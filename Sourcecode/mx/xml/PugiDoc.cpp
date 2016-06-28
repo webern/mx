@@ -4,6 +4,7 @@
 #include "mx/xml/PugiDoc.h"
 #include "mx/xml/PugiElement.h"
 #include "mx/utility/Parse.h"
+#include "mx/utility/Throw.h"
 
 #include <fstream>
 
@@ -17,17 +18,62 @@ namespace mx
             , myEncoding( DEFAULT_ENCODING )
             , myIsStandalone( false )
         {
-            
+            std::istringstream is( R"(<?xml version="1.0" encoding="UTF-8"?>)" );
+            auto options = pugi::parse_default | pugi::parse_declaration | pugi::parse_doctype;
+            myDoc.load( is, options );
         }
 
-
+        // Don't look at me, I'm ugly.
+        
         void PugiDoc::parse( std::istream& is )
         {
             auto options = pugi::parse_default | pugi::parse_declaration | pugi::parse_doctype;
             auto parseResult = myDoc.load( is, options );
             if( parseResult.status != pugi::status_ok )
             {
-                throw std::runtime_error( "PugiDoc::parse failed" );
+                MX_THROW( "pugixml parse failed" );
+            }
+            else if( myDoc.begin() == myDoc.end() )
+            {
+                MX_THROW( "pugixml parse created an empty document" );
+            }
+            else if( myDoc.begin()->type() != pugi::node_declaration )
+            {
+                auto xmlDeclaration = myDoc.prepend_child( pugi::node_declaration );
+                xmlDeclaration.set_name( "xml" );
+                auto ver = xmlDeclaration.append_attribute( "version" );
+                ver.set_value( "1.0" );
+                ver = xmlDeclaration.append_attribute( "encoding" );
+                ver.set_value( "UTF-8" );
+            }
+            else
+            {
+                auto xmlDec = *( myDoc.begin() );
+                if( xmlDec.attributes_begin() == xmlDec.attributes_end() )
+                {
+                    auto attr = xmlDec.append_attribute( "version" );
+                    attr.set_value( "1.0" );
+                    attr = xmlDec.append_attribute( "encoding" );
+                    attr.set_value( "UTF-8" );
+                }
+                else
+                {
+                    auto it = xmlDec.attributes_begin();
+                    auto end = xmlDec.attributes_end();
+                    if( !utility::compareCaseInsensitive( "version", it->name() ) )
+                    {
+                        auto attr = xmlDec.prepend_attribute( "version" );
+                        attr.set_value( "1.0" );
+                    }
+                    auto verAttr = xmlDec.attributes_begin();
+                    it = xmlDec.attributes_begin();
+                    ++it;
+                    if( it == end || !utility::compareCaseInsensitive( "encoding", it->name() ) )
+                    {
+                        auto encodingAttr = xmlDec.insert_attribute_after( "encoding", *verAttr );
+                        encodingAttr.set_value( "UTF-8" );
+                    }
+                }
             }
             parseXmlDeclarationValues();
         }
@@ -74,6 +120,36 @@ namespace mx
 
         void PugiDoc::setXmlVersion( XmlVersion value )
         {
+            if( value == XmlVersion::unknown )
+            {
+                MX_THROW( "cannot set the XmlVersion to 'unknown'" );
+            }
+            if( myDoc.begin() == myDoc.end() )
+            {
+                MX_THROW( "the xml document does not have an xml declaration - bad state" );
+            }
+            else if ( myDoc.begin()->type() != pugi::node_declaration )
+            {
+                MX_THROW( "the first node in the xml document should be an xml declaration - bad state" );
+            }
+            else
+            {
+                auto node = *( myDoc.begin() );
+                if( node.attributes_begin() == node.attributes_end() )
+                {
+                    node.prepend_attribute( "version" );
+                }
+                auto attr = node.attributes_begin();
+                if( attr == node.attributes_end() )
+                {
+                    MX_THROW( "something bad happened - this line should be unreachable" );
+                }
+                if( !utility::compareCaseInsensitive( "version", attr->name() ) )
+                {
+                    MX_THROW( "the first attribute of the xml declaration must be 'version'" );
+                }
+                attr->set_value( toString( value ).c_str() );
+            }
             myXmlVersion = value;
         }
         
@@ -86,6 +162,16 @@ namespace mx
         
         void PugiDoc::setEncoding( Encoding value )
         {
+            if( value == Encoding::unknown )
+            {
+                MX_THROW( "the encoding cannot be unknown" );
+            }
+            auto attr = getXmlDeclarationAttribute( "encoding" );
+            if( ! utility::compareCaseInsensitive( "encoding", attr.name() ) )
+            {
+                MX_THROW( "the 'encoding' attribute could not be found" );
+            }
+            attr.set_value( toString( value ).c_str() );
             myEncoding = value;
         }
         
@@ -93,7 +179,7 @@ namespace mx
         bool PugiDoc::getHasStandaloneAttribute() const
         {
             auto standalone = getXmlDeclarationAttribute( "standalone" );
-            if( mx::utility::compareCaseInsensitive( standalone.value(), "yes" ) )
+            if( mx::utility::compareCaseInsensitive( standalone.name(), "standalone" ) )
             {
                 return true;
             }
@@ -103,20 +189,82 @@ namespace mx
         
         void PugiDoc::setHasStandaloneAttribute( bool value )
         {
-            addStandaloneValueIfNeeded( value );
-            removeStandaloneValueIfNeeded( value );
-            setStandaloneValueIfNeeded( value );
+            bool isStandaloneCurrentlyPresent = getHasStandaloneAttribute();
+            if( isStandaloneCurrentlyPresent && value )
+            {
+                return;
+            }
+            else if ( !isStandaloneCurrentlyPresent && !value )
+            {
+                return;
+            }
+            else if ( value )
+            {
+                auto xmlDeclarationNode = getXmlDeclarationNode();
+                auto it = xmlDeclarationNode.attributes_begin();
+                if( it == xmlDeclarationNode.attributes_end() )
+                {
+                    MX_THROW( "the xml declaration node must have attributes" );
+                }
+                if( !utility::compareCaseInsensitive( "version", it->name() ) )
+                {
+                    MX_THROW( "the first xml declaration attribute must be 'version'" );
+                }
+                ++it;
+                if( it == xmlDeclarationNode.attributes_end() )
+                {
+                    MX_THROW( "the xml declaration node must have an 'encoding' attribute" );
+                }
+                if( !utility::compareCaseInsensitive( "encoding", it->name() ) )
+                {
+                    MX_THROW( "the second attribute of the xml declaration node must be 'encoding'" );
+                }
+                auto attr = xmlDeclarationNode.insert_attribute_after( "standalone", *it );
+                if( myIsStandalone )
+                {
+                    attr.set_value( "yes" );
+                }
+                else
+                {
+                    attr.set_value( "no" );
+                }
+                return;
+            }
+            else if ( !value )
+            {
+                auto xmlDeclarationNode = getXmlDeclarationNode();
+                for( auto it = xmlDeclarationNode.attributes_begin();
+                     it != xmlDeclarationNode.attributes_end(); ++it )
+                {
+                    if( utility::compareCaseInsensitive( "standalone", it->name() ) )
+                    {
+                        xmlDeclarationNode.remove_attribute( *it );
+                        myIsStandalone = false;
+                        return;
+                    }
+                }
+            }
         }
         
         
-        bool PugiDoc::getIsStandaloneValueYes() const
+        bool PugiDoc::getIsStandalone() const
         {
             return myIsStandalone;
         }
         
         
-        void PugiDoc::setIsStandaloneValueYes( bool value )
+        void PugiDoc::setIsStandalone( bool value )
         {
+            setHasStandaloneAttribute( true );
+            auto attr = getXmlDeclarationAttribute( "standalone" );
+            if( value )
+            {
+                attr.set_value( "yes" );
+            }
+            else
+            {
+                attr.set_value( "no" );
+            }
             myIsStandalone = value;
         }
         
@@ -134,19 +282,59 @@ namespace mx
         
         void PugiDoc::setHasDoctypeDeclaration( bool value )
         {
-            
+            bool isDoctypeCurrentlyPresent = getHasDoctypeDeclaration();
+            if( value && isDoctypeCurrentlyPresent )
+            {
+                // is requested and already exists, nothing to do
+                return;
+            }
+            else if( !isDoctypeCurrentlyPresent && !value )
+            {
+                // is not requested and doesn't exist, nothing to do
+                return;
+            }
+            else if ( value )
+            {
+                // add doctype
+                if( myDoc.begin() == myDoc.end() )
+                {
+                    MX_THROW( "empty documet" );
+                }
+                auto xmlDeclarationNode = *( myDoc.begin() );
+                if( xmlDeclarationNode.type() != pugi::node_declaration )
+                {
+                    MX_THROW( "bad xml document state" );
+                }
+                myDoc.insert_child_after( pugi::node_doctype, xmlDeclarationNode );
+                return;
+            }
+            else if ( !value )
+            {
+                // delete doctype
+                for( auto it = myDoc.begin(); it != myDoc.end(); ++it )
+                {
+                    if( it->type() == pugi::node_doctype )
+                    {
+                        myDoc.remove_child( *it );
+                        return;
+                    }
+                }
+            }
         }
         
         
-        std::string PugiDoc::getDoctypeDeclaration() const
+        std::string PugiDoc::getDoctypeValue() const
         {
-            return "";
+            auto doctypeNode = getDoctypeNode();
+            return doctypeNode.value();
         }
         
         
-        void PugiDoc::setDoctypeDeclaration( const std::string& value )
+        void PugiDoc::setDoctypeValue( const std::string& value )
         {
-            
+            setHasDoctypeDeclaration( true );
+            auto doctypeNode = getDoctypeNode();
+            doctypeNode.set_value( value.c_str() );
         }
         
         
@@ -177,8 +365,7 @@ namespace mx
             auto xmlDeclaration = getXmlDeclarationNode();
             if( xmlDeclaration.type() != pugi::node_declaration )
             {
-                myXmlVersion = DEFAULT_XML_VERSION;
-                return;
+                MX_THROW( "the xml document must have an xml declaration as its first node" );
             }
             
             auto version = xmlDeclaration.attribute( "version" );
@@ -186,6 +373,7 @@ namespace mx
             if( value == "" )
             {
                 myXmlVersion = DEFAULT_XML_VERSION;
+                setXmlVersion( DEFAULT_XML_VERSION );
                 return;
             }
             
@@ -195,7 +383,13 @@ namespace mx
         
         void PugiDoc::parseEncodingFromDoc()
         {
-            
+            auto attr = getXmlDeclarationAttribute( "encoding" );
+            if( !utility::compareCaseInsensitive( "encoding", attr.name() ) )
+            {
+                MX_THROW( "encoding value was not found" );
+            }
+            myEncoding = parseEncoding( attr.value() );
+            attr.set_value( toString( myEncoding ).c_str() );
         }
         
         
@@ -263,8 +457,7 @@ namespace mx
             
             return firstNode;
         }
-        
-        
+
         
         pugi::xml_attribute PugiDoc::getXmlDeclarationAttribute( const char* const name ) const
         {
@@ -274,80 +467,6 @@ namespace mx
                 return pugi::xml_attribute{};
             }
             return declaration.attribute( name );
-        }
-        
-        
-        void PugiDoc::addStandaloneValueIfNeeded( bool shouldHaveStandaloneAttribute )
-        {
-            if( !shouldHaveStandaloneAttribute )
-            {
-                return;
-            }
-            
-            if( shouldHaveStandaloneAttribute && getHasStandaloneAttribute() )
-            {
-                return;
-            }
-            
-            auto declaration = getXmlDeclarationNode();
-            declaration.append_attribute( "standalone" );
-        }
-        
-        
-        void PugiDoc::removeStandaloneValueIfNeeded( bool shouldHaveStandaloneAttribute )
-        {
-            if( shouldHaveStandaloneAttribute )
-            {
-                return;
-            }
-            
-            if( !shouldHaveStandaloneAttribute && !getHasStandaloneAttribute() )
-            {
-                return;
-            }
-            auto declaration = getXmlDeclarationNode();
-            /* why doesn't this work?
-            auto it = std::find(
-                declaration.attributes().begin(),
-                declaration.attributes().end(),
-                                [](const pugi::xml_attribute& attr)->bool { return std::string{ attr.name() } == std::string{ "standalone" }; } );
-            */
-            for( auto it = declaration.attributes().begin();
-                 it != declaration.attributes().end(); ++ it )
-            {
-                if( std::string{ it->name() } == std::string{ "standalone" } )
-                {
-                    declaration.remove_attribute( *it );
-                    return;
-                }
-            }
-        }
-        
-        
-        void PugiDoc::setStandaloneValueIfNeeded( bool shouldHaveStandaloneAttribute )
-        {
-            if( !getHasStandaloneAttribute() )
-            {
-                return;
-            }
-            auto declaration = getXmlDeclarationNode();
-            for( auto it = declaration.attributes().begin();
-                it != declaration.attributes().end(); ++ it )
-            {
-                if( std::string{ it->name() } == std::string{ "standalone" } )
-                {
-                    if( myIsStandalone )
-                    {
-                        it->set_value( "yes" );
-                        return;
-                    }
-                    else
-                    {
-                        it->set_value( "no" );
-                        return;
-                    }
-                }
-            }
         }
     }
 }

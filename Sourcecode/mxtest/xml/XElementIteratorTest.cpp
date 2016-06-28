@@ -1,3 +1,6 @@
+#include "mxtest/control/CompileControl.h"
+#ifdef MX_COMPILE_XML_TESTS
+
 #include "cpul/cpulTestHarness.h"
 #include "mx/xml/XFactory.h"
 #include "mx/xml/XDoc.h"
@@ -102,6 +105,7 @@ TEST( prefixIncrement, XElementIterator )
     ++iter;
     CHECK( iter == root->elementsEnd() )
 }
+T_END
 
 
 TEST( prefixDecrement, XElementIterator )
@@ -226,6 +230,7 @@ TEST( assignmentOperator, XElementIterator )
     CHECK_EQUAL( "def", iter->getName() )
     CHECK_EQUAL( "def", assigned->getName() )
 }
+T_END
 
 
 TEST( moveAssignment, XElementIterator )
@@ -255,6 +260,7 @@ TEST( nullThrows, XElementIterator )
     CHECK_RAISES( (*nullIter).getName() )
     
 }
+T_END
 
 
 TEST( doesNotCrash, XElementIterator )
@@ -264,4 +270,6 @@ TEST( doesNotCrash, XElementIterator )
     CHECK_NOT_RAISES( anotherIter = nullIter );
     CHECK_NOT_RAISES( anotherIter = XElementIterator{} );
 }
+T_END
 
+#endif

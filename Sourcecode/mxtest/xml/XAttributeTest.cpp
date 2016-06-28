@@ -1,3 +1,6 @@
+#include "mxtest/control/CompileControl.h"
+#ifdef MX_COMPILE_XML_TESTS
+
 #include "cpul/cpulTestHarness.h"
 #include "mx/xml/XFactory.h"
 #include "mx/xml/XDoc.h"
@@ -134,3 +137,5 @@ TEST( setValue, XAttribute )
     CHECK( iter == node->attributesEnd() );
 }
 T_END
+
+#endif

@@ -1,3 +1,6 @@
+#include "mxtest/control/CompileControl.h"
+#ifdef MX_COMPILE_XML_TESTS
+
 #include "cpul/cpulTestHarness.h"
 #include "mx/xml/XFactory.h"
 #include "mx/xml/XDoc.h"
@@ -264,6 +267,7 @@ TEST( appendAttributeFromEmpty, XElement )
     CHECK_EQUAL( "appended", atIter2->getName() );
     CHECK_EQUAL( "val-B", atIter2->getValue() );
 }
+T_END
 
 
 TEST( prependAttributeWithExisting, XElement )
@@ -308,3 +312,5 @@ TEST( appendAttributeWithExisting, XElement )
     CHECK_EQUAL( "pended", atIter->getValue() );
 }
 T_END
+
+#endif

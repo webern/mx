@@ -1,3 +1,5 @@
+#include "mxtest/control/CompileControl.h"
+#ifdef MX_COMPILE_UTILTIY_TESTS
 
 #include "cpul/cpulTestHarness.h"
 #include "mx/utility/Utility.h"
@@ -525,3 +527,5 @@ T_END
 
 
 // TODO createNote tests
+
+#endif

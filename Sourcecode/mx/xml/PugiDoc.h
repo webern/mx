@@ -37,14 +37,14 @@ namespace mx
             virtual void setEncoding( Encoding value ) override;
             virtual bool getHasStandaloneAttribute() const override;
             virtual void setHasStandaloneAttribute( bool value ) override;
-            virtual bool getIsStandaloneValueYes() const override;
-            virtual void setIsStandaloneValueYes( bool value ) override;
+            virtual bool getIsStandalone() const override;
+            virtual void setIsStandalone( bool value ) override;
             
             // Doctype Declaration
             virtual bool getHasDoctypeDeclaration() const override;
             virtual void setHasDoctypeDeclaration( bool value ) override;
-            virtual std::string getDoctypeDeclaration() const override;
-            virtual void setDoctypeDeclaration( const std::string& value ) override;
+            virtual std::string getDoctypeValue() const override;
+            virtual void setDoctypeValue( const std::string& value ) override;
             
             // Node Access
             virtual XElementPtr getRoot() const override;
@@ -62,9 +62,6 @@ namespace mx
             pugi::xml_node getDoctypeNode() const;
             pugi::xml_node getXmlDeclarationNode() const;
             pugi::xml_attribute getXmlDeclarationAttribute( const char* const name ) const;
-            void addStandaloneValueIfNeeded( bool shouldHaveStandaloneAttribute );
-            void removeStandaloneValueIfNeeded( bool shouldHaveStandaloneAttribute );
-            void setStandaloneValueIfNeeded( bool shouldHaveStandaloneAttribute );
         };
     }
 }

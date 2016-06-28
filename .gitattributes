@@ -1,0 +1,72 @@
+# trying to preserve xml input files as-is
+*.xml binary
+
+# seems like we shouldn't be changine xcode files
+*.xc* binary
+
+# These files are text and should be normalized (Convert crlf => lf)
+*.rb text
+*.h text
+*.cpp text
+*.hpp text
+*.c text
+*.cc text
+*.sh text
+*.bat text
+*.m text
+*.mm text
+*.swift text
+*.php text
+*.css text
+*.js text
+*.htm text
+*.html text
+*.txt text
+*.ini text
+*.inc text
+.htaccess text
+
+# These files are binary and should be left untouched
+# (binary is a macro for -text -diff)
+*.tiff binary
+*.mxl binary
+*.mp3 binary
+*.wav binary
+*.aiff binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.mov binary
+*.mp4 binary
+*.mp3 binary
+*.flv binary
+*.fla binary
+*.swf binary
+*.gz binary
+*.zip binary
+*.7z binary
+*.ttf binary
+
+# Auto detect text files and perform LF normalization
+# http://davidlaing.com/2012/09/19/customise-your-gitattributes-to-become-a-git-ninja/
+# * text=auto
+
+# Documents
+*.doc  diff=astextplain
+*.DOC  diff=astextplain
+*.docx diff=astextplain
+*.DOCX diff=astextplain
+*.dot  diff=astextplain
+*.DOT  diff=astextplain
+*.pdf  diff=astextplain
+*.PDF  diff=astextplain
+*.rtf  diff=astextplain
+*.RTF  diff=astextplain
+
+# Declare files that will always have CRLF line endings on checkout.
+*.sln text eol=crlf
+*.vcxproj text eol=crlf
+*.vsproj text eol=crlf
+*.csproj text eol=crlf

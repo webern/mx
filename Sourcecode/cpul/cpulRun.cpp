@@ -3,8 +3,8 @@
 
 void cpulRun( bool runTests, bool holdConsole )
 {
-	UNUSED_PARAMETER( runTests )
-	UNUSED_PARAMETER( holdConsole )
+    UNUSED_PARAMETER( runTests )
+    UNUSED_PARAMETER( holdConsole )
 
 #ifndef USE_VS_TEST
     if ( runTests )

@@ -1,3 +1,6 @@
+#include "mxtest/control/CompileControl.h"
+#ifdef MX_COMPILE_XML_TESTS
+
 #include "cpul/cpulTestHarness.h"
 #include "mxtest/xml/FakeXml.h"
 #include "mx/xml/XFactory.h"
@@ -282,7 +285,6 @@ namespace
         return node;
     }
 }
-T_END
 
 
 TEST( avoidsUndefinedBehavior, XAttributeIterator )
@@ -291,3 +293,5 @@ TEST( avoidsUndefinedBehavior, XAttributeIterator )
     CHECK_RAISES( auto iter = root->attributesBegin() );
 }
 T_END
+
+#endif

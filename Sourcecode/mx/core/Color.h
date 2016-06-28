@@ -53,8 +53,8 @@ namespace mx
         };
         
         std::string toString( const Color& value );
-		std::ostream& toStream( std::ostream& os, const Color& value );
-		std::ostream& operator<<( std::ostream& os, const Color& value );
+        std::ostream& toStream( std::ostream& os, const Color& value );
+        std::ostream& operator<<( std::ostream& os, const Color& value );
         
     }
 }

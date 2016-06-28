@@ -16,8 +16,7 @@ public ref class Test##className##functionName \
 public: \
 \
     [TestMethod] \
-	[TestProperty("Project","Lyre")] \
-	[TestProperty("Class",#className)] \
+    [TestProperty("Class",#className)] \
     void className##_##functionName####() \
 
 #undef CHECK
@@ -36,3 +35,31 @@ public: \
 
 #define CHECK_FAIL( text ) \
     CHECK( false )
+
+#define CHECK_RAISES(statement) \
+{\
+    bool isExceptionRaised = false; \
+    try \
+    { \
+        statement ; \
+    }\
+    catch ( std::exception& ) \
+    { \
+        isExceptionRaised = true; \
+    } \
+    CHECK( isExceptionRaised ); \
+}
+
+#define CHECK_NOT_RAISES(statement) \
+{\
+        bool isExceptionRaised = false; \
+    try \
+    { \
+        statement ; \
+    }\
+    catch ( std::exception& ) \
+    { \
+        isExceptionRaised = true; \
+    } \
+    CHECK( !isExceptionRaised ); \
+}

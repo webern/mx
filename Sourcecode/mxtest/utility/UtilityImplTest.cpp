@@ -1,6 +1,9 @@
+#include "mxtest/control/CompileControl.h"
+#ifdef MX_COMPILE_UTILTIY_TESTS
 
 #include "cpul/cpulTestHarness.h"
 #include "mx/utility/UtilityImpl.h"
+#include "mx/utility/Utility.h"
 
 #include <string>
 #include <sstream>
@@ -15,7 +18,7 @@ using namespace mx::utility;
 TEST( makePartGroupStartTagDefault, MxUtilityImpl )
 {
     PartGroupParams params;
-    auto obj = makePartGroupStartTag( params );
+    mx::core::PartGroupPtr obj = makePartGroupStartTag( params );
 
     std::stringstream expected;
     expected << R"(<part-group type="start">)" << endl;
@@ -40,7 +43,7 @@ T_END
 TEST( makePartGroupStartTagNameOnly, MxUtilityImpl )
 {
     PartGroupParams params( "Strings" );
-    auto obj = makePartGroupStartTag( params );
+    mx::core::PartGroupPtr obj = makePartGroupStartTag( params );
     
     std::stringstream expected;
     expected << R"(<part-group type="start">)" << endl;
@@ -60,13 +63,13 @@ TEST( makePartGroupStartTagNameOnly, MxUtilityImpl )
     
     CHECK_EQUAL( expected.str(), actual.str() )
 }
-
+T_END
 
 TEST( makePartGroupAddAbbreviation, MxUtilityImpl )
 {
     PartGroupParams params( "Strings" );
     params.abbreviation = "Str.";
-    auto obj = makePartGroupStartTag( params );
+    mx::core::PartGroupPtr obj = makePartGroupStartTag( params );
     
     std::stringstream expected;
     expected << R"(<part-group type="start">)" << endl;
@@ -95,7 +98,7 @@ TEST( makePartGroupAddNumber, MxUtilityImpl )
     PartGroupParams params( "Strings" );
     params.abbreviation = "Str.";
     params.number = 0;
-    auto obj = makePartGroupStartTag( params );
+    mx::core::PartGroupPtr obj = makePartGroupStartTag( params );
     
     std::stringstream expected;
     expected << R"(<part-group type="start" number="0">)" << endl;
@@ -125,7 +128,7 @@ TEST( makePartGroupAddDisplayName, MxUtilityImpl )
     params.abbreviation = "Str.";
     params.number = 1;
     params.displayName = "Chili You Ugly";
-    auto obj = makePartGroupStartTag( params );
+    mx::core::PartGroupPtr obj = makePartGroupStartTag( params );
     
     std::stringstream expected;
     expected << R"(<part-group type="start" number="1">)" << endl;
@@ -156,7 +159,7 @@ TEST( makePartGroupAddDisplayAbbreviation, MxUtilityImpl )
     params.number = 1;
     params.displayName = "Chili You Ugly";
     params.displayAbbreviation = "Bones";
-    auto obj = makePartGroupStartTag( params );
+    mx::core::PartGroupPtr obj = makePartGroupStartTag( params );
     
     std::stringstream expected;
     expected << R"(<part-group type="start" number="1">)" << endl;
@@ -188,7 +191,7 @@ TEST( makePartGroupNoBarline, MxUtilityImpl )
     params.displayName = "Chili You Ugly";
     params.displayAbbreviation = "Bones";
     params.isGroupBarline = false;
-    auto obj = makePartGroupStartTag( params );
+    mx::core::PartGroupPtr obj = makePartGroupStartTag( params );
     
     std::stringstream expected;
     expected << R"(<part-group type="start" number="1">)" << endl;
@@ -221,7 +224,7 @@ TEST( makePartGroupNoSymbol, MxUtilityImpl )
     params.displayAbbreviation = "Bones";
     params.isGroupBarline = false;
     params.groupSymbol = GroupSymbolValue::none;
-    auto obj = makePartGroupStartTag( params );
+    mx::core::PartGroupPtr obj = makePartGroupStartTag( params );
     
     std::stringstream expected;
     expected << R"(<part-group type="start" number="1">)" << endl;
@@ -761,7 +764,7 @@ TEST( createGraceNote, MxUtilityImpl )
     setStemDirection( n, mx::utility::UpDown::down );
     setNoteDurationType( n, NoteTypeValue::oneHundredTwentyEighth );
     setNoteDurationDots( n, 2 );
-	vector<BeamValue> beams;
+    vector<BeamValue> beams;
     beams.push_back( BeamValue::begin );
     beams.push_back( BeamValue::continue_ );
     beams.push_back( BeamValue::end );
@@ -869,3 +872,5 @@ TEST( setNoteIsCue, MxUtilityImpl )
     CHECK( note->getNote()->getNoteChoice()->getChoice() == NoteChoice::Choice::cue );
 }
 T_END
+
+#endif

@@ -1,4 +1,7 @@
 #pragma once
+#include "mxtest/control/CompileControl.h"
+#ifdef MX_COMPILE_XML_TESTS
+
 
 //#include "pugixml/pugixml.hpp"
 
@@ -24,3 +27,5 @@ namespace MxRtiTest
         
     }
 }
+
+#endif

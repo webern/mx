@@ -181,4 +181,14 @@ private:
     }\
 }
 
+#define CHECK_WITH_MESSAGE(bOoLeAn,mEsSaGe) \
+{                                                                     \
+    if (!(bOoLeAn))                                                   \
+    {                                                                 \
+        rEsUlT_.addFailure (Failure (mEsSaGe, __FILE__, __LINE__));  \
+        return;                                                       \
+    }                                                                 \
+}                                                                     \
+
+
 #endif

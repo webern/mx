@@ -9,6 +9,10 @@
 
 namespace mx
 {
+    namespace xml
+    {
+        class XElement;
+    }
     
     namespace core
     {
@@ -34,6 +38,13 @@ namespace mx
             virtual std::ostream& streamCloseTag( std::ostream& os ) const;
             virtual std::ostream& streamSelfCloseTag( std::ostream& os ) const;
             virtual std::ostream& toStream( std::ostream& os, const int indentLevel ) const;
+            virtual bool fromXElement( std::ostream& message, xml::XElement& xelement )
+            {
+                // TODO - remove and make it pure virtual
+                streamName( message );
+                message << " - import from XDoc not implemented ";
+                return false;
+            }
         };
         
         std::ostream& indent( std::ostream& os, const int indentLevel );

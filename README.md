@@ -3,11 +3,26 @@ MusicXML Class Library
 
 Author: Matthew James Briggs
 
-Update: June 20, 2016: Changes have been made since the readme doc below was written.  Development is currently underway for MusicXML import.  Readme and documentation needs to be updated as soon as the import feature is complete.
+-----------------------------------------
+Update: June 27, 2016: An "integration" tester has been added to the MxTest executable.  This exists in ImportTest.cpp, and ImportTestImpl.h/cpp.  A top level directory "Resources" has been added to hold test input (i.e. "golden") files.  The input files are gathered from Recordare, Lilypond and MuseScore and to this I have added a few of my own scores as exported by Finale Dolet.
+
+Each of these test input files has been "scrubbed" using the XDoc classes (i.e. it has been round-tripped through pugixml and has been updated to a normalized MusicXML 3.0 header format.  The resultant scrubbed files are in Resources/expected.  During the test run, a csv file is written in Resources/testOutput recording a row for each test (Pass/Fail, duration of test, messages, etc).  Each time a test failure is encountered the expected file and the error file will be saved to the Resources/testOutput directory to allow for visual inspection.
+
+Currently this tester is a "write-up".  All 263 of these round-trip import/export tests fail because the implementation does not yet exist in mx::core.  The next body of work will be the mx::core implementation.
+
+-----------------------------------------
+
+Update: June 20, 2016: A simple interface to for XML DOM has been added in the mx::xml namespace.  The key classes (pure virtual) are XDoc, XElement, XAttribute, XElementIterator, XAttributeIterator.  These are implemented by concrete classes PugiDoc, PugiElement, etc. which serve as a wrapper for the pugixml library (http://pugixml.org/).  Although this is a static library, a class XFactory can be used to create a Pugi instance of the XDoc interface.
+
+The idea behind using a pure virtual interface is that the client of the Music XML Class Library can, in theory choose a different XML DOM library (Xerces, TinyXML, etc) and wrap with instances of the XDoc interfaces and the Music XML core classes will not know the difference.
+
+-----------------------------------------
+Old Readme Text...
+
+Changes have been made since the readme doc below was written.  Development is currently underway for MusicXML import.  Readme and documentation needs to be updated as soon as the import feature is complete.
 
 Also the entire GitHub repo has been wiped out and restarted on June 20, 2016.
 
-Old info below...
 
 -----------------------------------------
 Datestamp: May 31, 2015
@@ -17,7 +32,7 @@ This project is a static C++ class library which represents MusicXML in object-o
 
 One of the goals of this project is to strongly-type all aspects of the MusicXML XSD specification such that **any program that compiles will represent a valid MusicXML document.**  This principle is only extended as far as XSD validation is concerned.  The MusicXML specification allows for the creation of valid MusicXML documents which are nonetheless musical gibberish.  Additionally the MusicXML specification has many requirements which are described in comments in the XSD specification.  In other words, an XSD-validated MusicXML document does not necessarily represent valid MusicXML.
 
-Note: XsIDREF and XsID constraints are not enforced by this library.  Thus the goal stated above has not entirely been acheived.  If you introduce duplicative XsID values, for example, an XSD validation of your document will fail.  I don't know how to solve this problem right now.
+Note: XsIDREF and XsID constraints are not enforced by this library.  Thus the goal stated above has not entirely been achieved.  If you introduce duplicative XsID values, for example, an XSD validation of your document will fail.  I don't know how to solve this problem right now.
 
 ### Compiling
 The project uses C++11 semantics, does not use any third-party libraries and does not employ any platform-specific commands.  It has been built with the following compilers successfully.
@@ -73,7 +88,7 @@ Also note that setting HasFoo to *false* does not mean that Foo's value is gone.
 bar->setHasFoo( false ); /* The XML document no longer has a Foo */
 bar->getFoo()->getName() == "Dave"; /* True! The value is still there even though it is not present in the XML document. */
 ```
-##### Optional Member Data with Unbounded Ocurrences
+##### Optional Member Data with Unbounded Occurrences
 Sometimes an element may contain zero, one, or many occurrences of another element.  For example
 ```
 <xs:element name="key" type="key" minOccurs="0" maxOccurs="unbounded">
@@ -184,7 +199,7 @@ https://github.com/smikes/CppUnitLite
 *MusicXML Class Library* unit testing is not comprehensive, but it is extensive.  I believe every class has at least some unit tests and most functions have at least one test.  The philosophy is lightweight TDD.  The tests are not necessarily written first, but a function/class/feature is not considered complete until unit tests have been written.
 
 ### Known Issues and Todo List
-- There is no easy way to "deep copy" anything.  Each element and attributesclass needs a "clone" function.  Alternatively each makeSomething() could be overloaded to create a clone.
+- There is no easy way to "deep copy" anything.  Each element and attributes class needs a "clone" function.  Alternatively each makeSomething() could be overloaded to create a clone.
 - XsID uniqueness is not constrained...  it should be.
 - XsIDREF's, especially in the ScorePartList are not constrained to relate to the PartList XsID's.  Thus it is possible to create an unparsable MusicXML document.  A feature should be added to enforce this one-to-one constraint.
 - A (substantial) new feature should be added to represent and interact with the MusicXML document by way of a standard XML DOM structure.  This XML DOM structure should be presented via pure virtual interfaces so that users can wrap their favorite XML DOM program (Xerces, TinyXML, etc) with the *MusicXML Class Library* DOM for easy integration.

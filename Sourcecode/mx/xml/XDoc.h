@@ -39,14 +39,14 @@ namespace mx
             virtual void setEncoding( Encoding value ) = 0;
             virtual bool getHasStandaloneAttribute() const = 0;
             virtual void setHasStandaloneAttribute( bool value ) = 0;
-            virtual bool getIsStandaloneValueYes() const = 0;
-            virtual void setIsStandaloneValueYes( bool value ) = 0;
+            virtual bool getIsStandalone() const = 0;
+            virtual void setIsStandalone( bool value ) = 0;
             
             // Doctype Declaration
             virtual bool getHasDoctypeDeclaration() const = 0;
             virtual void setHasDoctypeDeclaration( bool value ) = 0;
-            virtual std::string getDoctypeDeclaration() const = 0;
-            virtual void setDoctypeDeclaration( const std::string& value ) = 0;
+            virtual std::string getDoctypeValue() const = 0;
+            virtual void setDoctypeValue( const std::string& value ) = 0;
             
             // Node Access
             virtual XElementPtr getRoot() const = 0;
