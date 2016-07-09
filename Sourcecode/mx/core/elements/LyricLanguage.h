@@ -1,0 +1,43 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
+#pragma once
+
+#include "mx/core/ForwardDeclare.h"
+#include "mx/core/ElementInterface.h"
+#include "mx/core/elements/LyricLanguageAttributes.h"
+
+#include <iosfwd>
+#include <memory>
+#include <vector>
+
+namespace mx
+{
+    namespace core
+    {
+
+        MX_FORWARD_DECLARE_ATTRIBUTES( LyricLanguageAttributes )
+        MX_FORWARD_DECLARE_ELEMENT( LyricLanguage )
+
+        inline LyricLanguagePtr makeLyricLanguage() { return std::make_shared<LyricLanguage>(); }
+
+        class LyricLanguage : public ElementInterface
+        {
+        public:
+            LyricLanguage();
+
+            virtual bool hasAttributes() const;
+            virtual bool hasContents() const;
+            virtual std::ostream& streamAttributes( std::ostream& os ) const;
+            virtual std::ostream& streamName( std::ostream& os ) const;
+            virtual std::ostream& streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly ) const;
+            LyricLanguageAttributesPtr getAttributes() const;
+            void setAttributes( const LyricLanguageAttributesPtr& attributes );
+
+            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+
+        private:
+            LyricLanguageAttributesPtr myAttributes;
+        };
+    }
+}

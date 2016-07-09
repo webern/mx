@@ -1,4 +1,4 @@
-// MusicXML Class Library v0.1.1
+// MusicXML Class Library v0.2
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #include "mx/xml/PugiElement.h"
@@ -51,7 +51,7 @@ namespace mx
                 return XElementType::text;
             }
 
-            if( elementsBegin() == elementsEnd() )
+            if( begin() == end() )
             {
                 return XElementType::empty;
             }
@@ -144,7 +144,7 @@ namespace mx
         }
 
 
-        XElementIterator PugiElement::elementsBegin() const
+        XElementIterator PugiElement::begin() const
         {
             MX_CHECK_NULL_NODE;
             MX_CHECK_NODE_ELEMENT;
@@ -152,7 +152,7 @@ namespace mx
         }
 
 
-        XElementIterator PugiElement::elementsEnd() const
+        XElementIterator PugiElement::end() const
         {
             MX_CHECK_NULL_NODE;
             MX_CHECK_NODE_ELEMENT;
@@ -174,16 +174,44 @@ namespace mx
             MX_CHECK_NODE_ELEMENT;
             return XAttributeIterator( PugiAttributeIterImpl{ myNode.attributes_end(), myNode, myXDoc.lock() } );
         }
+        
+        
+        
+        XElementPtr PugiElement::appendChild( const std::string& name )
+        {
+            MX_CHECK_NULL_NODE;
+            MX_CHECK_NODE_ELEMENT;
+            return XElementPtr{ new PugiElement{ myNode.append_child( name.c_str() ), myXDoc.lock() } };
+        }
+        
+        
+        XElementPtr PugiElement::prependChild( const std::string& name )
+        {
+            MX_CHECK_NULL_NODE;
+            MX_CHECK_NODE_ELEMENT;
+            return XElementPtr{ new PugiElement{ myNode.prepend_child( name.c_str() ), myXDoc.lock() } };
+        }
+        
+        
+        XElementPtr PugiElement::insertSiblingAfter( const std::string& newElementName )
+        {
+            MX_CHECK_NULL_NODE;
+            MX_CHECK_NODE_ELEMENT;
+            auto newNode = myNode.parent().insert_child_after( newElementName.c_str(), myNode );
+            return XElementPtr{ new PugiElement{ newNode, myXDoc.lock() } };
+        }
+        
+        
+        bool PugiElement::removeChild( const std::string& elementName )
+        {
+            return myNode.remove_child( elementName.c_str() );
+        }
 
 
         XAttributePtr PugiElement::appendAttribute( const std::string & name )
         {
             MX_CHECK_NULL_NODE;
             MX_CHECK_NODE_ELEMENT;
-            if( getType() == XElementType::text )
-            {
-                MX_THROW( "the object cannot hold both elements and text" );
-            }
             return XAttributePtr{ new PugiAttribute{ myNode.append_attribute( name.c_str() ), myNode, myXDoc.lock() } };
         }
 
@@ -192,11 +220,22 @@ namespace mx
         {
             MX_CHECK_NULL_NODE;
             MX_CHECK_NODE_ELEMENT;
-            if( getType() == XElementType::text )
-            {
-                MX_THROW( "the object cannot hold both elements and text" );
-            }
             return XAttributePtr{ new PugiAttribute{ myNode.prepend_attribute( name.c_str() ), myNode, myXDoc.lock() } };
+        }
+        
+        
+        void  PugiElement::removeAttribute( const XAttributeIterator& iter )
+        {
+            auto it = myNode.attributes_begin();
+            auto e = myNode.attributes_end();
+            for( ; it != e; ++ it )
+            {
+                if( iter->getName() == it->name() )
+                {
+                    myNode.remove_attribute( *it );
+                    return;
+                }
+            }
         }
     }
 }

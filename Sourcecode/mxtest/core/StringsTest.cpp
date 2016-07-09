@@ -1,3 +1,6 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_CORE_TESTS
 
@@ -331,7 +334,7 @@ TEST( XlinkTitle03, Strings )
 TEST( CommaSeparatedText01, Strings )
 {
     CommaSeparatedText x( " Hello , \nWorld$#&" );
-    StringType expected = "Hello,World$#&";
+    StringType expected = "Hello,World$#&amp;";
     StringType actual = toString( x );
     CHECK_EQUAL( expected, actual )
 }

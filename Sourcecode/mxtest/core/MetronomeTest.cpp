@@ -1,3 +1,6 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_CORE_TESTS
 
@@ -61,7 +64,7 @@ TEST( Test03, Metronome )
 	streamLine( expected, 3, R"(<metronome-beam>begin</metronome-beam>)" );
 	streamLine( expected, 3, R"(<metronome-beam>begin</metronome-beam>)" );
 	streamLine( expected, 2, R"(</metronome-note>)" );
-	streamLine( expected, 2, R"(<metronome-relation>equals</metronome-relation>)" );
+	streamLine( expected, 2, R"(<metronome-relation>96</metronome-relation>)" );
 	streamLine( expected, 2, R"(<metronome-note>)" );
 	streamLine( expected, 3, R"(<metronome-type>64th</metronome-type>)" );
 	streamLine( expected, 3, R"(<metronome-tuplet type="start">)" );

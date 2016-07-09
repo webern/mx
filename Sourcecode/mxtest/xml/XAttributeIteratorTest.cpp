@@ -1,3 +1,6 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_XML_TESTS
 
@@ -20,17 +23,17 @@ namespace
     {
         auto xdoc = XFactory::makeXDoc();
         std::istringstream is( MxTest::fakeXml );
-        xdoc->parse( is );
+        xdoc->loadStream( is );
         return xdoc;
     }
     
     inline XElementPtr somethingWithAttributes( const mx::xml::XDocCPtr& xdoc )
     {
         auto root = xdoc->getRoot();
-        auto firstIter = root->elementsBegin();
+        auto firstIter = root->begin();
         ++firstIter;
         ++firstIter;
-        auto nextIter = firstIter->elementsBegin();
+        auto nextIter = firstIter->begin();
         return nextIter->clone();
     }
 }
@@ -92,7 +95,7 @@ TEST( suffixDecrement, XAttributeIterator )
     CHECK( iter == node->attributesBegin() );
     CHECK_EQUAL( "attr-a", ( iter-- )->getName() );
     
-    // iter is now "before" root->elementsBegin()
+    // iter is now "before" root->begin()
     // which behaves like an "end" iter, should throw
     CHECK_RAISES( iter->getName() );
 }
@@ -131,7 +134,7 @@ TEST( prefixDecrement, XAttributeIterator )
     CHECK( iter == node->attributesBegin() );
     --iter;
     
-    // iter is now "before" root->elementsBegin()
+    // iter is now "before" root->begin()
     // which behaves like an "end" iter, should throw
     CHECK_RAISES( iter->getName() );
 }

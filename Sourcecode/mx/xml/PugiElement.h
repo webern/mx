@@ -1,4 +1,4 @@
-// MusicXML Class Library v0.1.1
+// MusicXML Class Library v0.2
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #pragma once
@@ -53,14 +53,21 @@ namespace mx
             virtual XDocCPtr getDoc() const override;
             virtual XElementPtr getParent() const override;
 
-            virtual XElementIterator elementsBegin() const override;
-            virtual XElementIterator elementsEnd() const override;
+            virtual XElementIterator begin() const override;
+            virtual XElementIterator end() const override;
 
             virtual XAttributeIterator attributesBegin() const override;
             virtual XAttributeIterator attributesEnd() const override;
 
+            virtual XElementPtr appendChild( const std::string& name ) override;
+            virtual XElementPtr prependChild( const std::string& name ) override;
+            
+            virtual XElementPtr insertSiblingAfter( const std::string& newElementName ) override;
+            virtual bool removeChild( const std::string& elementName ) override;
+            
             virtual XAttributePtr appendAttribute( const std::string& name ) override;
             virtual XAttributePtr prependAttribute( const std::string& name ) override;
+            virtual void removeAttribute( const XAttributeIterator& iter ) override;
 
         private:
             pugi::xml_node myNode;

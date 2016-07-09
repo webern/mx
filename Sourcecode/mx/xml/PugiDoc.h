@@ -1,4 +1,4 @@
-// MusicXML Class Library v0.1.1
+// MusicXML Class Library v0.2
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #pragma once
@@ -24,11 +24,11 @@ namespace mx
             PugiDoc& operator=( const PugiDoc& other ) = delete;
             PugiDoc& operator=( PugiDoc&& other ) = default;
             
-            virtual void parse( std::istream& is ) override;
-            virtual void write( std::ostream& os ) const override;
+            virtual void loadStream( std::istream& is ) override;
+            virtual void saveStream( std::ostream& os ) const override;
             
-            virtual void parse( const std::string& filename ) override;
-            virtual void write( const std::string& filename ) const override;
+            virtual void loadFile( const std::string& filename ) override;
+            virtual void saveFile( const std::string& filename ) const override;
             
             // Xml Declaration
             virtual XmlVersion getXmlVersion() const override;
@@ -48,12 +48,15 @@ namespace mx
             
             // Node Access
             virtual XElementPtr getRoot() const override;
+            
+            virtual void setDoWriteByteOrderMark( bool value ) override;
 
         private:
             pugi::xml_document myDoc;
             XmlVersion myXmlVersion;
             Encoding myEncoding;
             bool myIsStandalone;
+            bool myDoWriteBom;
             
             void parseXmlDeclarationValues();
             void parseXmlVersionFromDoc();

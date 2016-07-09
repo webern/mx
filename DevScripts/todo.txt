@@ -1,0 +1,23 @@
+
+
+After the above is working put the ruby scripts into a "trash" folder (clever
+name perhaps) and start over with new ruby scripts that read from the new h
+and cpp files.  Begin implementing the fromXDoc functions one-at-a-time.
+
+
+---- comments
+/* I am renaming this to "properties" because it clashes with a lot of things.
+         In particular it clashes with the Attributes which are contained by every
+         element.  I discovered this clash late in the game so this is likely to be
+         the only Element where the element's name does not match the Class name. */
+
+
+
+
+        void MetronomeRelation::setValue( const XsString& value )
+        {
+            // No!  This is weird, the only allowed value is "equals"
+            // per the specification, so the client cannot change
+            // the value
+            // myValue = value;
+        }

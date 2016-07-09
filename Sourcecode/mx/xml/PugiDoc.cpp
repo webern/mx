@@ -1,4 +1,4 @@
-// MusicXML Class Library v0.1.1
+// MusicXML Class Library v0.2
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #include "mx/xml/PugiDoc.h"
@@ -17,21 +17,90 @@ namespace mx
             , myXmlVersion( DEFAULT_XML_VERSION )
             , myEncoding( DEFAULT_ENCODING )
             , myIsStandalone( false )
+            , myDoWriteBom( false )
         {
-            std::istringstream is( R"(<?xml version="1.0" encoding="UTF-8"?>)" );
+            std::istringstream is( R"(<?xml version="1.0" encoding="UTF-8"?><root/>)" );
             auto options = pugi::parse_default | pugi::parse_declaration | pugi::parse_doctype;
             myDoc.load( is, options );
         }
 
         // Don't look at me, I'm ugly.
         
-        void PugiDoc::parse( std::istream& is )
+        void PugiDoc::loadStream( std::istream& is )
         {
             auto options = pugi::parse_default | pugi::parse_declaration | pugi::parse_doctype;
             auto parseResult = myDoc.load( is, options );
             if( parseResult.status != pugi::status_ok )
             {
-                MX_THROW( "pugixml parse failed" );
+                std::stringstream ss;
+                ss << "pugixml parsing failed - '";
+                switch ( parseResult.status )
+                {
+                    case pugi::status_file_not_found:
+                        ss << "status_file_not_found'";
+                        break;
+
+                    case pugi::status_io_error:
+                        ss << "status_io_error'";
+                        break;
+                        
+                    case pugi::status_out_of_memory:
+                        ss << "status_out_of_memory'";
+                        break;
+                        
+                    case pugi::status_internal_error:
+                        ss << "status_internal_error'";
+                        break;
+                        
+                    case pugi::status_unrecognized_tag:
+                        ss << "status_unrecognized_tag'";
+                        break;
+                        
+                    case pugi::status_bad_pi:
+                        ss << "status_bad_pi'";
+                        break;
+                        
+                    case pugi::status_bad_comment:
+                        ss << "status_bad_comment'";
+                        break;
+                        
+                    case pugi::status_bad_cdata:
+                        ss << "status_bad_cdata'";
+                        break;
+                        
+                    case pugi::status_bad_doctype:
+                        ss << "status_bad_doctype'";
+                        break;
+                        
+                    case pugi::status_bad_pcdata:
+                        ss << "status_bad_pcdata'";
+                        break;
+                        
+                    case pugi::status_bad_start_element:
+                        ss << "status_bad_start_element'";
+                        break;
+                        
+                    case pugi::status_bad_attribute:
+                        ss << "status_bad_attribute'";
+                        break;
+                        
+                    case pugi::status_end_element_mismatch:
+                        ss << "status_end_element_mismatch'";
+                        break;
+                        
+                    case pugi::status_append_invalid_root:
+                        ss << "status_append_invalid_root'";
+                        break;
+                        
+                    case pugi::status_no_document_element:
+                        ss << "status_no_document_element'";
+                        break;
+                        
+                    default:
+                        break;
+                }
+                ss << " - " << parseResult.description();
+                MX_THROW( ss.str() );
             }
             else if( myDoc.begin() == myDoc.end() )
             {
@@ -76,17 +145,59 @@ namespace mx
                 }
             }
             parseXmlDeclarationValues();
+            
+            // if the detected encoding doesn't match the encoding tag, take the actual encoding ??
+            switch ( parseResult.encoding )
+            {
+                case pugi::encoding_auto:
+                case pugi::encoding_utf8:
+                case pugi::encoding_utf16_le:
+                case pugi::encoding_utf16_be:
+                    setEncoding( Encoding::utfEight );
+                    break;
+                case pugi::encoding_utf16:
+                    setEncoding( Encoding::utfSixteen );
+                    break;
+                case pugi::encoding_utf32_le:
+                case pugi::encoding_utf32_be:
+                case pugi::encoding_utf32:
+                case pugi::encoding_wchar:
+                case pugi::encoding_latin1:
+                default:
+                    setEncoding( Encoding::utfEight );
+                    break;
+            }
         }
 
 
-        void PugiDoc::write( std::ostream& os ) const
+        void PugiDoc::saveStream( std::ostream& os ) const
         {
+            auto pugiEncoding = pugi::encoding_utf8;
+            switch( myEncoding )
+            {
+                case Encoding::utfEight:
+                    pugiEncoding = pugi::encoding_utf8;
+                    break;
+                case Encoding::utfSixteen:
+                    pugiEncoding = pugi::encoding_utf16;
+                    break;
+                default:
+                    pugiEncoding = pugi::encoding_utf8;
+                    break;
+            }
+            auto flags = pugi::format_indent;
+            
+            if( myDoWriteBom )
+            {
+                flags = pugi::format_indent | pugi::format_write_bom;
+            }
+            
             pugi::xml_writer_stream writer( os );
-            myDoc.save( writer, "  " );
+            myDoc.save( writer, "  ", flags, pugiEncoding );
         }
 
 
-        void PugiDoc::parse( const std::string& filename )
+        void PugiDoc::loadFile( const std::string& filename )
         {
             std::ifstream infile( filename.c_str() );
             if( !infile.is_open() )
@@ -94,12 +205,12 @@ namespace mx
                 throw std::runtime_error( "error opening input file" );
             }
             
-            this->parse( infile );
+            loadStream( infile );
             infile.close();
         }
 
 
-        void PugiDoc::write( const std::string& filename ) const
+        void PugiDoc::saveFile( const std::string& filename ) const
         {
             std::ofstream outfile( filename.c_str() );
             if( !outfile.is_open() )
@@ -107,7 +218,7 @@ namespace mx
                 throw std::runtime_error( "error opening file for writing" );
             }
             
-            this->write( outfile );
+            saveStream( outfile );
             outfile.close();
         }
 
@@ -467,6 +578,12 @@ namespace mx
                 return pugi::xml_attribute{};
             }
             return declaration.attribute( name );
+        }
+        
+        
+        void PugiDoc::setDoWriteByteOrderMark( bool value )
+        {
+            myDoWriteBom = value;
         }
     }
 }

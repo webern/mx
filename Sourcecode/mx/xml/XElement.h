@@ -1,4 +1,4 @@
-// MusicXML Class Library v0.1.1
+// MusicXML Class Library v0.2
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 
@@ -16,7 +16,7 @@ namespace mx
             null,           // The element is in a bad, unusable state and getIsNull will return true
             empty,          // The element has no text and no child elements
             element,        // The element has child elements
-            text,           // The element has text data and no child elements
+            text,           // The element has text data
         };
         
         class XDoc;
@@ -50,19 +50,47 @@ namespace mx
             virtual void setName( const std::string& name ) = 0;
             virtual void setValue( const std::string& name ) = 0;
 
+            // get the XDoc from which this
+            // entire XML tree descends
             virtual XDocCPtr getDoc() const = 0;
+
+            // get the element that contains this element
+            // returns an XElement with type == null if this
+            // element is the root of the entire XML tree
             virtual XElementPtr getParent() const = 0;
-
-            virtual XElementIterator elementsBegin() const = 0;
-            virtual XElementIterator elementsEnd() const = 0;
-
+            
+            // STL compliant iterators to the elements
+            // which are children of this element. If
+            // this element has text or has no children
+            // then begin() == end()
+            virtual XElementIterator begin() const = 0;
+            virtual XElementIterator end() const = 0;
+            
+            // STL compliant iterators to the attributes
+            // of this element. If this element has no
+            // attributes then begin() == end()
             virtual XAttributeIterator attributesBegin() const = 0;
             virtual XAttributeIterator attributesEnd() const = 0;
+            
+            // add an element as the last child of this element.
+            // throws if this element's type == text
+            virtual XElementPtr appendChild( const std::string& name ) = 0;
 
-            // TODO prepend element append element
+            // add an element as the first child of this element.
+            // throws if this element's type == text
+            virtual XElementPtr prependChild( const std::string& name ) = 0;
+            
+            // removes the first occurence of a child element with the given name
+            virtual bool removeChild( const std::string& elementName ) = 0;
+            
+            // adds an element after this element, at this element's
+            // same level in the tree. throws if this element is the
+            // root of the entire XML tree
+            virtual XElementPtr insertSiblingAfter( const std::string& newElementName ) = 0;
 
             virtual XAttributePtr appendAttribute( const std::string& name ) = 0;
             virtual XAttributePtr prependAttribute( const std::string& name ) = 0;
+            virtual void removeAttribute( const XAttributeIterator& iter ) = 0;
         };
     }
 }

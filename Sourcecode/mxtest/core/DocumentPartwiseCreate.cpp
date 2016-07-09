@@ -1,19 +1,22 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_CORE_TESTS
 
 #include "DocumentPartwiseCreate.h"
 #include "mx/core/Strings.h"
 #include "mx/core/Elements.h"
-#include "mx/core/DocumentPartwise.h"
+#include "mx/core/Document.h"
 #include <sstream>
 
 using namespace mx::core;
 
 namespace MxTestHelpers
 {
-    mx::core::DocumentPartwisePtr createDocumentPartwise()
+    mx::core::DocumentPtr createDocumentPartwise()
     {
-        auto doc = makeDocumentPartwise();
+        auto doc = makeDocument( DocumentChoice::partwise );
         
         /* Set Version Attribute on Score Element */
         auto s = doc->getScorePartwise();
@@ -24,7 +27,9 @@ namespace MxTestHelpers
         auto header = s->getScoreHeaderGroup();
         auto composerCredit = makeCredit();
         composerCredit->getCreditChoice()->setChoice( CreditChoice::Choice::creditWords );
-        composerCredit->getCreditChoice()->getCreditWordsGroup()->getCreditWords()->setValue( XsString( "Matthew James Briggs" ) );
+        auto words = makeCreditWordsGroup();
+        words->getCreditWords()->setValue( XsString( "Matthew James Briggs" ) );
+        composerCredit->getCreditChoice()->addCreditWordsGroup( words );
         auto creditType = makeCreditType();
         creditType->setValue( XsString( "composer" ) );
         composerCredit->addCreditType( creditType );
@@ -174,8 +179,11 @@ namespace MxTestHelpers
         properties->addKey( makeKey() );
         auto time = makeTime();
         time->getTimeChoice()->setChoice( TimeChoice::Choice::timeSignature );
-        time->getTimeChoice()->getTimeSignature()->getBeats()->setValue( XsString( beatSstr.str() ) );
-        time->getTimeChoice()->getTimeSignature()->getBeatType()->setValue( XsString( beatTypeSstr.str() ) );
+        auto timeSignature = makeTimeSignatureGroup();
+        timeSignature->getBeats()->setValue( XsString( beatSstr.str() ) );
+        timeSignature->getBeatType()->setValue( XsString( beatTypeSstr.str() ) );
+        time->getTimeChoice()->addTimeSignatureGroup( timeSignature );
+        time->getTimeChoice()->removeTimeSignatureGroup( time->getTimeChoice()->getTimeSignatureGroupSet().cbegin() );
         properties->addTime( time );
         auto clef = makeClef();
         clef->getSign()->setValue( ClefSign::g );

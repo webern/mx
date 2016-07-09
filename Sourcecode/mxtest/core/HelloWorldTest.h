@@ -1,12 +1,17 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
 #pragma once
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_CORE_TESTS
 
-#include "mx/core/DocumentPartwise.h"
+#include "mx/core/Document.h"
 #include "mx/core/Elements.h"
-#include "mx/core/DocumentTimewise.h"
 #include "mxtest/core/DocumentPartwiseCreate.h"
 #include "mxtest/core/DocumentTimewiseCreate.h"
+#include "mx/core/elements/Encoding.h"
+#include "mx/core/elements/EncodingChoice.h"
+
 
 #include <iostream>
 #include <string>
@@ -58,11 +63,14 @@ namespace MxTest
     
     inline TimePtr makeFourFourTime()
     {
-        auto time = makeTime();
-        time->getTimeChoice()->setChoice( TimeChoice::Choice::timeSignature );
-        time->getTimeChoice()->getTimeSignature()->getBeats()->setValue( XsString( "4" ) );
-        time->getTimeChoice()->getTimeSignature()->getBeatType()->setValue( XsString( "4" ) );
-        return time;
+        auto t = makeTime();
+        t->getTimeChoice()->setChoice( TimeChoice::Choice::timeSignature );
+        auto timeSignature = makeTimeSignatureGroup();
+        timeSignature->getBeats()->setValue( XsString( "4" ) );
+        timeSignature->getBeatType()->setValue( XsString( "4" ) );
+        t->getTimeChoice()->addTimeSignatureGroup( timeSignature );
+        t->getTimeChoice()->removeTimeSignatureGroup( t->getTimeChoice()->getTimeSignatureGroupSet().cbegin() );
+        return t;
     }
     
     
@@ -80,9 +88,9 @@ namespace MxTest
     }
     
     
-    DocumentPartwisePtr makeDocStub()
+    DocumentPtr makeDocStub()
     {
-        auto doc = makeDocumentPartwise();
+        auto doc = makeDocument( DocumentChoice::partwise );
         auto s = doc->getScorePartwise();
         s->getAttributes()->hasVersion = true;
         s->getAttributes()->version = XsToken( "3.0" );
@@ -97,9 +105,12 @@ namespace MxTest
         ident->addCreator( composer );
         header->setHasIdentification( true );
         header->setIdentification( ident );
-        ident->getEncoding()->setChoice( Encoding::Choice::software );
-        ident->getEncoding()->getSoftware()->setValue( XsString("MxSample" ) );
+        
+        auto encodingChoice = makeEncodingChoice();
+        encodingChoice->setChoice( EncodingChoice::Choice::software );
+        encodingChoice->getSoftware()->setValue( XsString( "MxSample" ) );
         ident->setHasEncoding( true );
+        ident->getEncoding()->addEncodingChoice( encodingChoice );
         header->setHasWork( true );
         header->getWork()->setHasWorkTitle( true );
         header->getWork()->getWorkTitle()->setValue( XsString( "In the Beginning" ) );
@@ -113,7 +124,7 @@ namespace MxTest
     
     inline std::string helloMusicXml()
     {
-        auto doc = makeDocumentPartwise();
+        auto doc = makeDocument( DocumentChoice::partwise );
         auto s = doc->getScorePartwise();
         s->getAttributes()->hasVersion = true;
         s->getAttributes()->version = XsToken( "3.0" );
@@ -130,11 +141,16 @@ namespace MxTest
         properties->setHasDivisions( true );
         properties->getDivisions()->setValue( PositiveDivisionsValue( 1 ) );
         properties->addKey( makeKey() );
+        
         auto time = makeTime();
         time->getTimeChoice()->setChoice( TimeChoice::Choice::timeSignature );
-        time->getTimeChoice()->getTimeSignature()->getBeats()->setValue( XsString( "4" ) );
-        time->getTimeChoice()->getTimeSignature()->getBeatType()->setValue( XsString( "4" ) );
+        auto timeSignature = makeTimeSignatureGroup();
+        timeSignature->getBeats()->setValue( XsString("4") );
+        timeSignature->getBeatType()->setValue( XsString("4") );
+        time->getTimeChoice()->addTimeSignatureGroup( timeSignature );
+        time->getTimeChoice()->removeTimeSignatureGroup( time->getTimeChoice()->getTimeSignatureGroupSet().cbegin() );
         properties->addTime( time );
+        
         auto clef = makeClef();
         clef->getSign()->setValue( ClefSign::g );
         clef->setHasLine( true );
@@ -150,8 +166,10 @@ namespace MxTest
         noteData->getNote()->getNoteChoice()->getNormalNoteGroup()->getDuration()->setValue( PositiveDivisionsValue( 4 ) );
         noteData->getNote()->getType()->setValue( NoteTypeValue::whole );
         measure->getMusicDataGroup()->addMusicDataChoice( noteData );
-        auto twDoc = DocumentTimewise::convert( doc );
-        auto pwDoc = DocumentPartwise::convert( twDoc );
+        doc->convertContents();
+        auto twDoc = doc;
+        doc->convertContents();
+        auto pwDoc = doc;
         std::stringstream output;
         pwDoc->toStream( output );
         return output.str();

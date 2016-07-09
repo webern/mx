@@ -1,15 +1,14 @@
-// MusicXML Class Library v0.1.1
+// MusicXML Class Library v0.2
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #pragma once
-#include "mx/core/DocumentPartwise.h"
+#include "mx/core/Document.h"
 
 namespace mx
 {
 	namespace utility
 	{
-        using MxDoc = core::DocumentPartwisePtr;
-        //using core::StringType;
+        using MxDoc = core::DocumentPtr;
         
         
         void setTitle(
@@ -115,7 +114,7 @@ namespace mx
         
         core::PartwiseMeasurePtr createMeasure( int measureNumber );
         
-        void addTimeSignature( const core::PartwiseMeasurePtr& measure, int top, int bottom );
+        void addTimeSignatureGroup( const core::PartwiseMeasurePtr& measure, int top, int bottom );
         
         void addStaveCount( const core::PartwiseMeasurePtr& measure, int staveCount );
         
@@ -165,6 +164,8 @@ namespace mx
                 , showAccidental( false )
             {}
         };
+        
+        void addKey( const core::PartwiseMeasurePtr& measure );
         
         core::MusicDataChoicePtr createNote( const NoteParams& params );
     }

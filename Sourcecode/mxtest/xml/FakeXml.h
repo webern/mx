@@ -1,4 +1,8 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
 #pragma once
+
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_XML_TESTS
 

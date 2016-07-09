@@ -1,3 +1,6 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_CORE_TESTS
 
@@ -6,16 +9,16 @@
 
 #include "mx/core/Strings.h"
 #include "mx/core/Elements.h"
-#include "mx/core/DocumentTimewise.h"
+#include "mx/core/Document.h"
 #include <sstream>
 
 using namespace mx::core;
 
 namespace MxTestHelpers
 {
-    mx::core::DocumentTimewisePtr createDocumentTimewise()
+    mx::core::DocumentPtr createDocumentTimewise()
     {
-        auto doc = makeDocumentTimewise();
+        auto doc = makeDocument( DocumentChoice::timewise );
         
         /* Set Version Attribute on Score Element */
         auto s = doc->getScoreTimewise();
@@ -26,7 +29,9 @@ namespace MxTestHelpers
         auto header = s->getScoreHeaderGroup();
         auto composerCredit = makeCredit();
         composerCredit->getCreditChoice()->setChoice( CreditChoice::Choice::creditWords );
-        composerCredit->getCreditChoice()->getCreditWordsGroup()->getCreditWords()->setValue( XsString( "Matthew James Briggs" ) );
+        auto wordsGroup = makeCreditWordsGroup();
+        wordsGroup->getCreditWords()->setValue( XsString( "Matthew James Briggs" ) );
+        composerCredit->getCreditChoice()->addCreditWordsGroup( wordsGroup );
         auto creditType = makeCreditType();
         creditType->setValue( XsString( "composer" ) );
         composerCredit->addCreditType( creditType );
@@ -169,8 +174,11 @@ namespace MxTestHelpers
         properties->addKey( makeKey() );
         auto time = makeTime();
         time->getTimeChoice()->setChoice( TimeChoice::Choice::timeSignature );
-        time->getTimeChoice()->getTimeSignature()->getBeats()->setValue( XsString( beats ) );
-        time->getTimeChoice()->getTimeSignature()->getBeatType()->setValue( XsString( "4" ) );
+        auto timeSignature = makeTimeSignatureGroup();
+        timeSignature->getBeats()->setValue( XsString( beats ) );
+        timeSignature->getBeatType()->setValue( XsString( "4" ) );
+        time->getTimeChoice()->addTimeSignatureGroup( timeSignature );
+        time->getTimeChoice()->removeTimeSignatureGroup( time->getTimeChoice()->getTimeSignatureGroupSet().cbegin() );
         properties->addTime( time );
         auto clef = makeClef();
         clef->getSign()->setValue( ClefSign::g );
@@ -180,151 +188,6 @@ namespace MxTestHelpers
         output->addMusicDataChoice( propertiesChoice );
         return output;
     }
-    /*
-    MusicDataChoicePtr makeNote( mx::t::StepEnum step,
-                                       int octave,
-                                       mx::t::NoteTypeValue duration,
-                                       int divisions )
-    {
-        auto m1p1_noteData = makeMusicDataChoice();
-        m1p1_noteData->setChoice( MusicDataChoice::Choice::note );
-        m1p1_noteData->getNote()->getNoteChoice()->setChoice( NoteChoice::Choice::normal );
-        m1p1_noteData->getNote()->getNoteChoice()->getNormalNoteGroup()->getFullNoteGroup()->getFullNoteTypeChoice()->setChoice( FullNoteTypeChoice::Choice::pitch );
-        m1p1_noteData->getNote()->getNoteChoice()->getNormalNoteGroup()->getFullNoteGroup()->getFullNoteTypeChoice()->getPitch()->getStep()->setValue( step );
-        m1p1_noteData->getNote()->getNoteChoice()->getNormalNoteGroup()->getFullNoteGroup()->getFullNoteTypeChoice()->getPitch()->getOctave()->setValue( OctaveValue( octave ) );
-        m1p1_noteData->getNote()->getNoteChoice()->getNormalNoteGroup()->getDuration()->setValue( PositiveDivisionsValue( divisions ) );
-        m1p1_noteData->getNote()->getType()->setValue( duration );
-        return m1p1_noteData;
-    }
-    
-    void addP1M1Data( const MusicDataGroupPtr& musicDataGroup )
-    {
-        auto m1p1_noteData = makeNote( StepEnum::c,          // step
-                                      4,                    // octave
-                                      NoteTypeValue::whole, // duration
-                                      4 );                  // divisions
-        musicDataGroup->addMusicDataChoice( m1p1_noteData );
-    }
-    void addP1M2Data( const MusicDataGroupPtr& musicDataGroup )
-    {
-        auto m2p1_noteData = makeNote( StepEnum::d,          // step
-                                      4,                    // octave
-                                      NoteTypeValue::whole, // duration
-                                      4 );                  // divisions
-        musicDataGroup->addMusicDataChoice( m2p1_noteData );
-    }
-    void addP1M3Data( const MusicDataGroupPtr& musicDataGroup )
-    {
-        auto m3p1_noteData = makeNote( StepEnum::e,          // step
-                                      4,                    // octave
-                                      NoteTypeValue::half, // duration
-                                      2 );                  // divisions
-        musicDataGroup->addMusicDataChoice( m3p1_noteData );
-    }
-    void addP2M1Data( const MusicDataGroupPtr& musicDataGroup )
-    {
-        auto m1p2_noteData = makeNote( StepEnum::c,          // step
-                                      5,                    // octave
-                                      NoteTypeValue::quarter, // duration
-                                      1 );                  // divisions
-        musicDataGroup->addMusicDataChoice( m1p2_noteData );
-        m1p2_noteData = makeNote( StepEnum::b,          // step
-                                 4,                    // octave
-                                 NoteTypeValue::quarter, // duration
-                                 1 );                  // divisions
-        musicDataGroup->addMusicDataChoice( m1p2_noteData );
-        m1p2_noteData = makeNote( StepEnum::a,          // step
-                                 4,                    // octave
-                                 NoteTypeValue::quarter, // duration
-                                 1 );                  // divisions
-        musicDataGroup->addMusicDataChoice( m1p2_noteData );
-        m1p2_noteData = makeNote( StepEnum::g,          // step
-                                 4,                    // octave
-                                 NoteTypeValue::quarter, // duration
-                                 1 );                  // divisions
-        musicDataGroup->addMusicDataChoice( m1p2_noteData );
-    }
-    void addP2M2Data( const MusicDataGroupPtr& musicDataGroup )
-    {
-        auto notedata = makeNote( StepEnum::a,          // step
-                                 4,                    // octave
-                                 NoteTypeValue::whole, // duration
-                                 4 );                  // divisions
-        musicDataGroup->addMusicDataChoice( notedata );
-    }
-    void addP2M3Data( const MusicDataGroupPtr& musicDataGroup )
-    {
-        auto notedata = makeNote( StepEnum::a,          // step
-                                 4,                    // octave
-                                 NoteTypeValue::quarter, // duration
-                                 1 );                  // divisions
-        musicDataGroup->addMusicDataChoice( notedata );
-        notedata = makeNote( StepEnum::f,          // step
-                            4,                    // octave
-                            NoteTypeValue::quarter, // duration
-                            1 );                  // divisions
-        musicDataGroup->addMusicDataChoice( notedata );
-    }
-    void addP3M1Data( const MusicDataGroupPtr& musicDataGroup )
-    {
-        auto notedata = makeNote( StepEnum::a,          // step
-                                 3,                    // octave
-                                 NoteTypeValue::quarter, // duration
-                                 1 );                  // divisions
-        musicDataGroup->addMusicDataChoice( notedata );
-        notedata = makeNote( StepEnum::f,          // step
-                            3,                    // octave
-                            NoteTypeValue::quarter, // duration
-                            1 );                  // divisions
-        musicDataGroup->addMusicDataChoice( notedata );
-        notedata = makeNote( StepEnum::g,          // step
-                            3,                    // octave
-                            NoteTypeValue::quarter, // duration
-                            1 );                  // divisions
-        musicDataGroup->addMusicDataChoice( notedata );
-        notedata = makeNote( StepEnum::a,          // step
-                            3,                    // octave
-                            NoteTypeValue::quarter, // duration
-                            1 );                  // divisions
-        musicDataGroup->addMusicDataChoice( notedata );
-    }
-    void addP3M2Data( const MusicDataGroupPtr& musicDataGroup )
-    {
-        auto notedata = makeNote( StepEnum::b,          // step
-                                 3,                    // octave
-                                 NoteTypeValue::quarter, // duration
-                                 1 );                  // divisions
-        musicDataGroup->addMusicDataChoice( notedata );
-        notedata = makeNote( StepEnum::c,          // step
-                            4,                    // octave
-                            NoteTypeValue::quarter, // duration
-                            1 );                  // divisions
-        musicDataGroup->addMusicDataChoice( notedata );
-        notedata = makeNote( StepEnum::b,          // step
-                            3,                    // octave
-                            NoteTypeValue::quarter, // duration
-                            1 );                  // divisions
-        musicDataGroup->addMusicDataChoice( notedata );
-        notedata = makeNote( StepEnum::a,          // step
-                            3,                    // octave
-                            NoteTypeValue::quarter, // duration
-                            1 );                  // divisions
-        musicDataGroup->addMusicDataChoice( notedata );
-    }
-    void addP3M3Data( const MusicDataGroupPtr& musicDataGroup )
-    {
-        auto notedata = makeNote( StepEnum::g,          // step
-                                 3,                    // octave
-                                 NoteTypeValue::quarter, // duration
-                                 1 );                  // divisions
-        musicDataGroup->addMusicDataChoice( notedata );
-        notedata = makeNote( StepEnum::f,          // step
-                            3,                    // octave
-                            NoteTypeValue::quarter, // duration
-                            1 );                  // divisions
-        musicDataGroup->addMusicDataChoice( notedata );
-    }
-     */
-}
+ }
 
 #endif

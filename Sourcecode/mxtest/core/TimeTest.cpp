@@ -1,3 +1,6 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_CORE_TESTS
 
@@ -30,13 +33,18 @@ TEST( Test02, Time )
     object.getAttributes()->hasNumber = true;
     object.getAttributes()->number = StaffNumber{ 9 };
     object.getTimeChoice()->setChoice( TimeChoice::Choice::timeSignature );
-    object.getTimeChoice()->getTimeSignature()->getBeats()->setValue( XsString( "Test1" ) );
-    object.getTimeChoice()->getTimeSignature()->getBeatType()->setValue( XsString( "Test2" ) );
-    object.getTimeChoice()->getTimeSignature()->setHasInterchangeable( true );
-    object.getTimeChoice()->getTimeSignature()->getInterchangeable()->getBeats()->setValue( XsString( "Bishop" ) );
-    object.getTimeChoice()->getTimeSignature()->getInterchangeable()->getBeatType()->setValue( XsString( "Bones" ) );
-    object.getTimeChoice()->getTimeSignature()->getInterchangeable()->setHasTimeRelation( true );
-    object.getTimeChoice()->getTimeSignature()->getInterchangeable()->getTimeRelation()->setValue( TimeRelationEnum::bracket );
+    
+    auto timeSignature = makeTimeSignatureGroup();
+    timeSignature->getBeats()->setValue( XsString( "Test1" ) );
+    timeSignature->getBeatType()->setValue( XsString( "Test2" ) );
+    timeSignature->setHasInterchangeable( true );
+    timeSignature->getInterchangeable()->getBeats()->setValue( XsString( "Bishop" ) );
+    timeSignature->getInterchangeable()->getBeatType()->setValue( XsString( "Bones" ) );
+    timeSignature->getInterchangeable()->setHasTimeRelation( true );
+    timeSignature->getInterchangeable()->getTimeRelation()->setValue( TimeRelationEnum::bracket );
+    object.getTimeChoice()->addTimeSignatureGroup( timeSignature );
+    object.getTimeChoice()->removeTimeSignatureGroup( object.getTimeChoice()->getTimeSignatureGroupSet().cbegin() );
+
 	stringstream expected;
 	streamLine( expected, 1, R"(<time number="9">)" );
 	streamLine( expected, 2, R"(<beats>Test1</beats>)" );

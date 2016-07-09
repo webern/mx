@@ -1,3 +1,6 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_CORE_TESTS
 
@@ -15,7 +18,7 @@ using namespace MxTestHelpers;
 TEST( Test01, DocumentTimewise )
 {
     variant v = variant::one;
-	DocumentTimewisePtr object = tgenDocumentTimewise( v );
+	auto object = tgenDocumentTimewise( v );
 	stringstream expected;
 	tgenDocumentTimewiseExpected( expected, 1, v );
 	stringstream actual;
@@ -26,7 +29,7 @@ TEST( Test01, DocumentTimewise )
 TEST( Test02, DocumentTimewise )
 {
     variant v = variant::two;
-	DocumentTimewisePtr object = tgenDocumentTimewise( v );
+	auto object = tgenDocumentTimewise( v );
 	stringstream expected;
 	tgenDocumentTimewiseExpected( expected, 1, v );
 	stringstream actual;
@@ -37,7 +40,7 @@ TEST( Test02, DocumentTimewise )
 TEST( Test03, DocumentTimewise )
 {
     variant v = variant::three;
-	DocumentTimewisePtr object = tgenDocumentTimewise( v );
+	auto object = tgenDocumentTimewise( v );
 	stringstream expected;
 	tgenDocumentTimewiseExpected( expected, 1, v );
 	stringstream actual;
@@ -48,9 +51,9 @@ TEST( Test03, DocumentTimewise )
 
 namespace MxTestHelpers
 {
-    DocumentTimewisePtr tgenDocumentTimewise( variant v )
+    DocumentPtr tgenDocumentTimewise( variant v )
     {
-        DocumentTimewisePtr o = makeDocumentTimewise();
+        DocumentPtr o = makeDocument( DocumentChoice::timewise );
         switch ( v )
         {
             case variant::one:

@@ -1,3 +1,6 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_CORE_TESTS
 
@@ -14,7 +17,7 @@ using namespace MxTestHelpers;
 TEST( Test01, DocumentPartwise )
 {
     variant v = variant::one;
-	DocumentPartwisePtr object = tgenDocumentPartwise( v );
+	DocumentPtr object = tgenDocumentPartwise( v );
 	stringstream expected;
 	tgenDocumentPartwiseExpected( expected, 1, v );
 	stringstream actual;
@@ -25,7 +28,7 @@ TEST( Test01, DocumentPartwise )
 TEST( Test02, DocumentPartwise )
 {
     variant v = variant::two;
-	DocumentPartwisePtr object = tgenDocumentPartwise( v );
+	DocumentPtr object = tgenDocumentPartwise( v );
 	stringstream expected;
 	tgenDocumentPartwiseExpected( expected, 1, v );
 	stringstream actual;
@@ -36,7 +39,7 @@ TEST( Test02, DocumentPartwise )
 TEST( Test03, DocumentPartwise )
 {
     variant v = variant::three;
-	DocumentPartwisePtr object = tgenDocumentPartwise( v );
+	DocumentPtr object = tgenDocumentPartwise( v );
 	stringstream expected;
 	tgenDocumentPartwiseExpected( expected, 1, v );
 	stringstream actual;
@@ -47,9 +50,9 @@ TEST( Test03, DocumentPartwise )
 
 namespace MxTestHelpers
 {
-    DocumentPartwisePtr tgenDocumentPartwise( variant v )
+    DocumentPtr tgenDocumentPartwise( variant v )
     {
-        DocumentPartwisePtr o = makeDocumentPartwise();
+        DocumentPtr o = makeDocument();
         switch ( v )
         {
             case variant::one:

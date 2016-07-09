@@ -1,4 +1,4 @@
-// MusicXML Class Library v0.1.1
+// MusicXML Class Library v0.2
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #pragma once
@@ -31,7 +31,7 @@ namespace mx
         };
         
         StringType toString( const XsString& xsstring );
-        std::ostream& toStream( std::ostream& os, const XsString& xsstring );
+        std::ostream& toStream( std::ostream& os, const XsString& xsstring, bool useXmlEscapeCharacters = true );
         std::ostream& operator<<( std::ostream& os, const XsString& xsstring );
         
         class XsToken : public XsString
@@ -103,8 +103,11 @@ namespace mx
             std::set<int>::const_iterator getValuesEndConst() const;
             void setValues( const std::set<int>& values );
             void parse( const StringType& commaSeparatedText );
+            void setUseSpaceBetweenItems( bool value );
+            bool getUseSpaceBetweenItems() const;
         private:
             std::set<int> myValues;
+            bool myIsSpacingDesired;
         };
         
         StringType toString( const CommaSeparatedListOfPositiveIntegers& value );

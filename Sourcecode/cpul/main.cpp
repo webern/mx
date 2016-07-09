@@ -2,7 +2,6 @@
 #include "cpul/cpulRun.h"
 #include "cpul/cpulTestTimer.h"
 #include "cpul/cpulDefines.h"
-#include "mxtest/xml/rtiMain.h"
 
 int main(int argc, const char * argv[])
 {

@@ -1,4 +1,4 @@
-// MusicXML Class Library v0.1.1
+// MusicXML Class Library v0.2
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #include "mx/core/Decimals.h"
@@ -91,10 +91,14 @@ namespace mx
             }
             return s;
         }
+
+
         std::ostream& toStream( std::ostream& os, const Decimal& value, unsigned int precision )
         {
             return os << toString( value, precision );
         }
+
+
         std::ostream& operator<<( std::ostream& os, const Decimal& value )
         {
             return os << toString( value );

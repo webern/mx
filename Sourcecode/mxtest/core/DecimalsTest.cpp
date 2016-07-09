@@ -1,3 +1,6 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_CORE_TESTS
 
@@ -596,8 +599,7 @@ TEST( RotationDegrees04, Decimals )
 {
     RotationDegrees d( 1.234 );
     d.setValue( -999 );
-    std::string expected = "-180"; // this sucks
-    // todo fix the floating stream b.s.
+    std::string expected = "-180";
     std::string actual = toString( d, 11 );
     CHECK_EQUAL( expected, actual )
     
@@ -808,8 +810,7 @@ TEST( TrillBeats04, Decimals )
 {
     TrillBeats d( 1.234 );
     d.setValue( -999 );
-    std::string expected = "2"; // this sucks
-    // todo fix the floating stream b.s.
+    std::string expected = "2";
     std::string actual = toString( d, 11 );
     CHECK_EQUAL( expected, actual )
     

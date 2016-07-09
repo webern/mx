@@ -1,9 +1,11 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_CORE_TESTS
 
 #include "cpul/cpulTestHarness.h"
-#include "mx/core/DocumentTimewise.h"
-#include "mx/core/DocumentPartwise.h"
+#include "mx/core/Document.h"
 #include "mxtest/core/DocumentHeaderTest.h"
 #include "DocumentPartwiseCreate.h"
 #include "DocumentTimewiseCreate.h"
@@ -14,9 +16,9 @@ using namespace MxTestHelpers;
 
 TEST( DocumentPartwiseConvert, DocumentPartwise )
 {
-    auto docOriginal = MxTestHelpers::createDocumentTimewise();
     auto docExpected = MxTestHelpers::createDocumentPartwise();
-    auto docActual = DocumentPartwise::convert( docOriginal );
+    auto docActual = MxTestHelpers::createDocumentTimewise();
+    docActual->convertContents();
     stringstream expected;
     docExpected->toStream( expected );
     stringstream actual;

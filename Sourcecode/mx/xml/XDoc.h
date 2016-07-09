@@ -1,4 +1,4 @@
-// MusicXML Class Library v0.1.1
+// MusicXML Class Library v0.2
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #pragma once
@@ -25,12 +25,12 @@ namespace mx
             virtual ~XDoc() {}
 
             // these can throw std::runtime_error
-            virtual void parse( std::istream& is ) = 0;
-            virtual void write( std::ostream& os ) const = 0;
+            virtual void loadStream( std::istream& is ) = 0;
+            virtual void saveStream( std::ostream& os ) const = 0;
             
             // these can throw std::runtime_error
-            virtual void parse( const std::string& filename ) = 0;
-            virtual void write( const std::string& filename ) const = 0;
+            virtual void loadFile( const std::string& filename ) = 0;
+            virtual void saveFile( const std::string& filename ) const = 0;
             
             // Xml Declaration
             virtual XmlVersion getXmlVersion() const = 0;
@@ -47,6 +47,10 @@ namespace mx
             virtual void setHasDoctypeDeclaration( bool value ) = 0;
             virtual std::string getDoctypeValue() const = 0;
             virtual void setDoctypeValue( const std::string& value ) = 0;
+            
+            // when calling the write function, this value will
+            // determine whether or not to include the BOM
+            virtual void setDoWriteByteOrderMark( bool value ) = 0;
             
             // Node Access
             virtual XElementPtr getRoot() const = 0;

@@ -1,0 +1,51 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
+#pragma once
+
+#include "mx/core/ForwardDeclare.h"
+#include "mx/core/ElementInterface.h"
+#include "mx/core/Enums.h"
+#include "mx/core/elements/DynamicsAttributes.h"
+
+#include <iosfwd>
+#include <memory>
+#include <vector>
+
+namespace mx
+{
+    namespace core
+    {
+
+        MX_FORWARD_DECLARE_ATTRIBUTES( DynamicsAttributes )
+        MX_FORWARD_DECLARE_ELEMENT( Dynamics )
+
+        inline DynamicsPtr makeDynamics() { return std::make_shared<Dynamics>(); }
+		inline DynamicsPtr makeDynamics( const DynamicsValue& value ) { return std::make_shared<Dynamics>( value ); }
+		inline DynamicsPtr makeDynamics( DynamicsValue&& value ) { return std::make_shared<Dynamics>( std::move( value ) ); }
+
+        class Dynamics : public ElementInterface
+        {
+        public:
+            Dynamics( const DynamicsValue& value );
+            Dynamics();
+
+            virtual bool hasAttributes() const;
+            virtual bool hasContents() const;
+            virtual std::ostream& streamAttributes( std::ostream& os ) const;
+            virtual std::ostream& streamName( std::ostream& os ) const;
+            virtual std::ostream& streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly ) const;
+            DynamicsAttributesPtr getAttributes() const;
+            void setAttributes( const DynamicsAttributes& attributes );
+            DynamicsValue getValue() const;
+            void setValue( const DynamicsValue& value );
+            
+
+            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+
+        private:
+            DynamicsValue myValue;
+            DynamicsAttributesPtr myAttributes;
+        };
+    }
+}

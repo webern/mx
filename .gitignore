@@ -21,12 +21,13 @@ Xcode/mx.xcworkspace/xcuserdata/
 Proj/
 */project.xcworkspace/
 
-#####################################
-# Ignore Test Output Files          #
-#####################################
+#########################################
+# Ignore Test Output and Expected Files #
+#########################################
 Resources/testOutput/*.xml
 Resources/testOutput/*.txt
 Resources/testOutput/*.csv
+Resources/expected/
 
 #####################################
 # Stuff I found online              #

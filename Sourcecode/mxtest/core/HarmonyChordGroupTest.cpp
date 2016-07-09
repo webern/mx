@@ -1,3 +1,6 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_CORE_TESTS
 
@@ -105,7 +108,7 @@ namespace MxTestHelpers
             {
                 tgenRootExpected( os, i, v );
                 os << std::endl;
-                streamLine( os, i, R"(<kind>major</kind>)", false );
+                streamLine( os, i, R"(<kind>none</kind>)", false );
             }
                 break;
             case variant::two:

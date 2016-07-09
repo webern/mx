@@ -1,4 +1,4 @@
-// MusicXML Class Library v0.1.1
+// MusicXML Class Library v0.2
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #pragma once
@@ -48,7 +48,8 @@ namespace mx
             
             bool getIsPayloadNull() const;
 
-            // TODO - how can I eliminate this violation of encapsulation?
+            // Reveal the private data member, violates
+            // encapsulation but could not find a better way
             const XElementIterImplUP& reveal() const;
             
         private:

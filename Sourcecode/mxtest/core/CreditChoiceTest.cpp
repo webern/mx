@@ -1,3 +1,6 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_CORE_TESTS
 
@@ -75,7 +78,12 @@ namespace MxTestHelpers
             case variant::three:
             {
                 o->setChoice( CreditChoice::Choice::creditWords );
-                o->setCreditWordsGroup( tgenCreditWordsGroup( v ) );
+                auto w = makeCreditWords();
+                w->getAttributes()->hasUnderline = true;
+                w->getAttributes()->underline = NumberOfLines( 1 );
+                w->setValue( XsString( "this is the string of damocles" ) );
+                o->setCreditWords( w );
+                o->addCreditWordsGroup( tgenCreditWordsGroup( v ) );
             }
                 break;
             default:
@@ -100,6 +108,7 @@ namespace MxTestHelpers
                 break;
             case variant::three:
             {
+                streamLine( os, i, R"(<credit-words underline="1">this is the string of damocles</credit-words>)", true );
                 tgenCreditWordsGroupExpected( os, i, v );
             }
                 break;

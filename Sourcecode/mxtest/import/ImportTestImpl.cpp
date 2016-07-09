@@ -1,3 +1,6 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_IMPORT_TESTS
 
@@ -6,6 +9,7 @@
 #include "mxtest/control/File.h"
 #include "mxtest/control/Path.h"
 #include "mxtest/import/ExpectedFiles.h"
+#include "mxtest/import/SortAttributes.h"
 
 #include <fstream>
 
@@ -38,12 +42,16 @@ namespace MxTest
         std::stringstream ss;
         for( auto c = message.cbegin(); c != message.cend(); ++c )
         {
-            if( *c != ',' && *c != '\n' && *c != '\r' && *c != '\t' )
+            if( *c != ',' && *c != '\n' && *c != '\r' && *c != '\t' && *c != ';' )
             {
                 ss << (*c);
             }
+            else
+            {
+                ss << "_";
+            }
         }
-        return ss.str();
+        return ss.str().substr( 0, 128 );
     }
     
     void ImportRoundTripResult::writeRow( std::ostream& os ) const
@@ -114,10 +122,8 @@ namespace MxTest
         myXdocLoadTimer.stop();
         myMxDeserializeTimer.start();
         
-        if( !loadIntoMxClasses( outMessage, inputXDoc, resultantMxDoc ) )
-        {
-            return false;
-        }
+        bool isLoadIntoMxClassesSuccessful = false;
+        isLoadIntoMxClassesSuccessful = loadIntoMxClasses( outMessage, inputXDoc, resultantMxDoc );
         
         myMxDeserializeTimer.stop();
         myMxReserializeTimer.start();
@@ -139,8 +145,8 @@ namespace MxTest
         
         std::stringstream expectedSstr;
         std::stringstream actualSstr;
-        expectedXDoc->write( expectedSstr );
-        reserializedXDoc->write( actualSstr );
+        expectedXDoc->saveStream( expectedSstr );
+        reserializedXDoc->saveStream( actualSstr );
         std::string expected = expectedSstr.str();
         std::string actual = actualSstr.str();
         double percentMatch = 0.0;
@@ -165,7 +171,7 @@ namespace MxTest
         }
 
         
-        return isCheckEqualSuccessful;
+        return isCheckEqualSuccessful && isLoadIntoMxClassesSuccessful;
     }
     
     std::string ImportRoundTripTest::getTestName() const
@@ -203,7 +209,20 @@ namespace MxTest
     {
         try
         {
-            outXDoc->parse( filepath );
+            outXDoc->loadFile( filepath );
+            auto root = outXDoc->getRoot();
+            
+            for( auto it = root->attributesBegin(); it != root->attributesEnd(); ++it )
+            {
+                if( it->getName() == "version" )
+                {
+                    it->setValue( "3.0" );
+                    return true;
+                }
+            }
+
+            root->appendAttribute( "version" )->setValue( "3.0" );
+
         }
         catch ( std::exception& e )
         {
@@ -218,7 +237,7 @@ namespace MxTest
     {
         try
         {
-            outXDoc->parse( filepath );
+            outXDoc->loadFile( filepath );
         }
         catch ( std::exception& e )
         {
@@ -235,6 +254,8 @@ namespace MxTest
         {
             return true;
         }
+
+
         std::stringstream xdocMsg;
         bool isSuccess = false;
         try
@@ -265,10 +286,21 @@ namespace MxTest
         try
         {
             inMx->toXDoc( *outXDoc );
+            
+            // because attribute order doesn't matter in xml, we need to sort them alphabetically before and after round trip
+            sortAttributes( *outXDoc );
         }
         catch ( std::exception& e )
         {
             msg << "exception occurred in toXDoc '" << e.what() << "'";
+            
+            const std::string filename = getTestOutputErrorFileFullPath( myInputSuiteName, getFileName() );
+            
+            std::ofstream errorFile;
+            openOutputFile( errorFile, filename );
+            inMx->toStream( errorFile );
+            errorFile.close();
+            
             return false;
         }
         return true;
@@ -421,6 +453,8 @@ namespace MxTest
             // no need to write the files
             return true;
         }
+
+
         std::string testOutputErrorFilePath = getTestOutputErrorFileFullPath( myInputSuiteName, getFileName() );
         std::string testOutputExpectedFilePath = getTestOutputExpectedFileFullPath( myInputSuiteName, getFileName() );
         

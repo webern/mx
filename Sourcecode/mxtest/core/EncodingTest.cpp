@@ -1,3 +1,6 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_CORE_TESTS
 
@@ -21,7 +24,7 @@ TEST( Test01, Encoding )
 	object->toStream( actual, 1 );
 	CHECK_EQUAL( expected.str(), actual.str() )
 	CHECK( ! object->hasAttributes() )
-	CHECK( object->hasContents() )
+	CHECK( ! object->hasContents() )
 }
 TEST( Test02, Encoding )
 {
@@ -64,14 +67,25 @@ namespace MxTestHelpers
                 break;
             case variant::two:
             {
-                o->setChoice( Encoding::Choice::software );
-                o->getSoftware()->setValue( XsString( "My Software!" ) );
+                auto encodingChoice = makeEncodingChoice();
+                encodingChoice->setChoice( EncodingChoice::Choice::software );
+                encodingChoice->getSoftware()->setValue( XsString( "My Software!" ) );
+                o->addEncodingChoice( encodingChoice );
             }
                 break;
             case variant::three:
             {
-                o->setChoice( Encoding::Choice::encodingDescription );
-                o->getEncodingDescription()->setValue( XsString( "Described" ) );
+                auto encodingChoice = makeEncodingChoice();
+                encodingChoice->setChoice( EncodingChoice::Choice::software );
+                encodingChoice->getSoftware()->setValue( XsString( "Described" ) );
+                o->addEncodingChoice( encodingChoice );
+
+                auto anotherChoice = makeEncodingChoice();
+                anotherChoice->setChoice( EncodingChoice::Choice::supports );
+                o->addEncodingChoice( anotherChoice );
+                anotherChoice->getSupports()->getAttributes()->element = XsNMToken( "stupid" );
+                anotherChoice->getSupports()->getAttributes()->hasValue = true;
+                anotherChoice->getSupports()->getAttributes()->value = XsToken( "TOKEN" );
             }
                 break;
             default:
@@ -86,9 +100,7 @@ namespace MxTestHelpers
         {
             case variant::one:
             {
-                streamLine( os, i, R"(<encoding>)" );
-                streamLine( os, i+1, R"(<encoding-date>1900-01-01</encoding-date>)" );
-                streamLine( os, i, R"(</encoding>)", false );
+                streamLine( os, i, R"(<encoding/>)", false );
             }
                 break;
             case variant::two:
@@ -101,7 +113,8 @@ namespace MxTestHelpers
             case variant::three:
             {
                 streamLine( os, i, R"(<encoding>)" );
-                streamLine( os, i+1, R"(<encoding-description>Described</encoding-description>)" );
+                streamLine( os, i+1, R"(<software>Described</software>)" );
+                streamLine( os, i+1, R"(<supports type="no" element="stupid" value="TOKEN"/>)" );
                 streamLine( os, i, R"(</encoding>)", false );
             }
                 break;

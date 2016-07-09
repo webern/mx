@@ -1,4 +1,4 @@
-// MusicXML Class Library v0.1.1
+// MusicXML Class Library v0.2
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #include "mx/core/Document.h"
@@ -10,6 +10,7 @@
 #include "mx/xml/XElementIterator.h"
 #include "mx/xml/XAttributeIterator.h"
 #include "mx/utility/Throw.h"
+#include "mx/core/ScoreConversions.h"
 
 using namespace mx::xml;
 
@@ -40,7 +41,7 @@ namespace mx
         
         
         Document::Document( DocumentChoice choice )
-        : myChoice( DEFAULT_DOCUMENT_CHOICE )
+        : myChoice( choice )
         , myScorePartwise( makeScorePartwise() )
         , myScoreTimewise( makeScoreTimewise() )
         {
@@ -62,7 +63,25 @@ namespace mx
         
         void Document::convertContents()
         {
-            // TODO - get the code from DocumentPartwise and DocumentTimewise
+            switch ( myChoice )
+            {
+                case DocumentChoice::partwise:
+                {
+                    myScoreTimewise = partwiseTimewise( myScorePartwise );
+                    myScorePartwise = makeScorePartwise();
+                    myChoice = DocumentChoice::timewise;
+                }
+                    break;
+                case DocumentChoice::timewise:
+                {
+                    myScorePartwise = timewisePartwise( myScoreTimewise );
+                    myScoreTimewise = makeScoreTimewise();
+                    myChoice = DocumentChoice::partwise;
+                }
+                    break;
+                default:
+                    break;
+            }
         }
         
         
@@ -103,19 +122,18 @@ namespace mx
             {
                 case DocumentChoice::partwise:
                 {
-                    os << DOCTYPE_SCORE_PARTWISE << std::endl;
+                    os << "<!DOCTYPE " << DOCTYPE_VALUE_SCORE_PARTWISE << ">" << std::endl;
                     myScorePartwise->toStream( os, 0 );
                 }
                     break;
                 case DocumentChoice::timewise:
                 {
-                    os << DOCTYPE_SCORE_TIMEWISE << std::endl;
+                    os << "<!DOCTYPE " << DOCTYPE_VALUE_SCORE_TIMEWISE << ">" << std::endl;
                     myScoreTimewise->toStream( os, 0 );
                 }
                     break;
                 default:
                     MX_THROW( "myChoice had a bad value" )
-                    break;
             }
             return os;
         }
@@ -126,22 +144,22 @@ namespace mx
             std::stringstream ss;
             toStream( ss );
             std::istringstream is( ss.str() );
-            outXDoc.parse( is );
+            
+            outXDoc.loadStream( is );
             switch ( myChoice )
             {
                 case DocumentChoice::partwise:
                 {
-                    outXDoc.setDoctypeValue( DOCTYPE_SCORE_PARTWISE );
+                    outXDoc.setDoctypeValue( DOCTYPE_VALUE_SCORE_PARTWISE );
                 }
                     break;
                 case DocumentChoice::timewise:
                 {
-                    outXDoc.setDoctypeValue( DOCTYPE_SCORE_TIMEWISE );
+                    outXDoc.setDoctypeValue( DOCTYPE_VALUE_SCORE_TIMEWISE );
                 }
                     break;
                 default:
                     MX_THROW( "myChoice had a bad value" )
-                    break;
             }
         }
         
@@ -151,19 +169,20 @@ namespace mx
             auto root = inXDoc.getRoot();
             if( inXDoc.getRoot()->getName() == "score-partwise" )
             {
+                myChoice = DocumentChoice::partwise;
                 myScorePartwise = makeScorePartwise();
                 return myScorePartwise->fromXElement( messages, *root );
             }
             else if( inXDoc.getRoot()->getName() == "score-timewise" )
             {
-                myScorePartwise = makeScorePartwise();
-                return myScorePartwise->fromXElement( messages, *root );
+                myChoice = DocumentChoice::timewise;
+                myScoreTimewise = makeScoreTimewise();
+                return myScoreTimewise->fromXElement( messages, *root );
             }
             else
             {
                 MX_THROW( "bad input - could not find the score-timewise or score-partwise node" );
-            }
-            return true;            
+            }          
         }
         
     }

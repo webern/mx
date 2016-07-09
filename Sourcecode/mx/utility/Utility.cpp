@@ -1,4 +1,4 @@
-// MusicXML Class Library v0.1.1
+// MusicXML Class Library v0.2
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #include "mx/utility/Utility.h"
@@ -144,8 +144,10 @@ namespace mx
             auto header = doc->getScorePartwise()->getScoreHeaderGroup();
             header->setHasIdentification( true );
             header->getIdentification()->setHasEncoding( true );
-            header->getIdentification()->getEncoding()->setChoice( Encoding::Choice::software );
-            header->getIdentification()->getEncoding()->getSoftware()->setValue( XsString( value ) );
+            auto encodingChoice = makeEncodingChoice();
+            encodingChoice->setChoice( EncodingChoice::Choice::software );
+            encodingChoice->getSoftware()->setValue( XsString( value ) );
+            header->getIdentification()->getEncoding()->addEncodingChoice( encodingChoice );
         }
         
         
@@ -156,11 +158,15 @@ namespace mx
             {
                 return "";
             }
-            if( !( header->getIdentification()->getEncoding()->getChoice() == Encoding::Choice::software ) )
+            auto encoding = header->getIdentification()->getEncoding();
+            for( auto e : encoding->getEncodingChoiceSet() )
             {
-                return "";
+                if( e->getChoice() == EncodingChoice::Choice::software )
+                {
+                    return e->getSoftware()->getValue().getValue();
+                }
             }
-            return header->getIdentification()->getEncoding()->getSoftware()->getValue().getValue();
+            return "";
         }
         
         void startPartGroup(
@@ -233,14 +239,17 @@ namespace mx
         }
         
         
-        void addTimeSignature( const PartwiseMeasurePtr& measure, int top, int bottom )
+        void addTimeSignatureGroup( const PartwiseMeasurePtr& measure, int top, int bottom )
         {
             auto measureProperties = createOrRetrieveMeasureProperties( measure );
             auto time = makeTime();
             auto timeChoice = time->getTimeChoice();
             timeChoice->setChoice( TimeChoice::Choice::timeSignature );
-            timeChoice->getTimeSignature()->getBeats()->setValue( XsString( std::to_string( top ) ) );
-            timeChoice->getTimeSignature()->getBeatType()->setValue( XsString( std::to_string( bottom ) ) );
+            auto timeSignature = makeTimeSignatureGroup();
+            timeSignature->getBeats()->setValue( XsString( std::to_string( top ) ) );
+            timeSignature->getBeatType()->setValue( XsString( std::to_string( bottom ) ) );
+            timeChoice->addTimeSignatureGroup( timeSignature );
+            timeChoice->removeTimeSignatureGroup( timeChoice->getTimeSignatureGroupSet().cbegin() );
             measureProperties->getProperties()->addTime( time );
         }
         

@@ -1,3 +1,6 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_CORE_TESTS
 
@@ -39,12 +42,12 @@ TEST( Test02, TraditionalKey )
     object.getAttributes()->number = StaffNumber{ 2 };
     object.getKeyChoice()->setChoice( KeyChoice::Choice::nonTraditionalKey );
     NonTraditionalKeyPtr ntk1 = makeNonTraditionalKey();
-    ntk1->setHasKeyAccivental( true );
+    ntk1->setHasKeyAccidental( true );
     ntk1->setKeyAccidental( std::make_shared<KeyAccidental>( AccidentalValue::flat ) );
     ntk1->setKeyAlter( std::make_shared<KeyAlter>( Semitones{ -0.2 } ) );
     object.getKeyChoice()->addNonTraditionalKey( ntk1 );
     NonTraditionalKeyPtr ntk2 = makeNonTraditionalKey();
-    ntk2->setHasKeyAccivental( true );
+    ntk2->setHasKeyAccidental( true );
     ntk2->setKeyAccidental( std::make_shared<KeyAccidental>( AccidentalValue::sharp ) );
     ntk2->setKeyAlter( std::make_shared<KeyAlter>( Semitones{ 2 } ) );
     object.getKeyChoice()->addNonTraditionalKey( ntk2 );

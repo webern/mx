@@ -436,6 +436,8 @@
 		29C01F191D13137D0094BE61 /* cpulTestRegistry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C01F0F1D13137D0094BE61 /* cpulTestRegistry.cpp */; };
 		29C01F1A1D13137D0094BE61 /* cpulTestResult.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C01F111D13137D0094BE61 /* cpulTestResult.cpp */; };
 		29C01F1B1D13137D0094BE61 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C01F151D13137D0094BE61 /* main.cpp */; };
+		29C227ED1D2F5DE000677B3C /* SortAttributes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C227EB1D2F5DE000677B3C /* SortAttributes.cpp */; };
+		29C227F01D2F74B500677B3C /* ChangeValues.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C227EE1D2F74B500677B3C /* ChangeValues.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -456,12 +458,12 @@
 		2936D2081D20C6AD003836E5 /* Path.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Path.h; path = ../Sourcecode/mxtest/control/Path.h; sourceTree = "<group>"; };
 		2936D2091D20CBB6003836E5 /* ExpectedFiles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ExpectedFiles.cpp; path = ../Sourcecode/mxtest/import/ExpectedFiles.cpp; sourceTree = "<group>"; };
 		2937D1751D18D43A001C2A1A /* FakeXml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FakeXml.h; path = ../Sourcecode/mxtest/xml/FakeXml.h; sourceTree = "<group>"; };
-		2937D1761D18D43A001C2A1A /* rtiMain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = rtiMain.h; path = ../Sourcecode/mxtest/xml/rtiMain.h; sourceTree = "<group>"; };
 		2937D1771D18D43A001C2A1A /* XAttributeIteratorTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = XAttributeIteratorTest.cpp; path = ../Sourcecode/mxtest/xml/XAttributeIteratorTest.cpp; sourceTree = "<group>"; };
 		2937D1781D18D43A001C2A1A /* XAttributeTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = XAttributeTest.cpp; path = ../Sourcecode/mxtest/xml/XAttributeTest.cpp; sourceTree = "<group>"; };
 		2937D1791D18D43A001C2A1A /* XDocTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = XDocTest.cpp; path = ../Sourcecode/mxtest/xml/XDocTest.cpp; sourceTree = "<group>"; };
 		2937D17A1D18D43A001C2A1A /* XElementIteratorTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = XElementIteratorTest.cpp; path = ../Sourcecode/mxtest/xml/XElementIteratorTest.cpp; sourceTree = "<group>"; };
 		2937D17B1D18D43A001C2A1A /* XElementTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = XElementTest.cpp; path = ../Sourcecode/mxtest/xml/XElementTest.cpp; sourceTree = "<group>"; };
+		294847701D5AD4AD0025138E /* DecimalFields.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DecimalFields.h; path = ../Sourcecode/mxtest/import/DecimalFields.h; sourceTree = "<group>"; };
 		297555FA1D1359CA007732D0 /* HelloWorldExpected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HelloWorldExpected.h; path = ../Sourcecode/mxtest/core/HelloWorldExpected.h; sourceTree = "<group>"; };
 		297555FB1D1359CA007732D0 /* HelloWorldTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HelloWorldTest.cpp; path = ../Sourcecode/mxtest/core/HelloWorldTest.cpp; sourceTree = "<group>"; };
 		297555FC1D1359CA007732D0 /* HelloWorldTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HelloWorldTest.h; path = ../Sourcecode/mxtest/core/HelloWorldTest.h; sourceTree = "<group>"; };
@@ -1008,6 +1010,10 @@
 		29C01F131D13137D0094BE61 /* cpulTestTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cpulTestTimer.h; path = ../Sourcecode/cpul/cpulTestTimer.h; sourceTree = "<group>"; };
 		29C01F141D13137D0094BE61 /* cpulVsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cpulVsTest.h; path = ../Sourcecode/cpul/cpulVsTest.h; sourceTree = "<group>"; };
 		29C01F151D13137D0094BE61 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../Sourcecode/cpul/main.cpp; sourceTree = "<group>"; };
+		29C227EB1D2F5DE000677B3C /* SortAttributes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SortAttributes.cpp; path = ../Sourcecode/mxtest/import/SortAttributes.cpp; sourceTree = "<group>"; };
+		29C227EC1D2F5DE000677B3C /* SortAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SortAttributes.h; path = ../Sourcecode/mxtest/import/SortAttributes.h; sourceTree = "<group>"; };
+		29C227EE1D2F74B500677B3C /* ChangeValues.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ChangeValues.cpp; path = ../Sourcecode/mxtest/import/ChangeValues.cpp; sourceTree = "<group>"; };
+		29C227EF1D2F74B500677B3C /* ChangeValues.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChangeValues.h; path = ../Sourcecode/mxtest/import/ChangeValues.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1593,7 +1599,6 @@
 			isa = PBXGroup;
 			children = (
 				2937D1751D18D43A001C2A1A /* FakeXml.h */,
-				2937D1761D18D43A001C2A1A /* rtiMain.h */,
 				2937D1771D18D43A001C2A1A /* XAttributeIteratorTest.cpp */,
 				2937D1781D18D43A001C2A1A /* XAttributeTest.cpp */,
 				2937D1791D18D43A001C2A1A /* XDocTest.cpp */,
@@ -1617,11 +1622,16 @@
 		297DD7C61D1A4BAE003BADC1 /* import */ = {
 			isa = PBXGroup;
 			children = (
-				297DD7C81D1A4BD1003BADC1 /* ImportTest.cpp */,
-				297DD7C71D1A4BC1003BADC1 /* ExpectedFiles.h */,
+				29C227EE1D2F74B500677B3C /* ChangeValues.cpp */,
+				29C227EF1D2F74B500677B3C /* ChangeValues.h */,
+				294847701D5AD4AD0025138E /* DecimalFields.h */,
 				2936D2091D20CBB6003836E5 /* ExpectedFiles.cpp */,
+				297DD7C71D1A4BC1003BADC1 /* ExpectedFiles.h */,
+				297DD7C81D1A4BD1003BADC1 /* ImportTest.cpp */,
 				298F0F4B1D1E4981005C3D9D /* ImportTestImpl.cpp */,
 				298F0F4C1D1E4981005C3D9D /* ImportTestImpl.h */,
+				29C227EB1D2F5DE000677B3C /* SortAttributes.cpp */,
+				29C227EC1D2F5DE000677B3C /* SortAttributes.h */,
 				299D805B1D1F1C7700BB134C /* TestFiles.h */,
 			);
 			name = import;
@@ -1963,6 +1973,7 @@
 				29C01EB51D1312FA0094BE61 /* StaccatoTest.cpp in Sources */,
 				29C01E7C1D1312FA0094BE61 /* PartwisePartTest.cpp in Sources */,
 				29C01F031D1312FA0094BE61 /* WorkNumberTest.cpp in Sources */,
+				29C227ED1D2F5DE000677B3C /* SortAttributes.cpp in Sources */,
 				29C01DFE1D1312FA0094BE61 /* GroupTest.cpp in Sources */,
 				29C01E221D1312FA0094BE61 /* LaughingTest.cpp in Sources */,
 				29C01DC31D1312FA0094BE61 /* DocumentTimewiseCreate.cpp in Sources */,
@@ -2084,6 +2095,7 @@
 				29C01E8B1D1312FA0094BE61 /* PrincipalVoiceTest.cpp in Sources */,
 				29C01EFD1D1312FA0094BE61 /* WavyLineTest.cpp in Sources */,
 				29C01D7D1D1312FA0094BE61 /* ArtificialTest.cpp in Sources */,
+				29C227F01D2F74B500677B3C /* ChangeValues.cpp in Sources */,
 				29C01E341D1312FA0094BE61 /* MembraneTest.cpp in Sources */,
 				29C01DAD1D1312FA0094BE61 /* DegreeAlterTest.cpp in Sources */,
 				29C01E761D1312FA0094BE61 /* PartGroupTest.cpp in Sources */,

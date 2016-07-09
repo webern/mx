@@ -1,4 +1,4 @@
-// MusicXML Class Library v0.1.1
+// MusicXML Class Library v0.2
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #pragma once
@@ -35,8 +35,8 @@ namespace mx
     namespace core
     {
         constexpr const char* const DEFAULT_XML_DECLARATION = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>";
-        constexpr const char* const DOCTYPE_SCORE_PARTWISE = "score-partwise PUBLIC \"_//Recordare//DTD MusicXML 3.0 Partwise//EN\" \"http://www.musicxml.org/dtds/partwise.dtd\"";
-        constexpr const char* const DOCTYPE_SCORE_TIMEWISE = "score-timewise PUBLIC \"_//Recordare//DTD MusicXML 3.0 Timewise//EN\" \"http://www.musicxml.org/dtds/timewise.dtd\"";
+        constexpr const char* const DOCTYPE_VALUE_SCORE_PARTWISE = "score-partwise PUBLIC \"-//Recordare//DTD MusicXML 3.0 Partwise//EN\" \"http://www.musicxml.org/dtds/partwise.dtd\"";
+        constexpr const char* const DOCTYPE_VALUE_SCORE_TIMEWISE = "score-timewise PUBLIC \"-//Recordare//DTD MusicXML 3.0 Timewise//EN\" \"http://www.musicxml.org/dtds/timewise.dtd\"";
         
         enum class DocumentChoice
         {

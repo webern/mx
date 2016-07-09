@@ -1,7 +1,5 @@
-// PUGIXML_CLASS xml_node
-// MusicXML Class Library v0.1.1
+// MusicXML Class Library v0.2
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
-
 
 #pragma once
 

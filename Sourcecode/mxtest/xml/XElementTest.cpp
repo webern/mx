@@ -1,3 +1,6 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_XML_TESTS
 
@@ -20,7 +23,7 @@ namespace
     {
         auto xdoc = XFactory::makeXDoc();
         std::istringstream is( MxTest::fakeXml );
-        xdoc->parse( is );
+        xdoc->loadStream( is );
         return xdoc;
     }
 }
@@ -31,8 +34,8 @@ TEST( useIteratorBasic, XElement )
     auto xdoc = doc();
     auto root = xdoc->getRoot();
     int i = 0;
-    auto endIter = root->elementsEnd();
-    for( auto it = root->elementsBegin(); it != endIter; ++it, ++i )
+    auto endIter = root->end();
+    for( auto it = root->begin(); it != endIter; ++it, ++i )
     {
         switch( i )
         {
@@ -70,11 +73,11 @@ TEST( getTypeText, XElement )
 {
     auto xdoc = doc();
     auto node = xdoc->getRoot();
-    auto iter = node->elementsBegin();
+    auto iter = node->begin();
     CHECK( !iter.getIsPayloadNull() );
     CHECK( !iter->getIsNull() );
     CHECK_EQUAL( "abc", iter->getName() );
-    auto weird = iter->elementsBegin();
+    auto weird = iter->begin();
     CHECK_EQUAL( "abcdefg", iter->getValue() );
     CHECK( XElementType::text == iter->getType() );
 }
@@ -85,7 +88,7 @@ TEST( getTypeEmpty, XElement )
 {
     auto xdoc = doc();
     auto node = xdoc->getRoot();
-    auto iter = node->elementsBegin();
+    auto iter = node->begin();
     ++iter;
     CHECK( !iter.getIsPayloadNull() );
     CHECK( !iter->getIsNull() );
@@ -99,7 +102,7 @@ TEST( getValueEmptyElementEmptyString, XElement )
 {
     auto xdoc = doc();
     auto node = xdoc->getRoot();
-    auto iter = node->elementsBegin();
+    auto iter = node->begin();
     ++iter;
     CHECK( !iter.getIsPayloadNull() );
     CHECK( !iter->getIsNull() );
@@ -113,7 +116,7 @@ TEST( getValueEmptyElementTypeEmptyString, XElement )
 {
     auto xdoc = doc();
     auto node = xdoc->getRoot();
-    auto iter = node->elementsBegin();
+    auto iter = node->begin();
     ++iter;
     ++iter;
     CHECK( !iter.getIsPayloadNull() );
@@ -128,7 +131,7 @@ TEST( getValue, XElement )
 {
     auto xdoc = doc();
     auto node = xdoc->getRoot();
-    auto iter = node->elementsBegin();
+    auto iter = node->begin();
     CHECK( !iter.getIsPayloadNull() );
     CHECK( !iter->getIsNull() );
     CHECK_EQUAL( "abcdefg", iter->getValue() );
@@ -141,7 +144,7 @@ TEST( setName, XElement )
 {
     auto xdoc = doc();
     auto node1 = xdoc->getRoot();
-    auto iter1 = node1->elementsBegin();
+    auto iter1 = node1->begin();
     CHECK_EQUAL( "abc", iter1->getName() );
 
     // function under test
@@ -149,7 +152,7 @@ TEST( setName, XElement )
     CHECK_EQUAL( "blah", iter1->getName() );
 
     auto node2 = xdoc->getRoot();
-    auto iter2 = node1->elementsBegin();
+    auto iter2 = node1->begin();
     CHECK_EQUAL( "blah", iter1->getName() );
 }
 T_END
@@ -159,7 +162,7 @@ TEST( setValueChangeExisting, XElement )
 {
     auto xdoc = doc();
     auto node1 = xdoc->getRoot();
-    auto iter1 = node1->elementsBegin();
+    auto iter1 = node1->begin();
     CHECK_EQUAL( "abcdefg", iter1->getValue() );
 
     // function under test
@@ -167,7 +170,7 @@ TEST( setValueChangeExisting, XElement )
     CHECK_EQUAL( "blah", iter1->getValue() );
 
     auto node2 = xdoc->getRoot();
-    auto iter2 = node1->elementsBegin();
+    auto iter2 = node1->begin();
     CHECK_EQUAL( "blah", iter1->getValue() );
 }
 T_END
@@ -177,7 +180,7 @@ TEST( setValueAddToEmpty, XElement )
 {
     auto xdoc = doc();
     auto node1 = xdoc->getRoot();
-    auto iter1 = node1->elementsBegin();
+    auto iter1 = node1->begin();
     ++iter1;
     CHECK_EQUAL( "", iter1->getValue() );
     CHECK( XElementType::empty == iter1->getType() );
@@ -188,7 +191,7 @@ TEST( setValueAddToEmpty, XElement )
     CHECK( XElementType::text == iter1->getType() );
 
     auto node2 = xdoc->getRoot();
-    auto iter2 = node1->elementsBegin();
+    auto iter2 = node1->begin();
     ++iter2;
     CHECK_EQUAL( "blah", iter1->getValue() );
     CHECK( XElementType::text == iter1->getType() );
@@ -210,7 +213,7 @@ TEST( getParent, XElement )
 {
     auto xdoc = doc();
     auto node = xdoc->getRoot();
-    auto iter = node->elementsBegin();
+    auto iter = node->begin();
     auto parent = iter->getParent();
     CHECK_EQUAL( "root-node", node->getName() );
     CHECK_EQUAL( "root-node", parent->getName() )
@@ -223,7 +226,7 @@ TEST( attributesBeginEnd, XElement )
     auto xdoc = doc();
     auto root = xdoc->getRoot();
     CHECK( root->attributesBegin() == root->attributesEnd() );
-    auto elIter = root->elementsBegin();
+    auto elIter = root->begin();
     ++elIter;
     CHECK( elIter->attributesBegin() != elIter->attributesEnd() );
 }
@@ -274,7 +277,7 @@ TEST( prependAttributeWithExisting, XElement )
 {
     auto xdoc = doc();
     auto root = xdoc->getRoot();
-    auto elIter = root->elementsBegin();
+    auto elIter = root->begin();
     ++elIter;
     ++elIter;
     auto& node = *elIter;
@@ -296,7 +299,7 @@ TEST( appendAttributeWithExisting, XElement )
 {
     auto xdoc = doc();
     auto root = xdoc->getRoot();
-    auto elIter = root->elementsBegin();
+    auto elIter = root->begin();
     ++elIter;
     ++elIter;
     auto& node = *elIter;
@@ -312,5 +315,45 @@ TEST( appendAttributeWithExisting, XElement )
     CHECK_EQUAL( "pended", atIter->getValue() );
 }
 T_END
+
+
+TEST( insertSiblingAfter, XElement )
+{
+    auto xdoc = XFactory::makeXDoc();
+    auto root = xdoc->getRoot();
+    root->appendChild( "one" );
+    root->appendChild( "three" );
+    root->appendChild( "four" );
+    root->begin()->insertSiblingAfter( "two" );
+    auto it = root->begin();
+    CHECK_EQUAL( "one", it->getName() );
+    ++it;
+    CHECK_EQUAL( "two", it->getName() );
+    ++it;
+    CHECK_EQUAL( "three", it->getName() );
+    ++it;
+    CHECK_EQUAL( "four", it->getName() );
+}
+T_END
+
+
+TEST( removeChild, XElement )
+{
+    auto xdoc = XFactory::makeXDoc();
+    auto root = xdoc->getRoot();
+    root->appendChild( "one" );
+    root->appendChild( "two" );
+    root->appendChild( "three" );
+    root->appendChild( "four" );
+    root->removeChild( "two" );
+    auto it = root->begin();
+    CHECK_EQUAL( "one", it->getName() );
+    ++it;
+    CHECK_EQUAL( "three", it->getName() );
+    ++it;
+    CHECK_EQUAL( "four", it->getName() );
+}
+T_END
+
 
 #endif

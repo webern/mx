@@ -1,3 +1,6 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_IMPORT_TESTS
 
@@ -69,7 +72,7 @@ using namespace MxTest;
 #endif
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+//#if 1==0
 MXTEST_IMPORT_ROUNDTRIP( lysuite, ly01a_Pitches_Pitches, xml , MxTest::RESOURCES_DIRECTORY_PATH)
 	isSuccess = test.runTest( msgsstr );
     CHECK_WITH_MESSAGE( isSuccess, msgsstr.str() );
@@ -93,7 +96,7 @@ MXTEST_IMPORT_ROUNDTRIP( lysuite, ly01d_Pitches_Microtones, xml , MxTest::RESOUR
     CHECK_WITH_MESSAGE( isSuccess, msgsstr.str() );
 MXTEST_IMPORT_ROUNDTRIP_END
 
-
+//#endif
 MXTEST_IMPORT_ROUNDTRIP( lysuite, ly01e_Pitches_ParenthesizedAccidentals, xml , MxTest::RESOURCES_DIRECTORY_PATH);
 	isSuccess = test.runTest( msgsstr );
     CHECK_WITH_MESSAGE( isSuccess, msgsstr.str() );
@@ -249,7 +252,7 @@ MXTEST_IMPORT_ROUNDTRIP( lysuite, ly14a_StaffDetails_LineChanges, xml , MxTest::
     CHECK_WITH_MESSAGE( isSuccess, msgsstr.str() );
 MXTEST_IMPORT_ROUNDTRIP_END
 
-
+//#endif
 MXTEST_IMPORT_ROUNDTRIP( lysuite, ly21a_Chord_Basic, xml , MxTest::RESOURCES_DIRECTORY_PATH);
 	isSuccess = test.runTest( msgsstr );
     CHECK_WITH_MESSAGE( isSuccess, msgsstr.str() );
@@ -332,7 +335,7 @@ MXTEST_IMPORT_ROUNDTRIP( lysuite, ly23d_Tuplets_Nested, xml , MxTest::RESOURCES_
 	isSuccess = test.runTest( msgsstr );
     CHECK_WITH_MESSAGE( isSuccess, msgsstr.str() );
 MXTEST_IMPORT_ROUNDTRIP_END
-
+//#endif
 
 MXTEST_IMPORT_ROUNDTRIP( lysuite, ly23e_Tuplets_Tremolo, xml , MxTest::RESOURCES_DIRECTORY_PATH);
 	isSuccess = test.runTest( msgsstr );
@@ -386,7 +389,7 @@ MXTEST_IMPORT_ROUNDTRIP( lysuite, ly31a_Directions, xml , MxTest::RESOURCES_DIRE
 	isSuccess = test.runTest( msgsstr );
     CHECK_WITH_MESSAGE( isSuccess, msgsstr.str() );
 MXTEST_IMPORT_ROUNDTRIP_END
-
+//#endif
 
 MXTEST_IMPORT_ROUNDTRIP( lysuite, ly31c_MetronomeMarks, xml , MxTest::RESOURCES_DIRECTORY_PATH);
 	isSuccess = test.runTest( msgsstr );
@@ -416,7 +419,7 @@ MXTEST_IMPORT_ROUNDTRIP( lysuite, ly32d_Arpeggio, xml , MxTest::RESOURCES_DIRECT
 	isSuccess = test.runTest( msgsstr );
     CHECK_WITH_MESSAGE( isSuccess, msgsstr.str() );
 MXTEST_IMPORT_ROUNDTRIP_END
-
+//#endif
 
 MXTEST_IMPORT_ROUNDTRIP( lysuite, ly33a_Spanners, xml , MxTest::RESOURCES_DIRECTORY_PATH);
 	isSuccess = test.runTest( msgsstr );
@@ -506,11 +509,15 @@ MXTEST_IMPORT_ROUNDTRIP( lysuite, ly41f_StaffGroups_Overlapping, xml , MxTest::R
 	isSuccess = test.runTest( msgsstr );
     CHECK_WITH_MESSAGE( isSuccess, msgsstr.str() );
 MXTEST_IMPORT_ROUNDTRIP_END
-
+//#endif
 
 MXTEST_IMPORT_ROUNDTRIP( lysuite, ly41g_PartNoId, xml , MxTest::RESOURCES_DIRECTORY_PATH);
-	isSuccess = test.runTest( msgsstr );
-    CHECK_WITH_MESSAGE( isSuccess, msgsstr.str() );
+    // unusual test case - this file has a part which is missing the 'id' attribute.
+    // in this case we expect mx to return false from the fromXElement function.
+    isSuccess = test.runTest( msgsstr );
+    CHECK( !isSuccess )
+    const std::string m = msgsstr.str();
+    CHECK_EQUAL( "PartAttributes: 'id' is a required", m.substr(0,34) );
 MXTEST_IMPORT_ROUNDTRIP_END
 
 
@@ -842,7 +849,7 @@ MXTEST_IMPORT_ROUNDTRIP( mjbsuite, freezing, xml , MxTest::RESOURCES_DIRECTORY_P
 	isSuccess = test.runTest( msgsstr );
     CHECK_WITH_MESSAGE( isSuccess, msgsstr.str() );
 MXTEST_IMPORT_ROUNDTRIP_END
-
+//#endif
 
 MXTEST_IMPORT_ROUNDTRIP( mjbsuite, hello_timewise, xml , MxTest::RESOURCES_DIRECTORY_PATH);
 	isSuccess = test.runTest( msgsstr );
@@ -852,6 +859,12 @@ MXTEST_IMPORT_ROUNDTRIP_END
 
 MXTEST_IMPORT_ROUNDTRIP( mjbsuite, lyre_timewise, xml , MxTest::RESOURCES_DIRECTORY_PATH);
 	isSuccess = test.runTest( msgsstr );
+    CHECK_WITH_MESSAGE( isSuccess, msgsstr.str() );
+MXTEST_IMPORT_ROUNDTRIP_END
+
+
+MXTEST_IMPORT_ROUNDTRIP( musuite, A_Walk_through_the_Park, xml , MxTest::RESOURCES_DIRECTORY_PATH);
+    isSuccess = test.runTest( msgsstr );
     CHECK_WITH_MESSAGE( isSuccess, msgsstr.str() );
 MXTEST_IMPORT_ROUNDTRIP_END
 
@@ -1616,7 +1629,7 @@ MXTEST_IMPORT_ROUNDTRIP( recsuite, MozartPianoSonata, xml , MxTest::RESOURCES_DI
 	isSuccess = test.runTest( msgsstr );
     CHECK_WITH_MESSAGE( isSuccess, msgsstr.str() );
 MXTEST_IMPORT_ROUNDTRIP_END
-
+//#endif
 
 MXTEST_IMPORT_ROUNDTRIP( recsuite, MozartTrio, xml , MxTest::RESOURCES_DIRECTORY_PATH);
 	isSuccess = test.runTest( msgsstr );
@@ -1635,7 +1648,7 @@ MXTEST_IMPORT_ROUNDTRIP( recsuite, Saltarello, xml , MxTest::RESOURCES_DIRECTORY
     CHECK_WITH_MESSAGE( isSuccess, msgsstr.str() );
 MXTEST_IMPORT_ROUNDTRIP_END
 
-
+//#endif
 MXTEST_IMPORT_ROUNDTRIP( recsuite, SchbAvMaSample, xml , MxTest::RESOURCES_DIRECTORY_PATH);
 	isSuccess = test.runTest( msgsstr );
     CHECK_WITH_MESSAGE( isSuccess, msgsstr.str() );
@@ -1647,5 +1660,52 @@ MXTEST_IMPORT_ROUNDTRIP( recsuite, Telemann, xml , MxTest::RESOURCES_DIRECTORY_P
     CHECK_WITH_MESSAGE( isSuccess, msgsstr.str() );
 MXTEST_IMPORT_ROUNDTRIP_END
 
+
+MXTEST_IMPORT_ROUNDTRIP( ksuite, k001a_Articulations, xml , MxTest::RESOURCES_DIRECTORY_PATH);
+    isSuccess = test.runTest( msgsstr );
+    CHECK_WITH_MESSAGE( isSuccess, msgsstr.str() );
+MXTEST_IMPORT_ROUNDTRIP_END
+
+
+MXTEST_IMPORT_ROUNDTRIP( ksuite, k001b_Articulations_Above, xml , MxTest::RESOURCES_DIRECTORY_PATH);
+    isSuccess = test.runTest( msgsstr );
+    CHECK_WITH_MESSAGE( isSuccess, msgsstr.str() );
+MXTEST_IMPORT_ROUNDTRIP_END
+
+
+MXTEST_IMPORT_ROUNDTRIP( ksuite, k001c_Articulations_Below, xml , MxTest::RESOURCES_DIRECTORY_PATH);
+    isSuccess = test.runTest( msgsstr );
+    CHECK_WITH_MESSAGE( isSuccess, msgsstr.str() );
+MXTEST_IMPORT_ROUNDTRIP_END
+
+
+MXTEST_IMPORT_ROUNDTRIP( ksuite, k002a_Fermatas, xml , MxTest::RESOURCES_DIRECTORY_PATH);
+    isSuccess = test.runTest( msgsstr );
+    CHECK_WITH_MESSAGE( isSuccess, msgsstr.str() );
+MXTEST_IMPORT_ROUNDTRIP_END
+
+
+MXTEST_IMPORT_ROUNDTRIP( ksuite, k003a_Ornaments, xml , MxTest::RESOURCES_DIRECTORY_PATH);
+    isSuccess = test.runTest( msgsstr );
+    CHECK_WITH_MESSAGE( isSuccess, msgsstr.str() );
+MXTEST_IMPORT_ROUNDTRIP_END
+
+
+MXTEST_IMPORT_ROUNDTRIP( ksuite, k004a_Technical, xml , MxTest::RESOURCES_DIRECTORY_PATH);
+    isSuccess = test.runTest( msgsstr );
+    CHECK_WITH_MESSAGE( isSuccess, msgsstr.str() );
+MXTEST_IMPORT_ROUNDTRIP_END
+
+
+MXTEST_IMPORT_ROUNDTRIP( ksuite, k005a_Spanners_Slides, xml , MxTest::RESOURCES_DIRECTORY_PATH);
+    isSuccess = test.runTest( msgsstr );
+    CHECK_WITH_MESSAGE( isSuccess, msgsstr.str() );
+MXTEST_IMPORT_ROUNDTRIP_END
+
+
+MXTEST_IMPORT_ROUNDTRIP( logicpro, logic01a_homoSapiens, xml , MxTest::RESOURCES_DIRECTORY_PATH);
+    isSuccess = test.runTest( msgsstr );
+    CHECK_WITH_MESSAGE( isSuccess, msgsstr.str() );
+MXTEST_IMPORT_ROUNDTRIP_END
 
 #endif

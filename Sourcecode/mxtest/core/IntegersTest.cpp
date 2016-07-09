@@ -1,3 +1,6 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_CORE_TESTS
 
@@ -254,10 +257,10 @@ TEST( AccordionMiddleValue, Integers )
     IntType expected = 0;
     IntType actual = 0;
     AccordionMiddleValue x;
-    expected = 1;
+    expected = 0;
     actual = x.getValue();
     CHECK_EQUAL( expected, actual )
-    AccordionMiddleValue y( 0 );
+    AccordionMiddleValue y( 1 );
     expected = 1;
     actual = y.getValue();
     CHECK_EQUAL( expected, actual )

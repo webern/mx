@@ -1,3 +1,6 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_CORE_TESTS
 
@@ -68,7 +71,7 @@ namespace MxTestHelpers
                 o->getInstrumentName()->setValue( XsString( "Bassoon" ) );
                 o->setHasInstrumentAbbreviation( true );
                 o->getInstrumentAbbreviation()->setValue( XsString( "Bsn." ) );
-                o->setHasSoloOrEnsemble( true );
+                o->setHasSoloOrEnsembleChoice( true );
                 o->setHasVirtualInstrument( true );
                 o->setVirtualInstrument( tgenVirtualInstrument( v ) );
                 o->getAttributes()->id = XsID{ "Instrument01" };
@@ -80,10 +83,10 @@ namespace MxTestHelpers
                 o->getInstrumentName()->setValue( XsString( "Trumpet" ) );
                 o->setHasInstrumentAbbreviation( true );
                 o->getInstrumentAbbreviation()->setValue( XsString( "Trp." ) );
-                o->setHasSoloOrEnsemble( true );
-                o->getSoloOrEnsemble()->setChoice( SoloOrEnsemble::Choice::ensemble );
+                o->setHasSoloOrEnsembleChoice( true );
+                o->getSoloOrEnsembleChoice()->setChoice( SoloOrEnsembleChoice::Choice::ensemble );
                 PositiveIntegerOrEmpty forteen{ PositiveInteger{ 14 } };
-                o->getSoloOrEnsemble()->getEnsemble()->setValue( forteen );
+                o->getSoloOrEnsembleChoice()->getEnsemble()->setValue( forteen );
                 o->setHasVirtualInstrument( true );
                 o->setVirtualInstrument( tgenVirtualInstrument( v ) );
                 o->getAttributes()->id = XsID{ "Instrument02" };

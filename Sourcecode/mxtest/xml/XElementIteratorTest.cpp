@@ -1,3 +1,6 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_XML_TESTS
 
@@ -21,7 +24,7 @@ namespace
     {
         auto xdoc = XFactory::makeXDoc();
         std::istringstream is( MxTest::fakeXml );
-        xdoc->parse( is );
+        xdoc->loadStream( is );
         return xdoc;
     }
 }
@@ -32,7 +35,7 @@ TEST( beginEndForLoop, XElementIterator )
     auto xdoc = doc();
     auto root = xdoc->getRoot();
     int i = 0;
-    for( auto it = root->elementsBegin(); it != root->elementsEnd(); ++it, ++i )
+    for( auto it = root->begin(); it != root->end(); ++it, ++i )
     {
         switch( i )
         {
@@ -58,14 +61,14 @@ TEST( suffixIncrement, XElementIterator )
 {
     auto xdoc = doc();
     auto root = xdoc->getRoot();
-    XElementIterator iter = root->elementsBegin();
-    CHECK( iter != root->elementsEnd() );
+    XElementIterator iter = root->begin();
+    CHECK( iter != root->end() );
     CHECK_EQUAL( "abc", ( iter++ )->getName() );
-    CHECK( iter != root->elementsEnd() );
+    CHECK( iter != root->end() );
     CHECK_EQUAL( "empty-element", ( iter++ )->getName() );
-    CHECK( iter != root->elementsEnd() );
+    CHECK( iter != root->end() );
     CHECK_EQUAL( "nested-stuff", ( iter++ )->getName() );
-    CHECK( iter == root->elementsEnd() );
+    CHECK( iter == root->end() );
 }
 T_END
 
@@ -74,20 +77,20 @@ TEST( suffixDecrement, XElementIterator )
 {
     auto xdoc = doc();
     auto root = xdoc->getRoot();
-    XElementIterator iter = root->elementsEnd();
-    CHECK( iter == root->elementsEnd() );
+    XElementIterator iter = root->end();
+    CHECK( iter == root->end() );
     iter--;
-    CHECK( iter != root->elementsEnd() );
-    CHECK( iter != root->elementsBegin() );
+    CHECK( iter != root->end() );
+    CHECK( iter != root->begin() );
     CHECK_EQUAL( "nested-stuff", ( iter-- )->getName() );
-    CHECK( iter != root->elementsEnd() );
-    CHECK( iter != root->elementsBegin() );
+    CHECK( iter != root->end() );
+    CHECK( iter != root->begin() );
     CHECK_EQUAL( "empty-element", ( iter-- )->getName() );
-    CHECK( iter != root->elementsEnd() );
-    CHECK( iter == root->elementsBegin() );
+    CHECK( iter != root->end() );
+    CHECK( iter == root->begin() );
     CHECK_EQUAL( "abc", ( iter-- )->getName() );
     
-    // iter is now "before" root->elementsBegin()
+    // iter is now "before" root->begin()
     // which behaves like an "end" iter, should throw
     CHECK_RAISES( iter->getName() );
 }
@@ -98,12 +101,12 @@ TEST( prefixIncrement, XElementIterator )
 {
     auto xdoc = doc();
     auto root = xdoc->getRoot();
-    XElementIterator iter = root->elementsBegin();
+    XElementIterator iter = root->begin();
     CHECK_EQUAL( "abc", iter->getName() );
     CHECK_EQUAL( "empty-element", ( ++iter )->getName() );
     CHECK_EQUAL( "nested-stuff", ( ++iter )->getName() );
     ++iter;
-    CHECK( iter == root->elementsEnd() )
+    CHECK( iter == root->end() )
 }
 T_END
 
@@ -112,21 +115,21 @@ TEST( prefixDecrement, XElementIterator )
 {
     auto xdoc = doc();
     auto root = xdoc->getRoot();
-    XElementIterator iter = root->elementsEnd();
-    CHECK( iter == root->elementsEnd() );
-    CHECK( iter != root->elementsBegin() );
+    XElementIterator iter = root->end();
+    CHECK( iter == root->end() );
+    CHECK( iter != root->begin() );
     CHECK_EQUAL( "nested-stuff", ( --iter )->getName() );
-    CHECK( iter != root->elementsEnd() );
-    CHECK( iter != root->elementsBegin() );
+    CHECK( iter != root->end() );
+    CHECK( iter != root->begin() );
     CHECK_EQUAL( "empty-element", ( --iter )->getName() );
-    CHECK( iter != root->elementsEnd() );
-    CHECK( iter != root->elementsBegin() );
+    CHECK( iter != root->end() );
+    CHECK( iter != root->begin() );
     CHECK_EQUAL( "abc", ( --iter )->getName() );
-    CHECK( iter != root->elementsEnd() );
-    CHECK( iter == root->elementsBegin() );
+    CHECK( iter != root->end() );
+    CHECK( iter == root->begin() );
     --iter;
     
-    // iter is now "before" root->elementsBegin()
+    // iter is now "before" root->begin()
     // which behaves like an "end" iter, should throw
     CHECK_RAISES( iter->getName() );
 }
@@ -150,8 +153,8 @@ TEST( stlAlgorithm, XElementIterator )
     auto root = xdoc->getRoot();
     
     auto iter = std::find_if(
-        root->elementsBegin(),
-        root->elementsEnd(),
+        root->begin(),
+        root->end(),
         [] ( const XElement& n ) { return n.getName() == "nested-stuff"; } );
     
     CHECK_EQUAL( "nested-stuff", iter->getName() )
@@ -163,7 +166,7 @@ TEST( operatorStar, XElementIterator )
 {
     auto xdoc = doc();
     auto root = xdoc->getRoot();
-    XElementIterator iter = root->elementsBegin();
+    XElementIterator iter = root->begin();
     auto& node = *iter;
     CHECK_EQUAL( "abc", node.getName() )
     node.setName( "def" );
@@ -171,7 +174,7 @@ TEST( operatorStar, XElementIterator )
     
     // obtain the node again to make sure it changed in the xdoc
     auto reobtainedRoot = xdoc->getRoot();
-    auto reobtainedIter = reobtainedRoot->elementsBegin();
+    auto reobtainedIter = reobtainedRoot->begin();
     CHECK_EQUAL( "def", reobtainedIter->getName() );
 }
 T_END
@@ -181,7 +184,7 @@ TEST( copyConstructor, XElementIterator )
 {
     auto xdoc = doc();
     auto root = xdoc->getRoot();
-    XElementIterator iter = root->elementsBegin();
+    XElementIterator iter = root->begin();
     XElementIterator copy{ iter };
 
     CHECK_EQUAL( "abc", iter->getName() )
@@ -199,7 +202,7 @@ TEST( moveConstructor, XElementIterator )
 {
     auto xdoc = doc();
     auto root = xdoc->getRoot();
-    XElementIterator moved{ root->elementsBegin() }; // maybe it calls move ctor...
+    XElementIterator moved{ root->begin() }; // maybe it calls move ctor...
     
     auto& node = *moved;
     CHECK_EQUAL( "abc", node.getName() )
@@ -208,7 +211,7 @@ TEST( moveConstructor, XElementIterator )
     
     // obtain the node again to make sure it changed in the xdoc
     auto reobtainedRoot = xdoc->getRoot();
-    auto reobtainedIter = reobtainedRoot->elementsBegin();
+    auto reobtainedIter = reobtainedRoot->begin();
     CHECK_EQUAL( "def", reobtainedIter->getName() );
 }
 T_END
@@ -218,7 +221,7 @@ TEST( assignmentOperator, XElementIterator )
 {
     auto xdoc = doc();
     auto root = xdoc->getRoot();
-    XElementIterator iter = root->elementsBegin();
+    XElementIterator iter = root->begin();
     XElementIterator assigned;
     assigned = iter;
     
@@ -238,7 +241,7 @@ TEST( moveAssignment, XElementIterator )
     auto xdoc = doc();
     auto root = xdoc->getRoot();
     XElementIterator moved;
-    moved = root->elementsBegin(); // maybe it calls move assignment...
+    moved = root->begin(); // maybe it calls move assignment...
     
     auto& node = *moved;
     CHECK_EQUAL( "abc", node.getName() )
@@ -247,7 +250,7 @@ TEST( moveAssignment, XElementIterator )
     
     // obtain the node again to make sure it changed in the xdoc
     auto reobtainedRoot = xdoc->getRoot();
-    auto reobtainedIter = reobtainedRoot->elementsBegin();
+    auto reobtainedIter = reobtainedRoot->begin();
     CHECK_EQUAL( "def", reobtainedIter->getName() );
 }
 T_END

@@ -1,3 +1,6 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_CORE_TESTS
 
@@ -75,7 +78,7 @@ namespace MxTestHelpers
                 o->addDirectionType( d );
                 o->setHasOffset( true );
                 o->getOffset()->setValue( DivisionsValue( 3.3 ) );
-                o->setEditorialVoiceDirectionGroup( tgenEditorialVoiceGroup( v ) );
+                o->setEditorialVoiceDirectionGroup( tgenEditorialVoiceDirectionGroup( v ) );
             }
                 break;
             case variant::three:
@@ -90,11 +93,43 @@ namespace MxTestHelpers
                 d->setChoice( DirectionType::Choice::dynamics );
                 (*d->getDynamicsSet().cbegin())->setValue( DynamicsValue( DynamicsEnum::ffff ) );
                 o->addDirectionType( d );
-                o->setEditorialVoiceDirectionGroup( tgenEditorialVoiceGroup( v ) );
+                o->setEditorialVoiceDirectionGroup( tgenEditorialVoiceDirectionGroup( v ) );
                 o->setHasStaff( true );
                 o->getStaff()->setValue( PositiveInteger( 2 ) );
                 o->setHasSound( true );
                 o->setSound( tgenSound( v ) );
+            }
+                break;
+            default:
+                break;
+        }
+        return o;
+    }
+    EditorialVoiceDirectionGroupPtr tgenEditorialVoiceDirectionGroup( variant v )
+    {
+        EditorialVoiceDirectionGroupPtr o = makeEditorialVoiceDirectionGroup();
+        switch ( v )
+        {
+            case variant::one:
+            {
+            }
+                break;
+            case variant::two:
+            {
+                o->setHasLevel( true );
+                o->getLevel()->setValue( XsString( "LevelTwo" ) );
+                o->setHasFootnote( true );
+                o->getFootnote()->setValue( XsString( "FootNoteTwo" ) );
+                o->setHasVoice( true );
+                o->getVoice()->setValue( XsString( "123" ) );
+            }
+                break;
+            case variant::three:
+            {
+                o->setHasFootnote( true );
+                o->getFootnote()->setValue( XsString( "FootNoteThree" ) );
+                o->setHasVoice( true );
+                o->getVoice()->setValue( XsString( "456" ) );
             }
                 break;
             default:

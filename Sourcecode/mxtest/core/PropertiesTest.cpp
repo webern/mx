@@ -1,3 +1,6 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_CORE_TESTS
 
@@ -75,10 +78,15 @@ namespace MxTestHelpers
                 k->getKeyChoice()->getTraditionalKey()->setHasCancel( true );
                 k->getKeyChoice()->getTraditionalKey()->getCancel()->setValue( FifthsValue ( 1 ) );
                 o->addKey( k );
+                
                 auto t = makeTime();
                 t->getTimeChoice()->setChoice( TimeChoice::Choice::timeSignature );
-                t->getTimeChoice()->getTimeSignature()->getBeats()->setValue( XsString( "5" ) );
-                t->getTimeChoice()->getTimeSignature()->getBeatType()->setValue( XsString( "4" ) );
+                auto timeSignature = makeTimeSignatureGroup();
+                timeSignature->getBeats()->setValue( XsString( "3" ) );
+                timeSignature->getBeatType()->setValue( XsString( "4" ) );
+                t->getTimeChoice()->addTimeSignatureGroup( timeSignature );
+                t->getTimeChoice()->removeTimeSignatureGroup( t->getTimeChoice()->getTimeSignatureGroupSet().cbegin() );
+                
                 o->addTime( t );
                 o->setHasStaves( true );
                 o->getStaves()->setValue( NonNegativeInteger( 4 ) );
@@ -120,10 +128,15 @@ namespace MxTestHelpers
                 k->getKeyChoice()->getTraditionalKey()->setHasCancel( true );
                 k->getKeyChoice()->getTraditionalKey()->getCancel()->setValue( FifthsValue ( 1 ) );
                 o->addKey( k );
+                
                 auto t = makeTime();
                 t->getTimeChoice()->setChoice( TimeChoice::Choice::timeSignature );
-                t->getTimeChoice()->getTimeSignature()->getBeats()->setValue( XsString( "5" ) );
-                t->getTimeChoice()->getTimeSignature()->getBeatType()->setValue( XsString( "4" ) );
+                auto timeSignature = makeTimeSignatureGroup();
+                timeSignature->getBeats()->setValue( XsString( "5" ) );
+                timeSignature->getBeatType()->setValue( XsString( "4" ) );
+                t->getTimeChoice()->addTimeSignatureGroup( timeSignature );
+                t->getTimeChoice()->removeTimeSignatureGroup( t->getTimeChoice()->getTimeSignatureGroupSet().cbegin() );
+                
                 o->addTime( t );
                 o->setHasStaves( true );
                 o->getStaves()->setValue( NonNegativeInteger( 4 ) );
@@ -184,7 +197,7 @@ namespace MxTestHelpers
                 streamLine( os, i+2, R"(<fifths>-2</fifths>)" );
                 streamLine( os, i+1, R"(</key>)" );
                 streamLine( os, i+1, R"(<time>)" );
-                streamLine( os, i+2, R"(<beats>5</beats>)" );
+                streamLine( os, i+2, R"(<beats>3</beats>)" );
                 streamLine( os, i+2, R"(<beat-type>4</beat-type>)" );
                 streamLine( os, i+1, R"(</time>)" );
                 streamLine( os, i+1, R"(<staves>4</staves>)" );

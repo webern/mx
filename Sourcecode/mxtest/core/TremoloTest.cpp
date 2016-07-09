@@ -1,3 +1,6 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_CORE_TESTS
 
@@ -24,7 +27,7 @@ TEST( Test01, Tremolo )
 	object1.toStream( default_constructed, 0 );
 	std::stringstream object2_stream;
 	object2.toStream( object2_stream, 2 );
-	std::string expected = R"(<tremolo>0</tremolo>)";
+	std::string expected = R"(<tremolo>3</tremolo>)";
 	std::string actual = default_constructed.str();
 	CHECK_EQUAL( expected, actual )
 	expected = indentString+indentString+R"(<tremolo placement="below">3</tremolo>)";

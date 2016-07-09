@@ -1,4 +1,4 @@
-// MusicXML Class Library v0.1.1
+// MusicXML Class Library v0.2
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #include "mx/core/Date.h"
@@ -176,7 +176,7 @@ namespace mx
                 }
                 else
                 {
-                    for ( size_t i = 0; i < length; ++i )
+                    for ( size_t i = 0; i < static_cast<size_t>( length ); ++i )
                     {
                         if ( ( i <= 3 ) && ! isdigit( value_in[i] ) )
                         {
@@ -731,12 +731,16 @@ namespace mx
             myImpl->addYears( years_in );
             return *this;
         }
+
+
         std::string toString( const Date& value )
         {
             std::stringstream ss;
             toStream( ss, value );
             return ss.str();
         }
+
+
         std::ostream& toStream( std::ostream& os, const Date& value )
         {
             zeroPad( value.getYear(), 4, os );
@@ -746,6 +750,8 @@ namespace mx
             zeroPad( value.getDay(), 2, os );
             return os;
         }
+
+
         std::ostream& operator<<( std::ostream& os, const Date& value )
         {
             return toStream( os, value );

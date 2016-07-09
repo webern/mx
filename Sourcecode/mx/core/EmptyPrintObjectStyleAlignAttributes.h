@@ -1,4 +1,4 @@
-// MusicXML Class Library v0.1.1
+// MusicXML Class Library v0.2
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #pragma once
@@ -7,16 +7,12 @@
 #include "mx/core/Strings.h"
 #include "mx/core/Enums.h"
 #include "mx/core/FontSize.h"
-//#include "mx/core/TenthsValue.h"
-//#include "mx/core/CommaSeparatedText.h"
-//#include "mx/core/FontStyle.h"
-//#include "mx/core/FontWeight.h"
-//#include "mx/core/LeftCenterRight.h"
+#include "mx/core/Color.h"
 
 namespace mx
 {
-	namespace core
-	{
+    namespace core
+    {
         struct EmptyPrintObjectStyleAlignAttributes;
         using EmptyPrintObjectStyleAlignAttributesPtr = std::shared_ptr<EmptyPrintObjectStyleAlignAttributes>;
         
@@ -26,6 +22,8 @@ namespace mx
             EmptyPrintObjectStyleAlignAttributes();
             virtual bool hasValues() const;
             virtual std::ostream& toStream( std::ostream& os ) const;
+            
+            YesNo printObject;
             TenthsValue defaultX;
             TenthsValue defaultY;
             TenthsValue relativeX;
@@ -34,7 +32,11 @@ namespace mx
             FontStyle fontStyle;
             FontSize fontSize;
             FontWeight fontWeight;
+            Color color;
             LeftCenterRight halign;
+            Valign valign;
+            
+            bool hasPrintObject;
             bool hasDefaultX;
             bool hasDefaultY;
             bool hasRelativeX;
@@ -43,7 +45,11 @@ namespace mx
             bool hasFontStyle;
             bool hasFontSize;
             bool hasFontWeight;
+            bool hasColor;
             bool hasHalign;
+            bool hasValign;
+
+            virtual bool fromXElement( std::ostream& message, xml::XElement& xelement );
         };
-	}
+    }
 }

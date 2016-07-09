@@ -1,3 +1,6 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
 #pragma once
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_CORE_TESTS
@@ -5,6 +8,7 @@
 #include <memory>
 #include "mx/core/Enums.h"
 #include "mx/core/Elements.h"
+#include "mx/core/Document.h"
 
 namespace mx
 {
@@ -17,7 +21,7 @@ namespace mx
 
 namespace MxTestHelpers
 {
-    mx::core::DocumentTimewisePtr createDocumentTimewise();
+    mx::core::DocumentPtr createDocumentTimewise();
     void setTimewiseMeasureProperties( mx::core::TimewiseMeasurePtr& measure,
                                       int measureNumber,
                                       int divisions,

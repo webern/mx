@@ -1,10 +1,11 @@
-// MusicXML Class Library v0.1.1
+// MusicXML Class Library v0.2
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #pragma once
 
-#include <iostream>
+#include <iosfwd>
 #include <memory>
+#include "mx/core/UnusedParameter.h"
 #include "mx/core/AttributesInterface.h"
 
 namespace mx
@@ -16,9 +17,8 @@ namespace mx
     
     namespace core
     {
-        /* This will be used throughout when writing XML
-         to indent the XML tree */
-		extern const char* INDENT;
+        // This will be used by toStream to indent the XML tree
+        extern const char* INDENT;
         
         struct ElementInterface;
         using ElementPtr = std::shared_ptr<ElementInterface>;
@@ -32,19 +32,14 @@ namespace mx
             virtual bool hasAttributes() const;
             virtual std::ostream& streamAttributes( std::ostream& os ) const = 0;
             virtual std::ostream& streamName( std::ostream& os ) const = 0;
-            virtual bool hasContents() const = 0; /* if this returns false then self-closing tag will be created */
+            virtual bool hasContents() const = 0; // if this returns false then self-closing tag will be created
             virtual std::ostream& streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly ) const = 0;
             virtual std::ostream& streamOpenTag( std::ostream& os ) const;
             virtual std::ostream& streamCloseTag( std::ostream& os ) const;
             virtual std::ostream& streamSelfCloseTag( std::ostream& os ) const;
             virtual std::ostream& toStream( std::ostream& os, const int indentLevel ) const;
-            virtual bool fromXElement( std::ostream& message, xml::XElement& xelement )
-            {
-                // TODO - remove and make it pure virtual
-                streamName( message );
-                message << " - import from XDoc not implemented ";
-                return false;
-            }
+            virtual const std::string getElementName() const;
+            virtual bool fromXElement( std::ostream& message, xml::XElement& xelement ) = 0;
         };
         
         std::ostream& indent( std::ostream& os, const int indentLevel );

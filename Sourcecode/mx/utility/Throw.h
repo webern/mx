@@ -1,5 +1,8 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
 #pragma once
-#include "Version.h"
+
 #include <string>
 
 #ifndef __FILENAME__
@@ -17,7 +20,7 @@
 #endif
 
 #ifndef MX_THROW
-#define MX_THROW(throw_error_message)                      \
+#define MX_THROW(throw_error_message)                   \
 throw std::runtime_error (                              \
   std::string( "error in " )                            \
 + std::string( __FILENAME__ )                           \
@@ -25,7 +28,7 @@ throw std::runtime_error (                              \
 + std::string( std::to_string(__LINE__ ) )              \
 + std::string(") ")                                     \
 + std::string( __FUNCTION__ )                           \
-+ std::string(": '")                                     \
++ std::string(": '")                                    \
 + std::string( throw_error_message ) );                    
 #endif
 

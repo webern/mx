@@ -1,4 +1,4 @@
-// MusicXML Class Library v0.1.1
+// MusicXML Class Library v0.2
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #pragma once
@@ -26,6 +26,12 @@ namespace mx
             IntType myValue;
         };
         
+        
+        std::string toString( const Integer& value );
+        std::ostream& toStream( std::ostream& os, const Integer& value );
+        std::ostream& operator<<( std::ostream& os, const Integer& value );
+        
+        
         class IntRange : public Integer
         {
         public:
@@ -43,6 +49,7 @@ namespace mx
             const IntType myMax;
         };
         
+        
         class PositiveInteger: public Integer
         {
         public:
@@ -52,6 +59,7 @@ namespace mx
             virtual void setValue( IntType value );
             virtual void parse( const std::string& value );
         };
+        
         
         class NonNegativeInteger: public Integer
         {
@@ -63,17 +71,23 @@ namespace mx
             virtual void parse( const std::string& value );
         };
         
+        
 		std::string toString( const Integer& value );
 		std::ostream& toStream( std::ostream& os, const Integer& value );
 		std::ostream& operator<<( std::ostream& os, const Integer& value );
         
-        /* MIN = 1, MAX = 3, DEFAULT = 1 */
+        
+        // The specification restrics the values from 1 to 3
+        // This seems incorrect when searching accordion symbols
+        // online so this library will support 0 to 3 instead.
+        /* MIN = 0, MAX = 3, DEFAULT = 0 */
         class AccordionMiddleValue : public IntRange
         {
         public:
             explicit AccordionMiddleValue( IntType value );
             AccordionMiddleValue();
         };
+        
         
         /* MIN = 1, MAX = 8, DEFAULT = 1 */
         class BeamLevel : public IntRange
@@ -83,6 +97,7 @@ namespace mx
             BeamLevel();
         };
         
+        
         /* MIN = N/A, MAX = N/A, DEFAULT = 0 */
         class FifthsValue : public Integer
         {
@@ -90,6 +105,7 @@ namespace mx
             explicit FifthsValue( IntType value );
             FifthsValue();
         };
+        
         
         /* MIN = 1, MAX = 16, DEFAULT = 1 */
         class Midi16 : public IntRange
@@ -99,6 +115,7 @@ namespace mx
             Midi16();
         };
         
+        
         /* MIN = 1, MAX = 128, DEFAULT = 1 */
         class Midi128 : public IntRange
         {
@@ -106,6 +123,7 @@ namespace mx
             explicit Midi128( IntType value );
             Midi128();
         };
+        
         
         /* MIN = 1, MAX = 16384, DEFAULT = 1 */
         class Midi16384 : public IntRange
@@ -115,6 +133,7 @@ namespace mx
             Midi16384();
         };
         
+        
         /* MIN = 1, MAX = 6, DEFAULT = 1 */
         class NumberLevel : public IntRange
         {
@@ -122,6 +141,7 @@ namespace mx
             explicit NumberLevel( IntType value );
             NumberLevel();
         };
+        
         
         /* MIN = 0, MAX = 3, DEFAULT = 0 */
         class NumberOfLines : public IntRange
@@ -131,6 +151,7 @@ namespace mx
             NumberOfLines();
         };
         
+        
         /* MIN = 0, MAX = 9, DEFAULT = 0 */
         class OctaveValue : public IntRange
         {
@@ -138,6 +159,7 @@ namespace mx
             explicit OctaveValue( IntType value );
             OctaveValue();
         };
+        
         
         /* MIN = N/A, MAX = N/A, DEFAULT = 0 */
         class StaffLine : public Integer
@@ -147,11 +169,14 @@ namespace mx
             StaffLine();
         };
         
+        
         /* MIN = 1, MAX = N/A, DEFAULT = 1 */
         using StaffNumber = PositiveInteger;
         
+        
         /* MIN = 1, MAX = N/A, DEFAULT = 1 */
         using StringNumber = PositiveInteger;
+        
         
         /* MIN = 0, MAX = 8, DEFAULT = 0 */
         class TremoloMarks : public IntRange
@@ -160,5 +185,6 @@ namespace mx
             explicit TremoloMarks( IntType value );
             TremoloMarks();
         };
+        
     }
 }

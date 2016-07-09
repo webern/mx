@@ -1,16 +1,17 @@
-// MusicXML Class Library v0.1.1
+// MusicXML Class Library v0.2
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #include "mx/core/ElementInterface.h"
+#include <iostream>
 #include <sstream>
 
 namespace mx
 {
     namespace core
     {
-		const char* INDENT = "   ";
+        const char* INDENT = "   ";
  
-		ElementInterface::ElementInterface()
+        ElementInterface::ElementInterface()
         {}
         
         ElementInterface::~ElementInterface() {}
@@ -27,6 +28,8 @@ namespace mx
             os << ">";
             return os;
         }
+
+
         std::ostream& ElementInterface::streamCloseTag( std::ostream& os ) const
         {
             os << "</";
@@ -34,6 +37,8 @@ namespace mx
             os << ">";
             return os;
         }
+
+
         std::ostream& ElementInterface::streamSelfCloseTag( std::ostream& os ) const
         {
             os << "<";
@@ -52,6 +57,8 @@ namespace mx
             streamContents( ss, 0, discard );
             return ( ss.str() ).length() > 0;
         }
+
+
         std::ostream& ElementInterface::toStream( std::ostream& os, const int indentLevel ) const
         {
             indent( os, indentLevel );
@@ -72,6 +79,16 @@ namespace mx
             }
             return os;
         }
+        
+        
+        const std::string ElementInterface::getElementName() const
+        {
+            std::stringstream ss;
+            this->streamName( ss );
+            return ss.str();
+        }
+
+
         std::ostream& indent( std::ostream& os, const int indentLevel )
         {
             for ( int i = 0; i < indentLevel; ++i )
@@ -80,10 +97,14 @@ namespace mx
             }
             return os;
         }
+        
+        
         bool ElementInterface::hasAttributes() const
         {
             return false;
         }
+
+
         std::ostream& operator<<( std::ostream& os, const ElementInterface& value )
         {
             return value.toStream( os, 0 );

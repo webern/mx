@@ -1,3 +1,6 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_CORE_TESTS
 
@@ -60,13 +63,13 @@ namespace MxTestHelpers
             case variant::one:
             {
                 auto choice = tgenOrnamentsChoice( v );
-                o->setOrnamentsChoice( choice );
+                o->addOrnamentsChoice( choice );
             }
                 break;
             case variant::two:
             {
                 auto choice = tgenOrnamentsChoice( v );
-                o->setOrnamentsChoice( choice );
+                o->addOrnamentsChoice( choice );
                 auto mark1 = makeAccidentalMark();
                 mark1->setValue( AccidentalValue::doubleSharp );
                 o->addAccidentalMark( mark1 );
@@ -75,7 +78,7 @@ namespace MxTestHelpers
             case variant::three:
             {
                 auto choice = tgenOrnamentsChoice( v );
-                o->setOrnamentsChoice( choice );
+                o->addOrnamentsChoice( choice );
                 auto mark1 = makeAccidentalMark();
                 mark1->setValue( AccidentalValue::natural );
                 o->addAccidentalMark( mark1 );

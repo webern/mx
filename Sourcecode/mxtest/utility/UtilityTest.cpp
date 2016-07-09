@@ -1,3 +1,6 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_UTILTIY_TESTS
 
@@ -16,7 +19,7 @@ using namespace mx::utility;
 
 TEST( setTitle, MxUtility )
 {
-    auto doc = makeDocumentPartwise();
+    auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     setTitle( doc, "My Title" );
     
     bool isElementEnabled = doc->getScorePartwise()->getScoreHeaderGroup()->getHasWork();
@@ -32,7 +35,7 @@ T_END
 
 TEST( getTitleFalse, MxUtility )
 {
-    auto doc = makeDocumentPartwise();
+    auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     doc->getScorePartwise()->getScoreHeaderGroup()->getWork()->getWorkTitle()->setValue( XsString( "AnyString" ) );
     
     bool isElementEnabled = doc->getScorePartwise()->getScoreHeaderGroup()->getHasWork();
@@ -48,7 +51,7 @@ T_END
 
 TEST( getTitle, MxUtility )
 {
-    auto doc = makeDocumentPartwise();
+    auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     doc->getScorePartwise()->getScoreHeaderGroup()->getWork()->getWorkTitle()->setValue( XsString( "AnyString" ) );
     doc->getScorePartwise()->getScoreHeaderGroup()->setHasWork( true );
     doc->getScorePartwise()->getScoreHeaderGroup()->getWork()->setHasWorkTitle( true );
@@ -65,7 +68,7 @@ T_END
 
 TEST( setMovementTitle, MxUtility )
 {
-    auto doc = makeDocumentPartwise();
+    auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     setMovementTitle( doc, "My Title" );
     
     bool isElementEnabled = doc->getScorePartwise()->getScoreHeaderGroup()->getHasMovementTitle();
@@ -80,7 +83,7 @@ T_END
 
 TEST( getMovementTitleFalse, MxUtility )
 {
-    auto doc = makeDocumentPartwise();
+    auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     doc->getScorePartwise()->getScoreHeaderGroup()->getMovementTitle()->setValue( XsString( "AnyString" ) );
     
     bool isElementEnabled = doc->getScorePartwise()->getScoreHeaderGroup()->getHasMovementTitle();
@@ -95,7 +98,7 @@ T_END
 
 TEST( getMovementTitle, MxUtility )
 {
-    auto doc = makeDocumentPartwise();
+    auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     doc->getScorePartwise()->getScoreHeaderGroup()->getMovementTitle()->setValue( XsString( "AnyString" ) );
     doc->getScorePartwise()->getScoreHeaderGroup()->setHasMovementTitle( true );
     bool isElementEnabled = doc->getScorePartwise()->getScoreHeaderGroup()->getHasMovementTitle();
@@ -110,7 +113,7 @@ T_END
 
 TEST( setMovementNumber, MxUtility )
 {
-    auto doc = makeDocumentPartwise();
+    auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     setMovementNumber( doc, 1 );
     
     bool isElementEnabled = doc->getScorePartwise()->getScoreHeaderGroup()->getHasMovementNumber();
@@ -125,7 +128,7 @@ T_END
 
 TEST( getMovementNumberFalse, MxUtility )
 {
-    auto doc = makeDocumentPartwise();
+    auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     doc->getScorePartwise()->getScoreHeaderGroup()->getMovementNumber()->setValue( XsString( "1" ) );
     
     bool isElementEnabled = doc->getScorePartwise()->getScoreHeaderGroup()->getHasMovementNumber();
@@ -140,7 +143,7 @@ T_END
 
 TEST( getMovementNumber, MxUtility )
 {
-    auto doc = makeDocumentPartwise();
+    auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     doc->getScorePartwise()->getScoreHeaderGroup()->getMovementNumber()->setValue( XsString( "2" ) );
     doc->getScorePartwise()->getScoreHeaderGroup()->setHasMovementNumber( true );
     bool isElementEnabled = doc->getScorePartwise()->getScoreHeaderGroup()->getHasMovementNumber();
@@ -155,7 +158,7 @@ T_END
 
 TEST( setComposer, MxUtility )
 {
-    auto doc = makeDocumentPartwise();
+    auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     setComposer( doc, "AnyString" );
     
     CHECK_EQUAL( 1, doc->getScorePartwise()->getScoreHeaderGroup()->getIdentification()->getCreatorSet().size() )
@@ -172,7 +175,7 @@ T_END
 
 TEST( getComposerFalse, MxUtility )
 {
-    auto doc = makeDocumentPartwise();
+    auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     auto composerCreator = makeCreator();
     composerCreator->setValue( XsString( "Bishop the Cat" ));
     composerCreator->getAttributes()->type = XsToken( "cat" );
@@ -186,7 +189,7 @@ T_END
 
 TEST( getComposer, MxUtility )
 {
-    auto doc = makeDocumentPartwise();
+    auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     auto composerCreator = makeCreator();
     composerCreator->setValue( XsString( "Bishop the Cat" ));
     composerCreator->getAttributes()->type = XsToken( "composer" );
@@ -200,7 +203,7 @@ T_END
 
 TEST( setCopyright, MxUtility )
 {
-    auto doc = makeDocumentPartwise();
+    auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     setCopyright( doc, "AnyString" );
     
     CHECK_EQUAL( 1, doc->getScorePartwise()->getScoreHeaderGroup()->getIdentification()->getRightsSet().size() )
@@ -217,7 +220,7 @@ T_END
 
 TEST( getCopyrightFalse, MxUtility )
 {
-    auto doc = makeDocumentPartwise();
+    auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     auto item = makeRights();
     item->setValue( XsString( "Bishop the Cat" ));
     item->getAttributes()->type = XsToken( "cat" );
@@ -231,7 +234,7 @@ T_END
 
 TEST( getCopyright, MxUtility )
 {
-    auto doc = makeDocumentPartwise();
+    auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     auto item = makeRights();
     item->setValue( XsString( "Bishop the Cat" ));
     item->getAttributes()->type = XsToken( "copyright" );
@@ -245,48 +248,64 @@ T_END
 
 TEST( setSoftware, MxUtility )
 {
-    auto doc = makeDocumentPartwise();
+    auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     setSoftware( doc, "AnyString" );
-    doc->getScorePartwise()->getScoreHeaderGroup()->getIdentification()->getEncoding()->getSoftware()->getValue().getValue();
-    StringType expected = "AnyString";
-    StringType actual = doc->getScorePartwise()->getScoreHeaderGroup()->getIdentification()->getEncoding()->getSoftware()->getValue().getValue();
+    auto encoding = doc->getScorePartwise()->getScoreHeaderGroup()->getIdentification()->getEncoding();
+    const auto& encodingChoiceSet = encoding->getEncodingChoiceSet();
+    auto encodingChoice = *encodingChoiceSet.cbegin();
+    auto software = encodingChoice->getSoftware();
+    auto choice = encodingChoice->getChoice();
+    CHECK( EncodingChoice::Choice::software == choice );
+    
+    auto actual = software->getValue().getValue();
+    auto expected = "AnyString";
+    CHECK_EQUAL( expected, actual );
+    
+//    doc->getScorePartwise()->getScoreHeaderGroup()->getIdentification()->getEncoding()->getEncodingChoiceSet().cbegin()->getSoftware()->getValue().getValue();
+//    StringType expected = "AnyString";
+//    StringType actual = doc->getScorePartwise()->getScoreHeaderGroup()->getIdentification()->getEncoding()->getEncodingChoiceSet().cbegin()->getSoftware()->getValue().getValue();
 }
 T_END
 
 
 TEST( getSoftwareFalse, MxUtility )
 {
-    auto doc = makeDocumentPartwise();
-    auto item = makeEncoding();
-    item->setChoice( Encoding::Choice::software );
-    item->getSoftware()->setValue( XsString( "Some Value" ) );
-    doc->getScorePartwise()->getScoreHeaderGroup()->getIdentification()->setEncoding( item );
+    auto doc = makeDocument( mx::core::DocumentChoice::partwise );
+    auto encoding = makeEncoding();
+    auto encodingChoice = makeEncodingChoice();
+    encodingChoice->setChoice( EncodingChoice::Choice::software );
+    encodingChoice->getSoftware()->setValue( XsString( "Some Value" ) );
+    encoding->addEncodingChoice( encodingChoice );
+    doc->getScorePartwise()->getScoreHeaderGroup()->getIdentification()->setEncoding( encoding );
+    doc->getScorePartwise()->getScoreHeaderGroup()->setHasIdentification( true );
     StringType expected = "";
     StringType actual = getSoftware( doc );
-    CHECK_EQUAL( expected, actual )
+    CHECK_EQUAL( expected, actual );
 }
 T_END
 
 
 TEST( getSoftware, MxUtility )
 {
-    auto doc = makeDocumentPartwise();
-    auto item = makeEncoding();
-    item->setChoice( Encoding::Choice::software );
-    item->getSoftware()->setValue( XsString( "Some Value" ) );
+    auto doc = makeDocument( mx::core::DocumentChoice::partwise );
+    auto encoding = makeEncoding();
+    auto encodingChoice = makeEncodingChoice();
+    encodingChoice->setChoice( EncodingChoice::Choice::software );
+    encodingChoice->getSoftware()->setValue( XsString( "Some Value" ) );
+    encoding->addEncodingChoice( encodingChoice );
+    doc->getScorePartwise()->getScoreHeaderGroup()->getIdentification()->setEncoding( encoding );
     doc->getScorePartwise()->getScoreHeaderGroup()->setHasIdentification( true );
     doc->getScorePartwise()->getScoreHeaderGroup()->getIdentification()->setHasEncoding( true );
-    doc->getScorePartwise()->getScoreHeaderGroup()->getIdentification()->setEncoding( item );
     StringType expected = "Some Value";
     StringType actual = getSoftware( doc );
-    CHECK_EQUAL( expected, actual )
+    CHECK_EQUAL( expected, actual );
 }
 T_END
 
 
 TEST( startPartGroupInitialGroup, MxUtility )
 {
-    auto doc = makeDocumentPartwise();
+    auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     PartGroupParams params( "Woodwinds" );
     params.abbreviation = "Ww.";
     params.isGroupBarline = true;
@@ -302,7 +321,7 @@ T_END
 
 TEST( startPartGroupTwoGroupsAtBeginning, MxUtility )
 {
-    auto doc = makeDocumentPartwise();
+    auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     PartGroupParams params( "Woodwinds" );
     params.abbreviation = "Ww.";
     params.isGroupBarline = true;
@@ -319,7 +338,7 @@ T_END
 
 TEST( startPartGroupOneAtBeginningOneAfterFirstPart, MxUtility )
 {
-    auto doc = makeDocumentPartwise();
+    auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     PartGroupParams params( "Woodwinds" );
     params.abbreviation = "Ww.";
     params.isGroupBarline = true;
@@ -342,7 +361,7 @@ T_END
 
 TEST( stopPartGroup, MxUtility )
 {
-    auto doc = makeDocumentPartwise();
+    auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     stopPartGroup( doc );
     size_t expected = 1;
     size_t actual = doc->getScorePartwise()->getScoreHeaderGroup()->getPartList()->getPartGroupOrScorePartSet().size();
@@ -358,7 +377,7 @@ T_END
 
 TEST( stopPartGroupInt, MxUtility )
 {
-    auto doc = makeDocumentPartwise();
+    auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     stopPartGroup( doc, 10 );
     size_t expected = 1;
     size_t actual = doc->getScorePartwise()->getScoreHeaderGroup()->getPartList()->getPartGroupOrScorePartSet().size();
@@ -381,7 +400,7 @@ TEST( addPart, MxUtilityImpl )
     PartParams p2;
     p2.uniqueId = "P2";
     p2.name = "Part 2";
-    auto doc = makeDocumentPartwise();
+    auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     PartGroupParams group1;
     group1.name = "These Parts";
     group1.number = 1;
@@ -446,7 +465,7 @@ T_END
 TEST( measureTimeSignature, MxUtilityImpl )
 {
     auto measure = createMeasure( 9 );
-    addTimeSignature( measure, 5, 4 );
+    addTimeSignatureGroup( measure, 5, 4 );
     std::stringstream ss;
     ss << R"(<measure number="9">)" << endl;
     ss << R"(   <attributes>)" << endl;
@@ -469,7 +488,7 @@ TEST( measureStaves, MxUtilityImpl )
 {
     auto measure = createMeasure( 9 );
     addStaveCount( measure, 2 );
-    addTimeSignature( measure, 5, 4 );
+    addTimeSignatureGroup( measure, 5, 4 );
     std::stringstream ss;
     ss << R"(<measure number="9">)" << endl;
     ss << R"(   <attributes>)" << endl;
@@ -494,7 +513,7 @@ TEST( measureDivisions, MxUtilityImpl )
     auto measure = createMeasure( 9 );
     addDivisions( measure, 123456789 );
     addStaveCount( measure, 2 );
-    addTimeSignature( measure, 5, 4 );
+    addTimeSignatureGroup( measure, 5, 4 );
     std::stringstream ss;
     ss << R"(<measure number="9">)" << endl;
     ss << R"(   <attributes>)" << endl;

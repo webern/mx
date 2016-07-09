@@ -1,4 +1,4 @@
-// MusicXML Class Library v0.1.1
+// MusicXML Class Library v0.2
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #include "mx/utility/UtilityImpl.h"
@@ -31,12 +31,18 @@ namespace mx
             }
             pg->setHasGroupSymbol( true );
             pg->getGroupSymbol()->setValue( params.groupSymbol );
+            
             pg->setHasGroupNameDisplay( true );
-            pg->getGroupNameDisplay()->setChoice( GroupNameDisplay::Choice::displayText );
-            pg->getGroupNameDisplay()->getDisplayText()->setValue( XsString( params.displayName ) );
+            auto dt = makeDisplayTextOrAccidentalText();
+            dt->setChoice( DisplayTextOrAccidentalText::Choice::displayText );
+            dt->getDisplayText()->setValue( XsString( params.displayName ) );
+            pg->getGroupNameDisplay()->addDisplayTextOrAccidentalText( dt );
+            
             pg->setHasGroupAbbreviationDisplay( true );
-            pg->getGroupAbbreviationDisplay()->setChoice( GroupAbbreviationDisplay::Choice::displayText );
-            pg->getGroupAbbreviationDisplay()->getDisplayText()->setValue( XsString( params.displayAbbreviation ) );
+            auto gad = makeDisplayTextOrAccidentalText();
+            gad->setChoice( DisplayTextOrAccidentalText::Choice::displayText );
+            gad->getDisplayText()->setValue( XsString( params.displayAbbreviation ) );
+            pg->getGroupAbbreviationDisplay()->addDisplayTextOrAccidentalText( gad );
             return std::move( pg );
         }
         

@@ -1,3 +1,6 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_CORE_TESTS
 
@@ -69,6 +72,7 @@ namespace MxTestHelpers
                 o->getAttributes()->hasAccelerate = true;
                 o->getAttributes()->hasBeats = true;
                 o->getAttributes()->beats = TrillBeats( 3 );
+                o->setHasBendChoice( true );
             }
                 break;
             case variant::three:
@@ -81,6 +85,7 @@ namespace MxTestHelpers
                 o->getAttributes()->lastBeat = Percent( 0.999 );
                 o->setHasWithBar( true );
                 o->getWithBar()->setValue( XsString( "FooBar" ) );
+                o->setHasBendChoice( true );
             }
                 break;
             default:
@@ -97,8 +102,8 @@ namespace MxTestHelpers
             {
                 streamLine( os, i, R"(<bend>)" );
                 streamLine( os, i+1, R"(<bend-alter>0</bend-alter>)" );
-                tgenBendChoiceExpected( os, i+1, v );
-                os << std::endl;
+                //tgenBendChoiceExpected( os, i+1, v );
+                //os << std::endl;
                 streamLine( os, i, R"(</bend>)", false );
             }
                 break;

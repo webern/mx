@@ -1,3 +1,6 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_UTILTIY_TESTS
 
@@ -250,7 +253,7 @@ T_END
 
 TEST( isPartListInitializedTrue1, MxUtilityImpl )
 {
-    auto doc = makeDocumentPartwise();
+    auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     auto partList = doc->getScorePartwise()->getScoreHeaderGroup()->getPartList();
     auto somePart = makePartGroupOrScorePart();
     somePart->setChoice( PartGroupOrScorePart::Choice::scorePart );
@@ -263,7 +266,7 @@ T_END
 
 TEST( isPartListInitializedTrue2, MxUtilityImpl )
 {
-    auto doc = makeDocumentPartwise();
+    auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     auto partList = doc->getScorePartwise()->getScoreHeaderGroup()->getPartList();
     auto somePart = partList->getScorePart();
     somePart->getAttributes()->id = XsID( "XXX" );
@@ -274,7 +277,7 @@ T_END
 
 TEST( isPartListInitializedFalse, MxUtilityImpl )
 {
-    auto doc = makeDocumentPartwise();
+    auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     CHECK( ! isPartListInitialized( doc ) );
 }
 T_END
@@ -382,7 +385,7 @@ TEST( addInitialPartToDocument, MxUtilityImpl )
     PartParams params;
     params.name = "Bishop";
     params.uniqueId = "BISHOP_1";
-    auto doc = makeDocumentPartwise();
+    auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     addInitialPartToDocument( doc, params );
     StringType expected = "BISHOP_1";
     StringType actual = doc->getScorePartwise()->getScoreHeaderGroup()->getPartList()->getScorePart()->getAttributes()->id.getValue();
@@ -399,7 +402,7 @@ TEST( addSubsequentPartToDocument, MxUtilityImpl )
     PartParams params;
     params.name = "Bishop";
     params.uniqueId = "BISHOP_1";
-    auto doc = makeDocumentPartwise();
+    auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     addInitialPartToDocument( doc, params );
     params.name = "Bones";
     params.uniqueId = "BONES_1";

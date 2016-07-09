@@ -1,3 +1,6 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_CORE_TESTS
 
@@ -20,7 +23,7 @@ TEST( Test01, GroupAbbreviationDisplay )
 	object->toStream( actual, 1 );
 	CHECK_EQUAL( expected.str(), actual.str() )
 	CHECK( ! object->hasAttributes() )
-	CHECK( object->hasContents() )
+	CHECK( ! object->hasContents() )
 }
 TEST( Test02, GroupAbbreviationDisplay )
 {
@@ -63,18 +66,22 @@ namespace MxTestHelpers
                 break;
             case variant::two:
             {
-                o->setChoice( GroupAbbreviationDisplay::Choice::accidentalText );
-                o->getAccidentalText()->setValue( AccidentalValue::doubleSharp );
+                auto ch = makeDisplayTextOrAccidentalText();
+                ch->setChoice( DisplayTextOrAccidentalText::Choice::accidentalText );
+                ch->getAccidentalText()->setValue( AccidentalValue::doubleSharp );
+                o->addDisplayTextOrAccidentalText( ch );
                 o->getAttributes()->hasPrintObject = true;
                 o->getAttributes()->printObject = YesNo::no;
             }
                 break;
             case variant::three:
             {
-                o->setChoice( GroupAbbreviationDisplay::Choice::displayText );
-                o->getDisplayText()->setValue( XsString( "My Display String!" ) );
-                o->getDisplayText()->getAttributes()->hasSpace = true;
-                o->getDisplayText()->getAttributes()->space = XmlSpace::preserve;
+                auto ch = makeDisplayTextOrAccidentalText();
+                ch->setChoice( DisplayTextOrAccidentalText::Choice::displayText );
+                ch->getDisplayText()->setValue( XsString( "My Display String!" ) );
+                ch->getDisplayText()->getAttributes()->hasSpace = true;
+                ch->getDisplayText()->getAttributes()->space = XmlSpace::preserve;
+                o->addDisplayTextOrAccidentalText( ch );
             }
                 break;
             default:
@@ -89,9 +96,7 @@ namespace MxTestHelpers
         {
             case variant::one:
             {
-                streamLine( os, i, R"(<group-abbreviation-display>)" );
-                streamLine( os, i+1, R"(<display-text></display-text>)" );
-                streamLine( os, i, R"(</group-abbreviation-display>)", false );
+                streamLine( os, i, R"(<group-abbreviation-display/>)", false );
             }
                 break;
             case variant::two:

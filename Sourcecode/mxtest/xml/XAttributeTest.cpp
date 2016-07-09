@@ -1,3 +1,6 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_XML_TESTS
 
@@ -18,7 +21,7 @@ namespace
     {
         auto xdoc = XFactory::makeXDoc();
         std::istringstream is( MxTest::fakeXml );
-        xdoc->parse( is );
+        xdoc->loadStream( is );
         return xdoc;
     }
 
@@ -26,10 +29,10 @@ namespace
     inline XElementPtr somethingWithAttributes( const  mx::xml::XDocCPtr& xdoc )
     {
         auto root = xdoc->getRoot();
-        auto firstIter = root->elementsBegin();
+        auto firstIter = root->begin();
         ++firstIter;
         ++firstIter;
-        auto nextIter = firstIter->elementsBegin();
+        auto nextIter = firstIter->begin();
         return nextIter->clone();
     }
 }

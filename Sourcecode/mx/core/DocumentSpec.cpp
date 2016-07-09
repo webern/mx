@@ -1,8 +1,9 @@
-// MusicXML Class Library v0.1.1
+// MusicXML Class Library v0.2
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #include "mx/core/DocumentSpec.h"
 #include "mx/utility/Parse.h"
+#include "mx/core/UnusedParameter.h"
 #include <sstream>
 
 namespace mx
@@ -136,6 +137,7 @@ namespace mx
         
         DocumentSpec parseDocumentSpec( const xml::XDocCPtr& doc )
         {
+            MX_UNUSED( doc );
             throw std::runtime_error( "not implemented" );
         }
     }

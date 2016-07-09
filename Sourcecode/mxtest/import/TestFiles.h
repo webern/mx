@@ -1,4 +1,8 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
 #pragma once
+
 #include <string>
 #include <vector>
 
@@ -140,6 +144,7 @@ namespace MxTest
         { "mjbsuite", "freezing.xml" },
         { "mjbsuite", "hello_timewise.xml" },
         { "mjbsuite", "lyre_timewise.xml" },
+        { "musuite", "A_Walk_through_the_Park.xml" },
         { "musuite", "different_keysigs_1.xml" },
         { "musuite", "different_keysigs_2.xml" },
         { "musuite", "test_harmony.xml" },
@@ -271,6 +276,14 @@ namespace MxTest
         { "recsuite", "MozaVeilSample.xml" },
         { "recsuite", "Saltarello.xml" },
         { "recsuite", "SchbAvMaSample.xml" },
-        { "recsuite", "Telemann.xml" }
+        { "recsuite", "Telemann.xml" },
+        { "ksuite", "k001a_Articulations.xml" },
+        { "ksuite", "k001b_Articulations_Above.xml" },
+        { "ksuite", "k001c_Articulations_Below.xml" },
+        { "ksuite", "k002a_Fermatas.xml" },
+        { "ksuite", "k003a_Ornaments.xml" },
+        { "ksuite", "k004a_Technical.xml" },
+        { "ksuite", "k005a_Spanners_Slides.xml" },
+        { "logicpro", "logic01a_homoSapiens.xml" }
     };
 }

@@ -1,13 +1,20 @@
-// MusicXML Class Library v0.1.1
+// MusicXML Class Library v0.2
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #pragma once
+
+#include "mx/core/UnusedParameter.h"
 
 #include <iostream>
 #include <memory>
 
 namespace mx
 {
+    namespace xml
+    {
+        class XElement;
+    }
+    
     namespace core
     {
         struct AttributesInterface;
@@ -20,6 +27,10 @@ namespace mx
             virtual ~AttributesInterface();
             virtual bool hasValues() const;
             virtual std::ostream& toStream( std::ostream& os ) const;
+            
+            
+            
+            virtual bool fromXElement( std::ostream& message, xml::XElement& xelement ) = 0;
         };
 
         std::ostream& operator<<( std::ostream& os, const AttributesInterface& value );
@@ -36,7 +47,7 @@ namespace mx
                 os << attributeName;
                 os << "=\"";
                 os << value;
-                os <<"\"";
+                os << "\"";
             }
             return os;
         }

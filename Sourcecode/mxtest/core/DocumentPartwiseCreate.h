@@ -1,3 +1,6 @@
+// MusicXML Class Library v0.2
+// Copyright (c) 2015 - 2016 by Matthew James Briggs
+
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_CORE_TESTS
 
@@ -9,14 +12,14 @@ namespace mx
 {
     namespace core
     {
-        class DocumentPartwise;
-        using DocumentPartwisePtr = std::shared_ptr<DocumentPartwise>;
+        class Document;
+        using DocumentPtr = std::shared_ptr<Document>;
     }
 }
 
 namespace MxTestHelpers
 {
-    mx::core::DocumentPartwisePtr createDocumentPartwise();
+    mx::core::DocumentPtr createDocumentPartwise();
     void setPartwiseMeasureProperties( mx::core::PartwiseMeasurePtr& measure,
                                        int measureNumber,
                                        int divisions,

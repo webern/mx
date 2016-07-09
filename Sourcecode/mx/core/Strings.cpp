@@ -1,4 +1,4 @@
-// MusicXML Class Library v0.1.1
+// MusicXML Class Library v0.2
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #include "mx/core/Strings.h"
@@ -93,10 +93,47 @@ namespace mx
         {
             return xsstring.getValue();
         }
-        std::ostream& toStream( std::ostream& os, const XsString& xsstring )
+
+
+        std::ostream& toStream( std::ostream& os, const XsString& xsstring, bool useXmlEscapeCharacters )
         {
-            return os << xsstring.getValue();
+            if( !useXmlEscapeCharacters )
+            {
+                return os << xsstring.getValue();
+            }
+            for( auto c : xsstring.getValue() )
+            {
+                switch ( c )
+                {
+                    //case '"':
+                    //    os << "&quot;";
+                    //    break;
+                        
+                    //case '\'':
+                    //    os << "&apos;";
+                    //    break;
+                        
+                    case '<':
+                        os << "&lt;";
+                        break;
+                        
+                    case '>':
+                        os << "&gt;";
+                        break;
+                        
+                    case '&':
+                        os << "&amp;";
+                        break;
+                        
+                    default:
+                        os << c;
+                        break;
+                }
+            }
+            return os;
         }
+
+
         std::ostream& operator<<( std::ostream& os, const XsString& xsstring )
         {
             return toStream( os, xsstring );
@@ -204,6 +241,8 @@ namespace mx
             }
             return os;
         }
+
+
         std::ostream& operator<<( std::ostream& os, const CommaSeparatedText& value )
         {
             return toStream( os, value );
@@ -214,42 +253,65 @@ namespace mx
             toStream( ss, value );
             return ss.str();
         }
+        
+        
         CommaSeparatedListOfPositiveIntegers::CommaSeparatedListOfPositiveIntegers()
-        :myValues() {}
+        :myValues()
+        ,myIsSpacingDesired( false )
+        {}
+        
+        
         CommaSeparatedListOfPositiveIntegers::CommaSeparatedListOfPositiveIntegers( const StringType& value )
         :myValues()
+        ,myIsSpacingDesired(false)
         {
             parse( value );
         }
+        
+        
         CommaSeparatedListOfPositiveIntegers::CommaSeparatedListOfPositiveIntegers( const std::set<int>& values )
         :myValues()
         {
             setValues( values );
         }
+        
+        
         const std::set<int>& CommaSeparatedListOfPositiveIntegers::getValues() const
         {
             return myValues;
         }
+
+
         std::set<int>::iterator CommaSeparatedListOfPositiveIntegers::getValuesBegin()
         {
             return myValues.begin();
         }
+
+
         std::set<int>::iterator CommaSeparatedListOfPositiveIntegers::getValuesEnd()
         {
             return myValues.end();
         }
+
+
         std::set<int>::const_iterator CommaSeparatedListOfPositiveIntegers::getValuesBeginConst() const
         {
             return myValues.cbegin();
         }
+
+
         std::set<int>::const_iterator CommaSeparatedListOfPositiveIntegers::getValuesEndConst() const
         {
             return myValues.cend();
         }
+        
+        
         void CommaSeparatedListOfPositiveIntegers::setValues( const std::set<int>& values )
         {
             myValues = copyPositives( values );
         }
+        
+        
         void CommaSeparatedListOfPositiveIntegers::parse( const StringType& commaSeparatedText )
         {
             StringType cleaned = onlyAllow( commaSeparatedText, "", "1234567890,-" );
@@ -270,6 +332,20 @@ namespace mx
                 }
             }
         }
+        
+        
+        void CommaSeparatedListOfPositiveIntegers::setUseSpaceBetweenItems( bool value )
+        {
+            myIsSpacingDesired = value;
+        }
+        
+        
+        bool CommaSeparatedListOfPositiveIntegers::getUseSpaceBetweenItems() const
+        {
+            return myIsSpacingDesired;
+        }
+
+
         std::ostream& toStream( std::ostream& os, const CommaSeparatedListOfPositiveIntegers& value )
         {
             bool isfirst = true;
@@ -283,11 +359,17 @@ namespace mx
                 else
                 {
                     os << ",";
+                    if( value.getUseSpaceBetweenItems() )
+                    {
+                        os << " ";
+                    }
                     os << x;
                 }
             }
             return os;
         }
+
+
         std::ostream& operator<<( std::ostream& os, const CommaSeparatedListOfPositiveIntegers& value )
         {
             return toStream( os, value );
