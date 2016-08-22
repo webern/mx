@@ -429,6 +429,8 @@ The tests are slow to compile, see the *Compiling* section for more info on how 
 
 ##### Historical Notes
 
+**Release: Version 0.2 August 21, 2016** Adds the ability to import MusicXML documents into MusicXML Classes.
+
 **Update: August 16, 2016:** All tests are passing (core, xml and import).  The remaining items to do on the ximport feature are
 - search for all `\\TODO's` and fix those that can be fixed
 - Standardize the code file copyrights and bump to version 0.2
