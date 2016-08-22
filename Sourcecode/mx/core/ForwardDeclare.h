@@ -1,4 +1,4 @@
-// MusicXML Class Library v0.2
+// MusicXML Class Library v0.3.0
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #pragma once
@@ -7,7 +7,8 @@
 #include <vector>
 #include <memory>
 #include "mx/utility/Throw.h"
-
+#include "mx/utility/Lock.h"
+#include "mx/utility/JitAllocate.h"
 
 #ifndef MX_FORWARD_DECLARE_ELEMENT
 #define MX_FORWARD_DECLARE_ELEMENT( class_name ) \

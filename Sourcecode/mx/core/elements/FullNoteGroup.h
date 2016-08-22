@@ -1,4 +1,4 @@
-// MusicXML Class Library v0.2
+// MusicXML Class Library v0.3.0
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #pragma once
@@ -45,9 +45,10 @@ namespace mx
             bool fromXElement( std::ostream& message, xml::XElement& xelement );
 
         private:
+            MX_MUTEX
             ChordPtr myChord;
             bool myHasChord;
-            FullNoteTypeChoicePtr myFullNoteTypeChoice;
+            mutable FullNoteTypeChoicePtr myFullNoteTypeChoice;
         };
     }
 }

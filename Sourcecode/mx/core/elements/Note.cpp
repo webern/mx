@@ -1,4 +1,4 @@
-// MusicXML Class Library v0.2
+// MusicXML Class Library v0.3.0
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #include "mx/core/elements/Note.h"
@@ -40,43 +40,43 @@ namespace mx
     namespace core
     {
         Note::Note()
-        :myAttributes( std::make_shared<NoteAttributes>() )
-        ,myNoteChoice( makeNoteChoice() )
-        ,myInstrument( makeInstrument() )
+        :myAttributes( nullptr )
+        ,myNoteChoice( nullptr )
+        ,myInstrument( nullptr )
         ,myHasInstrument( false )
-        ,myEditorialVoiceGroup( makeEditorialVoiceGroup() )
-        ,myType( makeType() )
+        ,myEditorialVoiceGroup( nullptr )
+        ,myType( nullptr )
         ,myHasType( false )
         ,myDotSet()
-        ,myAccidental( makeAccidental() )
+        ,myAccidental( nullptr )
         ,myHasAccidental( false )
-        ,myTimeModification( makeTimeModification() )
+        ,myTimeModification( nullptr )
         ,myHasTimeModification( false )
-        ,myStem( makeStem() )
+        ,myStem( nullptr )
         ,myHasStem( false )
-        ,myNotehead( makeNotehead() )
+        ,myNotehead( nullptr )
         ,myHasNotehead( false )
-        ,myNoteheadText( makeNoteheadText() )
+        ,myNoteheadText( nullptr )
         ,myHasNoteheadText( false )
-        ,myStaff( makeStaff() )
+        ,myStaff( nullptr )
         ,myHasStaff( false )
         ,myBeamSet()
         ,myNotationsSet()
         ,myLyricSet()
-        ,myPlay( makePlay() )
+        ,myPlay( nullptr )
         ,myHasPlay( false )
         {}
 
 
         bool Note::hasAttributes() const
         {
-            return myAttributes->hasValues();
+            return getAttributes()->hasValues();
         }
 
 
         std::ostream& Note::streamAttributes( std::ostream& os ) const
         {
-            return myAttributes->toStream( os );
+            return getAttributes()->toStream( os );
         }
 
 
@@ -96,21 +96,21 @@ namespace mx
         std::ostream& Note::streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly ) const
         {
             os << std::endl;
-            myNoteChoice->streamContents( os, indentLevel+1, isOneLineOnly );
+            getNoteChoice()->streamContents( os, indentLevel+1, isOneLineOnly );
             if ( myHasInstrument )
             {
                 os << std::endl;
-                myInstrument->toStream( os, indentLevel+1 );
+                getInstrument()->toStream( os, indentLevel+1 );
             }
-            if ( myEditorialVoiceGroup->hasContents() )
+            if ( getEditorialVoiceGroup()->hasContents() )
             {
                 os << std::endl;
-                myEditorialVoiceGroup->streamContents( os, indentLevel+1, isOneLineOnly );
+                getEditorialVoiceGroup()->streamContents( os, indentLevel+1, isOneLineOnly );
             }
             if ( myHasType )
             {
                 os << std::endl;
-                myType->toStream( os, indentLevel+1 );
+                getType()->toStream( os, indentLevel+1 );
             }
             for ( auto x : myDotSet )
             {
@@ -120,32 +120,32 @@ namespace mx
             if ( myHasAccidental )
             {
                 os << std::endl;
-                myAccidental->toStream( os, indentLevel+1 );
+                getAccidental()->toStream( os, indentLevel+1 );
             }
             if ( myHasTimeModification )
             {
                 os << std::endl;
-                myTimeModification->toStream( os, indentLevel+1 );
+                getTimeModification()->toStream( os, indentLevel+1 );
             }
             if ( myHasStem )
             {
                 os << std::endl;
-                myStem->toStream( os, indentLevel+1 );
+                getStem()->toStream( os, indentLevel+1 );
             }
             if ( myHasNotehead )
             {
                 os << std::endl;
-                myNotehead->toStream( os, indentLevel+1 );
+                getNotehead()->toStream( os, indentLevel+1 );
             }
             if ( myHasNoteheadText )
             {
                 os << std::endl;
-                myNoteheadText->toStream( os, indentLevel+1 );
+                getNoteheadText()->toStream( os, indentLevel+1 );
             }
             if ( myHasStaff )
             {
                 os << std::endl;
-                myStaff->toStream( os, indentLevel+1 );
+                getStaff()->toStream( os, indentLevel+1 );
             }
             for ( auto x : myBeamSet )
             {
@@ -165,7 +165,7 @@ namespace mx
             if ( myHasPlay )
             {
                 os << std::endl;
-                myPlay->toStream( os, indentLevel+1 );
+                getPlay()->toStream( os, indentLevel+1 );
             }
             isOneLineOnly = false;
             os << std::endl;
@@ -175,6 +175,8 @@ namespace mx
 
         NoteAttributesPtr Note::getAttributes() const
         {
+            MX_LOCK;
+            MX_JIT_ALLOCATE_ATTRIBUTES( NoteAttributes );
             return myAttributes;
         }
 
@@ -190,6 +192,8 @@ namespace mx
 
         NoteChoicePtr Note::getNoteChoice() const
         {
+            MX_LOCK;
+            MX_JIT_ALLOCATE( NoteChoice );
             return myNoteChoice;
         }
 
@@ -205,6 +209,8 @@ namespace mx
 
         InstrumentPtr Note::getInstrument() const
         {
+            MX_LOCK;
+            MX_JIT_ALLOCATE( Instrument );
             return myInstrument;
         }
 
@@ -232,6 +238,8 @@ namespace mx
 
         EditorialVoiceGroupPtr Note::getEditorialVoiceGroup() const
         {
+            MX_LOCK;
+            MX_JIT_ALLOCATE( EditorialVoiceGroup );
             return myEditorialVoiceGroup;
         }
 
@@ -247,6 +255,8 @@ namespace mx
 
         TypePtr Note::getType() const
         {
+            MX_LOCK;
+            MX_JIT_ALLOCATE( Type );
             return myType;
         }
 
@@ -314,6 +324,8 @@ namespace mx
 
         AccidentalPtr Note::getAccidental() const
         {
+            MX_LOCK;
+            MX_JIT_ALLOCATE( Accidental );
             return myAccidental;
         }
 
@@ -341,6 +353,8 @@ namespace mx
 
         TimeModificationPtr Note::getTimeModification() const
         {
+            MX_LOCK;
+            MX_JIT_ALLOCATE( TimeModification );
             return myTimeModification;
         }
 
@@ -368,6 +382,8 @@ namespace mx
 
         StemPtr Note::getStem() const
         {
+            MX_LOCK;
+            MX_JIT_ALLOCATE( Stem );
             return myStem;
         }
 
@@ -395,6 +411,8 @@ namespace mx
 
         NoteheadPtr Note::getNotehead() const
         {
+            MX_LOCK;
+            MX_JIT_ALLOCATE( Notehead );
             return myNotehead;
         }
 
@@ -422,6 +440,8 @@ namespace mx
 
         NoteheadTextPtr Note::getNoteheadText() const
         {
+            MX_LOCK;
+            MX_JIT_ALLOCATE( NoteheadText );
             return myNoteheadText;
         }
 
@@ -449,6 +469,8 @@ namespace mx
 
         StaffPtr Note::getStaff() const
         {
+            MX_LOCK;
+            MX_JIT_ALLOCATE( Staff );
             return myStaff;
         }
 
@@ -599,6 +621,8 @@ namespace mx
 
         PlayPtr Note::getPlay() const
         {
+            MX_LOCK;
+            MX_JIT_ALLOCATE( Play );
             return myPlay;
         }
 
@@ -633,7 +657,7 @@ namespace mx
             bool isFirstNotationsAdded = false;
             bool isFirstLyricAdded = false;
             
-            isSuccess &= myAttributes->fromXElement( message, xelement );
+            isSuccess &= getAttributes()->fromXElement( message, xelement );
             
             for( auto it = xelement.begin(); it != xelement.end(); ++it )
             {
@@ -653,7 +677,7 @@ namespace mx
                 else if( elementName == "instrument" )
                 {
                     myHasInstrument = true;
-                    isSuccess &= myInstrument->fromXElement( message, *it );
+                    isSuccess &= getInstrument()->fromXElement( message, *it );
                 }
                 else if(   elementName == "footnote"
                         || elementName == "level"
@@ -664,7 +688,7 @@ namespace mx
                 else if( elementName == "type" )
                 {
                     myHasType = true;
-                    isSuccess &= myType->fromXElement( message, *it );
+                    isSuccess &= getType()->fromXElement( message, *it );
                 }
                 else if( elementName == "dot" )
                 {
@@ -685,32 +709,32 @@ namespace mx
                 else if( elementName == "accidental" )
                 {
                     myHasAccidental = true;
-                    isSuccess &= myAccidental->fromXElement( message, *it );
+                    isSuccess &= getAccidental()->fromXElement( message, *it );
                 }
                 else if( elementName == "time-modification" )
                 {
                     myHasTimeModification = true;
-                    isSuccess &= myTimeModification->fromXElement( message, *it );
+                    isSuccess &= getTimeModification()->fromXElement( message, *it );
                 }
                 else if( elementName == "stem" )
                 {
                     myHasStem = true;
-                    isSuccess &= myStem->fromXElement( message, *it );
+                    isSuccess &= getStem()->fromXElement( message, *it );
                 }
                 else if( elementName == "notehead" )
                 {
                     myHasNotehead = true;
-                    isSuccess &= myNotehead->fromXElement( message, *it );
+                    isSuccess &= getNotehead()->fromXElement( message, *it );
                 }
                 else if( elementName == "notehead-text" )
                 {
                     myHasNoteheadText = true;
-                    isSuccess &= myNoteheadText->fromXElement( message, *it );
+                    isSuccess &= getNoteheadText()->fromXElement( message, *it );
                 }
                 else if( elementName == "staff" )
                 {
                     myHasStaff = true;
-                    isSuccess &= myStaff->fromXElement( message, *it );
+                    isSuccess &= getStaff()->fromXElement( message, *it );
                 }
                 else if( elementName == "beam" )
                 {
@@ -763,7 +787,7 @@ namespace mx
                 else if( elementName == "play" )
                 {
                     myHasPlay = true;
-                    isSuccess &= myPlay->fromXElement( message, *it );
+                    isSuccess &= getPlay()->fromXElement( message, *it );
                 }
                 else
                 {
@@ -797,22 +821,22 @@ namespace mx
             
             if( elementName == "grace" )
             {
-                myNoteChoice->setChoice( NoteChoice::Choice::grace );
-                isSuccess &= myNoteChoice->getGraceNoteGroup()->getGrace()->fromXElement( message, *iter );
-                fullNoteGroup = myNoteChoice->getGraceNoteGroup()->getFullNoteGroup();
+                getNoteChoice()->setChoice( NoteChoice::Choice::grace );
+                isSuccess &= getNoteChoice()->getGraceNoteGroup()->getGrace()->fromXElement( message, *iter );
+                fullNoteGroup = getNoteChoice()->getGraceNoteGroup()->getFullNoteGroup();
                 ++iter;
             }
             else if ( elementName == "cue" )
             {
-                myNoteChoice->setChoice( NoteChoice::Choice::cue );
-                isSuccess &= myNoteChoice->getCueNoteGroup()->getCue()->fromXElement( message, *iter );
-                fullNoteGroup = myNoteChoice->getCueNoteGroup()->getFullNoteGroup();
+                getNoteChoice()->setChoice( NoteChoice::Choice::cue );
+                isSuccess &= getNoteChoice()->getCueNoteGroup()->getCue()->fromXElement( message, *iter );
+                fullNoteGroup = getNoteChoice()->getCueNoteGroup()->getFullNoteGroup();
                 ++iter;
             }
             else
             {
-                myNoteChoice->setChoice( NoteChoice::Choice::normal );
-                fullNoteGroup = myNoteChoice->getNormalNoteGroup()->getFullNoteGroup();
+                getNoteChoice()->setChoice( NoteChoice::Choice::normal );
+                fullNoteGroup = getNoteChoice()->getNormalNoteGroup()->getFullNoteGroup();
             }
             
             // we should now be pointing at the full note group
@@ -827,13 +851,13 @@ namespace mx
                     return false;
                 }
                 
-                if( myNoteChoice->getChoice() == NoteChoice::Choice::normal )
+                if( getNoteChoice()->getChoice() == NoteChoice::Choice::normal )
                 {
-                    myNoteChoice->getNormalNoteGroup()->getDuration()->fromXElement( message, *iter );
+                    getNoteChoice()->getNormalNoteGroup()->getDuration()->fromXElement( message, *iter );
                 }
-                else if( myNoteChoice->getChoice() == NoteChoice::Choice::cue )
+                else if( getNoteChoice()->getChoice() == NoteChoice::Choice::cue )
                 {
-                    myNoteChoice->getCueNoteGroup()->getDuration()->fromXElement( message, *iter );
+                    getNoteChoice()->getCueNoteGroup()->getDuration()->fromXElement( message, *iter );
                 }
                 ++iter;
             }
@@ -845,25 +869,25 @@ namespace mx
             }
             
             // now we may be pointing at tie elements, but only if the choice is normal or grace
-            if( myNoteChoice->getChoice() == NoteChoice::Choice::normal || myNoteChoice->getChoice() == NoteChoice::Choice::grace  )
+            if( getNoteChoice()->getChoice() == NoteChoice::Choice::normal || getNoteChoice()->getChoice() == NoteChoice::Choice::grace  )
             {
                 std::string possibleTieElementName = iter->getName();
                 while( iter != noteElement.end() && iter->getName() == "tie" )
                 {
                     auto tie = makeTie();
                     isSuccess &= tie->fromXElement( message, *iter );
-                    if( myNoteChoice->getChoice() == NoteChoice::Choice::normal )
+                    if( getNoteChoice()->getChoice() == NoteChoice::Choice::normal )
                     {
-                        myNoteChoice->getNormalNoteGroup()->addTie( tie );
+                        getNoteChoice()->getNormalNoteGroup()->addTie( tie );
                     }
-                    else if ( myNoteChoice->getChoice() == NoteChoice::Choice::grace )
+                    else if ( getNoteChoice()->getChoice() == NoteChoice::Choice::grace )
                     {
-                        myNoteChoice->getGraceNoteGroup()->addTie( tie );
+                        getNoteChoice()->getGraceNoteGroup()->addTie( tie );
                     }
                     ++iter;
                 }
             }
-            else if( myNoteChoice->getChoice() == NoteChoice::Choice::cue )
+            else if( getNoteChoice()->getChoice() == NoteChoice::Choice::cue )
             {
                 MX_RETURN_IS_SUCCESS;
             }
@@ -934,18 +958,18 @@ namespace mx
             {
                 if( iter->getName() == "footnote" )
                 {
-                    myEditorialVoiceGroup->setHasFootnote( true );
-                    isSuccess &= myEditorialVoiceGroup->getFootnote()->fromXElement( message, *iter );
+                    getEditorialVoiceGroup()->setHasFootnote( true );
+                    isSuccess &= getEditorialVoiceGroup()->getFootnote()->fromXElement( message, *iter );
                 }
                 else if ( iter->getName() == "level" )
                 {
-                    myEditorialVoiceGroup->setHasLevel( true );
-                    isSuccess &= myEditorialVoiceGroup->getLevel()->fromXElement( message, *iter );
+                    getEditorialVoiceGroup()->setHasLevel( true );
+                    isSuccess &= getEditorialVoiceGroup()->getLevel()->fromXElement( message, *iter );
                 }
                 else if ( iter->getName() == "voice" )
                 {
-                    myEditorialVoiceGroup->setHasVoice( true );
-                    isSuccess &= myEditorialVoiceGroup->getVoice()->fromXElement( message, *iter );
+                    getEditorialVoiceGroup()->setHasVoice( true );
+                    isSuccess &= getEditorialVoiceGroup()->getVoice()->fromXElement( message, *iter );
                 }
                 
                 ++iter;

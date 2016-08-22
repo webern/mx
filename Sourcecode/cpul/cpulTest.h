@@ -15,6 +15,7 @@
 #include <vector>
 #include <sstream>
 #include <string>
+#include <iomanip>
 
 class TestResult;
 
@@ -85,11 +86,12 @@ private:
 
 #define CHECK_DOUBLES_EQUAL(expected,actual,threshold)\
 {\
-    double _expected = static_cast<double>(expected);\
-    double _actual = static_cast<double>(actual);\
-    if (fabs ((_expected)-(_actual)) > (threshold)) {\
+    long double _expected = static_cast<long double>(expected);\
+    long double _actual = static_cast<long double>(actual);\
+    long double _thresh = static_cast<long double>(threshold);\
+    if (std::abs ((_expected)-(_actual)) > (_thresh)) {\
         std::ostringstream message; \
-        message << "expected '" << (_expected) << "' but was '" << (_actual) << "'"; \
+        message << "expected '" << std::setprecision(16) << std::fixed << (_expected) << "' but was '" << (_actual) << "'"; \
         rEsUlT_.addFailure (Failure (message.str(), __FILE__, __LINE__));\
         return; \
     }\

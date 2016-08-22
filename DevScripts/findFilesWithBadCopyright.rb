@@ -1,7 +1,7 @@
-expected_identifier = "// MusicXML Class Library v0.1.1"
+expected_identifier = "// MusicXML Class Library v0.2"
 expected_copyright = "// Copyright (c) 2015 - 2016 by Matthew James Briggs"
 
-new_identifier = "// MusicXML Class Library v0.2"
+new_identifier = "// MusicXML Class Library v0.3.0"
 new_copyright = "// Copyright (c) 2015 - 2016 by Matthew James Briggs"
 
 def regexify input_string

@@ -1,4 +1,4 @@
-// MusicXML Class Library v0.2
+// MusicXML Class Library v0.3.0
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #include "mx/utility/UtilityImpl.h"
@@ -43,7 +43,7 @@ namespace mx
             gad->setChoice( DisplayTextOrAccidentalText::Choice::displayText );
             gad->getDisplayText()->setValue( XsString( params.displayAbbreviation ) );
             pg->getGroupAbbreviationDisplay()->addDisplayTextOrAccidentalText( gad );
-            return std::move( pg );
+            return pg ;
         }
         
         bool isPartListInitialized( const MxDoc& doc )

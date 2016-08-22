@@ -1,11 +1,10 @@
 MusicXML Class Library
 ======================
 
-Author: Matthew James Briggs
-License: MIT
-Version: 0.2
-Datestamp: August 17, 2016
-Supported MusicXML Version: 3.0
+- Author: Matthew James Briggs
+- License: MIT
+- Version: 0.3
+- Supported MusicXML Version: 3.0
 
 -----------------------------------------
 

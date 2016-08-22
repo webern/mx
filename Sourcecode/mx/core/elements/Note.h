@@ -1,4 +1,4 @@
-// MusicXML Class Library v0.2
+// MusicXML Class Library v0.3.0
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #pragma once
@@ -149,30 +149,31 @@ namespace mx
             bool fromXElement( std::ostream& message, xml::XElement& xelement );
 
         private:
-            NoteAttributesPtr myAttributes;
-            NoteChoicePtr myNoteChoice;
-            InstrumentPtr myInstrument;
+            MX_MUTEX
+            mutable NoteAttributesPtr myAttributes;
+            mutable NoteChoicePtr myNoteChoice;
+            mutable InstrumentPtr myInstrument;
             bool myHasInstrument;
-            EditorialVoiceGroupPtr myEditorialVoiceGroup;
-            TypePtr myType;
+            mutable EditorialVoiceGroupPtr myEditorialVoiceGroup;
+            mutable TypePtr myType;
             bool myHasType;
             DotSet myDotSet;
-            AccidentalPtr myAccidental;
+            mutable AccidentalPtr myAccidental;
             bool myHasAccidental;
-            TimeModificationPtr myTimeModification;
+            mutable TimeModificationPtr myTimeModification;
             bool myHasTimeModification;
-            StemPtr myStem;
+            mutable StemPtr myStem;
             bool myHasStem;
-            NoteheadPtr myNotehead;
+            mutable NoteheadPtr myNotehead;
             bool myHasNotehead;
-            NoteheadTextPtr myNoteheadText;
+            mutable NoteheadTextPtr myNoteheadText;
             bool myHasNoteheadText;
-            StaffPtr myStaff;
+            mutable StaffPtr myStaff;
             bool myHasStaff;
             BeamSet myBeamSet;
             NotationsSet myNotationsSet;
             LyricSet myLyricSet;
-            PlayPtr myPlay;
+            mutable PlayPtr myPlay;
             bool myHasPlay;
             
             bool parseNoteChoice(

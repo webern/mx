@@ -1,4 +1,4 @@
-// MusicXML Class Library v0.2
+// MusicXML Class Library v0.3.0
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #include "mxtest/control/CompileControl.h"
@@ -29,7 +29,7 @@ using namespace MxTest;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-#define MXTEST_GENERATE_EXPECTED_FILES
+//#define MXTEST_GENERATE_EXPECTED_FILES
 #ifdef MXTEST_GENERATE_EXPECTED_FILES
 
     TEST( GenerateExpected, Import )
