@@ -118,6 +118,7 @@ namespace mx
             bool fromXElement( std::ostream& message, xml::XElement& xelement );
 
         private:
+            MX_MUTEX
             Choice myChoice;
             mutable NotePtr myNote;
             mutable BackupPtr myBackup;

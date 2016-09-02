@@ -42,7 +42,8 @@ namespace mx
             bool fromXElement( std::ostream& message, xml::XElement& xelement );
 
         private:
-            MeasureAttributesPtr myAttributes;
+            MX_MUTEX
+            mutable MeasureAttributesPtr myAttributes;
             MusicDataGroupPtr myMusicDataGroup;
         };
     }

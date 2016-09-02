@@ -45,9 +45,10 @@ namespace mx
             bool fromXElement( std::ostream& message, xml::XElement& xelement );
 
         private:
+            MX_MUTEX
             ChordPtr myChord;
             bool myHasChord;
-            FullNoteTypeChoicePtr myFullNoteTypeChoice;
+            mutable FullNoteTypeChoicePtr myFullNoteTypeChoice;
         };
     }
 }

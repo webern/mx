@@ -58,10 +58,11 @@ namespace mx
             bool fromXElement( std::ostream& message, xml::XElement& xelement );
 
         private:
+            MX_MUTEX
             Choice myChoice;
-            PitchPtr myPitch;
-            UnpitchedPtr myUnpitched;
-            RestPtr myRest;
+            mutable PitchPtr myPitch;
+            mutable UnpitchedPtr myUnpitched;
+            mutable RestPtr myRest;
         };
     }
 }

@@ -53,13 +53,13 @@ namespace mx
             switch ( myChoice )
             {
                 case Choice::pitch:
-                    myPitch->toStream( os, indentLevel );
+                    getPitch()->toStream( os, indentLevel );
                     break;
                 case Choice::unpitched:
-                    myUnpitched->toStream( os, indentLevel );
+                    getUnpitched()->toStream( os, indentLevel );
                     break;
                 case Choice::rest:
-                    myRest->toStream( os, indentLevel );
+                    getRest()->toStream( os, indentLevel );
                     break;
                 default:
                     break;
@@ -82,6 +82,8 @@ namespace mx
 
         PitchPtr FullNoteTypeChoice::getPitch() const
         {
+            MX_LOCK
+            MX_JIT_ALLOCATE( Pitch );
             return myPitch;
         }
 
@@ -97,6 +99,8 @@ namespace mx
 
         UnpitchedPtr FullNoteTypeChoice::getUnpitched() const
         {
+            MX_LOCK
+            MX_JIT_ALLOCATE( Unpitched );
             return myUnpitched;
         }
 
@@ -112,6 +116,8 @@ namespace mx
 
         RestPtr FullNoteTypeChoice::getRest() const
         {
+            MX_LOCK
+            MX_JIT_ALLOCATE( Rest );
             return myRest;
         }
 

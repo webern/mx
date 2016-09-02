@@ -14,7 +14,7 @@ namespace mx
         FullNoteGroup::FullNoteGroup()
         :myChord( makeChord() )
         ,myHasChord( false )
-        ,myFullNoteTypeChoice( makeFullNoteTypeChoice() )
+        ,myFullNoteTypeChoice( nullptr )
         {}
 
 
@@ -49,7 +49,7 @@ namespace mx
                 myChord->toStream( os, indentLevel );
                 os << std::endl;
             }
-            myFullNoteTypeChoice->streamContents( os, indentLevel, isOneLineOnly );
+            getFullNoteTypeChoice()->streamContents( os, indentLevel, isOneLineOnly );
             isOneLineOnly = false;
             return os;
         }
@@ -84,6 +84,8 @@ namespace mx
 
         FullNoteTypeChoicePtr FullNoteGroup::getFullNoteTypeChoice() const
         {
+            MX_LOCK
+            MX_JIT_ALLOCATE( FullNoteTypeChoice );
             return myFullNoteTypeChoice;
         }
 

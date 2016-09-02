@@ -43,7 +43,7 @@ namespace mx
             gad->setChoice( DisplayTextOrAccidentalText::Choice::displayText );
             gad->getDisplayText()->setValue( XsString( params.displayAbbreviation ) );
             pg->getGroupAbbreviationDisplay()->addDisplayTextOrAccidentalText( gad );
-            return std::move( pg );
+            return pg ;
         }
         
         bool isPartListInitialized( const MxDoc& doc )
