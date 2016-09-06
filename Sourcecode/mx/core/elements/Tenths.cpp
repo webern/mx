@@ -69,7 +69,7 @@ namespace mx
         {
             MX_UNUSED( message );
             MX_UNUSED( xelement );
-            //myValue.parse( xelement.getValue() ); ????
+            myValue.parse( xelement.getValue() );
             return true;
         }
 
