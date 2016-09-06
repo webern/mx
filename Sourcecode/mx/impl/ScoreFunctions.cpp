@@ -5,6 +5,7 @@
 #include "mx/impl/EncodingFunctions.h"
 #include "mx/impl/LayoutFunctions.h"
 #include "mx/impl/PageTextFunctions.h"
+#include "mx/impl/PartFunctions.h"
 #include "mx/core/elements/ScoreHeaderGroup.h"
 #include "mx/core/elements/Work.h"
 #include "mx/core/elements/WorkTitle.h"
@@ -70,7 +71,9 @@ namespace mx
             }
             
             createEncoding( score.encoding, *header );
+            addLayoutData( score.layout, *header );
             createPageTextItems( score.pageTextItems, *header );
+            createMxFromPartData( score, *mxScore );
 
             if( score.musicXmlType == "timewise" )
             {
@@ -166,6 +169,8 @@ namespace mx
             }
             
             createPageTextItems( *header, score.pageTextItems );
+            
+            createPartDataFromMx( *document.getScorePartwise(), score );
             
             return score;
         }

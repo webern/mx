@@ -9,15 +9,10 @@
 /* Begin PBXBuildFile section */
 		2904A4D51D301D5A00A39CC6 /* Encoding.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2904A4D31D301D5A00A39CC6 /* Encoding.cpp */; };
 		2913BB911D753FC8006C34A3 /* EncodingFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2913BB871D753FC8006C34A3 /* EncodingFunctions.cpp */; };
-		2913BB921D753FC8006C34A3 /* EncodingFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 2913BB881D753FC8006C34A3 /* EncodingFunctions.h */; };
 		2913BB931D753FC8006C34A3 /* LayoutFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2913BB891D753FC8006C34A3 /* LayoutFunctions.cpp */; };
-		2913BB941D753FC8006C34A3 /* LayoutFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 2913BB8A1D753FC8006C34A3 /* LayoutFunctions.h */; };
 		2913BB951D753FC8006C34A3 /* NoteFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2913BB8B1D753FC8006C34A3 /* NoteFunctions.cpp */; };
-		2913BB961D753FC8006C34A3 /* NoteFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 2913BB8C1D753FC8006C34A3 /* NoteFunctions.h */; };
 		2913BB971D753FC8006C34A3 /* PageTextFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2913BB8D1D753FC8006C34A3 /* PageTextFunctions.cpp */; };
-		2913BB981D753FC8006C34A3 /* PageTextFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 2913BB8E1D753FC8006C34A3 /* PageTextFunctions.h */; };
 		2913BB991D753FC8006C34A3 /* ScoreFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2913BB8F1D753FC8006C34A3 /* ScoreFunctions.cpp */; };
-		2913BB9A1D753FC8006C34A3 /* ScoreFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 2913BB901D753FC8006C34A3 /* ScoreFunctions.h */; };
 		2937D15D1D18D403001C2A1A /* PugiAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2937D1451D18D403001C2A1A /* PugiAttribute.cpp */; };
 		2937D15F1D18D403001C2A1A /* PugiAttributeIterImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2937D1471D18D403001C2A1A /* PugiAttributeIterImpl.cpp */; };
 		2937D1611D18D403001C2A1A /* PugiDoc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2937D1491D18D403001C2A1A /* PugiDoc.cpp */; };
@@ -618,11 +613,11 @@
 		2951A0C51D60F3B700B49A13 /* ScoreConversions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2951A0C31D60F3B700B49A13 /* ScoreConversions.cpp */; };
 		295C49371D2CB41E0015E349 /* NoteheadTextChoice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 295C49361D2CB41E0015E349 /* NoteheadTextChoice.cpp */; };
 		295DDE101D2C0D4D00A2881D /* FromXElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 295DDE0F1D2C0D4D00A2881D /* FromXElement.cpp */; };
-		29ADB30F1D729E1900683BEC /* EncodingData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29ADB30D1D729E1900683BEC /* EncodingData.h */; };
-		29ADB3101D729E1900683BEC /* PartData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29ADB30E1D729E1900683BEC /* PartData.h */; };
-		29ADB3121D729FB700683BEC /* LayoutData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29ADB3111D729FB700683BEC /* LayoutData.h */; };
-		29ADB3151D736A2B00683BEC /* PageTextData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29ADB3131D736A2B00683BEC /* PageTextData.h */; };
-		29ADB3161D736A2B00683BEC /* PositionData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29ADB3141D736A2B00683BEC /* PositionData.h */; };
+		297DA0761D7F60BE0067C13A /* MeasureFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297DA06E1D7F60BE0067C13A /* MeasureFunctions.cpp */; };
+		297DA0781D7F60BE0067C13A /* PartFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297DA0701D7F60BE0067C13A /* PartFunctions.cpp */; };
+		297DA07A1D7F60BE0067C13A /* StaffFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297DA0721D7F60BE0067C13A /* StaffFunctions.cpp */; };
+		297DA07C1D7F60BE0067C13A /* VoiceFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297DA0741D7F60BE0067C13A /* VoiceFunctions.cpp */; };
+		299A2BB11D7FA48A006A7F5C /* PartGroupData.h in Headers */ = {isa = PBXBuildFile; fileRef = 299A2BB01D7FA48A006A7F5C /* PartGroupData.h */; };
 		29C01B061D130B690094BE61 /* AttributesInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C01AE01D130B690094BE61 /* AttributesInterface.cpp */; };
 		29C01B081D130B690094BE61 /* Color.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C01AE21D130B690094BE61 /* Color.cpp */; };
 		29C01B0A1D130B690094BE61 /* Date.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C01AE41D130B690094BE61 /* Date.cpp */; };
@@ -1868,7 +1863,16 @@
 		295C49381D2CB4B60015E349 /* NoteheadTextChoice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NoteheadTextChoice.h; path = ../Sourcecode/mx/core/elements/NoteheadTextChoice.h; sourceTree = "<group>"; };
 		295DDE0E1D2C0D4400A2881D /* FromXElement.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FromXElement.h; path = ../Sourcecode/mx/core/FromXElement.h; sourceTree = "<group>"; };
 		295DDE0F1D2C0D4D00A2881D /* FromXElement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FromXElement.cpp; path = ../Sourcecode/mx/core/FromXElement.cpp; sourceTree = "<group>"; };
+		297DA06E1D7F60BE0067C13A /* MeasureFunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MeasureFunctions.cpp; path = ../Sourcecode/mx/impl/MeasureFunctions.cpp; sourceTree = "<group>"; };
+		297DA06F1D7F60BE0067C13A /* MeasureFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MeasureFunctions.h; path = ../Sourcecode/mx/impl/MeasureFunctions.h; sourceTree = "<group>"; };
+		297DA0701D7F60BE0067C13A /* PartFunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PartFunctions.cpp; path = ../Sourcecode/mx/impl/PartFunctions.cpp; sourceTree = "<group>"; };
+		297DA0711D7F60BE0067C13A /* PartFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PartFunctions.h; path = ../Sourcecode/mx/impl/PartFunctions.h; sourceTree = "<group>"; };
+		297DA0721D7F60BE0067C13A /* StaffFunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StaffFunctions.cpp; path = ../Sourcecode/mx/impl/StaffFunctions.cpp; sourceTree = "<group>"; };
+		297DA0731D7F60BE0067C13A /* StaffFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StaffFunctions.h; path = ../Sourcecode/mx/impl/StaffFunctions.h; sourceTree = "<group>"; };
+		297DA0741D7F60BE0067C13A /* VoiceFunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VoiceFunctions.cpp; path = ../Sourcecode/mx/impl/VoiceFunctions.cpp; sourceTree = "<group>"; };
+		297DA0751D7F60BE0067C13A /* VoiceFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VoiceFunctions.h; path = ../Sourcecode/mx/impl/VoiceFunctions.h; sourceTree = "<group>"; };
 		2987DA351D2750FD00FAAFC5 /* IncludeAlot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IncludeAlot.h; path = ../Sourcecode/mx/core/IncludeAlot.h; sourceTree = "<group>"; };
+		299A2BB01D7FA48A006A7F5C /* PartGroupData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PartGroupData.h; path = ../Sourcecode/mx/api/PartGroupData.h; sourceTree = "<group>"; };
 		299F7FE61CA8D2200084CAE5 /* libMx.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMx.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		29ADB30D1D729E1900683BEC /* EncodingData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EncodingData.h; path = ../Sourcecode/mx/api/EncodingData.h; sourceTree = "<group>"; };
 		29ADB30E1D729E1900683BEC /* PartData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PartData.h; path = ../Sourcecode/mx/api/PartData.h; sourceTree = "<group>"; };
@@ -1917,10 +1921,14 @@
 		29C01B5D1D130BBE0094BE61 /* pugixml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pugixml.cpp; path = ../Sourcecode/Mx/pugixml/pugixml.cpp; sourceTree = "<group>"; };
 		29C01B5E1D130BBE0094BE61 /* pugixml.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = pugixml.hpp; path = ../Sourcecode/Mx/pugixml/pugixml.hpp; sourceTree = "<group>"; };
 		29D35E7A1D28DD8E00EC2CAE /* ForwardDeclare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ForwardDeclare.h; path = ../Sourcecode/mx/core/ForwardDeclare.h; sourceTree = "<group>"; };
+		29DC06EE1D7E5A8300210B7E /* StaffData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = StaffData.h; path = ../Sourcecode/mx/api/StaffData.h; sourceTree = "<group>"; };
+		29DC06EF1D7E5B2A00210B7E /* MeasureData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MeasureData.h; path = ../Sourcecode/mx/api/MeasureData.h; sourceTree = "<group>"; };
+		29DC06F01D7E5BBF00210B7E /* VoiceData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = VoiceData.h; path = ../Sourcecode/mx/api/VoiceData.h; sourceTree = "<group>"; };
 		29EF44081D6E6D2600DBDAB9 /* NoteData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NoteData.h; path = ../Sourcecode/mx/api/NoteData.h; sourceTree = "<group>"; };
 		29EF44091D6E70D300DBDAB9 /* DocumentManager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DocumentManager.cpp; path = ../Sourcecode/mx/api/DocumentManager.cpp; sourceTree = "<group>"; };
 		29EF440A1D6E70D300DBDAB9 /* DocumentManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DocumentManager.h; path = ../Sourcecode/mx/api/DocumentManager.h; sourceTree = "<group>"; };
 		29EF440C1D6E70D300DBDAB9 /* ScoreData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ScoreData.h; path = ../Sourcecode/mx/api/ScoreData.h; sourceTree = "<group>"; };
+		29F492B01D792B2F00C7C4B8 /* Lock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Lock.h; path = ../Sourcecode/mx/utility/Lock.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2038,6 +2046,14 @@
 		292255D51D712B26002D8E48 /* impl */ = {
 			isa = PBXGroup;
 			children = (
+				297DA06E1D7F60BE0067C13A /* MeasureFunctions.cpp */,
+				297DA06F1D7F60BE0067C13A /* MeasureFunctions.h */,
+				297DA0701D7F60BE0067C13A /* PartFunctions.cpp */,
+				297DA0711D7F60BE0067C13A /* PartFunctions.h */,
+				297DA0721D7F60BE0067C13A /* StaffFunctions.cpp */,
+				297DA0731D7F60BE0067C13A /* StaffFunctions.h */,
+				297DA0741D7F60BE0067C13A /* VoiceFunctions.cpp */,
+				297DA0751D7F60BE0067C13A /* VoiceFunctions.h */,
 				293CE9F51D7B2C18003F1FEB /* PositionFunctions.h */,
 				2913BB871D753FC8006C34A3 /* EncodingFunctions.cpp */,
 				2913BB881D753FC8006C34A3 /* EncodingFunctions.h */,
@@ -3282,6 +3298,7 @@
 		29EF44071D6E6CE900DBDAB9 /* api */ = {
 			isa = PBXGroup;
 			children = (
+				299A2BB01D7FA48A006A7F5C /* PartGroupData.h */,
 				29EF44091D6E70D300DBDAB9 /* DocumentManager.cpp */,
 				29EF440A1D6E70D300DBDAB9 /* DocumentManager.h */,
 				29ADB30D1D729E1900683BEC /* EncodingData.h */,
@@ -3291,6 +3308,9 @@
 				29ADB30E1D729E1900683BEC /* PartData.h */,
 				29ADB3141D736A2B00683BEC /* PositionData.h */,
 				29EF440C1D6E70D300DBDAB9 /* ScoreData.h */,
+				29DC06EE1D7E5A8300210B7E /* StaffData.h */,
+				29DC06EF1D7E5B2A00210B7E /* MeasureData.h */,
+				29DC06F01D7E5BBF00210B7E /* VoiceData.h */,
 			);
 			name = api;
 			sourceTree = "<group>";
@@ -3302,16 +3322,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				29ADB30F1D729E1900683BEC /* EncodingData.h in Headers */,
-				29ADB3121D729FB700683BEC /* LayoutData.h in Headers */,
-				2913BB981D753FC8006C34A3 /* PageTextFunctions.h in Headers */,
-				29ADB3161D736A2B00683BEC /* PositionData.h in Headers */,
-				29ADB3151D736A2B00683BEC /* PageTextData.h in Headers */,
-				2913BB961D753FC8006C34A3 /* NoteFunctions.h in Headers */,
-				29ADB3101D729E1900683BEC /* PartData.h in Headers */,
-				2913BB941D753FC8006C34A3 /* LayoutFunctions.h in Headers */,
-				2913BB921D753FC8006C34A3 /* EncodingFunctions.h in Headers */,
-				2913BB9A1D753FC8006C34A3 /* ScoreFunctions.h in Headers */,
+				299A2BB11D7FA48A006A7F5C /* PartGroupData.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3560,6 +3571,7 @@
 				294548671D295C5500B90302 /* BeatRepeat.cpp in Sources */,
 				294548DA1D295C5500B90302 /* FermataAttributes.cpp in Sources */,
 				294548721D295C5500B90302 /* BendAttributes.cpp in Sources */,
+				297DA0781D7F60BE0067C13A /* PartFunctions.cpp in Sources */,
 				29454A3A1D295C5500B90302 /* SystemDividers.cpp in Sources */,
 				2937D16E1D18D403001C2A1A /* XElementIterator.cpp in Sources */,
 				2945484E1D295C5500B90302 /* ArrowAttributes.cpp in Sources */,
@@ -3767,6 +3779,7 @@
 				2945490E1D295C5500B90302 /* Harmonic.cpp in Sources */,
 				294548871D295C5500B90302 /* CreatorAttributes.cpp in Sources */,
 				2937D1651D18D403001C2A1A /* PugiElementIterImpl.cpp in Sources */,
+				297DA07C1D7F60BE0067C13A /* VoiceFunctions.cpp in Sources */,
 				2945486D1D295C5500B90302 /* BeatUnitGroup.cpp in Sources */,
 				294548CB1D295C5500B90302 /* EncodingChoice.cpp in Sources */,
 				294549CF1D295C5500B90302 /* Pitch.cpp in Sources */,
@@ -3785,6 +3798,7 @@
 				29454A1A1D295C5500B90302 /* StaffDistance.cpp in Sources */,
 				294548E11D295C5500B90302 /* Fingering.cpp in Sources */,
 				2945495F1D295C5500B90302 /* MetronomeNote.cpp in Sources */,
+				297DA07A1D7F60BE0067C13A /* StaffFunctions.cpp in Sources */,
 				294549531D295C5500B90302 /* MeasureRepeat.cpp in Sources */,
 				2945490C1D295C5500B90302 /* Handbell.cpp in Sources */,
 				2945484A1D295C5500B90302 /* Appearance.cpp in Sources */,
@@ -3867,6 +3881,7 @@
 				29C01B601D130BBE0094BE61 /* pugixml.cpp in Sources */,
 				294549931D295C5500B90302 /* Octave.cpp in Sources */,
 				294548F81D295C5500B90302 /* GraceAttributes.cpp in Sources */,
+				297DA0761D7F60BE0067C13A /* MeasureFunctions.cpp in Sources */,
 				294548681D295C5500B90302 /* BeatRepeatAttributes.cpp in Sources */,
 				294548CF1D295C5500B90302 /* EndingAttributes.cpp in Sources */,
 				294549B31D295C5500B90302 /* PartAbbreviation.cpp in Sources */,

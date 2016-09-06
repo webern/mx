@@ -8,6 +8,13 @@
 #include "mxtest/control/Path.h"
 #include "mx/api/DocumentManager.h"
 #include "mx/api/LayoutData.h"
+#include "mx/core/Document.h"
+#include "mx/core/elements/PageMargins.h"
+#include "mx/core/elements/LeftMargin.h"
+#include "mx/core/elements/RightMargin.h"
+#include "mx/core/elements/TopMargin.h"
+#include "mx/core/elements/BottomMargin.h"
+
 
 using namespace std;
 using namespace mx::api;
@@ -18,6 +25,11 @@ inline int loadDoc()
     return docMngr.createFromFile( std::string{ MxTest::RESOURCES_DIRECTORY_PATH } + std::string{ "/recsuite/Dichterliebe01.xml" } );
 }
 
+inline int loadActorPreludeDoc()
+{
+    auto& docMngr = DocumentManager::getInstance();
+    return docMngr.createFromFile( std::string{ MxTest::RESOURCES_DIRECTORY_PATH } + std::string{ "/recsuite/ActorPreludeSample.xml" } );
+}
 
 inline void destroyDoc( int documentId )
 {
@@ -29,6 +41,14 @@ inline void destroyDoc( int documentId )
 inline ScoreData getScore()
 {
     auto documentId = loadDoc();
+    auto score = DocumentManager::getInstance().getData( documentId );
+    destroyDoc( documentId );
+    return score;
+}
+
+inline ScoreData getActorPreludeScore()
+{
+    auto documentId = loadActorPreludeDoc();
     auto score = DocumentManager::getInstance().getData( documentId );
     destroyDoc( documentId );
     return score;
@@ -137,10 +157,10 @@ TEST( tenthsPerMillimeter, DocumentManager )
 }
 T_END
 
-
+#endif
 TEST( tenthsPerInch, DocumentManager )
 {
-    auto score = getScore();
+    auto score = getActorPreludeScore();
     CHECK_DOUBLES_EQUAL( 160, score.layout.tenthsPerInch(), MX_API_EQUALITY_EPSILON )
 }
 T_END
@@ -187,7 +207,7 @@ TEST( RoundTrip_WorkTitle, DocumentManager )
     CHECK_EQUAL( value, actual.workTitle );
 }
 T_END
-#endif
+
 
 #define ROUND_TRIP_TEST_SCALAR( scalarType, fieldPath, fieldName, value, nameSuffix ) \
 TEST( RoundTrip_##structType##_##fieldName##_##nameSuffix, DocumentManager ) \
@@ -224,6 +244,100 @@ ROUND_TRIP_TEST_SCALAR( std::string, encoding.encodingDescription, encodingDescr
 ROUND_TRIP_TEST_SCALAR( int, encoding.encodingDate.year, year, 2016, 0 );
 ROUND_TRIP_TEST_SCALAR( int, encoding.encodingDate.month, month, 9, 0 );
 ROUND_TRIP_TEST_SCALAR( int, encoding.encodingDate.day, day, 12, 0 );
+
+
+//#endif
+
+
+#define ROUND_TRIP_TEST_SCALAR_DOUBLE( scalarType, fieldPath, fieldName, value, nameSuffix ) \
+TEST( RoundTrip_##structType##_##fieldName##_##nameSuffix, DocumentManager ) \
+{ \
+auto testValue = scalarType{ value }; \
+auto expectedStruct = ScoreData{}; \
+auto actualStruct = ScoreData{}; \
+auto& actualValue = actualStruct.fieldPath; \
+auto& expectedValue = expectedStruct.fieldPath; \
+expectedValue = testValue; \
+auto documentId = DocumentManager::getInstance().createFromScore( expectedStruct ); \
+std::ostringstream oss; \
+DocumentManager::getInstance().writeToStream( documentId, oss ); \
+DocumentManager::getInstance().destroyDocument( documentId ); \
+std::istringstream iss{ oss.str() }; \
+documentId = DocumentManager::getInstance().createFromStream( iss ); \
+actualStruct = DocumentManager::getInstance().getData( documentId ); \
+DocumentManager::getInstance().destroyDocument( documentId ); \
+CHECK_DOUBLES_EQUAL( expectedValue, actualValue, MX_API_EQUALITY_EPSILON ); \
+} \
+T_END
+
+using LongDouble = long double;
+
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.scalingMillimeters, scalingMillimeters, 5.451, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.scalingTenths, scalingTenths, 5.452, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.oddPageLeftMargin, oddPageLeftMargin, 5.453, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.oddPageRightMargin, oddPageRightMargin, 5.454, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.oddPageTopMargin, oddPageTopMargin, 5.455, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.oddPageBottomMargin, oddPageBottomMargin, 5.456, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.evenPageLeftMargin, evenPageLeftMargin, 5.457, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.evenPageRightMargin, evenPageRightMargin, 5.458, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.evenPageTopMargin, evenPageTopMargin, 5.459, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.evenPageBottomMargin, evenPageBottomMargin, 5.4501, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.systemLeftMargin, systemLeftMargin, 5.4502, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.systemRightMargin, systemRightMargin, 5.4503, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.systemDistance, systemDistance, 5.4504, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.topSystemDistance, topSystemDistance, 5.4505, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.staffDistance, staffDistance, 5.4506, 0 );
+
+
+TEST( Layout_PageMarginsBoth, DocumentManager )
+{
+    auto score = ScoreData{};
+    const long double left = 0.1;
+    const long double right = 0.2;
+    const long double top = 0.3;
+    const long double bottom = 0.4;
+    score.layout.oddPageLeftMargin = left;
+    score.layout.evenPageLeftMargin = left;
+    score.layout.oddPageRightMargin = right;
+    score.layout.evenPageRightMargin = right;
+    score.layout.oddPageTopMargin = top;
+    score.layout.evenPageTopMargin = top;
+    score.layout.oddPageBottomMargin = bottom;
+    score.layout.evenPageBottomMargin = bottom;
+    auto docId = DocumentManager::getInstance().createFromScore( score );
+    auto mxDoc = DocumentManager::getInstance().getDocument( docId );
+    const auto& pageMarginsSet = mxDoc->getScorePartwise()->getScoreHeaderGroup()->getDefaults()->getLayoutGroup()->getPageLayout()->getPageMarginsSet();
+    CHECK_EQUAL( 1, pageMarginsSet.size() );
+    CHECK( mx::core::MarginType::both == (*pageMarginsSet.cbegin())->getAttributes()->type );
+}
+T_END
+
+
+TEST( Layout_PageMarginsEvenOdd, DocumentManager )
+{
+    auto score = ScoreData{};
+    const long double left = 0.1;
+    const long double right = 0.2;
+    const long double top = 0.3;
+    const long double bottom = 0.4;
+    score.layout.oddPageLeftMargin = left + 100.0;
+    score.layout.evenPageLeftMargin = left;
+    score.layout.oddPageRightMargin = right;
+    score.layout.evenPageRightMargin = right;
+    score.layout.oddPageTopMargin = top;
+    score.layout.evenPageTopMargin = top;
+    score.layout.oddPageBottomMargin = bottom;
+    score.layout.evenPageBottomMargin = bottom;
+    auto docId = DocumentManager::getInstance().createFromScore( score );
+    auto mxDoc = DocumentManager::getInstance().getDocument( docId );
+    const auto& pageMarginsSet = mxDoc->getScorePartwise()->getScoreHeaderGroup()->getDefaults()->getLayoutGroup()->getPageLayout()->getPageMarginsSet();
+    CHECK_EQUAL( 2, pageMarginsSet.size() );
+    auto iter = pageMarginsSet.cbegin();
+    CHECK( mx::core::MarginType::odd == (*iter)->getAttributes()->type );
+    ++iter;
+    CHECK( mx::core::MarginType::even == (*iter)->getAttributes()->type );
+}
+T_END
 
 
 TEST( RoundTrip_SupportedItems_elementName, DocumentManager )

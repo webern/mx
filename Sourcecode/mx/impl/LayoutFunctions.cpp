@@ -1,6 +1,7 @@
 // MusicXML Class Library v0.3.0
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
+#include "mx/api/ScoreData.h"
 #include "mx/impl/LayoutFunctions.h"
 #include "mx/core/elements/LayoutGroup.h"
 #include "mx/core/elements/Defaults.h"
@@ -26,36 +27,145 @@ namespace mx
 {
     namespace impl
     {
-        void addLayoutData( const api::LayoutData& inScore, core::ScoreHeaderGroup& outScoreHeaderGroup )
+        void addLayoutData( const api::LayoutData& inLayout, core::ScoreHeaderGroup& outScoreHeaderGroup )
         {
-            addScaling( inScore, outScoreHeaderGroup );
-            addPageMargins( inScore, outScoreHeaderGroup );
-            addSystemMargins( inScore, outScoreHeaderGroup );
-            addStaffLayout( inScore, outScoreHeaderGroup );
+            addScaling( inLayout, outScoreHeaderGroup );
+            addPageMargins( inLayout, outScoreHeaderGroup );
+            addSystemMargins( inLayout, outScoreHeaderGroup );
         }
         
         
-        void addScaling( const api::LayoutData& inScore, core::ScoreHeaderGroup& outScoreHeaderGroup )
+        void addScaling( const api::LayoutData& inLayout, core::ScoreHeaderGroup& outScoreHeaderGroup )
         {
+            if( inLayout.scalingMillimeters > 0 )
+            {
+                outScoreHeaderGroup.setHasDefaults( true );
+                outScoreHeaderGroup.getDefaults()->setHasScaling( true );
+                outScoreHeaderGroup.getDefaults()->getScaling()->getMillimeters()->setValue( core::MillimetersValue{ inLayout.scalingMillimeters } );
+            }
             
+            if( inLayout.scalingTenths > 0 )
+            {
+                outScoreHeaderGroup.setHasDefaults( true );
+                outScoreHeaderGroup.getDefaults()->setHasScaling( true );
+                outScoreHeaderGroup.getDefaults()->getScaling()->getTenths()->setValue( core::PositiveDecimal{ inLayout.scalingTenths } );
+            }
         }
         
         
-        void addPageMargins( const api::LayoutData& inScore, core::ScoreHeaderGroup& outScoreHeaderGroup )
+        void addPageMargins( const api::LayoutData& inLayout, core::ScoreHeaderGroup& outScoreHeaderGroup )
         {
+            bool areEvenOddSame = true;
+            areEvenOddSame &= api::areSame( inLayout.evenPageLeftMargin, inLayout.oddPageLeftMargin );
+            areEvenOddSame &= api::areSame( inLayout.evenPageRightMargin, inLayout.oddPageRightMargin );
+            areEvenOddSame &= api::areSame( inLayout.evenPageTopMargin, inLayout.oddPageTopMargin );
+            areEvenOddSame &= api::areSame( inLayout.evenPageBottomMargin, inLayout.oddPageBottomMargin );
+
+            bool areOddPagesSpecified =    inLayout.oddPageLeftMargin > 0
+                                        || inLayout.oddPageRightMargin > 0
+                                        || inLayout.oddPageTopMargin > 0
+                                        || inLayout.oddPageBottomMargin > 0;
             
+            bool areEvenPagesSpecified =   inLayout.evenPageLeftMargin > 0
+                                        || inLayout.evenPageRightMargin > 0
+                                        || inLayout.evenPageTopMargin > 0
+                                        || inLayout.evenPageBottomMargin > 0;
+            
+            if( !areOddPagesSpecified && !areEvenPagesSpecified )
+            {
+                return;
+            }
+            
+            outScoreHeaderGroup.setHasDefaults( true );
+            auto& defaults = *outScoreHeaderGroup.getDefaults();
+            auto& layout = *defaults.getLayoutGroup();
+            layout.setHasPageLayout( true );
+            auto& pageLayout = *layout.getPageLayout();
+            
+            if( areOddPagesSpecified )
+            {
+                auto oddPages = core::makePageMargins();
+                oddPages->getAttributes()->hasType = true;
+                const auto t = areEvenOddSame ? core::MarginType::both : core::MarginType::odd;
+                oddPages->getAttributes()->type = t;
+                const auto left = core::TenthsValue{ inLayout.oddPageLeftMargin > 0 ? inLayout.oddPageLeftMargin : 0 };
+                const auto right = core::TenthsValue{ inLayout.oddPageRightMargin > 0 ? inLayout.oddPageRightMargin : 0 };
+                const auto top = core::TenthsValue{ inLayout.oddPageTopMargin > 0 ? inLayout.oddPageTopMargin : 0 };
+                const auto bottom = core::TenthsValue{ inLayout.oddPageBottomMargin > 0 ? inLayout.oddPageBottomMargin : 0 };
+                oddPages->getLeftMargin()->setValue( left );
+                oddPages->getRightMargin()->setValue( right );
+                oddPages->getTopMargin()->setValue( top );
+                oddPages->getBottomMargin()->setValue( bottom );
+                pageLayout.addPageMargins( oddPages );
+            }
+            
+            if( !areEvenOddSame && areEvenPagesSpecified )
+            {
+                auto evenPages = core::makePageMargins();
+                evenPages->getAttributes()->hasType = true;
+                const auto t = core::MarginType::even;
+                evenPages->getAttributes()->type = t;
+                const auto left = core::TenthsValue{ inLayout.evenPageLeftMargin > 0 ? inLayout.evenPageLeftMargin : 0 };
+                const auto right = core::TenthsValue{ inLayout.evenPageRightMargin > 0 ? inLayout.evenPageRightMargin : 0 };
+                const auto top = core::TenthsValue{ inLayout.evenPageTopMargin > 0 ? inLayout.evenPageTopMargin : 0 };
+                const auto bottom = core::TenthsValue{ inLayout.evenPageBottomMargin > 0 ? inLayout.evenPageBottomMargin : 0 };
+                evenPages->getLeftMargin()->setValue( left );
+                evenPages->getRightMargin()->setValue( right );
+                evenPages->getTopMargin()->setValue( top );
+                evenPages->getBottomMargin()->setValue( bottom );
+                pageLayout.addPageMargins( evenPages );
+            }
         }
         
         
-        void addSystemMargins( const api::LayoutData& inScore, core::ScoreHeaderGroup& outScoreHeaderGroup )
+        void addSystemMargins( const api::LayoutData& inLayout, core::ScoreHeaderGroup& outScoreHeaderGroup )
         {
+            auto& defaults = *outScoreHeaderGroup.getDefaults();
+            auto& layoutGroup = *defaults.getLayoutGroup();
+            auto& systemLayout = *layoutGroup.getSystemLayout();
+            auto& systemMargins = *systemLayout.getSystemMargins();
+
+            if( inLayout.systemDistance > 0 )
+            {
+                outScoreHeaderGroup.setHasDefaults( true );
+                layoutGroup.setHasSystemLayout( true );
+                systemLayout.setHasSystemDistance( true );
+                systemLayout.getSystemDistance()->setValue( core::TenthsValue{ inLayout.systemDistance } );
+            }
             
-        }
-        
-        
-        void addStaffLayout( const api::LayoutData& inScore, core::ScoreHeaderGroup& outScoreHeaderGroup )
-        {
+            if( inLayout.staffDistance > 0 )
+            {
+                outScoreHeaderGroup.setHasDefaults( true );
+                auto staffLayout = core::makeStaffLayout();
+                staffLayout->setHasStaffDistance( true );
+                staffLayout->getStaffDistance()->setValue( core::TenthsValue{ inLayout.staffDistance } );
+                layoutGroup.addStaffLayout( staffLayout );
+            }
             
+            if( inLayout.systemLeftMargin > 0 )
+            {
+                outScoreHeaderGroup.setHasDefaults( true );
+                layoutGroup.setHasSystemLayout( true );
+                systemLayout.setHasSystemMargins( true );
+                systemMargins.getLeftMargin()->setValue( core::TenthsValue{ inLayout.systemLeftMargin } );
+            }
+            
+            if( inLayout.systemRightMargin > 0 )
+            {
+                outScoreHeaderGroup.setHasDefaults( true );
+                layoutGroup.setHasSystemLayout( true );
+                systemLayout.setHasSystemMargins( true );
+                systemMargins.getRightMargin()->setValue( core::TenthsValue{ inLayout.systemRightMargin } );
+            }
+            
+            if( inLayout.topSystemDistance > 0 )
+            {
+                outScoreHeaderGroup.setHasDefaults( true );
+                layoutGroup.setHasSystemLayout( true );
+                systemLayout.setHasSystemMargins( true );
+                systemLayout.setHasTopSystemDistance( true );
+                systemLayout.getTopSystemDistance()->setValue( core::TenthsValue{ inLayout.topSystemDistance } );
+            }
         }
         
         

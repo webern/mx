@@ -7,9 +7,11 @@
 #include "mx/api/LayoutData.h"
 #include "mx/api/PageTextData.h"
 #include "mx/api/PartData.h"
+#include "mx/api/PartGroupData.h"
 
 #include <vector>
 #include <cmath>
+#include <algorithm>
 
 namespace mx
 {
@@ -37,6 +39,7 @@ namespace mx
             std::vector<PageTextData> pageTextItems;
             LayoutData layout;
             std::vector<PartData> parts;
+            std::vector<PartGroupData> partGroups;
 
             ScoreData()
             : musicXmlType( "partwise" )
@@ -44,5 +47,16 @@ namespace mx
 
             }
         };
+        
+        inline std::vector<PartData>::iterator findPart( std::vector<PartData>& inParts, const std::string& inPartId )
+        {
+            auto predicate = [&inPartId] ( const PartData& partData )
+            {
+                return inPartId == partData.uniqueId;
+            };
+            
+            auto it = std::find_if( inParts.begin(), inParts.end(), predicate );
+            return it;
+        }
     }
 }

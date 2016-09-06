@@ -111,6 +111,12 @@ namespace mx
             }
             return makeDisplayTextOrAccidentalText();
         }
+
+        
+        const DisplayTextOrAccidentalTextSet& GroupAbbreviationDisplay::getDisplayTextOrAccidentalTextSet() const
+        {
+            return myDisplayTextOrAccidentalTextSet;
+        }
         
 
         bool GroupAbbreviationDisplay::fromXElement( std::ostream& message, xml::XElement& xelement )
