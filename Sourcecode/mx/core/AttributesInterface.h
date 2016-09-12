@@ -23,13 +23,9 @@ namespace mx
 
         struct AttributesInterface
         {
-            AttributesInterface();
-            virtual ~AttributesInterface();
+            virtual ~AttributesInterface() {}
             virtual bool hasValues() const;
             virtual std::ostream& toStream( std::ostream& os ) const;
-            
-            
-            
             virtual bool fromXElement( std::ostream& message, xml::XElement& xelement ) = 0;
         };
 

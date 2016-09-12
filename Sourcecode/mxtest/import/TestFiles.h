@@ -284,6 +284,7 @@ namespace MxTest
         { "ksuite", "k003a_Ornaments.xml" },
         { "ksuite", "k004a_Technical.xml" },
         { "ksuite", "k005a_Spanners_Slides.xml" },
+        { "ksuite", "k006a_Header_Scaling_Decimals.xml" },
         { "logicpro", "logic01a_homoSapiens.xml" }
     };
 }

@@ -438,6 +438,7 @@
 		29C01F1B1D13137D0094BE61 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C01F151D13137D0094BE61 /* main.cpp */; };
 		29C227ED1D2F5DE000677B3C /* SortAttributes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C227EB1D2F5DE000677B3C /* SortAttributes.cpp */; };
 		29C227F01D2F74B500677B3C /* ChangeValues.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C227EE1D2F74B500677B3C /* ChangeValues.cpp */; };
+		29EF44101D6E8F5500DBDAB9 /* DocumentManagerTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EF440F1D6E8F5500DBDAB9 /* DocumentManagerTest.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -1014,6 +1015,7 @@
 		29C227EC1D2F5DE000677B3C /* SortAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SortAttributes.h; path = ../Sourcecode/mxtest/import/SortAttributes.h; sourceTree = "<group>"; };
 		29C227EE1D2F74B500677B3C /* ChangeValues.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ChangeValues.cpp; path = ../Sourcecode/mxtest/import/ChangeValues.cpp; sourceTree = "<group>"; };
 		29C227EF1D2F74B500677B3C /* ChangeValues.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChangeValues.h; path = ../Sourcecode/mxtest/import/ChangeValues.h; sourceTree = "<group>"; };
+		29EF440F1D6E8F5500DBDAB9 /* DocumentManagerTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DocumentManagerTest.cpp; path = ../Sourcecode/mxtest/api/DocumentManagerTest.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1640,6 +1642,7 @@
 		299F7FED1CA8D2620084CAE5 = {
 			isa = PBXGroup;
 			children = (
+				29EF440E1D6E8F4700DBDAB9 /* api */,
 				297555D51D134FDA007732D0 /* bin */,
 				297556161D136AC8007732D0 /* control */,
 				292E37201CA8D6A400CC63BB /* core */,
@@ -1657,6 +1660,14 @@
 				299F7FF61CA8D2620084CAE5 /* MxTest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		29EF440E1D6E8F4700DBDAB9 /* api */ = {
+			isa = PBXGroup;
+			children = (
+				29EF440F1D6E8F5500DBDAB9 /* DocumentManagerTest.cpp */,
+			);
+			name = api;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2124,6 +2135,7 @@
 				29C01D781D1312FA0094BE61 /* ArpeggiateTest.cpp in Sources */,
 				29C01DB81D1312FA0094BE61 /* DisplayOctaveTest.cpp in Sources */,
 				29C01E481D1312FA0094BE61 /* MordentTest.cpp in Sources */,
+				29EF44101D6E8F5500DBDAB9 /* DocumentManagerTest.cpp in Sources */,
 				29C01EDE1D1312FA0094BE61 /* TimeTest.cpp in Sources */,
 				29C01E791D1312FA0094BE61 /* PartNameTest.cpp in Sources */,
 				29C01DD61D1312FA0094BE61 /* EncodingTest.cpp in Sources */,

@@ -41,7 +41,8 @@ namespace mx
             void removeDisplayTextOrAccidentalText( const DisplayTextOrAccidentalTextSetIterConst& setIterator );
             void clearDisplayTextOrAccidentalTextSet();
             DisplayTextOrAccidentalTextPtr getDisplayTextOrAccidentalText( const DisplayTextOrAccidentalTextSetIterConst& setIterator ) const;
-
+            const DisplayTextOrAccidentalTextSet& getDisplayTextOrAccidentalTextSet() const;
+            
             bool fromXElement( std::ostream& message, xml::XElement& xelement );
 
         private:

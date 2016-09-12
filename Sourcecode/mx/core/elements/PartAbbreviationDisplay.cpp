@@ -115,7 +115,13 @@ namespace mx
             return makeDisplayTextOrAccidentalText();
         }
 
-
+        
+        const DisplayTextOrAccidentalTextSet& PartAbbreviationDisplay::getDisplayTextOrAccidentalTextSet() const
+        {
+            return myDisplayTextOrAccidentalTextSet;
+        }
+        
+        
         bool PartAbbreviationDisplay::fromXElement( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;

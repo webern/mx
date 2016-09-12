@@ -111,6 +111,12 @@ namespace mx
             }
             return makeDisplayTextOrAccidentalText();
         }
+        
+        
+        const DisplayTextOrAccidentalTextSet& GroupNameDisplay::getDisplayTextOrAccidentalTextSet() const
+        {
+            return myDisplayTextOrAccidentalTextSet;
+        }
 
 
         bool GroupNameDisplay::fromXElement( std::ostream& message, xml::XElement& xelement )

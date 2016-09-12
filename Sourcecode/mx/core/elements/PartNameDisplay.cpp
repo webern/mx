@@ -114,6 +114,12 @@ namespace mx
             }
             return makeDisplayTextOrAccidentalText();
         }
+        
+        
+        const DisplayTextOrAccidentalTextSet& PartNameDisplay::getDisplayTextOrAccidentalTextSet() const
+        {
+            return myDisplayTextOrAccidentalTextSet;
+        }
 
 
         bool PartNameDisplay::fromXElement( std::ostream& message, xml::XElement& xelement )
