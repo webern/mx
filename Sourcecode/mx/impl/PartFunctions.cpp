@@ -281,22 +281,23 @@ namespace mx
                 }
                 
                 // TODO - InstrumentName, MIDI stuff, Virtual Library stuff, etc
-                const auto& mxPartwiseParts = inMx.getPartwisePartSet();
-                for( const auto& mxMusicContainer : mxPartwiseParts )
-                {
-                    auto iter = api::findPart( outScoreData.parts, mxMusicContainer->getAttributes()->id.getValue() );
-                    
-                    if( iter == outScoreData.parts.end() )
-                    {
-                        continue;
-                    }
-                    
-                    auto& partData = *iter;
-                    createStavesFromMx( mxMusicContainer->getPartwiseMeasureSet(), partData.staves );
-                }
                 
                 outScoreData.parts.emplace_back( std::move( partData ) );
                 
+            }
+            
+            const auto& mxPartwiseParts = inMx.getPartwisePartSet();
+            for( const auto& mxMusicContainer : mxPartwiseParts )
+            {
+                auto iter = api::findPart( outScoreData.parts, mxMusicContainer->getAttributes()->id.getValue() );
+                
+                if( iter == outScoreData.parts.end() )
+                {
+                    continue;
+                }
+                
+                auto& partData = *iter;
+                createStavesFromMx( outScoreData.ticksPerQuarter, mxMusicContainer->getPartwiseMeasureSet(), partData.staves );
             }
         }
     }

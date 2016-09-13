@@ -9,6 +9,6 @@ namespace mx
 {
     namespace impl
     {
-        void createStavesFromMx( const core::PartwiseMeasureSet& inMxMeasures, std::vector<api::StaffData>& outStaves );
+        void createStavesFromMx( int inGlobalTicksPerQuarter, const core::PartwiseMeasureSet& inMxMeasures, std::vector<api::StaffData>& outStaves );
     }
 }

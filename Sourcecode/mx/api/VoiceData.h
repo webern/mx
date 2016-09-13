@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include "mx/api/NoteData.h"
+
 #include <string>
 #include <vector>
 
@@ -13,7 +15,7 @@ namespace mx
         class VoiceData
         {
         public:
-            
+            std::vector<NoteData> notes;
         };
     }
 }

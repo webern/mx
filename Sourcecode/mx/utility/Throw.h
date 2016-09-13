@@ -49,3 +49,7 @@ BADVALUEMESSAGE << "value out of range. " <<                                   \
 #VALUE << " = " << VALUE << ", min = " << MIN_VAL << ", max = " << MAX_VAL;    \
 THROW( BADVALUEMESSAGE.str() ) }
 #endif
+
+#ifndef MX_BUG
+#define MX_BUG MX_THROW( "this exception is due to a coding error, please report the bug https://github.com/Webern/MusicXML-Class-Library/issues" );
+#endif

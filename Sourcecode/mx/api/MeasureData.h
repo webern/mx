@@ -4,18 +4,22 @@
 #pragma once
 
 #include "mx/api/VoiceData.h"
+#include "mx/api/TimeSignatureData.h"
 
 #include <string>
-#include <vector>
+#include <map>
 
 namespace mx
 {
     namespace api
     {
+    	using VoiceDataMap = std::map<int,VoiceData>;
+
         class MeasureData
         {
         public:
-            std::vector<VoiceData> voices;
+        	TimeSignatureData timeSignature;
+            VoiceDataMap voices;
         };
     }
 }

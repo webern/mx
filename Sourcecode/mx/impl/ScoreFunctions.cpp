@@ -6,6 +6,7 @@
 #include "mx/impl/LayoutFunctions.h"
 #include "mx/impl/PageTextFunctions.h"
 #include "mx/impl/PartFunctions.h"
+#include "mx/impl/TimeFunctions.h"
 #include "mx/core/elements/ScoreHeaderGroup.h"
 #include "mx/core/elements/Work.h"
 #include "mx/core/elements/WorkTitle.h"
@@ -94,7 +95,8 @@ namespace mx
             auto header = scorePartwise->getScoreHeaderGroup();
 
             api::ScoreData score;
-            
+            score.ticksPerQuarter = impl::findMaxDivisionsPerQuarter( *scorePartwise );
+
             if( header->getHasWork() && header->getWork()->getHasWorkTitle() )
             {
                 score.workTitle = header->getWork()->getWorkTitle()->getValue().getValue();
@@ -171,7 +173,6 @@ namespace mx
             createPageTextItems( *header, score.pageTextItems );
             
             createPartDataFromMx( *document.getScorePartwise(), score );
-            
             return score;
         }
     }

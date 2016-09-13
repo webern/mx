@@ -149,6 +149,7 @@ TEST( scalingTenths, DocumentManager )
 }
 T_END
 
+#endif
 
 TEST( tenthsPerMillimeter, DocumentManager )
 {
@@ -157,7 +158,6 @@ TEST( tenthsPerMillimeter, DocumentManager )
 }
 T_END
 
-#endif
 TEST( tenthsPerInch, DocumentManager )
 {
     auto score = getActorPreludeScore();

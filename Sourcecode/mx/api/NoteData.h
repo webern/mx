@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "mx/api/NoteAttachment.h"
+//#include "mx/api/NoteAttachment.h"
 
 #include <vector>
 
@@ -32,12 +32,15 @@ namespace mx
 
     	enum class DurationName
     	{
-    		Maxima,
-    		Longa,
-    		Breve,
-    		Whole,
-    		Quarter,
-    		Eighth,
+
+    		unspecified,
+            maxima,
+    		longa,
+    		breve,
+    		whole,
+    		quarter,
+            half,
+    		eighth,
     		dur16th,
     		dur32nd,
     		dur64th,
@@ -60,18 +63,22 @@ namespace mx
 
     	public:
 
-    		bool isRest;
-            bool isChord;
-    		int type;
+    		bool isRest;                       // if isRest is true then isUnpitched can be ignored
+            bool isUnpitched;                  // only relevant if isRest is false
+            bool isDisplayStepOctaveSpecified; // MusicXML can optionally specify display step and octave for rests and unpitched notes
+            bool isChord;                      // the note is part of a chord
+            NoteType noteType;                 // normal, cue, grace
             Step step;
             int alter;
-            bool showAccidental;
+            bool showAccidental;               // the type of accidental will be automatically deduced from the alter value, -2=bb, -1=b, 0=Nat, 1=#, 2=x
             int octave;
-            int staff;
-            int voice;
+            int staffIndex;                    // this will be one less than the number shown in the <staff> element
+            int userRequestedVoiceNumber;
             Stem stem;
             DurationName durationName;
             int durationDots;
+            int durationTicks;
+            int startPosition;
             // TODO tuplet alteration
             // TODO int durationTicks;
             // TODO int durationTicksPerQuarter;
@@ -79,6 +86,27 @@ namespace mx
             // TODO int stopPosition;
             // TODO beaming
 
+            NoteData()
+            : isRest{ false }
+            , isUnpitched{ false }
+            , isDisplayStepOctaveSpecified{ false }
+            , isChord{ false }
+            , noteType{ NoteType::normal }
+            , step{ Step::c }
+            , alter{ 0 }
+            , showAccidental{ false }
+            , octave{ 4 }
+            , staffIndex{ 0 }
+            , userRequestedVoiceNumber{ -1 }
+            , stem{ Stem::unspecified }
+            , durationName{ DurationName::unspecified }
+            , durationDots{ 0 }
+            , durationTicks{ 0 }
+            , startPosition{ 0 }
+            
+            {
+
+            }
     	private:
     		 
     	};

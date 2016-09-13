@@ -24,6 +24,8 @@ namespace mx
             return ( std::abs( left - right ) < MX_API_EQUALITY_EPSILON );
         }
 
+        constexpr int DEFAULT_TICKS_PER_QUARTER = 3 * 4 * 5 * 7;
+        
         class ScoreData
         {
         public:
@@ -40,9 +42,23 @@ namespace mx
             LayoutData layout;
             std::vector<PartData> parts;
             std::vector<PartGroupData> partGroups;
-
+            int ticksPerQuarter;
+            
             ScoreData()
-            : musicXmlType( "partwise" )
+            : musicXmlType{ "partwise" }
+            , workTitle{}
+            , workNumber{}
+            , movementTitle{}
+            , movementNumber{}
+            , composer{}
+            , lyricist{}
+            , copyright{}
+            , encoding{}
+            , pageTextItems{}
+            , layout{}
+            , parts{}
+            , partGroups{}
+            , ticksPerQuarter{ DEFAULT_TICKS_PER_QUARTER }
             {
 
             }
