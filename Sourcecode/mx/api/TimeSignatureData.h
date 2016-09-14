@@ -25,6 +25,13 @@ namespace mx
             bool isImplicit;
             bool isPrintObjectYes;
 
+            inline bool isEqualTo( const TimeSignatureData& other ) const
+            {
+                return    ( beats == other.beats )
+                       && ( beatType == other.beatType )
+                       && ( symbol == other.symbol );
+            }
+
             TimeSignatureData()
             : symbol{ TimeSignatureSymbol::none }
             , beats{ 4 }

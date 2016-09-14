@@ -2,66 +2,69 @@
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #include "mx/api/MeasureData.h"
-#include "mx/core/elements/PartwiseMeasure.h"
 #include "mx/api/TimeSignatureData.h"
+#include "mx/core/elements/PartwiseMeasure.h"
+#include "mx/impl/Cursor.h"
 #include "mx/utility/Throw.h"
 
 #include <map>
 
 namespace mx
 {
+    namespace core
+    {
+        class MusicDataChoice;
+        class Note;
+        class Backup;
+        class Forward;
+        class Direction;
+        class Properties;
+        class Harmony;
+        class FiguredBass;
+        class Print;
+        class Sound;
+        class Barline;
+        class Grouping;
+        class Link;
+        class Bookmark;
+    }
+    
     namespace impl
     {
-    	using StaffIndexMeasureMap = std::map<int, api::MeasureData>;
-		
-        
-        struct MeasureCursor
+        using StaffIndexMeasureMap = std::map<int, api::MeasureData>;
+        class MeasureFunctions
         {
-            api::TimeSignatureData timeSignature;
-            int currentTicksPerQuarter;
-            int currentPositionTicks;
-            int currentVoiceIndex;
-            int currentStaffIndex;
-            int numStaves;
-            int globalTicksPerQuarter;
-            int userRequestedVoiceNumber;
-            bool isBackupInProgress;
+        public:
+            MeasureFunctions( int numStaves, int globalTicksPerQuarter );
+            ~MeasureFunctions() = default;
+            MeasureFunctions( const MeasureFunctions& ) = default;
+            MeasureFunctions( MeasureFunctions&& ) = default;
+            MeasureFunctions& operator=( const MeasureFunctions& ) = default;
+            MeasureFunctions& operator=( MeasureFunctions&& ) = default;
             
-            MeasureCursor()
-            : timeSignature{}
-            , currentTicksPerQuarter( 48 )
-            , currentPositionTicks( 0 )
-            , currentVoiceIndex( 0 )
-            , currentStaffIndex( 0 )
-            , numStaves( 1 )
-            , globalTicksPerQuarter( 48 )
-            , userRequestedVoiceNumber( 1 )
-            , isBackupInProgress( false )
-            {
-                
-            }
+            StaffIndexMeasureMap parseMeasure( const core::PartwiseMeasure& inMxMeasure );
             
-            
-            inline void reset()
-            {
-                currentPositionTicks = 0;
-                currentStaffIndex = 0;
-                currentVoiceIndex = 0;
-            }
-            
-            
-            int convertToGlobalTickScale( const int divisions )
-            {
-                if( currentTicksPerQuarter != globalTicksPerQuarter )
-                {
-                    // TODO - handle documents with multiple divisions values
-                    MX_THROW( "a document with multiple divisions values is currently unsupported" );
-                }
-                return divisions;
-            }
+        private:
+            impl::Cursor myCurrentCursor;
+            impl::Cursor myPreviousCursor;
+            StaffIndexMeasureMap myStaves;
+        
+        private:
+            void parseMusicDataChoice( const core::MusicDataChoice& mdc );
+            void parseNote( const core::Note& inMxNote );
+            void parseBackup( const core::Backup& inMxBackup );
+            void parseForward( const core::Forward& inMxForward );
+            void parseDirection( const core::Direction& inMxDirection );
+            void parseProperties( const core::Properties& inMxProperties );
+            void parseHarmony( const core::Harmony& inMxHarmony );
+            void parseFiguredBass( const core::FiguredBass& inMxFiguredBass );
+            void parsePrint( const core::Print& inMxPrint );
+            void parseSound( const core::Sound& inMxSound );
+            void parseBarline( const core::Barline& inMxBarline );
+            void parseGrouping( const core::Grouping& inMxGrouping );
+            void parseLink( const core::Link& inMxLink );
+            void parseBookmark( const core::Bookmark& inMxBookmark );
+            void coutItemNotSupported( const core::ElementInterface& element );
         };
-        
-        
-        StaffIndexMeasureMap parseMeasure( const core::PartwiseMeasure& inMxMeasure, MeasureCursor& cursor, bool isFirstMeasure );
     }
 }

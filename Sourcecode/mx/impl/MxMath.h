@@ -31,7 +31,7 @@ namespace mx
         /* return the least common multiple
          for a and b. if either a or b is
          zero, returns zero. */
-        static int leastCommonMultiple( int a, int b );
+        int leastCommonMultiple( int a, int b );
         
         /* don't give this any zeros, if you do
          it will throw a std::runtime_error. If

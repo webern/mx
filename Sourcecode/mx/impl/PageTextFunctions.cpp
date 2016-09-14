@@ -2,11 +2,11 @@
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #include "mx/impl/PageTextFunctions.h"
-#include "mx/impl/PositionFunctions.h"
-#include "mx/core/elements/ScoreHeaderGroup.h"
 #include "mx/core/elements/Credit.h"
 #include "mx/core/elements/CreditChoice.h"
 #include "mx/core/elements/CreditWords.h"
+#include "mx/core/elements/ScoreHeaderGroup.h"
+#include "mx/impl/PositionFunctions.h"
 #include "mx/core/elements/CreditType.h"
 
 namespace mx

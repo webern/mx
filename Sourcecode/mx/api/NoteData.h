@@ -49,8 +49,23 @@ namespace mx
     		dur512th,
     		dur1024th
     	};
+        
+        constexpr long double DUR_QUARTERS_VALUE_MAXIMA = 32.0L;
+        constexpr long double DUR_QUARTERS_VALUE_LONGA = 16.0L;
+        constexpr long double DUR_QUARTERS_VALUE_BREVE = 8.0L;
+        constexpr long double DUR_QUARTERS_VALUE_WHOLE = 4.0L;
+        constexpr long double DUR_QUARTERS_VALUE_HALF = 2.0L;
+        constexpr long double DUR_QUARTERS_VALUE_QUARTER = 1.0L;
+        constexpr long double DUR_QUARTERS_VALUE_EIGHTH = 1.0L / 2.0L;
+        constexpr long double DUR_QUARTERS_VALUE_16TH = 1.0L / 4.0L;
+        constexpr long double DUR_QUARTERS_VALUE_32ND = 1.0L / 8.0L;
+        constexpr long double DUR_QUARTERS_VALUE_64TH = 1.0L / 16.0L;
+        constexpr long double DUR_QUARTERS_VALUE_128TH = 1.0L / 32.0L;
+        constexpr long double DUR_QUARTERS_VALUE_256TH = 1.0L / 64.0L;
+        constexpr long double DUR_QUARTERS_VALUE_512TH = 1.0L / 128.0L;
+        constexpr long double DUR_QUARTERS_VALUE_1024TH = 1.0L / 256.0L;
 
-    	enum class Stem
+        enum class Stem
     	{
     		unspecified,
     		up,
@@ -64,6 +79,7 @@ namespace mx
     	public:
 
     		bool isRest;                       // if isRest is true then isUnpitched can be ignored
+            bool isMeasureRest;                // only valid if isRest is true
             bool isUnpitched;                  // only relevant if isRest is false
             bool isDisplayStepOctaveSpecified; // MusicXML can optionally specify display step and octave for rests and unpitched notes
             bool isChord;                      // the note is part of a chord
@@ -75,7 +91,7 @@ namespace mx
             int staffIndex;                    // this will be one less than the number shown in the <staff> element
             int userRequestedVoiceNumber;
             Stem stem;
-            DurationName durationName;
+            DurationName durationName;         // i.e. quarter, eighth etc
             int durationDots;
             int durationTicks;
             int startPosition;
@@ -88,6 +104,7 @@ namespace mx
 
             NoteData()
             : isRest{ false }
+            , isMeasureRest{ false }
             , isUnpitched{ false }
             , isDisplayStepOctaveSpecified{ false }
             , isChord{ false }

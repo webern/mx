@@ -4,12 +4,25 @@
 #include "mx/api/TimeSignatureData.h"
 #include "mx/core/elements/MusicDataChoice.h"
 #include "mx/core/elements/ScorePartwise.h"
+#include "mx/impl/Cursor.h"
 
 namespace mx
 {
+    namespace core
+    {
+        class Duration;
+    }
+    
     namespace impl
     {
-        bool findAndFillTimeSignature( const core::MusicDataChoice& inMdc, api::TimeSignatureData& outTimeSignatureData );
-        int findMaxDivisionsPerQuarter( const core::ScorePartwise& inScorePartwise );
+    	class TimeFunctions
+    	{
+        public:
+	        bool findAndFillTimeSignature( const core::MusicDataChoice& inMdc, api::TimeSignatureData& outTimeSignatureData ) const;
+	        bool isTimeSignatureImplicit( const api::TimeSignatureData& previousTimeSignature, const api::TimeSignatureData& currentTimeSignature, const bool isFirstMeasureInPart ) const;
+    	    int findMaxDivisionsPerQuarter( const core::ScorePartwise& inScorePartwise ) const;
+            int convertDurationToGlobalTickScale( const impl::Cursor& cursor, const core::Duration& duration ) const;
+            int convertDurationToGlobalTickScale( const impl::Cursor& cursor, long double durationValue ) const;
+        };
     }
 }

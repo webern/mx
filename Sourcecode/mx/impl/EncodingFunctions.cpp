@@ -2,16 +2,16 @@
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #include "mx/impl/EncodingFunctions.h"
+#include "mx/core/Date.h"
+#include "mx/core/elements/Encoder.h"
+#include "mx/core/elements/Encoding.h"
 #include "mx/core/elements/Encoding.h"
 #include "mx/core/elements/EncodingChoice.h"
-#include "mx/core/elements/Software.h"
 #include "mx/core/elements/EncodingDate.h"
-#include "mx/core/elements/Encoder.h"
 #include "mx/core/elements/EncodingDescription.h"
-#include "mx/core/elements/Supports.h"
 #include "mx/core/elements/Identification.h"
-#include "mx/core/elements/Encoding.h"
-#include "mx/core/Date.h"
+#include "mx/core/elements/Software.h"
+#include "mx/core/elements/Supports.h"
 
 namespace mx
 {

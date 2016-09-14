@@ -2,15 +2,15 @@
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #include "mx/impl/StaffFunctions.h"
-#include "mx/impl/MeasureFunctions.h"
-#include "mx/core/elements/MusicDataGroup.h"
-#include "mx/core/elements/MusicDataChoice.h"
-#include "mx/core/elements/Note.h"
-#include "mx/core/elements/Staff.h"
 #include "mx/core/elements/EditorialVoiceGroup.h"
-#include "mx/core/elements/Voice.h"
+#include "mx/core/elements/MusicDataChoice.h"
+#include "mx/core/elements/MusicDataGroup.h"
+#include "mx/core/elements/Note.h"
 #include "mx/core/elements/Properties.h"
+#include "mx/core/elements/Staff.h"
 #include "mx/core/elements/Staves.h"
+#include "mx/core/elements/Voice.h"
+#include "mx/impl/MeasureFunctions.h"
 #include "mx/utility/Throw.h"
 
 #include <map>
@@ -26,31 +26,27 @@ namespace mx
         
         void createStavesFromMx( int inGlobalTicksPerQuarter, const core::PartwiseMeasureSet& inMxMeasures, std::vector<api::StaffData>& outStaves )
         {
-            int measureIndex = 0;
             const int staffCount = findStaffCountInAllMeasures( inMxMeasures );
             outStaves.clear();
-            outStaves.resize( staffCount );
+            outStaves.resize( static_cast<size_t>( staffCount ) );
             auto mxMeasureIter = inMxMeasures.cbegin();
             auto mxMeasureEnd = inMxMeasures.cend();
             bool isFirstMeasure = true;
             StaffIndexMeasureMap currentMeasureData;
             
-            MeasureCursor cursor{};
+            impl::MeasureFunctions measureFunc{ staffCount, inGlobalTicksPerQuarter  };
             
             for( ; mxMeasureIter != mxMeasureEnd; ++mxMeasureIter )
             {
-                cursor.numStaves = staffCount;
-                cursor.globalTicksPerQuarter = inGlobalTicksPerQuarter;
-                cursor.currentTicksPerQuarter = inGlobalTicksPerQuarter;
-                
-                currentMeasureData = parseMeasure( **mxMeasureIter, cursor, isFirstMeasure );
+
+                currentMeasureData = measureFunc.parseMeasure( **mxMeasureIter );
                 isFirstMeasure = false;
                 
                 
                 if( currentMeasureData.size() != outStaves.size() ) { MX_THROW( "currentMeasureData.size() != outStaves.size()" ); } // TODO - remove this
                 auto it = currentMeasureData.cbegin();
                 
-                for( int i = 0; i < outStaves.size() && it != currentMeasureData.cend(); ++i, ++it )
+                for( int i = 0; i < static_cast<int>( outStaves.size() ) && it != currentMeasureData.cend(); ++i, ++it )
                 {
                     if( i != it->first )
                     {
@@ -58,9 +54,9 @@ namespace mx
                     }
                 }
                 
-                for( int i = 0; i < outStaves.size(); ++i )
+                for( int i = 0; i < static_cast<int>( outStaves.size() ); ++i )
                 {
-                    outStaves.at( i ).measures.push_back( currentMeasureData.at( i ) );
+                    outStaves.at( static_cast<size_t>( i ) ).measures.push_back( currentMeasureData.at( i ) );
                 }
             }
         }

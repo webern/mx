@@ -2,19 +2,19 @@
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #include "mx/impl/ScoreFunctions.h"
+#include "mx/core/elements/Creator.h"
+#include "mx/core/elements/MovementNumber.h"
+#include "mx/core/elements/MovementTitle.h"
+#include "mx/core/elements/Rights.h"
+#include "mx/core/elements/ScoreHeaderGroup.h"
+#include "mx/core/elements/Work.h"
+#include "mx/core/elements/WorkNumber.h"
+#include "mx/core/elements/WorkTitle.h"
 #include "mx/impl/EncodingFunctions.h"
 #include "mx/impl/LayoutFunctions.h"
 #include "mx/impl/PageTextFunctions.h"
 #include "mx/impl/PartFunctions.h"
 #include "mx/impl/TimeFunctions.h"
-#include "mx/core/elements/ScoreHeaderGroup.h"
-#include "mx/core/elements/Work.h"
-#include "mx/core/elements/WorkTitle.h"
-#include "mx/core/elements/WorkNumber.h"
-#include "mx/core/elements/MovementTitle.h"
-#include "mx/core/elements/MovementNumber.h"
-#include "mx/core/elements/Creator.h"
-#include "mx/core/elements/Rights.h"
 
 using namespace mx::core;
 using namespace mx::api;
@@ -95,7 +95,8 @@ namespace mx
             auto header = scorePartwise->getScoreHeaderGroup();
 
             api::ScoreData score;
-            score.ticksPerQuarter = impl::findMaxDivisionsPerQuarter( *scorePartwise );
+            impl::TimeFunctions timeFunc;
+            score.ticksPerQuarter = timeFunc.findMaxDivisionsPerQuarter( *scorePartwise );
 
             if( header->getHasWork() && header->getWork()->getHasWorkTitle() )
             {

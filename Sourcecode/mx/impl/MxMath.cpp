@@ -24,7 +24,7 @@ namespace mx
         }
         
         
-        int gcd( std::initializer_list<int> integers )
+        int greatestCommonDivisor( std::initializer_list<int> integers )
         {
             int gcd = 1;
             if ( integers.size() == 0 )

@@ -620,6 +620,10 @@
 		2951A0C51D60F3B700B49A13 /* ScoreConversions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2951A0C31D60F3B700B49A13 /* ScoreConversions.cpp */; };
 		295C49371D2CB41E0015E349 /* NoteheadTextChoice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 295C49361D2CB41E0015E349 /* NoteheadTextChoice.cpp */; };
 		295DDE101D2C0D4D00A2881D /* FromXElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 295DDE0F1D2C0D4D00A2881D /* FromXElement.cpp */; };
+		2973065F1D89AB3300B8C0D3 /* Cursor.h in Headers */ = {isa = PBXBuildFile; fileRef = 2973065D1D89AB3300B8C0D3 /* Cursor.h */; };
+		297306601D89AB3300B8C0D3 /* Cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2973065E1D89AB3300B8C0D3 /* Cursor.cpp */; };
+		297306671D89D08400B8C0D3 /* MxNoteReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 297306651D89D08400B8C0D3 /* MxNoteReader.h */; };
+		297306681D89D08400B8C0D3 /* MxNoteReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297306661D89D08400B8C0D3 /* MxNoteReader.cpp */; };
 		297DA0781D7F60BE0067C13A /* PartFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297DA0701D7F60BE0067C13A /* PartFunctions.cpp */; };
 		297DA07A1D7F60BE0067C13A /* StaffFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297DA0721D7F60BE0067C13A /* StaffFunctions.cpp */; };
 		297DA07C1D7F60BE0067C13A /* VoiceFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297DA0741D7F60BE0067C13A /* VoiceFunctions.cpp */; };
@@ -1875,6 +1879,10 @@
 		295C49381D2CB4B60015E349 /* NoteheadTextChoice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NoteheadTextChoice.h; path = ../Sourcecode/mx/core/elements/NoteheadTextChoice.h; sourceTree = "<group>"; };
 		295DDE0E1D2C0D4400A2881D /* FromXElement.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FromXElement.h; path = ../Sourcecode/mx/core/FromXElement.h; sourceTree = "<group>"; };
 		295DDE0F1D2C0D4D00A2881D /* FromXElement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FromXElement.cpp; path = ../Sourcecode/mx/core/FromXElement.cpp; sourceTree = "<group>"; };
+		2973065D1D89AB3300B8C0D3 /* Cursor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Cursor.h; path = ../Sourcecode/mx/impl/Cursor.h; sourceTree = "<group>"; };
+		2973065E1D89AB3300B8C0D3 /* Cursor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Cursor.cpp; path = ../Sourcecode/mx/impl/Cursor.cpp; sourceTree = "<group>"; };
+		297306651D89D08400B8C0D3 /* MxNoteReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MxNoteReader.h; path = ../Sourcecode/mx/impl/MxNoteReader.h; sourceTree = "<group>"; };
+		297306661D89D08400B8C0D3 /* MxNoteReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MxNoteReader.cpp; path = ../Sourcecode/mx/impl/MxNoteReader.cpp; sourceTree = "<group>"; };
 		297DA0701D7F60BE0067C13A /* PartFunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PartFunctions.cpp; path = ../Sourcecode/mx/impl/PartFunctions.cpp; sourceTree = "<group>"; };
 		297DA0711D7F60BE0067C13A /* PartFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PartFunctions.h; path = ../Sourcecode/mx/impl/PartFunctions.h; sourceTree = "<group>"; };
 		297DA0721D7F60BE0067C13A /* StaffFunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StaffFunctions.cpp; path = ../Sourcecode/mx/impl/StaffFunctions.cpp; sourceTree = "<group>"; };
@@ -2057,29 +2065,33 @@
 		292255D51D712B26002D8E48 /* impl */ = {
 			isa = PBXGroup;
 			children = (
-				2927ECA51D888AB30042E080 /* MxMath.h */,
-				2927ECA61D888AB30042E080 /* MxMath.cpp */,
-				2927ECA11D8872EA0042E080 /* MeasureFunctions.h */,
-				2927ECA21D8872EA0042E080 /* MeasureFunctions.cpp */,
-				2927EC9D1D886E460042E080 /* TimeFunctions.h */,
-				2927EC9E1D886E460042E080 /* TimeFunctions.cpp */,
-				297DA0701D7F60BE0067C13A /* PartFunctions.cpp */,
-				297DA0711D7F60BE0067C13A /* PartFunctions.h */,
-				297DA0721D7F60BE0067C13A /* StaffFunctions.cpp */,
-				297DA0731D7F60BE0067C13A /* StaffFunctions.h */,
-				297DA0741D7F60BE0067C13A /* VoiceFunctions.cpp */,
-				297DA0751D7F60BE0067C13A /* VoiceFunctions.h */,
-				293CE9F51D7B2C18003F1FEB /* PositionFunctions.h */,
+				2973065E1D89AB3300B8C0D3 /* Cursor.cpp */,
+				2973065D1D89AB3300B8C0D3 /* Cursor.h */,
 				2913BB871D753FC8006C34A3 /* EncodingFunctions.cpp */,
 				2913BB881D753FC8006C34A3 /* EncodingFunctions.h */,
 				2913BB891D753FC8006C34A3 /* LayoutFunctions.cpp */,
 				2913BB8A1D753FC8006C34A3 /* LayoutFunctions.h */,
+				2927ECA21D8872EA0042E080 /* MeasureFunctions.cpp */,
+				2927ECA11D8872EA0042E080 /* MeasureFunctions.h */,
+				2927ECA61D888AB30042E080 /* MxMath.cpp */,
+				2927ECA51D888AB30042E080 /* MxMath.h */,
+				297306661D89D08400B8C0D3 /* MxNoteReader.cpp */,
+				297306651D89D08400B8C0D3 /* MxNoteReader.h */,
 				2913BB8B1D753FC8006C34A3 /* NoteFunctions.cpp */,
 				2913BB8C1D753FC8006C34A3 /* NoteFunctions.h */,
 				2913BB8D1D753FC8006C34A3 /* PageTextFunctions.cpp */,
 				2913BB8E1D753FC8006C34A3 /* PageTextFunctions.h */,
+				297DA0701D7F60BE0067C13A /* PartFunctions.cpp */,
+				297DA0711D7F60BE0067C13A /* PartFunctions.h */,
+				293CE9F51D7B2C18003F1FEB /* PositionFunctions.h */,
 				2913BB8F1D753FC8006C34A3 /* ScoreFunctions.cpp */,
 				2913BB901D753FC8006C34A3 /* ScoreFunctions.h */,
+				297DA0721D7F60BE0067C13A /* StaffFunctions.cpp */,
+				297DA0731D7F60BE0067C13A /* StaffFunctions.h */,
+				2927EC9E1D886E460042E080 /* TimeFunctions.cpp */,
+				2927EC9D1D886E460042E080 /* TimeFunctions.h */,
+				297DA0741D7F60BE0067C13A /* VoiceFunctions.cpp */,
+				297DA0751D7F60BE0067C13A /* VoiceFunctions.h */,
 			);
 			name = impl;
 			sourceTree = "<group>";
@@ -3340,8 +3352,10 @@
 			files = (
 				2927EC9C1D886E2B0042E080 /* TimeSignatureData.h in Headers */,
 				2927EC9F1D886E460042E080 /* TimeFunctions.h in Headers */,
+				297306671D89D08400B8C0D3 /* MxNoteReader.h in Headers */,
 				2927ECA71D888AB30042E080 /* MxMath.h in Headers */,
 				2927ECA31D8872EA0042E080 /* MeasureFunctions.h in Headers */,
+				2973065F1D89AB3300B8C0D3 /* Cursor.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3757,6 +3771,7 @@
 				294548611D295C5500B90302 /* BassStep.cpp in Sources */,
 				294549421D295C5500B90302 /* Line.cpp in Sources */,
 				294549BF1D295C5500B90302 /* PartNameDisplayAttributes.cpp in Sources */,
+				297306601D89AB3300B8C0D3 /* Cursor.cpp in Sources */,
 				294549F91D295C5500B90302 /* ScorePart.cpp in Sources */,
 				294549E11D295C5500B90302 /* RehearsalAttributes.cpp in Sources */,
 				2945489E1D295C5500B90302 /* DegreeValue.cpp in Sources */,
@@ -3852,6 +3867,7 @@
 				2945486F1D295C5500B90302 /* BeatUnitPerOrNoteRelationNoteChoice.cpp in Sources */,
 				294548F41D295C5500B90302 /* Glass.cpp in Sources */,
 				294549C31D295C5500B90302 /* PartwisePart.cpp in Sources */,
+				297306681D89D08400B8C0D3 /* MxNoteReader.cpp in Sources */,
 				29454A401D295C5500B90302 /* TechnicalChoice.cpp in Sources */,
 				294549821D295C5500B90302 /* NormalDot.cpp in Sources */,
 				294548D71D295C5500B90302 /* Feature.cpp in Sources */,
@@ -4074,6 +4090,7 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
 				GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS = YES;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
@@ -4083,6 +4100,7 @@
 				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
 				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
 				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
+				GCC_WARN_PEDANTIC = YES;
 				GCC_WARN_SHADOW = YES;
 				GCC_WARN_SIGN_COMPARE = YES;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -4135,6 +4153,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
 				GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS = YES;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
@@ -4144,6 +4163,7 @@
 				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
 				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
 				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
+				GCC_WARN_PEDANTIC = YES;
 				GCC_WARN_SHADOW = YES;
 				GCC_WARN_SIGN_COMPARE = YES;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;

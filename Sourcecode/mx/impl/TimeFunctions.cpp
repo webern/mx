@@ -2,19 +2,20 @@
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #include "mx/impl/TimeFunctions.h"
-#include "mx/utility/Throw.h"
-#include "mx/core/elements/MusicDataGroup.h"
+#include "mx/core/elements/Beats.h"
+#include "mx/core/elements/BeatType.h"
+#include "mx/core/elements/Divisions.h"
+#include "mx/core/elements/Duration.h"
 #include "mx/core/elements/MusicDataChoice.h"
+#include "mx/core/elements/MusicDataGroup.h"
+#include "mx/core/elements/PartwiseMeasure.h"
+#include "mx/core/elements/PartwisePart.h"
 #include "mx/core/elements/Properties.h"
 #include "mx/core/elements/Time.h"
 #include "mx/core/elements/TimeChoice.h"
 #include "mx/core/elements/TimeSignatureGroup.h"
-#include "mx/core/elements/Beats.h"
-#include "mx/core/elements/BeatType.h"
-#include "mx/core/elements/PartwisePart.h"
-#include "mx/core/elements/PartwiseMeasure.h"
-#include "mx/core/elements/Divisions.h"
 #include "mx/impl/MxMath.h"
+#include "mx/utility/Throw.h"
 
 #include <string>
 #include <cmath>
@@ -24,7 +25,7 @@ namespace mx
 {
     namespace impl
     {
-        bool findAndFillTimeSignature( const core::MusicDataChoice& inMdc, api::TimeSignatureData& outTimeSignatureData )
+        bool TimeFunctions::findAndFillTimeSignature( const core::MusicDataChoice& inMdc, api::TimeSignatureData& outTimeSignatureData ) const
         {
             if( ! ( inMdc.getChoice() == core::MusicDataChoice::Choice::properties ) )
             {
@@ -58,11 +59,11 @@ namespace mx
                         {
                             if( time.getAttributes()->symbol == core::TimeSymbol::common )
                             {
-                                outTimeSignatureData.symbol == api::TimeSignatureSymbol::common;
+                                outTimeSignatureData.symbol = api::TimeSignatureSymbol::common;
                             }
                             else if( time.getAttributes()->symbol == core::TimeSymbol::cut )
                             {
-                                outTimeSignatureData.symbol == api::TimeSignatureSymbol::cut;
+                                outTimeSignatureData.symbol = api::TimeSignatureSymbol::cut;
                             }
                         }
                         
@@ -78,8 +79,31 @@ namespace mx
             }
             return false;
         }
+
+
+        bool TimeFunctions::isTimeSignatureImplicit( const api::TimeSignatureData& previousTimeSignature, const api::TimeSignatureData& currentTimeSignature, const bool isFirstMeasureInPart ) const
+        {
+            if( isFirstMeasureInPart )
+            {
+                return false;
+            }
+            else
+            {
+                if(    ( !currentTimeSignature.isEqualTo( previousTimeSignature ) )
+                    || (  currentTimeSignature.isPrintObjectYes ) )
+                    
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+        }
         
-        int findMaxDivisionsPerQuarter( const core::ScorePartwise& inScorePartwise )
+        
+        int TimeFunctions::findMaxDivisionsPerQuarter( const core::ScorePartwise& inScorePartwise ) const
         {
             std::set<int> foundDivisions;
             
@@ -113,6 +137,26 @@ namespace mx
             }
                 
             return mx::impl::leastCommonMultiple( foundDivisions );
+        }
+        
+        
+        int TimeFunctions::convertDurationToGlobalTickScale( const impl::Cursor& cursor, const core::Duration& duration ) const
+        {
+            return convertDurationToGlobalTickScale( cursor, static_cast<long double>( duration.getValue().getValue() ) );
+        }
+        
+        
+        int TimeFunctions::convertDurationToGlobalTickScale( const impl::Cursor& cursor, long double durationValue ) const
+        {
+            if( cursor.ticksPerQuarter == cursor.getGlobalTicksPerQuarter() )
+            {
+                return static_cast<int>( std::ceil( durationValue - 0.5L ) );
+            }
+            
+            const long double currentTicksPerQuarter = static_cast<long double>( cursor.ticksPerQuarter );
+            const long double globalTicksPerQuarter = static_cast<long double>( cursor.getGlobalTicksPerQuarter() );
+            const long double convertedVal = durationValue * ( globalTicksPerQuarter / currentTicksPerQuarter );
+            return static_cast<int>( std::ceil( convertedVal - 0.5L ) );
         }
     }
 }

@@ -2,26 +2,26 @@
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #include "mx/impl/PartFunctions.h"
-#include "mx/impl/StaffFunctions.h"
-#include "mx/utility/Throw.h"
-#include "mx/core/elements/ScorePartwise.h"
-#include "mx/core/elements/ScoreHeaderGroup.h"
-#include "mx/core/elements/PartList.h"
-#include "mx/core/elements/ScorePart.h"
+#include "mx/core/elements/AccidentalText.h"
+#include "mx/core/elements/DisplayText.h"
+#include "mx/core/elements/DisplayTextOrAccidentalText.h"
+#include "mx/core/elements/GroupAbbreviation.h"
+#include "mx/core/elements/GroupAbbreviationDisplay.h"
+#include "mx/core/elements/GroupName.h"
+#include "mx/core/elements/GroupNameDisplay.h"
+#include "mx/core/elements/PartAbbreviation.h"
+#include "mx/core/elements/PartAbbreviationDisplay.h"
 #include "mx/core/elements/PartGroup.h"
 #include "mx/core/elements/PartGroupOrScorePart.h"
+#include "mx/core/elements/PartList.h"
 #include "mx/core/elements/PartName.h"
-#include "mx/core/elements/GroupName.h"
-#include "mx/core/elements/GroupAbbreviation.h"
-#include "mx/core/elements/GroupNameDisplay.h"
-#include "mx/core/elements/GroupAbbreviationDisplay.h"
-#include "mx/core/elements/DisplayTextOrAccidentalText.h"
-#include "mx/core/elements/DisplayText.h"
-#include "mx/core/elements/AccidentalText.h"
 #include "mx/core/elements/PartNameDisplay.h"
-#include "mx/core/elements/PartAbbreviationDisplay.h"
-#include "mx/core/elements/PartAbbreviation.h"
 #include "mx/core/elements/PartwisePart.h"
+#include "mx/core/elements/ScoreHeaderGroup.h"
+#include "mx/core/elements/ScorePart.h"
+#include "mx/core/elements/ScorePartwise.h"
+#include "mx/impl/StaffFunctions.h"
+#include "mx/utility/Throw.h"
 
 #include <list>
 #include <sstream>
@@ -211,8 +211,10 @@ namespace mx
         
         void createMxFromPartData( const api::ScoreData& inScoreData, core::ScorePartwise& outMx )
         {
+            MX_UNUSED( outMx );
             for( const auto& p : inScoreData.parts )
             {
+                MX_UNUSED( p );
                 // TODO - everything
             }
         }
@@ -221,9 +223,6 @@ namespace mx
         void createPartDataFromMx( const core::ScorePartwise& inMx, api::ScoreData& outScoreData )
         {
             std::list<api::PartGroupData> groupStack;
-            int index = 0;
-            const auto& header = *inMx.getScoreHeaderGroup();
-            const auto& partDeclarations = *header.getPartList();
             
             std::vector<GroupEnd> groupEnds;
             std::vector<PartHelper> parts;

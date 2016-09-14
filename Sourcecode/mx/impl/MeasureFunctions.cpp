@@ -1,51 +1,53 @@
 // MusicXML Class Library v0.3.0
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
-#include "mx/api/NoteData.h"
 #include "mx/impl/MeasureFunctions.h"
-#include "mx/impl/TimeFunctions.h"
-#include "mx/utility/Throw.h"
-#include "mx/core/elements/MusicDataGroup.h"
+#include "mx/api/NoteData.h"
+#include "mx/core/elements/Alter.h"
+#include "mx/core/elements/Backup.h"
+#include "mx/core/elements/Barline.h"
+#include "mx/core/elements/Beats.h"
+#include "mx/core/elements/BeatType.h"
+#include "mx/core/elements/Bookmark.h"
+#include "mx/core/elements/CueNoteGroup.h"
+#include "mx/core/elements/Direction.h"
+#include "mx/core/elements/DisplayOctave.h"
+#include "mx/core/elements/DisplayStep.h"
+#include "mx/core/elements/DisplayStepOctaveGroup.h"
+#include "mx/core/elements/Duration.h"
+#include "mx/core/elements/EditorialVoiceGroup.h"
+#include "mx/core/elements/FiguredBass.h"
+#include "mx/core/elements/Forward.h"
+#include "mx/core/elements/FullNoteGroup.h"
+#include "mx/core/elements/FullNoteTypeChoice.h"
+#include "mx/core/elements/GraceNoteGroup.h"
+#include "mx/core/elements/Grouping.h"
+#include "mx/core/elements/Harmony.h"
+#include "mx/core/elements/Link.h"
 #include "mx/core/elements/MusicDataChoice.h"
+#include "mx/core/elements/MusicDataGroup.h"
+#include "mx/core/elements/NormalNoteGroup.h"
+#include "mx/core/elements/Note.h"
+#include "mx/core/elements/NoteChoice.h"
+#include "mx/core/elements/Octave.h"
+#include "mx/core/elements/Pitch.h"
+#include "mx/core/elements/Print.h"
 #include "mx/core/elements/Properties.h"
+#include "mx/core/elements/Properties.h"
+#include "mx/core/elements/Rest.h"
+#include "mx/core/elements/Sound.h"
+#include "mx/core/elements/Staff.h"
+#include "mx/core/elements/Step.h"
 #include "mx/core/elements/Time.h"
 #include "mx/core/elements/TimeChoice.h"
 #include "mx/core/elements/TimeSignatureGroup.h"
-#include "mx/core/elements/Beats.h"
-#include "mx/core/elements/BeatType.h"
-#include "mx/core/elements/Note.h"
-#include "mx/core/elements/Backup.h"
-#include "mx/core/elements/Forward.h"
-#include "mx/core/elements/Direction.h"
-#include "mx/core/elements/Properties.h"
-#include "mx/core/elements/Harmony.h"
-#include "mx/core/elements/FiguredBass.h"
-#include "mx/core/elements/Print.h"
-#include "mx/core/elements/Sound.h"
-#include "mx/core/elements/Barline.h"
-#include "mx/core/elements/Grouping.h"
-#include "mx/core/elements/Link.h"
-#include "mx/core/elements/Bookmark.h"
-#include "mx/core/elements/Staff.h"
-#include "mx/core/elements/NoteChoice.h"
-#include "mx/core/elements/NormalNoteGroup.h"
-#include "mx/core/elements/CueNoteGroup.h"
-#include "mx/core/elements/GraceNoteGroup.h"
-#include "mx/core/elements/Duration.h"
-#include "mx/core/elements/FullNoteGroup.h"
-#include "mx/core/elements/FullNoteTypeChoice.h"
-#include "mx/core/elements/Rest.h"
-#include "mx/core/elements/Pitch.h"
-#include "mx/core/elements/Unpitched.h"
-#include "mx/core/elements/DisplayStepOctaveGroup.h"
-#include "mx/core/elements/DisplayStep.h"
-#include "mx/core/elements/Step.h"
-#include "mx/core/elements/DisplayOctave.h"
-#include "mx/core/elements/Octave.h"
-#include "mx/core/elements/Alter.h"
-#include "mx/core/elements/EditorialVoiceGroup.h"
-#include "mx/core/elements/Voice.h"
 #include "mx/core/elements/Type.h"
+#include "mx/core/elements/Unpitched.h"
+#include "mx/core/elements/Voice.h"
+#include "mx/impl/MxNoteReader.h"
+#include "mx/impl/NoteFunctions.h"
+#include "mx/impl/TimeFunctions.h"
+#include "mx/utility/Throw.h"
 
 #include <string>
 
@@ -53,6 +55,7 @@ namespace mx
 {
     namespace impl
     {
+        api::Step converCoreStepToApiStep( core::StepEnum coreStep );
         api::Step converCoreStepToApiStep( core::StepEnum coreStep )
         {
             switch ( coreStep )
@@ -77,6 +80,7 @@ namespace mx
             MX_BUG;
         }
         
+        api::DurationName converCoreDurationEnumToApiDurationEnum( core::NoteTypeValue noteTypeValue );
         api::DurationName converCoreDurationEnumToApiDurationEnum( core::NoteTypeValue noteTypeValue )
         {
             switch ( noteTypeValue )
@@ -101,18 +105,28 @@ namespace mx
             return api::DurationName::unspecified;
         }
         
-		StaffIndexMeasureMap parseMeasure( const core::PartwiseMeasure& inMxMeasure, MeasureCursor& cursor, bool isFirstMeasure )
+        
+        MeasureFunctions::MeasureFunctions( int numStaves, int globalTicksPerQuarter )
+        : myCurrentCursor{ numStaves, globalTicksPerQuarter }
+        , myPreviousCursor{ numStaves, globalTicksPerQuarter }
+        , myStaves{}
         {
-            cursor.reset();
-            StaffIndexMeasureMap outMap;
+            myCurrentCursor.isFirstMeasureInPart = true;
+        }
+        
+        
+        StaffIndexMeasureMap MeasureFunctions::parseMeasure( const core::PartwiseMeasure& inMxMeasure )
+        {
+            myStaves.clear();
+            myCurrentCursor.reset();
             
-            if( isFirstMeasure )
+            if( myCurrentCursor.isFirstMeasureInPart )
             {
-                cursor.timeSignature.isImplicit = false;
+                myCurrentCursor.timeSignature.isImplicit = false;
                 
             }
             
-            auto startingCursor = cursor;
+            myPreviousCursor = myCurrentCursor;
             bool isTimeSignatureFound = false;
             
             const auto& mdcSet = inMxMeasure.getMusicDataGroup()->getMusicDataChoiceSet();
@@ -121,292 +135,228 @@ namespace mx
             {
                 if( !isTimeSignatureFound )
                 {
-                    isTimeSignatureFound = findAndFillTimeSignature( *mdc, cursor.timeSignature );
-                    if( isFirstMeasure )
-                    {
-                        cursor.timeSignature.isImplicit = false;
-                    }
-                    else
-                    {
-                        if( ( cursor.timeSignature.beats != startingCursor.timeSignature.beats ) ||
-                           ( cursor.timeSignature.beatType != startingCursor.timeSignature.beatType ) ||
-                           ( cursor.timeSignature.symbol != startingCursor.timeSignature.symbol ) ||
-                           ( cursor.timeSignature.isPrintObjectYes ) )
-                            
-                        {
-                            cursor.timeSignature.isImplicit = false;
-                        }
-                        else
-                        {
-                            cursor.timeSignature.isImplicit = true;
-                        }
-                    }
+                    impl::TimeFunctions timeFunc;
+                    isTimeSignatureFound = timeFunc.findAndFillTimeSignature( *mdc, myCurrentCursor.timeSignature );
+                    myCurrentCursor.timeSignature.isImplicit = timeFunc.isTimeSignatureImplicit( myPreviousCursor.timeSignature, myCurrentCursor.timeSignature, myCurrentCursor.isFirstMeasureInPart );
                 }
-                
-                const auto choice = mdc->getChoice();
-                switch ( choice )
-                {
-                    case core::MusicDataChoice::Choice::note:
-                    {
-                        cursor.isBackupInProgress = false;
-                        const auto& mxNote = *mdc->getNote();
-                        
-                        if( mxNote.getHasStaff() )
-                        {
-                            cursor.currentVoiceIndex = mxNote.getStaff()->getValue().getValue() - 1;
-                        }
-                        
-                        const auto& ncObject = *mxNote.getNoteChoice();
-                        const auto& ncChoice = ncObject.getChoice();
-                        core::FullNoteGroupPtr fullNoteGroup;
-                        int durationValue = cursor.currentTicksPerQuarter;
-                        int tieCount = 0;
-                        bool isCue = false;
-                        bool isGrace = false;
-                        
-                        switch ( ncChoice )
-                        {
-                            case core::NoteChoice::Choice::normal:
-                            {
-                                const auto& noteGuts = *ncObject.getNormalNoteGroup();
-                                fullNoteGroup = noteGuts.getFullNoteGroup();
-                                tieCount = noteGuts.getTieSet().size();
-                                durationValue = cursor.convertToGlobalTickScale( static_cast<int>( std::ceil( noteGuts.getDuration()->getValue().getValue() - 0.5 ) ) );
-                                break;
-                            }
-                            case core::NoteChoice::Choice::grace:
-                            {
-                                isGrace = true;
-                                const auto& noteGuts = *ncObject.getGraceNoteGroup();
-                                fullNoteGroup = noteGuts.getFullNoteGroup();
-                                tieCount = noteGuts.getTieSet().size();
-                                durationValue = 0;
-                                break;
-                            }
-                            case core::NoteChoice::Choice::cue:
-                            {
-                                isCue = true;
-                                const auto& noteGuts = *ncObject.getCueNoteGroup();
-                                fullNoteGroup = noteGuts.getFullNoteGroup();
-                                durationValue = cursor.convertToGlobalTickScale( static_cast<int>( std::ceil( noteGuts.getDuration()->getValue().getValue() - 0.5 ) ) );
-                                tieCount = 0;
-                                break;
-                            }
-                            default:
-                                MX_BUG;
-                                break;
-                        }
-                        bool isChord = fullNoteGroup->getHasChord();
-                        const auto& fntcObject = *fullNoteGroup->getFullNoteTypeChoice();
-                        const auto& fntcChoice = fntcObject.getChoice();
-                        bool isRest = false;
-                        bool isUnpitched = false;
-                        auto step = core::StepEnum::c;
-                        int octave = 4;
-                        int alter = 0;
-                        bool isDisplayStepOctaveSpecified = false;
-                        
-                        switch ( fntcChoice )
-                        {
-                            case core::FullNoteTypeChoice::Choice::rest:
-                            {
-                                isRest = true;
-                                const auto& rest = *fntcObject.getRest();
-                                const auto& stepOctave = *rest.getDisplayStepOctaveGroup();
-
-                                if( rest.getHasDisplayStepOctaveGroup() )
-                                {
-                                    isDisplayStepOctaveSpecified = true;
-                                    step = stepOctave.getDisplayStep()->getValue();
-                                    octave = stepOctave.getDisplayOctave()->getValue().getValue();
-                                }
-                                
-                                alter = 0;
-                                break;
-                            }
-                            case core::FullNoteTypeChoice::Choice::unpitched:
-                            {
-                                isUnpitched = true;
-                                const auto& unpitched = *fntcObject.getUnpitched();
-                                const auto& stepOctave = *unpitched.getDisplayStepOctaveGroup();
-                                
-                                if( unpitched.getHasDisplayStepOctaveGroup() )
-                                {
-                                    isDisplayStepOctaveSpecified = true;
-                                    step = stepOctave.getDisplayStep()->getValue();
-                                    octave = stepOctave.getDisplayOctave()->getValue().getValue();
-                                }
-
-                                alter = 0;
-                                break;
-                            }
-                            case core::FullNoteTypeChoice::Choice::pitch:
-                            {
-                                const auto& pitch = *fntcObject.getPitch();
-                                step = pitch.getStep()->getValue();
-                                octave = pitch.getOctave()->getValue().getValue();
-                                alter = static_cast<int>( std::ceil( pitch.getAlter()->getValue().getValue() - 0.5 ) );
-                                break;
-                            }
-                                
-                            default:
-                                break;
-                        }
-                        
-                        int userRequestedVoiceNumber = -1;
-                        if( mxNote.getEditorialVoiceGroup()->getHasVoice() )
-                        {
-                            try
-                            {
-                                userRequestedVoiceNumber = std::stoi( mxNote.getEditorialVoiceGroup()->getVoice()->getValue().getValue() );
-                            }
-                            catch ( ... )
-                            {
-                                
-                            }
-                        }
-
-                        cursor.currentStaffIndex = mxNote.getHasStaff() ? mxNote.getStaff()->getValue().getValue() - 1 : 0;
-                        
-                        auto mxNoteTypeValue = mxNote.getType()->getValue();
-                        
-                        auto noteData = api::NoteData{};
-                        noteData.isRest = isRest;
-                        
-                        noteData.noteType = api::NoteType::normal;
-                        
-                        if( isCue )
-                        {
-                            noteData.noteType = api::NoteType::cue;
-                        }
-                        
-                        if( isGrace )
-                        {
-                            noteData.noteType = api::NoteType::grace;
-                        }
-                        
-                        noteData.durationTicks = durationValue;
-                        noteData.startPosition = cursor.currentPositionTicks;
-                        noteData.staffIndex = cursor.currentStaffIndex;
-                        noteData.userRequestedVoiceNumber = userRequestedVoiceNumber;
-                        noteData.step = converCoreStepToApiStep( step );
-                        noteData.alter = alter;
-                        noteData.octave = octave;
-                        noteData.durationName = ( mxNote.getHasType() ? converCoreDurationEnumToApiDurationEnum( mxNoteTypeValue ) : api::DurationName::unspecified );
-                        auto& outMeasure = outMap[cursor.currentStaffIndex];
-                        outMeasure.voices[cursor.currentVoiceIndex].notes.emplace_back( std::move( noteData ) );
-                        
-                        if( !isChord )
-                        {
-                            cursor.currentPositionTicks += durationValue;
-                        }
-                        
-                        break;
-                    }
-                    case core::MusicDataChoice::Choice::backup:
-                    {
-                        MX_THROW( "i am not working" );
-                        if( !cursor.isBackupInProgress )
-                        {
-                            ++cursor.currentVoiceIndex;
-                        }
-                        cursor.isBackupInProgress = true;
-                        const auto& item = *mdc->getBackup();
-                        const int backupAmount = static_cast<int>( std::ceil( item.getDuration()->getValue().getValue() - 0.5 ) );
-                        cursor.currentPositionTicks -= backupAmount;
-                        break;
-                    }
-                    case core::MusicDataChoice::Choice::forward:
-                    {
-                        
-                        cursor.isBackupInProgress = false;
-                        const auto& item = *mdc->getForward();
-                        std::cout << item.getElementName() << " is not supported" << std::endl;
-                        break;
-                    }
-                    case core::MusicDataChoice::Choice::direction:
-                    {
-                        cursor.isBackupInProgress = false;
-                        const auto& item = *mdc->getDirection();
-                        std::cout << item.getElementName() << " is not supported" << std::endl;
-                        break;
-                    }
-                    case core::MusicDataChoice::Choice::properties:
-                    {
-                        cursor.isBackupInProgress = false;
-                        const auto& item = *mdc->getProperties();
-                        std::cout << item.getElementName() << " is not supported" << std::endl;
-                        break;
-                    }
-                    case core::MusicDataChoice::Choice::harmony:
-                    {
-                        cursor.isBackupInProgress = false;
-                        const auto& item = *mdc->getHarmony();
-                        std::cout << item.getElementName() << " is not supported" << std::endl;
-                        break;
-                    }
-                    case core::MusicDataChoice::Choice::figuredBass:
-                    {
-                        cursor.isBackupInProgress = false;
-                        const auto& item = *mdc->getFiguredBass();
-                        std::cout << item.getElementName() << " is not supported" << std::endl;
-                        break;
-                    }
-                    case core::MusicDataChoice::Choice::print:
-                    {
-                        cursor.isBackupInProgress = false;
-                        const auto& item = *mdc->getPrint();
-                        std::cout << item.getElementName() << " is not supported" << std::endl;
-                        break;
-                    }
-                    case core::MusicDataChoice::Choice::sound:
-                    {
-                        cursor.isBackupInProgress = false;
-                        const auto& item = *mdc->getSound();
-                        std::cout << item.getElementName() << " is not supported" << std::endl;
-                        break;
-                    }
-                    case core::MusicDataChoice::Choice::barline:
-                    {
-                        cursor.isBackupInProgress = false;
-                        const auto& item = *mdc->getBarline();
-                        std::cout << item.getElementName() << " is not supported" << std::endl;
-                        break;
-                    }
-                    case core::MusicDataChoice::Choice::grouping:
-                    {
-                        cursor.isBackupInProgress = false;
-                        const auto& item = *mdc->getGrouping();
-                        std::cout << item.getElementName() << " is not supported" << std::endl;
-                        break;
-                    }
-                    case core::MusicDataChoice::Choice::link:
-                    {
-                        cursor.isBackupInProgress = false;
-                        const auto& item = *mdc->getLink();
-                        std::cout << item.getElementName() << " is not supported" << std::endl;
-                        break;
-                    }
-                    case core::MusicDataChoice::Choice::bookmark:
-                    {
-                        cursor.isBackupInProgress = false;
-                        const auto& item = *mdc->getBookmark();
-                        std::cout << item.getElementName() << " is not supported" << std::endl;
-                        break;
-                    }
-                    default:
-                    {
-                        MX_THROW( "unsupported MusicDataChoice::Choice value" );
-                    }
-                }
+                parseMusicDataChoice( *mdc );
             }
             
-            for( int i = 0; i < cursor.numStaves; ++i )
+            // assign the correct time signature to all staves
+            // and also initialize any staves that were missing
+            for( int i = 0; i < myCurrentCursor.getNumStaves(); ++i )
             {
-                outMap[i].timeSignature = cursor.timeSignature;
+                myStaves[i].timeSignature = myCurrentCursor.timeSignature;
             }
             
-            return outMap;
+            myCurrentCursor.isFirstMeasureInPart = false;
+            return myStaves;
+        }
+        
+        
+        void MeasureFunctions::parseMusicDataChoice( const core::MusicDataChoice& mdc )
+        {
+            switch ( mdc.getChoice() )
+            {
+                case core::MusicDataChoice::Choice::note:
+                {
+                    myCurrentCursor.isBackupInProgress = false;
+                    parseNote( *mdc.getNote() );
+                    break;
+                }
+                case core::MusicDataChoice::Choice::backup:
+                {
+                    parseBackup( *mdc.getBackup() );
+                    break;
+                }
+                case core::MusicDataChoice::Choice::forward:
+                {
+                    
+                    myCurrentCursor.isBackupInProgress = false;
+                    parseForward( *mdc.getForward() );
+                    break;
+                }
+                case core::MusicDataChoice::Choice::direction:
+                {
+                    myCurrentCursor.isBackupInProgress = false;
+                    parseDirection( *mdc.getDirection() );
+                    break;
+                }
+                case core::MusicDataChoice::Choice::properties:
+                {
+                    myCurrentCursor.isBackupInProgress = false;
+                    parseProperties( *mdc.getProperties() );
+                    break;
+                }
+                case core::MusicDataChoice::Choice::harmony:
+                {
+                    myCurrentCursor.isBackupInProgress = false;
+                    parseHarmony( *mdc.getHarmony() );
+                    break;
+                }
+                case core::MusicDataChoice::Choice::figuredBass:
+                {
+                    myCurrentCursor.isBackupInProgress = false;
+                    parseFiguredBass( *mdc.getFiguredBass() );
+                    break;
+                }
+                case core::MusicDataChoice::Choice::print:
+                {
+                    myCurrentCursor.isBackupInProgress = false;
+                    parsePrint( *mdc.getPrint() );
+                    break;
+                }
+                case core::MusicDataChoice::Choice::sound:
+                {
+                    myCurrentCursor.isBackupInProgress = false;
+                    parseSound( *mdc.getSound() );
+                    break;
+                }
+                case core::MusicDataChoice::Choice::barline:
+                {
+                    myCurrentCursor.isBackupInProgress = false;
+                    parseBarline( *mdc.getBarline() );
+                    break;
+                }
+                case core::MusicDataChoice::Choice::grouping:
+                {
+                    myCurrentCursor.isBackupInProgress = false;
+                    parseGrouping( *mdc.getGrouping() );
+                    break;
+                }
+                case core::MusicDataChoice::Choice::link:
+                {
+                    myCurrentCursor.isBackupInProgress = false;
+                    parseLink( *mdc.getLink() );
+                    break;
+                }
+                case core::MusicDataChoice::Choice::bookmark:
+                {
+                    myCurrentCursor.isBackupInProgress = false;
+                    parseBookmark( *mdc.getBookmark() );
+                    break;
+                }
+                default:
+                {
+                    MX_THROW( "unsupported MusicDataChoice::Choice value" );
+                }
+            }
+        }
+        
+        
+        void MeasureFunctions::parseNote( const core::Note& inMxNote )
+        {
+            myCurrentCursor.isBackupInProgress = false;
+            impl::NoteFunctions noteFunc;
+            auto noteData = noteFunc.parseNote( inMxNote, myCurrentCursor );
+            
+            if( noteData.staffIndex >= 0 )
+            {
+                myCurrentCursor.staffIndex = noteData.staffIndex;
+            }
+            else
+            {
+                myCurrentCursor.staffIndex = 0;
+            }
+            
+            if( !noteData.isChord )
+            {
+                myCurrentCursor.position += noteData.durationTicks;
+            }
+            
+            auto& outMeasure = myStaves[myCurrentCursor.staffIndex];
+            outMeasure.voices[myCurrentCursor.voiceIndex].notes.emplace_back( std::move( noteData ) );
+        }
+        
+        
+        void MeasureFunctions::parseBackup( const core::Backup& inMxBackup )
+        {
+            if( ! ( myCurrentCursor.isBackupInProgress ) )
+            {
+                ++myCurrentCursor.voiceIndex;
+            }
+            else
+            {
+                MX_THROW( "multiple backups in a row" ); // TODO - remove this debugging check
+            }
+            myCurrentCursor.isBackupInProgress = true;
+            impl::TimeFunctions timeFunc;
+            const int backupAmount = timeFunc.convertDurationToGlobalTickScale( myCurrentCursor, *inMxBackup.getDuration() );
+            myCurrentCursor.position -= backupAmount;
+        }
+        
+        
+        void MeasureFunctions::parseForward( const core::Forward& inMxForward )
+        {
+            impl::TimeFunctions timeFunc;
+            const int forwardAmount = timeFunc.convertDurationToGlobalTickScale( myCurrentCursor, *inMxForward.getDuration() );
+            myCurrentCursor.position += forwardAmount;
+        }
+        
+        
+        void MeasureFunctions::parseDirection( const core::Direction& inMxDirection )
+        {
+            coutItemNotSupported( inMxDirection );
+        }
+        
+        
+        void MeasureFunctions::parseProperties( const core::Properties& inMxProperties )
+        {
+            coutItemNotSupported( inMxProperties );
+        }
+        
+        
+        void MeasureFunctions::parseHarmony( const core::Harmony& inMxHarmony )
+        {
+            coutItemNotSupported( inMxHarmony );
+        }
+        
+        
+        void MeasureFunctions::parseFiguredBass( const core::FiguredBass& inMxFiguredBass )
+        {
+            coutItemNotSupported( inMxFiguredBass );
+        }
+        
+        
+        void MeasureFunctions::parsePrint( const core::Print& inMxPrint )
+        {
+            coutItemNotSupported( inMxPrint );
+        }
+        
+        
+        void MeasureFunctions::parseSound( const core::Sound& inMxSound )
+        {
+            coutItemNotSupported( inMxSound );
+        }
+        
+        
+        void MeasureFunctions::parseBarline( const core::Barline& inMxBarline )
+        {
+            coutItemNotSupported( inMxBarline );
+        }
+        
+        
+        void MeasureFunctions::parseGrouping( const core::Grouping& inMxGrouping )
+        {
+            coutItemNotSupported( inMxGrouping );
+        }
+        
+        
+        void MeasureFunctions::parseLink( const core::Link& inMxLink )
+        {
+            coutItemNotSupported( inMxLink );
+        }
+        
+        
+        void MeasureFunctions::parseBookmark( const core::Bookmark& inMxBookmark )
+        {
+            coutItemNotSupported( inMxBookmark );
+        }
+        
+        
+        void MeasureFunctions::coutItemNotSupported( const core::ElementInterface& element )
+        {
+            std::cout << element.getElementName() << " is not supported" << std::endl;
         }
     }
 }
