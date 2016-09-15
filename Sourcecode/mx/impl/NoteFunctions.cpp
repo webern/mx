@@ -41,6 +41,16 @@ namespace mx
             std::pair<core::NoteTypeValue, api::DurationName>{ core::NoteTypeValue::oneThousandTwentyFourth, api::DurationName::dur1024th },
         };
         
+        
+        std::map<core::BeamValue, api::Beam> NoteFunctions::beamMap =
+        {
+            std::pair<core::BeamValue, api::Beam>{ core::BeamValue::begin, api::Beam::start },
+            std::pair<core::BeamValue, api::Beam>{ core::BeamValue::end, api::Beam::stop },
+            std::pair<core::BeamValue, api::Beam>{ core::BeamValue::continue_, api::Beam::continue_ },
+            std::pair<core::BeamValue, api::Beam>{ core::BeamValue::forwardHook, api::Beam::forwardHook },
+            std::pair<core::BeamValue, api::Beam>{ core::BeamValue::backwardHook, api::Beam::backwardHook },
+        };
+        
         NoteFunctions::NoteFunctions() {}
         
         api::NoteData NoteFunctions::parseNote( const core::Note& inMxNote, const impl::Cursor& cursor ) const
@@ -91,9 +101,32 @@ namespace mx
             
             outNoteData.durationDots = reader.getNumDots();
             impl::TimeFunctions timeFunc;
-            outNoteData.durationTicks = timeFunc.convertDurationToGlobalTickScale( cursor, reader.getDurationValue() );
-            outNoteData.startPosition = cursor.position;
-                        
+            outNoteData.durationTimeTicks = timeFunc.convertDurationToGlobalTickScale( cursor, reader.getDurationValue() );
+            outNoteData.startTimeTicks = cursor.position;
+            
+            for( const auto& coreBeamVal : reader.getBeams() )
+            {
+                outNoteData.beams.push_back( convert( coreBeamVal ) );
+            }
+            
+            outNoteData.timeModificationActualNotes = reader.getTimeModificationActualNotes();
+            outNoteData.timeModificationNormalNotes = reader.getTimeModificationNormalNotes();
+            
+            const core::NoteTypeValue timeModType = reader.getTimeModificationNormalType();
+            const int timeModTypeDots = reader.getTimeModificationNormalTypeDots();
+            bool isTimeModTypeSpecified = ( timeModTypeDots > 0 ) && ( timeModType != reader.getDurationType() );
+            
+            if( isTimeModTypeSpecified )
+            {
+                outNoteData.timeModificationNormalType = convert( timeModType );
+                outNoteData.timeModificationNormalTypeDots = timeModTypeDots;
+            }
+            else
+            {
+                outNoteData.timeModificationNormalType = api::DurationName::unspecified;
+                outNoteData.timeModificationNormalTypeDots = 0;
+            }
+            
             return outNoteData;
         }
         
@@ -153,6 +186,35 @@ namespace mx
             }
             
             return it->first;
+        }
+        
+        
+        core::BeamValue NoteFunctions::convert( api::Beam value ) const
+        {
+            auto compare = [&value]( const std::pair<core::BeamValue, api::Beam>& v )
+            {
+                return v.second == value;
+            };
+            
+            auto it = std::find_if( beamMap.cbegin(), beamMap.cend(), compare );
+            
+            if( it == beamMap.cend() )
+            {
+                return core::BeamValue::begin;
+            }
+            
+            return it->first;
+        }
+        
+        
+        api::Beam NoteFunctions::convert( core::BeamValue value ) const
+        {
+            auto it = beamMap.find( value );
+            if( it == beamMap.cend() )
+            {
+                return api::Beam::unspecified;
+            }
+            return it->second;
         }
     }
 }

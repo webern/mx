@@ -261,7 +261,7 @@ namespace mx
             
             if( !noteData.isChord )
             {
-                myCurrentCursor.position += noteData.durationTicks;
+                myCurrentCursor.position += noteData.durationTimeTicks;
             }
             
             auto& outMeasure = myStaves[myCurrentCursor.staffIndex];

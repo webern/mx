@@ -5,6 +5,8 @@
 
 #include "mx/core/Enums.h"
 
+#include <vector>
+
 namespace mx
 {
     namespace core
@@ -48,7 +50,12 @@ namespace mx
             inline core::NoteTypeValue getDurationType() const { return myDurationType; }
             inline bool getIsDurationTypeSpecified() const { return myIsDurationTypeSpecified; }
             inline int getNumDots() const { return myNumDots; }
-
+            inline const std::vector<core::BeamValue>& getBeams() const { return myBeams; }
+            inline int getTimeModificationActualNotes() const { return myTimeModificationActualNotes; }
+            inline int getTimeModificationNormalNotes() const { return myTimeModificationNormalNotes; }
+            inline core::NoteTypeValue getTimeModificationNormalType() const { return myTimeModificationNormalType; }
+            inline int getTimeModificationNormalTypeDots() const { return myTimeModificationNormalTypeDots; }
+            
 		private:
         	const core::Note& myNote;
             const core::NoteChoice& myNoteChoice;
@@ -71,6 +78,11 @@ namespace mx
             core::NoteTypeValue myDurationType;
             bool myIsDurationTypeSpecified;
             int myNumDots;
+            std::vector<core::BeamValue> myBeams;
+            int myTimeModificationActualNotes;
+            int myTimeModificationNormalNotes;
+            core::NoteTypeValue myTimeModificationNormalType;
+            int myTimeModificationNormalTypeDots;
 
         private:
             const core::FullNoteGroup& findFullNoteGroup( const core::NoteChoice& noteChoice ) const;
@@ -80,6 +92,8 @@ namespace mx
             void setVoiceNumber();
             void setDurationType();
             void setNumDots();
+            void setBeams();
+            void setTimeModification();
         };
     }
 }

@@ -3,6 +3,7 @@
 
 #include "mx/impl/MxNoteReader.h"
 #include "mx/core/elements/Alter.h"
+#include "mx/core/elements/Beam.h"
 #include "mx/core/elements/CueNoteGroup.h"
 #include "mx/core/elements/DisplayOctave.h"
 #include "mx/core/elements/DisplayStep.h"
@@ -23,6 +24,13 @@
 #include "mx/core/elements/Type.h"
 #include "mx/core/elements/Unpitched.h"
 #include "mx/core/elements/Voice.h"
+#include "mx/core/elements/TimeModification.h"
+#include "mx/core/elements/NormalNotes.h"
+#include "mx/core/elements/ActualNotes.h"
+#include "mx/core/elements/NormalTypeNormalDotGroup.h"
+#include "mx/core/elements/NormalType.h"
+
+#include <map>
 
 namespace mx
 {
@@ -50,6 +58,11 @@ namespace mx
         , myDurationType( core::NoteTypeValue::maxima )
         , myIsDurationTypeSpecified( false )
         , myNumDots( 0 )
+        , myBeams()
+        , myTimeModificationActualNotes( -1 )
+        , myTimeModificationNormalNotes( -1 )
+        , myTimeModificationNormalType( core::NoteTypeValue::maxima )
+        , myTimeModificationNormalTypeDots( 0 )
         {
             setNormalGraceCueItems();
             setRestPitchUnpitchedItems();
@@ -57,6 +70,8 @@ namespace mx
             setVoiceNumber();
             setDurationType();
             setNumDots();
+            setBeams();
+            setTimeModification();
         }
 
         const core::FullNoteGroup& MxNoteReader::findFullNoteGroup( const core::NoteChoice& noteChoice ) const
@@ -217,6 +232,68 @@ namespace mx
         void MxNoteReader::setNumDots()
         {
             myNumDots = static_cast<int>( myNote.getDotSet().size() );
+        }
+        
+        
+        void MxNoteReader::setBeams()
+        {
+            const auto& mxBeamSet = myNote.getBeamSet();
+            std::map<int,core::BeamValue> mapOfBeams;
+            int calculatedBeamIndex = 0;
+            
+            for( const auto& mxBeam : mxBeamSet )
+            {
+                const int userBeamIndex = ( mxBeam->getAttributes()->number.getValue() );
+                int useThisBeamIndex = calculatedBeamIndex;
+                
+                // if the userBeamIndex seems valid we will use it
+                // by doing this we support the possibility that
+                // the musicxml file could have beams listed in the
+                // 'wrong' order, i.e. 3,4,1,2
+                if( mxBeam->getAttributes()->hasNumber )
+                {
+                    if( mapOfBeams.find( userBeamIndex ) == mapOfBeams.cend() )
+                    {
+                        useThisBeamIndex = userBeamIndex;
+                    }
+                }
+                
+                mapOfBeams[useThisBeamIndex] = mxBeam->getValue();
+                ++calculatedBeamIndex;
+            }
+            
+            // if the musicxml document has not provided all of the needed
+            // beams then this will not be using the docs illogical numbers
+            for( const auto& beamVal : mapOfBeams )
+            {
+                myBeams.push_back( beamVal.second );
+            }
+        }
+        
+        
+        void MxNoteReader::setTimeModification()
+        {
+            if( ! myNote.getHasTimeModification() )
+            {
+                myTimeModificationActualNotes = 1;
+                myTimeModificationNormalNotes = 1;
+            }
+            
+            const auto& mxTimeMod = *myNote.getTimeModification();
+            myTimeModificationActualNotes = mxTimeMod.getActualNotes()->getValue().getValue();
+            myTimeModificationNormalNotes = mxTimeMod.getNormalNotes()->getValue().getValue();
+            
+            if( mxTimeMod.getHasNormalTypeNormalDotGroup() )
+            {
+                const auto& grp = *mxTimeMod.getNormalTypeNormalDotGroup();
+                myTimeModificationNormalType = grp.getNormalType()->getValue();
+                myTimeModificationNormalTypeDots = static_cast<int>( grp.getNormalDotSet().size() );
+            }
+            else
+            {
+                myTimeModificationNormalType = myDurationType;
+                myTimeModificationNormalTypeDots = 0;
+            }
         }
     }
 }

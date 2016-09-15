@@ -28,13 +28,16 @@ namespace mx
             
             api::NoteData parseNote( const core::Note& inMxNote, const impl::Cursor& cursor ) const;
             
-            api::Step convert( core::StepEnum inStep ) const;
-            core::StepEnum convert( api::Step inStep ) const;
-            api::DurationName convert( core::NoteTypeValue inDur ) const;
-            core::NoteTypeValue convert( api::DurationName inDur ) const;
+            api::Step convert( core::StepEnum value ) const;
+            core::StepEnum convert( api::Step value ) const;
+            api::DurationName convert( core::NoteTypeValue value ) const;
+            core::NoteTypeValue convert( api::DurationName value ) const;
+            core::BeamValue convert( api::Beam value ) const;
+            api::Beam convert( core::BeamValue value ) const;
             
             static std::map<core::StepEnum, api::Step> stepMap;
             static std::map<core::NoteTypeValue, api::DurationName> durationMap;
+            static std::map<core::BeamValue, api::Beam> beamMap;
         };
     }
 }

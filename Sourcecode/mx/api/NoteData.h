@@ -50,6 +50,7 @@ namespace mx
     		dur1024th
     	};
         
+        
         constexpr long double DUR_QUARTERS_VALUE_MAXIMA = 32.0L;
         constexpr long double DUR_QUARTERS_VALUE_LONGA = 16.0L;
         constexpr long double DUR_QUARTERS_VALUE_BREVE = 8.0L;
@@ -64,7 +65,19 @@ namespace mx
         constexpr long double DUR_QUARTERS_VALUE_256TH = 1.0L / 64.0L;
         constexpr long double DUR_QUARTERS_VALUE_512TH = 1.0L / 128.0L;
         constexpr long double DUR_QUARTERS_VALUE_1024TH = 1.0L / 256.0L;
-
+        
+        
+        enum class Beam
+        {
+            unspecified,
+            start,
+            stop,
+            continue_,
+            forwardHook,
+            backwardHook
+        };
+        
+        
         enum class Stem
     	{
     		unspecified,
@@ -78,30 +91,29 @@ namespace mx
 
     	public:
 
-    		bool isRest;                       // if isRest is true then isUnpitched can be ignored
-            bool isMeasureRest;                // only valid if isRest is true
-            bool isUnpitched;                  // only relevant if isRest is false
-            bool isDisplayStepOctaveSpecified; // MusicXML can optionally specify display step and octave for rests and unpitched notes
-            bool isChord;                      // the note is part of a chord
-            NoteType noteType;                 // normal, cue, grace
+    		bool isRest;                        // if isRest is true then isUnpitched can be ignored
+            bool isMeasureRest;                 // only valid if isRest is true
+            bool isUnpitched;                   // only relevant if isRest is false
+            bool isDisplayStepOctaveSpecified;  // MusicXML can optionally specify display step and octave for rests and unpitched notes
+            bool isChord;                       // the note is part of a chord
+            NoteType noteType;                  // normal, cue, grace
             Step step;
             int alter;
-            bool showAccidental;               // the type of accidental will be automatically deduced from the alter value, -2=bb, -1=b, 0=Nat, 1=#, 2=x
+            bool showAccidental;                // the type of accidental will be automatically deduced from the alter value, -2=bb, -1=b, 0=Nat, 1=#, 2=x
             int octave;
-            int staffIndex;                    // this will be one less than the number shown in the <staff> element
+            int staffIndex;                     // this will be one less than the number shown in the <staff> element
             int userRequestedVoiceNumber;
             Stem stem;
-            DurationName durationName;         // i.e. quarter, eighth etc
+            DurationName durationName;          // i.e. quarter, eighth etc
             int durationDots;
-            int durationTicks;
-            int startPosition;
-            // TODO tuplet alteration
-            // TODO int durationTicks;
-            // TODO int durationTicksPerQuarter;
-            // TODO int startPosition;
-            // TODO int stopPosition;
-            // TODO beaming
-
+            std::vector<Beam> beams;
+            int durationTimeTicks;
+            int startTimeTicks;
+            int timeModificationActualNotes;    // i.e. for a triplet this would be 3 - durationTimeTicks is not affected by this
+            int timeModificationNormalNotes;    // i.e. for a triplet this would be 2 - durationTimeTicks is not affected by this
+            api::DurationName timeModificationNormalType;    // use this if the time modification ratio involves a different durationName than the main 'durationName'
+            int timeModificationNormalTypeDots; // in case the time modification ratio involves a dotted type
+            
             NoteData()
             : isRest{ false }
             , isMeasureRest{ false }
@@ -118,9 +130,13 @@ namespace mx
             , stem{ Stem::unspecified }
             , durationName{ DurationName::unspecified }
             , durationDots{ 0 }
-            , durationTicks{ 0 }
-            , startPosition{ 0 }
-            
+            , beams{}
+            , durationTimeTicks{ 0 }
+            , startTimeTicks{ 0 }
+            , timeModificationActualNotes{ 1 }
+            , timeModificationNormalNotes{ 1 }
+            , timeModificationNormalType{ api::DurationName::unspecified }
+            , timeModificationNormalTypeDots{ 0 }
             {
 
             }
