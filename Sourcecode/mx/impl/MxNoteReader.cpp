@@ -208,13 +208,19 @@ namespace mx
 
         void MxNoteReader::setVoiceNumber()
         {
+            if( !myNote.getEditorialVoiceGroup()->getHasVoice() )
+            {
+                myVoiceNumber = -1;
+                return;
+            }
+            
             try
             {
-                myVoiceNumber = std::stoi( myNote.getEditorialVoiceGroup()->getVoice()->getValue().getValue() );
+                myVoiceNumber = static_cast<int>( std::stoi( myNote.getEditorialVoiceGroup()->getVoice()->getValue().getValue() ) );
             }
             catch ( ... )
             {
-                
+                myVoiceNumber = -1;
             }
         }
 

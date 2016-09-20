@@ -15,6 +15,7 @@
 		2937D17E1D18D43A001C2A1A /* XDocTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2937D1791D18D43A001C2A1A /* XDocTest.cpp */; };
 		2937D17F1D18D43A001C2A1A /* XElementIteratorTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2937D17A1D18D43A001C2A1A /* XElementIteratorTest.cpp */; };
 		2937D1801D18D43A001C2A1A /* XElementTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2937D17B1D18D43A001C2A1A /* XElementTest.cpp */; };
+		294775E21D934C510006E1AD /* LoadAllTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 294775E11D934C510006E1AD /* LoadAllTest.cpp */; };
 		297555FD1D1359CA007732D0 /* HelloWorldTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297555FB1D1359CA007732D0 /* HelloWorldTest.cpp */; };
 		297556081D135AA3007732D0 /* UtilityImplTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297556061D135AA3007732D0 /* UtilityImplTest.cpp */; };
 		297556091D135AA3007732D0 /* UtilityTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297556071D135AA3007732D0 /* UtilityTest.cpp */; };
@@ -464,6 +465,7 @@
 		2937D1791D18D43A001C2A1A /* XDocTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = XDocTest.cpp; path = ../Sourcecode/mxtest/xml/XDocTest.cpp; sourceTree = "<group>"; };
 		2937D17A1D18D43A001C2A1A /* XElementIteratorTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = XElementIteratorTest.cpp; path = ../Sourcecode/mxtest/xml/XElementIteratorTest.cpp; sourceTree = "<group>"; };
 		2937D17B1D18D43A001C2A1A /* XElementTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = XElementTest.cpp; path = ../Sourcecode/mxtest/xml/XElementTest.cpp; sourceTree = "<group>"; };
+		294775E11D934C510006E1AD /* LoadAllTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LoadAllTest.cpp; path = ../Sourcecode/mxtest/api/LoadAllTest.cpp; sourceTree = "<group>"; };
 		294847701D5AD4AD0025138E /* DecimalFields.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DecimalFields.h; path = ../Sourcecode/mxtest/import/DecimalFields.h; sourceTree = "<group>"; };
 		297555FA1D1359CA007732D0 /* HelloWorldExpected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HelloWorldExpected.h; path = ../Sourcecode/mxtest/core/HelloWorldExpected.h; sourceTree = "<group>"; };
 		297555FB1D1359CA007732D0 /* HelloWorldTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HelloWorldTest.cpp; path = ../Sourcecode/mxtest/core/HelloWorldTest.cpp; sourceTree = "<group>"; };
@@ -1665,6 +1667,7 @@
 		29EF440E1D6E8F4700DBDAB9 /* api */ = {
 			isa = PBXGroup;
 			children = (
+				294775E11D934C510006E1AD /* LoadAllTest.cpp */,
 				29EF440F1D6E8F5500DBDAB9 /* DocumentManagerTest.cpp */,
 			);
 			name = api;
@@ -1842,6 +1845,7 @@
 				29C01E7F1D1312FA0094BE61 /* PedalTest.cpp in Sources */,
 				29C01EE01D1312FA0094BE61 /* TimewisePartTest.cpp in Sources */,
 				29C01DFB1D1312FA0094BE61 /* GroupNameDisplayTest.cpp in Sources */,
+				294775E21D934C510006E1AD /* LoadAllTest.cpp in Sources */,
 				29C01EE61D1312FA0094BE61 /* TransposeTest.cpp in Sources */,
 				29C01DB61D1312FA0094BE61 /* DirectionTypeTest.cpp in Sources */,
 				29C01EAE1D1312FA0094BE61 /* SoftwareTest.cpp in Sources */,

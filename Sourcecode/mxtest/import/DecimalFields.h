@@ -29,7 +29,8 @@ namespace MxTest
         "staff-distance",
         "system-distance",
         "default-y",
-        "default-x"
+        "default-x",
+        "tenths"
     };
 
     inline int trailingCharsToStrip( const std::string& value )

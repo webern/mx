@@ -120,6 +120,9 @@ namespace mx
             
             bool isComposerFound = false;
             bool isCopyrightFound = false;
+            bool isArrangerFound = false;
+            bool isLyricistFound = false;
+            bool isPublisherFound = false;
             
             if( header->getHasIdentification() )
             {
@@ -141,7 +144,19 @@ namespace mx
                     if( a->type.getValue() == "lyricist" )
                     {
                         score.lyricist = i->getValue().getValue();
-                        isComposerFound = true;
+                        isLyricistFound = true;
+                    }
+                    
+                    if( a->type.getValue() == "arranger" )
+                    {
+                        score.lyricist = i->getValue().getValue();
+                        isArrangerFound = true;
+                    }
+                    
+                    if( a->type.getValue() == "publisher" )
+                    {
+                        score.lyricist = i->getValue().getValue();
+                        isPublisherFound = true;
                     }
                 }
                 

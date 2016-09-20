@@ -29,7 +29,7 @@ using namespace MxTest;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-//#define MXTEST_GENERATE_EXPECTED_FILES
+#define MXTEST_GENERATE_EXPECTED_FILES
 #ifdef MXTEST_GENERATE_EXPECTED_FILES
 
     TEST( GenerateExpected, Import )
@@ -1710,6 +1710,12 @@ MXTEST_IMPORT_ROUNDTRIP_END
 
 
 MXTEST_IMPORT_ROUNDTRIP( logicpro, logic01a_homoSapiens, xml , MxTest::RESOURCES_DIRECTORY_PATH);
+    isSuccess = test.runTest( msgsstr );
+    CHECK_WITH_MESSAGE( isSuccess, msgsstr.str() );
+MXTEST_IMPORT_ROUNDTRIP_END
+
+
+MXTEST_IMPORT_ROUNDTRIP( foundsuite, Schubert_der_Mueller, xml , MxTest::RESOURCES_DIRECTORY_PATH);
     isSuccess = test.runTest( msgsstr );
     CHECK_WITH_MESSAGE( isSuccess, msgsstr.str() );
 MXTEST_IMPORT_ROUNDTRIP_END

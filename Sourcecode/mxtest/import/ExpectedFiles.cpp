@@ -275,7 +275,7 @@ namespace MxTest
         
         for( auto it = TestFiles.cbegin(); it != TestFiles.cend(); ++it )
         {
-            // std::cout << "creating expected file - " << it->first << " - " << it->second << std::endl;
+            std::cout << "creating expected file - " << it->first << " - " << it->second << std::endl;
             auto fut = std::async( std::launch::async, generateExpectedFile, it->first.c_str(), it->second.c_str() );
             
             while( q.size() >= maxConcurrency )

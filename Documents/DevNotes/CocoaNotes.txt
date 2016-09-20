@@ -1,0 +1,17 @@
+NSDocumentController
+* Creates empty documents
+* Creates documents from a file
+* Tracks and manages those documents
+* Handles document-related menu items, such as Open Recent
+
+NSDocument
+* Manages display and capture its windows (using its window controllers)
+* Reads and writes the persistent data associated with its document
+* save, print, revert, and close
+* Save and Page Setup dialogs
+* owns and manages its window controllers
+* manages its menu
+
+NSWindowController
+* manages one window associated with a document
+* assumes responsibility for closing windows properly

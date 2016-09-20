@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include "mx/api/MxApiCommon.h"
 #include "mx/api/EncodingData.h"
 #include "mx/api/LayoutData.h"
 #include "mx/api/PageTextData.h"
@@ -10,22 +11,11 @@
 #include "mx/api/PartGroupData.h"
 
 #include <vector>
-#include <cmath>
-#include <algorithm>
 
 namespace mx
 {
     namespace api
     {
-        constexpr const long double MX_API_EQUALITY_EPSILON = 0.00000001;
-
-        inline bool areSame( long double left, long double right )
-        {
-            return ( std::abs( left - right ) < MX_API_EQUALITY_EPSILON );
-        }
-
-        constexpr int DEFAULT_TICKS_PER_QUARTER = 3 * 4 * 5 * 7;
-        
         class ScoreData
         {
         public:
@@ -36,6 +26,8 @@ namespace mx
             std::string movementNumber;
             std::string composer;
             std::string lyricist;
+            std::string arranger;
+            std::string publisher;
             std::string copyright;
             EncodingData encoding;
             std::vector<PageTextData> pageTextItems;
@@ -61,6 +53,39 @@ namespace mx
             , ticksPerQuarter{ DEFAULT_TICKS_PER_QUARTER }
             {
 
+            }
+
+            inline int getNumMeasures() const
+            {
+                int numMeasures = 0;
+
+                for( const auto& part : parts )
+                {
+                    for( const auto& staff : part.staves )
+                    {
+                        int size = static_cast<int>(staff.measures.size());
+
+                        if( size > numMeasures )
+                        {
+                            numMeasures = size;
+                        }
+                    }
+                }
+
+                return numMeasures;
+            }
+
+
+            inline int getNumStaves() const
+            {
+                int numStaves = 0;
+
+                for( const auto& p : parts )
+                {
+                    numStaves += static_cast<int>( p.staves.size() );
+                }
+
+                return numStaves;
             }
         };
         

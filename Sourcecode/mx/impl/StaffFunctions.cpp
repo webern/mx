@@ -11,6 +11,10 @@
 #include "mx/core/elements/Staves.h"
 #include "mx/core/elements/Voice.h"
 #include "mx/impl/MeasureFunctions.h"
+#include "mx/core/elements/Direction.h"
+#include "mx/core/elements/Backup.h"
+#include "mx/core/elements/Forward.h"
+#include "mx/core/elements/Harmony.h"
 #include "mx/utility/Throw.h"
 
 #include <map>
@@ -83,6 +87,56 @@ namespace mx
                         }
                     }
                 }
+                
+                mx::core::StaffPtr staff = nullptr;
+                
+                if( mdc->getChoice() == core::MusicDataChoice::Choice::note )
+                {
+                    const auto& item = *mdc->getNote();
+                    if( item.getHasStaff() )
+                    {
+                        staff = item.getStaff();
+                    }
+                }
+                
+                if( mdc->getChoice() == core::MusicDataChoice::Choice::direction )
+                {
+                    const auto& item = *mdc->getDirection();
+                    if( item.getHasStaff() )
+                    {
+                        staff = item.getStaff();
+                    }
+                }
+                
+                if( mdc->getChoice() == core::MusicDataChoice::Choice::forward )
+                {
+                    const auto& item = *mdc->getForward();
+                    if( item.getHasStaff() )
+                    {
+                        staff = item.getStaff();
+                    }
+                }
+                
+                
+                if( mdc->getChoice() == core::MusicDataChoice::Choice::harmony )
+                {
+                    const auto& item = *mdc->getHarmony();
+                    if( item.getHasStaff() )
+                    {
+                        staff = item.getStaff();
+                    }
+                }
+                
+                if(staff)
+                {
+                    const int tempVal = static_cast<int>( staff->getValue().getValue() );
+                    if( tempVal > outStaffCount )
+                    {
+                        outStaffCount = tempVal;
+                    }
+                }
+                
+                // TODO - look at all the notes and items for staff values
             }
             return outStaffCount;
         }

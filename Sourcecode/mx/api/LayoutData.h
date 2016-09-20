@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include "mx/api/MxApiCommon.h"
+
 #include <string>
 #include <vector>
 
@@ -69,6 +71,34 @@ namespace mx
             {
 
             }
+
+
+            inline bool areOddMarginsValid() const
+            {
+                return oddPageLeftMargin > 0
+                    && oddPageRightMargin > 0
+                    && oddPageTopMargin > 0
+                    && oddPageBottomMargin > 0;
+            }
+
+
+            inline bool areEvenMarginsValid() const
+            {
+                return evenPageLeftMargin > 0
+                    && evenPageRightMargin > 0
+                    && evenPageTopMargin > 0
+                    && evenPageBottomMargin > 0;
+            }
+
+
+            inline bool areOddEvenMarginsTheSame() const
+            {
+                return areSame(oddPageLeftMargin, evenPageLeftMargin)
+                    && areSame(oddPageRightMargin, evenPageRightMargin)
+                    && areSame(oddPageTopMargin, evenPageTopMargin)
+                    && areSame(oddPageBottomMargin, evenPageBottomMargin);
+            }
+
         };
     }
 }

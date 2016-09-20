@@ -20,6 +20,7 @@
 		2927ECA41D8872EA0042E080 /* MeasureFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2927ECA21D8872EA0042E080 /* MeasureFunctions.cpp */; };
 		2927ECA71D888AB30042E080 /* MxMath.h in Headers */ = {isa = PBXBuildFile; fileRef = 2927ECA51D888AB30042E080 /* MxMath.h */; };
 		2927ECA81D888AB30042E080 /* MxMath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2927ECA61D888AB30042E080 /* MxMath.cpp */; };
+		293488D51D94903B00D0C407 /* MxApiCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 293488D41D94903B00D0C407 /* MxApiCommon.h */; };
 		2937D15D1D18D403001C2A1A /* PugiAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2937D1451D18D403001C2A1A /* PugiAttribute.cpp */; };
 		2937D15F1D18D403001C2A1A /* PugiAttributeIterImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2937D1471D18D403001C2A1A /* PugiAttributeIterImpl.cpp */; };
 		2937D1611D18D403001C2A1A /* PugiDoc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2937D1491D18D403001C2A1A /* PugiDoc.cpp */; };
@@ -669,6 +670,7 @@
 		2927ECA21D8872EA0042E080 /* MeasureFunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MeasureFunctions.cpp; path = ../Sourcecode/mx/impl/MeasureFunctions.cpp; sourceTree = "<group>"; };
 		2927ECA51D888AB30042E080 /* MxMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MxMath.h; path = ../Sourcecode/mx/impl/MxMath.h; sourceTree = "<group>"; };
 		2927ECA61D888AB30042E080 /* MxMath.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MxMath.cpp; path = ../Sourcecode/mx/impl/MxMath.cpp; sourceTree = "<group>"; };
+		293488D41D94903B00D0C407 /* MxApiCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MxApiCommon.h; path = ../Sourcecode/mx/api/MxApiCommon.h; sourceTree = "<group>"; };
 		2937D1451D18D403001C2A1A /* PugiAttribute.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PugiAttribute.cpp; path = ../Sourcecode/mx/xml/PugiAttribute.cpp; sourceTree = "<group>"; };
 		2937D1461D18D403001C2A1A /* PugiAttribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PugiAttribute.h; path = ../Sourcecode/mx/xml/PugiAttribute.h; sourceTree = "<group>"; };
 		2937D1471D18D403001C2A1A /* PugiAttributeIterImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PugiAttributeIterImpl.cpp; path = ../Sourcecode/mx/xml/PugiAttributeIterImpl.cpp; sourceTree = "<group>"; };
@@ -3325,6 +3327,7 @@
 		29EF44071D6E6CE900DBDAB9 /* api */ = {
 			isa = PBXGroup;
 			children = (
+				293488D41D94903B00D0C407 /* MxApiCommon.h */,
 				2927EC9B1D886E2B0042E080 /* TimeSignatureData.h */,
 				299A2BB01D7FA48A006A7F5C /* PartGroupData.h */,
 				29EF44091D6E70D300DBDAB9 /* DocumentManager.cpp */,
@@ -3352,6 +3355,7 @@
 			files = (
 				2927EC9C1D886E2B0042E080 /* TimeSignatureData.h in Headers */,
 				2927EC9F1D886E460042E080 /* TimeFunctions.h in Headers */,
+				293488D51D94903B00D0C407 /* MxApiCommon.h in Headers */,
 				297306671D89D08400B8C0D3 /* MxNoteReader.h in Headers */,
 				2927ECA71D888AB30042E080 /* MxMath.h in Headers */,
 				2927ECA31D8872EA0042E080 /* MeasureFunctions.h in Headers */,
