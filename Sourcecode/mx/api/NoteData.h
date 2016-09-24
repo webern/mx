@@ -23,6 +23,21 @@ namespace mx
     		b = 6
     	};
 
+        inline int stepToInt(Step step)
+        {
+            switch(step)
+            {
+                case Step::c: return 0;
+                case Step::d: return 1;
+                case Step::e: return 2;
+                case Step::f: return 3;
+                case Step::g: return 4;
+                case Step::a: return 5;
+                case Step::b: return 6;
+                default: return 0; 
+            }
+        };
+
     	enum class NoteType
     	{
     		normal,
