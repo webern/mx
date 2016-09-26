@@ -55,6 +55,12 @@ namespace mx
             inline int getTimeModificationNormalNotes() const { return myTimeModificationNormalNotes; }
             inline core::NoteTypeValue getTimeModificationNormalType() const { return myTimeModificationNormalType; }
             inline int getTimeModificationNormalTypeDots() const { return myTimeModificationNormalTypeDots; }
+            inline bool getHasAccidental() const { return myHasAccidental; }
+            inline core::AccidentalValue getAccidental() const { return myAccidental; }
+            inline bool getIsAccidentalParenthetical() const { return myIsAccidentalParenthetical; }
+            inline bool getIsAccidentalCautionary() const { return myIsAccidentalCautionary; }
+            inline bool getIsAccidentalEditorial() const { return myIsAccidentalEditorial; }
+            inline bool getIsAccidentalBracketed() const { return myIsAccidentalBracketed; }
             
 		private:
         	const core::Note& myNote;
@@ -83,6 +89,12 @@ namespace mx
             int myTimeModificationNormalNotes;
             core::NoteTypeValue myTimeModificationNormalType;
             int myTimeModificationNormalTypeDots;
+            bool myHasAccidental;
+            core::AccidentalValue myAccidental;
+            bool myIsAccidentalParenthetical;
+            bool myIsAccidentalCautionary;
+            bool myIsAccidentalEditorial;
+            bool myIsAccidentalBracketed;
 
         private:
             const core::FullNoteGroup& findFullNoteGroup( const core::NoteChoice& noteChoice ) const;
@@ -94,6 +106,7 @@ namespace mx
             void setNumDots();
             void setBeams();
             void setTimeModification();
+            void setAccidental();
         };
     }
 }

@@ -2,6 +2,8 @@
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #include "mx/impl/MxNoteReader.h"
+#include "mx/core/elements/Accidental.h"
+#include "mx/core/elements/ActualNotes.h"
 #include "mx/core/elements/Alter.h"
 #include "mx/core/elements/Beam.h"
 #include "mx/core/elements/CueNoteGroup.h"
@@ -14,6 +16,9 @@
 #include "mx/core/elements/FullNoteTypeChoice.h"
 #include "mx/core/elements/GraceNoteGroup.h"
 #include "mx/core/elements/NormalNoteGroup.h"
+#include "mx/core/elements/NormalNotes.h"
+#include "mx/core/elements/NormalType.h"
+#include "mx/core/elements/NormalTypeNormalDotGroup.h"
 #include "mx/core/elements/Note.h"
 #include "mx/core/elements/NoteChoice.h"
 #include "mx/core/elements/Octave.h"
@@ -21,14 +26,11 @@
 #include "mx/core/elements/Rest.h"
 #include "mx/core/elements/Staff.h"
 #include "mx/core/elements/Step.h"
+#include "mx/core/elements/TimeModification.h"
 #include "mx/core/elements/Type.h"
 #include "mx/core/elements/Unpitched.h"
 #include "mx/core/elements/Voice.h"
-#include "mx/core/elements/TimeModification.h"
-#include "mx/core/elements/NormalNotes.h"
-#include "mx/core/elements/ActualNotes.h"
-#include "mx/core/elements/NormalTypeNormalDotGroup.h"
-#include "mx/core/elements/NormalType.h"
+#include "mx/utility/StringToInt.h"
 
 #include <map>
 
@@ -63,6 +65,12 @@ namespace mx
         , myTimeModificationNormalNotes( -1 )
         , myTimeModificationNormalType( core::NoteTypeValue::maxima )
         , myTimeModificationNormalTypeDots( 0 )
+        , myHasAccidental( false )
+        , myAccidental( core::AccidentalValue::natural )
+        , myIsAccidentalParenthetical( false )
+        , myIsAccidentalCautionary{ false }
+        , myIsAccidentalEditorial{ false }
+        , myIsAccidentalBracketed{ false }
         {
             setNormalGraceCueItems();
             setRestPitchUnpitchedItems();
@@ -72,6 +80,7 @@ namespace mx
             setNumDots();
             setBeams();
             setTimeModification();
+            setAccidental();
         }
 
         const core::FullNoteGroup& MxNoteReader::findFullNoteGroup( const core::NoteChoice& noteChoice ) const
@@ -208,20 +217,14 @@ namespace mx
 
         void MxNoteReader::setVoiceNumber()
         {
+            myVoiceNumber = -1;
+            
             if( !myNote.getEditorialVoiceGroup()->getHasVoice() )
             {
-                myVoiceNumber = -1;
                 return;
             }
             
-            try
-            {
-                myVoiceNumber = static_cast<int>( std::stoi( myNote.getEditorialVoiceGroup()->getVoice()->getValue().getValue() ) );
-            }
-            catch ( ... )
-            {
-                myVoiceNumber = -1;
-            }
+            utility::stringToInt( myNote.getEditorialVoiceGroup()->getVoice()->getValue().getValue().c_str(), myVoiceNumber );
         }
 
 
@@ -299,6 +302,42 @@ namespace mx
             {
                 myTimeModificationNormalType = myDurationType;
                 myTimeModificationNormalTypeDots = 0;
+            }
+        }
+        
+        
+        void MxNoteReader::setAccidental()
+        {
+            myIsAccidentalParenthetical = false;
+            myHasAccidental = myNote.getHasAccidental();
+
+            if( myHasAccidental )
+            {
+                myAccidental = myNote.getAccidental()->getValue();
+                
+                if(    myNote.getAccidental()->getAttributes()->hasParentheses
+                    && myNote.getAccidental()->getAttributes()->parentheses == core::YesNo::yes )
+                {
+                    myIsAccidentalParenthetical = true;
+                }
+                
+                if(    myNote.getAccidental()->getAttributes()->hasCautionary
+                    && myNote.getAccidental()->getAttributes()->cautionary == core::YesNo::yes )
+                {
+                    myIsAccidentalCautionary = true;
+                }
+                
+                if(    myNote.getAccidental()->getAttributes()->hasEditorial
+                    && myNote.getAccidental()->getAttributes()->editorial == core::YesNo::yes )
+                {
+                    myIsAccidentalEditorial = true;
+                }
+                
+                if(    myNote.getAccidental()->getAttributes()->hasBracket
+                    && myNote.getAccidental()->getAttributes()->bracket == core::YesNo::yes )
+                {
+                    myIsAccidentalBracketed = true;
+                }
             }
         }
     }

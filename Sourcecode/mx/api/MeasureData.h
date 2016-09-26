@@ -5,6 +5,7 @@
 
 #include "mx/api/VoiceData.h"
 #include "mx/api/TimeSignatureData.h"
+#include "mx/api/ClefData.h"
 
 #include <string>
 #include <map>
@@ -20,6 +21,7 @@ namespace mx
         public:
         	TimeSignatureData timeSignature;
             VoiceDataMap voices;
+            std::vector<ClefData> clefs;
         };
     }
 }

@@ -13,14 +13,10 @@
 		2913BB951D753FC8006C34A3 /* NoteFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2913BB8B1D753FC8006C34A3 /* NoteFunctions.cpp */; };
 		2913BB971D753FC8006C34A3 /* PageTextFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2913BB8D1D753FC8006C34A3 /* PageTextFunctions.cpp */; };
 		2913BB991D753FC8006C34A3 /* ScoreFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2913BB8F1D753FC8006C34A3 /* ScoreFunctions.cpp */; };
-		2927EC9C1D886E2B0042E080 /* TimeSignatureData.h in Headers */ = {isa = PBXBuildFile; fileRef = 2927EC9B1D886E2B0042E080 /* TimeSignatureData.h */; };
-		2927EC9F1D886E460042E080 /* TimeFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 2927EC9D1D886E460042E080 /* TimeFunctions.h */; };
 		2927ECA01D886E460042E080 /* TimeFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2927EC9E1D886E460042E080 /* TimeFunctions.cpp */; };
-		2927ECA31D8872EA0042E080 /* MeasureFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 2927ECA11D8872EA0042E080 /* MeasureFunctions.h */; };
 		2927ECA41D8872EA0042E080 /* MeasureFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2927ECA21D8872EA0042E080 /* MeasureFunctions.cpp */; };
-		2927ECA71D888AB30042E080 /* MxMath.h in Headers */ = {isa = PBXBuildFile; fileRef = 2927ECA51D888AB30042E080 /* MxMath.h */; };
 		2927ECA81D888AB30042E080 /* MxMath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2927ECA61D888AB30042E080 /* MxMath.cpp */; };
-		293488D51D94903B00D0C407 /* MxApiCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 293488D41D94903B00D0C407 /* MxApiCommon.h */; };
+		292D1DD21D9A43A500CDD9F4 /* ClefData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 292D1DD01D9A43A500CDD9F4 /* ClefData.cpp */; };
 		2937D15D1D18D403001C2A1A /* PugiAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2937D1451D18D403001C2A1A /* PugiAttribute.cpp */; };
 		2937D15F1D18D403001C2A1A /* PugiAttributeIterImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2937D1471D18D403001C2A1A /* PugiAttributeIterImpl.cpp */; };
 		2937D1611D18D403001C2A1A /* PugiDoc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2937D1491D18D403001C2A1A /* PugiDoc.cpp */; };
@@ -621,9 +617,7 @@
 		2951A0C51D60F3B700B49A13 /* ScoreConversions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2951A0C31D60F3B700B49A13 /* ScoreConversions.cpp */; };
 		295C49371D2CB41E0015E349 /* NoteheadTextChoice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 295C49361D2CB41E0015E349 /* NoteheadTextChoice.cpp */; };
 		295DDE101D2C0D4D00A2881D /* FromXElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 295DDE0F1D2C0D4D00A2881D /* FromXElement.cpp */; };
-		2973065F1D89AB3300B8C0D3 /* Cursor.h in Headers */ = {isa = PBXBuildFile; fileRef = 2973065D1D89AB3300B8C0D3 /* Cursor.h */; };
 		297306601D89AB3300B8C0D3 /* Cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2973065E1D89AB3300B8C0D3 /* Cursor.cpp */; };
-		297306671D89D08400B8C0D3 /* MxNoteReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 297306651D89D08400B8C0D3 /* MxNoteReader.h */; };
 		297306681D89D08400B8C0D3 /* MxNoteReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297306661D89D08400B8C0D3 /* MxNoteReader.cpp */; };
 		297DA0781D7F60BE0067C13A /* PartFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297DA0701D7F60BE0067C13A /* PartFunctions.cpp */; };
 		297DA07A1D7F60BE0067C13A /* StaffFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297DA0721D7F60BE0067C13A /* StaffFunctions.cpp */; };
@@ -670,6 +664,8 @@
 		2927ECA21D8872EA0042E080 /* MeasureFunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MeasureFunctions.cpp; path = ../Sourcecode/mx/impl/MeasureFunctions.cpp; sourceTree = "<group>"; };
 		2927ECA51D888AB30042E080 /* MxMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MxMath.h; path = ../Sourcecode/mx/impl/MxMath.h; sourceTree = "<group>"; };
 		2927ECA61D888AB30042E080 /* MxMath.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MxMath.cpp; path = ../Sourcecode/mx/impl/MxMath.cpp; sourceTree = "<group>"; };
+		292D1DD01D9A43A500CDD9F4 /* ClefData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ClefData.cpp; path = ../Sourcecode/mx/api/ClefData.cpp; sourceTree = "<group>"; };
+		292D1DD11D9A43A500CDD9F4 /* ClefData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ClefData.h; path = ../Sourcecode/mx/api/ClefData.h; sourceTree = "<group>"; };
 		293488D41D94903B00D0C407 /* MxApiCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MxApiCommon.h; path = ../Sourcecode/mx/api/MxApiCommon.h; sourceTree = "<group>"; };
 		2937D1451D18D403001C2A1A /* PugiAttribute.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PugiAttribute.cpp; path = ../Sourcecode/mx/xml/PugiAttribute.cpp; sourceTree = "<group>"; };
 		2937D1461D18D403001C2A1A /* PugiAttribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PugiAttribute.h; path = ../Sourcecode/mx/xml/PugiAttribute.h; sourceTree = "<group>"; };
@@ -1944,6 +1940,7 @@
 		29DC06EE1D7E5A8300210B7E /* StaffData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = StaffData.h; path = ../Sourcecode/mx/api/StaffData.h; sourceTree = "<group>"; };
 		29DC06EF1D7E5B2A00210B7E /* MeasureData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MeasureData.h; path = ../Sourcecode/mx/api/MeasureData.h; sourceTree = "<group>"; };
 		29DC06F01D7E5BBF00210B7E /* VoiceData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = VoiceData.h; path = ../Sourcecode/mx/api/VoiceData.h; sourceTree = "<group>"; };
+		29E33EA21D99C9AA001BD2EE /* StringToInt.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = StringToInt.h; path = ../Sourcecode/mx/utility/StringToInt.h; sourceTree = "<group>"; };
 		29EF44081D6E6D2600DBDAB9 /* NoteData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NoteData.h; path = ../Sourcecode/mx/api/NoteData.h; sourceTree = "<group>"; };
 		29EF44091D6E70D300DBDAB9 /* DocumentManager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DocumentManager.cpp; path = ../Sourcecode/mx/api/DocumentManager.cpp; sourceTree = "<group>"; };
 		29EF440A1D6E70D300DBDAB9 /* DocumentManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DocumentManager.h; path = ../Sourcecode/mx/api/DocumentManager.h; sourceTree = "<group>"; };
@@ -2030,6 +2027,7 @@
 				29C01B2F1D130B910094BE61 /* UtilityImpl.cpp */,
 				29C01B301D130B910094BE61 /* UtilityImpl.h */,
 				29F492B01D792B2F00C7C4B8 /* Lock.h */,
+				29E33EA21D99C9AA001BD2EE /* StringToInt.h */,
 			);
 			name = utility;
 			sourceTree = "<group>";
@@ -3327,6 +3325,8 @@
 		29EF44071D6E6CE900DBDAB9 /* api */ = {
 			isa = PBXGroup;
 			children = (
+				292D1DD01D9A43A500CDD9F4 /* ClefData.cpp */,
+				292D1DD11D9A43A500CDD9F4 /* ClefData.h */,
 				293488D41D94903B00D0C407 /* MxApiCommon.h */,
 				2927EC9B1D886E2B0042E080 /* TimeSignatureData.h */,
 				299A2BB01D7FA48A006A7F5C /* PartGroupData.h */,
@@ -3353,13 +3353,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2927EC9C1D886E2B0042E080 /* TimeSignatureData.h in Headers */,
-				2927EC9F1D886E460042E080 /* TimeFunctions.h in Headers */,
-				293488D51D94903B00D0C407 /* MxApiCommon.h in Headers */,
-				297306671D89D08400B8C0D3 /* MxNoteReader.h in Headers */,
-				2927ECA71D888AB30042E080 /* MxMath.h in Headers */,
-				2927ECA31D8872EA0042E080 /* MeasureFunctions.h in Headers */,
-				2973065F1D89AB3300B8C0D3 /* Cursor.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3588,6 +3581,7 @@
 				294549FD1D295C5500B90302 /* ScoreTimewise.cpp in Sources */,
 				2945485F1D295C5500B90302 /* BassAlter.cpp in Sources */,
 				295C49371D2CB41E0015E349 /* NoteheadTextChoice.cpp in Sources */,
+				292D1DD21D9A43A500CDD9F4 /* ClefData.cpp in Sources */,
 				294549431D295C5500B90302 /* LineWidth.cpp in Sources */,
 				29454A381D295C5500B90302 /* SyllabicTextGroup.cpp in Sources */,
 				294549041D295C5500B90302 /* GroupNameAttributes.cpp in Sources */,

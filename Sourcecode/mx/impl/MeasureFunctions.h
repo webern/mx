@@ -27,6 +27,9 @@ namespace mx
         class Grouping;
         class Link;
         class Bookmark;
+        class Clef;
+        using ClefPtr = std::shared_ptr<Clef>;
+        using ClefSet = std::vector<ClefPtr>;
     }
     
     namespace impl
@@ -65,6 +68,8 @@ namespace mx
             void parseLink( const core::Link& inMxLink );
             void parseBookmark( const core::Bookmark& inMxBookmark );
             void coutItemNotSupported( const core::ElementInterface& element );
+            void importClefs( const core::ClefSet& inClefs );
+            void importClef( const core::Clef& inClef );
         };
     }
 }

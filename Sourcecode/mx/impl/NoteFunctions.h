@@ -34,10 +34,13 @@ namespace mx
             core::NoteTypeValue convert( api::DurationName value ) const;
             core::BeamValue convert( api::Beam value ) const;
             api::Beam convert( core::BeamValue value ) const;
+            api::Accidental convert( core::AccidentalValue value ) const;
+            core::AccidentalValue convert( api::Accidental value ) const;
             
             static std::map<core::StepEnum, api::Step> stepMap;
             static std::map<core::NoteTypeValue, api::DurationName> durationMap;
             static std::map<core::BeamValue, api::Beam> beamMap;
+            static std::map<core::AccidentalValue, api::Accidental> accidentalMap;
         };
     }
 }

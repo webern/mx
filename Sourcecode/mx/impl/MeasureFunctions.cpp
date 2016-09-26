@@ -9,6 +9,7 @@
 #include "mx/core/elements/Beats.h"
 #include "mx/core/elements/BeatType.h"
 #include "mx/core/elements/Bookmark.h"
+#include "mx/core/elements/Clef.h"
 #include "mx/core/elements/CueNoteGroup.h"
 #include "mx/core/elements/Direction.h"
 #include "mx/core/elements/DisplayOctave.h"
@@ -48,6 +49,7 @@
 #include "mx/impl/NoteFunctions.h"
 #include "mx/impl/TimeFunctions.h"
 #include "mx/utility/Throw.h"
+#include "mx/api/ClefData.h"
 
 #include <string>
 
@@ -167,6 +169,12 @@ namespace mx
                 case core::MusicDataChoice::Choice::backup:
                 {
                     parseBackup( *mdc.getBackup() );
+                    
+                    if( myCurrentCursor.position < 0 )
+                    {
+                        myCurrentCursor.position = 0;
+                        // TODO - log or inform the client that the file is erroneous
+                    }
                     break;
                 }
                 case core::MusicDataChoice::Choice::forward:
@@ -302,7 +310,8 @@ namespace mx
         
         void MeasureFunctions::parseProperties( const core::Properties& inMxProperties )
         {
-            coutItemNotSupported( inMxProperties );
+            //coutItemNotSupported( inMxProperties );
+            importClefs( inMxProperties.getClefSet() );
         }
         
         
@@ -356,7 +365,65 @@ namespace mx
         
         void MeasureFunctions::coutItemNotSupported( const core::ElementInterface& element )
         {
-            std::cout << element.getElementName() << " is not supported" << std::endl;
+            MX_UNUSED(element);
+            //std::cout << element.getElementName() << " is not supported" << std::endl;
+        }
+        
+        
+        void MeasureFunctions::importClefs( const core::ClefSet& inClefs )
+        {
+            auto iter = inClefs.cbegin();
+            auto endIter = inClefs.cend();
+            
+            for( ; iter != endIter; ++iter)
+            {
+                const auto& clef = **iter;
+                importClef( clef );
+            }
+        }
+        
+        
+        void MeasureFunctions::importClef( const core::Clef& inClef )
+        {
+            api::ClefData clefData;
+            clefData.tickPosition = myCurrentCursor.position;
+            
+            const auto& attr = *inClef.getAttributes();
+            
+            if( attr.hasNumber )
+            {
+                clefData.staffIndex = attr.number.getValue() - 1;
+            }
+            else
+            {
+                clefData.staffIndex = 0;
+            }
+            
+            if( myCurrentCursor.position == 0 )
+            {
+                if( attr.hasAfterBarline )
+                {
+                    if( attr.afterBarline == core::YesNo::yes )
+                    {
+                        clefData.location = ClefLocation::afterBarline;
+                    }
+                    else
+                    {
+                        clefData.location = ClefLocation::beforeBarline;
+                    }
+                }
+                else
+                {
+                    clefData.location = ClefLocation::unspecified;
+                }
+            }
+            else
+            {
+                clefData.location = ClefLocation::midMeasure;
+            }
+            
+            auto& measure = myStaves[clefData.staffIndex];
+            measure.clefs.emplace_back( std::move( clefData ) );
         }
     }
 }

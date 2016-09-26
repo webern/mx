@@ -51,7 +51,47 @@ namespace mx
             std::pair<core::BeamValue, api::Beam>{ core::BeamValue::backwardHook, api::Beam::backwardHook },
         };
         
+        
+        std::map<core::AccidentalValue, api::Accidental> NoteFunctions::accidentalMap =
+        {
+            std::pair<core::AccidentalValue, api::Accidental>{ core::AccidentalValue::sharp, api::Accidental::sharp },
+            std::pair<core::AccidentalValue, api::Accidental>{ core::AccidentalValue::natural, api::Accidental::natural },
+            std::pair<core::AccidentalValue, api::Accidental>{ core::AccidentalValue::flat, api::Accidental::flat },
+            std::pair<core::AccidentalValue, api::Accidental>{ core::AccidentalValue::doubleSharp, api::Accidental::doubleSharp },
+            std::pair<core::AccidentalValue, api::Accidental>{ core::AccidentalValue::flatFlat, api::Accidental::flatFlat },
+            std::pair<core::AccidentalValue, api::Accidental>{ core::AccidentalValue::naturalSharp, api::Accidental::naturalSharp },
+            std::pair<core::AccidentalValue, api::Accidental>{ core::AccidentalValue::naturalFlat, api::Accidental::naturalFlat },
+            std::pair<core::AccidentalValue, api::Accidental>{ core::AccidentalValue::quarterFlat, api::Accidental::quarterFlat },
+            std::pair<core::AccidentalValue, api::Accidental>{ core::AccidentalValue::quarterSharp, api::Accidental::quarterSharp },
+            std::pair<core::AccidentalValue, api::Accidental>{ core::AccidentalValue::threeQuartersFlat, api::Accidental::threeQuartersFlat },
+            std::pair<core::AccidentalValue, api::Accidental>{ core::AccidentalValue::threeQuartersSharp, api::Accidental::threeQuartersSharp },
+            std::pair<core::AccidentalValue, api::Accidental>{ core::AccidentalValue::sharpDown, api::Accidental::sharpDown },
+            std::pair<core::AccidentalValue, api::Accidental>{ core::AccidentalValue::sharpUp, api::Accidental::sharpUp },
+            std::pair<core::AccidentalValue, api::Accidental>{ core::AccidentalValue::naturalDown, api::Accidental::naturalDown },
+            std::pair<core::AccidentalValue, api::Accidental>{ core::AccidentalValue::naturalUp, api::Accidental::naturalUp },
+            std::pair<core::AccidentalValue, api::Accidental>{ core::AccidentalValue::flatDown, api::Accidental::flatDown },
+            std::pair<core::AccidentalValue, api::Accidental>{ core::AccidentalValue::flatUp, api::Accidental::flatUp },
+            std::pair<core::AccidentalValue, api::Accidental>{ core::AccidentalValue::tripleSharp, api::Accidental::tripleSharp },
+            std::pair<core::AccidentalValue, api::Accidental>{ core::AccidentalValue::tripleFlat, api::Accidental::tripleFlat },
+            std::pair<core::AccidentalValue, api::Accidental>{ core::AccidentalValue::slashQuarterSharp, api::Accidental::slashQuarterSharp },
+            std::pair<core::AccidentalValue, api::Accidental>{ core::AccidentalValue::slashSharp, api::Accidental::slashSharp },
+            std::pair<core::AccidentalValue, api::Accidental>{ core::AccidentalValue::slashFlat, api::Accidental::slashFlat },
+            std::pair<core::AccidentalValue, api::Accidental>{ core::AccidentalValue::doubleSlashFlat, api::Accidental::doubleSlashFlat },
+            std::pair<core::AccidentalValue, api::Accidental>{ core::AccidentalValue::sharp1, api::Accidental::sharp1 },
+            std::pair<core::AccidentalValue, api::Accidental>{ core::AccidentalValue::sharp2, api::Accidental::sharp2 },
+            std::pair<core::AccidentalValue, api::Accidental>{ core::AccidentalValue::sharp3, api::Accidental::sharp3 },
+            std::pair<core::AccidentalValue, api::Accidental>{ core::AccidentalValue::sharp5, api::Accidental::sharp5 },
+            std::pair<core::AccidentalValue, api::Accidental>{ core::AccidentalValue::flat1, api::Accidental::flat1 },
+            std::pair<core::AccidentalValue, api::Accidental>{ core::AccidentalValue::flat2, api::Accidental::flat2 },
+            std::pair<core::AccidentalValue, api::Accidental>{ core::AccidentalValue::flat3, api::Accidental::flat3 },
+            std::pair<core::AccidentalValue, api::Accidental>{ core::AccidentalValue::flat4, api::Accidental::flat4 },
+            std::pair<core::AccidentalValue, api::Accidental>{ core::AccidentalValue::sori, api::Accidental::sori },
+            std::pair<core::AccidentalValue, api::Accidental>{ core::AccidentalValue::koron, api::Accidental::koron },
+        };
+        
+        
         NoteFunctions::NoteFunctions() {}
+        
         
         api::NoteData NoteFunctions::parseNote( const core::Note& inMxNote, const impl::Cursor& cursor ) const
         {
@@ -85,7 +125,18 @@ namespace mx
             
             outNoteData.step = this->convert( reader.getStep() );
             outNoteData.alter = reader.getAlter();
-            // outNoteData.showAccidental = reader.getIsAccidentalShown(); // TODO - add this to the reader
+            
+            outNoteData.accidental = api::Accidental::none;
+            
+            if( reader.getHasAccidental() )
+            {
+                outNoteData.accidental = convert( reader.getAccidental() );
+                outNoteData.isAccidentalParenthetical = reader.getIsAccidentalParenthetical();
+                outNoteData.isAccidentalCautionary = reader.getIsAccidentalCautionary();
+                outNoteData.isAccidentalEditorial = reader.getIsAccidentalEditorial();
+                outNoteData.isAccidentalBracketed = reader.getIsAccidentalBracketed();
+            }
+            
             outNoteData.octave = reader.getOctave();
             outNoteData.staffIndex = reader.getStaffNumber() - 1;
             outNoteData.userRequestedVoiceNumber = reader.getVoiceNumber(); // TODO - make sure this is -1 when not found in the musicxml
@@ -215,6 +266,35 @@ namespace mx
                 return api::Beam::unspecified;
             }
             return it->second;
+        }
+        
+        
+        api::Accidental NoteFunctions::convert( core::AccidentalValue value ) const
+        {
+            auto it = accidentalMap.find( value );
+            if( it == accidentalMap.cend() )
+            {
+                return api::Accidental::none;
+            }
+            return it->second;
+        }
+        
+        
+        core::AccidentalValue NoteFunctions::convert( api::Accidental value ) const
+        {
+            auto compare = [&value]( const std::pair<core::AccidentalValue, api::Accidental>& v )
+            {
+                return v.second == value;
+            };
+            
+            auto it = std::find_if( accidentalMap.cbegin(), accidentalMap.cend(), compare );
+            
+            if( it == accidentalMap.cend() )
+            {
+                return core::AccidentalValue::natural;
+            }
+            
+            return it->first;
         }
     }
 }

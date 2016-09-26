@@ -16,6 +16,7 @@
 #include "mx/core/elements/TimeSignatureGroup.h"
 #include "mx/impl/MxMath.h"
 #include "mx/utility/Throw.h"
+#include "mx/utility/StringToInt.h"
 
 #include <string>
 #include <cmath>
@@ -47,10 +48,19 @@ namespace mx
                         const auto& sigGroup = **( sigGroupSet.cbegin() );
                         const auto beatsStr = sigGroup.getBeats()->getValue().getValue();
                         int beats = outTimeSignatureData.beats;
-                        try { beats = std::stoi( beatsStr ); } catch ( ... ) { return false; }
+                        
+                        if( !utility::stringToInt( beatsStr, beats) )
+                        {
+                            return false;
+                        }
+                        
                         const auto beatTypeStr = sigGroup.getBeatType()->getValue().getValue();
                         int beatType = outTimeSignatureData.beatType;
-                        try { beatType = std::stoi( beatTypeStr ); } catch ( ... ) { return false; }
+                        
+                        if( !utility::stringToInt( beatTypeStr, beatType) )
+                        {
+                            return false;
+                        }
                         
                         outTimeSignatureData.beats = beats;
                         outTimeSignatureData.beatType = beatType;

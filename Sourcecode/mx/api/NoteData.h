@@ -92,7 +92,6 @@ namespace mx
             backwardHook
         };
         
-        
         enum class Stem
     	{
     		unspecified,
@@ -101,9 +100,50 @@ namespace mx
     		none
     	};
 
+        enum class Accidental
+        {
+            // none means the Accidental value is not known or specified
+            none,
+
+            // the rest of these values map to the musicxml specification
+            sharp,
+            natural,
+            flat,
+            doubleSharp,
+            sharpSharp,
+            flatFlat,
+            naturalSharp,
+            naturalFlat,
+            quarterFlat,
+            quarterSharp,
+            threeQuartersFlat,
+            threeQuartersSharp,
+            sharpDown,
+            sharpUp,
+            naturalDown,
+            naturalUp,
+            flatDown,
+            flatUp,
+            tripleSharp,
+            tripleFlat,
+            slashQuarterSharp,
+            slashSharp,
+            slashFlat,
+            doubleSlashFlat,
+            sharp1,
+            sharp2,
+            sharp3,
+            sharp5,
+            flat1,
+            flat2,
+            flat3,
+            flat4,
+            sori,
+            koron
+        };
+
     	class NoteData
     	{
-
     	public:
 
     		bool isRest;                        // if isRest is true then isUnpitched can be ignored
@@ -114,7 +154,11 @@ namespace mx
             NoteType noteType;                  // normal, cue, grace
             Step step;
             int alter;
-            bool showAccidental;                // the type of accidental will be automatically deduced from the alter value, -2=bb, -1=b, 0=Nat, 1=#, 2=x
+            Accidental accidental;
+            bool isAccidentalParenthetical;
+            bool isAccidentalCautionary;
+            bool isAccidentalEditorial;
+            bool isAccidentalBracketed;
             int octave;
             int staffIndex;                     // this will be one less than the number shown in the <staff> element
             int userRequestedVoiceNumber;
@@ -138,7 +182,11 @@ namespace mx
             , noteType{ NoteType::normal }
             , step{ Step::c }
             , alter{ 0 }
-            , showAccidental{ false }
+            , accidental{Accidental::none}
+            , isAccidentalParenthetical{ false }
+            , isAccidentalCautionary{ false }
+            , isAccidentalEditorial{ false }
+            , isAccidentalBracketed{ false }
             , octave{ 4 }
             , staffIndex{ 0 }
             , userRequestedVoiceNumber{ -1 }
@@ -155,8 +203,30 @@ namespace mx
             {
 
             }
+            
+            // automatically set the Accidental enum value by parsing the alter value
+            inline void showAccidental()
+            {
+                switch( alter )
+                {
+                    case -3: accidental = Accidental::tripleFlat; break;
+                    case -2: accidental = Accidental::flatFlat; break;
+                    case -1: accidental = Accidental::flat; break;
+                    case  0: accidental = Accidental::natural; break;
+                    case  1: accidental = Accidental::sharp; break;
+                    case  2: accidental = Accidental::doubleSharp; break;
+                    case  3: accidental = Accidental::tripleSharp; break;
+                    default: accidental = Accidental::none;
+                }
+            }
+            
+            inline void hideAccidental()
+            {
+                accidental = Accidental::none;
+            }
+            
     	private:
-    		 
+
     	};
     }
 }
