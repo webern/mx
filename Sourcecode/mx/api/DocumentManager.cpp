@@ -158,7 +158,6 @@ namespace mx
                 score.musicXmlType = "timewise";
                 it->second->convertContents();
             }
-            
             return score;
         }
         

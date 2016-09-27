@@ -36,6 +36,11 @@ namespace mx
             inline bool getIsGrace() const { return myIsGrace; }
             inline bool getIsCue() const { return myIsCue; }
             inline bool getIsRest() const { return myIsRest; }
+            
+            // careful - this only means that the MusicXML <note> has a <chord> tag
+            // in fact a note is part of a chord if the subsequent note has a <chord> tag
+            inline bool getIsChord() const { return myIsChord; }
+            
             inline bool getIsMeasureRest() const { return myIsMeasureRest; }
             inline bool getIsUnpitched() const { return myIsUnpitched; }
             inline bool getIsPitch() const { return myIsPitch; }
@@ -70,6 +75,7 @@ namespace mx
             bool myIsGrace;
             bool myIsCue;
             bool myIsRest;
+            bool myIsChord;
             bool myIsMeasureRest;
             bool myIsUnpitched;
             bool myIsPitch;
@@ -100,6 +106,7 @@ namespace mx
             const core::FullNoteGroup& findFullNoteGroup( const core::NoteChoice& noteChoice ) const;
             void setNormalGraceCueItems();
             void setRestPitchUnpitchedItems();
+            void setChord();
             void setStaffNumber();
             void setVoiceNumber();
             void setDurationType();

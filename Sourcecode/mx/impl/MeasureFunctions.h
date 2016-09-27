@@ -15,6 +15,7 @@ namespace mx
     {
         class MusicDataChoice;
         class Note;
+        using NotePtr = std::shared_ptr<Note>;
         class Backup;
         class Forward;
         class Direction;
@@ -53,8 +54,8 @@ namespace mx
             StaffIndexMeasureMap myStaves;
         
         private:
-            void parseMusicDataChoice( const core::MusicDataChoice& mdc );
-            void parseNote( const core::Note& inMxNote );
+            void parseMusicDataChoice( const core::MusicDataChoice& mdc, const core::NotePtr& nextNotePtr );
+            void parseNote( const core::Note& inMxNote, const core::NotePtr& nextNotePtr );
             void parseBackup( const core::Backup& inMxBackup );
             void parseForward( const core::Forward& inMxForward );
             void parseDirection( const core::Direction& inMxDirection );

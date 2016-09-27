@@ -10,6 +10,9 @@
 #include "mx/core/elements/BeatType.h"
 #include "mx/core/elements/Bookmark.h"
 #include "mx/core/elements/Clef.h"
+#include "mx/core/elements/Sign.h"
+#include "mx/core/elements/Line.h"
+#include "mx/core/elements/ClefOctaveChange.h"
 #include "mx/core/elements/CueNoteGroup.h"
 #include "mx/core/elements/Direction.h"
 #include "mx/core/elements/DisplayOctave.h"
@@ -50,6 +53,7 @@
 #include "mx/impl/TimeFunctions.h"
 #include "mx/utility/Throw.h"
 #include "mx/api/ClefData.h"
+#include "mx/impl/Converter.h"
 
 #include <string>
 
@@ -132,16 +136,39 @@ namespace mx
             bool isTimeSignatureFound = false;
             
             const auto& mdcSet = inMxMeasure.getMusicDataGroup()->getMusicDataChoiceSet();
+            auto iter = mdcSet.cbegin();
+            const auto endIter = mdcSet.cend();
             
-            for( const auto& mdc : mdcSet )
+            for( ; iter != endIter; ++iter )
             {
+                const auto& mdc = **iter;
+                
+                // incredibly, we need to know if the note following this one has a 'chord' tag
+                // otherwise we don't know whether or not the current note if part of a chord,
+                // which we need to know so that we can choose whether or not to increment the
+                // current tick position in myCurrentCursor
+                auto peekAheadAtNextNoteIter = iter + 1;
+                
+                while( mdc.getChoice() == core::MusicDataChoice::Choice::note
+                       && peekAheadAtNextNoteIter != endIter
+                       && (*peekAheadAtNextNoteIter)->getChoice() != core::MusicDataChoice::Choice::note )
+                {
+                    ++peekAheadAtNextNoteIter;
+                }
+                
+                core::NotePtr nextNotePtr = nullptr;
+                if( peekAheadAtNextNoteIter != endIter )
+                {
+                    nextNotePtr = (*peekAheadAtNextNoteIter)->getNote();
+                }
+                
                 if( !isTimeSignatureFound )
                 {
                     impl::TimeFunctions timeFunc;
-                    isTimeSignatureFound = timeFunc.findAndFillTimeSignature( *mdc, myCurrentCursor.timeSignature );
+                    isTimeSignatureFound = timeFunc.findAndFillTimeSignature( mdc, myCurrentCursor.timeSignature );
                     myCurrentCursor.timeSignature.isImplicit = timeFunc.isTimeSignatureImplicit( myPreviousCursor.timeSignature, myCurrentCursor.timeSignature, myCurrentCursor.isFirstMeasureInPart );
                 }
-                parseMusicDataChoice( *mdc );
+                parseMusicDataChoice( mdc, nextNotePtr );
             }
             
             // assign the correct time signature to all staves
@@ -156,14 +183,14 @@ namespace mx
         }
         
         
-        void MeasureFunctions::parseMusicDataChoice( const core::MusicDataChoice& mdc )
+        void MeasureFunctions::parseMusicDataChoice( const core::MusicDataChoice& mdc, const core::NotePtr& nextNotePtr )
         {
             switch ( mdc.getChoice() )
             {
                 case core::MusicDataChoice::Choice::note:
                 {
                     myCurrentCursor.isBackupInProgress = false;
-                    parseNote( *mdc.getNote() );
+                    parseNote( *mdc.getNote(), nextNotePtr );
                     break;
                 }
                 case core::MusicDataChoice::Choice::backup:
@@ -252,8 +279,16 @@ namespace mx
         }
         
         
-        void MeasureFunctions::parseNote( const core::Note& inMxNote )
+        void MeasureFunctions::parseNote( const core::Note& inMxNote, const core::NotePtr& nextNotePtr )
         {
+            bool isNextNoteAChordMemberMakingThisNoteTheStartOfTheChord = false;
+            
+            if( nextNotePtr )
+            {
+                MxNoteReader nextNoteReader{ *nextNotePtr };
+                isNextNoteAChordMemberMakingThisNoteTheStartOfTheChord = nextNoteReader.getIsChord();
+            }
+            
             myCurrentCursor.isBackupInProgress = false;
             impl::NoteFunctions noteFunc;
             auto noteData = noteFunc.parseNote( inMxNote, myCurrentCursor );
@@ -267,7 +302,7 @@ namespace mx
                 myCurrentCursor.staffIndex = 0;
             }
             
-            if( !noteData.isChord )
+            if( !noteData.isChord && !isNextNoteAChordMemberMakingThisNoteTheStartOfTheChord)
             {
                 myCurrentCursor.position += noteData.durationTimeTicks;
             }
@@ -387,7 +422,50 @@ namespace mx
         {
             api::ClefData clefData;
             clefData.tickPosition = myCurrentCursor.position;
+            auto converter = Converter{};
+            clefData.symbol = converter.convert( inClef.getSign()->getValue() );
             
+            if( inClef.getHasLine() )
+            {
+                clefData.line = inClef.getLine()->getValue().getValue();
+            }
+            else
+            {
+                switch (clefData.symbol)
+                {
+                    case api::ClefSymbol::g:
+                        clefData.line = 2;
+                        break;
+                    case api::ClefSymbol::f:
+                        clefData.line = 4;
+                        break;
+                    case api::ClefSymbol::c:
+                        clefData.line = 3;
+                        break;
+                    case api::ClefSymbol::jianpu:
+                        clefData.line = 1;
+                        break;
+                    case api::ClefSymbol::tab:
+                        clefData.line = 1;
+                        break;
+                    case api::ClefSymbol::percussion:
+                        clefData.line = 3;
+                        break;
+                    default:
+                        clefData.line = 3;
+                        break;
+                }
+            }
+            
+            if( inClef.getHasClefOctaveChange() )
+            {
+                clefData.octaveChange = inClef.getClefOctaveChange()->getValue().getValue();
+            }
+            else
+            {
+                clefData.octaveChange = 0;
+            }
+                
             const auto& attr = *inClef.getAttributes();
             
             if( attr.hasNumber )
@@ -405,21 +483,21 @@ namespace mx
                 {
                     if( attr.afterBarline == core::YesNo::yes )
                     {
-                        clefData.location = ClefLocation::afterBarline;
+                        clefData.location = api::ClefLocation::afterBarline;
                     }
                     else
                     {
-                        clefData.location = ClefLocation::beforeBarline;
+                        clefData.location = api::ClefLocation::beforeBarline;
                     }
                 }
                 else
                 {
-                    clefData.location = ClefLocation::unspecified;
+                    clefData.location = api::ClefLocation::unspecified;
                 }
             }
             else
             {
-                clefData.location = ClefLocation::midMeasure;
+                clefData.location = api::ClefLocation::midMeasure;
             }
             
             auto& measure = myStaves[clefData.staffIndex];

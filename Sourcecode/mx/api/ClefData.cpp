@@ -78,43 +78,43 @@ namespace mx
         
     	bool ClefData::isTreble() const
         {
-            return ( symbol == ClefSymbol::g ) && ( line == 2 ) && ( octaveChange );
+            return ( symbol == ClefSymbol::g ) && ( line == 2 ) && ( octaveChange == 0 );
         }
 
         
     	bool ClefData::isBass() const
         {
-            return ( symbol == ClefSymbol::f ) && ( line == 4 ) && ( octaveChange );
+            return ( symbol == ClefSymbol::f ) && ( line == 4 ) && ( octaveChange == 0 );
         }
 
         
     	bool ClefData::isAlto() const
         {
-            return ( symbol == ClefSymbol::c ) && ( line == 3 ) && ( octaveChange );
+            return ( symbol == ClefSymbol::c ) && ( line == 3 ) && ( octaveChange == 0 );
         }
 
         
     	bool ClefData::isTenor() const
         {
-            return ( symbol == ClefSymbol::c ) && ( line == 4 ) && ( octaveChange );
+            return ( symbol == ClefSymbol::c ) && ( line == 4 ) && ( octaveChange == 0 );
         }
 
         
     	bool ClefData::isBaritone() const
         {
-            return ( symbol == ClefSymbol::c ) && ( line == 5 ) && ( octaveChange );
+            return ( symbol == ClefSymbol::c ) && ( line == 5 ) && ( octaveChange == 0 );
         }
 
         
     	bool ClefData::isSoprano() const
         {
-            return ( symbol == ClefSymbol::c ) && ( line == 0 ) && ( octaveChange );
+            return ( symbol == ClefSymbol::c ) && ( line == 0 ) && ( octaveChange == 0 );
         }
 
         
-    	bool ClefData::isMessoSoprano() const
+    	bool ClefData::isMezzoSoprano() const
         {
-            return ( symbol == ClefSymbol::c ) && ( line == 1 ) && ( octaveChange );
+            return ( symbol == ClefSymbol::c ) && ( line == 1 ) && ( octaveChange == 0 );
         }
     }
 }

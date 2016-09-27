@@ -13,6 +13,7 @@
 		2913BB951D753FC8006C34A3 /* NoteFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2913BB8B1D753FC8006C34A3 /* NoteFunctions.cpp */; };
 		2913BB971D753FC8006C34A3 /* PageTextFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2913BB8D1D753FC8006C34A3 /* PageTextFunctions.cpp */; };
 		2913BB991D753FC8006C34A3 /* ScoreFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2913BB8F1D753FC8006C34A3 /* ScoreFunctions.cpp */; };
+		2922CC641D9AF28400F8C9C1 /* Converter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2922CC621D9AF28400F8C9C1 /* Converter.cpp */; };
 		2927ECA01D886E460042E080 /* TimeFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2927EC9E1D886E460042E080 /* TimeFunctions.cpp */; };
 		2927ECA41D8872EA0042E080 /* MeasureFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2927ECA21D8872EA0042E080 /* MeasureFunctions.cpp */; };
 		2927ECA81D888AB30042E080 /* MxMath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2927ECA61D888AB30042E080 /* MxMath.cpp */; };
@@ -657,6 +658,8 @@
 		2913BB8E1D753FC8006C34A3 /* PageTextFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PageTextFunctions.h; path = ../Sourcecode/mx/impl/PageTextFunctions.h; sourceTree = "<group>"; };
 		2913BB8F1D753FC8006C34A3 /* ScoreFunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ScoreFunctions.cpp; path = ../Sourcecode/mx/impl/ScoreFunctions.cpp; sourceTree = "<group>"; };
 		2913BB901D753FC8006C34A3 /* ScoreFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ScoreFunctions.h; path = ../Sourcecode/mx/impl/ScoreFunctions.h; sourceTree = "<group>"; };
+		2922CC621D9AF28400F8C9C1 /* Converter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Converter.cpp; path = ../Sourcecode/mx/impl/Converter.cpp; sourceTree = "<group>"; };
+		2922CC631D9AF28400F8C9C1 /* Converter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Converter.h; path = ../Sourcecode/mx/impl/Converter.h; sourceTree = "<group>"; };
 		2927EC9B1D886E2B0042E080 /* TimeSignatureData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TimeSignatureData.h; path = ../Sourcecode/mx/api/TimeSignatureData.h; sourceTree = "<group>"; };
 		2927EC9D1D886E460042E080 /* TimeFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TimeFunctions.h; path = ../Sourcecode/mx/impl/TimeFunctions.h; sourceTree = "<group>"; };
 		2927EC9E1D886E460042E080 /* TimeFunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimeFunctions.cpp; path = ../Sourcecode/mx/impl/TimeFunctions.cpp; sourceTree = "<group>"; };
@@ -2065,6 +2068,8 @@
 		292255D51D712B26002D8E48 /* impl */ = {
 			isa = PBXGroup;
 			children = (
+				2922CC621D9AF28400F8C9C1 /* Converter.cpp */,
+				2922CC631D9AF28400F8C9C1 /* Converter.h */,
 				2973065E1D89AB3300B8C0D3 /* Cursor.cpp */,
 				2973065D1D89AB3300B8C0D3 /* Cursor.h */,
 				2913BB871D753FC8006C34A3 /* EncodingFunctions.cpp */,
@@ -3412,6 +3417,7 @@
 				29454A711D295C5500B90302 /* Unpitched.cpp in Sources */,
 				294549E21D295C5500B90302 /* Relation.cpp in Sources */,
 				2945487B1D295C5500B90302 /* Caesura.cpp in Sources */,
+				2922CC641D9AF28400F8C9C1 /* Converter.cpp in Sources */,
 				29454A791D295C5500B90302 /* Volume.cpp in Sources */,
 				2927ECA41D8872EA0042E080 /* MeasureFunctions.cpp in Sources */,
 				29454A361D295C5500B90302 /* SupportsAttributes.cpp in Sources */,

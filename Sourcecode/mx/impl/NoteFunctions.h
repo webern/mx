@@ -4,8 +4,7 @@
 #include "mx/api/NoteData.h"
 #include "mx/core/Enums.h"
 #include "mx/impl/Cursor.h"
-
-#include <map>
+#include "mx/impl/Converter.h"
 
 namespace mx
 {
@@ -27,20 +26,6 @@ namespace mx
             NoteFunctions& operator=( NoteFunctions&& ) = default;
             
             api::NoteData parseNote( const core::Note& inMxNote, const impl::Cursor& cursor ) const;
-            
-            api::Step convert( core::StepEnum value ) const;
-            core::StepEnum convert( api::Step value ) const;
-            api::DurationName convert( core::NoteTypeValue value ) const;
-            core::NoteTypeValue convert( api::DurationName value ) const;
-            core::BeamValue convert( api::Beam value ) const;
-            api::Beam convert( core::BeamValue value ) const;
-            api::Accidental convert( core::AccidentalValue value ) const;
-            core::AccidentalValue convert( api::Accidental value ) const;
-            
-            static std::map<core::StepEnum, api::Step> stepMap;
-            static std::map<core::NoteTypeValue, api::DurationName> durationMap;
-            static std::map<core::BeamValue, api::Beam> beamMap;
-            static std::map<core::AccidentalValue, api::Accidental> accidentalMap;
         };
     }
 }

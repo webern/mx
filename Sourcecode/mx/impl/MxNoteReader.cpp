@@ -46,6 +46,7 @@ namespace mx
         , myIsGrace( false )
         , myIsCue( false )
         , myIsRest( false )
+        , myIsChord( false )
         , myIsMeasureRest( false )
         , myIsUnpitched( false )
         , myIsPitch( false )
@@ -74,6 +75,7 @@ namespace mx
         {
             setNormalGraceCueItems();
             setRestPitchUnpitchedItems();
+            setChord();
             setStaffNumber();
             setVoiceNumber();
             setDurationType();
@@ -205,6 +207,12 @@ namespace mx
         }
 
 
+        void MxNoteReader::setChord()
+        {
+            myIsChord = myFullNoteGroup.getHasChord();
+        }
+        
+        
         void MxNoteReader::setStaffNumber()
         {
             if( myNote.getHasStaff() )

@@ -150,7 +150,12 @@ namespace mx
             bool isMeasureRest;                 // only valid if isRest is true
             bool isUnpitched;                   // only relevant if isRest is false
             bool isDisplayStepOctaveSpecified;  // MusicXML can optionally specify display step and octave for rests and unpitched notes
-            bool isChord;                       // the note is part of a chord
+            
+            // TODO - MusicXML is totally screwed up in that a note is part of
+            // a chord if the *following* note says it is. Need to decide
+            // whether to mirror that approach in the API or make it more sane.
+            bool isChord;
+            
             NoteType noteType;                  // normal, cue, grace
             Step step;
             int alter;
