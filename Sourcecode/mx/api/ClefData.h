@@ -45,6 +45,7 @@ namespace mx
             int octaveChange;
             int tickPosition;
             ClefLocation location;
+            std::string toString() const;
             
             // convenience - set symbol, line and octave for common clefs
             void setTreble();

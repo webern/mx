@@ -3,6 +3,7 @@
 
 #include "mx/api/ClefData.h"
 #include <vector>
+#include <sstream>
 
 namespace mx
 {
@@ -17,6 +18,27 @@ namespace mx
         , location{ ClefLocation::unspecified }
         {
 
+        }
+
+
+        std::string ClefData::toString() const
+        {
+            std::stringstream ss;
+            ss << "Symbol ";
+            switch(symbol)
+            {
+                case ClefSymbol::g: ss << "G"; break;
+                case ClefSymbol::f: ss << "F"; break;
+                case ClefSymbol::c: ss << "C"; break;
+                case ClefSymbol::percussion: ss << "Percussion"; break;
+                case ClefSymbol::tab: ss << "Tab"; break;
+                case ClefSymbol::jianpu: ss << "Jianpu"; break;
+                case ClefSymbol::none: ss << "None"; break;
+                default: ss << "Unknown"; break;      
+            }
+            ss << ", Line " << line;
+            ss << ", OctaveChange " << octaveChange;
+            return ss.str();
         }
 
 
