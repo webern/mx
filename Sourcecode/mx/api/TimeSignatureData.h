@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include "mx/api/ApiCommon.h"
+
 #include <string>
 
 namespace mx
@@ -11,7 +13,7 @@ namespace mx
     {
         enum class TimeSignatureSymbol
         {
-            none,
+            unspecified,
             common,
             cut
         };
@@ -23,7 +25,7 @@ namespace mx
             int beats;
             int beatType;
             bool isImplicit;
-            bool isPrintObjectYes;
+            Display display;
 
             inline bool isEqualTo( const TimeSignatureData& other ) const
             {
@@ -33,11 +35,11 @@ namespace mx
             }
 
             TimeSignatureData()
-            : symbol{ TimeSignatureSymbol::none }
+            : symbol{ TimeSignatureSymbol::unspecified }
             , beats{ 4 }
             , beatType{ 4 }
             , isImplicit{ true }
-            , isPrintObjectYes{ false }
+            , display{ Display::unspecified }
             {
 
             }

@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "mx/api/MxApiCommon.h"
+#include "mx/api/ApiCommon.h"
 #include "mx/api/EncodingData.h"
 #include "mx/api/LayoutData.h"
 #include "mx/api/PageTextData.h"

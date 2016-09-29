@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "mx/api/MxApiCommon.h"
+#include "mx/api/ApiCommon.h"
 
 #include <string>
 #include <vector>

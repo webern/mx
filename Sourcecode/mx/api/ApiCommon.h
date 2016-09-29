@@ -18,5 +18,12 @@ namespace mx
         }
 
         constexpr int DEFAULT_TICKS_PER_QUARTER = 3 * 4 * 5 * 7;
+        
+        enum class Display
+        {
+            unspecified,
+            yes,
+            no
+        };
     }
 }

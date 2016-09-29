@@ -669,7 +669,7 @@
 		2927ECA61D888AB30042E080 /* MxMath.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MxMath.cpp; path = ../Sourcecode/mx/impl/MxMath.cpp; sourceTree = "<group>"; };
 		292D1DD01D9A43A500CDD9F4 /* ClefData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ClefData.cpp; path = ../Sourcecode/mx/api/ClefData.cpp; sourceTree = "<group>"; };
 		292D1DD11D9A43A500CDD9F4 /* ClefData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ClefData.h; path = ../Sourcecode/mx/api/ClefData.h; sourceTree = "<group>"; };
-		293488D41D94903B00D0C407 /* MxApiCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MxApiCommon.h; path = ../Sourcecode/mx/api/MxApiCommon.h; sourceTree = "<group>"; };
+		293488D41D94903B00D0C407 /* ApiCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ApiCommon.h; path = ../Sourcecode/mx/api/ApiCommon.h; sourceTree = "<group>"; };
 		2937D1451D18D403001C2A1A /* PugiAttribute.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PugiAttribute.cpp; path = ../Sourcecode/mx/xml/PugiAttribute.cpp; sourceTree = "<group>"; };
 		2937D1461D18D403001C2A1A /* PugiAttribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PugiAttribute.h; path = ../Sourcecode/mx/xml/PugiAttribute.h; sourceTree = "<group>"; };
 		2937D1471D18D403001C2A1A /* PugiAttributeIterImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PugiAttributeIterImpl.cpp; path = ../Sourcecode/mx/xml/PugiAttributeIterImpl.cpp; sourceTree = "<group>"; };
@@ -3332,7 +3332,7 @@
 			children = (
 				292D1DD01D9A43A500CDD9F4 /* ClefData.cpp */,
 				292D1DD11D9A43A500CDD9F4 /* ClefData.h */,
-				293488D41D94903B00D0C407 /* MxApiCommon.h */,
+				293488D41D94903B00D0C407 /* ApiCommon.h */,
 				2927EC9B1D886E2B0042E080 /* TimeSignatureData.h */,
 				299A2BB01D7FA48A006A7F5C /* PartGroupData.h */,
 				29EF44091D6E70D300DBDAB9 /* DocumentManager.cpp */,
