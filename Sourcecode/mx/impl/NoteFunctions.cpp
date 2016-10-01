@@ -4,7 +4,33 @@
 #include "mx/impl/NoteFunctions.h"
 #include "mx/impl/MxNoteReader.h"
 #include "mx/impl/TimeFunctions.h"
+#include "mx/api/MarkData.h"
 #include "mx/utility/Throw.h"
+
+
+// remove?
+#include "mx/core/elements/Note.h"
+#include "mx/core/elements/Notations.h"
+#include "mx/core/elements/NotationsChoice.h"
+#include "mx/core/elements/AccidentalMark.h"
+#include "mx/core/elements/Arpeggiate.h"
+#include "mx/core/elements/Articulations.h"
+#include "mx/core/elements/Dynamics.h"
+#include "mx/core/elements/EditorialGroup.h"
+#include "mx/core/elements/Fermata.h"
+#include "mx/core/elements/Footnote.h"
+#include "mx/core/elements/Glissando.h"
+#include "mx/core/elements/Level.h"
+#include "mx/core/elements/NonArpeggiate.h"
+#include "mx/core/elements/Ornaments.h"
+#include "mx/core/elements/OtherNotation.h"
+#include "mx/core/elements/Slide.h"
+#include "mx/core/elements/Slur.h"
+#include "mx/core/elements/Technical.h"
+#include "mx/core/elements/Tied.h"
+#include "mx/core/elements/Tuplet.h"
+#include "mx/core/elements/ArticulationsChoice.h"
+#include "mx/impl/PositionFunctions.h"
 
 #include <algorithm>
 
@@ -61,7 +87,7 @@ namespace mx
             
             outNoteData.octave = reader.getOctave();
             outNoteData.staffIndex = reader.getStaffNumber() - 1;
-            outNoteData.userRequestedVoiceNumber = reader.getVoiceNumber(); // TODO - make sure this is -1 when not found in the musicxml
+            outNoteData.userRequestedVoiceNumber = reader.getVoiceNumber();
             
             if( reader.getIsDurationTypeSpecified() )
             {
@@ -99,8 +125,156 @@ namespace mx
                 outNoteData.timeModificationNormalType = api::DurationName::unspecified;
                 outNoteData.timeModificationNormalTypeDots = 0;
             }
-            
+            thing( inMxNote, cursor, outNoteData );
+            outNoteData.positionData = impl::createPositionData( *inMxNote.getAttributes() );
             return outNoteData;
+        }
+        
+        void NoteFunctions::thing( const core::Note& inMxNote, const impl::Cursor& cursor, api::NoteData& outNoteData ) const
+        {
+            MX_UNUSED(inMxNote);
+            MX_UNUSED(cursor);
+            for( const auto& notationsPtr : inMxNote.getNotationsSet() )
+            {
+                for( const auto& notationsChoicePtr : notationsPtr->getNotationsChoiceSet() )
+                {
+                    const auto& notationsChoice = *notationsChoicePtr;
+                    const auto choice = notationsChoice.getChoice();
+                    
+                    switch (choice)
+                    {
+                        // these are spanners, handle elsewhere
+                        case core::NotationsChoice::Choice::tied:
+                        case core::NotationsChoice::Choice::slur:
+                        case core::NotationsChoice::Choice::tuplet:
+                        case core::NotationsChoice::Choice::glissando:
+                        case core::NotationsChoice::Choice::slide:
+                            break;
+                        
+                        // TODO - these
+                        case core::NotationsChoice::Choice::ornaments:
+                        case core::NotationsChoice::Choice::technical:
+                            break;
+                            
+                        case core::NotationsChoice::Choice::articulations:
+                        {
+                            const auto& item = *notationsChoice.getArticulations();
+                            for( const auto& articulationsChoicePtr : item.getArticulationsChoiceSet() )
+                            {
+                                const auto& articulationsChoice = *articulationsChoicePtr;
+                                const auto articulationType = articulationsChoice.getChoice();
+                                
+                                switch ( articulationType )
+                                {
+                                    case core::ArticulationsChoice::Choice::accent:
+                                    {
+                                        api::MarkData mark;
+                                        mark.absoluteMarkId = -1;
+                                        mark.markType = api::MarkType::accent;
+                                        mark.name = "accent";
+                                        mark.smuflName = "articAccentAbove";
+                                        mark.smuflCodepoint = api::Smufl::findCodepoint( mark.smuflName );
+                                        mark.tickPosition = cursor.position;
+                                        outNoteData.marks.emplace_back( std::move( mark ) );
+                                        break;
+                                    }
+                                    
+                                    case core::ArticulationsChoice::Choice::strongAccent:
+                                    {
+                                        break;
+                                    }
+                                    
+                                    case core::ArticulationsChoice::Choice::staccato:
+                                    {
+                                        break;
+                                    }
+                                    
+                                    case core::ArticulationsChoice::Choice::tenuto:
+                                    {
+                                        break;
+                                    }
+                                    
+                                    case core::ArticulationsChoice::Choice::detachedLegato:
+                                    {
+                                        break;
+                                    }
+                                    
+                                    case core::ArticulationsChoice::Choice::staccatissimo:
+                                    {
+                                        break;
+                                    }
+                                    
+                                    case core::ArticulationsChoice::Choice::spiccato:
+                                    {
+                                        break;
+                                    }
+                                    
+                                    case core::ArticulationsChoice::Choice::scoop:
+                                    {
+                                        break;
+                                    }
+                                    
+                                    case core::ArticulationsChoice::Choice::plop:
+                                    {
+                                        break;
+                                    }
+                                    
+                                    case core::ArticulationsChoice::Choice::doit:
+                                    {
+                                        break;
+                                    }
+                                    
+                                    case core::ArticulationsChoice::Choice::falloff:
+                                    {
+                                        break;
+                                    }
+                                    
+                                    case core::ArticulationsChoice::Choice::breathMark:
+                                    {
+                                        break;
+                                    }
+                                    
+                                    case core::ArticulationsChoice::Choice::caesura:
+                                    {
+                                        break;
+                                    }
+                                    
+                                    case core::ArticulationsChoice::Choice::stress:
+                                    {
+                                        break;
+                                    }
+                                    
+                                    case core::ArticulationsChoice::Choice::unstress:
+                                    {
+                                        break;
+                                    }
+
+                                    case core::ArticulationsChoice::Choice::otherArticulation:
+                                    {
+                                        break;
+                                    }
+                                    default:
+                                        break;
+                                }
+                                
+                            }
+
+                        }
+                            
+                        // TODO - these
+                        case core::NotationsChoice::Choice::dynamics:
+                        case core::NotationsChoice::Choice::fermata:
+                        case core::NotationsChoice::Choice::arpeggiate:
+                        case core::NotationsChoice::Choice::nonArpeggiate:
+                        case core::NotationsChoice::Choice::accidentalMark:
+                        case core::NotationsChoice::Choice::otherNotation:
+                            break;
+                            
+                        default:
+                            break;
+                    }
+                }
+            }
         }
     }
 }

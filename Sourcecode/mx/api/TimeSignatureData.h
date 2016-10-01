@@ -25,7 +25,7 @@ namespace mx
             int beats;
             int beatType;
             bool isImplicit;
-            Display display;
+            Bool display;
 
             inline bool isEqualTo( const TimeSignatureData& other ) const
             {
@@ -39,7 +39,7 @@ namespace mx
             , beats{ 4 }
             , beatType{ 4 }
             , isImplicit{ true }
-            , display{ Display::unspecified }
+            , display{ Bool::unspecified }
             {
 
             }

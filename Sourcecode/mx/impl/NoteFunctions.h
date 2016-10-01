@@ -11,6 +11,9 @@ namespace mx
     namespace core
     {
         class Note;
+        class Notations;
+        using NotationsPtr = std::shared_ptr<Notations>;
+        using NotationsSet = std::vector<NotationsPtr>;
     }
     
     namespace impl
@@ -26,6 +29,7 @@ namespace mx
             NoteFunctions& operator=( NoteFunctions&& ) = default;
             
             api::NoteData parseNote( const core::Note& inMxNote, const impl::Cursor& cursor ) const;
+            void thing( const core::Note& inMxNote, const impl::Cursor& cursor, api::NoteData& outNoteData ) const;
         };
     }
 }

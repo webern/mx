@@ -3,7 +3,9 @@
 
 #pragma once
 
-//#include "mx/api/NoteAttachment.h"
+#include "mx/api/PrintData.h"
+#include "mx/api/PositionData.h"
+#include "mx/api/MarkData.h"
 
 #include <vector>
 
@@ -146,6 +148,11 @@ namespace mx
     	{
     	public:
 
+            // when reading a MusicXML file this will be incremented
+            // for each not that is encountered. when writing a
+            // MusicXML file it will be ignored.
+            int absoluteNoteIndex;
+            
     		bool isRest;                        // if isRest is true then isUnpitched can be ignored
             bool isMeasureRest;                 // only valid if isRest is true
             bool isUnpitched;                   // only relevant if isRest is false
@@ -177,6 +184,9 @@ namespace mx
             int timeModificationNormalNotes;    // i.e. for a triplet this would be 2 - durationTimeTicks is not affected by this
             api::DurationName timeModificationNormalType;    // use this if the time modification ratio involves a different durationName than the main 'durationName'
             int timeModificationNormalTypeDots; // in case the time modification ratio involves a dotted type
+            PositionData positionData;
+            PrintData printData;
+            std::vector<MarkData> marks;
             
             NoteData()
             : isRest{ false }
@@ -205,6 +215,9 @@ namespace mx
             , timeModificationNormalNotes{ 1 }
             , timeModificationNormalType{ api::DurationName::unspecified }
             , timeModificationNormalTypeDots{ 0 }
+            , positionData{}
+            , printData{}
+            , marks{}
             {
 
             }

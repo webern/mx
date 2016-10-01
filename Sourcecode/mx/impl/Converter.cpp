@@ -10,7 +10,7 @@ namespace mx
 {
     namespace impl
     {
-        std::map<core::StepEnum, api::Step> Converter::stepMap =
+        const std::map<core::StepEnum, api::Step> Converter::stepMap =
         {
             std::pair<core::StepEnum, api::Step>{ core::StepEnum::c, api::Step::c },
             std::pair<core::StepEnum, api::Step>{ core::StepEnum::d, api::Step::d },
@@ -21,7 +21,7 @@ namespace mx
             std::pair<core::StepEnum, api::Step>{ core::StepEnum::b, api::Step::b },
         };
         
-        std::map<core::NoteTypeValue, api::DurationName> Converter::durationMap =
+        const std::map<core::NoteTypeValue, api::DurationName> Converter::durationMap =
         {
             std::pair<core::NoteTypeValue, api::DurationName>{ core::NoteTypeValue::maxima, api::DurationName::maxima },
             std::pair<core::NoteTypeValue, api::DurationName>{ core::NoteTypeValue::long_, api::DurationName::longa },
@@ -40,7 +40,7 @@ namespace mx
         };
         
         
-        std::map<core::BeamValue, api::Beam> Converter::beamMap =
+        const std::map<core::BeamValue, api::Beam> Converter::beamMap =
         {
             std::pair<core::BeamValue, api::Beam>{ core::BeamValue::begin, api::Beam::start },
             std::pair<core::BeamValue, api::Beam>{ core::BeamValue::end, api::Beam::stop },
@@ -50,7 +50,7 @@ namespace mx
         };
         
         
-        std::map<core::AccidentalValue, api::Accidental> Converter::accidentalMap =
+        const std::map<core::AccidentalValue, api::Accidental> Converter::accidentalMap =
         {
             std::pair<core::AccidentalValue, api::Accidental>{ core::AccidentalValue::sharp, api::Accidental::sharp },
             std::pair<core::AccidentalValue, api::Accidental>{ core::AccidentalValue::natural, api::Accidental::natural },
@@ -88,7 +88,7 @@ namespace mx
         };
         
         
-        std::map<core::ClefSign, api::ClefSymbol> Converter::clefMap =
+        const std::map<core::ClefSign, api::ClefSymbol> Converter::clefMap =
         {
             std::pair<core::ClefSign, api::ClefSymbol>{ core::ClefSign::c, api::ClefSymbol::c },
             std::pair<core::ClefSign, api::ClefSymbol>{ core::ClefSign::f, api::ClefSymbol::f },
@@ -97,6 +97,37 @@ namespace mx
             std::pair<core::ClefSign, api::ClefSymbol>{ core::ClefSign::none, api::ClefSymbol::none },
             std::pair<core::ClefSign, api::ClefSymbol>{ core::ClefSign::percussion, api::ClefSymbol::percussion },
             std::pair<core::ClefSign, api::ClefSymbol>{ core::ClefSign::tab, api::ClefSymbol::tab }
+        };
+        
+        
+        const std::map<core::AboveBelow, api::Placement> Converter::placementMap =
+        {
+            std::pair<core::AboveBelow, api::Placement>{ core::AboveBelow::above, api::Placement::above },
+            std::pair<core::AboveBelow, api::Placement>{ core::AboveBelow::below, api::Placement::below },
+        };
+        
+        
+        const std::map<core::YesNo, api::Bool> Converter::boolMap =
+        {
+            std::pair<core::YesNo, api::Bool>{ core::YesNo::yes, api::Bool::yes },
+            std::pair<core::YesNo, api::Bool>{ core::YesNo::no, api::Bool::no },
+        };
+        
+        
+        const std::map<core::Valign, api::VerticalAlignment> Converter::valignMap =
+        {
+            std::pair<core::Valign, api::VerticalAlignment>{ core::Valign::baseline, api::VerticalAlignment::baseline },
+            std::pair<core::Valign, api::VerticalAlignment>{ core::Valign::bottom, api::VerticalAlignment::bottom },
+            std::pair<core::Valign, api::VerticalAlignment>{ core::Valign::middle, api::VerticalAlignment::middle },
+            std::pair<core::Valign, api::VerticalAlignment>{ core::Valign::top, api::VerticalAlignment::top },
+        };
+        
+        
+        const std::map<core::LeftCenterRight, api::HorizontalAlignment> Converter::halignMap =
+        {
+            std::pair<core::LeftCenterRight, api::HorizontalAlignment>{ core::LeftCenterRight::left, api::HorizontalAlignment::left },
+            std::pair<core::LeftCenterRight, api::HorizontalAlignment>{ core::LeftCenterRight::center, api::HorizontalAlignment::center },
+            std::pair<core::LeftCenterRight, api::HorizontalAlignment>{ core::LeftCenterRight::right, api::HorizontalAlignment::right },
         };
         
         
@@ -225,5 +256,55 @@ namespace mx
         {
             return findApiItem( clefMap, api::ClefSymbol::none, value );
         }
+        
+        
+        api::Placement Converter::convert( core::AboveBelow value ) const
+        {
+            return findApiItem( placementMap, api::Placement::unspecified, value );
+        }
+        
+        
+        core::AboveBelow Converter::convert( api::Placement value ) const
+        {
+            return findCoreItem( placementMap, core::AboveBelow::below, value );
+        }
+        
+        
+        api::Bool Converter::convert( core::YesNo value ) const
+        {
+            return findApiItem( boolMap, api::Bool::unspecified, value );
+        }
+        
+        
+        core::YesNo Converter::convert( api::Bool value ) const
+        {
+            return findCoreItem( boolMap, core::YesNo::no, value );
+        }
+        
+        
+        api::VerticalAlignment Converter::convert( core::Valign value ) const
+        {
+            return findApiItem( valignMap, api::VerticalAlignment::unspecified, value );
+        }
+        
+        
+        core::Valign Converter::convert( api::VerticalAlignment value ) const
+        {
+            return findCoreItem( valignMap, core::Valign::baseline, value );
+        }
+        
+        
+        api::HorizontalAlignment Converter::convert( core::LeftCenterRight value ) const
+        {
+            return findApiItem( halignMap, api::HorizontalAlignment::unspecified, value );
+        }
+        
+        
+        core::LeftCenterRight Converter::convert( api::HorizontalAlignment value ) const
+        {
+            return findCoreItem( halignMap, core::LeftCenterRight::left, value );
+        }
+        
+        
     }
 }

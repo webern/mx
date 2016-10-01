@@ -7,6 +7,7 @@
 #include "mx/api/ScoreData.h"
 #include "mx/api/NoteData.h"
 #include "mx/api/ClefData.h"
+#include "mx/api/PositionData.h"
 
 #include <map>
 
@@ -27,13 +28,24 @@ namespace mx
             core::AccidentalValue convert( api::Accidental value ) const;
             core::ClefSign convert( api::ClefSymbol value ) const;
             api::ClefSymbol convert( core::ClefSign value ) const;
-            
+            api::Placement convert( core::AboveBelow value ) const;
+            core::AboveBelow convert( api::Placement value ) const;
+            api::Bool convert( core::YesNo value ) const;
+            core::YesNo convert( api::Bool value ) const;
+            api::VerticalAlignment convert( core::Valign value ) const;
+            core::Valign convert( api::VerticalAlignment value ) const;
+            api::HorizontalAlignment convert( core::LeftCenterRight value ) const;
+            core::LeftCenterRight convert( api::HorizontalAlignment value ) const;
 
-            static std::map<core::StepEnum, api::Step> stepMap;
-            static std::map<core::NoteTypeValue, api::DurationName> durationMap;
-            static std::map<core::BeamValue, api::Beam> beamMap;
-            static std::map<core::AccidentalValue, api::Accidental> accidentalMap;
-            static std::map<core::ClefSign, api::ClefSymbol> clefMap;
+            const static std::map<core::StepEnum, api::Step> stepMap;
+            const static std::map<core::NoteTypeValue, api::DurationName> durationMap;
+            const static std::map<core::BeamValue, api::Beam> beamMap;
+            const static std::map<core::AccidentalValue, api::Accidental> accidentalMap;
+            const static std::map<core::ClefSign, api::ClefSymbol> clefMap;
+            const static std::map<core::AboveBelow, api::Placement> placementMap;
+            const static std::map<core::YesNo, api::Bool> boolMap;
+            const static std::map<core::Valign, api::VerticalAlignment> valignMap;
+            const static std::map<core::LeftCenterRight, api::HorizontalAlignment> halignMap;
             
         private:
             template<typename CORE_TYPE, typename API_TYPE>

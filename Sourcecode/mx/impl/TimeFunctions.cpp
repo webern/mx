@@ -81,18 +81,18 @@ namespace mx
                             outTimeSignatureData.symbol = api::TimeSignatureSymbol::unspecified;
                         }
                         
-                        outTimeSignatureData.display = api::Display::unspecified;
+                        outTimeSignatureData.display = api::Bool::unspecified;
                         if( time.getAttributes()->hasPrintObject )
                         {
                             bool isPrint = time.getAttributes()->printObject == core::YesNo::yes;
 
                             if( isPrint )
                             {
-                                outTimeSignatureData.display = api::Display::yes;
+                                outTimeSignatureData.display = api::Bool::yes;
                             }
                             else
                             {
-                                outTimeSignatureData.display = api::Display::no;
+                                outTimeSignatureData.display = api::Bool::yes;
                             }
                         }
                         
@@ -113,7 +113,7 @@ namespace mx
             else
             {
                 if(    ( !currentTimeSignature.isEqualTo( previousTimeSignature ) )
-                   ||  (  currentTimeSignature.display == api::Display::yes ) )
+                   ||  (  currentTimeSignature.display == api::Bool::yes ) )
                     
                 {
                     return false;

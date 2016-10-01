@@ -75,7 +75,7 @@ namespace mx
                     pageText.description = t->getValue().getValue();
                 }
                 
-                createPositionData( *attr, pageText.position );
+                pageText.position = createPositionData( *attr );
                 
                 outPageTextItems.push_back( pageText );
             }

@@ -642,6 +642,12 @@
 		29C01B321D130B910094BE61 /* Utility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C01B2D1D130B910094BE61 /* Utility.cpp */; };
 		29C01B341D130B910094BE61 /* UtilityImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C01B2F1D130B910094BE61 /* UtilityImpl.cpp */; };
 		29C01B601D130BBE0094BE61 /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C01B5D1D130BBE0094BE61 /* pugixml.cpp */; };
+		29C51A1E1D9ED91000EAA308 /* Smufl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C51A1D1D9ED91000EAA308 /* Smufl.cpp */; };
+		29C51A211D9EFCB000EAA308 /* SmuflGlyphMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 29C51A201D9EFCB000EAA308 /* SmuflGlyphMap.h */; };
+		29C51A4D1D9F061600EAA308 /* MeasureLocation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C51A4C1D9F061600EAA308 /* MeasureLocation.cpp */; };
+		29C51A4F1D9F0B6000EAA308 /* MarkData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29C51A4E1D9F0B6000EAA308 /* MarkData.h */; };
+		29C51A511D9F18BA00EAA308 /* FontData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29C51A501D9F18BA00EAA308 /* FontData.h */; };
+		29C51A531D9F18C600EAA308 /* PrintData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29C51A521D9F18C600EAA308 /* PrintData.h */; };
 		29EF44111D6E997100DBDAB9 /* DocumentManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EF44091D6E70D300DBDAB9 /* DocumentManager.cpp */; };
 /* End PBXBuildFile section */
 
@@ -1939,6 +1945,14 @@
 		29C01B5C1D130BBE0094BE61 /* pugiconfig.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = pugiconfig.hpp; path = ../Sourcecode/Mx/pugixml/pugiconfig.hpp; sourceTree = "<group>"; };
 		29C01B5D1D130BBE0094BE61 /* pugixml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pugixml.cpp; path = ../Sourcecode/Mx/pugixml/pugixml.cpp; sourceTree = "<group>"; };
 		29C01B5E1D130BBE0094BE61 /* pugixml.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = pugixml.hpp; path = ../Sourcecode/Mx/pugixml/pugixml.hpp; sourceTree = "<group>"; };
+		29C51A1C1D9ED3A200EAA308 /* Smufl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Smufl.h; path = ../Sourcecode/mx/api/Smufl.h; sourceTree = "<group>"; };
+		29C51A1D1D9ED91000EAA308 /* Smufl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Smufl.cpp; path = ../Sourcecode/mx/api/Smufl.cpp; sourceTree = "<group>"; };
+		29C51A201D9EFCB000EAA308 /* SmuflGlyphMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmuflGlyphMap.h; path = ../Sourcecode/mx/impl/SmuflGlyphMap.h; sourceTree = "<group>"; };
+		29C51A221D9F05AD00EAA308 /* MeasureLocation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MeasureLocation.h; path = ../Sourcecode/mx/api/MeasureLocation.h; sourceTree = "<group>"; };
+		29C51A4C1D9F061600EAA308 /* MeasureLocation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MeasureLocation.cpp; path = ../Sourcecode/mx/api/MeasureLocation.cpp; sourceTree = "<group>"; };
+		29C51A4E1D9F0B6000EAA308 /* MarkData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MarkData.h; path = ../Sourcecode/mx/api/MarkData.h; sourceTree = "<group>"; };
+		29C51A501D9F18BA00EAA308 /* FontData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FontData.h; path = ../Sourcecode/mx/api/FontData.h; sourceTree = "<group>"; };
+		29C51A521D9F18C600EAA308 /* PrintData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PrintData.h; path = ../Sourcecode/mx/api/PrintData.h; sourceTree = "<group>"; };
 		29D35E7A1D28DD8E00EC2CAE /* ForwardDeclare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ForwardDeclare.h; path = ../Sourcecode/mx/core/ForwardDeclare.h; sourceTree = "<group>"; };
 		29DC06EE1D7E5A8300210B7E /* StaffData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = StaffData.h; path = ../Sourcecode/mx/api/StaffData.h; sourceTree = "<group>"; };
 		29DC06EF1D7E5B2A00210B7E /* MeasureData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MeasureData.h; path = ../Sourcecode/mx/api/MeasureData.h; sourceTree = "<group>"; };
@@ -2068,6 +2082,7 @@
 		292255D51D712B26002D8E48 /* impl */ = {
 			isa = PBXGroup;
 			children = (
+				29C51A201D9EFCB000EAA308 /* SmuflGlyphMap.h */,
 				2922CC621D9AF28400F8C9C1 /* Converter.cpp */,
 				2922CC631D9AF28400F8C9C1 /* Converter.h */,
 				2973065E1D89AB3300B8C0D3 /* Cursor.cpp */,
@@ -3330,23 +3345,30 @@
 		29EF44071D6E6CE900DBDAB9 /* api */ = {
 			isa = PBXGroup;
 			children = (
+				29C51A521D9F18C600EAA308 /* PrintData.h */,
+				29C51A501D9F18BA00EAA308 /* FontData.h */,
+				29ADB3141D736A2B00683BEC /* PositionData.h */,
+				29C51A4E1D9F0B6000EAA308 /* MarkData.h */,
+				293488D41D94903B00D0C407 /* ApiCommon.h */,
 				292D1DD01D9A43A500CDD9F4 /* ClefData.cpp */,
 				292D1DD11D9A43A500CDD9F4 /* ClefData.h */,
-				293488D41D94903B00D0C407 /* ApiCommon.h */,
-				2927EC9B1D886E2B0042E080 /* TimeSignatureData.h */,
-				299A2BB01D7FA48A006A7F5C /* PartGroupData.h */,
 				29EF44091D6E70D300DBDAB9 /* DocumentManager.cpp */,
 				29EF440A1D6E70D300DBDAB9 /* DocumentManager.h */,
 				29ADB30D1D729E1900683BEC /* EncodingData.h */,
 				29ADB3111D729FB700683BEC /* LayoutData.h */,
+				29DC06EF1D7E5B2A00210B7E /* MeasureData.h */,
 				29EF44081D6E6D2600DBDAB9 /* NoteData.h */,
 				29ADB3131D736A2B00683BEC /* PageTextData.h */,
 				29ADB30E1D729E1900683BEC /* PartData.h */,
-				29ADB3141D736A2B00683BEC /* PositionData.h */,
+				299A2BB01D7FA48A006A7F5C /* PartGroupData.h */,
 				29EF440C1D6E70D300DBDAB9 /* ScoreData.h */,
+				29C51A1D1D9ED91000EAA308 /* Smufl.cpp */,
+				29C51A1C1D9ED3A200EAA308 /* Smufl.h */,
 				29DC06EE1D7E5A8300210B7E /* StaffData.h */,
-				29DC06EF1D7E5B2A00210B7E /* MeasureData.h */,
+				2927EC9B1D886E2B0042E080 /* TimeSignatureData.h */,
 				29DC06F01D7E5BBF00210B7E /* VoiceData.h */,
+				29C51A221D9F05AD00EAA308 /* MeasureLocation.h */,
+				29C51A4C1D9F061600EAA308 /* MeasureLocation.cpp */,
 			);
 			name = api;
 			sourceTree = "<group>";
@@ -3358,6 +3380,10 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29C51A511D9F18BA00EAA308 /* FontData.h in Headers */,
+				29C51A211D9EFCB000EAA308 /* SmuflGlyphMap.h in Headers */,
+				29C51A531D9F18C600EAA308 /* PrintData.h in Headers */,
+				29C51A4F1D9F0B6000EAA308 /* MarkData.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3471,6 +3497,7 @@
 				29454A5C1D295C5500B90302 /* Tremolo.cpp in Sources */,
 				294549B51D295C5500B90302 /* PartAbbreviationDisplay.cpp in Sources */,
 				29454A731D295C5500B90302 /* UpBow.cpp in Sources */,
+				29C51A1E1D9ED91000EAA308 /* Smufl.cpp in Sources */,
 				294549DA1D295C5500B90302 /* PrincipalVoiceAttributes.cpp in Sources */,
 				29454A5A1D295C5500B90302 /* Transpose.cpp in Sources */,
 				29454A0E1D295C5500B90302 /* Solo.cpp in Sources */,
@@ -3581,6 +3608,7 @@
 				294549A91D295C5500B90302 /* OtherPlay.cpp in Sources */,
 				294549371D295C5500B90302 /* KeyOctave.cpp in Sources */,
 				294549C21D295C5500B90302 /* PartwiseMeasure.cpp in Sources */,
+				29C51A4D1D9F061600EAA308 /* MeasureLocation.cpp in Sources */,
 				294548E51D295C5500B90302 /* FirstFretAttributes.cpp in Sources */,
 				29454A1F1D295C5500B90302 /* StaffTuning.cpp in Sources */,
 				2945485E1D295C5500B90302 /* Bass.cpp in Sources */,

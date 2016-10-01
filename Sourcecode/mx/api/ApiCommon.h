@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include "mx/api/Smufl.h"
+
 #include <cmath>
 #include <algorithm>
 
@@ -18,8 +20,9 @@ namespace mx
         }
 
         constexpr int DEFAULT_TICKS_PER_QUARTER = 3 * 4 * 5 * 7;
+
         
-        enum class Display
+        enum class Bool
         {
             unspecified,
             yes,

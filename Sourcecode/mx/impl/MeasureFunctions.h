@@ -52,6 +52,7 @@ namespace mx
             impl::Cursor myCurrentCursor;
             impl::Cursor myPreviousCursor;
             StaffIndexMeasureMap myStaves;
+            int myAbsoluteNoteIndex;
         
         private:
             void parseMusicDataChoice( const core::MusicDataChoice& mdc, const core::NotePtr& nextNotePtr );

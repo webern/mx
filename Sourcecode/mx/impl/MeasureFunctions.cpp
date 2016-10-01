@@ -54,6 +54,7 @@
 #include "mx/utility/Throw.h"
 #include "mx/api/ClefData.h"
 #include "mx/impl/Converter.h"
+#include "mx/api/Smufl.h"
 
 #include <string>
 
@@ -116,6 +117,7 @@ namespace mx
         : myCurrentCursor{ numStaves, globalTicksPerQuarter }
         , myPreviousCursor{ numStaves, globalTicksPerQuarter }
         , myStaves{}
+        , myAbsoluteNoteIndex{ 0 }
         {
             myCurrentCursor.isFirstMeasureInPart = true;
         }
@@ -308,6 +310,7 @@ namespace mx
             }
             
             auto& outMeasure = myStaves[myCurrentCursor.staffIndex];
+            noteData.absoluteNoteIndex = myAbsoluteNoteIndex++;
             outMeasure.voices[myCurrentCursor.voiceIndex].notes.emplace_back( std::move( noteData ) );
         }
         
