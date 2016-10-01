@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include "mx/api/PositionData.h"
+
 #include <string>
 #include <map>
 
@@ -13,6 +15,22 @@ namespace mx
         using SmuflPair = std::pair<const std::string, const char16_t>;
         using SmuflMap = std::map<const std::string, const char16_t>;
         using SmuflIter = SmuflMap::const_iterator;
+        
+        
+        struct SmuflGlyphname
+        {
+            SmuflGlyphname( std::string inNameAbove,
+                            std::string inNameBelow,
+                            std::string inNameUnspecified );
+            
+            const std::string above;
+            const std::string below;
+            const std::string unspecified;
+            
+            const std::string& getName() const;
+            const std::string& getName( Placement placement ) const;
+        };
+
         
         class Smufl
         {

@@ -26,6 +26,7 @@
 		2937D1681D18D403001C2A1A /* XAttributeIterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2937D1501D18D403001C2A1A /* XAttributeIterator.cpp */; };
 		2937D16E1D18D403001C2A1A /* XElementIterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2937D1561D18D403001C2A1A /* XElementIterator.cpp */; };
 		2937D1711D18D403001C2A1A /* XFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2937D1591D18D403001C2A1A /* XFactory.cpp */; };
+		293AB0861DA011B100A58B36 /* FontFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 293AB0851DA011B100A58B36 /* FontFunctions.h */; };
 		2945483A1D295C5500B90302 /* Accent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 294545ED1D295C5300B90302 /* Accent.cpp */; };
 		2945483B1D295C5500B90302 /* Accidental.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 294545EE1D295C5300B90302 /* Accidental.cpp */; };
 		2945483C1D295C5500B90302 /* AccidentalAttributes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 294545EF1D295C5300B90302 /* AccidentalAttributes.cpp */; };
@@ -648,6 +649,7 @@
 		29C51A4F1D9F0B6000EAA308 /* MarkData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29C51A4E1D9F0B6000EAA308 /* MarkData.h */; };
 		29C51A511D9F18BA00EAA308 /* FontData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29C51A501D9F18BA00EAA308 /* FontData.h */; };
 		29C51A531D9F18C600EAA308 /* PrintData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29C51A521D9F18C600EAA308 /* PrintData.h */; };
+		29DB30A11DA0713200031477 /* MarkData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DB30A01DA0713200031477 /* MarkData.cpp */; };
 		29EF44111D6E997100DBDAB9 /* DocumentManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EF44091D6E70D300DBDAB9 /* DocumentManager.cpp */; };
 /* End PBXBuildFile section */
 
@@ -699,6 +701,7 @@
 		2937D1591D18D403001C2A1A /* XFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = XFactory.cpp; path = ../Sourcecode/mx/xml/XFactory.cpp; sourceTree = "<group>"; };
 		2937D15A1D18D403001C2A1A /* XFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XFactory.h; path = ../Sourcecode/mx/xml/XFactory.h; sourceTree = "<group>"; };
 		2937D15C1D18D403001C2A1A /* XThrow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XThrow.h; path = ../Sourcecode/mx/xml/XThrow.h; sourceTree = "<group>"; };
+		293AB0851DA011B100A58B36 /* FontFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FontFunctions.h; path = ../Sourcecode/mx/impl/FontFunctions.h; sourceTree = "<group>"; };
 		293CE9F51D7B2C18003F1FEB /* PositionFunctions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PositionFunctions.h; path = ../Sourcecode/mx/impl/PositionFunctions.h; sourceTree = "<group>"; };
 		29421B331D27FECC00DBC7C3 /* UnusedParameter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UnusedParameter.h; path = ../Sourcecode/mx/core/UnusedParameter.h; sourceTree = "<group>"; };
 		294545ED1D295C5300B90302 /* Accent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Accent.cpp; path = ../Sourcecode/mx/core/elements/Accent.cpp; sourceTree = "<group>"; };
@@ -1954,6 +1957,7 @@
 		29C51A501D9F18BA00EAA308 /* FontData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FontData.h; path = ../Sourcecode/mx/api/FontData.h; sourceTree = "<group>"; };
 		29C51A521D9F18C600EAA308 /* PrintData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PrintData.h; path = ../Sourcecode/mx/api/PrintData.h; sourceTree = "<group>"; };
 		29D35E7A1D28DD8E00EC2CAE /* ForwardDeclare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ForwardDeclare.h; path = ../Sourcecode/mx/core/ForwardDeclare.h; sourceTree = "<group>"; };
+		29DB30A01DA0713200031477 /* MarkData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MarkData.cpp; path = ../Sourcecode/mx/api/MarkData.cpp; sourceTree = "<group>"; };
 		29DC06EE1D7E5A8300210B7E /* StaffData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = StaffData.h; path = ../Sourcecode/mx/api/StaffData.h; sourceTree = "<group>"; };
 		29DC06EF1D7E5B2A00210B7E /* MeasureData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MeasureData.h; path = ../Sourcecode/mx/api/MeasureData.h; sourceTree = "<group>"; };
 		29DC06F01D7E5BBF00210B7E /* VoiceData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = VoiceData.h; path = ../Sourcecode/mx/api/VoiceData.h; sourceTree = "<group>"; };
@@ -2082,6 +2086,7 @@
 		292255D51D712B26002D8E48 /* impl */ = {
 			isa = PBXGroup;
 			children = (
+				293AB0851DA011B100A58B36 /* FontFunctions.h */,
 				29C51A201D9EFCB000EAA308 /* SmuflGlyphMap.h */,
 				2922CC621D9AF28400F8C9C1 /* Converter.cpp */,
 				2922CC631D9AF28400F8C9C1 /* Converter.h */,
@@ -3345,30 +3350,31 @@
 		29EF44071D6E6CE900DBDAB9 /* api */ = {
 			isa = PBXGroup;
 			children = (
-				29C51A521D9F18C600EAA308 /* PrintData.h */,
-				29C51A501D9F18BA00EAA308 /* FontData.h */,
-				29ADB3141D736A2B00683BEC /* PositionData.h */,
-				29C51A4E1D9F0B6000EAA308 /* MarkData.h */,
 				293488D41D94903B00D0C407 /* ApiCommon.h */,
 				292D1DD01D9A43A500CDD9F4 /* ClefData.cpp */,
 				292D1DD11D9A43A500CDD9F4 /* ClefData.h */,
 				29EF44091D6E70D300DBDAB9 /* DocumentManager.cpp */,
 				29EF440A1D6E70D300DBDAB9 /* DocumentManager.h */,
 				29ADB30D1D729E1900683BEC /* EncodingData.h */,
+				29C51A501D9F18BA00EAA308 /* FontData.h */,
 				29ADB3111D729FB700683BEC /* LayoutData.h */,
+				29DB30A01DA0713200031477 /* MarkData.cpp */,
+				29C51A4E1D9F0B6000EAA308 /* MarkData.h */,
 				29DC06EF1D7E5B2A00210B7E /* MeasureData.h */,
+				29C51A4C1D9F061600EAA308 /* MeasureLocation.cpp */,
+				29C51A221D9F05AD00EAA308 /* MeasureLocation.h */,
 				29EF44081D6E6D2600DBDAB9 /* NoteData.h */,
 				29ADB3131D736A2B00683BEC /* PageTextData.h */,
 				29ADB30E1D729E1900683BEC /* PartData.h */,
 				299A2BB01D7FA48A006A7F5C /* PartGroupData.h */,
+				29ADB3141D736A2B00683BEC /* PositionData.h */,
+				29C51A521D9F18C600EAA308 /* PrintData.h */,
 				29EF440C1D6E70D300DBDAB9 /* ScoreData.h */,
 				29C51A1D1D9ED91000EAA308 /* Smufl.cpp */,
 				29C51A1C1D9ED3A200EAA308 /* Smufl.h */,
 				29DC06EE1D7E5A8300210B7E /* StaffData.h */,
 				2927EC9B1D886E2B0042E080 /* TimeSignatureData.h */,
 				29DC06F01D7E5BBF00210B7E /* VoiceData.h */,
-				29C51A221D9F05AD00EAA308 /* MeasureLocation.h */,
-				29C51A4C1D9F061600EAA308 /* MeasureLocation.cpp */,
 			);
 			name = api;
 			sourceTree = "<group>";
@@ -3382,6 +3388,7 @@
 			files = (
 				29C51A511D9F18BA00EAA308 /* FontData.h in Headers */,
 				29C51A211D9EFCB000EAA308 /* SmuflGlyphMap.h in Headers */,
+				293AB0861DA011B100A58B36 /* FontFunctions.h in Headers */,
 				29C51A531D9F18C600EAA308 /* PrintData.h in Headers */,
 				29C51A4F1D9F0B6000EAA308 /* MarkData.h in Headers */,
 			);
@@ -3510,6 +3517,7 @@
 				294548901D295C5500B90302 /* CreditWordsGroup.cpp in Sources */,
 				294548BE1D295C5500B90302 /* EditorialVoiceGroup.cpp in Sources */,
 				2945488B1D295C5500B90302 /* CreditImage.cpp in Sources */,
+				29DB30A11DA0713200031477 /* MarkData.cpp in Sources */,
 				294549EC1D295C5500B90302 /* RightsAttributes.cpp in Sources */,
 				29C01B1C1D130B690094BE61 /* EmptyPrintObjectStyleAlignAttributes.cpp in Sources */,
 				294548751D295C5500B90302 /* BookmarkAttributes.cpp in Sources */,

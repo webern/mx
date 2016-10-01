@@ -2,22 +2,13 @@
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #include "mx/api/PositionData.h"
-#include "mx/core/elements/CreditWordsAttributes.h"
-#include "mx/core/Enums.h"
 #include "mx/utility/OptionalMembers.h"
 #include "mx/impl/Converter.h"
 
 namespace mx
 {
-    namespace core
-    {
-        class CreditWordsAttributes;
-    }
-
     namespace impl
     {
-
-        
         using LongDouble = long double;
         
         MX_ATTR_FUNC_OPTIONAL( hasDefaultX, HasDefaultX, bool, false );

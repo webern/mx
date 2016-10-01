@@ -8,6 +8,8 @@
 #include "mx/api/NoteData.h"
 #include "mx/api/ClefData.h"
 #include "mx/api/PositionData.h"
+#include "mx/api/MarkData.h"
+#include "mx/core/elements/ArticulationsChoice.h"
 
 #include <map>
 
@@ -18,25 +20,45 @@ namespace mx
         class Converter
         {
         public:
-            api::Step convert( core::StepEnum value ) const;
             core::StepEnum convert( api::Step value ) const;
-            api::DurationName convert( core::NoteTypeValue value ) const;
+            api::Step convert( core::StepEnum value ) const;
+            
             core::NoteTypeValue convert( api::DurationName value ) const;
+            api::DurationName convert( core::NoteTypeValue value ) const;
+            
             core::BeamValue convert( api::Beam value ) const;
             api::Beam convert( core::BeamValue value ) const;
-            api::Accidental convert( core::AccidentalValue value ) const;
+            
             core::AccidentalValue convert( api::Accidental value ) const;
+            api::Accidental convert( core::AccidentalValue value ) const;
+            
             core::ClefSign convert( api::ClefSymbol value ) const;
             api::ClefSymbol convert( core::ClefSign value ) const;
-            api::Placement convert( core::AboveBelow value ) const;
+            
             core::AboveBelow convert( api::Placement value ) const;
-            api::Bool convert( core::YesNo value ) const;
+            api::Placement convert( core::AboveBelow value ) const;
+            
             core::YesNo convert( api::Bool value ) const;
-            api::VerticalAlignment convert( core::Valign value ) const;
+            api::Bool convert( core::YesNo value ) const;
+            
             core::Valign convert( api::VerticalAlignment value ) const;
-            api::HorizontalAlignment convert( core::LeftCenterRight value ) const;
+            api::VerticalAlignment convert( core::Valign value ) const;
+            
             core::LeftCenterRight convert( api::HorizontalAlignment value ) const;
-
+            api::HorizontalAlignment convert( core::LeftCenterRight value ) const;
+            
+            core::CssFontSize convert( api::CssSize value ) const;
+            api::CssSize convert( core::CssFontSize value ) const;
+            
+            core::FontStyle convert( api::FontStyle value ) const;
+            api::FontStyle convert( core::FontStyle value ) const;
+            
+            core::FontWeight convert( api::FontWeight value ) const;
+            api::FontWeight convert( core::FontWeight value ) const;
+            
+            core::ArticulationsChoice::Choice convertArticulation( api::MarkType value ) const;
+            api::MarkType convertArticulation( core::ArticulationsChoice::Choice value ) const;
+            
             const static std::map<core::StepEnum, api::Step> stepMap;
             const static std::map<core::NoteTypeValue, api::DurationName> durationMap;
             const static std::map<core::BeamValue, api::Beam> beamMap;
@@ -46,6 +68,9 @@ namespace mx
             const static std::map<core::YesNo, api::Bool> boolMap;
             const static std::map<core::Valign, api::VerticalAlignment> valignMap;
             const static std::map<core::LeftCenterRight, api::HorizontalAlignment> halignMap;
+            const static std::map<core::CssFontSize, api::CssSize> cssMap;
+            const static std::map<core::FontStyle, api::FontStyle> fontStyleMap;
+            const static std::map<core::FontWeight, api::FontWeight> fontWeightMap;
             
         private:
             template<typename CORE_TYPE, typename API_TYPE>

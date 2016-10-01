@@ -26,11 +26,16 @@ namespace mx
         enum class CssSize
         {
             unspecified,
+            xxSmall,
+            xSmall,
             small,
-            large
+            medium,
+            large,
+            xLarge,
+            xxLarge
         };
         
-        
+    
         enum class FontStyle
         {
             unspecified,

@@ -3,6 +3,9 @@
 
 #pragma once
 
+#include "mx/api/PositionData.h"
+#include "mx/api/PrintData.h"
+
 #include <string>
 
 namespace mx
@@ -14,12 +17,12 @@ namespace mx
         {
             // articulations
             accent,
-            strongAccent,
+            strongAccent,    // marcato
             staccato,
             tenuto,
-            detachedLegato,
+            detachedLegato,  // tenuto with dot
             staccatissimo,
-            spiccato,
+            spiccato,        // ? using "StaccatissimoWedge"
             scoop,
             plop,
             doit,
@@ -29,6 +32,25 @@ namespace mx
             stress,
             unstress,
             otherArticulation
+        };
+
+        using MarkSmuflEntry = std::pair<const MarkType, const SmuflGlyphname>;
+        using MarkSmuflMap = std::map<const MarkType, const SmuflGlyphname>;
+        
+        class MarkSmufl
+        {
+        public:
+            static const std::string& getName( MarkType mark );
+            static const std::string& getName( MarkType mark, Placement placement );
+            static char16_t getCodepoint( MarkType mark );
+            static char16_t getCodepoint( MarkType mark, Placement placement );
+            static const SmuflGlyphname& getSmuflGlyphname( MarkType mark );
+            static const MarkSmuflMap& getMap();
+            
+        private:
+            MarkSmufl();
+            static const MarkSmufl& getInstance();
+            MarkSmuflMap myMap;
         };
         
         
@@ -40,9 +62,8 @@ namespace mx
             std::string smuflName;
             char16_t smuflCodepoint;
             int tickPosition;
-            
-            // TODO - font stuff
-            // TODO - placement stuff
-        };
+            PrintData print;
+            PositionData position;
+       };
     }
 }

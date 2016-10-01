@@ -131,6 +131,33 @@ namespace mx
         };
         
         
+        
+        const std::map<core::CssFontSize, api::CssSize> Converter::cssMap =
+        {
+            std::pair<core::CssFontSize, api::CssSize>{ core::CssFontSize::xxSmall, api::CssSize::xxSmall },
+            std::pair<core::CssFontSize, api::CssSize>{ core::CssFontSize::xSmall, api::CssSize::xSmall },
+            std::pair<core::CssFontSize, api::CssSize>{ core::CssFontSize::small, api::CssSize::small },
+            std::pair<core::CssFontSize, api::CssSize>{ core::CssFontSize::medium, api::CssSize::medium },
+            std::pair<core::CssFontSize, api::CssSize>{ core::CssFontSize::large, api::CssSize::large },
+            std::pair<core::CssFontSize, api::CssSize>{ core::CssFontSize::xLarge, api::CssSize::xLarge },
+            std::pair<core::CssFontSize, api::CssSize>{ core::CssFontSize::xxLarge, api::CssSize::xxLarge },
+        };
+        
+        
+        const std::map<core::FontStyle, api::FontStyle> Converter::fontStyleMap =
+        {
+            std::pair<core::FontStyle, api::FontStyle>{ core::FontStyle::normal, api::FontStyle::normal },
+            std::pair<core::FontStyle, api::FontStyle>{ core::FontStyle::italic, api::FontStyle::italic },
+        };
+        
+        
+        const std::map<core::FontWeight, api::FontWeight> Converter::fontWeightMap =
+        {
+            std::pair<core::FontWeight, api::FontWeight>{ core::FontWeight::normal, api::FontWeight::normal },
+            std::pair<core::FontWeight, api::FontWeight>{ core::FontWeight::bold, api::FontWeight::bold },
+        };
+
+        
         api::Step Converter::convert( core::StepEnum inStep ) const
         {
             auto it = stepMap.find( inStep );
@@ -305,6 +332,55 @@ namespace mx
             return findCoreItem( halignMap, core::LeftCenterRight::left, value );
         }
         
+        
+        core::CssFontSize Converter::convert( api::CssSize value ) const
+        {
+            return findCoreItem( cssMap, core::CssFontSize::medium, value );
+        }
+        
+        
+        api::CssSize Converter::convert( core::CssFontSize value ) const
+        {
+            return findApiItem( cssMap, api::CssSize::unspecified, value );
+        }
+        
+        
+        core::FontStyle Converter::convert( api::FontStyle value ) const
+        {
+            return findCoreItem( fontStyleMap, core::FontStyle::normal, value );
+        }
+        
+        
+        api::FontStyle Converter::convert( core::FontStyle value ) const
+        {
+            return findApiItem( fontStyleMap, api::FontStyle::unspecified, value );
+        }
+        
+        
+        core::FontWeight Converter::convert( api::FontWeight value ) const
+        {
+            return findCoreItem( fontWeightMap, core::FontWeight::normal, value );
+        }
+        
+        
+        api::FontWeight Converter::convert( core::FontWeight value ) const
+        {
+            return findApiItem( fontWeightMap, api::FontWeight::unspecified, value );
+        }
+        
+        
+        core::ArticulationsChoice::Choice Converter::convertArticulation( api::MarkType value ) const
+        {
+            MX_UNUSED( value );
+            MX_THROW( "not implemented" );
+        }
+        
+        
+        api::MarkType Converter::convertArticulation( core::ArticulationsChoice::Choice value ) const
+        {
+            MX_UNUSED( value );
+            MX_THROW( "not implemented" );
+        }
         
     }
 }

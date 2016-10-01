@@ -12,7 +12,35 @@ namespace mx
 {
     namespace api
     {
-
+        SmuflGlyphname::SmuflGlyphname( std::string inNameAbove,
+                                        std::string inNameBelow,
+                                        std::string inNameUnspecified )
+        : above{ inNameAbove }
+        , below{ inNameBelow }
+        , unspecified{ inNameUnspecified }
+        {
+            
+        }
+        
+        
+        const std::string& SmuflGlyphname::getName() const
+        {
+            return unspecified;
+        }
+        
+        
+        const std::string& SmuflGlyphname::getName( Placement placement ) const
+        {
+            switch ( placement )
+            {
+                case Placement::above: return above;
+                case Placement::below: return below;
+                case Placement::unspecified: return unspecified;
+                default:
+                    break;
+            }
+            return unspecified;
+        }
         
         
         const Smufl& Smufl::instance()

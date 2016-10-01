@@ -31,6 +31,7 @@
 #include "mx/core/elements/Tuplet.h"
 #include "mx/core/elements/ArticulationsChoice.h"
 #include "mx/impl/PositionFunctions.h"
+#include "mx/impl/FontFunctions.h"
 
 #include <algorithm>
 
@@ -127,6 +128,7 @@ namespace mx
             }
             thing( inMxNote, cursor, outNoteData );
             outNoteData.positionData = impl::createPositionData( *inMxNote.getAttributes() );
+            outNoteData.printData.fontData = impl::createFontData( *inMxNote.getAttributes() );
             return outNoteData;
         }
         
@@ -163,11 +165,19 @@ namespace mx
                             {
                                 const auto& articulationsChoice = *articulationsChoicePtr;
                                 const auto articulationType = articulationsChoice.getChoice();
+                                Converter converter;
+                                const auto markType = converter.convertArticulation( articulationType );
+                                auto markData = api::MarkData{};
+                                markData.markType = markType;
+                                
+                                // TODO - put this after the parsing of the position attributes
+                                markData.smuflName = api::MarkSmufl::getName( markType );
                                 
                                 switch ( articulationType )
                                 {
                                     case core::ArticulationsChoice::Choice::accent:
                                     {
+                                        //const auto markType
                                         api::MarkData mark;
                                         mark.absoluteMarkId = -1;
                                         mark.markType = api::MarkType::accent;
