@@ -27,6 +27,7 @@ namespace mx
         ,bezierY()
         ,bezierX2()
         ,bezierY2()
+        ,color()
         ,hasType( true )
         ,hasNumber( false )
         ,hasLineType( false )
@@ -44,6 +45,7 @@ namespace mx
         ,hasBezierY( false )
         ,hasBezierX2( false )
         ,hasBezierY2( false )
+        ,hasColor( false )
         {}
 
 
@@ -65,7 +67,8 @@ namespace mx
             hasBezierX ||
             hasBezierY ||
             hasBezierX2 ||
-            hasBezierY2;
+            hasBezierY2 ||
+            hasColor;
         }
 
 
@@ -90,6 +93,7 @@ namespace mx
                 streamAttribute( os, bezierY, "bezier-y", hasBezierY );
                 streamAttribute( os, bezierX2, "bezier-x2", hasBezierX2 );
                 streamAttribute( os, bezierY2, "bezier-y2", hasBezierY2 );
+                streamAttribute( os, color, "color", hasColor );
             }
             return os;
         }
@@ -123,6 +127,7 @@ namespace mx
                 if( parseAttribute( message, it, className, isSuccess, bezierY, hasBezierY, "bezier-y" ) ) { continue; }
                 if( parseAttribute( message, it, className, isSuccess, bezierX2, hasBezierX2, "bezier-x-2" ) ) { continue; }
                 if( parseAttribute( message, it, className, isSuccess, bezierY2, hasBezierY2, "bezier-y-2" ) ) { continue; }
+                if( parseAttribute( message, it, className, isSuccess, color, hasColor, "color" ) ) { continue; }
             }
         
             if( !isTypeFound )

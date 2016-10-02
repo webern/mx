@@ -37,7 +37,7 @@ namespace mx
             TenthsValue relativeX;
             TenthsValue relativeY;
             AboveBelow placement;
-            const 	bool hasType;
+            const bool hasType;
             bool hasNumber;
             bool hasBracket;
             bool hasShowNumber;

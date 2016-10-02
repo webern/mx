@@ -20,7 +20,7 @@ namespace mx
         public:
             std::string text;
             int pageNumber;
-            PositionData position;
+            PositionData positionData;
             std::string description; // e.g. 'composer', 'page number', 'title', etc., this is metadata which does not appear on the printed page
         };
     }

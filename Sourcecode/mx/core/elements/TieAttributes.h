@@ -27,7 +27,7 @@ namespace mx
             virtual std::ostream& toStream( std::ostream& os ) const;
             StartStop type;
             TimeOnly timeOnly;
-            const   bool hasType;
+            const bool hasType;
             bool hasTimeOnly;
 
             bool fromXElement( std::ostream& message, xml::XElement& xelement );

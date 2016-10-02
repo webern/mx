@@ -3,7 +3,8 @@
 
 #pragma once
 
-#include "mx/api/MeasureData.h"
+#include "mx/api/ClefData.h"
+#include "mx/api/VoiceData.h"
 
 #include <string>
 #include <vector>
@@ -15,7 +16,8 @@ namespace mx
         class StaffData
         {
         public:
-            std::vector<MeasureData> measures;
+            std::vector<ClefData> clefs;
+            std::map<int, VoiceData> voices;
         };
     }
 }

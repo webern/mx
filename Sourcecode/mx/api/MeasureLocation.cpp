@@ -31,18 +31,18 @@ namespace mx
             
             const auto& part = scoreData.parts.at( static_cast<size_t>( partIndex ) );
             
-            if( static_cast<size_t>( staffIndex ) > part.staves.size() - 1 )
+            if( static_cast<size_t>( measureIndex) > part.measures.size() - 1 )
             {
                 return false;
             }
             
-            const auto& staff = part.staves.at( static_cast<size_t>( staffIndex ) );
+            const auto& measure = part.measures.at( static_cast<size_t>( measureIndex ) );
             
-            if( static_cast<size_t>( measureIndex ) > staff.measures.size() - 1 )
+            if( static_cast<size_t>( staffIndex ) > measure.staves.size() - 1 )
             {
                 return false;
             }
-            
+                        
             return true;
         }
     }

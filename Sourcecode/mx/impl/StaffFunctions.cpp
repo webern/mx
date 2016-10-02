@@ -2,7 +2,11 @@
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #include "mx/impl/StaffFunctions.h"
+#include "mx/core/elements/Backup.h"
+#include "mx/core/elements/Direction.h"
 #include "mx/core/elements/EditorialVoiceGroup.h"
+#include "mx/core/elements/Forward.h"
+#include "mx/core/elements/Harmony.h"
 #include "mx/core/elements/MusicDataChoice.h"
 #include "mx/core/elements/MusicDataGroup.h"
 #include "mx/core/elements/Note.h"
@@ -10,11 +14,6 @@
 #include "mx/core/elements/Staff.h"
 #include "mx/core/elements/Staves.h"
 #include "mx/core/elements/Voice.h"
-#include "mx/impl/MeasureFunctions.h"
-#include "mx/core/elements/Direction.h"
-#include "mx/core/elements/Backup.h"
-#include "mx/core/elements/Forward.h"
-#include "mx/core/elements/Harmony.h"
 #include "mx/utility/Throw.h"
 
 #include <map>
@@ -30,20 +29,24 @@ namespace mx
         
         void createStavesFromMx( int inGlobalTicksPerQuarter, const core::PartwiseMeasureSet& inMxMeasures, std::vector<api::StaffData>& outStaves )
         {
+            MX_UNUSED( inGlobalTicksPerQuarter );
+            MX_UNUSED( inMxMeasures );
+            MX_UNUSED( outStaves );
+#if 0
             const int staffCount = findStaffCountInAllMeasures( inMxMeasures );
             outStaves.clear();
             outStaves.resize( static_cast<size_t>( staffCount ) );
             auto mxMeasureIter = inMxMeasures.cbegin();
             auto mxMeasureEnd = inMxMeasures.cend();
             bool isFirstMeasure = true;
-            StaffIndexMeasureMap currentMeasureData;
+            IntMeasureDataMap currentMeasureData;
             
             impl::MeasureFunctions measureFunc{ staffCount, inGlobalTicksPerQuarter  };
             
             for( ; mxMeasureIter != mxMeasureEnd; ++mxMeasureIter )
             {
-
-                currentMeasureData = measureFunc.parseMeasure( **mxMeasureIter );
+                auto currentMeasurePropertiesPayload = MeasurePropertiesPayload{};
+                currentMeasureData = measureFunc.parseMeasure( **mxMeasureIter, currentMeasurePropertiesPayload );
                 isFirstMeasure = false;
                 
                 
@@ -60,9 +63,13 @@ namespace mx
                 
                 for( int i = 0; i < static_cast<int>( outStaves.size() ); ++i )
                 {
-                    outStaves.at( static_cast<size_t>( i ) ).measures.push_back( currentMeasureData.at( i ) );
+                    //auto& staff = outStaves.at( static_cast<size_t>( i ) );
+                    auto& measureData = currentMeasureData.at( i );
+                    measureData.multiMeasureRestCount = currentMeasurePropertiesPayload.multipleRest;
+                    //staff.measures.push_back( measureData );
                 }
             }
+#endif
         }
         
         

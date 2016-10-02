@@ -29,8 +29,8 @@ namespace mx
             XsNMToken element;
             XsNMToken attribute;
             XsToken value;
-            const   bool hasType;
-            const   bool hasElement;
+            const bool hasType;
+            const bool hasElement;
             bool hasAttribute;
             bool hasValue;
 

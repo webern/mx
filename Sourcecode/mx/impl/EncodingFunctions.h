@@ -1,8 +1,10 @@
 // MusicXML Class Library v0.3.0
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
-#include "mx/core/elements/Encoding.h"
+#pragma once
+
 #include "mx/api/EncodingData.h"
+#include "mx/core/elements/Encoding.h"
 #include "mx/core/elements/ScoreHeaderGroup.h"
 
 namespace mx

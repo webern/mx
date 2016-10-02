@@ -66,7 +66,7 @@ namespace mx
             TenthsValue bezierX2;
             TenthsValue bezierY2;
             Color color;
-            const   bool hasType;
+            const bool hasType;
             bool hasNumber;
             bool hasLineType;
             bool hasDashLength;

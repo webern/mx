@@ -6,6 +6,7 @@
 #include "mx/core/elements/Cancel.h"
 #include "mx/core/elements/Fifths.h"
 #include "mx/core/elements/Mode.h"
+
 #include <iostream>
 
 namespace mx
@@ -14,8 +15,8 @@ namespace mx
     {
         TraditionalKey::TraditionalKey()
         :ElementInterface()
-        ,myCancel( std::make_shared<Cancel>() )
-        ,myFifths( std::make_shared<Fifths>() )
+        ,myCancel( std::make_shared<Cancel>( FifthsValue{ 0 } ) )
+        ,myFifths( std::make_shared<Fifths>( FifthsValue{ 0 } ) )
         ,myMode( std::make_shared<Mode>() )
         ,myHasCancel( false )
         ,myHasMode( false )

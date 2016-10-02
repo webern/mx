@@ -42,11 +42,11 @@ namespace mx
         
         const std::map<core::BeamValue, api::Beam> Converter::beamMap =
         {
-            std::pair<core::BeamValue, api::Beam>{ core::BeamValue::begin, api::Beam::start },
-            std::pair<core::BeamValue, api::Beam>{ core::BeamValue::end, api::Beam::stop },
-            std::pair<core::BeamValue, api::Beam>{ core::BeamValue::continue_, api::Beam::continue_ },
-            std::pair<core::BeamValue, api::Beam>{ core::BeamValue::forwardHook, api::Beam::forwardHook },
-            std::pair<core::BeamValue, api::Beam>{ core::BeamValue::backwardHook, api::Beam::backwardHook },
+            std::pair<core::BeamValue, api::Beam>{ core::BeamValue::begin, api::Beam::begin },
+            std::pair<core::BeamValue, api::Beam>{ core::BeamValue::end, api::Beam::end },
+            std::pair<core::BeamValue, api::Beam>{ core::BeamValue::continue_, api::Beam::extend },
+            std::pair<core::BeamValue, api::Beam>{ core::BeamValue::forwardHook, api::Beam::forwardBroken },
+            std::pair<core::BeamValue, api::Beam>{ core::BeamValue::backwardHook, api::Beam::backwardBroken },
         };
         
         
@@ -131,7 +131,6 @@ namespace mx
         };
         
         
-        
         const std::map<core::CssFontSize, api::CssSize> Converter::cssMap =
         {
             std::pair<core::CssFontSize, api::CssSize>{ core::CssFontSize::xxSmall, api::CssSize::xxSmall },
@@ -141,6 +140,113 @@ namespace mx
             std::pair<core::CssFontSize, api::CssSize>{ core::CssFontSize::large, api::CssSize::large },
             std::pair<core::CssFontSize, api::CssSize>{ core::CssFontSize::xLarge, api::CssSize::xLarge },
             std::pair<core::CssFontSize, api::CssSize>{ core::CssFontSize::xxLarge, api::CssSize::xxLarge },
+        };
+        
+        
+        const std::map<core::ArticulationsChoice::Choice, api::MarkType> Converter::articulationsMap =
+        {
+            std::pair<core::ArticulationsChoice::Choice, api::MarkType>{ core::ArticulationsChoice::Choice::accent, api::MarkType::accent },
+            std::pair<core::ArticulationsChoice::Choice, api::MarkType>{ core::ArticulationsChoice::Choice::strongAccent, api::MarkType::strongAccent },
+            std::pair<core::ArticulationsChoice::Choice, api::MarkType>{ core::ArticulationsChoice::Choice::staccato, api::MarkType::staccato },
+            std::pair<core::ArticulationsChoice::Choice, api::MarkType>{ core::ArticulationsChoice::Choice::tenuto, api::MarkType::tenuto },
+            std::pair<core::ArticulationsChoice::Choice, api::MarkType>{ core::ArticulationsChoice::Choice::detachedLegato, api::MarkType::detachedLegato },
+            std::pair<core::ArticulationsChoice::Choice, api::MarkType>{ core::ArticulationsChoice::Choice::staccatissimo, api::MarkType::staccatissimo },
+            std::pair<core::ArticulationsChoice::Choice, api::MarkType>{ core::ArticulationsChoice::Choice::spiccato, api::MarkType::spiccato },
+            std::pair<core::ArticulationsChoice::Choice, api::MarkType>{ core::ArticulationsChoice::Choice::scoop, api::MarkType::scoop },
+            std::pair<core::ArticulationsChoice::Choice, api::MarkType>{ core::ArticulationsChoice::Choice::plop, api::MarkType::plop },
+            std::pair<core::ArticulationsChoice::Choice, api::MarkType>{ core::ArticulationsChoice::Choice::doit, api::MarkType::doit },
+            std::pair<core::ArticulationsChoice::Choice, api::MarkType>{ core::ArticulationsChoice::Choice::falloff, api::MarkType::falloff },
+            std::pair<core::ArticulationsChoice::Choice, api::MarkType>{ core::ArticulationsChoice::Choice::breathMark, api::MarkType::breathMark },
+            std::pair<core::ArticulationsChoice::Choice, api::MarkType>{ core::ArticulationsChoice::Choice::caesura, api::MarkType::caesura },
+            std::pair<core::ArticulationsChoice::Choice, api::MarkType>{ core::ArticulationsChoice::Choice::stress, api::MarkType::stress },
+            std::pair<core::ArticulationsChoice::Choice, api::MarkType>{ core::ArticulationsChoice::Choice::unstress, api::MarkType::unstress },
+            std::pair<core::ArticulationsChoice::Choice, api::MarkType>{ core::ArticulationsChoice::Choice::otherArticulation, api::MarkType::otherArticulation },
+        };
+        
+        
+        const std::map<core::DynamicsEnum, api::MarkType> Converter::dynamicsMap =
+        {
+            std::pair<core::DynamicsEnum, api::MarkType>{ core::DynamicsEnum::p, api::MarkType::p },
+            std::pair<core::DynamicsEnum, api::MarkType>{ core::DynamicsEnum::pp, api::MarkType::pp },
+            std::pair<core::DynamicsEnum, api::MarkType>{ core::DynamicsEnum::ppp, api::MarkType::ppp },
+            std::pair<core::DynamicsEnum, api::MarkType>{ core::DynamicsEnum::pppp, api::MarkType::pppp },
+            std::pair<core::DynamicsEnum, api::MarkType>{ core::DynamicsEnum::ppppp, api::MarkType::ppppp },
+            std::pair<core::DynamicsEnum, api::MarkType>{ core::DynamicsEnum::pppppp, api::MarkType::pppppp },
+            std::pair<core::DynamicsEnum, api::MarkType>{ core::DynamicsEnum::f, api::MarkType::f },
+            std::pair<core::DynamicsEnum, api::MarkType>{ core::DynamicsEnum::ff, api::MarkType::ff },
+            std::pair<core::DynamicsEnum, api::MarkType>{ core::DynamicsEnum::fff, api::MarkType::fff },
+            std::pair<core::DynamicsEnum, api::MarkType>{ core::DynamicsEnum::ffff, api::MarkType::ffff },
+            std::pair<core::DynamicsEnum, api::MarkType>{ core::DynamicsEnum::fffff, api::MarkType::fffff },
+            std::pair<core::DynamicsEnum, api::MarkType>{ core::DynamicsEnum::ffffff, api::MarkType::ffffff },
+            std::pair<core::DynamicsEnum, api::MarkType>{ core::DynamicsEnum::mp, api::MarkType::mp },
+            std::pair<core::DynamicsEnum, api::MarkType>{ core::DynamicsEnum::mf, api::MarkType::mf },
+            std::pair<core::DynamicsEnum, api::MarkType>{ core::DynamicsEnum::sf, api::MarkType::sf },
+            std::pair<core::DynamicsEnum, api::MarkType>{ core::DynamicsEnum::sfp, api::MarkType::sfp },
+            std::pair<core::DynamicsEnum, api::MarkType>{ core::DynamicsEnum::sfpp, api::MarkType::sfpp },
+            std::pair<core::DynamicsEnum, api::MarkType>{ core::DynamicsEnum::fp, api::MarkType::fp },
+            std::pair<core::DynamicsEnum, api::MarkType>{ core::DynamicsEnum::rf, api::MarkType::rf },
+            std::pair<core::DynamicsEnum, api::MarkType>{ core::DynamicsEnum::rfz, api::MarkType::rfz },
+            std::pair<core::DynamicsEnum, api::MarkType>{ core::DynamicsEnum::sfz, api::MarkType::sfz },
+            std::pair<core::DynamicsEnum, api::MarkType>{ core::DynamicsEnum::sffz, api::MarkType::sffz },
+            std::pair<core::DynamicsEnum, api::MarkType>{ core::DynamicsEnum::fz, api::MarkType::fz },
+            std::pair<core::DynamicsEnum, api::MarkType>{ core::DynamicsEnum::otherDynamics, api::MarkType::otherDynamics },
+        };
+
+
+        const std::map<core::OrnamentsChoice::Choice, api::MarkType> Converter::ornamentsMap =
+        {
+            std::pair<core::OrnamentsChoice::Choice, api::MarkType>{ core::OrnamentsChoice::Choice::trillMark, api::MarkType::trillMark },
+            std::pair<core::OrnamentsChoice::Choice, api::MarkType>{ core::OrnamentsChoice::Choice::turn, api::MarkType::turn },
+            std::pair<core::OrnamentsChoice::Choice, api::MarkType>{ core::OrnamentsChoice::Choice::delayedTurn, api::MarkType::delayedTurn },
+            std::pair<core::OrnamentsChoice::Choice, api::MarkType>{ core::OrnamentsChoice::Choice::invertedTurn, api::MarkType::invertedTurn },
+            std::pair<core::OrnamentsChoice::Choice, api::MarkType>{ core::OrnamentsChoice::Choice::delayedInvertedTurn, api::MarkType::delayedInvertedTurn },
+            std::pair<core::OrnamentsChoice::Choice, api::MarkType>{ core::OrnamentsChoice::Choice::verticalTurn, api::MarkType::verticalTurn },
+            std::pair<core::OrnamentsChoice::Choice, api::MarkType>{ core::OrnamentsChoice::Choice::shake, api::MarkType::shake },
+            std::pair<core::OrnamentsChoice::Choice, api::MarkType>{ core::OrnamentsChoice::Choice::wavyLine, api::MarkType::wavyLine },
+            std::pair<core::OrnamentsChoice::Choice, api::MarkType>{ core::OrnamentsChoice::Choice::mordent, api::MarkType::mordent },
+            std::pair<core::OrnamentsChoice::Choice, api::MarkType>{ core::OrnamentsChoice::Choice::invertedMordent, api::MarkType::invertedMordent },
+            std::pair<core::OrnamentsChoice::Choice, api::MarkType>{ core::OrnamentsChoice::Choice::schleifer, api::MarkType::schleifer },
+            std::pair<core::OrnamentsChoice::Choice, api::MarkType>{ core::OrnamentsChoice::Choice::tremolo, api::MarkType::tremolo },
+            std::pair<core::OrnamentsChoice::Choice, api::MarkType>{ core::OrnamentsChoice::Choice::otherOrnament, api::MarkType::otherOrnament },
+        };
+        
+        
+        const std::map<core::AccidentalValue, api::MarkType> Converter::accidentalMarkMap =
+        {
+            std::pair<core::AccidentalValue, api::MarkType>{ core::AccidentalValue::sharp, api::MarkType::accidentalMarkSharp },
+            std::pair<core::AccidentalValue, api::MarkType>{ core::AccidentalValue::natural, api::MarkType::accidentalMarkNatural },
+            std::pair<core::AccidentalValue, api::MarkType>{ core::AccidentalValue::flat, api::MarkType::accidentalMarkFlat },
+            std::pair<core::AccidentalValue, api::MarkType>{ core::AccidentalValue::doubleSharp, api::MarkType::accidentalMarkDoubleSharp },
+            std::pair<core::AccidentalValue, api::MarkType>{ core::AccidentalValue::sharpSharp, api::MarkType::accidentalMarkSharpSharp },
+            std::pair<core::AccidentalValue, api::MarkType>{ core::AccidentalValue::flatFlat, api::MarkType::accidentalMarkFlatFlat },
+            std::pair<core::AccidentalValue, api::MarkType>{ core::AccidentalValue::naturalSharp, api::MarkType::accidentalMarkNaturalSharp },
+            std::pair<core::AccidentalValue, api::MarkType>{ core::AccidentalValue::naturalFlat, api::MarkType::accidentalMarkNaturalFlat },
+            std::pair<core::AccidentalValue, api::MarkType>{ core::AccidentalValue::quarterFlat, api::MarkType::accidentalMarkQuarterFlat },
+            std::pair<core::AccidentalValue, api::MarkType>{ core::AccidentalValue::quarterSharp, api::MarkType::accidentalMarkQuarterSharp },
+            std::pair<core::AccidentalValue, api::MarkType>{ core::AccidentalValue::threeQuartersFlat, api::MarkType::accidentalMarkThreeQuartersFlat },
+            std::pair<core::AccidentalValue, api::MarkType>{ core::AccidentalValue::threeQuartersSharp, api::MarkType::accidentalMarkThreeQuartersSharp },
+            std::pair<core::AccidentalValue, api::MarkType>{ core::AccidentalValue::sharpDown, api::MarkType::accidentalMarkSharpDown },
+            std::pair<core::AccidentalValue, api::MarkType>{ core::AccidentalValue::sharpUp, api::MarkType::accidentalMarkSharpUp },
+            std::pair<core::AccidentalValue, api::MarkType>{ core::AccidentalValue::naturalDown, api::MarkType::accidentalMarkNaturalDown },
+            std::pair<core::AccidentalValue, api::MarkType>{ core::AccidentalValue::naturalUp, api::MarkType::accidentalMarkNaturalUp },
+            std::pair<core::AccidentalValue, api::MarkType>{ core::AccidentalValue::flatDown, api::MarkType::accidentalMarkFlatDown },
+            std::pair<core::AccidentalValue, api::MarkType>{ core::AccidentalValue::flatUp, api::MarkType::accidentalMarkFlatUp },
+            std::pair<core::AccidentalValue, api::MarkType>{ core::AccidentalValue::tripleSharp, api::MarkType::accidentalMarkTripleSharp },
+            std::pair<core::AccidentalValue, api::MarkType>{ core::AccidentalValue::tripleFlat, api::MarkType::accidentalMarkTripleFlat },
+            std::pair<core::AccidentalValue, api::MarkType>{ core::AccidentalValue::slashQuarterSharp, api::MarkType::accidentalMarkSlashQuarterSharp },
+            std::pair<core::AccidentalValue, api::MarkType>{ core::AccidentalValue::slashSharp, api::MarkType::accidentalMarkSlashSharp },
+            std::pair<core::AccidentalValue, api::MarkType>{ core::AccidentalValue::slashFlat, api::MarkType::accidentalMarkSlashFlat },
+            std::pair<core::AccidentalValue, api::MarkType>{ core::AccidentalValue::doubleSlashFlat, api::MarkType::accidentalMarkDoubleSlashFlat },
+            std::pair<core::AccidentalValue, api::MarkType>{ core::AccidentalValue::sharp1, api::MarkType::accidentalMarkSharp1 },
+            std::pair<core::AccidentalValue, api::MarkType>{ core::AccidentalValue::sharp2, api::MarkType::accidentalMarkSharp2 },
+            std::pair<core::AccidentalValue, api::MarkType>{ core::AccidentalValue::sharp3, api::MarkType::accidentalMarkSharp3 },
+            std::pair<core::AccidentalValue, api::MarkType>{ core::AccidentalValue::sharp5, api::MarkType::accidentalMarkSharp5 },
+            std::pair<core::AccidentalValue, api::MarkType>{ core::AccidentalValue::flat1, api::MarkType::accidentalMarkFlat1 },
+            std::pair<core::AccidentalValue, api::MarkType>{ core::AccidentalValue::flat2, api::MarkType::accidentalMarkFlat2 },
+            std::pair<core::AccidentalValue, api::MarkType>{ core::AccidentalValue::flat3, api::MarkType::accidentalMarkFlat3 },
+            std::pair<core::AccidentalValue, api::MarkType>{ core::AccidentalValue::flat4, api::MarkType::accidentalMarkFlat4 },
+            std::pair<core::AccidentalValue, api::MarkType>{ core::AccidentalValue::sori, api::MarkType::accidentalMarkSori },
+            std::pair<core::AccidentalValue, api::MarkType>{ core::AccidentalValue::koron, api::MarkType::accidentalMarkKoron },
         };
         
         
@@ -157,6 +263,40 @@ namespace mx
             std::pair<core::FontWeight, api::FontWeight>{ core::FontWeight::bold, api::FontWeight::bold },
         };
 
+        
+        const std::map<core::TechnicalChoice::Choice, api::MarkType> Converter::technicalMarkMap =
+        {
+            // std::pair<core::TechnicalChoice::Choice, api::MarkType>{ core::TechnicalChoice::Choice::technical, api::MarkType::unspecified },
+            std::pair<core::TechnicalChoice::Choice, api::MarkType>{ core::TechnicalChoice::Choice::upBow, api::MarkType::upBow },
+            std::pair<core::TechnicalChoice::Choice, api::MarkType>{ core::TechnicalChoice::Choice::downBow, api::MarkType::downBow },
+            std::pair<core::TechnicalChoice::Choice, api::MarkType>{ core::TechnicalChoice::Choice::harmonic, api::MarkType::harmonic },
+            std::pair<core::TechnicalChoice::Choice, api::MarkType>{ core::TechnicalChoice::Choice::openString, api::MarkType::openString },
+            std::pair<core::TechnicalChoice::Choice, api::MarkType>{ core::TechnicalChoice::Choice::thumbPosition, api::MarkType::thumbPosition },
+            // std::pair<core::TechnicalChoice::Choice, api::MarkType>{ core::TechnicalChoice::Choice::fingering, api::MarkType::unspecified },
+            // std::pair<core::TechnicalChoice::Choice, api::MarkType>{ core::TechnicalChoice::Choice::pluck, api::MarkType::unspecified },
+            std::pair<core::TechnicalChoice::Choice, api::MarkType>{ core::TechnicalChoice::Choice::doubleTongue, api::MarkType::doubleTongue },
+            std::pair<core::TechnicalChoice::Choice, api::MarkType>{ core::TechnicalChoice::Choice::tripleTongue, api::MarkType::tripleTongue },
+            std::pair<core::TechnicalChoice::Choice, api::MarkType>{ core::TechnicalChoice::Choice::stopped, api::MarkType::stopped },
+            std::pair<core::TechnicalChoice::Choice, api::MarkType>{ core::TechnicalChoice::Choice::snapPizzicato, api::MarkType::snapPizzicato },
+            // std::pair<core::TechnicalChoice::Choice, api::MarkType>{ core::TechnicalChoice::Choice::fret, api::MarkType::unspecified },
+            // std::pair<core::TechnicalChoice::Choice, api::MarkType>{ core::TechnicalChoice::Choice::string_, api::MarkType::unspecified },
+            // std::pair<core::TechnicalChoice::Choice, api::MarkType>{ core::TechnicalChoice::Choice::hammerOn, api::MarkType::unspecified },
+            // std::pair<core::TechnicalChoice::Choice, api::MarkType>{ core::TechnicalChoice::Choice::pullOff, api::MarkType::unspecified },
+            // std::pair<core::TechnicalChoice::Choice, api::MarkType>{ core::TechnicalChoice::Choice::bend, api::MarkType::unspecified },
+            // std::pair<core::TechnicalChoice::Choice, api::MarkType>{ core::TechnicalChoice::Choice::tap, api::MarkType::unspecified },
+            std::pair<core::TechnicalChoice::Choice, api::MarkType>{ core::TechnicalChoice::Choice::heel, api::MarkType::heel },
+            std::pair<core::TechnicalChoice::Choice, api::MarkType>{ core::TechnicalChoice::Choice::toe, api::MarkType::toe },
+            std::pair<core::TechnicalChoice::Choice, api::MarkType>{ core::TechnicalChoice::Choice::fingernails, api::MarkType::unspecified },
+            // std::pair<core::TechnicalChoice::Choice, api::MarkType>{ core::TechnicalChoice::Choice::hole, api::MarkType::unspecified },
+            // std::pair<core::TechnicalChoice::Choice, api::MarkType>{ core::TechnicalChoice::Choice::arrow, api::MarkType::unspecified },
+            // std::pair<core::TechnicalChoice::Choice, api::MarkType>{ core::TechnicalChoice::Choice::handbell, api::MarkType::unspecified },
+            std::pair<core::TechnicalChoice::Choice, api::MarkType>{ core::TechnicalChoice::Choice::otherTechnical, api::MarkType::otherTechnical },
+        };
+        
+        const std::map<core::MeasureNumberingValue, api::MeasureNumbering> Converter::measureNumberingMap =
+        {
+            
+        };
         
         api::Step Converter::convert( core::StepEnum inStep ) const
         {
@@ -371,16 +511,73 @@ namespace mx
         
         core::ArticulationsChoice::Choice Converter::convertArticulation( api::MarkType value ) const
         {
-            MX_UNUSED( value );
-            MX_THROW( "not implemented" );
+            return findCoreItem( articulationsMap, core::ArticulationsChoice::Choice::otherArticulation, value );
         }
         
         
         api::MarkType Converter::convertArticulation( core::ArticulationsChoice::Choice value ) const
         {
-            MX_UNUSED( value );
-            MX_THROW( "not implemented" );
+            return findApiItem( articulationsMap, api::MarkType::unspecified, value );
         }
         
+        
+        core::DynamicsEnum Converter::convertDynamic( api::MarkType value ) const
+        {
+            return findCoreItem( dynamicsMap, core::DynamicsEnum::otherDynamics, value );
+        }
+        
+        
+        api::MarkType Converter::convertDynamic( core::DynamicsEnum value ) const
+        {
+            return findApiItem( dynamicsMap, api::MarkType::unspecified, value );
+        }
+
+        
+        core::OrnamentsChoice::Choice Converter::convertOrnament( api::MarkType value ) const
+        {
+            return findCoreItem( ornamentsMap, core::OrnamentsChoice::Choice::otherOrnament, value );
+        }
+        
+        
+        api::MarkType Converter::convertOrnament( core::OrnamentsChoice::Choice value ) const
+        {
+            return findApiItem( ornamentsMap, api::MarkType::unspecified, value );
+        }
+
+        
+        core::AccidentalValue Converter::convertAccidentalMark( api::MarkType value ) const
+        {
+            return findCoreItem( accidentalMarkMap, core::AccidentalValue::natural, value );
+        }
+        
+        
+        api::MarkType Converter::convertAccidentalMark( core::AccidentalValue value ) const
+        {
+            return findApiItem( accidentalMarkMap, api::MarkType::unspecified, value );
+        }
+        
+        
+        core::TechnicalChoice::Choice Converter::convertTechnicalMark( api::MarkType value ) const
+        {
+            return findCoreItem( technicalMarkMap, core::TechnicalChoice::Choice::otherTechnical, value );
+        }
+        
+        
+        api::MarkType Converter::convertTechnicalMark( core::TechnicalChoice::Choice value ) const
+        {
+            return findApiItem( technicalMarkMap, api::MarkType::unspecified, value );
+        }
+
+
+        core::MeasureNumberingValue Converter::convertMeasureNumbering( api::MeasureNumbering value ) const
+        {
+            return findCoreItem( measureNumberingMap, core::MeasureNumberingValue::none, value );
+        }
+
+
+        api::MeasureNumbering Converter::convertMeasureNumbering( core::MeasureNumberingValue value ) const
+        {
+            return findApiItem( measureNumberingMap, api::MeasureNumbering::unspecified, value );
+        }
     }
 }

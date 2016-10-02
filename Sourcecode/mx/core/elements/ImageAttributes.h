@@ -33,8 +33,8 @@ namespace mx
             TenthsValue relativeX;
             TenthsValue relativeY;
             LeftCenterRight halign;
-            const   bool hasSource;
-            const   bool hasType;
+            const bool hasSource;
+            const bool hasType;
             bool hasDefaultX;
             bool hasDefaultY;
             bool hasRelativeX;

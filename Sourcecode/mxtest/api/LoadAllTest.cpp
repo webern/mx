@@ -117,7 +117,7 @@ TEST( Load_##theSuiteName_##theFileNamePart , Api ) \
 
 #define MXTEST_API_LOAD_END } T_END
 
-
+//#if 1==0
 MXTEST_API_LOAD( lysuite, ly01a_Pitches_Pitches, xml )
 bool isSuccess = runApiLoaderTest( suiteName, fileNamePart, fileExtensionPart );
 CHECK( isSuccess );
@@ -1745,6 +1745,12 @@ MXTEST_API_LOAD_END
 
 
 MXTEST_API_LOAD( ksuite, k006a_Header_Scaling_Decimals, xml );
+bool isSuccess = runApiLoaderTest( suiteName, fileNamePart, fileExtensionPart );
+CHECK( isSuccess );
+MXTEST_API_LOAD_END
+
+//#endif
+MXTEST_API_LOAD( ksuite, k007a_Notations_Dynamics, xml );
 bool isSuccess = runApiLoaderTest( suiteName, fileNamePart, fileExtensionPart );
 CHECK( isSuccess );
 MXTEST_API_LOAD_END

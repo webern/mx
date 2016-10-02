@@ -1709,6 +1709,12 @@ MXTEST_IMPORT_ROUNDTRIP( ksuite, k006a_Header_Scaling_Decimals, xml , MxTest::RE
 MXTEST_IMPORT_ROUNDTRIP_END
 
 
+MXTEST_IMPORT_ROUNDTRIP( ksuite, k007a_Notations_Dynamics, xml , MxTest::RESOURCES_DIRECTORY_PATH);
+    isSuccess = test.runTest( msgsstr );
+    CHECK_WITH_MESSAGE( isSuccess, msgsstr.str() );
+MXTEST_IMPORT_ROUNDTRIP_END
+
+
 MXTEST_IMPORT_ROUNDTRIP( logicpro, logic01a_homoSapiens, xml , MxTest::RESOURCES_DIRECTORY_PATH);
     isSuccess = test.runTest( msgsstr );
     CHECK_WITH_MESSAGE( isSuccess, msgsstr.str() );

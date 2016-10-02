@@ -25,7 +25,7 @@ namespace mx
             virtual bool hasValues() const;
             virtual std::ostream& toStream( std::ostream& os ) const;
             XsIDREF id;
-            const   bool hasId;
+            const bool hasId;
 
             bool fromXElement( std::ostream& message, xml::XElement& xelement );
         };

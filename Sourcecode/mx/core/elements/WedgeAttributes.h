@@ -37,7 +37,7 @@ namespace mx
             TenthsValue defaultY;
             TenthsValue relativeX;
             TenthsValue relativeY;
-            const   bool hasType;
+            const bool hasType;
             bool hasNumber;
             bool hasLineType;
             bool hasSpread;

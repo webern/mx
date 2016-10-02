@@ -9,8 +9,10 @@
 #include "mx/api/PageTextData.h"
 #include "mx/api/PartData.h"
 #include "mx/api/PartGroupData.h"
+#include "mx/api/SystemData.h"
 
 #include <vector>
+#include <set>
 
 namespace mx
 {
@@ -35,6 +37,7 @@ namespace mx
             std::vector<PartData> parts;
             std::vector<PartGroupData> partGroups;
             int ticksPerQuarter;
+            std::set<SystemData> systems;
             
             ScoreData()
             : musicXmlType{ "partwise" }
@@ -61,14 +64,10 @@ namespace mx
 
                 for( const auto& part : parts )
                 {
-                    for( const auto& staff : part.staves )
+                    int temp = static_cast<int>( part.measures.size() );
+                    if( temp > numMeasures )
                     {
-                        int size = static_cast<int>(staff.measures.size());
-
-                        if( size > numMeasures )
-                        {
-                            numMeasures = size;
-                        }
+                        numMeasures = temp;
                     }
                 }
 
@@ -76,13 +75,13 @@ namespace mx
             }
 
 
-            inline int getNumStaves() const
+            inline int getNumStavesPerSystem() const
             {
                 int numStaves = 0;
 
                 for( const auto& p : parts )
                 {
-                    numStaves += static_cast<int>( p.staves.size() );
+                    numStaves += p.getNumStaves();
                 }
 
                 return numStaves;

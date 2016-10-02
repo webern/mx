@@ -149,7 +149,6 @@ TEST( scalingTenths, DocumentManager )
 }
 T_END
 
-#endif
 
 TEST( tenthsPerMillimeter, DocumentManager )
 {
@@ -540,5 +539,7 @@ TEST( RoundTrip_PageTextData, DocumentManager )
 
 }
 T_END
+
+#endif
 
 #endif

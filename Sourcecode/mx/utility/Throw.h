@@ -53,3 +53,8 @@ THROW( BADVALUEMESSAGE.str() ) }
 #ifndef MX_BUG
 #define MX_BUG MX_THROW( "this exception is due to a coding error, please report the bug https://github.com/Webern/MusicXML-Class-Library/issues" );
 #endif
+
+#ifndef MX_ASSERT
+#define MX_ASSERT(expectedTrueStatement)               \
+if ( ! (expectedTrueStatement) ) { MX_THROW("assertion failed '" #expectedTrueStatement "'"); }
+#endif

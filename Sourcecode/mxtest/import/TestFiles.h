@@ -285,7 +285,8 @@ namespace MxTest
         { "ksuite", "k004a_Technical.xml" },
         { "ksuite", "k005a_Spanners_Slides.xml" },
         { "ksuite", "k006a_Header_Scaling_Decimals.xml" },
+        { "ksuite", "k007a_Notations_Dynamics.xml" },
         { "logicpro", "logic01a_homoSapiens.xml" },
-        { "foundsuite", "Schubert_der_Mueller.xml" }
+        { "foundsuite", "Schubert_der_Mueller.xml" },
     };
 }

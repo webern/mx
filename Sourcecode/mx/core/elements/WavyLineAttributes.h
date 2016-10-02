@@ -40,7 +40,7 @@ namespace mx
             TrillBeats beats;
             Percent secondBeat;
             Percent lastBeat;
-            const   bool hasType;
+            const bool hasType;
             bool hasNumber;
             bool hasDefaultX;
             bool hasDefaultY;

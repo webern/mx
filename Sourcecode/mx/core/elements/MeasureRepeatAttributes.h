@@ -27,7 +27,7 @@ namespace mx
             virtual std::ostream& toStream( std::ostream& os ) const;
             StartStop type;
             PositiveInteger slashes;
-            const   bool hasType;
+            const bool hasType;
             bool hasSlashes;
 
             bool fromXElement( std::ostream& message, xml::XElement& xelement );

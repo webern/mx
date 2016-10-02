@@ -38,8 +38,8 @@ namespace mx
             FontSize fontSize;
             FontWeight fontWeight;
             LeftCenterRight halign;
-            const   bool hasType;
-            const   bool hasSymbol;
+            const bool hasType;
+            const bool hasSymbol;
             bool hasDefaultX;
             bool hasDefaultY;
             bool hasRelativeX;

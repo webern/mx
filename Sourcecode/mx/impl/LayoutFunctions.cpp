@@ -55,6 +55,17 @@ namespace mx
         
         void addPageMargins( const api::LayoutData& inLayout, core::ScoreHeaderGroup& outScoreHeaderGroup )
         {
+            auto& defaults = *outScoreHeaderGroup.getDefaults();
+            auto& layout = *defaults.getLayoutGroup();
+            auto& pageLayout = *layout.getPageLayout();
+            
+            if( inLayout.pageWidth >= 0 || inLayout.pageHeight >= 0 )
+            {
+                outScoreHeaderGroup.setHasDefaults( true );
+                layout.setHasPageLayout( true );
+                pageLayout.getPageWidth()->setValue( core::TenthsValue{ inLayout.pageWidth } );
+                pageLayout.getPageHeight()->setValue( core::TenthsValue{ inLayout.pageHeight } );
+            }
             bool areEvenOddSame = true;
             areEvenOddSame &= api::areSame( inLayout.evenPageLeftMargin, inLayout.oddPageLeftMargin );
             areEvenOddSame &= api::areSame( inLayout.evenPageRightMargin, inLayout.oddPageRightMargin );
@@ -77,10 +88,7 @@ namespace mx
             }
             
             outScoreHeaderGroup.setHasDefaults( true );
-            auto& defaults = *outScoreHeaderGroup.getDefaults();
-            auto& layout = *defaults.getLayoutGroup();
             layout.setHasPageLayout( true );
-            auto& pageLayout = *layout.getPageLayout();
             
             if( areOddPagesSpecified )
             {

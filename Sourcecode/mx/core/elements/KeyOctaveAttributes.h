@@ -27,7 +27,7 @@ namespace mx
             virtual std::ostream& toStream( std::ostream& os ) const;
             PositiveInteger number;
             YesNo cancel;
-            const   bool hasNumber;
+            const bool hasNumber;
             bool hasCancel;
 
             bool fromXElement( std::ostream& message, xml::XElement& xelement );

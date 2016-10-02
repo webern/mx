@@ -35,10 +35,10 @@
 //
 // The magic came from here h t t p : / / stackoverflow.com/a/31860104/2779792
 
-    #define MX_ATTR_FUNC_OPTIONAL( attributeFieldName, attributeFieldNameCapitalized , attributeType, defaultReturnValue )              \
+    #define MX_ATTR_FUNC_OPTIONAL( attributeFieldName, attributeFieldNameCapitalized, attributeType, defaultReturnValue )               \
                                                                                                                                         \
     template<class T>                                                                                                                   \
-    auto check##attributeFieldNameCapitalized(const T* const obj)                                                                       \
+    auto check##attributeFieldNameCapitalized( const T* const obj )                                                                     \
     -> decltype(  obj->attributeFieldName  )                                                                                            \
     {                                                                                                                                   \
         return obj->attributeFieldName;                                                                                                 \
@@ -51,10 +51,10 @@
     }                                                                                                                                   \
 
 
-    #define MX_ATTR_FUNC_OPTIONAL_WITH_GETTER( attributeFieldName, attributeFieldNameCapitalized , attributeType, defaultReturnValue )  \
+    #define MX_ATTR_FUNC_OPTIONAL_WITH_GETTER( attributeFieldName, attributeFieldNameCapitalized, attributeType, defaultReturnValue )   \
                                                                                                                                         \
     template<class T>                                                                                                                   \
-    auto check##attributeFieldNameCapitalized(const T* const obj)                                                                       \
+    auto check##attributeFieldNameCapitalized( const T* const obj )                                                                     \
     -> decltype(  obj->attributeFieldName.getValue()  )                                                                                 \
     {                                                                                                                                   \
         return obj->attributeFieldName.getValue();                                                                                      \

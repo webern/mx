@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 2.8.12.2)
 project(Mx)
 
-
 set(CMAKE_BINARY_DIR "./Build")
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
@@ -37,6 +36,7 @@ source_group( "impl" FILES ${SRC_MX_IMPL} )
 source_group( "pugixml" FILES ${SRC_MX_PUGIXML} )
 source_group( "utility" FILES ${SRC_MX_UTILITY} )
 source_group( "xml" FILES ${SRC_MX_XML} )
+set_property(TARGET Mx PROPERTY CXX_STANDARD 14)
 
 # MxTest
 add_executable(MxTest ${SRC_MX_TEST_API} ${SRC_MX_TEST_CONTROL} ${SRC_MX_TEST_CORE} ${SRC_MX_TEST_IMPL} ${SRC_MX_TEST_IMPORT} ${SRC_MX_TEST_UTILITY} ${SRC_MX_TEST_XML} ${SRC_CPUL})
@@ -49,25 +49,4 @@ source_group( "utility" FILES ${SRC_MX_TEST_UTILITY} )
 source_group( "xml" FILES ${SRC_MX_TEST_XML} )
 source_group( "cpul" FILES ${SRC_CPUL} )
 target_link_libraries(MxTest Mx)
-
-
-#macro(add_cppunit_test target)
-#  add_library(${target} SHARED ${ARGN})
-#  set_target_properties(${target} PROPERTIES COMPILE_FLAGS "/FIstdafx.h /I\"$(VCInstallDir)UnitTest/include\"")
-#  set_target_properties(${target} PROPERTIES LINK_FLAGS "-LIBPATH:\"$(VCInstallDir)UnitTest/lib\"")
-#  set_target_properties(${target} PROPERTIES PREFIX ${TEST_NAMESPACE} IMPORT_PREFIX ${TEST_NAMESPACE} ${PROPERTIES_VS_SCC})
-#  include_directories(${CMAKE_SOURCE_DIR}/Common/Test)
-#endmacro(add_cppunit_test)
-
-
-# MxTestVstf - doesn't work, hard to find an example
-#set(PROPERTIES_VS_SCC VS_SCC_AUXPATH SAK VS_SCC_LOCALPATH SAK VS_SCC_PROJECTNAME SAK VS_SCC_PROVIDER SAK)
-#add_library(MxTestVstf STATIC ${SRC_MX_TEST_CONTROL} ${SRC_MX_TEST_CORE} ${SRC_MX_TEST_UTILITY} ${SRC_MX_TEST_XML} ${SRC_CPUL})
-#source_group( "control" FILES ${SRC_MX_TEST_CONTROL} )
-#source_group( "core" FILES ${SRC_MX_TEST_CORE} )
-#source_group( "utility" FILES ${SRC_MX_TEST_UTILITY} )
-#source_group( "xml" FILES ${SRC_MX_TEST_XML} )
-#source_group( "cpul" FILES ${SRC_CPUL} )
-#set_target_properties(MxTestVstf PROPERTIES COMPILE_FLAGS "/I\"$(VCInstallDir)UnitTest/include\"")
-#set_target_properties(MxTestVstf PROPERTIES LINK_FLAGS "-LIBPATH:\"$(VCInstallDir)UnitTest/lib\"")
-#target_link_libraries(MxTest Mx)
+set_property(TARGET MxTest PROPERTY CXX_STANDARD 14)

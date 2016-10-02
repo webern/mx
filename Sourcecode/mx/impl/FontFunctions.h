@@ -1,26 +1,19 @@
 // MusicXML Class Library v0.3.0
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
+#pragma once
+
 #include "mx/api/FontData.h"
-#include "mx/utility/OptionalMembers.h"
-#include "mx/impl/Converter.h"
 #include "mx/core/Enums.h"
-#include "mx/core/Strings.h"
 #include "mx/core/FontSize.h"
+#include "mx/core/Strings.h"
+#include "mx/impl/Converter.h"
+#include "mx/utility/OptionalMembers.h"
 
 namespace mx
 {
     namespace impl
-    {
-        using LongDouble = long double;
-        
-        /*
-         bool hasFontFamily;
-         bool hasFontStyle;
-         bool hasFontSize;
-         bool hasFontWeight;
-         */
-        
+    {        
         MX_ATTR_FUNC_OPTIONAL( hasFontFamily, HasFontFamily, bool, false );
         MX_ATTR_FUNC_OPTIONAL_WITH_GETTER( fontFamily, FontFamily, core::CommaSeparatedText, core::CommaSeparatedText{} );
         
@@ -112,7 +105,7 @@ namespace mx
         
         
         template <typename ATTRIBUTES_TYPE>
-        api::FontData createFontData( const ATTRIBUTES_TYPE& inAttributes )
+        api::FontData getFontData( const ATTRIBUTES_TYPE& inAttributes )
         {
             api::FontData outFontData;
             outFontData.fontFamily = getFontFamily( inAttributes );

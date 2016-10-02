@@ -439,6 +439,7 @@
 		29C01F1B1D13137D0094BE61 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C01F151D13137D0094BE61 /* main.cpp */; };
 		29C227ED1D2F5DE000677B3C /* SortAttributes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C227EB1D2F5DE000677B3C /* SortAttributes.cpp */; };
 		29C227F01D2F74B500677B3C /* ChangeValues.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C227EE1D2F74B500677B3C /* ChangeValues.cpp */; };
+		29EF2F831DA2FECA001FE5DF /* PositionParsingTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EF2F821DA2FECA001FE5DF /* PositionParsingTest.cpp */; };
 		29EF44101D6E8F5500DBDAB9 /* DocumentManagerTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EF440F1D6E8F5500DBDAB9 /* DocumentManagerTest.cpp */; };
 /* End PBXBuildFile section */
 
@@ -1017,6 +1018,7 @@
 		29C227EC1D2F5DE000677B3C /* SortAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SortAttributes.h; path = ../Sourcecode/mxtest/import/SortAttributes.h; sourceTree = "<group>"; };
 		29C227EE1D2F74B500677B3C /* ChangeValues.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ChangeValues.cpp; path = ../Sourcecode/mxtest/import/ChangeValues.cpp; sourceTree = "<group>"; };
 		29C227EF1D2F74B500677B3C /* ChangeValues.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChangeValues.h; path = ../Sourcecode/mxtest/import/ChangeValues.h; sourceTree = "<group>"; };
+		29EF2F821DA2FECA001FE5DF /* PositionParsingTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PositionParsingTest.cpp; path = ../Sourcecode/mxtest/api/PositionParsingTest.cpp; sourceTree = "<group>"; };
 		29EF440F1D6E8F5500DBDAB9 /* DocumentManagerTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DocumentManagerTest.cpp; path = ../Sourcecode/mxtest/api/DocumentManagerTest.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1669,6 +1671,7 @@
 			children = (
 				294775E11D934C510006E1AD /* LoadAllTest.cpp */,
 				29EF440F1D6E8F5500DBDAB9 /* DocumentManagerTest.cpp */,
+				29EF2F821DA2FECA001FE5DF /* PositionParsingTest.cpp */,
 			);
 			name = api;
 			sourceTree = "<group>";
@@ -1971,6 +1974,7 @@
 				29C01E2E1D1312FA0094BE61 /* MakeFunctionsTest.cpp in Sources */,
 				29C01D811D1312FA0094BE61 /* BarStyleTest.cpp in Sources */,
 				29C01E241D1312FA0094BE61 /* LeftDividerTest.cpp in Sources */,
+				29EF2F831DA2FECA001FE5DF /* PositionParsingTest.cpp in Sources */,
 				29C01E981D1312FA0094BE61 /* RootStepTest.cpp in Sources */,
 				29C01DE21D1312FA0094BE61 /* FiguredBassTest.cpp in Sources */,
 				29C01E181D1312FA0094BE61 /* InversionTest.cpp in Sources */,

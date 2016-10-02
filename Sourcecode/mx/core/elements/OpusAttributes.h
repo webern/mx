@@ -31,7 +31,7 @@ namespace mx
             XlinkTitle title;
             XlinkShow show;
             XlinkActuate actuate;
-            const   bool hasHref;
+            const bool hasHref;
             bool hasType;
             bool hasRole;
             bool hasTitle;

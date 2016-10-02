@@ -41,7 +41,7 @@ namespace mx
             FontStyle fontStyle;
             FontSize fontSize;
             FontWeight fontWeight;
-            const   bool hasType;
+            const bool hasType;
             bool hasNumber;
             bool hasSize;
             bool hasDashLength;

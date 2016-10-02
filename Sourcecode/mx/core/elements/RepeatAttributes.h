@@ -28,7 +28,7 @@ namespace mx
             BackwardForward direction;
             NonNegativeInteger times;
             Winged winged;
-            const   bool hasDirection;
+            const bool hasDirection;
             bool hasTimes;
             bool hasWinged;
 

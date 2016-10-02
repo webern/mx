@@ -29,7 +29,7 @@ namespace mx
             XsToken name;
             XsNMToken element;
             PositiveInteger position;
-            const   bool hasId;
+            const bool hasId;
             bool hasName;
             bool hasElement;
             bool hasPosition;

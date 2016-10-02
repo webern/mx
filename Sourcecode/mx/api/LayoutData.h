@@ -51,23 +51,23 @@ namespace mx
             long double staffDistance;         // the space between staves within the same system, negative number represent the absence of a value
 
             LayoutData()
-            : scalingMillimeters( 7.0 )
-            , scalingTenths( 40.0 )
-            , pageWidth( tenthsPerInch() * 8.5 ) // 8.5"
-            , pageHeight( tenthsPerInch() * 11 ) // 11"
+            : scalingMillimeters( -1.0 )
+            , scalingTenths( -1.0 )
+            , pageWidth( -1.0 )
+            , pageHeight( -1.0 )
             , oddPageLeftMargin( -1.0 )
-            , oddPageRightMargin( -1.0f )
-            , oddPageTopMargin( -1.0f )
-            , oddPageBottomMargin( -1.0f )
-            , evenPageLeftMargin( -1.0f )
-            , evenPageRightMargin( -1.0f )
-            , evenPageTopMargin( -1.0f )
-            , evenPageBottomMargin( -1.0f )
-            , systemLeftMargin( -1.0f )
-            , systemRightMargin( -1.0f )
-            , systemDistance( -1.0f )
-            , topSystemDistance( -1.0f )
-            , staffDistance( -1.0f )
+            , oddPageRightMargin( -1.0 )
+            , oddPageTopMargin( -1.0 )
+            , oddPageBottomMargin( -1.0 )
+            , evenPageLeftMargin( -1.0 )
+            , evenPageRightMargin( -1.0 )
+            , evenPageTopMargin( -1.0 )
+            , evenPageBottomMargin( -1.0 )
+            , systemLeftMargin( -1.0 )
+            , systemRightMargin( -1.0 )
+            , systemDistance( -1.0 )
+            , topSystemDistance( -1.0 )
+            , staffDistance( -1.0 )
             {
 
             }

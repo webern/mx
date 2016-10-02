@@ -4,10 +4,10 @@
 #include "mx/impl/PageTextFunctions.h"
 #include "mx/core/elements/Credit.h"
 #include "mx/core/elements/CreditChoice.h"
+#include "mx/core/elements/CreditType.h"
 #include "mx/core/elements/CreditWords.h"
 #include "mx/core/elements/ScoreHeaderGroup.h"
 #include "mx/impl/PositionFunctions.h"
-#include "mx/core/elements/CreditType.h"
 
 namespace mx
 {
@@ -38,7 +38,7 @@ namespace mx
                 }
                 const auto wattr = words->getAttributes();
                 
-                createPositionData( p.position, *wattr );
+                getPositionData( p.positionData, *wattr );
                 
                 outHeader.addCredit( credit );
             }
@@ -75,7 +75,7 @@ namespace mx
                     pageText.description = t->getValue().getValue();
                 }
                 
-                pageText.position = createPositionData( *attr );
+                pageText.positionData = getPositionData( *attr );
                 
                 outPageTextItems.push_back( pageText );
             }

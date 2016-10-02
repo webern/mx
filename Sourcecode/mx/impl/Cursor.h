@@ -11,7 +11,6 @@ namespace mx
 {
     namespace impl
     {
-    	
         class Cursor
         {
         public:
@@ -25,7 +24,7 @@ namespace mx
             bool isFirstMeasureInPart;
 
             Cursor( int numStaves, int globalTicksPerQuarter );
-            ~Cursor() = default;
+            virtual ~Cursor() = default;
             Cursor( const Cursor& ) = default;
             Cursor( Cursor&& ) = default;
             Cursor& operator=( const Cursor& ) = default;
@@ -41,7 +40,6 @@ namespace mx
         private:
             int myNumStaves;
             int myGlobalTicksPerQuarter;
-
         };        
     }
 }

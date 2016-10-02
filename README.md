@@ -426,27 +426,27 @@ The tests are slow to compile, see the *Compiling* section for more info on how 
 - XsIDREF's, especially in the ScorePartList are not constrained to relate to the PartList XsID's.  Thus it is possible to create an unparsable MusicXML document.  A feature could be added to enforce this one-to-one constraint.  Should this feature be added in the core model?  Maybe not.
 - A simplified and stable facade API should be added to make it much, much easier to understand and interact with MusicXML documents.
 
-##### Historical Notes
+### Historical Notes and Release Notes
+**Historical Note: October 6, 2016:** Significant progress has been made on the `api` namespace, which is a simplified set of data structures to represent a MusicXML document.  These are being implemented as mostly-POD structs.  Currently the importing of data into these structures is well-underway, but the exporting from these data structures has not been implemented.
+**Release:  Version 0.2 August 21, 2016** Adds the ability to import MusicXML documents into MusicXML Classes.
 
-**Release: Version 0.2 August 21, 2016** Adds the ability to import MusicXML documents into MusicXML Classes.
-
-**Update: August 16, 2016:** All tests are passing (core, xml and import).  The remaining items to do on the ximport feature are
+**Historical Note: August 16, 2016:** All tests are passing (core, xml and import).  The remaining items to do on the ximport feature are
 - search for all `\\TODO's` and fix those that can be fixed
 - Standardize the code file copyrights and bump to version 0.2
 - Rename XElement functions to better names
 - Update the readme including information about the XDoc XElement classes and how to implement those interfaces.
 
-**Update: August 11, 2016:** The feature to import MusicXML files is essentially complete with most "round-trip" integration tests passing.
+**Historical Note: August 11, 2016:** The feature to import MusicXML files is essentially complete with most "round-trip" integration tests passing.
 
-**Update: June 27, 2016:** An "integration" tester has been added to the MxTest executable.  This exists in ImportTest.cpp, and ImportTestImpl.h/cpp.  A top level directory "Resources" has been added to hold test input (i.e. "golden") files.  The input files are gathered from Recordare, Lilypond and MuseScore and to this I have added a few of my own scores as exported by Finale Dolet.
+**Historical Note: June 27, 2016:** An "integration" tester has been added to the MxTest executable.  This exists in ImportTest.cpp, and ImportTestImpl.h/cpp.  A top level directory "Resources" has been added to hold test input (i.e. "golden") files.  The input files are gathered from Recordare, Lilypond and MuseScore and to this I have added a few of my own scores as exported by Finale Dolet.
 
 Each of these test input files has been "scrubbed" using the XDoc classes (i.e. it has been round-tripped through pugixml and has been updated to a normalized MusicXML 3.0 header format.  The resultant scrubbed files are in Resources/expected.  During the test run, a csv file is written in Resources/testOutput recording a row for each test (Pass/Fail, duration of test, messages, etc).  Each time a test failure is encountered the expected file and the error file will be saved to the Resources/testOutput directory to allow for visual inspection.
 
 Currently this tester is a "wire-up".  All 263 of these round-trip import/export tests fail because the implementation does not yet exist in mx::core.  The next body of work will be the mx::core implementation.
 
 
-**Update: June 20, 2016:** A simple interface to for XML DOM has been added in the mx::xml namespace.  The key classes (pure virtual) are XDoc, XElement, XAttribute, XElementIterator, XAttributeIterator.  These are implemented by concrete classes PugiDoc, PugiElement, etc. which serve as a wrapper for the pugixml library (http://pugixml.org/).  Although this is a static library, a class XFactory can be used to create a Pugi instance of the XDoc interface.
+**Historical Note: June 20, 2016:** A simple interface to for XML DOM has been added in the mx::xml namespace.  The key classes (pure virtual) are XDoc, XElement, XAttribute, XElementIterator, XAttributeIterator.  These are implemented by concrete classes PugiDoc, PugiElement, etc. which serve as a wrapper for the pugixml library (http://pugixml.org/).  Although this is a static library, a class XFactory can be used to create a Pugi instance of the XDoc interface.
 
 The idea behind using a pure virtual interface is that the client of the Music XML Class Library can, in theory choose a different XML DOM library (Xerces, TinyXML, etc) and wrap with instances of the XDoc interfaces and the Music XML core classes will not know the difference.
 
-**Update: June 20, 2016:** The GitHub repo was bloated and has been entirely wiped-out and restarted.
+**Historical Note: June 20, 2016:** The GitHub repo was bloated and has been entirely wiped-out and restarted.

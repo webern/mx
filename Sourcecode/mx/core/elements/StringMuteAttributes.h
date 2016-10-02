@@ -37,7 +37,7 @@ namespace mx
             FontSize fontSize;
             FontWeight fontWeight;
             LeftCenterRight halign;
-            const   bool hasType;
+            const bool hasType;
             bool hasDefaultX;
             bool hasDefaultY;
             bool hasRelativeX;

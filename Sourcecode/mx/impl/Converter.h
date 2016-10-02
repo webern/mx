@@ -3,13 +3,15 @@
 
 #pragma once
 
-#include "mx/core/Enums.h"
-#include "mx/api/ScoreData.h"
-#include "mx/api/NoteData.h"
 #include "mx/api/ClefData.h"
-#include "mx/api/PositionData.h"
 #include "mx/api/MarkData.h"
+#include "mx/api/NoteData.h"
+#include "mx/api/PositionData.h"
+#include "mx/api/ScoreData.h"
 #include "mx/core/elements/ArticulationsChoice.h"
+#include "mx/core/elements/OrnamentsChoice.h"
+#include "mx/core/elements/TechnicalChoice.h"
+#include "mx/core/Enums.h"
 
 #include <map>
 
@@ -59,6 +61,21 @@ namespace mx
             core::ArticulationsChoice::Choice convertArticulation( api::MarkType value ) const;
             api::MarkType convertArticulation( core::ArticulationsChoice::Choice value ) const;
             
+            core::DynamicsEnum convertDynamic( api::MarkType value ) const;
+            api::MarkType convertDynamic( core::DynamicsEnum value ) const;
+            
+            core::OrnamentsChoice::Choice convertOrnament( api::MarkType value ) const;
+            api::MarkType convertOrnament( core::OrnamentsChoice::Choice value ) const;
+            
+            core::AccidentalValue convertAccidentalMark( api::MarkType value ) const;
+            api::MarkType convertAccidentalMark( core::AccidentalValue value ) const;
+            
+            core::TechnicalChoice::Choice convertTechnicalMark( api::MarkType value ) const;
+            api::MarkType convertTechnicalMark( core::TechnicalChoice::Choice value ) const;
+            
+            core::MeasureNumberingValue convertMeasureNumbering( api::MeasureNumbering value ) const;
+            api::MeasureNumbering convertMeasureNumbering( core::MeasureNumberingValue value ) const;
+
             const static std::map<core::StepEnum, api::Step> stepMap;
             const static std::map<core::NoteTypeValue, api::DurationName> durationMap;
             const static std::map<core::BeamValue, api::Beam> beamMap;
@@ -71,7 +88,13 @@ namespace mx
             const static std::map<core::CssFontSize, api::CssSize> cssMap;
             const static std::map<core::FontStyle, api::FontStyle> fontStyleMap;
             const static std::map<core::FontWeight, api::FontWeight> fontWeightMap;
-            
+            const static std::map<core::ArticulationsChoice::Choice, api::MarkType> articulationsMap;
+            const static std::map<core::DynamicsEnum, api::MarkType> dynamicsMap;
+            const static std::map<core::OrnamentsChoice::Choice, api::MarkType> ornamentsMap;
+            const static std::map<core::AccidentalValue, api::MarkType> accidentalMarkMap;
+            const static std::map<core::TechnicalChoice::Choice, api::MarkType> technicalMarkMap;
+            const static std::map<core::MeasureNumberingValue, api::MeasureNumbering> measureNumberingMap;
+
         private:
             template<typename CORE_TYPE, typename API_TYPE>
             API_TYPE findApiItem( const std::map<CORE_TYPE, API_TYPE>& enumMap, API_TYPE defaultToReturn, CORE_TYPE itemToFind ) const

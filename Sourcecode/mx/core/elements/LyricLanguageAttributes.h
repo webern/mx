@@ -29,7 +29,7 @@ namespace mx
             XmlLang lang;
             bool hasNumber;
             bool hasName;
-            const   bool hasLang;
+            const bool hasLang;
 
             bool fromXElement( std::ostream& message, xml::XElement& xelement );
         };

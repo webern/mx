@@ -8,6 +8,7 @@
 #include "mx/core/Decimals.h"
 #include "mx/core/Enums.h"
 #include "mx/core/Integers.h"
+#include "mx/core/Color.h"
 
 #include <iosfwd>
 #include <memory>
@@ -43,7 +44,8 @@ namespace mx
             TenthsValue bezierY;
             TenthsValue bezierX2;
             TenthsValue bezierY2;
-            const   bool hasType;
+            Color color;
+            const bool hasType;
             bool hasNumber;
             bool hasLineType;
             bool hasDashLength;
@@ -60,6 +62,7 @@ namespace mx
             bool hasBezierY;
             bool hasBezierX2;
             bool hasBezierY2;
+            bool hasColor;
 
             bool fromXElement( std::ostream& message, xml::XElement& xelement );
         };

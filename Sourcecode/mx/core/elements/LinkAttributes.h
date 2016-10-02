@@ -40,7 +40,7 @@ namespace mx
             TenthsValue defaultY;
             TenthsValue relativeX;
             TenthsValue relativeY;
-            const   bool hasHref;
+            const bool hasHref;
             bool hasType;
             bool hasRole;
             bool hasTitle;

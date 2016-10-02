@@ -14,9 +14,9 @@
 #include "mx/core/elements/Time.h"
 #include "mx/core/elements/TimeChoice.h"
 #include "mx/core/elements/TimeSignatureGroup.h"
-#include "mx/impl/MxMath.h"
-#include "mx/utility/Throw.h"
+#include "mx/impl/LcmGcd.h"
 #include "mx/utility/StringToInt.h"
+#include "mx/utility/Throw.h"
 
 #include <string>
 #include <cmath>

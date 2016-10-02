@@ -2,7 +2,8 @@
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #include "mx/api/DocumentManager.h"
-#include "mx/impl/ScoreFunctions.h"
+#include "mx/impl/ScoreReader.h"
+#include "mx/impl/ScoreWriter.h"
 #include "mx/core/Document.h"
 #include "mx/xml/XFactory.h"
 #include "mx/xml/XDoc.h"
@@ -89,7 +90,16 @@ namespace mx
         
         int DocumentManager::createFromScore( const ScoreData& score )
         {
-            auto mxdoc = mx::impl::createDocument( score );
+            impl::ScoreWriter writer{ score };
+            auto scorePartwise = writer.getScorePartwise();
+            auto mxdoc = core::makeDocument();
+            mxdoc->setChoice( core::DocumentChoice::partwise );
+            mxdoc->setScorePartwise( scorePartwise );
+            
+            if( score.musicXmlType == "timewise" )
+            {
+                mxdoc->convertContents();
+            }
             
             LOCK_DOCUMENT_MANAGER
             myImpl->myMap[myImpl->myCurrentId] = std::move( mxdoc );
@@ -150,8 +160,9 @@ namespace mx
                 wasTimewise = true;
                 it->second->convertContents();
             }
-            
-            auto score = impl::createScore( *it->second );
+
+            impl::ScoreReader reader{ *it->second->getScorePartwise() };
+            auto score = reader.getScoreData();
 
             if( wasTimewise )
             {

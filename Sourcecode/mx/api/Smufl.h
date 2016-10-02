@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "mx/api/PositionData.h"
+#include "mx/api/ApiCommon.h"
 
 #include <string>
 #include <map>
@@ -28,7 +28,7 @@ namespace mx
             const std::string unspecified;
             
             const std::string& getName() const;
-            const std::string& getName( Placement placement ) const;
+            const std::string& getName( api::Placement placement ) const;
         };
 
         

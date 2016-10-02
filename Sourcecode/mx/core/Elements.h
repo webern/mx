@@ -285,7 +285,7 @@ namespace mx
             virtual bool hasValues() const;
             virtual std::ostream& toStream( std::ostream& os ) const;
             XsToken type;
-            const   bool hasType;
+            const bool hasType;
         };
         
         class OtherPlay;
@@ -387,7 +387,7 @@ namespace mx
             virtual std::ostream& toStream( std::ostream& os ) const;
             PositiveInteger number;
             YesNo cancel;
-            const   bool hasNumber;
+            const bool hasNumber;
             bool hasCancel;
         };
         
@@ -479,7 +479,7 @@ namespace mx
             virtual std::ostream& toStream( std::ostream& os ) const;
             StartStop type;
             PositiveInteger slashes;
-            const   bool hasType;
+            const bool hasType;
             bool hasSlashes;
         };
         
@@ -644,8 +644,8 @@ namespace mx
             TenthsValue endLength;
             TenthsValue textX;
             TenthsValue textY;
-            const   bool hasNumber;
-            const   bool hasType;
+            const bool hasNumber;
+            const bool hasType;
             bool hasPrintObject;
             bool hasDefaultX;
             bool hasDefaultY;
@@ -1228,8 +1228,8 @@ namespace mx
             FontSize fontSize;
             FontWeight fontWeight;
             LeftCenterRight halign;
-            const   bool hasType;
-            const   bool hasSymbol;
+            const bool hasType;
+            const bool hasSymbol;
             bool hasDefaultX;
             bool hasDefaultY;
             bool hasRelativeX;
@@ -2111,7 +2111,7 @@ namespace mx
             virtual bool hasValues() const;
             virtual std::ostream& toStream( std::ostream& os ) const;
             XsToken name;
-            const   bool hasName;
+            const bool hasName;
         };
         
         class MiscellaneousField;
@@ -2201,7 +2201,7 @@ namespace mx
             virtual bool hasValues() const;
             virtual std::ostream& toStream( std::ostream& os ) const;
             NoteSizeType type;
-            const   bool hasType;
+            const bool hasType;
         };
         
         class NoteSize;
@@ -2246,7 +2246,7 @@ namespace mx
             virtual bool hasValues() const;
             virtual std::ostream& toStream( std::ostream& os ) const;
             DistanceType type;
-            const   bool hasType;
+            const bool hasType;
         };
         
         class Distance;
@@ -2291,7 +2291,7 @@ namespace mx
             virtual bool hasValues() const;
             virtual std::ostream& toStream( std::ostream& os ) const;
             XsToken type;
-            const   bool hasType;
+            const bool hasType;
         };
         
         class OtherAppearance;
@@ -2881,7 +2881,7 @@ namespace mx
             FontStyle fontStyle;
             FontSize fontSize;
             FontWeight fontWeight;
-            const   bool hasType;
+            const bool hasType;
             bool hasNumber;
             bool hasDashLength;
             bool hasSpaceLength;
@@ -2952,7 +2952,7 @@ namespace mx
             TrillBeats beats;
             Percent firstBeat;
             Percent lastBeat;
-            const   bool hasType;
+            const bool hasType;
             bool hasNumber;
             bool hasDashLength;
             bool hasSpaceLength;
@@ -3084,7 +3084,7 @@ namespace mx
             FontSize fontSize;
             FontWeight fontWeight;
             AboveBelow placement;
-            const   bool hasType;
+            const bool hasType;
             bool hasNumber;
             bool hasPrintObject;
             bool hasDefaultX;
@@ -3604,7 +3604,7 @@ namespace mx
             FontSize fontSize;
             FontWeight fontWeight;
             AboveBelow placement;
-            const   bool hasType;
+            const bool hasType;
             bool hasNumber;
             bool hasDefaultX;
             bool hasDefaultY;
@@ -3669,7 +3669,7 @@ namespace mx
             FontSize fontSize;
             FontWeight fontWeight;
             AboveBelow placement;
-            const   bool hasType;
+            const bool hasType;
             bool hasNumber;
             bool hasDefaultX;
             bool hasDefaultY;
@@ -9229,7 +9229,7 @@ namespace mx
             TrillBeats beats;
             Percent secondBeat;
             Percent lastBeat;
-            const   bool hasType;
+            const bool hasType;
             bool hasNumber;
             bool hasDefaultX;
             bool hasDefaultY;
@@ -9283,7 +9283,7 @@ namespace mx
             BackwardForward direction;
             NonNegativeInteger times;
             Winged winged;
-            const   bool hasDirection;
+            const bool hasDirection;
             bool hasTimes;
             bool hasWinged;
         };
@@ -9333,7 +9333,7 @@ namespace mx
             TenthsValue defaultY;
             TenthsValue relativeX;
             TenthsValue relativeY;
-            const   bool hasType;
+            const bool hasType;
             bool hasNumber;
             bool hasSpread;
             bool hasNiente;
@@ -9388,7 +9388,7 @@ namespace mx
             TenthsValue defaultY;
             TenthsValue relativeX;
             TenthsValue relativeY;
-            const   bool hasType;
+            const bool hasType;
             bool hasNumber;
             bool hasDashLength;
             bool hasSpaceLength;
@@ -9484,7 +9484,7 @@ namespace mx
             FontSize fontSize;
             FontWeight fontWeight;
             LeftCenterRight halign;
-            const   bool hasType;
+            const bool hasType;
             bool hasLine;
             bool hasSign;
             bool hasDefaultX;
@@ -9546,7 +9546,7 @@ namespace mx
             FontStyle fontStyle;
             FontSize fontSize;
             FontWeight fontWeight;
-            const   bool hasType;
+            const bool hasType;
             bool hasNumber;
             bool hasSize;
             bool hasDashLength;
@@ -9606,7 +9606,7 @@ namespace mx
             FontSize fontSize;
             FontWeight fontWeight;
             LeftCenterRight halign;
-            const   bool hasType;
+            const bool hasType;
             bool hasDefaultX;
             bool hasDefaultY;
             bool hasRelativeX;
@@ -9660,8 +9660,8 @@ namespace mx
             TenthsValue relativeX;
             TenthsValue relativeY;
             LeftCenterRight halign;
-            const   bool hasSource;
-            const   bool hasType;
+            const bool hasSource;
+            const bool hasType;
             bool hasDefaultX;
             bool hasDefaultY;
             bool hasRelativeX;
@@ -9705,7 +9705,7 @@ namespace mx
             virtual bool hasValues() const;
             virtual std::ostream& toStream( std::ostream& os ) const;
             StartStop type;
-            const   bool hasType;
+            const bool hasType;
         };
         
         class Barre;
@@ -9747,8 +9747,8 @@ namespace mx
             XsNMToken element;
             XsNMToken attribute;
             XsToken value;
-            const   bool hasType;
-            const   bool hasElement;
+            const bool hasType;
+            const bool hasElement;
             bool hasAttribute;
             bool hasValue;
         };
@@ -9859,7 +9859,7 @@ namespace mx
             TenthsValue bezierY;
             TenthsValue bezierX2;
             TenthsValue bezierY2;
-            const   bool hasType;
+            const bool hasType;
             bool hasNumber;
             bool hasDashLength;
             bool hasSpaceLength;
@@ -9928,7 +9928,7 @@ namespace mx
             TenthsValue bezierY;
             TenthsValue bezierX2;
             TenthsValue bezierY2;
-            const   bool hasType;
+            const bool hasType;
             bool hasNumber;
             bool hasDashLength;
             bool hasSpaceLength;
@@ -10039,7 +10039,7 @@ namespace mx
             TenthsValue relativeX;
             TenthsValue relativeY;
             AboveBelow placement;
-            const   bool hasType;
+            const bool hasType;
             bool hasNumber;
             bool hasDefaultX;
             bool hasDefaultY;
@@ -10130,7 +10130,7 @@ namespace mx
             virtual std::ostream& toStream( std::ostream& os ) const;
             StartStop type;
             TimeOnly timeOnly;
-            const   bool hasType;
+            const bool hasType;
             bool hasTimeOnly;
         };
         
@@ -10171,7 +10171,7 @@ namespace mx
             virtual bool hasValues() const;
             virtual std::ostream& toStream( std::ostream& os ) const;
             XsIDREF id;
-            const   bool hasId;
+            const bool hasId;
         };
         
         class Instrument;
@@ -10551,7 +10551,7 @@ namespace mx
             TenthsValue defaultY;
             TenthsValue relativeX;
             TenthsValue relativeY;
-            const   bool hasHref;
+            const bool hasHref;
             bool hasType;
             bool hasRole;
             bool hasTitle;
@@ -10605,7 +10605,7 @@ namespace mx
             XsToken name;
             XsNMToken element;
             PositiveInteger position;
-            const   bool hasId;
+            const bool hasId;
             bool hasName;
             bool hasElement;
             bool hasPosition;
@@ -10653,8 +10653,8 @@ namespace mx
             TenthsValue relativeX;
             TenthsValue relativeY;
             LeftCenterRight halign;
-            const   bool hasSource;
-            const   bool hasType;
+            const bool hasSource;
+            const bool hasType;
             bool hasDefaultX;
             bool hasDefaultY;
             bool hasRelativeX;
@@ -10751,7 +10751,7 @@ namespace mx
             XmlLang lang;
             bool hasNumber;
             bool hasName;
-            const   bool hasLang;
+            const bool hasLang;
         };
         
         class LyricLanguage;
@@ -10795,7 +10795,7 @@ namespace mx
             XlinkTitle title;
             XlinkShow show;
             XlinkActuate actuate;
-            const   bool hasHref;
+            const bool hasHref;
             bool hasType;
             bool hasRole;
             bool hasTitle;

@@ -1,9 +1,12 @@
 // MusicXML Class Library v0.3.0
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
+#pragma once
+
 #include "mx/api/PositionData.h"
-#include "mx/utility/OptionalMembers.h"
+#include "mx/core/elements/DynamicsAttributes.h"
 #include "mx/impl/Converter.h"
+#include "mx/utility/OptionalMembers.h"
 
 namespace mx
 {
@@ -31,10 +34,27 @@ namespace mx
 
         MX_ATTR_FUNC_OPTIONAL( hasPlacement, HasPlacement, bool, false );
         MX_ATTR_FUNC_OPTIONAL( placement, Placement, core::AboveBelow, core::AboveBelow::above );
+
+//        template<typename T>
+//auto checkHasPlacement( const T* const obj )
+//-> decltype(  obj->hasPlacement  )
+//{                                                                                                                                   
+//return obj->hasPlacement;
+//}
+//
+//    inline auto checkHasPlacement(...) -> bool
+//    {                                                                                                                                   
+//    return false;
+//    }                                                                                                                                   
+
+        //const core::DynamicsAttributes attrs;
+        //const bool da = checkHasPlacement<core::DynamicsAttributes>( &attrs );
         
         template <typename ATTRIBUTES_TYPE>
-        api::PositionData createPositionData( const ATTRIBUTES_TYPE& inAttributes )
+        api::PositionData getPositionData( const ATTRIBUTES_TYPE& inAttributes )
         {
+            //MX_UNUSED(da);
+
             api::PositionData outPositionData;
             
             if( checkHasDefaultX( &inAttributes ) )
@@ -96,7 +116,7 @@ namespace mx
         
         
         template <typename ATTRIBUTES_TYPE>
-        void createPositionData( const api::PositionData& inPositionData, ATTRIBUTES_TYPE& outAttributes )
+        void getPositionData( const api::PositionData& inPositionData, ATTRIBUTES_TYPE& outAttributes )
         {
             if( inPositionData.hasDefaultX )
             {

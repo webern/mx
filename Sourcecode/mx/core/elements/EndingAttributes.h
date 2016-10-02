@@ -41,8 +41,8 @@ namespace mx
             TenthsValue endLength;
             TenthsValue textX;
             TenthsValue textY;
-            const   bool hasNumber;
-            const   bool hasType;
+            const bool hasNumber;
+            const bool hasType;
             bool hasPrintObject;
             bool hasDefaultX;
             bool hasDefaultY;
