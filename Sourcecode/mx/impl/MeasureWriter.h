@@ -30,6 +30,7 @@ namespace mx
         	const api::MeasureData& myMeasureData;
         	mutable core::PartwiseMeasurePtr myOutMeasure;
             mutable MeasureCursor myCursor;
+            mutable MeasureCursor myPreviousCursor;
             const ScoreWriter& myScoreWriter;
 
         private:
@@ -43,6 +44,22 @@ namespace mx
             void writeClef( int staffIndex, const api::ClefData& inClefData, core::Properties& outProperties ) const;
             void writeInitialClefs( core::Properties& outProperties ) const;
             void writeInitialKeys( core::Properties& outProperties ) const;
+            void writeStaffData() const;
+            void writeVoiceData( const api::StaffData& inStaff ) const;
+            
+            template<typename T>
+            std::vector<T> findItemsAtTimePosition( const std::vector<T>& inItems, int inTickTimePosition ) const
+            {
+                std::vector<T> outVector;
+                for( const auto& item : inItems )
+                {
+                    if( item.tickTimePosition == inTickTimePosition )
+                    {
+                        outVector.push_back( item );
+                    }
+                }
+                return outVector;
+            }
         };
     }
 }

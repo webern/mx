@@ -14,7 +14,7 @@ namespace mx
         , symbol{ DEFAULT_CLEF_SYMBOL }
         , line{ DEFAULT_CLEF_LINE }
         , octaveChange{ DEFAULT_CLEF_OCTAVE_CHANGE }
-        , tickPosition{ 0 }
+        , tickTimePosition{ 0 }
         , location{ ClefLocation::unspecified }
         {
 

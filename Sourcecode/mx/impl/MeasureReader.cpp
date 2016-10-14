@@ -197,9 +197,9 @@ namespace mx
                 {
                     parseBackup( *mdc.getBackup() );
                     
-                    if( myCurrentCursor.position < 0 )
+                    if( myCurrentCursor.tickTimePosition < 0 )
                     {
-                        myCurrentCursor.position = 0;
+                        myCurrentCursor.tickTimePosition = 0;
                         // TODO - log or inform the client that the file is erroneous
                     }
                     break;
@@ -307,7 +307,7 @@ namespace mx
             
             if( !noteData.isChord && !isNextNoteAChordMemberMakingThisNoteTheStartOfTheChord)
             {
-                myCurrentCursor.position += noteData.durationData.durationTimeTicks;
+                myCurrentCursor.tickTimePosition += noteData.durationData.durationTimeTicks;
             }
             
             insertNoteData( std::move(noteData), myCurrentCursor.staffIndex, myCurrentCursor.voiceIndex );
@@ -327,7 +327,7 @@ namespace mx
             myCurrentCursor.isBackupInProgress = true;
             impl::TimeFunctions timeFunc;
             const int backupAmount = timeFunc.convertDurationToGlobalTickScale( myCurrentCursor, *inMxBackup.getDuration() );
-            myCurrentCursor.position -= backupAmount;
+            myCurrentCursor.tickTimePosition -= backupAmount;
         }
         
         
@@ -335,7 +335,7 @@ namespace mx
         {
             impl::TimeFunctions timeFunc;
             const int forwardAmount = timeFunc.convertDurationToGlobalTickScale( myCurrentCursor, *inMxForward.getDuration() );
-            myCurrentCursor.position += forwardAmount;
+            myCurrentCursor.tickTimePosition += forwardAmount;
         }
         
         
@@ -414,7 +414,7 @@ namespace mx
                         keyData.mode = api::KeyMode::unsupported;
                     }
                 }
-                keyData.tickTimePosition = myCurrentCursor.position;
+                keyData.tickTimePosition = myCurrentCursor.tickTimePosition;
                 
                 myOutMeasureData.keys.emplace_back( std::move( keyData ) );
             }
@@ -493,7 +493,7 @@ namespace mx
         void MeasureReader::importClef( const core::Clef& inClef ) const
         {
             api::ClefData clefData;
-            clefData.tickPosition = myCurrentCursor.position;
+            clefData.tickTimePosition = myCurrentCursor.tickTimePosition;
             auto converter = Converter{};
             clefData.symbol = converter.convert( inClef.getSign()->getValue() );
             
@@ -549,7 +549,7 @@ namespace mx
                 clefData.staffIndex = 0;
             }
             
-            if( myCurrentCursor.position == 0 )
+            if( myCurrentCursor.tickTimePosition == 0 )
             {
                 if( attr.hasAfterBarline )
                 {

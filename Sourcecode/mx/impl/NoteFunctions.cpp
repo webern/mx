@@ -131,7 +131,7 @@ namespace mx
             myOutNoteData.durationData.durationDots = reader.getNumDots();
             impl::TimeFunctions timeFunc;
             myOutNoteData.durationData.durationTimeTicks = timeFunc.convertDurationToGlobalTickScale( myCursor, reader.getDurationValue() );
-            myOutNoteData.startTimeTicks = myCursor.position;
+            myOutNoteData.tickTimePosition = myCursor.tickTimePosition;
             
             for( const auto& coreBeamVal : reader.getBeams() )
             {
@@ -158,6 +158,11 @@ namespace mx
             parseNotations();
             myOutNoteData.positionData = impl::getPositionData( *myNote.getAttributes() );
             myOutNoteData.printData = impl::getPrintData( *myNote.getAttributes() );
+            
+            if( reader.getIsStemSpecified() )
+            {
+                myOutNoteData.stem = converter.convert( reader.getStem() );
+            }
             return myOutNoteData;
         }
         
@@ -383,7 +388,7 @@ namespace mx
                             api::SpannerData spannerData;
                             spannerData.name = "slide";
                             spannerData.spannerType = api::SpannerType::slide;
-                            spannerData.tickPosition = myCursor.position;
+                            spannerData.tickTimePosition = myCursor.tickTimePosition;
                             
                             if( attr.hasNumber )
                             {

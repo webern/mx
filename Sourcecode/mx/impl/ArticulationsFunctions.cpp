@@ -48,7 +48,7 @@ namespace mx
                 const auto markType = converter.convertArticulation( articulationType );
                 auto markData = api::MarkData{};
                 markData.markType = markType;
-                markData.tickPosition = myCursor.position;
+                markData.tickTimePosition = myCursor.tickTimePosition;
                 
                 parseArticulation( *articulation, markData );
                 

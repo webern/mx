@@ -48,6 +48,38 @@
 #include "mx/core/elements/TopSystemDistance.h"
 #include "mx/core/elements/LeftMargin.h"
 #include "mx/core/elements/RightMargin.h"
+#include "mx/core/elements/Note.h"
+#include "mx/core/elements/Accidental.h"
+#include "mx/core/elements/Beam.h"
+#include "mx/core/elements/CueNoteGroup.h"
+#include "mx/core/elements/Dot.h"
+#include "mx/core/elements/Duration.h"
+#include "mx/core/elements/EditorialVoiceGroup.h"
+#include "mx/core/elements/Footnote.h"
+#include "mx/core/elements/FullNoteGroup.h"
+#include "mx/core/elements/FullNoteTypeChoice.h"
+#include "mx/core/elements/GraceNoteGroup.h"
+#include "mx/core/elements/Grace.h"
+#include "mx/core/elements/Cue.h"
+#include "mx/core/elements/Instrument.h"
+#include "mx/core/elements/Level.h"
+#include "mx/core/elements/Lyric.h"
+#include "mx/core/elements/Notations.h"
+#include "mx/core/elements/NoteChoice.h"
+#include "mx/core/elements/Notehead.h"
+#include "mx/core/elements/NoteheadText.h"
+#include "mx/core/elements/NormalNoteGroup.h"
+#include "mx/core/elements/Pitch.h"
+#include "mx/core/elements/Play.h"
+#include "mx/core/elements/Staff.h"
+#include "mx/core/elements/Stem.h"
+#include "mx/core/elements/Rest.h"
+#include "mx/core/elements/Tie.h"
+#include "mx/core/elements/TimeModification.h"
+#include "mx/core/elements/Type.h"
+#include "mx/core/elements/Unpitched.h"
+#include "mx/core/elements/Voice.h"
+#include "mx/impl/NoteWriter.h"
 
 namespace mx
 {
@@ -63,6 +95,7 @@ namespace mx
         : myMeasureData{ inMeasureData }
         , myOutMeasure{ nullptr }
         , myCursor{ inCursor }
+        , myPreviousCursor{ inCursor }
         , myScoreWriter{ inScoreWriter }
         {
 
@@ -108,11 +141,7 @@ namespace mx
                 writeFirstMeasureProperties();
             }
             
-            for( const auto& staff : myMeasureData.staves )
-            {
-                MX_UNUSED( staff );
-            }
-            
+            writeStaffData();
             return myOutMeasure;
         }
 
@@ -159,13 +188,9 @@ namespace mx
         {
             auto& props = createAndInsertMeasureProperties();
             writeDivisions( props );
-
-            
             writeInitialClefs( props );
             writeTime( props );
             writeNumStaves( props );
-            
-
         }
         
         
@@ -201,6 +226,7 @@ namespace mx
             key->getKeyChoice()->setChoice( core::KeyChoice::Choice::traditionalKey );
             auto traditionalKey = key->getKeyChoice()->getTraditionalKey();
             traditionalKey->getFifths()->setValue( core::FifthsValue{ inKeyData.fifths } );
+            
             if ( inKeyData.cancel != 0 )
             {
                 traditionalKey->setHasCancel( true );
@@ -219,11 +245,11 @@ namespace mx
         void MeasureWriter::writeTime( core::Properties& outProperties ) const
         {
             const auto& timeData = myMeasureData.timeSignature;
-            // TODO - find out why the first measure was coming up with an 'implicit' time-signature
-            if( timeData.isImplicit )
-            {
-                return;
-            }
+//            // TODO - find out why the first measure is coming up with an 'implicit' time-signature
+//            if( timeData.isImplicit )
+//            {
+//                return;
+//            }
             
             auto time = core::makeTime();
             outProperties.addTime( time );
@@ -286,21 +312,13 @@ namespace mx
         
         void MeasureWriter::writeInitialClefs( core::Properties& outProperties ) const
         {
-            // TODO - this is wrong. Parse the actual clefs at position zero
-            // and only fall back to a default clef if they don't match up
-            // with the staves we have in the part
             int staffIndex = 0;
             for( const auto& staff : myMeasureData.staves )
             {
-                int staffToPass = staffIndex;
-                if( staff.clefs.size() > 0 )
+                auto clefsAtZero = findItemsAtTimePosition( staff.clefs, 0 );
+                if( clefsAtZero.size() == 1 )
                 {
-                    if( myCursor.getNumStaves() == 1 )
-                    {
-                        staffToPass = -1;
-                    }
-                    auto& apiClef = staff.clefs.front();
-                    writeClef( staffIndex, apiClef, outProperties );
+                    writeClef( staffIndex, clefsAtZero.front(), outProperties );
                 }
                 ++staffIndex;
             }
@@ -320,6 +338,60 @@ namespace mx
             else
             {
                 writeKey( -1, api::KeyData{}, outProperties );
+            }
+        }
+        
+        
+        void MeasureWriter::writeStaffData() const
+        {
+            myCursor.tickTimePosition = 0;
+            myCursor.staffIndex = 0;
+            myCursor.voiceIndex = 0;
+            myPreviousCursor = myCursor;
+            for( const auto& staff : myMeasureData.staves )
+            {
+                // auto clefIter = staff.clefs.cbegin();
+                // auto clefEnd = staff.clefs.cend();
+                
+                writeVoiceData( staff );
+                ++myCursor.staffIndex;
+            }
+        }
+        
+        void MeasureWriter::writeVoiceData( const api::StaffData& inStaff ) const
+        {
+            for( const auto& voice : inStaff.voices )
+            {
+                myCursor.voiceIndex = voice.first;
+                for( const auto& apiNote : voice.second.notes )
+                {
+//                    auto mxNote = core::makeNote();
+//                    mxNote->setHasType( true );
+//                    mxNote->getType()->setValue( converter.convert( apiNote.durationData.durationName ) );
+//                    for( int d = 0; d < apiNote.durationData.durationDots; ++ d )
+//                    {
+//                        mxNote->addDot( core::makeDot() );
+//                    }
+//                    if( apiNote.pitchData.accidental != api::Accidental::none )
+//                    {
+//                        mxNote->setHasAccidental( true );
+//                        mxNote->getAccidental()->setValue( converter.convert( apiNote.pitchData.accidental ) );
+//                    }
+//                    if( apiNote.stem != api::Stem::unspecified )
+//                    {
+//                        mxNote->setHasStem( true );
+//                        mxNote->getStem()->setValue( converter.convert( apiNote.stem ) );
+//                    }
+//                    auto nc = mxNote->getNoteChoice();
+//                    nc->setChoice( core::NoteChoice::Choice::normal );
+//                    auto nng = nc->getNormalNoteGroup();
+                    
+                    auto mdc = core::makeMusicDataChoice();
+                    mdc->setChoice( core::MusicDataChoice::Choice::note );
+                    NoteWriter writer{ apiNote, myCursor, myScoreWriter };
+                    mdc->setNote( writer.getNote() );
+                    myOutMeasure->getMusicDataGroup()->addMusicDataChoice( mdc );
+                }
             }
         }
     }

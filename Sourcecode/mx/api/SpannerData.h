@@ -39,7 +39,7 @@ namespace mx
             int numberLevel;
             SpannerType spannerType;
             std::string name;
-            int tickPosition;
+            int tickTimePosition;
             PrintData printData;
             PositionData positionData;
             LineData lineData;

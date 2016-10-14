@@ -24,7 +24,7 @@ namespace mx
             const auto markType = converter.convertAccidentalMark( accidentalValue );
             auto markData = api::MarkData{};
             markData.markType = markType;
-            markData.tickPosition = myCursor.position;
+            markData.tickTimePosition = myCursor.tickTimePosition;
             
             markData.name = core::toString( accidentalValue );
             parseMarkDataAttributes( myAccidentalMark, markData );

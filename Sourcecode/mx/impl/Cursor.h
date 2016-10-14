@@ -17,7 +17,7 @@ namespace mx
 
             api::TimeSignatureData timeSignature;
             int ticksPerQuarter;
-            int position;
+            int tickTimePosition;
             int voiceIndex;
             int staffIndex;
             bool isBackupInProgress;

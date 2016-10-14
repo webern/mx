@@ -293,6 +293,17 @@ namespace mx
             std::pair<core::TechnicalChoice::Choice, api::MarkType>{ core::TechnicalChoice::Choice::otherTechnical, api::MarkType::otherTechnical },
         };
         
+        
+        const std::map<core::StemValue, api::Stem> Converter::stemMap =
+        {
+            // std::pair<core::TechnicalChoice::Choice, api::MarkType>{ core::TechnicalChoice::Choice::technical, api::MarkType::unspecified },
+            std::pair<core::StemValue, api::Stem>{ core::StemValue::up, api::Stem::up },
+            std::pair<core::StemValue, api::Stem>{ core::StemValue::down, api::Stem::down },
+            std::pair<core::StemValue, api::Stem>{ core::StemValue::none, api::Stem::none },
+            std::pair<core::StemValue, api::Stem>{ core::StemValue::double_, api::Stem::both },
+        };
+        
+        
         const std::map<core::MeasureNumberingValue, api::MeasureNumbering> Converter::measureNumberingMap =
         {
             
@@ -578,6 +589,18 @@ namespace mx
         api::MeasureNumbering Converter::convertMeasureNumbering( core::MeasureNumberingValue value ) const
         {
             return findApiItem( measureNumberingMap, api::MeasureNumbering::unspecified, value );
+        }
+        
+        
+        core::StemValue Converter::convert( api::Stem value ) const
+        {
+            return findCoreItem( stemMap, core::StemValue::up, value );
+        }
+        
+        
+        api::Stem Converter::convert( core::StemValue value ) const
+        {
+            return findApiItem( stemMap, api::Stem::unspecified, value );
         }
     }
 }

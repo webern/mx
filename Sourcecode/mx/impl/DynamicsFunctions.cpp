@@ -29,7 +29,7 @@ namespace mx
             const auto markType = converter.convertDynamic( dynamicType );
             auto markData = api::MarkData{};
             markData.markType = markType;
-            markData.tickPosition = myCursor.position;
+            markData.tickTimePosition = myCursor.tickTimePosition;
             markData.name = myDynamic.getValue().getValueString();
             parseMarkDataAttributes( myDynamic, markData );
 

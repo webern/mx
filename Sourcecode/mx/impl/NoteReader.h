@@ -66,6 +66,8 @@ namespace mx
             inline bool getIsAccidentalCautionary() const { return myIsAccidentalCautionary; }
             inline bool getIsAccidentalEditorial() const { return myIsAccidentalEditorial; }
             inline bool getIsAccidentalBracketed() const { return myIsAccidentalBracketed; }
+            inline bool getIsStemSpecified() const { return myIsStemSpecified; }
+            inline core::StemValue getStem() const { return myStem; }
             
 		private:
         	const core::Note& myNote;
@@ -101,6 +103,8 @@ namespace mx
             bool myIsAccidentalCautionary;
             bool myIsAccidentalEditorial;
             bool myIsAccidentalBracketed;
+            bool myIsStemSpecified;
+            core::StemValue myStem;
 
         private:
             const core::FullNoteGroup& findFullNoteGroup( const core::NoteChoice& noteChoice ) const;
@@ -114,6 +118,7 @@ namespace mx
             void setBeams();
             void setTimeModification();
             void setAccidental();
+            void setStem();
         };
     }
 }

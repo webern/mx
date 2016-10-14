@@ -75,6 +75,9 @@ namespace mx
             
             core::MeasureNumberingValue convertMeasureNumbering( api::MeasureNumbering value ) const;
             api::MeasureNumbering convertMeasureNumbering( core::MeasureNumberingValue value ) const;
+            
+            core::StemValue convert( api::Stem value ) const;
+            api::Stem convert( core::StemValue value ) const;
 
             const static std::map<core::StepEnum, api::Step> stepMap;
             const static std::map<core::NoteTypeValue, api::DurationName> durationMap;
@@ -94,7 +97,8 @@ namespace mx
             const static std::map<core::AccidentalValue, api::MarkType> accidentalMarkMap;
             const static std::map<core::TechnicalChoice::Choice, api::MarkType> technicalMarkMap;
             const static std::map<core::MeasureNumberingValue, api::MeasureNumbering> measureNumberingMap;
-
+            const static std::map<core::StemValue, api::Stem> stemMap;
+            
         private:
             template<typename CORE_TYPE, typename API_TYPE>
             API_TYPE findApiItem( const std::map<CORE_TYPE, API_TYPE>& enumMap, API_TYPE defaultToReturn, CORE_TYPE itemToFind ) const

@@ -59,7 +59,7 @@ namespace mx
                 }
                 api::MarkData markData;
                 markData.markType = markType;
-                markData.tickPosition = myCursor.position;
+                markData.tickTimePosition = myCursor.tickTimePosition;
                 bool isSuccess = parseTechicalMark( *techChoice, markData );
                 
                 if( isSuccess )

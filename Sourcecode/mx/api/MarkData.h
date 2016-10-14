@@ -166,7 +166,7 @@ namespace mx
             std::string name;
             std::string smuflName;
             char16_t smuflCodepoint;
-            int tickPosition;
+            int tickTimePosition;
             PrintData printData;
             PositionData positionData;
             bool isDynamic() const;

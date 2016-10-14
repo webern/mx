@@ -14,12 +14,13 @@ namespace mx
         , isUnpitched{ false }
         , isDisplayStepOctaveSpecified{ false }
         , isChord{ false }
+        , isTied{ false }
         , noteType{ NoteType::normal }
         , pitchData{}
         , staffIndex{ 0 }
         , userRequestedVoiceNumber{ -1 }
         , stem{ Stem::unspecified }
-        , startTimeTicks{ 0 }
+        , tickTimePosition{ 0 }
         , durationData{}
         , beams{}
         , positionData{}

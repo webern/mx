@@ -47,7 +47,7 @@ namespace mx
                 const auto markType = converter.convertOrnament( ornamentType );
                 auto markData = api::MarkData{};
                 markData.markType = markType;
-                markData.tickPosition = myCursor.position;
+                markData.tickTimePosition = myCursor.tickTimePosition;
                 
                 parseOrnament( *ornament, markData );
                 

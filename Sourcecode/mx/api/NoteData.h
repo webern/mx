@@ -38,7 +38,8 @@ namespace mx
     		unspecified,
     		up,
     		down,
-    		none
+    		none,
+            both
     	};
 
     	class NoteData
@@ -62,13 +63,20 @@ namespace mx
             // whether to mirror that approach in the API or make it more sane.
             bool isChord;
             
+            // This is separate from the tie curves themselves. This
+            // states that the note should be tied but noteAttachment.curve
+            // items are needed to draw the ties visibly
+            bool isTied;
+            
             NoteType noteType;                  // normal, cue, grace
             PitchData pitchData;                // step, alter, octave, accidental, etc
             int staffIndex;                     // this should be one less than the number shown in the <staff> element
             int userRequestedVoiceNumber;
             Stem stem;
             
-            int startTimeTicks;
+            // the location of the note, timewise, within the measure
+            // denominated in ticksPerQuarter as defined by ScoreData
+            int tickTimePosition;
             DurationData durationData;
             
             std::vector<Beam> beams;

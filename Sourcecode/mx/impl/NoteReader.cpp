@@ -2,6 +2,7 @@
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #include "mx/impl/NoteReader.h"
+#include "mx/core/elements/Stem.h"
 #include "mx/core/elements/Accidental.h"
 #include "mx/core/elements/ActualNotes.h"
 #include "mx/core/elements/Alter.h"
@@ -83,6 +84,7 @@ namespace mx
             setBeams();
             setTimeModification();
             setAccidental();
+            setStem();
         }
 
         const core::FullNoteGroup& NoteReader::findFullNoteGroup( const core::NoteChoice& noteChoice ) const
@@ -346,6 +348,20 @@ namespace mx
                 {
                     myIsAccidentalBracketed = true;
                 }
+            }
+        }
+        
+        
+        void NoteReader::setStem()
+        {
+            if( myNote.getHasStem() )
+            {
+                myIsStemSpecified = true;
+                myStem = myNote.getStem()->getValue();
+            }
+            else
+            {
+                myIsStemSpecified = false;
             }
         }
     }

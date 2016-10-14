@@ -10,7 +10,7 @@ namespace mx
         Cursor::Cursor( int numStaves, int globalTicksPerQuarter )
         : timeSignature{}
         , ticksPerQuarter( globalTicksPerQuarter )
-        , position( 0 )
+        , tickTimePosition( 0 )
         , voiceIndex( 0 )
         , staffIndex( 0 )
         , isBackupInProgress( false )
@@ -36,7 +36,7 @@ namespace mx
 
         void Cursor::reset()
         {
-            position = 0;
+            tickTimePosition = 0;
             staffIndex = 0;
             voiceIndex = 0;
         }

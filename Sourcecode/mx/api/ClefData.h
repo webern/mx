@@ -43,7 +43,7 @@ namespace mx
             ClefSymbol symbol;
             int line;
             int octaveChange;
-            int tickPosition;
+            int tickTimePosition;
             ClefLocation location;
             std::string toString() const;
             
