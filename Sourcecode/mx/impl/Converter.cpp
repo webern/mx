@@ -262,6 +262,14 @@ namespace mx
             std::pair<core::FontWeight, api::FontWeight>{ core::FontWeight::normal, api::FontWeight::normal },
             std::pair<core::FontWeight, api::FontWeight>{ core::FontWeight::bold, api::FontWeight::bold },
         };
+        
+        
+        const std::map<core::MeasureNumberingValue, api::MeasureNumbering> Converter::measureNumberingMap =
+        {
+            std::make_pair( core::MeasureNumberingValue::measure, api::MeasureNumbering::measure ),
+            std::make_pair( core::MeasureNumberingValue::none, api::MeasureNumbering::none ),
+            std::make_pair( core::MeasureNumberingValue::system, api::MeasureNumbering::system ),
+        };
 
         
         const std::map<core::TechnicalChoice::Choice, api::MarkType> Converter::technicalMarkMap =
@@ -296,7 +304,6 @@ namespace mx
         
         const std::map<core::StemValue, api::Stem> Converter::stemMap =
         {
-            // std::pair<core::TechnicalChoice::Choice, api::MarkType>{ core::TechnicalChoice::Choice::technical, api::MarkType::unspecified },
             std::pair<core::StemValue, api::Stem>{ core::StemValue::up, api::Stem::up },
             std::pair<core::StemValue, api::Stem>{ core::StemValue::down, api::Stem::down },
             std::pair<core::StemValue, api::Stem>{ core::StemValue::none, api::Stem::none },
@@ -304,10 +311,14 @@ namespace mx
         };
         
         
-        const std::map<core::MeasureNumberingValue, api::MeasureNumbering> Converter::measureNumberingMap =
+        const std::map<core::LineType, api::LineType> Converter::lineType =
         {
-            
+            std::pair<core::LineType, api::LineType>{ core::LineType::dashed, api::LineType::dashed },
+            std::pair<core::LineType, api::LineType>{ core::LineType::dotted, api::LineType::dotted },
+            std::pair<core::LineType, api::LineType>{ core::LineType::solid, api::LineType::solid },
+            std::pair<core::LineType, api::LineType>{ core::LineType::wavy, api::LineType::wavy },
         };
+        
         
         api::Step Converter::convert( core::StepEnum inStep ) const
         {
@@ -532,6 +543,27 @@ namespace mx
         }
         
         
+        bool Converter::isArticulation( api::MarkType value ) const
+        {
+            return value == api::MarkType::accent ||
+            value == api::MarkType::strongAccent ||
+            value == api::MarkType::staccato ||
+            value == api::MarkType::tenuto ||
+            value == api::MarkType::detachedLegato ||
+            value == api::MarkType::staccatissimo ||
+            value == api::MarkType::spiccato ||
+            value == api::MarkType::scoop ||
+            value == api::MarkType::plop ||
+            value == api::MarkType::doit ||
+            value == api::MarkType::falloff ||
+            value == api::MarkType::breathMark ||
+            value == api::MarkType::caesura ||
+            value == api::MarkType::stress ||
+            value == api::MarkType::unstress ||
+            value == api::MarkType::otherArticulation;
+        }
+        
+        
         core::DynamicsEnum Converter::convertDynamic( api::MarkType value ) const
         {
             return findCoreItem( dynamicsMap, core::DynamicsEnum::otherDynamics, value );
@@ -601,6 +633,18 @@ namespace mx
         api::Stem Converter::convert( core::StemValue value ) const
         {
             return findApiItem( stemMap, api::Stem::unspecified, value );
+        }
+        
+        
+        core::LineType Converter::convert( api::LineType value ) const
+        {
+            return findCoreItem( lineType, core::LineType::solid, value );
+        }
+        
+        
+        api::LineType Converter::convert( core::LineType value ) const
+        {
+            return findApiItem( lineType, api::LineType::unspecified, value );
         }
     }
 }

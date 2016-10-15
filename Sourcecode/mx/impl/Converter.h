@@ -60,6 +60,7 @@ namespace mx
             
             core::ArticulationsChoice::Choice convertArticulation( api::MarkType value ) const;
             api::MarkType convertArticulation( core::ArticulationsChoice::Choice value ) const;
+            bool isArticulation( api::MarkType value ) const;
             
             core::DynamicsEnum convertDynamic( api::MarkType value ) const;
             api::MarkType convertDynamic( core::DynamicsEnum value ) const;
@@ -78,6 +79,9 @@ namespace mx
             
             core::StemValue convert( api::Stem value ) const;
             api::Stem convert( core::StemValue value ) const;
+            
+            core::LineType convert( api::LineType value ) const;
+            api::LineType convert( core::LineType value ) const;
 
             const static std::map<core::StepEnum, api::Step> stepMap;
             const static std::map<core::NoteTypeValue, api::DurationName> durationMap;
@@ -98,6 +102,7 @@ namespace mx
             const static std::map<core::TechnicalChoice::Choice, api::MarkType> technicalMarkMap;
             const static std::map<core::MeasureNumberingValue, api::MeasureNumbering> measureNumberingMap;
             const static std::map<core::StemValue, api::Stem> stemMap;
+            const static std::map<core::LineType, api::LineType> lineType;
             
         private:
             template<typename CORE_TYPE, typename API_TYPE>

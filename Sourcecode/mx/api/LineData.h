@@ -24,6 +24,13 @@ namespace mx
             bool isSpaceLengthSpecified;
             long double spaceLength;
             
+            inline bool isSpecified() const
+            {
+                return lineType != LineType::unspecified ||
+                isDashLengthSpecified ||
+                isSpaceLengthSpecified;
+            }
+            
             LineData()
             : lineType{ LineType::unspecified }
             , isDashLengthSpecified{ false }

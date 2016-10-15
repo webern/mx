@@ -1325,6 +1325,12 @@
 		29398BAB1DB1561A00475CD5 /* NoteWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 29398BA61DB1561200475CD5 /* NoteWriter.h */; };
 		29398BAC1DB1561A00475CD5 /* NoteWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29398BA51DB1561200475CD5 /* NoteWriter.cpp */; };
 		29398BAD1DB1561A00475CD5 /* NoteWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 29398BA61DB1561200475CD5 /* NoteWriter.h */; };
+		29398BB01DB1917B00475CD5 /* NotationsWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29398BAE1DB1917B00475CD5 /* NotationsWriter.cpp */; };
+		29398BB11DB1917B00475CD5 /* NotationsWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 29398BAF1DB1917B00475CD5 /* NotationsWriter.h */; };
+		29398BB21DB1918100475CD5 /* NotationsWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29398BAE1DB1917B00475CD5 /* NotationsWriter.cpp */; };
+		29398BB31DB1918100475CD5 /* NotationsWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 29398BAF1DB1917B00475CD5 /* NotationsWriter.h */; };
+		29398BB41DB1918100475CD5 /* NotationsWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29398BAE1DB1917B00475CD5 /* NotationsWriter.cpp */; };
+		29398BB51DB1918100475CD5 /* NotationsWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 29398BAF1DB1917B00475CD5 /* NotationsWriter.h */; };
 		2945483A1D295C5500B90302 /* Accent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 294545ED1D295C5300B90302 /* Accent.cpp */; };
 		2945483B1D295C5500B90302 /* Accidental.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 294545EE1D295C5300B90302 /* Accidental.cpp */; };
 		2945483C1D295C5500B90302 /* AccidentalAttributes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 294545EF1D295C5300B90302 /* AccidentalAttributes.cpp */; };
@@ -2113,6 +2119,8 @@
 		29398BA41DB1561200475CD5 /* MeasureCursor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MeasureCursor.h; path = ../Sourcecode/mx/impl/MeasureCursor.h; sourceTree = "<group>"; };
 		29398BA51DB1561200475CD5 /* NoteWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NoteWriter.cpp; path = ../Sourcecode/mx/impl/NoteWriter.cpp; sourceTree = "<group>"; };
 		29398BA61DB1561200475CD5 /* NoteWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NoteWriter.h; path = ../Sourcecode/mx/impl/NoteWriter.h; sourceTree = "<group>"; };
+		29398BAE1DB1917B00475CD5 /* NotationsWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NotationsWriter.cpp; path = ../Sourcecode/mx/impl/NotationsWriter.cpp; sourceTree = "<group>"; };
+		29398BAF1DB1917B00475CD5 /* NotationsWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NotationsWriter.h; path = ../Sourcecode/mx/impl/NotationsWriter.h; sourceTree = "<group>"; };
 		293AB0851DA011B100A58B36 /* FontFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FontFunctions.h; path = ../Sourcecode/mx/impl/FontFunctions.h; sourceTree = "<group>"; };
 		293CE9F51D7B2C18003F1FEB /* PositionFunctions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PositionFunctions.h; path = ../Sourcecode/mx/impl/PositionFunctions.h; sourceTree = "<group>"; };
 		29421B331D27FECC00DBC7C3 /* UnusedParameter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UnusedParameter.h; path = ../Sourcecode/mx/core/UnusedParameter.h; sourceTree = "<group>"; };
@@ -3583,6 +3591,8 @@
 				29B7C4681DAFFDBA009D7D8F /* MeasureWriter.h */,
 				29766AC61DAC014300CCE2AC /* MetronomeReader.cpp */,
 				29766AC51DAC014300CCE2AC /* MetronomeReader.h */,
+				29398BAE1DB1917B00475CD5 /* NotationsWriter.cpp */,
+				29398BAF1DB1917B00475CD5 /* NotationsWriter.h */,
 				2913BB8B1D753FC8006C34A3 /* NoteFunctions.cpp */,
 				2913BB8C1D753FC8006C34A3 /* NoteFunctions.h */,
 				297306661D89D08400B8C0D3 /* NoteReader.cpp */,
@@ -4929,6 +4939,7 @@
 				290756E61DA8BE2A00EEF5C3 /* CurveEnd.h in Headers */,
 				290756E71DA8BE2A00EEF5C3 /* CurvePoints.h in Headers */,
 				290756E81DA8BE2A00EEF5C3 /* CurveStart.h in Headers */,
+				29398BB31DB1918100475CD5 /* NotationsWriter.h in Headers */,
 				290756E91DA8BE2A00EEF5C3 /* CurveType.h in Headers */,
 				29766AD31DAC14CC00CCE2AC /* DirectionData.h in Headers */,
 				290756EA1DA8BE2A00EEF5C3 /* DocumentManager.h in Headers */,
@@ -4973,6 +4984,7 @@
 				290756C81DA8BE0800EEF5C3 /* CurveEnd.h in Headers */,
 				290756C91DA8BE0800EEF5C3 /* CurvePoints.h in Headers */,
 				290756CA1DA8BE0800EEF5C3 /* CurveStart.h in Headers */,
+				29398BB51DB1918100475CD5 /* NotationsWriter.h in Headers */,
 				290756CB1DA8BE0800EEF5C3 /* CurveType.h in Headers */,
 				29766AD41DAC14D700CCE2AC /* DirectionData.h in Headers */,
 				290756CC1DA8BE0800EEF5C3 /* DocumentManager.h in Headers */,
@@ -5011,6 +5023,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				29766AC71DAC014300CCE2AC /* MetronomeReader.h in Headers */,
+				29398BB11DB1917B00475CD5 /* NotationsWriter.h in Headers */,
 				29B4E8241DA9CFC2005DC6D1 /* NoteAttachmentData.h in Headers */,
 				29C29B891DAEC00C00D3A884 /* ScoreReader.h in Headers */,
 				29398BA91DB1561200475CD5 /* NoteWriter.h in Headers */,
@@ -5500,6 +5513,7 @@
 				2933A9401DA58F2F005D7222 /* NormalNotes.cpp in Sources */,
 				2933A9411DA58F2F005D7222 /* NormalType.cpp in Sources */,
 				2933A9421DA58F2F005D7222 /* NormalTypeNormalDotGroup.cpp in Sources */,
+				29398BB21DB1918100475CD5 /* NotationsWriter.cpp in Sources */,
 				2933A9431DA58F2F005D7222 /* Notations.cpp in Sources */,
 				2933A9441DA58F2F005D7222 /* NotationsAttributes.cpp in Sources */,
 				2933A9451DA58F2F005D7222 /* NotationsChoice.cpp in Sources */,
@@ -6161,6 +6175,7 @@
 				2933AC0B1DA5AA73005D7222 /* NormalNotes.cpp in Sources */,
 				2933AC0C1DA5AA73005D7222 /* NormalType.cpp in Sources */,
 				2933AC0D1DA5AA73005D7222 /* NormalTypeNormalDotGroup.cpp in Sources */,
+				29398BB41DB1918100475CD5 /* NotationsWriter.cpp in Sources */,
 				2933AC0E1DA5AA73005D7222 /* Notations.cpp in Sources */,
 				2933AC0F1DA5AA73005D7222 /* NotationsAttributes.cpp in Sources */,
 				2933AC101DA5AA73005D7222 /* NotationsChoice.cpp in Sources */,
@@ -6822,6 +6837,7 @@
 				29454A581D295C5500B90302 /* TouchingPitch.cpp in Sources */,
 				294548781D295C5500B90302 /* BracketAttributes.cpp in Sources */,
 				2945499E1D295C5500B90302 /* OtherAppearance.cpp in Sources */,
+				29398BB01DB1917B00475CD5 /* NotationsWriter.cpp in Sources */,
 				2945490A1D295C5500B90302 /* HammerOn.cpp in Sources */,
 				294549491D295C5500B90302 /* LyricFont.cpp in Sources */,
 				294549381D295C5500B90302 /* KeyOctaveAttributes.cpp in Sources */,

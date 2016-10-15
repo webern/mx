@@ -31,6 +31,7 @@
 #include "mx/core/elements/Type.h"
 #include "mx/core/elements/Unpitched.h"
 #include "mx/core/elements/Voice.h"
+#include "mx/core/elements/Tie.h"
 #include "mx/utility/StringToInt.h"
 
 #include <map>
@@ -53,7 +54,6 @@ namespace mx
         , myIsPitch( false )
         , myIsDisplayStepOctaveSpecified( false )
         , myDurationValue( 0.0L )
-        , myTieCount( 0 )
         , myStep( core::StepEnum::c )
         , myAlter( 0 )
         , myOctave( 4 )
@@ -73,6 +73,8 @@ namespace mx
         , myIsAccidentalCautionary{ false }
         , myIsAccidentalEditorial{ false }
         , myIsAccidentalBracketed{ false }
+        , myIsTieStart{ false }
+        , myIsTieStop{ false }
         {
             setNormalGraceCueItems();
             setRestPitchUnpitchedItems();
@@ -122,16 +124,16 @@ namespace mx
                 {
                     myIsNormal = true;
                     const auto& noteGuts = *myNoteChoice.getNormalNoteGroup();
-                    myTieCount = static_cast<int>( noteGuts.getTieSet().size() );
                     myDurationValue = noteGuts.getDuration()->getValue().getValue();
+                    setTie( noteGuts.getTieSet() );
                     break;
                 }
                 case core::NoteChoice::Choice::grace:
                 {
                     myIsGrace = true;
                     const auto& noteGuts = *myNoteChoice.getGraceNoteGroup();
-                    myTieCount = static_cast<int>( noteGuts.getTieSet().size() );
                     myDurationValue = 0;
+                    setTie( noteGuts.getTieSet() );
                     break;
                 }
                 case core::NoteChoice::Choice::cue:
@@ -139,7 +141,6 @@ namespace mx
                     myIsCue = true;
                     const auto& noteGuts = *myNoteChoice.getCueNoteGroup();
                     myDurationValue = noteGuts.getDuration()->getValue().getValue();
-                    myTieCount = 0;
                     break;
                 }
                 default:
@@ -362,6 +363,22 @@ namespace mx
             else
             {
                 myIsStemSpecified = false;
+            }
+        }
+        
+        
+        void NoteReader::setTie( const core::TieSet& tieSet )
+        {
+            for( const auto& tie : tieSet )
+            {
+                if( tie->getAttributes()->type == core::StartStop::start )
+                {
+                    myIsTieStart = true;
+                }
+                else if( tie->getAttributes()->type == core::StartStop::stop )
+                {
+                    myIsTieStop = true;
+                }
             }
         }
     }

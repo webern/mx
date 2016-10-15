@@ -39,6 +39,8 @@
 #include "mx/core/elements/Tie.h"
 #include "mx/core/elements/Dot.h"
 #include "mx/core/elements/Stem.h"
+#include "mx/core/elements/Notations.h"
+#include "mx/impl/NotationsWriter.h"
 
 namespace mx
 {
@@ -55,6 +57,7 @@ namespace mx
         {
             
         }
+
         
         core::NotePtr NoteWriter::getNote() const
         {
@@ -64,6 +67,33 @@ namespace mx
             setStaffAndVoice();
             setDurationNameAndDots();
             setStemDirection();
+            NotationsWriter notationsWriter{ myNoteData, myCursor, myScoreWriter };
+            
+            auto notations = notationsWriter.getNotations();
+            if( notations->getNotationsChoiceSet().size() > 0 )
+            {
+                myOutNote->addNotations( notations );
+            }
+            
+            if( myNoteData.pitchData.accidental != api::Accidental::none )
+            {
+                myOutNote->setHasAccidental( true );
+                myOutNote->getAccidental()->setValue( myConverter.convert( myNoteData.pitchData.accidental ) );
+            }
+            
+            auto beamIndex = 0;
+            for( const auto& beam : myNoteData.beams )
+            {
+                auto mxBeam = core::makeBeam();
+                auto attr = mxBeam->getAttributes();
+                attr->hasNumber = true;
+                attr->number = core::BeamLevel{ beamIndex + 1 };
+                mxBeam->setValue( myConverter.convert( beam ) );
+                myOutNote->addBeam( mxBeam );
+                ++beamIndex;
+            }
+            
+            
             return myOutNote;
         }
         
@@ -74,6 +104,13 @@ namespace mx
             myOutNoteChoice = myOutNote->getNoteChoice();
             switch( myNoteData.noteType )
             {
+//            if( myNoteData.isTieStart )
+//            {
+//                auto tiePtr = core::makeTie();
+//                tiePtr->getAttributes()->type = core::StartStop::start;
+//                myOutFullNoteGroup
+//            }
+
                 case api::NoteType::cue:
                 {
                     myOutNoteChoice->setChoice( core::NoteChoice::Choice::cue );
@@ -87,9 +124,17 @@ namespace mx
                     myOutNoteChoice->setChoice( core::NoteChoice::Choice::grace );
                     auto choiceObj = myOutNoteChoice->getGraceNoteGroup();
                     myOutFullNoteGroup = choiceObj->getFullNoteGroup();
-                    if( myNoteData.isTied )
+                    if( myNoteData.isTieStart )
                     {
-                        choiceObj->addTie( core::makeTie() );
+                        auto tie = core::makeTie();
+                        tie->getAttributes()->type = core::StartStop::start;
+                        choiceObj->addTie( tie );
+                    }
+                    if( myNoteData.isTieStop )
+                    {
+                        auto tie = core::makeTie();
+                        tie->getAttributes()->type = core::StartStop::stop;
+                        choiceObj->addTie( tie );
                     }
                     break;
                 }
@@ -99,9 +144,17 @@ namespace mx
                     auto choiceObj = myOutNoteChoice->getNormalNoteGroup();
                     myOutFullNoteGroup = choiceObj->getFullNoteGroup();
                     choiceObj->getDuration()->setValue( core::PositiveDivisionsValue{ static_cast<core::DecimalType>(myNoteData.durationData.durationTimeTicks) } );
-                    if( myNoteData.isTied )
+                    if( myNoteData.isTieStart )
                     {
-                        choiceObj->addTie( core::makeTie() );
+                        auto tie = core::makeTie();
+                        tie->getAttributes()->type = core::StartStop::start;
+                        choiceObj->addTie( tie );
+                    }
+                    if( myNoteData.isTieStop )
+                    {
+                        auto tie = core::makeTie();
+                        tie->getAttributes()->type = core::StartStop::stop;
+                        choiceObj->addTie( tie );
                     }
                     break;
                 }

@@ -163,6 +163,8 @@ namespace mx
             {
                 myOutNoteData.stem = converter.convert( reader.getStem() );
             }
+            myOutNoteData.isTieStart = reader.getIsTieStart();
+            myOutNoteData.isTieStop = reader.getIsTieStop();
             return myOutNoteData;
         }
         

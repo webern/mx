@@ -66,7 +66,8 @@ namespace mx
             // This is separate from the tie curves themselves. This
             // states that the note should be tied but noteAttachment.curve
             // items are needed to draw the ties visibly
-            bool isTied;
+            bool isTieStart;
+            bool isTieStop;
             
             NoteType noteType;                  // normal, cue, grace
             PitchData pitchData;                // step, alter, octave, accidental, etc

@@ -14,7 +14,8 @@ namespace mx
         , isUnpitched{ false }
         , isDisplayStepOctaveSpecified{ false }
         , isChord{ false }
-        , isTied{ false }
+        , isTieStart{ false }
+        , isTieStop{ false }
         , noteType{ NoteType::normal }
         , pitchData{}
         , staffIndex{ 0 }
