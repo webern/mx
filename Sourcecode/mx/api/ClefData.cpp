@@ -2,7 +2,6 @@
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #include "mx/api/ClefData.h"
-#include <vector>
 #include <sstream>
 
 namespace mx

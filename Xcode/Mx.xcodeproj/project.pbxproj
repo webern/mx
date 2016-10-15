@@ -1953,7 +1953,6 @@
 		29B7C4781DB03B61009D7D8F /* NoteData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29E9EA351DA4A80A0040183B /* NoteData.cpp */; };
 		29B7C4791DB03B61009D7D8F /* PitchData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29E9EA341DA4A80A0040183B /* PitchData.cpp */; };
 		29B7C47A1DB03B61009D7D8F /* Smufl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C51A1D1D9ED91000EAA308 /* Smufl.cpp */; };
-		29B7C47B1DB03B61009D7D8F /* SpannerData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29E9C53A1DA470BC0040183B /* SpannerData.cpp */; };
 		29B7C47C1DB03B61009D7D8F /* ClefData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 292D1DD01D9A43A500CDD9F4 /* ClefData.cpp */; };
 		29B7C47D1DB03B61009D7D8F /* DocumentManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EF44091D6E70D300DBDAB9 /* DocumentManager.cpp */; };
 		29B7C47E1DB03B61009D7D8F /* DurationData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29E9EA361DA4A80A0040183B /* DurationData.cpp */; };
@@ -1962,7 +1961,6 @@
 		29B7C4811DB03B61009D7D8F /* NoteData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29E9EA351DA4A80A0040183B /* NoteData.cpp */; };
 		29B7C4821DB03B61009D7D8F /* PitchData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29E9EA341DA4A80A0040183B /* PitchData.cpp */; };
 		29B7C4831DB03B61009D7D8F /* Smufl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C51A1D1D9ED91000EAA308 /* Smufl.cpp */; };
-		29B7C4841DB03B61009D7D8F /* SpannerData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29E9C53A1DA470BC0040183B /* SpannerData.cpp */; };
 		29C01B061D130B690094BE61 /* AttributesInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C01AE01D130B690094BE61 /* AttributesInterface.cpp */; };
 		29C01B081D130B690094BE61 /* Color.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C01AE21D130B690094BE61 /* Color.cpp */; };
 		29C01B0A1D130B690094BE61 /* Date.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C01AE41D130B690094BE61 /* Date.cpp */; };
@@ -2008,7 +2006,6 @@
 		29E2B43A1DA8494900DC61EA /* StaffFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297DA0721D7F60BE0067C13A /* StaffFunctions.cpp */; };
 		29E2B43B1DA8494900DC61EA /* TechnicalFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EF30011DA32E37001FE5DF /* TechnicalFunctions.cpp */; };
 		29E2B43C1DA8494900DC61EA /* TimeFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2927EC9E1D886E460042E080 /* TimeFunctions.cpp */; };
-		29E9C53C1DA470BC0040183B /* SpannerData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29E9C53A1DA470BC0040183B /* SpannerData.cpp */; };
 		29E9EA371DA4A80A0040183B /* PitchData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29E9EA341DA4A80A0040183B /* PitchData.cpp */; };
 		29E9EA381DA4A80A0040183B /* NoteData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29E9EA351DA4A80A0040183B /* NoteData.cpp */; };
 		29E9EA391DA4A80A0040183B /* DurationData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29E9EA361DA4A80A0040183B /* DurationData.cpp */; };
@@ -3400,7 +3397,6 @@
 		29E2B3CB1DA81E9700DC61EA /* PartReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PartReader.h; path = ../Sourcecode/mx/impl/PartReader.h; sourceTree = "<group>"; };
 		29E33EA21D99C9AA001BD2EE /* StringToInt.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = StringToInt.h; path = ../Sourcecode/mx/utility/StringToInt.h; sourceTree = "<group>"; };
 		29E9C5391DA470BC0040183B /* SpannerData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SpannerData.h; path = ../Sourcecode/mx/api/SpannerData.h; sourceTree = "<group>"; };
-		29E9C53A1DA470BC0040183B /* SpannerData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SpannerData.cpp; path = ../Sourcecode/mx/api/SpannerData.cpp; sourceTree = "<group>"; };
 		29E9C53D1DA4802B0040183B /* CurveStart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CurveStart.h; path = ../Sourcecode/mx/api/CurveStart.h; sourceTree = "<group>"; };
 		29E9C53F1DA48DAA0040183B /* CurvePoints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CurvePoints.h; path = ../Sourcecode/mx/api/CurvePoints.h; sourceTree = "<group>"; };
 		29E9C5421DA48F5F0040183B /* CurveContinue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CurveContinue.h; path = ../Sourcecode/mx/api/CurveContinue.h; sourceTree = "<group>"; };
@@ -4909,7 +4905,6 @@
 				29EF440C1D6E70D300DBDAB9 /* ScoreData.h */,
 				29C51A1D1D9ED91000EAA308 /* Smufl.cpp */,
 				29C51A1C1D9ED3A200EAA308 /* Smufl.h */,
-				29E9C53A1DA470BC0040183B /* SpannerData.cpp */,
 				29E9C5391DA470BC0040183B /* SpannerData.h */,
 				29DC06EE1D7E5A8300210B7E /* StaffData.h */,
 				29B7C46B1DB02D2F009D7D8F /* SystemData.h */,
@@ -5406,7 +5401,6 @@
 				2933A8E01DA58F2F005D7222 /* InstrumentAbbreviation.cpp in Sources */,
 				2933A8E11DA58F2F005D7222 /* InstrumentAttributes.cpp in Sources */,
 				2933A8E21DA58F2F005D7222 /* InstrumentName.cpp in Sources */,
-				29B7C4841DB03B61009D7D8F /* SpannerData.cpp in Sources */,
 				2933A8E31DA58F2F005D7222 /* Instruments.cpp in Sources */,
 				2933A8E41DA58F2F005D7222 /* InstrumentSound.cpp in Sources */,
 				2933A8E51DA58F2F005D7222 /* Interchangeable.cpp in Sources */,
@@ -6068,7 +6062,6 @@
 				2933ABAB1DA5AA73005D7222 /* InstrumentAbbreviation.cpp in Sources */,
 				2933ABAC1DA5AA73005D7222 /* InstrumentAttributes.cpp in Sources */,
 				2933ABAD1DA5AA73005D7222 /* InstrumentName.cpp in Sources */,
-				29B7C47B1DB03B61009D7D8F /* SpannerData.cpp in Sources */,
 				2933ABAE1DA5AA73005D7222 /* Instruments.cpp in Sources */,
 				2933ABAF1DA5AA73005D7222 /* InstrumentSound.cpp in Sources */,
 				2933ABB01DA5AA73005D7222 /* Interchangeable.cpp in Sources */,
@@ -6772,7 +6765,6 @@
 				29454A051D295C5500B90302 /* SlashAttributes.cpp in Sources */,
 				294548C31D295C5500B90302 /* ElisionSyllabicGroup.cpp in Sources */,
 				29454A231D295C5500B90302 /* Stem.cpp in Sources */,
-				29E9C53C1DA470BC0040183B /* SpannerData.cpp in Sources */,
 				294549981D295C5500B90302 /* OffsetAttributes.cpp in Sources */,
 				294548761D295C5500B90302 /* BottomMargin.cpp in Sources */,
 				294549DB1D295C5500B90302 /* Print.cpp in Sources */,

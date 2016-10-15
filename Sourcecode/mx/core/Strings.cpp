@@ -3,9 +3,6 @@
 
 #include "mx/core/Strings.h"
 #include <sstream>
-#include <cctype>
-#include <algorithm>
-#include <iterator>
 
 namespace
 {

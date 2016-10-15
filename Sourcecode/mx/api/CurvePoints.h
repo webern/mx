@@ -80,7 +80,7 @@ namespace mx
             bool isTimeOffsetTicksSpecified;
             int timeOffsetTicks;
             
-            // convience, check if any of the available fields
+            // convenience, check if any of the available fields
             // are specified.
             inline bool isSpecified() const
             {

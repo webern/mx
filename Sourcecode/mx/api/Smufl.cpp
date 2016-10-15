@@ -6,7 +6,6 @@
 
 #include <locale>
 #include <codecvt>
-#include <algorithm>
 
 namespace mx
 {

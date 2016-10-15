@@ -3,7 +3,6 @@
 
 #include "mx/xml/PugiDoc.h"
 #include "mx/xml/PugiElement.h"
-#include "mx/utility/Parse.h"
 #include "mx/utility/Throw.h"
 
 #include <fstream>

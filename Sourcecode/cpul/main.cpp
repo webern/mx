@@ -1,7 +1,7 @@
 #include <iostream>
 #include "cpul/cpulRun.h"
 #include "cpul/cpulTestTimer.h"
-#include "cpul/cpulDefines.h"
+
 
 int main(int argc, const char * argv[])
 {
