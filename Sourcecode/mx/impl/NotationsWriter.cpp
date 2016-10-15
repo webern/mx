@@ -24,6 +24,8 @@
 #include "mx/core/elements/Unstress.h"
 #include "mx/core/elements/Tied.h"
 #include "mx/core/elements/Slur.h"
+#include "mx/utility/OptionalMembers.h"
+#include "mx/impl/CurveFunctions.h"
 
 namespace mx
 {
@@ -37,8 +39,7 @@ namespace mx
         {
             
         }
-        
-        
+                
         core::NotationsPtr NotationsWriter::getNotations() const
         {
             myOutNotations = core::makeNotations();
@@ -55,180 +56,14 @@ namespace mx
                     curveNotationsChoice->setChoice( core::NotationsChoice::Choice::tied );
                     auto element = curveNotationsChoice->getTied();
                     auto attr = element->getAttributes();
-                    if( curve.numberLevel > 0 )
-                    {
-                        attr->hasNumber = true;
-                        attr->number = core::NumberLevel{ curve.numberLevel };
-                    }
-                    
-                    if( curve.curvePoints.isSpecified() )
-                    {
-                        const auto& p = curve.curvePoints;
-                        
-                        if( p.isBezierXSpecified )
-                        {
-                            attr->hasBezierX = true;
-                            attr->bezierX = core::TenthsValue{ p.bezierX };
-                        }
-                        
-                        if( p.isBezierYSpecified )
-                        {
-                            attr->hasBezierY = true;
-                            attr->bezierY = core::TenthsValue{ p.bezierY };
-                        }
-                        
-                        if( p.isXSpecified )
-                        {
-                            attr->hasDefaultX = true;
-                            attr->defaultX = core::TenthsValue{ p.x };
-                        }
-                        
-                        if( p.isYSpecified )
-                        {
-                            attr->hasDefaultY = true;
-                            attr->defaultY = core::TenthsValue{ p.y };
-                        }
-                        
-                        if( p.isTimeOffsetTicksSpecified )
-                        {
-                            attr->hasBezierOffset = true;
-                            attr->bezierOffset = core::DivisionsValue{ static_cast<core::DecimalType>(p.timeOffsetTicks) };
-                        }
-                    }
-                    
-                    if( curve.isColorSpecified )
-                    {
-                        attr->hasColor = true;
-                        attr->color.setRed( curve.colorData.red );
-                        attr->color.setGreen( curve.colorData.green );
-                        attr->color.setBlue( curve.colorData.blue );
-                        if( curve.colorData.isAlphaSpecified )
-                        {
-                            attr->color.setAlpha( curve.colorData.alpha );
-                            attr->color.setColorType( core::Color::ColorType::ARGB );
-                        }
-                        else
-                        {
-                            attr->color.setColorType( core::Color::ColorType::RGB );
-                        }
-                    }
-                    
-                    if( curve.placement != api::Placement::unspecified )
-                    {
-                        attr->hasPlacement = true;
-                        attr->placement = myConverter.convert( curve.placement );
-                    }
-                    
-                    if( curve.lineData.isSpecified() )
-                    {
-                        if( curve.lineData.lineType != api::LineType::unspecified )
-                        {
-                            attr->hasLineType = true;
-                            attr->lineType = myConverter.convert( curve.lineData.lineType );
-                        }
-                        
-                        if( curve.lineData.isSpaceLengthSpecified )
-                        {
-                            attr->hasSpaceLength = true;
-                            attr->spaceLength = core::TenthsValue{ curve.lineData.spaceLength };
-                        }
-                        
-                        if( curve.lineData.isDashLengthSpecified )
-                        {
-                            attr->hasDashLength = true;
-                            attr->dashLength = core::TenthsValue{ curve.lineData.dashLength };
-                        }
-                    }
+                    writeCurveStartAttributes( curve, attr );
                 }
                 else if( curve.curveType == api::CurveType::slur )
                 {
                     curveNotationsChoice->setChoice( core::NotationsChoice::Choice::slur );
                     auto element = curveNotationsChoice->getSlur();
                     auto attr = element->getAttributes();
-                    if( curve.numberLevel > 0 )
-                    {
-                        attr->hasNumber = true;
-                        attr->number = core::NumberLevel{ curve.numberLevel };
-                    }
-                    
-                    if( curve.curvePoints.isSpecified() )
-                    {
-                        const auto& p = curve.curvePoints;
-                        
-                        if( p.isBezierXSpecified )
-                        {
-                            attr->hasBezierX = true;
-                            attr->bezierX = core::TenthsValue{ p.bezierX };
-                        }
-                        
-                        if( p.isBezierYSpecified )
-                        {
-                            attr->hasBezierY = true;
-                            attr->bezierY = core::TenthsValue{ p.bezierY };
-                        }
-                        
-                        if( p.isXSpecified )
-                        {
-                            attr->hasDefaultX = true;
-                            attr->defaultX = core::TenthsValue{ p.x };
-                        }
-                        
-                        if( p.isYSpecified )
-                        {
-                            attr->hasDefaultY = true;
-                            attr->defaultY = core::TenthsValue{ p.y };
-                        }
-                        
-                        if( p.isTimeOffsetTicksSpecified )
-                        {
-                            attr->hasBezierOffset = true;
-                            attr->bezierOffset = core::DivisionsValue{ static_cast<core::DecimalType>(p.timeOffsetTicks) };
-                        }
-                    }
-                    
-                    if( curve.isColorSpecified )
-                    {
-                        attr->hasColor = true;
-                        attr->color.setRed( curve.colorData.red );
-                        attr->color.setGreen( curve.colorData.green );
-                        attr->color.setBlue( curve.colorData.blue );
-                        if( curve.colorData.isAlphaSpecified )
-                        {
-                            attr->color.setAlpha( curve.colorData.alpha );
-                            attr->color.setColorType( core::Color::ColorType::ARGB );
-                        }
-                        else
-                        {
-                            attr->color.setColorType( core::Color::ColorType::RGB );
-                        }
-                    }
-                    
-                    if( curve.placement != api::Placement::unspecified )
-                    {
-                        attr->hasPlacement = true;
-                        attr->placement = myConverter.convert( curve.placement );
-                    }
-                    
-                    if( curve.lineData.isSpecified() )
-                    {
-                        if( curve.lineData.lineType != api::LineType::unspecified )
-                        {
-                            attr->hasLineType = true;
-                            attr->lineType = myConverter.convert( curve.lineData.lineType );
-                        }
-                        
-                        if( curve.lineData.isSpaceLengthSpecified )
-                        {
-                            attr->hasSpaceLength = true;
-                            attr->spaceLength = core::TenthsValue{ curve.lineData.spaceLength };
-                        }
-                        
-                        if( curve.lineData.isDashLengthSpecified )
-                        {
-                            attr->hasDashLength = true;
-                            attr->dashLength = core::TenthsValue{ curve.lineData.dashLength };
-                        }
-                    }
+                    writeCurveStartAttributes( curve, attr );
                 }
             }
             

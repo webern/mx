@@ -147,5 +147,96 @@ namespace mx
                 outNoteData.noteAttachmentData.curveEnds.emplace_back( std::move( curveEnd ) );
             }
         }
+        
+        // take api::CurveStart as input, write values to either TiedAttributes or SlurAttributes
+        template<typename ATTRIBUTES_TYPE>
+        void writeCurveStartAttributes(const api::CurveStart& curve, ATTRIBUTES_TYPE& outAttributes )
+        {
+            if( curve.numberLevel > 0 )
+            {
+                outAttributes->hasNumber = true;
+                outAttributes->number = core::NumberLevel{ curve.numberLevel };
+            }
+            
+            if( curve.curvePoints.isSpecified() )
+            {
+                const auto& p = curve.curvePoints;
+                
+                if( p.isBezierXSpecified )
+                {
+                    outAttributes->hasBezierX = true;
+                    outAttributes->bezierX = core::TenthsValue{ p.bezierX };
+                }
+                
+                if( p.isBezierYSpecified )
+                {
+                    outAttributes->hasBezierY = true;
+                    outAttributes->bezierY = core::TenthsValue{ p.bezierY };
+                }
+                
+                if( p.isXSpecified )
+                {
+                    outAttributes->hasDefaultX = true;
+                    outAttributes->defaultX = core::TenthsValue{ p.x };
+                }
+                
+                if( p.isYSpecified )
+                {
+                    outAttributes->hasDefaultY = true;
+                    outAttributes->defaultY = core::TenthsValue{ p.y };
+                }
+                
+                if( p.isTimeOffsetTicksSpecified )
+                {
+                    outAttributes->hasBezierOffset = true;
+                    outAttributes->bezierOffset = core::DivisionsValue{ static_cast<core::DecimalType>(p.timeOffsetTicks) };
+                }
+            }
+            
+            if( curve.isColorSpecified )
+            {
+                outAttributes->hasColor = true;
+                outAttributes->color.setRed( curve.colorData.red );
+                outAttributes->color.setGreen( curve.colorData.green );
+                outAttributes->color.setBlue( curve.colorData.blue );
+                if( curve.colorData.isAlphaSpecified )
+                {
+                    outAttributes->color.setAlpha( curve.colorData.alpha );
+                    outAttributes->color.setColorType( core::Color::ColorType::ARGB );
+                }
+                else
+                {
+                    outAttributes->color.setColorType( core::Color::ColorType::RGB );
+                }
+            }
+            
+            Converter converter;
+            if( curve.placement != api::Placement::unspecified )
+            {
+                outAttributes->hasPlacement = true;
+                outAttributes->placement = converter.convert( curve.placement );
+            }
+            
+            if( curve.lineData.isSpecified() )
+            {
+                if( curve.lineData.lineType != api::LineType::unspecified )
+                {
+                    outAttributes->hasLineType = true;
+                    outAttributes->lineType = converter.convert( curve.lineData.lineType );
+                }
+                
+                if( curve.lineData.isSpaceLengthSpecified )
+                {
+                    outAttributes->hasSpaceLength = true;
+                    outAttributes->spaceLength = core::TenthsValue{ curve.lineData.spaceLength };
+                }
+                
+                if( curve.lineData.isDashLengthSpecified )
+                {
+                    outAttributes->hasDashLength = true;
+                    outAttributes->dashLength = core::TenthsValue{ curve.lineData.dashLength };
+                }
+            }
+        }//func
     }
 }
