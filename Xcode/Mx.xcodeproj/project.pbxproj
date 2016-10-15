@@ -1322,15 +1322,11 @@
 		29398BA81DB1561200475CD5 /* NoteWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29398BA51DB1561200475CD5 /* NoteWriter.cpp */; };
 		29398BA91DB1561200475CD5 /* NoteWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 29398BA61DB1561200475CD5 /* NoteWriter.h */; };
 		29398BAA1DB1561A00475CD5 /* NoteWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29398BA51DB1561200475CD5 /* NoteWriter.cpp */; };
-		29398BAB1DB1561A00475CD5 /* NoteWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 29398BA61DB1561200475CD5 /* NoteWriter.h */; };
 		29398BAC1DB1561A00475CD5 /* NoteWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29398BA51DB1561200475CD5 /* NoteWriter.cpp */; };
-		29398BAD1DB1561A00475CD5 /* NoteWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 29398BA61DB1561200475CD5 /* NoteWriter.h */; };
 		29398BB01DB1917B00475CD5 /* NotationsWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29398BAE1DB1917B00475CD5 /* NotationsWriter.cpp */; };
 		29398BB11DB1917B00475CD5 /* NotationsWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 29398BAF1DB1917B00475CD5 /* NotationsWriter.h */; };
 		29398BB21DB1918100475CD5 /* NotationsWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29398BAE1DB1917B00475CD5 /* NotationsWriter.cpp */; };
-		29398BB31DB1918100475CD5 /* NotationsWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 29398BAF1DB1917B00475CD5 /* NotationsWriter.h */; };
 		29398BB41DB1918100475CD5 /* NotationsWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29398BAE1DB1917B00475CD5 /* NotationsWriter.cpp */; };
-		29398BB51DB1918100475CD5 /* NotationsWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 29398BAF1DB1917B00475CD5 /* NotationsWriter.h */; };
 		2945483A1D295C5500B90302 /* Accent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 294545ED1D295C5300B90302 /* Accent.cpp */; };
 		2945483B1D295C5500B90302 /* Accidental.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 294545EE1D295C5300B90302 /* Accidental.cpp */; };
 		2945483C1D295C5500B90302 /* AccidentalAttributes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 294545EF1D295C5300B90302 /* AccidentalAttributes.cpp */; };
@@ -4939,7 +4935,6 @@
 				290756E61DA8BE2A00EEF5C3 /* CurveEnd.h in Headers */,
 				290756E71DA8BE2A00EEF5C3 /* CurvePoints.h in Headers */,
 				290756E81DA8BE2A00EEF5C3 /* CurveStart.h in Headers */,
-				29398BB31DB1918100475CD5 /* NotationsWriter.h in Headers */,
 				290756E91DA8BE2A00EEF5C3 /* CurveType.h in Headers */,
 				29766AD31DAC14CC00CCE2AC /* DirectionData.h in Headers */,
 				290756EA1DA8BE2A00EEF5C3 /* DocumentManager.h in Headers */,
@@ -4969,7 +4964,6 @@
 				290756FE1DA8BE2A00EEF5C3 /* TimeSignatureData.h in Headers */,
 				29B4E81D1DA9CA15005DC6D1 /* TupletData.h in Headers */,
 				290756FF1DA8BE2A00EEF5C3 /* VoiceData.h in Headers */,
-				29398BAB1DB1561A00475CD5 /* NoteWriter.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4984,7 +4978,6 @@
 				290756C81DA8BE0800EEF5C3 /* CurveEnd.h in Headers */,
 				290756C91DA8BE0800EEF5C3 /* CurvePoints.h in Headers */,
 				290756CA1DA8BE0800EEF5C3 /* CurveStart.h in Headers */,
-				29398BB51DB1918100475CD5 /* NotationsWriter.h in Headers */,
 				290756CB1DA8BE0800EEF5C3 /* CurveType.h in Headers */,
 				29766AD41DAC14D700CCE2AC /* DirectionData.h in Headers */,
 				290756CC1DA8BE0800EEF5C3 /* DocumentManager.h in Headers */,
@@ -5014,7 +5007,6 @@
 				290756E01DA8BE0800EEF5C3 /* TimeSignatureData.h in Headers */,
 				29B4E81E1DA9CA19005DC6D1 /* TupletData.h in Headers */,
 				290756E11DA8BE0800EEF5C3 /* VoiceData.h in Headers */,
-				29398BAD1DB1561A00475CD5 /* NoteWriter.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
