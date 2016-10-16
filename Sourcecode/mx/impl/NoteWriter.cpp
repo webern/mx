@@ -93,6 +93,16 @@ namespace mx
                 ++beamIndex;
             }
             
+            if(    myNoteData.durationData.timeModificationNormalNotes > 0
+                && myNoteData.durationData.timeModificationActualNotes > 0
+                && (    myNoteData.durationData.timeModificationNormalNotes > 1
+                     || myNoteData.durationData.timeModificationActualNotes > 1 ) )
+            {
+                myOutNote->setHasTimeModification( true );
+                auto timeMod = myOutNote->getTimeModification();
+                timeMod->getActualNotes()->setValue( core::NonNegativeInteger{ myNoteData.durationData.timeModificationActualNotes } );
+                timeMod->getNormalNotes()->setValue( core::NonNegativeInteger{ myNoteData.durationData.timeModificationNormalNotes } );
+            }
             
             return myOutNote;
         }
@@ -104,13 +114,6 @@ namespace mx
             myOutNoteChoice = myOutNote->getNoteChoice();
             switch( myNoteData.noteType )
             {
-//            if( myNoteData.isTieStart )
-//            {
-//                auto tiePtr = core::makeTie();
-//                tiePtr->getAttributes()->type = core::StartStop::start;
-//                myOutFullNoteGroup
-//            }
-
                 case api::NoteType::cue:
                 {
                     myOutNoteChoice->setChoice( core::NoteChoice::Choice::cue );

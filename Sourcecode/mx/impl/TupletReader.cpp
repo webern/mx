@@ -34,11 +34,17 @@ namespace mx
             const auto& attr = *myTuplet.getAttributes();
             api::TupletStart tupletStart;
             tupletStart.positionData = getPositionData( attr );
+            
+            if( attr.hasNumber )
+            {
+                tupletStart.numberLevel = attr.number.getValue();
+            }
  
             if( attr.type == core::StartStop::stop )
             {
                 api::TupletEnd tupletEnd;
                 tupletEnd.positionData = tupletStart.positionData;
+                tupletEnd.numberLevel = tupletStart.numberLevel;
                 outTupletEnds.emplace_back( std::move( tupletEnd ) );
                 return;
             }

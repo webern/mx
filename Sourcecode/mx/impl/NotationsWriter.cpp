@@ -26,6 +26,12 @@
 #include "mx/core/elements/Slur.h"
 #include "mx/utility/OptionalMembers.h"
 #include "mx/impl/CurveFunctions.h"
+#include "mx/core/elements/Tuplet.h"
+#include "mx/core/elements/TupletActual.h"
+#include "mx/core/elements/TupletNormal.h"
+#include "mx/core/elements/TupletDot.h"
+#include "mx/core/elements/TupletNumber.h"
+#include "mx/core/elements/TupletType.h"
 
 namespace mx
 {
@@ -66,6 +72,77 @@ namespace mx
                     writeCurveStartAttributes( curve, attr );
                 }
             }
+            
+            // TODO - curve continues and curve stops
+            
+            for( const auto& tupletStart : myNoteData.noteAttachmentData.tupletStarts )
+            {
+                auto tupletNotationsChoice = core::makeNotationsChoice();
+                myOutNotations->addNotationsChoice( tupletNotationsChoice );
+                tupletNotationsChoice->setChoice( core::NotationsChoice::Choice::tuplet );
+                auto tuplet = tupletNotationsChoice->getTuplet();
+                tuplet->getAttributes()->type = core::StartStop::start;
+                tuplet->setHasTupletActual( true );
+                tuplet->setHasTupletNormal( true );
+                tuplet->getTupletActual()->getTupletNumber()->setValue( core::NonNegativeInteger{ tupletStart.actualNumber } );
+                tuplet->getTupletNormal()->getTupletNumber()->setValue( core::NonNegativeInteger{ tupletStart.normalNumber } );
+                tuplet->getTupletNormal()->setHasTupletNumber( true );
+                tuplet->getTupletActual()->setHasTupletNumber( true );
+                
+                if( tupletStart.numberLevel > 0 )
+                {
+                    tuplet->getAttributes()->hasNumber = true;
+                    tuplet->getAttributes()->number = core::NumberLevel{ tupletStart.numberLevel };
+                }
+                
+                if( tupletStart.bracket != api::Bool::unspecified )
+                {
+                    tuplet->getAttributes()->hasBracket = true;
+                    tuplet->getAttributes()->bracket = myConverter.convert( tupletStart.bracket );
+                }
+                
+                if( tupletStart.showActualNumber != api::Bool::unspecified )
+                {
+                    auto& hasShow = tuplet->getAttributes()->hasShowNumber;
+                    auto& show = tuplet->getAttributes()->showNumber;
+                    
+                    if( tupletStart.showActualNumber == api::Bool::yes )
+                    {
+                        if( tupletStart.showNormalNumber == api::Bool::yes )
+                        {
+                            hasShow = true;
+                            show = core::ShowTuplet::both;
+                        }
+                        else
+                        {
+                            hasShow = true;
+                            show = core::ShowTuplet::actual;
+                        }
+                    }
+                    else if( tupletStart.showActualNumber == api::Bool::no )
+                    {
+                        hasShow = true;
+                        show = core::ShowTuplet::none;
+                    }
+                }
+            }
+            
+            
+            for( const auto& tupletEnd : myNoteData.noteAttachmentData.tupletEnds )
+            {
+                auto tupletNotationsChoice = core::makeNotationsChoice();
+                myOutNotations->addNotationsChoice( tupletNotationsChoice );
+                tupletNotationsChoice->setChoice( core::NotationsChoice::Choice::tuplet );
+                auto tuplet = tupletNotationsChoice->getTuplet();
+                tuplet->getAttributes()->type = core::StartStop::stop;
+                
+                if( tupletEnd.numberLevel > 0 )
+                {
+                    tuplet->getAttributes()->hasNumber = true;
+                    tuplet->getAttributes()->number = core::NumberLevel{ tupletEnd.numberLevel };
+                }
+            }
+            
             
             for( const auto& mark : myNoteData.noteAttachmentData.marks )
             {
