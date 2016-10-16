@@ -75,6 +75,8 @@
 #include "mx/impl/TimeFunctions.h"
 #include "mx/utility/Throw.h"
 
+#include <set>
+
 namespace mx
 {
     namespace impl
@@ -175,6 +177,8 @@ namespace mx
             }
             
             myCurrentCursor.isFirstMeasureInPart = false;
+            
+            consolidateVoicesForAllStaves();
             
             // move the data to a temp then return the temp
             auto temp = api::MeasureData{ std::move(myOutMeasureData) };
@@ -596,6 +600,105 @@ namespace mx
             MX_ASSERT( static_cast<size_t>( staff ) < myOutMeasureData.staves.size() );
             auto& staffRef = myOutMeasureData.staves.at( static_cast<size_t>( staff ) );
             staffRef.clefs.emplace_back( std::move( clefData ) );
+        }
+        
+        void MeasureReader::consolidateVoicesForAllStaves() const
+        {
+            for( auto& staff : myOutMeasureData.staves )
+            {
+                if( isUserRequestedVoiceNumberConsistentAccrossAllVoices( staff ) )
+                {
+                    takeUserRequestedVoiceNumbers( staff );
+                }
+                else
+                {
+                    collapseVoicesAutomatically( staff );
+                }
+            }
+        }
+        
+        
+        void MeasureReader::takeUserRequestedVoiceNumbers( api::StaffData& staff ) const
+        {
+            std::map<int, api::VoiceData> newVoiceData;
+            for( const auto& voicePair : staff.voices )
+            {
+                const int userRequestedVoiceNumber = getUserRequestedVoiceNumber( voicePair.second );
+                MX_ASSERT( userRequestedVoiceNumber >= 1 );
+                newVoiceData[userRequestedVoiceNumber-1] = std::move(voicePair.second);
+                
+            }
+            staff.voices = std::move( newVoiceData );
+        }
+        
+        
+        void MeasureReader::collapseVoicesAutomatically( api::StaffData& staff ) const
+        {
+            std::map<int, api::VoiceData> newVoiceData;
+            int newVoiceIndex = 0;
+            for( auto& voicePair : staff.voices )
+            {
+                newVoiceData[newVoiceIndex] = std::move(voicePair.second);
+                ++newVoiceIndex;
+            }
+            staff.voices = std::move( newVoiceData );
+        }
+        
+        
+        bool MeasureReader::isUserRequestedVoiceNumberConsistent( const api::VoiceData& voiceData ) const
+        {
+            if( voiceData.notes.empty() )
+            {
+                return true;
+            }
+            
+            const int userRequestedVoiceNumber = voiceData.notes.front().userRequestedVoiceNumber;
+            
+            if( userRequestedVoiceNumber < 1 )
+            {
+                return false;
+            }
+            
+            for( const auto& note : voiceData.notes )
+            {
+                if( note.userRequestedVoiceNumber != userRequestedVoiceNumber )
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        
+        
+        bool MeasureReader::isUserRequestedVoiceNumberConsistentAccrossAllVoices( const api::StaffData& staff ) const
+        {
+            std::set<int> userRequestedVoiceNumbers;
+            for( const auto& voicePair : staff.voices )
+            {
+                if( !isUserRequestedVoiceNumberConsistent( voicePair.second ) )
+                {
+                    return false;
+                }
+                const int userRequestedVoiceNumber = getUserRequestedVoiceNumber( voicePair.second );
+                auto result = userRequestedVoiceNumbers.insert( userRequestedVoiceNumber );
+                
+                if( !result.second )
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        
+        
+        int MeasureReader::getUserRequestedVoiceNumber( const api::VoiceData& voiceData ) const
+        {
+            if( voiceData.notes.empty() )
+            {
+                return -1;
+            }
+            
+            return voiceData.notes.front().userRequestedVoiceNumber;
         }
     }
 }
