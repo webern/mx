@@ -3316,7 +3316,6 @@
 		29766ADF1DAC39EF00CCE2AC /* KeyData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KeyData.h; path = ../Sourcecode/mx/api/KeyData.h; sourceTree = "<group>"; };
 		297DA0721D7F60BE0067C13A /* StaffFunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StaffFunctions.cpp; path = ../Sourcecode/mx/impl/StaffFunctions.cpp; sourceTree = "<group>"; };
 		297DA0731D7F60BE0067C13A /* StaffFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StaffFunctions.h; path = ../Sourcecode/mx/impl/StaffFunctions.h; sourceTree = "<group>"; };
-		2987DA351D2750FD00FAAFC5 /* IncludeAlot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IncludeAlot.h; path = ../Sourcecode/mx/core/IncludeAlot.h; sourceTree = "<group>"; };
 		299A2BB01D7FA48A006A7F5C /* PartGroupData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PartGroupData.h; path = ../Sourcecode/mx/api/PartGroupData.h; sourceTree = "<group>"; };
 		299F7FE61CA8D2200084CAE5 /* libMx.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMx.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		29ADB30D1D729E1900683BEC /* EncodingData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EncodingData.h; path = ../Sourcecode/mx/api/EncodingData.h; sourceTree = "<group>"; };
@@ -3492,7 +3491,6 @@
 				29D35E7A1D28DD8E00EC2CAE /* ForwardDeclare.h */,
 				295DDE0F1D2C0D4D00A2881D /* FromXElement.cpp */,
 				295DDE0E1D2C0D4400A2881D /* FromXElement.h */,
-				2987DA351D2750FD00FAAFC5 /* IncludeAlot.h */,
 				29C01AFC1D130B690094BE61 /* Integers.cpp */,
 				29C01AFD1D130B690094BE61 /* Integers.h */,
 				29C01AFE1D130B690094BE61 /* NumberOrNormal.cpp */,
