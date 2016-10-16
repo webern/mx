@@ -4,7 +4,7 @@
 #pragma once
 
 #include "mx/core/Enums.h"
-
+#include "mx/core/elements/Tie.h"
 #include <vector>
 
 namespace mx
@@ -14,9 +14,6 @@ namespace mx
         class Note;
         class NoteChoice;
         class FullNoteGroup;
-        class Tie;
-        using TiePtr = std::shared_ptr<Tie>;
-        using TieSet = std::vector<TiePtr>;
     }
     
     namespace impl
