@@ -72,7 +72,7 @@ namespace mx
             long double bezierY;
             
             // this is the 'bezier-offset' (or bezier-offset2')
-            // attribute.  it is very unclear what this is for
+            // attribute.  it is very unclear what this is for.
             // it's a decimal in the spec, but using an int
             // here since it is denominated in time duration
             // units and throughout the api we have decided to
