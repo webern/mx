@@ -85,18 +85,32 @@ namespace mx
         {
         public:
             std::string uniqueId;
+            
+            // because the MuscXML specification says this "Formatting
+            // attributes for the part-name element are deprecated in
+            // Version 2.0 in favor of the new part-name-display and
+            // part-abbreviation-display elements" the name will always
+            // be written with 'print-object="no". You must populate
+            // the displayName field in order to have a name displayed.
             std::string name;
-            PrintData namePrintData;
-            PositionData namePositionData;
+
+            // because the MuscXML specification says this "Formatting
+            // attributes for the part-name element are deprecated in
+            // Version 2.0 in favor of the new part-name-display and
+            // part-abbreviation-display elements" the abbreviation will
+            // always be written with 'print-object="no". You must
+            // populate the displayName field in order to have an
+            // abbreviation displayed.
             std::string abbreviation;
-            PrintData abbreviationPrintData;
-            PositionData abbreviationPositionData;
+
             std::string displayName;
             PrintData displayNamePrintData;
             PositionData displayNamePositionData;
+            
             std::string displayAbbreviation;
             PrintData displayAbbreviationPrintData;
             PositionData displayAbbreviationPositionData;
+            
             InstrumentData instrumentData;
             MidiData midiData;
             std::vector<MeasureData> measures;

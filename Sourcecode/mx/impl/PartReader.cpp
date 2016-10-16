@@ -166,8 +166,6 @@ namespace mx
         {
             myOutPartData.uniqueId = myScorePart.getAttributes()->id.getValue();
             myOutPartData.name = myScorePart.getPartName()->getValue().getValue();
-            const auto& partNameAttributes = *myScorePart.getPartName()->getAttributes();
-            myOutPartData.namePrintData = getPrintData( partNameAttributes );
             
             if( myScorePart.getHasPartNameDisplay() )
             {

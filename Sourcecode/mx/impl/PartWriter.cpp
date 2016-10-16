@@ -71,11 +71,17 @@ namespace mx
             auto& attr = *myOutScorePart->getAttributes();
             attr.id = core::XsID{ myPartData.uniqueId };
             myOutScorePart->getPartName()->setValue( core::XsString{ myPartData.name } );
+            myOutScorePart->getPartName()->getAttributes()->hasPrintObject = true;
+            myOutScorePart->getPartName()->getAttributes()->printObject = core::YesNo::no;
+            
             if( myPartData.abbreviation.size() > 0 )
             {
                 myOutScorePart->setHasPartAbbreviation( true );
                 myOutScorePart->getPartAbbreviation()->setValue( core::XsString{ myPartData.abbreviation } );
+                myOutScorePart->getPartAbbreviation()->getAttributes()->hasPrintObject = true;
+                myOutScorePart->getPartAbbreviation()->getAttributes()->printObject = core::YesNo::no;
             }
+            
             if( myPartData.displayName.size() > 0 )
             {
                 myOutScorePart->setHasPartNameDisplay( true );
