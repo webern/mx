@@ -11,12 +11,11 @@ namespace mx
 {
     namespace impl
     {
-        template<typename T>
-        void parseMarkDataAttributes(const T& elem, api::MarkData& outMarkData )
+        template<typename ATTRIBUTES_TYPE>
+        void parseMarkDataAttributes(const ATTRIBUTES_TYPE& attr, api::MarkData& outMarkData )
         {
-            const auto& attr = *( elem.getAttributes() );
-            outMarkData.positionData = getPositionData( attr );
-            outMarkData.printData = getPrintData( attr );
+            outMarkData.positionData = getPositionData<ATTRIBUTES_TYPE>( attr );
+            outMarkData.printData = getPrintData<ATTRIBUTES_TYPE>( attr );
         }
 	}
 }

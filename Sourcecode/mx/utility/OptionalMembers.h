@@ -38,13 +38,13 @@
     #define MX_ATTR_FUNC_OPTIONAL( attributeFieldName, attributeFieldNameCapitalized, attributeType, defaultReturnValue )               \
                                                                                                                                         \
     template<class T>                                                                                                                   \
-    auto check##attributeFieldNameCapitalized( const T* const obj )                                                                     \
-    -> decltype(  obj->attributeFieldName  )                                                                                            \
+    auto check##attributeFieldNameCapitalized( const T* const attributesRawPtr )                                                        \
+    -> decltype(  attributesRawPtr->attributeFieldName  )                                                                               \
     {                                                                                                                                   \
-        return obj->attributeFieldName;                                                                                                 \
+        return attributesRawPtr->attributeFieldName;                                                                                    \
     }                                                                                                                                   \
                                                                                                                                         \
-                                                                                                                                        \
+    template<class T>                                                                                                                   \
     inline auto check##attributeFieldNameCapitalized(...) -> attributeType                                                              \
     {                                                                                                                                   \
         return defaultReturnValue;                                                                                                      \
@@ -60,7 +60,7 @@
         return obj->attributeFieldName.getValue();                                                                                      \
     }                                                                                                                                   \
                                                                                                                                         \
-                                                                                                                                        \
+    template<class T>                                                                                                                   \
     inline auto check##attributeFieldNameCapitalized(...) -> attributeType                                                              \
     {                                                                                                                                   \
         return defaultReturnValue;                                                                                                      \

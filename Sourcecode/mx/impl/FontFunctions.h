@@ -29,12 +29,12 @@ namespace mx
         template <typename ATTRIBUTES_TYPE>
         std::vector<std::string> getFontFamily( const ATTRIBUTES_TYPE& inAttributes )
         {
-            if( !checkHasFontFamily( &inAttributes ) )
+            if( !checkHasFontFamily<ATTRIBUTES_TYPE>( &inAttributes ) )
             {
                 return std::vector<std::string>{};
             }
             
-            const auto& fontFamily = checkFontFamily( &inAttributes );
+            const auto& fontFamily = checkFontFamily<ATTRIBUTES_TYPE>( &inAttributes );
             auto iter = fontFamily.getValuesBeginConst();
             auto end = fontFamily.getValuesEndConst();
             std::vector<std::string> outStrings;
@@ -50,25 +50,25 @@ namespace mx
         template <typename ATTRIBUTES_TYPE>
         api::FontStyle getFontStyle( const ATTRIBUTES_TYPE& inAttributes )
         {
-            if( !checkHasFontStyle( &inAttributes ) )
+            if( !checkHasFontStyle<ATTRIBUTES_TYPE>( &inAttributes ) )
             {
                 return api::FontStyle::unspecified;
             }
             Converter converter;
-            return converter.convert( checkFontStyle( &inAttributes ) );
+            return converter.convert( checkFontStyle<ATTRIBUTES_TYPE>( &inAttributes ) );
         }
         
         
         template <typename ATTRIBUTES_TYPE>
         api::FontWeight getFontWeight( const ATTRIBUTES_TYPE& inAttributes )
         {
-            if( !checkHasFontWeight( &inAttributes ) )
+            if( !checkHasFontWeight<ATTRIBUTES_TYPE>( &inAttributes ) )
             {
                 return api::FontWeight::unspecified;
             }
             
             Converter converter;
-            return converter.convert( checkFontWeight( &inAttributes ) );
+            return converter.convert( checkFontWeight<ATTRIBUTES_TYPE>( &inAttributes ) );
         }
         
         
@@ -79,14 +79,14 @@ namespace mx
                                         core::DecimalType& outPointSize,
                                         api::CssSize& outCssSize )
         {
-            if( !checkHasFontSize( &inAttributes ) )
+            if( !checkHasFontSize<ATTRIBUTES_TYPE>( &inAttributes ) )
             {
                 outPointSize = -1.0L;
                 outCssSize = api::CssSize::unspecified;
                 return api::FontSizeType::unspecified;
             }
             
-            const auto& coreFontSize = checkFontSize( &inAttributes );
+            const auto& coreFontSize = checkFontSize<ATTRIBUTES_TYPE>( &inAttributes );
             Converter converter;
             
             if( coreFontSize.getIsCssFontSize() )

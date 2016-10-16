@@ -86,9 +86,17 @@ namespace mx
         public:
             std::string uniqueId;
             std::string name;
+            PrintData namePrintData;
+            PositionData namePositionData;
             std::string abbreviation;
+            PrintData abbreviationPrintData;
+            PositionData abbreviationPositionData;
             std::string displayName;
+            PrintData displayNamePrintData;
+            PositionData displayNamePositionData;
             std::string displayAbbreviation;
+            PrintData displayAbbreviationPrintData;
+            PositionData displayAbbreviationPositionData;
             InstrumentData instrumentData;
             MidiData midiData;
             std::vector<MeasureData> measures;

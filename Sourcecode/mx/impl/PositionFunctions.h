@@ -40,35 +40,35 @@ namespace mx
         {
             api::PositionData outPositionData;
             
-            if( checkHasDefaultX( &inAttributes ) )
+            if( checkHasDefaultX<ATTRIBUTES_TYPE>( &inAttributes ) )
             {
                 outPositionData.hasDefaultX = true;
-                outPositionData.defaultX = checkDefaultX( &inAttributes );
+                outPositionData.defaultX = checkDefaultX<ATTRIBUTES_TYPE>( &inAttributes );
             }
             
-            if( checkHasDefaultY( &inAttributes ) )
+            if( checkHasDefaultY<ATTRIBUTES_TYPE>( &inAttributes ) )
             {
                 outPositionData.hasDefaultY = true;
-                outPositionData.defaultY = checkDefaultY( &inAttributes );
+                outPositionData.defaultY = checkDefaultY<ATTRIBUTES_TYPE>( &inAttributes );
             }
             
-            if( checkHasRelativeX( &inAttributes ) )
+            if( checkHasRelativeX<ATTRIBUTES_TYPE>( &inAttributes ) )
             {
                 outPositionData.hasRelativeX = true;
-                outPositionData.relativeX = checkRelativeX( &inAttributes );
+                outPositionData.relativeX = checkRelativeX<ATTRIBUTES_TYPE>( &inAttributes );
             }
             
-            if( checkHasRelativeY( &inAttributes ) )
+            if( checkHasRelativeY<ATTRIBUTES_TYPE>( &inAttributes ) )
             {
                 outPositionData.hasRelativeY = true;
-                outPositionData.relativeY = checkRelativeY( &inAttributes );
+                outPositionData.relativeY = checkRelativeY<ATTRIBUTES_TYPE>( &inAttributes );
             }
             
             impl::Converter converter;
             
-            if( checkHasHalign( &inAttributes ) )
+            if( checkHasHalign<ATTRIBUTES_TYPE>( &inAttributes ) )
             {
-                outPositionData.horizontalAlignmnet = converter.convert( checkHalign( &inAttributes ) );
+                outPositionData.horizontalAlignmnet = converter.convert( checkHalign<ATTRIBUTES_TYPE>( &inAttributes ) );
             }
             else
             {
@@ -76,18 +76,18 @@ namespace mx
                 
             }
             
-            if( checkHasValign( &inAttributes ) )
+            if( checkHasValign<ATTRIBUTES_TYPE>( &inAttributes ) )
             {
-                outPositionData.verticalAlignment = converter.convert( checkValign( &inAttributes ) );
+                outPositionData.verticalAlignment = converter.convert( checkValign<ATTRIBUTES_TYPE>( &inAttributes ) );
             }
             else
             {
                 outPositionData.verticalAlignment = api::VerticalAlignment::unspecified;
             }
 
-            if( checkHasPlacement( &inAttributes ) )
+            if( checkHasPlacement<ATTRIBUTES_TYPE>( &inAttributes ) )
             {
-                outPositionData.placement = converter.convert( checkPlacement( &inAttributes ) );
+                outPositionData.placement = converter.convert( checkPlacement<ATTRIBUTES_TYPE>( &inAttributes ) );
             }
             else
             {
@@ -97,7 +97,7 @@ namespace mx
             return outPositionData;
         }
         
-        
+        /*
         template <typename ATTRIBUTES_TYPE>
         void getPositionData( const api::PositionData& inPositionData, ATTRIBUTES_TYPE& outAttributes )
         {
@@ -157,5 +157,6 @@ namespace mx
                 }
             }
         }
+         */
     }
 }

@@ -42,6 +42,7 @@
 #include "mx/core/elements/VirtualName.h"
 #include "mx/core/elements/Volume.h"
 #include "mx/impl/MeasureReader.h"
+#include "mx/impl/PrintFunctions.h"
 
 #include <sstream>
 
@@ -152,8 +153,7 @@ namespace mx
                         case core::MusicDataChoice::Choice::grouping:
                         case core::MusicDataChoice::Choice::link:
                         case core::MusicDataChoice::Choice::bookmark:
-                        default:
-                            break;
+                        default: break;
                     }
                 }
             }
@@ -166,6 +166,8 @@ namespace mx
         {
             myOutPartData.uniqueId = myScorePart.getAttributes()->id.getValue();
             myOutPartData.name = myScorePart.getPartName()->getValue().getValue();
+            const auto& partNameAttributes = *myScorePart.getPartName()->getAttributes();
+            myOutPartData.namePrintData = getPrintData( partNameAttributes );
             
             if( myScorePart.getHasPartNameDisplay() )
             {

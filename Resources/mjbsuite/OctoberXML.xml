@@ -98,7 +98,7 @@
       </midi-instrument>
     </score-part>
     <score-part id="P2">
-      <part-name print-object="no">MusicXML Part</part-name>
+      <part-name print-object="no" color="#800080">MusicXML Part</part-name>
       <score-instrument id="P2-I2">
         <instrument-name>ARIA Player</instrument-name>
         <virtual-instrument>

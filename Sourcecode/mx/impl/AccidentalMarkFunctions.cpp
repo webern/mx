@@ -27,7 +27,7 @@ namespace mx
             markData.tickTimePosition = myCursor.tickTimePosition;
             
             markData.name = core::toString( accidentalValue );
-            parseMarkDataAttributes( myAccidentalMark, markData );
+            parseMarkDataAttributes( *myAccidentalMark.getAttributes(), markData );
             
             markData.smuflName = api::MarkSmufl::getName( markType, markData.positionData.placement );
             markData.smuflCodepoint = api::MarkSmufl::getCodepoint( markType, markData.positionData.placement );

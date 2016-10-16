@@ -5,6 +5,7 @@
 
 #include "mx/core/ForwardDeclare.h"
 #include "mx/core/AttributesInterface.h"
+#include "mx/core/Color.h"
 #include "mx/core/Decimals.h"
 #include "mx/core/Enums.h"
 #include "mx/core/Strings.h"
@@ -35,6 +36,7 @@ namespace mx
             FontStyle fontStyle;
             FontSize fontSize;
             FontWeight fontWeight;
+            Color color;
             YesNo printObject;
             LeftCenterRight justify;
             bool hasDefaultX;
@@ -45,6 +47,7 @@ namespace mx
             bool hasFontStyle;
             bool hasFontSize;
             bool hasFontWeight;
+            bool hasColor;
             bool hasPrintObject;
             bool hasJustify;
 

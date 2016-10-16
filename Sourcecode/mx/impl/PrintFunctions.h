@@ -23,23 +23,24 @@ namespace mx
         template <typename ATTRIBUTES_TYPE>
         api::Bool getPrintObject( const ATTRIBUTES_TYPE& inAttributes )
         {
-            if( !checkHasPrintObject( &inAttributes ) )
+            const ATTRIBUTES_TYPE* const ptr = &inAttributes;
+            if( !checkHasPrintObject<ATTRIBUTES_TYPE>( ptr ) )
             {
                 return api::Bool::unspecified;
             }
             Converter converter;
-            return converter.convert( checkPrintObject( &inAttributes ) );
+            return converter.convert( checkPrintObject<ATTRIBUTES_TYPE>( &inAttributes ) );
         }
 
         
         template <typename ATTRIBUTES_TYPE>
         core::Color getColor( const ATTRIBUTES_TYPE& inAttributes )
         {
-            if( !checkHasColor( &inAttributes ) )
+            if( !checkHasColor<ATTRIBUTES_TYPE>( &inAttributes ) )
             {
                 return core::Color{};
             }
-            return checkColor( &inAttributes );
+            return checkColor<ATTRIBUTES_TYPE>( &inAttributes );
         }
         
         
@@ -47,13 +48,13 @@ namespace mx
         api::PrintData getPrintData( const ATTRIBUTES_TYPE& inAttributes )
         {
             api::PrintData outPrintData;
-            outPrintData.printObject = getPrintObject( &inAttributes );
-            outPrintData.fontData = getFontData( &inAttributes );
-            
-            if( checkHasColor( &inAttributes ) )
+            const ATTRIBUTES_TYPE* const ptr = &inAttributes;
+            outPrintData.printObject = getPrintObject<ATTRIBUTES_TYPE>( inAttributes );
+            outPrintData.fontData = getFontData<ATTRIBUTES_TYPE>( inAttributes );
+            if( checkHasColor<ATTRIBUTES_TYPE>( ptr ) )
             {
                 outPrintData.isColorSpecified = true;
-                const auto theColor = getColor( &inAttributes );
+                const auto theColor = getColor( ptr );
                 outPrintData.color.red = static_cast<uint8_t>( theColor.getRed() );
                 outPrintData.color.green = static_cast<uint8_t>( theColor.getGreen() );
                 outPrintData.color.blue = static_cast<uint8_t>( theColor.getBlue() );
