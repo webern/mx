@@ -97,10 +97,10 @@ namespace mx
             // because the MuscXML specification says this "Formatting
             // attributes for the part-name element are deprecated in
             // Version 2.0 in favor of the new part-name-display and
-            // part-abbreviation-display elements" the abbreviation will
-            // always be written with 'print-object="no". You must
-            // populate the displayName field in order to have an
-            // abbreviation displayed.
+            // part-abbreviation-display elements" the abbreviation
+            // will always be written with 'print-object="no". You
+            // must populate the displayAbbreviation field in order to
+            // have an abbreviation displayed.
             std::string abbreviation;
 
             std::string displayName;

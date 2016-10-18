@@ -8,10 +8,11 @@
 using namespace mx::api;
 
 constexpr const char* const fileName =
+"./Resources/lysuite/ly01a_Pitches_Pitches.xml";
 // "./Resources/lysuite/ly02c_Rests_MultiMeasureRests.xml";
 // "./Resources/mjbsuite/freezing.xml";
 // "./Resources/mjbsuite/FreezingSmall.xml";
-"./Resources/mjbsuite/OctoberXML.xml";
+// "./Resources/mjbsuite/OctoberXML.xml";
 // "./Resources/ksuite/k011a_Tuplets.xml";
 // "./Resources/lysuite/ly33a_Spanners.xml";
 // "./Resources/ksuite/k012a_Tempo_Markings.xml";
