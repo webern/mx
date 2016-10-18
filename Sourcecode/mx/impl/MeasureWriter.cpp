@@ -140,6 +140,17 @@ namespace mx
                 }
                 writeFirstMeasureProperties();
             }
+            else
+            {
+                auto startingProps = createSubsequentMeasureStartingPoperties();
+                if( isMeasurePropertiesRequired( *startingProps ) )
+                {
+                    auto startingPropsMdc = core::makeMusicDataChoice();
+                    startingPropsMdc->setChoice( core::MusicDataChoice::Choice::properties );
+                    startingPropsMdc->setProperties( startingProps );
+                    myOutMeasure->getMusicDataGroup()->addMusicDataChoice( startingPropsMdc );
+                }
+            }
             
             writeStaffData();
             return myOutMeasure;
@@ -192,6 +203,31 @@ namespace mx
             writeTime( props );
             writeNumStaves( props );
             writeInitialKeys( props );
+        }
+        
+        
+        core::PropertiesPtr MeasureWriter::createSubsequentMeasureStartingPoperties() const
+        {
+            auto propsPtr = core::makeProperties();
+            auto& props = *propsPtr;
+            if( !myMeasureData.timeSignature.isImplicit )
+            {
+                writeTime( props );
+            }
+            return propsPtr;
+        }
+        
+        
+        bool MeasureWriter::isMeasurePropertiesRequired( const core::Properties& props ) const
+        {
+            return props.getHasStaves() ||
+            props.getHasDivisions() ||
+            props.getHasPartSymbol() ||
+            props.getHasInstruments() ||
+            props.getKeySet().size() > 0 ||
+            props.getTimeSet().size() > 0 ||
+            props.getClefSet().size() > 0 ||
+            props.getDirectiveSet().size() > 0;
         }
         
         

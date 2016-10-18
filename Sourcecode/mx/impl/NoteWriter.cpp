@@ -103,7 +103,7 @@ namespace mx
                 timeMod->getActualNotes()->setValue( core::NonNegativeInteger{ myNoteData.durationData.timeModificationActualNotes } );
                 timeMod->getNormalNotes()->setValue( core::NonNegativeInteger{ myNoteData.durationData.timeModificationNormalNotes } );
             }
-            
+
             return myOutNote;
         }
         

@@ -14,6 +14,7 @@ namespace mx
 		class PartwiseMeasure;
         using PartwiseMeasurePtr = std::shared_ptr<PartwiseMeasure>;
         class Properties;
+        using PropertiesPtr = std::shared_ptr<Properties>;
 	}
 
     namespace impl
@@ -36,6 +37,8 @@ namespace mx
         private:
             void writeSystemInfo() const;
             void writeFirstMeasureProperties() const;
+            core::PropertiesPtr createSubsequentMeasureStartingPoperties() const;
+            bool isMeasurePropertiesRequired( const core::Properties& props ) const;
             core::Properties& createAndInsertMeasureProperties() const;
             void writeDivisions( core::Properties& outProperties ) const;
             void writeKey(int staffIndex, const api::KeyData& inKeyData, core::Properties& outProperties ) const;
