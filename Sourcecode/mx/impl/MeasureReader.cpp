@@ -128,8 +128,7 @@ namespace mx
             }
             
             addStavesToOutMeasure();
-            
-            bool isTimeSignatureFound = false;
+            parseTimeSignature();
             
             const auto& mdcSet = myPartwiseMeasure.getMusicDataGroup()->getMusicDataChoiceSet();
             auto iter = mdcSet.cbegin();
@@ -158,22 +157,6 @@ namespace mx
                     nextNotePtr = (*peekAheadAtNextNoteIter)->getNote();
                 }
                 
-                if( !isTimeSignatureFound )
-                {
-                    impl::TimeReader timeFunc{ myPartwiseMeasure.getMusicDataGroup()->getMusicDataChoiceSet() };
-                    isTimeSignatureFound = timeFunc.getIsTimeFound();
-                    bool implicitTime = true;
-                    if( myCurrentCursor.isFirstMeasureInPart )
-                    {
-                        implicitTime = false;
-                    }
-                    else
-                    {
-                        implicitTime = isTimeSignatureFound;
-                    }
-                    myCurrentCursor.timeSignature.isImplicit = implicitTime;
-                    myOutMeasureData.timeSignature = myCurrentCursor.timeSignature;
-                }
                 parseMusicDataChoice( mdc, nextNotePtr );
             }
             
@@ -185,6 +168,32 @@ namespace mx
             auto temp = api::MeasureData{ std::move(myOutMeasureData) };
             myOutMeasureData = api::MeasureData{};
             return temp;
+        }
+        
+        
+        void MeasureReader::parseTimeSignature() const
+        {
+            TimeReader timeReader{ myPartwiseMeasure.getMusicDataGroup()->getMusicDataChoiceSet() };
+            if( timeReader.getIsTimeFound() )
+            {
+                auto timeSignatureData = timeReader.getTimeSignatureData();
+                timeSignatureData.isImplicit = false;
+                myCurrentCursor.timeSignature = timeSignatureData;
+            }
+            else
+            {
+                if( myCurrentCursor.isFirstMeasureInPart )
+                {
+                    myCurrentCursor.timeSignature = api::TimeSignatureData{};
+                }
+                else
+                {
+                    myCurrentCursor.timeSignature = myPreviousCursor.timeSignature;
+                }
+                myCurrentCursor.timeSignature.isImplicit = true;
+            }
+            myOutMeasureData.timeSignature = myCurrentCursor.timeSignature;
+
         }
         
         

@@ -91,6 +91,7 @@ namespace mx
             
         private:
             void addStavesToOutMeasure() const;
+            void parseTimeSignature() const;
             void parseMusicDataChoice( const core::MusicDataChoice& mdc, const core::NotePtr& nextNotePtr ) const;
             void parseNote( const core::Note& inMxNote, const core::NotePtr& nextNotePtr ) const;
             void parseBackup( const core::Backup& inMxBackup ) const;
