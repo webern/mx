@@ -92,7 +92,7 @@ namespace mx
                             }
                             else
                             {
-                                outTimeSignatureData.display = api::Bool::yes;
+                                outTimeSignatureData.display = api::Bool::no;
                             }
                         }
                         

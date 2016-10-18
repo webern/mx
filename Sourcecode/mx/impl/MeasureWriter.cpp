@@ -191,6 +191,7 @@ namespace mx
             writeInitialClefs( props );
             writeTime( props );
             writeNumStaves( props );
+            writeInitialKeys( props );
         }
         
         
@@ -245,11 +246,11 @@ namespace mx
         void MeasureWriter::writeTime( core::Properties& outProperties ) const
         {
             const auto& timeData = myMeasureData.timeSignature;
-//            // TODO - find out why the first measure is coming up with an 'implicit' time-signature
-//            if( timeData.isImplicit )
-//            {
-//                return;
-//            }
+            
+            if( timeData.isImplicit )
+            {
+                return;
+            }
             
             auto time = core::makeTime();
             outProperties.addTime( time );
@@ -262,8 +263,14 @@ namespace mx
             if( symbol != api::TimeSignatureSymbol::unspecified )
             {
                 time->getAttributes()->hasSymbol = true;
-                // TODO - cut time and common time
-                // time->getAttributes()->symbol = converter.convert( symbol );
+                if( symbol == api::TimeSignatureSymbol::common )
+                {
+                    time->getAttributes()->symbol = core::TimeSymbol::common;
+                }
+                else if( symbol == api::TimeSignatureSymbol::cut )
+                {
+                    time->getAttributes()->symbol = core::TimeSymbol::cut;
+                }
             }
             
             Converter converter;

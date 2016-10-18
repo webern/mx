@@ -172,6 +172,7 @@ namespace mx
                         implicitTime = timeFunc.isTimeSignatureImplicit( myPreviousCursor.timeSignature, myCurrentCursor.timeSignature, myCurrentCursor.isFirstMeasureInPart );
                     }
                     myCurrentCursor.timeSignature.isImplicit = implicitTime;
+                    myOutMeasureData.timeSignature = myCurrentCursor.timeSignature;
                 }
                 parseMusicDataChoice( mdc, nextNotePtr );
             }
