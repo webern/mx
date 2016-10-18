@@ -72,7 +72,7 @@
 #include "mx/impl/DirectionReader.h"
 #include "mx/impl/NoteFunctions.h"
 #include "mx/impl/NoteReader.h"
-#include "mx/impl/TimeFunctions.h"
+#include "mx/impl/TimeReader.h"
 #include "mx/utility/Throw.h"
 
 #include <set>
@@ -160,8 +160,8 @@ namespace mx
                 
                 if( !isTimeSignatureFound )
                 {
-                    impl::TimeFunctions timeFunc;
-                    isTimeSignatureFound = timeFunc.findAndFillTimeSignature( mdc, myCurrentCursor.timeSignature );
+                    impl::TimeReader timeFunc{ myPartwiseMeasure.getMusicDataGroup()->getMusicDataChoiceSet() };
+                    isTimeSignatureFound = timeFunc.getIsTimeFound();
                     bool implicitTime = true;
                     if( myCurrentCursor.isFirstMeasureInPart )
                     {
@@ -169,7 +169,7 @@ namespace mx
                     }
                     else
                     {
-                        implicitTime = timeFunc.isTimeSignatureImplicit( myPreviousCursor.timeSignature, myCurrentCursor.timeSignature, myCurrentCursor.isFirstMeasureInPart );
+                        implicitTime = isTimeSignatureFound;
                     }
                     myCurrentCursor.timeSignature.isImplicit = implicitTime;
                     myOutMeasureData.timeSignature = myCurrentCursor.timeSignature;
@@ -330,16 +330,14 @@ namespace mx
                 MX_THROW( "multiple backups in a row" ); // TODO - remove this debugging check
             }
             myCurrentCursor.isBackupInProgress = true;
-            impl::TimeFunctions timeFunc;
-            const int backupAmount = timeFunc.convertDurationToGlobalTickScale( myCurrentCursor, *inMxBackup.getDuration() );
+            const int backupAmount = myCurrentCursor.convertDurationToGlobalTickScale( *inMxBackup.getDuration() );
             myCurrentCursor.tickTimePosition -= backupAmount;
         }
         
         
         void MeasureReader::parseForward( const core::Forward& inMxForward ) const
         {
-            impl::TimeFunctions timeFunc;
-            const int forwardAmount = timeFunc.convertDurationToGlobalTickScale( myCurrentCursor, *inMxForward.getDuration() );
+            const int forwardAmount = myCurrentCursor.convertDurationToGlobalTickScale( *inMxForward.getDuration() );
             myCurrentCursor.tickTimePosition += forwardAmount;
         }
         

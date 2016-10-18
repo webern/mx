@@ -2005,7 +2005,7 @@
 		29E2B4371DA8494900DC61EA /* PartReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29E2B3CA1DA81E9700DC61EA /* PartReader.cpp */; };
 		29E2B43A1DA8494900DC61EA /* StaffFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297DA0721D7F60BE0067C13A /* StaffFunctions.cpp */; };
 		29E2B43B1DA8494900DC61EA /* TechnicalFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EF30011DA32E37001FE5DF /* TechnicalFunctions.cpp */; };
-		29E2B43C1DA8494900DC61EA /* TimeFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2927EC9E1D886E460042E080 /* TimeFunctions.cpp */; };
+		29E2B43C1DA8494900DC61EA /* TimeReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2927EC9E1D886E460042E080 /* TimeReader.cpp */; };
 		29E9EA371DA4A80A0040183B /* PitchData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29E9EA341DA4A80A0040183B /* PitchData.cpp */; };
 		29E9EA381DA4A80A0040183B /* NoteData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29E9EA351DA4A80A0040183B /* NoteData.cpp */; };
 		29E9EA391DA4A80A0040183B /* DurationData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29E9EA361DA4A80A0040183B /* DurationData.cpp */; };
@@ -2031,7 +2031,7 @@
 		29F03BA51DAF01A10034562B /* ScoreWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C29B861DAEC00C00D3A884 /* ScoreWriter.cpp */; };
 		29F03BA61DAF01A10034562B /* StaffFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297DA0721D7F60BE0067C13A /* StaffFunctions.cpp */; };
 		29F03BA71DAF01A10034562B /* TechnicalFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EF30011DA32E37001FE5DF /* TechnicalFunctions.cpp */; };
-		29F03BA81DAF01A10034562B /* TimeFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2927EC9E1D886E460042E080 /* TimeFunctions.cpp */; };
+		29F03BA81DAF01A10034562B /* TimeReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2927EC9E1D886E460042E080 /* TimeReader.cpp */; };
 		29F03BA91DAF01A10034562B /* TupletReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29B4E81F1DA9CD5D005DC6D1 /* TupletReader.cpp */; };
 		29F03BAE1DAF01A30034562B /* AccidentalMarkFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EF2FE91DA307D3001FE5DF /* AccidentalMarkFunctions.cpp */; };
 		29F03BB01DAF01A30034562B /* ArticulationsFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EF2F781DA2CC1D001FE5DF /* ArticulationsFunctions.cpp */; };
@@ -2054,7 +2054,7 @@
 		29F03BC61DAF01A30034562B /* ScoreWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C29B861DAEC00C00D3A884 /* ScoreWriter.cpp */; };
 		29F03BC71DAF01A30034562B /* StaffFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297DA0721D7F60BE0067C13A /* StaffFunctions.cpp */; };
 		29F03BC81DAF01A30034562B /* TechnicalFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EF30011DA32E37001FE5DF /* TechnicalFunctions.cpp */; };
-		29F03BC91DAF01A30034562B /* TimeFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2927EC9E1D886E460042E080 /* TimeFunctions.cpp */; };
+		29F03BC91DAF01A30034562B /* TimeReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2927EC9E1D886E460042E080 /* TimeReader.cpp */; };
 		29F03BCA1DAF01A30034562B /* TupletReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29B4E81F1DA9CD5D005DC6D1 /* TupletReader.cpp */; };
 /* End PBXBuildFile section */
 
@@ -2072,8 +2072,8 @@
 		2922CC621D9AF28400F8C9C1 /* Converter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Converter.cpp; path = ../Sourcecode/mx/impl/Converter.cpp; sourceTree = "<group>"; };
 		2922CC631D9AF28400F8C9C1 /* Converter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Converter.h; path = ../Sourcecode/mx/impl/Converter.h; sourceTree = "<group>"; };
 		2927EC9B1D886E2B0042E080 /* TimeSignatureData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TimeSignatureData.h; path = ../Sourcecode/mx/api/TimeSignatureData.h; sourceTree = "<group>"; };
-		2927EC9D1D886E460042E080 /* TimeFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TimeFunctions.h; path = ../Sourcecode/mx/impl/TimeFunctions.h; sourceTree = "<group>"; };
-		2927EC9E1D886E460042E080 /* TimeFunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimeFunctions.cpp; path = ../Sourcecode/mx/impl/TimeFunctions.cpp; sourceTree = "<group>"; };
+		2927EC9D1D886E460042E080 /* TimeReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TimeReader.h; path = ../Sourcecode/mx/impl/TimeReader.h; sourceTree = "<group>"; };
+		2927EC9E1D886E460042E080 /* TimeReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimeReader.cpp; path = ../Sourcecode/mx/impl/TimeReader.cpp; sourceTree = "<group>"; };
 		2927ECA51D888AB30042E080 /* LcmGcd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LcmGcd.h; path = ../Sourcecode/mx/impl/LcmGcd.h; sourceTree = "<group>"; };
 		2927ECA61D888AB30042E080 /* LcmGcd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LcmGcd.cpp; path = ../Sourcecode/mx/impl/LcmGcd.cpp; sourceTree = "<group>"; };
 		292D1DD01D9A43A500CDD9F4 /* ClefData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ClefData.cpp; path = ../Sourcecode/mx/api/ClefData.cpp; sourceTree = "<group>"; };
@@ -3609,8 +3609,8 @@
 				297DA0731D7F60BE0067C13A /* StaffFunctions.h */,
 				29EF30011DA32E37001FE5DF /* TechnicalFunctions.cpp */,
 				29EF30021DA32E37001FE5DF /* TechnicalFunctions.h */,
-				2927EC9E1D886E460042E080 /* TimeFunctions.cpp */,
-				2927EC9D1D886E460042E080 /* TimeFunctions.h */,
+				2927EC9E1D886E460042E080 /* TimeReader.cpp */,
+				2927EC9D1D886E460042E080 /* TimeReader.h */,
 				29B4E81F1DA9CD5D005DC6D1 /* TupletReader.cpp */,
 				29B4E8201DA9CD5D005DC6D1 /* TupletReader.h */,
 			);
@@ -5539,7 +5539,7 @@
 				2933A9681DA58F30005D7222 /* OtherTechnical.cpp in Sources */,
 				2933A9691DA58F30005D7222 /* OtherTechnicalAttributes.cpp in Sources */,
 				29F03B9D1DAF01A10034562B /* NoteReader.cpp in Sources */,
-				29F03BA81DAF01A10034562B /* TimeFunctions.cpp in Sources */,
+				29F03BA81DAF01A10034562B /* TimeReader.cpp in Sources */,
 				2933A96A1DA58F30005D7222 /* PageHeight.cpp in Sources */,
 				2933A96B1DA58F30005D7222 /* PageLayout.cpp in Sources */,
 				2933A96C1DA58F30005D7222 /* PageMargins.cpp in Sources */,
@@ -6200,7 +6200,7 @@
 				2933AC331DA5AA73005D7222 /* OtherTechnical.cpp in Sources */,
 				2933AC341DA5AA73005D7222 /* OtherTechnicalAttributes.cpp in Sources */,
 				29F03BBE1DAF01A30034562B /* NoteReader.cpp in Sources */,
-				29F03BC91DAF01A30034562B /* TimeFunctions.cpp in Sources */,
+				29F03BC91DAF01A30034562B /* TimeReader.cpp in Sources */,
 				2933AC351DA5AA73005D7222 /* PageHeight.cpp in Sources */,
 				2933AC361DA5AA73005D7222 /* PageLayout.cpp in Sources */,
 				2933AC371DA5AA73005D7222 /* PageMargins.cpp in Sources */,
@@ -6542,7 +6542,7 @@
 				29454A111D295C5500B90302 /* SoundAttributes.cpp in Sources */,
 				29454A141D295C5500B90302 /* Spiccato.cpp in Sources */,
 				294549271D295C5500B90302 /* Instruments.cpp in Sources */,
-				29E2B43C1DA8494900DC61EA /* TimeFunctions.cpp in Sources */,
+				29E2B43C1DA8494900DC61EA /* TimeReader.cpp in Sources */,
 				294548911D295C5500B90302 /* Cue.cpp in Sources */,
 				294548FF1D295C5500B90302 /* GroupBarline.cpp in Sources */,
 				294549401D295C5500B90302 /* Level.cpp in Sources */,

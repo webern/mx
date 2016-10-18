@@ -7,11 +7,12 @@
 
 using namespace mx::api;
 
-#define PERFORMANCE_LOOP
+#define LOAD_ONE
 
 constexpr const char* const fileName =
+"./Resources/lysuite/ly11a_TimeSignatures.xml";
 // "./Resources/lysuite/ly01a_Pitches_Pitches.xml";
-"./Resources/lysuite/ly02c_Rests_MultiMeasureRests.xml";
+// "./Resources/lysuite/ly02c_Rests_MultiMeasureRests.xml";
 // "./Resources/mjbsuite/freezing.xml";
 // "./Resources/mjbsuite/FreezingSmall.xml";
 // "./Resources/mjbsuite/OctoberXML.xml";

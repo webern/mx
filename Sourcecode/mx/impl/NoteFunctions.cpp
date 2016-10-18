@@ -51,7 +51,7 @@
 #include "mx/impl/PositionFunctions.h"
 #include "mx/impl/PrintFunctions.h"
 #include "mx/impl/TechnicalFunctions.h"
-#include "mx/impl/TimeFunctions.h"
+#include "mx/impl/TimeReader.h"
 #include "mx/impl/TupletReader.h"
 #include "mx/utility/Throw.h"
 
@@ -129,8 +129,7 @@ namespace mx
             }
             
             myOutNoteData.durationData.durationDots = reader.getNumDots();
-            impl::TimeFunctions timeFunc;
-            myOutNoteData.durationData.durationTimeTicks = timeFunc.convertDurationToGlobalTickScale( myCursor, reader.getDurationValue() );
+            myOutNoteData.durationData.durationTimeTicks = myCursor.convertDurationToGlobalTickScale( reader.getDurationValue() );
             myOutNoteData.tickTimePosition = myCursor.tickTimePosition;
             
             for( const auto& coreBeamVal : reader.getBeams() )

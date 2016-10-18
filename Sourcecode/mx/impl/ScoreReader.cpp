@@ -32,7 +32,7 @@
 #include "mx/impl/LayoutFunctions.h"
 #include "mx/impl/PageTextFunctions.h"
 #include "mx/impl/PartReader.h"
-#include "mx/impl/TimeFunctions.h"
+#include "mx/impl/TimeReader.h"
 #include "mx/utility/StringToInt.h"
 #include "mx/core/elements/MusicDataGroup.h"
 #include "mx/core/elements/MusicDataChoice.h"
@@ -47,6 +47,9 @@
 #include "mx/core/elements/TopSystemDistance.h"
 #include "mx/core/elements/LeftMargin.h"
 #include "mx/core/elements/RightMargin.h"
+#include "mx/core/elements/Properties.h"
+#include "mx/core/elements/Divisions.h"
+#include "mx/impl/LcmGcd.h"
 
 namespace mx
 {
@@ -159,8 +162,7 @@ namespace mx
             myOutScoreData = api::ScoreData{};
             myPartGroupStack = std::list<api::PartGroupData>{};
             
-            impl::TimeFunctions timeFunc;
-            myOutScoreData.ticksPerQuarter = timeFunc.findMaxDivisionsPerQuarter( myScorePartwise );
+            myOutScoreData.ticksPerQuarter = findMaxDivisionsPerQuarter();
 
             if( myHeaderGroup.getHasWork() && myHeaderGroup.getWork()->getHasWorkTitle() )
             {
@@ -449,5 +451,43 @@ namespace mx
                 ++measureIndex;
             }
         }
+        
+        
+        int ScoreReader::findMaxDivisionsPerQuarter() const
+        {
+            std::set<int> foundDivisions;
+            
+            for( const auto& pp : myScorePartwise.getPartwisePartSet() )
+            {
+                for( const auto& m : pp->getPartwiseMeasureSet() )
+                {
+                    for( const auto& mdc : m->getMusicDataGroup()->getMusicDataChoiceSet() )
+                    {
+                        if( mdc->getChoice() != core::MusicDataChoice::Choice::properties )
+                        {
+                            continue;
+                        }
+                        
+                        const auto& props = *mdc->getProperties();
+                        
+                        if( !props.getHasDivisions() )
+                        {
+                            continue;
+                        }
+                        
+                        const auto& divisions = *props.getDivisions();
+                        const auto tempDiv = divisions.getValue().getValue();
+                        const int tempDivInt = static_cast<int>( std::ceil( tempDiv - 0.5 ) );
+                        if( tempDivInt > 0 )
+                        {
+                            foundDivisions.insert( tempDivInt );
+                        }
+                    }
+                }
+            }
+            
+            return mx::impl::leastCommonMultiple( foundDivisions );
+        }
+        
     }
 }

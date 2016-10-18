@@ -28,7 +28,7 @@
 #include "mx/impl/PageTextFunctions.h"
 #include "mx/impl/PartReader.h"
 #include "mx/impl/PartWriter.h"
-#include "mx/impl/TimeFunctions.h"
+#include "mx/impl/TimeReader.h"
 
 namespace mx
 {
