@@ -39,15 +39,170 @@ namespace mx
 {
     namespace impl
     {
-        DirectionReader::DirectionReader( const core::Direction& inDirection, Cursor inCursor )
-        : myMutex{}
-        , myDirection{ inDirection }
+        DirectionReader::DirectionReader( const core::Direction& inDirection, const core::DirectionType& inDirectionType, Cursor inCursor )
+        : myDirection{ inDirection }
+        , myDirectionType{ inDirectionType }
         , myCursor{ inCursor }
-        , mySet{ inDirection.getDirectionTypeSet() }
+        , myIsMark{ false }
+        , myIsSpanner{ false }
+        , myIsSpecial{ false }
+        , myIsInvalid{ false }
+        , myOutMarkData{}
+        , myStaffIndex{ 1 }
         {
-            
+            initialize();
         }
         
+        
+        bool DirectionReader::getIsMark() const
+        {
+            return myIsMark;
+        }
+        
+        
+        int DirectionReader::getStaffIndex() const
+        {
+            return myStaffIndex;
+        }
+        
+        
+        api::MarkData DirectionReader::getMarkData() const
+        {
+            return myOutMarkData;
+        }
+        
+        
+        void DirectionReader::initialize()
+        {
+            parseStaffIndex();
+            
+            switch ( myDirectionType.getChoice() )
+            {
+                case core::DirectionType::Choice::rehearsal:
+                {
+                    myIsMark = true;
+                    break;
+                }
+                case core::DirectionType::Choice::segno:
+                {
+                    myIsMark = true;
+                    break;
+                }
+                case core::DirectionType::Choice::words:
+                {
+                    myIsMark = true;
+                    break;
+                }
+                case core::DirectionType::Choice::coda:
+                {
+                    myIsMark = true;
+                    break;
+                }
+                case core::DirectionType::Choice::wedge:
+                {
+                    myIsSpanner = true;
+                    break;
+                }
+                case core::DirectionType::Choice::dynamics:
+                {
+                    myIsMark = true;
+                    break;
+                }
+                case core::DirectionType::Choice::dashes:
+                {
+                    myIsSpanner = true;
+                    break;
+                }
+                case core::DirectionType::Choice::bracket:
+                {
+                    myIsSpanner = true;
+                    break;
+                }
+                case core::DirectionType::Choice::pedal:
+                {
+                    myIsSpecial = true;
+                    break;
+                }
+                case core::DirectionType::Choice::metronome:
+                {
+                    myIsSpecial = true;
+                    parseMetronome( myDirectionType );
+                    break;
+                }
+                case core::DirectionType::Choice::octaveShift:
+                {
+                    break;
+                }
+                case core::DirectionType::Choice::harpPedals:
+                {
+                    break;
+                }
+                case core::DirectionType::Choice::damp:
+                {
+                    myIsMark = true;
+                    break;
+                }
+                case core::DirectionType::Choice::dampAll:
+                {
+                    myIsMark = true;
+                    break;
+                }
+                case core::DirectionType::Choice::eyeglasses:
+                {
+                    myIsMark = true;
+                    break;
+                }
+                case core::DirectionType::Choice::stringMute:
+                {
+                    myIsMark = true;
+                    break;
+                }
+                case core::DirectionType::Choice::scordatura:
+                {
+                    myIsSpecial = true;
+                    break;
+                }
+                case core::DirectionType::Choice::image:
+                {
+                    myIsSpecial = true;
+                    break;
+                }
+                case core::DirectionType::Choice::principalVoice:
+                {
+                    myIsSpecial = true;
+                    break;
+                }
+                case core::DirectionType::Choice::accordionRegistration:
+                {
+                    myIsSpecial = true;
+                    break;
+                }
+                case core::DirectionType::Choice::percussion:
+                {
+                    myIsMark = true;
+                    break;
+                }
+                case core::DirectionType::Choice::otherDirection:
+                {
+                    myIsMark = true;
+                    break;
+                }
+                default:
+                    myIsInvalid = true;
+                    break;
+            }
+        }
+        
+        
+        void DirectionReader::parseStaffIndex()
+        {
+            if( myDirection.getHasStaff() )
+            {
+                myStaffIndex = myDirection.getStaff()->getValue().getValue() - 1;
+            }
+        }
+        
+#if 0
         void DirectionReader::getDirectionData( api::MeasureData& outMeasureData ) const
         {
             std::lock_guard<std::mutex> lock{ myMutex };
@@ -153,7 +308,7 @@ namespace mx
                 }
             }
         }
-        
+#endif
         
         void DirectionReader::parseRehearsal( const core::DirectionType& directionType ) const
         {
@@ -211,9 +366,10 @@ namespace mx
         
         void DirectionReader::parseMetronome( const core::DirectionType& directionType ) const
         {
-            const auto& metronome = *directionType.getMetronome();
-            MetronomeReader reader{ metronome };
-            myOutMeasureDataP->tempos.emplace_back( reader.getTempoData() );
+            MX_UNUSED( directionType );
+            //const auto& metronome = *directionType.getMetronome();
+            //MetronomeReader reader{ metronome };
+            //myOutMeasureDataP->tempos.emplace_back( reader.getTempoData() );
         }
         
         

@@ -23,17 +23,25 @@ namespace mx
     	class DirectionReader
     	{
     	public:
-            DirectionReader( const core::Direction& inDirection, Cursor inCursor );
-    		void getDirectionData( api::MeasureData& outMeasureData ) const;
-
+            DirectionReader( const core::Direction& inDirection, const core::DirectionType& inDirectionType, Cursor inCursor );
+            bool getIsMark() const;
+            int getStaffIndex() const;
+            api::MarkData getMarkData() const;
+            
     	private:
-    		mutable std::mutex myMutex;
-    		mutable api::MeasureData* myOutMeasureDataP;
-    		const core::Direction& myDirection;
-    		const Cursor myCursor;
-            const core::DirectionTypeSet& mySet;
-
+            const core::Direction& myDirection;
+            const core::DirectionType& myDirectionType;
+            const Cursor myCursor;
+            int myStaffIndex;
+            bool myIsMark;
+            bool myIsSpanner;
+            bool myIsSpecial;
+            bool myIsInvalid;
+            api::MarkData myOutMarkData;
+            
     	private:
+            void initialize();
+            void parseStaffIndex();
             void parseRehearsal( const core::DirectionType& directionType ) const;
             void parseSegno( const core::DirectionType& directionType ) const;
             void parseWords( const core::DirectionType& directionType ) const;

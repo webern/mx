@@ -353,9 +353,22 @@ namespace mx
         
         void MeasureReader::parseDirection( const core::Direction& inMxDirection ) const
         {
-            
-            DirectionReader reader{ inMxDirection, myCurrentCursor };
-            reader.getDirectionData( myOutMeasureData );
+            for( const auto& directionTypePtr : inMxDirection.getDirectionTypeSet() )
+            {
+                const auto& directionType = *directionTypePtr;
+                DirectionReader reader{ inMxDirection, directionType, myCurrentCursor };
+                const int staffIndex = reader.getStaffIndex();
+                if( reader.getIsMark() )
+                {
+                    auto markData = reader.getMarkData();
+                    auto& staff = myOutMeasureData.staves.at( static_cast<size_t>( staffIndex ) );
+                    staff.marks.emplace_back( markData );
+                }
+//                else if ( reader.getIsSpanner() )
+//                {
+//                    
+//                }
+            }
         }
         
         

@@ -10,7 +10,8 @@ using namespace mx::api;
 #define LOAD_ONE
 
 constexpr const char* const fileName =
-"./Resources/lysuite/ly11a_TimeSignatures.xml";
+"./Resources/lysuite/ly43e_Multistaff_ClefDynamics.xml";
+// "./Resources/lysuite/ly11a_TimeSignatures.xml";
 // "./Resources/lysuite/ly01a_Pitches_Pitches.xml";
 // "./Resources/lysuite/ly02c_Rests_MultiMeasureRests.xml";
 // "./Resources/mjbsuite/freezing.xml";

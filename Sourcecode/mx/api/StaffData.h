@@ -5,8 +5,8 @@
 
 #include "mx/api/ClefData.h"
 #include "mx/api/VoiceData.h"
+#include "mx/api/MarkData.h"
 
-#include <string>
 #include <vector>
 
 namespace mx
@@ -17,6 +17,7 @@ namespace mx
         {
         public:
             std::vector<ClefData> clefs;
+            std::vector<MarkData> marks;
             std::map<int, VoiceData> voices;
         };
     }
