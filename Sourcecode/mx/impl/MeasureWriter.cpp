@@ -4,6 +4,8 @@
 #include "mx/impl/MeasureWriter.h"
 #include "mx/core/elements/PartwiseMeasure.h"
 #include "mx/impl/Converter.h"
+#include "mx/core/elements/Backup.h"
+#include "mx/core/elements/Forward.h"
 #include "mx/core/elements/MusicDataGroup.h"
 #include "mx/core/elements/MusicDataChoice.h"
 #include "mx/core/elements/Properties.h"
@@ -97,16 +99,29 @@ namespace mx
         , myCursor{ inCursor }
         , myPreviousCursor{ inCursor }
         , myScoreWriter{ inScoreWriter }
+        , myPropertiesWriter{ nullptr }
         {
-
+            for( const auto& keyData : myMeasureData.keys )
+            {
+                myMeasureKeys.push_back( keyData );
+            }
         }
 
 
-        core::PartwiseMeasurePtr MeasureWriter::getPartwiseMeasure() const
+        core::PartwiseMeasurePtr MeasureWriter::getPartwiseMeasure()
         {
             myOutMeasure = core::makePartwiseMeasure();
+            myPropertiesWriter = std::unique_ptr<PropertiesWriter>{ new PropertiesWriter{ myOutMeasure } };
             myCursor.reset();
             
+            
+            writeMeasureGlobals();
+            writeStaves();
+            return myOutMeasure;
+        }
+        
+        void MeasureWriter::writeMeasureGlobals()
+        {
             auto& measureAttr = *myOutMeasure->getAttributes();
             
             if( myMeasureData.number.size() > 0 )
@@ -126,40 +141,66 @@ namespace mx
             
             Converter converter;
             
+            if( myMeasureData.staves.size() > 1 )
+            {
+                myPropertiesWriter->writeNumStaves( static_cast<int>( myMeasureData.staves.size() ) );
+            }
+            
             if( myMeasureData.implicit != api::Bool::unspecified )
             {
                 measureAttr.hasImplicit = true;
                 measureAttr.implicit = converter.convert( myMeasureData.implicit );
             }
             
-            if( myCursor.isFirstMeasureInPart )
+            if( myScoreWriter.isStartOfSystem( myCursor.measureIndex ) )
             {
-                if( myScoreWriter.isStartOfSystem( myCursor.measureIndex ) )
-                {
-                    writeSystemInfo();
-                }
-                writeFirstMeasureProperties();
-            }
-            else
-            {
-                auto startingProps = createSubsequentMeasureStartingPoperties();
-                if( isMeasurePropertiesRequired( *startingProps ) )
-                {
-                    auto startingPropsMdc = core::makeMusicDataChoice();
-                    startingPropsMdc->setChoice( core::MusicDataChoice::Choice::properties );
-                    startingPropsMdc->setProperties( startingProps );
-                    myOutMeasure->getMusicDataGroup()->addMusicDataChoice( startingPropsMdc );
-                }
+                writeSystemInfo();
             }
             
-            writeStaffData();
-            return myOutMeasure;
+            if( myCursor.isFirstMeasureInPart )
+            {
+                myPropertiesWriter->writeDivisions( myCursor.getGlobalTicksPerQuarter() );
+            }
+            
+            if( !myMeasureData.timeSignature.isImplicit )
+            {
+                myPropertiesWriter->writeTime( myMeasureData.timeSignature );
+            }
+            
+            int localStaffCounter = 0;
+            for( const auto staff : myMeasureData.staves )
+            {
+                auto clefIter = staff.clefs.cbegin();
+                auto clefEnd = staff.clefs.cend();
+                while( clefIter != clefEnd && clefIter->tickTimePosition == 0 )
+                {
+                    int desiredStaffIndex = -1;
+                    if( myCursor.getNumStaves() > 1 )
+                    {
+                        desiredStaffIndex = localStaffCounter;
+                    }
+                    myPropertiesWriter->writeClef( desiredStaffIndex, *clefIter );
+                    ++clefIter;
+                }
+                ++localStaffCounter;
+            }
         }
 
-        
-        void MeasureWriter::writeSystemInfo() const
+
+        void MeasureWriter::writeSystemInfo()
         {
-            auto systemData = myScoreWriter.getSystemData(myCursor.measureIndex );
+            auto systemData = myScoreWriter.getSystemData( myCursor.measureIndex );
+            
+            const bool isSystemDataSpecified =
+                   systemData.isMarginSpecified
+                || systemData.isSystemDistanceSpecified
+                || systemData.isTopSystemDistanceSpecified;
+            
+            if( !isSystemDataSpecified && !myCursor.isFirstMeasureInPart )
+            {
+                return;
+            }
+            
             auto printMdc = core::makeMusicDataChoice();
             printMdc->setChoice( core::MusicDataChoice::Choice::print );
             auto& print = *printMdc->getPrint();
@@ -167,7 +208,7 @@ namespace mx
             print.getAttributes()->newSystem = core::YesNo::yes;
             auto& layoutGroup = *print.getLayoutGroup();
             myOutMeasure->getMusicDataGroup()->addMusicDataChoice(printMdc );
-            if( systemData.isMarginSpecified || systemData.isSystemDistanceSpecified || systemData.isTopSystemDistanceSpecified )
+            if( isSystemDataSpecified )
             {
                 layoutGroup.setHasSystemLayout( true );
                 auto& systemLayout = *layoutGroup.getSystemLayout();
@@ -195,197 +236,7 @@ namespace mx
         }
         
         
-        void MeasureWriter::writeFirstMeasureProperties() const
-        {
-            auto& props = createAndInsertMeasureProperties();
-            writeDivisions( props );
-            writeInitialClefs( props );
-            writeTime( props );
-            writeNumStaves( props );
-            writeInitialKeys( props );
-        }
-        
-        
-        core::PropertiesPtr MeasureWriter::createSubsequentMeasureStartingPoperties() const
-        {
-            auto propsPtr = core::makeProperties();
-            auto& props = *propsPtr;
-            if( !myMeasureData.timeSignature.isImplicit )
-            {
-                writeTime( props );
-            }
-            return propsPtr;
-        }
-        
-        
-        bool MeasureWriter::isMeasurePropertiesRequired( const core::Properties& props ) const
-        {
-            return props.getHasStaves() ||
-            props.getHasDivisions() ||
-            props.getHasPartSymbol() ||
-            props.getHasInstruments() ||
-            props.getKeySet().size() > 0 ||
-            props.getTimeSet().size() > 0 ||
-            props.getClefSet().size() > 0 ||
-            props.getDirectiveSet().size() > 0;
-        }
-        
-        
-        core::Properties& MeasureWriter::createAndInsertMeasureProperties() const
-        {
-            auto mdc = core::makeMusicDataChoice();
-            myOutMeasure->getMusicDataGroup()->addMusicDataChoice( mdc );
-            mdc->setChoice( core::MusicDataChoice::Choice::properties );
-            return *mdc->getProperties();
-        }
-        
-        
-        void MeasureWriter::writeDivisions( core::Properties& outProperties ) const
-        {
-            outProperties.setHasDivisions( true );
-            outProperties.getDivisions()->setValue( core::PositiveDecimal{ static_cast<long double>( myCursor.ticksPerQuarter ) } );
-        }
-        
-        
-        void MeasureWriter::writeKey(int staffIndex, const api::KeyData& inKeyData, core::Properties& outProperties ) const
-        {
-            // TODO - support non-traditional keys
-            // TODO - support placement and other attributes
-
-            auto key = core::makeKey();
-            
-            if( staffIndex >= 0 )
-            {
-                key->getAttributes()->hasNumber = true;
-                key->getAttributes()->number = core::StaffNumber{ staffIndex + 1 };
-            }
-            
-            key->getKeyChoice()->setChoice( core::KeyChoice::Choice::traditionalKey );
-            auto traditionalKey = key->getKeyChoice()->getTraditionalKey();
-            traditionalKey->getFifths()->setValue( core::FifthsValue{ inKeyData.fifths } );
-            
-            if ( inKeyData.cancel != 0 )
-            {
-                traditionalKey->setHasCancel( true );
-                traditionalKey->getCancel()->setValue( core::FifthsValue{ inKeyData.cancel } );
-            }
-            
-            if( inKeyData.mode == api::KeyMode::major || inKeyData.mode == api::KeyMode::minor )
-            {
-                traditionalKey->setHasMode( true );
-                traditionalKey->getMode()->setValue( core::ModeValue{ inKeyData.mode == api::KeyMode::major ? core::ModeEnum::major : core::ModeEnum::minor } );
-            }
-            outProperties.addKey( key );
-        }
-        
-        
-        void MeasureWriter::writeTime( core::Properties& outProperties ) const
-        {
-            const auto& timeData = myMeasureData.timeSignature;
-            
-            if( timeData.isImplicit )
-            {
-                return;
-            }
-            
-            auto time = core::makeTime();
-            outProperties.addTime( time );
-            time->getTimeChoice()->setChoice( core::TimeChoice::Choice::timeSignature );
-            auto sigGrp = time->getTimeChoice()->getTimeSignatureGroupSet().front();
-            sigGrp->getBeats()->setValue( core::XsString{ std::to_string( timeData.beats ) } );
-            sigGrp->getBeatType()->setValue( core::XsString{ std::to_string( timeData.beatType ) } );
-            
-            const auto symbol = myMeasureData.timeSignature.symbol;
-            if( symbol != api::TimeSignatureSymbol::unspecified )
-            {
-                time->getAttributes()->hasSymbol = true;
-                if( symbol == api::TimeSignatureSymbol::common )
-                {
-                    time->getAttributes()->symbol = core::TimeSymbol::common;
-                }
-                else if( symbol == api::TimeSignatureSymbol::cut )
-                {
-                    time->getAttributes()->symbol = core::TimeSymbol::cut;
-                }
-            }
-            
-            Converter converter;
-            if( myMeasureData.timeSignature.display != api::Bool::unspecified )
-            {
-                time->getAttributes()->hasPrintObject = true;
-                time->getAttributes()->printObject = converter.convert( myMeasureData.timeSignature.display );
-            }
-        }
-        
-        
-        void MeasureWriter::writeNumStaves( core::Properties& outProperties ) const
-        {
-            outProperties.setHasStaves( true );
-            outProperties.getStaves()->setValue( core::NonNegativeInteger{ myCursor.getNumStaves() } );
-        }
-        
-        
-        void MeasureWriter::writeClef( int staffIndex, const api::ClefData& inClefData, core::Properties& outProperties ) const
-        {
-            auto mxClef = core::makeClef();
-            
-            if( staffIndex >= 0 )
-            {
-                mxClef->getAttributes()->hasNumber = true;
-                mxClef->getAttributes()->number = core::StaffNumber{ staffIndex + 1 };
-            }
-            
-            Converter converter;
-            mxClef->getSign()->setValue( converter.convert( inClefData.symbol ) );
-            
-            if( inClefData.line >= 0 )
-            {
-                mxClef->setHasLine( true );
-                mxClef->getLine()->setValue( core::StaffLine{ inClefData.line } );
-            }
-            
-            if( inClefData.octaveChange != 0 )
-            {
-                mxClef->setHasClefOctaveChange( true );
-                mxClef->getClefOctaveChange()->setValue( core::Integer{ inClefData.octaveChange } );
-            }
-            outProperties.addClef( mxClef );
-        }
-        
-        
-        void MeasureWriter::writeInitialClefs( core::Properties& outProperties ) const
-        {
-            int staffIndex = 0;
-            for( const auto& staff : myMeasureData.staves )
-            {
-                auto clefsAtZero = findItemsAtTimePosition( staff.clefs, 0 );
-                if( clefsAtZero.size() == 1 )
-                {
-                    writeClef( staffIndex, clefsAtZero.front(), outProperties );
-                }
-                ++staffIndex;
-            }
-        }
-        
-        
-        void MeasureWriter::writeInitialKeys( core::Properties& outProperties ) const
-        {
-            // TODO - this is wrong - properly parse the keys
-            // and place them per staff in case they are different
-            // in a multi-staff part
-            if( myMeasureData.keys.size() > 0 )
-            {
-                const auto& keyData = myMeasureData.keys.front();
-                writeKey( -1, keyData, outProperties );
-            }
-            else
-            {
-                writeKey( -1, api::KeyData{}, outProperties );
-            }
-        }
-        
-        
-        void MeasureWriter::writeStaffData() const
+        void MeasureWriter::writeStaves()
         {
             myCursor.tickTimePosition = 0;
             myCursor.staffIndex = 0;
@@ -396,46 +247,112 @@ namespace mx
                 // auto clefIter = staff.clefs.cbegin();
                 // auto clefEnd = staff.clefs.cend();
                 
-                writeVoiceData( staff );
+                writeVoices( staff );
                 ++myCursor.staffIndex;
             }
         }
         
-        void MeasureWriter::writeVoiceData( const api::StaffData& inStaff ) const
+        
+        void MeasureWriter::writeVoices( const api::StaffData& inStaff )
         {
+            auto clefIter = inStaff.clefs.cbegin();
+            auto clefEnd = inStaff.clefs.cend();
+            while( clefIter != clefEnd && clefIter->tickTimePosition == 0 ) { ++clefIter; }
+            auto measureKeyIter = myMeasureKeys.cbegin();
+            auto measureKeyEnd = myMeasureKeys.cend();
+            auto staffKeyIter = inStaff.keys.cbegin();
+            auto staffKeyEnd = inStaff.keys.cend();
+            auto staffMarkIter = inStaff.marks.cbegin();
+            auto staffMarkEnd = inStaff.marks.cend();
+            
             for( const auto& voice : inStaff.voices )
             {
                 myCursor.voiceIndex = voice.first;
                 for( const auto& apiNote : voice.second.notes )
                 {
-//                    auto mxNote = core::makeNote();
-//                    mxNote->setHasType( true );
-//                    mxNote->getType()->setValue( converter.convert( apiNote.durationData.durationName ) );
-//                    for( int d = 0; d < apiNote.durationData.durationDots; ++ d )
-//                    {
-//                        mxNote->addDot( core::makeDot() );
-//                    }
-//                    if( apiNote.pitchData.accidental != api::Accidental::none )
-//                    {
-//                        mxNote->setHasAccidental( true );
-//                        mxNote->getAccidental()->setValue( converter.convert( apiNote.pitchData.accidental ) );
-//                    }
-//                    if( apiNote.stem != api::Stem::unspecified )
-//                    {
-//                        mxNote->setHasStem( true );
-//                        mxNote->getStem()->setValue( converter.convert( apiNote.stem ) );
-//                    }
-//                    auto nc = mxNote->getNoteChoice();
-//                    nc->setChoice( core::NoteChoice::Choice::normal );
-//                    auto nng = nc->getNormalNoteGroup();
+                    writeForwardOrBackupIfNeeded( apiNote );
+                    auto propsPtr = core::makeProperties();
+                    if( measureKeyIter != measureKeyEnd )
+                    {
+                        if( measureKeyIter->tickTimePosition <= myCursor.tickTimePosition )
+                        {
+                            myPropertiesWriter->writeKey( -1, *measureKeyIter );
+                            myMeasureKeys.erase( measureKeyIter );
+                            measureKeyIter = myMeasureKeys.cbegin();
+                            measureKeyEnd = myMeasureKeys.cend();
+                        }
+                    }
+                    while( clefIter != clefEnd && clefIter->tickTimePosition <= myCursor.tickTimePosition )
+                    {
+                        myPropertiesWriter->writeClef( myCursor.staffIndex, *clefIter );
+                        ++clefIter;
+                    }
+                    for( ; staffKeyIter != staffKeyEnd && staffKeyIter->tickTimePosition <= myCursor.tickTimePosition; ++staffKeyIter )
+                    {
+                        myPropertiesWriter->writeKey( myCursor.staffIndex, *staffKeyIter );
+                    }
+                    myPropertiesWriter->flushBuffer();
+                    
+                    for( ; staffMarkIter != staffMarkEnd && staffMarkIter->tickTimePosition <= myCursor.tickTimePosition; ++staffMarkIter )
+                    {
+                        // TODO - add directions
+                        MX_UNUSED( staffMarkIter );
+                    }
                     
                     auto mdc = core::makeMusicDataChoice();
                     mdc->setChoice( core::MusicDataChoice::Choice::note );
                     NoteWriter writer{ apiNote, myCursor, myScoreWriter };
                     mdc->setNote( writer.getNote() );
                     myOutMeasure->getMusicDataGroup()->addMusicDataChoice( mdc );
+                    advanceCursorIfNeeded( apiNote );
                 }
             }
         }
+        
+        
+        void MeasureWriter::writeForwardOrBackupIfNeeded( const api::NoteData& currentNote )
+        {
+            const int timeDifference = currentNote.tickTimePosition - myCursor.tickTimePosition;
+            if( timeDifference < 0 )
+            {
+                backup( -1 * timeDifference );
+            }
+            else if ( timeDifference > 0 )
+            {
+                forward( timeDifference );
+            }
+        }
+        
+        
+        void MeasureWriter::backup( const int ticks )
+        {
+            auto backupMdc = core::makeMusicDataChoice();
+            backupMdc->setChoice( core::MusicDataChoice::Choice::backup );
+            auto backup = backupMdc->getBackup();
+            backup->getDuration()->setValue( core::PositiveDivisionsValue{ static_cast<core::DecimalType>( ticks ) } );
+            myOutMeasure->getMusicDataGroup()->addMusicDataChoice( backupMdc );
+            myCursor.tickTimePosition -= ticks;
+        }
+        
+        
+        void MeasureWriter::forward( const int ticks )
+        {
+            auto forwardMdc = core::makeMusicDataChoice();
+            forwardMdc->setChoice( core::MusicDataChoice::Choice::forward );
+            auto forward = forwardMdc->getForward();
+            forward->getDuration()->setValue( core::PositiveDivisionsValue{ static_cast<core::DecimalType>( ticks ) } );
+            myOutMeasure->getMusicDataGroup()->addMusicDataChoice( forwardMdc );
+            myCursor.tickTimePosition += ticks;
+        }
+        
+        
+        void MeasureWriter::advanceCursorIfNeeded( const api::NoteData& currentNote )
+        {
+            if( !currentNote.isChord )
+            {
+                myCursor.tickTimePosition += currentNote.durationData.durationTimeTicks;
+            }
+        }
+        
     }
 }

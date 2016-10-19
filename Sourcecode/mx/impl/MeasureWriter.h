@@ -6,6 +6,9 @@
 #include "mx/api/MeasureData.h"
 #include "mx/impl/MeasureCursor.h"
 #include "mx/api/SystemData.h"
+#include "mx/impl/PropertiesWriter.h"
+
+#include <list>
 
 namespace mx
 {
@@ -25,33 +28,29 @@ namespace mx
         {
 		public:
             MeasureWriter( const api::MeasureData& inMeasureData, const MeasureCursor& inCursor, const ScoreWriter& inScoreWriter );
-        	core::PartwiseMeasurePtr getPartwiseMeasure() const;
+        	core::PartwiseMeasurePtr getPartwiseMeasure();
 
         private:
         	const api::MeasureData& myMeasureData;
-        	mutable core::PartwiseMeasurePtr myOutMeasure;
-            mutable MeasureCursor myCursor;
-            mutable MeasureCursor myPreviousCursor;
+        	core::PartwiseMeasurePtr myOutMeasure;
+            MeasureCursor myCursor;
+            MeasureCursor myPreviousCursor;
             const ScoreWriter& myScoreWriter;
+            std::unique_ptr<PropertiesWriter> myPropertiesWriter;
+            std::list<api::KeyData> myMeasureKeys;
 
         private:
-            void writeSystemInfo() const;
-            void writeFirstMeasureProperties() const;
-            core::PropertiesPtr createSubsequentMeasureStartingPoperties() const;
-            bool isMeasurePropertiesRequired( const core::Properties& props ) const;
-            core::Properties& createAndInsertMeasureProperties() const;
-            void writeDivisions( core::Properties& outProperties ) const;
-            void writeKey(int staffIndex, const api::KeyData& inKeyData, core::Properties& outProperties ) const;
-            void writeTime( core::Properties& outProperties ) const;
-            void writeNumStaves( core::Properties& outProperties ) const;
-            void writeClef( int staffIndex, const api::ClefData& inClefData, core::Properties& outProperties ) const;
-            void writeInitialClefs( core::Properties& outProperties ) const;
-            void writeInitialKeys( core::Properties& outProperties ) const;
-            void writeStaffData() const;
-            void writeVoiceData( const api::StaffData& inStaff ) const;
+            void writeMeasureGlobals();
+            void writeSystemInfo();
+            void writeStaves();
+            void writeVoices( const api::StaffData& inStaff );            void writeForwardOrBackupIfNeeded( const api::NoteData& currentNote );
+            void backup( const int ticks );
+            void forward( const int ticks );
+            void advanceCursorIfNeeded( const api::NoteData& currentNote );
+
             
             template<typename T>
-            std::vector<T> findItemsAtTimePosition( const std::vector<T>& inItems, int inTickTimePosition ) const
+            std::vector<T> findItemsAtTimePosition( const std::vector<T>& inItems, int inTickTimePosition )
             {
                 std::vector<T> outVector;
                 for( const auto& item : inItems )

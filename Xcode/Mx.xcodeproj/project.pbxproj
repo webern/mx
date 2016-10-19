@@ -1986,6 +1986,8 @@
 		29C29B8B1DAEC00C00D3A884 /* ScoreWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 29C29B871DAEC00C00D3A884 /* ScoreWriter.h */; };
 		29C51A1E1D9ED91000EAA308 /* Smufl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C51A1D1D9ED91000EAA308 /* Smufl.cpp */; };
 		29C51A4D1D9F061600EAA308 /* MeasureLocation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C51A4C1D9F061600EAA308 /* MeasureLocation.cpp */; };
+		29CD72281DB806FD00FB7153 /* PropertiesWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29CD72261DB806FD00FB7153 /* PropertiesWriter.cpp */; };
+		29CD72291DB806FD00FB7153 /* PropertiesWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 29CD72271DB806FD00FB7153 /* PropertiesWriter.h */; };
 		29CDDA2D1DADCAF30022B1A3 /* PartWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29CDDA2B1DADCAF30022B1A3 /* PartWriter.cpp */; };
 		29CDDA2E1DADCAF30022B1A3 /* PartWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 29CDDA2C1DADCAF30022B1A3 /* PartWriter.h */; };
 		29DB30A11DA0713200031477 /* MarkData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DB30A01DA0713200031477 /* MarkData.cpp */; };
@@ -3383,6 +3385,8 @@
 		29C51A4E1D9F0B6000EAA308 /* MarkData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MarkData.h; path = ../Sourcecode/mx/api/MarkData.h; sourceTree = "<group>"; };
 		29C51A501D9F18BA00EAA308 /* FontData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FontData.h; path = ../Sourcecode/mx/api/FontData.h; sourceTree = "<group>"; };
 		29C51A521D9F18C600EAA308 /* PrintData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PrintData.h; path = ../Sourcecode/mx/api/PrintData.h; sourceTree = "<group>"; };
+		29CD72261DB806FD00FB7153 /* PropertiesWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PropertiesWriter.cpp; path = ../Sourcecode/mx/impl/PropertiesWriter.cpp; sourceTree = "<group>"; };
+		29CD72271DB806FD00FB7153 /* PropertiesWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PropertiesWriter.h; path = ../Sourcecode/mx/impl/PropertiesWriter.h; sourceTree = "<group>"; };
 		29CDDA2B1DADCAF30022B1A3 /* PartWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PartWriter.cpp; path = ../Sourcecode/mx/impl/PartWriter.cpp; sourceTree = "<group>"; };
 		29CDDA2C1DADCAF30022B1A3 /* PartWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PartWriter.h; path = ../Sourcecode/mx/impl/PartWriter.h; sourceTree = "<group>"; };
 		29D35E7A1D28DD8E00EC2CAE /* ForwardDeclare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ForwardDeclare.h; path = ../Sourcecode/mx/core/ForwardDeclare.h; sourceTree = "<group>"; };
@@ -3554,6 +3558,8 @@
 		292255D51D712B26002D8E48 /* impl */ = {
 			isa = PBXGroup;
 			children = (
+				29CD72261DB806FD00FB7153 /* PropertiesWriter.cpp */,
+				29CD72271DB806FD00FB7153 /* PropertiesWriter.h */,
 				29EF2FE91DA307D3001FE5DF /* AccidentalMarkFunctions.cpp */,
 				29EF2FEA1DA307D3001FE5DF /* AccidentalMarkFunctions.h */,
 				29EF2F781DA2CC1D001FE5DF /* ArticulationsFunctions.cpp */,
@@ -5019,6 +5025,7 @@
 				29C29B8B1DAEC00C00D3A884 /* ScoreWriter.h in Headers */,
 				29CDDA2E1DADCAF30022B1A3 /* PartWriter.h in Headers */,
 				29B7C46A1DAFFDBA009D7D8F /* MeasureWriter.h in Headers */,
+				29CD72291DB806FD00FB7153 /* PropertiesWriter.h in Headers */,
 				29B4E8221DA9CD5D005DC6D1 /* TupletReader.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7070,6 +7077,7 @@
 				294548E71D295C5500B90302 /* FootnoteAttributes.cpp in Sources */,
 				29454A761D295C5500B90302 /* VirtualLibrary.cpp in Sources */,
 				294548A21D295C5500B90302 /* DelayedTurn.cpp in Sources */,
+				29CD72281DB806FD00FB7153 /* PropertiesWriter.cpp in Sources */,
 				2945492B1D295C5500B90302 /* Inversion.cpp in Sources */,
 				294549101D295C5500B90302 /* HarmonicInfoChoice.cpp in Sources */,
 				29454A181D295C5500B90302 /* StaffDetails.cpp in Sources */,
