@@ -5,6 +5,7 @@
 
 #include "mx/api/DirectionData.h"
 #include "mx/impl/Cursor.h"
+#include "mx/impl/Converter.h"
 
 #include <mutex>
 #include <vector>
@@ -17,6 +18,7 @@ namespace mx
         class DirectionType;
         using DirectionTypePtr = std::shared_ptr<DirectionType>;
         using DirectionTypeSet = std::vector<DirectionTypePtr>;
+        class Dynamics;
 	}
     namespace impl
     {
@@ -26,18 +28,19 @@ namespace mx
             DirectionReader( const core::Direction& inDirection, const core::DirectionType& inDirectionType, Cursor inCursor );
             bool getIsMark() const;
             int getStaffIndex() const;
-            api::MarkData getMarkData() const;
+            std::vector<api::MarkData> getMarkData() const;
             
     	private:
             const core::Direction& myDirection;
             const core::DirectionType& myDirectionType;
             const Cursor myCursor;
+            const Converter myConverter;
             int myStaffIndex;
             bool myIsMark;
             bool myIsSpanner;
             bool myIsSpecial;
             bool myIsInvalid;
-            api::MarkData myOutMarkData;
+            std::vector<api::MarkData> myOutMarkData;
             
     	private:
             void initialize();
@@ -47,7 +50,8 @@ namespace mx
             void parseWords( const core::DirectionType& directionType ) const;
             void parseCoda( const core::DirectionType& directionType ) const;
             void parseWedge( const core::DirectionType& directionType ) const;
-            void parseDynamics( const core::DirectionType& directionType ) const;
+            void parseDynamics();
+            void parseDynamic( const core::Dynamics& dynamic );
             void parseDashes( const core::DirectionType& directionType ) const;
             void parseBracket( const core::DirectionType& directionType ) const;
             void parsePedal( const core::DirectionType& directionType ) const;

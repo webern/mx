@@ -34,6 +34,8 @@
 #include "mx/core/elements/Wedge.h"
 #include "mx/core/elements/Words.h"
 #include "mx/impl/MetronomeReader.h"
+#include "mx/impl/PositionFunctions.h"
+#include "mx/impl/PrintFunctions.h"
 
 namespace mx
 {
@@ -43,6 +45,7 @@ namespace mx
         : myDirection{ inDirection }
         , myDirectionType{ inDirectionType }
         , myCursor{ inCursor }
+        , myConverter{}
         , myIsMark{ false }
         , myIsSpanner{ false }
         , myIsSpecial{ false }
@@ -66,7 +69,7 @@ namespace mx
         }
         
         
-        api::MarkData DirectionReader::getMarkData() const
+        std::vector<api::MarkData> DirectionReader::getMarkData() const
         {
             return myOutMarkData;
         }
@@ -106,6 +109,7 @@ namespace mx
                 case core::DirectionType::Choice::dynamics:
                 {
                     myIsMark = true;
+                    parseDynamics();
                     break;
                 }
                 case core::DirectionType::Choice::dashes:
@@ -340,9 +344,49 @@ namespace mx
         }
         
         
-        void DirectionReader::parseDynamics( const core::DirectionType& directionType ) const
+        void DirectionReader::parseDynamics()
         {
-            MX_UNUSED( directionType );
+            for( const auto& dynamic : myDirectionType.getDynamicsSet() )
+            {
+                parseDynamic( *dynamic );
+            }
+        }
+        
+        
+        void DirectionReader::parseDynamic( const core::Dynamics& dynamic )
+        {
+            const auto& attr = *dynamic.getAttributes();
+            auto markData = api::MarkData{};
+            markData.tickTimePosition = myCursor.tickTimePosition;
+            markData.positionData = getPositionData( attr );
+            markData.printData = getPrintData( attr );
+            const auto valueObject = dynamic.getValue();
+            
+            if( myDirection.getAttributes()->hasPlacement )
+            {
+                if( markData.positionData.placement == api::Placement::unspecified )
+                {
+                    markData.positionData.placement = myConverter.convert( myDirection.getAttributes()->placement );
+                }
+            }
+            
+            markData.markType = myConverter.convertDynamic( valueObject.getValue() );
+            markData.name = valueObject.getValueString();
+            if( valueObject.getValue() == core::DynamicsEnum::otherDynamics )
+            {
+                auto codePoint = api::Smufl::findCodepoint( markData.name );
+                if( codePoint > 0 )
+                {
+                    markData.smuflCodepoint = codePoint;
+                    markData.smuflName = markData.name;
+                }
+            }
+            else
+            {
+                markData.smuflName = api::MarkSmufl::getName( markData.markType, markData.positionData.placement );
+                markData.smuflCodepoint = api::MarkSmufl::getCodepoint( markData.markType, markData.positionData.placement );
+            }
+            myOutMarkData.emplace_back( std::move( markData ) );
         }
         
         

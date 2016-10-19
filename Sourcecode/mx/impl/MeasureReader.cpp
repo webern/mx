@@ -362,7 +362,10 @@ namespace mx
                 {
                     auto markData = reader.getMarkData();
                     auto& staff = myOutMeasureData.staves.at( static_cast<size_t>( staffIndex ) );
-                    staff.marks.emplace_back( markData );
+                    for( auto& md : markData )
+                    {
+                        staff.marks.emplace_back( std::move( md ) );
+                    }
                 }
 //                else if ( reader.getIsSpanner() )
 //                {
