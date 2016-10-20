@@ -11,6 +11,7 @@
 
 #include <cstdio>
 #include <fstream>
+#include <list>
 
 using namespace mx::xml;
 using namespace MxTest;
@@ -29,7 +30,7 @@ using namespace MxTest;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-#define MXTEST_GENERATE_EXPECTED_FILES
+//#define MXTEST_GENERATE_EXPECTED_FILES
 #ifdef MXTEST_GENERATE_EXPECTED_FILES
 
     TEST( GenerateExpected, Import )
@@ -42,7 +43,7 @@ using namespace MxTest;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-#define MXTEST_DELETE_TEST_OUTPUT_FILES
+//#define MXTEST_DELETE_TEST_OUTPUT_FILES
 #ifdef MXTEST_DELETE_TEST_OUTPUT_FILES
 
     TEST( DeleteTestOutputFiles, Import )
@@ -81,10 +82,10 @@ public:
         auto files = t.getTestFiles();
         for( const auto& file : files )
         {
-            tests.emplace_back( file );
+            tests.push_back( std::make_shared<ImportTestCpul>( file ) );
         }
     }
-    std::vector<ImportTestCpul> tests;
+    std::list<std::shared_ptr<ImportTestCpul>> tests;
 } importTestsInstance;
 
 #if 1==0

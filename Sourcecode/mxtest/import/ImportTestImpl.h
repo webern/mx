@@ -138,7 +138,6 @@ public:
     
     inline void runTest(TestResult& rEsUlT_)
     {
-
         MxTest::ImportRoundTripTest test{
         myTestFile.getFileNamePart().c_str(),
         "xml",
