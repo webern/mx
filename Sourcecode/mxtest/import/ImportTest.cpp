@@ -72,7 +72,22 @@ using namespace MxTest;
 #endif
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//#if 1==0
+class ImportTests
+{
+public:
+    ImportTests()
+    {
+        TestFiles t;
+        auto files = t.getTestFiles();
+        for( const auto& file : files )
+        {
+            tests.emplace_back( file );
+        }
+    }
+    std::vector<ImportTestCpul> tests;
+} importTestsInstance;
+
+#if 1==0
 MXTEST_IMPORT_ROUNDTRIP( lysuite, ly01a_Pitches_Pitches, xml , MxTest::RESOURCES_DIRECTORY_PATH)
 	isSuccess = test.runTest( msgsstr );
     CHECK_WITH_MESSAGE( isSuccess, msgsstr.str() );
@@ -1726,6 +1741,7 @@ MXTEST_IMPORT_ROUNDTRIP( foundsuite, Schubert_der_Mueller, xml , MxTest::RESOURC
     CHECK_WITH_MESSAGE( isSuccess, msgsstr.str() );
 MXTEST_IMPORT_ROUNDTRIP_END
 
+#endif
 
 
 #endif

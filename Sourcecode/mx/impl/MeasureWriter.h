@@ -7,6 +7,7 @@
 #include "mx/impl/MeasureCursor.h"
 #include "mx/api/SystemData.h"
 #include "mx/impl/PropertiesWriter.h"
+#include "mx/impl/Converter.h"
 
 #include <list>
 
@@ -38,6 +39,7 @@ namespace mx
             const ScoreWriter& myScoreWriter;
             std::unique_ptr<PropertiesWriter> myPropertiesWriter;
             std::list<api::KeyData> myMeasureKeys;
+            const Converter myConverter;
 
         private:
             void writeMeasureGlobals();

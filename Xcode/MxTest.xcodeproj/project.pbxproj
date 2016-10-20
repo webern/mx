@@ -439,6 +439,7 @@
 		29C01F1B1D13137D0094BE61 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C01F151D13137D0094BE61 /* main.cpp */; };
 		29C227ED1D2F5DE000677B3C /* SortAttributes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C227EB1D2F5DE000677B3C /* SortAttributes.cpp */; };
 		29C227F01D2F74B500677B3C /* ChangeValues.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C227EE1D2F74B500677B3C /* ChangeValues.cpp */; };
+		29CD72321DB8437E00FB7153 /* TestFiles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29CD72301DB8437E00FB7153 /* TestFiles.cpp */; };
 		29EF2F831DA2FECA001FE5DF /* PositionParsingTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EF2F821DA2FECA001FE5DF /* PositionParsingTest.cpp */; };
 		29EF44101D6E8F5500DBDAB9 /* DocumentManagerTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EF440F1D6E8F5500DBDAB9 /* DocumentManagerTest.cpp */; };
 /* End PBXBuildFile section */
@@ -479,7 +480,6 @@
 		297DD7CB1D1A4C96003BADC1 /* File.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = File.h; path = ../Sourcecode/mxtest/control/File.h; sourceTree = "<group>"; };
 		298F0F4B1D1E4981005C3D9D /* ImportTestImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImportTestImpl.cpp; path = ../Sourcecode/mxtest/import/ImportTestImpl.cpp; sourceTree = "<group>"; };
 		298F0F4C1D1E4981005C3D9D /* ImportTestImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImportTestImpl.h; path = ../Sourcecode/mxtest/import/ImportTestImpl.h; sourceTree = "<group>"; };
-		299D805B1D1F1C7700BB134C /* TestFiles.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TestFiles.h; path = ../Sourcecode/mxtest/import/TestFiles.h; sourceTree = "<group>"; };
 		299F7FF61CA8D2620084CAE5 /* MxTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MxTest; sourceTree = BUILT_PRODUCTS_DIR; };
 		29C01B641D1312F90094BE61 /* AccentTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AccentTest.cpp; path = ../Sourcecode/mxtest/core/AccentTest.cpp; sourceTree = "<group>"; };
 		29C01B651D1312F90094BE61 /* AccidentalMarkTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AccidentalMarkTest.cpp; path = ../Sourcecode/mxtest/core/AccidentalMarkTest.cpp; sourceTree = "<group>"; };
@@ -1018,6 +1018,9 @@
 		29C227EC1D2F5DE000677B3C /* SortAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SortAttributes.h; path = ../Sourcecode/mxtest/import/SortAttributes.h; sourceTree = "<group>"; };
 		29C227EE1D2F74B500677B3C /* ChangeValues.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ChangeValues.cpp; path = ../Sourcecode/mxtest/import/ChangeValues.cpp; sourceTree = "<group>"; };
 		29C227EF1D2F74B500677B3C /* ChangeValues.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChangeValues.h; path = ../Sourcecode/mxtest/import/ChangeValues.h; sourceTree = "<group>"; };
+		29CD722E1DB8421100FB7153 /* RoundTrip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RoundTrip.h; path = ../Sourcecode/mxtest/api/RoundTrip.h; sourceTree = "<group>"; };
+		29CD72301DB8437E00FB7153 /* TestFiles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestFiles.cpp; path = ../Sourcecode/mxtest/control/TestFiles.cpp; sourceTree = "<group>"; };
+		29CD72311DB8437E00FB7153 /* TestFiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestFiles.h; path = ../Sourcecode/mxtest/control/TestFiles.h; sourceTree = "<group>"; };
 		29EF2F821DA2FECA001FE5DF /* PositionParsingTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PositionParsingTest.cpp; path = ../Sourcecode/mxtest/api/PositionParsingTest.cpp; sourceTree = "<group>"; };
 		29EF440F1D6E8F5500DBDAB9 /* DocumentManagerTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DocumentManagerTest.cpp; path = ../Sourcecode/mxtest/api/DocumentManagerTest.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1617,6 +1620,8 @@
 		297556161D136AC8007732D0 /* control */ = {
 			isa = PBXGroup;
 			children = (
+				29CD72301DB8437E00FB7153 /* TestFiles.cpp */,
+				29CD72311DB8437E00FB7153 /* TestFiles.h */,
 				2936D2081D20C6AD003836E5 /* Path.h */,
 				297556171D136AE0007732D0 /* CompileControl.h */,
 				297DD7CB1D1A4C96003BADC1 /* File.h */,
@@ -1638,7 +1643,6 @@
 				298F0F4C1D1E4981005C3D9D /* ImportTestImpl.h */,
 				29C227EB1D2F5DE000677B3C /* SortAttributes.cpp */,
 				29C227EC1D2F5DE000677B3C /* SortAttributes.h */,
-				299D805B1D1F1C7700BB134C /* TestFiles.h */,
 			);
 			name = import;
 			sourceTree = "<group>";
@@ -1669,6 +1673,7 @@
 		29EF440E1D6E8F4700DBDAB9 /* api */ = {
 			isa = PBXGroup;
 			children = (
+				29CD722E1DB8421100FB7153 /* RoundTrip.h */,
 				294775E11D934C510006E1AD /* LoadAllTest.cpp */,
 				29EF440F1D6E8F5500DBDAB9 /* DocumentManagerTest.cpp */,
 				29EF2F821DA2FECA001FE5DF /* PositionParsingTest.cpp */,
@@ -2002,6 +2007,7 @@
 				29C01EAD1D1312FA0094BE61 /* SnapPizzicatoTest.cpp in Sources */,
 				29C01E9F1D1312FA0094BE61 /* ScoreInstrumentTest.cpp in Sources */,
 				29C01D7C1D1312FA0094BE61 /* ArticulationsTest.cpp in Sources */,
+				29CD72321DB8437E00FB7153 /* TestFiles.cpp in Sources */,
 				2936D2071D20C66D003836E5 /* File.cpp in Sources */,
 				29C01DCA1D1312FA0094BE61 /* DurationTest.cpp in Sources */,
 				29C01EA31D1312FA0094BE61 /* SegnoTest.cpp in Sources */,

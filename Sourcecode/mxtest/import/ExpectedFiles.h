@@ -8,7 +8,7 @@
 
 #include "mxtest/control/Path.h"
 #include "mxtest/control/File.h"
-#include "mxtest/import/TestFiles.h"
+#include "mxtest/control/TestFiles.h"
 #include "mx/utility/Parse.h"
 #include "mx/xml/XFactory.h"
 #include "mx/xml/XDoc.h"

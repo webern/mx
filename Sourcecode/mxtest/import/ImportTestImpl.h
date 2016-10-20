@@ -7,9 +7,11 @@
 
 #include "cpul/cpulTestHarness.h"
 #include "cpul/cpulTestTimer.h"
+#include "cpul/cpulTest.h"
 #include "mx/xml/XFactory.h"
 #include "mx/xml/XDoc.h"
 #include "mxtest/control/Path.h"
+#include "mxtest/control/TestFiles.h"
 #include "mx/core/Document.h"
 
 #include <iostream>
@@ -40,10 +42,9 @@ void GROUPNAME##FNAME_PART##Test::runTest (TestResult& rEsUlT_)                 
                                                                                 \
                                                                                 \
 
+
 #define MXTEST_IMPORT_ROUNDTRIP_END }                                           \
                                                                                 \
-
-
 
 
 namespace MxTest
@@ -126,5 +127,36 @@ namespace MxTest
         return value.streamValues( os );
     }
 }
+
+class ImportTestCpul : public Test
+{
+public:
+    ImportTestCpul( MxTest::TestFile testFile )
+    : Test( "ImportTestCpul", testFile.fileName, 0 )
+    , myTestFile{ testFile }
+    {}
+    
+    inline void runTest(TestResult& rEsUlT_)
+    {
+
+        MxTest::ImportRoundTripTest test{
+        myTestFile.getFileNamePart().c_str(),
+        "xml",
+        myTestFile.subdirectory.c_str(),
+        myTestFile.fileName.c_str(),
+        0,
+        myTestFile.subdirectory.c_str() };
+        
+        bool isSuccess = false;
+        std::stringstream msgsstr;
+        test.setIsMxBypassed( false );
+        
+        isSuccess = test.runTest( msgsstr );
+        CHECK_WITH_MESSAGE( isSuccess, msgsstr.str() );
+    }
+    
+private:
+    MxTest::TestFile myTestFile;
+};
 
 #endif

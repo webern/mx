@@ -1988,6 +1988,8 @@
 		29C51A4D1D9F061600EAA308 /* MeasureLocation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C51A4C1D9F061600EAA308 /* MeasureLocation.cpp */; };
 		29CD72281DB806FD00FB7153 /* PropertiesWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29CD72261DB806FD00FB7153 /* PropertiesWriter.cpp */; };
 		29CD72291DB806FD00FB7153 /* PropertiesWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 29CD72271DB806FD00FB7153 /* PropertiesWriter.h */; };
+		29CD722C1DB82C9200FB7153 /* DirectionWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29CD722A1DB82C9200FB7153 /* DirectionWriter.cpp */; };
+		29CD722D1DB82C9200FB7153 /* DirectionWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 29CD722B1DB82C9200FB7153 /* DirectionWriter.h */; };
 		29CDDA2D1DADCAF30022B1A3 /* PartWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29CDDA2B1DADCAF30022B1A3 /* PartWriter.cpp */; };
 		29CDDA2E1DADCAF30022B1A3 /* PartWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 29CDDA2C1DADCAF30022B1A3 /* PartWriter.h */; };
 		29DB30A11DA0713200031477 /* MarkData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DB30A01DA0713200031477 /* MarkData.cpp */; };
@@ -3387,6 +3389,8 @@
 		29C51A521D9F18C600EAA308 /* PrintData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PrintData.h; path = ../Sourcecode/mx/api/PrintData.h; sourceTree = "<group>"; };
 		29CD72261DB806FD00FB7153 /* PropertiesWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PropertiesWriter.cpp; path = ../Sourcecode/mx/impl/PropertiesWriter.cpp; sourceTree = "<group>"; };
 		29CD72271DB806FD00FB7153 /* PropertiesWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PropertiesWriter.h; path = ../Sourcecode/mx/impl/PropertiesWriter.h; sourceTree = "<group>"; };
+		29CD722A1DB82C9200FB7153 /* DirectionWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DirectionWriter.cpp; path = ../Sourcecode/mx/impl/DirectionWriter.cpp; sourceTree = "<group>"; };
+		29CD722B1DB82C9200FB7153 /* DirectionWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DirectionWriter.h; path = ../Sourcecode/mx/impl/DirectionWriter.h; sourceTree = "<group>"; };
 		29CDDA2B1DADCAF30022B1A3 /* PartWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PartWriter.cpp; path = ../Sourcecode/mx/impl/PartWriter.cpp; sourceTree = "<group>"; };
 		29CDDA2C1DADCAF30022B1A3 /* PartWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PartWriter.h; path = ../Sourcecode/mx/impl/PartWriter.h; sourceTree = "<group>"; };
 		29D35E7A1D28DD8E00EC2CAE /* ForwardDeclare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ForwardDeclare.h; path = ../Sourcecode/mx/core/ForwardDeclare.h; sourceTree = "<group>"; };
@@ -3558,6 +3562,8 @@
 		292255D51D712B26002D8E48 /* impl */ = {
 			isa = PBXGroup;
 			children = (
+				29CD722A1DB82C9200FB7153 /* DirectionWriter.cpp */,
+				29CD722B1DB82C9200FB7153 /* DirectionWriter.h */,
 				29CD72261DB806FD00FB7153 /* PropertiesWriter.cpp */,
 				29CD72271DB806FD00FB7153 /* PropertiesWriter.h */,
 				29EF2FE91DA307D3001FE5DF /* AccidentalMarkFunctions.cpp */,
@@ -5022,6 +5028,7 @@
 				29B7C46C1DB02D2F009D7D8F /* SystemData.h in Headers */,
 				29766ACB1DAC149900CCE2AC /* DirectionReader.h in Headers */,
 				29B4E81C1DA9CA0E005DC6D1 /* TupletData.h in Headers */,
+				29CD722D1DB82C9200FB7153 /* DirectionWriter.h in Headers */,
 				29C29B8B1DAEC00C00D3A884 /* ScoreWriter.h in Headers */,
 				29CDDA2E1DADCAF30022B1A3 /* PartWriter.h in Headers */,
 				29B7C46A1DAFFDBA009D7D8F /* MeasureWriter.h in Headers */,
@@ -6583,6 +6590,7 @@
 				294549231D295C5500B90302 /* Instrument.cpp in Sources */,
 				294549FB1D295C5500B90302 /* ScorePartwise.cpp in Sources */,
 				294548DB1D295C5500B90302 /* Fifths.cpp in Sources */,
+				29CD722C1DB82C9200FB7153 /* DirectionWriter.cpp in Sources */,
 				294549391D295C5500B90302 /* KeyStep.cpp in Sources */,
 				2945483B1D295C5500B90302 /* Accidental.cpp in Sources */,
 				29454A531D295C5500B90302 /* Timpani.cpp in Sources */,

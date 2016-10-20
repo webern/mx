@@ -40,16 +40,16 @@ private:
     std::string     myName;
 };
 
-#define TEST(name,classUnderTest)\
-    class classUnderTest##name##Test : public Test\
-    { \
-        public: \
-            classUnderTest##name##Test () \
-            : \
-                Test ("TEST(" #name ", " #classUnderTest ")", \
-                      __FILE__, __LINE__) {} \
-            void runTest (TestResult& rEsUlT_); \
-    } classUnderTest##name##Instance; \
+#define TEST(name,classUnderTest)                                   \
+    class classUnderTest##name##Test : public Test                  \
+    {                                                               \
+        public:                                                     \
+            classUnderTest##name##Test ()                           \
+            :                                                       \
+                Test ("TEST(" #name ", " #classUnderTest ")",       \
+                      __FILE__, __LINE__) {}                        \
+            void runTest (TestResult& rEsUlT_);                     \
+    } classUnderTest##name##Instance;                               \
     void classUnderTest##name##Test::runTest (TestResult& rEsUlT_)
 
 

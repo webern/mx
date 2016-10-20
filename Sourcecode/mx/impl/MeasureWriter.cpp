@@ -82,6 +82,30 @@
 #include "mx/core/elements/Unpitched.h"
 #include "mx/core/elements/Voice.h"
 #include "mx/impl/NoteWriter.h"
+#include "mx/core/elements/Direction.h"
+#include "mx/core/elements/DirectionType.h"
+#include "mx/core/elements/AccordionRegistration.h"
+#include "mx/core/elements/Bracket.h"
+#include "mx/core/elements/Coda.h"
+#include "mx/core/elements/Damp.h"
+#include "mx/core/elements/DampAll.h"
+#include "mx/core/elements/Dashes.h"
+#include "mx/core/elements/Dynamics.h"
+#include "mx/core/elements/Eyeglasses.h"
+#include "mx/core/elements/HarpPedals.h"
+#include "mx/core/elements/Image.h"
+#include "mx/core/elements/Metronome.h"
+#include "mx/core/elements/OctaveShift.h"
+#include "mx/core/elements/OtherDirection.h"
+#include "mx/core/elements/Pedal.h"
+#include "mx/core/elements/Percussion.h"
+#include "mx/core/elements/PrincipalVoice.h"
+#include "mx/core/elements/Rehearsal.h"
+#include "mx/core/elements/Scordatura.h"
+#include "mx/core/elements/Segno.h"
+#include "mx/core/elements/StringMute.h"
+#include "mx/core/elements/Wedge.h"
+#include "mx/core/elements/Words.h"
 
 namespace mx
 {
@@ -100,6 +124,7 @@ namespace mx
         , myPreviousCursor{ inCursor }
         , myScoreWriter{ inScoreWriter }
         , myPropertiesWriter{ nullptr }
+        , myConverter{}
         {
             for( const auto& keyData : myMeasureData.keys )
             {
@@ -141,11 +166,6 @@ namespace mx
             
             Converter converter;
             
-            if( myMeasureData.staves.size() > 1 )
-            {
-                myPropertiesWriter->writeNumStaves( static_cast<int>( myMeasureData.staves.size() ) );
-            }
-            
             if( myMeasureData.implicit != api::Bool::unspecified )
             {
                 measureAttr.hasImplicit = true;
@@ -160,6 +180,11 @@ namespace mx
             if( myCursor.isFirstMeasureInPart )
             {
                 myPropertiesWriter->writeDivisions( myCursor.getGlobalTicksPerQuarter() );
+                
+                if( myMeasureData.staves.size() > 1 )
+                {
+                    myPropertiesWriter->writeNumStaves( static_cast<int>( myMeasureData.staves.size() ) );
+                }
             }
             
             if( !myMeasureData.timeSignature.isImplicit )
@@ -295,8 +320,31 @@ namespace mx
                     
                     for( ; staffMarkIter != staffMarkEnd && staffMarkIter->tickTimePosition <= myCursor.tickTimePosition; ++staffMarkIter )
                     {
-                        // TODO - add directions
-                        MX_UNUSED( staffMarkIter );
+                        const auto& mark = *staffMarkIter;
+                        if( !mark.isDynamic() )
+                        {
+                            continue;
+                        }
+                        
+                        auto directionMdc = core::makeMusicDataChoice();
+                        directionMdc->setChoice( core::MusicDataChoice::Choice::direction );
+                        myOutMeasure->getMusicDataGroup()->addMusicDataChoice( directionMdc );
+                        auto direction  = directionMdc->getDirection();
+                        auto directionType = direction->getDirectionTypeSet().front();
+                        directionType->setChoice( core::DirectionType::Choice::dynamics );
+                        auto dynamics = directionType->getDynamicsSet().front();
+                        
+                        if( mark.positionData.placement != api::Placement::unspecified )
+                        {
+                            direction->getAttributes()->hasPlacement = true;
+                            direction->getAttributes()->placement = myConverter.convert( mark.positionData.placement );
+                        }
+                        
+                        dynamics->setValue( core::DynamicsValue{ myConverter.convertDynamic( mark.markType ) } );
+                        direction->setHasStaff( true );
+                        direction->getStaff()->setValue( core::StaffNumber{ myCursor.staffIndex + 1 } );
+                        
+                        
                     }
                     
                     auto mdc = core::makeMusicDataChoice();
