@@ -10,6 +10,10 @@
 
 namespace mxtest
 {
+    // set to zero for infitinity
+    constexpr const int MX_COMPILE_MAX_FILE_SIZE_MEGABYTES = 5;
+    constexpr const int MX_COMPILE_MAX_FILE_SIZE_BYTES = 1024 * MX_COMPILE_MAX_FILE_SIZE_MEGABYTES;
+    
     using StringPair = std::pair<std::string, std::string>;
     using StringMap = std::map<std::string, std::string>;
 
@@ -20,7 +24,7 @@ namespace mxtest
         std::string path;
         bool isLoadFailureExpected;
         int sizeBytes;
-        inline std::string getFileNamePart()
+        inline std::string getFileNamePart() const
         {
             return fileName.substr( 0, static_cast<size_t>( static_cast<int>( fileName.size() ) - 4 ) );
         }

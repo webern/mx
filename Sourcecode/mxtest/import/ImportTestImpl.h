@@ -5,6 +5,7 @@
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_IMPORT_TESTS
 
+#include "mxtest/file/MxFileTest.h"
 #include "cpul/cpulTestHarness.h"
 #include "cpul/cpulTestTimer.h"
 #include "cpul/cpulTest.h"
@@ -128,42 +129,44 @@ namespace mxtest
     }
 }
 
-class ImportTestCpul : public Test
+class ImportTestCpul : public mxtest::MxFileTest
 {
 public:
-    ImportTestCpul( mxtest::TestFile testFile )
-    : Test( "ImportTestCpul", testFile.fileName, 0 )
-    , myTestFile{ testFile }
+    ImportTestCpul(
+            mxtest::TestFile inTestFile,
+            std::string inTestName,
+            std::string inTestCppFileName,
+            int inTestCppFileLineNumber )
+    : mxtest::MxFileTest( inTestFile, inTestName, inTestCppFileName, inTestCppFileLineNumber )
     {}
     
-    inline void runTest(TestResult& rEsUlT_)
+    
+    inline void runTestCode()
     {
         mxtest::ImportRoundTripTest test{
-        myTestFile.getFileNamePart().c_str(),
-        "xml",
-        myTestFile.subdirectory.c_str(),
-        myTestFile.fileName.c_str(),
-        0,
-        myTestFile.subdirectory.c_str() };
+            testFileNamePart().c_str(),
+            testFileExtension().c_str(),
+            testSubdirectory().c_str(),
+            testFileName().c_str(),
+            getCppFileLineNumber(),
+            testSubdirectory().c_str() };
         
-        bool isSuccess = false;
         std::stringstream msgsstr;
-        msgsstr << "filename - " << myTestFile.fileName << " ";
         test.setIsMxBypassed( false );
         
-        isSuccess = test.runTest( msgsstr );
-        if( myTestFile.isLoadFailureExpected )
+        bool isTestSuccess = test.runTest( msgsstr );
+        if( isLoadFailureExpected() )
         {
-            CHECK_WITH_MESSAGE( !isSuccess, myTestFile.fileName );
+            setIsSuccess( !isTestSuccess );
+            setFailureMessage( "loading was expected to fail but succeeded instead" );
         }
         else
         {
-            CHECK_WITH_MESSAGE( isSuccess, msgsstr.str() );
+            setIsSuccess( isTestSuccess );
+            setFailureMessage( msgsstr.str() );
         }
     }
-    
-private:
-    mxtest::TestFile myTestFile;
+
 };
 
 #endif

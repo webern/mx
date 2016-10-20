@@ -4,6 +4,7 @@
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_IMPORT_TESTS
 
+#include "mxtest/file/MxFileTestGroup.h"
 #include "mxtest/control/Path.h"
 #include "cpul/cpulTestHarness.h"
 #include "ExpectedFiles.h"
@@ -73,20 +74,12 @@ using namespace mxtest;
 #endif
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class ImportTests
+MxFileTestGroup instance
 {
-public:
-    ImportTests()
-    {
-        int maxFileSizeBytes = MX_COMPILE_MAX_FILE_SIZE_BYTES; // 0 means infinity
-        TestFiles t;
-        auto files = t.getTestFiles( maxFileSizeBytes );
-        for( const auto& file : files )
-        {
-            tests.push_back( std::make_shared<ImportTestCpul>( file ) );
-        }
-    }
-    std::list<std::shared_ptr<ImportTestCpul>> tests;
-} importTestsInstance;
+    mxtest::MX_COMPILE_MAX_FILE_SIZE_BYTES, // maxFileSizeBytes
+    "XML Import Tests",
+    __FILE__,
+    __LINE__
+};
 
 #endif
