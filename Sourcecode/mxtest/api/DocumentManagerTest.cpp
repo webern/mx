@@ -5,7 +5,7 @@
 #ifdef MX_COMPILE_API_TESTS
 
 #include "cpul/cpulTestHarness.h"
-#include "mxtest/control/Path.h"
+#include "mxtest/file/Path.h"
 #include "mx/api/DocumentManager.h"
 #include "mx/api/LayoutData.h"
 #include "mx/core/Document.h"

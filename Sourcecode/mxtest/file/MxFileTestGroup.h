@@ -22,6 +22,7 @@ namespace mxtest
 	// the purpose of this class is to create a collection of MxFileTest instances
 	// and to keep them alive for the lifetime of the test run.  pointers to these
 	// tests will be inserted into the cpul test registry and run during main()
+	template<typename MX_FILE_TEST_DERIVITAVE_TYPE>
 	class MxFileTestGroup
 	{
 	public:
@@ -32,7 +33,15 @@ namespace mxtest
 			int maxFileSizeBytes,
 			std::string testName,
 			std::string testCppFileName,
-			int testCppFileLineNumber );
+			int testCppFileLineNumber )
+	    {
+	        auto files = MxFileRepository::getTestFiles( maxFileSizeBytes );
+	        for( auto& file : files )
+	        {
+	            std::shared_ptr<MxFileTest> testPtr{ new MX_FILE_TEST_DERIVITAVE_TYPE{ file, testName, testCppFileName, testCppFileLineNumber } };
+	            myTests.push_back( testPtr );
+	        }
+	    }
 
 		// if you use MxFileTestListType::includedFiles then only those files which
 		// are in fileList and which are less than or equal to maxFileSizeBytes
@@ -47,7 +56,10 @@ namespace mxtest
 			MxFileTestListType listType,
 			std::string testName,
 			std::string testCppFileName,
-			int testCppFileLineNumber );
+			int testCppFileLineNumber )
+		{
+        	throw std::runtime_error{ "not implemented" };
+    	}
 
 	private:
 		std::list<std::shared_ptr<MxFileTest>> myTests;

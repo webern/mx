@@ -4,7 +4,7 @@
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_IMPORT_TESTS
 
-#include "mxtest/control/File.h"
+#include "mxtest/file/StupidFileFunctions.h"
 #include "mxtest/file/MxFileRepository.h"
 #include "mxtest/import/ExpectedFiles.h"
 #include "mx/utility/Throw.h"
@@ -260,24 +260,32 @@ namespace mxtest
     
     void deleteExpectedFiles()
     {
+        std::cout << "deleting expected files" << std::flush;
         auto testFiles = MxFileRepository::getTestFiles( 0 );
         for( auto it = testFiles.cbegin(); it != testFiles.cend(); ++it )
         {
             std::string fullpath = getExpectedFileFullPath( it->subdirectory, it->fileName );
-            std::cout << "deleting expected file - " << fullpath << it->fileName << std::endl;
-            deleteFileNoThrow( fullpath );
+            bool isDeleted = deleteFileNoThrow( fullpath );
+            if( isDeleted )
+            {
+                std::cout << "." << std::flush;
+                //std::cout << "deleting expected file - " << fullpath << it->fileName << std::endl;
+            }
         }
+        std::cout << "done" << std::endl;
     }
     
     
     void generateExpectedFiles()
     {
+        std::cout << "creating expected files" << std::flush;
         const int maxConcurrency = 50;
         std::list<std::future<void>> q;
         auto testFiles = MxFileRepository::getTestFiles( MX_COMPILE_MAX_FILE_SIZE_BYTES );
         for( auto it = testFiles.cbegin(); it != testFiles.cend(); ++it )
         {
-            std::cout << "creating expected file - " << it->subdirectory << " - " << it->fileName << std::endl;
+            std::cout << "." << std::flush;
+            // std::cout << "creating expected file - " << it->subdirectory << " - " << it->fileName << std::endl;
             auto fut = std::async( std::launch::async, generateExpectedFile, it->subdirectory.c_str(), it->fileName.c_str() );
             
             while( q.size() >= maxConcurrency )
@@ -309,6 +317,7 @@ namespace mxtest
                 std::this_thread::sleep_for( std::chrono::milliseconds(10) );
             }
         }
+        std::cout << "done" << std::endl;
     }
     
 

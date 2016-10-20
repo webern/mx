@@ -11,7 +11,7 @@
 #include "cpul/cpulTest.h"
 #include "mx/xml/XFactory.h"
 #include "mx/xml/XDoc.h"
-#include "mxtest/control/Path.h"
+#include "mxtest/file/Path.h"
 #include "mxtest/file/MxFileRepository.h"
 #include "mx/core/Document.h"
 

@@ -5,7 +5,7 @@
 #ifdef MX_COMPILE_IMPORT_TESTS
 
 #include "mxtest/file/MxFileTestGroup.h"
-#include "mxtest/control/Path.h"
+#include "mxtest/file/Path.h"
 #include "cpul/cpulTestHarness.h"
 #include "ExpectedFiles.h"
 #include "mxtest/import/ImportTestImpl.h"
@@ -74,7 +74,7 @@ using namespace mxtest;
 #endif
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-MxFileTestGroup instance
+MxFileTestGroup<ImportTestCpul> instance
 {
     mxtest::MX_COMPILE_MAX_FILE_SIZE_BYTES, // maxFileSizeBytes
     "XML Import Tests",

@@ -45,7 +45,7 @@ namespace mxtest
         if( isExceptionThrown )
         {
             std::stringstream failureMessage;
-            failureMessage << "'" << myTestName << " "  << testFileName() << " exception was thrown '" << exceptionMessage << "'";
+            failureMessage << "'" << myTestName << "' "  << testFileName() << " exception was thrown '" << exceptionMessage << "'";
             
             ::Failure exceptionFailure
             {

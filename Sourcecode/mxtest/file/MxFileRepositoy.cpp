@@ -2,7 +2,7 @@
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #include "mxtest/file/MxFileRepository.h"
-#include "mxtest/control/Path.h"
+#include "mxtest/file/Path.h"
 
 #include <fstream>
 

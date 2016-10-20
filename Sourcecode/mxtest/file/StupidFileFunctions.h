@@ -37,5 +37,5 @@ namespace mxtest
     
     void deleteFileThrowError( const std::string fullpath );
     
-    void deleteFileNoThrow( const std::string fullpath );
+    bool deleteFileNoThrow( const std::string fullpath );
 }

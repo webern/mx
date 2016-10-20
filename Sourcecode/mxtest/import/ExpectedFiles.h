@@ -6,8 +6,8 @@
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_IMPORT_TESTS
 
-#include "mxtest/control/Path.h"
-#include "mxtest/control/File.h"
+#include "mxtest/file/Path.h"
+#include "mxtest/file/StupidFileFunctions.h"
 #include "mxtest/file/MxFileRepository.h"
 #include "mx/utility/Parse.h"
 #include "mx/xml/XFactory.h"

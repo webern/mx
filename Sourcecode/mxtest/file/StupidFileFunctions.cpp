@@ -1,8 +1,8 @@
 // MusicXML Class Library v0.3.0
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
-#include "mxtest/control/File.h"
-#include "mxtest/control/Path.h"
+#include "mxtest/file/StupidFileFunctions.h"
+#include "mxtest/file/Path.h"
 #include "mx/utility/Throw.h"
 
 #include <iostream>
@@ -117,9 +117,9 @@ namespace mxtest
     }
 
     
-    void deleteFileNoThrow( const std::string fullpath )
+    bool deleteFileNoThrow( const std::string fullpath )
     {
-        std::remove( fullpath.c_str() );
+        return 0 == std::remove( fullpath.c_str() );
     }
     
 }
