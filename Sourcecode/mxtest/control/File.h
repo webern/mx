@@ -5,7 +5,7 @@
 
 #include <string>
 
-namespace MxTest
+namespace mxtest
 {
     constexpr const char* const TEST_OUTPUT_DIRECTORY_NAME = "testOutput";
     constexpr const char* const EXPECTED_FILES_DIRECTORY_NAME = "expected";

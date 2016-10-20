@@ -8,7 +8,7 @@
 #include "mxtest/core/HelperFunctions.h"
 #include "mx/core/Elements.h"
 
-namespace MxTestHelpers
+namespace mxtest
 {
     mx::core::CueNoteGroupPtr tgenCueNoteGroup( variant v );
     void tgenCueNoteGroupExpected( std::ostream& os, int indentLevel, variant v );

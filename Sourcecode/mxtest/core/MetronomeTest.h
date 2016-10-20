@@ -11,7 +11,7 @@
 using namespace mx::core;
 using namespace std;
 
-namespace MxTestHelpers
+namespace mxtest
 {
     BeatUnitGroupPtr tgenBeatUnitGroup( variant v );
     MetronomeRelationGroupPtr tgenMetronomeRelationGroup( variant v );

@@ -9,7 +9,7 @@
 #include "mxtest/core/HelperFunctions.h"
 #include "mx/core/Elements.h"
 
-namespace MxTestHelpers
+namespace mxtest
 {
     mx::core::TechnicalChoicePtr tgenTechnicalChoice( variant v );
     void tgenTechnicalChoiceExpected( std::ostream& os, int indentLevel, variant v );

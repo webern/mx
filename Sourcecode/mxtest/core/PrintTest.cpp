@@ -14,7 +14,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, Print )
 {
@@ -56,7 +56,7 @@ TEST( Test03, Print )
 	CHECK( object->hasContents() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     PrintPtr tgenPrint( variant v )
     {

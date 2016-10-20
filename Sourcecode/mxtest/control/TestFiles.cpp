@@ -5,7 +5,7 @@
 #include "mxtest/control/Path.h"
 #include <fstream>
 
-namespace MxTest
+namespace mxtest
 {
     
     const StringMap& TestFiles::getTestFileMap() const
@@ -66,8 +66,8 @@ namespace MxTest
 
     
     TestFiles::TestFiles()
-    : myPath{ MxTest::RESOURCES_DIRECTORY_PATH }
-    , mySeparator{ MxTest::FILE_PATH_SEPARATOR }
+    : myPath{ mxtest::RESOURCES_DIRECTORY_PATH }
+    , mySeparator{ mxtest::FILE_PATH_SEPARATOR }
     , myTestFiles{
                     // lily files
                     { "ly01a_Pitches_Pitches.xml", "lysuite" },

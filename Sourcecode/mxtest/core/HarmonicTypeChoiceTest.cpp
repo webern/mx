@@ -10,7 +10,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, HarmonicTypeChoice )
 {
@@ -55,7 +55,7 @@ TEST( Test03, HarmonicTypeChoice )
 	CHECK( object->hasContents() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     HarmonicTypeChoicePtr tgenHarmonicTypeChoice( variant v )
     {

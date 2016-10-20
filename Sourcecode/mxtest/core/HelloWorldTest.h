@@ -20,7 +20,7 @@
 using namespace mx::core;
 using namespace std;
 
-namespace MxTest
+namespace mxtest
 {
     inline MusicDataChoicePtr makeSixteenthNote( const StepEnum step, int octave, BeamValue beamval )
     {

@@ -10,7 +10,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, Work )
 {
@@ -52,7 +52,7 @@ TEST( Test03, Work )
 	CHECK( object->hasContents() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     WorkPtr tgenWork( variant v )
     {

@@ -8,7 +8,7 @@
 #include "mxtest/core/HelperFunctions.h"
 #include "mx/core/Elements.h"
 
-namespace MxTestHelpers
+namespace mxtest
 {
     mx::core::OrnamentsChoicePtr tgenOrnamentsChoice( variant v );
     void tgenOrnamentsChoiceExpected( std::ostream& os, int indentLevel, variant v );

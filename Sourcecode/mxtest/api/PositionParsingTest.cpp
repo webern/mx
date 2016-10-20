@@ -19,47 +19,58 @@
 using namespace std;
 using namespace mx::api;
 
+inline ScoreData createExpectedScoreData()
+{
+    ScoreData scoreData;
+    scoreData.workTitle = "RoundTrip_PositionInfo";
+    scoreData.parts.emplace_back( PartData{} );
+    auto& part = scoreData.parts.at( 0 );
+    part.measures.emplace_back( MeasureData{} );
+    auto& measure = part.measures.at( 0 );
+    measure.staves.emplace_back( StaffData{} );
+    auto& staff = measure.staves.at( 0 );
+    staff.voices[0] = VoiceData{};
+    auto& voice = staff.voices.at( 0 );
+    voice.notes.emplace_back( NoteData{} );
+    auto& note = voice.notes.at( 0 );
+    note.absoluteNoteIndex = 1;
+    note.positionData.hasDefaultX = true;
+    note.positionData.hasDefaultY = true;
+    note.positionData.hasRelativeX = true;
+    note.positionData.hasRelativeY = true;
+    note.positionData.defaultX = 1.0;
+    note.positionData.defaultY = 2.0;
+    note.positionData.relativeX = 3.0;
+    note.positionData.relativeY = 4.0;
+    note.noteAttachmentData.marks.emplace_back( MarkData{} );
+    auto& mark = note.noteAttachmentData.marks.at( 0 );
+    mark.printData.isColorSpecified = true;
+    mark.printData.color.red = 1;
+    mark.printData.color.green = 2;
+    mark.printData.color.blue = 3;
+    mark.printData.fontData.fontFamily.emplace_back( "HELLO" );
+    return scoreData;
+}
+
+inline ScoreData roundTripTheScore( ScoreData inScoreData )
+{
+    ScoreData scoreData = createExpectedScoreData();
+    auto& docMgr = DocumentManager::getInstance();
+    int docId = docMgr.createFromScore( scoreData );
+    std::ostringstream oss;
+    docMgr.writeToStream( docId, oss );
+    docMgr.destroyDocument( docId );
+    std::istringstream iss{ oss.str() };
+    docId = docMgr.createFromStream( iss );
+    auto afterScore = docMgr.getData( docId );
+    docMgr.destroyDocument( docId );
+    return afterScore;
+}
+
 TEST( RoundTrip_PositionInfo, PositionParsing )
 {
-//    ScoreData scoreData;
-//    scoreData.workTitle = "RoundTrip_PositionInfo";
-//    scoreData.parts.emplace_back( PartData{} );
-//    auto& part = scoreData.parts.at( 0 );
-//    part.staves.emplace_back( StaffData{} );
-//    auto& staff = part.staves.at( 0 );
-//    staff.measures.emplace_back( MeasureData{} );
-//    auto& measure = staff.measures.at( 0 );
-//    measure.voices[0] = VoiceData{};
-//    auto& voice = measure.voices.at( 0 );
-//    voice.notes.emplace_back( NoteData{} );
-//    auto& note = voice.notes.at( 0 );
-//    note.absoluteNoteIndex = 1;
-//    note.positionData.hasDefaultX = true;
-//    note.positionData.hasDefaultY = true;
-//    note.positionData.hasRelativeX = true;
-//    note.positionData.hasRelativeY = true;
-//    note.positionData.defaultX = 1.0;
-//    note.positionData.defaultY = 2.0;
-//    note.positionData.relativeX = 3.0;
-//    note.positionData.relativeY = 4.0;
-//    note.marks.emplace_back( MarkData{} );
-//    auto& mark = note.marks.at( 0 );
-//    mark.printData.isColorSpecified = true;
-//    mark.printData.color.red = 1;
-//    mark.printData.color.green = 2;
-//    mark.printData.color.blue = 3;
-//    mark.printData.fontData.fontFamily.emplace_back( "HELLO" );
-//    auto& docMgr = DocumentManager::getInstance();
-//    int docId = docMgr.createFromScore( scoreData );
-//    std::ostringstream oss;
-//    docMgr.writeToStream( docId, oss );
-//    docMgr.destroyDocument( docId );
-//    std::istringstream iss{ oss.str() };
-//    docId = docMgr.createFromStream( iss );
-//    auto afterScore = docMgr.getData( docId );
-//    docMgr.destroyDocument( docId );
-    
-    // TODO - check all the round-tripped values
+    ScoreData beforeScore = createExpectedScoreData();
+    auto afterScore = roundTripTheScore( beforeScore );
     CHECK( false );
 }
 T_END

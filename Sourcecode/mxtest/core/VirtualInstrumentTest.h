@@ -9,7 +9,7 @@
 #include "mxtest/core/HelperFunctions.h"
 #include "mx/core/Elements.h"
 
-namespace MxTestHelpers
+namespace mxtest
 {
     mx::core::VirtualInstrumentPtr tgenVirtualInstrument( variant v );
     void tgenVirtualInstrumentExpected( std::ostream& os, int indentLevel, variant v );

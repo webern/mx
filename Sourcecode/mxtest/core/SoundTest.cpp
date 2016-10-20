@@ -14,7 +14,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, Sound )
 {
@@ -56,7 +56,7 @@ TEST( Test03, Sound )
 	CHECK( object->hasContents() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     SoundPtr tgenSound( variant v )
     {

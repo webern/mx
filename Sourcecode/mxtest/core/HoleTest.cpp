@@ -14,7 +14,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, Hole )
 {
@@ -56,7 +56,7 @@ TEST( Test03, Hole )
 	CHECK( object->hasContents() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     HolePtr tgenHole( variant v )
     {

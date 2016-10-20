@@ -7,7 +7,7 @@
 #ifdef MX_COMPILE_XML_TESTS
 
 
-namespace MxTest
+namespace mxtest
 {
     const char* const fakeXml = R"((((<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <!DOCTYPE total-fake-stuff>

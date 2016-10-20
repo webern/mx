@@ -18,7 +18,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, Lyric )
 {
@@ -60,7 +60,7 @@ TEST( Test03, Lyric )
 	CHECK( object->hasContents() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     LyricPtr tgenLyric( variant v )
     {

@@ -14,7 +14,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, SystemMargins )
 {
@@ -56,7 +56,7 @@ TEST( Test03, SystemMargins )
 	CHECK( object->hasContents() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     SystemMarginsPtr tgenSystemMargins( variant v )
     {

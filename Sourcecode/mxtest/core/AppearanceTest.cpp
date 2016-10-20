@@ -14,7 +14,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_CORE_TESTS
 
@@ -58,7 +58,7 @@ TEST( Test03, Appearance )
 	CHECK( object->hasContents() )
 }
 #endif
-namespace MxTestHelpers
+namespace mxtest
 {
     AppearancePtr tgenAppearance( variant v )
     {

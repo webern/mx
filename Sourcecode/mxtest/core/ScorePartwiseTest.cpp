@@ -13,7 +13,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, ScorePartwise )
 {
@@ -55,7 +55,7 @@ TEST( Test03, ScorePartwise )
 	CHECK( object->hasContents() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     ScorePartwisePtr tgenScorePartwise( variant v )
     {

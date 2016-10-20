@@ -12,12 +12,12 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( DocumentTimewiseConvert, DocumentTimewise )
 {
-    auto docExpected = MxTestHelpers::createDocumentTimewise();
-    auto docActual = MxTestHelpers::createDocumentPartwise();
+    auto docExpected = mxtest::createDocumentTimewise();
+    auto docActual = mxtest::createDocumentPartwise();
     docActual->convertContents();
     stringstream expected;
     docExpected->toStream( expected );

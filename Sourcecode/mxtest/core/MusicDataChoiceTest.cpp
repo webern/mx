@@ -22,7 +22,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, MusicDataChoice )
 {
@@ -64,7 +64,7 @@ TEST( Test03, MusicDataChoice )
 	CHECK( object->hasContents() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     MusicDataChoicePtr tgenMusicDataChoice( variant v )
     {

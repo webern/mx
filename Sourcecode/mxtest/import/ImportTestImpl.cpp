@@ -16,7 +16,7 @@
 using namespace mx::xml;
 using namespace mx::core;
 
-namespace MxTest
+namespace mxtest
 {
     
     std::string ImportRoundTripResult::getHeaderRow()

@@ -14,7 +14,7 @@
 #include <list>
 
 using namespace mx::xml;
-using namespace MxTest;
+using namespace mxtest;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 #define MXTEST_DELETE_EXPECTED_FILES
@@ -22,7 +22,7 @@ using namespace MxTest;
 
     TEST( DeleteExpected, Import )
     {
-        MxTest::deleteExpectedFiles();
+        mxtest::deleteExpectedFiles();
     }
     T_END
 
@@ -35,7 +35,7 @@ using namespace MxTest;
 
     TEST( GenerateExpected, Import )
     {
-        MxTest::generateExpectedFiles();
+        mxtest::generateExpectedFiles();
     }
     T_END
 
@@ -48,7 +48,7 @@ using namespace MxTest;
 
     TEST( DeleteTestOutputFiles, Import )
     {
-        MxTest::deleteTestOutputFiles();
+        mxtest::deleteTestOutputFiles();
     }
     T_END
 
@@ -61,11 +61,11 @@ using namespace MxTest;
 
     TEST( CreateCsvFile, Import )
     {
-        std::string csvFilePath = MxTest::getTestRecordFilepath();
+        std::string csvFilePath = mxtest::getTestRecordFilepath();
         deleteFileNoThrow( csvFilePath );
         std::ofstream ofile;
         openAppendFile( ofile, csvFilePath );
-        ofile << MxTest::ImportRoundTripResult::getHeaderRow() << std::endl;
+        ofile << mxtest::ImportRoundTripResult::getHeaderRow() << std::endl;
         ofile.close();
     }
     T_END

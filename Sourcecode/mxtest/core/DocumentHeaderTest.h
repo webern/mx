@@ -8,7 +8,7 @@
 #include "mxtest/core/HelperFunctions.h"
 #include "mx/core/DocumentHeader.h"
 
-namespace MxTestHelpers
+namespace mxtest
 {
     void tgenDocumentHeaderExpected( std::ostream& os, const mx::core::DocumentType doctype );
 }

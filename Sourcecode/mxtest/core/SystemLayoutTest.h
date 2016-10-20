@@ -9,7 +9,7 @@
 #include "mxtest/core/HelperFunctions.h"
 #include "mx/core/Elements.h"
 
-namespace MxTestHelpers
+namespace mxtest
 {
     mx::core::SystemLayoutPtr tgenSystemLayout( variant v );
     void tgenSystemLayoutExpected( std::ostream& os, int indentLevel, variant v );

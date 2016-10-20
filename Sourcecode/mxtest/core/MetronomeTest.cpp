@@ -11,7 +11,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, Metronome )
 {
@@ -101,7 +101,7 @@ TEST( Test04, Metronome )
 	CHECK( object->hasContents() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     BeatUnitGroupPtr tgenBeatUnitGroup( variant v )
     {

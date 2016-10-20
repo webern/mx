@@ -9,7 +9,7 @@
 #include "mx/api/DocumentManager.h"
 #include "mxtest/control/TestFiles.h"
 
-namespace MxTest
+namespace mxtest
 {
 
 

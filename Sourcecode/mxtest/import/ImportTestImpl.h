@@ -28,7 +28,7 @@ void runTest (TestResult& rEsUlT_);                                             
 } GROUPNAME##FNAME_PART##Instance;                                              \
 void GROUPNAME##FNAME_PART##Test::runTest (TestResult& rEsUlT_)                 \
 {                                                                               \
-    MxTest::ImportRoundTripTest test(                                           \
+    mxtest::ImportRoundTripTest test(                                           \
     #FNAME_PART,                                                                \
     #FEXT,                                                                      \
     #GROUPNAME,                                                                 \
@@ -47,7 +47,7 @@ void GROUPNAME##FNAME_PART##Test::runTest (TestResult& rEsUlT_)                 
                                                                                 \
 
 
-namespace MxTest
+namespace mxtest
 {
     
     constexpr const char* const TEST_RECORD_FILENAME = "_MxImportTestResults.csv";
@@ -131,14 +131,14 @@ namespace MxTest
 class ImportTestCpul : public Test
 {
 public:
-    ImportTestCpul( MxTest::TestFile testFile )
+    ImportTestCpul( mxtest::TestFile testFile )
     : Test( "ImportTestCpul", testFile.fileName, 0 )
     , myTestFile{ testFile }
     {}
     
     inline void runTest(TestResult& rEsUlT_)
     {
-        MxTest::ImportRoundTripTest test{
+        mxtest::ImportRoundTripTest test{
         myTestFile.getFileNamePart().c_str(),
         "xml",
         myTestFile.subdirectory.c_str(),
@@ -163,7 +163,7 @@ public:
     }
     
 private:
-    MxTest::TestFile myTestFile;
+    mxtest::TestFile myTestFile;
 };
 
 #endif

@@ -8,7 +8,7 @@
 #include "mxtest/core/HelperFunctions.h"
 #include "mx/core/Elements.h"
 
-namespace MxTestHelpers
+namespace mxtest
 {
     mx::core::DefaultsPtr tgenDefaults( variant v );
     void tgenDefaultsExpected( std::ostream& os, int indentLevel, variant v );

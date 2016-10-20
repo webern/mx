@@ -9,7 +9,7 @@
 #include "mxtest/core/HelperFunctions.h"
 #include "mx/core/Elements.h"
 
-namespace MxTestHelpers
+namespace mxtest
 {
     mx::core::TupletNormalPtr tgenTupletNormal( variant v );
     void tgenTupletNormalExpected( std::ostream& os, int indentLevel, variant v );

@@ -19,7 +19,7 @@ namespace mx
     }
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     mx::core::DocumentPtr createDocumentTimewise();
     void setTimewiseMeasureProperties( mx::core::TimewiseMeasurePtr& measure,

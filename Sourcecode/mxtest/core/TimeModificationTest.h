@@ -9,7 +9,7 @@
 #include "mxtest/core/HelperFunctions.h"
 #include "mx/core/Elements.h"
 
-namespace MxTestHelpers
+namespace mxtest
 {
     mx::core::NormalTypeNormalDotGroupPtr tgenNormalTypeNormalDotGroup( variant v );
     mx::core::TimeModificationPtr tgenTimeModification( variant v );

@@ -22,13 +22,13 @@ using namespace mx::api;
 inline int loadDoc()
 {
     auto& docMngr = DocumentManager::getInstance();
-    return docMngr.createFromFile( std::string{ MxTest::RESOURCES_DIRECTORY_PATH } + std::string{ "/recsuite/Dichterliebe01.xml" } );
+    return docMngr.createFromFile( std::string{ mxtest::RESOURCES_DIRECTORY_PATH } + std::string{ "/recsuite/Dichterliebe01.xml" } );
 }
 
 inline int loadActorPreludeDoc()
 {
     auto& docMngr = DocumentManager::getInstance();
-    return docMngr.createFromFile( std::string{ MxTest::RESOURCES_DIRECTORY_PATH } + std::string{ "/recsuite/ActorPreludeSample.xml" } );
+    return docMngr.createFromFile( std::string{ mxtest::RESOURCES_DIRECTORY_PATH } + std::string{ "/recsuite/ActorPreludeSample.xml" } );
 }
 
 inline void destroyDoc( int documentId )
@@ -58,7 +58,7 @@ inline ScoreData getActorPreludeScore()
 TEST( createFromFile, DocumentManager )
 {
     auto& docMngr = DocumentManager::getInstance();
-    auto documentId = docMngr.createFromFile( std::string{ MxTest::RESOURCES_DIRECTORY_PATH } + std::string{ "/recsuite/Dichterliebe01.xml" } );
+    auto documentId = docMngr.createFromFile( std::string{ mxtest::RESOURCES_DIRECTORY_PATH } + std::string{ "/recsuite/Dichterliebe01.xml" } );
     CHECK( documentId > 0 );
     
     auto mxdocPtr = docMngr.getDocument( documentId );

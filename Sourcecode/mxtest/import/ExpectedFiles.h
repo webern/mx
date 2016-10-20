@@ -17,7 +17,7 @@
 #include <map>
 #include <cstdio>
 
-namespace MxTest
+namespace mxtest
 {
     
     void generateExpectedFile( const std::string& subdir, const std::string& fileName );

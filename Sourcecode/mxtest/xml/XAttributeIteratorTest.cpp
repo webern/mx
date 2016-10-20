@@ -22,7 +22,7 @@ namespace
     inline mx::xml::XDocCPtr doc()
     {
         auto xdoc = XFactory::makeXDoc();
-        std::istringstream is( MxTest::fakeXml );
+        std::istringstream is( mxtest::fakeXml );
         xdoc->loadStream( is );
         return xdoc;
     }

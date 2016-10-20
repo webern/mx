@@ -10,7 +10,7 @@
 #include <sstream>
 #include <fstream>
 
-namespace MxTest
+namespace mxtest
 {
     
     std::string getSubdirectoryFullPath( const std::string& subdirectory )

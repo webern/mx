@@ -11,7 +11,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, GraceNoteGroup )
 {
@@ -56,7 +56,7 @@ TEST( Test03, GraceNoteGroup )
 	CHECK( object->hasContents() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     GraceNoteGroupPtr tgenGraceNoteGroup( variant v )
     {

@@ -22,13 +22,13 @@ using namespace mx::api;
 inline int loadDoc()
 {
     auto& docMngr = DocumentManager::getInstance();
-    return docMngr.createFromFile( std::string{ MxTest::RESOURCES_DIRECTORY_PATH } + std::string{ "/recsuite/Dichterliebe01.xml" } );
+    return docMngr.createFromFile( std::string{ mxtest::RESOURCES_DIRECTORY_PATH } + std::string{ "/recsuite/Dichterliebe01.xml" } );
 }
 
 inline int loadActorPreludeDoc()
 {
     auto& docMngr = DocumentManager::getInstance();
-    return docMngr.createFromFile( std::string{ MxTest::RESOURCES_DIRECTORY_PATH } + std::string{ "/recsuite/ActorPreludeSample.xml" } );
+    return docMngr.createFromFile( std::string{ mxtest::RESOURCES_DIRECTORY_PATH } + std::string{ "/recsuite/ActorPreludeSample.xml" } );
 }
 
 inline void destroyDoc( int documentId )
@@ -98,8 +98,8 @@ T_END
 
 inline bool runApiLoaderTest( std::string suiteName, std::string fileNamePart, std::string fileExtPart )
 {
-    auto fileName = MxTest::concatFileNameParts( fileNamePart, fileExtPart );
-    auto filePath = MxTest::filePath( suiteName, fileName );
+    auto fileName = mxtest::concatFileNameParts( fileNamePart, fileExtPart );
+    auto filePath = mxtest::filePath( suiteName, fileName );
 
     auto& docMgr = mx::api::DocumentManager::getInstance();
     const auto docId = docMgr.createFromFile( filePath );

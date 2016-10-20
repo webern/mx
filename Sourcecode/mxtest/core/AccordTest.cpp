@@ -11,7 +11,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, Accord )
 {
@@ -52,7 +52,7 @@ TEST( Test03, Accord )
 	CHECK( ! object->hasAttributes() )
 	CHECK( object->hasContents() )
 }
-namespace MxTestHelpers
+namespace mxtest
 {
     AccordPtr tgenAccord( variant v )
     {

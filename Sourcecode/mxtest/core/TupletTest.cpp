@@ -14,7 +14,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, Tuplet )
 {
@@ -56,7 +56,7 @@ TEST( Test03, Tuplet )
 	CHECK( object->hasContents() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     TupletPtr tgenTuplet( variant v )
     {

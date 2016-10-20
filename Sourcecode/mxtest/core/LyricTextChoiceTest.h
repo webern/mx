@@ -8,7 +8,7 @@
 #include "mxtest/core/HelperFunctions.h"
 #include "mx/core/Elements.h"
 
-namespace MxTestHelpers
+namespace mxtest
 {
     mx::core::LyricTextChoicePtr tgenLyricTextChoice( variant v );
     void tgenLyricTextChoiceExpected( std::ostream& os, int indentLevel, variant v );

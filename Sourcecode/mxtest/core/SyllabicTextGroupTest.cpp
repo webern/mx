@@ -14,7 +14,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, SyllabicTextGroup )
 {
@@ -59,7 +59,7 @@ TEST( Test03, SyllabicTextGroup )
 	CHECK( object->hasContents() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     SyllabicTextGroupPtr tgenSyllabicTextGroup( variant v )
     {

@@ -13,7 +13,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, OrnamentsChoice )
 {
@@ -58,7 +58,7 @@ TEST( Test03, OrnamentsChoice )
 	CHECK( object->hasContents() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     OrnamentsChoicePtr tgenOrnamentsChoice( variant v )
     {

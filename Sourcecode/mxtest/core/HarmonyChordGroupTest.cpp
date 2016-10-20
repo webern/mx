@@ -15,7 +15,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, HarmonyChordGroup )
 {
@@ -60,7 +60,7 @@ TEST( Test03, HarmonyChordGroup )
 	CHECK( object->hasContents() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     HarmonyChordGroupPtr tgenHarmonyChordGroup( variant v )
     {

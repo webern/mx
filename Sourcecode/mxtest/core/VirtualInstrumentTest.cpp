@@ -12,7 +12,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, VirtualInstrument )
 {
@@ -54,7 +54,7 @@ TEST( Test03, VirtualInstrument )
 	CHECK( object->hasContents() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     VirtualInstrumentPtr tgenVirtualInstrument( variant v )
     {

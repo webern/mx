@@ -9,7 +9,7 @@
 #include "mxtest/core/HelperFunctions.h"
 #include "mx/core/Elements.h"
 
-namespace MxTestHelpers
+namespace mxtest
 {
     mx::core::SystemDividersPtr tgenSystemDividers( variant v );
     void tgenSystemDividersExpected( std::ostream& os, int indentLevel, variant v );

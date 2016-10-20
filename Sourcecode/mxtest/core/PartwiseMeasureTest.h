@@ -8,7 +8,7 @@
 #include "mxtest/core/HelperFunctions.h"
 #include "mx/core/Elements.h"
 
-namespace MxTestHelpers
+namespace mxtest
 {
     mx::core::PartwiseMeasurePtr tgenPartwiseMeasure( variant v );
     void tgenPartwiseMeasureExpected( std::ostream& os, int indentLevel, variant v );

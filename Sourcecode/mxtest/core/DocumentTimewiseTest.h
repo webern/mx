@@ -8,7 +8,7 @@
 #include "mxtest/core/HelperFunctions.h"
 #include "mx/core/Document.h"
 
-namespace MxTestHelpers
+namespace mxtest
 {
     mx::core::DocumentPtr tgenDocumentTimewise( variant v );
     void tgenDocumentTimewiseExpected( std::ostream& os, int indentLevel, variant v );

@@ -13,7 +13,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, DocumentTimewise )
 {
@@ -49,7 +49,7 @@ TEST( Test03, DocumentTimewise )
 	CHECK_EQUAL( expected.str(), actual.str() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     DocumentPtr tgenDocumentTimewise( variant v )
     {

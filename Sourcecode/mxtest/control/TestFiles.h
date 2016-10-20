@@ -8,7 +8,7 @@
 #include <map>
 #include <set>
 
-namespace MxTest
+namespace mxtest
 {
     using StringPair = std::pair<std::string, std::string>;
     using StringMap = std::map<std::string, std::string>;

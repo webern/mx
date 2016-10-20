@@ -8,7 +8,7 @@
 #include "mxtest/core/HelperFunctions.h"
 #include "mx/core/Elements.h"
 
-namespace MxTestHelpers
+namespace mxtest
 {
     mx::core::BarlinePtr tgenBarline( variant v );
     void tgenBarlineExpected( std::ostream& os, int indentLevel, variant v );
