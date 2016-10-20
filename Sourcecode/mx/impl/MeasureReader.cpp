@@ -357,7 +357,7 @@ namespace mx
             {
                 const auto& directionType = *directionTypePtr;
                 DirectionReader reader{ inMxDirection, directionType, myCurrentCursor };
-                const int staffIndex = reader.getStaffIndex();
+                 int staffIndex = reader.getStaffIndex();
                 if( reader.getIsMark() )
                 {
                     auto markData = reader.getMarkData();

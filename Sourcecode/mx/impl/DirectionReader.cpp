@@ -51,7 +51,7 @@ namespace mx
         , myIsSpecial{ false }
         , myIsInvalid{ false }
         , myOutMarkData{}
-        , myStaffIndex{ 1 }
+        , myStaffIndex{ 0 }
         {
             initialize();
         }
@@ -200,6 +200,7 @@ namespace mx
         
         void DirectionReader::parseStaffIndex()
         {
+            myStaffIndex = 0;
             if( myDirection.getHasStaff() )
             {
                 myStaffIndex = myDirection.getStaff()->getValue().getValue() - 1;
