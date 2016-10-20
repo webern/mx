@@ -7,7 +7,7 @@
 #ifdef MX_COMPILE_API_ROUNDTRIP
 
 #include "mx/api/DocumentManager.h"
-#include "mxtest/control/TestFiles.h"
+#include "mxtest/file/MxFileRepository.h"
 
 namespace mxtest
 {
@@ -29,8 +29,7 @@ constexpr const char* const roundTripFileName =  "ly43e_Multistaff_ClefDynamics.
 
 	inline void roundTrip()
 	{
-        TestFiles files;
-        const std::string path{ files.getFullPath( roundTripFileName ) };
+        const std::string path{ MxFileRepository::getFullPath( roundTripFileName ) };
         auto& docMgr = mx::api::DocumentManager::getInstance();
 	    auto docId = docMgr.createFromFile( path );
 	    auto scoreData = docMgr.getData( docId );

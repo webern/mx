@@ -4,7 +4,7 @@
 #pragma once
 
 #include "cpul/cpulTest.h"
-#include "mxtest/control/TestFiles.h"
+#include "mxtest/file/MxFile.h"
 
 namespace mxtest
 {
@@ -12,7 +12,7 @@ namespace mxtest
 	{
 	public:
 		MxFileTest(
-            mxtest::TestFile inTestFile,
+            mxtest::MxFile inTestFile,
             std::string inTestName,
             std::string inTestCppFileName,
             int inTestCppFileLineNumber );
@@ -42,7 +42,7 @@ namespace mxtest
         // MxFileTest& operator=( const MxFileTest& other );
 
     private:
-        mxtest::TestFile myTestFile;
+        mxtest::MxFile myTestFile;
         std::string myTestName;
         std::string myCppFileName;
         int myCppFileLineNumber;

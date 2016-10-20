@@ -9,7 +9,7 @@
 
 namespace mxtest
 {
-    MxFileTest::MxFileTest( mxtest::TestFile inTestFile, std::string inTestName, std::string inTestCppFileName, int inTestCppFileLineNumber )
+    MxFileTest::MxFileTest( mxtest::MxFile inTestFile, std::string inTestName, std::string inTestCppFileName, int inTestCppFileLineNumber )
     : ::Test{ inTestName, inTestCppFileName, inTestCppFileLineNumber }
     , myTestFile{ inTestFile }
     , myTestName{ inTestName }

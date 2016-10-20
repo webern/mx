@@ -12,7 +12,7 @@
 #include "mx/xml/XFactory.h"
 #include "mx/xml/XDoc.h"
 #include "mxtest/control/Path.h"
-#include "mxtest/control/TestFiles.h"
+#include "mxtest/file/MxFileRepository.h"
 #include "mx/core/Document.h"
 
 #include <iostream>
@@ -133,7 +133,7 @@ class ImportTestCpul : public mxtest::MxFileTest
 {
 public:
     ImportTestCpul(
-            mxtest::TestFile inTestFile,
+            mxtest::MxFile inTestFile,
             std::string inTestName,
             std::string inTestCppFileName,
             int inTestCppFileLineNumber )

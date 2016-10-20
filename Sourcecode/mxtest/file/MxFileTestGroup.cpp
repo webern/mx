@@ -2,7 +2,7 @@
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #include "mxtest/file/MxFileTestGroup.h"
-#include "mxtest/control/TestFiles.h"
+#include "mxtest/file/MxFileRepository.h"
 
 namespace mxtest
 {
@@ -13,8 +13,7 @@ namespace mxtest
 	    int testCppFileLineNumber )
     : myTests{}
     {
-        TestFiles testFiles;
-        auto files = testFiles.getTestFiles( maxFileSizeBytes );
+        auto files = MxFileRepository::getTestFiles( maxFileSizeBytes );
         for( auto& file : files )
         {
             std::shared_ptr<MxFileTest> testPtr{ new ImportTestCpul{ file, testName, testCppFileName, testCppFileLineNumber } };

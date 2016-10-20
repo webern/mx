@@ -5,7 +5,7 @@
 #ifdef MX_COMPILE_IMPORT_TESTS
 
 #include "mxtest/control/File.h"
-#include "mxtest/control/TestFiles.h"
+#include "mxtest/file/MxFileRepository.h"
 #include "mxtest/import/ExpectedFiles.h"
 #include "mx/utility/Throw.h"
 #include "mx/core/Document.h"
@@ -260,8 +260,7 @@ namespace mxtest
     
     void deleteExpectedFiles()
     {
-        TestFiles t;
-        auto testFiles = t.getTestFiles( 0 );
+        auto testFiles = MxFileRepository::getTestFiles( 0 );
         for( auto it = testFiles.cbegin(); it != testFiles.cend(); ++it )
         {
             std::string fullpath = getExpectedFileFullPath( it->subdirectory, it->fileName );
@@ -275,8 +274,7 @@ namespace mxtest
     {
         const int maxConcurrency = 50;
         std::list<std::future<void>> q;
-        TestFiles t;
-        auto testFiles = t.getTestFiles( MX_COMPILE_MAX_FILE_SIZE_BYTES );
+        auto testFiles = MxFileRepository::getTestFiles( MX_COMPILE_MAX_FILE_SIZE_BYTES );
         for( auto it = testFiles.cbegin(); it != testFiles.cend(); ++it )
         {
             std::cout << "creating expected file - " << it->subdirectory << " - " << it->fileName << std::endl;
@@ -336,8 +334,7 @@ namespace mxtest
     
     void deleteTestOutputFiles()
     {
-        TestFiles t;
-        auto testFiles = t.getTestFiles( 0 );
+        auto testFiles = MxFileRepository::getTestFiles( 0 );
         for( auto it = testFiles.cbegin(); it != testFiles.cend(); ++it )
         {
             std::string ex = getTestOutputExpectedFileFullPath( it->subdirectory, it->fileName );
