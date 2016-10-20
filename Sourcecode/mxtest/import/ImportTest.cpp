@@ -78,7 +78,7 @@ class ImportTests
 public:
     ImportTests()
     {
-        int maxFileSizeBytes = 0; // 0 means infinity
+        int maxFileSizeBytes = MX_COMPILE_MAX_FILE_SIZE_BYTES; // 0 means infinity
         TestFiles t;
         auto files = t.getTestFiles( maxFileSizeBytes );
         for( const auto& file : files )

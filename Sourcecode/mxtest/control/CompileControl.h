@@ -3,11 +3,17 @@
 
 #pragma once
 
+namespace MxTest
+{
+    constexpr const int MX_COMPILE_MAX_FILE_SIZE_MEGABYTES = 1;
+    constexpr const int MX_COMPILE_MAX_FILE_SIZE_BYTES = 1024 * MX_COMPILE_MAX_FILE_SIZE_MEGABYTES;
+}
+
 #define MX_COMPILE_API_TESTS
 //#define MX_COMPILE_CORE_TESTS
 #define MX_COMPILE_IMPORT_TESTS
 //#define MX_COMPILE_UTILTIY_TESTS
-#define MX_COMPILE_XML_TESTS
+//#define MX_COMPILE_XML_TESTS
 
 #define MX_COMPILE_API_ROUNDTRIP "ly43e_Multistaff_ClefDynamics.xml"
 //#define MX_COMPILE_API_ROUNDTRIP "ly11a_TimeSignatures.xml"

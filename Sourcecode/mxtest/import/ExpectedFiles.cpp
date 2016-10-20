@@ -261,7 +261,7 @@ namespace MxTest
     void deleteExpectedFiles()
     {
         TestFiles t;
-        auto testFiles = t.getTestFiles();
+        auto testFiles = t.getTestFiles( 0 );
         for( auto it = testFiles.cbegin(); it != testFiles.cend(); ++it )
         {
             std::string fullpath = getExpectedFileFullPath( it->subdirectory, it->fileName );
@@ -276,7 +276,7 @@ namespace MxTest
         const int maxConcurrency = 50;
         std::list<std::future<void>> q;
         TestFiles t;
-        auto testFiles = t.getTestFiles();
+        auto testFiles = t.getTestFiles( MX_COMPILE_MAX_FILE_SIZE_BYTES );
         for( auto it = testFiles.cbegin(); it != testFiles.cend(); ++it )
         {
             std::cout << "creating expected file - " << it->subdirectory << " - " << it->fileName << std::endl;
@@ -337,7 +337,7 @@ namespace MxTest
     void deleteTestOutputFiles()
     {
         TestFiles t;
-        auto testFiles = t.getTestFiles();
+        auto testFiles = t.getTestFiles( 0 );
         for( auto it = testFiles.cbegin(); it != testFiles.cend(); ++it )
         {
             std::string ex = getTestOutputExpectedFileFullPath( it->subdirectory, it->fileName );
