@@ -3,6 +3,7 @@
 
 #include "mxtest/control/TestFiles.h"
 #include "mxtest/control/Path.h"
+#include <fstream>
 
 namespace MxTest
 {
@@ -36,7 +37,14 @@ namespace MxTest
     }
     
     
-    std::vector<TestFile> TestFiles::getTestFiles() const
+    inline int getTheFilesize(const char* filename)
+    {
+        std::ifstream in(filename, std::ifstream::ate | std::ifstream::binary);
+        return static_cast<int>( in.tellg() );
+    }
+    
+    
+    std::vector<TestFile> TestFiles::getTestFiles( int maxFileSizeBytes ) const
     {
         std::vector<TestFile> outFiles;
         for( const auto& stringPair : myTestFiles )
@@ -45,11 +53,17 @@ namespace MxTest
             testFile.fileName = stringPair.first;
             testFile.subdirectory = stringPair.second;
             testFile.path = getFullPath( stringPair.first );
-            outFiles.emplace_back( std::move( testFile ) );
+            testFile.isLoadFailureExpected = ( myExpectedLoadFailures.find( testFile.fileName ) ) != myExpectedLoadFailures.cend();
+            testFile.sizeBytes = getTheFilesize( testFile.path.c_str() );
+            
+            if( maxFileSizeBytes <= 0 || testFile.sizeBytes <= maxFileSizeBytes )
+            {
+                outFiles.emplace_back( std::move( testFile ) );
+            }
         }
         return outFiles;
     }
-    
+
     
     TestFiles::TestFiles()
     : myPath{ MxTest::RESOURCES_DIRECTORY_PATH }
@@ -369,6 +383,10 @@ namespace MxTest
                     // other
                     { "logic01a_homoSapiens.xml", "logicpro" },
                     { "Schubert_der_Mueller.xml", "foundsuite"  },
+                }
+    , myExpectedLoadFailures
+                {
+                    { "ly41g_PartNoId.xml" },
                 }
     {
 

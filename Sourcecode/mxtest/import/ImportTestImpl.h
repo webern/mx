@@ -148,10 +148,18 @@ public:
         
         bool isSuccess = false;
         std::stringstream msgsstr;
+        msgsstr << "filename - " << myTestFile.fileName << " ";
         test.setIsMxBypassed( false );
         
         isSuccess = test.runTest( msgsstr );
-        CHECK_WITH_MESSAGE( isSuccess, msgsstr.str() );
+        if( myTestFile.isLoadFailureExpected )
+        {
+            CHECK_WITH_MESSAGE( !isSuccess, myTestFile.fileName );
+        }
+        else
+        {
+            CHECK_WITH_MESSAGE( isSuccess, msgsstr.str() );
+        }
     }
     
 private:

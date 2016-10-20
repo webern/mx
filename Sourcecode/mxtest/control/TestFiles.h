@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <set>
 
 namespace MxTest
 {
@@ -17,6 +18,8 @@ namespace MxTest
         std::string fileName;
         std::string subdirectory;
         std::string path;
+        bool isLoadFailureExpected;
+        int sizeBytes;
         inline std::string getFileNamePart()
         {
             return fileName.substr( 0, static_cast<size_t>( static_cast<int>( fileName.size() ) - 4 ) );
@@ -31,11 +34,13 @@ namespace MxTest
         const StringMap& getTestFileMap() const;
         const std::string getFullPath( const std::string& fileName ) const;
         const std::string& getSubdirectory( const std::string& fileName ) const;
-        std::vector<TestFile> getTestFiles() const;
+        std::vector<TestFile> getTestFiles( int maxFileSizeBytes = 0 ) const;
         
     private:
         const std::string myPath;
         const std::string mySeparator;
         const StringMap myTestFiles;
+        const std::set<std::string> myExpectedLoadFailures;
+        
     };
 }
