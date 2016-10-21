@@ -100,5 +100,24 @@ namespace mx
             }
 
         };
+        
+        MXAPI_EQUALS_BEGIN( LayoutData )
+        MXAPI_EQUALS_FIRST_MEMBER( pageWidth )
+        MXAPI_EQUALS_NEXT_MEMBER( pageHeight )
+        MXAPI_EQUALS_NEXT_MEMBER( oddPageLeftMargin )
+        MXAPI_EQUALS_NEXT_MEMBER( oddPageRightMargin )
+        MXAPI_EQUALS_NEXT_MEMBER( oddPageTopMargin )
+        MXAPI_EQUALS_NEXT_MEMBER( oddPageBottomMargin )
+        MXAPI_EQUALS_NEXT_MEMBER( evenPageLeftMargin )
+        MXAPI_EQUALS_NEXT_MEMBER( evenPageRightMargin )
+        MXAPI_EQUALS_NEXT_MEMBER( evenPageTopMargin )
+        MXAPI_EQUALS_NEXT_MEMBER( evenPageBottomMargin )
+        MXAPI_EQUALS_NEXT_MEMBER( systemLeftMargin )
+        MXAPI_EQUALS_NEXT_MEMBER( systemRightMargin )
+        MXAPI_EQUALS_NEXT_MEMBER( systemDistance )
+        MXAPI_EQUALS_NEXT_MEMBER( topSystemDistance )
+        MXAPI_EQUALS_LAST_MEMBER( staffDistance )
+        MXAPI_EQUALS_END;
+        MXAPI_NOT_EQUALS_AND_VECTORS( LayoutData );
     }
 }

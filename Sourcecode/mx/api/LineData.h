@@ -41,5 +41,14 @@ namespace mx
                 
             }
         };
+        
+        MXAPI_EQUALS_BEGIN( LineData )
+        MXAPI_EQUALS_FIRST_MEMBER( lineType )
+        MXAPI_EQUALS_NEXT_MEMBER( isDashLengthSpecified )
+        MXAPI_EQUALS_NEXT_MEMBER( dashLength )
+        MXAPI_EQUALS_NEXT_MEMBER( isSpaceLengthSpecified )
+        MXAPI_EQUALS_LAST_MEMBER( spaceLength )
+        MXAPI_EQUALS_END;
+        MXAPI_NOT_EQUALS_AND_VECTORS( LineData );
     }
 }

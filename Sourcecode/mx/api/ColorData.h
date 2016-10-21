@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include "mx/api/ApiCommon.h"
+
 namespace mx
 {
     namespace api
@@ -25,7 +27,15 @@ namespace mx
             {
                 
             }
-
         };
+        
+        MXAPI_EQUALS_BEGIN( ColorData )
+        MXAPI_EQUALS_FIRST_MEMBER( red )
+        MXAPI_EQUALS_NEXT_MEMBER( green )
+        MXAPI_EQUALS_NEXT_MEMBER( blue )
+        MXAPI_EQUALS_NEXT_MEMBER( isAlphaSpecified )
+        MXAPI_EQUALS_LAST_MEMBER( alpha )
+        MXAPI_EQUALS_END;
+        MXAPI_NOT_EQUALS_AND_VECTORS( ColorData );
     }
 }

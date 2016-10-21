@@ -170,6 +170,17 @@ namespace mx
             PrintData printData;
             PositionData positionData;
             bool isDynamic() const;
-       };
+        };
+        
+        MXAPI_EQUALS_BEGIN( MarkData )
+        MXAPI_EQUALS_FIRST_MEMBER( markType )
+        MXAPI_EQUALS_NEXT_MEMBER( name )
+        MXAPI_EQUALS_NEXT_MEMBER( smuflName )
+        MXAPI_EQUALS_NEXT_MEMBER( smuflCodepoint )
+        MXAPI_EQUALS_NEXT_MEMBER( tickTimePosition )
+        MXAPI_EQUALS_NEXT_MEMBER( printData )
+        MXAPI_EQUALS_LAST_MEMBER( positionData )
+        MXAPI_EQUALS_END;
+        MXAPI_NOT_EQUALS_AND_VECTORS( MarkData );
     }
 }

@@ -4,14 +4,9 @@
 #pragma once
 
 #include "mx/api/MarkData.h"
-#include "mx/api/CurveStart.h"
-#include "mx/api/CurveContinue.h"
-#include "mx/api/CurveEnd.h"
+#include "mx/api/CurveData.h"
 #include "mx/api/TupletData.h"
 #include "mx/api/SpannerData.h"
-
-#include <vector>
-
 
 namespace mx
 {
@@ -29,5 +24,17 @@ namespace mx
             std::vector<SpannerData> spannerStarts;
             std::vector<SpannerData> spannerEnds;
         };
+        
+        MXAPI_EQUALS_BEGIN( NoteAttachmentData )
+        MXAPI_EQUALS_FIRST_MEMBER( marks )
+        MXAPI_EQUALS_NEXT_MEMBER( curveStarts )
+        MXAPI_EQUALS_NEXT_MEMBER( curveContinuations )
+        MXAPI_EQUALS_NEXT_MEMBER( curveEnds )
+        MXAPI_EQUALS_NEXT_MEMBER( tupletStarts )
+        MXAPI_EQUALS_NEXT_MEMBER( tupletEnds )
+        MXAPI_EQUALS_NEXT_MEMBER( spannerStarts )
+        MXAPI_EQUALS_LAST_MEMBER( spannerEnds )
+        MXAPI_EQUALS_END;
+        MXAPI_NOT_EQUALS_AND_VECTORS( NoteAttachmentData );
     }
 }

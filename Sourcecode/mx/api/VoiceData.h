@@ -17,5 +17,13 @@ namespace mx
         public:
             std::vector<NoteData> notes;
         };
+
+        
+        inline bool operator==( const VoiceData& lhs, const VoiceData& rhs )
+        {
+            return areVectorsEqual( lhs.notes, rhs.notes );
+        }
+        MXAPI_NOT_EQUALS_AND_VECTORS( VoiceData );
+        MXAPI_INT_MAPS_EQUALS( VoiceData );
     }
 }

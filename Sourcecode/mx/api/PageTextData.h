@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include "mx/api/ApiCommon.h"
 #include "mx/api/PositionData.h"
 
 #include <string>
@@ -23,5 +24,13 @@ namespace mx
             PositionData positionData;
             std::string description; // e.g. 'composer', 'page number', 'title', etc., this is metadata which does not appear on the printed page
         };
+        
+        MXAPI_EQUALS_BEGIN( PageTextData )
+        MXAPI_EQUALS_FIRST_MEMBER( text )
+        MXAPI_EQUALS_NEXT_MEMBER( pageNumber )
+        MXAPI_EQUALS_NEXT_MEMBER( positionData )
+        MXAPI_EQUALS_LAST_MEMBER( description )
+        MXAPI_EQUALS_END;
+        MXAPI_NOT_EQUALS_AND_VECTORS( PageTextData );
     }
 }

@@ -44,5 +44,16 @@ namespace mx
             PositionData positionData;
             LineData lineData;
         };
+        
+        MXAPI_EQUALS_BEGIN( SpannerData )
+        MXAPI_EQUALS_FIRST_MEMBER( numberLevel )
+        MXAPI_EQUALS_NEXT_MEMBER( spannerType )
+        MXAPI_EQUALS_NEXT_MEMBER( name )
+        MXAPI_EQUALS_NEXT_MEMBER( tickTimePosition )
+        MXAPI_EQUALS_NEXT_MEMBER( printData )
+        MXAPI_EQUALS_NEXT_MEMBER( positionData )
+        MXAPI_EQUALS_LAST_MEMBER( lineData )
+        MXAPI_EQUALS_END;
+        MXAPI_NOT_EQUALS_AND_VECTORS( SpannerData );
     }
 }

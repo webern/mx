@@ -131,5 +131,49 @@ namespace mx
                 return numStaves;
             }
         };
+        
+        MXAPI_EQUALS_BEGIN( InstrumentData )
+        MXAPI_EQUALS_FIRST_MEMBER( uniqueId )
+        MXAPI_EQUALS_NEXT_MEMBER( name )
+        MXAPI_EQUALS_NEXT_MEMBER( abbreviation )
+        MXAPI_EQUALS_NEXT_MEMBER( sound )
+        MXAPI_EQUALS_LAST_MEMBER( soloOrEnsemble )
+        MXAPI_EQUALS_END;
+        MXAPI_NOT_EQUALS_AND_VECTORS( InstrumentData );
+        
+        MXAPI_EQUALS_BEGIN( MidiData )
+        MXAPI_EQUALS_FIRST_MEMBER( virtualLibrary )
+        MXAPI_EQUALS_NEXT_MEMBER( virtualName )
+        MXAPI_EQUALS_NEXT_MEMBER( device )
+        MXAPI_EQUALS_NEXT_MEMBER( uniqueId )
+        MXAPI_EQUALS_NEXT_MEMBER( name )
+        MXAPI_EQUALS_NEXT_MEMBER( bank )
+        MXAPI_EQUALS_NEXT_MEMBER( channel )
+        MXAPI_EQUALS_NEXT_MEMBER( program )
+        MXAPI_EQUALS_NEXT_MEMBER( unpitched )
+        MXAPI_EQUALS_NEXT_MEMBER( volume )
+        MXAPI_EQUALS_NEXT_MEMBER( isVolumeSpecified )
+        MXAPI_EQUALS_NEXT_MEMBER( pan )
+        MXAPI_EQUALS_NEXT_MEMBER( isPanSpecified )
+        MXAPI_EQUALS_NEXT_MEMBER( elevation )
+        MXAPI_EQUALS_LAST_MEMBER( isElevationSpecified )
+        MXAPI_EQUALS_END;
+        MXAPI_NOT_EQUALS_AND_VECTORS( MidiData );
+        
+        MXAPI_EQUALS_BEGIN( PartData )
+        MXAPI_EQUALS_FIRST_MEMBER( uniqueId )
+        MXAPI_EQUALS_NEXT_MEMBER( name )
+        MXAPI_EQUALS_NEXT_MEMBER( abbreviation )
+        MXAPI_EQUALS_NEXT_MEMBER( displayName )
+        MXAPI_EQUALS_NEXT_MEMBER( displayNamePrintData )
+        MXAPI_EQUALS_NEXT_MEMBER( displayNamePositionData )
+        MXAPI_EQUALS_NEXT_MEMBER( displayAbbreviation )
+        MXAPI_EQUALS_NEXT_MEMBER( displayAbbreviationPrintData )
+        MXAPI_EQUALS_NEXT_MEMBER( displayAbbreviationPositionData )
+        MXAPI_EQUALS_NEXT_MEMBER( instrumentData )
+        MXAPI_EQUALS_NEXT_MEMBER( midiData )
+        MXAPI_EQUALS_LAST_MEMBER( measures )
+        MXAPI_EQUALS_END;
+        MXAPI_NOT_EQUALS_AND_VECTORS( PartData );
     }
 }

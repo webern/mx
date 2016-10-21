@@ -24,6 +24,11 @@ namespace mxtest
 
         inline void runTestCode()
         {
+            if( isLoadFailureExpected() )
+            {
+                setIsSuccess( true );
+                return;
+            }
             auto& docMgr = mx::api::DocumentManager::getInstance();
             const auto docId = docMgr.createFromFile( testFilePath() );
             const auto scoreData = docMgr.getData( docId );

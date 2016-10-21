@@ -77,5 +77,15 @@ namespace mx
                 
             }
         };
+        
+        MXAPI_EQUALS_BEGIN( FontData )
+        MXAPI_EQUALS_FIRST_MEMBER( sizeType )
+        MXAPI_EQUALS_NEXT_MEMBER( sizePoint )
+        MXAPI_EQUALS_NEXT_MEMBER( sizeCss )
+        MXAPI_EQUALS_NEXT_MEMBER( style )
+        MXAPI_EQUALS_NEXT_MEMBER( weight )
+        MXAPI_EQUALS_LAST_MEMBER( fontFamily )
+        MXAPI_EQUALS_END;
+        MXAPI_NOT_EQUALS_AND_VECTORS( FontData );
     }
 }

@@ -86,5 +86,29 @@ namespace mx
             
             NoteAttachmentData noteAttachmentData;
     	};
+        
+        
+        MXAPI_EQUALS_BEGIN( NoteData )
+        MXAPI_EQUALS_FIRST_MEMBER( absoluteNoteIndex )
+        MXAPI_EQUALS_NEXT_MEMBER( isRest )
+        MXAPI_EQUALS_NEXT_MEMBER( isMeasureRest )
+        MXAPI_EQUALS_NEXT_MEMBER( isUnpitched )
+        MXAPI_EQUALS_NEXT_MEMBER( isDisplayStepOctaveSpecified )
+        MXAPI_EQUALS_NEXT_MEMBER( isChord )
+        MXAPI_EQUALS_NEXT_MEMBER( isTieStart )
+        MXAPI_EQUALS_NEXT_MEMBER( isTieStop )
+        MXAPI_EQUALS_NEXT_MEMBER( noteType )
+        MXAPI_EQUALS_NEXT_MEMBER( pitchData )
+        MXAPI_EQUALS_NEXT_MEMBER( staffIndex )
+        MXAPI_EQUALS_NEXT_MEMBER( userRequestedVoiceNumber )
+        MXAPI_EQUALS_NEXT_MEMBER( stem )
+        MXAPI_EQUALS_NEXT_MEMBER( tickTimePosition )
+        MXAPI_EQUALS_NEXT_MEMBER( durationData )
+        MXAPI_EQUALS_NEXT_MEMBER( beams )
+        MXAPI_EQUALS_NEXT_MEMBER( positionData )
+        MXAPI_EQUALS_NEXT_MEMBER( printData )
+        MXAPI_EQUALS_LAST_MEMBER( noteAttachmentData )
+        MXAPI_EQUALS_END;
+        MXAPI_NOT_EQUALS_AND_VECTORS( NoteData );
     }
 }

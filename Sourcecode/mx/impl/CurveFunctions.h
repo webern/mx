@@ -3,9 +3,7 @@
 
 #pragma once
 
-#include "mx/api/CurveContinue.h"
-#include "mx/api/CurveEnd.h"
-#include "mx/api/CurveStart.h"
+#include "mx/api/CurveData.h"
 
 namespace mx
 {

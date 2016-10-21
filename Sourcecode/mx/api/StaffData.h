@@ -28,5 +28,13 @@ namespace mx
             
             std::map<int, VoiceData> voices;
         };
+        
+        MXAPI_EQUALS_BEGIN( StaffData )
+        MXAPI_EQUALS_FIRST_MEMBER( clefs )
+        MXAPI_EQUALS_NEXT_MEMBER( marks )
+        MXAPI_EQUALS_NEXT_MEMBER( keys )
+        MXAPI_EQUALS_LAST_MEMBER( voices )
+        MXAPI_EQUALS_END;
+        MXAPI_NOT_EQUALS_AND_VECTORS( StaffData );
     }
 }

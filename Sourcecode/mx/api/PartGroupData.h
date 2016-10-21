@@ -53,5 +53,15 @@ namespace mx
             
             }
         };
+        
+        MXAPI_EQUALS_BEGIN( PartGroupData )
+        MXAPI_EQUALS_FIRST_MEMBER( firstPartIndex )
+        MXAPI_EQUALS_NEXT_MEMBER( lastPartIndex )
+        MXAPI_EQUALS_NEXT_MEMBER( name )
+        MXAPI_EQUALS_NEXT_MEMBER( displayName )
+        MXAPI_EQUALS_NEXT_MEMBER( abbreviation )
+        MXAPI_EQUALS_LAST_MEMBER( displayAbbreviation )
+        MXAPI_EQUALS_END;
+        MXAPI_NOT_EQUALS_AND_VECTORS( PartGroupData );
     }
 }

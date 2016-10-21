@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include <vector>
+#include "mx/api/ApiCommon.h"
 
 namespace mx
 {
@@ -66,5 +66,14 @@ namespace mx
             bool isMezzoSoprano() const;
         };
 
+        MXAPI_EQUALS_BEGIN( ClefData )
+        MXAPI_EQUALS_FIRST_MEMBER( staffIndex )
+        MXAPI_EQUALS_NEXT_MEMBER( symbol )
+        MXAPI_EQUALS_NEXT_MEMBER( line )
+        MXAPI_EQUALS_NEXT_MEMBER( octaveChange )
+        MXAPI_EQUALS_NEXT_MEMBER( tickTimePosition )
+        MXAPI_EQUALS_LAST_MEMBER( location )
+        MXAPI_EQUALS_END;
+        MXAPI_NOT_EQUALS_AND_VECTORS( ClefData );
     }
 }

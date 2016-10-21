@@ -64,5 +64,17 @@ namespace mx
         };
         
         inline bool operator<( const SystemData& lhs, const SystemData& rhs ) { return lhs.measureIndex < rhs.measureIndex; }
+
+        MXAPI_EQUALS_BEGIN( SystemData )
+        MXAPI_EQUALS_FIRST_MEMBER( measureIndex )
+        MXAPI_EQUALS_NEXT_MEMBER( rightMargin )
+        MXAPI_EQUALS_NEXT_MEMBER( leftMargin )
+        MXAPI_EQUALS_NEXT_MEMBER( isMarginSpecified )
+        MXAPI_EQUALS_NEXT_MEMBER( systemDistance )
+        MXAPI_EQUALS_NEXT_MEMBER( isSystemDistanceSpecified )
+        MXAPI_EQUALS_NEXT_MEMBER( topSystemDistance )
+        MXAPI_EQUALS_LAST_MEMBER( isTopSystemDistanceSpecified )
+        MXAPI_EQUALS_END;
+        MXAPI_NOT_EQUALS_AND_VECTORS( SystemData );
     }
 }

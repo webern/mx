@@ -11,11 +11,6 @@
 		290756C41DA8BE0800EEF5C3 /* ApiCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 293488D41D94903B00D0C407 /* ApiCommon.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		290756C51DA8BE0800EEF5C3 /* ClefData.h in Headers */ = {isa = PBXBuildFile; fileRef = 292D1DD11D9A43A500CDD9F4 /* ClefData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		290756C61DA8BE0800EEF5C3 /* ColorData.h in Headers */ = {isa = PBXBuildFile; fileRef = 2933AD601DA5B616005D7222 /* ColorData.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		290756C71DA8BE0800EEF5C3 /* CurveContinue.h in Headers */ = {isa = PBXBuildFile; fileRef = 29E9C5421DA48F5F0040183B /* CurveContinue.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		290756C81DA8BE0800EEF5C3 /* CurveEnd.h in Headers */ = {isa = PBXBuildFile; fileRef = 29E9C5461DA4977A0040183B /* CurveEnd.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		290756C91DA8BE0800EEF5C3 /* CurvePoints.h in Headers */ = {isa = PBXBuildFile; fileRef = 29E9C53F1DA48DAA0040183B /* CurvePoints.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		290756CA1DA8BE0800EEF5C3 /* CurveStart.h in Headers */ = {isa = PBXBuildFile; fileRef = 29E9C53D1DA4802B0040183B /* CurveStart.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		290756CB1DA8BE0800EEF5C3 /* CurveType.h in Headers */ = {isa = PBXBuildFile; fileRef = 2933AD5F1DA5B616005D7222 /* CurveType.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		290756CC1DA8BE0800EEF5C3 /* DocumentManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 29EF440A1D6E70D300DBDAB9 /* DocumentManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		290756CD1DA8BE0800EEF5C3 /* DurationData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29E9C55E1DA49DAF0040183B /* DurationData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		290756CE1DA8BE0800EEF5C3 /* EncodingData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29ADB30D1D729E1900683BEC /* EncodingData.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -41,11 +36,6 @@
 		290756E21DA8BE2A00EEF5C3 /* ApiCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 293488D41D94903B00D0C407 /* ApiCommon.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		290756E31DA8BE2A00EEF5C3 /* ClefData.h in Headers */ = {isa = PBXBuildFile; fileRef = 292D1DD11D9A43A500CDD9F4 /* ClefData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		290756E41DA8BE2A00EEF5C3 /* ColorData.h in Headers */ = {isa = PBXBuildFile; fileRef = 2933AD601DA5B616005D7222 /* ColorData.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		290756E51DA8BE2A00EEF5C3 /* CurveContinue.h in Headers */ = {isa = PBXBuildFile; fileRef = 29E9C5421DA48F5F0040183B /* CurveContinue.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		290756E61DA8BE2A00EEF5C3 /* CurveEnd.h in Headers */ = {isa = PBXBuildFile; fileRef = 29E9C5461DA4977A0040183B /* CurveEnd.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		290756E71DA8BE2A00EEF5C3 /* CurvePoints.h in Headers */ = {isa = PBXBuildFile; fileRef = 29E9C53F1DA48DAA0040183B /* CurvePoints.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		290756E81DA8BE2A00EEF5C3 /* CurveStart.h in Headers */ = {isa = PBXBuildFile; fileRef = 29E9C53D1DA4802B0040183B /* CurveStart.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		290756E91DA8BE2A00EEF5C3 /* CurveType.h in Headers */ = {isa = PBXBuildFile; fileRef = 2933AD5F1DA5B616005D7222 /* CurveType.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		290756EA1DA8BE2A00EEF5C3 /* DocumentManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 29EF440A1D6E70D300DBDAB9 /* DocumentManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		290756EB1DA8BE2A00EEF5C3 /* DurationData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29E9C55E1DA49DAF0040183B /* DurationData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		290756EC1DA8BE2A00EEF5C3 /* EncodingData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29ADB30D1D729E1900683BEC /* EncodingData.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -2060,6 +2050,7 @@
 		29F03BC81DAF01A30034562B /* TechnicalFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EF30011DA32E37001FE5DF /* TechnicalFunctions.cpp */; };
 		29F03BC91DAF01A30034562B /* TimeReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2927EC9E1D886E460042E080 /* TimeReader.cpp */; };
 		29F03BCA1DAF01A30034562B /* TupletReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29B4E81F1DA9CD5D005DC6D1 /* TupletReader.cpp */; };
+		29FFAC801DB9C8B600DC8AE1 /* CurveData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29FFAC7F1DB9C8B600DC8AE1 /* CurveData.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -2086,7 +2077,6 @@
 		2933AA921DA5A60C005D7222 /* mx-macOS.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "mx-macOS.plist"; sourceTree = SOURCE_ROOT; };
 		2933AD461DA5AA73005D7222 /* mx-iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = "mx-iOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2933AD471DA5AA74005D7222 /* mx-iOS.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "mx-iOS.plist"; path = "/Users/mjb/Dropbox/Programming/MxRepo/Xcode/mx-iOS.plist"; sourceTree = "<absolute>"; };
-		2933AD5F1DA5B616005D7222 /* CurveType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CurveType.h; path = ../Sourcecode/mx/api/CurveType.h; sourceTree = "<group>"; };
 		2933AD601DA5B616005D7222 /* ColorData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ColorData.h; path = ../Sourcecode/mx/api/ColorData.h; sourceTree = "<group>"; };
 		2933AD7B1DA5E850005D7222 /* CurveFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CurveFunctions.h; path = ../Sourcecode/mx/impl/CurveFunctions.h; sourceTree = "<group>"; };
 		293488D41D94903B00D0C407 /* ApiCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ApiCommon.h; path = ../Sourcecode/mx/api/ApiCommon.h; sourceTree = "<group>"; };
@@ -3404,10 +3394,6 @@
 		29E2B3CB1DA81E9700DC61EA /* PartReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PartReader.h; path = ../Sourcecode/mx/impl/PartReader.h; sourceTree = "<group>"; };
 		29E33EA21D99C9AA001BD2EE /* StringToInt.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = StringToInt.h; path = ../Sourcecode/mx/utility/StringToInt.h; sourceTree = "<group>"; };
 		29E9C5391DA470BC0040183B /* SpannerData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SpannerData.h; path = ../Sourcecode/mx/api/SpannerData.h; sourceTree = "<group>"; };
-		29E9C53D1DA4802B0040183B /* CurveStart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CurveStart.h; path = ../Sourcecode/mx/api/CurveStart.h; sourceTree = "<group>"; };
-		29E9C53F1DA48DAA0040183B /* CurvePoints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CurvePoints.h; path = ../Sourcecode/mx/api/CurvePoints.h; sourceTree = "<group>"; };
-		29E9C5421DA48F5F0040183B /* CurveContinue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CurveContinue.h; path = ../Sourcecode/mx/api/CurveContinue.h; sourceTree = "<group>"; };
-		29E9C5461DA4977A0040183B /* CurveEnd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CurveEnd.h; path = ../Sourcecode/mx/api/CurveEnd.h; sourceTree = "<group>"; };
 		29E9C55D1DA49DAF0040183B /* LineData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LineData.h; path = ../Sourcecode/mx/api/LineData.h; sourceTree = "<group>"; };
 		29E9C55E1DA49DAF0040183B /* DurationData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DurationData.h; path = ../Sourcecode/mx/api/DurationData.h; sourceTree = "<group>"; };
 		29E9C5611DA49F2D0040183B /* PitchData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PitchData.h; path = ../Sourcecode/mx/api/PitchData.h; sourceTree = "<group>"; };
@@ -3430,6 +3416,7 @@
 		29EF440A1D6E70D300DBDAB9 /* DocumentManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DocumentManager.h; path = ../Sourcecode/mx/api/DocumentManager.h; sourceTree = "<group>"; };
 		29EF440C1D6E70D300DBDAB9 /* ScoreData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ScoreData.h; path = ../Sourcecode/mx/api/ScoreData.h; sourceTree = "<group>"; };
 		29F492B01D792B2F00C7C4B8 /* Lock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Lock.h; path = ../Sourcecode/mx/utility/Lock.h; sourceTree = "<group>"; };
+		29FFAC7F1DB9C8B600DC8AE1 /* CurveData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CurveData.h; path = ../Sourcecode/mx/api/CurveData.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -4878,15 +4865,11 @@
 		29EF44071D6E6CE900DBDAB9 /* api */ = {
 			isa = PBXGroup;
 			children = (
+				29FFAC7F1DB9C8B600DC8AE1 /* CurveData.h */,
 				293488D41D94903B00D0C407 /* ApiCommon.h */,
 				292D1DD01D9A43A500CDD9F4 /* ClefData.cpp */,
 				292D1DD11D9A43A500CDD9F4 /* ClefData.h */,
 				2933AD601DA5B616005D7222 /* ColorData.h */,
-				29E9C5421DA48F5F0040183B /* CurveContinue.h */,
-				29E9C5461DA4977A0040183B /* CurveEnd.h */,
-				29E9C53F1DA48DAA0040183B /* CurvePoints.h */,
-				29E9C53D1DA4802B0040183B /* CurveStart.h */,
-				2933AD5F1DA5B616005D7222 /* CurveType.h */,
 				29766AD11DAC14B900CCE2AC /* DirectionData.h */,
 				29EF44091D6E70D300DBDAB9 /* DocumentManager.cpp */,
 				29EF440A1D6E70D300DBDAB9 /* DocumentManager.h */,
@@ -4936,11 +4919,6 @@
 				290756E21DA8BE2A00EEF5C3 /* ApiCommon.h in Headers */,
 				290756E31DA8BE2A00EEF5C3 /* ClefData.h in Headers */,
 				290756E41DA8BE2A00EEF5C3 /* ColorData.h in Headers */,
-				290756E51DA8BE2A00EEF5C3 /* CurveContinue.h in Headers */,
-				290756E61DA8BE2A00EEF5C3 /* CurveEnd.h in Headers */,
-				290756E71DA8BE2A00EEF5C3 /* CurvePoints.h in Headers */,
-				290756E81DA8BE2A00EEF5C3 /* CurveStart.h in Headers */,
-				290756E91DA8BE2A00EEF5C3 /* CurveType.h in Headers */,
 				29766AD31DAC14CC00CCE2AC /* DirectionData.h in Headers */,
 				290756EA1DA8BE2A00EEF5C3 /* DocumentManager.h in Headers */,
 				290756EB1DA8BE2A00EEF5C3 /* DurationData.h in Headers */,
@@ -4979,11 +4957,6 @@
 				290756C41DA8BE0800EEF5C3 /* ApiCommon.h in Headers */,
 				290756C51DA8BE0800EEF5C3 /* ClefData.h in Headers */,
 				290756C61DA8BE0800EEF5C3 /* ColorData.h in Headers */,
-				290756C71DA8BE0800EEF5C3 /* CurveContinue.h in Headers */,
-				290756C81DA8BE0800EEF5C3 /* CurveEnd.h in Headers */,
-				290756C91DA8BE0800EEF5C3 /* CurvePoints.h in Headers */,
-				290756CA1DA8BE0800EEF5C3 /* CurveStart.h in Headers */,
-				290756CB1DA8BE0800EEF5C3 /* CurveType.h in Headers */,
 				29766AD41DAC14D700CCE2AC /* DirectionData.h in Headers */,
 				290756CC1DA8BE0800EEF5C3 /* DocumentManager.h in Headers */,
 				290756CD1DA8BE0800EEF5C3 /* DurationData.h in Headers */,
@@ -5019,6 +4992,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29FFAC801DB9C8B600DC8AE1 /* CurveData.h in Headers */,
 				29766AC71DAC014300CCE2AC /* MetronomeReader.h in Headers */,
 				29398BB11DB1917B00475CD5 /* NotationsWriter.h in Headers */,
 				29B4E8241DA9CFC2005DC6D1 /* NoteAttachmentData.h in Headers */,

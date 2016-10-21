@@ -60,5 +60,14 @@ namespace mx
                 
             }
 		};
+        
+        MXAPI_EQUALS_BEGIN( KeyData )
+        MXAPI_EQUALS_FIRST_MEMBER( fifths )
+        MXAPI_EQUALS_NEXT_MEMBER( cancel )
+        MXAPI_EQUALS_NEXT_MEMBER( mode )
+        MXAPI_EQUALS_NEXT_MEMBER( tickTimePosition )
+        MXAPI_EQUALS_LAST_MEMBER( staffIndex )
+        MXAPI_EQUALS_END;
+        MXAPI_NOT_EQUALS_AND_VECTORS( KeyData );
 	}
 }
