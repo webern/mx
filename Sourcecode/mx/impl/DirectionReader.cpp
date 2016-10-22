@@ -36,318 +36,243 @@
 #include "mx/impl/MetronomeReader.h"
 #include "mx/impl/PositionFunctions.h"
 #include "mx/impl/PrintFunctions.h"
+#include "mx/api/WedgeData.h"
 
 namespace mx
 {
     namespace impl
     {
-        DirectionReader::DirectionReader( const core::Direction& inDirection, const core::DirectionType& inDirectionType, Cursor inCursor )
+        DirectionReader::DirectionReader( const core::Direction& inDirection, Cursor inCursor )
         : myDirection{ inDirection }
-        , myDirectionType{ inDirectionType }
         , myCursor{ inCursor }
         , myConverter{}
-        , myIsMark{ false }
-        , myIsSpanner{ false }
-        , myIsSpecial{ false }
-        , myIsInvalid{ false }
-        , myOutMarkData{}
-        , myStaffIndex{ 0 }
+        , myOutDirectionData{}
         {
-            initialize();
-        }
-        
-        
-        bool DirectionReader::getIsMark() const
-        {
-            return myIsMark;
-        }
-        
-        
-        int DirectionReader::getStaffIndex() const
-        {
-            return myStaffIndex;
-        }
-        
-        
-        std::vector<api::MarkData> DirectionReader::getMarkData() const
-        {
-            return myOutMarkData;
-        }
-        
-        
-        void DirectionReader::initialize()
-        {
-            parseStaffIndex();
             
-            switch ( myDirectionType.getChoice() )
+        }
+
+        
+        api::DirectionData DirectionReader::getDirectionData()
+        {
+            myOutDirectionData = api::DirectionData{};
+            myOutDirectionData.tickTimePosition = myCursor.tickTimePosition;
+            myOutDirectionData.isStaffValueSpecified = !myDirection.getHasStaff();
+           
+            if( myDirection.getHasOffset() )
+            {
+                myOutDirectionData.isOffsetSpecified = true;
+                myOutDirectionData.offset = static_cast<int>( std::ceil( myDirection.getOffset()->getValue().getValue() - 0.5 ) );
+                if( myDirection.getOffset()->getAttributes()->hasSound )
+                {
+                    myOutDirectionData.offsetSound = myConverter.convert( myDirection.getOffset()->getAttributes()->sound );
+                }
+            }
+            
+            if( myDirection.getAttributes()->hasPlacement )
+            {
+                myOutDirectionData.placement = myConverter.convert( myDirection.getAttributes()->placement );
+            }
+            
+            for ( const auto& dtPtr : myDirection.getDirectionTypeSet() )
+            {
+                const auto& dt = *dtPtr;
+                parseDirectionType( dt );
+            }
+            
+            api::DirectionData temp{ std::move( myOutDirectionData ) };
+            myOutDirectionData = api::DirectionData{};
+            return temp;
+        }
+        
+        
+        void DirectionReader::parseDirectionType( const core::DirectionType& directionType )
+        {
+            switch ( directionType.getChoice() )
             {
                 case core::DirectionType::Choice::rehearsal:
                 {
-                    myIsMark = true;
+                    parseRehearsal( directionType );
                     break;
                 }
                 case core::DirectionType::Choice::segno:
                 {
-                    myIsMark = true;
+                    parseSegno( directionType );
                     break;
                 }
                 case core::DirectionType::Choice::words:
                 {
-                    myIsMark = true;
+                    parseWords( directionType );
                     break;
                 }
                 case core::DirectionType::Choice::coda:
                 {
-                    myIsMark = true;
+                    parseCoda( directionType );
                     break;
                 }
                 case core::DirectionType::Choice::wedge:
                 {
-                    myIsSpanner = true;
+                    parseWedge( directionType );
                     break;
                 }
                 case core::DirectionType::Choice::dynamics:
                 {
-                    myIsMark = true;
-                    parseDynamics();
+                    parseDynamics( directionType );
                     break;
                 }
                 case core::DirectionType::Choice::dashes:
                 {
-                    myIsSpanner = true;
+                    parseDashes( directionType );
                     break;
                 }
                 case core::DirectionType::Choice::bracket:
                 {
-                    myIsSpanner = true;
+                    parseBracket( directionType );
                     break;
                 }
                 case core::DirectionType::Choice::pedal:
                 {
-                    myIsSpecial = true;
+                    parsePedal( directionType );
                     break;
                 }
                 case core::DirectionType::Choice::metronome:
                 {
-                    myIsSpecial = true;
-                    parseMetronome( myDirectionType );
+                    parseMetronome( directionType );
                     break;
                 }
                 case core::DirectionType::Choice::octaveShift:
                 {
+                    parseOctaveShift( directionType );
                     break;
                 }
                 case core::DirectionType::Choice::harpPedals:
                 {
+                    parseHarpPedals( directionType );
                     break;
                 }
                 case core::DirectionType::Choice::damp:
                 {
-                    myIsMark = true;
+                    parseDamp( directionType );
                     break;
                 }
                 case core::DirectionType::Choice::dampAll:
                 {
-                    myIsMark = true;
+                    parseRehearsal( directionType );
                     break;
                 }
                 case core::DirectionType::Choice::eyeglasses:
                 {
-                    myIsMark = true;
+                    parseEyeglasses( directionType );
                     break;
                 }
                 case core::DirectionType::Choice::stringMute:
                 {
-                    myIsMark = true;
+                    parseStringMute( directionType );
                     break;
                 }
                 case core::DirectionType::Choice::scordatura:
                 {
-                    myIsSpecial = true;
+                    parseScordatura( directionType );
                     break;
                 }
                 case core::DirectionType::Choice::image:
                 {
-                    myIsSpecial = true;
+                    parseImage( directionType );
                     break;
                 }
                 case core::DirectionType::Choice::principalVoice:
                 {
-                    myIsSpecial = true;
+                    parsePrincipalVoice( directionType );
                     break;
                 }
                 case core::DirectionType::Choice::accordionRegistration:
                 {
-                    myIsSpecial = true;
+                    parseAccordionRegistration( directionType );
                     break;
                 }
                 case core::DirectionType::Choice::percussion:
                 {
-                    myIsMark = true;
+                    parsePercussion( directionType );
                     break;
                 }
                 case core::DirectionType::Choice::otherDirection:
                 {
-                    myIsMark = true;
+                    parseOtherDirection( directionType );
                     break;
                 }
-                default:
-                    myIsInvalid = true;
-                    break;
+                default: break;
             }
+        }
+       
+        
+        void DirectionReader::parseRehearsal( const core::DirectionType& directionType)
+        {
+            MX_UNUSED( directionType );
         }
         
         
-        void DirectionReader::parseStaffIndex()
+        void DirectionReader::parseSegno( const core::DirectionType& directionType)
         {
-            myStaffIndex = 0;
-            if( myDirection.getHasStaff() )
-            {
-                myStaffIndex = myDirection.getStaff()->getValue().getValue() - 1;
-            }
+            MX_UNUSED( directionType );
         }
         
-#if 0
-        void DirectionReader::getDirectionData( api::MeasureData& outMeasureData ) const
+        
+        void DirectionReader::parseWords( const core::DirectionType& directionType)
         {
-            std::lock_guard<std::mutex> lock{ myMutex };
-            myOutMeasureDataP = &outMeasureData;
+            MX_UNUSED( directionType );
+        }
+        
+        
+        void DirectionReader::parseCoda( const core::DirectionType& directionType)
+        {
+            MX_UNUSED( directionType );
+        }
+        
+        
+        void DirectionReader::parseWedge( const core::DirectionType& directionType)
+        {
+            const auto& wedge = *directionType.getWedge();
+            const auto& attr = *wedge.getAttributes();
+            const auto wedgeType = myConverter.convert( attr.type );
+            const bool isSpreadSpecified = attr.hasSpread;
+            const long double spread = attr.spread.getValue();
             
-            for( const auto& directionTypePtr : mySet )
+            if( attr.type == core::WedgeType::stop )
             {
-                const auto& directionType = *directionTypePtr;
-                
-                switch ( directionType.getChoice() )
+                api::WedgeStop stop;
+                if( attr.hasNumber )
                 {
-                    case core::DirectionType::Choice::rehearsal:
-                    {
-                        break;
-                    }
-                    case core::DirectionType::Choice::segno:
-                    {
-                        break;
-                    }
-                    case core::DirectionType::Choice::words:
-                    {
-                        break;
-                    }
-                    case core::DirectionType::Choice::coda:
-                    {
-                        break;
-                    }
-                    case core::DirectionType::Choice::wedge:
-                    {
-                        break;
-                    }
-                    case core::DirectionType::Choice::dynamics:
-                    {
-                        break;
-                    }
-                    case core::DirectionType::Choice::dashes:
-                    {
-                        break;
-                    }
-                    case core::DirectionType::Choice::bracket:
-                    {
-                        break;
-                    }
-                    case core::DirectionType::Choice::pedal:
-                    {
-                        break;
-                    }
-                    case core::DirectionType::Choice::metronome:
-                    {
-                        parseMetronome( directionType );
-                        break;
-                    }
-                    case core::DirectionType::Choice::octaveShift:
-                    {
-                        break;
-                    }
-                    case core::DirectionType::Choice::harpPedals:
-                    {
-                        break;
-                    }
-                    case core::DirectionType::Choice::damp:
-                    {
-                        break;
-                    }
-                    case core::DirectionType::Choice::dampAll:
-                    {
-                        break;
-                    }
-                    case core::DirectionType::Choice::eyeglasses:
-                    {
-                        break;
-                    }
-                    case core::DirectionType::Choice::stringMute:
-                    {
-                        break;
-                    }
-                    case core::DirectionType::Choice::scordatura:
-                    {
-                        break;
-                    }
-                    case core::DirectionType::Choice::image:
-                    {
-                        break;
-                    }
-                    case core::DirectionType::Choice::principalVoice:
-                    {
-                        break;
-                    }
-                    case core::DirectionType::Choice::accordionRegistration:
-                    {
-                        break;
-                    }
-                    case core::DirectionType::Choice::percussion:
-                    {
-                        break;
-                    }
-                    case core::DirectionType::Choice::otherDirection:
-                    {
-                        break;
-                    }
-                    default:
-                        break;
+                    stop.numberLevel = attr.number.getValue();
                 }
+                if( isSpreadSpecified )
+                {
+                    stop.isSpreadSpecified = true;
+                    stop.spread = spread;
+                }
+                myOutDirectionData.wedgeStops.emplace_back( std::move( stop ) );
+                return;
+            }
+            else
+            {
+                api::WedgeStart start;
+                if( attr.hasNumber )
+                {
+                    start.numberLevel = attr.number.getValue();
+                }
+                if( isSpreadSpecified )
+                {
+                    start.isSpreadSpecified = true;
+                    start.spread = spread;
+                }
+                start.wedgeType = wedgeType;
+                myOutDirectionData.wedgeStarts.emplace_back( std::move( start ) );
             }
         }
-#endif
         
-        void DirectionReader::parseRehearsal( const core::DirectionType& directionType ) const
+        
+        void DirectionReader::parseDynamics( const core::DirectionType& directionType )
         {
             MX_UNUSED( directionType );
-        }
-        
-        
-        void DirectionReader::parseSegno( const core::DirectionType& directionType ) const
-        {
-            MX_UNUSED( directionType );
-        }
-        
-        
-        void DirectionReader::parseWords( const core::DirectionType& directionType ) const
-        {
-            MX_UNUSED( directionType );
-        }
-        
-        
-        void DirectionReader::parseCoda( const core::DirectionType& directionType ) const
-        {
-            MX_UNUSED( directionType );
-        }
-        
-        
-        void DirectionReader::parseWedge( const core::DirectionType& directionType ) const
-        {
-            MX_UNUSED( directionType );
-        }
-        
-        
-        void DirectionReader::parseDynamics()
-        {
-            for( const auto& dynamic : myDirectionType.getDynamicsSet() )
+            for( const auto& dynamic : directionType.getDynamicsSet() )
             {
                 parseDynamic( *dynamic );
             }
@@ -356,135 +281,134 @@ namespace mx
         
         void DirectionReader::parseDynamic( const core::Dynamics& dynamic )
         {
-            const auto& attr = *dynamic.getAttributes();
-            auto markData = api::MarkData{};
-            markData.tickTimePosition = myCursor.tickTimePosition;
-            markData.positionData = getPositionData( attr );
-            markData.printData = getPrintData( attr );
+            //const auto& attr = *dynamic.getAttributes();
+            auto mark = api::DirectionMark{};
+//            mark.tickTimePosition = myCursor.tickTimePosition;
+//            mark.positionData = getPositionData( attr );
+//            mark.printData = getPrintData( attr );
             const auto valueObject = dynamic.getValue();
             
-            if( myDirection.getAttributes()->hasPlacement )
-            {
-                if( markData.positionData.placement == api::Placement::unspecified )
-                {
-                    markData.positionData.placement = myConverter.convert( myDirection.getAttributes()->placement );
-                }
-            }
+//            if( myDirection.getAttributes()->hasPlacement )
+//            {
+//                if( markData.positionData.placement == api::Placement::unspecified )
+//                {
+//                    markData.positionData.placement = myConverter.convert( myDirection.getAttributes()->placement );
+//                }
+//            }
             
-            markData.markType = myConverter.convertDynamic( valueObject.getValue() );
-            markData.name = valueObject.getValueString();
+            mark.markType = myConverter.convertDynamic( valueObject.getValue() );
+            mark.name = valueObject.getValueString();
             if( valueObject.getValue() == core::DynamicsEnum::otherDynamics )
             {
-                auto codePoint = api::Smufl::findCodepoint( markData.name );
+                auto codePoint = api::Smufl::findCodepoint( mark.name );
                 if( codePoint > 0 )
                 {
-                    markData.smuflCodepoint = codePoint;
-                    markData.smuflName = markData.name;
+                    mark.smuflCodepoint = codePoint;
+                    mark.smuflName = mark.name;
                 }
             }
             else
             {
-                markData.smuflName = api::MarkSmufl::getName( markData.markType, markData.positionData.placement );
-                markData.smuflCodepoint = api::MarkSmufl::getCodepoint( markData.markType, markData.positionData.placement );
+                mark.smuflName = api::MarkSmufl::getName( mark.markType, myOutDirectionData.placement );
+                mark.smuflCodepoint = api::MarkSmufl::getCodepoint( mark.markType, myOutDirectionData.placement );
             }
-            myOutMarkData.emplace_back( std::move( markData ) );
+            myOutDirectionData.marks.emplace_back( std::move( mark ) );
         }
         
         
-        void DirectionReader::parseDashes( const core::DirectionType& directionType ) const
+        void DirectionReader::parseDashes( const core::DirectionType& directionType)
         {
             MX_UNUSED( directionType );
         }
         
         
-        void DirectionReader::parseBracket( const core::DirectionType& directionType ) const
+        void DirectionReader::parseBracket( const core::DirectionType& directionType)
         {
             MX_UNUSED( directionType );
         }
         
         
-        void DirectionReader::parsePedal( const core::DirectionType& directionType ) const
+        void DirectionReader::parsePedal( const core::DirectionType& directionType)
         {
             MX_UNUSED( directionType );
         }
         
         
-        void DirectionReader::parseMetronome( const core::DirectionType& directionType ) const
+        void DirectionReader::parseMetronome( const core::DirectionType& directionType)
         {
-            MX_UNUSED( directionType );
-            //const auto& metronome = *directionType.getMetronome();
-            //MetronomeReader reader{ metronome };
-            //myOutMeasureDataP->tempos.emplace_back( reader.getTempoData() );
+            const auto& metronome = *directionType.getMetronome();
+            MetronomeReader reader{ metronome };
+            myOutDirectionData.tempos.emplace_back( reader.getTempoData() );
         }
         
         
-        void DirectionReader::parseOctaveShift( const core::DirectionType& directionType ) const
-        {
-            MX_UNUSED( directionType );
-        }
-        
-        
-        void DirectionReader::parseHarpPedals( const core::DirectionType& directionType ) const
+        void DirectionReader::parseOctaveShift( const core::DirectionType& directionType)
         {
             MX_UNUSED( directionType );
         }
         
         
-        void DirectionReader::parseDamp( const core::DirectionType& directionType ) const
+        void DirectionReader::parseHarpPedals( const core::DirectionType& directionType)
         {
             MX_UNUSED( directionType );
         }
         
         
-        void DirectionReader::parseDampAll( const core::DirectionType& directionType ) const
+        void DirectionReader::parseDamp( const core::DirectionType& directionType)
         {
             MX_UNUSED( directionType );
         }
         
         
-        void DirectionReader::parseEyeglasses( const core::DirectionType& directionType ) const
+        void DirectionReader::parseDampAll( const core::DirectionType& directionType)
         {
             MX_UNUSED( directionType );
         }
         
         
-        void DirectionReader::parseStringMute( const core::DirectionType& directionType ) const
+        void DirectionReader::parseEyeglasses( const core::DirectionType& directionType)
         {
             MX_UNUSED( directionType );
         }
         
         
-        void DirectionReader::parseScordatura( const core::DirectionType& directionType ) const
+        void DirectionReader::parseStringMute( const core::DirectionType& directionType)
         {
             MX_UNUSED( directionType );
         }
         
         
-        void DirectionReader::parseImage( const core::DirectionType& directionType ) const
+        void DirectionReader::parseScordatura( const core::DirectionType& directionType)
         {
             MX_UNUSED( directionType );
         }
         
         
-        void DirectionReader::parsePrincipalVoice( const core::DirectionType& directionType ) const
+        void DirectionReader::parseImage( const core::DirectionType& directionType)
         {
             MX_UNUSED( directionType );
         }
         
         
-        void DirectionReader::parseAccordionRegistration( const core::DirectionType& directionType ) const
+        void DirectionReader::parsePrincipalVoice( const core::DirectionType& directionType)
         {
             MX_UNUSED( directionType );
         }
         
         
-        void DirectionReader::parsePercussion( const core::DirectionType& directionType ) const
+        void DirectionReader::parseAccordionRegistration( const core::DirectionType& directionType)
         {
             MX_UNUSED( directionType );
         }
         
         
-        void DirectionReader::parseOtherDirection( const core::DirectionType& directionType ) const
+        void DirectionReader::parsePercussion( const core::DirectionType& directionType)
+        {
+            MX_UNUSED( directionType );
+        }
+        
+        
+        void DirectionReader::parseOtherDirection( const core::DirectionType& directionType)
         {
             MX_UNUSED( directionType );
         }

@@ -336,7 +336,8 @@ namespace mx
             }
             else
             {
-                MX_THROW( "multiple backups in a row" ); // TODO - remove this debugging check
+                // TODO - remove this debugging check
+                MX_THROW( "multiple backups in a row" );
             }
             myCurrentCursor.isBackupInProgress = true;
             const int backupAmount = myCurrentCursor.convertDurationToGlobalTickScale( *inMxBackup.getDuration() );
@@ -353,25 +354,36 @@ namespace mx
         
         void MeasureReader::parseDirection( const core::Direction& inMxDirection ) const
         {
-            for( const auto& directionTypePtr : inMxDirection.getDirectionTypeSet() )
+            DirectionReader reader{ inMxDirection, myCurrentCursor };
+            auto directionData = reader.getDirectionData();
+            
+            // make an adjustment if the directionData refers to a non-existant staff
+            size_t staffIndex = 0;
+            bool isStaffIndexSpecified = inMxDirection.getHasStaff();
+            bool isStaffIndexInsane = false;
+
+            if( isStaffIndexSpecified )
             {
-                const auto& directionType = *directionTypePtr;
-                DirectionReader reader{ inMxDirection, directionType, myCurrentCursor };
-                 int staffIndex = reader.getStaffIndex();
-                if( reader.getIsMark() )
-                {
-                    auto markData = reader.getMarkData();
-                    auto& staff = myOutMeasureData.staves.at( static_cast<size_t>( staffIndex ) );
-                    for( auto& md : markData )
-                    {
-                        staff.marks.emplace_back( std::move( md ) );
-                    }
-                }
-//                else if ( reader.getIsSpanner() )
-//                {
-//                    
-//                }
+                staffIndex = static_cast<size_t>( inMxDirection.getStaff()->getValue().getValue() - 1 );
             }
+            
+            isStaffIndexInsane = staffIndex >= myOutMeasureData.staves.size();
+            
+            if( !isStaffIndexSpecified || isStaffIndexInsane )
+            {
+                staffIndex = 0;
+                directionData.isStaffValueSpecified = false;
+            }
+            else
+            {
+                directionData.isStaffValueSpecified = true;
+            }
+            
+            // in-case we made a mistake in the code above which calculates the staffIndex
+            // make a final check to see if the staffIndex is in-bounds - throw if stupid
+            MX_ASSERT( staffIndex < myOutMeasureData.staves.size() );
+            auto& staff = myOutMeasureData.staves.at( staffIndex );
+            staff.directions.emplace_back( std::move( directionData ) );
         }
         
         

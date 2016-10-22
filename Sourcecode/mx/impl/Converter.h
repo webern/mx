@@ -8,6 +8,7 @@
 #include "mx/api/NoteData.h"
 #include "mx/api/PositionData.h"
 #include "mx/api/ScoreData.h"
+#include "mx/api/BarlineData.h"
 #include "mx/core/elements/ArticulationsChoice.h"
 #include "mx/core/elements/OrnamentsChoice.h"
 #include "mx/core/elements/TechnicalChoice.h"
@@ -82,6 +83,15 @@ namespace mx
             
             core::LineType convert( api::LineType value ) const;
             api::LineType convert( core::LineType value ) const;
+            
+            core::WedgeType convert( api::WedgeType value ) const;
+            api::WedgeType convert( core::WedgeType value ) const;
+            
+            core::BarStyleEnum convert( api::BarlineType value ) const;
+            api::BarlineType convert( core::BarStyleEnum value ) const;
+            
+            core::RightLeftMiddle convertBarlinePlacement( api::HorizontalAlignment value ) const;
+            api::HorizontalAlignment convertBarlinePlacement( core::RightLeftMiddle value ) const;
 
             const static std::map<core::StepEnum, api::Step> stepMap;
             const static std::map<core::NoteTypeValue, api::DurationName> durationMap;
@@ -103,6 +113,9 @@ namespace mx
             const static std::map<core::MeasureNumberingValue, api::MeasureNumbering> measureNumberingMap;
             const static std::map<core::StemValue, api::Stem> stemMap;
             const static std::map<core::LineType, api::LineType> lineType;
+            const static std::map<core::WedgeType, api::WedgeType> wedgeMap;
+            const static std::map<core::BarStyleEnum, api::BarlineType> barlineMap;
+            const static std::map<core::RightLeftMiddle, api::HorizontalAlignment> barlinePlacementMap;
             
         private:
             template<typename CORE_TYPE, typename API_TYPE>

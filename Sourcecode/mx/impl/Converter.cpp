@@ -320,6 +320,37 @@ namespace mx
         };
         
         
+        const std::map<core::WedgeType, api::WedgeType> Converter::wedgeMap =
+        {
+            std::pair<core::WedgeType, api::WedgeType>{ core::WedgeType::crescendo, api::WedgeType::crescendo },
+            std::pair<core::WedgeType, api::WedgeType>{ core::WedgeType::diminuendo, api::WedgeType::diminuendo },
+        };
+        
+        
+        const std::map<core::BarStyleEnum, api::BarlineType> Converter::barlineMap =
+        {
+            std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::regular, api::BarlineType::normal },
+            std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::dotted, api::BarlineType::unsupported },
+            std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::dashed, api::BarlineType::unsupported },
+            std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::heavy, api::BarlineType::unsupported },
+            std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::lightLight, api::BarlineType::lightLight },
+            std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::lightHeavy, api::BarlineType::lightHeavy },
+            std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::heavyLight, api::BarlineType::heavyLight },
+            std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::heavyHeavy, api::BarlineType::unsupported },
+            std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::tick, api::BarlineType::unsupported },
+            std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::short_, api::BarlineType::unsupported },
+            std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::none, api::BarlineType::none },
+        };
+        
+        
+        const std::map<core::RightLeftMiddle, api::HorizontalAlignment> Converter::barlinePlacementMap =
+        {
+            std::pair<core::RightLeftMiddle, api::HorizontalAlignment>{ core::RightLeftMiddle::right, api::HorizontalAlignment::right },
+            std::pair<core::RightLeftMiddle, api::HorizontalAlignment>{ core::RightLeftMiddle::left, api::HorizontalAlignment::left },
+            std::pair<core::RightLeftMiddle, api::HorizontalAlignment>{ core::RightLeftMiddle::middle, api::HorizontalAlignment::center },
+        };
+        
+        
         api::Step Converter::convert( core::StepEnum inStep ) const
         {
             auto it = stepMap.find( inStep );
@@ -646,5 +677,43 @@ namespace mx
         {
             return findApiItem( lineType, api::LineType::unspecified, value );
         }
+        
+        
+        core::WedgeType Converter::convert( api::WedgeType value ) const
+        {
+            return findCoreItem( wedgeMap, core::WedgeType::continue_, value );
+        }
+        
+        
+        api::WedgeType Converter::convert( core::WedgeType value ) const
+        {
+            return findApiItem( wedgeMap, api::WedgeType::unspecified, value );
+        }
+        
+        
+        
+        core::BarStyleEnum Converter::convert( api::BarlineType value ) const
+        {
+            return findCoreItem( barlineMap, core::BarStyleEnum::regular, value );
+        }
+        
+        
+        api::BarlineType Converter::convert( core::BarStyleEnum value ) const
+        {
+            return findApiItem( barlineMap, api::BarlineType::unsupported, value );
+        }
+        
+        
+        core::RightLeftMiddle Converter::convertBarlinePlacement( api::HorizontalAlignment value ) const
+        {
+            return findCoreItem( barlinePlacementMap, core::RightLeftMiddle::right, value );
+        }
+        
+        
+        api::HorizontalAlignment Converter::convertBarlinePlacement( core::RightLeftMiddle value ) const
+        {
+            return findApiItem( barlinePlacementMap, api::HorizontalAlignment::unspecified, value );
+        }
+        
     }
 }

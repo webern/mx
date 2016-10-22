@@ -1,7 +1,6 @@
 // MusicXML Class Library v0.3.0
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
-#ifdef FAIL
 
 #include "mx/impl/DirectionWriter.h"
 #include "mx/core/elements/Direction.h"
@@ -40,87 +39,113 @@ namespace mx
 {
     namespace impl
     {
-        DirectionWriter::DirectionWriter( const core::PartwiseMeasurePtr& inPartwiseMeasure )
-        : myDirection{ nullptr }
-        , myPartwiseMeasure{ inPartwiseMeasure }
+        DirectionWriter::DirectionWriter( const api::DirectionData& inDirectionData, const Cursor& inCursor )
+        : myDirectionData{ inDirectionData }
+        , myCursor{ inCursor }
+        , myOutDirectionPtr{ nullptr }
         , myConverter{}
         {
-            allocate();
+            
         }
         
-        api::Placement DirectionWriter::getPlacement() const
+        core::DirectionPtr DirectionWriter::getDirection()
         {
-            return getPlacement( *myDirection );
-        }
-        
-        
-        int DirectionWriter::getStaffIndex() const
-        {
-            return getStaffIndex( *myDirection );
-        }
-        
-        
-        int DirectionWriter::getOffset() const
-        {
-            return getOffset( *myDirection );
-        }
-        
-        api::Placement DirectionWriter::getPlacement( const core::Direction& direction ) const
-        {
-            if( !direction.getAttributes()->hasPlacement )
+            myOutDirectionPtr = core::makeDirection();
+            myIsFirstDirectionTypeAdded = false;
+            auto& directionAttributes = *myOutDirectionPtr->getAttributes();
+            
+            if( myDirectionData.placement != api::Placement::unspecified )
             {
-                return api::Placement::unspecified;
+                directionAttributes.hasPlacement = true;
+                directionAttributes.placement = myConverter.convert( myDirectionData.placement );
             }
             
-            return myConverter.convert( direction.getAttributes()->placement );
-        }
-        
-        
-        int DirectionWriter::getStaffIndex( const core::Direction& direction ) const
-        {
-            if( direction.getHasStaff() )
+            if( myDirectionData.isStaffValueSpecified || myCursor.staffIndex != 0 )
             {
-                return direction.getStaff()->getValue().getValue();
+                myOutDirectionPtr->setHasStaff( true );
+                myOutDirectionPtr->getStaff()->setValue( core::StaffNumber{ myCursor.staffIndex + 1 } );
             }
-            return -1;
-        }
-        
-        
-        int DirectionWriter::getOffset( const core::Direction& direction ) const
-        {
-            if( direction.getOffset() )
+            
+            if( myDirectionData.isOffsetSpecified )
             {
-                return static_cast<int>( direction.getOffset()->getValue().getValue() );
+                myOutDirectionPtr->setHasOffset( true );
+                myOutDirectionPtr->getOffset()->setValue( core::DivisionsValue{ static_cast<core::DecimalType>( myDirectionData.offset ) } );
+                if( myDirectionData.offsetSound != api::Bool::unspecified )
+                {
+                    myOutDirectionPtr->getOffset()->getAttributes()->hasSound = true;
+                    myOutDirectionPtr->getOffset()->getAttributes()->sound = myConverter.convert( myDirectionData.offsetSound );
+                }
             }
-            return -1;
-        }
-        
-        
-        bool DirectionWriter::isCompatible( const api::MarkData mark, int staffIndex ) const
-        {
-            if( getIsDirectionEmpty() )
+            
+            for( const auto& mark : myDirectionData.marks )
             {
-                return true;
+                // TODO - skip marks that aren't of the correct type (i.e. direction marks)
+                // if !isDirection( mark ) continue;
+                if( isMarkDynamic( mark.markType ) )
+                {
+                    auto directionTypePtr = core::makeDirectionType();
+                    this->addDirectionType( directionTypePtr );
+                    directionTypePtr->setChoice( core::DirectionType::Choice::dynamics );
+                    MX_ASSERT( directionTypePtr->getDynamicsSet().size() == 1 );
+                    auto dynamics = directionTypePtr->getDynamicsSet().front();
+                    core::DynamicsValue dynamicsValue;
+                    dynamicsValue.setValue( myConverter.convertDynamic( mark.markType ) );
+                    dynamics->setValue( dynamicsValue );
+                }
             }
-            else if( getStaffIndex() != staffIndex )
+            
+            for( const auto& wedgeStart : myDirectionData.wedgeStarts )
             {
-                return false;
+                auto wedgeStartDirectionTypePtr = core::makeDirectionType();
+                wedgeStartDirectionTypePtr->setChoice( core::DirectionType::Choice::wedge );
+                this->addDirectionType( wedgeStartDirectionTypePtr );
+                auto wedgePtr = wedgeStartDirectionTypePtr->getWedge();
+                auto& attr = *wedgePtr->getAttributes();
+
+                if( wedgeStart.wedgeType != api::WedgeType::unspecified )
+                {
+                    attr.type = myConverter.convert( wedgeStart.wedgeType );
+                }
+                
+                if( wedgeStart.isSpreadSpecified )
+                {
+                    attr.hasSpread = true;
+                    attr.spread = core::DivisionsValue{ static_cast<core::DecimalType>( wedgeStart.spread ) };
+                }
             }
+            
+            for( const auto& wedgeStop : myDirectionData.wedgeStops )
+            {
+                auto wedgeStartDirectionTypePtr = core::makeDirectionType();
+                wedgeStartDirectionTypePtr->setChoice( core::DirectionType::Choice::wedge );
+                this->addDirectionType( wedgeStartDirectionTypePtr );
+                auto wedgePtr = wedgeStartDirectionTypePtr->getWedge();
+                auto& attr = *wedgePtr->getAttributes();
+                attr.type = core::WedgeType::stop;
+                
+                if( wedgeStop.isSpreadSpecified )
+                {
+                    attr.hasSpread = true;
+                    attr.spread = core::DivisionsValue{ static_cast<core::DecimalType>( wedgeStop.spread ) };
+                }
+            }
+            
+            //core::DirectionPtr temp{ std::move( myOutDirectionPtr ) };
+            myIsFirstDirectionTypeAdded = false;
+            //myOutDirectionPtr = nullptr;
+            return myOutDirectionPtr;//temp;
         }
         
-        
-        bool DirectionWriter::getIsDirectionEmpty() const
+        void DirectionWriter::addDirectionType( const core::DirectionTypePtr& directionType )
         {
-            return !( myDirection->getHasSound() || myDirection->getDirectionTypeSet().size() > 0 );
+            myOutDirectionPtr->addDirectionType( directionType );
+
+            if( !myIsFirstDirectionTypeAdded && myOutDirectionPtr->getDirectionTypeSet().size() == 2 )
+            {
+                myOutDirectionPtr->removeDirectionType( myOutDirectionPtr->getDirectionTypeSet().cbegin() );
+            }
+            
+            myIsFirstDirectionTypeAdded = true;
         }
-        
-        
-        void DirectionWriter::allocate()
-        {
-            myDirection = core::makeDirection();
-        }
-        
-        
     }
 }
-#endif

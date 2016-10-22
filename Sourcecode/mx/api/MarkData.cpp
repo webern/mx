@@ -157,7 +157,7 @@ namespace mx
             return theInstance;
         }
         
-        bool MarkData::isDynamic() const
+        bool isMarkDynamic( MarkType markType )
         {
             return ( markType == MarkType::p ) ||
             ( markType == MarkType::p ) ||

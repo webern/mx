@@ -9,6 +9,7 @@
 #include "mx/api/TempoData.h"
 #include "mx/api/DirectionData.h"
 #include "mx/api/KeyData.h"
+#include "mx/api/BarlineData.h"
 
 #include <string>
 #include <map>
@@ -89,12 +90,9 @@ namespace mx
             
             // a width value less than 0 means 'unspecified'
             long double width;
-            
-            std::vector<TempoData> tempos;
             std::vector<KeyData> keys;
-            
-            DirectionData directionData;
-            
+            std::vector<BarlineData> barlines;
+
             MeasureData()
             : staves{}
             , timeSignature{}
@@ -118,9 +116,8 @@ namespace mx
         MXAPI_EQUALS_NEXT_MEMBER( implicit )
         MXAPI_EQUALS_NEXT_MEMBER( nonControlling )
         MXAPI_EQUALS_NEXT_MEMBER( width )
-        MXAPI_EQUALS_NEXT_MEMBER( tempos )
         MXAPI_EQUALS_NEXT_MEMBER( keys )
-        MXAPI_EQUALS_LAST_MEMBER( directionData )
+        MXAPI_EQUALS_LAST_MEMBER( barlines )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( MeasureData );
     }

@@ -106,6 +106,7 @@
 #include "mx/core/elements/StringMute.h"
 #include "mx/core/elements/Wedge.h"
 #include "mx/core/elements/Words.h"
+#include "mx/impl/DirectionWriter.h"
 
 namespace mx
 {
@@ -209,6 +210,16 @@ namespace mx
                 }
                 ++localStaffCounter;
             }
+            
+//            auto measureKeyIter = myMeasureKeys.cbegin();
+//            auto measureKeyEnd = myMeasureKeys.cend();
+//            while( measureKeyIter != measureKeyEnd && measureKeyIter->tickTimePosition == 0 )
+//            {
+//                myPropertiesWriter->writeKey( -1, *measureKeyIter );
+//                myMeasureKeys.erase( measureKeyIter );
+//                measureKeyIter = myMeasureKeys.cbegin();
+//                measureKeyEnd = myMeasureKeys.cend();
+//            }
         }
 
 
@@ -287,16 +298,19 @@ namespace mx
             auto measureKeyEnd = myMeasureKeys.cend();
             auto staffKeyIter = inStaff.keys.cbegin();
             auto staffKeyEnd = inStaff.keys.cend();
-            auto staffMarkIter = inStaff.marks.cbegin();
-            auto staffMarkEnd = inStaff.marks.cend();
+            auto directionIter = inStaff.directions.cbegin();
+            auto directionEnd = inStaff.directions.cend();
             
             for( const auto& voice : inStaff.voices )
             {
                 myCursor.voiceIndex = voice.first;
-                for( const auto& apiNote : voice.second.notes )
+                auto noteIter = voice.second.notes.cbegin();
+                auto noteEnd = voice.second.notes.cend();
+                for( ; noteIter != noteEnd; ++noteIter )
                 {
+                    const auto& apiNote = *noteIter;
                     writeForwardOrBackupIfNeeded( apiNote );
-                    auto propsPtr = core::makeProperties();
+                    
                     if( measureKeyIter != measureKeyEnd )
                     {
                         if( measureKeyIter->tickTimePosition <= myCursor.tickTimePosition )
@@ -307,6 +321,7 @@ namespace mx
                             measureKeyEnd = myMeasureKeys.cend();
                         }
                     }
+                    
                     while( clefIter != clefEnd && clefIter->tickTimePosition <= myCursor.tickTimePosition )
                     {
                         myPropertiesWriter->writeClef( myCursor.staffIndex, *clefIter );
@@ -318,33 +333,17 @@ namespace mx
                     }
                     myPropertiesWriter->flushBuffer();
                     
-                    for( ; staffMarkIter != staffMarkEnd && staffMarkIter->tickTimePosition <= myCursor.tickTimePosition; ++staffMarkIter )
+                    for( ; directionIter != directionEnd && directionIter->tickTimePosition <= myCursor.tickTimePosition; ++directionIter )
                     {
-                        const auto& mark = *staffMarkIter;
-                        if( !mark.isDynamic() )
+                        if( isDirectionDataEmpty( *directionIter ) )
                         {
                             continue;
                         }
-                        
                         auto directionMdc = core::makeMusicDataChoice();
                         directionMdc->setChoice( core::MusicDataChoice::Choice::direction );
+                        DirectionWriter directionWriter{ *directionIter, myCursor };
+                        directionMdc->setDirection( directionWriter.getDirection() );
                         myOutMeasure->getMusicDataGroup()->addMusicDataChoice( directionMdc );
-                        auto direction  = directionMdc->getDirection();
-                        auto directionType = direction->getDirectionTypeSet().front();
-                        directionType->setChoice( core::DirectionType::Choice::dynamics );
-                        auto dynamics = directionType->getDynamicsSet().front();
-                        
-                        if( mark.positionData.placement != api::Placement::unspecified )
-                        {
-                            direction->getAttributes()->hasPlacement = true;
-                            direction->getAttributes()->placement = myConverter.convert( mark.positionData.placement );
-                        }
-                        
-                        dynamics->setValue( core::DynamicsValue{ myConverter.convertDynamic( mark.markType ) } );
-                        direction->setHasStaff( true );
-                        direction->getStaff()->setValue( core::StaffNumber{ myCursor.staffIndex + 1 } );
-                        
-                        
                     }
                     
                     auto mdc = core::makeMusicDataChoice();
@@ -353,9 +352,53 @@ namespace mx
                     mdc->setNote( writer.getNote() );
                     myOutMeasure->getMusicDataGroup()->addMusicDataChoice( mdc );
                     advanceCursorIfNeeded( apiNote );
+                } // foreach note
+            } // foreach voice
+            
+            bool areClefsRemaining = clefIter != clefEnd;
+            bool areMeasureKeysRemaining = measureKeyIter != measureKeyEnd;
+            bool areStaffKeysRemaining = staffKeyIter != staffKeyEnd;
+            
+            if( areClefsRemaining || areMeasureKeysRemaining || areStaffKeysRemaining )
+            {
+                for( ; clefIter != clefEnd; ++clefIter )
+                {
+                    myPropertiesWriter->writeClef( myCursor.staffIndex, *clefIter );
+                    ++clefIter;
                 }
+                
+                if( measureKeyIter != measureKeyEnd )
+                {
+                    if( measureKeyIter->tickTimePosition )
+                    {
+                        myPropertiesWriter->writeKey( -1, *measureKeyIter );
+                        myMeasureKeys.erase( measureKeyIter );
+                        measureKeyIter = myMeasureKeys.cbegin();
+                        measureKeyEnd = myMeasureKeys.cend();
+                    }
+                }
+                
+                for( ; staffKeyIter != staffKeyEnd; ++staffKeyIter )
+                {
+                    myPropertiesWriter->writeKey( myCursor.staffIndex, *staffKeyIter );
+                }
+                myPropertiesWriter->flushBuffer();
             }
-        }
+            
+            for( ; directionIter != directionEnd; ++directionIter )
+            {
+                if( isDirectionDataEmpty( *directionIter ) )
+                {
+                    continue;
+                }
+                auto directionMdc = core::makeMusicDataChoice();
+                directionMdc->setChoice( core::MusicDataChoice::Choice::direction );
+                DirectionWriter directionWriter{ *directionIter, myCursor };
+                directionMdc->setDirection( directionWriter.getDirection() );
+                myOutMeasure->getMusicDataGroup()->addMusicDataChoice( directionMdc );
+            }
+            
+        } // func writeVoices
         
         
         void MeasureWriter::writeForwardOrBackupIfNeeded( const api::NoteData& currentNote )

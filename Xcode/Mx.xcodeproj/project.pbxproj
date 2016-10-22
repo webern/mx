@@ -1903,6 +1903,7 @@
 		29454A851D295C5500B90302 /* WorkNumber.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 294548381D295C5500B90302 /* WorkNumber.cpp */; };
 		29454A861D295C5500B90302 /* WorkTitle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 294548391D295C5500B90302 /* WorkTitle.cpp */; };
 		2951A0C51D60F3B700B49A13 /* ScoreConversions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2951A0C31D60F3B700B49A13 /* ScoreConversions.cpp */; };
+		2951E1681DBA9C7300826CEF /* WedgeData.h in Headers */ = {isa = PBXBuildFile; fileRef = 2951E1671DBA9C7300826CEF /* WedgeData.h */; };
 		295C49371D2CB41E0015E349 /* NoteheadTextChoice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 295C49361D2CB41E0015E349 /* NoteheadTextChoice.cpp */; };
 		295DDE101D2C0D4D00A2881D /* FromXElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 295DDE0F1D2C0D4D00A2881D /* FromXElement.cpp */; };
 		29766AC31DABFC3C00CCE2AC /* TempoData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29766AC21DABFBA500CCE2AC /* TempoData.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -2709,6 +2710,7 @@
 		294847721D5ADD550025138E /* Throw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Throw.h; path = ../Sourcecode/mx/utility/Throw.h; sourceTree = "<group>"; };
 		2951A0C31D60F3B700B49A13 /* ScoreConversions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ScoreConversions.cpp; path = ../Sourcecode/mx/core/ScoreConversions.cpp; sourceTree = "<group>"; };
 		2951A0C41D60F3B700B49A13 /* ScoreConversions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ScoreConversions.h; path = ../Sourcecode/mx/core/ScoreConversions.h; sourceTree = "<group>"; };
+		2951E1671DBA9C7300826CEF /* WedgeData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WedgeData.h; path = ../Sourcecode/mx/api/WedgeData.h; sourceTree = "<group>"; };
 		295545861D28E5A30062D7E5 /* Accent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Accent.h; path = ../Sourcecode/mx/core/elements/Accent.h; sourceTree = "<group>"; };
 		295545871D28E5A30062D7E5 /* Accidental.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Accidental.h; path = ../Sourcecode/mx/core/elements/Accidental.h; sourceTree = "<group>"; };
 		295545881D28E5A30062D7E5 /* AccidentalAttributes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AccidentalAttributes.h; path = ../Sourcecode/mx/core/elements/AccidentalAttributes.h; sourceTree = "<group>"; };
@@ -4871,6 +4873,7 @@
 		29EF44071D6E6CE900DBDAB9 /* api */ = {
 			isa = PBXGroup;
 			children = (
+				2951E1671DBA9C7300826CEF /* WedgeData.h */,
 				29FFAC7F1DB9C8B600DC8AE1 /* CurveData.h */,
 				293488D41D94903B00D0C407 /* ApiCommon.h */,
 				292D1DD01D9A43A500CDD9F4 /* ClefData.cpp */,
@@ -5002,6 +5005,7 @@
 			files = (
 				29FFAC801DB9C8B600DC8AE1 /* CurveData.h in Headers */,
 				29766AC71DAC014300CCE2AC /* MetronomeReader.h in Headers */,
+				2951E1681DBA9C7300826CEF /* WedgeData.h in Headers */,
 				29398BB11DB1917B00475CD5 /* NotationsWriter.h in Headers */,
 				29B4E8241DA9CFC2005DC6D1 /* NoteAttachmentData.h in Headers */,
 				29C29B891DAEC00C00D3A884 /* ScoreReader.h in Headers */,

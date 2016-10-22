@@ -140,6 +140,8 @@ namespace mx
             otherTechnical,
         };
 
+        bool isMarkDynamic( MarkType );
+        
         using MarkSmuflEntry = std::pair<const MarkType, const SmuflGlyphname>;
         using MarkSmuflMap = std::map<const MarkType, const SmuflGlyphname>;
         
@@ -169,7 +171,38 @@ namespace mx
             int tickTimePosition;
             PrintData printData;
             PositionData positionData;
-            bool isDynamic() const;
+            
+            MarkData()
+            : markType( MarkType::unspecified )
+            , name{}
+            , smuflName{}
+            , smuflCodepoint{ 0 }
+            , tickTimePosition{ 0 }
+            , printData{}
+            , positionData{}
+            {
+                
+            }
+        };
+        
+        // because of the horrible <direction> element
+        // we another mark struct which does *not*
+        // know about its position or tickTimePosition
+        struct DirectionMark
+        {
+            MarkType markType;
+            std::string name;
+            std::string smuflName;
+            char16_t smuflCodepoint;
+            
+            DirectionMark()
+            : markType( MarkType::unspecified )
+            , name{}
+            , smuflName{}
+            , smuflCodepoint{ 0 }
+            {
+                
+            }
         };
         
         MXAPI_EQUALS_BEGIN( MarkData )
@@ -182,5 +215,13 @@ namespace mx
         MXAPI_EQUALS_LAST_MEMBER( positionData )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( MarkData );
+        
+        MXAPI_EQUALS_BEGIN( DirectionMark )
+        MXAPI_EQUALS_FIRST_MEMBER( markType )
+        MXAPI_EQUALS_NEXT_MEMBER( name )
+        MXAPI_EQUALS_NEXT_MEMBER( smuflName )
+        MXAPI_EQUALS_LAST_MEMBER( smuflCodepoint )
+        MXAPI_EQUALS_END;
+        MXAPI_NOT_EQUALS_AND_VECTORS( DirectionMark );
     }
 }
