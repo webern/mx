@@ -70,6 +70,26 @@ namespace mxtest
     }
     
     
+    const MxFile& MxFileRepository::getTestFile( const std::string& fileName )
+    {
+        const auto& instance = getInstance();
+
+        auto lambda = [&]( const MxFile& inMxFile )
+        {
+            return fileName == inMxFile.fileName;
+        };
+        
+        const auto iter = std::find_if( instance.myTestFiles.cbegin(), instance.myTestFiles.cend(), lambda );
+        
+        if( iter == instance.myTestFiles.cend() )
+        {
+            throw std::runtime_error( "MxFileRepository::getTestFile fileName not found" );
+        }
+        
+        return *iter;
+    }
+    
+    
     const MxFileRepository& MxFileRepository::getInstance()
     {
         static MxFileRepository ourInstance;

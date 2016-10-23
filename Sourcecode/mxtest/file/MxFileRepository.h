@@ -26,6 +26,7 @@ namespace mxtest
         static const std::string& getSubdirectory( const std::string& fileName );
         static MxFiles getTestFiles( int maxFileSizeBytes );
         static const MxFiles& getTestFiles();
+        static const MxFile& getTestFile( const std::string& fileName );
         
     private:
         MxFileRepository();

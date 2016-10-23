@@ -6,6 +6,7 @@
 #include "mx/api/MeasureData.h"
 #include "mx/impl/MeasureCursor.h"
 #include "mx/api/SystemData.h"
+#include "mx/api/BarlineData.h"
 #include "mx/impl/PropertiesWriter.h"
 #include "mx/impl/Converter.h"
 
@@ -19,6 +20,8 @@ namespace mx
         using PartwiseMeasurePtr = std::shared_ptr<PartwiseMeasure>;
         class Properties;
         using PropertiesPtr = std::shared_ptr<Properties>;
+        class Direction;
+        using DirectionPtr = std::shared_ptr<Direction>;
 	}
 
     namespace impl
@@ -40,6 +43,8 @@ namespace mx
             std::unique_ptr<PropertiesWriter> myPropertiesWriter;
             std::list<api::KeyData> myMeasureKeys;
             const Converter myConverter;
+            std::vector<api::BarlineData>::const_iterator myBarlinesIter;
+            std::vector<api::BarlineData>::const_iterator myBarlinesEnd;
 
         private:
             void writeMeasureGlobals();
@@ -49,7 +54,7 @@ namespace mx
             void backup( const int ticks );
             void forward( const int ticks );
             void advanceCursorIfNeeded( const api::NoteData& currentNote );
-
+            void writeBarlines( int tickTimePosition );
             
             template<typename T>
             std::vector<T> findItemsAtTimePosition( const std::vector<T>& inItems, int inTickTimePosition )

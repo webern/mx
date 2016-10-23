@@ -11,7 +11,7 @@ int main(int argc, const char * argv[])
     UNUSED_PARAMETER( argc )
     UNUSED_PARAMETER( argv )
     cpul::TestTimer timer;
-    //cpulRun( true );
+    cpulRun( true );
     mxtest::roundTrip();
     doStuff();
     timer.report( "Total runtime for all tests" );
@@ -398,6 +398,9 @@ void doStuff()
     noteP->durationData.durationTimeTicks = 32;
     
     measureP->barlines.emplace_back( BarlineData{} );
+    auto barlineP = &measureP->barlines.back();
+    barlineP->tickTimePosition = std::numeric_limits<int>::max();
+    barlineP->barlineType = BarlineType::lightHeavy;
     
     // save the file
     auto docId = DocumentManager::getInstance().createFromScore( score );

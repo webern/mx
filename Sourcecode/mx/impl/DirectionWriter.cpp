@@ -34,6 +34,7 @@
 #include "mx/core/elements/StringMute.h"
 #include "mx/core/elements/Wedge.h"
 #include "mx/core/elements/Words.h"
+#include "mx/api/BarlineData.h"
 
 namespace mx
 {
@@ -135,6 +136,7 @@ namespace mx
             //myOutDirectionPtr = nullptr;
             return myOutDirectionPtr;//temp;
         }
+        
         
         void DirectionWriter::addDirectionType( const core::DirectionTypePtr& directionType )
         {

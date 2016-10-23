@@ -107,6 +107,17 @@
 #include "mx/core/elements/Wedge.h"
 #include "mx/core/elements/Words.h"
 #include "mx/impl/DirectionWriter.h"
+#include "mx/core/elements/Barline.h"
+#include "mx/core/elements/BarStyle.h"
+#include "mx/core/elements/Coda.h"
+#include "mx/core/elements/EditorialGroup.h"
+#include "mx/core/elements/Ending.h"
+#include "mx/core/elements/Fermata.h"
+#include "mx/core/elements/Repeat.h"
+#include "mx/core/elements/Segno.h"
+#include "mx/core/elements/WavyLine.h"
+
+#include <limits>
 
 namespace mx
 {
@@ -126,6 +137,8 @@ namespace mx
         , myScoreWriter{ inScoreWriter }
         , myPropertiesWriter{ nullptr }
         , myConverter{}
+        , myBarlinesIter{ inMeasureData.barlines.cbegin() }
+        , myBarlinesEnd{ inMeasureData.barlines.cend() }
         {
             for( const auto& keyData : myMeasureData.keys )
             {
@@ -139,15 +152,20 @@ namespace mx
             myOutMeasure = core::makePartwiseMeasure();
             myPropertiesWriter = std::unique_ptr<PropertiesWriter>{ new PropertiesWriter{ myOutMeasure } };
             myCursor.reset();
-            
+            myBarlinesIter = myMeasureData.barlines.cbegin();
+            myBarlinesEnd = myMeasureData.barlines.cend();
             
             writeMeasureGlobals();
             writeStaves();
+            myPropertiesWriter->flushBuffer();
+            writeBarlines( std::numeric_limits<int>::max() );
+            myPropertiesWriter = nullptr;
             return myOutMeasure;
         }
         
         void MeasureWriter::writeMeasureGlobals()
         {
+            writeBarlines( 0 );
             auto& measureAttr = *myOutMeasure->getAttributes();
             
             if( myMeasureData.number.size() > 0 )
@@ -210,6 +228,10 @@ namespace mx
                 }
                 ++localStaffCounter;
             }
+            
+            // TODO - these might end up in the wrong place, figure out how
+            // to preserve location if the barline is not at the beginning or
+            // the end
             
 //            auto measureKeyIter = myMeasureKeys.cbegin();
 //            auto measureKeyEnd = myMeasureKeys.cend();
@@ -445,5 +467,26 @@ namespace mx
             }
         }
         
+        
+        void MeasureWriter::writeBarlines( int tickTimePosition )
+        {
+            for( ; myBarlinesIter != myBarlinesEnd && myBarlinesIter->tickTimePosition <= tickTimePosition; ++myBarlinesIter )
+            {
+                auto mdc = core::makeMusicDataChoice();
+                mdc->setChoice( core::MusicDataChoice::Choice::barline );
+                auto barlineElement = mdc->getBarline();
+                if( myBarlinesIter->barlineType != api::BarlineType::unspecified && myBarlinesIter->barlineType != api::BarlineType::unsupported )
+                {
+                    barlineElement->setHasBarStyle( true );
+                    barlineElement->getBarStyle()->setValue( myConverter.convert( myBarlinesIter->barlineType ) );
+                }
+                if( myBarlinesIter->location != api::HorizontalAlignment::unspecified )
+                {
+                    barlineElement->getAttributes()->hasLocation = true;
+                    barlineElement->getAttributes()->location = myConverter.convertBarlinePlacement( myBarlinesIter->location );
+                }
+                myOutMeasure->getMusicDataGroup()->addMusicDataChoice( mdc );
+            }
+        }
     }
 }
