@@ -50,10 +50,11 @@ namespace mx
         : myNoteData{ inNoteData }
         , myCursor{ inCursor }
         , myScoreWriter{ inScoreWriter }
+        , myConverter{}
         , myOutNote{ nullptr }
         , myOutNoteChoice( nullptr )
         , myOutFullNoteGroup( nullptr )
-        , myConverter{}
+        , myOutFullNoteTypeChoice{ nullptr }
         {
             
         }

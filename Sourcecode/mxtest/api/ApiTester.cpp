@@ -15,10 +15,30 @@ namespace mxtest
 		MxFile inFile,
 	  	std::string cppFileName,
         int cppFileLineNumber)
-    : MxFileTest{ inFile, std::string{ "ApiRoundTripTest_" } + std::string{ inFile.getFileNamePart() }, cppFileName, cppFileLineNumber }
+    : MxFileTest{ inFile, "ApiRoundTripTest" , cppFileName, cppFileLineNumber }
     , myScoreDataCreator{ std::move( inScoreDataCreator ) }
+    , myIntermediateFilePath{}
+    , myScrubbedFilePath{}
+    , myExpectedFilePath{}
+    , myFinalFilePath{}
     {
+        std::stringstream ss;
+        ss << "./apitester." << testFileNamePart() << ".intermediate.xml";
+        myIntermediateFilePath = ss.str();
+        
+        ss.str( "" );
+        ss << "./apitester." << testFileNamePart() << ".input.xml";
+        myScrubbedFilePath = ss.str();
+        
+        ss.str( "" );
+        ss << "./apitester." << testFileNamePart() << ".expected.xml";
+        myExpectedFilePath = ss.str();
 
+        ss.str( "" );
+        ss << "./apitester." << testFileNamePart() << ".final.xml";
+        myFinalFilePath = ss.str();
+        
+        deleteFiles();
     }
 
     void ApiTester::runTestCode()
@@ -33,16 +53,12 @@ namespace mxtest
         
         // save what we loaded back to disk
         auto initialScoreDataDocId = docMgr.createFromScore( initialLoadScoreData );
-        std::stringstream intermediateFilePathSstr;
-        intermediateFilePathSstr << "./" << testFileNamePart();
-        intermediateFilePathSstr << ".intermediate.xml";
-        const std::string intermediateFilePath = intermediateFilePathSstr.str();
         
         // save the 'intermediate' ScoreData
-        docMgr.writeToFile( initialScoreDataDocId, intermediateFilePath );
+        docMgr.writeToFile( initialScoreDataDocId, myIntermediateFilePath );
         
         // load what what we just saved back up into memory
-        auto intermediateFileLoadDocId = docMgr.createFromFile( intermediateFilePath );
+        auto intermediateFileLoadDocId = docMgr.createFromFile( myIntermediateFilePath );
         const auto actualScoreData = docMgr.getData( intermediateFileLoadDocId );
         
         const bool areEqual = ( expectedScoreData == actualScoreData );
@@ -53,8 +69,7 @@ namespace mxtest
             docMgr.destroyDocument( initialLoadDocId );
             docMgr.destroyDocument( initialScoreDataDocId );
             docMgr.destroyDocument( intermediateFileLoadDocId );
-            // delete the intermediate score data.
-            deleteFileNoThrow( intermediateFilePath );
+            deleteFiles();
             return;
         }
         
@@ -65,24 +80,15 @@ namespace mxtest
         // save a "scrubbed" version of the input
         auto xdoc = mx::xml::XFactory::makeXDoc();
         xdoc->loadFile( testFilePath() );
-        std::stringstream inputXmlFilePath;
-        inputXmlFilePath << "./" << testFileNamePart();
-        inputXmlFilePath << ".input.xml";
-        xdoc->saveFile( inputXmlFilePath.str() );
+        xdoc->saveFile( myScrubbedFilePath );
         
         // save the 'expected' ScoreData
-        std::stringstream expectedXmlFilePath;
-        expectedXmlFilePath << "./" << testFileNamePart();
-        expectedXmlFilePath << ".expected.xml";
         auto expectedScoeDataDocId = docMgr.createFromScore( expectedScoreData );
-        docMgr.writeToFile( expectedScoeDataDocId, expectedXmlFilePath.str() );
+        docMgr.writeToFile( expectedScoeDataDocId, myExpectedFilePath );
         
         // save the 'actual' ScoreData
-        std::stringstream actualXmlFilePath;
-        actualXmlFilePath << "./" << testFileNamePart();
-        actualXmlFilePath << ".final.xml";
         auto finalDocId = docMgr.createFromScore( actualScoreData );
-        docMgr.writeToFile( finalDocId, actualXmlFilePath.str() );
+        docMgr.writeToFile( finalDocId, myFinalFilePath );
         
         docMgr.destroyDocument( initialLoadDocId );
         docMgr.destroyDocument( initialScoreDataDocId );
@@ -90,5 +96,13 @@ namespace mxtest
         docMgr.destroyDocument( expectedScoeDataDocId );
         docMgr.destroyDocument( finalDocId );
         
+    }
+        
+    void ApiTester::deleteFiles() const
+    {
+        deleteFileNoThrow( myIntermediateFilePath );
+        deleteFileNoThrow( myScrubbedFilePath );
+        deleteFileNoThrow( myExpectedFilePath );
+        deleteFileNoThrow( myFinalFilePath );
     }
 }

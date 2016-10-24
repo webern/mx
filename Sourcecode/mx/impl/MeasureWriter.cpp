@@ -314,7 +314,7 @@ namespace mx
         void MeasureWriter::writeVoices( const api::StaffData& inStaff )
         {
             auto clefIter = inStaff.clefs.cbegin();
-            auto clefEnd = inStaff.clefs.cend();
+            const auto clefEnd = inStaff.clefs.cend();
             while( clefIter != clefEnd && clefIter->tickTimePosition == 0 ) { ++clefIter; }
             auto measureKeyIter = myMeasureKeys.cbegin();
             auto measureKeyEnd = myMeasureKeys.cend();
@@ -383,10 +383,11 @@ namespace mx
             
             if( areClefsRemaining || areMeasureKeysRemaining || areStaffKeysRemaining )
             {
-                for( ; clefIter != clefEnd; ++clefIter )
+                for( ; clefIter != inStaff.clefs.cend(); ++clefIter )
                 {
-                    myPropertiesWriter->writeClef( myCursor.staffIndex, *clefIter );
-                    ++clefIter;
+                    MX_ASSERT( clefIter != inStaff.clefs.cend() );
+                    api::ClefData clef = *clefIter;
+                    myPropertiesWriter->writeClef( myCursor.staffIndex, clef );
                 }
                 
                 if( measureKeyIter != measureKeyEnd )
@@ -425,6 +426,7 @@ namespace mx
         
         void MeasureWriter::writeForwardOrBackupIfNeeded( const api::NoteData& currentNote )
         {
+            myPropertiesWriter->flushBuffer();
             const int timeDifference = currentNote.tickTimePosition - myCursor.tickTimePosition;
             if( timeDifference < 0 )
             {

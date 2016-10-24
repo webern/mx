@@ -25,6 +25,10 @@
 		297556091D135AA3007732D0 /* UtilityTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297556071D135AA3007732D0 /* UtilityTest.cpp */; };
 		297DD7C91D1A4BD1003BADC1 /* ImportTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297DD7C81D1A4BD1003BADC1 /* ImportTest.cpp */; };
 		298F0F4D1D1E4981005C3D9D /* ImportTestImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 298F0F4B1D1E4981005C3D9D /* ImportTestImpl.cpp */; };
+		29B48EDB1DBE7F550030A974 /* MeasureWriterTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29B48ED71DBE7F550030A974 /* MeasureWriterTest.cpp */; };
+		29B48EDC1DBE7F550030A974 /* NoteWriterTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29B48ED81DBE7F550030A974 /* NoteWriterTest.cpp */; };
+		29B48EDD1DBE7F550030A974 /* PartWriterTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29B48ED91DBE7F550030A974 /* PartWriterTest.cpp */; };
+		29B48EDE1DBE7F550030A974 /* ScoreWriterTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29B48EDA1DBE7F550030A974 /* ScoreWriterTest.cpp */; };
 		29C01D6C1D1312FA0094BE61 /* AccentTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C01B641D1312F90094BE61 /* AccentTest.cpp */; };
 		29C01D6D1D1312FA0094BE61 /* AccidentalMarkTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C01B651D1312F90094BE61 /* AccidentalMarkTest.cpp */; };
 		29C01D6E1D1312FA0094BE61 /* AccidentalTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C01B661D1312F90094BE61 /* AccidentalTest.cpp */; };
@@ -493,6 +497,11 @@
 		298F0F4B1D1E4981005C3D9D /* ImportTestImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImportTestImpl.cpp; path = ../Sourcecode/mxtest/import/ImportTestImpl.cpp; sourceTree = "<group>"; };
 		298F0F4C1D1E4981005C3D9D /* ImportTestImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImportTestImpl.h; path = ../Sourcecode/mxtest/import/ImportTestImpl.h; sourceTree = "<group>"; };
 		299F7FF61CA8D2620084CAE5 /* MxTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MxTest; sourceTree = BUILT_PRODUCTS_DIR; };
+		29B48ED71DBE7F550030A974 /* MeasureWriterTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MeasureWriterTest.cpp; path = ../Sourcecode/mxtest/impl/MeasureWriterTest.cpp; sourceTree = "<group>"; };
+		29B48ED81DBE7F550030A974 /* NoteWriterTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NoteWriterTest.cpp; path = ../Sourcecode/mxtest/impl/NoteWriterTest.cpp; sourceTree = "<group>"; };
+		29B48ED91DBE7F550030A974 /* PartWriterTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PartWriterTest.cpp; path = ../Sourcecode/mxtest/impl/PartWriterTest.cpp; sourceTree = "<group>"; };
+		29B48EDA1DBE7F550030A974 /* ScoreWriterTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ScoreWriterTest.cpp; path = ../Sourcecode/mxtest/impl/ScoreWriterTest.cpp; sourceTree = "<group>"; };
+		29B48EDF1DBE8C450030A974 /* ApiLy43eScoreData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ApiLy43eScoreData.h; path = ../Sourcecode/mxtest/api/ApiLy43eScoreData.h; sourceTree = "<group>"; };
 		29C01B641D1312F90094BE61 /* AccentTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AccentTest.cpp; path = ../Sourcecode/mxtest/core/AccentTest.cpp; sourceTree = "<group>"; };
 		29C01B651D1312F90094BE61 /* AccidentalMarkTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AccidentalMarkTest.cpp; path = ../Sourcecode/mxtest/core/AccidentalMarkTest.cpp; sourceTree = "<group>"; };
 		29C01B661D1312F90094BE61 /* AccidentalTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AccidentalTest.cpp; path = ../Sourcecode/mxtest/core/AccidentalTest.cpp; sourceTree = "<group>"; };
@@ -1676,12 +1685,13 @@
 		299F7FED1CA8D2620084CAE5 = {
 			isa = PBXGroup;
 			children = (
-				2958970F1DB953BC00F18FBA /* file */,
 				29EF440E1D6E8F4700DBDAB9 /* api */,
 				297555D51D134FDA007732D0 /* bin */,
 				297556161D136AC8007732D0 /* control */,
 				292E37201CA8D6A400CC63BB /* core */,
 				292E371B1CA8D4B500CC63BB /* cpul */,
+				2958970F1DB953BC00F18FBA /* file */,
+				29B48ED61DBE7F470030A974 /* impl */,
 				297DD7C61D1A4BAE003BADC1 /* import */,
 				299F7FF71CA8D2620084CAE5 /* Products */,
 				297555D61D134FE3007732D0 /* utility */,
@@ -1697,16 +1707,28 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		29B48ED61DBE7F470030A974 /* impl */ = {
+			isa = PBXGroup;
+			children = (
+				29B48ED71DBE7F550030A974 /* MeasureWriterTest.cpp */,
+				29B48ED81DBE7F550030A974 /* NoteWriterTest.cpp */,
+				29B48ED91DBE7F550030A974 /* PartWriterTest.cpp */,
+				29B48EDA1DBE7F550030A974 /* ScoreWriterTest.cpp */,
+			);
+			name = impl;
+			sourceTree = "<group>";
+		};
 		29EF440E1D6E8F4700DBDAB9 /* api */ = {
 			isa = PBXGroup;
 			children = (
 				294775E11D934C510006E1AD /* ApiLoadSurvivalTest.cpp */,
+				29B48EDF1DBE8C450030A974 /* ApiLy43eScoreData.h */,
 				29FFAC7C1DB998C100DC8AE1 /* ApiLy43eTest.cpp */,
+				2903C9471DBC7ED600218C9E /* ApiTester.cpp */,
+				2903C9481DBC7ED600218C9E /* ApiTester.h */,
 				29EF440F1D6E8F5500DBDAB9 /* DocumentManagerTest.cpp */,
 				29CD722E1DB8421100FB7153 /* RoundTrip.h */,
 				2903C9461DBC7D7600218C9E /* ScoreDataCreator.h */,
-				2903C9471DBC7ED600218C9E /* ApiTester.cpp */,
-				2903C9481DBC7ED600218C9E /* ApiTester.h */,
 			);
 			name = api;
 			sourceTree = "<group>";
@@ -1898,6 +1920,7 @@
 				29C01EC51D1312FA0094BE61 /* StoppedTest.cpp in Sources */,
 				29C01E711D1312FA0094BE61 /* PageWidthTest.cpp in Sources */,
 				29C01EB91D1312FA0094BE61 /* StaffLinesTest.cpp in Sources */,
+				29B48EDE1DBE7F550030A974 /* ScoreWriterTest.cpp in Sources */,
 				29C01E781D1312FA0094BE61 /* PartNameDisplayTest.cpp in Sources */,
 				29C01E371D1312FA0094BE61 /* MetronomeDotTest.cpp in Sources */,
 				2903C9491DBC7ED600218C9E /* ApiTester.cpp in Sources */,
@@ -1948,6 +1971,7 @@
 				29C01DBA1D1312FA0094BE61 /* DisplayStepTest.cpp in Sources */,
 				29C01DF31D1312FA0094BE61 /* GlassTest.cpp in Sources */,
 				29C01E851D1312FA0094BE61 /* PlayTest.cpp in Sources */,
+				29B48EDD1DBE7F550030A974 /* PartWriterTest.cpp in Sources */,
 				29C01DBB1D1312FA0094BE61 /* DisplayTextTest.cpp in Sources */,
 				29C01EAC1D1312FA0094BE61 /* SlurTest.cpp in Sources */,
 				29C01F061D1312FA0094BE61 /* YesNoNumberTest.cpp in Sources */,
@@ -1963,6 +1987,7 @@
 				29C01E651D1312FA0094BE61 /* OrnamentsTest.cpp in Sources */,
 				29C01DC91D1312FA0094BE61 /* DownBowTest.cpp in Sources */,
 				29C01EF51D1312FA0094BE61 /* UnstressTest.cpp in Sources */,
+				29B48EDB1DBE7F550030A974 /* MeasureWriterTest.cpp in Sources */,
 				29C01DAC1D1312FA0094BE61 /* DefaultsTest.cpp in Sources */,
 				29C01DC71D1312FA0094BE61 /* DoubleTest.cpp in Sources */,
 				29C01D721D1312FA0094BE61 /* AccordionMiddleTest.cpp in Sources */,
@@ -2046,6 +2071,7 @@
 				297556081D135AA3007732D0 /* UtilityImplTest.cpp in Sources */,
 				29C01F041D1312FA0094BE61 /* WorkTest.cpp in Sources */,
 				29C01EAB1D1312FA0094BE61 /* SlideTest.cpp in Sources */,
+				29B48EDC1DBE7F550030A974 /* NoteWriterTest.cpp in Sources */,
 				29C01E521D1312FA0094BE61 /* NormalDotTest.cpp in Sources */,
 				29C01EB61D1312FA0094BE61 /* StaffDetailsTest.cpp in Sources */,
 				29C01D7B1D1312FA0094BE61 /* ArrowTest.cpp in Sources */,
@@ -2210,7 +2236,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -2255,7 +2281,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;

@@ -23,6 +23,13 @@ namespace mxtest
         
     private:
         ScoreDataCreatorPtr myScoreDataCreator;
+        std::string myIntermediateFilePath;
+        std::string myScrubbedFilePath;
+        std::string myExpectedFilePath;
+        std::string myFinalFilePath;
+        
+    private:
+        void deleteFiles() const;
     };
 }
 

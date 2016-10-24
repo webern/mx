@@ -80,16 +80,12 @@ namespace mx
             mutable std::mutex myMutex;
             const core::PartwiseMeasure& myPartwiseMeasure;
             const int myNumStaves;
-            const int myGlobalTicksPerQuarter;
-            const bool myIsFirstMeasure;
-            const bool myIsFirstPart;
             const int myMeasureIndex;
             const Converter myConverter;
             
             mutable api::MeasureData myOutMeasureData;
             mutable Cursor myCurrentCursor;
             mutable Cursor myPreviousCursor;
-            
             
         private:
             void addStavesToOutMeasure() const;

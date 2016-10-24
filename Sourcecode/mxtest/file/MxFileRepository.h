@@ -13,8 +13,7 @@
 namespace mxtest
 {
     // set to zero for infitinity
-    constexpr const int MX_COMPILE_MAX_FILE_SIZE_KILOBYTES = 10000;
-    constexpr const int MX_COMPILE_MAX_FILE_SIZE_BYTES = 1024 * MX_COMPILE_MAX_FILE_SIZE_KILOBYTES;
+    constexpr const int MX_COMPILE_MAX_FILE_SIZE_BYTES = 1024 * 100000;
     
     using StringPair = std::pair<std::string, std::string>;
     using StringMap = std::map<std::string, std::string>;

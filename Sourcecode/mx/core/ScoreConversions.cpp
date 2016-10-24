@@ -115,7 +115,6 @@ namespace mx
             attr_new->hasVersion = attr_old->hasVersion;
             attr_new->version = attr_old->version;
             PartwisePartSet pwParts;
-            using Intz = TimewisePartSet::size_type;
             
             /* Create and add a ScorePartwisePart for each part in the main list */
             auto firstPart = makePartwisePart();

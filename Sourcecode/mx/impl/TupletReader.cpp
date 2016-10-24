@@ -23,8 +23,8 @@ namespace mx
     {
         TupletReader::TupletReader( const core::Tuplet& inMxTuplet, impl::Cursor inCursor, const core::Note& inNote )
         : myTuplet{ inMxTuplet }
-        , myCursor{ inCursor }
         , myNote{ inNote }
+        , myCursor{ inCursor }
         {
             
         }

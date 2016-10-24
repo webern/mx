@@ -51,9 +51,9 @@ namespace mx
             
             WedgeStop()
             : numberLevel{ -1 }
+            , positionData{}
             , isSpreadSpecified{ false }
             , spread{ 0.0 }
-            , positionData{}
             {
                 
             }

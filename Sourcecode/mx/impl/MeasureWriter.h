@@ -50,7 +50,8 @@ namespace mx
             void writeMeasureGlobals();
             void writeSystemInfo();
             void writeStaves();
-            void writeVoices( const api::StaffData& inStaff );            void writeForwardOrBackupIfNeeded( const api::NoteData& currentNote );
+            void writeVoices( const api::StaffData& inStaff );
+            void writeForwardOrBackupIfNeeded( const api::NoteData& currentNote );
             void backup( const int ticks );
             void forward( const int ticks );
             void advanceCursorIfNeeded( const api::NoteData& currentNote );

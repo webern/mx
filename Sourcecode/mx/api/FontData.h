@@ -70,8 +70,8 @@ namespace mx
             FontData()
             : sizeType{ FontSizeType::unspecified }
             , sizePoint{ -1.0L }
-            , style{ FontStyle::unspecified }
             , sizeCss{ CssSize::unspecified }
+            , style{ FontStyle::unspecified }
             , weight{ FontWeight::unspecified }
             {
                 

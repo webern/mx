@@ -86,14 +86,11 @@ namespace mx
         : myMutex{}
         , myPartwiseMeasure{ inPartwiseMeasureRef }
         , myNumStaves{ params.numStaves }
-        , myGlobalTicksPerQuarter{ params.globalTicksPerQuarter }
-        , myIsFirstMeasure{ params.isFirstMeasure }
-        , myIsFirstPart{ params.isFirstPart }
+        , myMeasureIndex( params.measureIndex )
+        , myConverter{}
         , myOutMeasureData{}
         , myCurrentCursor{ params.numStaves, params.globalTicksPerQuarter }
         , myPreviousCursor{ params.numStaves, params.globalTicksPerQuarter }
-        , myMeasureIndex( params.measureIndex )
-        , myConverter{}
         {
             
         }
