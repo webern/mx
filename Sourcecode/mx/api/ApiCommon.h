@@ -8,6 +8,7 @@
 #include <ostream>
 #include <vector>
 #include <map>
+#include <limits>
 
 namespace mx
 {
@@ -21,6 +22,7 @@ namespace mx
         }
 
         constexpr int DEFAULT_TICKS_PER_QUARTER = 3 * 4 * 5 * 7;
+        constexpr int TICK_TIME_INFINITY = std::numeric_limits<int>::max();
 
         enum class Bool
         {

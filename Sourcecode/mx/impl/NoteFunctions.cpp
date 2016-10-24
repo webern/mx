@@ -116,7 +116,7 @@ namespace mx
             }
             
             myOutNoteData.pitchData.octave = reader.getOctave();
-            myOutNoteData.staffIndex = reader.getStaffNumber() - 1;
+            //myOutNoteData.staffIndex = reader.getStaffNumber() - 1;
             myOutNoteData.userRequestedVoiceNumber = reader.getVoiceNumber();
             
             if( reader.getIsDurationTypeSpecified() )

@@ -9,8 +9,7 @@ namespace mx
     namespace api
     {
         ClefData::ClefData()
-        : staffIndex{ 0 }
-        , symbol{ DEFAULT_CLEF_SYMBOL }
+        : symbol{ DEFAULT_CLEF_SYMBOL }
         , line{ DEFAULT_CLEF_LINE }
         , octaveChange{ DEFAULT_CLEF_OCTAVE_CHANGE }
         , tickTimePosition{ 0 }

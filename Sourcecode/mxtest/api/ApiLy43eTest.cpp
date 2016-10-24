@@ -53,10 +53,16 @@ namespace mxtest
             directionP->marks.emplace_back( DirectionMark{} );
             auto directionMarkP = &directionP->marks.back();
             directionMarkP->markType = MarkType::ffff;
+            directionMarkP->name = "ffff";
+            auto glyph = &MarkSmufl::getSmuflGlyphname( directionMarkP->markType );
+            directionMarkP->smuflName = glyph->below;
+            directionMarkP->smuflCodepoint = Smufl::findCodepoint( directionMarkP->smuflName );
             
             // measure 1 - music
-            staff1P->voices[0].notes.emplace_back( NoteData{} );
-            auto noteP = &staff1P->voices[0].notes.back();
+            int voice = 0;
+            staff1P->voices[voice].notes.emplace_back( NoteData{} );
+            auto noteP = &staff1P->voices[voice].notes.back();
+            noteP->userRequestedVoiceNumber = voice + 1;
             noteP->tickTimePosition = 0;
             noteP->pitchData.step = Step::c;
             noteP->pitchData.octave = 5;
@@ -65,8 +71,9 @@ namespace mxtest
             noteP->durationData.durationName = DurationName::quarter;
             noteP->durationData.durationTimeTicks = 8;
             
-            staff1P->voices[0].notes.emplace_back( NoteData{} );
-            noteP = &staff1P->voices[0].notes.back();
+            staff1P->voices[voice].notes.emplace_back( NoteData{} );
+            noteP = &staff1P->voices[voice].notes.back();
+            noteP->userRequestedVoiceNumber = voice + 1;
             noteP->tickTimePosition = 8;
             noteP->pitchData.step = Step::b;
             noteP->pitchData.octave = 4;
@@ -75,8 +82,9 @@ namespace mxtest
             noteP->durationData.durationName = DurationName::quarter;
             noteP->durationData.durationTimeTicks = 8;
             
-            staff1P->voices[0].notes.emplace_back( NoteData{} );
-            noteP = &staff1P->voices[0].notes.back();
+            staff1P->voices[voice].notes.emplace_back( NoteData{} );
+            noteP = &staff1P->voices[voice].notes.back();
+            noteP->userRequestedVoiceNumber = voice + 1;
             noteP->tickTimePosition = 16;
             noteP->pitchData.step = Step::a;
             noteP->pitchData.octave = 4;
@@ -95,9 +103,14 @@ namespace mxtest
             directionP->marks.emplace_back( DirectionMark{} );
             directionMarkP = &directionP->marks.back();
             directionMarkP->markType = MarkType::p;
+            directionMarkP->name = "p";
+            glyph = &MarkSmufl::getSmuflGlyphname( directionMarkP->markType );
+            directionMarkP->smuflName = glyph->below;
+            directionMarkP->smuflCodepoint = Smufl::findCodepoint( directionMarkP->smuflName );
             
-            staff1P->voices[0].notes.emplace_back( NoteData{} );
-            noteP = &staff1P->voices[0].notes.back();
+            staff1P->voices[voice].notes.emplace_back( NoteData{} );
+            noteP = &staff1P->voices[voice].notes.back();
+            noteP->userRequestedVoiceNumber = voice + 1;
             noteP->tickTimePosition = 24;
             noteP->pitchData.step = Step::g;
             noteP->pitchData.octave = 4;
@@ -106,8 +119,10 @@ namespace mxtest
             noteP->durationData.durationName = DurationName::quarter;
             noteP->durationData.durationTimeTicks = 8;
             
-            staff2P->voices[1].notes.emplace_back( NoteData{} );
-            noteP = &staff2P->voices[1].notes.back();
+            voice = 1;
+            staff2P->voices[voice].notes.emplace_back( NoteData{} );
+            noteP = &staff2P->voices[voice].notes.back();
+            noteP->userRequestedVoiceNumber = voice + 1;
             noteP->tickTimePosition = 0;
             noteP->pitchData.step = Step::a;
             noteP->pitchData.octave = 2;
@@ -129,8 +144,9 @@ namespace mxtest
             wedgeStartP->isSpreadSpecified = true;
             wedgeStartP->spread = 0.0;
             
-            staff2P->voices[1].notes.emplace_back( NoteData{} );
-            noteP = &staff2P->voices[1].notes.back();
+            staff2P->voices[voice].notes.emplace_back( NoteData{} );
+            noteP = &staff2P->voices[voice].notes.back();
+            noteP->userRequestedVoiceNumber = voice + 1;
             noteP->tickTimePosition = 8;
             noteP->pitchData.step = Step::b;
             noteP->pitchData.octave = 2;
@@ -151,8 +167,9 @@ namespace mxtest
             wedgeStopP->isSpreadSpecified = true;
             wedgeStopP->spread = 15.0;
             
-            staff2P->voices[1].notes.emplace_back( NoteData{} );
-            noteP = &staff2P->voices[1].notes.back();
+            staff2P->voices[voice].notes.emplace_back( NoteData{} );
+            noteP = &staff2P->voices[voice].notes.back();
+            noteP->userRequestedVoiceNumber = voice + 1;
             noteP->tickTimePosition = 16;
             noteP->pitchData.step = Step::c;
             noteP->pitchData.octave = 3;
@@ -161,8 +178,9 @@ namespace mxtest
             noteP->durationData.durationName = DurationName::quarter;
             noteP->durationData.durationTimeTicks = 8;
             
-            staff2P->voices[1].notes.emplace_back( NoteData{} );
-            noteP = &staff2P->voices[1].notes.back();
+            staff2P->voices[voice].notes.emplace_back( NoteData{} );
+            noteP = &staff2P->voices[voice].notes.back();
+            noteP->userRequestedVoiceNumber = voice + 1;
             noteP->tickTimePosition = 24;
             noteP->pitchData.step = Step::d;
             noteP->pitchData.octave = 3;
@@ -188,9 +206,11 @@ namespace mxtest
             clefP->line = 2;
             
             // measure 2 - music
+            voice = 0;
             staff1P = &measureP->staves.at( 0 );
-            staff1P->voices[0].notes.emplace_back( NoteData{} );
-            noteP = &staff1P->voices[0].notes.back();
+            staff1P->voices[voice].notes.emplace_back( NoteData{} );
+            noteP = &staff1P->voices[voice].notes.back();
+            noteP->userRequestedVoiceNumber = voice + 1;
             noteP->tickTimePosition = 0;
             noteP->pitchData.step = Step::a;
             noteP->pitchData.octave = 4;
@@ -199,8 +219,9 @@ namespace mxtest
             noteP->durationData.durationName = DurationName::quarter;
             noteP->durationData.durationTimeTicks = 8;
             
-            staff1P->voices[0].notes.emplace_back( NoteData{} );
-            noteP = &staff1P->voices[0].notes.back();
+            staff1P->voices[voice].notes.emplace_back( NoteData{} );
+            noteP = &staff1P->voices[voice].notes.back();
+            noteP->userRequestedVoiceNumber = voice + 1;
             noteP->tickTimePosition = 8;
             noteP->pitchData.step = Step::b;
             noteP->pitchData.octave = 4;
@@ -209,8 +230,9 @@ namespace mxtest
             noteP->durationData.durationName = DurationName::quarter;
             noteP->durationData.durationTimeTicks = 8;
             
-            staff1P->voices[0].notes.emplace_back( NoteData{} );
-            noteP = &staff1P->voices[0].notes.back();
+            staff1P->voices[voice].notes.emplace_back( NoteData{} );
+            noteP = &staff1P->voices[voice].notes.back();
+            noteP->userRequestedVoiceNumber = voice + 1;
             noteP->tickTimePosition = 16;
             noteP->pitchData.step = Step::c;
             noteP->pitchData.octave = 5;
@@ -219,8 +241,9 @@ namespace mxtest
             noteP->durationData.durationName = DurationName::quarter;
             noteP->durationData.durationTimeTicks = 8;
             
-            staff1P->voices[0].notes.emplace_back( NoteData{} );
-            noteP = &staff1P->voices[0].notes.back();
+            staff1P->voices[voice].notes.emplace_back( NoteData{} );
+            noteP = &staff1P->voices[voice].notes.back();
+            noteP->userRequestedVoiceNumber = voice + 1;
             noteP->tickTimePosition = 24;
             noteP->pitchData.step = Step::d;
             noteP->pitchData.octave = 5;
@@ -229,9 +252,11 @@ namespace mxtest
             noteP->durationData.durationName = DurationName::quarter;
             noteP->durationData.durationTimeTicks = 8;
             
+            voice = 1;
             staff2P = &measureP->staves.at( 1 );
-            staff2P->voices[1].notes.emplace_back( NoteData{} );
-            noteP = &staff2P->voices[1].notes.back();
+            staff2P->voices[voice].notes.emplace_back( NoteData{} );
+            noteP = &staff2P->voices[voice].notes.back();
+            noteP->userRequestedVoiceNumber = voice + 1;
             noteP->tickTimePosition = 0;
             noteP->pitchData.step = Step::f;
             noteP->pitchData.octave = 4;
@@ -240,8 +265,9 @@ namespace mxtest
             noteP->durationData.durationName = DurationName::quarter;
             noteP->durationData.durationTimeTicks = 8;
             
-            staff2P->voices[1].notes.emplace_back( NoteData{} );
-            noteP = &staff2P->voices[1].notes.back();
+            staff2P->voices[voice].notes.emplace_back( NoteData{} );
+            noteP = &staff2P->voices[voice].notes.back();
+            noteP->userRequestedVoiceNumber = voice + 1;
             noteP->tickTimePosition = 8;
             noteP->pitchData.step = Step::g;
             noteP->pitchData.octave = 4;
@@ -250,8 +276,9 @@ namespace mxtest
             noteP->durationData.durationName = DurationName::quarter;
             noteP->durationData.durationTimeTicks = 8;
             
-            staff2P->voices[1].notes.emplace_back( NoteData{} );
-            noteP = &staff2P->voices[1].notes.back();
+            staff2P->voices[voice].notes.emplace_back( NoteData{} );
+            noteP = &staff2P->voices[voice].notes.back();
+            noteP->userRequestedVoiceNumber = voice + 1;
             noteP->tickTimePosition = 16;
             noteP->pitchData.step = Step::a;
             noteP->pitchData.octave = 4;
@@ -260,8 +287,9 @@ namespace mxtest
             noteP->durationData.durationName = DurationName::quarter;
             noteP->durationData.durationTimeTicks = 8;
             
-            staff2P->voices[1].notes.emplace_back( NoteData{} );
-            noteP = &staff2P->voices[1].notes.back();
+            staff2P->voices[voice].notes.emplace_back( NoteData{} );
+            noteP = &staff2P->voices[voice].notes.back();
+            noteP->userRequestedVoiceNumber = voice + 1;
             noteP->tickTimePosition = 24;
             noteP->pitchData.step = Step::b;
             noteP->pitchData.octave = 4;
@@ -283,9 +311,11 @@ namespace mxtest
             clefP->line = 2;
             
             // measure 3 - music
+            voice = 0;
             staff1P = &measureP->staves.at( 0 );
-            staff1P->voices[0].notes.emplace_back( NoteData{} );
-            noteP = &staff1P->voices[0].notes.back();
+            staff1P->voices[voice].notes.emplace_back( NoteData{} );
+            noteP = &staff1P->voices[voice].notes.back();
+            noteP->userRequestedVoiceNumber = voice + 1;
             noteP->tickTimePosition = 0;
             noteP->pitchData.step = Step::d;
             noteP->pitchData.octave = 5;
@@ -294,8 +324,9 @@ namespace mxtest
             noteP->durationData.durationName = DurationName::quarter;
             noteP->durationData.durationTimeTicks = 8;
             
-            staff1P->voices[0].notes.emplace_back( NoteData{} );
-            noteP = &staff1P->voices[0].notes.back();
+            staff1P->voices[voice].notes.emplace_back( NoteData{} );
+            noteP = &staff1P->voices[voice].notes.back();
+            noteP->userRequestedVoiceNumber = voice + 1;
             noteP->tickTimePosition = 8;
             noteP->pitchData.step = Step::c;
             noteP->pitchData.octave = 5;
@@ -304,8 +335,9 @@ namespace mxtest
             noteP->durationData.durationName = DurationName::quarter;
             noteP->durationData.durationTimeTicks = 8;
             
-            staff1P->voices[0].notes.emplace_back( NoteData{} );
-            noteP = &staff1P->voices[0].notes.back();
+            staff1P->voices[voice].notes.emplace_back( NoteData{} );
+            noteP = &staff1P->voices[voice].notes.back();
+            noteP->userRequestedVoiceNumber = voice + 1;
             noteP->tickTimePosition = 16;
             noteP->pitchData.step = Step::b;
             noteP->pitchData.octave = 4;
@@ -314,8 +346,9 @@ namespace mxtest
             noteP->durationData.durationName = DurationName::quarter;
             noteP->durationData.durationTimeTicks = 8;
             
-            staff1P->voices[0].notes.emplace_back( NoteData{} );
-            noteP = &staff1P->voices[0].notes.back();
+            staff1P->voices[voice].notes.emplace_back( NoteData{} );
+            noteP = &staff1P->voices[voice].notes.back();
+            noteP->userRequestedVoiceNumber = voice + 1;
             noteP->tickTimePosition = 24;
             noteP->pitchData.step = Step::a;
             noteP->pitchData.octave = 4;
@@ -324,8 +357,10 @@ namespace mxtest
             noteP->durationData.durationName = DurationName::quarter;
             noteP->durationData.durationTimeTicks = 8;
             
-            staff2P->voices[1].notes.emplace_back( NoteData{} );
-            noteP = &staff2P->voices[1].notes.back();
+            voice = 1;
+            staff2P->voices[voice].notes.emplace_back( NoteData{} );
+            noteP = &staff2P->voices[voice].notes.back();
+            noteP->userRequestedVoiceNumber = voice + 1;
             noteP->tickTimePosition = 0;
             noteP->pitchData.step = Step::a;
             noteP->pitchData.octave = 4;
@@ -334,8 +369,9 @@ namespace mxtest
             noteP->durationData.durationName = DurationName::quarter;
             noteP->durationData.durationTimeTicks = 8;
             
-            staff2P->voices[1].notes.emplace_back( NoteData{} );
-            noteP = &staff2P->voices[1].notes.back();
+            staff2P->voices[voice].notes.emplace_back( NoteData{} );
+            noteP = &staff2P->voices[voice].notes.back();
+            noteP->userRequestedVoiceNumber = voice + 1;
             noteP->tickTimePosition = 8;
             noteP->pitchData.step = Step::b;
             noteP->pitchData.octave = 4;
@@ -344,8 +380,9 @@ namespace mxtest
             noteP->durationData.durationName = DurationName::quarter;
             noteP->durationData.durationTimeTicks = 8;
             
-            staff2P->voices[1].notes.emplace_back( NoteData{} );
-            noteP = &staff2P->voices[1].notes.back();
+            staff2P->voices[voice].notes.emplace_back( NoteData{} );
+            noteP = &staff2P->voices[voice].notes.back();
+            noteP->userRequestedVoiceNumber = voice + 1;
             noteP->tickTimePosition = 16;
             noteP->pitchData.step = Step::c;
             noteP->pitchData.octave = 5;
@@ -354,8 +391,9 @@ namespace mxtest
             noteP->durationData.durationName = DurationName::quarter;
             noteP->durationData.durationTimeTicks = 8;
             
-            staff2P->voices[1].notes.emplace_back( NoteData{} );
-            noteP = &staff2P->voices[1].notes.back();
+            staff2P->voices[voice].notes.emplace_back( NoteData{} );
+            noteP = &staff2P->voices[voice].notes.back();
+            noteP->userRequestedVoiceNumber = voice + 1;
             noteP->tickTimePosition = 24;
             noteP->pitchData.step = Step::d;
             noteP->pitchData.octave = 5;
@@ -373,23 +411,27 @@ namespace mxtest
             staff2P = &measureP->staves.at( 1 );
             
             // measure 4 - music
+            voice = 0;
             staff1P = &measureP->staves.at( 0 );
-            staff1P->voices[0].notes.emplace_back( NoteData{} );
-            noteP = &staff1P->voices[0].notes.back();
+            staff1P->voices[voice].notes.emplace_back( NoteData{} );
+            noteP = &staff1P->voices[voice].notes.back();
+            noteP->userRequestedVoiceNumber = voice + 1;
             noteP->tickTimePosition = 0;
-            noteP->pitchData.step = Step::d;
-            noteP->pitchData.octave = 5;
+            noteP->pitchData.step = Step::c;
+            noteP->pitchData.octave = 4;
             noteP->pitchData.alter = 0;
             noteP->pitchData.accidental = Accidental::none;
             noteP->durationData.durationName = DurationName::whole;
             noteP->isRest = true;
             noteP->durationData.durationTimeTicks = 32;
             
-            staff2P->voices[1].notes.emplace_back( NoteData{} );
-            noteP = &staff2P->voices[1].notes.back();
+            voice = 1;
+            staff2P->voices[voice].notes.emplace_back( NoteData{} );
+            noteP = &staff2P->voices[voice].notes.back();
+            noteP->userRequestedVoiceNumber = voice + 1;
             noteP->tickTimePosition = 0;
-            noteP->pitchData.step = Step::d;
-            noteP->pitchData.octave = 5;
+            noteP->pitchData.step = Step::c;
+            noteP->pitchData.octave = 4;
             noteP->pitchData.alter = 0;
             noteP->pitchData.accidental = Accidental::none;
             noteP->durationData.durationName = DurationName::whole;

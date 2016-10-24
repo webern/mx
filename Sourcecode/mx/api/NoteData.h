@@ -71,7 +71,7 @@ namespace mx
             
             NoteType noteType;                  // normal, cue, grace
             PitchData pitchData;                // step, alter, octave, accidental, etc
-            int staffIndex;                     // this should be one less than the number shown in the <staff> element
+            //int staffIndex;                     // this should be one less than the number shown in the <staff> element
             int userRequestedVoiceNumber;
             Stem stem;
             
@@ -99,7 +99,7 @@ namespace mx
         MXAPI_EQUALS_NEXT_MEMBER( isTieStop )
         MXAPI_EQUALS_NEXT_MEMBER( noteType )
         MXAPI_EQUALS_NEXT_MEMBER( pitchData )
-        MXAPI_EQUALS_NEXT_MEMBER( staffIndex )
+        //MXAPI_EQUALS_NEXT_MEMBER( staffIndex )
         MXAPI_EQUALS_NEXT_MEMBER( userRequestedVoiceNumber )
         MXAPI_EQUALS_NEXT_MEMBER( stem )
         MXAPI_EQUALS_NEXT_MEMBER( tickTimePosition )

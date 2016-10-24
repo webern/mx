@@ -5,6 +5,7 @@
 
 #include "mx/api/MeasureData.h"
 #include "mx/impl/Cursor.h"
+#include "mx/impl/Converter.h"
 
 #include <mutex>
 
@@ -83,6 +84,7 @@ namespace mx
             const bool myIsFirstMeasure;
             const bool myIsFirstPart;
             const int myMeasureIndex;
+            const Converter myConverter;
             
             mutable api::MeasureData myOutMeasureData;
             mutable Cursor myCurrentCursor;

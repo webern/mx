@@ -67,6 +67,7 @@
 #include "mx/core/elements/TraditionalKey.h"
 #include "mx/core/elements/Type.h"
 #include "mx/core/elements/Unpitched.h"
+#include "mx/core/elements/BarStyle.h"
 #include "mx/core/elements/Voice.h"
 #include "mx/impl/Converter.h"
 #include "mx/impl/DirectionReader.h"
@@ -92,6 +93,7 @@ namespace mx
         , myCurrentCursor{ params.numStaves, params.globalTicksPerQuarter }
         , myPreviousCursor{ params.numStaves, params.globalTicksPerQuarter }
         , myMeasureIndex( params.measureIndex )
+        , myConverter{}
         {
             
         }
@@ -307,23 +309,26 @@ namespace mx
             }
             
             myCurrentCursor.isBackupInProgress = false;
+            impl::NoteReader noteReader{ inMxNote };
             impl::NoteFunctions noteFunc{ inMxNote, myCurrentCursor};
             auto noteData = noteFunc.parseNote();
             
-            if( noteData.staffIndex >= 0 )
+            int noteDataStaffIndex = noteReader.getStaffNumber() - 1;
+            
+            if( noteDataStaffIndex < 0 )
             {
-                myCurrentCursor.staffIndex = noteData.staffIndex;
+                noteDataStaffIndex = 0;
             }
-            else
-            {
-                myCurrentCursor.staffIndex = 0;
-            }
+            
+            myCurrentCursor.staffIndex = noteDataStaffIndex;
             
             if( !noteData.isChord && !isNextNoteAChordMemberMakingThisNoteTheStartOfTheChord)
             {
                 myCurrentCursor.tickTimePosition += noteData.durationData.durationTimeTicks;
             }
             
+            MX_ASSERT( noteDataStaffIndex >= 0 );
+            MX_ASSERT( static_cast<size_t>( noteDataStaffIndex ) < myOutMeasureData.staves.size() );
             insertNoteData( std::move(noteData), myCurrentCursor.staffIndex, myCurrentCursor.voiceIndex );
         }
         
@@ -488,7 +493,34 @@ namespace mx
         
         void MeasureReader::parseBarline( const core::Barline& inMxBarline ) const
         {
-            coutItemNotSupported( inMxBarline );
+            auto barline = api::BarlineData{};
+            const auto& attr = *inMxBarline.getAttributes();
+            auto loc = api::HorizontalAlignment::unspecified;
+            auto style = api::BarlineType::unspecified;
+            
+            if( attr.hasLocation )
+            {
+                loc = myConverter.convertBarlinePlacement( attr.location );
+            }
+            
+            if( inMxBarline.getHasBarStyle() )
+            {
+                style = myConverter.convert( inMxBarline.getBarStyle()->getValue() );
+            }
+            
+            // make a right-side barline last in the data
+            if( loc == api::HorizontalAlignment::right )
+            {
+                barline.tickTimePosition = api::TICK_TIME_INFINITY;
+            }
+            else
+            {
+                barline.tickTimePosition = myCurrentCursor.tickTimePosition;
+            }
+            
+            barline.barlineType = style;
+            barline.location = loc;
+            myOutMeasureData.barlines.emplace_back( std::move( barline ) );
         }
         
         
@@ -580,13 +612,14 @@ namespace mx
             
             const auto& attr = *inClef.getAttributes();
             
+            int celfStaffIndex = -1;
             if( attr.hasNumber )
             {
-                clefData.staffIndex = attr.number.getValue() - 1;
+                celfStaffIndex = attr.number.getValue() - 1;
             }
             else
             {
-                clefData.staffIndex = 0;
+                celfStaffIndex = 0;
             }
             
             if( myCurrentCursor.tickTimePosition == 0 )
@@ -611,7 +644,7 @@ namespace mx
             {
                 clefData.location = api::ClefLocation::midMeasure;
             }
-            insertClef( std::move( clefData ), clefData.staffIndex );
+            insertClef( std::move( clefData ), celfStaffIndex );
         }
     
         

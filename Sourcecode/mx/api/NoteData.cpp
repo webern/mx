@@ -18,7 +18,7 @@ namespace mx
         , isTieStop{ false }
         , noteType{ NoteType::normal }
         , pitchData{}
-        , staffIndex{ 0 }
+        //, staffIndex{ 0 }
         , userRequestedVoiceNumber{ -1 }
         , stem{ Stem::unspecified }
         , tickTimePosition{ 0 }

@@ -17,7 +17,7 @@ namespace mxtest
         	ScoreDataCreatorPtr&& inScoreDataCreator,
         	MxFile inFile,
           	std::string cppFileName,
-          	int cppFileLineNumber);
+          	int cppFileLineNumber); 
 
     virtual void runTestCode() override;
         

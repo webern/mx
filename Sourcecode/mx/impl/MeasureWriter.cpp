@@ -158,7 +158,7 @@ namespace mx
             writeMeasureGlobals();
             writeStaves();
             myPropertiesWriter->flushBuffer();
-            writeBarlines( std::numeric_limits<int>::max() );
+            writeBarlines( api::TICK_TIME_INFINITY );
             myPropertiesWriter = nullptr;
             return myOutMeasure;
         }

@@ -39,7 +39,7 @@ namespace mx
             
             ClefData();
             
-            int staffIndex;
+            //int staffIndex;
             ClefSymbol symbol;
             int line;
             int octaveChange;
@@ -67,8 +67,8 @@ namespace mx
         };
 
         MXAPI_EQUALS_BEGIN( ClefData )
-        MXAPI_EQUALS_FIRST_MEMBER( staffIndex )
-        MXAPI_EQUALS_NEXT_MEMBER( symbol )
+        //MXAPI_EQUALS_FIRST_MEMBER( staffIndex )
+        MXAPI_EQUALS_FIRST_MEMBER( symbol )
         MXAPI_EQUALS_NEXT_MEMBER( line )
         MXAPI_EQUALS_NEXT_MEMBER( octaveChange )
         MXAPI_EQUALS_NEXT_MEMBER( tickTimePosition )
