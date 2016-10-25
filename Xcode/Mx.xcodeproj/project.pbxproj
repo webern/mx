@@ -1917,6 +1917,11 @@
 		29766AE01DAC39EF00CCE2AC /* KeyData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29766ADF1DAC39EF00CCE2AC /* KeyData.h */; };
 		29766AE11DAC39F800CCE2AC /* KeyData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29766ADF1DAC39EF00CCE2AC /* KeyData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		29766AE21DAC39FB00CCE2AC /* KeyData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29766ADF1DAC39EF00CCE2AC /* KeyData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		29B48EE01DBEC6ED0030A974 /* WedgeData.h in Headers */ = {isa = PBXBuildFile; fileRef = 2951E1671DBA9C7300826CEF /* WedgeData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		29B48EE11DBEC6F10030A974 /* WedgeData.h in Headers */ = {isa = PBXBuildFile; fileRef = 2951E1671DBA9C7300826CEF /* WedgeData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		29B48EE51DBEC9950030A974 /* BarlineData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29B48EE41DBEC9950030A974 /* BarlineData.h */; };
+		29B48EE61DBECA0D0030A974 /* BarlineData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29B48EE41DBEC9950030A974 /* BarlineData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		29B48EE71DBECA110030A974 /* BarlineData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29B48EE41DBEC9950030A974 /* BarlineData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		29B4E81C1DA9CA0E005DC6D1 /* TupletData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29B4E81B1DA9CA0E005DC6D1 /* TupletData.h */; };
 		29B4E81D1DA9CA15005DC6D1 /* TupletData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29B4E81B1DA9CA0E005DC6D1 /* TupletData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		29B4E81E1DA9CA19005DC6D1 /* TupletData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29B4E81B1DA9CA0E005DC6D1 /* TupletData.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -3325,6 +3330,7 @@
 		29ADB3111D729FB700683BEC /* LayoutData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LayoutData.h; path = ../Sourcecode/mx/api/LayoutData.h; sourceTree = "<group>"; };
 		29ADB3131D736A2B00683BEC /* PageTextData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PageTextData.h; path = ../Sourcecode/mx/api/PageTextData.h; sourceTree = "<group>"; };
 		29ADB3141D736A2B00683BEC /* PositionData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PositionData.h; path = ../Sourcecode/mx/api/PositionData.h; sourceTree = "<group>"; };
+		29B48EE41DBEC9950030A974 /* BarlineData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BarlineData.h; path = ../Sourcecode/mx/api/BarlineData.h; sourceTree = "<group>"; };
 		29B4E81B1DA9CA0E005DC6D1 /* TupletData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TupletData.h; path = ../Sourcecode/mx/api/TupletData.h; sourceTree = "<group>"; };
 		29B4E81F1DA9CD5D005DC6D1 /* TupletReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TupletReader.cpp; path = ../Sourcecode/mx/impl/TupletReader.cpp; sourceTree = "<group>"; };
 		29B4E8201DA9CD5D005DC6D1 /* TupletReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TupletReader.h; path = ../Sourcecode/mx/impl/TupletReader.h; sourceTree = "<group>"; };
@@ -3465,8 +3471,6 @@
 		2912011E1D0C9A17000B5033 /* core */ = {
 			isa = PBXGroup;
 			children = (
-				2951A0C31D60F3B700B49A13 /* ScoreConversions.cpp */,
-				2951A0C41D60F3B700B49A13 /* ScoreConversions.h */,
 				29C01AE01D130B690094BE61 /* AttributesInterface.cpp */,
 				29C01AE11D130B690094BE61 /* AttributesInterface.h */,
 				29C01AE21D130B690094BE61 /* Color.cpp */,
@@ -3500,6 +3504,8 @@
 				29C01AFF1D130B690094BE61 /* NumberOrNormal.h */,
 				29C01B001D130B690094BE61 /* PositiveIntegerOrEmpty.cpp */,
 				29C01B011D130B690094BE61 /* PositiveIntegerOrEmpty.h */,
+				2951A0C31D60F3B700B49A13 /* ScoreConversions.cpp */,
+				2951A0C41D60F3B700B49A13 /* ScoreConversions.h */,
 				29C01B021D130B690094BE61 /* Strings.cpp */,
 				29C01B031D130B690094BE61 /* Strings.h */,
 				29421B331D27FECC00DBC7C3 /* UnusedParameter.h */,
@@ -3557,10 +3563,6 @@
 		292255D51D712B26002D8E48 /* impl */ = {
 			isa = PBXGroup;
 			children = (
-				29CD722A1DB82C9200FB7153 /* DirectionWriter.cpp */,
-				29CD722B1DB82C9200FB7153 /* DirectionWriter.h */,
-				29CD72261DB806FD00FB7153 /* PropertiesWriter.cpp */,
-				29CD72271DB806FD00FB7153 /* PropertiesWriter.h */,
 				29EF2FE91DA307D3001FE5DF /* AccidentalMarkFunctions.cpp */,
 				29EF2FEA1DA307D3001FE5DF /* AccidentalMarkFunctions.h */,
 				29EF2F781DA2CC1D001FE5DF /* ArticulationsFunctions.cpp */,
@@ -3572,6 +3574,8 @@
 				2933AD7B1DA5E850005D7222 /* CurveFunctions.h */,
 				29766ACA1DAC149900CCE2AC /* DirectionReader.cpp */,
 				29766AC91DAC149900CCE2AC /* DirectionReader.h */,
+				29CD722A1DB82C9200FB7153 /* DirectionWriter.cpp */,
+				29CD722B1DB82C9200FB7153 /* DirectionWriter.h */,
 				29EF2F7C1DA2D450001FE5DF /* DynamicsFunctions.cpp */,
 				29EF2F7D1DA2D450001FE5DF /* DynamicsFunctions.h */,
 				2913BB871D753FC8006C34A3 /* EncodingFunctions.cpp */,
@@ -3607,6 +3611,8 @@
 				29CDDA2C1DADCAF30022B1A3 /* PartWriter.h */,
 				293CE9F51D7B2C18003F1FEB /* PositionFunctions.h */,
 				2975BF041DA1843900490FAA /* PrintFunctions.h */,
+				29CD72261DB806FD00FB7153 /* PropertiesWriter.cpp */,
+				29CD72271DB806FD00FB7153 /* PropertiesWriter.h */,
 				29C29B841DAEC00C00D3A884 /* ScoreReader.cpp */,
 				29C29B851DAEC00C00D3A884 /* ScoreReader.h */,
 				29C29B861DAEC00C00D3A884 /* ScoreWriter.cpp */,
@@ -4873,12 +4879,12 @@
 		29EF44071D6E6CE900DBDAB9 /* api */ = {
 			isa = PBXGroup;
 			children = (
-				2951E1671DBA9C7300826CEF /* WedgeData.h */,
-				29FFAC7F1DB9C8B600DC8AE1 /* CurveData.h */,
 				293488D41D94903B00D0C407 /* ApiCommon.h */,
+				29B48EE41DBEC9950030A974 /* BarlineData.h */,
 				292D1DD01D9A43A500CDD9F4 /* ClefData.cpp */,
 				292D1DD11D9A43A500CDD9F4 /* ClefData.h */,
 				2933AD601DA5B616005D7222 /* ColorData.h */,
+				29FFAC7F1DB9C8B600DC8AE1 /* CurveData.h */,
 				29766AD11DAC14B900CCE2AC /* DirectionData.h */,
 				29EF44091D6E70D300DBDAB9 /* DocumentManager.cpp */,
 				29EF440A1D6E70D300DBDAB9 /* DocumentManager.h */,
@@ -4914,6 +4920,7 @@
 				2927EC9B1D886E2B0042E080 /* TimeSignatureData.h */,
 				29B4E81B1DA9CA0E005DC6D1 /* TupletData.h */,
 				29DC06F01D7E5BBF00210B7E /* VoiceData.h */,
+				2951E1671DBA9C7300826CEF /* WedgeData.h */,
 			);
 			name = api;
 			sourceTree = "<group>";
@@ -4925,10 +4932,12 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29B48EE11DBEC6F10030A974 /* WedgeData.h in Headers */,
 				29FFAC821DB9C9D100DC8AE1 /* CurveData.h in Headers */,
 				290756E21DA8BE2A00EEF5C3 /* ApiCommon.h in Headers */,
 				290756E31DA8BE2A00EEF5C3 /* ClefData.h in Headers */,
 				290756E41DA8BE2A00EEF5C3 /* ColorData.h in Headers */,
+				29B48EE61DBECA0D0030A974 /* BarlineData.h in Headers */,
 				29766AD31DAC14CC00CCE2AC /* DirectionData.h in Headers */,
 				290756EA1DA8BE2A00EEF5C3 /* DocumentManager.h in Headers */,
 				290756EB1DA8BE2A00EEF5C3 /* DurationData.h in Headers */,
@@ -4964,6 +4973,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29B48EE01DBEC6ED0030A974 /* WedgeData.h in Headers */,
 				29FFAC811DB9C9CD00DC8AE1 /* CurveData.h in Headers */,
 				290756C41DA8BE0800EEF5C3 /* ApiCommon.h in Headers */,
 				290756C51DA8BE0800EEF5C3 /* ClefData.h in Headers */,
@@ -4974,6 +4984,7 @@
 				290756CE1DA8BE0800EEF5C3 /* EncodingData.h in Headers */,
 				290756CF1DA8BE0800EEF5C3 /* FontData.h in Headers */,
 				29766AE21DAC39FB00CCE2AC /* KeyData.h in Headers */,
+				29B48EE71DBECA110030A974 /* BarlineData.h in Headers */,
 				290756D01DA8BE0800EEF5C3 /* LayoutData.h in Headers */,
 				290756D11DA8BE0800EEF5C3 /* LineData.h in Headers */,
 				290756D21DA8BE0800EEF5C3 /* MarkData.h in Headers */,
@@ -5019,6 +5030,7 @@
 				29CDDA2E1DADCAF30022B1A3 /* PartWriter.h in Headers */,
 				29B7C46A1DAFFDBA009D7D8F /* MeasureWriter.h in Headers */,
 				29CD72291DB806FD00FB7153 /* PropertiesWriter.h in Headers */,
+				29B48EE51DBEC9950030A974 /* BarlineData.h in Headers */,
 				29B4E8221DA9CD5D005DC6D1 /* TupletReader.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
