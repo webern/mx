@@ -7,6 +7,7 @@
 #include "mx/api/WedgeData.h"
 #include "mx/api/MarkData.h"
 #include "mx/api/TempoData.h"
+#include "mx/api/OttavaData.h"
 
 namespace mx
 {
@@ -54,6 +55,8 @@ namespace mx
             std::vector<DirectionMark> marks;
             std::vector<WedgeStart> wedgeStarts;
             std::vector<WedgeStop> wedgeStops;
+            std::vector<OttavaStart> ottavaStarts;
+            std::vector<SpannerStop> ottavaStops;
             
             DirectionData()
             : tickTimePosition{ 0 }
@@ -66,6 +69,8 @@ namespace mx
             , marks{}
             , wedgeStarts{}
             , wedgeStops{}
+            , ottavaStarts{}
+            , ottavaStops{}
             {
                 
             }
@@ -90,7 +95,9 @@ namespace mx
         MXAPI_EQUALS_NEXT_MEMBER( tempos )
         MXAPI_EQUALS_NEXT_MEMBER( marks )
         MXAPI_EQUALS_NEXT_MEMBER( wedgeStarts )
-        MXAPI_EQUALS_LAST_MEMBER( wedgeStops )
+        MXAPI_EQUALS_NEXT_MEMBER( wedgeStops )
+        MXAPI_EQUALS_NEXT_MEMBER( ottavaStarts )
+        MXAPI_EQUALS_LAST_MEMBER( ottavaStops )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( DirectionData );
 	}

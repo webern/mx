@@ -92,6 +92,9 @@ namespace mx
             
             core::RightLeftMiddle convertBarlinePlacement( api::HorizontalAlignment value ) const;
             api::HorizontalAlignment convertBarlinePlacement( core::RightLeftMiddle value ) const;
+            
+            core::LineEnd convert( api::LineHook value ) const;
+            api::LineHook convert( core::LineEnd value ) const;
 
             const static std::map<core::StepEnum, api::Step> stepMap;
             const static std::map<core::NoteTypeValue, api::DurationName> durationMap;
@@ -116,6 +119,7 @@ namespace mx
             const static std::map<core::WedgeType, api::WedgeType> wedgeMap;
             const static std::map<core::BarStyleEnum, api::BarlineType> barlineMap;
             const static std::map<core::RightLeftMiddle, api::HorizontalAlignment> barlinePlacementMap;
+            const static std::map<core::LineEnd, api::LineHook> lineEndMap;
             
         private:
             template<typename CORE_TYPE, typename API_TYPE>

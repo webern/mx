@@ -75,5 +75,21 @@ namespace mx
             }
             return outPrintData;
         }
+        
+        
+        MX_ATTR_SETFUNC_OPTIONAL( hasPrintObject, HasPrintObject, bool, false );
+        MX_ATTR_SETFUNC_OPTIONAL( printObject, PrintObject, core::YesNo, core::YesNo::yes );
+        
+        MX_ATTR_SETFUNC_OPTIONAL( hasColor, HasColor, bool, false );
+        MX_ATTR_SETFUNC_OPTIONAL( color, Color, core::Color, core::Color{} );
+
+        template <typename ATTRIBUTES_TYPE>
+        void setPrintObject( const api::Bool& inPrintObject, ATTRIBUTES_TYPE& outAttributes )
+        {
+            if( !lookForAndSetHasPrintObject( inPrintObject != api::Bool::unspecified, &outAttributes ) )
+            {
+                lookForAndSetPrintObject( inPrintObject, &outAttributes );
+            }
+        }
     }
 }

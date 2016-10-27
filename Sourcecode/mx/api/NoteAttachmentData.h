@@ -6,7 +6,6 @@
 #include "mx/api/MarkData.h"
 #include "mx/api/CurveData.h"
 #include "mx/api/TupletData.h"
-#include "mx/api/SpannerData.h"
 
 namespace mx
 {
@@ -21,8 +20,8 @@ namespace mx
             std::vector<CurveEnd> curveEnds;
             std::vector<TupletStart> tupletStarts;
             std::vector<TupletEnd> tupletEnds;
-            std::vector<SpannerData> spannerStarts;
-            std::vector<SpannerData> spannerEnds;
+            //std::vector<SpannerData> spannerStarts;
+            //std::vector<SpannerData> spannerEnds;
         };
         
         MXAPI_EQUALS_BEGIN( NoteAttachmentData )
@@ -31,9 +30,9 @@ namespace mx
         MXAPI_EQUALS_NEXT_MEMBER( curveContinuations )
         MXAPI_EQUALS_NEXT_MEMBER( curveEnds )
         MXAPI_EQUALS_NEXT_MEMBER( tupletStarts )
-        MXAPI_EQUALS_NEXT_MEMBER( tupletEnds )
-        MXAPI_EQUALS_NEXT_MEMBER( spannerStarts )
-        MXAPI_EQUALS_LAST_MEMBER( spannerEnds )
+        MXAPI_EQUALS_LAST_MEMBER( tupletEnds )
+        //MXAPI_EQUALS_NEXT_MEMBER( spannerStarts )
+        //MXAPI_EQUALS_LAST_MEMBER( spannerEnds )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( NoteAttachmentData );
     }

@@ -35,6 +35,7 @@
 #include "mx/core/elements/Wedge.h"
 #include "mx/core/elements/Words.h"
 #include "mx/api/BarlineData.h"
+#include "mx/impl/LineFunctions.h"
 
 namespace mx
 {
@@ -129,6 +130,58 @@ namespace mx
                     attr.hasSpread = true;
                     attr.spread = core::DivisionsValue{ static_cast<core::DecimalType>( wedgeStop.spread ) };
                 }
+            }
+            
+            for( const auto& ottavaStart : myDirectionData.ottavaStarts )
+            {
+                auto oStartDir = core::makeDirectionType();
+                this->addDirectionType( oStartDir );
+                oStartDir->setChoice( core::DirectionType::Choice::octaveShift );
+                auto oStart = oStartDir->getOctaveShift();
+                auto& attr = *oStart->getAttributes();
+                impl::setLineData( ottavaStart.spannerStart.lineData, attr );
+                
+                attr.hasSize = true;
+                
+                switch( ottavaStart.ottavaType )
+                {
+                    case api::OttavaType::o15ma:
+                    {
+                        attr.type = core::UpDownStopContinue::up;
+                        attr.size = core::PositiveInteger{ 15 };
+                        break;
+                    }
+                    case api::OttavaType::o15mb:
+                    {
+                        attr.type = core::UpDownStopContinue::down;
+                        attr.size = core::PositiveInteger{ 15 };
+                        break;
+                    }
+                    case api::OttavaType::o8va:
+                    {
+                        attr.type = core::UpDownStopContinue::up;
+                        attr.size = core::PositiveInteger{ 8 };
+                        break;
+                    }
+                    case api::OttavaType::o8vb:
+                    {
+                        attr.type = core::UpDownStopContinue::down;
+                        attr.size = core::PositiveInteger{ 8 };
+                        break;
+                    }
+                    default: break;
+                }
+            }
+            
+            for( const auto& ottavaStop : myDirectionData.ottavaStops )
+            {
+                auto oStopDir = core::makeDirectionType();
+                this->addDirectionType( oStopDir );
+                oStopDir->setChoice( core::DirectionType::Choice::octaveShift );
+                auto oStart = oStopDir->getOctaveShift();
+                auto& attr = *oStart->getAttributes();
+                attr.type = core::UpDownStopContinue::stop;
+                MX_UNUSED( ottavaStop );
             }
             
             //core::DirectionPtr temp{ std::move( myOutDirectionPtr ) };

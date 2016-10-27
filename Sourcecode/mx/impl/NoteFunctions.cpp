@@ -382,28 +382,28 @@ namespace mx
                         }
                         case core::NotationsChoice::Choice::slide:
                         {
-                            const auto& slide = *notationsChoice.getSlide();
-                            const auto& attr = *slide.getAttributes();
-                            const auto slideType = attr.type;
+//                            const auto& slide = *notationsChoice.getSlide();
+//                            const auto& attr = *slide.getAttributes();
+//                            const auto slideType = attr.type;
 
-                            api::SpannerData spannerData;
-                            spannerData.name = "slide";
-                            spannerData.spannerType = api::SpannerType::slide;
-                            spannerData.tickTimePosition = myCursor.tickTimePosition;
-                            
-                            if( attr.hasNumber )
-                            {
-                                spannerData.numberLevel = attr.number.getValue();
-                            }
-
-                            if( slideType == core::StartStop::start )
-                            {
-                                myOutNoteData.noteAttachmentData.spannerStarts.emplace_back( std::move( spannerData ) );
-                            }
-                            else
-                            {
-                                myOutNoteData.noteAttachmentData.spannerEnds.emplace_back( std::move( spannerData ) );
-                            }
+//                            api::SpannerData spannerData;
+//                            spannerData.name = "slide";
+//                            spannerData.spannerType = api::SpannerType::slide;
+//                            spannerData.tickTimePosition = myCursor.tickTimePosition;
+//                            
+//                            if( attr.hasNumber )
+//                            {
+//                                spannerData.numberLevel = attr.number.getValue();
+//                            }
+//
+//                            if( slideType == core::StartStop::start )
+//                            {
+//                                myOutNoteData.noteAttachmentData.spannerStarts.emplace_back( std::move( spannerData ) );
+//                            }
+//                            else
+//                            {
+//                                myOutNoteData.noteAttachmentData.spannerEnds.emplace_back( std::move( spannerData ) );
+//                            }
                             
                             break;
                         }

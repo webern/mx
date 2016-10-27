@@ -66,3 +66,32 @@
         return defaultReturnValue;                                                                                                      \
     }                                                                                                                                   \
 
+    #define MX_ATTR_SETFUNC_OPTIONAL( attributeFieldName, attributeFieldNameCapitalized, attributeType, failureReturnValue )            \
+                                                                                                                                        \
+    template<class ATTRIBUTES_STRUCT, class VALUE_TYPE>                                                                                 \
+    auto lookForAndSet##attributeFieldNameCapitalized( VALUE_TYPE valueToSet, ATTRIBUTES_STRUCT* const outAttributesRawPtr )            \
+    -> decltype(  outAttributesRawPtr->attributeFieldName  )                                                                            \
+    {                                                                                                                                   \
+        outAttributesRawPtr->attributeFieldName = valueToSet;                                                                           \
+        return outAttributesRawPtr->attributeFieldName;                                                                                 \
+    }                                                                                                                                   \
+                                                                                                                                        \
+    inline auto lookForAndSet##attributeFieldNameCapitalized(...) -> attributeType                                                      \
+    {                                                                                                                                   \
+        return failureReturnValue;                                                                                                      \
+    }                                                                                                                                   \
+
+    #define MX_ATTR_SETFUNC_OPTIONAL_WITH_GETTER( attributeFieldName, attributeFieldNameCapitalized, attributeType, failureReturnValue )\
+                                                                                                                                        \
+    template<class ATTRIBUTES_STRUCT, class VALUE_TYPE>                                                                                 \
+    auto lookForAndSet##attributeFieldNameCapitalized( VALUE_TYPE valueToSet, ATTRIBUTES_STRUCT* const outAttributesRawPtr )            \
+    -> decltype(  outAttributesRawPtr->attributeFieldName.getValue()  )                                                                 \
+    {                                                                                                                                   \
+        outAttributesRawPtr->attributeFieldName.setValue( valueToSet );                                                                 \
+        return outAttributesRawPtr->attributeFieldName.getValue();                                                                      \
+    }                                                                                                                                   \
+                                                                                                                                        \
+    inline auto lookForAndSet##attributeFieldNameCapitalized(...) -> attributeType                                                      \
+    {                                                                                                                                   \
+        return failureReturnValue;                                                                                                      \
+    }                                                                                                                                   \

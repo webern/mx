@@ -15,10 +15,21 @@ namespace mx
             dotted,
             wavy
         };
+
+        enum class LineHook
+        {
+            unspecified,
+            down,
+            up,
+            both,
+            arrow,
+            none
+        };
         
         struct LineData
         {
             LineType lineType;
+            LineHook lineEnd;
             bool isDashLengthSpecified;
             long double dashLength;
             bool isSpaceLengthSpecified;
@@ -33,6 +44,7 @@ namespace mx
             
             LineData()
             : lineType{ LineType::unspecified }
+            , lineEnd{ LineHook::unspecified }
             , isDashLengthSpecified{ false }
             , dashLength{ 0.0 }
             , isSpaceLengthSpecified{ false }
@@ -44,6 +56,7 @@ namespace mx
         
         MXAPI_EQUALS_BEGIN( LineData )
         MXAPI_EQUALS_FIRST_MEMBER( lineType )
+        MXAPI_EQUALS_NEXT_MEMBER( lineEnd )
         MXAPI_EQUALS_NEXT_MEMBER( isDashLengthSpecified )
         MXAPI_EQUALS_NEXT_MEMBER( dashLength )
         MXAPI_EQUALS_NEXT_MEMBER( isSpaceLengthSpecified )

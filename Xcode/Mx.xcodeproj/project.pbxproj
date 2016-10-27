@@ -1970,6 +1970,15 @@
 		29C01B321D130B910094BE61 /* Utility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C01B2D1D130B910094BE61 /* Utility.cpp */; };
 		29C01B341D130B910094BE61 /* UtilityImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C01B2F1D130B910094BE61 /* UtilityImpl.cpp */; };
 		29C01B601D130BBE0094BE61 /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C01B5D1D130BBE0094BE61 /* pugixml.cpp */; };
+		29C175981DC0048700CC48D7 /* OttavaData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29C175971DC0048700CC48D7 /* OttavaData.h */; };
+		29C1759B1DC00FD200CC48D7 /* SpannerFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 29C175991DC00FD200CC48D7 /* SpannerFunctions.h */; };
+		29C1759C1DC00FD200CC48D7 /* LineFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 29C1759A1DC00FD200CC48D7 /* LineFunctions.h */; };
+		29C175A11DC03BA000CC48D7 /* SpannerFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 29C175991DC00FD200CC48D7 /* SpannerFunctions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		29C175A21DC03BA000CC48D7 /* LineFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 29C1759A1DC00FD200CC48D7 /* LineFunctions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		29C175A31DC03BA000CC48D7 /* OttavaData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29C175971DC0048700CC48D7 /* OttavaData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		29C175A41DC03BA500CC48D7 /* SpannerFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 29C175991DC00FD200CC48D7 /* SpannerFunctions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		29C175A51DC03BA500CC48D7 /* LineFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 29C1759A1DC00FD200CC48D7 /* LineFunctions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		29C175A61DC03BA500CC48D7 /* OttavaData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29C175971DC0048700CC48D7 /* OttavaData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		29C29B881DAEC00C00D3A884 /* ScoreReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C29B841DAEC00C00D3A884 /* ScoreReader.cpp */; };
 		29C29B891DAEC00C00D3A884 /* ScoreReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 29C29B851DAEC00C00D3A884 /* ScoreReader.h */; };
 		29C29B8A1DAEC00C00D3A884 /* ScoreWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C29B861DAEC00C00D3A884 /* ScoreWriter.cpp */; };
@@ -3379,6 +3388,9 @@
 		29C01B5C1D130BBE0094BE61 /* pugiconfig.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = pugiconfig.hpp; path = ../Sourcecode/Mx/pugixml/pugiconfig.hpp; sourceTree = "<group>"; };
 		29C01B5D1D130BBE0094BE61 /* pugixml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pugixml.cpp; path = ../Sourcecode/Mx/pugixml/pugixml.cpp; sourceTree = "<group>"; };
 		29C01B5E1D130BBE0094BE61 /* pugixml.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = pugixml.hpp; path = ../Sourcecode/Mx/pugixml/pugixml.hpp; sourceTree = "<group>"; };
+		29C175971DC0048700CC48D7 /* OttavaData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OttavaData.h; path = ../Sourcecode/mx/api/OttavaData.h; sourceTree = "<group>"; };
+		29C175991DC00FD200CC48D7 /* SpannerFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SpannerFunctions.h; path = ../Sourcecode/mx/impl/SpannerFunctions.h; sourceTree = "<group>"; };
+		29C1759A1DC00FD200CC48D7 /* LineFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LineFunctions.h; path = ../Sourcecode/mx/impl/LineFunctions.h; sourceTree = "<group>"; };
 		29C29B841DAEC00C00D3A884 /* ScoreReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ScoreReader.cpp; path = ../Sourcecode/mx/impl/ScoreReader.cpp; sourceTree = "<group>"; };
 		29C29B851DAEC00C00D3A884 /* ScoreReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ScoreReader.h; path = ../Sourcecode/mx/impl/ScoreReader.h; sourceTree = "<group>"; };
 		29C29B861DAEC00C00D3A884 /* ScoreWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ScoreWriter.cpp; path = ../Sourcecode/mx/impl/ScoreWriter.cpp; sourceTree = "<group>"; };
@@ -4879,6 +4891,9 @@
 		29EF44071D6E6CE900DBDAB9 /* api */ = {
 			isa = PBXGroup;
 			children = (
+				29C175991DC00FD200CC48D7 /* SpannerFunctions.h */,
+				29C1759A1DC00FD200CC48D7 /* LineFunctions.h */,
+				29C175971DC0048700CC48D7 /* OttavaData.h */,
 				293488D41D94903B00D0C407 /* ApiCommon.h */,
 				29B48EE41DBEC9950030A974 /* BarlineData.h */,
 				292D1DD01D9A43A500CDD9F4 /* ClefData.cpp */,
@@ -4932,12 +4947,14 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				29B48EE11DBEC6F10030A974 /* WedgeData.h in Headers */,
-				29FFAC821DB9C9D100DC8AE1 /* CurveData.h in Headers */,
+				29C175A41DC03BA500CC48D7 /* SpannerFunctions.h in Headers */,
+				29C175A51DC03BA500CC48D7 /* LineFunctions.h in Headers */,
+				29C175A61DC03BA500CC48D7 /* OttavaData.h in Headers */,
 				290756E21DA8BE2A00EEF5C3 /* ApiCommon.h in Headers */,
+				29B48EE61DBECA0D0030A974 /* BarlineData.h in Headers */,
 				290756E31DA8BE2A00EEF5C3 /* ClefData.h in Headers */,
 				290756E41DA8BE2A00EEF5C3 /* ColorData.h in Headers */,
-				29B48EE61DBECA0D0030A974 /* BarlineData.h in Headers */,
+				29FFAC821DB9C9D100DC8AE1 /* CurveData.h in Headers */,
 				29766AD31DAC14CC00CCE2AC /* DirectionData.h in Headers */,
 				290756EA1DA8BE2A00EEF5C3 /* DocumentManager.h in Headers */,
 				290756EB1DA8BE2A00EEF5C3 /* DurationData.h in Headers */,
@@ -4966,6 +4983,7 @@
 				290756FE1DA8BE2A00EEF5C3 /* TimeSignatureData.h in Headers */,
 				29B4E81D1DA9CA15005DC6D1 /* TupletData.h in Headers */,
 				290756FF1DA8BE2A00EEF5C3 /* VoiceData.h in Headers */,
+				29B48EE11DBEC6F10030A974 /* WedgeData.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4973,18 +4991,20 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				29B48EE01DBEC6ED0030A974 /* WedgeData.h in Headers */,
-				29FFAC811DB9C9CD00DC8AE1 /* CurveData.h in Headers */,
+				29C175A11DC03BA000CC48D7 /* SpannerFunctions.h in Headers */,
+				29C175A21DC03BA000CC48D7 /* LineFunctions.h in Headers */,
+				29C175A31DC03BA000CC48D7 /* OttavaData.h in Headers */,
 				290756C41DA8BE0800EEF5C3 /* ApiCommon.h in Headers */,
+				29B48EE71DBECA110030A974 /* BarlineData.h in Headers */,
 				290756C51DA8BE0800EEF5C3 /* ClefData.h in Headers */,
 				290756C61DA8BE0800EEF5C3 /* ColorData.h in Headers */,
+				29FFAC811DB9C9CD00DC8AE1 /* CurveData.h in Headers */,
 				29766AD41DAC14D700CCE2AC /* DirectionData.h in Headers */,
 				290756CC1DA8BE0800EEF5C3 /* DocumentManager.h in Headers */,
 				290756CD1DA8BE0800EEF5C3 /* DurationData.h in Headers */,
 				290756CE1DA8BE0800EEF5C3 /* EncodingData.h in Headers */,
 				290756CF1DA8BE0800EEF5C3 /* FontData.h in Headers */,
 				29766AE21DAC39FB00CCE2AC /* KeyData.h in Headers */,
-				29B48EE71DBECA110030A974 /* BarlineData.h in Headers */,
 				290756D01DA8BE0800EEF5C3 /* LayoutData.h in Headers */,
 				290756D11DA8BE0800EEF5C3 /* LineData.h in Headers */,
 				290756D21DA8BE0800EEF5C3 /* MarkData.h in Headers */,
@@ -5007,6 +5027,7 @@
 				290756E01DA8BE0800EEF5C3 /* TimeSignatureData.h in Headers */,
 				29B4E81E1DA9CA19005DC6D1 /* TupletData.h in Headers */,
 				290756E11DA8BE0800EEF5C3 /* VoiceData.h in Headers */,
+				29B48EE01DBEC6ED0030A974 /* WedgeData.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5014,14 +5035,17 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29C1759B1DC00FD200CC48D7 /* SpannerFunctions.h in Headers */,
 				29FFAC801DB9C8B600DC8AE1 /* CurveData.h in Headers */,
 				29766AC71DAC014300CCE2AC /* MetronomeReader.h in Headers */,
 				2951E1681DBA9C7300826CEF /* WedgeData.h in Headers */,
+				29C175981DC0048700CC48D7 /* OttavaData.h in Headers */,
 				29398BB11DB1917B00475CD5 /* NotationsWriter.h in Headers */,
 				29B4E8241DA9CFC2005DC6D1 /* NoteAttachmentData.h in Headers */,
 				29C29B891DAEC00C00D3A884 /* ScoreReader.h in Headers */,
 				29398BA91DB1561200475CD5 /* NoteWriter.h in Headers */,
 				29766AE01DAC39EF00CCE2AC /* KeyData.h in Headers */,
+				29C1759C1DC00FD200CC48D7 /* LineFunctions.h in Headers */,
 				29B7C46C1DB02D2F009D7D8F /* SystemData.h in Headers */,
 				29766ACB1DAC149900CCE2AC /* DirectionReader.h in Headers */,
 				29B4E81C1DA9CA0E005DC6D1 /* TupletData.h in Headers */,

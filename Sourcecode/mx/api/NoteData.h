@@ -47,7 +47,7 @@ namespace mx
     	public:
 
             NoteData();
-
+            
             // when reading a MusicXML file this will be incremented
             // for each note that is encountered. when writing a
             // MusicXML file it will be ignored.
@@ -69,9 +69,9 @@ namespace mx
             bool isTieStart;
             bool isTieStop;
             
-            NoteType noteType;                  // normal, cue, grace
-            PitchData pitchData;                // step, alter, octave, accidental, etc
-            //int staffIndex;                     // this should be one less than the number shown in the <staff> element
+            NoteType noteType;            // normal, cue, grace
+            PitchData pitchData;          // step, alter, octave, accidental, etc
+            //int staffIndex;             // this should be one less than the number shown in the <staff> element
             int userRequestedVoiceNumber;
             Stem stem;
             
@@ -99,7 +99,6 @@ namespace mx
         MXAPI_EQUALS_NEXT_MEMBER( isTieStop )
         MXAPI_EQUALS_NEXT_MEMBER( noteType )
         MXAPI_EQUALS_NEXT_MEMBER( pitchData )
-        //MXAPI_EQUALS_NEXT_MEMBER( staffIndex )
         MXAPI_EQUALS_NEXT_MEMBER( userRequestedVoiceNumber )
         MXAPI_EQUALS_NEXT_MEMBER( stem )
         MXAPI_EQUALS_NEXT_MEMBER( tickTimePosition )

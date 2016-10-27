@@ -445,6 +445,8 @@
 		29C01F191D13137D0094BE61 /* cpulTestRegistry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C01F0F1D13137D0094BE61 /* cpulTestRegistry.cpp */; };
 		29C01F1A1D13137D0094BE61 /* cpulTestResult.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C01F111D13137D0094BE61 /* cpulTestResult.cpp */; };
 		29C01F1B1D13137D0094BE61 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C01F151D13137D0094BE61 /* main.cpp */; };
+		29C1759E1DC016B500CC48D7 /* DirectionReaderTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C1759D1DC016B500CC48D7 /* DirectionReaderTest.cpp */; };
+		29C175A01DC0253900CC48D7 /* DirectionWriterTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C1759F1DC0253900CC48D7 /* DirectionWriterTest.cpp */; };
 		29C227ED1D2F5DE000677B3C /* SortAttributes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C227EB1D2F5DE000677B3C /* SortAttributes.cpp */; };
 		29C227F01D2F74B500677B3C /* ChangeValues.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C227EE1D2F74B500677B3C /* ChangeValues.cpp */; };
 		29DE547A1DB98E7100F5F8A7 /* StupidFileFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DE54781DB98E7100F5F8A7 /* StupidFileFunctions.cpp */; };
@@ -1035,6 +1037,8 @@
 		29C01F131D13137D0094BE61 /* cpulTestTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cpulTestTimer.h; path = ../Sourcecode/cpul/cpulTestTimer.h; sourceTree = "<group>"; };
 		29C01F141D13137D0094BE61 /* cpulVsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cpulVsTest.h; path = ../Sourcecode/cpul/cpulVsTest.h; sourceTree = "<group>"; };
 		29C01F151D13137D0094BE61 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../Sourcecode/cpul/main.cpp; sourceTree = "<group>"; };
+		29C1759D1DC016B500CC48D7 /* DirectionReaderTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DirectionReaderTest.cpp; path = ../Sourcecode/mxtest/impl/DirectionReaderTest.cpp; sourceTree = "<group>"; };
+		29C1759F1DC0253900CC48D7 /* DirectionWriterTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DirectionWriterTest.cpp; path = ../Sourcecode/mxtest/impl/DirectionWriterTest.cpp; sourceTree = "<group>"; };
 		29C227EB1D2F5DE000677B3C /* SortAttributes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SortAttributes.cpp; path = ../Sourcecode/mxtest/import/SortAttributes.cpp; sourceTree = "<group>"; };
 		29C227EC1D2F5DE000677B3C /* SortAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SortAttributes.h; path = ../Sourcecode/mxtest/import/SortAttributes.h; sourceTree = "<group>"; };
 		29C227EE1D2F74B500677B3C /* ChangeValues.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ChangeValues.cpp; path = ../Sourcecode/mxtest/import/ChangeValues.cpp; sourceTree = "<group>"; };
@@ -1710,6 +1714,8 @@
 		29B48ED61DBE7F470030A974 /* impl */ = {
 			isa = PBXGroup;
 			children = (
+				29C1759F1DC0253900CC48D7 /* DirectionWriterTest.cpp */,
+				29C1759D1DC016B500CC48D7 /* DirectionReaderTest.cpp */,
 				29B48ED71DBE7F550030A974 /* MeasureWriterTest.cpp */,
 				29B48ED81DBE7F550030A974 /* NoteWriterTest.cpp */,
 				29B48ED91DBE7F550030A974 /* PartWriterTest.cpp */,
@@ -1814,6 +1820,7 @@
 				29C01D801D1312FA0094BE61 /* BarreTest.cpp in Sources */,
 				29C01E491D1312FA0094BE61 /* MovementNumberTest.cpp in Sources */,
 				29C01DAB1D1312FA0094BE61 /* DecimalsTest.cpp in Sources */,
+				29C175A01DC0253900CC48D7 /* DirectionWriterTest.cpp in Sources */,
 				29C01E2B1D1312FA0094BE61 /* LyricLanguageTest.cpp in Sources */,
 				29C01EE81D1312FA0094BE61 /* TrillMarkTest.cpp in Sources */,
 				29C01D981D1312FA0094BE61 /* ChromaticTest.cpp in Sources */,
@@ -1999,6 +2006,7 @@
 				29C01D9F1D1312FA0094BE61 /* CreditChoiceTest.cpp in Sources */,
 				29C01DED1D1312FA0094BE61 /* FrameStringsTest.cpp in Sources */,
 				29C01E421D1312FA0094BE61 /* MidiProgramTest.cpp in Sources */,
+				29C1759E1DC016B500CC48D7 /* DirectionReaderTest.cpp in Sources */,
 				29C01E661D1312FA0094BE61 /* OtherAppearanceTest.cpp in Sources */,
 				29C01F011D1312FA0094BE61 /* WordFontTest.cpp in Sources */,
 				29C01E4B1D1312FA0094BE61 /* MultipleRestTest.cpp in Sources */,

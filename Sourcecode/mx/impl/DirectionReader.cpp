@@ -37,6 +37,7 @@
 #include "mx/impl/PositionFunctions.h"
 #include "mx/impl/PrintFunctions.h"
 #include "mx/api/WedgeData.h"
+#include "mx/impl/SpannerFunctions.h"
 
 namespace mx
 {
@@ -344,7 +345,56 @@ namespace mx
         
         void DirectionReader::parseOctaveShift( const core::DirectionType& directionType)
         {
-            MX_UNUSED( directionType );
+            const auto& octaveShift = *directionType.getOctaveShift();
+            auto& attr = *octaveShift.getAttributes();
+            
+            if( attr.type == core::UpDownStopContinue::continue_ )
+            {
+                // not supported
+                return;
+            }
+            
+            bool isStop = attr.type == core::UpDownStopContinue::stop;
+            if( isStop )
+            {
+                auto stop = impl::getSpannerStop( attr );
+                stop.tickTimePosition = myCursor.tickTimePosition;
+                myOutDirectionData.ottavaStops.emplace_back( std::move( stop ) );
+                return;
+            }
+            
+            auto ottavaType = api::OttavaType::unspecified;
+            int amount = 8;
+            
+            if( attr.hasSize )
+            {
+                amount = attr.size.getValue();
+            }
+            
+            bool isUp = attr.type == core::UpDownStopContinue::up;
+            
+            if( isUp && amount > 8 )
+            {
+                ottavaType = api::OttavaType::o15ma;
+            }
+            else if ( isUp )
+            {
+                ottavaType = api::OttavaType::o8va;
+            }
+            else if ( !isUp && amount > 8 )
+            {
+                ottavaType = api::OttavaType::o15mb;
+            }
+            else if ( !isUp )
+            {
+                ottavaType = api::OttavaType::o8vb;
+            }
+
+            api::OttavaStart start;
+            start.spannerStart = impl::getSpannerStart( attr );
+            start.ottavaType = ottavaType;
+            start.spannerStart.tickTimePosition = myCursor.tickTimePosition;
+            myOutDirectionData.ottavaStarts.emplace_back( std::move( start ) );
         }
         
         

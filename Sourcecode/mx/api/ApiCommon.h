@@ -89,7 +89,7 @@ namespace mx
         {
             return areSame( lhs, rhs );
         }
-        
+
         
 #define MXAPI_EQUALS_BEGIN( mxapiClassName ) \
         inline bool operator==( const mxapiClassName& lhs, const mxapiClassName& rhs ) \

@@ -343,6 +343,16 @@ namespace mx
         };
         
         
+        const std::map<core::LineEnd, api::LineHook> Converter::lineEndMap =
+        {
+            std::pair<core::LineEnd, api::LineHook>{ core::LineEnd::arrow, api::LineHook::arrow },
+            std::pair<core::LineEnd, api::LineHook>{ core::LineEnd::both, api::LineHook::both },
+            std::pair<core::LineEnd, api::LineHook>{ core::LineEnd::down, api::LineHook::down },
+            std::pair<core::LineEnd, api::LineHook>{ core::LineEnd::up, api::LineHook::up },
+            std::pair<core::LineEnd, api::LineHook>{ core::LineEnd::none, api::LineHook::none },
+        };
+        
+        
         const std::map<core::RightLeftMiddle, api::HorizontalAlignment> Converter::barlinePlacementMap =
         {
             std::pair<core::RightLeftMiddle, api::HorizontalAlignment>{ core::RightLeftMiddle::right, api::HorizontalAlignment::right },
@@ -713,6 +723,18 @@ namespace mx
         api::HorizontalAlignment Converter::convertBarlinePlacement( core::RightLeftMiddle value ) const
         {
             return findApiItem( barlinePlacementMap, api::HorizontalAlignment::unspecified, value );
+        }
+        
+        
+        core::LineEnd Converter::convert( api::LineHook value ) const
+        {
+            return findCoreItem( lineEndMap, core::LineEnd::none, value );
+        }
+        
+        
+        api::LineHook Converter::convert( core::LineEnd value ) const
+        {
+            return findApiItem( lineEndMap, api::LineHook::unspecified, value );
         }
         
     }

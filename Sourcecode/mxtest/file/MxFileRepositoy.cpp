@@ -42,8 +42,7 @@ namespace mxtest
         const auto iter = instance.myNameSubdirectoryMap.find( fileName );
         if( iter == instance.myNameSubdirectoryMap.cend() )
         {
-            static std::string emptyness;
-            return emptyness;
+            throw std::runtime_error( "MxFileRepository::getSubdirectory fileName not found" );
         }
         return iter->second;
     }
