@@ -28,7 +28,11 @@ namespace mx
         class NoteWriter
         {
         public:
-            NoteWriter( const api::NoteData& inNoteData, const MeasureCursor& inCursor, const ScoreWriter& inScoreWriter );
+            NoteWriter(
+                const api::NoteData& inNoteData,
+                const MeasureCursor& inCursor,
+                const ScoreWriter& inScoreWriter,
+                bool isPreviousNoteAChordMember );
             core::NotePtr getNote() const;
             
         private:
@@ -36,6 +40,7 @@ namespace mx
             const impl::MeasureCursor& myCursor;
             const impl::ScoreWriter& myScoreWriter;
             const Converter myConverter;
+            const bool myIsPreviousNoteAChordMember;
             mutable core::NotePtr myOutNote;
             mutable core::NoteChoicePtr myOutNoteChoice;
             mutable core::FullNoteGroupPtr myOutFullNoteGroup;

@@ -77,6 +77,16 @@ namespace mx
         }
         
         
+        inline core::Color createCoreColor( const api::ColorData& inColor )
+        {
+            if( inColor.isAlphaSpecified )
+            {
+                return core::Color{ inColor.red, inColor.green, inColor.blue, inColor.alpha };
+            }
+            return core::Color{ inColor.red, inColor.green, inColor.blue };
+        }
+        
+        
         MX_ATTR_SETFUNC_OPTIONAL( hasPrintObject, HasPrintObject, bool, false );
         MX_ATTR_SETFUNC_OPTIONAL( printObject, PrintObject, core::YesNo, core::YesNo::yes );
         
@@ -90,6 +100,31 @@ namespace mx
             {
                 lookForAndSetPrintObject( inPrintObject, &outAttributes );
             }
+        }
+        
+        
+        template <typename ATTRIBUTES_TYPE>
+        void setAttributesColor( const api::ColorData& inColorData, ATTRIBUTES_TYPE& outAttributes )
+        {
+            lookForAndSetHasColor( true, &outAttributes );
+            lookForAndSetColor( createCoreColor( inColorData ), &outAttributes );
+        }
+        
+        template <typename ATTRIBUTES_TYPE>
+        void setAttributesFromPrintData( const api::PrintData& inPrintData, ATTRIBUTES_TYPE& outAttributes )
+        {
+            if( inPrintData.isColorSpecified )
+            {
+                lookForAndSetHasColor( true, &outAttributes );
+                lookForAndSetColor( inPrintData.color, &outAttributes );
+            }
+            else
+            {
+                lookForAndSetHasColor( false, &outAttributes );
+                lookForAndSetColor( core::Color{}, &outAttributes );
+            }
+            
+            setAttributesFromFontData( inPrintData, outAttributes );
         }
     }
 }

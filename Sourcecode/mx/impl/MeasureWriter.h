@@ -35,6 +35,7 @@ namespace mx
         	core::PartwiseMeasurePtr getPartwiseMeasure();
 
         private:
+            using NoteIter = std::vector<api::NoteData>::const_iterator;
         	const api::MeasureData& myMeasureData;
         	core::PartwiseMeasurePtr myOutMeasure;
             MeasureCursor myCursor;
@@ -54,7 +55,7 @@ namespace mx
             void writeForwardOrBackupIfNeeded( const api::NoteData& currentNote );
             void backup( const int ticks );
             void forward( const int ticks );
-            void advanceCursorIfNeeded( const api::NoteData& currentNote );
+            void advanceCursorIfNeeded( const api::NoteData& currentNote, NoteIter inNoteIter, const NoteIter inEndIter );
             void writeBarlines( int tickTimePosition );
             
             template<typename T>

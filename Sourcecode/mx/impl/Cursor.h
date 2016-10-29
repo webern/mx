@@ -27,6 +27,8 @@ namespace mx
             int staffIndex;
             bool isBackupInProgress;
             bool isFirstMeasureInPart;
+            
+            bool isChordActive;
 
             Cursor( int numStaves, int globalTicksPerQuarter );
             virtual ~Cursor() = default;

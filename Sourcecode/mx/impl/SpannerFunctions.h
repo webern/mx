@@ -28,9 +28,7 @@ namespace mx
             }
             start.positionData = getPositionData( inAttributes );
             start.printData = getPrintData( inAttributes );
-            
-            // TODO - why doesn't this line compile?
-            //start.lineData = getLineData( inAttributes );
+            start.lineData = getLineData( inAttributes );
             return start;
         }
         
@@ -45,6 +43,25 @@ namespace mx
             }
             stop.positionData = getPositionData( inAttributes );
             return stop;
+        }
+        
+        MX_ATTR_SETFUNC_OPTIONAL( hasNumber, HasNumber, bool, false );
+        MX_ATTR_SETFUNC_OPTIONAL_WITH_GETTER( number, Number, int, -1 );
+
+        template <typename ATTRIBUTES_TYPE>
+        void setAttributesFromSpannerStart( const api::SpannerStart& start, ATTRIBUTES_TYPE& outAttributes )
+        {
+            if( start.numberLevel > 0 )
+            {
+                lookForAndSetHasNumber( true, &outAttributes );
+                lookForAndSetNumber( start.numberLevel, &outAttributes );
+            }
+            else
+            {
+                lookForAndSetHasNumber( false, &outAttributes );
+                lookForAndSetNumber( 1, &outAttributes );
+            }
+            
         }
     }
 }

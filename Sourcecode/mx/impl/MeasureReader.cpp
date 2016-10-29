@@ -297,12 +297,12 @@ namespace mx
             MX_UNUSED( inMxNote );
             MX_UNUSED( nextNotePtr );
             
-            bool isNextNoteAChordMemberMakingThisNoteTheStartOfTheChord = false;
+            bool isNextNotePartOfAChord = false;
             
             if( nextNotePtr )
             {
                 NoteReader nextNoteReader{ *nextNotePtr };
-                isNextNoteAChordMemberMakingThisNoteTheStartOfTheChord = nextNoteReader.getIsChord();
+                isNextNotePartOfAChord = nextNoteReader.getIsChord();
             }
             
             myCurrentCursor.isBackupInProgress = false;
@@ -319,7 +319,10 @@ namespace mx
             
             myCurrentCursor.staffIndex = noteDataStaffIndex;
             
-            if( !noteData.isChord && !isNextNoteAChordMemberMakingThisNoteTheStartOfTheChord)
+            bool isThisNotePartOfAChord = noteData.isChord || isNextNotePartOfAChord;
+            noteData.isChord = isThisNotePartOfAChord;
+            
+            if( !isThisNotePartOfAChord || !isNextNotePartOfAChord )
             {
                 myCurrentCursor.tickTimePosition += noteData.durationData.durationTimeTicks;
             }

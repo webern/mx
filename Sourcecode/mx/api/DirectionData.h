@@ -57,6 +57,8 @@ namespace mx
             std::vector<WedgeStop> wedgeStops;
             std::vector<OttavaStart> ottavaStarts;
             std::vector<SpannerStop> ottavaStops;
+            std::vector<SpannerStart> bracketStarts;
+            std::vector<SpannerStop> bracketStops;
             
             DirectionData()
             : tickTimePosition{ 0 }
@@ -71,6 +73,8 @@ namespace mx
             , wedgeStops{}
             , ottavaStarts{}
             , ottavaStops{}
+            , bracketStarts{}
+            , bracketStops{}
             {
                 
             }
@@ -97,7 +101,9 @@ namespace mx
         MXAPI_EQUALS_NEXT_MEMBER( wedgeStarts )
         MXAPI_EQUALS_NEXT_MEMBER( wedgeStops )
         MXAPI_EQUALS_NEXT_MEMBER( ottavaStarts )
-        MXAPI_EQUALS_LAST_MEMBER( ottavaStops )
+        MXAPI_EQUALS_NEXT_MEMBER( ottavaStops )
+        MXAPI_EQUALS_NEXT_MEMBER( bracketStarts )
+        MXAPI_EQUALS_LAST_MEMBER( bracketStops )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( DirectionData );
 	}

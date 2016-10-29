@@ -3,6 +3,7 @@
 
 #include "mxtest/file/MxFileRepository.h"
 #include "mxtest/file/Path.h"
+#include "mx/api/DocumentManager.h"
 
 #include <fstream>
 
@@ -121,6 +122,17 @@ namespace mxtest
             file.sizeBytes = MxFileRepositoryGetTheFilesize( file.path.c_str() );
             myTestFiles.emplace_back( std::move( file ) );
         }
+    }
+    
+    
+    mx::api::ScoreData MxFileRepository::loadFile( const std::string& fileName )
+    {
+        const std::string fullPath = getFullPath( fileName );
+        auto& docMgr = mx::api::DocumentManager::getInstance();
+        const int docId = docMgr.createFromFile( fullPath );
+        auto scoreData = docMgr.getData( docId );
+        docMgr.destroyDocument( docId );
+        return scoreData;
     }
     
     

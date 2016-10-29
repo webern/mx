@@ -121,6 +121,8 @@
 
 namespace mx
 {
+    
+    
     namespace core
     {
         class PartwiseMeasure;
@@ -330,6 +332,7 @@ namespace mx
                 auto noteEnd = voice.second.notes.cend();
                 for( ; noteIter != noteEnd; ++noteIter )
                 {
+                    myCursor.isChordActive = noteIter->isChord;
                     const auto& apiNote = *noteIter;
                     writeForwardOrBackupIfNeeded( apiNote );
                     
@@ -370,10 +373,10 @@ namespace mx
                     
                     auto mdc = core::makeMusicDataChoice();
                     mdc->setChoice( core::MusicDataChoice::Choice::note );
-                    NoteWriter writer{ apiNote, myCursor, myScoreWriter };
+                    NoteWriter writer{ apiNote, myCursor, myScoreWriter, myPreviousCursor.isChordActive };
                     mdc->setNote( writer.getNote() );
                     myOutMeasure->getMusicDataGroup()->addMusicDataChoice( mdc );
-                    advanceCursorIfNeeded( apiNote );
+                    advanceCursorIfNeeded( apiNote, noteIter, noteEnd );
                 } // foreach note
             } // foreach voice
             
@@ -461,12 +464,20 @@ namespace mx
         }
         
         
-        void MeasureWriter::advanceCursorIfNeeded( const api::NoteData& currentNote )
+        void MeasureWriter::advanceCursorIfNeeded( const api::NoteData& currentNote, NoteIter inNoteIter, const NoteIter inEndIter )
         {
-            if( !currentNote.isChord )
+            ++inNoteIter;
+            bool isNextNoteChord = false;
+            if( inNoteIter != inEndIter )
+            {
+                isNextNoteChord = inNoteIter->isChord;
+            }
+            if( !currentNote.isChord || !isNextNoteChord )
             {
                 myCursor.tickTimePosition += currentNote.durationData.durationTimeTicks;
+                myCursor.isChordActive = true;
             }
+            myPreviousCursor = myCursor;
         }
         
         

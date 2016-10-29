@@ -13,12 +13,12 @@ namespace mx
         // populates the outNoteData.curveStart, cureContinuations
         // or curveEnd vector with the result
         template<typename SLUR_OR_TIE_ELEMENT_TYPE>
-        void slurryness( const SLUR_OR_TIE_ELEMENT_TYPE& slurOrTie, api::NoteData& outNoteData )
+        void parseCurve( const SLUR_OR_TIE_ELEMENT_TYPE& slurOrTie, api::NoteData& outNoteData )
         {
             const auto curveType = slurOrTie.getElementName() == "slur" ? api::CurveType::slur : api::CurveType::tie;
             Converter converter;
             const auto& attr = *slurOrTie.getAttributes();
-            const int number = attr.hasNumber ? attr.number.getValue() : 1;
+            const int number = attr.hasNumber ? attr.number.getValue() : -1;
             auto orientation = api::CurveOrientation::unspecified;
             
             if( attr.hasOrientation && attr.orientation == core::OverUnder::over )

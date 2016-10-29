@@ -6,6 +6,8 @@
 #include "mx/api/DirectionData.h"
 #include "mx/impl/Cursor.h"
 #include "mx/impl/Converter.h"
+#include "mx/impl/PositionFunctions.h"
+#include "mx/core/elements/Direction.h"
 
 #include <mutex>
 #include <vector>
@@ -14,7 +16,6 @@ namespace mx
 {
 	namespace core
 	{
-		class Direction;
         class DirectionType;
         using DirectionTypePtr = std::shared_ptr<DirectionType>;
         using DirectionTypeSet = std::vector<DirectionTypePtr>;
@@ -60,6 +61,24 @@ namespace mx
             void parseAccordionRegistration( const core::DirectionType& directionType );
             void parsePercussion( const core::DirectionType& directionType );
             void parseOtherDirection( const core::DirectionType& directionType );
+            
+            template<typename ATTRIBUTES_TYPE>
+            api::PositionData parsePositionData( const ATTRIBUTES_TYPE& attributes )
+            {
+                api::PositionData positionData = impl::getPositionData( attributes );
+                
+                if( positionData.placement == api::Placement::unspecified )
+                {
+                    const auto& dirAttr = *myDirection.getAttributes();
+                    
+                    if( dirAttr.hasPlacement )
+                    {
+                        positionData.placement = myConverter.convert( dirAttr.placement );
+                    }
+                }
+                
+                return positionData;
+            }
     	};
 	}
 }

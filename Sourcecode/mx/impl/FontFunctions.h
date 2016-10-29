@@ -71,13 +71,12 @@ namespace mx
             return converter.convert( checkFontWeight<ATTRIBUTES_TYPE>( &inAttributes ) );
         }
         
-        
-        
-        
+
         template <typename ATTRIBUTES_TYPE>
-        api::FontSizeType getFontSize( const ATTRIBUTES_TYPE& inAttributes,
-                                        core::DecimalType& outPointSize,
-                                        api::CssSize& outCssSize )
+        api::FontSizeType getFontSize(
+            const ATTRIBUTES_TYPE& inAttributes,
+            core::DecimalType& outPointSize,
+            api::CssSize& outCssSize )
         {
             if( !checkHasFontSize<ATTRIBUTES_TYPE>( &inAttributes ) )
             {
@@ -114,6 +113,99 @@ namespace mx
             outFontData.sizeType = getFontSize( inAttributes, outFontData.sizePoint, outFontData.sizeCss );
             MX_UNUSED( inAttributes );
             return outFontData;
+        }
+
+        MX_ATTR_SETFUNC_OPTIONAL( hasFontFamily, HasFontFamily, bool, false );
+        MX_ATTR_SETFUNC_OPTIONAL_WITH_GETTER( fontFamily, FontFamily, core::CommaSeparatedText, core::CommaSeparatedText{} );
+        
+        MX_ATTR_SETFUNC_OPTIONAL( hasFontStyle, HasFontStyle, bool, false );
+        MX_ATTR_SETFUNC_OPTIONAL( fontStyle, FontStyle, core::FontStyle, core::FontStyle{} );
+        
+        MX_ATTR_SETFUNC_OPTIONAL( hasFontSize, HasFontSize, bool, false );
+        MX_ATTR_SETFUNC_OPTIONAL_WITH_GETTER( fontSize, FontSize, core::FontSize, core::FontSize{ core::CssFontSize::medium } );
+        
+        MX_ATTR_SETFUNC_OPTIONAL( hasFontWeight, HasFontWeight, bool, false );
+        MX_ATTR_SETFUNC_OPTIONAL( fontWeight, FontWeight, core::FontWeight, core::FontWeight::normal );
+
+        template<typename ATTRIBUTES_TYPE>
+        void setAttributesFromFontFamily( const std::vector<std::string>& fontFamilyData, ATTRIBUTES_TYPE& outAttributes )
+        {
+            if( fontFamilyData.empty() )
+            {
+                lookForAndSetHasFontFamily( false, &outAttributes );
+                return;
+            }
+            
+            core::XsTokenSet tokens;
+            for( const auto& s : fontFamilyData )
+            {
+                tokens.emplace_back( s );
+            }
+            core::CommaSeparatedText csv;
+            csv.setValues( tokens );
+            lookForAndSetHasFontFamily( true, &outAttributes );
+            lookForAndSetFontFamily( csv, outAttributes );
+        }
+        
+        
+        template<typename ATTRIBUTES_TYPE>
+        void setAttributesFromFontStyle( api::FontStyle value, ATTRIBUTES_TYPE& outAttributes )
+        {
+            Converter converter;
+            if( value == api::FontStyle::unspecified )
+            {
+                lookForAndSetHasFontStyle( false, &outAttributes );
+            }
+            lookForAndSetHasFontStyle( true, &outAttributes );
+            lookForAndSetFontStyle( converter.convert( value ), &outAttributes );
+        }
+        
+        
+        template<typename ATTRIBUTES_TYPE>
+        void setAttributesFromFontWeight( api::FontWeight value, ATTRIBUTES_TYPE& outAttributes )
+        {
+            Converter converter;
+            if( value == api::FontWeight::unspecified )
+            {
+                lookForAndSetHasFontWeight( false, &outAttributes );
+            }
+            lookForAndSetHasFontWeight( true, &outAttributes );
+            lookForAndSetFontWeight( converter.convert( value ), &outAttributes );
+        }
+        
+        
+        template<typename ATTRIBUTES_TYPE>
+        void setAttributesFromFontSize( const api::FontData& value, ATTRIBUTES_TYPE& outAttributes )
+        {
+            Converter converter;
+            
+            if( value.sizeType == api::FontSizeType::unspecified )
+            {
+                lookForAndSetHasFontSize( false, &outAttributes );
+            }
+            
+            lookForAndSetHasFontSize( true, &outAttributes );
+            core::FontSize fontSize;
+            
+            if( value.sizeType == api::FontSizeType::css )
+            {
+                fontSize.setValue( converter.convert( value.sizeCss ) );
+            }
+            else if( value.sizeType == api::FontSizeType::point )
+            {
+                fontSize.setValue( core::PositiveDecimal{ value.sizePoint } );
+            }
+            
+            lookForAndSetFontSize( fontSize, &outAttributes );
+        }
+        
+        template<typename ATTRIBUTES_TYPE>
+        void setAttributesFromFontData( const api::FontData& value, ATTRIBUTES_TYPE& outAttributes )
+        {
+            setAttributesFromFontSize( value, outAttributes );
+            setAttributesFromFontWeight( value.weight, outAttributes );
+            setAttributesFromFontStyle( value.style, outAttributes );
+            setAttributesFromFontFamily( value.fontFamily, outAttributes );
         }
     }
 }

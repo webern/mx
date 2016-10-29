@@ -47,7 +47,7 @@ namespace mx
                 
             }
         };
-        
+                
         MXAPI_EQUALS_BEGIN( SpannerStart )
         MXAPI_EQUALS_FIRST_MEMBER( numberLevel )
         MXAPI_EQUALS_NEXT_MEMBER( tickTimePosition )

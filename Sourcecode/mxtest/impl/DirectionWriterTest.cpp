@@ -36,7 +36,6 @@ TEST( ottavaStartStop, DirectionWriter )
     auto direction = writer.getDirection();
     const auto& directionTypes = direction->getDirectionTypeSet();
     
-    direction->toStream( std::cout, 0 );
     CHECK_EQUAL( 2, directionTypes.size() );
 }
 T_END

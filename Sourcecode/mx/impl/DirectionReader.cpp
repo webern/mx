@@ -34,7 +34,6 @@
 #include "mx/core/elements/Wedge.h"
 #include "mx/core/elements/Words.h"
 #include "mx/impl/MetronomeReader.h"
-#include "mx/impl/PositionFunctions.h"
 #include "mx/impl/PrintFunctions.h"
 #include "mx/api/WedgeData.h"
 #include "mx/impl/SpannerFunctions.h"
@@ -282,21 +281,8 @@ namespace mx
         
         void DirectionReader::parseDynamic( const core::Dynamics& dynamic )
         {
-            //const auto& attr = *dynamic.getAttributes();
             auto mark = api::DirectionMark{};
-//            mark.tickTimePosition = myCursor.tickTimePosition;
-//            mark.positionData = getPositionData( attr );
-//            mark.printData = getPrintData( attr );
             const auto valueObject = dynamic.getValue();
-            
-//            if( myDirection.getAttributes()->hasPlacement )
-//            {
-//                if( markData.positionData.placement == api::Placement::unspecified )
-//                {
-//                    markData.positionData.placement = myConverter.convert( myDirection.getAttributes()->placement );
-//                }
-//            }
-            
             mark.markType = myConverter.convertDynamic( valueObject.getValue() );
             mark.name = valueObject.getValueString();
             if( valueObject.getValue() == core::DynamicsEnum::otherDynamics )
@@ -325,7 +311,29 @@ namespace mx
         
         void DirectionReader::parseBracket( const core::DirectionType& directionType)
         {
-            MX_UNUSED( directionType );
+            const auto& bracket = *directionType.getBracket();
+            const auto& attr = *bracket.getAttributes();
+            
+            if( attr.type == core::StartStopContinue::stop )
+            {
+                api::SpannerStop stop;
+                stop.tickTimePosition = myCursor.tickTimePosition;
+                stop.numberLevel = impl::checkNumber( &attr );
+                stop.positionData = this->parsePositionData( attr );
+                myOutDirectionData.bracketStops.emplace_back( std::move( stop ) );
+                return;
+            }
+            else if( attr.type == core::StartStopContinue::start )
+            {
+                api::SpannerStart start;
+                start.tickTimePosition = myCursor.tickTimePosition;
+                start.numberLevel = impl::checkNumber( &attr );
+                start.positionData = this->parsePositionData( attr );
+                start.lineData = impl::getLineData( attr );
+                start.printData = impl::getPrintData( attr );
+                myOutDirectionData.bracketStarts.emplace_back( std::move( start ) );
+                return;
+            }
         }
         
         

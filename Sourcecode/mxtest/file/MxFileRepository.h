@@ -4,6 +4,7 @@
 #pragma once
 
 #include "mxtest/file/MxFile.h"
+#include "mx/api/ScoreData.h"
 
 #include <string>
 #include <vector>
@@ -13,7 +14,7 @@
 namespace mxtest
 {
     // set to zero for infitinity
-    constexpr const int MX_COMPILE_MAX_FILE_SIZE_BYTES = 1;//1024 * 100000;
+    constexpr const int MX_COMPILE_MAX_FILE_SIZE_BYTES = 1024 * 1024;
     
     using StringPair = std::pair<std::string, std::string>;
     using StringMap = std::map<std::string, std::string>;
@@ -26,6 +27,7 @@ namespace mxtest
         static MxFiles getTestFiles( int maxFileSizeBytes );
         static const MxFiles& getTestFiles();
         static const MxFile& getTestFile( const std::string& fileName );
+        static mx::api::ScoreData loadFile( const std::string& fileName );
         
     private:
         MxFileRepository();

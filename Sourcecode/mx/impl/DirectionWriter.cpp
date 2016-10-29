@@ -34,8 +34,10 @@
 #include "mx/core/elements/StringMute.h"
 #include "mx/core/elements/Wedge.h"
 #include "mx/core/elements/Words.h"
+#include "mx/core/elements/Bracket.h"
 #include "mx/api/BarlineData.h"
 #include "mx/impl/LineFunctions.h"
+#include "mx/impl/SpannerFunctions.h"
 
 namespace mx
 {
@@ -184,10 +186,18 @@ namespace mx
                 MX_UNUSED( ottavaStop );
             }
             
-            //core::DirectionPtr temp{ std::move( myOutDirectionPtr ) };
+            for( const auto& item : myDirectionData.bracketStarts )
+            {
+                auto outDirType = core::makeDirectionType();
+                this->addDirectionType( outDirType );
+                outDirType->setChoice( core::DirectionType::Choice::bracket );
+                auto outElement = outDirType->getBracket();
+                auto& attr = *outElement->getAttributes();
+                setAttributesFromSpannerStart( item, attr );
+            }
+            
             myIsFirstDirectionTypeAdded = false;
-            //myOutDirectionPtr = nullptr;
-            return myOutDirectionPtr;//temp;
+            return myOutDirectionPtr;
         }
         
         

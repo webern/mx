@@ -16,6 +16,7 @@ namespace mx
         , staffIndex( 0 )
         , isBackupInProgress( false )
         , isFirstMeasureInPart( true )
+        , isChordActive( false )
         , myNumStaves( numStaves )
         , myGlobalTicksPerQuarter( globalTicksPerQuarter )
         {
@@ -40,6 +41,8 @@ namespace mx
             tickTimePosition = 0;
             staffIndex = 0;
             voiceIndex = 0;
+            isBackupInProgress = false;
+            isChordActive = false;
         }
 
 
