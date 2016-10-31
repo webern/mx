@@ -185,5 +185,25 @@ namespace mx
             ( markType == MarkType::fz ) ||
             ( markType == MarkType::otherDynamics );
         }
+        
+        bool isMarkArticulation( MarkType markType )
+        {
+            return ( markType == MarkType::accent ) ||
+            ( markType == MarkType::strongAccent ) ||
+            ( markType == MarkType::staccato ) ||
+            ( markType == MarkType::tenuto ) ||
+            ( markType == MarkType::detachedLegato ) ||
+            ( markType == MarkType::staccatissimo ) ||
+            ( markType == MarkType::spiccato ) ||
+            ( markType == MarkType::scoop ) ||
+            ( markType == MarkType::plop ) ||
+            ( markType == MarkType::doit ) ||
+            ( markType == MarkType::falloff ) ||
+            ( markType == MarkType::breathMark ) ||
+            ( markType == MarkType::caesura ) ||
+            ( markType == MarkType::stress ) ||
+            ( markType == MarkType::unstress ) ||
+            ( markType == MarkType::otherArticulation );
+        }
     }
 }

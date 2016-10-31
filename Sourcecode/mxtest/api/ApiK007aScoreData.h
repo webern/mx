@@ -4,6 +4,7 @@
 #pragma once
 
 #include "mx/api/ScoreData.h"
+#include "mx/api/Smufl.h"
 
 namespace
 {
@@ -99,6 +100,14 @@ namespace mxtest
         addMeasureWithNote( MarkType::sffz, part );
         addMeasureWithNote( MarkType::fz, part );
         addMeasureWithNote( MarkType::otherDynamics, part );
+        
+        auto& lastMeasure = part.measures.back();
+        auto& lastDynamic = lastMeasure.staves.back().voices[0].notes.back().noteAttachmentData.marks.back();
+        const std::string name = "dynamicZ";
+        lastDynamic.smuflName = name;
+        lastDynamic.name = name;
+        lastDynamic.smuflCodepoint = Smufl::findCodepoint( name );
+        
         return score;
     }
 }

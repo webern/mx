@@ -24,6 +24,7 @@
 #include "mx/core/elements/Unstress.h"
 #include "mx/core/elements/Tied.h"
 #include "mx/core/elements/Slur.h"
+#include "mx/core/elements/Dynamics.h"
 #include "mx/utility/OptionalMembers.h"
 #include "mx/impl/CurveFunctions.h"
 #include "mx/core/elements/Tuplet.h"
@@ -146,7 +147,37 @@ namespace mx
             
             for( const auto& mark : myNoteData.noteAttachmentData.marks )
             {
-                addArticulation( mark, articulations );
+                if( isMarkArticulation( mark.markType ) )
+                {
+                    this->addArticulation( mark, articulations );
+                }
+                else if( isMarkDynamic( mark.markType) )
+                {
+                    auto dynamicNotationsChoice = core::makeNotationsChoice();
+                    myOutNotations->addNotationsChoice( dynamicNotationsChoice );
+                    dynamicNotationsChoice->setChoice( core::NotationsChoice::Choice::dynamics );
+                    auto dynamics = dynamicNotationsChoice->getDynamics();
+                    if( mark.positionData.placement != api::Placement::unspecified )
+                    {
+                        dynamics->getAttributes()->hasPlacement = true;
+                        dynamics->getAttributes()->placement = myConverter.convert( mark.positionData.placement );
+                    }
+                    const auto value = myConverter.convertDynamic( mark.markType );
+                    core::DynamicsValue dynamicsValue;
+                    dynamicsValue.setValue( value );
+                    const bool isOther = value == core::DynamicsEnum::otherDynamics;
+                    
+                    if( isOther && !mark.smuflName.empty() )
+                    {
+                        dynamicsValue.setValue( mark.smuflName );
+                    }
+                    else if ( isOther && !mark.name.empty() )
+                    {
+                        dynamicsValue.setValue( mark.name );
+                    }
+                    
+                    dynamics->setValue( dynamicsValue );
+                }
             }
             
             if( articulations->getArticulationsChoiceSet().size() > 0 )

@@ -141,6 +141,7 @@ namespace mx
         };
 
         bool isMarkDynamic( MarkType );
+        bool isMarkArticulation( MarkType );
         
         using MarkSmuflEntry = std::pair<const MarkType, const SmuflGlyphname>;
         using MarkSmuflMap = std::map<const MarkType, const SmuflGlyphname>;
