@@ -31,7 +31,7 @@ namespace mx
             markData.markType = markType;
             markData.tickTimePosition = myCursor.tickTimePosition;
             markData.name = myDynamic.getValue().getValueString();
-            //parseMarkDataAttributes( *myDynamic.getAttributes(), markData );
+            parseMarkDataAttributes( *myDynamic.getAttributes(), markData );
 
             if( dynamicType == core::DynamicsEnum::otherDynamics )
             {

@@ -28,11 +28,34 @@ namespace mx
             std::map<int, VoiceData> voices;
         };
         
+        inline bool voicesAreEqual( const std::map<int, VoiceData>& l, const std::map<int, VoiceData>& r )
+        {
+            if( l.size() != r.size() )
+            {
+                return false;
+            }
+            auto li = l.cbegin();
+            auto ri = r.cbegin();
+            auto le = l.cend();
+            for( ; li != le; ++li, ++ri )
+            {
+                if( li->first != ri->first )
+                {
+                    return false;
+                }
+                else if ( li->second != ri->second )
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        
         MXAPI_EQUALS_BEGIN( StaffData )
         MXAPI_EQUALS_FIRST_MEMBER( clefs )
         MXAPI_EQUALS_NEXT_MEMBER( keys )
-        MXAPI_EQUALS_LAST_MEMBER( directions )
-        MXAPI_EQUALS_LAST_MEMBER( voices )
+        MXAPI_EQUALS_NEXT_MEMBER( directions )
+        ( voicesAreEqual( lhs.voices, rhs.voices ) );
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( StaffData );
     }

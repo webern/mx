@@ -39,10 +39,3 @@ namespace mxtest
 }
 
 #endif
-
-
-/*
-
-
-
-*/

@@ -5,6 +5,8 @@
 
 #include "mx/api/ScoreData.h"
 #include "mx/api/Smufl.h"
+#include "mx/impl/Converter.h"
+#include "mx/core/Enums.h"
 
 namespace
 {
@@ -29,7 +31,9 @@ namespace
         auto& markData = noteP->noteAttachmentData.marks.back();
         markData.markType = markType;
         markData.smuflName = MarkSmufl::getName( markType );
-        markData.name = markData.smuflName;
+        mx::impl::Converter converter;
+        const auto d = converter.convertDynamic( markType );
+        markData.name = mx::core::toString( d );
         markData.smuflCodepoint = MarkSmufl::getCodepoint( markType );
         markData.tickTimePosition = noteP->tickTimePosition;
         markData.positionData.placement = Placement::below;
@@ -49,9 +53,6 @@ namespace
         using namespace mx::api;
         outPartData.measures.emplace_back( MeasureData{} );
         auto measureP = &outPartData.measures.front();
-        //measureP->keys.emplace_back( KeyData{} );
-        //auto keyP = &measureP->keys.back();
-        //keyP->mode = KeyMode::major;
         measureP->timeSignature.isImplicit = false;
         measureP->timeSignature.symbol = TimeSignatureSymbol::unspecified;
         measureP->staves.emplace_back( StaffData{} );
