@@ -13,7 +13,7 @@ namespace mxtest
 {
 
     
-constexpr const char* const roundTripFileName = "testChord.xml";
+constexpr const char* const roundTripFileName = "k007a_Notations_Dynamics.xml";
 
 	inline void roundTrip()
 	{
