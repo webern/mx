@@ -57,11 +57,11 @@ namespace mx
         };
         
         MXAPI_EQUALS_BEGIN( TimeSignatureData )
-        MXAPI_EQUALS_FIRST_MEMBER( symbol )
-        MXAPI_EQUALS_NEXT_MEMBER( beats )
-        MXAPI_EQUALS_NEXT_MEMBER( beatType )
-        MXAPI_EQUALS_NEXT_MEMBER( isImplicit )
-        MXAPI_EQUALS_LAST_MEMBER( display )
+        MXAPI_EQUALS_MEMBER( symbol )
+        MXAPI_EQUALS_MEMBER( beats )
+        MXAPI_EQUALS_MEMBER( beatType )
+        MXAPI_EQUALS_MEMBER( isImplicit )
+        MXAPI_EQUALS_MEMBER( display )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( TimeSignatureData );
     }

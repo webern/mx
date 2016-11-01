@@ -141,43 +141,43 @@ namespace mx
         };
         
         MXAPI_EQUALS_BEGIN( CurvePoints )
-        MXAPI_EQUALS_FIRST_MEMBER( isXSpecified )
-        MXAPI_EQUALS_NEXT_MEMBER( x )
-        MXAPI_EQUALS_NEXT_MEMBER( isYSpecified )
-        MXAPI_EQUALS_NEXT_MEMBER( y )
-        MXAPI_EQUALS_NEXT_MEMBER( isBezierXSpecified )
-        MXAPI_EQUALS_NEXT_MEMBER( bezierX )
-        MXAPI_EQUALS_NEXT_MEMBER( isBezierYSpecified )
-        MXAPI_EQUALS_NEXT_MEMBER( bezierY )
-        MXAPI_EQUALS_NEXT_MEMBER( isTimeOffsetTicksSpecified )
-        MXAPI_EQUALS_LAST_MEMBER( timeOffsetTicks )
+        MXAPI_EQUALS_MEMBER( isXSpecified )
+        MXAPI_EQUALS_MEMBER( x )
+        MXAPI_EQUALS_MEMBER( isYSpecified )
+        MXAPI_EQUALS_MEMBER( y )
+        MXAPI_EQUALS_MEMBER( isBezierXSpecified )
+        MXAPI_EQUALS_MEMBER( bezierX )
+        MXAPI_EQUALS_MEMBER( isBezierYSpecified )
+        MXAPI_EQUALS_MEMBER( bezierY )
+        MXAPI_EQUALS_MEMBER( isTimeOffsetTicksSpecified )
+        MXAPI_EQUALS_MEMBER( timeOffsetTicks )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( CurvePoints );
 
         MXAPI_EQUALS_BEGIN( CurveStart )
-        MXAPI_EQUALS_FIRST_MEMBER( curveType )
-        MXAPI_EQUALS_NEXT_MEMBER( numberLevel )
-        MXAPI_EQUALS_NEXT_MEMBER( curvePoints )
-        MXAPI_EQUALS_NEXT_MEMBER( curveOrientation )
-        MXAPI_EQUALS_NEXT_MEMBER( placement )
-        MXAPI_EQUALS_NEXT_MEMBER( lineData )
-        MXAPI_EQUALS_NEXT_MEMBER( isColorSpecified )
-        MXAPI_EQUALS_LAST_MEMBER( colorData )
+        MXAPI_EQUALS_MEMBER( curveType )
+        MXAPI_EQUALS_MEMBER( numberLevel )
+        MXAPI_EQUALS_MEMBER( curvePoints )
+        MXAPI_EQUALS_MEMBER( curveOrientation )
+        MXAPI_EQUALS_MEMBER( placement )
+        MXAPI_EQUALS_MEMBER( lineData )
+        MXAPI_EQUALS_MEMBER( isColorSpecified )
+        MXAPI_EQUALS_MEMBER( colorData )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( CurveStart );
 
         MXAPI_EQUALS_BEGIN( CurveContinue )
-        MXAPI_EQUALS_FIRST_MEMBER( curveType )
-        MXAPI_EQUALS_NEXT_MEMBER( numberLevel )
-        MXAPI_EQUALS_NEXT_MEMBER( incomingCurvePoints )
-        MXAPI_EQUALS_LAST_MEMBER( outgoingCurvePoints )
+        MXAPI_EQUALS_MEMBER( curveType )
+        MXAPI_EQUALS_MEMBER( numberLevel )
+        MXAPI_EQUALS_MEMBER( incomingCurvePoints )
+        MXAPI_EQUALS_MEMBER( outgoingCurvePoints )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( CurveContinue );
 
         MXAPI_EQUALS_BEGIN( CurveEnd )
-        MXAPI_EQUALS_FIRST_MEMBER( curveType )
-        MXAPI_EQUALS_NEXT_MEMBER( numberLevel )
-        MXAPI_EQUALS_LAST_MEMBER( curvePoints )
+        MXAPI_EQUALS_MEMBER( curveType )
+        MXAPI_EQUALS_MEMBER( numberLevel )
+        MXAPI_EQUALS_MEMBER( curvePoints )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( CurveEnd );
     }

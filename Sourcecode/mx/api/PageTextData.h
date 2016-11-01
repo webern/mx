@@ -26,10 +26,10 @@ namespace mx
         };
         
         MXAPI_EQUALS_BEGIN( PageTextData )
-        MXAPI_EQUALS_FIRST_MEMBER( text )
-        MXAPI_EQUALS_NEXT_MEMBER( pageNumber )
-        MXAPI_EQUALS_NEXT_MEMBER( positionData )
-        MXAPI_EQUALS_LAST_MEMBER( description )
+        MXAPI_EQUALS_MEMBER( text )
+        MXAPI_EQUALS_MEMBER( pageNumber )
+        MXAPI_EQUALS_MEMBER( positionData )
+        MXAPI_EQUALS_MEMBER( description )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( PageTextData );
     }

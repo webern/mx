@@ -81,23 +81,23 @@ namespace mx
         };
         
         MXAPI_EQUALS_BEGIN( TupletStart )
-        MXAPI_EQUALS_FIRST_MEMBER( numberLevel )
-        MXAPI_EQUALS_NEXT_MEMBER( positionData )
-        MXAPI_EQUALS_NEXT_MEMBER( actualNumber )
-        MXAPI_EQUALS_NEXT_MEMBER( actualDurationName )
-        MXAPI_EQUALS_NEXT_MEMBER( actualDots )
-        MXAPI_EQUALS_NEXT_MEMBER( normalNumber )
-        MXAPI_EQUALS_NEXT_MEMBER( normalDurationName )
-        MXAPI_EQUALS_NEXT_MEMBER( normalDots )
-        MXAPI_EQUALS_NEXT_MEMBER( showActualNumber )
-        MXAPI_EQUALS_NEXT_MEMBER( showNormalNumber )
-        MXAPI_EQUALS_LAST_MEMBER( bracket )
+        MXAPI_EQUALS_MEMBER( numberLevel )
+        MXAPI_EQUALS_MEMBER( positionData )
+        MXAPI_EQUALS_MEMBER( actualNumber )
+        MXAPI_EQUALS_MEMBER( actualDurationName )
+        MXAPI_EQUALS_MEMBER( actualDots )
+        MXAPI_EQUALS_MEMBER( normalNumber )
+        MXAPI_EQUALS_MEMBER( normalDurationName )
+        MXAPI_EQUALS_MEMBER( normalDots )
+        MXAPI_EQUALS_MEMBER( showActualNumber )
+        MXAPI_EQUALS_MEMBER( showNormalNumber )
+        MXAPI_EQUALS_MEMBER( bracket )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( TupletStart );
         
         MXAPI_EQUALS_BEGIN( TupletEnd )
-        MXAPI_EQUALS_FIRST_MEMBER( numberLevel )
-        MXAPI_EQUALS_LAST_MEMBER( positionData )
+        MXAPI_EQUALS_MEMBER( numberLevel )
+        MXAPI_EQUALS_MEMBER( positionData )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( TupletEnd );
     }

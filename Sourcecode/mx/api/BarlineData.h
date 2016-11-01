@@ -39,9 +39,9 @@ namespace mx
         };
         
         MXAPI_EQUALS_BEGIN( BarlineData )
-        MXAPI_EQUALS_FIRST_MEMBER( tickTimePosition )
-        MXAPI_EQUALS_NEXT_MEMBER( barlineType )
-        MXAPI_EQUALS_LAST_MEMBER( location )
+        MXAPI_EQUALS_MEMBER( tickTimePosition )
+        MXAPI_EQUALS_MEMBER( barlineType )
+        MXAPI_EQUALS_MEMBER( location )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( BarlineData );
     }

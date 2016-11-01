@@ -49,18 +49,18 @@ namespace mx
         };
                 
         MXAPI_EQUALS_BEGIN( SpannerStart )
-        MXAPI_EQUALS_FIRST_MEMBER( numberLevel )
-        MXAPI_EQUALS_NEXT_MEMBER( tickTimePosition )
-        MXAPI_EQUALS_NEXT_MEMBER( positionData )
-        MXAPI_EQUALS_NEXT_MEMBER( printData )
-        MXAPI_EQUALS_LAST_MEMBER( lineData )
+        MXAPI_EQUALS_MEMBER( numberLevel )
+        MXAPI_EQUALS_MEMBER( tickTimePosition )
+        MXAPI_EQUALS_MEMBER( positionData )
+        MXAPI_EQUALS_MEMBER( printData )
+        MXAPI_EQUALS_MEMBER( lineData )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( SpannerStart );
         
         MXAPI_EQUALS_BEGIN( SpannerStop )
-        MXAPI_EQUALS_FIRST_MEMBER( numberLevel )
-        MXAPI_EQUALS_NEXT_MEMBER( tickTimePosition )
-        MXAPI_EQUALS_LAST_MEMBER( positionData )
+        MXAPI_EQUALS_MEMBER( numberLevel )
+        MXAPI_EQUALS_MEMBER( tickTimePosition )
+        MXAPI_EQUALS_MEMBER( positionData )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( SpannerStop );
     }

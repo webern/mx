@@ -67,12 +67,12 @@ namespace mx
         };
 
         MXAPI_EQUALS_BEGIN( ClefData )
-        //MXAPI_EQUALS_FIRST_MEMBER( staffIndex )
-        MXAPI_EQUALS_FIRST_MEMBER( symbol )
-        MXAPI_EQUALS_NEXT_MEMBER( line )
-        MXAPI_EQUALS_NEXT_MEMBER( octaveChange )
-        MXAPI_EQUALS_NEXT_MEMBER( tickTimePosition )
-        MXAPI_EQUALS_LAST_MEMBER( location )
+        //MXAPI_EQUALS_MEMBER( staffIndex )
+        MXAPI_EQUALS_MEMBER( symbol )
+        MXAPI_EQUALS_MEMBER( line )
+        MXAPI_EQUALS_MEMBER( octaveChange )
+        MXAPI_EQUALS_MEMBER( tickTimePosition )
+        MXAPI_EQUALS_MEMBER( location )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( ClefData );
     }

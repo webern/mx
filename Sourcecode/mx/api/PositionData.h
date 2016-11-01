@@ -127,17 +127,17 @@ namespace mx
         
         
         MXAPI_EQUALS_BEGIN( PositionData )
-        MXAPI_EQUALS_FIRST_MEMBER( defaultX )
-        MXAPI_EQUALS_NEXT_MEMBER( hasDefaultX )
-        MXAPI_EQUALS_NEXT_MEMBER( defaultY )
-        MXAPI_EQUALS_NEXT_MEMBER( hasDefaultY )
-        MXAPI_EQUALS_NEXT_MEMBER( relativeX )
-        MXAPI_EQUALS_NEXT_MEMBER( hasRelativeX )
-        MXAPI_EQUALS_NEXT_MEMBER( relativeY )
-        MXAPI_EQUALS_NEXT_MEMBER( hasRelativeY )
-        MXAPI_EQUALS_NEXT_MEMBER( placement )
-        MXAPI_EQUALS_NEXT_MEMBER( verticalAlignment )
-        MXAPI_EQUALS_LAST_MEMBER( horizontalAlignmnet )
+        MXAPI_EQUALS_MEMBER( defaultX )
+        MXAPI_EQUALS_MEMBER( hasDefaultX )
+        MXAPI_EQUALS_MEMBER( defaultY )
+        MXAPI_EQUALS_MEMBER( hasDefaultY )
+        MXAPI_EQUALS_MEMBER( relativeX )
+        MXAPI_EQUALS_MEMBER( hasRelativeX )
+        MXAPI_EQUALS_MEMBER( relativeY )
+        MXAPI_EQUALS_MEMBER( hasRelativeY )
+        MXAPI_EQUALS_MEMBER( placement )
+        MXAPI_EQUALS_MEMBER( verticalAlignment )
+        MXAPI_EQUALS_MEMBER( horizontalAlignmnet )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( PositionData );
     }

@@ -25,14 +25,14 @@ namespace mx
         };
         
         MXAPI_EQUALS_BEGIN( NoteAttachmentData )
-        MXAPI_EQUALS_FIRST_MEMBER( marks )
-        MXAPI_EQUALS_NEXT_MEMBER( curveStarts )
-        MXAPI_EQUALS_NEXT_MEMBER( curveContinuations )
-        MXAPI_EQUALS_NEXT_MEMBER( curveEnds )
-        MXAPI_EQUALS_NEXT_MEMBER( tupletStarts )
-        MXAPI_EQUALS_LAST_MEMBER( tupletEnds )
-        //MXAPI_EQUALS_NEXT_MEMBER( spannerStarts )
-        //MXAPI_EQUALS_LAST_MEMBER( spannerEnds )
+        MXAPI_EQUALS_MEMBER( marks )
+        MXAPI_EQUALS_MEMBER( curveStarts )
+        MXAPI_EQUALS_MEMBER( curveContinuations )
+        MXAPI_EQUALS_MEMBER( curveEnds )
+        MXAPI_EQUALS_MEMBER( tupletStarts )
+        MXAPI_EQUALS_MEMBER( tupletEnds )
+        //MXAPI_EQUALS_MEMBER( spannerStarts )
+        //MXAPI_EQUALS_MEMBER( spannerEnds )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( NoteAttachmentData );
     }

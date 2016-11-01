@@ -78,36 +78,36 @@ namespace mx
         };
 
         MXAPI_EQUALS_BEGIN( BeatsPerMinute )
-        MXAPI_EQUALS_FIRST_MEMBER( durationName )
-        MXAPI_EQUALS_NEXT_MEMBER( dots )
-        MXAPI_EQUALS_LAST_MEMBER( beatsPerMinute )
+        MXAPI_EQUALS_MEMBER( durationName )
+        MXAPI_EQUALS_MEMBER( dots )
+        MXAPI_EQUALS_MEMBER( beatsPerMinute )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( BeatsPerMinute );
         
         MXAPI_EQUALS_BEGIN( MetricModulation )
-        MXAPI_EQUALS_FIRST_MEMBER( leftDurationName )
-        MXAPI_EQUALS_NEXT_MEMBER( leftDots )
-        MXAPI_EQUALS_NEXT_MEMBER( rightDurationName )
-        MXAPI_EQUALS_NEXT_MEMBER( rightDots )
-        MXAPI_EQUALS_LAST_MEMBER( playbackBeatsPerMinute )
+        MXAPI_EQUALS_MEMBER( leftDurationName )
+        MXAPI_EQUALS_MEMBER( leftDots )
+        MXAPI_EQUALS_MEMBER( rightDurationName )
+        MXAPI_EQUALS_MEMBER( rightDots )
+        MXAPI_EQUALS_MEMBER( playbackBeatsPerMinute )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( MetricModulation );
         
         MXAPI_EQUALS_BEGIN( TempoText )
-        MXAPI_EQUALS_FIRST_MEMBER( tempoText )
-        MXAPI_EQUALS_LAST_MEMBER( playbackBeatsPerMinute )
+        MXAPI_EQUALS_MEMBER( tempoText )
+        MXAPI_EQUALS_MEMBER( playbackBeatsPerMinute )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( TempoText );
         
         MXAPI_EQUALS_BEGIN( TempoData )
-        MXAPI_EQUALS_FIRST_MEMBER( tickTime )
-        MXAPI_EQUALS_NEXT_MEMBER( isParenthetical )
-        MXAPI_EQUALS_NEXT_MEMBER( printData )
-        MXAPI_EQUALS_NEXT_MEMBER( positionData )
-        MXAPI_EQUALS_NEXT_MEMBER( tempoType )
-        MXAPI_EQUALS_NEXT_MEMBER( beatsPerMinute )
-        MXAPI_EQUALS_NEXT_MEMBER( metricModulation )
-        MXAPI_EQUALS_LAST_MEMBER( tempoText )
+        MXAPI_EQUALS_MEMBER( tickTime )
+        MXAPI_EQUALS_MEMBER( isParenthetical )
+        MXAPI_EQUALS_MEMBER( printData )
+        MXAPI_EQUALS_MEMBER( positionData )
+        MXAPI_EQUALS_MEMBER( tempoType )
+        MXAPI_EQUALS_MEMBER( beatsPerMinute )
+        MXAPI_EQUALS_MEMBER( metricModulation )
+        MXAPI_EQUALS_MEMBER( tempoText )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( TempoData );
     }

@@ -34,8 +34,8 @@ namespace mx
         // SpannerStop is used for OttavaStops
         
         MXAPI_EQUALS_BEGIN( OttavaStart )
-        MXAPI_EQUALS_FIRST_MEMBER( spannerStart )
-        MXAPI_EQUALS_LAST_MEMBER( ottavaType )
+        MXAPI_EQUALS_MEMBER( spannerStart )
+        MXAPI_EQUALS_MEMBER( ottavaType )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( OttavaStart );
     }

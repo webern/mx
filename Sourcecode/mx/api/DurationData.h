@@ -62,14 +62,14 @@ namespace mx
         };
         
         MXAPI_EQUALS_BEGIN( DurationData )
-        MXAPI_EQUALS_FIRST_MEMBER( durationName )
-        MXAPI_EQUALS_NEXT_MEMBER( durationDots )
-        MXAPI_EQUALS_NEXT_MEMBER( durationTimeTicks )
-        MXAPI_EQUALS_NEXT_MEMBER( isTied )
-        MXAPI_EQUALS_NEXT_MEMBER( timeModificationActualNotes )
-        MXAPI_EQUALS_NEXT_MEMBER( timeModificationNormalNotes )
-        MXAPI_EQUALS_NEXT_MEMBER( timeModificationNormalType )
-        MXAPI_EQUALS_LAST_MEMBER( timeModificationNormalTypeDots )
+        MXAPI_EQUALS_MEMBER( durationName )
+        MXAPI_EQUALS_MEMBER( durationDots )
+        MXAPI_EQUALS_MEMBER( durationTimeTicks )
+        MXAPI_EQUALS_MEMBER( isTied )
+        MXAPI_EQUALS_MEMBER( timeModificationActualNotes )
+        MXAPI_EQUALS_MEMBER( timeModificationNormalNotes )
+        MXAPI_EQUALS_MEMBER( timeModificationNormalType )
+        MXAPI_EQUALS_MEMBER( timeModificationNormalTypeDots )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( DurationData );
     }

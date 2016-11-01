@@ -52,9 +52,9 @@ namespace mx
         }
         
         MXAPI_EQUALS_BEGIN( StaffData )
-        MXAPI_EQUALS_FIRST_MEMBER( clefs )
-        MXAPI_EQUALS_NEXT_MEMBER( keys )
-        MXAPI_EQUALS_NEXT_MEMBER( directions )
+        MXAPI_EQUALS_MEMBER( clefs )
+        MXAPI_EQUALS_MEMBER( keys )
+        MXAPI_EQUALS_MEMBER( directions )
         ( voicesAreEqual( lhs.voices, rhs.voices ) );
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( StaffData );

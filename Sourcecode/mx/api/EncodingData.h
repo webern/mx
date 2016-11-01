@@ -50,26 +50,26 @@ namespace mx
         };
         
         MXAPI_EQUALS_BEGIN( SupportedItem )
-        MXAPI_EQUALS_FIRST_MEMBER( elementName )
-        MXAPI_EQUALS_NEXT_MEMBER( attributeName )
-        MXAPI_EQUALS_NEXT_MEMBER( specificValue )
-        MXAPI_EQUALS_LAST_MEMBER( isSupported )
+        MXAPI_EQUALS_MEMBER( elementName )
+        MXAPI_EQUALS_MEMBER( attributeName )
+        MXAPI_EQUALS_MEMBER( specificValue )
+        MXAPI_EQUALS_MEMBER( isSupported )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( SupportedItem );
         
         MXAPI_EQUALS_BEGIN( EncodingDate )
-        MXAPI_EQUALS_FIRST_MEMBER( year )
-        MXAPI_EQUALS_NEXT_MEMBER( month )
-        MXAPI_EQUALS_LAST_MEMBER( day )
+        MXAPI_EQUALS_MEMBER( year )
+        MXAPI_EQUALS_MEMBER( month )
+        MXAPI_EQUALS_MEMBER( day )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( EncodingDate );
         
         MXAPI_EQUALS_BEGIN( EncodingData )
-        MXAPI_EQUALS_FIRST_MEMBER( encodingDate )
-        MXAPI_EQUALS_NEXT_MEMBER( encoder )
-        MXAPI_EQUALS_NEXT_MEMBER( encodingDescription )
-        MXAPI_EQUALS_NEXT_MEMBER( software )
-        MXAPI_EQUALS_LAST_MEMBER( supportedItems )
+        MXAPI_EQUALS_MEMBER( encodingDate )
+        MXAPI_EQUALS_MEMBER( encoder )
+        MXAPI_EQUALS_MEMBER( encodingDescription )
+        MXAPI_EQUALS_MEMBER( software )
+        MXAPI_EQUALS_MEMBER( supportedItems )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( EncodingData );
     }

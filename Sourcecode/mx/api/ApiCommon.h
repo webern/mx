@@ -9,6 +9,7 @@
 #include <vector>
 #include <map>
 #include <limits>
+#include <iostream>
 
 namespace mx
 {
@@ -37,6 +38,14 @@ namespace mx
             above,
             below
         };
+
+        
+        
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// All of the uglines below this point is mainly to be used in test code.  It is not expected that clients will have need of the //
+// functions defined here.  If you do wish to use the equality operator, you may want to silence the cout's that occur when two  //
+// items are found to be not-equal.  This cout stream was necessary for testing during development.                              //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         template <typename T>
         inline bool areVectorsEqual( const std::vector<T>& lhs, const std::vector<T>& rhs )
@@ -90,21 +99,30 @@ namespace mx
             return areSame( lhs, rhs );
         }
 
+        inline void streamComparisonUnequalMessage( const char* const inClassName, const char* const inMemberName )
+        {
+            std::cout << inClassName;
+            std::cout << " ";
+            std::cout << inMemberName;
+            std::cout << " members are not equal ";
+            std::cout << std::endl;
+        }
         
 #define MXAPI_EQUALS_BEGIN( mxapiClassName ) \
         inline bool operator==( const mxapiClassName& lhs, const mxapiClassName& rhs ) \
         { \
+            const char* const theCurrentClassName = #mxapiClassName; \
+            bool isEqual = true;
 
-#define MXAPI_EQUALS_FIRST_MEMBER( mxapiMemberName ) \
-            return ( lhs.mxapiMemberName == rhs.mxapiMemberName ) && \
-
-#define MXAPI_EQUALS_NEXT_MEMBER( mxapiMemberName ) \
-    ( lhs.mxapiMemberName == rhs.mxapiMemberName ) && \
-
-#define MXAPI_EQUALS_LAST_MEMBER( mxapiMemberName ) \
-    ( lhs.mxapiMemberName == rhs.mxapiMemberName ); \
+#define MXAPI_EQUALS_MEMBER( mxapiMemberName ) \
+        isEqual &= ( lhs.mxapiMemberName == rhs.mxapiMemberName ); \
+        if( !isEqual ) \
+        { \
+            streamComparisonUnequalMessage( theCurrentClassName, #mxapiMemberName ); \
+        }
 
 #define MXAPI_EQUALS_END \
+        return isEqual; \
     }\
 
 

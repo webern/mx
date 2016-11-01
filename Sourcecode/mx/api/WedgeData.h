@@ -60,21 +60,21 @@ namespace mx
         };
         
         MXAPI_EQUALS_BEGIN( WedgeStart )
-        MXAPI_EQUALS_FIRST_MEMBER( numberLevel )
-        MXAPI_EQUALS_NEXT_MEMBER( wedgeType )
-        MXAPI_EQUALS_NEXT_MEMBER( isSpreadSpecified )
-        MXAPI_EQUALS_NEXT_MEMBER( spread )
-        MXAPI_EQUALS_NEXT_MEMBER( lineData )
-        MXAPI_EQUALS_NEXT_MEMBER( positionData )
-        MXAPI_EQUALS_LAST_MEMBER( colorData )
+        MXAPI_EQUALS_MEMBER( numberLevel )
+        MXAPI_EQUALS_MEMBER( wedgeType )
+        MXAPI_EQUALS_MEMBER( isSpreadSpecified )
+        MXAPI_EQUALS_MEMBER( spread )
+        MXAPI_EQUALS_MEMBER( lineData )
+        MXAPI_EQUALS_MEMBER( positionData )
+        MXAPI_EQUALS_MEMBER( colorData )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( WedgeStart );
         
         MXAPI_EQUALS_BEGIN( WedgeStop )
-        MXAPI_EQUALS_FIRST_MEMBER( numberLevel )
-        MXAPI_EQUALS_NEXT_MEMBER( positionData )
-        MXAPI_EQUALS_NEXT_MEMBER( isSpreadSpecified )
-        MXAPI_EQUALS_LAST_MEMBER( spread )
+        MXAPI_EQUALS_MEMBER( numberLevel )
+        MXAPI_EQUALS_MEMBER( positionData )
+        MXAPI_EQUALS_MEMBER( isSpreadSpecified )
+        MXAPI_EQUALS_MEMBER( spread )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( WedgeStop );
     }

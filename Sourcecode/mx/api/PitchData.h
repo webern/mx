@@ -85,14 +85,14 @@ namespace mx
         };
         
         MXAPI_EQUALS_BEGIN( PitchData )
-        MXAPI_EQUALS_FIRST_MEMBER( step )
-        MXAPI_EQUALS_NEXT_MEMBER( alter )
-        MXAPI_EQUALS_NEXT_MEMBER( accidental )
-        MXAPI_EQUALS_NEXT_MEMBER( isAccidentalParenthetical )
-        MXAPI_EQUALS_NEXT_MEMBER( isAccidentalCautionary )
-        MXAPI_EQUALS_NEXT_MEMBER( isAccidentalEditorial )
-        MXAPI_EQUALS_NEXT_MEMBER( isAccidentalBracketed )
-        MXAPI_EQUALS_LAST_MEMBER( octave )
+        MXAPI_EQUALS_MEMBER( step )
+        MXAPI_EQUALS_MEMBER( alter )
+        MXAPI_EQUALS_MEMBER( accidental )
+        MXAPI_EQUALS_MEMBER( isAccidentalParenthetical )
+        MXAPI_EQUALS_MEMBER( isAccidentalCautionary )
+        MXAPI_EQUALS_MEMBER( isAccidentalEditorial )
+        MXAPI_EQUALS_MEMBER( isAccidentalBracketed )
+        MXAPI_EQUALS_MEMBER( octave )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( PitchData );
     }
