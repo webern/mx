@@ -3,7 +3,7 @@
 
 #include "mx/impl/AccidentalMarkFunctions.h"
 #include "mx/core/elements/AccidentalMark.h"
-#include "mx/impl/ParseMarkDataAttributes.h"
+#include "mx/impl/MarkDataFunctions.h"
 
 namespace mx
 {
@@ -27,7 +27,7 @@ namespace mx
             markData.tickTimePosition = myCursor.tickTimePosition;
             
             markData.name = core::toString( accidentalValue );
-            parseMarkDataAttributes( *myAccidentalMark.getAttributes(), markData );
+            markData.positionData = impl::getPositionData( *myAccidentalMark.getAttributes() );
             
             markData.smuflName = api::MarkSmufl::getName( markType, markData.positionData.placement );
             markData.smuflCodepoint = api::MarkSmufl::getCodepoint( markType, markData.positionData.placement );

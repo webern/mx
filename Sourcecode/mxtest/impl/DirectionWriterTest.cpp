@@ -2,7 +2,7 @@
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #include "mxtest/control/CompileControl.h"
-#ifdef MX_COMPILE_API_TESTS
+#ifdef MX_COMPILE_IMPL_TESTS
 
 #include "cpul/cpulTestHarness.h"
 #include "mx/impl/DirectionWriter.h"

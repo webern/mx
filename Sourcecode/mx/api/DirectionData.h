@@ -52,7 +52,7 @@ namespace mx
             // TODO - sound element
             
             std::vector<TempoData> tempos;
-            std::vector<DirectionMark> marks;
+            std::vector<MarkData> marks;
             std::vector<WedgeStart> wedgeStarts;
             std::vector<WedgeStop> wedgeStops;
             std::vector<OttavaStart> ottavaStarts;

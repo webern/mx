@@ -45,7 +45,7 @@
 #include "mx/impl/AccidentalMarkFunctions.h"
 #include "mx/impl/ArticulationsFunctions.h"
 #include "mx/impl/CurveFunctions.h"
-#include "mx/impl/DynamicsFunctions.h"
+#include "mx/impl/DynamicsReader.h"
 #include "mx/impl/NoteReader.h"
 #include "mx/impl/OrnamentsFunctions.h"
 #include "mx/impl/PositionFunctions.h"
@@ -307,7 +307,7 @@ namespace mx
                         }
                         case core::NotationsChoice::Choice::dynamics:
                         {
-                            DynamicsFunctions funcs{ *notationsChoice.getDynamics(), myCursor };
+                            DynamicsReader funcs{ *notationsChoice.getDynamics(), myCursor };
                             funcs.parseDynamics( myOutNoteData.noteAttachmentData.marks );
                             break;
                         }

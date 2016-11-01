@@ -21,11 +21,15 @@
 		295897281DB9806600F18FBA /* MxFileRepositoy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 295897221DB9806600F18FBA /* MxFileRepositoy.cpp */; };
 		295897291DB9806600F18FBA /* MxFileTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 295897231DB9806600F18FBA /* MxFileTest.cpp */; };
 		2958972A1DB9806600F18FBA /* MxFileTestGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 295897251DB9806600F18FBA /* MxFileTestGroup.cpp */; };
+		2961F1171DC7CDD700D62B16 /* ApiK007cTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2961F1161DC7CDD700D62B16 /* ApiK007cTest.cpp */; };
+		2961F12E1DC7F36000D62B16 /* MagicTemplatesTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2961F12D1DC7F36000D62B16 /* MagicTemplatesTest.cpp */; };
+		2961F1311DC7F47100D62B16 /* ApiMuAccidentalsTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2961F1301DC7F47100D62B16 /* ApiMuAccidentalsTest.cpp */; };
 		297555FD1D1359CA007732D0 /* HelloWorldTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297555FB1D1359CA007732D0 /* HelloWorldTest.cpp */; };
 		297556081D135AA3007732D0 /* UtilityImplTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297556061D135AA3007732D0 /* UtilityImplTest.cpp */; };
 		297556091D135AA3007732D0 /* UtilityTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297556071D135AA3007732D0 /* UtilityTest.cpp */; };
 		297DD7C91D1A4BD1003BADC1 /* ImportTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297DD7C81D1A4BD1003BADC1 /* ImportTest.cpp */; };
 		298F0F4D1D1E4981005C3D9D /* ImportTestImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 298F0F4B1D1E4981005C3D9D /* ImportTestImpl.cpp */; };
+		29979D621DC811F300707AA4 /* TimeSignatureApiTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29979D611DC811F300707AA4 /* TimeSignatureApiTest.cpp */; };
 		29B48EDB1DBE7F550030A974 /* MeasureWriterTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29B48ED71DBE7F550030A974 /* MeasureWriterTest.cpp */; };
 		29B48EDC1DBE7F550030A974 /* NoteWriterTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29B48ED81DBE7F550030A974 /* NoteWriterTest.cpp */; };
 		29B48EDD1DBE7F550030A974 /* PartWriterTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29B48ED91DBE7F550030A974 /* PartWriterTest.cpp */; };
@@ -492,6 +496,11 @@
 		295897241DB9806600F18FBA /* MxFileTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MxFileTest.h; path = ../Sourcecode/mxtest/file/MxFileTest.h; sourceTree = "<group>"; };
 		295897251DB9806600F18FBA /* MxFileTestGroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MxFileTestGroup.cpp; path = ../Sourcecode/mxtest/file/MxFileTestGroup.cpp; sourceTree = "<group>"; };
 		295897261DB9806600F18FBA /* MxFileTestGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MxFileTestGroup.h; path = ../Sourcecode/mxtest/file/MxFileTestGroup.h; sourceTree = "<group>"; };
+		2961F1151DC7CDD700D62B16 /* ApiK007cScoreData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ApiK007cScoreData.h; path = ../Sourcecode/mxtest/api/ApiK007cScoreData.h; sourceTree = "<group>"; };
+		2961F1161DC7CDD700D62B16 /* ApiK007cTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ApiK007cTest.cpp; path = ../Sourcecode/mxtest/api/ApiK007cTest.cpp; sourceTree = "<group>"; };
+		2961F12D1DC7F36000D62B16 /* MagicTemplatesTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MagicTemplatesTest.cpp; path = ../Sourcecode/mxtest/impl/MagicTemplatesTest.cpp; sourceTree = "<group>"; };
+		2961F12F1DC7F47100D62B16 /* ApiMuAccidentals1ScoreData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ApiMuAccidentals1ScoreData.h; path = ../Sourcecode/mxtest/api/ApiMuAccidentals1ScoreData.h; sourceTree = "<group>"; };
+		2961F1301DC7F47100D62B16 /* ApiMuAccidentalsTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ApiMuAccidentalsTest.cpp; path = ../Sourcecode/mxtest/api/ApiMuAccidentalsTest.cpp; sourceTree = "<group>"; };
 		297555FA1D1359CA007732D0 /* HelloWorldExpected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HelloWorldExpected.h; path = ../Sourcecode/mxtest/core/HelloWorldExpected.h; sourceTree = "<group>"; };
 		297555FB1D1359CA007732D0 /* HelloWorldTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HelloWorldTest.cpp; path = ../Sourcecode/mxtest/core/HelloWorldTest.cpp; sourceTree = "<group>"; };
 		297555FC1D1359CA007732D0 /* HelloWorldTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HelloWorldTest.h; path = ../Sourcecode/mxtest/core/HelloWorldTest.h; sourceTree = "<group>"; };
@@ -502,6 +511,7 @@
 		297DD7C81D1A4BD1003BADC1 /* ImportTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImportTest.cpp; path = ../Sourcecode/mxtest/import/ImportTest.cpp; sourceTree = "<group>"; };
 		298F0F4B1D1E4981005C3D9D /* ImportTestImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImportTestImpl.cpp; path = ../Sourcecode/mxtest/import/ImportTestImpl.cpp; sourceTree = "<group>"; };
 		298F0F4C1D1E4981005C3D9D /* ImportTestImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImportTestImpl.h; path = ../Sourcecode/mxtest/import/ImportTestImpl.h; sourceTree = "<group>"; };
+		29979D611DC811F300707AA4 /* TimeSignatureApiTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimeSignatureApiTest.cpp; path = ../Sourcecode/mxtest/api/TimeSignatureApiTest.cpp; sourceTree = "<group>"; };
 		299F7FF61CA8D2620084CAE5 /* MxTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MxTest; sourceTree = BUILT_PRODUCTS_DIR; };
 		29B48ED71DBE7F550030A974 /* MeasureWriterTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MeasureWriterTest.cpp; path = ../Sourcecode/mxtest/impl/MeasureWriterTest.cpp; sourceTree = "<group>"; };
 		29B48ED81DBE7F550030A974 /* NoteWriterTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NoteWriterTest.cpp; path = ../Sourcecode/mxtest/impl/NoteWriterTest.cpp; sourceTree = "<group>"; };
@@ -1721,13 +1731,14 @@
 		29B48ED61DBE7F470030A974 /* impl */ = {
 			isa = PBXGroup;
 			children = (
-				29C1759F1DC0253900CC48D7 /* DirectionWriterTest.cpp */,
 				29C1759D1DC016B500CC48D7 /* DirectionReaderTest.cpp */,
+				29C1759F1DC0253900CC48D7 /* DirectionWriterTest.cpp */,
+				2961F12D1DC7F36000D62B16 /* MagicTemplatesTest.cpp */,
 				29B48ED71DBE7F550030A974 /* MeasureWriterTest.cpp */,
 				29B48ED81DBE7F550030A974 /* NoteWriterTest.cpp */,
 				29B48ED91DBE7F550030A974 /* PartWriterTest.cpp */,
-				29B48EDA1DBE7F550030A974 /* ScoreWriterTest.cpp */,
 				291A04751DC2BFD000B5C5F6 /* PositionFunctionsTest.cpp */,
+				29B48EDA1DBE7F550030A974 /* ScoreWriterTest.cpp */,
 			);
 			name = impl;
 			sourceTree = "<group>";
@@ -1735,17 +1746,22 @@
 		29EF440E1D6E8F4700DBDAB9 /* api */ = {
 			isa = PBXGroup;
 			children = (
+				2961F12F1DC7F47100D62B16 /* ApiMuAccidentals1ScoreData.h */,
+				2961F1301DC7F47100D62B16 /* ApiMuAccidentalsTest.cpp */,
 				29BF98891DC6D20500BBC7B3 /* ApiK007aScoreData.h */,
 				29BF988A1DC6D20500BBC7B3 /* ApiK007aTest.cpp */,
+				2961F1151DC7CDD700D62B16 /* ApiK007cScoreData.h */,
+				2961F1161DC7CDD700D62B16 /* ApiK007cTest.cpp */,
 				294775E11D934C510006E1AD /* ApiLoadSurvivalTest.cpp */,
 				29B48EDF1DBE8C450030A974 /* ApiLy43eScoreData.h */,
 				29FFAC7C1DB998C100DC8AE1 /* ApiLy43eTest.cpp */,
 				2903C9471DBC7ED600218C9E /* ApiTester.cpp */,
 				2903C9481DBC7ED600218C9E /* ApiTester.h */,
+				29C9AFD81DC3BE6000DD9BFB /* ChordApiTest.cpp */,
+				29979D611DC811F300707AA4 /* TimeSignatureApiTest.cpp */,
 				29EF440F1D6E8F5500DBDAB9 /* DocumentManagerTest.cpp */,
 				29CD722E1DB8421100FB7153 /* RoundTrip.h */,
 				2903C9461DBC7D7600218C9E /* ScoreDataCreator.h */,
-				29C9AFD81DC3BE6000DD9BFB /* ChordApiTest.cpp */,
 			);
 			name = api;
 			sourceTree = "<group>";
@@ -1980,6 +1996,7 @@
 				29C01E021D1312FA0094BE61 /* HarmonicInfoChoiceTest.cpp in Sources */,
 				29C01E131D1312FA0094BE61 /* InstrumentSoundTest.cpp in Sources */,
 				29C01E5B1D1312FA0094BE61 /* NoteSizeTest.cpp in Sources */,
+				29979D621DC811F300707AA4 /* TimeSignatureApiTest.cpp in Sources */,
 				29C01DAF1D1312FA0094BE61 /* DegreeTypeTest.cpp in Sources */,
 				29C01EEF1D1312FA0094BE61 /* TupletNormalTest.cpp in Sources */,
 				29C01EA01D1312FA0094BE61 /* ScorePartTest.cpp in Sources */,
@@ -2141,6 +2158,7 @@
 				29C01E121D1312FA0094BE61 /* InstrumentNameTest.cpp in Sources */,
 				29C01EA51D1312FA0094BE61 /* SenzaMisuraTest.cpp in Sources */,
 				29C01E9B1D1312FA0094BE61 /* SchleiferTest.cpp in Sources */,
+				2961F12E1DC7F36000D62B16 /* MagicTemplatesTest.cpp in Sources */,
 				29C01DA41D1312FA0094BE61 /* CreditWordsTest.cpp in Sources */,
 				29C01EFB1D1312FA0094BE61 /* VoiceTest.cpp in Sources */,
 				29C01E971D1312FA0094BE61 /* RootAlterTest.cpp in Sources */,
@@ -2213,6 +2231,7 @@
 				29C01DE81D1312FA0094BE61 /* FontSizeTest.cpp in Sources */,
 				29C01E411D1312FA0094BE61 /* MidiNameTest.cpp in Sources */,
 				29C01F1B1D13137D0094BE61 /* main.cpp in Sources */,
+				2961F1171DC7CDD700D62B16 /* ApiK007cTest.cpp in Sources */,
 				29C01E1E1D1312FA0094BE61 /* KeyOctaveTest.cpp in Sources */,
 				29C01D891D1312FA0094BE61 /* BeatsTest.cpp in Sources */,
 				29C01DD11D1312FA0094BE61 /* ElisionSyllabicTextGroupTest.cpp in Sources */,
@@ -2221,6 +2240,7 @@
 				29C01DCB1D1312FA0094BE61 /* DynamicsTest.cpp in Sources */,
 				29C01EFC1D1312FA0094BE61 /* VolumeTest.cpp in Sources */,
 				29C01F021D1312FA0094BE61 /* WordsTest.cpp in Sources */,
+				2961F1311DC7F47100D62B16 /* ApiMuAccidentalsTest.cpp in Sources */,
 				29C01D961D1312FA0094BE61 /* CapoTest.cpp in Sources */,
 				29C01F161D13137D0094BE61 /* cpulFailure.cpp in Sources */,
 				29C01EF11D1312FA0094BE61 /* TupletTypeTest.cpp in Sources */,

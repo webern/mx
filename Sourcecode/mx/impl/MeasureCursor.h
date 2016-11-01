@@ -17,6 +17,8 @@ namespace mx
 
             MeasureCursor( int numStaves, int globalTicksPerQuarter )
             : Cursor{ numStaves, globalTicksPerQuarter }
+            , partIndex{ 0 }
+            , measureIndex{ 0 }
             {
                 
             }

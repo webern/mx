@@ -21,7 +21,7 @@ namespace mx
             css,
             point
         };
-
+        
         
         enum class CssSize
         {
@@ -35,7 +35,7 @@ namespace mx
             xxLarge
         };
         
-    
+        
         enum class FontStyle
         {
             unspecified,
@@ -67,12 +67,20 @@ namespace mx
             
             std::vector<std::string> fontFamily;
             
+            int underline;
+            int overline;
+            int lineThrough;
+            
             FontData()
             : sizeType{ FontSizeType::unspecified }
             , sizePoint{ -1.0L }
             , sizeCss{ CssSize::unspecified }
             , style{ FontStyle::unspecified }
             , weight{ FontWeight::unspecified }
+            , fontFamily{}
+            , underline{ 0 }
+            , overline{ 0 }
+            , lineThrough{ 0 }
             {
                 
             }
@@ -84,7 +92,10 @@ namespace mx
         MXAPI_EQUALS_NEXT_MEMBER( sizeCss )
         MXAPI_EQUALS_NEXT_MEMBER( style )
         MXAPI_EQUALS_NEXT_MEMBER( weight )
-        MXAPI_EQUALS_LAST_MEMBER( fontFamily )
+        MXAPI_EQUALS_NEXT_MEMBER( fontFamily )
+        MXAPI_EQUALS_NEXT_MEMBER( underline )
+        MXAPI_EQUALS_NEXT_MEMBER( overline )
+        MXAPI_EQUALS_LAST_MEMBER( lineThrough )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( FontData );
     }

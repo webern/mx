@@ -1,12 +1,12 @@
 // MusicXML Class Library v0.3.0
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
-#include "mx/impl/DynamicsFunctions.h"
+#include "mx/impl/DynamicsReader.h"
 #include "mx/api/Smufl.h"
 #include "mx/core/elements/Dynamics.h"
 #include "mx/core/Enums.h"
 #include "mx/impl/Converter.h"
-#include "mx/impl/ParseMarkDataAttributes.h"
+#include "mx/impl/MarkDataFunctions.h"
 
 #include <mutex>
 
@@ -14,7 +14,7 @@ namespace mx
 {
     namespace impl
     {
-        DynamicsFunctions::DynamicsFunctions( const core::Dynamics& inDynamic, impl::Cursor inCursor )
+        DynamicsReader::DynamicsReader( const core::Dynamics& inDynamic, impl::Cursor inCursor )
         : myDynamic{ inDynamic }
         , myCursor{ inCursor }
         {
@@ -22,7 +22,7 @@ namespace mx
         }
         
         
-        void DynamicsFunctions::parseDynamics( std::vector<api::MarkData>& outMarks ) const
+        void DynamicsReader::parseDynamics( std::vector<api::MarkData>& outMarks ) const
         {
             const auto dynamicType = myDynamic.getValue().getValue();
             Converter converter;
@@ -31,7 +31,7 @@ namespace mx
             markData.markType = markType;
             markData.tickTimePosition = myCursor.tickTimePosition;
             markData.name = myDynamic.getValue().getValueString();
-            parseMarkDataAttributes( *myDynamic.getAttributes(), markData );
+            markData.positionData = impl::getPositionData( *myDynamic.getAttributes() );
 
             if( dynamicType == core::DynamicsEnum::otherDynamics )
             {

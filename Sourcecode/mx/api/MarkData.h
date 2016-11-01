@@ -172,6 +172,7 @@ namespace mx
             int tickTimePosition;
             PrintData printData;
             PositionData positionData;
+            FontData fontData;
             
             MarkData()
             : markType( MarkType::unspecified )
@@ -181,26 +182,7 @@ namespace mx
             , tickTimePosition{ 0 }
             , printData{}
             , positionData{}
-            {
-                
-            }
-        };
-        
-        // because of the horrible <direction> element
-        // we another mark struct which does *not*
-        // know about its position or tickTimePosition
-        struct DirectionMark
-        {
-            MarkType markType;
-            std::string name;
-            std::string smuflName;
-            char16_t smuflCodepoint;
-            
-            DirectionMark()
-            : markType( MarkType::unspecified )
-            , name{}
-            , smuflName{}
-            , smuflCodepoint{ 0 }
+            , fontData{}
             {
                 
             }
@@ -213,16 +195,9 @@ namespace mx
         MXAPI_EQUALS_NEXT_MEMBER( smuflCodepoint )
         MXAPI_EQUALS_NEXT_MEMBER( tickTimePosition )
         MXAPI_EQUALS_NEXT_MEMBER( printData )
-        MXAPI_EQUALS_LAST_MEMBER( positionData )
+        MXAPI_EQUALS_NEXT_MEMBER( positionData )
+        MXAPI_EQUALS_LAST_MEMBER( fontData )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( MarkData );
-        
-        MXAPI_EQUALS_BEGIN( DirectionMark )
-        MXAPI_EQUALS_FIRST_MEMBER( markType )
-        MXAPI_EQUALS_NEXT_MEMBER( name )
-        MXAPI_EQUALS_NEXT_MEMBER( smuflName )
-        MXAPI_EQUALS_LAST_MEMBER( smuflCodepoint )
-        MXAPI_EQUALS_END;
-        MXAPI_NOT_EQUALS_AND_VECTORS( DirectionMark );
     }
 }

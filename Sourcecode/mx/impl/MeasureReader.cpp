@@ -82,22 +82,20 @@ namespace mx
 {
     namespace impl
     {
-        MeasureReader::MeasureReader( const core::PartwiseMeasure& inPartwiseMeasureRef, const MeasureReaderParameters& params )
+        MeasureReader::MeasureReader( const core::PartwiseMeasure& inPartwiseMeasureRef, const MeasureCursor& cursor, const MeasureCursor& previousMeasureCursor )
         : myMutex{}
         , myPartwiseMeasure{ inPartwiseMeasureRef }
-        , myNumStaves{ params.numStaves }
-        , myMeasureIndex( params.measureIndex )
         , myConverter{}
         , myOutMeasureData{}
-        , myCurrentCursor{ params.numStaves, params.globalTicksPerQuarter }
-        , myPreviousCursor{ params.numStaves, params.globalTicksPerQuarter }
+        , myCurrentCursor{ cursor }
+        , myPreviousCursor{ previousMeasureCursor }
         {
             
         }
         
         void MeasureReader::addStavesToOutMeasure() const
         {
-            for( int i = 0; i < myNumStaves; ++ i )
+            for( int i = 0; i < myCurrentCursor.getNumStaves(); ++i )
             {
                 myOutMeasureData.staves.emplace_back( api::StaffData{} );
             }
@@ -106,12 +104,13 @@ namespace mx
         api::MeasureData MeasureReader::getMeasureData() const
         {
             // lock due to the use of a mutable in const function
+            // TODO - that's stupid, remove const designations
             std::lock_guard<std::mutex> lock(myMutex);
             myOutMeasureData = api::MeasureData{};
             const auto& attr = *myPartwiseMeasure.getAttributes();
             myOutMeasureData.number = attr.number.getValue();
             
-            if( myOutMeasureData.number == std::to_string( myMeasureIndex + 1 ) )
+            if( myOutMeasureData.number == std::to_string( myCurrentCursor.measureIndex + 1 ) )
             {
                 myOutMeasureData.number = "";
             }
@@ -173,26 +172,24 @@ namespace mx
         void MeasureReader::parseTimeSignature() const
         {
             TimeReader timeReader{ myPartwiseMeasure.getMusicDataGroup()->getMusicDataChoiceSet() };
+            api::TimeSignatureData timeSignature;
+            
             if( timeReader.getIsTimeFound() )
             {
-                auto timeSignatureData = timeReader.getTimeSignatureData();
-                timeSignatureData.isImplicit = false;
-                myCurrentCursor.timeSignature = timeSignatureData;
+                timeSignature = timeReader.getTimeSignatureData();
+                timeSignature.isImplicit = false;
             }
-            else
+            else // no time signature was found
             {
-                if( myCurrentCursor.isFirstMeasureInPart )
+                if( myCurrentCursor.measureIndex > 0 )
                 {
-                    myCurrentCursor.timeSignature = api::TimeSignatureData{};
+                    timeSignature = myPreviousCursor.timeSignature;
                 }
-                else
-                {
-                    myCurrentCursor.timeSignature = myPreviousCursor.timeSignature;
-                }
-                myCurrentCursor.timeSignature.isImplicit = true;
+                timeSignature.isImplicit = true;
             }
-            myOutMeasureData.timeSignature = myCurrentCursor.timeSignature;
 
+            myOutMeasureData.timeSignature = timeSignature;
+            myCurrentCursor.timeSignature = timeSignature;
         }
         
         
@@ -430,7 +427,7 @@ namespace mx
                 if( attr.hasNumber )
                 {
                     keyData.staffIndex = attr.number.getValue() - 1;
-                    if( keyData.staffIndex > myNumStaves -1 )
+                    if( keyData.staffIndex > myCurrentCursor.getNumStaves() - 1 )
                     {
                         keyData.staffIndex = -1;
                     }

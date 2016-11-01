@@ -21,10 +21,21 @@ namespace mx
         class TimeSignatureData
         {
         public:
+            
+            // common, cut
             TimeSignatureSymbol symbol;
+            
+            // the top number of the time signature, e.g. '5' in a '5/4' signature
             int beats;
+            
+            // the bottom number of the time signature, e.g. '4' in a '5/4' signature
             int beatType;
+            
+            // a time signature is implicit when it is not specified by the musicxml
             bool isImplicit;
+            
+            // use this to hide a time sigature with Bool::no. If a time signature is
+            // implicit, the 'display' field will be ignored
             Bool display;
 
             inline bool isEqualTo( const TimeSignatureData& other ) const

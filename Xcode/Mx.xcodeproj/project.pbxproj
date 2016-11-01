@@ -1996,7 +1996,7 @@
 		29E2B4251DA8494900DC61EA /* ArticulationsFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EF2F781DA2CC1D001FE5DF /* ArticulationsFunctions.cpp */; };
 		29E2B4261DA8494900DC61EA /* Converter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2922CC621D9AF28400F8C9C1 /* Converter.cpp */; };
 		29E2B4271DA8494900DC61EA /* Cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2973065E1D89AB3300B8C0D3 /* Cursor.cpp */; };
-		29E2B4291DA8494900DC61EA /* DynamicsFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EF2F7C1DA2D450001FE5DF /* DynamicsFunctions.cpp */; };
+		29E2B4291DA8494900DC61EA /* DynamicsReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EF2F7C1DA2D450001FE5DF /* DynamicsReader.cpp */; };
 		29E2B42A1DA8494900DC61EA /* EncodingFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2913BB871D753FC8006C34A3 /* EncodingFunctions.cpp */; };
 		29E2B42C1DA8494900DC61EA /* LayoutFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2913BB891D753FC8006C34A3 /* LayoutFunctions.cpp */; };
 		29E2B42D1DA8494900DC61EA /* LcmGcd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2927ECA61D888AB30042E080 /* LcmGcd.cpp */; };
@@ -2023,7 +2023,7 @@
 		29FFAC891DB9C9F400DC8AE1 /* Converter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2922CC621D9AF28400F8C9C1 /* Converter.cpp */; };
 		29FFAC8A1DB9C9F400DC8AE1 /* Cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2973065E1D89AB3300B8C0D3 /* Cursor.cpp */; };
 		29FFAC8B1DB9C9F400DC8AE1 /* DirectionReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29766ACA1DAC149900CCE2AC /* DirectionReader.cpp */; };
-		29FFAC8C1DB9C9F400DC8AE1 /* DynamicsFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EF2F7C1DA2D450001FE5DF /* DynamicsFunctions.cpp */; };
+		29FFAC8C1DB9C9F400DC8AE1 /* DynamicsReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EF2F7C1DA2D450001FE5DF /* DynamicsReader.cpp */; };
 		29FFAC8D1DB9C9F400DC8AE1 /* EncodingFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2913BB871D753FC8006C34A3 /* EncodingFunctions.cpp */; };
 		29FFAC8E1DB9C9F400DC8AE1 /* LayoutFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2913BB891D753FC8006C34A3 /* LayoutFunctions.cpp */; };
 		29FFAC8F1DB9C9F400DC8AE1 /* LcmGcd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2927ECA61D888AB30042E080 /* LcmGcd.cpp */; };
@@ -2051,7 +2051,7 @@
 		29FFACA71DB9C9F600DC8AE1 /* Converter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2922CC621D9AF28400F8C9C1 /* Converter.cpp */; };
 		29FFACA81DB9C9F600DC8AE1 /* Cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2973065E1D89AB3300B8C0D3 /* Cursor.cpp */; };
 		29FFACA91DB9C9F600DC8AE1 /* DirectionReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29766ACA1DAC149900CCE2AC /* DirectionReader.cpp */; };
-		29FFACAA1DB9C9F600DC8AE1 /* DynamicsFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EF2F7C1DA2D450001FE5DF /* DynamicsFunctions.cpp */; };
+		29FFACAA1DB9C9F600DC8AE1 /* DynamicsReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EF2F7C1DA2D450001FE5DF /* DynamicsReader.cpp */; };
 		29FFACAB1DB9C9F600DC8AE1 /* EncodingFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2913BB871D753FC8006C34A3 /* EncodingFunctions.cpp */; };
 		29FFACAC1DB9C9F600DC8AE1 /* LayoutFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2913BB891D753FC8006C34A3 /* LayoutFunctions.cpp */; };
 		29FFACAD1DB9C9F600DC8AE1 /* LcmGcd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2927ECA61D888AB30042E080 /* LcmGcd.cpp */; };
@@ -3428,9 +3428,9 @@
 		29E9EA361DA4A80A0040183B /* DurationData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DurationData.cpp; path = ../Sourcecode/mx/api/DurationData.cpp; sourceTree = "<group>"; };
 		29EF2F781DA2CC1D001FE5DF /* ArticulationsFunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ArticulationsFunctions.cpp; path = ../Sourcecode/mx/impl/ArticulationsFunctions.cpp; sourceTree = "<group>"; };
 		29EF2F791DA2CC1D001FE5DF /* ArticulationsFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ArticulationsFunctions.h; path = ../Sourcecode/mx/impl/ArticulationsFunctions.h; sourceTree = "<group>"; };
-		29EF2F7C1DA2D450001FE5DF /* DynamicsFunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DynamicsFunctions.cpp; path = ../Sourcecode/mx/impl/DynamicsFunctions.cpp; sourceTree = "<group>"; };
-		29EF2F7D1DA2D450001FE5DF /* DynamicsFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DynamicsFunctions.h; path = ../Sourcecode/mx/impl/DynamicsFunctions.h; sourceTree = "<group>"; };
-		29EF2F801DA2E966001FE5DF /* ParseMarkDataAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ParseMarkDataAttributes.h; path = ../Sourcecode/mx/impl/ParseMarkDataAttributes.h; sourceTree = "<group>"; };
+		29EF2F7C1DA2D450001FE5DF /* DynamicsReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DynamicsReader.cpp; path = ../Sourcecode/mx/impl/DynamicsReader.cpp; sourceTree = "<group>"; };
+		29EF2F7D1DA2D450001FE5DF /* DynamicsReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DynamicsReader.h; path = ../Sourcecode/mx/impl/DynamicsReader.h; sourceTree = "<group>"; };
+		29EF2F801DA2E966001FE5DF /* MarkDataFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MarkDataFunctions.h; path = ../Sourcecode/mx/impl/MarkDataFunctions.h; sourceTree = "<group>"; };
 		29EF2FE91DA307D3001FE5DF /* AccidentalMarkFunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AccidentalMarkFunctions.cpp; path = ../Sourcecode/mx/impl/AccidentalMarkFunctions.cpp; sourceTree = "<group>"; };
 		29EF2FEA1DA307D3001FE5DF /* AccidentalMarkFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AccidentalMarkFunctions.h; path = ../Sourcecode/mx/impl/AccidentalMarkFunctions.h; sourceTree = "<group>"; };
 		29EF2FF11DA307D3001FE5DF /* OrnamentsFunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OrnamentsFunctions.cpp; path = ../Sourcecode/mx/impl/OrnamentsFunctions.cpp; sourceTree = "<group>"; };
@@ -3588,8 +3588,8 @@
 				29766AC91DAC149900CCE2AC /* DirectionReader.h */,
 				29CD722A1DB82C9200FB7153 /* DirectionWriter.cpp */,
 				29CD722B1DB82C9200FB7153 /* DirectionWriter.h */,
-				29EF2F7C1DA2D450001FE5DF /* DynamicsFunctions.cpp */,
-				29EF2F7D1DA2D450001FE5DF /* DynamicsFunctions.h */,
+				29EF2F7C1DA2D450001FE5DF /* DynamicsReader.cpp */,
+				29EF2F7D1DA2D450001FE5DF /* DynamicsReader.h */,
 				2913BB871D753FC8006C34A3 /* EncodingFunctions.cpp */,
 				2913BB881D753FC8006C34A3 /* EncodingFunctions.h */,
 				293AB0851DA011B100A58B36 /* FontFunctions.h */,
@@ -3616,7 +3616,7 @@
 				29EF2FF21DA307D3001FE5DF /* OrnamentsFunctions.h */,
 				2913BB8D1D753FC8006C34A3 /* PageTextFunctions.cpp */,
 				2913BB8E1D753FC8006C34A3 /* PageTextFunctions.h */,
-				29EF2F801DA2E966001FE5DF /* ParseMarkDataAttributes.h */,
+				29EF2F801DA2E966001FE5DF /* MarkDataFunctions.h */,
 				29E2B3CA1DA81E9700DC61EA /* PartReader.cpp */,
 				29E2B3CB1DA81E9700DC61EA /* PartReader.h */,
 				29CDDA2B1DADCAF30022B1A3 /* PartWriter.cpp */,
@@ -5831,7 +5831,7 @@
 				2933AA551DA58F30005D7222 /* XAttributeIterator.cpp in Sources */,
 				2933AA561DA58F30005D7222 /* XElementIterator.cpp in Sources */,
 				2933AA571DA58F30005D7222 /* XFactory.cpp in Sources */,
-				29FFAC8C1DB9C9F400DC8AE1 /* DynamicsFunctions.cpp in Sources */,
+				29FFAC8C1DB9C9F400DC8AE1 /* DynamicsReader.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6494,7 +6494,7 @@
 				2933AD201DA5AA73005D7222 /* XAttributeIterator.cpp in Sources */,
 				2933AD211DA5AA73005D7222 /* XElementIterator.cpp in Sources */,
 				2933AD221DA5AA73005D7222 /* XFactory.cpp in Sources */,
-				29FFACAA1DB9C9F600DC8AE1 /* DynamicsFunctions.cpp in Sources */,
+				29FFACAA1DB9C9F600DC8AE1 /* DynamicsReader.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7157,7 +7157,7 @@
 				29454A3F1D295C5500B90302 /* Technical.cpp in Sources */,
 				294549741D295C5500B90302 /* Mordent.cpp in Sources */,
 				2945497A1D295C5500B90302 /* MusicDataChoice.cpp in Sources */,
-				29E2B4291DA8494900DC61EA /* DynamicsFunctions.cpp in Sources */,
+				29E2B4291DA8494900DC61EA /* DynamicsReader.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

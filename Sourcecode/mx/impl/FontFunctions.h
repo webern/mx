@@ -144,7 +144,7 @@ namespace mx
             core::CommaSeparatedText csv;
             csv.setValues( tokens );
             lookForAndSetHasFontFamily( true, &outAttributes );
-            lookForAndSetFontFamily( csv, outAttributes );
+            lookForAndSetFontFamily( csv, &outAttributes );
         }
         
         

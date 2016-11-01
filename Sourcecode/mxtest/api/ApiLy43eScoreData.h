@@ -37,7 +37,7 @@ namespace mxtest
         staff1P->directions.emplace_back( DirectionData{} );
         auto directionP = &staff1P->directions.back();
         directionP->placement = Placement::below;
-        directionP->marks.emplace_back( DirectionMark{} );
+        directionP->marks.emplace_back( MarkData{} );
         auto directionMarkP = &directionP->marks.back();
         directionMarkP->markType = MarkType::ffff;
         directionMarkP->name = "ffff";
@@ -87,7 +87,7 @@ namespace mxtest
         directionP->offset = 1;
         directionP->placement = Placement::below;
         directionP->isStaffValueSpecified = true;
-        directionP->marks.emplace_back( DirectionMark{} );
+        directionP->marks.emplace_back( MarkData{} );
         directionMarkP = &directionP->marks.back();
         directionMarkP->markType = MarkType::p;
         directionMarkP->name = "p";

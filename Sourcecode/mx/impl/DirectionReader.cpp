@@ -37,6 +37,7 @@
 #include "mx/impl/PrintFunctions.h"
 #include "mx/api/WedgeData.h"
 #include "mx/impl/SpannerFunctions.h"
+#include "mx/impl/DynamicsReader.h"
 
 namespace mx
 {
@@ -47,6 +48,7 @@ namespace mx
         , myCursor{ inCursor }
         , myConverter{}
         , myOutDirectionData{}
+        , myGlobalPlacement{ api::Placement::unspecified }
         {
             
         }
@@ -271,17 +273,20 @@ namespace mx
         
         void DirectionReader::parseDynamics( const core::DirectionType& directionType )
         {
+
             MX_UNUSED( directionType );
             for( const auto& dynamic : directionType.getDynamicsSet() )
             {
-                parseDynamic( *dynamic );
+                DynamicsReader reader{ *dynamic, myCursor };
+                reader.parseDynamics( myOutDirectionData.marks );
+                //parseDynamic( *dynamic );
             }
         }
         
         
         void DirectionReader::parseDynamic( const core::Dynamics& dynamic )
         {
-            auto mark = api::DirectionMark{};
+            auto mark = api::MarkData{};
             const auto valueObject = dynamic.getValue();
             mark.markType = myConverter.convertDynamic( valueObject.getValue() );
             mark.name = valueObject.getValueString();

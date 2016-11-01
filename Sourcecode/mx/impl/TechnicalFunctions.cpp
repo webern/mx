@@ -29,7 +29,7 @@
 #include "mx/core/elements/TripleTongue.h"
 #include "mx/core/elements/UpBow.h"
 #include "mx/impl/Converter.h"
-#include "mx/impl/ParseMarkDataAttributes.h"
+#include "mx/impl/MarkDataFunctions.h"
 
 namespace mx
 {

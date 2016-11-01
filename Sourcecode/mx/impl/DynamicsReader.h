@@ -17,15 +17,15 @@ namespace mx
     
     namespace impl
     {
-        class DynamicsFunctions
+        class DynamicsReader
         {
         public:
-            DynamicsFunctions( const core::Dynamics& inDynamic, impl::Cursor inCursor );
-            ~DynamicsFunctions() = default;
-            DynamicsFunctions( const DynamicsFunctions& ) = delete;
-            DynamicsFunctions( DynamicsFunctions&& ) = delete;
-            DynamicsFunctions& operator=( const DynamicsFunctions& ) = delete;
-            DynamicsFunctions& operator=( DynamicsFunctions&& ) = delete;
+            DynamicsReader( const core::Dynamics& inDynamic, impl::Cursor inCursor );
+            ~DynamicsReader() = default;
+            DynamicsReader( const DynamicsReader& ) = delete;
+            DynamicsReader( DynamicsReader&& ) = delete;
+            DynamicsReader& operator=( const DynamicsReader& ) = delete;
+            DynamicsReader& operator=( DynamicsReader&& ) = delete;
             
             void parseDynamics( std::vector<api::MarkData>& outMarks ) const;
             

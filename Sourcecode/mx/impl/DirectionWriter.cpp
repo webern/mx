@@ -38,6 +38,7 @@
 #include "mx/api/BarlineData.h"
 #include "mx/impl/LineFunctions.h"
 #include "mx/impl/SpannerFunctions.h"
+#include "mx/impl/MarkDataFunctions.h"
 
 namespace mx
 {
@@ -95,6 +96,8 @@ namespace mx
                     core::DynamicsValue dynamicsValue;
                     dynamicsValue.setValue( myConverter.convertDynamic( mark.markType ) );
                     dynamics->setValue( dynamicsValue );
+                    setAttributesFromPositionData( mark.positionData, *dynamics->getAttributes() );
+                    setAttributesFromMarkData( mark, *dynamics->getAttributes() );
                 }
             }
             

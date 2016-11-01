@@ -121,10 +121,10 @@ namespace mx
             else
             {
                 lookForAndSetHasColor( false, &outAttributes );
-                lookForAndSetColor( core::Color{}, &outAttributes );
+                //lookForAndSetColor( core::Color{}, &outAttributes );
             }
             
-            setAttributesFromFontData( inPrintData, outAttributes );
+            //setAttributesFromFontData( inPrintData, outAttributes );
         }
     }
 }

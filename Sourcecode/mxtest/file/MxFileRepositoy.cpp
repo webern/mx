@@ -440,6 +440,9 @@ namespace mxtest
         myNameSubdirectoryMap.emplace( "k006u_Clefs_sign_jianpu_ln_3_oct_0_Jianpu.xml", "ksuite" );
         myNameSubdirectoryMap.emplace( "k006v_Clefs_sign_none_ln_3_oct_0_None.xml", "ksuite" );
         myNameSubdirectoryMap.emplace( "k007a_Notations_Dynamics.xml", "ksuite" );
+        myNameSubdirectoryMap.emplace( "k007b_Notations_Dynamics_Attributes.xml", "ksuite" );
+        myNameSubdirectoryMap.emplace( "k007c_Directions_Dynamics.xml", "ksuite" );
+        myNameSubdirectoryMap.emplace( "k007d_Directions_Dynamics_Attributes.xml", "ksuite" );
         myNameSubdirectoryMap.emplace( "k008a_Beaming.xml", "ksuite" );
         myNameSubdirectoryMap.emplace( "k009a_Slurs.xml", "ksuite" );
         myNameSubdirectoryMap.emplace( "k010a_Ties.xml", "ksuite" );

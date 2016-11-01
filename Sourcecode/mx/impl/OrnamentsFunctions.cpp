@@ -18,7 +18,7 @@
 #include "mx/core/elements/VerticalTurn.h"
 #include "mx/core/elements/WavyLine.h"
 #include "mx/impl/AccidentalMarkFunctions.h"
-#include "mx/impl/ParseMarkDataAttributes.h"
+#include "mx/impl/MarkDataFunctions.h"
 
 namespace mx
 {
