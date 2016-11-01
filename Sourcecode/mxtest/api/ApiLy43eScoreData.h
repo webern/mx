@@ -44,6 +44,7 @@ namespace mxtest
         auto glyph = &MarkSmufl::getSmuflGlyphname( directionMarkP->markType );
         directionMarkP->smuflName = glyph->below;
         directionMarkP->smuflCodepoint = Smufl::findCodepoint( directionMarkP->smuflName );
+        directionMarkP->tickTimePosition = 0;
         
         // measure 1 - music
         int voice = 0;
@@ -91,6 +92,7 @@ namespace mxtest
         directionMarkP = &directionP->marks.back();
         directionMarkP->markType = MarkType::p;
         directionMarkP->name = "p";
+        directionMarkP->tickTimePosition = 24;
         glyph = &MarkSmufl::getSmuflGlyphname( directionMarkP->markType );
         directionMarkP->smuflName = glyph->below;
         directionMarkP->smuflCodepoint = Smufl::findCodepoint( directionMarkP->smuflName );
@@ -179,6 +181,8 @@ namespace mxtest
         // measure 2 - setup
         part.measures.emplace_back( MeasureData{} );
         measureP = &part.measures.back();
+        measureP->timeSignature.isImplicit = true;
+        measureP->timeSignature.symbol = TimeSignatureSymbol::common;
         measureP->keys.emplace_back( KeyData{} );
         keyP = &measureP->keys.back();
         keyP->fifths = 2;
@@ -288,6 +292,8 @@ namespace mxtest
         // measure 3 - setup
         part.measures.emplace_back( MeasureData{} );
         measureP = &part.measures.back();
+        measureP->timeSignature.isImplicit = true;
+        measureP->timeSignature.symbol = TimeSignatureSymbol::common;
         measureP->staves.emplace_back( StaffData{} );
         measureP->staves.emplace_back( StaffData{} );
         staff1P = &measureP->staves.at( 0 );
@@ -392,6 +398,8 @@ namespace mxtest
         // measure 4 - setup
         part.measures.emplace_back( MeasureData{} );
         measureP = &part.measures.back();
+        measureP->timeSignature.isImplicit = true;
+        measureP->timeSignature.symbol = TimeSignatureSymbol::common;
         measureP->staves.emplace_back( StaffData{} );
         measureP->staves.emplace_back( StaffData{} );
         staff1P = &measureP->staves.at( 0 );
@@ -402,6 +410,8 @@ namespace mxtest
         staff1P = &measureP->staves.at( 0 );
         staff1P->voices[voice].notes.emplace_back( NoteData{} );
         noteP = &staff1P->voices[voice].notes.back();
+        measureP->timeSignature.isImplicit = true;
+        measureP->timeSignature.symbol = TimeSignatureSymbol::common;
         noteP->userRequestedVoiceNumber = voice + 1;
         noteP->tickTimePosition = 0;
         noteP->pitchData.step = Step::c;

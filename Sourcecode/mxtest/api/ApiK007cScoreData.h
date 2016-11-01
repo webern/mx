@@ -38,8 +38,8 @@ namespace
         mark.name = mx::core::toString( d );
         mark.smuflCodepoint = MarkSmufl::getCodepoint( markType );
         direction.tickTimePosition = noteP->tickTimePosition;
-        direction.placement = Placement::below;
         direction.isStaffValueSpecified = false;
+        mark.positionData.placement = Placement::below;
     }
     
     inline void addMeasureWithNote( mx::api::MarkType markType, mx::api::PartData& outPartData )

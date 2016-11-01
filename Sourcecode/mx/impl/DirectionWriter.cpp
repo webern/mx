@@ -39,6 +39,7 @@
 #include "mx/impl/LineFunctions.h"
 #include "mx/impl/SpannerFunctions.h"
 #include "mx/impl/MarkDataFunctions.h"
+#include "mx/impl/DynamicsWriter.h"
 
 namespace mx
 {
@@ -49,6 +50,7 @@ namespace mx
         , myCursor{ inCursor }
         , myOutDirectionPtr{ nullptr }
         , myConverter{}
+        , myPlacements{}
         {
             
         }
@@ -56,6 +58,7 @@ namespace mx
         core::DirectionPtr DirectionWriter::getDirection()
         {
             myOutDirectionPtr = core::makeDirection();
+            myPlacements.clear();
             myIsFirstDirectionTypeAdded = false;
             auto& directionAttributes = *myOutDirectionPtr->getAttributes();
             
@@ -91,13 +94,10 @@ namespace mx
                     auto directionTypePtr = core::makeDirectionType();
                     this->addDirectionType( directionTypePtr );
                     directionTypePtr->setChoice( core::DirectionType::Choice::dynamics );
+                    DynamicsWriter dynamicsWriter{ mark, myCursor };
                     MX_ASSERT( directionTypePtr->getDynamicsSet().size() == 1 );
-                    auto dynamics = directionTypePtr->getDynamicsSet().front();
-                    core::DynamicsValue dynamicsValue;
-                    dynamicsValue.setValue( myConverter.convertDynamic( mark.markType ) );
-                    dynamics->setValue( dynamicsValue );
-                    setAttributesFromPositionData( mark.positionData, *dynamics->getAttributes() );
-                    setAttributesFromMarkData( mark, *dynamics->getAttributes() );
+                    directionTypePtr->addDynamics( dynamicsWriter.getDynamics() );
+                    directionTypePtr->removeDynamics( directionTypePtr->getDynamicsSet().cbegin() );
                 }
             }
             
@@ -199,6 +199,7 @@ namespace mx
                 setAttributesFromSpannerStart( item, attr );
             }
             
+            myPlacements.clear();
             myIsFirstDirectionTypeAdded = false;
             return myOutDirectionPtr;
         }

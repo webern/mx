@@ -7,6 +7,8 @@
 #include "mx/impl/Converter.h"
 #include "mx/impl/Cursor.h"
 
+#include <set>
+
 namespace mx
 {
 	namespace core
@@ -36,6 +38,7 @@ namespace mx
             core::DirectionPtr myOutDirectionPtr;
             const Converter myConverter;
             bool myIsFirstDirectionTypeAdded;
+            std::set<api::Placement> myPlacements;
         };
     }
 }

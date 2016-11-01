@@ -37,38 +37,7 @@ namespace mx
     
     namespace impl
     {
-        
-//        struct MeasureReaderParameters
-//        {
-//            // number of staves in the part, i.e.
-//            // the max <staff>x</staff> or max
-//            // <staves>x</staves> found in the part
-//            int numStaves;
-//            
-//            // ticks per quarter to be used for all
-//            // measures throughout the entire score
-//            // must be calculated at the top and
-//            // past down to the import routines
-//            int globalTicksPerQuarter;
-//            
-//            // is this the first measure in the part
-//            bool isFirstMeasure;
-//            int measureIndex;
-//            
-//            // is this the first part in the score
-//            bool isFirstPart;
-//            
-//            MeasureReaderParameters()
-//            : numStaves{ 0 }
-//            , globalTicksPerQuarter{ 1 }
-//            , isFirstMeasure{ false }
-//            , measureIndex( -1 )
-//            , isFirstPart{ false }
-//            {
-//                
-//            }
-//        };
-//        
+
     	class MeasureReader
     	{
     	public:

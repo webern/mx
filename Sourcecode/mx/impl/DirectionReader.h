@@ -34,7 +34,6 @@ namespace mx
             const Cursor myCursor;
             const Converter myConverter;
             api::DirectionData myOutDirectionData;
-            api::Placement myGlobalPlacement;
             
     	private:
             void parseStaffIndex();

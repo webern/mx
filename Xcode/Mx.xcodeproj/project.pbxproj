@@ -1917,6 +1917,8 @@
 		29766AE01DAC39EF00CCE2AC /* KeyData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29766ADF1DAC39EF00CCE2AC /* KeyData.h */; };
 		29766AE11DAC39F800CCE2AC /* KeyData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29766ADF1DAC39EF00CCE2AC /* KeyData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		29766AE21DAC39FB00CCE2AC /* KeyData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29766ADF1DAC39EF00CCE2AC /* KeyData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		29979D671DC830AA00707AA4 /* DynamicsWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29979D651DC830AA00707AA4 /* DynamicsWriter.cpp */; };
+		29979D681DC830AA00707AA4 /* DynamicsWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 29979D661DC830AA00707AA4 /* DynamicsWriter.h */; };
 		29B48EE01DBEC6ED0030A974 /* WedgeData.h in Headers */ = {isa = PBXBuildFile; fileRef = 2951E1671DBA9C7300826CEF /* WedgeData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		29B48EE11DBEC6F10030A974 /* WedgeData.h in Headers */ = {isa = PBXBuildFile; fileRef = 2951E1671DBA9C7300826CEF /* WedgeData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		29B48EE51DBEC9950030A974 /* BarlineData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29B48EE41DBEC9950030A974 /* BarlineData.h */; };
@@ -3332,6 +3334,8 @@
 		29766ADF1DAC39EF00CCE2AC /* KeyData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KeyData.h; path = ../Sourcecode/mx/api/KeyData.h; sourceTree = "<group>"; };
 		297DA0721D7F60BE0067C13A /* StaffFunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StaffFunctions.cpp; path = ../Sourcecode/mx/impl/StaffFunctions.cpp; sourceTree = "<group>"; };
 		297DA0731D7F60BE0067C13A /* StaffFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StaffFunctions.h; path = ../Sourcecode/mx/impl/StaffFunctions.h; sourceTree = "<group>"; };
+		29979D651DC830AA00707AA4 /* DynamicsWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DynamicsWriter.cpp; path = ../Sourcecode/mx/impl/DynamicsWriter.cpp; sourceTree = "<group>"; };
+		29979D661DC830AA00707AA4 /* DynamicsWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DynamicsWriter.h; path = ../Sourcecode/mx/impl/DynamicsWriter.h; sourceTree = "<group>"; };
 		299A2BB01D7FA48A006A7F5C /* PartGroupData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PartGroupData.h; path = ../Sourcecode/mx/api/PartGroupData.h; sourceTree = "<group>"; };
 		299F7FE61CA8D2200084CAE5 /* libMx.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMx.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		29ADB30D1D729E1900683BEC /* EncodingData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EncodingData.h; path = ../Sourcecode/mx/api/EncodingData.h; sourceTree = "<group>"; };
@@ -3575,6 +3579,8 @@
 		292255D51D712B26002D8E48 /* impl */ = {
 			isa = PBXGroup;
 			children = (
+				29979D651DC830AA00707AA4 /* DynamicsWriter.cpp */,
+				29979D661DC830AA00707AA4 /* DynamicsWriter.h */,
 				29EF2FE91DA307D3001FE5DF /* AccidentalMarkFunctions.cpp */,
 				29EF2FEA1DA307D3001FE5DF /* AccidentalMarkFunctions.h */,
 				29EF2F781DA2CC1D001FE5DF /* ArticulationsFunctions.cpp */,
@@ -5050,6 +5056,7 @@
 				29766ACB1DAC149900CCE2AC /* DirectionReader.h in Headers */,
 				29B4E81C1DA9CA0E005DC6D1 /* TupletData.h in Headers */,
 				29CD722D1DB82C9200FB7153 /* DirectionWriter.h in Headers */,
+				29979D681DC830AA00707AA4 /* DynamicsWriter.h in Headers */,
 				29C29B8B1DAEC00C00D3A884 /* ScoreWriter.h in Headers */,
 				29CDDA2E1DADCAF30022B1A3 /* PartWriter.h in Headers */,
 				29B7C46A1DAFFDBA009D7D8F /* MeasureWriter.h in Headers */,
@@ -7035,6 +7042,7 @@
 				29E2B4321DA8494900DC61EA /* NoteReader.cpp in Sources */,
 				2951A0C51D60F3B700B49A13 /* ScoreConversions.cpp in Sources */,
 				294548FA1D295C5500B90302 /* Group.cpp in Sources */,
+				29979D671DC830AA00707AA4 /* DynamicsWriter.cpp in Sources */,
 				29454A6D1D295C5500B90302 /* Turn.cpp in Sources */,
 				2945499A1D295C5500B90302 /* Opus.cpp in Sources */,
 				29454A4F1D295C5500B90302 /* TimeRelation.cpp in Sources */,

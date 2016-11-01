@@ -33,6 +33,7 @@
 #include "mx/core/elements/TupletDot.h"
 #include "mx/core/elements/TupletNumber.h"
 #include "mx/core/elements/TupletType.h"
+#include "mx/impl/DynamicsWriter.h"
 
 namespace mx
 {
@@ -156,27 +157,8 @@ namespace mx
                     auto dynamicNotationsChoice = core::makeNotationsChoice();
                     myOutNotations->addNotationsChoice( dynamicNotationsChoice );
                     dynamicNotationsChoice->setChoice( core::NotationsChoice::Choice::dynamics );
-                    auto dynamics = dynamicNotationsChoice->getDynamics();
-                    if( mark.positionData.placement != api::Placement::unspecified )
-                    {
-                        dynamics->getAttributes()->hasPlacement = true;
-                        dynamics->getAttributes()->placement = myConverter.convert( mark.positionData.placement );
-                    }
-                    const auto value = myConverter.convertDynamic( mark.markType );
-                    core::DynamicsValue dynamicsValue;
-                    dynamicsValue.setValue( value );
-                    const bool isOther = value == core::DynamicsEnum::otherDynamics;
-                    
-                    if( isOther && !mark.smuflName.empty() )
-                    {
-                        dynamicsValue.setValue( mark.smuflName );
-                    }
-                    else if ( isOther && !mark.name.empty() )
-                    {
-                        dynamicsValue.setValue( mark.name );
-                    }
-                    
-                    dynamics->setValue( dynamicsValue );
+                    DynamicsWriter dynamicsWriter{ mark, myCursor };
+                    dynamicNotationsChoice->setDynamics( dynamicsWriter.getDynamics() );
                 }
             }
             

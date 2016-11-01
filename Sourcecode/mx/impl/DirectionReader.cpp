@@ -38,6 +38,7 @@
 #include "mx/api/WedgeData.h"
 #include "mx/impl/SpannerFunctions.h"
 #include "mx/impl/DynamicsReader.h"
+#include "mx/impl/MarkDataFunctions.h"
 
 namespace mx
 {
@@ -48,7 +49,6 @@ namespace mx
         , myCursor{ inCursor }
         , myConverter{}
         , myOutDirectionData{}
-        , myGlobalPlacement{ api::Placement::unspecified }
         {
             
         }
@@ -273,8 +273,6 @@ namespace mx
         
         void DirectionReader::parseDynamics( const core::DirectionType& directionType )
         {
-
-            MX_UNUSED( directionType );
             for( const auto& dynamic : directionType.getDynamicsSet() )
             {
                 DynamicsReader reader{ *dynamic, myCursor };
@@ -290,6 +288,15 @@ namespace mx
             const auto valueObject = dynamic.getValue();
             mark.markType = myConverter.convertDynamic( valueObject.getValue() );
             mark.name = valueObject.getValueString();
+            impl::parseMarkDataAttributes( *dynamic.getAttributes(), mark );
+            
+            auto placement = mark.positionData.placement;
+            
+            if( placement == api::Placement::unspecified )
+            {
+                placement = myOutDirectionData.placement;
+            }
+            
             if( valueObject.getValue() == core::DynamicsEnum::otherDynamics )
             {
                 auto codePoint = api::Smufl::findCodepoint( mark.name );
@@ -301,8 +308,8 @@ namespace mx
             }
             else
             {
-                mark.smuflName = api::MarkSmufl::getName( mark.markType, myOutDirectionData.placement );
-                mark.smuflCodepoint = api::MarkSmufl::getCodepoint( mark.markType, myOutDirectionData.placement );
+                mark.smuflName = api::MarkSmufl::getName( mark.markType, placement );
+                mark.smuflCodepoint = api::MarkSmufl::getCodepoint( mark.markType, placement );
             }
             myOutDirectionData.marks.emplace_back( std::move( mark ) );
         }
