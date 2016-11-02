@@ -457,6 +457,7 @@
 		29C227F01D2F74B500677B3C /* ChangeValues.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C227EE1D2F74B500677B3C /* ChangeValues.cpp */; };
 		29C9AFD91DC3BE6000DD9BFB /* ChordApiTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C9AFD81DC3BE6000DD9BFB /* ChordApiTest.cpp */; };
 		29DE547A1DB98E7100F5F8A7 /* StupidFileFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DE54781DB98E7100F5F8A7 /* StupidFileFunctions.cpp */; };
+		29E41D691DC978400085405E /* ApiK014aFermatasTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29E41D681DC978400085405E /* ApiK014aFermatasTest.cpp */; };
 		29EF44101D6E8F5500DBDAB9 /* DocumentManagerTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EF440F1D6E8F5500DBDAB9 /* DocumentManagerTest.cpp */; };
 		29FFAC7E1DB99AD400DC8AE1 /* ApiLy43eTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29FFAC7C1DB998C100DC8AE1 /* ApiLy43eTest.cpp */; };
 /* End PBXBuildFile section */
@@ -1064,6 +1065,8 @@
 		29DE54771DB98E7100F5F8A7 /* Path.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Path.h; path = ../Sourcecode/mxtest/file/Path.h; sourceTree = "<group>"; };
 		29DE54781DB98E7100F5F8A7 /* StupidFileFunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StupidFileFunctions.cpp; path = ../Sourcecode/mxtest/file/StupidFileFunctions.cpp; sourceTree = "<group>"; };
 		29DE54791DB98E7100F5F8A7 /* StupidFileFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StupidFileFunctions.h; path = ../Sourcecode/mxtest/file/StupidFileFunctions.h; sourceTree = "<group>"; };
+		29E41D671DC978400085405E /* ApiK014aFermatasScoreData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ApiK014aFermatasScoreData.h; path = ../Sourcecode/mxtest/api/ApiK014aFermatasScoreData.h; sourceTree = "<group>"; };
+		29E41D681DC978400085405E /* ApiK014aFermatasTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ApiK014aFermatasTest.cpp; path = ../Sourcecode/mxtest/api/ApiK014aFermatasTest.cpp; sourceTree = "<group>"; };
 		29EF440F1D6E8F5500DBDAB9 /* DocumentManagerTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DocumentManagerTest.cpp; path = ../Sourcecode/mxtest/api/DocumentManagerTest.cpp; sourceTree = "<group>"; };
 		29FFAC7C1DB998C100DC8AE1 /* ApiLy43eTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ApiLy43eTest.cpp; path = ../Sourcecode/mxtest/api/ApiLy43eTest.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1746,22 +1749,24 @@
 		29EF440E1D6E8F4700DBDAB9 /* api */ = {
 			isa = PBXGroup;
 			children = (
-				2961F12F1DC7F47100D62B16 /* ApiMuAccidentals1ScoreData.h */,
-				2961F1301DC7F47100D62B16 /* ApiMuAccidentals1Test.cpp */,
 				29BF98891DC6D20500BBC7B3 /* ApiK007aScoreData.h */,
 				29BF988A1DC6D20500BBC7B3 /* ApiK007aTest.cpp */,
 				2961F1151DC7CDD700D62B16 /* ApiK007cScoreData.h */,
 				2961F1161DC7CDD700D62B16 /* ApiK007cTest.cpp */,
+				29E41D671DC978400085405E /* ApiK014aFermatasScoreData.h */,
+				29E41D681DC978400085405E /* ApiK014aFermatasTest.cpp */,
 				294775E11D934C510006E1AD /* ApiLoadSurvivalTest.cpp */,
 				29B48EDF1DBE8C450030A974 /* ApiLy43eScoreData.h */,
 				29FFAC7C1DB998C100DC8AE1 /* ApiLy43eTest.cpp */,
+				2961F12F1DC7F47100D62B16 /* ApiMuAccidentals1ScoreData.h */,
+				2961F1301DC7F47100D62B16 /* ApiMuAccidentals1Test.cpp */,
 				2903C9471DBC7ED600218C9E /* ApiTester.cpp */,
 				2903C9481DBC7ED600218C9E /* ApiTester.h */,
 				29C9AFD81DC3BE6000DD9BFB /* ChordApiTest.cpp */,
-				29979D611DC811F300707AA4 /* TimeSignatureApiTest.cpp */,
 				29EF440F1D6E8F5500DBDAB9 /* DocumentManagerTest.cpp */,
 				29CD722E1DB8421100FB7153 /* RoundTrip.h */,
 				2903C9461DBC7D7600218C9E /* ScoreDataCreator.h */,
+				29979D611DC811F300707AA4 /* TimeSignatureApiTest.cpp */,
 			);
 			name = api;
 			sourceTree = "<group>";
@@ -1960,6 +1965,7 @@
 				29B48EDE1DBE7F550030A974 /* ScoreWriterTest.cpp in Sources */,
 				29C01E781D1312FA0094BE61 /* PartNameDisplayTest.cpp in Sources */,
 				29C01E371D1312FA0094BE61 /* MetronomeDotTest.cpp in Sources */,
+				29E41D691DC978400085405E /* ApiK014aFermatasTest.cpp in Sources */,
 				2903C9491DBC7ED600218C9E /* ApiTester.cpp in Sources */,
 				29C01EDF1D1312FA0094BE61 /* TimewiseMeasureTest.cpp in Sources */,
 				29C01DA81D1312FA0094BE61 /* DampTest.cpp in Sources */,

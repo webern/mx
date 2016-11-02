@@ -34,6 +34,7 @@
 #include "mx/core/elements/TupletNumber.h"
 #include "mx/core/elements/TupletType.h"
 #include "mx/impl/DynamicsWriter.h"
+#include "mx/core/elements/Fermata.h"
 
 namespace mx
 {
@@ -159,6 +160,23 @@ namespace mx
                     dynamicNotationsChoice->setChoice( core::NotationsChoice::Choice::dynamics );
                     DynamicsWriter dynamicsWriter{ mark, myCursor };
                     dynamicNotationsChoice->setDynamics( dynamicsWriter.getDynamics() );
+                }
+                else if( isMarkFermata( mark.markType ) )
+                {
+                    auto fermataNotationsChoice = core::makeNotationsChoice();
+                    myOutNotations->addNotationsChoice( fermataNotationsChoice );
+                    fermataNotationsChoice->setChoice( core::NotationsChoice::Choice::fermata );
+                    auto& fermata = *fermataNotationsChoice->getFermata();
+                    
+                    if( mark.markType == api::MarkType::fermata )
+                    {
+                        fermata.setValue( core::FermataShape::emptystring );
+                    }
+                    else
+                    {
+                        fermata.setValue( myConverter.convertFermata( mark.markType ) );
+                    }
+                    
                 }
             }
             
