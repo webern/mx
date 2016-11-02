@@ -24,6 +24,5 @@ namespace mx
             return areVectorsEqual( lhs.notes, rhs.notes );
         }
         MXAPI_NOT_EQUALS_AND_VECTORS( VoiceData );
-        MXAPI_INT_MAPS_EQUALS( VoiceData );
     }
 }

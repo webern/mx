@@ -317,21 +317,77 @@ namespace mx
                         {
                             const auto& fermata = *notationsChoice.getFermata();
                             const auto& attr = *fermata.getAttributes();
-                            auto placement = api::Placement::unspecified;
+                            const auto shape = fermata.getValue();
+                            auto markType = api::MarkType::fermata;
                             
-                            if( attr.hasType && attr.type == core::UprightInverted::inverted )
+                            if( shape == core::FermataShape::emptystring )
                             {
-                                placement = api::Placement::below;
+                                if( !attr.hasType )
+                                {
+                                    markType = api::MarkType::fermata;
+                                }
+                                else if ( attr.type == core::UprightInverted::upright )
+                                {
+                                    markType = api::MarkType::fermataUpright;
+                                }
+                                else if ( attr.type == core::UprightInverted::inverted )
+                                {
+                                    markType = api::MarkType::fermataInverted;
+                                }
                             }
-                            else if ( attr.hasType && attr.type == core::UprightInverted::upright )
+                            else if( shape == core::FermataShape::normal )
                             {
-                                placement = api::Placement::above;
+                                if( !attr.hasType )
+                                {
+                                    markType = api::MarkType::fermataNormal;
+                                }
+                                else if ( attr.type == core::UprightInverted::upright )
+                                {
+                                    markType = api::MarkType::fermataNormalUpright;
+                                }
+                                else if ( attr.type == core::UprightInverted::inverted )
+                                {
+                                    markType = api::MarkType::fermataNormalInverted;
+                                }
+                                
+                            }
+                            else if( shape == core::FermataShape::angled )
+                            {
+                                if( !attr.hasType )
+                                {
+                                    markType = api::MarkType::fermataAngled;
+                                }
+                                else if ( attr.type == core::UprightInverted::upright )
+                                {
+                                    markType = api::MarkType::fermataAngledUpright;
+                                }
+                                else if ( attr.type == core::UprightInverted::inverted )
+                                {
+                                    markType = api::MarkType::fermataAngledInverted;
+                                }
+                            }
+                            else if( shape == core::FermataShape::square )
+                            {
+                                if( !attr.hasType )
+                                {
+                                    markType = api::MarkType::fermataSquare;
+                                }
+                                else if ( attr.type == core::UprightInverted::upright )
+                                {
+                                    markType = api::MarkType::fermataSquareUpright;
+                                }
+                                else if ( attr.type == core::UprightInverted::inverted )
+                                {
+                                    markType = api::MarkType::fermataSquareInverted;
+                                }
                             }
                             
-                            api::MarkData markData{ placement, myConverter.convertFermata( fermata.getValue() ) };
+                            // Unfortunately, without doing a lot of guess word, we can't
+                            // know whether the correct glyph is "above" or "below"
+                            api::MarkData markData{ markType };
                             impl::parseMarkDataAttributes( attr, markData );
                             markData.tickTimePosition = myCursor.tickTimePosition;
-                            markData.positionData.placement = placement;
+                            impl::parseMarkDataAttributes( attr, markData );
                             myOutNoteData.noteAttachmentData.marks.emplace_back( std::move( markData ) );
                             break;
                         }

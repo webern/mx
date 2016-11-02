@@ -101,9 +101,5 @@ namespace mx
         inline bool operator==( const std::vector<mxapiClassName>& lhs, const std::vector<mxapiClassName>& rhs ) { return areVectorsEqual<mxapiClassName>( lhs, rhs ); } \
         inline bool operator!=( const std::vector<mxapiClassName>& lhs, const std::vector<mxapiClassName>& rhs ) { return !areVectorsEqual<mxapiClassName>( lhs, rhs ); } \
 
-#define MXAPI_INT_MAPS_EQUALS( mxapiClassName ) \
-        inline bool operator==( const std::map<int,mxapiClassName>& lhs, const std::map<int,mxapiClassName>& rhs ) { return areIntMapsEqual<mxapiClassName>( lhs, rhs ); } \
-        inline bool operator!=( const std::map<int,mxapiClassName>& lhs, const std::map<int,mxapiClassName>& rhs ) { return !areIntMapsEqual<mxapiClassName>( lhs, rhs ); } \
-
     }
 }

@@ -48,19 +48,15 @@ namespace mx
 
             NoteData();
             
-            // when reading a MusicXML file this will be incremented
-            // for each note that is encountered. when writing a
-            // MusicXML file it will be ignored.
-            int absoluteNoteIndex;
-            
     		bool isRest;                        // if isRest is true then isUnpitched can be ignored
             bool isMeasureRest;                 // only valid if isRest is true
             bool isUnpitched;                   // only relevant if isRest is false
             bool isDisplayStepOctaveSpecified;  // MusicXML can optionally specify display step and octave for rests and unpitched notes
             
-            // TODO - MusicXML is totally screwed up in that a note is part of
-            // a chord if the *following* note says it is. Need to decide
-            // whether to mirror that approach in the API or make it more sane.
+            // This does *not* indicate the presence of absence of a <chord> tag.  Instead isChord
+            // denotes whether or not the note is a member of a chord.  This is translated from/to
+            // MusicXML's <chord> usage rules (the first note of a chord does *not* have a <chord>
+            // tag, but subsequent chord notes do have the tag).
             bool isChord;
             
             // This is separate from the tie curves themselves. This
@@ -71,7 +67,6 @@ namespace mx
             
             NoteType noteType;            // normal, cue, grace
             PitchData pitchData;          // step, alter, octave, accidental, etc
-            //int staffIndex;             // this should be one less than the number shown in the <staff> element
             int userRequestedVoiceNumber;
             Stem stem;
             
@@ -89,7 +84,6 @@ namespace mx
         
         
         MXAPI_EQUALS_BEGIN( NoteData )
-        MXAPI_EQUALS_MEMBER( absoluteNoteIndex )
         MXAPI_EQUALS_MEMBER( isRest )
         MXAPI_EQUALS_MEMBER( isMeasureRest )
         MXAPI_EQUALS_MEMBER( isUnpitched )

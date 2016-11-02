@@ -55,7 +55,11 @@ namespace mx
         MXAPI_EQUALS_MEMBER( clefs )
         MXAPI_EQUALS_MEMBER( keys )
         MXAPI_EQUALS_MEMBER( directions )
-        ( voicesAreEqual( lhs.voices, rhs.voices ) );
+        if( !( voicesAreEqual( lhs.voices, rhs.voices ) ) )
+        {
+            streamComparisonUnequalMessage( "StaffData", "voices" );
+            return false;
+        }
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( StaffData );
     }

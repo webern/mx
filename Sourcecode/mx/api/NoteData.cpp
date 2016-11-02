@@ -8,8 +8,7 @@ namespace mx
     namespace api
     {
         NoteData::NoteData()
-        : absoluteNoteIndex{ 0 }
-        , isRest{ false }
+        : isRest{ false }
         , isMeasureRest{ false }
         , isUnpitched{ false }
         , isDisplayStepOctaveSpecified{ false }

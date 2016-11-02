@@ -35,6 +35,7 @@ namespace mxtest
         
         staff->voices[0].notes.emplace_back( NoteData{} );
         auto note = &staff->voices[0].notes.back();
+        note->userRequestedVoiceNumber = 1;
         note->pitchData.step = Step::c;
         note->pitchData.octave = 4;
         note->durationData.durationName = DurationName::whole;
@@ -49,6 +50,7 @@ namespace mxtest
         staff = &measure->staves.back();
         staff->voices[0].notes.emplace_back( NoteData{} );
         note = &staff->voices[0].notes.back();
+        note->userRequestedVoiceNumber = 1;
         note->pitchData.step = Step::c;
         note->pitchData.octave = 4;
         note->durationData.durationName = DurationName::whole;
@@ -63,6 +65,7 @@ namespace mxtest
         staff = &measure->staves.back();
         staff->voices[0].notes.emplace_back( NoteData{} );
         note = &staff->voices[0].notes.back();
+        note->userRequestedVoiceNumber = 1;
         note->pitchData.step = Step::c;
         note->pitchData.octave = 4;
         note->durationData.durationName = DurationName::whole;
@@ -77,6 +80,7 @@ namespace mxtest
         staff = &measure->staves.back();
         staff->voices[0].notes.emplace_back( NoteData{} );
         note = &staff->voices[0].notes.back();
+        note->userRequestedVoiceNumber = 1;
         note->pitchData.step = Step::c;
         note->pitchData.octave = 6;
         note->durationData.durationName = DurationName::whole;
@@ -105,6 +109,7 @@ namespace mxtest
         staff = &measure->staves.back();
         staff->voices[0].notes.emplace_back( NoteData{} );
         note = &staff->voices[0].notes.back();
+        note->userRequestedVoiceNumber = 1;
         note->pitchData.step = Step::c;
         note->pitchData.octave = 4;
         note->durationData.durationName = DurationName::whole;
@@ -119,6 +124,7 @@ namespace mxtest
         staff = &measure->staves.back();
         staff->voices[0].notes.emplace_back( NoteData{} );
         note = &staff->voices[0].notes.back();
+        note->userRequestedVoiceNumber = 1;
         note->pitchData.step = Step::c;
         note->pitchData.octave = 4;
         note->durationData.durationName = DurationName::whole;
@@ -147,6 +153,7 @@ namespace mxtest
         staff = &measure->staves.back();
         staff->voices[0].notes.emplace_back( NoteData{} );
         note = &staff->voices[0].notes.back();
+        note->userRequestedVoiceNumber = 1;
         note->pitchData.step = Step::c;
         note->pitchData.octave = 6;
         note->durationData.durationName = DurationName::whole;
@@ -161,6 +168,7 @@ namespace mxtest
         staff = &measure->staves.back();
         staff->voices[0].notes.emplace_back( NoteData{} );
         note = &staff->voices[0].notes.back();
+        note->userRequestedVoiceNumber = 1;
         note->pitchData.step = Step::c;
         note->pitchData.octave = 4;
         note->durationData.durationName = DurationName::whole;
@@ -189,6 +197,7 @@ namespace mxtest
         staff = &measure->staves.back();
         staff->voices[0].notes.emplace_back( NoteData{} );
         note = &staff->voices[0].notes.back();
+        note->userRequestedVoiceNumber = 1;
         note->pitchData.step = Step::c;
         note->pitchData.octave = 6;
         note->durationData.durationName = DurationName::whole;
@@ -203,6 +212,7 @@ namespace mxtest
         staff = &measure->staves.back();
         staff->voices[0].notes.emplace_back( NoteData{} );
         note = &staff->voices[0].notes.back();
+        note->userRequestedVoiceNumber = 1;
         note->pitchData.step = Step::d;
         note->pitchData.octave = 6;
         note->durationData.durationName = DurationName::whole;
