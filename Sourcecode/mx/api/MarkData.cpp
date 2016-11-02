@@ -2,6 +2,8 @@
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #include "mx/api/MarkData.h"
+#include "mx/impl/Converter.h"
+#include "mx/core/Enums.h"
 
 namespace mx
 {
@@ -94,6 +96,11 @@ namespace mx
             // myMap.emplace( std::make_pair( MarkType::arrow, SmuflGlyphname{ "", "", "" } ) );
             // myMap.emplace( std::make_pair( MarkType::handbell, SmuflGlyphname{ "", "", "" } ) );
             myMap.emplace( std::make_pair( MarkType::otherTechnical, SmuflGlyphname{ "", "", "" } ) );
+            
+            myMap.emplace( std::make_pair( MarkType::fermata, SmuflGlyphname{ "fermataAbove", "fermataBelow", "fermataAbove" } ) );
+            myMap.emplace( std::make_pair( MarkType::fermataNormal, SmuflGlyphname{ "fermataAbove", "fermataBelow", "fermataAbove" } ) );
+            myMap.emplace( std::make_pair( MarkType::fermataAngled, SmuflGlyphname{ "fermataShortAbove", "fermataShortBelow", "fermataShortAbove" } ) );
+            myMap.emplace( std::make_pair( MarkType::fermataSquare, SmuflGlyphname{ "fermataLongAbove", "fermataLongBelow", "fermataLongAbove" } ) );
         }
         
         
@@ -204,6 +211,88 @@ namespace mx
             ( markType == MarkType::stress ) ||
             ( markType == MarkType::unstress ) ||
             ( markType == MarkType::otherArticulation );
+        }
+        
+        
+        bool isMarkFermata( MarkType markType )
+        {
+            return ( markType == MarkType::fermata ) ||
+            ( markType == MarkType::fermataNormal ) ||
+            ( markType == MarkType::fermataAngled ) ||
+            ( markType == MarkType::fermataSquare );
+        }
+        
+        
+        MarkData::MarkData()
+        : markType( MarkType::unspecified )
+        , name{}
+        , smuflName{}
+        , smuflCodepoint{ 0 }
+        , tickTimePosition{ 0 }
+        , printData{}
+        , positionData{}
+        , fontData{}
+        {
+            
+        }
+        
+        
+        MarkData::MarkData( MarkType inMarkType )
+        : markType( inMarkType )
+        , name{}
+        , smuflName{}
+        , smuflCodepoint{ 0 }
+        , tickTimePosition{ 0 }
+        , printData{}
+        , positionData{}
+        , fontData{}
+        {
+            impl::Converter converter;
+            if( isMarkDynamic( markType ) )
+            {
+                name = mx::core::toString( converter.convertDynamic( markType ) );
+            }
+            else if( isMarkArticulation( markType ) )
+            {
+                name = "articulation";
+            }
+            else if( isMarkFermata( markType ) )
+            {
+                name = mx::core::toString( converter.convertFermata( markType ) );
+            }
+            
+            smuflName = MarkSmufl::getName( markType );
+            smuflCodepoint = MarkSmufl::getCodepoint( markType );
+        }
+        
+        
+        MarkData::MarkData( Placement inPlacement, MarkType inMarkType )
+        : markType( inMarkType )
+        , name{}
+        , smuflName{}
+        , smuflCodepoint{ 0 }
+        , tickTimePosition{ 0 }
+        , printData{}
+        , positionData{}
+        , fontData{}
+        {
+            positionData.placement = inPlacement;
+            impl::Converter converter;
+            if( isMarkDynamic( markType ) )
+            {
+                name = mx::core::toString( converter.convertDynamic( markType ) );
+            }
+            else if( isMarkArticulation( markType ) )
+            {
+                name = "articulation";
+            }
+            else if( isMarkFermata( markType ) )
+            {
+                name = mx::core::toString( converter.convertFermata( markType ) );
+            }
+            
+            smuflName = MarkSmufl::getName( markType, positionData.placement );
+            smuflCodepoint = MarkSmufl::getCodepoint( markType, positionData.placement );
         }
     }
 }

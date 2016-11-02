@@ -22,6 +22,7 @@ namespace mxtest
         score.encoding.encodingDate.year = 2007;
         score.encoding.encodingDate.month = 9;
         score.encoding.encodingDate.day = 10;
+        score.encoding.software.emplace_back( "MuseScore 0.7.0" );
         
         auto& part = score.parts.front();
         part.uniqueId = "P1";
@@ -42,10 +43,10 @@ namespace mxtest
         measure->timeSignature.beatType = 4;
         measure->timeSignature.isImplicit = false;
         measure->staves.emplace_back( StaffData{} );
-        auto staff = &measure->staves.back();
-        staff->keys.emplace_back( KeyData{} );
-        auto& key = staff->keys.back();
+        measure->keys.emplace_back( KeyData{} );
+        auto& key = measure->keys.back();
         key.mode = KeyMode::major;
+        auto staff = &measure->staves.back();
         staff->clefs.emplace_back( ClefData{} );
         auto& clef = staff->clefs.back();
         clef.line = 2;

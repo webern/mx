@@ -138,10 +138,17 @@ namespace mx
             // arrow,
             // handbell,
             otherTechnical,
+            
+            // fermata
+            fermata,       // <fermata/>
+            fermataNormal, // <fermata>normal</fermata>
+            fermataAngled, // <fermata>angled</fermata>
+            fermataSquare, // <fermata>square</fermata>
         };
 
         bool isMarkDynamic( MarkType );
         bool isMarkArticulation( MarkType );
+        bool isMarkFermata( MarkType );
         
         using MarkSmuflEntry = std::pair<const MarkType, const SmuflGlyphname>;
         using MarkSmuflMap = std::map<const MarkType, const SmuflGlyphname>;
@@ -174,18 +181,15 @@ namespace mx
             PositionData positionData;
             FontData fontData;
             
-            MarkData()
-            : markType( MarkType::unspecified )
-            , name{}
-            , smuflName{}
-            , smuflCodepoint{ 0 }
-            , tickTimePosition{ 0 }
-            , printData{}
-            , positionData{}
-            , fontData{}
-            {
-                
-            }
+            MarkData();
+            
+            // smulf and name fields will be filled in if possible
+            // placement 'unspecified' will be assumed for smufl
+            MarkData( MarkType inMarkType );
+            
+            // smulf and name fields will be filled in if possible
+            // positionData.placement field will also be filled in
+            MarkData( Placement inPlacement, MarkType inMarkType );
         };
         
         MXAPI_EQUALS_BEGIN( MarkData )

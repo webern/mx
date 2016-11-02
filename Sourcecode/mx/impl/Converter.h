@@ -95,6 +95,9 @@ namespace mx
             
             core::LineEnd convert( api::LineHook value ) const;
             api::LineHook convert( core::LineEnd value ) const;
+            
+            core::FermataShape convertFermata( api::MarkType value ) const;
+            api::MarkType convertFermata( core::FermataShape value ) const;
 
             const static std::map<core::StepEnum, api::Step> stepMap;
             const static std::map<core::NoteTypeValue, api::DurationName> durationMap;
@@ -120,6 +123,7 @@ namespace mx
             const static std::map<core::BarStyleEnum, api::BarlineType> barlineMap;
             const static std::map<core::RightLeftMiddle, api::HorizontalAlignment> barlinePlacementMap;
             const static std::map<core::LineEnd, api::LineHook> lineEndMap;
+            const static std::map<core::FermataShape, api::MarkType> fermataMap;
             
         private:
             template<typename CORE_TYPE, typename API_TYPE>

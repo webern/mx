@@ -361,6 +361,15 @@ namespace mx
         };
         
         
+        const std::map<core::FermataShape, api::MarkType> Converter::fermataMap =
+        {
+            std::pair<core::FermataShape, api::MarkType>{ core::FermataShape::normal, api::MarkType::fermataNormal },
+            std::pair<core::FermataShape, api::MarkType>{ core::FermataShape::angled, api::MarkType::fermataAngled },
+            std::pair<core::FermataShape, api::MarkType>{ core::FermataShape::square, api::MarkType::fermataSquare },
+            std::pair<core::FermataShape, api::MarkType>{ core::FermataShape::emptystring, api::MarkType::fermata },
+        };
+        
+        
         api::Step Converter::convert( core::StepEnum inStep ) const
         {
             auto it = stepMap.find( inStep );
@@ -735,6 +744,18 @@ namespace mx
         api::LineHook Converter::convert( core::LineEnd value ) const
         {
             return findApiItem( lineEndMap, api::LineHook::unspecified, value );
+        }
+        
+        
+        core::FermataShape Converter::convertFermata( api::MarkType value ) const
+        {
+            return findCoreItem( fermataMap, core::FermataShape::emptystring, value );
+        }
+        
+        
+        api::MarkType Converter::convertFermata( core::FermataShape value ) const
+        {
+            return findApiItem( fermataMap, api::MarkType::unspecified, value );
         }
         
     }

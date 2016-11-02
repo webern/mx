@@ -42,11 +42,12 @@ namespace mx
             MeasureCursor myPreviousCursor;
             const ScoreWriter& myScoreWriter;
             std::unique_ptr<PropertiesWriter> myPropertiesWriter;
-            std::list<api::KeyData> myMeasureKeys;
             const Converter myConverter;
             std::vector<api::BarlineData>::const_iterator myBarlinesIter;
             std::vector<api::BarlineData>::const_iterator myBarlinesEnd;
-
+            std::vector<api::KeyData>::const_iterator myMeasureKeysIter;
+            const std::vector<api::KeyData>::const_iterator myMeasureKeysEnd;
+            
         private:
             void writeMeasureGlobals();
             void writeSystemInfo();

@@ -141,11 +141,10 @@ namespace mx
         , myConverter{}
         , myBarlinesIter{ inMeasureData.barlines.cbegin() }
         , myBarlinesEnd{ inMeasureData.barlines.cend() }
+        , myMeasureKeysIter{ inMeasureData.keys.cbegin() }
+        , myMeasureKeysEnd{ inMeasureData.keys.cend() }
         {
-            for( const auto& keyData : myMeasureData.keys )
-            {
-                myMeasureKeys.push_back( keyData );
-            }
+
         }
 
 
@@ -156,6 +155,7 @@ namespace mx
             myCursor.reset();
             myBarlinesIter = myMeasureData.barlines.cbegin();
             myBarlinesEnd = myMeasureData.barlines.cend();
+            myMeasureKeysIter = myMeasureData.keys.cbegin();
             
             writeMeasureGlobals();
             writeStaves();
@@ -235,15 +235,11 @@ namespace mx
             // to preserve location if the barline is not at the beginning or
             // the end
             
-//            auto measureKeyIter = myMeasureKeys.cbegin();
-//            auto measureKeyEnd = myMeasureKeys.cend();
-//            while( measureKeyIter != measureKeyEnd && measureKeyIter->tickTimePosition == 0 )
-//            {
-//                myPropertiesWriter->writeKey( -1, *measureKeyIter );
-//                myMeasureKeys.erase( measureKeyIter );
-//                measureKeyIter = myMeasureKeys.cbegin();
-//                measureKeyEnd = myMeasureKeys.cend();
-//            }
+            while( myMeasureKeysIter != myMeasureKeysEnd && myMeasureKeysIter->tickTimePosition == 0 )
+            {
+                myPropertiesWriter->writeKey( -1, *myMeasureKeysIter );
+                ++myMeasureKeysIter;
+            }
         }
 
 
@@ -318,8 +314,8 @@ namespace mx
             auto clefIter = inStaff.clefs.cbegin();
             const auto clefEnd = inStaff.clefs.cend();
             while( clefIter != clefEnd && clefIter->tickTimePosition == 0 ) { ++clefIter; }
-            auto measureKeyIter = myMeasureKeys.cbegin();
-            auto measureKeyEnd = myMeasureKeys.cend();
+//            auto myMeasureKeysIter = myMeasureKeys.cbegin();
+//            auto myMeasureKeysEnd = myMeasureKeys.cend();
             auto staffKeyIter = inStaff.keys.cbegin();
             auto staffKeyEnd = inStaff.keys.cend();
             auto directionIter = inStaff.directions.cbegin();
@@ -336,14 +332,12 @@ namespace mx
                     const auto& apiNote = *noteIter;
                     writeForwardOrBackupIfNeeded( apiNote );
                     
-                    if( measureKeyIter != measureKeyEnd )
+                    if( myMeasureKeysIter != myMeasureKeysEnd )
                     {
-                        if( measureKeyIter->tickTimePosition <= myCursor.tickTimePosition )
+                        if( myMeasureKeysIter->tickTimePosition <= myCursor.tickTimePosition )
                         {
-                            myPropertiesWriter->writeKey( -1, *measureKeyIter );
-                            myMeasureKeys.erase( measureKeyIter );
-                            measureKeyIter = myMeasureKeys.cbegin();
-                            measureKeyEnd = myMeasureKeys.cend();
+                            myPropertiesWriter->writeKey( -1, *myMeasureKeysIter );
+                            ++myMeasureKeysIter;
                         }
                     }
                     
@@ -381,7 +375,7 @@ namespace mx
             } // foreach voice
             
             bool areClefsRemaining = clefIter != clefEnd;
-            bool areMeasureKeysRemaining = measureKeyIter != measureKeyEnd;
+            bool areMeasureKeysRemaining = myMeasureKeysIter != myMeasureKeysEnd;
             bool areStaffKeysRemaining = staffKeyIter != staffKeyEnd;
             
             if( areClefsRemaining || areMeasureKeysRemaining || areStaffKeysRemaining )
@@ -393,14 +387,12 @@ namespace mx
                     myPropertiesWriter->writeClef( myCursor.staffIndex, clef );
                 }
                 
-                if( measureKeyIter != measureKeyEnd )
+                if( myMeasureKeysIter != myMeasureKeysEnd )
                 {
-                    if( measureKeyIter->tickTimePosition )
+                    if( myMeasureKeysIter->tickTimePosition )
                     {
-                        myPropertiesWriter->writeKey( -1, *measureKeyIter );
-                        myMeasureKeys.erase( measureKeyIter );
-                        measureKeyIter = myMeasureKeys.cbegin();
-                        measureKeyEnd = myMeasureKeys.cend();
+                        myPropertiesWriter->writeKey( -1, *myMeasureKeysIter );
+                        ++myMeasureKeysIter;
                     }
                 }
                 

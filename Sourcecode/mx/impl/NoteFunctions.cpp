@@ -54,6 +54,7 @@
 #include "mx/impl/TimeReader.h"
 #include "mx/impl/TupletReader.h"
 #include "mx/utility/Throw.h"
+#include "mx/impl/MarkDataFunctions.h"
 
 #include <algorithm>
 
@@ -65,6 +66,7 @@ namespace mx
         : myNote{ inMxNote }
         , myCursor{ inCursor }
         , myOutNoteData{}
+        , myConverter()
         {}
         
         
@@ -313,7 +315,24 @@ namespace mx
                         }
                         case core::NotationsChoice::Choice::fermata:
                         {
-                            // TODO - import fermatas
+                            const auto& fermata = *notationsChoice.getFermata();
+                            const auto& attr = *fermata.getAttributes();
+                            auto placement = api::Placement::unspecified;
+                            
+                            if( attr.hasType && attr.type == core::UprightInverted::inverted )
+                            {
+                                placement = api::Placement::below;
+                            }
+                            else if ( attr.hasType && attr.type == core::UprightInverted::upright )
+                            {
+                                placement = api::Placement::above;
+                            }
+                            
+                            api::MarkData markData{ placement, myConverter.convertFermata( fermata.getValue() ) };
+                            impl::parseMarkDataAttributes( attr, markData );
+                            markData.tickTimePosition = myCursor.tickTimePosition;
+                            markData.positionData.placement = placement;
+                            myOutNoteData.noteAttachmentData.marks.emplace_back( std::move( markData ) );
                             break;
                         }
                         case core::NotationsChoice::Choice::arpeggiate:
