@@ -21,6 +21,7 @@ namespace mxtest
         part.uniqueId = "P1";
         part.name = "MusicXML Part";
 
+        // 1
         part.measures.emplace_back( MeasureData{} );
         auto measure = &part.measures.back();
         measure->timeSignature.beats = 4;
@@ -39,9 +40,9 @@ namespace mxtest
         note->durationData.durationName = DurationName::whole;
         note->durationData.durationTimeTicks = 8;
         note->pitchData.accidental = Accidental::none;
-        note->stem = Stem::up;
         note->noteAttachmentData.marks.emplace_back( MarkType::fermata );
         
+        // 2
         part.measures.emplace_back( MeasureData{} );
         measure = &part.measures.back();
         measure->staves.emplace_back( StaffData{} );
@@ -53,8 +54,161 @@ namespace mxtest
         note->durationData.durationName = DurationName::whole;
         note->durationData.durationTimeTicks = 8;
         note->pitchData.accidental = Accidental::none;
-        note->stem = Stem::up;
-        note->noteAttachmentData.marks.emplace_back( MarkType::fermata );
+        note->noteAttachmentData.marks.emplace_back( MarkType::fermataNormalUpright );
+        
+        // 3
+        part.measures.emplace_back( MeasureData{} );
+        measure = &part.measures.back();
+        measure->staves.emplace_back( StaffData{} );
+        staff = &measure->staves.back();
+        staff->voices[0].notes.emplace_back( NoteData{} );
+        note = &staff->voices[0].notes.back();
+        note->pitchData.step = Step::c;
+        note->pitchData.octave = 4;
+        note->durationData.durationName = DurationName::whole;
+        note->durationData.durationTimeTicks = 8;
+        note->pitchData.accidental = Accidental::none;
+        note->noteAttachmentData.marks.emplace_back( MarkType::fermataNormalInverted );
+        
+        // 4
+        part.measures.emplace_back( MeasureData{} );
+        measure = &part.measures.back();
+        measure->staves.emplace_back( StaffData{} );
+        staff = &measure->staves.back();
+        staff->voices[0].notes.emplace_back( NoteData{} );
+        note = &staff->voices[0].notes.back();
+        note->pitchData.step = Step::c;
+        note->pitchData.octave = 6;
+        note->durationData.durationName = DurationName::whole;
+        note->durationData.durationTimeTicks = 8;
+        note->pitchData.accidental = Accidental::none;
+        note->noteAttachmentData.marks.emplace_back( MarkType::fermataNormalUpright );
+        
+        // 5
+        part.measures.emplace_back( MeasureData{} );
+        measure = &part.measures.back();
+        measure->staves.emplace_back( StaffData{} );
+        staff = &measure->staves.back();
+        staff->voices[0].notes.emplace_back( NoteData{} );
+        note = &staff->voices[0].notes.back();
+        note->pitchData.step = Step::c;
+        note->pitchData.octave = 6;
+        note->durationData.durationName = DurationName::whole;
+        note->durationData.durationTimeTicks = 8;
+        note->pitchData.accidental = Accidental::none;
+        note->noteAttachmentData.marks.emplace_back( MarkType::fermataNormalInverted );
+        
+        // 6
+        part.measures.emplace_back( MeasureData{} );
+        measure = &part.measures.back();
+        measure->staves.emplace_back( StaffData{} );
+        staff = &measure->staves.back();
+        staff->voices[0].notes.emplace_back( NoteData{} );
+        note = &staff->voices[0].notes.back();
+        note->pitchData.step = Step::c;
+        note->pitchData.octave = 4;
+        note->durationData.durationName = DurationName::whole;
+        note->durationData.durationTimeTicks = 8;
+        note->pitchData.accidental = Accidental::none;
+        note->noteAttachmentData.marks.emplace_back( MarkType::fermataAngledUpright );
+        
+        // 7
+        part.measures.emplace_back( MeasureData{} );
+        measure = &part.measures.back();
+        measure->staves.emplace_back( StaffData{} );
+        staff = &measure->staves.back();
+        staff->voices[0].notes.emplace_back( NoteData{} );
+        note = &staff->voices[0].notes.back();
+        note->pitchData.step = Step::c;
+        note->pitchData.octave = 4;
+        note->durationData.durationName = DurationName::whole;
+        note->durationData.durationTimeTicks = 8;
+        note->pitchData.accidental = Accidental::none;
+        note->noteAttachmentData.marks.emplace_back( MarkType::fermataAngledInverted );
+        
+        // 8
+        part.measures.emplace_back( MeasureData{} );
+        measure = &part.measures.back();
+        measure->staves.emplace_back( StaffData{} );
+        staff = &measure->staves.back();
+        staff->voices[0].notes.emplace_back( NoteData{} );
+        note = &staff->voices[0].notes.back();
+        note->pitchData.step = Step::c;
+        note->pitchData.octave = 6;
+        note->durationData.durationName = DurationName::whole;
+        note->durationData.durationTimeTicks = 8;
+        note->pitchData.accidental = Accidental::none;
+        note->noteAttachmentData.marks.emplace_back( MarkType::fermataAngledUpright );
+        
+        // 9
+        part.measures.emplace_back( MeasureData{} );
+        measure = &part.measures.back();
+        measure->staves.emplace_back( StaffData{} );
+        staff = &measure->staves.back();
+        staff->voices[0].notes.emplace_back( NoteData{} );
+        note = &staff->voices[0].notes.back();
+        note->pitchData.step = Step::c;
+        note->pitchData.octave = 6;
+        note->durationData.durationName = DurationName::whole;
+        note->durationData.durationTimeTicks = 8;
+        note->pitchData.accidental = Accidental::none;
+        note->noteAttachmentData.marks.emplace_back( MarkType::fermataAngledInverted );
+        
+        // 10
+        part.measures.emplace_back( MeasureData{} );
+        measure = &part.measures.back();
+        measure->staves.emplace_back( StaffData{} );
+        staff = &measure->staves.back();
+        staff->voices[0].notes.emplace_back( NoteData{} );
+        note = &staff->voices[0].notes.back();
+        note->pitchData.step = Step::c;
+        note->pitchData.octave = 4;
+        note->durationData.durationName = DurationName::whole;
+        note->durationData.durationTimeTicks = 8;
+        note->pitchData.accidental = Accidental::none;
+        note->noteAttachmentData.marks.emplace_back( MarkType::fermataSquareUpright );
+        
+        // 11
+        part.measures.emplace_back( MeasureData{} );
+        measure = &part.measures.back();
+        measure->staves.emplace_back( StaffData{} );
+        staff = &measure->staves.back();
+        staff->voices[0].notes.emplace_back( NoteData{} );
+        note = &staff->voices[0].notes.back();
+        note->pitchData.step = Step::c;
+        note->pitchData.octave = 4;
+        note->durationData.durationName = DurationName::whole;
+        note->durationData.durationTimeTicks = 8;
+        note->pitchData.accidental = Accidental::none;
+        note->noteAttachmentData.marks.emplace_back( MarkType::fermataSquareInverted );
+        
+        // 12
+        part.measures.emplace_back( MeasureData{} );
+        measure = &part.measures.back();
+        measure->staves.emplace_back( StaffData{} );
+        staff = &measure->staves.back();
+        staff->voices[0].notes.emplace_back( NoteData{} );
+        note = &staff->voices[0].notes.back();
+        note->pitchData.step = Step::c;
+        note->pitchData.octave = 6;
+        note->durationData.durationName = DurationName::whole;
+        note->durationData.durationTimeTicks = 8;
+        note->pitchData.accidental = Accidental::none;
+        note->noteAttachmentData.marks.emplace_back( MarkType::fermataSquareUpright );
+        
+        // 13
+        part.measures.emplace_back( MeasureData{} );
+        measure = &part.measures.back();
+        measure->staves.emplace_back( StaffData{} );
+        staff = &measure->staves.back();
+        staff->voices[0].notes.emplace_back( NoteData{} );
+        note = &staff->voices[0].notes.back();
+        note->pitchData.step = Step::d;
+        note->pitchData.octave = 6;
+        note->durationData.durationName = DurationName::whole;
+        note->durationData.durationTimeTicks = 8;
+        note->pitchData.accidental = Accidental::none;
+        note->noteAttachmentData.marks.emplace_back( MarkType::fermataSquareInverted );
         
         return score;
     }

@@ -101,6 +101,15 @@ namespace mx
             myMap.emplace( std::make_pair( MarkType::fermataNormal, SmuflGlyphname{ "fermataAbove", "fermataBelow", "fermataAbove" } ) );
             myMap.emplace( std::make_pair( MarkType::fermataAngled, SmuflGlyphname{ "fermataShortAbove", "fermataShortBelow", "fermataShortAbove" } ) );
             myMap.emplace( std::make_pair( MarkType::fermataSquare, SmuflGlyphname{ "fermataLongAbove", "fermataLongBelow", "fermataLongAbove" } ) );
+            myMap.emplace( std::make_pair( MarkType::fermataUpright, SmuflGlyphname{ "fermataAbove", "fermataBelow", "fermataAbove" } ) );
+            myMap.emplace( std::make_pair( MarkType::fermataNormalUpright, SmuflGlyphname{ "fermataAbove", "fermataBelow", "fermataAbove" } ) );
+            myMap.emplace( std::make_pair( MarkType::fermataAngledUpright, SmuflGlyphname{ "fermataShortAbove", "fermataShortBelow", "fermataShortAbove" } ) );
+            myMap.emplace( std::make_pair( MarkType::fermataSquareUpright, SmuflGlyphname{ "fermataLongAbove", "fermataLongBelow", "fermataLongAbove" } ) );
+            myMap.emplace( std::make_pair( MarkType::fermataInverted, SmuflGlyphname{ "fermataAbove", "fermataBelow", "fermataAbove" } ) );
+            myMap.emplace( std::make_pair( MarkType::fermataNormalInverted, SmuflGlyphname{ "fermataAbove", "fermataBelow", "fermataAbove" } ) );
+            myMap.emplace( std::make_pair( MarkType::fermataAngledInverted, SmuflGlyphname{ "fermataShortAbove", "fermataShortBelow", "fermataShortAbove" } ) );
+            myMap.emplace( std::make_pair( MarkType::fermataSquareInverted, SmuflGlyphname{ "fermataLongAbove", "fermataLongBelow", "fermataLongAbove" } ) );
+
         }
         
         
@@ -219,7 +228,15 @@ namespace mx
             return ( markType == MarkType::fermata ) ||
             ( markType == MarkType::fermataNormal ) ||
             ( markType == MarkType::fermataAngled ) ||
-            ( markType == MarkType::fermataSquare );
+            ( markType == MarkType::fermataSquare ) ||
+            ( markType == MarkType::fermataUpright ) ||
+            ( markType == MarkType::fermataNormalUpright ) ||
+            ( markType == MarkType::fermataAngledUpright ) ||
+            ( markType == MarkType::fermataSquareUpright ) ||
+            ( markType == MarkType::fermataInverted ) ||
+            ( markType == MarkType::fermataNormalInverted ) ||
+            ( markType == MarkType::fermataAngledInverted ) ||
+            ( markType == MarkType::fermataSquareInverted );
         }
         
         

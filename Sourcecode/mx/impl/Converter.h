@@ -98,7 +98,7 @@ namespace mx
             
             core::FermataShape convertFermata( api::MarkType value ) const;
             api::MarkType convertFermata( core::FermataShape value ) const;
-
+            
             const static std::map<core::StepEnum, api::Step> stepMap;
             const static std::map<core::NoteTypeValue, api::DurationName> durationMap;
             const static std::map<core::BeamValue, api::Beam> beamMap;

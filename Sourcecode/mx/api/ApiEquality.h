@@ -83,19 +83,17 @@ namespace mx
 #define MXAPI_EQUALS_BEGIN( mxapiClassName ) \
         inline bool operator==( const mxapiClassName& lhs, const mxapiClassName& rhs ) \
         { \
-            const char* const theCurrentClassName = #mxapiClassName; \
-            bool isEqual = true;
+            const char* const theCurrentClassName = #mxapiClassName;
 
 #define MXAPI_EQUALS_MEMBER( mxapiMemberName ) \
-        isEqual &= ( lhs.mxapiMemberName == rhs.mxapiMemberName ); \
-        if( !isEqual ) \
+        if( ! ( lhs.mxapiMemberName == rhs.mxapiMemberName ) ) \
         { \
             streamComparisonUnequalMessage( theCurrentClassName, #mxapiMemberName ); \
             return false; \
         }
 
 #define MXAPI_EQUALS_END \
-        return isEqual; \
+        return true; \
     }\
         
 #define MXAPI_NOT_EQUALS_AND_VECTORS( mxapiClassName ) \

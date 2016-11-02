@@ -167,14 +167,75 @@ namespace mx
                     myOutNotations->addNotationsChoice( fermataNotationsChoice );
                     fermataNotationsChoice->setChoice( core::NotationsChoice::Choice::fermata );
                     auto& fermata = *fermataNotationsChoice->getFermata();
+                    auto& attr = *fermata.getAttributes();
                     
                     if( mark.markType == api::MarkType::fermata )
                     {
                         fermata.setValue( core::FermataShape::emptystring );
+                        attr.hasType = false;
                     }
-                    else
+                    else if( mark.markType == api::MarkType::fermataNormal )
                     {
-                        fermata.setValue( myConverter.convertFermata( mark.markType ) );
+                        fermata.setValue( core::FermataShape::normal );
+                        attr.hasType = false;
+                    }
+                    else if( mark.markType == api::MarkType::fermataAngled )
+                    {
+                        fermata.setValue( core::FermataShape::angled );
+                        attr.hasType = false;
+                    }
+                    else if( mark.markType == api::MarkType::fermataSquare )
+                    {
+                        fermata.setValue( core::FermataShape::angled );
+                        attr.hasType = false;
+                    }
+                    else if( mark.markType == api::MarkType::fermataUpright )
+                    {
+                        fermata.setValue( core::FermataShape::emptystring );
+                        attr.hasType = true;
+                        attr.type = core::UprightInverted::upright;
+                    }
+                    else if( mark.markType == api::MarkType::fermataNormalUpright )
+                    {
+                        fermata.setValue( core::FermataShape::normal );
+                        attr.hasType = true;
+                        attr.type = core::UprightInverted::upright;
+                    }
+                    else if( mark.markType == api::MarkType::fermataAngledUpright )
+                    {
+                        fermata.setValue( core::FermataShape::angled );
+                        attr.hasType = true;
+                        attr.type = core::UprightInverted::upright;
+                    }
+                    else if( mark.markType == api::MarkType::fermataSquareUpright )
+                    {
+                        fermata.setValue( core::FermataShape::angled );
+                        attr.hasType = true;
+                        attr.type = core::UprightInverted::upright;
+                    }
+                    else if( mark.markType == api::MarkType::fermataInverted )
+                    {
+                        fermata.setValue( core::FermataShape::emptystring );
+                        attr.hasType = true;
+                        attr.type = core::UprightInverted::inverted;
+                    }
+                    else if( mark.markType == api::MarkType::fermataNormalInverted )
+                    {
+                        fermata.setValue( core::FermataShape::normal );
+                        attr.hasType = true;
+                        attr.type = core::UprightInverted::inverted;
+                    }
+                    else if( mark.markType == api::MarkType::fermataAngledInverted )
+                    {
+                        fermata.setValue( core::FermataShape::angled );
+                        attr.hasType = true;
+                        attr.type = core::UprightInverted::inverted;
+                    }
+                    else if( mark.markType == api::MarkType::fermataSquareInverted )
+                    {
+                        fermata.setValue( core::FermataShape::angled );
+                        attr.hasType = true;
+                        attr.type = core::UprightInverted::inverted;
                     }
                     
                 }

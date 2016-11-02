@@ -144,11 +144,39 @@ namespace mx
             fermataNormal, // <fermata>normal</fermata>
             fermataAngled, // <fermata>angled</fermata>
             fermataSquare, // <fermata>square</fermata>
+            
+            // sadly, in MusicXML we do not have an 'above' 'below' attribute for the fermata.
+            // instead it has an attribute 'type' that is either 'upright' or 'inverted'.
+            // it appears that implementations interpret 'upright' to mean the 'normal' or
+            // correct orientation and 'inverted' to mean that the fermata should be 'flipped'
+            // from its correct orientation.  in otherwords the implementation has to figure
+            // out if the fermata is above or below the note on its own (using its own
+            // algorithm combined with any default-y and relative-y values).  this mess is
+            // going to be beyond the scope of the MusicXML Class Library at this time.  You
+            // cause the fermata 'type' attribute to be set using the enum values below, but
+            // it's not possible for this library to calculate the correct fermata glyph.
+            fermataUpright,        // <fermata type="upright"/>
+            fermataNormalUpright,  // <fermata type="upright">normal</fermata>
+            fermataAngledUpright,  // <fermata type="upright">angled</fermata>
+            fermataSquareUpright,  // <fermata type="upright">square</fermata>
+            fermataInverted,       // <fermata type="inverted"/>
+            fermataNormalInverted, // <fermata type="inverted">normal</fermata>
+            fermataAngledInverted, // <fermata type="inverted">angled</fermata>
+            fermataSquareInverted, // <fermata type="inverted">square</fermata>
+            
         };
 
         bool isMarkDynamic( MarkType );
         bool isMarkArticulation( MarkType );
         bool isMarkFermata( MarkType );
+ 
+
+        enum class FermataOrientation
+        {
+            unspecified,
+            normal,
+            flipped
+        };
         
         using MarkSmuflEntry = std::pair<const MarkType, const SmuflGlyphname>;
         using MarkSmuflMap = std::map<const MarkType, const SmuflGlyphname>;
