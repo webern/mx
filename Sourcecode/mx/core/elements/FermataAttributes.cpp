@@ -19,6 +19,7 @@ namespace mx
         ,fontStyle( FontStyle::normal )
         ,fontSize( FontSize{ CssFontSize::medium } )
         ,fontWeight( FontWeight::normal )
+        ,color()
         ,hasType( false )
         ,hasDefaultX( false )
         ,hasDefaultY( false )
@@ -28,6 +29,7 @@ namespace mx
         ,hasFontStyle( false )
         ,hasFontSize( false )
         ,hasFontWeight( false )
+        ,hasColor( false )
         {}
 
 
@@ -41,7 +43,8 @@ namespace mx
             hasFontFamily ||
             hasFontStyle ||
             hasFontSize ||
-            hasFontWeight;
+            hasFontWeight ||
+            hasColor;
         }
 
 
@@ -58,6 +61,7 @@ namespace mx
                 streamAttribute( os, fontStyle, "font-style", hasFontStyle );
                 streamAttribute( os, fontSize, "font-size", hasFontSize );
                 streamAttribute( os, fontWeight, "font-weight", hasFontWeight );
+                streamAttribute( os, color, "color", hasColor );
             }
             return os;
         }
@@ -82,6 +86,7 @@ namespace mx
                 if( parseAttribute( message, it, className, isSuccess, fontStyle, hasFontStyle, "font-style", &parseFontStyle ) ) { continue; }
                 if( parseAttribute( message, it, className, isSuccess, fontSize, hasFontSize, "font-size" ) ) { continue; }
                 if( parseAttribute( message, it, className, isSuccess, fontWeight, hasFontWeight, "font-weight", &parseFontWeight ) ) { continue; }
+                if( parseAttribute( message, it, className, isSuccess, color, hasColor, "color" ) ) { continue; }
             }
         
         

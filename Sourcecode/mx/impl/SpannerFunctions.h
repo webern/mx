@@ -46,7 +46,7 @@ namespace mx
         }
         
         MX_ATTR_SETFUNC_OPTIONAL( hasNumber, HasNumber, bool, false );
-        MX_ATTR_SETFUNC_OPTIONAL_WITH_GETTER( number, Number, int, -1 );
+        MX_ATTR_SETFUNC_OPTIONAL_WITH_SETTER( number, Number, int, -1 );
 
         template <typename ATTRIBUTES_TYPE>
         void setAttributesFromSpannerStart( const api::SpannerStart& start, ATTRIBUTES_TYPE& outAttributes )

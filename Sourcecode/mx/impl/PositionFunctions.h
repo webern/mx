@@ -98,16 +98,16 @@ namespace mx
         }
 
         MX_ATTR_SETFUNC_OPTIONAL( hasDefaultX, HasDefaultX, bool, false );
-        MX_ATTR_SETFUNC_OPTIONAL_WITH_GETTER( defaultX, DefaultX, LongDouble, 1.0L );
+        MX_ATTR_SETFUNC_OPTIONAL_WITH_SETTER( defaultX, DefaultX, LongDouble, 1.0L );
         
         MX_ATTR_SETFUNC_OPTIONAL( hasDefaultY, HasDefaultY, bool, false );
-        MX_ATTR_SETFUNC_OPTIONAL_WITH_GETTER( defaultY, DefaultY, LongDouble, 1.0L );
+        MX_ATTR_SETFUNC_OPTIONAL_WITH_SETTER( defaultY, DefaultY, LongDouble, 1.0L );
         
         MX_ATTR_SETFUNC_OPTIONAL( hasRelativeX, HasRelativeX, bool, false );
-        MX_ATTR_SETFUNC_OPTIONAL_WITH_GETTER( relativeX, RelativeX, LongDouble, 1.0L );
+        MX_ATTR_SETFUNC_OPTIONAL_WITH_SETTER( relativeX, RelativeX, LongDouble, 1.0L );
         
         MX_ATTR_SETFUNC_OPTIONAL( hasRelativeY, HasRelativeY, bool, false );
-        MX_ATTR_SETFUNC_OPTIONAL_WITH_GETTER( relativeY, RelativeY, LongDouble, 1.0L );
+        MX_ATTR_SETFUNC_OPTIONAL_WITH_SETTER( relativeY, RelativeY, LongDouble, 1.0L );
         
         MX_ATTR_SETFUNC_OPTIONAL( hasHalign, HasHalign, bool, false );
         MX_ATTR_SETFUNC_OPTIONAL( halign, Halign, core::LeftCenterRight, core::LeftCenterRight::left );

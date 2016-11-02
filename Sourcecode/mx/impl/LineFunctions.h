@@ -72,13 +72,13 @@ namespace mx
         MX_ATTR_SETFUNC_OPTIONAL( lineEnd, LineEnd, core::LineEnd, core::LineEnd::none );
         
         MX_ATTR_SETFUNC_OPTIONAL( hasSpaceLength, HasSpaceLength, bool, false );
-        MX_ATTR_SETFUNC_OPTIONAL_WITH_GETTER( spaceLength, SpaceLength, long double, 0.0L );
+        MX_ATTR_SETFUNC_OPTIONAL_WITH_SETTER( spaceLength, SpaceLength, long double, 0.0L );
         
         MX_ATTR_SETFUNC_OPTIONAL( hasDashLength, HasDashLength, bool, false );
-        MX_ATTR_SETFUNC_OPTIONAL_WITH_GETTER( dashLength, DashLength, long double, 0.0L );
+        MX_ATTR_SETFUNC_OPTIONAL_WITH_SETTER( dashLength, DashLength, long double, 0.0L );
         
         MX_ATTR_SETFUNC_OPTIONAL( hasEndLength, HasEndLength, bool, false );
-        MX_ATTR_SETFUNC_OPTIONAL_WITH_GETTER( endLength, EndLength, long double, 0.0L );
+        MX_ATTR_SETFUNC_OPTIONAL_WITH_SETTER( endLength, EndLength, long double, 0.0L );
         
         template <typename ATTRIBUTES_TYPE>
         void setLineData( const api::LineData& inLineData, ATTRIBUTES_TYPE& outAttributes )

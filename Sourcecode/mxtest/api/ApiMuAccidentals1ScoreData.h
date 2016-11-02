@@ -53,8 +53,10 @@ namespace mxtest
         
         staff->voices[0].notes.emplace_back( NoteData{} );
         auto note = &staff->voices[0].notes.back();
+        note->userRequestedVoiceNumber = 1;
         note->pitchData.step = Step::g;
         note->pitchData.octave = 4;
+        note->tickTimePosition = 0;
         note->durationData.durationName = DurationName::quarter;
         note->durationData.durationTimeTicks = 1;
         note->pitchData.accidental = Accidental::none;
@@ -62,9 +64,11 @@ namespace mxtest
         
         staff->voices[0].notes.emplace_back( NoteData{} );
         note = &staff->voices[0].notes.back();
+        note->userRequestedVoiceNumber = 1;
         note->pitchData.step = Step::a;
         note->pitchData.octave = 4;
         note->pitchData.alter = 1;
+        note->tickTimePosition = 1;
         note->durationData.durationName = DurationName::quarter;
         note->durationData.durationTimeTicks = 1;
         note->pitchData.accidental = Accidental::sharp;
@@ -72,9 +76,11 @@ namespace mxtest
         
         staff->voices[0].notes.emplace_back( NoteData{} );
         note = &staff->voices[0].notes.back();
+        note->userRequestedVoiceNumber = 1;
         note->pitchData.step = Step::b;
         note->pitchData.octave = 4;
         note->pitchData.alter = -1;
+        note->tickTimePosition = 2;
         note->durationData.durationName = DurationName::quarter;
         note->durationData.durationTimeTicks = 1;
         note->pitchData.accidental = Accidental::flat;
@@ -90,9 +96,11 @@ namespace mxtest
         
         staff->voices[0].notes.emplace_back( NoteData{} );
         note = &staff->voices[0].notes.back();
+        note->userRequestedVoiceNumber = 1;
         note->pitchData.step = Step::c;
         note->pitchData.octave = 5;
         note->pitchData.alter = 2;
+        note->tickTimePosition = 0;
         note->durationData.durationName = DurationName::quarter;
         note->durationData.durationTimeTicks = 1;
         note->pitchData.accidental = Accidental::doubleSharp;
@@ -100,9 +108,11 @@ namespace mxtest
         
         staff->voices[0].notes.emplace_back( NoteData{} );
         note = &staff->voices[0].notes.back();
+        note->userRequestedVoiceNumber = 1;
         note->pitchData.step = Step::d;
         note->pitchData.octave = 5;
         note->pitchData.alter = -2;
+        note->tickTimePosition = 1;
         note->durationData.durationName = DurationName::quarter;
         note->durationData.durationTimeTicks = 1;
         note->pitchData.accidental = Accidental::flatFlat;
@@ -110,9 +120,11 @@ namespace mxtest
         
         staff->voices[0].notes.emplace_back( NoteData{} );
         note = &staff->voices[0].notes.back();
+        note->userRequestedVoiceNumber = 1;
         note->pitchData.step = Step::d;
         note->pitchData.octave = 5;
         note->pitchData.alter = 0;
+        note->tickTimePosition = 2;
         note->durationData.durationName = DurationName::quarter;
         note->durationData.durationTimeTicks = 1;
         note->pitchData.accidental = Accidental::natural;

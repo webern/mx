@@ -26,7 +26,7 @@
             default-y="0.2"
             relative-x="0.3"
             relative-y="0.4"
-            font-family="A, b, Charlie"
+            font-family="A,b,Charlie"
             font-style="italic"
             font-size="11"
             font-weight="bold"

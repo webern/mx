@@ -169,14 +169,6 @@ namespace mx
         bool isMarkDynamic( MarkType );
         bool isMarkArticulation( MarkType );
         bool isMarkFermata( MarkType );
- 
-
-        enum class FermataOrientation
-        {
-            unspecified,
-            normal,
-            flipped
-        };
         
         using MarkSmuflEntry = std::pair<const MarkType, const SmuflGlyphname>;
         using MarkSmuflMap = std::map<const MarkType, const SmuflGlyphname>;
@@ -207,7 +199,6 @@ namespace mx
             int tickTimePosition;
             PrintData printData;
             PositionData positionData;
-            FontData fontData;
             
             MarkData();
             
@@ -228,7 +219,6 @@ namespace mx
         MXAPI_EQUALS_MEMBER( tickTimePosition )
         MXAPI_EQUALS_MEMBER( printData )
         MXAPI_EQUALS_MEMBER( positionData )
-        MXAPI_EQUALS_MEMBER( fontData )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( MarkData );
     }

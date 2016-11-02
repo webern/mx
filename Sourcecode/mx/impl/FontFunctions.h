@@ -15,16 +15,25 @@ namespace mx
     namespace impl
     {        
         MX_ATTR_FUNC_OPTIONAL( hasFontFamily, HasFontFamily, bool, false );
-        MX_ATTR_FUNC_OPTIONAL_WITH_GETTER( fontFamily, FontFamily, core::CommaSeparatedText, core::CommaSeparatedText{} );
+        MX_ATTR_FUNC_OPTIONAL( fontFamily, FontFamily, core::CommaSeparatedText, core::CommaSeparatedText{} );
         
         MX_ATTR_FUNC_OPTIONAL( hasFontStyle, HasFontStyle, bool, false );
         MX_ATTR_FUNC_OPTIONAL( fontStyle, FontStyle, core::FontStyle, core::FontStyle{} );
         
         MX_ATTR_FUNC_OPTIONAL( hasFontSize, HasFontSize, bool, false );
-        MX_ATTR_FUNC_OPTIONAL_WITH_GETTER( fontSize, FontSize, core::FontSize, core::FontSize{ core::CssFontSize::medium } );
+        MX_ATTR_FUNC_OPTIONAL( fontSize, FontSize, core::FontSize, core::FontSize{ core::CssFontSize::medium } );
         
         MX_ATTR_FUNC_OPTIONAL( hasFontWeight, HasFontWeight, bool, false );
         MX_ATTR_FUNC_OPTIONAL( fontWeight, FontWeight, core::FontWeight, core::FontWeight::normal );
+        
+        MX_ATTR_FUNC_OPTIONAL( hasLineThrough, HasLineThrough, bool, false );
+        MX_ATTR_FUNC_OPTIONAL_WITH_GETTER( lineThrough, LineThrough, int, 0 );
+        
+        MX_ATTR_FUNC_OPTIONAL( hasOverline, HasOverline, bool, false );
+        MX_ATTR_FUNC_OPTIONAL_WITH_GETTER( overline, Overline, int, 0 );
+        
+        MX_ATTR_FUNC_OPTIONAL( hasUnderline, HasUnderline, bool, false );
+        MX_ATTR_FUNC_OPTIONAL_WITH_GETTER( underline, Underline, int, 0 );
 
         template <typename ATTRIBUTES_TYPE>
         std::vector<std::string> getFontFamily( const ATTRIBUTES_TYPE& inAttributes )
@@ -98,7 +107,7 @@ namespace mx
             {
                 outPointSize = coreFontSize.getValueNumber().getValue();
                 outCssSize = api::CssSize::unspecified;
-                return api::FontSizeType::unspecified;
+                return api::FontSizeType::point;
             }
         }
         
@@ -111,21 +120,45 @@ namespace mx
             outFontData.style = getFontStyle( inAttributes );
             outFontData.weight = getFontWeight( inAttributes );
             outFontData.sizeType = getFontSize( inAttributes, outFontData.sizePoint, outFontData.sizeCss );
-            MX_UNUSED( inAttributes );
+            
+            if( checkHasLineThrough<ATTRIBUTES_TYPE>( &inAttributes ) )
+            {
+                outFontData.lineThrough = checkLineThrough<ATTRIBUTES_TYPE>( &inAttributes );
+            }
+            
+            if( checkHasOverline<ATTRIBUTES_TYPE>( &inAttributes ) )
+            {
+                outFontData.overline = checkOverline<ATTRIBUTES_TYPE>( &inAttributes );
+            }
+            
+            if( checkHasUnderline<ATTRIBUTES_TYPE>( &inAttributes ) )
+            {
+                outFontData.underline = checkUnderline<ATTRIBUTES_TYPE>( &inAttributes );
+            }
+            
             return outFontData;
         }
 
         MX_ATTR_SETFUNC_OPTIONAL( hasFontFamily, HasFontFamily, bool, false );
-        MX_ATTR_SETFUNC_OPTIONAL_WITH_GETTER( fontFamily, FontFamily, core::CommaSeparatedText, core::CommaSeparatedText{} );
+        MX_ATTR_SETFUNC_OPTIONAL( fontFamily, FontFamily, core::CommaSeparatedText, core::CommaSeparatedText{} );
         
         MX_ATTR_SETFUNC_OPTIONAL( hasFontStyle, HasFontStyle, bool, false );
         MX_ATTR_SETFUNC_OPTIONAL( fontStyle, FontStyle, core::FontStyle, core::FontStyle{} );
         
         MX_ATTR_SETFUNC_OPTIONAL( hasFontSize, HasFontSize, bool, false );
-        MX_ATTR_SETFUNC_OPTIONAL_WITH_GETTER( fontSize, FontSize, core::FontSize, core::FontSize{ core::CssFontSize::medium } );
+        MX_ATTR_SETFUNC_OPTIONAL( fontSize, FontSize, core::FontSize, core::FontSize{ core::CssFontSize::medium } );
         
         MX_ATTR_SETFUNC_OPTIONAL( hasFontWeight, HasFontWeight, bool, false );
         MX_ATTR_SETFUNC_OPTIONAL( fontWeight, FontWeight, core::FontWeight, core::FontWeight::normal );
+        
+        MX_ATTR_SETFUNC_OPTIONAL( hasLineThrough, HasLineThrough, bool, false );
+        MX_ATTR_SETFUNC_OPTIONAL_WITH_SETTER( lineThrough, LineThrough, int, 0 );
+        
+        MX_ATTR_SETFUNC_OPTIONAL( hasOverline, HasOverline, bool, false );
+        MX_ATTR_SETFUNC_OPTIONAL_WITH_SETTER( overline, Overline, int, 0 );
+        
+        MX_ATTR_SETFUNC_OPTIONAL( hasUnderline, HasUnderline, bool, false );
+        MX_ATTR_SETFUNC_OPTIONAL_WITH_SETTER( underline, Underline, int, 0 );
 
         template<typename ATTRIBUTES_TYPE>
         void setAttributesFromFontFamily( const std::vector<std::string>& fontFamilyData, ATTRIBUTES_TYPE& outAttributes )
@@ -155,6 +188,7 @@ namespace mx
             if( value == api::FontStyle::unspecified )
             {
                 lookForAndSetHasFontStyle( false, &outAttributes );
+                return;
             }
             lookForAndSetHasFontStyle( true, &outAttributes );
             lookForAndSetFontStyle( converter.convert( value ), &outAttributes );
@@ -168,6 +202,7 @@ namespace mx
             if( value == api::FontWeight::unspecified )
             {
                 lookForAndSetHasFontWeight( false, &outAttributes );
+                return;
             }
             lookForAndSetHasFontWeight( true, &outAttributes );
             lookForAndSetFontWeight( converter.convert( value ), &outAttributes );
@@ -182,6 +217,7 @@ namespace mx
             if( value.sizeType == api::FontSizeType::unspecified )
             {
                 lookForAndSetHasFontSize( false, &outAttributes );
+                return;
             }
             
             lookForAndSetHasFontSize( true, &outAttributes );
@@ -206,6 +242,39 @@ namespace mx
             setAttributesFromFontWeight( value.weight, outAttributes );
             setAttributesFromFontStyle( value.style, outAttributes );
             setAttributesFromFontFamily( value.fontFamily, outAttributes );
+            
+            if( value.lineThrough > 0 )
+            {
+                lookForAndSetHasLineThrough( true, &outAttributes );
+                lookForAndSetLineThrough( value.lineThrough, &outAttributes );
+            }
+            else
+            {
+                lookForAndSetHasLineThrough( false, &outAttributes );
+                lookForAndSetLineThrough( value.lineThrough, &outAttributes );
+            }
+            
+            if( value.overline > 0 )
+            {
+                lookForAndSetHasOverline( true, &outAttributes );
+                lookForAndSetOverline( value.overline, &outAttributes );
+            }
+            else
+            {
+                lookForAndSetHasOverline( false, &outAttributes );
+                lookForAndSetOverline( value.overline, &outAttributes );
+            }
+            
+            if( value.underline > 0 )
+            {
+                lookForAndSetHasUnderline( true, &outAttributes );
+                lookForAndSetUnderline( value.underline, &outAttributes );
+            }
+            else
+            {
+                lookForAndSetHasUnderline( false, &outAttributes );
+                lookForAndSetUnderline( value.underline, &outAttributes );
+            }
         }
     }
 }

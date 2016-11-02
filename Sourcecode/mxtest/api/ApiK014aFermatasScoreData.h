@@ -42,6 +42,26 @@ namespace mxtest
         note->durationData.durationTimeTicks = 8;
         note->pitchData.accidental = Accidental::none;
         note->noteAttachmentData.marks.emplace_back( MarkType::fermata );
+        auto& markData = note->noteAttachmentData.marks.back();
+        markData.positionData.hasDefaultX = true;
+        markData.positionData.defaultX = 1.0;
+        markData.positionData.hasDefaultY = true;
+        markData.positionData.defaultY = 2.0;
+        markData.positionData.hasRelativeX = true;
+        markData.positionData.relativeX = 3.0;
+        markData.positionData.hasRelativeY = true;
+        markData.positionData.relativeY = 4.0;
+        markData.printData.fontData.fontFamily.emplace_back( std::string{ "a" } );
+        markData.printData.fontData.fontFamily.emplace_back( std::string{ "B" } );
+        markData.printData.fontData.fontFamily.emplace_back( std::string{ "Charlie" } );
+        markData.printData.fontData.style = mx::api::FontStyle::italic;
+        markData.printData.fontData.weight = mx::api::FontWeight::bold;
+        markData.printData.isColorSpecified = true;
+        markData.printData.color.red = 1;
+        markData.printData.color.green = 2;
+        markData.printData.color.blue = 3;
+        markData.printData.fontData.sizeType = mx::api::FontSizeType::point;
+        markData.printData.fontData.sizePoint = 24.0;
         
         // 2
         part.measures.emplace_back( MeasureData{} );
@@ -95,6 +115,7 @@ namespace mxtest
         staff = &measure->staves.back();
         staff->voices[0].notes.emplace_back( NoteData{} );
         note = &staff->voices[0].notes.back();
+        note->userRequestedVoiceNumber = 1;
         note->pitchData.step = Step::c;
         note->pitchData.octave = 6;
         note->durationData.durationName = DurationName::whole;
@@ -139,6 +160,7 @@ namespace mxtest
         staff = &measure->staves.back();
         staff->voices[0].notes.emplace_back( NoteData{} );
         note = &staff->voices[0].notes.back();
+        note->userRequestedVoiceNumber = 1;
         note->pitchData.step = Step::c;
         note->pitchData.octave = 6;
         note->durationData.durationName = DurationName::whole;
@@ -183,6 +205,7 @@ namespace mxtest
         staff = &measure->staves.back();
         staff->voices[0].notes.emplace_back( NoteData{} );
         note = &staff->voices[0].notes.back();
+        note->userRequestedVoiceNumber = 1;
         note->pitchData.step = Step::c;
         note->pitchData.octave = 4;
         note->durationData.durationName = DurationName::whole;
@@ -213,13 +236,13 @@ namespace mxtest
         staff->voices[0].notes.emplace_back( NoteData{} );
         note = &staff->voices[0].notes.back();
         note->userRequestedVoiceNumber = 1;
-        note->pitchData.step = Step::d;
+        note->pitchData.step = Step::c;
         note->pitchData.octave = 6;
         note->durationData.durationName = DurationName::whole;
         note->durationData.durationTimeTicks = 8;
         note->pitchData.accidental = Accidental::none;
         note->noteAttachmentData.marks.emplace_back( MarkType::fermataSquareInverted );
-        
+
         return score;
     }
 }

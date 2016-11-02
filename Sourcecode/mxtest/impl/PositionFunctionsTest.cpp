@@ -13,8 +13,6 @@
 using namespace mx;
 using namespace mx::impl;
 
-// TODO - make real tests
-
 TEST( setAttributesFromPositionDataBracket, PositionFunctions )
 {
     core::BracketAttributes attr;
@@ -29,7 +27,7 @@ TEST( setAttributesFromPositionDataBracket, PositionFunctions )
     positionData.relativeX = 0.3;
     positionData.hasRelativeY = true;
     positionData.relativeY = 0.4;
-
+    
     impl::setAttributesFromPositionData( positionData, attr );
     
     CHECK( attr.hasDefaultX );
@@ -55,7 +53,7 @@ TEST( setAttributesFromPositionDataFakeClass, PositionFunctions )
     TotallyBogusClassToTestSetAttributesFromPositionData fake;
     api::PositionData positionData;
     impl::setAttributesFromPositionData( positionData, fake );
-
+    
     // only check that it compiles
     CHECK( true );
 }
@@ -66,7 +64,7 @@ TEST( setAttributesFromPositionDataDirectionAttributes, PositionFunctions )
 {
     core::DirectionAttributes attr;
     api::PositionData positionData;
-
+    
     positionData.placement = api::Placement::below;
     
     impl::setAttributesFromPositionData( positionData, attr );

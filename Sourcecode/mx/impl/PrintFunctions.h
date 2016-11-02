@@ -54,7 +54,7 @@ namespace mx
             if( checkHasColor<ATTRIBUTES_TYPE>( ptr ) )
             {
                 outPrintData.isColorSpecified = true;
-                const auto theColor = getColor( ptr );
+                const auto theColor = getColor( inAttributes );
                 outPrintData.color.red = static_cast<uint8_t>( theColor.getRed() );
                 outPrintData.color.green = static_cast<uint8_t>( theColor.getGreen() );
                 outPrintData.color.blue = static_cast<uint8_t>( theColor.getBlue() );
@@ -93,6 +93,7 @@ namespace mx
         MX_ATTR_SETFUNC_OPTIONAL( hasColor, HasColor, bool, false );
         MX_ATTR_SETFUNC_OPTIONAL( color, Color, core::Color, core::Color{} );
 
+        
         template <typename ATTRIBUTES_TYPE>
         void setPrintObject( const api::Bool& inPrintObject, ATTRIBUTES_TYPE& outAttributes )
         {
@@ -102,29 +103,31 @@ namespace mx
             }
         }
         
-        
-        template <typename ATTRIBUTES_TYPE>
-        void setAttributesColor( const api::ColorData& inColorData, ATTRIBUTES_TYPE& outAttributes )
-        {
-            lookForAndSetHasColor( true, &outAttributes );
-            lookForAndSetColor( createCoreColor( inColorData ), &outAttributes );
-        }
-        
         template <typename ATTRIBUTES_TYPE>
         void setAttributesFromPrintData( const api::PrintData& inPrintData, ATTRIBUTES_TYPE& outAttributes )
         {
             if( inPrintData.isColorSpecified )
             {
                 lookForAndSetHasColor( true, &outAttributes );
-                lookForAndSetColor( inPrintData.color, &outAttributes );
+                core::Color colorToSet;
+                colorToSet.setColorType( core::Color::ColorType::RGB );
+                colorToSet.setRed( inPrintData.color.red );
+                colorToSet.setGreen( inPrintData.color.green );
+                colorToSet.setBlue( inPrintData.color.blue );
+                if( inPrintData.color.isAlphaSpecified )
+                {
+                    colorToSet.setColorType( core::Color::ColorType::ARGB );
+                    colorToSet.setAlpha( inPrintData.color.alpha );
+                }
+                lookForAndSetColor( colorToSet, &outAttributes );
             }
             else
             {
                 lookForAndSetHasColor( false, &outAttributes );
-                //lookForAndSetColor( core::Color{}, &outAttributes );
+                lookForAndSetColor( core::Color{}, &outAttributes );
             }
             
-            //setAttributesFromFontData( inPrintData, outAttributes );
+            setAttributesFromFontData( inPrintData.fontData, outAttributes );
         }
     }
 }

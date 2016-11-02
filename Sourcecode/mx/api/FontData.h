@@ -86,13 +86,18 @@ namespace mx
             }
         };
         
+        
         MXAPI_EQUALS_BEGIN( FontData )
         MXAPI_EQUALS_MEMBER( sizeType )
         MXAPI_EQUALS_MEMBER( sizePoint )
         MXAPI_EQUALS_MEMBER( sizeCss )
         MXAPI_EQUALS_MEMBER( style )
         MXAPI_EQUALS_MEMBER( weight )
-        MXAPI_EQUALS_MEMBER( fontFamily )
+        if( ! areVectorsEqual( lhs.fontFamily, rhs.fontFamily ) )
+        {
+            streamComparisonUnequalMessage( "FontData", "fontFamily" );
+            return false;
+        }
         MXAPI_EQUALS_MEMBER( underline )
         MXAPI_EQUALS_MEMBER( overline )
         MXAPI_EQUALS_MEMBER( lineThrough )

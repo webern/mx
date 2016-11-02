@@ -28,7 +28,7 @@
         <voice>1</voice>
         <type>whole</type>
         <notations>
-          <fermata default-x="1" default-y="2" relative-x="3" relative-y="4" font-family="a, B, Charlie" font-style="italic" font-size="24" font-weight="bold"/>
+          <fermata default-x="1" default-y="2" relative-x="3" relative-y="4" font-family="a,B,Charlie" font-style="italic" font-size="24" font-weight="bold" color="#010203"/>
         </notations>
       </note>
     </measure>

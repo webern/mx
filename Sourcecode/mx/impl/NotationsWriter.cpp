@@ -27,6 +27,7 @@
 #include "mx/core/elements/Dynamics.h"
 #include "mx/utility/OptionalMembers.h"
 #include "mx/impl/CurveFunctions.h"
+#include "mx/impl/MarkDataFunctions.h"
 #include "mx/core/elements/Tuplet.h"
 #include "mx/core/elements/TupletActual.h"
 #include "mx/core/elements/TupletNormal.h"
@@ -168,6 +169,7 @@ namespace mx
                     fermataNotationsChoice->setChoice( core::NotationsChoice::Choice::fermata );
                     auto& fermata = *fermataNotationsChoice->getFermata();
                     auto& attr = *fermata.getAttributes();
+                    impl::setAttributesFromMarkData( mark, attr );
                     
                     if( mark.markType == api::MarkType::fermata )
                     {
@@ -186,7 +188,7 @@ namespace mx
                     }
                     else if( mark.markType == api::MarkType::fermataSquare )
                     {
-                        fermata.setValue( core::FermataShape::angled );
+                        fermata.setValue( core::FermataShape::square );
                         attr.hasType = false;
                     }
                     else if( mark.markType == api::MarkType::fermataUpright )
@@ -209,7 +211,7 @@ namespace mx
                     }
                     else if( mark.markType == api::MarkType::fermataSquareUpright )
                     {
-                        fermata.setValue( core::FermataShape::angled );
+                        fermata.setValue( core::FermataShape::square );
                         attr.hasType = true;
                         attr.type = core::UprightInverted::upright;
                     }
@@ -233,7 +235,7 @@ namespace mx
                     }
                     else if( mark.markType == api::MarkType::fermataSquareInverted )
                     {
-                        fermata.setValue( core::FermataShape::angled );
+                        fermata.setValue( core::FermataShape::square );
                         attr.hasType = true;
                         attr.type = core::UprightInverted::inverted;
                     }

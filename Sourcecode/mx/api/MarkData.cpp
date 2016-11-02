@@ -248,7 +248,6 @@ namespace mx
         , tickTimePosition{ 0 }
         , printData{}
         , positionData{}
-        , fontData{}
         {
             
         }
@@ -262,7 +261,6 @@ namespace mx
         , tickTimePosition{ 0 }
         , printData{}
         , positionData{}
-        , fontData{}
         {
             impl::Converter converter;
             if( isMarkDynamic( markType ) )
@@ -291,7 +289,6 @@ namespace mx
         , tickTimePosition{ 0 }
         , printData{}
         , positionData{}
-        , fontData{}
         {
             positionData.placement = inPlacement;
             impl::Converter converter;
