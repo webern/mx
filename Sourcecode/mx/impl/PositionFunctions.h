@@ -42,25 +42,25 @@ namespace mx
             
             if( checkHasDefaultX<ATTRIBUTES_TYPE>( &inAttributes ) )
             {
-                outPositionData.hasDefaultX = true;
+                outPositionData.isDefaultXSpecified = true;
                 outPositionData.defaultX = checkDefaultX<ATTRIBUTES_TYPE>( &inAttributes );
             }
             
             if( checkHasDefaultY<ATTRIBUTES_TYPE>( &inAttributes ) )
             {
-                outPositionData.hasDefaultY = true;
+                outPositionData.isDefaultYSpecified = true;
                 outPositionData.defaultY = checkDefaultY<ATTRIBUTES_TYPE>( &inAttributes );
             }
             
             if( checkHasRelativeX<ATTRIBUTES_TYPE>( &inAttributes ) )
             {
-                outPositionData.hasRelativeX = true;
+                outPositionData.isRelativeXSpecified = true;
                 outPositionData.relativeX = checkRelativeX<ATTRIBUTES_TYPE>( &inAttributes );
             }
             
             if( checkHasRelativeY<ATTRIBUTES_TYPE>( &inAttributes ) )
             {
-                outPositionData.hasRelativeY = true;
+                outPositionData.isRelativeYSpecified = true;
                 outPositionData.relativeY = checkRelativeY<ATTRIBUTES_TYPE>( &inAttributes );
             }
             
@@ -121,7 +121,7 @@ namespace mx
         template <typename ATTRIBUTES_TYPE>
         void setAttributesFromPositionData( const api::PositionData& positionData, ATTRIBUTES_TYPE& outAttributes )
         {
-            if( positionData.hasDefaultX )
+            if( positionData.isDefaultXSpecified )
             {
                 lookForAndSetHasDefaultX( true, &outAttributes );
                 lookForAndSetDefaultX( positionData.defaultX, &outAttributes );
@@ -132,7 +132,7 @@ namespace mx
                 lookForAndSetDefaultX( 0.0, &outAttributes );
             }
             
-            if( positionData.hasDefaultY )
+            if( positionData.isDefaultYSpecified )
             {
                 lookForAndSetHasDefaultY( true, &outAttributes );
                 lookForAndSetDefaultY( positionData.defaultY, &outAttributes );
@@ -143,7 +143,7 @@ namespace mx
                 lookForAndSetDefaultY( 0.0, &outAttributes );
             }
             
-            if( positionData.hasRelativeX )
+            if( positionData.isRelativeXSpecified )
             {
                 lookForAndSetHasRelativeX( true, &outAttributes );
                 lookForAndSetRelativeX( positionData.relativeX, &outAttributes );
@@ -154,7 +154,7 @@ namespace mx
                 lookForAndSetRelativeX( 0.0, &outAttributes );
             }
             
-            if( positionData.hasRelativeY )
+            if( positionData.isRelativeYSpecified )
             {
                 lookForAndSetHasRelativeY( true, &outAttributes );
                 lookForAndSetRelativeY( positionData.relativeY, &outAttributes );

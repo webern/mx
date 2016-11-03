@@ -484,13 +484,13 @@ TEST( RoundTrip_PageTextData, DocumentManager )
     testValue0.description = "descrip";
     testValue0.pageNumber = 2;
     testValue0.position.defaultX = -0.1;
-    testValue0.position.hasDefaultX = true;
+    testValue0.position.isDefaultXSpecified = true;
     testValue0.position.defaultY = 108.2;
-    testValue0.position.hasDefaultY = true;
+    testValue0.position.isDefaultYSpecified = true;
     testValue0.position.relativeX = 1.0;
-    testValue0.position.hasRelativeX = true;
+    testValue0.position.isRelativeXSpecified = true;
     testValue0.position.relativeY = 2.0;
-    testValue0.position.hasRelativeY = true;
+    testValue0.position.isRelativeYSpecified = true;
     testValue0.position.horizontalAlignmnet = HorizontalAlignment::left;
     testValue0.position.verticalAlignment = VerticalAlignment::bottom;
     testValue0.position.placement = Placement::above;
@@ -516,26 +516,26 @@ TEST( RoundTrip_PageTextData, DocumentManager )
     CHECK_EQUAL( testValue0.pageNumber, actualValue.pageNumber );
     CHECK_EQUAL( testValue0.text, actualValue.text );
     CHECK_DOUBLES_EQUAL( testValue0.position.defaultX, actualValue.position.defaultX, MX_API_EQUALITY_EPSILON );
-    CHECK_EQUAL( testValue0.position.hasDefaultX, actualValue.position.hasDefaultX );
+    CHECK_EQUAL( testValue0.position.isDefaultXSpecified, actualValue.position.isDefaultXSpecified );
     CHECK_DOUBLES_EQUAL( testValue0.position.defaultY, actualValue.position.defaultY, MX_API_EQUALITY_EPSILON );
-    CHECK_EQUAL( testValue0.position.hasRelativeY, actualValue.position.hasRelativeY );
+    CHECK_EQUAL( testValue0.position.isRelativeYSpecified, actualValue.position.isRelativeYSpecified );
     CHECK_DOUBLES_EQUAL( testValue0.position.relativeX, actualValue.position.relativeX, MX_API_EQUALITY_EPSILON );
-    CHECK_EQUAL( testValue0.position.hasRelativeX, actualValue.position.hasRelativeX );
+    CHECK_EQUAL( testValue0.position.isRelativeXSpecified, actualValue.position.isRelativeXSpecified );
     CHECK_DOUBLES_EQUAL( testValue0.position.relativeY, actualValue.position.relativeY, MX_API_EQUALITY_EPSILON );
-    CHECK_EQUAL( testValue0.position.hasRelativeY, actualValue.position.hasRelativeY );
+    CHECK_EQUAL( testValue0.position.isRelativeYSpecified, actualValue.position.isRelativeYSpecified );
     
     actualValue = outputScore.pageTextItems.at( 1 );
     CHECK_EQUAL( testValue1.description, actualValue.description );
     CHECK_EQUAL( testValue1.pageNumber, actualValue.pageNumber );
     CHECK_EQUAL( testValue1.text, actualValue.text );
     CHECK_DOUBLES_EQUAL( testValue1.position.defaultX, actualValue.position.defaultX, MX_API_EQUALITY_EPSILON );
-    CHECK_EQUAL( testValue1.position.hasDefaultX, actualValue.position.hasDefaultX );
+    CHECK_EQUAL( testValue1.position.isDefaultXSpecified, actualValue.position.isDefaultXSpecified );
     CHECK_DOUBLES_EQUAL( testValue1.position.defaultY, actualValue.position.defaultY, MX_API_EQUALITY_EPSILON );
-    CHECK_EQUAL( testValue1.position.hasRelativeY, actualValue.position.hasRelativeY );
+    CHECK_EQUAL( testValue1.position.isRelativeYSpecified, actualValue.position.isRelativeYSpecified );
     CHECK_DOUBLES_EQUAL( testValue1.position.relativeX, actualValue.position.relativeX, MX_API_EQUALITY_EPSILON );
-    CHECK_EQUAL( testValue1.position.hasRelativeX, actualValue.position.hasRelativeX );
+    CHECK_EQUAL( testValue1.position.isRelativeXSpecified, actualValue.position.isRelativeXSpecified );
     CHECK_DOUBLES_EQUAL( testValue1.position.relativeY, actualValue.position.relativeY, MX_API_EQUALITY_EPSILON );
-    CHECK_EQUAL( testValue1.position.hasRelativeY, actualValue.position.hasRelativeY );
+    CHECK_EQUAL( testValue1.position.isRelativeYSpecified, actualValue.position.isRelativeYSpecified );
 
 }
 T_END

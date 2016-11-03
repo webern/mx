@@ -16,7 +16,6 @@ namespace mx
         {
             outMarkData.positionData = getPositionData<ATTRIBUTES_TYPE>( attr );
             outMarkData.printData = getPrintData<ATTRIBUTES_TYPE>( attr );
-            //outMarkData.fontData = getFontData<ATTRIBUTES_TYPE>( attr );
         }
         
         template<typename ATTRIBUTES_TYPE>
@@ -24,7 +23,6 @@ namespace mx
         {
             setAttributesFromPositionData( markData.positionData, outAttributes );
             setAttributesFromPrintData( markData.printData, outAttributes );
-            //setAttributesFromFontData( markData.printData.fontData, outAttributes );
         }
 	}
 }

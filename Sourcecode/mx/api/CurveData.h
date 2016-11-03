@@ -6,11 +6,16 @@
 #include "mx/api/LineData.h"
 #include "mx/api/ColorData.h"
 #include "mx/api/ApiCommon.h"
+#include "mx/api/PositionData.h"
 
 namespace mx
 {
     namespace api
     {
+
+        // TODO - use PositionData which includes Placement
+        // eleminate the one-off versions of DefaultX/Y
+
     	enum class CurveType
         {
             unspecified,
@@ -27,17 +32,16 @@ namespace mx
         
         struct CurvePoints
         {
-            // the 'default-x' attribute which specifies the the
-            // a point along the curve (either an endpoint or
-            // continuation point).
-            bool isXSpecified;
-            long double x;
-
-            // the 'default-y' attribute which specifies the the
-            // a point along the curve (either an endpoint or
-            // continuation point).
-            bool isYSpecified;
-            long double y;
+            // positionData represents a point along the curve.
+            // either the endpoint in the case of starts and stops,
+            // or the continuation points in the case of a 'continue'.
+            // only the following PositionData fields are supported
+            // defaultX
+            // defaultY
+            // relativeX
+            // relativeY
+            // placement
+            PositionData positionData;
             
             // the 'bezier-x' (or 'bezier-x2') attribute which
             // specifies the bezier curve handle point
@@ -49,33 +53,29 @@ namespace mx
             bool isBezierYSpecified;
             long double bezierY;
             
-            // this is the 'bezier-offset' (or bezier-offset2')
-            // attribute.  it is very unclear what this is for.
-            // it's a decimal in the spec, but using an int
-            // here since it is denominated in time duration
-            // units and throughout the api we have decided to
-            // only allow time to be specified in integer values
-            bool isTimeOffsetTicksSpecified;
-            int timeOffsetTicks;
+            // this is the 'bezier-offset' attribute.  it is very
+            // unclear what this is for. it's a decimal in the spec,
+            // but using an int here since it is denominated in time
+            // duration units and throughout the api we have decided
+            // to only allow time to be specified in integer values.
+            bool isBezierOffsetSpecified;
+            int bezierOffset;
             
             // convenience, check if any of the available fields
             // are specified.
             inline bool isSpecified() const
             {
-                return isXSpecified || isYSpecified || isBezierXSpecified || isBezierYSpecified || isTimeOffsetTicksSpecified;
+                return positionData.isDefaultXSpecified || positionData.isDefaultYSpecified || isBezierXSpecified || isBezierYSpecified || isBezierOffsetSpecified;
             }
             
             CurvePoints()
-            : isXSpecified{ false }
-            , x{ 0.0 }
-            , isYSpecified{ false }
-            , y{ 0.0 }
+            : positionData{}
             , isBezierXSpecified{ false }
             , bezierX{ 0.0 }
             , isBezierYSpecified{ false }
             , bezierY{ 0.0 }
-            , isTimeOffsetTicksSpecified{ false }
-            , timeOffsetTicks{ 0 }
+            , isBezierOffsetSpecified{ false }
+            , bezierOffset{ 0 }
             {
                 
             }
@@ -111,14 +111,24 @@ namespace mx
         {
             CurveType curveType;
             int numberLevel;
-            CurvePoints incomingCurvePoints;
-            CurvePoints outgoingCurvePoints;
+            CurvePoints curvePoints;
+            bool isBezierX2Specified;
+            long double bezierX2;
+            bool isBezierY2Specified;
+            long double bezierY2;
+            bool isBezierOffset2Specified;
+            long double bezierOffset2;
             
             CurveContinue( CurveType inCurveType )
             : curveType{ inCurveType }
             , numberLevel{ -1 }
-            , incomingCurvePoints{}
-            , outgoingCurvePoints{}
+            , curvePoints{}
+            , isBezierX2Specified{ false }
+            , bezierX2{ 0.0 }
+            , isBezierY2Specified{ false }
+            , bezierY2{ 0.0 }
+            , isBezierOffset2Specified{ false }
+            , bezierOffset2{ 0.0 }
             {
                 
             }
@@ -141,16 +151,13 @@ namespace mx
         };
         
         MXAPI_EQUALS_BEGIN( CurvePoints )
-        MXAPI_EQUALS_MEMBER( isXSpecified )
-        MXAPI_EQUALS_MEMBER( x )
-        MXAPI_EQUALS_MEMBER( isYSpecified )
-        MXAPI_EQUALS_MEMBER( y )
+        MXAPI_EQUALS_MEMBER( positionData )
         MXAPI_EQUALS_MEMBER( isBezierXSpecified )
         MXAPI_EQUALS_MEMBER( bezierX )
         MXAPI_EQUALS_MEMBER( isBezierYSpecified )
         MXAPI_EQUALS_MEMBER( bezierY )
-        MXAPI_EQUALS_MEMBER( isTimeOffsetTicksSpecified )
-        MXAPI_EQUALS_MEMBER( timeOffsetTicks )
+        MXAPI_EQUALS_MEMBER( isBezierOffsetSpecified )
+        MXAPI_EQUALS_MEMBER( bezierOffset )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( CurvePoints );
 
@@ -169,8 +176,13 @@ namespace mx
         MXAPI_EQUALS_BEGIN( CurveContinue )
         MXAPI_EQUALS_MEMBER( curveType )
         MXAPI_EQUALS_MEMBER( numberLevel )
-        MXAPI_EQUALS_MEMBER( incomingCurvePoints )
-        MXAPI_EQUALS_MEMBER( outgoingCurvePoints )
+        MXAPI_EQUALS_MEMBER( curvePoints )
+        MXAPI_EQUALS_MEMBER( isBezierX2Specified )
+        MXAPI_EQUALS_MEMBER( bezierX2 )
+        MXAPI_EQUALS_MEMBER( isBezierY2Specified )
+        MXAPI_EQUALS_MEMBER( bezierY2 )
+        MXAPI_EQUALS_MEMBER( isBezierOffset2Specified )
+        MXAPI_EQUALS_MEMBER( bezierOffset2 )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( CurveContinue );
 

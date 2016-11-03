@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		2903C9491DBC7ED600218C9E /* ApiTester.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2903C9471DBC7ED600218C9E /* ApiTester.cpp */; };
 		291A04761DC2BFD000B5C5F6 /* PositionFunctionsTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 291A04751DC2BFD000B5C5F6 /* PositionFunctionsTest.cpp */; };
+		29271A091DCBB6760036528D /* ApiK009bSlurTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29271A081DCBB6760036528D /* ApiK009bSlurTest.cpp */; };
+		29271A0B1DCBD92D0036528D /* CurveFunctionsTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29271A0A1DCBD92D0036528D /* CurveFunctionsTest.cpp */; };
 		292E371F1CA8D68D00CC63BB /* libMx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 292E371E1CA8D68D00CC63BB /* libMx.a */; };
 		2936D20A1D20CBB6003836E5 /* ExpectedFiles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2936D2091D20CBB6003836E5 /* ExpectedFiles.cpp */; };
 		2937D17C1D18D43A001C2A1A /* XAttributeIteratorTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2937D1771D18D43A001C2A1A /* XAttributeIteratorTest.cpp */; };
@@ -480,6 +482,9 @@
 		2903C9471DBC7ED600218C9E /* ApiTester.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ApiTester.cpp; path = ../Sourcecode/mxtest/api/ApiTester.cpp; sourceTree = "<group>"; };
 		2903C9481DBC7ED600218C9E /* ApiTester.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ApiTester.h; path = ../Sourcecode/mxtest/api/ApiTester.h; sourceTree = "<group>"; };
 		291A04751DC2BFD000B5C5F6 /* PositionFunctionsTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PositionFunctionsTest.cpp; path = ../Sourcecode/mxtest/impl/PositionFunctionsTest.cpp; sourceTree = "<group>"; };
+		29271A071DCBB6760036528D /* ApiK009bSlurScoreData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ApiK009bSlurScoreData.h; path = ../Sourcecode/mxtest/api/ApiK009bSlurScoreData.h; sourceTree = "<group>"; };
+		29271A081DCBB6760036528D /* ApiK009bSlurTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ApiK009bSlurTest.cpp; path = ../Sourcecode/mxtest/api/ApiK009bSlurTest.cpp; sourceTree = "<group>"; };
+		29271A0A1DCBD92D0036528D /* CurveFunctionsTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CurveFunctionsTest.cpp; path = ../Sourcecode/mxtest/impl/CurveFunctionsTest.cpp; sourceTree = "<group>"; };
 		292E371E1CA8D68D00CC63BB /* libMx.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libMx.a; path = bin/Build/Debug/libMx.a; sourceTree = "<group>"; };
 		2936D2091D20CBB6003836E5 /* ExpectedFiles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ExpectedFiles.cpp; path = ../Sourcecode/mxtest/import/ExpectedFiles.cpp; sourceTree = "<group>"; };
 		2937D1751D18D43A001C2A1A /* FakeXml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FakeXml.h; path = ../Sourcecode/mxtest/xml/FakeXml.h; sourceTree = "<group>"; };
@@ -1736,6 +1741,7 @@
 		29B48ED61DBE7F470030A974 /* impl */ = {
 			isa = PBXGroup;
 			children = (
+				29271A0A1DCBD92D0036528D /* CurveFunctionsTest.cpp */,
 				29C1759D1DC016B500CC48D7 /* DirectionReaderTest.cpp */,
 				29C1759F1DC0253900CC48D7 /* DirectionWriterTest.cpp */,
 				2961F12D1DC7F36000D62B16 /* MagicTemplatesTest.cpp */,
@@ -1743,8 +1749,8 @@
 				29B48ED81DBE7F550030A974 /* NoteWriterTest.cpp */,
 				29B48ED91DBE7F550030A974 /* PartWriterTest.cpp */,
 				291A04751DC2BFD000B5C5F6 /* PositionFunctionsTest.cpp */,
-				29B48EDA1DBE7F550030A974 /* ScoreWriterTest.cpp */,
 				294CE2021DCA952A0021670C /* PrintFunctionsTest.cpp */,
+				29B48EDA1DBE7F550030A974 /* ScoreWriterTest.cpp */,
 			);
 			name = impl;
 			sourceTree = "<group>";
@@ -1752,6 +1758,8 @@
 		29EF440E1D6E8F4700DBDAB9 /* api */ = {
 			isa = PBXGroup;
 			children = (
+				29271A071DCBB6760036528D /* ApiK009bSlurScoreData.h */,
+				29271A081DCBB6760036528D /* ApiK009bSlurTest.cpp */,
 				29BF98891DC6D20500BBC7B3 /* ApiK007aScoreData.h */,
 				29BF988A1DC6D20500BBC7B3 /* ApiK007aTest.cpp */,
 				2961F1151DC7CDD700D62B16 /* ApiK007cScoreData.h */,
@@ -1896,6 +1904,7 @@
 				29C01E461D1312FA0094BE61 /* MiscellaneousTest.cpp in Sources */,
 				29C01EF81D1312FA0094BE61 /* VirtualInstrumentTest.cpp in Sources */,
 				29C01D6F1D1312FA0094BE61 /* AccidentalTextTest.cpp in Sources */,
+				29271A091DCBB6760036528D /* ApiK009bSlurTest.cpp in Sources */,
 				29C01DBD1D1312FA0094BE61 /* DivisionsTest.cpp in Sources */,
 				29C01DFA1D1312FA0094BE61 /* GroupingTest.cpp in Sources */,
 				29C01ECA1D1312FA0094BE61 /* StrongAccentTest.cpp in Sources */,
@@ -2089,6 +2098,7 @@
 				29C01E241D1312FA0094BE61 /* LeftDividerTest.cpp in Sources */,
 				29C01E981D1312FA0094BE61 /* RootStepTest.cpp in Sources */,
 				29C01DE21D1312FA0094BE61 /* FiguredBassTest.cpp in Sources */,
+				29271A0B1DCBD92D0036528D /* CurveFunctionsTest.cpp in Sources */,
 				29C01E181D1312FA0094BE61 /* InversionTest.cpp in Sources */,
 				29C01E4A1D1312FA0094BE61 /* MovementTitleTest.cpp in Sources */,
 				29C01EBF1D1312FA0094BE61 /* StemTest.cpp in Sources */,

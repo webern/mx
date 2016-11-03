@@ -144,7 +144,7 @@ namespace mx
                 oStartDir->setChoice( core::DirectionType::Choice::octaveShift );
                 auto oStart = oStartDir->getOctaveShift();
                 auto& attr = *oStart->getAttributes();
-                impl::setLineData( ottavaStart.spannerStart.lineData, attr );
+                impl::setAttributesFromLineData( ottavaStart.spannerStart.lineData, attr );
                 
                 attr.hasSize = true;
                 

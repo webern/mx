@@ -66,18 +66,58 @@ namespace mx
                     curveNotationsChoice->setChoice( core::NotationsChoice::Choice::tied );
                     auto element = curveNotationsChoice->getTied();
                     auto attr = element->getAttributes();
-                    writeCurveStartAttributes( curve, attr );
+                    writeAttributesFromCurveStart( curve, *attr );
                 }
                 else if( curve.curveType == api::CurveType::slur )
                 {
                     curveNotationsChoice->setChoice( core::NotationsChoice::Choice::slur );
                     auto element = curveNotationsChoice->getSlur();
                     auto attr = element->getAttributes();
-                    writeCurveStartAttributes( curve, attr );
+                    writeAttributesFromCurveStart( curve, *attr );
                 }
             }
             
-            // TODO - curve continues and curve stops
+            for( const auto& curve : myNoteData.noteAttachmentData.curveContinuations )
+            {
+                auto curveNotationsChoice = core::makeNotationsChoice();
+                myOutNotations->addNotationsChoice( curveNotationsChoice );
+                
+                if( curve.curveType == api::CurveType::tie )
+                {
+                    curveNotationsChoice->setChoice( core::NotationsChoice::Choice::tied );
+                    auto element = curveNotationsChoice->getTied();
+                    auto attr = element->getAttributes();
+                    writeAttributesFromCurveContinue( curve, *attr );
+                }
+                else if( curve.curveType == api::CurveType::slur )
+                {
+                    curveNotationsChoice->setChoice( core::NotationsChoice::Choice::slur );
+                    auto element = curveNotationsChoice->getSlur();
+                    auto attr = element->getAttributes();
+                    writeAttributesFromCurveContinue( curve, *attr );
+                }
+            }
+            
+            for( const auto& curve : myNoteData.noteAttachmentData.curveEnds )
+            {
+                auto curveNotationsChoice = core::makeNotationsChoice();
+                myOutNotations->addNotationsChoice( curveNotationsChoice );
+                
+                if( curve.curveType == api::CurveType::tie )
+                {
+                    curveNotationsChoice->setChoice( core::NotationsChoice::Choice::tied );
+                    auto element = curveNotationsChoice->getTied();
+                    auto attr = element->getAttributes();
+                    writeAttributesFromCurveEnd( curve, *attr );
+                }
+                else if( curve.curveType == api::CurveType::slur )
+                {
+                    curveNotationsChoice->setChoice( core::NotationsChoice::Choice::slur );
+                    auto element = curveNotationsChoice->getSlur();
+                    auto attr = element->getAttributes();
+                    writeAttributesFromCurveEnd( curve, *attr );
+                }
+            }
             
             for( const auto& tupletStart : myNoteData.noteAttachmentData.tupletStarts )
             {

@@ -29,7 +29,7 @@ TEST( ottavaStartStop, DirectionWriter )
     directionData.ottavaStarts.emplace_back( api::OttavaStart{} );
     auto& start = directionData.ottavaStarts.back();
     start.ottavaType = api::OttavaType::o15mb;
-    start.spannerStart.positionData.hasDefaultX = true;
+    start.spannerStart.positionData.isDefaultXSpecified = true;
     start.spannerStart.positionData.defaultX = 100.0;
     
     DirectionWriter writer{ directionData, cursor };

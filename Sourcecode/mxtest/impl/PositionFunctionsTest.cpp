@@ -18,14 +18,14 @@ TEST( setAttributesFromPositionDataBracket, PositionFunctions )
     core::BracketAttributes attr;
     api::PositionData positionData;
     
-    positionData.hasDefaultX = true;
+    positionData.isDefaultXSpecified = true;
     positionData.defaultX = 0.1;
-    positionData.hasDefaultY = true;
+    positionData.isDefaultYSpecified = true;
     positionData.defaultY = 0.2;
     
-    positionData.hasRelativeX = true;
+    positionData.isRelativeXSpecified = true;
     positionData.relativeX = 0.3;
-    positionData.hasRelativeY = true;
+    positionData.isRelativeYSpecified = true;
     positionData.relativeY = 0.4;
     
     impl::setAttributesFromPositionData( positionData, attr );

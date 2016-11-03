@@ -81,7 +81,7 @@ namespace mx
         MX_ATTR_SETFUNC_OPTIONAL_WITH_SETTER( endLength, EndLength, long double, 0.0L );
         
         template <typename ATTRIBUTES_TYPE>
-        void setLineData( const api::LineData& inLineData, ATTRIBUTES_TYPE& outAttributes )
+        void setAttributesFromLineData( const api::LineData& inLineData, ATTRIBUTES_TYPE& outAttributes )
         {
             Converter converter;
             if( lookForAndSetHasDashLength( inLineData.isDashLengthSpecified, &outAttributes ) )

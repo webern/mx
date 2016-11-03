@@ -445,6 +445,7 @@ namespace mxtest
         myNameSubdirectoryMap.emplace( "k007d_Directions_Dynamics_Attributes.xml", "ksuite" );
         myNameSubdirectoryMap.emplace( "k008a_Beaming.xml", "ksuite" );
         myNameSubdirectoryMap.emplace( "k009a_Slurs.xml", "ksuite" );
+        myNameSubdirectoryMap.emplace( "k009b_Slur_Attributes.xml", "ksuite" );
         myNameSubdirectoryMap.emplace( "k010a_Ties.xml", "ksuite" );
         myNameSubdirectoryMap.emplace( "k010b_Bad_Ties.xml", "ksuite" );
         myNameSubdirectoryMap.emplace( "k011a_Tuplets.xml", "ksuite" );

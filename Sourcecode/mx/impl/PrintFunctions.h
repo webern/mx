@@ -34,13 +34,28 @@ namespace mx
 
         
         template <typename ATTRIBUTES_TYPE>
-        core::Color getColor( const ATTRIBUTES_TYPE& inAttributes )
+        api::ColorData getColor( const ATTRIBUTES_TYPE& inAttributes )
         {
             if( !checkHasColor<ATTRIBUTES_TYPE>( &inAttributes ) )
             {
-                return core::Color{};
+                return api::ColorData{};
             }
-            return checkColor<ATTRIBUTES_TYPE>( &inAttributes );
+            const auto coreColor = checkColor<ATTRIBUTES_TYPE>( &inAttributes );
+            api::ColorData outApiColor;
+            outApiColor.red = static_cast<uint8_t>( coreColor.getRed() );
+            outApiColor.green = static_cast<uint8_t>( coreColor.getGreen() );
+            outApiColor.blue = static_cast<uint8_t>( coreColor.getBlue() );
+            outApiColor.isAlphaSpecified = coreColor.getColorType() == core::Color::ColorType::ARGB;
+            
+            if( outApiColor.isAlphaSpecified )
+            {
+                outApiColor.alpha = static_cast<uint8_t>( coreColor.getAlpha() );
+            }
+            else
+            {
+                outApiColor.alpha = 255;
+            }
+            return outApiColor;
         }
         
         
@@ -54,20 +69,7 @@ namespace mx
             if( checkHasColor<ATTRIBUTES_TYPE>( ptr ) )
             {
                 outPrintData.isColorSpecified = true;
-                const auto theColor = getColor( inAttributes );
-                outPrintData.color.red = static_cast<uint8_t>( theColor.getRed() );
-                outPrintData.color.green = static_cast<uint8_t>( theColor.getGreen() );
-                outPrintData.color.blue = static_cast<uint8_t>( theColor.getBlue() );
-                outPrintData.color.isAlphaSpecified = theColor.getColorType() == core::Color::ColorType::ARGB;
-                
-                if( outPrintData.color.isAlphaSpecified )
-                {
-                    outPrintData.color.alpha = static_cast<uint8_t>( theColor.getAlpha() );
-                }
-                else
-                {
-                    outPrintData.color.alpha = 255;
-                }
+                outPrintData.color = getColor( inAttributes );
             }
             else
             {
@@ -81,7 +83,7 @@ namespace mx
         {
             if( inColor.isAlphaSpecified )
             {
-                return core::Color{ inColor.red, inColor.green, inColor.blue, inColor.alpha };
+                return core::Color{ inColor.alpha, inColor.red, inColor.green, inColor.blue };
             }
             return core::Color{ inColor.red, inColor.green, inColor.blue };
         }
@@ -103,23 +105,22 @@ namespace mx
             }
         }
         
+        
+        template <typename ATTRIBUTES_TYPE>
+        void setAttributesFromColorData( const api::ColorData& inColorData, ATTRIBUTES_TYPE& outAttributes )
+        {
+            const auto valueToSet = createCoreColor( inColorData );
+            lookForAndSetColor( valueToSet, &outAttributes );
+        }
+
+        
         template <typename ATTRIBUTES_TYPE>
         void setAttributesFromPrintData( const api::PrintData& inPrintData, ATTRIBUTES_TYPE& outAttributes )
         {
             if( inPrintData.isColorSpecified )
             {
                 lookForAndSetHasColor( true, &outAttributes );
-                core::Color colorToSet;
-                colorToSet.setColorType( core::Color::ColorType::RGB );
-                colorToSet.setRed( inPrintData.color.red );
-                colorToSet.setGreen( inPrintData.color.green );
-                colorToSet.setBlue( inPrintData.color.blue );
-                if( inPrintData.color.isAlphaSpecified )
-                {
-                    colorToSet.setColorType( core::Color::ColorType::ARGB );
-                    colorToSet.setAlpha( inPrintData.color.alpha );
-                }
-                lookForAndSetColor( colorToSet, &outAttributes );
+                setAttributesFromColorData( inPrintData.color, outAttributes );
             }
             else
             {

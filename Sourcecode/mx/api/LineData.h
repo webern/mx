@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include "mx/api/ApiCommon.h"
+
 namespace mx
 {
     namespace api

@@ -43,13 +43,13 @@ namespace mxtest
         note->pitchData.accidental = Accidental::none;
         note->noteAttachmentData.marks.emplace_back( MarkType::fermata );
         auto& markData = note->noteAttachmentData.marks.back();
-        markData.positionData.hasDefaultX = true;
+        markData.positionData.isDefaultXSpecified = true;
         markData.positionData.defaultX = 1.0;
-        markData.positionData.hasDefaultY = true;
+        markData.positionData.isDefaultYSpecified = true;
         markData.positionData.defaultY = 2.0;
-        markData.positionData.hasRelativeX = true;
+        markData.positionData.isRelativeXSpecified = true;
         markData.positionData.relativeX = 3.0;
-        markData.positionData.hasRelativeY = true;
+        markData.positionData.isRelativeYSpecified = true;
         markData.positionData.relativeY = 4.0;
         markData.printData.fontData.fontFamily.emplace_back( std::string{ "a" } );
         markData.printData.fontData.fontFamily.emplace_back( std::string{ "B" } );
