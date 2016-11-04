@@ -8,15 +8,39 @@
 #include "mx/api/ApiCommon.h"
 #include "mx/api/PositionData.h"
 
+// MusicXML Documentation for Bezier Attributes Group
+// The bezier attribute group is used to indicate the curvature of slurs
+// and ties, representing the control points for a cubic bezier curve.
+// For ties, the bezier attribute group is used with the tied element.
+//
+// Normal slurs, S-shaped slurs, and ties need only two bezier points:
+// one associated with the start of the slur or tie, the other with the
+// stop. Complex slurs and slurs divided over system breaks can specify
+// additional bezier data at slur elements with a continue type.
+//
+// The bezier-offset, bezier-x, and bezier-y attributes describe the
+// outgoing bezier point for slurs and ties with a start type, and the
+// incoming bezier point for slurs and ties with types of stop or continue.
+// The attributes bezier-offset2, bezier-x2, and bezier-y2 are only valid
+// with slurs of type continue, and describe the outgoing bezier point.
+//    
+// The bezier-offset and bezier-offset2 attributes are measured in terms of
+// musical divisions, like the offset element. These are the recommended
+// attributes for specifying horizontal position. The other attributes are
+// specified in tenths, relative to any position settings associated with
+// the slur or tied element.
+
+// MusicXML Documentation for Slur Element
+// Slur types are empty. Most slurs are represented with two elements: one
+// with a start type, and one with a stop type. Slurs can add more elements
+// using a continue type. This is typically used to specify the formatting
+// of cross-system slurs, or to specify the shape of very complex slurs.
+
 namespace mx
 {
     namespace api
     {
-
-        // TODO - use PositionData which includes Placement
-        // eleminate the one-off versions of DefaultX/Y
-
-    	enum class CurveType
+        enum class CurveType
         {
             unspecified,
             slur,
@@ -35,29 +59,16 @@ namespace mx
             // positionData represents a point along the curve.
             // either the endpoint in the case of starts and stops,
             // or the continuation points in the case of a 'continue'.
-            // only the following PositionData fields are supported
-            // defaultX
-            // defaultY
-            // relativeX
-            // relativeY
-            // placement
+            // only the following PositionData fields are supported:
+            // defaultX, defaultY, relativeX, relativeY, placement
             PositionData positionData;
             
-            // the 'bezier-x' (or 'bezier-x2') attribute which
-            // specifies the bezier curve handle point
             bool isBezierXSpecified;
             long double bezierX;
 
-            // the 'bezier-x' (or 'bezier-x2') attribute which
-            // specifies the bezier curve handle point
             bool isBezierYSpecified;
             long double bezierY;
             
-            // this is the 'bezier-offset' attribute.  it is very
-            // unclear what this is for. it's a decimal in the spec,
-            // but using an int here since it is denominated in time
-            // duration units and throughout the api we have decided
-            // to only allow time to be specified in integer values.
             bool isBezierOffsetSpecified;
             int bezierOffset;
             
@@ -65,7 +76,11 @@ namespace mx
             // are specified.
             inline bool isSpecified() const
             {
-                return positionData.isDefaultXSpecified || positionData.isDefaultYSpecified || isBezierXSpecified || isBezierYSpecified || isBezierOffsetSpecified;
+                return positionData.isDefaultXSpecified
+                || positionData.isDefaultYSpecified
+                || isBezierXSpecified
+                || isBezierYSpecified
+                || isBezierOffsetSpecified;
             }
             
             CurvePoints()
