@@ -397,7 +397,7 @@
         <type>whole</type>
         <notations>
           <dynamics placement="below">
-            <other-dynamics>dynamicZ</other-dynamics>
+            <other-dynamics>dynamicNiente</other-dynamics>
           </dynamics>
         </notations>
       </note>

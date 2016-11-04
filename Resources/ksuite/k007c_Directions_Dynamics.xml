@@ -436,7 +436,7 @@
       <direction>
         <direction-type>
           <dynamics placement="below">
-            <other-dynamics>dynamicZ</other-dynamics>
+            <other-dynamics>dynamicNiente</other-dynamics>
           </dynamics>
         </direction-type>
       </direction>
