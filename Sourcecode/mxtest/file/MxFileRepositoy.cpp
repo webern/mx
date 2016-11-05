@@ -453,6 +453,8 @@ namespace mxtest
         myNameSubdirectoryMap.emplace( "k013a_OrchestralScoreFinale.xml", "ksuite" );
         myNameSubdirectoryMap.emplace( "k013b_OrchestralScoreSibelius.xml", "ksuite" );
         myNameSubdirectoryMap.emplace( "k014a_Fermatas.xml", "ksuite" );
+        myNameSubdirectoryMap.emplace( "k015a_System_Layout.xml", "ksuite" );
+        
         
         // other
         myNameSubdirectoryMap.emplace( "logic01a_homoSapiens.xml", "logicpro" );

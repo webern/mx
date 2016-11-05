@@ -29,6 +29,20 @@ namespace mx
 
             }
         };
+
+        class MiscellaneousField
+        {
+        public:
+            std::string key;
+            std::string value;
+
+            MiscellaneousField( std::string inKey, std::string inValue )
+            : key{ inKey }
+            , value{ inValue }
+            {
+
+            }
+        };
         
         class EncodingDate
         {
@@ -47,6 +61,7 @@ namespace mx
             std::string encodingDescription;
             std::vector<std::string> software;
             std::vector<SupportedItem> supportedItems; 
+            std::vector<MiscellaneousField> miscelaneousFields;
         };
         
         MXAPI_EQUALS_BEGIN( SupportedItem )
@@ -56,6 +71,12 @@ namespace mx
         MXAPI_EQUALS_MEMBER( isSupported )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( SupportedItem );
+
+        MXAPI_EQUALS_BEGIN( MiscellaneousField )
+        MXAPI_EQUALS_MEMBER( key )
+        MXAPI_EQUALS_MEMBER( value )
+        MXAPI_EQUALS_END;
+        MXAPI_NOT_EQUALS_AND_VECTORS( MiscellaneousField );
         
         MXAPI_EQUALS_BEGIN( EncodingDate )
         MXAPI_EQUALS_MEMBER( year )
@@ -70,6 +91,7 @@ namespace mx
         MXAPI_EQUALS_MEMBER( encodingDescription )
         MXAPI_EQUALS_MEMBER( software )
         MXAPI_EQUALS_MEMBER( supportedItems )
+        MXAPI_EQUALS_MEMBER( miscelaneousFields )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( EncodingData );
     }

@@ -107,7 +107,7 @@ namespace mxtest
         
         auto& lastMeasure = part.measures.back();
         auto& lastDynamic = lastMeasure.staves.back().directions.back().marks.back();
-        const std::string name = "dynamicZ";
+        const std::string name = "dynamicNiente";
         lastDynamic.smuflName = name;
         lastDynamic.name = name;
         lastDynamic.smuflCodepoint = Smufl::findCodepoint( name );

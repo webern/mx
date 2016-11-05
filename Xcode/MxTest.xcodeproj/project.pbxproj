@@ -27,6 +27,7 @@
 		2961F1171DC7CDD700D62B16 /* ApiK007cTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2961F1161DC7CDD700D62B16 /* ApiK007cTest.cpp */; };
 		2961F12E1DC7F36000D62B16 /* MagicTemplatesTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2961F12D1DC7F36000D62B16 /* MagicTemplatesTest.cpp */; };
 		2961F1311DC7F47100D62B16 /* ApiMuAccidentals1Test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2961F1301DC7F47100D62B16 /* ApiMuAccidentals1Test.cpp */; };
+		2973CDE31DCD74CD001B9AAD /* ApiK015aLayoutTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2973CDE21DCD74CD001B9AAD /* ApiK015aLayoutTest.cpp */; };
 		297555FD1D1359CA007732D0 /* HelloWorldTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297555FB1D1359CA007732D0 /* HelloWorldTest.cpp */; };
 		297556081D135AA3007732D0 /* UtilityImplTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297556061D135AA3007732D0 /* UtilityImplTest.cpp */; };
 		297556091D135AA3007732D0 /* UtilityTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297556071D135AA3007732D0 /* UtilityTest.cpp */; };
@@ -509,6 +510,8 @@
 		2961F12D1DC7F36000D62B16 /* MagicTemplatesTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MagicTemplatesTest.cpp; path = ../Sourcecode/mxtest/impl/MagicTemplatesTest.cpp; sourceTree = "<group>"; };
 		2961F12F1DC7F47100D62B16 /* ApiMuAccidentals1ScoreData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ApiMuAccidentals1ScoreData.h; path = ../Sourcecode/mxtest/api/ApiMuAccidentals1ScoreData.h; sourceTree = "<group>"; };
 		2961F1301DC7F47100D62B16 /* ApiMuAccidentals1Test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ApiMuAccidentals1Test.cpp; path = ../Sourcecode/mxtest/api/ApiMuAccidentals1Test.cpp; sourceTree = "<group>"; };
+		2973CDE11DCD74CD001B9AAD /* ApiK015aLayoutScoreData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ApiK015aLayoutScoreData.h; path = ../Sourcecode/mxtest/api/ApiK015aLayoutScoreData.h; sourceTree = "<group>"; };
+		2973CDE21DCD74CD001B9AAD /* ApiK015aLayoutTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ApiK015aLayoutTest.cpp; path = ../Sourcecode/mxtest/api/ApiK015aLayoutTest.cpp; sourceTree = "<group>"; };
 		297555FA1D1359CA007732D0 /* HelloWorldExpected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HelloWorldExpected.h; path = ../Sourcecode/mxtest/core/HelloWorldExpected.h; sourceTree = "<group>"; };
 		297555FB1D1359CA007732D0 /* HelloWorldTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HelloWorldTest.cpp; path = ../Sourcecode/mxtest/core/HelloWorldTest.cpp; sourceTree = "<group>"; };
 		297555FC1D1359CA007732D0 /* HelloWorldTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HelloWorldTest.h; path = ../Sourcecode/mxtest/core/HelloWorldTest.h; sourceTree = "<group>"; };
@@ -1758,6 +1761,8 @@
 		29EF440E1D6E8F4700DBDAB9 /* api */ = {
 			isa = PBXGroup;
 			children = (
+				2973CDE11DCD74CD001B9AAD /* ApiK015aLayoutScoreData.h */,
+				2973CDE21DCD74CD001B9AAD /* ApiK015aLayoutTest.cpp */,
 				29271A071DCBB6760036528D /* ApiK009bSlurScoreData.h */,
 				29271A081DCBB6760036528D /* ApiK009bSlurTest.cpp */,
 				29BF98891DC6D20500BBC7B3 /* ApiK007aScoreData.h */,
@@ -2194,6 +2199,7 @@
 				29C01EE91D1312FA0094BE61 /* TripleTongueTest.cpp in Sources */,
 				29C01D841D1312FA0094BE61 /* BassStepTest.cpp in Sources */,
 				29C01E061D1312FA0094BE61 /* HarmonyTest.cpp in Sources */,
+				2973CDE31DCD74CD001B9AAD /* ApiK015aLayoutTest.cpp in Sources */,
 				29C01E0A1D1312FA0094BE61 /* HoleClosedTest.cpp in Sources */,
 				29C01DDB1D1312FA0094BE61 /* EnumsTest.cpp in Sources */,
 				29C01EB31D1312FA0094BE61 /* SpiccatoTest.cpp in Sources */,

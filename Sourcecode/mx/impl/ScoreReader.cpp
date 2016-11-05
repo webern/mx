@@ -49,6 +49,7 @@
 #include "mx/core/elements/RightMargin.h"
 #include "mx/core/elements/Properties.h"
 #include "mx/core/elements/Divisions.h"
+#include "mx/core/elements/MiscellaneousField.h"
 #include "mx/impl/LcmGcd.h"
 
 namespace mx
@@ -238,6 +239,19 @@ namespace mx
                     if( !isCopyrightFound && !a->hasType )
                     {
                         myOutScoreData.copyright = r->getValue().getValue();
+                    }
+                }
+                
+                if( myHeaderGroup.getIdentification()->getHasMiscellaneous() )
+                {
+                    for( const auto m : myHeaderGroup.getIdentification()->getMiscellaneous()->getMiscellaneousFieldSet() )
+                    {
+                        std::string key;
+                        if( m->getAttributes()->hasName )
+                        {
+                            key = m->getAttributes()->name.getValue();
+                        }
+                        myOutScoreData.encoding.miscelaneousFields.emplace_back( m->getAttributes()->name.getValue(), m->getValue().getValue() );
                     }
                 }
             }
