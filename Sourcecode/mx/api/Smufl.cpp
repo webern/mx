@@ -6,7 +6,6 @@
 
 #include <locale>
 #include <codecvt>
-#include <algorithm>
 
 namespace mx
 {
@@ -36,8 +35,7 @@ namespace mx
                 case Placement::above: return above;
                 case Placement::below: return below;
                 case Placement::unspecified: return unspecified;
-                default:
-                    break;
+                default: break;
             }
             return unspecified;
         }

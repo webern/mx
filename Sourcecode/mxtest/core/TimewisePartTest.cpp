@@ -11,7 +11,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, TimewisePart )
 {
@@ -53,7 +53,7 @@ TEST( Test03, TimewisePart )
 	CHECK( object->hasContents() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     TimewisePartPtr tgenTimewisePart( variant v )
     {

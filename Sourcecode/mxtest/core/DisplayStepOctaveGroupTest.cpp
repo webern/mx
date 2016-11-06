@@ -12,7 +12,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, DisplayStepOctaveGroup )
 {
@@ -57,7 +57,7 @@ TEST( Test03, DisplayStepOctaveGroup )
 	CHECK( object->hasContents() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     DisplayStepOctaveGroupPtr tgenDisplayStepOctaveGroup( variant v )
     {

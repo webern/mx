@@ -15,7 +15,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, ScoreHeaderGroup )
 {
@@ -57,7 +57,7 @@ TEST( Test03, ScoreHeaderGroup )
 	CHECK( object->hasContents() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     ScoreHeaderGroupPtr tgenScoreHeaderGroup( variant v )
     {

@@ -5,11 +5,14 @@
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_IMPORT_TESTS
 
+#include "mxtest/file/MxFileTest.h"
 #include "cpul/cpulTestHarness.h"
 #include "cpul/cpulTestTimer.h"
+#include "cpul/cpulTest.h"
 #include "mx/xml/XFactory.h"
 #include "mx/xml/XDoc.h"
-#include "mxtest/control/Path.h"
+#include "mxtest/file/Path.h"
+#include "mxtest/file/MxFileRepository.h"
 #include "mx/core/Document.h"
 
 #include <iostream>
@@ -26,7 +29,7 @@ void runTest (TestResult& rEsUlT_);                                             
 } GROUPNAME##FNAME_PART##Instance;                                              \
 void GROUPNAME##FNAME_PART##Test::runTest (TestResult& rEsUlT_)                 \
 {                                                                               \
-    MxTest::ImportRoundTripTest test(                                           \
+    mxtest::ImportRoundTripTest test(                                           \
     #FNAME_PART,                                                                \
     #FEXT,                                                                      \
     #GROUPNAME,                                                                 \
@@ -40,13 +43,12 @@ void GROUPNAME##FNAME_PART##Test::runTest (TestResult& rEsUlT_)                 
                                                                                 \
                                                                                 \
 
+
 #define MXTEST_IMPORT_ROUNDTRIP_END }                                           \
                                                                                 \
 
 
-
-
-namespace MxTest
+namespace mxtest
 {
     
     constexpr const char* const TEST_RECORD_FILENAME = "_MxImportTestResults.csv";
@@ -126,5 +128,45 @@ namespace MxTest
         return value.streamValues( os );
     }
 }
+
+class ImportTestCpul : public mxtest::MxFileTest
+{
+public:
+    ImportTestCpul(
+            mxtest::MxFile inTestFile,
+            std::string inTestName,
+            std::string inTestCppFileName,
+            int inTestCppFileLineNumber )
+    : mxtest::MxFileTest( inTestFile, inTestName, inTestCppFileName, inTestCppFileLineNumber )
+    {}
+    
+    
+    inline void runTestCode()
+    {
+        mxtest::ImportRoundTripTest test{
+            testFileNamePart().c_str(),
+            testFileExtension().c_str(),
+            testSubdirectory().c_str(),
+            testFileName().c_str(),
+            getCppFileLineNumber(),
+            testSubdirectory().c_str() };
+        
+        std::stringstream msgsstr;
+        test.setIsMxBypassed( false );
+        
+        bool isTestSuccess = test.runTest( msgsstr );
+        if( isLoadFailureExpected() )
+        {
+            setIsSuccess( !isTestSuccess );
+            setFailureMessage( "loading was expected to fail but succeeded instead" );
+        }
+        else
+        {
+            setIsSuccess( isTestSuccess );
+            setFailureMessage( msgsstr.str() );
+        }
+    }
+
+};
 
 #endif

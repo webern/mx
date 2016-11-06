@@ -3,148 +3,279 @@
 
 #pragma once
 
-#include "mx/api/CurveContinue.h"
-#include "mx/api/CurveEnd.h"
-#include "mx/api/CurveStart.h"
+#include "mx/api/CurveData.h"
+#include "mx/impl/SpannerFunctions.h"
+#include "mx/impl/PositionFunctions.h"
+#include "mx/impl/LineFunctions.h"
+#include "mx/impl/PrintFunctions.h"
 
 namespace mx
 {
     namespace impl
     {
+        
+        template<typename ATTRIBUTES_TYPE>
+        api::CurvePoints parseCurvePoints( const ATTRIBUTES_TYPE& inAttributes )
+        {
+            api::CurvePoints p;
+            p.positionData = impl::getPositionData( inAttributes );
+            
+            if( inAttributes.hasBezierX )
+            {
+                p.isBezierXSpecified = true;
+                p.bezierX = inAttributes.bezierX.getValue();
+            }
+            
+            if( inAttributes.hasBezierY )
+            {
+                p.isBezierYSpecified = true;
+                p.bezierY = inAttributes.bezierY.getValue();
+            }
+            
+            if( inAttributes.hasBezierOffset )
+            {
+                p.isBezierOffsetSpecified = true;
+                p.bezierOffset = static_cast<int>( std::ceil( inAttributes.bezierOffset.getValue() - 0.5 ) );
+            }
+            
+            return p;
+        }
+        
+        
+        template<typename ATTRIBUTES_TYPE>
+        void writeAttributesFromCurvePoints( const api::CurvePoints& curvePoints, ATTRIBUTES_TYPE& outAttributes )
+        {
+            impl::setAttributesFromPositionData( curvePoints.positionData, outAttributes );
+            
+            if( curvePoints.isBezierXSpecified )
+            {
+                outAttributes.hasBezierX = true;
+                outAttributes.bezierX.setValue( curvePoints.bezierX );
+            }
+            
+            if( curvePoints.isBezierYSpecified )
+            {
+                outAttributes.hasBezierY = true;
+                outAttributes.bezierY.setValue( curvePoints.bezierY );
+            }
+            
+            if( curvePoints.isBezierOffsetSpecified )
+            {
+                outAttributes.hasBezierOffset = true;
+                outAttributes.bezierOffset.setValue( curvePoints.bezierOffset );
+            }
+        }
+        
+        
+        template<typename SLUR_OR_TIE_ELEMENT_TYPE>
+        api::CurveStart parseCurveStart( const SLUR_OR_TIE_ELEMENT_TYPE& inSlurOrTie )
+        {
+            const auto& inAttributes = *inSlurOrTie.getAttributes();
+            const auto curveType = inSlurOrTie.getElementName() == "slur" ? api::CurveType::slur : api::CurveType::tie;
+            api::CurveStart c{ curveType };
+            c.numberLevel = impl::checkNumber( &inAttributes );
+            
+            c.curvePoints = parseCurvePoints( inAttributes );
+            c.lineData = impl::getLineData( inAttributes );
+            c.isColorSpecified = checkHasColor( &inAttributes );
+
+            if( c.isColorSpecified )
+            {
+                c.colorData = impl::getColor( inAttributes );
+            }
+            
+            if( inAttributes.hasOrientation )
+            {
+                c.curveOrientation = inAttributes.orientation == core::OverUnder::over ? api::CurveOrientation::overhand : api::CurveOrientation::underhand;
+            }
+            return c;
+        }
+        
+        template<typename SLUR_OR_TIE_ELEMENT_TYPE>
+        api::CurveContinue parseCurveContinue( const SLUR_OR_TIE_ELEMENT_TYPE& inSlurOrTie )
+        {
+            const auto& inAttributes = *inSlurOrTie.getAttributes();
+            const auto curveType = inSlurOrTie.getElementName() == "slur" ? api::CurveType::slur : api::CurveType::tie;
+            api::CurveContinue c{ curveType };
+            c.numberLevel = impl::checkNumber( &inAttributes );
+            
+            if( inAttributes.hasBezierX2 )
+            {
+                c.isBezierX2Specified = true;
+                c.bezierX2 = inAttributes.bezierX2.getValue();
+            }
+            
+            if( inAttributes.hasBezierY2 )
+            {
+                c.isBezierY2Specified = true;
+                c.bezierY2 = inAttributes.bezierY2.getValue();
+            }
+            
+            if( inAttributes.hasBezierOffset2 )
+            {
+                c.isBezierOffset2Specified = true;
+                c.bezierOffset2 = inAttributes.bezierOffset2.getValue();
+            }
+            
+            c.curvePoints = parseCurvePoints( inAttributes );
+            return c;
+        }
+        
+        template<typename SLUR_OR_TIE_ELEMENT_TYPE>
+        api::CurveEnd parseCurveStop( const SLUR_OR_TIE_ELEMENT_TYPE& inSlurOrTie )
+        {
+            const auto& inAttributes = *inSlurOrTie.getAttributes();
+            const auto curveType = inSlurOrTie.getElementName() == "slur" ? api::CurveType::slur : api::CurveType::tie;
+            api::CurveEnd c{ curveType };
+            c.numberLevel = impl::checkNumber( &inAttributes );
+            c.curvePoints = parseCurvePoints( inAttributes );
+            return c;
+        }
+
+        
+        template<typename ATTRIBUTES_TYPE>
+        void writeAttributesFromCurveStart( const api::CurveStart inCurve, ATTRIBUTES_TYPE& outAttributes )
+        {
+            outAttributes.type = core::StartStopContinue::start;
+            impl::setAttributesFromPositionData( inCurve.curvePoints.positionData, outAttributes );
+            impl::setAttributesFromLineData( inCurve.lineData, outAttributes );
+            
+            if( inCurve.isColorSpecified )
+            {
+                outAttributes.hasColor = true;
+                setAttributesFromColorData( inCurve.colorData, outAttributes );
+            }
+
+            if( inCurve.numberLevel > 0 )
+            {
+                outAttributes.hasNumber = true;
+                impl::lookForAndSetNumber( inCurve.numberLevel, &outAttributes );
+            }
+
+            if( inCurve.curvePoints.isBezierOffsetSpecified )
+            {
+                outAttributes.hasBezierOffset = true;
+                outAttributes.bezierOffset.setValue( static_cast<long double>( inCurve.curvePoints.bezierOffset ) );
+            }
+            
+            if( inCurve.curvePoints.isBezierXSpecified )
+            {
+                outAttributes.hasBezierX = true;
+                outAttributes.bezierX.setValue( inCurve.curvePoints.bezierX );
+            }
+            
+            if( inCurve.curvePoints.isBezierYSpecified )
+            {
+                outAttributes.hasBezierY = true;
+                outAttributes.bezierY.setValue( inCurve.curvePoints.bezierY );
+            }
+            
+            if( inCurve.curveOrientation != api::CurveOrientation::unspecified )
+            {
+                outAttributes.hasOrientation = true;
+                outAttributes.orientation = inCurve.curveOrientation == api::CurveOrientation::overhand ? core::OverUnder::over : core::OverUnder::under;
+            }
+        }
+        
+        template<typename ATTRIBUTES_TYPE>
+        void writeAttributesFromCurveContinue( const api::CurveContinue inCurve, ATTRIBUTES_TYPE& outAttributes )
+        {
+            outAttributes.type = core::StartStopContinue::continue_;
+            impl::setAttributesFromPositionData( inCurve.curvePoints.positionData, outAttributes );
+
+            if( inCurve.numberLevel > 0 )
+            {
+                outAttributes.hasNumber = true;
+                impl::lookForAndSetNumber( inCurve.numberLevel, &outAttributes );
+            }
+
+            if( inCurve.curvePoints.isBezierOffsetSpecified )
+            {
+                outAttributes.hasBezierOffset = true;
+                outAttributes.bezierOffset.setValue( static_cast<long double>( inCurve.curvePoints.bezierOffset ) );
+            }
+            
+            if( inCurve.curvePoints.isBezierXSpecified )
+            {
+                outAttributes.hasBezierX = true;
+                outAttributes.bezierX.setValue( inCurve.curvePoints.bezierX );
+            }
+            
+            if( inCurve.curvePoints.isBezierYSpecified )
+            {
+                outAttributes.hasBezierY = true;
+                outAttributes.bezierY.setValue( inCurve.curvePoints.bezierY );
+            }
+            
+            if( inCurve.isBezierX2Specified )
+            {
+                outAttributes.hasBezierX2 = true;
+                outAttributes.bezierX2.setValue( inCurve.bezierX2 );
+            }
+            
+            if( inCurve.isBezierY2Specified )
+            {
+                outAttributes.hasBezierY2 = true;
+                outAttributes.bezierY2.setValue( inCurve.bezierY2 );
+            }
+            
+            if( inCurve.isBezierOffset2Specified )
+            {
+                outAttributes.hasBezierOffset2 = true;
+                outAttributes.bezierOffset2.setValue( inCurve.bezierOffset2 );
+            }
+        }
+        
+        template<typename ATTRIBUTES_TYPE>
+        void writeAttributesFromCurveEnd( const api::CurveEnd inCurve, ATTRIBUTES_TYPE& outAttributes )
+        {
+            outAttributes.type = core::StartStopContinue::stop;
+            impl::setAttributesFromPositionData( inCurve.curvePoints.positionData, outAttributes );
+            
+            if( inCurve.numberLevel > 0 )
+            {
+                outAttributes.hasNumber = true;
+                impl::lookForAndSetNumber( inCurve.numberLevel, &outAttributes );
+            }
+            
+            if( inCurve.curvePoints.isBezierOffsetSpecified )
+            {
+                outAttributes.hasBezierOffset = true;
+                outAttributes.bezierOffset.setValue( static_cast<long double>( inCurve.curvePoints.bezierOffset ) );
+            }
+            
+            if( inCurve.curvePoints.isBezierXSpecified )
+            {
+                outAttributes.hasBezierX = true;
+                outAttributes.bezierX.setValue( inCurve.curvePoints.bezierX );
+            }
+            
+            if( inCurve.curvePoints.isBezierYSpecified )
+            {
+                outAttributes.hasBezierY = true;
+                outAttributes.bezierY.setValue( inCurve.curvePoints.bezierY );
+            }
+        }
+        
         // takes either an mx::core::Tie or an mx::core::Slur
         // populates the outNoteData.curveStart, cureContinuations
         // or curveEnd vector with the result
         template<typename SLUR_OR_TIE_ELEMENT_TYPE>
-        void slurryness( const SLUR_OR_TIE_ELEMENT_TYPE& slurOrTie, api::NoteData& outNoteData )
+        void parseCurve( const SLUR_OR_TIE_ELEMENT_TYPE& slurOrTie, api::NoteData& outNoteData )
         {
-            const auto curveType = slurOrTie.getElementName() == "slur" ? api::CurveType::slur : api::CurveType::tie;
-            Converter converter;
-            const auto& attr = *slurOrTie.getAttributes();
-            const int number = attr.hasNumber ? attr.number.getValue() : 1;
-            auto orientation = api::CurveOrientation::unspecified;
+            const auto outputType = slurOrTie.getAttributes()->type;
             
-            if( attr.hasOrientation && attr.orientation == core::OverUnder::over )
+            if( core::StartStopContinue::start == outputType )
             {
-                orientation = api::CurveOrientation::overhand;
+                outNoteData.noteAttachmentData.curveStarts.emplace_back( parseCurveStart( slurOrTie ) );
             }
-            else if( attr.hasOrientation && attr.orientation == core::OverUnder::under )
+            else if( core::StartStopContinue::continue_ == outputType )
             {
-                orientation = api::CurveOrientation::underhand;
+                outNoteData.noteAttachmentData.curveContinuations.emplace_back( parseCurveContinue( slurOrTie ) );
             }
-            
-            auto placement = api::Placement::unspecified;
-            
-            if( attr.hasPlacement )
+            else if( core::StartStopContinue::stop == outputType )
             {
-                placement = converter.convert( attr.placement );
-            }
-            
-            auto p1 = api::CurvePoints{};
-            p1.isXSpecified = attr.hasDefaultX;
-            p1.isYSpecified = attr.hasDefaultY;
-            p1.isBezierXSpecified = attr.hasBezierX;
-            p1.isBezierYSpecified = attr.hasBezierY;
-            p1.isTimeOffsetTicksSpecified = attr.hasBezierOffset;
-            
-            p1.x = p1.isXSpecified ? attr.defaultX.getValue() : 0.0;
-            p1.y = p1.isYSpecified ? attr.defaultY.getValue() : 0.0;
-            p1.bezierX = p1.isBezierXSpecified ? attr.bezierX.getValue() : 0.0;
-            p1.bezierY = p1.isBezierYSpecified ? attr.bezierY.getValue() : 0.0;
-            
-            p1.timeOffsetTicks = p1.isTimeOffsetTicksSpecified ?
-            static_cast<int>( attr.bezierOffset.getValue() ) : 0;
-            
-            if( attr.type == core::StartStopContinue::start )
-            {
-                api::CurveStart curveStart{ curveType };
-                curveStart.numberLevel = number;
-                curveStart.curveOrientation = orientation;
-                curveStart.placement = placement;
-                curveStart.curvePoints = p1;
-                
-                auto lineData = api::LineData{};
-                
-                // TODO - move to converter
-                if( attr.hasLineType )
-                {
-                    switch ( attr.lineType )
-                    {
-                        case core::LineType::solid:
-                            lineData.lineType = api::LineType::solid;
-                            break;
-                        case core::LineType::wavy:
-                            lineData.lineType = api::LineType::wavy;
-                            break;
-                        case core::LineType::dashed:
-                            lineData.lineType = api::LineType::dashed;
-                            break;
-                        case core::LineType::dotted:
-                            lineData.lineType = api::LineType::dotted;
-                            break;
-                        default:
-                            lineData.lineType = api::LineType::unspecified;
-                            break;
-                    }
-                }
-                
-                curveStart.isColorSpecified = attr.hasColor;
-                if( attr.hasColor )
-                {
-                    curveStart.colorData.red = static_cast<uint8_t>( attr.color.getRed() );
-                    curveStart.colorData.green = static_cast<uint8_t>( attr.color.getGreen() );
-                    curveStart.colorData.blue = static_cast<uint8_t>( attr.color.getBlue() );
-                    if( attr.color.getColorType() == core::Color::ColorType::ARGB )
-                    {
-                        curveStart.colorData.isAlphaSpecified = true;
-                        curveStart.colorData.alpha = static_cast<uint8_t>( attr.color.getAlpha() );
-                    }
-                }
-                
-                if( attr.hasDashLength )
-                {
-                    lineData.isDashLengthSpecified = true;
-                    lineData.dashLength = attr.dashLength.getValue();
-                }
-                
-                if( attr.hasSpaceLength )
-                {
-                    lineData.isSpaceLengthSpecified = true;
-                    lineData.spaceLength = attr.spaceLength.getValue();
-                }
-                curveStart.lineData = std::move( lineData );
-                outNoteData.noteAttachmentData.curveStarts.emplace_back( std::move( curveStart ) );
-            }
-            else if ( attr.type == core::StartStopContinue::continue_ )
-            {
-                api::CurveContinue curveContinue{ curveType };
-                curveContinue.numberLevel = number;
-                curveContinue.incomingCurvePoints = p1;
-                
-                auto p2 = api::CurvePoints{};
-                p2.isXSpecified = attr.hasDefaultX;
-                p2.isYSpecified = attr.hasDefaultY;
-                p2.isBezierXSpecified = attr.hasBezierX;
-                p2.isBezierYSpecified = attr.hasBezierY;
-                p2.isTimeOffsetTicksSpecified = attr.hasBezierOffset;
-                
-                p2.x = p2.isXSpecified ? attr.defaultX.getValue() : 0.0;
-                p2.y = p2.isYSpecified ? attr.defaultY.getValue() : 0.0;
-                p2.bezierX = p2.isBezierXSpecified ? attr.bezierX.getValue() : 0.0;
-                p2.bezierY = p2.isBezierYSpecified ? attr.bezierY.getValue() : 0.0;
-                
-                p2.timeOffsetTicks = p2.isTimeOffsetTicksSpecified ?
-                static_cast<int>( attr.bezierOffset.getValue() ) : 0;
-                
-                curveContinue.outgoingCurvePoints = p2;
-                outNoteData.noteAttachmentData.curveContinuations.emplace_back( std::move( curveContinue ) );
-                
-            }
-            else if ( attr.type == core::StartStopContinue::stop )
-            {
-                api::CurveEnd curveEnd{ curveType };
-                curveEnd.numberLevel = number;
-                curveEnd.curvePoints = p1;
-                outNoteData.noteAttachmentData.curveEnds.emplace_back( std::move( curveEnd ) );
+                outNoteData.noteAttachmentData.curveEnds.emplace_back( parseCurveStop( slurOrTie ) );
             }
         }
     }

@@ -262,6 +262,14 @@ namespace mx
             std::pair<core::FontWeight, api::FontWeight>{ core::FontWeight::normal, api::FontWeight::normal },
             std::pair<core::FontWeight, api::FontWeight>{ core::FontWeight::bold, api::FontWeight::bold },
         };
+        
+        
+        const std::map<core::MeasureNumberingValue, api::MeasureNumbering> Converter::measureNumberingMap =
+        {
+            std::make_pair( core::MeasureNumberingValue::measure, api::MeasureNumbering::measure ),
+            std::make_pair( core::MeasureNumberingValue::none, api::MeasureNumbering::none ),
+            std::make_pair( core::MeasureNumberingValue::system, api::MeasureNumbering::system ),
+        };
 
         
         const std::map<core::TechnicalChoice::Choice, api::MarkType> Converter::technicalMarkMap =
@@ -293,10 +301,74 @@ namespace mx
             std::pair<core::TechnicalChoice::Choice, api::MarkType>{ core::TechnicalChoice::Choice::otherTechnical, api::MarkType::otherTechnical },
         };
         
-        const std::map<core::MeasureNumberingValue, api::MeasureNumbering> Converter::measureNumberingMap =
+        
+        const std::map<core::StemValue, api::Stem> Converter::stemMap =
         {
-            
+            std::pair<core::StemValue, api::Stem>{ core::StemValue::up, api::Stem::up },
+            std::pair<core::StemValue, api::Stem>{ core::StemValue::down, api::Stem::down },
+            std::pair<core::StemValue, api::Stem>{ core::StemValue::none, api::Stem::none },
+            std::pair<core::StemValue, api::Stem>{ core::StemValue::double_, api::Stem::both },
         };
+        
+        
+        const std::map<core::LineType, api::LineType> Converter::lineType =
+        {
+            std::pair<core::LineType, api::LineType>{ core::LineType::dashed, api::LineType::dashed },
+            std::pair<core::LineType, api::LineType>{ core::LineType::dotted, api::LineType::dotted },
+            std::pair<core::LineType, api::LineType>{ core::LineType::solid, api::LineType::solid },
+            std::pair<core::LineType, api::LineType>{ core::LineType::wavy, api::LineType::wavy },
+        };
+        
+        
+        const std::map<core::WedgeType, api::WedgeType> Converter::wedgeMap =
+        {
+            std::pair<core::WedgeType, api::WedgeType>{ core::WedgeType::crescendo, api::WedgeType::crescendo },
+            std::pair<core::WedgeType, api::WedgeType>{ core::WedgeType::diminuendo, api::WedgeType::diminuendo },
+        };
+        
+        
+        const std::map<core::BarStyleEnum, api::BarlineType> Converter::barlineMap =
+        {
+            std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::regular, api::BarlineType::normal },
+            std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::dotted, api::BarlineType::unsupported },
+            std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::dashed, api::BarlineType::unsupported },
+            std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::heavy, api::BarlineType::unsupported },
+            std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::lightLight, api::BarlineType::lightLight },
+            std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::lightHeavy, api::BarlineType::lightHeavy },
+            std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::heavyLight, api::BarlineType::heavyLight },
+            std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::heavyHeavy, api::BarlineType::unsupported },
+            std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::tick, api::BarlineType::unsupported },
+            std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::short_, api::BarlineType::unsupported },
+            std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::none, api::BarlineType::none },
+        };
+        
+        
+        const std::map<core::LineEnd, api::LineHook> Converter::lineEndMap =
+        {
+            std::pair<core::LineEnd, api::LineHook>{ core::LineEnd::arrow, api::LineHook::arrow },
+            std::pair<core::LineEnd, api::LineHook>{ core::LineEnd::both, api::LineHook::both },
+            std::pair<core::LineEnd, api::LineHook>{ core::LineEnd::down, api::LineHook::down },
+            std::pair<core::LineEnd, api::LineHook>{ core::LineEnd::up, api::LineHook::up },
+            std::pair<core::LineEnd, api::LineHook>{ core::LineEnd::none, api::LineHook::none },
+        };
+        
+        
+        const std::map<core::RightLeftMiddle, api::HorizontalAlignment> Converter::barlinePlacementMap =
+        {
+            std::pair<core::RightLeftMiddle, api::HorizontalAlignment>{ core::RightLeftMiddle::right, api::HorizontalAlignment::right },
+            std::pair<core::RightLeftMiddle, api::HorizontalAlignment>{ core::RightLeftMiddle::left, api::HorizontalAlignment::left },
+            std::pair<core::RightLeftMiddle, api::HorizontalAlignment>{ core::RightLeftMiddle::middle, api::HorizontalAlignment::center },
+        };
+        
+        
+        const std::map<core::FermataShape, api::MarkType> Converter::fermataMap =
+        {
+            std::pair<core::FermataShape, api::MarkType>{ core::FermataShape::normal, api::MarkType::fermataNormal },
+            std::pair<core::FermataShape, api::MarkType>{ core::FermataShape::angled, api::MarkType::fermataAngled },
+            std::pair<core::FermataShape, api::MarkType>{ core::FermataShape::square, api::MarkType::fermataSquare },
+            std::pair<core::FermataShape, api::MarkType>{ core::FermataShape::emptystring, api::MarkType::fermata },
+        };
+        
         
         api::Step Converter::convert( core::StepEnum inStep ) const
         {
@@ -521,6 +593,27 @@ namespace mx
         }
         
         
+        bool Converter::isArticulation( api::MarkType value ) const
+        {
+            return value == api::MarkType::accent ||
+            value == api::MarkType::strongAccent ||
+            value == api::MarkType::staccato ||
+            value == api::MarkType::tenuto ||
+            value == api::MarkType::detachedLegato ||
+            value == api::MarkType::staccatissimo ||
+            value == api::MarkType::spiccato ||
+            value == api::MarkType::scoop ||
+            value == api::MarkType::plop ||
+            value == api::MarkType::doit ||
+            value == api::MarkType::falloff ||
+            value == api::MarkType::breathMark ||
+            value == api::MarkType::caesura ||
+            value == api::MarkType::stress ||
+            value == api::MarkType::unstress ||
+            value == api::MarkType::otherArticulation;
+        }
+        
+        
         core::DynamicsEnum Converter::convertDynamic( api::MarkType value ) const
         {
             return findCoreItem( dynamicsMap, core::DynamicsEnum::otherDynamics, value );
@@ -579,5 +672,91 @@ namespace mx
         {
             return findApiItem( measureNumberingMap, api::MeasureNumbering::unspecified, value );
         }
+        
+        
+        core::StemValue Converter::convert( api::Stem value ) const
+        {
+            return findCoreItem( stemMap, core::StemValue::up, value );
+        }
+        
+        
+        api::Stem Converter::convert( core::StemValue value ) const
+        {
+            return findApiItem( stemMap, api::Stem::unspecified, value );
+        }
+        
+        
+        core::LineType Converter::convert( api::LineType value ) const
+        {
+            return findCoreItem( lineType, core::LineType::solid, value );
+        }
+        
+        
+        api::LineType Converter::convert( core::LineType value ) const
+        {
+            return findApiItem( lineType, api::LineType::unspecified, value );
+        }
+        
+        
+        core::WedgeType Converter::convert( api::WedgeType value ) const
+        {
+            return findCoreItem( wedgeMap, core::WedgeType::continue_, value );
+        }
+        
+        
+        api::WedgeType Converter::convert( core::WedgeType value ) const
+        {
+            return findApiItem( wedgeMap, api::WedgeType::unspecified, value );
+        }
+        
+        
+        
+        core::BarStyleEnum Converter::convert( api::BarlineType value ) const
+        {
+            return findCoreItem( barlineMap, core::BarStyleEnum::regular, value );
+        }
+        
+        
+        api::BarlineType Converter::convert( core::BarStyleEnum value ) const
+        {
+            return findApiItem( barlineMap, api::BarlineType::unsupported, value );
+        }
+        
+        
+        core::RightLeftMiddle Converter::convertBarlinePlacement( api::HorizontalAlignment value ) const
+        {
+            return findCoreItem( barlinePlacementMap, core::RightLeftMiddle::right, value );
+        }
+        
+        
+        api::HorizontalAlignment Converter::convertBarlinePlacement( core::RightLeftMiddle value ) const
+        {
+            return findApiItem( barlinePlacementMap, api::HorizontalAlignment::unspecified, value );
+        }
+        
+        
+        core::LineEnd Converter::convert( api::LineHook value ) const
+        {
+            return findCoreItem( lineEndMap, core::LineEnd::none, value );
+        }
+        
+        
+        api::LineHook Converter::convert( core::LineEnd value ) const
+        {
+            return findApiItem( lineEndMap, api::LineHook::unspecified, value );
+        }
+        
+        
+        core::FermataShape Converter::convertFermata( api::MarkType value ) const
+        {
+            return findCoreItem( fermataMap, core::FermataShape::emptystring, value );
+        }
+        
+        
+        api::MarkType Converter::convertFermata( core::FermataShape value ) const
+        {
+            return findApiItem( fermataMap, api::MarkType::unspecified, value );
+        }
+        
     }
 }

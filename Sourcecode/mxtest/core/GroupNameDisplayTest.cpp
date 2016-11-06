@@ -10,7 +10,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, GroupNameDisplay )
 {
@@ -52,7 +52,7 @@ TEST( Test03, GroupNameDisplay )
 	CHECK( object->hasContents() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     GroupNameDisplayPtr tgenGroupNameDisplay( variant v )
     {

@@ -2,11 +2,8 @@
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #include "mx/core/Color.h"
-#include "mx/core/Integers.h"
 #include <sstream>
 #include <iomanip>
-#include <string>
-#include <memory>
 
 namespace mx
 {

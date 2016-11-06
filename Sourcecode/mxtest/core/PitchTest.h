@@ -8,7 +8,7 @@
 #include "mxtest/core/HelperFunctions.h"
 #include "mx/core/Elements.h"
 
-namespace MxTestHelpers
+namespace mxtest
 {
     mx::core::PitchPtr tgenPitch( variant v );
     void tgenPitchExpected( std::ostream& os, int indentLevel, variant v );

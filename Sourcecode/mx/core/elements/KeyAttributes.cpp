@@ -19,6 +19,7 @@ namespace mx
         ,fontStyle( FontStyle::normal )
         ,fontSize( CssFontSize::medium )
         ,fontWeight( FontWeight::normal )
+        ,color()
         ,printObject( YesNo::no )
         ,hasNumber( false )
         ,hasDefaultX( false )
@@ -29,6 +30,7 @@ namespace mx
         ,hasFontStyle( false )
         ,hasFontSize( false )
         ,hasFontWeight( false )
+        ,hasColor( false )
         ,hasPrintObject( false )
         {}
 
@@ -44,6 +46,7 @@ namespace mx
             hasFontStyle ||
             hasFontSize ||
             hasFontWeight ||
+            hasColor ||
             hasPrintObject;
         }
 
@@ -61,6 +64,7 @@ namespace mx
                 streamAttribute( os, fontStyle, "font-style", hasFontStyle );
                 streamAttribute( os, fontSize, "font-size", hasFontSize );
                 streamAttribute( os, fontWeight, "font-weight", hasFontWeight );
+                streamAttribute( os, color, "color", hasColor );
                 streamAttribute( os, printObject, "print-object", hasPrintObject );
             }
             return os;
@@ -86,6 +90,7 @@ namespace mx
                 if( parseAttribute( message, it, className, isSuccess, fontStyle, hasFontStyle, "font-style", &parseFontStyle ) ) { continue; }
                 if( parseAttribute( message, it, className, isSuccess, fontSize, hasFontSize, "font-size" ) ) { continue; }
                 if( parseAttribute( message, it, className, isSuccess, fontWeight, hasFontWeight, "font-weight", &parseFontWeight ) ) { continue; }
+                if( parseAttribute( message, it, className, isSuccess, color, hasColor, "color" ) ) { continue; }
                 if( parseAttribute( message, it, className, isSuccess, printObject, hasPrintObject, "print-object", &parseYesNo ) ) { continue; }
             }
         

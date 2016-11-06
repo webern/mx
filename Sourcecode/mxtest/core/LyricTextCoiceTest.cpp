@@ -15,7 +15,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, LyricTextChoice )
 {
@@ -88,7 +88,7 @@ TEST( Test05, LyricTextChoice )
 	CHECK( ! object->hasContents() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     LyricTextChoicePtr tgenLyricTextChoice( variant v )
     {

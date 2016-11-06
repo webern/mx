@@ -8,7 +8,7 @@
 #include "mxtest/core/HelperFunctions.h"
 #include "mx/core/Elements.h"
 
-namespace MxTestHelpers
+namespace mxtest
 {
     mx::core::MusicDataChoicePtr tgenMusicDataChoice( variant v );
     mx::core::MusicDataChoicePtr tgenMusicDataChoiceAll( variant v );

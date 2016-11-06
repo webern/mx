@@ -97,26 +97,26 @@ namespace mx
             // decimal values are in 'tenths'
 
             long double defaultX;
-            bool hasDefaultX;
+            bool isDefaultXSpecified;
             long double defaultY;
-            bool hasDefaultY;
+            bool isDefaultYSpecified;
             long double relativeX;
-            bool hasRelativeX;
+            bool isRelativeXSpecified;
             long double relativeY;
-            bool hasRelativeY;
+            bool isRelativeYSpecified;
             Placement placement;
             VerticalAlignment verticalAlignment;
             HorizontalAlignment horizontalAlignmnet;
 
             PositionData()
             : defaultX( 0.0 )
-            , hasDefaultX( false )
+            , isDefaultXSpecified( false )
             , defaultY( 0.0 )
-            , hasDefaultY( false )
+            , isDefaultYSpecified( false )
             , relativeX( 0.0 )
-            , hasRelativeX( false )
+            , isRelativeXSpecified( false )
             , relativeY( 0.0 )
-            , hasRelativeY( false )
+            , isRelativeYSpecified( false )
             , placement( Placement::unspecified )
             , verticalAlignment( VerticalAlignment::unspecified )
             , horizontalAlignmnet( HorizontalAlignment::unspecified )
@@ -124,5 +124,21 @@ namespace mx
 
             }
         };
+        
+        
+        MXAPI_EQUALS_BEGIN( PositionData )
+        MXAPI_EQUALS_MEMBER( defaultX )
+        MXAPI_EQUALS_MEMBER( isDefaultXSpecified )
+        MXAPI_EQUALS_MEMBER( defaultY )
+        MXAPI_EQUALS_MEMBER( isDefaultYSpecified )
+        MXAPI_EQUALS_MEMBER( relativeX )
+        MXAPI_EQUALS_MEMBER( isRelativeXSpecified )
+        MXAPI_EQUALS_MEMBER( relativeY )
+        MXAPI_EQUALS_MEMBER( isRelativeYSpecified )
+        MXAPI_EQUALS_MEMBER( placement )
+        MXAPI_EQUALS_MEMBER( verticalAlignment )
+        MXAPI_EQUALS_MEMBER( horizontalAlignmnet )
+        MXAPI_EQUALS_END;
+        MXAPI_NOT_EQUALS_AND_VECTORS( PositionData );
     }
 }

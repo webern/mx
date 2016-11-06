@@ -5,9 +5,6 @@
       location = "group:Mx.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:mxload.xcodeproj">
-   </FileRef>
-   <FileRef
       location = "group:MxTest.xcodeproj">
    </FileRef>
    <Group

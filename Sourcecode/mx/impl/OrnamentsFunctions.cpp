@@ -18,7 +18,7 @@
 #include "mx/core/elements/VerticalTurn.h"
 #include "mx/core/elements/WavyLine.h"
 #include "mx/impl/AccidentalMarkFunctions.h"
-#include "mx/impl/ParseMarkDataAttributes.h"
+#include "mx/impl/MarkDataFunctions.h"
 
 namespace mx
 {
@@ -47,7 +47,7 @@ namespace mx
                 const auto markType = converter.convertOrnament( ornamentType );
                 auto markData = api::MarkData{};
                 markData.markType = markType;
-                markData.tickPosition = myCursor.position;
+                markData.tickTimePosition = myCursor.tickTimePosition;
                 
                 parseOrnament( *ornament, markData );
                 
@@ -75,79 +75,79 @@ namespace mx
                 case core::OrnamentsChoice::Choice::trillMark:
                 {
                     outMark.name = "trill-mark";
-                    parseMarkDataAttributes( *choiceObj.getTrillMark(), outMark );
+                    parseMarkDataAttributes( *choiceObj.getTrillMark()->getAttributes(), outMark );
                     break;
                 }
                 case core::OrnamentsChoice::Choice::turn:
                 {
                     outMark.name = "turn";
-                    parseMarkDataAttributes( *choiceObj.getTurn(), outMark );
+                    parseMarkDataAttributes( *choiceObj.getTurn()->getAttributes(), outMark );
                     break;
                 }
                 case core::OrnamentsChoice::Choice::delayedTurn:
                 {
                     outMark.name = "delayed-turn";
-                    parseMarkDataAttributes( *choiceObj.getDelayedTurn(), outMark );
+                    parseMarkDataAttributes( *choiceObj.getDelayedTurn()->getAttributes(), outMark );
                     break;
                 }
                 case core::OrnamentsChoice::Choice::invertedTurn:
                 {
                     outMark.name = "inverted-turn";
-                    parseMarkDataAttributes( *choiceObj.getInvertedTurn(), outMark );
+                    parseMarkDataAttributes( *choiceObj.getInvertedTurn()->getAttributes(), outMark );
                     break;
                 }
                 case core::OrnamentsChoice::Choice::delayedInvertedTurn:
                 {
                     outMark.name = "delayed-inverted-turn";
-                    parseMarkDataAttributes( *choiceObj.getDelayedInvertedTurn(), outMark );
+                    parseMarkDataAttributes( *choiceObj.getDelayedInvertedTurn()->getAttributes(), outMark );
                     break;
                 }
                 case core::OrnamentsChoice::Choice::verticalTurn:
                 {
                     outMark.name = "vertical-turn";
-                    parseMarkDataAttributes( *choiceObj.getVerticalTurn(), outMark );
+                    parseMarkDataAttributes( *choiceObj.getVerticalTurn()->getAttributes(), outMark );
                     break;
                 }
                 case core::OrnamentsChoice::Choice::shake:
                 {
                     outMark.name = "shake";
-                    parseMarkDataAttributes( *choiceObj.getShake(), outMark );
+                    parseMarkDataAttributes( *choiceObj.getShake()->getAttributes(), outMark );
                     break;
                 }
                 case core::OrnamentsChoice::Choice::wavyLine:
                 {
                     outMark.name = "wavy-line";
-                    parseMarkDataAttributes( *choiceObj.getWavyLine(), outMark );
+                    parseMarkDataAttributes( *choiceObj.getWavyLine()->getAttributes(), outMark );
                     break;
                 }
                 case core::OrnamentsChoice::Choice::mordent:
                 {
                     outMark.name = "mordent";
-                    parseMarkDataAttributes( *choiceObj.getMordent(), outMark );
+                    parseMarkDataAttributes( *choiceObj.getMordent()->getAttributes(), outMark );
                     break;
                 }
                 case core::OrnamentsChoice::Choice::invertedMordent:
                 {
                     outMark.name = "inverted-mordent";
-                    parseMarkDataAttributes( *choiceObj.getInvertedMordent(), outMark );
+                    parseMarkDataAttributes( *choiceObj.getInvertedMordent()->getAttributes(), outMark );
                     break;
                 }
                 case core::OrnamentsChoice::Choice::schleifer:
                 {
                     outMark.name = "schleifer";
-                    parseMarkDataAttributes( *choiceObj.getSchleifer(), outMark );
+                    parseMarkDataAttributes( *choiceObj.getSchleifer()->getAttributes(), outMark );
                     break;
                 }
                 case core::OrnamentsChoice::Choice::tremolo:
                 {
                     outMark.name = "tremolo";
-                    parseMarkDataAttributes( *choiceObj.getTremolo(), outMark );
+                    parseMarkDataAttributes( *choiceObj.getTremolo()->getAttributes(), outMark );
                     break;
                 }
                 case core::OrnamentsChoice::Choice::otherOrnament:
                 {
                     const auto value = choiceObj.getOtherOrnament()->getValue().getValue();
-                    parseMarkDataAttributes( *choiceObj.getOtherOrnament(), outMark );
+                    parseMarkDataAttributes( *choiceObj.getOtherOrnament()->getAttributes(), outMark );
                     
                     if( value.empty() )
                     {

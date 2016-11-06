@@ -13,7 +13,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, EditorialVoiceGroup )
 {
@@ -58,7 +58,7 @@ TEST( Test03, EditorialVoiceGroup )
 	CHECK( object->hasContents() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     EditorialVoiceGroupPtr tgenEditorialVoiceGroup( variant v )
     {

@@ -10,7 +10,7 @@
 #include <sstream>
 #include "mx/core/ElementInterface.h"
 
-namespace MxTestHelpers
+namespace mxtest
 {
     
     enum class variant

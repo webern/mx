@@ -9,7 +9,7 @@
 #include "mxtest/core/HelperFunctions.h"
 #include "mx/core/Document.h"
 
-namespace MxTestHelpers
+namespace mxtest
 {
     mx::core::DocumentPtr tgenDocumentPartwise( variant v );
     void tgenDocumentPartwiseExpected( std::ostream& os, int indentLevel, variant v );

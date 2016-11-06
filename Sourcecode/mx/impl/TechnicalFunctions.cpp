@@ -29,7 +29,7 @@
 #include "mx/core/elements/TripleTongue.h"
 #include "mx/core/elements/UpBow.h"
 #include "mx/impl/Converter.h"
-#include "mx/impl/ParseMarkDataAttributes.h"
+#include "mx/impl/MarkDataFunctions.h"
 
 namespace mx
 {
@@ -59,7 +59,7 @@ namespace mx
                 }
                 api::MarkData markData;
                 markData.markType = markType;
-                markData.tickPosition = myCursor.position;
+                markData.tickTimePosition = myCursor.tickTimePosition;
                 bool isSuccess = parseTechicalMark( *techChoice, markData );
                 
                 if( isSuccess )
@@ -81,62 +81,62 @@ namespace mx
             {
                 case core::TechnicalChoice::Choice::upBow:
                 {
-                    parseMarkDataAttributes( *techicalChoice.getUpBow(), outMarkData );
+                    parseMarkDataAttributes( *techicalChoice.getUpBow()->getAttributes(), outMarkData );
                     outMarkData.name = "up-bow";
                     return true;
                 }
                 case core::TechnicalChoice::Choice::downBow:
                 {
-                    parseMarkDataAttributes( *techicalChoice.getDownBow(), outMarkData );
+                    parseMarkDataAttributes( *techicalChoice.getDownBow()->getAttributes(), outMarkData );
                     outMarkData.name = "down-bow";
                     return true;
                 }
                 case core::TechnicalChoice::Choice::harmonic:
                 {
-                    parseMarkDataAttributes( *techicalChoice.getHarmonic(), outMarkData );
+                    parseMarkDataAttributes( *techicalChoice.getHarmonic()->getAttributes(), outMarkData );
                     outMarkData.name = "harmonic";
                     return true;
                 }
                 case core::TechnicalChoice::Choice::openString:
                 {
-                    parseMarkDataAttributes( *techicalChoice.getOpenString(), outMarkData );
+                    parseMarkDataAttributes( *techicalChoice.getOpenString()->getAttributes(), outMarkData );
                     outMarkData.name = "open-string";
                     return true;
                 }
                 case core::TechnicalChoice::Choice::thumbPosition:
                 {
-                    parseMarkDataAttributes( *techicalChoice.getThumbPosition(), outMarkData );
+                    parseMarkDataAttributes( *techicalChoice.getThumbPosition()->getAttributes(), outMarkData );
                     outMarkData.name = "thumb-position";
                     return true;
                 }
                 case core::TechnicalChoice::Choice::fingering: return false;
                 case core::TechnicalChoice::Choice::pluck:
                 {
-                    parseMarkDataAttributes( *techicalChoice.getPluck(), outMarkData );
+                    parseMarkDataAttributes( *techicalChoice.getPluck()->getAttributes(), outMarkData );
                     outMarkData.name = "pluck";
                     return true;
                 }
                 case core::TechnicalChoice::Choice::doubleTongue:
                 {
-                    parseMarkDataAttributes( *techicalChoice.getDoubleTongue(), outMarkData );
+                    parseMarkDataAttributes( *techicalChoice.getDoubleTongue()->getAttributes(), outMarkData );
                     outMarkData.name = "double-tongue";
                     return true;
                 }
                 case core::TechnicalChoice::Choice::tripleTongue:
                 {
-                    parseMarkDataAttributes( *techicalChoice.getTripleTongue(), outMarkData );
+                    parseMarkDataAttributes( *techicalChoice.getTripleTongue()->getAttributes(), outMarkData );
                     outMarkData.name = "triple-tongue";
                     return true;
                 }
                 case core::TechnicalChoice::Choice::stopped:
                 {
-                    parseMarkDataAttributes( *techicalChoice.getStopped(), outMarkData );
+                    parseMarkDataAttributes( *techicalChoice.getStopped()->getAttributes(), outMarkData );
                     outMarkData.name = "stopped";
                     return true;
                 }
                 case core::TechnicalChoice::Choice::snapPizzicato:
                 {
-                    parseMarkDataAttributes( *techicalChoice.getSnapPizzicato(), outMarkData );
+                    parseMarkDataAttributes( *techicalChoice.getSnapPizzicato()->getAttributes(), outMarkData );
                     outMarkData.name = "snap-pizzicato";
                     return true;
                 }
@@ -148,19 +148,19 @@ namespace mx
                 case core::TechnicalChoice::Choice::tap: return false;
                 case core::TechnicalChoice::Choice::heel:
                 {
-                    parseMarkDataAttributes( *techicalChoice.getHeel(), outMarkData );
+                    parseMarkDataAttributes( *techicalChoice.getHeel()->getAttributes(), outMarkData );
                     outMarkData.name = "heel";
                     return true;
                 }
                 case core::TechnicalChoice::Choice::toe:
                 {
-                    parseMarkDataAttributes( *techicalChoice.getToe(), outMarkData );
+                    parseMarkDataAttributes( *techicalChoice.getToe()->getAttributes(), outMarkData );
                     outMarkData.name = "toe";
                     return true;
                 }
                 case core::TechnicalChoice::Choice::fingernails:
                 {
-                    parseMarkDataAttributes( *techicalChoice.getFingernails(), outMarkData );
+                    parseMarkDataAttributes( *techicalChoice.getFingernails()->getAttributes(), outMarkData );
                     outMarkData.name = "fingernails";
                     return true;
                 }
@@ -170,7 +170,7 @@ namespace mx
                 case core::TechnicalChoice::Choice::otherTechnical:
                 {
                     const auto& other = *techicalChoice.getOtherTechnical();
-                    parseMarkDataAttributes( other, outMarkData );
+                    parseMarkDataAttributes( other.getAttributes(), outMarkData );
                     
                     const auto value = other.getValue().getValue();
                     const auto charVal = api::Smufl::findCodepoint( value );

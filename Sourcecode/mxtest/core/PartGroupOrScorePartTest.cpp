@@ -12,7 +12,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, PartGroupOrScorePart )
 {
@@ -57,7 +57,7 @@ TEST( Test03, PartGroupOrScorePart )
 	CHECK( object->hasContents() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     PartGroupOrScorePartPtr tgenPartGroupOrScorePart( variant v )
     {

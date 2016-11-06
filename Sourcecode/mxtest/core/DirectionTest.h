@@ -8,7 +8,7 @@
 #include "mxtest/core/HelperFunctions.h"
 #include "mx/core/Elements.h"
 
-namespace MxTestHelpers
+namespace mxtest
 {
     mx::core::DirectionPtr tgenDirection( variant v );
     mx::core::EditorialVoiceDirectionGroupPtr tgenEditorialVoiceDirectionGroup( variant v );

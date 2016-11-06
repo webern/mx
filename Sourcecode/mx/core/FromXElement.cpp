@@ -34,9 +34,7 @@
 
 #include "mx/core/Color.h"
 #include "mx/core/Date.h"
-#include "mx/core/FontSize.h"
 #include "mx/core/PositiveIntegerOrEmpty.h"
-#include "mx/core/NumberOrNormal.h"
 #include "mx/core/YesNoNumber.h"
 
 #include "mx/core/elements/TimeSignatureGroup.h"
@@ -53,12 +51,7 @@
 #include "mx/core/elements/Pan.h"
 #include "mx/core/elements/Volume.h"
 
-#include "mx/core/elements/BeatUnitGroup.h"
 #include "mx/core/elements/PerMinuteOrBeatUnitChoice.h"
-#include "mx/core/elements/BeatUnitGroup.h"
-#include "mx/core/elements/PerMinute.h"
-
-#include <iostream>
 
 namespace mx
 {

@@ -13,7 +13,7 @@ using namespace mx::core;
 TEST( Test, HelloWorld )
 {
     std::string expected = helloWorldExpected();
-    std::string actual = MxTest::helloMusicXml();
+    std::string actual = mxtest::helloMusicXml();
     CHECK_EQUAL( expected, actual );
 }
 

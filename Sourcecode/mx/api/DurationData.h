@@ -6,12 +6,7 @@
 #include "mx/api/PrintData.h"
 #include "mx/api/PositionData.h"
 #include "mx/api/MarkData.h"
-#include "mx/api/CurveStart.h"
-#include "mx/api/CurveContinue.h"
-#include "mx/api/CurveEnd.h"
-
-#include <vector>
-
+#include "mx/api/CurveData.h"
 
 namespace mx
 {
@@ -65,5 +60,17 @@ namespace mx
             api::DurationName timeModificationNormalType; // use this if the time modification ratio involves a different durationName than the main 'durationName'
             int timeModificationNormalTypeDots;           // in case the time modification ratio involves a dotted type
         };
+        
+        MXAPI_EQUALS_BEGIN( DurationData )
+        MXAPI_EQUALS_MEMBER( durationName )
+        MXAPI_EQUALS_MEMBER( durationDots )
+        MXAPI_EQUALS_MEMBER( durationTimeTicks )
+        MXAPI_EQUALS_MEMBER( isTied )
+        MXAPI_EQUALS_MEMBER( timeModificationActualNotes )
+        MXAPI_EQUALS_MEMBER( timeModificationNormalNotes )
+        MXAPI_EQUALS_MEMBER( timeModificationNormalType )
+        MXAPI_EQUALS_MEMBER( timeModificationNormalTypeDots )
+        MXAPI_EQUALS_END;
+        MXAPI_NOT_EQUALS_AND_VECTORS( DurationData );
     }
 }

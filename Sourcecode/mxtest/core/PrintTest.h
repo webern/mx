@@ -8,7 +8,7 @@
 #include "mxtest/core/HelperFunctions.h"
 #include "mx/core/Elements.h"
 
-namespace MxTestHelpers
+namespace mxtest
 {
     mx::core::PrintPtr tgenPrint( variant v );
     void tgenPrintExpected( std::ostream& os, int indentLevel, variant v );

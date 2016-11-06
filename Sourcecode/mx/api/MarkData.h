@@ -138,8 +138,38 @@ namespace mx
             // arrow,
             // handbell,
             otherTechnical,
+            
+            // fermata
+            fermata,       // <fermata/>
+            fermataNormal, // <fermata>normal</fermata>
+            fermataAngled, // <fermata>angled</fermata>
+            fermataSquare, // <fermata>square</fermata>
+            
+            // sadly, in MusicXML we do not have an 'above' 'below' attribute for the fermata.
+            // instead it has an attribute 'type' that is either 'upright' or 'inverted'.
+            // it appears that implementations interpret 'upright' to mean the 'normal' or
+            // correct orientation and 'inverted' to mean that the fermata should be 'flipped'
+            // from its correct orientation.  in otherwords the implementation has to figure
+            // out if the fermata is above or below the note on its own (using its own
+            // algorithm combined with any default-y and relative-y values).  this mess is
+            // going to be beyond the scope of the MusicXML Class Library at this time.  You
+            // cause the fermata 'type' attribute to be set using the enum values below, but
+            // it's not possible for this library to calculate the correct fermata glyph.
+            fermataUpright,        // <fermata type="upright"/>
+            fermataNormalUpright,  // <fermata type="upright">normal</fermata>
+            fermataAngledUpright,  // <fermata type="upright">angled</fermata>
+            fermataSquareUpright,  // <fermata type="upright">square</fermata>
+            fermataInverted,       // <fermata type="inverted"/>
+            fermataNormalInverted, // <fermata type="inverted">normal</fermata>
+            fermataAngledInverted, // <fermata type="inverted">angled</fermata>
+            fermataSquareInverted, // <fermata type="inverted">square</fermata>
+            
         };
 
+        bool isMarkDynamic( MarkType );
+        bool isMarkArticulation( MarkType );
+        bool isMarkFermata( MarkType );
+        
         using MarkSmuflEntry = std::pair<const MarkType, const SmuflGlyphname>;
         using MarkSmuflMap = std::map<const MarkType, const SmuflGlyphname>;
         
@@ -166,10 +196,30 @@ namespace mx
             std::string name;
             std::string smuflName;
             char16_t smuflCodepoint;
-            int tickPosition;
+            int tickTimePosition;
             PrintData printData;
             PositionData positionData;
-            bool isDynamic() const;
-       };
+            
+            MarkData();
+            
+            // smulf and name fields will be filled in if possible
+            // placement 'unspecified' will be assumed for smufl
+            MarkData( MarkType inMarkType );
+            
+            // smulf and name fields will be filled in if possible
+            // positionData.placement field will also be filled in
+            MarkData( Placement inPlacement, MarkType inMarkType );
+        };
+        
+        MXAPI_EQUALS_BEGIN( MarkData )
+        MXAPI_EQUALS_MEMBER( markType )
+        MXAPI_EQUALS_MEMBER( name )
+        MXAPI_EQUALS_MEMBER( smuflName )
+        MXAPI_EQUALS_MEMBER( smuflCodepoint )
+        MXAPI_EQUALS_MEMBER( tickTimePosition )
+        MXAPI_EQUALS_MEMBER( printData )
+        MXAPI_EQUALS_MEMBER( positionData )
+        MXAPI_EQUALS_END;
+        MXAPI_NOT_EQUALS_AND_VECTORS( MarkData );
     }
 }

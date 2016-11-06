@@ -12,7 +12,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, MidiInstrument )
 {
@@ -54,7 +54,7 @@ TEST( Test03, MidiInstrument )
 	CHECK( object->hasContents() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     MidiInstrumentPtr tgenMidiInstrument( variant v )
     {

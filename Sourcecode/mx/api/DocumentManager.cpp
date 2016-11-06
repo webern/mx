@@ -6,10 +6,6 @@
 #include "mx/impl/ScoreWriter.h"
 #include "mx/core/Document.h"
 #include "mx/xml/XFactory.h"
-#include "mx/xml/XDoc.h"
-
-#include <mutex>
-#include <map>
 
 #define LOCK_DOCUMENT_MANAGER std::lock_guard<std::mutex> lock(myImpl->myMutex);
 

@@ -98,5 +98,26 @@ namespace mx
             auto it = std::find_if( inParts.begin(), inParts.end(), predicate );
             return it;
         }
+        
+        MXAPI_EQUALS_BEGIN( ScoreData )
+        MXAPI_EQUALS_MEMBER( musicXmlType )
+        MXAPI_EQUALS_MEMBER( workTitle )
+        MXAPI_EQUALS_MEMBER( workNumber )
+        MXAPI_EQUALS_MEMBER( movementTitle )
+        MXAPI_EQUALS_MEMBER( movementNumber )
+        MXAPI_EQUALS_MEMBER( composer )
+        MXAPI_EQUALS_MEMBER( lyricist )
+        MXAPI_EQUALS_MEMBER( arranger )
+        MXAPI_EQUALS_MEMBER( publisher )
+        MXAPI_EQUALS_MEMBER( copyright )
+        MXAPI_EQUALS_MEMBER( encoding )
+        MXAPI_EQUALS_MEMBER( pageTextItems )
+        MXAPI_EQUALS_MEMBER( layout )
+        MXAPI_EQUALS_MEMBER( parts )
+        MXAPI_EQUALS_MEMBER( partGroups )
+        MXAPI_EQUALS_MEMBER( ticksPerQuarter )
+        MXAPI_EQUALS_MEMBER( systems )
+        MXAPI_EQUALS_END;
+        MXAPI_NOT_EQUALS_AND_VECTORS( ScoreData );
     }
 }

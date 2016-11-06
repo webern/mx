@@ -38,7 +38,7 @@ namespace mx
                 }
                 const auto wattr = words->getAttributes();
                 
-                getPositionData( p.positionData, *wattr );
+                //getPositionData( p.positionData, *wattr );
                 
                 outHeader.addCredit( credit );
             }

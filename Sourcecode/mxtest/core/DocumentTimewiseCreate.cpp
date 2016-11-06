@@ -14,7 +14,7 @@
 
 using namespace mx::core;
 
-namespace MxTestHelpers
+namespace mxtest
 {
     mx::core::DocumentPtr createDocumentTimewise()
     {

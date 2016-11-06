@@ -4,7 +4,6 @@
 #pragma once
 
 #include "mx/api/PositionData.h"
-#include "mx/core/elements/DynamicsAttributes.h"
 #include "mx/impl/Converter.h"
 #include "mx/utility/OptionalMembers.h"
 
@@ -35,57 +34,41 @@ namespace mx
         MX_ATTR_FUNC_OPTIONAL( hasPlacement, HasPlacement, bool, false );
         MX_ATTR_FUNC_OPTIONAL( placement, Placement, core::AboveBelow, core::AboveBelow::above );
 
-//        template<typename T>
-//auto checkHasPlacement( const T* const obj )
-//-> decltype(  obj->hasPlacement  )
-//{                                                                                                                                   
-//return obj->hasPlacement;
-//}
-//
-//    inline auto checkHasPlacement(...) -> bool
-//    {                                                                                                                                   
-//    return false;
-//    }                                                                                                                                   
 
-        //const core::DynamicsAttributes attrs;
-        //const bool da = checkHasPlacement<core::DynamicsAttributes>( &attrs );
-        
         template <typename ATTRIBUTES_TYPE>
         api::PositionData getPositionData( const ATTRIBUTES_TYPE& inAttributes )
         {
-            //MX_UNUSED(da);
-
             api::PositionData outPositionData;
             
-            if( checkHasDefaultX( &inAttributes ) )
+            if( checkHasDefaultX<ATTRIBUTES_TYPE>( &inAttributes ) )
             {
-                outPositionData.hasDefaultX = true;
-                outPositionData.defaultX = checkDefaultX( &inAttributes );
+                outPositionData.isDefaultXSpecified = true;
+                outPositionData.defaultX = checkDefaultX<ATTRIBUTES_TYPE>( &inAttributes );
             }
             
-            if( checkHasDefaultY( &inAttributes ) )
+            if( checkHasDefaultY<ATTRIBUTES_TYPE>( &inAttributes ) )
             {
-                outPositionData.hasDefaultY = true;
-                outPositionData.defaultY = checkDefaultY( &inAttributes );
+                outPositionData.isDefaultYSpecified = true;
+                outPositionData.defaultY = checkDefaultY<ATTRIBUTES_TYPE>( &inAttributes );
             }
             
-            if( checkHasRelativeX( &inAttributes ) )
+            if( checkHasRelativeX<ATTRIBUTES_TYPE>( &inAttributes ) )
             {
-                outPositionData.hasRelativeX = true;
-                outPositionData.relativeX = checkRelativeX( &inAttributes );
+                outPositionData.isRelativeXSpecified = true;
+                outPositionData.relativeX = checkRelativeX<ATTRIBUTES_TYPE>( &inAttributes );
             }
             
-            if( checkHasRelativeY( &inAttributes ) )
+            if( checkHasRelativeY<ATTRIBUTES_TYPE>( &inAttributes ) )
             {
-                outPositionData.hasRelativeY = true;
-                outPositionData.relativeY = checkRelativeY( &inAttributes );
+                outPositionData.isRelativeYSpecified = true;
+                outPositionData.relativeY = checkRelativeY<ATTRIBUTES_TYPE>( &inAttributes );
             }
             
             impl::Converter converter;
             
-            if( checkHasHalign( &inAttributes ) )
+            if( checkHasHalign<ATTRIBUTES_TYPE>( &inAttributes ) )
             {
-                outPositionData.horizontalAlignmnet = converter.convert( checkHalign( &inAttributes ) );
+                outPositionData.horizontalAlignmnet = converter.convert( checkHalign<ATTRIBUTES_TYPE>( &inAttributes ) );
             }
             else
             {
@@ -93,18 +76,18 @@ namespace mx
                 
             }
             
-            if( checkHasValign( &inAttributes ) )
+            if( checkHasValign<ATTRIBUTES_TYPE>( &inAttributes ) )
             {
-                outPositionData.verticalAlignment = converter.convert( checkValign( &inAttributes ) );
+                outPositionData.verticalAlignment = converter.convert( checkValign<ATTRIBUTES_TYPE>( &inAttributes ) );
             }
             else
             {
                 outPositionData.verticalAlignment = api::VerticalAlignment::unspecified;
             }
 
-            if( checkHasPlacement( &inAttributes ) )
+            if( checkHasPlacement<ATTRIBUTES_TYPE>( &inAttributes ) )
             {
-                outPositionData.placement = converter.convert( checkPlacement( &inAttributes ) );
+                outPositionData.placement = converter.convert( checkPlacement<ATTRIBUTES_TYPE>( &inAttributes ) );
             }
             else
             {
@@ -113,65 +96,105 @@ namespace mx
             
             return outPositionData;
         }
+
+        MX_ATTR_SETFUNC_OPTIONAL( hasDefaultX, HasDefaultX, bool, false );
+        MX_ATTR_SETFUNC_OPTIONAL_WITH_SETTER( defaultX, DefaultX, LongDouble, 1.0L );
         
+        MX_ATTR_SETFUNC_OPTIONAL( hasDefaultY, HasDefaultY, bool, false );
+        MX_ATTR_SETFUNC_OPTIONAL_WITH_SETTER( defaultY, DefaultY, LongDouble, 1.0L );
+        
+        MX_ATTR_SETFUNC_OPTIONAL( hasRelativeX, HasRelativeX, bool, false );
+        MX_ATTR_SETFUNC_OPTIONAL_WITH_SETTER( relativeX, RelativeX, LongDouble, 1.0L );
+        
+        MX_ATTR_SETFUNC_OPTIONAL( hasRelativeY, HasRelativeY, bool, false );
+        MX_ATTR_SETFUNC_OPTIONAL_WITH_SETTER( relativeY, RelativeY, LongDouble, 1.0L );
+        
+        MX_ATTR_SETFUNC_OPTIONAL( hasHalign, HasHalign, bool, false );
+        MX_ATTR_SETFUNC_OPTIONAL( halign, Halign, core::LeftCenterRight, core::LeftCenterRight::left );
+        
+        MX_ATTR_SETFUNC_OPTIONAL( hasValign, HasValign, bool, false );
+        MX_ATTR_SETFUNC_OPTIONAL( valign, Valign, core::Valign, core::Valign::baseline );
+        
+        MX_ATTR_SETFUNC_OPTIONAL( hasPlacement, HasPlacement, bool, false );
+        MX_ATTR_SETFUNC_OPTIONAL( placement, Placement, core::AboveBelow, core::AboveBelow::above );
         
         template <typename ATTRIBUTES_TYPE>
-        void getPositionData( const api::PositionData& inPositionData, ATTRIBUTES_TYPE& outAttributes )
+        void setAttributesFromPositionData( const api::PositionData& positionData, ATTRIBUTES_TYPE& outAttributes )
         {
-            if( inPositionData.hasDefaultX )
+            if( positionData.isDefaultXSpecified )
             {
-                outAttributes.hasDefaultX = true;
-                outAttributes.defaultX.setValue( inPositionData.defaultX );
+                lookForAndSetHasDefaultX( true, &outAttributes );
+                lookForAndSetDefaultX( positionData.defaultX, &outAttributes );
+            }
+            else
+            {
+                lookForAndSetHasDefaultX( false, &outAttributes );
+                lookForAndSetDefaultX( 0.0, &outAttributes );
             }
             
-            if( inPositionData.hasDefaultY )
+            if( positionData.isDefaultYSpecified )
             {
-                outAttributes.hasDefaultY = true;
-                outAttributes.defaultY.setValue( inPositionData.defaultY );
+                lookForAndSetHasDefaultY( true, &outAttributes );
+                lookForAndSetDefaultY( positionData.defaultY, &outAttributes );
+            }
+            else
+            {
+                lookForAndSetHasDefaultY( false, &outAttributes );
+                lookForAndSetDefaultY( 0.0, &outAttributes );
             }
             
-            if( inPositionData.hasRelativeX )
+            if( positionData.isRelativeXSpecified )
             {
-                outAttributes.hasRelativeX = true;
-                outAttributes.relativeX.setValue( inPositionData.relativeX );
+                lookForAndSetHasRelativeX( true, &outAttributes );
+                lookForAndSetRelativeX( positionData.relativeX, &outAttributes );
+            }
+            else
+            {
+                lookForAndSetHasRelativeX( false, &outAttributes );
+                lookForAndSetRelativeX( 0.0, &outAttributes );
             }
             
-            if( inPositionData.hasRelativeY )
+            if( positionData.isRelativeYSpecified )
             {
-                outAttributes.hasRelativeY = true;
-                outAttributes.relativeY.setValue( inPositionData.relativeY );
+                lookForAndSetHasRelativeY( true, &outAttributes );
+                lookForAndSetRelativeY( positionData.relativeY, &outAttributes );
+            }
+            else
+            {
+                lookForAndSetHasRelativeY( false, &outAttributes );
+                lookForAndSetRelativeY( 0.0, &outAttributes );
             }
             
-            switch ( inPositionData.horizontalAlignmnet )
+            Converter converter;
+            
+            if( positionData.horizontalAlignmnet == api::HorizontalAlignment::unspecified )
             {
-                case api::HorizontalAlignment::unspecified:
-                {
-                    outAttributes.hasHalign = false;
-                    break;
-                }
-                case api::HorizontalAlignment::left:
-                {
-                    outAttributes.hasHalign = true;
-                    outAttributes.halign = core::LeftCenterRight::left;
-                    break;
-                }
-                case api::HorizontalAlignment::center:
-                {
-                    outAttributes.hasHalign = true;
-                    outAttributes.halign = core::LeftCenterRight::center;
-                    break;
-                }
-                case api::HorizontalAlignment::right:
-                {
-                    outAttributes.hasHalign = true;
-                    outAttributes.halign = core::LeftCenterRight::right;
-                    break;
-                }
-                default:
-                {
-                    outAttributes.hasHalign = false;
-                    break;
-                }
+                lookForAndSetHasHalign( false, &outAttributes );
+            }
+            else
+            {
+                lookForAndSetHasHalign( true, &outAttributes );
+                lookForAndSetHalign( converter.convert( positionData.horizontalAlignmnet ), &outAttributes );
+            }
+            
+            if( positionData.verticalAlignment == api::VerticalAlignment::unspecified )
+            {
+                lookForAndSetHasValign( false, &outAttributes );
+            }
+            else
+            {
+                lookForAndSetHasValign( true, &outAttributes );
+                lookForAndSetValign( converter.convert( positionData.verticalAlignment ), &outAttributes );
+            }
+            
+            if( positionData.placement == api::Placement::unspecified )
+            {
+                lookForAndSetHasPlacement( false, &outAttributes );
+            }
+            else
+            {
+                lookForAndSetHasPlacement( true, &outAttributes );
+                lookForAndSetPlacement( converter.convert( positionData.placement ), &outAttributes );
             }
         }
     }

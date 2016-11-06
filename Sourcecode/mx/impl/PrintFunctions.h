@@ -23,23 +23,39 @@ namespace mx
         template <typename ATTRIBUTES_TYPE>
         api::Bool getPrintObject( const ATTRIBUTES_TYPE& inAttributes )
         {
-            if( !checkHasPrintObject( &inAttributes ) )
+            const ATTRIBUTES_TYPE* const ptr = &inAttributes;
+            if( !checkHasPrintObject<ATTRIBUTES_TYPE>( ptr ) )
             {
                 return api::Bool::unspecified;
             }
             Converter converter;
-            return converter.convert( checkPrintObject( &inAttributes ) );
+            return converter.convert( checkPrintObject<ATTRIBUTES_TYPE>( &inAttributes ) );
         }
 
         
         template <typename ATTRIBUTES_TYPE>
-        core::Color getColor( const ATTRIBUTES_TYPE& inAttributes )
+        api::ColorData getColor( const ATTRIBUTES_TYPE& inAttributes )
         {
-            if( !checkHasColor( &inAttributes ) )
+            if( !checkHasColor<ATTRIBUTES_TYPE>( &inAttributes ) )
             {
-                return core::Color{};
+                return api::ColorData{};
             }
-            return checkColor( &inAttributes );
+            const auto coreColor = checkColor<ATTRIBUTES_TYPE>( &inAttributes );
+            api::ColorData outApiColor;
+            outApiColor.red = static_cast<uint8_t>( coreColor.getRed() );
+            outApiColor.green = static_cast<uint8_t>( coreColor.getGreen() );
+            outApiColor.blue = static_cast<uint8_t>( coreColor.getBlue() );
+            outApiColor.isAlphaSpecified = coreColor.getColorType() == core::Color::ColorType::ARGB;
+            
+            if( outApiColor.isAlphaSpecified )
+            {
+                outApiColor.alpha = static_cast<uint8_t>( coreColor.getAlpha() );
+            }
+            else
+            {
+                outApiColor.alpha = 255;
+            }
+            return outApiColor;
         }
         
         
@@ -47,32 +63,72 @@ namespace mx
         api::PrintData getPrintData( const ATTRIBUTES_TYPE& inAttributes )
         {
             api::PrintData outPrintData;
-            outPrintData.printObject = getPrintObject( &inAttributes );
-            outPrintData.fontData = getFontData( &inAttributes );
-            
-            if( checkHasColor( &inAttributes ) )
+            const ATTRIBUTES_TYPE* const ptr = &inAttributes;
+            outPrintData.printObject = getPrintObject<ATTRIBUTES_TYPE>( inAttributes );
+            outPrintData.fontData = getFontData<ATTRIBUTES_TYPE>( inAttributes );
+            if( checkHasColor<ATTRIBUTES_TYPE>( ptr ) )
             {
                 outPrintData.isColorSpecified = true;
-                const auto theColor = getColor( &inAttributes );
-                outPrintData.color.red = static_cast<uint8_t>( theColor.getRed() );
-                outPrintData.color.green = static_cast<uint8_t>( theColor.getGreen() );
-                outPrintData.color.blue = static_cast<uint8_t>( theColor.getBlue() );
-                outPrintData.color.isAlphaSpecified = theColor.getColorType() == core::Color::ColorType::ARGB;
-                
-                if( outPrintData.color.isAlphaSpecified )
-                {
-                    outPrintData.color.alpha = static_cast<uint8_t>( theColor.getAlpha() );
-                }
-                else
-                {
-                    outPrintData.color.alpha = 255;
-                }
+                outPrintData.color = getColor( inAttributes );
             }
             else
             {
                 outPrintData.isColorSpecified = false;
             }
             return outPrintData;
+        }
+        
+        
+        inline core::Color createCoreColor( const api::ColorData& inColor )
+        {
+            if( inColor.isAlphaSpecified )
+            {
+                return core::Color{ inColor.alpha, inColor.red, inColor.green, inColor.blue };
+            }
+            return core::Color{ inColor.red, inColor.green, inColor.blue };
+        }
+        
+        
+        MX_ATTR_SETFUNC_OPTIONAL( hasPrintObject, HasPrintObject, bool, false );
+        MX_ATTR_SETFUNC_OPTIONAL( printObject, PrintObject, core::YesNo, core::YesNo::yes );
+        
+        MX_ATTR_SETFUNC_OPTIONAL( hasColor, HasColor, bool, false );
+        MX_ATTR_SETFUNC_OPTIONAL( color, Color, core::Color, core::Color{} );
+
+        
+        template <typename ATTRIBUTES_TYPE>
+        void setPrintObject( const api::Bool& inPrintObject, ATTRIBUTES_TYPE& outAttributes )
+        {
+            if( !lookForAndSetHasPrintObject( inPrintObject != api::Bool::unspecified, &outAttributes ) )
+            {
+                lookForAndSetPrintObject( inPrintObject, &outAttributes );
+            }
+        }
+        
+        
+        template <typename ATTRIBUTES_TYPE>
+        void setAttributesFromColorData( const api::ColorData& inColorData, ATTRIBUTES_TYPE& outAttributes )
+        {
+            const auto valueToSet = createCoreColor( inColorData );
+            lookForAndSetColor( valueToSet, &outAttributes );
+        }
+
+        
+        template <typename ATTRIBUTES_TYPE>
+        void setAttributesFromPrintData( const api::PrintData& inPrintData, ATTRIBUTES_TYPE& outAttributes )
+        {
+            if( inPrintData.isColorSpecified )
+            {
+                lookForAndSetHasColor( true, &outAttributes );
+                setAttributesFromColorData( inPrintData.color, outAttributes );
+            }
+            else
+            {
+                lookForAndSetHasColor( false, &outAttributes );
+                lookForAndSetColor( core::Color{}, &outAttributes );
+            }
+            
+            setAttributesFromFontData( inPrintData.fontData, outAttributes );
         }
     }
 }

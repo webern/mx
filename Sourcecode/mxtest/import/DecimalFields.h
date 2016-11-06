@@ -17,7 +17,7 @@
 // example when we see '75.00' in an input file, we would expect Mx to
 // produce '75'.  These functions will alter the 'expected' files.
 
-namespace MxTest
+namespace mxtest
 {
 
     const std::set<std::string> decimalFields =

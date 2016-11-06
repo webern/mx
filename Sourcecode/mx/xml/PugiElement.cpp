@@ -5,7 +5,6 @@
 #include "mx/xml/PugiElementIterImpl.h"
 #include "mx/xml/XAttributeIterImpl.h"
 #include "mx/xml/PugiAttributeIterImpl.h"
-#include "mx/xml/XDoc.h"
 #include "mx/xml/XThrow.h"
 
 #define MX_CHECK_NULL_NODE if( getIsNull() ) { MX_THROW_XNULL; }

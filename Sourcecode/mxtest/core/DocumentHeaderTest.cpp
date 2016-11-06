@@ -11,7 +11,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, DocumentHeader )
 {
@@ -98,7 +98,7 @@ TEST( Test09, DocumentHeader )
 	CHECK_EQUAL( expected.str(), actual.str() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     void tgenDocumentHeaderExpected( std::ostream& os, const mx::core::DocumentType doctype )
     {

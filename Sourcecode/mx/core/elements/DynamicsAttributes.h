@@ -10,6 +10,7 @@
 #include "mx/core/Integers.h"
 #include "mx/core/Strings.h"
 #include "mx/core/FontSize.h"
+#include "mx/core/Color.h"
 
 #include <iosfwd>
 #include <memory>
@@ -36,7 +37,9 @@ namespace mx
             FontStyle fontStyle;
             FontSize fontSize;
             FontWeight fontWeight;
+            Color color;
             LeftCenterRight halign;
+            Valign valign;
             AboveBelow placement;
             NumberOfLines underline;
             NumberOfLines overline;
@@ -50,7 +53,9 @@ namespace mx
             bool hasFontStyle;
             bool hasFontSize;
             bool hasFontWeight;
+            bool hasColor;
             bool hasHalign;
+            bool hasValign;
             bool hasPlacement;
             bool hasUnderline;
             bool hasOverline;

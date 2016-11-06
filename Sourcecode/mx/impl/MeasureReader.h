@@ -4,7 +4,8 @@
 #pragma once
 
 #include "mx/api/MeasureData.h"
-#include "mx/impl/Cursor.h"
+#include "mx/impl/Converter.h"
+#include "mx/impl/MeasureCursor.h"
 
 #include <mutex>
 
@@ -36,61 +37,26 @@ namespace mx
     
     namespace impl
     {
-        
-        struct MeasureReaderParameters
-        {
-            // number of staves in the part, i.e.
-            // the max <staff>x</staff> or max
-            // <staves>x</staves> found in the part
-            int numStaves;
-            
-            // ticks per quarter to be used for all
-            // measures throughout the entire score
-            // must be calculated at the top and
-            // past down to the import routines
-            int globalTicksPerQuarter;
-            
-            // is this the first measure in the part
-            bool isFirstMeasure;
-            int measureIndex;
-            
-            // is this the first part in the score
-            bool isFirstPart;
-            
-            MeasureReaderParameters()
-            : numStaves{ 0 }
-            , globalTicksPerQuarter{ 1 }
-            , isFirstMeasure{ false }
-            , measureIndex( -1 )
-            , isFirstPart{ false }
-            {
-                
-            }
-        };
-        
+
     	class MeasureReader
     	{
     	public:
-    		MeasureReader( const core::PartwiseMeasure& inPartwiseMeasureRef, const MeasureReaderParameters& params );
+    		MeasureReader( const core::PartwiseMeasure& inPartwiseMeasureRef, const MeasureCursor& cursor, const MeasureCursor& previousMeasureCursor );
 
     		api::MeasureData getMeasureData() const;
 
     	private:
             mutable std::mutex myMutex;
             const core::PartwiseMeasure& myPartwiseMeasure;
-            const int myNumStaves;
-            const int myGlobalTicksPerQuarter;
-            const bool myIsFirstMeasure;
-            const bool myIsFirstPart;
-            const int myMeasureIndex;
+            const Converter myConverter;
             
             mutable api::MeasureData myOutMeasureData;
-            mutable Cursor myCurrentCursor;
-            mutable Cursor myPreviousCursor;
-            
+            mutable MeasureCursor myCurrentCursor;
+            mutable MeasureCursor myPreviousCursor;
             
         private:
             void addStavesToOutMeasure() const;
+            void parseTimeSignature() const;
             void parseMusicDataChoice( const core::MusicDataChoice& mdc, const core::NotePtr& nextNotePtr ) const;
             void parseNote( const core::Note& inMxNote, const core::NotePtr& nextNotePtr ) const;
             void parseBackup( const core::Backup& inMxBackup ) const;
@@ -110,6 +76,12 @@ namespace mx
             void importClef( const core::Clef& inClef ) const;
             void insertNoteData( api::NoteData&& noteData, int staff, int voice ) const;
             void insertClef( api::ClefData&& clefData, int staff ) const;
+            void consolidateVoicesForAllStaves() const;
+            void takeUserRequestedVoiceNumbers( api::StaffData& staff ) const;
+            void collapseVoicesAutomatically( api::StaffData& staff ) const;
+            bool isUserRequestedVoiceNumberConsistent( const api::VoiceData& voiceData ) const;
+            bool isUserRequestedVoiceNumberConsistentAccrossAllVoices( const api::StaffData& staff ) const;
+            int getUserRequestedVoiceNumber( const api::VoiceData& voiceData ) const;
     	};
     }
 }

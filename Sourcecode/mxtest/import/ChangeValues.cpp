@@ -4,7 +4,7 @@
 #include "ChangeValues.h"
 #include "DecimalFields.h"
 
-namespace MxTest
+namespace mxtest
 {
     void convertValues( mx::xml::XDoc& xdoc, const std::string& elementName, const std::string& existingValue, const std::string desiredValue )
     {

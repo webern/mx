@@ -2,7 +2,6 @@
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #include "mx/core/Date.h"
-#include <string>
 #include <sstream>
 
 namespace

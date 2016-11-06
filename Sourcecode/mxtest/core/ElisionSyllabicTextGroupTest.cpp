@@ -13,7 +13,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, ElisionSyllabicTextGroup )
 {
@@ -58,7 +58,7 @@ TEST( Test03, ElisionSyllabicTextGroup )
 	CHECK( object->hasContents() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     ElisionSyllabicTextGroupPtr tgenElisionSyllabicTextGroup( variant v )
     {

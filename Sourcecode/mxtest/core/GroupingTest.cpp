@@ -10,7 +10,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, Grouping )
 {
@@ -52,7 +52,7 @@ TEST( Test03, Grouping )
 	CHECK( object->hasContents() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     GroupingPtr tgenGrouping( variant v )
     {

@@ -4,7 +4,7 @@
 #pragma once
 
 #include <cmath>
-#include <algorithm>
+#include <limits>
 
 namespace mx
 {
@@ -18,6 +18,7 @@ namespace mx
         }
 
         constexpr int DEFAULT_TICKS_PER_QUARTER = 3 * 4 * 5 * 7;
+        constexpr int TICK_TIME_INFINITY = std::numeric_limits<int>::max();
 
         enum class Bool
         {
@@ -32,5 +33,17 @@ namespace mx
             above,
             below
         };
+        
+        enum class MeasureNumbering
+        {
+            unspecified,
+            none,
+            measure,
+            system
+        };
     }
 }
+
+// this defines inline equality comparison macros and functions
+// which are mainly used for test code to assert equality
+#include "mx/api/ApiEquality.h"

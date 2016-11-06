@@ -9,6 +9,7 @@
 #include "mx/core/Enums.h"
 #include "mx/core/Strings.h"
 #include "mx/core/FontSize.h"
+#include "mx/core/Color.h"
 
 #include <iosfwd>
 #include <memory>
@@ -36,6 +37,7 @@ namespace mx
             FontStyle fontStyle;
             FontSize fontSize;
             FontWeight fontWeight;
+            Color color;
             bool hasType;
             bool hasDefaultX;
             bool hasDefaultY;
@@ -45,6 +47,7 @@ namespace mx
             bool hasFontStyle;
             bool hasFontSize;
             bool hasFontWeight;
+            bool hasColor;
 
             bool fromXElement( std::ostream& message, xml::XElement& xelement );
         };

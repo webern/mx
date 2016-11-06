@@ -67,36 +67,35 @@
 #include "mx/core/elements/TraditionalKey.h"
 #include "mx/core/elements/Type.h"
 #include "mx/core/elements/Unpitched.h"
+#include "mx/core/elements/BarStyle.h"
 #include "mx/core/elements/Voice.h"
 #include "mx/impl/Converter.h"
 #include "mx/impl/DirectionReader.h"
 #include "mx/impl/NoteFunctions.h"
 #include "mx/impl/NoteReader.h"
-#include "mx/impl/TimeFunctions.h"
+#include "mx/impl/TimeReader.h"
 #include "mx/utility/Throw.h"
+
+#include <set>
 
 namespace mx
 {
     namespace impl
     {
-        MeasureReader::MeasureReader( const core::PartwiseMeasure& inPartwiseMeasureRef, const MeasureReaderParameters& params )
+        MeasureReader::MeasureReader( const core::PartwiseMeasure& inPartwiseMeasureRef, const MeasureCursor& cursor, const MeasureCursor& previousMeasureCursor )
         : myMutex{}
         , myPartwiseMeasure{ inPartwiseMeasureRef }
-        , myNumStaves{ params.numStaves }
-        , myGlobalTicksPerQuarter{ params.globalTicksPerQuarter }
-        , myIsFirstMeasure{ params.isFirstMeasure }
-        , myIsFirstPart{ params.isFirstPart }
+        , myConverter{}
         , myOutMeasureData{}
-        , myCurrentCursor{ params.numStaves, params.globalTicksPerQuarter }
-        , myPreviousCursor{ params.numStaves, params.globalTicksPerQuarter }
-        , myMeasureIndex( params.measureIndex )
+        , myCurrentCursor{ cursor }
+        , myPreviousCursor{ previousMeasureCursor }
         {
             
         }
         
         void MeasureReader::addStavesToOutMeasure() const
         {
-            for( int i = 0; i < myNumStaves; ++ i )
+            for( int i = 0; i < myCurrentCursor.getNumStaves(); ++i )
             {
                 myOutMeasureData.staves.emplace_back( api::StaffData{} );
             }
@@ -105,12 +104,13 @@ namespace mx
         api::MeasureData MeasureReader::getMeasureData() const
         {
             // lock due to the use of a mutable in const function
+            // TODO - that's stupid, remove const designations
             std::lock_guard<std::mutex> lock(myMutex);
             myOutMeasureData = api::MeasureData{};
             const auto& attr = *myPartwiseMeasure.getAttributes();
             myOutMeasureData.number = attr.number.getValue();
             
-            if( myOutMeasureData.number == std::to_string( myMeasureIndex + 1 ) )
+            if( myOutMeasureData.number == std::to_string( myCurrentCursor.measureIndex + 1 ) )
             {
                 myOutMeasureData.number = "";
             }
@@ -126,8 +126,7 @@ namespace mx
             }
             
             addStavesToOutMeasure();
-            
-            bool isTimeSignatureFound = false;
+            parseTimeSignature();
             
             const auto& mdcSet = myPartwiseMeasure.getMusicDataGroup()->getMusicDataChoiceSet();
             auto iter = mdcSet.cbegin();
@@ -156,30 +155,41 @@ namespace mx
                     nextNotePtr = (*peekAheadAtNextNoteIter)->getNote();
                 }
                 
-                if( !isTimeSignatureFound )
-                {
-                    impl::TimeFunctions timeFunc;
-                    isTimeSignatureFound = timeFunc.findAndFillTimeSignature( mdc, myCurrentCursor.timeSignature );
-                    bool implicitTime = true;
-                    if( myCurrentCursor.isFirstMeasureInPart )
-                    {
-                        implicitTime = false;
-                    }
-                    else
-                    {
-                        implicitTime = timeFunc.isTimeSignatureImplicit( myPreviousCursor.timeSignature, myCurrentCursor.timeSignature, myCurrentCursor.isFirstMeasureInPart );
-                    }
-                    myCurrentCursor.timeSignature.isImplicit = implicitTime;
-                }
                 parseMusicDataChoice( mdc, nextNotePtr );
             }
             
             myCurrentCursor.isFirstMeasureInPart = false;
             
+            consolidateVoicesForAllStaves();
+            
             // move the data to a temp then return the temp
             auto temp = api::MeasureData{ std::move(myOutMeasureData) };
             myOutMeasureData = api::MeasureData{};
             return temp;
+        }
+        
+        
+        void MeasureReader::parseTimeSignature() const
+        {
+            TimeReader timeReader{ myPartwiseMeasure.getMusicDataGroup()->getMusicDataChoiceSet() };
+            api::TimeSignatureData timeSignature;
+            
+            if( timeReader.getIsTimeFound() )
+            {
+                timeSignature = timeReader.getTimeSignatureData();
+                timeSignature.isImplicit = false;
+            }
+            else // no time signature was found
+            {
+                if( myCurrentCursor.measureIndex > 0 )
+                {
+                    timeSignature = myPreviousCursor.timeSignature;
+                }
+                timeSignature.isImplicit = true;
+            }
+
+            myOutMeasureData.timeSignature = timeSignature;
+            myCurrentCursor.timeSignature = timeSignature;
         }
         
         
@@ -197,9 +207,9 @@ namespace mx
                 {
                     parseBackup( *mdc.getBackup() );
                     
-                    if( myCurrentCursor.position < 0 )
+                    if( myCurrentCursor.tickTimePosition < 0 )
                     {
-                        myCurrentCursor.position = 0;
+                        myCurrentCursor.tickTimePosition = 0;
                         // TODO - log or inform the client that the file is erroneous
                     }
                     break;
@@ -284,32 +294,38 @@ namespace mx
             MX_UNUSED( inMxNote );
             MX_UNUSED( nextNotePtr );
             
-            bool isNextNoteAChordMemberMakingThisNoteTheStartOfTheChord = false;
+            bool isNextNotePartOfAChord = false;
             
             if( nextNotePtr )
             {
                 NoteReader nextNoteReader{ *nextNotePtr };
-                isNextNoteAChordMemberMakingThisNoteTheStartOfTheChord = nextNoteReader.getIsChord();
+                isNextNotePartOfAChord = nextNoteReader.getIsChord();
             }
             
             myCurrentCursor.isBackupInProgress = false;
+            impl::NoteReader noteReader{ inMxNote };
             impl::NoteFunctions noteFunc{ inMxNote, myCurrentCursor};
             auto noteData = noteFunc.parseNote();
             
-            if( noteData.staffIndex >= 0 )
+            int noteDataStaffIndex = noteReader.getStaffNumber() - 1;
+            
+            if( noteDataStaffIndex < 0 )
             {
-                myCurrentCursor.staffIndex = noteData.staffIndex;
-            }
-            else
-            {
-                myCurrentCursor.staffIndex = 0;
+                noteDataStaffIndex = 0;
             }
             
-            if( !noteData.isChord && !isNextNoteAChordMemberMakingThisNoteTheStartOfTheChord)
+            myCurrentCursor.staffIndex = noteDataStaffIndex;
+            
+            bool isThisNotePartOfAChord = noteData.isChord || isNextNotePartOfAChord;
+            noteData.isChord = isThisNotePartOfAChord;
+            
+            if( !isThisNotePartOfAChord || !isNextNotePartOfAChord )
             {
-                myCurrentCursor.position += noteData.durationData.durationTimeTicks;
+                myCurrentCursor.tickTimePosition += noteData.durationData.durationTimeTicks;
             }
             
+            MX_ASSERT( noteDataStaffIndex >= 0 );
+            MX_ASSERT( static_cast<size_t>( noteDataStaffIndex ) < myOutMeasureData.staves.size() );
             insertNoteData( std::move(noteData), myCurrentCursor.staffIndex, myCurrentCursor.voiceIndex );
         }
         
@@ -322,28 +338,54 @@ namespace mx
             }
             else
             {
-                MX_THROW( "multiple backups in a row" ); // TODO - remove this debugging check
+                // TODO - remove this debugging check
+                MX_THROW( "multiple backups in a row" );
             }
             myCurrentCursor.isBackupInProgress = true;
-            impl::TimeFunctions timeFunc;
-            const int backupAmount = timeFunc.convertDurationToGlobalTickScale( myCurrentCursor, *inMxBackup.getDuration() );
-            myCurrentCursor.position -= backupAmount;
+            const int backupAmount = myCurrentCursor.convertDurationToGlobalTickScale( *inMxBackup.getDuration() );
+            myCurrentCursor.tickTimePosition -= backupAmount;
         }
         
         
         void MeasureReader::parseForward( const core::Forward& inMxForward ) const
         {
-            impl::TimeFunctions timeFunc;
-            const int forwardAmount = timeFunc.convertDurationToGlobalTickScale( myCurrentCursor, *inMxForward.getDuration() );
-            myCurrentCursor.position += forwardAmount;
+            const int forwardAmount = myCurrentCursor.convertDurationToGlobalTickScale( *inMxForward.getDuration() );
+            myCurrentCursor.tickTimePosition += forwardAmount;
         }
         
         
         void MeasureReader::parseDirection( const core::Direction& inMxDirection ) const
         {
-            
             DirectionReader reader{ inMxDirection, myCurrentCursor };
-            reader.getDirectionData( myOutMeasureData );
+            auto directionData = reader.getDirectionData();
+            
+            // make an adjustment if the directionData refers to a non-existant staff
+            size_t staffIndex = 0;
+            bool isStaffIndexSpecified = inMxDirection.getHasStaff();
+            bool isStaffIndexInsane = false;
+
+            if( isStaffIndexSpecified )
+            {
+                staffIndex = static_cast<size_t>( inMxDirection.getStaff()->getValue().getValue() - 1 );
+            }
+            
+            isStaffIndexInsane = staffIndex >= myOutMeasureData.staves.size();
+            
+            if( !isStaffIndexSpecified || isStaffIndexInsane )
+            {
+                staffIndex = 0;
+                directionData.isStaffValueSpecified = false;
+            }
+            else
+            {
+                directionData.isStaffValueSpecified = true;
+            }
+            
+            // in-case we made a mistake in the code above which calculates the staffIndex
+            // make a final check to see if the staffIndex is in-bounds - throw if stupid
+            MX_ASSERT( staffIndex < myOutMeasureData.staves.size() );
+            auto& staff = myOutMeasureData.staves.at( staffIndex );
+            staff.directions.emplace_back( std::move( directionData ) );
         }
         
         
@@ -385,7 +427,7 @@ namespace mx
                 if( attr.hasNumber )
                 {
                     keyData.staffIndex = attr.number.getValue() - 1;
-                    if( keyData.staffIndex > myNumStaves -1 )
+                    if( keyData.staffIndex > myCurrentCursor.getNumStaves() - 1 )
                     {
                         keyData.staffIndex = -1;
                     }
@@ -414,7 +456,7 @@ namespace mx
                         keyData.mode = api::KeyMode::unsupported;
                     }
                 }
-                keyData.tickTimePosition = myCurrentCursor.position;
+                keyData.tickTimePosition = myCurrentCursor.tickTimePosition;
                 
                 myOutMeasureData.keys.emplace_back( std::move( keyData ) );
             }
@@ -448,7 +490,34 @@ namespace mx
         
         void MeasureReader::parseBarline( const core::Barline& inMxBarline ) const
         {
-            coutItemNotSupported( inMxBarline );
+            auto barline = api::BarlineData{};
+            const auto& attr = *inMxBarline.getAttributes();
+            auto loc = api::HorizontalAlignment::unspecified;
+            auto style = api::BarlineType::unspecified;
+            
+            if( attr.hasLocation )
+            {
+                loc = myConverter.convertBarlinePlacement( attr.location );
+            }
+            
+            if( inMxBarline.getHasBarStyle() )
+            {
+                style = myConverter.convert( inMxBarline.getBarStyle()->getValue() );
+            }
+            
+            // make a right-side barline last in the data
+            if( loc == api::HorizontalAlignment::right )
+            {
+                barline.tickTimePosition = api::TICK_TIME_INFINITY;
+            }
+            else
+            {
+                barline.tickTimePosition = myCurrentCursor.tickTimePosition;
+            }
+            
+            barline.barlineType = style;
+            barline.location = loc;
+            myOutMeasureData.barlines.emplace_back( std::move( barline ) );
         }
         
         
@@ -493,7 +562,7 @@ namespace mx
         void MeasureReader::importClef( const core::Clef& inClef ) const
         {
             api::ClefData clefData;
-            clefData.tickPosition = myCurrentCursor.position;
+            clefData.tickTimePosition = myCurrentCursor.tickTimePosition;
             auto converter = Converter{};
             clefData.symbol = converter.convert( inClef.getSign()->getValue() );
             
@@ -540,16 +609,17 @@ namespace mx
             
             const auto& attr = *inClef.getAttributes();
             
+            int celfStaffIndex = -1;
             if( attr.hasNumber )
             {
-                clefData.staffIndex = attr.number.getValue() - 1;
+                celfStaffIndex = attr.number.getValue() - 1;
             }
             else
             {
-                clefData.staffIndex = 0;
+                celfStaffIndex = 0;
             }
             
-            if( myCurrentCursor.position == 0 )
+            if( myCurrentCursor.tickTimePosition == 0 )
             {
                 if( attr.hasAfterBarline )
                 {
@@ -571,7 +641,7 @@ namespace mx
             {
                 clefData.location = api::ClefLocation::midMeasure;
             }
-            insertClef( std::move( clefData ), clefData.staffIndex );
+            insertClef( std::move( clefData ), celfStaffIndex );
         }
     
         
@@ -596,6 +666,105 @@ namespace mx
             MX_ASSERT( static_cast<size_t>( staff ) < myOutMeasureData.staves.size() );
             auto& staffRef = myOutMeasureData.staves.at( static_cast<size_t>( staff ) );
             staffRef.clefs.emplace_back( std::move( clefData ) );
+        }
+        
+        void MeasureReader::consolidateVoicesForAllStaves() const
+        {
+            for( auto& staff : myOutMeasureData.staves )
+            {
+                if( isUserRequestedVoiceNumberConsistentAccrossAllVoices( staff ) )
+                {
+                    takeUserRequestedVoiceNumbers( staff );
+                }
+                else
+                {
+                    collapseVoicesAutomatically( staff );
+                }
+            }
+        }
+        
+        
+        void MeasureReader::takeUserRequestedVoiceNumbers( api::StaffData& staff ) const
+        {
+            std::map<int, api::VoiceData> newVoiceData;
+            for( const auto& voicePair : staff.voices )
+            {
+                const int userRequestedVoiceNumber = getUserRequestedVoiceNumber( voicePair.second );
+                MX_ASSERT( userRequestedVoiceNumber >= 1 );
+                newVoiceData[userRequestedVoiceNumber-1] = std::move(voicePair.second);
+                
+            }
+            staff.voices = std::move( newVoiceData );
+        }
+        
+        
+        void MeasureReader::collapseVoicesAutomatically( api::StaffData& staff ) const
+        {
+            std::map<int, api::VoiceData> newVoiceData;
+            int newVoiceIndex = 0;
+            for( auto& voicePair : staff.voices )
+            {
+                newVoiceData[newVoiceIndex] = std::move(voicePair.second);
+                ++newVoiceIndex;
+            }
+            staff.voices = std::move( newVoiceData );
+        }
+        
+        
+        bool MeasureReader::isUserRequestedVoiceNumberConsistent( const api::VoiceData& voiceData ) const
+        {
+            if( voiceData.notes.empty() )
+            {
+                return true;
+            }
+            
+            const int userRequestedVoiceNumber = voiceData.notes.front().userRequestedVoiceNumber;
+            
+            if( userRequestedVoiceNumber < 1 )
+            {
+                return false;
+            }
+            
+            for( const auto& note : voiceData.notes )
+            {
+                if( note.userRequestedVoiceNumber != userRequestedVoiceNumber )
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        
+        
+        bool MeasureReader::isUserRequestedVoiceNumberConsistentAccrossAllVoices( const api::StaffData& staff ) const
+        {
+            std::set<int> userRequestedVoiceNumbers;
+            for( const auto& voicePair : staff.voices )
+            {
+                if( !isUserRequestedVoiceNumberConsistent( voicePair.second ) )
+                {
+                    return false;
+                }
+                const int userRequestedVoiceNumber = getUserRequestedVoiceNumber( voicePair.second );
+                auto result = userRequestedVoiceNumbers.insert( userRequestedVoiceNumber );
+                
+                if( !result.second )
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        
+        
+        int MeasureReader::getUserRequestedVoiceNumber( const api::VoiceData& voiceData ) const
+        {
+            if( voiceData.notes.empty() )
+            {
+                return -1;
+            }
+            
+            return voiceData.notes.front().userRequestedVoiceNumber;
         }
     }
 }

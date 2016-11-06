@@ -8,7 +8,7 @@
 #include "mxtest/core/HelperFunctions.h"
 #include "mx/core/Elements.h"
 
-namespace MxTestHelpers
+namespace mxtest
 {
     mx::core::ArrowPtr tgenArrow( variant v );
     void tgenArrowExpected( std::ostream& os, int indentLevel, variant v );

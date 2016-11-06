@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include <vector>
+#include "mx/api/ApiCommon.h"
 
 namespace mx
 {
@@ -39,11 +39,11 @@ namespace mx
             
             ClefData();
             
-            int staffIndex;
+            //int staffIndex;
             ClefSymbol symbol;
             int line;
             int octaveChange;
-            int tickPosition;
+            int tickTimePosition;
             ClefLocation location;
             std::string toString() const;
             
@@ -66,5 +66,14 @@ namespace mx
             bool isMezzoSoprano() const;
         };
 
+        MXAPI_EQUALS_BEGIN( ClefData )
+        //MXAPI_EQUALS_MEMBER( staffIndex )
+        MXAPI_EQUALS_MEMBER( symbol )
+        MXAPI_EQUALS_MEMBER( line )
+        MXAPI_EQUALS_MEMBER( octaveChange )
+        MXAPI_EQUALS_MEMBER( tickTimePosition )
+        MXAPI_EQUALS_MEMBER( location )
+        MXAPI_EQUALS_END;
+        MXAPI_NOT_EQUALS_AND_VECTORS( ClefData );
     }
 }

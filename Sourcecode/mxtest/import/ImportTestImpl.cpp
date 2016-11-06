@@ -6,8 +6,8 @@
 
 #include "ImportTestImpl.h"
 #include "mx/xml/XFactory.h"
-#include "mxtest/control/File.h"
-#include "mxtest/control/Path.h"
+#include "mxtest/file/StupidFileFunctions.h"
+#include "mxtest/file/Path.h"
 #include "mxtest/import/ExpectedFiles.h"
 #include "mxtest/import/SortAttributes.h"
 
@@ -16,7 +16,7 @@
 using namespace mx::xml;
 using namespace mx::core;
 
-namespace MxTest
+namespace mxtest
 {
     
     std::string ImportRoundTripResult::getHeaderRow()

@@ -14,7 +14,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, Heel )
 {
@@ -56,7 +56,7 @@ TEST( Test03, Heel )
 	CHECK( ! object->hasContents() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     HeelPtr tgenHeel( variant v )
     {

@@ -8,7 +8,7 @@
 #include "mxtest/core/HelperFunctions.h"
 #include "mx/core/Elements.h"
 
-namespace MxTestHelpers
+namespace mxtest
 {
     mx::core::ArticulationsChoicePtr tgenArticulationsChoice( variant v );
     mx::core::ArticulationsPtr tgenArticulations( variant v );

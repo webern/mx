@@ -9,7 +9,7 @@
 #include "mxtest/core/HelperFunctions.h"
 #include "mx/core/Elements.h"
 
-namespace MxTestHelpers
+namespace mxtest
 {
     mx::core::StickPtr tgenStick( variant v );
     void tgenStickExpected( std::ostream& os, int indentLevel, variant v );

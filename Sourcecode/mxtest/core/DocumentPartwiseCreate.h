@@ -17,7 +17,7 @@ namespace mx
     }
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     mx::core::DocumentPtr createDocumentPartwise();
     void setPartwiseMeasureProperties( mx::core::PartwiseMeasurePtr& measure,

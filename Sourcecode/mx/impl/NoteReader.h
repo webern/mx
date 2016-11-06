@@ -4,7 +4,7 @@
 #pragma once
 
 #include "mx/core/Enums.h"
-
+#include "mx/core/elements/Tie.h"
 #include <vector>
 
 namespace mx
@@ -46,7 +46,6 @@ namespace mx
             inline bool getIsPitch() const { return myIsPitch; }
             inline bool getIsDisplayStepOctaveSpecified() const { return myIsDisplayStepOctaveSpecified; }
             inline long double getDurationValue() const { return myDurationValue; }
-            inline int getTieCount() const { return myTieCount; }
             inline core::StepEnum getStep() const { return myStep; }
             inline int getAlter() const { return myAlter; }
             inline int getOctave() const { return myOctave; }
@@ -66,6 +65,10 @@ namespace mx
             inline bool getIsAccidentalCautionary() const { return myIsAccidentalCautionary; }
             inline bool getIsAccidentalEditorial() const { return myIsAccidentalEditorial; }
             inline bool getIsAccidentalBracketed() const { return myIsAccidentalBracketed; }
+            inline bool getIsStemSpecified() const { return myIsStemSpecified; }
+            inline core::StemValue getStem() const { return myStem; }
+            bool getIsTieStart() const { return myIsTieStart; }
+            bool getIsTieStop() const { return myIsTieStop; }
             
 		private:
         	const core::Note& myNote;
@@ -81,7 +84,6 @@ namespace mx
             bool myIsPitch;
             bool myIsDisplayStepOctaveSpecified;
             long double myDurationValue;
-            int myTieCount;
             core::StepEnum myStep;
             int myAlter;
             int myOctave;
@@ -101,6 +103,10 @@ namespace mx
             bool myIsAccidentalCautionary;
             bool myIsAccidentalEditorial;
             bool myIsAccidentalBracketed;
+            bool myIsStemSpecified;
+            core::StemValue myStem;
+            bool myIsTieStart;
+            bool myIsTieStop;
 
         private:
             const core::FullNoteGroup& findFullNoteGroup( const core::NoteChoice& noteChoice ) const;
@@ -114,6 +120,8 @@ namespace mx
             void setBeams();
             void setTimeModification();
             void setAccidental();
+            void setStem();
+            void setTie( const core::TieSet& tieSet );
         };
     }
 }

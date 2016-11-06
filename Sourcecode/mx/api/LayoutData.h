@@ -49,7 +49,9 @@ namespace mx
             long double systemDistance;        // distance from bollom line of one system to top line of next system, negative number represent the absence of a value
             long double topSystemDistance;     // first system distance from top margin to top line of first staff, negative number represent the absence of a value
             long double staffDistance;         // the space between staves within the same system, negative number represent the absence of a value
-
+            
+            MeasureNumbering measureNumbering; // measure numbering setting at the global level, will be stated in first measure's <print> tag.  can be overridden by a value in the Measure
+            
             LayoutData()
             : scalingMillimeters( -1.0 )
             , scalingTenths( -1.0 )
@@ -68,6 +70,7 @@ namespace mx
             , systemDistance( -1.0 )
             , topSystemDistance( -1.0 )
             , staffDistance( -1.0 )
+            , measureNumbering{ MeasureNumbering::unspecified }
             {
 
             }
@@ -100,5 +103,25 @@ namespace mx
             }
 
         };
+        
+        MXAPI_EQUALS_BEGIN( LayoutData )
+        MXAPI_EQUALS_MEMBER( pageWidth )
+        MXAPI_EQUALS_MEMBER( pageHeight )
+        MXAPI_EQUALS_MEMBER( oddPageLeftMargin )
+        MXAPI_EQUALS_MEMBER( oddPageRightMargin )
+        MXAPI_EQUALS_MEMBER( oddPageTopMargin )
+        MXAPI_EQUALS_MEMBER( oddPageBottomMargin )
+        MXAPI_EQUALS_MEMBER( evenPageLeftMargin )
+        MXAPI_EQUALS_MEMBER( evenPageRightMargin )
+        MXAPI_EQUALS_MEMBER( evenPageTopMargin )
+        MXAPI_EQUALS_MEMBER( evenPageBottomMargin )
+        MXAPI_EQUALS_MEMBER( systemLeftMargin )
+        MXAPI_EQUALS_MEMBER( systemRightMargin )
+        MXAPI_EQUALS_MEMBER( systemDistance )
+        MXAPI_EQUALS_MEMBER( topSystemDistance )
+        MXAPI_EQUALS_MEMBER( staffDistance )
+        MXAPI_EQUALS_MEMBER( measureNumbering )
+        MXAPI_EQUALS_END;
+        MXAPI_NOT_EQUALS_AND_VECTORS( LayoutData );
     }
 }

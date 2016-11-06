@@ -45,15 +45,16 @@
 #include "mx/impl/AccidentalMarkFunctions.h"
 #include "mx/impl/ArticulationsFunctions.h"
 #include "mx/impl/CurveFunctions.h"
-#include "mx/impl/DynamicsFunctions.h"
+#include "mx/impl/DynamicsReader.h"
 #include "mx/impl/NoteReader.h"
 #include "mx/impl/OrnamentsFunctions.h"
 #include "mx/impl/PositionFunctions.h"
 #include "mx/impl/PrintFunctions.h"
 #include "mx/impl/TechnicalFunctions.h"
-#include "mx/impl/TimeFunctions.h"
+#include "mx/impl/TimeReader.h"
 #include "mx/impl/TupletReader.h"
 #include "mx/utility/Throw.h"
+#include "mx/impl/MarkDataFunctions.h"
 
 #include <algorithm>
 
@@ -65,6 +66,7 @@ namespace mx
         : myNote{ inMxNote }
         , myCursor{ inCursor }
         , myOutNoteData{}
+        , myConverter()
         {}
         
         
@@ -116,7 +118,7 @@ namespace mx
             }
             
             myOutNoteData.pitchData.octave = reader.getOctave();
-            myOutNoteData.staffIndex = reader.getStaffNumber() - 1;
+            //myOutNoteData.staffIndex = reader.getStaffNumber() - 1;
             myOutNoteData.userRequestedVoiceNumber = reader.getVoiceNumber();
             
             if( reader.getIsDurationTypeSpecified() )
@@ -129,9 +131,8 @@ namespace mx
             }
             
             myOutNoteData.durationData.durationDots = reader.getNumDots();
-            impl::TimeFunctions timeFunc;
-            myOutNoteData.durationData.durationTimeTicks = timeFunc.convertDurationToGlobalTickScale( myCursor, reader.getDurationValue() );
-            myOutNoteData.startTimeTicks = myCursor.position;
+            myOutNoteData.durationData.durationTimeTicks = myCursor.convertDurationToGlobalTickScale( reader.getDurationValue() );
+            myOutNoteData.tickTimePosition = myCursor.tickTimePosition;
             
             for( const auto& coreBeamVal : reader.getBeams() )
             {
@@ -158,6 +159,13 @@ namespace mx
             parseNotations();
             myOutNoteData.positionData = impl::getPositionData( *myNote.getAttributes() );
             myOutNoteData.printData = impl::getPrintData( *myNote.getAttributes() );
+            
+            if( reader.getIsStemSpecified() )
+            {
+                myOutNoteData.stem = converter.convert( reader.getStem() );
+            }
+            myOutNoteData.isTieStart = reader.getIsTieStart();
+            myOutNoteData.isTieStop = reader.getIsTieStop();
             return myOutNoteData;
         }
         
@@ -233,139 +241,13 @@ namespace mx
                     switch (choice)
                     {
                         case core::NotationsChoice::Choice::tied:
-                            slurryness( *notationsChoice.getTied(), myOutNoteData );
+                        {
+                            parseCurve( *notationsChoice.getTied(), myOutNoteData );
                             break;
+                        }
                         case core::NotationsChoice::Choice::slur:
                         {
-                            Converter converter;
-                            const auto& slur = *notationsChoice.getSlur();
-                            const auto& attr = *slur.getAttributes();
-                            const int number = attr.hasNumber ? attr.number.getValue() : 1;
-                            auto orientation = api::CurveOrientation::unspecified;
-                            
-                            if( attr.hasOrientation && attr.orientation == core::OverUnder::over )
-                            {
-                                orientation = api::CurveOrientation::overhand;
-                            }
-                            else if( attr.hasOrientation && attr.orientation == core::OverUnder::under )
-                            {
-                                orientation = api::CurveOrientation::underhand;
-                            }
-                            
-                            auto placement = api::Placement::unspecified;
-                            
-                            if( attr.hasPlacement )
-                            {
-                                placement = converter.convert( attr.placement );
-                            }
-
-                            auto p1 = api::CurvePoints{};
-                            p1.isXSpecified = attr.hasDefaultX;
-                            p1.isYSpecified = attr.hasDefaultY;
-                            p1.isBezierXSpecified = attr.hasBezierX;
-                            p1.isBezierYSpecified = attr.hasBezierY;
-                            p1.isTimeOffsetTicksSpecified = attr.hasBezierOffset;
-                            
-                            p1.x = p1.isXSpecified ? attr.defaultX.getValue() : 0.0;
-                            p1.y = p1.isYSpecified ? attr.defaultY.getValue() : 0.0;
-                            p1.bezierX = p1.isBezierXSpecified ? attr.bezierX.getValue() : 0.0;
-                            p1.bezierY = p1.isBezierYSpecified ? attr.bezierY.getValue() : 0.0;
-                            
-                            p1.timeOffsetTicks = p1.isTimeOffsetTicksSpecified ?
-                                static_cast<int>( attr.bezierOffset.getValue() ) : 0;
-                            
-                            if( attr.type == core::StartStopContinue::start )
-                            {
-                                api::CurveStart curveStart{ api::CurveType::slur };
-                                curveStart.numberLevel = number;
-                                curveStart.curveOrientation = orientation;
-                                curveStart.placement = placement;
-                                curveStart.curvePoints = p1;
-                                
-                                auto lineData = api::LineData{};
-                                
-                                // TODO - move to converter
-                                if( attr.hasLineType )
-                                {
-                                    switch ( attr.lineType )
-                                    {
-                                        case core::LineType::solid:
-                                            lineData.lineType = api::LineType::solid;
-                                            break;
-                                        case core::LineType::wavy:
-                                            lineData.lineType = api::LineType::wavy;
-                                            break;
-                                        case core::LineType::dashed:
-                                            lineData.lineType = api::LineType::dashed;
-                                            break;
-                                        case core::LineType::dotted:
-                                            lineData.lineType = api::LineType::dotted;
-                                            break;
-                                        default:
-                                            lineData.lineType = api::LineType::unspecified;
-                                            break;
-                                    }
-                                }
-                                
-                                curveStart.isColorSpecified = attr.hasColor;
-                                if( attr.hasColor )
-                                {
-                                    curveStart.colorData.red = static_cast<uint8_t>( attr.color.getRed() );
-                                    curveStart.colorData.green = static_cast<uint8_t>( attr.color.getGreen() );
-                                    curveStart.colorData.blue = static_cast<uint8_t>( attr.color.getBlue() );
-                                    if( attr.color.getColorType() == core::Color::ColorType::ARGB )
-                                    {
-                                        curveStart.colorData.isAlphaSpecified = true;
-                                        curveStart.colorData.alpha = static_cast<uint8_t>( attr.color.getAlpha() );
-                                    }
-                                }
-                                
-                                if( attr.hasDashLength )
-                                {
-                                    lineData.isDashLengthSpecified = true;
-                                    lineData.dashLength = attr.dashLength.getValue();
-                                }
-                                
-                                if( attr.hasSpaceLength )
-                                {
-                                    lineData.isSpaceLengthSpecified = true;
-                                    lineData.spaceLength = attr.spaceLength.getValue();
-                                }
-                                curveStart.lineData = std::move( lineData );
-                                myOutNoteData.noteAttachmentData.curveStarts.emplace_back( std::move( curveStart ) );
-                            }
-                            else if ( attr.type == core::StartStopContinue::continue_ )
-                            {
-                                api::CurveContinue curveContinue{ api::CurveType::slur };
-                                curveContinue.numberLevel = number;
-                                curveContinue.incomingCurvePoints = p1;
-                                
-                                auto p2 = api::CurvePoints{};
-                                p2.isXSpecified = attr.hasDefaultX;
-                                p2.isYSpecified = attr.hasDefaultY;
-                                p2.isBezierXSpecified = attr.hasBezierX;
-                                p2.isBezierYSpecified = attr.hasBezierY;
-                                p2.isTimeOffsetTicksSpecified = attr.hasBezierOffset;
-                                
-                                p2.x = p2.isXSpecified ? attr.defaultX.getValue() : 0.0;
-                                p2.y = p2.isYSpecified ? attr.defaultY.getValue() : 0.0;
-                                p2.bezierX = p2.isBezierXSpecified ? attr.bezierX.getValue() : 0.0;
-                                p2.bezierY = p2.isBezierYSpecified ? attr.bezierY.getValue() : 0.0;
-                                
-                                p2.timeOffsetTicks = p2.isTimeOffsetTicksSpecified ?
-                                static_cast<int>( attr.bezierOffset.getValue() ) : 0;
-                                
-                                curveContinue.outgoingCurvePoints = p2;
-                                myOutNoteData.noteAttachmentData.curveContinuations.emplace_back( std::move( curveContinue ) );
-                                
-                            }
-                            else if ( attr.type == core::StartStopContinue::stop )
-                            {
-                                api::CurveEnd curveEnd{ api::CurveType::slur };
-                                curveEnd.numberLevel = number;
-                                curveEnd.curvePoints = p1;
-                                myOutNoteData.noteAttachmentData.curveEnds.emplace_back( std::move( curveEnd ) );
-                            }
+                            parseCurve( *notationsChoice.getSlur(), myOutNoteData );
                             break;
                         }
                         case core::NotationsChoice::Choice::tuplet:
@@ -376,28 +258,28 @@ namespace mx
                         }
                         case core::NotationsChoice::Choice::slide:
                         {
-                            const auto& slide = *notationsChoice.getSlide();
-                            const auto& attr = *slide.getAttributes();
-                            const auto slideType = attr.type;
+//                            const auto& slide = *notationsChoice.getSlide();
+//                            const auto& attr = *slide.getAttributes();
+//                            const auto slideType = attr.type;
 
-                            api::SpannerData spannerData;
-                            spannerData.name = "slide";
-                            spannerData.spannerType = api::SpannerType::slide;
-                            spannerData.tickPosition = myCursor.position;
-                            
-                            if( attr.hasNumber )
-                            {
-                                spannerData.numberLevel = attr.number.getValue();
-                            }
-
-                            if( slideType == core::StartStop::start )
-                            {
-                                myOutNoteData.noteAttachmentData.spannerStarts.emplace_back( std::move( spannerData ) );
-                            }
-                            else
-                            {
-                                myOutNoteData.noteAttachmentData.spannerEnds.emplace_back( std::move( spannerData ) );
-                            }
+//                            api::SpannerData spannerData;
+//                            spannerData.name = "slide";
+//                            spannerData.spannerType = api::SpannerType::slide;
+//                            spannerData.tickTimePosition = myCursor.tickTimePosition;
+//                            
+//                            if( attr.hasNumber )
+//                            {
+//                                spannerData.numberLevel = attr.number.getValue();
+//                            }
+//
+//                            if( slideType == core::StartStop::start )
+//                            {
+//                                myOutNoteData.noteAttachmentData.spannerStarts.emplace_back( std::move( spannerData ) );
+//                            }
+//                            else
+//                            {
+//                                myOutNoteData.noteAttachmentData.spannerEnds.emplace_back( std::move( spannerData ) );
+//                            }
                             
                             break;
                         }
@@ -427,13 +309,86 @@ namespace mx
                         }
                         case core::NotationsChoice::Choice::dynamics:
                         {
-                            DynamicsFunctions funcs{ *notationsChoice.getDynamics(), myCursor };
+                            DynamicsReader funcs{ *notationsChoice.getDynamics(), myCursor };
                             funcs.parseDynamics( myOutNoteData.noteAttachmentData.marks );
                             break;
                         }
                         case core::NotationsChoice::Choice::fermata:
                         {
-                            // TODO - import fermatas
+                            const auto& fermata = *notationsChoice.getFermata();
+                            const auto& attr = *fermata.getAttributes();
+                            const auto shape = fermata.getValue();
+                            auto markType = api::MarkType::fermata;
+                            
+                            if( shape == core::FermataShape::emptystring )
+                            {
+                                if( !attr.hasType )
+                                {
+                                    markType = api::MarkType::fermata;
+                                }
+                                else if ( attr.type == core::UprightInverted::upright )
+                                {
+                                    markType = api::MarkType::fermataUpright;
+                                }
+                                else if ( attr.type == core::UprightInverted::inverted )
+                                {
+                                    markType = api::MarkType::fermataInverted;
+                                }
+                            }
+                            else if( shape == core::FermataShape::normal )
+                            {
+                                if( !attr.hasType )
+                                {
+                                    markType = api::MarkType::fermataNormal;
+                                }
+                                else if ( attr.type == core::UprightInverted::upright )
+                                {
+                                    markType = api::MarkType::fermataNormalUpright;
+                                }
+                                else if ( attr.type == core::UprightInverted::inverted )
+                                {
+                                    markType = api::MarkType::fermataNormalInverted;
+                                }
+                                
+                            }
+                            else if( shape == core::FermataShape::angled )
+                            {
+                                if( !attr.hasType )
+                                {
+                                    markType = api::MarkType::fermataAngled;
+                                }
+                                else if ( attr.type == core::UprightInverted::upright )
+                                {
+                                    markType = api::MarkType::fermataAngledUpright;
+                                }
+                                else if ( attr.type == core::UprightInverted::inverted )
+                                {
+                                    markType = api::MarkType::fermataAngledInverted;
+                                }
+                            }
+                            else if( shape == core::FermataShape::square )
+                            {
+                                if( !attr.hasType )
+                                {
+                                    markType = api::MarkType::fermataSquare;
+                                }
+                                else if ( attr.type == core::UprightInverted::upright )
+                                {
+                                    markType = api::MarkType::fermataSquareUpright;
+                                }
+                                else if ( attr.type == core::UprightInverted::inverted )
+                                {
+                                    markType = api::MarkType::fermataSquareInverted;
+                                }
+                            }
+                            
+                            // Unfortunately, without doing a lot of guess word, we can't
+                            // know whether the correct glyph is "above" or "below"
+                            api::MarkData markData{ markType };
+                            impl::parseMarkDataAttributes( attr, markData );
+                            markData.tickTimePosition = myCursor.tickTimePosition;
+                            impl::parseMarkDataAttributes( attr, markData );
+                            myOutNoteData.noteAttachmentData.marks.emplace_back( std::move( markData ) );
                             break;
                         }
                         case core::NotationsChoice::Choice::arpeggiate:

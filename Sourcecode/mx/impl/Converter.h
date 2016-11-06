@@ -8,6 +8,7 @@
 #include "mx/api/NoteData.h"
 #include "mx/api/PositionData.h"
 #include "mx/api/ScoreData.h"
+#include "mx/api/BarlineData.h"
 #include "mx/core/elements/ArticulationsChoice.h"
 #include "mx/core/elements/OrnamentsChoice.h"
 #include "mx/core/elements/TechnicalChoice.h"
@@ -60,6 +61,7 @@ namespace mx
             
             core::ArticulationsChoice::Choice convertArticulation( api::MarkType value ) const;
             api::MarkType convertArticulation( core::ArticulationsChoice::Choice value ) const;
+            bool isArticulation( api::MarkType value ) const;
             
             core::DynamicsEnum convertDynamic( api::MarkType value ) const;
             api::MarkType convertDynamic( core::DynamicsEnum value ) const;
@@ -75,7 +77,28 @@ namespace mx
             
             core::MeasureNumberingValue convertMeasureNumbering( api::MeasureNumbering value ) const;
             api::MeasureNumbering convertMeasureNumbering( core::MeasureNumberingValue value ) const;
-
+            
+            core::StemValue convert( api::Stem value ) const;
+            api::Stem convert( core::StemValue value ) const;
+            
+            core::LineType convert( api::LineType value ) const;
+            api::LineType convert( core::LineType value ) const;
+            
+            core::WedgeType convert( api::WedgeType value ) const;
+            api::WedgeType convert( core::WedgeType value ) const;
+            
+            core::BarStyleEnum convert( api::BarlineType value ) const;
+            api::BarlineType convert( core::BarStyleEnum value ) const;
+            
+            core::RightLeftMiddle convertBarlinePlacement( api::HorizontalAlignment value ) const;
+            api::HorizontalAlignment convertBarlinePlacement( core::RightLeftMiddle value ) const;
+            
+            core::LineEnd convert( api::LineHook value ) const;
+            api::LineHook convert( core::LineEnd value ) const;
+            
+            core::FermataShape convertFermata( api::MarkType value ) const;
+            api::MarkType convertFermata( core::FermataShape value ) const;
+            
             const static std::map<core::StepEnum, api::Step> stepMap;
             const static std::map<core::NoteTypeValue, api::DurationName> durationMap;
             const static std::map<core::BeamValue, api::Beam> beamMap;
@@ -94,7 +117,14 @@ namespace mx
             const static std::map<core::AccidentalValue, api::MarkType> accidentalMarkMap;
             const static std::map<core::TechnicalChoice::Choice, api::MarkType> technicalMarkMap;
             const static std::map<core::MeasureNumberingValue, api::MeasureNumbering> measureNumberingMap;
-
+            const static std::map<core::StemValue, api::Stem> stemMap;
+            const static std::map<core::LineType, api::LineType> lineType;
+            const static std::map<core::WedgeType, api::WedgeType> wedgeMap;
+            const static std::map<core::BarStyleEnum, api::BarlineType> barlineMap;
+            const static std::map<core::RightLeftMiddle, api::HorizontalAlignment> barlinePlacementMap;
+            const static std::map<core::LineEnd, api::LineHook> lineEndMap;
+            const static std::map<core::FermataShape, api::MarkType> fermataMap;
+            
         private:
             template<typename CORE_TYPE, typename API_TYPE>
             API_TYPE findApiItem( const std::map<CORE_TYPE, API_TYPE>& enumMap, API_TYPE defaultToReturn, CORE_TYPE itemToFind ) const

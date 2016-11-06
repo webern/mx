@@ -13,7 +13,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, ScoreTimewise )
 {
@@ -55,7 +55,7 @@ TEST( Test03, ScoreTimewise )
 	CHECK( object->hasContents() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     ScoreTimewisePtr tgenScoreTimewise( variant v )
     {

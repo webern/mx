@@ -12,7 +12,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, DocumentPartwise )
 {
@@ -48,7 +48,7 @@ TEST( Test03, DocumentPartwise )
 	CHECK_EQUAL( expected.str(), actual.str() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     DocumentPtr tgenDocumentPartwise( variant v )
     {

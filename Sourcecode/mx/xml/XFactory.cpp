@@ -4,7 +4,6 @@
 #include "mx/xml/XFactory.h"
 #include "mx/xml/PugiDoc.h"
 #include "mx/xml/PugiElement.h"
-#include <memory>
 
 namespace mx
 {

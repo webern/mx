@@ -18,7 +18,9 @@ namespace mx
         ,hasFontStyle( false )
         ,hasFontSize( false )
         ,hasFontWeight( false )
+        ,hasColor( false )
         ,hasHalign( false )
+        ,hasValign( false )
         ,hasPlacement( false )
         ,hasUnderline( false )
         ,hasOverline( false )
@@ -37,7 +39,9 @@ namespace mx
             || hasFontStyle
             || hasFontSize
             || hasFontWeight
+            || hasColor
             || hasHalign
+            || hasValign
             || hasPlacement
             || hasUnderline
             || hasOverline
@@ -58,7 +62,9 @@ namespace mx
                 streamAttribute( os, fontStyle, "font-style", hasFontStyle );
                 streamAttribute( os, fontSize, "font-size", hasFontSize );
                 streamAttribute( os, fontWeight, "font-weight", hasFontWeight );
+                streamAttribute( os, color, "color", hasColor );
                 streamAttribute( os, halign, "halign", hasHalign );
+                streamAttribute( os, valign, "valign", hasValign );
                 streamAttribute( os, placement, "placement", hasPlacement );
                 streamAttribute( os, underline, "underline", hasUnderline );
                 streamAttribute( os, overline, "overline", hasOverline );
@@ -87,7 +93,9 @@ namespace mx
                 if( parseAttribute( message, it, className, isSuccess, fontStyle, hasFontStyle, "font-style", &parseFontStyle ) ) { continue; }
                 if( parseAttribute( message, it, className, isSuccess, fontSize, hasFontSize, "font-size" ) ) { continue; }
                 if( parseAttribute( message, it, className, isSuccess, fontWeight, hasFontWeight, "font-weight", &parseFontWeight ) ) { continue; }
+                if( parseAttribute( message, it, className, isSuccess, color, hasColor, "color" ) ) { continue; }
                 if( parseAttribute( message, it, className, isSuccess, halign, hasHalign, "halign", &parseLeftCenterRight ) ) { continue; }
+                if( parseAttribute( message, it, className, isSuccess, valign, hasValign, "valign", &parseValign ) ) { continue; }
                 if( parseAttribute( message, it, className, isSuccess, placement, hasPlacement, "placement", &parseAboveBelow ) ) { continue; }
                 if( parseAttribute( message, it, className, isSuccess, underline, hasUnderline, "underline" ) ) { continue; }
                 if( parseAttribute( message, it, className, isSuccess, overline, hasOverline, "overline" ) ) { continue; }

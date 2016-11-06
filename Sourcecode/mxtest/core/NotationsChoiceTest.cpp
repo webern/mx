@@ -14,7 +14,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, NotationsChoice )
 {
@@ -59,7 +59,7 @@ TEST( Test03, NotationsChoice )
 	CHECK( object->hasContents() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     NotationsChoicePtr tgenNotationsChoice( variant v )
     {

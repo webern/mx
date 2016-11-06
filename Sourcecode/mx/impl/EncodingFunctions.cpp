@@ -12,6 +12,8 @@
 #include "mx/core/elements/Identification.h"
 #include "mx/core/elements/Software.h"
 #include "mx/core/elements/Supports.h"
+#include "mx/core/elements/MiscellaneousField.h"
+#include "mx/core/elements/Miscellaneous.h"
 
 namespace mx
 {
@@ -94,6 +96,17 @@ namespace mx
 
                 attributes->type = s.isSupported ? core::YesNo::yes : core::YesNo::no;
                 encoding->addEncodingChoice( item );
+            }
+            
+            for ( const auto& m : inEncoding.miscelaneousFields )
+            {
+                header.setHasIdentification( true );
+                identification->setHasEncoding( true );
+                identification->setHasMiscellaneous( true );
+                auto item = core::makeMiscellaneousField();
+                item->getAttributes()->name.setValue( m.key );
+                item->setValue( core::XsString{ m.value } );
+                identification->getMiscellaneous()->addMiscellaneousField( item );
             }
         }
 

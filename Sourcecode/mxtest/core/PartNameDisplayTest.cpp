@@ -11,7 +11,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, PartNameDisplay )
 {
@@ -53,7 +53,7 @@ TEST( Test03, PartNameDisplay )
 	CHECK( object->hasContents() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     PartNameDisplayPtr tgenPartNameDisplay( variant v )
     {

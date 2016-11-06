@@ -13,7 +13,7 @@
 #include <map>
 #include <set>
 
-namespace MxTest
+namespace mxtest
 {
     
     using StringMap = std::map<std::string, std::string>;

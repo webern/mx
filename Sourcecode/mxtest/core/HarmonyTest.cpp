@@ -12,7 +12,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, Harmony )
 {
@@ -54,7 +54,7 @@ TEST( Test03, Harmony )
 	CHECK( object->hasContents() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     HarmonyPtr tgenHarmony( variant v )
     {

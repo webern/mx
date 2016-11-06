@@ -3,7 +3,7 @@
 
 #include "SortAttributes.h"
 
-namespace MxTest
+namespace mxtest
 {
     void sortAttributes( mx::xml::XDoc& xdoc )
     {

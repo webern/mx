@@ -2,7 +2,6 @@
 // Copyright (c) 2015 - 2016 by Matthew James Briggs
 
 #include "mx/xml/PugiAttributeIterImpl.h"
-#include "mx/xml/XAttribute.h"
 #include "mx/xml/XDoc.h"
 #include "mx/xml/XThrow.h"
 

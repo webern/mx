@@ -48,6 +48,7 @@ namespace mx
             SlurAttributes();
             virtual bool hasValues() const;
             virtual std::ostream& toStream( std::ostream& os ) const;
+            
             StartStopContinue type;
             NumberLevel number;
             LineType lineType;
@@ -66,6 +67,7 @@ namespace mx
             TenthsValue bezierX2;
             TenthsValue bezierY2;
             Color color;
+            
             const bool hasType;
             bool hasNumber;
             bool hasLineType;

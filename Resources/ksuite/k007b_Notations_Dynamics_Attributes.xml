@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 3.0 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">
+<score-partwise version="3.0">
+  <part-list>
+    <score-part id="P1">
+      <part-name>Dynamics</part-name>
+    </score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes>
+        <divisions>2</divisions>
+        <time>
+          <beats>4</beats>
+          <beat-type>4</beat-type>
+        </time>
+        <clef>
+          <sign>G</sign>
+          <line>2</line>
+        </clef>
+      </attributes>
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>8</duration>
+        <voice>1</voice>
+        <type>whole</type>
+        <notations>
+          <dynamics
+            default-x="0.1"
+            default-y="0.2"
+            relative-x="0.3"
+            relative-y="0.4"
+            font-family="A,b,Charlie"
+            font-style="italic"
+            font-size="11"
+            font-weight="bold"
+            color="#01020304"
+            halign="center"
+            valign="baseline"
+            placement="above"
+            underline="2"
+            overline="1"
+            line-through="1"
+            enclosure="rectangle">
+            <p/>
+          </dynamics>
+        </notations>
+      </note>
+    </measure>
+    <measure number="2">
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>8</duration>
+        <voice>1</voice>
+        <type>whole</type>
+        <notations>
+          <dynamics font-size="x-small">
+            <p/>
+          </dynamics>
+        </notations>
+      </note>
+    </measure>
+  </part>
+</score-partwise>
+
+<!--
+    <xs:attributeGroup ref="print-style-align"/>
+      <xs:attributeGroup ref="print-style"/>
+        <xs:attributeGroup ref="position"/>
+              <xs:attribute name="default-x" type="tenths"/>
+              <xs:attribute name="default-y" type="tenths"/>
+              <xs:attribute name="relative-x" type="tenths"/>
+              <xs:attribute name="relative-y" type="tenths"/>
+        <xs:attributeGroup ref="font"/>
+              <xs:attribute name="font-family" type="comma-separated-text"/>
+              <xs:attribute name="font-style" type="font-style"/>
+              <xs:attribute name="font-size" type="font-size"/>
+              <xs:attribute name="font-weight" type="font-weight"/>
+        <xs:attributeGroup ref="color"/>
+              <xs:attribute name="color" type="color"/>
+      <xs:attributeGroup ref="halign"/>
+              <xs:attribute name="halign" type="left-center-right"/>
+      <xs:attributeGroup ref="valign"/>
+              <xs:attribute name="valign" type="valign"/>
+    <xs:attributeGroup ref="placement"/>
+              <xs:attribute name="placement" type="above-below"/>
+    <xs:attributeGroup ref="text-decoration"/>
+              <xs:attribute name="underline" type="number-of-lines"/>
+              <xs:attribute name="overline" type="number-of-lines"/>
+              <xs:attribute name="line-through" type="number-of-lines"/>
+    <xs:attributeGroup ref="enclosure"/>
+              <xs:attribute name="enclosure" type="enclosure-shape"/>
+  -->

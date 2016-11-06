@@ -71,11 +71,17 @@ namespace mx
             auto& attr = *myOutScorePart->getAttributes();
             attr.id = core::XsID{ myPartData.uniqueId };
             myOutScorePart->getPartName()->setValue( core::XsString{ myPartData.name } );
+            myOutScorePart->getPartName()->getAttributes()->hasPrintObject = true;
+            myOutScorePart->getPartName()->getAttributes()->printObject = core::YesNo::no;
+            
             if( myPartData.abbreviation.size() > 0 )
             {
                 myOutScorePart->setHasPartAbbreviation( true );
                 myOutScorePart->getPartAbbreviation()->setValue( core::XsString{ myPartData.abbreviation } );
+                myOutScorePart->getPartAbbreviation()->getAttributes()->hasPrintObject = true;
+                myOutScorePart->getPartAbbreviation()->getAttributes()->printObject = core::YesNo::no;
             }
+            
             if( myPartData.displayName.size() > 0 )
             {
                 myOutScorePart->setHasPartNameDisplay( true );
@@ -114,12 +120,32 @@ namespace mx
                     core::SoloOrEnsembleChoice::Choice::ensemble : core::SoloOrEnsembleChoice::Choice::solo;
                 scoreIntstrument->getSoloOrEnsembleChoice()->setChoice( value );
             }
-            if( myPartData.instrumentData.sound.size() > 0)
+            
+            if( myPartData.midiData.virtualName.size() > 0 || myPartData.midiData.virtualLibrary.size() > 0 )
             {
                 addScoreInstrument = true;
+                scoreIntstrument->setHasVirtualInstrument( true );
+                auto virtualInstrument = scoreIntstrument->getVirtualInstrument();
+                
+                if( myPartData.midiData.virtualName.size() > 0 )
+                {
+                    virtualInstrument->setHasVirtualName( true );
+                    virtualInstrument->getVirtualName()->setValue( core::XsString{ myPartData.midiData.virtualName } );
+                }
+                
+                if( myPartData.midiData.virtualLibrary.size() > 0 )
+                {
+                    virtualInstrument->setHasVirtualLibrary( true );
+                    virtualInstrument->getVirtualLibrary()->setValue( core::XsString{ myPartData.midiData.virtualLibrary } );
+                }
+            }
+            
+            if( myPartData.instrumentData.sound.size() > 0 )
+            {
                 scoreIntstrument->setHasInstrumentSound( true );
                 scoreIntstrument->getInstrumentSound()->setValue( core::XsString{ myPartData.instrumentData.sound } );
             }
+            
             if( addScoreInstrument )
             {
                 myOutScorePart->addScoreInstrument( scoreIntstrument );
@@ -130,6 +156,7 @@ namespace mx
             auto& midiDevice = *midiGroup->getMidiDevice();
             auto& midiInstrument = *midiGroup->getMidiInstrument();
             midiInstrument.getAttributes()->id = core::XsID{ myPartData.midiData.uniqueId };
+            
             if( myPartData.midiData.device.size() > 0 )
             {
                 addMidiElement = true;

@@ -9,7 +9,7 @@
 
 using namespace mx::core;
 
-DecimalType kThreshold = 0.00000000000001;
+DecimalType kThreshold = 0.0000000000001;
 
 // using DecimalType = double;
 TEST( DecimalType, Decimals )

@@ -24,5 +24,12 @@ namespace mx
             bool isValid( const ScoreData& scoreData ) const;
             
         };
+        
+        MXAPI_EQUALS_BEGIN( MeasureLocation )
+        MXAPI_EQUALS_MEMBER( partIndex )
+        MXAPI_EQUALS_MEMBER( staffIndex )
+        MXAPI_EQUALS_MEMBER( measureIndex )
+        MXAPI_EQUALS_END;
+        MXAPI_NOT_EQUALS_AND_VECTORS( MeasureLocation );
     }
 }

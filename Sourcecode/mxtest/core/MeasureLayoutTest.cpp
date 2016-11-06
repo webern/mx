@@ -11,7 +11,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, MeasureLayout )
 {
@@ -53,7 +53,7 @@ TEST( Test03, MeasureLayout )
 	CHECK( object->hasContents() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     MeasureLayoutPtr tgenMeasureLayout( variant v )
     {

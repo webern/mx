@@ -9,6 +9,11 @@
 
 namespace mx
 {
+    namespace core
+    {
+        class Duration;
+    }
+
     namespace impl
     {
         class Cursor
@@ -17,11 +22,13 @@ namespace mx
 
             api::TimeSignatureData timeSignature;
             int ticksPerQuarter;
-            int position;
+            int tickTimePosition;
             int voiceIndex;
             int staffIndex;
             bool isBackupInProgress;
             bool isFirstMeasureInPart;
+            
+            bool isChordActive;
 
             Cursor( int numStaves, int globalTicksPerQuarter );
             virtual ~Cursor() = default;
@@ -36,7 +43,11 @@ namespace mx
 			// use this to clear the state
 			// when starting a new measure     
             void reset();
-            
+
+            int convertDurationToGlobalTickScale( const core::Duration& duration ) const;
+            int convertDurationToGlobalTickScale( long double durationValue ) const;
+            int convertDurationToGlobalTickScale( int duration ) const;
+
         private:
             int myNumStaves;
             int myGlobalTicksPerQuarter;

@@ -35,21 +35,24 @@
 //
 // The magic came from here h t t p : / / stackoverflow.com/a/31860104/2779792
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     #define MX_ATTR_FUNC_OPTIONAL( attributeFieldName, attributeFieldNameCapitalized, attributeType, defaultReturnValue )               \
                                                                                                                                         \
     template<class T>                                                                                                                   \
-    auto check##attributeFieldNameCapitalized( const T* const obj )                                                                     \
-    -> decltype(  obj->attributeFieldName  )                                                                                            \
+    auto check##attributeFieldNameCapitalized( const T* const attributesRawPtr )                                                        \
+    -> decltype(  attributesRawPtr->attributeFieldName  )                                                                               \
     {                                                                                                                                   \
-        return obj->attributeFieldName;                                                                                                 \
+        return attributesRawPtr->attributeFieldName;                                                                                    \
     }                                                                                                                                   \
                                                                                                                                         \
-                                                                                                                                        \
+    template<class T>                                                                                                                   \
     inline auto check##attributeFieldNameCapitalized(...) -> attributeType                                                              \
     {                                                                                                                                   \
         return defaultReturnValue;                                                                                                      \
     }                                                                                                                                   \
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #define MX_ATTR_FUNC_OPTIONAL_WITH_GETTER( attributeFieldName, attributeFieldNameCapitalized, attributeType, defaultReturnValue )   \
                                                                                                                                         \
@@ -60,8 +63,85 @@
         return obj->attributeFieldName.getValue();                                                                                      \
     }                                                                                                                                   \
                                                                                                                                         \
-                                                                                                                                        \
+    template<class T>                                                                                                                   \
     inline auto check##attributeFieldNameCapitalized(...) -> attributeType                                                              \
     {                                                                                                                                   \
         return defaultReturnValue;                                                                                                      \
     }                                                                                                                                   \
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    #define MX_ATTR_SETFUNC_OPTIONAL( attributeFieldName, attributeFieldNameCapitalized, attributeType, failureReturnValue )            \
+                                                                                                                                        \
+    template<class ATTRIBUTES_STRUCT, class VALUE_TYPE>                                                                                 \
+    auto MXIMPLFUNC_lookForAndSet##attributeFieldNameCapitalized(                                                                       \
+        VALUE_TYPE valueToSet,                                                                                                          \
+        ATTRIBUTES_STRUCT* const outAttributesRawPtr,                                                                                   \
+        int dummy )                                                                                                                     \
+    -> decltype(  outAttributesRawPtr->attributeFieldName  )                                                                            \
+    {                                                                                                                                   \
+        MX_UNUSED( dummy );                                                                                                             \
+        outAttributesRawPtr->attributeFieldName = valueToSet;                                                                           \
+        return outAttributesRawPtr->attributeFieldName;                                                                                 \
+    }                                                                                                                                   \
+                                                                                                                                        \
+    template<class ATTRIBUTES_STRUCT, class VALUE_TYPE>                                                                                 \
+    auto MXIMPLFUNC_lookForAndSet##attributeFieldNameCapitalized(                                                                       \
+        VALUE_TYPE valueToSet,                                                                                                          \
+        ATTRIBUTES_STRUCT* const outAttributesRawPtr,                                                                                   \
+        long dummy )                                                                                                                    \
+    -> decltype( failureReturnValue )                                                                                                   \
+    {                                                                                                                                   \
+        MX_UNUSED( outAttributesRawPtr );                                                                                               \
+        MX_UNUSED( dummy );                                                                                                             \
+        MX_UNUSED( valueToSet );                                                                                                        \
+        return failureReturnValue;                                                                                                      \
+    }                                                                                                                                   \
+                                                                                                                                        \
+    template<class ATTRIBUTES_STRUCT, class VALUE_TYPE>                                                                                 \
+    auto lookForAndSet##attributeFieldNameCapitalized(                                                                                  \
+        VALUE_TYPE valueToSet,                                                                                                          \
+        ATTRIBUTES_STRUCT* const outAttributesRawPtr )                                                                                  \
+    -> decltype( MXIMPLFUNC_lookForAndSet##attributeFieldNameCapitalized( valueToSet, outAttributesRawPtr, 0 ) )                        \
+    {                                                                                                                                   \
+         return MXIMPLFUNC_lookForAndSet##attributeFieldNameCapitalized( valueToSet, outAttributesRawPtr, 0 );                          \
+    }                                                                                                                                   \
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    #define MX_ATTR_SETFUNC_OPTIONAL_WITH_SETTER( attributeFieldName, attributeFieldNameCapitalized, attributeType, failureReturnValue )\
+                                                                                                                                        \
+    template<class ATTRIBUTES_STRUCT, class VALUE_TYPE>                                                                                 \
+    auto MXIMPLFUNC_lookForAndSet##attributeFieldNameCapitalized(                                                                       \
+        VALUE_TYPE valueToSet,                                                                                                          \
+        ATTRIBUTES_STRUCT* const outAttributesRawPtr,                                                                                   \
+        int dummy )                                                                                                                     \
+    -> decltype( outAttributesRawPtr->attributeFieldName.setValue( valueToSet ) )                                                       \
+    {                                                                                                                                   \
+        MX_UNUSED( dummy );                                                                                                             \
+        outAttributesRawPtr->attributeFieldName.setValue( valueToSet );                                                                 \
+    }                                                                                                                                   \
+                                                                                                                                        \
+    template<class ATTRIBUTES_STRUCT, class VALUE_TYPE>                                                                                 \
+    auto MXIMPLFUNC_lookForAndSet##attributeFieldNameCapitalized(                                                                       \
+        VALUE_TYPE valueToSet,                                                                                                          \
+        ATTRIBUTES_STRUCT* const outAttributesRawPtr,                                                                                   \
+        long dummy )                                                                                                                    \
+    -> decltype( void() )                                                                                                               \
+    {                                                                                                                                   \
+        MX_UNUSED( outAttributesRawPtr );                                                                                               \
+        MX_UNUSED( dummy );                                                                                                             \
+        MX_UNUSED( valueToSet );                                                                                                        \
+    }                                                                                                                                   \
+                                                                                                                                        \
+    template<class ATTRIBUTES_STRUCT, class VALUE_TYPE>                                                                                 \
+    auto lookForAndSet##attributeFieldNameCapitalized(                                                                                  \
+        VALUE_TYPE valueToSet,                                                                                                          \
+        ATTRIBUTES_STRUCT* const outAttributesRawPtr )                                                                                  \
+    -> decltype( MXIMPLFUNC_lookForAndSet##attributeFieldNameCapitalized( valueToSet, outAttributesRawPtr, 0 ), void() )                \
+    {                                                                                                                                   \
+         MXIMPLFUNC_lookForAndSet##attributeFieldNameCapitalized( valueToSet, outAttributesRawPtr, 0 );                                 \
+    }                                                                                                                                   \
+                                                                                                                                        \
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

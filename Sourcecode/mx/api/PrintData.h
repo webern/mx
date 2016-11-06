@@ -28,5 +28,13 @@ namespace mx
                 
             }
         };
+        
+        MXAPI_EQUALS_BEGIN( PrintData )
+        MXAPI_EQUALS_MEMBER( printObject )
+        MXAPI_EQUALS_MEMBER( fontData )
+        MXAPI_EQUALS_MEMBER( isColorSpecified )
+        MXAPI_EQUALS_MEMBER( color )
+        MXAPI_EQUALS_END;
+        MXAPI_NOT_EQUALS_AND_VECTORS( PrintData );
     }
 }

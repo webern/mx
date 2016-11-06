@@ -8,7 +8,7 @@
 #include "mxtest/core/HelperFunctions.h"
 #include "mx/core/Elements.h"
 
-namespace MxTestHelpers
+namespace mxtest
 {
     mx::core::ScordaturaPtr tgenScordatura( variant v );
     void tgenScordaturaExpected( std::ostream& os, int indentLevel, variant v );

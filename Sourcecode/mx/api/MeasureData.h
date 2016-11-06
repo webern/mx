@@ -9,6 +9,7 @@
 #include "mx/api/TempoData.h"
 #include "mx/api/DirectionData.h"
 #include "mx/api/KeyData.h"
+#include "mx/api/BarlineData.h"
 
 #include <string>
 #include <map>
@@ -17,14 +18,6 @@ namespace mx
 {
     namespace api
     {
-        enum class MeasureNumbering
-        {
-            unspecified,
-            none,
-            measure,
-            system
-        };
-
         class MeasureData
         {
         public:
@@ -89,12 +82,9 @@ namespace mx
             
             // a width value less than 0 means 'unspecified'
             long double width;
-            
-            std::vector<TempoData> tempos;
             std::vector<KeyData> keys;
-            
-            DirectionData directionData;
-            
+            std::vector<BarlineData> barlines;
+
             MeasureData()
             : staves{}
             , timeSignature{}
@@ -108,5 +98,19 @@ namespace mx
                 
             }
         };
+        
+        MXAPI_EQUALS_BEGIN( MeasureData )
+        MXAPI_EQUALS_MEMBER( staves )
+        MXAPI_EQUALS_MEMBER( timeSignature )
+        MXAPI_EQUALS_MEMBER( number )
+        MXAPI_EQUALS_MEMBER( measureNumbering )
+        MXAPI_EQUALS_MEMBER( multiMeasureRest )
+        MXAPI_EQUALS_MEMBER( implicit )
+        MXAPI_EQUALS_MEMBER( nonControlling )
+        MXAPI_EQUALS_MEMBER( width )
+        MXAPI_EQUALS_MEMBER( keys )
+        MXAPI_EQUALS_MEMBER( barlines )
+        MXAPI_EQUALS_END;
+        MXAPI_NOT_EQUALS_AND_VECTORS( MeasureData );
     }
 }

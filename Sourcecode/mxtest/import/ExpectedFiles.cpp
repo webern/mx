@@ -4,7 +4,8 @@
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_IMPORT_TESTS
 
-#include "mxtest/control/File.h"
+#include "mxtest/file/StupidFileFunctions.h"
+#include "mxtest/file/MxFileRepository.h"
 #include "mxtest/import/ExpectedFiles.h"
 #include "mx/utility/Throw.h"
 #include "mx/core/Document.h"
@@ -21,7 +22,7 @@
 using namespace mx::xml;
 
 
-namespace MxTest
+namespace mxtest
 {
     void generateExpectedFile( const std::string& subdir, const std::string& fileName )
     {
@@ -259,24 +260,33 @@ namespace MxTest
     
     void deleteExpectedFiles()
     {
-        for( auto it = TestFiles.cbegin(); it != TestFiles.cend(); ++it )
+        std::cout << "deleting expected files" << std::flush;
+        auto testFiles = MxFileRepository::getTestFiles( 0 );
+        for( auto it = testFiles.cbegin(); it != testFiles.cend(); ++it )
         {
-            std::string fullpath = getExpectedFileFullPath( it->first, it->second );
-            std::cout << "deleting expected file - " << fullpath << it->second << std::endl;
-            deleteFileNoThrow( fullpath );
+            std::string fullpath = getExpectedFileFullPath( it->subdirectory, it->fileName );
+            bool isDeleted = deleteFileNoThrow( fullpath );
+            if( isDeleted )
+            {
+                std::cout << "." << std::flush;
+                //std::cout << "deleting expected file - " << fullpath << it->fileName << std::endl;
+            }
         }
+        std::cout << "done" << std::endl;
     }
     
     
     void generateExpectedFiles()
     {
+        std::cout << "creating expected files" << std::flush;
         const int maxConcurrency = 50;
         std::list<std::future<void>> q;
-        
-        for( auto it = TestFiles.cbegin(); it != TestFiles.cend(); ++it )
+        auto testFiles = MxFileRepository::getTestFiles( MX_COMPILE_MAX_FILE_SIZE_BYTES );
+        for( auto it = testFiles.cbegin(); it != testFiles.cend(); ++it )
         {
-            std::cout << "creating expected file - " << it->first << " - " << it->second << std::endl;
-            auto fut = std::async( std::launch::async, generateExpectedFile, it->first.c_str(), it->second.c_str() );
+            std::cout << "." << std::flush;
+            // std::cout << "creating expected file - " << it->subdirectory << " - " << it->fileName << std::endl;
+            auto fut = std::async( std::launch::async, generateExpectedFile, it->subdirectory.c_str(), it->fileName.c_str() );
             
             while( q.size() >= maxConcurrency )
             {
@@ -307,6 +317,7 @@ namespace MxTest
                 std::this_thread::sleep_for( std::chrono::milliseconds(10) );
             }
         }
+        std::cout << "done" << std::endl;
     }
     
 
@@ -332,10 +343,11 @@ namespace MxTest
     
     void deleteTestOutputFiles()
     {
-        for( auto it = TestFiles.cbegin(); it != TestFiles.cend(); ++it )
+        auto testFiles = MxFileRepository::getTestFiles( 0 );
+        for( auto it = testFiles.cbegin(); it != testFiles.cend(); ++it )
         {
-            std::string ex = getTestOutputExpectedFileFullPath( it->first, it->second );
-            std::string er = getTestOutputErrorFileFullPath( it->first, it->second );
+            std::string ex = getTestOutputExpectedFileFullPath( it->subdirectory, it->fileName );
+            std::string er = getTestOutputErrorFileFullPath( it->subdirectory, it->fileName );
             deleteFileNoThrow( ex );
             deleteFileNoThrow( er );
         }

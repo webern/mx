@@ -11,7 +11,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, TechnicalChoice )
 {
@@ -56,7 +56,7 @@ TEST( Test03, TechnicalChoice )
 	CHECK( object->hasContents() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     TechnicalChoicePtr tgenTechnicalChoice( variant v )
     {

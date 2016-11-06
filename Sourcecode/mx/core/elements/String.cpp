@@ -12,13 +12,17 @@ namespace mx
         String::String()
         :myAttributes( std::make_shared<StringAttributes>() )
         ,myValue()
-        {}
+        {
+
+        }
 
 
         String::String( const StringNumber& value )
         :myAttributes( std::make_shared<StringAttributes>() )
         ,myValue( value )
-        {}
+        {
+            
+        }
 
 
         bool String::hasAttributes() const

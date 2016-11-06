@@ -23,7 +23,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, MusicDataGroup )
 {
@@ -65,7 +65,7 @@ TEST( Test03, MusicDataGroup )
 	CHECK( object->hasContents() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     MusicDataGroupPtr tgenMusicDataGroup( variant v )
     {

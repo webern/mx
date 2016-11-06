@@ -42,6 +42,7 @@
 #include "mx/core/elements/VirtualName.h"
 #include "mx/core/elements/Volume.h"
 #include "mx/impl/MeasureReader.h"
+#include "mx/impl/PrintFunctions.h"
 
 #include <sstream>
 
@@ -71,27 +72,19 @@ namespace mx
             myOutPartData = api::PartData{};
             parseScorePart();
             
-            bool isFirstMeasure = true;
-
-            // TODO - if we need to use isFirstPart it
-            // will need to be passed down from the caller
-            bool isFirstPart = false;
-            
-            int measureIndex = 0;
+            MeasureCursor currentCursor{ myNumStaves, myGlobalTicksPerMeasure };
+            MeasureCursor previousCursor{ myNumStaves, myGlobalTicksPerMeasure };
             for( const auto& mxMeasurePtr : myPartwisePart.getPartwiseMeasureSet() )
             {
                 const auto& mxMeasure = *mxMeasurePtr;
-                MeasureReaderParameters params;
-                params.measureIndex = measureIndex;
-                params.globalTicksPerQuarter = myGlobalTicksPerMeasure;
-                params.numStaves = myNumStaves;
-                params.isFirstPart = isFirstPart;
-                params.isFirstMeasure = isFirstMeasure;
-                MeasureReader reader{ mxMeasure, params };
-                myOutPartData.measures.emplace_back( reader.getMeasureData() );
-                isFirstMeasure = false;
-                ++measureIndex;
+                MeasureReader reader{ mxMeasure, currentCursor, previousCursor };
+                auto measureData = reader.getMeasureData();
+                currentCursor.timeSignature = measureData.timeSignature;
+                myOutPartData.measures.emplace_back( std::move( measureData ) );
+                ++currentCursor.measureIndex;
+                previousCursor = currentCursor;
             }
+            
             api::PartData tempReturn = std::move( myOutPartData );
             myOutPartData = api::PartData{};
             return tempReturn;
@@ -152,8 +145,7 @@ namespace mx
                         case core::MusicDataChoice::Choice::grouping:
                         case core::MusicDataChoice::Choice::link:
                         case core::MusicDataChoice::Choice::bookmark:
-                        default:
-                            break;
+                        default: break;
                     }
                 }
             }

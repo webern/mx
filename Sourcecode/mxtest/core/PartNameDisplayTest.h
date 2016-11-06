@@ -8,7 +8,7 @@
 #include "mxtest/core/HelperFunctions.h"
 #include "mx/core/Elements.h"
 
-namespace MxTestHelpers
+namespace mxtest
 {
     mx::core::DisplayTextOrAccidentalTextPtr tgenDisplayTextOrAccidentalText( variant v );
     mx::core::PartNameDisplayPtr tgenPartNameDisplay( variant v );

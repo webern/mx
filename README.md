@@ -5,11 +5,12 @@ MusicXML Class Library
 - License: MIT
 - Version: 0.3
 - Supported MusicXML Version: 3.0
+- Language: C++14
 
 -----------------------------------------
 
 ## Introduction
-This project is a static C++ class library for working with MusicXML files.  The MusicXML file is represented in a strongly-typed object-oriented class structure.  MusicXML can be deserialized into the class structure and serialized from class structure to MusicXML.
+This project is a C++ class library for working with MusicXML files.  MusicXML filea are represented in a strongly-typed object-oriented class structure.  MusicXML can be deserialized into the class structure and serialized from class structure to MusicXML.
 
 One of the goals of this project is to strongly-type all aspects of the MusicXML XSD specification such that **any program that compiles will represent a valid MusicXML document.**  This principle is only extended as far as XSD validation is concerned.  The MusicXML specification allows for the creation of valid MusicXML documents which are nonetheless musical gibberish.  Additionally the MusicXML specification has many requirements which are described in comments in the XSD specification.  In other words, an XSD-validated MusicXML document does not necessarily represent valid MusicXML.
 
@@ -29,6 +30,7 @@ To compile with any other system, use cmake, here is a Visual Studio example
 ```
 git clone https://github.com/Webern/MusicXML-Class-Library.git MxRepo
 mkdir MxBuild
+cd MxBuild
 cmake ..\MxRepo
 start Mx.sln
 ```
@@ -427,7 +429,8 @@ The tests are slow to compile, see the *Compiling* section for more info on how 
 - A simplified and stable facade API should be added to make it much, much easier to understand and interact with MusicXML documents.
 
 ### Historical Notes and Release Notes
-**Historical Note: October 6, 2016:** Significant progress has been made on the `api` namespace, which is a simplified set of data structures to represent a MusicXML document.  These are being implemented as mostly-POD structs.  Currently the importing of data into these structures is well-underway, but the exporting from these data structures has not been implemented.
+**Historical Note: October 6, 2016:** Significant progress has been made on the `api` namespace, which is a simplified set of data structures to represent a MusicXML document.  These are being implemented as mostly-POD structs.  Currently the importing of data into these structures is well-underway, but the exporting from these data structures has not been implemented.
+
 **Release:  Version 0.2 August 21, 2016** Adds the ability to import MusicXML documents into MusicXML Classes.
 
 **Historical Note: August 16, 2016:** All tests are passing (core, xml and import).  The remaining items to do on the ximport feature are

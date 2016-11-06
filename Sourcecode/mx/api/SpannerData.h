@@ -13,36 +13,55 @@ namespace mx
 {
     namespace api
     {
-        enum class SpannerType
-        {
-            unspecified,
-            wavyLine,
-            beatRepeat,      // ?
-            measureRepeat,   // ?
-            slashNotation,   // ?
-            ending,          // ?
-            barre,
-            bracket,
-            dashes,
-            pedal,           // ?
-            extend,          // ?
-            glissando,
-            hammerOnPullOff, // ?
-            slide,
-            slur,
-            tie,
-            tremolo,
-        };
-        
-        struct SpannerData
+
+        struct SpannerStart
         {
             int numberLevel;
-            SpannerType spannerType;
-            std::string name;
-            int tickPosition;
-            PrintData printData;
+            int tickTimePosition;
             PositionData positionData;
+            PrintData printData;
             LineData lineData;
+            
+            SpannerStart()
+            : numberLevel{ -1 }
+            , tickTimePosition{ 0 }
+            , positionData{}
+            , printData{}
+            , lineData{}
+            {
+                
+            }
         };
+        
+        struct SpannerStop
+        {
+            int numberLevel;
+            int tickTimePosition;
+            PositionData positionData;
+            
+            SpannerStop()
+            : numberLevel{ -1 }
+            , tickTimePosition{ 0 }
+            , positionData{}
+            {
+                
+            }
+        };
+                
+        MXAPI_EQUALS_BEGIN( SpannerStart )
+        MXAPI_EQUALS_MEMBER( numberLevel )
+        MXAPI_EQUALS_MEMBER( tickTimePosition )
+        MXAPI_EQUALS_MEMBER( positionData )
+        MXAPI_EQUALS_MEMBER( printData )
+        MXAPI_EQUALS_MEMBER( lineData )
+        MXAPI_EQUALS_END;
+        MXAPI_NOT_EQUALS_AND_VECTORS( SpannerStart );
+        
+        MXAPI_EQUALS_BEGIN( SpannerStop )
+        MXAPI_EQUALS_MEMBER( numberLevel )
+        MXAPI_EQUALS_MEMBER( tickTimePosition )
+        MXAPI_EQUALS_MEMBER( positionData )
+        MXAPI_EQUALS_END;
+        MXAPI_NOT_EQUALS_AND_VECTORS( SpannerStop );
     }
 }

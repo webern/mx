@@ -58,6 +58,7 @@ namespace mx
             api::PartGroupData popMostRecentGroupFromStack() const;
             int parsePartGroupNumber( const core::PartGroupPtr& inPartGroup ) const;
             void scanForSystemInfo() const;
+            int findMaxDivisionsPerQuarter() const;
     	};
     }
 }
