@@ -33,6 +33,14 @@ namespace mx
             above,
             below
         };
+        
+        enum class MeasureNumbering
+        {
+            unspecified,
+            none,
+            measure,
+            system
+        };
     }
 }
 

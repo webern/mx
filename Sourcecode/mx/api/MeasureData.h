@@ -18,14 +18,6 @@ namespace mx
 {
     namespace api
     {
-        enum class MeasureNumbering
-        {
-            unspecified,
-            none,
-            measure,
-            system
-        };
-
         class MeasureData
         {
         public:

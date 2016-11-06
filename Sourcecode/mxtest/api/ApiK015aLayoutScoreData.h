@@ -15,7 +15,64 @@ namespace mxtest
         using namespace mx::api;
         ScoreData score;
         score.parts.emplace_back( PartData{} );
-        score.ticksPerQuarter = 2;
+        score.ticksPerQuarter = 240;
+        score.movementTitle = "k015a_System_Layout";
+        
+        SupportedItem supported;
+        supported.elementName = "print";
+        supported.attributeName = "new-system";
+        supported.specificValue = "yes";
+        score.encoding.supportedItems.emplace_back( supported );
+        supported.attributeName = "new-page";
+        score.encoding.supportedItems.emplace_back( supported );
+        score.layout.pageHeight = 1545;
+        score.layout.pageWidth = 1194;
+        score.layout.scalingMillimeters = 7.2319;
+        score.layout.scalingTenths = 40;
+        score.layout.oddPageLeftMargin = 70;
+        score.layout.oddPageRightMargin = 70;
+        score.layout.oddPageTopMargin = 88;
+        score.layout.oddPageBottomMargin = 88;
+        score.layout.evenPageLeftMargin = 70;
+        score.layout.evenPageRightMargin = 70;
+        score.layout.evenPageTopMargin = 88;
+        score.layout.evenPageBottomMargin = 88;
+        
+        score.layout.systemLeftMargin = 125;
+        score.layout.systemRightMargin = 503;
+        score.layout.topSystemDistance = 70;
+        score.layout.systemDistance = 121;
+        
+        SystemData system;
+        system.measureIndex = 0;
+        system.rightMargin = 0;
+        system.leftMargin = 515;
+        system.topSystemDistance = 211;
+        
+        /*
+         : measureIndex{ -1 }
+         , rightMargin{ 0 }
+         , leftMargin{ 0 }
+         , isMarginSpecified{ false }
+         , systemDistance{ 0 }
+         , isSystemDistanceSpecified{ false }
+         , topSystemDistance{ 0 }
+         , isTopSystemDistanceSpecified{ false }
+         */
+        score.systems.emplace( system );
+        
+        /*
+         <print page-number="1">
+           <system-layout>
+             <system-margins>
+               <left-margin>515</left-margin>
+               <right-margin>0</right-margin>
+             </system-margins>
+               <top-system-distance>211</top-system-distance>
+           </system-layout>
+           <measure-numbering>system</measure-numbering>
+         </print>
+         */
         
         auto& part = score.parts.front();
         part.uniqueId = "P1";
@@ -24,6 +81,7 @@ namespace mxtest
         // 1
         part.measures.emplace_back( MeasureData{} );
         auto measure = &part.measures.back();
+        measure->width =
         measure->timeSignature.beats = 4;
         measure->timeSignature.beatType = 4;
         measure->timeSignature.isImplicit = false;
@@ -34,214 +92,7 @@ namespace mxtest
         clef.line = 2;
         
         staff->voices[0].notes.emplace_back( NoteData{} );
-        auto note = &staff->voices[0].notes.back();
-        note->userRequestedVoiceNumber = 1;
-        note->pitchData.step = Step::c;
-        note->pitchData.octave = 4;
-        note->durationData.durationName = DurationName::whole;
-        note->durationData.durationTimeTicks = 8;
-        note->pitchData.accidental = Accidental::none;
-        note->noteAttachmentData.marks.emplace_back( MarkType::fermata );
-        auto& markData = note->noteAttachmentData.marks.back();
-        markData.positionData.isDefaultXSpecified = true;
-        markData.positionData.defaultX = 1.0;
-        markData.positionData.isDefaultYSpecified = true;
-        markData.positionData.defaultY = 2.0;
-        markData.positionData.isRelativeXSpecified = true;
-        markData.positionData.relativeX = 3.0;
-        markData.positionData.isRelativeYSpecified = true;
-        markData.positionData.relativeY = 4.0;
-        markData.printData.fontData.fontFamily.emplace_back( std::string{ "a" } );
-        markData.printData.fontData.fontFamily.emplace_back( std::string{ "B" } );
-        markData.printData.fontData.fontFamily.emplace_back( std::string{ "Charlie" } );
-        markData.printData.fontData.style = mx::api::FontStyle::italic;
-        markData.printData.fontData.weight = mx::api::FontWeight::bold;
-        markData.printData.isColorSpecified = true;
-        markData.printData.color.red = 1;
-        markData.printData.color.green = 2;
-        markData.printData.color.blue = 3;
-        markData.printData.fontData.sizeType = mx::api::FontSizeType::point;
-        markData.printData.fontData.sizePoint = 24.0;
         
-        // 2
-        part.measures.emplace_back( MeasureData{} );
-        measure = &part.measures.back();
-        measure->staves.emplace_back( StaffData{} );
-        staff = &measure->staves.back();
-        staff->voices[0].notes.emplace_back( NoteData{} );
-        note = &staff->voices[0].notes.back();
-        note->userRequestedVoiceNumber = 1;
-        note->pitchData.step = Step::c;
-        note->pitchData.octave = 4;
-        note->durationData.durationName = DurationName::whole;
-        note->durationData.durationTimeTicks = 8;
-        note->pitchData.accidental = Accidental::none;
-        note->noteAttachmentData.marks.emplace_back( MarkType::fermataNormalUpright );
-        
-        // 3
-        part.measures.emplace_back( MeasureData{} );
-        measure = &part.measures.back();
-        measure->staves.emplace_back( StaffData{} );
-        staff = &measure->staves.back();
-        staff->voices[0].notes.emplace_back( NoteData{} );
-        note = &staff->voices[0].notes.back();
-        note->userRequestedVoiceNumber = 1;
-        note->pitchData.step = Step::c;
-        note->pitchData.octave = 4;
-        note->durationData.durationName = DurationName::whole;
-        note->durationData.durationTimeTicks = 8;
-        note->pitchData.accidental = Accidental::none;
-        note->noteAttachmentData.marks.emplace_back( MarkType::fermataNormalInverted );
-        
-        // 4
-        part.measures.emplace_back( MeasureData{} );
-        measure = &part.measures.back();
-        measure->staves.emplace_back( StaffData{} );
-        staff = &measure->staves.back();
-        staff->voices[0].notes.emplace_back( NoteData{} );
-        note = &staff->voices[0].notes.back();
-        note->userRequestedVoiceNumber = 1;
-        note->pitchData.step = Step::c;
-        note->pitchData.octave = 6;
-        note->durationData.durationName = DurationName::whole;
-        note->durationData.durationTimeTicks = 8;
-        note->pitchData.accidental = Accidental::none;
-        note->noteAttachmentData.marks.emplace_back( MarkType::fermataNormalUpright );
-        
-        // 5
-        part.measures.emplace_back( MeasureData{} );
-        measure = &part.measures.back();
-        measure->staves.emplace_back( StaffData{} );
-        staff = &measure->staves.back();
-        staff->voices[0].notes.emplace_back( NoteData{} );
-        note = &staff->voices[0].notes.back();
-        note->userRequestedVoiceNumber = 1;
-        note->pitchData.step = Step::c;
-        note->pitchData.octave = 6;
-        note->durationData.durationName = DurationName::whole;
-        note->durationData.durationTimeTicks = 8;
-        note->pitchData.accidental = Accidental::none;
-        note->noteAttachmentData.marks.emplace_back( MarkType::fermataNormalInverted );
-        
-        // 6
-        part.measures.emplace_back( MeasureData{} );
-        measure = &part.measures.back();
-        measure->staves.emplace_back( StaffData{} );
-        staff = &measure->staves.back();
-        staff->voices[0].notes.emplace_back( NoteData{} );
-        note = &staff->voices[0].notes.back();
-        note->userRequestedVoiceNumber = 1;
-        note->pitchData.step = Step::c;
-        note->pitchData.octave = 4;
-        note->durationData.durationName = DurationName::whole;
-        note->durationData.durationTimeTicks = 8;
-        note->pitchData.accidental = Accidental::none;
-        note->noteAttachmentData.marks.emplace_back( MarkType::fermataAngledUpright );
-        
-        // 7
-        part.measures.emplace_back( MeasureData{} );
-        measure = &part.measures.back();
-        measure->staves.emplace_back( StaffData{} );
-        staff = &measure->staves.back();
-        staff->voices[0].notes.emplace_back( NoteData{} );
-        note = &staff->voices[0].notes.back();
-        note->userRequestedVoiceNumber = 1;
-        note->pitchData.step = Step::c;
-        note->pitchData.octave = 4;
-        note->durationData.durationName = DurationName::whole;
-        note->durationData.durationTimeTicks = 8;
-        note->pitchData.accidental = Accidental::none;
-        note->noteAttachmentData.marks.emplace_back( MarkType::fermataAngledInverted );
-        
-        // 8
-        part.measures.emplace_back( MeasureData{} );
-        measure = &part.measures.back();
-        measure->staves.emplace_back( StaffData{} );
-        staff = &measure->staves.back();
-        staff->voices[0].notes.emplace_back( NoteData{} );
-        note = &staff->voices[0].notes.back();
-        note->userRequestedVoiceNumber = 1;
-        note->pitchData.step = Step::c;
-        note->pitchData.octave = 6;
-        note->durationData.durationName = DurationName::whole;
-        note->durationData.durationTimeTicks = 8;
-        note->pitchData.accidental = Accidental::none;
-        note->noteAttachmentData.marks.emplace_back( MarkType::fermataAngledUpright );
-        
-        // 9
-        part.measures.emplace_back( MeasureData{} );
-        measure = &part.measures.back();
-        measure->staves.emplace_back( StaffData{} );
-        staff = &measure->staves.back();
-        staff->voices[0].notes.emplace_back( NoteData{} );
-        note = &staff->voices[0].notes.back();
-        note->userRequestedVoiceNumber = 1;
-        note->pitchData.step = Step::c;
-        note->pitchData.octave = 6;
-        note->durationData.durationName = DurationName::whole;
-        note->durationData.durationTimeTicks = 8;
-        note->pitchData.accidental = Accidental::none;
-        note->noteAttachmentData.marks.emplace_back( MarkType::fermataAngledInverted );
-        
-        // 10
-        part.measures.emplace_back( MeasureData{} );
-        measure = &part.measures.back();
-        measure->staves.emplace_back( StaffData{} );
-        staff = &measure->staves.back();
-        staff->voices[0].notes.emplace_back( NoteData{} );
-        note = &staff->voices[0].notes.back();
-        note->userRequestedVoiceNumber = 1;
-        note->pitchData.step = Step::c;
-        note->pitchData.octave = 4;
-        note->durationData.durationName = DurationName::whole;
-        note->durationData.durationTimeTicks = 8;
-        note->pitchData.accidental = Accidental::none;
-        note->noteAttachmentData.marks.emplace_back( MarkType::fermataSquareUpright );
-        
-        // 11
-        part.measures.emplace_back( MeasureData{} );
-        measure = &part.measures.back();
-        measure->staves.emplace_back( StaffData{} );
-        staff = &measure->staves.back();
-        staff->voices[0].notes.emplace_back( NoteData{} );
-        note = &staff->voices[0].notes.back();
-        note->userRequestedVoiceNumber = 1;
-        note->pitchData.step = Step::c;
-        note->pitchData.octave = 4;
-        note->durationData.durationName = DurationName::whole;
-        note->durationData.durationTimeTicks = 8;
-        note->pitchData.accidental = Accidental::none;
-        note->noteAttachmentData.marks.emplace_back( MarkType::fermataSquareInverted );
-        
-        // 12
-        part.measures.emplace_back( MeasureData{} );
-        measure = &part.measures.back();
-        measure->staves.emplace_back( StaffData{} );
-        staff = &measure->staves.back();
-        staff->voices[0].notes.emplace_back( NoteData{} );
-        note = &staff->voices[0].notes.back();
-        note->userRequestedVoiceNumber = 1;
-        note->pitchData.step = Step::c;
-        note->pitchData.octave = 6;
-        note->durationData.durationName = DurationName::whole;
-        note->durationData.durationTimeTicks = 8;
-        note->pitchData.accidental = Accidental::none;
-        note->noteAttachmentData.marks.emplace_back( MarkType::fermataSquareUpright );
-        
-        // 13
-        part.measures.emplace_back( MeasureData{} );
-        measure = &part.measures.back();
-        measure->staves.emplace_back( StaffData{} );
-        staff = &measure->staves.back();
-        staff->voices[0].notes.emplace_back( NoteData{} );
-        note = &staff->voices[0].notes.back();
-        note->userRequestedVoiceNumber = 1;
-        note->pitchData.step = Step::c;
-        note->pitchData.octave = 6;
-        note->durationData.durationName = DurationName::whole;
-        note->durationData.durationTimeTicks = 8;
-        note->pitchData.accidental = Accidental::none;
-        note->noteAttachmentData.marks.emplace_back( MarkType::fermataSquareInverted );
 
         return score;
     }
