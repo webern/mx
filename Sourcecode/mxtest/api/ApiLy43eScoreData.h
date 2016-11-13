@@ -13,6 +13,8 @@ namespace mxtest
         ScoreData score;
         score.parts.emplace_back( PartData{} );
         score.ticksPerQuarter = 8;
+        score.encoding.miscelaneousFields.emplace_back( "description", "A piano staff with dynamics and \n          clef changes, where each element (ffff, wedge and clef changes) \n          applies only to one voice or one staff, respectively." );
+        
         auto& part = score.parts.front();
         part.uniqueId = "P1";
         part.name = "MusicXML Part";

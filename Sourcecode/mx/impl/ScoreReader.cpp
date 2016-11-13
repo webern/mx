@@ -241,6 +241,12 @@ namespace mx
                         myOutScoreData.copyright = r->getValue().getValue();
                     }
                 }
+                api::EncodingData encodingData;
+                
+                if( myHeaderGroup.getHasIdentification() && myHeaderGroup.getIdentification()->getHasEncoding() )
+                {
+                    encodingData = createEncoding( *myHeaderGroup.getIdentification()->getEncoding() );
+                }
                 
                 if( myHeaderGroup.getIdentification()->getHasMiscellaneous() )
                 {
@@ -251,15 +257,14 @@ namespace mx
                         {
                             key = m->getAttributes()->name.getValue();
                         }
-                        myOutScoreData.encoding.miscelaneousFields.emplace_back( m->getAttributes()->name.getValue(), m->getValue().getValue() );
+                        encodingData.miscelaneousFields.emplace_back( m->getAttributes()->name.getValue(), m->getValue().getValue() );
                     }
                 }
+                
+                myOutScoreData.encoding = std::move(encodingData);
             }
             
-            if( myHeaderGroup.getHasIdentification() && myHeaderGroup.getIdentification()->getHasEncoding() )
-            {
-                myOutScoreData.encoding = createEncoding( *myHeaderGroup.getIdentification()->getEncoding() );
-            }
+            
             
             if( myHeaderGroup.getHasDefaults() )
             {
