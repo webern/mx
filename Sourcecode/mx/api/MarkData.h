@@ -61,6 +61,7 @@ namespace mx
             sffz,
             fz,
             otherDynamics,
+            unknownDynamics,
 
             // ornaments
             trillMark,
@@ -76,6 +77,7 @@ namespace mx
             schleifer,
             tremolo,
             otherOrnament,
+            unknownOrnament,
 
             // accidental marks
             accidentalMarkSharp,
@@ -112,6 +114,7 @@ namespace mx
             accidentalMarkFlat4,
             accidentalMarkSori,
             accidentalMarkKoron,
+            accidentalUnknown,
             
             // technical
             upBow,
@@ -138,6 +141,7 @@ namespace mx
             // arrow,
             // handbell,
             otherTechnical,
+            unknownTechnical,
             
             // fermata
             fermata,       // <fermata/>
@@ -163,6 +167,7 @@ namespace mx
             fermataNormalInverted, // <fermata type="inverted">normal</fermata>
             fermataAngledInverted, // <fermata type="inverted">angled</fermata>
             fermataSquareInverted, // <fermata type="inverted">square</fermata>
+            unknownFermata,        // bad state, unknown type, error
             
         };
 
