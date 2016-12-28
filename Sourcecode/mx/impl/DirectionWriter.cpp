@@ -119,6 +119,12 @@ namespace mx
                     attr.hasSpread = true;
                     attr.spread = core::DivisionsValue{ static_cast<core::DecimalType>( wedgeStart.spread ) };
                 }
+                
+                auto& attributes = *wedgePtr->getAttributes();
+                
+                setAttributesFromPositionData( wedgeStart.positionData, attributes );
+                setAttributesFromLineData(wedgeStart.lineData, attributes);
+                setAttributesFromColorData(wedgeStart.colorData, attributes);
             }
             
             for( const auto& wedgeStop : myDirectionData.wedgeStops )
