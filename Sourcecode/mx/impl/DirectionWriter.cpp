@@ -141,6 +141,8 @@ namespace mx
                     attr.hasSpread = true;
                     attr.spread = core::DivisionsValue{ static_cast<core::DecimalType>( wedgeStop.spread ) };
                 }
+                auto& attributes = *wedgePtr->getAttributes();
+                setAttributesFromPositionData( wedgeStop.positionData, attributes );
             }
             
             for( const auto& ottavaStart : myDirectionData.ottavaStarts )
