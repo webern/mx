@@ -237,6 +237,9 @@ namespace mx
             const auto wedgeType = myConverter.convert( attr.type );
             const bool isSpreadSpecified = attr.hasSpread;
             const long double spread = attr.spread.getValue();
+            auto positionData = getPositionData( attr );
+            auto lineData = getLineData( attr );
+            auto colorData = getColor( attr );
             
             if( attr.type == core::WedgeType::stop )
             {
@@ -250,6 +253,7 @@ namespace mx
                     stop.isSpreadSpecified = true;
                     stop.spread = spread;
                 }
+                stop.positionData = positionData;
                 myOutDirectionData.wedgeStops.emplace_back( std::move( stop ) );
                 return;
             }
@@ -266,8 +270,13 @@ namespace mx
                     start.spread = spread;
                 }
                 start.wedgeType = wedgeType;
+                start.positionData = positionData;
+                start.lineData = lineData;
+                start.colorData = colorData;
                 myOutDirectionData.wedgeStarts.emplace_back( std::move( start ) );
             }
+            
+            
         }
         
         
