@@ -38,7 +38,7 @@ namespace mx
         public:
             
             // returns the SMuFL codepoint value for the given name
-            // returns 0 (i.e. '\0;) if not found
+            // returns 0 (i.e. '\0';) if not found
             static char16_t findCodepoint(const std::string& inName);
             
             // finds the SMuFL glyphname for the given codepoint
@@ -61,8 +61,7 @@ namespace mx
             
         private:
             Smufl();
-            static const Smufl& instance();
-            std::map<const std::string, const char16_t> myMap;
+            static std::map<const std::string, const char16_t> ourMap;
         };
     }
 }

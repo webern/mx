@@ -275,8 +275,6 @@ namespace mx
                 start.colorData = colorData;
                 myOutDirectionData.wedgeStarts.emplace_back( std::move( start ) );
             }
-            
-            
         }
         
         
