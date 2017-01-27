@@ -31,7 +31,7 @@ namespace mx
         struct LineData
         {
             LineType lineType;
-            LineHook lineStop;
+            LineHook lineHook;
             bool isStopLengthSpecified;
             long double endLength;
             bool isDashLengthSpecified;
@@ -48,7 +48,7 @@ namespace mx
             
             LineData()
             : lineType{ LineType::unspecified }
-            , lineStop{ LineHook::unspecified }
+            , lineHook{ LineHook::unspecified }
             , isStopLengthSpecified{ false }
             , endLength{ 0.0 }
             , isDashLengthSpecified{ false }
@@ -62,7 +62,7 @@ namespace mx
         
         MXAPI_EQUALS_BEGIN( LineData )
         MXAPI_EQUALS_MEMBER( lineType )
-        MXAPI_EQUALS_MEMBER( lineStop )
+        MXAPI_EQUALS_MEMBER( lineHook )
         MXAPI_EQUALS_MEMBER( isStopLengthSpecified )
         MXAPI_EQUALS_MEMBER( endLength )
         MXAPI_EQUALS_MEMBER( isDashLengthSpecified )

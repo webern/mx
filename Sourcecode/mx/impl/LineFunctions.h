@@ -41,7 +41,7 @@ namespace mx
             
             if( checkHasLineStop<ATTRIBUTES_TYPE>( &inAttributes ) )
             {
-                lineData.lineStop = converter.convert( checkLineStop<ATTRIBUTES_TYPE>( &inAttributes ) );
+                lineData.lineHook = converter.convert( checkLineStop<ATTRIBUTES_TYPE>( &inAttributes ) );
             }
             
             if( checkHasDashLength( &inAttributes ) )
@@ -94,9 +94,9 @@ namespace mx
                 lookForAndSetSpaceLength( inLineData.spaceLength, &outAttributes );
             }
             
-            if( lookForAndSetHasLineStop( inLineData.lineStop != api::LineHook::unspecified, &outAttributes ) )
+            if( lookForAndSetHasLineStop( inLineData.lineHook != api::LineHook::unspecified, &outAttributes ) )
             {
-                lookForAndSetLineStop( converter.convert( inLineData.lineStop ), &outAttributes );
+                lookForAndSetLineStop( converter.convert( inLineData.lineHook ), &outAttributes );
             }
             
             if( lookForAndSetHasLineType( inLineData.lineType != api::LineType::unspecified, &outAttributes ) )
