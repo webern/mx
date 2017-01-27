@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include "mxtest/control/CompileControl.h"
 #include "mxtest/file/MxFile.h"
 #include "mx/api/ScoreData.h"
 
@@ -13,9 +14,6 @@
 
 namespace mxtest
 {
-    // set to zero for infitinity
-    constexpr const int MX_COMPILE_MAX_FILE_SIZE_BYTES = 1024 * 1;
-    
     using StringPair = std::pair<std::string, std::string>;
     using StringMap = std::map<std::string, std::string>;
     
