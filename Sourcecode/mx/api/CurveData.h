@@ -150,13 +150,13 @@ namespace mx
         };
 
 
-        struct CurveEnd
+        struct CurveStop
         {
             CurveType curveType;
             int numberLevel;
             CurvePoints curvePoints;
             
-            CurveEnd( CurveType inCurveType )
+            CurveStop( CurveType inCurveType )
             : curveType{ inCurveType }
             , numberLevel{ -1 }
             , curvePoints{}
@@ -201,11 +201,11 @@ namespace mx
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( CurveContinue );
 
-        MXAPI_EQUALS_BEGIN( CurveEnd )
+        MXAPI_EQUALS_BEGIN( CurveStop )
         MXAPI_EQUALS_MEMBER( curveType )
         MXAPI_EQUALS_MEMBER( numberLevel )
         MXAPI_EQUALS_MEMBER( curvePoints )
         MXAPI_EQUALS_END;
-        MXAPI_NOT_EQUALS_AND_VECTORS( CurveEnd );
+        MXAPI_NOT_EQUALS_AND_VECTORS( CurveStop );
     }
 }

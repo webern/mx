@@ -122,11 +122,11 @@ namespace mx
         }
         
         template<typename SLUR_OR_TIE_ELEMENT_TYPE>
-        api::CurveEnd parseCurveStop( const SLUR_OR_TIE_ELEMENT_TYPE& inSlurOrTie )
+        api::CurveStop parseCurveStop( const SLUR_OR_TIE_ELEMENT_TYPE& inSlurOrTie )
         {
             const auto& inAttributes = *inSlurOrTie.getAttributes();
             const auto curveType = inSlurOrTie.getElementName() == "slur" ? api::CurveType::slur : api::CurveType::tie;
-            api::CurveEnd c{ curveType };
+            api::CurveStop c{ curveType };
             c.numberLevel = impl::checkNumber( &inAttributes );
             c.curvePoints = parseCurvePoints( inAttributes );
             return c;
@@ -227,7 +227,7 @@ namespace mx
         }
         
         template<typename ATTRIBUTES_TYPE>
-        void writeAttributesFromCurveEnd( const api::CurveEnd inCurve, ATTRIBUTES_TYPE& outAttributes )
+        void writeAttributesFromCurveStop( const api::CurveStop inCurve, ATTRIBUTES_TYPE& outAttributes )
         {
             outAttributes.type = core::StartStopContinue::stop;
             impl::setAttributesFromPositionData( inCurve.curvePoints.positionData, outAttributes );
@@ -259,7 +259,7 @@ namespace mx
         
         // takes either an mx::core::Tie or an mx::core::Slur
         // populates the outNoteData.curveStart, cureContinuations
-        // or curveEnd vector with the result
+        // or curveStop vector with the result
         template<typename SLUR_OR_TIE_ELEMENT_TYPE>
         void parseCurve( const SLUR_OR_TIE_ELEMENT_TYPE& slurOrTie, api::NoteData& outNoteData )
         {
@@ -275,7 +275,7 @@ namespace mx
             }
             else if( core::StartStopContinue::stop == outputType )
             {
-                outNoteData.noteAttachmentData.curveEnds.emplace_back( parseCurveStop( slurOrTie ) );
+                outNoteData.noteAttachmentData.curveStops.emplace_back( parseCurveStop( slurOrTie ) );
             }
         }
     }

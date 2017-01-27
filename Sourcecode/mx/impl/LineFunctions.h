@@ -16,8 +16,8 @@ namespace mx
         MX_ATTR_FUNC_OPTIONAL( hasLineType, HasLineType, bool, false );
         MX_ATTR_FUNC_OPTIONAL( lineType, LineType, core::LineType, core::LineType::solid );
 
-        MX_ATTR_FUNC_OPTIONAL( hasLineEnd, HasLineEnd, bool, false );
-        MX_ATTR_FUNC_OPTIONAL( lineEnd, LineEnd, core::LineEnd, core::LineEnd::none );
+        MX_ATTR_FUNC_OPTIONAL( hasLineStop, HasLineStop, bool, false );
+        MX_ATTR_FUNC_OPTIONAL( lineStop, LineStop, core::LineEnd, core::LineEnd::none );
         
         MX_ATTR_FUNC_OPTIONAL( hasDashLength, HasDashLength, bool, false );
         MX_ATTR_FUNC_OPTIONAL_WITH_GETTER( dashLength, DashLength, long double, 0.0L );
@@ -25,8 +25,8 @@ namespace mx
         MX_ATTR_FUNC_OPTIONAL( hasSpaceLength, HasSpaceLength, bool, false );
         MX_ATTR_FUNC_OPTIONAL_WITH_GETTER( spaceLength, SpaceLength, long double, 0.0L );
         
-        MX_ATTR_FUNC_OPTIONAL( hasEndLength, HasEndLength, bool, false );
-        MX_ATTR_FUNC_OPTIONAL_WITH_GETTER( endLength, EndLength, long double, 0.0L );
+        MX_ATTR_FUNC_OPTIONAL( hasStopLength, HasStopLength, bool, false );
+        MX_ATTR_FUNC_OPTIONAL_WITH_GETTER( endLength, StopLength, long double, 0.0L );
         
         template <typename ATTRIBUTES_TYPE>
         api::LineData getLineData( const ATTRIBUTES_TYPE& inAttributes )
@@ -39,9 +39,9 @@ namespace mx
                 lineData.lineType = converter.convert( checkLineType<ATTRIBUTES_TYPE>( &inAttributes ) );
             }
             
-            if( checkHasLineEnd<ATTRIBUTES_TYPE>( &inAttributes ) )
+            if( checkHasLineStop<ATTRIBUTES_TYPE>( &inAttributes ) )
             {
-                lineData.lineEnd = converter.convert( checkLineEnd<ATTRIBUTES_TYPE>( &inAttributes ) );
+                lineData.lineStop = converter.convert( checkLineStop<ATTRIBUTES_TYPE>( &inAttributes ) );
             }
             
             if( checkHasDashLength( &inAttributes ) )
@@ -56,10 +56,10 @@ namespace mx
                 lineData.spaceLength = checkSpaceLength( &inAttributes );
             }
             
-            if( checkHasEndLength<ATTRIBUTES_TYPE>( &inAttributes ) )
+            if( checkHasStopLength<ATTRIBUTES_TYPE>( &inAttributes ) )
             {
-                lineData.isEndLengthSpecified = true;
-                lineData.endLength = checkEndLength<ATTRIBUTES_TYPE>( &inAttributes );
+                lineData.isStopLengthSpecified = true;
+                lineData.endLength = checkStopLength<ATTRIBUTES_TYPE>( &inAttributes );
             }
             
             return lineData;
@@ -68,8 +68,8 @@ namespace mx
         MX_ATTR_SETFUNC_OPTIONAL( hasLineType, HasLineType, bool, false );
         MX_ATTR_SETFUNC_OPTIONAL( lineType, LineType, core::LineType, core::LineType::solid );
         
-        MX_ATTR_SETFUNC_OPTIONAL( hasLineEnd, HasLineEnd, bool, false );
-        MX_ATTR_SETFUNC_OPTIONAL( lineEnd, LineEnd, core::LineEnd, core::LineEnd::none );
+        MX_ATTR_SETFUNC_OPTIONAL( hasLineStop, HasLineStop, bool, false );
+        MX_ATTR_SETFUNC_OPTIONAL( lineStop, LineStop, core::LineEnd, core::LineEnd::none );
         
         MX_ATTR_SETFUNC_OPTIONAL( hasSpaceLength, HasSpaceLength, bool, false );
         MX_ATTR_SETFUNC_OPTIONAL_WITH_SETTER( spaceLength, SpaceLength, long double, 0.0L );
@@ -77,8 +77,8 @@ namespace mx
         MX_ATTR_SETFUNC_OPTIONAL( hasDashLength, HasDashLength, bool, false );
         MX_ATTR_SETFUNC_OPTIONAL_WITH_SETTER( dashLength, DashLength, long double, 0.0L );
         
-        MX_ATTR_SETFUNC_OPTIONAL( hasEndLength, HasEndLength, bool, false );
-        MX_ATTR_SETFUNC_OPTIONAL_WITH_SETTER( endLength, EndLength, long double, 0.0L );
+        MX_ATTR_SETFUNC_OPTIONAL( hasStopLength, HasStopLength, bool, false );
+        MX_ATTR_SETFUNC_OPTIONAL_WITH_SETTER( endLength, StopLength, long double, 0.0L );
         
         template <typename ATTRIBUTES_TYPE>
         void setAttributesFromLineData( const api::LineData& inLineData, ATTRIBUTES_TYPE& outAttributes )
@@ -94,9 +94,9 @@ namespace mx
                 lookForAndSetSpaceLength( inLineData.spaceLength, &outAttributes );
             }
             
-            if( lookForAndSetHasLineEnd( inLineData.lineEnd != api::LineHook::unspecified, &outAttributes ) )
+            if( lookForAndSetHasLineStop( inLineData.lineStop != api::LineHook::unspecified, &outAttributes ) )
             {
-                lookForAndSetLineEnd( converter.convert( inLineData.lineEnd ), &outAttributes );
+                lookForAndSetLineStop( converter.convert( inLineData.lineStop ), &outAttributes );
             }
             
             if( lookForAndSetHasLineType( inLineData.lineType != api::LineType::unspecified, &outAttributes ) )
@@ -104,9 +104,9 @@ namespace mx
                 lookForAndSetLineType( converter.convert( inLineData.lineType ), &outAttributes );
             }
             
-            if( lookForAndSetHasEndLength( inLineData.isEndLengthSpecified, &outAttributes ) )
+            if( lookForAndSetHasStopLength( inLineData.isStopLengthSpecified, &outAttributes ) )
             {
-                lookForAndSetEndLength( inLineData.endLength, &outAttributes );
+                lookForAndSetStopLength( inLineData.endLength, &outAttributes );
             }
         }
     }

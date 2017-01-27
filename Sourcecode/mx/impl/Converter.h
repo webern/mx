@@ -122,7 +122,7 @@ namespace mx
             const static std::map<core::WedgeType, api::WedgeType> wedgeMap;
             const static std::map<core::BarStyleEnum, api::BarlineType> barlineMap;
             const static std::map<core::RightLeftMiddle, api::HorizontalAlignment> barlinePlacementMap;
-            const static std::map<core::LineEnd, api::LineHook> lineEndMap;
+            const static std::map<core::LineEnd, api::LineHook> lineStopMap;
             const static std::map<core::FermataShape, api::MarkType> fermataMap;
             
         private:

@@ -98,7 +98,7 @@ namespace mx
                 }
             }
             
-            for( const auto& curve : myNoteData.noteAttachmentData.curveEnds )
+            for( const auto& curve : myNoteData.noteAttachmentData.curveStops )
             {
                 auto curveNotationsChoice = core::makeNotationsChoice();
                 myOutNotations->addNotationsChoice( curveNotationsChoice );
@@ -108,14 +108,14 @@ namespace mx
                     curveNotationsChoice->setChoice( core::NotationsChoice::Choice::tied );
                     auto element = curveNotationsChoice->getTied();
                     auto attr = element->getAttributes();
-                    writeAttributesFromCurveEnd( curve, *attr );
+                    writeAttributesFromCurveStop( curve, *attr );
                 }
                 else if( curve.curveType == api::CurveType::slur )
                 {
                     curveNotationsChoice->setChoice( core::NotationsChoice::Choice::slur );
                     auto element = curveNotationsChoice->getSlur();
                     auto attr = element->getAttributes();
-                    writeAttributesFromCurveEnd( curve, *attr );
+                    writeAttributesFromCurveStop( curve, *attr );
                 }
             }
             
@@ -172,7 +172,7 @@ namespace mx
             }
             
             
-            for( const auto& tupletEnd : myNoteData.noteAttachmentData.tupletEnds )
+            for( const auto& tupletStop : myNoteData.noteAttachmentData.tupletStops )
             {
                 auto tupletNotationsChoice = core::makeNotationsChoice();
                 myOutNotations->addNotationsChoice( tupletNotationsChoice );
@@ -180,10 +180,10 @@ namespace mx
                 auto tuplet = tupletNotationsChoice->getTuplet();
                 tuplet->getAttributes()->type = core::StartStop::stop;
                 
-                if( tupletEnd.numberLevel > 0 )
+                if( tupletStop.numberLevel > 0 )
                 {
                     tuplet->getAttributes()->hasNumber = true;
-                    tuplet->getAttributes()->number = core::NumberLevel{ tupletEnd.numberLevel };
+                    tuplet->getAttributes()->number = core::NumberLevel{ tupletStop.numberLevel };
                 }
             }
             
