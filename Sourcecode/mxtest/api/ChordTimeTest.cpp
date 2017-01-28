@@ -74,7 +74,7 @@ TEST( chordTest, Chords )
     auto doc = mgr.getDocument(docId);
     mgr.destroyDocument(docId);
     auto xml = ss.str();
-    std::cout << xml << std::endl;
+//    std::cout << xml << std::endl;
     
     using namespace mx::core;
     

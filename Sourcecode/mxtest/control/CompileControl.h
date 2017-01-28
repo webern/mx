@@ -13,4 +13,4 @@
 // use this to restrict the size of the files that
 // the test run will open (compile-time constant).
 // 0 indicates no limit
-constexpr const int MX_COMPILE_MAX_FILE_SIZE_BYTES = 0;
+constexpr const int MX_COMPILE_MAX_FILE_SIZE_BYTES = (5 * 1024);

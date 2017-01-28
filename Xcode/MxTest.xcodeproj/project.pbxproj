@@ -35,6 +35,7 @@
 		297DD7C91D1A4BD1003BADC1 /* ImportTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297DD7C81D1A4BD1003BADC1 /* ImportTest.cpp */; };
 		298F0F4D1D1E4981005C3D9D /* ImportTestImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 298F0F4B1D1E4981005C3D9D /* ImportTestImpl.cpp */; };
 		29979D621DC811F300707AA4 /* TimeSignatureApiTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29979D611DC811F300707AA4 /* TimeSignatureApiTest.cpp */; };
+		29AD58B81E3D1000004FD94E /* MetronomeApiTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29AD58B71E3D1000004FD94E /* MetronomeApiTest.cpp */; };
 		29B48EDB1DBE7F550030A974 /* MeasureWriterTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29B48ED71DBE7F550030A974 /* MeasureWriterTest.cpp */; };
 		29B48EDC1DBE7F550030A974 /* NoteWriterTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29B48ED81DBE7F550030A974 /* NoteWriterTest.cpp */; };
 		29B48EDD1DBE7F550030A974 /* PartWriterTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29B48ED91DBE7F550030A974 /* PartWriterTest.cpp */; };
@@ -527,6 +528,7 @@
 		298F0F4C1D1E4981005C3D9D /* ImportTestImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImportTestImpl.h; path = ../Sourcecode/mxtest/import/ImportTestImpl.h; sourceTree = "<group>"; };
 		29979D611DC811F300707AA4 /* TimeSignatureApiTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimeSignatureApiTest.cpp; path = ../Sourcecode/mxtest/api/TimeSignatureApiTest.cpp; sourceTree = "<group>"; };
 		299F7FF61CA8D2620084CAE5 /* MxTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MxTest; sourceTree = BUILT_PRODUCTS_DIR; };
+		29AD58B71E3D1000004FD94E /* MetronomeApiTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MetronomeApiTest.cpp; path = ../Sourcecode/mxtest/api/MetronomeApiTest.cpp; sourceTree = "<group>"; };
 		29B48ED71DBE7F550030A974 /* MeasureWriterTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MeasureWriterTest.cpp; path = ../Sourcecode/mxtest/impl/MeasureWriterTest.cpp; sourceTree = "<group>"; };
 		29B48ED81DBE7F550030A974 /* NoteWriterTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NoteWriterTest.cpp; path = ../Sourcecode/mxtest/impl/NoteWriterTest.cpp; sourceTree = "<group>"; };
 		29B48ED91DBE7F550030A974 /* PartWriterTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PartWriterTest.cpp; path = ../Sourcecode/mxtest/impl/PartWriterTest.cpp; sourceTree = "<group>"; };
@@ -1766,18 +1768,18 @@
 		29EF440E1D6E8F4700DBDAB9 /* api */ = {
 			isa = PBXGroup;
 			children = (
-				29FF27331DD7DE880005B0AA /* ApiK016aMiscScoreData.h */,
-				29FF27341DD7DE880005B0AA /* ApiK016aMiscTest.cpp */,
-				2973CDE11DCD74CD001B9AAD /* ApiK015aLayoutScoreData.h */,
-				2973CDE21DCD74CD001B9AAD /* ApiK015aLayoutTest.cpp */,
-				29271A071DCBB6760036528D /* ApiK009bSlurScoreData.h */,
-				29271A081DCBB6760036528D /* ApiK009bSlurTest.cpp */,
 				29BF98891DC6D20500BBC7B3 /* ApiK007aScoreData.h */,
 				29BF988A1DC6D20500BBC7B3 /* ApiK007aTest.cpp */,
 				2961F1151DC7CDD700D62B16 /* ApiK007cScoreData.h */,
 				2961F1161DC7CDD700D62B16 /* ApiK007cTest.cpp */,
+				29271A071DCBB6760036528D /* ApiK009bSlurScoreData.h */,
+				29271A081DCBB6760036528D /* ApiK009bSlurTest.cpp */,
 				29E41D671DC978400085405E /* ApiK014aFermatasScoreData.h */,
 				29E41D681DC978400085405E /* ApiK014aFermatasTest.cpp */,
+				2973CDE11DCD74CD001B9AAD /* ApiK015aLayoutScoreData.h */,
+				2973CDE21DCD74CD001B9AAD /* ApiK015aLayoutTest.cpp */,
+				29FF27331DD7DE880005B0AA /* ApiK016aMiscScoreData.h */,
+				29FF27341DD7DE880005B0AA /* ApiK016aMiscTest.cpp */,
 				294775E11D934C510006E1AD /* ApiLoadSurvivalTest.cpp */,
 				29B48EDF1DBE8C450030A974 /* ApiLy43eScoreData.h */,
 				29FFAC7C1DB998C100DC8AE1 /* ApiLy43eTest.cpp */,
@@ -1786,11 +1788,12 @@
 				2903C9471DBC7ED600218C9E /* ApiTester.cpp */,
 				2903C9481DBC7ED600218C9E /* ApiTester.h */,
 				29C9AFD81DC3BE6000DD9BFB /* ChordApiTest.cpp */,
+				29510AFC1E3113AA00EB76F0 /* ChordTimeTest.cpp */,
 				29EF440F1D6E8F5500DBDAB9 /* DocumentManagerTest.cpp */,
+				29AD58B71E3D1000004FD94E /* MetronomeApiTest.cpp */,
 				29CD722E1DB8421100FB7153 /* RoundTrip.h */,
 				2903C9461DBC7D7600218C9E /* ScoreDataCreator.h */,
 				29979D611DC811F300707AA4 /* TimeSignatureApiTest.cpp */,
-				29510AFC1E3113AA00EB76F0 /* ChordTimeTest.cpp */,
 			);
 			name = api;
 			sourceTree = "<group>";
@@ -1924,6 +1927,7 @@
 				29C01E3F1D1312FA0094BE61 /* MidiDeviceTest.cpp in Sources */,
 				29C01DC41D1312FA0094BE61 /* DocumentTimewiseTest.cpp in Sources */,
 				29C01EFE1D1312FA0094BE61 /* WedgeTest.cpp in Sources */,
+				29AD58B81E3D1000004FD94E /* MetronomeApiTest.cpp in Sources */,
 				29C01E741D1312FA0094BE61 /* PartAbbreviationTest.cpp in Sources */,
 				29C01D8F1D1312FA0094BE61 /* BendTest.cpp in Sources */,
 				29C01EC91D1312FA0094BE61 /* StringTest.cpp in Sources */,

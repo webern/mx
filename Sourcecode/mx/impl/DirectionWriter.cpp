@@ -3,43 +3,50 @@
 
 
 #include "mx/impl/DirectionWriter.h"
-#include "mx/core/elements/Direction.h"
-#include "mx/core/elements/DirectionType.h"
-#include "mx/core/elements/EditorialVoiceDirectionGroup.h"
-#include "mx/core/elements/Footnote.h"
-#include "mx/core/elements/Level.h"
-#include "mx/core/elements/Offset.h"
-#include "mx/core/elements/Sound.h"
-#include "mx/core/elements/Staff.h"
-#include "mx/core/elements/Voice.h"
+#include "mx/api/BarlineData.h"
 #include "mx/core/elements/AccordionRegistration.h"
+#include "mx/core/elements/BeatUnit.h"
+#include "mx/core/elements/BeatUnitDot.h"
+#include "mx/core/elements/BeatUnitGroup.h"
+#include "mx/core/elements/BeatUnitPer.h"
+#include "mx/core/elements/BeatUnitPerOrNoteRelationNoteChoice.h"
+#include "mx/core/elements/Bracket.h"
 #include "mx/core/elements/Bracket.h"
 #include "mx/core/elements/Coda.h"
 #include "mx/core/elements/Damp.h"
 #include "mx/core/elements/DampAll.h"
 #include "mx/core/elements/Dashes.h"
+#include "mx/core/elements/Direction.h"
+#include "mx/core/elements/DirectionType.h"
 #include "mx/core/elements/Dynamics.h"
+#include "mx/core/elements/EditorialVoiceDirectionGroup.h"
 #include "mx/core/elements/Eyeglasses.h"
+#include "mx/core/elements/Footnote.h"
 #include "mx/core/elements/HarpPedals.h"
 #include "mx/core/elements/Image.h"
+#include "mx/core/elements/Level.h"
 #include "mx/core/elements/Metronome.h"
 #include "mx/core/elements/OctaveShift.h"
+#include "mx/core/elements/Offset.h"
 #include "mx/core/elements/OtherDirection.h"
 #include "mx/core/elements/Pedal.h"
 #include "mx/core/elements/Percussion.h"
+#include "mx/core/elements/PerMinute.h"
+#include "mx/core/elements/PerMinuteOrBeatUnitChoice.h"
 #include "mx/core/elements/PrincipalVoice.h"
 #include "mx/core/elements/Rehearsal.h"
 #include "mx/core/elements/Scordatura.h"
 #include "mx/core/elements/Segno.h"
+#include "mx/core/elements/Sound.h"
+#include "mx/core/elements/Staff.h"
 #include "mx/core/elements/StringMute.h"
+#include "mx/core/elements/Voice.h"
 #include "mx/core/elements/Wedge.h"
 #include "mx/core/elements/Words.h"
-#include "mx/core/elements/Bracket.h"
-#include "mx/api/BarlineData.h"
-#include "mx/impl/LineFunctions.h"
-#include "mx/impl/SpannerFunctions.h"
-#include "mx/impl/MarkDataFunctions.h"
 #include "mx/impl/DynamicsWriter.h"
+#include "mx/impl/LineFunctions.h"
+#include "mx/impl/MarkDataFunctions.h"
+#include "mx/impl/SpannerFunctions.h"
 
 namespace mx
 {
@@ -205,6 +212,39 @@ namespace mx
                 auto outElement = outDirType->getBracket();
                 auto& attr = *outElement->getAttributes();
                 setAttributesFromSpannerStart( item, attr );
+            }
+
+            for( const auto& tempo : myDirectionData.tempos )
+            {
+                if( tempo.tempoType != api::TempoType::beatsPerMinute )
+                {
+                    MX_THROW( "Only api::TempoType::beatsPerMinute is supported, others are not implemented" );
+                }
+                
+                auto outDirType = core::makeDirectionType();
+                this->addDirectionType( outDirType );
+                outDirType->setChoice( core::DirectionType::Choice::metronome );
+                auto outElement = outDirType->getMetronome();
+                auto choice = outElement->getBeatUnitPerOrNoteRelationNoteChoice();
+                choice->setChoice( core::BeatUnitPerOrNoteRelationNoteChoice::Choice::beatUnitPer );
+                auto bpm = choice->getBeatUnitPer();
+                auto beatUnitGroup = bpm->getBeatUnitGroup();
+                auto beatUnit = beatUnitGroup->getBeatUnit();
+                Converter converter;
+                beatUnit->setValue(converter.convert(tempo.beatsPerMinute.durationName));
+                
+                for( int d = 0; d < tempo.beatsPerMinute.dots; ++d )
+                {
+                    beatUnitGroup->addBeatUnitDot(core::makeBeatUnitDot());
+                }
+                
+                auto pmobuc = bpm->getPerMinuteOrBeatUnitChoice();
+                pmobuc->setChoice( core::PerMinuteOrBeatUnitChoice::Choice::perMinute );
+                auto pm = pmobuc->getPerMinute();
+                auto str = std::to_string( tempo.beatsPerMinute.beatsPerMinute );
+                pm->setValue( core::XsString{ str } );
+                //auto& attr = *outElement->getAttributes();
+                //setAttributesFromSpannerStart( item, attr );
             }
             
             myPlacements.clear();
