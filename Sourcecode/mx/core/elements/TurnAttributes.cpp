@@ -1,5 +1,6 @@
-// MusicXML Class Library v0.3.0
-// Copyright (c) 2015 - 2016 by Matthew James Briggs
+// MusicXML Class Library
+// Copyright (c) by Matthew James Briggs
+// Distributed under the MIT License
 
 #include "mx/core/elements/TurnAttributes.h"
 #include "mx/core/FromXElement.h"
