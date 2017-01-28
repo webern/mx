@@ -1,5 +1,6 @@
-// MusicXML Class Library v0.2
-// Copyright (c) 2015 - 2016 by Matthew James Briggs
+// MusicXML Class Library
+// Copyright (c) by Matthew James Briggs
+// Distributed under the MIT License
 
 #include "mx/core/elements/SlurAttributes.h"
 #include "mx/core/FromXElement.h"
@@ -120,7 +121,7 @@ namespace mx
                 if( parseAttribute( message, it, className, isSuccess, placement, hasPlacement, "placement", &parseAboveBelow ) ) { continue; }
                 if( parseAttribute( message, it, className, isSuccess, orientation, hasOrientation, "orientation", &parseOverUnder ) ) { continue; }
                 if( parseAttribute( message, it, className, isSuccess, bezierOffset, hasBezierOffset, "bezier-offset" ) ) { continue; }
-                if( parseAttribute( message, it, className, isSuccess, bezierOffset2, hasBezierOffset2, "bezier-offset-2" ) ) { continue; }
+                if( parseAttribute( message, it, className, isSuccess, bezierOffset2, hasBezierOffset2, "bezier-offset2" ) ) { continue; }
                 if( parseAttribute( message, it, className, isSuccess, bezierX, hasBezierX, "bezier-x" ) ) { continue; }
                 if( parseAttribute( message, it, className, isSuccess, bezierY, hasBezierY, "bezier-y" ) ) { continue; }
                 if( parseAttribute( message, it, className, isSuccess, bezierX2, hasBezierX2, "bezier-x2" ) ) { continue; }

@@ -1,10 +1,12 @@
-// MusicXML Class Library v0.2
-// Copyright (c) 2015 - 2016 by Matthew James Briggs
+// MusicXML Class Library
+// Copyright (c) by Matthew James Briggs
+// Distributed under the MIT License
 
 #pragma once
 
 #include "mx/core/ForwardDeclare.h"
 #include "mx/core/AttributesInterface.h"
+#include "mx/core/Color.h"
 #include "mx/core/Decimals.h"
 #include "mx/core/Enums.h"
 #include "mx/core/Strings.h"
@@ -35,6 +37,7 @@ namespace mx
             FontStyle fontStyle;
             FontSize fontSize;
             FontWeight fontWeight;
+            Color color;
             YesNo printObject;
             LeftCenterRight justify;
             bool hasDefaultX;
@@ -45,6 +48,7 @@ namespace mx
             bool hasFontStyle;
             bool hasFontSize;
             bool hasFontWeight;
+            bool hasColor;
             bool hasPrintObject;
             bool hasJustify;
 

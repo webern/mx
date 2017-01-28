@@ -1,5 +1,6 @@
-// MusicXML Class Library v0.2
-// Copyright (c) 2015 - 2016 by Matthew James Briggs
+// MusicXML Class Library
+// Copyright (c) by Matthew James Briggs
+// Distributed under the MIT License
 
 #include "mx/core/elements/String.h"
 #include "mx/core/FromXElement.h"
@@ -12,13 +13,17 @@ namespace mx
         String::String()
         :myAttributes( std::make_shared<StringAttributes>() )
         ,myValue()
-        {}
+        {
+
+        }
 
 
         String::String( const StringNumber& value )
         :myAttributes( std::make_shared<StringAttributes>() )
         ,myValue( value )
-        {}
+        {
+            
+        }
 
 
         bool String::hasAttributes() const

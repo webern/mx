@@ -1,5 +1,6 @@
-// MusicXML Class Library v0.2
-// Copyright (c) 2015 - 2016 by Matthew James Briggs
+// MusicXML Class Library
+// Copyright (c) by Matthew James Briggs
+// Distributed under the MIT License
 
 #pragma once
 
@@ -17,7 +18,7 @@
 // example when we see '75.00' in an input file, we would expect Mx to
 // produce '75'.  These functions will alter the 'expected' files.
 
-namespace MxTest
+namespace mxtest
 {
 
     const std::set<std::string> decimalFields =
@@ -29,7 +30,8 @@ namespace MxTest
         "staff-distance",
         "system-distance",
         "default-y",
-        "default-x"
+        "default-x",
+        "tenths"
     };
 
     inline int trailingCharsToStrip( const std::string& value )

@@ -1,5 +1,6 @@
-// MusicXML Class Library v0.2
-// Copyright (c) 2015 - 2016 by Matthew James Briggs
+// MusicXML Class Library
+// Copyright (c) by Matthew James Briggs
+// Distributed under the MIT License
 
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_CORE_TESTS
@@ -12,7 +13,7 @@
 
 using namespace mx::core;
 using namespace std;
-using namespace MxTestHelpers;
+using namespace mxtest;
 
 TEST( Test01, DocumentPartwise )
 {
@@ -48,7 +49,7 @@ TEST( Test03, DocumentPartwise )
 	CHECK_EQUAL( expected.str(), actual.str() )
 }
 
-namespace MxTestHelpers
+namespace mxtest
 {
     DocumentPtr tgenDocumentPartwise( variant v )
     {

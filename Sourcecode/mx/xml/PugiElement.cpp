@@ -1,11 +1,11 @@
-// MusicXML Class Library v0.2
-// Copyright (c) 2015 - 2016 by Matthew James Briggs
+// MusicXML Class Library
+// Copyright (c) by Matthew James Briggs
+// Distributed under the MIT License
 
 #include "mx/xml/PugiElement.h"
 #include "mx/xml/PugiElementIterImpl.h"
 #include "mx/xml/XAttributeIterImpl.h"
 #include "mx/xml/PugiAttributeIterImpl.h"
-#include "mx/xml/XDoc.h"
 #include "mx/xml/XThrow.h"
 
 #define MX_CHECK_NULL_NODE if( getIsNull() ) { MX_THROW_XNULL; }

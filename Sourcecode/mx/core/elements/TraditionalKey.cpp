@@ -1,11 +1,13 @@
-// MusicXML Class Library v0.2
-// Copyright (c) 2015 - 2016 by Matthew James Briggs
+// MusicXML Class Library
+// Copyright (c) by Matthew James Briggs
+// Distributed under the MIT License
 
 #include "mx/core/elements/TraditionalKey.h"
 #include "mx/core/FromXElement.h"
 #include "mx/core/elements/Cancel.h"
 #include "mx/core/elements/Fifths.h"
 #include "mx/core/elements/Mode.h"
+
 #include <iostream>
 
 namespace mx
@@ -14,8 +16,8 @@ namespace mx
     {
         TraditionalKey::TraditionalKey()
         :ElementInterface()
-        ,myCancel( std::make_shared<Cancel>() )
-        ,myFifths( std::make_shared<Fifths>() )
+        ,myCancel( std::make_shared<Cancel>( FifthsValue{ 0 } ) )
+        ,myFifths( std::make_shared<Fifths>( FifthsValue{ 0 } ) )
         ,myMode( std::make_shared<Mode>() )
         ,myHasCancel( false )
         ,myHasMode( false )

@@ -1,5 +1,6 @@
-// MusicXML Class Library v0.2
-// Copyright (c) 2015 - 2016 by Matthew James Briggs
+// MusicXML Class Library
+// Copyright (c) by Matthew James Briggs
+// Distributed under the MIT License
 
 #pragma once
 
@@ -41,7 +42,7 @@ namespace mx
             FontStyle fontStyle;
             FontSize fontSize;
             FontWeight fontWeight;
-            const   bool hasType;
+            const bool hasType;
             bool hasNumber;
             bool hasLineType;
             bool hasDashLength;

@@ -1,5 +1,6 @@
-// MusicXML Class Library v0.2
-// Copyright (c) 2015 - 2016 by Matthew James Briggs
+// MusicXML Class Library
+// Copyright (c) by Matthew James Briggs
+// Distributed under the MIT License
 
 #include "mx/core/ScoreConversions.h"
 #include "mx/core/elements/TimewiseMeasure.h"
@@ -115,7 +116,6 @@ namespace mx
             attr_new->hasVersion = attr_old->hasVersion;
             attr_new->version = attr_old->version;
             PartwisePartSet pwParts;
-            using Intz = TimewisePartSet::size_type;
             
             /* Create and add a ScorePartwisePart for each part in the main list */
             auto firstPart = makePartwisePart();

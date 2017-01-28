@@ -44,10 +44,17 @@ Resources/expected/
 !default.perspectivev3
 xcuserdata/
 
-## Other
+#####################################
+# Other                             #
+#####################################
 *.moved-aside
 *.xccheckout
 *.xcscmblueprint
+
+#####################################
+# CLion                             #
+#####################################
+.idea/
 
 ######################### http://stackoverflow.com/questions/49478/git-ignore-file-for-xcode-projects
 # .gitignore file for Xcode4 and Xcode5 Source projects

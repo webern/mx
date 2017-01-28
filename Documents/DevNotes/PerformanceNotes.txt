@@ -1,0 +1,40 @@
+Baseline ---------------------------------------------------------------------
+
+274 tests, 0 failures, 0 errors
+Total runtime for all tests 18.2356 sec
+Program ended with exit code: 0
+
+274 tests, 0 failures, 0 errors
+Total runtime for all tests 17.4334 sec
+Program ended with exit code: 0
+
+274 tests, 0 failures, 0 errors
+Total runtime for all tests 17.2236 sec
+Program ended with exit code: 0
+
+
+After Optimizing Note ---------------------------------------------------------------------
+
+274 tests, 0 failures, 0 errors
+Total runtime for all tests 14.7685 sec
+Program ended with exit code: 0
+
+274 tests, 0 failures, 0 errors
+Total runtime for all tests 14.6552 sec
+Program ended with exit code: 0
+
+274 tests, 0 failures, 0 errors
+Total runtime for all tests 14.6044 sec
+Program ended with exit code: 0
+
+--without mutex
+274 tests, 0 failures, 0 errors
+Total runtime for all tests 14.9611 sec
+Program ended with exit code: 0
+
+
+----
+DirectionType
+Direction
+FullNoteTypeChoice
+Key

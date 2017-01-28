@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 3.0 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">
+<score-partwise>
+  <identification>
+    <encoding>
+      <software>komp</software>
+    </encoding>
+    <miscellaneous>
+      <miscellaneous-field name="komp-version-major">1</miscellaneous-field>
+      <miscellaneous-field name="komp-version-minor">2</miscellaneous-field>
+      <miscellaneous-field name="komp-version-patch">3</miscellaneous-field>
+    </miscellaneous>
+  </identification>
+  <part-list>
+    <score-part id="ID">
+      <part-name print-object="no">hello world</part-name>
+    </score-part>
+  </part-list>
+  <part id="ID">
+    <measure number="1">
+      <attributes>
+        <divisions>420</divisions>
+      </attributes>
+    </measure>
+  </part>
+</score-partwise>

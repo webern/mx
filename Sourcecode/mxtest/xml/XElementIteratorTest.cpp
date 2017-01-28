@@ -1,5 +1,6 @@
-// MusicXML Class Library v0.2
-// Copyright (c) 2015 - 2016 by Matthew James Briggs
+// MusicXML Class Library
+// Copyright (c) by Matthew James Briggs
+// Distributed under the MIT License
 
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_XML_TESTS
@@ -23,7 +24,7 @@ namespace
     inline mx::xml::XDocCPtr doc()
     {
         auto xdoc = XFactory::makeXDoc();
-        std::istringstream is( MxTest::fakeXml );
+        std::istringstream is( mxtest::fakeXml );
         xdoc->loadStream( is );
         return xdoc;
     }

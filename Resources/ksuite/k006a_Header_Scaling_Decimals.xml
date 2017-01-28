@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE score-timewise PUBLIC "-//Recordare//DTD MusicXML 3.0 Timewise//EN" "http://www.musicxml.org/dtds/timewise.dtd">
+<score-timewise>
+  <work>
+    <work-number>workNumber</work-number>
+    <work-title>workTitle</work-title>
+  </work>
+  <movement-number>movementNumber</movement-number>
+  <movement-title>movementTitle</movement-title>
+  <identification>
+    <creator type="composer">The Composer</creator>
+    <creator type="lyricist">The Lyricist</creator>
+    <rights type="copyright">© 2016 by Matthew James Briggs</rights>
+    <encoding>
+      <encoder>The Encoder</encoder>
+      <encoding-date>2016-08-30</encoding-date>
+      <encoding-description>The Encoding Description</encoding-description>
+      <software>Software 1</software>
+      <software>Software 2</software>
+    </encoding>
+  </identification>
+  <defaults>
+    <scaling>
+      <millimeters>0.123</millimeters>
+      <tenths>0.456</tenths>
+    </scaling>
+  </defaults>
+  <part-list>
+    <score-part id="ID">
+      <part-name />
+    </score-part>
+  </part-list>
+  <measure number="">
+    <part id="ID" />
+  </measure>
+</score-timewise>

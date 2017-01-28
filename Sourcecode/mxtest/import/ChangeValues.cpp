@@ -1,10 +1,11 @@
-// MusicXML Class Library v0.2
-// Copyright (c) 2015 - 2016 by Matthew James Briggs
+// MusicXML Class Library
+// Copyright (c) by Matthew James Briggs
+// Distributed under the MIT License
 
 #include "ChangeValues.h"
 #include "DecimalFields.h"
 
-namespace MxTest
+namespace mxtest
 {
     void convertValues( mx::xml::XDoc& xdoc, const std::string& elementName, const std::string& existingValue, const std::string desiredValue )
     {

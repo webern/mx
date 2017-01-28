@@ -1,5 +1,6 @@
-// MusicXML Class Library v0.2
-// Copyright (c) 2015 - 2016 by Matthew James Briggs
+// MusicXML Class Library
+// Copyright (c) by Matthew James Briggs
+// Distributed under the MIT License
 
 #pragma once
 
@@ -23,13 +24,9 @@ namespace mx
 
         struct AttributesInterface
         {
-            AttributesInterface();
-            virtual ~AttributesInterface();
+            virtual ~AttributesInterface() {}
             virtual bool hasValues() const;
             virtual std::ostream& toStream( std::ostream& os ) const;
-            
-            
-            
             virtual bool fromXElement( std::ostream& message, xml::XElement& xelement ) = 0;
         };
 

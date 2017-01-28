@@ -1,5 +1,6 @@
-// MusicXML Class Library v0.2
-// Copyright (c) 2015 - 2016 by Matthew James Briggs
+// MusicXML Class Library
+// Copyright (c) by Matthew James Briggs
+// Distributed under the MIT License
 
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_CORE_TESTS
@@ -9,7 +10,7 @@
 
 using namespace mx::core;
 
-DecimalType kThreshold = 0.00000000000001;
+DecimalType kThreshold = 0.0000000000001;
 
 // using DecimalType = double;
 TEST( DecimalType, Decimals )

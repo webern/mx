@@ -1,7 +1,7 @@
 #include <iostream>
 #include "cpul/cpulRun.h"
 #include "cpul/cpulTestTimer.h"
-#include "cpul/cpulDefines.h"
+#include "mxtest/api/RoundTrip.h"
 
 int main(int argc, const char * argv[])
 {
@@ -10,7 +10,7 @@ int main(int argc, const char * argv[])
     UNUSED_PARAMETER( argv )
     cpul::TestTimer timer;
     cpulRun( true );
+    mxtest::roundTrip();
     timer.report( "Total runtime for all tests" );
     return 0;
 }
-

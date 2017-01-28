@@ -1,5 +1,6 @@
-// MusicXML Class Library v0.2
-// Copyright (c) 2015 - 2016 by Matthew James Briggs
+// MusicXML Class Library
+// Copyright (c) by Matthew James Briggs
+// Distributed under the MIT License
 
 #pragma once
 
@@ -29,7 +30,7 @@ namespace mx
             XsToken name;
             XsNMToken element;
             PositiveInteger position;
-            const   bool hasId;
+            const bool hasId;
             bool hasName;
             bool hasElement;
             bool hasPosition;

@@ -1,5 +1,6 @@
-// MusicXML Class Library v0.2
-// Copyright (c) 2015 - 2016 by Matthew James Briggs
+// MusicXML Class Library
+// Copyright (c) by Matthew James Briggs
+// Distributed under the MIT License
 
 #pragma once
 
@@ -10,6 +11,7 @@
 #include "mx/core/Integers.h"
 #include "mx/core/Strings.h"
 #include "mx/core/FontSize.h"
+#include "mx/core/Color.h"
 
 #include <iosfwd>
 #include <memory>
@@ -37,6 +39,7 @@ namespace mx
             FontStyle fontStyle;
             FontSize fontSize;
             FontWeight fontWeight;
+            Color color;
             YesNo printObject;
             bool hasNumber;
             bool hasDefaultX;
@@ -47,6 +50,7 @@ namespace mx
             bool hasFontStyle;
             bool hasFontSize;
             bool hasFontWeight;
+            bool hasColor;
             bool hasPrintObject;
 
             bool fromXElement( std::ostream& message, xml::XElement& xelement );

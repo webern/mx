@@ -1,15 +1,12 @@
-// MusicXML Class Library v0.2
-// Copyright (c) 2015 - 2016 by Matthew James Briggs
+// MusicXML Class Library
+// Copyright (c) by Matthew James Briggs
+// Distributed under the MIT License
 
 #include "mx/core/Document.h"
-#include "mx/core/Elements.h"
 #include "mx/xml/XFactory.h"
-#include "mx/xml/XDoc.h"
-#include "mx/xml/XElement.h"
 #include "mx/xml/XAttribute.h"
 #include "mx/xml/XElementIterator.h"
 #include "mx/xml/XAttributeIterator.h"
-#include "mx/utility/Throw.h"
 #include "mx/core/ScoreConversions.h"
 
 using namespace mx::xml;

@@ -1,5 +1,6 @@
-// MusicXML Class Library v0.2
-// Copyright (c) 2015 - 2016 by Matthew James Briggs
+// MusicXML Class Library
+// Copyright (c) by Matthew James Briggs
+// Distributed under the MIT License
 
 #pragma once
 
@@ -20,11 +21,11 @@ namespace mx
         // This will be used by toStream to indent the XML tree
         extern const char* INDENT;
         
-        struct ElementInterface;
+        class ElementInterface;
         using ElementPtr = std::shared_ptr<ElementInterface>;
         using ElementUPtr = std::unique_ptr<ElementInterface>;
         
-        struct ElementInterface
+        class ElementInterface
         {
         public:
             ElementInterface();

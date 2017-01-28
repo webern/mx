@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Workspace
    version = "1.0">
+   <FileRef
+      location = "group:Mx.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:MxTest.xcodeproj">
+   </FileRef>
    <Group
       location = "container:"
       name = "Other">
@@ -11,10 +17,4 @@
          location = "group:../README.md">
       </FileRef>
    </Group>
-   <FileRef
-      location = "group:MxTest.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:Mx.xcodeproj">
-   </FileRef>
 </Workspace>

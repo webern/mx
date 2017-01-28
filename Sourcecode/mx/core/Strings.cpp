@@ -1,9 +1,9 @@
-// MusicXML Class Library v0.2
-// Copyright (c) 2015 - 2016 by Matthew James Briggs
+// MusicXML Class Library
+// Copyright (c) by Matthew James Briggs
+// Distributed under the MIT License
 
 #include "mx/core/Strings.h"
 #include <sstream>
-#include <cctype>
 #include <algorithm>
 #include <iterator>
 
@@ -11,8 +11,11 @@ namespace
 {
     const mx::core::StringType kWhitespace = " \t\n\v\f\r";
     const mx::core::StringType kNCNameAllowed = "-.0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz";
-    mx::core::StringType trim(const mx::core::StringType& str,
-                     const mx::core::StringType& whitespace = kWhitespace )
+
+
+    mx::core::StringType trim(
+        const mx::core::StringType& str,
+        const mx::core::StringType& whitespace = kWhitespace )
     {
         const auto strBegin = str.find_first_not_of(whitespace);
         if (strBegin == mx::core::StringType::npos)
@@ -24,9 +27,11 @@ namespace
         return str.substr(strBegin, strRange);
     }
     
-    mx::core::StringType reduce(const mx::core::StringType& str,
-                       const mx::core::StringType& fill = " ",
-                       const mx::core::StringType& whitespace = kWhitespace)
+
+    mx::core::StringType reduce(
+        const mx::core::StringType& str,
+        const mx::core::StringType& fill = " ",
+        const mx::core::StringType& whitespace = kWhitespace)
     {
         // trim first
         auto result = trim(str, whitespace);
@@ -46,9 +51,12 @@ namespace
         
         return result;
     }
-    mx::core::StringType onlyAllow(const mx::core::StringType& input,
-                                    const mx::core::StringType& fill = "_",
-                                    const mx::core::StringType& onlyAllow = kNCNameAllowed)
+
+
+    mx::core::StringType onlyAllow(
+        const mx::core::StringType& input,
+        const mx::core::StringType& fill = "_",
+        const mx::core::StringType& onlyAllow = kNCNameAllowed)
     {
         std::string str = input;
         auto firstBadChar = str.find_first_not_of( onlyAllow );
@@ -60,6 +68,7 @@ namespace
         return str;
     }
     
+
     std::set<int> copyPositives( const std::set<int>& input )
     {
         std::set<int> output;
@@ -74,28 +83,47 @@ namespace mx
     namespace core
     {
         XsString::XsString()
-        :myValue( "" ) {}
+        :myValue( "" )
+        {
+
+        }
+
         
         XsString::XsString( const StringType& value )
-        :myValue( value ) {}
+        :myValue( value )
+        {
+
+        }
         
-        XsString::~XsString() {}
+
+        XsString::~XsString()
+        {
+
+        }
         
+
         StringType XsString::getValue() const
         {
             return myValue;
         }
+
+
         void XsString::setValue( const StringType& value )
         {
             myValue = value;
         }
+
+
         StringType toString( const XsString& xsstring )
         {
             return xsstring.getValue();
         }
 
 
-        std::ostream& toStream( std::ostream& os, const XsString& xsstring, bool useXmlEscapeCharacters )
+        std::ostream& toStream(
+            std::ostream& os,
+            const XsString& xsstring,
+            bool useXmlEscapeCharacters )
         {
             if( !useXmlEscapeCharacters )
             {
@@ -105,14 +133,6 @@ namespace mx
             {
                 switch ( c )
                 {
-                    //case '"':
-                    //    os << "&quot;";
-                    //    break;
-                        
-                    //case '\'':
-                    //    os << "&apos;";
-                    //    break;
-                        
                     case '<':
                         os << "&lt;";
                         break;
@@ -139,21 +159,32 @@ namespace mx
             return toStream( os, xsstring );
         }
         
+
         XsToken::XsToken()
-        :XsString() {}
+        :XsString()
+        {
+
+        }
         
         XsToken::XsToken( const StringType& value )
         :XsString( value )
         {
             XsToken::setValue( value );
         }
+
+
         void XsToken::setValue( const StringType& value )
         {
             XsString::setValue( reduce( value ) );
         }
         
+
         XsID::XsID()
-        :XsString( "ID" ) {}
+        :XsString( "ID" )
+        {
+
+        }
+
         
         XsID::XsID( const StringType& value )
         :XsString( value )
@@ -161,6 +192,7 @@ namespace mx
             XsID::setValue( value );
         }
         
+
         void XsID::setValue( const StringType& value )
         {
             std::string scrubbed = onlyAllow( value );
@@ -174,18 +206,29 @@ namespace mx
             }
             XsString::setValue( scrubbed );
         }
+
         
         CommaSeparatedText::CommaSeparatedText()
-        :myValues() {}
+        :myValues()
+        {
+
+        }
+        
         
         CommaSeparatedText::CommaSeparatedText( const XsTokenSet& values )
-        :myValues( values ) {}
+        :myValues( values )
+        {
+
+        }
+        
         
         CommaSeparatedText::CommaSeparatedText( const StringType& value )
         :myValues()
         {
             this->parse( value );
         }
+        
+        
         void CommaSeparatedText::parse( const StringType& commaSeparatedText )
         {
             myValues.clear();
@@ -197,31 +240,43 @@ namespace mx
                 myValues.push_back( XsToken( token ) );
             }
         }
+        
+        
         const XsTokenSet& CommaSeparatedText::getValues() const
         {
             return myValues;
         }
+        
+        
         void CommaSeparatedText::setValues( const XsTokenSet& values )
         {
             myValues = values;
         }
         
+        
         XsTokenSetIter CommaSeparatedText::getValuesBegin()
         {
             return myValues.begin();
         }
+        
+        
         XsTokenSetIter CommaSeparatedText::getValuesEnd()
         {
             return myValues.end();
         }
+        
+        
         XsTokenSetIterConst CommaSeparatedText::getValuesBeginConst() const
         {
             return myValues.cbegin();
         }
+        
+        
         XsTokenSetIterConst CommaSeparatedText::getValuesEndConst() const
         {
             return myValues.cend();
         }
+        
         
         std::ostream& toStream( std::ostream& os, const CommaSeparatedText& value )
         {
@@ -247,6 +302,8 @@ namespace mx
         {
             return toStream( os, value );
         }
+        
+        
         StringType toString( const CommaSeparatedText& value )
         {
             std::stringstream ss;
@@ -258,7 +315,9 @@ namespace mx
         CommaSeparatedListOfPositiveIntegers::CommaSeparatedListOfPositiveIntegers()
         :myValues()
         ,myIsSpacingDesired( false )
-        {}
+        {
+
+        }
         
         
         CommaSeparatedListOfPositiveIntegers::CommaSeparatedListOfPositiveIntegers( const StringType& value )
@@ -374,6 +433,8 @@ namespace mx
         {
             return toStream( os, value );
         }
+
+        
         StringType toString( const CommaSeparatedListOfPositiveIntegers& value )
         {
             std::stringstream ss;

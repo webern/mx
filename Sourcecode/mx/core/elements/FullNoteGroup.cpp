@@ -1,5 +1,6 @@
-// MusicXML Class Library v0.2
-// Copyright (c) 2015 - 2016 by Matthew James Briggs
+// MusicXML Class Library
+// Copyright (c) by Matthew James Briggs
+// Distributed under the MIT License
 
 #include "mx/core/elements/FullNoteGroup.h"
 #include "mx/core/FromXElement.h"
@@ -14,7 +15,7 @@ namespace mx
         FullNoteGroup::FullNoteGroup()
         :myChord( makeChord() )
         ,myHasChord( false )
-        ,myFullNoteTypeChoice( makeFullNoteTypeChoice() )
+        ,myFullNoteTypeChoice( nullptr )
         {}
 
 
@@ -49,7 +50,7 @@ namespace mx
                 myChord->toStream( os, indentLevel );
                 os << std::endl;
             }
-            myFullNoteTypeChoice->streamContents( os, indentLevel, isOneLineOnly );
+            getFullNoteTypeChoice()->streamContents( os, indentLevel, isOneLineOnly );
             isOneLineOnly = false;
             return os;
         }
@@ -84,6 +85,8 @@ namespace mx
 
         FullNoteTypeChoicePtr FullNoteGroup::getFullNoteTypeChoice() const
         {
+            MX_LOCK
+            MX_JIT_ALLOCATE( FullNoteTypeChoice );
             return myFullNoteTypeChoice;
         }
 

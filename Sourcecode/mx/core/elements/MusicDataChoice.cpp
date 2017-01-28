@@ -1,5 +1,6 @@
-// MusicXML Class Library v0.2
-// Copyright (c) 2015 - 2016 by Matthew James Briggs
+// MusicXML Class Library
+// Copyright (c) by Matthew James Briggs
+// Distributed under the MIT License
 
 #include "mx/core/elements/MusicDataChoice.h"
 #include "mx/core/FromXElement.h"
@@ -18,8 +19,6 @@
 #include "mx/core/elements/Sound.h"
 #include <iostream>
 
-#define MX_MAKE_JUST_IN_TIME( class_type ) \
-if( !my##class_type ){ my##class_type = make##class_type(); }
 
 namespace mx
 {
@@ -132,7 +131,8 @@ namespace mx
 
         NotePtr MusicDataChoice::getNote() const
         {
-            MX_MAKE_JUST_IN_TIME( Note );
+            MX_LOCK
+            MX_JIT_ALLOCATE( Note );
             return myNote;
         }
 
@@ -148,7 +148,8 @@ namespace mx
 
         BackupPtr MusicDataChoice::getBackup() const
         {
-            MX_MAKE_JUST_IN_TIME( Backup );
+            MX_LOCK
+            MX_JIT_ALLOCATE( Backup );
             return myBackup;
         }
 
@@ -164,7 +165,8 @@ namespace mx
 
         ForwardPtr MusicDataChoice::getForward() const
         {
-            MX_MAKE_JUST_IN_TIME( Forward );
+            MX_LOCK
+            MX_JIT_ALLOCATE( Forward );
             return myForward;
         }
 
@@ -180,7 +182,8 @@ namespace mx
 
         DirectionPtr MusicDataChoice::getDirection() const
         {
-            MX_MAKE_JUST_IN_TIME( Direction );
+            MX_LOCK
+            MX_JIT_ALLOCATE( Direction );
             return myDirection;
         }
 
@@ -196,7 +199,8 @@ namespace mx
 
         PropertiesPtr MusicDataChoice::getProperties() const
         {
-            MX_MAKE_JUST_IN_TIME( Properties );
+            MX_LOCK
+            MX_JIT_ALLOCATE( Properties );
             return myProperties;
         }
 
@@ -212,7 +216,8 @@ namespace mx
 
         HarmonyPtr MusicDataChoice::getHarmony() const
         {
-            MX_MAKE_JUST_IN_TIME( Harmony );
+            MX_LOCK
+            MX_JIT_ALLOCATE( Harmony );
             return myHarmony;
         }
 
@@ -228,7 +233,8 @@ namespace mx
 
         FiguredBassPtr MusicDataChoice::getFiguredBass() const
         {
-            MX_MAKE_JUST_IN_TIME( FiguredBass );
+            MX_LOCK
+            MX_JIT_ALLOCATE( FiguredBass );
             return myFiguredBass;
         }
 
@@ -244,7 +250,8 @@ namespace mx
 
         PrintPtr MusicDataChoice::getPrint() const
         {
-            MX_MAKE_JUST_IN_TIME( Print );
+            MX_LOCK
+            MX_JIT_ALLOCATE( Print );
             return myPrint;
         }
 
@@ -260,7 +267,8 @@ namespace mx
 
         SoundPtr MusicDataChoice::getSound() const
         {
-            MX_MAKE_JUST_IN_TIME( Sound );
+            MX_LOCK
+            MX_JIT_ALLOCATE( Sound );
             return mySound;
         }
 
@@ -276,7 +284,8 @@ namespace mx
 
         BarlinePtr MusicDataChoice::getBarline() const
         {
-            MX_MAKE_JUST_IN_TIME( Barline );
+            MX_LOCK
+            MX_JIT_ALLOCATE( Barline );
             return myBarline;
         }
 
@@ -292,7 +301,8 @@ namespace mx
 
         GroupingPtr MusicDataChoice::getGrouping() const
         {
-            MX_MAKE_JUST_IN_TIME( Grouping );
+            MX_LOCK
+            MX_JIT_ALLOCATE( Grouping );
             return myGrouping;
         }
 
@@ -308,7 +318,8 @@ namespace mx
 
         LinkPtr MusicDataChoice::getLink() const
         {
-            MX_MAKE_JUST_IN_TIME( Link );
+            MX_LOCK
+            MX_JIT_ALLOCATE( Link );
             return myLink;
         }
 
@@ -324,7 +335,8 @@ namespace mx
 
         BookmarkPtr MusicDataChoice::getBookmark() const
         {
-            MX_MAKE_JUST_IN_TIME( Bookmark );
+            MX_LOCK
+            MX_JIT_ALLOCATE( Bookmark );
             return myBookmark;
         }
 

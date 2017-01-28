@@ -1,5 +1,6 @@
-// MusicXML Class Library v0.2
-// Copyright (c) 2015 - 2016 by Matthew James Briggs
+// MusicXML Class Library
+// Copyright (c) by Matthew James Briggs
+// Distributed under the MIT License
 
 #include "mx/core/elements/PartwiseMeasure.h"
 #include "mx/core/FromXElement.h"
@@ -25,20 +26,20 @@ namespace mx
     namespace core
     {
         PartwiseMeasure::PartwiseMeasure()
-        :myAttributes( std::make_shared<MeasureAttributes>() )
+        :myAttributes( nullptr )
         ,myMusicDataGroup( makeMusicDataGroup() )
         {}
 
 
         bool PartwiseMeasure::hasAttributes() const
         {
-            return myAttributes->hasValues();
+            return getAttributes()->hasValues();
         }
 
 
         std::ostream& PartwiseMeasure::streamAttributes( std::ostream& os ) const
         {
-            return myAttributes->toStream( os );
+            return getAttributes()->toStream( os );
         }
 
 
@@ -74,6 +75,8 @@ namespace mx
 
         MeasureAttributesPtr PartwiseMeasure::getAttributes() const
         {
+            MX_LOCK
+            MX_JIT_ALLOCATE_ATTRIBUTES( MeasureAttributes );
             return myAttributes;
         }
 
@@ -106,7 +109,7 @@ namespace mx
         {
             bool isSuccess = true;
             bool isFirstMusicDataChoiceAdded = false;
-            isSuccess &= myAttributes->fromXElement( message, xelement );
+            isSuccess &= getAttributes()->fromXElement( message, xelement );
             
             for( auto it = xelement.begin(); it != xelement.end(); ++it )
             {

@@ -1,5 +1,6 @@
-// MusicXML Class Library v0.2
-// Copyright (c) 2015 - 2016 by Matthew James Briggs
+// MusicXML Class Library
+// Copyright (c) by Matthew James Briggs
+// Distributed under the MIT License
 
 #include "mx/core/elements/Tenths.h"
 #include "mx/core/FromXElement.h"
@@ -69,7 +70,7 @@ namespace mx
         {
             MX_UNUSED( message );
             MX_UNUSED( xelement );
-            //myValue.parse( xelement.getValue() ); ????
+            myValue.parse( xelement.getValue() );
             return true;
         }
 
