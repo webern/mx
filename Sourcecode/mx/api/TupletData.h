@@ -63,7 +63,7 @@ namespace mx
             }
         };
 
-        class TupletEnd
+        class TupletStop
         {
         public:
             // used to id when nested
@@ -72,7 +72,7 @@ namespace mx
             
             PositionData positionData;
             
-            TupletEnd()
+            TupletStop()
             : numberLevel{ -1 }
             , positionData{}
             {
@@ -95,10 +95,10 @@ namespace mx
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( TupletStart );
         
-        MXAPI_EQUALS_BEGIN( TupletEnd )
+        MXAPI_EQUALS_BEGIN( TupletStop )
         MXAPI_EQUALS_MEMBER( numberLevel )
         MXAPI_EQUALS_MEMBER( positionData )
         MXAPI_EQUALS_END;
-        MXAPI_NOT_EQUALS_AND_VECTORS( TupletEnd );
+        MXAPI_NOT_EQUALS_AND_VECTORS( TupletStop );
     }
 }

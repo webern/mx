@@ -76,7 +76,7 @@ using namespace mxtest;
 
 MxFileTestGroup<ImportTestCpul> instance
 {
-    mxtest::MX_COMPILE_MAX_FILE_SIZE_BYTES, // maxFileSizeBytes
+    MX_COMPILE_MAX_FILE_SIZE_BYTES, // maxFileSizeBytes
     "XML Import Tests",
     __FILE__,
     __LINE__

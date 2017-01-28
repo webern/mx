@@ -65,10 +65,10 @@ namespace mx
         }
 
         
-        core::NotePtr NoteWriter::getNote() const
+        core::NotePtr NoteWriter::getNote( bool isStartOfChord ) const
         {
             myOutNote = core::makeNote();
-            setNoteChoiceAndFullNoteGroup();
+            setNoteChoiceAndFullNoteGroup( isStartOfChord );
             setFullNoteTypeChoice();
             setStaffAndVoice();
             setDurationNameAndDots();
@@ -116,7 +116,7 @@ namespace mx
         }
         
         
-        void NoteWriter::setNoteChoiceAndFullNoteGroup() const
+        void NoteWriter::setNoteChoiceAndFullNoteGroup( bool isStartOfChord ) const
         {
             MX_ASSERT( myOutNote != nullptr );
             myOutNoteChoice = myOutNote->getNoteChoice();
@@ -128,7 +128,7 @@ namespace mx
                     auto choiceObj = myOutNoteChoice->getCueNoteGroup();
                     choiceObj->getDuration()->setValue( core::PositiveDivisionsValue{ static_cast<core::DecimalType>(myNoteData.durationData.durationTimeTicks) } );
                     myOutFullNoteGroup = choiceObj->getFullNoteGroup();
-                    myOutFullNoteGroup->setHasChord( myCursor.isChordActive && myIsPreviousNoteAChordMember );
+                    myOutFullNoteGroup->setHasChord( myCursor.isChordActive && myIsPreviousNoteAChordMember && !isStartOfChord );
                     break;
                 }
                 case api::NoteType::grace:
@@ -136,7 +136,7 @@ namespace mx
                     myOutNoteChoice->setChoice( core::NoteChoice::Choice::grace );
                     auto choiceObj = myOutNoteChoice->getGraceNoteGroup();
                     myOutFullNoteGroup = choiceObj->getFullNoteGroup();
-                    myOutFullNoteGroup->setHasChord( myCursor.isChordActive && myIsPreviousNoteAChordMember );
+                    myOutFullNoteGroup->setHasChord( myCursor.isChordActive && myIsPreviousNoteAChordMember && !isStartOfChord );
                     if( myNoteData.isTieStart )
                     {
                         auto tie = core::makeTie();
@@ -156,7 +156,7 @@ namespace mx
                     myOutNoteChoice->setChoice( core::NoteChoice::Choice::normal );
                     auto choiceObj = myOutNoteChoice->getNormalNoteGroup();
                     myOutFullNoteGroup = choiceObj->getFullNoteGroup();
-                    myOutFullNoteGroup->setHasChord( myCursor.isChordActive && myIsPreviousNoteAChordMember );
+                    myOutFullNoteGroup->setHasChord( myCursor.isChordActive && myIsPreviousNoteAChordMember && !isStartOfChord );
                     choiceObj->getDuration()->setValue( core::PositiveDivisionsValue{ static_cast<core::DecimalType>(myNoteData.durationData.durationTimeTicks) } );
                     if( myNoteData.isTieStart )
                     {

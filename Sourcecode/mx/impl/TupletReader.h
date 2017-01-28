@@ -19,7 +19,7 @@ namespace mx
         {
         public:
             TupletReader( const core::Tuplet& inMxTuplet, impl::Cursor inCursor, const core::Note& inNote );
-            void parseTuplet( std::vector<api::TupletStart>& outTupletStarts, std::vector<api::TupletEnd>& outTupletEnds );
+            void parseTuplet( std::vector<api::TupletStart>& outTupletStarts, std::vector<api::TupletStop>& outTupletStops );
             
         private:
             const core::Tuplet& myTuplet;

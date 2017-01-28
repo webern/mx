@@ -1,0 +1,41 @@
+#!/bin/bash
+rm -rf /Users/mjb/MxBin/Build/Products/
+
+# build iOS
+xcodebuild \
+	-workspace ~/Dropbox/Programming/MxRepo/Xcode/mx.xcworkspace \
+	-scheme dylib-iOS \
+	build \
+	-derivedDataPath ~/MxBin \
+	-destination generic/platform=iOS \
+	-destination 'generic/platform=iOS simulator'
+
+# combine the two outputs into one "fat" binary
+mv /Users/mjb/MxBin/Build/Products/Debug-iphoneos/libmx-iOS.dylib /Users/mjb/MxBin/Build/Products/Debug-iphoneos/libmx-iOS.dylib.deviceonly
+mv /Users/mjb/MxBin/Build/Products/Debug-iphonesimulator/libmx-iOS.dylib /Users/mjb/MxBin/Build/Products/Debug-iphonesimulator/libmx-iOS.dylib.iphonesimulator
+
+lipo -create -output "/Users/mjb/MxBin/Build/Products/Debug-iphoneos/libmx-iOS.dylib" /Users/mjb/MxBin/Build/Products/Debug-iphoneos/libmx-iOS.dylib.deviceonly /Users/mjb/MxBin/Build/Products/Debug-iphonesimulator/libmx-iOS.dylib.iphonesimulator
+
+# cleanup the no-longer-needed stuff
+rm /Users/mjb/MxBin/Build/Products/Debug-iphoneos/libmx-iOS.dylib.deviceonly
+rm /Users/mjb/MxBin/Build/Products/Debug-iphonesimulator/libmx-iOS.dylib.iphonesimulator
+rm -rf /Users/mjb/MxBin/Build/Products/Debug-iphonesimulator
+
+# build macOS
+xcodebuild \
+	-workspace ~/Dropbox/Programming/MxRepo/Xcode/mx.xcworkspace \
+	-scheme dylib-macOS \
+	build \
+	-derivedDataPath ~/MxBin \
+	-destination 'platform=OS X,arch=x86_64'
+
+# move to komp repo
+rm -f /Users/mjb/komp/Frameworks/mx/bin/libmx-iOS.dylib
+rm -f /Users/mjb/komp/Frameworks/mx/bin/libmx-macOS.dylib
+cp /Users/mjb/MxBin/Build/Products/Debug-iphoneos/libmx-iOS.dylib /Users/mjb/komp/Frameworks/mx/bin/libmx-iOS.dylib
+cp /Users/mjb/MxBin/Build/Products/Debug/libmx-macOS.dylib /Users/mjb/komp/Frameworks/mx/bin/libmx-macOS.dylib
+rm -rf /Users/mjb/komp/Frameworks/mx/headers/
+mkdir /Users/mjb/komp/Frameworks/mx/headers
+mkdir /Users/mjb/komp/Frameworks/mx/headers/mx
+mkdir /Users/mjb/komp/Frameworks/mx/headers/mx/api
+cp /Users/mjb/Dropbox/Programming/MxRepo/Sourcecode/mx/api/*.h  /Users/mjb/komp/Frameworks/mx/headers/mx/api

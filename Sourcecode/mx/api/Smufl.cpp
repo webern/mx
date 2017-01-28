@@ -39,24 +39,19 @@ namespace mx
             }
             return unspecified;
         }
-        
-        
-        const Smufl& Smufl::instance()
-        {
-            static const Smufl staticInstance;
-            return staticInstance;
-        }
 
         
+        std::map<const std::string, const char16_t> Smufl::ourMap = impl::createSmuflMap();
+        
         Smufl::Smufl()
-        : myMap{}
         {
-            myMap = impl::createSmuflMap();
+
         }
         
         
         char16_t Smufl::findCodepoint(const std::string& inName)
         {
+            
             const SmuflIter iter = getMap().find( inName );
             if( iter == Smufl::end() )
             {
@@ -100,7 +95,7 @@ namespace mx
         
         const SmuflMap& Smufl::getMap()
         {
-            return Smufl::instance().myMap;
+            return ourMap;
         }
         
         

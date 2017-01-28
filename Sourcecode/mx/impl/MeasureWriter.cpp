@@ -323,12 +323,28 @@ namespace mx
             
             for( const auto& voice : inStaff.voices )
             {
+                int currentChordTickPosition = -1;
+                int previousChordTickPosition = -2;
                 myCursor.voiceIndex = voice.first;
                 auto noteIter = voice.second.notes.cbegin();
                 auto noteEnd = voice.second.notes.cend();
                 for( ; noteIter != noteEnd; ++noteIter )
                 {
+                    // TODO - this is too simplistic. If we have two chords in a row then this
+                    // will be incorrect
+                    bool isStartOfChord = false;
                     myCursor.isChordActive = noteIter->isChord;
+                    
+                    if ( noteIter->isChord )
+                    {
+                        currentChordTickPosition = noteIter->tickTimePosition;
+                        if( currentChordTickPosition != previousChordTickPosition )
+                        {
+                            isStartOfChord = true;
+                        }
+                        previousChordTickPosition = currentChordTickPosition;
+                    }
+                    
                     const auto& apiNote = *noteIter;
                     writeForwardOrBackupIfNeeded( apiNote );
                     
@@ -368,9 +384,9 @@ namespace mx
                     auto mdc = core::makeMusicDataChoice();
                     mdc->setChoice( core::MusicDataChoice::Choice::note );
                     NoteWriter writer{ apiNote, myCursor, myScoreWriter, myPreviousCursor.isChordActive };
-                    mdc->setNote( writer.getNote() );
+                    mdc->setNote( writer.getNote(isStartOfChord) );
                     myOutMeasure->getMusicDataGroup()->addMusicDataChoice( mdc );
-                    advanceCursorIfNeeded( apiNote, noteIter, noteEnd );
+                    advanceCursorIfNeeded( apiNote, noteIter, noteEnd, isStartOfChord );
                 } // foreach note
             } // foreach voice
             
@@ -456,19 +472,22 @@ namespace mx
         }
         
         
-        void MeasureWriter::advanceCursorIfNeeded( const api::NoteData& currentNote, NoteIter inNoteIter, const NoteIter inEndIter )
+        void MeasureWriter::advanceCursorIfNeeded( const api::NoteData& currentNote, NoteIter inNoteIter, const NoteIter inEndIter, bool isStartOfChord )
         {
+            MX_UNUSED(currentNote);
+            MX_UNUSED(isStartOfChord);
+            
             ++inNoteIter;
-            bool isNextNoteChord = false;
             if( inNoteIter != inEndIter )
             {
-                isNextNoteChord = inNoteIter->isChord;
+                myCursor.tickTimePosition = inNoteIter->tickTimePosition;
             }
-            if( !currentNote.isChord || !isNextNoteChord )
+            else
             {
                 myCursor.tickTimePosition += currentNote.durationData.durationTimeTicks;
                 myCursor.isChordActive = true;
             }
+
             myPreviousCursor = myCursor;
         }
         

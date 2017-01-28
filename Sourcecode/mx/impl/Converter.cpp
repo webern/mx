@@ -343,7 +343,7 @@ namespace mx
         };
         
         
-        const std::map<core::LineEnd, api::LineHook> Converter::lineEndMap =
+        const std::map<core::LineEnd, api::LineHook> Converter::lineStopMap =
         {
             std::pair<core::LineEnd, api::LineHook>{ core::LineEnd::arrow, api::LineHook::arrow },
             std::pair<core::LineEnd, api::LineHook>{ core::LineEnd::both, api::LineHook::both },
@@ -737,13 +737,13 @@ namespace mx
         
         core::LineEnd Converter::convert( api::LineHook value ) const
         {
-            return findCoreItem( lineEndMap, core::LineEnd::none, value );
+            return findCoreItem( lineStopMap, core::LineEnd::none, value );
         }
         
         
         api::LineHook Converter::convert( core::LineEnd value ) const
         {
-            return findApiItem( lineEndMap, api::LineHook::unspecified, value );
+            return findApiItem( lineStopMap, api::LineHook::unspecified, value );
         }
         
         

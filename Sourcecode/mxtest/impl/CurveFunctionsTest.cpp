@@ -120,9 +120,9 @@ namespace
         return c;
     }
     
-    api::CurveEnd seedEnd( api::CurveType t )
+    api::CurveStop seedStop( api::CurveType t )
     {
-        api::CurveEnd c{ t };
+        api::CurveStop c{ t };
         c.numberLevel = 2;
         c.curvePoints.isBezierOffsetSpecified = true;
         c.curvePoints.bezierOffset = 1.0;
@@ -930,115 +930,115 @@ T_END
 /////////////////////////////////////////////////////////////////////////////////
 
 
-TEST( writeAttributesFromCurveEnd_type, CurveFunctions )
+TEST( writeAttributesFromCurveStop_type, CurveFunctions )
 {
     using namespace mx::impl;
     using namespace mx;
     core::SlurAttributes attr;
-    auto c = seedEnd( api::CurveType::slur );
-    impl::writeAttributesFromCurveEnd( c, attr );
+    auto c = seedStop( api::CurveType::slur );
+    impl::writeAttributesFromCurveStop( c, attr );
     CHECK( core::StartStopContinue::stop == attr.type );
 }
 T_END
 
 
-TEST( writeAttributesFromCurveEnd_number, CurveFunctions )
+TEST( writeAttributesFromCurveStop_number, CurveFunctions )
 {
     using namespace mx::impl;
     using namespace mx;
     core::SlurAttributes attr;
-    auto c = seedEnd( api::CurveType::slur );
-    impl::writeAttributesFromCurveEnd( c, attr );
+    auto c = seedStop( api::CurveType::slur );
+    impl::writeAttributesFromCurveStop( c, attr );
     CHECK_EQUAL( 2, attr.number.getValue() );
 }
 T_END
 
 
-TEST( writeAttributesFromCurveEnd_bezierOffset, CurveFunctions )
+TEST( writeAttributesFromCurveStop_bezierOffset, CurveFunctions )
 {
     using namespace mx::impl;
     using namespace mx;
     core::SlurAttributes attr;
-    auto c = seedEnd( api::CurveType::slur );
-    impl::writeAttributesFromCurveEnd( c, attr );
+    auto c = seedStop( api::CurveType::slur );
+    impl::writeAttributesFromCurveStop( c, attr );
     CHECK( attr.hasBezierOffset );
     CHECK_DOUBLES_EQUAL( 1.0, attr.bezierOffset.getValue(), 0.01 );
 }
 T_END
 
 
-TEST( writeAttributesFromCurveEnd_bezierX, CurveFunctions )
+TEST( writeAttributesFromCurveStop_bezierX, CurveFunctions )
 {
     using namespace mx::impl;
     using namespace mx;
     core::SlurAttributes attr;
-    auto c = seedEnd( api::CurveType::slur );
-    impl::writeAttributesFromCurveEnd( c, attr );
+    auto c = seedStop( api::CurveType::slur );
+    impl::writeAttributesFromCurveStop( c, attr );
     CHECK( attr.hasBezierX );
     CHECK_DOUBLES_EQUAL( 13.0, attr.bezierX.getValue(), 0.01 );
 }
 T_END
 
 
-TEST( writeAttributesFromCurveEnd_bezierY, CurveFunctions )
+TEST( writeAttributesFromCurveStop_bezierY, CurveFunctions )
 {
     using namespace mx::impl;
     using namespace mx;
     core::SlurAttributes attr;
-    auto c = seedEnd( api::CurveType::slur );
-    impl::writeAttributesFromCurveEnd( c, attr );
+    auto c = seedStop( api::CurveType::slur );
+    impl::writeAttributesFromCurveStop( c, attr );
     CHECK( attr.hasBezierY );
     CHECK_DOUBLES_EQUAL( 14.0, attr.bezierY.getValue(), 0.01 );
 }
 T_END
 
 
-TEST( writeAttributesFromCurveEnd_defaultX, CurveFunctions )
+TEST( writeAttributesFromCurveStop_defaultX, CurveFunctions )
 {
     using namespace mx::impl;
     using namespace mx;
     core::SlurAttributes attr;
-    auto c = seedEnd( api::CurveType::slur );
-    impl::writeAttributesFromCurveEnd( c, attr );
+    auto c = seedStop( api::CurveType::slur );
+    impl::writeAttributesFromCurveStop( c, attr );
     CHECK( attr.hasDefaultX );
     CHECK_DOUBLES_EQUAL( 3.0, attr.defaultX.getValue(), 0.01 );
 }
 T_END
 
 
-TEST( writeAttributesFromCurveEnd_defaultY, CurveFunctions )
+TEST( writeAttributesFromCurveStop_defaultY, CurveFunctions )
 {
     using namespace mx::impl;
     using namespace mx;
     core::SlurAttributes attr;
-    auto c = seedEnd( api::CurveType::slur );
-    impl::writeAttributesFromCurveEnd( c, attr );
+    auto c = seedStop( api::CurveType::slur );
+    impl::writeAttributesFromCurveStop( c, attr );
     CHECK( attr.hasDefaultY );
     CHECK_DOUBLES_EQUAL( 4.0, attr.defaultY.getValue(), 0.01 );
 }
 T_END
 
 
-TEST( writeAttributesFromCurveEnd_relativeX, CurveFunctions )
+TEST( writeAttributesFromCurveStop_relativeX, CurveFunctions )
 {
     using namespace mx::impl;
     using namespace mx;
     core::SlurAttributes attr;
-    auto c = seedEnd( api::CurveType::slur );
-    impl::writeAttributesFromCurveEnd( c, attr );
+    auto c = seedStop( api::CurveType::slur );
+    impl::writeAttributesFromCurveStop( c, attr );
     CHECK( attr.hasRelativeX );
     CHECK_DOUBLES_EQUAL( 5.0, attr.relativeX.getValue(), 0.01 );
 }
 T_END
 
 
-TEST( writeAttributesFromCurveEnd_relativeY, CurveFunctions )
+TEST( writeAttributesFromCurveStop_relativeY, CurveFunctions )
 {
     using namespace mx::impl;
     using namespace mx;
     core::SlurAttributes attr;
-    auto c = seedEnd( api::CurveType::slur );
-    impl::writeAttributesFromCurveEnd( c, attr );
+    auto c = seedStop( api::CurveType::slur );
+    impl::writeAttributesFromCurveStop( c, attr );
     CHECK( attr.hasRelativeY );
     CHECK_DOUBLES_EQUAL( 6.0, attr.relativeY.getValue(), 0.01 );
 }

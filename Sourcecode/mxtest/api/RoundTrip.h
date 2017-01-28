@@ -11,21 +11,21 @@
 
 namespace mxtest
 {
-
     
-constexpr const char* const roundTripFileName = "k007a_Notations_Dynamics.xml";
-
-	inline void roundTrip()
-	{
+    
+    constexpr const char* const roundTripFileName = "k007a_Notations_Dynamics.xml";
+    
+    inline void roundTrip()
+    {
         const std::string path{ MxFileRepository::getFullPath( roundTripFileName ) };
         auto& docMgr = mx::api::DocumentManager::getInstance();
-	    auto docId = docMgr.createFromFile( path );
-	    auto scoreData = docMgr.getData( docId );
-	    docMgr.destroyDocument( docId );
-	    docId = docMgr.createFromScore( scoreData );
-	    docMgr.writeToFile( docId, "./output.xml" );
-	    docMgr.destroyDocument( docId );
-	}
+        auto docId = docMgr.createFromFile( path );
+        auto scoreData = docMgr.getData( docId );
+        docMgr.destroyDocument( docId );
+        docId = docMgr.createFromScore( scoreData );
+        docMgr.writeToFile( docId, "./output.xml" );
+        docMgr.destroyDocument( docId );
+    }
     
     inline mx::api::ScoreData roundTrip( const mx::api::ScoreData inScoreData )
     {

@@ -253,7 +253,7 @@ namespace mx
                         case core::NotationsChoice::Choice::tuplet:
                         {
                             TupletReader reader{ *notationsChoice.getTuplet(), myCursor, myNote };
-                            reader.parseTuplet( myOutNoteData.noteAttachmentData.tupletStarts, myOutNoteData.noteAttachmentData.tupletEnds );
+                            reader.parseTuplet( myOutNoteData.noteAttachmentData.tupletStarts, myOutNoteData.noteAttachmentData.tupletStops );
                             break;
                         }
                         case core::NotationsChoice::Choice::slide:
@@ -278,7 +278,7 @@ namespace mx
 //                            }
 //                            else
 //                            {
-//                                myOutNoteData.noteAttachmentData.spannerEnds.emplace_back( std::move( spannerData ) );
+//                                myOutNoteData.noteAttachmentData.spannerStops.emplace_back( std::move( spannerData ) );
 //                            }
                             
                             break;

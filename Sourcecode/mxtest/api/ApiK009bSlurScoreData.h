@@ -119,8 +119,8 @@ namespace mxtest
         note->durationData.durationName = DurationName::quarter;
         note->durationData.durationTimeTicks = 2;
         note->pitchData.accidental = Accidental::none;
-        note->noteAttachmentData.curveEnds.emplace_back( CurveType::slur );
-        auto& end = note->noteAttachmentData.curveEnds.back();
+        note->noteAttachmentData.curveStops.emplace_back( CurveType::slur );
+        auto& end = note->noteAttachmentData.curveStops.back();
         end.numberLevel = 1;
         end.curvePoints.isBezierXSpecified = true;
         end.curvePoints.bezierX = 53.0;

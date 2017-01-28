@@ -33,7 +33,7 @@ namespace mx
                 const MeasureCursor& inCursor,
                 const ScoreWriter& inScoreWriter,
                 bool isPreviousNoteAChordMember );
-            core::NotePtr getNote() const;
+            core::NotePtr getNote( bool isStartOfChord ) const;
             
         private:
             const api::NoteData& myNoteData;
@@ -47,7 +47,7 @@ namespace mx
             mutable core::FullNoteTypeChoicePtr myOutFullNoteTypeChoice;
             
         private:
-            void setNoteChoiceAndFullNoteGroup() const;
+            void setNoteChoiceAndFullNoteGroup( bool isStartOfChord ) const;
             void setFullNoteTypeChoice() const;
             void setStaffAndVoice() const;
             void setDurationNameAndDots() const;

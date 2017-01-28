@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include "mxtest/control/CompileControl.h"
 #include "mxtest/file/MxFile.h"
 #include "mx/api/ScoreData.h"
 

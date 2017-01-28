@@ -56,7 +56,7 @@ namespace mx
             void writeForwardOrBackupIfNeeded( const api::NoteData& currentNote );
             void backup( const int ticks );
             void forward( const int ticks );
-            void advanceCursorIfNeeded( const api::NoteData& currentNote, NoteIter inNoteIter, const NoteIter inEndIter );
+            void advanceCursorIfNeeded( const api::NoteData& currentNote, NoteIter inNoteIter, const NoteIter inEndIter, bool isStartOfChord );
             void writeBarlines( int tickTimePosition );
             
             template<typename T>

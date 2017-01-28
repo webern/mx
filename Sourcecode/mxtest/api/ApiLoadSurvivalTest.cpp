@@ -41,7 +41,7 @@ namespace mxtest
     
     MxFileTestGroup<ApiLoadSurvivalTest> instance
     {
-        mxtest::MX_COMPILE_MAX_FILE_SIZE_BYTES, // maxFileSizeBytes
+        MX_COMPILE_MAX_FILE_SIZE_BYTES, // maxFileSizeBytes
         "Api Load Survival Test",
         __FILE__,
         __LINE__

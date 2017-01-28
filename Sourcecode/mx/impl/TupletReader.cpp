@@ -29,7 +29,7 @@ namespace mx
             
         }
         
-        void TupletReader::parseTuplet( std::vector<api::TupletStart>& outTupletStarts, std::vector<api::TupletEnd>& outTupletEnds )
+        void TupletReader::parseTuplet( std::vector<api::TupletStart>& outTupletStarts, std::vector<api::TupletStop>& outTupletStops )
         {
             const auto& attr = *myTuplet.getAttributes();
             api::TupletStart tupletStart;
@@ -42,10 +42,10 @@ namespace mx
  
             if( attr.type == core::StartStop::stop )
             {
-                api::TupletEnd tupletEnd;
-                tupletEnd.positionData = tupletStart.positionData;
-                tupletEnd.numberLevel = tupletStart.numberLevel;
-                outTupletEnds.emplace_back( std::move( tupletEnd ) );
+                api::TupletStop tupletStop;
+                tupletStop.positionData = tupletStart.positionData;
+                tupletStop.numberLevel = tupletStart.numberLevel;
+                outTupletStops.emplace_back( std::move( tupletStop ) );
                 return;
             }
             
