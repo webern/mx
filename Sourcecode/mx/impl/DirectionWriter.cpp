@@ -40,6 +40,13 @@
 #include "mx/impl/SpannerFunctions.h"
 #include "mx/impl/MarkDataFunctions.h"
 #include "mx/impl/DynamicsWriter.h"
+#include "mx/core/elements/BeatUnitPerOrNoteRelationNoteChoice.h"
+#include "mx/core/elements/BeatUnitPer.h"
+#include "mx/core/elements/BeatUnitGroup.h"
+#include "mx/core/elements/BeatUnit.h"
+#include "mx/core/elements/BeatUnitDot.h"
+#include "mx/core/elements/PerMinuteOrBeatUnitChoice.h"
+#include "mx/core/elements/PerMinute.h"
 
 namespace mx
 {
@@ -197,6 +204,39 @@ namespace mx
                 auto outElement = outDirType->getBracket();
                 auto& attr = *outElement->getAttributes();
                 setAttributesFromSpannerStart( item, attr );
+            }
+            
+            for( const auto& tempo : myDirectionData.tempos )
+            {
+                if( tempo.tempoType != api::TempoType::beatsPerMinute )
+                {
+                    MX_THROW( "Only api::TempoType::beatsPerMinute is supported, others are not implemented" );
+                }
+                
+                auto outDirType = core::makeDirectionType();
+                this->addDirectionType( outDirType );
+                outDirType->setChoice( core::DirectionType::Choice::metronome );
+                auto outElement = outDirType->getMetronome();
+                auto choice = outElement->getBeatUnitPerOrNoteRelationNoteChoice();
+                choice->setChoice( core::BeatUnitPerOrNoteRelationNoteChoice::Choice::beatUnitPer );
+                auto bpm = choice->getBeatUnitPer();
+                auto beatUnitGroup = bpm->getBeatUnitGroup();
+                auto beatUnit = beatUnitGroup->getBeatUnit();
+                Converter converter;
+                beatUnit->setValue(converter.convert(tempo.beatsPerMinute.durationName));
+                
+                for( int d = 0; d < tempo.beatsPerMinute.dots; ++d )
+                {
+                    beatUnitGroup->addBeatUnitDot(core::makeBeatUnitDot());
+                }
+                
+                auto pmobuc = bpm->getPerMinuteOrBeatUnitChoice();
+                pmobuc->setChoice( core::PerMinuteOrBeatUnitChoice::Choice::perMinute );
+                auto pm = pmobuc->getPerMinute();
+                auto str = std::to_string( tempo.beatsPerMinute.beatsPerMinute );
+                pm->setValue( core::XsString{ str } );
+                //auto& attr = *outElement->getAttributes();
+                //setAttributesFromSpannerStart( item, attr );
             }
             
             myPlacements.clear();

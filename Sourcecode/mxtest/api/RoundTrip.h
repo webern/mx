@@ -25,7 +25,22 @@ constexpr const char* const roundTripFileName = "k007a_Notations_Dynamics.xml";
 	    docId = docMgr.createFromScore( scoreData );
 	    docMgr.writeToFile( docId, "./output.xml" );
 	    docMgr.destroyDocument( docId );
-	}	
+	}
+    
+    inline mx::api::ScoreData roundTrip( const mx::api::ScoreData inScoreData )
+    {
+        auto& docMgr = mx::api::DocumentManager::getInstance();
+        auto docId = docMgr.createFromScore( inScoreData );
+        std::stringstream ss;
+        docMgr.writeToStream(docId, ss);
+        docMgr.destroyDocument(docId);
+        auto xmlData = ss.str();
+        std::istringstream iss{ xmlData };
+        docId = docMgr.createFromStream( iss );
+        auto outScoreData = docMgr.getData( docId );
+        docMgr.destroyDocument( docId );
+        return outScoreData;
+    }
 }
 
 #endif

@@ -18,6 +18,7 @@
 		2937D17E1D18D43A001C2A1A /* XDocTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2937D1791D18D43A001C2A1A /* XDocTest.cpp */; };
 		2937D17F1D18D43A001C2A1A /* XElementIteratorTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2937D17A1D18D43A001C2A1A /* XElementIteratorTest.cpp */; };
 		2937D1801D18D43A001C2A1A /* XElementTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2937D17B1D18D43A001C2A1A /* XElementTest.cpp */; };
+		2941ABC81E3D046E00BFF4AE /* MetronomeApiTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2941ABC71E3D046E00BFF4AE /* MetronomeApiTest.cpp */; };
 		294775E21D934C510006E1AD /* ApiLoadSurvivalTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 294775E11D934C510006E1AD /* ApiLoadSurvivalTest.cpp */; };
 		294CE2031DCA952A0021670C /* PrintFunctionsTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 294CE2021DCA952A0021670C /* PrintFunctionsTest.cpp */; };
 		295897271DB9806600F18FBA /* MxFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2958971F1DB9806600F18FBA /* MxFile.cpp */; };
@@ -494,6 +495,7 @@
 		2937D1791D18D43A001C2A1A /* XDocTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = XDocTest.cpp; path = ../Sourcecode/mxtest/xml/XDocTest.cpp; sourceTree = "<group>"; };
 		2937D17A1D18D43A001C2A1A /* XElementIteratorTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = XElementIteratorTest.cpp; path = ../Sourcecode/mxtest/xml/XElementIteratorTest.cpp; sourceTree = "<group>"; };
 		2937D17B1D18D43A001C2A1A /* XElementTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = XElementTest.cpp; path = ../Sourcecode/mxtest/xml/XElementTest.cpp; sourceTree = "<group>"; };
+		2941ABC71E3D046E00BFF4AE /* MetronomeApiTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MetronomeApiTest.cpp; path = ../Sourcecode/mxtest/api/MetronomeApiTest.cpp; sourceTree = "<group>"; };
 		294775E11D934C510006E1AD /* ApiLoadSurvivalTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ApiLoadSurvivalTest.cpp; path = ../Sourcecode/mxtest/api/ApiLoadSurvivalTest.cpp; sourceTree = "<group>"; };
 		294847701D5AD4AD0025138E /* DecimalFields.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DecimalFields.h; path = ../Sourcecode/mxtest/import/DecimalFields.h; sourceTree = "<group>"; };
 		294CE2021DCA952A0021670C /* PrintFunctionsTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PrintFunctionsTest.cpp; path = ../Sourcecode/mxtest/impl/PrintFunctionsTest.cpp; sourceTree = "<group>"; };
@@ -1761,16 +1763,16 @@
 		29EF440E1D6E8F4700DBDAB9 /* api */ = {
 			isa = PBXGroup;
 			children = (
-				2973CDE11DCD74CD001B9AAD /* ApiK015aLayoutScoreData.h */,
-				2973CDE21DCD74CD001B9AAD /* ApiK015aLayoutTest.cpp */,
-				29271A071DCBB6760036528D /* ApiK009bSlurScoreData.h */,
-				29271A081DCBB6760036528D /* ApiK009bSlurTest.cpp */,
 				29BF98891DC6D20500BBC7B3 /* ApiK007aScoreData.h */,
 				29BF988A1DC6D20500BBC7B3 /* ApiK007aTest.cpp */,
 				2961F1151DC7CDD700D62B16 /* ApiK007cScoreData.h */,
 				2961F1161DC7CDD700D62B16 /* ApiK007cTest.cpp */,
+				29271A071DCBB6760036528D /* ApiK009bSlurScoreData.h */,
+				29271A081DCBB6760036528D /* ApiK009bSlurTest.cpp */,
 				29E41D671DC978400085405E /* ApiK014aFermatasScoreData.h */,
 				29E41D681DC978400085405E /* ApiK014aFermatasTest.cpp */,
+				2973CDE11DCD74CD001B9AAD /* ApiK015aLayoutScoreData.h */,
+				2973CDE21DCD74CD001B9AAD /* ApiK015aLayoutTest.cpp */,
 				294775E11D934C510006E1AD /* ApiLoadSurvivalTest.cpp */,
 				29B48EDF1DBE8C450030A974 /* ApiLy43eScoreData.h */,
 				29FFAC7C1DB998C100DC8AE1 /* ApiLy43eTest.cpp */,
@@ -1780,6 +1782,7 @@
 				2903C9481DBC7ED600218C9E /* ApiTester.h */,
 				29C9AFD81DC3BE6000DD9BFB /* ChordApiTest.cpp */,
 				29EF440F1D6E8F5500DBDAB9 /* DocumentManagerTest.cpp */,
+				2941ABC71E3D046E00BFF4AE /* MetronomeApiTest.cpp */,
 				29CD722E1DB8421100FB7153 /* RoundTrip.h */,
 				2903C9461DBC7D7600218C9E /* ScoreDataCreator.h */,
 				29979D611DC811F300707AA4 /* TimeSignatureApiTest.cpp */,
@@ -2135,6 +2138,7 @@
 				297556081D135AA3007732D0 /* UtilityImplTest.cpp in Sources */,
 				29C01F041D1312FA0094BE61 /* WorkTest.cpp in Sources */,
 				29C01EAB1D1312FA0094BE61 /* SlideTest.cpp in Sources */,
+				2941ABC81E3D046E00BFF4AE /* MetronomeApiTest.cpp in Sources */,
 				29B48EDC1DBE7F550030A974 /* NoteWriterTest.cpp in Sources */,
 				29C01E521D1312FA0094BE61 /* NormalDotTest.cpp in Sources */,
 				29C01EB61D1312FA0094BE61 /* StaffDetailsTest.cpp in Sources */,

@@ -9,3 +9,9 @@
 #define MX_COMPILE_IMPORT_TESTS
 #define MX_COMPILE_UTILTIY_TESTS
 #define MX_COMPILE_XML_TESTS
+
+namespace mxtest
+{
+    // zero indicates infinity
+    constexpr const int MX_COMPILE_MAX_FILE_SIZE_BYTES = 1024 * 3;
+}
