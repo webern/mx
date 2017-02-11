@@ -30,13 +30,12 @@ namespace mxtest
         part.name = "Staff 1";
         part.instrumentData.uniqueId = "P1-I3";
         part.instrumentData.name = "Staff 1";
-        part.midiData.uniqueId = "P1-I3";
-        part.midiData.channel = 1;
-        part.midiData.program = 1;
-        part.midiData.volume = 0;
-        part.midiData.isVolumeSpecified = true;
-        part.midiData.pan = 90;
-        part.midiData.isPanSpecified = true;
+        part.instrumentData.midiData.channel = 1;
+        part.instrumentData.midiData.program = 1;
+        part.instrumentData.midiData.volume = 0;
+        part.instrumentData.midiData.isVolumeSpecified = true;
+        part.instrumentData.midiData.pan = 90;
+        part.instrumentData.midiData.isPanSpecified = true;
 
         part.measures.emplace_back( MeasureData{} );
         auto measure = &part.measures.back();

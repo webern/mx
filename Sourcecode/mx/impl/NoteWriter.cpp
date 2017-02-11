@@ -39,6 +39,7 @@
 #include "mx/core/elements/NoteChoice.h"
 #include "mx/core/elements/Tie.h"
 #include "mx/core/elements/Dot.h"
+#include "mx/core/elements/NormalDot.h"
 #include "mx/core/elements/Stem.h"
 #include "mx/core/elements/Notations.h"
 #include "mx/impl/NotationsWriter.h"
@@ -111,6 +112,17 @@ namespace mx
                 auto timeMod = myOutNote->getTimeModification();
                 timeMod->getActualNotes()->setValue( core::NonNegativeInteger{ myNoteData.durationData.timeModificationActualNotes } );
                 timeMod->getNormalNotes()->setValue( core::NonNegativeInteger{ myNoteData.durationData.timeModificationNormalNotes } );
+
+                if (myNoteData.durationData.timeModificationNormalType != api::DurationName::unspecified)
+                {
+                    timeMod->setHasNormalTypeNormalDotGroup(true);
+                    timeMod->getNormalTypeNormalDotGroup()->getNormalType()->setValue( myConverter.convert( myNoteData.durationData.timeModificationNormalType ) );
+
+                    for( int i = 0; i < myNoteData.durationData.timeModificationNormalTypeDots; ++i )
+                    {
+                        timeMod->getNormalTypeNormalDotGroup()->addNormalDot( core::makeNormalDot() );
+                    }
+                }
             }
 
             return myOutNote;

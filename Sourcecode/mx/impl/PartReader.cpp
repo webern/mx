@@ -251,12 +251,12 @@ namespace mx
         {
             if( virtualInstrument.getHasVirtualName() )
             {
-                myOutPartData.midiData.virtualName = virtualInstrument.getVirtualName()->getValue().getValue();
+                myOutPartData.instrumentData.midiData.virtualName = virtualInstrument.getVirtualName()->getValue().getValue();
             }
             
             if( virtualInstrument.getHasVirtualLibrary() )
             {
-                myOutPartData.midiData.virtualLibrary = virtualInstrument.getVirtualLibrary()->getValue().getValue();
+                myOutPartData.instrumentData.midiData.virtualLibrary = virtualInstrument.getVirtualLibrary()->getValue().getValue();
             }
         }
         
@@ -265,7 +265,7 @@ namespace mx
         {
             if( grp.getHasMidiDevice() )
             {
-                myOutPartData.midiData.device = grp.getMidiDevice()->getValue().getValue();
+                myOutPartData.instrumentData.midiData.device = grp.getMidiDevice()->getValue().getValue();
             }
             
             if( grp.getHasMidiInstrument() )
@@ -276,54 +276,52 @@ namespace mx
         
         void PartReader::parseMidiInstrument( const core::MidiInstrument& inst ) const
         {
-            myOutPartData.midiData.uniqueId = inst.getAttributes()->id.getValue();
-            
             if( inst.getHasMidiChannel() )
             {
-                myOutPartData.midiData.channel = inst.getMidiChannel()->getValue().getValue();
+                myOutPartData.instrumentData.midiData.channel = inst.getMidiChannel()->getValue().getValue();
             }
             
             if( inst.getHasMidiName() )
             {
-                myOutPartData.midiData.name = inst.getMidiName()->getValue().getValue();
+                myOutPartData.instrumentData.midiData.name = inst.getMidiName()->getValue().getValue();
             }
             
             if( inst.getHasMidiChannel() )
             {
-                myOutPartData.midiData.channel = inst.getMidiChannel()->getValue().getValue();
+                myOutPartData.instrumentData.midiData.channel = inst.getMidiChannel()->getValue().getValue();
             }
             
             if( inst.getHasMidiBank() )
             {
-                myOutPartData.midiData.bank = inst.getMidiBank()->getValue().getValue();
+                myOutPartData.instrumentData.midiData.bank = inst.getMidiBank()->getValue().getValue();
             }
             
             if( inst.getHasMidiProgram() )
             {
-                myOutPartData.midiData.program = inst.getMidiProgram()->getValue().getValue();
+                myOutPartData.instrumentData.midiData.program = inst.getMidiProgram()->getValue().getValue();
             }
             
             if( inst.getHasMidiUnpitched() )
             {
-                myOutPartData.midiData.unpitched = inst.getMidiUnpitched()->getValue().getValue();
+                myOutPartData.instrumentData.midiData.unpitched = inst.getMidiUnpitched()->getValue().getValue();
             }
             
             if( inst.getHasVolume() )
             {
-                myOutPartData.midiData.isVolumeSpecified = true;
-                myOutPartData.midiData.volume = inst.getVolume()->getValue().getValue();
+                myOutPartData.instrumentData.midiData.isVolumeSpecified = true;
+                myOutPartData.instrumentData.midiData.volume = inst.getVolume()->getValue().getValue();
             }
             
             if( inst.getHasPan() )
             {
-                myOutPartData.midiData.isPanSpecified = true;
-                myOutPartData.midiData.pan = inst.getPan()->getValue().getValue();
+                myOutPartData.instrumentData.midiData.isPanSpecified = true;
+                myOutPartData.instrumentData.midiData.pan = inst.getPan()->getValue().getValue();
             }
             
             if( inst.getHasElevation() )
             {
-                myOutPartData.midiData.isElevationSpecified = true;
-                myOutPartData.midiData.elevation = inst.getElevation()->getValue().getValue();
+                myOutPartData.instrumentData.midiData.isElevationSpecified = true;
+                myOutPartData.instrumentData.midiData.elevation = inst.getElevation()->getValue().getValue();
             }
         }
     }

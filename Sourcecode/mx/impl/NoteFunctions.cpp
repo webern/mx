@@ -142,7 +142,9 @@ namespace mx
             
             myOutNoteData.durationData.timeModificationActualNotes = reader.getTimeModificationActualNotes();
             myOutNoteData.durationData.timeModificationNormalNotes = reader.getTimeModificationNormalNotes();
-            
+            myOutNoteData.durationData.timeModificationNormalType = converter.convert( reader.getTimeModificationNormalType() );
+            myOutNoteData.durationData.timeModificationNormalTypeDots = reader.getTimeModificationNormalTypeDots();
+
             const core::NoteTypeValue timeModType = reader.getTimeModificationNormalType();
             const int timeModTypeDots = reader.getTimeModificationNormalTypeDots();
             bool isTimeModTypeSpecified = ( timeModTypeDots > 0 ) && ( timeModType != reader.getDurationType() );
