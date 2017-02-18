@@ -42,7 +42,9 @@
 #include "mx/core/elements/NormalDot.h"
 #include "mx/core/elements/Stem.h"
 #include "mx/core/elements/Notations.h"
+#include "mx/core/elements/Footnote.h"
 #include "mx/impl/NotationsWriter.h"
+#include "mx/core/Strings.h"
 
 namespace mx
 {
@@ -75,6 +77,7 @@ namespace mx
             setStaffAndVoice();
             setDurationNameAndDots();
             setStemDirection();
+            setMiscData();
             NotationsWriter notationsWriter{ myNoteData, myCursor, myScoreWriter };
             
             auto notations = notationsWriter.getNotations();
@@ -271,6 +274,45 @@ namespace mx
             
             myOutNote->setHasStem( true );
             myOutNote->getStem()->setValue( myConverter.convert( myNoteData.stem ) );
+        }
+
+
+        void NoteWriter::setMiscData() const
+        {
+            if( myNoteData.miscData.size() == 0 )
+            {
+                return;
+            }
+
+            const std::string comma = ",";
+            const std::string underscore = "_";
+
+            bool isFirst = true;
+            for( auto s : myNoteData.miscData )
+            {
+
+                myOutNote->getEditorialVoiceGroup()->setHasFootnote( true );
+                auto footnote = myOutNote->getEditorialVoiceGroup()->getFootnote();
+                footnote->getAttributes()->hasFontFamily = true;
+                auto& miscField = footnote->getAttributes()->fontFamily;
+
+                std::string::size_type position = 0;
+                while ( ( position = s.find( comma, position ) ) != std::string::npos )
+                {
+                    s.replace( position, comma.size(), underscore );
+                    position++;
+                }
+
+                if (isFirst)
+                {
+                    isFirst = false;
+                    miscField.addValue( core::XsToken{ std::string{"##misc-data##"} + s } );
+                }
+                else
+                {
+                    miscField.addValue( core::XsToken{ s } );
+                }
+            }
         }
     }
 }
