@@ -129,8 +129,23 @@ namespace mx
                 tuplet->getAttributes()->type = core::StartStop::start;
                 tuplet->setHasTupletActual( true );
                 tuplet->setHasTupletNormal( true );
+
                 tuplet->getTupletActual()->getTupletNumber()->setValue( core::NonNegativeInteger{ tupletStart.actualNumber } );
+                tuplet->getTupletActual()->setHasTupletType( true );
+                tuplet->getTupletActual()->getTupletType()->setValue( myConverter.convert( tupletStart.actualDurationName ) );
+                for( int d = 0; d < tupletStart.actualDots; ++d )
+                {
+                    tuplet->getTupletActual()->addTupletDot( core::makeTupletDot() );
+                }
+
                 tuplet->getTupletNormal()->getTupletNumber()->setValue( core::NonNegativeInteger{ tupletStart.normalNumber } );
+                tuplet->getTupletNormal()->setHasTupletType( true );
+                tuplet->getTupletNormal()->getTupletType()->setValue( myConverter.convert( tupletStart.normalDurationName ) );
+                for( int d = 0; d < tupletStart.normalDots; ++d )
+                {
+                    tuplet->getTupletNormal()->addTupletDot( core::makeTupletDot() );
+                }
+
                 tuplet->getTupletNormal()->setHasTupletNumber( true );
                 tuplet->getTupletActual()->setHasTupletNumber( true );
                 
