@@ -8,6 +8,20 @@
 #include "cpul/cpulTestHarness.h"
 #include "mxtest/api/RoundTrip.h"
 #include "mx/api/DocumentManager.h"
+#include "mx/core/Document.h"
+#include "mx/core/elements/ScorePartwise.h"
+#include "mx/core/elements/PartwisePart.h"
+#include "mx/core/elements/PartwiseMeasure.h"
+#include "mx/core/elements/MusicDataGroup.h"
+#include "mx/core/elements/Note.h"
+#include "mx/core/elements/NoteChoice.h"
+#include "mx/core/elements/NormalNoteGroup.h"
+#include "mx/core/elements/FullNoteGroup.h"
+#include "mx/core/elements/FullNoteTypeChoice.h"
+#include "mx/core/elements/Pitch.h"
+#include "mx/core/elements/Notations.h"
+#include "mx/core/elements/NotationsChoice.h"
+#include "mx/core/elements/Tied.h"
 
 using namespace std;
 using namespace mx::api;
@@ -67,6 +81,48 @@ TEST( miscFields, NoteData )
     ++iter;
 
     CHECK( iter == end );
+}
+T_END
+
+TEST( SlurTieNumberLevel, NoteData )
+{
+    using namespace mx::core;
+    Document doc;
+    auto sp = doc.getScorePartwise();
+    const auto& parts = sp->getPartwisePartSet();
+    const auto& part = parts.front();
+    const auto& measure = part->getPartwiseMeasureSet().front();
+    const auto mdg = measure->getMusicDataGroup();
+    const auto mdc = makeMusicDataChoice();
+    mdg->addMusicDataChoice( mdc );
+    mdc->setChoice( MusicDataChoice::Choice::note );
+    const auto note = mdc->getNote();
+    note->setHasType(true);
+    note->getType()->setValue( NoteTypeValue::quarter );
+    note->getNoteChoice()->setChoice( NoteChoice::Choice::normal );
+    auto nng = note->getNoteChoice()->getNormalNoteGroup();
+    nng->getFullNoteGroup()->getFullNoteTypeChoice()->setChoice( FullNoteTypeChoice::Choice::pitch );
+    auto pitch = nng->getFullNoteGroup()->getFullNoteTypeChoice()->getPitch();
+    const auto notations = makeNotations();
+    note->addNotations( notations );
+    const auto nc = makeNotationsChoice();
+    notations->addNotationsChoice( nc );
+    nc->setChoice( NotationsChoice::Choice::tied );
+    const auto tied = nc->getTied();
+    tied->getAttributes()->type = StartStopContinue::start;
+
+    auto& mgr = DocumentManager::getInstance();
+    std::stringstream ss;
+    doc.toStream( ss );
+    std::stringstream iss{ ss.str() };
+    auto id = mgr.createFromStream( iss );
+    const auto scoreData = mgr.getData( id );
+    mgr.destroyDocument( id );
+
+    const auto& noteData = scoreData.parts.at(0).measures.at(0).staves.at(0).voices.at(0).notes.front();
+    const auto& curveStart = noteData.noteAttachmentData.curveStarts.front();
+    CHECK_EQUAL( -1, curveStart.numberLevel );
+    CHECK( curveStart.curveType == mx::api::CurveType::tie );
 }
 T_END
 

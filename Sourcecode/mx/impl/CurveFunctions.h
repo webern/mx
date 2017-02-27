@@ -74,8 +74,15 @@ namespace mx
             const auto& inAttributes = *inSlurOrTie.getAttributes();
             const auto curveType = inSlurOrTie.getElementName() == "slur" ? api::CurveType::slur : api::CurveType::tie;
             api::CurveStart c{ curveType };
-            c.numberLevel = impl::checkNumber( &inAttributes );
-            
+
+            if( inAttributes.hasNumber )
+            {
+                c.numberLevel = impl::checkNumber( &inAttributes );
+            } else
+            {
+                c.numberLevel = -1;
+            }
+
             c.curvePoints = parseCurvePoints( inAttributes );
             c.lineData = impl::getLineData( inAttributes );
             c.isColorSpecified = checkHasColor( &inAttributes );
