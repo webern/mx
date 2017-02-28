@@ -84,7 +84,7 @@ TEST( miscFields, NoteData )
 }
 T_END
 
-TEST( SlurTieNumberLevel, NoteData )
+TEST( SlurTieNumberLevelA, NoteData )
 {
     using namespace mx::core;
     Document doc;
@@ -123,6 +123,90 @@ TEST( SlurTieNumberLevel, NoteData )
     const auto& curveStart = noteData.noteAttachmentData.curveStarts.front();
     CHECK_EQUAL( -1, curveStart.numberLevel );
     CHECK( curveStart.curveType == mx::api::CurveType::tie );
+}
+T_END
+
+TEST( SlurTieNumberLevelB, NoteData )
+{
+    using namespace mx::core;
+    Document doc;
+    auto sp = doc.getScorePartwise();
+    const auto& parts = sp->getPartwisePartSet();
+    const auto& part = parts.front();
+    const auto& measure = part->getPartwiseMeasureSet().front();
+    const auto mdg = measure->getMusicDataGroup();
+    const auto mdc = makeMusicDataChoice();
+    mdg->addMusicDataChoice( mdc );
+    mdc->setChoice( MusicDataChoice::Choice::note );
+    const auto note = mdc->getNote();
+    note->setHasType(true);
+    note->getType()->setValue( NoteTypeValue::quarter );
+    note->getNoteChoice()->setChoice( NoteChoice::Choice::normal );
+    auto nng = note->getNoteChoice()->getNormalNoteGroup();
+    nng->getFullNoteGroup()->getFullNoteTypeChoice()->setChoice( FullNoteTypeChoice::Choice::pitch );
+    auto pitch = nng->getFullNoteGroup()->getFullNoteTypeChoice()->getPitch();
+    const auto notations = makeNotations();
+    note->addNotations( notations );
+    const auto nc = makeNotationsChoice();
+    notations->addNotationsChoice( nc );
+    nc->setChoice( NotationsChoice::Choice::tied );
+    const auto tied = nc->getTied();
+    tied->getAttributes()->type = StartStopContinue::continue_;
+
+    auto& mgr = DocumentManager::getInstance();
+    std::stringstream ss;
+    doc.toStream( ss );
+    std::stringstream iss{ ss.str() };
+    auto id = mgr.createFromStream( iss );
+    const auto scoreData = mgr.getData( id );
+    mgr.destroyDocument( id );
+
+    const auto& noteData = scoreData.parts.at(0).measures.at(0).staves.at(0).voices.at(0).notes.front();
+    const auto& curveContinue = noteData.noteAttachmentData.curveContinuations.front();
+    CHECK_EQUAL( -1, curveContinue.numberLevel );
+    CHECK( curveContinue.curveType == mx::api::CurveType::tie );
+}
+T_END
+
+TEST( SlurTieNumberLevelC, NoteData )
+{
+    using namespace mx::core;
+    Document doc;
+    auto sp = doc.getScorePartwise();
+    const auto& parts = sp->getPartwisePartSet();
+    const auto& part = parts.front();
+    const auto& measure = part->getPartwiseMeasureSet().front();
+    const auto mdg = measure->getMusicDataGroup();
+    const auto mdc = makeMusicDataChoice();
+    mdg->addMusicDataChoice( mdc );
+    mdc->setChoice( MusicDataChoice::Choice::note );
+    const auto note = mdc->getNote();
+    note->setHasType(true);
+    note->getType()->setValue( NoteTypeValue::quarter );
+    note->getNoteChoice()->setChoice( NoteChoice::Choice::normal );
+    auto nng = note->getNoteChoice()->getNormalNoteGroup();
+    nng->getFullNoteGroup()->getFullNoteTypeChoice()->setChoice( FullNoteTypeChoice::Choice::pitch );
+    auto pitch = nng->getFullNoteGroup()->getFullNoteTypeChoice()->getPitch();
+    const auto notations = makeNotations();
+    note->addNotations( notations );
+    const auto nc = makeNotationsChoice();
+    notations->addNotationsChoice( nc );
+    nc->setChoice( NotationsChoice::Choice::tied );
+    const auto tied = nc->getTied();
+    tied->getAttributes()->type = StartStopContinue::stop;
+
+    auto& mgr = DocumentManager::getInstance();
+    std::stringstream ss;
+    doc.toStream( ss );
+    std::stringstream iss{ ss.str() };
+    auto id = mgr.createFromStream( iss );
+    const auto scoreData = mgr.getData( id );
+    mgr.destroyDocument( id );
+
+    const auto& noteData = scoreData.parts.at(0).measures.at(0).staves.at(0).voices.at(0).notes.front();
+    const auto& curveStop = noteData.noteAttachmentData.curveStops.front();
+    CHECK_EQUAL( -1, curveStop.numberLevel );
+    CHECK( curveStop.curveType == mx::api::CurveType::tie );
 }
 T_END
 
