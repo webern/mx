@@ -21,6 +21,16 @@ namespace mx
             std::mutex myMutex;
             int myCurrentId;
             DocumentMap myMap;
+            int myCurrentUniqueId;
+
+            Impl()
+            : myMutex{}
+            , myCurrentId{0}
+            , myMap{}
+            , myCurrentUniqueId{1000000}
+            {
+
+            }
         };
         
         DocumentManager::DocumentManager()
@@ -196,6 +206,13 @@ namespace mx
             
             return it->second;
         }
-        
+
+        int DocumentManager::getUniqueId()
+        {
+            LOCK_DOCUMENT_MANAGER
+            int returnValue = myImpl->myCurrentUniqueId;
+            ++myImpl->myCurrentUniqueId;
+            return returnValue;
+        }
     }
 }

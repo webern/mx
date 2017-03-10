@@ -46,6 +46,7 @@
 #include "mx/impl/MeasureWriter.h"
 #include "mx/impl/MeasureCursor.h"
 #include "mx/impl/ScoreWriter.h"
+#include "mx/api/DocumentManager.h"
 
 #include <sstream>
 
@@ -122,22 +123,22 @@ namespace mx
                 scoreIntstrument->getSoloOrEnsembleChoice()->setChoice( value );
             }
             
-            if( myPartData.midiData.virtualName.size() > 0 || myPartData.midiData.virtualLibrary.size() > 0 )
+            if( myPartData.instrumentData.midiData.virtualName.size() > 0 || myPartData.instrumentData.midiData.virtualLibrary.size() > 0 )
             {
                 addScoreInstrument = true;
                 scoreIntstrument->setHasVirtualInstrument( true );
                 auto virtualInstrument = scoreIntstrument->getVirtualInstrument();
                 
-                if( myPartData.midiData.virtualName.size() > 0 )
+                if( myPartData.instrumentData.midiData.virtualName.size() > 0 )
                 {
                     virtualInstrument->setHasVirtualName( true );
-                    virtualInstrument->getVirtualName()->setValue( core::XsString{ myPartData.midiData.virtualName } );
+                    virtualInstrument->getVirtualName()->setValue( core::XsString{ myPartData.instrumentData.midiData.virtualName } );
                 }
                 
-                if( myPartData.midiData.virtualLibrary.size() > 0 )
+                if( myPartData.instrumentData.midiData.virtualLibrary.size() > 0 )
                 {
                     virtualInstrument->setHasVirtualLibrary( true );
-                    virtualInstrument->getVirtualLibrary()->setValue( core::XsString{ myPartData.midiData.virtualLibrary } );
+                    virtualInstrument->getVirtualLibrary()->setValue( core::XsString{ myPartData.instrumentData.midiData.virtualLibrary } );
                 }
             }
             
@@ -156,59 +157,75 @@ namespace mx
             auto midiGroup = core::makeMidiDeviceInstrumentGroup();
             auto& midiDevice = *midiGroup->getMidiDevice();
             auto& midiInstrument = *midiGroup->getMidiInstrument();
-            midiInstrument.getAttributes()->id = core::XsID{ myPartData.midiData.uniqueId };
+            midiInstrument.getAttributes()->id = core::XsID{ myPartData.instrumentData.uniqueId };
             
-            if( myPartData.midiData.device.size() > 0 )
+            if( myPartData.instrumentData.midiData.device.size() > 0 )
             {
                 addMidiElement = true;
                 midiGroup->setHasMidiDevice( true );
-                midiDevice.setValue( core::XsString{ myPartData.midiData.device } );
+                midiDevice.setValue( core::XsString{ myPartData.instrumentData.midiData.device } );
             }
-            if( myPartData.midiData.bank >= 0 )
+            if( myPartData.instrumentData.midiData.bank >= 0 )
             {
                 addMidiElement = true;
                 midiGroup->setHasMidiInstrument( true );
                 midiInstrument.setHasMidiBank( true );
-                midiInstrument.getMidiBank()->setValue( core::Midi16384{ myPartData.midiData.bank } );
+                midiInstrument.getMidiBank()->setValue( core::Midi16384{ myPartData.instrumentData.midiData.bank } );
             }
-            if( myPartData.midiData.channel >= 0 )
+            if( myPartData.instrumentData.midiData.channel >= 0 )
             {
                 addMidiElement = true;
                 midiGroup->setHasMidiInstrument( true );
                 midiInstrument.setHasMidiChannel( true );
-                midiInstrument.getMidiChannel()->setValue( core::Midi16{ myPartData.midiData.channel } );
+                midiInstrument.getMidiChannel()->setValue( core::Midi16{ myPartData.instrumentData.midiData.channel } );
             }
-            if( myPartData.midiData.program >= 0 )
+            if( myPartData.instrumentData.midiData.program >= 0 )
             {
                 addMidiElement = true;
                 midiGroup->setHasMidiInstrument( true );
                 midiInstrument.setHasMidiProgram( true );
-                midiInstrument.getMidiProgram()->setValue( core::Midi128{ myPartData.midiData.program } );
+                midiInstrument.getMidiProgram()->setValue( core::Midi128{ myPartData.instrumentData.midiData.program } );
             }
-            if( myPartData.midiData.isElevationSpecified )
+            if( myPartData.instrumentData.midiData.isElevationSpecified )
             {
                 addMidiElement = true;
                 midiGroup->setHasMidiInstrument( true );
                 midiInstrument.setHasElevation( true );
-                midiInstrument.getElevation()->setValue( core::RotationDegrees{ myPartData.midiData.elevation } );
+                midiInstrument.getElevation()->setValue( core::RotationDegrees{ myPartData.instrumentData.midiData.elevation } );
             }
-            if( myPartData.midiData.isPanSpecified )
+            if( myPartData.instrumentData.midiData.isPanSpecified )
             {
                 addMidiElement = true;
                 midiGroup->setHasMidiInstrument( true );
                 midiInstrument.setHasPan( true );
-                midiInstrument.getPan()->setValue( core::RotationDegrees{ myPartData.midiData.pan } );
+                midiInstrument.getPan()->setValue( core::RotationDegrees{ myPartData.instrumentData.midiData.pan } );
             }
-            if( myPartData.midiData.isVolumeSpecified )
+            if( myPartData.instrumentData.midiData.isVolumeSpecified )
             {
                 addMidiElement = true;
                 midiGroup->setHasMidiInstrument( true );
                 midiInstrument.setHasVolume( true );
-                midiInstrument.getVolume()->setValue( core::Percent{ myPartData.midiData.volume } );
+                midiInstrument.getVolume()->setValue( core::Percent{ myPartData.instrumentData.midiData.volume } );
             }
             if( addMidiElement )
             {
                 myOutScorePart->addMidiDeviceInstrumentGroup( midiGroup );
+            }
+            if( addMidiElement && !addScoreInstrument )
+            {
+                if( myPartData.instrumentData.uniqueId.size() == 0 )
+                {
+                    std::stringstream ss;
+                    ss << "ID";
+                    ss << api::DocumentManager::getInstance().getUniqueId();
+                    scoreIntstrument->getAttributes()->id = core::XsID{ ss.str() };
+                }
+                else
+                {
+                    scoreIntstrument->getAttributes()->id = core::XsID{ myPartData.instrumentData.uniqueId };
+                }
+
+                myOutScorePart->addScoreInstrument( scoreIntstrument );
             }
             return myOutScorePart;
         }

@@ -740,7 +740,6 @@
 		2933AA551DA58F30005D7222 /* XAttributeIterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2937D1501D18D403001C2A1A /* XAttributeIterator.cpp */; };
 		2933AA561DA58F30005D7222 /* XElementIterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2937D1561D18D403001C2A1A /* XElementIterator.cpp */; };
 		2933AA571DA58F30005D7222 /* XFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2937D1591D18D403001C2A1A /* XFactory.cpp */; };
-		2933AA931DA5A60C005D7222 /* mx-macOS.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2933AA921DA5A60C005D7222 /* mx-macOS.plist */; };
 		2933AAB71DA5AA73005D7222 /* ScoreConversions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2951A0C31D60F3B700B49A13 /* ScoreConversions.cpp */; };
 		2933AAB81DA5AA73005D7222 /* AttributesInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C01AE01D130B690094BE61 /* AttributesInterface.cpp */; };
 		2933AAB91DA5AA73005D7222 /* Color.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C01AE21D130B690094BE61 /* Color.cpp */; };
@@ -6518,7 +6517,7 @@
 		299F7FDE1CA8D2200084CAE5 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = "Matthew James Briggs";
 				TargetAttributes = {
 					2933A7C21DA58F1D005D7222 = {
@@ -6565,7 +6564,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2933AA931DA5A60C005D7222 /* mx-macOS.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9906,13 +9904,12 @@
 		2933A7C81DA58F1D005D7222 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -9942,7 +9939,6 @@
 		2933A7C91DA58F1D005D7222 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -9977,19 +9973,13 @@
 		2933AD441DA5AA73005D7222 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					arm7,
-					arm64,
-					arm7s,
-					"$(ARCHS_STANDARD_32_64_BIT)",
-				);
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CODE_SIGN_IDENTITY = "Mac Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -10009,7 +9999,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PUBLIC_HEADERS_FOLDER_PATH = "$(CONTENTS_FOLDER_PATH)/Headers/mx/api/";
 				SDKROOT = iphoneos;
-				SKIP_INSTALL = NO;
+				SKIP_INSTALL = YES;
 				STRIP_INSTALLED_PRODUCT = NO;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -10020,18 +10010,13 @@
 		2933AD451DA5AA73005D7222 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					arm7,
-					arm64,
-					arm7s,
-					"$(ARCHS_STANDARD_32_64_BIT)",
-				);
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CODE_SIGN_IDENTITY = "Mac Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
@@ -10050,7 +10035,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PUBLIC_HEADERS_FOLDER_PATH = "$(CONTENTS_FOLDER_PATH)/Headers/mx/api/";
 				SDKROOT = iphoneos;
-				SKIP_INSTALL = NO;
+				SKIP_INSTALL = YES;
 				STRIP_INSTALLED_PRODUCT = NO;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -10276,7 +10261,6 @@
 		29E8C22A1DD2920C00E8CEBA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -10296,7 +10280,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "mx-iOS";
-				SDKROOT = iphoneos10.1;
+				SDKROOT = iphoneos;
 				VALID_ARCHS = "arm64 armv7 i386";
 			};
 			name = Debug;
@@ -10304,7 +10288,6 @@
 		29E8C22B1DD2920C00E8CEBA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -10324,7 +10307,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "mx-iOS";
-				SDKROOT = iphoneos10.1;
+				SDKROOT = iphoneos;
 				VALID_ARCHS = "arm64 armv7 i386";
 			};
 			name = Release;

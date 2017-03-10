@@ -11,7 +11,7 @@ namespace mx
     namespace core
     {
         Duration::Duration()
-        :myValue()
+        :myValue(1.0)
         {}
 
 

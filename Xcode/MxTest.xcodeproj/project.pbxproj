@@ -11,6 +11,7 @@
 		291A04761DC2BFD000B5C5F6 /* PositionFunctionsTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 291A04751DC2BFD000B5C5F6 /* PositionFunctionsTest.cpp */; };
 		29271A091DCBB6760036528D /* ApiK009bSlurTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29271A081DCBB6760036528D /* ApiK009bSlurTest.cpp */; };
 		29271A0B1DCBD92D0036528D /* CurveFunctionsTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29271A0A1DCBD92D0036528D /* CurveFunctionsTest.cpp */; };
+		292D3FF41E57EBE4008AA032 /* NoteDataTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 292D3FF31E57EBE4008AA032 /* NoteDataTest.cpp */; };
 		292E371F1CA8D68D00CC63BB /* libMx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 292E371E1CA8D68D00CC63BB /* libMx.a */; };
 		2936D20A1D20CBB6003836E5 /* ExpectedFiles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2936D2091D20CBB6003836E5 /* ExpectedFiles.cpp */; };
 		2937D17C1D18D43A001C2A1A /* XAttributeIteratorTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2937D1771D18D43A001C2A1A /* XAttributeIteratorTest.cpp */; };
@@ -35,6 +36,7 @@
 		297DD7C91D1A4BD1003BADC1 /* ImportTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297DD7C81D1A4BD1003BADC1 /* ImportTest.cpp */; };
 		298F0F4D1D1E4981005C3D9D /* ImportTestImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 298F0F4B1D1E4981005C3D9D /* ImportTestImpl.cpp */; };
 		29979D621DC811F300707AA4 /* TimeSignatureApiTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29979D611DC811F300707AA4 /* TimeSignatureApiTest.cpp */; };
+		29A338801E652432001D61DD /* FreezingTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A3387F1E652432001D61DD /* FreezingTest.cpp */; };
 		29AD58B81E3D1000004FD94E /* MetronomeApiTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29AD58B71E3D1000004FD94E /* MetronomeApiTest.cpp */; };
 		29B48EDB1DBE7F550030A974 /* MeasureWriterTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29B48ED71DBE7F550030A974 /* MeasureWriterTest.cpp */; };
 		29B48EDC1DBE7F550030A974 /* NoteWriterTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29B48ED81DBE7F550030A974 /* NoteWriterTest.cpp */; };
@@ -489,6 +491,7 @@
 		29271A071DCBB6760036528D /* ApiK009bSlurScoreData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ApiK009bSlurScoreData.h; path = ../Sourcecode/mxtest/api/ApiK009bSlurScoreData.h; sourceTree = "<group>"; };
 		29271A081DCBB6760036528D /* ApiK009bSlurTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ApiK009bSlurTest.cpp; path = ../Sourcecode/mxtest/api/ApiK009bSlurTest.cpp; sourceTree = "<group>"; };
 		29271A0A1DCBD92D0036528D /* CurveFunctionsTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CurveFunctionsTest.cpp; path = ../Sourcecode/mxtest/impl/CurveFunctionsTest.cpp; sourceTree = "<group>"; };
+		292D3FF31E57EBE4008AA032 /* NoteDataTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NoteDataTest.cpp; path = ../Sourcecode/mxtest/api/NoteDataTest.cpp; sourceTree = "<group>"; };
 		292E371E1CA8D68D00CC63BB /* libMx.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libMx.a; path = bin/Build/Debug/libMx.a; sourceTree = "<group>"; };
 		2936D2091D20CBB6003836E5 /* ExpectedFiles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ExpectedFiles.cpp; path = ../Sourcecode/mxtest/import/ExpectedFiles.cpp; sourceTree = "<group>"; };
 		2937D1751D18D43A001C2A1A /* FakeXml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FakeXml.h; path = ../Sourcecode/mxtest/xml/FakeXml.h; sourceTree = "<group>"; };
@@ -528,6 +531,7 @@
 		298F0F4C1D1E4981005C3D9D /* ImportTestImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImportTestImpl.h; path = ../Sourcecode/mxtest/import/ImportTestImpl.h; sourceTree = "<group>"; };
 		29979D611DC811F300707AA4 /* TimeSignatureApiTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimeSignatureApiTest.cpp; path = ../Sourcecode/mxtest/api/TimeSignatureApiTest.cpp; sourceTree = "<group>"; };
 		299F7FF61CA8D2620084CAE5 /* MxTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MxTest; sourceTree = BUILT_PRODUCTS_DIR; };
+		29A3387F1E652432001D61DD /* FreezingTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FreezingTest.cpp; path = ../Sourcecode/mxtest/api/FreezingTest.cpp; sourceTree = "<group>"; };
 		29AD58B71E3D1000004FD94E /* MetronomeApiTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MetronomeApiTest.cpp; path = ../Sourcecode/mxtest/api/MetronomeApiTest.cpp; sourceTree = "<group>"; };
 		29B48ED71DBE7F550030A974 /* MeasureWriterTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MeasureWriterTest.cpp; path = ../Sourcecode/mxtest/impl/MeasureWriterTest.cpp; sourceTree = "<group>"; };
 		29B48ED81DBE7F550030A974 /* NoteWriterTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NoteWriterTest.cpp; path = ../Sourcecode/mxtest/impl/NoteWriterTest.cpp; sourceTree = "<group>"; };
@@ -1794,6 +1798,8 @@
 				29CD722E1DB8421100FB7153 /* RoundTrip.h */,
 				2903C9461DBC7D7600218C9E /* ScoreDataCreator.h */,
 				29979D611DC811F300707AA4 /* TimeSignatureApiTest.cpp */,
+				292D3FF31E57EBE4008AA032 /* NoteDataTest.cpp */,
+				29A3387F1E652432001D61DD /* FreezingTest.cpp */,
 			);
 			name = api;
 			sourceTree = "<group>";
@@ -1852,6 +1858,7 @@
 				29C01EDD1D1312FA0094BE61 /* TimeRelationTest.cpp in Sources */,
 				29C01ED11D1312FA0094BE61 /* SystemLayoutTest.cpp in Sources */,
 				29C01DC21D1312FA0094BE61 /* DocumentTimewiseConvertTest.cpp in Sources */,
+				29A338801E652432001D61DD /* FreezingTest.cpp in Sources */,
 				29C01E261D1312FA0094BE61 /* LevelTest.cpp in Sources */,
 				29C01E4C1D1312FA0094BE61 /* MusicDataChoiceTest.cpp in Sources */,
 				29C01DF01D1312FA0094BE61 /* FullNoteGroupTest.cpp in Sources */,
@@ -2138,6 +2145,7 @@
 				29C01DC31D1312FA0094BE61 /* DocumentTimewiseCreate.cpp in Sources */,
 				29C01D771D1312FA0094BE61 /* AppearanceTest.cpp in Sources */,
 				29C01E5C1D1312FA0094BE61 /* NoteTest.cpp in Sources */,
+				292D3FF41E57EBE4008AA032 /* NoteDataTest.cpp in Sources */,
 				29C01E951D1312FA0094BE61 /* RightMarginTest.cpp in Sources */,
 				29C01EAD1D1312FA0094BE61 /* SnapPizzicatoTest.cpp in Sources */,
 				29C01E9F1D1312FA0094BE61 /* ScoreInstrumentTest.cpp in Sources */,

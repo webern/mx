@@ -11,7 +11,7 @@ namespace mx
         DurationData::DurationData()
         : durationName{ DurationName::unspecified }
         , durationDots{ 0 }
-        , durationTimeTicks{ 0 }
+        , durationTimeTicks{ 1 }
         , isTied{ false }
         , timeModificationActualNotes{ 1 }
         , timeModificationNormalNotes{ 1 }

@@ -81,6 +81,15 @@ namespace mx
             PrintData printData;
             
             NoteAttachmentData noteAttachmentData;
+
+            // these strings will be stuffed into the editorial <footnote> element
+            // preceded by the string ##misc-data##. for example if you have the
+            // strings Bob, Cat, Hello then we will get:
+            // <footnote print-object="no">##misc-data##Bob,Cat,Hello</footnote>
+            // similarly when parsing if we see ##misc-data## in this element, it
+            // will be parsed into these strings. do not use commas in your misc
+            // data strings as these are the delimiter
+            std::vector<std::string> miscData;
     	};
         
         
@@ -102,6 +111,7 @@ namespace mx
         MXAPI_EQUALS_MEMBER( positionData )
         MXAPI_EQUALS_MEMBER( printData )
         MXAPI_EQUALS_MEMBER( noteAttachmentData )
+        MXAPI_EQUALS_MEMBER( miscData )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( NoteData );
     }

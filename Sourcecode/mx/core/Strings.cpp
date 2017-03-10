@@ -252,6 +252,12 @@ namespace mx
         {
             myValues = values;
         }
+
+
+        void CommaSeparatedText::addValue( const XsToken& value )
+        {
+            myValues.emplace_back( value );
+        }
         
         
         XsTokenSetIter CommaSeparatedText::getValuesBegin()

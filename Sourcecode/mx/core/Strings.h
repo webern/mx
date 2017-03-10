@@ -79,6 +79,7 @@ namespace mx
             XsTokenSetIter getValuesEnd();
             XsTokenSetIterConst getValuesBeginConst() const;
             XsTokenSetIterConst getValuesEndConst() const;
+            void addValue( const XsToken& value );
             void setValues( const XsTokenSet& values );
             void parse( const StringType& commaSeparatedText );
             
