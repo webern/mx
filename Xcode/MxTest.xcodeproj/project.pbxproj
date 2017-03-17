@@ -42,6 +42,7 @@
 		29B48EDC1DBE7F550030A974 /* NoteWriterTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29B48ED81DBE7F550030A974 /* NoteWriterTest.cpp */; };
 		29B48EDD1DBE7F550030A974 /* PartWriterTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29B48ED91DBE7F550030A974 /* PartWriterTest.cpp */; };
 		29B48EDE1DBE7F550030A974 /* ScoreWriterTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29B48EDA1DBE7F550030A974 /* ScoreWriterTest.cpp */; };
+		29B962781E79FEE40072071D /* Mx_iOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 29B962761E79FEE40072071D /* Mx_iOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		29BF988B1DC6D20500BBC7B3 /* ApiK007aTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29BF988A1DC6D20500BBC7B3 /* ApiK007aTest.cpp */; };
 		29C01D6C1D1312FA0094BE61 /* AccentTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C01B641D1312F90094BE61 /* AccentTest.cpp */; };
 		29C01D6D1D1312FA0094BE61 /* AccidentalMarkTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C01B651D1312F90094BE61 /* AccidentalMarkTest.cpp */; };
@@ -538,6 +539,9 @@
 		29B48ED91DBE7F550030A974 /* PartWriterTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PartWriterTest.cpp; path = ../Sourcecode/mxtest/impl/PartWriterTest.cpp; sourceTree = "<group>"; };
 		29B48EDA1DBE7F550030A974 /* ScoreWriterTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ScoreWriterTest.cpp; path = ../Sourcecode/mxtest/impl/ScoreWriterTest.cpp; sourceTree = "<group>"; };
 		29B48EDF1DBE8C450030A974 /* ApiLy43eScoreData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ApiLy43eScoreData.h; path = ../Sourcecode/mxtest/api/ApiLy43eScoreData.h; sourceTree = "<group>"; };
+		29B962741E79FEE40072071D /* Mx_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Mx_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		29B962761E79FEE40072071D /* Mx_iOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Mx_iOS.h; sourceTree = "<group>"; };
+		29B962771E79FEE40072071D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		29BF98891DC6D20500BBC7B3 /* ApiK007aScoreData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ApiK007aScoreData.h; path = ../Sourcecode/mxtest/api/ApiK007aScoreData.h; sourceTree = "<group>"; };
 		29BF988A1DC6D20500BBC7B3 /* ApiK007aTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ApiK007aTest.cpp; path = ../Sourcecode/mxtest/api/ApiK007aTest.cpp; sourceTree = "<group>"; };
 		29C01B641D1312F90094BE61 /* AccentTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AccentTest.cpp; path = ../Sourcecode/mxtest/core/AccentTest.cpp; sourceTree = "<group>"; };
@@ -1098,6 +1102,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				292E371F1CA8D68D00CC63BB /* libMx.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		29B962701E79FEE40072071D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1738,6 +1749,7 @@
 				2958970F1DB953BC00F18FBA /* file */,
 				29B48ED61DBE7F470030A974 /* impl */,
 				297DD7C61D1A4BAE003BADC1 /* import */,
+				29B962751E79FEE40072071D /* Mx_iOS */,
 				299F7FF71CA8D2620084CAE5 /* Products */,
 				297555D61D134FE3007732D0 /* utility */,
 				297555DC1D13519E007732D0 /* xml */,
@@ -1748,6 +1760,7 @@
 			isa = PBXGroup;
 			children = (
 				299F7FF61CA8D2620084CAE5 /* MxTest */,
+				29B962741E79FEE40072071D /* Mx_iOS.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1767,6 +1780,15 @@
 				29B48EDA1DBE7F550030A974 /* ScoreWriterTest.cpp */,
 			);
 			name = impl;
+			sourceTree = "<group>";
+		};
+		29B962751E79FEE40072071D /* Mx_iOS */ = {
+			isa = PBXGroup;
+			children = (
+				29B962761E79FEE40072071D /* Mx_iOS.h */,
+				29B962771E79FEE40072071D /* Info.plist */,
+			);
+			path = Mx_iOS;
 			sourceTree = "<group>";
 		};
 		29EF440E1D6E8F4700DBDAB9 /* api */ = {
@@ -1806,6 +1828,17 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		29B962711E79FEE40072071D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				29B962781E79FEE40072071D /* Mx_iOS.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
 		299F7FF51CA8D2620084CAE5 /* MxTest */ = {
 			isa = PBXNativeTarget;
@@ -1824,6 +1857,24 @@
 			productReference = 299F7FF61CA8D2620084CAE5 /* MxTest */;
 			productType = "com.apple.product-type.tool";
 		};
+		29B962731E79FEE40072071D /* Mx_iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 29B9627B1E79FEE40072071D /* Build configuration list for PBXNativeTarget "Mx_iOS" */;
+			buildPhases = (
+				29B9626F1E79FEE40072071D /* Sources */,
+				29B962701E79FEE40072071D /* Frameworks */,
+				29B962711E79FEE40072071D /* Headers */,
+				29B962721E79FEE40072071D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Mx_iOS;
+			productName = Mx_iOS;
+			productReference = 29B962741E79FEE40072071D /* Mx_iOS.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -1832,6 +1883,13 @@
 			attributes = {
 				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Matthew James Briggs";
+				TargetAttributes = {
+					29B962731E79FEE40072071D = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = RRS55ZY6E5;
+						ProvisioningStyle = Automatic;
+					};
+				};
 			};
 			buildConfigurationList = 299F7FF11CA8D2620084CAE5 /* Build configuration list for PBXProject "MxTest" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1846,9 +1904,20 @@
 			projectRoot = "";
 			targets = (
 				299F7FF51CA8D2620084CAE5 /* MxTest */,
+				29B962731E79FEE40072071D /* Mx_iOS */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		29B962721E79FEE40072071D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		299F7FF21CA8D2620084CAE5 /* Sources */ = {
@@ -2319,6 +2388,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		29B9626F1E79FEE40072071D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
@@ -2422,6 +2498,67 @@
 			};
 			name = Release;
 		};
+		29B962791E79FEE40072071D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = RRS55ZY6E5;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = Mx_iOS/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "mjb.Mx-iOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		29B9627A1E79FEE40072071D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = RRS55ZY6E5;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = Mx_iOS/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "mjb.Mx-iOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -2442,6 +2579,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		29B9627B1E79FEE40072071D /* Build configuration list for PBXNativeTarget "Mx_iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				29B962791E79FEE40072071D /* Debug */,
+				29B9627A1E79FEE40072071D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
