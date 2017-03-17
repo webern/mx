@@ -65,7 +65,7 @@ TEST( miscFields, NoteData )
     auto iter = omisc.cbegin();
     const auto end = omisc.cend();
 
-    std::cout << xml << std::endl;
+    //std::cout << xml << std::endl;
 
     // assert
     CHECK( iter != end );

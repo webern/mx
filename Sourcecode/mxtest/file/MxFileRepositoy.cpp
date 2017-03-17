@@ -410,6 +410,7 @@ namespace mxtest
         myNameSubdirectoryMap.emplace( "Telemann.xml", "recsuite" );
         
         // ksuite
+        myNameSubdirectoryMap.emplace( "Bombe.xml", "ksuite" );
         myNameSubdirectoryMap.emplace( "k001a_Articulations.xml", "ksuite" );
         myNameSubdirectoryMap.emplace( "k001b_Articulations_Above.xml", "ksuite" );
         myNameSubdirectoryMap.emplace( "k001c_Articulations_Below.xml", "ksuite" );
