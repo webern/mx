@@ -22,6 +22,7 @@
 #include "mx/core/elements/DisplayOctave.h"
 #include "mx/core/elements/DisplayStep.h"
 #include "mx/core/elements/DisplayStepOctaveGroup.h"
+#include "mx/core/elements/Divisions.h"
 #include "mx/core/elements/Duration.h"
 #include "mx/core/elements/EditorialVoiceGroup.h"
 #include "mx/core/elements/Fifths.h"
@@ -392,6 +393,12 @@ namespace mx
         
         void MeasureReader::parseProperties( const core::Properties& inMxProperties ) const
         {
+            if( inMxProperties.getHasDivisions() )
+            {
+                const auto newDivisionsValueDecimal = inMxProperties.getDivisions()->getValue().getValue();
+                myCurrentCursor.ticksPerQuarter = static_cast<int>(std::ceil(newDivisionsValueDecimal - 0.5));
+            }
+            
             // TODO - continue work on measure numbering and style etc
             for( const auto& measureStylePtr : inMxProperties.getMeasureStyleSet() )
             {
