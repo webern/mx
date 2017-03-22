@@ -338,63 +338,93 @@ namespace mx
             }
             else if( mark.markType == api::MarkType::strongAccent )
             {
-                
+                auto element = articulationsChoice->getStrongAccent();
+                auto attributes = element->getAttributes();
+                setAttributesFromPositionData( mark.positionData, *attributes);
             }
             else if( mark.markType == api::MarkType::staccato )
             {
-                
+                auto element = articulationsChoice->getStaccato();
+                auto attributes = element->getAttributes();
+                setAttributesFromPositionData( mark.positionData, *attributes);
             }
             else if( mark.markType == api::MarkType::tenuto )
             {
-                
+                auto element = articulationsChoice->getTenuto();
+                auto attributes = element->getAttributes();
+                setAttributesFromPositionData( mark.positionData, *attributes);
             }
             else if( mark.markType == api::MarkType::detachedLegato )
             {
-                
+                auto element = articulationsChoice->getDetachedLegato();
+                auto attributes = element->getAttributes();
+                setAttributesFromPositionData( mark.positionData, *attributes);
             }
             else if( mark.markType == api::MarkType::staccatissimo )
             {
-                
+                auto element = articulationsChoice->getStaccatissimo();
+                auto attributes = element->getAttributes();
+                setAttributesFromPositionData( mark.positionData, *attributes);
             }
             else if( mark.markType == api::MarkType::spiccato )
             {
-                
+                auto element = articulationsChoice->getSpiccato();
+                auto attributes = element->getAttributes();
+                setAttributesFromPositionData( mark.positionData, *attributes);
             }
             else if( mark.markType == api::MarkType::scoop )
             {
-                
+                auto element = articulationsChoice->getScoop();
+                auto attributes = element->getAttributes();
+                setAttributesFromPositionData( mark.positionData, *attributes);
             }
             else if( mark.markType == api::MarkType::plop )
             {
-                
+                auto element = articulationsChoice->getPlop();
+                auto attributes = element->getAttributes();
+                setAttributesFromPositionData( mark.positionData, *attributes);
             }
             else if( mark.markType == api::MarkType::doit )
             {
-                
+                auto element = articulationsChoice->getDoit();
+                auto attributes = element->getAttributes();
+                setAttributesFromPositionData( mark.positionData, *attributes);
             }
             else if( mark.markType == api::MarkType::falloff )
             {
-                
+                auto element = articulationsChoice->getFalloff();
+                auto attributes = element->getAttributes();
+                setAttributesFromPositionData( mark.positionData, *attributes);
             }
             else if( mark.markType == api::MarkType::breathMark )
             {
-                
+                auto element = articulationsChoice->getBreathMark();
+                auto attributes = element->getAttributes();
+                setAttributesFromPositionData( mark.positionData, *attributes);
             }
             else if( mark.markType == api::MarkType::caesura )
             {
-                
+                auto element = articulationsChoice->getCaesura();
+                auto attributes = element->getAttributes();
+                setAttributesFromPositionData( mark.positionData, *attributes);
             }
             else if( mark.markType == api::MarkType::stress )
             {
-                
+                auto element = articulationsChoice->getStress();
+                auto attributes = element->getAttributes();
+                setAttributesFromPositionData( mark.positionData, *attributes);
             }
             else if( mark.markType == api::MarkType::unstress )
             {
-                
+                auto element = articulationsChoice->getUnstress();
+                auto attributes = element->getAttributes();
+                setAttributesFromPositionData( mark.positionData, *attributes);
             }
             else if( mark.markType == api::MarkType::otherArticulation )
             {
-                
+                auto element = articulationsChoice->getOtherArticulation();
+                auto attributes = element->getAttributes();
+                setAttributesFromPositionData( mark.positionData, *attributes);
             }
         }
     }
