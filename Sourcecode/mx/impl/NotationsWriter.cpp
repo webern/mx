@@ -320,19 +320,21 @@ namespace mx
         
         void NotationsWriter::addArticulation( const api::MarkData& mark, const core::ArticulationsPtr& outArticulationsPtr ) const
         {
-            auto articulationsChoice = core::makeArticulationsChoice();
-            auto choiceValue = myConverter.convertArticulation( mark.markType );
-            articulationsChoice->setChoice( choiceValue );
-            outArticulationsPtr->addArticulationsChoice( articulationsChoice );
-            
             if( !myConverter.isArticulation( mark.markType ) )
             {
                 return;
             }
-            
+
+            auto articulationsChoice = core::makeArticulationsChoice();
+            auto choiceValue = myConverter.convertArticulation( mark.markType );
+            articulationsChoice->setChoice( choiceValue );
+            outArticulationsPtr->addArticulationsChoice( articulationsChoice );
+
             if( mark.markType == api::MarkType::accent )
             {
-
+                auto element = articulationsChoice->getAccent();
+                auto attributes = element->getAttributes();
+                setAttributesFromPositionData( mark.positionData, *attributes);
             }
             else if( mark.markType == api::MarkType::strongAccent )
             {
