@@ -86,10 +86,17 @@ namespace mx
             /* remove trailing zeros */
             std::string s = ss.str();
             s.erase(s.find_last_not_of('0') + 1, std::string::npos);
+            
             if(s[s.size()-1] == '.')
             {
                 s.erase(s.end()-1);
             }
+
+            if ( s == "-0" )
+            {
+                s = "0";
+            }
+            
             return s;
         }
 
