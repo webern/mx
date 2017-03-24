@@ -328,7 +328,7 @@ namespace mx
             
             // TODO - group name display
             // TODO - group abbreviation display
-            // TODO - backet, barline, etc
+            // TODO - barline, etc
 
             myPartGroupStack.push_front( grpData );
         }

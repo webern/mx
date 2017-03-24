@@ -5,6 +5,7 @@
 #include "mx/impl/ScoreWriter.h"
 #include "mx/core/elements/Creator.h"
 #include "mx/core/elements/Encoding.h"
+#include "mx/core/elements/GroupBarline.h"
 #include "mx/core/elements/GroupName.h"
 #include "mx/core/elements/Identification.h"
 #include "mx/core/elements/Miscellaneous.h"
@@ -273,6 +274,12 @@ namespace mx
                 mxGrp->setHasGroupSymbol( true );
                 mxGrp->getGroupSymbol()->setValue( symbol );
             }
+
+            // TODO - make group barline configurable
+
+            mxGrp->setHasGroupBarline( true );
+            mxGrp->getGroupBarline()->setValue( core::GroupBarlineValue::yes );
+
             return mxGrp;
         }
         
