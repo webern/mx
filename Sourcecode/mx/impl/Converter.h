@@ -96,7 +96,10 @@ namespace mx
             
             core::LineEnd convert( api::LineHook value ) const;
             api::LineHook convert( core::LineEnd value ) const;
-            
+
+            core::GroupSymbolValue convert( api::BracketType value ) const;
+            api::BracketType convert( core::GroupSymbolValue value ) const;
+
             core::FermataShape convertFermata( api::MarkType value ) const;
             api::MarkType convertFermata( core::FermataShape value ) const;
             
@@ -124,6 +127,7 @@ namespace mx
             const static std::map<core::BarStyleEnum, api::BarlineType> barlineMap;
             const static std::map<core::RightLeftMiddle, api::HorizontalAlignment> barlinePlacementMap;
             const static std::map<core::LineEnd, api::LineHook> lineStopMap;
+            const static std::map<core::GroupSymbolValue, api::BracketType> bracketMap;
             const static std::map<core::FermataShape, api::MarkType> fermataMap;
             
         private:

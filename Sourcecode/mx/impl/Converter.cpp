@@ -352,6 +352,16 @@ namespace mx
             std::pair<core::LineEnd, api::LineHook>{ core::LineEnd::up, api::LineHook::up },
             std::pair<core::LineEnd, api::LineHook>{ core::LineEnd::none, api::LineHook::none },
         };
+
+
+        const std::map<core::GroupSymbolValue, api::BracketType> Converter::bracketMap =
+        {
+            std::pair<core::GroupSymbolValue, api::BracketType>{ core::GroupSymbolValue::brace, api::BracketType::brace },
+            std::pair<core::GroupSymbolValue, api::BracketType>{ core::GroupSymbolValue::bracket, api::BracketType::bracket },
+            std::pair<core::GroupSymbolValue, api::BracketType>{ core::GroupSymbolValue::line, api::BracketType::line },
+            std::pair<core::GroupSymbolValue, api::BracketType>{ core::GroupSymbolValue::none, api::BracketType::none },
+            std::pair<core::GroupSymbolValue, api::BracketType>{ core::GroupSymbolValue::square, api::BracketType::square },
+        };
         
         
         const std::map<core::RightLeftMiddle, api::HorizontalAlignment> Converter::barlinePlacementMap =
@@ -745,6 +755,18 @@ namespace mx
         api::LineHook Converter::convert( core::LineEnd value ) const
         {
             return findApiItem( lineStopMap, api::LineHook::unspecified, value );
+        }
+
+
+        core::GroupSymbolValue Converter::convert( api::BracketType value ) const
+        {
+            return findCoreItem( bracketMap, core::GroupSymbolValue::none, value );
+        }
+
+
+        api::BracketType Converter::convert( core::GroupSymbolValue value ) const
+        {
+            return findApiItem( bracketMap, api::BracketType::unspecified, value );
         }
         
         
