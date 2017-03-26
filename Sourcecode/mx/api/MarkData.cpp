@@ -222,6 +222,25 @@ namespace mx
             ( markType == MarkType::unstress ) ||
             ( markType == MarkType::otherArticulation );
         }
+
+
+        bool isMarkOrnament( MarkType markType )
+        {
+            return ( markType == MarkType::trillMark ) ||
+            ( markType == MarkType::turn ) ||
+            ( markType == MarkType::delayedTurn ) ||
+            ( markType == MarkType::invertedTurn ) ||
+            ( markType == MarkType::delayedInvertedTurn ) ||
+            ( markType == MarkType::verticalTurn ) ||
+            ( markType == MarkType::shake ) ||
+            ( markType == MarkType::wavyLine ) ||
+            ( markType == MarkType::mordent ) ||
+            ( markType == MarkType::invertedMordent ) ||
+            ( markType == MarkType::schleifer ) ||
+            ( markType == MarkType::tremolo ) ||
+            ( markType == MarkType::otherOrnament ) ||
+            ( markType == MarkType::unknownOrnament );
+        }
         
         
         bool isMarkFermata( MarkType markType )

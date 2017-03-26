@@ -210,4 +210,61 @@ TEST( SlurTieNumberLevelC, NoteData )
 }
 T_END
 
+TEST( ornaments, NoteData )
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    auto& part = score.parts.back();
+    part.measures.emplace_back();
+    auto& measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto& staff = measure.staves.back();
+    auto& voice = staff.voices[0];
+    voice.notes.emplace_back();
+    auto& note = voice.notes.back();
+
+    note.noteAttachmentData.marks.emplace_back( Placement::above, MarkType::trillMark );
+    note.noteAttachmentData.marks.back().positionData.isDefaultXSpecified = true;
+    note.noteAttachmentData.marks.back().positionData.defaultX = 123.0;
+
+    note.noteAttachmentData.marks.emplace_back( Placement::above, MarkType::wavyLine );
+    note.noteAttachmentData.marks.back().positionData.isDefaultYSpecified = true;
+    note.noteAttachmentData.marks.back().positionData.defaultY = -456.0;
+
+    // round trip it through xml
+    auto& mgr = DocumentManager::getInstance();
+    auto docId = mgr.createFromScore( score );
+    std::stringstream ss;
+    mgr.writeToStream(docId, ss);
+    mgr.destroyDocument(docId);
+    const std::string xml = ss.str();
+    std::istringstream iss{ xml };
+    docId = mgr.createFromStream( iss );
+    auto oscore = mgr.getData(docId);
+
+    // get the data after the round trip
+    auto& opart = oscore.parts.back();
+    auto& omeasure = opart.measures.back();
+    auto& ostaff = omeasure.staves.back();
+    auto& ovoice = ostaff.voices[0];
+    auto& onote = ovoice.notes.back();
+    auto& oattachments = onote.noteAttachmentData;
+    auto& omarks = oattachments.marks;
+    auto oIter = omarks.cbegin();
+
+    auto md = *oIter;
+    CHECK( md.markType == MarkType::trillMark );
+    CHECK( md.positionData.isDefaultXSpecified );
+    CHECK( !md.positionData.isDefaultYSpecified );
+    CHECK_DOUBLES_EQUAL( 123.0, md.positionData.defaultX, 0.00001 );
+
+    ++oIter;
+    md = *oIter;
+    CHECK( md.markType == MarkType::wavyLine );
+    CHECK( !md.positionData.isDefaultXSpecified );
+    CHECK( md.positionData.isDefaultYSpecified );
+    CHECK_DOUBLES_EQUAL( -456.0, md.positionData.defaultY, 0.00001 );
+}
+T_END
+
 #endif

@@ -174,6 +174,7 @@ namespace mx
 
         bool isMarkDynamic( MarkType );
         bool isMarkArticulation( MarkType );
+        bool isMarkOrnament( MarkType );
         bool isMarkFermata( MarkType );
         
         using MarkSmuflEntry = std::pair<const MarkType, const SmuflGlyphname>;

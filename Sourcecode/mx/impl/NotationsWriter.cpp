@@ -37,6 +37,21 @@
 #include "mx/core/elements/TupletType.h"
 #include "mx/impl/DynamicsWriter.h"
 #include "mx/core/elements/Fermata.h"
+#include "mx/core/elements/Ornaments.h"
+#include "mx/core/elements/OrnamentsChoice.h"
+#include "mx/core/elements/DelayedInvertedTurn.h"
+#include "mx/core/elements/DelayedTurn.h"
+#include "mx/core/elements/InvertedMordent.h"
+#include "mx/core/elements/InvertedTurn.h"
+#include "mx/core/elements/Mordent.h"
+#include "mx/core/elements/OtherOrnament.h"
+#include "mx/core/elements/Schleifer.h"
+#include "mx/core/elements/Shake.h"
+#include "mx/core/elements/Tremolo.h"
+#include "mx/core/elements/TrillMark.h"
+#include "mx/core/elements/Turn.h"
+#include "mx/core/elements/VerticalTurn.h"
+#include "mx/core/elements/WavyLine.h"
 
 namespace mx
 {
@@ -47,6 +62,7 @@ namespace mx
         , myCursor{ inCursor }
         , myScoreWriter{ inScoreWriter }
         , myConverter{}
+        , myOutNotations{nullptr}
         {
             
         }
@@ -56,7 +72,9 @@ namespace mx
             myOutNotations = core::makeNotations();
             auto articulationsNotationChoice = makeArticulationsNotationsChoice();
             auto articulations = articulationsNotationChoice->getArticulations();
-            
+            auto ornamentsNotationChoice = makeOrnamentsNotationsChoice();
+            auto ornaments = ornamentsNotationChoice->getOrnaments();
+
             for( const auto& curve : myNoteData.noteAttachmentData.curveStarts )
             {
                 auto curveNotationsChoice = core::makeNotationsChoice();
@@ -210,6 +228,10 @@ namespace mx
                 {
                     this->addArticulation( mark, articulations );
                 }
+                if( isMarkOrnament( mark.markType ) )
+                {
+                    this->addOrnament( mark, ornaments );
+                }
                 else if( isMarkDynamic( mark.markType) )
                 {
                     auto dynamicNotationsChoice = core::makeNotationsChoice();
@@ -303,6 +325,11 @@ namespace mx
             {
                 myOutNotations->addNotationsChoice( articulationsNotationChoice );
             }
+
+            if( ornaments->getOrnamentsChoiceSet().size() > 0 )
+            {
+                myOutNotations->addNotationsChoice( ornamentsNotationChoice );
+            }
             
             return myOutNotations;
         }
@@ -310,10 +337,18 @@ namespace mx
         
         core::NotationsChoicePtr NotationsWriter::makeArticulationsNotationsChoice() const
         {
-            myOutNotations = core::makeNotations();
-            auto articulations = core::makeArticulations();
+//            auto articulations = core::makeArticulations();
             auto notationsChoice = core::makeNotationsChoice();
             notationsChoice->setChoice( core::NotationsChoice::Choice::articulations );
+            return notationsChoice;
+        }
+
+
+        core::NotationsChoicePtr NotationsWriter::makeOrnamentsNotationsChoice() const
+        {
+//            auto ornaments = core::makeOrnamentsChoice();
+            auto notationsChoice = core::makeNotationsChoice();
+            notationsChoice->setChoice( core::NotationsChoice::Choice::ornaments );
             return notationsChoice;
         }
         
@@ -425,6 +460,114 @@ namespace mx
                 auto element = articulationsChoice->getOtherArticulation();
                 auto attributes = element->getAttributes();
                 setAttributesFromPositionData( mark.positionData, *attributes);
+            }
+        }
+
+        
+        void NotationsWriter::addOrnament( const api::MarkData& mark, const core::OrnamentsPtr& outOrnamentsPtr ) const
+        {
+            if( !isMarkOrnament( mark.markType ) )
+            {
+                return;
+            }
+
+            auto ornamentsChoice = core::makeOrnamentsChoice();
+            auto choiceValue = myConverter.convertOrnament( mark.markType );
+            ornamentsChoice->setChoice( choiceValue );
+            outOrnamentsPtr->addOrnamentsChoice( ornamentsChoice );
+
+            if( mark.markType == api::MarkType::trillMark )
+            {
+                auto element = ornamentsChoice->getTrillMark();
+                auto attributes = element->getAttributes();
+                setAttributesFromPositionData( mark.positionData, *attributes);
+            }
+            else if( mark.markType == api::MarkType::turn )
+            {
+                auto element = ornamentsChoice->getTurn();
+                auto attributes = element->getAttributes();
+                setAttributesFromPositionData( mark.positionData, *attributes);
+            }
+            else if( mark.markType == api::MarkType::delayedTurn )
+            {
+                auto element = ornamentsChoice->getDelayedTurn();
+                auto attributes = element->getAttributes();
+                setAttributesFromPositionData( mark.positionData, *attributes);
+            }
+            else if( mark.markType == api::MarkType::invertedTurn )
+            {
+                auto element = ornamentsChoice->getInvertedTurn();
+                auto attributes = element->getAttributes();
+                setAttributesFromPositionData( mark.positionData, *attributes);
+            }
+            else if( mark.markType == api::MarkType::delayedInvertedTurn )
+            {
+                auto element = ornamentsChoice->getDelayedInvertedTurn();
+                auto attributes = element->getAttributes();
+                setAttributesFromPositionData( mark.positionData, *attributes);
+            }
+            else if( mark.markType == api::MarkType::verticalTurn )
+            {
+                auto element = ornamentsChoice->getVerticalTurn();
+                auto attributes = element->getAttributes();
+                setAttributesFromPositionData( mark.positionData, *attributes);
+            }
+            else if( mark.markType == api::MarkType::shake )
+            {
+                auto element = ornamentsChoice->getShake();
+                auto attributes = element->getAttributes();
+                setAttributesFromPositionData( mark.positionData, *attributes);
+            }
+            else if( mark.markType == api::MarkType::wavyLine )
+            {
+                auto element = ornamentsChoice->getWavyLine();
+                auto attributes = element->getAttributes();
+                setAttributesFromPositionData( mark.positionData, *attributes);
+            }
+            else if( mark.markType == api::MarkType::mordent )
+            {
+                auto element = ornamentsChoice->getMordent();
+                auto attributes = element->getAttributes();
+                setAttributesFromPositionData( mark.positionData, *attributes);
+            }
+            else if( mark.markType == api::MarkType::invertedMordent )
+            {
+                auto element = ornamentsChoice->getInvertedMordent();
+                auto attributes = element->getAttributes();
+                setAttributesFromPositionData( mark.positionData, *attributes);
+            }
+            else if( mark.markType == api::MarkType::schleifer )
+            {
+                auto element = ornamentsChoice->getSchleifer();
+                auto attributes = element->getAttributes();
+                setAttributesFromPositionData( mark.positionData, *attributes);
+            }
+            else if( mark.markType == api::MarkType::tremolo )
+            {
+                auto element = ornamentsChoice->getTremolo();
+                auto attributes = element->getAttributes();
+                setAttributesFromPositionData( mark.positionData, *attributes);
+            }
+            else if( mark.markType == api::MarkType::otherOrnament )
+            {
+                auto element = ornamentsChoice->getOtherOrnament();
+                auto attributes = element->getAttributes();
+                setAttributesFromPositionData( mark.positionData, *attributes);
+            }
+            else if( mark.markType == api::MarkType::unknownOrnament )
+            {
+                auto element = ornamentsChoice->getOtherOrnament();
+                auto attributes = element->getAttributes();
+                setAttributesFromPositionData( mark.positionData, *attributes);
+
+                if( !mark.name.empty() )
+                {
+                    element->setValue( core::XsString{ mark.name } );
+                }
+                else if ( !mark.smuflName.empty() )
+                {
+                    element->setValue( core::XsString{ mark.smuflName } );
+                }
             }
         }
     }
