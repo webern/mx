@@ -111,8 +111,11 @@ namespace mx
             myMap.emplace( std::make_pair( MarkType::fermataAngledInverted, SmuflGlyphname{ "fermataShortAbove", "fermataShortBelow", "fermataShortAbove" } ) );
             myMap.emplace( std::make_pair( MarkType::fermataSquareInverted, SmuflGlyphname{ "fermataLongAbove", "fermataLongBelow", "fermataLongAbove" } ) );
 
+            myMap.emplace( std::make_pair( MarkType::pedal, SmuflGlyphname{ "keyboardPedalPed", "keyboardPedalPed", "keyboardPedalPed" } ) );
+            myMap.emplace( std::make_pair( MarkType::damp, SmuflGlyphname{ "keyboardPedalUp", "keyboardPedalUp", "keyboardPedalUp" } ) );
+
         }
-        
+
         
         const std::string& MarkSmufl::getName( MarkType mark )
         {
@@ -257,6 +260,13 @@ namespace mx
             ( markType == MarkType::fermataNormalInverted ) ||
             ( markType == MarkType::fermataAngledInverted ) ||
             ( markType == MarkType::fermataSquareInverted );
+        }
+        
+        
+        bool isMarkPedal( MarkType markType )
+        {
+            return ( markType == MarkType::pedal ) ||
+            ( markType == MarkType::damp );
         }
         
         

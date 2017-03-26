@@ -363,10 +363,12 @@ namespace mx
                         myPropertiesWriter->writeClef( myCursor.staffIndex, *clefIter );
                         ++clefIter;
                     }
+                    
                     for( ; staffKeyIter != staffKeyEnd && staffKeyIter->tickTimePosition <= myCursor.tickTimePosition; ++staffKeyIter )
                     {
                         myPropertiesWriter->writeKey( myCursor.staffIndex, *staffKeyIter );
                     }
+
                     myPropertiesWriter->flushBuffer();
                     
                     for( ; directionIter != directionEnd && directionIter->tickTimePosition <= myCursor.tickTimePosition; ++directionIter )
@@ -388,7 +390,9 @@ namespace mx
                     mdc->setNote( writer.getNote(isStartOfChord) );
                     myOutMeasure->getMusicDataGroup()->addMusicDataChoice( mdc );
                     advanceCursorIfNeeded( apiNote, noteIter, noteEnd, isStartOfChord );
+
                 } // foreach note
+
             } // foreach voice
             
             bool areClefsRemaining = clefIter != clefEnd;

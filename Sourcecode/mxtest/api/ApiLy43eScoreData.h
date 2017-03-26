@@ -84,22 +84,6 @@ namespace mxtest
         noteP->durationData.durationName = DurationName::quarter;
         noteP->durationData.durationTimeTicks = 8;
         
-        staff1P->directions.emplace_back( DirectionData{} );
-        directionP = &staff1P->directions.back();
-        directionP->tickTimePosition = 24;
-        directionP->isOffsetSpecified = true;
-        directionP->offset = 1;
-        directionP->placement = Placement::below;
-        directionP->isStaffValueSpecified = true;
-        directionP->marks.emplace_back( MarkData{} );
-        directionMarkP = &directionP->marks.back();
-        directionMarkP->markType = MarkType::p;
-        directionMarkP->name = "p";
-        directionMarkP->tickTimePosition = 24;
-        glyph = &MarkSmufl::getSmuflGlyphname( directionMarkP->markType );
-        directionMarkP->smuflName = glyph->below;
-        directionMarkP->smuflCodepoint = Smufl::findCodepoint( directionMarkP->smuflName );
-        
         staff1P->voices[voice].notes.emplace_back( NoteData{} );
         noteP = &staff1P->voices[voice].notes.back();
         noteP->userRequestedVoiceNumber = voice + 1;
@@ -110,6 +94,22 @@ namespace mxtest
         noteP->pitchData.accidental = Accidental::none;
         noteP->durationData.durationName = DurationName::quarter;
         noteP->durationData.durationTimeTicks = 8;
+
+        staff1P->directions.emplace_back( DirectionData{} );
+        directionP = &staff1P->directions.back();
+        directionP->tickTimePosition = 25;
+//        directionP->isOffsetSpecified = true;
+//        directionP->offset = 1;
+        directionP->placement = Placement::below;
+        directionP->isStaffValueSpecified = true;
+        directionP->marks.emplace_back( MarkData{} );
+        directionMarkP = &directionP->marks.back();
+        directionMarkP->tickTimePosition = directionP->tickTimePosition;
+        directionMarkP->markType = MarkType::p;
+        directionMarkP->name = "p";
+        glyph = &MarkSmufl::getSmuflGlyphname( directionMarkP->markType );
+        directionMarkP->smuflName = glyph->below;
+        directionMarkP->smuflCodepoint = Smufl::findCodepoint( directionMarkP->smuflName );
         
         voice = 1;
         staff2P->voices[voice].notes.emplace_back( NoteData{} );
@@ -126,8 +126,8 @@ namespace mxtest
         staff2P->directions.emplace_back( DirectionData{} );
         directionP = &staff2P->directions.back();
         directionP->tickTimePosition = 0;
-        directionP->isOffsetSpecified = false;
-        directionP->offset = 0;
+//        directionP->isOffsetSpecified = false;
+//        directionP->offset = 0;
         directionP->placement = Placement::below;
         directionP->isStaffValueSpecified = true;
         directionP->wedgeStarts.emplace_back( WedgeStart{} );
@@ -150,8 +150,8 @@ namespace mxtest
         staff2P->directions.emplace_back( DirectionData{} );
         directionP = &staff2P->directions.back();
         directionP->tickTimePosition = 16;
-        directionP->isOffsetSpecified = false;
-        directionP->offset = 0;
+//        directionP->isOffsetSpecified = false;
+//        directionP->offset = 0;
         directionP->placement = Placement::unspecified;
         directionP->isStaffValueSpecified = true;
         directionP->wedgeStops.emplace_back( WedgeStop{} );

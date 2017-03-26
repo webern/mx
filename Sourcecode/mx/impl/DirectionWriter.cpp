@@ -31,6 +31,7 @@
 #include "mx/core/elements/Offset.h"
 #include "mx/core/elements/OtherDirection.h"
 #include "mx/core/elements/Pedal.h"
+#include "mx/core/elements/Pedal.h"
 #include "mx/core/elements/Percussion.h"
 #include "mx/core/elements/PerMinute.h"
 #include "mx/core/elements/PerMinuteOrBeatUnitChoice.h"
@@ -82,15 +83,13 @@ namespace mx
                 myOutDirectionPtr->getStaff()->setValue( core::StaffNumber{ myCursor.staffIndex + 1 } );
             }
             
-            if( myDirectionData.isOffsetSpecified )
+            if( myDirectionData.tickTimePosition != myCursor.tickTimePosition )
             {
+                auto offset = myDirectionData.tickTimePosition - myCursor.tickTimePosition;
                 myOutDirectionPtr->setHasOffset( true );
-                myOutDirectionPtr->getOffset()->setValue( core::DivisionsValue{ static_cast<core::DecimalType>( myDirectionData.offset ) } );
-                if( myDirectionData.offsetSound != api::Bool::unspecified )
-                {
-                    myOutDirectionPtr->getOffset()->getAttributes()->hasSound = true;
-                    myOutDirectionPtr->getOffset()->getAttributes()->sound = myConverter.convert( myDirectionData.offsetSound );
-                }
+                myOutDirectionPtr->getOffset()->setValue( core::DivisionsValue{ static_cast<core::DecimalType>( offset ) } );
+                myOutDirectionPtr->getOffset()->getAttributes()->hasSound = true;
+                myOutDirectionPtr->getOffset()->getAttributes()->sound = core::YesNo::yes;
             }
             
             for( const auto& mark : myDirectionData.marks )
@@ -106,6 +105,30 @@ namespace mx
                     MX_ASSERT( directionTypePtr->getDynamicsSet().size() == 1 );
                     directionTypePtr->addDynamics( dynamicsWriter.getDynamics() );
                     directionTypePtr->removeDynamics( directionTypePtr->getDynamicsSet().cbegin() );
+                }
+
+                if( isMarkPedal( mark.markType ) )
+                {
+                    auto directionTypePtr = core::makeDirectionType();
+                    this->addDirectionType( directionTypePtr );
+                    directionTypePtr->setChoice( core::DirectionType::Choice::pedal );
+                    auto pedalPtr = directionTypePtr->getPedal();
+                    auto attr = pedalPtr->getAttributes();
+
+                    if( mark.markType == api::MarkType::pedal )
+                    {
+                        attr->type = core::StartStopChangeContinue::start;
+                    }
+                    else if ( mark.markType == api::MarkType::damp )
+                    {
+                        attr->type = core::StartStopChangeContinue::stop;
+                    }
+
+                    attr->hasLine = true;
+                    attr->line = core::YesNo::no;
+                    attr->hasSign = true;
+                    attr->sign = core::YesNo::yes;
+                    setAttributesFromPositionData( mark.positionData, *attr );
                 }
             }
             

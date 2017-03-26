@@ -63,14 +63,10 @@ namespace mx
            
             if( myDirection.getHasOffset() )
             {
-                myOutDirectionData.isOffsetSpecified = true;
-                myOutDirectionData.offset = static_cast<int>( std::ceil( myDirection.getOffset()->getValue().getValue() - 0.5 ) );
-                if( myDirection.getOffset()->getAttributes()->hasSound )
-                {
-                    myOutDirectionData.offsetSound = myConverter.convert( myDirection.getOffset()->getAttributes()->sound );
-                }
+                const auto offset = static_cast<int>( std::ceil( myDirection.getOffset()->getValue().getValue() - 0.5 ) );
+                myOutDirectionData.tickTimePosition += offset;
             }
-            
+
             if( myDirection.getAttributes()->hasPlacement )
             {
                 myOutDirectionData.placement = myConverter.convert( myDirection.getAttributes()->placement );
@@ -359,9 +355,35 @@ namespace mx
         
         void DirectionReader::parsePedal( const core::DirectionType& directionType)
         {
-            MX_UNUSED( directionType );
+            const auto& pedalPtr = *directionType.getPedal();
+            const auto& attr = *pedalPtr.getAttributes();
+
+            if( attr.type != core::StartStopChangeContinue::start &&
+                attr.type != core::StartStopChangeContinue::stop )
+            {
+                return;
+            }
+
+            auto pedalType = api::MarkType::pedal;
+
+            if( attr.type == core::StartStopChangeContinue::start )
+            {
+                pedalType = api::MarkType::damp;
+            }
+
+            auto positionData = getPositionData( attr );
+            auto mark = api::MarkData{ positionData.placement, pedalType };
+
+            if( mark.positionData.placement == api::Placement::unspecified )
+            {
+                mark.positionData.placement = myOutDirectionData.placement;
+            }
+
+//            mark.smuflName = api::MarkSmufl::getName( mark.markType, mark.positionData.placement );
+//            mark.smuflCodepoint = api::MarkSmufl::getCodepoint( mark.markType, mark.positionData.placement );
+            myOutDirectionData.marks.emplace_back( std::move( mark ) );
         }
-        
+
         
         void DirectionReader::parseMetronome( const core::DirectionType& directionType)
         {

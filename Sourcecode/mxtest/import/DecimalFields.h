@@ -91,6 +91,12 @@ namespace mxtest
         }
 
         xelement.setValue( initialValue.substr( 0, initialValue.size() - chars ) );
+
+        auto str = xelement.getValue();
+        if( str == "-0" )
+        {
+            xelement.setValue( "0" );
+        }
     }
 
 
@@ -111,5 +117,11 @@ namespace mxtest
         }
 
         xattribute.setValue( initialValue.substr( 0, initialValue.size() - chars ) );
+
+        auto str = xattribute.getValue();
+        if( str == "-0" )
+        {
+            xattribute.setValue( "0" );
+        }
     }
 }

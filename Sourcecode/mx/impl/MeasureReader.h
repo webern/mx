@@ -53,8 +53,19 @@ namespace mx
             
             mutable api::MeasureData myOutMeasureData;
             mutable MeasureCursor myCurrentCursor;
-            mutable MeasureCursor myPreviousCursor;
-            
+            mutable MeasureCursor myPreviousMeasureCursor;
+
+            class CursorMovementRecord
+            {
+            public:
+                std::string reason;
+                int amount;
+                MeasureCursor beforeMove;
+                MeasureCursor afterMove;
+            };
+
+            mutable std::vector<CursorMovementRecord> myCursorHistory;
+
         private:
             void addStavesToOutMeasure() const;
             void parseTimeSignature() const;
@@ -83,6 +94,7 @@ namespace mx
             bool isUserRequestedVoiceNumberConsistent( const api::VoiceData& voiceData ) const;
             bool isUserRequestedVoiceNumberConsistentAccrossAllVoices( const api::StaffData& staff ) const;
             int getUserRequestedVoiceNumber( const api::VoiceData& voiceData ) const;
+            void advanceTickTimePosition( int amount, std::string reason ) const;
     	};
     }
 }

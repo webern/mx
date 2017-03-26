@@ -35,10 +35,10 @@ namespace mx
             // compatibility with earlier versions of the MusicXML format. If an element within a
             // direction includes a default-x attribute, the offset value will be ignored when determining
             // the appearance of that element.
-            bool isOffsetSpecified;
-            int offset;
-            Bool offsetSound;
-            
+//            bool isOffsetSpecified;
+//            int offset;
+//            Bool offsetSound;
+
             // voice value of -1 means unspecified
             int voice;
             
@@ -64,9 +64,9 @@ namespace mx
             DirectionData()
             : tickTimePosition{ 0 }
             , placement{ Placement::unspecified }
-            , isOffsetSpecified{ false }
-            , offset{ 0 }
-            , offsetSound{ Bool::unspecified }
+//            , isOffsetSpecified{ false }
+//            , offset{ 0 }
+//            , offsetSound{ Bool::unspecified }
             , voice{ -1 }
             , isStaffValueSpecified{ true }
             , marks{}
@@ -86,15 +86,20 @@ namespace mx
             return directionData.tempos.size() == 0 &&
             directionData.marks.size() == 0 &&
             directionData.wedgeStarts.size() == 0 &&
-            directionData.wedgeStops.size() == 0;
+            directionData.wedgeStops.size() == 0 &&
+            directionData.bracketStarts.size() == 0 &&
+            directionData.bracketStops.size() == 0 &&
+            directionData.tempos.size() == 0 &&
+            directionData.ottavaStarts.size() == 0 &&
+            directionData.ottavaStops.size() == 0;
         }
         
         MXAPI_EQUALS_BEGIN( DirectionData )
         MXAPI_EQUALS_MEMBER( tickTimePosition )
         MXAPI_EQUALS_MEMBER( placement )
-        MXAPI_EQUALS_MEMBER( isOffsetSpecified )
-        MXAPI_EQUALS_MEMBER( offset )
-        MXAPI_EQUALS_MEMBER( offsetSound )
+//        MXAPI_EQUALS_MEMBER( isOffsetSpecified )
+//        MXAPI_EQUALS_MEMBER( offset )
+//        MXAPI_EQUALS_MEMBER( offsetSound )
         MXAPI_EQUALS_MEMBER( voice )
         MXAPI_EQUALS_MEMBER( isStaffValueSpecified )
         MXAPI_EQUALS_MEMBER( tempos )

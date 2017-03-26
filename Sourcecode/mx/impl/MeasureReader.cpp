@@ -90,9 +90,14 @@ namespace mx
         , myConverter{}
         , myOutMeasureData{}
         , myCurrentCursor{ cursor }
-        , myPreviousCursor{ previousMeasureCursor }
+        , myPreviousMeasureCursor{ previousMeasureCursor }
+        , myCursorHistory{}
         {
-            
+            CursorMovementRecord initialCursorRecord;
+            initialCursorRecord.reason = "starting position";
+            initialCursorRecord.beforeMove = cursor;
+            initialCursorRecord.afterMove = cursor;
+            myCursorHistory.emplace_back( std::move( cursor ) );
         }
         
         void MeasureReader::addStavesToOutMeasure() const
@@ -185,7 +190,7 @@ namespace mx
             {
                 if( myCurrentCursor.measureIndex > 0 )
                 {
-                    timeSignature = myPreviousCursor.timeSignature;
+                    timeSignature = myPreviousMeasureCursor.timeSignature;
                 }
                 timeSignature.isImplicit = true;
             }
@@ -212,7 +217,6 @@ namespace mx
                     if( myCurrentCursor.tickTimePosition < 0 )
                     {
                         myCurrentCursor.tickTimePosition = 0;
-                        // TODO - log or inform the client that the file is erroneous
                     }
                     break;
                 }
@@ -323,7 +327,7 @@ namespace mx
             
             if( !isThisNotePartOfAChord || !isNextNotePartOfAChord )
             {
-                myCurrentCursor.tickTimePosition += noteData.durationData.durationTimeTicks;
+                advanceTickTimePosition( noteData.durationData.durationTimeTicks, "note" );
             }
             
             MX_ASSERT( noteDataStaffIndex >= 0 );
@@ -338,23 +342,23 @@ namespace mx
             {
                 ++myCurrentCursor.voiceIndex;
             }
-            else
-            {
-                // TODO - remove this debugging check
-                MX_THROW( "multiple backups in a row" );
-            }
+//            else
+//            {
+//                // TODO - remove this debugging check
+//                MX_THROW( "multiple backups in a row" );
+//            }
             myCurrentCursor.isBackupInProgress = true;
             const int backupAmount = myCurrentCursor.convertDurationToGlobalTickScale( *inMxBackup.getDuration() );
-            myCurrentCursor.tickTimePosition -= backupAmount;
+            advanceTickTimePosition( -1 * backupAmount, "backup" );
         }
-        
+
         
         void MeasureReader::parseForward( const core::Forward& inMxForward ) const
         {
             const int forwardAmount = myCurrentCursor.convertDurationToGlobalTickScale( *inMxForward.getDuration() );
-            myCurrentCursor.tickTimePosition += forwardAmount;
+            advanceTickTimePosition( forwardAmount, "forward" );
         }
-        
+
         
         void MeasureReader::parseDirection( const core::Direction& inMxDirection ) const
         {
@@ -773,6 +777,17 @@ namespace mx
             }
             
             return voiceData.notes.front().userRequestedVoiceNumber;
+        }
+
+
+        void MeasureReader::advanceTickTimePosition( int amount, std::string reason ) const
+        {
+            CursorMovementRecord record;
+            record.reason = std::move( reason );
+            record.beforeMove = myCurrentCursor;
+            myCurrentCursor.tickTimePosition += amount;
+            record.afterMove = myCurrentCursor;
+            myCursorHistory.emplace_back( std::move( record ) );
         }
     }
 }

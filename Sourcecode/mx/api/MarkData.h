@@ -170,12 +170,15 @@ namespace mx
             fermataSquareInverted, // <fermata type="inverted">square</fermata>
             unknownFermata,        // bad state, unknown type, error
             
+            pedal, // the typical piano pedal mark
+            damp,  // the typical piano end-pedal mark
         };
 
         bool isMarkDynamic( MarkType );
         bool isMarkArticulation( MarkType );
         bool isMarkOrnament( MarkType );
         bool isMarkFermata( MarkType );
+        bool isMarkPedal( MarkType );
         
         using MarkSmuflEntry = std::pair<const MarkType, const SmuflGlyphname>;
         using MarkSmuflMap = std::map<const MarkType, const SmuflGlyphname>;

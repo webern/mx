@@ -267,4 +267,47 @@ TEST( ornaments, NoteData )
 }
 T_END
 
+TEST( pedalStart, NoteData )
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    auto& part = score.parts.back();
+    part.measures.emplace_back();
+    auto& measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto& staff = measure.staves.back();
+    auto& voice = staff.voices[0];
+    voice.notes.emplace_back();
+
+    staff.directions.emplace_back();
+    auto& direction = staff.directions.back();
+    direction.marks.emplace_back( Placement::below, MarkType::pedal );
+    direction.tickTimePosition = 420;
+
+    // round trip it through xml
+    auto& mgr = DocumentManager::getInstance();
+    auto docId = mgr.createFromScore( score );
+    std::stringstream ss;
+    mgr.writeToStream(docId, ss);
+    mgr.destroyDocument(docId);
+    const std::string xml = ss.str();
+    std::istringstream iss{ xml };
+    docId = mgr.createFromStream( iss );
+    auto oscore = mgr.getData(docId);
+
+    // get the data after the round trip
+    auto& opart = oscore.parts.back();
+    auto& omeasure = opart.measures.back();
+    auto& ostaff = omeasure.staves.back();
+    auto& odirections = ostaff.directions;
+    auto& odirection = odirections.back();
+    auto& omark = odirection.marks.back();
+
+    CHECK( omark.markType == MarkType::pedal );
+    CHECK_EQUAL( odirection.tickTimePosition, odirection.tickTimePosition );
+
+
+}
+T_END
+
 #endif
