@@ -373,7 +373,7 @@ namespace mx
 
             auto pedalType = api::MarkType::pedal;
 
-            if( attr.type == core::StartStopChangeContinue::start )
+            if( attr.type == core::StartStopChangeContinue::stop )
             {
                 pedalType = api::MarkType::damp;
             }
