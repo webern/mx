@@ -91,13 +91,16 @@ namespace mx
         , myOutMeasureData{}
         , myCurrentCursor{ cursor }
         , myPreviousMeasureCursor{ previousMeasureCursor }
-        , myCursorHistory{}
+        , myHistory{}
         {
-            CursorMovementRecord initialCursorRecord;
+            HistoryRecord initialCursorRecord;
+            initialCursorRecord.amount = 0;
             initialCursorRecord.reason = "starting position";
-            initialCursorRecord.beforeMove = cursor;
-            initialCursorRecord.afterMove = cursor;
-            myCursorHistory.emplace_back( std::move( cursor ) );
+            initialCursorRecord.timeBefore = cursor.tickTimePosition;
+            initialCursorRecord.timeAfter = cursor.tickTimePosition;
+            initialCursorRecord.cursorBefore = cursor;
+            initialCursorRecord.cursorAfter = cursor;
+            myHistory.emplace_back( std::move( initialCursorRecord ) );
         }
         
         void MeasureReader::addStavesToOutMeasure() const
@@ -197,6 +200,7 @@ namespace mx
 
             myOutMeasureData.timeSignature = timeSignature;
             myCurrentCursor.timeSignature = timeSignature;
+            advanceTickTimePosition( 0, "parseTimeSignature" );
         }
         
         
@@ -213,11 +217,6 @@ namespace mx
                 case core::MusicDataChoice::Choice::backup:
                 {
                     parseBackup( *mdc.getBackup() );
-                    
-                    if( myCurrentCursor.tickTimePosition < 0 )
-                    {
-                        myCurrentCursor.tickTimePosition = 0;
-                    }
                     break;
                 }
                 case core::MusicDataChoice::Choice::forward:
@@ -231,60 +230,70 @@ namespace mx
                 {
                     myCurrentCursor.isBackupInProgress = false;
                     parseDirection( *mdc.getDirection() );
+                    advanceTickTimePosition( 0, "parseDirection" );
                     break;
                 }
                 case core::MusicDataChoice::Choice::properties:
                 {
                     myCurrentCursor.isBackupInProgress = false;
                     parseProperties( *mdc.getProperties() );
+                    advanceTickTimePosition( 0, "parseProperties" );
                     break;
                 }
                 case core::MusicDataChoice::Choice::harmony:
                 {
                     myCurrentCursor.isBackupInProgress = false;
                     parseHarmony( *mdc.getHarmony() );
+                    advanceTickTimePosition( 0, "parseHarmony" );
                     break;
                 }
                 case core::MusicDataChoice::Choice::figuredBass:
                 {
                     myCurrentCursor.isBackupInProgress = false;
                     parseFiguredBass( *mdc.getFiguredBass() );
+                    advanceTickTimePosition( 0, "parseFiguredBass" );
                     break;
                 }
                 case core::MusicDataChoice::Choice::print:
                 {
                     myCurrentCursor.isBackupInProgress = false;
                     parsePrint( *mdc.getPrint() );
+                    advanceTickTimePosition( 0, "parsePrint" );
                     break;
                 }
                 case core::MusicDataChoice::Choice::sound:
                 {
                     myCurrentCursor.isBackupInProgress = false;
                     parseSound( *mdc.getSound() );
+                    advanceTickTimePosition( 0, "parseSound" );
                     break;
                 }
                 case core::MusicDataChoice::Choice::barline:
                 {
                     myCurrentCursor.isBackupInProgress = false;
                     parseBarline( *mdc.getBarline() );
+                    advanceTickTimePosition( 0, "parseBarline" );
                     break;
                 }
                 case core::MusicDataChoice::Choice::grouping:
                 {
                     myCurrentCursor.isBackupInProgress = false;
                     parseGrouping( *mdc.getGrouping() );
+                    advanceTickTimePosition( 0, "parseGrouping" );
                     break;
                 }
                 case core::MusicDataChoice::Choice::link:
                 {
                     myCurrentCursor.isBackupInProgress = false;
                     parseLink( *mdc.getLink() );
+                    advanceTickTimePosition( 0, "parseLink" );
                     break;
                 }
                 case core::MusicDataChoice::Choice::bookmark:
                 {
                     myCurrentCursor.isBackupInProgress = false;
                     parseBookmark( *mdc.getBookmark() );
+                    advanceTickTimePosition( 0, "parseBookmark" );
                     break;
                 }
                 default:
@@ -350,6 +359,12 @@ namespace mx
             myCurrentCursor.isBackupInProgress = true;
             const int backupAmount = myCurrentCursor.convertDurationToGlobalTickScale( *inMxBackup.getDuration() );
             advanceTickTimePosition( -1 * backupAmount, "backup" );
+
+            if (myCurrentCursor.tickTimePosition < 0)
+            {
+                auto problemAmount = myCurrentCursor.tickTimePosition * -1;
+                advanceTickTimePosition( problemAmount, "correct backup negative error" );
+            }
         }
 
         
@@ -782,12 +797,17 @@ namespace mx
 
         void MeasureReader::advanceTickTimePosition( int amount, std::string reason ) const
         {
-            CursorMovementRecord record;
+            HistoryRecord record;
             record.reason = std::move( reason );
-            record.beforeMove = myCurrentCursor;
+            record.amount = amount;
+            record.timeBefore = myCurrentCursor.tickTimePosition;
+            record.cursorBefore = myCurrentCursor;
             myCurrentCursor.tickTimePosition += amount;
-            record.afterMove = myCurrentCursor;
-            myCursorHistory.emplace_back( std::move( record ) );
+            record.cursorAfter = myCurrentCursor;
+            record.timeAfter = myCurrentCursor.tickTimePosition;
+
+            myHistory.push_back( record );
+//            std::cout << record.reason << std::endl;
         }
     }
 }

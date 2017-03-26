@@ -370,20 +370,26 @@ namespace mx
                     }
 
                     myPropertiesWriter->flushBuffer();
-                    
-                    for( ; directionIter != directionEnd && directionIter->tickTimePosition <= myCursor.tickTimePosition; ++directionIter )
+
                     {
-                        if( isDirectionDataEmpty( *directionIter ) )
+                        auto nextNote = noteIter;
+                        ++nextNote;
+                        auto nextTime = std::numeric_limits<int>::max();
+
+                        if( nextNote != noteEnd )
                         {
-                            continue;
+                            auto nextNoteTime = nextNote->tickTimePosition;
+
+                            if( nextNoteTime > myCursor.tickTimePosition )
+                            {
+                                nextTime = nextNoteTime;
+                            }
                         }
-                        auto directionMdc = core::makeMusicDataChoice();
-                        directionMdc->setChoice( core::MusicDataChoice::Choice::direction );
-                        DirectionWriter directionWriter{ *directionIter, myCursor };
-                        directionMdc->setDirection( directionWriter.getDirection() );
-                        myOutMeasure->getMusicDataGroup()->addMusicDataChoice( directionMdc );
+
+                        writeDirections( directionIter, directionEnd, nextTime );
                     }
-                    
+
+
                     auto mdc = core::makeMusicDataChoice();
                     mdc->setChoice( core::MusicDataChoice::Choice::note );
                     NoteWriter writer{ apiNote, myCursor, myScoreWriter, myPreviousCursor.isChordActive };
@@ -424,18 +430,7 @@ namespace mx
                 myPropertiesWriter->flushBuffer();
             }
             
-            for( ; directionIter != directionEnd; ++directionIter )
-            {
-                if( isDirectionDataEmpty( *directionIter ) )
-                {
-                    continue;
-                }
-                auto directionMdc = core::makeMusicDataChoice();
-                directionMdc->setChoice( core::MusicDataChoice::Choice::direction );
-                DirectionWriter directionWriter{ *directionIter, myCursor };
-                directionMdc->setDirection( directionWriter.getDirection() );
-                myOutMeasure->getMusicDataGroup()->addMusicDataChoice( directionMdc );
-            }
+            writeDirections( directionIter, directionEnd, std::numeric_limits<int>::max() );
             
         } // func writeVoices
         
@@ -495,8 +490,26 @@ namespace mx
 
             myPreviousCursor = myCursor;
         }
-        
-        
+
+
+        void MeasureWriter::writeDirections( dIter& directionIter, const dIter& directionEnd, int maxTickTimePosition )
+        {
+            for( ; directionIter != directionEnd && directionIter->tickTimePosition <= maxTickTimePosition; ++directionIter )
+            {
+                if( isDirectionDataEmpty( *directionIter ) )
+                {
+                    continue;
+                }
+                auto directionMdc = core::makeMusicDataChoice();
+                directionMdc->setChoice( core::MusicDataChoice::Choice::direction );
+//                auto tempDirectionCursor = myCursor;
+                DirectionWriter directionWriter{ *directionIter, myCursor };
+                directionMdc->setDirection( directionWriter.getDirection() );
+                myOutMeasure->getMusicDataGroup()->addMusicDataChoice( directionMdc );
+            }
+        }
+
+
         void MeasureWriter::writeBarlines( int tickTimePosition )
         {
             for( ; myBarlinesIter != myBarlinesEnd && myBarlinesIter->tickTimePosition <= tickTimePosition; ++myBarlinesIter )

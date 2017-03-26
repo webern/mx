@@ -55,16 +55,18 @@ namespace mx
             mutable MeasureCursor myCurrentCursor;
             mutable MeasureCursor myPreviousMeasureCursor;
 
-            class CursorMovementRecord
+            class HistoryRecord
             {
             public:
                 std::string reason;
                 int amount;
-                MeasureCursor beforeMove;
-                MeasureCursor afterMove;
+                int timeBefore;
+                int timeAfter;
+                MeasureCursor cursorBefore;
+                MeasureCursor cursorAfter;
             };
 
-            mutable std::vector<CursorMovementRecord> myCursorHistory;
+            mutable std::vector<HistoryRecord> myHistory;
 
         private:
             void addStavesToOutMeasure() const;

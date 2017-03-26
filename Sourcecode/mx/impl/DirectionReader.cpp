@@ -77,7 +77,14 @@ namespace mx
                 const auto& dt = *dtPtr;
                 parseDirectionType( dt );
             }
-            
+
+            // messy - need to make sure all the MarkDatas have the same tickTimePosition
+            // as their parent DirectionData.
+            for( auto& mark : myOutDirectionData.marks )
+            {
+                mark.tickTimePosition = myOutDirectionData.tickTimePosition;
+            }
+
             api::DirectionData temp{ std::move( myOutDirectionData ) };
             myOutDirectionData = api::DirectionData{};
             return temp;

@@ -92,8 +92,10 @@ namespace mx
                 myOutDirectionPtr->getOffset()->getAttributes()->sound = core::YesNo::yes;
             }
             
-            for( const auto& mark : myDirectionData.marks )
+            for( auto mark : myDirectionData.marks )
             {
+                mark.tickTimePosition = myDirectionData.tickTimePosition;
+                
                 // TODO - skip marks that aren't of the correct type (i.e. direction marks)
                 // if !isDirection( mark ) continue;
                 if( isMarkDynamic( mark.markType ) )
