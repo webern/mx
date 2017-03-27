@@ -532,6 +532,10 @@ TEST( directionOrderRoundTrip, NoteData )
     placement = Placement::unspecified;
     direction.placement = placement;
     direction.marks.back().positionData.placement = placement;
+    direction.marks.back().positionData.isDefaultXSpecified = false;
+    direction.marks.back().positionData.defaultX = 0.0;
+    direction.marks.back().positionData.isDefaultYSpecified = true;
+    direction.marks.back().positionData.defaultY = 1.1;
     direction.tickTimePosition = 120;
     direction.marks.back().tickTimePosition = direction.tickTimePosition;
     staff.directions.push_back( direction );
@@ -539,6 +543,10 @@ TEST( directionOrderRoundTrip, NoteData )
     placement = Placement::unspecified;
     direction.placement = placement;
     direction.marks.back().positionData.placement = placement;
+    direction.marks.back().positionData.isDefaultXSpecified = true;
+    direction.marks.back().positionData.defaultX = 2.2;
+    direction.marks.back().positionData.isDefaultYSpecified = false;
+    direction.marks.back().positionData.defaultY = 0.0;
     direction.tickTimePosition = 240;
     direction.marks.back().tickTimePosition = direction.tickTimePosition;
     staff.directions.push_back( direction );
@@ -546,12 +554,20 @@ TEST( directionOrderRoundTrip, NoteData )
     placement = Placement::unspecified;
     direction.placement = placement;
     direction.marks.back().positionData.placement = placement;
+    direction.marks.back().positionData.isDefaultXSpecified = true;
+    direction.marks.back().positionData.defaultX = 3.3;
+    direction.marks.back().positionData.isDefaultYSpecified = true;
+    direction.marks.back().positionData.defaultY = 3.3;
     direction.tickTimePosition = 360;
     direction.marks.back().tickTimePosition = direction.tickTimePosition;
     staff.directions.push_back( direction );
 
     placement = Placement::unspecified;
     direction.placement = placement;
+    direction.marks.back().positionData.isDefaultXSpecified = false;
+    direction.marks.back().positionData.defaultX = 0.0;
+    direction.marks.back().positionData.isDefaultYSpecified = false;
+    direction.marks.back().positionData.defaultY = 0.0;
     direction.marks.back().positionData.placement = placement;
     direction.tickTimePosition = 480;
     direction.marks.back().tickTimePosition = direction.tickTimePosition;

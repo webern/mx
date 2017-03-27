@@ -128,13 +128,13 @@ namespace mx
         
         
         MXAPI_EQUALS_BEGIN( PositionData )
-        MXAPI_EQUALS_MEMBER( defaultX )
+        MXAPI_DOUBLES_EQUALS_MEMBER( defaultX )
         MXAPI_EQUALS_MEMBER( isDefaultXSpecified )
-        MXAPI_EQUALS_MEMBER( defaultY )
+        MXAPI_DOUBLES_EQUALS_MEMBER( defaultY )
         MXAPI_EQUALS_MEMBER( isDefaultYSpecified )
-        MXAPI_EQUALS_MEMBER( relativeX )
+        MXAPI_DOUBLES_EQUALS_MEMBER( relativeX )
         MXAPI_EQUALS_MEMBER( isRelativeXSpecified )
-        MXAPI_EQUALS_MEMBER( relativeY )
+        MXAPI_DOUBLES_EQUALS_MEMBER( relativeY )
         MXAPI_EQUALS_MEMBER( isRelativeYSpecified )
         MXAPI_EQUALS_MEMBER( placement )
         MXAPI_EQUALS_MEMBER( verticalAlignment )

@@ -378,16 +378,17 @@ namespace mx
                 pedalType = api::MarkType::damp;
             }
 
-            auto positionData = getPositionData( attr );
-            auto mark = api::MarkData{ positionData.placement, pedalType };
+            const auto placement =
+                myDirection.getAttributes()->hasPlacement ?
+                    ( myDirection.getAttributes()->placement == core::AboveBelow::above ?
+                      api::Placement::above :
+                      api::Placement::below )
+                : api::Placement::unspecified;
 
-            if( mark.positionData.placement == api::Placement::unspecified )
-            {
-                mark.positionData.placement = myOutDirectionData.placement;
-            }
-
-//            mark.smuflName = api::MarkSmufl::getName( mark.markType, mark.positionData.placement );
-//            mark.smuflCodepoint = api::MarkSmufl::getCodepoint( mark.markType, mark.positionData.placement );
+            auto mark = api::MarkData{ placement, pedalType };
+            mark.positionData = getPositionData( attr );
+            mark.positionData.placement = placement;
+            myOutDirectionData.placement = placement;
             myOutDirectionData.marks.emplace_back( std::move( mark ) );
         }
 

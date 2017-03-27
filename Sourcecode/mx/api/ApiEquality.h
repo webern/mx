@@ -93,6 +93,13 @@ namespace mx
             return false; \
         }
 
+#define MXAPI_DOUBLES_EQUALS_MEMBER( mxapiMemberName ) \
+        if( std::abs( lhs.mxapiMemberName - rhs.mxapiMemberName ) > MX_API_EQUALITY_EPSILON ) \
+        { \
+            streamComparisonUnequalMessage( theCurrentClassName, #mxapiMemberName ); \
+            return false; \
+        }
+
 #define MXAPI_EQUALS_END \
         return true; \
     }\
