@@ -117,6 +117,13 @@ namespace mx
                     auto pedalPtr = directionTypePtr->getPedal();
                     auto attr = pedalPtr->getAttributes();
 
+                    if( mark.positionData.placement != api::Placement::unspecified )
+                    {
+                        myOutDirectionPtr->getAttributes()->hasPlacement = true;
+                        Converter c;
+                        myOutDirectionPtr->getAttributes()->placement = c.convert( mark.positionData.placement );
+                    }
+
                     if( mark.markType == api::MarkType::pedal )
                     {
                         attr->type = core::StartStopChangeContinue::start;
