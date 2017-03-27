@@ -85,12 +85,10 @@ namespace mxtest
 
         const int chars = trailingCharsToStrip( initialValue );
 
-        if ( chars == 0 )
+        if ( chars != 0 )
         {
-            return;
+            xelement.setValue( initialValue.substr( 0, initialValue.size() - chars ) );
         }
-
-        xelement.setValue( initialValue.substr( 0, initialValue.size() - chars ) );
 
         auto str = xelement.getValue();
         if( str == "-0" )
@@ -111,12 +109,10 @@ namespace mxtest
 
         const int chars = trailingCharsToStrip( initialValue );
 
-        if ( chars == 0 )
+        if ( chars != 0 )
         {
-            return;
+            xattribute.setValue( initialValue.substr( 0, initialValue.size() - chars ) );
         }
-
-        xattribute.setValue( initialValue.substr( 0, initialValue.size() - chars ) );
 
         auto str = xattribute.getValue();
         if( str == "-0" )
