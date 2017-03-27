@@ -321,7 +321,7 @@ namespace mx
             auto staffKeyEnd = inStaff.keys.cend();
             auto directionIter = inStaff.directions.cbegin();
             auto directionEnd = inStaff.directions.cend();
-            
+
             for( const auto& voice : inStaff.voices )
             {
                 int currentChordTickPosition = -1;
@@ -329,6 +329,8 @@ namespace mx
                 myCursor.voiceIndex = voice.first;
                 auto noteIter = voice.second.notes.cbegin();
                 auto noteEnd = voice.second.notes.cend();
+                writeDirections( directionIter, directionEnd, std::numeric_limits<int>::min(), 0 );
+
                 for( ; noteIter != noteEnd; ++noteIter )
                 {
                     // TODO - this is too simplistic. If we have two chords in a row then this
@@ -372,21 +374,16 @@ namespace mx
                     myPropertiesWriter->flushBuffer();
 
                     {
-                        auto nextNote = noteIter;
-                        ++nextNote;
-                        auto nextTime = std::numeric_limits<int>::max();
+                        int minTime = myCursor.tickTimePosition;
+                        int maxTime = std::numeric_limits<int>::max();
+                        auto nextNote = noteIter + 1;
 
                         if( nextNote != noteEnd )
                         {
-                            auto nextNoteTime = nextNote->tickTimePosition;
-
-                            if( nextNoteTime > myCursor.tickTimePosition )
-                            {
-                                nextTime = nextNoteTime;
-                            }
+                            maxTime = nextNote->tickTimePosition;
                         }
 
-                        writeDirections( directionIter, directionEnd, nextTime );
+                        writeDirections( directionIter, directionEnd, minTime, maxTime );
                     }
 
 
@@ -430,7 +427,7 @@ namespace mx
                 myPropertiesWriter->flushBuffer();
             }
             
-            writeDirections( directionIter, directionEnd, std::numeric_limits<int>::max() );
+            writeDirections( directionIter, directionEnd, std::numeric_limits<int>::min(), std::numeric_limits<int>::max() );
             
         } // func writeVoices
         
@@ -492,14 +489,36 @@ namespace mx
         }
 
 
-        void MeasureWriter::writeDirections( dIter& directionIter, const dIter& directionEnd, int maxTickTimePosition )
+        void MeasureWriter::writeDirections( dIter& directionIter, const dIter& directionEnd, int minTickTimePosition, int maxTickTimePosition )
         {
-            for( ; directionIter != directionEnd && directionIter->tickTimePosition <= maxTickTimePosition; ++directionIter )
+            if( directionIter == directionEnd )
+            {
+                return;
+            }
+
+            const auto firstDirectionTime = directionIter->tickTimePosition;
+
+            if( firstDirectionTime < minTickTimePosition )
+            {
+                MX_THROW( "this should never happen" );
+            }
+
+            for( ; directionIter != directionEnd
+                && directionIter->tickTimePosition < maxTickTimePosition;
+                ++directionIter )
             {
                 if( isDirectionDataEmpty( *directionIter ) )
                 {
                     continue;
                 }
+
+                const auto directionTime = directionIter->tickTimePosition;
+
+                if( directionTime < minTickTimePosition )
+                {
+                    MX_THROW( "this should never happen" );
+                }
+
                 auto directionMdc = core::makeMusicDataChoice();
                 directionMdc->setChoice( core::MusicDataChoice::Choice::direction );
 //                auto tempDirectionCursor = myCursor;

@@ -152,7 +152,6 @@ namespace mx
         {
             LOCK_DOCUMENT_MANAGER
             
-            
             const DocumentMap::const_iterator it = myImpl->myMap.find( documentId );
             
             if( it == myImpl->myMap.cend() )

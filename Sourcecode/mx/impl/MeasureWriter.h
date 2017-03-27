@@ -61,7 +61,7 @@ namespace mx
             void writeBarlines( int tickTimePosition );
             using dirs = std::vector<api::DirectionData>;
             using dIter = dirs::const_iterator;
-            void writeDirections( dIter& directionIter, const dIter& directionEnd, int maxTickTimePosition );
+            void writeDirections( dIter& directionIter, const dIter& directionEnd, int minTickTimePosition, int maxTickTimePosition );
             
             template<typename T>
             std::vector<T> findItemsAtTimePosition( const std::vector<T>& inItems, int inTickTimePosition )

@@ -7,23 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		290A8CE41E881B1F00AF62C8 /* ApiTester.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2903C9471DBC7ED600218C9E /* ApiTester.cpp */; };
-		290A8CE51E881B2400AF62C8 /* ApiLy43eTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29FFAC7C1DB998C100DC8AE1 /* ApiLy43eTest.cpp */; };
-		290A8CE61E8838DD00AF62C8 /* ApiK007aTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29BF988A1DC6D20500BBC7B3 /* ApiK007aTest.cpp */; };
-		290A8CE71E8838DD00AF62C8 /* ApiK007cTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2961F1161DC7CDD700D62B16 /* ApiK007cTest.cpp */; };
-		290A8CE81E8838DD00AF62C8 /* ApiK009bSlurTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29271A081DCBB6760036528D /* ApiK009bSlurTest.cpp */; };
-		290A8CE91E8838DD00AF62C8 /* ApiK014aFermatasTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29E41D681DC978400085405E /* ApiK014aFermatasTest.cpp */; };
-		290A8CEA1E8838DD00AF62C8 /* ApiK015aLayoutTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2973CDE21DCD74CD001B9AAD /* ApiK015aLayoutTest.cpp */; };
-		290A8CEB1E8838DD00AF62C8 /* ApiK016aMiscTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29FF27341DD7DE880005B0AA /* ApiK016aMiscTest.cpp */; };
-		290A8CEC1E8838DD00AF62C8 /* ApiLoadSurvivalTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 294775E11D934C510006E1AD /* ApiLoadSurvivalTest.cpp */; };
-		290A8CED1E8838DD00AF62C8 /* ApiMuAccidentals1Test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2961F1301DC7F47100D62B16 /* ApiMuAccidentals1Test.cpp */; };
-		290A8CEE1E8838DD00AF62C8 /* ChordApiTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C9AFD81DC3BE6000DD9BFB /* ChordApiTest.cpp */; };
-		290A8CEF1E8838DD00AF62C8 /* ChordTimeTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29510AFC1E3113AA00EB76F0 /* ChordTimeTest.cpp */; };
-		290A8CF01E8838DD00AF62C8 /* DocumentManagerTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EF440F1D6E8F5500DBDAB9 /* DocumentManagerTest.cpp */; };
-		290A8CF11E8838DD00AF62C8 /* MetronomeApiTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29AD58B71E3D1000004FD94E /* MetronomeApiTest.cpp */; };
-		290A8CF21E8838DD00AF62C8 /* TimeSignatureApiTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29979D611DC811F300707AA4 /* TimeSignatureApiTest.cpp */; };
-		290A8CF31E8838DD00AF62C8 /* NoteDataTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 292D3FF31E57EBE4008AA032 /* NoteDataTest.cpp */; };
-		290A8CF41E8838DD00AF62C8 /* BombeTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A3387F1E652432001D61DD /* BombeTest.cpp */; };
+		290A8D0E1E895CC800AF62C8 /* NoteDataTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 292D3FF31E57EBE4008AA032 /* NoteDataTest.cpp */; };
 		291A04761DC2BFD000B5C5F6 /* PositionFunctionsTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 291A04751DC2BFD000B5C5F6 /* PositionFunctionsTest.cpp */; };
 		29271A0B1DCBD92D0036528D /* CurveFunctionsTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29271A0A1DCBD92D0036528D /* CurveFunctionsTest.cpp */; };
 		292E371F1CA8D68D00CC63BB /* libMx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 292E371E1CA8D68D00CC63BB /* libMx.a */; };
@@ -1936,7 +1920,6 @@
 				29C01DD91D1312FA0094BE61 /* EndParagraphTest.cpp in Sources */,
 				29C01E8C1D1312FA0094BE61 /* PrintTest.cpp in Sources */,
 				295897281DB9806600F18FBA /* MxFileRepositoy.cpp in Sources */,
-				290A8CE41E881B1F00AF62C8 /* ApiTester.cpp in Sources */,
 				29C01EF21D1312FA0094BE61 /* TurnTest.cpp in Sources */,
 				29C01E751D1312FA0094BE61 /* PartGroupOrScorePartTest.cpp in Sources */,
 				29C01EE31D1312FA0094BE61 /* TopMarginTest.cpp in Sources */,
@@ -1965,14 +1948,12 @@
 				29C01D761D1312FA0094BE61 /* AlterTest.cpp in Sources */,
 				29C01EAF1D1312FA0094BE61 /* SoloTest.cpp in Sources */,
 				29C01E6C1D1312FA0094BE61 /* OtherPlayTest.cpp in Sources */,
-				290A8CEF1E8838DD00AF62C8 /* ChordTimeTest.cpp in Sources */,
 				29C01D8A1D1312FA0094BE61 /* BeatTypeTest.cpp in Sources */,
 				29C01DBC1D1312FA0094BE61 /* DistanceTest.cpp in Sources */,
 				294CE2031DCA952A0021670C /* PrintFunctionsTest.cpp in Sources */,
 				29C01EBC1D1312FA0094BE61 /* StaffTuningTest.cpp in Sources */,
 				29C01DDD1D1312FA0094BE61 /* EyeglassesTest.cpp in Sources */,
 				295897291DB9806600F18FBA /* MxFileTest.cpp in Sources */,
-				290A8CF21E8838DD00AF62C8 /* TimeSignatureApiTest.cpp in Sources */,
 				29C01E731D1312FA0094BE61 /* PartAbbreviationDisplayTest.cpp in Sources */,
 				29C01ECE1D1312FA0094BE61 /* SyllabicTextGroupTest.cpp in Sources */,
 				29C01D701D1312FA0094BE61 /* AccordionHighTest.cpp in Sources */,
@@ -2016,7 +1997,6 @@
 				29C01E4D1D1312FA0094BE61 /* MusicDataGroupTest.cpp in Sources */,
 				29C01E401D1312FA0094BE61 /* MidiInstrumentTest.cpp in Sources */,
 				29C01E671D1312FA0094BE61 /* OtherArticulationTest.cpp in Sources */,
-				290A8CF11E8838DD00AF62C8 /* MetronomeApiTest.cpp in Sources */,
 				29C01DCC1D1312FA0094BE61 /* EditorialGroupTest.cpp in Sources */,
 				29C01E8E1D1312FA0094BE61 /* PullOffTest.cpp in Sources */,
 				29C01EFA1D1312FA0094BE61 /* VirtualNameTest.cpp in Sources */,
@@ -2033,7 +2013,6 @@
 				29C01D8B1D1312FA0094BE61 /* BeatUnitDotTest.cpp in Sources */,
 				29C01ED21D1312FA0094BE61 /* SystemMarginsTest.cpp in Sources */,
 				29C01D9E1D1312FA0094BE61 /* CreatorTest.cpp in Sources */,
-				290A8CF41E8838DD00AF62C8 /* BombeTest.cpp in Sources */,
 				29C01E861D1312FA0094BE61 /* PlopTest.cpp in Sources */,
 				29C01E011D1312FA0094BE61 /* HandbellTest.cpp in Sources */,
 				29C01DD21D1312FA0094BE61 /* ElisionTest.cpp in Sources */,
@@ -2050,7 +2029,6 @@
 				29C01D741D1312FA0094BE61 /* AccordTest.cpp in Sources */,
 				29C01EB21D1312FA0094BE61 /* SourceTest.cpp in Sources */,
 				29C01E8A1D1312FA0094BE61 /* PrefixTest.cpp in Sources */,
-				290A8CE61E8838DD00AF62C8 /* ApiK007aTest.cpp in Sources */,
 				29C01F001D1312FA0094BE61 /* WoodTest.cpp in Sources */,
 				29C01D931D1312FA0094BE61 /* BreathMarkTest.cpp in Sources */,
 				29C01E7F1D1312FA0094BE61 /* PedalTest.cpp in Sources */,
@@ -2095,7 +2073,6 @@
 				29C01EA81D1312FA0094BE61 /* SlashDotTest.cpp in Sources */,
 				29C01E9E1D1312FA0094BE61 /* ScoreHeaderGroupTest.cpp in Sources */,
 				29C01DFC1D1312FA0094BE61 /* GroupNameTest.cpp in Sources */,
-				290A8CE91E8838DD00AF62C8 /* ApiK014aFermatasTest.cpp in Sources */,
 				29C01E581D1312FA0094BE61 /* NoteChoiceTest.cpp in Sources */,
 				29C01EE41D1312FA0094BE61 /* TopSystemDistanceTest.cpp in Sources */,
 				29C01DEA1D1312FA0094BE61 /* ForwardTest.cpp in Sources */,
@@ -2122,7 +2099,6 @@
 				29C01DBB1D1312FA0094BE61 /* DisplayTextTest.cpp in Sources */,
 				29C01EAC1D1312FA0094BE61 /* SlurTest.cpp in Sources */,
 				29C01F061D1312FA0094BE61 /* YesNoNumberTest.cpp in Sources */,
-				290A8CE51E881B2400AF62C8 /* ApiLy43eTest.cpp in Sources */,
 				29C01DA01D1312FA0094BE61 /* CreditImageTest.cpp in Sources */,
 				29C01E991D1312FA0094BE61 /* RootTest.cpp in Sources */,
 				29C01DB31D1312FA0094BE61 /* DetachedLegatoTest.cpp in Sources */,
@@ -2135,7 +2111,6 @@
 				29C01E651D1312FA0094BE61 /* OrnamentsTest.cpp in Sources */,
 				29C01DC91D1312FA0094BE61 /* DownBowTest.cpp in Sources */,
 				29C01EF51D1312FA0094BE61 /* UnstressTest.cpp in Sources */,
-				290A8CEC1E8838DD00AF62C8 /* ApiLoadSurvivalTest.cpp in Sources */,
 				29B48EDB1DBE7F550030A974 /* MeasureWriterTest.cpp in Sources */,
 				29C01DAC1D1312FA0094BE61 /* DefaultsTest.cpp in Sources */,
 				29C01DC71D1312FA0094BE61 /* DoubleTest.cpp in Sources */,
@@ -2165,7 +2140,6 @@
 				29C01E611D1312FA0094BE61 /* OffsetTest.cpp in Sources */,
 				29C01E5E1D1312FA0094BE61 /* OctaveChangeTest.cpp in Sources */,
 				29C01DB91D1312FA0094BE61 /* DisplayStepOctaveGroupTest.cpp in Sources */,
-				290A8CE81E8838DD00AF62C8 /* ApiK009bSlurTest.cpp in Sources */,
 				29C01EC01D1312FA0094BE61 /* StepTest.cpp in Sources */,
 				29C01ED81D1312FA0094BE61 /* TextTest.cpp in Sources */,
 				29C01DA51D1312FA0094BE61 /* CueNoteGroupTest.cpp in Sources */,
@@ -2178,8 +2152,8 @@
 				29C01E301D1312FA0094BE61 /* MeasureLayoutTest.cpp in Sources */,
 				29C01D7F1D1312FA0094BE61 /* BarlineTest.cpp in Sources */,
 				29C01DA71D1312FA0094BE61 /* DampAllTest.cpp in Sources */,
+				290A8D0E1E895CC800AF62C8 /* NoteDataTest.cpp in Sources */,
 				29C01DD81D1312FA0094BE61 /* EndLineTest.cpp in Sources */,
-				290A8CEB1E8838DD00AF62C8 /* ApiK016aMiscTest.cpp in Sources */,
 				29C01EE71D1312FA0094BE61 /* TremoloTest.cpp in Sources */,
 				29C01E1F1D1312FA0094BE61 /* KeyStepTest.cpp in Sources */,
 				29C01EF71D1312FA0094BE61 /* VerticalTurnTest.cpp in Sources */,
@@ -2188,7 +2162,6 @@
 				29C01EC81D1312FA0094BE61 /* StringsTest.cpp in Sources */,
 				29C01E901D1312FA0094BE61 /* RelationTest.cpp in Sources */,
 				29C01E2E1D1312FA0094BE61 /* MakeFunctionsTest.cpp in Sources */,
-				290A8CE71E8838DD00AF62C8 /* ApiK007cTest.cpp in Sources */,
 				29C01D811D1312FA0094BE61 /* BarStyleTest.cpp in Sources */,
 				29C01E241D1312FA0094BE61 /* LeftDividerTest.cpp in Sources */,
 				29C01E981D1312FA0094BE61 /* RootStepTest.cpp in Sources */,
@@ -2214,17 +2187,14 @@
 				29C01E221D1312FA0094BE61 /* LaughingTest.cpp in Sources */,
 				29C01DC31D1312FA0094BE61 /* DocumentTimewiseCreate.cpp in Sources */,
 				29C01D771D1312FA0094BE61 /* AppearanceTest.cpp in Sources */,
-				290A8CF31E8838DD00AF62C8 /* NoteDataTest.cpp in Sources */,
 				29C01E5C1D1312FA0094BE61 /* NoteTest.cpp in Sources */,
 				29C01E951D1312FA0094BE61 /* RightMarginTest.cpp in Sources */,
 				29C01EAD1D1312FA0094BE61 /* SnapPizzicatoTest.cpp in Sources */,
 				29C01E9F1D1312FA0094BE61 /* ScoreInstrumentTest.cpp in Sources */,
 				29C01D7C1D1312FA0094BE61 /* ArticulationsTest.cpp in Sources */,
-				290A8CF01E8838DD00AF62C8 /* DocumentManagerTest.cpp in Sources */,
 				29C01DCA1D1312FA0094BE61 /* DurationTest.cpp in Sources */,
 				29C01EA31D1312FA0094BE61 /* SegnoTest.cpp in Sources */,
 				298F0F4D1D1E4981005C3D9D /* ImportTestImpl.cpp in Sources */,
-				290A8CEE1E8838DD00AF62C8 /* ChordApiTest.cpp in Sources */,
 				297556081D135AA3007732D0 /* UtilityImplTest.cpp in Sources */,
 				29C01F041D1312FA0094BE61 /* WorkTest.cpp in Sources */,
 				29C01EAB1D1312FA0094BE61 /* SlideTest.cpp in Sources */,
@@ -2255,7 +2225,6 @@
 				295897271DB9806600F18FBA /* MxFile.cpp in Sources */,
 				29C01DC51D1312FA0094BE61 /* DoitTest.cpp in Sources */,
 				29C01E931D1312FA0094BE61 /* RestTest.cpp in Sources */,
-				290A8CED1E8838DD00AF62C8 /* ApiMuAccidentals1Test.cpp in Sources */,
 				29C01E111D1312FA0094BE61 /* InstrumentAbbreviationTest.cpp in Sources */,
 				29C01E211D1312FA0094BE61 /* KindTest.cpp in Sources */,
 				29C01DBF1D1312FA0094BE61 /* DocumentPartwiseConvertTest.cpp in Sources */,
@@ -2348,7 +2317,6 @@
 				29C01E391D1312FA0094BE61 /* MetronomeRelationTest.cpp in Sources */,
 				29C01EF31D1312FA0094BE61 /* TypeTest.cpp in Sources */,
 				29C01DE81D1312FA0094BE61 /* FontSizeTest.cpp in Sources */,
-				290A8CEA1E8838DD00AF62C8 /* ApiK015aLayoutTest.cpp in Sources */,
 				29C01E411D1312FA0094BE61 /* MidiNameTest.cpp in Sources */,
 				29C01F1B1D13137D0094BE61 /* main.cpp in Sources */,
 				29C01E1E1D1312FA0094BE61 /* KeyOctaveTest.cpp in Sources */,
