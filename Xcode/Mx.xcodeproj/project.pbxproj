@@ -9,6 +9,16 @@
 /* Begin PBXBuildFile section */
 		2904A4D51D301D5A00A39CC6 /* Encoding.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2904A4D31D301D5A00A39CC6 /* Encoding.cpp */; };
 		29271A4F1DCC0D820036528D /* ApiEquality.h in Headers */ = {isa = PBXBuildFile; fileRef = 29271A4E1DCC0D820036528D /* ApiEquality.h */; };
+		292C3ADB1E8B13FD001A0CB9 /* WordsData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 292C3AD91E8B13FD001A0CB9 /* WordsData.cpp */; };
+		292C3ADC1E8B13FD001A0CB9 /* WordsData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 292C3AD91E8B13FD001A0CB9 /* WordsData.cpp */; };
+		292C3ADD1E8B13FD001A0CB9 /* WordsData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 292C3AD91E8B13FD001A0CB9 /* WordsData.cpp */; };
+		292C3ADE1E8B13FD001A0CB9 /* WordsData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 292C3AD91E8B13FD001A0CB9 /* WordsData.cpp */; };
+		292C3ADF1E8B13FD001A0CB9 /* WordsData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 292C3AD91E8B13FD001A0CB9 /* WordsData.cpp */; };
+		292C3AE01E8B13FD001A0CB9 /* WordsData.h in Headers */ = {isa = PBXBuildFile; fileRef = 292C3ADA1E8B13FD001A0CB9 /* WordsData.h */; };
+		292C3AE11E8B13FD001A0CB9 /* WordsData.h in Headers */ = {isa = PBXBuildFile; fileRef = 292C3ADA1E8B13FD001A0CB9 /* WordsData.h */; };
+		292C3AE21E8B13FD001A0CB9 /* WordsData.h in Headers */ = {isa = PBXBuildFile; fileRef = 292C3ADA1E8B13FD001A0CB9 /* WordsData.h */; };
+		292C3AE31E8B13FD001A0CB9 /* WordsData.h in Headers */ = {isa = PBXBuildFile; fileRef = 292C3ADA1E8B13FD001A0CB9 /* WordsData.h */; };
+		292C3AE41E8B13FD001A0CB9 /* WordsData.h in Headers */ = {isa = PBXBuildFile; fileRef = 292C3ADA1E8B13FD001A0CB9 /* WordsData.h */; };
 		292D1DD21D9A43A500CDD9F4 /* ClefData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 292D1DD01D9A43A500CDD9F4 /* ClefData.cpp */; };
 		2937D15D1D18D403001C2A1A /* PugiAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2937D1451D18D403001C2A1A /* PugiAttribute.cpp */; };
 		2937D15F1D18D403001C2A1A /* PugiAttributeIterImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2937D1471D18D403001C2A1A /* PugiAttributeIterImpl.cpp */; };
@@ -3338,6 +3348,8 @@
 		2927EC9E1D886E460042E080 /* TimeReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimeReader.cpp; path = ../Sourcecode/mx/impl/TimeReader.cpp; sourceTree = "<group>"; };
 		2927ECA51D888AB30042E080 /* LcmGcd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LcmGcd.h; path = ../Sourcecode/mx/impl/LcmGcd.h; sourceTree = "<group>"; };
 		2927ECA61D888AB30042E080 /* LcmGcd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LcmGcd.cpp; path = ../Sourcecode/mx/impl/LcmGcd.cpp; sourceTree = "<group>"; };
+		292C3AD91E8B13FD001A0CB9 /* WordsData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WordsData.cpp; path = ../Sourcecode/mx/api/WordsData.cpp; sourceTree = "<group>"; };
+		292C3ADA1E8B13FD001A0CB9 /* WordsData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WordsData.h; path = ../Sourcecode/mx/api/WordsData.h; sourceTree = "<group>"; };
 		292D1DD01D9A43A500CDD9F4 /* ClefData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ClefData.cpp; path = ../Sourcecode/mx/api/ClefData.cpp; sourceTree = "<group>"; };
 		292D1DD11D9A43A500CDD9F4 /* ClefData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ClefData.h; path = ../Sourcecode/mx/api/ClefData.h; sourceTree = "<group>"; };
 		2933AD601DA5B616005D7222 /* ColorData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ColorData.h; path = ../Sourcecode/mx/api/ColorData.h; sourceTree = "<group>"; };
@@ -6225,6 +6237,8 @@
 				29B4E81B1DA9CA0E005DC6D1 /* TupletData.h */,
 				29DC06F01D7E5BBF00210B7E /* VoiceData.h */,
 				2951E1671DBA9C7300826CEF /* WedgeData.h */,
+				292C3AD91E8B13FD001A0CB9 /* WordsData.cpp */,
+				292C3ADA1E8B13FD001A0CB9 /* WordsData.h */,
 			);
 			name = api;
 			sourceTree = "<group>";
@@ -6236,6 +6250,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				292C3AE11E8B13FD001A0CB9 /* WordsData.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6247,6 +6262,7 @@
 				29FFAC801DB9C8B600DC8AE1 /* CurveData.h in Headers */,
 				29766AC71DAC014300CCE2AC /* MetronomeReader.h in Headers */,
 				2951E1681DBA9C7300826CEF /* WedgeData.h in Headers */,
+				292C3AE01E8B13FD001A0CB9 /* WordsData.h in Headers */,
 				29C175981DC0048700CC48D7 /* OttavaData.h in Headers */,
 				29398BB11DB1917B00475CD5 /* NotationsWriter.h in Headers */,
 				29271A4F1DCC0D820036528D /* ApiEquality.h in Headers */,
@@ -6273,6 +6289,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				292C3AE31E8B13FD001A0CB9 /* WordsData.h in Headers */,
 				29B962851E79FF410072071D /* MxiOS.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6281,6 +6298,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				292C3AE41E8B13FD001A0CB9 /* WordsData.h in Headers */,
 				29B9652D1E7A04140072071D /* MxmacOS.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6289,6 +6307,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				292C3AE21E8B13FD001A0CB9 /* WordsData.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6956,6 +6975,7 @@
 				293F00D11DD25CF2001477E8 /* StaffLayoutAttributes.cpp in Sources */,
 				293F00D21DD25CF2001477E8 /* StaffLines.cpp in Sources */,
 				293F00D31DD25CF2001477E8 /* StaffSize.cpp in Sources */,
+				292C3ADC1E8B13FD001A0CB9 /* WordsData.cpp in Sources */,
 				293F00D41DD25CF2001477E8 /* StaffTuning.cpp in Sources */,
 				293F00D51DD25CF2001477E8 /* StaffTuningAttributes.cpp in Sources */,
 				293F00D61DD25CF2001477E8 /* StaffType.cpp in Sources */,
@@ -7620,6 +7640,7 @@
 				29766ACC1DAC149900CCE2AC /* DirectionReader.cpp in Sources */,
 				294548A11D295C5500B90302 /* DelayedInvertedTurnAttributes.cpp in Sources */,
 				294549921D295C5500B90302 /* NoteSizeAttributes.cpp in Sources */,
+				292C3ADB1E8B13FD001A0CB9 /* WordsData.cpp in Sources */,
 				29454A331D295C5500B90302 /* Suffix.cpp in Sources */,
 				2945484C1D295C5500B90302 /* ArpeggiateAttributes.cpp in Sources */,
 				29B7C4691DAFFDBA009D7D8F /* MeasureWriter.cpp in Sources */,
@@ -8284,6 +8305,7 @@
 				29B9647D1E79FF640072071D /* StaffLayoutAttributes.cpp in Sources */,
 				29B9647E1E79FF640072071D /* StaffLines.cpp in Sources */,
 				29B9647F1E79FF640072071D /* StaffSize.cpp in Sources */,
+				292C3ADE1E8B13FD001A0CB9 /* WordsData.cpp in Sources */,
 				29B964801E79FF640072071D /* StaffTuning.cpp in Sources */,
 				29B964811E79FF640072071D /* StaffTuningAttributes.cpp in Sources */,
 				29B964821E79FF640072071D /* StaffType.cpp in Sources */,
@@ -8948,6 +8970,7 @@
 				29B967251E7A043E0072071D /* StaffLayoutAttributes.cpp in Sources */,
 				29B967261E7A043E0072071D /* StaffLines.cpp in Sources */,
 				29B967271E7A043E0072071D /* StaffSize.cpp in Sources */,
+				292C3ADF1E8B13FD001A0CB9 /* WordsData.cpp in Sources */,
 				29B967281E7A043E0072071D /* StaffTuning.cpp in Sources */,
 				29B967291E7A043E0072071D /* StaffTuningAttributes.cpp in Sources */,
 				29B9672A1E7A043E0072071D /* StaffType.cpp in Sources */,
@@ -9612,6 +9635,7 @@
 				29E8C18A1DD2920C00E8CEBA /* StaffLayoutAttributes.cpp in Sources */,
 				29E8C18B1DD2920C00E8CEBA /* StaffLines.cpp in Sources */,
 				29E8C18C1DD2920C00E8CEBA /* StaffSize.cpp in Sources */,
+				292C3ADD1E8B13FD001A0CB9 /* WordsData.cpp in Sources */,
 				29E8C18D1DD2920C00E8CEBA /* StaffTuning.cpp in Sources */,
 				29E8C18E1DD2920C00E8CEBA /* StaffTuningAttributes.cpp in Sources */,
 				29E8C18F1DD2920C00E8CEBA /* StaffType.cpp in Sources */,

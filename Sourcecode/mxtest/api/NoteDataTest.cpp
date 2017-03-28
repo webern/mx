@@ -37,6 +37,58 @@ using namespace std;
 using namespace mx::api;
 using namespace mxtest;
 
+TEST( words, NoteData )
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    auto& part = score.parts.back();
+    part.measures.emplace_back();
+    auto& measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto& staff = measure.staves.back();
+    auto& directions = staff.directions;
+
+    DirectionData direction;
+    WordsData words;
+    words.positionData.isDefaultXSpecified = true;
+    words.positionData.defaultX = 1.1;
+    words.text = "Hello";
+    direction.words.push_back( words );
+    directions.push_back(direction);
+
+    direction = DirectionData{};
+    words = WordsData{};
+    words.fontData.style = FontStyle::italic;
+    words.text = "One";
+    direction.words.push_back( words );
+    words = WordsData{};
+    words.isColorSpecified = true;
+    words.text = "Two";
+    direction.words.push_back( words );
+    directions.push_back(direction);
+
+    // round trip it through xml
+    auto& mgr = DocumentManager::getInstance();
+    auto docId = mgr.createFromScore( score );
+    std::stringstream ss;
+    mgr.writeToStream(docId, ss);
+    mgr.destroyDocument(docId);
+    const std::string xml = ss.str();
+    std::istringstream iss{ xml };
+    docId = mgr.createFromStream( iss );
+    auto oscore = mgr.getData(docId);
+
+    std::cout << xml << std::endl;
+
+    // get the data after the round trip
+    const auto& opart = oscore.parts.back();
+    const auto& omeasure = opart.measures.back();
+    const auto& ostaff = omeasure.staves.back();
+    const auto& ovoice = ostaff.voices.at(0);
+    const auto& onote = ovoice.notes.back();
+
+}
+T_END
 
 TEST( tremolos, NoteData )
 {

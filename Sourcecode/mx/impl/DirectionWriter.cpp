@@ -279,7 +279,37 @@ namespace mx
                 //auto& attr = *outElement->getAttributes();
                 //setAttributesFromSpannerStart( item, attr );
             }
-            
+
+            if( myDirectionData.words.size() > 0 )
+            {
+                bool isFirstWordsAdded = false;
+                auto outDirType = core::makeDirectionType();
+                outDirType->setChoice( core::DirectionType::Choice::words );
+
+                for( const auto& wordsData : myDirectionData.words )
+                {
+                    auto outWords = core::makeWords();
+                    outDirType->addWords( outWords );
+
+                    if (!isFirstWordsAdded)
+                    {
+                        isFirstWordsAdded = true;
+                        outDirType->removeWords( outDirType->getWordsSet().cbegin() );
+                    }
+
+                    auto& attr = *(outWords->getAttributes());
+                    outWords->setValue( core::XsString{ wordsData.text } );
+                    setAttributesFromPositionData( wordsData.positionData, attr );
+                    setAttributesFromFontData( wordsData.fontData, attr );
+                    setAttributesFromColorData( wordsData.colorData, attr );
+                }
+
+                if( isFirstWordsAdded )
+                {
+                    addDirectionType( outDirType );
+                }
+            }
+
             myPlacements.clear();
             myIsFirstDirectionTypeAdded = false;
             return myOutDirectionPtr;

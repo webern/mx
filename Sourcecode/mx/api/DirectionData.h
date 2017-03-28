@@ -9,6 +9,7 @@
 #include "mx/api/MarkData.h"
 #include "mx/api/TempoData.h"
 #include "mx/api/OttavaData.h"
+#include "mx/api/WordsData.h"
 
 namespace mx
 {
@@ -60,6 +61,7 @@ namespace mx
             std::vector<SpannerStop> ottavaStops;
             std::vector<SpannerStart> bracketStarts;
             std::vector<SpannerStop> bracketStops;
+            std::vector<WordsData> words;
             
             DirectionData()
             : tickTimePosition{ 0 }
@@ -76,6 +78,7 @@ namespace mx
             , ottavaStops{}
             , bracketStarts{}
             , bracketStops{}
+            , words{}
             {
                 
             }
@@ -91,7 +94,8 @@ namespace mx
             directionData.bracketStops.size() == 0 &&
             directionData.tempos.size() == 0 &&
             directionData.ottavaStarts.size() == 0 &&
-            directionData.ottavaStops.size() == 0;
+            directionData.ottavaStops.size() == 0 &&
+            directionData.words.size() == 0;
         }
         
         MXAPI_EQUALS_BEGIN( DirectionData )
@@ -110,6 +114,7 @@ namespace mx
         MXAPI_EQUALS_MEMBER( ottavaStops )
         MXAPI_EQUALS_MEMBER( bracketStarts )
         MXAPI_EQUALS_MEMBER( bracketStops )
+        MXAPI_EQUALS_MEMBER( words )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( DirectionData );
 	}
