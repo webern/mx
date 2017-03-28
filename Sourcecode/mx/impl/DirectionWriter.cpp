@@ -301,7 +301,13 @@ namespace mx
                     outWords->setValue( core::XsString{ wordsData.text } );
                     setAttributesFromPositionData( wordsData.positionData, attr );
                     setAttributesFromFontData( wordsData.fontData, attr );
-                    setAttributesFromColorData( wordsData.colorData, attr );
+
+                    if( wordsData.isColorSpecified )
+                    {
+                        // TODO - oops color is missing from words
+//                        attr.hasColor = true;
+                        setAttributesFromColorData( wordsData.colorData, attr );
+                    }
                 }
 
                 if( isFirstWordsAdded )

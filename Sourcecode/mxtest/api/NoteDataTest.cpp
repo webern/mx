@@ -78,15 +78,32 @@ TEST( words, NoteData )
     docId = mgr.createFromStream( iss );
     auto oscore = mgr.getData(docId);
 
-    std::cout << xml << std::endl;
-
     // get the data after the round trip
     const auto& opart = oscore.parts.back();
     const auto& omeasure = opart.measures.back();
     const auto& ostaff = omeasure.staves.back();
-    const auto& ovoice = ostaff.voices.at(0);
-    const auto& onote = ovoice.notes.back();
+    const auto& odirections = ostaff.directions;
+    CHECK_EQUAL( 2, odirections.size() );
+    const auto& firstDirection = odirections.front();
+    const auto& firstWordVec = firstDirection.words;
+    CHECK_EQUAL( 1, firstWordVec.size() );
+    const auto& firstWords = firstWordVec.front();
+    CHECK_EQUAL( "Hello", firstWords.text);
+    CHECK( firstWords.positionData.isDefaultXSpecified );
+    CHECK_DOUBLES_EQUAL( 1.1, firstWords.positionData.defaultX, 0.0001 );
 
+    const auto& secondDirection = odirections.at(1);
+    CHECK_EQUAL( 2, secondDirection.words.size() );
+    const auto& wordsOne = secondDirection.words.at(0);
+    const auto& wordsTwo = secondDirection.words.at(1);
+
+    CHECK_EQUAL( "One", wordsOne.text );
+    CHECK( wordsOne.fontData.style == mx::api::FontStyle::italic );
+
+    CHECK_EQUAL( "Two", wordsTwo.text );
+
+    // TODO - oops bug opened for this
+//    CHECK( wordsTwo.isColorSpecified );
 }
 T_END
 
