@@ -69,7 +69,11 @@ namespace mx
             myMap.emplace( std::make_pair( MarkType::mordent, SmuflGlyphname{ "ornamentMordent", "ornamentMordent", "ornamentMordent" } ) );
             myMap.emplace( std::make_pair( MarkType::invertedMordent, SmuflGlyphname{ "ornamentMordentInverted", "ornamentMordentInverted", "ornamentMordentInverted" } ) );
             myMap.emplace( std::make_pair( MarkType::schleifer, SmuflGlyphname{ "ornamentSchleifer", "ornamentSchleifer", "ornamentSchleifer" } ) );
-            myMap.emplace( std::make_pair( MarkType::tremolo, SmuflGlyphname{ "tremolo3", "tremolo3", "tremolo3" } ) );
+            myMap.emplace( std::make_pair( MarkType::tremoloSingleOne, SmuflGlyphname{ "tremolo1", "tremolo3", "tremolo3" } ) );
+            myMap.emplace( std::make_pair( MarkType::tremoloSingleTwo, SmuflGlyphname{ "tremolo2", "tremolo2", "tremolo2" } ) );
+            myMap.emplace( std::make_pair( MarkType::tremoloSingleThree, SmuflGlyphname{ "tremolo3", "tremolo3", "tremolo3" } ) );
+            myMap.emplace( std::make_pair( MarkType::tremoloSingleFour, SmuflGlyphname{ "tremolo4", "tremolo4", "tremolo4" } ) );
+            myMap.emplace( std::make_pair( MarkType::tremoloSingleFive, SmuflGlyphname{ "tremolo5", "tremolo5", "tremolo5" } ) );
             myMap.emplace( std::make_pair( MarkType::otherOrnament, SmuflGlyphname{ "", "", "" } ) );
             
             myMap.emplace( std::make_pair( MarkType::upBow, SmuflGlyphname{ "stringsUpBow", "stringsUpBow", "stringsUpBow" } ) );
@@ -240,7 +244,11 @@ namespace mx
             ( markType == MarkType::mordent ) ||
             ( markType == MarkType::invertedMordent ) ||
             ( markType == MarkType::schleifer ) ||
-            ( markType == MarkType::tremolo ) ||
+            ( markType == MarkType::tremoloSingleOne ) ||
+            ( markType == MarkType::tremoloSingleTwo ) ||
+            ( markType == MarkType::tremoloSingleThree ) ||
+            ( markType == MarkType::tremoloSingleFour ) ||
+            ( markType == MarkType::tremoloSingleFive ) ||
             ( markType == MarkType::otherOrnament ) ||
             ( markType == MarkType::unknownOrnament );
         }
@@ -268,7 +276,48 @@ namespace mx
             return ( markType == MarkType::pedal ) ||
             ( markType == MarkType::damp );
         }
+
+
+        bool isMarkTremolo( MarkType markType )
+        {
+            return ( markType == MarkType::tremoloSingleOne ) ||
+            ( markType == MarkType::tremoloSingleTwo ) ||
+            ( markType == MarkType::tremoloSingleThree ) ||
+            ( markType == MarkType::tremoloSingleFour ) ||
+            ( markType == MarkType::tremoloSingleFive );
+        }
         
+
+        int numTremoloSlashes( MarkType markType )
+        {
+            if( markType == MarkType::tremoloSingleOne )
+            {
+                return 1;
+            }
+
+            if( markType == MarkType::tremoloSingleTwo )
+            {
+                return 2;
+            }
+
+            if( markType == MarkType::tremoloSingleThree )
+            {
+                return 3;
+            }
+
+            if( markType == MarkType::tremoloSingleFour )
+            {
+                return 4;
+            }
+
+            if( markType == MarkType::tremoloSingleFive )
+            {
+                return 5;
+            }
+
+            return -1;
+        }
+
         
         MarkData::MarkData()
         : markType( MarkType::unspecified )

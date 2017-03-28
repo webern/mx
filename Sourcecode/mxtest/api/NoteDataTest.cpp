@@ -38,6 +38,63 @@ using namespace mx::api;
 using namespace mxtest;
 
 
+TEST( tremolos, NoteData )
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    auto& part = score.parts.back();
+    part.measures.emplace_back();
+    auto& measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto& staff = measure.staves.back();
+    auto& voice = staff.voices[0];
+    voice.notes.emplace_back();
+    auto& note = voice.notes.back();
+    auto& attachments = note.noteAttachmentData;
+    auto& marks = attachments.marks;
+
+    MarkData mark{ MarkType::tremoloSingleOne };
+    marks.emplace_back( mark );
+    mark = MarkData{ MarkType::tremoloSingleTwo };
+    marks.emplace_back( mark );
+    mark = MarkData{ MarkType::tremoloSingleThree };
+    marks.emplace_back( mark );
+    mark = MarkData{ MarkType::tremoloSingleFour };
+    marks.emplace_back( mark );
+    mark = MarkData{ MarkType::tremoloSingleFive };
+    marks.emplace_back( mark );
+
+
+    // round trip it through xml
+    auto& mgr = DocumentManager::getInstance();
+    auto docId = mgr.createFromScore( score );
+    std::stringstream ss;
+    mgr.writeToStream(docId, ss);
+    mgr.destroyDocument(docId);
+    const std::string xml = ss.str();
+    std::istringstream iss{ xml };
+    docId = mgr.createFromStream( iss );
+    auto oscore = mgr.getData(docId);
+
+    // get the data after the round trip
+    const auto& opart = oscore.parts.back();
+    const auto& omeasure = opart.measures.back();
+    const auto& ostaff = omeasure.staves.back();
+    const auto& ovoice = ostaff.voices.at(0);
+    const auto& onote = ovoice.notes.back();
+    const auto& omarks = onote.noteAttachmentData.marks;
+    auto markIter = omarks.cbegin();
+    const auto markEnd = marks.cend();
+
+    for (int i = 1; i <= 5; ++i, ++markIter)
+    {
+        CHECK( markIter != markEnd );
+        const auto& markData = *markIter;
+        CHECK_EQUAL( i, numTremoloSlashes( markData.markType ) );
+    }
+}
+T_END
+
 TEST( miscFields, NoteData )
 {
     ScoreData score;

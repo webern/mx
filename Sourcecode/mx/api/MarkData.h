@@ -81,7 +81,8 @@ namespace mx
             tremoloSingleThree, ///< A tremolo on a single note (a glyph, not a spanner) with 3 slashes
             tremoloSingleFour,  ///< A tremolo on a single note (a glyph, not a spanner) with 4 slashes
             tremoloSingleFive,  ///< A tremolo on a single note (a glyph, not a spanner) with 5 slashes
-            unknownOrnament,
+            otherOrnament,      ///< MusicXML's 'other-ornament' value
+            unknownOrnament,    ///< Error state
 
             // accidental marks
             accidentalMarkSharp,
@@ -182,6 +183,8 @@ namespace mx
         bool isMarkOrnament( MarkType );
         bool isMarkFermata( MarkType );
         bool isMarkPedal( MarkType );
+        bool isMarkTremolo( MarkType );
+        int numTremoloSlashes( MarkType );
         
         using MarkSmuflEntry = std::pair<const MarkType, const SmuflGlyphname>;
         using MarkSmuflMap = std::map<const MarkType, const SmuflGlyphname>;

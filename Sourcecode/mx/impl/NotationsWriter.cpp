@@ -29,6 +29,7 @@
 #include "mx/utility/OptionalMembers.h"
 #include "mx/impl/CurveFunctions.h"
 #include "mx/impl/MarkDataFunctions.h"
+#include "mx/core/elements/Tremolo.h"
 #include "mx/core/elements/Tuplet.h"
 #include "mx/core/elements/TupletActual.h"
 #include "mx/core/elements/TupletNormal.h"
@@ -542,11 +543,13 @@ namespace mx
                 auto attributes = element->getAttributes();
                 setAttributesFromPositionData( mark.positionData, *attributes);
             }
-            else if( mark.markType == api::MarkType::tremolo )
+            else if( isMarkTremolo( mark.markType ) )
             {
+                ornamentsChoice->setChoice( core::OrnamentsChoice::Choice::tremolo );
                 auto element = ornamentsChoice->getTremolo();
                 auto attributes = element->getAttributes();
                 setAttributesFromPositionData( mark.positionData, *attributes);
+                element->setValue( mx::core::TremoloMarks{ api::numTremoloSlashes( mark.markType ) } );
             }
             else if( mark.markType == api::MarkType::otherOrnament )
             {

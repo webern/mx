@@ -48,13 +48,20 @@ namespace mx
                 const auto markType = converter.convertOrnament( ornamentType );
                 auto markData = api::MarkData{};
                 markData.markType = markType;
-                markData.tickTimePosition = myCursor.tickTimePosition;
-                
                 parseOrnament( *ornament, markData );
-                
-                markData.smuflName = api::MarkSmufl::getName( markType, markData.positionData.placement );
-                markData.smuflCodepoint = api::MarkSmufl::getCodepoint( markType, markData.positionData.placement );
-                outMarks.emplace_back( std::move( markData ) );
+                markData.tickTimePosition = myCursor.tickTimePosition;
+
+                if( ( markData.markType != api::MarkType::otherOrnament ) &&
+                    ( markData.markType != api::MarkType::unknownOrnament ) )
+                {
+                    markData.smuflName = api::MarkSmufl::getName( markType, markData.positionData.placement );
+                    markData.smuflCodepoint = api::MarkSmufl::getCodepoint( markType, markData.positionData.placement );
+                }
+
+                if( markData.markType != api::MarkType::unknownOrnament )
+                {
+                    outMarks.emplace_back( std::move( markData ) );
+                }
             }
         }
         
@@ -141,8 +148,44 @@ namespace mx
                 }
                 case core::OrnamentsChoice::Choice::tremolo:
                 {
+                    const auto& attr = *choiceObj.getTremolo()->getAttributes();
+                    if( attr.type != core::StartStopSingle::single )
+                    {
+                        outMark.name = "this tremolo is not a mark";
+                        outMark.markType = api::MarkType::unknownOrnament;
+                        return;
+                    }
+
                     outMark.name = "tremolo";
-                    parseMarkDataAttributes( *choiceObj.getTremolo()->getAttributes(), outMark );
+                    parseMarkDataAttributes( attr, outMark );
+                    const auto& tremolo = choiceObj.getTremolo();
+                    const auto numSlashes = tremolo->getValue().getValue();
+
+                    if( numSlashes == 0 )
+                    {
+                        outMark.markType = api::MarkType::tremoloSingleThree;
+                    }
+                    else if ( numSlashes == 1 )
+                    {
+                        outMark.markType = api::MarkType::tremoloSingleOne;
+                    }
+                    else if ( numSlashes == 2 )
+                    {
+                        outMark.markType = api::MarkType::tremoloSingleTwo;
+                    }
+                    else if ( numSlashes == 3 )
+                    {
+                        outMark.markType = api::MarkType::tremoloSingleThree;
+                    }
+                    else if ( numSlashes == 4 )
+                    {
+                        outMark.markType = api::MarkType::tremoloSingleFour;
+                    }
+                    else if ( numSlashes == 5 )
+                    {
+                        outMark.markType = api::MarkType::tremoloSingleFive;
+                    }
+
                     break;
                 }
                 case core::OrnamentsChoice::Choice::otherOrnament:

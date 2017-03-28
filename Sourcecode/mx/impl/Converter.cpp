@@ -207,7 +207,7 @@ namespace mx
             std::pair<core::OrnamentsChoice::Choice, api::MarkType>{ core::OrnamentsChoice::Choice::mordent, api::MarkType::mordent },
             std::pair<core::OrnamentsChoice::Choice, api::MarkType>{ core::OrnamentsChoice::Choice::invertedMordent, api::MarkType::invertedMordent },
             std::pair<core::OrnamentsChoice::Choice, api::MarkType>{ core::OrnamentsChoice::Choice::schleifer, api::MarkType::schleifer },
-            std::pair<core::OrnamentsChoice::Choice, api::MarkType>{ core::OrnamentsChoice::Choice::tremolo, api::MarkType::tremolo },
+            std::pair<core::OrnamentsChoice::Choice, api::MarkType>{ core::OrnamentsChoice::Choice::tremolo, api::MarkType::tremoloSingleThree },
             std::pair<core::OrnamentsChoice::Choice, api::MarkType>{ core::OrnamentsChoice::Choice::otherOrnament, api::MarkType::otherOrnament },
         };
         

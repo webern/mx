@@ -7,7 +7,7 @@
 #include "mx/api/TimeSignatureData.h"
 #include "mx/api/KeyData.h"
 #include "mx/api/ClefData.h"
-#include <memory>"
+#include <memory>
 
 namespace mx
 {
