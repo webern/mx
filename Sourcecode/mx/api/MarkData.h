@@ -76,8 +76,11 @@ namespace mx
             mordent,
             invertedMordent,
             schleifer,
-            tremolo,
-            otherOrnament,
+            tremoloSingleOne,   ///< A tremolo on a single note (a glyph, not a spanner) with 1 slash
+            tremoloSingleTwo,   ///< A tremolo on a single note (a glyph, not a spanner) with 2 slashes
+            tremoloSingleThree, ///< A tremolo on a single note (a glyph, not a spanner) with 3 slashes
+            tremoloSingleFour,  ///< A tremolo on a single note (a glyph, not a spanner) with 4 slashes
+            tremoloSingleFive,  ///< A tremolo on a single note (a glyph, not a spanner) with 5 slashes
             unknownOrnament,
 
             // accidental marks
