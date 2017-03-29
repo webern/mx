@@ -37,6 +37,106 @@ using namespace std;
 using namespace mx::api;
 using namespace mxtest;
 
+TEST( otherArticulation, NoteData )
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    auto& part = score.parts.back();
+    part.measures.emplace_back();
+    auto& measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto& staff = measure.staves.back();
+    auto& voice = staff.voices[0];
+    voice.notes.emplace_back();
+    auto& note = voice.notes.back();
+
+    note.noteAttachmentData.marks.emplace_back( Placement::unspecified, MarkType::otherArticulation );
+    note.noteAttachmentData.marks.back().positionData.isDefaultXSpecified = true;
+    note.noteAttachmentData.marks.back().positionData.defaultX = 333.3;
+    note.noteAttachmentData.marks.back().name = "name";
+    note.noteAttachmentData.marks.back().smuflName = "smuflName";
+
+    // round trip it through xml
+    auto& mgr = DocumentManager::getInstance();
+    auto docId = mgr.createFromScore( score );
+    std::stringstream ss;
+    mgr.writeToStream(docId, ss);
+    mgr.destroyDocument(docId);
+    const std::string xml = ss.str();
+    std::istringstream iss{ xml };
+    docId = mgr.createFromStream( iss );
+    auto oscore = mgr.getData(docId);
+
+    // get the data after the round trip
+    auto& opart = oscore.parts.back();
+    auto& omeasure = opart.measures.back();
+    auto& ostaff = omeasure.staves.back();
+    auto& ovoice = ostaff.voices[0];
+    auto& onote = ovoice.notes.back();
+    auto& oattachments = onote.noteAttachmentData;
+    auto& omarks = oattachments.marks;
+    auto oIter = omarks.cbegin();
+
+    auto md = *oIter;
+    CHECK( md.markType == MarkType::otherArticulation );
+    CHECK( md.positionData.isDefaultXSpecified );
+    CHECK( !md.positionData.isDefaultYSpecified );
+    CHECK_DOUBLES_EQUAL( 333.3, md.positionData.defaultX, 0.00001 );
+    CHECK_EQUAL( "name", md.name );
+    CHECK( md.positionData.placement == Placement::unspecified );
+}
+T_END;
+
+TEST( otherOrnament, NoteData )
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    auto& part = score.parts.back();
+    part.measures.emplace_back();
+    auto& measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto& staff = measure.staves.back();
+    auto& voice = staff.voices[0];
+    voice.notes.emplace_back();
+    auto& note = voice.notes.back();
+
+    note.noteAttachmentData.marks.emplace_back( Placement::unspecified, MarkType::otherOrnament );
+    note.noteAttachmentData.marks.back().positionData.isDefaultXSpecified = true;
+    note.noteAttachmentData.marks.back().positionData.defaultX = 333.3;
+    note.noteAttachmentData.marks.back().name = "name";
+    note.noteAttachmentData.marks.back().smuflName = "smuflName";
+
+    // round trip it through xml
+    auto& mgr = DocumentManager::getInstance();
+    auto docId = mgr.createFromScore( score );
+    std::stringstream ss;
+    mgr.writeToStream(docId, ss);
+    mgr.destroyDocument(docId);
+    const std::string xml = ss.str();
+    std::istringstream iss{ xml };
+    docId = mgr.createFromStream( iss );
+    auto oscore = mgr.getData(docId);
+
+    // get the data after the round trip
+    auto& opart = oscore.parts.back();
+    auto& omeasure = opart.measures.back();
+    auto& ostaff = omeasure.staves.back();
+    auto& ovoice = ostaff.voices[0];
+    auto& onote = ovoice.notes.back();
+    auto& oattachments = onote.noteAttachmentData;
+    auto& omarks = oattachments.marks;
+    auto oIter = omarks.cbegin();
+
+    auto md = *oIter;
+    CHECK( md.markType == MarkType::otherOrnament );
+    CHECK( md.positionData.isDefaultXSpecified );
+    CHECK( !md.positionData.isDefaultYSpecified );
+    CHECK_DOUBLES_EQUAL( 333.3, md.positionData.defaultX, 0.00001 );
+    CHECK_EQUAL( "name", md.name );
+    CHECK( md.positionData.placement == Placement::unspecified );
+}
+T_END;
+
 TEST( technical, NoteData )
 {
     ScoreData score;
@@ -95,7 +195,7 @@ TEST( technical, NoteData )
     CHECK_DOUBLES_EQUAL( -456.0, md.positionData.defaultY, 0.00001 );
     CHECK_EQUAL( "Bob", md.name );
 }
-T_END
+T_END;
 
 TEST( words, NoteData )
 {
@@ -165,7 +265,7 @@ TEST( words, NoteData )
     // TODO - oops bug opened for this
 //    CHECK( wordsTwo.isColorSpecified );
 }
-T_END
+T_END;
 
 TEST( tremolos, NoteData )
 {
@@ -222,7 +322,7 @@ TEST( tremolos, NoteData )
         CHECK_EQUAL( i, numTremoloSlashes( markData.markType ) );
     }
 }
-T_END
+T_END;
 
 TEST( miscFields, NoteData )
 {
@@ -278,7 +378,7 @@ TEST( miscFields, NoteData )
 
     CHECK( iter == end );
 }
-T_END
+T_END;
 
 TEST( SlurTieNumberLevelA, NoteData )
 {
@@ -320,7 +420,7 @@ TEST( SlurTieNumberLevelA, NoteData )
     CHECK_EQUAL( -1, curveStart.numberLevel );
     CHECK( curveStart.curveType == mx::api::CurveType::tie );
 }
-T_END
+T_END;
 
 TEST( SlurTieNumberLevelB, NoteData )
 {
@@ -362,7 +462,7 @@ TEST( SlurTieNumberLevelB, NoteData )
     CHECK_EQUAL( -1, curveContinue.numberLevel );
     CHECK( curveContinue.curveType == mx::api::CurveType::tie );
 }
-T_END
+T_END;
 
 TEST( SlurTieNumberLevelC, NoteData )
 {
@@ -404,7 +504,7 @@ TEST( SlurTieNumberLevelC, NoteData )
     CHECK_EQUAL( -1, curveStop.numberLevel );
     CHECK( curveStop.curveType == mx::api::CurveType::tie );
 }
-T_END
+T_END;
 
 TEST( ornaments, NoteData )
 {
@@ -461,7 +561,7 @@ TEST( ornaments, NoteData )
     CHECK( md.positionData.isDefaultYSpecified );
     CHECK_DOUBLES_EQUAL( -456.0, md.positionData.defaultY, 0.00001 );
 }
-T_END
+T_END;
 
 TEST( pedalStart, NoteData )
 {
@@ -502,7 +602,7 @@ TEST( pedalStart, NoteData )
     CHECK( omark.markType == MarkType::pedal );
     CHECK_EQUAL( odirection.tickTimePosition, odirection.tickTimePosition );
 }
-T_END
+T_END;
 
 TEST( pedalStop, NoteData )
 {
@@ -543,7 +643,7 @@ TEST( pedalStop, NoteData )
     CHECK( omark.markType == MarkType::damp );
     CHECK_EQUAL( odirection.tickTimePosition, odirection.tickTimePosition );
 }
-T_END
+T_END;
 
 TEST( directionOrder, NoteData )
 {
@@ -672,7 +772,7 @@ TEST( directionOrder, NoteData )
     dirElement = mdc->getDirection();
     CHECK( !dirElement->getHasOffset() );
 }
-T_END
+T_END;
 
 TEST( directionOrderRoundTrip, NoteData )
 {
@@ -773,6 +873,6 @@ TEST( directionOrderRoundTrip, NoteData )
     CHECK( score == oscore )
 
 }
-T_END
+T_END;
 
 #endif

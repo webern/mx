@@ -500,6 +500,7 @@ namespace mx
             else if( mark.markType == api::MarkType::otherArticulation )
             {
                 auto element = articulationsChoice->getOtherArticulation();
+                element->setValue( core::XsString{ mark.name } );
                 auto attributes = element->getAttributes();
                 setAttributesFromPositionData( mark.positionData, *attributes);
             }
