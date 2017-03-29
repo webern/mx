@@ -171,7 +171,8 @@ namespace mx
                 case core::TechnicalChoice::Choice::otherTechnical:
                 {
                     const auto& other = *techicalChoice.getOtherTechnical();
-                    parseMarkDataAttributes( other.getAttributes(), outMarkData );
+                    const auto& attr = *other.getAttributes();
+                    parseMarkDataAttributes( attr, outMarkData );
                     
                     const auto value = other.getValue().getValue();
                     const auto charVal = api::Smufl::findCodepoint( value );

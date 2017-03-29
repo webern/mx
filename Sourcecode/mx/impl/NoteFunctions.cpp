@@ -304,7 +304,6 @@ namespace mx
                         }
                         case core::NotationsChoice::Choice::technical:
                         {
-                            // TODO - some technical items are spanners and others are complex/not-implemented yet
                             TechnicalFunctions funcs{ notationsChoice.getTechnical()->getTechnicalChoiceSet(), myCursor };
                             funcs.parseTechnicalMarks( myOutNoteData.noteAttachmentData.marks );
                             break;

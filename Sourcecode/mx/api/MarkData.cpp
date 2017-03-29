@@ -276,6 +276,24 @@ namespace mx
             return ( markType == MarkType::pedal ) ||
             ( markType == MarkType::damp );
         }
+        
+        
+        bool isMarkTechnical( MarkType markType )
+        {
+            return ( markType == MarkType::upBow ) ||
+            ( markType == MarkType::downBow ) ||
+            ( markType == MarkType::harmonic ) ||
+            ( markType == MarkType::openString ) ||
+            ( markType == MarkType::thumbPosition ) ||
+            ( markType == MarkType::doubleTongue ) ||
+            ( markType == MarkType::tripleTongue ) ||
+            ( markType == MarkType::stopped ) ||
+            ( markType == MarkType::snapPizzicato ) ||
+            ( markType == MarkType::heel ) ||
+            ( markType == MarkType::toe ) ||
+            ( markType == MarkType::fingernails ) ||
+            ( markType == MarkType::otherTechnical );
+        }
 
 
         bool isMarkTremolo( MarkType markType )

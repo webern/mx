@@ -183,6 +183,7 @@ namespace mx
         bool isMarkOrnament( MarkType );
         bool isMarkFermata( MarkType );
         bool isMarkPedal( MarkType );
+        bool isMarkTechnical( MarkType );
         bool isMarkTremolo( MarkType );
         int numTremoloSlashes( MarkType );
         

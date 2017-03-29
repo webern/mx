@@ -37,6 +37,68 @@ using namespace std;
 using namespace mx::api;
 using namespace mxtest;
 
+TEST( technical, NoteData )
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    auto& part = score.parts.back();
+    part.measures.emplace_back();
+    auto& measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto& staff = measure.staves.back();
+    auto& voice = staff.voices[0];
+    voice.notes.emplace_back();
+    auto& note = voice.notes.back();
+
+    note.noteAttachmentData.marks.emplace_back( Placement::above, MarkType::upBow );
+    note.noteAttachmentData.marks.back().positionData.isDefaultXSpecified = true;
+    note.noteAttachmentData.marks.back().positionData.defaultX = 123.0;
+
+    note.noteAttachmentData.marks.emplace_back( Placement::above, MarkType::otherTechnical );
+    note.noteAttachmentData.marks.back().name = "Bob";
+    note.noteAttachmentData.marks.back().smuflName = "Charlie";
+    note.noteAttachmentData.marks.back().positionData.isDefaultYSpecified = true;
+    note.noteAttachmentData.marks.back().positionData.defaultY = -456.0;
+
+    // round trip it through xml
+    auto& mgr = DocumentManager::getInstance();
+    auto docId = mgr.createFromScore( score );
+    std::stringstream ss;
+    mgr.writeToStream(docId, ss);
+    mgr.destroyDocument(docId);
+    const std::string xml = ss.str();
+    std::istringstream iss{ xml };
+    docId = mgr.createFromStream( iss );
+    auto oscore = mgr.getData(docId);
+
+    std::cout << xml << std::endl;
+
+    // get the data after the round trip
+    auto& opart = oscore.parts.back();
+    auto& omeasure = opart.measures.back();
+    auto& ostaff = omeasure.staves.back();
+    auto& ovoice = ostaff.voices[0];
+    auto& onote = ovoice.notes.back();
+    auto& oattachments = onote.noteAttachmentData;
+    auto& omarks = oattachments.marks;
+    auto oIter = omarks.cbegin();
+
+    auto md = *oIter;
+    CHECK( md.markType == MarkType::upBow );
+    CHECK( md.positionData.isDefaultXSpecified );
+    CHECK( !md.positionData.isDefaultYSpecified );
+    CHECK_DOUBLES_EQUAL( 123.0, md.positionData.defaultX, 0.00001 );
+
+    ++oIter;
+    md = *oIter;
+    CHECK( md.markType == MarkType::otherTechnical );
+    CHECK( !md.positionData.isDefaultXSpecified );
+    CHECK( md.positionData.isDefaultYSpecified );
+    CHECK_DOUBLES_EQUAL( -456.0, md.positionData.defaultY, 0.00001 );
+    CHECK_EQUAL( "Bob", md.name );
+}
+T_END
+
 TEST( words, NoteData )
 {
     ScoreData score;
