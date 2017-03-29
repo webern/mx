@@ -71,8 +71,6 @@ TEST( technical, NoteData )
     docId = mgr.createFromStream( iss );
     auto oscore = mgr.getData(docId);
 
-    std::cout << xml << std::endl;
-
     // get the data after the round trip
     auto& opart = oscore.parts.back();
     auto& omeasure = opart.measures.back();
