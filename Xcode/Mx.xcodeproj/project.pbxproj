@@ -1289,6 +1289,16 @@
 		29766AE01DAC39EF00CCE2AC /* KeyData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29766ADF1DAC39EF00CCE2AC /* KeyData.h */; };
 		29979D671DC830AA00707AA4 /* DynamicsWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29979D651DC830AA00707AA4 /* DynamicsWriter.cpp */; };
 		29979D681DC830AA00707AA4 /* DynamicsWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 29979D661DC830AA00707AA4 /* DynamicsWriter.h */; };
+		29A16F841EB10CDB00D59278 /* PreciseDecimal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A16F821EB10CDB00D59278 /* PreciseDecimal.cpp */; };
+		29A16F851EB10CDB00D59278 /* PreciseDecimal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A16F821EB10CDB00D59278 /* PreciseDecimal.cpp */; };
+		29A16F861EB10CDB00D59278 /* PreciseDecimal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A16F821EB10CDB00D59278 /* PreciseDecimal.cpp */; };
+		29A16F871EB10CDB00D59278 /* PreciseDecimal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A16F821EB10CDB00D59278 /* PreciseDecimal.cpp */; };
+		29A16F881EB10CDB00D59278 /* PreciseDecimal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A16F821EB10CDB00D59278 /* PreciseDecimal.cpp */; };
+		29A16F891EB10CDB00D59278 /* PreciseDecimal.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A16F831EB10CDB00D59278 /* PreciseDecimal.h */; };
+		29A16F8A1EB10CDB00D59278 /* PreciseDecimal.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A16F831EB10CDB00D59278 /* PreciseDecimal.h */; };
+		29A16F8B1EB10CDB00D59278 /* PreciseDecimal.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A16F831EB10CDB00D59278 /* PreciseDecimal.h */; };
+		29A16F8C1EB10CDB00D59278 /* PreciseDecimal.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A16F831EB10CDB00D59278 /* PreciseDecimal.h */; };
+		29A16F8D1EB10CDB00D59278 /* PreciseDecimal.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A16F831EB10CDB00D59278 /* PreciseDecimal.h */; };
 		29B48EE51DBEC9950030A974 /* BarlineData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29B48EE41DBEC9950030A974 /* BarlineData.h */; };
 		29B4E81C1DA9CA0E005DC6D1 /* TupletData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29B4E81B1DA9CA0E005DC6D1 /* TupletData.h */; };
 		29B4E8211DA9CD5D005DC6D1 /* TupletReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29B4E81F1DA9CD5D005DC6D1 /* TupletReader.cpp */; };
@@ -4591,6 +4601,8 @@
 		29979D661DC830AA00707AA4 /* DynamicsWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DynamicsWriter.h; path = ../Sourcecode/mx/impl/DynamicsWriter.h; sourceTree = "<group>"; };
 		299A2BB01D7FA48A006A7F5C /* PartGroupData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PartGroupData.h; path = ../Sourcecode/mx/api/PartGroupData.h; sourceTree = "<group>"; };
 		299F7FE61CA8D2200084CAE5 /* libMx.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMx.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		29A16F821EB10CDB00D59278 /* PreciseDecimal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PreciseDecimal.cpp; path = ../Sourcecode/mx/core/PreciseDecimal.cpp; sourceTree = "<group>"; };
+		29A16F831EB10CDB00D59278 /* PreciseDecimal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreciseDecimal.h; path = ../Sourcecode/mx/core/PreciseDecimal.h; sourceTree = "<group>"; };
 		29ADB30D1D729E1900683BEC /* EncodingData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EncodingData.h; path = ../Sourcecode/mx/api/EncodingData.h; sourceTree = "<group>"; };
 		29ADB30E1D729E1900683BEC /* PartData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PartData.h; path = ../Sourcecode/mx/api/PartData.h; sourceTree = "<group>"; };
 		29ADB3111D729FB700683BEC /* LayoutData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LayoutData.h; path = ../Sourcecode/mx/api/LayoutData.h; sourceTree = "<group>"; };
@@ -4794,6 +4806,8 @@
 				29C01AFF1D130B690094BE61 /* NumberOrNormal.h */,
 				29C01B001D130B690094BE61 /* PositiveIntegerOrEmpty.cpp */,
 				29C01B011D130B690094BE61 /* PositiveIntegerOrEmpty.h */,
+				29A16F821EB10CDB00D59278 /* PreciseDecimal.cpp */,
+				29A16F831EB10CDB00D59278 /* PreciseDecimal.h */,
 				2951A0C31D60F3B700B49A13 /* ScoreConversions.cpp */,
 				2951A0C41D60F3B700B49A13 /* ScoreConversions.h */,
 				29C01B021D130B690094BE61 /* Strings.cpp */,
@@ -6251,6 +6265,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				292C3AE11E8B13FD001A0CB9 /* WordsData.h in Headers */,
+				29A16F8A1EB10CDB00D59278 /* PreciseDecimal.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6276,6 +6291,7 @@
 				29B4E81C1DA9CA0E005DC6D1 /* TupletData.h in Headers */,
 				29CD722D1DB82C9200FB7153 /* DirectionWriter.h in Headers */,
 				29979D681DC830AA00707AA4 /* DynamicsWriter.h in Headers */,
+				29A16F891EB10CDB00D59278 /* PreciseDecimal.h in Headers */,
 				29C29B8B1DAEC00C00D3A884 /* ScoreWriter.h in Headers */,
 				29CDDA2E1DADCAF30022B1A3 /* PartWriter.h in Headers */,
 				29B7C46A1DAFFDBA009D7D8F /* MeasureWriter.h in Headers */,
@@ -6290,6 +6306,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				292C3AE31E8B13FD001A0CB9 /* WordsData.h in Headers */,
+				29A16F8C1EB10CDB00D59278 /* PreciseDecimal.h in Headers */,
 				29B962851E79FF410072071D /* MxiOS.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6299,6 +6316,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				292C3AE41E8B13FD001A0CB9 /* WordsData.h in Headers */,
+				29A16F8D1EB10CDB00D59278 /* PreciseDecimal.h in Headers */,
 				29B9652D1E7A04140072071D /* MxmacOS.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6308,6 +6326,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				292C3AE21E8B13FD001A0CB9 /* WordsData.h in Headers */,
+				29A16F8B1EB10CDB00D59278 /* PreciseDecimal.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6701,6 +6720,7 @@
 				293FFFBF1DD25CF1001477E8 /* HammerOnAttributes.cpp in Sources */,
 				293FFFC01DD25CF1001477E8 /* Handbell.cpp in Sources */,
 				293FFFC11DD25CF1001477E8 /* HandbellAttributes.cpp in Sources */,
+				29A16F851EB10CDB00D59278 /* PreciseDecimal.cpp in Sources */,
 				293FFFC21DD25CF1001477E8 /* Harmonic.cpp in Sources */,
 				293FFFC31DD25CF1001477E8 /* HarmonicAttributes.cpp in Sources */,
 				293FFFC41DD25CF1001477E8 /* HarmonicInfoChoice.cpp in Sources */,
@@ -7366,6 +7386,7 @@
 				294548D61D295C5500B90302 /* Falloff.cpp in Sources */,
 				2945489D1D295C5500B90302 /* DegreeTypeAttributes.cpp in Sources */,
 				294549ED1D295C5500B90302 /* Root.cpp in Sources */,
+				29A16F841EB10CDB00D59278 /* PreciseDecimal.cpp in Sources */,
 				294548C01D295C5500B90302 /* Elevation.cpp in Sources */,
 				29454A541D295C5500B90302 /* Toe.cpp in Sources */,
 				294548B21D295C5500B90302 /* DistanceAttributes.cpp in Sources */,
@@ -8031,6 +8052,7 @@
 				29B9636B1E79FF640072071D /* HammerOnAttributes.cpp in Sources */,
 				29B9636C1E79FF640072071D /* Handbell.cpp in Sources */,
 				29B9636D1E79FF640072071D /* HandbellAttributes.cpp in Sources */,
+				29A16F871EB10CDB00D59278 /* PreciseDecimal.cpp in Sources */,
 				29B9636E1E79FF640072071D /* Harmonic.cpp in Sources */,
 				29B9636F1E79FF640072071D /* HarmonicAttributes.cpp in Sources */,
 				29B963701E79FF640072071D /* HarmonicInfoChoice.cpp in Sources */,
@@ -8696,6 +8718,7 @@
 				29B966131E7A043D0072071D /* HammerOnAttributes.cpp in Sources */,
 				29B966141E7A043D0072071D /* Handbell.cpp in Sources */,
 				29B966151E7A043D0072071D /* HandbellAttributes.cpp in Sources */,
+				29A16F881EB10CDB00D59278 /* PreciseDecimal.cpp in Sources */,
 				29B966161E7A043D0072071D /* Harmonic.cpp in Sources */,
 				29B966171E7A043D0072071D /* HarmonicAttributes.cpp in Sources */,
 				29B966181E7A043D0072071D /* HarmonicInfoChoice.cpp in Sources */,
@@ -9361,6 +9384,7 @@
 				29E8C0781DD2920C00E8CEBA /* HammerOnAttributes.cpp in Sources */,
 				29E8C0791DD2920C00E8CEBA /* Handbell.cpp in Sources */,
 				29E8C07A1DD2920C00E8CEBA /* HandbellAttributes.cpp in Sources */,
+				29A16F861EB10CDB00D59278 /* PreciseDecimal.cpp in Sources */,
 				29E8C07B1DD2920C00E8CEBA /* Harmonic.cpp in Sources */,
 				29E8C07C1DD2920C00E8CEBA /* HarmonicAttributes.cpp in Sources */,
 				29E8C07D1DD2920C00E8CEBA /* HarmonicInfoChoice.cpp in Sources */,

@@ -171,7 +171,7 @@ TEST( PositiveDecimal02, Decimals )
 TEST( PositiveDecimal02b, Decimals )
 {
     PositiveDecimal d( -123456789012.123456789012 );
-    DecimalType expected = kNonZeroAmount;
+    DecimalType expected = NON_ZERO_AMOUNT;
     DecimalType actual = d.getValue();
     CHECK_DOUBLES_EQUAL( expected, actual, kThreshold )
 }
@@ -206,7 +206,7 @@ TEST( PositiveDecimal05, Decimals )
     PositiveDecimal d( 1.234 );
     d.setValue( 0.00000384 );
     d.parse( "-0.3164978546312" );
-    DecimalType expected = kNonZeroAmount;
+    DecimalType expected = NON_ZERO_AMOUNT;
     DecimalType actual = d.getValue();
     CHECK_DOUBLES_EQUAL( expected, actual, kThreshold )
 }
@@ -516,7 +516,7 @@ TEST( PositiveDivisionsValue02, Decimals )
 TEST( PositiveDivisionsValue02b, Decimals )
 {
     PositiveDivisionsValue d( -123456789012.123456789012 );
-    DecimalType expected = kNonZeroAmount;
+    DecimalType expected = NON_ZERO_AMOUNT;
     DecimalType actual = d.getValue();
     CHECK_DOUBLES_EQUAL( expected, actual, kThreshold )
 }
@@ -551,7 +551,7 @@ TEST( PositiveDivisionsValue05, Decimals )
     PositiveDivisionsValue d( 1.234 );
     d.setValue( 0.00000384 );
     d.parse( "-0.3164978546312" );
-    DecimalType expected = kNonZeroAmount;
+    DecimalType expected = NON_ZERO_AMOUNT;
     DecimalType actual = d.getValue();
     CHECK_DOUBLES_EQUAL( expected, actual, kThreshold )
 }

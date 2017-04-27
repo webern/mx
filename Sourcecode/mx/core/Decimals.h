@@ -18,16 +18,16 @@ namespace mx
          Note, "decimal" is synonymous with "float" in this context. */
         using DecimalType = long double;
         
-        /* this is the number being passed to
-         std::precision for streaming and toString functions */
-        const unsigned short kDefaultPrecision = 11;
+        /* decimals will be rounded to this number of places,
+           you must recompile if this number is changed */
+        const unsigned short DEFAULT_PRECISION = 6;
         
         /* when a Decimal's range is Exclusive and you try to assign
          out-of-range, this amount will be added to the exclusive minimum.
          For example if a Decimal is constrainted to be a positive number,
          and you try to assign the value 0, the value will by set to 
-         kNonZeroAmount instead */
-        const DecimalType kNonZeroAmount = 0.00000000001;
+         NON_ZERO_AMOUNT instead */
+        const DecimalType NON_ZERO_AMOUNT = 0.000001;
         
         class Decimal
         {
@@ -43,13 +43,16 @@ namespace mx
             DecimalType getValue() const;
             virtual void setValue( DecimalType value );
             virtual void parse( const std::string& value );
+            std::string toString() const;
+            std::ostream& toStream( std::ostream& os ) const;
+
         private:
             class impl;
             std::unique_ptr<impl> myImpl;
         };
         
-        std::string toString( const Decimal& value, unsigned int precision = kDefaultPrecision );
-		std::ostream& toStream( std::ostream& os, const Decimal& value, unsigned int precision = kDefaultPrecision );
+        std::string toString( const Decimal& value, unsigned int precision = DEFAULT_PRECISION );
+		std::ostream& toStream( std::ostream& os, const Decimal& value, unsigned int precision = DEFAULT_PRECISION );
 		std::ostream& operator<<( std::ostream& os, const Decimal& value );
         
         class DecimalRange : public Decimal
