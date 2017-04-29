@@ -1287,6 +1287,11 @@
 		29766ACB1DAC149900CCE2AC /* DirectionReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 29766AC91DAC149900CCE2AC /* DirectionReader.h */; };
 		29766ACC1DAC149900CCE2AC /* DirectionReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29766ACA1DAC149900CCE2AC /* DirectionReader.cpp */; };
 		29766AE01DAC39EF00CCE2AC /* KeyData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29766ADF1DAC39EF00CCE2AC /* KeyData.h */; };
+		2983E3E01EB4303C007FCC34 /* ScoreData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2983E3DF1EB4303C007FCC34 /* ScoreData.cpp */; };
+		2983E3E11EB4303C007FCC34 /* ScoreData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2983E3DF1EB4303C007FCC34 /* ScoreData.cpp */; };
+		2983E3E21EB4303C007FCC34 /* ScoreData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2983E3DF1EB4303C007FCC34 /* ScoreData.cpp */; };
+		2983E3E31EB4303C007FCC34 /* ScoreData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2983E3DF1EB4303C007FCC34 /* ScoreData.cpp */; };
+		2983E3E41EB4303C007FCC34 /* ScoreData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2983E3DF1EB4303C007FCC34 /* ScoreData.cpp */; };
 		29979D671DC830AA00707AA4 /* DynamicsWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29979D651DC830AA00707AA4 /* DynamicsWriter.cpp */; };
 		29979D681DC830AA00707AA4 /* DynamicsWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 29979D661DC830AA00707AA4 /* DynamicsWriter.h */; };
 		29A16F841EB10CDB00D59278 /* PreciseDecimal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A16F821EB10CDB00D59278 /* PreciseDecimal.cpp */; };
@@ -4597,6 +4602,7 @@
 		29766ADF1DAC39EF00CCE2AC /* KeyData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KeyData.h; path = ../Sourcecode/mx/api/KeyData.h; sourceTree = "<group>"; };
 		297DA0721D7F60BE0067C13A /* StaffFunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StaffFunctions.cpp; path = ../Sourcecode/mx/impl/StaffFunctions.cpp; sourceTree = "<group>"; };
 		297DA0731D7F60BE0067C13A /* StaffFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StaffFunctions.h; path = ../Sourcecode/mx/impl/StaffFunctions.h; sourceTree = "<group>"; };
+		2983E3DF1EB4303C007FCC34 /* ScoreData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ScoreData.cpp; path = ../Sourcecode/mx/api/ScoreData.cpp; sourceTree = "<group>"; };
 		29979D651DC830AA00707AA4 /* DynamicsWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DynamicsWriter.cpp; path = ../Sourcecode/mx/impl/DynamicsWriter.cpp; sourceTree = "<group>"; };
 		29979D661DC830AA00707AA4 /* DynamicsWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DynamicsWriter.h; path = ../Sourcecode/mx/impl/DynamicsWriter.h; sourceTree = "<group>"; };
 		299A2BB01D7FA48A006A7F5C /* PartGroupData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PartGroupData.h; path = ../Sourcecode/mx/api/PartGroupData.h; sourceTree = "<group>"; };
@@ -6239,6 +6245,7 @@
 				29E9C5611DA49F2D0040183B /* PitchData.h */,
 				29ADB3141D736A2B00683BEC /* PositionData.h */,
 				29C51A521D9F18C600EAA308 /* PrintData.h */,
+				2983E3DF1EB4303C007FCC34 /* ScoreData.cpp */,
 				29EF440C1D6E70D300DBDAB9 /* ScoreData.h */,
 				29C51A1D1D9ED91000EAA308 /* Smufl.cpp */,
 				29C51A1C1D9ED3A200EAA308 /* Smufl.h */,
@@ -6735,6 +6742,7 @@
 				293FFFCD1DD25CF1001477E8 /* Hole.cpp in Sources */,
 				293FFFCE1DD25CF1001477E8 /* HoleAttributes.cpp in Sources */,
 				293FFFCF1DD25CF1001477E8 /* HoleClosed.cpp in Sources */,
+				2983E3E11EB4303C007FCC34 /* ScoreData.cpp in Sources */,
 				293FFFD01DD25CF1001477E8 /* HoleClosedAttributes.cpp in Sources */,
 				293FFFD11DD25CF1001477E8 /* HoleShape.cpp in Sources */,
 				293FFFD21DD25CF1001477E8 /* HoleType.cpp in Sources */,
@@ -7401,6 +7409,7 @@
 				294549AA1D295C5500B90302 /* OtherPlayAttributes.cpp in Sources */,
 				29454A4D1D295C5500B90302 /* TimeModification.cpp in Sources */,
 				294549F51D295C5500B90302 /* Scordatura.cpp in Sources */,
+				2983E3E01EB4303C007FCC34 /* ScoreData.cpp in Sources */,
 				294549651D295C5500B90302 /* MidiBank.cpp in Sources */,
 				2945497C1D295C5500B90302 /* MusicFont.cpp in Sources */,
 				29C01B101D130B690094BE61 /* DocumentHeader.cpp in Sources */,
@@ -8067,6 +8076,7 @@
 				29B963791E79FF640072071D /* Hole.cpp in Sources */,
 				29B9637A1E79FF640072071D /* HoleAttributes.cpp in Sources */,
 				29B9637B1E79FF640072071D /* HoleClosed.cpp in Sources */,
+				2983E3E31EB4303C007FCC34 /* ScoreData.cpp in Sources */,
 				29B9637C1E79FF640072071D /* HoleClosedAttributes.cpp in Sources */,
 				29B9637D1E79FF640072071D /* HoleShape.cpp in Sources */,
 				29B9637E1E79FF640072071D /* HoleType.cpp in Sources */,
@@ -8733,6 +8743,7 @@
 				29B966211E7A043D0072071D /* Hole.cpp in Sources */,
 				29B966221E7A043D0072071D /* HoleAttributes.cpp in Sources */,
 				29B966231E7A043D0072071D /* HoleClosed.cpp in Sources */,
+				2983E3E41EB4303C007FCC34 /* ScoreData.cpp in Sources */,
 				29B966241E7A043D0072071D /* HoleClosedAttributes.cpp in Sources */,
 				29B966251E7A043D0072071D /* HoleShape.cpp in Sources */,
 				29B966261E7A043D0072071D /* HoleType.cpp in Sources */,
@@ -9399,6 +9410,7 @@
 				29E8C0861DD2920C00E8CEBA /* Hole.cpp in Sources */,
 				29E8C0871DD2920C00E8CEBA /* HoleAttributes.cpp in Sources */,
 				29E8C0881DD2920C00E8CEBA /* HoleClosed.cpp in Sources */,
+				2983E3E21EB4303C007FCC34 /* ScoreData.cpp in Sources */,
 				29E8C0891DD2920C00E8CEBA /* HoleClosedAttributes.cpp in Sources */,
 				29E8C08A1DD2920C00E8CEBA /* HoleShape.cpp in Sources */,
 				29E8C08B1DD2920C00E8CEBA /* HoleType.cpp in Sources */,
