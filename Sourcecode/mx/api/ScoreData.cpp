@@ -31,6 +31,8 @@ namespace mx
 
         }
 
+
+
         int ScoreData::getNumMeasures() const
         {
             int numMeasures = 0;
@@ -48,6 +50,7 @@ namespace mx
         }
 
 
+
         int ScoreData::getNumStavesPerSystem() const
         {
             int numStaves = 0;
@@ -59,6 +62,45 @@ namespace mx
 
             return numStaves;
         }
+
+
+        void ScoreData::sort()
+        {
+            for( auto& part : parts )
+            {
+                for( auto& measure : part.measures )
+                {
+                    for ( auto& staff : measure.staves )
+                    {
+
+                        const auto clefCompare = [&]( ClefData& inLeft, ClefData& inRight )
+                        {
+                            return inLeft.tickTimePosition < inRight.tickTimePosition;
+                        };
+
+                        std::sort( std::begin( staff.clefs ), std::end( staff.clefs ), clefCompare );
+
+                        const auto directionCompare = [&]( DirectionData& inLeft, DirectionData& inRight )
+                        {
+                            return inLeft.tickTimePosition < inRight.tickTimePosition;
+                        };
+
+                        std::sort( std::begin( staff.directions ), std::end( staff.directions ), directionCompare );
+
+                        for ( auto& voice : staff.voices )
+                        {
+                            const auto noteCompare = [&]( NoteData& inLeft, NoteData& inRight )
+                            {
+                                return inLeft.tickTimePosition < inRight.tickTimePosition;
+                            };
+
+                            std::sort( std::begin( voice.second.notes ), std::end( voice.second.notes ), noteCompare );
+                        }
+                    }
+                }
+            }
+        }
+
 
         std::vector<PartData>::iterator findPart( std::vector<PartData>& inParts, const std::string& inPartId )
         {

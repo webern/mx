@@ -43,7 +43,7 @@ namespace mx
         , myMutex{}
         , myOutScorePartwise{ nullptr }
         {
-            
+            myScoreData.sort();
         }
         
         core::ScorePartwisePtr ScoreWriter::getScorePartwise() const
