@@ -8,6 +8,7 @@
 #include "mx/impl/Cursor.h"
 
 #include <mutex>
+#include <optional>
 
 namespace mx
 {
@@ -35,6 +36,7 @@ namespace mx
     		core::ScorePartwisePtr getScorePartwise() const;
 
             bool isStartOfSystem( int measureIndex ) const;
+            std::optional<api::PageData> findPageLayoutData( api::MeasureIndex measureIndex ) const;
             api::SystemData getSystemData( int measureIndex ) const;
             
     	private:

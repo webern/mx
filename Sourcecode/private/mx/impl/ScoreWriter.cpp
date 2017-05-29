@@ -2,17 +2,16 @@
 // Copyright (c) by Matthew James Briggs
 // Distributed under the MIT License
 
-#include "mx/impl/ScoreWriter.h"
 #include "mx/core/elements/Creator.h"
 #include "mx/core/elements/Encoding.h"
 #include "mx/core/elements/GroupBarline.h"
 #include "mx/core/elements/GroupName.h"
+#include "mx/core/elements/GroupSymbol.h"
 #include "mx/core/elements/Identification.h"
 #include "mx/core/elements/Miscellaneous.h"
 #include "mx/core/elements/MovementNumber.h"
 #include "mx/core/elements/MovementTitle.h"
 #include "mx/core/elements/PartGroup.h"
-#include "mx/core/elements/GroupSymbol.h"
 #include "mx/core/elements/PartGroupOrScorePart.h"
 #include "mx/core/elements/PartList.h"
 #include "mx/core/elements/PartwisePart.h"
@@ -26,13 +25,14 @@
 #include "mx/core/elements/Work.h"
 #include "mx/core/elements/WorkNumber.h"
 #include "mx/core/elements/WorkTitle.h"
+#include "mx/impl/Converter.h"
 #include "mx/impl/EncodingFunctions.h"
 #include "mx/impl/LayoutFunctions.h"
 #include "mx/impl/PageTextFunctions.h"
 #include "mx/impl/PartReader.h"
 #include "mx/impl/PartWriter.h"
+#include "mx/impl/ScoreWriter.h"
 #include "mx/impl/TimeReader.h"
-#include "mx/impl/Converter.h"
 
 namespace mx
 {
@@ -120,7 +120,7 @@ namespace mx
             }
             
             createEncoding( myScoreData.encoding, *header );
-            addLayoutData( myScoreData.layout, *header );
+            addDefaultsData( myScoreData.defaults, *header );
             createPageTextItems( myScoreData.pageTextItems, *header );
             
             using PartPair = std::pair<core::ScorePartPtr, core::PartwisePartPtr>;
@@ -341,30 +341,38 @@ namespace mx
         
         bool ScoreWriter::isStartOfSystem( int measureIndex ) const
         {
-            auto lambda = [&]( const api::SystemData& sysData )
+            const auto iter = myScoreData.layout.find( measureIndex );
+            if( iter == std::cend( myScoreData.layout ) )
             {
-                return measureIndex == sysData.measureIndex;
-            };
-            
-            const auto iter = std::find_if( myScoreData.systems.cbegin(), myScoreData.systems.cend(), lambda );
-            return iter != myScoreData.systems.cend();
+                return false;
+            }
+            return iter->second.system.newSystem == api::Bool::yes;
+        }
+
+
+        std::optional<api::PageData> ScoreWriter::findPageLayoutData( api::MeasureIndex measureIndex ) const
+        {
+            const auto iter = myScoreData.layout.find( measureIndex );
+            if( iter == std::cend( myScoreData.layout ) )
+            {
+                return std::nullopt;
+            }
+            if( !iter->second.page.isUsed() )
+            {
+                return std::nullopt;
+            }
+            return iter->second.page;
         }
         
         
         api::SystemData ScoreWriter::getSystemData( int measureIndex ) const
         {
-            auto lambda = [&]( const api::SystemData& sysData )
-            {
-                return measureIndex == sysData.measureIndex;
-            };
-            
-            const auto iter = std::find_if( myScoreData.systems.cbegin(), myScoreData.systems.cend(), lambda );
-  
-            if( iter == myScoreData.systems.cend() )
+            const auto iter = myScoreData.layout.find( measureIndex );
+            if( iter == std::cend( myScoreData.layout ) )
             {
                 return api::SystemData{};
             }
-            return *iter;
+            return iter->second.system;
         }
     }
 }

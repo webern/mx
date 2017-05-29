@@ -6,15 +6,15 @@
 #ifdef MX_COMPILE_API_TESTS
 
 #include "cpul/cpulTestHarness.h"
-#include "mxtest/file/Path.h"
+#include "mx/api/DefaultsData.h"
 #include "mx/api/DocumentManager.h"
-#include "mx/api/LayoutData.h"
 #include "mx/core/Document.h"
-#include "mx/core/elements/PageMargins.h"
+#include "mx/core/elements/BottomMargin.h"
 #include "mx/core/elements/LeftMargin.h"
+#include "mx/core/elements/PageMargins.h"
 #include "mx/core/elements/RightMargin.h"
 #include "mx/core/elements/TopMargin.h"
-#include "mx/core/elements/BottomMargin.h"
+#include "mxtest/file/Path.h"
 
 
 using namespace std;
@@ -55,7 +55,7 @@ inline ScoreData getActorPreludeScore()
     return score;
 }
 
-#if 1==0
+#if 0
 TEST( createFromFile, DocumentManager )
 {
     auto& docMngr = DocumentManager::getInstance();
@@ -138,7 +138,7 @@ T_END
 TEST( scalingMillimeters, DocumentManager )
 {
     auto score = getScore();
-    CHECK_DOUBLES_EQUAL( 6.35, score.layout.scalingMillimeters, MX_API_EQUALITY_EPSILON )
+    CHECK_DOUBLES_EQUAL( 6.35, score.defaults.scalingMillimeters, MX_API_EQUALITY_EPSILON )
 }
 T_END
 
@@ -146,7 +146,7 @@ T_END
 TEST( scalingTenths, DocumentManager )
 {
     auto score = getScore();
-    CHECK_DOUBLES_EQUAL( 40, score.layout.scalingTenths, MX_API_EQUALITY_EPSILON )
+    CHECK_DOUBLES_EQUAL( 40, score.defaults.scalingTenths, MX_API_EQUALITY_EPSILON )
 }
 T_END
 
@@ -154,14 +154,16 @@ T_END
 TEST( tenthsPerMillimeter, DocumentManager )
 {
     auto score = getScore();
-    CHECK_DOUBLES_EQUAL( 6.299212598425197, score.layout.tenthsPerMillimeter(), MX_API_EQUALITY_EPSILON )
+    CHECK_DOUBLES_EQUAL( 6.299212598425197, score.defaults.tenthsPerMillimeter(), MX_API_EQUALITY_EPSILON )
 }
 T_END
 
 TEST( tenthsPerInch, DocumentManager )
 {
     auto score = getActorPreludeScore();
-    CHECK_DOUBLES_EQUAL( 160, score.layout.tenthsPerInch(), MX_API_EQUALITY_EPSILON )
+    CHECK_DOUBLES_EQUAL( 40, score.defaults.scalingTenths, MX_API_EQUALITY_EPSILON );
+    CHECK_DOUBLES_EQUAL( 3.9956, score.defaults.scalingMillimeters, MX_API_EQUALITY_EPSILON );
+    CHECK_DOUBLES_EQUAL( 160, score.defaults.tenthsPerInch(), MX_API_EQUALITY_EPSILON )
 }
 T_END
 
@@ -272,21 +274,21 @@ T_END
 
 using LongDouble = long double;
 
-ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.scalingMillimeters, scalingMillimeters, 5.451, 0 );
-ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.scalingTenths, scalingTenths, 5.452, 0 );
-ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.oddPageLeftMargin, oddPageLeftMargin, 5.453, 0 );
-ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.oddPageRightMargin, oddPageRightMargin, 5.454, 0 );
-ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.oddPageTopMargin, oddPageTopMargin, 5.455, 0 );
-ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.oddPageBottomMargin, oddPageBottomMargin, 5.456, 0 );
-ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.evenPageLeftMargin, evenPageLeftMargin, 5.457, 0 );
-ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.evenPageRightMargin, evenPageRightMargin, 5.458, 0 );
-ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.evenPageTopMargin, evenPageTopMargin, 5.459, 0 );
-ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.evenPageBottomMargin, evenPageBottomMargin, 5.4501, 0 );
-ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.systemLeftMargin, systemLeftMargin, 5.4502, 0 );
-ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.systemRightMargin, systemRightMargin, 5.4503, 0 );
-ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.systemDistance, systemDistance, 5.4504, 0 );
-ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.topSystemDistance, topSystemDistance, 5.4505, 0 );
-ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.staffDistance, staffDistance, 5.4506, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, defaults.scalingMillimeters, scalingMillimeters, 5.451, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, defaults.scalingTenths, scalingTenths, 5.452, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, defaults.pageLayout.margins.odd.value().left, oddPageLeftMargin, 5.453, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, defaults.pageLayout.margins.odd.value().right, oddPageRightMargin, 5.454, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, defaults.pageLayout.margins.odd.value().top, oddPageTopMargin, 5.455, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, defaults.pageLayout.margins.odd.value().bottom, oddPageBottomMargin, 5.456, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, defaults.pageLayout.margins.even.value().left, evenPageLeftMargin, 5.457, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, defaults.pageLayout.margins.even.value().right, evenPageRightMargin, 5.458, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, defaults.pageLayout.margins.even.value().top, evenPageTopMargin, 5.459, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, defaults.pageLayout.margins.even.value().bottom, evenPageBottomMargin, 5.4501, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, defaults.systemLayout.margins.value().left, systemLeftMargin, 5.4502, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, defaults.systemLayout.margins.value().right, systemRightMargin, 5.4503, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, defaults.systemLayout.systemDistance.value(), systemDistance, 5.4504, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, defaults.systemLayout.topSystemDistance.value(), topSystemDistance, 5.4505, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, defaults.systemLayout.staffDistance.value(), staffDistance, 5.4506, 0 );
 
 
 TEST( Layout_PageMarginsBoth, DocumentManager )
@@ -296,14 +298,14 @@ TEST( Layout_PageMarginsBoth, DocumentManager )
     const long double right = 0.2;
     const long double top = 0.3;
     const long double bottom = 0.4;
-    score.layout.oddPageLeftMargin = left;
-    score.layout.evenPageLeftMargin = left;
-    score.layout.oddPageRightMargin = right;
-    score.layout.evenPageRightMargin = right;
-    score.layout.oddPageTopMargin = top;
-    score.layout.evenPageTopMargin = top;
-    score.layout.oddPageBottomMargin = bottom;
-    score.layout.evenPageBottomMargin = bottom;
+    score.defaults.pageLayout.margins.odd.value().left = left;
+    score.defaults.pageLayout.margins.even.value().left = left;
+    score.defaults.pageLayout.margins.odd.value().right = right;
+    score.defaults.pageLayout.margins.even.value().right = right;
+    score.defaults.pageLayout.margins.odd.value().top = top;
+    score.defaults.pageLayout.margins.even.value().top = top;
+    score.defaults.pageLayout.margins.odd.value().bottom = bottom;
+    score.defaults.pageLayout.margins.even.value().bottom = bottom;
     auto docId = DocumentManager::getInstance().createFromScore( score );
     auto mxDoc = DocumentManager::getInstance().getDocument( docId );
     const auto& pageMarginsSet = mxDoc->getScorePartwise()->getScoreHeaderGroup()->getDefaults()->getLayoutGroup()->getPageLayout()->getPageMarginsSet();
@@ -320,14 +322,14 @@ TEST( Layout_PageMarginsEvenOdd, DocumentManager )
     const long double right = 0.2;
     const long double top = 0.3;
     const long double bottom = 0.4;
-    score.layout.oddPageLeftMargin = left + 100.0;
-    score.layout.evenPageLeftMargin = left;
-    score.layout.oddPageRightMargin = right;
-    score.layout.evenPageRightMargin = right;
-    score.layout.oddPageTopMargin = top;
-    score.layout.evenPageTopMargin = top;
-    score.layout.oddPageBottomMargin = bottom;
-    score.layout.evenPageBottomMargin = bottom;
+    score.defaults.pageLayout.margins.odd.value().left = left + 100.0;
+    score.defaults.pageLayout.margins.even.value().left = left;
+    score.defaults.pageLayout.margins.odd.value().right = right;
+    score.defaults.pageLayout.margins.even.value().right = right;
+    score.defaults.pageLayout.margins.odd.value().top = top;
+    score.defaults.pageLayout.margins.even.value().top = top;
+    score.defaults.pageLayout.margins.odd.value().bottom = bottom;
+    score.defaults.pageLayout.margins.even.value().bottom = bottom;
     auto docId = DocumentManager::getInstance().createFromScore( score );
     auto mxDoc = DocumentManager::getInstance().getDocument( docId );
     const auto& pageMarginsSet = mxDoc->getScorePartwise()->getScoreHeaderGroup()->getDefaults()->getLayoutGroup()->getPageLayout()->getPageMarginsSet();
@@ -484,17 +486,17 @@ TEST( RoundTrip_PageTextData, DocumentManager )
     auto testValue0 = PageTextData{};
     testValue0.description = "descrip";
     testValue0.pageNumber = 2;
-    testValue0.position.defaultX = -0.1;
-    testValue0.position.isDefaultXSpecified = true;
-    testValue0.position.defaultY = 108.2;
-    testValue0.position.isDefaultYSpecified = true;
-    testValue0.position.relativeX = 1.0;
-    testValue0.position.isRelativeXSpecified = true;
-    testValue0.position.relativeY = 2.0;
-    testValue0.position.isRelativeYSpecified = true;
-    testValue0.position.horizontalAlignmnet = HorizontalAlignment::left;
-    testValue0.position.verticalAlignment = VerticalAlignment::bottom;
-    testValue0.position.placement = Placement::above;
+    testValue0.positionData.defaultX = -0.1;
+    testValue0.positionData.isDefaultXSpecified = true;
+    testValue0.positionData.defaultY = 108.2;
+    testValue0.positionData.isDefaultYSpecified = true;
+    testValue0.positionData.relativeX = 1.0;
+    testValue0.positionData.isRelativeXSpecified = true;
+    testValue0.positionData.relativeY = 2.0;
+    testValue0.positionData.isRelativeYSpecified = true;
+    testValue0.positionData.horizontalAlignmnet = HorizontalAlignment::left;
+    testValue0.positionData.verticalAlignment = VerticalAlignment::bottom;
+    testValue0.positionData.placement = Placement::above;
     testValue0.text = "my text";
 
     auto testValue1 = PageTextData{};
@@ -516,27 +518,27 @@ TEST( RoundTrip_PageTextData, DocumentManager )
     CHECK_EQUAL( testValue0.description, actualValue.description );
     CHECK_EQUAL( testValue0.pageNumber, actualValue.pageNumber );
     CHECK_EQUAL( testValue0.text, actualValue.text );
-    CHECK_DOUBLES_EQUAL( testValue0.position.defaultX, actualValue.position.defaultX, MX_API_EQUALITY_EPSILON );
-    CHECK_EQUAL( testValue0.position.isDefaultXSpecified, actualValue.position.isDefaultXSpecified );
-    CHECK_DOUBLES_EQUAL( testValue0.position.defaultY, actualValue.position.defaultY, MX_API_EQUALITY_EPSILON );
-    CHECK_EQUAL( testValue0.position.isRelativeYSpecified, actualValue.position.isRelativeYSpecified );
-    CHECK_DOUBLES_EQUAL( testValue0.position.relativeX, actualValue.position.relativeX, MX_API_EQUALITY_EPSILON );
-    CHECK_EQUAL( testValue0.position.isRelativeXSpecified, actualValue.position.isRelativeXSpecified );
-    CHECK_DOUBLES_EQUAL( testValue0.position.relativeY, actualValue.position.relativeY, MX_API_EQUALITY_EPSILON );
-    CHECK_EQUAL( testValue0.position.isRelativeYSpecified, actualValue.position.isRelativeYSpecified );
+    CHECK_DOUBLES_EQUAL( testValue0.positionData.defaultX, actualValue.positionData.defaultX, MX_API_EQUALITY_EPSILON );
+    CHECK_EQUAL( testValue0.positionData.isDefaultXSpecified, actualValue.positionData.isDefaultXSpecified );
+    CHECK_DOUBLES_EQUAL( testValue0.positionData.defaultY, actualValue.positionData.defaultY, MX_API_EQUALITY_EPSILON );
+    CHECK_EQUAL( testValue0.positionData.isRelativeYSpecified, actualValue.positionData.isRelativeYSpecified );
+    CHECK_DOUBLES_EQUAL( testValue0.positionData.relativeX, actualValue.positionData.relativeX, MX_API_EQUALITY_EPSILON );
+    CHECK_EQUAL( testValue0.positionData.isRelativeXSpecified, actualValue.positionData.isRelativeXSpecified );
+    CHECK_DOUBLES_EQUAL( testValue0.positionData.relativeY, actualValue.positionData.relativeY, MX_API_EQUALITY_EPSILON );
+    CHECK_EQUAL( testValue0.positionData.isRelativeYSpecified, actualValue.positionData.isRelativeYSpecified );
     
     actualValue = outputScore.pageTextItems.at( 1 );
     CHECK_EQUAL( testValue1.description, actualValue.description );
     CHECK_EQUAL( testValue1.pageNumber, actualValue.pageNumber );
     CHECK_EQUAL( testValue1.text, actualValue.text );
-    CHECK_DOUBLES_EQUAL( testValue1.position.defaultX, actualValue.position.defaultX, MX_API_EQUALITY_EPSILON );
-    CHECK_EQUAL( testValue1.position.isDefaultXSpecified, actualValue.position.isDefaultXSpecified );
-    CHECK_DOUBLES_EQUAL( testValue1.position.defaultY, actualValue.position.defaultY, MX_API_EQUALITY_EPSILON );
-    CHECK_EQUAL( testValue1.position.isRelativeYSpecified, actualValue.position.isRelativeYSpecified );
-    CHECK_DOUBLES_EQUAL( testValue1.position.relativeX, actualValue.position.relativeX, MX_API_EQUALITY_EPSILON );
-    CHECK_EQUAL( testValue1.position.isRelativeXSpecified, actualValue.position.isRelativeXSpecified );
-    CHECK_DOUBLES_EQUAL( testValue1.position.relativeY, actualValue.position.relativeY, MX_API_EQUALITY_EPSILON );
-    CHECK_EQUAL( testValue1.position.isRelativeYSpecified, actualValue.position.isRelativeYSpecified );
+    CHECK_DOUBLES_EQUAL( testValue1.positionData.defaultX, actualValue.positionData.defaultX, MX_API_EQUALITY_EPSILON );
+    CHECK_EQUAL( testValue1.positionData.isDefaultXSpecified, actualValue.positionData.isDefaultXSpecified );
+    CHECK_DOUBLES_EQUAL( testValue1.positionData.defaultY, actualValue.positionData.defaultY, MX_API_EQUALITY_EPSILON );
+    CHECK_EQUAL( testValue1.positionData.isRelativeYSpecified, actualValue.positionData.isRelativeYSpecified );
+    CHECK_DOUBLES_EQUAL( testValue1.positionData.relativeX, actualValue.positionData.relativeX, MX_API_EQUALITY_EPSILON );
+    CHECK_EQUAL( testValue1.positionData.isRelativeXSpecified, actualValue.positionData.isRelativeXSpecified );
+    CHECK_DOUBLES_EQUAL( testValue1.positionData.relativeY, actualValue.positionData.relativeY, MX_API_EQUALITY_EPSILON );
+    CHECK_EQUAL( testValue1.positionData.isRelativeYSpecified, actualValue.positionData.isRelativeYSpecified );
 
 }
 T_END

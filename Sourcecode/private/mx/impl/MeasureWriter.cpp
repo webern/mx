@@ -116,6 +116,7 @@
 #include "mx/core/elements/Words.h"
 #include "mx/impl/Converter.h"
 #include "mx/impl/DirectionWriter.h"
+#include "mx/impl/LayoutFunctions.h"
 #include "mx/impl/NoteWriter.h"
 #include "mx/impl/ScoreWriter.h"
 
@@ -199,7 +200,13 @@ namespace mx
             {
                 writeSystemInfo();
             }
-            
+
+            const auto& pageData = myScoreWriter.findPageLayoutData( myHistory.getCursor().measureIndex );
+            if( pageData )
+            {
+                writePageInfo( *pageData );
+            }
+
             if( myHistory.getCursor().isFirstMeasureInPart )
             {
                 myPropertiesWriter->writeDivisions( myHistory.getCursor().getGlobalTicksPerQuarter() );
@@ -249,58 +256,108 @@ namespace mx
         void MeasureWriter::writeSystemInfo()
         {
             auto systemData = myScoreWriter.getSystemData( myHistory.getCursor().measureIndex );
-            
-            const bool isSystemDataSpecified =
-                   systemData.isMarginSpecified
-                || systemData.isSystemDistanceSpecified
-                || systemData.isTopSystemDistanceSpecified
-                || systemData.measureIndex >= 0;
-            
-            if( !isSystemDataSpecified && !myHistory.getCursor().isFirstMeasureInPart )
+
+            // early exit if there is nothing to do
+            if( !systemData.isUsed() )
             {
                 return;
             }
             
-            auto printMdc = core::makeMusicDataChoice();
-            printMdc->setChoice( core::MusicDataChoice::Choice::print );
-            auto& print = *printMdc->getPrint();
-            print.getAttributes()->hasNewSystem = true;
-            print.getAttributes()->newSystem = core::YesNo::yes;
-            auto& layoutGroup = *print.getLayoutGroup();
-            myOutMeasure->getMusicDataGroup()->addMusicDataChoice( printMdc );
+            auto outPrintMdc = core::makeMusicDataChoice();
+            outPrintMdc->setChoice(core::MusicDataChoice::Choice::print );
+            auto& outPrint = *outPrintMdc->getPrint();
+            auto& outLayoutGroup = *outPrint.getLayoutGroup();
+            myOutMeasure->getMusicDataGroup()->addMusicDataChoice( outPrintMdc );
             myHistory.log( "writePrint" );
 
-            if( isSystemDataSpecified )
+            if( isSpecified( systemData.newSystem ) )
             {
-                layoutGroup.setHasSystemLayout( true );
-                auto& systemLayout = *layoutGroup.getSystemLayout();
+                outPrint.getAttributes()->hasNewSystem = true;
+                outPrint.getAttributes()->newSystem =
+                        systemData.newSystem == api::Bool::yes ? core::YesNo::yes : core::YesNo::no;
+            }
 
-                if( systemData.isMarginSpecified )
+            if( systemData.layout.isUsed() )
+            {
+                auto& outSystemLayout = *outLayoutGroup.getSystemLayout();
+                const auto& inSystemLayout = systemData.layout;
+
+                if( inSystemLayout.margins )
                 {
-                    systemLayout.setHasSystemMargins( true );
-                    auto& margins = *systemLayout.getSystemMargins();
-                    margins.getLeftMargin()->setValue( core::TenthsValue{static_cast<core::DecimalType>( systemData.leftMargin ) } );
-                    margins.getRightMargin()->setValue( core::TenthsValue{static_cast<core::DecimalType>( systemData.rightMargin ) } );
+                    outLayoutGroup.setHasSystemLayout(true );
+                    const auto& inMargins = inSystemLayout.margins.value();
+                    outSystemLayout.setHasSystemMargins(true );
+                    auto& margins = *outSystemLayout.getSystemMargins();
+                    margins.getLeftMargin()->setValue( core::TenthsValue{ static_cast<core::DecimalType>( inMargins.left ) } );
+                    margins.getRightMargin()->setValue( core::TenthsValue{ static_cast<core::DecimalType>( inMargins.right ) } );
                 }
 
-                if( systemData.isTopSystemDistanceSpecified )
+                if( inSystemLayout.topSystemDistance )
                 {
-                    systemLayout.setHasTopSystemDistance( true );
-                    systemLayout.getTopSystemDistance()->setValue( core::TenthsValue{static_cast<core::DecimalType>( systemData.topSystemDistance ) } );
+                    outLayoutGroup.setHasSystemLayout(true );
+                    outSystemLayout.setHasTopSystemDistance(true );
+                    outSystemLayout.getTopSystemDistance()->setValue(core::TenthsValue{
+                        static_cast<core::DecimalType>( inSystemLayout.topSystemDistance.value() )
+                    });
                 }
 
-                if( systemData.isSystemDistanceSpecified )
+                if( inSystemLayout.systemDistance )
                 {
-                    systemLayout.setHasSystemDistance( true );
-                    systemLayout.getSystemDistance()->setValue( core::TenthsValue{static_cast<core::DecimalType>( systemData.systemDistance ) } );
+                    outLayoutGroup.setHasSystemLayout(true );
+                    outSystemLayout.setHasSystemDistance(true );
+                    outSystemLayout.getSystemDistance()->setValue( core::TenthsValue{
+                        static_cast<core::DecimalType>( inSystemLayout.systemDistance.value() )
+                    });
                 }
-           }
+            }
+        }
+
+        void MeasureWriter::writePageInfo( const api::PageData& inPageData )
+        {
+            // since a print object may have been added by writeSystemInfo, we don't want to add another one. we will
+            // search for a print object and use it if we find it, otherwise we will add a new one.
+            core::PrintPtr outPrint = nullptr;
+            for( const auto& mdc : myOutMeasure->getMusicDataGroup()->getMusicDataChoiceSet() )
+            {
+                if( mdc->getChoice() == core::MusicDataChoice::Choice::print )
+                {
+                    outPrint = mdc->getPrint();
+                    break;
+                }
+            }
+            if( outPrint == nullptr )
+            {
+                // since we didn't find an existing print object, we will create one and add it to the measure
+                auto mdc = core::makeMusicDataChoice();
+                mdc->setChoice( core::MusicDataChoice::Choice::print );
+                outPrint = mdc->getPrint();
+                myOutMeasure->getMusicDataGroup()->addMusicDataChoice( mdc );
+            }
+
+            if( isSpecified( inPageData.newPage ) )
+            {
+                outPrint->getAttributes()->hasNewPage = true;
+                outPrint->getAttributes()->newPage =
+                        inPageData.newPage == api::Bool::yes ? core::YesNo::yes : core::YesNo::no;
+            }
+
+            if( inPageData.pageLayoutData.isUsed() )
+            {
+                const auto outPageLayout = createPageLayout( inPageData.pageLayoutData );
+                outPrint->getLayoutGroup()->setHasPageLayout( true );
+                outPrint->getLayoutGroup()->setPageLayout( outPageLayout );
+            }
+
+            if( inPageData.pageNumber )
+            {
+                outPrint->getAttributes()->hasPageNumber = true;
+                outPrint->getAttributes()->pageNumber = *inPageData.pageNumber;
+            }
         }
         
         
         void MeasureWriter::writeStaves()
         {
-            
             myHistory.resetCursorFofStaffIterations();
             myPreviousCursor = myHistory.getCursor();
             for( const auto& staff : myMeasureData.staves )

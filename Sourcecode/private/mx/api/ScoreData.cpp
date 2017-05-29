@@ -4,9 +4,6 @@
 
 #include "mx/api/ScoreData.h"
 
-#include <vector>
-#include <set>
-
 namespace mx
 {
     namespace api
@@ -24,7 +21,7 @@ namespace mx
         , copyright{}
         , encoding{}
         , pageTextItems{}
-        , layout{}
+        , defaults{}
         , parts{}
         , partGroups{}
         , ticksPerQuarter{ DEFAULT_TICKS_PER_QUARTER }
