@@ -70,6 +70,7 @@
 #include "mx/core/elements/Notehead.h"
 #include "mx/core/elements/NoteheadText.h"
 #include "mx/core/elements/OctaveShift.h"
+#include "mx/core/elements/Offset.h"
 #include "mx/core/elements/OtherDirection.h"
 #include "mx/core/elements/PartAbbreviationDisplay.h"
 #include "mx/core/elements/PartNameDisplay.h"
@@ -177,7 +178,7 @@ namespace mx
             }
             else
             {
-                measureAttr.number = core::XsToken{ std::to_string( myHistory.getCursor().measureIndex + 1 ) };
+                measureAttr.number = core::XsToken{ std::to_string( myHistory.getCursor().measureIndex ) };
             }
             
             if( myMeasureData.width >= 0.0 )
@@ -328,7 +329,14 @@ namespace mx
                 myHistory.setVoiceIndex( voice.first );
                 auto noteIter = voice.second.notes.cbegin();
                 auto noteEnd = voice.second.notes.cend();
-                writeDirections( directionIter, directionEnd, std::numeric_limits<int>::min(), 0 );
+
+                if( directionIter != directionEnd )
+                {
+                    const auto absoluteMinimumTickTime = std::numeric_limits<int>::min();
+                    writeDirections( directionIter, directionEnd, absoluteMinimumTickTime, 1 );
+                }
+
+                mx::api::NoteData noteForOutsideOfLoop;
 
                 for( ; noteIter != noteEnd; ++noteIter )
                 {
@@ -379,7 +387,12 @@ namespace mx
                         maxDirectionTime = nextNote->tickTimePosition;
                     }
 
-                    writeDirections( directionIter, directionEnd, minDirectionTime, maxDirectionTime );
+                    if( directionIter != directionEnd )
+                    {
+                        const auto firstDirectionTime = directionIter->tickTimePosition;
+                        MX_ASSERT( firstDirectionTime >= minDirectionTime );
+                        writeDirections( directionIter, directionEnd, minDirectionTime, maxDirectionTime );
+                    }
 
                     auto mdc = core::makeMusicDataChoice();
                     mdc->setChoice( core::MusicDataChoice::Choice::note );
@@ -387,9 +400,12 @@ namespace mx
                     mdc->setNote( writer.getNote(isStartOfChord) );
                     myOutMeasure->getMusicDataGroup()->addMusicDataChoice( mdc );
                     myHistory.log( "addNote cursorTime " + std::to_string( myHistory.getCursor().tickTimePosition ) + ", noteTime " + std::to_string( apiNote.tickTimePosition ) );
-                    advanceCursorIfNeeded( apiNote, noteIter, noteEnd, isStartOfChord );
+                    advanceCursorIfNeeded( apiNote );
+//                    noteForOutsideOfLoop = apiNote;
 
                 } // foreach note
+
+//                advanceCursorIfNeeded( noteForOutsideOfLoop );
 
             } // foreach voice
             
@@ -421,7 +437,7 @@ namespace mx
                 }
                 myPropertiesWriter->flushBuffer();
             }
-            
+
             writeDirections( directionIter, directionEnd, std::numeric_limits<int>::min(), std::numeric_limits<int>::max() );
             
         } // func writeVoices
@@ -430,6 +446,12 @@ namespace mx
         void MeasureWriter::writeForwardOrBackupIfNeeded( const api::NoteData& currentNote )
         {
             myPropertiesWriter->flushBuffer();
+
+            if( currentNote.tickTimePosition < 0 )
+            {
+                return;
+            }
+
             const int timeDifference = currentNote.tickTimePosition - myHistory.getCursor().tickTimePosition;
             if( timeDifference < 0 )
             {
@@ -442,14 +464,33 @@ namespace mx
         }
         
         
-        void MeasureWriter::backup( const int ticks )
+        void MeasureWriter::backup( const int inTicks )
         {
+            // ensure we don't go below zero
+
+            const auto currentTime = myHistory.getCursor().tickTimePosition;
+            MX_ASSERT( currentTime >= 0 );
+            const auto proposedNewTime = currentTime - inTicks;
+            int safeTickAmount = inTicks;
+
+            if( proposedNewTime <  0 )
+            {
+                safeTickAmount += proposedNewTime;
+            }
+
+            MX_ASSERT( safeTickAmount >= 0 );
+
+            if( safeTickAmount == 0 )
+            {
+                return;
+            }
+
             auto backupMdc = core::makeMusicDataChoice();
             backupMdc->setChoice( core::MusicDataChoice::Choice::backup );
             auto backup = backupMdc->getBackup();
-            backup->getDuration()->setValue( core::PositiveDivisionsValue{ static_cast<core::DecimalType>( ticks ) } );
+            backup->getDuration()->setValue( core::PositiveDivisionsValue{ static_cast<core::DecimalType>( safeTickAmount ) } );
             myOutMeasure->getMusicDataGroup()->addMusicDataChoice( backupMdc );
-            myHistory.advanceTickTimePosition( -1 * ticks, "write backup" );
+            myHistory.advanceTickTimePosition( -1 * safeTickAmount, "write backup" );
         }
         
         
@@ -464,21 +505,22 @@ namespace mx
         }
         
         
-        void MeasureWriter::advanceCursorIfNeeded( const api::NoteData& currentNote, NoteIter inNoteIter, const NoteIter inEndIter, bool isStartOfChord )
+        void MeasureWriter::advanceCursorIfNeeded( const api::NoteData& currentNote )
         {
-            MX_UNUSED(currentNote);
-            MX_UNUSED(isStartOfChord);
-            
-            ++inNoteIter;
-            if( inNoteIter != inEndIter )
-            {
-                myHistory.setTime( inNoteIter->tickTimePosition, "advanceCursorIfNeeded inNoteIter != inEndIter" );
-            }
-            else
-            {
-                myHistory.advanceTickTimePosition( currentNote.durationData.durationTimeTicks, "advanceCursorIfNeeded else");
-                myHistory.setChord( true );
-            }
+//            if( inNoteIter != inEndIter )
+//            {
+                 {
+                     const auto curTime = std::max( myHistory.getCursor().tickTimePosition, 0 );
+                     const auto duration = std::max( currentNote.durationData.durationTimeTicks, 0 );
+                     const auto newTime = curTime + duration;
+                    myHistory.setTime( newTime, "advanceCursorIfNeeded" );
+                }
+//            }
+//            else
+//            {
+//                myHistory.advanceTickTimePosition( currentNote.durationData.durationTimeTicks, "advanceCursorIfNeeded else");
+//                myHistory.setChord( true );
+//            }
 
             myPreviousCursor = myHistory.getCursor();
         }
@@ -495,11 +537,11 @@ namespace mx
 
             if( firstDirectionTime < minTickTimePosition )
             {
-                MX_THROW( "this should never happen" );
+                MX_THROW( "firstDirectionTime < minTickTimePosition" );
             }
 
             for( ; directionIter != directionEnd
-                && directionIter->tickTimePosition < maxTickTimePosition;
+                && directionIter->tickTimePosition <= maxTickTimePosition;
                 ++directionIter )
             {
                 if( isDirectionDataEmpty( *directionIter ) )
@@ -511,7 +553,7 @@ namespace mx
 
                 if( directionTime < minTickTimePosition )
                 {
-                    MX_THROW( "this should never happen" );
+                    MX_THROW( "directionTime < minTickTimePosition" );
                 }
 
                 auto directionMdc = core::makeMusicDataChoice();
@@ -520,6 +562,8 @@ namespace mx
                 directionMdc->setDirection( directionWriter.getDirection() );
                 myOutMeasure->getMusicDataGroup()->addMusicDataChoice( directionMdc );
                 myHistory.log( "addDirection cursorTime " + std::to_string( myHistory.getCursor().tickTimePosition ) + ", directionTime " + std::to_string( directionIter->tickTimePosition ) );
+
+//                MX_ASSERT(directionMdc->getDirection()->getOffset()->getValue().getValue() != 19.0);
             }
         }
 
@@ -556,7 +600,7 @@ namespace mx
             myCursor.tickTimePosition += amount;
             record.cursorAfter = myCursor;
             record.timeAfter = myCursor.tickTimePosition;
-            history.push_back( record );
+            historyPush( record );
         }
     }
 }

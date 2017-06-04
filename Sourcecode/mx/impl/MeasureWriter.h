@@ -62,12 +62,18 @@ namespace mx
                     record.cursorBefore = myCursor;
                     record.cursorAfter = myCursor;
                     record.timeAfter = myCursor.tickTimePosition;
-                    history.push_back( record );
+                    historyPush( record );
                 }
 
                 std::vector<HistoryRecord> history;
                 void advanceTickTimePosition( int amount, std::string reason );
                 const MeasureCursor& getCursor() const { return myCursor; }
+
+                void historyPush( const HistoryRecord& record )
+                {
+                    history.push_back( record );
+                    //std::cout << "before: " << record.timeBefore << ", " << "after: " << record.timeAfter << ", reason: " << record.reason << std::endl;
+                }
 
                 void resetCursorFofStaffIterations()
                 {
@@ -83,7 +89,7 @@ namespace mx
 
                     record.cursorAfter = myCursor;
                     record.timeAfter = myCursor.tickTimePosition;
-                    history.push_back( record );
+                    historyPush( record );
                 }
 
                 void nextStaff()
@@ -98,7 +104,7 @@ namespace mx
 
                     record.cursorAfter = myCursor;
                     record.timeAfter = myCursor.tickTimePosition;
-                    history.push_back( record );
+                    historyPush( record );
                 }
 
                 void setVoiceIndex( int inVoiceIndex )
@@ -113,7 +119,7 @@ namespace mx
 
                     record.cursorAfter = myCursor;
                     record.timeAfter = myCursor.tickTimePosition;
-                    history.push_back( record );
+                    historyPush( record );
                 }
 
                 void setChord( bool isChordActive )
@@ -142,7 +148,7 @@ namespace mx
 
                     record.cursorAfter = myCursor;
                     record.timeAfter = myCursor.tickTimePosition;
-                    history.push_back( record );
+                    historyPush( record );
                 }
 
                 void setTime( int inTickTimePosition, std::string inReason )
@@ -157,7 +163,7 @@ namespace mx
 
                     record.cursorAfter = myCursor;
                     record.timeAfter = myCursor.tickTimePosition;
-                    history.push_back( record );
+                    historyPush( record );
                 }
 
                 void log( std::string message )
@@ -169,7 +175,7 @@ namespace mx
                     record.cursorBefore = myCursor;
                     record.cursorAfter = myCursor;
                     record.timeAfter = myCursor.tickTimePosition;
-                    history.push_back( record );
+                    historyPush( record );
                 }
 
                 std::string toString() const
@@ -208,7 +214,7 @@ namespace mx
             void writeForwardOrBackupIfNeeded( const api::NoteData& currentNote );
             void backup( const int ticks );
             void forward( const int ticks );
-            void advanceCursorIfNeeded( const api::NoteData& currentNote, NoteIter inNoteIter, const NoteIter inEndIter, bool isStartOfChord );
+            void advanceCursorIfNeeded( const api::NoteData& currentNote );
             void writeBarlines( int tickTimePosition );
             using dirs = std::vector<api::DirectionData>;
             using dIter = dirs::const_iterator;

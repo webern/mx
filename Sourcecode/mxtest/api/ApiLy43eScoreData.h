@@ -19,10 +19,12 @@ namespace mxtest
         auto& part = score.parts.front();
         part.uniqueId = "P1";
         part.name = "MusicXML Part";
-        
+        int measureIndex = 0;
+
         // measure 1 - setup
         part.measures.emplace_back( MeasureData{} );
         auto measureP = &part.measures.front();
+        measureP->number = std::to_string( measureIndex++ );
         measureP->keys.emplace_back( KeyData{} );
         auto keyP = &measureP->keys.back();
         keyP->mode = KeyMode::major;
@@ -184,6 +186,7 @@ namespace mxtest
         // measure 2 - setup
         part.measures.emplace_back( MeasureData{} );
         measureP = &part.measures.back();
+        measureP->number = std::to_string( measureIndex++ );
         measureP->timeSignature.isImplicit = true;
         measureP->timeSignature.symbol = TimeSignatureSymbol::common;
         measureP->keys.emplace_back( KeyData{} );
@@ -295,6 +298,7 @@ namespace mxtest
         // measure 3 - setup
         part.measures.emplace_back( MeasureData{} );
         measureP = &part.measures.back();
+        measureP->number = std::to_string( measureIndex++ );
         measureP->timeSignature.isImplicit = true;
         measureP->timeSignature.symbol = TimeSignatureSymbol::common;
         measureP->staves.emplace_back( StaffData{} );
@@ -401,6 +405,7 @@ namespace mxtest
         // measure 4 - setup
         part.measures.emplace_back( MeasureData{} );
         measureP = &part.measures.back();
+        measureP->number = std::to_string( measureIndex++ );
         measureP->timeSignature.isImplicit = true;
         measureP->timeSignature.symbol = TimeSignatureSymbol::common;
         measureP->staves.emplace_back( StaffData{} );

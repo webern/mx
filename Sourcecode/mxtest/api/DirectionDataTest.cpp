@@ -116,4 +116,107 @@ TEST( OutOfOrderDoesntThrow, DirectionData )
 }
 T_END;
 
+TEST( OutOfOrderTorture, DirectionData )
+{
+    const std::vector<int> randomNumbers =
+    { -31, 25, -9, 21, 0, 77, -100, 100, 0,
+       31, 12, 6, 19, 109, 10000, -100000,
+       0, 231, 652, 2345, 11, 11, 1, 11
+    };
+
+    const auto vecSize = randomNumbers.size();
+
+    for( int i = 0; i < 100; ++i )
+    {
+        const int tick0 = randomNumbers.at( static_cast<size_t>( i + 0 ) % vecSize );
+        const int tick1 = randomNumbers.at( static_cast<size_t>( i + 1 ) % vecSize );
+        const int tick2 = randomNumbers.at( static_cast<size_t>( i + 2 ) % vecSize );
+        const int tick3 = randomNumbers.at( static_cast<size_t>( i + 3 ) % vecSize );
+        const int dur0tick = randomNumbers.at( static_cast<size_t>( i + 4 ) % vecSize );
+        const int dur1tick = randomNumbers.at( static_cast<size_t>( i + 5 ) % vecSize );
+        const int dur2tick = randomNumbers.at( static_cast<size_t>( i + 6 ) % vecSize );
+
+        ScoreData oscore;
+        oscore.ticksPerQuarter = 10;
+        oscore.parts.emplace_back();
+        auto& opart = oscore.parts.back();
+        opart.measures.emplace_back();
+        auto& omeasure = opart.measures.back();
+        omeasure.staves.emplace_back();
+        auto& ostaff = omeasure.staves.back();
+        auto& ovoice = ostaff.voices[0];
+        NoteData onote{};
+
+        onote.tickTimePosition = tick0;
+        onote.durationData.durationTimeTicks = 10;
+        onote.durationData.durationName = DurationName::quarter;
+        onote.durationData.durationName = DurationName::quarter;
+        ovoice.notes.push_back( onote );
+
+        onote.tickTimePosition = tick1;
+        onote.durationData.durationTimeTicks = 10;
+        onote.durationData.durationName = DurationName::quarter;
+        onote.durationData.durationName = DurationName::quarter;
+        ovoice.notes.push_back( onote );
+
+        onote.tickTimePosition = tick2;
+        onote.durationData.durationTimeTicks = 10;
+        onote.durationData.durationName = DurationName::quarter;
+        onote.durationData.durationName = DurationName::quarter;
+        ovoice.notes.push_back( onote );
+
+        onote.tickTimePosition = tick3;
+        onote.durationData.durationTimeTicks = 10;
+        onote.durationData.durationName = DurationName::quarter;
+        onote.durationData.durationName = DurationName::quarter;
+        ovoice.notes.push_back( onote );
+
+        DirectionData directionData{};
+        MarkData mark{ MarkType::f };
+
+        mark.tickTimePosition = dur0tick;
+        directionData.tickTimePosition = dur0tick;
+        directionData.marks.clear();
+        directionData.marks.push_back( mark );
+        ostaff.directions.push_back( directionData );
+
+        mark.tickTimePosition = dur1tick;
+        directionData.tickTimePosition = dur1tick;
+        directionData.marks.clear();
+        directionData.marks.push_back( mark );
+        ostaff.directions.push_back( directionData );
+
+        mark.tickTimePosition = dur2tick;
+        directionData.tickTimePosition = dur2tick;
+        directionData.marks.clear();
+        directionData.marks.push_back( mark );
+        ostaff.directions.push_back( directionData );
+
+        const auto rscore = mxtest::roundTrip( oscore );
+        const auto& rpart = rscore.parts.back();
+        const auto& rmeasure = rpart.measures.back();
+        const auto& rstaff = rmeasure.staves.back();
+        const auto& rdirections = rstaff.directions;
+
+        std::vector<int> tempTickSorter = { dur0tick, dur1tick, dur2tick };
+        std::sort( std::begin( tempTickSorter ), std::end( tempTickSorter ) );
+
+        int expectedShift = 0;
+
+        if( tick0 < 0 )
+        {
+            expectedShift = ( -1 * tick0 );
+        }
+
+        CHECK_EQUAL( 3, rdirections.size() );
+        auto rdirection = rdirections.cbegin();
+        CHECK_EQUAL( tempTickSorter.at( 0 ), rdirection->tickTimePosition );
+        ++rdirection;
+        CHECK_EQUAL( tempTickSorter.at( 1 ), rdirection->tickTimePosition );
+        ++rdirection;
+        CHECK_EQUAL( tempTickSorter.at( 2 ), rdirection->tickTimePosition );
+    }
+}
+T_END;
+
 #endif
