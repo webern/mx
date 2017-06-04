@@ -178,7 +178,7 @@ namespace mx
             }
             else
             {
-                measureAttr.number = core::XsToken{ std::to_string( myHistory.getCursor().measureIndex ) };
+                measureAttr.number = core::XsToken{ std::to_string( myHistory.getCursor().measureIndex + 1 ) };
             }
             
             if( myMeasureData.width >= 0.0 )
@@ -400,7 +400,7 @@ namespace mx
                     mdc->setNote( writer.getNote(isStartOfChord) );
                     myOutMeasure->getMusicDataGroup()->addMusicDataChoice( mdc );
                     myHistory.log( "addNote cursorTime " + std::to_string( myHistory.getCursor().tickTimePosition ) + ", noteTime " + std::to_string( apiNote.tickTimePosition ) );
-                    advanceCursorIfNeeded( apiNote );
+                    advanceCursorIfNeeded( apiNote, noteIter, noteEnd );
 //                    noteForOutsideOfLoop = apiNote;
 
                 } // foreach note
@@ -503,26 +503,49 @@ namespace mx
             myOutMeasure->getMusicDataGroup()->addMusicDataChoice( forwardMdc );
             myHistory.advanceTickTimePosition( ticks, "write forward" );
         }
-        
-        
-        void MeasureWriter::advanceCursorIfNeeded( const api::NoteData& currentNote )
-        {
-//            if( inNoteIter != inEndIter )
-//            {
-                 {
-                     const auto curTime = std::max( myHistory.getCursor().tickTimePosition, 0 );
-                     const auto duration = std::max( currentNote.durationData.durationTimeTicks, 0 );
-                     const auto newTime = curTime + duration;
-                    myHistory.setTime( newTime, "advanceCursorIfNeeded" );
-                }
-//            }
-//            else
-//            {
-//                myHistory.advanceTickTimePosition( currentNote.durationData.durationTimeTicks, "advanceCursorIfNeeded else");
-//                myHistory.setChord( true );
-//            }
 
-            myPreviousCursor = myHistory.getCursor();
+
+        bool MeasureWriter::isAdvanceNeeded( const api::NoteData& currentNote, const NoteIter& inIter, const NoteIter& inEnd )
+        {
+            if( currentNote.isChord )
+            {
+                auto nextNoteIter = inIter + 1;
+                if( nextNoteIter == inEnd )
+                {
+                    return true;
+                }
+                else
+                {
+                    const auto nextNoteTime = nextNoteIter->tickTimePosition;
+                    if( nextNoteTime != currentNote.tickTimePosition )
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        
+        void MeasureWriter::advanceCursorIfNeeded( const api::NoteData& currentNote, const NoteIter& inIter, const NoteIter& inEnd )
+        {
+            if (isAdvanceNeeded( currentNote, inIter, inEnd ) )
+            {
+                const auto curTime = std::max( myHistory.getCursor().tickTimePosition, 0 );
+                const auto duration = std::max( currentNote.durationData.durationTimeTicks, 0 );
+                const auto newTime = curTime + duration;
+                myHistory.setTime( newTime, "advance cursor" );
+                myPreviousCursor = myHistory.getCursor();
+            }
+            else
+            {
+                myHistory.log( "no advance");
+            }
+
         }
 
 

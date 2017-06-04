@@ -214,7 +214,8 @@ namespace mx
             void writeForwardOrBackupIfNeeded( const api::NoteData& currentNote );
             void backup( const int ticks );
             void forward( const int ticks );
-            void advanceCursorIfNeeded( const api::NoteData& currentNote );
+            bool isAdvanceNeeded( const api::NoteData& currentNote, const NoteIter& inIter, const NoteIter& inEnd );
+            void advanceCursorIfNeeded( const api::NoteData& currentNote, const NoteIter& inIter, const NoteIter& inEnd );
             void writeBarlines( int tickTimePosition );
             using dirs = std::vector<api::DirectionData>;
             using dIter = dirs::const_iterator;
