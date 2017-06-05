@@ -72,7 +72,7 @@ namespace mx
                 void historyPush( const HistoryRecord& record )
                 {
                     history.push_back( record );
-                    //std::cout << "before: " << record.timeBefore << ", " << "after: " << record.timeAfter << ", reason: " << record.reason << std::endl;
+                    // std::cout << "before: " << record.timeBefore << ", " << "after: " << record.timeAfter << ", reason: " << record.reason << std::endl;
                 }
 
                 void resetCursorFofStaffIterations()
@@ -219,7 +219,8 @@ namespace mx
             void writeBarlines( int tickTimePosition );
             using dirs = std::vector<api::DirectionData>;
             using dIter = dirs::const_iterator;
-            void writeDirections( dIter& directionIter, const dIter& directionEnd, int minTickTimePosition, int maxTickTimePosition );
+            void writeDirections( dIter& directionIter, const dIter& directionEnd, const NoteIter& inNoteIter, const NoteIter& inNotesBegin, const NoteIter& inNoteEnd );
+            void writeDirection( const api::DirectionData& inDirectionData );
 
             template<typename T>
             std::vector<T> findItemsAtTimePosition( const std::vector<T>& inItems, int inTickTimePosition )
