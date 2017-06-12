@@ -20,4 +20,16 @@ namespace mxtest
         const auto xml = ss.str();
         return xml;
     }
+
+
+    inline mx::api::ScoreData fromXml( const std::string& inXml )
+    {
+        using namespace mx::api;
+        auto& docMgr = DocumentManager::getInstance();
+        std::istringstream iss{ inXml };
+        const auto docId = docMgr.createFromStream( iss );
+        const auto score = docMgr.getData( docId );
+        docMgr.destroyDocument( docId );
+        return score;
+    }
 }

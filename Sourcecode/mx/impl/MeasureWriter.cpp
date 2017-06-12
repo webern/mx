@@ -321,6 +321,7 @@ namespace mx
 
             for( const auto& voice : inStaff.voices )
             {
+                bool isFirstNote = true;
                 int currentChordTickPosition = -1;
                 int previousChordTickPosition = -2;
                 myHistory.setVoiceIndex( voice.first );
@@ -338,20 +339,23 @@ namespace mx
                 {
                     bool isStartOfChord = false;
                     myHistory.setChord( noteIter->isChord );
-
+                    const auto& apiNote = *noteIter;
+                    writeForwardOrBackupIfNeeded( apiNote );
+                    
                     if ( noteIter->isChord )
                     {
                         currentChordTickPosition = myHistory.getCursor().tickTimePosition;
-                        if( currentChordTickPosition != previousChordTickPosition )
+                        if( isFirstNote )
+                        {
+                            isStartOfChord = true;
+                        }
+                        else if( currentChordTickPosition != previousChordTickPosition )
                         {
                             isStartOfChord = true;
                         }
                         previousChordTickPosition = currentChordTickPosition;
                     }
-                    
-                    const auto& apiNote = *noteIter;
-                    writeForwardOrBackupIfNeeded( apiNote );
-                    
+
                     if( myMeasureKeysIter != myMeasureKeysEnd )
                     {
                         if( myMeasureKeysIter->tickTimePosition <= myHistory.getCursor().tickTimePosition )
@@ -393,6 +397,7 @@ namespace mx
                     myHistory.log( "addNote cursorTime " + std::to_string( myHistory.getCursor().tickTimePosition ) + ", noteTime " + std::to_string( apiNote.tickTimePosition ) );
                     advanceCursorIfNeeded( apiNote, noteIter, noteEnd );
                     myPreviousCursor = myHistory.getCursor();
+                    isFirstNote = false;
 
                 } // foreach note
 

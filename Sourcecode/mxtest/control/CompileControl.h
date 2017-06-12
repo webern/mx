@@ -10,7 +10,7 @@
 #define MX_COMPILE_IMPORT_TESTS
 #define MX_COMPILE_NEW_DECIMAL_TESTS
 #define MX_COMPILE_UTILTIY_TESTS
-//#define MX_COMPILE_XML_TESTS
+#define MX_COMPILE_XML_TESTS
 
 // use this to restrict the size of the files that
 // the test run will open (compile-time constant).
