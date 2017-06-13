@@ -27,7 +27,7 @@ enum class ZEUS_ENUM_CLASS_NAME { ZEUS_ENUM_MEMBERS(ZEUS_ENUM_VALUE) };
 
 #define ZEUS_STRING_CONSTANT_NAME(XXX, value) ZEUS_CAT(ZEUS_CAT(XXX, _), ZEUS_CAT(value, _String))
 
-#define ZEUS_ENUM_VALUE(value, string) static constexpr const char* const ZEUS_STRING_CONSTANT_NAME(  RETURN_ZEUS_ENUM_CLASS_NAME( ZEUS_ENUM_CLASS_NAME ) , value ) = #string;
+#define ZEUS_ENUM_VALUE(value, string) static constexpr const char* const ZEUS_STRING_CONSTANT_NAME(  RETURN_ZEUS_ENUM_CLASS_NAME( ZEUS_ENUM_CLASS_NAME ) , value ) = string;
 
 ZEUS_ENUM_MEMBERS(ZEUS_ENUM_VALUE);
 

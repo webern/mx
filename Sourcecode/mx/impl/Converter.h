@@ -102,6 +102,9 @@ namespace mx
 
             core::FermataShape convertFermata( api::MarkType value ) const;
             api::MarkType convertFermata( core::FermataShape value ) const;
+
+            core::PlaybackSound convert( api::InstrumentSound value ) const;
+            api::InstrumentSound convert( core::PlaybackSound value ) const;
             
             const static std::map<core::StepEnum, api::Step> stepMap;
             const static std::map<core::NoteTypeValue, api::DurationName> durationMap;
@@ -129,7 +132,8 @@ namespace mx
             const static std::map<core::LineEnd, api::LineHook> lineStopMap;
             const static std::map<core::GroupSymbolValue, api::BracketType> bracketMap;
             const static std::map<core::FermataShape, api::MarkType> fermataMap;
-            
+            const static std::map<core::PlaybackSound, api::InstrumentSound> instrumentMap;
+
         private:
             template<typename CORE_TYPE, typename API_TYPE>
             API_TYPE findApiItem( const std::map<CORE_TYPE, API_TYPE>& enumMap, API_TYPE defaultToReturn, CORE_TYPE itemToFind ) const
