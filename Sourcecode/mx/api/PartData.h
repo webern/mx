@@ -5,7 +5,7 @@
 #pragma once
 
 #include "mx/api/MeasureData.h"
-#include "mx/api/InstrumentSound.h"
+#include "mx/api/SoundID.h"
 
 #include <string>
 #include <vector>
@@ -77,7 +77,7 @@ namespace mx
             std::string uniqueId;
             std::string name;
             std::string abbreviation;
-            InstrumentSound instrumentSound;
+            SoundID soundID;
             SoloOrEnsemble soloOrEnsemble;
             MidiData midiData;
         };
@@ -154,7 +154,7 @@ namespace mx
         MXAPI_EQUALS_MEMBER( uniqueId )
         MXAPI_EQUALS_MEMBER( name )
         MXAPI_EQUALS_MEMBER( abbreviation )
-        MXAPI_EQUALS_MEMBER( instrumentSound )
+        MXAPI_EQUALS_MEMBER( soundID )
         MXAPI_EQUALS_MEMBER( soloOrEnsemble )
         MXAPI_EQUALS_MEMBER( midiData )
         MXAPI_EQUALS_END;

@@ -142,11 +142,11 @@ namespace mx
                 }
             }
             
-            if( myPartData.instrumentData.instrumentSound != api::InstrumentSound::unspecified && myPartData.instrumentData.instrumentSound != api::InstrumentSound::errorBadString )
+            if( myPartData.instrumentData.soundID != api::SoundID::unspecified && myPartData.instrumentData.soundID != api::SoundID::errorBadString )
             {
                 scoreIntstrument->setHasInstrumentSound( true );
                 Converter c;
-                scoreIntstrument->getInstrumentSound()->setValue( c.convert( myPartData.instrumentData.instrumentSound ) );
+                scoreIntstrument->getInstrumentSound()->setValue( c.convert( myPartData.instrumentData.soundID ) );
             }
             
             if( addScoreInstrument )

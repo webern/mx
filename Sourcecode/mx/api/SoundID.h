@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <string>
+
 //#include "mx/api/ApiCommon.h"
 //#include "mx/api/PositionData.h"
 //#include "mx/api/ColorData.h"
@@ -13,7 +15,12 @@ namespace mx
 {
     namespace api
     {
-        enum class InstrumentSound
+        enum class SoundID;
+
+        std::string SoundIDToString( SoundID inSoundID );
+        SoundID SoundIDFromString( const std::string& inString );
+
+        enum class SoundID
         {
             unspecified,
             errorBadString,
