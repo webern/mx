@@ -45,7 +45,7 @@
 		297DD7C91D1A4BD1003BADC1 /* ImportTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297DD7C81D1A4BD1003BADC1 /* ImportTest.cpp */; };
 		2983E3E61EB43878007FCC34 /* DirectionDataTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2983E3E51EB43878007FCC34 /* DirectionDataTest.cpp */; };
 		298F0F4D1D1E4981005C3D9D /* ImportTestImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 298F0F4B1D1E4981005C3D9D /* ImportTestImpl.cpp */; };
-		29A16F8F1EB11B4400D59278 /* PreciseDecimalTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A16F8E1EB11B4400D59278 /* PreciseDecimalTest.cpp */; };
+		29A800611EF04A5F00AD2478 /* PreciseDecimalTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A800601EF04A5F00AD2478 /* PreciseDecimalTest.cpp */; };
 		29B48EDB1DBE7F550030A974 /* MeasureWriterTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29B48ED71DBE7F550030A974 /* MeasureWriterTest.cpp */; };
 		29B48EDC1DBE7F550030A974 /* NoteWriterTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29B48ED81DBE7F550030A974 /* NoteWriterTest.cpp */; };
 		29B48EDD1DBE7F550030A974 /* PartWriterTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29B48ED91DBE7F550030A974 /* PartWriterTest.cpp */; };
@@ -536,8 +536,8 @@
 		298F0F4C1D1E4981005C3D9D /* ImportTestImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImportTestImpl.h; path = ../Sourcecode/mxtest/import/ImportTestImpl.h; sourceTree = "<group>"; };
 		29979D611DC811F300707AA4 /* TimeSignatureApiTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimeSignatureApiTest.cpp; path = ../Sourcecode/mxtest/api/TimeSignatureApiTest.cpp; sourceTree = "<group>"; };
 		299F7FF61CA8D2620084CAE5 /* MxTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MxTest; sourceTree = BUILT_PRODUCTS_DIR; };
-		29A16F8E1EB11B4400D59278 /* PreciseDecimalTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PreciseDecimalTest.cpp; path = ../Sourcecode/mx/core/elements/PreciseDecimalTest.cpp; sourceTree = "<group>"; };
 		29A3387F1E652432001D61DD /* BombeTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BombeTest.cpp; path = ../Sourcecode/mxtest/api/BombeTest.cpp; sourceTree = "<group>"; };
+		29A800601EF04A5F00AD2478 /* PreciseDecimalTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PreciseDecimalTest.cpp; path = ../Sourcecode/mxtest/core/PreciseDecimalTest.cpp; sourceTree = "<group>"; };
 		29AD58B71E3D1000004FD94E /* MetronomeApiTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MetronomeApiTest.cpp; path = ../Sourcecode/mxtest/api/MetronomeApiTest.cpp; sourceTree = "<group>"; };
 		29B48ED71DBE7F550030A974 /* MeasureWriterTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MeasureWriterTest.cpp; path = ../Sourcecode/mxtest/impl/MeasureWriterTest.cpp; sourceTree = "<group>"; };
 		29B48ED81DBE7F550030A974 /* NoteWriterTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NoteWriterTest.cpp; path = ../Sourcecode/mxtest/impl/NoteWriterTest.cpp; sourceTree = "<group>"; };
@@ -1145,6 +1145,7 @@
 		292E37201CA8D6A400CC63BB /* core */ = {
 			isa = PBXGroup;
 			children = (
+				29A800601EF04A5F00AD2478 /* PreciseDecimalTest.cpp */,
 				29C01B641D1312F90094BE61 /* AccentTest.cpp */,
 				29C01B651D1312F90094BE61 /* AccidentalMarkTest.cpp */,
 				29C01B661D1312F90094BE61 /* AccidentalTest.cpp */,
@@ -1510,7 +1511,6 @@
 				29C01CCD1D1312F90094BE61 /* PluckTest.cpp */,
 				29C01CCE1D1312F90094BE61 /* PositiveIntegerOrEmptyTest.cpp */,
 				29C01CCF1D1312F90094BE61 /* PreBendTest.cpp */,
-				29A16F8E1EB11B4400D59278 /* PreciseDecimalTest.cpp */,
 				29C01CD01D1312F90094BE61 /* PrefixTest.cpp */,
 				29C01CD11D1312F90094BE61 /* PrincipalVoiceTest.cpp */,
 				29C01CD21D1312F90094BE61 /* PrintTest.cpp */,
@@ -2245,7 +2245,6 @@
 				29C01E141D1312FA0094BE61 /* InstrumentsTest.cpp in Sources */,
 				29C01D6D1D1312FA0094BE61 /* AccidentalMarkTest.cpp in Sources */,
 				29C01DE61D1312FA0094BE61 /* FingernailsTest.cpp in Sources */,
-				29A16F8F1EB11B4400D59278 /* PreciseDecimalTest.cpp in Sources */,
 				29C01D6C1D1312FA0094BE61 /* AccentTest.cpp in Sources */,
 				29C01D9C1D1312FA0094BE61 /* CodaTest.cpp in Sources */,
 				29C01EC41D1312FA0094BE61 /* StickTypeTest.cpp in Sources */,
@@ -2262,6 +2261,7 @@
 				29C01EE11D1312FA0094BE61 /* TimpaniTest.cpp in Sources */,
 				295897271DB9806600F18FBA /* MxFile.cpp in Sources */,
 				29C01DC51D1312FA0094BE61 /* DoitTest.cpp in Sources */,
+				29A800611EF04A5F00AD2478 /* PreciseDecimalTest.cpp in Sources */,
 				29C01E931D1312FA0094BE61 /* RestTest.cpp in Sources */,
 				29C01E111D1312FA0094BE61 /* InstrumentAbbreviationTest.cpp in Sources */,
 				290A8D171E897C9000AF62C8 /* ApiMuAccidentals1Test.cpp in Sources */,
