@@ -24,6 +24,7 @@ namespace mx
         class Harmony;
         using HarmonyPtr = std::shared_ptr<Harmony>;
         using HarmonyPtrSet = std::vector<HarmonyPtr>;
+        class HarmonyChordGroup;
 	}
     namespace impl
     {
@@ -73,6 +74,7 @@ namespace mx
             void parseAccordionRegistration( const core::DirectionType& directionType );
             void parsePercussion( const core::DirectionType& directionType );
             void parseOtherDirection( const core::DirectionType& directionType );
+            void parseHarmony( const core::HarmonyChordGroup& inGrp );
             
             template<typename ATTRIBUTES_TYPE>
             api::PositionData parsePositionData( const ATTRIBUTES_TYPE& attributes )

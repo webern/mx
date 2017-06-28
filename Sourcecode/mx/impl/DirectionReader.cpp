@@ -3,20 +3,32 @@
 // Distributed under the MIT License
 
 #include "mx/impl/DirectionReader.h"
+#include "mx/api/WedgeData.h"
 #include "mx/core/elements/AccordionRegistration.h"
+#include "mx/core/elements/Bass.h"
+#include "mx/core/elements/BassAlter.h"
+#include "mx/core/elements/BassStep.h"
 #include "mx/core/elements/Bracket.h"
 #include "mx/core/elements/Coda.h"
 #include "mx/core/elements/Damp.h"
 #include "mx/core/elements/DampAll.h"
 #include "mx/core/elements/Dashes.h"
+#include "mx/core/elements/Degree.h"
 #include "mx/core/elements/Direction.h"
 #include "mx/core/elements/DirectionType.h"
 #include "mx/core/elements/Dynamics.h"
+#include "mx/core/elements/EditorialGroup.h"
 #include "mx/core/elements/EditorialVoiceDirectionGroup.h"
 #include "mx/core/elements/Eyeglasses.h"
 #include "mx/core/elements/Footnote.h"
+#include "mx/core/elements/Frame.h"
+#include "mx/core/elements/Function.h"
+#include "mx/core/elements/Harmony.h"
+#include "mx/core/elements/HarmonyChordGroup.h"
 #include "mx/core/elements/HarpPedals.h"
 #include "mx/core/elements/Image.h"
+#include "mx/core/elements/Inversion.h"
+#include "mx/core/elements/Kind.h"
 #include "mx/core/elements/Level.h"
 #include "mx/core/elements/Metronome.h"
 #include "mx/core/elements/OctaveShift.h"
@@ -26,21 +38,23 @@
 #include "mx/core/elements/Percussion.h"
 #include "mx/core/elements/PrincipalVoice.h"
 #include "mx/core/elements/Rehearsal.h"
+#include "mx/core/elements/Root.h"
+#include "mx/core/elements/RootAlter.h"
+#include "mx/core/elements/RootStep.h"
 #include "mx/core/elements/Scordatura.h"
 #include "mx/core/elements/Segno.h"
 #include "mx/core/elements/Sound.h"
+#include "mx/core/elements/Staff.h"
 #include "mx/core/elements/Staff.h"
 #include "mx/core/elements/StringMute.h"
 #include "mx/core/elements/Voice.h"
 #include "mx/core/elements/Wedge.h"
 #include "mx/core/elements/Words.h"
-#include "mx/impl/MetronomeReader.h"
-#include "mx/impl/PrintFunctions.h"
-#include "mx/api/WedgeData.h"
-#include "mx/impl/SpannerFunctions.h"
 #include "mx/impl/DynamicsReader.h"
 #include "mx/impl/MarkDataFunctions.h"
-#include "mx/core/elements/Harmony.h"
+#include "mx/impl/MetronomeReader.h"
+#include "mx/impl/PrintFunctions.h"
+#include "mx/impl/SpannerFunctions.h"
 
 namespace mx
 {
@@ -151,7 +165,13 @@ namespace mx
             }
             else if( myHarmony )
             {
-                MX_THROW("not implemented");
+                for ( const auto& hPtr : myHarmony->getHarmonyChordGroupSet() )
+                {
+                    if( hPtr->getHarmonyChordGroup()->getChord() == core::HarmonyChordGroup::Choice::root )
+                    {
+                        parseHarmony( *hPtr );
+                    }
+                }
             }
         }
 
@@ -612,6 +632,13 @@ namespace mx
         void DirectionReader::parseOtherDirection( const core::DirectionType& directionType)
         {
             MX_UNUSED( directionType );
+        }
+
+
+        void DirectionReader::parseHarmony( const core::HarmonyChordGroup& inGrp )
+        {
+            mx::api::ChordData chord;
+            chord.root = inGrp->getRoot();
         }
     }
 }
