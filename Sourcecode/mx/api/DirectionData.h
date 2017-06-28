@@ -10,6 +10,7 @@
 #include "mx/api/TempoData.h"
 #include "mx/api/OttavaData.h"
 #include "mx/api/WordsData.h"
+#include "mx/api/ChordData.h"
 
 namespace mx
 {
@@ -27,7 +28,8 @@ namespace mx
     	{
             int tickTimePosition;
             Placement placement;
-            
+
+            // mx::api will place the DirectionData element in the correct place by using an offset element.
             // MusicXML Documentation: An offset is represented in terms of divisions, and indicates where
             // the direction will appear relative to the current musical location. This affects the visual
             // appearance of the direction. If the sound attribute is "yes", then the offset affects
@@ -36,9 +38,6 @@ namespace mx
             // compatibility with earlier versions of the MusicXML format. If an element within a
             // direction includes a default-x attribute, the offset value will be ignored when determining
             // the appearance of that element.
-//            bool isOffsetSpecified;
-//            int offset;
-//            Bool offsetSound;
 
             // voice value of -1 means unspecified
             int voice;
@@ -62,13 +61,11 @@ namespace mx
             std::vector<SpannerStart> bracketStarts;
             std::vector<SpannerStop> bracketStops;
             std::vector<WordsData> words;
+            std::vector<ChordData> chords;
             
             DirectionData()
             : tickTimePosition{ 0 }
             , placement{ Placement::unspecified }
-//            , isOffsetSpecified{ false }
-//            , offset{ 0 }
-//            , offsetSound{ Bool::unspecified }
             , voice{ -1 }
             , isStaffValueSpecified{ true }
             , marks{}
@@ -79,6 +76,7 @@ namespace mx
             , bracketStarts{}
             , bracketStops{}
             , words{}
+            , chords{}
             {
                 
             }
@@ -101,9 +99,6 @@ namespace mx
         MXAPI_EQUALS_BEGIN( DirectionData )
         MXAPI_EQUALS_MEMBER( tickTimePosition )
         MXAPI_EQUALS_MEMBER( placement )
-//        MXAPI_EQUALS_MEMBER( isOffsetSpecified )
-//        MXAPI_EQUALS_MEMBER( offset )
-//        MXAPI_EQUALS_MEMBER( offsetSound )
         MXAPI_EQUALS_MEMBER( voice )
         MXAPI_EQUALS_MEMBER( isStaffValueSpecified )
         MXAPI_EQUALS_MEMBER( tempos )
@@ -115,6 +110,7 @@ namespace mx
         MXAPI_EQUALS_MEMBER( bracketStarts )
         MXAPI_EQUALS_MEMBER( bracketStops )
         MXAPI_EQUALS_MEMBER( words )
+        MXAPI_EQUALS_MEMBER( chords )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( DirectionData );
 	}

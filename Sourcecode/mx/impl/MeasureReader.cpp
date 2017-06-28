@@ -229,7 +229,7 @@ namespace mx
                 case core::MusicDataChoice::Choice::direction:
                 {
                     myCurrentCursor.isBackupInProgress = false;
-                    parseDirection( *mdc.getDirection() );
+                    parseDirection( mdc.getDirection() );
                     advanceTickTimePosition( 0, "parseDirection" );
                     break;
                 }
@@ -375,19 +375,19 @@ namespace mx
         }
 
         
-        void MeasureReader::parseDirection( const core::Direction& inMxDirection ) const
+        void MeasureReader::parseDirection( std::shared_ptr<const core::Direction> inDirection ) const
         {
-            DirectionReader reader{ inMxDirection, myCurrentCursor };
+            DirectionReader reader{ inDirection, myCurrentCursor };
             auto directionData = reader.getDirectionData();
             
             // make an adjustment if the directionData refers to a non-existant staff
             size_t staffIndex = 0;
-            bool isStaffIndexSpecified = inMxDirection.getHasStaff();
+            bool isStaffIndexSpecified = inDirection->getHasStaff();
             bool isStaffIndexInsane = false;
 
             if( isStaffIndexSpecified )
             {
-                staffIndex = static_cast<size_t>( inMxDirection.getStaff()->getValue().getValue() - 1 );
+                staffIndex = static_cast<size_t>( inDirection->getStaff()->getValue().getValue() - 1 );
             }
             
             isStaffIndexInsane = staffIndex >= myOutMeasureData.staves.size();

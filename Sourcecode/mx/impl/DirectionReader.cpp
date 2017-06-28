@@ -40,13 +40,15 @@
 #include "mx/impl/SpannerFunctions.h"
 #include "mx/impl/DynamicsReader.h"
 #include "mx/impl/MarkDataFunctions.h"
+#include "mx/core/elements/Harmony.h"
 
 namespace mx
 {
     namespace impl
     {
-        DirectionReader::DirectionReader( const core::Direction& inDirection, Cursor inCursor )
+        DirectionReader::DirectionReader( std::shared_ptr<const core::Direction> inDirection, Cursor inCursor )
         : myDirection{ inDirection }
+        , myHarmony{ nullptr }
         , myCursor{ inCursor }
         , myConverter{}
         , myOutDirectionData{}
@@ -54,43 +56,123 @@ namespace mx
             
         }
 
-        
+
+        DirectionReader::DirectionReader( std::shared_ptr<const core::Harmony> inHarmony, Cursor inCursor )
+        : myDirection{ nullptr }
+        , myHarmony{ inHarmony }
+        , myCursor{ inCursor }
+        , myConverter{}
+        , myOutDirectionData{}
+        {
+
+        }
+
+
         api::DirectionData DirectionReader::getDirectionData()
         {
-            myOutDirectionData = api::DirectionData{};
-            myOutDirectionData.tickTimePosition = myCursor.tickTimePosition;
-            myOutDirectionData.isStaffValueSpecified = !myDirection.getHasStaff();
-           
-            if( myDirection.getHasOffset() )
+            myOutDirectionData = initializeData();
+            updateTimeForOffset();
+            parsePlacement();
+            parseValues();
+
+            // need to make sure all the MarkData item times match the DirectionData time
+            fixTimes();
+            return returnData();
+        }
+
+
+        mx::api::DirectionData DirectionReader::initializeData()
+        {
+            auto result = api::DirectionData{};
+            result.tickTimePosition = myCursor.tickTimePosition;
+
+            if( myDirection )
             {
-                const auto offset = static_cast<int>( std::ceil( myDirection.getOffset()->getValue().getValue() - 0.5 ) );
-                myOutDirectionData.tickTimePosition += offset;
+                result.isStaffValueSpecified = myDirection->getHasStaff();
+            }
+            else if ( myHarmony )
+            {
+                result.isStaffValueSpecified = myHarmony->getHasStaff();
             }
 
-            if( myDirection.getAttributes()->hasPlacement )
-            {
-                myOutDirectionData.placement = myConverter.convert( myDirection.getAttributes()->placement );
-            }
-            
-            for ( const auto& dtPtr : myDirection.getDirectionTypeSet() )
-            {
-                const auto& dt = *dtPtr;
-                parseDirectionType( dt );
-            }
+            return result;
+        }
 
-            // messy - need to make sure all the MarkDatas have the same tickTimePosition
-            // as their parent DirectionData.
+
+        void DirectionReader::updateTimeForOffset()
+        {
+            if( myDirection )
+            {
+                if( myDirection->getHasOffset() )
+                {
+                    const auto offset = static_cast<int>( std::ceil( myDirection->getOffset()->getValue().getValue() - 0.5 ) );
+                    myOutDirectionData.tickTimePosition += offset;
+                }
+            }
+            else if( myHarmony )
+            {
+                if( myHarmony->getHasOffset() )
+                {
+                    const auto offset = static_cast<int>( std::ceil( myHarmony->getOffset()->getValue().getValue() - 0.5 ) );
+                    myOutDirectionData.tickTimePosition += offset;
+                }
+            }
+        }
+
+
+        void DirectionReader::parsePlacement()
+        {
+            if( myDirection )
+            {
+                if( myDirection->getAttributes()->hasPlacement )
+                {
+                    myOutDirectionData.placement = myConverter.convert( myDirection->getAttributes()->placement );
+                }
+            }
+            else if( myHarmony )
+            {
+                if( myHarmony->getAttributes()->hasPlacement )
+                {
+                    myOutDirectionData.placement = myConverter.convert( myHarmony->getAttributes()->placement );
+                }
+            }
+        }
+
+
+        void DirectionReader::parseValues()
+        {
+            if( myDirection )
+            {
+                for ( const auto& dtPtr : myDirection->getDirectionTypeSet() )
+                {
+                    const auto& dt = *dtPtr;
+                    parseDirectionType( dt );
+                }
+            }
+            else if( myHarmony )
+            {
+                MX_THROW("not implemented");
+            }
+        }
+
+
+        void DirectionReader::fixTimes()
+        {
             for( auto& mark : myOutDirectionData.marks )
             {
                 mark.tickTimePosition = myOutDirectionData.tickTimePosition;
             }
+        }
 
+
+        mx::api::DirectionData DirectionReader::returnData()
+        {
             api::DirectionData temp{ std::move( myOutDirectionData ) };
             myOutDirectionData = api::DirectionData{};
             return temp;
         }
-        
-        
+
+
         void DirectionReader::parseDirectionType( const core::DirectionType& directionType )
         {
             switch ( directionType.getChoice() )
@@ -390,8 +472,8 @@ namespace mx
             }
 
             const auto placement =
-                myDirection.getAttributes()->hasPlacement ?
-                    ( myDirection.getAttributes()->placement == core::AboveBelow::above ?
+                myDirection->getAttributes()->hasPlacement ?
+                    ( myDirection->getAttributes()->placement == core::AboveBelow::above ?
                       api::Placement::above :
                       api::Placement::below )
                 : api::Placement::unspecified;

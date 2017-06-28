@@ -7,6 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2975944F1F044C7600DE2F30 /* ChordData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2975944D1F044C7600DE2F30 /* ChordData.cpp */; };
+		297594501F044C7600DE2F30 /* ChordData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2975944D1F044C7600DE2F30 /* ChordData.cpp */; };
+		297594511F044C7600DE2F30 /* ChordData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2975944D1F044C7600DE2F30 /* ChordData.cpp */; };
+		297594521F044C7600DE2F30 /* ChordData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2975944D1F044C7600DE2F30 /* ChordData.cpp */; };
+		297594531F044C7600DE2F30 /* ChordData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2975944D1F044C7600DE2F30 /* ChordData.cpp */; };
+		297594541F044C7600DE2F30 /* ChordData.h in Headers */ = {isa = PBXBuildFile; fileRef = 2975944E1F044C7600DE2F30 /* ChordData.h */; };
+		297594551F044C7600DE2F30 /* ChordData.h in Headers */ = {isa = PBXBuildFile; fileRef = 2975944E1F044C7600DE2F30 /* ChordData.h */; };
+		297594561F044C7600DE2F30 /* ChordData.h in Headers */ = {isa = PBXBuildFile; fileRef = 2975944E1F044C7600DE2F30 /* ChordData.h */; };
+		297594571F044C7600DE2F30 /* ChordData.h in Headers */ = {isa = PBXBuildFile; fileRef = 2975944E1F044C7600DE2F30 /* ChordData.h */; };
+		297594581F044C7600DE2F30 /* ChordData.h in Headers */ = {isa = PBXBuildFile; fileRef = 2975944E1F044C7600DE2F30 /* ChordData.h */; };
 		29A800001EF0499300AD2478 /* TransposeAttributes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E1E11EF0476200AD2478 /* TransposeAttributes.cpp */; };
 		29A800011EF0499300AD2478 /* Tremolo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E1E31EF0476200AD2478 /* Tremolo.cpp */; };
 		29A800021EF0499300AD2478 /* TremoloAttributes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E1E51EF0476200AD2478 /* TremoloAttributes.cpp */; };
@@ -3328,6 +3338,8 @@
 
 /* Begin PBXFileReference section */
 		293FFED21DD25C74001477E8 /* libmx-macOS.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libmx-macOS.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2975944D1F044C7600DE2F30 /* ChordData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ChordData.cpp; sourceTree = "<group>"; };
+		2975944E1F044C7600DE2F30 /* ChordData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChordData.h; sourceTree = "<group>"; };
 		299F7FE61CA8D2200084CAE5 /* libMx.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMx.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		29A800621EF0876500AD2478 /* SoundID.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SoundID.cpp; sourceTree = "<group>"; };
 		29A800631EF0876500AD2478 /* SoundID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundID.h; sourceTree = "<group>"; };
@@ -4809,6 +4821,8 @@
 				29A8DD591EF0475D00AD2478 /* ApiCommon.h */,
 				29A8DD5A1EF0475D00AD2478 /* ApiEquality.h */,
 				29A8DD5B1EF0475D00AD2478 /* BarlineData.h */,
+				2975944D1F044C7600DE2F30 /* ChordData.cpp */,
+				2975944E1F044C7600DE2F30 /* ChordData.h */,
 				29A8DD5C1EF0475D00AD2478 /* ClefData.cpp */,
 				29A8DD5D1EF0475D00AD2478 /* ClefData.h */,
 				29A8DD5E1EF0475D00AD2478 /* ColorData.h */,
@@ -6261,6 +6275,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				29A8006A1EF0876500AD2478 /* SoundID.h in Headers */,
+				297594551F044C7600DE2F30 /* ChordData.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6269,6 +6284,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				29A800691EF0876500AD2478 /* SoundID.h in Headers */,
+				297594541F044C7600DE2F30 /* ChordData.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6276,6 +6292,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				297594581F044C7600DE2F30 /* ChordData.h in Headers */,
 				29A8FDC61EF0497500AD2478 /* MxmacOS.h in Headers */,
 				29A8006D1EF0876500AD2478 /* SoundID.h in Headers */,
 			);
@@ -6285,6 +6302,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				297594571F044C7600DE2F30 /* ChordData.h in Headers */,
 				29B962851E79FF410072071D /* MxiOS.h in Headers */,
 				29A8006C1EF0876500AD2478 /* SoundID.h in Headers */,
 			);
@@ -6295,6 +6313,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				29A8006B1EF0876500AD2478 /* SoundID.h in Headers */,
+				297594561F044C7600DE2F30 /* ChordData.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6510,6 +6529,7 @@
 				29A8E6581EF0476300AD2478 /* BottomMargin.cpp in Sources */,
 				29A8F0761EF0476700AD2478 /* MultipleRest.cpp in Sources */,
 				29A8E45A1EF0476300AD2478 /* AccordionHigh.cpp in Sources */,
+				297594501F044C7600DE2F30 /* ChordData.cpp in Sources */,
 				29A8EB1C1EF0476500AD2478 /* FretAttributes.cpp in Sources */,
 				29A8E5721EF0476300AD2478 /* BassAlter.cpp in Sources */,
 				29A8EE961EF0476600AD2478 /* LyricAttributes.cpp in Sources */,
@@ -7179,6 +7199,7 @@
 				29A8E6571EF0476300AD2478 /* BottomMargin.cpp in Sources */,
 				29A8F0751EF0476700AD2478 /* MultipleRest.cpp in Sources */,
 				29A8E4591EF0476300AD2478 /* AccordionHigh.cpp in Sources */,
+				2975944F1F044C7600DE2F30 /* ChordData.cpp in Sources */,
 				29A8EB1B1EF0476500AD2478 /* FretAttributes.cpp in Sources */,
 				29A8E5711EF0476300AD2478 /* BassAlter.cpp in Sources */,
 				29A8EE951EF0476600AD2478 /* LyricAttributes.cpp in Sources */,
@@ -7848,6 +7869,7 @@
 				29A8FDFA1EF0499200AD2478 /* BarlineAttributes.cpp in Sources */,
 				29A8FDFB1EF0499200AD2478 /* Barre.cpp in Sources */,
 				29A8FDFC1EF0499200AD2478 /* BarreAttributes.cpp in Sources */,
+				297594531F044C7600DE2F30 /* ChordData.cpp in Sources */,
 				29A8FDFD1EF0499200AD2478 /* BarStyle.cpp in Sources */,
 				29A8FDFE1EF0499200AD2478 /* BarStyleAttributes.cpp in Sources */,
 				29A8FDFF1EF0499200AD2478 /* BasePitch.cpp in Sources */,
@@ -8517,6 +8539,7 @@
 				29A8E65A1EF0476300AD2478 /* BottomMargin.cpp in Sources */,
 				29A8F0781EF0476700AD2478 /* MultipleRest.cpp in Sources */,
 				29A8E45C1EF0476300AD2478 /* AccordionHigh.cpp in Sources */,
+				297594521F044C7600DE2F30 /* ChordData.cpp in Sources */,
 				29A8EB1E1EF0476500AD2478 /* FretAttributes.cpp in Sources */,
 				29A8E5741EF0476300AD2478 /* BassAlter.cpp in Sources */,
 				29A8EE981EF0476600AD2478 /* LyricAttributes.cpp in Sources */,
@@ -9186,6 +9209,7 @@
 				29A8E6591EF0476300AD2478 /* BottomMargin.cpp in Sources */,
 				29A8F0771EF0476700AD2478 /* MultipleRest.cpp in Sources */,
 				29A8E45B1EF0476300AD2478 /* AccordionHigh.cpp in Sources */,
+				297594511F044C7600DE2F30 /* ChordData.cpp in Sources */,
 				29A8EB1D1EF0476500AD2478 /* FretAttributes.cpp in Sources */,
 				29A8E5731EF0476300AD2478 /* BassAlter.cpp in Sources */,
 				29A8EE971EF0476600AD2478 /* LyricAttributes.cpp in Sources */,
@@ -10242,6 +10266,7 @@
 				29A8FDC91EF0497500AD2478 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		29B962861E79FF410072071D /* Build configuration list for PBXNativeTarget "MxiOS" */ = {
 			isa = XCConfigurationList;
