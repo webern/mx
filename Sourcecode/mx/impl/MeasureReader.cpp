@@ -243,7 +243,7 @@ namespace mx
                 case core::MusicDataChoice::Choice::harmony:
                 {
                     myCurrentCursor.isBackupInProgress = false;
-                    parseHarmony( *mdc.getHarmony() );
+                    parseHarmony( mdc.getHarmony() );
                     advanceTickTimePosition( 0, "parseHarmony" );
                     break;
                 }
@@ -351,11 +351,7 @@ namespace mx
             {
                 ++myCurrentCursor.voiceIndex;
             }
-//            else
-//            {
-//                // TODO - remove this debugging check
-//                MX_THROW( "multiple backups in a row" );
-//            }
+
             myCurrentCursor.isBackupInProgress = true;
             const int backupAmount = myCurrentCursor.convertDurationToGlobalTickScale( *inMxBackup.getDuration() );
             advanceTickTimePosition( -1 * backupAmount, "backup" );
@@ -374,12 +370,15 @@ namespace mx
             advanceTickTimePosition( forwardAmount, "forward" );
         }
 
-        
-        void MeasureReader::parseDirection( std::shared_ptr<const core::Direction> inDirection ) const
+        template<typename T>
+        static void parseDirectionImpl( std::shared_ptr<const T> inDirection, api::MeasureData& ioMeasureData, const MeasureCursor& inMeasureCursor  );
+
+        template<typename T>
+        static void parseDirectionImpl( std::shared_ptr<const T> inDirection, api::MeasureData& ioMeasureData, const MeasureCursor& inMeasureCursor )
         {
-            DirectionReader reader{ inDirection, myCurrentCursor };
+            DirectionReader reader{ inDirection, inMeasureCursor };
             auto directionData = reader.getDirectionData();
-            
+
             // make an adjustment if the directionData refers to a non-existant staff
             size_t staffIndex = 0;
             bool isStaffIndexSpecified = inDirection->getHasStaff();
@@ -389,9 +388,9 @@ namespace mx
             {
                 staffIndex = static_cast<size_t>( inDirection->getStaff()->getValue().getValue() - 1 );
             }
-            
-            isStaffIndexInsane = staffIndex >= myOutMeasureData.staves.size();
-            
+
+            isStaffIndexInsane = staffIndex >= ioMeasureData.staves.size();
+
             if( !isStaffIndexSpecified || isStaffIndexInsane )
             {
                 staffIndex = 0;
@@ -401,12 +400,18 @@ namespace mx
             {
                 directionData.isStaffValueSpecified = true;
             }
-            
+
             // in-case we made a mistake in the code above which calculates the staffIndex
             // make a final check to see if the staffIndex is in-bounds - throw if stupid
-            MX_ASSERT( staffIndex < myOutMeasureData.staves.size() );
-            auto& staff = myOutMeasureData.staves.at( staffIndex );
+            MX_ASSERT( staffIndex < ioMeasureData.staves.size() );
+            auto& staff = ioMeasureData.staves.at( staffIndex );
             staff.directions.emplace_back( std::move( directionData ) );
+        }
+
+
+        void MeasureReader::parseDirection( std::shared_ptr<const core::Direction> inDirection ) const
+        {
+            parseDirectionImpl<core::Direction>( inDirection, myOutMeasureData, myCurrentCursor );
         }
         
         
@@ -491,9 +496,9 @@ namespace mx
         }
         
         
-        void MeasureReader::parseHarmony( const core::Harmony& inMxHarmony ) const
+        void MeasureReader::parseHarmony( std::shared_ptr<const core::Harmony> inHarmony ) const
         {
-            coutItemNotSupported( inMxHarmony );
+            parseDirectionImpl<core::Harmony>( inHarmony, myOutMeasureData, myCurrentCursor );
         }
         
         

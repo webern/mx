@@ -77,7 +77,7 @@ namespace mx
             void parseForward( const core::Forward& inMxForward ) const;
             void parseDirection( std::shared_ptr<const core::Direction> inDirection ) const;
             void parseProperties( const core::Properties& inMxProperties ) const;
-            void parseHarmony( const core::Harmony& inMxHarmony ) const;
+            void parseHarmony( std::shared_ptr<const core::Harmony> inHarmony ) const;
             void parseFiguredBass( const core::FiguredBass& inMxFiguredBass ) const;
             void parsePrint( const core::Print& inMxPrint ) const;
             void parseSound( const core::Sound& inMxSound ) const;

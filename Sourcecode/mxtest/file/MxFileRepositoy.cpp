@@ -273,6 +273,7 @@ namespace mxtest
         myNameSubdirectoryMap.emplace( "freezing.xml", "mjbsuite" );
         myNameSubdirectoryMap.emplace( "hello_timewise.xml", "mjbsuite" );
         myNameSubdirectoryMap.emplace( "lyre_timewise.xml", "mjbsuite" );
+        myNameSubdirectoryMap.emplace( "chords_simple.xml", "mjbsuite" );
         
         // museScore
         myNameSubdirectoryMap.emplace( "A_Walk_through_the_Park.xml", "musuite" );
