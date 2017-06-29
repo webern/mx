@@ -123,42 +123,4 @@ namespace mxtest
     {
         myFailureMessage = inMessage;
     }
-
-
-    // MxFileTest::MxFileTest( MxFileTest&& other )
-    // : Test{ std::move( other ) }
-    // , myTestFile{ std::move( other.myTestFile ) }
-    // , myTestName{ std::move( other.myTestName ) }
-    // , myCppFileName{ std::move( other.myCppFileName ) }
-    // , myCppFileLineNumber{ std::move( other.myCppFileLineNumber ) }
-    // , myIsSuccess{ std::move( other.myIsSuccess ) }
-    // , myFailureMessage{ std::move( other.myFailureMessage ) }
-    // {
-
-    // }
-
-
-    // MxFileTest::MxFileTest( const MxFileTest& other )
-    // : Test{ other }
-    // , myTestFile{ other.myTestFile }
-    // , myTestName{ other.myTestName }
-    // , myCppFileName{ other.myCppFileName }
-    // , myCppFileLineNumber{ other.myCppFileLineNumber }
-    // , myIsSuccess{ other.myIsSuccess }
-    // , myFailureMessage{ other.myFailureMessage } 
-    // {
-
-    // }
-
-
-    // MxFileTest& MxFileTest::operator=( MxFileTest&& other )
-    // {
-    //     return *this;
-    // }
-
-
-    // MxFileTest& MxFileTest::operator=( const MxFileTest& other )
-    // {
-    //     return *this;
-    // }
 }

@@ -37,11 +37,6 @@ namespace mxtest
 
 		virtual void runTestCode() = 0;
 
-        // MxFileTest( MxFileTest&& other );
-        // MxFileTest( const MxFileTest& other );
-        // MxFileTest& operator=( MxFileTest&& other );
-        // MxFileTest& operator=( const MxFileTest& other );
-
     private:
         mxtest::MxFile myTestFile;
         std::string myTestName;

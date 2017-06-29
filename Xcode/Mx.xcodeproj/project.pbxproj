@@ -3340,6 +3340,7 @@
 		293FFED21DD25C74001477E8 /* libmx-macOS.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libmx-macOS.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2975944D1F044C7600DE2F30 /* ChordData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ChordData.cpp; sourceTree = "<group>"; };
 		2975944E1F044C7600DE2F30 /* ChordData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChordData.h; sourceTree = "<group>"; };
+		297594591F04783100DE2F30 /* Round.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Round.h; sourceTree = "<group>"; };
 		299F7FE61CA8D2200084CAE5 /* libMx.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMx.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		29A800621EF0876500AD2478 /* SoundID.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SoundID.cpp; sourceTree = "<group>"; };
 		29A800631EF0876500AD2478 /* SoundID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundID.h; sourceTree = "<group>"; };
@@ -6214,6 +6215,7 @@
 				29A8E2A81EF0476300AD2478 /* Utility.h */,
 				29A8E2A91EF0476300AD2478 /* UtilityImpl.cpp */,
 				29A8E2AA1EF0476300AD2478 /* UtilityImpl.h */,
+				297594591F04783100DE2F30 /* Round.h */,
 			);
 			path = utility;
 			sourceTree = "<group>";

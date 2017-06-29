@@ -1270,8 +1270,46 @@ namespace mx
             std::pair<core::PlaybackSound, api::SoundID>{ core::PlaybackSound::woodTonetang, api::SoundID::woodTonetang },
             std::pair<core::PlaybackSound, api::SoundID>{ core::PlaybackSound::woodWoodBlock, api::SoundID::woodWoodBlock },
         };
-        
-        
+
+
+        const std::map<core::KindValue, api::ChordKind> Converter::kindMap
+        {
+            std::pair<core::KindValue, api::ChordKind>{ core::KindValue::major, api::ChordKind::major },
+            std::pair<core::KindValue, api::ChordKind>{ core::KindValue::minor, api::ChordKind::minor },
+            std::pair<core::KindValue, api::ChordKind>{ core::KindValue::augmented, api::ChordKind::augmented },
+            std::pair<core::KindValue, api::ChordKind>{ core::KindValue::diminished, api::ChordKind::diminished },
+            std::pair<core::KindValue, api::ChordKind>{ core::KindValue::dominant, api::ChordKind::dominant },
+            std::pair<core::KindValue, api::ChordKind>{ core::KindValue::majorSeventh, api::ChordKind::majorSeventh },
+            std::pair<core::KindValue, api::ChordKind>{ core::KindValue::minorSeventh, api::ChordKind::minorSeventh },
+            std::pair<core::KindValue, api::ChordKind>{ core::KindValue::diminishedSeventh, api::ChordKind::diminishedSeventh },
+            std::pair<core::KindValue, api::ChordKind>{ core::KindValue::augmentedSeventh, api::ChordKind::augmentedSeventh },
+            std::pair<core::KindValue, api::ChordKind>{ core::KindValue::halfDiminished, api::ChordKind::halfDiminished },
+            std::pair<core::KindValue, api::ChordKind>{ core::KindValue::majorMinor, api::ChordKind::majorMinor },
+            std::pair<core::KindValue, api::ChordKind>{ core::KindValue::majorSixth, api::ChordKind::majorSixth },
+            std::pair<core::KindValue, api::ChordKind>{ core::KindValue::minorSixth, api::ChordKind::minorSixth },
+            std::pair<core::KindValue, api::ChordKind>{ core::KindValue::dominantNinth, api::ChordKind::dominantNinth },
+            std::pair<core::KindValue, api::ChordKind>{ core::KindValue::majorNinth, api::ChordKind::majorNinth },
+            std::pair<core::KindValue, api::ChordKind>{ core::KindValue::minorNinth, api::ChordKind::minorNinth },
+            std::pair<core::KindValue, api::ChordKind>{ core::KindValue::dominant11Th, api::ChordKind::dominant11Th },
+            std::pair<core::KindValue, api::ChordKind>{ core::KindValue::major11Th, api::ChordKind::major11Th },
+            std::pair<core::KindValue, api::ChordKind>{ core::KindValue::minor11Th, api::ChordKind::minor11Th },
+            std::pair<core::KindValue, api::ChordKind>{ core::KindValue::dominant13Th, api::ChordKind::dominant13Th },
+            std::pair<core::KindValue, api::ChordKind>{ core::KindValue::major13Th, api::ChordKind::major13Th },
+            std::pair<core::KindValue, api::ChordKind>{ core::KindValue::minor13Th, api::ChordKind::minor13Th },
+            std::pair<core::KindValue, api::ChordKind>{ core::KindValue::suspendedSecond, api::ChordKind::suspendedSecond },
+            std::pair<core::KindValue, api::ChordKind>{ core::KindValue::suspendedFourth, api::ChordKind::suspendedFourth },
+            std::pair<core::KindValue, api::ChordKind>{ core::KindValue::neapolitan, api::ChordKind::neapolitan },
+            std::pair<core::KindValue, api::ChordKind>{ core::KindValue::italian, api::ChordKind::italian },
+            std::pair<core::KindValue, api::ChordKind>{ core::KindValue::french, api::ChordKind::french },
+            std::pair<core::KindValue, api::ChordKind>{ core::KindValue::german, api::ChordKind::german },
+            std::pair<core::KindValue, api::ChordKind>{ core::KindValue::pedal, api::ChordKind::pedal },
+            std::pair<core::KindValue, api::ChordKind>{ core::KindValue::power, api::ChordKind::power },
+            std::pair<core::KindValue, api::ChordKind>{ core::KindValue::tristan, api::ChordKind::tristan },
+            std::pair<core::KindValue, api::ChordKind>{ core::KindValue::other, api::ChordKind::other },
+            std::pair<core::KindValue, api::ChordKind>{ core::KindValue::none, api::ChordKind::none },
+        };
+
+
         api::Step Converter::convert( core::StepEnum inStep ) const
         {
             auto it = stepMap.find( inStep );
@@ -1682,6 +1720,18 @@ namespace mx
         api::SoundID Converter::convert( core::PlaybackSound value ) const
         {
             return findApiItem( instrumentMap, api::SoundID::unspecified, value );
+        }
+
+
+        core::KindValue Converter::convert( api::ChordKind value ) const
+        {
+            return findCoreItem( kindMap, core::KindValue::none, value );
+        }
+
+
+        api::ChordKind Converter::convert( core::KindValue value ) const
+        {
+            return findApiItem( kindMap, api::ChordKind::unspecified, value );
         }
         
     }

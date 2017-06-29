@@ -106,6 +106,9 @@ namespace mx
 
             core::PlaybackSound convert( api::SoundID value ) const;
             api::SoundID convert( core::PlaybackSound value ) const;
+
+            core::KindValue convert( api::ChordKind value ) const;
+            api::ChordKind convert( core::KindValue value ) const;
             
             const static std::map<core::StepEnum, api::Step> stepMap;
             const static std::map<core::NoteTypeValue, api::DurationName> durationMap;
@@ -134,6 +137,7 @@ namespace mx
             const static std::map<core::GroupSymbolValue, api::BracketType> bracketMap;
             const static std::map<core::FermataShape, api::MarkType> fermataMap;
             const static std::map<core::PlaybackSound, api::SoundID> instrumentMap;
+            const static std::map<core::KindValue, api::ChordKind> kindMap;
 
         private:
             template<typename CORE_TYPE, typename API_TYPE>

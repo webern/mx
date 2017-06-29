@@ -55,6 +55,7 @@
 #include "mx/impl/MetronomeReader.h"
 #include "mx/impl/PrintFunctions.h"
 #include "mx/impl/SpannerFunctions.h"
+#include "mx/utility/Round.h"
 
 namespace mx
 {
@@ -167,7 +168,7 @@ namespace mx
             {
                 for ( const auto& hPtr : myHarmony->getHarmonyChordGroupSet() )
                 {
-                    if( hPtr->getHarmonyChordGroup()->getChord() == core::HarmonyChordGroup::Choice::root )
+                    if( hPtr->getChoice() == core::HarmonyChordGroup::Choice::root )
                     {
                         parseHarmony( *hPtr );
                     }
@@ -638,7 +639,32 @@ namespace mx
         void DirectionReader::parseHarmony( const core::HarmonyChordGroup& inGrp )
         {
             mx::api::ChordData chord;
-            chord.root = inGrp->getRoot();
+            chord.root = myConverter.convert( inGrp.getRoot()->getRootStep()->getValue() );
+
+            if( inGrp.getRoot()->getHasRootAlter() )
+            {
+                chord.rootAlter = mx::utility::roundTo<core::DecimalType, int>( inGrp.getRoot()->getRootAlter()->getValue().getValue() );
+            }
+
+            const auto& kind = *inGrp.getKind();
+
+            chord.chordKind = myConverter.convert( kind.getValue() );
+
+            if( kind.getAttributes()->hasText )
+            {
+                chord.text = kind.getAttributes()->text.getValue();
+            }
+
+            if( inGrp.getHasBass() )
+            {
+                const auto& bass = *inGrp.getBass();
+                chord.bass = myConverter.convert( bass.getBassStep()->getValue() );
+
+                if( bass.getHasBassAlter() )
+                {
+                    chord.bassAlter = mx::utility::roundTo<core::DecimalType, int>( bass.getBassAlter()->getValue().getValue() );
+                }
+            }
         }
     }
 }
