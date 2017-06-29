@@ -361,7 +361,7 @@ namespace mx
         }
 
 
-        core::MusicDataChoiceSet DirectionWriter::createHarmonyElements(int inOffset)
+        core::MusicDataChoiceSet DirectionWriter::createHarmonyElements( int inOffset )
         {
             if( myDirectionData.chords.empty() )
             {
@@ -378,6 +378,12 @@ namespace mx
             {
                 harmony->setHasOffset( true );
                 harmony->getOffset()->setValue( core::DivisionsValue{ static_cast<core::DecimalType>( inOffset ) } );
+            }
+
+            if( myDirectionData.isStaffValueSpecified )
+            {
+                harmony->setHasStaff( true );
+                harmony->getStaff()->setValue( core::PositiveInteger{ myCursor.staffIndex + 1 } );
             }
 
             const auto& chords = myDirectionData.chords;

@@ -91,6 +91,7 @@ TEST( Save, ChordDataSaveTest )
     const auto& measureSet = partwisePart->getPartwiseMeasureSet();
 
     auto measure = measureSet.at( 0 );
+    CHECK_EQUAL( 2, measure->getMusicDataGroup()->getMusicDataChoiceSet().size() );
     auto mdc = measure->getMusicDataGroup()->getMusicDataChoiceSet().back();
     CHECK( core::MusicDataChoice::Choice::harmony == mdc->getChoice() );
     auto harmony = mdc->getHarmony();
@@ -117,6 +118,7 @@ TEST( Save, ChordDataSaveTest )
     CHECK_DOUBLES_EQUAL( 0.0, bassAlter, 0.01 );
 
     measure = measureSet.at( 1 );
+    CHECK_EQUAL( 1, measure->getMusicDataGroup()->getMusicDataChoiceSet().size() );
     mdc = measure->getMusicDataGroup()->getMusicDataChoiceSet().back();
     CHECK( core::MusicDataChoice::Choice::harmony == mdc->getChoice() );
     harmony = mdc->getHarmony();
@@ -143,6 +145,7 @@ TEST( Save, ChordDataSaveTest )
     CHECK_DOUBLES_EQUAL( 1.0, bassAlter, 0.01 );
 
     measure = measureSet.at( 2 );
+    CHECK_EQUAL( 1, measure->getMusicDataGroup()->getMusicDataChoiceSet().size() );
     mdc = measure->getMusicDataGroup()->getMusicDataChoiceSet().back();
     CHECK( core::MusicDataChoice::Choice::harmony == mdc->getChoice() );
     harmony = mdc->getHarmony();
@@ -169,6 +172,7 @@ TEST( Save, ChordDataSaveTest )
     CHECK_DOUBLES_EQUAL( 0.0, bassAlter, 0.01 );
 
     measure = measureSet.at( 3 );
+    CHECK_EQUAL( 1, measure->getMusicDataGroup()->getMusicDataChoiceSet().size() );
     mdc = measure->getMusicDataGroup()->getMusicDataChoiceSet().back();
     CHECK( core::MusicDataChoice::Choice::harmony == mdc->getChoice() );
     harmony = mdc->getHarmony();
@@ -198,8 +202,134 @@ TEST( Save, ChordDataSaveTest )
     auto offset = harmony->getOffset();
     auto offsetValue = offset->getValue().getValue();
     CHECK_DOUBLES_EQUAL( 109.0, offsetValue, 0.01 );
+}
 
-    // TODO - go to DirectionWriter and pass the offset value down into the harmony element
+
+TEST( Load1, ChordDataSaveTest )
+{
+    const auto scoreData = MxFileRepository::loadFile( "chords_simple.xml" );
+    auto part = &scoreData.parts.front();
+
+    int measureNumber = 1;
+    auto measure = &part->measures.at( measureNumber - 1 );
+    auto staff = &measure->staves.front();
+    auto directions = &staff->directions;
+    CHECK_EQUAL( 1, directions->size() );
+    auto direction = &directions->at( 0 );
+    auto chords = &direction->chords;
+    CHECK_EQUAL( 1, chords->size() );
+    CHECK_EQUAL( 0, direction->tempos.size() );
+    CHECK_EQUAL( 0, direction->marks.size() );
+    CHECK_EQUAL( 0, direction->wedgeStarts.size() );
+    CHECK_EQUAL( 0, direction->wedgeStops.size() );
+    CHECK_EQUAL( 0, direction->ottavaStarts.size() );
+    CHECK_EQUAL( 0, direction->ottavaStops.size() );
+    CHECK_EQUAL( 0, direction->bracketStarts.size() );
+    CHECK_EQUAL( 0, direction->bracketStops.size() );
+    CHECK_EQUAL( 0, direction->words.size() );
+    auto chord = &chords->at( 0 );
+    CHECK( api::Step::c ==  chord->root );
+    CHECK_EQUAL( 0, chord->rootAlter );
+    CHECK( ChordKind::majorSeventh == chord->chordKind );
+    CHECK_EQUAL( "maj7", chord->text );
+    CHECK( Step::unspecified == chord->bass );
+    CHECK_EQUAL( 0, chord->bassAlter );
+}
+
+
+TEST( Load2, ChordDataSaveTest )
+{
+    const auto scoreData = MxFileRepository::loadFile( "chords_simple.xml" );
+    auto part = &scoreData.parts.front();
+
+    int measureNumber = 2;
+    auto measure = &part->measures.at( measureNumber - 1 );
+    auto staff = &measure->staves.front();
+    auto directions = &staff->directions;
+    CHECK_EQUAL( 1, directions->size() );
+    auto direction = &directions->at( 0 );
+    auto chords = &direction->chords;
+    CHECK_EQUAL( 1, chords->size() );
+    CHECK_EQUAL( 0, direction->tempos.size() );
+    CHECK_EQUAL( 0, direction->marks.size() );
+    CHECK_EQUAL( 0, direction->wedgeStarts.size() );
+    CHECK_EQUAL( 0, direction->wedgeStops.size() );
+    CHECK_EQUAL( 0, direction->ottavaStarts.size() );
+    CHECK_EQUAL( 0, direction->ottavaStops.size() );
+    CHECK_EQUAL( 0, direction->bracketStarts.size() );
+    CHECK_EQUAL( 0, direction->bracketStops.size() );
+    CHECK_EQUAL( 0, direction->words.size() );
+    auto chord = &chords->at( 0 );
+    CHECK( api::Step::d ==  chord->root );
+    CHECK_EQUAL( 0, chord->rootAlter );
+    CHECK( ChordKind::minor == chord->chordKind );
+    CHECK_EQUAL( "m", chord->text );
+    CHECK( Step::c == chord->bass );
+    CHECK_EQUAL( 1, chord->bassAlter );
+}
+
+
+TEST( Load3, ChordDataSaveTest )
+{
+    const auto scoreData = MxFileRepository::loadFile( "chords_simple.xml" );
+    auto part = &scoreData.parts.front();
+
+    int measureNumber = 3;
+    auto measure = &part->measures.at( measureNumber - 1 );
+    auto staff = &measure->staves.front();
+    auto directions = &staff->directions;
+    CHECK_EQUAL( 1, directions->size() );
+    auto direction = &directions->at( 0 );
+    auto chords = &direction->chords;
+    CHECK_EQUAL( 1, chords->size() );
+    CHECK_EQUAL( 0, direction->tempos.size() );
+    CHECK_EQUAL( 0, direction->marks.size() );
+    CHECK_EQUAL( 0, direction->wedgeStarts.size() );
+    CHECK_EQUAL( 0, direction->wedgeStops.size() );
+    CHECK_EQUAL( 0, direction->ottavaStarts.size() );
+    CHECK_EQUAL( 0, direction->ottavaStops.size() );
+    CHECK_EQUAL( 0, direction->bracketStarts.size() );
+    CHECK_EQUAL( 0, direction->bracketStops.size() );
+    CHECK_EQUAL( 0, direction->words.size() );
+    auto chord = &chords->at( 0 );
+    CHECK( api::Step::e ==  chord->root );
+    CHECK_EQUAL( -1, chord->rootAlter );
+    CHECK( ChordKind::dominant == chord->chordKind );
+    CHECK_EQUAL( "7", chord->text );
+    CHECK( Step::unspecified == chord->bass );
+    CHECK_EQUAL( 0, chord->bassAlter );
+}
+
+
+TEST( Load4, ChordDataSaveTest )
+{
+    const auto scoreData = MxFileRepository::loadFile( "chords_simple.xml" );
+    auto part = &scoreData.parts.front();
+
+    int measureNumber = 4;
+    auto measure = &part->measures.at( measureNumber - 1 );
+    auto staff = &measure->staves.front();
+    auto directions = &staff->directions;
+    CHECK_EQUAL( 1, directions->size() );
+    auto direction = &directions->at( 0 );
+    auto chords = &direction->chords;
+    CHECK_EQUAL( 1, chords->size() );
+    CHECK_EQUAL( 0, direction->tempos.size() );
+    CHECK_EQUAL( 0, direction->marks.size() );
+    CHECK_EQUAL( 0, direction->wedgeStarts.size() );
+    CHECK_EQUAL( 0, direction->wedgeStops.size() );
+    CHECK_EQUAL( 0, direction->ottavaStarts.size() );
+    CHECK_EQUAL( 0, direction->ottavaStops.size() );
+    CHECK_EQUAL( 0, direction->bracketStarts.size() );
+    CHECK_EQUAL( 0, direction->bracketStops.size() );
+    CHECK_EQUAL( 0, direction->words.size() );
+    auto chord = &chords->at( 0 );
+    CHECK( api::Step::b ==  chord->root );
+    CHECK_EQUAL( 0, chord->rootAlter );
+    CHECK( ChordKind::diminishedSeventh == chord->chordKind );
+    CHECK_EQUAL( "dim7", chord->text );
+    CHECK( Step::unspecified == chord->bass );
+    CHECK_EQUAL( 0, chord->bassAlter );
 }
 
 #endif

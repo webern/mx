@@ -35,7 +35,7 @@ namespace mx
 
         private:
             void addDirectionType( const core::DirectionTypePtr& directionType, const core::DirectionPtr& ioDirection );
-            core::MusicDataChoiceSet createHarmonyElements(int inOffset);
+            core::MusicDataChoiceSet createHarmonyElements( int inOffset );
             void addMusicDataChoices( const core::MusicDataChoiceSet& inMdcs, core::MusicDataChoiceSet& ioOutputSet );
 
         private:

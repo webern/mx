@@ -43,7 +43,7 @@
 		297556081D135AA3007732D0 /* UtilityImplTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297556061D135AA3007732D0 /* UtilityImplTest.cpp */; };
 		297556091D135AA3007732D0 /* UtilityTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297556071D135AA3007732D0 /* UtilityTest.cpp */; };
 		2975945D1F04880000DE2F30 /* ApiChordSimpleTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2975945B1F04848600DE2F30 /* ApiChordSimpleTest.cpp */; };
-		2975945F1F04A0CD00DE2F30 /* ChordDataSaveTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2975945E1F04A0CD00DE2F30 /* ChordDataSaveTest.cpp */; };
+		2975945F1F04A0CD00DE2F30 /* ChordDataSaveAndLoadTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2975945E1F04A0CD00DE2F30 /* ChordDataSaveAndLoadTest.cpp */; };
 		297DD7C91D1A4BD1003BADC1 /* ImportTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297DD7C81D1A4BD1003BADC1 /* ImportTest.cpp */; };
 		2983E3E61EB43878007FCC34 /* DirectionDataTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2983E3E51EB43878007FCC34 /* DirectionDataTest.cpp */; };
 		298F0F4D1D1E4981005C3D9D /* ImportTestImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 298F0F4B1D1E4981005C3D9D /* ImportTestImpl.cpp */; };
@@ -532,7 +532,7 @@
 		297556171D136AE0007732D0 /* CompileControl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CompileControl.h; path = ../Sourcecode/mxtest/control/CompileControl.h; sourceTree = "<group>"; };
 		2975945A1F04848600DE2F30 /* ApiChordSimpleScoreData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ApiChordSimpleScoreData.h; path = ../Sourcecode/mxtest/api/ApiChordSimpleScoreData.h; sourceTree = "<group>"; };
 		2975945B1F04848600DE2F30 /* ApiChordSimpleTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ApiChordSimpleTest.cpp; path = ../Sourcecode/mxtest/api/ApiChordSimpleTest.cpp; sourceTree = "<group>"; };
-		2975945E1F04A0CD00DE2F30 /* ChordDataSaveTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ChordDataSaveTest.cpp; path = ../Sourcecode/mxtest/api/ChordDataSaveTest.cpp; sourceTree = "<group>"; };
+		2975945E1F04A0CD00DE2F30 /* ChordDataSaveAndLoadTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ChordDataSaveAndLoadTest.cpp; path = ../Sourcecode/mxtest/api/ChordDataSaveAndLoadTest.cpp; sourceTree = "<group>"; };
 		297DD7C71D1A4BC1003BADC1 /* ExpectedFiles.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ExpectedFiles.h; path = ../Sourcecode/mxtest/import/ExpectedFiles.h; sourceTree = "<group>"; };
 		297DD7C81D1A4BD1003BADC1 /* ImportTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImportTest.cpp; path = ../Sourcecode/mxtest/import/ImportTest.cpp; sourceTree = "<group>"; };
 		2983E3E51EB43878007FCC34 /* DirectionDataTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DirectionDataTest.cpp; path = ../Sourcecode/mxtest/api/DirectionDataTest.cpp; sourceTree = "<group>"; };
@@ -1837,7 +1837,7 @@
 				29979D611DC811F300707AA4 /* TimeSignatureApiTest.cpp */,
 				2975945A1F04848600DE2F30 /* ApiChordSimpleScoreData.h */,
 				2975945B1F04848600DE2F30 /* ApiChordSimpleTest.cpp */,
-				2975945E1F04A0CD00DE2F30 /* ChordDataSaveTest.cpp */,
+				2975945E1F04A0CD00DE2F30 /* ChordDataSaveAndLoadTest.cpp */,
 			);
 			name = api;
 			sourceTree = "<group>";
@@ -2082,7 +2082,7 @@
 				29C01E1B1D1312FA0094BE61 /* IpaTest.cpp in Sources */,
 				29C01E2F1D1312FA0094BE61 /* MeasureDistanceTest.cpp in Sources */,
 				29C01E311D1312FA0094BE61 /* MeasureNumberingTest.cpp in Sources */,
-				2975945F1F04A0CD00DE2F30 /* ChordDataSaveTest.cpp in Sources */,
+				2975945F1F04A0CD00DE2F30 /* ChordDataSaveAndLoadTest.cpp in Sources */,
 				29C01EC51D1312FA0094BE61 /* StoppedTest.cpp in Sources */,
 				29C01E711D1312FA0094BE61 /* PageWidthTest.cpp in Sources */,
 				29C01EB91D1312FA0094BE61 /* StaffLinesTest.cpp in Sources */,

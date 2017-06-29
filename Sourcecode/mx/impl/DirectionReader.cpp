@@ -665,6 +665,8 @@ namespace mx
                     chord.bassAlter = mx::utility::roundTo<core::DecimalType, int>( bass.getBassAlter()->getValue().getValue() );
                 }
             }
+
+            myOutDirectionData.chords.push_back( chord );
         }
     }
 }
