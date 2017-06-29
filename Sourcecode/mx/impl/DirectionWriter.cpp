@@ -94,10 +94,12 @@ namespace mx
                 directionPtr->setHasStaff( true );
                 directionPtr->getStaff()->setValue( core::StaffNumber{ myCursor.staffIndex + 1 } );
             }
-            
+
+            int offset = 0;
+
             if( myDirectionData.tickTimePosition != myCursor.tickTimePosition )
             {
-                auto offset = myDirectionData.tickTimePosition - myCursor.tickTimePosition;
+                offset = myDirectionData.tickTimePosition - myCursor.tickTimePosition;
                 directionPtr->setHasOffset( true );
                 directionPtr->getOffset()->setValue( core::DivisionsValue{ static_cast<core::DecimalType>( offset ) } );
                 directionPtr->getOffset()->getAttributes()->hasSound = true;
@@ -336,7 +338,7 @@ namespace mx
                 output.push_back( directionMdc );
             }
 
-            auto harmonyMdcs = createHarmonyElements();
+            auto harmonyMdcs = createHarmonyElements( offset );
             addMusicDataChoices(harmonyMdcs, output);
 
             // clear state
@@ -359,7 +361,7 @@ namespace mx
         }
 
 
-        core::MusicDataChoiceSet DirectionWriter::createHarmonyElements()
+        core::MusicDataChoiceSet DirectionWriter::createHarmonyElements(int inOffset)
         {
             if( myDirectionData.chords.empty() )
             {
@@ -371,6 +373,13 @@ namespace mx
             mdc->setChoice( core::MusicDataChoice::Choice::harmony );
 
             auto harmony = mdc->getHarmony();
+
+            if( inOffset != 0 )
+            {
+                harmony->setHasOffset( true );
+                harmony->getOffset()->setValue( core::DivisionsValue{ static_cast<core::DecimalType>( inOffset ) } );
+            }
+
             const auto& chords = myDirectionData.chords;
 
             auto chordIter = chords.cbegin();

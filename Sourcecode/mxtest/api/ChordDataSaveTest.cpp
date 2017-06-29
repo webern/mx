@@ -199,6 +199,7 @@ TEST( Save, ChordDataSaveTest )
     auto offsetValue = offset->getValue().getValue();
     CHECK_DOUBLES_EQUAL( 109.0, offsetValue, 0.01 );
 
+    // TODO - go to DirectionWriter and pass the offset value down into the harmony element
 }
 
 #endif

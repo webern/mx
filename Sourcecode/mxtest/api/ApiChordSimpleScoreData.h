@@ -77,7 +77,7 @@ namespace mxtest
         staff = &measure->staves.back();
         staff->directions.emplace_back();
         direction = &staff->directions.back();
-        direction->tickTimePosition = 101;
+        direction->tickTimePosition = 109;
         direction->isStaffValueSpecified = true;
         direction->chords.emplace_back();
         chord = &direction->chords.back();
