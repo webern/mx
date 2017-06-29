@@ -599,39 +599,6 @@ namespace mx
 
                 return;
             }
-
-//            const auto firstDirectionTime = directionIter->tickTimePosition;
-//
-//            if( firstDirectionTime < minTickTimePosition )
-//            {
-//                MX_THROW( "firstDirectionTime < minTickTimePosition" );
-//            }
-//
-//            for( ; directionIter != directionEnd
-//                && directionIter->tickTimePosition <= maxTickTimePosition;
-//                ++directionIter )
-//            {
-//                if( isDirectionDataEmpty( *directionIter ) )
-//                {
-//                    continue;
-//                }
-//
-//                const auto directionTime = directionIter->tickTimePosition;
-//
-//                if( directionTime < minTickTimePosition )
-//                {
-//                    MX_THROW( "directionTime < minTickTimePosition" );
-//                }
-//
-//                auto directionMdc = core::makeMusicDataChoice();
-//                directionMdc->setChoice( core::MusicDataChoice::Choice::direction );
-//                DirectionWriter directionWriter{ *directionIter, myHistory.getCursor() };
-//                directionMdc->setDirection( directionWriter.getDirection() );
-//                myOutMeasure->getMusicDataGroup()->addMusicDataChoice( directionMdc );
-//                myHistory.log( "addDirection cursorTime " + std::to_string( myHistory.getCursor().tickTimePosition ) + ", directionTime " + std::to_string( directionIter->tickTimePosition ) );
-//
-////                MX_ASSERT(directionMdc->getDirection()->getOffset()->getValue().getValue() != 19.0);
-//            }
         }
 
         void MeasureWriter::writeDirection( const api::DirectionData& inDirectionData )
@@ -641,11 +608,14 @@ namespace mx
                 myPropertiesWriter->flushBuffer();
             }
 
-            auto directionMdc = core::makeMusicDataChoice();
-            directionMdc->setChoice( core::MusicDataChoice::Choice::direction );
+            //auto directionMdc = core::makeMusicDataChoice();
+            //directionMdc->setChoice( core::MusicDataChoice::Choice::direction );
             DirectionWriter directionWriter{ inDirectionData, myHistory.getCursor() };
-            directionMdc->setDirection( directionWriter.getDirection() );
-            myOutMeasure->getMusicDataGroup()->addMusicDataChoice( directionMdc );
+            auto mdcSet = directionWriter.getDirectionLikeThings();
+            for( const auto& mdc : mdcSet )
+            {
+                myOutMeasure->getMusicDataGroup()->addMusicDataChoice( mdc );
+            }
             myHistory.log( "addDirection cursorTime " + std::to_string( myHistory.getCursor().tickTimePosition ) + ", directionTime " + std::to_string( inDirectionData.tickTimePosition ) );
         }
 

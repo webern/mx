@@ -8,6 +8,9 @@
   </part-list>
   <part id="P1">
     <measure number="1">
+      <attributes>
+        <divisions>101</divisions>
+      </attributes>
       <harmony>
         <root>
           <root-step>C</root-step>
@@ -40,6 +43,9 @@
       </harmony>
     </measure>
     <measure number="4">
+      <forward>
+        <duration>101</duration>
+      </forward>
       <harmony>
         <root>
           <root-step>B</root-step>
