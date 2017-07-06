@@ -173,7 +173,7 @@ namespace mx
                 {
                     if( hPtr->getChoice() == core::HarmonyChordGroup::Choice::root )
                     {
-                        parseHarmony( *hPtr );
+                        parseHarmony( *myHarmony, *hPtr );
                     }
                 }
             }
@@ -639,7 +639,7 @@ namespace mx
         }
 
 
-        void DirectionReader::parseHarmony( const core::HarmonyChordGroup& inGrp )
+        void DirectionReader::parseHarmony( const core::Harmony& inHarmony, const core::HarmonyChordGroup& inGrp )
         {
             mx::api::ChordData chord;
             chord.root = myConverter.convert( inGrp.getRoot()->getRootStep()->getValue() );
@@ -752,6 +752,14 @@ namespace mx
                 {
                     chord.extensions.push_back( extension );
                 }
+            }
+
+            for ( const auto& pi : inHarmony.getProcessingInstructions() )
+            {
+                mx::api::MiscData misc;
+                misc.name = pi.getName();
+                misc.data = pi.getData();
+                chord.miscData.push_back( misc );
             }
 
             myOutDirectionData.chords.push_back( chord );

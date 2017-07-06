@@ -3339,6 +3339,16 @@
 		29EAD73D1F0EA96B00BDE782 /* ProcessingInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EAD7391F0EA96B00BDE782 /* ProcessingInstruction.cpp */; };
 		29EAD73E1F0EA96B00BDE782 /* ProcessingInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EAD7391F0EA96B00BDE782 /* ProcessingInstruction.cpp */; };
 		29EAD73F1F0EA96B00BDE782 /* ProcessingInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EAD7391F0EA96B00BDE782 /* ProcessingInstruction.cpp */; };
+		29EAD7481F0EF8CE00BDE782 /* MiscData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EAD7461F0EF8CE00BDE782 /* MiscData.cpp */; };
+		29EAD7491F0EF8CE00BDE782 /* MiscData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EAD7461F0EF8CE00BDE782 /* MiscData.cpp */; };
+		29EAD74A1F0EF8CE00BDE782 /* MiscData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EAD7461F0EF8CE00BDE782 /* MiscData.cpp */; };
+		29EAD74B1F0EF8CE00BDE782 /* MiscData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EAD7461F0EF8CE00BDE782 /* MiscData.cpp */; };
+		29EAD74C1F0EF8CE00BDE782 /* MiscData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EAD7461F0EF8CE00BDE782 /* MiscData.cpp */; };
+		29EAD74D1F0EF8CE00BDE782 /* MiscData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29EAD7471F0EF8CE00BDE782 /* MiscData.h */; };
+		29EAD74E1F0EF8CE00BDE782 /* MiscData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29EAD7471F0EF8CE00BDE782 /* MiscData.h */; };
+		29EAD74F1F0EF8CE00BDE782 /* MiscData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29EAD7471F0EF8CE00BDE782 /* MiscData.h */; };
+		29EAD7501F0EF8CE00BDE782 /* MiscData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29EAD7471F0EF8CE00BDE782 /* MiscData.h */; };
+		29EAD7511F0EF8CE00BDE782 /* MiscData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29EAD7471F0EF8CE00BDE782 /* MiscData.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -4738,6 +4748,8 @@
 		29E8C22C1DD2920C00E8CEBA /* libmx-iOS.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libmx-iOS.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		29EAD7391F0EA96B00BDE782 /* ProcessingInstruction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProcessingInstruction.cpp; sourceTree = "<group>"; };
 		29EAD73A1F0EA96B00BDE782 /* ProcessingInstruction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProcessingInstruction.h; sourceTree = "<group>"; };
+		29EAD7461F0EF8CE00BDE782 /* MiscData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MiscData.cpp; sourceTree = "<group>"; };
+		29EAD7471F0EF8CE00BDE782 /* MiscData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MiscData.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -4850,6 +4862,8 @@
 				29A8DD6C1EF0475D00AD2478 /* MeasureData.h */,
 				29A8DD6D1EF0475D00AD2478 /* MeasureLocation.cpp */,
 				29A8DD6E1EF0475D00AD2478 /* MeasureLocation.h */,
+				29EAD7461F0EF8CE00BDE782 /* MiscData.cpp */,
+				29EAD7471F0EF8CE00BDE782 /* MiscData.h */,
 				29A8DD6F1EF0475D00AD2478 /* NoteAttachmentData.h */,
 				29A8DD701EF0475D00AD2478 /* NoteData.cpp */,
 				29A8DD711EF0475D00AD2478 /* NoteData.h */,
@@ -6286,6 +6300,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				29A8006A1EF0876500AD2478 /* SoundID.h in Headers */,
+				29EAD74E1F0EF8CE00BDE782 /* MiscData.h in Headers */,
 				297594551F044C7600DE2F30 /* ChordData.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6295,6 +6310,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				29A800691EF0876500AD2478 /* SoundID.h in Headers */,
+				29EAD74D1F0EF8CE00BDE782 /* MiscData.h in Headers */,
 				297594541F044C7600DE2F30 /* ChordData.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6305,6 +6321,7 @@
 			files = (
 				297594581F044C7600DE2F30 /* ChordData.h in Headers */,
 				29A8FDC61EF0497500AD2478 /* MxmacOS.h in Headers */,
+				29EAD7511F0EF8CE00BDE782 /* MiscData.h in Headers */,
 				29A8006D1EF0876500AD2478 /* SoundID.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6315,6 +6332,7 @@
 			files = (
 				297594571F044C7600DE2F30 /* ChordData.h in Headers */,
 				29B962851E79FF410072071D /* MxiOS.h in Headers */,
+				29EAD7501F0EF8CE00BDE782 /* MiscData.h in Headers */,
 				29A8006C1EF0876500AD2478 /* SoundID.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6324,6 +6342,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				29A8006B1EF0876500AD2478 /* SoundID.h in Headers */,
+				29EAD74F1F0EF8CE00BDE782 /* MiscData.h in Headers */,
 				297594561F044C7600DE2F30 /* ChordData.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6822,6 +6841,7 @@
 				29A8F3DC1EF0476900AD2478 /* PerMinuteOrBeatUnitChoice.cpp in Sources */,
 				29A8E69E1EF0476300AD2478 /* CancelAttributes.cpp in Sources */,
 				29A8F9271EF0476C00AD2478 /* ToeAttributes.cpp in Sources */,
+				29EAD7491F0EF8CE00BDE782 /* MiscData.cpp in Sources */,
 				29A8ED881EF0476600AD2478 /* InvertedMordent.cpp in Sources */,
 				29A8E86A1EF0476400AD2478 /* DisplayOctave.cpp in Sources */,
 				29A8E91E1EF0476400AD2478 /* EditorialVoiceDirectionGroup.cpp in Sources */,
@@ -7493,6 +7513,7 @@
 				29A8F3DB1EF0476900AD2478 /* PerMinuteOrBeatUnitChoice.cpp in Sources */,
 				29A8E69D1EF0476300AD2478 /* CancelAttributes.cpp in Sources */,
 				29A8F9261EF0476C00AD2478 /* ToeAttributes.cpp in Sources */,
+				29EAD7481F0EF8CE00BDE782 /* MiscData.cpp in Sources */,
 				29A8ED871EF0476600AD2478 /* InvertedMordent.cpp in Sources */,
 				29A8E8691EF0476400AD2478 /* DisplayOctave.cpp in Sources */,
 				29A8E91D1EF0476400AD2478 /* EditorialVoiceDirectionGroup.cpp in Sources */,
@@ -8164,6 +8185,7 @@
 				29A8FF121EF0499200AD2478 /* Millimeters.cpp in Sources */,
 				29A8FF131EF0499200AD2478 /* Miscellaneous.cpp in Sources */,
 				29A8FF141EF0499200AD2478 /* MiscellaneousField.cpp in Sources */,
+				29EAD74C1F0EF8CE00BDE782 /* MiscData.cpp in Sources */,
 				29A8FF151EF0499200AD2478 /* MiscellaneousFieldAttributes.cpp in Sources */,
 				29A8FF161EF0499200AD2478 /* Mode.cpp in Sources */,
 				29A8FF171EF0499200AD2478 /* Mordent.cpp in Sources */,
@@ -8835,6 +8857,7 @@
 				29A8F3DE1EF0476900AD2478 /* PerMinuteOrBeatUnitChoice.cpp in Sources */,
 				29A8E6A01EF0476300AD2478 /* CancelAttributes.cpp in Sources */,
 				29A8F9291EF0476C00AD2478 /* ToeAttributes.cpp in Sources */,
+				29EAD74B1F0EF8CE00BDE782 /* MiscData.cpp in Sources */,
 				29A8ED8A1EF0476600AD2478 /* InvertedMordent.cpp in Sources */,
 				29A8E86C1EF0476400AD2478 /* DisplayOctave.cpp in Sources */,
 				29A8E9201EF0476400AD2478 /* EditorialVoiceDirectionGroup.cpp in Sources */,
@@ -9506,6 +9529,7 @@
 				29A8F3DD1EF0476900AD2478 /* PerMinuteOrBeatUnitChoice.cpp in Sources */,
 				29A8E69F1EF0476300AD2478 /* CancelAttributes.cpp in Sources */,
 				29A8F9281EF0476C00AD2478 /* ToeAttributes.cpp in Sources */,
+				29EAD74A1F0EF8CE00BDE782 /* MiscData.cpp in Sources */,
 				29A8ED891EF0476600AD2478 /* InvertedMordent.cpp in Sources */,
 				29A8E86B1EF0476400AD2478 /* DisplayOctave.cpp in Sources */,
 				29A8E91F1EF0476400AD2478 /* EditorialVoiceDirectionGroup.cpp in Sources */,

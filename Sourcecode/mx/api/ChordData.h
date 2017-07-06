@@ -6,6 +6,7 @@
 
 #include "mx/api/ApiCommon.h"
 #include "mx/api/PitchData.h"
+#include "mx/api/MiscData.h"
 
 namespace mx
 {
@@ -112,6 +113,7 @@ namespace mx
             Step bass;
             int bassAlter;
             std::vector<Extension> extensions;
+            std::vector<MiscData> miscData;
         };
 
         MXAPI_EQUALS_BEGIN( ChordData )
@@ -123,6 +125,7 @@ namespace mx
         MXAPI_EQUALS_MEMBER( bass )
         MXAPI_EQUALS_MEMBER( bassAlter )
         MXAPI_EQUALS_MEMBER( extensions )
+        MXAPI_EQUALS_MEMBER( miscData )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( ChordData );
 

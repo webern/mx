@@ -489,6 +489,12 @@ namespace mx
                     grp->addDegree( degree );
                 }
 
+                auto miscIter = chordIter->miscData.cbegin();
+                const auto miscEnd = chordIter->miscData.cend();
+                for( ; miscIter != miscEnd; ++miscIter ) {
+                    harmony->addProcessingInstruction(core::ProcessingInstruction{miscIter->name, miscIter->data});
+                }
+
                 if( output.empty() )
                 {
                     output.push_back( mdc );

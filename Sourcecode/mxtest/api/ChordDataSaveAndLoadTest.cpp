@@ -332,4 +332,42 @@ TEST( Load4, ChordDataSaveTest )
     CHECK_EQUAL( 0, chord->bassAlter );
 }
 
+
+TEST( SaveProcessingInstructions, ChordDataSaveTest )
+{
+    ScoreData scoreData{};
+    scoreData.parts.emplace_back();
+    auto part = &scoreData.parts.back();
+    part->measures.emplace_back();
+    auto measure = &part->measures.back();
+    measure->staves.emplace_back();
+    auto staff = &measure->staves.back();
+    staff->directions.emplace_back();
+    auto direction = &staff->directions.back();
+    direction->chords.emplace_back();
+    auto chord = &direction->chords.back();
+    chord->root = Step::b;
+    chord->miscData.emplace_back( MiscData{"test", "123"} );
+
+    const auto xml = toXml( scoreData );
+    std::cout << xml << std::endl;
+    auto outScore = fromXml( xml );
+
+    part = nullptr;
+    measure = nullptr;
+    staff = nullptr;
+    chord = nullptr;
+
+    part = &outScore.parts.back();
+    measure = &part->measures.back();
+    staff = &measure->staves.back();
+    direction = &staff->directions.back();
+    chord = &direction->chords.back();
+
+    CHECK_EQUAL( 1, chord->miscData.size() );
+    CHECK_EQUAL( "test", chord->miscData.front().name );
+    CHECK_EQUAL( "123", chord->miscData.front().data );
+    CHECK( chord->root == Step::b );
+}
+
 #endif
