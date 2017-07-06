@@ -19,6 +19,9 @@
 #include "mx/core/elements/DampAll.h"
 #include "mx/core/elements/Dashes.h"
 #include "mx/core/elements/Degree.h"
+#include "mx/core/elements/DegreeAlter.h"
+#include "mx/core/elements/DegreeType.h"
+#include "mx/core/elements/DegreeValue.h"
 #include "mx/core/elements/Direction.h"
 #include "mx/core/elements/DirectionType.h"
 #include "mx/core/elements/Dynamics.h"
@@ -434,6 +437,56 @@ namespace mx
                     auto a = grp->getKind()->getAttributes();
                     a->hasText = true;
                     a->text = core::XsToken{ chordIter->text };
+                }
+
+                if( chordIter->useSymbols != api::Bool::unspecified )
+                {
+                    grp->getKind()->getAttributes()->hasUseSymbols = true;
+                    grp->getKind()->getAttributes()->useSymbols = chordIter->useSymbols == api::Bool::yes ? mx::core::YesNo::yes : mx::core::YesNo::no;
+                }
+
+                for( const auto& extension : chordIter->extensions )
+                {
+                    auto degree = core::makeDegree();
+
+                    if( extension.extensionType == api::ExtensionType::add )
+                    {
+                        degree->getDegreeType()->setValue( core::DegreeTypeValue::add );
+                    }
+                    else if( extension.extensionType == api::ExtensionType::remove )
+                    {
+                        degree->getDegreeType()->setValue( core::DegreeTypeValue::subtract );
+                    }
+                    else if( extension.extensionType == api::ExtensionType::alter )
+                    {
+                        degree->getDegreeType()->setValue( core::DegreeTypeValue::alter );
+                    }
+
+                    switch ( extension.extensionNumber )
+                    {
+                        case api::ExtensionNumber::first: degree->getDegreeValue()->setValue( mx::core::PositiveInteger{ 1 } ); break;
+                        case api::ExtensionNumber::second: degree->getDegreeValue()->setValue( mx::core::PositiveInteger{ 2 } ); break;
+                        case api::ExtensionNumber::third: degree->getDegreeValue()->setValue( mx::core::PositiveInteger{ 3 } ); break;
+                        case api::ExtensionNumber::fourth: degree->getDegreeValue()->setValue( mx::core::PositiveInteger{ 4 } ); break;
+                        case api::ExtensionNumber::fifth: degree->getDegreeValue()->setValue( mx::core::PositiveInteger{ 5 } ); break;
+                        case api::ExtensionNumber::sixth: degree->getDegreeValue()->setValue( mx::core::PositiveInteger{ 6 } ); break;
+                        case api::ExtensionNumber::seventh: degree->getDegreeValue()->setValue( mx::core::PositiveInteger{ 7 } ); break;
+                        case api::ExtensionNumber::ninth: degree->getDegreeValue()->setValue( mx::core::PositiveInteger{ 9 } ); break;
+                        case api::ExtensionNumber::eleventh: degree->getDegreeValue()->setValue( mx::core::PositiveInteger{ 11 } ); break;
+                        case api::ExtensionNumber::thirteenth: degree->getDegreeValue()->setValue( mx::core::PositiveInteger{ 13 } ); break;
+                        default: break;
+                    }
+
+                    switch( extension.extensionAlter )
+                    {
+                        case api::ExtensionAlter::doubleFlat: degree->getDegreeAlter()->setValue( core::Semitones{ -2.0 } ); break;
+                        case api::ExtensionAlter::doubleSharp: degree->getDegreeAlter()->setValue( core::Semitones{ 2.0 } ); break;
+                        case api::ExtensionAlter::flat: degree->getDegreeAlter()->setValue( core::Semitones{ -1.0 } ); break;
+                        case api::ExtensionAlter::sharp: degree->getDegreeAlter()->setValue( core::Semitones{ 1.0 } ); break;
+                        case api::ExtensionAlter::none: degree->getDegreeAlter()->setValue( core::Semitones{ 0.0 } ); break;
+                    }
+
+                    grp->addDegree( degree );
                 }
 
                 if( output.empty() )

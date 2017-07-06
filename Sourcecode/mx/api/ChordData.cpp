@@ -13,13 +13,25 @@ namespace mx
 // CTOR AND COPY ///////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
+        Extension::Extension()
+        : extensionType{ ExtensionType::add }
+        , extensionAlter{ ExtensionAlter::none }
+        , extensionNumber{ ExtensionNumber::first }
+        , printObject{ Bool::unspecified }
+        {
+
+        }
+
+
         ChordData::ChordData()
         : root{ Step::c }
         , rootAlter{ 0 }
         , chordKind{ ChordKind::unspecified }
         , text{}
+        , useSymbols{ Bool::unspecified }
         , bass{ Step::unspecified }
         , bassAlter{ 0 }
+        , extensions{}
         {
 
         }

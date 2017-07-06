@@ -14,6 +14,9 @@
 #include "mx/core/elements/DampAll.h"
 #include "mx/core/elements/Dashes.h"
 #include "mx/core/elements/Degree.h"
+#include "mx/core/elements/DegreeAlter.h"
+#include "mx/core/elements/DegreeType.h"
+#include "mx/core/elements/DegreeValue.h"
 #include "mx/core/elements/Direction.h"
 #include "mx/core/elements/DirectionType.h"
 #include "mx/core/elements/Dynamics.h"
@@ -655,6 +658,18 @@ namespace mx
                 chord.text = kind.getAttributes()->text.getValue();
             }
 
+            if( kind.getAttributes()->hasUseSymbols )
+            {
+                if( kind.getAttributes()->useSymbols == mx::core::YesNo::yes )
+                {
+                    chord.useSymbols = api::Bool::yes;
+                }
+                else
+                {
+                    chord.useSymbols = api::Bool::no;
+                }
+            }
+
             if( inGrp.getHasBass() )
             {
                 const auto& bass = *inGrp.getBass();
@@ -663,6 +678,79 @@ namespace mx
                 if( bass.getHasBassAlter() )
                 {
                     chord.bassAlter = mx::utility::roundTo<core::DecimalType, int>( bass.getBassAlter()->getValue().getValue() );
+                }
+            }
+
+            const auto& degrees = inGrp.getDegreeSet();
+
+            for( const auto& degree : degrees )
+            {
+                api::Extension extension;
+                bool doAddExtension = true;
+
+                const auto type = degree->getDegreeType()->getValue();
+                const auto alter = mx::utility::roundTo<core::DecimalType, int>( degree->getDegreeAlter()->getValue().getValue() );
+                const auto value = degree->getDegreeValue()->getValue().getValue();
+
+                switch ( type )
+                {
+                    case core::DegreeTypeValue::alter: extension.extensionType = api::ExtensionType::alter; break;
+                    case core::DegreeTypeValue::add: extension.extensionType = api::ExtensionType::add; break;
+                    case core::DegreeTypeValue::subtract: extension.extensionType = api::ExtensionType::remove; break;
+                    default: break;
+                }
+
+                if ( alter <= -2 )
+                {
+                    extension.extensionAlter = api::ExtensionAlter::doubleFlat;
+                }
+                else if ( alter == -1 )
+                {
+                    extension.extensionAlter = api::ExtensionAlter::flat;
+                }
+                else if ( alter == 0 )
+                {
+                    extension.extensionAlter = api::ExtensionAlter::none;
+                }
+                else if ( alter == 1 )
+                {
+                    extension.extensionAlter = api::ExtensionAlter::sharp;
+                }
+                else if ( alter >= 2 )
+                {
+                    extension.extensionAlter = api::ExtensionAlter::doubleSharp;
+                }
+
+                switch ( value )
+                {
+                    case 1: extension.extensionNumber = api::ExtensionNumber::first; break;
+                    case 2: extension.extensionNumber = api::ExtensionNumber::second; break;
+                    case 3: extension.extensionNumber = api::ExtensionNumber::third; break;
+                    case 4: extension.extensionNumber = api::ExtensionNumber::fourth; break;
+                    case 5: extension.extensionNumber = api::ExtensionNumber::fifth; break;
+                    case 6: extension.extensionNumber = api::ExtensionNumber::sixth; break;
+                    case 7: extension.extensionNumber = api::ExtensionNumber::seventh; break;
+                    case 9: extension.extensionNumber = api::ExtensionNumber::ninth; break;
+                    case 11: extension.extensionNumber = api::ExtensionNumber::eleventh; break;
+                    case 13: extension.extensionNumber = api::ExtensionNumber::thirteenth; break;
+                    default: doAddExtension = false; break;
+                }
+
+                if ( degree->getAttributes()->hasPrintObject )
+                {
+                    if ( degree->getAttributes()->printObject == core::YesNo::yes )
+                    {
+                        extension.printObject = api::Bool::yes;
+                    }
+                    else
+                    {
+                        extension.printObject = api::Bool::no;
+                    }
+                }
+
+                if( doAddExtension )
+                {
+                    chord.extensions.push_back( extension );
                 }
             }
 
