@@ -64,7 +64,7 @@ namespace mx
         }
 
 
-        bool PluckAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool PluckAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "PluckAttributes";
             bool isSuccess = true;

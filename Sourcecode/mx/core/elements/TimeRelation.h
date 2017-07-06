@@ -37,7 +37,8 @@ namespace mx
             TimeRelationEnum getValue() const;
             void setValue( const TimeRelationEnum& value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             TimeRelationEnum myValue;

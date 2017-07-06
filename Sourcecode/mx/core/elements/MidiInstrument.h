@@ -91,7 +91,8 @@ namespace mx
             bool getHasElevation() const;
             void setHasElevation( const bool value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             MidiInstrumentAttributesPtr myAttributes;

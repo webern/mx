@@ -87,7 +87,7 @@ namespace mx
         }
 
 
-        bool TupletNumber::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool TupletNumber::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

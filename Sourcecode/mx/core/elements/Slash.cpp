@@ -122,7 +122,7 @@ namespace mx
         }
 
 
-        bool Slash::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Slash::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

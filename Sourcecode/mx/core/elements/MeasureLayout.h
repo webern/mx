@@ -38,7 +38,8 @@ namespace mx
             bool getHasMeasureDistance() const;
             void setHasMeasureDistance( const bool value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             MeasureDistancePtr myMeasureDistance;

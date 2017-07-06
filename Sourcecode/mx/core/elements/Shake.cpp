@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool Shake::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Shake::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

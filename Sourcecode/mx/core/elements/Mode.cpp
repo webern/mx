@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool Mode::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Mode::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             MX_UNUSED( message );
             MX_UNUSED( xelement );

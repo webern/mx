@@ -40,7 +40,8 @@ namespace mx
             MusicDataGroupPtr getMusicDataGroup() const;
             void setMusicDataGroup( const MusicDataGroupPtr& value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             PartAttributesPtr myAttributes;

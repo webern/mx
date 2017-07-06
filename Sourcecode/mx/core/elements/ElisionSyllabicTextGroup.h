@@ -43,7 +43,8 @@ namespace mx
             TextPtr getText() const;
             void setText( const TextPtr& value );
             
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             ElisionSyllabicGroupPtr myElisionSyllabicGroup;

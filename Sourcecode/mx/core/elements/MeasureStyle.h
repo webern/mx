@@ -38,7 +38,8 @@ namespace mx
             MeasureStyleChoicePtr getMeasureStyleChoice() const;
             void setMeasureStyleChoice( const MeasureStyleChoicePtr& value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             MeasureStyleAttributesPtr myAttributes;

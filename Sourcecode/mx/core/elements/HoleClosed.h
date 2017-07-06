@@ -41,7 +41,8 @@ namespace mx
             HoleClosedValue getValue() const;
             void setValue( const HoleClosedValue& value );
             
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
             
         private:
             HoleClosedValue myValue;

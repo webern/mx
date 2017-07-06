@@ -32,7 +32,7 @@ namespace mx
         }
 
 
-        bool EncoderAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool EncoderAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "EncoderAttributes";
             bool isSuccess = true;

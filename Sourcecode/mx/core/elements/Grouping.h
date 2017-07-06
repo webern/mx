@@ -43,7 +43,8 @@ namespace mx
             void clearFeatureSet();
             FeaturePtr getFeature( const FeatureSetIterConst& setIterator ) const;
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             GroupingAttributesPtr myAttributes;

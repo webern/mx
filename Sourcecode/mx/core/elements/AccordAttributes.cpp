@@ -32,7 +32,7 @@ namespace mx
         }
 
 
-        bool AccordAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool AccordAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "AccordAttributes";
             bool isSuccess = true;

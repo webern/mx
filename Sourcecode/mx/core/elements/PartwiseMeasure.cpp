@@ -105,7 +105,7 @@ namespace mx
         }
         
         
-        bool PartwiseMeasure::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool PartwiseMeasure::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             bool isFirstMusicDataChoiceAdded = false;

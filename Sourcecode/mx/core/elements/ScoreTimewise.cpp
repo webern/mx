@@ -136,7 +136,7 @@ namespace mx
             return TimewiseMeasurePtr();
         }
         
-        bool ScoreTimewise::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool ScoreTimewise::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             bool isFirstMeasureAdded = false;

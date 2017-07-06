@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool StaffSize::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool StaffSize::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             MX_UNUSED( message );
             MX_UNUSED( xelement );

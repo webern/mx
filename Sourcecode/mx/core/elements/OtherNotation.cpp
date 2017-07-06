@@ -87,7 +87,7 @@ namespace mx
         }
 
 
-        bool OtherNotation::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool OtherNotation::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

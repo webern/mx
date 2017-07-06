@@ -3334,6 +3334,11 @@
 		29A8FFFE1EF0499300AD2478 /* TraditionalKey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E1DD1EF0476200AD2478 /* TraditionalKey.cpp */; };
 		29A8FFFF1EF0499300AD2478 /* Transpose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E1DF1EF0476200AD2478 /* Transpose.cpp */; };
 		29B962851E79FF410072071D /* MxiOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 29B962831E79FF410072071D /* MxiOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		29EAD73B1F0EA96B00BDE782 /* ProcessingInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EAD7391F0EA96B00BDE782 /* ProcessingInstruction.cpp */; };
+		29EAD73C1F0EA96B00BDE782 /* ProcessingInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EAD7391F0EA96B00BDE782 /* ProcessingInstruction.cpp */; };
+		29EAD73D1F0EA96B00BDE782 /* ProcessingInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EAD7391F0EA96B00BDE782 /* ProcessingInstruction.cpp */; };
+		29EAD73E1F0EA96B00BDE782 /* ProcessingInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EAD7391F0EA96B00BDE782 /* ProcessingInstruction.cpp */; };
+		29EAD73F1F0EA96B00BDE782 /* ProcessingInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EAD7391F0EA96B00BDE782 /* ProcessingInstruction.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -4731,6 +4736,8 @@
 		29B962831E79FF410072071D /* MxiOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MxiOS.h; sourceTree = "<group>"; };
 		29B962841E79FF410072071D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		29E8C22C1DD2920C00E8CEBA /* libmx-iOS.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libmx-iOS.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
+		29EAD7391F0EA96B00BDE782 /* ProcessingInstruction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProcessingInstruction.cpp; sourceTree = "<group>"; };
+		29EAD73A1F0EA96B00BDE782 /* ProcessingInstruction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProcessingInstruction.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -4914,6 +4921,8 @@
 				29A8E24B1EF0476200AD2478 /* PositiveIntegerOrEmpty.h */,
 				29A8E24C1EF0476200AD2478 /* PreciseDecimal.cpp */,
 				29A8E24D1EF0476200AD2478 /* PreciseDecimal.h */,
+				29EAD7391F0EA96B00BDE782 /* ProcessingInstruction.cpp */,
+				29EAD73A1F0EA96B00BDE782 /* ProcessingInstruction.h */,
 				29A8E24E1EF0476200AD2478 /* ScoreConversions.cpp */,
 				29A8E24F1EF0476200AD2478 /* ScoreConversions.h */,
 				29A8E2501EF0476200AD2478 /* Strings.cpp */,
@@ -7089,6 +7098,7 @@
 				29A8E55E1EF0476300AD2478 /* BasePitch.cpp in Sources */,
 				29A8EA901EF0476500AD2478 /* Fingering.cpp in Sources */,
 				29A8F0261EF0476700AD2478 /* Miscellaneous.cpp in Sources */,
+				29EAD73C1F0EA96B00BDE782 /* ProcessingInstruction.cpp in Sources */,
 				29A8F13E1EF0476700AD2478 /* NoteChoice.cpp in Sources */,
 				29A8F61B1EF0476A00AD2478 /* SlashType.cpp in Sources */,
 				29A8FCAB1EF0476E00AD2478 /* PropertiesWriter.cpp in Sources */,
@@ -7759,6 +7769,7 @@
 				29A8E55D1EF0476300AD2478 /* BasePitch.cpp in Sources */,
 				29A8EA8F1EF0476500AD2478 /* Fingering.cpp in Sources */,
 				29A8F0251EF0476700AD2478 /* Miscellaneous.cpp in Sources */,
+				29EAD73B1F0EA96B00BDE782 /* ProcessingInstruction.cpp in Sources */,
 				29A8F13D1EF0476700AD2478 /* NoteChoice.cpp in Sources */,
 				29A8F61A1EF0476A00AD2478 /* SlashType.cpp in Sources */,
 				29A8FCAA1EF0476E00AD2478 /* PropertiesWriter.cpp in Sources */,
@@ -8429,6 +8440,7 @@
 				29A800271EF0499300AD2478 /* Words.cpp in Sources */,
 				29A800281EF0499300AD2478 /* WordsAttributes.cpp in Sources */,
 				29A800291EF0499300AD2478 /* Work.cpp in Sources */,
+				29EAD73F1F0EA96B00BDE782 /* ProcessingInstruction.cpp in Sources */,
 				29A8002A1EF0499300AD2478 /* WorkNumber.cpp in Sources */,
 				29A8002B1EF0499300AD2478 /* WorkTitle.cpp in Sources */,
 				29A8002C1EF0499300AD2478 /* Elements.cpp in Sources */,
@@ -9099,6 +9111,7 @@
 				29A8E5601EF0476300AD2478 /* BasePitch.cpp in Sources */,
 				29A8EA921EF0476500AD2478 /* Fingering.cpp in Sources */,
 				29A8F0281EF0476700AD2478 /* Miscellaneous.cpp in Sources */,
+				29EAD73E1F0EA96B00BDE782 /* ProcessingInstruction.cpp in Sources */,
 				29A8F1401EF0476700AD2478 /* NoteChoice.cpp in Sources */,
 				29A8F61D1EF0476A00AD2478 /* SlashType.cpp in Sources */,
 				29A8FCAD1EF0476E00AD2478 /* PropertiesWriter.cpp in Sources */,
@@ -9769,6 +9782,7 @@
 				29A8E55F1EF0476300AD2478 /* BasePitch.cpp in Sources */,
 				29A8EA911EF0476500AD2478 /* Fingering.cpp in Sources */,
 				29A8F0271EF0476700AD2478 /* Miscellaneous.cpp in Sources */,
+				29EAD73D1F0EA96B00BDE782 /* ProcessingInstruction.cpp in Sources */,
 				29A8F13F1EF0476700AD2478 /* NoteChoice.cpp in Sources */,
 				29A8F61C1EF0476A00AD2478 /* SlashType.cpp in Sources */,
 				29A8FCAC1EF0476E00AD2478 /* PropertiesWriter.cpp in Sources */,

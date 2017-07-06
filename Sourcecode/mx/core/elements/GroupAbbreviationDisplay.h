@@ -49,7 +49,8 @@ namespace mx
             DisplayTextOrAccidentalTextPtr getDisplayTextOrAccidentalText( const DisplayTextOrAccidentalTextSetIterConst& setIterator ) const;
             const DisplayTextOrAccidentalTextSet& getDisplayTextOrAccidentalTextSet() const;
             
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             GroupAbbreviationDisplayAttributesPtr myAttributes;

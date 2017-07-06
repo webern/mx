@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool KeyAccidental::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool KeyAccidental::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             MX_UNUSED( message );
             myValue = parseAccidentalValue( xelement.getValue() );

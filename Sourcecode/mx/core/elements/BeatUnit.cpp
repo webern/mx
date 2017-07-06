@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool BeatUnit::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool BeatUnit::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             MX_UNUSED( message );
             myValue = parseNoteTypeValue( xelement.getValue() );

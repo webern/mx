@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool TrillMark::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool TrillMark::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

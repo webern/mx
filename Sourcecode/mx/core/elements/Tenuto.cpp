@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool Tenuto::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Tenuto::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

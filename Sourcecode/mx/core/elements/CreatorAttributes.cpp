@@ -32,7 +32,7 @@ namespace mx
         }
 
 
-        bool CreatorAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool CreatorAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "CreatorAttributes";
             bool isSuccess = true;

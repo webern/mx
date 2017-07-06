@@ -64,7 +64,7 @@ namespace mx
         }
 
 
-        bool OtherArticulationAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool OtherArticulationAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "OtherArticulationAttributes";
             bool isSuccess = true;

@@ -55,7 +55,8 @@ namespace mx
             BottomMarginPtr getBottomMargin() const;
             void setBottomMargin( const BottomMarginPtr& value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             PageMarginsAttributesPtr myAttributes;

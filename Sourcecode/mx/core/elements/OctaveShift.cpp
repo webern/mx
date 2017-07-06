@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool OctaveShift::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool OctaveShift::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

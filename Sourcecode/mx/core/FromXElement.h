@@ -15,7 +15,7 @@
 #ifndef MX_FROM_XELEMENT_UNUSED
 #define MX_FROM_XELEMENT_UNUSED( class_name ) \
 \
-        bool class_name::fromXElement( std::ostream& message, xml::XElement& xelement ) \
+        bool class_name::fromXElementImpl( std::ostream& message, xml::XElement& xelement ) \
         { \
             MX_UNUSED( xelement ); \
             message << #class_name ": fromXElement function is not expected to be called on this class" << std::endl; \

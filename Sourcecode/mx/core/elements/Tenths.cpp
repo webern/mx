@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool Tenths::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Tenths::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             MX_UNUSED( message );
             MX_UNUSED( xelement );

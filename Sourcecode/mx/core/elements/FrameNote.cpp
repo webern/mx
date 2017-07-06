@@ -155,7 +155,7 @@ namespace mx
         }
 
 
-        bool FrameNote::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool FrameNote::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             bool isStringFound = false;

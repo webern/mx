@@ -87,7 +87,7 @@ namespace mx
         }
 
 
-        bool Encoder::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Encoder::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

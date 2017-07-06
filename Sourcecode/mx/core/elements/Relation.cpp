@@ -87,7 +87,7 @@ namespace mx
         }
 
 
-        bool Relation::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Relation::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

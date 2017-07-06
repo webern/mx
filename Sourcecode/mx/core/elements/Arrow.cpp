@@ -129,7 +129,7 @@ namespace mx
         }
 
 
-        bool Arrow::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Arrow::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

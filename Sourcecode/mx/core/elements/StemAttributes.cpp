@@ -44,7 +44,7 @@ namespace mx
         }
 
 
-        bool StemAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool StemAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "StemAttributes";
             bool isSuccess = true;

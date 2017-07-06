@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool InstrumentSound::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool InstrumentSound::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             MX_UNUSED( message );
             MX_UNUSED( xelement );

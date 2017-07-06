@@ -68,7 +68,7 @@ namespace mx
         }
 
 
-        bool TremoloAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool TremoloAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "TremoloAttributes";
             bool isSuccess = true;

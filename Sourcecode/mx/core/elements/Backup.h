@@ -41,7 +41,8 @@ namespace mx
             EditorialGroupPtr getEditorialGroup() const;
             void setEditorialGroup( const EditorialGroupPtr& value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             DurationPtr myDuration;

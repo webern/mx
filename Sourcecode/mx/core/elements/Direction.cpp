@@ -316,7 +316,7 @@ namespace mx
         }
         
 
-        bool Direction::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Direction::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             bool isDirectionTypeFound = false;

@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool Capo::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Capo::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             MX_UNUSED( message );
             MX_UNUSED( xelement );

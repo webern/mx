@@ -76,7 +76,8 @@ namespace mx
             bool getHasMiscellaneous() const;
             void setHasMiscellaneous( const bool value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             CreatorSet myCreatorSet;

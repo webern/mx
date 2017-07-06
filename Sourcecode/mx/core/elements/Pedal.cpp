@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool Pedal::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Pedal::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

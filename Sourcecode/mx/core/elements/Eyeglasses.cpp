@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool Eyeglasses::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Eyeglasses::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

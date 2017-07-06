@@ -98,7 +98,7 @@ namespace mx
         }
         
         
-        bool ArrowGroup::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool ArrowGroup::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             bool isArrowDirectionFound = false;

@@ -143,7 +143,10 @@ namespace mxtest
         openInputFile( inputFile, fullPath );
         auto xdoc = mx::xml::XFactory::makeXDoc();
         xdoc->loadStream( inputFile );
-        inputFile.close();
+//        std::stringstream ss;
+//        xdoc->saveStream( ss );
+//        std::cout << ss.str() << std::endl;
+//        inputFile.close();
         return xdoc;
     }
     
@@ -280,7 +283,7 @@ namespace mxtest
     void generateExpectedFiles()
     {
         std::cout << "creating expected files" << std::flush;
-        const int maxConcurrency = 50;
+        const int maxConcurrency = 48;
         std::list<std::future<void>> q;
         auto testFiles = MxFileRepository::getTestFiles( MX_COMPILE_MAX_FILE_SIZE_BYTES );
         for( auto it = testFiles.cbegin(); it != testFiles.cend(); ++it )
@@ -289,7 +292,7 @@ namespace mxtest
             // std::cout << "creating expected file - " << it->subdirectory << " - " << it->fileName << std::endl;
             auto fut = std::async( std::launch::async, generateExpectedFile, it->subdirectory.c_str(), it->fileName.c_str() );
             
-            while( q.size() >= maxConcurrency )
+            while( q.size() >= maxConcurrency && q.begin() != q.end() )
             {
                 for( auto qIter = q.begin(); qIter != q.end(); ++qIter )
                 {
@@ -300,7 +303,7 @@ namespace mxtest
                         break;
                     }
                 }
-                std::this_thread::sleep_for( std::chrono::milliseconds(10) );
+                std::this_thread::sleep_for( std::chrono::milliseconds( maxConcurrency > 0 ? 10 : 0 ) );
             }
             q.push_front( std::move( fut ) );
         }

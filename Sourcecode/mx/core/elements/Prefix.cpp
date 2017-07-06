@@ -87,7 +87,7 @@ namespace mx
         }
 
 
-        bool Prefix::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Prefix::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

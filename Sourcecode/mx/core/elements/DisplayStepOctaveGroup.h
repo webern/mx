@@ -41,7 +41,8 @@ namespace mx
             DisplayOctavePtr getDisplayOctave() const;
             void setDisplayOctave( const DisplayOctavePtr& value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             DisplayStepPtr myDisplayStep;

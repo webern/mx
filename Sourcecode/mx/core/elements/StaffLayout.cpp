@@ -101,7 +101,7 @@ namespace mx
         }
 
 
-        bool StaffLayout::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool StaffLayout::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

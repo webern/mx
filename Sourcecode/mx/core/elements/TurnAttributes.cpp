@@ -96,7 +96,7 @@ namespace mx
         }
 
 
-        bool TurnAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool TurnAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "TurnAttributes";
             bool isSuccess = true;

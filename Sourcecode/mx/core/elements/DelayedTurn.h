@@ -35,7 +35,8 @@ namespace mx
             DelayedTurnAttributesPtr getAttributes() const;
             void setAttributes( const DelayedTurnAttributesPtr& attributes );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             DelayedTurnAttributesPtr myAttributes;

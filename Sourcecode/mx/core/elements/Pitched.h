@@ -37,7 +37,8 @@ namespace mx
             PitchedEnum getValue() const;
             void setValue( const PitchedEnum& value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             PitchedEnum myValue;

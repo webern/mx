@@ -160,7 +160,7 @@ namespace mx
         }
         
         
-        bool PartList::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool PartList::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             bool isFirstScorePartEncountered = false;

@@ -53,7 +53,8 @@ namespace mx
             bool hasColor;
             bool hasPrintObject;
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
         };
     }
 }

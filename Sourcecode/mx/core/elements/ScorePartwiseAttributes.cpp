@@ -35,7 +35,7 @@ namespace mx
         }
 
 
-        bool ScorePartwiseAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool ScorePartwiseAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "ScorePartwiseAttributes";
             bool isSuccess = true;

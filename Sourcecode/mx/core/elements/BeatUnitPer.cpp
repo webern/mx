@@ -82,7 +82,7 @@ namespace mx
         }
 
 
-        bool BeatUnitPer::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool BeatUnitPer::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
 

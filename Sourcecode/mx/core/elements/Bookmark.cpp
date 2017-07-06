@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool Bookmark::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Bookmark::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

@@ -36,7 +36,7 @@ namespace mx
         }
 
 
-        bool TieAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool TieAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "TieAttributes";
             bool isSuccess = true;

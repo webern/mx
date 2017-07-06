@@ -32,7 +32,7 @@ namespace mx
         }
 
 
-        bool TransposeAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool TransposeAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "TransposeAttributes";
             bool isSuccess = true;

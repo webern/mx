@@ -35,7 +35,8 @@ namespace mx
             InvertedMordentAttributesPtr getAttributes() const;
             void setAttributes( const InvertedMordentAttributesPtr& value );
             
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             InvertedMordentAttributesPtr myAttributes;

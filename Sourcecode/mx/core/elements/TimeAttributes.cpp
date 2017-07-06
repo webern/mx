@@ -88,7 +88,7 @@ namespace mx
         }
 
 
-        bool TimeAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool TimeAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "TimeAttributes";
             bool isSuccess = true;

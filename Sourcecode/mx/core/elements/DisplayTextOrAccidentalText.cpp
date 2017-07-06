@@ -118,7 +118,7 @@ namespace mx
         }
 
 
-        bool DisplayTextOrAccidentalText::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool DisplayTextOrAccidentalText::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             MX_CHOICE_IF( displayText, "display-text", DisplayText );
             MX_CHOICE_IF( accidentalText, "accidental-text", AccidentalText );

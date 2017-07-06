@@ -87,7 +87,7 @@ namespace mx
         }
 
 
-        bool BassStep::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool BassStep::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

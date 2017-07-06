@@ -305,7 +305,7 @@ namespace mx
         }
 
 
-        bool Identification::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Identification::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
 

@@ -87,7 +87,7 @@ namespace mx
         }
 
 
-        bool Distance::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Distance::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

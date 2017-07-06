@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool Mute::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Mute::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             MX_UNUSED( message );
             myValue = parseMuteEnum( xelement.getValue() );

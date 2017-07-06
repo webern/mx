@@ -35,7 +35,8 @@ namespace mx
             WedgeAttributesPtr getAttributes() const;
             void setAttributes( const WedgeAttributesPtr& attributes );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             WedgeAttributesPtr myAttributes;

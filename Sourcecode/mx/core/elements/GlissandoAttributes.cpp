@@ -80,7 +80,7 @@ namespace mx
         }
 
 
-        bool GlissandoAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool GlissandoAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "GlissandoAttributes";
             bool isSuccess = true;

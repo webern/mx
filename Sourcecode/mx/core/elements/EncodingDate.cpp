@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool EncodingDate::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool EncodingDate::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             MX_UNUSED( message );
             MX_UNUSED( xelement );

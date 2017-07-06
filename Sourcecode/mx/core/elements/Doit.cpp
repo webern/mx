@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool Doit::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Doit::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

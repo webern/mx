@@ -49,7 +49,8 @@ namespace mx
             void addKeyOctave( const KeyOctavePtr& value );
             void clearKeyOctaveSet();
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             KeyAttributesPtr myAttributes;

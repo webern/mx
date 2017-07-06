@@ -87,7 +87,7 @@ namespace mx
         }
 
 
-        bool FirstFret::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool FirstFret::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

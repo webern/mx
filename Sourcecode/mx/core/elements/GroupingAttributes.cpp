@@ -40,7 +40,7 @@ namespace mx
         }
 
 
-        bool GroupingAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool GroupingAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "GroupingAttributes";
             bool isSuccess = true;

@@ -32,7 +32,7 @@ namespace mx
         }
 
 
-        bool ScorePartAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool ScorePartAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "ScorePartAttributes";
             bool isSuccess = true;

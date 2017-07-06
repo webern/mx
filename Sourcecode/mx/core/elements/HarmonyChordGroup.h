@@ -75,7 +75,8 @@ namespace mx
             void clearDegreeSet();
             DegreePtr getDegree( const DegreeSetIterConst& setIterator ) const;
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             Choice myChoice;

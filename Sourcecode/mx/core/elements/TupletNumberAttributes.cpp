@@ -44,7 +44,7 @@ namespace mx
         }
 
 
-        bool TupletNumberAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool TupletNumberAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "TupletNumberAttributes";
             bool isSuccess = true;

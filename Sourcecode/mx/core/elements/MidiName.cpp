@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool MidiName::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool MidiName::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             MX_UNUSED( message );
             MX_UNUSED( xelement );

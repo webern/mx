@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool TripleTongue::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool TripleTongue::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

@@ -35,7 +35,8 @@ namespace mx
             TurnAttributesPtr getAttributes() const;
             void setAttributes( const TurnAttributesPtr& attributes );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             TurnAttributesPtr myAttributes;

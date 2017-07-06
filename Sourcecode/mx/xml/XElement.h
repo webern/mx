@@ -45,6 +45,8 @@ namespace mx
             virtual XElementType getType() const = 0;
             virtual bool getIsNull() const = 0;
 
+            virtual bool getIsProcessingInstruction() const = 0;
+
             virtual std::string getName() const = 0;
             virtual std::string getValue() const = 0;
 
@@ -59,6 +61,10 @@ namespace mx
             // returns an XElement with type == null if this
             // element is the root of the entire XML tree
             virtual XElementPtr getParent() const = 0;
+
+            // return the next element after this one, can
+            // return nullptr if there are no more siblings
+            virtual XElementPtr getNextSibling() const = 0;
             
             // STL compliant iterators to the elements
             // which are children of this element. If
@@ -66,6 +72,10 @@ namespace mx
             // then begin() == end()
             virtual XElementIterator begin() const = 0;
             virtual XElementIterator end() const = 0;
+
+            // if you want iterations to include processing
+            // instructions then use this function.
+            virtual XElementIterator beginWithProcessingInstructions() const = 0;
             
             // STL compliant iterators to the attributes
             // of this element. If this element has no

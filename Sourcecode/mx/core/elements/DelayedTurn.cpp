@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool DelayedTurn::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool DelayedTurn::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

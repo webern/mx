@@ -52,7 +52,8 @@ namespace mx
             bool getHasOpus() const;
             void setHasOpus( const bool value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             WorkNumberPtr myWorkNumber;

@@ -87,7 +87,7 @@ namespace mx
         }
 
 
-        bool PartAbbreviation::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool PartAbbreviation::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

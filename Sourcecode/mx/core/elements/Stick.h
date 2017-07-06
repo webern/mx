@@ -45,7 +45,8 @@ namespace mx
             StickMaterialPtr getStickMaterial() const;
             void setStickMaterial( const StickMaterialPtr& value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             StickAttributesPtr myAttributes;

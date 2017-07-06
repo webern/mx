@@ -140,6 +140,18 @@ namespace mx
 
             return false;
         }
+
+
+        bool XElementIterator::getSkipProcessingInstructions() const
+        {
+            return myImpl->getSkipProcessingInstructions();
+        }
+
+
+        void XElementIterator::setSkipProcessingInstructions( bool inValue )
+        {
+            myImpl->setSkipProcessingInstructions( inValue );
+        }
         
         
         const XElementIterImplUP& XElementIterator::reveal() const

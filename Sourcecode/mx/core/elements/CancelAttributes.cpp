@@ -32,7 +32,7 @@ namespace mx
         }
 
 
-        bool CancelAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool CancelAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "CancelAttributes";
             bool isSuccess = true;

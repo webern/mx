@@ -171,7 +171,7 @@ namespace mx
         }
 
 
-        bool TupletActual::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool TupletActual::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
 

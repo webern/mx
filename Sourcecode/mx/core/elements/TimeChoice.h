@@ -51,7 +51,8 @@ namespace mx
             SenzaMisuraPtr getSenzaMisura() const;
             void setSenzaMisura( const SenzaMisuraPtr& value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             Choice myChoice;

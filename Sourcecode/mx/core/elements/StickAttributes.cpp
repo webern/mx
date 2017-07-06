@@ -32,7 +32,7 @@ namespace mx
         }
 
 
-        bool StickAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool StickAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "StickAttributes";
             bool isSuccess = true;

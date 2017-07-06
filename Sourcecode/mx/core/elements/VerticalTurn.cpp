@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool VerticalTurn::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool VerticalTurn::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

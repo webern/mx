@@ -32,7 +32,7 @@ namespace mx
         }
 
 
-        bool GroupNameDisplayAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool GroupNameDisplayAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "GroupNameDisplayAttributes";
             bool isSuccess = true;

@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool Coda::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Coda::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

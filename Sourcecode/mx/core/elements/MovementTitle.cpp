@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool MovementTitle::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool MovementTitle::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             MX_UNUSED( message );
             MX_UNUSED( xelement );

@@ -176,7 +176,7 @@ namespace mx
         }
 
 
-        bool FiguredBass::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool FiguredBass::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

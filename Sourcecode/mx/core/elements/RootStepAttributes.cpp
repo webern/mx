@@ -64,7 +64,7 @@ namespace mx
         }
 
 
-        bool RootStepAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool RootStepAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "RootStepAttributes";
             bool isSuccess = true;

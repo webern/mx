@@ -101,7 +101,7 @@ namespace mx
         }
 
 
-        bool Root::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Root::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             bool isRootStepFound = false;

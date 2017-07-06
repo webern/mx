@@ -32,7 +32,7 @@ namespace mx
         }
 
 
-        bool ScoreInstrumentAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool ScoreInstrumentAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "ScoreInstrumentAttributes";
             bool isSuccess = true;

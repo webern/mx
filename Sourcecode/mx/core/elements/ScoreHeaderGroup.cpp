@@ -314,7 +314,7 @@ namespace mx
         }
         
         
-        bool ScoreHeaderGroup::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool ScoreHeaderGroup::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             bool isPartListFound = false;

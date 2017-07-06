@@ -96,7 +96,7 @@ namespace mx
         }
 
 
-        bool DelayedInvertedTurnAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool DelayedInvertedTurnAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "DelayedInvertedTurnAttributes";
             bool isSuccess = true;

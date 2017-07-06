@@ -96,7 +96,7 @@ namespace mx
         }
 
 
-        bool SlideAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool SlideAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "SlideAttributes";
             bool isSuccess = true;

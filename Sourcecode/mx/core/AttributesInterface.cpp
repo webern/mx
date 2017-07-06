@@ -19,5 +19,12 @@ namespace mx
         {
             return value.toStream( os );
         }
+
+
+        bool
+        AttributesInterface::fromXElement( std::ostream& message, xml::XElement& xelement )
+        {
+            return this->fromXElementImpl( message, xelement );
+        }
     }
 }
