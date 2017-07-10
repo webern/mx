@@ -89,6 +89,43 @@ namespace mx
             ExtensionAlter extensionAlter;
             ExtensionNumber extensionNumber;
             Bool printObject;
+
+            inline int getAlterValue() const
+            {
+                switch( extensionAlter )
+                {
+                    case ExtensionAlter::none: return 0;
+                    case ExtensionAlter::flat: return -1;
+                    case ExtensionAlter::sharp: return 1;
+                    case ExtensionAlter::doubleFlat: return -2;
+                    case ExtensionAlter::doubleSharp: return 2;
+                }
+                return 0;
+            }
+
+            inline void setAlterValue( int inAlterValue )
+            {
+                if( inAlterValue <= -2 )
+                {
+                    extensionAlter = ExtensionAlter::doubleFlat;
+                }
+                else if ( inAlterValue == -1 )
+                {
+                    extensionAlter = ExtensionAlter::flat;   
+                }
+                else if ( inAlterValue == 0 )
+                {
+                    extensionAlter = ExtensionAlter::none;   
+                }
+                else if ( inAlterValue == 1 )
+                {
+                    extensionAlter = ExtensionAlter::sharp;   
+                }
+                else if ( inAlterValue >= 2 )
+                {
+                    extensionAlter = ExtensionAlter::doubleSharp;   
+                }
+            }
         };
 
         MXAPI_EQUALS_BEGIN( Extension )
