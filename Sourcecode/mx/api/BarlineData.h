@@ -20,7 +20,11 @@ namespace mx
             normal,
             lightLight,
             lightHeavy,
-            heavyLight
+            heavyLight,
+            dotted,
+            dashed,
+            heavy,
+            heavyHeavy
         };
 
         class BarlineData

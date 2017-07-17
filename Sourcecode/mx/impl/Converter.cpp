@@ -331,13 +331,13 @@ namespace mx
         const std::map<core::BarStyleEnum, api::BarlineType> Converter::barlineMap =
         {
             std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::regular, api::BarlineType::normal },
-            std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::dotted, api::BarlineType::unsupported },
-            std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::dashed, api::BarlineType::unsupported },
-            std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::heavy, api::BarlineType::unsupported },
+            std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::dotted, api::BarlineType::dotted },
+            std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::dashed, api::BarlineType::dashed },
+            std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::heavy, api::BarlineType::heavy },
             std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::lightLight, api::BarlineType::lightLight },
             std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::lightHeavy, api::BarlineType::lightHeavy },
             std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::heavyLight, api::BarlineType::heavyLight },
-            std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::heavyHeavy, api::BarlineType::unsupported },
+            std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::heavyHeavy, api::BarlineType::heavyHeavy },
             std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::tick, api::BarlineType::unsupported },
             std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::short_, api::BarlineType::unsupported },
             std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::none, api::BarlineType::none },
