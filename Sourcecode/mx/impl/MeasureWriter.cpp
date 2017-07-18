@@ -601,6 +601,7 @@ namespace mx
             }
         }
 
+        
         void MeasureWriter::writeDirection( const api::DirectionData& inDirectionData )
         {
             if( myPropertiesWriter )
@@ -632,16 +633,29 @@ namespace mx
                     barlineElement->setHasBarStyle( true );
                     barlineElement->getBarStyle()->setValue( myConverter.convert( myBarlinesIter->barlineType ) );
                 }
+                if( myBarlinesIter->endingType != api::EndingType::none )
+                {
+                    barlineElement->setHasEnding( true );
+                    auto ending = barlineElement->getEnding();
+                    ending->getAttributes()->type = myConverter.convert( myBarlinesIter->endingType );
+
+                    if( myBarlinesIter->endingNumber > 0 )
+                    {
+                        ending->getAttributes()->number = std::to_string( myBarlinesIter->endingNumber );
+                    }
+                }
                 if( myBarlinesIter->location != api::HorizontalAlignment::unspecified )
                 {
                     barlineElement->getAttributes()->hasLocation = true;
                     barlineElement->getAttributes()->location = myConverter.convertBarlinePlacement( myBarlinesIter->location );
                 }
+
                 myOutMeasure->getMusicDataGroup()->addMusicDataChoice( mdc );
                 myHistory.log( "writeBarline" );
             }
         }
 
+        
         void MeasureWriter::History::advanceTickTimePosition( int amount, std::string reason )
         {
             HistoryRecord record;
