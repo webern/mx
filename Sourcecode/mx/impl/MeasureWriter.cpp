@@ -649,7 +649,10 @@ namespace mx
                     barlineElement->setHasBarStyle( true );
                     barlineElement->getBarStyle()->setValue( myConverter.convert( myBarlinesIter->barlineType ) );
                 }
+<<<<<<< 082227f5ac3f2004cd7884731308aef6d954274d
 
+=======
+>>>>>>> Add support for reading and writing of endings
                 if( myBarlinesIter->endingType != api::EndingType::none )
                 {
                     barlineElement->setHasEnding( true );
@@ -661,12 +664,16 @@ namespace mx
                         ending->getAttributes()->number = std::to_string( myBarlinesIter->endingNumber );
                     }
                 }
+<<<<<<< 082227f5ac3f2004cd7884731308aef6d954274d
 
+=======
+>>>>>>> Add support for reading and writing of endings
                 if( myBarlinesIter->location != api::HorizontalAlignment::unspecified )
                 {
                     barlineElement->getAttributes()->hasLocation = true;
                     barlineElement->getAttributes()->location = myConverter.convertBarlinePlacement( myBarlinesIter->location );
                 }
+<<<<<<< 082227f5ac3f2004cd7884731308aef6d954274d
                 else if ( myBarlinesIter->location == api::HorizontalAlignment::left || myBarlinesIter->tickTimePosition == 0 )
                 {
                     barlineElement->getAttributes()->hasLocation = true;
@@ -692,6 +699,8 @@ namespace mx
                         repeatElement->getAttributes()->direction = mx::core::BackwardForward::backward;
                     }
                 }
+=======
+>>>>>>> Add support for reading and writing of endings
 
                 myOutMeasure->getMusicDataGroup()->addMusicDataChoice( mdc );
                 myHistory.log( "writeBarline" );

@@ -529,7 +529,10 @@ namespace mx
             auto style = api::BarlineType::unspecified;
             auto endingType = api::EndingType::none;
             auto endingNumber = 0;
+<<<<<<< 082227f5ac3f2004cd7884731308aef6d954274d
             auto repeat = false;
+=======
+>>>>>>> Add support for reading and writing of endings
             
             if( attr.hasLocation )
             {
@@ -579,16 +582,22 @@ namespace mx
                 }
             }
             
+<<<<<<< 082227f5ac3f2004cd7884731308aef6d954274d
             if( inMxBarline.getHasRepeat() )
             {
                 repeat = true;
             }
             
+=======
+>>>>>>> Add support for reading and writing of endings
             barline.barlineType = style;
             barline.location = loc;
             barline.endingType = endingType;
             barline.endingNumber = endingNumber;
+<<<<<<< 082227f5ac3f2004cd7884731308aef6d954274d
             barline.repeat = repeat;
+=======
+>>>>>>> Add support for reading and writing of endings
             myOutMeasureData.barlines.emplace_back( std::move( barline ) );
         }
         
