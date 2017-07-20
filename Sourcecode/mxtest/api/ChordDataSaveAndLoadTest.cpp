@@ -350,7 +350,7 @@ TEST( SaveProcessingInstructions, ChordDataSaveTest )
     chord->miscData.emplace_back( MiscData{"test", "123"} );
 
     const auto xml = toXml( scoreData );
-    std::cout << xml << std::endl;
+//    std::cout << xml << std::endl;
     auto outScore = fromXml( xml );
 
     part = nullptr;
