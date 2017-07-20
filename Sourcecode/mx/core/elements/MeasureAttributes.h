@@ -31,7 +31,7 @@ namespace mx
             YesNo implicit;
             YesNo nonControlling;
             TenthsValue width;
-            const 	bool hasNumber;
+            const bool hasNumber;
             bool hasImplicit;
             bool hasNonControlling;
             bool hasWidth;

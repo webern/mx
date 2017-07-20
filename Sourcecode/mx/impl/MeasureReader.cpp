@@ -25,6 +25,7 @@
 #include "mx/core/elements/Divisions.h"
 #include "mx/core/elements/Duration.h"
 #include "mx/core/elements/EditorialVoiceGroup.h"
+#include "mx/core/elements/Ending.h"
 #include "mx/core/elements/Fifths.h"
 #include "mx/core/elements/Fifths.h"
 #include "mx/core/elements/FiguredBass.h"
@@ -526,6 +527,8 @@ namespace mx
             const auto& attr = *inMxBarline.getAttributes();
             auto loc = api::HorizontalAlignment::unspecified;
             auto style = api::BarlineType::unspecified;
+            auto endingType = api::EndingType::none;
+            auto endingNumber = 0;
             
             if( attr.hasLocation )
             {
@@ -547,8 +550,38 @@ namespace mx
                 barline.tickTimePosition = myCurrentCursor.tickTimePosition;
             }
             
+            if( inMxBarline.getHasEnding() )
+            {
+                const auto& ending = inMxBarline.getEnding();
+                const auto& endingAttributes = ending->getAttributes();
+                
+                switch (endingAttributes->type)
+                {
+                    case core::StartStopDiscontinue::start:
+                        endingType = api::EndingType::start;
+                        break;
+
+                    case core::StartStopDiscontinue::stop:
+                        endingType = api::EndingType::stop;
+                        break;
+
+                    case core::StartStopDiscontinue::discontinue:
+                        endingType = api::EndingType::discontinue;
+                        break;
+                };
+                
+                const auto& number = endingAttributes->number;
+                const auto& numValues = number.getValues();
+                if (!numValues.empty()) {
+                    const auto iter = numValues.begin();
+                    endingNumber = *iter;
+                }
+            }
+            
             barline.barlineType = style;
             barline.location = loc;
+            barline.endingType = endingType;
+            barline.endingNumber = endingNumber;
             myOutMeasureData.barlines.emplace_back( std::move( barline ) );
         }
         
