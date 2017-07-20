@@ -43,6 +43,7 @@ namespace mx
             BarlineType barlineType;
             EndingType endingType;
             int endingNumber;
+            bool repeat;
             HorizontalAlignment location;
             
             BarlineData()
@@ -50,6 +51,7 @@ namespace mx
             , barlineType{ BarlineType::normal }
             , endingType{ EndingType::none }
             , endingNumber { 0 }
+            , repeat { false }
             , location{ HorizontalAlignment::right }
             {
             }
@@ -60,6 +62,7 @@ namespace mx
         MXAPI_EQUALS_MEMBER( barlineType )
         MXAPI_EQUALS_MEMBER( endingType )
         MXAPI_EQUALS_MEMBER( endingNumber )
+        MXAPI_EQUALS_MEMBER( repeat )
         MXAPI_EQUALS_MEMBER( location )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( BarlineData );
