@@ -91,7 +91,9 @@ namespace mx
             
             core::BarStyleEnum convert( api::BarlineType value ) const;
             api::BarlineType convert( core::BarStyleEnum value ) const;
-            
+
+            core::StartStopDiscontinue convert( api::EndingType value ) const;
+
             core::RightLeftMiddle convertBarlinePlacement( api::HorizontalAlignment value ) const;
             api::HorizontalAlignment convertBarlinePlacement( core::RightLeftMiddle value ) const;
             
@@ -133,6 +135,7 @@ namespace mx
             const static std::map<core::WedgeType, api::WedgeType> wedgeMap;
             const static std::map<core::BarStyleEnum, api::BarlineType> barlineMap;
             const static std::map<core::RightLeftMiddle, api::HorizontalAlignment> barlinePlacementMap;
+            const static std::map<core::StartStopDiscontinue, api::EndingType> endingMap;
             const static std::map<core::LineEnd, api::LineHook> lineStopMap;
             const static std::map<core::GroupSymbolValue, api::BracketType> bracketMap;
             const static std::map<core::FermataShape, api::MarkType> fermataMap;

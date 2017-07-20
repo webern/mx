@@ -342,7 +342,7 @@ namespace mx
             std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::short_, api::BarlineType::unsupported },
             std::pair<core::BarStyleEnum, api::BarlineType>{ core::BarStyleEnum::none, api::BarlineType::none },
         };
-        
+
         
         const std::map<core::LineEnd, api::LineHook> Converter::lineStopMap =
         {
@@ -371,6 +371,14 @@ namespace mx
             std::pair<core::RightLeftMiddle, api::HorizontalAlignment>{ core::RightLeftMiddle::middle, api::HorizontalAlignment::center },
         };
         
+        
+        const std::map<core::StartStopDiscontinue, api::EndingType> Converter::endingMap =
+        {
+            std::pair<core::StartStopDiscontinue, api::EndingType>{ core::StartStopDiscontinue::start, api::EndingType::start },
+            std::pair<core::StartStopDiscontinue, api::EndingType>{ core::StartStopDiscontinue::stop, api::EndingType::stop },
+            std::pair<core::StartStopDiscontinue, api::EndingType>{ core::StartStopDiscontinue::discontinue, api::EndingType::discontinue }
+        };
+
         
         const std::map<core::FermataShape, api::MarkType> Converter::fermataMap =
         {
@@ -1654,6 +1662,12 @@ namespace mx
         core::BarStyleEnum Converter::convert( api::BarlineType value ) const
         {
             return findCoreItem( barlineMap, core::BarStyleEnum::regular, value );
+        }
+
+        
+        core::StartStopDiscontinue Converter::convert( api::EndingType value ) const
+        {
+            return findCoreItem( endingMap, core::StartStopDiscontinue::start, value );
         }
         
         
