@@ -529,6 +529,10 @@ namespace mx
             auto style = api::BarlineType::unspecified;
             auto endingType = api::EndingType::none;
             auto endingNumber = 0;
+<<<<<<< HEAD
+=======
+            auto repeat = false;
+>>>>>>> upstream/feature/mxapi
             
             if( attr.hasLocation )
             {
@@ -578,10 +582,22 @@ namespace mx
                 }
             }
             
+<<<<<<< HEAD
+=======
+            if( inMxBarline.getHasRepeat() )
+            {
+                repeat = true;
+            }
+            
+>>>>>>> upstream/feature/mxapi
             barline.barlineType = style;
             barline.location = loc;
             barline.endingType = endingType;
             barline.endingNumber = endingNumber;
+<<<<<<< HEAD
+=======
+            barline.repeat = repeat;
+>>>>>>> upstream/feature/mxapi
             myOutMeasureData.barlines.emplace_back( std::move( barline ) );
         }
         
