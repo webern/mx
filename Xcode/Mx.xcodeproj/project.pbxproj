@@ -3349,6 +3349,11 @@
 		29EAD74F1F0EF8CE00BDE782 /* MiscData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29EAD7471F0EF8CE00BDE782 /* MiscData.h */; };
 		29EAD7501F0EF8CE00BDE782 /* MiscData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29EAD7471F0EF8CE00BDE782 /* MiscData.h */; };
 		29EAD7511F0EF8CE00BDE782 /* MiscData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29EAD7471F0EF8CE00BDE782 /* MiscData.h */; };
+		E20803A81F25511D006B6C88 /* LyricData.h in Headers */ = {isa = PBXBuildFile; fileRef = E20803A71F25511D006B6C88 /* LyricData.h */; };
+		E20803A91F25511D006B6C88 /* LyricData.h in Headers */ = {isa = PBXBuildFile; fileRef = E20803A71F25511D006B6C88 /* LyricData.h */; };
+		E20803AA1F25511D006B6C88 /* LyricData.h in Headers */ = {isa = PBXBuildFile; fileRef = E20803A71F25511D006B6C88 /* LyricData.h */; };
+		E20803AB1F25511D006B6C88 /* LyricData.h in Headers */ = {isa = PBXBuildFile; fileRef = E20803A71F25511D006B6C88 /* LyricData.h */; };
+		E20803AC1F25511D006B6C88 /* LyricData.h in Headers */ = {isa = PBXBuildFile; fileRef = E20803A71F25511D006B6C88 /* LyricData.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -4750,6 +4755,7 @@
 		29EAD73A1F0EA96B00BDE782 /* ProcessingInstruction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProcessingInstruction.h; sourceTree = "<group>"; };
 		29EAD7461F0EF8CE00BDE782 /* MiscData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MiscData.cpp; sourceTree = "<group>"; };
 		29EAD7471F0EF8CE00BDE782 /* MiscData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MiscData.h; sourceTree = "<group>"; };
+		E20803A71F25511D006B6C88 /* LyricData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LyricData.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -4857,6 +4863,7 @@
 				29A8DD671EF0475D00AD2478 /* KeyData.h */,
 				29A8DD681EF0475D00AD2478 /* LayoutData.h */,
 				29A8DD691EF0475D00AD2478 /* LineData.h */,
+				E20803A71F25511D006B6C88 /* LyricData.h */,
 				29A8DD6A1EF0475D00AD2478 /* MarkData.cpp */,
 				29A8DD6B1EF0475D00AD2478 /* MarkData.h */,
 				29A8DD6C1EF0475D00AD2478 /* MeasureData.h */,
@@ -6301,6 +6308,7 @@
 			files = (
 				29A8006A1EF0876500AD2478 /* SoundID.h in Headers */,
 				29EAD74E1F0EF8CE00BDE782 /* MiscData.h in Headers */,
+				E20803A91F25511D006B6C88 /* LyricData.h in Headers */,
 				297594551F044C7600DE2F30 /* ChordData.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6311,6 +6319,7 @@
 			files = (
 				29A800691EF0876500AD2478 /* SoundID.h in Headers */,
 				29EAD74D1F0EF8CE00BDE782 /* MiscData.h in Headers */,
+				E20803A81F25511D006B6C88 /* LyricData.h in Headers */,
 				297594541F044C7600DE2F30 /* ChordData.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6319,6 +6328,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E20803AC1F25511D006B6C88 /* LyricData.h in Headers */,
 				297594581F044C7600DE2F30 /* ChordData.h in Headers */,
 				29A8FDC61EF0497500AD2478 /* MxmacOS.h in Headers */,
 				29EAD7511F0EF8CE00BDE782 /* MiscData.h in Headers */,
@@ -6330,6 +6340,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E20803AB1F25511D006B6C88 /* LyricData.h in Headers */,
 				297594571F044C7600DE2F30 /* ChordData.h in Headers */,
 				29B962851E79FF410072071D /* MxiOS.h in Headers */,
 				29EAD7501F0EF8CE00BDE782 /* MiscData.h in Headers */,
@@ -6343,6 +6354,7 @@
 			files = (
 				29A8006B1EF0876500AD2478 /* SoundID.h in Headers */,
 				29EAD74F1F0EF8CE00BDE782 /* MiscData.h in Headers */,
+				E20803AA1F25511D006B6C88 /* LyricData.h in Headers */,
 				297594561F044C7600DE2F30 /* ChordData.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

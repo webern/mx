@@ -108,6 +108,7 @@ namespace mx
             core::StemValue myStem;
             bool myIsTieStart;
             bool myIsTieStop;
+            bool myHasLyric;
 
         private:
             const core::FullNoteGroup& findFullNoteGroup( const core::NoteChoice& noteChoice ) const;
@@ -123,6 +124,8 @@ namespace mx
             void setAccidental();
             void setStem();
             void setTie( const core::TieSet& tieSet );
+            void setLyric();
+
         };
     }
 }

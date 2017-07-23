@@ -17,6 +17,8 @@
 #include "mx/core/elements/FullNoteGroup.h"
 #include "mx/core/elements/FullNoteTypeChoice.h"
 #include "mx/core/elements/GraceNoteGroup.h"
+#include "mx/core/elements/Lyric.h"
+#include "mx/core/elements/LyricTextChoice.h"
 #include "mx/core/elements/NormalNoteGroup.h"
 #include "mx/core/elements/NormalNotes.h"
 #include "mx/core/elements/NormalType.h"
@@ -28,6 +30,7 @@
 #include "mx/core/elements/Rest.h"
 #include "mx/core/elements/Staff.h"
 #include "mx/core/elements/Step.h"
+#include "mx/core/elements/getSyllabicTextGroup.h"
 #include "mx/core/elements/TimeModification.h"
 #include "mx/core/elements/Type.h"
 #include "mx/core/elements/Unpitched.h"
@@ -76,6 +79,7 @@ namespace mx
         , myIsAccidentalBracketed{ false }
         , myIsTieStart{ false }
         , myIsTieStop{ false }
+        , myHasLyric{ false }
         {
             setNormalGraceCueItems();
             setRestPitchUnpitchedItems();
@@ -88,6 +92,7 @@ namespace mx
             setTimeModification();
             setAccidental();
             setStem();
+            setLyric();
         }
 
         const core::FullNoteGroup& NoteReader::findFullNoteGroup( const core::NoteChoice& noteChoice ) const
@@ -379,6 +384,55 @@ namespace mx
                 else if( tie->getAttributes()->type == core::StartStop::stop )
                 {
                     myIsTieStop = true;
+                }
+            }
+        }
+        
+        void NoteReader::setLyric()
+        {
+            const auto& lyricSet = myNote.getLyricSet();
+            auto iter = lyricSet.begin();
+            const auto iterEnd = lyricSet.end();
+            for (; iter != iterEnd; ++iter) {
+                const auto& lyric = *iter;
+                
+                const auto& textChoice = lyric->getLyricTextChoice();
+                if( textChoice )
+                {
+                    const auto choice = textChoice->getChoice();
+                    switch (choice)
+                    {
+                        case core::LyricTextChoice::Choice::syllabicTextGroup:
+                        {
+                            const auto textGroup = textChoice->getSyllabicTextGroup();
+                            if (textGroup) {
+                                if (textGroup->getHasSyllabic()) {
+                                    myHasLyric = true;
+                                } else {
+                                    const auto& text = textGroup->getText();
+                                    if (text) {
+                                        myHasLyric = true;
+                                    }
+                                }
+                            }
+                            break;
+                        }
+
+                        case core::LyricTextChoice::Choice::extend:
+                        {
+                            break;
+                        }
+
+                        case core::LyricTextChoice::Choice::laughing:
+                        {
+                            break;
+                        }
+
+                        case core::LyricTextChoice::Choice::humming:
+                        {
+                            break;
+                        }
+                    }
                 }
             }
         }
