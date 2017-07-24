@@ -109,6 +109,7 @@ namespace mx
             bool myIsTieStart;
             bool myIsTieStop;
             bool myHasLyric;
+            std::vector<core::LyricType> myLyrics;
 
         private:
             const core::FullNoteGroup& findFullNoteGroup( const core::NoteChoice& noteChoice ) const;

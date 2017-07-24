@@ -3890,6 +3890,16 @@ namespace mx
             return toStream( os, value );
         }
         
+        LyricType::LyricType()
+        : mySyllabic(SyllabicEnum::single)
+        {
+        }
+        
+        LyricType::LyricType(const std::string& value, SyllabicEnum syllabic)
+        : myText(value)
+        , mySyllabic(syllabic)
+        {
+        }
         
         /***************************************************************************************************************************
          ***************************************************************************************************************************

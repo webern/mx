@@ -13,9 +13,9 @@ namespace mx
         class LyricData
         {
         public:
-            LyricData()
-            {
-            }
+            LyricData() {}
+            
+            std::string text;
         };
         
         MXAPI_EQUALS_BEGIN( LyricData )

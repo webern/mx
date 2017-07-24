@@ -2267,5 +2267,14 @@ namespace mx
 		std::ostream& toStream( std::ostream& os, const DynamicsValue& value );
 		std::ostream& operator<<( std::ostream& os, const DynamicsValue& value );
         
+        class LyricType
+        {
+        public:
+            explicit LyricType(const std::string& value, SyllabicEnum syllabic);
+            LyricType();
+        private:
+            std::string myText;
+            SyllabicEnum mySyllabic;
+        };
 	}
 }

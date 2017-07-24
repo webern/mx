@@ -30,12 +30,14 @@
 #include "mx/core/elements/Rest.h"
 #include "mx/core/elements/Staff.h"
 #include "mx/core/elements/Step.h"
-#include "mx/core/elements/getSyllabicTextGroup.h"
-#include "mx/core/elements/TimeModification.h"
+#include "mx/core/elements/Syllabic.h"
+#include "mx/core/elements/SyllabicTextGroup.h"
 #include "mx/core/elements/Type.h"
+#include "mx/core/elements/Text.h"
+#include "mx/core/elements/Tie.h"
+#include "mx/core/elements/TimeModification.h"
 #include "mx/core/elements/Unpitched.h"
 #include "mx/core/elements/Voice.h"
-#include "mx/core/elements/Tie.h"
 #include "mx/utility/StringToInt.h"
 
 #include <map>
@@ -400,34 +402,33 @@ namespace mx
                 if( textChoice )
                 {
                     const auto choice = textChoice->getChoice();
-                    switch (choice)
+                    switch ( choice )
                     {
                         case core::LyricTextChoice::Choice::syllabicTextGroup:
                         {
                             const auto textGroup = textChoice->getSyllabicTextGroup();
-                            if (textGroup) {
-                                if (textGroup->getHasSyllabic()) {
+                            if ( textGroup )
+                            {
+                                core::SyllabicEnum syllabic = core::SyllabicEnum::single;
+                                if( textGroup->getHasSyllabic() )
+                                {
+                                    syllabic = textGroup->getSyllabic()->getValue();
+                                }
+
+                                const auto& textPtr = textGroup->getText();
+                                if ( textPtr )
+                                {
+                                    const auto text = textPtr->getValue();
+                                    const core::LyricType lyricType( text.getValue(), syllabic );
+                                    myLyrics.emplace_back( lyricType );
                                     myHasLyric = true;
-                                } else {
-                                    const auto& text = textGroup->getText();
-                                    if (text) {
-                                        myHasLyric = true;
-                                    }
                                 }
                             }
                             break;
                         }
 
                         case core::LyricTextChoice::Choice::extend:
-                        {
-                            break;
-                        }
-
                         case core::LyricTextChoice::Choice::laughing:
-                        {
-                            break;
-                        }
-
                         case core::LyricTextChoice::Choice::humming:
                         {
                             break;
