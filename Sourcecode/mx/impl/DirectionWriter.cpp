@@ -394,10 +394,17 @@ namespace mx
             auto chordIter = chords.cbegin();
             const auto chordEnd = chords.cend();
 
+            bool isFirstChord = true;
             for( ; chordIter != chordEnd; ++chordIter )
             {
-                core::HarmonyChordGroupPtr grp = nullptr;
+                if ( isFirstChord )
+                {
+                    isFirstChord = false;
+                    auto& attributes = *harmony->getAttributes();
+                    setAttributesFromPositionData( chordIter->positionData, attributes );
+                }
 
+                core::HarmonyChordGroupPtr grp = nullptr;
                 if( chordIter == chords.cbegin() )
                 {
                     grp = harmony->getHarmonyChordGroupSet().front();
@@ -409,6 +416,7 @@ namespace mx
                 }
 
                 grp->setChoice( core::HarmonyChordGroup::Choice::root );
+
                 auto step = chordIter->root == api::Step::unspecified ? api::Step::c : chordIter->root;
                 grp->getRoot()->getRootStep()->setValue( myConverter.convert( step ) );
                 if( chordIter->rootAlter != 0 )
