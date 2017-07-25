@@ -370,4 +370,49 @@ TEST( SaveProcessingInstructions, ChordDataSaveTest )
     CHECK( chord->root == Step::b );
 }
 
+
+
+
+
+TEST( SavePositionData, ChordDataSaveTest )
+{
+    ScoreData scoreData{};
+    scoreData.parts.emplace_back();
+    auto part = &scoreData.parts.back();
+    part->measures.emplace_back();
+    auto measure = &part->measures.back();
+    measure->staves.emplace_back();
+    auto staff = &measure->staves.back();
+    staff->directions.emplace_back();
+    auto direction = &staff->directions.back();
+    direction->chords.emplace_back();
+    auto chord = &direction->chords.back();
+    chord->root = Step::b;
+    chord->positionData.isDefaultXSpecified = true;
+    chord->positionData.defaultX = 123.0;
+    chord->positionData.isDefaultYSpecified = true;
+    chord->positionData.defaultY = 456.0;
+
+    const auto xml = toXml( scoreData );
+//    std::cout << xml << std::endl;
+    auto outScore = fromXml( xml );
+
+    part = nullptr;
+    measure = nullptr;
+    staff = nullptr;
+    chord = nullptr;
+
+    part = &outScore.parts.back();
+    measure = &part->measures.back();
+    staff = &measure->staves.back();
+    direction = &staff->directions.back();
+    chord = &direction->chords.back();
+
+    CHECK( chord->positionData.isDefaultXSpecified );
+    CHECK_DOUBLES_EQUAL( 123.0, chord->positionData.defaultX, 0.001 );
+
+    CHECK( chord->positionData.isDefaultYSpecified );
+    CHECK_DOUBLES_EQUAL( 456.0, chord->positionData.defaultY, 0.001 );
+}
+
 #endif

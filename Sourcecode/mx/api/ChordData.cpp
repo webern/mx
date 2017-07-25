@@ -32,6 +32,8 @@ namespace mx
         , bass{ Step::unspecified }
         , bassAlter{ 0 }
         , extensions{}
+        , miscData{}
+        , positionData{}
         {
 
         }

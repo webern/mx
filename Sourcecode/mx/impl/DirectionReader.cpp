@@ -762,6 +762,9 @@ namespace mx
                 chord.miscData.push_back( misc );
             }
 
+            const auto& attr = *inHarmony.getAttributes();
+            chord.positionData = getPositionData( attr );
+
             myOutDirectionData.chords.push_back( chord );
         }
     }
