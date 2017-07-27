@@ -32,6 +32,7 @@
 #include "mx/core/elements/Notehead.h"
 #include "mx/core/elements/Octave.h"
 #include "mx/core/elements/Pitch.h"
+#include "mx/impl/PositionFunctions.h"
 #include "mx/core/elements/Rest.h"
 #include "mx/core/elements/Staff.h"
 #include "mx/core/elements/Stem.h"
@@ -79,7 +80,9 @@ namespace mx
             setStemDirection();
             setMiscData();
             NotationsWriter notationsWriter{ myNoteData, myCursor, myScoreWriter };
-            
+            auto& noteAttr = *myOutNote->getAttributes();
+            impl::setAttributesFromPositionData(myNoteData.positionData, noteAttr);
+
             auto notations = notationsWriter.getNotations();
             if( notations->getNotationsChoiceSet().size() > 0 )
             {

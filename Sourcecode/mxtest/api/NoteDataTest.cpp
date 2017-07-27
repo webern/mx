@@ -876,4 +876,45 @@ TEST( directionOrderRoundTrip, NoteData )
 }
 T_END;
 
+TEST( notePositionRoundTrip, NoteData )
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    score.ticksPerQuarter = 120;
+    auto& part = score.parts.back();
+    part.uniqueId = "BISH";
+    part.measures.emplace_back();
+    auto& measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto& staff = measure.staves.back();
+    auto& voice = staff.voices[0];
+
+    NoteData note;
+    note.userRequestedVoiceNumber = 1;
+    note.durationData.durationName = DurationName::quarter;
+    note.durationData.durationTimeTicks = 120;
+    note.tickTimePosition = 0;
+    note.positionData.isDefaultXSpecified = true;
+    note.positionData.defaultX = 1.0;
+    note.positionData.isDefaultYSpecified = true;
+    note.positionData.defaultY = -2.0;
+    voice.notes.push_back( note );
+
+
+    // round trip it through xml
+    auto& mgr = DocumentManager::getInstance();
+    auto docId = mgr.createFromScore( score );
+    auto docPtr = mgr.getDocument( docId );
+    std::stringstream ss;
+    mgr.writeToStream(docId, ss);
+    mgr.destroyDocument(docId);
+    const std::string xml = ss.str();
+    std::istringstream iss{ xml };
+    docId = mgr.createFromStream( iss );
+    auto oscore = mgr.getData(docId);
+    CHECK( score == oscore )
+    
+}
+T_END;
+
 #endif
