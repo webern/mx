@@ -371,9 +371,6 @@ TEST( SaveProcessingInstructions, ChordDataSaveTest )
 }
 
 
-
-
-
 TEST( SavePositionData, ChordDataSaveTest )
 {
     ScoreData scoreData{};

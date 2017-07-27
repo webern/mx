@@ -3,6 +3,7 @@
 // Distributed under the MIT License
 
 #include "mx/impl/NoteFunctions.h"
+#include "mx/impl/PositionFunctions.h"
 #include "mx/api/MarkData.h"
 #include "mx/api/SpannerData.h"
 #include "mx/core/elements/Accent.h"
@@ -173,6 +174,8 @@ namespace mx
             myOutNoteData.isTieStop = reader.getIsTieStop();
 
             parseMiscData();
+            const auto& incomingNoteAttributes = *(myNote.getAttributes());
+            myOutNoteData.positionData = impl::getPositionData( incomingNoteAttributes );
 
             return myOutNoteData;
         }
