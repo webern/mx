@@ -628,11 +628,13 @@ namespace mx
                 auto mdc = core::makeMusicDataChoice();
                 mdc->setChoice( core::MusicDataChoice::Choice::barline );
                 auto barlineElement = mdc->getBarline();
+
                 if( myBarlinesIter->barlineType != api::BarlineType::unspecified && myBarlinesIter->barlineType != api::BarlineType::unsupported )
                 {
                     barlineElement->setHasBarStyle( true );
                     barlineElement->getBarStyle()->setValue( myConverter.convert( myBarlinesIter->barlineType ) );
                 }
+
                 if( myBarlinesIter->endingType != api::EndingType::none )
                 {
                     barlineElement->setHasEnding( true );
@@ -644,10 +646,36 @@ namespace mx
                         ending->getAttributes()->number = std::to_string( myBarlinesIter->endingNumber );
                     }
                 }
+
                 if( myBarlinesIter->location != api::HorizontalAlignment::unspecified )
                 {
                     barlineElement->getAttributes()->hasLocation = true;
                     barlineElement->getAttributes()->location = myConverter.convertBarlinePlacement( myBarlinesIter->location );
+                }
+                else if ( myBarlinesIter->location == api::HorizontalAlignment::left || myBarlinesIter->tickTimePosition == 0 )
+                {
+                    barlineElement->getAttributes()->hasLocation = true;
+                    barlineElement->getAttributes()->location = myConverter.convertBarlinePlacement( mx::api::HorizontalAlignment::left );
+                }
+                else
+                {
+                    barlineElement->getAttributes()->hasLocation = true;
+                    barlineElement->getAttributes()->location = myConverter.convertBarlinePlacement( mx::api::HorizontalAlignment::right );
+                }
+
+                if ( myBarlinesIter->repeat )
+                {
+                    const auto repeatElement = barlineElement->getRepeat();
+                    barlineElement->setHasRepeat(true);
+
+                    if ( myBarlinesIter->location == api::HorizontalAlignment::left || myBarlinesIter->tickTimePosition == 0 )
+                    {
+                        repeatElement->getAttributes()->direction = mx::core::BackwardForward::forward;
+                    }
+                    else
+                    {
+                        repeatElement->getAttributes()->direction = mx::core::BackwardForward::backward;
+                    }
                 }
 
                 myOutMeasure->getMusicDataGroup()->addMusicDataChoice( mdc );
