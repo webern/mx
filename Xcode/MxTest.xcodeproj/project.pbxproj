@@ -474,6 +474,7 @@
 		29C227ED1D2F5DE000677B3C /* SortAttributes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C227EB1D2F5DE000677B3C /* SortAttributes.cpp */; };
 		29C227F01D2F74B500677B3C /* ChangeValues.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C227EE1D2F74B500677B3C /* ChangeValues.cpp */; };
 		29DE547A1DB98E7100F5F8A7 /* StupidFileFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DE54781DB98E7100F5F8A7 /* StupidFileFunctions.cpp */; };
+		29E385CA1F2BE056001AC8E2 /* MeasureDataTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29E385C81F2BE056001AC8E2 /* MeasureDataTest.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -1098,6 +1099,7 @@
 		29DE54771DB98E7100F5F8A7 /* Path.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Path.h; path = ../Sourcecode/mxtest/file/Path.h; sourceTree = "<group>"; };
 		29DE54781DB98E7100F5F8A7 /* StupidFileFunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StupidFileFunctions.cpp; path = ../Sourcecode/mxtest/file/StupidFileFunctions.cpp; sourceTree = "<group>"; };
 		29DE54791DB98E7100F5F8A7 /* StupidFileFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StupidFileFunctions.h; path = ../Sourcecode/mxtest/file/StupidFileFunctions.h; sourceTree = "<group>"; };
+		29E385C81F2BE056001AC8E2 /* MeasureDataTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MeasureDataTest.cpp; path = ../Sourcecode/mxtest/api/MeasureDataTest.cpp; sourceTree = "<group>"; };
 		29E41D671DC978400085405E /* ApiK014aFermatasScoreData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ApiK014aFermatasScoreData.h; path = ../Sourcecode/mxtest/api/ApiK014aFermatasScoreData.h; sourceTree = "<group>"; };
 		29E41D681DC978400085405E /* ApiK014aFermatasTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ApiK014aFermatasTest.cpp; path = ../Sourcecode/mxtest/api/ApiK014aFermatasTest.cpp; sourceTree = "<group>"; };
 		29EF440F1D6E8F5500DBDAB9 /* DocumentManagerTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DocumentManagerTest.cpp; path = ../Sourcecode/mxtest/api/DocumentManagerTest.cpp; sourceTree = "<group>"; };
@@ -1838,6 +1840,7 @@
 				2975945A1F04848600DE2F30 /* ApiChordSimpleScoreData.h */,
 				2975945B1F04848600DE2F30 /* ApiChordSimpleTest.cpp */,
 				2975945E1F04A0CD00DE2F30 /* ChordDataSaveAndLoadTest.cpp */,
+				29E385C81F2BE056001AC8E2 /* MeasureDataTest.cpp */,
 			);
 			name = api;
 			sourceTree = "<group>";
@@ -2392,6 +2395,7 @@
 				29C01E791D1312FA0094BE61 /* PartNameTest.cpp in Sources */,
 				29C01DD61D1312FA0094BE61 /* EncodingTest.cpp in Sources */,
 				29C01DD71D1312FA0094BE61 /* EndingTest.cpp in Sources */,
+				29E385CA1F2BE056001AC8E2 /* MeasureDataTest.cpp in Sources */,
 				29C01ED91D1312FA0094BE61 /* ThumbPositionTest.cpp in Sources */,
 				29C01DA21D1312FA0094BE61 /* CreditTypeTest.cpp in Sources */,
 				29C01EDC1D1312FA0094BE61 /* TimeModificationTest.cpp in Sources */,

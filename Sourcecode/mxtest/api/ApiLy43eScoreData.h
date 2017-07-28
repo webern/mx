@@ -442,6 +442,7 @@ namespace mxtest
         auto barlineP = &measureP->barlines.back();
         barlineP->tickTimePosition = std::numeric_limits<int>::max();
         barlineP->barlineType = BarlineType::lightHeavy;
+        barlineP->location = mx::api::HorizontalAlignment::right;
         
         return score;
 	}
