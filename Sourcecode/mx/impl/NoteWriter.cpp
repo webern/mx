@@ -210,6 +210,12 @@ namespace mx
                     pitch->getDisplayStep()->setValue( myConverter.convert( myNoteData.pitchData.step ) );
                     pitch->getDisplayOctave()->setValue( core::OctaveValue{ myNoteData.pitchData.octave } );
                 }
+
+                if( myNoteData.isMeasureRest )
+                {
+                    myOutFullNoteTypeChoice->getRest()->getAttributes()->hasMeasure = true;
+                    myOutFullNoteTypeChoice->getRest()->getAttributes()->measure = core::YesNo::yes;
+                }
             }
             else if( myNoteData.isUnpitched )
             {
