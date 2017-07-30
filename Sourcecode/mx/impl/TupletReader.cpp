@@ -16,6 +16,7 @@
 #include "mx/core/elements/TupletNormal.h"
 #include "mx/core/elements/TupletNumber.h"
 #include "mx/core/elements/TupletType.h"
+#include "mx/core/elements/Type.h"
 #include "mx/impl/PositionFunctions.h"
 
 namespace mx
@@ -148,7 +149,11 @@ namespace mx
                 outTupletStart.normalDurationName = durName;
                 outTupletStart.normalDots = static_cast<int>( grp.getNormalDotSet().size() );
             }
-
+            else if ( myNote.getHasType() )
+            {
+                const auto durName = converter.convert( myNote.getType()->getValue() );
+                outTupletStart.normalDurationName = durName;
+            }
         }
         
         
@@ -168,6 +173,11 @@ namespace mx
                 const auto durName = converter.convert( grp.getNormalType()->getValue() );
                 outTupletStart.actualDurationName = durName;
                 outTupletStart.actualDots = static_cast<int>( grp.getNormalDotSet().size() );
+            }
+            else if ( myNote.getHasType() )
+            {
+                const auto durName = converter.convert( myNote.getType()->getValue() );
+                outTupletStart.actualDurationName = durName;
             }
         }
         
