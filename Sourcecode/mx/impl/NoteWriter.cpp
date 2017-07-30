@@ -215,6 +215,7 @@ namespace mx
                 {
                     myOutFullNoteTypeChoice->getRest()->getAttributes()->hasMeasure = true;
                     myOutFullNoteTypeChoice->getRest()->getAttributes()->measure = core::YesNo::yes;
+                    myOutNote->setHasType( false );
                 }
             }
             else if( myNoteData.isUnpitched )
@@ -262,9 +263,12 @@ namespace mx
         
         void NoteWriter::setDurationNameAndDots() const
         {
-            myOutNote->setHasType( true );
-            myOutNote->getType()->setValue( myConverter.convert( myNoteData.durationData.durationName ) );
-            
+            if( !myNoteData.isRest || !myNoteData.isMeasureRest )
+            {
+                myOutNote->setHasType( true );
+                myOutNote->getType()->setValue( myConverter.convert( myNoteData.durationData.durationName ) );
+            }
+
             for( int d = 0; d < static_cast<int>( myNoteData.durationData.durationDots ); ++d )
             {
                 myOutNote->addDot( core::makeDot() );
