@@ -136,7 +136,7 @@ TEST( missingMusicXMLVersion, Freezing )
     CHECK( originalScore->getAttributes()->hasVersion == savedScore->getAttributes()->hasVersion );
 }
 
-TEST( appearanceMissing, Freezing )
+TEST( appearanceLineWidthsMissing, Freezing )
 {
     auto& mgr = DocumentManager::getInstance();
     const auto filePath = mxtest::MxFileRepository::getFullPath( fileName );
@@ -158,11 +158,14 @@ TEST( appearanceMissing, Freezing )
 
     for( int i = 0; i < lineWidthSetSize; ++i )
     {
-        const auto savedElement = savedAppearance->getLineWidthSet().at( i )->getValue().getValue();
-        const auto originalElement = originalAppearance->getLineWidthSet().at( i )->getValue().getValue();
-        const auto savedLineWidth = savedElement;
-        const auto originalLineWidth = originalElement;
-        
+        const auto savedElement = savedAppearance->getLineWidthSet().at( i );
+        const auto originalElement = originalAppearance->getLineWidthSet().at( i );
+        const auto savedLineWidth = savedElement->getValue().getValue();
+        const auto originalLineWidth = originalElement->getValue().getValue();
+        CHECK_DOUBLES_EQUAL( originalLineWidth, savedLineWidth, 0.00001 );
+
+        CHECK( originalElement->getAttributes()->hasType == savedElement->getAttributes()->hasType );
+        CHECK_EQUAL( originalElement->getAttributes()->type.getValue(), savedElement->getAttributes()->type.getValue() );
     }
 
 }
