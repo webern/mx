@@ -136,7 +136,29 @@ TEST( missingMusicXMLVersion, Freezing )
     CHECK( originalScore->getAttributes()->hasVersion == savedScore->getAttributes()->hasVersion );
 }
 
-TEST( appearanceLineWidthsMissing, Freezing )
+TEST( HasDefaultsHasAppearance, Freezing )
+{
+    auto& mgr = DocumentManager::getInstance();
+    const auto filePath = mxtest::MxFileRepository::getFullPath( fileName );
+    const auto originalId = mgr.createFromFile( filePath );
+    const auto originalScoreData = mgr.getData( originalId );
+    const auto originalScore = mgr.getDocument( originalId )->getScorePartwise();
+    const auto savedId = mgr.createFromScore( mgr.getData( originalId ) );
+    const auto savedScoreData = mgr.getData( savedId );
+    const auto savedScore = mgr.getDocument( savedId )->getScorePartwise();
+    mgr.destroyDocument( originalId );
+    mgr.destroyDocument( savedId );
+
+    const auto originalHasDefaults = originalScore->getScoreHeaderGroup()->getHasDefaults();
+    const auto savedHasDefaults = savedScore->getScoreHeaderGroup()->getHasDefaults();
+    CHECK( originalHasDefaults == savedHasDefaults );
+
+    const auto originalHasAppearance = originalScore->getScoreHeaderGroup()->getDefaults()->getHasAppearance();
+    const auto savedHasAppearance = savedScore->getScoreHeaderGroup()->getDefaults()->getHasAppearance();
+    CHECK( originalHasAppearance == savedHasAppearance );
+}
+
+TEST( appearanceLineWidths, Freezing )
 {
     auto& mgr = DocumentManager::getInstance();
     const auto filePath = mxtest::MxFileRepository::getFullPath( fileName );
@@ -165,9 +187,76 @@ TEST( appearanceLineWidthsMissing, Freezing )
         CHECK_DOUBLES_EQUAL( originalLineWidth, savedLineWidth, 0.00001 );
 
         CHECK( originalElement->getAttributes()->hasType == savedElement->getAttributes()->hasType );
-        CHECK_EQUAL( originalElement->getAttributes()->type.getValue(), savedElement->getAttributes()->type.getValue() );
+        CHECK_EQUAL( originalElement->getAttributes()->type.getValueString(), savedElement->getAttributes()->type.getValueString() );
     }
+}
 
+TEST( appearanceNoteSize, Freezing )
+{
+    auto& mgr = DocumentManager::getInstance();
+    const auto filePath = mxtest::MxFileRepository::getFullPath( fileName );
+    const auto originalId = mgr.createFromFile( filePath );
+    const auto originalScoreData = mgr.getData( originalId );
+    const auto originalScore = mgr.getDocument( originalId )->getScorePartwise();
+    const auto savedId = mgr.createFromScore( mgr.getData( originalId ) );
+    const auto savedScoreData = mgr.getData( savedId );
+    const auto savedScore = mgr.getDocument( savedId )->getScorePartwise();
+    mgr.destroyDocument( originalId );
+    mgr.destroyDocument( savedId );
+
+    const auto originalAppearance = originalScore->getScoreHeaderGroup()->getDefaults()->getAppearance();
+    const auto savedAppearance = savedScore->getScoreHeaderGroup()->getDefaults()->getAppearance();
+
+    const auto noteSizeSetSize = savedAppearance->getNoteSizeSet().size();
+    CHECK( noteSizeSetSize > 0 );
+    CHECK_EQUAL( originalAppearance->getNoteSizeSet().size(), savedAppearance->getNoteSizeSet().size() );
+
+    for( int i = 0; i < noteSizeSetSize; ++i )
+    {
+        const auto savedElement = savedAppearance->getNoteSizeSet().at( i );
+        const auto originalElement = originalAppearance->getNoteSizeSet().at( i );
+        const auto savedNoteSize = savedElement->getValue().getValue();
+        const auto originalNoteSize = originalElement->getValue().getValue();
+        CHECK_DOUBLES_EQUAL( originalNoteSize, savedNoteSize, 0.00001 );
+
+        CHECK( originalElement->getAttributes()->hasType == savedElement->getAttributes()->hasType );
+        CHECK( originalElement->getAttributes()->type == savedElement->getAttributes()->type );
+    }
+}
+
+
+
+TEST( appearancDistance, Freezing )
+{
+    auto& mgr = DocumentManager::getInstance();
+    const auto filePath = mxtest::MxFileRepository::getFullPath( fileName );
+    const auto originalId = mgr.createFromFile( filePath );
+    const auto originalScoreData = mgr.getData( originalId );
+    const auto originalScore = mgr.getDocument( originalId )->getScorePartwise();
+    const auto savedId = mgr.createFromScore( mgr.getData( originalId ) );
+    const auto savedScoreData = mgr.getData( savedId );
+    const auto savedScore = mgr.getDocument( savedId )->getScorePartwise();
+    mgr.destroyDocument( originalId );
+    mgr.destroyDocument( savedId );
+
+    const auto originalAppearance = originalScore->getScoreHeaderGroup()->getDefaults()->getAppearance();
+    const auto savedAppearance = savedScore->getScoreHeaderGroup()->getDefaults()->getAppearance();
+
+    const auto distanceSetSize = savedAppearance->getDistanceSet().size();
+    CHECK( distanceSetSize > 0 );
+    CHECK_EQUAL( originalAppearance->getDistanceSet().size(), savedAppearance->getDistanceSet().size() );
+
+    for( int i = 0; i < distanceSetSize; ++i )
+    {
+        const auto savedElement = savedAppearance->getDistanceSet().at( i );
+        const auto originalElement = originalAppearance->getDistanceSet().at( i );
+        const auto savedDistance = savedElement->getValue().getValue();
+        const auto originalDistance = originalElement->getValue().getValue();
+        CHECK_DOUBLES_EQUAL( originalDistance, savedDistance, 0.00001 );
+
+        CHECK( originalElement->getAttributes()->hasType == savedElement->getAttributes()->hasType );
+        CHECK( originalElement->getAttributes()->type.getValueString() == savedElement->getAttributes()->type.getValueString() );
+    }
 }
 
 #endif
