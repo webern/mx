@@ -120,4 +120,51 @@ TEST( roundTripViolaDynamicWrongTime, Freezing )
 }
 T_END
 
+TEST( missingMusicXMLVersion, Freezing )
+{
+    auto& mgr = DocumentManager::getInstance();
+    const auto filePath = mxtest::MxFileRepository::getFullPath( fileName );
+    const auto originalId = mgr.createFromFile( filePath );
+    const auto originalScoreData = mgr.getData( originalId );
+    const auto originalScore = mgr.getDocument( originalId )->getScorePartwise();
+    const auto savedId = mgr.createFromScore( mgr.getData( originalId ) );
+    const auto savedScoreData = mgr.getData( savedId );
+    const auto savedScore = mgr.getDocument( savedId )->getScorePartwise();
+    mgr.destroyDocument( originalId );
+    mgr.destroyDocument( savedId );
+
+    CHECK( originalScore->getAttributes()->hasVersion == savedScore->getAttributes()->hasVersion );
+}
+
+TEST( appearanceMissing, Freezing )
+{
+    auto& mgr = DocumentManager::getInstance();
+    const auto filePath = mxtest::MxFileRepository::getFullPath( fileName );
+    const auto originalId = mgr.createFromFile( filePath );
+    const auto originalScoreData = mgr.getData( originalId );
+    const auto originalScore = mgr.getDocument( originalId )->getScorePartwise();
+    const auto savedId = mgr.createFromScore( mgr.getData( originalId ) );
+    const auto savedScoreData = mgr.getData( savedId );
+    const auto savedScore = mgr.getDocument( savedId )->getScorePartwise();
+    mgr.destroyDocument( originalId );
+    mgr.destroyDocument( savedId );
+
+    const auto originalAppearance = originalScore->getScoreHeaderGroup()->getDefaults()->getAppearance();
+    const auto savedAppearance = savedScore->getScoreHeaderGroup()->getDefaults()->getAppearance();
+
+    const auto lineWidthSetSize = savedAppearance->getLineWidthSet().size();
+    CHECK( lineWidthSetSize > 0 );
+    CHECK_EQUAL( originalAppearance->getLineWidthSet().size(), savedAppearance->getLineWidthSet().size() );
+
+    for( int i = 0; i < lineWidthSetSize; ++i )
+    {
+        const auto savedElement = savedAppearance->getLineWidthSet().at( i )->getValue().getValue();
+        const auto originalElement = originalAppearance->getLineWidthSet().at( i )->getValue().getValue();
+        const auto savedLineWidth = savedElement;
+        const auto originalLineWidth = originalElement;
+        
+    }
+
+}
+
 #endif
