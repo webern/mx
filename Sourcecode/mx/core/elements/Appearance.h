@@ -63,7 +63,8 @@ namespace mx
             void clearOtherAppearanceSet();
             OtherAppearancePtr getOtherAppearance( const OtherAppearanceSetIterConst& setIterator ) const;
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             LineWidthSet myLineWidthSet;

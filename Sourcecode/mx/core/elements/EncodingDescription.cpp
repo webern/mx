@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool EncodingDescription::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool EncodingDescription::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             MX_UNUSED( message );
             MX_UNUSED( xelement );

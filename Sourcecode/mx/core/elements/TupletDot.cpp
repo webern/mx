@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool TupletDot::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool TupletDot::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

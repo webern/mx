@@ -98,7 +98,8 @@ namespace mx
             void clearMidiDeviceInstrumentGroupSet();
             MidiDeviceInstrumentGroupPtr getMidiDeviceInstrumentGroup( const MidiDeviceInstrumentGroupSetIterConst& setIterator ) const;
             
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             ScorePartAttributesPtr myAttributes;

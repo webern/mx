@@ -350,7 +350,7 @@ namespace mx
         }
 
 
-        bool OrnamentsChoice::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool OrnamentsChoice::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             

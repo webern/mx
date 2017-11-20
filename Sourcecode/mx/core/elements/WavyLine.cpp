@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool WavyLine::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool WavyLine::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

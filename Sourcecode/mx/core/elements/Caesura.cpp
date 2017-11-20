@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool Caesura::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Caesura::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

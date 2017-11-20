@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool NonArpeggiate::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool NonArpeggiate::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

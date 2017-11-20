@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool TopSystemDistance::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool TopSystemDistance::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             MX_UNUSED( message );
             MX_UNUSED( xelement );

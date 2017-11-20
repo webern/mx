@@ -48,7 +48,7 @@ namespace mx
         }
 
 
-        bool PrintAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool PrintAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "PrintAttributes";
             bool isSuccess = true;

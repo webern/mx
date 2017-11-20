@@ -21,22 +21,34 @@ namespace mx
         using DirectionTypePtr = std::shared_ptr<DirectionType>;
         using DirectionTypeSet = std::vector<DirectionTypePtr>;
         class Dynamics;
+        class Harmony;
+        using HarmonyPtr = std::shared_ptr<Harmony>;
+        using HarmonyPtrSet = std::vector<HarmonyPtr>;
+        class HarmonyChordGroup;
 	}
     namespace impl
     {
     	class DirectionReader
     	{
     	public:
-            DirectionReader( const core::Direction& inDirection, Cursor inCursor );
+            DirectionReader( std::shared_ptr<const core::Direction> inDirection, Cursor inCursor );
+            DirectionReader( std::shared_ptr<const core::Harmony> inHarmony, Cursor inCursor );
             api::DirectionData getDirectionData();
 
     	private:
-            const core::Direction& myDirection;
+            const std::shared_ptr<const core::Direction> myDirection;
+            const std::shared_ptr<const core::Harmony> myHarmony;
             const Cursor myCursor;
             const Converter myConverter;
             api::DirectionData myOutDirectionData;
             
     	private:
+            mx::api::DirectionData initializeData();
+            void updateTimeForOffset();
+            void parsePlacement();
+            void parseValues();
+            void fixTimes();
+            mx::api::DirectionData returnData();
             void parseStaffIndex();
             void parseDirectionType( const core::DirectionType& directionType );
             void parseRehearsal( const core::DirectionType& directionType );
@@ -62,6 +74,7 @@ namespace mx
             void parseAccordionRegistration( const core::DirectionType& directionType );
             void parsePercussion( const core::DirectionType& directionType );
             void parseOtherDirection( const core::DirectionType& directionType );
+            void parseHarmony( const core::Harmony& inHarmony, const core::HarmonyChordGroup& inGrp );
             
             template<typename ATTRIBUTES_TYPE>
             api::PositionData parsePositionData( const ATTRIBUTES_TYPE& attributes )
@@ -70,7 +83,7 @@ namespace mx
                 
                 if( positionData.placement == api::Placement::unspecified )
                 {
-                    const auto& dirAttr = *myDirection.getAttributes();
+                    const auto& dirAttr = *myDirection->getAttributes();
                     
                     if( dirAttr.hasPlacement )
                     {

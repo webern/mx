@@ -34,7 +34,11 @@ const std::string& Test::getName() const
 
 void Test::run (TestResult& result)
 {
-    runTest (result);
-    result.testWasRun();
+//    if ( getName() == "ApiRoundTripTest" &&
+//        getFileName().find( "ApiChordSimpleTest.cpp" ) != std::string::npos )
+//    {
+        runTest (result);
+        result.testWasRun();
+//    }
 }
 

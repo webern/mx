@@ -79,6 +79,7 @@ TEST( getTypeText, XElement )
     CHECK( !iter->getIsNull() );
     CHECK_EQUAL( "abc", iter->getName() );
     auto weird = iter->begin();
+    CHECK( weird == iter->end() );
     CHECK_EQUAL( "abcdefg", iter->getValue() );
     CHECK( XElementType::text == iter->getType() );
 }

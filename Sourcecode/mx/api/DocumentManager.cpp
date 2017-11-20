@@ -21,6 +21,16 @@ namespace mx
             std::mutex myMutex;
             int myCurrentId;
             DocumentMap myMap;
+            int myCurrentUniqueId;
+
+            Impl()
+            : myMutex{}
+            , myCurrentId{0}
+            , myMap{}
+            , myCurrentUniqueId{1000000}
+            {
+
+            }
         };
         
         DocumentManager::DocumentManager()
@@ -48,6 +58,10 @@ namespace mx
             auto xdoc = mx::xml::XFactory::makeXDoc();
             xdoc->loadFile( filePath );
 
+#ifdef DEBUG_HELL
+            xdoc->saveStream( std::cout );
+            std::cout << std::endl;
+#endif
             auto mxdoc = mx::core::makeDocument();
             
             std::stringstream messages;
@@ -142,7 +156,6 @@ namespace mx
         {
             LOCK_DOCUMENT_MANAGER
             
-            
             const DocumentMap::const_iterator it = myImpl->myMap.find( documentId );
             
             if( it == myImpl->myMap.cend() )
@@ -196,6 +209,13 @@ namespace mx
             
             return it->second;
         }
-        
+
+        int DocumentManager::getUniqueId()
+        {
+            LOCK_DOCUMENT_MANAGER
+            int returnValue = myImpl->myCurrentUniqueId;
+            ++myImpl->myCurrentUniqueId;
+            return returnValue;
+        }
     }
 }

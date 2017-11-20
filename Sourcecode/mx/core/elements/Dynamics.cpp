@@ -89,7 +89,7 @@ namespace mx
         }
 
 
-        bool Dynamics::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Dynamics::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

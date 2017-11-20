@@ -37,7 +37,8 @@ namespace mx
             PositiveDivisionsValue getValue() const;
             void setValue( const PositiveDivisionsValue& value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             PositiveDivisionsValue myValue;

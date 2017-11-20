@@ -104,7 +104,7 @@ namespace mx
         }
 
 
-        bool FootnoteAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool FootnoteAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "FootnoteAttributes";
             bool isSuccess = true;

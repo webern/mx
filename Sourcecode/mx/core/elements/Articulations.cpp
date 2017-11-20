@@ -100,7 +100,7 @@ namespace mx
         }
 
 
-        bool Articulations::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Articulations::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
 

@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool CreditImage::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool CreditImage::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

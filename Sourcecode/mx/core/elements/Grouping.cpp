@@ -117,7 +117,7 @@ namespace mx
         }
 
 
-        bool Grouping::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Grouping::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

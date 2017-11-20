@@ -158,7 +158,7 @@ namespace mx
         }
 
 
-        bool Bend::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Bend::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

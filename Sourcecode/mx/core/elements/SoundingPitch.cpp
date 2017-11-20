@@ -27,7 +27,7 @@ namespace mx
         }
 
 
-        bool SoundingPitch::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool SoundingPitch::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             MX_UNUSED( message );
             MX_UNUSED( xelement );

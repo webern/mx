@@ -87,7 +87,7 @@ namespace mx
         }
 
 
-        bool MiscellaneousField::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool MiscellaneousField::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

@@ -85,7 +85,7 @@ namespace mx
         }
 
 
-        bool SystemDividers::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool SystemDividers::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             bool isLeftDividerFound = false;

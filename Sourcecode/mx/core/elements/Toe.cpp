@@ -63,7 +63,7 @@ namespace mx
         }
 
 
-        bool Toe::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Toe::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

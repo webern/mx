@@ -53,6 +53,7 @@ namespace mx
             void setStaffAndVoice() const;
             void setDurationNameAndDots() const;
             void setStemDirection() const;
+            void setMiscData() const;
         };
     }
 }

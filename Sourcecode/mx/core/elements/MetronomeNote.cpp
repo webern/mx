@@ -195,7 +195,7 @@ namespace mx
         }
 
 
-        bool MetronomeNote::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool MetronomeNote::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             bool isMetronomeTypeFound = false;

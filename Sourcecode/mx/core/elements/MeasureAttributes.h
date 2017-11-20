@@ -31,12 +31,13 @@ namespace mx
             YesNo implicit;
             YesNo nonControlling;
             TenthsValue width;
-            const 	bool hasNumber;
+            const bool hasNumber;
             bool hasImplicit;
             bool hasNonControlling;
             bool hasWidth;
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
         };
     }
 }

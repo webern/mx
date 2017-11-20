@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool PedalStep::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool PedalStep::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             MX_UNUSED( message );
             myValue = parseStepEnum( xelement.getValue() );

@@ -38,7 +38,7 @@ namespace mx
             api::SystemData getSystemData( int measureIndex ) const;
             
     	private:
-    		const api::ScoreData& myScoreData;
+    		api::ScoreData myScoreData;
             mutable std::mutex myMutex;
             mutable core::ScorePartwisePtr myOutScorePartwise;
             

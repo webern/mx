@@ -48,7 +48,7 @@ namespace mx
             void clearTimewiseMeasureSet();
             TimewiseMeasurePtr getTimewiseMeasure( const TimewiseMeasureSetIterConst& setIterator ) const;
             
-            virtual bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             ScoreTimewiseAttributesPtr myAttributes;

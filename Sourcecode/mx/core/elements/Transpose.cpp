@@ -187,7 +187,7 @@ namespace mx
         }
 
 
-        bool Transpose::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Transpose::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

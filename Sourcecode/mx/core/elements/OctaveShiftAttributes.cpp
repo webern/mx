@@ -80,7 +80,7 @@ namespace mx
         }
 
 
-        bool OctaveShiftAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool OctaveShiftAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "OctaveShiftAttributes";
             bool isSuccess = true;

@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool Damp::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Damp::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

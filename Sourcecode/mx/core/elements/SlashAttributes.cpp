@@ -40,7 +40,7 @@ namespace mx
         }
 
 
-        bool SlashAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool SlashAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "SlashAttributes";
             bool isSuccess = true;

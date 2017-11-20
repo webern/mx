@@ -87,7 +87,7 @@ namespace mx
         }
 
 
-        bool Footnote::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Footnote::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

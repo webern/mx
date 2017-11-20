@@ -31,7 +31,8 @@ namespace mx
             const bool hasType;
             bool hasTimeOnly;
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
         };
     }
 }

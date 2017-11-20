@@ -48,6 +48,8 @@ namespace mx
             XElementIterator operator--(int);
             
             bool getIsPayloadNull() const;
+            bool getSkipProcessingInstructions() const;
+            void setSkipProcessingInstructions( bool inValue );
 
             // Reveal the private data member, violates
             // encapsulation but could not find a better way

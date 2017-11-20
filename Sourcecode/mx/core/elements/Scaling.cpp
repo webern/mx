@@ -85,7 +85,7 @@ namespace mx
         }
 
 
-        bool Scaling::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Scaling::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             bool isMillimetersFound = false;

@@ -45,7 +45,7 @@ namespace mx
         }
 
 
-        bool MeasureAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool MeasureAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "MeasureAttributes";
             bool isSuccess = true;

@@ -44,7 +44,7 @@ namespace mx
         }
 
 
-        bool SupportsAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool SupportsAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "SupportsAttributes";
             bool isSuccess = true;

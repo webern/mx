@@ -52,7 +52,8 @@ namespace mx
             TuningOctavePtr getTuningOctave() const;
             void setTuningOctave( const TuningOctavePtr& value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             StaffTuningAttributesPtr myAttributes;

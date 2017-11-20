@@ -175,7 +175,7 @@ namespace mx
         }
 
 
-        bool Sound::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Sound::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

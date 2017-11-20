@@ -152,7 +152,7 @@ namespace mx
         }
 
 
-        bool Hole::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Hole::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool StickMaterial::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool StickMaterial::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             MX_UNUSED( message );
             myValue = parseStickMaterialEnum( xelement.getValue() );

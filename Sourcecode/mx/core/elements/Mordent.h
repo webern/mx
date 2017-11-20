@@ -35,7 +35,8 @@ namespace mx
             MordentAttributesPtr getAttributes() const;
             void setAttributes( const MordentAttributesPtr& value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             MordentAttributesPtr myAttributes;

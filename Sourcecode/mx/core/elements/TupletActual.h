@@ -53,7 +53,8 @@ namespace mx
             void clearTupletDotSet();
             TupletDotPtr getTupletDot( const TupletDotSetIterConst& setIterator ) const;
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             TupletNumberPtr myTupletNumber;

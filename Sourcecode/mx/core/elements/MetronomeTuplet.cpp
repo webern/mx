@@ -136,7 +136,7 @@ namespace mx
         }
 
 
-        bool MetronomeTuplet::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool MetronomeTuplet::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

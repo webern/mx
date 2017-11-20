@@ -32,7 +32,7 @@ namespace mx
         }
 
 
-        bool GroupAbbreviationDisplayAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool GroupAbbreviationDisplayAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "GroupAbbreviationDisplayAttributes";
             bool isSuccess = true;

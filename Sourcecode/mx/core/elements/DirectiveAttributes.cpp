@@ -64,7 +64,7 @@ namespace mx
         }
 
 
-        bool DirectiveAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool DirectiveAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "DirectiveAttributes";
             bool isSuccess = true;

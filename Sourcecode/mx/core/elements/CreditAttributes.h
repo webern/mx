@@ -28,7 +28,8 @@ namespace mx
             PositiveInteger page;
             bool hasPage;
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
         };
     }
 }

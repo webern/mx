@@ -241,7 +241,7 @@ namespace mx
         }
 
 
-        bool Appearance::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Appearance::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
 

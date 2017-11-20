@@ -87,7 +87,7 @@ namespace mx
         }
 
 
-        bool String::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool String::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

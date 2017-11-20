@@ -120,7 +120,7 @@ namespace mx
         }
         
 
-        bool GroupAbbreviationDisplay::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool GroupAbbreviationDisplay::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

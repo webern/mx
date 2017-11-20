@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool Opus::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Opus::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

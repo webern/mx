@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool LyricFont::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool LyricFont::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

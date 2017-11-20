@@ -82,7 +82,7 @@ namespace mx
         }
 
 
-        bool EmptyLineAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool EmptyLineAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "EmptyLineAttributes";
             bool isSuccess = true;

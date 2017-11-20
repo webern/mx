@@ -24,6 +24,14 @@ namespace mx
                 
             }
 
-        };        
+            MeasureCursor()
+            : Cursor{ -1, -1 }
+            , partIndex{ -1 }
+            , measureIndex{ -1 }
+            {
+
+            }
+
+        };
     }
 }

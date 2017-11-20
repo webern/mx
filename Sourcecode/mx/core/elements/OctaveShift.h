@@ -35,7 +35,8 @@ namespace mx
             OctaveShiftAttributesPtr getAttributes() const;
             void setAttributes( const OctaveShiftAttributesPtr& attributes );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             OctaveShiftAttributesPtr myAttributes;

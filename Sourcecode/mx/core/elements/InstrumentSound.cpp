@@ -11,11 +11,11 @@ namespace mx
     namespace core
     {
         InstrumentSound::InstrumentSound()
-        :myValue()
+        :myValue( PlaybackSound::keyboardPiano )
         {}
 
 
-        InstrumentSound::InstrumentSound( const XsString& value )
+        InstrumentSound::InstrumentSound( const PlaybackSound& value )
         :myValue( value )
         {}
 
@@ -49,28 +49,28 @@ namespace mx
         {
             MX_UNUSED( indentLevel );
             isOneLineOnly = true;
-            os << myValue;
+            os << PlaybackSoundToString( myValue );
             return os;
         }
 
 
-        XsString InstrumentSound::getValue() const
+        PlaybackSound InstrumentSound::getValue() const
         {
             return myValue;
         }
 
 
-        void InstrumentSound::setValue( const XsString& value )
+        void InstrumentSound::setValue( const PlaybackSound& value )
         {
             myValue = value;
         }
 
 
-        bool InstrumentSound::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool InstrumentSound::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             MX_UNUSED( message );
             MX_UNUSED( xelement );
-            myValue.setValue( xelement.getValue() );
+            myValue = ( PlaybackSoundFromString( xelement.getValue() ) );
             return true;
         }
 

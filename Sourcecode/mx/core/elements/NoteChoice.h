@@ -56,7 +56,8 @@ namespace mx
             NormalNoteGroupPtr getNormalNoteGroup() const;
             void setNormalNoteGroup( const NormalNoteGroupPtr& value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             Choice myChoice;

@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool Image::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Image::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

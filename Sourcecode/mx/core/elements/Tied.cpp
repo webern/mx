@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool Tied::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Tied::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

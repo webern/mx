@@ -76,7 +76,7 @@ namespace mx
         }
 
 
-        bool OtherNotationAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool OtherNotationAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "OtherNotationAttributes";
             bool isSuccess = true;

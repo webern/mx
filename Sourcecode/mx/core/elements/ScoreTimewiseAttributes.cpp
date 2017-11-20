@@ -34,7 +34,7 @@ namespace mx
         }
 
 
-        bool ScoreTimewiseAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool ScoreTimewiseAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "ScoreTimewiseAttributes";
             bool isSuccess = true;

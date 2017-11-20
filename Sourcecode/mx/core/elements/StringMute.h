@@ -35,7 +35,8 @@ namespace mx
             StringMuteAttributesPtr getAttributes() const;
             void setAttributes( const StringMuteAttributesPtr& attributes );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             StringMuteAttributesPtr myAttributes;

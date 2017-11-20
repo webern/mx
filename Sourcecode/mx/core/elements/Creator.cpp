@@ -87,7 +87,7 @@ namespace mx
         }
 
 
-        bool Creator::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Creator::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

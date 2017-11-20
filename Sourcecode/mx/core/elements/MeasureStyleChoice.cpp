@@ -145,7 +145,7 @@ namespace mx
         }
 
 
-        bool MeasureStyleChoice::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool MeasureStyleChoice::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             MX_CHOICE_IF( multipleRest, "multiple-rest", MultipleRest );
             MX_CHOICE_IF( measureRepeat, "measure-repeat", MeasureRepeat );

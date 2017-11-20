@@ -17,6 +17,10 @@ namespace mx
         using NotationsChoicePtr = std::shared_ptr<NotationsChoice>;
         class Articulations;
         using ArticulationsPtr = std::shared_ptr<Articulations>;
+        class Ornaments;
+        using OrnamentsPtr = std::shared_ptr<Ornaments>;
+        class Technical;
+        using TechnicalPtr = std::shared_ptr<Technical>;
         
     }
     
@@ -39,8 +43,11 @@ namespace mx
             
         private:
             core::NotationsChoicePtr makeArticulationsNotationsChoice() const;
+            core::NotationsChoicePtr makeOrnamentsNotationsChoice() const;
+            core::NotationsChoicePtr makeTechnicalNotationsChoice() const;
             void addArticulation( const api::MarkData& markData, const core::ArticulationsPtr& outArticulationsPtr ) const;
-            void insertArticulationsNotationsChoiceIfNeeded() const;
+            void addOrnament( const api::MarkData& markData, const core::OrnamentsPtr& outOrnamentsPtr ) const;
+            void addTechnical( const api::MarkData& markData, const core::TechnicalPtr& outOrnamentsPtr ) const;
         };
     }
 }

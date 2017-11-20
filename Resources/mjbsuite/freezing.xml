@@ -11404,7 +11404,7 @@ Note: None of the percussion instruments may be shared
         </notations>
       </note>
     </measure>
-    <!--=======================================================-->
+    <!--====== THIS IS WHERE KOMP CRASHES ======-->
     <measure number="84" width="245">
       <print new-system="no"/>
       <note default-x="23">
@@ -11424,6 +11424,7 @@ Note: None of the percussion instruments may be shared
           <slur number="1" type="stop"/>
         </notations>
       </note>
+      <!--====== THIS IS WHERE KOMP GETS A BAD WEDGE ======-->
       <direction placement="below">
         <direction-type>
           <wedge default-y="-67" spread="15" type="diminuendo"/>

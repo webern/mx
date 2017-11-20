@@ -11,6 +11,16 @@ namespace mx
 {
     namespace api
     {
+        enum class BracketType
+        {
+            unspecified,
+            none,
+            brace,
+            line,
+            bracket,
+            square
+        };
+
         // The part-group element indicates groupings of parts in the score, usually indicated
         // by braces and brackets. Braces that are used for multi-staff parts should be defined
         // in the attributes element for that part. The part-group start element appears before
@@ -35,7 +45,7 @@ namespace mx
             std::string displayName;
             std::string abbreviation;
             std::string displayAbbreviation;
-            // TODO - group symbol
+            BracketType bracketType;
             // TODO - group barline
             // TODO - group time
             // TODO - group editorial

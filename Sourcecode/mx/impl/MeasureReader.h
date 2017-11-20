@@ -53,8 +53,21 @@ namespace mx
             
             mutable api::MeasureData myOutMeasureData;
             mutable MeasureCursor myCurrentCursor;
-            mutable MeasureCursor myPreviousCursor;
-            
+            mutable MeasureCursor myPreviousMeasureCursor;
+
+            class HistoryRecord
+            {
+            public:
+                std::string reason;
+                int amount;
+                int timeBefore;
+                int timeAfter;
+                MeasureCursor cursorBefore;
+                MeasureCursor cursorAfter;
+            };
+
+            mutable std::vector<HistoryRecord> myHistory;
+
         private:
             void addStavesToOutMeasure() const;
             void parseTimeSignature() const;
@@ -62,9 +75,9 @@ namespace mx
             void parseNote( const core::Note& inMxNote, const core::NotePtr& nextNotePtr ) const;
             void parseBackup( const core::Backup& inMxBackup ) const;
             void parseForward( const core::Forward& inMxForward ) const;
-            void parseDirection( const core::Direction& inMxDirection ) const;
+            void parseDirection( std::shared_ptr<const core::Direction> inDirection ) const;
             void parseProperties( const core::Properties& inMxProperties ) const;
-            void parseHarmony( const core::Harmony& inMxHarmony ) const;
+            void parseHarmony( std::shared_ptr<const core::Harmony> inHarmony ) const;
             void parseFiguredBass( const core::FiguredBass& inMxFiguredBass ) const;
             void parsePrint( const core::Print& inMxPrint ) const;
             void parseSound( const core::Sound& inMxSound ) const;
@@ -83,6 +96,7 @@ namespace mx
             bool isUserRequestedVoiceNumberConsistent( const api::VoiceData& voiceData ) const;
             bool isUserRequestedVoiceNumberConsistentAccrossAllVoices( const api::StaffData& staff ) const;
             int getUserRequestedVoiceNumber( const api::VoiceData& voiceData ) const;
+            void advanceTickTimePosition( int amount, std::string reason ) const;
     	};
     }
 }

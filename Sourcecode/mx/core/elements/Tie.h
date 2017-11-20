@@ -35,7 +35,8 @@ namespace mx
             TieAttributesPtr getAttributes() const;
             void setAttributes( const TieAttributesPtr& attributes );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             TieAttributesPtr myAttributes;

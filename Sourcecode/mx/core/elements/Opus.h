@@ -35,7 +35,8 @@ namespace mx
             OpusAttributesPtr getAttributes() const;
             void setAttributes( const OpusAttributesPtr& attributes );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             OpusAttributesPtr myAttributes;

@@ -171,7 +171,7 @@ namespace mx
         }
 
 
-        bool AccordionRegistration::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool AccordionRegistration::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

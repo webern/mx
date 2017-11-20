@@ -5,6 +5,7 @@
 #pragma once
 
 #include "mx/api/MeasureData.h"
+#include "mx/api/SoundID.h"
 
 #include <string>
 #include <vector>
@@ -20,21 +21,11 @@ namespace mx
             ensemble
         };
         
-        struct InstrumentData
-        {
-            std::string uniqueId;
-            std::string name;
-            std::string abbreviation;
-            std::string sound;
-            SoloOrEnsemble soloOrEnsemble;
-        };
-        
         struct MidiData
         {
             std::string virtualLibrary;
             std::string virtualName;
             std::string device;
-            std::string uniqueId;
             std::string name;
             
             // -1 indicates absence of value
@@ -65,7 +56,6 @@ namespace mx
             : virtualLibrary{}
             , virtualName{}
             , device{}
-            , uniqueId{}
             , name{}
             , bank{ -1 }
             , channel{ -1 }
@@ -80,6 +70,16 @@ namespace mx
             {
                 
             }
+        };
+
+        struct InstrumentData
+        {
+            std::string uniqueId;
+            std::string name;
+            std::string abbreviation;
+            SoundID soundID;
+            SoloOrEnsemble soloOrEnsemble;
+            MidiData midiData;
         };
         
         class PartData
@@ -113,7 +113,6 @@ namespace mx
             PositionData displayAbbreviationPositionData;
             
             InstrumentData instrumentData;
-            MidiData midiData;
             std::vector<MeasureData> measures;
             
             inline int getNumStaves() const
@@ -132,21 +131,11 @@ namespace mx
                 return numStaves;
             }
         };
-        
-        MXAPI_EQUALS_BEGIN( InstrumentData )
-        MXAPI_EQUALS_MEMBER( uniqueId )
-        MXAPI_EQUALS_MEMBER( name )
-        MXAPI_EQUALS_MEMBER( abbreviation )
-        MXAPI_EQUALS_MEMBER( sound )
-        MXAPI_EQUALS_MEMBER( soloOrEnsemble )
-        MXAPI_EQUALS_END;
-        MXAPI_NOT_EQUALS_AND_VECTORS( InstrumentData );
-        
+
         MXAPI_EQUALS_BEGIN( MidiData )
         MXAPI_EQUALS_MEMBER( virtualLibrary )
         MXAPI_EQUALS_MEMBER( virtualName )
         MXAPI_EQUALS_MEMBER( device )
-        MXAPI_EQUALS_MEMBER( uniqueId )
         MXAPI_EQUALS_MEMBER( name )
         MXAPI_EQUALS_MEMBER( bank )
         MXAPI_EQUALS_MEMBER( channel )
@@ -161,6 +150,16 @@ namespace mx
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( MidiData );
         
+        MXAPI_EQUALS_BEGIN( InstrumentData )
+        MXAPI_EQUALS_MEMBER( uniqueId )
+        MXAPI_EQUALS_MEMBER( name )
+        MXAPI_EQUALS_MEMBER( abbreviation )
+        MXAPI_EQUALS_MEMBER( soundID )
+        MXAPI_EQUALS_MEMBER( soloOrEnsemble )
+        MXAPI_EQUALS_MEMBER( midiData )
+        MXAPI_EQUALS_END;
+        MXAPI_NOT_EQUALS_AND_VECTORS( InstrumentData );
+        
         MXAPI_EQUALS_BEGIN( PartData )
         MXAPI_EQUALS_MEMBER( uniqueId )
         MXAPI_EQUALS_MEMBER( name )
@@ -172,7 +171,6 @@ namespace mx
         MXAPI_EQUALS_MEMBER( displayAbbreviationPrintData )
         MXAPI_EQUALS_MEMBER( displayAbbreviationPositionData )
         MXAPI_EQUALS_MEMBER( instrumentData )
-        MXAPI_EQUALS_MEMBER( midiData )
         MXAPI_EQUALS_MEMBER( measures )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( PartData );

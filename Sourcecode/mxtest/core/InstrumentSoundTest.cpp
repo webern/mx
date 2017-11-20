@@ -14,18 +14,18 @@ using namespace mx::core;
 TEST( Test01, InstrumentSound )
 {
 	std::string indentString( INDENT );
-	XsString value1{ "ABC" };
-	XsString value2{ "XYZ" };
-	InstrumentSound object1;
+    PlaybackSound value1{ PlaybackSound::keyboardHarpsichord };
+    PlaybackSound value2{ PlaybackSound::stringsViolin };
+    InstrumentSound object1;
 	InstrumentSound object2( value2 );
 	std::stringstream default_constructed;
 	object1.toStream( default_constructed, 0 );
 	std::stringstream object2_stream;
 	object2.toStream( object2_stream, 2 );
-	std::string expected = R"(<instrument-sound></instrument-sound>)";
+	std::string expected = R"(<instrument-sound>keyboard.piano</instrument-sound>)";
 	std::string actual = default_constructed.str();
 	CHECK_EQUAL( expected, actual )
-	expected = indentString+indentString+R"(<instrument-sound>XYZ</instrument-sound>)";
+	expected = indentString+indentString+R"(<instrument-sound>strings.violin</instrument-sound>)";
 	actual = object2_stream.str();
 	CHECK_EQUAL( expected, actual )
 	value1 = object2.getValue();

@@ -69,7 +69,8 @@ namespace mx
             bool hasSpace;
             bool hasEnclosure;
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
         };
     }
 }

@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool Spiccato::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Spiccato::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

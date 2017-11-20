@@ -44,7 +44,7 @@ namespace mx
         }
 
 
-        bool EmptyFontAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool EmptyFontAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "EmptyFontAttributes";
             bool isSuccess = true;

@@ -31,7 +31,7 @@ TEST( ottavaStart15mb, DirectionReader )
     attr->size = core::PositiveInteger{ 15 };
     Cursor cursor{ 1, 100 };
     cursor.tickTimePosition = tickTimePosition;
-    DirectionReader reader{ *dir, cursor };
+    DirectionReader reader{ dir, cursor };
     auto directionData = reader.getDirectionData();
     CHECK_EQUAL( 1, directionData.ottavaStarts.size() );
     const auto& ottavaStart = directionData.ottavaStarts.front();
@@ -76,7 +76,7 @@ TEST( ottavaStart8vaAnd8vb, DirectionReader )
 
     Cursor cursor{ 1, 111 };
     cursor.tickTimePosition = tickTimePosition;
-    DirectionReader reader{ *dir, cursor };
+    DirectionReader reader{ dir, cursor };
     auto directionData = reader.getDirectionData();
     
     CHECK_EQUAL( 2, directionData.ottavaStarts.size() );
@@ -108,7 +108,7 @@ TEST( ottavaStop, DirectionReader )
     attr->size = core::PositiveInteger{ 15 };
     Cursor cursor{ 1, 100 };
     cursor.tickTimePosition = tickTimePosition;
-    DirectionReader reader{ *dir, cursor };
+    DirectionReader reader{ dir, cursor };
     auto directionData = reader.getDirectionData();
     CHECK_EQUAL( 1, directionData.ottavaStops.size() );
     const auto& ottavaStop = directionData.ottavaStops.front();

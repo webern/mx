@@ -35,7 +35,8 @@ namespace mx
             EmptyPlacementAttributesPtr getAttributes() const;
             void setAttributes( const EmptyPlacementAttributesPtr& attributes );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             EmptyPlacementAttributesPtr myAttributes;

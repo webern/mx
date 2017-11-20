@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool Staccato::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Staccato::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

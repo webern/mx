@@ -417,7 +417,7 @@ namespace mx
         }
 
 
-        bool ArticulationsChoice::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool ArticulationsChoice::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             if( xelement.getName() == "accent" )
             {

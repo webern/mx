@@ -35,7 +35,8 @@ namespace mx
             BracketAttributesPtr getAttributes() const;
             void setAttributes( const BracketAttributesPtr& attributes );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             BracketAttributesPtr myAttributes;

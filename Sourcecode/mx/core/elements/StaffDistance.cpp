@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool StaffDistance::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool StaffDistance::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             MX_UNUSED( message );
             MX_UNUSED( xelement );

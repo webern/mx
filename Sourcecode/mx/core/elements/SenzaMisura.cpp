@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool SenzaMisura::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool SenzaMisura::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             MX_UNUSED( message );
             MX_UNUSED( xelement );

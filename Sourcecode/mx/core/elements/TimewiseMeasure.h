@@ -43,7 +43,8 @@ namespace mx
             void clearTimewisePartSet();
             TimewisePartPtr getTimewisePart( const TimewisePartSetIterConst& setIterator ) const;
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
             
         private:
             MeasureAttributesPtr myAttributes;

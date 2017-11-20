@@ -56,7 +56,8 @@ namespace mx
             RestPtr getRest() const;
             void setRest( const RestPtr& value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             MX_MUTEX

@@ -63,7 +63,7 @@ namespace mx
         }
 
 
-        bool Heel::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Heel::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

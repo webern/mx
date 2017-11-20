@@ -64,7 +64,7 @@ namespace mx
         }
 
 
-        bool DegreeTypeAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool DegreeTypeAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "DegreeTypeAttributes";
             bool isSuccess = true;

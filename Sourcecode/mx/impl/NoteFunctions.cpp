@@ -3,6 +3,7 @@
 // Distributed under the MIT License
 
 #include "mx/impl/NoteFunctions.h"
+#include "mx/impl/PositionFunctions.h"
 #include "mx/api/MarkData.h"
 #include "mx/api/SpannerData.h"
 #include "mx/core/elements/Accent.h"
@@ -42,6 +43,8 @@
 #include "mx/core/elements/Tied.h"
 #include "mx/core/elements/Tuplet.h"
 #include "mx/core/elements/Unstress.h"
+#include "mx/core/elements/EditorialVoiceGroup.h"
+#include "mx/core/elements/Footnote.h"
 #include "mx/core/FromXElement.h"
 #include "mx/impl/AccidentalMarkFunctions.h"
 #include "mx/impl/ArticulationsFunctions.h"
@@ -142,7 +145,9 @@ namespace mx
             
             myOutNoteData.durationData.timeModificationActualNotes = reader.getTimeModificationActualNotes();
             myOutNoteData.durationData.timeModificationNormalNotes = reader.getTimeModificationNormalNotes();
-            
+            myOutNoteData.durationData.timeModificationNormalType = converter.convert( reader.getTimeModificationNormalType() );
+            myOutNoteData.durationData.timeModificationNormalTypeDots = reader.getTimeModificationNormalTypeDots();
+
             const core::NoteTypeValue timeModType = reader.getTimeModificationNormalType();
             const int timeModTypeDots = reader.getTimeModificationNormalTypeDots();
             bool isTimeModTypeSpecified = ( timeModTypeDots > 0 ) && ( timeModType != reader.getDurationType() );
@@ -167,6 +172,11 @@ namespace mx
             }
             myOutNoteData.isTieStart = reader.getIsTieStart();
             myOutNoteData.isTieStop = reader.getIsTieStop();
+
+            parseMiscData();
+            const auto& incomingNoteAttributes = *(myNote.getAttributes());
+            myOutNoteData.positionData = impl::getPositionData( incomingNoteAttributes );
+
             return myOutNoteData;
         }
         
@@ -297,7 +307,6 @@ namespace mx
                         }
                         case core::NotationsChoice::Choice::technical:
                         {
-                            // TODO - some technical items are spanners and others are complex/not-implemented yet
                             TechnicalFunctions funcs{ notationsChoice.getTechnical()->getTechnicalChoiceSet(), myCursor };
                             funcs.parseTechnicalMarks( myOutNoteData.noteAttachmentData.marks );
                             break;
@@ -417,6 +426,54 @@ namespace mx
                             break;
                     }
                 }
+            }
+        }
+
+        void NoteFunctions::parseMiscData() const
+        {
+            if (!myNote.getEditorialVoiceGroup()->getHasFootnote())
+            {
+                return;
+            }
+
+            auto footnote = myNote.getEditorialVoiceGroup()->getFootnote();
+
+            if( footnote->getValue().getValue().size() > 0 )
+            {
+                // we expect this element to be unused if it is
+                // stuffed with ##misc-data## in the font-family
+                return;
+            }
+
+            auto attr = footnote->getAttributes();
+
+            if( !attr->hasFontFamily )
+            {
+                return;
+            }
+
+            auto& miscData = attr->fontFamily;
+            auto iter = miscData.getValuesBeginConst();
+            const auto end = miscData.getValuesEndConst();
+
+            if( iter == end )
+            {
+                return;
+            }
+
+            const auto firstString = iter->getValue();
+
+            if( firstString.substr(0,13) != "##misc-data##" )
+            {
+                return;
+            }
+
+            myOutNoteData.miscData.push_back( firstString.substr( 13 ) );
+            ++iter;
+
+            for( ; iter != end; ++iter)
+            {
+                myOutNoteData.miscData.push_back( iter->getValue() );
             }
         }
     }

@@ -108,7 +108,7 @@ namespace mx
         }
 
 
-        bool MordentAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool MordentAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "MordentAttributes";
             bool isSuccess = true;

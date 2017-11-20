@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool ArrowDirection::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool ArrowDirection::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             MX_UNUSED( message );
             myValue = parseArrowDirectionEnum( xelement.getValue() );

@@ -84,7 +84,7 @@ namespace mx
         }
 
 
-        bool WavyLineAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool WavyLineAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "WavyLineAttributes";
             bool isSuccess = true;

@@ -41,7 +41,8 @@ namespace mx
             PedalAlterPtr getPedalAlter() const;
             void setPedalAlter( const PedalAlterPtr& value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             PedalStepPtr myPedalStep;

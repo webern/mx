@@ -32,7 +32,7 @@ namespace mx
         }
 
 
-        bool NoteSizeAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool NoteSizeAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "NoteSizeAttributes";
             bool isSuccess = true;

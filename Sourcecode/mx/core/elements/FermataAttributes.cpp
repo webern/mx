@@ -68,7 +68,7 @@ namespace mx
         }
 
 
-        bool FermataAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool FermataAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "FermataAttributes";
             bool isSuccess = true;

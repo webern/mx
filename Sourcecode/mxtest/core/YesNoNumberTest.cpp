@@ -54,7 +54,7 @@ TEST( YesNoNumber05, YesNoNumber )
     CHECK( x.getIsNumber() )
     DecimalType expected = 24;
     DecimalType actual = x.getValueNumber().getValue();
-    CHECK_DOUBLES_EQUAL( expected, actual, kDefaultPrecision )
+    CHECK_DOUBLES_EQUAL( expected, actual, DEFAULT_PRECISION )
 }
 TEST( YesNoNumber06, YesNoNumber )
 {

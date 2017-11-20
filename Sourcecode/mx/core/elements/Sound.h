@@ -56,7 +56,8 @@ namespace mx
             bool getHasPlay() const;
             void setHasPlay( const bool value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             SoundAttributesPtr myAttributes;

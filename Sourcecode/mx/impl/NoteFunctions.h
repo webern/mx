@@ -57,6 +57,7 @@ namespace mx
         private:
             api::DurationName deriveNoteTypeFromDurationValue( const NoteReader& reader ) const;
             void parseNotations() const;
+            void parseMiscData() const;
         };
     }
 }

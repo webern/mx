@@ -50,7 +50,8 @@ namespace mx
             EnsemblePtr getEnsemble() const;
             void setEnsemble( const EnsemblePtr& value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             Choice myChoice;

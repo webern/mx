@@ -56,7 +56,7 @@ namespace mx
         }
 
 
-        bool CreditImageAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool CreditImageAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "CreditImageAttributes";
             bool isSuccess = true;

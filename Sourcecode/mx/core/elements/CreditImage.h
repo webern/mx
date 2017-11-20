@@ -35,7 +35,8 @@ namespace mx
             CreditImageAttributesPtr getAttributes() const;
             void setAttributes( const CreditImageAttributesPtr& attributes );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             CreditImageAttributesPtr myAttributes;

@@ -64,7 +64,7 @@ namespace mx
         }
 
 
-        bool BreathMarkAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool BreathMarkAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "BreathMarkAttributes";
             bool isSuccess = true;

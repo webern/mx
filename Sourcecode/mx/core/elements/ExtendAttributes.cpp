@@ -64,7 +64,7 @@ namespace mx
         }
 
 
-        bool ExtendAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool ExtendAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "ExtendAttributes";
             bool isSuccess = true;

@@ -37,7 +37,8 @@ namespace mx
             StickLocationEnum getValue() const;
             void setValue( const StickLocationEnum& value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             StickLocationEnum myValue;

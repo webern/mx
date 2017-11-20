@@ -27,7 +27,7 @@ namespace mx
         }
 
 
-        bool NormalDot::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool NormalDot::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             MX_UNUSED( message );
             MX_UNUSED( xelement );

@@ -10,6 +10,7 @@
 #include "mx/core/elements/GroupAbbreviationDisplay.h"
 #include "mx/core/elements/GroupName.h"
 #include "mx/core/elements/GroupNameDisplay.h"
+#include "mx/core/elements/GroupSymbol.h"
 #include "mx/core/elements/Identification.h"
 #include "mx/core/elements/Miscellaneous.h"
 #include "mx/core/elements/MovementNumber.h"
@@ -29,6 +30,7 @@
 #include "mx/core/elements/Work.h"
 #include "mx/core/elements/WorkNumber.h"
 #include "mx/core/elements/WorkTitle.h"
+#include "mx/impl/Converter.h"
 #include "mx/impl/EncodingFunctions.h"
 #include "mx/impl/LayoutFunctions.h"
 #include "mx/impl/PageTextFunctions.h"
@@ -310,13 +312,23 @@ namespace mx
             {
                 grpData.name = inPartGroup->getGroupName()->getValue().getValue();
             }
-            
+
+            if( inPartGroup->getHasGroupAbbreviation() )
+            {
+                grpData.abbreviation = inPartGroup->getGroupAbbreviation()->getValue().getValue();
+            }
+
+            if (inPartGroup->getHasGroupSymbol() )
+            {
+                Converter c;
+                grpData.bracketType = c.convert( inPartGroup->getGroupSymbol()->getValue() );
+            }
+
             grpData.firstPartIndex = partIndex;
             
-            // TODO - group abbreviation
             // TODO - group name display
             // TODO - group abbreviation display
-            // TODO - backet, barline, etc
+            // TODO - barline, etc
 
             myPartGroupStack.push_front( grpData );
         }

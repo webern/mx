@@ -41,7 +41,8 @@ namespace mx
             DivisionsValue getValue() const;
             void setValue( const DivisionsValue& value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             DivisionsValue myValue;

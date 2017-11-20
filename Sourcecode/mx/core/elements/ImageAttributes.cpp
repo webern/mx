@@ -56,7 +56,7 @@ namespace mx
         }
 
 
-        bool ImageAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool ImageAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "ImageAttributes";
             bool isSuccess = true;

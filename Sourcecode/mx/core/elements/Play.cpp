@@ -170,7 +170,7 @@ namespace mx
         }
 
 
-        bool Play::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Play::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             if( xelement.getName() == "ipa" )
             {

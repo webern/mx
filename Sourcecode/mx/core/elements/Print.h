@@ -68,7 +68,8 @@ namespace mx
             bool getHasPartAbbreviationDisplay() const;
             void setHasPartAbbreviationDisplay( const bool value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
             
         private:
             PrintAttributesPtr myAttributes;

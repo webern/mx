@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool DownBow::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool DownBow::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

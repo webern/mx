@@ -76,6 +76,12 @@ namespace mx
             // DocumentManager will no longer know about the object, but the
             // object will still exist
             mx::core::DocumentPtr getDocument( int documentId ) const;
+
+            // returns a unique number and increments the unique number
+            // generator. this is here as an aid to any client code that
+            // needs unique numbers since DocumentManager is already a
+            // thread-locking singleton, it can easily implement this.
+            int getUniqueId();
             
         private:
             DocumentManager();

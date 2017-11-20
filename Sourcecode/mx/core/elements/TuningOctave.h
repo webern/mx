@@ -37,7 +37,8 @@ namespace mx
             OctaveValue getValue() const;
             void setValue( const OctaveValue& value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             OctaveValue myValue;

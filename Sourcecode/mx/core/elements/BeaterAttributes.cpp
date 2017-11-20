@@ -32,7 +32,7 @@ namespace mx
         }
 
 
-        bool BeaterAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool BeaterAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "BeaterAttributes";
             bool isSuccess = true;
