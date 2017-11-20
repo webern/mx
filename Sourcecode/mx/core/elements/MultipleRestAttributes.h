@@ -28,7 +28,8 @@ namespace mx
             YesNo useSymbols;
             bool hasUseSymbols;
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
         };
     }
 }

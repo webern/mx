@@ -72,7 +72,7 @@ namespace mx
         }
 
 
-        bool HarmonicAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool HarmonicAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "HarmonicAttributes";
             bool isSuccess = true;

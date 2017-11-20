@@ -80,7 +80,7 @@ namespace mx
         }
 
 
-        bool MetronomeAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool MetronomeAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "MetronomeAttributes";
             bool isSuccess = true;

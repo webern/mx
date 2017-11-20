@@ -24,6 +24,9 @@ namespace mx
 
             virtual bool getIsPayloadNull() const = 0;
             virtual bool getIsEndIter() const = 0;
+            virtual bool getIsProcessingInstruction() const = 0;
+            virtual bool getSkipProcessingInstructions() const = 0;
+            virtual void setSkipProcessingInstructions( bool inValue ) = 0;
 
             virtual XElementIterImplUP clone() const = 0;
             virtual bool equals( const XElementIterator& other ) const = 0;

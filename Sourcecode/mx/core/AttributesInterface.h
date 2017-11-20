@@ -9,7 +9,7 @@
 #include <iostream>
 #include <memory>
 
-namespace mx
+namespace mx  
 {
     namespace xml
     {
@@ -27,7 +27,10 @@ namespace mx
             virtual ~AttributesInterface() {}
             virtual bool hasValues() const;
             virtual std::ostream& toStream( std::ostream& os ) const;
-            virtual bool fromXElement( std::ostream& message, xml::XElement& xelement ) = 0;
+            virtual bool fromXElement( std::ostream& message, xml::XElement& xelement ) final;
+
+        private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement ) = 0;
         };
 
         std::ostream& operator<<( std::ostream& os, const AttributesInterface& value );

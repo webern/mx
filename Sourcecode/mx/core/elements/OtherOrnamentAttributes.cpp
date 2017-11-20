@@ -64,7 +64,7 @@ namespace mx
         }
 
 
-        bool OtherOrnamentAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool OtherOrnamentAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "OtherOrnamentAttributes";
             bool isSuccess = true;

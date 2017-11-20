@@ -32,7 +32,7 @@ namespace mx
         }
 
 
-        bool LineWidthAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool LineWidthAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "LineWidthAttributes";
             bool isSuccess = true;

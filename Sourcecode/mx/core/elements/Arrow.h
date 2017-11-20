@@ -54,7 +54,8 @@ namespace mx
             CircularArrowPtr getCircularArrow() const;
             void setCircularArrow( const CircularArrowPtr& value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             Choice myChoice;

@@ -32,7 +32,7 @@ namespace mx
         }
 
 
-        bool BarreAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool BarreAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "BarreAttributes";
             bool isSuccess = true;

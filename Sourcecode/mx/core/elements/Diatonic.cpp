@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool Diatonic::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Diatonic::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             MX_UNUSED( message );
             MX_UNUSED( xelement );

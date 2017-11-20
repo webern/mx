@@ -30,7 +30,7 @@ TEST( Test01, Distance )
 	std::string expected = R"(<distance type="beam">0</distance>)";
 	std::string actual = default_constructed.str();
 	CHECK_EQUAL( expected, actual )
-	expected = indentString+indentString+R"(<distance type="Berg">9.735271627</distance>)";
+	expected = indentString+indentString+R"(<distance type="Berg">9.735272</distance>)";
 	actual = object2_stream.str();
 	CHECK_EQUAL( expected, actual )
 	value1 = object2.getValue();

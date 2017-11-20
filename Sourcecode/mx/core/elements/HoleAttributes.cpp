@@ -68,7 +68,7 @@ namespace mx
         }
 
 
-        bool HoleAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool HoleAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "HoleAttributes";
             bool isSuccess = true;

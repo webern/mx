@@ -105,7 +105,7 @@ namespace mx
         }
         
         
-        bool NoteheadTextChoice::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool NoteheadTextChoice::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             
             if( xelement.getName() == "display-text" )

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 3.0 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">
+<score-partwise version="3.0">
+  <part-list>
+    <score-part id="P1">
+      <part-name>P1</part-name>
+    </score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes>
+        <divisions>101</divisions>
+      </attributes>
+      <harmony>
+        <root>
+          <root-step>C</root-step>
+        </root>
+        <kind text="maj7">major-seventh</kind>
+        <staff>1</staff>
+      </harmony>
+    </measure>
+    <measure number="2">
+      <harmony>
+        <root>
+        <?processing-instruction root1?>
+        <?processing-instruction root2?> 
+          <root-step>D</root-step>
+          <?processing-instruction root-step?>
+        </root>
+        <kind text="m">minor</kind>
+        <bass>
+          <bass-step>C</bass-step>
+          <bass-alter>1</bass-alter>
+        </bass>
+        <staff>1</staff>
+      </harmony>
+    </measure>
+    <measure number="3">
+      <harmony>
+        <root>
+          <root-step>E</root-step>
+          <root-alter>-1</root-alter>
+        </root>
+        <kind text="7">dominant</kind>
+        <staff>1</staff>
+      </harmony>
+    </measure>
+    <?processing-instruction measure?>
+    <measure number="4">
+      <forward>
+        <duration>101</duration>
+      </forward>
+      <harmony>
+        <?processing-instruction harmony?>
+        <root>
+          <root-step>B</root-step>
+        </root>
+        <kind text="dim7">diminished-seventh</kind>
+        <offset>8</offset>
+        <staff>1</staff>
+      </harmony>
+    </measure>
+  </part>
+</score-partwise>

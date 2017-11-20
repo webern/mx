@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool Wedge::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Wedge::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

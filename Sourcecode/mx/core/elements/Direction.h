@@ -75,7 +75,8 @@ namespace mx
             bool getHasSound() const;
             void setHasSound( const bool value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             DirectionAttributesPtr myAttributes;

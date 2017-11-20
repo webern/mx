@@ -104,7 +104,7 @@ namespace mx
         }
 
 
-        bool WordsAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool WordsAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "WordsAttributes";
             bool isSuccess = true;

@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool Falloff::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Falloff::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

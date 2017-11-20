@@ -43,7 +43,8 @@ namespace mx
             bool getHasArrowStyle() const;
             void setHasArrowStyle( const bool value );
             
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             ArrowDirectionPtr myArrowDirection;

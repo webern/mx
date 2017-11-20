@@ -82,7 +82,7 @@ namespace mx
         }
 
 
-        bool MeasureStyle::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool MeasureStyle::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

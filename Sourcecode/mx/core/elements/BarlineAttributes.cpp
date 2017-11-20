@@ -44,7 +44,7 @@ namespace mx
         }
 
 
-        bool BarlineAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool BarlineAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "BarlineAttributes";
             bool isSuccess = true;

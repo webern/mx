@@ -68,7 +68,7 @@ namespace mx
         }
 
 
-        bool RootAlterAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool RootAlterAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "RootAlterAttributes";
             bool isSuccess = true;

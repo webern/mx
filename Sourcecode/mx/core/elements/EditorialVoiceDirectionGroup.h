@@ -53,7 +53,8 @@ namespace mx
             bool getHasVoice() const;
             void setHasVoice( const bool value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             FootnotePtr myFootnote;

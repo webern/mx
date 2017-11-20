@@ -135,7 +135,7 @@ namespace mx
         }
 
 
-        bool PageLayout::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool PageLayout::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             bool isPageHeightFound = false;

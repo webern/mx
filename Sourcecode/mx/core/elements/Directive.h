@@ -41,7 +41,8 @@ namespace mx
             XsString getValue() const;
             void setValue( const XsString& value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             DirectiveAttributesPtr myAttributes;

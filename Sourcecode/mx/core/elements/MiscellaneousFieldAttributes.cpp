@@ -32,7 +32,7 @@ namespace mx
         }
 
 
-        bool MiscellaneousFieldAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool MiscellaneousFieldAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "MiscellaneousFieldAttributes";
             bool isSuccess = true;

@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool Barre::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Barre::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool Accent::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Accent::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

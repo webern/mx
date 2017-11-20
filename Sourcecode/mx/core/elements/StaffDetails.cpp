@@ -251,7 +251,7 @@ namespace mx
         }
 
 
-        bool StaffDetails::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool StaffDetails::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

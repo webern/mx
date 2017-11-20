@@ -52,7 +52,7 @@ namespace mx
         }
 
 
-        bool OpusAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool OpusAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "OpusAttributes";
             bool isSuccess = true;

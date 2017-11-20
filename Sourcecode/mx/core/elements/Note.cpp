@@ -649,7 +649,7 @@ namespace mx
         }
         
         
-        bool Note::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Note::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             bool isNoteChoiceFound = false;

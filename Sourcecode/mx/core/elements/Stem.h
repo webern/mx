@@ -41,7 +41,8 @@ namespace mx
             StemValue getValue() const;
             void setValue( const StemValue& value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             StemValue myValue;

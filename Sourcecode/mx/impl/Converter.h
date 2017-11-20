@@ -5,6 +5,7 @@
 #pragma once
 
 #include "mx/api/ClefData.h"
+#include "mx/api/SoundID.h"
 #include "mx/api/MarkData.h"
 #include "mx/api/NoteData.h"
 #include "mx/api/PositionData.h"
@@ -90,15 +91,26 @@ namespace mx
             
             core::BarStyleEnum convert( api::BarlineType value ) const;
             api::BarlineType convert( core::BarStyleEnum value ) const;
-            
+
+            core::StartStopDiscontinue convert( api::EndingType value ) const;
+
             core::RightLeftMiddle convertBarlinePlacement( api::HorizontalAlignment value ) const;
             api::HorizontalAlignment convertBarlinePlacement( core::RightLeftMiddle value ) const;
             
             core::LineEnd convert( api::LineHook value ) const;
             api::LineHook convert( core::LineEnd value ) const;
-            
+
+            core::GroupSymbolValue convert( api::BracketType value ) const;
+            api::BracketType convert( core::GroupSymbolValue value ) const;
+
             core::FermataShape convertFermata( api::MarkType value ) const;
             api::MarkType convertFermata( core::FermataShape value ) const;
+
+            core::PlaybackSound convert( api::SoundID value ) const;
+            api::SoundID convert( core::PlaybackSound value ) const;
+
+            core::KindValue convert( api::ChordKind value ) const;
+            api::ChordKind convert( core::KindValue value ) const;
             
             const static std::map<core::StepEnum, api::Step> stepMap;
             const static std::map<core::NoteTypeValue, api::DurationName> durationMap;
@@ -123,9 +135,13 @@ namespace mx
             const static std::map<core::WedgeType, api::WedgeType> wedgeMap;
             const static std::map<core::BarStyleEnum, api::BarlineType> barlineMap;
             const static std::map<core::RightLeftMiddle, api::HorizontalAlignment> barlinePlacementMap;
+            const static std::map<core::StartStopDiscontinue, api::EndingType> endingMap;
             const static std::map<core::LineEnd, api::LineHook> lineStopMap;
+            const static std::map<core::GroupSymbolValue, api::BracketType> bracketMap;
             const static std::map<core::FermataShape, api::MarkType> fermataMap;
-            
+            const static std::map<core::PlaybackSound, api::SoundID> instrumentMap;
+            const static std::map<core::KindValue, api::ChordKind> kindMap;
+
         private:
             template<typename CORE_TYPE, typename API_TYPE>
             API_TYPE findApiItem( const std::map<CORE_TYPE, API_TYPE>& enumMap, API_TYPE defaultToReturn, CORE_TYPE itemToFind ) const

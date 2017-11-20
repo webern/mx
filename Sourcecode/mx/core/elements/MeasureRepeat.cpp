@@ -87,7 +87,7 @@ namespace mx
         }
 
 
-        bool MeasureRepeat::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool MeasureRepeat::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

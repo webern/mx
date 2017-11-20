@@ -42,7 +42,8 @@ namespace mx
             StringNumber getValue() const;
             void setValue( const StringNumber& value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             StringAttributesPtr myAttributes;

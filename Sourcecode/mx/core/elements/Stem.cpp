@@ -87,7 +87,7 @@ namespace mx
         }
 
 
-        bool Stem::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Stem::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

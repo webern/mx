@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool Divisions::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Divisions::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             MX_UNUSED( message );
             myValue.parse( xelement.getValue() );

@@ -60,7 +60,7 @@ namespace mx
         }
 
 
-        bool SuffixAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool SuffixAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "SuffixAttributes";
             bool isSuccess = true;

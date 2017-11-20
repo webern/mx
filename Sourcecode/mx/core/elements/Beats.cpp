@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool Beats::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Beats::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             MX_UNUSED( message );
             MX_UNUSED( xelement );

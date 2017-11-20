@@ -87,7 +87,7 @@ namespace mx
         }
 
 
-        bool MidiDevice::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool MidiDevice::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

@@ -55,7 +55,7 @@ namespace mx
         }
 
 
-        bool NoteheadAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool NoteheadAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "NoteheadAttributes";
             bool isSuccess = true;

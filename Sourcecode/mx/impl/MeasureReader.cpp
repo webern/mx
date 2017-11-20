@@ -22,8 +22,10 @@
 #include "mx/core/elements/DisplayOctave.h"
 #include "mx/core/elements/DisplayStep.h"
 #include "mx/core/elements/DisplayStepOctaveGroup.h"
+#include "mx/core/elements/Divisions.h"
 #include "mx/core/elements/Duration.h"
 #include "mx/core/elements/EditorialVoiceGroup.h"
+#include "mx/core/elements/Ending.h"
 #include "mx/core/elements/Fifths.h"
 #include "mx/core/elements/Fifths.h"
 #include "mx/core/elements/FiguredBass.h"
@@ -89,9 +91,17 @@ namespace mx
         , myConverter{}
         , myOutMeasureData{}
         , myCurrentCursor{ cursor }
-        , myPreviousCursor{ previousMeasureCursor }
+        , myPreviousMeasureCursor{ previousMeasureCursor }
+        , myHistory{}
         {
-            
+            HistoryRecord initialCursorRecord;
+            initialCursorRecord.amount = 0;
+            initialCursorRecord.reason = "starting position";
+            initialCursorRecord.timeBefore = cursor.tickTimePosition;
+            initialCursorRecord.timeAfter = cursor.tickTimePosition;
+            initialCursorRecord.cursorBefore = cursor;
+            initialCursorRecord.cursorAfter = cursor;
+            myHistory.emplace_back( std::move( initialCursorRecord ) );
         }
         
         void MeasureReader::addStavesToOutMeasure() const
@@ -184,13 +194,14 @@ namespace mx
             {
                 if( myCurrentCursor.measureIndex > 0 )
                 {
-                    timeSignature = myPreviousCursor.timeSignature;
+                    timeSignature = myPreviousMeasureCursor.timeSignature;
                 }
                 timeSignature.isImplicit = true;
             }
 
             myOutMeasureData.timeSignature = timeSignature;
             myCurrentCursor.timeSignature = timeSignature;
+            advanceTickTimePosition( 0, "parseTimeSignature" );
         }
         
         
@@ -207,12 +218,6 @@ namespace mx
                 case core::MusicDataChoice::Choice::backup:
                 {
                     parseBackup( *mdc.getBackup() );
-                    
-                    if( myCurrentCursor.tickTimePosition < 0 )
-                    {
-                        myCurrentCursor.tickTimePosition = 0;
-                        // TODO - log or inform the client that the file is erroneous
-                    }
                     break;
                 }
                 case core::MusicDataChoice::Choice::forward:
@@ -225,61 +230,71 @@ namespace mx
                 case core::MusicDataChoice::Choice::direction:
                 {
                     myCurrentCursor.isBackupInProgress = false;
-                    parseDirection( *mdc.getDirection() );
+                    parseDirection( mdc.getDirection() );
+                    advanceTickTimePosition( 0, "parseDirection" );
                     break;
                 }
                 case core::MusicDataChoice::Choice::properties:
                 {
                     myCurrentCursor.isBackupInProgress = false;
                     parseProperties( *mdc.getProperties() );
+                    advanceTickTimePosition( 0, "parseProperties" );
                     break;
                 }
                 case core::MusicDataChoice::Choice::harmony:
                 {
                     myCurrentCursor.isBackupInProgress = false;
-                    parseHarmony( *mdc.getHarmony() );
+                    parseHarmony( mdc.getHarmony() );
+                    advanceTickTimePosition( 0, "parseHarmony" );
                     break;
                 }
                 case core::MusicDataChoice::Choice::figuredBass:
                 {
                     myCurrentCursor.isBackupInProgress = false;
                     parseFiguredBass( *mdc.getFiguredBass() );
+                    advanceTickTimePosition( 0, "parseFiguredBass" );
                     break;
                 }
                 case core::MusicDataChoice::Choice::print:
                 {
                     myCurrentCursor.isBackupInProgress = false;
                     parsePrint( *mdc.getPrint() );
+                    advanceTickTimePosition( 0, "parsePrint" );
                     break;
                 }
                 case core::MusicDataChoice::Choice::sound:
                 {
                     myCurrentCursor.isBackupInProgress = false;
                     parseSound( *mdc.getSound() );
+                    advanceTickTimePosition( 0, "parseSound" );
                     break;
                 }
                 case core::MusicDataChoice::Choice::barline:
                 {
                     myCurrentCursor.isBackupInProgress = false;
                     parseBarline( *mdc.getBarline() );
+                    advanceTickTimePosition( 0, "parseBarline" );
                     break;
                 }
                 case core::MusicDataChoice::Choice::grouping:
                 {
                     myCurrentCursor.isBackupInProgress = false;
                     parseGrouping( *mdc.getGrouping() );
+                    advanceTickTimePosition( 0, "parseGrouping" );
                     break;
                 }
                 case core::MusicDataChoice::Choice::link:
                 {
                     myCurrentCursor.isBackupInProgress = false;
                     parseLink( *mdc.getLink() );
+                    advanceTickTimePosition( 0, "parseLink" );
                     break;
                 }
                 case core::MusicDataChoice::Choice::bookmark:
                 {
                     myCurrentCursor.isBackupInProgress = false;
                     parseBookmark( *mdc.getBookmark() );
+                    advanceTickTimePosition( 0, "parseBookmark" );
                     break;
                 }
                 default:
@@ -322,7 +337,7 @@ namespace mx
             
             if( !isThisNotePartOfAChord || !isNextNotePartOfAChord )
             {
-                myCurrentCursor.tickTimePosition += noteData.durationData.durationTimeTicks;
+                advanceTickTimePosition( noteData.durationData.durationTimeTicks, "note" );
             }
             
             MX_ASSERT( noteDataStaffIndex >= 0 );
@@ -337,41 +352,46 @@ namespace mx
             {
                 ++myCurrentCursor.voiceIndex;
             }
-            else
-            {
-                // TODO - remove this debugging check
-                MX_THROW( "multiple backups in a row" );
-            }
+
             myCurrentCursor.isBackupInProgress = true;
             const int backupAmount = myCurrentCursor.convertDurationToGlobalTickScale( *inMxBackup.getDuration() );
-            myCurrentCursor.tickTimePosition -= backupAmount;
+            advanceTickTimePosition( -1 * backupAmount, "backup" );
+
+            if (myCurrentCursor.tickTimePosition < 0)
+            {
+                auto problemAmount = myCurrentCursor.tickTimePosition * -1;
+                advanceTickTimePosition( problemAmount, "correct backup negative error" );
+            }
         }
-        
+
         
         void MeasureReader::parseForward( const core::Forward& inMxForward ) const
         {
             const int forwardAmount = myCurrentCursor.convertDurationToGlobalTickScale( *inMxForward.getDuration() );
-            myCurrentCursor.tickTimePosition += forwardAmount;
+            advanceTickTimePosition( forwardAmount, "forward" );
         }
-        
-        
-        void MeasureReader::parseDirection( const core::Direction& inMxDirection ) const
+
+        template<typename T>
+        static void parseDirectionImpl( std::shared_ptr<const T> inDirection, api::MeasureData& ioMeasureData, const MeasureCursor& inMeasureCursor  );
+
+        template<typename T>
+        static void parseDirectionImpl( std::shared_ptr<const T> inDirection, api::MeasureData& ioMeasureData, const MeasureCursor& inMeasureCursor )
         {
-            DirectionReader reader{ inMxDirection, myCurrentCursor };
+            DirectionReader reader{ inDirection, inMeasureCursor };
             auto directionData = reader.getDirectionData();
-            
+
             // make an adjustment if the directionData refers to a non-existant staff
             size_t staffIndex = 0;
-            bool isStaffIndexSpecified = inMxDirection.getHasStaff();
+            bool isStaffIndexSpecified = inDirection->getHasStaff();
             bool isStaffIndexInsane = false;
 
             if( isStaffIndexSpecified )
             {
-                staffIndex = static_cast<size_t>( inMxDirection.getStaff()->getValue().getValue() - 1 );
+                staffIndex = static_cast<size_t>( inDirection->getStaff()->getValue().getValue() - 1 );
             }
-            
-            isStaffIndexInsane = staffIndex >= myOutMeasureData.staves.size();
-            
+
+            isStaffIndexInsane = staffIndex >= ioMeasureData.staves.size();
+
             if( !isStaffIndexSpecified || isStaffIndexInsane )
             {
                 staffIndex = 0;
@@ -381,17 +401,29 @@ namespace mx
             {
                 directionData.isStaffValueSpecified = true;
             }
-            
+
             // in-case we made a mistake in the code above which calculates the staffIndex
             // make a final check to see if the staffIndex is in-bounds - throw if stupid
-            MX_ASSERT( staffIndex < myOutMeasureData.staves.size() );
-            auto& staff = myOutMeasureData.staves.at( staffIndex );
+            MX_ASSERT( staffIndex < ioMeasureData.staves.size() );
+            auto& staff = ioMeasureData.staves.at( staffIndex );
             staff.directions.emplace_back( std::move( directionData ) );
+        }
+
+
+        void MeasureReader::parseDirection( std::shared_ptr<const core::Direction> inDirection ) const
+        {
+            parseDirectionImpl<core::Direction>( inDirection, myOutMeasureData, myCurrentCursor );
         }
         
         
         void MeasureReader::parseProperties( const core::Properties& inMxProperties ) const
         {
+            if( inMxProperties.getHasDivisions() )
+            {
+                const auto newDivisionsValueDecimal = inMxProperties.getDivisions()->getValue().getValue();
+                myCurrentCursor.ticksPerQuarter = static_cast<int>(std::ceil(newDivisionsValueDecimal - 0.5));
+            }
+            
             // TODO - continue work on measure numbering and style etc
             for( const auto& measureStylePtr : inMxProperties.getMeasureStyleSet() )
             {
@@ -465,9 +497,9 @@ namespace mx
         }
         
         
-        void MeasureReader::parseHarmony( const core::Harmony& inMxHarmony ) const
+        void MeasureReader::parseHarmony( std::shared_ptr<const core::Harmony> inHarmony ) const
         {
-            coutItemNotSupported( inMxHarmony );
+            parseDirectionImpl<core::Harmony>( inHarmony, myOutMeasureData, myCurrentCursor );
         }
         
         
@@ -495,6 +527,9 @@ namespace mx
             const auto& attr = *inMxBarline.getAttributes();
             auto loc = api::HorizontalAlignment::unspecified;
             auto style = api::BarlineType::unspecified;
+            auto endingType = api::EndingType::none;
+            auto endingNumber = 0;
+            auto repeat = false;
             
             if( attr.hasLocation )
             {
@@ -516,8 +551,44 @@ namespace mx
                 barline.tickTimePosition = myCurrentCursor.tickTimePosition;
             }
             
+            if( inMxBarline.getHasEnding() )
+            {
+                const auto& ending = inMxBarline.getEnding();
+                const auto& endingAttributes = ending->getAttributes();
+                
+                switch (endingAttributes->type)
+                {
+                    case core::StartStopDiscontinue::start:
+                        endingType = api::EndingType::start;
+                        break;
+
+                    case core::StartStopDiscontinue::stop:
+                        endingType = api::EndingType::stop;
+                        break;
+
+                    case core::StartStopDiscontinue::discontinue:
+                        endingType = api::EndingType::discontinue;
+                        break;
+                };
+                
+                const auto& number = endingAttributes->number;
+                const auto& numValues = number.getValues();
+                if (!numValues.empty()) {
+                    const auto iter = numValues.begin();
+                    endingNumber = *iter;
+                }
+            }
+            
+            if( inMxBarline.getHasRepeat() )
+            {
+                repeat = true;
+            }
+            
             barline.barlineType = style;
             barline.location = loc;
+            barline.endingType = endingType;
+            barline.endingNumber = endingNumber;
+            barline.repeat = repeat;
             myOutMeasureData.barlines.emplace_back( std::move( barline ) );
         }
         
@@ -766,6 +837,22 @@ namespace mx
             }
             
             return voiceData.notes.front().userRequestedVoiceNumber;
+        }
+
+
+        void MeasureReader::advanceTickTimePosition( int amount, std::string reason ) const
+        {
+            HistoryRecord record;
+            record.reason = std::move( reason );
+            record.amount = amount;
+            record.timeBefore = myCurrentCursor.tickTimePosition;
+            record.cursorBefore = myCurrentCursor;
+            myCurrentCursor.tickTimePosition += amount;
+            record.cursorAfter = myCurrentCursor;
+            record.timeAfter = myCurrentCursor.tickTimePosition;
+
+            myHistory.push_back( record );
+//            std::cout << record.reason << std::endl;
         }
     }
 }

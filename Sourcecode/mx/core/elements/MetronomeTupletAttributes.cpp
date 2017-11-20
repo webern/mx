@@ -40,7 +40,7 @@ namespace mx
         }
 
 
-        bool MetronomeTupletAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool MetronomeTupletAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "MetronomeTupletAttributes";
             bool isSuccess = true;

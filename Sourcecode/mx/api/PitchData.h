@@ -18,7 +18,8 @@ namespace mx
     		f = 3,
     		g = 4,
     		a = 5,
-    		b = 6
+    		b = 6,
+            unspecified = -1
     	};
 
         enum class Accidental

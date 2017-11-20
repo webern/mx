@@ -85,7 +85,7 @@ namespace mx
         }
 
 
-        bool PedalTuning::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool PedalTuning::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             bool isPedalStepFound = false;

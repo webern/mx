@@ -68,7 +68,7 @@ namespace mx
         }
 
 
-        bool LyricAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool LyricAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "LyricAttributes";
             bool isSuccess = true;

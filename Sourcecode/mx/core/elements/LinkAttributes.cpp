@@ -80,7 +80,7 @@ namespace mx
         }
 
 
-        bool LinkAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool LinkAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "LinkAttributes";
             bool isSuccess = true;

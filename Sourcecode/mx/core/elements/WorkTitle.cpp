@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool WorkTitle::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool WorkTitle::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             MX_UNUSED( message );
             MX_UNUSED( xelement );

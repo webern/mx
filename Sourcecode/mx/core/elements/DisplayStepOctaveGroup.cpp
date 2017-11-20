@@ -82,7 +82,7 @@ namespace mx
         }
         
         
-        bool DisplayStepOctaveGroup::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool DisplayStepOctaveGroup::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             bool isDisplayStepFound = false;

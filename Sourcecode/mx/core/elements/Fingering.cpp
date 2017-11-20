@@ -87,7 +87,7 @@ namespace mx
         }
 
 
-        bool Fingering::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Fingering::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

@@ -55,7 +55,8 @@ namespace mx
             bool getHasBarre() const;
             void setHasBarre( const bool value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             StringPtr myString;

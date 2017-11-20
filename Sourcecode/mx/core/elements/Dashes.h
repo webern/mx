@@ -35,7 +35,8 @@ namespace mx
             DashesAttributesPtr getAttributes() const;
             void setAttributes( const DashesAttributesPtr& attributes );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             DashesAttributesPtr myAttributes;

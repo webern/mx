@@ -120,7 +120,7 @@ namespace mx
         }
 
 
-        bool VirtualInstrument::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool VirtualInstrument::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
 

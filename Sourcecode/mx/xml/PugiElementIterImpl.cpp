@@ -13,6 +13,8 @@ namespace mx
         : myIter()
         , myIterParent()
         , myXDoc()
+        , mySkipProcessingInstructions{ true }
+        , myReturnableElement{ nullptr }
         {
             
         }
@@ -25,8 +27,31 @@ namespace mx
         : myIter( iter )
         , myIterParent( iterParent )
         , myXDoc( parentDoc )
+        , mySkipProcessingInstructions{ true }
+        , myReturnableElement{ nullptr }
         {
 
+        }
+
+        PugiElementIterImpl::PugiElementIterImpl( const PugiElementIterImpl& inOther )
+        : myIter( inOther.myIter )
+        , myIterParent( inOther.myIterParent )
+        , myXDoc( inOther.myXDoc )
+        , mySkipProcessingInstructions{ inOther.mySkipProcessingInstructions }
+        , myReturnableElement{ inOther.myReturnableElement == nullptr ? nullptr : std::make_unique<PugiElement>( *inOther.myReturnableElement ) }
+        {
+
+        }
+
+
+        PugiElementIterImpl& PugiElementIterImpl::operator=( const PugiElementIterImpl& inOther )
+        {
+            myIter = inOther.myIter;
+            myIterParent = inOther.myIterParent;
+            myXDoc = inOther.myXDoc;
+            mySkipProcessingInstructions = inOther.mySkipProcessingInstructions;
+            myReturnableElement = inOther.myReturnableElement == nullptr ? nullptr : std::make_unique<PugiElement>( *inOther.myReturnableElement );
+            return *this;
         }
 
 
@@ -44,7 +69,12 @@ namespace mx
             {
                 return true;
             }
-            else if( myIterParent.type() != pugi::node_element )
+
+            const auto type = myIterParent.type();
+            const auto isElement = type == pugi::node_element;
+            const auto isProcessingInstruction = type == pugi::node_pi;
+
+            if( ( !isElement ) && ( !isProcessingInstruction ) )
             {
                 return true;
             }
@@ -61,6 +91,51 @@ namespace mx
             }
 
             return false;
+        }
+
+
+        bool PugiElementIterImpl::getIsBeginIter() const
+        {
+            if ( myIter == myIterParent.begin() )
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+
+        bool PugiElementIterImpl::getIsProcessingInstruction() const
+        {
+            if( this->getIsEndIter() )
+            {
+                return false;
+            }
+            else if( this->getIsPayloadNull() )
+            {
+                return false;
+            }
+
+            const auto type = myIter->type();
+
+            if( type == pugi::node_pi )
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+
+        bool PugiElementIterImpl::getSkipProcessingInstructions() const
+        {
+            return mySkipProcessingInstructions;
+        }
+
+
+        void PugiElementIterImpl::setSkipProcessingInstructions( bool inValue )
+        {
+            mySkipProcessingInstructions = inValue;
         }
 
 
@@ -90,11 +165,11 @@ namespace mx
 
             if ( getIsEndIter() )
             {
-                MX_THROW( "XElementIterator attempted to dereference and 'end' iterator" );
+                MX_THROW( "XElementIterator attempted to dereference an 'end' iterator" );
             }
 
-            myReturnableElement = PugiElement{ *myIter, myXDoc.lock() };
-            return myReturnableElement;
+            myReturnableElement = std::make_unique<PugiElement>( *myIter, myXDoc.lock() );
+            return *myReturnableElement;
         }
 
 
@@ -107,17 +182,30 @@ namespace mx
 
             if ( getIsEndIter() )
             {
-                MX_THROW( "XElementIterator attempted to dereference and 'end' iterator" );
+                MX_THROW( "XElementIterator attempted to dereference an 'end' iterator" );
             }
 
-            myReturnableElement = PugiElement{ *myIter, myXDoc.lock() };
-            return &myReturnableElement;
+            myReturnableElement = std::make_unique<PugiElement>( *myIter, myXDoc.lock() );
+            return myReturnableElement.get();
         }
 
 
         const PugiElementIterImpl& PugiElementIterImpl::increment()
         {
             ++myIter;
+
+            if (mySkipProcessingInstructions)
+            {
+                bool isEnd = getIsEndIter();
+                bool isPi = getIsProcessingInstruction();
+
+                while( !isEnd && isPi )
+                {
+                    ++myIter;
+                    isEnd = getIsEndIter();
+                    isPi = getIsProcessingInstruction();
+                }
+            }
             return *this;
         }
 
@@ -125,6 +213,19 @@ namespace mx
         const PugiElementIterImpl& PugiElementIterImpl::decrement()
         {
             --myIter;
+
+            if (mySkipProcessingInstructions)
+            {
+                bool isBegin = getIsBeginIter();
+                bool isPi = getIsProcessingInstruction();
+
+                while( !isBegin && isPi )
+                {
+                    --myIter;
+                    isBegin = getIsBeginIter();
+                    isPi = getIsProcessingInstruction();
+                }
+            }
             return *this;
         }
 

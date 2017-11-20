@@ -44,7 +44,8 @@ namespace mx
             bool getHasMode() const;
             void setHasMode( const bool value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             CancelPtr myCancel;

@@ -44,7 +44,7 @@ namespace mx
         }
 
 
-        bool PerMinuteAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool PerMinuteAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "PerMinuteAttributes";
             bool isSuccess = true;

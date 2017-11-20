@@ -72,7 +72,7 @@ namespace mx
         }
 
 
-        bool ToeAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool ToeAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "ToeAttributes";
             bool isSuccess = true;

@@ -52,7 +52,8 @@ namespace mx
             void clearPartGroupOrScorePartSet();
             PartGroupOrScorePartPtr getPartGroupOrScorePart( const PartGroupOrScorePartSetIterConst& setIterator ) const;
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
             
         private:
             PartGroupSet myPartGroupSet;

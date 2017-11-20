@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool Metal::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Metal::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             MX_UNUSED( message );
             myValue = parseMetalEnum( xelement.getValue() );

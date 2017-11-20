@@ -79,7 +79,8 @@ namespace mx
             PartListPtr getPartList() const;
             void setPartList( const PartListPtr& value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             WorkPtr myWork;

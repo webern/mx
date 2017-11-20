@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool PedalAlter::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool PedalAlter::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             MX_UNUSED( message );
             MX_UNUSED( xelement );

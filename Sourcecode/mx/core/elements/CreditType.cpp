@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool CreditType::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool CreditType::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             MX_UNUSED( message );
             myValue.setValue( xelement.getValue() );

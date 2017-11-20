@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool DetachedLegato::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool DetachedLegato::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

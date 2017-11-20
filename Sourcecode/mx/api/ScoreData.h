@@ -22,6 +22,8 @@ namespace mx
         class ScoreData
         {
         public:
+            ScoreData();
+
             std::string musicXmlType;
             std::string workTitle;
             std::string workNumber;
@@ -39,66 +41,16 @@ namespace mx
             std::vector<PartGroupData> partGroups;
             int ticksPerQuarter;
             std::set<SystemData> systems;
-            
-            ScoreData()
-            : musicXmlType{ "partwise" }
-            , workTitle{}
-            , workNumber{}
-            , movementTitle{}
-            , movementNumber{}
-            , composer{}
-            , lyricist{}
-            , copyright{}
-            , encoding{}
-            , pageTextItems{}
-            , layout{}
-            , parts{}
-            , partGroups{}
-            , ticksPerQuarter{ DEFAULT_TICKS_PER_QUARTER }
-            {
 
-            }
+            int getNumMeasures() const;
+            int getNumStavesPerSystem() const;
 
-            inline int getNumMeasures() const
-            {
-                int numMeasures = 0;
-
-                for( const auto& part : parts )
-                {
-                    int temp = static_cast<int>( part.measures.size() );
-                    if( temp > numMeasures )
-                    {
-                        numMeasures = temp;
-                    }
-                }
-
-                return numMeasures;
-            }
-
-
-            inline int getNumStavesPerSystem() const
-            {
-                int numStaves = 0;
-
-                for( const auto& p : parts )
-                {
-                    numStaves += p.getNumStaves();
-                }
-
-                return numStaves;
-            }
+            /// sorts all of the events, directions, etc.
+            /// it is good to call this before writing to xml.
+            void sort();
         };
         
-        inline std::vector<PartData>::iterator findPart( std::vector<PartData>& inParts, const std::string& inPartId )
-        {
-            auto predicate = [&inPartId] ( const PartData& partData )
-            {
-                return inPartId == partData.uniqueId;
-            };
-            
-            auto it = std::find_if( inParts.begin(), inParts.end(), predicate );
-            return it;
-        }
+        std::vector<PartData>::iterator findPart( std::vector<PartData>& inParts, const std::string& inPartId );
         
         MXAPI_EQUALS_BEGIN( ScoreData )
         MXAPI_EQUALS_MEMBER( musicXmlType )

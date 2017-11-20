@@ -80,7 +80,7 @@ namespace mx
         }
 
 
-        bool BendAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool BendAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "BendAttributes";
             bool isSuccess = true;

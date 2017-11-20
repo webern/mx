@@ -72,7 +72,7 @@ namespace mx
         }
 
 
-        bool HammerOnAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool HammerOnAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "HammerOnAttributes";
             bool isSuccess = true;

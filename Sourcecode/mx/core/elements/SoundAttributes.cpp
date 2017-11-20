@@ -96,7 +96,7 @@ namespace mx
         }
 
 
-        bool SoundAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool SoundAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "SoundAttributes";
             bool isSuccess = true;

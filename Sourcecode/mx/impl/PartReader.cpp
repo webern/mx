@@ -237,7 +237,8 @@ namespace mx
             
             if( scoreInstrument.getHasInstrumentSound() )
             {
-                myOutPartData.instrumentData.sound = scoreInstrument.getInstrumentSound()->getValue().getValue();
+                Converter c;
+                myOutPartData.instrumentData.soundID = c.convert( scoreInstrument.getInstrumentSound()->getValue() );
             }
             
             if( scoreInstrument.getHasVirtualInstrument() )

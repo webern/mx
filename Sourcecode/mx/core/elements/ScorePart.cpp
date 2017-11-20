@@ -368,7 +368,7 @@ namespace mx
         }
 
         
-        bool ScorePart::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool ScorePart::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

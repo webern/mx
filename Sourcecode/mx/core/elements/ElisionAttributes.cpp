@@ -68,7 +68,7 @@ namespace mx
         }
 
 
-        bool ElisionAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool ElisionAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "ElisionAttributes";
             bool isSuccess = true;

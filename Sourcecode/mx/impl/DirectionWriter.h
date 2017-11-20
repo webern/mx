@@ -20,6 +20,9 @@ namespace mx
         using DirectionPtr = std::shared_ptr<Direction>;
         class DirectionType;
         using DirectionTypePtr = std::shared_ptr<DirectionType>;
+        class MusicDataChoice;
+        using MusicDataChoicePtr = std::shared_ptr<MusicDataChoice>;
+        using MusicDataChoiceSet = std::vector<MusicDataChoicePtr>;
 	}
 
     namespace impl
@@ -28,15 +31,16 @@ namespace mx
         {
         public:
             DirectionWriter( const api::DirectionData& inDirectionData, const Cursor& inCursor );
-            core::DirectionPtr getDirection();
+            core::MusicDataChoiceSet getDirectionLikeThings();
 
         private:
-            void addDirectionType( const core::DirectionTypePtr& directionType );
+            void addDirectionType( const core::DirectionTypePtr& directionType, const core::DirectionPtr& ioDirection );
+            core::MusicDataChoiceSet createHarmonyElements( int inOffset );
+            void addMusicDataChoices( const core::MusicDataChoiceSet& inMdcs, core::MusicDataChoiceSet& ioOutputSet );
 
         private:
             const api::DirectionData& myDirectionData;
             const Cursor myCursor;
-            core::DirectionPtr myOutDirectionPtr;
             const Converter myConverter;
             bool myIsFirstDirectionTypeAdded;
             std::set<api::Placement> myPlacements;

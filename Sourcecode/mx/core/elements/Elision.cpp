@@ -87,7 +87,7 @@ namespace mx
         }
 
 
-        bool Elision::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Elision::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

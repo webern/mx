@@ -104,7 +104,7 @@ namespace mx
         }
 
 
-        bool BeatUnitPerOrNoteRelationNoteChoice::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool BeatUnitPerOrNoteRelationNoteChoice::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             MX_CHOICE_IF( beatUnitPer, "beat-unit-per", BeatUnitPer );
             MX_CHOICE_IF( noteRelationNote, "note-relation-note", NoteRelationNote );

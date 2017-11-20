@@ -12,6 +12,8 @@ namespace mx
 {
     namespace xml
     {
+        static const unsigned int standardOptions = pugi::parse_default | pugi::parse_declaration | pugi::parse_doctype | pugi::parse_pi;
+
         PugiDoc::PugiDoc()
             : myDoc()
             , myXmlVersion( DEFAULT_XML_VERSION )
@@ -20,7 +22,7 @@ namespace mx
             , myDoWriteBom( false )
         {
             std::istringstream is( R"(<?xml version="1.0" encoding="UTF-8"?><root/>)" );
-            auto options = pugi::parse_default | pugi::parse_declaration | pugi::parse_doctype;
+            auto options = standardOptions;
             myDoc.load( is, options );
         }
 
@@ -28,7 +30,7 @@ namespace mx
         
         void PugiDoc::loadStream( std::istream& is )
         {
-            auto options = pugi::parse_default | pugi::parse_declaration | pugi::parse_doctype;
+            auto options = standardOptions;
             auto parseResult = myDoc.load( is, options );
             if( parseResult.status != pugi::status_ok )
             {

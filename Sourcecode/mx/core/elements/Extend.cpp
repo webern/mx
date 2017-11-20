@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool Extend::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Extend::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

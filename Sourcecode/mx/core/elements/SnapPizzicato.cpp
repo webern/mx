@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool SnapPizzicato::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool SnapPizzicato::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

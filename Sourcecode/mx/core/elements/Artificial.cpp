@@ -27,7 +27,7 @@ namespace mx
         }
 
 
-        bool Artificial::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Artificial::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             MX_UNUSED( message );
             MX_UNUSED( xelement );

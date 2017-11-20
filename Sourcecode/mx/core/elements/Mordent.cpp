@@ -63,7 +63,7 @@ namespace mx
         }
 
 
-        bool Mordent::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Mordent::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

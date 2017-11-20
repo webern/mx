@@ -145,7 +145,7 @@ namespace mx
         }
         
         
-        bool Harmonic::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Harmonic::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

@@ -40,6 +40,7 @@ namespace mxtest
         docId = docMgr.createFromStream( iss );
         auto outScoreData = docMgr.getData( docId );
         docMgr.destroyDocument( docId );
+        //std::cout << xmlData << std::endl;
         return outScoreData;
     }
 }

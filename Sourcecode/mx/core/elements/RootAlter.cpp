@@ -87,7 +87,7 @@ namespace mx
         }
 
 
-        bool RootAlter::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool RootAlter::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

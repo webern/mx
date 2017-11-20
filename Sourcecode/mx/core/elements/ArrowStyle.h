@@ -37,7 +37,8 @@ namespace mx
             ArrowStyleEnum getValue() const;
             void setValue( const ArrowStyleEnum& value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             ArrowStyleEnum myValue;

@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool ThumbPosition::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool ThumbPosition::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

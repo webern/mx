@@ -35,7 +35,8 @@ namespace mx
             GraceAttributesPtr getAttributes() const;
             void setAttributes( const GraceAttributesPtr& attributes );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             GraceAttributesPtr myAttributes;

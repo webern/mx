@@ -6,8 +6,6 @@
 #include "mx/xml/XDoc.h"
 #include "mx/xml/XThrow.h"
 
-#define MX_CHECK_NODE_STATE if( myParentElement.type() != pugi::node_element ) { MX_THROW_XNULL; }
-
 namespace mx
 {
     namespace xml
@@ -31,8 +29,7 @@ namespace mx
         , myXDoc( parentXDoc )
         , myReturnableAttribute()
         {
-            MX_CHECK_NODE_STATE;
-            if( myParentElement.type() != pugi::node_element )
+            if( myParentElement.type() != pugi::node_element && myParentElement.type() != pugi::node_pi )
             {
                 MX_THROW( "improperly constructed, parent should be of element type" );
             }
@@ -98,7 +95,7 @@ namespace mx
 
             if ( getIsEndIter() )
             {
-                MX_THROW( "XAttributeIterator attempted to dereference and 'end' iterator" );
+                MX_THROW( "XAttributeIterator attempted to dereference an 'end' iterator" );
             }
 
             myReturnableAttribute = PugiAttribute{ *myIter, myParentElement, myXDoc.lock() };
@@ -115,7 +112,7 @@ namespace mx
 
             if ( getIsEndIter() )
             {
-                MX_THROW( "XAttributeIterator attempted to dereference and 'end' iterator" );
+                MX_THROW( "XAttributeIterator attempted to dereference an 'end' iterator" );
             }
 
             myReturnableAttribute = PugiAttribute{ *myIter, myParentElement, myXDoc.lock() };

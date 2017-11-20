@@ -41,7 +41,8 @@ namespace mx
             BreathMarkValue getValue() const;
             void setValue( const BreathMarkValue& value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             BreathMarkValue myValue;

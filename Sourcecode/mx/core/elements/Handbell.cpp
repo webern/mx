@@ -87,7 +87,7 @@ namespace mx
         }
 
 
-        bool Handbell::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Handbell::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

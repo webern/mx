@@ -32,7 +32,7 @@ namespace mx
         }
 
 
-        bool PlayAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool PlayAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "PlayAttributes";
             bool isSuccess = true;

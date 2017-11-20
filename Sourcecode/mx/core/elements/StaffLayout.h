@@ -42,7 +42,8 @@ namespace mx
             bool getHasStaffDistance() const;
             void setHasStaffDistance( const bool value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             StaffLayoutAttributesPtr myAttributes;

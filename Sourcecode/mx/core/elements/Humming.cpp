@@ -27,7 +27,7 @@ namespace mx
         }
 
 
-        bool Humming::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Humming::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             MX_UNUSED( message );
             MX_UNUSED( xelement );

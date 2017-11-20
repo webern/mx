@@ -68,7 +68,7 @@ namespace mx
         }
 
 
-        bool PartAbbreviationAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool PartAbbreviationAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "PartAbbreviationAttributes";
             bool isSuccess = true;

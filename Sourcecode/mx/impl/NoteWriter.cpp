@@ -3,48 +3,49 @@
 // Distributed under the MIT License
 
 #include "mx/impl/NoteWriter.h"
-#include "mx/core/elements/Note.h"
-#include "mx/impl/ScoreWriter.h"
 #include "mx/core/elements/Accidental.h"
 #include "mx/core/elements/ActualNotes.h"
 #include "mx/core/elements/Alter.h"
 #include "mx/core/elements/Beam.h"
 #include "mx/core/elements/CueNoteGroup.h"
+#include "mx/core/elements/CueNoteGroup.h"
 #include "mx/core/elements/DisplayOctave.h"
 #include "mx/core/elements/DisplayStep.h"
 #include "mx/core/elements/DisplayStepOctaveGroup.h"
+#include "mx/core/elements/Dot.h"
 #include "mx/core/elements/Duration.h"
 #include "mx/core/elements/EditorialVoiceGroup.h"
+#include "mx/core/elements/Footnote.h"
 #include "mx/core/elements/FullNoteGroup.h"
 #include "mx/core/elements/FullNoteTypeChoice.h"
 #include "mx/core/elements/GraceNoteGroup.h"
+#include "mx/core/elements/GraceNoteGroup.h"
+#include "mx/core/elements/NormalDot.h"
+#include "mx/core/elements/NormalNoteGroup.h"
 #include "mx/core/elements/NormalNoteGroup.h"
 #include "mx/core/elements/NormalNotes.h"
 #include "mx/core/elements/NormalType.h"
 #include "mx/core/elements/NormalTypeNormalDotGroup.h"
+#include "mx/core/elements/Notations.h"
 #include "mx/core/elements/Note.h"
+#include "mx/core/elements/Note.h"
+#include "mx/core/elements/NoteChoice.h"
 #include "mx/core/elements/NoteChoice.h"
 #include "mx/core/elements/Octave.h"
 #include "mx/core/elements/Pitch.h"
+#include "mx/impl/PositionFunctions.h"
 #include "mx/core/elements/Rest.h"
 #include "mx/core/elements/Staff.h"
+#include "mx/core/elements/Stem.h"
 #include "mx/core/elements/Step.h"
+#include "mx/core/elements/Tie.h"
 #include "mx/core/elements/TimeModification.h"
 #include "mx/core/elements/Type.h"
 #include "mx/core/elements/Unpitched.h"
 #include "mx/core/elements/Voice.h"
-#include "mx/core/elements/CueNoteGroup.h"
-#include "mx/core/elements/GraceNoteGroup.h"
-#include "mx/core/elements/NormalNoteGroup.h"
-#include "mx/core/elements/NoteChoice.h"
-#include "mx/core/elements/Tie.h"
-#include "mx/core/elements/Dot.h"
-#include "mx/core/elements/NormalDot.h"
-#include "mx/core/elements/Stem.h"
-#include "mx/core/elements/Notations.h"
-#include "mx/core/elements/Footnote.h"
-#include "mx/impl/NotationsWriter.h"
 #include "mx/core/Strings.h"
+#include "mx/impl/NotationsWriter.h"
+#include "mx/impl/ScoreWriter.h"
 
 namespace mx
 {
@@ -79,7 +80,9 @@ namespace mx
             setStemDirection();
             setMiscData();
             NotationsWriter notationsWriter{ myNoteData, myCursor, myScoreWriter };
-            
+            auto& noteAttr = *myOutNote->getAttributes();
+            impl::setAttributesFromPositionData(myNoteData.positionData, noteAttr);
+
             auto notations = notationsWriter.getNotations();
             if( notations->getNotationsChoiceSet().size() > 0 )
             {
@@ -91,8 +94,6 @@ namespace mx
                 myOutNote->setHasAccidental( true );
                 myOutNote->getAccidental()->setValue( myConverter.convert( myNoteData.pitchData.accidental ) );
             }
-            
-
             
             auto beamIndex = 0;
             for( const auto& beam : myNoteData.beams )
@@ -209,6 +210,13 @@ namespace mx
                     pitch->getDisplayStep()->setValue( myConverter.convert( myNoteData.pitchData.step ) );
                     pitch->getDisplayOctave()->setValue( core::OctaveValue{ myNoteData.pitchData.octave } );
                 }
+
+                if( myNoteData.isMeasureRest )
+                {
+                    myOutFullNoteTypeChoice->getRest()->getAttributes()->hasMeasure = true;
+                    myOutFullNoteTypeChoice->getRest()->getAttributes()->measure = core::YesNo::yes;
+                    myOutNote->setHasType( false );
+                }
             }
             else if( myNoteData.isUnpitched )
             {
@@ -255,9 +263,12 @@ namespace mx
         
         void NoteWriter::setDurationNameAndDots() const
         {
-            myOutNote->setHasType( true );
-            myOutNote->getType()->setValue( myConverter.convert( myNoteData.durationData.durationName ) );
-            
+            if( !myNoteData.isRest || !myNoteData.isMeasureRest )
+            {
+                myOutNote->setHasType( true );
+                myOutNote->getType()->setValue( myConverter.convert( myNoteData.durationData.durationName ) );
+            }
+
             for( int d = 0; d < static_cast<int>( myNoteData.durationData.durationDots ); ++d )
             {
                 myOutNote->addDot( core::makeDot() );

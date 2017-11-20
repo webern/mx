@@ -68,7 +68,7 @@ namespace mx
         }
 
 
-        bool StringMuteAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool StringMuteAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "StringMuteAttributes";
             bool isSuccess = true;

@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool PageWidth::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool PageWidth::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             MX_UNUSED( message );
             MX_UNUSED( xelement );

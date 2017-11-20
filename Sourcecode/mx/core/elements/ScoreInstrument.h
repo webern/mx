@@ -68,7 +68,8 @@ namespace mx
             bool getHasVirtualInstrument() const;
             void setHasVirtualInstrument( const bool value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             ScoreInstrumentAttributesPtr myAttributes;

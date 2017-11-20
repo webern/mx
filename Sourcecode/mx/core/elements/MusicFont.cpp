@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool MusicFont::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool MusicFont::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

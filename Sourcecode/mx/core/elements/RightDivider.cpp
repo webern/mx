@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool RightDivider::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool RightDivider::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

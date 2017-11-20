@@ -48,7 +48,8 @@ namespace mx
             OctavePtr getOctave() const;
             void setOctave( const OctavePtr& value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             StepPtr myStep;

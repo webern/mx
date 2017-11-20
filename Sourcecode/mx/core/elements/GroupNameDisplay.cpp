@@ -120,7 +120,7 @@ namespace mx
         }
 
 
-        bool GroupNameDisplay::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool GroupNameDisplay::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

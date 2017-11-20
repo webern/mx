@@ -68,7 +68,7 @@ namespace mx
         }
 
 
-        bool TextAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool TextAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "TextAttributes";
             bool isSuccess = true;

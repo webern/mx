@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool Scoop::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Scoop::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

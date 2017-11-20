@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool HoleShape::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool HoleShape::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             MX_UNUSED( message );
             MX_UNUSED( xelement );

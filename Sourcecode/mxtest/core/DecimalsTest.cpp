@@ -10,7 +10,7 @@
 
 using namespace mx::core;
 
-DecimalType kThreshold = 0.0000000000001;
+DecimalType kThreshold = 0.00001;
 
 // using DecimalType = double;
 TEST( DecimalType, Decimals )
@@ -53,7 +53,7 @@ TEST( Decimal04, Decimals )
 {
     Decimal d( 1.234 );
     d.setValue( 0.00000384109 );
-    std::string expected = "0.00000384109";
+    std::string expected = "0.000004";
     std::string actual = toString( d, 11 );
     CHECK_EQUAL( expected, actual )
 
@@ -120,7 +120,7 @@ TEST( DecimalRange04, Decimals )
 {
     DecimalRange d( -1, 1, 1.234 );
     d.setValue( 0.00000384109 );
-    std::string expected = "0.00000384109";
+    std::string expected = "0.000004";
     std::string actual = toString( d, 11 );
     CHECK_EQUAL( expected, actual )
     
@@ -171,7 +171,7 @@ TEST( PositiveDecimal02, Decimals )
 TEST( PositiveDecimal02b, Decimals )
 {
     PositiveDecimal d( -123456789012.123456789012 );
-    DecimalType expected = kNonZeroAmount;
+    DecimalType expected = NON_ZERO_AMOUNT;
     DecimalType actual = d.getValue();
     CHECK_DOUBLES_EQUAL( expected, actual, kThreshold )
 }
@@ -187,7 +187,7 @@ TEST( PositiveDecimal04, Decimals )
 {
     PositiveDecimal d( 1.234 );
     d.setValue( 0.00000384109 );
-    std::string expected = "0.00000384109";
+    std::string expected = "0.000004";
     std::string actual = toString( d, 11 );
     CHECK_EQUAL( expected, actual )
     
@@ -206,7 +206,7 @@ TEST( PositiveDecimal05, Decimals )
     PositiveDecimal d( 1.234 );
     d.setValue( 0.00000384 );
     d.parse( "-0.3164978546312" );
-    DecimalType expected = kNonZeroAmount;
+    DecimalType expected = NON_ZERO_AMOUNT;
     DecimalType actual = d.getValue();
     CHECK_DOUBLES_EQUAL( expected, actual, kThreshold )
 }
@@ -254,7 +254,7 @@ TEST( NonNegativeDecimal04, Decimals )
 {
     NonNegativeDecimal d( 1.234 );
     d.setValue( 0.00000384109 );
-    std::string expected = "0.00000384109";
+    std::string expected = "0.000004";
     std::string actual = toString( d, 11 );
     CHECK_EQUAL( expected, actual )
     
@@ -321,7 +321,7 @@ TEST( DivisionsValue04, Decimals )
 {
     DivisionsValue d( 1.234 );
     d.setValue( 0.00000384109 );
-    std::string expected = "0.00000384109";
+    std::string expected = "0.000004";
     std::string actual = toString( d, 11 );
     CHECK_EQUAL( expected, actual )
     
@@ -388,7 +388,7 @@ TEST( MillimetersValue04, Decimals )
 {
     MillimetersValue d( 1.234 );
     d.setValue( 0.00000384109 );
-    std::string expected = "0.00000384109";
+    std::string expected = "0.000004";
     std::string actual = toString( d, 11 );
     CHECK_EQUAL( expected, actual )
     
@@ -456,7 +456,7 @@ TEST( Percent04, Decimals )
 {
     Percent d( 1.234 );
     d.setValue( 0.00000384109 );
-    std::string expected = "0.00000384109";
+    std::string expected = "0.000004";
     std::string actual = toString( d, 11 );
     CHECK_EQUAL( expected, actual )
     
@@ -516,7 +516,7 @@ TEST( PositiveDivisionsValue02, Decimals )
 TEST( PositiveDivisionsValue02b, Decimals )
 {
     PositiveDivisionsValue d( -123456789012.123456789012 );
-    DecimalType expected = kNonZeroAmount;
+    DecimalType expected = NON_ZERO_AMOUNT;
     DecimalType actual = d.getValue();
     CHECK_DOUBLES_EQUAL( expected, actual, kThreshold )
 }
@@ -532,7 +532,7 @@ TEST( PositiveDivisionsValue04, Decimals )
 {
     PositiveDivisionsValue d( 1.234 );
     d.setValue( 0.00000384109 );
-    std::string expected = "0.00000384109";
+    std::string expected = "0.000004";
     std::string actual = toString( d, 11 );
     CHECK_EQUAL( expected, actual )
     
@@ -551,7 +551,7 @@ TEST( PositiveDivisionsValue05, Decimals )
     PositiveDivisionsValue d( 1.234 );
     d.setValue( 0.00000384 );
     d.parse( "-0.3164978546312" );
-    DecimalType expected = kNonZeroAmount;
+    DecimalType expected = NON_ZERO_AMOUNT;
     DecimalType actual = d.getValue();
     CHECK_DOUBLES_EQUAL( expected, actual, kThreshold )
 }
@@ -676,7 +676,7 @@ TEST( Semitones04, Decimals )
 {
     Semitones d( 1.234 );
     d.setValue( 0.00000384109 );
-    std::string expected = "0.00000384109";
+    std::string expected = "0.000004";
     std::string actual = toString( d, 11 );
     CHECK_EQUAL( expected, actual )
     
@@ -743,7 +743,7 @@ TEST( TenthsValue04, Decimals )
 {
     TenthsValue d( 1.234 );
     d.setValue( 0.00000384109 );
-    std::string expected = "0.00000384109";
+    std::string expected = "0.000004";
     std::string actual = toString( d, 11 );
     CHECK_EQUAL( expected, actual )
     

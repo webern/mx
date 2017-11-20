@@ -58,6 +58,10 @@ namespace mx
             auto xdoc = mx::xml::XFactory::makeXDoc();
             xdoc->loadFile( filePath );
 
+#ifdef DEBUG_HELL
+            xdoc->saveStream( std::cout );
+            std::cout << std::endl;
+#endif
             auto mxdoc = mx::core::makeDocument();
             
             std::stringstream messages;
@@ -151,7 +155,6 @@ namespace mx
         ScoreData DocumentManager::getData( int documentId ) const
         {
             LOCK_DOCUMENT_MANAGER
-            
             
             const DocumentMap::const_iterator it = myImpl->myMap.find( documentId );
             

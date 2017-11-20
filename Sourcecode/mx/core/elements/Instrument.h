@@ -35,7 +35,8 @@ namespace mx
             InstrumentAttributesPtr getAttributes() const;
             void setAttributes( const InstrumentAttributesPtr& attributes );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             InstrumentAttributesPtr myAttributes;

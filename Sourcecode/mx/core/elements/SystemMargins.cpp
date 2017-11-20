@@ -85,7 +85,7 @@ namespace mx
         }
 
 
-        bool SystemMargins::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool SystemMargins::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             bool isLeftMarginFound = false;

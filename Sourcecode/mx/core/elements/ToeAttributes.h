@@ -52,7 +52,8 @@ namespace mx
             bool hasPlacement;
             bool hasSubstitution;
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
         };
     }
 }

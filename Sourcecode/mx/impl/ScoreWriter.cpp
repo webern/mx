@@ -5,12 +5,14 @@
 #include "mx/impl/ScoreWriter.h"
 #include "mx/core/elements/Creator.h"
 #include "mx/core/elements/Encoding.h"
+#include "mx/core/elements/GroupBarline.h"
 #include "mx/core/elements/GroupName.h"
 #include "mx/core/elements/Identification.h"
 #include "mx/core/elements/Miscellaneous.h"
 #include "mx/core/elements/MovementNumber.h"
 #include "mx/core/elements/MovementTitle.h"
 #include "mx/core/elements/PartGroup.h"
+#include "mx/core/elements/GroupSymbol.h"
 #include "mx/core/elements/PartGroupOrScorePart.h"
 #include "mx/core/elements/PartList.h"
 #include "mx/core/elements/PartwisePart.h"
@@ -30,6 +32,7 @@
 #include "mx/impl/PartReader.h"
 #include "mx/impl/PartWriter.h"
 #include "mx/impl/TimeReader.h"
+#include "mx/impl/Converter.h"
 
 namespace mx
 {
@@ -40,7 +43,7 @@ namespace mx
         , myMutex{}
         , myOutScorePartwise{ nullptr }
         {
-            
+            myScoreData.sort();
         }
         
         core::ScorePartwisePtr ScoreWriter::getScorePartwise() const
@@ -251,16 +254,32 @@ namespace mx
         {
             auto mxGrp = core::makePartGroup();
             mxGrp->getAttributes()->type = core::StartStop::start;
+
             if( apiGrp.number >= 0 )
             {
                 mxGrp->getAttributes()->hasNumber = true;
                 mxGrp->getAttributes()->number = std::to_string( apiGrp.number );
             }
+
             if( apiGrp.name.size() > 0 )
             {
                 mxGrp->setHasGroupName( true );
                 mxGrp->getGroupName()->setValue( core::XsString{ apiGrp.name} );
             }
+
+            Converter converter;
+            if( apiGrp.bracketType != api::BracketType::unspecified )
+            {
+                const auto symbol = converter.convert( apiGrp.bracketType );
+                mxGrp->setHasGroupSymbol( true );
+                mxGrp->getGroupSymbol()->setValue( symbol );
+            }
+
+            // TODO - make group barline configurable
+
+            mxGrp->setHasGroupBarline( true );
+            mxGrp->getGroupBarline()->setValue( core::GroupBarlineValue::yes );
+
             return mxGrp;
         }
         

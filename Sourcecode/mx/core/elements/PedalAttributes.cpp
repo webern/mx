@@ -76,7 +76,7 @@ namespace mx
         }
 
 
-        bool PedalAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool PedalAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "PedalAttributes";
             bool isSuccess = true;

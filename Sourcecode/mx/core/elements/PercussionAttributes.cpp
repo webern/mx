@@ -76,7 +76,7 @@ namespace mx
         }
 
 
-        bool PercussionAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool PercussionAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "PercussionAttributes";
             bool isSuccess = true;

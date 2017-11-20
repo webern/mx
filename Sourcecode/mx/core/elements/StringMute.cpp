@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool StringMute::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool StringMute::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

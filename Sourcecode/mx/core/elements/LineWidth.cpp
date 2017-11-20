@@ -87,7 +87,7 @@ namespace mx
         }
 
 
-        bool LineWidth::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool LineWidth::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

@@ -98,7 +98,7 @@ namespace mx
         }
 
 
-        bool SlurAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool SlurAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "SlurAttributes";
             bool isSuccess = true;

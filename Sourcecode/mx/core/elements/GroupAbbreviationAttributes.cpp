@@ -64,7 +64,7 @@ namespace mx
         }
 
 
-        bool GroupAbbreviationAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool GroupAbbreviationAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "GroupAbbreviationAttributes";
             bool isSuccess = true;

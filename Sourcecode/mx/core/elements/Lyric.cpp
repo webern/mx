@@ -181,7 +181,7 @@ namespace mx
         }
 
 
-        bool Lyric::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Lyric::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

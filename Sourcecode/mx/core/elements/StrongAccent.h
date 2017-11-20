@@ -35,7 +35,8 @@ namespace mx
             StrongAccentAttributesPtr getAttributes() const;
             void setAttributes( const StrongAccentAttributesPtr& value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             StrongAccentAttributesPtr myAttributes;

@@ -11,6 +11,7 @@
 #include "mx/core/elements/DirectionType.h"
 #include "mx/api/OttavaData.h"
 #include "mx/core/elements/OctaveShift.h"
+#include "mx/core/elements/MusicDataChoice.h"
 
 #include <memory>
 
@@ -34,7 +35,9 @@ TEST( ottavaStartStop, DirectionWriter )
     start.spannerStart.positionData.defaultX = 100.0;
     
     DirectionWriter writer{ directionData, cursor };
-    auto direction = writer.getDirection();
+    const auto mdcSet = writer.getDirectionLikeThings();
+    CHECK( mdcSet.front()->getChoice() == core::MusicDataChoice::Choice::direction );
+    const auto direction = mdcSet.front()->getDirection();
     const auto& directionTypes = direction->getDirectionTypeSet();
     
     CHECK_EQUAL( 2, directionTypes.size() );

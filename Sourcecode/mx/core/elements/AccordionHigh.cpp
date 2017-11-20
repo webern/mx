@@ -27,7 +27,7 @@ namespace mx
         }
 
 
-        bool AccordionHigh::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool AccordionHigh::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             MX_UNUSED( message );
             MX_UNUSED( xelement );

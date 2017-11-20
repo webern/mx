@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool Schleifer::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Schleifer::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

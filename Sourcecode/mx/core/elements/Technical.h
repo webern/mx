@@ -39,7 +39,8 @@ namespace mx
             void clearTechnicalChoiceSet();
             TechnicalChoicePtr getTechnicalChoice( const TechnicalChoiceSetIterConst& setIterator ) const;
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
             
         private:
             TechnicalChoiceSet myTechnicalChoiceSet;

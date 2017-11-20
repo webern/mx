@@ -35,7 +35,8 @@ namespace mx
             BarreAttributesPtr getAttributes() const;
             void setAttributes( const BarreAttributesPtr& attributes );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             BarreAttributesPtr myAttributes;

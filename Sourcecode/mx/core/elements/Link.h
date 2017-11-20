@@ -35,7 +35,8 @@ namespace mx
             LinkAttributesPtr getAttributes() const;
             void setAttributes( const LinkAttributesPtr& attributes );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             LinkAttributesPtr myAttributes;

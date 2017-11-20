@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool Stress::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool Stress::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

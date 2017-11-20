@@ -92,7 +92,7 @@ namespace mx
         }
 
 
-        bool EmptyTrillSoundAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool EmptyTrillSoundAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "EmptyTrillSoundAttributes";
             bool isSuccess = true;

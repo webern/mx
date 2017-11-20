@@ -37,7 +37,8 @@ namespace mx
             CircularArrowEnum getValue() const;
             void setValue( const CircularArrowEnum& value );
 
-            bool fromXElement( std::ostream& message, xml::XElement& xelement );
+            private:
+            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
 
         private:
             CircularArrowEnum myValue;

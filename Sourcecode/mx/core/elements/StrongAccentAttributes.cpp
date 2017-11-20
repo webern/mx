@@ -72,7 +72,7 @@ namespace mx
         }
 
 
-        bool StrongAccentAttributes::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool StrongAccentAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
         {
             const char* const className = "StrongAccentAttributes";
             bool isSuccess = true;
