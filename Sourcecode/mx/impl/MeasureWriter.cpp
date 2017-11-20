@@ -37,8 +37,13 @@
 #include "mx/core/elements/Eyeglasses.h"
 #include "mx/core/elements/Fermata.h"
 #include "mx/core/elements/Fifths.h"
+<<<<<<< caeae2ca63c6721746e558cf2db28844937863ca
 #include "mx/core/elements/Footnote.h"
 #include "mx/core/elements/Footnote.h"
+=======
+#include "mx/core/elements/Footnote.h"
+#include "mx/core/elements/Footnote.h"
+>>>>>>> release v0.3.0
 #include "mx/core/elements/Forward.h"
 #include "mx/core/elements/FullNoteGroup.h"
 #include "mx/core/elements/FullNoteTypeChoice.h"

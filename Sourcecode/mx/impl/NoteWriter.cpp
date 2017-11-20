@@ -27,9 +27,16 @@
 #include "mx/core/elements/NormalType.h"
 #include "mx/core/elements/NormalTypeNormalDotGroup.h"
 #include "mx/core/elements/Notations.h"
+<<<<<<< caeae2ca63c6721746e558cf2db28844937863ca
 #include "mx/core/elements/Note.h"
 #include "mx/core/elements/NoteChoice.h"
 #include "mx/core/elements/Notehead.h"
+=======
+#include "mx/core/elements/Note.h"
+#include "mx/core/elements/Note.h"
+#include "mx/core/elements/NoteChoice.h"
+#include "mx/core/elements/NoteChoice.h"
+>>>>>>> release v0.3.0
 #include "mx/core/elements/Octave.h"
 #include "mx/core/elements/Pitch.h"
 #include "mx/impl/PositionFunctions.h"

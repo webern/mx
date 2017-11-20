@@ -7,7 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+<<<<<<< caeae2ca63c6721746e558cf2db28844937863ca
 <<<<<<< c581556ca0c3128128d3a5e8c01bf3243fd1e2e2
+=======
+>>>>>>> release v0.3.0
 		2975944F1F044C7600DE2F30 /* ChordData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2975944D1F044C7600DE2F30 /* ChordData.cpp */; };
 		297594501F044C7600DE2F30 /* ChordData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2975944D1F044C7600DE2F30 /* ChordData.cpp */; };
 		297594511F044C7600DE2F30 /* ChordData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2975944D1F044C7600DE2F30 /* ChordData.cpp */; };
@@ -3350,6 +3353,7 @@
 		29EAD74F1F0EF8CE00BDE782 /* MiscData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29EAD7471F0EF8CE00BDE782 /* MiscData.h */; };
 		29EAD7501F0EF8CE00BDE782 /* MiscData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29EAD7471F0EF8CE00BDE782 /* MiscData.h */; };
 		29EAD7511F0EF8CE00BDE782 /* MiscData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29EAD7471F0EF8CE00BDE782 /* MiscData.h */; };
+<<<<<<< caeae2ca63c6721746e558cf2db28844937863ca
 		E20803A81F25511D006B6C88 /* LyricData.h in Headers */ = {isa = PBXBuildFile; fileRef = E20803A71F25511D006B6C88 /* LyricData.h */; };
 		E20803A91F25511D006B6C88 /* LyricData.h in Headers */ = {isa = PBXBuildFile; fileRef = E20803A71F25511D006B6C88 /* LyricData.h */; };
 		E20803AA1F25511D006B6C88 /* LyricData.h in Headers */ = {isa = PBXBuildFile; fileRef = E20803A71F25511D006B6C88 /* LyricData.h */; };
@@ -6742,6 +6746,8 @@
 		29FFAC811DB9C9CD00DC8AE1 /* CurveData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29FFAC7F1DB9C8B600DC8AE1 /* CurveData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		29FFAC821DB9C9D100DC8AE1 /* CurveData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29FFAC7F1DB9C8B600DC8AE1 /* CurveData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 >>>>>>> Fix setting for archive deployment
+=======
+>>>>>>> release v0.3.0
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -8143,7 +8149,10 @@
 		29EAD73A1F0EA96B00BDE782 /* ProcessingInstruction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProcessingInstruction.h; sourceTree = "<group>"; };
 		29EAD7461F0EF8CE00BDE782 /* MiscData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MiscData.cpp; sourceTree = "<group>"; };
 		29EAD7471F0EF8CE00BDE782 /* MiscData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MiscData.h; sourceTree = "<group>"; };
+<<<<<<< caeae2ca63c6721746e558cf2db28844937863ca
 		E20803A71F25511D006B6C88 /* LyricData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LyricData.h; sourceTree = "<group>"; };
+=======
+>>>>>>> release v0.3.0
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -8251,7 +8260,10 @@
 				29A8DD671EF0475D00AD2478 /* KeyData.h */,
 				29A8DD681EF0475D00AD2478 /* LayoutData.h */,
 				29A8DD691EF0475D00AD2478 /* LineData.h */,
+<<<<<<< caeae2ca63c6721746e558cf2db28844937863ca
 				E20803A71F25511D006B6C88 /* LyricData.h */,
+=======
+>>>>>>> release v0.3.0
 				29A8DD6A1EF0475D00AD2478 /* MarkData.cpp */,
 				29A8DD6B1EF0475D00AD2478 /* MarkData.h */,
 				29A8DD6C1EF0475D00AD2478 /* MeasureData.h */,
@@ -9696,7 +9708,10 @@
 			files = (
 				29A8006A1EF0876500AD2478 /* SoundID.h in Headers */,
 				29EAD74E1F0EF8CE00BDE782 /* MiscData.h in Headers */,
+<<<<<<< caeae2ca63c6721746e558cf2db28844937863ca
 				E20803A91F25511D006B6C88 /* LyricData.h in Headers */,
+=======
+>>>>>>> release v0.3.0
 				297594551F044C7600DE2F30 /* ChordData.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9707,7 +9722,10 @@
 			files = (
 				29A800691EF0876500AD2478 /* SoundID.h in Headers */,
 				29EAD74D1F0EF8CE00BDE782 /* MiscData.h in Headers */,
+<<<<<<< caeae2ca63c6721746e558cf2db28844937863ca
 				E20803A81F25511D006B6C88 /* LyricData.h in Headers */,
+=======
+>>>>>>> release v0.3.0
 				297594541F044C7600DE2F30 /* ChordData.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9716,7 +9734,10 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+<<<<<<< caeae2ca63c6721746e558cf2db28844937863ca
 				E20803AC1F25511D006B6C88 /* LyricData.h in Headers */,
+=======
+>>>>>>> release v0.3.0
 				297594581F044C7600DE2F30 /* ChordData.h in Headers */,
 				29A8FDC61EF0497500AD2478 /* MxmacOS.h in Headers */,
 				29EAD7511F0EF8CE00BDE782 /* MiscData.h in Headers */,
@@ -9728,7 +9749,10 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+<<<<<<< caeae2ca63c6721746e558cf2db28844937863ca
 				E20803AB1F25511D006B6C88 /* LyricData.h in Headers */,
+=======
+>>>>>>> release v0.3.0
 				297594571F044C7600DE2F30 /* ChordData.h in Headers */,
 				29B962851E79FF410072071D /* MxiOS.h in Headers */,
 				29EAD7501F0EF8CE00BDE782 /* MiscData.h in Headers */,
@@ -9742,7 +9766,10 @@
 			files = (
 				29A8006B1EF0876500AD2478 /* SoundID.h in Headers */,
 				29EAD74F1F0EF8CE00BDE782 /* MiscData.h in Headers */,
+<<<<<<< caeae2ca63c6721746e558cf2db28844937863ca
 				E20803AA1F25511D006B6C88 /* LyricData.h in Headers */,
+=======
+>>>>>>> release v0.3.0
 				297594561F044C7600DE2F30 /* ChordData.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13271,6 +13298,7 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+<<<<<<< caeae2ca63c6721746e558cf2db28844937863ca
 <<<<<<< c581556ca0c3128128d3a5e8c01bf3243fd1e2e2
 =======
 		2933A7C81DA58F1D005D7222 /* Debug */ = {
@@ -13416,6 +13444,8 @@
 			name = Release;
 		};
 >>>>>>> Fix setting for archive deployment
+=======
+>>>>>>> release v0.3.0
 		293FFEDA1DD25C74001477E8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -13711,7 +13741,11 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CODE_SIGN_IDENTITY = "";
+<<<<<<< caeae2ca63c6721746e558cf2db28844937863ca
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+=======
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+>>>>>>> release v0.3.0
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
@@ -13727,7 +13761,11 @@
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = mjb.MxiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+<<<<<<< caeae2ca63c6721746e558cf2db28844937863ca
 				SDKROOT = iphoneos;
+=======
+				SDKROOT = iphoneos10.2;
+>>>>>>> release v0.3.0
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "arm64 armv7 armv7s x86_64 i386";
@@ -13744,7 +13782,11 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CODE_SIGN_IDENTITY = "";
+<<<<<<< caeae2ca63c6721746e558cf2db28844937863ca
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+=======
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+>>>>>>> release v0.3.0
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -13760,7 +13802,11 @@
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = mjb.MxiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+<<<<<<< caeae2ca63c6721746e558cf2db28844937863ca
 				SDKROOT = iphoneos;
+=======
+				SDKROOT = iphoneos10.2;
+>>>>>>> release v0.3.0
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
