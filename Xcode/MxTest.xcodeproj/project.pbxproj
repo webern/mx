@@ -2545,8 +2545,12 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CODE_SIGN_IDENTITY = "";
+<<<<<<< 753d3ba8d14c9daba17e9543f6cbc4e3573ea2ae
 <<<<<<< caeae2ca63c6721746e558cf2db28844937863ca
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+=======
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+>>>>>>> release v0.3.0
 =======
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 >>>>>>> release v0.3.0
@@ -2579,8 +2583,12 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CODE_SIGN_IDENTITY = "";
+<<<<<<< 753d3ba8d14c9daba17e9543f6cbc4e3573ea2ae
 <<<<<<< caeae2ca63c6721746e558cf2db28844937863ca
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+=======
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+>>>>>>> release v0.3.0
 =======
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 >>>>>>> release v0.3.0
