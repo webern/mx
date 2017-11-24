@@ -267,12 +267,11 @@ namespace mx
                 myOutScoreData.encoding = std::move(encodingData);
             }
             
-            
-            
             if( myHeaderGroup.getHasDefaults() )
             {
                 myOutScoreData.layout = createLayout( myHeaderGroup );
             }
+
             createPageTextItems( myHeaderGroup, myOutScoreData.pageTextItems );
             
             auto partMap = reconcileParts( myScorePartwise );

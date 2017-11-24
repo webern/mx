@@ -502,7 +502,7 @@ Note: None of the percussion instruments may be shared
         </notations>
       </note>
     </measure>
-    <!--=======================================================-->
+    <!-- roundTripViolaDynamicWrongTime -->
     <measure implicit="yes" number="X7" width="389">
       <print new-system="no"/>
       <note default-x="22">
@@ -539,9 +539,9 @@ Note: None of the percussion instruments may be shared
           <tied type="stop"/>
         </notations>
       </note>
-      <direction placement="below">
+      <direction placement="below" >
         <direction-type>
-          <dynamics default-x="45" default-y="-73" halign="left">
+          <dynamics default-x="45" default-y="-73" halign="left" font-family="roundTripViolaDynamicWrongTime">
             <pp/>
           </dynamics>
         </direction-type>

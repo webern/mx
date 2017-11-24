@@ -36,6 +36,13 @@ namespace mxtest
         const auto& instance = getInstance();
         return instance.myPath + subDir + instance.mySeparator + fileName;
     }
+
+
+    const std::string MxFileRepository::getNameWithoutExtension( const std::string& fileName )
+    {
+        const auto lastDot = fileName.find_last_of( '.' );
+        return fileName.substr( 0, lastDot - 1 );
+    }
     
     
     const std::string& MxFileRepository::getSubdirectory( const std::string& fileName )
@@ -274,6 +281,7 @@ namespace mxtest
         myNameSubdirectoryMap.emplace( "hello_timewise.xml", "mjbsuite" );
         myNameSubdirectoryMap.emplace( "lyre_timewise.xml", "mjbsuite" );
         myNameSubdirectoryMap.emplace( "chords_simple.xml", "mjbsuite" );
+        myNameSubdirectoryMap.emplace( "ChordDirectionPlacement.xml", "mjbsuite" );
         
         // museScore
         myNameSubdirectoryMap.emplace( "A_Walk_through_the_Park.xml", "musuite" );

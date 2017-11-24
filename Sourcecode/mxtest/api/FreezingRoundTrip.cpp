@@ -22,28 +22,127 @@ using namespace mxtest;
 
 namespace
 {
-    constexpr const char* const fileName = "freezing.xml";
+    constexpr const char* const freezingFile = "freezing.xml";
+    constexpr const char* const chordDirFile = "ChordDirectionPlacement.xml";
 }
+
+namespace
+{
+    inline bool writeRoundTrip( std::string inFilename )
+    {
+        const auto nameWithoutExtension = mxtest::MxFileRepository::getNameWithoutExtension( inFilename );
+        const auto outBeforeFilepath = std::string{ "./" } + nameWithoutExtension + std::string{ "_before.xml" };
+        const auto outAfterFilepath = std::string{ "./" } + nameWithoutExtension + std::string{ "_after.xml" };
+        const auto scoreData = mxtest::MxFileRepository::loadFile( inFilename );
+        const auto filePath = mxtest::MxFileRepository::getFullPath( inFilename );
+        auto& docMgr = DocumentManager::getInstance();
+        const auto docId = docMgr.createFromFile( filePath );
+        docMgr.writeToFile( docId, outBeforeFilepath );
+        docMgr.destroyDocument( docId );
+        const auto apiDocId = docMgr.createFromScore( scoreData );
+        docMgr.writeToFile( apiDocId, outAfterFilepath );
+        docMgr.destroyDocument( apiDocId );
+        return docId != apiDocId;
+    }
+
+    struct TestData
+    {
+        const mx::core::ScorePartwisePtr originalScore;
+        const mx::core::ScorePartwisePtr savedScore;
+        const mx::api::ScoreData originalScoreData;
+        const mx::api::ScoreData savedScoreData;
+
+        TestData( mx::core::ScorePartwisePtr inOriginalScore,
+                  mx::core::ScorePartwisePtr inSavedScore,
+                  mx::api::ScoreData inOriginalScoreData,
+                  mx::api::ScoreData inSavedScoreData )
+        : originalScore{ inOriginalScore }
+        , savedScore{ inSavedScore }
+        , originalScoreData{ inOriginalScoreData }
+        , savedScoreData{ inSavedScoreData }
+        {
+
+        }
+
+        //////////////////////////// original score ///////////////////// saved score ///////////////////
+        inline const std::pair<const mx::core::MusicDataChoiceSet, const mx::core::MusicDataChoiceSet>
+        getMusicData( int inPartIndex, int inMeasureIndex ) const
+        {
+            const auto& oPset = this->originalScore->getPartwisePartSet();
+            const auto& sPset = this->savedScore->getPartwisePartSet();
+            const auto& oPart = oPset.at( static_cast<size_t>( inPartIndex ) );
+            const auto& sPart = sPset.at( static_cast<size_t>( inPartIndex ) );
+            const auto& oMdc = oPart->getPartwiseMeasureSet().at( static_cast<int>( inMeasureIndex ) )->getMusicDataGroup()->getMusicDataChoiceSet();
+            const auto& sMdc = sPart->getPartwiseMeasureSet().at( static_cast<int>( inMeasureIndex ) )->getMusicDataGroup()->getMusicDataChoiceSet();
+            return std::make_pair<const mx::core::MusicDataChoiceSet&, const mx::core::MusicDataChoiceSet&>( oMdc, sMdc );
+        }
+    };
+
+    inline TestData getTestData( std::string filename )
+    {
+        auto& mgr = DocumentManager::getInstance();
+        const auto filePath = mxtest::MxFileRepository::getFullPath( filename );
+        const auto originalId = mgr.createFromFile( filePath );
+        const auto originalScoreData = mgr.getData( originalId );
+        const auto originalScore = mgr.getDocument( originalId )->getScorePartwise();
+        const auto savedId = mgr.createFromScore( mgr.getData( originalId ) );
+        const auto savedScoreData = mgr.getData( savedId );
+        const auto savedScore = mgr.getDocument( savedId )->getScorePartwise();
+        mgr.destroyDocument( originalId );
+        mgr.destroyDocument( savedId );
+        return TestData{ originalScore, savedScore, originalScoreData, savedScoreData };
+    }
+}
+
+TEST( roundTripChordDirFile, Freezing )
+{
+    const auto success = writeRoundTrip( chordDirFile );
+    CHECK( success );
+}
+T_END
+
+
+TEST( chordDirectionPlacement, Freezing )
+{
+    const auto testData = getTestData( chordDirFile );
+    const auto musicData = testData.getMusicData( 0, 0 );
+    const auto oNumEntries = musicData.first.size();
+    const auto sNumEntries = musicData.second.size();
+    CHECK( oNumEntries > 0 );
+    CHECK_EQUAL( oNumEntries, sNumEntries );
+
+    for( size_t i = 0; i < oNumEntries; ++i )
+    {
+        const auto& o = musicData.first.at( i );
+        const auto& s = musicData.second.at( i );
+        const auto oChoice = o->getChoice();
+        const auto sChoice = s->getChoice();
+        std::stringstream ss;
+        ss << "After round trip the MusicDataChoice elements are not the same. Currently index (i) == " << i << ".";
+        ss << " ( oChoice == sChoice ) was supposed to return true, but returned false.";
+        ss << " with ( " << static_cast<int>( oChoice ) << " == " << static_cast<int>( sChoice ) << " )";
+        const std::string message = ss.str();
+        CHECK_WITH_MESSAGE( oChoice == sChoice, message );
+    }
+
+    CHECK( true );
+}
+T_END
 
 
 TEST( roundTripOutput, Freezing )
 {
-    const auto scoreData = mxtest::MxFileRepository::loadFile( fileName );
-    const auto filePath = mxtest::MxFileRepository::getFullPath( fileName );
-    auto& docMgr = DocumentManager::getInstance();
-    const auto docId = docMgr.createFromFile( filePath );
-    docMgr.writeToFile( docId, "./freezing_before.xml" );
-    docMgr.destroyDocument( docId );
-    const auto apiDocId = docMgr.createFromScore( scoreData );
-    docMgr.writeToFile( apiDocId, "./freezing_after.xml" );
-    docMgr.destroyDocument( apiDocId );
+    const auto success = writeRoundTrip( freezingFile );
+    CHECK( success );
 }
 T_END
 
 TEST( roundTripViolaDynamicWrongTime, Freezing )
 {
+    // in the original file measure number="X7" implicit="yes" width="389"
+    // or search for font-family="roundTripViolaDynamicWrongTime"
     auto& mgr = DocumentManager::getInstance();
-    const auto filePath = mxtest::MxFileRepository::getFullPath( fileName );
+    const auto filePath = mxtest::MxFileRepository::getFullPath( freezingFile );
     const auto originalId = mgr.createFromFile( filePath );
     const auto originalScoreData = mgr.getData( originalId );
     const auto originalScore = mgr.getDocument( originalId )->getScorePartwise();
@@ -67,12 +166,14 @@ TEST( roundTripViolaDynamicWrongTime, Freezing )
         ++originalMdcIter;
     }
 
+    // this is the first note in the measure
     CHECK( originalMdcIter != originalMdcEnd );
     CHECK( MusicDataChoice::Choice::note == (*originalMdcIter)->getChoice() );
     auto originalCurrentNote = (*originalMdcIter)->getNote();
     CHECK_DOUBLES_EQUAL( 30.0, originalCurrentNote->getNoteChoice()->getNormalNoteGroup()->getDuration()->getValue().getValue(), 0.0001 );
     CHECK( !originalCurrentNote->getNoteChoice()->getNormalNoteGroup()->getFullNoteGroup()->getHasChord() );
 
+    // this is the second note in the measure
     ++originalMdcIter;
     CHECK( originalMdcIter != originalMdcEnd );
     CHECK( MusicDataChoice::Choice::note == (*originalMdcIter)->getChoice() );
@@ -80,6 +181,7 @@ TEST( roundTripViolaDynamicWrongTime, Freezing )
     CHECK_DOUBLES_EQUAL( 30.0, originalCurrentNote->getNoteChoice()->getNormalNoteGroup()->getDuration()->getValue().getValue(), 0.0001 );
     CHECK( originalCurrentNote->getNoteChoice()->getNormalNoteGroup()->getFullNoteGroup()->getHasChord() );
 
+    // this is where we find the first pp dynamic in the measure
     ++originalMdcIter;
     CHECK( originalMdcIter != originalMdcEnd );
     CHECK( MusicDataChoice::Choice::direction == (*originalMdcIter)->getChoice() );
@@ -88,6 +190,26 @@ TEST( roundTripViolaDynamicWrongTime, Freezing )
     auto originalDynamics = originalDirection->getDirectionTypeSet().front()->getDynamicsSet().front();
     auto originalDynamicsValue = originalDynamics->getValue();
     CHECK( DynamicsEnum::pp == originalDynamicsValue.getValue() );
+    const auto& originalDirections = originalScoreData.parts.at( partIndex ).measures.at( measureIndex ).staves.at( 0 ).directions;
+    const auto originalDirectionsBegin = std::cbegin( originalDirections );
+    const auto originalDirectionsEnd = std::cend( originalDirections );
+
+    const auto findDirectionLambda = [&]( const DirectionData& inDirection )
+    {
+        if( inDirection.marks.size() == 1 )
+        {
+            const auto& mark = inDirection.marks.front();
+            if( mark.markType == MarkType::pp )
+            {
+                return true;
+            }
+        }
+
+        return false;
+    };
+
+    const auto directionIter = std::find_if( originalDirectionsBegin, originalDirectionsEnd, findDirectionLambda );
+    CHECK_DOUBLES_EQUAL( 30.0, directionIter->tickTimePosition, 0.001 );
 
     const auto& savedPart = savedScore->getPartwisePartSet().at( partIndex );
     const auto& savedMeasure = savedPart->getPartwiseMeasureSet().at( measureIndex );
@@ -123,7 +245,7 @@ T_END
 TEST( missingMusicXMLVersion, Freezing )
 {
     auto& mgr = DocumentManager::getInstance();
-    const auto filePath = mxtest::MxFileRepository::getFullPath( fileName );
+    const auto filePath = mxtest::MxFileRepository::getFullPath( freezingFile );
     const auto originalId = mgr.createFromFile( filePath );
     const auto originalScoreData = mgr.getData( originalId );
     const auto originalScore = mgr.getDocument( originalId )->getScorePartwise();
@@ -133,13 +255,16 @@ TEST( missingMusicXMLVersion, Freezing )
     mgr.destroyDocument( originalId );
     mgr.destroyDocument( savedId );
 
-    CHECK( originalScore->getAttributes()->hasVersion == savedScore->getAttributes()->hasVersion );
+    const bool originalScoreHasVersion = originalScore->getAttributes()->hasVersion;
+    const bool savedScoreHasVersion = savedScore->getAttributes()->hasVersion;
+    CHECK( originalScoreHasVersion );
+    CHECK( savedScoreHasVersion );
 }
 
 TEST( HasDefaultsHasAppearance, Freezing )
 {
     auto& mgr = DocumentManager::getInstance();
-    const auto filePath = mxtest::MxFileRepository::getFullPath( fileName );
+    const auto filePath = mxtest::MxFileRepository::getFullPath( freezingFile );
     const auto originalId = mgr.createFromFile( filePath );
     const auto originalScoreData = mgr.getData( originalId );
     const auto originalScore = mgr.getDocument( originalId )->getScorePartwise();
@@ -156,12 +281,33 @@ TEST( HasDefaultsHasAppearance, Freezing )
     const auto originalHasAppearance = originalScore->getScoreHeaderGroup()->getDefaults()->getHasAppearance();
     const auto savedHasAppearance = savedScore->getScoreHeaderGroup()->getDefaults()->getHasAppearance();
     CHECK( originalHasAppearance == savedHasAppearance );
+
+    const auto originalAppearance = originalScore->getScoreHeaderGroup()->getDefaults()->getAppearance();
+    const auto savedAppearance = savedScore->getScoreHeaderGroup()->getDefaults()->getAppearance();
+
+    for( size_t i = 0; i < originalAppearance->getLineWidthSet().size(); ++i )
+    {
+        CHECK_DOUBLES_EQUAL( originalAppearance->getLineWidthSet().at( i )->getValue().getValue(), savedAppearance->getLineWidthSet().at( i )->getValue().getValue(), 0.0001 );
+        CHECK( originalAppearance->getLineWidthSet().at( i )->getAttributes()->type.getValueString() == savedAppearance->getLineWidthSet().at( i )->getAttributes()->type.getValueString() );
+    }
+
+    for( size_t i = 0; i < originalAppearance->getNoteSizeSet().size(); ++i )
+    {
+        CHECK_DOUBLES_EQUAL( originalAppearance->getNoteSizeSet().at( i )->getValue().getValue(), savedAppearance->getNoteSizeSet().at( i )->getValue().getValue(), 0.0001 );
+        CHECK( originalAppearance->getNoteSizeSet().at( i )->getAttributes()->type == savedAppearance->getNoteSizeSet().at( i )->getAttributes()->type );
+    }
+
+    for( size_t i = 0; i < originalAppearance->getDistanceSet().size(); ++i )
+    {
+        CHECK_DOUBLES_EQUAL( originalAppearance->getDistanceSet().at( i )->getValue().getValue(), savedAppearance->getDistanceSet().at( i )->getValue().getValue(), 0.0001 );
+        CHECK( originalAppearance->getDistanceSet().at( i )->getAttributes()->type.getValueString() == savedAppearance->getDistanceSet().at( i )->getAttributes()->type.getValueString() );
+    }
 }
 
 TEST( appearanceLineWidths, Freezing )
 {
     auto& mgr = DocumentManager::getInstance();
-    const auto filePath = mxtest::MxFileRepository::getFullPath( fileName );
+    const auto filePath = mxtest::MxFileRepository::getFullPath( freezingFile );
     const auto originalId = mgr.createFromFile( filePath );
     const auto originalScoreData = mgr.getData( originalId );
     const auto originalScore = mgr.getDocument( originalId )->getScorePartwise();
@@ -194,7 +340,7 @@ TEST( appearanceLineWidths, Freezing )
 TEST( appearanceNoteSize, Freezing )
 {
     auto& mgr = DocumentManager::getInstance();
-    const auto filePath = mxtest::MxFileRepository::getFullPath( fileName );
+    const auto filePath = mxtest::MxFileRepository::getFullPath( freezingFile );
     const auto originalId = mgr.createFromFile( filePath );
     const auto originalScoreData = mgr.getData( originalId );
     const auto originalScore = mgr.getDocument( originalId )->getScorePartwise();
@@ -229,7 +375,7 @@ TEST( appearanceNoteSize, Freezing )
 TEST( appearancDistance, Freezing )
 {
     auto& mgr = DocumentManager::getInstance();
-    const auto filePath = mxtest::MxFileRepository::getFullPath( fileName );
+    const auto filePath = mxtest::MxFileRepository::getFullPath( freezingFile );
     const auto originalId = mgr.createFromFile( filePath );
     const auto originalScoreData = mgr.getData( originalId );
     const auto originalScore = mgr.getDocument( originalId )->getScorePartwise();

@@ -7,6 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2948959B1FC4011400A06219 /* AppearanceData.h in Headers */ = {isa = PBXBuildFile; fileRef = 294895991FC4011400A06219 /* AppearanceData.h */; };
+		2948959C1FC4011400A06219 /* AppearanceData.h in Headers */ = {isa = PBXBuildFile; fileRef = 294895991FC4011400A06219 /* AppearanceData.h */; };
+		2948959D1FC4011400A06219 /* AppearanceData.h in Headers */ = {isa = PBXBuildFile; fileRef = 294895991FC4011400A06219 /* AppearanceData.h */; };
+		2948959E1FC4011400A06219 /* AppearanceData.h in Headers */ = {isa = PBXBuildFile; fileRef = 294895991FC4011400A06219 /* AppearanceData.h */; };
+		2948959F1FC4011400A06219 /* AppearanceData.h in Headers */ = {isa = PBXBuildFile; fileRef = 294895991FC4011400A06219 /* AppearanceData.h */; };
+		294895A01FC4011400A06219 /* AppearanceData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2948959A1FC4011400A06219 /* AppearanceData.cpp */; };
+		294895A11FC4011400A06219 /* AppearanceData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2948959A1FC4011400A06219 /* AppearanceData.cpp */; };
+		294895A21FC4011400A06219 /* AppearanceData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2948959A1FC4011400A06219 /* AppearanceData.cpp */; };
+		294895A31FC4011400A06219 /* AppearanceData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2948959A1FC4011400A06219 /* AppearanceData.cpp */; };
+		294895A41FC4011400A06219 /* AppearanceData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2948959A1FC4011400A06219 /* AppearanceData.cpp */; };
 		2975944F1F044C7600DE2F30 /* ChordData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2975944D1F044C7600DE2F30 /* ChordData.cpp */; };
 		297594501F044C7600DE2F30 /* ChordData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2975944D1F044C7600DE2F30 /* ChordData.cpp */; };
 		297594511F044C7600DE2F30 /* ChordData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2975944D1F044C7600DE2F30 /* ChordData.cpp */; };
@@ -3353,6 +3363,8 @@
 
 /* Begin PBXFileReference section */
 		293FFED21DD25C74001477E8 /* libmx-macOS.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libmx-macOS.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
+		294895991FC4011400A06219 /* AppearanceData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppearanceData.h; sourceTree = "<group>"; };
+		2948959A1FC4011400A06219 /* AppearanceData.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AppearanceData.cpp; sourceTree = "<group>"; };
 		2975944D1F044C7600DE2F30 /* ChordData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ChordData.cpp; sourceTree = "<group>"; };
 		2975944E1F044C7600DE2F30 /* ChordData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChordData.h; sourceTree = "<group>"; };
 		297594591F04783100DE2F30 /* Round.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Round.h; sourceTree = "<group>"; };
@@ -4891,6 +4903,8 @@
 				29A8DD851EF0475D00AD2478 /* WedgeData.h */,
 				29A8DD861EF0475D00AD2478 /* WordsData.cpp */,
 				29A8DD871EF0475D00AD2478 /* WordsData.h */,
+				294895991FC4011400A06219 /* AppearanceData.h */,
+				2948959A1FC4011400A06219 /* AppearanceData.cpp */,
 			);
 			path = api;
 			sourceTree = "<group>";
@@ -6299,6 +6313,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2948959C1FC4011400A06219 /* AppearanceData.h in Headers */,
 				29A8006A1EF0876500AD2478 /* SoundID.h in Headers */,
 				29EAD74E1F0EF8CE00BDE782 /* MiscData.h in Headers */,
 				297594551F044C7600DE2F30 /* ChordData.h in Headers */,
@@ -6309,6 +6324,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2948959B1FC4011400A06219 /* AppearanceData.h in Headers */,
 				29A800691EF0876500AD2478 /* SoundID.h in Headers */,
 				29EAD74D1F0EF8CE00BDE782 /* MiscData.h in Headers */,
 				297594541F044C7600DE2F30 /* ChordData.h in Headers */,
@@ -6319,6 +6335,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2948959F1FC4011400A06219 /* AppearanceData.h in Headers */,
 				297594581F044C7600DE2F30 /* ChordData.h in Headers */,
 				29A8FDC61EF0497500AD2478 /* MxmacOS.h in Headers */,
 				29EAD7511F0EF8CE00BDE782 /* MiscData.h in Headers */,
@@ -6330,6 +6347,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2948959E1FC4011400A06219 /* AppearanceData.h in Headers */,
 				297594571F044C7600DE2F30 /* ChordData.h in Headers */,
 				29B962851E79FF410072071D /* MxiOS.h in Headers */,
 				29EAD7501F0EF8CE00BDE782 /* MiscData.h in Headers */,
@@ -6341,6 +6359,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2948959D1FC4011400A06219 /* AppearanceData.h in Headers */,
 				29A8006B1EF0876500AD2478 /* SoundID.h in Headers */,
 				29EAD74F1F0EF8CE00BDE782 /* MiscData.h in Headers */,
 				297594561F044C7600DE2F30 /* ChordData.h in Headers */,
@@ -6853,6 +6872,7 @@
 				29A8EBDA1EF0476500AD2478 /* GroupingAttributes.cpp in Sources */,
 				29A8EF181EF0476700AD2478 /* MeasureStyle.cpp in Sources */,
 				29A8E4FA1EF0476300AD2478 /* ArticulationsChoice.cpp in Sources */,
+				294895A11FC4011400A06219 /* AppearanceData.cpp in Sources */,
 				29A8F94F1EF0476C00AD2478 /* TraditionalKey.cpp in Sources */,
 				29A8E2ED1EF0476300AD2478 /* DocumentManager.cpp in Sources */,
 				29A8F6891EF0476A00AD2478 /* SoundingPitch.cpp in Sources */,
@@ -7525,6 +7545,7 @@
 				29A8EBD91EF0476500AD2478 /* GroupingAttributes.cpp in Sources */,
 				29A8EF171EF0476700AD2478 /* MeasureStyle.cpp in Sources */,
 				29A8E4F91EF0476300AD2478 /* ArticulationsChoice.cpp in Sources */,
+				294895A01FC4011400A06219 /* AppearanceData.cpp in Sources */,
 				29A8F94E1EF0476C00AD2478 /* TraditionalKey.cpp in Sources */,
 				29A8E2EC1EF0476300AD2478 /* DocumentManager.cpp in Sources */,
 				29A8F6881EF0476A00AD2478 /* SoundingPitch.cpp in Sources */,
@@ -8197,6 +8218,7 @@
 				29A8FF1D1EF0499200AD2478 /* MusicDataChoice.cpp in Sources */,
 				29A8FF1E1EF0499200AD2478 /* MusicDataGroup.cpp in Sources */,
 				29A8FF1F1EF0499200AD2478 /* MusicFont.cpp in Sources */,
+				294895A41FC4011400A06219 /* AppearanceData.cpp in Sources */,
 				29A8FF201EF0499200AD2478 /* Mute.cpp in Sources */,
 				29A8FF211EF0499200AD2478 /* Natural.cpp in Sources */,
 				29A8FF221EF0499200AD2478 /* NonArpeggiate.cpp in Sources */,
@@ -8869,6 +8891,7 @@
 				29A8EBDC1EF0476500AD2478 /* GroupingAttributes.cpp in Sources */,
 				29A8EF1A1EF0476700AD2478 /* MeasureStyle.cpp in Sources */,
 				29A8E4FC1EF0476300AD2478 /* ArticulationsChoice.cpp in Sources */,
+				294895A31FC4011400A06219 /* AppearanceData.cpp in Sources */,
 				29A8F9511EF0476C00AD2478 /* TraditionalKey.cpp in Sources */,
 				29A8E2EF1EF0476300AD2478 /* DocumentManager.cpp in Sources */,
 				29A8F68B1EF0476A00AD2478 /* SoundingPitch.cpp in Sources */,
@@ -9541,6 +9564,7 @@
 				29A8EBDB1EF0476500AD2478 /* GroupingAttributes.cpp in Sources */,
 				29A8EF191EF0476700AD2478 /* MeasureStyle.cpp in Sources */,
 				29A8E4FB1EF0476300AD2478 /* ArticulationsChoice.cpp in Sources */,
+				294895A21FC4011400A06219 /* AppearanceData.cpp in Sources */,
 				29A8F9501EF0476C00AD2478 /* TraditionalKey.cpp in Sources */,
 				29A8E2EE1EF0476300AD2478 /* DocumentManager.cpp in Sources */,
 				29A8F68A1EF0476A00AD2478 /* SoundingPitch.cpp in Sources */,

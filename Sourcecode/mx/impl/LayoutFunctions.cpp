@@ -4,6 +4,11 @@
 
 #include "mx/impl/LayoutFunctions.h"
 #include "mx/api/ScoreData.h"
+#include "mx/core/elements/Appearance.h"
+#include "mx/core/elements/LineWidth.h"
+#include "mx/core/elements/NoteSize.h"
+#include "mx/core/elements/Distance.h"
+#include "mx/core/elements/OtherAppearance.h"
 #include "mx/core/elements/BottomMargin.h"
 #include "mx/core/elements/Defaults.h"
 #include "mx/core/elements/LayoutGroup.h"
@@ -33,6 +38,7 @@ namespace mx
             addScaling( inLayout, outScoreHeaderGroup );
             addPageMargins( inLayout, outScoreHeaderGroup );
             addSystemMargins( inLayout, outScoreHeaderGroup );
+            addAppearance( inLayout, outScoreHeaderGroup );
         }
         
         
@@ -176,6 +182,53 @@ namespace mx
                 systemLayout.getTopSystemDistance()->setValue( core::TenthsValue{ inLayout.topSystemDistance } );
             }
         }
+
+
+        void addAppearance( const api::LayoutData& inLayoutData, core::ScoreHeaderGroup& outScoreHeaderGroup )
+        {
+            for( const auto& appearanceData : inLayoutData.appearance )
+            {
+                if( appearanceData.appearanceType == api::AppearanceType::LineWidth )
+                {
+                    const auto lw = core::makeLineWidth();
+                    lw->getAttributes()->type = core::LineWidthType{ appearanceData.appearanceSubType };
+                    lw->setValue( core::TenthsValue{ appearanceData.value } );
+                    outScoreHeaderGroup.setHasDefaults( true );
+                    outScoreHeaderGroup.getDefaults()->setHasAppearance( true );
+                    outScoreHeaderGroup.getDefaults()->getAppearance()->addLineWidth( lw );
+                }
+
+                if( appearanceData.appearanceType == api::AppearanceType::NoteSize )
+                {
+                    const auto ns = core::makeNoteSize();
+                    ns->getAttributes()->type = core::parseNoteSizeType( appearanceData.appearanceSubType );
+                    ns->setValue( core::NonNegativeDecimal{ appearanceData.value } );
+                    outScoreHeaderGroup.setHasDefaults( true );
+                    outScoreHeaderGroup.getDefaults()->setHasAppearance( true );
+                    outScoreHeaderGroup.getDefaults()->getAppearance()->addNoteSize( ns );
+                }
+
+                if( appearanceData.appearanceType == api::AppearanceType::Distance )
+                {
+                    const auto di = core::makeDistance();
+                    di->getAttributes()->type = core::parseDistanceType( appearanceData.appearanceSubType );
+                    di->setValue( core::TenthsValue{ appearanceData.value } );
+                    outScoreHeaderGroup.setHasDefaults( true );
+                    outScoreHeaderGroup.getDefaults()->setHasAppearance( true );
+                    outScoreHeaderGroup.getDefaults()->getAppearance()->addDistance( di );
+                }
+
+                if( appearanceData.appearanceType == api::AppearanceType::OtherAppearance )
+                {
+                    const auto oa = core::makeOtherAppearance();
+                    oa->getAttributes()->type = appearanceData.appearanceSubType;
+                    oa->setValue( core::XsString{ std::to_string( appearanceData.value ) } );
+                    outScoreHeaderGroup.setHasDefaults( true );
+                    outScoreHeaderGroup.getDefaults()->setHasAppearance( true );
+                    outScoreHeaderGroup.getDefaults()->getAppearance()->addOtherAppearance( oa );
+                }
+            }
+        }
         
         
         api::LayoutData createLayout( const core::ScoreHeaderGroup& inScoreHeaderGroup )
@@ -185,6 +238,7 @@ namespace mx
             addPageMargins( inScoreHeaderGroup, layout );
             addSystemMargins( inScoreHeaderGroup, layout );
             addStaffLayout( inScoreHeaderGroup, layout );
+            addAppearance( inScoreHeaderGroup, layout );
             return layout;
         }
         
@@ -289,6 +343,63 @@ namespace mx
             }
             
         }
-        
+
+
+        void addAppearance( const core::ScoreHeaderGroup& inScoreHeaderGroup, api::LayoutData& outLayoutData )
+        {
+            outLayoutData.appearance.clear();
+
+            if( !inScoreHeaderGroup.getHasDefaults() )
+            {
+                return;
+            }
+
+            const auto& defaults = *inScoreHeaderGroup.getDefaults();
+
+            if( !defaults.getHasAppearance() )
+            {
+                return;
+            }
+
+            const auto& appearance = *defaults.getAppearance();
+
+            for( const auto& lineWidth : appearance.getLineWidthSet() )
+            {
+                api::AppearanceData data{};
+                data.appearanceType = api::AppearanceType::LineWidth;
+                data.appearanceSubType = core::toString( lineWidth->getAttributes()->type );
+                data.value = lineWidth->getValue().getValue();
+                outLayoutData.appearance.emplace_back( std::move( data ) );
+            }
+
+            for( const auto& noteSize : appearance.getNoteSizeSet() )
+            {
+                api::AppearanceData data{};
+                data.appearanceType = api::AppearanceType::NoteSize;
+                data.appearanceSubType = core::toString( noteSize->getAttributes()->type );
+                data.value = noteSize->getValue().getValue();
+                outLayoutData.appearance.emplace_back( std::move( data ) );
+            }
+
+            for( const auto& distance : appearance.getDistanceSet() )
+            {
+                api::AppearanceData data{};
+                data.appearanceType = api::AppearanceType::Distance;
+                data.appearanceSubType = core::toString( distance->getAttributes()->type );
+                data.value = distance->getValue().getValue();
+                outLayoutData.appearance.emplace_back( std::move( data ) );
+            }
+
+            for( const auto& other : appearance.getOtherAppearanceSet() )
+            {
+                api::AppearanceData data{};
+                data.appearanceType = api::AppearanceType::Distance;
+                data.appearanceSubType = core::toString( other->getAttributes()->type );
+
+                // TODO - fix
+                data.value = 0.0;//other->getValue().getValue();
+                outLayoutData.appearance.emplace_back( std::move( data ) );
+            }
+        }
     }
 }

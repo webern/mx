@@ -19,6 +19,18 @@
 
 class TestResult;
 
+struct TestIdentifier
+{
+    TestIdentifier(std::string inName, std::string inFilename)
+    : name{ inName }
+    , filename{ inFilename }
+    {}
+
+    const std::string name;
+    const std::string filename;
+};
+
+
 class Test
 {
 public:
@@ -32,7 +44,12 @@ public:
     const long& getLineNumber() const;
     const std::string& getName() const;
     void run (TestResult& result);
-    virtual void runTest (TestResult& result) = 0;
+    virtual void runTest ( TestResult& result ) = 0;
+
+    bool getDoRunTest() const;
+
+private:
+    static const std::vector<TestIdentifier> runOnlyTheseTests;
 
 private:
     std::string     myFileName;
@@ -187,7 +204,7 @@ private:
 {                                                                     \
     if (!(bOoLeAn))                                                   \
     {                                                                 \
-        rEsUlT_.addFailure (Failure (mEsSaGe, __FILE__, __LINE__));  \
+        rEsUlT_.addFailure (Failure (mEsSaGe, __FILE__, __LINE__));   \
         return;                                                       \
     }                                                                 \
 }                                                                     \
