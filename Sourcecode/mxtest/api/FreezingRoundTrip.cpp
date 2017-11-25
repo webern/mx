@@ -9,6 +9,7 @@
 #include "mxtest/file/MxFileRepository.h"
 #include "mx/api/DocumentManager.h"
 #include "mx/core/Document.h"
+#include "mx/core/DocumentHeader.h"
 #include "mx/core/elements/MusicDataChoice.h"
 #include "mxtest/api/RoundTrip.h"
 
@@ -24,6 +25,8 @@ namespace
 {
     constexpr const char* const freezingFile = "freezing.xml";
     constexpr const char* const chordDirFile = "ChordDirectionPlacement.xml";
+    constexpr const char* const hasVerFile = "HasMusicXmlVersionTrue.xml";
+    constexpr const char* const noVerFile = "HasMusicXmlVersionFalse.xml";
 }
 
 namespace
@@ -241,6 +244,27 @@ TEST( roundTripViolaDynamicWrongTime, Freezing )
 
 }
 T_END
+
+
+TEST( hasVersion, Freezing )
+{
+    const auto testData = getTestData( hasVerFile );
+    const bool hasVersion = testData.savedScore->getAttributes()->hasVersion;
+    CHECK( hasVersion );
+    const auto version = testData.savedScore->getAttributes()->version.getValue();
+    CHECK_EQUAL( "3.0", version );
+}
+T_END
+
+
+TEST( hasNoVersion, Freezing )
+{
+    const auto testData = getTestData( noVerFile );
+    const bool hasVersion = testData.savedScore->getAttributes()->hasVersion;
+    CHECK( !hasVersion );
+}
+T_END
+
 
 TEST( missingMusicXMLVersion, Freezing )
 {

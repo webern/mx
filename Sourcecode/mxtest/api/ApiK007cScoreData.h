@@ -75,6 +75,7 @@ namespace mxtest
     {
         using namespace mx::api;
         ScoreData score;
+        score.musicXmlVersion = mx::api::MusicXmlVersion::ThreePointZero;
         score.parts.emplace_back( PartData{} );
         score.ticksPerQuarter = 2;
         auto& part = score.parts.front();

@@ -51,6 +51,30 @@ namespace mx
             std::lock_guard<std::mutex> lock{ myMutex };
             myOutScorePartwise = core::makeScorePartwise();
 
+            switch ( this->myScoreData.musicXmlVersion )
+            {
+                case api::MusicXmlVersion::unspecified:
+                {
+                    myOutScorePartwise->getAttributes()->hasVersion = false;
+                    myOutScorePartwise->getAttributes()->version = core::XsToken{ "" };
+                }
+                    break;
+
+                case api::MusicXmlVersion::ThreePointZero:
+                {
+                    myOutScorePartwise->getAttributes()->hasVersion = true;
+                    myOutScorePartwise->getAttributes()->version = core::XsToken{ "3.0" };
+                }
+                    break;
+
+                default:
+                {
+                    myOutScorePartwise->getAttributes()->hasVersion = false;
+                    myOutScorePartwise->getAttributes()->version = core::XsToken{ "" };
+                }
+                    break;
+            }
+
             auto header = myOutScorePartwise->getScoreHeaderGroup();
             
             header->setHasWork( !myScoreData.workTitle.empty() || !myScoreData.workNumber.empty() );

@@ -13,7 +13,8 @@ namespace mx
     {
 
         ScoreData::ScoreData()
-        : musicXmlType{ "partwise" }
+        : musicXmlVersion{ api::MusicXmlVersion::unspecified }
+        , musicXmlType{ "partwise" }
         , workTitle{}
         , workNumber{}
         , movementTitle{}

@@ -282,6 +282,8 @@ namespace mxtest
         myNameSubdirectoryMap.emplace( "lyre_timewise.xml", "mjbsuite" );
         myNameSubdirectoryMap.emplace( "chords_simple.xml", "mjbsuite" );
         myNameSubdirectoryMap.emplace( "ChordDirectionPlacement.xml", "mjbsuite" );
+        myNameSubdirectoryMap.emplace( "HasMusicXmlVersionTrue.xml", "mjbsuite" );
+        myNameSubdirectoryMap.emplace( "HasMusicXmlVersionFalse.xml", "mjbsuite" );
         
         // museScore
         myNameSubdirectoryMap.emplace( "A_Walk_through_the_Park.xml", "musuite" );

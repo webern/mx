@@ -51,6 +51,7 @@ const std::vector<TestIdentifier> Test::runOnlyTheseTests =
 //    { "roundTripOutput", "FreezingRoundTrip.cpp" },
 //    { "roundTripChordDirFile", "FreezingRoundTrip.cpp" },
 //    { "chordDirectionPlacement", "FreezingRoundTrip.cpp" },
+//    { "hasVersion", "FreezingRoundTrip.cpp" },
 };
 
 bool Test::getDoRunTest() const

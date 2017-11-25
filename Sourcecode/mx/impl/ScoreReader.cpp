@@ -168,6 +168,14 @@ namespace mx
             
             myOutScoreData.ticksPerQuarter = findMaxDivisionsPerQuarter();
 
+            if( myScorePartwise.getAttributes()->hasVersion )
+            {
+                if( myScorePartwise.getAttributes()->version.getValue() == "3.0" )
+                {
+                    myOutScoreData.musicXmlVersion = api::MusicXmlVersion::ThreePointZero;
+                }
+            }
+
             if( myHeaderGroup.getHasWork() && myHeaderGroup.getWork()->getHasWorkTitle() )
             {
                 myOutScoreData.workTitle = myHeaderGroup.getWork()->getWorkTitle()->getValue().getValue();
