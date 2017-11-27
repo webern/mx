@@ -27,6 +27,7 @@ namespace
     constexpr const char* const chordDirFile = "ChordDirectionPlacement.xml";
     constexpr const char* const hasVerFile = "HasMusicXmlVersionTrue.xml";
     constexpr const char* const noVerFile = "HasMusicXmlVersionFalse.xml";
+    constexpr const char* const tupletType = "PreserveTimeModificationNormalType.xml";
 }
 
 namespace
@@ -212,7 +213,8 @@ TEST( roundTripViolaDynamicWrongTime, Freezing )
     };
 
     const auto directionIter = std::find_if( originalDirectionsBegin, originalDirectionsEnd, findDirectionLambda );
-    CHECK_DOUBLES_EQUAL( 30.0, directionIter->tickTimePosition, 0.001 );
+    const double tickTimeScaleFactor = 2.0;
+    CHECK_DOUBLES_EQUAL( 30.0 * tickTimeScaleFactor, directionIter->tickTimePosition, 0.001 );
 
     const auto& savedPart = savedScore->getPartwisePartSet().at( partIndex );
     const auto& savedMeasure = savedPart->getPartwiseMeasureSet().at( measureIndex );
@@ -223,14 +225,14 @@ TEST( roundTripViolaDynamicWrongTime, Freezing )
     CHECK( savedMdcIter != savedMdcEnd );
     CHECK( MusicDataChoice::Choice::note == (*savedMdcIter)->getChoice() );
     auto savedCurrentNote = (*savedMdcIter)->getNote();
-    CHECK_DOUBLES_EQUAL( 30.0, savedCurrentNote->getNoteChoice()->getNormalNoteGroup()->getDuration()->getValue().getValue(), 0.0001 );
+    CHECK_DOUBLES_EQUAL( 30.0 * tickTimeScaleFactor, savedCurrentNote->getNoteChoice()->getNormalNoteGroup()->getDuration()->getValue().getValue(), 0.0001 );
     CHECK( !savedCurrentNote->getNoteChoice()->getNormalNoteGroup()->getFullNoteGroup()->getHasChord() );
 
     ++savedMdcIter;
     CHECK( savedMdcIter != savedMdcEnd );
     CHECK( MusicDataChoice::Choice::note == (*savedMdcIter)->getChoice() );
     savedCurrentNote = (*savedMdcIter)->getNote();
-    CHECK_DOUBLES_EQUAL( 30.0, savedCurrentNote->getNoteChoice()->getNormalNoteGroup()->getDuration()->getValue().getValue(), 0.0001 );
+    CHECK_DOUBLES_EQUAL( 30.0 * tickTimeScaleFactor, savedCurrentNote->getNoteChoice()->getNormalNoteGroup()->getDuration()->getValue().getValue(), 0.0001 );
     CHECK( savedCurrentNote->getNoteChoice()->getNormalNoteGroup()->getFullNoteGroup()->getHasChord() );
 
     ++savedMdcIter;
@@ -426,6 +428,80 @@ TEST( appearancDistance, Freezing )
 
         CHECK( originalElement->getAttributes()->hasType == savedElement->getAttributes()->hasType );
         CHECK( originalElement->getAttributes()->type.getValueString() == savedElement->getAttributes()->type.getValueString() );
+    }
+}
+
+TEST( checkMissingNormalTypeSimple, Freezing )
+{
+    const auto testData = getTestData( tupletType );
+    const auto musicData = testData.getMusicData( 0, 0 );
+    CHECK( musicData.second.at( 1 )->getNote()->getTimeModification()->getHasNormalTypeNormalDotGroup() );
+    CHECK( mx::core::NoteTypeValue::eighth == musicData.second.at( 1 )->getNote()->getTimeModification()->getNormalTypeNormalDotGroup()->getNormalType()->getValue() );
+}
+
+TEST( checkMissingNormalType, Freezing )
+{
+    const auto testData = getTestData( freezingFile );
+    const auto partCount = testData.originalScore->getPartwisePartSet().size();
+
+    for( size_t partIndex = 0; partIndex < partCount; ++partIndex )
+    {
+        const auto measureCount = testData.originalScore->getPartwisePartSet().at( partIndex )->getPartwiseMeasureSet().size();
+
+        for( size_t measureIndex = 0; measureIndex < measureCount; ++measureIndex )
+        {
+            const auto music = testData.getMusicData( static_cast<int>( partIndex ), static_cast<int>( measureIndex ) );
+
+            const auto filterLambda = [&]( const mx::core::MusicDataChoicePtr& inMdc )
+            {
+                if( inMdc->getChoice() != mx::core::MusicDataChoice::Choice::note )
+                {
+                    return false;
+                }
+
+                const auto& note = inMdc->getNote();
+
+                if( !note->getHasTimeModification() )
+                {
+                    return false;
+                }
+
+                const auto& tm = note->getTimeModification();
+                return true;
+            };
+
+            MusicDataChoiceSet originalNotes;
+            MusicDataChoiceSet savedNotes;
+            std::copy_if( std::cbegin( music.first ), std::cend( music.first ), std::back_inserter( originalNotes ), filterLambda );
+            std::copy_if( std::cbegin( music.second ), std::cend( music.second ), std::back_inserter( savedNotes ), filterLambda );
+            {
+                std::stringstream message1;
+                message1 << "( originalNotes.size() == savedNotes.size() ), ";
+                message1 << "( " << originalNotes.size() << " == " << savedNotes.size() << " ), ";
+                message1 << " partIndex = " << partIndex << ", measureIndex = " << measureIndex;
+                CHECK_WITH_MESSAGE( originalNotes.size() == savedNotes.size(), message1.str() );
+            }
+            const size_t numNotes = originalNotes.size();
+            for( int i = 0; i < numNotes; ++i )
+            {
+                CHECK( savedNotes.at( i )->getNote()->getTimeModification()->getHasNormalTypeNormalDotGroup() );
+                
+                if( originalNotes.at( i )->getNote()->getTimeModification()->getHasNormalTypeNormalDotGroup() )
+                {
+                    const auto originalType = originalNotes.at( i )->getNote()->getTimeModification()->getNormalTypeNormalDotGroup()->getNormalType()->getValue();
+                    const auto savedType = savedNotes.at( i )->getNote()->getTimeModification()->getNormalTypeNormalDotGroup()->getNormalType()->getValue();
+                    
+                    if( originalType != savedType )
+                    {
+                        std::stringstream message2;
+                        message2 << "( originalType == savedType ), ";
+                        message2 << "( " << mx::core::toString( originalType ) << " == " << mx::core::toString( savedType ) << " ), ";
+                        message2 << " partIndex = " << partIndex << ", measureIndex = " << measureIndex;
+                        CHECK_WITH_MESSAGE( originalType == savedType, message2.str() );
+                    }
+                }
+            }
+        }
     }
 }
 

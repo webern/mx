@@ -55,12 +55,16 @@ namespace mx
             const api::NoteData& inNoteData,
             const MeasureCursor& inCursor,
             const ScoreWriter& inScoreWriter,
-            bool isPreviousNoteAChordMember )
+            bool isPreviousNoteAChordMember,
+            const std::vector<mx::api::NoteData>& inSiblingNotes,
+            int inNoteIndex )
         : myNoteData{ inNoteData }
         , myCursor{ inCursor }
         , myScoreWriter{ inScoreWriter }
         , myConverter{}
         , myIsPreviousNoteAChordMember{ isPreviousNoteAChordMember }
+        , mySiblingNotes{ inSiblingNotes }
+        , myNoteIndex{ inNoteIndex }
         , myOutNote{ nullptr }
         , myOutNoteChoice( nullptr )
         , myOutFullNoteGroup( nullptr )
@@ -117,16 +121,100 @@ namespace mx
                 timeMod->getActualNotes()->setValue( core::NonNegativeInteger{ myNoteData.durationData.timeModificationActualNotes } );
                 timeMod->getNormalNotes()->setValue( core::NonNegativeInteger{ myNoteData.durationData.timeModificationNormalNotes } );
 
-                if (myNoteData.durationData.timeModificationNormalType != api::DurationName::unspecified)
-                {
-                    timeMod->setHasNormalTypeNormalDotGroup(true);
-                    timeMod->getNormalTypeNormalDotGroup()->getNormalType()->setValue( myConverter.convert( myNoteData.durationData.timeModificationNormalType ) );
+                // find the tuplet start note and TupletStart object
+                bool isTupletStartFound = false;
+                int tupletStartIndex = myNoteIndex;
+                mx::api::NoteData tupletStartNote{};
+                mx::api::TupletStart tupletStart{};
 
-                    for( int i = 0; i < myNoteData.durationData.timeModificationNormalTypeDots; ++i )
+                for( ; tupletStartIndex >= 0 && mySiblingNotes.size() > 0; --tupletStartIndex )
+                {
+                    const auto& siblingNote = mySiblingNotes.at( static_cast<size_t>( tupletStartIndex ) );
+                    if( siblingNote.noteAttachmentData.tupletStarts.size() == 1 )
                     {
-                        timeMod->getNormalTypeNormalDotGroup()->addNormalDot( core::makeNormalDot() );
+                        isTupletStartFound = true;
+                        tupletStartNote = siblingNote;
+                        tupletStart = siblingNote.noteAttachmentData.tupletStarts.at( 0 );
+                        break;
                     }
                 }
+
+                if( !isTupletStartFound )
+                {
+                    MX_DEBUG_THROW( "tupletStart was not found" );
+                }
+
+                // find the tuplet stop note and TupletStop object
+                bool isTupletStopFound = false;
+                int tupletStopIndex = tupletStartIndex;
+                mx::api::NoteData tupletStopNote{};
+                mx::api::TupletStop tupletStop{};
+
+                if( isTupletStartFound )
+                {
+                    for( ; tupletStopIndex < static_cast<int>( mySiblingNotes.size() ); ++tupletStopIndex )
+                    {
+                        const auto& siblingNote = mySiblingNotes.at( static_cast<size_t>( tupletStopIndex ) );
+                        if( siblingNote.noteAttachmentData.tupletStops.size() == 1 )
+                        {
+                            isTupletStopFound = true;
+                            tupletStopNote = siblingNote;
+                            tupletStop = siblingNote.noteAttachmentData.tupletStops.at( 0 );
+                            break;
+                        }
+                    }
+                }
+
+                if( !isTupletStopFound )
+                {
+                    MX_DEBUG_THROW( "tupletStop was not found" );
+                }
+
+                // calculate the distance between the two
+                if( isTupletStartFound && isTupletStopFound )
+                {
+                    const auto tickTimeDistance = ( tupletStopNote.tickTimePosition + tupletStopNote.durationData.durationTimeTicks ) - tupletStartNote.tickTimePosition;
+
+                    if( tickTimeDistance > 0 && tupletStart.normalNumber != 0 && tupletStart.actualNumber != 0 )
+                    {
+                        // calculate the tuplet normal type and dots based on the distance between start and stop and the ratio
+                        const long double normalLength = static_cast<long double>( tickTimeDistance ) / static_cast<long double>( tupletStart.normalNumber );
+
+                        mx::api::DurationName normalName = mx::api::DurationName::unspecified;
+                        int normalDots = 0;
+                        const bool isNormalNameAndDotsFound = this->findNormalNameAndDots( normalName, normalDots, normalLength );
+                        if( isNormalNameAndDotsFound )
+                        {
+                            timeMod->setHasNormalTypeNormalDotGroup(true);
+                            timeMod->getNormalTypeNormalDotGroup()->getNormalType()->setValue( myConverter.convert( normalName ) );
+
+                            for( int i = 0; i < normalDots; ++i )
+                            {
+                                timeMod->getNormalTypeNormalDotGroup()->addNormalDot( mx::core::makeNormalDot() );
+                            }
+                        }
+                        else
+                        {
+                           MX_DEBUG_THROW( "this->findNormalNameAndDots could not find what it was looking for. This probably means that the file has a badly specified tuplet." );
+                        }
+                    }
+                    else
+                    {
+                        MX_DEBUG_THROW( "one of these things was not true ( tickTimeDistance > 0 && tupletStart.normalNumber != 0 && tupletStart.actualNumber != 0 )" );
+                    }
+                }
+                else
+                {
+                    MX_DEBUG_THROW( "one of these things was not true ( isTupletStartFound && isTupletStopFound )" );
+                }
+
+                // TODO - decide what happens if the user entered specific tuplet type in the
+                // duration data, possibly remove those fields from duration data.
+            }
+            else
+            {
+//                const auto insanityMessage = "this insanity returned false ( ( myNoteData.durationData.timeModificationNormalNotes > 0 && myNoteData.durationData.timeModificationActualNotes > 0 && (    myNoteData.durationData.timeModificationNormalNotes > 1 || myNoteData.durationData.timeModificationActualNotes > 1 ) ))";
+//                std::cout << insanityMessage << std::endl;
             }
 
             return myOutNote;
@@ -324,6 +412,90 @@ namespace mx
                     miscField.addValue( core::XsToken{ s } );
                 }
             }
+        }
+
+        bool
+        NoteWriter::findNormalNameAndDots( mx::api::DurationName& ioName, int& ioDots, long double inTickLength ) const
+        {
+            const auto equals = [&]( long double a, long double b )
+            {
+                return std::abs( a - b ) < 0.0001;
+            };
+
+            const auto isMatch = [&]( long double durQuarters, int numDots, mx::api::DurationName name )
+            {
+                if( equals( mx::api::applyDots( durQuarters * static_cast<long double>( myCursor.ticksPerQuarter ), numDots ), inTickLength ) )
+                {
+                    ioName = name;
+                    ioDots = numDots;
+                    return true;
+                }
+
+                return false;
+            };
+
+            for( int dots = 0; dots < 4; ++dots )
+            {
+
+                if( isMatch( mx::api::DUR_QUARTERS_VALUE_QUARTER, dots, mx::api::DurationName::quarter ) )
+                {
+                    return true;
+                }
+                else if( isMatch( mx::api::DUR_QUARTERS_VALUE_EIGHTH, dots, mx::api::DurationName::eighth ) )
+                {
+                    return true;
+                }
+                else if( isMatch( mx::api::DUR_QUARTERS_VALUE_16TH, dots, mx::api::DurationName::dur16th ) )
+                {
+                    return true;
+                }
+                else if( isMatch( mx::api::DUR_QUARTERS_VALUE_MAXIMA, dots, mx::api::DurationName::maxima ) )
+                {
+                    return true;
+                }
+                else if( isMatch( mx::api::DUR_QUARTERS_VALUE_LONGA, dots, mx::api::DurationName::longa ) )
+                {
+                    return true;
+                }
+                else if( isMatch( mx::api::DUR_QUARTERS_VALUE_BREVE, dots, mx::api::DurationName::breve ) )
+                {
+                    return true;
+                }
+                else if( isMatch( mx::api::DUR_QUARTERS_VALUE_WHOLE, dots, mx::api::DurationName::whole ) )
+                {
+                    return true;
+                }
+                else if( isMatch( mx::api::DUR_QUARTERS_VALUE_HALF, dots, mx::api::DurationName::half ) )
+                {
+                    return true;
+                }
+                else if( isMatch( mx::api::DUR_QUARTERS_VALUE_32ND, dots, mx::api::DurationName::dur32nd ) )
+                {
+                    return true;
+                }
+                else if( isMatch( mx::api::DUR_QUARTERS_VALUE_64TH, dots, mx::api::DurationName::dur64th ) )
+                {
+                    return true;
+                }
+                else if( isMatch( mx::api::DUR_QUARTERS_VALUE_128TH, dots, mx::api::DurationName::dur128th ) )
+                {
+                    return true;
+                }
+                else if( isMatch( mx::api::DUR_QUARTERS_VALUE_256TH, dots, mx::api::DurationName::dur256th ) )
+                {
+                    return true;
+                }
+                else if( isMatch( mx::api::DUR_QUARTERS_VALUE_512TH, dots, mx::api::DurationName::dur512th ) )
+                {
+                    return true;
+                }
+                else if( isMatch( mx::api::DUR_QUARTERS_VALUE_1024TH, dots, mx::api::DurationName::dur1024th ) )
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

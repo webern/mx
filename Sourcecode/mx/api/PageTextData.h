@@ -6,6 +6,7 @@
 
 #include "mx/api/ApiCommon.h"
 #include "mx/api/PositionData.h"
+#include "mx/api/FontData.h"
 
 #include <string>
 #include <vector>
@@ -23,6 +24,7 @@ namespace mx
             std::string text;
             int pageNumber;
             PositionData positionData;
+            FontData fontData;
             std::string description; // e.g. 'composer', 'page number', 'title', etc., this is metadata which does not appear on the printed page
         };
         
@@ -30,6 +32,7 @@ namespace mx
         MXAPI_EQUALS_MEMBER( text )
         MXAPI_EQUALS_MEMBER( pageNumber )
         MXAPI_EQUALS_MEMBER( positionData )
+        MXAPI_EQUALS_MEMBER( fontData )
         MXAPI_EQUALS_MEMBER( description )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( PageTextData );

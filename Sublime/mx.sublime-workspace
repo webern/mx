@@ -546,12 +546,29 @@
 	],
 	"file_history":
 	[
+		"/Users/mjb/MxRepo/Resources/mjbsuite/freezing.xml",
+		"/Users/mjb/MxRepo/Sourcecode/mx/impl/PartReader.h",
+		"/Users/mjb/MxRepo/Sourcecode/mx/impl/PartReader.cpp",
 		"/Users/mjb/MxRepo/Documents/musicxml.xsd",
+		"/Users/mjb/MxRepo/Resources/mjbsuite/PreserveTimeModificationNormalType.xml",
+		"/Users/mjb/MxRepo/Sourcecode/mx/core/elements/NormalType.h",
+		"/Users/mjb/MxRepo/Sourcecode/mx/core/elements/NormalTypeNormalDotGroup.h",
+		"/Users/mjb/MxRepo/Sourcecode/mx/core/elements/Note.h",
+		"/Users/mjb/Desktop/blerp.xml",
+		"/Users/mjb/MxRepo/Resources/mjbsuite/HasMusicXmlVersionTrue.xml",
+		"/Users/mjb/MxRepo/Resources/lysuite/ly43e_Multistaff_ClefDynamics.xml",
+		"/Users/mjb/MxRepo/Resources/ksuite/k014a_Fermatas.xml",
+		"/Users/mjb/MxRepo/Sourcecode/mx/core/elements/CreditWords.h",
+		"/Users/mjb/MxRepo/Sourcecode/mx/core/elements/CreditWordsAttributes.h",
+		"/Users/mjb/MxRepo/Sourcecode/mx/impl/MxVersionDefines.h",
+		"/Users/mjb/MxRepo/DevScripts/mxdeploy-v01.rb",
+		"/Users/mjb/MxRepo/Sourcecode/mx/api/ScoreData.h",
+		"/Users/mjb/MxRepo/Sourcecode/mxtest/file/MxFileTestGroup.cpp",
+		"/Users/mjb/MxRepo/Resources/mjbsuite/ChordDirectionPlacement.xml",
 		"/Users/mjb/MxRepo/Sourcecode/mx/core/elements/ScoreHeaderGroup.h",
 		"/Users/mjb/MxRepo/Sourcecode/mx/core/elements/Appearance.h",
 		"/Users/mjb/MxRepo/Sourcecode/mx/core/elements/Tenths.h",
 		"/Users/mjb/MxRepo/Sourcecode/mx/core/elements/OtherAppearance.h",
-		"/Users/mjb/MxRepo/Resources/mjbsuite/freezing.xml",
 		"/Users/mjb/MxRepo/Sourcecode/mx/api/MarkData.h",
 		"/Users/mjb/MxRepo/Sublime/mx.sublime-project",
 		"/Users/mjb/Library/Developer/Xcode/Templates/File Templates/Source/Mx Api C++ File.xctemplate/WithHeader/___FILEBASENAME___.h",
@@ -656,34 +673,18 @@
 		"/Users/mjb/iqreq/data/SamplePricingCode.js",
 		"/Users/mjb/iqreq/scripts/pricing_analysis_import.rb",
 		"/Users/mjb/Desktop/Pricing Analysis Headers.csv",
-		"/Users/mjb/Desktop/Pricing Analysis 2017-09-27 Armstrong Targets.csv",
-		"/Users/mjb/iqreq/app/helpers/notes about pricing table from roldan.txt",
-		"/Users/mjb/Desktop/todo from brent call.txt",
-		"/Users/mjb/iqreq/app/models/user.rb",
-		"/Users/mjb/iqreq/app/models/application_record.rb",
-		"/Users/mjb/Bitflip/Inteliquent/Calls/product-notes-from-call-with-tony.txt",
-		"/Users/mjb/iqreq/config/secrets.yml",
-		"/Users/mjb/iqreq/buildpack-run.sh",
-		"/Users/mjb/iqreq/db/migrate/20170923225408_alter_paragraph_table.rb",
-		"/Users/mjb/iqreq/db/migrate/20170923225418_add_image_width_stuff.rb",
-		"/Users/mjb/iqreq/db/migrate/20170925072940_add_users.rb",
-		"/Users/mjb/iqreq/tmp/cache/assets/sprockets/v3.0/vO/vOLaDJP97UQL9kvODRRixzwCfeCBVrFPZnRj3uL3e9U.cache",
-		"/Users/mjb/iqreq/db/migrate/20170924025517_devise_create_users.rb",
-		"/Users/mjb/iqreq/test/helpers/.keep",
-		"/Users/mjb/iqreq/app/views/test_page/test.html.erb",
-		"/Users/mjb/iqreq/app/controllers/test_page_controller.rb",
-		"/Users/mjb/iqreq/db/migrate/20170923224536_database_test_migration.rb",
-		"/Users/mjb/iqreq/db/migrate/20170923224746_delete_test_table.rb"
+		"/Users/mjb/Desktop/Pricing Analysis 2017-09-27 Armstrong Targets.csv"
 	],
 	"find":
 	{
-		"height": 27.0
+		"height": 40.0
 	},
 	"find_in_files":
 	{
 		"height": 281.0,
 		"where_history":
 		[
+			""
 		]
 	},
 	"find_state":
@@ -691,6 +692,19 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"part id=\"P3",
+			"<divisions>",
+			"\n    tickTimePosition = ",
+			"tickTimePosition = ",
+			"  [",
+			"\"note\"",
+			"<note default-x=\"167\">",
+			"<measure number=\"129\" width=\"438\">\n      <print new-system=\"no\" />\n      <note default-x=\"33\">\n        <rest />",
+			"<measure number=\"129\" width=\"438\">\n      <print new-system=\"no\" />\n      <note default-x=\"33\">\n        <rest />\n        <duration>60</duration>\n        <voice>1</voice>\n        <type>quarter</type>\n      </note>\n      <note default-x=\"138\">\n        <rest />\n        <duration>15</duration>\n        <voice>1</voice>\n        <type>16th</type>\n      </note>",
+			"MX_VERSION",
+			"MINOR =",
+			"0.3",
+			"  ",
 			"\">",
 			"name=\"print-style-align\"",
 			"\"print-style-align\"",
@@ -712,6 +726,7 @@
 		"regex": false,
 		"replace_history":
 		[
+			" "
 		],
 		"reverse": false,
 		"show_context": true,
@@ -780,12 +795,72 @@
 		"selected_items":
 		[
 			[
-				"markdata",
-				"Sourcecode/mx/api/MarkData.h"
+				"par",
+				"Sourcecode/mx/impl/PartReader.cpp"
+			],
+			[
+				"partreader",
+				"Sourcecode/mx/impl/PartReader.h"
+			],
+			[
+				"freez",
+				"Resources/mjbsuite/freezing.xml"
+			],
+			[
+				"free",
+				"Resources/mjbsuite/freezing.xml"
+			],
+			[
+				"direction.xml",
+				"Resources/mjbsuite/ChordDirectionPlacement.xml"
+			],
+			[
+				"normalt",
+				"Sourcecode/mx/core/elements/NormalType.h"
+			],
+			[
+				"normaltypenorma",
+				"Sourcecode/mx/core/elements/NormalTypeNormalDotGroup.h"
+			],
+			[
+				"note.h",
+				"Sourcecode/mx/core/elements/Note.h"
 			],
 			[
 				"musicxml.xsd",
 				"Documents/musicxml.xsd"
+			],
+			[
+				"creditwordsa",
+				"Sourcecode/mx/core/elements/CreditWordsAttributes.h"
+			],
+			[
+				"creditwords",
+				"Sourcecode/mx/core/elements/CreditWords.h"
+			],
+			[
+				"k014",
+				"Resources/ksuite/k014a_Fermatas.xml"
+			],
+			[
+				"43e",
+				"Resources/lysuite/ly43e_Multistaff_ClefDynamics.xml"
+			],
+			[
+				"mxver",
+				"Sourcecode/mx/impl/MxVersionDefines.h"
+			],
+			[
+				"score.",
+				"Sourcecode/mx/api/ScoreData.h"
+			],
+			[
+				"mxvers",
+				"Sourcecode/mx/impl/MxVersionDefines.h"
+			],
+			[
+				"markdata",
+				"Sourcecode/mx/api/MarkData.h"
 			],
 			[
 				"freezing",
@@ -1112,10 +1187,6 @@
 				"app/views/documents/_images_and_text.html.erb"
 			],
 			[
-				"par",
-				"app/models/paragraph.rb"
-			],
-			[
 				"paragra",
 				"app/models/paragraph.rb"
 			],
@@ -1234,62 +1305,6 @@
 			[
 				"user.",
 				"req/app/models/user.rb"
-			],
-			[
-				"mysqld",
-				"db/mysqldump.command.info.txt"
-			],
-			[
-				"requirements.",
-				"req/requirements.xml"
-			],
-			[
-				"requ",
-				"req/requirements.xml"
-			],
-			[
-				"document_",
-				"req/app/controllers/documents_controller.rb"
-			],
-			[
-				"mime_",
-				"req/config/initializers/mime_types.rb"
-			],
-			[
-				"requir",
-				"req/requirements.xml"
-			],
-			[
-				"requirement.",
-				"req/app/models/requirement.rb"
-			],
-			[
-				"schem",
-				"req/db/schema.rb"
-			],
-			[
-				"application.js",
-				"req/app/assets/javascripts/application.js"
-			],
-			[
-				"envir",
-				"req/config/environment.rb"
-			],
-			[
-				"route",
-				"config/routes.rb"
-			],
-			[
-				"subjec",
-				"db/migrate/20130813025828_create_subjects.rb"
-			],
-			[
-				"access_c",
-				"app/controllers/access_controller.rb"
-			],
-			[
-				"admin_u",
-				"app/models/admin_user.rb"
 			]
 		],
 		"width": 0.0

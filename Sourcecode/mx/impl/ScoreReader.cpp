@@ -283,10 +283,13 @@ namespace mx
             createPageTextItems( myHeaderGroup, myOutScoreData.pageTextItems );
             
             auto partMap = reconcileParts( myScorePartwise );
+            int divisionsValue = -1;
             for( const auto& reconciledPart : partMap )
             {
-                PartReader reader{ *reconciledPart.first, *reconciledPart.second, myOutScoreData.ticksPerQuarter };
+                PartReader reader{ *reconciledPart.first, *reconciledPart.second, myOutScoreData.ticksPerQuarter, myScorePartwise, divisionsValue };
                 myOutScoreData.parts.emplace_back( reader.getPartData() );
+                const auto cursorReturn = reader.getCursor();
+                divisionsValue = cursorReturn.ticksPerQuarter;
             }
             
             scanForSystemInfo();

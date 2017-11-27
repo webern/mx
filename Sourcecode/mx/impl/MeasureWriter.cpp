@@ -327,6 +327,7 @@ namespace mx
                 myHistory.setVoiceIndex( voice.first );
                 auto noteIter = voice.second.notes.cbegin();
                 auto noteEnd = voice.second.notes.cend();
+                int noteIndex = 0;
 
                 if( directionIter != directionEnd )
                 {
@@ -335,7 +336,7 @@ namespace mx
 
 //                mx::api::NoteData noteForOutsideOfLoop;
 
-                for( ; noteIter != noteEnd; ++noteIter )
+                for( ; noteIter != noteEnd; ++noteIter, ++noteIndex )
                 {
                     bool isStartOfChord = false;
 
@@ -407,17 +408,14 @@ namespace mx
                         maxDirectionTime = nextNote->tickTimePosition;
                     }
 
-                    // TODO - determine if we are in the middle of an ongoing chord,
-                    // do not write directions if we are in the middle of an ongoing
-                    // chord.  instead wait until the chord is done.
-//                    if( isNextNoteIndependent )
+
                     {
                         writeDirections( directionIter, directionEnd, noteIter, std::cbegin(voice.second.notes), noteEnd );
                     }
 
                     auto mdc = core::makeMusicDataChoice();
                     mdc->setChoice( core::MusicDataChoice::Choice::note );
-                    NoteWriter writer{ apiNote, myHistory.getCursor(), myScoreWriter, myPreviousCursor.isChordActive };
+                    NoteWriter writer{ apiNote, myHistory.getCursor(), myScoreWriter, myPreviousCursor.isChordActive, voice.second.notes, noteIndex };
                     mdc->setNote( writer.getNote(isStartOfChord) );
                     myOutMeasure->getMusicDataGroup()->addMusicDataChoice( mdc );
                     myHistory.log( "addNote cursorTime " + std::to_string( myHistory.getCursor().tickTimePosition ) + ", noteTime " + std::to_string( apiNote.tickTimePosition ) );

@@ -20,8 +20,8 @@ namespace mx
     		longa,
     		breve,
     		whole,
-    		quarter,
             half,
+    		quarter,
     		eighth,
     		dur16th,
     		dur32nd,
@@ -47,6 +47,20 @@ namespace mx
         constexpr long double DUR_QUARTERS_VALUE_256TH = 1.0L / 64.0L;
         constexpr long double DUR_QUARTERS_VALUE_512TH = 1.0L / 128.0L;
         constexpr long double DUR_QUARTERS_VALUE_1024TH = 1.0L / 256.0L;
+
+        inline long double applyDots( long double inUnDottedValue, int inNumDots )
+        {
+            long double outValue = inUnDottedValue;
+            long double valueToAdd = inUnDottedValue / 0.5;
+
+            for( int i = 0; i < inNumDots; ++i )
+            {
+                outValue += valueToAdd;
+                valueToAdd /= 0.5;
+            }
+
+            return outValue;
+        }
         
         struct DurationData
         {

@@ -10,7 +10,7 @@ int main(int argc, const char * argv[])
     UNUSED_PARAMETER( argv )
     cpul::TestTimer timer;
     cpulRun( true );
-    mxtest::roundTrip();
+//    mxtest::roundTrip();
     timer.report( "Total runtime for all tests" );
     return 0;
 }

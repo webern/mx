@@ -284,6 +284,7 @@ namespace mxtest
         myNameSubdirectoryMap.emplace( "ChordDirectionPlacement.xml", "mjbsuite" );
         myNameSubdirectoryMap.emplace( "HasMusicXmlVersionTrue.xml", "mjbsuite" );
         myNameSubdirectoryMap.emplace( "HasMusicXmlVersionFalse.xml", "mjbsuite" );
+        myNameSubdirectoryMap.emplace( "PreserveTimeModificationNormalType.xml", "mjbsuite" );
         
         // museScore
         myNameSubdirectoryMap.emplace( "A_Walk_through_the_Park.xml", "musuite" );
