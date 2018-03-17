@@ -60,7 +60,6 @@ namespace mx
             std::pair<core::NoteheadValue, api::Notehead>{ core::NoteheadValue::leftTriangle, api::Notehead::leftTriangle },
             std::pair<core::NoteheadValue, api::Notehead>{ core::NoteheadValue::rectangle, api::Notehead::rectangle },
             std::pair<core::NoteheadValue, api::Notehead>{ core::NoteheadValue::none, api::Notehead::none },
-            
             std::pair<core::NoteheadValue, api::Notehead>{ core::NoteheadValue::do_, api::Notehead::do_ },
             std::pair<core::NoteheadValue, api::Notehead>{ core::NoteheadValue::re, api::Notehead::re },
             std::pair<core::NoteheadValue, api::Notehead>{ core::NoteheadValue::mi, api::Notehead::mi },
