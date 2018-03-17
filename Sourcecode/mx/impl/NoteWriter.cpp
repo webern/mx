@@ -40,10 +40,12 @@
 >>>>>>> release v0.3.0
 =======
 #include "mx/core/elements/Note.h"
-#include "mx/core/elements/Note.h"
 #include "mx/core/elements/NoteChoice.h"
-#include "mx/core/elements/NoteChoice.h"
+<<<<<<< bdb430851c084b25a741e78403b33e3f536796a0
 >>>>>>> release v0.3.0
+=======
+#include "mx/core/elements/Notehead.h"
+>>>>>>> Round trip notehead saving
 #include "mx/core/elements/Octave.h"
 #include "mx/core/elements/Pitch.h"
 #include "mx/impl/PositionFunctions.h"
