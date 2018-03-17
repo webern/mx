@@ -105,7 +105,9 @@ namespace mx
             {
                 myOutNoteData.noteType = api::NoteType::normal;
             }
+            
             auto converter = Converter{};
+            
             myOutNoteData.pitchData.step = converter.convert( reader.getStep() );
             myOutNoteData.pitchData.alter = reader.getAlter();
             
@@ -124,6 +126,8 @@ namespace mx
             //myOutNoteData.staffIndex = reader.getStaffNumber() - 1;
             myOutNoteData.userRequestedVoiceNumber = reader.getVoiceNumber();
             
+            myOutNoteData.notehead = converter.convert( reader.getNoteheadValue() );
+
             if( reader.getIsDurationTypeSpecified() )
             {
                 myOutNoteData.durationData.durationName = converter.convert( reader.getDurationType() );

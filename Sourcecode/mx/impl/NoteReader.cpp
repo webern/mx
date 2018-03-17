@@ -25,6 +25,7 @@
 #include "mx/core/elements/NormalTypeNormalDotGroup.h"
 #include "mx/core/elements/Note.h"
 #include "mx/core/elements/NoteChoice.h"
+#include "mx/core/elements/Notehead.h"
 #include "mx/core/elements/Octave.h"
 #include "mx/core/elements/Pitch.h"
 #include "mx/core/elements/Rest.h"
@@ -65,6 +66,7 @@ namespace mx
         , myOctave( 4 )
         , myStaffNumber( 0 )
         , myVoiceNumber( 0 )
+        , myNoteheadValue( core::NoteheadValue::normal)
         , myDurationType( core::NoteTypeValue::maxima )
         , myIsDurationTypeSpecified( false )
         , myNumDots( 0 )
@@ -88,6 +90,7 @@ namespace mx
             setChord();
             setStaffNumber();
             setVoiceNumber();
+            setNoteheadValue();
             setDurationType();
             setNumDots();
             setBeams();
@@ -246,7 +249,13 @@ namespace mx
             utility::stringToInt( myNote.getEditorialVoiceGroup()->getVoice()->getValue().getValue().c_str(), myVoiceNumber );
         }
 
+        
+        void NoteReader::setNoteheadValue()
+        {
+            myNoteheadValue = myNote.getNotehead()->getValue();
+        }
 
+        
         void NoteReader::setDurationType()
         {
             if( myNote.getHasType() )
