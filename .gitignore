@@ -10,6 +10,7 @@ DerivedData/
 .fseventsd
 output/
 Meta/
+MxBuild
 Xcode/bin
 *.xcbkptlist
 *.xcsettings

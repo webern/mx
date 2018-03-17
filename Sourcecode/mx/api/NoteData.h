@@ -23,6 +23,36 @@ namespace mx
     		grace,
     		cue
     	};
+        
+        enum class Notehead
+        {
+            slash,
+            triangle,
+            diamond,
+            square,
+            cross,
+            x,
+            circleX,
+            invertedTriangle,
+            arrowDown,
+            arrowUp,
+            slashed,
+            backSlashed,
+            normal,
+            cluster,
+            circleDot,
+            leftTriangle,
+            rectangle,
+            none,
+            do_,
+            re,
+            mi,
+            fa,
+            faUp,
+            so,
+            la,
+            ti
+        };
 
         enum class Beam
         {
@@ -67,6 +97,7 @@ namespace mx
             bool isTieStop;
             
             NoteType noteType;            // normal, cue, grace
+            Notehead notehead;            
             PitchData pitchData;          // step, alter, octave, accidental, etc
             int userRequestedVoiceNumber;
             Stem stem;

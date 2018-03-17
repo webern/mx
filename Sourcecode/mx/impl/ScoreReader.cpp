@@ -253,7 +253,7 @@ namespace mx
                 
                 if( myHeaderGroup.getIdentification()->getHasMiscellaneous() )
                 {
-                    for( const auto m : myHeaderGroup.getIdentification()->getMiscellaneous()->getMiscellaneousFieldSet() )
+                    for( const auto& m : myHeaderGroup.getIdentification()->getMiscellaneous()->getMiscellaneousFieldSet() )
                     {
                         std::string key;
                         if( m->getAttributes()->hasName )
