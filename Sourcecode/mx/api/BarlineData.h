@@ -43,14 +43,7 @@ namespace mx
             BarlineType barlineType;
             EndingType endingType;
             int endingNumber;
-<<<<<<< 3f3f1ab43b3f03510a344fdd0d480315a1ade6bb
-<<<<<<< 082227f5ac3f2004cd7884731308aef6d954274d
             bool repeat;
-=======
->>>>>>> Add support for reading and writing of endings
-=======
-            bool repeat;
->>>>>>> Add repeat
             HorizontalAlignment location;
             
             BarlineData()
@@ -58,16 +51,10 @@ namespace mx
             , barlineType{ BarlineType::normal }
             , endingType{ EndingType::none }
             , endingNumber { 0 }
-<<<<<<< 3f3f1ab43b3f03510a344fdd0d480315a1ade6bb
-<<<<<<< 082227f5ac3f2004cd7884731308aef6d954274d
             , repeat { false }
             , location{ HorizontalAlignment::unspecified }
-=======
-=======
             , repeat { false }
->>>>>>> Add repeat
             , location{ HorizontalAlignment::right }
->>>>>>> Add support for reading and writing of endings
             {
             }
         };
@@ -77,14 +64,7 @@ namespace mx
         MXAPI_EQUALS_MEMBER( barlineType )
         MXAPI_EQUALS_MEMBER( endingType )
         MXAPI_EQUALS_MEMBER( endingNumber )
-<<<<<<< 3f3f1ab43b3f03510a344fdd0d480315a1ade6bb
-<<<<<<< 082227f5ac3f2004cd7884731308aef6d954274d
         MXAPI_EQUALS_MEMBER( repeat )
-=======
->>>>>>> Add support for reading and writing of endings
-=======
-        MXAPI_EQUALS_MEMBER( repeat )
->>>>>>> Add repeat
         MXAPI_EQUALS_MEMBER( location )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( BarlineData );
