@@ -28,9 +28,8 @@
 #include "mx/core/elements/NormalTypeNormalDotGroup.h"
 #include "mx/core/elements/Notations.h"
 #include "mx/core/elements/Note.h"
-#include "mx/core/elements/Note.h"
 #include "mx/core/elements/NoteChoice.h"
-#include "mx/core/elements/NoteChoice.h"
+#include "mx/core/elements/Notehead.h"
 #include "mx/core/elements/Octave.h"
 #include "mx/core/elements/Pitch.h"
 #include "mx/core/elements/Rest.h"
@@ -76,6 +75,7 @@ namespace mx
             setFullNoteTypeChoice();
             setStaffAndVoice();
             setDurationNameAndDots();
+            setNotehead();
             setStemDirection();
             setMiscData();
             NotationsWriter notationsWriter{ myNoteData, myCursor, myScoreWriter };
@@ -262,6 +262,11 @@ namespace mx
             }
         }
         
+        void NoteWriter::setNotehead() const
+        {
+            myOutNote->setHasNotehead( true );
+            myOutNote->getNotehead()->setValue( myConverter.convert( myNoteData.notehead ) );
+        }
         
         void NoteWriter::setStemDirection() const
         {
