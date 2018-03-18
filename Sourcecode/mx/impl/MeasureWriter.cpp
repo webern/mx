@@ -37,18 +37,9 @@
 #include "mx/core/elements/Eyeglasses.h"
 #include "mx/core/elements/Fermata.h"
 #include "mx/core/elements/Fifths.h"
-<<<<<<< 753d3ba8d14c9daba17e9543f6cbc4e3573ea2ae
-<<<<<<< caeae2ca63c6721746e558cf2db28844937863ca
 #include "mx/core/elements/Footnote.h"
 #include "mx/core/elements/Footnote.h"
-=======
 #include "mx/core/elements/Footnote.h"
-#include "mx/core/elements/Footnote.h"
->>>>>>> release v0.3.0
-=======
-#include "mx/core/elements/Footnote.h"
-#include "mx/core/elements/Footnote.h"
->>>>>>> release v0.3.0
 #include "mx/core/elements/Forward.h"
 #include "mx/core/elements/FullNoteGroup.h"
 #include "mx/core/elements/FullNoteTypeChoice.h"
@@ -62,13 +53,7 @@
 #include "mx/core/elements/KeyChoice.h"
 #include "mx/core/elements/LayoutGroup.h"
 #include "mx/core/elements/LeftMargin.h"
-<<<<<<< 753d3ba8d14c9daba17e9543f6cbc4e3573ea2ae
 #include "mx/core/elements/Level.h"
-#include "mx/core/elements/Level.h"
-=======
-#include "mx/core/elements/Level.h"
-#include "mx/core/elements/Level.h"
->>>>>>> release v0.3.0
 #include "mx/core/elements/Line.h"
 #include "mx/core/elements/Lyric.h"
 #include "mx/core/elements/MeasureLayout.h"
