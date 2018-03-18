@@ -5,12 +5,19 @@
 
 int main(int argc, const char * argv[])
 {
-    //MxRtiTest::rtiMain();
+#ifdef MX_REPO_ROOT_PATH
+    std::cout << MX_REPO_ROOT_PATH << std::endl;
+#endif
+#ifdef MX_BINARY_OUTPUT_PATH
+    std::cout << MX_BINARY_OUTPUT_PATH << std::endl;
+#endif
+#ifdef DEBUG
+    std::cout << "Debug Mode" << std::endl;
+#endif
     UNUSED_PARAMETER( argc )
     UNUSED_PARAMETER( argv )
     cpul::TestTimer timer;
     cpulRun( true );
-//    mxtest::roundTrip();
     timer.report( "Total runtime for all tests" );
     return 0;
 }

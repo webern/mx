@@ -216,7 +216,8 @@ namespace mx
             }
             
             int localStaffCounter = 0;
-            for( const auto staff : myMeasureData.staves )
+            
+            for( const auto& staff : myMeasureData.staves )
             {
                 auto clefIter = staff.clefs.cbegin();
                 auto clefEnd = staff.clefs.cend();

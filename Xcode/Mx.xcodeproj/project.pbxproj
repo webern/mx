@@ -27,6 +27,21 @@
 		297594561F044C7600DE2F30 /* ChordData.h in Headers */ = {isa = PBXBuildFile; fileRef = 2975944E1F044C7600DE2F30 /* ChordData.h */; };
 		297594571F044C7600DE2F30 /* ChordData.h in Headers */ = {isa = PBXBuildFile; fileRef = 2975944E1F044C7600DE2F30 /* ChordData.h */; };
 		297594581F044C7600DE2F30 /* ChordData.h in Headers */ = {isa = PBXBuildFile; fileRef = 2975944E1F044C7600DE2F30 /* ChordData.h */; };
+		29A02E791FE0F71A00B74FDE /* Version.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A02E771FE0F71A00B74FDE /* Version.h */; };
+		29A02E7A1FE0F71A00B74FDE /* Version.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A02E771FE0F71A00B74FDE /* Version.h */; };
+		29A02E7B1FE0F71A00B74FDE /* Version.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A02E771FE0F71A00B74FDE /* Version.h */; };
+		29A02E7C1FE0F71A00B74FDE /* Version.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A02E771FE0F71A00B74FDE /* Version.h */; };
+		29A02E7D1FE0F71A00B74FDE /* Version.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A02E771FE0F71A00B74FDE /* Version.h */; };
+		29A02E7E1FE0F71A00B74FDE /* Version.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A02E781FE0F71A00B74FDE /* Version.cpp */; };
+		29A02E7F1FE0F71A00B74FDE /* Version.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A02E781FE0F71A00B74FDE /* Version.cpp */; };
+		29A02E801FE0F71A00B74FDE /* Version.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A02E781FE0F71A00B74FDE /* Version.cpp */; };
+		29A02E811FE0F71A00B74FDE /* Version.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A02E781FE0F71A00B74FDE /* Version.cpp */; };
+		29A02E821FE0F71A00B74FDE /* Version.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A02E781FE0F71A00B74FDE /* Version.cpp */; };
+		29A02E8A1FE0FA5000B74FDE /* EncodingData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A02E841FE0FA5000B74FDE /* EncodingData.cpp */; };
+		29A02E8B1FE0FA5000B74FDE /* EncodingData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A02E841FE0FA5000B74FDE /* EncodingData.cpp */; };
+		29A02E8C1FE0FA5000B74FDE /* EncodingData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A02E841FE0FA5000B74FDE /* EncodingData.cpp */; };
+		29A02E8D1FE0FA5000B74FDE /* EncodingData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A02E841FE0FA5000B74FDE /* EncodingData.cpp */; };
+		29A02E8E1FE0FA5000B74FDE /* EncodingData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A02E841FE0FA5000B74FDE /* EncodingData.cpp */; };
 		29A800001EF0499300AD2478 /* TransposeAttributes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E1E11EF0476200AD2478 /* TransposeAttributes.cpp */; };
 		29A800011EF0499300AD2478 /* Tremolo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E1E31EF0476200AD2478 /* Tremolo.cpp */; };
 		29A800021EF0499300AD2478 /* TremoloAttributes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E1E51EF0476200AD2478 /* TremoloAttributes.cpp */; };
@@ -3369,6 +3384,9 @@
 		2975944E1F044C7600DE2F30 /* ChordData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChordData.h; sourceTree = "<group>"; };
 		297594591F04783100DE2F30 /* Round.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Round.h; sourceTree = "<group>"; };
 		299F7FE61CA8D2200084CAE5 /* libMx.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMx.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		29A02E771FE0F71A00B74FDE /* Version.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Version.h; sourceTree = "<group>"; };
+		29A02E781FE0F71A00B74FDE /* Version.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Version.cpp; sourceTree = "<group>"; };
+		29A02E841FE0FA5000B74FDE /* EncodingData.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = EncodingData.cpp; sourceTree = "<group>"; };
 		29A800621EF0876500AD2478 /* SoundID.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SoundID.cpp; sourceTree = "<group>"; };
 		29A800631EF0876500AD2478 /* SoundID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundID.h; sourceTree = "<group>"; };
 		29A8DD591EF0475D00AD2478 /* ApiCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApiCommon.h; sourceTree = "<group>"; };
@@ -4865,6 +4883,7 @@
 				29A8DD631EF0475D00AD2478 /* DurationData.cpp */,
 				29A8DD641EF0475D00AD2478 /* DurationData.h */,
 				29A8DD651EF0475D00AD2478 /* EncodingData.h */,
+				29A02E841FE0FA5000B74FDE /* EncodingData.cpp */,
 				29A8DD661EF0475D00AD2478 /* FontData.h */,
 				29A8DD671EF0475D00AD2478 /* KeyData.h */,
 				29A8DD681EF0475D00AD2478 /* LayoutData.h */,
@@ -4899,6 +4918,8 @@
 				29A8DD811EF0475D00AD2478 /* TempoData.h */,
 				29A8DD821EF0475D00AD2478 /* TimeSignatureData.h */,
 				29A8DD831EF0475D00AD2478 /* TupletData.h */,
+				29A02E781FE0F71A00B74FDE /* Version.cpp */,
+				29A02E771FE0F71A00B74FDE /* Version.h */,
 				29A8DD841EF0475D00AD2478 /* VoiceData.h */,
 				29A8DD851EF0475D00AD2478 /* WedgeData.h */,
 				29A8DD861EF0475D00AD2478 /* WordsData.cpp */,
@@ -6315,6 +6336,7 @@
 			files = (
 				2948959C1FC4011400A06219 /* AppearanceData.h in Headers */,
 				29A8006A1EF0876500AD2478 /* SoundID.h in Headers */,
+				29A02E7A1FE0F71A00B74FDE /* Version.h in Headers */,
 				29EAD74E1F0EF8CE00BDE782 /* MiscData.h in Headers */,
 				297594551F044C7600DE2F30 /* ChordData.h in Headers */,
 			);
@@ -6326,6 +6348,7 @@
 			files = (
 				2948959B1FC4011400A06219 /* AppearanceData.h in Headers */,
 				29A800691EF0876500AD2478 /* SoundID.h in Headers */,
+				29A02E791FE0F71A00B74FDE /* Version.h in Headers */,
 				29EAD74D1F0EF8CE00BDE782 /* MiscData.h in Headers */,
 				297594541F044C7600DE2F30 /* ChordData.h in Headers */,
 			);
@@ -6338,6 +6361,7 @@
 				2948959F1FC4011400A06219 /* AppearanceData.h in Headers */,
 				297594581F044C7600DE2F30 /* ChordData.h in Headers */,
 				29A8FDC61EF0497500AD2478 /* MxmacOS.h in Headers */,
+				29A02E7D1FE0F71A00B74FDE /* Version.h in Headers */,
 				29EAD7511F0EF8CE00BDE782 /* MiscData.h in Headers */,
 				29A8006D1EF0876500AD2478 /* SoundID.h in Headers */,
 			);
@@ -6350,6 +6374,7 @@
 				2948959E1FC4011400A06219 /* AppearanceData.h in Headers */,
 				297594571F044C7600DE2F30 /* ChordData.h in Headers */,
 				29B962851E79FF410072071D /* MxiOS.h in Headers */,
+				29A02E7C1FE0F71A00B74FDE /* Version.h in Headers */,
 				29EAD7501F0EF8CE00BDE782 /* MiscData.h in Headers */,
 				29A8006C1EF0876500AD2478 /* SoundID.h in Headers */,
 			);
@@ -6361,6 +6386,7 @@
 			files = (
 				2948959D1FC4011400A06219 /* AppearanceData.h in Headers */,
 				29A8006B1EF0876500AD2478 /* SoundID.h in Headers */,
+				29A02E7B1FE0F71A00B74FDE /* Version.h in Headers */,
 				29EAD74F1F0EF8CE00BDE782 /* MiscData.h in Headers */,
 				297594561F044C7600DE2F30 /* ChordData.h in Headers */,
 			);
@@ -6462,7 +6488,7 @@
 		299F7FDE1CA8D2200084CAE5 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 0920;
 				ORGANIZATIONNAME = "Matthew James Briggs";
 				TargetAttributes = {
 					293FFED11DD25C74001477E8 = {
@@ -6679,6 +6705,7 @@
 				29A8F2101EF0476800AD2478 /* OtherArticulation.cpp in Sources */,
 				29A8F82D1EF0476B00AD2478 /* SystemMargins.cpp in Sources */,
 				29A8F3501EF0476800AD2478 /* PartSymbol.cpp in Sources */,
+				29A02E7F1FE0F71A00B74FDE /* Version.cpp in Sources */,
 				29A8F5D51EF0476A00AD2478 /* SemiPitched.cpp in Sources */,
 				29A8F17A1EF0476800AD2478 /* NoteSize.cpp in Sources */,
 				29A8F2C41EF0476800AD2478 /* Pan.cpp in Sources */,
@@ -6700,6 +6727,7 @@
 				29A8F55D1EF0476A00AD2478 /* Scoop.cpp in Sources */,
 				29A8F7D31EF0476B00AD2478 /* Suffix.cpp in Sources */,
 				29A8F9BD1EF0476C00AD2478 /* TupletActual.cpp in Sources */,
+				29A02E8B1FE0FA5000B74FDE /* EncodingData.cpp in Sources */,
 				29A8E9AA1EF0476400AD2478 /* Encoding.cpp in Sources */,
 				29A8E6081EF0476300AD2478 /* BeatUnitPer.cpp in Sources */,
 				29A8E77A1EF0476400AD2478 /* Damp.cpp in Sources */,
@@ -7352,6 +7380,7 @@
 				29A8F20F1EF0476800AD2478 /* OtherArticulation.cpp in Sources */,
 				29A8F82C1EF0476B00AD2478 /* SystemMargins.cpp in Sources */,
 				29A8F34F1EF0476800AD2478 /* PartSymbol.cpp in Sources */,
+				29A02E7E1FE0F71A00B74FDE /* Version.cpp in Sources */,
 				29A8F5D41EF0476A00AD2478 /* SemiPitched.cpp in Sources */,
 				29A8F1791EF0476800AD2478 /* NoteSize.cpp in Sources */,
 				29A8F2C31EF0476800AD2478 /* Pan.cpp in Sources */,
@@ -7373,6 +7402,7 @@
 				29A8F55C1EF0476A00AD2478 /* Scoop.cpp in Sources */,
 				29A8F7D21EF0476B00AD2478 /* Suffix.cpp in Sources */,
 				29A8F9BC1EF0476C00AD2478 /* TupletActual.cpp in Sources */,
+				29A02E8A1FE0FA5000B74FDE /* EncodingData.cpp in Sources */,
 				29A8E9A91EF0476400AD2478 /* Encoding.cpp in Sources */,
 				29A8E6071EF0476300AD2478 /* BeatUnitPer.cpp in Sources */,
 				29A8E7791EF0476400AD2478 /* Damp.cpp in Sources */,
@@ -8025,6 +8055,7 @@
 				29A8FE5D1EF0499200AD2478 /* DynamicsAttributes.cpp in Sources */,
 				29A8FE5E1EF0499200AD2478 /* EditorialGroup.cpp in Sources */,
 				29A8FE5F1EF0499200AD2478 /* EditorialVoiceDirectionGroup.cpp in Sources */,
+				29A02E821FE0F71A00B74FDE /* Version.cpp in Sources */,
 				29A8FE601EF0499200AD2478 /* EditorialVoiceGroup.cpp in Sources */,
 				29A8FE611EF0499200AD2478 /* Effect.cpp in Sources */,
 				29A8FE621EF0499200AD2478 /* Elevation.cpp in Sources */,
@@ -8046,6 +8077,7 @@
 				29A8FE721EF0499200AD2478 /* EndingAttributes.cpp in Sources */,
 				29A8FE731EF0499200AD2478 /* EndLine.cpp in Sources */,
 				29A8FE741EF0499200AD2478 /* EndParagraph.cpp in Sources */,
+				29A02E8E1FE0FA5000B74FDE /* EncodingData.cpp in Sources */,
 				29A8FE751EF0499200AD2478 /* Ensemble.cpp in Sources */,
 				29A8FE761EF0499200AD2478 /* Extend.cpp in Sources */,
 				29A8FE771EF0499200AD2478 /* ExtendAttributes.cpp in Sources */,
@@ -8698,6 +8730,7 @@
 				29A8F2121EF0476800AD2478 /* OtherArticulation.cpp in Sources */,
 				29A8F82F1EF0476B00AD2478 /* SystemMargins.cpp in Sources */,
 				29A8F3521EF0476800AD2478 /* PartSymbol.cpp in Sources */,
+				29A02E811FE0F71A00B74FDE /* Version.cpp in Sources */,
 				29A8F5D71EF0476A00AD2478 /* SemiPitched.cpp in Sources */,
 				29A8F17C1EF0476800AD2478 /* NoteSize.cpp in Sources */,
 				29A8F2C61EF0476800AD2478 /* Pan.cpp in Sources */,
@@ -8719,6 +8752,7 @@
 				29A8F55F1EF0476A00AD2478 /* Scoop.cpp in Sources */,
 				29A8F7D51EF0476B00AD2478 /* Suffix.cpp in Sources */,
 				29A8F9BF1EF0476C00AD2478 /* TupletActual.cpp in Sources */,
+				29A02E8D1FE0FA5000B74FDE /* EncodingData.cpp in Sources */,
 				29A8E9AC1EF0476400AD2478 /* Encoding.cpp in Sources */,
 				29A8E60A1EF0476300AD2478 /* BeatUnitPer.cpp in Sources */,
 				29A8E77C1EF0476400AD2478 /* Damp.cpp in Sources */,
@@ -9371,6 +9405,7 @@
 				29A8F2111EF0476800AD2478 /* OtherArticulation.cpp in Sources */,
 				29A8F82E1EF0476B00AD2478 /* SystemMargins.cpp in Sources */,
 				29A8F3511EF0476800AD2478 /* PartSymbol.cpp in Sources */,
+				29A02E801FE0F71A00B74FDE /* Version.cpp in Sources */,
 				29A8F5D61EF0476A00AD2478 /* SemiPitched.cpp in Sources */,
 				29A8F17B1EF0476800AD2478 /* NoteSize.cpp in Sources */,
 				29A8F2C51EF0476800AD2478 /* Pan.cpp in Sources */,
@@ -9392,6 +9427,7 @@
 				29A8F55E1EF0476A00AD2478 /* Scoop.cpp in Sources */,
 				29A8F7D41EF0476B00AD2478 /* Suffix.cpp in Sources */,
 				29A8F9BE1EF0476C00AD2478 /* TupletActual.cpp in Sources */,
+				29A02E8C1FE0FA5000B74FDE /* EncodingData.cpp in Sources */,
 				29A8E9AB1EF0476400AD2478 /* Encoding.cpp in Sources */,
 				29A8E6091EF0476300AD2478 /* BeatUnitPer.cpp in Sources */,
 				29A8E77B1EF0476400AD2478 /* Damp.cpp in Sources */,
@@ -9948,7 +9984,9 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_ASSIGN_ENUM = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_CXX0X_EXTENSIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
@@ -9959,6 +9997,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NULLABLE_TO_NONNULL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES_AGGRESSIVE;
@@ -10017,7 +10057,9 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_ASSIGN_ENUM = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_CXX0X_EXTENSIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
@@ -10028,6 +10070,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NULLABLE_TO_NONNULL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES_AGGRESSIVE;
@@ -10178,7 +10222,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
@@ -10194,7 +10238,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = mjb.MxiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos10.2;
+				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "arm64 armv7 armv7s x86_64 i386";
@@ -10211,7 +10255,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -10227,7 +10271,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = mjb.MxiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos10.2;
+				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -10240,7 +10284,6 @@
 		29E8C22A1DD2920C00E8CEBA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -10260,7 +10303,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "mx-iOS";
-				SDKROOT = iphoneos10.1;
+				SDKROOT = iphoneos;
 				VALID_ARCHS = "arm64 armv7 i386";
 			};
 			name = Debug;
@@ -10268,7 +10311,6 @@
 		29E8C22B1DD2920C00E8CEBA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -10288,7 +10330,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "mx-iOS";
-				SDKROOT = iphoneos10.1;
+				SDKROOT = iphoneos;
 				VALID_ARCHS = "arm64 armv7 i386";
 			};
 			name = Release;

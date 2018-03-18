@@ -56,7 +56,7 @@ namespace mxtest
     inline std::string getTestRecordFilepath()
     {
         std::stringstream ss;
-        ss << RESOURCES_DIRECTORY_PATH << "testOutput" << FILE_PATH_SEPARATOR;
+        ss << mxtest::getResourcesDirectoryPath() << "testOutput" << FILE_PATH_SEPARATOR;
         ss << TEST_RECORD_FILENAME;
         return ss.str();
     }

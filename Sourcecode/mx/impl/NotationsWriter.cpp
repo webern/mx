@@ -590,6 +590,8 @@ namespace mx
                 ornamentsChoice->setChoice( core::OrnamentsChoice::Choice::tremolo );
                 auto element = ornamentsChoice->getTremolo();
                 auto attributes = element->getAttributes();
+                attributes->hasType = true;
+                attributes->type = mx::core::StartStopSingle::single;
                 setAttributesFromPositionData( mark.positionData, *attributes);
                 element->setValue( mx::core::TremoloMarks{ api::numTremoloSlashes( mark.markType ) } );
             }

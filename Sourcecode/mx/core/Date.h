@@ -22,7 +22,9 @@ namespace mx
             Date( Date&& other );
             Date& operator=( const Date& other );
             Date& operator=( Date&& other );
-            
+
+            static Date today();
+
             /** Returns the year as an int. **/
             int getYear() const;
             

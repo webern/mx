@@ -153,6 +153,7 @@ namespace mx
                     {
                         outMark.name = "this tremolo is not a mark";
                         outMark.markType = api::MarkType::unknownOrnament;
+                        MX_LOG( "This tremolo is not supported because it starts and stops on different notes." );
                         return;
                     }
 

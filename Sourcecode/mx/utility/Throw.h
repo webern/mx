@@ -20,17 +20,26 @@
 
 #endif
 
-#ifndef MX_THROW
-#define MX_THROW(throw_error_message)                   \
-throw std::runtime_error (                              \
-  std::string( "error in " )                            \
+#ifndef MX_ERROR_MESSAGE
+#define MX_ERROR_MESSAGE(error_message)                 \
+( std::string( "error in " )                            \
 + std::string( __FILENAME__ )                           \
 + std::string(" (line ")                                \
 + std::string( std::to_string(__LINE__ ) )              \
 + std::string(") ")                                     \
 + std::string( __FUNCTION__ )                           \
 + std::string(": '")                                    \
-+ std::string( throw_error_message ) );                    
++ std::string( error_message ) )
+#endif
+
+#ifndef MX_THROW
+#define MX_THROW(throw_error_message)                               \
+throw std::runtime_error ( MX_ERROR_MESSAGE(throw_error_message) );
+#endif
+
+#ifndef MX_LOG
+#define MX_LOG(message) \
+std::cout << MX_ERROR_MESSAGE(message) << std::endl;
 #endif
 
 #ifndef MX_DEBUG_THROW

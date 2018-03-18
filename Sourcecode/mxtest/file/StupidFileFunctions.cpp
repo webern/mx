@@ -17,7 +17,7 @@ namespace mxtest
     std::string getSubdirectoryFullPath( const std::string& subdirectory )
     {
         std::stringstream ss;
-        ss << RESOURCES_DIRECTORY_PATH << subdirectory << FILE_PATH_SEPARATOR;
+        ss << mxtest::getResourcesDirectoryPath() << subdirectory << FILE_PATH_SEPARATOR;
         return ss.str();
     }
     

@@ -3,6 +3,7 @@
 // Distributed under the MIT License
 
 #pragma once
+
 #define MX_COMPILE_API_TESTS
 #define MX_COMPILE_API_ROUNDTRIP
 //#define MX_COMPILE_CORE_TESTS

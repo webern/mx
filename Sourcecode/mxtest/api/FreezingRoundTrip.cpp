@@ -465,8 +465,7 @@ TEST( checkMissingNormalType, Freezing )
                 {
                     return false;
                 }
-
-                const auto& tm = note->getTimeModification();
+                
                 return true;
             };
 

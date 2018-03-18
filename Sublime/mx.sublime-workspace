@@ -546,10 +546,12 @@
 	],
 	"file_history":
 	[
+		"/Users/mjb/MxRepo/Documents/musicxml.xsd",
+		"/Users/mjb/MxRepo/Resources/mjbsuite/freezing-measure-numbers.rb",
 		"/Users/mjb/MxRepo/Resources/mjbsuite/freezing.xml",
+		"/Users/mjb/MxRepo/Resources/mjbsuite/freezing.old.xml",
 		"/Users/mjb/MxRepo/Sourcecode/mx/impl/PartReader.h",
 		"/Users/mjb/MxRepo/Sourcecode/mx/impl/PartReader.cpp",
-		"/Users/mjb/MxRepo/Documents/musicxml.xsd",
 		"/Users/mjb/MxRepo/Resources/mjbsuite/PreserveTimeModificationNormalType.xml",
 		"/Users/mjb/MxRepo/Sourcecode/mx/core/elements/NormalType.h",
 		"/Users/mjb/MxRepo/Sourcecode/mx/core/elements/NormalTypeNormalDotGroup.h",
@@ -671,9 +673,7 @@
 		"/Users/mjb/iqreq/tmp/cache/assets/sprockets/v3.0/3S/3SA85uyF5GmS9_ZjfmCsfAjSJQhH2T_EhWQRd2Aaxk0.cache",
 		"/Users/mjb/iqreq/data/JobSchema.sql",
 		"/Users/mjb/iqreq/data/SamplePricingCode.js",
-		"/Users/mjb/iqreq/scripts/pricing_analysis_import.rb",
-		"/Users/mjb/Desktop/Pricing Analysis Headers.csv",
-		"/Users/mjb/Desktop/Pricing Analysis 2017-09-27 Armstrong Targets.csv"
+		"/Users/mjb/iqreq/scripts/pricing_analysis_import.rb"
 	],
 	"find":
 	{
@@ -692,6 +692,36 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"tremolo\"",
+			"/>",
+			"<measure implicit=\"yes\" number=\"X26\"",
+			"<measure implicit=\"yes\" number=\"X25\"",
+			"<measure implicit=\"yes\" number=\"X24\"",
+			"<measure implicit=\"yes\" number=\"X23\"",
+			"<measure implicit=\"yes\" number=\"X22\"",
+			"<measure implicit=\"yes\" number=\"X21\"",
+			"<measure implicit=\"yes\" number=\"X20\"",
+			"<measure implicit=\"yes\" number=\"X19\"",
+			"<measure implicit=\"yes\" number=\"X18\"",
+			"<measure implicit=\"yes\" number=\"X17\"",
+			"<measure implicit=\"yes\" number=\"X16\"",
+			"<measure implicit=\"yes\" number=\"X15\"",
+			"<measure implicit=\"yes\" number=\"X14\"",
+			"<measure implicit=\"yes\" number=\"X13\"",
+			"<measure implicit=\"yes\" number=\"X12\"",
+			"<measure implicit=\"yes\" number=\"X11\"",
+			"<measure implicit=\"yes\" number=\"X10\"",
+			"<measure implicit=\"yes\" number=\"X9\"",
+			"<measure implicit=\"yes\" number=\"X8\"",
+			"<measure implicit=\"yes\" number=\"X7\"",
+			"<measure implicit=\"yes\" number=\"X6\"",
+			"<measure implicit=\"yes\" number=\"X5\"",
+			"<measure implicit=\"yes\" number=\"X4\"",
+			"<measure implicit=\"yes\" number=\"X3\"",
+			"<measure implicit=\"yes\" number=\"X2\"",
+			"<measure implicit=\"yes\" number=\"X1\"",
+			"<measure implicit=\"yes\" number=\"0\"",
+			"implicit",
 			"part id=\"P3",
 			"<divisions>",
 			"\n    tickTimePosition = ",
@@ -726,6 +756,35 @@
 		"regex": false,
 		"replace_history":
 		[
+			" />",
+			"<measure number=\"INDEX26\"",
+			"<measure number=\"INDEX25\"",
+			"<measure number=\"INDEX24\"",
+			"<measure number=\"INDEX23\"",
+			"<measure number=\"INDEX22\"",
+			"<measure number=\"INDEX21\"",
+			"<measure number=\"INDEX20\"",
+			"<measure number=\"INDEX19\"",
+			"<measure number=\"INDEX18\"",
+			"<measure number=\"INDEX17\"",
+			"<measure number=\"INDEX16\"",
+			"<measure number=\"INDEX15\"",
+			"<measure number=\"INDEX14\"",
+			"<measure number=\"INDEX13\"",
+			"<measure number=\"INDEX12\"",
+			"<measure number=\"INDEX11\"",
+			"<measure number=\"INDEX10\"",
+			"<measure number=\"INDEX9\"",
+			"<measure number=\"INDEX8\"",
+			"<measure number=\"INDEX7\"",
+			"<measure number=\"INDEX6\"",
+			"<measure number=\"INDEX5\"",
+			"<measure number=\"INDEX4\"",
+			"<measure number=\"INDEX3\"",
+			"<measure number=\"INDEX2\"",
+			"<measure number=\"INDEX1\"",
+			"<measure number=\"INDEX0\"",
+			"<measure number=\"0\"",
 			" "
 		],
 		"reverse": false,
@@ -795,6 +854,22 @@
 		"selected_items":
 		[
 			[
+				"music",
+				"Documents/musicxml.xsd"
+			],
+			[
+				"freezing.old",
+				"Resources/mjbsuite/freezing.old.xml"
+			],
+			[
+				"freezing.xml",
+				"Resources/mjbsuite/freezing.xml"
+			],
+			[
+				"musicxml.xsd",
+				"Documents/musicxml.xsd"
+			],
+			[
 				"par",
 				"Sourcecode/mx/impl/PartReader.cpp"
 			],
@@ -825,10 +900,6 @@
 			[
 				"note.h",
 				"Sourcecode/mx/core/elements/Note.h"
-			],
-			[
-				"musicxml.xsd",
-				"Documents/musicxml.xsd"
 			],
 			[
 				"creditwordsa",
@@ -881,10 +952,6 @@
 			[
 				"scoreheader",
 				"Sourcecode/mx/core/elements/ScoreHeaderGroup.h"
-			],
-			[
-				"music",
-				"Documents/musicxml.xsd"
 			],
 			[
 				"req",
@@ -1297,14 +1364,6 @@
 			[
 				"routes.",
 				"req/config/routes.rb"
-			],
-			[
-				"development.rb",
-				"req/config/environments/development.rb"
-			],
-			[
-				"user.",
-				"req/app/models/user.rb"
 			]
 		],
 		"width": 0.0

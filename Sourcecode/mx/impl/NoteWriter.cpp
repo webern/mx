@@ -27,6 +27,7 @@
 #include "mx/core/elements/NormalType.h"
 #include "mx/core/elements/NormalTypeNormalDotGroup.h"
 #include "mx/core/elements/Notations.h"
+#include "mx/core/elements/NotationsChoice.h"
 #include "mx/core/elements/Note.h"
 #include "mx/core/elements/Note.h"
 #include "mx/core/elements/NoteChoice.h"
@@ -39,6 +40,7 @@
 #include "mx/core/elements/Stem.h"
 #include "mx/core/elements/Step.h"
 #include "mx/core/elements/Tie.h"
+#include "mx/core/elements/Tied.h"
 #include "mx/core/elements/TimeModification.h"
 #include "mx/core/elements/Type.h"
 #include "mx/core/elements/Unpitched.h"
@@ -211,15 +213,64 @@ namespace mx
                 // TODO - decide what happens if the user entered specific tuplet type in the
                 // duration data, possibly remove those fields from duration data.
             }
-            else
-            {
-//                const auto insanityMessage = "this insanity returned false ( ( myNoteData.durationData.timeModificationNormalNotes > 0 && myNoteData.durationData.timeModificationActualNotes > 0 && (    myNoteData.durationData.timeModificationNormalNotes > 1 || myNoteData.durationData.timeModificationActualNotes > 1 ) ))";
-//                std::cout << insanityMessage << std::endl;
-            }
 
             return myOutNote;
         }
         
+        template<typename CHOICE_OBJ_TYPE>
+        static inline void addTie( bool isStart, CHOICE_OBJ_TYPE choiceObj, core::NotePtr outNote )
+        {
+            auto tie = core::makeTie();
+            
+            if( isStart )
+            {
+                tie->getAttributes()->type = core::StartStop::start;
+            }
+            else
+            {
+                tie->getAttributes()->type = core::StartStop::stop;
+            }
+            
+            choiceObj->addTie( tie );
+            
+            core::NotationsPtr notations = nullptr;
+            core::NotationsChoicePtr notationsChoice = nullptr;
+            
+            if( !outNote->getNotationsSet().empty() )
+            {
+                notations = outNote->getNotationsSet().front();
+                notationsChoice = core::makeNotationsChoice();
+                notations->addNotationsChoice( notationsChoice );
+                outNote->addNotations( notations );
+            }
+            else
+            {
+                notations = core::makeNotations();
+                
+                if( notations->getNotationsChoiceSet().empty() )
+                {
+                    notationsChoice = core::makeNotationsChoice();
+                    notations->addNotationsChoice( notationsChoice );
+                }
+                else
+                {
+                    notationsChoice = notations->getNotationsChoiceSet().front();
+                }
+                
+                outNote->addNotations( notations );
+            }
+            
+            notationsChoice->setChoice( core::NotationsChoice::Choice::tied );
+            
+            if( isStart )
+            {
+                notationsChoice->getTied()->getAttributes()->type = core::StartStopContinue::start;
+            }
+            else
+            {
+                notationsChoice->getTied()->getAttributes()->type = core::StartStopContinue::stop;
+            }
+        }
         
         void NoteWriter::setNoteChoiceAndFullNoteGroup( bool isStartOfChord ) const
         {
@@ -242,18 +293,17 @@ namespace mx
                     auto choiceObj = myOutNoteChoice->getGraceNoteGroup();
                     myOutFullNoteGroup = choiceObj->getFullNoteGroup();
                     myOutFullNoteGroup->setHasChord( myCursor.isChordActive && myIsPreviousNoteAChordMember && !isStartOfChord );
-                    if( myNoteData.isTieStart )
-                    {
-                        auto tie = core::makeTie();
-                        tie->getAttributes()->type = core::StartStop::start;
-                        choiceObj->addTie( tie );
-                    }
+
                     if( myNoteData.isTieStop )
                     {
-                        auto tie = core::makeTie();
-                        tie->getAttributes()->type = core::StartStop::stop;
-                        choiceObj->addTie( tie );
+                        addTie( false, choiceObj, myOutNote );
                     }
+                    
+                    if( myNoteData.isTieStart )
+                    {
+                        addTie( true, choiceObj, myOutNote );
+                    }
+                    
                     break;
                 }
                 case api::NoteType::normal:
@@ -263,18 +313,17 @@ namespace mx
                     myOutFullNoteGroup = choiceObj->getFullNoteGroup();
                     myOutFullNoteGroup->setHasChord( myCursor.isChordActive && myIsPreviousNoteAChordMember && !isStartOfChord );
                     choiceObj->getDuration()->setValue( core::PositiveDivisionsValue{ static_cast<core::DecimalType>(myNoteData.durationData.durationTimeTicks) } );
-                    if( myNoteData.isTieStart )
-                    {
-                        auto tie = core::makeTie();
-                        tie->getAttributes()->type = core::StartStop::start;
-                        choiceObj->addTie( tie );
-                    }
+                    
                     if( myNoteData.isTieStop )
                     {
-                        auto tie = core::makeTie();
-                        tie->getAttributes()->type = core::StartStop::stop;
-                        choiceObj->addTie( tie );
+                        addTie( false, choiceObj, myOutNote );
                     }
+                    
+                    if( myNoteData.isTieStart )
+                    {
+                        addTie( true, choiceObj, myOutNote );
+                    }
+                    
                     break;
                 }
                 default:

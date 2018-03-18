@@ -69,8 +69,10 @@
 #include "mx/core/elements/Voice.h"
 #include "mx/core/elements/Wedge.h"
 #include "mx/core/elements/Words.h"
-
 #include "mxtest/api/ApiChordSimpleScoreData.h"
+#include <string>
+#include <memory>
+#include <algorithm>
 
 using namespace std;
 using namespace mx::api;

@@ -9,6 +9,7 @@
 #include "mx/api/ScoreData.h"
 
 #include <string>
+#include <memory>
 #include <vector>
 #include <map>
 #include <set>
