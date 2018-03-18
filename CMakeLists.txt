@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.12.2)
 project(Mx)
 
-set(CMAKE_BINARY_DIR "./Build")
+#set(CMAKE_BINARY_DIR "./Build")
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
@@ -25,9 +25,9 @@ file(GLOB_RECURSE SRC_CPUL ${SOURCE}/cpul/*.cpp ${SOURCE}/cpul/*.h)
 
 include_directories(${SOURCE})
 
-IF(!MSVC)
-    add_compile_options(-std=c++11)
-ENDIF()
+#IF(!MSVC)
+#    add_compile_options(-std=c++14)
+#ENDIF()
 
 # Mx
 add_library(Mx STATIC ${SRC_MX_API} ${SRC_MX_CORE} ${SRC_MX_IMPL} ${SRC_MX_PUGIXML} ${SRC_MX_UTILITY} ${SRC_MX_XML})
@@ -38,6 +38,22 @@ source_group( "pugixml" FILES ${SRC_MX_PUGIXML} )
 source_group( "utility" FILES ${SRC_MX_UTILITY} )
 source_group( "xml" FILES ${SRC_MX_XML} )
 set_property(TARGET Mx PROPERTY CXX_STANDARD 14)
+
+file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/Sourcecode/mxtest/file/PathRoot.h
+        "// This file is auto generated
+// To override these paths, pass in these macro definitions to the compiler.
+#pragma once
+
+// The absolute path to the binary output directory.
+#ifndef MX_REPO_ROOT_PATH
+#define MX_REPO_ROOT_PATH \"${CMAKE_CURRENT_SOURCE_DIR}\"
+#endif
+
+// The absolute path to the root of the repository.
+#ifndef MX_BINARY_OUTPUT_PATH
+#define MX_BINARY_OUTPUT_PATH \"${CMAKE_BINARY_DIR}\"
+#endif"
+        )
 
 # MxTest
 add_executable(MxTest ${SRC_MX_TEST_API} ${SRC_MX_TEST_CONTROL} ${SRC_MX_TEST_CORE} ${SRC_MX_TEST_FILE} ${SRC_MX_TEST_IMPL} ${SRC_MX_TEST_IMPORT} ${SRC_MX_TEST_UTILITY} ${SRC_MX_TEST_XML} ${SRC_CPUL})

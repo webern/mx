@@ -9,6 +9,7 @@
 #include "mx/core/elements/CreditWords.h"
 #include "mx/core/elements/ScoreHeaderGroup.h"
 #include "mx/impl/PositionFunctions.h"
+#include "mx/impl/FontFunctions.h"
 
 namespace mx
 {
@@ -23,8 +24,12 @@ namespace mx
                 choice->setChoice( core::CreditChoice::Choice::creditWords );
                 auto words = choice->getCreditWords();
                 auto attr = credit->getAttributes();
-                
+
                 words->setValue( core::XsString{ p.text } );
+
+                impl::setAttributesFromFontData( p.fontData, *words->getAttributes() );
+                impl::setAttributesFromPositionData( p.positionData, *words->getAttributes() );
+
                 if( !p.description.empty() )
                 {
                     auto descrip = core::makeCreditType();
@@ -57,9 +62,9 @@ namespace mx
                     // ignore images for now
                     continue;
                 }
-                
+
                 auto pageText = api::PageTextData{};
-                
+
                 if( c->getAttributes()->hasPage )
                 {
                     pageText.pageNumber = c->getAttributes()->page.getValue();
@@ -68,6 +73,8 @@ namespace mx
                 auto words = choice->getCreditWords();
                 pageText.text = words->getValue().getValue();
                 auto attr = words->getAttributes();
+                pageText.positionData = impl::getPositionData( *( attr ) );
+                pageText.fontData = impl::getFontData( *( attr ) );
                 
                 const auto& creditTypeSet = c->getCreditTypeSet();
                 if( creditTypeSet.size() > 0 )
@@ -75,9 +82,7 @@ namespace mx
                     const auto& t = *creditTypeSet.cbegin();
                     pageText.description = t->getValue().getValue();
                 }
-                
-                pageText.positionData = getPositionData( *attr );
-                
+
                 outPageTextItems.push_back( pageText );
             }
         }

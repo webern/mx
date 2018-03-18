@@ -9,6 +9,7 @@
 #include "mx/api/ScoreData.h"
 
 #include <string>
+#include <memory>
 #include <vector>
 #include <map>
 #include <set>
@@ -22,6 +23,7 @@ namespace mxtest
     {
     public:
         static const std::string getFullPath( const std::string& fileName );
+        static const std::string getNameWithoutExtension( const std::string& fileName );
         static const std::string& getSubdirectory( const std::string& fileName );
         static MxFiles getTestFiles( int maxFileSizeBytes );
         static const MxFiles& getTestFiles();

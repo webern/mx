@@ -45,6 +45,7 @@ namespace mx
     		MeasureReader( const core::PartwiseMeasure& inPartwiseMeasureRef, const MeasureCursor& cursor, const MeasureCursor& previousMeasureCursor );
 
     		api::MeasureData getMeasureData() const;
+            impl::MeasureCursor getCursor() const;
 
     	private:
             mutable std::mutex myMutex;

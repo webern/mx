@@ -178,6 +178,12 @@ namespace mx
             myOutMeasureData = api::MeasureData{};
             return temp;
         }
+
+
+        impl::MeasureCursor MeasureReader::getCursor() const
+        {
+            return myCurrentCursor;
+        }
         
         
         void MeasureReader::parseTimeSignature() const

@@ -17,22 +17,29 @@
 #include "mx/core/elements/FullNoteGroup.h"
 #include "mx/core/elements/FullNoteTypeChoice.h"
 #include "mx/core/elements/GraceNoteGroup.h"
+#include "mx/core/elements/Lyric.h"
+#include "mx/core/elements/LyricTextChoice.h"
 #include "mx/core/elements/NormalNoteGroup.h"
 #include "mx/core/elements/NormalNotes.h"
 #include "mx/core/elements/NormalType.h"
 #include "mx/core/elements/NormalTypeNormalDotGroup.h"
 #include "mx/core/elements/Note.h"
 #include "mx/core/elements/NoteChoice.h"
+#include "mx/core/elements/Notehead.h"
 #include "mx/core/elements/Octave.h"
 #include "mx/core/elements/Pitch.h"
 #include "mx/core/elements/Rest.h"
 #include "mx/core/elements/Staff.h"
 #include "mx/core/elements/Step.h"
+#include "mx/core/elements/Syllabic.h"
+#include "mx/core/elements/SyllabicTextGroup.h"
 #include "mx/core/elements/TimeModification.h"
 #include "mx/core/elements/Type.h"
+#include "mx/core/elements/Text.h"
+#include "mx/core/elements/Tie.h"
+#include "mx/core/elements/TimeModification.h"
 #include "mx/core/elements/Unpitched.h"
 #include "mx/core/elements/Voice.h"
-#include "mx/core/elements/Tie.h"
 #include "mx/utility/StringToInt.h"
 
 #include <map>
@@ -60,6 +67,7 @@ namespace mx
         , myOctave( 4 )
         , myStaffNumber( 0 )
         , myVoiceNumber( 0 )
+        , myNoteheadValue( core::NoteheadValue::normal)
         , myDurationType( core::NoteTypeValue::maxima )
         , myIsDurationTypeSpecified( false )
         , myNumDots( 0 )
@@ -76,18 +84,21 @@ namespace mx
         , myIsAccidentalBracketed{ false }
         , myIsTieStart{ false }
         , myIsTieStop{ false }
+        , myHasLyric{ false }
         {
             setNormalGraceCueItems();
             setRestPitchUnpitchedItems();
             setChord();
             setStaffNumber();
             setVoiceNumber();
+            setNoteheadValue();
             setDurationType();
             setNumDots();
             setBeams();
             setTimeModification();
             setAccidental();
             setStem();
+            setLyric();
         }
 
         const core::FullNoteGroup& NoteReader::findFullNoteGroup( const core::NoteChoice& noteChoice ) const
@@ -239,7 +250,13 @@ namespace mx
             utility::stringToInt( myNote.getEditorialVoiceGroup()->getVoice()->getValue().getValue().c_str(), myVoiceNumber );
         }
 
+        
+        void NoteReader::setNoteheadValue()
+        {
+            myNoteheadValue = myNote.getNotehead()->getValue();
+        }
 
+        
         void NoteReader::setDurationType()
         {
             if( myNote.getHasType() )
@@ -379,6 +396,54 @@ namespace mx
                 else if( tie->getAttributes()->type == core::StartStop::stop )
                 {
                     myIsTieStop = true;
+                }
+            }
+        }
+        
+        void NoteReader::setLyric()
+        {
+            const auto& lyricSet = myNote.getLyricSet();
+            auto iter = lyricSet.begin();
+            const auto iterEnd = lyricSet.end();
+            for (; iter != iterEnd; ++iter) {
+                const auto& lyric = *iter;
+                
+                const auto& textChoice = lyric->getLyricTextChoice();
+                if( textChoice )
+                {
+                    const auto choice = textChoice->getChoice();
+                    switch ( choice )
+                    {
+                        case core::LyricTextChoice::Choice::syllabicTextGroup:
+                        {
+                            const auto textGroup = textChoice->getSyllabicTextGroup();
+                            if ( textGroup )
+                            {
+                                core::SyllabicEnum syllabic = core::SyllabicEnum::single;
+                                if( textGroup->getHasSyllabic() )
+                                {
+                                    syllabic = textGroup->getSyllabic()->getValue();
+                                }
+
+                                const auto& textPtr = textGroup->getText();
+                                if ( textPtr )
+                                {
+                                    const auto text = textPtr->getValue();
+                                    const LyricType lyricType( text.getValue(), syllabic );
+                                    myLyrics.emplace_back( lyricType );
+                                    myHasLyric = true;
+                                }
+                            }
+                            break;
+                        }
+
+                        case core::LyricTextChoice::Choice::extend:
+                        case core::LyricTextChoice::Choice::laughing:
+                        case core::LyricTextChoice::Choice::humming:
+                        {
+                            break;
+                        }
+                    }
                 }
             }
         }

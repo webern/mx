@@ -1,6 +1,7 @@
 #include "cpul/cpulTest.h"
 #include "cpul/cpulTestResult.h"
 #include "cpul/cpulTestRegistry.h"
+#include "cpul/cpulTest.h"
 #include <iostream>
 
 void TestRegistry::addTest (Test *test) 
@@ -18,8 +19,16 @@ TestRegistry& TestRegistry::instance () {
     return registry;
 }
 
-void TestRegistry::add (Test *test) {
-    tests.push_back (test);
+void TestRegistry::add(Test *test) {
+
+    // control what tests are run by adding or removing them
+    // from runOnlyTheseTests. See cpulTest.cpp
+    const bool doRunTest = test->getDoRunTest();
+
+    if( doRunTest )
+    {
+        tests.push_back (test);
+    }
 }
 
 void TestRegistry::run (TestResult& result) {

@@ -4,6 +4,7 @@
 
 #include "mx/core/Date.h"
 #include <sstream>
+#include <ctime>
 
 namespace
 {
@@ -48,22 +49,28 @@ namespace mx
             { parseString( yyyy_mm_dd ); }
             
             ~impl() {}
+
         public:
             void setYear( int value )
             {
                 myYear = constrainToRange( value, 1, 9999 );
                 setDay( getDay() );
             }
+
+
             void setMonth( int value )
             {
                 myMonth = constrainToRange( value, 1, 12 );
                 setDay( getDay() );
             }
+
+
             void setDay( int value )
             {
                 myDay = constrainToRange( value, 1, daysInMonth( getMonth(), getYear() ) );
             }
-            
+
+
             bool setValue( int year_in, int month_in, int day_in )
             {
                 if ( isDateValid( year_in, month_in, day_in ) )
@@ -75,6 +82,8 @@ namespace mx
                 }
                 return false;
             }
+
+
             bool isLeapYear( int year_in ) const
             {
                 /* per Wikipedia
@@ -104,12 +113,14 @@ namespace mx
                 else
                     return false;   // is not leapyear per wikipedia
             }
-            
+
+
             bool parse( const std::string value_in )
             {
                 return parseString( value_in );
             }
-            
+
+
             bool parseString( const std::string& value_in )
             {
                 if ( isStringFormatValid( value_in ) )
@@ -130,7 +141,8 @@ namespace mx
                 }
                 return false;
             } // parseString
-            
+
+
             bool parseStringYear( const std::string& value_in, int& year_out )
             {
                 year_out = -1;
@@ -142,7 +154,8 @@ namespace mx
                 }
                 return success;
             } //parseStringYear
-            
+
+
             bool parseStringMonth( const std::string& value_in, int& month_out )
             {
                 month_out = -1;
@@ -154,7 +167,8 @@ namespace mx
                 }
                 return success;
             } //parseStringMonth
-            
+
+
             bool parseStringDay( const std::string& value_in, int& day_out )
             {
                 day_out = -1;
@@ -166,7 +180,8 @@ namespace mx
                 }
                 return success;
             } //parseStringDay
-            
+
+
             bool isStringFormatValid( const std::string& value_in ) const
             {
                 int length = (int)value_in.size();
@@ -198,7 +213,8 @@ namespace mx
                 }
                 return true;
             }
-            
+
+
             int daysInMonth( int month_in, int year_in ) const
             {
                 if ( isLeapYear( year_in ) )
@@ -210,6 +226,8 @@ namespace mx
                     return MONTHDAYS[0][constrainToRange( month_in, 1, 12 )];
                 }
             }
+
+
             int constrainToRange( int value_in, int minimumValue, int maximumValue ) const
             {
                 if ( value_in < minimumValue )
@@ -222,9 +240,27 @@ namespace mx
                 }
                 return value_in;
             }
-            int getYear() const { return myYear; }
-            int getDay() const { return myDay; }
-            int getMonth() const { return myMonth; }
+
+
+            int getYear() const
+            {
+                return myYear;
+            }
+
+
+            int getDay() const
+            {
+                return myDay;
+
+            }
+
+
+            int getMonth() const
+            {
+                return myMonth;
+            }
+
+
             int getWeekday() const
             {
                 // returns sequential day of the week 1 for Sunday, 2 for Monday ... 7 for Saturday
@@ -253,7 +289,7 @@ namespace mx
                 h = h % 7;
                 
                 // Zeller's Congruence returns 0 for Saturday
-                // Convert this to 7 so that
+                // Convert this to 7 so that...
                 // 1 = Sunday
                 // 2 = Monday
                 // 3 = Tuesday
@@ -267,7 +303,8 @@ namespace mx
                 }
                 return h;
             }
-            
+
+
             bool isDateValid( int year_in, int month_in, int day_in ) const
             {
                 if ( year_in < 1 )
@@ -305,30 +342,40 @@ namespace mx
             {
                 return compare( other_in ) == 0;
             }
+
+
             bool notEqual( const Date& other_in ) const
             {
                 return compare( other_in ) != 0;
             }
-            
+
+
             bool greaterThan( const Date& other_in ) const
             {
                 int temp = 999;
                 temp = compare( other_in );
                 return temp > 0;
             }
+
+
             bool greaterThanOrEqual( const Date& other_in ) const
             {
                 return compare( other_in ) >= 0;
             }
+
+
             bool lessThan( const Date& other_in ) const
             {
                 return compare( other_in ) < 0;
             }
+
+
             bool lessThanOrEqual( const Date& other_in ) const
             {
                 return compare( other_in ) <= 0;
             }
-            
+
+
             void addDays( int days )
             {
                 if (days == 0)
@@ -386,6 +433,8 @@ namespace mx
                     }
                 }
             }
+
+
             void addMonths( int months )
             {
                 
@@ -476,7 +525,8 @@ namespace mx
                     setYear( new_year );
                 }
             }
-            
+
+
             void addYears( int years )
             {
                 int new_year = getYear() + years;
@@ -496,6 +546,7 @@ namespace mx
             int myYear;
             int myMonth;
             int myDay;
+
             void setInitialValue( int year_in, int month_in, int day_in )
             {
                 if ( isDateValid( year_in, month_in, day_in ) )
@@ -507,7 +558,8 @@ namespace mx
                     setValue( 1900, 1, 1 );
                 }
             }
-            
+
+
             int compare( const Date& other ) const
             {
                 if ( this->getYear() > other.getYear() )
@@ -602,7 +654,17 @@ namespace mx
             myImpl = std::move( other.myImpl );
             return *this;
         }
-        
+
+        Date Date::today()
+        {
+            std::time_t t = std::time( 0 );
+            struct tm* now = std::localtime( &t );
+            const int y = static_cast<int>( now->tm_year + 1900 );
+            const int m = static_cast<int>( now->tm_mon + 1 );
+            const int d = static_cast<int>( now->tm_mday );
+            return Date{ y, m, d };
+        }
+
         /* Getters ---------------------------------------------------------------------------- */
         
         /** Returns the year as an int. **/

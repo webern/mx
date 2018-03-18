@@ -7,12 +7,13 @@
 #include "mx/api/DocumentManager.h"
 
 #include <fstream>
+#include <algorithm>
 
 namespace mxtest
 {
 
     MxFileRepository::MxFileRepository()
-    : myPath{ RESOURCES_DIRECTORY_PATH }
+    : myPath{ mxtest::getResourcesDirectoryPath() }
     , mySeparator{ FILE_PATH_SEPARATOR }
     , myExpectedLoadFailures{}
     , myNameSubdirectoryMap{}
@@ -35,6 +36,13 @@ namespace mxtest
         }
         const auto& instance = getInstance();
         return instance.myPath + subDir + instance.mySeparator + fileName;
+    }
+
+
+    const std::string MxFileRepository::getNameWithoutExtension( const std::string& fileName )
+    {
+        const auto lastDot = fileName.find_last_of( '.' );
+        return fileName.substr( 0, lastDot - 1 );
     }
     
     
@@ -274,6 +282,10 @@ namespace mxtest
         myNameSubdirectoryMap.emplace( "hello_timewise.xml", "mjbsuite" );
         myNameSubdirectoryMap.emplace( "lyre_timewise.xml", "mjbsuite" );
         myNameSubdirectoryMap.emplace( "chords_simple.xml", "mjbsuite" );
+        myNameSubdirectoryMap.emplace( "ChordDirectionPlacement.xml", "mjbsuite" );
+        myNameSubdirectoryMap.emplace( "HasMusicXmlVersionTrue.xml", "mjbsuite" );
+        myNameSubdirectoryMap.emplace( "HasMusicXmlVersionFalse.xml", "mjbsuite" );
+        myNameSubdirectoryMap.emplace( "PreserveTimeModificationNormalType.xml", "mjbsuite" );
         
         // museScore
         myNameSubdirectoryMap.emplace( "A_Walk_through_the_Park.xml", "musuite" );

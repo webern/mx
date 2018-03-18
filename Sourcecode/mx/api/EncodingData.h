@@ -52,6 +52,7 @@ namespace mx
             int month;
             int day;
             EncodingDate() : year(-1), month(-1), day(-1) {}
+            static EncodingDate today();
         };
         
         class EncodingData

@@ -168,6 +168,14 @@ namespace mx
             
             myOutScoreData.ticksPerQuarter = findMaxDivisionsPerQuarter();
 
+            if( myScorePartwise.getAttributes()->hasVersion )
+            {
+                if( myScorePartwise.getAttributes()->version.getValue() == "3.0" )
+                {
+                    myOutScoreData.musicXmlVersion = api::MusicXmlVersion::ThreePointZero;
+                }
+            }
+
             if( myHeaderGroup.getHasWork() && myHeaderGroup.getWork()->getHasWorkTitle() )
             {
                 myOutScoreData.workTitle = myHeaderGroup.getWork()->getWorkTitle()->getValue().getValue();
@@ -253,7 +261,7 @@ namespace mx
                 
                 if( myHeaderGroup.getIdentification()->getHasMiscellaneous() )
                 {
-                    for( const auto m : myHeaderGroup.getIdentification()->getMiscellaneous()->getMiscellaneousFieldSet() )
+                    for( const auto& m : myHeaderGroup.getIdentification()->getMiscellaneous()->getMiscellaneousFieldSet() )
                     {
                         std::string key;
                         if( m->getAttributes()->hasName )
@@ -267,19 +275,21 @@ namespace mx
                 myOutScoreData.encoding = std::move(encodingData);
             }
             
-            
-            
             if( myHeaderGroup.getHasDefaults() )
             {
                 myOutScoreData.layout = createLayout( myHeaderGroup );
             }
+
             createPageTextItems( myHeaderGroup, myOutScoreData.pageTextItems );
             
             auto partMap = reconcileParts( myScorePartwise );
+            int divisionsValue = -1;
             for( const auto& reconciledPart : partMap )
             {
-                PartReader reader{ *reconciledPart.first, *reconciledPart.second, myOutScoreData.ticksPerQuarter };
+                PartReader reader{ *reconciledPart.first, *reconciledPart.second, myOutScoreData.ticksPerQuarter, myScorePartwise, divisionsValue };
                 myOutScoreData.parts.emplace_back( reader.getPartData() );
+                const auto cursorReturn = reader.getCursor();
+                divisionsValue = cursorReturn.ticksPerQuarter;
             }
             
             scanForSystemInfo();

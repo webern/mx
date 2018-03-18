@@ -28,12 +28,16 @@
 #include "mx/core/elements/Note.h"
 #include "mx/core/elements/Pan.h"
 #include "mx/core/elements/PartAbbreviation.h"
+#include "mx/core/elements/PartGroupOrScorePart.h"
+#include "mx/core/elements/PartList.h"
 #include "mx/core/elements/PartName.h"
 #include "mx/core/elements/PartNameDisplay.h"
 #include "mx/core/elements/PartwisePart.h"
 #include "mx/core/elements/Properties.h"
+#include "mx/core/elements/ScoreHeaderGroup.h"
 #include "mx/core/elements/ScoreInstrument.h"
 #include "mx/core/elements/ScorePart.h"
+#include "mx/core/elements/ScorePartwise.h"
 #include "mx/core/elements/Solo.h"
 #include "mx/core/elements/SoloOrEnsembleChoice.h"
 #include "mx/core/elements/Staff.h"
@@ -51,11 +55,14 @@ namespace mx
 {
     namespace impl
     {
-        PartReader::PartReader( const core::ScorePart& inScorePart, const core::PartwisePart& inPartwisePartRef, int globalTicksPerMeasure )
+        PartReader::PartReader( const core::ScorePart& inScorePart, const core::PartwisePart& inPartwisePartRef, int globalTicksPerMeasure, const core::ScorePartwise& inScore, int inDivisionsValue )
         : myPartwisePart{ inPartwisePartRef }
         , myScorePart{ inScorePart }
         , myNumStaves{ -1 }
         , myGlobalTicksPerMeasure{ globalTicksPerMeasure }
+        , myScore{ inScore }
+        , myPartIndex{ -1 }
+        , myConstructedDivisionsValue{ inDivisionsValue }
         {
             const auto ppId = myPartwisePart.getAttributes()->id.getValue();
             const auto spId = myScorePart.getAttributes()->id.getValue();
@@ -63,33 +70,52 @@ namespace mx
             {
                 MX_THROW( "the partwise-part id must match the score-part id" );
             }
+            const auto partIndex = findPartIndex( ppId );
+            MX_ASSERT( partIndex >= 0 );
+            myPartIndex = partIndex;
             myNumStaves = calculateNumStaves();
         }
         
         
-        api::PartData PartReader::getPartData() const
+        api::PartData PartReader::getPartData()
         {
             std::lock_guard<std::mutex> lock{ myMutex };
             myOutPartData = api::PartData{};
             parseScorePart();
             
-            MeasureCursor currentCursor{ myNumStaves, myGlobalTicksPerMeasure };
-            MeasureCursor previousCursor{ myNumStaves, myGlobalTicksPerMeasure };
+            myCurrentCursor = MeasureCursor{ myNumStaves, myGlobalTicksPerMeasure };
+            myCurrentCursor.partIndex = myPartIndex;
+
+            if( myConstructedDivisionsValue > 0 )
+            {
+                myCurrentCursor.ticksPerQuarter = myConstructedDivisionsValue;
+            }
+
+            myPreviousCursor = myCurrentCursor;
+
             for( const auto& mxMeasurePtr : myPartwisePart.getPartwiseMeasureSet() )
             {
                 const auto& mxMeasure = *mxMeasurePtr;
-                MeasureReader reader{ mxMeasure, currentCursor, previousCursor };
+                MeasureReader reader{ mxMeasure, myCurrentCursor, myPreviousCursor };
                 auto measureData = reader.getMeasureData();
-                currentCursor.timeSignature = measureData.timeSignature;
+                myCurrentCursor.timeSignature = measureData.timeSignature;
+                myCurrentCursor.ticksPerQuarter = reader.getCursor().ticksPerQuarter;
                 myOutPartData.measures.emplace_back( std::move( measureData ) );
-                ++currentCursor.measureIndex;
-                previousCursor = currentCursor;
+                ++myCurrentCursor.measureIndex;
+                myPreviousCursor = myCurrentCursor;
             }
             
             api::PartData tempReturn = std::move( myOutPartData );
             myOutPartData = api::PartData{};
             return tempReturn;
         }
+
+
+        MeasureCursor PartReader::getCursor() const
+        {
+            return myCurrentCursor;
+        }
+
         
         int PartReader::calculateNumStaves() const
         {
@@ -324,6 +350,33 @@ namespace mx
                 myOutPartData.instrumentData.midiData.isElevationSpecified = true;
                 myOutPartData.instrumentData.midiData.elevation = inst.getElevation()->getValue().getValue();
             }
+        }
+
+        int PartReader::findPartIndex( const std::string& inPartId ) const
+        {
+            const auto& partList = *myScore.getScoreHeaderGroup()->getPartList();
+            const auto& firstPart = *partList.getScorePart();
+            int index = 0;
+
+            if( firstPart.getAttributes()->id.getValue() == inPartId )
+            {
+                return index;
+            }
+
+            ++index;
+
+            for( const auto& p : partList.getPartGroupOrScorePartSet() )
+            {
+                if( p->getChoice() == core::PartGroupOrScorePart::Choice::scorePart )
+                {
+                    if( p->getScorePart()->getAttributes()->id.getValue() == inPartId )
+                    {
+                        return index;
+                    }
+                    ++index;
+                }
+            }
+            return -1;
         }
     }
 }

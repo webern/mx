@@ -15,6 +15,7 @@ namespace mxtest
     {
         using namespace mx::api;
         ScoreData score;
+        score.musicXmlVersion = mx::api::MusicXmlVersion::ThreePointZero;
         score.parts.emplace_back( PartData{} );
         score.ticksPerQuarter = 2;
         score.encoding.encodingDate.year = 2016;

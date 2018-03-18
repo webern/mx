@@ -6,6 +6,7 @@
 
 #include "mx/core/Enums.h"
 #include "mx/core/elements/Tie.h"
+#include "mx/impl/LyricType.h"
 #include <vector>
 
 namespace mx
@@ -52,6 +53,7 @@ namespace mx
             inline int getOctave() const { return myOctave; }
             inline int getStaffNumber() const { return myStaffNumber; }
             inline int getVoiceNumber() const { return myVoiceNumber; }
+            inline core::NoteheadValue getNoteheadValue() const { return myNoteheadValue; }
             inline core::NoteTypeValue getDurationType() const { return myDurationType; }
             inline bool getIsDurationTypeSpecified() const { return myIsDurationTypeSpecified; }
             inline int getNumDots() const { return myNumDots; }
@@ -90,6 +92,7 @@ namespace mx
             int myOctave;
             int myStaffNumber;
             int myVoiceNumber;
+            core::NoteheadValue myNoteheadValue;
             core::NoteTypeValue myDurationType;
             bool myIsDurationTypeSpecified;
             int myNumDots;
@@ -108,6 +111,8 @@ namespace mx
             core::StemValue myStem;
             bool myIsTieStart;
             bool myIsTieStop;
+            bool myHasLyric;
+            std::vector<LyricType> myLyrics;
 
         private:
             const core::FullNoteGroup& findFullNoteGroup( const core::NoteChoice& noteChoice ) const;
@@ -116,6 +121,7 @@ namespace mx
             void setChord();
             void setStaffNumber();
             void setVoiceNumber();
+            void setNoteheadValue();
             void setDurationType();
             void setNumDots();
             void setBeams();
@@ -123,6 +129,8 @@ namespace mx
             void setAccidental();
             void setStem();
             void setTie( const core::TieSet& tieSet );
+            void setLyric();
+
         };
     }
 }

@@ -20,35 +20,54 @@
 
 #endif
 
-#ifndef MX_THROW
-#define MX_THROW(throw_error_message)                   \
-throw std::runtime_error (                              \
-  std::string( "error in " )                            \
+#ifndef MX_ERROR_MESSAGE
+#define MX_ERROR_MESSAGE(error_message)                 \
+( std::string( "error in " )                            \
 + std::string( __FILENAME__ )                           \
 + std::string(" (line ")                                \
 + std::string( std::to_string(__LINE__ ) )              \
 + std::string(") ")                                     \
 + std::string( __FUNCTION__ )                           \
 + std::string(": '")                                    \
-+ std::string( throw_error_message ) );                    
++ std::string( error_message ) )
+#endif
+
+#ifndef MX_THROW
+#define MX_THROW(throw_error_message)                               \
+throw std::runtime_error ( MX_ERROR_MESSAGE(throw_error_message) );
+#endif
+
+#ifndef MX_LOG
+#define MX_LOG(message) \
+std::cout << MX_ERROR_MESSAGE(message) << std::endl;
+#endif
+
+#ifndef MX_DEBUG_THROW
+#
+#    ifdef DEBUG
+#        define MX_DEBUG_THROW(the_message) MX_THROW(the_message)
+#    else
+#        define MX_DEBUG_THROW(the_message)
+#    endif
+#
 #endif
 
 #ifndef MX_THROW_NULL
-#define THROW_NULL THROW("null pointer encountered")
+#define THROW_NULL MX_THROW("null pointer encountered")
 #endif
 
 #ifndef MX_THROW_IF_NULL
 #define THROW_IF_NULL(pointerVariable)               \
-if ( pointerVariable == nullptr ) { THROW_NULL }
+if ( pointerVariable == nullptr ) { MX_THROW_NULL }
 #endif
 
 #ifndef MX_THROW_IF_BAD_VALUE
-#define THROW_IF_BAD_VALUE( VALUE, MIN_VAL, MAX_VAL )                          \
+#define MX_THROW_IF_BAD_VALUE( VALUE, MIN_VAL, MAX_VAL )                          \
 if( VALUE < MIN_VAL || VALUE > MAX_VAL ) {                                     \
 std::stringstream BADVALUEMESSAGE;                                             \
 BADVALUEMESSAGE << "value out of range. " <<                                   \
 #VALUE << " = " << VALUE << ", min = " << MIN_VAL << ", max = " << MAX_VAL;    \
-THROW( BADVALUEMESSAGE.str() ) }
+MX_THROW( BADVALUEMESSAGE.str() ) }
 #endif
 
 #ifndef MX_BUG

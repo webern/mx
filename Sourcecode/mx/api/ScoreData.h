@@ -19,11 +19,17 @@ namespace mx
 {
     namespace api
     {
+        enum class MusicXmlVersion
+        {
+             unspecified,
+             ThreePointZero,
+        };
+
         class ScoreData
         {
         public:
             ScoreData();
-
+            MusicXmlVersion musicXmlVersion;
             std::string musicXmlType;
             std::string workTitle;
             std::string workNumber;
@@ -53,6 +59,7 @@ namespace mx
         std::vector<PartData>::iterator findPart( std::vector<PartData>& inParts, const std::string& inPartId );
         
         MXAPI_EQUALS_BEGIN( ScoreData )
+        MXAPI_EQUALS_MEMBER( musicXmlVersion )
         MXAPI_EQUALS_MEMBER( musicXmlType )
         MXAPI_EQUALS_MEMBER( workTitle )
         MXAPI_EQUALS_MEMBER( workNumber )

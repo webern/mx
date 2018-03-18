@@ -40,6 +40,34 @@ namespace mx
             std::pair<core::NoteTypeValue, api::DurationName>{ core::NoteTypeValue::oneThousandTwentyFourth, api::DurationName::dur1024th },
         };
         
+        const std::map<core::NoteheadValue, api::Notehead> Converter::noteheadMap =
+        {
+            std::pair<core::NoteheadValue, api::Notehead>{ core::NoteheadValue::slash, api::Notehead::slash },
+            std::pair<core::NoteheadValue, api::Notehead>{ core::NoteheadValue::triangle, api::Notehead::triangle },
+            std::pair<core::NoteheadValue, api::Notehead>{ core::NoteheadValue::diamond, api::Notehead::diamond },
+            std::pair<core::NoteheadValue, api::Notehead>{ core::NoteheadValue::square, api::Notehead::square },
+            std::pair<core::NoteheadValue, api::Notehead>{ core::NoteheadValue::cross, api::Notehead::cross },
+            std::pair<core::NoteheadValue, api::Notehead>{ core::NoteheadValue::x, api::Notehead::x },
+            std::pair<core::NoteheadValue, api::Notehead>{ core::NoteheadValue::circleX, api::Notehead::circleX },
+            std::pair<core::NoteheadValue, api::Notehead>{ core::NoteheadValue::invertedTriangle, api::Notehead::invertedTriangle },
+            std::pair<core::NoteheadValue, api::Notehead>{ core::NoteheadValue::arrowDown, api::Notehead::arrowDown },
+            std::pair<core::NoteheadValue, api::Notehead>{ core::NoteheadValue::arrowUp, api::Notehead::arrowUp },
+            std::pair<core::NoteheadValue, api::Notehead>{ core::NoteheadValue::slashed, api::Notehead::slashed },
+            std::pair<core::NoteheadValue, api::Notehead>{ core::NoteheadValue::backSlashed, api::Notehead::backSlashed },
+            std::pair<core::NoteheadValue, api::Notehead>{ core::NoteheadValue::normal, api::Notehead::normal },
+            std::pair<core::NoteheadValue, api::Notehead>{ core::NoteheadValue::cluster, api::Notehead::cluster },
+            std::pair<core::NoteheadValue, api::Notehead>{ core::NoteheadValue::circleDot, api::Notehead::circleDot },
+            std::pair<core::NoteheadValue, api::Notehead>{ core::NoteheadValue::leftTriangle, api::Notehead::leftTriangle },
+            std::pair<core::NoteheadValue, api::Notehead>{ core::NoteheadValue::rectangle, api::Notehead::rectangle },
+            std::pair<core::NoteheadValue, api::Notehead>{ core::NoteheadValue::none, api::Notehead::none },
+            std::pair<core::NoteheadValue, api::Notehead>{ core::NoteheadValue::do_, api::Notehead::do_ },
+            std::pair<core::NoteheadValue, api::Notehead>{ core::NoteheadValue::re, api::Notehead::re },
+            std::pair<core::NoteheadValue, api::Notehead>{ core::NoteheadValue::mi, api::Notehead::mi },
+            std::pair<core::NoteheadValue, api::Notehead>{ core::NoteheadValue::fa, api::Notehead::fa },
+            std::pair<core::NoteheadValue, api::Notehead>{ core::NoteheadValue::la, api::Notehead::la },
+            std::pair<core::NoteheadValue, api::Notehead>{ core::NoteheadValue::so  , api::Notehead::so },
+            std::pair<core::NoteheadValue, api::Notehead>{ core::NoteheadValue::ti, api::Notehead::ti },
+        };
         
         const std::map<core::BeamValue, api::Beam> Converter::beamMap =
         {
@@ -1370,6 +1398,35 @@ namespace mx
             if( it == durationMap.cend() )
             {
                 return core::NoteTypeValue::maxima;
+            }
+            
+            return it->first;
+        }
+        
+        
+        api::Notehead Converter::convert( core::NoteheadValue inValue ) const
+        {
+            auto it = noteheadMap.find( inValue );
+            if( it == noteheadMap.cend() )
+            {
+                return api::Notehead::none;
+            }
+            return it->second;
+        }
+        
+        
+        core::NoteheadValue Converter::convert( api::Notehead inValue ) const
+        {
+            auto compare = [&inValue]( const std::pair<core::NoteheadValue, api::Notehead>& v )
+            {
+                return v.second == inValue;
+            };
+            
+            auto it = std::find_if( noteheadMap.cbegin(), noteheadMap.cend(), compare );
+            
+            if( it == noteheadMap.cend() )
+            {
+                return core::NoteheadValue::none;
             }
             
             return it->first;

@@ -33,7 +33,10 @@ namespace mx
                 const api::NoteData& inNoteData,
                 const MeasureCursor& inCursor,
                 const ScoreWriter& inScoreWriter,
-                bool isPreviousNoteAChordMember );
+                bool isPreviousNoteAChordMember,
+                const std::vector<mx::api::NoteData>& inSiblingNotes,
+                int inNoteIndex );
+            
             core::NotePtr getNote( bool isStartOfChord ) const;
             
         private:
@@ -42,6 +45,8 @@ namespace mx
             const impl::ScoreWriter& myScoreWriter;
             const Converter myConverter;
             const bool myIsPreviousNoteAChordMember;
+            const std::vector<mx::api::NoteData>& mySiblingNotes;
+            const int myNoteIndex;
             mutable core::NotePtr myOutNote;
             mutable core::NoteChoicePtr myOutNoteChoice;
             mutable core::FullNoteGroupPtr myOutFullNoteGroup;
@@ -52,8 +57,10 @@ namespace mx
             void setFullNoteTypeChoice() const;
             void setStaffAndVoice() const;
             void setDurationNameAndDots() const;
+            void setNotehead() const;
             void setStemDirection() const;
             void setMiscData() const;
+            bool findNormalNameAndDots( mx::api::DurationName& ioName, int& ioDots, long double inTickLength ) const;
         };
     }
 }
