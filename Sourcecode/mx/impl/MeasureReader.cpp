@@ -530,7 +530,6 @@ namespace mx
             auto endingType = api::EndingType::none;
             auto endingNumber = 0;
             auto repeat = false;
-            auto repeat = false;
             
             if( attr.hasLocation )
             {

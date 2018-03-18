@@ -27,7 +27,6 @@
 		290756D91DA8BE0800EEF5C3 /* PitchData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29E9C5611DA49F2D0040183B /* PitchData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		290756DA1DA8BE0800EEF5C3 /* PositionData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29ADB3141D736A2B00683BEC /* PositionData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		290756DB1DA8BE0800EEF5C3 /* PrintData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29C51A521D9F18C600EAA308 /* PrintData.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		290756DC1DA8BE0800EEF5C3 /* ScoreData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29EF440C1D6E70D300DBDAB9 /* ScoreData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		290756DD1DA8BE0800EEF5C3 /* Smufl.h in Headers */ = {isa = PBXBuildFile; fileRef = 29C51A1C1D9ED3A200EAA308 /* Smufl.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		290756DE1DA8BE0800EEF5C3 /* SpannerData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29E9C5391DA470BC0040183B /* SpannerData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		290756DF1DA8BE0800EEF5C3 /* StaffData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29DC06EE1D7E5A8300210B7E /* StaffData.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -52,7 +51,6 @@
 		290756F71DA8BE2A00EEF5C3 /* PitchData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29E9C5611DA49F2D0040183B /* PitchData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		290756F81DA8BE2A00EEF5C3 /* PositionData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29ADB3141D736A2B00683BEC /* PositionData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		290756F91DA8BE2A00EEF5C3 /* PrintData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29C51A521D9F18C600EAA308 /* PrintData.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		290756FA1DA8BE2A00EEF5C3 /* ScoreData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29EF440C1D6E70D300DBDAB9 /* ScoreData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		290756FB1DA8BE2A00EEF5C3 /* Smufl.h in Headers */ = {isa = PBXBuildFile; fileRef = 29C51A1C1D9ED3A200EAA308 /* Smufl.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		290756FC1DA8BE2A00EEF5C3 /* SpannerData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29E9C5391DA470BC0040183B /* SpannerData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		290756FD1DA8BE2A00EEF5C3 /* StaffData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29DC06EE1D7E5A8300210B7E /* StaffData.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -3392,6 +3390,46 @@
 		29FFAC801DB9C8B600DC8AE1 /* CurveData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29FFAC7F1DB9C8B600DC8AE1 /* CurveData.h */; };
 		29FFAC811DB9C9CD00DC8AE1 /* CurveData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29FFAC7F1DB9C8B600DC8AE1 /* CurveData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		29FFAC821DB9C9D100DC8AE1 /* CurveData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29FFAC7F1DB9C8B600DC8AE1 /* CurveData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E29A1CE0205DE897006A7021 /* ChordData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E29A1CDF205DE896006A7021 /* ChordData.cpp */; };
+		E29A1CE1205DE897006A7021 /* ChordData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E29A1CDF205DE896006A7021 /* ChordData.cpp */; };
+		E29A1CE2205DE897006A7021 /* ChordData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E29A1CDF205DE896006A7021 /* ChordData.cpp */; };
+		E29A1CE3205DE897006A7021 /* ChordData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E29A1CDF205DE896006A7021 /* ChordData.cpp */; };
+		E29A1CE4205DE897006A7021 /* ChordData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E29A1CDF205DE896006A7021 /* ChordData.cpp */; };
+		E29A1CE6205DE89F006A7021 /* ChordData.h in Headers */ = {isa = PBXBuildFile; fileRef = E29A1CE5205DE89F006A7021 /* ChordData.h */; };
+		E29A1CE7205DE89F006A7021 /* ChordData.h in Headers */ = {isa = PBXBuildFile; fileRef = E29A1CE5205DE89F006A7021 /* ChordData.h */; };
+		E29A1CE8205DE89F006A7021 /* ChordData.h in Headers */ = {isa = PBXBuildFile; fileRef = E29A1CE5205DE89F006A7021 /* ChordData.h */; };
+		E29A1CE9205DE89F006A7021 /* ChordData.h in Headers */ = {isa = PBXBuildFile; fileRef = E29A1CE5205DE89F006A7021 /* ChordData.h */; };
+		E29A1CEA205DE89F006A7021 /* ChordData.h in Headers */ = {isa = PBXBuildFile; fileRef = E29A1CE5205DE89F006A7021 /* ChordData.h */; };
+		E29A1CED205DE8BB006A7021 /* ProcessingInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E29A1CEB205DE8BA006A7021 /* ProcessingInstruction.cpp */; };
+		E29A1CEE205DE8BB006A7021 /* ProcessingInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E29A1CEB205DE8BA006A7021 /* ProcessingInstruction.cpp */; };
+		E29A1CEF205DE8BB006A7021 /* ProcessingInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E29A1CEB205DE8BA006A7021 /* ProcessingInstruction.cpp */; };
+		E29A1CF0205DE8BB006A7021 /* ProcessingInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E29A1CEB205DE8BA006A7021 /* ProcessingInstruction.cpp */; };
+		E29A1CF1205DE8BB006A7021 /* ProcessingInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E29A1CEB205DE8BA006A7021 /* ProcessingInstruction.cpp */; };
+		E29A1CF2205DE8BB006A7021 /* ProcessingInstruction.h in Headers */ = {isa = PBXBuildFile; fileRef = E29A1CEC205DE8BA006A7021 /* ProcessingInstruction.h */; };
+		E29A1CF3205DE8BB006A7021 /* ProcessingInstruction.h in Headers */ = {isa = PBXBuildFile; fileRef = E29A1CEC205DE8BA006A7021 /* ProcessingInstruction.h */; };
+		E29A1CF4205DE8BB006A7021 /* ProcessingInstruction.h in Headers */ = {isa = PBXBuildFile; fileRef = E29A1CEC205DE8BA006A7021 /* ProcessingInstruction.h */; };
+		E29A1CF5205DE8BB006A7021 /* ProcessingInstruction.h in Headers */ = {isa = PBXBuildFile; fileRef = E29A1CEC205DE8BA006A7021 /* ProcessingInstruction.h */; };
+		E29A1CF6205DE8BB006A7021 /* ProcessingInstruction.h in Headers */ = {isa = PBXBuildFile; fileRef = E29A1CEC205DE8BA006A7021 /* ProcessingInstruction.h */; };
+		E29A1CF9205DE8CC006A7021 /* PreciseDecimal.h in Headers */ = {isa = PBXBuildFile; fileRef = E29A1CF7205DE8CC006A7021 /* PreciseDecimal.h */; };
+		E29A1CFA205DE8CC006A7021 /* PreciseDecimal.h in Headers */ = {isa = PBXBuildFile; fileRef = E29A1CF7205DE8CC006A7021 /* PreciseDecimal.h */; };
+		E29A1CFB205DE8CC006A7021 /* PreciseDecimal.h in Headers */ = {isa = PBXBuildFile; fileRef = E29A1CF7205DE8CC006A7021 /* PreciseDecimal.h */; };
+		E29A1CFC205DE8CC006A7021 /* PreciseDecimal.h in Headers */ = {isa = PBXBuildFile; fileRef = E29A1CF7205DE8CC006A7021 /* PreciseDecimal.h */; };
+		E29A1CFD205DE8CC006A7021 /* PreciseDecimal.h in Headers */ = {isa = PBXBuildFile; fileRef = E29A1CF7205DE8CC006A7021 /* PreciseDecimal.h */; };
+		E29A1CFE205DE8CC006A7021 /* PreciseDecimal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E29A1CF8205DE8CC006A7021 /* PreciseDecimal.cpp */; };
+		E29A1CFF205DE8CC006A7021 /* PreciseDecimal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E29A1CF8205DE8CC006A7021 /* PreciseDecimal.cpp */; };
+		E29A1D00205DE8CC006A7021 /* PreciseDecimal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E29A1CF8205DE8CC006A7021 /* PreciseDecimal.cpp */; };
+		E29A1D01205DE8CC006A7021 /* PreciseDecimal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E29A1CF8205DE8CC006A7021 /* PreciseDecimal.cpp */; };
+		E29A1D02205DE8CC006A7021 /* PreciseDecimal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E29A1CF8205DE8CC006A7021 /* PreciseDecimal.cpp */; };
+		E29A1D05205DE8E9006A7021 /* ScoreData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E29A1D03205DE8E8006A7021 /* ScoreData.cpp */; };
+		E29A1D06205DE8E9006A7021 /* ScoreData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E29A1D03205DE8E8006A7021 /* ScoreData.cpp */; };
+		E29A1D07205DE8E9006A7021 /* ScoreData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E29A1D03205DE8E8006A7021 /* ScoreData.cpp */; };
+		E29A1D08205DE8E9006A7021 /* ScoreData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E29A1D03205DE8E8006A7021 /* ScoreData.cpp */; };
+		E29A1D09205DE8E9006A7021 /* ScoreData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E29A1D03205DE8E8006A7021 /* ScoreData.cpp */; };
+		E29A1D0A205DE8E9006A7021 /* ScoreData.h in Headers */ = {isa = PBXBuildFile; fileRef = E29A1D04205DE8E8006A7021 /* ScoreData.h */; };
+		E29A1D0B205DE8E9006A7021 /* ScoreData.h in Headers */ = {isa = PBXBuildFile; fileRef = E29A1D04205DE8E8006A7021 /* ScoreData.h */; };
+		E29A1D0C205DE8E9006A7021 /* ScoreData.h in Headers */ = {isa = PBXBuildFile; fileRef = E29A1D04205DE8E8006A7021 /* ScoreData.h */; };
+		E29A1D0D205DE8E9006A7021 /* ScoreData.h in Headers */ = {isa = PBXBuildFile; fileRef = E29A1D04205DE8E8006A7021 /* ScoreData.h */; };
+		E29A1D0E205DE8E9006A7021 /* ScoreData.h in Headers */ = {isa = PBXBuildFile; fileRef = E29A1D04205DE8E8006A7021 /* ScoreData.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -4765,9 +4803,16 @@
 		29EF44081D6E6D2600DBDAB9 /* NoteData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NoteData.h; path = ../Sourcecode/mx/api/NoteData.h; sourceTree = "<group>"; };
 		29EF44091D6E70D300DBDAB9 /* DocumentManager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DocumentManager.cpp; path = ../Sourcecode/mx/api/DocumentManager.cpp; sourceTree = "<group>"; };
 		29EF440A1D6E70D300DBDAB9 /* DocumentManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DocumentManager.h; path = ../Sourcecode/mx/api/DocumentManager.h; sourceTree = "<group>"; };
-		29EF440C1D6E70D300DBDAB9 /* ScoreData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ScoreData.h; path = ../Sourcecode/mx/api/ScoreData.h; sourceTree = "<group>"; };
 		29F492B01D792B2F00C7C4B8 /* Lock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Lock.h; path = ../Sourcecode/mx/utility/Lock.h; sourceTree = "<group>"; };
 		29FFAC7F1DB9C8B600DC8AE1 /* CurveData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CurveData.h; path = ../Sourcecode/mx/api/CurveData.h; sourceTree = "<group>"; };
+		E29A1CDF205DE896006A7021 /* ChordData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ChordData.cpp; path = ../Sourcecode/mx/api/ChordData.cpp; sourceTree = "<group>"; };
+		E29A1CE5205DE89F006A7021 /* ChordData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChordData.h; path = ../Sourcecode/mx/api/ChordData.h; sourceTree = "<group>"; };
+		E29A1CEB205DE8BA006A7021 /* ProcessingInstruction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ProcessingInstruction.cpp; path = ../Sourcecode/mx/core/ProcessingInstruction.cpp; sourceTree = "<group>"; };
+		E29A1CEC205DE8BA006A7021 /* ProcessingInstruction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProcessingInstruction.h; path = ../Sourcecode/mx/core/ProcessingInstruction.h; sourceTree = "<group>"; };
+		E29A1CF7205DE8CC006A7021 /* PreciseDecimal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreciseDecimal.h; path = ../Sourcecode/mx/core/PreciseDecimal.h; sourceTree = "<group>"; };
+		E29A1CF8205DE8CC006A7021 /* PreciseDecimal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PreciseDecimal.cpp; path = ../Sourcecode/mx/core/PreciseDecimal.cpp; sourceTree = "<group>"; };
+		E29A1D03205DE8E8006A7021 /* ScoreData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ScoreData.cpp; path = ../Sourcecode/mx/api/ScoreData.cpp; sourceTree = "<group>"; };
+		E29A1D04205DE8E8006A7021 /* ScoreData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ScoreData.h; path = ../Sourcecode/mx/api/ScoreData.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -4855,6 +4900,10 @@
 				29C01AFF1D130B690094BE61 /* NumberOrNormal.h */,
 				29C01B001D130B690094BE61 /* PositiveIntegerOrEmpty.cpp */,
 				29C01B011D130B690094BE61 /* PositiveIntegerOrEmpty.h */,
+				E29A1CF8205DE8CC006A7021 /* PreciseDecimal.cpp */,
+				E29A1CF7205DE8CC006A7021 /* PreciseDecimal.h */,
+				E29A1CEB205DE8BA006A7021 /* ProcessingInstruction.cpp */,
+				E29A1CEC205DE8BA006A7021 /* ProcessingInstruction.h */,
 				2951A0C31D60F3B700B49A13 /* ScoreConversions.cpp */,
 				2951A0C41D60F3B700B49A13 /* ScoreConversions.h */,
 				29C01B021D130B690094BE61 /* Strings.cpp */,
@@ -6240,6 +6289,8 @@
 				29C175971DC0048700CC48D7 /* OttavaData.h */,
 				293488D41D94903B00D0C407 /* ApiCommon.h */,
 				29B48EE41DBEC9950030A974 /* BarlineData.h */,
+				E29A1CDF205DE896006A7021 /* ChordData.cpp */,
+				E29A1CE5205DE89F006A7021 /* ChordData.h */,
 				292D1DD01D9A43A500CDD9F4 /* ClefData.cpp */,
 				292D1DD11D9A43A500CDD9F4 /* ClefData.h */,
 				2933AD601DA5B616005D7222 /* ColorData.h */,
@@ -6269,7 +6320,8 @@
 				29E9C5611DA49F2D0040183B /* PitchData.h */,
 				29ADB3141D736A2B00683BEC /* PositionData.h */,
 				29C51A521D9F18C600EAA308 /* PrintData.h */,
-				29EF440C1D6E70D300DBDAB9 /* ScoreData.h */,
+				E29A1D03205DE8E8006A7021 /* ScoreData.cpp */,
+				E29A1D04205DE8E8006A7021 /* ScoreData.h */,
 				29C51A1D1D9ED91000EAA308 /* Smufl.cpp */,
 				29C51A1C1D9ED3A200EAA308 /* Smufl.h */,
 				29E9C5391DA470BC0040183B /* SpannerData.h */,
@@ -6292,12 +6344,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				29271A501DCC0D8D0036528D /* ApiEquality.h in Headers */,
+				E29A1D0B205DE8E9006A7021 /* ScoreData.h in Headers */,
 				29C175A41DC03BA500CC48D7 /* SpannerFunctions.h in Headers */,
 				29C175A51DC03BA500CC48D7 /* LineFunctions.h in Headers */,
 				29C175A61DC03BA500CC48D7 /* OttavaData.h in Headers */,
+				E29A1CF3205DE8BB006A7021 /* ProcessingInstruction.h in Headers */,
 				290756E21DA8BE2A00EEF5C3 /* ApiCommon.h in Headers */,
 				29B48EE61DBECA0D0030A974 /* BarlineData.h in Headers */,
 				290756E31DA8BE2A00EEF5C3 /* ClefData.h in Headers */,
+				E29A1CFA205DE8CC006A7021 /* PreciseDecimal.h in Headers */,
 				290756E41DA8BE2A00EEF5C3 /* ColorData.h in Headers */,
 				29FFAC821DB9C9D100DC8AE1 /* CurveData.h in Headers */,
 				29766AD31DAC14CC00CCE2AC /* DirectionData.h in Headers */,
@@ -6309,6 +6364,7 @@
 				290756EE1DA8BE2A00EEF5C3 /* LayoutData.h in Headers */,
 				290756EF1DA8BE2A00EEF5C3 /* LineData.h in Headers */,
 				290756F01DA8BE2A00EEF5C3 /* MarkData.h in Headers */,
+				E29A1CE7205DE89F006A7021 /* ChordData.h in Headers */,
 				290756F11DA8BE2A00EEF5C3 /* MeasureData.h in Headers */,
 				290756F21DA8BE2A00EEF5C3 /* MeasureLocation.h in Headers */,
 				29B4E8271DA9E792005DC6D1 /* NoteAttachmentData.h in Headers */,
@@ -6319,7 +6375,6 @@
 				290756F71DA8BE2A00EEF5C3 /* PitchData.h in Headers */,
 				290756F81DA8BE2A00EEF5C3 /* PositionData.h in Headers */,
 				290756F91DA8BE2A00EEF5C3 /* PrintData.h in Headers */,
-				290756FA1DA8BE2A00EEF5C3 /* ScoreData.h in Headers */,
 				290756FB1DA8BE2A00EEF5C3 /* Smufl.h in Headers */,
 				290756FC1DA8BE2A00EEF5C3 /* SpannerData.h in Headers */,
 				290756FD1DA8BE2A00EEF5C3 /* StaffData.h in Headers */,
@@ -6337,12 +6392,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				29271A511DCC0D910036528D /* ApiEquality.h in Headers */,
+				E29A1D0C205DE8E9006A7021 /* ScoreData.h in Headers */,
 				29C175A11DC03BA000CC48D7 /* SpannerFunctions.h in Headers */,
 				29C175A21DC03BA000CC48D7 /* LineFunctions.h in Headers */,
 				29C175A31DC03BA000CC48D7 /* OttavaData.h in Headers */,
+				E29A1CF4205DE8BB006A7021 /* ProcessingInstruction.h in Headers */,
 				290756C41DA8BE0800EEF5C3 /* ApiCommon.h in Headers */,
 				29B48EE71DBECA110030A974 /* BarlineData.h in Headers */,
 				290756C51DA8BE0800EEF5C3 /* ClefData.h in Headers */,
+				E29A1CFB205DE8CC006A7021 /* PreciseDecimal.h in Headers */,
 				290756C61DA8BE0800EEF5C3 /* ColorData.h in Headers */,
 				29FFAC811DB9C9CD00DC8AE1 /* CurveData.h in Headers */,
 				29766AD41DAC14D700CCE2AC /* DirectionData.h in Headers */,
@@ -6354,6 +6412,7 @@
 				290756D01DA8BE0800EEF5C3 /* LayoutData.h in Headers */,
 				290756D11DA8BE0800EEF5C3 /* LineData.h in Headers */,
 				290756D21DA8BE0800EEF5C3 /* MarkData.h in Headers */,
+				E29A1CE8205DE89F006A7021 /* ChordData.h in Headers */,
 				290756D31DA8BE0800EEF5C3 /* MeasureData.h in Headers */,
 				290756D41DA8BE0800EEF5C3 /* MeasureLocation.h in Headers */,
 				29B4E8281DA9E796005DC6D1 /* NoteAttachmentData.h in Headers */,
@@ -6364,7 +6423,6 @@
 				290756D91DA8BE0800EEF5C3 /* PitchData.h in Headers */,
 				290756DA1DA8BE0800EEF5C3 /* PositionData.h in Headers */,
 				290756DB1DA8BE0800EEF5C3 /* PrintData.h in Headers */,
-				290756DC1DA8BE0800EEF5C3 /* ScoreData.h in Headers */,
 				290756DD1DA8BE0800EEF5C3 /* Smufl.h in Headers */,
 				290756DE1DA8BE0800EEF5C3 /* SpannerData.h in Headers */,
 				290756DF1DA8BE0800EEF5C3 /* StaffData.h in Headers */,
@@ -6381,6 +6439,10 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E29A1CFC205DE8CC006A7021 /* PreciseDecimal.h in Headers */,
+				E29A1CF5205DE8BB006A7021 /* ProcessingInstruction.h in Headers */,
+				E29A1CE9205DE89F006A7021 /* ChordData.h in Headers */,
+				E29A1D0D205DE8E9006A7021 /* ScoreData.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6391,6 +6453,8 @@
 				29C1759B1DC00FD200CC48D7 /* SpannerFunctions.h in Headers */,
 				29FFAC801DB9C8B600DC8AE1 /* CurveData.h in Headers */,
 				29766AC71DAC014300CCE2AC /* MetronomeReader.h in Headers */,
+				E29A1CE6205DE89F006A7021 /* ChordData.h in Headers */,
+				E29A1CF9205DE8CC006A7021 /* PreciseDecimal.h in Headers */,
 				2951E1681DBA9C7300826CEF /* WedgeData.h in Headers */,
 				29C175981DC0048700CC48D7 /* OttavaData.h in Headers */,
 				29398BB11DB1917B00475CD5 /* NotationsWriter.h in Headers */,
@@ -6401,9 +6465,11 @@
 				29766AE01DAC39EF00CCE2AC /* KeyData.h in Headers */,
 				29C1759C1DC00FD200CC48D7 /* LineFunctions.h in Headers */,
 				29B7C46C1DB02D2F009D7D8F /* SystemData.h in Headers */,
+				E29A1CF2205DE8BB006A7021 /* ProcessingInstruction.h in Headers */,
 				29766ACB1DAC149900CCE2AC /* DirectionReader.h in Headers */,
 				29B4E81C1DA9CA0E005DC6D1 /* TupletData.h in Headers */,
 				29CD722D1DB82C9200FB7153 /* DirectionWriter.h in Headers */,
+				E29A1D0A205DE8E9006A7021 /* ScoreData.h in Headers */,
 				29979D681DC830AA00707AA4 /* DynamicsWriter.h in Headers */,
 				29C29B8B1DAEC00C00D3A884 /* ScoreWriter.h in Headers */,
 				29CDDA2E1DADCAF30022B1A3 /* PartWriter.h in Headers */,
@@ -6418,6 +6484,10 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E29A1CFD205DE8CC006A7021 /* PreciseDecimal.h in Headers */,
+				E29A1CF6205DE8BB006A7021 /* ProcessingInstruction.h in Headers */,
+				E29A1CEA205DE89F006A7021 /* ChordData.h in Headers */,
+				E29A1D0E205DE8E9006A7021 /* ScoreData.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6734,6 +6804,7 @@
 				2933A8771DA58F2F005D7222 /* EditorialGroup.cpp in Sources */,
 				2933A8781DA58F2F005D7222 /* EditorialVoiceDirectionGroup.cpp in Sources */,
 				2933A8791DA58F2F005D7222 /* EditorialVoiceGroup.cpp in Sources */,
+				E29A1CE1205DE897006A7021 /* ChordData.cpp in Sources */,
 				2933A87A1DA58F2F005D7222 /* Effect.cpp in Sources */,
 				2933A87B1DA58F2F005D7222 /* Elevation.cpp in Sources */,
 				2933A87C1DA58F2F005D7222 /* Elision.cpp in Sources */,
@@ -6930,6 +7001,7 @@
 				2933A9311DA58F2F005D7222 /* MordentAttributes.cpp in Sources */,
 				2933A9321DA58F2F005D7222 /* MovementNumber.cpp in Sources */,
 				2933A9331DA58F2F005D7222 /* MovementTitle.cpp in Sources */,
+				E29A1CFF205DE8CC006A7021 /* PreciseDecimal.cpp in Sources */,
 				2933A9341DA58F2F005D7222 /* MultipleRest.cpp in Sources */,
 				2933A9351DA58F2F005D7222 /* MultipleRestAttributes.cpp in Sources */,
 				2933A9361DA58F2F005D7222 /* MusicDataChoice.cpp in Sources */,
@@ -7003,6 +7075,7 @@
 				2933A9751DA58F30005D7222 /* PartGroup.cpp in Sources */,
 				2933A9761DA58F30005D7222 /* PartGroupAttributes.cpp in Sources */,
 				2933A9771DA58F30005D7222 /* PartGroupOrScorePart.cpp in Sources */,
+				E29A1D06205DE8E9006A7021 /* ScoreData.cpp in Sources */,
 				2933A9781DA58F30005D7222 /* PartList.cpp in Sources */,
 				2933A9791DA58F30005D7222 /* PartName.cpp in Sources */,
 				2933A97A1DA58F30005D7222 /* PartNameAttributes.cpp in Sources */,
@@ -7103,6 +7176,7 @@
 				2933A9D61DA58F30005D7222 /* StaffDetailsAttributes.cpp in Sources */,
 				2933A9D71DA58F30005D7222 /* StaffDistance.cpp in Sources */,
 				29271A1B1DCC04610036528D /* NotationsWriter.cpp in Sources */,
+				E29A1CEE205DE8BB006A7021 /* ProcessingInstruction.cpp in Sources */,
 				2933A9D81DA58F30005D7222 /* StaffLayout.cpp in Sources */,
 				2933A9D91DA58F30005D7222 /* StaffLayoutAttributes.cpp in Sources */,
 				2933A9DA1DA58F30005D7222 /* StaffLines.cpp in Sources */,
@@ -7398,6 +7472,7 @@
 				2933AB421DA5AA73005D7222 /* EditorialGroup.cpp in Sources */,
 				2933AB431DA5AA73005D7222 /* EditorialVoiceDirectionGroup.cpp in Sources */,
 				2933AB441DA5AA73005D7222 /* EditorialVoiceGroup.cpp in Sources */,
+				E29A1CE2205DE897006A7021 /* ChordData.cpp in Sources */,
 				2933AB451DA5AA73005D7222 /* Effect.cpp in Sources */,
 				2933AB461DA5AA73005D7222 /* Elevation.cpp in Sources */,
 				2933AB471DA5AA73005D7222 /* Elision.cpp in Sources */,
@@ -7594,6 +7669,7 @@
 				2933ABFC1DA5AA73005D7222 /* MordentAttributes.cpp in Sources */,
 				2933ABFD1DA5AA73005D7222 /* MovementNumber.cpp in Sources */,
 				2933ABFE1DA5AA73005D7222 /* MovementTitle.cpp in Sources */,
+				E29A1D00205DE8CC006A7021 /* PreciseDecimal.cpp in Sources */,
 				2933ABFF1DA5AA73005D7222 /* MultipleRest.cpp in Sources */,
 				2933AC001DA5AA73005D7222 /* MultipleRestAttributes.cpp in Sources */,
 				2933AC011DA5AA73005D7222 /* MusicDataChoice.cpp in Sources */,
@@ -7667,6 +7743,7 @@
 				2933AC401DA5AA73005D7222 /* PartGroup.cpp in Sources */,
 				2933AC411DA5AA73005D7222 /* PartGroupAttributes.cpp in Sources */,
 				2933AC421DA5AA73005D7222 /* PartGroupOrScorePart.cpp in Sources */,
+				E29A1D07205DE8E9006A7021 /* ScoreData.cpp in Sources */,
 				2933AC431DA5AA73005D7222 /* PartList.cpp in Sources */,
 				2933AC441DA5AA73005D7222 /* PartName.cpp in Sources */,
 				2933AC451DA5AA73005D7222 /* PartNameAttributes.cpp in Sources */,
@@ -7767,6 +7844,7 @@
 				2933ACA11DA5AA73005D7222 /* StaffDetailsAttributes.cpp in Sources */,
 				2933ACA21DA5AA73005D7222 /* StaffDistance.cpp in Sources */,
 				29271A391DCC04630036528D /* NotationsWriter.cpp in Sources */,
+				E29A1CEF205DE8BB006A7021 /* ProcessingInstruction.cpp in Sources */,
 				2933ACA31DA5AA73005D7222 /* StaffLayout.cpp in Sources */,
 				2933ACA41DA5AA73005D7222 /* StaffLayoutAttributes.cpp in Sources */,
 				2933ACA51DA5AA73005D7222 /* StaffLines.cpp in Sources */,
@@ -8062,6 +8140,7 @@
 				293FFF721DD25CF1001477E8 /* Effect.cpp in Sources */,
 				293FFF731DD25CF1001477E8 /* Elevation.cpp in Sources */,
 				293FFF741DD25CF1001477E8 /* Elision.cpp in Sources */,
+				E29A1CE3205DE897006A7021 /* ChordData.cpp in Sources */,
 				293FFF751DD25CF1001477E8 /* ElisionAttributes.cpp in Sources */,
 				293FFF761DD25CF1001477E8 /* ElisionSyllabicGroup.cpp in Sources */,
 				293FFF771DD25CF1001477E8 /* ElisionSyllabicTextGroup.cpp in Sources */,
@@ -8258,6 +8337,7 @@
 				293F00361DD25CF1001477E8 /* NormalDot.cpp in Sources */,
 				293F00371DD25CF1001477E8 /* NormalNoteGroup.cpp in Sources */,
 				293F00381DD25CF1001477E8 /* NormalNotes.cpp in Sources */,
+				E29A1D01205DE8CC006A7021 /* PreciseDecimal.cpp in Sources */,
 				293F00391DD25CF1001477E8 /* NormalType.cpp in Sources */,
 				293F003A1DD25CF1001477E8 /* NormalTypeNormalDotGroup.cpp in Sources */,
 				293F003B1DD25CF1001477E8 /* Notations.cpp in Sources */,
@@ -8331,6 +8411,7 @@
 				293F007F1DD25CF2001477E8 /* PercussionAttributes.cpp in Sources */,
 				293F00801DD25CF2001477E8 /* PercussionChoice.cpp in Sources */,
 				293F00811DD25CF2001477E8 /* PerMinute.cpp in Sources */,
+				E29A1D08205DE8E9006A7021 /* ScoreData.cpp in Sources */,
 				293F00821DD25CF2001477E8 /* PerMinuteAttributes.cpp in Sources */,
 				293F00831DD25CF2001477E8 /* PerMinuteOrBeatUnitChoice.cpp in Sources */,
 				293F00841DD25CF2001477E8 /* Pitch.cpp in Sources */,
@@ -8431,6 +8512,7 @@
 				293F00E31DD25CF2001477E8 /* StringAttributes.cpp in Sources */,
 				293F00E41DD25CF2001477E8 /* StringMute.cpp in Sources */,
 				293F00E51DD25CF2001477E8 /* StringMuteAttributes.cpp in Sources */,
+				E29A1CF0205DE8BB006A7021 /* ProcessingInstruction.cpp in Sources */,
 				293F00E61DD25CF2001477E8 /* StrongAccent.cpp in Sources */,
 				293F00E71DD25CF2001477E8 /* StrongAccentAttributes.cpp in Sources */,
 				293F00E81DD25CF2001477E8 /* Suffix.cpp in Sources */,
@@ -8726,6 +8808,7 @@
 				294549C11D295C5500B90302 /* PartSymbolAttributes.cpp in Sources */,
 				29454A161D295C5500B90302 /* Staccato.cpp in Sources */,
 				29454A6F1D295C5500B90302 /* Type.cpp in Sources */,
+				E29A1CE0205DE897006A7021 /* ChordData.cpp in Sources */,
 				294549051D295C5500B90302 /* GroupNameDisplay.cpp in Sources */,
 				294548D51D295C5500B90302 /* Eyeglasses.cpp in Sources */,
 				29454A311D295C5500B90302 /* StrongAccent.cpp in Sources */,
@@ -8922,6 +9005,7 @@
 				294548AD1D295C5500B90302 /* DisplayStepOctaveGroup.cpp in Sources */,
 				29454A7A1D295C5500B90302 /* WavyLine.cpp in Sources */,
 				29454A2F1D295C5500B90302 /* StringMute.cpp in Sources */,
+				E29A1CFE205DE8CC006A7021 /* PreciseDecimal.cpp in Sources */,
 				294549D01D295C5500B90302 /* Pitched.cpp in Sources */,
 				29454A7F1D295C5500B90302 /* WithBarAttributes.cpp in Sources */,
 				29454A3C1D295C5500B90302 /* SystemMargins.cpp in Sources */,
@@ -8995,6 +9079,7 @@
 				2937D1651D18D403001C2A1A /* PugiElementIterImpl.cpp in Sources */,
 				2945486D1D295C5500B90302 /* BeatUnitGroup.cpp in Sources */,
 				294548CB1D295C5500B90302 /* EncodingChoice.cpp in Sources */,
+				E29A1D05205DE8E9006A7021 /* ScoreData.cpp in Sources */,
 				294549CF1D295C5500B90302 /* Pitch.cpp in Sources */,
 				294548981D295C5500B90302 /* Degree.cpp in Sources */,
 				294549211D295C5500B90302 /* Image.cpp in Sources */,
@@ -9095,6 +9180,7 @@
 				294549BD1D295C5500B90302 /* PartNameAttributes.cpp in Sources */,
 				294548631D295C5500B90302 /* Beam.cpp in Sources */,
 				29C01B601D130BBE0094BE61 /* pugixml.cpp in Sources */,
+				E29A1CED205DE8BB006A7021 /* ProcessingInstruction.cpp in Sources */,
 				294549931D295C5500B90302 /* Octave.cpp in Sources */,
 				294548F81D295C5500B90302 /* GraceAttributes.cpp in Sources */,
 				294548681D295C5500B90302 /* BeatRepeatAttributes.cpp in Sources */,
@@ -9390,6 +9476,7 @@
 				29E8C02B1DD2920C00E8CEBA /* Effect.cpp in Sources */,
 				29E8C02C1DD2920C00E8CEBA /* Elevation.cpp in Sources */,
 				29E8C02D1DD2920C00E8CEBA /* Elision.cpp in Sources */,
+				E29A1CE4205DE897006A7021 /* ChordData.cpp in Sources */,
 				29E8C02E1DD2920C00E8CEBA /* ElisionAttributes.cpp in Sources */,
 				29E8C02F1DD2920C00E8CEBA /* ElisionSyllabicGroup.cpp in Sources */,
 				29E8C0301DD2920C00E8CEBA /* ElisionSyllabicTextGroup.cpp in Sources */,
@@ -9586,6 +9673,7 @@
 				29E8C0EF1DD2920C00E8CEBA /* NormalDot.cpp in Sources */,
 				29E8C0F01DD2920C00E8CEBA /* NormalNoteGroup.cpp in Sources */,
 				29E8C0F11DD2920C00E8CEBA /* NormalNotes.cpp in Sources */,
+				E29A1D02205DE8CC006A7021 /* PreciseDecimal.cpp in Sources */,
 				29E8C0F21DD2920C00E8CEBA /* NormalType.cpp in Sources */,
 				29E8C0F31DD2920C00E8CEBA /* NormalTypeNormalDotGroup.cpp in Sources */,
 				29E8C0F41DD2920C00E8CEBA /* Notations.cpp in Sources */,
@@ -9659,6 +9747,7 @@
 				29E8C1381DD2920C00E8CEBA /* PercussionAttributes.cpp in Sources */,
 				29E8C1391DD2920C00E8CEBA /* PercussionChoice.cpp in Sources */,
 				29E8C13A1DD2920C00E8CEBA /* PerMinute.cpp in Sources */,
+				E29A1D09205DE8E9006A7021 /* ScoreData.cpp in Sources */,
 				29E8C13B1DD2920C00E8CEBA /* PerMinuteAttributes.cpp in Sources */,
 				29E8C13C1DD2920C00E8CEBA /* PerMinuteOrBeatUnitChoice.cpp in Sources */,
 				29E8C13D1DD2920C00E8CEBA /* Pitch.cpp in Sources */,
@@ -9759,6 +9848,7 @@
 				29E8C19C1DD2920C00E8CEBA /* StringAttributes.cpp in Sources */,
 				29E8C19D1DD2920C00E8CEBA /* StringMute.cpp in Sources */,
 				29E8C19E1DD2920C00E8CEBA /* StringMuteAttributes.cpp in Sources */,
+				E29A1CF1205DE8BB006A7021 /* ProcessingInstruction.cpp in Sources */,
 				29E8C19F1DD2920C00E8CEBA /* StrongAccent.cpp in Sources */,
 				29E8C1A01DD2920C00E8CEBA /* StrongAccentAttributes.cpp in Sources */,
 				29E8C1A11DD2920C00E8CEBA /* Suffix.cpp in Sources */,
