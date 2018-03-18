@@ -52,8 +52,6 @@ namespace mx
             , endingType{ EndingType::none }
             , endingNumber { 0 }
             , repeat { false }
-            , location{ HorizontalAlignment::unspecified }
-            , repeat { false }
             , location{ HorizontalAlignment::right }
             {
             }
