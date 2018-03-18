@@ -185,6 +185,7 @@ namespace mx
             return myCurrentCursor;
         }
         
+        
         void MeasureReader::parseTimeSignature() const
         {
             TimeReader timeReader{ myPartwiseMeasure.getMusicDataGroup()->getMusicDataChoiceSet() };
@@ -312,13 +313,6 @@ namespace mx
         
         void MeasureReader::parseNote( const core::Note& inMxNote, const core::NotePtr& nextNotePtr ) const
         {
-            // TODO - remove this debugging break
-            if( myCurrentCursor.partIndex == 0 && myCurrentCursor.measureIndex == 7 )
-            {
-                int x = 0;
-                ++x;
-            }
-
             MX_UNUSED( inMxNote );
             MX_UNUSED( nextNotePtr );
             
@@ -389,12 +383,6 @@ namespace mx
         template<typename T>
         static void parseDirectionImpl( std::shared_ptr<const T> inDirection, api::MeasureData& ioMeasureData, const MeasureCursor& inMeasureCursor )
         {
-            // TODO - remove this debugging break
-            if( inMeasureCursor.partIndex == 0 && inMeasureCursor.measureIndex == 7 )
-            {
-                int x = 0;
-                ++x;
-            }
             DirectionReader reader{ inDirection, inMeasureCursor };
             auto directionData = reader.getDirectionData();
 

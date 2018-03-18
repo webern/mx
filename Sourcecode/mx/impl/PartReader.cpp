@@ -2,6 +2,7 @@
 // Copyright (c) by Matthew James Briggs
 // Distributed under the MIT License
 
+#include "mx/impl/PartReader.h"
 #include "mx/core/elements/AccidentalText.h"
 #include "mx/core/elements/Direction.h"
 #include "mx/core/elements/DisplayText.h"
@@ -46,7 +47,6 @@
 #include "mx/core/elements/VirtualName.h"
 #include "mx/core/elements/Volume.h"
 #include "mx/impl/MeasureReader.h"
-#include "mx/impl/PartReader.h"
 #include "mx/impl/PrintFunctions.h"
 
 #include <sstream>

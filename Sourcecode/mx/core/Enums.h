@@ -2266,6 +2266,5 @@ namespace mx
 		std::string toString( const DynamicsValue& value );
 		std::ostream& toStream( std::ostream& os, const DynamicsValue& value );
 		std::ostream& operator<<( std::ostream& os, const DynamicsValue& value );
-        
 	}
 }

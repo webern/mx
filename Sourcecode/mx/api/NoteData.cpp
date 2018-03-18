@@ -17,6 +17,7 @@ namespace mx
         , isTieStart{ false }
         , isTieStop{ false }
         , noteType{ NoteType::normal }
+        , notehead{ Notehead::normal }
         , pitchData{}
         , userRequestedVoiceNumber{ -1 }
         , stem{ Stem::unspecified }

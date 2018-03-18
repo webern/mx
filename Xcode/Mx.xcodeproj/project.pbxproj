@@ -3359,6 +3359,16 @@
 		29A8FFFE1EF0499300AD2478 /* TraditionalKey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E1DD1EF0476200AD2478 /* TraditionalKey.cpp */; };
 		29A8FFFF1EF0499300AD2478 /* Transpose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E1DF1EF0476200AD2478 /* Transpose.cpp */; };
 		29B962851E79FF410072071D /* MxiOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 29B962831E79FF410072071D /* MxiOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		29E7633B205E2DEE00B754D5 /* LyricType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29E76339205E2DEE00B754D5 /* LyricType.cpp */; };
+		29E7633C205E2DEE00B754D5 /* LyricType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29E76339205E2DEE00B754D5 /* LyricType.cpp */; };
+		29E7633D205E2DEE00B754D5 /* LyricType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29E76339205E2DEE00B754D5 /* LyricType.cpp */; };
+		29E7633E205E2DEE00B754D5 /* LyricType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29E76339205E2DEE00B754D5 /* LyricType.cpp */; };
+		29E7633F205E2DEE00B754D5 /* LyricType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29E76339205E2DEE00B754D5 /* LyricType.cpp */; };
+		29E76340205E2DEE00B754D5 /* LyricType.h in Headers */ = {isa = PBXBuildFile; fileRef = 29E7633A205E2DEE00B754D5 /* LyricType.h */; };
+		29E76341205E2DEE00B754D5 /* LyricType.h in Headers */ = {isa = PBXBuildFile; fileRef = 29E7633A205E2DEE00B754D5 /* LyricType.h */; };
+		29E76342205E2DEE00B754D5 /* LyricType.h in Headers */ = {isa = PBXBuildFile; fileRef = 29E7633A205E2DEE00B754D5 /* LyricType.h */; };
+		29E76343205E2DEE00B754D5 /* LyricType.h in Headers */ = {isa = PBXBuildFile; fileRef = 29E7633A205E2DEE00B754D5 /* LyricType.h */; };
+		29E76344205E2DEE00B754D5 /* LyricType.h in Headers */ = {isa = PBXBuildFile; fileRef = 29E7633A205E2DEE00B754D5 /* LyricType.h */; };
 		29EAD73B1F0EA96B00BDE782 /* ProcessingInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EAD7391F0EA96B00BDE782 /* ProcessingInstruction.cpp */; };
 		29EAD73C1F0EA96B00BDE782 /* ProcessingInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EAD7391F0EA96B00BDE782 /* ProcessingInstruction.cpp */; };
 		29EAD73D1F0EA96B00BDE782 /* ProcessingInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EAD7391F0EA96B00BDE782 /* ProcessingInstruction.cpp */; };
@@ -4775,6 +4785,8 @@
 		29B962811E79FF410072071D /* MxiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MxiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		29B962831E79FF410072071D /* MxiOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MxiOS.h; sourceTree = "<group>"; };
 		29B962841E79FF410072071D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		29E76339205E2DEE00B754D5 /* LyricType.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LyricType.cpp; sourceTree = "<group>"; };
+		29E7633A205E2DEE00B754D5 /* LyricType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LyricType.h; sourceTree = "<group>"; };
 		29E8C22C1DD2920C00E8CEBA /* libmx-iOS.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libmx-iOS.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		29EAD7391F0EA96B00BDE782 /* ProcessingInstruction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProcessingInstruction.cpp; sourceTree = "<group>"; };
 		29EAD73A1F0EA96B00BDE782 /* ProcessingInstruction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProcessingInstruction.h; sourceTree = "<group>"; };
@@ -6201,6 +6213,8 @@
 				29A8E26C1EF0476200AD2478 /* LcmGcd.cpp */,
 				29A8E26D1EF0476200AD2478 /* LcmGcd.h */,
 				29A8E26E1EF0476200AD2478 /* LineFunctions.h */,
+				29E76339205E2DEE00B754D5 /* LyricType.cpp */,
+				29E7633A205E2DEE00B754D5 /* LyricType.h */,
 				29A8E26F1EF0476200AD2478 /* MarkDataFunctions.h */,
 				29A8E2701EF0476200AD2478 /* MeasureCursor.h */,
 				29A8E2711EF0476200AD2478 /* MeasureReader.cpp */,
@@ -6338,6 +6352,7 @@
 				29A8006A1EF0876500AD2478 /* SoundID.h in Headers */,
 				29A02E7A1FE0F71A00B74FDE /* Version.h in Headers */,
 				29EAD74E1F0EF8CE00BDE782 /* MiscData.h in Headers */,
+				29E76341205E2DEE00B754D5 /* LyricType.h in Headers */,
 				297594551F044C7600DE2F30 /* ChordData.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6350,6 +6365,7 @@
 				29A800691EF0876500AD2478 /* SoundID.h in Headers */,
 				29A02E791FE0F71A00B74FDE /* Version.h in Headers */,
 				29EAD74D1F0EF8CE00BDE782 /* MiscData.h in Headers */,
+				29E76340205E2DEE00B754D5 /* LyricType.h in Headers */,
 				297594541F044C7600DE2F30 /* ChordData.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6363,6 +6379,7 @@
 				29A8FDC61EF0497500AD2478 /* MxmacOS.h in Headers */,
 				29A02E7D1FE0F71A00B74FDE /* Version.h in Headers */,
 				29EAD7511F0EF8CE00BDE782 /* MiscData.h in Headers */,
+				29E76344205E2DEE00B754D5 /* LyricType.h in Headers */,
 				29A8006D1EF0876500AD2478 /* SoundID.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6376,6 +6393,7 @@
 				29B962851E79FF410072071D /* MxiOS.h in Headers */,
 				29A02E7C1FE0F71A00B74FDE /* Version.h in Headers */,
 				29EAD7501F0EF8CE00BDE782 /* MiscData.h in Headers */,
+				29E76343205E2DEE00B754D5 /* LyricType.h in Headers */,
 				29A8006C1EF0876500AD2478 /* SoundID.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6388,6 +6406,7 @@
 				29A8006B1EF0876500AD2478 /* SoundID.h in Headers */,
 				29A02E7B1FE0F71A00B74FDE /* Version.h in Headers */,
 				29EAD74F1F0EF8CE00BDE782 /* MiscData.h in Headers */,
+				29E76342205E2DEE00B754D5 /* LyricType.h in Headers */,
 				297594561F044C7600DE2F30 /* ChordData.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7042,6 +7061,7 @@
 				29A8FCB51EF0476E00AD2478 /* ScoreReader.cpp in Sources */,
 				29A8E7201EF0476400AD2478 /* CreditChoice.cpp in Sources */,
 				29A8E3291EF0476300AD2478 /* MeasureLocation.cpp in Sources */,
+				29E7633C205E2DEE00B754D5 /* LyricType.cpp in Sources */,
 				29A8E7F21EF0476400AD2478 /* DegreeValueAttributes.cpp in Sources */,
 				29A8FAD01EF0476D00AD2478 /* WithBarAttributes.cpp in Sources */,
 				29A8F3FA1EF0476900AD2478 /* Play.cpp in Sources */,
@@ -7717,6 +7737,7 @@
 				29A8FCB41EF0476E00AD2478 /* ScoreReader.cpp in Sources */,
 				29A8E71F1EF0476400AD2478 /* CreditChoice.cpp in Sources */,
 				29A8E3281EF0476300AD2478 /* MeasureLocation.cpp in Sources */,
+				29E7633B205E2DEE00B754D5 /* LyricType.cpp in Sources */,
 				29A8E7F11EF0476400AD2478 /* DegreeValueAttributes.cpp in Sources */,
 				29A8FACF1EF0476D00AD2478 /* WithBarAttributes.cpp in Sources */,
 				29A8F3F91EF0476900AD2478 /* Play.cpp in Sources */,
@@ -8392,6 +8413,7 @@
 				29A8FFAB1EF0499300AD2478 /* SlashDot.cpp in Sources */,
 				29A8FFAC1EF0499300AD2478 /* SlashType.cpp in Sources */,
 				29A8FFAD1EF0499300AD2478 /* Slide.cpp in Sources */,
+				29E7633F205E2DEE00B754D5 /* LyricType.cpp in Sources */,
 				29A8FFAE1EF0499300AD2478 /* SlideAttributes.cpp in Sources */,
 				29A8FFAF1EF0499300AD2478 /* Slur.cpp in Sources */,
 				29A8FFB01EF0499300AD2478 /* SlurAttributes.cpp in Sources */,
@@ -9067,6 +9089,7 @@
 				29A8FCB71EF0476E00AD2478 /* ScoreReader.cpp in Sources */,
 				29A8E7221EF0476400AD2478 /* CreditChoice.cpp in Sources */,
 				29A8E32B1EF0476300AD2478 /* MeasureLocation.cpp in Sources */,
+				29E7633E205E2DEE00B754D5 /* LyricType.cpp in Sources */,
 				29A8E7F41EF0476400AD2478 /* DegreeValueAttributes.cpp in Sources */,
 				29A8FAD21EF0476D00AD2478 /* WithBarAttributes.cpp in Sources */,
 				29A8F3FC1EF0476900AD2478 /* Play.cpp in Sources */,
@@ -9742,6 +9765,7 @@
 				29A8FCB61EF0476E00AD2478 /* ScoreReader.cpp in Sources */,
 				29A8E7211EF0476400AD2478 /* CreditChoice.cpp in Sources */,
 				29A8E32A1EF0476300AD2478 /* MeasureLocation.cpp in Sources */,
+				29E7633D205E2DEE00B754D5 /* LyricType.cpp in Sources */,
 				29A8E7F31EF0476400AD2478 /* DegreeValueAttributes.cpp in Sources */,
 				29A8FAD11EF0476D00AD2478 /* WithBarAttributes.cpp in Sources */,
 				29A8F3FB1EF0476900AD2478 /* Play.cpp in Sources */,
