@@ -7,7 +7,7 @@
 #include "mx/api/ApiCommon.h"
 
 #include <string>
-#include <map>
+#include <unordered_map>
 
 namespace mx
 {
@@ -38,6 +38,8 @@ namespace mx
 
         public:
             
+            static Smufl& getInstance();
+
             // returns the SMuFL codepoint value for the given name
             // returns 0 (i.e. '\0';) if not found
             static char16_t findCodepoint(const std::string& inName);
@@ -45,24 +47,16 @@ namespace mx
             // finds the SMuFL glyphname for the given codepoint
             // returns empty string if codepoint is not found
             static const std::string& findName( char16_t codepoint );
-            
-            // returns 'true' if the given name is found in the table
-            static bool isNameValid(const std::string& inName);
-            
-            // returns 'true' if the given codepoint is found
-            // in the table. ignores alternateCodepoint values
-            static bool isCodepointValid( char16_t codepoint );
-            
+                        
             // returns an immutable ref to the map
-            static const SmuflMap& getMap();
-            
-            // returns cbegin() / cend()
-            static SmuflIter begin();
-            static SmuflIter end();
+            const SmuflMap& getMap();
             
         private:
             Smufl();
-            static std::map<const std::string, const char16_t> ourMap;
+            
+            void createSmuflMap();
+
+            SmuflMap mMap;
         };
     }
 }

@@ -11,9 +11,8 @@ namespace mx
 {
     namespace impl
     {
-        inline std::map<const std::string, const char16_t> createSmuflMap()
+        inline void createSmuflMap(std::map<const std::string, const char16_t>& outMap)
         {
-            std::map<const std::string, const char16_t> outMap;
             outMap.emplace(std::make_pair<const std::string, const char16_t>( "4stringTabClef", 0xE06E )); // glyphnumber: 0, 4-string tab clef
             outMap.emplace(std::make_pair<const std::string, const char16_t>( "6stringTabClef", 0xE06D )); // glyphnumber: 1, 6-string tab clef
             outMap.emplace(std::make_pair<const std::string, const char16_t>( "accSagittal11LargeDiesisDown", 0xE30D )); // glyphnumber: 2, 11 large diesis down, 3° down [46 EDO]
@@ -2608,7 +2607,6 @@ namespace mx
             outMap.emplace(std::make_pair<const std::string, const char16_t>( "windTrillKey", 0xE5FA )); // glyphnumber: 2591, Trill key
             outMap.emplace(std::make_pair<const std::string, const char16_t>( "windVeryTightEmbouchure", 0xE601 )); // glyphnumber: 2592, Very tight embouchure
             outMap.emplace(std::make_pair<const std::string, const char16_t>( "windWeakAirPressure", 0xE602 )); // glyphnumber: 2593, Very relaxed embouchure / weak air-pressure
-            return outMap;
         }
     }
 }
