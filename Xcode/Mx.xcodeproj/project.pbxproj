@@ -10,8 +10,8 @@
 		2948959B1FC4011400A06219 /* AppearanceData.h in Headers */ = {isa = PBXBuildFile; fileRef = 294895991FC4011400A06219 /* AppearanceData.h */; };
 		2948959C1FC4011400A06219 /* AppearanceData.h in Headers */ = {isa = PBXBuildFile; fileRef = 294895991FC4011400A06219 /* AppearanceData.h */; };
 		2948959D1FC4011400A06219 /* AppearanceData.h in Headers */ = {isa = PBXBuildFile; fileRef = 294895991FC4011400A06219 /* AppearanceData.h */; };
-		2948959E1FC4011400A06219 /* AppearanceData.h in Headers */ = {isa = PBXBuildFile; fileRef = 294895991FC4011400A06219 /* AppearanceData.h */; };
-		2948959F1FC4011400A06219 /* AppearanceData.h in Headers */ = {isa = PBXBuildFile; fileRef = 294895991FC4011400A06219 /* AppearanceData.h */; };
+		2948959E1FC4011400A06219 /* AppearanceData.h in Headers */ = {isa = PBXBuildFile; fileRef = 294895991FC4011400A06219 /* AppearanceData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2948959F1FC4011400A06219 /* AppearanceData.h in Headers */ = {isa = PBXBuildFile; fileRef = 294895991FC4011400A06219 /* AppearanceData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		294895A01FC4011400A06219 /* AppearanceData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2948959A1FC4011400A06219 /* AppearanceData.cpp */; };
 		294895A11FC4011400A06219 /* AppearanceData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2948959A1FC4011400A06219 /* AppearanceData.cpp */; };
 		294895A21FC4011400A06219 /* AppearanceData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2948959A1FC4011400A06219 /* AppearanceData.cpp */; };
@@ -25,13 +25,13 @@
 		297594541F044C7600DE2F30 /* ChordData.h in Headers */ = {isa = PBXBuildFile; fileRef = 2975944E1F044C7600DE2F30 /* ChordData.h */; };
 		297594551F044C7600DE2F30 /* ChordData.h in Headers */ = {isa = PBXBuildFile; fileRef = 2975944E1F044C7600DE2F30 /* ChordData.h */; };
 		297594561F044C7600DE2F30 /* ChordData.h in Headers */ = {isa = PBXBuildFile; fileRef = 2975944E1F044C7600DE2F30 /* ChordData.h */; };
-		297594571F044C7600DE2F30 /* ChordData.h in Headers */ = {isa = PBXBuildFile; fileRef = 2975944E1F044C7600DE2F30 /* ChordData.h */; };
-		297594581F044C7600DE2F30 /* ChordData.h in Headers */ = {isa = PBXBuildFile; fileRef = 2975944E1F044C7600DE2F30 /* ChordData.h */; };
+		297594571F044C7600DE2F30 /* ChordData.h in Headers */ = {isa = PBXBuildFile; fileRef = 2975944E1F044C7600DE2F30 /* ChordData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		297594581F044C7600DE2F30 /* ChordData.h in Headers */ = {isa = PBXBuildFile; fileRef = 2975944E1F044C7600DE2F30 /* ChordData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		29A02E791FE0F71A00B74FDE /* Version.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A02E771FE0F71A00B74FDE /* Version.h */; };
 		29A02E7A1FE0F71A00B74FDE /* Version.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A02E771FE0F71A00B74FDE /* Version.h */; };
 		29A02E7B1FE0F71A00B74FDE /* Version.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A02E771FE0F71A00B74FDE /* Version.h */; };
-		29A02E7C1FE0F71A00B74FDE /* Version.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A02E771FE0F71A00B74FDE /* Version.h */; };
-		29A02E7D1FE0F71A00B74FDE /* Version.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A02E771FE0F71A00B74FDE /* Version.h */; };
+		29A02E7C1FE0F71A00B74FDE /* Version.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A02E771FE0F71A00B74FDE /* Version.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		29A02E7D1FE0F71A00B74FDE /* Version.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A02E771FE0F71A00B74FDE /* Version.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		29A02E7E1FE0F71A00B74FDE /* Version.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A02E781FE0F71A00B74FDE /* Version.cpp */; };
 		29A02E7F1FE0F71A00B74FDE /* Version.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A02E781FE0F71A00B74FDE /* Version.cpp */; };
 		29A02E801FE0F71A00B74FDE /* Version.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A02E781FE0F71A00B74FDE /* Version.cpp */; };
@@ -146,8 +146,8 @@
 		29A800691EF0876500AD2478 /* SoundID.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A800631EF0876500AD2478 /* SoundID.h */; };
 		29A8006A1EF0876500AD2478 /* SoundID.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A800631EF0876500AD2478 /* SoundID.h */; };
 		29A8006B1EF0876500AD2478 /* SoundID.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A800631EF0876500AD2478 /* SoundID.h */; };
-		29A8006C1EF0876500AD2478 /* SoundID.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A800631EF0876500AD2478 /* SoundID.h */; };
-		29A8006D1EF0876500AD2478 /* SoundID.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A800631EF0876500AD2478 /* SoundID.h */; };
+		29A8006C1EF0876500AD2478 /* SoundID.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A800631EF0876500AD2478 /* SoundID.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		29A8006D1EF0876500AD2478 /* SoundID.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A800631EF0876500AD2478 /* SoundID.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		29A8E2D31EF0476300AD2478 /* ClefData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8DD5C1EF0475D00AD2478 /* ClefData.cpp */; };
 		29A8E2D41EF0476300AD2478 /* ClefData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8DD5C1EF0475D00AD2478 /* ClefData.cpp */; };
 		29A8E2D51EF0476300AD2478 /* ClefData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8DD5C1EF0475D00AD2478 /* ClefData.cpp */; };
@@ -3367,8 +3367,8 @@
 		29E76340205E2DEE00B754D5 /* LyricType.h in Headers */ = {isa = PBXBuildFile; fileRef = 29E7633A205E2DEE00B754D5 /* LyricType.h */; };
 		29E76341205E2DEE00B754D5 /* LyricType.h in Headers */ = {isa = PBXBuildFile; fileRef = 29E7633A205E2DEE00B754D5 /* LyricType.h */; };
 		29E76342205E2DEE00B754D5 /* LyricType.h in Headers */ = {isa = PBXBuildFile; fileRef = 29E7633A205E2DEE00B754D5 /* LyricType.h */; };
-		29E76343205E2DEE00B754D5 /* LyricType.h in Headers */ = {isa = PBXBuildFile; fileRef = 29E7633A205E2DEE00B754D5 /* LyricType.h */; };
-		29E76344205E2DEE00B754D5 /* LyricType.h in Headers */ = {isa = PBXBuildFile; fileRef = 29E7633A205E2DEE00B754D5 /* LyricType.h */; };
+		29E76343205E2DEE00B754D5 /* LyricType.h in Headers */ = {isa = PBXBuildFile; fileRef = 29E7633A205E2DEE00B754D5 /* LyricType.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		29E76344205E2DEE00B754D5 /* LyricType.h in Headers */ = {isa = PBXBuildFile; fileRef = 29E7633A205E2DEE00B754D5 /* LyricType.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		29EAD73B1F0EA96B00BDE782 /* ProcessingInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EAD7391F0EA96B00BDE782 /* ProcessingInstruction.cpp */; };
 		29EAD73C1F0EA96B00BDE782 /* ProcessingInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EAD7391F0EA96B00BDE782 /* ProcessingInstruction.cpp */; };
 		29EAD73D1F0EA96B00BDE782 /* ProcessingInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EAD7391F0EA96B00BDE782 /* ProcessingInstruction.cpp */; };
@@ -3382,8 +3382,82 @@
 		29EAD74D1F0EF8CE00BDE782 /* MiscData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29EAD7471F0EF8CE00BDE782 /* MiscData.h */; };
 		29EAD74E1F0EF8CE00BDE782 /* MiscData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29EAD7471F0EF8CE00BDE782 /* MiscData.h */; };
 		29EAD74F1F0EF8CE00BDE782 /* MiscData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29EAD7471F0EF8CE00BDE782 /* MiscData.h */; };
-		29EAD7501F0EF8CE00BDE782 /* MiscData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29EAD7471F0EF8CE00BDE782 /* MiscData.h */; };
-		29EAD7511F0EF8CE00BDE782 /* MiscData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29EAD7471F0EF8CE00BDE782 /* MiscData.h */; };
+		29EAD7501F0EF8CE00BDE782 /* MiscData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29EAD7471F0EF8CE00BDE782 /* MiscData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		29EAD7511F0EF8CE00BDE782 /* MiscData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29EAD7471F0EF8CE00BDE782 /* MiscData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB7256A2098B8490015ACA5 /* ApiCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD591EF0475D00AD2478 /* ApiCommon.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB7256B2098B8490015ACA5 /* ApiEquality.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD5A1EF0475D00AD2478 /* ApiEquality.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB7256C2098B8490015ACA5 /* BarlineData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD5B1EF0475D00AD2478 /* BarlineData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB7256D2098B8490015ACA5 /* ClefData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD5D1EF0475D00AD2478 /* ClefData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB7256E2098B8490015ACA5 /* ColorData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD5E1EF0475D00AD2478 /* ColorData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB7256F2098B8490015ACA5 /* CurveData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD5F1EF0475D00AD2478 /* CurveData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725702098B8490015ACA5 /* DirectionData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD601EF0475D00AD2478 /* DirectionData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725712098B8490015ACA5 /* DocumentManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD621EF0475D00AD2478 /* DocumentManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725722098B8490015ACA5 /* DurationData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD641EF0475D00AD2478 /* DurationData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725732098B8490015ACA5 /* EncodingData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD651EF0475D00AD2478 /* EncodingData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725742098B8490015ACA5 /* FontData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD661EF0475D00AD2478 /* FontData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725752098B8490015ACA5 /* KeyData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD671EF0475D00AD2478 /* KeyData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725762098B8490015ACA5 /* LayoutData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD681EF0475D00AD2478 /* LayoutData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725772098B8490015ACA5 /* LineData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD691EF0475D00AD2478 /* LineData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725782098B8490015ACA5 /* MarkData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD6B1EF0475D00AD2478 /* MarkData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725792098B8490015ACA5 /* MeasureData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD6C1EF0475D00AD2478 /* MeasureData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB7257A2098B8490015ACA5 /* MeasureLocation.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD6E1EF0475D00AD2478 /* MeasureLocation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB7257B2098B8490015ACA5 /* NoteAttachmentData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD6F1EF0475D00AD2478 /* NoteAttachmentData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB7257C2098B8490015ACA5 /* NoteData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD711EF0475D00AD2478 /* NoteData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB7257D2098B8490015ACA5 /* OttavaData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD721EF0475D00AD2478 /* OttavaData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB7257E2098B8490015ACA5 /* PageTextData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD731EF0475D00AD2478 /* PageTextData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB7257F2098B8490015ACA5 /* PartData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD741EF0475D00AD2478 /* PartData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725802098B8490015ACA5 /* PartGroupData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD751EF0475D00AD2478 /* PartGroupData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725812098B8490015ACA5 /* PitchData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD771EF0475D00AD2478 /* PitchData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725822098B8490015ACA5 /* PositionData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD781EF0475D00AD2478 /* PositionData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725832098B8490015ACA5 /* PrintData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD791EF0475D00AD2478 /* PrintData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725842098B8490015ACA5 /* ScoreData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD7B1EF0475D00AD2478 /* ScoreData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725852098B8490015ACA5 /* Smufl.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD7D1EF0475D00AD2478 /* Smufl.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725862098B8490015ACA5 /* SpannerData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD7E1EF0475D00AD2478 /* SpannerData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725872098B8490015ACA5 /* StaffData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD7F1EF0475D00AD2478 /* StaffData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725882098B8490015ACA5 /* SystemData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD801EF0475D00AD2478 /* SystemData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725892098B8490015ACA5 /* TempoData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD811EF0475D00AD2478 /* TempoData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB7258A2098B8490015ACA5 /* TimeSignatureData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD821EF0475D00AD2478 /* TimeSignatureData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB7258B2098B8490015ACA5 /* TupletData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD831EF0475D00AD2478 /* TupletData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB7258C2098B8490015ACA5 /* VoiceData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD841EF0475D00AD2478 /* VoiceData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB7258D2098B8490015ACA5 /* WedgeData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD851EF0475D00AD2478 /* WedgeData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB7258E2098B8490015ACA5 /* WordsData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD871EF0475D00AD2478 /* WordsData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB7258F2098B87F0015ACA5 /* ApiCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD591EF0475D00AD2478 /* ApiCommon.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725902098B87F0015ACA5 /* ApiEquality.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD5A1EF0475D00AD2478 /* ApiEquality.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725912098B87F0015ACA5 /* BarlineData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD5B1EF0475D00AD2478 /* BarlineData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725922098B87F0015ACA5 /* ClefData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD5D1EF0475D00AD2478 /* ClefData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725932098B87F0015ACA5 /* ColorData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD5E1EF0475D00AD2478 /* ColorData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725942098B87F0015ACA5 /* CurveData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD5F1EF0475D00AD2478 /* CurveData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725952098B87F0015ACA5 /* DirectionData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD601EF0475D00AD2478 /* DirectionData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725962098B87F0015ACA5 /* DocumentManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD621EF0475D00AD2478 /* DocumentManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725972098B87F0015ACA5 /* DurationData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD641EF0475D00AD2478 /* DurationData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725982098B87F0015ACA5 /* EncodingData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD651EF0475D00AD2478 /* EncodingData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725992098B87F0015ACA5 /* FontData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD661EF0475D00AD2478 /* FontData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB7259A2098B87F0015ACA5 /* KeyData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD671EF0475D00AD2478 /* KeyData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB7259B2098B87F0015ACA5 /* LayoutData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD681EF0475D00AD2478 /* LayoutData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB7259C2098B87F0015ACA5 /* LineData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD691EF0475D00AD2478 /* LineData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB7259D2098B87F0015ACA5 /* MarkData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD6B1EF0475D00AD2478 /* MarkData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB7259E2098B87F0015ACA5 /* MeasureData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD6C1EF0475D00AD2478 /* MeasureData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB7259F2098B87F0015ACA5 /* MeasureLocation.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD6E1EF0475D00AD2478 /* MeasureLocation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725A02098B87F0015ACA5 /* NoteAttachmentData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD6F1EF0475D00AD2478 /* NoteAttachmentData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725A12098B87F0015ACA5 /* NoteData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD711EF0475D00AD2478 /* NoteData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725A22098B87F0015ACA5 /* OttavaData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD721EF0475D00AD2478 /* OttavaData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725A32098B87F0015ACA5 /* PageTextData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD731EF0475D00AD2478 /* PageTextData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725A42098B87F0015ACA5 /* PartData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD741EF0475D00AD2478 /* PartData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725A52098B87F0015ACA5 /* PartGroupData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD751EF0475D00AD2478 /* PartGroupData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725A62098B87F0015ACA5 /* PitchData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD771EF0475D00AD2478 /* PitchData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725A72098B87F0015ACA5 /* PositionData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD781EF0475D00AD2478 /* PositionData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725A82098B87F0015ACA5 /* PrintData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD791EF0475D00AD2478 /* PrintData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725A92098B87F0015ACA5 /* ScoreData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD7B1EF0475D00AD2478 /* ScoreData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725AA2098B87F0015ACA5 /* Smufl.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD7D1EF0475D00AD2478 /* Smufl.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725AB2098B87F0015ACA5 /* SpannerData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD7E1EF0475D00AD2478 /* SpannerData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725AC2098B87F0015ACA5 /* StaffData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD7F1EF0475D00AD2478 /* StaffData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725AD2098B87F0015ACA5 /* SystemData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD801EF0475D00AD2478 /* SystemData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725AE2098B87F0015ACA5 /* TempoData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD811EF0475D00AD2478 /* TempoData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725AF2098B87F0015ACA5 /* TimeSignatureData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD821EF0475D00AD2478 /* TimeSignatureData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725B02098B87F0015ACA5 /* TupletData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD831EF0475D00AD2478 /* TupletData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725B12098B87F0015ACA5 /* VoiceData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD841EF0475D00AD2478 /* VoiceData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725B22098B87F0015ACA5 /* WedgeData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD851EF0475D00AD2478 /* WedgeData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DB725B32098B87F0015ACA5 /* WordsData.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A8DD871EF0475D00AD2478 /* WordsData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -6374,9 +6448,46 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3DB7258F2098B87F0015ACA5 /* ApiCommon.h in Headers */,
+				3DB725902098B87F0015ACA5 /* ApiEquality.h in Headers */,
+				3DB725912098B87F0015ACA5 /* BarlineData.h in Headers */,
+				3DB725922098B87F0015ACA5 /* ClefData.h in Headers */,
+				3DB725932098B87F0015ACA5 /* ColorData.h in Headers */,
+				3DB725942098B87F0015ACA5 /* CurveData.h in Headers */,
+				3DB725952098B87F0015ACA5 /* DirectionData.h in Headers */,
+				3DB725962098B87F0015ACA5 /* DocumentManager.h in Headers */,
+				3DB725972098B87F0015ACA5 /* DurationData.h in Headers */,
+				3DB725982098B87F0015ACA5 /* EncodingData.h in Headers */,
+				3DB725992098B87F0015ACA5 /* FontData.h in Headers */,
+				3DB7259A2098B87F0015ACA5 /* KeyData.h in Headers */,
+				3DB7259B2098B87F0015ACA5 /* LayoutData.h in Headers */,
+				3DB7259C2098B87F0015ACA5 /* LineData.h in Headers */,
+				3DB7259D2098B87F0015ACA5 /* MarkData.h in Headers */,
+				3DB7259E2098B87F0015ACA5 /* MeasureData.h in Headers */,
+				3DB7259F2098B87F0015ACA5 /* MeasureLocation.h in Headers */,
+				3DB725A02098B87F0015ACA5 /* NoteAttachmentData.h in Headers */,
+				3DB725A12098B87F0015ACA5 /* NoteData.h in Headers */,
+				3DB725A22098B87F0015ACA5 /* OttavaData.h in Headers */,
+				3DB725A32098B87F0015ACA5 /* PageTextData.h in Headers */,
+				3DB725A42098B87F0015ACA5 /* PartData.h in Headers */,
+				3DB725A52098B87F0015ACA5 /* PartGroupData.h in Headers */,
+				3DB725A62098B87F0015ACA5 /* PitchData.h in Headers */,
+				3DB725A72098B87F0015ACA5 /* PositionData.h in Headers */,
+				3DB725A82098B87F0015ACA5 /* PrintData.h in Headers */,
+				3DB725A92098B87F0015ACA5 /* ScoreData.h in Headers */,
+				3DB725AA2098B87F0015ACA5 /* Smufl.h in Headers */,
+				3DB725AB2098B87F0015ACA5 /* SpannerData.h in Headers */,
+				3DB725AC2098B87F0015ACA5 /* StaffData.h in Headers */,
+				3DB725AD2098B87F0015ACA5 /* SystemData.h in Headers */,
+				3DB725AE2098B87F0015ACA5 /* TempoData.h in Headers */,
+				3DB725AF2098B87F0015ACA5 /* TimeSignatureData.h in Headers */,
+				3DB725B02098B87F0015ACA5 /* TupletData.h in Headers */,
+				3DB725B12098B87F0015ACA5 /* VoiceData.h in Headers */,
+				3DB725B22098B87F0015ACA5 /* WedgeData.h in Headers */,
+				3DB725B32098B87F0015ACA5 /* WordsData.h in Headers */,
 				2948959F1FC4011400A06219 /* AppearanceData.h in Headers */,
-				297594581F044C7600DE2F30 /* ChordData.h in Headers */,
 				29A8FDC61EF0497500AD2478 /* MxmacOS.h in Headers */,
+				297594581F044C7600DE2F30 /* ChordData.h in Headers */,
 				29A02E7D1FE0F71A00B74FDE /* Version.h in Headers */,
 				29EAD7511F0EF8CE00BDE782 /* MiscData.h in Headers */,
 				29E76344205E2DEE00B754D5 /* LyricType.h in Headers */,
@@ -6388,6 +6499,43 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3DB7256A2098B8490015ACA5 /* ApiCommon.h in Headers */,
+				3DB7256B2098B8490015ACA5 /* ApiEquality.h in Headers */,
+				3DB7256C2098B8490015ACA5 /* BarlineData.h in Headers */,
+				3DB7256D2098B8490015ACA5 /* ClefData.h in Headers */,
+				3DB7256E2098B8490015ACA5 /* ColorData.h in Headers */,
+				3DB7256F2098B8490015ACA5 /* CurveData.h in Headers */,
+				3DB725702098B8490015ACA5 /* DirectionData.h in Headers */,
+				3DB725712098B8490015ACA5 /* DocumentManager.h in Headers */,
+				3DB725722098B8490015ACA5 /* DurationData.h in Headers */,
+				3DB725732098B8490015ACA5 /* EncodingData.h in Headers */,
+				3DB725742098B8490015ACA5 /* FontData.h in Headers */,
+				3DB725752098B8490015ACA5 /* KeyData.h in Headers */,
+				3DB725762098B8490015ACA5 /* LayoutData.h in Headers */,
+				3DB725772098B8490015ACA5 /* LineData.h in Headers */,
+				3DB725782098B8490015ACA5 /* MarkData.h in Headers */,
+				3DB725792098B8490015ACA5 /* MeasureData.h in Headers */,
+				3DB7257A2098B8490015ACA5 /* MeasureLocation.h in Headers */,
+				3DB7257B2098B8490015ACA5 /* NoteAttachmentData.h in Headers */,
+				3DB7257C2098B8490015ACA5 /* NoteData.h in Headers */,
+				3DB7257D2098B8490015ACA5 /* OttavaData.h in Headers */,
+				3DB7257E2098B8490015ACA5 /* PageTextData.h in Headers */,
+				3DB7257F2098B8490015ACA5 /* PartData.h in Headers */,
+				3DB725802098B8490015ACA5 /* PartGroupData.h in Headers */,
+				3DB725812098B8490015ACA5 /* PitchData.h in Headers */,
+				3DB725822098B8490015ACA5 /* PositionData.h in Headers */,
+				3DB725832098B8490015ACA5 /* PrintData.h in Headers */,
+				3DB725842098B8490015ACA5 /* ScoreData.h in Headers */,
+				3DB725852098B8490015ACA5 /* Smufl.h in Headers */,
+				3DB725862098B8490015ACA5 /* SpannerData.h in Headers */,
+				3DB725872098B8490015ACA5 /* StaffData.h in Headers */,
+				3DB725882098B8490015ACA5 /* SystemData.h in Headers */,
+				3DB725892098B8490015ACA5 /* TempoData.h in Headers */,
+				3DB7258A2098B8490015ACA5 /* TimeSignatureData.h in Headers */,
+				3DB7258B2098B8490015ACA5 /* TupletData.h in Headers */,
+				3DB7258C2098B8490015ACA5 /* VoiceData.h in Headers */,
+				3DB7258D2098B8490015ACA5 /* WedgeData.h in Headers */,
+				3DB7258E2098B8490015ACA5 /* WordsData.h in Headers */,
 				2948959E1FC4011400A06219 /* AppearanceData.h in Headers */,
 				29B962851E79FF410072071D /* MxiOS.h in Headers */,
 				297594571F044C7600DE2F30 /* ChordData.h in Headers */,
@@ -6512,6 +6660,7 @@
 				TargetAttributes = {
 					293FFED11DD25C74001477E8 = {
 						CreatedOnToolsVersion = 8.1;
+						DevelopmentTeam = RRS55ZY6E5;
 						ProvisioningStyle = Automatic;
 					};
 					29A8FDC11EF0497400AD2478 = {
@@ -9962,6 +10111,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = RRS55ZY6E5;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -9986,6 +10136,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CODE_SIGN_IDENTITY = "";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = RRS55ZY6E5;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -10278,7 +10429,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = mjb.MxiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
+				"SDKROOT[arch=i386]" = "$(CORRESPONDING_SIMULATOR_SDK_NAME)";
+				"SDKROOT[arch=x86_64]" = "$(CORRESPONDING_SIMULATOR_SDK_NAME)";
+				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "arm64 armv7 armv7s x86_64 i386";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -10302,6 +10455,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_OPTIMIZATION_LEVEL = 3;
 				INFOPLIST_FILE = MxiOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
@@ -10311,7 +10465,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = mjb.MxiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
+				"SDKROOT[arch=i386]" = "$(CORRESPONDING_SIMULATOR_SDK_NAME)";
+				"SDKROOT[arch=x86_64]" = "$(CORRESPONDING_SIMULATOR_SDK_NAME)";
+				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VALID_ARCHS = "arm64 armv7 armv7s x86_64 i386";

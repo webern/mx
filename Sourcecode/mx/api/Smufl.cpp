@@ -5,8 +5,9 @@
 #include "mx/api/Smufl.h"
 #include "mx/impl/SmuflGlyphMap.h"
 
-#include <locale>
 #include <codecvt>
+#include <locale>
+#include <unordered_map>
 
 namespace mx
 {
@@ -2676,9 +2677,8 @@ namespace mx
         {
             static Smufl instance;
             return instance;
+                
         }
-        
-        
         Smufl::Smufl()
         {
             createSmuflMap();

@@ -13,8 +13,8 @@ namespace mx
 {
     namespace api
     {
-        using SmuflPair = std::pair<const std::string, const char16_t>;
-        using SmuflMap = std::map<const std::string, const char16_t>;
+        using SmuflPair = std::pair<std::string, char16_t>;
+        using SmuflMap = std::unordered_map<std::string, char16_t>;
         using SmuflIter = SmuflMap::const_iterator;
         
         
@@ -53,7 +53,6 @@ namespace mx
             
         private:
             Smufl();
-            
             void createSmuflMap();
 
             SmuflMap mMap;
