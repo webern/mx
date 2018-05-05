@@ -2692,7 +2692,7 @@ namespace mx
             const SmuflIter iter = map.find( inName );
             if( iter == map.cend() )
             {
-                std::cout << "WARN: findCodepoint missing: " << inName << std::endl;
+                //std::cout << "WARN: findCodepoint missing: " << inName << std::endl;
                 return 0;
             }
             return iter->second;
@@ -2714,7 +2714,7 @@ namespace mx
             
             if( iter == map.cend() )
             {
-                std::cout << "WARN: findName missing: " << codepoint << std::endl;
+                //std::cout << "WARN: findName missing: " << codepoint << std::endl;
                 return empty;
             }
             
