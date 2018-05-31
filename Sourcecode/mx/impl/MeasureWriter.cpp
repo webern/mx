@@ -573,7 +573,11 @@ namespace mx
         }
 
 
-        void MeasureWriter::writeDirections( dIter& directionIter, const dIter& directionEnd, const NoteIter& inNoteIter, const NoteIter& inNotesBegin, const NoteIter& inNotesEnd )
+        void MeasureWriter::writeDirections(dIter& directionIter,
+                                            const dIter& directionEnd,
+                                            const NoteIter& inNoteIter,
+                                            const NoteIter& inNotesBegin,
+                                            const NoteIter& inNotesEnd )
         {
             if( directionIter == directionEnd )
             {
@@ -581,7 +585,7 @@ namespace mx
             }
 
             const bool isNotesEnd = inNoteIter == inNotesEnd;
-            const bool isLastNote = !isNotesEnd && ( inNoteIter + 1 == inNotesEnd );
+            const bool isLastNote = isNotesEnd || ( inNoteIter + 1 == inNotesEnd );
             const bool isFirstNote = !isLastNote && !isNotesEnd && ( inNoteIter == inNotesBegin );
             const bool isOnlyNote = inNoteIter == inNotesBegin && isLastNote;
             const auto previousNote = ( isFirstNote || isOnlyNote ) ? inNotesEnd : ( inNoteIter - 1 );
