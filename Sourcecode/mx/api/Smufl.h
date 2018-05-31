@@ -12,12 +12,7 @@
 namespace mx
 {
     namespace api
-    {
-        using SmuflPair = std::pair<std::string, char16_t>;
-        using SmuflMap = std::unordered_map<std::string, char16_t>;
-        using SmuflIter = SmuflMap::const_iterator;
-        
-        
+    {        
         struct SmuflGlyphname
         {
             SmuflGlyphname( std::string inNameAbove,
@@ -48,14 +43,8 @@ namespace mx
             // returns empty string if codepoint is not found
             static const std::string& findName( char16_t codepoint );
                         
-            // returns an immutable ref to the map
-            const SmuflMap& getMap();
-            
         private:
             Smufl();
-            void createSmuflMap();
-
-            SmuflMap mMap;
         };
     }
 }
