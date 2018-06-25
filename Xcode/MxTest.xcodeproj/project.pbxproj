@@ -53,7 +53,6 @@
 		29B48EDC1DBE7F550030A974 /* NoteWriterTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29B48ED81DBE7F550030A974 /* NoteWriterTest.cpp */; };
 		29B48EDD1DBE7F550030A974 /* PartWriterTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29B48ED91DBE7F550030A974 /* PartWriterTest.cpp */; };
 		29B48EDE1DBE7F550030A974 /* ScoreWriterTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29B48EDA1DBE7F550030A974 /* ScoreWriterTest.cpp */; };
-		29B962781E79FEE40072071D /* Mx_iOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 29B962761E79FEE40072071D /* Mx_iOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		29C01D6C1D1312FA0094BE61 /* AccentTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C01B641D1312F90094BE61 /* AccentTest.cpp */; };
 		29C01D6D1D1312FA0094BE61 /* AccidentalMarkTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C01B651D1312F90094BE61 /* AccidentalMarkTest.cpp */; };
 		29C01D6E1D1312FA0094BE61 /* AccidentalTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C01B661D1312F90094BE61 /* AccidentalTest.cpp */; };
@@ -553,8 +552,6 @@
 		29B48EDA1DBE7F550030A974 /* ScoreWriterTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ScoreWriterTest.cpp; path = ../Sourcecode/mxtest/impl/ScoreWriterTest.cpp; sourceTree = "<group>"; };
 		29B48EDF1DBE8C450030A974 /* ApiLy43eScoreData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ApiLy43eScoreData.h; path = ../Sourcecode/mxtest/api/ApiLy43eScoreData.h; sourceTree = "<group>"; };
 		29B962741E79FEE40072071D /* Mx_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Mx_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		29B962761E79FEE40072071D /* Mx_iOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Mx_iOS.h; sourceTree = "<group>"; };
-		29B962771E79FEE40072071D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		29BF98891DC6D20500BBC7B3 /* ApiK007aScoreData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ApiK007aScoreData.h; path = ../Sourcecode/mxtest/api/ApiK007aScoreData.h; sourceTree = "<group>"; };
 		29BF988A1DC6D20500BBC7B3 /* ApiK007aTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ApiK007aTest.cpp; path = ../Sourcecode/mxtest/api/ApiK007aTest.cpp; sourceTree = "<group>"; };
 		29C01B641D1312F90094BE61 /* AccentTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AccentTest.cpp; path = ../Sourcecode/mxtest/core/AccentTest.cpp; sourceTree = "<group>"; };
@@ -1764,7 +1761,6 @@
 				2958970F1DB953BC00F18FBA /* file */,
 				29B48ED61DBE7F470030A974 /* impl */,
 				297DD7C61D1A4BAE003BADC1 /* import */,
-				29B962751E79FEE40072071D /* Mx_iOS */,
 				299F7FF71CA8D2620084CAE5 /* Products */,
 				297555D61D134FE3007732D0 /* utility */,
 				297555DC1D13519E007732D0 /* xml */,
@@ -1795,15 +1791,6 @@
 				29B48EDA1DBE7F550030A974 /* ScoreWriterTest.cpp */,
 			);
 			name = impl;
-			sourceTree = "<group>";
-		};
-		29B962751E79FEE40072071D /* Mx_iOS */ = {
-			isa = PBXGroup;
-			children = (
-				29B962761E79FEE40072071D /* Mx_iOS.h */,
-				29B962771E79FEE40072071D /* Info.plist */,
-			);
-			path = Mx_iOS;
 			sourceTree = "<group>";
 		};
 		29EF440E1D6E8F4700DBDAB9 /* api */ = {
@@ -1855,7 +1842,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				29B962781E79FEE40072071D /* Mx_iOS.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
