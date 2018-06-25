@@ -431,7 +431,9 @@ namespace mx
             } // foreach voice
 
             std::vector<api::NoteData> fakeEmptyNoteVector;
-            writeDirections( directionIter, directionEnd, std::cend(fakeEmptyNoteVector), std::cbegin(fakeEmptyNoteVector), std::cend(fakeEmptyNoteVector) );
+            const auto iterBegin = std::cbegin(fakeEmptyNoteVector);
+            const auto iterEnd = std::cend(fakeEmptyNoteVector);
+            writeDirections( directionIter, directionEnd, iterEnd, iterBegin, iterEnd );
             
             bool areClefsRemaining = clefIter != clefEnd;
             bool areMeasureKeysRemaining = myMeasureKeysIter != myMeasureKeysEnd;
@@ -571,7 +573,11 @@ namespace mx
         }
 
 
-        void MeasureWriter::writeDirections( dIter& directionIter, const dIter& directionEnd, const NoteIter& inNoteIter, const NoteIter& inNotesBegin, const NoteIter& inNotesEnd )
+        void MeasureWriter::writeDirections(dIter& directionIter,
+                                            const dIter& directionEnd,
+                                            const NoteIter& inNoteIter,
+                                            const NoteIter& inNotesBegin,
+                                            const NoteIter& inNotesEnd )
         {
             if( directionIter == directionEnd )
             {
@@ -579,11 +585,12 @@ namespace mx
             }
 
             const bool isNotesEnd = inNoteIter == inNotesEnd;
-            const bool isLastNote = !isNotesEnd && ( inNoteIter + 1 == inNotesEnd );
+            const bool isLastNote = isNotesEnd || ( inNoteIter + 1 == inNotesEnd );
             const bool isFirstNote = !isLastNote && !isNotesEnd && ( inNoteIter == inNotesBegin );
-            const auto previousNote = isFirstNote ? inNotesEnd : ( inNoteIter - 1 );
+            const bool isOnlyNote = inNoteIter == inNotesBegin && isLastNote;
+            const auto previousNote = ( isFirstNote || isOnlyNote ) ? inNotesEnd : ( inNoteIter - 1 );
             const auto nextNote = ( isLastNote || isNotesEnd ) ? inNotesEnd : ( inNoteIter + 1 );
-            const bool isTickTimeSameAsPreviousNote = ( isFirstNote || isNotesEnd ) ? false : ( inNoteIter->tickTimePosition == previousNote->tickTimePosition );
+            const bool isTickTimeSameAsPreviousNote = ( isFirstNote || isOnlyNote || isNotesEnd ) ? false : ( inNoteIter->tickTimePosition == previousNote->tickTimePosition );
             const bool isIndependentNote = !isTickTimeSameAsPreviousNote;
 
             if( isFirstNote )

@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "299F7FF51CA8D2620084CAE5"
-               BuildableName = "MxTest"
-               BlueprintName = "MxTest"
-               ReferencedContainer = "container:MxTest.xcodeproj">
+               BlueprintIdentifier = "29B962801E79FF410072071D"
+               BuildableName = "MxiOS.framework"
+               BlueprintName = "MxiOS"
+               ReferencedContainer = "container:Mx.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -29,15 +29,6 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "299F7FF51CA8D2620084CAE5"
-            BuildableName = "MxTest"
-            BlueprintName = "MxTest"
-            ReferencedContainer = "container:MxTest.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
@@ -45,22 +36,22 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      disableMainThreadChecker = "YES"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "299F7FF51CA8D2620084CAE5"
-            BuildableName = "MxTest"
-            BlueprintName = "MxTest"
-            ReferencedContainer = "container:MxTest.xcodeproj">
+            BlueprintIdentifier = "29B962801E79FF410072071D"
+            BuildableName = "MxiOS.framework"
+            BlueprintName = "MxiOS"
+            ReferencedContainer = "container:Mx.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -70,16 +61,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "299F7FF51CA8D2620084CAE5"
-            BuildableName = "MxTest"
-            BlueprintName = "MxTest"
-            ReferencedContainer = "container:MxTest.xcodeproj">
+            BlueprintIdentifier = "29B962801E79FF410072071D"
+            BuildableName = "MxiOS.framework"
+            BlueprintName = "MxiOS"
+            ReferencedContainer = "container:Mx.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
@@ -87,5 +77,14 @@
    <ArchiveAction
       buildConfiguration = "Release"
       revealArchiveInOrganizer = "YES">
+      <PostActions>
+         <ExecutionAction
+            ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
+            <ActionContent
+               title = "Run Script"
+               scriptText = "cp &quot;${ARCHIVE_PRODUCTS_PATH}/somefile&quot;">
+            </ActionContent>
+         </ExecutionAction>
+      </PostActions>
    </ArchiveAction>
 </Scheme>
