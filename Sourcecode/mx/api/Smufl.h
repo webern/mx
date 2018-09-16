@@ -40,7 +40,7 @@ namespace mx
             
             // finds the SMuFL glyphname for the given codepoint
             // returns empty string if codepoint is not found
-            static const std::string findName( char16_t codepoint );
+            static const std::string& findName( char16_t codepoint );
                         
         private:
             Smufl();

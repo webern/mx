@@ -2671,7 +2671,7 @@ namespace mx
         }
         
         
-        const std::string Smufl::findName( char16_t codepoint )
+        const std::string& Smufl::findName( char16_t codepoint )
         {
             static std::string empty = "";
             
