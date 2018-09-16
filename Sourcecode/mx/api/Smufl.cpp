@@ -3,17 +3,14 @@
 // Distributed under the MIT License
 
 #include "mx/api/Smufl.h"
-#include "mx/impl/SmuflGlyphMap.h"
+#include "mx/sparsepp/spp.h"
 
 #include <codecvt>
 #include <locale>
-#include <unordered_map>
 
-#include <frozen/unordered_map.h>
-#include <frozen/string.h>
 
-using SmuflPair = std::pair<frozen::string, char16_t>;
-using SmuflMap = frozen::unordered_map<frozen::string, char16_t, 2>;
+using SmuflPair = std::pair<std::string, char16_t>;
+using SmuflMap = spp::sparse_hash_map<std::string, char16_t>;
 using SmuflIter = SmuflMap::const_iterator;
 
 namespace mx
@@ -22,8 +19,6 @@ namespace mx
     {
         static const SmuflMap sMap =
         {
-            { "4stringTabClef", 0xE06E }, // glyphnumber: 0, 4-string tab clef
-            
             { "4stringTabClef", 0xE06E },  // glyphnumber: 0, 4-string tab clef
             { "6stringTabClef", 0xE06D },  // glyphnumber: 1, 6-string tab clef
             { "accSagittal11LargeDiesisDown", 0xE30D },  // glyphnumber: 2, 11 large diesis down, 3° down [46 EDO]
@@ -2666,8 +2661,7 @@ namespace mx
         
         char16_t Smufl::findCodepoint(const std::string& inName)
         {
-            const frozen::string findMe(inName.c_str(), inName.length());
-            const SmuflIter iter = sMap.find( findMe );
+            const SmuflIter iter = sMap.find( inName );
             if( iter == sMap.cend() )
             {
                 std::cout << "WARN: findCodepoint missing: " << inName << std::endl;
@@ -2694,10 +2688,7 @@ namespace mx
                 return empty;
             }
             
-            const auto frzStr = iter->first;
-            const std::string result(frzStr.data(), frzStr.size());
-            
-            return result;
+            return iter->first;
         }
     }
 }
