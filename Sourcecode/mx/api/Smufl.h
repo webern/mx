@@ -7,7 +7,6 @@
 #include "mx/api/ApiCommon.h"
 
 #include <string>
-#include <unordered_map>
 
 namespace mx
 {
