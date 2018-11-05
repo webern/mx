@@ -52,13 +52,6 @@ namespace mx
                 markData.tickTimePosition = myCursor.tickTimePosition;
                 
                 parseArticulation( *articulation, markData );
-
-                if( markType != api::MarkType::otherArticulation )
-                {
-                    markData.smuflName = api::MarkSmufl::getName( markType, markData.positionData.placement );
-                    markData.smuflCodepoint = api::MarkSmufl::getCodepoint( markType, markData.positionData.placement );
-                }
-
                 outMarks.emplace_back( std::move( markData ) );
             }
         }
@@ -162,8 +155,14 @@ namespace mx
                 {
                     parseMarkDataAttributes( *inArticulation.getOtherArticulation()->getAttributes(), outMark );
                     outMark.name = inArticulation.getOtherArticulation()->getValue().getValue();
-                    outMark.smuflName = outMark.name;
-                    outMark.smuflCodepoint = api::Smufl::findCodepoint( outMark.smuflName );
+                    
+                    const auto possibleCustomMarkType = mx::api::getMarkTypeFromCustomString( outMark.name );
+                    
+                    if( possibleCustomMarkType != mx::api::MarkType::customErrorUnknown )
+                    {
+                        outMark.markType = possibleCustomMarkType;
+                    }
+                    
                     break;
                 }
                 default:

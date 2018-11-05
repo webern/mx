@@ -33,21 +33,12 @@ namespace mx
         {
             auto dyn = core::makeDynamics();
             
-            // if( myMarkData.positionData.placement != api::Placement::unspecified )
-            // {
-            //     dyn->getAttributes()->hasPlacement = true;
-            //     dyn->getAttributes()->placement = myConverter.convert( myMarkData.positionData.placement );
-            // }
             const auto value = myConverter.convertDynamic( myMarkData.markType );
             core::DynamicsValue dynamicsValue;
             dynamicsValue.setValue( value );
             const bool isOther = value == core::DynamicsEnum::otherDynamics;
             
-            if( isOther && !myMarkData.smuflName.empty() )
-            {
-                dynamicsValue.setValue( myMarkData.smuflName );
-            }
-            else if ( isOther && !myMarkData.name.empty() )
+            if ( isOther && !myMarkData.name.empty() )
             {
                 dynamicsValue.setValue( myMarkData.name );
             }

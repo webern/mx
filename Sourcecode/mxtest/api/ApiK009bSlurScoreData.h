@@ -5,7 +5,6 @@
 #pragma once
 
 #include "mx/api/ScoreData.h"
-#include "mx/api/Smufl.h"
 #include "mx/impl/Converter.h"
 #include "mx/core/Enums.h"
 

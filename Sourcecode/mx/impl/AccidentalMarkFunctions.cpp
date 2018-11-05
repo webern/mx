@@ -30,8 +30,6 @@ namespace mx
             markData.name = core::toString( accidentalValue );
             markData.positionData = impl::getPositionData( *myAccidentalMark.getAttributes() );
             
-            markData.smuflName = api::MarkSmufl::getName( markType, markData.positionData.placement );
-            markData.smuflCodepoint = api::MarkSmufl::getCodepoint( markType, markData.positionData.placement );
             return markData;
         }
     }
