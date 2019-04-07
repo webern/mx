@@ -49,7 +49,7 @@ jobs:
       
       - run:
           name: Build
-          command: make -j4
+          command: make
 
       - run:
           name: Test
