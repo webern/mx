@@ -22,7 +22,7 @@ Proj/
 */project.xcworkspace/
 cmake-build*
 cmake-build*
-*.sublime-workspace
+#*.sublime-workspace
 
 #########################################
 # Ignore Test Output and Expected Files #
