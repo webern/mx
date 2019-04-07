@@ -8,6 +8,7 @@
 #include "mx/impl/MeasureCursor.h"
 
 #include <mutex>
+#include <memory>
 
 namespace mx
 {
