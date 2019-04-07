@@ -53,7 +53,7 @@ jobs:
 
       - run:
           name: Test
-          command: ./mxtest
+          command: ./MxTest
 
       # - store_artifacts:
       #     path: /tmp/coverage/
