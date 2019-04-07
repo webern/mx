@@ -51,11 +51,10 @@ namespace mx
                 parseOrnament( *ornament, markData );
                 markData.tickTimePosition = myCursor.tickTimePosition;
 
-                if( ( markData.markType != api::MarkType::otherOrnament ) &&
-                    ( markData.markType != api::MarkType::unknownOrnament ) )
+                if( ( markData.markType == api::MarkType::otherOrnament ) ||
+                    ( markData.markType == api::MarkType::unknownOrnament ) )
                 {
-                    markData.smuflName = api::MarkSmufl::getName( markType, markData.positionData.placement );
-                    markData.smuflCodepoint = api::MarkSmufl::getCodepoint( markType, markData.positionData.placement );
+                    // TODO - SMUFLKILL - use the name to see if we have a custom enum value
                 }
 
                 if( markData.markType != api::MarkType::unknownOrnament )
@@ -203,14 +202,6 @@ namespace mx
                         outMark.name = value;
                     }
                     
-                    const auto tempChar = api::Smufl::findCodepoint( value );
-                    
-                    if( tempChar != 0 )
-                    {
-                        outMark.smuflName = value;
-                        outMark.smuflCodepoint = tempChar;
-                    }
-
                     break;
                 }
                 default:

@@ -6,6 +6,7 @@
 
 #include "mx/api/PartData.h"
 #include <mutex>
+#include <memory>
 
 namespace mx
 {

@@ -1,11 +1,12 @@
 #include "cpul/cpulRun.h"
 
 
-void cpulRun( bool runTests, bool holdConsole )
+int cpulRun( bool runTests, bool holdConsole )
 {
     UNUSED_PARAMETER( runTests )
     UNUSED_PARAMETER( holdConsole )
-
+    int failures = 0;
+    
 #ifndef USE_VS_TEST
     if ( runTests )
     {
@@ -13,7 +14,7 @@ void cpulRun( bool runTests, bool holdConsole )
         srand(::time_t(NULL));
         
         TestResult tr;
-        TestRegistry::runAllTests(tr);
+        failures = TestRegistry::runAllTests(tr);
         
         // force console screen to hold
         if ( holdConsole )
@@ -23,4 +24,6 @@ void cpulRun( bool runTests, bool holdConsole )
         }
     }
 #endif
+    
+    return failures;
 }

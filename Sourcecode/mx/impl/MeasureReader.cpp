@@ -6,7 +6,6 @@
 #include "mx/api/ClefData.h"
 #include "mx/api/KeyData.h"
 #include "mx/api/NoteData.h"
-#include "mx/api/Smufl.h"
 #include "mx/core/elements/Alter.h"
 #include "mx/core/elements/Backup.h"
 #include "mx/core/elements/Barline.h"

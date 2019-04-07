@@ -1,6 +1,7 @@
 #include "cpul/cpulTest.h"
 #include "cpul/cpulTestRegistry.h"
 #include "cpul/cpulTestResult.h"
+#include <algorithm>
 
 Test::Test (const std::string& testName,
             std::string fileName,

@@ -65,11 +65,6 @@ namespace mx
                 
                 if( isSuccess )
                 {
-                    if( markData.smuflName.empty() && markData.smuflCodepoint == 0 )
-                    {
-                        markData.smuflName = api::MarkSmufl::getName( markType, markData.positionData.placement );
-                        markData.smuflCodepoint = api::MarkSmufl::getCodepoint( markType, markData.positionData.placement );
-                    }
                     outMarks.emplace_back( std::move( markData ) );
                 }
             }
@@ -175,14 +170,7 @@ namespace mx
                     parseMarkDataAttributes( attr, outMarkData );
                     
                     const auto value = other.getValue().getValue();
-                    const auto charVal = api::Smufl::findCodepoint( value );
                     outMarkData.name = value;
-                    
-                    if( charVal != 0 )
-                    {
-                        outMarkData.smuflName = value;
-                        outMarkData.smuflCodepoint = charVal;
-                    }
 
                     return true;
                 }

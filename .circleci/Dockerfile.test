@@ -3,4 +3,4 @@ FROM matthewjamesbriggs/mxci:v001
 ENV BASEDIR="/mx"
 WORKDIR $BASEDIR
 COPY . .
-CMD cmake . && make
+CMD cmake . && make -j12 && ./MxTest

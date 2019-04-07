@@ -425,20 +425,7 @@ namespace mx
                 placement = myOutDirectionData.placement;
             }
             
-            if( valueObject.getValue() == core::DynamicsEnum::otherDynamics )
-            {
-                auto codePoint = api::Smufl::findCodepoint( mark.name );
-                if( codePoint > 0 )
-                {
-                    mark.smuflCodepoint = codePoint;
-                    mark.smuflName = mark.name;
-                }
-            }
-            else
-            {
-                mark.smuflName = api::MarkSmufl::getName( mark.markType, placement );
-                mark.smuflCodepoint = api::MarkSmufl::getCodepoint( mark.markType, placement );
-            }
+            mark.name = valueObject.getValueString();            
             myOutDirectionData.marks.emplace_back( std::move( mark ) );
         }
         

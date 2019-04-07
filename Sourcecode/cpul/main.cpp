@@ -17,7 +17,13 @@ int main(int argc, const char * argv[])
     UNUSED_PARAMETER( argc )
     UNUSED_PARAMETER( argv )
     cpul::TestTimer timer;
-    cpulRun( true );
+    const auto failures = cpulRun( true );
     timer.report( "Total runtime for all tests" );
+    
+    if( failures != 0 )
+    {
+        return 1;
+    }
+    
     return 0;
 }
