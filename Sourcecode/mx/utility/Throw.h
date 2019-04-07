@@ -5,6 +5,9 @@
 #pragma once
 
 #include <string>
+#include <cstring>
+#include <stddef.h>
+#include <stdint.h>
 
 #ifndef __FILENAME__
 
