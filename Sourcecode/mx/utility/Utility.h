@@ -4,6 +4,7 @@
 
 #pragma once
 #include "mx/core/Document.h"
+#include <climits>
 
 namespace mx
 {
