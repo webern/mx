@@ -2,4 +2,4 @@
 #include <iostream>
 
 
-void cpulRun( bool runTests, bool holdConsole = false );
+int cpulRun( bool runTests, bool holdConsole = false );

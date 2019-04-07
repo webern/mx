@@ -9,9 +9,9 @@ void TestRegistry::addTest (Test *test)
     instance ().add (test);
 }
 
-void TestRegistry::runAllTests (TestResult& result) 
+int TestRegistry::runAllTests (TestResult& result) 
 {
-    instance ().run (result);
+    return instance ().run (result);
 }
 
 TestRegistry& TestRegistry::instance () {
@@ -31,7 +31,7 @@ void TestRegistry::add(Test *test) {
     }
 }
 
-void TestRegistry::run (TestResult& result) {
+int TestRegistry::run (TestResult& result) {
     int testCount = 0;
     int errorCount = 0;
     result.startTests ();
@@ -68,4 +68,6 @@ void TestRegistry::run (TestResult& result) {
     std::cout << testCount << " tests, "
               << result.getFailureCount() << " failures, "
               << errorCount << " errors" << std::endl;
+
+    return failureCount;
 }

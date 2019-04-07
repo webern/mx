@@ -6,7 +6,6 @@
 
 #include "mx/api/PositionData.h"
 #include "mx/api/PrintData.h"
-#include "mx/api/Smufl.h"
 
 #include <string>
 
@@ -176,7 +175,15 @@ namespace mx
             
             pedal, // the typical piano pedal mark
             damp,  // the typical piano end-pedal mark
+            
+            // these are cust additions that will be written to, and read from, the
+            // other-articulations (or other-*) elements.
+            customErrorUnknown, // used to represent an error when parsing from a string
+            customAccentTenuto,
         };
+        
+        static constexpr const char* const markStringCustomErrorUnknown = "";
+        static constexpr const char* const markStringCustomAccentTenuto = "gjhsldjhglskdjhfg";
 
         bool isMarkDynamic( MarkType );
         bool isMarkArticulation( MarkType );
@@ -185,54 +192,27 @@ namespace mx
         bool isMarkPedal( MarkType );
         bool isMarkTechnical( MarkType );
         bool isMarkTremolo( MarkType );
+        bool isMarkCustom( MarkType );
+        std::string getCustomMarkName( MarkType );
+        MarkType getMarkTypeFromCustomString( const std::string& );
         int numTremoloSlashes( MarkType );
-        
-        using MarkSmuflEntry = std::pair<const MarkType, const SmuflGlyphname>;
-        using MarkSmuflMap = std::map<const MarkType, const SmuflGlyphname>;
-        
-        class MarkSmufl
-        {
-        public:
-            static const std::string& getName( MarkType mark );
-            static const std::string& getName( MarkType mark, Placement placement );
-            static char16_t getCodepoint( MarkType mark );
-            static char16_t getCodepoint( MarkType mark, Placement placement );
-            static const SmuflGlyphname& getSmuflGlyphname( MarkType mark );
-            static const MarkSmuflMap& getMap();
-            
-        private:
-            MarkSmufl();
-            static const MarkSmufl& getInstance();
-            MarkSmuflMap myMap;
-        };
-        
-        
+                
         struct MarkData
         {
             MarkType markType;
             std::string name;
-            std::string smuflName;
-            char16_t smuflCodepoint;
             int tickTimePosition;
             PrintData printData;
             PositionData positionData;
             
             MarkData();
-            
-            // smulf and name fields will be filled in if possible
-            // placement 'unspecified' will be assumed for smufl
             MarkData( MarkType inMarkType );
-            
-            // smulf and name fields will be filled in if possible
-            // positionData.placement field will also be filled in
             MarkData( Placement inPlacement, MarkType inMarkType );
         };
         
         MXAPI_EQUALS_BEGIN( MarkData )
         MXAPI_EQUALS_MEMBER( markType )
         MXAPI_EQUALS_MEMBER( name )
-        MXAPI_EQUALS_MEMBER( smuflName )
-        MXAPI_EQUALS_MEMBER( smuflCodepoint )
         MXAPI_EQUALS_MEMBER( tickTimePosition )
         MXAPI_EQUALS_MEMBER( printData )
         MXAPI_EQUALS_MEMBER( positionData )

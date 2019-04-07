@@ -1,7 +1,7 @@
 require 'json'
 require 'stringio'
 
-j = JSON.parse( IO.read("../Resources/smufl/glyphnames.json"))
+j = JSON.parse( IO.read("../Resources/S-M-U-F-L/glyphnames.json"))
 
 content = StringIO.new
 
@@ -17,7 +17,7 @@ content << "namespace mx\n"
 content << "{\n"
 content << "    namespace impl\n"
 content << "    {\n"
-content << "        inline std::map<const std::string, const char16_t> createSmuflMap()\n"
+content << "        inline std::map<const std::string, const char16_t> createS-M-U-F-LMap()\n"
 content << "        {\n"
 content << "            std::map<const std::string, const char16_t> outMap;\n"
 
@@ -43,7 +43,7 @@ content << "    }\n"
 content << "}\n"
 
 begin
-  file = File.open("../Sourcecode/mx/impl/SmuflGlyphMap.h", "w")
+  file = File.open("../Sourcecode/mx/impl/S-M-U-F-LGlyphMap.h", "w")
   file.write(content.string) 
 rescue IOError => e
   #some error occur, dir not writable etc.

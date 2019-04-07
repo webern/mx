@@ -6,6 +6,8 @@
 
 #include "mx/xml/XDoc.h"
 #include <memory>
+#include <stddef.h>
+#include <stdint.h>
 
 namespace mx
 {

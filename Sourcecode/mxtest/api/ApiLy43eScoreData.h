@@ -44,9 +44,6 @@ namespace mxtest
         auto directionMarkP = &directionP->marks.back();
         directionMarkP->markType = MarkType::ffff;
         directionMarkP->name = "ffff";
-        auto glyph = &MarkSmufl::getSmuflGlyphname( directionMarkP->markType );
-        directionMarkP->smuflName = glyph->below;
-        directionMarkP->smuflCodepoint = Smufl::findCodepoint( directionMarkP->smuflName );
         directionMarkP->tickTimePosition = 0;
         
         // measure 1 - music
@@ -107,9 +104,6 @@ namespace mxtest
         directionMarkP->tickTimePosition = directionP->tickTimePosition;
         directionMarkP->markType = MarkType::p;
         directionMarkP->name = "p";
-        glyph = &MarkSmufl::getSmuflGlyphname( directionMarkP->markType );
-        directionMarkP->smuflName = glyph->below;
-        directionMarkP->smuflCodepoint = Smufl::findCodepoint( directionMarkP->smuflName );
         
         voice = 1;
         staff2P->voices[voice].notes.emplace_back( NoteData{} );

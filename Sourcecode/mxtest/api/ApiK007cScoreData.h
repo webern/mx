@@ -5,7 +5,6 @@
 #pragma once
 
 #include "mx/api/ScoreData.h"
-#include "mx/api/Smufl.h"
 #include "mx/impl/Converter.h"
 #include "mx/core/Enums.h"
 
@@ -33,11 +32,9 @@ namespace
         auto& mark = direction.marks.back();
         
         mark.markType = markType;
-        mark.smuflName = MarkSmufl::getName( markType );
         mx::impl::Converter converter;
         const auto d = converter.convertDynamic( markType );
         mark.name = mx::core::toString( d );
-        mark.smuflCodepoint = MarkSmufl::getCodepoint( markType );
         direction.tickTimePosition = noteP->tickTimePosition;
         direction.isStaffValueSpecified = false;
         mark.positionData.placement = Placement::below;
@@ -110,9 +107,7 @@ namespace mxtest
         auto& lastMeasure = part.measures.back();
         auto& lastDynamic = lastMeasure.staves.back().directions.back().marks.back();
         const std::string name = "dynamicNiente";
-        lastDynamic.smuflName = name;
         lastDynamic.name = name;
-        lastDynamic.smuflCodepoint = Smufl::findCodepoint( name );
         
         return score;
     }

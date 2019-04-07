@@ -252,7 +252,7 @@ namespace mx
             
             for( const auto& mark : myNoteData.noteAttachmentData.marks )
             {
-                if( isMarkArticulation( mark.markType ) )
+                if( isMarkArticulation( mark.markType ) || isMarkCustom( mark.markType ) )
                 {
                     this->addArticulation( mark, articulations );
                 }
@@ -397,7 +397,7 @@ namespace mx
         
         void NotationsWriter::addArticulation( const api::MarkData& mark, const core::ArticulationsPtr& outArticulationsPtr ) const
         {
-            if( !myConverter.isArticulation( mark.markType ) )
+            if( !myConverter.isArticulation( mark.markType ) && !api::isMarkCustom( mark.markType ) )
             {
                 return;
             }
@@ -494,6 +494,14 @@ namespace mx
             else if( mark.markType == api::MarkType::unstress )
             {
                 auto element = articulationsChoice->getUnstress();
+                auto attributes = element->getAttributes();
+                setAttributesFromPositionData( mark.positionData, *attributes);
+            }
+            else if( api::isMarkCustom( mark.markType ) )
+            {
+                const auto customName = api::getCustomMarkName( mark.markType );
+                auto element = articulationsChoice->getOtherArticulation();
+                element->setValue( core::XsString{ customName } );
                 auto attributes = element->getAttributes();
                 setAttributesFromPositionData( mark.positionData, *attributes);
             }
@@ -595,8 +603,13 @@ namespace mx
                 setAttributesFromPositionData( mark.positionData, *attributes);
                 element->setValue( mx::core::TremoloMarks{ api::numTremoloSlashes( mark.markType ) } );
             }
+            else if( api::isMarkCustom( mark.markType ) )
+            {
+                
+            }
             else if( ( mark.markType == api::MarkType::unknownOrnament ) ||
                      ( mark.markType == api::MarkType::otherOrnament ) )
+                // TODO - SMUFLKILL - handle custom enum values?
             {
                 auto element = ornamentsChoice->getOtherOrnament();
                 auto attributes = element->getAttributes();
@@ -605,10 +618,6 @@ namespace mx
                 if( !mark.name.empty() )
                 {
                     element->setValue( core::XsString{ mark.name } );
-                }
-                else if ( !mark.smuflName.empty() )
-                {
-                    element->setValue( core::XsString{ mark.smuflName } );
                 }
             }
         }
@@ -707,10 +716,6 @@ namespace mx
                 if( !mark.name.empty() )
                 {
                     element->setValue( core::XsString{ mark.name } );
-                }
-                else if ( !mark.smuflName.empty() )
-                {
-                    element->setValue( core::XsString{ mark.smuflName } );
                 }
             }
         }

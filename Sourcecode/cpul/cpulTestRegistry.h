@@ -16,13 +16,15 @@ class TestRegistry
 {
 public:
 	static void addTest (Test *test);
-	static void runAllTests (TestResult& result);
+	
+    // returns the number of test failures
+    static int runAllTests (TestResult& result);
 
 private:
 
 	static TestRegistry&	instance ();
 	void					add (Test *test);
-	void					run (TestResult& result);
+	int 					run (TestResult& result);
 
 	std::vector<Test *>		tests;
 

@@ -9,6 +9,7 @@
 #include <mutex>
 #include <list>
 #include <map>
+#include <memory>
 
 namespace mx
 {

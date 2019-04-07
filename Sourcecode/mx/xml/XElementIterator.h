@@ -9,6 +9,8 @@
 
 #include <iostream>
 #include <memory>
+#include <stddef.h>
+#include <stdint.h>
 
 namespace mx
 {
