@@ -8,6 +8,7 @@
 
 #include <sstream>
 #include <iomanip>
+#include <mutex>
 
 namespace mx
 {
