@@ -13,7 +13,7 @@ using namespace std;
 using namespace mx::api;
 using namespace mxtest;
 
-
+#if 0
 TEST( x, Freezing )
 {
     const int partIndex = 1; // bass clarinet
@@ -41,5 +41,5 @@ TEST( x, Freezing )
 
 }
 T_END
-
+#endif
 #endif
