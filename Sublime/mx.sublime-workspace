@@ -541,11 +541,34 @@
 	},
 	"expanded_folders":
 	[
-		"/Users/mjb/MxRepo",
-		"/Users/mjb/MxRepo/Sublime"
+		"/Users/mjb/repos/mx"
 	],
 	"file_history":
 	[
+		"/Users/mjb/Library/Developer/Xcode/DerivedData/mx-bsuewfrvqkwhdoejyflracifumto/Build/Products/Debug/bloop.xml",
+		"/Users/mjb/repos/mx/Sourcecode/mx/impl/DynamicsReader.cpp",
+		"/Users/mjb/repos/mx/DevScripts/smuflHeader.rb",
+		"/Users/mjb/repos/mx/Sourcecode/mx/impl/DynamicsWriter.cpp",
+		"/Users/mjb/repos/mx/Sourcecode/mx/impl/NotationsWriter.cpp",
+		"/Users/mjb/repos/mx/Sourcecode/mx/impl/OrnamentsFunctions.cpp",
+		"/Users/mjb/repos/mx/Sourcecode/mx/impl/TechnicalFunctions.cpp",
+		"/Users/mjb/repos/mx/Sourcecode/mxtest/api/ApiK007aScoreData.h",
+		"/Users/mjb/repos/mx/Sourcecode/mxtest/api/ApiK007cScoreData.h",
+		"/Users/mjb/repos/mx/Sourcecode/mxtest/api/ApiLy43eScoreData.h",
+		"/Users/mjb/repos/mx/Sourcecode/mxtest/api/NoteDataTest.cpp",
+		"/Users/mjb/repos/mx/Sourcecode/mx/impl/MeasureReader.cpp",
+		"/Users/mjb/repos/mx/Sourcecode/mxtest/api/ApiChordSimpleScoreData.h",
+		"/Users/mjb/repos/mx/Sourcecode/mxtest/api/ApiK009bSlurScoreData.h",
+		"/Users/mjb/repos/mx/Sourcecode/mxtest/api/ApiK014aFermatasScoreData.h",
+		"/Users/mjb/repos/mx/Sourcecode/mxtest/api/ApiK015aLayoutScoreData.h",
+		"/Users/mjb/repos/mx/Sourcecode/mxtest/api/ApiK016aMiscScoreData.h",
+		"/Users/mjb/repos/mx/Sourcecode/mxtest/api/ApiMuAccidentals1ScoreData.h",
+		"/Users/mjb/repos/mx/Xcode/mx.xcworkspace/xcuserdata/mjb.xcuserdatad/UserInterfaceState.xcuserstate",
+		"/Users/mjb/repos/mx/Sourcecode/mx/impl/AccidentalMarkFunctions.cpp",
+		"/Users/mjb/repos/mx/Sourcecode/mx/impl/DirectionReader.cpp",
+		"/Users/mjb/repos/mx/Sourcecode/mx/impl/ArticulationsFunctions.cpp",
+		"/Users/mjb/repos/mx/Sourcecode/mx/api/MarkData.h",
+		"/Users/mjb/repos/mx/Sourcecode/mx/api/MarkData.cpp",
 		"/Users/mjb/MxRepo/Documents/musicxml.xsd",
 		"/Users/mjb/MxRepo/Resources/mjbsuite/freezing-measure-numbers.rb",
 		"/Users/mjb/MxRepo/Resources/mjbsuite/freezing.xml",
@@ -649,41 +672,18 @@
 		"/Users/mjb/iqreq/scripts/xml.rb",
 		"/Users/mjb/iqreq/scripts/xml-new.rb",
 		"/Users/mjb/iqreq/app/models/text_field.rb",
-		"/Users/mjb/iqreq/vendor/bundle/ruby/2.4.0/gems/rails-dom-testing-2.0.3/lib/rails/dom/testing/assertions/selector_assertions/count_describable.rb",
-		"/Users/mjb/iqreq/app/models/paragraph.rb",
-		"/Users/mjb/iqreq/data/40 bus.txt",
-		"/Users/mjb/.bashrc",
-		"/Users/mjb/.bash_profile",
-		"/Users/mjb/iqreq/config/environment.rb",
-		"/Users/mjb/iqreq/config/application.rb",
-		"/Users/mjb/Desktop/dadnotes.txt",
-		"/Users/mjb/.rvm/log/1507645866_ruby-2.4.1/install.log",
-		"/usr/local/Cellar/gnupg/2.2.1/bin/reqxml-new.rb",
-		"/usr/local/Cellar/gnupg/2.2.1/bin/reqxml.rb",
-		"/Users/mjb/iqreq/data/requirements.xsd",
-		"/Users/mjb/Users/mjb/iqreq/data/requirements.xsd",
-		"/usr/local/Cellar/gnupg/2.2.1/bin/data/requirements.xsd",
-		"/Users/mjb/.profile",
-		"/Users/mjb/iqreq/scripts/parse-reqs-doc.xml",
-		"/Users/mjb/Desktop/todays notes",
-		"/Users/mjb/iqreq/app/views/documents/_images_and_text.html.erb",
-		"/Users/mjb/iqreq/app/views/layouts/application.html.erb",
-		"/Users/mjb/iqreq/app/views/layouts/_images_and_text.html.erb",
-		"/Users/mjb/iqreq/log/development.log",
-		"/Users/mjb/iqreq/tmp/cache/assets/sprockets/v3.0/3S/3SA85uyF5GmS9_ZjfmCsfAjSJQhH2T_EhWQRd2Aaxk0.cache",
-		"/Users/mjb/iqreq/data/JobSchema.sql",
-		"/Users/mjb/iqreq/data/SamplePricingCode.js",
-		"/Users/mjb/iqreq/scripts/pricing_analysis_import.rb"
+		"/Users/mjb/iqreq/vendor/bundle/ruby/2.4.0/gems/rails-dom-testing-2.0.3/lib/rails/dom/testing/assertions/selector_assertions/count_describable.rb"
 	],
 	"find":
 	{
-		"height": 40.0
+		"height": 44.0
 	},
 	"find_in_files":
 	{
 		"height": 281.0,
 		"where_history":
 		[
+			"/Users/mjb/repos/mx",
 			""
 		]
 	},
@@ -692,6 +692,11 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"smufl",
+			"\n#include \"mx/api/Smufl.h\"",
+			"smufl",
+			"Smuf",
+			"smufl",
 			"tremolo\"",
 			"/>",
 			"<measure implicit=\"yes\" number=\"X26\"",
@@ -756,6 +761,8 @@
 		"regex": false,
 		"replace_history":
 		[
+			"S-M-U-F-L",
+			"",
 			" />",
 			"<measure number=\"INDEX26\"",
 			"<measure number=\"INDEX25\"",
@@ -803,7 +810,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 27.0
+		"height": 32.0
 	},
 	"input":
 	{
@@ -844,7 +851,7 @@
 	"project": "mx.sublime-project",
 	"replace":
 	{
-		"height": 50.0
+		"height": 80.0
 	},
 	"save_all_on_build": true,
 	"select_file":
