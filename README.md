@@ -48,6 +48,8 @@ make -j6
 ./MxTest
 ```
 
+The Xcode project which is checked-in to the repo also has targets for iOS and macOS frameworks and dylibs, but these are not specified in the cmake file.
+
 ## API
 
 The `mx::api` namespace is intended to be a (somewhat) simplified structural representation of MusicXML. It should be slightly more intuitive than manipulating the DOM representation directly.
@@ -664,7 +666,7 @@ The tests are slow to compile, see the *Compiling* section for more info on how 
 
 #### Historical Notes
 
-**Historical Note: April 7, 2019** Trying to button up a '1.0' 'release' by tying up some of the loose ends with the build, continuous integration, testing, and header leakage.
+**Historical Note: April 7, 2019** Trying to button up a '1.0' 'release' by tying up some of the loose ends with the build, continuous integration, testing, and header leakage. The use of the semver `1.0` implies that we hope there won't be many breaking changes. I suppose the way I will use semver is as follows: a patch release may cause slight compilation annoyances, but nothing that would cause any rewriting of code. A minor release may similarly require some tweaks but hopefully nothing too major. A major release could be anything up-to a complete re-write.
 
 **Historical Note: October 6, 2016:** Significant progress has been made on the `api` namespace, which is a simplified set of data structures to represent a MusicXML document.  These are being implemented as mostly-POD structs.  Currently the importing of data into these structures is well-underway, but the exporting from these data structures has not been implemented.
 
