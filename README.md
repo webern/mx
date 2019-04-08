@@ -13,29 +13,37 @@ Master: [![CircleCI](https://circleci.com/gh/webern/mx.svg?style=svg)](https://c
 Develop: [![CircleCI](https://circleci.com/gh/webern/mx/tree/develop.svg?style=svg)](https://circleci.com/gh/webern/mx/tree/develop)  
 
 ## Introduction
-This project is a C++ class library for working with MusicXML files.  MusicXML filea are represented in a strongly-typed object-oriented class structure.  MusicXML can be deserialized into the class structure and serialized from class structure to MusicXML.
 
-One of the goals of this project is to strongly-type all aspects of the MusicXML XSD specification such that **any program that compiles will represent a valid MusicXML document.**  This principle is only extended as far as XSD validation is concerned.  The MusicXML specification allows for the creation of valid MusicXML documents which are nonetheless musical gibberish.  Additionally the MusicXML specification has many requirements which are described in comments in the XSD specification.  In other words, an XSD-validated MusicXML document does not necessarily represent valid MusicXML.
-
-Note: XsIDREF and XsID constraints are not enforced by this library.  Thus the goal stated above has not entirely been achieved.  If you introduce duplicative XsID values, for example, an XSD validation of your document will fail and most implementors will throw when reading your MusicXML file.  I don't know how to solve this problem right now.
+This project is a C++ library for working with MusicXML files.  MusicXML files are represented in a statically typed objects.  This structure can be serialized and deserialize to/from MusicXML.
 
 ## Compiling
-The project has been built with the following compilers successfully.
-* Xcode 7.3.1 Apple LLVM version 7.3.0 (clang-703.0.31)
-* Visual Studio 2015
 
-GCC is not working because GCC incorrectly implements the vector erase function with no overload that takes a const iterator.  If you get it to compile with GCC please create a pull request.  [Issue #6](https://github.com/Webern/MusicXML-Class-Library/issues/6) exists for the GCC problem.  Here are the [GCC bugs](https://gcc.gnu.org/bugzilla/buglist.cgi?bug_id=55675%2C57158).
+The project is working with:
+* Xcode 10.1 Apple LLVM version 10.0.0 (clang-1000.11.45.5)
+* g++ (Debian 6.3.0-18+deb9u1) 6.3.0 20170516
+* cmake version 3.7.2
 
-To compile with Xcode, just open `YourRepoRoot/Xcode/mx.xcworkspace` and build.
+Visual Studio should be very close to working if you use cmake. The most likely issues you will run into with VS is includes that need to be added here and there.
 
-To compile with any other system, use cmake, here is a Visual Studio example
+There are three cmake options:
 
 ```
-git clone https://github.com/Webern/MusicXML-Class-Library.git MxRepo
-mkdir MxBuild
-cd MxBuild
-cmake ..\MxRepo
-start Mx.sln
+    -DMX_BUILD_TESTS=on
+    -DMX_BUILD_CORE_TESTS=off
+    -DMX_BUILD_EXAMPLES=on
+```
+
+The configuration shown above is the recommended configuration for development. If you just need the lib then turn off all three of the cmake options.
+
+Here's an example of a clean build of the project followed by a test run.
+
+```
+git clone https://github.com/webern/mx.git mx
+mkdir build
+cd build
+cmake ../mx -DMX_BUILD_TESTS=on -DMX_BUILD_CORE_TESTS=off -DMX_BUILD_EXAMPLES=on
+make -j6
+./MxTest
 ```
 
 Visual Studio will open with a solution file and be ready to compile.
