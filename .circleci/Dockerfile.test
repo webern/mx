@@ -3,14 +3,28 @@ FROM matthewjamesbriggs/mxci:v001
 ENV BASEDIR="/mx"
 WORKDIR $BASEDIR
 COPY . .
-CMD cmake --version \
-    cmake \
-    -DMX_BUILD_TESTS=on \
-    -DMX_BUILD_CORE_TESTS=on \
-    -DMX_BUILD_EXAMPLES=on \
-    . && \
-    make -j12 && \
-    ./MxTest && \
-    ./MxRead && \
-    ./MxWrite && \
-    ./MxHide
+
+RUN echo "#! /bin/bash\n" >> /usr/bin/docker-entrypoint.sh \
+    echo "set -e\n" >> /usr/bin/docker-entrypoint.sh \
+    echo "cmake --version\n" >> /usr/bin/docker-entrypoint.sh \
+    echo "cmake -DMX_BUILD_TESTS=on -DMX_BUILD_CORE_TESTS=on -DMX_BUILD_EXAMPLES=on .\n" >> /usr/bin/docker-entrypoint.sh \
+    echo "make -j12\n" >> /usr/bin/docker-entrypoint.sh \
+    echo "./MxHide\n" >> /usr/bin/docker-entrypoint.sh \
+    echo "./MxWrite\n" >> /usr/bin/docker-entrypoint.sh \
+    echo "./MxRead\n" >> /usr/bin/docker-entrypoint.sh \
+    echo "./MxTest\n" >> /usr/bin/docker-entrypoint.sh && \
+    chmod +x /usr/bin/docker-entrypoint.sh
+
+CMD "/usr/bin/docker-entrypoint.sh"
+
+# CMD cmake --version && \
+#     cmake \
+#     -DMX_BUILD_TESTS=on \
+#     -DMX_BUILD_CORE_TESTS=on \
+#     -DMX_BUILD_EXAMPLES=on \
+#     . && \
+#      && \
+#     ./MxTest && \
+#     ./MxRead && \
+#     ./MxWrite && \
+#     ./MxHide

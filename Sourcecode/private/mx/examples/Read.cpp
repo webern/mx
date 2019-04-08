@@ -3,15 +3,8 @@
 #include <cstdint>
 #include <sstream>
 
-// TODO - create a proper include folder
-// normally we would want to include like this
-// #include "mx/api/DocumentManager.h"
-// however because our cmake system is a little bit
-// broken, we are importing from the mx/api directory
-// directly.
-
-#include "DocumentManager.h"
-#include "ScoreData.h"
+#include "mx/api/DocumentManager.h"
+#include "mx/api/ScoreData.h"
 
 #define MX_IS_A_SUCCESS 0
 #define MX_IS_A_FAILURE 1

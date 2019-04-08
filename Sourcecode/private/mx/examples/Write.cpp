@@ -3,18 +3,11 @@
 #include <cstdint>
 #include <sstream>
 
-// TODO - create a proper include folder
-// normally we would want to include like this
-// #include "mx/api/DocumentManager.h"
-// however because our cmake system is a little bit
-// broken, we are importing from the mx/api directory
-// directly.
-
-#include "DocumentManager.h"
-#include "ScoreData.h"
+#include "mx/api/DocumentManager.h"
+#include "mx/api/ScoreData.h"
 
 // set this to 1 if you want to see the xml in your console
-#define MX_WRITE_THIS_TO_THE_CONSOLE 1
+#define MX_WRITE_THIS_TO_THE_CONSOLE 0
 
 int main(int argc, const char * argv[])
 {
