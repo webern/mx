@@ -3,7 +3,8 @@ FROM matthewjamesbriggs/mxci:v001
 ENV BASEDIR="/mx"
 WORKDIR $BASEDIR
 COPY . .
-CMD cmake \
+CMD cmake --version \
+    cmake \
     -DMX_BUILD_TESTS=on \
     -DMX_BUILD_CORE_TESTS=on \
     -DMX_BUILD_EXAMPLES=on \
@@ -11,5 +12,5 @@ CMD cmake \
     make -j12 && \
     ./MxTest && \
     ./MxRead && \
-    ./MxWrite
-# CMD cmake --version
+    ./MxWrite && \
+    ./MxHide
