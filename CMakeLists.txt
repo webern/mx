@@ -1,6 +1,14 @@
 cmake_minimum_required(VERSION 2.8.12.2)
 project(Mx)
 
+option(MX_BUILD_TESTS "build or skip the test suite" OFF)
+
+option(
+    MX_BUILD_CORE_TESTS
+    "build or skip the tests in the 'core' namespace, requires MX_BUILD_TESTS"
+    OFF
+)
+
 #set(CMAKE_BINARY_DIR "./Build")
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
@@ -55,19 +63,31 @@ file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/Sourcecode/mxtest/file/PathRoot.h
 #endif"
         )
 
-find_package( Threads )
 
 # MxTest
-add_executable(MxTest ${SRC_MX_TEST_API} ${SRC_MX_TEST_CONTROL} ${SRC_MX_TEST_CORE} ${SRC_MX_TEST_FILE} ${SRC_MX_TEST_IMPL} ${SRC_MX_TEST_IMPORT} ${SRC_MX_TEST_UTILITY} ${SRC_MX_TEST_XML} ${SRC_CPUL})
-source_group( "api" FILES ${SRC_MX_TEST_API} )
-source_group( "control" FILES ${SRC_MX_TEST_CONTROL} )
-source_group( "core" FILES ${SRC_MX_TEST_CORE} )
-source_group( "file" FILES ${SRC_MX_TEST_FILE} )
-source_group( "impl" FILES ${SRC_MX_TEST_IMPL} )
-source_group( "import" FILES ${SRC_MX_TEST_IMPORT} )
-source_group( "utility" FILES ${SRC_MX_TEST_UTILITY} )
-source_group( "xml" FILES ${SRC_MX_TEST_XML} )
-source_group( "cpul" FILES ${SRC_CPUL} )
-target_link_libraries(MxTest Mx)
-target_link_libraries(MxTest ${CMAKE_THREAD_LIBS_INIT})
-set_property(TARGET MxTest PROPERTY CXX_STANDARD 14)
+if(MX_BUILD_TESTS)
+    message("tests will be compiled")
+    if(MX_BUILD_CORE_TESTS)
+        message("core tests will be compiled")
+        # add_compile_definitions(MX_COMPILE_CORE_TESTS)
+        add_definitions(-DMX_COMPILE_CORE_TESTS)
+    else()
+        message("core tests will not be compiled")
+    endif()    
+    find_package( Threads )
+    add_executable(MxTest ${SRC_MX_TEST_API} ${SRC_MX_TEST_CONTROL} ${SRC_MX_TEST_CORE} ${SRC_MX_TEST_FILE} ${SRC_MX_TEST_IMPL} ${SRC_MX_TEST_IMPORT} ${SRC_MX_TEST_UTILITY} ${SRC_MX_TEST_XML} ${SRC_CPUL})
+    source_group( "api" FILES ${SRC_MX_TEST_API} )
+    source_group( "control" FILES ${SRC_MX_TEST_CONTROL} )
+    source_group( "core" FILES ${SRC_MX_TEST_CORE} )
+    source_group( "file" FILES ${SRC_MX_TEST_FILE} )
+    source_group( "impl" FILES ${SRC_MX_TEST_IMPL} )
+    source_group( "import" FILES ${SRC_MX_TEST_IMPORT} )
+    source_group( "utility" FILES ${SRC_MX_TEST_UTILITY} )
+    source_group( "xml" FILES ${SRC_MX_TEST_XML} )
+    source_group( "cpul" FILES ${SRC_CPUL} )
+    target_link_libraries(MxTest Mx)
+    target_link_libraries(MxTest ${CMAKE_THREAD_LIBS_INIT})
+    set_property(TARGET MxTest PROPERTY CXX_STANDARD 14)
+else()
+  message("tests will not be compiled")
+endif()
