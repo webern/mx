@@ -47,12 +47,16 @@ jobs:
           name: Cmake
           command: |
               [ "$(git rev-parse --abbrev-ref HEAD)" == "master" ] && \
-              cmake -DMX_BUILD_TESTS=on -DMX_BUILD_CORE_TESTS=on . || \
-              cmake -DMX_BUILD_TESTS=on -DMX_BUILD_CORE_TESTS=off .
+              cmake -DMX_BUILD_EXAMPLES=on -DMX_BUILD_TESTS=on -DMX_BUILD_CORE_TESTS=on . || \
+              cmake -DMX_BUILD_EXAMPLES=on -DMX_BUILD_TESTS=on -DMX_BUILD_CORE_TESTS=off .
       
       - run:
           name: Build
           command: make
+
+      - run:
+          name: Run Examples
+          command: ./MxRead && ./MxWrite
 
       - run:
           name: Test

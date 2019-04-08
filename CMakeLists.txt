@@ -91,3 +91,22 @@ if(MX_BUILD_TESTS)
 else()
   message("tests will not be compiled")
 endif()
+
+# MxExamples
+if(MX_BUILD_EXAMPLES)
+    message("examples will be compiled")   
+    find_package( Threads )
+    add_executable(MxRead ${SOURCE}/mx/examples/Read.cpp)
+    add_executable(MxWrite ${SOURCE}/mx/examples/Write.cpp)
+    target_link_libraries(MxRead Mx  ${CMAKE_THREAD_LIBS_INIT})
+    target_link_libraries(MxWrite Mx ${CMAKE_THREAD_LIBS_INIT})
+    set_property(TARGET MxRead PROPERTY CXX_STANDARD 14)
+    set_property(TARGET MxWrite PROPERTY CXX_STANDARD 14)
+
+    # TODO - create a proper 'include' directory
+    target_include_directories(MxRead PRIVATE ${SOURCE}/mx/api)
+    target_include_directories(MxWrite PRIVATE ${SOURCE}/mx/api)
+
+else()
+  message("examples will not be compiled")
+endif()
