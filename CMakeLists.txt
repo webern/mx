@@ -104,8 +104,8 @@ if(MX_BUILD_EXAMPLES)
     set_property(TARGET MxWrite PROPERTY CXX_STANDARD 14)
 
     # TODO - create a proper 'include' directory
-    target_include_directories(MxRead ${SOURCE}/mx/api)
-    target_include_directories(MxWrite ${SOURCE}/mx/api)
+    target_include_directories(MxRead PRIVATE ${SOURCE}/mx/api)
+    target_include_directories(MxWrite PRIVATE ${SOURCE}/mx/api)
 
 else()
   message("examples will not be compiled")

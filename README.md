@@ -56,6 +56,242 @@ Visual Studio will open with a solution file and be ready to compile.
 ```
 
 ## Usage
+
+The `mx::api` namespace is intended to be a (somewhat) simplified wrapping `api` for MusicXML. It should be slightly more intuitive than manipulating the DOM representation directly.
+
+#### Writing MusicXML with `mx::api`
+```C++
+#include <string>
+#include <iostream>
+#include <cstdint>
+#include <sstream>
+
+#include "mx/api/DocumentManager.h"
+#include "mx/api/ScoreData.h"
+
+// set this to 1 if you want to see the xml in your console
+#define MX_WRITE_THIS_TO_THE_CONSOLE 1
+
+int main(int argc, const char * argv[])
+{
+    using namespace mx::api;
+    const auto qticks = 4;
+
+    // create a score
+    auto score = ScoreData{};
+    score.workTitle = "Mx Example";
+    score.composer = "Matthew James Briggs";
+    score.copyright = "Copyright (c) 2019";
+    score.ticksPerQuarter = qticks;
+
+    // create a part
+    score.parts.emplace_back( PartData{} );
+    auto& part = score.parts.back();
+
+    // give the part a name
+    part.name = "Flute";
+    part.abbreviation = "Fl.";
+    part.displayName = "Flute";
+    part.displayAbbreviation = "Fl.";
+
+    // give the part an instrument
+    part.instrumentData.soundID = SoundID::windFlutesFlute;
+    part.instrumentData.midiData.channel = 1;
+    part.instrumentData.midiData.program = 74;
+
+    // add a measure
+    part.measures.emplace_back( MeasureData{} );
+    auto& measure = part.measures.back();
+    measure.timeSignature.beats = 4;
+    measure.timeSignature.beatType = 4;
+    measure.timeSignature.isImplicit = false;
+
+    // add a staff
+    measure.staves.emplace_back( StaffData{} );
+    auto& staff = measure.staves.back();
+
+    // set the clef
+    auto clef = ClefData{};
+    clef.setTreble();
+    staff.clefs.emplace_back( clef );
+
+    // add a voice
+    staff.voices[0] = VoiceData{};
+    auto& voice = staff.voices.at( 0 );
+
+    const auto quarter = qticks;
+    const auto half = qticks * 2;
+    const auto eighth = qticks / 2;
+
+    // add a few notes
+    auto currentTime = 0;
+    auto note = NoteData{};
+    note.pitchData.step = Step::d;
+    note.pitchData.alter = 1;
+    note.pitchData.octave = 5;
+    note.pitchData.accidental = Accidental::sharp;
+    note.durationData.durationName = DurationName::half;
+    note.durationData.durationTimeTicks = half;
+    note.tickTimePosition = currentTime;
+    voice.notes.push_back( note );
+
+    // advance our time
+    currentTime += half;
+
+    note.pitchData.step = Step::e;
+    note.pitchData.alter = 0;
+    note.pitchData.octave = 5;
+    note.pitchData.accidental = Accidental::none;
+    note.durationData.durationName = DurationName::eighth;
+    note.durationData.durationTimeTicks = eighth;
+    note.tickTimePosition = currentTime;
+    // beams are handled explicitly in musicxml
+    note.beams.push_back( Beam::begin ); // start an eighth-note beam
+    voice.notes.push_back( note );
+    currentTime += eighth;
+
+    note.pitchData.step = Step::f;
+    note.pitchData.alter = 0;
+    note.pitchData.octave = 5;
+    note.pitchData.accidental = Accidental::none;
+    note.durationData.durationName = DurationName::eighth;
+    note.tickTimePosition = currentTime;
+    note.durationData.durationTimeTicks = eighth;
+    note.beams.clear();
+    note.beams.push_back( Beam::end ); // end the eighth-note beam
+    voice.notes.push_back( note );
+    currentTime += eighth;
+
+    note.pitchData.step = Step::e;
+    note.pitchData.alter = 0;
+    note.pitchData.octave = 5;
+    note.pitchData.accidental = Accidental::none;
+    note.durationData.durationName = DurationName::quarter;
+    note.durationData.durationTimeTicks = quarter;
+    note.tickTimePosition = currentTime;
+    note.beams.clear();
+    voice.notes.push_back( note );
+
+    // the document manager is the liaison between our score data and the MusicXML DOM.
+    // it completely hides the MusicXML DOM from us when using mx::api
+    auto& mgr = DocumentManager::getInstance();
+    const auto documentID = mgr.createFromScore( score );
+
+    // write to the console
+    #if MX_WRITE_THIS_TO_THE_CONSOLE
+    mgr.writeToStream( documentID, std::cout );
+    std::cout << std::endl;
+    #endif
+
+    // write to a file
+    mgr.writeToFile( documentID, "./example.musicxml" );
+
+    return 0;
+}
+```
+
+#### Reading MusicXML with `mx::api`
+
+```C++
+#include "mx/api/DocumentManager.h"
+#include "mx/api/ScoreData.h"
+
+#include <string>
+#include <iostream>
+#include <cstdint>
+#include <sstream>
+
+#define MX_IS_A_SUCCESS 0
+#define MX_IS_A_FAILURE 1
+
+constexpr const char* const xml = R"(
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE score-partwise PUBLIC
+    "-//Recordare//DTD MusicXML 3.1 Partwise//EN"
+    "http://www.musicxml.org/dtds/partwise.dtd">
+<score-partwise version="3.1">
+  <part-list>
+    <score-part id="P1">
+      <part-name>Music</part-name>
+    </score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes>
+        <divisions>1</divisions>
+        <key>
+          <fifths>0</fifths>
+        </key>
+        <time>
+          <beats>4</beats>
+          <beat-type>4</beat-type>
+        </time>
+        <clef>
+          <sign>G</sign>
+          <line>2</line>
+        </clef>
+      </attributes>
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>4</duration>
+        <type>whole</type>
+      </note>
+    </measure>
+  </part>
+</score-partwise>
+)";
+
+int main(int argc, const char * argv[])
+{
+    using namespace mx::api;
+
+    // create a reference to the singleton which holds documents in memory for us
+    auto& mgr = DocumentManager::getInstance();
+
+    // place the xml from above into a stream object
+    std::istringstream istr{ xml };
+
+    // ask the document manager to parse the xml into memory for us, returns a document ID.
+    const auto documentID = mgr.createFromStream( istr );
+
+    // get the structural representation of the score from the document manager
+    const auto score = mgr.getData( documentID );
+
+    // we need to explicitly destroy the document from memory
+    mgr.destroyDocument(documentID);
+
+    // make sure we have exactly one part
+    if( score.parts.size() != 1 )
+    {
+        return MX_IS_A_FAILURE;
+    }
+
+    // drill down into the data structure to retrieve the note
+    const auto& part = score.parts.at( 0 );
+    const auto& measure = part.measures.at( 0 );
+    const auto& staff = measure.staves.at( 0 );
+    const auto& voice = staff.voices.at( 0 );
+    const auto& note = voice.notes.at( 0 );
+
+    if( note.durationData.durationName != DurationName::whole )
+    {
+        return MX_IS_A_FAILURE;
+    }
+
+    if( note.pitchData.step != Step::c )
+    {
+        return MX_IS_A_FAILURE;
+    }
+
+    return MX_IS_A_SUCCESS;
+}
+```
+
+## Core Implementation Details
+
 The MusicXML classes are tightly bound to the musicxml.xsd specification.  MusicXML can be challenging to use and the mx class structure mirrors the complexity of the MusicXML specification.  A facade or api for simplifying the interactions with MusicXML documents is planned for future development.
 
 ##### Namespaces
@@ -417,24 +653,22 @@ int main(int argc, const char * argv[])
 
 ### Unit Test Framework
 
-An executable program named MxTest is also included in the project.  MxTest utilizes the CppUnitLite macro library by Michael Feathers.  Licensing of this library is not clear, here is a link to the source of this library http://c2.com/cgi/wiki?CppUnitLite
+An executable program named MxTest is also included in the project.  MxTest utilizes the CppUnitLite macro library by Michael Feathers.  Licensing of this library is not clear, [here is a link](http://c2.com/cgi/wiki?CppUnitLite) to the source of this library.
 CppUnitLite appears to be abandonware, but it is very useful.
 Here are some additional CppUnitLite links
-http://www.objectmentor.com/resources/downloads.html
-https://github.com/smikes/CppUnitLite
+  * [http://www.objectmentor.com/resources/downloads.html](http://www.objectmentor.com/resources/downloads.html)
+  * [https://github.com/smikes/CppUnitLite](https://github.com/smikes/CppUnitLite)
+  * [https://github.com/webern/CppUnitLite](https://github.com/webern/CppUnitLite)
 
 The tests are slow to compile, see the *Compiling* section for more info on how to skip compilation of the tests.
 
-### Known Issues and Todo List
-- There is no easy way to "deep copy" anything.  Each element and attributes class needs a "clone" function.
-- XsID uniqueness is not constrained.  Should it be?
-- XsIDREF's, especially in the ScorePartList are not constrained to relate to the PartList XsID's.  Thus it is possible to create an unparsable MusicXML document.  A feature could be added to enforce this one-to-one constraint.  Should this feature be added in the core model?  Maybe not.
-- A simplified and stable facade API should be added to make it much, much easier to understand and interact with MusicXML documents.
+### Release Notes
 
-### Historical Notes and Release Notes
+  * **Version 1.0** April 2019: A more-or-less stable version of `mx::api`
+  * **Version 0.3** Early 2019
+  * **Version 0.2** August 21, 2016 Adds the ability to import MusicXML documents into MusicXML Classes.
+
 **Historical Note: October 6, 2016:** Significant progress has been made on the `api` namespace, which is a simplified set of data structures to represent a MusicXML document.  These are being implemented as mostly-POD structs.  Currently the importing of data into these structures is well-underway, but the exporting from these data structures has not been implemented.
-
-**Release:  Version 0.2 August 21, 2016** Adds the ability to import MusicXML documents into MusicXML Classes.
 
 **Historical Note: August 16, 2016:** All tests are passing (core, xml and import).  The remaining items to do on the ximport feature are
 - search for all `\\TODO's` and fix those that can be fixed
