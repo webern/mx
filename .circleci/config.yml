@@ -45,7 +45,10 @@ jobs:
 
       - run:
           name: Cmake
-          command: cmake .
+          command: |
+              [ "$(git rev-parse --abbrev-ref HEAD)" == "master" ] && \
+              cmake -DMX_BUILD_TESTS=on -DMX_BUILD_CORE_TESTS=on . || \
+              cmake -DMX_BUILD_TESTS=on -DMX_BUILD_CORE_TESTS=off .
       
       - run:
           name: Build
