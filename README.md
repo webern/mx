@@ -662,11 +662,15 @@ Here are some additional CppUnitLite links
 
 The tests are slow to compile, see the *Compiling* section for more info on how to skip compilation of the tests.
 
-### Release Notes
+#### Release Notes
 
   * **Version 1.0** April 2019: A more-or-less stable version of `mx::api`
   * **Version 0.3** Early 2019
   * **Version 0.2** August 21, 2016 Adds the ability to import MusicXML documents into MusicXML Classes.
+
+#### Historical Notes
+
+**Historical Note: April 7, 2019** Trying to button up a '1.0' 'release' by tying up some of the loose ends with the build, continuous integration, testing, and header leakage.
 
 **Historical Note: October 6, 2016:** Significant progress has been made on the `api` namespace, which is a simplified set of data structures to represent a MusicXML document.  These are being implemented as mostly-POD structs.  Currently the importing of data into these structures is well-underway, but the exporting from these data structures has not been implemented.
 
@@ -683,7 +687,6 @@ The tests are slow to compile, see the *Compiling* section for more info on how 
 Each of these test input files has been "scrubbed" using the XDoc classes (i.e. it has been round-tripped through pugixml and has been updated to a normalized MusicXML 3.0 header format.  The resultant scrubbed files are in Resources/expected.  During the test run, a csv file is written in Resources/testOutput recording a row for each test (Pass/Fail, duration of test, messages, etc).  Each time a test failure is encountered the expected file and the error file will be saved to the Resources/testOutput directory to allow for visual inspection.
 
 Currently this tester is a "wire-up".  All 263 of these round-trip import/export tests fail because the implementation does not yet exist in mx::core.  The next body of work will be the mx::core implementation.
-
 
 **Historical Note: June 20, 2016:** A simple interface to for XML DOM has been added in the mx::xml namespace.  The key classes (pure virtual) are XDoc, XElement, XAttribute, XElementIterator, XAttributeIterator.  These are implemented by concrete classes PugiDoc, PugiElement, etc. which serve as a wrapper for the pugixml library (http://pugixml.org/).  Although this is a static library, a class XFactory can be used to create a Pugi instance of the XDoc interface.
 
