@@ -9,8 +9,8 @@ MusicXML Class Library
 
 -----------------------------------------
 
-Master: [![CircleCI](https://circleci.com/gh/webern/MusicXML-Class-Library/tree/master.svg?style=svg)](https://circleci.com/gh/webern/MusicXML-Class-Library/tree/master)  
-Develop: [![CircleCI](https://circleci.com/gh/webern/MusicXML-Class-Library/tree/develop.svg?style=svg)](https://circleci.com/gh/webern/MusicXML-Class-Library/tree/develop)  
+Master: [![CircleCI](https://circleci.com/gh/webern/mx.svg?style=svg)](https://circleci.com/gh/webern/mx)  
+Develop: [![CircleCI](https://circleci.com/gh/webern/mx/tree/develop.svg?style=svg)](https://circleci.com/gh/webern/mx/tree/develop)  
 
 ## Introduction
 This project is a C++ class library for working with MusicXML files.  MusicXML filea are represented in a strongly-typed object-oriented class structure.  MusicXML can be deserialized into the class structure and serialized from class structure to MusicXML.
