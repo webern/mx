@@ -55,6 +55,10 @@ jobs:
           command: make
 
       - run:
+          name: Run Examples
+          command: ./MxRead && ./MxWrite
+
+      - run:
           name: Test
           command: ./MxTest
 
