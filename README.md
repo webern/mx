@@ -9,8 +9,10 @@ MusicXML Class Library
 
 -----------------------------------------
 
-Master: [![CircleCI](https://circleci.com/gh/webern/mx.svg?style=svg)](https://circleci.com/gh/webern/mx)  
-Develop: [![CircleCI](https://circleci.com/gh/webern/mx/tree/develop.svg?style=svg)](https://circleci.com/gh/webern/mx/tree/develop)  
+![CircleCI](https://circleci.com/gh/webern/mx.svg?style=svg&circle-token=2f4d1a33a0825d9634b458a2306ed22482314661)
+
+Badges seem to be [broken](https://github.com/github/markup/issues/224), go to the [CircleCI project](https://circleci.com/gh/webern/mx) for build status.  
+
 
 ## Introduction
 
@@ -23,7 +25,7 @@ The project is working with:
 * g++ (Debian 6.3.0-18+deb9u1) 6.3.0 20170516
 * cmake version 3.7.2
 
-Visual Studio should be very close to working if you use cmake. The most likely issues you will run into with VS is includes that need to be added here and there.
+Visual Studio should be very close to working. A good first pull request would be to compile with VS and add the version to the list above.
 
 There are three cmake options:
 
@@ -46,28 +48,12 @@ make -j6
 ./MxTest
 ```
 
-Visual Studio will open with a solution file and be ready to compile.
+## API
 
-**Warning: The Tests Take Forever to Compile**: Both the Xcode workspace and the cmake project include compilation of the unit and integ tests.  These take forever to compile.  If you just want the Mx library and don't want the tests then you can either skip building the test project or you can comment out a few lines to prevent the test code from compiling.
-
-`YourRepoRoot/Sourcecode/mxtest/control/CompileControl.h`
-
-```
-// Comment out these defines below to
-// prevent tests from compiling.  The
-// core tests take a long time to compile.
-
-//#define MX_COMPILE_CORE_TESTS
-//#define MX_COMPILE_IMPORT_TESTS
-//#define MX_COMPILE_UTILTIY_TESTS
-//#define MX_COMPILE_XML_TESTS
-```
-
-## Usage
-
-The `mx::api` namespace is intended to be a (somewhat) simplified wrapping `api` for MusicXML. It should be slightly more intuitive than manipulating the DOM representation directly.
+The `mx::api` namespace is intended to be a (somewhat) simplified structural representation of MusicXML. It should be slightly more intuitive than manipulating the DOM representation directly.
 
 #### Writing MusicXML with `mx::api`
+
 ```C++
 #include <string>
 #include <iostream>
