@@ -3,56 +3,291 @@ MusicXML Class Library
 
 - Author: Matthew James Briggs
 - License: MIT
-- Version: 0.3
+- Version: 1.0
 - Supported MusicXML Version: 3.0
 - Language: C++14
 
 -----------------------------------------
 
+![CircleCI](https://circleci.com/gh/webern/mx.svg?style=svg&circle-token=2f4d1a33a0825d9634b458a2306ed22482314661)
+
+Badges seem to be [broken](https://github.com/github/markup/issues/224), go to the [CircleCI project](https://circleci.com/gh/webern/mx) for build status.  
+
+
 ## Introduction
-This project is a C++ class library for working with MusicXML files.  MusicXML filea are represented in a strongly-typed object-oriented class structure.  MusicXML can be deserialized into the class structure and serialized from class structure to MusicXML.
 
-One of the goals of this project is to strongly-type all aspects of the MusicXML XSD specification such that **any program that compiles will represent a valid MusicXML document.**  This principle is only extended as far as XSD validation is concerned.  The MusicXML specification allows for the creation of valid MusicXML documents which are nonetheless musical gibberish.  Additionally the MusicXML specification has many requirements which are described in comments in the XSD specification.  In other words, an XSD-validated MusicXML document does not necessarily represent valid MusicXML.
-
-Note: XsIDREF and XsID constraints are not enforced by this library.  Thus the goal stated above has not entirely been achieved.  If you introduce duplicative XsID values, for example, an XSD validation of your document will fail and most implementors will throw when reading your MusicXML file.  I don't know how to solve this problem right now.
+This project is a C++ library for working with MusicXML files.  MusicXML files are represented in a statically typed objects.  This structure can be serialized and deserialize to/from MusicXML.
 
 ## Compiling
-The project has been built with the following compilers successfully.
-* Xcode 7.3.1 Apple LLVM version 7.3.0 (clang-703.0.31)
-* Visual Studio 2015
 
-GCC is not working because GCC incorrectly implements the vector erase function with no overload that takes a const iterator.  If you get it to compile with GCC please create a pull request.  [Issue #6](https://github.com/Webern/MusicXML-Class-Library/issues/6) exists for the GCC problem.  Here are the [GCC bugs](https://gcc.gnu.org/bugzilla/buglist.cgi?bug_id=55675%2C57158).
+The project is working with:
+* Xcode 10.1 Apple LLVM version 10.0.0 (clang-1000.11.45.5)
+* g++ (Debian 6.3.0-18+deb9u1) 6.3.0 20170516
+* cmake version 3.7.2
 
-To compile with Xcode, just open `YourRepoRoot/Xcode/mx.xcworkspace` and build.
+Visual Studio should be very close to working. A good first pull request would be to compile with VS and add the version to the list above.
 
-To compile with any other system, use cmake, here is a Visual Studio example
-
-```
-git clone https://github.com/Webern/MusicXML-Class-Library.git MxRepo
-mkdir MxBuild
-cd MxBuild
-cmake ..\MxRepo
-start Mx.sln
-```
-
-Visual Studio will open with a solution file and be ready to compile.
-
-**Warning: The Tests Take Forever to Compile**: Both the Xcode workspace and the cmake project include compilation of the unit and integ tests.  These take forever to compile.  If you just want the Mx library and don't want the tests then you can either skip building the test project or you can comment out a few lines to prevent the test code from compiling.
-
-`YourRepoRoot/Sourcecode/mxtest/control/CompileControl.h`
+There are three cmake options:
 
 ```
-// Comment out these defines below to
-// prevent tests from compiling.  The
-// core tests take a long time to compile.
-
-//#define MX_COMPILE_CORE_TESTS
-//#define MX_COMPILE_IMPORT_TESTS
-//#define MX_COMPILE_UTILTIY_TESTS
-//#define MX_COMPILE_XML_TESTS
+    -DMX_BUILD_TESTS=on
+    -DMX_BUILD_CORE_TESTS=off
+    -DMX_BUILD_EXAMPLES=on
 ```
 
-## Usage
+The configuration shown above is the recommended configuration for development. If you just need the lib then turn off all three of the cmake options.
+
+Here's an example of a clean build of the project followed by a test run.
+
+```
+git clone https://github.com/webern/mx.git mx
+mkdir build
+cd build
+cmake ../mx -DMX_BUILD_TESTS=on -DMX_BUILD_CORE_TESTS=off -DMX_BUILD_EXAMPLES=on
+make -j6
+./MxTest
+```
+
+The Xcode project which is checked-in to the repo also has targets for iOS and macOS frameworks and dylibs, but these are not specified in the cmake file.
+
+## API
+
+The `mx::api` namespace is intended to be a (somewhat) simplified structural representation of MusicXML. It should be slightly more intuitive than manipulating the DOM representation directly.
+
+#### Writing MusicXML with `mx::api`
+
+```C++
+#include <string>
+#include <iostream>
+#include <cstdint>
+#include <sstream>
+
+#include "mx/api/DocumentManager.h"
+#include "mx/api/ScoreData.h"
+
+// set this to 1 if you want to see the xml in your console
+#define MX_WRITE_THIS_TO_THE_CONSOLE 1
+
+int main(int argc, const char * argv[])
+{
+    using namespace mx::api;
+    const auto qticks = 4;
+
+    // create a score
+    auto score = ScoreData{};
+    score.workTitle = "Mx Example";
+    score.composer = "Matthew James Briggs";
+    score.copyright = "Copyright (c) 2019";
+    score.ticksPerQuarter = qticks;
+
+    // create a part
+    score.parts.emplace_back( PartData{} );
+    auto& part = score.parts.back();
+
+    // give the part a name
+    part.name = "Flute";
+    part.abbreviation = "Fl.";
+    part.displayName = "Flute";
+    part.displayAbbreviation = "Fl.";
+
+    // give the part an instrument
+    part.instrumentData.soundID = SoundID::windFlutesFlute;
+    part.instrumentData.midiData.channel = 1;
+    part.instrumentData.midiData.program = 74;
+
+    // add a measure
+    part.measures.emplace_back( MeasureData{} );
+    auto& measure = part.measures.back();
+    measure.timeSignature.beats = 4;
+    measure.timeSignature.beatType = 4;
+    measure.timeSignature.isImplicit = false;
+
+    // add a staff
+    measure.staves.emplace_back( StaffData{} );
+    auto& staff = measure.staves.back();
+
+    // set the clef
+    auto clef = ClefData{};
+    clef.setTreble();
+    staff.clefs.emplace_back( clef );
+
+    // add a voice
+    staff.voices[0] = VoiceData{};
+    auto& voice = staff.voices.at( 0 );
+
+    const auto quarter = qticks;
+    const auto half = qticks * 2;
+    const auto eighth = qticks / 2;
+
+    // add a few notes
+    auto currentTime = 0;
+    auto note = NoteData{};
+    note.pitchData.step = Step::d;
+    note.pitchData.alter = 1;
+    note.pitchData.octave = 5;
+    note.pitchData.accidental = Accidental::sharp;
+    note.durationData.durationName = DurationName::half;
+    note.durationData.durationTimeTicks = half;
+    note.tickTimePosition = currentTime;
+    voice.notes.push_back( note );
+
+    // advance our time
+    currentTime += half;
+
+    note.pitchData.step = Step::e;
+    note.pitchData.alter = 0;
+    note.pitchData.octave = 5;
+    note.pitchData.accidental = Accidental::none;
+    note.durationData.durationName = DurationName::eighth;
+    note.durationData.durationTimeTicks = eighth;
+    note.tickTimePosition = currentTime;
+    // beams are handled explicitly in musicxml
+    note.beams.push_back( Beam::begin ); // start an eighth-note beam
+    voice.notes.push_back( note );
+    currentTime += eighth;
+
+    note.pitchData.step = Step::f;
+    note.pitchData.alter = 0;
+    note.pitchData.octave = 5;
+    note.pitchData.accidental = Accidental::none;
+    note.durationData.durationName = DurationName::eighth;
+    note.tickTimePosition = currentTime;
+    note.durationData.durationTimeTicks = eighth;
+    note.beams.clear();
+    note.beams.push_back( Beam::end ); // end the eighth-note beam
+    voice.notes.push_back( note );
+    currentTime += eighth;
+
+    note.pitchData.step = Step::e;
+    note.pitchData.alter = 0;
+    note.pitchData.octave = 5;
+    note.pitchData.accidental = Accidental::none;
+    note.durationData.durationName = DurationName::quarter;
+    note.durationData.durationTimeTicks = quarter;
+    note.tickTimePosition = currentTime;
+    note.beams.clear();
+    voice.notes.push_back( note );
+
+    // the document manager is the liaison between our score data and the MusicXML DOM.
+    // it completely hides the MusicXML DOM from us when using mx::api
+    auto& mgr = DocumentManager::getInstance();
+    const auto documentID = mgr.createFromScore( score );
+
+    // write to the console
+    #if MX_WRITE_THIS_TO_THE_CONSOLE
+    mgr.writeToStream( documentID, std::cout );
+    std::cout << std::endl;
+    #endif
+
+    // write to a file
+    mgr.writeToFile( documentID, "./example.musicxml" );
+
+    return 0;
+}
+```
+
+#### Reading MusicXML with `mx::api`
+
+```C++
+#include "mx/api/DocumentManager.h"
+#include "mx/api/ScoreData.h"
+
+#include <string>
+#include <iostream>
+#include <cstdint>
+#include <sstream>
+
+#define MX_IS_A_SUCCESS 0
+#define MX_IS_A_FAILURE 1
+
+constexpr const char* const xml = R"(
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE score-partwise PUBLIC
+    "-//Recordare//DTD MusicXML 3.1 Partwise//EN"
+    "http://www.musicxml.org/dtds/partwise.dtd">
+<score-partwise version="3.1">
+  <part-list>
+    <score-part id="P1">
+      <part-name>Music</part-name>
+    </score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes>
+        <divisions>1</divisions>
+        <key>
+          <fifths>0</fifths>
+        </key>
+        <time>
+          <beats>4</beats>
+          <beat-type>4</beat-type>
+        </time>
+        <clef>
+          <sign>G</sign>
+          <line>2</line>
+        </clef>
+      </attributes>
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>4</duration>
+        <type>whole</type>
+      </note>
+    </measure>
+  </part>
+</score-partwise>
+)";
+
+int main(int argc, const char * argv[])
+{
+    using namespace mx::api;
+
+    // create a reference to the singleton which holds documents in memory for us
+    auto& mgr = DocumentManager::getInstance();
+
+    // place the xml from above into a stream object
+    std::istringstream istr{ xml };
+
+    // ask the document manager to parse the xml into memory for us, returns a document ID.
+    const auto documentID = mgr.createFromStream( istr );
+
+    // get the structural representation of the score from the document manager
+    const auto score = mgr.getData( documentID );
+
+    // we need to explicitly destroy the document from memory
+    mgr.destroyDocument(documentID);
+
+    // make sure we have exactly one part
+    if( score.parts.size() != 1 )
+    {
+        return MX_IS_A_FAILURE;
+    }
+
+    // drill down into the data structure to retrieve the note
+    const auto& part = score.parts.at( 0 );
+    const auto& measure = part.measures.at( 0 );
+    const auto& staff = measure.staves.at( 0 );
+    const auto& voice = staff.voices.at( 0 );
+    const auto& note = voice.notes.at( 0 );
+
+    if( note.durationData.durationName != DurationName::whole )
+    {
+        return MX_IS_A_FAILURE;
+    }
+
+    if( note.pitchData.step != Step::c )
+    {
+        return MX_IS_A_FAILURE;
+    }
+
+    return MX_IS_A_SUCCESS;
+}
+```
+
+## Core Implementation Details
+
 The MusicXML classes are tightly bound to the musicxml.xsd specification.  MusicXML can be challenging to use and the mx class structure mirrors the complexity of the MusicXML specification.  A facade or api for simplifying the interactions with MusicXML documents is planned for future development.
 
 ##### Namespaces
@@ -414,24 +649,26 @@ int main(int argc, const char * argv[])
 
 ### Unit Test Framework
 
-An executable program named MxTest is also included in the project.  MxTest utilizes the CppUnitLite macro library by Michael Feathers.  Licensing of this library is not clear, here is a link to the source of this library http://c2.com/cgi/wiki?CppUnitLite
+An executable program named MxTest is also included in the project.  MxTest utilizes the CppUnitLite macro library by Michael Feathers.  Licensing of this library is not clear, [here is a link](http://c2.com/cgi/wiki?CppUnitLite) to the source of this library.
 CppUnitLite appears to be abandonware, but it is very useful.
 Here are some additional CppUnitLite links
-http://www.objectmentor.com/resources/downloads.html
-https://github.com/smikes/CppUnitLite
+  * [http://www.objectmentor.com/resources/downloads.html](http://www.objectmentor.com/resources/downloads.html)
+  * [https://github.com/smikes/CppUnitLite](https://github.com/smikes/CppUnitLite)
+  * [https://github.com/webern/CppUnitLite](https://github.com/webern/CppUnitLite)
 
 The tests are slow to compile, see the *Compiling* section for more info on how to skip compilation of the tests.
 
-### Known Issues and Todo List
-- There is no easy way to "deep copy" anything.  Each element and attributes class needs a "clone" function.
-- XsID uniqueness is not constrained.  Should it be?
-- XsIDREF's, especially in the ScorePartList are not constrained to relate to the PartList XsID's.  Thus it is possible to create an unparsable MusicXML document.  A feature could be added to enforce this one-to-one constraint.  Should this feature be added in the core model?  Maybe not.
-- A simplified and stable facade API should be added to make it much, much easier to understand and interact with MusicXML documents.
+#### Release Notes
 
-### Historical Notes and Release Notes
+  * **Version 1.0** April 2019: A more-or-less stable version of `mx::api`
+  * **Version 0.3** Early 2019
+  * **Version 0.2** August 21, 2016 Adds the ability to import MusicXML documents into MusicXML Classes.
+
+#### Historical Notes
+
+**Historical Note: April 7, 2019** Trying to button up a '1.0' 'release' by tying up some of the loose ends with the build, continuous integration, testing, and header leakage. The use of the semver `1.0` implies that we hope there won't be many breaking changes. I suppose the way I will use semver is as follows: a patch release may cause slight compilation annoyances, but nothing that would cause any rewriting of code. A minor release may similarly require some tweaks but hopefully nothing too major. A major release could be anything up-to a complete re-write.
+
 **Historical Note: October 6, 2016:** Significant progress has been made on the `api` namespace, which is a simplified set of data structures to represent a MusicXML document.  These are being implemented as mostly-POD structs.  Currently the importing of data into these structures is well-underway, but the exporting from these data structures has not been implemented.
-
-**Release:  Version 0.2 August 21, 2016** Adds the ability to import MusicXML documents into MusicXML Classes.
 
 **Historical Note: August 16, 2016:** All tests are passing (core, xml and import).  The remaining items to do on the ximport feature are
 - search for all `\\TODO's` and fix those that can be fixed
@@ -446,7 +683,6 @@ The tests are slow to compile, see the *Compiling* section for more info on how 
 Each of these test input files has been "scrubbed" using the XDoc classes (i.e. it has been round-tripped through pugixml and has been updated to a normalized MusicXML 3.0 header format.  The resultant scrubbed files are in Resources/expected.  During the test run, a csv file is written in Resources/testOutput recording a row for each test (Pass/Fail, duration of test, messages, etc).  Each time a test failure is encountered the expected file and the error file will be saved to the Resources/testOutput directory to allow for visual inspection.
 
 Currently this tester is a "wire-up".  All 263 of these round-trip import/export tests fail because the implementation does not yet exist in mx::core.  The next body of work will be the mx::core implementation.
-
 
 **Historical Note: June 20, 2016:** A simple interface to for XML DOM has been added in the mx::xml namespace.  The key classes (pure virtual) are XDoc, XElement, XAttribute, XElementIterator, XAttributeIterator.  These are implemented by concrete classes PugiDoc, PugiElement, etc. which serve as a wrapper for the pugixml library (http://pugixml.org/).  Although this is a static library, a class XFactory can be used to create a Pugi instance of the XDoc interface.
 

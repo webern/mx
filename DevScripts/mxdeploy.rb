@@ -26,7 +26,7 @@ dir_mx_root = File.expand_path("#{dir_this_ruby_script}/..")
 file_mx_xcode_workspace = "#{dir_mx_root}/Xcode/mx.xcworkspace"
 file_mx_version_defines_h = "#{dir_mx_root}/Sourcecode/mx/impl/MxVersionDefines.h"
 
-dir_komp_root = "/Users/mjb/komp"
+dir_komp_root = "/Users/mjb/repos/komp"
 dir_komp_mx = "#{dir_komp_root}/Frameworks/mx"
 dir_komp_mx_bin = "#{dir_komp_mx}/bin"
 dir_komp_mx_src = "#{dir_komp_mx}/src"

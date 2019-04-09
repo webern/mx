@@ -15,4 +15,4 @@ docker build \
     -t mxtestimage \
     "$MX_DIR"
 
-docker run --name mxtestcontainer mxtestimage
+docker run -it --name mxtestcontainer mxtestimage

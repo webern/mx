@@ -1,0 +1,66 @@
+version: 2
+jobs:
+  build:
+    docker:
+      # specify the version you desire here
+      - image: matthewjamesbriggs/mxci:v001
+
+    resource_class: xlarge
+    working_directory: ~/mx
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      # - restore_cache:
+      #     keys:
+      #     - iqcache-{{ checksum ".circleci/cache-lock" }}-{{ checksum "iqtestdata/.cache-lock" }}
+      #     # fallback to using the latest cache if no exact match is found
+      #     - iqcache-
+
+      # - run: yarn install --cache-folder ~/yarn-cache
+
+      # - run:
+      #     name: Install Git LFS
+      #     command: |
+      #       curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
+      #       sudo apt-get update
+      #       sudo apt-get install -y git-lfs openssh-client
+      #       git lfs install
+      #       mkdir -p ~/.ssh
+      #       ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+      #       ssh git@github.com git-lfs-authenticate "${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}" download
+      #       git lfs pull
+
+      # - save_cache:
+      #     paths:
+      #       - node_modules
+      #       - iqtestdata
+      #       - web/node_modules
+      #       - iqbak/node_modules
+      #       - iqshared/node_modules
+      #       - ~/yarn-cache
+
+      #     key: iqcache-{{ checksum ".circleci/cache-lock" }}-{{ checksum "iqtestdata/.cache-lock" }}
+
+      - run:
+          name: Cmake
+          command: |
+              [ "$(git rev-parse --abbrev-ref HEAD)" == "master" ] && \
+              cmake -DMX_BUILD_EXAMPLES=on -DMX_BUILD_TESTS=on -DMX_BUILD_CORE_TESTS=on . || \
+              cmake -DMX_BUILD_EXAMPLES=on -DMX_BUILD_TESTS=on -DMX_BUILD_CORE_TESTS=off .
+      
+      - run:
+          name: Build
+          command: make
+
+      - run:
+          name: Run Examples
+          command: ./MxRead && ./MxWrite
+
+      - run:
+          name: Test
+          command: ./MxTest
+
+      # - store_artifacts:
+      #     path: /tmp/coverage/
