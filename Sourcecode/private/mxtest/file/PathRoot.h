@@ -4,10 +4,10 @@
 
 // The absolute path to the root of the repository.
 #ifndef MX_REPO_ROOT_PATH
-#define MX_REPO_ROOT_PATH "/Users/mjb/repos/mx"
+#define MX_REPO_ROOT_PATH "/Users/brigmatt/repos/mx"
 #endif
 
 // The absolute path to the binary output directory.
 #ifndef MX_BINARY_OUTPUT_PATH
-#define MX_BINARY_OUTPUT_PATH "/Users/mjb/repos/mx/cmake-build-debug"
+#define MX_BINARY_OUTPUT_PATH "/Users/brigmatt/repos/mx/cmake-build-debug"
 #endif
