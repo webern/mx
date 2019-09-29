@@ -3336,10 +3336,10 @@
 		9CD23C362340658C00EB6F13 /* PugiElementIterImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B982340658C00EB6F13 /* PugiElementIterImpl.cpp */; };
 		9CD23C372340658C00EB6F13 /* PugiElementIterImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B982340658C00EB6F13 /* PugiElementIterImpl.cpp */; };
 		9CD23C382340658C00EB6F13 /* PugiElementIterImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B982340658C00EB6F13 /* PugiElementIterImpl.cpp */; };
-		9CD23C3A2340658C00EB6F13 /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B992340658C00EB6F13 /* pugixml.cpp */; };
-		9CD23C3B2340658C00EB6F13 /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B992340658C00EB6F13 /* pugixml.cpp */; };
-		9CD23C3C2340658C00EB6F13 /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B992340658C00EB6F13 /* pugixml.cpp */; };
-		9CD23C3D2340658C00EB6F13 /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B992340658C00EB6F13 /* pugixml.cpp */; };
+		9CD23C3A2340658C00EB6F13 /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B992340658C00EB6F13 /* pugixml.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
+		9CD23C3B2340658C00EB6F13 /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B992340658C00EB6F13 /* pugixml.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
+		9CD23C3C2340658C00EB6F13 /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B992340658C00EB6F13 /* pugixml.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
+		9CD23C3D2340658C00EB6F13 /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B992340658C00EB6F13 /* pugixml.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
 		9CD23C4D2340658C00EB6F13 /* XFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B9D2340658C00EB6F13 /* XFactory.cpp */; };
 		9CD23C4E2340658C00EB6F13 /* XFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B9D2340658C00EB6F13 /* XFactory.cpp */; };
 		9CD23C4F2340658C00EB6F13 /* XFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B9D2340658C00EB6F13 /* XFactory.cpp */; };
@@ -3350,6 +3350,7 @@
 		9CD23C5E2340658C00EB6F13 /* PugiDoc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23BA02340658C00EB6F13 /* PugiDoc.cpp */; };
 		9CD23C5F2340658C00EB6F13 /* PugiDoc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23BA02340658C00EB6F13 /* PugiDoc.cpp */; };
 		9CD23C602340658C00EB6F13 /* PugiDoc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23BA02340658C00EB6F13 /* PugiDoc.cpp */; };
+		9CD23C7723406A1300EB6F13 /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B992340658C00EB6F13 /* pugixml.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -7485,6 +7486,7 @@
 				29A8E6B11EF0476400AD2478 /* Chord.cpp in Sources */,
 				29A8E9771EF0476400AD2478 /* EmptyLineAttributes.cpp in Sources */,
 				29A8F1C91EF0476800AD2478 /* OpenString.cpp in Sources */,
+				9CD23C7723406A1300EB6F13 /* pugixml.cpp in Sources */,
 				29A8EF2B1EF0476700AD2478 /* MeasureStyleChoice.cpp in Sources */,
 				29A8FB5B1EF0476D00AD2478 /* Integers.cpp in Sources */,
 				29A8F4801EF0476900AD2478 /* PullOff.cpp in Sources */,

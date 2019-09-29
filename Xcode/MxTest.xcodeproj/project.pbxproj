@@ -2405,7 +2405,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
-				USER_HEADER_SEARCH_PATHS = "$PROJECT_DIR/../Sourcecode/include $PROJECT_DIR/../Sourcecode/private";
+				USER_HEADER_SEARCH_PATHS = "$PROJECT_DIR/../Sourcecode/include $PROJECT_DIR/../Sourcecode/private $PROJECT_DIR/../Sourcecode/private/extern/ezxml/src/include";
 			};
 			name = Debug;
 		};
@@ -2457,7 +2457,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				SDKROOT = macosx;
-				USER_HEADER_SEARCH_PATHS = "$PROJECT_DIR/../Sourcecode/include $PROJECT_DIR/../Sourcecode/private";
+				USER_HEADER_SEARCH_PATHS = "$PROJECT_DIR/../Sourcecode/include $PROJECT_DIR/../Sourcecode/private $PROJECT_DIR/../Sourcecode/private/extern/ezxml/src/include";
 			};
 			name = Release;
 		};
