@@ -64,7 +64,7 @@ namespace mx
         }
 
 
-        bool HandbellAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool HandbellAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "HandbellAttributes";
             bool isSuccess = true;

@@ -64,7 +64,7 @@ namespace mx
         }
 
 
-        bool AccidentalMarkAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool AccidentalMarkAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "AccidentalMarkAttributes";
             bool isSuccess = true;

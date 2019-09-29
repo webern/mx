@@ -36,7 +36,7 @@ namespace mx
         }
 
 
-        bool KeyOctaveAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool KeyOctaveAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "KeyOctaveAttributes";
             bool isSuccess = true;

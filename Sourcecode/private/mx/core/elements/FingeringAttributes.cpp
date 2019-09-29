@@ -72,7 +72,7 @@ namespace mx
         }
 
 
-        bool FingeringAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool FingeringAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "FingeringAttributes";
             bool isSuccess = true;

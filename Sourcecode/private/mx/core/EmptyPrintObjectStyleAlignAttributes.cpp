@@ -75,7 +75,7 @@ namespace mx
         }
 
 
-        bool EmptyPrintObjectStyleAlignAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool EmptyPrintObjectStyleAlignAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "EmptyPrintObjectStyleAlignAttributes";
             bool isSuccess = true;

@@ -32,7 +32,7 @@ namespace mx
         }
 
 
-        bool PageMarginsAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool PageMarginsAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "PageMarginsAttributes";
             bool isSuccess = true;

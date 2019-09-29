@@ -135,7 +135,7 @@ namespace mx
         }
         
         
-        bool ScorePartwise::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool ScorePartwise::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
             bool isFirstPartAdded = false;

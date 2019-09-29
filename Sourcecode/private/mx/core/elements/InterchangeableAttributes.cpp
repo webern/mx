@@ -36,7 +36,7 @@ namespace mx
         }
 
 
-        bool InterchangeableAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool InterchangeableAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "InterchangeableAttributes";
             bool isSuccess = true;

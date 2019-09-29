@@ -107,7 +107,7 @@ namespace mx
         }
 
 
-        bool PerMinuteOrBeatUnitChoice::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool PerMinuteOrBeatUnitChoice::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             MX_CHOICE_IF( perMinute, "per-minute", PerMinute );
             MX_CHOICE_IF( beatUnitGroup, "beat-unit-group", BeatUnitGroup );

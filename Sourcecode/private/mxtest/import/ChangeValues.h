@@ -4,11 +4,11 @@
 
 #pragma once
 
-#include "mx/xml/XDoc.h"
-#include "mx/xml/XElement.h"
-#include "mx/xml/XAttribute.h"
-#include "mx/xml/XElementIterator.h"
-#include "mx/xml/XAttributeIterator.h"
+#include "ezxml/XDoc.h"
+#include "ezxml/XElement.h"
+#include "ezxml/XAttribute.h"
+#include "ezxml/XElementIterator.h"
+#include "ezxml/XAttributeIterator.h"
 
 #include <string>
 #include <map>
@@ -24,24 +24,24 @@ namespace mxtest
     // output that does not precisely match the input  See ExpectedFiles.cpp
     // for the specific applications of these functions to the input test files.
     
-    void convertValues( mx::xml::XDoc& xdoc, const std::string& elementName, const std::string& existingValue, const std::string desiredValue );
-    void convertValues( mx::xml::XElement& xelement, const std::string& elementName, const std::string& existingValue, const std::string desiredValue );
+    void convertValues( ::ezxml::XDoc& xdoc, const std::string& elementName, const std::string& existingValue, const std::string desiredValue );
+    void convertValues( ::ezxml::XElement& xelement, const std::string& elementName, const std::string& existingValue, const std::string desiredValue );
     
-    void addChildIfNone( mx::xml::XDoc& xdoc, const std::string& elementName, const std::string& childNameToAdd, const std::string childValueToAdd );
-    void addChildIfNone( mx::xml::XElement& xelement, const std::string& elementName, const std::string& childNameToAdd, const std::string childValueToAdd );
+    void addChildIfNone( ::ezxml::XDoc& xdoc, const std::string& elementName, const std::string& childNameToAdd, const std::string childValueToAdd );
+    void addChildIfNone( ::ezxml::XElement& xelement, const std::string& elementName, const std::string& childNameToAdd, const std::string childValueToAdd );
     
-    void addAttributeIfNone( mx::xml::XDoc& xdoc, const std::string& elementName, const std::string& attributeNameToAdd, const std::string attributeValueToAdd );
-    void addAttributeIfNone( mx::xml::XElement& xelement, const std::string& elementName, const std::string& attributeNameToAdd, const std::string attributeValueToAdd );
+    void addAttributeIfNone( ::ezxml::XDoc& xdoc, const std::string& elementName, const std::string& attributeNameToAdd, const std::string attributeValueToAdd );
+    void addAttributeIfNone( ::ezxml::XElement& xelement, const std::string& elementName, const std::string& attributeNameToAdd, const std::string attributeValueToAdd );
     
-    void removeAttribute( mx::xml::XDoc& xdoc, const std::string& elementName, const std::string& attributeNameToRemove );
-    void removeAttribute( mx::xml::XElement& xelement, const std::string& elementName, const std::string& attributeNameToRemove );
+    void removeAttribute( ::ezxml::XDoc& xdoc, const std::string& elementName, const std::string& attributeNameToRemove );
+    void removeAttribute( ::ezxml::XElement& xelement, const std::string& elementName, const std::string& attributeNameToRemove );
     
-    void changeAttributeValue( mx::xml::XDoc& xdoc, const std::string& elementName, const std::string& attributeName, const std::string& undesiredValueToReplace, const std::string& replacementValue );
-    void changeAttributeValue( mx::xml::XElement& xelement, const std::string& elementName, const std::string& attributeName,  const std::string& undesiredValueToReplace, const std::string& replacementValue);
+    void changeAttributeValue( ::ezxml::XDoc& xdoc, const std::string& elementName, const std::string& attributeName, const std::string& undesiredValueToReplace, const std::string& replacementValue );
+    void changeAttributeValue( ::ezxml::XElement& xelement, const std::string& elementName, const std::string& attributeName,  const std::string& undesiredValueToReplace, const std::string& replacementValue);
     
-    void stripZerosFromDecimalFields( mx::xml::XDoc& xdoc );
-    void stripZerosFromMatchingFields( mx::xml::XDoc& xdoc, const std::set<std::string>& fields );
-    void stripZerosFromMatchingFields( mx::xml::XElement& xelement, const std::set<std::string>& fields );
+    void stripZerosFromDecimalFields( ::ezxml::XDoc& xdoc );
+    void stripZerosFromMatchingFields( ::ezxml::XDoc& xdoc, const std::set<std::string>& fields );
+    void stripZerosFromMatchingFields( ::ezxml::XElement& xelement, const std::set<std::string>& fields );
 
     struct InsertChildAfterIfMissingParams
     {
@@ -51,8 +51,8 @@ namespace mxtest
         std::string value;
     };
     
-    void insertChildAfterIfMissing( const InsertChildAfterIfMissingParams& params, mx::xml::XElement& xelement );
+    void insertChildAfterIfMissing( const InsertChildAfterIfMissingParams& params, ::ezxml::XElement& xelement );
     
-    void removeElement( mx::xml::XElement& xelement, const std::string& elementName );
+    void removeElement( ::ezxml::XElement& xelement, const std::string& elementName );
     
 }

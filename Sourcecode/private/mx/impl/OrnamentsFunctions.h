@@ -28,10 +28,7 @@ namespace mx
             OrnamentsFunctions( const core::Ornaments& inOrnaments, impl::Cursor inCursor );
             ~OrnamentsFunctions() = default;
             OrnamentsFunctions( const OrnamentsFunctions& ) = default;
-            OrnamentsFunctions( OrnamentsFunctions&& ) = default;
-            OrnamentsFunctions& operator=( const OrnamentsFunctions& ) = default;
-            OrnamentsFunctions& operator=( OrnamentsFunctions&& ) = default;
-            
+            OrnamentsFunctions( OrnamentsFunctions&& ) = default;            
             void parseOrnaments( std::vector<api::MarkData>& outMarks ) const;
             
         private:

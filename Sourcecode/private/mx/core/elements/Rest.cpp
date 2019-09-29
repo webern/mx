@@ -102,7 +102,7 @@ namespace mx
         }
 
 
-        bool Rest::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Rest::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

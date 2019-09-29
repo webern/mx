@@ -51,7 +51,7 @@ namespace mx
             void setScorePart( const ScorePartPtr& value );
 
             private:
-            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
+            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
             
         private:
             Choice myChoice;

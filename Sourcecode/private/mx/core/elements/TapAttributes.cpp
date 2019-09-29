@@ -64,7 +64,7 @@ namespace mx
         }
 
 
-        bool TapAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool TapAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "TapAttributes";
             bool isSuccess = true;

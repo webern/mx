@@ -10,13 +10,13 @@
 #include "mx/core/AttributesInterface.h"
 #include "mx/core/ProcessingInstruction.h"
 
+namespace ezxml
+{
+    class XElement;
+}
+
 namespace mx
 {
-    namespace xml
-    {
-        class XElement;
-    }
-    
     namespace core
     {
         // This will be used by toStream to indent the XML tree
@@ -41,13 +41,13 @@ namespace mx
             virtual std::ostream& streamSelfCloseTag( std::ostream& os ) const;
             virtual std::ostream& toStream( std::ostream& os, const int indentLevel ) const;
             virtual const std::string getElementName() const;
-            virtual bool fromXElement( std::ostream& message, xml::XElement& xelement ) final;
+            virtual bool fromXElement( std::ostream& message, ezxml::XElement& xelement ) final;
             virtual const ProcessingInstructions& getProcessingInstructions() const final;
             virtual void clearProcessingInstructions() final;
             virtual void addProcessingInstruction( ProcessingInstruction inProcessingInstruction ) final;
 
         private:
-            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement ) = 0;
+            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement ) = 0;
 
         private:
             ProcessingInstructions myProcessingInstructions;

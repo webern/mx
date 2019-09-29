@@ -155,7 +155,7 @@ namespace mx
         }
 
 
-        bool Work::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Work::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
 

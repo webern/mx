@@ -128,7 +128,7 @@ namespace mx
         }
 
 
-        bool NoteRelationNote::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool NoteRelationNote::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
 

@@ -42,7 +42,7 @@ namespace mx
             void setTenths( const TenthsPtr& value );
 
             private:
-            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
+            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
 
         private:
             MillimetersPtr myMillimeters;

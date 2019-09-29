@@ -123,7 +123,7 @@ namespace mx
             void setOtherNotation( const OtherNotationPtr& value );
 
             private:
-            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
+            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
 
         private:
             Choice myChoice;

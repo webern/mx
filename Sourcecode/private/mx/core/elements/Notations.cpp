@@ -155,7 +155,7 @@ namespace mx
         }
 
         
-        bool Notations::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Notations::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

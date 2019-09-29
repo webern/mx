@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool TimeRelation::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool TimeRelation::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             MX_UNUSED( message );
             myValue = parseTimeRelationEnum( xelement.getValue() );

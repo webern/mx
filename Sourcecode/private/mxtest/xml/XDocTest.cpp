@@ -6,13 +6,13 @@
 #ifdef MX_COMPILE_XML_TESTS
 
 #include "cpul/cpulTestHarness.h"
-#include "mx/xml/XFactory.h"
-#include "mx/xml/XDoc.h"
+#include "ezxml/XFactory.h"
+#include "ezxml/XDoc.h"
 
 #include <fstream>
 
 using namespace std;
-using namespace mx::xml;
+using namespace ezxml;
     
 void streamDoc( const XDocCPtr& xdoc )
 {

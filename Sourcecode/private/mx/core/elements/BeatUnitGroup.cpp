@@ -99,7 +99,7 @@ namespace mx
             myBeatUnitDotSet.clear();
         }
         
-        bool BeatUnitGroup::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool BeatUnitGroup::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
             bool isBeatUnitFound = false;

@@ -1,8 +1,8 @@
 
 #include "mxtest/api/ApiTester.h"
 #include "mx/api/DocumentManager.h"
-#include "mx/xml/XFactory.h"
-#include "mx/xml/XDoc.h"
+#include "ezxml/XFactory.h"
+#include "ezxml/XDoc.h"
 #include "cpul/cpulFailure.h"
 #include "mxtest/file/StupidFileFunctions.h"
 
@@ -78,7 +78,7 @@ namespace mxtest
         setFailureMessage( "after round-trips to disk the ScoreData objects were not equal" );
         
         // save a "scrubbed" version of the input
-        auto xdoc = mx::xml::XFactory::makeXDoc();
+        auto xdoc = ::ezxml::XFactory::makeXDoc();
         xdoc->loadFile( testFilePath() );
         xdoc->saveFile( myScrubbedFilePath );
         

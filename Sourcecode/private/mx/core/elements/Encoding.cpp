@@ -92,7 +92,7 @@ namespace mx
         }
         
         
-        bool Encoding::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Encoding::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
             

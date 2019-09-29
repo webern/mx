@@ -104,7 +104,7 @@ namespace mx
         }
 
 
-        bool DisplayTextAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool DisplayTextAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "DisplayTextAttributes";
             bool isSuccess = true;

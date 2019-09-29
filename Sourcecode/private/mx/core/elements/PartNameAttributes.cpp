@@ -72,7 +72,7 @@ namespace mx
         }
 
 
-        bool PartNameAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool PartNameAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "PartNameAttributes";
             bool isSuccess = true;

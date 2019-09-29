@@ -10,6 +10,12 @@
 
 // Forward Declarations /////////////////////////////////////////////////////
 
+namespace ezxml
+{
+    class XDoc;
+    using XDocPtr = std::shared_ptr<XDoc>;
+}
+
 namespace mx
 {
     namespace core
@@ -23,13 +29,6 @@ namespace mx
         class ScoreTimewise;
         using ScoreTimewisePtr = std::shared_ptr<ScoreTimewise>;
     }
-    
-    namespace xml
-    {
-        class XDoc;
-        using XDocPtr = std::shared_ptr<XDoc>;
-    }
-
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -83,8 +82,8 @@ namespace mx
             void setScoreTimewise( const ScoreTimewisePtr& value );
 
             std::ostream& toStream( std::ostream& os ) const;
-            void toXDoc( xml::XDoc& outXDoc ) const;
-            bool fromXDoc( std::ostream& messages, const xml::XDoc& inXDoc );
+            void toXDoc( ::ezxml::XDoc& outXDoc ) const;
+            bool fromXDoc( std::ostream& messages, const ::ezxml::XDoc& inXDoc );
 
         private:
             DocumentChoice myChoice;

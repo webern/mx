@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool SlashType::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool SlashType::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             MX_UNUSED( message );
             myValue = parseNoteTypeValue( xelement.getValue() );

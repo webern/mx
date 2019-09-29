@@ -81,7 +81,7 @@ namespace mx
         }
 
 
-        bool Time::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Time::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

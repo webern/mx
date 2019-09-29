@@ -110,7 +110,7 @@ namespace mx
         }
 
         
-        bool NormalTypeNormalDotGroup::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool NormalTypeNormalDotGroup::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
             bool isNormalTypeFound = false;

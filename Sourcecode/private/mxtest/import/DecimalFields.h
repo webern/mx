@@ -4,11 +4,11 @@
 
 #pragma once
 
-#include "mx/xml/XDoc.h"
-#include "mx/xml/XElement.h"
-#include "mx/xml/XAttribute.h"
-#include "mx/xml/XElementIterator.h"
-#include "mx/xml/XAttributeIterator.h"
+#include "ezxml/XDoc.h"
+#include "ezxml/XElement.h"
+#include "ezxml/XAttribute.h"
+#include "ezxml/XElementIterator.h"
+#include "ezxml/XAttributeIterator.h"
 
 #include <string>
 #include <set>
@@ -74,7 +74,7 @@ namespace mxtest
     }
 
 
-    inline void stripZeros( mx::xml::XElement& xelement )
+    inline void stripZeros( ::ezxml::XElement& xelement )
     {
         const auto initialValue = xelement.getValue();
 
@@ -98,7 +98,7 @@ namespace mxtest
     }
 
 
-    inline void stripZeros( mx::xml::XAttribute& xattribute )
+    inline void stripZeros( ::ezxml::XAttribute& xattribute )
     {
         const auto initialValue = xattribute.getValue();
 

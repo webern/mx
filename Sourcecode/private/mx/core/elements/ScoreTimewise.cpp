@@ -6,8 +6,8 @@
 #include "mx/core/elements/ScoreHeaderGroup.h"
 #include "mx/core/elements/TimewiseMeasure.h"
 #include "mx/core/FromXElement.h"
-#include "mx/xml/XElement.h"
-#include "mx/xml/XElementIterator.h"
+#include "ezxml/XElement.h"
+#include "ezxml/XElementIterator.h"
 #include <iostream>
 
 namespace mx
@@ -136,7 +136,7 @@ namespace mx
             return TimewiseMeasurePtr();
         }
         
-        bool ScoreTimewise::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool ScoreTimewise::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
             bool isFirstMeasureAdded = false;

@@ -136,7 +136,7 @@ namespace mx
         }
         
         
-        DocumentSpec parseDocumentSpec( const xml::XDocCPtr& doc )
+        DocumentSpec parseDocumentSpec( const ::ezxml::XDocCPtr& doc )
         {
             MX_UNUSED( doc );
             throw std::runtime_error( "not implemented" );

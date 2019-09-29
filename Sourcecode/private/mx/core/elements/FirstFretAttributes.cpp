@@ -36,7 +36,7 @@ namespace mx
         }
 
 
-        bool FirstFretAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool FirstFretAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "FirstFretAttributes";
             bool isSuccess = true;

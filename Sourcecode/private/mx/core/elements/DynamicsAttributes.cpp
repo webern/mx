@@ -76,7 +76,7 @@ namespace mx
         }
 
 
-        bool DynamicsAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool DynamicsAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "DynamicsAttributes";
             bool isSuccess = true;

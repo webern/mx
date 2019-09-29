@@ -12,14 +12,13 @@
 #include <memory>
 #include <vector>
 
+namespace ezxml
+{
+    class XElementIterator;
+}
+
 namespace mx
 {
-    
-    namespace xml
-    {
-        class XElementIterator;
-    }
-    
     namespace core
     {
 
@@ -76,7 +75,7 @@ namespace mx
             void setHasSound( const bool value );
 
             private:
-            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
+            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
 
         private:
             DirectionAttributesPtr myAttributes;
@@ -89,8 +88,8 @@ namespace mx
             SoundPtr mySound;
             bool myHasSound;
             
-            bool importDirectionTypeSet( std::ostream& message, xml::XElementIterator& iter, xml::XElementIterator& endIter, bool& isSuccess, bool& isFound );
-            DirectionTypePtr createDirectionType( std::ostream& message, xml::XElementIterator& iter, xml::XElementIterator& endIter, bool& isSuccess );
+            bool importDirectionTypeSet( std::ostream& message, ::ezxml::XElementIterator& iter, ::ezxml::XElementIterator& endIter, bool& isSuccess, bool& isFound );
+            DirectionTypePtr createDirectionType( std::ostream& message, ::ezxml::XElementIterator& iter, ::ezxml::XElementIterator& endIter, bool& isSuccess );
             
             bool isDirectionType( const std::string& elementName ) const;
             bool isMultiDirectionType( const std::string& elementName ) const;

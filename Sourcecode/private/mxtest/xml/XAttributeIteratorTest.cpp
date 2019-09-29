@@ -7,20 +7,20 @@
 
 #include "cpul/cpulTestHarness.h"
 #include "mxtest/xml/FakeXml.h"
-#include "mx/xml/XFactory.h"
-#include "mx/xml/XDoc.h"
-#include "mx/xml/XAttribute.h"
-#include "mx/xml/XAttributeIterator.h"
-#include "mx/xml/XElementIterator.h"
+#include "ezxml/XFactory.h"
+#include "ezxml/XDoc.h"
+#include "ezxml/XAttribute.h"
+#include "ezxml/XAttributeIterator.h"
+#include "ezxml/XElementIterator.h"
 
 #include <algorithm>
 
 using namespace std;
-using namespace mx::xml;
+using namespace ezxml;
 
 namespace
 {
-    inline mx::xml::XDocCPtr doc()
+    inline ::ezxml::XDocCPtr doc()
     {
         auto xdoc = XFactory::makeXDoc();
         std::istringstream is( mxtest::fakeXml );
@@ -28,7 +28,7 @@ namespace
         return xdoc;
     }
     
-    inline XElementPtr somethingWithAttributes( const mx::xml::XDocCPtr& xdoc )
+    inline XElementPtr somethingWithAttributes( const ::ezxml::XDocCPtr& xdoc )
     {
         auto root = xdoc->getRoot();
         auto firstIter = root->begin();

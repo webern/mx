@@ -32,7 +32,7 @@ namespace mx
         }
 
 
-        bool RestAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool RestAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "RestAttributes";
             bool isSuccess = true;

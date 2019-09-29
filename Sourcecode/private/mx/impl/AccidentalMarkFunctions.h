@@ -23,10 +23,7 @@ namespace mx
             AccidentalMarkFunctions( const core::AccidentalMark& inAccidentalMark, impl::Cursor inCursor );
             ~AccidentalMarkFunctions() = default;
             AccidentalMarkFunctions( const AccidentalMarkFunctions& ) = default;
-            AccidentalMarkFunctions( AccidentalMarkFunctions&& ) = default;
-            AccidentalMarkFunctions& operator=( const AccidentalMarkFunctions& ) = default;
-            AccidentalMarkFunctions& operator=( AccidentalMarkFunctions&& ) = default;
-            
+            AccidentalMarkFunctions( AccidentalMarkFunctions&& ) = default;            
             api::MarkData parseAccidentalMark() const;
             
         private:
