@@ -5,7 +5,6 @@ jobs:
       # specify the version you desire here
       - image: matthewjamesbriggs/mxci:v001
 
-    resource_class: xlarge
     working_directory: ~/mx
 
     steps:
