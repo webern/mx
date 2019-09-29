@@ -112,17 +112,8 @@
 		29A800521EF0499300AD2478 /* TechnicalFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2941EF0476300AD2478 /* TechnicalFunctions.cpp */; };
 		29A800531EF0499300AD2478 /* TimeReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2961EF0476300AD2478 /* TimeReader.cpp */; };
 		29A800541EF0499300AD2478 /* TupletReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2981EF0476300AD2478 /* TupletReader.cpp */; };
-		29A800551EF0499300AD2478 /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E29C1EF0476300AD2478 /* pugixml.cpp */; };
 		29A800561EF0499300AD2478 /* Utility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2A71EF0476300AD2478 /* Utility.cpp */; };
 		29A800571EF0499300AD2478 /* UtilityImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2A91EF0476300AD2478 /* UtilityImpl.cpp */; };
-		29A800581EF0499300AD2478 /* PugiAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2AC1EF0476300AD2478 /* PugiAttribute.cpp */; };
-		29A800591EF0499300AD2478 /* PugiAttributeIterImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2AE1EF0476300AD2478 /* PugiAttributeIterImpl.cpp */; };
-		29A8005A1EF0499300AD2478 /* PugiDoc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2B01EF0476300AD2478 /* PugiDoc.cpp */; };
-		29A8005B1EF0499300AD2478 /* PugiElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2B21EF0476300AD2478 /* PugiElement.cpp */; };
-		29A8005C1EF0499300AD2478 /* PugiElementIterImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2B41EF0476300AD2478 /* PugiElementIterImpl.cpp */; };
-		29A8005D1EF0499300AD2478 /* XAttributeIterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2B71EF0476300AD2478 /* XAttributeIterator.cpp */; };
-		29A8005E1EF0499300AD2478 /* XElementIterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2BD1EF0476300AD2478 /* XElementIterator.cpp */; };
-		29A8005F1EF0499300AD2478 /* XFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2C01EF0476300AD2478 /* XFactory.cpp */; };
 		29A800641EF0876500AD2478 /* SoundID.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A800621EF0876500AD2478 /* SoundID.cpp */; };
 		29A800651EF0876500AD2478 /* SoundID.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A800621EF0876500AD2478 /* SoundID.cpp */; };
 		29A800661EF0876500AD2478 /* SoundID.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A800621EF0876500AD2478 /* SoundID.cpp */; };
@@ -2724,10 +2715,6 @@
 		29A8FCF11EF0476E00AD2478 /* TupletReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2981EF0476300AD2478 /* TupletReader.cpp */; };
 		29A8FCF21EF0476E00AD2478 /* TupletReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2981EF0476300AD2478 /* TupletReader.cpp */; };
 		29A8FCF31EF0476E00AD2478 /* TupletReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2981EF0476300AD2478 /* TupletReader.cpp */; };
-		29A8FCFF1EF0476E00AD2478 /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E29C1EF0476300AD2478 /* pugixml.cpp */; };
-		29A8FD001EF0476E00AD2478 /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E29C1EF0476300AD2478 /* pugixml.cpp */; };
-		29A8FD011EF0476E00AD2478 /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E29C1EF0476300AD2478 /* pugixml.cpp */; };
-		29A8FD021EF0476E00AD2478 /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E29C1EF0476300AD2478 /* pugixml.cpp */; };
 		29A8FD311EF0476E00AD2478 /* Utility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2A71EF0476300AD2478 /* Utility.cpp */; };
 		29A8FD321EF0476E00AD2478 /* Utility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2A71EF0476300AD2478 /* Utility.cpp */; };
 		29A8FD331EF0476E00AD2478 /* Utility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2A71EF0476300AD2478 /* Utility.cpp */; };
@@ -2736,38 +2723,6 @@
 		29A8FD3C1EF0476E00AD2478 /* UtilityImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2A91EF0476300AD2478 /* UtilityImpl.cpp */; };
 		29A8FD3D1EF0476E00AD2478 /* UtilityImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2A91EF0476300AD2478 /* UtilityImpl.cpp */; };
 		29A8FD3E1EF0476E00AD2478 /* UtilityImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2A91EF0476300AD2478 /* UtilityImpl.cpp */; };
-		29A8FD451EF0476E00AD2478 /* PugiAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2AC1EF0476300AD2478 /* PugiAttribute.cpp */; };
-		29A8FD461EF0476E00AD2478 /* PugiAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2AC1EF0476300AD2478 /* PugiAttribute.cpp */; };
-		29A8FD471EF0476E00AD2478 /* PugiAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2AC1EF0476300AD2478 /* PugiAttribute.cpp */; };
-		29A8FD481EF0476E00AD2478 /* PugiAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2AC1EF0476300AD2478 /* PugiAttribute.cpp */; };
-		29A8FD4F1EF0476E00AD2478 /* PugiAttributeIterImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2AE1EF0476300AD2478 /* PugiAttributeIterImpl.cpp */; };
-		29A8FD501EF0476E00AD2478 /* PugiAttributeIterImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2AE1EF0476300AD2478 /* PugiAttributeIterImpl.cpp */; };
-		29A8FD511EF0476E00AD2478 /* PugiAttributeIterImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2AE1EF0476300AD2478 /* PugiAttributeIterImpl.cpp */; };
-		29A8FD521EF0476E00AD2478 /* PugiAttributeIterImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2AE1EF0476300AD2478 /* PugiAttributeIterImpl.cpp */; };
-		29A8FD591EF0476F00AD2478 /* PugiDoc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2B01EF0476300AD2478 /* PugiDoc.cpp */; };
-		29A8FD5A1EF0476F00AD2478 /* PugiDoc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2B01EF0476300AD2478 /* PugiDoc.cpp */; };
-		29A8FD5B1EF0476F00AD2478 /* PugiDoc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2B01EF0476300AD2478 /* PugiDoc.cpp */; };
-		29A8FD5C1EF0476F00AD2478 /* PugiDoc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2B01EF0476300AD2478 /* PugiDoc.cpp */; };
-		29A8FD631EF0476F00AD2478 /* PugiElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2B21EF0476300AD2478 /* PugiElement.cpp */; };
-		29A8FD641EF0476F00AD2478 /* PugiElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2B21EF0476300AD2478 /* PugiElement.cpp */; };
-		29A8FD651EF0476F00AD2478 /* PugiElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2B21EF0476300AD2478 /* PugiElement.cpp */; };
-		29A8FD661EF0476F00AD2478 /* PugiElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2B21EF0476300AD2478 /* PugiElement.cpp */; };
-		29A8FD6D1EF0476F00AD2478 /* PugiElementIterImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2B41EF0476300AD2478 /* PugiElementIterImpl.cpp */; };
-		29A8FD6E1EF0476F00AD2478 /* PugiElementIterImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2B41EF0476300AD2478 /* PugiElementIterImpl.cpp */; };
-		29A8FD6F1EF0476F00AD2478 /* PugiElementIterImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2B41EF0476300AD2478 /* PugiElementIterImpl.cpp */; };
-		29A8FD701EF0476F00AD2478 /* PugiElementIterImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2B41EF0476300AD2478 /* PugiElementIterImpl.cpp */; };
-		29A8FD7C1EF0476F00AD2478 /* XAttributeIterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2B71EF0476300AD2478 /* XAttributeIterator.cpp */; };
-		29A8FD7D1EF0476F00AD2478 /* XAttributeIterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2B71EF0476300AD2478 /* XAttributeIterator.cpp */; };
-		29A8FD7E1EF0476F00AD2478 /* XAttributeIterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2B71EF0476300AD2478 /* XAttributeIterator.cpp */; };
-		29A8FD7F1EF0476F00AD2478 /* XAttributeIterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2B71EF0476300AD2478 /* XAttributeIterator.cpp */; };
-		29A8FD9A1EF0476F00AD2478 /* XElementIterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2BD1EF0476300AD2478 /* XElementIterator.cpp */; };
-		29A8FD9B1EF0476F00AD2478 /* XElementIterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2BD1EF0476300AD2478 /* XElementIterator.cpp */; };
-		29A8FD9C1EF0476F00AD2478 /* XElementIterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2BD1EF0476300AD2478 /* XElementIterator.cpp */; };
-		29A8FD9D1EF0476F00AD2478 /* XElementIterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2BD1EF0476300AD2478 /* XElementIterator.cpp */; };
-		29A8FDA91EF0476F00AD2478 /* XFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2C01EF0476300AD2478 /* XFactory.cpp */; };
-		29A8FDAA1EF0476F00AD2478 /* XFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2C01EF0476300AD2478 /* XFactory.cpp */; };
-		29A8FDAB1EF0476F00AD2478 /* XFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2C01EF0476300AD2478 /* XFactory.cpp */; };
-		29A8FDAC1EF0476F00AD2478 /* XFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2C01EF0476300AD2478 /* XFactory.cpp */; };
 		29A8FDCA1EF0499200AD2478 /* ClefData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8DD5C1EF0475D00AD2478 /* ClefData.cpp */; };
 		29A8FDCB1EF0499200AD2478 /* DocumentManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8DD611EF0475D00AD2478 /* DocumentManager.cpp */; };
 		29A8FDCC1EF0499200AD2478 /* DurationData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8DD631EF0475D00AD2478 /* DurationData.cpp */; };
@@ -3351,6 +3306,50 @@
 		29EAD74A1F0EF8CE00BDE782 /* MiscData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EAD7461F0EF8CE00BDE782 /* MiscData.cpp */; };
 		29EAD74B1F0EF8CE00BDE782 /* MiscData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EAD7461F0EF8CE00BDE782 /* MiscData.cpp */; };
 		29EAD74C1F0EF8CE00BDE782 /* MiscData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EAD7461F0EF8CE00BDE782 /* MiscData.cpp */; };
+		9CD23C022340658C00EB6F13 /* XAttributeIterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B8D2340658C00EB6F13 /* XAttributeIterator.cpp */; };
+		9CD23C032340658C00EB6F13 /* XAttributeIterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B8D2340658C00EB6F13 /* XAttributeIterator.cpp */; };
+		9CD23C042340658C00EB6F13 /* XAttributeIterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B8D2340658C00EB6F13 /* XAttributeIterator.cpp */; };
+		9CD23C052340658C00EB6F13 /* XAttributeIterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B8D2340658C00EB6F13 /* XAttributeIterator.cpp */; };
+		9CD23C062340658C00EB6F13 /* XAttributeIterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B8D2340658C00EB6F13 /* XAttributeIterator.cpp */; };
+		9CD23C0C2340658C00EB6F13 /* XElementIterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B8F2340658C00EB6F13 /* XElementIterator.cpp */; };
+		9CD23C0D2340658C00EB6F13 /* XElementIterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B8F2340658C00EB6F13 /* XElementIterator.cpp */; };
+		9CD23C0E2340658C00EB6F13 /* XElementIterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B8F2340658C00EB6F13 /* XElementIterator.cpp */; };
+		9CD23C0F2340658C00EB6F13 /* XElementIterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B8F2340658C00EB6F13 /* XElementIterator.cpp */; };
+		9CD23C102340658C00EB6F13 /* XElementIterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B8F2340658C00EB6F13 /* XElementIterator.cpp */; };
+		9CD23C112340658C00EB6F13 /* PugiElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B902340658C00EB6F13 /* PugiElement.cpp */; };
+		9CD23C122340658C00EB6F13 /* PugiElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B902340658C00EB6F13 /* PugiElement.cpp */; };
+		9CD23C132340658C00EB6F13 /* PugiElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B902340658C00EB6F13 /* PugiElement.cpp */; };
+		9CD23C142340658C00EB6F13 /* PugiElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B902340658C00EB6F13 /* PugiElement.cpp */; };
+		9CD23C152340658C00EB6F13 /* PugiElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B902340658C00EB6F13 /* PugiElement.cpp */; };
+		9CD23C252340658C00EB6F13 /* PugiAttributeIterImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B942340658C00EB6F13 /* PugiAttributeIterImpl.cpp */; };
+		9CD23C262340658C00EB6F13 /* PugiAttributeIterImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B942340658C00EB6F13 /* PugiAttributeIterImpl.cpp */; };
+		9CD23C272340658C00EB6F13 /* PugiAttributeIterImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B942340658C00EB6F13 /* PugiAttributeIterImpl.cpp */; };
+		9CD23C282340658C00EB6F13 /* PugiAttributeIterImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B942340658C00EB6F13 /* PugiAttributeIterImpl.cpp */; };
+		9CD23C292340658C00EB6F13 /* PugiAttributeIterImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B942340658C00EB6F13 /* PugiAttributeIterImpl.cpp */; };
+		9CD23C2F2340658C00EB6F13 /* PugiAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B972340658C00EB6F13 /* PugiAttribute.cpp */; };
+		9CD23C302340658C00EB6F13 /* PugiAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B972340658C00EB6F13 /* PugiAttribute.cpp */; };
+		9CD23C312340658C00EB6F13 /* PugiAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B972340658C00EB6F13 /* PugiAttribute.cpp */; };
+		9CD23C322340658C00EB6F13 /* PugiAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B972340658C00EB6F13 /* PugiAttribute.cpp */; };
+		9CD23C332340658C00EB6F13 /* PugiAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B972340658C00EB6F13 /* PugiAttribute.cpp */; };
+		9CD23C342340658C00EB6F13 /* PugiElementIterImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B982340658C00EB6F13 /* PugiElementIterImpl.cpp */; };
+		9CD23C352340658C00EB6F13 /* PugiElementIterImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B982340658C00EB6F13 /* PugiElementIterImpl.cpp */; };
+		9CD23C362340658C00EB6F13 /* PugiElementIterImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B982340658C00EB6F13 /* PugiElementIterImpl.cpp */; };
+		9CD23C372340658C00EB6F13 /* PugiElementIterImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B982340658C00EB6F13 /* PugiElementIterImpl.cpp */; };
+		9CD23C382340658C00EB6F13 /* PugiElementIterImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B982340658C00EB6F13 /* PugiElementIterImpl.cpp */; };
+		9CD23C3A2340658C00EB6F13 /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B992340658C00EB6F13 /* pugixml.cpp */; };
+		9CD23C3B2340658C00EB6F13 /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B992340658C00EB6F13 /* pugixml.cpp */; };
+		9CD23C3C2340658C00EB6F13 /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B992340658C00EB6F13 /* pugixml.cpp */; };
+		9CD23C3D2340658C00EB6F13 /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B992340658C00EB6F13 /* pugixml.cpp */; };
+		9CD23C4D2340658C00EB6F13 /* XFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B9D2340658C00EB6F13 /* XFactory.cpp */; };
+		9CD23C4E2340658C00EB6F13 /* XFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B9D2340658C00EB6F13 /* XFactory.cpp */; };
+		9CD23C4F2340658C00EB6F13 /* XFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B9D2340658C00EB6F13 /* XFactory.cpp */; };
+		9CD23C502340658C00EB6F13 /* XFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B9D2340658C00EB6F13 /* XFactory.cpp */; };
+		9CD23C512340658C00EB6F13 /* XFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23B9D2340658C00EB6F13 /* XFactory.cpp */; };
+		9CD23C5C2340658C00EB6F13 /* PugiDoc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23BA02340658C00EB6F13 /* PugiDoc.cpp */; };
+		9CD23C5D2340658C00EB6F13 /* PugiDoc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23BA02340658C00EB6F13 /* PugiDoc.cpp */; };
+		9CD23C5E2340658C00EB6F13 /* PugiDoc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23BA02340658C00EB6F13 /* PugiDoc.cpp */; };
+		9CD23C5F2340658C00EB6F13 /* PugiDoc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23BA02340658C00EB6F13 /* PugiDoc.cpp */; };
+		9CD23C602340658C00EB6F13 /* PugiDoc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD23BA02340658C00EB6F13 /* PugiDoc.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -4685,9 +4684,6 @@
 		29A8E2971EF0476300AD2478 /* TimeReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimeReader.h; sourceTree = "<group>"; };
 		29A8E2981EF0476300AD2478 /* TupletReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TupletReader.cpp; sourceTree = "<group>"; };
 		29A8E2991EF0476300AD2478 /* TupletReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TupletReader.h; sourceTree = "<group>"; };
-		29A8E29B1EF0476300AD2478 /* pugiconfig.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = pugiconfig.hpp; sourceTree = "<group>"; };
-		29A8E29C1EF0476300AD2478 /* pugixml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pugixml.cpp; sourceTree = "<group>"; };
-		29A8E29D1EF0476300AD2478 /* pugixml.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = pugixml.hpp; sourceTree = "<group>"; };
 		29A8E29F1EF0476300AD2478 /* Enum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Enum.h; sourceTree = "<group>"; };
 		29A8E2A01EF0476300AD2478 /* EnumWithString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EnumWithString.h; sourceTree = "<group>"; };
 		29A8E2A11EF0476300AD2478 /* JitAllocate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JitAllocate.h; sourceTree = "<group>"; };
@@ -4700,30 +4696,6 @@
 		29A8E2A81EF0476300AD2478 /* Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utility.h; sourceTree = "<group>"; };
 		29A8E2A91EF0476300AD2478 /* UtilityImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UtilityImpl.cpp; sourceTree = "<group>"; };
 		29A8E2AA1EF0476300AD2478 /* UtilityImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UtilityImpl.h; sourceTree = "<group>"; };
-		29A8E2AC1EF0476300AD2478 /* PugiAttribute.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PugiAttribute.cpp; sourceTree = "<group>"; };
-		29A8E2AD1EF0476300AD2478 /* PugiAttribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PugiAttribute.h; sourceTree = "<group>"; };
-		29A8E2AE1EF0476300AD2478 /* PugiAttributeIterImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PugiAttributeIterImpl.cpp; sourceTree = "<group>"; };
-		29A8E2AF1EF0476300AD2478 /* PugiAttributeIterImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PugiAttributeIterImpl.h; sourceTree = "<group>"; };
-		29A8E2B01EF0476300AD2478 /* PugiDoc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PugiDoc.cpp; sourceTree = "<group>"; };
-		29A8E2B11EF0476300AD2478 /* PugiDoc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PugiDoc.h; sourceTree = "<group>"; };
-		29A8E2B21EF0476300AD2478 /* PugiElement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PugiElement.cpp; sourceTree = "<group>"; };
-		29A8E2B31EF0476300AD2478 /* PugiElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PugiElement.h; sourceTree = "<group>"; };
-		29A8E2B41EF0476300AD2478 /* PugiElementIterImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PugiElementIterImpl.cpp; sourceTree = "<group>"; };
-		29A8E2B51EF0476300AD2478 /* PugiElementIterImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PugiElementIterImpl.h; sourceTree = "<group>"; };
-		29A8E2B61EF0476300AD2478 /* XAttribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XAttribute.h; sourceTree = "<group>"; };
-		29A8E2B71EF0476300AD2478 /* XAttributeIterator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = XAttributeIterator.cpp; sourceTree = "<group>"; };
-		29A8E2B81EF0476300AD2478 /* XAttributeIterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XAttributeIterator.h; sourceTree = "<group>"; };
-		29A8E2B91EF0476300AD2478 /* XAttributeIterImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XAttributeIterImpl.h; sourceTree = "<group>"; };
-		29A8E2BA1EF0476300AD2478 /* XDoc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XDoc.h; sourceTree = "<group>"; };
-		29A8E2BB1EF0476300AD2478 /* XDocSpec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XDocSpec.h; sourceTree = "<group>"; };
-		29A8E2BC1EF0476300AD2478 /* XElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XElement.h; sourceTree = "<group>"; };
-		29A8E2BD1EF0476300AD2478 /* XElementIterator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = XElementIterator.cpp; sourceTree = "<group>"; };
-		29A8E2BE1EF0476300AD2478 /* XElementIterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XElementIterator.h; sourceTree = "<group>"; };
-		29A8E2BF1EF0476300AD2478 /* XElementIterImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XElementIterImpl.h; sourceTree = "<group>"; };
-		29A8E2C01EF0476300AD2478 /* XFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = XFactory.cpp; sourceTree = "<group>"; };
-		29A8E2C11EF0476300AD2478 /* XFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XFactory.h; sourceTree = "<group>"; };
-		29A8E2C21EF0476300AD2478 /* XForwardDeclare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XForwardDeclare.h; sourceTree = "<group>"; };
-		29A8E2C31EF0476300AD2478 /* XThrow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XThrow.h; sourceTree = "<group>"; };
 		29A8FDC21EF0497400AD2478 /* MxmacOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MxmacOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		29A8FDC41EF0497500AD2478 /* MxmacOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MxmacOS.h; sourceTree = "<group>"; };
 		29A8FDC51EF0497500AD2478 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -4778,6 +4750,57 @@
 		29EAD7391F0EA96B00BDE782 /* ProcessingInstruction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProcessingInstruction.cpp; sourceTree = "<group>"; };
 		29EAD73A1F0EA96B00BDE782 /* ProcessingInstruction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProcessingInstruction.h; sourceTree = "<group>"; };
 		29EAD7461F0EF8CE00BDE782 /* MiscData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MiscData.cpp; sourceTree = "<group>"; };
+		9CD23B662340658C00EB6F13 /* .keep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .keep; sourceTree = "<group>"; };
+		9CD23B672340658C00EB6F13 /* .keep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .keep; sourceTree = "<group>"; };
+		9CD23B692340658C00EB6F13 /* freezing-small.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "freezing-small.xml"; sourceTree = "<group>"; };
+		9CD23B6A2340658C00EB6F13 /* simple.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = simple.xml; sourceTree = "<group>"; };
+		9CD23B6B2340658C00EB6F13 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		9CD23B6D2340658C00EB6F13 /* ezxml.sublime-workspace */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "ezxml.sublime-workspace"; sourceTree = "<group>"; };
+		9CD23B6E2340658C00EB6F13 /* ezxml.sublime-project */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "ezxml.sublime-project"; sourceTree = "<group>"; };
+		9CD23B6F2340658C00EB6F13 /* ezxml.sublime-workspace.example copy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "ezxml.sublime-workspace.example copy"; sourceTree = "<group>"; };
+		9CD23B702340658C00EB6F13 /* readme.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = readme.md; sourceTree = "<group>"; };
+		9CD23B712340658C00EB6F13 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		9CD23B722340658C00EB6F13 /* .gitattributes */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitattributes; sourceTree = "<group>"; };
+		9CD23B732340658C00EB6F13 /* license.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = license.txt; sourceTree = "<group>"; };
+		9CD23B762340658C00EB6F13 /* equal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = equal.h; sourceTree = "<group>"; };
+		9CD23B772340658C00EB6F13 /* Path.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Path.h; sourceTree = "<group>"; };
+		9CD23B782340658C00EB6F13 /* TestProcessingInstructions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestProcessingInstructions.cpp; sourceTree = "<group>"; };
+		9CD23B792340658C00EB6F13 /* TestXDoc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestXDoc.cpp; sourceTree = "<group>"; };
+		9CD23B7A2340658C00EB6F13 /* Catch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Catch.h; sourceTree = "<group>"; };
+		9CD23B7B2340658C00EB6F13 /* Files.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Files.h; sourceTree = "<group>"; };
+		9CD23B7C2340658C00EB6F13 /* TestFreezing.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestFreezing.cpp; sourceTree = "<group>"; };
+		9CD23B7D2340658C00EB6F13 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		9CD23B802340658C00EB6F13 /* XDocSpec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XDocSpec.h; sourceTree = "<group>"; };
+		9CD23B812340658C00EB6F13 /* XFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XFactory.h; sourceTree = "<group>"; };
+		9CD23B822340658C00EB6F13 /* ezxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ezxml.h; sourceTree = "<group>"; };
+		9CD23B832340658C00EB6F13 /* XElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XElement.h; sourceTree = "<group>"; };
+		9CD23B842340658C00EB6F13 /* XAttributeIterImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XAttributeIterImpl.h; sourceTree = "<group>"; };
+		9CD23B852340658C00EB6F13 /* XElementIterImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XElementIterImpl.h; sourceTree = "<group>"; };
+		9CD23B862340658C00EB6F13 /* XAttributeIterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XAttributeIterator.h; sourceTree = "<group>"; };
+		9CD23B872340658C00EB6F13 /* XElementIterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XElementIterator.h; sourceTree = "<group>"; };
+		9CD23B882340658C00EB6F13 /* XDoc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XDoc.h; sourceTree = "<group>"; };
+		9CD23B892340658C00EB6F13 /* XAttribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XAttribute.h; sourceTree = "<group>"; };
+		9CD23B8A2340658C00EB6F13 /* XForwardDeclare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XForwardDeclare.h; sourceTree = "<group>"; };
+		9CD23B8D2340658C00EB6F13 /* XAttributeIterator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = XAttributeIterator.cpp; sourceTree = "<group>"; };
+		9CD23B8E2340658C00EB6F13 /* pugiconfig.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = pugiconfig.hpp; sourceTree = "<group>"; };
+		9CD23B8F2340658C00EB6F13 /* XElementIterator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = XElementIterator.cpp; sourceTree = "<group>"; };
+		9CD23B902340658C00EB6F13 /* PugiElement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PugiElement.cpp; sourceTree = "<group>"; };
+		9CD23B912340658C00EB6F13 /* PugiDoc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PugiDoc.h; sourceTree = "<group>"; };
+		9CD23B922340658C00EB6F13 /* Parse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Parse.h; sourceTree = "<group>"; };
+		9CD23B932340658C00EB6F13 /* PugiAttribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PugiAttribute.h; sourceTree = "<group>"; };
+		9CD23B942340658C00EB6F13 /* PugiAttributeIterImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PugiAttributeIterImpl.cpp; sourceTree = "<group>"; };
+		9CD23B952340658C00EB6F13 /* pugilicense.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = pugilicense.txt; sourceTree = "<group>"; };
+		9CD23B962340658C00EB6F13 /* pugixml.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = pugixml.hpp; sourceTree = "<group>"; };
+		9CD23B972340658C00EB6F13 /* PugiAttribute.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PugiAttribute.cpp; sourceTree = "<group>"; };
+		9CD23B982340658C00EB6F13 /* PugiElementIterImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PugiElementIterImpl.cpp; sourceTree = "<group>"; };
+		9CD23B992340658C00EB6F13 /* pugixml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pugixml.cpp; sourceTree = "<group>"; };
+		9CD23B9A2340658C00EB6F13 /* XThrow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XThrow.h; sourceTree = "<group>"; };
+		9CD23B9B2340658C00EB6F13 /* PugiElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PugiElement.h; sourceTree = "<group>"; };
+		9CD23B9C2340658C00EB6F13 /* PugiElementIterImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PugiElementIterImpl.h; sourceTree = "<group>"; };
+		9CD23B9D2340658C00EB6F13 /* XFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = XFactory.cpp; sourceTree = "<group>"; };
+		9CD23B9E2340658C00EB6F13 /* Throw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Throw.h; sourceTree = "<group>"; };
+		9CD23B9F2340658C00EB6F13 /* PugiAttributeIterImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PugiAttributeIterImpl.h; sourceTree = "<group>"; };
+		9CD23BA02340658C00EB6F13 /* PugiDoc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PugiDoc.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -4852,13 +4875,12 @@
 		29A8DD571EF0475D00AD2478 /* mx */ = {
 			isa = PBXGroup;
 			children = (
+				9CD23B622340653B00EB6F13 /* extern */,
 				29DC383C225C0D4000814240 /* api-include */,
 				29A8DD581EF0475D00AD2478 /* api */,
 				29A8DD881EF0475D00AD2478 /* core */,
 				29A8E2551EF0476200AD2478 /* impl */,
-				29A8E29A1EF0476300AD2478 /* pugixml */,
 				29A8E29E1EF0476300AD2478 /* utility */,
-				29A8E2AB1EF0476300AD2478 /* xml */,
 			);
 			name = mx;
 			path = ../Sourcecode/private/mx;
@@ -6205,16 +6227,6 @@
 			path = impl;
 			sourceTree = "<group>";
 		};
-		29A8E29A1EF0476300AD2478 /* pugixml */ = {
-			isa = PBXGroup;
-			children = (
-				29A8E29B1EF0476300AD2478 /* pugiconfig.hpp */,
-				29A8E29C1EF0476300AD2478 /* pugixml.cpp */,
-				29A8E29D1EF0476300AD2478 /* pugixml.hpp */,
-			);
-			path = pugixml;
-			sourceTree = "<group>";
-		};
 		29A8E29E1EF0476300AD2478 /* utility */ = {
 			isa = PBXGroup;
 			children = (
@@ -6233,37 +6245,6 @@
 				297594591F04783100DE2F30 /* Round.h */,
 			);
 			path = utility;
-			sourceTree = "<group>";
-		};
-		29A8E2AB1EF0476300AD2478 /* xml */ = {
-			isa = PBXGroup;
-			children = (
-				29A8E2AC1EF0476300AD2478 /* PugiAttribute.cpp */,
-				29A8E2AD1EF0476300AD2478 /* PugiAttribute.h */,
-				29A8E2AE1EF0476300AD2478 /* PugiAttributeIterImpl.cpp */,
-				29A8E2AF1EF0476300AD2478 /* PugiAttributeIterImpl.h */,
-				29A8E2B01EF0476300AD2478 /* PugiDoc.cpp */,
-				29A8E2B11EF0476300AD2478 /* PugiDoc.h */,
-				29A8E2B21EF0476300AD2478 /* PugiElement.cpp */,
-				29A8E2B31EF0476300AD2478 /* PugiElement.h */,
-				29A8E2B41EF0476300AD2478 /* PugiElementIterImpl.cpp */,
-				29A8E2B51EF0476300AD2478 /* PugiElementIterImpl.h */,
-				29A8E2B61EF0476300AD2478 /* XAttribute.h */,
-				29A8E2B71EF0476300AD2478 /* XAttributeIterator.cpp */,
-				29A8E2B81EF0476300AD2478 /* XAttributeIterator.h */,
-				29A8E2B91EF0476300AD2478 /* XAttributeIterImpl.h */,
-				29A8E2BA1EF0476300AD2478 /* XDoc.h */,
-				29A8E2BB1EF0476300AD2478 /* XDocSpec.h */,
-				29A8E2BC1EF0476300AD2478 /* XElement.h */,
-				29A8E2BD1EF0476300AD2478 /* XElementIterator.cpp */,
-				29A8E2BE1EF0476300AD2478 /* XElementIterator.h */,
-				29A8E2BF1EF0476300AD2478 /* XElementIterImpl.h */,
-				29A8E2C01EF0476300AD2478 /* XFactory.cpp */,
-				29A8E2C11EF0476300AD2478 /* XFactory.h */,
-				29A8E2C21EF0476300AD2478 /* XForwardDeclare.h */,
-				29A8E2C31EF0476300AD2478 /* XThrow.h */,
-			);
-			path = xml;
 			sourceTree = "<group>";
 		};
 		29A8FDC31EF0497500AD2478 /* MxmacOS */ = {
@@ -6332,6 +6313,170 @@
 			);
 			name = "api-include";
 			path = ../../include/mx/api;
+			sourceTree = "<group>";
+		};
+		9CD23B622340653B00EB6F13 /* extern */ = {
+			isa = PBXGroup;
+			children = (
+				9CD23B632340658C00EB6F13 /* ezxml */,
+			);
+			name = extern;
+			path = ../Sourcecode/private/mx/extern;
+			sourceTree = SOURCE_ROOT;
+		};
+		9CD23B632340658C00EB6F13 /* ezxml */ = {
+			isa = PBXGroup;
+			children = (
+				9CD23B642340658C00EB6F13 /* testdata */,
+				9CD23B6B2340658C00EB6F13 /* CMakeLists.txt */,
+				9CD23B6C2340658C00EB6F13 /* other */,
+				9CD23B702340658C00EB6F13 /* readme.md */,
+				9CD23B712340658C00EB6F13 /* .gitignore */,
+				9CD23B722340658C00EB6F13 /* .gitattributes */,
+				9CD23B732340658C00EB6F13 /* license.txt */,
+				9CD23B742340658C00EB6F13 /* src */,
+			);
+			name = ezxml;
+			path = ../../extern/ezxml;
+			sourceTree = "<group>";
+		};
+		9CD23B642340658C00EB6F13 /* testdata */ = {
+			isa = PBXGroup;
+			children = (
+				9CD23B652340658C00EB6F13 /* out */,
+				9CD23B672340658C00EB6F13 /* .keep */,
+				9CD23B682340658C00EB6F13 /* xml */,
+			);
+			path = testdata;
+			sourceTree = "<group>";
+		};
+		9CD23B652340658C00EB6F13 /* out */ = {
+			isa = PBXGroup;
+			children = (
+				9CD23B662340658C00EB6F13 /* .keep */,
+			);
+			path = out;
+			sourceTree = "<group>";
+		};
+		9CD23B682340658C00EB6F13 /* xml */ = {
+			isa = PBXGroup;
+			children = (
+				9CD23B692340658C00EB6F13 /* freezing-small.xml */,
+				9CD23B6A2340658C00EB6F13 /* simple.xml */,
+			);
+			path = xml;
+			sourceTree = "<group>";
+		};
+		9CD23B6C2340658C00EB6F13 /* other */ = {
+			isa = PBXGroup;
+			children = (
+				9CD23B6D2340658C00EB6F13 /* ezxml.sublime-workspace */,
+				9CD23B6E2340658C00EB6F13 /* ezxml.sublime-project */,
+				9CD23B6F2340658C00EB6F13 /* ezxml.sublime-workspace.example copy */,
+			);
+			path = other;
+			sourceTree = "<group>";
+		};
+		9CD23B742340658C00EB6F13 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				9CD23B752340658C00EB6F13 /* test */,
+				9CD23B7E2340658C00EB6F13 /* include */,
+				9CD23B8B2340658C00EB6F13 /* private */,
+				9CD23BA12340658C00EB6F13 /* extern */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		9CD23B752340658C00EB6F13 /* test */ = {
+			isa = PBXGroup;
+			children = (
+				9CD23B762340658C00EB6F13 /* equal.h */,
+				9CD23B772340658C00EB6F13 /* Path.h */,
+				9CD23B782340658C00EB6F13 /* TestProcessingInstructions.cpp */,
+				9CD23B792340658C00EB6F13 /* TestXDoc.cpp */,
+				9CD23B7A2340658C00EB6F13 /* Catch.h */,
+				9CD23B7B2340658C00EB6F13 /* Files.h */,
+				9CD23B7C2340658C00EB6F13 /* TestFreezing.cpp */,
+				9CD23B7D2340658C00EB6F13 /* main.cpp */,
+			);
+			path = test;
+			sourceTree = "<group>";
+		};
+		9CD23B7E2340658C00EB6F13 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				9CD23B7F2340658C00EB6F13 /* ezxml */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		9CD23B7F2340658C00EB6F13 /* ezxml */ = {
+			isa = PBXGroup;
+			children = (
+				9CD23B802340658C00EB6F13 /* XDocSpec.h */,
+				9CD23B812340658C00EB6F13 /* XFactory.h */,
+				9CD23B822340658C00EB6F13 /* ezxml.h */,
+				9CD23B832340658C00EB6F13 /* XElement.h */,
+				9CD23B842340658C00EB6F13 /* XAttributeIterImpl.h */,
+				9CD23B852340658C00EB6F13 /* XElementIterImpl.h */,
+				9CD23B862340658C00EB6F13 /* XAttributeIterator.h */,
+				9CD23B872340658C00EB6F13 /* XElementIterator.h */,
+				9CD23B882340658C00EB6F13 /* XDoc.h */,
+				9CD23B892340658C00EB6F13 /* XAttribute.h */,
+				9CD23B8A2340658C00EB6F13 /* XForwardDeclare.h */,
+			);
+			path = ezxml;
+			sourceTree = "<group>";
+		};
+		9CD23B8B2340658C00EB6F13 /* private */ = {
+			isa = PBXGroup;
+			children = (
+				9CD23B8C2340658C00EB6F13 /* private */,
+			);
+			path = private;
+			sourceTree = "<group>";
+		};
+		9CD23B8C2340658C00EB6F13 /* private */ = {
+			isa = PBXGroup;
+			children = (
+				9CD23B8D2340658C00EB6F13 /* XAttributeIterator.cpp */,
+				9CD23B8E2340658C00EB6F13 /* pugiconfig.hpp */,
+				9CD23B8F2340658C00EB6F13 /* XElementIterator.cpp */,
+				9CD23B902340658C00EB6F13 /* PugiElement.cpp */,
+				9CD23B912340658C00EB6F13 /* PugiDoc.h */,
+				9CD23B922340658C00EB6F13 /* Parse.h */,
+				9CD23B932340658C00EB6F13 /* PugiAttribute.h */,
+				9CD23B942340658C00EB6F13 /* PugiAttributeIterImpl.cpp */,
+				9CD23B952340658C00EB6F13 /* pugilicense.txt */,
+				9CD23B962340658C00EB6F13 /* pugixml.hpp */,
+				9CD23B972340658C00EB6F13 /* PugiAttribute.cpp */,
+				9CD23B982340658C00EB6F13 /* PugiElementIterImpl.cpp */,
+				9CD23B992340658C00EB6F13 /* pugixml.cpp */,
+				9CD23B9A2340658C00EB6F13 /* XThrow.h */,
+				9CD23B9B2340658C00EB6F13 /* PugiElement.h */,
+				9CD23B9C2340658C00EB6F13 /* PugiElementIterImpl.h */,
+				9CD23B9D2340658C00EB6F13 /* XFactory.cpp */,
+				9CD23B9E2340658C00EB6F13 /* Throw.h */,
+				9CD23B9F2340658C00EB6F13 /* PugiAttributeIterImpl.h */,
+				9CD23BA02340658C00EB6F13 /* PugiDoc.cpp */,
+			);
+			path = private;
+			sourceTree = "<group>";
+		};
+		9CD23BA12340658C00EB6F13 /* extern */ = {
+			isa = PBXGroup;
+			children = (
+				9CD23BA22340658C00EB6F13 /* rapidjson */,
+			);
+			path = extern;
+			sourceTree = "<group>";
+		};
+		9CD23BA22340658C00EB6F13 /* rapidjson */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = rapidjson;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -6501,6 +6646,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 299F7FDD1CA8D2200084CAE5;
@@ -6553,6 +6699,7 @@
 				29A8EAA41EF0476500AD2478 /* Fingernails.cpp in Sources */,
 				29A8ED6A1EF0476600AD2478 /* InterchangeableAttributes.cpp in Sources */,
 				29A8E9001EF0476400AD2478 /* Dynamics.cpp in Sources */,
+				9CD23C3A2340658C00EB6F13 /* pugixml.cpp in Sources */,
 				29A8EC201EF0476500AD2478 /* GroupTime.cpp in Sources */,
 				29A8FA761EF0476D00AD2478 /* VirtualLibrary.cpp in Sources */,
 				29A8EA4A1EF0476500AD2478 /* FermataAttributes.cpp in Sources */,
@@ -6604,7 +6751,6 @@
 				29A8FC151EF0476E00AD2478 /* LcmGcd.cpp in Sources */,
 				29A8F3821EF0476900AD2478 /* PedalAlter.cpp in Sources */,
 				29A8F8191EF0476B00AD2478 /* SystemDividers.cpp in Sources */,
-				29A8FD9B1EF0476F00AD2478 /* XElementIterator.cpp in Sources */,
 				29A8E8EC1EF0476400AD2478 /* DownBow.cpp in Sources */,
 				29A8F7E71EF0476B00AD2478 /* Supports.cpp in Sources */,
 				29A8F4D11EF0476900AD2478 /* RepeatAttributes.cpp in Sources */,
@@ -6630,6 +6776,7 @@
 				29A8F08A1EF0476700AD2478 /* MusicDataChoice.cpp in Sources */,
 				29A8F7FB1EF0476B00AD2478 /* Syllabic.cpp in Sources */,
 				29A8F8B91EF0476C00AD2478 /* Time.cpp in Sources */,
+				9CD23C352340658C00EB6F13 /* PugiElementIterImpl.cpp in Sources */,
 				29A8E3A61EF0476300AD2478 /* WordsData.cpp in Sources */,
 				29A8ED741EF0476600AD2478 /* Inversion.cpp in Sources */,
 				29A8EAB81EF0476500AD2478 /* FirstFretAttributes.cpp in Sources */,
@@ -6640,11 +6787,11 @@
 				29A8FBDE1EF0476E00AD2478 /* DirectionWriter.cpp in Sources */,
 				29A8F18E1EF0476800AD2478 /* Octave.cpp in Sources */,
 				29A8EFC21EF0476700AD2478 /* MidiChannel.cpp in Sources */,
-				29A8FD461EF0476E00AD2478 /* PugiAttribute.cpp in Sources */,
 				29A800651EF0876500AD2478 /* SoundID.cpp in Sources */,
 				29A8F6251EF0476A00AD2478 /* Slide.cpp in Sources */,
 				29A8E8741EF0476400AD2478 /* DisplayStep.cpp in Sources */,
 				29A8F67F1EF0476A00AD2478 /* SoundAttributes.cpp in Sources */,
+				9CD23C122340658C00EB6F13 /* PugiElement.cpp in Sources */,
 				29A8E7701EF0476400AD2478 /* CueNoteGroup.cpp in Sources */,
 				29A8F2741EF0476800AD2478 /* OtherPlayAttributes.cpp in Sources */,
 				29A8EE821EF0476600AD2478 /* LinkAttributes.cpp in Sources */,
@@ -6679,7 +6826,6 @@
 				29A8F17A1EF0476800AD2478 /* NoteSize.cpp in Sources */,
 				29A8F2C41EF0476800AD2478 /* Pan.cpp in Sources */,
 				29A8EA861EF0476500AD2478 /* FigureNumberAttributes.cpp in Sources */,
-				29A8FD641EF0476F00AD2478 /* PugiElement.cpp in Sources */,
 				29A8FBFC1EF0476E00AD2478 /* EncodingFunctions.cpp in Sources */,
 				29A8EC661EF0476500AD2478 /* HarmonicInfoChoice.cpp in Sources */,
 				29A8E3381EF0476300AD2478 /* NoteData.cpp in Sources */,
@@ -6704,6 +6850,7 @@
 				29A8F7291EF0476B00AD2478 /* Staves.cpp in Sources */,
 				29A8F3281EF0476800AD2478 /* PartName.cpp in Sources */,
 				29A8F6BB1EF0476A00AD2478 /* Staff.cpp in Sources */,
+				9CD23C5D2340658C00EB6F13 /* PugiDoc.cpp in Sources */,
 				29A8F0BC1EF0476700AD2478 /* NonArpeggiate.cpp in Sources */,
 				29A8EBB21EF0476500AD2478 /* GroupAbbreviationDisplayAttributes.cpp in Sources */,
 				29A8F5671EF0476A00AD2478 /* Scordatura.cpp in Sources */,
@@ -6713,6 +6860,7 @@
 				29A8F9D11EF0476C00AD2478 /* TupletDot.cpp in Sources */,
 				29A8E8921EF0476400AD2478 /* DisplayTextAttributes.cpp in Sources */,
 				29A8FAF81EF0476D00AD2478 /* WordsAttributes.cpp in Sources */,
+				9CD23C262340658C00EB6F13 /* PugiAttributeIterImpl.cpp in Sources */,
 				29A8ECDE1EF0476600AD2478 /* HoleClosedAttributes.cpp in Sources */,
 				29A8E6C61EF0476400AD2478 /* CircularArrow.cpp in Sources */,
 				29A8F98B1EF0476C00AD2478 /* TripleTongue.cpp in Sources */,
@@ -6758,6 +6906,7 @@
 				29A8F53F1EF0476A00AD2478 /* RootStepAttributes.cpp in Sources */,
 				29A8F6611EF0476A00AD2478 /* Solo.cpp in Sources */,
 				29A8F5211EF0476900AD2478 /* RootAlter.cpp in Sources */,
+				9CD23C4E2340658C00EB6F13 /* XFactory.cpp in Sources */,
 				29A8E57C1EF0476300AD2478 /* BassAlterAttributes.cpp in Sources */,
 				29A8E5F41EF0476300AD2478 /* BeatUnitDot.cpp in Sources */,
 				29A8EC701EF0476500AD2478 /* HarmonicTypeChoice.cpp in Sources */,
@@ -6799,11 +6948,9 @@
 				29A8E8D81EF0476400AD2478 /* Double.cpp in Sources */,
 				29A8E8061EF0476400AD2478 /* DelayedInvertedTurnAttributes.cpp in Sources */,
 				29A8F2921EF0476800AD2478 /* PageHeight.cpp in Sources */,
-				29A8FDAA1EF0476F00AD2478 /* XFactory.cpp in Sources */,
 				29A8EF5E1EF0476700AD2478 /* MetronomeBeam.cpp in Sources */,
 				29A8F57B1EF0476A00AD2478 /* ScoreInstrument.cpp in Sources */,
 				29A8EDCE1EF0476600AD2478 /* KeyAlter.cpp in Sources */,
-				29A8FD5A1EF0476F00AD2478 /* PugiDoc.cpp in Sources */,
 				29A8F3001EF0476800AD2478 /* PartGroup.cpp in Sources */,
 				29A8F1C01EF0476800AD2478 /* OffsetAttributes.cpp in Sources */,
 				29A8E5C21EF0476300AD2478 /* BeatRepeat.cpp in Sources */,
@@ -6833,7 +6980,6 @@
 				29A8E5901EF0476300AD2478 /* BassStepAttributes.cpp in Sources */,
 				29A8ED241EF0476600AD2478 /* Instrument.cpp in Sources */,
 				29A8EB761EF0476500AD2478 /* GraceAttributes.cpp in Sources */,
-				29A8FD7D1EF0476F00AD2478 /* XAttributeIterator.cpp in Sources */,
 				29A8EE141EF0476600AD2478 /* KindAttributes.cpp in Sources */,
 				29A8F8AF1EF0476C00AD2478 /* TiedAttributes.cpp in Sources */,
 				29A8E7981EF0476400AD2478 /* DashesAttributes.cpp in Sources */,
@@ -6852,6 +6998,7 @@
 				29A8F2EC1EF0476800AD2478 /* PartAbbreviationDisplayAttributes.cpp in Sources */,
 				29A8E6301EF0476300AD2478 /* BendAttributes.cpp in Sources */,
 				29A8F2CE1EF0476800AD2478 /* PartAbbreviation.cpp in Sources */,
+				9CD23C032340658C00EB6F13 /* XAttributeIterator.cpp in Sources */,
 				29A8FBF21EF0476E00AD2478 /* DynamicsWriter.cpp in Sources */,
 				29A8FCF11EF0476E00AD2478 /* TupletReader.cpp in Sources */,
 				29A8F3DC1EF0476900AD2478 /* PerMinuteOrBeatUnitChoice.cpp in Sources */,
@@ -6906,6 +7053,7 @@
 				29A8EB4E1EF0476500AD2478 /* Glass.cpp in Sources */,
 				29A8FA261EF0476C00AD2478 /* TurnAttributes.cpp in Sources */,
 				29A8FA9E1EF0476D00AD2478 /* WavyLine.cpp in Sources */,
+				9CD23C302340658C00EB6F13 /* PugiAttribute.cpp in Sources */,
 				29A8EDA61EF0476600AD2478 /* InvertedTurnAttributes.cpp in Sources */,
 				29A8F10C1EF0476700AD2478 /* Notations.cpp in Sources */,
 				29A8E8241EF0476400AD2478 /* DetachedLegato.cpp in Sources */,
@@ -6917,7 +7065,6 @@
 				29A8E4001EF0476300AD2478 /* Accent.cpp in Sources */,
 				29A8F27E1EF0476800AD2478 /* OtherTechnical.cpp in Sources */,
 				29A8F8411EF0476B00AD2478 /* TapAttributes.cpp in Sources */,
-				29A8FD001EF0476E00AD2478 /* pugixml.cpp in Sources */,
 				29A8F89B1EF0476C00AD2478 /* TieAttributes.cpp in Sources */,
 				29A8EAFE1EF0476500AD2478 /* FrameNote.cpp in Sources */,
 				29A8F1521EF0476800AD2478 /* NoteheadAttributes.cpp in Sources */,
@@ -6942,7 +7089,6 @@
 				29A8EA0E1EF0476500AD2478 /* ExtendAttributes.cpp in Sources */,
 				29A8EC8E1EF0476600AD2478 /* HarmonyChordGroup.cpp in Sources */,
 				29A8FA4E1EF0476D00AD2478 /* Unstress.cpp in Sources */,
-				29A8FD501EF0476E00AD2478 /* PugiAttributeIterImpl.cpp in Sources */,
 				29A8E7341EF0476400AD2478 /* CreditImageAttributes.cpp in Sources */,
 				29A8E9E61EF0476500AD2478 /* EndLine.cpp in Sources */,
 				29A8FBA71EF0476D00AD2478 /* AccidentalMarkFunctions.cpp in Sources */,
@@ -7054,8 +7200,8 @@
 				29A8E66C1EF0476300AD2478 /* BracketAttributes.cpp in Sources */,
 				29A8F5351EF0476900AD2478 /* RootStep.cpp in Sources */,
 				29A8F7971EF0476B00AD2478 /* String.cpp in Sources */,
-				29A8FD6E1EF0476F00AD2478 /* PugiElementIterImpl.cpp in Sources */,
 				29A8E4B41EF0476300AD2478 /* ArpeggiateAttributes.cpp in Sources */,
+				9CD23C0D2340658C00EB6F13 /* XElementIterator.cpp in Sources */,
 				29A8EF4A1EF0476700AD2478 /* Metronome.cpp in Sources */,
 				29A8F5F31EF0476A00AD2478 /* Sign.cpp in Sources */,
 				29A8F5E91EF0476A00AD2478 /* Shake.cpp in Sources */,
@@ -7279,7 +7425,6 @@
 				29A8FC141EF0476E00AD2478 /* LcmGcd.cpp in Sources */,
 				29A8F3811EF0476900AD2478 /* PedalAlter.cpp in Sources */,
 				29A8F8181EF0476B00AD2478 /* SystemDividers.cpp in Sources */,
-				29A8FD9A1EF0476F00AD2478 /* XElementIterator.cpp in Sources */,
 				29A8E8EB1EF0476400AD2478 /* DownBow.cpp in Sources */,
 				29A8F7E61EF0476B00AD2478 /* Supports.cpp in Sources */,
 				29A8F4D01EF0476900AD2478 /* RepeatAttributes.cpp in Sources */,
@@ -7305,6 +7450,7 @@
 				29A8F0891EF0476700AD2478 /* MusicDataChoice.cpp in Sources */,
 				29A8F7FA1EF0476B00AD2478 /* Syllabic.cpp in Sources */,
 				29A8F8B81EF0476C00AD2478 /* Time.cpp in Sources */,
+				9CD23C342340658C00EB6F13 /* PugiElementIterImpl.cpp in Sources */,
 				29A8E3A51EF0476300AD2478 /* WordsData.cpp in Sources */,
 				29A8ED731EF0476600AD2478 /* Inversion.cpp in Sources */,
 				29A8EAB71EF0476500AD2478 /* FirstFretAttributes.cpp in Sources */,
@@ -7315,11 +7461,11 @@
 				29A8FBDD1EF0476E00AD2478 /* DirectionWriter.cpp in Sources */,
 				29A8F18D1EF0476800AD2478 /* Octave.cpp in Sources */,
 				29A8EFC11EF0476700AD2478 /* MidiChannel.cpp in Sources */,
-				29A8FD451EF0476E00AD2478 /* PugiAttribute.cpp in Sources */,
 				29A800641EF0876500AD2478 /* SoundID.cpp in Sources */,
 				29A8F6241EF0476A00AD2478 /* Slide.cpp in Sources */,
 				29A8E8731EF0476400AD2478 /* DisplayStep.cpp in Sources */,
 				29A8F67E1EF0476A00AD2478 /* SoundAttributes.cpp in Sources */,
+				9CD23C112340658C00EB6F13 /* PugiElement.cpp in Sources */,
 				29A8E76F1EF0476400AD2478 /* CueNoteGroup.cpp in Sources */,
 				29A8F2731EF0476800AD2478 /* OtherPlayAttributes.cpp in Sources */,
 				29A8EE811EF0476600AD2478 /* LinkAttributes.cpp in Sources */,
@@ -7354,7 +7500,6 @@
 				29A8F1791EF0476800AD2478 /* NoteSize.cpp in Sources */,
 				29A8F2C31EF0476800AD2478 /* Pan.cpp in Sources */,
 				29A8EA851EF0476500AD2478 /* FigureNumberAttributes.cpp in Sources */,
-				29A8FD631EF0476F00AD2478 /* PugiElement.cpp in Sources */,
 				29A8FBFB1EF0476E00AD2478 /* EncodingFunctions.cpp in Sources */,
 				29A8EC651EF0476500AD2478 /* HarmonicInfoChoice.cpp in Sources */,
 				29A8E3371EF0476300AD2478 /* NoteData.cpp in Sources */,
@@ -7379,6 +7524,7 @@
 				29A8F7281EF0476B00AD2478 /* Staves.cpp in Sources */,
 				29A8F3271EF0476800AD2478 /* PartName.cpp in Sources */,
 				29A8F6BA1EF0476A00AD2478 /* Staff.cpp in Sources */,
+				9CD23C5C2340658C00EB6F13 /* PugiDoc.cpp in Sources */,
 				29A8F0BB1EF0476700AD2478 /* NonArpeggiate.cpp in Sources */,
 				29A8EBB11EF0476500AD2478 /* GroupAbbreviationDisplayAttributes.cpp in Sources */,
 				29A8F5661EF0476A00AD2478 /* Scordatura.cpp in Sources */,
@@ -7388,6 +7534,7 @@
 				29A8F9D01EF0476C00AD2478 /* TupletDot.cpp in Sources */,
 				29A8E8911EF0476400AD2478 /* DisplayTextAttributes.cpp in Sources */,
 				29A8FAF71EF0476D00AD2478 /* WordsAttributes.cpp in Sources */,
+				9CD23C252340658C00EB6F13 /* PugiAttributeIterImpl.cpp in Sources */,
 				29A8ECDD1EF0476600AD2478 /* HoleClosedAttributes.cpp in Sources */,
 				29A8E6C51EF0476400AD2478 /* CircularArrow.cpp in Sources */,
 				29A8F98A1EF0476C00AD2478 /* TripleTongue.cpp in Sources */,
@@ -7433,6 +7580,7 @@
 				29A8F53E1EF0476A00AD2478 /* RootStepAttributes.cpp in Sources */,
 				29A8F6601EF0476A00AD2478 /* Solo.cpp in Sources */,
 				29A8F5201EF0476900AD2478 /* RootAlter.cpp in Sources */,
+				9CD23C4D2340658C00EB6F13 /* XFactory.cpp in Sources */,
 				29A8E57B1EF0476300AD2478 /* BassAlterAttributes.cpp in Sources */,
 				29A8E5F31EF0476300AD2478 /* BeatUnitDot.cpp in Sources */,
 				29A8EC6F1EF0476500AD2478 /* HarmonicTypeChoice.cpp in Sources */,
@@ -7474,11 +7622,9 @@
 				29A8E8D71EF0476400AD2478 /* Double.cpp in Sources */,
 				29A8E8051EF0476400AD2478 /* DelayedInvertedTurnAttributes.cpp in Sources */,
 				29A8F2911EF0476800AD2478 /* PageHeight.cpp in Sources */,
-				29A8FDA91EF0476F00AD2478 /* XFactory.cpp in Sources */,
 				29A8EF5D1EF0476700AD2478 /* MetronomeBeam.cpp in Sources */,
 				29A8F57A1EF0476A00AD2478 /* ScoreInstrument.cpp in Sources */,
 				29A8EDCD1EF0476600AD2478 /* KeyAlter.cpp in Sources */,
-				29A8FD591EF0476F00AD2478 /* PugiDoc.cpp in Sources */,
 				29A8F2FF1EF0476800AD2478 /* PartGroup.cpp in Sources */,
 				29A8F1BF1EF0476800AD2478 /* OffsetAttributes.cpp in Sources */,
 				29A8E5C11EF0476300AD2478 /* BeatRepeat.cpp in Sources */,
@@ -7508,7 +7654,6 @@
 				29A8E58F1EF0476300AD2478 /* BassStepAttributes.cpp in Sources */,
 				29A8ED231EF0476600AD2478 /* Instrument.cpp in Sources */,
 				29A8EB751EF0476500AD2478 /* GraceAttributes.cpp in Sources */,
-				29A8FD7C1EF0476F00AD2478 /* XAttributeIterator.cpp in Sources */,
 				29A8EE131EF0476600AD2478 /* KindAttributes.cpp in Sources */,
 				29A8F8AE1EF0476C00AD2478 /* TiedAttributes.cpp in Sources */,
 				29A8E7971EF0476400AD2478 /* DashesAttributes.cpp in Sources */,
@@ -7527,6 +7672,7 @@
 				29A8F2EB1EF0476800AD2478 /* PartAbbreviationDisplayAttributes.cpp in Sources */,
 				29A8E62F1EF0476300AD2478 /* BendAttributes.cpp in Sources */,
 				29A8F2CD1EF0476800AD2478 /* PartAbbreviation.cpp in Sources */,
+				9CD23C022340658C00EB6F13 /* XAttributeIterator.cpp in Sources */,
 				29A8FBF11EF0476E00AD2478 /* DynamicsWriter.cpp in Sources */,
 				29A8FCF01EF0476E00AD2478 /* TupletReader.cpp in Sources */,
 				29A8F3DB1EF0476900AD2478 /* PerMinuteOrBeatUnitChoice.cpp in Sources */,
@@ -7581,6 +7727,7 @@
 				29A8EB4D1EF0476500AD2478 /* Glass.cpp in Sources */,
 				29A8FA251EF0476C00AD2478 /* TurnAttributes.cpp in Sources */,
 				29A8FA9D1EF0476D00AD2478 /* WavyLine.cpp in Sources */,
+				9CD23C2F2340658C00EB6F13 /* PugiAttribute.cpp in Sources */,
 				29A8EDA51EF0476600AD2478 /* InvertedTurnAttributes.cpp in Sources */,
 				29A8F10B1EF0476700AD2478 /* Notations.cpp in Sources */,
 				29A8E8231EF0476400AD2478 /* DetachedLegato.cpp in Sources */,
@@ -7592,7 +7739,6 @@
 				29A8E3FF1EF0476300AD2478 /* Accent.cpp in Sources */,
 				29A8F27D1EF0476800AD2478 /* OtherTechnical.cpp in Sources */,
 				29A8F8401EF0476B00AD2478 /* TapAttributes.cpp in Sources */,
-				29A8FCFF1EF0476E00AD2478 /* pugixml.cpp in Sources */,
 				29A8F89A1EF0476C00AD2478 /* TieAttributes.cpp in Sources */,
 				29A8EAFD1EF0476500AD2478 /* FrameNote.cpp in Sources */,
 				29A8F1511EF0476800AD2478 /* NoteheadAttributes.cpp in Sources */,
@@ -7617,7 +7763,6 @@
 				29A8EA0D1EF0476500AD2478 /* ExtendAttributes.cpp in Sources */,
 				29A8EC8D1EF0476500AD2478 /* HarmonyChordGroup.cpp in Sources */,
 				29A8FA4D1EF0476D00AD2478 /* Unstress.cpp in Sources */,
-				29A8FD4F1EF0476E00AD2478 /* PugiAttributeIterImpl.cpp in Sources */,
 				29A8E7331EF0476400AD2478 /* CreditImageAttributes.cpp in Sources */,
 				29A8E9E51EF0476500AD2478 /* EndLine.cpp in Sources */,
 				29A8FBA61EF0476D00AD2478 /* AccidentalMarkFunctions.cpp in Sources */,
@@ -7729,8 +7874,8 @@
 				29A8E66B1EF0476300AD2478 /* BracketAttributes.cpp in Sources */,
 				29A8F5341EF0476900AD2478 /* RootStep.cpp in Sources */,
 				29A8F7961EF0476B00AD2478 /* String.cpp in Sources */,
-				29A8FD6D1EF0476F00AD2478 /* PugiElementIterImpl.cpp in Sources */,
 				29A8E4B31EF0476300AD2478 /* ArpeggiateAttributes.cpp in Sources */,
+				9CD23C0C2340658C00EB6F13 /* XElementIterator.cpp in Sources */,
 				29A8EF491EF0476700AD2478 /* Metronome.cpp in Sources */,
 				29A8F5F21EF0476A00AD2478 /* Sign.cpp in Sources */,
 				29A8F5E81EF0476A00AD2478 /* Shake.cpp in Sources */,
@@ -7903,6 +8048,7 @@
 				29A8FDE71EF0499200AD2478 /* AccordionMiddle.cpp in Sources */,
 				29A8FDE81EF0499200AD2478 /* AccordionRegistration.cpp in Sources */,
 				29A8FDE91EF0499200AD2478 /* AccordionRegistrationAttributes.cpp in Sources */,
+				9CD23C3D2340658C00EB6F13 /* pugixml.cpp in Sources */,
 				29A8FDEA1EF0499200AD2478 /* ActualNotes.cpp in Sources */,
 				29A8FDEB1EF0499200AD2478 /* Alter.cpp in Sources */,
 				29A8FDEC1EF0499200AD2478 /* Appearance.cpp in Sources */,
@@ -7979,6 +8125,7 @@
 				29A8FE321EF0499200AD2478 /* CreditWordsGroup.cpp in Sources */,
 				29A8FE331EF0499200AD2478 /* Cue.cpp in Sources */,
 				29A8FE341EF0499200AD2478 /* CueNoteGroup.cpp in Sources */,
+				9CD23C382340658C00EB6F13 /* PugiElementIterImpl.cpp in Sources */,
 				29A8FE351EF0499200AD2478 /* Damp.cpp in Sources */,
 				29A8FE361EF0499200AD2478 /* DampAll.cpp in Sources */,
 				29A8FE371EF0499200AD2478 /* Dashes.cpp in Sources */,
@@ -7993,6 +8140,7 @@
 				29A800681EF0876500AD2478 /* SoundID.cpp in Sources */,
 				29A8FE401EF0499200AD2478 /* DegreeValue.cpp in Sources */,
 				29A8FE411EF0499200AD2478 /* DegreeValueAttributes.cpp in Sources */,
+				9CD23C152340658C00EB6F13 /* PugiElement.cpp in Sources */,
 				29A8FE421EF0499200AD2478 /* DelayedInvertedTurn.cpp in Sources */,
 				29A8FE431EF0499200AD2478 /* DelayedInvertedTurnAttributes.cpp in Sources */,
 				29A8FE441EF0499200AD2478 /* DelayedTurn.cpp in Sources */,
@@ -8051,6 +8199,7 @@
 				29A8FE771EF0499200AD2478 /* ExtendAttributes.cpp in Sources */,
 				29A8FE781EF0499200AD2478 /* Eyeglasses.cpp in Sources */,
 				29A8FE791EF0499200AD2478 /* Falloff.cpp in Sources */,
+				9CD23C602340658C00EB6F13 /* PugiDoc.cpp in Sources */,
 				29A8FE7A1EF0499200AD2478 /* Feature.cpp in Sources */,
 				29A8FE7B1EF0499200AD2478 /* FeatureAttributes.cpp in Sources */,
 				29A8FE7C1EF0499200AD2478 /* Fermata.cpp in Sources */,
@@ -8060,6 +8209,7 @@
 				29A8FE801EF0499200AD2478 /* FiguredBass.cpp in Sources */,
 				29A8FE811EF0499200AD2478 /* FiguredBassAttributes.cpp in Sources */,
 				29A8FE821EF0499200AD2478 /* FigureNumber.cpp in Sources */,
+				9CD23C292340658C00EB6F13 /* PugiAttributeIterImpl.cpp in Sources */,
 				29A8FE831EF0499200AD2478 /* FigureNumberAttributes.cpp in Sources */,
 				29A8FE841EF0499200AD2478 /* Fingering.cpp in Sources */,
 				29A8FE851EF0499200AD2478 /* FingeringAttributes.cpp in Sources */,
@@ -8105,6 +8255,7 @@
 				29A8FEAD1EF0499200AD2478 /* HammerOn.cpp in Sources */,
 				29A8FEAE1EF0499200AD2478 /* HammerOnAttributes.cpp in Sources */,
 				29A8FEAF1EF0499200AD2478 /* Handbell.cpp in Sources */,
+				9CD23C512340658C00EB6F13 /* XFactory.cpp in Sources */,
 				29A8FEB01EF0499200AD2478 /* HandbellAttributes.cpp in Sources */,
 				29A8FEB11EF0499200AD2478 /* Harmonic.cpp in Sources */,
 				29A8FEB21EF0499200AD2478 /* HarmonicAttributes.cpp in Sources */,
@@ -8196,6 +8347,7 @@
 				29A8FF081EF0499200AD2478 /* MidiBank.cpp in Sources */,
 				29A8FF091EF0499200AD2478 /* MidiChannel.cpp in Sources */,
 				29A8FF0A1EF0499200AD2478 /* MidiDevice.cpp in Sources */,
+				9CD23C062340658C00EB6F13 /* XAttributeIterator.cpp in Sources */,
 				29A8FF0B1EF0499200AD2478 /* MidiDeviceAttributes.cpp in Sources */,
 				29A8FF0C1EF0499200AD2478 /* MidiDeviceInstrumentGroup.cpp in Sources */,
 				29A8FF0D1EF0499200AD2478 /* MidiInstrument.cpp in Sources */,
@@ -8250,6 +8402,7 @@
 				29A8FF3C1EF0499200AD2478 /* OffsetAttributes.cpp in Sources */,
 				29A8FF3D1EF0499200AD2478 /* OpenString.cpp in Sources */,
 				29A8FF3E1EF0499200AD2478 /* Opus.cpp in Sources */,
+				9CD23C332340658C00EB6F13 /* PugiAttribute.cpp in Sources */,
 				29A8FF3F1EF0499200AD2478 /* OpusAttributes.cpp in Sources */,
 				29A8FF401EF0499200AD2478 /* Ornaments.cpp in Sources */,
 				29A8FF411EF0499200AD2478 /* OrnamentsChoice.cpp in Sources */,
@@ -8398,6 +8551,7 @@
 				29A8FFD01EF0499300AD2478 /* Stopped.cpp in Sources */,
 				29A8FFD11EF0499300AD2478 /* Stress.cpp in Sources */,
 				29A8FFD21EF0499300AD2478 /* String.cpp in Sources */,
+				9CD23C102340658C00EB6F13 /* XElementIterator.cpp in Sources */,
 				29A8FFD31EF0499300AD2478 /* StringAttributes.cpp in Sources */,
 				29A8FFD41EF0499300AD2478 /* StringMute.cpp in Sources */,
 				29A8FFD51EF0499300AD2478 /* StringMuteAttributes.cpp in Sources */,
@@ -8529,17 +8683,8 @@
 				29A800521EF0499300AD2478 /* TechnicalFunctions.cpp in Sources */,
 				29A800531EF0499300AD2478 /* TimeReader.cpp in Sources */,
 				29A800541EF0499300AD2478 /* TupletReader.cpp in Sources */,
-				29A800551EF0499300AD2478 /* pugixml.cpp in Sources */,
 				29A800561EF0499300AD2478 /* Utility.cpp in Sources */,
 				29A800571EF0499300AD2478 /* UtilityImpl.cpp in Sources */,
-				29A800581EF0499300AD2478 /* PugiAttribute.cpp in Sources */,
-				29A800591EF0499300AD2478 /* PugiAttributeIterImpl.cpp in Sources */,
-				29A8005A1EF0499300AD2478 /* PugiDoc.cpp in Sources */,
-				29A8005B1EF0499300AD2478 /* PugiElement.cpp in Sources */,
-				29A8005C1EF0499300AD2478 /* PugiElementIterImpl.cpp in Sources */,
-				29A8005D1EF0499300AD2478 /* XAttributeIterator.cpp in Sources */,
-				29A8005E1EF0499300AD2478 /* XElementIterator.cpp in Sources */,
-				29A8005F1EF0499300AD2478 /* XFactory.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8578,6 +8723,7 @@
 				29A8EAA61EF0476500AD2478 /* Fingernails.cpp in Sources */,
 				29A8ED6C1EF0476600AD2478 /* InterchangeableAttributes.cpp in Sources */,
 				29A8E9021EF0476400AD2478 /* Dynamics.cpp in Sources */,
+				9CD23C3C2340658C00EB6F13 /* pugixml.cpp in Sources */,
 				29A8EC221EF0476500AD2478 /* GroupTime.cpp in Sources */,
 				29A8FA781EF0476D00AD2478 /* VirtualLibrary.cpp in Sources */,
 				29A8EA4C1EF0476500AD2478 /* FermataAttributes.cpp in Sources */,
@@ -8629,7 +8775,6 @@
 				29A8FC171EF0476E00AD2478 /* LcmGcd.cpp in Sources */,
 				29A8F3841EF0476900AD2478 /* PedalAlter.cpp in Sources */,
 				29A8F81B1EF0476B00AD2478 /* SystemDividers.cpp in Sources */,
-				29A8FD9D1EF0476F00AD2478 /* XElementIterator.cpp in Sources */,
 				29A8E8EE1EF0476400AD2478 /* DownBow.cpp in Sources */,
 				29A8F7E91EF0476B00AD2478 /* Supports.cpp in Sources */,
 				29A8F4D31EF0476900AD2478 /* RepeatAttributes.cpp in Sources */,
@@ -8655,6 +8800,7 @@
 				29A8F08C1EF0476700AD2478 /* MusicDataChoice.cpp in Sources */,
 				29A8F7FD1EF0476B00AD2478 /* Syllabic.cpp in Sources */,
 				29A8F8BB1EF0476C00AD2478 /* Time.cpp in Sources */,
+				9CD23C372340658C00EB6F13 /* PugiElementIterImpl.cpp in Sources */,
 				29A8E3A81EF0476300AD2478 /* WordsData.cpp in Sources */,
 				29A8ED761EF0476600AD2478 /* Inversion.cpp in Sources */,
 				29A8EABA1EF0476500AD2478 /* FirstFretAttributes.cpp in Sources */,
@@ -8665,11 +8811,11 @@
 				29A8FBE01EF0476E00AD2478 /* DirectionWriter.cpp in Sources */,
 				29A8F1901EF0476800AD2478 /* Octave.cpp in Sources */,
 				29A8EFC41EF0476700AD2478 /* MidiChannel.cpp in Sources */,
-				29A8FD481EF0476E00AD2478 /* PugiAttribute.cpp in Sources */,
 				29A800671EF0876500AD2478 /* SoundID.cpp in Sources */,
 				29A8F6271EF0476A00AD2478 /* Slide.cpp in Sources */,
 				29A8E8761EF0476400AD2478 /* DisplayStep.cpp in Sources */,
 				29A8F6811EF0476A00AD2478 /* SoundAttributes.cpp in Sources */,
+				9CD23C142340658C00EB6F13 /* PugiElement.cpp in Sources */,
 				29A8E7721EF0476400AD2478 /* CueNoteGroup.cpp in Sources */,
 				29A8F2761EF0476800AD2478 /* OtherPlayAttributes.cpp in Sources */,
 				29A8EE841EF0476600AD2478 /* LinkAttributes.cpp in Sources */,
@@ -8704,7 +8850,6 @@
 				29A8F17C1EF0476800AD2478 /* NoteSize.cpp in Sources */,
 				29A8F2C61EF0476800AD2478 /* Pan.cpp in Sources */,
 				29A8EA881EF0476500AD2478 /* FigureNumberAttributes.cpp in Sources */,
-				29A8FD661EF0476F00AD2478 /* PugiElement.cpp in Sources */,
 				29A8FBFE1EF0476E00AD2478 /* EncodingFunctions.cpp in Sources */,
 				29A8EC681EF0476500AD2478 /* HarmonicInfoChoice.cpp in Sources */,
 				29A8E33A1EF0476300AD2478 /* NoteData.cpp in Sources */,
@@ -8729,6 +8874,7 @@
 				29A8F72B1EF0476B00AD2478 /* Staves.cpp in Sources */,
 				29A8F32A1EF0476800AD2478 /* PartName.cpp in Sources */,
 				29A8F6BD1EF0476A00AD2478 /* Staff.cpp in Sources */,
+				9CD23C5F2340658C00EB6F13 /* PugiDoc.cpp in Sources */,
 				29A8F0BE1EF0476700AD2478 /* NonArpeggiate.cpp in Sources */,
 				29A8EBB41EF0476500AD2478 /* GroupAbbreviationDisplayAttributes.cpp in Sources */,
 				29A8F5691EF0476A00AD2478 /* Scordatura.cpp in Sources */,
@@ -8738,6 +8884,7 @@
 				29A8F9D31EF0476C00AD2478 /* TupletDot.cpp in Sources */,
 				29A8E8941EF0476400AD2478 /* DisplayTextAttributes.cpp in Sources */,
 				29A8FAFA1EF0476D00AD2478 /* WordsAttributes.cpp in Sources */,
+				9CD23C282340658C00EB6F13 /* PugiAttributeIterImpl.cpp in Sources */,
 				29A8ECE01EF0476600AD2478 /* HoleClosedAttributes.cpp in Sources */,
 				29A8E6C81EF0476400AD2478 /* CircularArrow.cpp in Sources */,
 				29A8F98D1EF0476C00AD2478 /* TripleTongue.cpp in Sources */,
@@ -8783,6 +8930,7 @@
 				29A8F5411EF0476A00AD2478 /* RootStepAttributes.cpp in Sources */,
 				29A8F6631EF0476A00AD2478 /* Solo.cpp in Sources */,
 				29A8F5231EF0476900AD2478 /* RootAlter.cpp in Sources */,
+				9CD23C502340658C00EB6F13 /* XFactory.cpp in Sources */,
 				29A8E57E1EF0476300AD2478 /* BassAlterAttributes.cpp in Sources */,
 				29A8E5F61EF0476300AD2478 /* BeatUnitDot.cpp in Sources */,
 				29A8EC721EF0476500AD2478 /* HarmonicTypeChoice.cpp in Sources */,
@@ -8824,11 +8972,9 @@
 				29A8E8DA1EF0476400AD2478 /* Double.cpp in Sources */,
 				29A8E8081EF0476400AD2478 /* DelayedInvertedTurnAttributes.cpp in Sources */,
 				29A8F2941EF0476800AD2478 /* PageHeight.cpp in Sources */,
-				29A8FDAC1EF0476F00AD2478 /* XFactory.cpp in Sources */,
 				29A8EF601EF0476700AD2478 /* MetronomeBeam.cpp in Sources */,
 				29A8F57D1EF0476A00AD2478 /* ScoreInstrument.cpp in Sources */,
 				29A8EDD01EF0476600AD2478 /* KeyAlter.cpp in Sources */,
-				29A8FD5C1EF0476F00AD2478 /* PugiDoc.cpp in Sources */,
 				29A8F3021EF0476800AD2478 /* PartGroup.cpp in Sources */,
 				29A8F1C21EF0476800AD2478 /* OffsetAttributes.cpp in Sources */,
 				29A8E5C41EF0476300AD2478 /* BeatRepeat.cpp in Sources */,
@@ -8858,7 +9004,6 @@
 				29A8E5921EF0476300AD2478 /* BassStepAttributes.cpp in Sources */,
 				29A8ED261EF0476600AD2478 /* Instrument.cpp in Sources */,
 				29A8EB781EF0476500AD2478 /* GraceAttributes.cpp in Sources */,
-				29A8FD7F1EF0476F00AD2478 /* XAttributeIterator.cpp in Sources */,
 				29A8EE161EF0476600AD2478 /* KindAttributes.cpp in Sources */,
 				29A8F8B11EF0476C00AD2478 /* TiedAttributes.cpp in Sources */,
 				29A8E79A1EF0476400AD2478 /* DashesAttributes.cpp in Sources */,
@@ -8877,6 +9022,7 @@
 				29A8F2EE1EF0476800AD2478 /* PartAbbreviationDisplayAttributes.cpp in Sources */,
 				29A8E6321EF0476300AD2478 /* BendAttributes.cpp in Sources */,
 				29A8F2D01EF0476800AD2478 /* PartAbbreviation.cpp in Sources */,
+				9CD23C052340658C00EB6F13 /* XAttributeIterator.cpp in Sources */,
 				29A8FBF41EF0476E00AD2478 /* DynamicsWriter.cpp in Sources */,
 				29A8FCF31EF0476E00AD2478 /* TupletReader.cpp in Sources */,
 				29A8F3DE1EF0476900AD2478 /* PerMinuteOrBeatUnitChoice.cpp in Sources */,
@@ -8931,6 +9077,7 @@
 				29A8EB501EF0476500AD2478 /* Glass.cpp in Sources */,
 				29A8FA281EF0476C00AD2478 /* TurnAttributes.cpp in Sources */,
 				29A8FAA01EF0476D00AD2478 /* WavyLine.cpp in Sources */,
+				9CD23C322340658C00EB6F13 /* PugiAttribute.cpp in Sources */,
 				29A8EDA81EF0476600AD2478 /* InvertedTurnAttributes.cpp in Sources */,
 				29A8F10E1EF0476700AD2478 /* Notations.cpp in Sources */,
 				29A8E8261EF0476400AD2478 /* DetachedLegato.cpp in Sources */,
@@ -8942,7 +9089,6 @@
 				29A8E4021EF0476300AD2478 /* Accent.cpp in Sources */,
 				29A8F2801EF0476800AD2478 /* OtherTechnical.cpp in Sources */,
 				29A8F8431EF0476B00AD2478 /* TapAttributes.cpp in Sources */,
-				29A8FD021EF0476E00AD2478 /* pugixml.cpp in Sources */,
 				29A8F89D1EF0476C00AD2478 /* TieAttributes.cpp in Sources */,
 				29A8EB001EF0476500AD2478 /* FrameNote.cpp in Sources */,
 				29A8F1541EF0476800AD2478 /* NoteheadAttributes.cpp in Sources */,
@@ -8967,7 +9113,6 @@
 				29A8EA101EF0476500AD2478 /* ExtendAttributes.cpp in Sources */,
 				29A8EC901EF0476600AD2478 /* HarmonyChordGroup.cpp in Sources */,
 				29A8FA501EF0476D00AD2478 /* Unstress.cpp in Sources */,
-				29A8FD521EF0476E00AD2478 /* PugiAttributeIterImpl.cpp in Sources */,
 				29A8E7361EF0476400AD2478 /* CreditImageAttributes.cpp in Sources */,
 				29A8E9E81EF0476500AD2478 /* EndLine.cpp in Sources */,
 				29A8FBA91EF0476D00AD2478 /* AccidentalMarkFunctions.cpp in Sources */,
@@ -9079,8 +9224,8 @@
 				29A8E66E1EF0476300AD2478 /* BracketAttributes.cpp in Sources */,
 				29A8F5371EF0476900AD2478 /* RootStep.cpp in Sources */,
 				29A8F7991EF0476B00AD2478 /* String.cpp in Sources */,
-				29A8FD701EF0476F00AD2478 /* PugiElementIterImpl.cpp in Sources */,
 				29A8E4B61EF0476300AD2478 /* ArpeggiateAttributes.cpp in Sources */,
+				9CD23C0F2340658C00EB6F13 /* XElementIterator.cpp in Sources */,
 				29A8EF4C1EF0476700AD2478 /* Metronome.cpp in Sources */,
 				29A8F5F51EF0476A00AD2478 /* Sign.cpp in Sources */,
 				29A8F5EB1EF0476A00AD2478 /* Shake.cpp in Sources */,
@@ -9253,6 +9398,7 @@
 				29A8EAA51EF0476500AD2478 /* Fingernails.cpp in Sources */,
 				29A8ED6B1EF0476600AD2478 /* InterchangeableAttributes.cpp in Sources */,
 				29A8E9011EF0476400AD2478 /* Dynamics.cpp in Sources */,
+				9CD23C3B2340658C00EB6F13 /* pugixml.cpp in Sources */,
 				29A8EC211EF0476500AD2478 /* GroupTime.cpp in Sources */,
 				29A8FA771EF0476D00AD2478 /* VirtualLibrary.cpp in Sources */,
 				29A8EA4B1EF0476500AD2478 /* FermataAttributes.cpp in Sources */,
@@ -9304,7 +9450,6 @@
 				29A8FC161EF0476E00AD2478 /* LcmGcd.cpp in Sources */,
 				29A8F3831EF0476900AD2478 /* PedalAlter.cpp in Sources */,
 				29A8F81A1EF0476B00AD2478 /* SystemDividers.cpp in Sources */,
-				29A8FD9C1EF0476F00AD2478 /* XElementIterator.cpp in Sources */,
 				29A8E8ED1EF0476400AD2478 /* DownBow.cpp in Sources */,
 				29A8F7E81EF0476B00AD2478 /* Supports.cpp in Sources */,
 				29A8F4D21EF0476900AD2478 /* RepeatAttributes.cpp in Sources */,
@@ -9330,6 +9475,7 @@
 				29A8F08B1EF0476700AD2478 /* MusicDataChoice.cpp in Sources */,
 				29A8F7FC1EF0476B00AD2478 /* Syllabic.cpp in Sources */,
 				29A8F8BA1EF0476C00AD2478 /* Time.cpp in Sources */,
+				9CD23C362340658C00EB6F13 /* PugiElementIterImpl.cpp in Sources */,
 				29A8E3A71EF0476300AD2478 /* WordsData.cpp in Sources */,
 				29A8ED751EF0476600AD2478 /* Inversion.cpp in Sources */,
 				29A8EAB91EF0476500AD2478 /* FirstFretAttributes.cpp in Sources */,
@@ -9340,11 +9486,11 @@
 				29A8FBDF1EF0476E00AD2478 /* DirectionWriter.cpp in Sources */,
 				29A8F18F1EF0476800AD2478 /* Octave.cpp in Sources */,
 				29A8EFC31EF0476700AD2478 /* MidiChannel.cpp in Sources */,
-				29A8FD471EF0476E00AD2478 /* PugiAttribute.cpp in Sources */,
 				29A800661EF0876500AD2478 /* SoundID.cpp in Sources */,
 				29A8F6261EF0476A00AD2478 /* Slide.cpp in Sources */,
 				29A8E8751EF0476400AD2478 /* DisplayStep.cpp in Sources */,
 				29A8F6801EF0476A00AD2478 /* SoundAttributes.cpp in Sources */,
+				9CD23C132340658C00EB6F13 /* PugiElement.cpp in Sources */,
 				29A8E7711EF0476400AD2478 /* CueNoteGroup.cpp in Sources */,
 				29A8F2751EF0476800AD2478 /* OtherPlayAttributes.cpp in Sources */,
 				29A8EE831EF0476600AD2478 /* LinkAttributes.cpp in Sources */,
@@ -9379,7 +9525,6 @@
 				29A8F17B1EF0476800AD2478 /* NoteSize.cpp in Sources */,
 				29A8F2C51EF0476800AD2478 /* Pan.cpp in Sources */,
 				29A8EA871EF0476500AD2478 /* FigureNumberAttributes.cpp in Sources */,
-				29A8FD651EF0476F00AD2478 /* PugiElement.cpp in Sources */,
 				29A8FBFD1EF0476E00AD2478 /* EncodingFunctions.cpp in Sources */,
 				29A8EC671EF0476500AD2478 /* HarmonicInfoChoice.cpp in Sources */,
 				29A8E3391EF0476300AD2478 /* NoteData.cpp in Sources */,
@@ -9404,6 +9549,7 @@
 				29A8F72A1EF0476B00AD2478 /* Staves.cpp in Sources */,
 				29A8F3291EF0476800AD2478 /* PartName.cpp in Sources */,
 				29A8F6BC1EF0476A00AD2478 /* Staff.cpp in Sources */,
+				9CD23C5E2340658C00EB6F13 /* PugiDoc.cpp in Sources */,
 				29A8F0BD1EF0476700AD2478 /* NonArpeggiate.cpp in Sources */,
 				29A8EBB31EF0476500AD2478 /* GroupAbbreviationDisplayAttributes.cpp in Sources */,
 				29A8F5681EF0476A00AD2478 /* Scordatura.cpp in Sources */,
@@ -9413,6 +9559,7 @@
 				29A8F9D21EF0476C00AD2478 /* TupletDot.cpp in Sources */,
 				29A8E8931EF0476400AD2478 /* DisplayTextAttributes.cpp in Sources */,
 				29A8FAF91EF0476D00AD2478 /* WordsAttributes.cpp in Sources */,
+				9CD23C272340658C00EB6F13 /* PugiAttributeIterImpl.cpp in Sources */,
 				29A8ECDF1EF0476600AD2478 /* HoleClosedAttributes.cpp in Sources */,
 				29A8E6C71EF0476400AD2478 /* CircularArrow.cpp in Sources */,
 				29A8F98C1EF0476C00AD2478 /* TripleTongue.cpp in Sources */,
@@ -9458,6 +9605,7 @@
 				29A8F5401EF0476A00AD2478 /* RootStepAttributes.cpp in Sources */,
 				29A8F6621EF0476A00AD2478 /* Solo.cpp in Sources */,
 				29A8F5221EF0476900AD2478 /* RootAlter.cpp in Sources */,
+				9CD23C4F2340658C00EB6F13 /* XFactory.cpp in Sources */,
 				29A8E57D1EF0476300AD2478 /* BassAlterAttributes.cpp in Sources */,
 				29A8E5F51EF0476300AD2478 /* BeatUnitDot.cpp in Sources */,
 				29A8EC711EF0476500AD2478 /* HarmonicTypeChoice.cpp in Sources */,
@@ -9499,11 +9647,9 @@
 				29A8E8D91EF0476400AD2478 /* Double.cpp in Sources */,
 				29A8E8071EF0476400AD2478 /* DelayedInvertedTurnAttributes.cpp in Sources */,
 				29A8F2931EF0476800AD2478 /* PageHeight.cpp in Sources */,
-				29A8FDAB1EF0476F00AD2478 /* XFactory.cpp in Sources */,
 				29A8EF5F1EF0476700AD2478 /* MetronomeBeam.cpp in Sources */,
 				29A8F57C1EF0476A00AD2478 /* ScoreInstrument.cpp in Sources */,
 				29A8EDCF1EF0476600AD2478 /* KeyAlter.cpp in Sources */,
-				29A8FD5B1EF0476F00AD2478 /* PugiDoc.cpp in Sources */,
 				29A8F3011EF0476800AD2478 /* PartGroup.cpp in Sources */,
 				29A8F1C11EF0476800AD2478 /* OffsetAttributes.cpp in Sources */,
 				29A8E5C31EF0476300AD2478 /* BeatRepeat.cpp in Sources */,
@@ -9533,7 +9679,6 @@
 				29A8E5911EF0476300AD2478 /* BassStepAttributes.cpp in Sources */,
 				29A8ED251EF0476600AD2478 /* Instrument.cpp in Sources */,
 				29A8EB771EF0476500AD2478 /* GraceAttributes.cpp in Sources */,
-				29A8FD7E1EF0476F00AD2478 /* XAttributeIterator.cpp in Sources */,
 				29A8EE151EF0476600AD2478 /* KindAttributes.cpp in Sources */,
 				29A8F8B01EF0476C00AD2478 /* TiedAttributes.cpp in Sources */,
 				29A8E7991EF0476400AD2478 /* DashesAttributes.cpp in Sources */,
@@ -9552,6 +9697,7 @@
 				29A8F2ED1EF0476800AD2478 /* PartAbbreviationDisplayAttributes.cpp in Sources */,
 				29A8E6311EF0476300AD2478 /* BendAttributes.cpp in Sources */,
 				29A8F2CF1EF0476800AD2478 /* PartAbbreviation.cpp in Sources */,
+				9CD23C042340658C00EB6F13 /* XAttributeIterator.cpp in Sources */,
 				29A8FBF31EF0476E00AD2478 /* DynamicsWriter.cpp in Sources */,
 				29A8FCF21EF0476E00AD2478 /* TupletReader.cpp in Sources */,
 				29A8F3DD1EF0476900AD2478 /* PerMinuteOrBeatUnitChoice.cpp in Sources */,
@@ -9606,6 +9752,7 @@
 				29A8EB4F1EF0476500AD2478 /* Glass.cpp in Sources */,
 				29A8FA271EF0476C00AD2478 /* TurnAttributes.cpp in Sources */,
 				29A8FA9F1EF0476D00AD2478 /* WavyLine.cpp in Sources */,
+				9CD23C312340658C00EB6F13 /* PugiAttribute.cpp in Sources */,
 				29A8EDA71EF0476600AD2478 /* InvertedTurnAttributes.cpp in Sources */,
 				29A8F10D1EF0476700AD2478 /* Notations.cpp in Sources */,
 				29A8E8251EF0476400AD2478 /* DetachedLegato.cpp in Sources */,
@@ -9617,7 +9764,6 @@
 				29A8E4011EF0476300AD2478 /* Accent.cpp in Sources */,
 				29A8F27F1EF0476800AD2478 /* OtherTechnical.cpp in Sources */,
 				29A8F8421EF0476B00AD2478 /* TapAttributes.cpp in Sources */,
-				29A8FD011EF0476E00AD2478 /* pugixml.cpp in Sources */,
 				29A8F89C1EF0476C00AD2478 /* TieAttributes.cpp in Sources */,
 				29A8EAFF1EF0476500AD2478 /* FrameNote.cpp in Sources */,
 				29A8F1531EF0476800AD2478 /* NoteheadAttributes.cpp in Sources */,
@@ -9642,7 +9788,6 @@
 				29A8EA0F1EF0476500AD2478 /* ExtendAttributes.cpp in Sources */,
 				29A8EC8F1EF0476600AD2478 /* HarmonyChordGroup.cpp in Sources */,
 				29A8FA4F1EF0476D00AD2478 /* Unstress.cpp in Sources */,
-				29A8FD511EF0476E00AD2478 /* PugiAttributeIterImpl.cpp in Sources */,
 				29A8E7351EF0476400AD2478 /* CreditImageAttributes.cpp in Sources */,
 				29A8E9E71EF0476500AD2478 /* EndLine.cpp in Sources */,
 				29A8FBA81EF0476D00AD2478 /* AccidentalMarkFunctions.cpp in Sources */,
@@ -9754,8 +9899,8 @@
 				29A8E66D1EF0476300AD2478 /* BracketAttributes.cpp in Sources */,
 				29A8F5361EF0476900AD2478 /* RootStep.cpp in Sources */,
 				29A8F7981EF0476B00AD2478 /* String.cpp in Sources */,
-				29A8FD6F1EF0476F00AD2478 /* PugiElementIterImpl.cpp in Sources */,
 				29A8E4B51EF0476300AD2478 /* ArpeggiateAttributes.cpp in Sources */,
+				9CD23C0E2340658C00EB6F13 /* XElementIterator.cpp in Sources */,
 				29A8EF4B1EF0476700AD2478 /* Metronome.cpp in Sources */,
 				29A8F5F41EF0476A00AD2478 /* Sign.cpp in Sources */,
 				29A8F5EA1EF0476A00AD2478 /* Shake.cpp in Sources */,
@@ -10023,7 +10168,7 @@
 				);
 				OTHER_LDFLAGS = "";
 				SDKROOT = "";
-				USER_HEADER_SEARCH_PATHS = "$PROJECT_DIR/../Sourcecode/private $PROJECT_DIR/../Sourcecode/include";
+				USER_HEADER_SEARCH_PATHS = "$PROJECT_DIR/../Sourcecode/private $PROJECT_DIR/../Sourcecode/include $PROJECT_DIR/../Sourcecode/private/extern/ezxml/src/include $PROJECT_DIR/../Sourcecode/private/extern/ezxml/src/private";
 			};
 			name = Debug;
 		};
@@ -10097,7 +10242,7 @@
 				);
 				OTHER_LDFLAGS = "";
 				SDKROOT = "";
-				USER_HEADER_SEARCH_PATHS = "$PROJECT_DIR/../Sourcecode/private $PROJECT_DIR/../Sourcecode/include";
+				USER_HEADER_SEARCH_PATHS = "$PROJECT_DIR/../Sourcecode/private $PROJECT_DIR/../Sourcecode/include $PROJECT_DIR/../Sourcecode/private/extern/ezxml/src/include $PROJECT_DIR/../Sourcecode/private/extern/ezxml/src/private";
 			};
 			name = Release;
 		};
