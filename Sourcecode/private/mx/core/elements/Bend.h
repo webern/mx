@@ -55,7 +55,7 @@ namespace mx
             void setHasWithBar( const bool value );
 
             private:
-            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
+            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
 
         private:
             BendAttributesPtr myAttributes;

@@ -27,7 +27,7 @@ namespace mx
         }
 
 
-        bool BeatUnitDot::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool BeatUnitDot::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             MX_UNUSED( message );
             MX_UNUSED( xelement );

@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool Ensemble::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Ensemble::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             MX_UNUSED( message );
             MX_UNUSED( xelement );

@@ -136,7 +136,7 @@ namespace mx
         }
 
 
-        bool Accord::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Accord::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

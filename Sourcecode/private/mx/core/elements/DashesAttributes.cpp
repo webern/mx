@@ -60,7 +60,7 @@ namespace mx
         }
 
 
-        bool DashesAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool DashesAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "DashesAttributes";
             bool isSuccess = true;

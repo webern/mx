@@ -32,7 +32,7 @@ namespace mx
         }
 
 
-        bool OtherAppearanceAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool OtherAppearanceAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "OtherAppearanceAttributes";
             bool isSuccess = true;

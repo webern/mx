@@ -316,7 +316,7 @@ namespace mx
         }
         
 
-        bool Direction::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Direction::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
             bool isDirectionTypeFound = false;
@@ -336,7 +336,7 @@ namespace mx
         }
         
         
-        bool Direction::importDirectionTypeSet( std::ostream& message, xml::XElementIterator& iter, xml::XElementIterator& endIter, bool& isSuccess, bool& isFound )
+        bool Direction::importDirectionTypeSet( std::ostream& message, ::ezxml::XElementIterator& iter, ::ezxml::XElementIterator& endIter, bool& isSuccess, bool& isFound )
         {
             if( iter == endIter )
             {
@@ -410,7 +410,7 @@ namespace mx
         }
         
         
-        DirectionTypePtr Direction::createDirectionType( std::ostream& message, xml::XElementIterator& subIter, xml::XElementIterator& subIterEnd, bool& isSuccess )
+        DirectionTypePtr Direction::createDirectionType( std::ostream& message, ::ezxml::XElementIterator& subIter, ::ezxml::XElementIterator& subIterEnd, bool& isSuccess )
         {
             auto directionType = makeDirectionType();
             

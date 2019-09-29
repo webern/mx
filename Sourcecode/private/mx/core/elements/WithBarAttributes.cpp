@@ -64,7 +64,7 @@ namespace mx
         }
 
 
-        bool WithBarAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool WithBarAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "WithBarAttributes";
             bool isSuccess = true;

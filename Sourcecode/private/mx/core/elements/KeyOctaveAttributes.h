@@ -32,7 +32,7 @@ namespace mx
             bool hasCancel;
 
             private:
-            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
+            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
         };
     }
 }

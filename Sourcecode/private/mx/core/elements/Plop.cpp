@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool Plop::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Plop::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

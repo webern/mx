@@ -316,7 +316,7 @@ namespace mx
         }
 
 
-        bool Defaults::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Defaults::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
 

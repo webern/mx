@@ -73,7 +73,7 @@ namespace mx
             void setHasStaffSize( const bool value );
 
             private:
-            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
+            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
 
         private:
             StaffDetailsAttributesPtr myAttributes;

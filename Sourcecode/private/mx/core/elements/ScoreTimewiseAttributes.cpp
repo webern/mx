@@ -4,8 +4,8 @@
 
 #include "mx/core/elements/ScoreTimewiseAttributes.h"
 #include "mx/core/FromXElement.h"
-#include "mx/xml/XElement.h"
-#include "mx/xml/XAttributeIterator.h"
+#include "ezxml/XElement.h"
+#include "ezxml/XAttributeIterator.h"
 #include <iostream>
 
 namespace mx
@@ -34,7 +34,7 @@ namespace mx
         }
 
 
-        bool ScoreTimewiseAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool ScoreTimewiseAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "ScoreTimewiseAttributes";
             bool isSuccess = true;

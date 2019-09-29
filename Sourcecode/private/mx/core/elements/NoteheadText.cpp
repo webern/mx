@@ -89,7 +89,7 @@ namespace mx
         }
 
 
-        bool NoteheadText::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool NoteheadText::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
             bool isFirstItemAdded = false;

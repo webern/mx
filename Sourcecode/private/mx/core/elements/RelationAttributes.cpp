@@ -32,7 +32,7 @@ namespace mx
         }
 
 
-        bool RelationAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool RelationAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "RelationAttributes";
             bool isSuccess = true;

@@ -238,14 +238,14 @@ namespace mx
         }
 #endif
         
-        bool Credit::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Credit::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );
             bool isCreditImageOrCreditWordsFound = false;
             
-            xml::XElementIterator i = xelement.begin();
-            xml::XElementIterator endIter = xelement.end();
+            ::ezxml::XElementIterator i = xelement.begin();
+            ::ezxml::XElementIterator endIter = xelement.end();
             MX_CREDIT_RETURN_IF_END;
             
             if( i->getName() == "credit-type" )

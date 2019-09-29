@@ -40,7 +40,7 @@ namespace mx
         }
 
 
-        bool LyricLanguageAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool LyricLanguageAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "LyricLanguageAttributes";
             bool isSuccess = true;

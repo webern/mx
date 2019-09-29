@@ -60,7 +60,7 @@ namespace mx
         }
 
 
-        bool InversionAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool InversionAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "InversionAttributes";
             bool isSuccess = true;

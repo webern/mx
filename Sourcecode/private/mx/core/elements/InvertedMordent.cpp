@@ -62,7 +62,7 @@ namespace mx
         }
         
         
-        bool InvertedMordent::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool InvertedMordent::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

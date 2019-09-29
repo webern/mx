@@ -175,7 +175,7 @@ namespace mx
         }
 
 
-        bool EncodingChoice::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool EncodingChoice::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             MX_CHOICE_IF( encodingDate, "encoding-date", EncodingDate );
             MX_CHOICE_IF( encoder, "encoder", Encoder );

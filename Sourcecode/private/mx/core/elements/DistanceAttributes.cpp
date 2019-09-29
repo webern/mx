@@ -32,7 +32,7 @@ namespace mx
         }
 
 
-        bool DistanceAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool DistanceAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "DistanceAttributes";
             bool isSuccess = true;

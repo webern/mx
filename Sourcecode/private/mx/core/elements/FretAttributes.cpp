@@ -44,7 +44,7 @@ namespace mx
         }
 
 
-        bool FretAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool FretAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "FretAttributes";
             bool isSuccess = true;

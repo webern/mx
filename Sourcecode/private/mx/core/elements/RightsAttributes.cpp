@@ -32,7 +32,7 @@ namespace mx
         }
 
 
-        bool RightsAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool RightsAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "RightsAttributes";
             bool isSuccess = true;

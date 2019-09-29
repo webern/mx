@@ -96,7 +96,7 @@ namespace mx
         }
 
 
-        bool InvertedTurnAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool InvertedTurnAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "InvertedTurnAttributes";
             bool isSuccess = true;

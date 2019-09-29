@@ -11,9 +11,9 @@
 #include "mxtest/file/StupidFileFunctions.h"
 #include "mxtest/file/MxFileRepository.h"
 #include "mx/utility/Parse.h"
-#include "mx/xml/XFactory.h"
-#include "mx/xml/XDoc.h"
-#include "mx/xml/XAttributeIterator.h"
+#include "ezxml/XFactory.h"
+#include "ezxml/XDoc.h"
+#include "ezxml/XAttributeIterator.h"
 
 #include <map>
 #include <cstdio>
@@ -23,15 +23,15 @@ namespace mxtest
     
     void generateExpectedFile( const std::string& subdir, const std::string& fileName );
     
-    mx::xml::XDocPtr readInputFile( const std::string& subdir, const std::string& fileName );
+    ::ezxml::XDocPtr readInputFile( const std::string& subdir, const std::string& fileName );
     
-    void setXmlDeclaration( mx::xml::XDocPtr& xdoc );
+    void setXmlDeclaration( ::ezxml::XDocPtr& xdoc );
     
-    bool getIsScorePartwise( const mx::xml::XDocPtr& xdoc );
+    bool getIsScorePartwise( const ::ezxml::XDocPtr& xdoc );
     
-    void setDoctype( mx::xml::XDocPtr& xdoc, bool isScorePartwise );
+    void setDoctype( ::ezxml::XDocPtr& xdoc, bool isScorePartwise );
     
-    void setRootMusicXmlVersion( mx::xml::XDocPtr& xdoc, bool isScorePartwsise );
+    void setRootMusicXmlVersion( ::ezxml::XDocPtr& xdoc, bool isScorePartwsise );
     
     std::string getExpectedFileName( const std::string& subdir, const std::string& fileName );
     

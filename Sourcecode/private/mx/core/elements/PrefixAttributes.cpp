@@ -60,7 +60,7 @@ namespace mx
         }
 
 
-        bool PrefixAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool PrefixAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "PrefixAttributes";
             bool isSuccess = true;

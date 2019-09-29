@@ -63,7 +63,7 @@ namespace mx
         }
 
 
-        bool StrongAccent::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool StrongAccent::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

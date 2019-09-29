@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool Staff::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Staff::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             MX_UNUSED( message );
             MX_UNUSED( xelement );

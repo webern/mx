@@ -3,13 +3,11 @@
 // Distributed under the MIT License
 
 #include "mx/core/Document.h"
-#include "mx/xml/XFactory.h"
-#include "mx/xml/XAttribute.h"
-#include "mx/xml/XElementIterator.h"
-#include "mx/xml/XAttributeIterator.h"
+#include "ezxml/XFactory.h"
+#include "ezxml/XAttribute.h"
+#include "ezxml/XElementIterator.h"
+#include "ezxml/XAttributeIterator.h"
 #include "mx/core/ScoreConversions.h"
-
-using namespace mx::xml;
 
 namespace mx
 {
@@ -136,7 +134,7 @@ namespace mx
         }
         
         
-        void Document::toXDoc( xml::XDoc& outXDoc ) const
+        void Document::toXDoc( ::ezxml::XDoc& outXDoc ) const
         {
             std::stringstream ss;
             toStream( ss );
@@ -161,7 +159,7 @@ namespace mx
         }
         
         
-        bool Document::fromXDoc( std::ostream& messages, const xml::XDoc& inXDoc )
+        bool Document::fromXDoc( std::ostream& messages, const ::ezxml::XDoc& inXDoc )
         {
             auto root = inXDoc.getRoot();
             if( inXDoc.getRoot()->getName() == "score-partwise" )

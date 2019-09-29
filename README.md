@@ -294,13 +294,13 @@ The MusicXML classes are tightly bound to the musicxml.xsd specification.  Music
 
 ```
 using namespace mx::core;
-using namespace mx::xml;
+using namespace ezxml;
 using namespace mx::utility;
 ```
 
 The `mx::core` namespace contains the MusicXML representation objects such as elements and attributes.  In the musicxml.xsd there are many cases of 'xs:choice' or 'xs:group' being used.  These constructs are typically represented in the mx::core class structure the same way that they are found in the musicxml.xsd specification.  The interfaces in this namespace are relatively stable, however they are tightly bound to MusicXML's specification and thus they will change when it comes time to support a future version of MusicXML.
 
-The `mx::xml` namespace contains generic XML DOM functionality.  Under the hood [pugixml](http://pugixml.org/) is being used.  See the XML DOM section for more information.
+The `::ezxml::` namespace contains generic XML DOM functionality.  Under the hood [pugixml](http://pugixml.org/) is being used.  See the XML DOM section for more information.
 
 The `mx::utility` namespace contains the beginnings of an api for simplifying the interactions with MusicXML.  This namespace and its interfaces will change completely and should be avoided for now.
 
@@ -528,20 +528,20 @@ private:
 
 When `getChoice() == BendChoice::Choice::preBend` then we will see `<pre-bend/>` in the XML, but when `getChoice() == BendChoice::Choice::postBend` then we will see `<post-bend/>` in the XML.
 
-### XML DOM (mx::xml)
+### XML DOM (::ezxml::)
 
-Any XML document can be read and manipulated with the classes in the `mx::xml` namespace.  Most notably, look at the following pure virtual interfaces XDoc, XElement, XAttribute.  Also look at the STL-compliant iterators XElementIterator and XAttributeIterator.
+Any XML document can be read and manipulated with the classes in the `::ezxml::` namespace.  Most notably, look at the following pure virtual interfaces XDoc, XElement, XAttribute.  Also look at the STL-compliant iterators XElementIterator and XAttributeIterator.
 
 These interfaces are designed to wrap any underlying XML DOM software so that `mx::core` does not care or know about the XML DOM code.  A set of implementation classes wrapping pugixml are provided, but if you need to use, say Xerces or RapidXML, you can look at the PugiElement, PugiDoc, etc classes and wrap whatever library you need.
 
-Here's how you can read a MusicXML document into `mx::core` classes by way of `mx::xml`.
+Here's how you can read a MusicXML document into `mx::core` classes by way of `::ezxml::`.
 
 ```
 #include "mx/core/Document.h"
 #include "mx/utility/Utility.h"
 #include "functions.h"
-#include "mx/xml/XFactory.h"
-#include "mx/xml/XDoc.h"
+#include "ezxml/XFactory.h"
+#include "ezxml/XDoc.h"
 
 #include <iostream>
 #include <string>
@@ -551,7 +551,7 @@ int main(int argc, const char *argv[])
 {
     // allocate the objects
     mx::core::DocumentPtr mxDoc = makeDocument();
-    mx::xml::XDocPtr xmlDoc = mx::xml::XFactory::makeXDoc();
+    ::ezxml::::XDocPtr xmlDoc = ::ezxml::::XFactory::makeXDoc();
     
     // read a MusicXML file into the XML DOM structure
     xmlDoc->loadFile( "music.xml" );
@@ -684,7 +684,7 @@ Each of these test input files has been "scrubbed" using the XDoc classes (i.e. 
 
 Currently this tester is a "wire-up".  All 263 of these round-trip import/export tests fail because the implementation does not yet exist in mx::core.  The next body of work will be the mx::core implementation.
 
-**Historical Note: June 20, 2016:** A simple interface to for XML DOM has been added in the mx::xml namespace.  The key classes (pure virtual) are XDoc, XElement, XAttribute, XElementIterator, XAttributeIterator.  These are implemented by concrete classes PugiDoc, PugiElement, etc. which serve as a wrapper for the pugixml library (http://pugixml.org/).  Although this is a static library, a class XFactory can be used to create a Pugi instance of the XDoc interface.
+**Historical Note: June 20, 2016:** A simple interface to for XML DOM has been added in the ::ezxml:: namespace.  The key classes (pure virtual) are XDoc, XElement, XAttribute, XElementIterator, XAttributeIterator.  These are implemented by concrete classes PugiDoc, PugiElement, etc. which serve as a wrapper for the pugixml library (http://pugixml.org/).  Although this is a static library, a class XFactory can be used to create a Pugi instance of the XDoc interface.
 
 The idea behind using a pure virtual interface is that the client of the Music XML Class Library can, in theory choose a different XML DOM library (Xerces, TinyXML, etc) and wrap with instances of the XDoc interfaces and the Music XML core classes will not know the difference.
 

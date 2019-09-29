@@ -6,7 +6,7 @@
 #include "mx/impl/ScoreReader.h"
 #include "mx/impl/ScoreWriter.h"
 #include "mx/core/Document.h"
-#include "mx/xml/XFactory.h"
+#include "ezxml/XFactory.h"
 
 #define LOCK_DOCUMENT_MANAGER std::lock_guard<std::mutex> lock(myImpl->myMutex);
 
@@ -55,7 +55,7 @@ namespace mx
         
         int DocumentManager::createFromFile( const std::string& filePath )
         {
-            auto xdoc = mx::xml::XFactory::makeXDoc();
+            auto xdoc = ::ezxml::XFactory::makeXDoc();
             xdoc->loadFile( filePath );
 
 #ifdef DEBUG_HELL
@@ -80,7 +80,7 @@ namespace mx
         
         int DocumentManager::createFromStream( std::istream& stream )
         {
-            auto xdoc = mx::xml::XFactory::makeXDoc();
+            auto xdoc = ::ezxml::XFactory::makeXDoc();
             xdoc->loadStream( stream );
             
             auto mxdoc = mx::core::makeDocument();
@@ -129,7 +129,7 @@ namespace mx
                 return;
             }
             
-            auto xdoc = mx::xml::XFactory::makeXDoc();
+            auto xdoc = ::ezxml::XFactory::makeXDoc();
             it->second->toXDoc( *xdoc );
             xdoc->saveFile( filePath );
         }
@@ -146,7 +146,7 @@ namespace mx
                 return;
             }
             
-            auto xdoc = mx::xml::XFactory::makeXDoc();
+            auto xdoc = ::ezxml::XFactory::makeXDoc();
             it->second->toXDoc( *xdoc );
             xdoc->saveStream( stream );
         }

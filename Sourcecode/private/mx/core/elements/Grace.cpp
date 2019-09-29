@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool Grace::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Grace::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

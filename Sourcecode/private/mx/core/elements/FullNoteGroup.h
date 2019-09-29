@@ -44,7 +44,7 @@ namespace mx
             void setFullNoteTypeChoice( const FullNoteTypeChoicePtr& value );
 
             private:
-            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
+            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
 
         private:
             MX_MUTEX

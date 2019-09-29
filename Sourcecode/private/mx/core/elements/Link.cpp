@@ -56,7 +56,7 @@ namespace mx
         }
 
 
-        bool Link::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Link::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             MX_UNUSED( message );
             return myAttributes->fromXElement( message, xelement );

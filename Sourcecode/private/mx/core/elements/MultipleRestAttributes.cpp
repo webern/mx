@@ -32,7 +32,7 @@ namespace mx
         }
 
 
-        bool MultipleRestAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool MultipleRestAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "MultipleRestAttributes";
             bool isSuccess = true;

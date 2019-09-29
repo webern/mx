@@ -112,7 +112,7 @@ namespace mx
         }
 
 
-        bool CreditWordsAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool CreditWordsAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "CreditWordsAttributes";
             bool isSuccess = true;

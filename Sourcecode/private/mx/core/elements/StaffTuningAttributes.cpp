@@ -32,7 +32,7 @@ namespace mx
         }
 
 
-        bool StaffTuningAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool StaffTuningAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "StaffTuningAttributes";
             bool isSuccess = true;

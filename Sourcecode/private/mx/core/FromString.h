@@ -3,8 +3,8 @@
 // Distributed under the MIT License
 
 #pragma once
-#include "mx/xml/XElement.h"
-#include "mx/xml/XAttributeIterator.h"
+#include "ezxml/XElement.h"
+#include "ezxml/XAttributeIterator.h"
 #include <iosfwd>
 
 namespace mx

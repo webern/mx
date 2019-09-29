@@ -38,7 +38,7 @@ namespace mx
             void setValue( const Midi16384& value );
 
             private:
-            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
+            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
 
         private:
             Midi16384 myValue;

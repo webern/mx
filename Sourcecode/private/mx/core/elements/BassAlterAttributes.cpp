@@ -68,7 +68,7 @@ namespace mx
         }
 
 
-        bool BassAlterAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool BassAlterAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "BassAlterAttributes";
             bool isSuccess = true;

@@ -40,7 +40,7 @@ namespace mx
         }
 
 
-        bool BeamAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool BeamAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "BeamAttributes";
             bool isSuccess = true;

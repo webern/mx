@@ -146,7 +146,7 @@ namespace mx
         }
 
 
-        bool Key::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Key::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );
@@ -163,7 +163,7 @@ namespace mx
         }
 
         
-        bool Key::importTraditionalKey( std::ostream& message, xml::XElementIterator& iter, xml::XElementIterator& endIter, bool& isSuccess )
+        bool Key::importTraditionalKey( std::ostream& message, ::ezxml::XElementIterator& iter, ::ezxml::XElementIterator& endIter, bool& isSuccess )
         {
             if( iter == endIter )
             {
@@ -212,7 +212,7 @@ namespace mx
         }
 
         
-        bool Key::importNonTraditionalKey( std::ostream& message, xml::XElementIterator& iter, xml::XElementIterator& endIter, bool& isSuccess )
+        bool Key::importNonTraditionalKey( std::ostream& message, ::ezxml::XElementIterator& iter, ::ezxml::XElementIterator& endIter, bool& isSuccess )
         {
             if( iter == endIter )
             {

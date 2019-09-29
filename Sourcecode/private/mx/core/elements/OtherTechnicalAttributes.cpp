@@ -64,7 +64,7 @@ namespace mx
         }
 
 
-        bool OtherTechnicalAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool OtherTechnicalAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "OtherTechnicalAttributes";
             bool isSuccess = true;

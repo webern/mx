@@ -72,7 +72,7 @@ namespace mx
         }
 
 
-        bool HeelAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool HeelAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "HeelAttributes";
             bool isSuccess = true;

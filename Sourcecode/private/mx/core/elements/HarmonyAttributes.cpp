@@ -80,7 +80,7 @@ namespace mx
         }
 
 
-        bool HarmonyAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool HarmonyAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "HarmonyAttributes";
             bool isSuccess = true;

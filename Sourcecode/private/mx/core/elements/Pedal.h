@@ -36,7 +36,7 @@ namespace mx
             void setAttributes( const PedalAttributesPtr& attributes );
 
             private:
-            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
+            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
 
         private:
             PedalAttributesPtr myAttributes;

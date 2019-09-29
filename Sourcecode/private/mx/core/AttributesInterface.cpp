@@ -22,7 +22,7 @@ namespace mx
 
 
         bool
-        AttributesInterface::fromXElement( std::ostream& message, xml::XElement& xelement )
+        AttributesInterface::fromXElement( std::ostream& message, ::ezxml::XElement& xelement )
         {
             return this->fromXElementImpl( message, xelement );
         }

@@ -4,10 +4,10 @@
 
 // The absolute path to the root of the repository.
 #ifndef EZXML_ROOT
-#define EZXML_ROOT "/Users/brigmatt/repos/ezxml"
+#define EZXML_ROOT "/Users/brigmatt/repos/mx/Sourcecode/private/extern/ezxml"
 #endif
 
 // The absolute path to the binary output directory.
 #ifndef EZXML_BIN
-#define EZXML_BIN "/Users/brigmatt/repos/ezxml/cmake-build-debug"
+#define EZXML_BIN "/Users/brigmatt/repos/mx/cmake-build-debug"
 #endif

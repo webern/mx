@@ -6,10 +6,10 @@
 #ifdef MX_COMPILE_XML_TESTS
 
 #include "cpul/cpulTestHarness.h"
-#include "mx/xml/XFactory.h"
-#include "mx/xml/XDoc.h"
-#include "mx/xml/XElement.h"
-#include "mx/xml/XElementIterator.h"
+#include "ezxml/XFactory.h"
+#include "ezxml/XDoc.h"
+#include "ezxml/XElement.h"
+#include "ezxml/XElementIterator.h"
 #include "mxtest/xml/FakeXml.h"
 
 
@@ -17,11 +17,11 @@
 #include <algorithm>
 
 using namespace std;
-using namespace mx::xml;
+using namespace ezxml;
 
 namespace
 {
-    inline mx::xml::XDocCPtr doc()
+    inline ::ezxml::XDocCPtr doc()
     {
         auto xdoc = XFactory::makeXDoc();
         std::istringstream is( mxtest::fakeXml );

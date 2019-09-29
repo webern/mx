@@ -558,10 +558,10 @@ namespace mx
         }
         
         
-        bool Properties::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Properties::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
-            xml::XElementIterator end = xelement.end();
+            ::ezxml::XElementIterator end = xelement.end();
 
             bool hasFootnote = false;
             bool hasLevel = false;
