@@ -16,11 +16,11 @@ Badges seem to be [broken](https://github.com/github/markup/issues/224), go to t
 
 ## Introduction
 
-This project is a C++ library for working with MusicXML files.  MusicXML files are represented in a statically typed objects.  This structure can be serialized and deserialize to/from MusicXML.
+This project is a C++ library for working with MusicXML files.  MusicXML files are represented as statically typed objects.  This structure can be serialized and deserialize to/from MusicXML.
 
 ## Compiling
 
-The project is working with:
+The project is tested with the following:
 * Xcode 10.1 Apple LLVM version 10.0.0 (clang-1000.11.45.5)
 * g++ (Debian 6.3.0-18+deb9u1) 6.3.0 20170516
 * cmake version 3.7.2
@@ -48,11 +48,11 @@ make -j6
 ./MxTest
 ```
 
-The Xcode project which is checked-in to the repo also has targets for iOS and macOS frameworks and dylibs, but these are not specified in the cmake file.
+The Xcode project (checked-in to the repo) has targets for iOS and macOS frameworks and dylibs.  These are not specified in the cmake file.
 
 ## API
 
-The `mx::api` namespace is intended to be a (somewhat) simplified structural representation of MusicXML. It should be slightly more intuitive than manipulating the DOM representation directly.
+The `mx::api` namespace is intended to be a simplified structural representation of MusicXML. It should be slightly more intuitive than manipulating the DOM representation directly. In particular, voices and time positions are more explicitly managed.
 
 #### Writing MusicXML with `mx::api`
 
@@ -288,14 +288,14 @@ int main(int argc, const char * argv[])
 
 ## Core Implementation Details
 
-The MusicXML classes are tightly bound to the musicxml.xsd specification.  MusicXML can be challenging to use and the mx class structure mirrors the complexity of the MusicXML specification.  A facade or api for simplifying the interactions with MusicXML documents is planned for future development.
+The MusicXML classes in `mx::core` are tightly bound to the `musicxml.xsd` specification.  MusicXML can be challenging to use and the `mx::core` class structure mirrors the complexity of the MusicXML specification.  A slightly simplified representation is available in `mx::api`. It is possible to work with a subset of MusicXML using only `mx::api`, without delving into `mx::core`.
 
 ##### Namespaces
 
 ```
 using namespace mx::core;
 using namespace mx::xml;
-using namespace mx::utility;
+using namespace mx::api;
 ```
 
 The `mx::core` namespace contains the MusicXML representation objects such as elements and attributes.  In the musicxml.xsd there are many cases of 'xs:choice' or 'xs:group' being used.  These constructs are typically represented in the mx::core class structure the same way that they are found in the musicxml.xsd specification.  The interfaces in this namespace are relatively stable, however they are tightly bound to MusicXML's specification and thus they will change when it comes time to support a future version of MusicXML.
