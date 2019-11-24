@@ -7,11 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		29DC3ACE225C0FC200814240 /* XAttributeTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DC3872225C0FC100814240 /* XAttributeTest.cpp */; };
-		29DC3ACF225C0FC200814240 /* XDocTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DC3873225C0FC100814240 /* XDocTest.cpp */; };
-		29DC3AD0225C0FC200814240 /* XElementTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DC3874225C0FC100814240 /* XElementTest.cpp */; };
-		29DC3AD1225C0FC200814240 /* XElementIteratorTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DC3875225C0FC100814240 /* XElementIteratorTest.cpp */; };
-		29DC3AD2225C0FC200814240 /* XAttributeIteratorTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DC3876225C0FC100814240 /* XAttributeIteratorTest.cpp */; };
 		29DC3AD3225C0FC200814240 /* PositionFunctionsTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DC3878225C0FC100814240 /* PositionFunctionsTest.cpp */; };
 		29DC3AD4225C0FC200814240 /* PrintFunctionsTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DC3879225C0FC100814240 /* PrintFunctionsTest.cpp */; };
 		29DC3AD5225C0FC200814240 /* DirectionReaderTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DC387A225C0FC100814240 /* DirectionReaderTest.cpp */; };
@@ -490,12 +485,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		29DC3871225C0FC100814240 /* FakeXml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FakeXml.h; sourceTree = "<group>"; };
-		29DC3872225C0FC100814240 /* XAttributeTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = XAttributeTest.cpp; sourceTree = "<group>"; };
-		29DC3873225C0FC100814240 /* XDocTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = XDocTest.cpp; sourceTree = "<group>"; };
-		29DC3874225C0FC100814240 /* XElementTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = XElementTest.cpp; sourceTree = "<group>"; };
-		29DC3875225C0FC100814240 /* XElementIteratorTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = XElementIteratorTest.cpp; sourceTree = "<group>"; };
-		29DC3876225C0FC100814240 /* XAttributeIteratorTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = XAttributeIteratorTest.cpp; sourceTree = "<group>"; };
 		29DC3878225C0FC100814240 /* PositionFunctionsTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PositionFunctionsTest.cpp; sourceTree = "<group>"; };
 		29DC3879225C0FC100814240 /* PrintFunctionsTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PrintFunctionsTest.cpp; sourceTree = "<group>"; };
 		29DC387A225C0FC100814240 /* DirectionReaderTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DirectionReaderTest.cpp; sourceTree = "<group>"; };
@@ -1104,7 +1093,7 @@
 		29DC3CAB225C11C000814240 /* cpulTestResult.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cpulTestResult.cpp; sourceTree = "<group>"; };
 		29DC3CAC225C11C000814240 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		29DC3CAD225C11C000814240 /* cpulFailure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cpulFailure.h; sourceTree = "<group>"; };
-		9CD23B612340651300EB6F13 /* MxTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MxTest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9CD50B87238A178B00ED7DD8 /* MxTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MxTest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1124,7 +1113,7 @@
 			children = (
 				29DC3867225C0EF200814240 /* mxtest */,
 				29DC3C9B225C10ED00814240 /* Frameworks */,
-				9CD23B612340651300EB6F13 /* MxTest */,
+				9CD50B87238A178B00ED7DD8 /* MxTest */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1139,23 +1128,9 @@
 				29DC3877225C0FC100814240 /* impl */,
 				29DC3882225C0FC100814240 /* import */,
 				29DC38C0225C0FC100814240 /* utility */,
-				29DC3870225C0FC100814240 /* xml */,
 			);
 			name = mxtest;
 			path = ../Sourcecode/private/mxtest;
-			sourceTree = "<group>";
-		};
-		29DC3870225C0FC100814240 /* xml */ = {
-			isa = PBXGroup;
-			children = (
-				29DC3871225C0FC100814240 /* FakeXml.h */,
-				29DC3872225C0FC100814240 /* XAttributeTest.cpp */,
-				29DC3873225C0FC100814240 /* XDocTest.cpp */,
-				29DC3874225C0FC100814240 /* XElementTest.cpp */,
-				29DC3875225C0FC100814240 /* XElementIteratorTest.cpp */,
-				29DC3876225C0FC100814240 /* XAttributeIteratorTest.cpp */,
-			);
-			path = xml;
 			sourceTree = "<group>";
 		};
 		29DC3877225C0FC100814240 /* impl */ = {
@@ -1847,7 +1822,7 @@
 			);
 			name = MxTest;
 			productName = MxTest;
-			productReference = 9CD23B612340651300EB6F13 /* MxTest */;
+			productReference = 9CD50B87238A178B00ED7DD8 /* MxTest */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -1856,16 +1831,16 @@
 		299F7FEE1CA8D2620084CAE5 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1100;
+				LastUpgradeCheck = 1010;
 				ORGANIZATIONNAME = "Matthew James Briggs";
 			};
 			buildConfigurationList = 299F7FF11CA8D2620084CAE5 /* Build configuration list for PBXProject "MxTest" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = en;
+			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
-				Base,
 			);
 			mainGroup = 299F7FED1CA8D2620084CAE5;
 			productRefGroup = 299F7FED1CA8D2620084CAE5;
@@ -1991,7 +1966,6 @@
 				29DC3C88225C0FC300814240 /* StaccatissimoTest.cpp in Sources */,
 				29DC3B6F225C0FC200814240 /* PropertiesTest.cpp in Sources */,
 				29DC3B40225C0FC200814240 /* TimeTest.cpp in Sources */,
-				29DC3AD2225C0FC200814240 /* XAttributeIteratorTest.cpp in Sources */,
 				29DC3BF8225C0FC300814240 /* LyricFontTest.cpp in Sources */,
 				29DC3B61225C0FC200814240 /* ScalingTest.cpp in Sources */,
 				29DC3B6C225C0FC200814240 /* HarpPedalsTest.cpp in Sources */,
@@ -2165,7 +2139,6 @@
 				29DC3C08225C0FC300814240 /* MetronomeRelationTest.cpp in Sources */,
 				29DC3B4D225C0FC200814240 /* StickTypeTest.cpp in Sources */,
 				29DC3AE9225C0FC200814240 /* FreezingTest.cpp in Sources */,
-				29DC3AD0225C0FC200814240 /* XElementTest.cpp in Sources */,
 				29DC3B45225C0FC200814240 /* WedgeTest.cpp in Sources */,
 				29DC3C5A225C0FC300814240 /* SchleiferTest.cpp in Sources */,
 				29DC3B58225C0FC200814240 /* LeftDividerTest.cpp in Sources */,
@@ -2264,7 +2237,6 @@
 				29DC3B5F225C0FC200814240 /* ScorePartwiseTest.cpp in Sources */,
 				29DC3C8D225C0FC300814240 /* AccordTest.cpp in Sources */,
 				29DC3ADC225C0FC200814240 /* NoteWriterTest.cpp in Sources */,
-				29DC3AD1225C0FC200814240 /* XElementIteratorTest.cpp in Sources */,
 				29DC3B19225C0FC200814240 /* KindTest.cpp in Sources */,
 				29DC3BFB225C0FC300814240 /* FrameFretsTest.cpp in Sources */,
 				29DC3BDB225C0FC300814240 /* DivisionsTest.cpp in Sources */,
@@ -2272,7 +2244,6 @@
 				29DC3BFC225C0FC300814240 /* TextTest.cpp in Sources */,
 				29DC3B09225C0FC200814240 /* StepTest.cpp in Sources */,
 				29DC3B54225C0FC200814240 /* SoloTest.cpp in Sources */,
-				29DC3ACE225C0FC200814240 /* XAttributeTest.cpp in Sources */,
 				29DC3C22225C0FC300814240 /* RootTest.cpp in Sources */,
 				29DC3B47225C0FC200814240 /* PrintTest.cpp in Sources */,
 				29DC3B93225C0FC300814240 /* EditorialGroupTest.cpp in Sources */,
@@ -2326,7 +2297,6 @@
 				29DC3B68225C0FC200814240 /* DownBowTest.cpp in Sources */,
 				29DC3B07225C0FC200814240 /* YesNoNumberTest.cpp in Sources */,
 				29DC3BEA225C0FC300814240 /* PercussionTest.cpp in Sources */,
-				29DC3ACF225C0FC200814240 /* XDocTest.cpp in Sources */,
 				29DC3B9E225C0FC300814240 /* ScoreHeaderGroupTest.cpp in Sources */,
 				29DC3B8C225C0FC300814240 /* OtherOrnamentTest.cpp in Sources */,
 				29DC3B4E225C0FC200814240 /* EndingTest.cpp in Sources */,
@@ -2359,7 +2329,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -2402,10 +2371,10 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
-				USER_HEADER_SEARCH_PATHS = "$PROJECT_DIR/../Sourcecode/include $PROJECT_DIR/../Sourcecode/private $PROJECT_DIR/../Sourcecode/private/extern/ezxml/src/include";
+				USER_HEADER_SEARCH_PATHS = "$PROJECT_DIR/../Sourcecode/include $PROJECT_DIR/../Sourcecode/private $PROJECT_DIR/../Sourcecode/private/extern/ezxml/src/include $PROJECT_DIR/../Sourcecode/private/extern/ezxml/src/private";
 			};
 			name = Debug;
 		};
@@ -2413,7 +2382,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -2455,16 +2423,15 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				SDKROOT = macosx;
-				USER_HEADER_SEARCH_PATHS = "$PROJECT_DIR/../Sourcecode/include $PROJECT_DIR/../Sourcecode/private $PROJECT_DIR/../Sourcecode/private/extern/ezxml/src/include";
+				USER_HEADER_SEARCH_PATHS = "$PROJECT_DIR/../Sourcecode/include $PROJECT_DIR/../Sourcecode/private $PROJECT_DIR/../Sourcecode/private/extern/ezxml/src/include $PROJECT_DIR/../Sourcecode/private/extern/ezxml/src/private";
 			};
 			name = Release;
 		};
 		299F80001CA8D2620084CAE5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "-";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"DEBUG=1",
@@ -2477,7 +2444,6 @@
 		299F80011CA8D2620084CAE5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "-";
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
