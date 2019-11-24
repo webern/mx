@@ -29,8 +29,6 @@ namespace mx
             ~OrnamentsFunctions() = default;
             OrnamentsFunctions( const OrnamentsFunctions& ) = default;
             OrnamentsFunctions( OrnamentsFunctions&& ) = default;
-            OrnamentsFunctions& operator=( const OrnamentsFunctions& ) = default;
-            OrnamentsFunctions& operator=( OrnamentsFunctions&& ) = default;
             
             void parseOrnaments( std::vector<api::MarkData>& outMarks ) const;
             

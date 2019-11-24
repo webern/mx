@@ -24,8 +24,6 @@ namespace mx
             ~AccidentalMarkFunctions() = default;
             AccidentalMarkFunctions( const AccidentalMarkFunctions& ) = default;
             AccidentalMarkFunctions( AccidentalMarkFunctions&& ) = default;
-            AccidentalMarkFunctions& operator=( const AccidentalMarkFunctions& ) = default;
-            AccidentalMarkFunctions& operator=( AccidentalMarkFunctions&& ) = default;
             
             api::MarkData parseAccidentalMark() const;
             

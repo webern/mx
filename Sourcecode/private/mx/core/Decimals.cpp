@@ -40,9 +40,6 @@ namespace mx
             }
 
 
-            impl( impl&& other ) = default;
-
-
             impl& operator=( const impl& other )
             {
                 if ( other.myValue )
@@ -56,9 +53,6 @@ namespace mx
 
                 return *this;
             }
-
-
-            impl& operator=( impl&& other ) = default;
 
             
             void setValue( DecimalType value )

@@ -21,9 +21,7 @@ namespace mx
             virtual ~PugiDoc() = default;
             PugiDoc();
             PugiDoc( const PugiDoc& other ) = delete;
-            PugiDoc( PugiDoc&& other ) = default;
             PugiDoc& operator=( const PugiDoc& other ) = delete;
-            PugiDoc& operator=( PugiDoc&& other ) = default;
             
             virtual void loadStream( std::istream& is ) override;
             virtual void saveStream( std::ostream& os ) const override;

@@ -490,7 +490,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		299F7FF61CA8D2620084CAE5 /* MxTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = MxTest; path = /Users/mjb/repos/mx/Xcode/build/Debug/MxTest; sourceTree = "<absolute>"; };
 		29DC3871225C0FC100814240 /* FakeXml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FakeXml.h; sourceTree = "<group>"; };
 		29DC3872225C0FC100814240 /* XAttributeTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = XAttributeTest.cpp; sourceTree = "<group>"; };
 		29DC3873225C0FC100814240 /* XDocTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = XDocTest.cpp; sourceTree = "<group>"; };
@@ -1105,6 +1104,7 @@
 		29DC3CAB225C11C000814240 /* cpulTestResult.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cpulTestResult.cpp; sourceTree = "<group>"; };
 		29DC3CAC225C11C000814240 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		29DC3CAD225C11C000814240 /* cpulFailure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cpulFailure.h; sourceTree = "<group>"; };
+		9CD50B87238A178B00ED7DD8 /* MxTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MxTest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1124,6 +1124,7 @@
 			children = (
 				29DC3867225C0EF200814240 /* mxtest */,
 				29DC3C9B225C10ED00814240 /* Frameworks */,
+				9CD50B87238A178B00ED7DD8 /* MxTest */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1846,7 +1847,7 @@
 			);
 			name = MxTest;
 			productName = MxTest;
-			productReference = 299F7FF61CA8D2620084CAE5 /* MxTest */;
+			productReference = 9CD50B87238A178B00ED7DD8 /* MxTest */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -1863,6 +1864,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 299F7FED1CA8D2620084CAE5;
@@ -2399,7 +2401,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "$PROJECT_DIR/../Sourcecode/include $PROJECT_DIR/../Sourcecode/private";
@@ -2451,7 +2453,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "$PROJECT_DIR/../Sourcecode/include $PROJECT_DIR/../Sourcecode/private";
 			};
