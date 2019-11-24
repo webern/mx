@@ -3332,7 +3332,6 @@
 		29A8FFFD1EF0499300AD2478 /* TouchingPitch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E1DB1EF0476100AD2478 /* TouchingPitch.cpp */; };
 		29A8FFFE1EF0499300AD2478 /* TraditionalKey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E1DD1EF0476200AD2478 /* TraditionalKey.cpp */; };
 		29A8FFFF1EF0499300AD2478 /* Transpose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E1DF1EF0476200AD2478 /* Transpose.cpp */; };
-		29B962851E79FF410072071D /* MxiOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 29B962831E79FF410072071D /* MxiOS.h */; };
 		29E7633B205E2DEE00B754D5 /* LyricType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29E76339205E2DEE00B754D5 /* LyricType.cpp */; };
 		29E7633C205E2DEE00B754D5 /* LyricType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29E76339205E2DEE00B754D5 /* LyricType.cpp */; };
 		29E7633D205E2DEE00B754D5 /* LyricType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29E76339205E2DEE00B754D5 /* LyricType.cpp */; };
@@ -3351,6 +3350,90 @@
 		29EAD74A1F0EF8CE00BDE782 /* MiscData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EAD7461F0EF8CE00BDE782 /* MiscData.cpp */; };
 		29EAD74B1F0EF8CE00BDE782 /* MiscData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EAD7461F0EF8CE00BDE782 /* MiscData.cpp */; };
 		29EAD74C1F0EF8CE00BDE782 /* MiscData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EAD7461F0EF8CE00BDE782 /* MiscData.cpp */; };
+		9CD50C25238A323100ED7DD8 /* ApiCommon.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3863225C0DB800814240 /* ApiCommon.h */; };
+		9CD50C26238A323100ED7DD8 /* ApiEquality.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3856225C0DB600814240 /* ApiEquality.h */; };
+		9CD50C27238A323100ED7DD8 /* AppearanceData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3841225C0DB400814240 /* AppearanceData.h */; };
+		9CD50C28238A323100ED7DD8 /* BarlineData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3852225C0DB600814240 /* BarlineData.h */; };
+		9CD50C29238A323100ED7DD8 /* ChordData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC384A225C0DB500814240 /* ChordData.h */; };
+		9CD50C2A238A323100ED7DD8 /* ClefData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC383D225C0DB300814240 /* ClefData.h */; };
+		9CD50C2B238A323100ED7DD8 /* ColorData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3861225C0DB700814240 /* ColorData.h */; };
+		9CD50C2C238A323100ED7DD8 /* CurveData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3859225C0DB600814240 /* CurveData.h */; };
+		9CD50C2D238A323100ED7DD8 /* DirectionData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC384B225C0DB500814240 /* DirectionData.h */; };
+		9CD50C2E238A323100ED7DD8 /* DocumentManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3840225C0DB400814240 /* DocumentManager.h */; };
+		9CD50C2F238A323100ED7DD8 /* DurationData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC385B225C0DB700814240 /* DurationData.h */; };
+		9CD50C30238A323100ED7DD8 /* EncodingData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3862225C0DB700814240 /* EncodingData.h */; };
+		9CD50C31238A323100ED7DD8 /* FontData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC384D225C0DB500814240 /* FontData.h */; };
+		9CD50C32238A323100ED7DD8 /* KeyData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3843225C0DB400814240 /* KeyData.h */; };
+		9CD50C33238A323100ED7DD8 /* LayoutData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC385C225C0DB700814240 /* LayoutData.h */; };
+		9CD50C34238A323100ED7DD8 /* LineData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3854225C0DB600814240 /* LineData.h */; };
+		9CD50C35238A323100ED7DD8 /* LyricData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3860225C0DB700814240 /* LyricData.h */; };
+		9CD50C36238A323100ED7DD8 /* MarkData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC385D225C0DB700814240 /* MarkData.h */; };
+		9CD50C37238A323100ED7DD8 /* MeasureData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC385F225C0DB700814240 /* MeasureData.h */; };
+		9CD50C38238A323100ED7DD8 /* MeasureLocation.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC385E225C0DB700814240 /* MeasureLocation.h */; };
+		9CD50C39238A323100ED7DD8 /* MiscData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3857225C0DB600814240 /* MiscData.h */; };
+		9CD50C3A238A323100ED7DD8 /* NoteAttachmentData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3866225C0DB800814240 /* NoteAttachmentData.h */; };
+		9CD50C3B238A323100ED7DD8 /* NoteData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC385A225C0DB600814240 /* NoteData.h */; };
+		9CD50C3C238A323100ED7DD8 /* OttavaData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3851225C0DB500814240 /* OttavaData.h */; };
+		9CD50C3D238A323100ED7DD8 /* PageTextData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3844225C0DB400814240 /* PageTextData.h */; };
+		9CD50C3E238A323100ED7DD8 /* PartData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3858225C0DB600814240 /* PartData.h */; };
+		9CD50C3F238A323100ED7DD8 /* PartGroupData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3845225C0DB400814240 /* PartGroupData.h */; };
+		9CD50C40238A323100ED7DD8 /* PitchData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC383F225C0DB400814240 /* PitchData.h */; };
+		9CD50C41238A323100ED7DD8 /* PositionData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3850225C0DB500814240 /* PositionData.h */; };
+		9CD50C42238A323100ED7DD8 /* PrintData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3846225C0DB400814240 /* PrintData.h */; };
+		9CD50C43238A323100ED7DD8 /* ScoreData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3847225C0DB400814240 /* ScoreData.h */; };
+		9CD50C44238A323100ED7DD8 /* SoundID.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3849225C0DB500814240 /* SoundID.h */; };
+		9CD50C45238A323100ED7DD8 /* SpannerData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3848225C0DB400814240 /* SpannerData.h */; };
+		9CD50C46238A323100ED7DD8 /* StaffData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3864225C0DB800814240 /* StaffData.h */; };
+		9CD50C47238A323100ED7DD8 /* SystemData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC384C225C0DB500814240 /* SystemData.h */; };
+		9CD50C48238A323100ED7DD8 /* TempoData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC384E225C0DB500814240 /* TempoData.h */; };
+		9CD50C49238A323100ED7DD8 /* TimeSignatureData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3842225C0DB400814240 /* TimeSignatureData.h */; };
+		9CD50C4A238A323100ED7DD8 /* TupletData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3853225C0DB600814240 /* TupletData.h */; };
+		9CD50C4B238A323100ED7DD8 /* Version.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC384F225C0DB500814240 /* Version.h */; };
+		9CD50C4C238A323100ED7DD8 /* VoiceData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3865225C0DB800814240 /* VoiceData.h */; };
+		9CD50C4D238A323100ED7DD8 /* WedgeData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC383E225C0DB300814240 /* WedgeData.h */; };
+		9CD50C4E238A323100ED7DD8 /* WordsData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3855225C0DB600814240 /* WordsData.h */; };
+		9CD50C4F238A329F00ED7DD8 /* ApiCommon.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3863225C0DB800814240 /* ApiCommon.h */; };
+		9CD50C50238A329F00ED7DD8 /* ApiEquality.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3856225C0DB600814240 /* ApiEquality.h */; };
+		9CD50C51238A329F00ED7DD8 /* AppearanceData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3841225C0DB400814240 /* AppearanceData.h */; };
+		9CD50C52238A32A000ED7DD8 /* BarlineData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3852225C0DB600814240 /* BarlineData.h */; };
+		9CD50C53238A32A000ED7DD8 /* ChordData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC384A225C0DB500814240 /* ChordData.h */; };
+		9CD50C54238A32A000ED7DD8 /* ClefData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC383D225C0DB300814240 /* ClefData.h */; };
+		9CD50C55238A32A000ED7DD8 /* ColorData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3861225C0DB700814240 /* ColorData.h */; };
+		9CD50C56238A32A000ED7DD8 /* CurveData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3859225C0DB600814240 /* CurveData.h */; };
+		9CD50C57238A32A000ED7DD8 /* DirectionData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC384B225C0DB500814240 /* DirectionData.h */; };
+		9CD50C58238A32A000ED7DD8 /* DocumentManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3840225C0DB400814240 /* DocumentManager.h */; };
+		9CD50C59238A32A000ED7DD8 /* DurationData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC385B225C0DB700814240 /* DurationData.h */; };
+		9CD50C5A238A32A000ED7DD8 /* EncodingData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3862225C0DB700814240 /* EncodingData.h */; };
+		9CD50C5B238A32A000ED7DD8 /* FontData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC384D225C0DB500814240 /* FontData.h */; };
+		9CD50C5C238A32A000ED7DD8 /* KeyData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3843225C0DB400814240 /* KeyData.h */; };
+		9CD50C5D238A32A000ED7DD8 /* LayoutData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC385C225C0DB700814240 /* LayoutData.h */; };
+		9CD50C5E238A32A000ED7DD8 /* LineData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3854225C0DB600814240 /* LineData.h */; };
+		9CD50C5F238A32A000ED7DD8 /* LyricData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3860225C0DB700814240 /* LyricData.h */; };
+		9CD50C60238A32A000ED7DD8 /* MarkData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC385D225C0DB700814240 /* MarkData.h */; };
+		9CD50C61238A32A000ED7DD8 /* MeasureData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC385F225C0DB700814240 /* MeasureData.h */; };
+		9CD50C62238A32A000ED7DD8 /* MeasureLocation.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC385E225C0DB700814240 /* MeasureLocation.h */; };
+		9CD50C63238A32A000ED7DD8 /* MiscData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3857225C0DB600814240 /* MiscData.h */; };
+		9CD50C64238A32A000ED7DD8 /* NoteAttachmentData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3866225C0DB800814240 /* NoteAttachmentData.h */; };
+		9CD50C65238A32A000ED7DD8 /* NoteData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC385A225C0DB600814240 /* NoteData.h */; };
+		9CD50C66238A32A100ED7DD8 /* OttavaData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3851225C0DB500814240 /* OttavaData.h */; };
+		9CD50C67238A32A100ED7DD8 /* PageTextData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3844225C0DB400814240 /* PageTextData.h */; };
+		9CD50C68238A32A100ED7DD8 /* PartData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3858225C0DB600814240 /* PartData.h */; };
+		9CD50C69238A32A100ED7DD8 /* PartGroupData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3845225C0DB400814240 /* PartGroupData.h */; };
+		9CD50C6A238A32A100ED7DD8 /* PitchData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC383F225C0DB400814240 /* PitchData.h */; };
+		9CD50C6B238A32A100ED7DD8 /* PositionData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3850225C0DB500814240 /* PositionData.h */; };
+		9CD50C6C238A32A100ED7DD8 /* PrintData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3846225C0DB400814240 /* PrintData.h */; };
+		9CD50C6D238A32A100ED7DD8 /* ScoreData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3847225C0DB400814240 /* ScoreData.h */; };
+		9CD50C6E238A32A100ED7DD8 /* SoundID.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3849225C0DB500814240 /* SoundID.h */; };
+		9CD50C6F238A32A100ED7DD8 /* SpannerData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3848225C0DB400814240 /* SpannerData.h */; };
+		9CD50C70238A32A100ED7DD8 /* StaffData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3864225C0DB800814240 /* StaffData.h */; };
+		9CD50C71238A32A100ED7DD8 /* SystemData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC384C225C0DB500814240 /* SystemData.h */; };
+		9CD50C72238A32A100ED7DD8 /* TempoData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC384E225C0DB500814240 /* TempoData.h */; };
+		9CD50C73238A32A100ED7DD8 /* TimeSignatureData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3842225C0DB400814240 /* TimeSignatureData.h */; };
+		9CD50C74238A32A100ED7DD8 /* TupletData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3853225C0DB600814240 /* TupletData.h */; };
+		9CD50C75238A32A100ED7DD8 /* Version.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC384F225C0DB500814240 /* Version.h */; };
+		9CD50C76238A32A100ED7DD8 /* VoiceData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3865225C0DB800814240 /* VoiceData.h */; };
+		9CD50C77238A32A100ED7DD8 /* WedgeData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC383E225C0DB300814240 /* WedgeData.h */; };
+		9CD50C78238A32A100ED7DD8 /* WordsData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3855225C0DB600814240 /* WordsData.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -3358,8 +3441,50 @@
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = mx/api;
-			dstSubfolderSpec = 7;
+			dstSubfolderSpec = 6;
 			files = (
+				9CD50C25238A323100ED7DD8 /* ApiCommon.h in CopyFiles */,
+				9CD50C26238A323100ED7DD8 /* ApiEquality.h in CopyFiles */,
+				9CD50C27238A323100ED7DD8 /* AppearanceData.h in CopyFiles */,
+				9CD50C28238A323100ED7DD8 /* BarlineData.h in CopyFiles */,
+				9CD50C29238A323100ED7DD8 /* ChordData.h in CopyFiles */,
+				9CD50C2A238A323100ED7DD8 /* ClefData.h in CopyFiles */,
+				9CD50C2B238A323100ED7DD8 /* ColorData.h in CopyFiles */,
+				9CD50C2C238A323100ED7DD8 /* CurveData.h in CopyFiles */,
+				9CD50C2D238A323100ED7DD8 /* DirectionData.h in CopyFiles */,
+				9CD50C2E238A323100ED7DD8 /* DocumentManager.h in CopyFiles */,
+				9CD50C2F238A323100ED7DD8 /* DurationData.h in CopyFiles */,
+				9CD50C30238A323100ED7DD8 /* EncodingData.h in CopyFiles */,
+				9CD50C31238A323100ED7DD8 /* FontData.h in CopyFiles */,
+				9CD50C32238A323100ED7DD8 /* KeyData.h in CopyFiles */,
+				9CD50C33238A323100ED7DD8 /* LayoutData.h in CopyFiles */,
+				9CD50C34238A323100ED7DD8 /* LineData.h in CopyFiles */,
+				9CD50C35238A323100ED7DD8 /* LyricData.h in CopyFiles */,
+				9CD50C36238A323100ED7DD8 /* MarkData.h in CopyFiles */,
+				9CD50C37238A323100ED7DD8 /* MeasureData.h in CopyFiles */,
+				9CD50C38238A323100ED7DD8 /* MeasureLocation.h in CopyFiles */,
+				9CD50C39238A323100ED7DD8 /* MiscData.h in CopyFiles */,
+				9CD50C3A238A323100ED7DD8 /* NoteAttachmentData.h in CopyFiles */,
+				9CD50C3B238A323100ED7DD8 /* NoteData.h in CopyFiles */,
+				9CD50C3C238A323100ED7DD8 /* OttavaData.h in CopyFiles */,
+				9CD50C3D238A323100ED7DD8 /* PageTextData.h in CopyFiles */,
+				9CD50C3E238A323100ED7DD8 /* PartData.h in CopyFiles */,
+				9CD50C3F238A323100ED7DD8 /* PartGroupData.h in CopyFiles */,
+				9CD50C40238A323100ED7DD8 /* PitchData.h in CopyFiles */,
+				9CD50C41238A323100ED7DD8 /* PositionData.h in CopyFiles */,
+				9CD50C42238A323100ED7DD8 /* PrintData.h in CopyFiles */,
+				9CD50C43238A323100ED7DD8 /* ScoreData.h in CopyFiles */,
+				9CD50C44238A323100ED7DD8 /* SoundID.h in CopyFiles */,
+				9CD50C45238A323100ED7DD8 /* SpannerData.h in CopyFiles */,
+				9CD50C46238A323100ED7DD8 /* StaffData.h in CopyFiles */,
+				9CD50C47238A323100ED7DD8 /* SystemData.h in CopyFiles */,
+				9CD50C48238A323100ED7DD8 /* TempoData.h in CopyFiles */,
+				9CD50C49238A323100ED7DD8 /* TimeSignatureData.h in CopyFiles */,
+				9CD50C4A238A323100ED7DD8 /* TupletData.h in CopyFiles */,
+				9CD50C4B238A323100ED7DD8 /* Version.h in CopyFiles */,
+				9CD50C4C238A323100ED7DD8 /* VoiceData.h in CopyFiles */,
+				9CD50C4D238A323100ED7DD8 /* WedgeData.h in CopyFiles */,
+				9CD50C4E238A323100ED7DD8 /* WordsData.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3369,6 +3494,48 @@
 			dstPath = mx/api;
 			dstSubfolderSpec = 7;
 			files = (
+				9CD50C4F238A329F00ED7DD8 /* ApiCommon.h in CopyFiles */,
+				9CD50C50238A329F00ED7DD8 /* ApiEquality.h in CopyFiles */,
+				9CD50C51238A329F00ED7DD8 /* AppearanceData.h in CopyFiles */,
+				9CD50C52238A32A000ED7DD8 /* BarlineData.h in CopyFiles */,
+				9CD50C53238A32A000ED7DD8 /* ChordData.h in CopyFiles */,
+				9CD50C54238A32A000ED7DD8 /* ClefData.h in CopyFiles */,
+				9CD50C55238A32A000ED7DD8 /* ColorData.h in CopyFiles */,
+				9CD50C56238A32A000ED7DD8 /* CurveData.h in CopyFiles */,
+				9CD50C57238A32A000ED7DD8 /* DirectionData.h in CopyFiles */,
+				9CD50C58238A32A000ED7DD8 /* DocumentManager.h in CopyFiles */,
+				9CD50C59238A32A000ED7DD8 /* DurationData.h in CopyFiles */,
+				9CD50C5A238A32A000ED7DD8 /* EncodingData.h in CopyFiles */,
+				9CD50C5B238A32A000ED7DD8 /* FontData.h in CopyFiles */,
+				9CD50C5C238A32A000ED7DD8 /* KeyData.h in CopyFiles */,
+				9CD50C5D238A32A000ED7DD8 /* LayoutData.h in CopyFiles */,
+				9CD50C5E238A32A000ED7DD8 /* LineData.h in CopyFiles */,
+				9CD50C5F238A32A000ED7DD8 /* LyricData.h in CopyFiles */,
+				9CD50C60238A32A000ED7DD8 /* MarkData.h in CopyFiles */,
+				9CD50C61238A32A000ED7DD8 /* MeasureData.h in CopyFiles */,
+				9CD50C62238A32A000ED7DD8 /* MeasureLocation.h in CopyFiles */,
+				9CD50C63238A32A000ED7DD8 /* MiscData.h in CopyFiles */,
+				9CD50C64238A32A000ED7DD8 /* NoteAttachmentData.h in CopyFiles */,
+				9CD50C65238A32A000ED7DD8 /* NoteData.h in CopyFiles */,
+				9CD50C66238A32A100ED7DD8 /* OttavaData.h in CopyFiles */,
+				9CD50C67238A32A100ED7DD8 /* PageTextData.h in CopyFiles */,
+				9CD50C68238A32A100ED7DD8 /* PartData.h in CopyFiles */,
+				9CD50C69238A32A100ED7DD8 /* PartGroupData.h in CopyFiles */,
+				9CD50C6A238A32A100ED7DD8 /* PitchData.h in CopyFiles */,
+				9CD50C6B238A32A100ED7DD8 /* PositionData.h in CopyFiles */,
+				9CD50C6C238A32A100ED7DD8 /* PrintData.h in CopyFiles */,
+				9CD50C6D238A32A100ED7DD8 /* ScoreData.h in CopyFiles */,
+				9CD50C6E238A32A100ED7DD8 /* SoundID.h in CopyFiles */,
+				9CD50C6F238A32A100ED7DD8 /* SpannerData.h in CopyFiles */,
+				9CD50C70238A32A100ED7DD8 /* StaffData.h in CopyFiles */,
+				9CD50C71238A32A100ED7DD8 /* SystemData.h in CopyFiles */,
+				9CD50C72238A32A100ED7DD8 /* TempoData.h in CopyFiles */,
+				9CD50C73238A32A100ED7DD8 /* TimeSignatureData.h in CopyFiles */,
+				9CD50C74238A32A100ED7DD8 /* TupletData.h in CopyFiles */,
+				9CD50C75238A32A100ED7DD8 /* Version.h in CopyFiles */,
+				9CD50C76238A32A100ED7DD8 /* VoiceData.h in CopyFiles */,
+				9CD50C77238A32A100ED7DD8 /* WedgeData.h in CopyFiles */,
+				9CD50C78238A32A100ED7DD8 /* WordsData.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6364,7 +6531,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				29B962851E79FF410072071D /* MxiOS.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
