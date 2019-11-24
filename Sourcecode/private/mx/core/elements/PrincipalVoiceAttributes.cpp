@@ -72,7 +72,7 @@ namespace mx
         }
 
 
-        bool PrincipalVoiceAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool PrincipalVoiceAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "PrincipalVoiceAttributes";
             bool isSuccess = true;

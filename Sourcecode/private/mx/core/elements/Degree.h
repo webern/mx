@@ -51,7 +51,7 @@ namespace mx
             void setDegreeType( const DegreeTypePtr& value );
 
             private:
-            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
+            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
 
         private:
             DegreeAttributesPtr myAttributes;

@@ -40,7 +40,7 @@ namespace mx
             MusicDataChoicePtr getMusicDataChoice( const MusicDataChoiceSetIterConst& setIterator ) const;
 
             private:
-            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
+            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
 
         private:
             MusicDataChoiceSet myMusicDataChoiceSet;

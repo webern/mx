@@ -351,7 +351,7 @@ namespace mx
         }
 
 
-        bool PercussionChoice::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool PercussionChoice::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             if( xelement.getName() == "glass" )
             {

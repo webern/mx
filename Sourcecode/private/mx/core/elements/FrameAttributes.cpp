@@ -68,7 +68,7 @@ namespace mx
         }
 
 
-        bool FrameAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool FrameAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "FrameAttributes";
             bool isSuccess = true;

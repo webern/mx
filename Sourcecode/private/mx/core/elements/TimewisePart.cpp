@@ -104,7 +104,7 @@ namespace mx
         }
         
         
-        bool TimewisePart::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool TimewisePart::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
             bool isFirstMusicDataChoiceAdded = false;

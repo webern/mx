@@ -8,14 +8,14 @@
 #include <string>
 #include <memory>
 
+namespace ezxml
+{
+    class XDoc;
+    using XDocCPtr = std::shared_ptr<const XDoc>;
+}
+
 namespace mx
 {
-    namespace xml
-    {
-        class XDoc;
-        using XDocCPtr = std::shared_ptr<const XDoc>;
-    }
-    
     namespace core
     {
 
@@ -64,7 +64,7 @@ namespace mx
             MusicXmlVersion musicXmlVersion;
         };
         
-        DocumentSpec parseDocumentSpec( const xml::XDocCPtr& doc );
+        DocumentSpec parseDocumentSpec( const ::ezxml::XDocCPtr& doc );
         
     }
 }

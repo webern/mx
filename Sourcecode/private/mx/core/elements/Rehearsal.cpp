@@ -87,7 +87,7 @@ namespace mx
         }
 
 
-        bool Rehearsal::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Rehearsal::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

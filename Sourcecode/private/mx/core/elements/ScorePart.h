@@ -12,14 +12,13 @@
 #include <memory>
 #include <vector>
 
+namespace ezxml
+{
+    class XElementIterator;
+}
+
 namespace mx
 {
-    
-    namespace xml
-    {
-        class XElementIterator;
-    }
-    
     namespace core
     {
 
@@ -99,7 +98,7 @@ namespace mx
             MidiDeviceInstrumentGroupPtr getMidiDeviceInstrumentGroup( const MidiDeviceInstrumentGroupSetIterConst& setIterator ) const;
             
             private:
-            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
+            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
 
         private:
             ScorePartAttributesPtr myAttributes;
@@ -118,8 +117,8 @@ namespace mx
             
             void importMidiDeviceInstrumentGroupSet(
                 std::ostream& message,
-                xml::XElementIterator& iter,
-                xml::XElementIterator& endIter,
+                ::ezxml::XElementIterator& iter,
+                ::ezxml::XElementIterator& endIter,
                 bool& isSuccess );
         };
     }

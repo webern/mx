@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool MetronomeRelation::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool MetronomeRelation::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             MX_UNUSED( message );
             myValue.setValue( xelement.getValue() );

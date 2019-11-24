@@ -110,7 +110,7 @@ namespace mx
         }
 
 
-        bool TimeModificationNormalTypeNormalDot::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool TimeModificationNormalTypeNormalDot::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
             bool isNormalTypeFound = false;

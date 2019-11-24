@@ -46,7 +46,7 @@ namespace mx
             bool hasFontWeight;
 
             private:
-            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
+            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
         };
     }
 }

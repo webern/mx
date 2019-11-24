@@ -42,7 +42,7 @@ namespace mx
             void setValue( const NoteheadValue& value );
 
             private:
-            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
+            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
 
         private:
             NoteheadValue myValue;

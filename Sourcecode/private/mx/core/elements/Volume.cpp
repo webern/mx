@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool Volume::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Volume::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             MX_UNUSED( message );
             myValue.parse( xelement.getValue() );

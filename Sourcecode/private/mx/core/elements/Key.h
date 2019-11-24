@@ -12,14 +12,13 @@
 #include <memory>
 #include <vector>
 
+namespace ezxml
+{
+    class XElementIterator;
+}
+
 namespace mx
 {
-    
-    namespace xml
-    {
-        class XElementIterator;
-    }
-    
     namespace core
     {
 
@@ -50,15 +49,15 @@ namespace mx
             void clearKeyOctaveSet();
 
             private:
-            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
+            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
 
         private:
             KeyAttributesPtr myAttributes;
             KeyChoicePtr myKeyChoice;
             KeyOctaveSet myKeyOctaveSet;
             
-            bool importTraditionalKey( std::ostream& message, xml::XElementIterator& iter, xml::XElementIterator& endIter, bool& isSuccess );
-            bool importNonTraditionalKey( std::ostream& message, xml::XElementIterator& iter, xml::XElementIterator& endIter, bool& isSuccess );
+            bool importTraditionalKey( std::ostream& message, ::ezxml::XElementIterator& iter, ::ezxml::XElementIterator& endIter, bool& isSuccess );
+            bool importNonTraditionalKey( std::ostream& message, ::ezxml::XElementIterator& iter, ::ezxml::XElementIterator& endIter, bool& isSuccess );
         };
     }
 }

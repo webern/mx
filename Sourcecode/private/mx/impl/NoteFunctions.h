@@ -39,8 +39,7 @@ namespace mx
         {
         public:
             NoteFunctions( const core::Note& inMxNote, impl::Cursor cursor );
-            ~NoteFunctions() = default;
-            
+            ~NoteFunctions() = default;            
             api::NoteData parseNote() const;
             
         private:

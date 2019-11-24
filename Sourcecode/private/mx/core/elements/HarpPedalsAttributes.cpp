@@ -72,7 +72,7 @@ namespace mx
         }
 
 
-        bool HarpPedalsAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool HarpPedalsAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "HarpPedalsAttributes";
             bool isSuccess = true;

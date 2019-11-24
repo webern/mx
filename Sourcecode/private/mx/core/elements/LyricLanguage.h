@@ -36,7 +36,7 @@ namespace mx
             void setAttributes( const LyricLanguageAttributesPtr& attributes );
 
             private:
-            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
+            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
 
         private:
             LyricLanguageAttributesPtr myAttributes;

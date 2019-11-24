@@ -649,7 +649,7 @@ namespace mx
         }
         
         
-        bool Note::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Note::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
             bool isNoteChoiceFound = false;
@@ -807,7 +807,7 @@ namespace mx
         }
 
         
-        bool Note::parseNoteChoice( std::ostream& message, xml::XElement& noteElement, xml::XElementIterator& iter )
+        bool Note::parseNoteChoice( std::ostream& message, ::ezxml::XElement& noteElement, ::ezxml::XElementIterator& iter )
         {
             if( iter == noteElement.end() )
             {
@@ -898,7 +898,7 @@ namespace mx
         }
         
         
-        bool Note::parseFullNoteGroup( std::ostream& message, xml::XElement& noteElement, xml::XElementIterator& iter, FullNoteGroupPtr& outFullNoteGroup )
+        bool Note::parseFullNoteGroup( std::ostream& message, ::ezxml::XElement& noteElement, ::ezxml::XElementIterator& iter, FullNoteGroupPtr& outFullNoteGroup )
         {
             if( iter == noteElement.end() )
             {
@@ -951,7 +951,7 @@ namespace mx
         }
         
         
-        bool Note::parseEditorialVoiceGroup( std::ostream& message, xml::XElement& noteElement, xml::XElementIterator& iter )
+        bool Note::parseEditorialVoiceGroup( std::ostream& message, ::ezxml::XElement& noteElement, ::ezxml::XElementIterator& iter )
         {
             bool isSuccess = true;
             bool isIterIncremented = false;

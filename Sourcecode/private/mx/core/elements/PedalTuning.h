@@ -42,7 +42,7 @@ namespace mx
             void setPedalAlter( const PedalAlterPtr& value );
 
             private:
-            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
+            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
 
         private:
             PedalStepPtr myPedalStep;

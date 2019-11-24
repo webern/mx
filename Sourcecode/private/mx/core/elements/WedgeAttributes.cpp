@@ -72,7 +72,7 @@ namespace mx
         }
 
 
-        bool WedgeAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool WedgeAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "WedgeAttributes";
             bool isSuccess = true;

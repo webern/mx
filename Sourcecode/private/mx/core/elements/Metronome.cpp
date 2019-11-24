@@ -102,7 +102,7 @@ namespace mx
          <xs:attributeGroup ref="text-direction"/>
          <xs:attributeGroup ref="enclosure"/>*/
 
-        bool Metronome::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Metronome::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

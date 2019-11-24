@@ -88,7 +88,7 @@ namespace mx
         }
 
 
-        bool Backup::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Backup::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
             bool isDurationFound = false;

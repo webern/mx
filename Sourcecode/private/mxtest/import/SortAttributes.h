@@ -4,11 +4,11 @@
 
 #pragma once
 
-#include "mx/xml/XDoc.h"
-#include "mx/xml/XElement.h"
-#include "mx/xml/XAttribute.h"
-#include "mx/xml/XElementIterator.h"
-#include "mx/xml/XAttributeIterator.h"
+#include "ezxml/XDoc.h"
+#include "ezxml/XElement.h"
+#include "ezxml/XAttribute.h"
+#include "ezxml/XElementIterator.h"
+#include "ezxml/XAttributeIterator.h"
 
 #include <map>
 #include <string>
@@ -22,7 +22,7 @@ namespace mxtest
     // so both the expected and actual files will need to have their
     // attributes sorted into alphabetical order so that they match.
     
-    void sortAttributes( mx::xml::XDoc& xdoc );
-    void sortAttributes ( mx::xml::XElement& xelement );
-    void deleteFirstAttribute( mx::xml::XElement& xelement );
+    void sortAttributes( ::ezxml::XDoc& xdoc );
+    void sortAttributes ( ::ezxml::XElement& xelement );
+    void deleteFirstAttribute( ::ezxml::XElement& xelement );
 }

@@ -72,7 +72,7 @@ namespace mx
         }
 
 
-        bool PullOffAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool PullOffAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "PullOffAttributes";
             bool isSuccess = true;

@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool Glass::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Glass::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             MX_UNUSED( message );
             myValue = parseGlassEnum( xelement.getValue() );

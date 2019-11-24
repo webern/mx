@@ -42,7 +42,7 @@ namespace mx
             void setDisplayOctave( const DisplayOctavePtr& value );
 
             private:
-            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
+            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
 
         private:
             DisplayStepPtr myDisplayStep;

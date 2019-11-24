@@ -136,7 +136,7 @@ namespace mx
         }
 
 
-        bool StaffTuning::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool StaffTuning::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

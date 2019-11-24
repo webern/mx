@@ -32,7 +32,7 @@ namespace mx
         }
 
 
-        bool HoleClosedAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool HoleClosedAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "HoleClosedAttributes";
             bool isSuccess = true;

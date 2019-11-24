@@ -60,7 +60,7 @@ namespace mx
         }
 
 
-        bool FigureNumberAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool FigureNumberAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "FigureNumberAttributes";
             bool isSuccess = true;

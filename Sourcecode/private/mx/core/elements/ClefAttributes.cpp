@@ -84,7 +84,7 @@ namespace mx
         }
 
 
-        bool ClefAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool ClefAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "ClefAttributes";
             bool isSuccess = true;

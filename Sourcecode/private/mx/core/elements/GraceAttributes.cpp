@@ -44,7 +44,7 @@ namespace mx
         }
 
 
-        bool GraceAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool GraceAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "GraceAttributes";
             bool isSuccess = true;

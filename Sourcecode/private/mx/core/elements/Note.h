@@ -12,14 +12,13 @@
 #include <memory>
 #include <vector>
 
+namespace ezxml
+{
+    class XElementIterator;
+}
+
 namespace mx
 {
-    
-    namespace xml
-    {
-        class XElementIterator;
-    }
-    
     namespace core
     {
 
@@ -148,7 +147,7 @@ namespace mx
             void setHasPlay( const bool value );
 
             private:
-            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
+            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
 
         private:
             MX_MUTEX
@@ -180,19 +179,19 @@ namespace mx
             
             bool parseNoteChoice(
                 std::ostream& message,
-                xml::XElement& noteElement,
-                xml::XElementIterator& iter );
+                ::ezxml::XElement& noteElement,
+                ::ezxml::XElementIterator& iter );
             
             bool parseFullNoteGroup(
                 std::ostream& message,
-                xml::XElement& noteElement,
-                xml::XElementIterator& iter,
+                ::ezxml::XElement& noteElement,
+                ::ezxml::XElementIterator& iter,
                 FullNoteGroupPtr& outFullNoteGroup );
             
             bool parseEditorialVoiceGroup(
                 std::ostream& message,
-                xml::XElement& noteElement,
-                xml::XElementIterator& iter );
+                ::ezxml::XElement& noteElement,
+                ::ezxml::XElementIterator& iter );
         };
     }
 }

@@ -40,7 +40,7 @@ namespace mx
         }
 
 
-        bool RepeatAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool RepeatAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "RepeatAttributes";
             bool isSuccess = true;

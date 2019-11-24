@@ -44,7 +44,7 @@ namespace mx
         }
 
 
-        bool StaffDetailsAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool StaffDetailsAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "StaffDetailsAttributes";
             bool isSuccess = true;

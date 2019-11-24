@@ -32,7 +32,7 @@ namespace mx
         }
 
 
-        bool OffsetAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool OffsetAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "OffsetAttributes";
             bool isSuccess = true;

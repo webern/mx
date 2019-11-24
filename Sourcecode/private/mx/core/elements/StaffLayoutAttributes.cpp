@@ -32,7 +32,7 @@ namespace mx
         }
 
 
-        bool StaffLayoutAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool StaffLayoutAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "StaffLayoutAttributes";
             bool isSuccess = true;

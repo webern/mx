@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool DoubleTongue::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool DoubleTongue::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

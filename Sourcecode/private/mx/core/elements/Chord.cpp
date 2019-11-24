@@ -27,7 +27,7 @@ namespace mx
         }
 
 
-        bool Chord::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Chord::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             MX_UNUSED( message );
             MX_UNUSED( xelement );

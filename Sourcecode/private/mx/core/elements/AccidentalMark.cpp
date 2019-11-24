@@ -87,7 +87,7 @@ namespace mx
         }
 
 
-        bool AccidentalMark::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool AccidentalMark::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

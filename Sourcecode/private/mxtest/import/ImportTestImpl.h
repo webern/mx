@@ -10,8 +10,8 @@
 #include "cpul/cpulTestHarness.h"
 #include "cpul/cpulTestTimer.h"
 #include "cpul/cpulTest.h"
-#include "mx/xml/XFactory.h"
-#include "mx/xml/XDoc.h"
+#include "ezxml/XFactory.h"
+#include "ezxml/XDoc.h"
 #include "mxtest/file/Path.h"
 #include "mxtest/file/MxFileRepository.h"
 #include "mx/core/Document.h"
@@ -114,10 +114,10 @@ namespace mxtest
         cpul::TestTimer myXdocWriteTimer;
         bool myIsMxBypassed;
         
-        bool loadTestFile( std::ostream& msg, mx::xml::XDocPtr& outXDoc, const std::string& filepath );
-        bool loadExpectedFile( std::ostream& msg, mx::xml::XDocPtr& outXDoc, const std::string& filepath );
-        bool loadIntoMxClasses( std::ostream& msg, const mx::xml::XDocPtr& inXdoc, mx::core::DocumentPtr& outMx );
-        bool reserializeToXDoc( std::ostream& msg, const mx::core::DocumentPtr& inMx, mx::xml::XDocPtr& outXDoc );
+        bool loadTestFile( std::ostream& msg, ::ezxml::XDocPtr& outXDoc, const std::string& filepath );
+        bool loadExpectedFile( std::ostream& msg, ::ezxml::XDocPtr& outXDoc, const std::string& filepath );
+        bool loadIntoMxClasses( std::ostream& msg, const ::ezxml::XDocPtr& inXdoc, mx::core::DocumentPtr& outMx );
+        bool reserializeToXDoc( std::ostream& msg, const mx::core::DocumentPtr& inMx, ::ezxml::XDocPtr& outXDoc );
         bool checkEqual( std::ostream& msg, const std::string& inExpected, const std::string& inActual, double& outPercentMatch );
         ImportRoundTripResult createInfo( const std::string& msg, bool success, const double percentMatch );
         bool writeResultToOutputFile( const ImportRoundTripResult& info );

@@ -122,7 +122,7 @@ namespace mx
             return PartwiseMeasurePtr();
         }
 
-        bool PartwisePart::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool PartwisePart::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

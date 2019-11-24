@@ -36,7 +36,7 @@ namespace mx
             void setAttributes( const EmptyTrillSoundAttributesPtr& attributes );
 
             private:
-            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
+            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
 
         private:
             EmptyTrillSoundAttributesPtr myAttributes;

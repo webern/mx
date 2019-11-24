@@ -7,22 +7,22 @@
 
 namespace mxtest
 {
-    void convertValues( mx::xml::XDoc& xdoc, const std::string& elementName, const std::string& existingValue, const std::string desiredValue )
+    void convertValues( ::ezxml::XDoc& xdoc, const std::string& elementName, const std::string& existingValue, const std::string desiredValue )
     {
         convertValues( *xdoc.getRoot(), elementName, existingValue, desiredValue );
     }
     
     
-    void convertValues( mx::xml::XElement& xelement, const std::string& elementName, const std::string& existingValue, const std::string desiredValue )
+    void convertValues( ::ezxml::XElement& xelement, const std::string& elementName, const std::string& existingValue, const std::string desiredValue )
     {
-        if( xelement.getType() == mx::xml::XElementType::element )
+        if( xelement.getType() == ::ezxml::XElementType::element )
         {
             for( auto it = xelement.begin(); it != xelement.end(); ++it )
             {
                 convertValues( *it, elementName, existingValue, desiredValue );
             }
         }
-        else if ( xelement.getType() == mx::xml::XElementType::text || xelement.getType() == mx::xml::XElementType::empty )
+        else if ( xelement.getType() == ::ezxml::XElementType::text || xelement.getType() == ::ezxml::XElementType::empty )
         {
             if( xelement.getName() == elementName && xelement.getValue() == existingValue )
             {
@@ -32,15 +32,15 @@ namespace mxtest
     }
     
     
-    void addChildIfNone( mx::xml::XDoc& xdoc, const std::string& elementName, const std::string& childNameToAdd, const std::string childValueToAdd )
+    void addChildIfNone( ::ezxml::XDoc& xdoc, const std::string& elementName, const std::string& childNameToAdd, const std::string childValueToAdd )
     {
         addChildIfNone( *xdoc.getRoot(), elementName, childNameToAdd, childValueToAdd );
     }
     
     
-    void addChildIfNone( mx::xml::XElement& xelement, const std::string& elementName, const std::string& childNameToAdd, const std::string childValueToAdd )
+    void addChildIfNone( ::ezxml::XElement& xelement, const std::string& elementName, const std::string& childNameToAdd, const std::string childValueToAdd )
     {
-        if( xelement.getType() != mx::xml::XElementType::text && xelement.getName() == elementName )
+        if( xelement.getType() != ::ezxml::XElementType::text && xelement.getName() == elementName )
         {
             if( xelement.begin() == xelement.end() )
             {
@@ -51,7 +51,7 @@ namespace mxtest
                 }
             }
         }
-        else if ( xelement.getType() == mx::xml::XElementType::element || xelement.getType() == mx::xml::XElementType::empty )
+        else if ( xelement.getType() == ::ezxml::XElementType::element || xelement.getType() == ::ezxml::XElementType::empty )
         {
             for( auto it = xelement.begin(); it != xelement.end(); ++it )
             {
@@ -61,13 +61,13 @@ namespace mxtest
     }
     
     
-    void addAttributeIfNone( mx::xml::XDoc& xdoc, const std::string& elementName, const std::string& attributeNameToAdd, const std::string attributeValueToAdd )
+    void addAttributeIfNone( ::ezxml::XDoc& xdoc, const std::string& elementName, const std::string& attributeNameToAdd, const std::string attributeValueToAdd )
     {
         addAttributeIfNone( *xdoc.getRoot(), elementName, attributeNameToAdd, attributeValueToAdd );
     }
     
     
-    void addAttributeIfNone( mx::xml::XElement& xelement, const std::string& elementName, const std::string& attributeNameToAdd, const std::string attributeValueToAdd )
+    void addAttributeIfNone( ::ezxml::XElement& xelement, const std::string& elementName, const std::string& attributeNameToAdd, const std::string attributeValueToAdd )
     {
         
         if( xelement.getName() == elementName )
@@ -89,7 +89,7 @@ namespace mxtest
             }
         }
         
-        if ( xelement.getType() == mx::xml::XElementType::element )
+        if ( xelement.getType() == ::ezxml::XElementType::element )
         {
             for( auto it = xelement.begin(); it != xelement.end(); ++it )
             {
@@ -99,13 +99,13 @@ namespace mxtest
     }
     
     
-    void removeAttribute( mx::xml::XDoc& xdoc, const std::string& elementName, const std::string& attributeNameToRemove )
+    void removeAttribute( ::ezxml::XDoc& xdoc, const std::string& elementName, const std::string& attributeNameToRemove )
     {
         removeAttribute( *xdoc.getRoot(), elementName, attributeNameToRemove );
     }
     
     
-    void removeAttribute( mx::xml::XElement& xelement, const std::string& elementName, const std::string& attributeNameToRemove )
+    void removeAttribute( ::ezxml::XElement& xelement, const std::string& elementName, const std::string& attributeNameToRemove )
     {
         if( xelement.getName() == elementName )
         {
@@ -119,7 +119,7 @@ namespace mxtest
             }
         }
         
-        if ( xelement.getType() == mx::xml::XElementType::element )
+        if ( xelement.getType() == ::ezxml::XElementType::element )
         {
             for( auto it = xelement.begin(); it != xelement.end(); ++it )
             {
@@ -129,13 +129,13 @@ namespace mxtest
     }
     
     
-    void changeAttributeValue( mx::xml::XDoc& xdoc, const std::string& elementName, const std::string& attributeName, const std::string& undesiredValueToReplace, const std::string& replacementValue )
+    void changeAttributeValue( ::ezxml::XDoc& xdoc, const std::string& elementName, const std::string& attributeName, const std::string& undesiredValueToReplace, const std::string& replacementValue )
     {
         changeAttributeValue( *xdoc.getRoot(), elementName, attributeName, undesiredValueToReplace, replacementValue );
     }
     
     
-    void changeAttributeValue( mx::xml::XElement& xelement, const std::string& elementName, const std::string& attributeName,  const std::string& undesiredValueToReplace, const std::string& replacementValue)
+    void changeAttributeValue( ::ezxml::XElement& xelement, const std::string& elementName, const std::string& attributeName,  const std::string& undesiredValueToReplace, const std::string& replacementValue)
     {
         if( xelement.getName() == elementName )
         {
@@ -152,7 +152,7 @@ namespace mxtest
             }
         }
         
-        if( xelement.getType() == mx::xml::XElementType::element )
+        if( xelement.getType() == ::ezxml::XElementType::element )
         {
             for( auto it = xelement.begin(); it != xelement.end(); ++it )
             {
@@ -162,21 +162,21 @@ namespace mxtest
     }
 
 
-    void stripZerosFromDecimalFields( mx::xml::XDoc& xdoc )
+    void stripZerosFromDecimalFields( ::ezxml::XDoc& xdoc )
     {
         stripZerosFromMatchingFields( xdoc, decimalFields );
     }
 
 
-    void stripZerosFromMatchingFields( mx::xml::XDoc& xdoc, const std::set<std::string>& fields )
+    void stripZerosFromMatchingFields( ::ezxml::XDoc& xdoc, const std::set<std::string>& fields )
     {
         stripZerosFromMatchingFields( *xdoc.getRoot(), fields );
     }
 
 
-    void stripZerosFromMatchingFields( mx::xml::XElement& xelement, const std::set<std::string>& fields )
+    void stripZerosFromMatchingFields( ::ezxml::XElement& xelement, const std::set<std::string>& fields )
     {
-        if ( xelement.getType() == mx::xml::XElementType::text )
+        if ( xelement.getType() == ::ezxml::XElementType::text )
         {
             auto foundIter = fields.find( xelement.getName() );
             if ( foundIter != fields.end() )
@@ -194,7 +194,7 @@ namespace mxtest
             }
         }
 
-        if ( xelement.getType() == mx::xml::XElementType::element )
+        if ( xelement.getType() == ::ezxml::XElementType::element )
         {
             for ( auto e = xelement.begin(); e != xelement.end(); ++e )
             {
@@ -206,15 +206,15 @@ namespace mxtest
     }
     
     
-    void insertChildAfterIfMissing( const InsertChildAfterIfMissingParams& params, mx::xml::XElement& xelement )
+    void insertChildAfterIfMissing( const InsertChildAfterIfMissingParams& params, ::ezxml::XElement& xelement )
     {
         
-        if( xelement.getType() == mx::xml::XElementType::null )
+        if( xelement.getType() == ::ezxml::XElementType::null )
         {
             return;
         }
         
-        if( xelement.getType() != mx::xml::XElementType::text && xelement.getName() == params.parentElement )
+        if( xelement.getType() != ::ezxml::XElementType::text && xelement.getName() == params.parentElement )
         {
 
             bool isTriggerFound = false;
@@ -243,7 +243,7 @@ namespace mxtest
             }
             
         }
-        else if ( xelement.getType() == mx::xml::XElementType::element || xelement.getType() == mx::xml::XElementType::empty )
+        else if ( xelement.getType() == ::ezxml::XElementType::element || xelement.getType() == ::ezxml::XElementType::empty )
         {
             for( auto it = xelement.begin(); it != xelement.end(); ++it )
             {
@@ -252,13 +252,13 @@ namespace mxtest
         }
     }
     
-    void removeElement( mx::xml::XElement& xelement, const std::string& elementName )
+    void removeElement( ::ezxml::XElement& xelement, const std::string& elementName )
     {
         while( xelement.removeChild( elementName ) ) {}
         
         for( auto it = xelement.begin(); it != xelement.end(); ++it )
         {
-            if( it->getType() == mx::xml::XElementType::element )
+            if( it->getType() == ::ezxml::XElementType::element )
             {
                 removeElement( *it, elementName );
             }

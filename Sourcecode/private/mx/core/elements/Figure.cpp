@@ -194,7 +194,7 @@ namespace mx
         }
 
 
-        bool Figure::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Figure::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
 

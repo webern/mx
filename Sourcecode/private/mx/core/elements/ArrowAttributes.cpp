@@ -68,7 +68,7 @@ namespace mx
         }
 
 
-        bool ArrowAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool ArrowAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "ArrowAttributes";
             bool isSuccess = true;

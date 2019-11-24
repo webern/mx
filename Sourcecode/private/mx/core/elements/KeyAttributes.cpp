@@ -72,7 +72,7 @@ namespace mx
         }
 
 
-        bool KeyAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool KeyAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "KeyAttributes";
             bool isSuccess = true;

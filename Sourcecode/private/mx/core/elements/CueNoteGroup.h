@@ -47,7 +47,7 @@ namespace mx
             void setDuration( const DurationPtr& value );
             
             private:
-            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
+            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
 
         private:
             CuePtr myCue;

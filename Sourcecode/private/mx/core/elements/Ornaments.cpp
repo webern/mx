@@ -163,7 +163,7 @@ namespace mx
         constexpr size_t ornamentsChoicesSize = 13;
 
         
-        bool Ornaments::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Ornaments::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
 

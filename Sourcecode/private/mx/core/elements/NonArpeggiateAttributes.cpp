@@ -56,7 +56,7 @@ namespace mx
         }
 
 
-        bool NonArpeggiateAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool NonArpeggiateAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "NonArpeggiateAttributes";
             bool isSuccess = true;
