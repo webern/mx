@@ -72,7 +72,7 @@ namespace mx
         }
 
 
-        bool AccordionRegistrationAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool AccordionRegistrationAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "AccordionRegistrationAttributes";
             bool isSuccess = true;

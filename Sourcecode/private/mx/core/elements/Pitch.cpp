@@ -120,7 +120,7 @@ namespace mx
         }
 
 
-        bool Pitch::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Pitch::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
             bool isStepFound = false;

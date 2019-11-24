@@ -64,7 +64,7 @@ namespace mx
         }
 
 
-        bool GroupNameAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool GroupNameAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "GroupNameAttributes";
             bool isSuccess = true;

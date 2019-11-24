@@ -121,7 +121,7 @@ namespace mx
             MeasureStylePtr getMeasureStyle( const MeasureStyleSetIterConst& setIterator ) const;
 
             private:
-            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
+            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
             
         private:
             EditorialGroupPtr myEditorialGroup;

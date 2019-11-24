@@ -37,7 +37,7 @@ namespace mx
             void setValue( const PlaybackSound& value );
 
             private:
-            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
+            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
 
         private:
             PlaybackSound myValue;

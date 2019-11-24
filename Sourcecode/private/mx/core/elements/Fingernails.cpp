@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool Fingernails::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Fingernails::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

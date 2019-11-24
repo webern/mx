@@ -368,14 +368,14 @@ namespace mx
         }
 
         
-        bool ScorePart::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool ScorePart::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );
             
             bool isPartNameFound = false;
             
-            xml::XElementIterator end = xelement.end();
+            ::ezxml::XElementIterator end = xelement.end();
             
             for( auto it = xelement.begin(); it != end; ++it )
             {
@@ -398,7 +398,7 @@ namespace mx
         }
         
         
-        void ScorePart::importMidiDeviceInstrumentGroupSet( std::ostream& message, xml::XElementIterator& iter, xml::XElementIterator& endIter, bool& isSuccess )
+        void ScorePart::importMidiDeviceInstrumentGroupSet( std::ostream& message, ::ezxml::XElementIterator& iter, ::ezxml::XElementIterator& endIter, bool& isSuccess )
         {
             bool doDecrementIter = false;
             while( iter != endIter && ( iter->getName() == "midi-device" || iter->getName() == "midi-instrument" ) )

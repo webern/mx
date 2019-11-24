@@ -20,7 +20,7 @@
 #include <future>
 #include <list>
 
-using namespace mx::xml;
+using namespace ezxml;
 
 
 namespace mxtest
@@ -136,12 +136,12 @@ namespace mxtest
     }
     
     
-    mx::xml::XDocPtr readInputFile( const std::string& subdir, const std::string& fileName )
+    ::ezxml::XDocPtr readInputFile( const std::string& subdir, const std::string& fileName )
     {
         std::ifstream inputFile;
         std::string fullPath = filePath( subdir, fileName );
         openInputFile( inputFile, fullPath );
-        auto xdoc = mx::xml::XFactory::makeXDoc();
+        auto xdoc = ::ezxml::XFactory::makeXDoc();
         xdoc->loadStream( inputFile );
 //        std::stringstream ss;
 //        xdoc->saveStream( ss );
@@ -151,30 +151,30 @@ namespace mxtest
     }
     
     
-    void setXmlDeclaration( mx::xml::XDocPtr& xdoc )
+    void setXmlDeclaration( ::ezxml::XDocPtr& xdoc )
     {
         xdoc->setIsStandalone( false );
-        xdoc->setXmlVersion( mx::xml::XmlVersion::onePointZero );
+        xdoc->setXmlVersion( ::ezxml::XmlVersion::onePointZero );
         auto encoding = xdoc->getEncoding();
         switch( encoding )
         {
-            case mx::xml::Encoding::utfEight:
-                xdoc->setEncoding( mx::xml::Encoding::utfEight );
+            case ::ezxml::Encoding::utfEight:
+                xdoc->setEncoding( ::ezxml::Encoding::utfEight );
                 break;
-            case mx::xml::Encoding::utfSixteen:
-                xdoc->setEncoding( mx::xml::Encoding::utfSixteen );
+            case ::ezxml::Encoding::utfSixteen:
+                xdoc->setEncoding( ::ezxml::Encoding::utfSixteen );
                 break;
-            case mx::xml::Encoding::unknown:
-                xdoc->setEncoding( mx::xml::DEFAULT_ENCODING );
+            case ::ezxml::Encoding::unknown:
+                xdoc->setEncoding( ::ezxml::DEFAULT_ENCODING );
                 break;
             default:
-                xdoc->setEncoding( mx::xml::DEFAULT_ENCODING );
+                xdoc->setEncoding( ::ezxml::DEFAULT_ENCODING );
                 break;
         }
     }
     
     
-    bool getIsScorePartwise( const mx::xml::XDocPtr& xdoc )
+    bool getIsScorePartwise( const ::ezxml::XDocPtr& xdoc )
     {
         std::string doctype = xdoc->getDoctypeValue();
         bool isScorePartwise = true;
@@ -196,7 +196,7 @@ namespace mxtest
     }
     
     
-    void setDoctype( mx::xml::XDocPtr& xdoc, bool isScorePartwise )
+    void setDoctype( ::ezxml::XDocPtr& xdoc, bool isScorePartwise )
     {
         if( isScorePartwise )
         {
@@ -209,7 +209,7 @@ namespace mxtest
     }
     
     
-    void setRootMusicXmlVersion( mx::xml::XDocPtr& xdoc, bool isScorePartwise )
+    void setRootMusicXmlVersion( ::ezxml::XDocPtr& xdoc, bool isScorePartwise )
     {
         auto root = xdoc->getRoot();
         if ( root->getName() == "score-partwise"  || root->getName() == "score-timewise" )

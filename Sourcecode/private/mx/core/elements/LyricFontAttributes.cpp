@@ -52,7 +52,7 @@ namespace mx
         }
 
 
-        bool LyricFontAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool LyricFontAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "LyricFontAttributes";
             bool isSuccess = true;

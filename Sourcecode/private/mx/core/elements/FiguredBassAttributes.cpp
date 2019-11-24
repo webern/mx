@@ -84,7 +84,7 @@ namespace mx
         }
 
 
-        bool FiguredBassAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool FiguredBassAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "FiguredBassAttributes";
             bool isSuccess = true;

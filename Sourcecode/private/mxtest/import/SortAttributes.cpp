@@ -6,13 +6,13 @@
 
 namespace mxtest
 {
-    void sortAttributes( mx::xml::XDoc& xdoc )
+    void sortAttributes( ::ezxml::XDoc& xdoc )
     {
         sortAttributes( *xdoc.getRoot() );
     }
     
     
-    void sortAttributes ( mx::xml::XElement& xelement )
+    void sortAttributes ( ::ezxml::XElement& xelement )
     {
         StringMap stringMap;
         
@@ -31,7 +31,7 @@ namespace mxtest
             xelement.appendAttribute( mapIter->first )->setValue( mapIter->second );
         }
         
-        if( xelement.getType() == mx::xml::XElementType::element )
+        if( xelement.getType() == ::ezxml::XElementType::element )
         {
             for( auto elementIter = xelement.begin(); elementIter != xelement.end(); ++elementIter )
             {
@@ -41,7 +41,7 @@ namespace mxtest
     }
     
     
-    void deleteFirstAttribute( mx::xml::XElement& xelement )
+    void deleteFirstAttribute( ::ezxml::XElement& xelement )
     {
         if( xelement.attributesBegin() != xelement.attributesEnd() )
         {

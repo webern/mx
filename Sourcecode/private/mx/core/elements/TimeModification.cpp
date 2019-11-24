@@ -122,7 +122,7 @@ namespace mx
         }
 
 
-        bool TimeModification::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool TimeModification::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
             bool isActualNotesFound = false;

@@ -32,7 +32,7 @@ namespace mx
         }
 
 
-        bool GroupBarlineAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool GroupBarlineAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "GroupBarlineAttributes";
             bool isSuccess = true;

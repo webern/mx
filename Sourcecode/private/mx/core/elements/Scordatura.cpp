@@ -100,7 +100,7 @@ namespace mx
         }
 
 
-        bool Scordatura::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Scordatura::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
 

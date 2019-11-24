@@ -44,7 +44,7 @@ namespace mx
         }
 
 
-        bool LevelAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool LevelAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "LevelAttributes";
             bool isSuccess = true;

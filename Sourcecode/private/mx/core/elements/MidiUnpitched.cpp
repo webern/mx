@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool MidiUnpitched::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool MidiUnpitched::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             MX_UNUSED( message );
             MX_UNUSED( xelement );

@@ -86,7 +86,7 @@ namespace mx
         }
         
         
-        bool Unpitched::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Unpitched::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
             

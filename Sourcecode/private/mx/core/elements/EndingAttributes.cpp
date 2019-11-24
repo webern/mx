@@ -84,7 +84,7 @@ namespace mx
         }
 
 
-        bool EndingAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool EndingAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "EndingAttributes";
             bool isSuccess = true;

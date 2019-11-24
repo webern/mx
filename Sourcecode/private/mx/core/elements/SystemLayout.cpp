@@ -193,7 +193,7 @@ namespace mx
         }
 
 
-        bool SystemLayout::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool SystemLayout::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
 

@@ -68,7 +68,7 @@ namespace mx
         }
 
 
-        bool OtherDirectionAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool OtherDirectionAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "OtherDirectionAttributes";
             bool isSuccess = true;

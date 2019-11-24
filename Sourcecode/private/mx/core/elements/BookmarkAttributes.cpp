@@ -44,7 +44,7 @@ namespace mx
         }
 
 
-        bool BookmarkAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool BookmarkAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "BookmarkAttributes";
             bool isSuccess = true;

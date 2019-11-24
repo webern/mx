@@ -12,13 +12,13 @@
 #include <memory>
 #include <vector>
 
+namespace ezxml
+{
+    class XElementIterator;
+}
+
 namespace mx
 {
-    namespace xml
-    {
-        class XElementIterator;
-    }
-
     namespace core
     {
 
@@ -70,7 +70,7 @@ namespace mx
             void setCreditChoice( const CreditChoicePtr& value );
 
             private:
-            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
+            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
 
         private:
             CreditAttributesPtr myAttributes;

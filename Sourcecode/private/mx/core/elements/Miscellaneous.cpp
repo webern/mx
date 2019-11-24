@@ -101,7 +101,7 @@ namespace mx
         }
 
 
-        bool Miscellaneous::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Miscellaneous::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
 

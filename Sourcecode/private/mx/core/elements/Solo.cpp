@@ -27,7 +27,7 @@ namespace mx
         }
 
 
-        bool Solo::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Solo::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             MX_UNUSED( xelement );
             MX_UNUSED( message );

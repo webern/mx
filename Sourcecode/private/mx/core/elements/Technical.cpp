@@ -124,10 +124,10 @@ namespace mx
         }
         
         
-        bool Technical::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Technical::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
-            xml::XElementIterator end = xelement.end();
+            ::ezxml::XElementIterator end = xelement.end();
             
             for( auto it = xelement.begin(); it != end; ++it )
             {

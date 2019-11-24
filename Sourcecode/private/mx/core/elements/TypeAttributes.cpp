@@ -32,7 +32,7 @@ namespace mx
         }
 
 
-        bool TypeAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool TypeAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "TypeAttributes";
             bool isSuccess = true;

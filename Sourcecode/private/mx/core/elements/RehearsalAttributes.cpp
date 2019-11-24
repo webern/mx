@@ -104,7 +104,7 @@ namespace mx
         }
 
 
-        bool RehearsalAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool RehearsalAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "RehearsalAttributes";
             bool isSuccess = true;

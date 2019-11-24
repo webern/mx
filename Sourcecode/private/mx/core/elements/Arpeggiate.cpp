@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool Arpeggiate::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Arpeggiate::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

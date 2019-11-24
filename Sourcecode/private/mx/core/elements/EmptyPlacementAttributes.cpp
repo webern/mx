@@ -64,7 +64,7 @@ namespace mx
         }
 
 
-        bool EmptyPlacementAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool EmptyPlacementAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "EmptyPlacementAttributes";
             bool isSuccess = true;

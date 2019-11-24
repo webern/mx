@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool Stopped::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Stopped::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }

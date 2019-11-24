@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool SemiPitched::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool SemiPitched::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             MX_UNUSED( message );
             myValue = parseSemiPitchedEnum( xelement.getValue() );

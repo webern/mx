@@ -87,7 +87,7 @@ namespace mx
         }
 
 
-        bool MultipleRest::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool MultipleRest::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
             isSuccess &= myAttributes->fromXElement( message, xelement );

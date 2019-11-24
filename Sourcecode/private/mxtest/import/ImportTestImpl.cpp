@@ -6,7 +6,7 @@
 #ifdef MX_COMPILE_IMPORT_TESTS
 
 #include "ImportTestImpl.h"
-#include "mx/xml/XFactory.h"
+#include "ezxml/XFactory.h"
 #include "mxtest/file/StupidFileFunctions.h"
 #include "mxtest/file/Path.h"
 #include "mxtest/import/ExpectedFiles.h"
@@ -14,7 +14,7 @@
 
 #include <fstream>
 
-using namespace mx::xml;
+using namespace ezxml;
 using namespace mx::core;
 
 namespace mxtest
@@ -206,7 +206,7 @@ namespace mxtest
     }
     
     
-    bool ImportRoundTripTest::loadTestFile( std::ostream& msg, mx::xml::XDocPtr& outXDoc, const std::string& filepath )
+    bool ImportRoundTripTest::loadTestFile( std::ostream& msg, ::ezxml::XDocPtr& outXDoc, const std::string& filepath )
     {
         try
         {
@@ -234,7 +234,7 @@ namespace mxtest
     }
     
     
-    bool ImportRoundTripTest::loadExpectedFile( std::ostream& msg, mx::xml::XDocPtr& outXDoc, const std::string& filepath )
+    bool ImportRoundTripTest::loadExpectedFile( std::ostream& msg, ::ezxml::XDocPtr& outXDoc, const std::string& filepath )
     {
         try
         {
@@ -249,7 +249,7 @@ namespace mxtest
     }
     
     
-    bool ImportRoundTripTest::loadIntoMxClasses( std::ostream& msg, const mx::xml::XDocPtr& inXdoc, mx::core::DocumentPtr& outMx )
+    bool ImportRoundTripTest::loadIntoMxClasses( std::ostream& msg, const ::ezxml::XDocPtr& inXdoc, mx::core::DocumentPtr& outMx )
     {
         if( myIsMxBypassed )
         {
@@ -277,7 +277,7 @@ namespace mxtest
     }
     
     
-    bool ImportRoundTripTest::reserializeToXDoc( std::ostream& msg, const mx::core::DocumentPtr& inMx, mx::xml::XDocPtr& outXDoc )
+    bool ImportRoundTripTest::reserializeToXDoc( std::ostream& msg, const mx::core::DocumentPtr& inMx, ::ezxml::XDocPtr& outXDoc )
     {
         if( myIsMxBypassed )
         {

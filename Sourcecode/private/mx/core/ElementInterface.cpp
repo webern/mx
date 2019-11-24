@@ -3,9 +3,9 @@
 // Distributed under the MIT License
 
 #include "mx/core/ElementInterface.h"
-#include "mx/xml/XElement.h"
-#include "mx/xml/XElementIterator.h"
-#include "mx/xml/XFactory.h"
+#include "ezxml/XElement.h"
+#include "ezxml/XElementIterator.h"
+#include "ezxml/XFactory.h"
 #include <sstream>
 
 namespace mx
@@ -81,10 +81,10 @@ namespace mx
                 streamWithoutProcessingInstructions( ss, 0 );
                 const auto xml = ss.str();
                 std::istringstream iss{ xml };
-                const auto xdoc = xml::XFactory::makeXDoc();
+                const auto xdoc = ::ezxml::XFactory::makeXDoc();
                 xdoc->loadStream( iss );
                 const auto root = xdoc->getRoot();
-                const bool hasChildren = root->getType() == xml::XElementType::element && root->begin() != root->end();
+                const bool hasChildren = root->getType() == ::ezxml::XElementType::element && root->begin() != root->end();
                 streamWithProcessingInstructions( os, indentLevel, hasChildren );
             }
 
@@ -116,7 +116,7 @@ namespace mx
         }
 
 
-        bool ElementInterface::fromXElement( std::ostream& message, xml::XElement& xelement )
+        bool ElementInterface::fromXElement( std::ostream& message, ::ezxml::XElement& xelement )
         {
             if( xelement.getIsProcessingInstruction() )
             {
@@ -132,7 +132,7 @@ namespace mx
 
             // check for processing instructions
 
-            if( xelement.getType() == xml::XElementType::element )
+            if( xelement.getType() == ezxml::XElementType::element )
             {
                 auto childIter = xelement.beginWithProcessingInstructions();
                 const auto childEnd = xelement.end();

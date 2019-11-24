@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool ArrowStyle::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool ArrowStyle::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             MX_UNUSED( message );
             myValue = parseArrowStyleEnum( xelement.getValue() );

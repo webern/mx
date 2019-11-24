@@ -50,7 +50,7 @@ namespace mx
             PageMarginsPtr getPageMargins( const PageMarginsSetIterConst& setIterator ) const;
 
             private:
-            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
+            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
 
         private:
             PageHeightPtr myPageHeight;

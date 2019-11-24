@@ -32,7 +32,7 @@ namespace mx
         }
 
 
-        bool MidiInstrumentAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool MidiInstrumentAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "MidiInstrumentAttributes";
             bool isSuccess = true;

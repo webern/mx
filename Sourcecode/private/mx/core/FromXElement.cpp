@@ -61,7 +61,7 @@ namespace mx
 
         bool importElement(
             std::ostream& message,
-            xml::XElement& xelement,
+            ::ezxml::XElement& xelement,
             bool& isSuccess,
             ElementInterface& element,
             bool& isMatch )
@@ -76,8 +76,8 @@ namespace mx
         }
 
         bool isEndWithDecrementIfNeeded(
-            xml::XElementIterator& iter,
-            xml::XElementIterator& endIter,
+            ::ezxml::XElementIterator& iter,
+            ::ezxml::XElementIterator& endIter,
             bool isDecrementNeeded )
         {
             if( iter == endIter )
@@ -93,8 +93,8 @@ namespace mx
 
         void importGroup(
             std::ostream& message,
-            xml::XElementIterator& iter,
-            xml::XElementIterator& endIter,
+            ::ezxml::XElementIterator& iter,
+            ::ezxml::XElementIterator& endIter,
             bool& isSuccess,
             EditorialGroupPtr& group )
         {
@@ -113,8 +113,8 @@ namespace mx
 
         void importGroup(
             std::ostream& message,
-            xml::XElementIterator& iter,
-            xml::XElementIterator& endIter,
+            ::ezxml::XElementIterator& iter,
+            ::ezxml::XElementIterator& endIter,
             bool& isSuccess,
             EditorialVoiceGroupPtr& group )
         {
@@ -137,8 +137,8 @@ namespace mx
 
         void importGroup(
             std::ostream& message,
-            xml::XElementIterator& iter,
-            xml::XElementIterator& endIter,
+            ::ezxml::XElementIterator& iter,
+            ::ezxml::XElementIterator& endIter,
             bool& isSuccess,
             EditorialVoiceDirectionGroupPtr& group )
         {
@@ -160,8 +160,8 @@ namespace mx
 
         void importGroup(
             std::ostream& message,
-            xml::XElementIterator& iter,
-            xml::XElementIterator& endIter,
+            ::ezxml::XElementIterator& iter,
+            ::ezxml::XElementIterator& endIter,
             bool& isSuccess,
             LayoutGroupPtr& group )
         {
@@ -190,8 +190,8 @@ namespace mx
 
         void importGroup(
             std::ostream& message,
-            xml::XElementIterator& iter,
-            xml::XElementIterator& endIter,
+            ::ezxml::XElementIterator& iter,
+            ::ezxml::XElementIterator& endIter,
             bool& isSuccess,
             BeatUnitGroupPtr& group )
         {
@@ -219,8 +219,8 @@ namespace mx
 
         void importGroup(
             std::ostream& message,
-            xml::XElementIterator& iter,
-            xml::XElementIterator& endIter,
+            ::ezxml::XElementIterator& iter,
+            ::ezxml::XElementIterator& endIter,
             bool& isSuccess,
             MetronomeRelationGroupPtr& group,
             bool& hasGroup )
@@ -251,8 +251,8 @@ namespace mx
 
         void importGroup(
             std::ostream& message,
-            xml::XElementIterator& iter,
-            xml::XElementIterator& endIter,
+            ::ezxml::XElementIterator& iter,
+            ::ezxml::XElementIterator& endIter,
             bool& isSuccess,
             DisplayStepOctaveGroupPtr& group,
             bool& hasGroup )
@@ -290,8 +290,8 @@ namespace mx
 
         void importGroup(
             std::ostream& message,
-            xml::XElementIterator& iter,
-            xml::XElementIterator& endIter,
+            ::ezxml::XElementIterator& iter,
+            ::ezxml::XElementIterator& endIter,
             bool& isSuccess,
             SyllabicTextGroupPtr& group )
         {
@@ -366,8 +366,8 @@ namespace mx
 
         void importGroup(
             std::ostream& message,
-            xml::XElementIterator& iter,
-            xml::XElementIterator& endIter,
+            ::ezxml::XElementIterator& iter,
+            ::ezxml::XElementIterator& endIter,
             bool& isSuccess,
             TimeSignatureGroupPtr& group )
         {
@@ -427,8 +427,8 @@ namespace mx
 
         void importGroup(
             std::ostream& message,
-            xml::XElementIterator& iter,
-            xml::XElementIterator& endIter,
+            ::ezxml::XElementIterator& iter,
+            ::ezxml::XElementIterator& endIter,
             bool& isSuccess,
             MidiInstrumentPtr& group )
         {
@@ -513,8 +513,8 @@ namespace mx
 /*
         void importGroup(
             std::ostream& message,
-            xml::XElementIterator& iter,
-            xml::XElementIterator& endIter,
+            ::ezxml::XElementIterator& iter,
+            ::ezxml::XElementIterator& endIter,
             bool& isSuccess,
             CreditWordsGroupPtr& group )
         {
@@ -539,8 +539,8 @@ namespace mx
 /*
         void importGroup(
             std::ostream& message,
-            xml::XElementIterator& iter,
-            xml::XElementIterator& endIter,
+            ::ezxml::XElementIterator& iter,
+            ::ezxml::XElementIterator& endIter,
             bool& isSuccess,
             BeatUnitPerPtr& group )
         {
@@ -570,7 +570,7 @@ namespace mx
 
         bool parseAttribute(
             std::ostream& message,
-            xml::XAttributeIterator& iter,
+            ::ezxml::XAttributeIterator& iter,
             const std::string& className,
             bool& isSuccess,
             XsString& assignmentTarget,
@@ -592,7 +592,7 @@ namespace mx
 
         bool parseAttribute(
             std::ostream& message,
-            xml::XAttributeIterator& iter,
+            ::ezxml::XAttributeIterator& iter,
             const std::string& className,
             bool& isSuccess,
             Decimal& assignmentTarget,
@@ -614,7 +614,7 @@ namespace mx
 
         bool parseAttribute(
             std::ostream& message,
-            xml::XAttributeIterator& iter,
+            ::ezxml::XAttributeIterator& iter,
             const std::string& className,
             bool& isSuccess,
             Integer& assignmentTarget,
@@ -645,7 +645,7 @@ namespace mx
 
         bool parseAttribute(
             std::ostream& message,
-            xml::XAttributeIterator& iter,
+            ::ezxml::XAttributeIterator& iter,
             const std::string& className,
             bool& isSuccess,
             Color& assignmentTarget,
@@ -673,7 +673,7 @@ namespace mx
 
         bool parseAttribute(
             std::ostream& message,
-            xml::XAttributeIterator& iter,
+            ::ezxml::XAttributeIterator& iter,
             const std::string& className,
             bool& isSuccess,
             Date& assignmentTarget,
@@ -701,7 +701,7 @@ namespace mx
 
         bool parseAttribute(
             std::ostream& message,
-            xml::XAttributeIterator& iter,
+            ::ezxml::XAttributeIterator& iter,
             const std::string& className,
             bool& isSuccess,
             FontSize& assignmentTarget,
@@ -732,7 +732,7 @@ namespace mx
 
         bool parseAttribute(
             std::ostream& message,
-            xml::XAttributeIterator& iter,
+            ::ezxml::XAttributeIterator& iter,
             const std::string& className,
             bool& isSuccess,
             NumberOrNormal& assignmentTarget,
@@ -760,7 +760,7 @@ namespace mx
 
         bool parseAttribute(
             std::ostream& message,
-            xml::XAttributeIterator& iter,
+            ::ezxml::XAttributeIterator& iter,
             const std::string& className,
             bool& isSuccess,
             PositiveIntegerOrEmpty& assignmentTarget,
@@ -791,7 +791,7 @@ namespace mx
 
         bool parseAttribute(
             std::ostream& message,
-            xml::XAttributeIterator& iter,
+            ::ezxml::XAttributeIterator& iter,
             const std::string& className,
             bool& isSuccess,
             YesNoNumber& assignmentTarget,
@@ -819,7 +819,7 @@ namespace mx
 
         bool parseAttribute(
             std::ostream& message,
-            xml::XAttributeIterator& iter,
+            ::ezxml::XAttributeIterator& iter,
             const std::string& className,
             bool& isSuccess,
             CommaSeparatedText& assignmentTarget,
@@ -843,7 +843,7 @@ namespace mx
 
         bool parseAttribute(
             std::ostream& message,
-            xml::XAttributeIterator& iter,
+            ::ezxml::XAttributeIterator& iter,
             const std::string& className,
             bool& isSuccess,
             DistanceType& assignmentTarget,
@@ -867,7 +867,7 @@ namespace mx
 
         bool parseAttribute(
             std::ostream& message,
-            xml::XAttributeIterator& iter,
+            ::ezxml::XAttributeIterator& iter,
             const std::string& className,
             bool& isSuccess,
             LineWidthType& assignmentTarget,
@@ -891,7 +891,7 @@ namespace mx
 
         bool parseAttribute(
             std::ostream& message,
-            xml::XAttributeIterator& iter,
+            ::ezxml::XAttributeIterator& iter,
             const std::string& className,
             bool& isSuccess,
             CommaSeparatedListOfPositiveIntegers& assignmentTarget,

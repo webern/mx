@@ -4,8 +4,8 @@
 
 #include "mx/core/elements/ScorePartwiseAttributes.h"
 #include "mx/core/FromXElement.h"
-#include "mx/xml/XElement.h"
-#include "mx/xml/XAttributeIterator.h"
+#include "ezxml/XElement.h"
+#include "ezxml/XAttributeIterator.h"
 
 #include <iostream>
 
@@ -35,7 +35,7 @@ namespace mx
         }
 
 
-        bool ScorePartwiseAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool ScorePartwiseAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "ScorePartwiseAttributes";
             bool isSuccess = true;

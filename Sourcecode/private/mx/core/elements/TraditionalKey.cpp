@@ -137,7 +137,7 @@ namespace mx
         }
 
 
-        bool TraditionalKey::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool TraditionalKey::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
             bool isFifthsFound = false;

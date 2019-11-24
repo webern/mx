@@ -101,7 +101,7 @@ namespace mx
         }
 
 
-        bool Bass::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Bass::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
             bool isBassStepFound = false;

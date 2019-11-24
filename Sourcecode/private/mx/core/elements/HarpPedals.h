@@ -44,7 +44,7 @@ namespace mx
             PedalTuningPtr getPedalTuning( const PedalTuningSetIterConst& setIterator ) const;
 
             private:
-            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
+            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
 
         private:
             HarpPedalsAttributesPtr myAttributes;

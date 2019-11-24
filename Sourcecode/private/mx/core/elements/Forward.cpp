@@ -123,7 +123,7 @@ namespace mx
         }
 
 
-        bool Forward::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Forward::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
             bool isDurationFound = false;

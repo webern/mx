@@ -86,7 +86,7 @@ namespace mx
         }
 
 
-        bool MeasureLayout::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool MeasureLayout::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
 

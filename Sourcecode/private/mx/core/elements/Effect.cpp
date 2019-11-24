@@ -66,7 +66,7 @@ namespace mx
         }
 
 
-        bool Effect::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Effect::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             MX_UNUSED( message );
             myValue = parseEffectEnum( xelement.getValue() );

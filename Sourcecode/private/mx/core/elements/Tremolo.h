@@ -42,7 +42,7 @@ namespace mx
             void setValue( const TremoloMarks& value );
 
             private:
-            virtual bool fromXElementImpl( std::ostream& message, xml::XElement& xelement );
+            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
 
         private:
             TremoloMarks myValue;

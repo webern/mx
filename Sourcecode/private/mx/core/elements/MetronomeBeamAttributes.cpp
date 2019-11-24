@@ -32,7 +32,7 @@ namespace mx
         }
 
 
-        bool MetronomeBeamAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool MetronomeBeamAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "MetronomeBeamAttributes";
             bool isSuccess = true;

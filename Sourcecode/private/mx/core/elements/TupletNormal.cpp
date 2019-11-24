@@ -171,7 +171,7 @@ namespace mx
         }
 
 
-        bool TupletNormal::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool TupletNormal::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
 

@@ -96,7 +96,7 @@ namespace mx
         }
 
 
-        bool DelayedTurnAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool DelayedTurnAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "DelayedTurnAttributes";
             bool isSuccess = true;

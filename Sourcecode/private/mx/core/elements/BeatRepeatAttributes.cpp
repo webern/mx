@@ -40,7 +40,7 @@ namespace mx
         }
 
 
-        bool BeatRepeatAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool BeatRepeatAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "BeatRepeatAttributes";
             bool isSuccess = true;

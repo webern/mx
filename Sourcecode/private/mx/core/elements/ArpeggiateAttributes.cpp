@@ -56,7 +56,7 @@ namespace mx
         }
 
 
-        bool ArpeggiateAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool ArpeggiateAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "ArpeggiateAttributes";
             bool isSuccess = true;

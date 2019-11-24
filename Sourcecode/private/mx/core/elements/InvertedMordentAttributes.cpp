@@ -109,7 +109,7 @@ namespace mx
         }
 
 
-        bool InvertedMordentAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool InvertedMordentAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "InvertedMordentAttributes";
             bool isSuccess = true;

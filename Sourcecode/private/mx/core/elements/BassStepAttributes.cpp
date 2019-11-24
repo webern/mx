@@ -64,7 +64,7 @@ namespace mx
         }
 
 
-        bool BassStepAttributes::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool BassStepAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             const char* const className = "BassStepAttributes";
             bool isSuccess = true;

@@ -123,7 +123,7 @@ namespace mx
         }
 
 
-        bool NonTraditionalKey::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool NonTraditionalKey::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             bool isSuccess = true;
             bool isKeyStepFound = false;

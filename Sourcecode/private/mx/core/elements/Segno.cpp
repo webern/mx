@@ -57,7 +57,7 @@ namespace mx
         }
 
 
-        bool Segno::fromXElementImpl( std::ostream& message, xml::XElement& xelement )
+        bool Segno::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
         {
             return myAttributes->fromXElement( message, xelement );
         }
