@@ -66,6 +66,7 @@ namespace mx
 
         struct PitchData
         {
+            // default construction is middle c (c4)
             PitchData();
 
             // the note name. i.e. c, d, e, f, g, a, b
