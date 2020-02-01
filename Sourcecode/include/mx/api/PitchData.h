@@ -68,6 +68,7 @@ namespace mx
         {
             PitchData();
 
+            // the note name. i.e. c, d, e, f, g, a, b
             Step step;
 
             // the alteration (number of semitones of pitch distance) from the step. for example, if step is 'c' and
@@ -85,11 +86,19 @@ namespace mx
             // <alter> = (double)alter + (cents * 100.0)
             double cents;
 
+            // in MusicXML, the accidental is completely independent of the sounding pitch and is only present when you
+            // actually want to show the accidental in the notated music. i.e. accidental is purely visual. for example,
+            // if you have a measure consisting of repeated c# notes, you would typically notate this with an accidental
+            // on the first note only. the rest of the notes of the measure would be 'sharped' by virtue of the first
+            // note's sharp. in MusicXML, the first note should have an accidental of 'sharp' and an alter of '1', and
+            // the remaining notes of the measure should have an accidental of 'none' and an alter of '1'.
             Accidental accidental;
             bool isAccidentalParenthetical;
             bool isAccidentalCautionary;
             bool isAccidentalEditorial;
             bool isAccidentalBracketed;
+
+            // which octave the note is located in. middle c is in octave 4.
             int octave;
 
             // automatically set the Accidental enum value by parsing the alter value (does not consider the value of
