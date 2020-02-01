@@ -69,7 +69,22 @@ namespace mx
             PitchData();
 
             Step step;
+
+            // the alteration (number of semitones of pitch distance) from the step. for example, if step is 'c' and
+            // alter is 1, then the sounding pitch is c#. if step is 'd' and alter is -2, then the sounding pitch is
+            // 'c' (i.e. d double flat). alter only affects the sounding pitch of the note. accidentals are applied
+            // independently. alter is always required to produce the correct sounding pitch, regardless of key
+            // signature or accidentals.
             int alter;
+
+            // additional alteration to the sounding pitch (in hundredths of a semitone). the MusicXML alter value is
+            // a floating point number to facilitate microtonal music. however for mx::api we wanted the simplicity of
+            // dealing with integrals for the more common case on non-microtonal music. in order to still support
+            // microtones without resording to a floating-point alter value, we break out microtonal adjustments to a
+            // separate 'cents' field, which will be addeded to the alter integral:
+            // <alter> = (double)alter + (cents * 100.0)
+            double cents;
+
             Accidental accidental;
             bool isAccidentalParenthetical;
             bool isAccidentalCautionary;
@@ -77,18 +92,19 @@ namespace mx
             bool isAccidentalBracketed;
             int octave;
 
-            // automatically set the Accidental enum value by
-            // parsing the alter value
+            // automatically set the Accidental enum value by parsing the alter value (does not consider the value of
+            // cents). this is a convenience function that simply adds the correct accidental given the current value
+            // of alter. for example, if alter is 1, then showAccidental will set the accidental field to 'sharp'.
             void showAccidental();
             
-            // set the accidental value to 'none' and clear out the
-            // other accidental-related values
+            // set the accidental value to 'none' and clear out the other accidental-related values
             void hideAccidental();
         };
         
         MXAPI_EQUALS_BEGIN( PitchData )
         MXAPI_EQUALS_MEMBER( step )
         MXAPI_EQUALS_MEMBER( alter )
+        MXAPI_DOUBLES_EQUALS_MEMBER( cents )
         MXAPI_EQUALS_MEMBER( accidental )
         MXAPI_EQUALS_MEMBER( isAccidentalParenthetical )
         MXAPI_EQUALS_MEMBER( isAccidentalCautionary )
