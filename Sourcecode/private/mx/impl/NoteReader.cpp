@@ -64,6 +64,7 @@ namespace mx
         , myDurationValue( 0.0L )
         , myStep( core::StepEnum::c )
         , myAlter( 0 )
+        , myCents( 0.0 )
         , myOctave( 4 )
         , myStaffNumber( 0 )
         , myVoiceNumber( 0 )
@@ -213,6 +214,16 @@ namespace mx
                     myStep = pitch.getStep()->getValue();
                     myOctave = pitch.getOctave()->getValue().getValue();
                     myAlter = static_cast<int>( std::ceil( pitch.getAlter()->getValue().getValue() - 0.5 ) );
+
+                    const auto micro =
+                        std::abs( static_cast<core::DecimalType>( myAlter ) - pitch.getAlter()->getValue().getValue() );
+
+                    const auto microDistance =std::abs( micro );
+
+                    if( microDistance >= 0.000000000001 )
+                    {
+                        myCents = static_cast<double>( micro * 100.0 );
+                    }
                     break;
                 }
                     

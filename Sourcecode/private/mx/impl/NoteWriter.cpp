@@ -372,8 +372,13 @@ namespace mx
                 pitch->getStep()->setValue( myConverter.convert( myNoteData.pitchData.step ) );
                 if( myNoteData.pitchData.alter != 0 )
                 {
+                    core::DecimalType microtones = 0.0;
+                    if( myNoteData.pitchData.cents != 0.0 ) {
+                        microtones = static_cast<core::DecimalType>( myNoteData.pitchData.cents * 100.0 );
+                    }
+                    const auto alter = static_cast<core::DecimalType>( myNoteData.pitchData.alter ) + microtones;
                     pitch->setHasAlter( true );
-                    pitch->getAlter()->setValue( core::Semitones{ static_cast<core::DecimalType>( myNoteData.pitchData.alter ) } );
+                    pitch->getAlter()->setValue( core::Semitones{ alter } );
                 }
                 pitch->getOctave()->setValue( core::OctaveValue{ myNoteData.pitchData.octave } );
             }
