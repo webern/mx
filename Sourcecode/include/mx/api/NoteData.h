@@ -102,8 +102,13 @@ namespace mx
             int userRequestedVoiceNumber;
             Stem stem;
             
-            // the location of the note, timewise, within the measure
-            // denominated in ticksPerQuarter as defined by ScoreData
+            // the location of the note, timewise, within the measuredenominated in ticksPerQuarter as
+            // defined by ScoreData. in each measure, the note with tickTimePosition 0 is located at
+            // the start of the measure. if ScoreData defines ticksPerQuarter as N, then the note
+            // located at tickTimePosition N will be located one quarter note after the start of the
+            // measure. MusicXML's <forward> and <backup> tags will be automatically derived and
+            // placed in to the MusicXML to facilitate the correct placement of notes based on their
+            // tickTimePosition defined here.
             int tickTimePosition;
             DurationData durationData;
             
