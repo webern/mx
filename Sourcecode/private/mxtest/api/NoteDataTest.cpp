@@ -977,5 +977,4 @@ TEST( notePositionRoundTrip, NoteData )
 }
 T_END;
 
-// TODO - write PitchData::cents tests
 #endif
