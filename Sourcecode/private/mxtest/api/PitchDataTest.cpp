@@ -76,6 +76,7 @@ namespace
         double cents;
         Accidental accidental;
         std::string alterString;
+        std::string secondAlterString;
     };
 
     Output pitchDataTest( const Input& input )
@@ -100,8 +101,7 @@ namespace
         auto docId = mgr.createFromScore( score );
         std::stringstream ss;
         mgr.writeToStream( docId, ss );
-
-        std::cout << std::endl << ss.str() << std::endl;
+        mgr.destroyDocument( docId );
 
         // check the alter value that was written to xml
         const auto xdoc = ezxml::XFactory::makeXDoc();
@@ -112,7 +112,6 @@ namespace
         Output output;
         output.alterString = alterString;
 
-        mgr.destroyDocument( docId );
         const std::string xml = ss.str();
         std::istringstream iss{ xml };
         docId = mgr.createFromStream( iss );
@@ -127,11 +126,25 @@ namespace
         output.alter = onote.pitchData.alter;
         output.cents = onote.pitchData.cents;
         output.accidental = onote.pitchData.accidental;
+
+        // serialize a second time and check the alter string again
+        docId = mgr.createFromScore( score );
+        ss.str( "" );
+        mgr.writeToStream( docId, ss );
+        mgr.destroyDocument( docId );
+
+        // check the alter value that was written to xml
+        const auto xdoc2 = ezxml::XFactory::makeXDoc();
+        xdoc2->loadStream( ss );
+        auto elem2 = xdoc->getRoot();
+        elem2 = bruteForceFindFirstElement( elem2, "alter" );
+        const auto alterString2 = elem->getValue();
+        output.secondAlterString = alterString2;
         return output;
     }
 }
 
-TEST( Microtones1, PitchData )
+TEST( ThreeQuarterSharp, PitchData )
 {
     auto input = Input{};
     input.step = Step::f;
@@ -145,19 +158,41 @@ TEST( Microtones1, PitchData )
     const auto output = pitchDataTest( input );
 
     CHECK_EQUAL( expectedAlterString, output.alterString );
+    CHECK_EQUAL( expectedAlterString, output.secondAlterString );
     CHECK_EQUAL( expectedAlter, output.alter );
     CHECK_DOUBLES_EQUAL( expectedCents, output.cents, MX_API_EQUALITY_EPSILON );
     CHECK( expectedAccidental == output.accidental );
 }
 T_END;
 
-TEST( Microtones2, PitchData )
+TEST( ThreeQuarterFlat, PitchData )
+{
+    auto input = Input{};
+    input.step = Step::b;
+    input.alter = -1;
+    input.cents = -50.0;
+    input.accidental = Accidental::threeQuartersFlat;
+    const std::string expectedAlterString = "-1.5";
+    const int expectedAlter = input.alter;
+    const double expectedCents = input.cents;
+    const Accidental expectedAccidental = input.accidental;
+    const auto output = pitchDataTest( input );
+
+    CHECK_EQUAL( expectedAlterString, output.alterString );
+    CHECK_EQUAL( expectedAlterString, output.secondAlterString );
+    CHECK_EQUAL( expectedAlter, output.alter );
+    CHECK_DOUBLES_EQUAL( expectedCents, output.cents, MX_API_EQUALITY_EPSILON );
+    CHECK( expectedAccidental == output.accidental );
+}
+T_END;
+
+TEST( AlmostDoubleSharp, PitchData )
 {
     auto input = Input{};
     input.step = Step::g;
     input.alter = 1;
     input.cents = 99.999;
-    input.accidental = Accidental::none;
+    input.accidental = Accidental::doubleSharp;
     const std::string expectedAlterString = "1.99999";
     const int expectedAlter = input.alter;
     const double expectedCents = input.cents;
@@ -165,6 +200,49 @@ TEST( Microtones2, PitchData )
     const auto output = pitchDataTest( input );
 
     CHECK_EQUAL( expectedAlterString, output.alterString );
+    CHECK_EQUAL( expectedAlterString, output.secondAlterString );
+    CHECK_EQUAL( expectedAlter, output.alter );
+    CHECK_DOUBLES_EQUAL( expectedCents, output.cents, MX_API_EQUALITY_EPSILON );
+    CHECK( expectedAccidental == output.accidental );
+}
+T_END;
+
+TEST( AlmostDoubleFlat, PitchData )
+{
+    auto input = Input{};
+    input.step = Step::a;
+    input.alter = -1;
+    input.cents = -99.9999;
+    input.accidental = Accidental::flatFlat;
+    const std::string expectedAlterString = "-1.999999";
+    const int expectedAlter = input.alter;
+    const double expectedCents = input.cents;
+    const Accidental expectedAccidental = input.accidental;
+    const auto output = pitchDataTest( input );
+
+    CHECK_EQUAL( expectedAlterString, output.alterString );
+    CHECK_EQUAL( expectedAlterString, output.secondAlterString );
+    CHECK_EQUAL( expectedAlter, output.alter );
+    CHECK_DOUBLES_EQUAL( expectedCents, output.cents, MX_API_EQUALITY_EPSILON );
+    CHECK( expectedAccidental == output.accidental );
+}
+T_END;
+
+TEST( Microtones4, PitchData )
+{
+    auto input = Input{};
+    input.step = Step::g;
+    input.alter = 1;
+    input.cents = -123456789;
+    input.accidental = Accidental::none;
+    const std::string expectedAlterString = "-1234566.89";
+    const int expectedAlter = -1234566;
+    const double expectedCents = -89.0;
+    const Accidental expectedAccidental = input.accidental;
+    const auto output = pitchDataTest( input );
+
+    CHECK_EQUAL( expectedAlterString, output.alterString );
+    CHECK_EQUAL( expectedAlterString, output.secondAlterString );
     CHECK_EQUAL( expectedAlter, output.alter );
     CHECK_DOUBLES_EQUAL( expectedCents, output.cents, MX_API_EQUALITY_EPSILON );
     CHECK( expectedAccidental == output.accidental );

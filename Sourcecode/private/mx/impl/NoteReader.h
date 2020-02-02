@@ -50,7 +50,7 @@ namespace mx
             inline long double getDurationValue() const { return myDurationValue; }
             inline core::StepEnum getStep() const { return myStep; }
             inline int getAlter() const { return myAlter; }
-            inline int getCents() const { return myCents; }
+            inline double getCents() const { return myCents; }
             inline int getOctave() const { return myOctave; }
             inline int getStaffNumber() const { return myStaffNumber; }
             inline int getVoiceNumber() const { return myVoiceNumber; }

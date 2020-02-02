@@ -214,13 +214,11 @@ namespace mx
                     const auto& pitch = *fullNoteTypeChoice.getPitch();
                     myStep = pitch.getStep()->getValue();
                     myOctave = pitch.getOctave()->getValue().getValue();
-                    myAlter = static_cast<int>( pitch.getAlter()->getValue().getValue() );
-
-                    const auto micro =
-                        std::abs( static_cast<core::DecimalType>( myAlter ) - pitch.getAlter()->getValue().getValue() );
-
+                    const auto xmlAlter = pitch.getAlter()->getValue().getValue();
+                    const auto intAlter = static_cast<int>( xmlAlter );
+                    myAlter = intAlter;
+                    const auto micro = xmlAlter - static_cast<mx::core::DecimalType> ( intAlter );
                     const auto microDistance = std::abs( micro );
-
                     if( microDistance >= 0.000000000001 )
                     {
                         const auto theCents = micro * 100.0;
