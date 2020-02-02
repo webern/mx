@@ -112,6 +112,7 @@ namespace
         Output output;
         output.alterString = alterString;
 
+// deserialize back to ScoreData
         const std::string xml = ss.str();
         std::istringstream iss{ xml };
         docId = mgr.createFromStream( iss );
