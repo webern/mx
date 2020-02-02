@@ -110,6 +110,7 @@ namespace mx
             auto converter = Converter{};
             myOutNoteData.pitchData.step = converter.convert( reader.getStep() );
             myOutNoteData.pitchData.alter = reader.getAlter();
+            myOutNoteData.pitchData.cents = reader.getCents();
             
             myOutNoteData.pitchData.accidental = api::Accidental::none;
             
