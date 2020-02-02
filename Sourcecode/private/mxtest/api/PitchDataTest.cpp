@@ -3,10 +3,9 @@
 // Distributed under the MIT License
 
 #include "mxtest/control/CompileControl.h"
-#if defined(MX_COMPILE_API_TESTS) && defined(MX_COMPILE_API_ROUNDTRIP)
+//#ifdef MX_COMPILE_API_TESTS
 
 #include "cpul/cpulTestHarness.h"
-#include "mxtest/api/RoundTrip.h"
 #include "mx/api/DocumentManager.h"
 #include "mx/core/Document.h"
 #include "mx/core/elements/ScorePartwise.h"
@@ -30,7 +29,6 @@
 
 using namespace std;
 using namespace mx::api;
-using namespace mxtest;
 
 TEST( microtones1, PitchData )
 {
@@ -72,4 +70,4 @@ TEST( microtones1, PitchData )
 }
 T_END;
 
-#endif
+//#endif

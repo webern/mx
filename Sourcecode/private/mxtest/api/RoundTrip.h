@@ -5,7 +5,6 @@
 #pragma once
 
 #include "mxtest/control/CompileControl.h"
-#ifdef MX_COMPILE_API_ROUNDTRIP
 
 #include "mx/api/DocumentManager.h"
 #include "mxtest/file/MxFileRepository.h"
@@ -45,4 +44,3 @@ namespace mxtest
     }
 }
 
-#endif
