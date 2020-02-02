@@ -21,9 +21,10 @@ This project is a C++ library for working with MusicXML files.  MusicXML files a
 ## Compiling
 
 The project is tested with the following:
-* Xcode 10.1 Apple LLVM version 10.0.0 (clang-1000.11.45.5)
+* Xcode 10.1 Apple LLVM version 10.0.0 and higher
 * g++ (Debian 6.3.0-18+deb9u1) 6.3.0 20170516
 * cmake version 3.7.2
+* MSVC2019
 
 Visual Studio should be very close to working. A good first pull request would be to compile with VS and add the version to the list above.
 
