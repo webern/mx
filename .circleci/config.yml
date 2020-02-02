@@ -11,6 +11,10 @@ jobs:
       - checkout
 
       - run:
+          name: Toolchain Versions
+          command: |
+              c++ --version && cmake --version && git --version && cat /etc/os-release
+      - run:
           name: Cmake
           command: |
               [ "$(git rev-parse --abbrev-ref HEAD)" == "master" ] && \
