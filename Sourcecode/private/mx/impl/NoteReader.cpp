@@ -43,6 +43,7 @@
 #include "mx/utility/StringToInt.h"
 
 #include <map>
+#include <mx/api/PitchData.h>
 
 namespace mx
 {
@@ -213,16 +214,18 @@ namespace mx
                     const auto& pitch = *fullNoteTypeChoice.getPitch();
                     myStep = pitch.getStep()->getValue();
                     myOctave = pitch.getOctave()->getValue().getValue();
-                    myAlter = static_cast<int>( std::ceil( pitch.getAlter()->getValue().getValue() - 0.5 ) );
+                    myAlter = static_cast<int>( pitch.getAlter()->getValue().getValue() );
 
                     const auto micro =
                         std::abs( static_cast<core::DecimalType>( myAlter ) - pitch.getAlter()->getValue().getValue() );
 
-                    const auto microDistance =std::abs( micro );
+                    const auto microDistance = std::abs( micro );
 
                     if( microDistance >= 0.000000000001 )
                     {
-                        myCents = static_cast<double>( micro * 100.0 );
+                        const auto theCents = micro * 100.0;
+                        const auto theNarrowCents = static_cast<decltype(mx::api::PitchData::cents)>( theCents );
+                        myCents = theNarrowCents;
                     }
                     break;
                 }
