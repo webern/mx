@@ -9,10 +9,8 @@ MusicXML Class Library
 
 -----------------------------------------
 
-![CircleCI](https://circleci.com/gh/webern/mx.svg?style=svg&circle-token=2f4d1a33a0825d9634b458a2306ed22482314661)
-
-Badges seem to be [broken](https://github.com/github/markup/issues/224), go to the [CircleCI project](https://circleci.com/gh/webern/mx) for build status.  
-
+ * Master: [![CircleCI](https://circleci.com/gh/webern/mx/tree/master.svg?style=svg)](https://circleci.com/gh/webern/mx/tree/master)
+ * Develop: [![CircleCI](https://circleci.com/gh/webern/mx/tree/develop.svg?style=svg)](https://circleci.com/gh/webern/mx/tree/develop)
 
 ## Introduction
 
