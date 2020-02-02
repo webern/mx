@@ -43,7 +43,7 @@
 #include "mx/utility/StringToInt.h"
 
 #include <map>
-#include <mx/api/PitchData.h>
+#include "mx/api/PitchData.h"
 
 namespace mx
 {
