@@ -228,7 +228,7 @@ TEST( AlmostDoubleFlat, PitchData )
 }
 T_END;
 
-TEST( Microtones4, PitchData )
+TEST( CrazyEdgeCase1, PitchData )
 {
     auto input = Input{};
     input.step = Step::g;
@@ -238,6 +238,27 @@ TEST( Microtones4, PitchData )
     const std::string expectedAlterString = "-1234566.89";
     const int expectedAlter = -1234566;
     const double expectedCents = -89.0;
+    const Accidental expectedAccidental = input.accidental;
+    const auto output = pitchDataTest( input );
+
+    CHECK_EQUAL( expectedAlterString, output.alterString );
+    CHECK_EQUAL( expectedAlterString, output.secondAlterString );
+    CHECK_EQUAL( expectedAlter, output.alter );
+    CHECK_DOUBLES_EQUAL( expectedCents, output.cents, MX_API_EQUALITY_EPSILON );
+    CHECK( expectedAccidental == output.accidental );
+}
+T_END;
+
+TEST( CrazyEdgeCase2, PitchData )
+{
+    auto input = Input{};
+    input.step = Step::e;
+    input.alter = 21;
+    input.cents = 100.01;
+    input.accidental = Accidental::sori;
+    const std::string expectedAlterString = "22.0001";
+    const int expectedAlter = 22;
+    const double expectedCents = 0.01;
     const Accidental expectedAccidental = input.accidental;
     const auto output = pitchDataTest( input );
 
