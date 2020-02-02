@@ -4,7 +4,7 @@
 
 #include <extern/ezxml/src/include/ezxml/XFactory.h>
 #include "mxtest/control/CompileControl.h"
-//#ifdef MX_COMPILE_API_TESTS
+#ifdef MX_COMPILE_API_TESTS
 
 #include "cpul/cpulTestHarness.h"
 #include "mx/api/DocumentManager.h"
@@ -270,4 +270,4 @@ TEST( CrazyEdgeCase2, PitchData )
 }
 T_END;
 
-//#endif
+#endif
