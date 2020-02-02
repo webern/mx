@@ -9,8 +9,7 @@ MusicXML Class Library
 
 -----------------------------------------
 
- * Master: [![CircleCI](https://circleci.com/gh/webern/mx/tree/master.svg?style=svg)](https://circleci.com/gh/webern/mx/tree/master)
- * Develop: [![CircleCI](https://circleci.com/gh/webern/mx/tree/develop.svg?style=svg)](https://circleci.com/gh/webern/mx/tree/develop)
+[![CircleCI](https://circleci.com/gh/webern/mx.svg?style=svg)](https://circleci.com/gh/webern/mx)
 
 ## Introduction
 
