@@ -84,7 +84,7 @@ namespace mx
             // dealing with integrals for the more common case on non-microtonal music. in order to still support
             // microtones without resording to a floating-point alter value, we break out microtonal adjustments to a
             // separate 'cents' field, which will be addeded to the alter integral:
-            // <alter> = (double)alter + (cents * 100.0)
+            // <alter> = (double)alter + (cents / 100.0)
             double cents;
 
             // in MusicXML, the accidental is completely independent of the sounding pitch and is only present when you
