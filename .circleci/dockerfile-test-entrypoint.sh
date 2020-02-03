@@ -7,9 +7,7 @@ sep() {
 
 sep
 echo "version info"
-g++ --version
-cmake --version
-cat /etc/os-release
+c++ --version && cmake --version && git --version && cat /etc/os-release
 
 sep
 cmake \

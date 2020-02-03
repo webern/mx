@@ -11,6 +11,7 @@ namespace mx
         PitchData::PitchData()
         : step{ Step::c }
         , alter{ 0 }
+        , cents{ 0.0 }
         , accidental{Accidental::none}
         , isAccidentalParenthetical{ false }
         , isAccidentalCautionary{ false }
