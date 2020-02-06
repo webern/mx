@@ -5,9 +5,9 @@
 #pragma once
 
 #include "mxtest/control/CompileControl.h"
-
 #include "mx/api/DocumentManager.h"
 #include "mxtest/file/MxFileRepository.h"
+#include <sstream>
 
 namespace mxtest
 {

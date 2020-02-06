@@ -1,3 +1,5 @@
+#define MX_USE_CATCH2
+
 #include <iostream>
 #include "cpul/cpulRun.h"
 #include "cpul/cpulTestTimer.h"

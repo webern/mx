@@ -1,3 +1,4 @@
+#if 0
 #include "cpul/cpulTest.h"
 #include "cpul/cpulTestRegistry.h"
 #include "cpul/cpulTestResult.h"
@@ -84,3 +85,4 @@ bool Test::getDoRunTest() const
     return doRunTest;
 }
 
+#endif
