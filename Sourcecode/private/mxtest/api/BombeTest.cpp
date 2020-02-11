@@ -3,11 +3,12 @@
 // Distributed under the MIT License
 
 #include "mxtest/control/CompileControl.h"
+
 #ifdef MX_COMPILE_API_TESTS
 
-#include "cpul/cpulTestHarness.h"
-#include "mxtest/api/RoundTrip.h"
-#include "mx/api/DocumentManager.h"
+    #include "cpul/testFramework.h"
+    #include "mxtest/api/RoundTrip.h"
+    #include "mx/api/DocumentManager.h"
 
 using namespace std;
 using namespace mx::api;
@@ -26,7 +27,7 @@ inline ScoreData getBombe()
     return scoreData;
 }
 
-inline NoteData getBombeNote(int measureIndex, int partIndex, int staffIndex, int voiceIndex, int noteIndex)
+inline NoteData getBombeNote( int measureIndex, int partIndex, int staffIndex, int voiceIndex, int noteIndex )
 {
     auto scoreData = getBombe();
     const auto& part = scoreData.parts.at( partIndex );
@@ -50,6 +51,7 @@ TEST( x, Bombe )
     CHECK_EQUAL( 336, noteData.tickTimePosition );
 
 }
+
 T_END
 
 #endif

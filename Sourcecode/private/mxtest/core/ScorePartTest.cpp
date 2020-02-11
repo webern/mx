@@ -5,7 +5,7 @@
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_CORE_TESTS
 
-#include "cpul/cpulTestHarness.h"
+#include "cpul/testFramework.h"
 #include "mxtest/core/HelperFunctions.h"
 #include "mxtest/core/ScorePartTest.h"
 #include "mxtest/core/IdentificationTest.h"

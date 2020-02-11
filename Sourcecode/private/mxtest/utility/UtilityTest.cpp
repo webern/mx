@@ -3,14 +3,15 @@
 // Distributed under the MIT License
 
 #include "mxtest/control/CompileControl.h"
+
 #ifdef MX_COMPILE_UTILTIY_TESTS
 
-#include "cpul/cpulTestHarness.h"
-#include "mx/utility/Utility.h"
+    #include "cpul/testFramework.h"
+    #include "mx/utility/Utility.h"
 
-#include <string>
-#include <sstream>
-#include <memory>
+    #include <string>
+    #include <sstream>
+    #include <memory>
 
 
 using namespace std;
@@ -22,15 +23,17 @@ TEST( setTitle, MxUtility )
 {
     auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     setTitle( doc, "My Title" );
-    
+
     bool isElementEnabled = doc->getScorePartwise()->getScoreHeaderGroup()->getHasWork();
     isElementEnabled &= doc->getScorePartwise()->getScoreHeaderGroup()->getWork()->getHasWorkTitle();
-    CHECK( isElementEnabled )
-    
+    CHECK( isElementEnabled );
+
     StringType expected = "My Title";
-    StringType actual = doc->getScorePartwise()->getScoreHeaderGroup()->getWork()->getWorkTitle()->getValue().getValue();
+    StringType
+        actual = doc->getScorePartwise()->getScoreHeaderGroup()->getWork()->getWorkTitle()->getValue().getValue();
     CHECK_EQUAL( expected, actual )
 }
+
 T_END
 
 
@@ -38,15 +41,16 @@ TEST( getTitleFalse, MxUtility )
 {
     auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     doc->getScorePartwise()->getScoreHeaderGroup()->getWork()->getWorkTitle()->setValue( XsString( "AnyString" ) );
-    
+
     bool isElementEnabled = doc->getScorePartwise()->getScoreHeaderGroup()->getHasWork();
     isElementEnabled &= doc->getScorePartwise()->getScoreHeaderGroup()->getWork()->getHasWorkTitle();
-    CHECK( ! isElementEnabled )
-    
+    CHECK( !isElementEnabled );
+
     StringType expected = "";
     StringType actual = getTitle( doc );
     CHECK_EQUAL( expected, actual )
 }
+
 T_END
 
 
@@ -58,12 +62,13 @@ TEST( getTitle, MxUtility )
     doc->getScorePartwise()->getScoreHeaderGroup()->getWork()->setHasWorkTitle( true );
     bool isElementEnabled = doc->getScorePartwise()->getScoreHeaderGroup()->getHasWork();
     isElementEnabled &= doc->getScorePartwise()->getScoreHeaderGroup()->getWork()->getHasWorkTitle();
-    CHECK( isElementEnabled )
-    
+    CHECK( isElementEnabled );
+
     StringType expected = "AnyString";
     StringType actual = getTitle( doc );
     CHECK_EQUAL( expected, actual )
 }
+
 T_END
 
 
@@ -71,14 +76,15 @@ TEST( setMovementTitle, MxUtility )
 {
     auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     setMovementTitle( doc, "My Title" );
-    
+
     bool isElementEnabled = doc->getScorePartwise()->getScoreHeaderGroup()->getHasMovementTitle();
-    CHECK( isElementEnabled )
-    
+    CHECK( isElementEnabled );
+
     StringType expected = "My Title";
     StringType actual = doc->getScorePartwise()->getScoreHeaderGroup()->getMovementTitle()->getValue().getValue();
     CHECK_EQUAL( expected, actual )
 }
+
 T_END
 
 
@@ -86,14 +92,15 @@ TEST( getMovementTitleFalse, MxUtility )
 {
     auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     doc->getScorePartwise()->getScoreHeaderGroup()->getMovementTitle()->setValue( XsString( "AnyString" ) );
-    
+
     bool isElementEnabled = doc->getScorePartwise()->getScoreHeaderGroup()->getHasMovementTitle();
-    CHECK( ! isElementEnabled )
-    
+    CHECK( !isElementEnabled );
+
     StringType expected = "";
     StringType actual = getMovementTitle( doc );
     CHECK_EQUAL( expected, actual )
 }
+
 T_END
 
 
@@ -103,12 +110,13 @@ TEST( getMovementTitle, MxUtility )
     doc->getScorePartwise()->getScoreHeaderGroup()->getMovementTitle()->setValue( XsString( "AnyString" ) );
     doc->getScorePartwise()->getScoreHeaderGroup()->setHasMovementTitle( true );
     bool isElementEnabled = doc->getScorePartwise()->getScoreHeaderGroup()->getHasMovementTitle();
-    CHECK( isElementEnabled )
-    
+    CHECK( isElementEnabled );
+
     StringType expected = "AnyString";
     StringType actual = getMovementTitle( doc );
     CHECK_EQUAL( expected, actual )
 }
+
 T_END
 
 
@@ -116,14 +124,15 @@ TEST( setMovementNumber, MxUtility )
 {
     auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     setMovementNumber( doc, 1 );
-    
+
     bool isElementEnabled = doc->getScorePartwise()->getScoreHeaderGroup()->getHasMovementNumber();
-    CHECK( isElementEnabled )
-    
+    CHECK( isElementEnabled );
+
     StringType expected = "1";
     StringType actual = doc->getScorePartwise()->getScoreHeaderGroup()->getMovementNumber()->getValue().getValue();
     CHECK_EQUAL( expected, actual )
 }
+
 T_END
 
 
@@ -131,14 +140,15 @@ TEST( getMovementNumberFalse, MxUtility )
 {
     auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     doc->getScorePartwise()->getScoreHeaderGroup()->getMovementNumber()->setValue( XsString( "1" ) );
-    
+
     bool isElementEnabled = doc->getScorePartwise()->getScoreHeaderGroup()->getHasMovementNumber();
-    CHECK( ! isElementEnabled )
-    
+    CHECK( !isElementEnabled );
+
     int expected = 0;
     int actual = getMovementNumber( doc );
     CHECK_EQUAL( expected, actual )
 }
+
 T_END
 
 
@@ -148,12 +158,13 @@ TEST( getMovementNumber, MxUtility )
     doc->getScorePartwise()->getScoreHeaderGroup()->getMovementNumber()->setValue( XsString( "2" ) );
     doc->getScorePartwise()->getScoreHeaderGroup()->setHasMovementNumber( true );
     bool isElementEnabled = doc->getScorePartwise()->getScoreHeaderGroup()->getHasMovementNumber();
-    CHECK( isElementEnabled )
-    
+    CHECK( isElementEnabled );
+
     int expected = 2;
     int actual = getMovementNumber( doc );
     CHECK_EQUAL( expected, actual )
 }
+
 T_END
 
 
@@ -161,9 +172,10 @@ TEST( setComposer, MxUtility )
 {
     auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     setComposer( doc, "AnyString" );
-    
+
     CHECK_EQUAL( 1, doc->getScorePartwise()->getScoreHeaderGroup()->getIdentification()->getCreatorSet().size() )
-    auto composerCredit = *doc->getScorePartwise()->getScoreHeaderGroup()->getIdentification()->getCreatorSet().cbegin();
+    auto
+        composerCredit = *doc->getScorePartwise()->getScoreHeaderGroup()->getIdentification()->getCreatorSet().cbegin();
     StringType expected = "AnyString";
     StringType actual = composerCredit->getValue().getValue();
     CHECK_EQUAL( expected, actual )
@@ -171,6 +183,7 @@ TEST( setComposer, MxUtility )
     actual = composerCredit->getAttributes()->type.getValue();
     CHECK_EQUAL( expected, actual )
 }
+
 T_END
 
 
@@ -178,13 +191,14 @@ TEST( getComposerFalse, MxUtility )
 {
     auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     auto composerCreator = makeCreator();
-    composerCreator->setValue( XsString( "Bishop the Cat" ));
+    composerCreator->setValue( XsString( "Bishop the Cat" ) );
     composerCreator->getAttributes()->type = XsToken( "cat" );
     doc->getScorePartwise()->getScoreHeaderGroup()->getIdentification()->addCreator( composerCreator );
     StringType expected = "";
     StringType actual = getComposer( doc );
     CHECK_EQUAL( expected, actual )
 }
+
 T_END
 
 
@@ -192,13 +206,14 @@ TEST( getComposer, MxUtility )
 {
     auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     auto composerCreator = makeCreator();
-    composerCreator->setValue( XsString( "Bishop the Cat" ));
+    composerCreator->setValue( XsString( "Bishop the Cat" ) );
     composerCreator->getAttributes()->type = XsToken( "composer" );
     doc->getScorePartwise()->getScoreHeaderGroup()->getIdentification()->addCreator( composerCreator );
     StringType expected = "Bishop the Cat";
     StringType actual = getComposer( doc );
     CHECK_EQUAL( expected, actual )
 }
+
 T_END
 
 
@@ -206,7 +221,7 @@ TEST( setCopyright, MxUtility )
 {
     auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     setCopyright( doc, "AnyString" );
-    
+
     CHECK_EQUAL( 1, doc->getScorePartwise()->getScoreHeaderGroup()->getIdentification()->getRightsSet().size() )
     auto item = *doc->getScorePartwise()->getScoreHeaderGroup()->getIdentification()->getRightsSet().cbegin();
     StringType expected = "AnyString";
@@ -216,6 +231,7 @@ TEST( setCopyright, MxUtility )
     actual = item->getAttributes()->type.getValue();
     CHECK_EQUAL( expected, actual )
 }
+
 T_END
 
 
@@ -223,13 +239,14 @@ TEST( getCopyrightFalse, MxUtility )
 {
     auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     auto item = makeRights();
-    item->setValue( XsString( "Bishop the Cat" ));
+    item->setValue( XsString( "Bishop the Cat" ) );
     item->getAttributes()->type = XsToken( "cat" );
     doc->getScorePartwise()->getScoreHeaderGroup()->getIdentification()->addRights( item );
     StringType expected = "";
     StringType actual = getCopyright( doc );
     CHECK_EQUAL( expected, actual )
 }
+
 T_END
 
 
@@ -237,13 +254,14 @@ TEST( getCopyright, MxUtility )
 {
     auto doc = makeDocument( mx::core::DocumentChoice::partwise );
     auto item = makeRights();
-    item->setValue( XsString( "Bishop the Cat" ));
+    item->setValue( XsString( "Bishop the Cat" ) );
     item->getAttributes()->type = XsToken( "copyright" );
     doc->getScorePartwise()->getScoreHeaderGroup()->getIdentification()->addRights( item );
     StringType expected = "Bishop the Cat";
     StringType actual = getCopyright( doc );
     CHECK_EQUAL( expected, actual )
 }
+
 T_END
 
 
@@ -257,15 +275,16 @@ TEST( setSoftware, MxUtility )
     auto software = encodingChoice->getSoftware();
     auto choice = encodingChoice->getChoice();
     CHECK( EncodingChoice::Choice::software == choice );
-    
+
     auto actual = software->getValue().getValue();
     auto expected = "AnyString";
     CHECK_EQUAL( expected, actual );
-    
+
 //    doc->getScorePartwise()->getScoreHeaderGroup()->getIdentification()->getEncoding()->getEncodingChoiceSet().cbegin()->getSoftware()->getValue().getValue();
 //    StringType expected = "AnyString";
 //    StringType actual = doc->getScorePartwise()->getScoreHeaderGroup()->getIdentification()->getEncoding()->getEncodingChoiceSet().cbegin()->getSoftware()->getValue().getValue();
 }
+
 T_END
 
 
@@ -283,6 +302,7 @@ TEST( getSoftwareFalse, MxUtility )
     StringType actual = getSoftware( doc );
     CHECK_EQUAL( expected, actual );
 }
+
 T_END
 
 
@@ -301,6 +321,7 @@ TEST( getSoftware, MxUtility )
     StringType actual = getSoftware( doc );
     CHECK_EQUAL( expected, actual );
 }
+
 T_END
 
 
@@ -317,6 +338,7 @@ TEST( startPartGroupInitialGroup, MxUtility )
     size_t actual = doc->getScorePartwise()->getScoreHeaderGroup()->getPartList()->getPartGroupSet().size();
     CHECK_EQUAL( expected, actual )
 }
+
 T_END
 
 
@@ -334,6 +356,7 @@ TEST( startPartGroupTwoGroupsAtBeginning, MxUtility )
     size_t actual = doc->getScorePartwise()->getScoreHeaderGroup()->getPartList()->getPartGroupSet().size();
     CHECK_EQUAL( expected, actual )
 }
+
 T_END
 
 
@@ -357,6 +380,7 @@ TEST( startPartGroupOneAtBeginningOneAfterFirstPart, MxUtility )
     actual = partList->getPartGroupOrScorePartSet().size();
     CHECK_EQUAL( expected, actual )
 }
+
 T_END
 
 
@@ -367,12 +391,14 @@ TEST( stopPartGroup, MxUtility )
     size_t expected = 1;
     size_t actual = doc->getScorePartwise()->getScoreHeaderGroup()->getPartList()->getPartGroupOrScorePartSet().size();
     CHECK_EQUAL( expected, actual )
-    auto groupStopContainer = *( doc->getScorePartwise()->getScoreHeaderGroup()->getPartList()->getPartGroupOrScorePartSet().cbegin() );
+    auto groupStopContainer =
+        *( doc->getScorePartwise()->getScoreHeaderGroup()->getPartList()->getPartGroupOrScorePartSet().cbegin() );
     CHECK( groupStopContainer->getChoice() == PartGroupOrScorePart::Choice::partGroup );
     auto groupStopElement = groupStopContainer->getPartGroup();
-    CHECK( !groupStopElement->getAttributes()->hasNumber )
+    CHECK( !groupStopElement->getAttributes()->hasNumber );
     CHECK( groupStopElement->getAttributes()->type == StartStop::stop );
 }
+
 T_END
 
 
@@ -383,13 +409,15 @@ TEST( stopPartGroupInt, MxUtility )
     size_t expected = 1;
     size_t actual = doc->getScorePartwise()->getScoreHeaderGroup()->getPartList()->getPartGroupOrScorePartSet().size();
     CHECK_EQUAL( expected, actual )
-    auto groupStopContainer = *( doc->getScorePartwise()->getScoreHeaderGroup()->getPartList()->getPartGroupOrScorePartSet().cbegin() );
+    auto groupStopContainer =
+        *( doc->getScorePartwise()->getScoreHeaderGroup()->getPartList()->getPartGroupOrScorePartSet().cbegin() );
     CHECK( groupStopContainer->getChoice() == PartGroupOrScorePart::Choice::partGroup );
     auto groupStopElement = groupStopContainer->getPartGroup();
-    CHECK( groupStopElement->getAttributes()->hasNumber )
+    CHECK( groupStopElement->getAttributes()->hasNumber );
     CHECK_EQUAL( "10", groupStopElement->getAttributes()->number.getValue() )
     CHECK( groupStopElement->getAttributes()->type == StartStop::stop );
 }
+
 T_END
 
 
@@ -411,7 +439,9 @@ TEST( addPart, MxUtilityImpl )
     stopPartGroup( doc, 1 );
     std::stringstream ss;
     ss << R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>)" << endl;
-    ss << R"(<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 3.0 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">)" << endl;
+    ss
+        << R"(<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 3.0 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">)"
+        << endl;
     ss << R"(<score-partwise>)" << endl;
     ss << R"(   <part-list>)" << endl;
     ss << R"(      <part-group type="start" number="1">)" << endl;
@@ -446,6 +476,7 @@ TEST( addPart, MxUtilityImpl )
     StringType actual = ss.str();
     CHECK_EQUAL( expected, actual )
 }
+
 T_END
 
 
@@ -460,6 +491,7 @@ TEST( measure, MxUtilityImpl )
     StringType actual = ss.str();
     CHECK_EQUAL( expected, actual );
 }
+
 T_END
 
 
@@ -482,6 +514,7 @@ TEST( measureTimeSignature, MxUtilityImpl )
     StringType actual = ss.str();
     CHECK_EQUAL( expected, actual );
 }
+
 T_END
 
 
@@ -506,6 +539,7 @@ TEST( measureStaves, MxUtilityImpl )
     StringType actual = ss.str();
     CHECK_EQUAL( expected, actual );
 }
+
 T_END
 
 
@@ -532,6 +566,7 @@ TEST( measureDivisions, MxUtilityImpl )
     StringType actual = ss.str();
     CHECK_EQUAL( expected, actual );
 }
+
 T_END
 
 
@@ -543,6 +578,7 @@ TEST( getDivisions, MxUtilityImpl )
     int actual = getDivisions( measure );
     CHECK_EQUAL( expected, actual )
 }
+
 T_END
 
 

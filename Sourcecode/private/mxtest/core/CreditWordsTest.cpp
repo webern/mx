@@ -4,7 +4,7 @@
 
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_CORE_TESTS
-#include "cpul/cpulTestHarness.h"
+#include "cpul/testFramework.h"
 #include "mx/core/Elements.h"
 #include <sstream>
 

@@ -9,7 +9,7 @@
 #include "mxtest/file/MxFileTest.h"
 #include "mxtest/file/MxFileTestGroup.h"
 #include "mx/api/DocumentManager.h"
-#include "cpul/cpulTestHarness.h"
+#include "cpul/testFramework.h"
 #include "mx/api/ScoreData.h"
 #include "mxtest/api/ApiTester.h"
 #include "mxtest/api/ApiK016aMiscScoreData.h"

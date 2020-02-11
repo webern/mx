@@ -3,12 +3,13 @@
 // Distributed under the MIT License
 
 #include "mxtest/control/CompileControl.h"
+
 #ifdef MX_COMPILE_IMPL_TESTS
 
-#include "cpul/cpulTestHarness.h"
-#include "mx/impl/PrintFunctions.h"
-#include "mx/core/elements/FermataAttributes.h"
-#include "mx/core/elements/DynamicsAttributes.h"
+    #include "cpul/testFramework.h"
+    #include "mx/impl/PrintFunctions.h"
+    #include "mx/core/elements/FermataAttributes.h"
+    #include "mx/core/elements/DynamicsAttributes.h"
 
 using namespace mx;
 using namespace mx::impl;
@@ -29,6 +30,7 @@ TEST( getColor, PrintFunctions )
     CHECK_EQUAL( static_cast<int>( 2 ), static_cast<int>( colorData.green ) );
     CHECK_EQUAL( static_cast<int>( 3 ), static_cast<int>( colorData.blue ) );
 }
+
 T_END
 
 
@@ -50,6 +52,7 @@ TEST( getColorAlpha, PrintFunctions )
     CHECK_EQUAL( static_cast<int>( 2 ), static_cast<int>( colorData.blue ) );
     CHECK_EQUAL( static_cast<int>( 1 ), static_cast<int>( colorData.alpha ) );
 }
+
 T_END
 
 
@@ -71,6 +74,7 @@ TEST( getColorFalse, PrintFunctions )
     CHECK_EQUAL( static_cast<int>( 255 ), static_cast<int>( colorData.blue ) );
     CHECK_EQUAL( static_cast<int>( 255 ), static_cast<int>( colorData.alpha ) );
 }
+
 T_END
 
 
@@ -95,6 +99,7 @@ TEST( setColor, PrintFunctions )
     CHECK( core::Color::ColorType::RGB == core.getColorType() );
     CHECK_EQUAL( 255, static_cast<int>( core.getAlpha() ) );
 }
+
 T_END
 
 
@@ -119,6 +124,7 @@ TEST( setColorAlpha, PrintFunctions )
     CHECK( core::Color::ColorType::ARGB == core.getColorType() );
     CHECK_EQUAL( 1, static_cast<int>( core.getAlpha() ) );
 }
+
 T_END
 
 
@@ -143,6 +149,7 @@ TEST( setColorFalse, PrintFunctions )
     CHECK( core::Color::ColorType::RGB == core.getColorType() );
     CHECK_EQUAL( 255, static_cast<int>( core.getAlpha() ) );
 }
+
 T_END
 
 
@@ -167,7 +174,7 @@ TEST( everythingSet, PrintFunctions )
     CHECK( attr.hasUnderline );
     CHECK_EQUAL( 3, attr.underline.getValue() );
     CHECK( attr.hasFontSize );
-    CHECK( attr.fontSize.getIsNumber() )
+    CHECK( attr.fontSize.getIsNumber() );
     CHECK_DOUBLES_EQUAL( 2.0, attr.fontSize.getValueNumber().getValue(), 0.01 );
     CHECK( attr.hasFontStyle );
     CHECK( core::FontStyle::italic == attr.fontStyle );
@@ -178,6 +185,7 @@ TEST( everythingSet, PrintFunctions )
     CHECK_EQUAL( "z", attr.fontFamily.getValues().front().getValue() );
     CHECK_EQUAL( "ABC", attr.fontFamily.getValues().back().getValue() );
 }
+
 T_END
 
 
@@ -212,8 +220,9 @@ TEST( everythingGet, PrintFunctions )
     CHECK_EQUAL( 2, p.fontData.fontFamily.size() );
     CHECK_EQUAL( "z", p.fontData.fontFamily.front() );
     CHECK_EQUAL( "ABC", p.fontData.fontFamily.back() );
-    
+
 }
+
 T_END
 
 #endif

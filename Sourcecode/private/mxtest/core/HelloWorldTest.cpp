@@ -7,7 +7,7 @@
 
 #include "HelloWorldTest.h"
 #include "HelloWorldExpected.h"
-#include "cpul/cpulTestHarness.h"
+#include "cpul/testFramework.h"
 
 using namespace mx::core;
 

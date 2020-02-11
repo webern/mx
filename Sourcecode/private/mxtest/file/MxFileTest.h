@@ -4,12 +4,12 @@
 
 #pragma once
 
-#include "cpul/cpulTest.h"
+#include "cpul/catch.h"
 #include "mxtest/file/MxFile.h"
 
 namespace mxtest
 {
-	class MxFileTest : public ::Test
+	class MxFileTest
 	{
 	public:
 		MxFileTest(
@@ -18,7 +18,7 @@ namespace mxtest
             std::string inTestCppFileName,
             int inTestCppFileLineNumber );
 
-		virtual void runTest( TestResult& rEsUlT_ ) final;
+		virtual void runTest() final;
 
 		virtual const std::string& testFileName() const final;
 		virtual const std::string testFileNamePart() const final;

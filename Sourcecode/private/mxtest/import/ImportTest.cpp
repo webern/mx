@@ -7,7 +7,7 @@
 
 #include "mxtest/file/MxFileTestGroup.h"
 #include "mxtest/file/Path.h"
-#include "cpul/cpulTestHarness.h"
+#include "cpul/testFramework.h"
 #include "ExpectedFiles.h"
 #include "mxtest/import/ImportTestImpl.h"
 

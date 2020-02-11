@@ -5,7 +5,7 @@
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_NEW_DECIMAL_TESTS
 
-#include "cpul/cpulTestHarness.h"
+#include "cpul/testFramework.h"
 #include "mx/core/PreciseDecimal.h"
 #include <sstream>
 
