@@ -1,5 +1,6 @@
 #pragma once
 
+
 #define PRIVATE_UNUSED_PARAMETER_STRINGIFY(argument) #argument
 
 #ifndef _MSC_VER

@@ -1,4 +1,3 @@
-#if 0
 #ifndef TEST_H
 #define TEST_H
 
@@ -211,5 +210,4 @@ private:
 }                                                                     \
 
 
-#endif
 #endif
