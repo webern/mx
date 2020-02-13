@@ -3,7 +3,8 @@
 #include "cpul/catch.h"
 #include <cmath>
 
-#define TEST( a, b ) TEST_CASE( #a, #b )
+#define MXTEST_STRINGIFY( xstr ) #xstr
+#define TEST( a, b ) TEST_CASE( MXTEST_STRINGIFY( a ## _ ## b ) )
 
 #define CHECK_EQUAL( expected, actual ) CHECK( (expected) == (actual) );
 
