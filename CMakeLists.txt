@@ -59,7 +59,11 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 )
 
 # Install Package Configuration
-install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}_targets)
+install(TARGETS ${PROJECT_NAME}
+    EXPORT ${PROJECT_NAME}_targets
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+)
 install(EXPORT ${PROJECT_NAME}_targets
     NAMESPACE ${PROJECT_NAME}::
     FILE ${PROJECT_NAME}-config.cmake
