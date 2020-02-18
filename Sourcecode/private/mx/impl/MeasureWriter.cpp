@@ -253,7 +253,8 @@ namespace mx
             const bool isSystemDataSpecified =
                    systemData.isMarginSpecified
                 || systemData.isSystemDistanceSpecified
-                || systemData.isTopSystemDistanceSpecified;
+                || systemData.isTopSystemDistanceSpecified
+                || systemData.measureIndex >= 0;
             
             if( !isSystemDataSpecified && !myHistory.getCursor().isFirstMeasureInPart )
             {
