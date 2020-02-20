@@ -604,3 +604,7 @@ healthchecksdb
 MigrationBackup/
 
 # End of https://www.gitignore.io/api/cmake,linux,xcode,macos,clion,windows,visualstudio
+
+# cmake generated files
+Sourcecode/private/extern/ezxml/src/test/Path.h
+Sourcecode/private/mxtest/file/PathRoot.h
