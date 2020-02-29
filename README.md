@@ -300,8 +300,6 @@ The `mx::core` namespace contains the MusicXML representation objects such as el
 
 The `::ezxml::` namespace contains generic XML DOM functionality.  Under the hood [pugixml](http://pugixml.org/) is being used.  See the XML DOM section for more information.
 
-The `mx::utility` namespace contains the beginnings of an api for simplifying the interactions with MusicXML.  This namespace and its interfaces will change completely and should be avoided for now.
-
 ##### Partwise vs. Timewise
 There are two types of MusicXML documents, 'partwise' and 'timewise'.  A partwise document consists of a set of parts which contain measures.  A timewise document consists of a set of measures which contain parts.  Partwise is used more often by MusicXML applications while Timewise documents seem to be rare or even nonresistant.  Nonetheless *MusicXML Class Library* implements both Timewise and Partwise.  The class `mx::core::Document` can hold *either* a Partwise *or* a Timewise score.  Note that is actually holds both, but only one or the other is 'active'.  You can check the inner document type with the getChoice function.  You can convert between Partwise and Timewise with the convertContents function.
 
