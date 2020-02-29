@@ -5,7 +5,7 @@
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_API_TESTS
 
-#include "cpul/cpulTestHarness.h"
+#include "cpul/testFramework.h"
 #include "mx/api/DocumentManager.h"
 #include "mx/core/Document.h"
 
