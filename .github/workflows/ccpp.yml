@@ -19,7 +19,7 @@ jobs:
       run: |
               export CORE_COUNT=$(nproc --all) && echo "CORE_COUNT: $CORE_COUNT" && \
               lscpu
-          
+                       
     - name: Build
       run: export CORE_COUNT=$(nproc --all) && make -j$CORE_COUNT
       
@@ -28,3 +28,29 @@ jobs:
       
     - name: Run Tests
       run: ./MxTest
+  
+  windows:
+    name: Windows
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Cmake
+      run: |
+          cmake -DMX_BUILD_EXAMPLES=on \
+                -DMX_BUILD_TESTS=on \
+                -DMX_BUILD_CORE_TESTS=off \
+                .
+    
+    - name: Build
+      run: make
+    
+    - name: Run Example MxWrite
+      run: MxWrite.exe
+    
+    - name: Run Example MxRead
+      run: MxRead.exe
+    
+    - name: Run Tests
+      run: MxTest.exe
