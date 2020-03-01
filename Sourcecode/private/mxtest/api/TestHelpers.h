@@ -27,8 +27,11 @@ namespace mxtest
     {
         MX_LOG( "trace" );
         using namespace mx::api;
+        MX_LOG( "trace" );
         auto& docMgr = DocumentManager::getInstance();
+        MX_LOG( "trace" );
         std::istringstream iss{ inXml };
+        MX_LOG( "trace" );
         const auto docId = docMgr.createFromStream( iss );
         MX_LOG( "trace" );
         const auto score = docMgr.getData( docId );
