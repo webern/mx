@@ -337,23 +337,39 @@ TEST( Load4, ChordDataSaveTest )
 
 TEST( SaveProcessingInstructions, ChordDataSaveTest )
 {
+    MX_LOG( "trace" );
     ScoreData scoreData{};
+    MX_LOG( "trace" );
     scoreData.parts.emplace_back();
+    MX_LOG( "trace" );
     auto part = &scoreData.parts.back();
+    MX_LOG( "trace" );
     part->measures.emplace_back();
+    MX_LOG( "trace" );
     auto measure = &part->measures.back();
+    MX_LOG( "trace" );
     measure->staves.emplace_back();
+    MX_LOG( "trace" );
     auto staff = &measure->staves.back();
+    MX_LOG( "trace" );
     staff->directions.emplace_back();
+    MX_LOG( "trace" );
     auto direction = &staff->directions.back();
+    MX_LOG( "trace" );
     direction->chords.emplace_back();
+    MX_LOG( "trace" );
     auto chord = &direction->chords.back();
+    MX_LOG( "trace" );
     chord->root = Step::b;
+    MX_LOG( "trace" );
     chord->miscData.emplace_back( MiscData{"test", "123"} );
+    MX_LOG( "trace" );
 
     const auto xml = toXml( scoreData );
+    MX_LOG( "trace" );
 //    std::cout << xml << std::endl;
     auto outScore = fromXml( xml );
+    MX_LOG( "trace" );
 
     part = nullptr;
     measure = nullptr;
@@ -361,10 +377,15 @@ TEST( SaveProcessingInstructions, ChordDataSaveTest )
     chord = nullptr;
 
     part = &outScore.parts.back();
+    MX_LOG( "trace" );
     measure = &part->measures.back();
+    MX_LOG( "trace" );
     staff = &measure->staves.back();
+    MX_LOG( "trace" );
     direction = &staff->directions.back();
+    MX_LOG( "trace" );
     chord = &direction->chords.back();
+    MX_LOG( "trace" );
 
     CHECK_EQUAL( 1, chord->miscData.size() );
     CHECK_EQUAL( "test", chord->miscData.front().name );
