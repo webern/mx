@@ -21,7 +21,7 @@ jobs:
               lscpu
           
     - name: Build
-      run: make -j "$CORE_COUNT"
+      run: export CORE_COUNT=$(nproc --all) && make -j$CORE_COUNT
       
     - name: Run Examples
       run: ./MxRead && ./MxWrite
