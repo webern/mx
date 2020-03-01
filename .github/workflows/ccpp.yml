@@ -47,17 +47,17 @@ jobs:
     - name: List Directory
       run: dir
     
-    - name: List x64 Dir
-      run: cd x64 -and dir
+    #- name: List Debug Dir
+    #  run: cd x64 -and dir
       
     - name: Run Example MxWrite
-      run: cd outdir && MxWrite.exe
+      run: Debug\MxWrite.exe
     
     - name: Run Example MxRead
-      run: cd outdir && MxRead.exe
+      run: Debug\MxRead.exe
     
     - name: Run Tests
-      run: cd outdir && MxTest.exe
+      run: Debug\MxTest.exe
   
   macos:
     name: macOS
