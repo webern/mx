@@ -161,17 +161,25 @@ namespace mx
         
         bool Document::fromXDoc( std::ostream& messages, const ::ezxml::XDoc& inXDoc )
         {
+            MX_LOG( "trace" );
             auto root = inXDoc.getRoot();
+            MX_LOG( "trace" );
             if( inXDoc.getRoot()->getName() == "score-partwise" )
             {
+                MX_LOG( "trace" );
                 myChoice = DocumentChoice::partwise;
+                MX_LOG( "trace" );
                 myScorePartwise = makeScorePartwise();
+                MX_LOG( "trace" );
                 return myScorePartwise->fromXElement( messages, *root );
             }
             else if( inXDoc.getRoot()->getName() == "score-timewise" )
             {
+                MX_LOG( "trace" );
                 myChoice = DocumentChoice::timewise;
+                MX_LOG( "trace" );
                 myScoreTimewise = makeScoreTimewise();
+                MX_LOG( "trace" );
                 return myScoreTimewise->fromXElement( messages, *root );
             }
             else
