@@ -38,7 +38,7 @@ jobs:
     
     - name: Cmake
       run: |
-          cmake -DMX_BUILD_EXAMPLES=on -DMX_BUILD_TESTS=on -DMX_BUILD_CORE_TESTS=off -DEXECUTABLE_OUTPUT_PATH=outdir .
+          cmake -DMX_BUILD_EXAMPLES=on -DMX_BUILD_TESTS=on -DMX_BUILD_CORE_TESTS=off .
     
     - name: Build
       run: |
@@ -47,8 +47,8 @@ jobs:
     - name: List Directory
       run: dir
     
-    - name: List Outdir
-      run: cd outdir && dir
+    - name: List x64 Dir
+      run: cd x64 && dir
       
     - name: Run Example MxWrite
       run: cd outdir && MxWrite.exe
