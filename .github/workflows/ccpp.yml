@@ -38,10 +38,7 @@ jobs:
     
     - name: Cmake
       run: |
-          cmake -DMX_BUILD_EXAMPLES=on \
-                -DMX_BUILD_TESTS=on \
-                -DMX_BUILD_CORE_TESTS=off \
-                .
+          cmake -DMX_BUILD_EXAMPLES=on -DMX_BUILD_TESTS=on -DMX_BUILD_CORE_TESTS=off .
     
     - name: Build
       run: make
