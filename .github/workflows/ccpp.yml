@@ -38,20 +38,26 @@ jobs:
     
     - name: Cmake
       run: |
-          cmake -DMX_BUILD_EXAMPLES=on -DMX_BUILD_TESTS=on -DMX_BUILD_CORE_TESTS=off --build .
+          cmake -DMX_BUILD_EXAMPLES=on -DMX_BUILD_TESTS=on -DMX_BUILD_CORE_TESTS=off -DEXECUTABLE_OUTPUT_PATH=outdir .
     
     - name: Build
       run: |
           cmake --build .
+
+    - name: List Directory
+      run: dir
     
+    - name: List Outdir
+      run: cd outdir && dir
+      
     - name: Run Example MxWrite
-      run: MxWrite.exe
+      run: cd outdir && MxWrite.exe
     
     - name: Run Example MxRead
-      run: MxRead.exe
+      run: cd outdir && MxRead.exe
     
     - name: Run Tests
-      run: MxTest.exe
+      run: cd outdir && MxTest.exe
   
   macos:
     name: macOS
@@ -62,7 +68,7 @@ jobs:
     
     - name: Cmake
       run: |
-          cmake -DMX_BUILD_EXAMPLES=on -DMX_BUILD_TESTS=on -DMX_BUILD_CORE_TESTS=off --build .
+          cmake -DMX_BUILD_EXAMPLES=on -DMX_BUILD_TESTS=on -DMX_BUILD_CORE_TESTS=off .
     
     - name: Build
       run: |
