@@ -6,6 +6,7 @@
 
 #include "mx/api/DocumentManager.h"
 #include <sstream>
+#include "mx/utility/Throw.h"
 
 namespace mxtest
 {
@@ -24,12 +25,16 @@ namespace mxtest
 
     inline mx::api::ScoreData fromXml( const std::string& inXml )
     {
+        MX_LOG( "trace" );
         using namespace mx::api;
         auto& docMgr = DocumentManager::getInstance();
         std::istringstream iss{ inXml };
         const auto docId = docMgr.createFromStream( iss );
+        MX_LOG( "trace" );
         const auto score = docMgr.getData( docId );
+        MX_LOG( "trace" );
         docMgr.destroyDocument( docId );
+        MX_LOG( "trace" );
         return score;
     }
 }
