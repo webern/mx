@@ -38,10 +38,10 @@ jobs:
     
     - name: Cmake
       run: |
-          cmake -DMX_BUILD_EXAMPLES=on -DMX_BUILD_TESTS=on -DMX_BUILD_CORE_TESTS=off .
+          cmake -DMX_BUILD_EXAMPLES=on -DMX_BUILD_TESTS=on -DMX_BUILD_CORE_TESTS=off -G "Visual Studio 12" .
     
     - name: Build
-      run: make
+      run: MSBuild ALL_BUILD.vcxproj
     
     - name: Run Example MxWrite
       run: MxWrite.exe
