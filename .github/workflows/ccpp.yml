@@ -41,7 +41,7 @@ jobs:
           cmake -DMX_BUILD_EXAMPLES=on -DMX_BUILD_TESTS=on -DMX_BUILD_CORE_TESTS=off .
     
     - name: Build
-      run: MSBuild ALL_BUILD.vcxproj
+      run: MSBuild.exe ALL_BUILD.vcxproj
     
     - name: Run Example MxWrite
       run: MxWrite.exe
