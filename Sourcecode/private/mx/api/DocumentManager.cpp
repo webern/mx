@@ -7,6 +7,7 @@
 #include "mx/impl/ScoreWriter.h"
 #include "mx/core/Document.h"
 #include "ezxml/XFactory.h"
+#include "mx/utility/Throw.h"
 
 #define LOCK_DOCUMENT_MANAGER std::lock_guard<std::mutex> lock(myImpl->myMutex);
 
@@ -80,13 +81,18 @@ namespace mx
         
         int DocumentManager::createFromStream( std::istream& stream )
         {
+            MX_LOG( "trace" );
             auto xdoc = ::ezxml::XFactory::makeXDoc();
+            MX_LOG( "trace" );
             xdoc->loadStream( stream );
+            MX_LOG( "trace" );
             
             auto mxdoc = mx::core::makeDocument();
+            MX_LOG( "trace" );
             
             std::stringstream messages;
             auto isSuccess = mxdoc->fromXDoc( messages, *xdoc );
+            MX_LOG( "trace" );
             
             if( !isSuccess )
             {
@@ -95,6 +101,7 @@ namespace mx
             
             LOCK_DOCUMENT_MANAGER
             myImpl->myMap[myImpl->myCurrentId] = std::move( mxdoc );
+            MX_LOG( "trace" );
             return myImpl->myCurrentId++;
         }
         
