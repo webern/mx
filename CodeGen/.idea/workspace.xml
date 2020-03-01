@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
+    <generated />
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="CargoProjects">
+    <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b7030d0b-7483-45ad-b249-881b080b6e4f" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="MacroExpansionManager">
+    <option name="directoryName" value="AuVTSVXB" />
+  </component>
+  <component name="ProjectId" id="1YXPAQm4bIPEDeFe1fchxvqXOu0" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="org.rust.cargo.project.model.PROJECT_DISCOVERY" value="true" />
+    <property name="settings.editor.selected.configurable" value="settings.saveactions" />
+  </component>
+  <component name="RunManager" selected="Cargo Command.run musicxml.xsd">
+    <configuration name="run musicxml.xsd" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="channel" value="DEFAULT" />
+      <option name="command" value="run --package musicxml-code-gen --bin musicxml-code-gen -- generate --xsd ../../music" />
+      <option name="allFeatures" value="false" />
+      <option name="nocapture" value="false" />
+      <option name="emulateTerminal" value="false" />
+      <option name="backtrace" value="SHORT" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs>
+        <env name="RUST_LOG" value="trace" />
+      </envs>
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="run" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="channel" value="DEFAULT" />
+      <option name="command" value="run --package musicxml-code-gen --bin musicxml-code-gen" />
+      <option name="allFeatures" value="false" />
+      <option name="nocapture" value="false" />
+      <option name="emulateTerminal" value="false" />
+      <option name="backtrace" value="SHORT" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Cargo Command.run musicxml.xsd" />
+      <item itemvalue="Cargo Command.run" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Cargo Command.run" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="RustProjectSettings">
+    <option name="toolchainHomeDirectory" value="$USER_HOME$/.cargo/bin" />
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="377" y="247" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1583090013208">
+      <screen x="0" y="23" width="1920" height="1120" />
+    </state>
+    <state x="377" y="247" key="#com.intellij.execution.impl.EditConfigurationsDialog/1920.-740.1440.2537/0.23.1920.1120/-1680.23.1680.1027@0.23.1920.1120" timestamp="1583090013208" />
+    <state x="667" y="355" key="EnvironmentVariablesDialog" timestamp="1583089957475">
+      <screen x="0" y="23" width="1920" height="1120" />
+    </state>
+    <state x="667" y="355" key="EnvironmentVariablesDialog/1920.-740.1440.2537/0.23.1920.1120/-1680.23.1680.1027@0.23.1920.1120" timestamp="1583089957475" />
+    <state width="1783" height="294" key="GridCell.Tab.0.bottom" timestamp="1583090039167">
+      <screen x="0" y="23" width="1920" height="1120" />
+    </state>
+    <state width="1783" height="294" key="GridCell.Tab.0.bottom/1920.-740.1440.2537/0.23.1920.1120/-1680.23.1680.1027@0.23.1920.1120" timestamp="1583090039167" />
+    <state width="1783" height="294" key="GridCell.Tab.0.center" timestamp="1583090039167">
+      <screen x="0" y="23" width="1920" height="1120" />
+    </state>
+    <state width="1783" height="294" key="GridCell.Tab.0.center/1920.-740.1440.2537/0.23.1920.1120/-1680.23.1680.1027@0.23.1920.1120" timestamp="1583090039167" />
+    <state width="1783" height="294" key="GridCell.Tab.0.left" timestamp="1583090039166">
+      <screen x="0" y="23" width="1920" height="1120" />
+    </state>
+    <state width="1783" height="294" key="GridCell.Tab.0.left/1920.-740.1440.2537/0.23.1920.1120/-1680.23.1680.1027@0.23.1920.1120" timestamp="1583090039166" />
+    <state width="1783" height="294" key="GridCell.Tab.0.right" timestamp="1583090039167">
+      <screen x="0" y="23" width="1920" height="1120" />
+    </state>
+    <state width="1783" height="294" key="GridCell.Tab.0.right/1920.-740.1440.2537/0.23.1920.1120/-1680.23.1680.1027@0.23.1920.1120" timestamp="1583090039167" />
+    <state x="421" y="222" key="SettingsEditor" timestamp="1583089487090">
+      <screen x="0" y="23" width="1920" height="1120" />
+    </state>
+    <state x="421" y="222" key="SettingsEditor/1920.-740.1440.2537/0.23.1920.1120/-1680.23.1680.1027@0.23.1920.1120" timestamp="1583089487090" />
+  </component>
+</project>
