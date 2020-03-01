@@ -367,7 +367,7 @@ TEST( SaveProcessingInstructions, ChordDataSaveTest )
 
     const auto xml = toXml( scoreData );
     MX_LOG( "trace" );
-//    std::cout << xml << std::endl;
+    std::cout << xml << std::endl;
     auto outScore = fromXml( xml );
     MX_LOG( "trace" );
 
