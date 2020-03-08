@@ -52,6 +52,7 @@ namespace mx
             return express( myInteger, myDecimal, myMaxDecimalDigits, myIsNegative );
         }
 
+        static constexpr const long double POINT_FIVE = 0.4999999;
 
         void PreciseDecimal::setValue( DecimalType inValue )
         {
@@ -77,9 +78,9 @@ namespace mx
 
             const DecimalType decimalPartAsFloat = inValue - static_cast<DecimalType>( integer );
             const auto powerMultiplierAsFloat = std::pow( static_cast<DecimalType>( 10 ), static_cast<DecimalType>( getMaxDecimalDigits() ) );
-            const auto powerMultiplier = static_cast<uint64_t>( std::ceil( powerMultiplierAsFloat - 0.5 ) );
+            const auto powerMultiplier = static_cast<uint64_t>( std::ceil( powerMultiplierAsFloat - POINT_FIVE ) );
             const auto decimalDigitsShifted = decimalPartAsFloat * static_cast<decltype( decimalPartAsFloat )>( powerMultiplier );
-            const auto decimalDigits = static_cast<decltype( myDecimal )>( std::ceil( decimalDigitsShifted - 0.5 ) );
+            const auto decimalDigits = static_cast<decltype( myDecimal )>( std::ceil( decimalDigitsShifted - POINT_FIVE ) );
 
             if( decimalDigits > myMaxExpressibleDecimal )
             {
