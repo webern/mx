@@ -77,6 +77,7 @@
   </component>
   <component name="RustProjectSettings">
     <option name="toolchainHomeDirectory" value="$USER_HOME$/.cargo/bin" />
+    <option name="version" value="2" />
   </component>
   <component name="ServiceViewManager">
     <option name="viewStates">
@@ -99,22 +100,26 @@
       <screen x="0" y="23" width="1920" height="1120" />
     </state>
     <state x="667" y="355" key="EnvironmentVariablesDialog/1920.-740.1440.2537/0.23.1920.1120/-1680.23.1680.1027@0.23.1920.1120" timestamp="1583089957475" />
-    <state width="1783" height="294" key="GridCell.Tab.0.bottom" timestamp="1583090039167">
-      <screen x="0" y="23" width="1920" height="1120" />
+    <state width="1712" height="328" key="GridCell.Tab.0.bottom" timestamp="1583711513340">
+      <screen x="0" y="23" width="2560" height="1497" />
     </state>
     <state width="1783" height="294" key="GridCell.Tab.0.bottom/1920.-740.1440.2537/0.23.1920.1120/-1680.23.1680.1027@0.23.1920.1120" timestamp="1583090039167" />
-    <state width="1783" height="294" key="GridCell.Tab.0.center" timestamp="1583090039167">
-      <screen x="0" y="23" width="1920" height="1120" />
+    <state width="1712" height="328" key="GridCell.Tab.0.bottom/2560.-585.1440.2537/-1440.769.1440.877/0.23.2560.1497@0.23.2560.1497" timestamp="1583711513340" />
+    <state width="1712" height="328" key="GridCell.Tab.0.center" timestamp="1583711513339">
+      <screen x="0" y="23" width="2560" height="1497" />
     </state>
     <state width="1783" height="294" key="GridCell.Tab.0.center/1920.-740.1440.2537/0.23.1920.1120/-1680.23.1680.1027@0.23.1920.1120" timestamp="1583090039167" />
-    <state width="1783" height="294" key="GridCell.Tab.0.left" timestamp="1583090039166">
-      <screen x="0" y="23" width="1920" height="1120" />
+    <state width="1712" height="328" key="GridCell.Tab.0.center/2560.-585.1440.2537/-1440.769.1440.877/0.23.2560.1497@0.23.2560.1497" timestamp="1583711513339" />
+    <state width="1712" height="328" key="GridCell.Tab.0.left" timestamp="1583711513339">
+      <screen x="0" y="23" width="2560" height="1497" />
     </state>
     <state width="1783" height="294" key="GridCell.Tab.0.left/1920.-740.1440.2537/0.23.1920.1120/-1680.23.1680.1027@0.23.1920.1120" timestamp="1583090039166" />
-    <state width="1783" height="294" key="GridCell.Tab.0.right" timestamp="1583090039167">
-      <screen x="0" y="23" width="1920" height="1120" />
+    <state width="1712" height="328" key="GridCell.Tab.0.left/2560.-585.1440.2537/-1440.769.1440.877/0.23.2560.1497@0.23.2560.1497" timestamp="1583711513339" />
+    <state width="1712" height="328" key="GridCell.Tab.0.right" timestamp="1583711513340">
+      <screen x="0" y="23" width="2560" height="1497" />
     </state>
     <state width="1783" height="294" key="GridCell.Tab.0.right/1920.-740.1440.2537/0.23.1920.1120/-1680.23.1680.1027@0.23.1920.1120" timestamp="1583090039167" />
+    <state width="1712" height="328" key="GridCell.Tab.0.right/2560.-585.1440.2537/-1440.769.1440.877/0.23.2560.1497@0.23.2560.1497" timestamp="1583711513340" />
     <state x="421" y="222" key="SettingsEditor" timestamp="1583089487090">
       <screen x="0" y="23" width="1920" height="1120" />
     </state>

@@ -1,3 +1,5 @@
+use std::convert::Infallible;
+
 use snafu::{Backtrace, Snafu};
 
 pub(crate) type Result<T> = std::result::Result<T, Error>;
@@ -10,4 +12,10 @@ pub(crate) enum Error {
         message: String,
         backtrace: Backtrace,
     },
+}
+
+impl From<Infallible> for Error {
+    fn from(_: Infallible) -> Self {
+        unreachable!()
+    }
 }
