@@ -352,8 +352,7 @@ TEST( tremolos, NoteData )
     marks.emplace_back( mark );
     mark = MarkData{ MarkType::tremoloSingleFive };
     marks.emplace_back( mark );
-
-
+    
     // round trip it through xml
     auto& mgr = DocumentManager::getInstance();
     auto docId = mgr.createFromScore( score );
@@ -372,13 +371,10 @@ TEST( tremolos, NoteData )
     const auto& ovoice = ostaff.voices.at(0);
     const auto& onote = ovoice.notes.back();
     const auto& omarks = onote.noteAttachmentData.marks;
-    auto markIter = omarks.cbegin();
-    const auto markEnd = marks.cend();
 
-    for (int i = 1; i <= 5; ++i, ++markIter)
+    for ( int i = 1; i <= 5; ++i )
     {
-        CHECK( markIter != markEnd );
-        const auto& markData = *markIter;
+        const auto& markData = omarks.at( static_cast<size_t>( i - 1 ) );
         CHECK_EQUAL( i, numTremoloSlashes( markData.markType ) );
     }
 }
