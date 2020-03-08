@@ -382,7 +382,7 @@ TEST( tremolos, NoteData )
     for ( int i = 1; i <= 5; ++i )
     {
         MX_LOG( "trace" );
-        const auto& markData = omarks.at( static_cast<size_t>( i ) );
+        const auto& markData = omarks.at( static_cast<size_t>( i - 1 ) );
         CHECK_EQUAL( i, numTremoloSlashes( markData.markType ) );
     }
     
