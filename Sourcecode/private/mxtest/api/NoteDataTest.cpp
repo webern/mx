@@ -376,12 +376,10 @@ TEST( tremolos, NoteData )
     const auto& ovoice = ostaff.voices.at(0);
     const auto& onote = ovoice.notes.back();
     const auto& omarks = onote.noteAttachmentData.marks;
-//     auto markIter = omarks.cbegin();
-//     const auto markEnd = marks.cend();
 
     MX_LOG( "trace" );
     
-    for (int i = 1; i <= 5; ++i, ++markIter)
+    for ( int i = 1; i <= 5; ++i )
     {
         MX_LOG( "trace" );
         const auto& markData = omarks.at( static_cast<size_t>( i ) );
