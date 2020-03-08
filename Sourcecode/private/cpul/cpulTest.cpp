@@ -2,6 +2,8 @@
 #include "cpul/cpulTestRegistry.h"
 #include "cpul/cpulTestResult.h"
 #include <algorithm>
+#include <iostream>
+#include "cpul/cpulTestTimer.h"
 
 Test::Test (const std::string& testName,
             std::string fileName,
@@ -37,8 +39,12 @@ void Test::run (TestResult& result )
 {
     if ( getDoRunTest() )
     {
+        cpul::TestTimer timer;
+        std::cout << getName() << " - starting" << std::endl;
         runTest (result);
         result.testWasRun();
+        timer.report( getName() + " - done" );
+        // std::cout << getName() << " - done" << std::endl;
     }
 }
 
