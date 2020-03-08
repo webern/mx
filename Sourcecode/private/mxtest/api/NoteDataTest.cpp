@@ -32,6 +32,7 @@
 #include "mx/core/elements/DirectionType.h"
 #include "mx/core/elements/Offset.h"
 #include "mx/core/elements/Pedal.h"
+#include "mx/utility/Throw.h"
 
 using namespace std;
 using namespace mx::api;
@@ -342,6 +343,8 @@ TEST( tremolos, NoteData )
     auto& attachments = note.noteAttachmentData;
     auto& marks = attachments.marks;
 
+    MX_LOG( "trace" );
+    
     MarkData mark{ MarkType::tremoloSingleOne };
     marks.emplace_back( mark );
     mark = MarkData{ MarkType::tremoloSingleTwo };
@@ -353,7 +356,8 @@ TEST( tremolos, NoteData )
     mark = MarkData{ MarkType::tremoloSingleFive };
     marks.emplace_back( mark );
 
-
+    MX_LOG( "trace" );
+    
     // round trip it through xml
     auto& mgr = DocumentManager::getInstance();
     auto docId = mgr.createFromScore( score );
@@ -375,12 +379,18 @@ TEST( tremolos, NoteData )
     auto markIter = omarks.cbegin();
     const auto markEnd = marks.cend();
 
+    MX_LOG( "trace" );
+    
     for (int i = 1; i <= 5; ++i, ++markIter)
     {
+        MX_LOG( "trace" );
+    
         CHECK( markIter != markEnd );
         const auto& markData = *markIter;
         CHECK_EQUAL( i, numTremoloSlashes( markData.markType ) );
     }
+    
+    MX_LOG( "trace" );    
 }
 T_END;
 
