@@ -245,7 +245,7 @@ TEST( CrazyEdgeCase1, PitchData )
     CHECK_EQUAL( expectedAlterString, output.alterString );
     CHECK_EQUAL( expectedAlterString, output.secondAlterString );
     CHECK_EQUAL( expectedAlter, output.alter );
-    CHECK_DOUBLES_EQUAL( expectedCents, output.cents, MX_API_EQUALITY_EPSILON );
+    CHECK_DOUBLES_EQUAL( expectedCents, output.cents, MX_API_EQUALITY_EPSILON * 10 );
     CHECK( expectedAccidental == output.accidental );
 }
 T_END;
