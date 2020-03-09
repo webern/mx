@@ -6,7 +6,7 @@
 
 #ifdef MX_COMPILE_CORE_TESTS
 
-    #include "cpul/testFramework.h"
+    #include "cpul/cpulTestHarness.h"
     #include "mx/core/Decimals.h"
     #include <sstream>
 

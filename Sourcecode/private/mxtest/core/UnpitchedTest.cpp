@@ -5,7 +5,7 @@
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_CORE_TESTS
 
-#include "cpul/testFramework.h"
+#include "cpul/cpulTestHarness.h"
 #include "mxtest/core/HelperFunctions.h"
 #include "mxtest/core/UnpitchedTest.h"
 #include "mxtest/core/DisplayStepOctaveGroupTest.h"

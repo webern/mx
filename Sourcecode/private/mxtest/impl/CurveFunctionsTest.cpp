@@ -5,7 +5,7 @@
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_IMPL_TESTS
 
-#include "cpul/testFramework.h"
+#include "cpul/cpulTestHarness.h"
 #include "mx/impl/CurveFunctions.h"
 #include "mx/core/elements/Slur.h"
 #include "mx/core/elements/Tied.h"

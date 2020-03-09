@@ -6,7 +6,7 @@
 
 #ifdef MX_COMPILE_IMPL_TESTS
 
-    #include "cpul/testFramework.h"
+    #include "cpul/cpulTestHarness.h"
     #include "mx/impl/PrintFunctions.h"
     #include "mx/core/elements/FermataAttributes.h"
     #include "mx/core/elements/DynamicsAttributes.h"

@@ -8,7 +8,7 @@
 #include "mxtest/file/MxFileTest.h"
 #include "mxtest/file/MxFileTestGroup.h"
 #include "mx/api/DocumentManager.h"
-#include "cpul/testFramework.h"
+#include "cpul/cpulTestHarness.h"
 
 namespace mxtest
 {

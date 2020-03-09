@@ -15,7 +15,7 @@
 #include "mx/core/elements/Divisions.h"
 #include "mx/core/elements/Clef.h"
 #include "mx/core/elements/Line.h"
-#include "cpul/testFramework.h"
+#include "cpul/cpulTestHarness.h"
 
 #include <memory>
 

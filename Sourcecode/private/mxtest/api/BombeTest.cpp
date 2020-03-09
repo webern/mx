@@ -6,7 +6,7 @@
 
 #ifdef MX_COMPILE_API_TESTS
 
-    #include "cpul/testFramework.h"
+    #include "cpul/cpulTestHarness.h"
     #include "mxtest/api/RoundTrip.h"
     #include "mx/api/DocumentManager.h"
 

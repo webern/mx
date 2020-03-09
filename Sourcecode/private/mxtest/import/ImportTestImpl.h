@@ -7,9 +7,9 @@
 #ifdef MX_COMPILE_IMPORT_TESTS
 
 #include "mxtest/file/MxFileTest.h"
-#include "cpul/testFramework.h"
+#include "cpul/cpulTestHarness.h"
 #include "cpul/cpulTestTimer.h"
-#include "cpul/testFramework.h"
+#include "cpul/cpulTestHarness.h"
 #include "ezxml/XFactory.h"
 #include "ezxml/XDoc.h"
 #include "mxtest/file/Path.h"

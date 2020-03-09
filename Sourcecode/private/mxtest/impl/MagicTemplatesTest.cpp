@@ -5,7 +5,7 @@
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_IMPL_TESTS
 
-#include "cpul/testFramework.h"
+#include "cpul/cpulTestHarness.h"
 #include "mx/impl/DirectionWriter.h"
 #include "mx/core/elements/Direction.h"
 #include "mx/core/elements/DirectionType.h"
