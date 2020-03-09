@@ -19,12 +19,12 @@ TEST( Test01, AccordionRegistration )
 	stringstream expected;
 	streamLine( expected, 1, R"(<accordion-registration/>)", false );
 	stringstream actual;
-	// object.toStream( std::cout, 1 );
 	object.toStream( actual, 1 );
 	CHECK_EQUAL( expected.str(), actual.str() )
 	CHECK( ! object.hasAttributes() )
 	CHECK( ! object.hasContents() )
 }
+
 TEST( Test02, AccordionRegistration )
 {
 	AccordionRegistration object;
@@ -42,7 +42,6 @@ TEST( Test02, AccordionRegistration )
 	streamLine( expected, 2, R"(<accordion-low/>)" );
 	streamLine( expected, 1, R"(</accordion-registration>)", false );
 	stringstream actual;
-	// object.toStream( std::cout, 1 );
 	object.toStream( actual, 1 );
 	CHECK_EQUAL( expected.str(), actual.str() )
 	CHECK( object.hasAttributes() )

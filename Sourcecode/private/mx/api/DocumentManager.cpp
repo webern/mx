@@ -58,13 +58,7 @@ namespace mx
         {
             auto xdoc = ::ezxml::XFactory::makeXDoc();
             xdoc->loadFile( filePath );
-
-#ifdef DEBUG_HELL
-            xdoc->saveStream( std::cout );
-            std::cout << std::endl;
-#endif
             auto mxdoc = mx::core::makeDocument();
-            
             std::stringstream messages;
             auto isSuccess = mxdoc->fromXDoc( messages, *xdoc );
             
@@ -81,18 +75,12 @@ namespace mx
         
         int DocumentManager::createFromStream( std::istream& stream )
         {
-            MX_LOG( "trace" );
             auto xdoc = ::ezxml::XFactory::makeXDoc();
-            MX_LOG( "trace" );
-            xdoc->loadStream( stream );
-            MX_LOG( "trace" );
-            
+            xdoc->loadStream( stream );            
             auto mxdoc = mx::core::makeDocument();
-            MX_LOG( "trace" );
             
             std::stringstream messages;
             auto isSuccess = mxdoc->fromXDoc( messages, *xdoc );
-            MX_LOG( "trace" );
             
             if( !isSuccess )
             {
@@ -101,7 +89,6 @@ namespace mx
             
             LOCK_DOCUMENT_MANAGER
             myImpl->myMap[myImpl->myCurrentId] = std::move( mxdoc );
-            MX_LOG( "trace" );
             return myImpl->myCurrentId++;
         }
         

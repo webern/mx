@@ -424,8 +424,6 @@ TEST( miscFields, NoteData )
     auto iter = omisc.cbegin();
     const auto end = omisc.cend();
 
-    //std::cout << xml << std::endl;
-
     // assert
     CHECK( iter != end );
     CHECK_EQUAL( "Hello_There", *iter );
@@ -775,7 +773,6 @@ TEST( directionOrder, NoteData )
     std::stringstream ss;
     mgr.writeToStream( docId, ss );
     mgr.destroyDocument( docId );
-//    std::cout << ss.str() << std::endl;
 
     const auto& partwise = docPtr->getScorePartwise();
     const auto& partwisePartSet = partwise->getPartwisePartSet();
