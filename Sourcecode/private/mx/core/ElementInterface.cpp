@@ -139,7 +139,14 @@ namespace mx
 
                 while( childIter != childEnd && childIter->getIsProcessingInstruction() )
                 {
-                    ProcessingInstruction pi{ childIter->getName(), childIter->getValue() };
+                    // inexplicably, the following line caused a bad address crash on msvc
+                    // ProcessingInstruction pi{ childIter->getName(), childIter->getValue() };
+                    // surely this is an msvc compiler bug? prove me wrong. anyway, we store
+                    // the getName() and getValue() results in short-lived variables to work
+                    // around the windows issue.
+                    auto name = childIter->getName();
+                    auto value = childIter->getValue();
+                    ProcessingInstruction pi{ name, value };
                     pi.setIsChild( true );
                     addProcessingInstruction( std::move( pi ) );
                     ++childIter;

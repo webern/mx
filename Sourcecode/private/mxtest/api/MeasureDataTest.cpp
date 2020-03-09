@@ -63,7 +63,6 @@ TEST( forwardRepeat, MeasureData )
     mgr.writeToStream(docId, ss);
     mgr.destroyDocument(docId);
     const std::string xml = ss.str();
-//    std::cout << xml << std::endl;
     std::istringstream iss{ xml };
     docId = mgr.createFromStream( iss );
     auto oscore = mgr.getData(docId);
@@ -110,7 +109,6 @@ TEST( backwardRepeat, MeasureData )
     mgr.writeToStream(docId, ss);
     mgr.destroyDocument(docId);
     const std::string xml = ss.str();
-//    std::cout << xml << std::endl;
     std::istringstream iss{ xml };
     docId = mgr.createFromStream( iss );
     auto oscore = mgr.getData(docId);

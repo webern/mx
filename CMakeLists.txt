@@ -12,7 +12,6 @@ option(
     OFF
 )
 
-#set(CMAKE_BINARY_DIR "./Build")
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
@@ -90,14 +89,13 @@ file(WRITE ${PRIVATE_DIR}/mxtest/file/PathRoot.h
 
 # MxTest
 if(MX_BUILD_TESTS)
-    message("tests will be compiled")
+    message(STATUS "${PROJECT_NAME}:${CMAKE_CURRENT_LIST_LINE} tests will be compiled")
     if(MX_BUILD_CORE_TESTS)
-        message("core tests will be compiled")
-        # add_compile_definitions(MX_COMPILE_CORE_TESTS)
+        message(STATUS "${PROJECT_NAME}:${CMAKE_CURRENT_LIST_LINE} core tests will be compiled")
         add_definitions(-DMX_COMPILE_CORE_TESTS)
     else()
-        message("core tests will not be compiled")
-    endif()    
+        message(STATUS "${PROJECT_NAME}:${CMAKE_CURRENT_LIST_LINE} core tests will NOT be compiled")
+    endif()
     find_package( Threads )
     add_executable(MxTest ${SRC_MX_TEST_API} ${SRC_MX_TEST_CONTROL} ${SRC_MX_TEST_CORE} ${SRC_MX_TEST_FILE} ${SRC_MX_TEST_IMPL} ${SRC_MX_TEST_IMPORT} ${SRC_MX_TEST_UTILITY} ${SRC_MX_TEST_XML} ${SRC_CPUL})
     target_include_directories(MxTest PRIVATE ${PRIVATE_DIR})
@@ -106,12 +104,12 @@ if(MX_BUILD_TESTS)
     target_link_libraries(MxTest ${CMAKE_THREAD_LIBS_INIT})
     set_property(TARGET MxTest PROPERTY CXX_STANDARD 14)
 else()
-  message("tests will not be compiled")
+    message(STATUS "${PROJECT_NAME}:${CMAKE_CURRENT_LIST_LINE} tests will NOT be compiled")
 endif()
 
 # MxExamples
 if(MX_BUILD_EXAMPLES)
-    message("examples will be compiled")   
+    message(STATUS "${PROJECT_NAME}:${CMAKE_CURRENT_LIST_LINE} examples will be compiled")
     find_package( Threads )
     add_executable(MxRead ${PRIVATE_DIR}/mx/examples/Read.cpp)
     add_executable(MxWrite ${PRIVATE_DIR}/mx/examples/Write.cpp)
@@ -123,5 +121,5 @@ if(MX_BUILD_EXAMPLES)
     set_property(TARGET MxWrite PROPERTY CXX_STANDARD 14)
     set_property(TARGET MxHide PROPERTY CXX_STANDARD 14)
 else()
-  message("examples will not be compiled")
+    message(STATUS "${PROJECT_NAME}:${CMAKE_CURRENT_LIST_LINE} examples will NOT be compiled")
 endif()

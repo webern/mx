@@ -6,6 +6,7 @@
 
 #include "mx/api/DocumentManager.h"
 #include <sstream>
+#include "mx/utility/Throw.h"
 
 namespace mxtest
 {

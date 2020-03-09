@@ -1,17 +1,14 @@
 #pragma once
 
-#include "cpul/cpulDefines.h"
+#include "cpul/unusedParameter.h"
 
 #ifdef USE_VS_TEST
 
+    #include "cpul/msNoexceptHack.h"
     #include "cpul/cpulVsTest.h"
 
 #else
 
-    #include "cpul/cpulTest.h"
-    #include "cpul/cpulTestResult.h"
-    #include "cpul/cpulFailure.h"
-    #include "cpul/cpulTestRegistry.h"
+    #include "cpul/catchDefines.h"
 
 #endif
-

@@ -3,18 +3,16 @@
 // Distributed under the MIT License
 
 #include "mxtest/file/MxFileTest.h"
-#include "cpul/cpulFailure.h"
-#include "cpul/cpulTestResult.h"
 
 #include <sstream>
+#include <utility>
 
 namespace mxtest
 {
     MxFileTest::MxFileTest( mxtest::MxFile inTestFile, std::string inTestName, std::string inTestCppFileName, int inTestCppFileLineNumber )
-    : ::Test{ inTestName, inTestCppFileName, inTestCppFileLineNumber }
-    , myTestFile{ inTestFile }
-    , myTestName{ inTestName }
-    , myCppFileName{ inTestCppFileName }
+    : myTestFile{ std::move(inTestFile) }
+    , myTestName{ std::move(inTestName) }
+    , myCppFileName{ std::move(inTestCppFileName) }
     , myCppFileLineNumber{ inTestCppFileLineNumber }
     , myIsSuccess{ false }
     , myFailureMessage{}
@@ -23,7 +21,7 @@ namespace mxtest
     }
     
     
-    void MxFileTest::runTest( TestResult& testResult )
+    void MxFileTest::runTest()
     {
         bool isExceptionThrown = false;
         std::string exceptionMessage;
@@ -47,27 +45,13 @@ namespace mxtest
         {
             std::stringstream failureMessage;
             failureMessage << "'" << myTestName << "' "  << testFileName() << " exception was thrown '" << exceptionMessage << "'";
-            
-            ::Failure exceptionFailure
-            {
-                failureMessage.str(), // std::string theCondition
-                myCppFileName,        // std::string theFileName
-                myCppFileLineNumber   // long theLineNumber
-            };
-            testResult.addFailure( exceptionFailure );
+            FAIL( failureMessage.str() );
         }
         else if( !getIsSuccess() )
         {
             std::stringstream failureMessage;
             failureMessage << "'" << myTestName << "' "  << testFileName() << " '" << getFailureMessage() << "'";
-            
-            ::Failure testFailure
-            {
-                failureMessage.str(), // std::string theCondition
-                myCppFileName,        // std::string theFileName
-                myCppFileLineNumber   // long theLineNumber
-            };
-            testResult.addFailure( testFailure );
+            FAIL( failureMessage.str() );
         }
     }
     

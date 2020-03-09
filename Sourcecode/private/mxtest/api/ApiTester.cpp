@@ -3,7 +3,7 @@
 #include "mx/api/DocumentManager.h"
 #include "ezxml/XFactory.h"
 #include "ezxml/XDoc.h"
-#include "cpul/cpulFailure.h"
+//#include "cpul/cpulFailure.h"
 #include "mxtest/file/StupidFileFunctions.h"
 
 #include <sstream>

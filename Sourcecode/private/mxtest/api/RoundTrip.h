@@ -5,16 +5,14 @@
 #pragma once
 
 #include "mxtest/control/CompileControl.h"
-
 #include "mx/api/DocumentManager.h"
 #include "mxtest/file/MxFileRepository.h"
+#include <sstream>
 
 namespace mxtest
 {
-    
-    
     constexpr const char* const roundTripFileName = "k007a_Notations_Dynamics.xml";
-    
+
     inline void roundTrip()
     {
         const std::string path{ MxFileRepository::getFullPath( roundTripFileName ) };
@@ -26,14 +24,14 @@ namespace mxtest
         docMgr.writeToFile( docId, "./output.xml" );
         docMgr.destroyDocument( docId );
     }
-    
+
     inline mx::api::ScoreData roundTrip( const mx::api::ScoreData inScoreData )
     {
         auto& docMgr = mx::api::DocumentManager::getInstance();
         auto docId = docMgr.createFromScore( inScoreData );
         std::stringstream ss;
-        docMgr.writeToStream(docId, ss);
-        docMgr.destroyDocument(docId);
+        docMgr.writeToStream( docId, ss );
+        docMgr.destroyDocument( docId );
         auto xmlData = ss.str();
         std::istringstream iss{ xmlData };
         docId = docMgr.createFromStream( iss );
@@ -43,4 +41,3 @@ namespace mxtest
         return outScoreData;
     }
 }
-
