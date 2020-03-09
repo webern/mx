@@ -8,6 +8,7 @@
 #include "cpul/cpulTestHarness.h"
 #include "mx/core/Date.h"
 #include <string>
+#include <sstream>
 
 using namespace mx::core;
 
