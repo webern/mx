@@ -350,21 +350,17 @@ TEST( SaveProcessingInstructions, ChordDataSaveTest )
     auto chord = &direction->chords.back();
     chord->root = Step::b;
     chord->miscData.emplace_back( MiscData{"test", "123"} );
-    
     const auto xml = toXml( scoreData );
     auto outScore = fromXml( xml );
-    
     part = nullptr;
     measure = nullptr;
     staff = nullptr;
     chord = nullptr;
-
     part = &outScore.parts.back();
     measure = &part->measures.back();
     staff = &measure->staves.back();
     direction = &staff->directions.back();
     chord = &direction->chords.back();
-    
     CHECK_EQUAL( 1, chord->miscData.size() );
     CHECK_EQUAL( "test", chord->miscData.front().name );
     CHECK_EQUAL( "123", chord->miscData.front().data );

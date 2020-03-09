@@ -46,27 +46,12 @@ namespace mxtest
             std::stringstream failureMessage;
             failureMessage << "'" << myTestName << "' "  << testFileName() << " exception was thrown '" << exceptionMessage << "'";
             FAIL( failureMessage.str() );
-//            ::Failure exceptionFailure
-//            {
-//                failureMessage.str(), // std::string theCondition
-//                myCppFileName,        // std::string theFileName
-//                myCppFileLineNumber   // long theLineNumber
-//            };
-//            testResult.addFailure( exceptionFailure );
         }
         else if( !getIsSuccess() )
         {
             std::stringstream failureMessage;
             failureMessage << "'" << myTestName << "' "  << testFileName() << " '" << getFailureMessage() << "'";
-
             FAIL( failureMessage.str() );
-//            ::Failure testFailure
-//            {
-//                failureMessage.str(), // std::string theCondition
-//                myCppFileName,        // std::string theFileName
-//                myCppFileLineNumber   // long theLineNumber
-//            };
-//            testResult.addFailure( testFailure );
         }
     }
     

@@ -11,8 +11,6 @@
 
 namespace mxtest
 {
-
-
     constexpr const char* const roundTripFileName = "k007a_Notations_Dynamics.xml";
 
     inline void roundTrip()
@@ -43,4 +41,3 @@ namespace mxtest
         return outScoreData;
     }
 }
-
