@@ -474,5 +474,8 @@ namespace mxtest
         // other
         myNameSubdirectoryMap.emplace( "logic01a_homoSapiens.xml", "logicpro" );
         myNameSubdirectoryMap.emplace( "Schubert_der_Mueller.xml", "foundsuite" );
+
+        // mxl
+        myNameSubdirectoryMap.emplace( "Dichterliebe01.mxl", "mxl" );
     }
 }
