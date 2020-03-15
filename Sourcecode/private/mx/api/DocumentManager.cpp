@@ -57,7 +57,37 @@ namespace mx
         int DocumentManager::createFromFile( const std::string& filePath )
         {
             auto xdoc = ::ezxml::XFactory::makeXDoc();
-            xdoc->loadFile( filePath );
+
+            try
+            {
+                xdoc->loadFile( filePath );
+            }
+            catch ( std::exception& e )
+            {
+                const std::string originalMessage = e.what();
+
+                const auto fileExtension = []( const std::string& filePath )
+                {
+                    const auto dotPos = filePath.find_last_of( '.' );
+                    if( dotPos == std::string::npos || dotPos == filePath.size() - 1 )
+                    {
+                        return std::string{ "" };
+                    }
+
+                    return filePath.substr( dotPos + 1 );
+                };
+
+                if ( ( originalMessage.find( "status_no_document_element" ) != std::string::npos) &&
+                     fileExtension( filePath ) == "mxl" )
+                {
+                    std::stringstream ss;
+                    ss << "it looks like you are trying to parse a compressed musicxml file, which is currently "
+                    << "unsupported. https://github.com/webern/mx/issues/66 ("
+                    << originalMessage << ")";
+                    MX_THROW( ss.str() );
+                }
+            }
+
             auto mxdoc = mx::core::makeDocument();
             std::stringstream messages;
             auto isSuccess = mxdoc->fromXDoc( messages, *xdoc );

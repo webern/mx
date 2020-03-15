@@ -23,8 +23,6 @@ The project is tested with the following:
 * cmake version 3.7.2
 * MSVC2019
 
-Visual Studio should be very close to working. A good first pull request would be to compile with VS and add the version to the list above.
-
 There are three cmake options:
 
 ```
