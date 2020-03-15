@@ -143,10 +143,6 @@ namespace mxtest
         openInputFile( inputFile, fullPath );
         auto xdoc = ::ezxml::XFactory::makeXDoc();
         xdoc->loadStream( inputFile );
-//        std::stringstream ss;
-//        xdoc->saveStream( ss );
-//        std::cout << ss.str() << std::endl;
-//        inputFile.close();
         return xdoc;
     }
     
@@ -315,7 +311,7 @@ namespace mxtest
             q.push_front( std::move( fut ) );
         }
         
-        while( q.size() > 0 )
+        while( q.empty() )
         {
             for( auto qIter = q.begin(); qIter != q.end(); ++qIter )
             {
