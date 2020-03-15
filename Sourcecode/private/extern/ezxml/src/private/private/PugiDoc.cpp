@@ -38,54 +38,69 @@ namespace ezxml
             ss << "pugixml parsing failed - '";
             switch( parseResult.status )
             {
-                case pugi::status_file_not_found:ss << "status_file_not_found'";
+                case pugi::status_file_not_found:
+                    ss << "status_file_not_found'";
                     break;
 
-                case pugi::status_io_error:ss << "status_io_error'";
+                case pugi::status_io_error:
+                    ss << "status_io_error'";
                     break;
 
-                case pugi::status_out_of_memory:ss << "status_out_of_memory'";
+                case pugi::status_out_of_memory:
+                    ss << "status_out_of_memory'";
                     break;
 
-                case pugi::status_internal_error:ss << "status_internal_error'";
+                case pugi::status_internal_error:
+                    ss << "status_internal_error'";
                     break;
 
-                case pugi::status_unrecognized_tag:ss << "status_unrecognized_tag'";
+                case pugi::status_unrecognized_tag:
+                    ss << "status_unrecognized_tag'";
                     break;
 
-                case pugi::status_bad_pi:ss << "status_bad_pi'";
+                case pugi::status_bad_pi:
+                    ss << "status_bad_pi'";
                     break;
 
-                case pugi::status_bad_comment:ss << "status_bad_comment'";
+                case pugi::status_bad_comment:
+                    ss << "status_bad_comment'";
                     break;
 
-                case pugi::status_bad_cdata:ss << "status_bad_cdata'";
+                case pugi::status_bad_cdata:
+                    ss << "status_bad_cdata'";
                     break;
 
-                case pugi::status_bad_doctype:ss << "status_bad_doctype'";
+                case pugi::status_bad_doctype:
+                    ss << "status_bad_doctype'";
                     break;
 
-                case pugi::status_bad_pcdata:ss << "status_bad_pcdata'";
+                case pugi::status_bad_pcdata:
+                    ss << "status_bad_pcdata'";
                     break;
 
-                case pugi::status_bad_start_element:ss << "status_bad_start_element'";
+                case pugi::status_bad_start_element:
+                    ss << "status_bad_start_element'";
                     break;
 
-                case pugi::status_bad_attribute:ss << "status_bad_attribute'";
+                case pugi::status_bad_attribute:
+                    ss << "status_bad_attribute'";
                     break;
 
-                case pugi::status_end_element_mismatch:ss << "status_end_element_mismatch'";
+                case pugi::status_end_element_mismatch:
+                    ss << "status_end_element_mismatch'";
                     break;
 
-                case pugi::status_append_invalid_root:ss << "status_append_invalid_root'";
+                case pugi::status_append_invalid_root:
+                    ss << "status_append_invalid_root'";
                     break;
 
-                case pugi::status_no_document_element:ss << "status_no_document_element'";
+                case pugi::status_no_document_element:
+                    ss << "status_no_document_element'";
                     break;
 
                 default:break;
             }
-            ss << " - " << parseResult.description();
+
             EZXML_THROW( ss.str() );
         }
         else if( myDoc.begin() == myDoc.end() )
