@@ -86,6 +86,8 @@ namespace mx
                     << originalMessage << ")";
                     MX_THROW( ss.str() );
                 }
+
+                throw e;
             }
 
             auto mxdoc = mx::core::makeDocument();
