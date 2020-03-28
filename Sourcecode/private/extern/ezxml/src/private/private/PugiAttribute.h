@@ -3,7 +3,7 @@
 #pragma once
 
 #include "ezxml/XAttribute.h"
-#include "private/pugixml.hpp"
+#include <pugixml.hpp>
 
 #include <memory>
 

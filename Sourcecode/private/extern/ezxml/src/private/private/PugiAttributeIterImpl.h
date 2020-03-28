@@ -5,7 +5,7 @@
 #include "ezxml/XAttributeIterator.h"
 #include "ezxml/XAttributeIterImpl.h"
 #include "private/PugiAttribute.h"
-#include "private/pugixml.hpp"
+#include <pugixml.hpp>
 
 namespace ezxml
 {

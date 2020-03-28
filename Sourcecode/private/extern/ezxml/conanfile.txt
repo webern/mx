@@ -1,0 +1,12 @@
+[requires]
+pugixml/1.10@bincrafters/stable 
+
+[generators]
+cmake_find_package_multi
+
+[options]
+
+[imports]
+bin, *.pdb -> ./bin
+bin, *.pdb -> ./lib
+bin, *.dll -> ./bin

@@ -1,3 +1,4 @@
+include(${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.conan.txt)
 cmake_minimum_required(VERSION 3.7.2)
 project(ezxml
         VERSION 0.0.0
@@ -10,16 +11,23 @@ include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
 find_package( Threads )
+find_package(pugixml CONFIG REQUIRED)
+
 set(SOURCE_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/src")
 set(PRIVATE_DIR "${SOURCE_ROOT}/private")
 set(PUBLIC_DIR "${SOURCE_ROOT}/include")
 set(TEST_DIR "${SOURCE_ROOT}/test")
+
+set(CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR} ${CMAKE_MODULE_PATH})
+set(CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR} ${CMAKE_PREFIX_PATH})
 
 file(GLOB_RECURSE PUBLIC_HEADERS ${PUBLIC_DIR}/ezxml/*.h)
 file(GLOB_RECURSE PRIVATE_HEADERS ${PRIVATE_DIR}/ezx/*.h)
 file(GLOB_RECURSE PRIVATE_CXX ${PRIVATE_DIR}/private/*.cpp)
 
 add_library(ezxml STATIC ${PRIVATE_CXX})
+target_link_libraries(ezxml PRIVATE pugixml::pugixml)
+
 source_group( "ezxml-public" FILES ${PUBLIC_HEADERS})
 source_group( "ezxml-private" FILES ${PRIVATE_HEADERS} ${PRIVATE_CXX})
 set_property(TARGET ezxml PROPERTY CXX_STANDARD 14)

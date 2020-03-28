@@ -3,7 +3,7 @@
 #pragma once
 
 #include "ezxml/XDoc.h"
-#include "private/pugixml.hpp"
+#include <pugixml.hpp>
 
 namespace ezxml
 {

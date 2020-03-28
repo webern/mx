@@ -8,7 +8,7 @@
 #include "ezxml/XElementIterImpl.h"
 #include "ezxml/XDoc.h"
 #include "private/PugiElement.h"
-#include "private/pugixml.hpp"
+#include <pugixml.hpp>
 
 namespace ezxml
 {

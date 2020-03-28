@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ezxml/XElement.h"
-#include "private/pugixml.hpp"
+#include <pugixml.hpp>
 #include "ezxml/XElementIterator.h"
 
 #include <memory>
