@@ -4,6 +4,10 @@
 
 #pragma once
 
+#include "mx/api/PitchData.h"
+
+#include <vector>
+
 namespace mx
 {
 	namespace api
@@ -49,6 +53,14 @@ namespace mx
             // within the part
             int staffIndex;
             
+            // If this is true, the KeyData is in "Non Traditional" mode.
+            // The the 'fifths' and 'mode' member variables will be ignored, and
+            // key data will be read from nonTraditionalPitchData.
+            bool nonTraditionalKey;
+            // The non-tradional accidentals.
+            // Fill this with your custom accidentals and alters.
+            std::vector<PitchData> nonTraditionalPitchData;
+
 			// TODO support position data and/or other attribtues
             
             KeyData()
@@ -57,6 +69,8 @@ namespace mx
             , mode{ KeyMode::unspecified }
             , tickTimePosition{ 0 }
             , staffIndex{ -1 }
+            , nonTraditionalKey{ false }
+            , nonTraditionalPitchData{}
             {
                 
             }
@@ -68,6 +82,8 @@ namespace mx
         MXAPI_EQUALS_MEMBER( mode )
         MXAPI_EQUALS_MEMBER( tickTimePosition )
         MXAPI_EQUALS_MEMBER( staffIndex )
+        MXAPI_EQUALS_MEMBER( nonTraditionalKey )
+        MXAPI_EQUALS_MEMBER( nonTraditionalPitchData )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( KeyData );
 	}

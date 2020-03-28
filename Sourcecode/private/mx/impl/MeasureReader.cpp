@@ -35,6 +35,7 @@
 #include "mx/core/elements/Grouping.h"
 #include "mx/core/elements/Harmony.h"
 #include "mx/core/elements/Key.h"
+#include "mx/core/elements/NonTraditionalKey.h"
 #include "mx/core/elements/KeyAccidental.h"
 #include "mx/core/elements/KeyAlter.h"
 #include "mx/core/elements/KeyChoice.h"
@@ -452,15 +453,8 @@ namespace mx
                 const auto keyChoiceObj = *key.getKeyChoice();
                 const auto keyType = keyChoiceObj.getChoice();
 
-                if( keyType == core::KeyChoice::Choice::nonTraditionalKey )
-                {
-                    // TODO - support non-traditional keys
-                    continue;
-                }
-                
                 api::KeyData keyData;
                 // TODO - do position attributes
-                const auto& traditionalKey = *keyChoiceObj.getTraditionalKey();
                 
                 if( attr.hasNumber )
                 {
@@ -470,33 +464,60 @@ namespace mx
                         keyData.staffIndex = -1;
                     }
                 }
-                
-                keyData.fifths = traditionalKey.getFifths()->getValue().getValue();
-                if( traditionalKey.getHasCancel() )
-                {
-                    keyData.cancel = traditionalKey.getCancel()->getValue().getValue();
+
+                if (keyType == core::KeyChoice::Choice::traditionalKey) {
+                    const auto& traditionalKey = *keyChoiceObj.getTraditionalKey();
+
+                    keyData.fifths = traditionalKey.getFifths()->getValue().getValue();
+                    if (traditionalKey.getHasCancel())
+                    {
+                        keyData.cancel = traditionalKey.getCancel()->getValue().getValue();
+                    }
+
+                    if (traditionalKey.getHasMode())
+                    {
+                        // TODO - support all modes, not just major/minor
+                        const auto coreMode = traditionalKey.getMode()->getValue().getValue();
+                        if (coreMode == core::ModeEnum::major)
+                        {
+                            keyData.mode = api::KeyMode::major;
+                        }
+                        else if (coreMode == core::ModeEnum::minor)
+                        {
+                            keyData.mode = api::KeyMode::minor;
+                        }
+                        else
+                        {
+                            keyData.mode = api::KeyMode::unsupported;
+                        }
+                    }
+
                 }
-                
-                if( traditionalKey.getHasMode() )
+                // Non-Traditional
+                else
                 {
-                    // TODO - support all modes, not just major/minor
-                    const auto coreMode = traditionalKey.getMode()->getValue().getValue();
-                    if( coreMode == core::ModeEnum::major )
+                    keyData.nonTraditionalKey = true;
+
+                    const auto& keyVec = keyChoiceObj.getNonTraditionalKeySet();
+
+                    for (const core::NonTraditionalKeyPtr& k : keyVec)
                     {
-                        keyData.mode = api::KeyMode::major;
-                    }
-                    else if( coreMode == core::ModeEnum::minor )
-                    {
-                        keyData.mode = api::KeyMode::minor;
-                    }
-                    else if( coreMode == core::ModeEnum::minor )
-                    {
-                        keyData.mode = api::KeyMode::unsupported;
+                        api::PitchData p;
+                        p.step = myConverter.convert(k->getKeyStep()->getValue());
+                        p.alter = int(k->getKeyAlter()->getValue().getValue());
+
+                        if (k->getHasKeyAccidental())
+                        {
+                            p.accidental = myConverter.convert(k->getKeyAccidental()->getValue());
+                        }
+
+                        keyData.nonTraditionalPitchData.push_back(std::move(p));
                     }
                 }
+
                 keyData.tickTimePosition = myCurrentCursor.tickTimePosition;
+                myOutMeasureData.keys.emplace_back(std::move(keyData));
                 
-                myOutMeasureData.keys.emplace_back( std::move( keyData ) );
             }
             importClefs( inMxProperties.getClefSet() );
         }

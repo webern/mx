@@ -38,7 +38,7 @@ file(GLOB_RECURSE SRC_MX_TEST_UTILITY ${PRIVATE_DIR}/mxtest/utility/*.cpp ${PRIV
 file(GLOB_RECURSE SRC_CPUL ${PRIVATE_DIR}/cpul/*.cpp ${SOURCE}/cpul/*.h)
 
 # Mx Library
-add_library(${PROJECT_NAME} STATIC ${SRC_MX_API} ${SRC_MX_CORE} ${SRC_MX_IMPL} ${SRC_MX_PUGIXML} ${SRC_MX_UTILITY})
+add_library(${PROJECT_NAME} STATIC ${HEADERS_MX_API} ${SRC_MX_API} ${SRC_MX_CORE} ${SRC_MX_IMPL} ${SRC_MX_PUGIXML} ${SRC_MX_UTILITY})
 source_group( "api-public" FILES ${HEADERS_MX_API})
 source_group( "api" FILES ${SRC_MX_API} )
 source_group( "core" FILES ${SRC_MX_CORE} )
@@ -103,6 +103,7 @@ if(MX_BUILD_TESTS)
     target_link_libraries(MxTest ${PROJECT_NAME})
     target_link_libraries(MxTest ${CMAKE_THREAD_LIBS_INIT})
     set_property(TARGET MxTest PROPERTY CXX_STANDARD 14)
+    set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT MxTest)
 else()
     message(STATUS "${PROJECT_NAME}:${CMAKE_CURRENT_LIST_LINE} tests will NOT be compiled")
 endif()

@@ -91,8 +91,19 @@ namespace mxtest
         measure->timeSignature.beatType = 4;
         measure->timeSignature.isImplicit = true;
         measure->staves.emplace_back( StaffData{} );
+        measure->keys.emplace_back( KeyData{} );
+        key = measure->keys.back();
+        key.nonTraditionalKey = true;
+        for (size_t i = 0; i < size_t(Step::count); ++i) {
+            PitchData p;
+            p.step = Step(i);
+            p.accidental = Accidental::doubleSharp;
+            p.alter = 2;
+            key.nonTraditionalPitchData.push_back(std::move(p));
+        }
+
+
         staff = &measure->staves.back();
-        
         staff->voices[0].notes.emplace_back( NoteData{} );
         note = &staff->voices[0].notes.back();
         note->userRequestedVoiceNumber = 1;

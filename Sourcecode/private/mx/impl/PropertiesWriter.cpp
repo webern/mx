@@ -11,6 +11,10 @@
 #include "mx/core/elements/Footnote.h"
 #include "mx/core/elements/Instruments.h"
 #include "mx/core/elements/Key.h"
+#include "mx/core/elements/NonTraditionalKey.h"
+#include "mx/core/elements/KeyAccidental.h"
+#include "mx/core/elements/KeyAlter.h"
+#include "mx/core/elements/KeyStep.h"
 #include "mx/core/elements/Level.h"
 #include "mx/core/elements/MeasureStyle.h"
 #include "mx/core/elements/PartSymbol.h"
@@ -109,6 +113,7 @@ namespace mx
         PropertiesWriter::PropertiesWriter( const core::PartwiseMeasurePtr& inPartwiseMeasure )
         : myProperties{ nullptr }
         , myPartwiseMeasure{ inPartwiseMeasure }
+        , myConverter{}
         {
             allocate();
             MX_ASSERT( myPartwiseMeasure != nullptr );
@@ -155,7 +160,6 @@ namespace mx
         
         void PropertiesWriter::writeKey( int staffIndex, const api::KeyData& inKeyData )
         {
-            // TODO - support non-traditional keys
             // TODO - support placement and other attributes
             auto key = core::makeKey();
             
@@ -165,26 +169,59 @@ namespace mx
                 key->getAttributes()->number = core::StaffNumber{ staffIndex + 1 };
             }
             
-            key->getKeyChoice()->setChoice( core::KeyChoice::Choice::traditionalKey );
-            auto traditionalKey = key->getKeyChoice()->getTraditionalKey();
-            traditionalKey->getFifths()->setValue( core::FifthsValue{ inKeyData.fifths } );
-            
-            if ( inKeyData.cancel != 0 )
+            if (!inKeyData.nonTraditionalKey)
             {
-                traditionalKey->setHasCancel( true );
-                traditionalKey->getCancel()->setValue( core::FifthsValue{ inKeyData.cancel } );
+                key->getKeyChoice()->setChoice(core::KeyChoice::Choice::traditionalKey);
+                auto traditionalKey = key->getKeyChoice()->getTraditionalKey();
+                traditionalKey->getFifths()->setValue(core::FifthsValue{ inKeyData.fifths });
+
+                if (inKeyData.cancel != 0)
+                {
+                    traditionalKey->setHasCancel(true);
+                    traditionalKey->getCancel()->setValue(core::FifthsValue{ inKeyData.cancel });
+                }
+
+                if (inKeyData.mode == api::KeyMode::major || inKeyData.mode == api::KeyMode::minor)
+                {
+                    traditionalKey->setHasMode(true);
+                    traditionalKey->getMode()->setValue(core::ModeValue{ inKeyData.mode == api::KeyMode::major ? core::ModeEnum::major : core::ModeEnum::minor });
+                }
+
+            } else {
+                key->getKeyChoice()->setChoice(core::KeyChoice::Choice::nonTraditionalKey);
+
+                for (const api::PitchData& p : inKeyData.nonTraditionalPitchData)
+                {
+                    core::NonTraditionalKeyPtr k = core::makeNonTraditionalKey();
+                    if (p.step == api::Step::count || p.step == api::Step::unspecified)
+                    {
+                        // Would you prefer throw? assert?
+                        continue;
+                    }
+
+                    auto s = std::make_shared<core::KeyStep>( myConverter.convert(p.step) );
+                    k->setKeyStep(s);
+
+                    if (p.accidental != api::Accidental::none)
+                    {
+                        k->setHasKeyAccidental(true);
+                        auto acc = std::make_shared<core::KeyAccidental>( myConverter.convert(p.accidental) );
+                        k->setKeyAccidental(acc);
+                    }
+
+                    if (p.alter != 0) {
+                        k->setKeyAlter(std::make_shared<core::KeyAlter>(core::Semitones{ double(p.alter) }));
+                    }
+
+                    key->getKeyChoice()->addNonTraditionalKey(k);
+                }
             }
-            
-            if( inKeyData.mode == api::KeyMode::major || inKeyData.mode == api::KeyMode::minor )
-            {
-                traditionalKey->setHasMode( true );
-                traditionalKey->getMode()->setValue( core::ModeValue{ inKeyData.mode == api::KeyMode::major ? core::ModeEnum::major : core::ModeEnum::minor } );
-            }
+
             myProperties->addKey( key );
         }
         
         
-        void PropertiesWriter::writeTime( const api::TimeSignatureData& value )
+		void PropertiesWriter::writeTime(const api::TimeSignatureData& value)
         {
             auto time = core::makeTime();
             myProperties->addTime( time );

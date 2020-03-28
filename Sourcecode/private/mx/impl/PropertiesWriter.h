@@ -7,6 +7,7 @@
 #include "mx/api/TimeSignatureData.h"
 #include "mx/api/KeyData.h"
 #include "mx/api/ClefData.h"
+#include "mx/impl/Converter.h"
 #include <memory>
 
 namespace mx
@@ -53,6 +54,7 @@ namespace mx
         private:
             core::PropertiesPtr myProperties;
             const core::PartwiseMeasurePtr& myPartwiseMeasure;
+            const Converter myConverter;
         };
     }
 }
