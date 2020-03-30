@@ -15,13 +15,9 @@ MusicXML Class Library
 
 This project is a C++ library for working with MusicXML files.  MusicXML files are represented as statically typed objects.  This structure can be serialized and deserialize to/from MusicXML.
 
-## Compiling
+## Build
 
-The project is tested with the following:
-* Clang (Xcode 10 and higher)
-* g++ (Debian 6.3.0-18+deb9u1) 6.3.0 20170516
-* cmake version 3.7.2
-* MSVC2019
+### Cmake
 
 There are three cmake options:
 
@@ -43,6 +39,15 @@ cmake ../mx -DMX_BUILD_TESTS=on -DMX_BUILD_CORE_TESTS=off -DMX_BUILD_EXAMPLES=on
 make -j6
 ./MxTest
 ```
+
+### Build Tennets
+
+* `mx` should be ridiculously easy to build.
+* `mx` should not depend on any outside libraries.
+* `mx` should not depened on any package manager, though it may be published into any package manager.
+* `mx` should be self-contained.
+
+### Xcode Project
 
 The Xcode project (checked-in to the repo) has targets for iOS and macOS frameworks and dylibs.  These are not specified in the cmake file.
 
