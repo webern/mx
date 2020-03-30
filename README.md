@@ -59,13 +59,14 @@ There is an Xcode project checked-in to the repo.
 This has targets for iOS and macOS which are not specified by `cmake`.
 Contributors need not worry about the Xcode project.
 
-# Writing Code with `mx`
+# Using `mx`
 
 ## API
 
 The `mx::api` namespace is intended to be a simplified structural representation of MusicXML.
-It should be slightly more intuitive than manipulating the DOM representation directly.
+It should be more intuitive than manipulating the DOM representation directly.
 In particular, voices and time positions are more explicitly managed.
+Some complexities, on the other hand, are retained in `mx::api`, such as the need to manage beam starts and stops explicitly. 
 
 #### Writing MusicXML with `mx::api`
 
@@ -79,7 +80,7 @@ In particular, voices and time positions are more explicitly managed.
 #include "mx/api/ScoreData.h"
 
 // set this to 1 if you want to see the xml in your console
-#define MX_WRITE_THIS_TO_THE_CONSOLE 1
+#define MX_WRITE_THIS_TO_THE_CONSOLE 0
 
 int main(int argc, const char * argv[])
 {
@@ -195,6 +196,9 @@ int main(int argc, const char * argv[])
     // write to a file
     mgr.writeToFile( documentID, "./example.musicxml" );
 
+    // we need to explicitly delete the object held by the manager
+    mgr.destroyDocument( documentID );
+
     return 0;
 }
 ```
@@ -299,7 +303,7 @@ int main(int argc, const char * argv[])
 }
 ```
 
-## Implementation Details
+# Implementation Details
 
 The MusicXML classes in `mx::core` are tightly bound to the `musicxml.xsd` specification.
 MusicXML can be challenging to use and the `mx::core` class structure mirrors the complexity of the MusicXML specification.
@@ -308,29 +312,48 @@ It is possible to work with a subset of MusicXML using only `mx::api`, without d
 
 ##### Namespaces
 
-```
-using namespace ezxml;
-using namespace mx::api;
-using namespace mx::core;
+```C++
+using namespace mx::api;    // an easier interface for reading and writing MusicXML
+using namespace mx::core;   // a direct representation of a musicxml document in C++ classes
+using namespace mx::impl    // the logic that translates between mx::api and mx::core
+using namespace mx::utility // a typical catch-all for generic stuff like logging macros
+using namespace ezxml;      // generic serialization and deserialization of xml
 ```
 
+##### `mx::api`
+
+(**TODO**: explain a bit about the mx::api design and link to the dir)
+
+##### `mx::core`
+
 The `mx::core` namespace contains the MusicXML representation objects such as elements and attributes.
-In the musicxml.xsd there are many cases of 'xs:choice' or 'xs:group' being used.
-These constructs are typically represented in the mx::core class structure the same way that they are found in the musicxml.xsd specification.
+(**TODO**: make better)
+In the `musicxml.xsd` there are many cases of `xs:choice` or `xs:group` being used.
+These constructs are typically represented in the `mx::core` class structure the same way that they are found in the `musicxml.xsd` specification.
 The interfaces in this namespace are relatively stable, however they are tightly bound to MusicXML's specification and thus they will change when it comes time to support a future version of MusicXML.
+
+##### `mx::impl`
+
+(**TODO**: explain what impl is for and link to the dir)
+
+##### `mx::utility`
+
+(**TODO**: explain some of the things in utility and link to the dir)
+
+##### `ezxml`
 
 The `::ezxml::` namespace contains generic XML DOM functionality.
 Under the hood [pugixml](http://pugixml.org/) is being used.
 See the XML DOM section for more information.
 
 ##### Partwise vs. Timewise
-There are two types of MusicXML documents, 'partwise' and 'timewise'.
+There are two types of MusicXML documents, `partwise` and `timewise`.
 A partwise document consists of a set of parts which contain measures.
 A timewise document consists of a set of measures which contain parts.
 Partwise is used more often by MusicXML applications while Timewise documents seem to be rare or even nonresistant.
 Nonetheless *MusicXML Class Library* implements both Timewise and Partwise.
 The class `mx::core::Document` can hold *either* a Partwise *or* a Timewise score.
-Note that is actually holds both, but only one or the other is 'active'.
+Note that it actually holds both, but only one or the other is 'active' (this is similar to how `xsd` `choice` constructs are handled).
 You can check the inner document type with the getChoice function.
 You can convert between Partwise and Timewise with the convertContents function.
 
