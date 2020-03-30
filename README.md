@@ -345,6 +345,9 @@ The interfaces in this namespace are relatively stable, however they are tightly
 The `::ezxml::` namespace contains generic XML DOM functionality.
 Under the hood [pugixml](http://pugixml.org/) is being used.
 See the XML DOM section for more information.
+Note that, even though `ezxml` can stand alone as a useful abstraction, we build it as if it were entirely owned by the `mx` project.
+Additionally, we check the `pugixml` library in and build it as if it were part of the `mx` project.
+This is in keeping with the build tenets [above](#build-tenets)
 
 ##### Partwise vs. Timewise
 There are two types of MusicXML documents, `partwise` and `timewise`.
