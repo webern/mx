@@ -32,10 +32,10 @@ namespace mx
         // key.mode = KeyMode::minor; // (optional)
         //
         // If you want to create a custom time signature, you can do so like this. Here we are creating a
-        // key where C's are sharp and D's are one-quarter-tone sharp.
+        // key where C's are sharp and D's are one-quarter-tone sharp. See KeyComponent for details.
         //
-        // KeyComponent cSharp{ Step::c, 1, Accidental::sharp };
-        // KeyComponent dQuarterTone{ Step::d, 0.5, Accidental:quarterSharp };
+        // KeyComponent cSharp{ Step::c, 1, 0.0, Accidental::sharp };
+        // KeyComponent dQuarterTone{ Step::d, 0, 50.0, Accidental:quarterSharp };
         // KeyData key;
         // key.custom.push_back( cSharp );
         // key.custom.push_back( dQuarterTone );
@@ -71,7 +71,7 @@ namespace mx
             // within the part
             int staffIndex;
 
-            // TODO support position data and/or other attribtues
+            // TODO support position data and/or other attributes
 
             // Supports the creation of customized, non-traditional key signatures by specifying the exact note
             // alterations. When custom is non-empty, then fifths and mode are ignored.
