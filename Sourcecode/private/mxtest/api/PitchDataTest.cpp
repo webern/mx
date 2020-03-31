@@ -2,7 +2,7 @@
 // Copyright (c) by Matthew James Briggs
 // Distributed under the MIT License
 
-#include <extern/ezxml/src/include/ezxml/XFactory.h>
+#include "ezxml/XFactory.h"
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_API_TESTS
 
