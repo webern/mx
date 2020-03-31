@@ -374,11 +374,11 @@ Thus we can be reasonably assured our objects will never return nullptr.
 
 For example
 
-```
+```C++
 std::shared_ptr<Foo> foo; /* nullptr! */
-bar->setFoo( foo ); /* no-op because you passed a nullptr */
-auto x = bar->getFoo(); /* guaranteed not to be null */
-x->somefuntion(); /* OK to dereference without checking for nullptr */
+bar->setFoo( foo );       /* no-op because you passed a nullptr */
+auto x = bar->getFoo();   /* guaranteed not to be null */
+x->somefuntion();         /* OK to dereference without checking for nullptr */
 ```
 
 ##### Optional Member Data
@@ -388,14 +388,14 @@ The bool serves as a flag indicating whether or not the optional element will be
 The bool has no side-effect on the element who's presence/absence it represents.
 So for example we may set some data:
 
-```
+```C++
 foo->setValue( "hello" );
 bar->setFoo( foo );
 ```
 
 But in this example, if Foo is an optional member of Bar, then we must also set hasFoo to *true* or else foo will not be in the XML output.
 
-```
+```C++
 bar->toStream(...); /* Foo is not in the output! */
 bar->setHasFoo( true );
 bar->toStream(...); /* Now we see <foo>hello</foo> in the output. */
@@ -403,7 +403,7 @@ bar->toStream(...); /* Now we see <foo>hello</foo> in the output. */
 
 Also note that setting HasFoo to *false* does not mean that Foo's value is gone.
 
-```
+```C++
 bar->setHasFoo( false ); /* The XML document no longer has a Foo */
 bar->getFoo()->getValue() == "hello"; /* True! The value still exists but is not present in the XML. */
 ```
@@ -412,13 +412,13 @@ bar->getFoo()->getValue() == "hello"; /* True! The value still exists but is not
 Sometimes an element may contain zero, one, or many occurrences of another element.
 For example
 
-```
+```xml
 <xs:element name="key" type="key" minOccurs="0" maxOccurs="unbounded">
 ```
 
 In this case there will be a collection of Key objects and the getter/setters will look like this, where `KeySet` is a typedef of `std::vector<Key>`.
 
-```
+```C++
 const KeySet& getKeySet() const;
 void addKey( const KeyPtr& value );
 void removeKey( const KeySetIterConst& value );
@@ -430,14 +430,14 @@ KeyPtr getKey( const KeySetIterConst& setIterator ) const;
 Sometimes an element is required, but you may optionally have more than one.
 For example
 
-```
+```xml
 <xs:element name="direction-type" type="direction-type" maxOccurs="unbounded"/>
 ```
 
 In this case, minOccurs="1" (by default per XSD language rules).
 The functions will look just like the previous example, but they will behave differently
 
-```
+```C++
 const DirectionTypeSet& getDirectionTypeSet() const;
 void addDirectionType( const DirectionTypePtr& value );
 void removeDirectionType( const DirectionTypeSetIterConst& value );
@@ -461,7 +461,7 @@ Here are the two patterns I have used for this (pseudocode).
 
 **Pattern 1:** Replace the first element by dereferencing the begin() iterator:
 
-```
+```C++
 bool isFirstAdded = false;
 for( auto stuffElement : stuffElementsIWantToAdd )
 {
@@ -479,7 +479,7 @@ for( auto stuffElement : stuffElementsIWantToAdd )
 
 **Pattern 2:** Remove the default element *After* adding a replacement:
 
-```
+```C++
 bool isFirstAdded = false;
 for( auto stuffElement : stuffIWantToAdd )
 {
@@ -497,7 +497,7 @@ Pattern 2 only works when `minOccurs="1"`.
 There are no cases where `minOccurs` is greater than 1.
 
 ##### Member Data with Bounded maxOccurs
-```
+```xml
 <xs:element name="beam" type="beam" minOccurs="0" maxOccurs="8"/>
 ```
 In this case if you call addBeam when there are already 8 beams in the vector, nothing will happen.
@@ -506,7 +506,7 @@ In this case if you call addBeam when there are already 8 beams in the vector, n
 For an xs:group there is usually a single 'element' class which represents the group of elements.
 For example this XSD snippet:
 
-```
+```xml
 <xs:group name="editorial">
 	<xs:sequence>
 		<xs:group ref="footnote" minOccurs="0"/>
@@ -517,7 +517,7 @@ For example this XSD snippet:
 
 is represented by this class:
 
-```
+```C++
 class EditorialGroup : public ElementInterface
 {
 public:
@@ -554,7 +554,7 @@ The element will have an enum named 'Choice' in the public scope of the class.
 Each of the possible 'choices' will exist as data members of the class, but only one of them will be 'active' (was present in, or will be written to, XML).
 For example, this xsd construct:
 
-```
+```xml
 <xs:choice minOccurs="0">
     <xs:element name="pre-bend" type="empty">
         <xs:annotation>
@@ -571,7 +571,7 @@ For example, this xsd construct:
 
 Is represented by this class:
 
-```
+```C++
 class BendChoice : public ElementInterface
 {
 public:
@@ -617,7 +617,7 @@ A set of implementation classes wrapping pugixml are provided, but if you need t
 
 Here's how you can read a MusicXML document into `mx::core` classes by way of `::ezxml::`.
 
-```
+```C++
 #include "mx/core/Document.h"
 #include "mx/utility/Utility.h"
 #include "functions.h"
@@ -676,7 +676,7 @@ int main(int argc, const char *argv[])
 On the MusicXML home page there is an example of a "Hello World" simple MusicXML file.
 Here is a main function that would output this "Hello World" MusicXML example to std::cout.
 
-```
+```C++
 #include <iostream>
 #include "DocumentPartwise.h"
 #include "Elements.h"
@@ -732,15 +732,11 @@ int main(int argc, const char * argv[])
 ### Unit Test Framework
 
 An executable program named MxTest is also included in the project.
-MxTest utilizes the CppUnitLite macro library by Michael Feathers.
-Licensing of this library is not clear, [here is a link](http://c2.com/cgi/wiki?CppUnitLite) to the source of this library.
-CppUnitLite appears to be abandonware, but it is very useful.
-Here are some additional CppUnitLite links
-  * [http://www.objectmentor.com/resources/downloads.html](http://www.objectmentor.com/resources/downloads.html)
-  * [https://github.com/smikes/CppUnitLite](https://github.com/smikes/CppUnitLite)
-  * [https://github.com/webern/CppUnitLite](https://github.com/webern/CppUnitLite)
+MxTest utilizes the Catch2 test framework.
+The core tests are slow to compile, see the [`cmake` options](#cmake-options) section for more info on how to skip compilation of the tests.
 
-The tests are slow to compile, see the *Compiling* section for more info on how to skip compilation of the tests.
+(*TODO*: move this to a changelog and describe the problem with premature 1.0.0 semver tagging)
+(*TODO*: decide and describe how we will use semver)
 
 #### Release Notes
 
