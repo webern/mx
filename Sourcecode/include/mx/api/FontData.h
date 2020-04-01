@@ -96,7 +96,7 @@ namespace mx
         MXAPI_EQUALS_MEMBER( weight )
         if( ! areVectorsEqual( lhs.fontFamily, rhs.fontFamily ) )
         {
-            streamComparisonUnequalMessage( "FontData", "fontFamily" );
+            MX_SHOW_UNEQUAL( "FontData", "fontFamily" );
             return false;
         }
         MXAPI_EQUALS_MEMBER( underline )

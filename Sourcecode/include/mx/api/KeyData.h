@@ -37,8 +37,8 @@ namespace mx
         // KeyComponent cSharp{ Step::c, 1, 0.0, Accidental::sharp };
         // KeyComponent dQuarterTone{ Step::d, 0, 50.0, Accidental:quarterSharp };
         // KeyData key;
-        // key.custom.push_back( cSharp );
-        // key.custom.push_back( dQuarterTone );
+        // key.nonTraditional.push_back( cSharp );
+        // key.nonTraditional.push_back( dQuarterTone );
         //
         struct KeyData
         {
@@ -75,7 +75,7 @@ namespace mx
 
             // Supports the creation of customized, non-traditional key signatures by specifying the exact note
             // alterations. When custom is non-empty, then fifths and mode are ignored.
-            std::vector<KeyComponent> custom;
+            std::vector<KeyComponent> nonTraditional;
 
             KeyData()
             : fifths{ 0 }
@@ -83,7 +83,7 @@ namespace mx
             , mode{ KeyMode::unspecified }
             , tickTimePosition{ 0 }
             , staffIndex{ -1 }
-            , custom{}
+            , nonTraditional{}
             {
 
             }
@@ -95,7 +95,7 @@ namespace mx
         MXAPI_EQUALS_MEMBER( mode )
         MXAPI_EQUALS_MEMBER( tickTimePosition )
         MXAPI_EQUALS_MEMBER( staffIndex )
-        MXAPI_EQUALS_MEMBER( custom )
+        MXAPI_EQUALS_MEMBER( nonTraditional )
         MXAPI_EQUALS_END;
 
         MXAPI_NOT_EQUALS_AND_VECTORS( KeyData );

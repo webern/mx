@@ -29,19 +29,6 @@ namespace
     }
 }
 
-//TEST( CMajor, KeyData )
-//{
-//    KeyData key;
-//    const auto original = putKeyInScore( key );
-//    auto& docMgr = DocumentManager::getInstance();
-//    const int originalId = docMgr.createFromScore( original );
-//    const mx::core::DocumentPtr corePtr = docMgr.getDocument( originalId );
-//    const auto coreScorePtr = corePtr->getScorePartwise();
-//    const auto coreParts = coreScorePtr->getPartwisePartSet();
-//    CHECK_EQUAL( 1, coreParts.size() );
-//
-//}
-
 TEST( EMajor, KeyData )
 {
     KeyData key;
@@ -99,7 +86,7 @@ TEST( EMajor, KeyData )
     CHECK_EQUAL( key.fifths, deserializedKey.fifths );
     CHECK_EQUAL( key.mode , deserializedKey.mode );
     CHECK_EQUAL( 0, deserializedKey.tickTimePosition );
-    CHECK( deserializedKey.custom.empty() );
+    CHECK( deserializedKey.nonTraditional.empty() );
 }
 
 TEST( AbMinor, KeyData )
@@ -158,7 +145,7 @@ TEST( AbMinor, KeyData )
     CHECK_EQUAL( key.fifths, deserializedKey.fifths );
     CHECK_EQUAL( key.mode , deserializedKey.mode );
     CHECK_EQUAL( 0, deserializedKey.tickTimePosition );
-    CHECK( deserializedKey.custom.empty() );
+    CHECK( deserializedKey.nonTraditional.empty() );
 }
 
 TEST( NonTraditional1, KeyData )
@@ -170,6 +157,8 @@ TEST( NonTraditional1, KeyData )
     key.staffIndex = -1;
     KeyComponent cSharp{ Step::c, 1, 0.0, Accidental::sharp };
     KeyComponent dQuarterFlat{ Step::d, 0, -50.0, Accidental::quarterFlat };
+    key.nonTraditional.push_back( cSharp );
+    key.nonTraditional.push_back( dQuarterFlat );
 
     const auto original = putKeyInScore( key );
     auto& docMgr = DocumentManager::getInstance();
@@ -196,7 +185,7 @@ TEST( NonTraditional1, KeyData )
     size_t keyComponentIndex = 0;
     auto keyComponent = coreKeyComponents.at( keyComponentIndex );
     CHECK_EQUAL( mx::core::StepEnum::c, keyComponent->getKeyStep()->getValue() );
-    CHECK_DOUBLES_EQUAL( 0.0, keyComponent->getKeyAlter()->getValue().getValue(), 0.0001 )
+    CHECK_DOUBLES_EQUAL( 1.0, keyComponent->getKeyAlter()->getValue().getValue(), 0.0001 )
     CHECK( keyComponent->getHasKeyAccidental() );
     CHECK_EQUAL( mx::core::AccidentalValue::sharp, keyComponent->getKeyAccidental()->getValue() );
 
@@ -204,7 +193,7 @@ TEST( NonTraditional1, KeyData )
     keyComponentIndex = 1;
     keyComponent = coreKeyComponents.at( keyComponentIndex );
     CHECK_EQUAL( mx::core::StepEnum::d, keyComponent->getKeyStep()->getValue() );
-    CHECK_DOUBLES_EQUAL( -0.25, keyComponent->getKeyAlter()->getValue().getValue(), 0.0001 )
+    CHECK_DOUBLES_EQUAL( -0.50, keyComponent->getKeyAlter()->getValue().getValue(), 0.0001 )
     CHECK( keyComponent->getHasKeyAccidental() );
     CHECK_EQUAL( mx::core::AccidentalValue::quarterFlat, keyComponent->getKeyAccidental()->getValue() );
 
@@ -221,19 +210,167 @@ TEST( NonTraditional1, KeyData )
     const auto deserializedKey = deserializedKeys.at( 0 );
 
     CHECK_EQUAL( -1, deserializedKey.staffIndex );
-    CHECK_EQUAL( key.cancel, deserializedKey.cancel );
+    CHECK_EQUAL( 0, deserializedKey.cancel ); // Non-Traditional Keys Cannot have a Cancel Component
     CHECK_EQUAL( 0, deserializedKey.fifths );
     CHECK_EQUAL( KeyMode::unspecified, deserializedKey.mode );
     CHECK_EQUAL( 0, deserializedKey.tickTimePosition );
-    CHECK_EQUAL( 2, deserializedKey.custom.size() );
+    CHECK_EQUAL( 2, deserializedKey.nonTraditional.size() );
 
-    CHECK_EQUAL( cSharp, deserializedKey.custom.at( 0 ) );
-    CHECK_EQUAL( dQuarterFlat, deserializedKey.custom.at( 1 ) );
-
-    std::cout << xml.str() << std::endl;
+    CHECK_EQUAL( cSharp, deserializedKey.nonTraditional.at( 0 ) );
+    CHECK_EQUAL( dQuarterFlat, deserializedKey.nonTraditional.at( 1 ) );
 }
 
-// TODO - test KeyComponent equality operator
-// TODO - test KeyData equality operator
+TEST( KeyDataEquality_change_fifths, KeyData )
+{
+    KeyData key1;
+    key1.fifths = 4;
+    key1.cancel = -1;
+    key1.mode = KeyMode::major;
+    key1.staffIndex = 0;
+    key1.nonTraditional.push_back( KeyComponent{ Step::c, 1, 0.0, Accidental::sharp } );
+    key1.nonTraditional.push_back( KeyComponent{ Step::d, 0, -50.0, Accidental::quarterFlat } );
+    key1.tickTimePosition = 13;
+    auto key2 = key1;
+    CHECK( key1 == key2 );
+    CHECK( !( key1 != key2 ) );
+
+    // change one thing
+    key1.fifths += 1;
+    CHECK( key1 != key2 );
+    CHECK( !( key1 == key2 ) );
+
+}
+
+TEST( KeyDataEquality_change_cancel, KeyData )
+{
+    KeyData key1;
+    key1.fifths = 4;
+    key1.cancel = -1;
+    key1.mode = KeyMode::major;
+    key1.staffIndex = 0;
+    key1.nonTraditional.push_back( KeyComponent{ Step::c, 1, 0.0, Accidental::sharp } );
+    key1.nonTraditional.push_back( KeyComponent{ Step::d, 0, -50.0, Accidental::quarterFlat } );
+    key1.tickTimePosition = 13;
+    auto key2 = key1;
+    CHECK( key1 == key2 );
+    CHECK( !( key1 != key2 ) );
+
+    // change one thing
+    key1.cancel += 1;
+    CHECK( key1 != key2 );
+    CHECK( !( key1 == key2 ) );
+
+}
+
+TEST( KeyDataEquality_change_mode, KeyData )
+{
+    KeyData key1;
+    key1.fifths = 4;
+    key1.cancel = -1;
+    key1.mode = KeyMode::major;
+    key1.staffIndex = 0;
+    key1.nonTraditional.push_back( KeyComponent{ Step::c, 1, 0.0, Accidental::sharp } );
+    key1.nonTraditional.push_back( KeyComponent{ Step::d, 0, -50.0, Accidental::quarterFlat } );
+    key1.tickTimePosition = 13;
+    auto key2 = key1;
+    CHECK( key1 == key2 );
+    CHECK( !( key1 != key2 ) );
+
+    // change one thing
+    key1.mode = KeyMode::unspecified;
+    CHECK( key1 != key2 );
+    CHECK( !( key1 == key2 ) );
+}
+
+TEST( KeyDataEquality_change_staffIndex, KeyData )
+{
+    KeyData key1;
+    key1.fifths = 4;
+    key1.cancel = -1;
+    key1.mode = KeyMode::major;
+    key1.staffIndex = 0;
+    key1.nonTraditional.push_back( KeyComponent{ Step::c, 1, 0.0, Accidental::sharp } );
+    key1.nonTraditional.push_back( KeyComponent{ Step::d, 0, -50.0, Accidental::quarterFlat } );
+    key1.tickTimePosition = 13;
+    auto key2 = key1;
+    CHECK( key1 == key2 );
+    CHECK( !( key1 != key2 ) );
+
+    // change one thing
+    key1.staffIndex += 1;
+    CHECK( key1 != key2 );
+    CHECK( !( key1 == key2 ) );
+}
+
+TEST( KeyDataEquality_change_nonTraditionalKey, KeyData )
+{
+    KeyData key1;
+    key1.fifths = 4;
+    key1.cancel = -1;
+    key1.mode = KeyMode::major;
+    key1.staffIndex = 0;
+    key1.nonTraditional.push_back( KeyComponent{ Step::c, 1, 0.0, Accidental::sharp } );
+    key1.nonTraditional.push_back( KeyComponent{ Step::d, 0, -50.0, Accidental::quarterFlat } );
+    key1.tickTimePosition = 13;
+    auto key2 = key1;
+    CHECK( key1 == key2 );
+    CHECK( !( key1 != key2 ) );
+
+    // change one thing
+    key1.nonTraditional.at( 0 ).cents += 0.01;
+    CHECK( key1 != key2 );
+    CHECK( !( key1 == key2 ) );
+}
+
+TEST( KeyComponentEquality_change_alter, KeyComponent )
+{
+    KeyComponent kc1;
+    kc1.cents = 1.0;
+    kc1.alter = 2;
+    kc1.accidental = Accidental::sori;
+    kc1.step = Step::d;
+    auto kc2 = kc1;
+    CHECK( kc1 == kc2 );
+    CHECK( !( kc1 != kc2 ) );
+
+    // change one thing
+    kc1.alter += 1;
+    CHECK( kc1 != kc2 );
+    CHECK( !( kc1 == kc2 ) );
+}
+
+TEST( KeyComponentEquality_change_accidental, KeyComponent )
+{
+    KeyComponent kc1;
+    kc1.cents = 1.0;
+    kc1.alter = 2;
+    kc1.accidental = Accidental::sori;
+    kc1.step = Step::d;
+    auto kc2 = kc1;
+    CHECK( kc1 == kc2 );
+    CHECK( !( kc1 != kc2 ) );
+
+    // change one thing
+    kc1.accidental = Accidental::flat4;
+    CHECK( kc1 != kc2 );
+    CHECK( !( kc1 == kc2 ) );
+}
+
+TEST( KeyComponentEquality_change_step, KeyComponent )
+{
+    KeyComponent kc1;
+    kc1.cents = 1.0;
+    kc1.alter = 2;
+    kc1.accidental = Accidental::sori;
+    kc1.step = Step::d;
+    auto kc2 = kc1;
+    CHECK( kc1 == kc2 );
+    CHECK( !( kc1 != kc2 ) );
+
+    // change one thing
+    kc1.step = Step::e;
+    CHECK( kc1 != kc2 );
+    CHECK( !( kc1 == kc2 ) );
+}
 
 #endif

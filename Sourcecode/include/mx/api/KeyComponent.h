@@ -12,7 +12,7 @@ namespace mx
     {
 
         // KeyComponent is only used for non-traditional key signatures. It facilitates specifying the
-        // exact accidentals that are found in a key signature.
+        // exact accidentals that are found in the key signature.
         struct KeyComponent
         {
             // The note name that is to be altered by the key signature.
@@ -21,9 +21,9 @@ namespace mx
             // The amount that notes of this note name should be altered, in semitones.
             int alter;
 
-            // Additional amount that notes of this note name should be altered, in cents. If alter = 1 and alterCents =
-            // 25.1 then the note is altered by 1.251 semitones in total.
-            double alterCents;
+            // Additional amount that notes of this note name should be altered, in cents. If alter = 1 and cents = 25.1
+            // then the note is altered by 1.251 semitones in total.
+            double cents;
 
             // The accidental to display for this note name.
             Accidental accidental;
@@ -33,7 +33,7 @@ namespace mx
         MXAPI_EQUALS_BEGIN( KeyComponent )
         MXAPI_EQUALS_MEMBER( step )
         MXAPI_EQUALS_MEMBER( alter )
-        MXAPI_EQUALS_MEMBER( alterCents )
+        MXAPI_EQUALS_MEMBER( cents )
         MXAPI_EQUALS_MEMBER( accidental )
         MXAPI_EQUALS_END;
 
