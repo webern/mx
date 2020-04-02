@@ -47,7 +47,6 @@ You only need to run them if you make changes in the `mx::core` namespace.
 
 ### Build Tenets
 
-* `mx` should be ridiculously easy to build.
 * `mx` should not depend on any outside libraries.
 * `mx` third-party code should be kept to a minimum.
 * `mx` third-party code should be checked into the `mx` repo and compiled as part of the `mx` library.
@@ -338,7 +337,8 @@ The interfaces in this namespace are relatively stable, however they are tightly
 
 ##### `mx::utility`
 
-(**TODO**: explain some of the things in utility and link to the dir)
+This namespace is small.
+It mostly contains macros and small, generic functions.
 
 ##### `ezxml`
 
