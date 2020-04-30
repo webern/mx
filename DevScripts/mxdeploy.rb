@@ -87,7 +87,7 @@ build_ios = "xcodebuild \
   -scheme #{name_ios_target} \
   build \
   -derivedDataPath #{dir_build} \
-  -destination generic/platform=iOS \
+  -destination 'generic/platform=iOS' \
   -destination 'generic/platform=iOS simulator' \
   -configuration #{configuration}"
 

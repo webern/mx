@@ -82,3 +82,18 @@ jobs:
     
     - name: Run Tests
       run: ./MxTest
+
+  xcode:
+    name: Xcode
+    runs-on: macos-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Build
+      run: |
+          DevScripts/build-for-apple.sh \
+          --outdir ./xcode-build-artifacts \
+          --test false \
+          --configuration Release \
+          --cleanup true
