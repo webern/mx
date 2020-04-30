@@ -94,6 +94,6 @@ jobs:
       run: |
           DevScripts/build-for-apple.sh \
           --outdir ./xcode-build-artifacts \
-          --tests false \
+          --test false \
           --configuration Release \
           --cleanup true
