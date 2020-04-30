@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -eo pipefail
 
 for tool in lipo xcodebuild mktemp uuidgen; do
   if ! command -v ${tool} > /dev/null; then

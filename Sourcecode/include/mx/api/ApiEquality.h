@@ -78,10 +78,14 @@ namespace mx
         }
 #endif
 
+#ifndef MX_API_UNUSED
+    #define MX_API_UNUSED( variable ) (void)variable;
+#endif
+    
 #ifdef MX_DEBUG
     #define MX_SHOW_UNEQUAL( XtheCurrentClassName, XmxapiMemberName ) streamComparisonUnequalMessage( XtheCurrentClassName, XmxapiMemberName );
 #else
-    #define MX_SHOW_UNEQUAL( XtheCurrentClassName, XmxapiMemberName )
+    #define MX_SHOW_UNEQUAL( XtheCurrentClassName, XmxapiMemberName ) { MX_API_UNUSED( XtheCurrentClassName ) }
 #endif
 
 #define MXAPI_EQUALS_BEGIN( mxapiClassName ) \
