@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		29126F0B245A81F700B1F839 /* KeyDataTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29126F0A245A81F700B1F839 /* KeyDataTest.cpp */; };
 		29A04F34244FBA62004A5D3C /* NewSystemTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A04F31244FBA62004A5D3C /* NewSystemTest.cpp */; };
 		29A04F35244FBA62004A5D3C /* PitchDataTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A04F32244FBA62004A5D3C /* PitchDataTest.cpp */; };
 		29A04F36244FBA62004A5D3C /* MxlTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A04F33244FBA62004A5D3C /* MxlTest.cpp */; };
@@ -479,6 +480,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		29126F0A245A81F700B1F839 /* KeyDataTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyDataTest.cpp; sourceTree = "<group>"; };
 		29A04F2D244FBA4D004A5D3C /* catchDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = catchDefines.h; sourceTree = "<group>"; };
 		29A04F2E244FBA4D004A5D3C /* unusedParameter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = unusedParameter.h; sourceTree = "<group>"; };
 		29A04F2F244FBA4D004A5D3C /* msNoexceptHack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = msNoexceptHack.h; sourceTree = "<group>"; };
@@ -1180,6 +1182,7 @@
 		29DC389B225C0FC100814240 /* api */ = {
 			isa = PBXGroup;
 			children = (
+				29126F0A245A81F700B1F839 /* KeyDataTest.cpp */,
 				29A04F33244FBA62004A5D3C /* MxlTest.cpp */,
 				29A04F31244FBA62004A5D3C /* NewSystemTest.cpp */,
 				29A04F32244FBA62004A5D3C /* PitchDataTest.cpp */,
@@ -1852,6 +1855,7 @@
 				29DC3BAC225C0FC300814240 /* FiguredBassTest.cpp in Sources */,
 				29DC3B33225C0FC200814240 /* MidiProgramTest.cpp in Sources */,
 				29DC3BE1225C0FC300814240 /* NormalDotTest.cpp in Sources */,
+				29126F0B245A81F700B1F839 /* KeyDataTest.cpp in Sources */,
 				29DC3BB6225C0FC300814240 /* MeasureLayoutTest.cpp in Sources */,
 				29DC3BDD225C0FC300814240 /* SlideTest.cpp in Sources */,
 				29DC3B5C225C0FC200814240 /* AccordionLowTest.cpp in Sources */,
