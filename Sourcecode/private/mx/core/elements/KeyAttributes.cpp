@@ -33,7 +33,9 @@ namespace mx
         ,hasFontWeight( false )
         ,hasColor( false )
         ,hasPrintObject( false )
-        {}
+        {
+
+        }
 
 
         bool KeyAttributes::hasValues() const

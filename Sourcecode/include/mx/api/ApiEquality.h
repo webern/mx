@@ -9,17 +9,12 @@
 #include <map>
 #include <iostream>
 
+// #define MX_DEBUG // shows traces to std::cout
+
 namespace mx
 {
     namespace api
     {
-        
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// All of the uglines below this point is mainly to be used in test code.  It is not expected that clients will have need of the //
-// functions defined here.  If you do wish to use the equality operator, you may want to silence the cout's that occur when two  //
-// items are found to be not-equal.  This cout stream was necessary for testing during development.                              //
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
         template <typename T>
         inline bool areVectorsEqual( const std::vector<T>& lhs, const std::vector<T>& rhs )
         {
@@ -72,6 +67,7 @@ namespace mx
             return areSame( lhs, rhs );
         }
 
+#ifdef MX_DEBUG
         inline void streamComparisonUnequalMessage( const char* const inClassName, const char* const inMemberName )
         {
             std::cout << inClassName;
@@ -80,23 +76,30 @@ namespace mx
             std::cout << " members are not equal ";
             std::cout << std::endl;
         }
-        
+#endif
+
+#ifdef MX_DEBUG
+    #define MX_SHOW_UNEQUAL( XtheCurrentClassName, XmxapiMemberName ) streamComparisonUnequalMessage( XtheCurrentClassName, XmxapiMemberName );
+#else
+    #define MX_SHOW_UNEQUAL( XtheCurrentClassName, XmxapiMemberName )
+#endif
+
 #define MXAPI_EQUALS_BEGIN( mxapiClassName ) \
         inline bool operator==( const mxapiClassName& lhs, const mxapiClassName& rhs ) \
         { \
             const char* const theCurrentClassName = #mxapiClassName;
-
+            
 #define MXAPI_EQUALS_MEMBER( mxapiMemberName ) \
         if( ! ( lhs.mxapiMemberName == rhs.mxapiMemberName ) ) \
         { \
-            streamComparisonUnequalMessage( theCurrentClassName, #mxapiMemberName ); \
+            MX_SHOW_UNEQUAL( theCurrentClassName, #mxapiMemberName ); \
             return false; \
         }
 
 #define MXAPI_DOUBLES_EQUALS_MEMBER( mxapiMemberName ) \
         if( std::abs( lhs.mxapiMemberName - rhs.mxapiMemberName ) > MX_API_EQUALITY_EPSILON ) \
         { \
-            streamComparisonUnequalMessage( theCurrentClassName, #mxapiMemberName ); \
+            MX_SHOW_UNEQUAL( theCurrentClassName, #mxapiMemberName ); \
             return false; \
         }
 

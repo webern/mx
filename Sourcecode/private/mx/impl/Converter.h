@@ -15,6 +15,7 @@
 #include "mx/core/elements/OrnamentsChoice.h"
 #include "mx/core/elements/TechnicalChoice.h"
 #include "mx/core/Enums.h"
+#include "mx/core/Decimals.h"
 
 #include <map>
 
@@ -25,6 +26,8 @@ namespace mx
         class Converter
         {
         public:
+            // TODO - all of these functions should be static
+
             core::StepEnum convert( api::Step value ) const;
             api::Step convert( core::StepEnum value ) const;
             
@@ -114,7 +117,10 @@ namespace mx
 
             core::KindValue convert( api::ChordKind value ) const;
             api::ChordKind convert( core::KindValue value ) const;
-            
+
+            static mx::core::DecimalType convertToAlter( int semitones, double cents );
+            static std::pair<int, double> convertToSemitonesAndCents( mx::core::DecimalType alter );
+
             const static std::map<core::StepEnum, api::Step> stepMap;
             const static std::map<core::NoteTypeValue, api::DurationName> durationMap;
             const static std::map<core::NoteheadValue, api::Notehead> noteheadMap;

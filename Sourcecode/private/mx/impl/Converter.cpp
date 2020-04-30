@@ -1804,6 +1804,34 @@ namespace mx
         {
             return findApiItem( kindMap, api::ChordKind::unspecified, value );
         }
-        
+
+        mx::core::DecimalType Converter::convertToAlter( int semitones, double cents )
+        {
+            double alter = 0.0;
+            if( semitones != 0 || cents != 0.0 )
+            {
+                double microtones = 0.0;
+                if( cents != 0.0 ) {
+                    microtones = cents / 100.0;
+                }
+                alter = semitones + microtones;
+            }
+            return alter;
+        }
+
+        std::pair<int, double> Converter::convertToSemitonesAndCents( mx::core::DecimalType xmlAlter )
+        {
+            double myCents = 0.0;
+            const auto intAlter = static_cast<int>( xmlAlter );
+            const auto micro = xmlAlter - static_cast<mx::core::DecimalType> ( intAlter );
+            const auto microDistance = std::abs( micro );
+            if( microDistance >= 0.000000000001 )
+            {
+                const auto theCents = micro * 100.0;
+                const auto theNarrowCents = static_cast<decltype(mx::api::PitchData::cents)>( theCents );
+                myCents = theNarrowCents;
+            }
+            return std::make_pair( intAlter, myCents );
+        }
     }
 }

@@ -454,7 +454,30 @@ namespace mx
 
                 if( keyType == core::KeyChoice::Choice::nonTraditionalKey )
                 {
-                    // TODO - support non-traditional keys
+                    api::KeyData keyData;
+                    const auto& nonTraditionalKeyParts = key.getKeyChoice()->getNonTraditionalKeySet();
+                    for( const auto& nonTraditionalKeyPart : nonTraditionalKeyParts )
+                    {
+                        api::KeyComponent keyComponent{};
+
+                        if( nonTraditionalKeyPart->getHasKeyAccidental() )
+                        {
+                            keyComponent.accidental = myConverter.convert(  nonTraditionalKeyPart->getKeyAccidental()->getValue() );
+                        }
+
+                        const auto alter = nonTraditionalKeyPart->getKeyAlter()->getValue().getValue();
+                        if( alter != 0.0 )
+                        {
+                            const auto semitoneAndCents = Converter::convertToSemitonesAndCents( alter );
+                            keyComponent.alter = semitoneAndCents.first;
+                            keyComponent.cents = semitoneAndCents.second;
+                        }
+
+                        keyComponent.step = myConverter.convert( nonTraditionalKeyPart->getKeyStep()->getValue() );
+                        keyData.nonTraditional.emplace_back( keyComponent );
+                    }
+
+                    myOutMeasureData.keys.emplace_back( std::move( keyData ) );
                     continue;
                 }
                 
