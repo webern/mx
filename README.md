@@ -44,7 +44,11 @@ make -j6
 ./MxTest
 ```
 
-The Xcode project (checked-in to the repo) has targets for iOS and macOS frameworks and dylibs.  These are not specified in the cmake file.
+The Xcode project (checked-in to the repo) has targets for iOS and macOS frameworks and dylibs.
+These are not specified in the cmake file.
+Contributors are not required to keep the Xcode project up-to-date.
+If you add, move or remove files from the codebase, it is likely that the Xcode CI run will fail.
+This will not prevent a contribution from being merged, the maintainer will fix the project after-the-fact.
 
 ## API
 

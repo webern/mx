@@ -173,6 +173,8 @@ create_ios_fat_binary() {
 }
 
 move_outputs() {
+  rm -rf "${OUTDIR}/${ios_framework_name}"
+  rm -rf "${OUTDIR}/${macos_framework_name}"
   mv -f "${ios_build_path}/" "${OUTDIR}/"
   mv -f "${macos_build_path}/" "${OUTDIR}/"
 }
