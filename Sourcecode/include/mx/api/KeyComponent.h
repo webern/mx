@@ -27,6 +27,24 @@ namespace mx
 
             // The accidental to display for this note name.
             Accidental accidental;
+
+            KeyComponent()
+            : step{}
+            , alter{}
+            , cents{}
+            , accidental{}
+            {
+
+            }
+
+            KeyComponent( Step inStep, int inAlter, double inCents, Accidental inAccidental )
+            : step{ inStep }
+            , alter{ inAlter }
+            , cents{ inCents }
+            , accidental{ inAccidental }
+            {
+
+            }
         };
 
 

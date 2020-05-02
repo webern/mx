@@ -377,7 +377,10 @@ TEST( IsInitialized, KeyComponent )
 {
     // https://github.com/webern/mx/issues/85
     KeyComponent k;
+    CHECK( k.step == Step{} );
+    CHECK( k.alter == 0 );
     CHECK( k.cents == 0.0 );
+    CHECK( k.accidental == Accidental{} );
 }
 
 #endif
