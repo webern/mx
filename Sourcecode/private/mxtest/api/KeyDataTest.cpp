@@ -373,4 +373,11 @@ TEST( KeyComponentEquality_change_step, KeyComponent )
     CHECK( !( kc1 == kc2 ) );
 }
 
+TEST( IsInitialized, KeyComponent )
+{
+    // https://github.com/webern/mx/issues/85
+    KeyComponent k;
+    CHECK( k.cents == 0.0 );
+}
+
 #endif
