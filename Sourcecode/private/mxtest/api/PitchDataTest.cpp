@@ -293,6 +293,11 @@ TEST( ConstructorTest, PitchData )
         { PitchData{ Step::c, 0, 4 }, 0 },
         { PitchData{ Step::g, 0, 4 }, 1 },
     };
+
+    PitchData g{ Step::g };
+    const auto find_iter = root_to_key_circle.find( g );
+    REQUIRE( find_iter != std::cend( root_to_key_circle ) );
+    CHECK_EQUAL( 1, find_iter->second );
 }
 T_END;
 
