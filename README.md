@@ -321,19 +321,60 @@ using namespace ezxml;      // generic serialization and deserialization of xml
 
 ##### `mx::api`
 
-(**TODO**: explain a bit about the mx::api design and link to the dir)
+The `mx::api` namespace is a set of 'plain old data' structs that represent a simplified model of MusicXML.
+For example, here is the `ScoreData.h`, which represents the top level of the object heirarchy:
+
+```C++
+class ScoreData
+{
+public:
+    ScoreData();
+    MusicXmlVersion musicXmlVersion;
+    std::string musicXmlType;
+    std::string workTitle;
+    std::string workNumber;
+    std::string movementTitle;
+    std::string movementNumber;
+    std::string composer;
+    std::string lyricist;
+    std::string arranger;
+    std::string publisher;
+    std::string copyright;
+    EncodingData encoding;
+    std::vector<PageTextData> pageTextItems;
+    LayoutData layout;
+    std::vector<PartData> parts;
+    std::vector<PartGroupData> partGroups;
+    int ticksPerQuarter;
+    std::set<SystemData> systems;
+
+    int getNumMeasures() const;
+    int getNumStavesPerSystem() const;
+
+    /// sorts all of the events, directions, etc.
+    /// it is good to call this before writing to xml.
+    void sort();
+};
+```
+
+`mx::api` and `mx::core` are kept completely separate.\
+That is, `mx::api` data is serialized into `mx::core` data, which is then serialized into MusicXML.
+The `mx::api` struct allow us to simplify things like specifying a note's tick time position, and allowing the serialization process to take care of details such as `<forward>` `<backup>` elements.
 
 ##### `mx::core`
 
 The `mx::core` namespace contains the MusicXML representation objects such as elements and attributes.
-(**TODO**: make better)
+`mx::core` was mostly generated from `musicxml.xsd` with plenty of intervention by hand.
+
+###### XML Choices and Groups
+
 In the `musicxml.xsd` there are many cases of `xs:choice` or `xs:group` being used.
 These constructs are typically represented in the `mx::core` class structure the same way that they are found in the `musicxml.xsd` specification.
 The interfaces in this namespace are relatively stable, however they are tightly bound to MusicXML's specification and thus they will change when it comes time to support a future version of MusicXML.
 
 ##### `mx::impl`
 
-(**TODO**: explain what impl is for and link to the dir)
+`mx::impl` is the translation layer between `mx::api` and `mx::core`.
 
 ##### `mx::utility`
 
@@ -342,7 +383,7 @@ It mostly contains macros and small, generic functions.
 
 ##### `ezxml`
 
-The `::ezxml::` namespace contains generic XML DOM functionality.
+The `ezxml` namespace contains generic XML DOM functionality.
 Under the hood [pugixml](http://pugixml.org/) is being used.
 See the XML DOM section for more information.
 Note that, even though `ezxml` can stand alone as a useful abstraction, we build it as if it were entirely owned by the `mx` project.
