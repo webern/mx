@@ -13,9 +13,7 @@ MusicXML Class Library
 
 ## Introduction
 
-This project is a C++ library for working with MusicXML files.
-MusicXML files are represented as statically typed objects.
-This structure can be serialized and deserialize to/from MusicXML.
+This project is a C++ library for working with MusicXML.
 
 # Build
 
@@ -47,7 +45,7 @@ You only need to run them if you make changes in the `mx::core` namespace.
 
 ### Build Tenets
 
-* `mx` should not depend on any outside libraries.
+* `mx` should not depend on any outside libraries (no deps).
 * `mx` third-party code should be kept to a minimum.
 * `mx` third-party code should be checked into the `mx` repo and compiled as part of the `mx` library.
 * `mx` should not depened on any package manager, though it may be published into any package manager.
