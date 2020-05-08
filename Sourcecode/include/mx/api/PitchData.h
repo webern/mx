@@ -69,6 +69,20 @@ namespace mx
             // default construction is middle c (c4)
             PitchData();
 
+            explicit PitchData(
+                Step inStep,
+                int inAlter = 0,
+                int inOctave = 4,
+                Accidental inAccidental = Accidental::none,
+
+                // less-often used params last
+                double inCents = 0.0,
+                bool inIsAccidentalParenthetical = false,
+                bool inIsAccidentalCautionary = false,
+                bool inIsAccidentalEditorial = false,
+                bool inIsAccidentalBracketed = false
+            );
+
             // the note name. i.e. c, d, e, f, g, a, b
             Step step;
 
@@ -82,8 +96,8 @@ namespace mx
             // additional alteration to the sounding pitch (in hundredths of a semitone). the MusicXML alter value is
             // a floating point number to facilitate microtonal music. however for mx::api we wanted the simplicity of
             // dealing with integrals for the more common case on non-microtonal music. in order to still support
-            // microtones without resording to a floating-point alter value, we break out microtonal adjustments to a
-            // separate 'cents' field, which will be addeded to the alter integral:
+            // microtones without resorting to a floating-point alter value, we break out microtonal adjustments to a
+            // separate 'cents' field, which will be added to the alter integral:
             // <alter> = (double)alter + (cents / 100.0)
             double cents;
 

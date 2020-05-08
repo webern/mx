@@ -9,20 +9,37 @@ namespace mx
     namespace api
     {
         PitchData::PitchData()
-        : step{ Step::c }
-        , alter{ 0 }
-        , cents{ 0.0 }
-        , accidental{Accidental::none}
-        , isAccidentalParenthetical{ false }
-        , isAccidentalCautionary{ false }
-        , isAccidentalEditorial{ false }
-        , isAccidentalBracketed{ false }
-        , octave{ 4 }
+        : PitchData{ Step::c }
         {
             
         }
-        
-        
+
+        PitchData::PitchData(
+            Step inStep,
+            int inAlter,
+            int inOctave,
+            Accidental inAccidental,
+            double inCents,
+            bool inIsAccidentalParenthetical,
+            bool inIsAccidentalCautionary,
+            bool inIsAccidentalEditorial,
+            bool inIsAccidentalBracketed
+        )        
+        : step{ inStep }
+        , alter{ inAlter }
+        , cents{ inCents }
+        , accidental{ inAccidental }
+        , isAccidentalParenthetical{ inIsAccidentalParenthetical }
+        , isAccidentalCautionary{ inIsAccidentalCautionary }
+        , isAccidentalEditorial{ inIsAccidentalEditorial }
+        , isAccidentalBracketed{ inIsAccidentalBracketed }
+        , octave{ inOctave }
+        {
+
+        }
+
+
+
         void PitchData::showAccidental()
         {
             switch( alter )
