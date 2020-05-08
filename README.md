@@ -54,9 +54,11 @@ You only need to run them if you make changes in the `mx::core` namespace.
 
 ### Xcode Project
 
-There is an Xcode project checked-in to the repo.
-This has targets for iOS and macOS which are not specified by `cmake`.
-Contributors need not worry about the Xcode project.
+The Xcode project (checked-in to the repo) has targets for iOS and macOS frameworks and dylibs.
+These are not specified in the cmake file.
+Contributors are not required to keep the Xcode project up-to-date.
+If you add, move or remove files from the codebase, it is likely that the Xcode CI run will fail.
+This will not prevent a contribution from being merged, the maintainer will fix the project after-the-fact.
 
 # Using `mx`
 

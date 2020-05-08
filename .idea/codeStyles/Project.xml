@@ -1,8 +1,6 @@
 <component name="ProjectCodeStyleConfiguration">
   <code_scheme name="Project" version="173">
     <Objective-C>
-      <option name="INDENT_PREPROCESSOR_DIRECTIVE" value="4" />
-      <option name="INDENT_DIRECTIVE_AS_CODE" value="true" />
       <option name="KEEP_CASE_EXPRESSIONS_IN_ONE_LINE" value="true" />
       <option name="KEEP_DIRECTIVE_AT_FIRST_COLUMN" value="false" />
       <option name="NAMESPACE_BRACE_PLACEMENT" value="2" />
@@ -26,6 +24,7 @@
       <option name="CLASS_CONSTRUCTOR_INIT_LIST_NEW_LINE_BEFORE_COLON" value="1" />
       <option name="SUPERCLASS_LIST_WRAP" value="1" />
       <option name="ALIGN_INIT_LIST_IN_COLUMNS" value="false" />
+      <option name="ENUM_CONSTANTS_COMMA_ON_NEXT_LINE" value="true" />
       <option name="SPACE_WITHIN_FUNCTION_DECLARATION_PARENTHESES" value="true" />
       <option name="SPACE_WITHIN_FUNCTION_CALL_PARENTHESES" value="true" />
       <option name="SPACE_BEFORE_PROTOCOLS_BRACKETS" value="false" />
@@ -78,6 +77,7 @@
       <option name="DOWHILE_BRACE_FORCE" value="3" />
       <option name="WHILE_BRACE_FORCE" value="3" />
       <option name="FOR_BRACE_FORCE" value="3" />
+      <option name="ENUM_CONSTANTS_WRAP" value="0" />
       <indentOptions>
         <option name="CONTINUATION_INDENT_SIZE" value="4" />
         <option name="LABEL_INDENT_ABSOLUTE" value="true" />

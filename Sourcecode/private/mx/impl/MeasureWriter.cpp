@@ -240,7 +240,7 @@ namespace mx
             
             while( myMeasureKeysIter != myMeasureKeysEnd && myMeasureKeysIter->tickTimePosition == 0 )
             {
-                myPropertiesWriter->writeKey( -1, *myMeasureKeysIter );
+                myPropertiesWriter->writeKey( myMeasureKeysIter->staffIndex, *myMeasureKeysIter );
                 ++myMeasureKeysIter;
             }
         }

@@ -370,13 +370,9 @@ namespace mx
                 myOutFullNoteTypeChoice->setChoice( core::FullNoteTypeChoice::Choice::pitch );
                 auto pitch = myOutFullNoteTypeChoice->getPitch();
                 pitch->getStep()->setValue( myConverter.convert( myNoteData.pitchData.step ) );
-                if( myNoteData.pitchData.alter != 0 )
+                if( myNoteData.pitchData.alter != 0 || myNoteData.pitchData.cents != 0.0 )
                 {
-                    core::DecimalType microtones = 0.0;
-                    if( myNoteData.pitchData.cents != 0.0 ) {
-                        microtones = static_cast<core::DecimalType>( myNoteData.pitchData.cents / 100.0 );
-                    }
-                    const auto alter = static_cast<core::DecimalType>( myNoteData.pitchData.alter ) + microtones;
+                    const auto alter = Converter::convertToAlter( myNoteData.pitchData.alter, myNoteData.pitchData.cents );
                     pitch->setHasAlter( true );
                     pitch->getAlter()->setValue( core::Semitones{ alter } );
                 }
@@ -398,8 +394,7 @@ namespace mx
                 myOutNote->getEditorialVoiceGroup()->setHasVoice( true );
                 myOutNote->getEditorialVoiceGroup()->getVoice()->setValue( core::XsString{ std::to_string( myCursor.voiceIndex + 1 ) } );
             }
-            // TODO - only show voice number if it is needed
-            // i.e. only show if != 0 or voiceCount > 1
+            // TODO - only show voice number if it is needed i.e. only show if != 0 or voiceCount > 1
         }
         
         

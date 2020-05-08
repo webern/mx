@@ -17,6 +17,8 @@ namespace mx
         using PartwiseMeasurePtr = std::shared_ptr<PartwiseMeasure>;
         class Properties;
         using PropertiesPtr = std::shared_ptr<Properties>;
+        class Key;
+        using KeyPtr = std::shared_ptr<Key>;
 	}
 
     namespace impl
@@ -43,6 +45,8 @@ namespace mx
 
             void writeDivisions( int value );
             void writeKey( int staffIndex, const api::KeyData& inKeyData );
+            static void writeTraditionalKey( const api::KeyData& inKeyData, mx::core::KeyPtr& ioKey );
+            static void writeNonTraditionalKey( const api::KeyData& inKeyData, mx::core::KeyPtr& ioKey );
             void writeTime( const api::TimeSignatureData& value );
             void writeNumStaves( int value );
             void writeClef( int staffIndex, const api::ClefData& inClefData );

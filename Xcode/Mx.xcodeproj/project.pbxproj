@@ -112,8 +112,6 @@
 		29A800521EF0499300AD2478 /* TechnicalFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2941EF0476300AD2478 /* TechnicalFunctions.cpp */; };
 		29A800531EF0499300AD2478 /* TimeReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2961EF0476300AD2478 /* TimeReader.cpp */; };
 		29A800541EF0499300AD2478 /* TupletReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2981EF0476300AD2478 /* TupletReader.cpp */; };
-		29A800561EF0499300AD2478 /* Utility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2A71EF0476300AD2478 /* Utility.cpp */; };
-		29A800571EF0499300AD2478 /* UtilityImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2A91EF0476300AD2478 /* UtilityImpl.cpp */; };
 		29A800641EF0876500AD2478 /* SoundID.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A800621EF0876500AD2478 /* SoundID.cpp */; };
 		29A800651EF0876500AD2478 /* SoundID.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A800621EF0876500AD2478 /* SoundID.cpp */; };
 		29A800661EF0876500AD2478 /* SoundID.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A800621EF0876500AD2478 /* SoundID.cpp */; };
@@ -2715,14 +2713,6 @@
 		29A8FCF11EF0476E00AD2478 /* TupletReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2981EF0476300AD2478 /* TupletReader.cpp */; };
 		29A8FCF21EF0476E00AD2478 /* TupletReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2981EF0476300AD2478 /* TupletReader.cpp */; };
 		29A8FCF31EF0476E00AD2478 /* TupletReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2981EF0476300AD2478 /* TupletReader.cpp */; };
-		29A8FD311EF0476E00AD2478 /* Utility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2A71EF0476300AD2478 /* Utility.cpp */; };
-		29A8FD321EF0476E00AD2478 /* Utility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2A71EF0476300AD2478 /* Utility.cpp */; };
-		29A8FD331EF0476E00AD2478 /* Utility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2A71EF0476300AD2478 /* Utility.cpp */; };
-		29A8FD341EF0476E00AD2478 /* Utility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2A71EF0476300AD2478 /* Utility.cpp */; };
-		29A8FD3B1EF0476E00AD2478 /* UtilityImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2A91EF0476300AD2478 /* UtilityImpl.cpp */; };
-		29A8FD3C1EF0476E00AD2478 /* UtilityImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2A91EF0476300AD2478 /* UtilityImpl.cpp */; };
-		29A8FD3D1EF0476E00AD2478 /* UtilityImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2A91EF0476300AD2478 /* UtilityImpl.cpp */; };
-		29A8FD3E1EF0476E00AD2478 /* UtilityImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2A91EF0476300AD2478 /* UtilityImpl.cpp */; };
 		29A8FDCA1EF0499200AD2478 /* ClefData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8DD5C1EF0475D00AD2478 /* ClefData.cpp */; };
 		29A8FDCB1EF0499200AD2478 /* DocumentManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8DD611EF0475D00AD2478 /* DocumentManager.cpp */; };
 		29A8FDCC1EF0499200AD2478 /* DurationData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8DD631EF0475D00AD2478 /* DurationData.cpp */; };
@@ -4860,10 +4850,6 @@
 		29A8E2A41EF0476300AD2478 /* Parse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Parse.h; sourceTree = "<group>"; };
 		29A8E2A51EF0476300AD2478 /* StringToInt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringToInt.h; sourceTree = "<group>"; };
 		29A8E2A61EF0476300AD2478 /* Throw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Throw.h; sourceTree = "<group>"; };
-		29A8E2A71EF0476300AD2478 /* Utility.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Utility.cpp; sourceTree = "<group>"; };
-		29A8E2A81EF0476300AD2478 /* Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utility.h; sourceTree = "<group>"; };
-		29A8E2A91EF0476300AD2478 /* UtilityImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UtilityImpl.cpp; sourceTree = "<group>"; };
-		29A8E2AA1EF0476300AD2478 /* UtilityImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UtilityImpl.h; sourceTree = "<group>"; };
 		29A8FDC21EF0497400AD2478 /* MxmacOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MxmacOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		29A8FDC41EF0497500AD2478 /* MxmacOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MxmacOS.h; sourceTree = "<group>"; };
 		29A8FDC51EF0497500AD2478 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -6386,10 +6372,6 @@
 				29A8E2A41EF0476300AD2478 /* Parse.h */,
 				29A8E2A51EF0476300AD2478 /* StringToInt.h */,
 				29A8E2A61EF0476300AD2478 /* Throw.h */,
-				29A8E2A71EF0476300AD2478 /* Utility.cpp */,
-				29A8E2A81EF0476300AD2478 /* Utility.h */,
-				29A8E2A91EF0476300AD2478 /* UtilityImpl.cpp */,
-				29A8E2AA1EF0476300AD2478 /* UtilityImpl.h */,
 				297594591F04783100DE2F30 /* Round.h */,
 			);
 			path = utility;
@@ -6497,7 +6479,7 @@
 				9CD50C92238A3CFA00ED7DD8 /* PugiDoc.cpp */,
 			);
 			name = private;
-			path = ../extern/ezxml/src/private/private;
+			path = ezxml/src/private/private;
 			sourceTree = "<group>";
 		};
 		9CD50C93238A3D0A00ED7DD8 /* include */ = {
@@ -6524,7 +6506,8 @@
 				9CD50C9E238A3D0A00ED7DD8 /* XAttribute.h */,
 				9CD50C9F238A3D0A00ED7DD8 /* XForwardDeclare.h */,
 			);
-			path = ezxml;
+			name = ezxml;
+			path = ../Sourcecode/private/mx/ezxml/src/include/ezxml;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -6664,7 +6647,7 @@
 		299F7FDE1CA8D2200084CAE5 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1010;
+				LastUpgradeCheck = 1140;
 				ORGANIZATIONNAME = "Matthew James Briggs";
 				TargetAttributes = {
 					293FFED11DD25C74001477E8 = {
@@ -6928,7 +6911,6 @@
 				29A8F0801EF0476700AD2478 /* MultipleRestAttributes.cpp in Sources */,
 				29A8FC791EF0476E00AD2478 /* OrnamentsFunctions.cpp in Sources */,
 				29A8F7C91EF0476B00AD2478 /* StrongAccentAttributes.cpp in Sources */,
-				29A8FD3C1EF0476E00AD2478 /* UtilityImpl.cpp in Sources */,
 				29A8ED381EF0476600AD2478 /* InstrumentAttributes.cpp in Sources */,
 				29A8E4C81EF0476300AD2478 /* ArrowAttributes.cpp in Sources */,
 				29A8E8C41EF0476400AD2478 /* Doit.cpp in Sources */,
@@ -7218,7 +7200,6 @@
 				29A8EB9E1EF0476500AD2478 /* GroupAbbreviationAttributes.cpp in Sources */,
 				29A8E8B01EF0476400AD2478 /* DistanceAttributes.cpp in Sources */,
 				29A8FBE81EF0476E00AD2478 /* DynamicsReader.cpp in Sources */,
-				29A8FD321EF0476E00AD2478 /* Utility.cpp in Sources */,
 				29A8EF721EF0476700AD2478 /* MetronomeDot.cpp in Sources */,
 				29A8F3B41EF0476900AD2478 /* PercussionAttributes.cpp in Sources */,
 				29A8E7661EF0476400AD2478 /* Cue.cpp in Sources */,
@@ -7603,7 +7584,6 @@
 				29A8F07F1EF0476700AD2478 /* MultipleRestAttributes.cpp in Sources */,
 				29A8FC781EF0476E00AD2478 /* OrnamentsFunctions.cpp in Sources */,
 				29A8F7C81EF0476B00AD2478 /* StrongAccentAttributes.cpp in Sources */,
-				29A8FD3B1EF0476E00AD2478 /* UtilityImpl.cpp in Sources */,
 				29A8ED371EF0476600AD2478 /* InstrumentAttributes.cpp in Sources */,
 				29A8E4C71EF0476300AD2478 /* ArrowAttributes.cpp in Sources */,
 				29A8E8C31EF0476400AD2478 /* Doit.cpp in Sources */,
@@ -7893,7 +7873,6 @@
 				29A8EB9D1EF0476500AD2478 /* GroupAbbreviationAttributes.cpp in Sources */,
 				29A8E8AF1EF0476400AD2478 /* DistanceAttributes.cpp in Sources */,
 				29A8FBE71EF0476E00AD2478 /* DynamicsReader.cpp in Sources */,
-				29A8FD311EF0476E00AD2478 /* Utility.cpp in Sources */,
 				29A8EF711EF0476700AD2478 /* MetronomeDot.cpp in Sources */,
 				29A8F3B31EF0476900AD2478 /* PercussionAttributes.cpp in Sources */,
 				29A8E7651EF0476400AD2478 /* Cue.cpp in Sources */,
@@ -8731,8 +8710,6 @@
 				29A800521EF0499300AD2478 /* TechnicalFunctions.cpp in Sources */,
 				29A800531EF0499300AD2478 /* TimeReader.cpp in Sources */,
 				29A800541EF0499300AD2478 /* TupletReader.cpp in Sources */,
-				29A800561EF0499300AD2478 /* Utility.cpp in Sources */,
-				29A800571EF0499300AD2478 /* UtilityImpl.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8953,7 +8930,6 @@
 				29A8F0821EF0476700AD2478 /* MultipleRestAttributes.cpp in Sources */,
 				29A8FC7B1EF0476E00AD2478 /* OrnamentsFunctions.cpp in Sources */,
 				29A8F7CB1EF0476B00AD2478 /* StrongAccentAttributes.cpp in Sources */,
-				29A8FD3E1EF0476E00AD2478 /* UtilityImpl.cpp in Sources */,
 				29A8ED3A1EF0476600AD2478 /* InstrumentAttributes.cpp in Sources */,
 				29A8E4CA1EF0476300AD2478 /* ArrowAttributes.cpp in Sources */,
 				29A8E8C61EF0476400AD2478 /* Doit.cpp in Sources */,
@@ -9243,7 +9219,6 @@
 				29A8EBA01EF0476500AD2478 /* GroupAbbreviationAttributes.cpp in Sources */,
 				29A8E8B21EF0476400AD2478 /* DistanceAttributes.cpp in Sources */,
 				29A8FBEA1EF0476E00AD2478 /* DynamicsReader.cpp in Sources */,
-				29A8FD341EF0476E00AD2478 /* Utility.cpp in Sources */,
 				29A8EF741EF0476700AD2478 /* MetronomeDot.cpp in Sources */,
 				29A8F3B61EF0476900AD2478 /* PercussionAttributes.cpp in Sources */,
 				29A8E7681EF0476400AD2478 /* Cue.cpp in Sources */,
@@ -9628,7 +9603,6 @@
 				29A8F0811EF0476700AD2478 /* MultipleRestAttributes.cpp in Sources */,
 				29A8FC7A1EF0476E00AD2478 /* OrnamentsFunctions.cpp in Sources */,
 				29A8F7CA1EF0476B00AD2478 /* StrongAccentAttributes.cpp in Sources */,
-				29A8FD3D1EF0476E00AD2478 /* UtilityImpl.cpp in Sources */,
 				29A8ED391EF0476600AD2478 /* InstrumentAttributes.cpp in Sources */,
 				29A8E4C91EF0476300AD2478 /* ArrowAttributes.cpp in Sources */,
 				29A8E8C51EF0476400AD2478 /* Doit.cpp in Sources */,
@@ -9918,7 +9892,6 @@
 				29A8EB9F1EF0476500AD2478 /* GroupAbbreviationAttributes.cpp in Sources */,
 				29A8E8B11EF0476400AD2478 /* DistanceAttributes.cpp in Sources */,
 				29A8FBE91EF0476E00AD2478 /* DynamicsReader.cpp in Sources */,
-				29A8FD331EF0476E00AD2478 /* Utility.cpp in Sources */,
 				29A8EF731EF0476700AD2478 /* MetronomeDot.cpp in Sources */,
 				29A8F3B51EF0476900AD2478 /* PercussionAttributes.cpp in Sources */,
 				29A8E7671EF0476400AD2478 /* Cue.cpp in Sources */,
@@ -10143,6 +10116,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -10216,7 +10190,8 @@
 				);
 				OTHER_LDFLAGS = "";
 				SDKROOT = "";
-				USER_HEADER_SEARCH_PATHS = "$PROJECT_DIR/../Sourcecode/private $PROJECT_DIR/../Sourcecode/include $PROJECT_DIR/../Sourcecode/private/extern/ezxml/src/include $PROJECT_DIR/../Sourcecode/private/extern/ezxml/src/private";
+				USER_HEADER_SEARCH_PATHS = "$PROJECT_DIR/../Sourcecode/private $PROJECT_DIR/../Sourcecode/include $PROJECT_DIR/../Sourcecode/private/mx/ezxml/src/include $PROJECT_DIR/../Sourcecode/private/mx/ezxml/src/private";
+				VALID_ARCHS = "$(ARCHS_STANDARD)";
 			};
 			name = Debug;
 		};
@@ -10224,6 +10199,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -10290,7 +10266,8 @@
 				);
 				OTHER_LDFLAGS = "";
 				SDKROOT = "";
-				USER_HEADER_SEARCH_PATHS = "$PROJECT_DIR/../Sourcecode/private $PROJECT_DIR/../Sourcecode/include $PROJECT_DIR/../Sourcecode/private/extern/ezxml/src/include $PROJECT_DIR/../Sourcecode/private/extern/ezxml/src/private";
+				USER_HEADER_SEARCH_PATHS = "$PROJECT_DIR/../Sourcecode/private $PROJECT_DIR/../Sourcecode/include $PROJECT_DIR/../Sourcecode/private/mx/ezxml/src/include $PROJECT_DIR/../Sourcecode/private/mx/ezxml/src/private";
+				VALID_ARCHS = "$(ARCHS_STANDARD)";
 			};
 			name = Release;
 		};
@@ -10433,7 +10410,7 @@
 				SKIP_INSTALL = NO;
 				SUPPORTS_MACCATALYST = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "arm64 armv7 armv7s i386 x86_64";
+				VALID_ARCHS = "$(inherited)";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -10474,7 +10451,7 @@
 				SUPPORTS_MACCATALYST = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
-				VALID_ARCHS = "arm64 armv7 armv7s i386 x86_64";
+				VALID_ARCHS = "$(inherited)";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
