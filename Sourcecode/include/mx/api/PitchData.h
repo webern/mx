@@ -69,7 +69,7 @@ namespace mx
             // default construction is middle c (c4)
             PitchData();
 
-            explicit PitchData(
+            constexpr explicit PitchData(
                 Step inStep,
                 int inAlter = 0,
                 int inOctave = 4,
@@ -81,7 +81,19 @@ namespace mx
                 bool inIsAccidentalCautionary = false,
                 bool inIsAccidentalEditorial = false,
                 bool inIsAccidentalBracketed = false
-            );
+            )
+            : step{ inStep }
+            , alter{ inAlter }
+            , cents{ inCents }
+            , accidental{ inAccidental }
+            , isAccidentalParenthetical{ inIsAccidentalParenthetical }
+            , isAccidentalCautionary{ inIsAccidentalCautionary }
+            , isAccidentalEditorial{ inIsAccidentalEditorial }
+            , isAccidentalBracketed{ inIsAccidentalBracketed }
+            , octave{ inOctave }
+            {
+
+            }
 
             // the note name. i.e. c, d, e, f, g, a, b
             Step step;
