@@ -5,7 +5,7 @@ MusicXML Class Library
 - License: MIT
 - Version: 1.0
 - Supported MusicXML Version: 3.0
-- Language: C++14
+- Language: C++20
 
 -----------------------------------------
 
