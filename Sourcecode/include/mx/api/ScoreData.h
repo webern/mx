@@ -51,9 +51,21 @@ namespace mx
             int getNumMeasures() const;
             int getNumStavesPerSystem() const;
 
-            /// sorts all of the events, directions, etc.
-            /// it is good to call this before writing to xml.
+            /// Sorts all of the events, directions, etc. You should call this before serializing with the
+            /// DocumentManger to ensure that you do not have tick times that are out-of-order.
             void sort();
+
+            /// Adds Encoding.supports statements by detecting the MusicXML features that you are using. For example, if
+            /// you have added `systems`, this function will ensure that you have an enconding element  like this:
+            /// <supports attribute="new-system" element="print" type="yes" value="yes" />
+            /// Does not override existing `supports`. Call score.encoding.supportedItems.clear() to start over.
+            void autoSetSupports();
+
+            /// Adds Encoding.supports statements by detecting the MusicXML features that you are NOT using. For
+            /// example, if you have no `systems`, this function will ensure that you have an enconding element like
+            /// this: <supports attribute="new-system" element="print" type="yes" value="no" />
+            /// Does not override existing `supports`. Call score.encoding.supportedItems.clear() to start over.
+            void autoSetNotSupports();
         };
         
         std::vector<PartData>::iterator findPart( std::vector<PartData>& inParts, const std::string& inPartId );

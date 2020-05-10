@@ -87,7 +87,6 @@ namespace mx
             DocumentManager();
             class Impl;
             std::unique_ptr<Impl> myImpl;
-            
         };
     }
 }

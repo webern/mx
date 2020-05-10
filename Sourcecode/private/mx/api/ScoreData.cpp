@@ -102,6 +102,115 @@ namespace mx
             }
         }
 
+        auto findSupports( const ScoreData& inScore, const std::string& inElement, const std::string& inAttribute )
+        {
+            const auto finder = [&](const SupportedItem& item)
+            {
+                return item.elementName == inElement && item.attributeName == inAttribute;
+            };
+
+            return std::find_if( std::cbegin( inScore.encoding.supportedItems ), std::cend( inScore.encoding.supportedItems ), finder );
+        }
+
+        auto supportExists( const ScoreData& inScore, const std::string& inElement, const std::string& inAttribute )
+        {
+            return findSupports( inScore, inElement, inAttribute ) != std::cend( inScore.encoding.supportedItems );
+        }
+
+        void ScoreData::autoSetSupports()
+        {
+            if( !supportExists( *this, "print", "new-system" ) )
+            {
+                if( !systems.empty() )
+                {
+                    auto s = SupportedItem{};
+                    s.elementName = "print";
+                    s.attributeName = "new-system";
+                    s.specificValue = "yes";
+                    s.isSupported = true;
+                }
+            }
+
+            if( !supportExists( *this, "beam", "" ) )
+            {
+                bool isBeamFound = false;
+                for( const auto& part : parts )
+                {
+                    for( const auto& measure : part.measures )
+                    {
+                        for( const auto& staff : measure.staves )
+                        {
+                            for( const auto& voice : staff.voices )
+                            {
+                                for( const auto& note : voice.second.notes )
+                                {
+                                    if( !note.beams.empty() )
+                                    {
+                                        isBeamFound = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if( isBeamFound )
+                    {
+                        auto s = SupportedItem{};
+                        s.elementName = "beam";
+                        s.isSupported = true;
+                    }
+                }
+            }
+        }
+
+
+        void ScoreData::autoSetNotSupports()
+        {
+            if( !supportExists( *this, "print", "new-system" ) )
+            {
+                if( systems.empty() )
+                {
+                    auto s = SupportedItem{};
+                    s.elementName = "print";
+                    s.attributeName = "new-system";
+                    s.specificValue = ""; // ?
+                    s.isSupported = false;
+                }
+            }
+
+            if( !supportExists( *this, "beam", "" ) )
+            {
+                bool isBeamFound = false;
+                for( const auto& part : parts )
+                {
+                    for( const auto& measure : part.measures )
+                    {
+                        for( const auto& staff : measure.staves )
+                        {
+                            for( const auto& voice : staff.voices )
+                            {
+                                for( const auto& note : voice.second.notes )
+                                {
+                                    if( !note.beams.empty() )
+                                    {
+                                        isBeamFound = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if( !isBeamFound )
+                    {
+                        auto s = SupportedItem{};
+                        s.elementName = "beam";
+                        s.isSupported = false;
+                    }
+                }
+            }
+        }
 
         std::vector<PartData>::iterator findPart( std::vector<PartData>& inParts, const std::string& inPartId )
         {
