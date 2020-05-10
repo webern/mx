@@ -29,6 +29,8 @@
 #include "mx/core/elements/Pedal.h"
 #include "ezxml/ezxml.h"
 
+#include <unordered_map>
+
 using namespace std;
 using namespace mx::api;
 
@@ -268,6 +270,34 @@ TEST( CrazyEdgeCase2, PitchData )
     CHECK_EQUAL( expectedAlter, output.alter );
     CHECK_DOUBLES_EQUAL( expectedCents, output.cents, MX_API_EQUALITY_EPSILON );
     CHECK( expectedAccidental == output.accidental );
+}
+T_END;
+
+namespace
+{
+    struct PitchHash
+    {
+        constexpr inline size_t operator()(const mx::api::PitchData& p) const {
+            size_t h1 = size_t(p.step) << 32;
+            size_t h2 = size_t(p.alter);
+            return h1 ^ h2;
+        }
+    };
+}
+
+TEST( ConstructorTest, PitchData )
+{
+    // duplicate the feature request from https://github.com/webern/mx/issues/69
+    std::unordered_map<mx::api::PitchData, int, PitchHash> root_to_key_circle {
+        { PitchData{ Step::f, 0, 4 }, -1 },
+        { PitchData{ Step::c, 0, 4 }, 0 },
+        { PitchData{ Step::g, 0, 4 }, 1 },
+    };
+
+    PitchData g{ Step::g };
+    const auto find_iter = root_to_key_circle.find( g );
+    REQUIRE( find_iter != std::cend( root_to_key_circle ) );
+    CHECK_EQUAL( 1, find_iter->second );
 }
 T_END;
 

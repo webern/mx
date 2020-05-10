@@ -299,7 +299,7 @@ namespace mxtest
             {
                 for( auto qIter = q.begin(); qIter != q.end(); ++qIter )
                 {
-                    if( qIter->wait_for( std::chrono::milliseconds(0) ) == std::future_status::ready )
+                    if( qIter->wait_for( std::chrono::milliseconds(2) ) == std::future_status::ready )
                     {
                         qIter->wait();
                         q.erase( qIter );
@@ -311,17 +311,17 @@ namespace mxtest
             q.push_front( std::move( fut ) );
         }
         
-        while( q.empty() )
+        while( !q.empty() )
         {
             for( auto qIter = q.begin(); qIter != q.end(); ++qIter )
             {
-                if( qIter->wait_for( std::chrono::milliseconds(0) ) == std::future_status::ready )
+                if( qIter->wait_for( std::chrono::milliseconds(10) ) == std::future_status::ready )
                 {
                     qIter->wait();
                     q.erase( qIter );
                     break;
                 }
-                std::this_thread::sleep_for( std::chrono::milliseconds(10) );
+                std::this_thread::sleep_for( std::chrono::milliseconds(50) );
             }
         }
         std::cout << "done" << std::endl;
