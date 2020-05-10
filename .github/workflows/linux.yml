@@ -1,0 +1,30 @@
+name: C/C++ CI
+
+on: [pull_request]
+
+jobs:
+  linux:
+    name: Linux
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Cmake
+      run: |
+              [ "$(git rev-parse --abbrev-ref HEAD)" == "master" ] && \
+              cmake -DMX_BUILD_EXAMPLES=on -DMX_BUILD_TESTS=on -DMX_BUILD_CORE_TESTS=on . || \
+              cmake -DMX_BUILD_EXAMPLES=on -DMX_BUILD_TESTS=on -DMX_BUILD_CORE_TESTS=off .
+    - name: Check Cores
+      run: |
+              export CORE_COUNT=$(nproc --all) && echo "CORE_COUNT: $CORE_COUNT" && \
+              lscpu
+                       
+    - name: Build
+      run: export CORE_COUNT=$(nproc --all) && make -j$CORE_COUNT
+      
+    - name: Run Examples
+      run: ./MxRead && ./MxWrite
+      
+    - name: Run Tests
+      run: ./MxTest
