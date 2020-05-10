@@ -74,20 +74,20 @@ namespace mx
                 pageLayout.getPageHeight()->setValue( core::TenthsValue{ inLayout.pageHeight } );
             }
             bool areEvenOddSame = true;
-            areEvenOddSame &= api::areSame( inLayout.evenPageLeftMargin, inLayout.oddPageLeftMargin );
-            areEvenOddSame &= api::areSame( inLayout.evenPageRightMargin, inLayout.oddPageRightMargin );
-            areEvenOddSame &= api::areSame( inLayout.evenPageTopMargin, inLayout.oddPageTopMargin );
-            areEvenOddSame &= api::areSame( inLayout.evenPageBottomMargin, inLayout.oddPageBottomMargin );
+            areEvenOddSame &= api::areSame( inLayout.pageMargins.evenPageLeftMargin, inLayout.pageMargins.oddPageLeftMargin );
+            areEvenOddSame &= api::areSame( inLayout.pageMargins.evenPageRightMargin, inLayout.pageMargins.oddPageRightMargin );
+            areEvenOddSame &= api::areSame( inLayout.pageMargins.evenPageTopMargin, inLayout.pageMargins.oddPageTopMargin );
+            areEvenOddSame &= api::areSame( inLayout.pageMargins.evenPageBottomMargin, inLayout.pageMargins.oddPageBottomMargin );
 
-            bool areOddPagesSpecified =    inLayout.oddPageLeftMargin > 0
-                                        || inLayout.oddPageRightMargin > 0
-                                        || inLayout.oddPageTopMargin > 0
-                                        || inLayout.oddPageBottomMargin > 0;
+            bool areOddPagesSpecified =    inLayout.pageMargins.oddPageLeftMargin > 0
+                                        || inLayout.pageMargins.oddPageRightMargin > 0
+                                        || inLayout.pageMargins.oddPageTopMargin > 0
+                                        || inLayout.pageMargins.oddPageBottomMargin > 0;
             
-            bool areEvenPagesSpecified =   inLayout.evenPageLeftMargin > 0
-                                        || inLayout.evenPageRightMargin > 0
-                                        || inLayout.evenPageTopMargin > 0
-                                        || inLayout.evenPageBottomMargin > 0;
+            bool areEvenPagesSpecified =   inLayout.pageMargins.evenPageLeftMargin > 0
+                                        || inLayout.pageMargins.evenPageRightMargin > 0
+                                        || inLayout.pageMargins.evenPageTopMargin > 0
+                                        || inLayout.pageMargins.evenPageBottomMargin > 0;
             
             if( !areOddPagesSpecified && !areEvenPagesSpecified )
             {
@@ -103,10 +103,10 @@ namespace mx
                 oddPages->getAttributes()->hasType = true;
                 const auto t = areEvenOddSame ? core::MarginType::both : core::MarginType::odd;
                 oddPages->getAttributes()->type = t;
-                const auto left = core::TenthsValue{ inLayout.oddPageLeftMargin > 0 ? inLayout.oddPageLeftMargin : 0 };
-                const auto right = core::TenthsValue{ inLayout.oddPageRightMargin > 0 ? inLayout.oddPageRightMargin : 0 };
-                const auto top = core::TenthsValue{ inLayout.oddPageTopMargin > 0 ? inLayout.oddPageTopMargin : 0 };
-                const auto bottom = core::TenthsValue{ inLayout.oddPageBottomMargin > 0 ? inLayout.oddPageBottomMargin : 0 };
+                const auto left = core::TenthsValue{ inLayout.pageMargins.oddPageLeftMargin > 0 ? inLayout.pageMargins.oddPageLeftMargin : 0 };
+                const auto right = core::TenthsValue{ inLayout.pageMargins.oddPageRightMargin > 0 ? inLayout.pageMargins.oddPageRightMargin : 0 };
+                const auto top = core::TenthsValue{ inLayout.pageMargins.oddPageTopMargin > 0 ? inLayout.pageMargins.oddPageTopMargin : 0 };
+                const auto bottom = core::TenthsValue{ inLayout.pageMargins.oddPageBottomMargin > 0 ? inLayout.pageMargins.oddPageBottomMargin : 0 };
                 oddPages->getLeftMargin()->setValue( left );
                 oddPages->getRightMargin()->setValue( right );
                 oddPages->getTopMargin()->setValue( top );
@@ -120,10 +120,10 @@ namespace mx
                 evenPages->getAttributes()->hasType = true;
                 const auto t = core::MarginType::even;
                 evenPages->getAttributes()->type = t;
-                const auto left = core::TenthsValue{ inLayout.evenPageLeftMargin > 0 ? inLayout.evenPageLeftMargin : 0 };
-                const auto right = core::TenthsValue{ inLayout.evenPageRightMargin > 0 ? inLayout.evenPageRightMargin : 0 };
-                const auto top = core::TenthsValue{ inLayout.evenPageTopMargin > 0 ? inLayout.evenPageTopMargin : 0 };
-                const auto bottom = core::TenthsValue{ inLayout.evenPageBottomMargin > 0 ? inLayout.evenPageBottomMargin : 0 };
+                const auto left = core::TenthsValue{ inLayout.pageMargins.evenPageLeftMargin > 0 ? inLayout.pageMargins.evenPageLeftMargin : 0 };
+                const auto right = core::TenthsValue{ inLayout.pageMargins.evenPageRightMargin > 0 ? inLayout.pageMargins.evenPageRightMargin : 0 };
+                const auto top = core::TenthsValue{ inLayout.pageMargins.evenPageTopMargin > 0 ? inLayout.pageMargins.evenPageTopMargin : 0 };
+                const auto bottom = core::TenthsValue{ inLayout.pageMargins.evenPageBottomMargin > 0 ? inLayout.pageMargins.evenPageBottomMargin : 0 };
                 evenPages->getLeftMargin()->setValue( left );
                 evenPages->getRightMargin()->setValue( right );
                 evenPages->getTopMargin()->setValue( top );
@@ -279,18 +279,18 @@ namespace mx
                 
                 if( !a->hasType || t == core::MarginType::both || t == core::MarginType::odd )
                 {
-                    outLayoutData.oddPageLeftMargin = m->getLeftMargin()->getValue().getValue();
-                    outLayoutData.oddPageRightMargin = m->getRightMargin()->getValue().getValue();
-                    outLayoutData.oddPageTopMargin = m->getTopMargin()->getValue().getValue();
-                    outLayoutData.oddPageBottomMargin = m->getBottomMargin()->getValue().getValue();
+                    outLayoutData.pageMargins.oddPageLeftMargin = m->getLeftMargin()->getValue().getValue();
+                    outLayoutData.pageMargins.oddPageRightMargin = m->getRightMargin()->getValue().getValue();
+                    outLayoutData.pageMargins.oddPageTopMargin = m->getTopMargin()->getValue().getValue();
+                    outLayoutData.pageMargins.oddPageBottomMargin = m->getBottomMargin()->getValue().getValue();
                 }
                 
                 if( !a->hasType || t == core::MarginType::both || t == core::MarginType::even )
                 {
-                    outLayoutData.evenPageLeftMargin = m->getLeftMargin()->getValue().getValue();
-                    outLayoutData.evenPageRightMargin = m->getRightMargin()->getValue().getValue();
-                    outLayoutData.evenPageTopMargin = m->getTopMargin()->getValue().getValue();
-                    outLayoutData.evenPageBottomMargin = m->getBottomMargin()->getValue().getValue();
+                    outLayoutData.pageMargins.evenPageLeftMargin = m->getLeftMargin()->getValue().getValue();
+                    outLayoutData.pageMargins.evenPageRightMargin = m->getRightMargin()->getValue().getValue();
+                    outLayoutData.pageMargins.evenPageTopMargin = m->getTopMargin()->getValue().getValue();
+                    outLayoutData.pageMargins.evenPageBottomMargin = m->getBottomMargin()->getValue().getValue();
                 }
             }
             
@@ -330,7 +330,7 @@ namespace mx
         void addStaffLayout( const core::ScoreHeaderGroup& inScoreHeaderGroup, api::LayoutData& outLayoutData )
         {
             const auto& layoutSet = inScoreHeaderGroup.getDefaults()->getLayoutGroup()->getStaffLayoutSet();
-            if( !inScoreHeaderGroup.getHasDefaults() || layoutSet.size() == 0 )
+            if( !inScoreHeaderGroup.getHasDefaults() || layoutSet.empty() )
             {
                 return;
             }
