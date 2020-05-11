@@ -7,6 +7,7 @@
 #include "mx/api/ApiCommon.h"
 #include "mx/api/EncodingData.h"
 #include "mx/api/LayoutData.h"
+#include "mx/api/PageData.h"
 #include "mx/api/PageTextData.h"
 #include "mx/api/PartData.h"
 #include "mx/api/PartGroupData.h"
@@ -46,7 +47,12 @@ namespace mx
             std::vector<PartData> parts;
             std::vector<PartGroupData> partGroups;
             int ticksPerQuarter;
+
+            // TODO - document how these are used
             std::set<SystemData> systems;
+
+            // TODO - document how these are used
+            std::set<PageData> pages;
 
             int getNumMeasures() const;
             int getNumStavesPerSystem() const;

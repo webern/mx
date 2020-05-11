@@ -10,6 +10,7 @@ namespace mx
 {
     namespace api
     {
+        // TODO - the documentation below if from MusicXML XSD and not very helpful for our case, improve documentation.
         // A system is a group of staves that are read and played simultaneously.
         // System layout includes left and right margins and the vertical distance
         // from the previous system. The system distance is measured from the
