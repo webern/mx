@@ -15,8 +15,9 @@ namespace mx
     namespace api
     {
 
-        // distance values are in 'tenths' governed by the 'scaling' values
-
+        /// Page margins are specified separately for odd and even pages. If odd and even pages have the same values,
+        /// then then a type of "both" will be used in the produced MusicXML. All values are optional. A negative value
+        /// indicates the absence of value. Distance values are in 'tenths' governed by the 'scaling' values
         class PageMarginsData
         {
         public:

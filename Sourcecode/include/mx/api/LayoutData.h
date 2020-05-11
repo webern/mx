@@ -6,7 +6,7 @@
 
 #include "mx/api/ApiCommon.h"
 #include "mx/api/AppearanceData.h"
-#include "mx/api/PageMarginsData.h"
+#include "mx/api/PageLayoutData.h"
 
 #include <string>
 #include <vector>
@@ -35,10 +35,7 @@ namespace mx
                 return tenthsPerMillimeter() * 25.4;
             }
 
-            long double pageWidth;             // negative number represent the absence of a value
-            long double pageHeight;            // negative number represent the absence of a value
-
-            PageMarginsData pageMargins;
+            PageLayoutData pageLayout;
 
             long double systemLeftMargin;      // negative number represent the absence of a value
             long double systemRightMargin;     // negative number represent the absence of a value
@@ -52,9 +49,7 @@ namespace mx
             LayoutData()
             : scalingMillimeters( -1.0 )
             , scalingTenths( -1.0 )
-            , pageWidth( -1.0 )
-            , pageHeight( -1.0 )
-            , pageMargins{}
+            , pageLayout{}
             , systemLeftMargin( -1.0 )
             , systemRightMargin( -1.0 )
             , systemDistance( -1.0 )
@@ -70,9 +65,7 @@ namespace mx
         };
         
         MXAPI_EQUALS_BEGIN( LayoutData )
-        MXAPI_EQUALS_MEMBER( pageWidth )
-        MXAPI_EQUALS_MEMBER( pageHeight )
-        MXAPI_EQUALS_MEMBER( pageMargins )
+        MXAPI_EQUALS_MEMBER( pageLayout )
         MXAPI_EQUALS_MEMBER( systemLeftMargin )
         MXAPI_EQUALS_MEMBER( systemRightMargin )
         MXAPI_EQUALS_MEMBER( systemDistance )
