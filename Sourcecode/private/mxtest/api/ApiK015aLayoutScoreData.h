@@ -25,18 +25,18 @@ namespace mxtest
         score.encoding.supportedItems.emplace_back( supported );
         supported.attributeName = "new-page";
         score.encoding.supportedItems.emplace_back( supported );
-        score.layout.pageHeight = 1545;
-        score.layout.pageWidth = 1194;
+        score.layout.pageLayout.pageHeight = 1545;
+        score.layout.pageLayout.pageWidth = 1194;
         score.layout.scalingMillimeters = 7.2319;
         score.layout.scalingTenths = 40;
-        score.layout.oddPageLeftMargin = 70;
-        score.layout.oddPageRightMargin = 70;
-        score.layout.oddPageTopMargin = 88;
-        score.layout.oddPageBottomMargin = 88;
-        score.layout.evenPageLeftMargin = 70;
-        score.layout.evenPageRightMargin = 70;
-        score.layout.evenPageTopMargin = 88;
-        score.layout.evenPageBottomMargin = 88;
+        score.layout.pageLayout.pageMargins.oddPageLeftMargin = 70;
+        score.layout.pageLayout.pageMargins.oddPageRightMargin = 70;
+        score.layout.pageLayout.pageMargins.oddPageTopMargin = 88;
+        score.layout.pageLayout.pageMargins.oddPageBottomMargin = 88;
+        score.layout.pageLayout.pageMargins.evenPageLeftMargin = 70;
+        score.layout.pageLayout.pageMargins.evenPageRightMargin = 70;
+        score.layout.pageLayout.pageMargins.evenPageTopMargin = 88;
+        score.layout.pageLayout.pageMargins.evenPageBottomMargin = 88;
         
         score.layout.systemLeftMargin = 125;
         score.layout.systemRightMargin = 503;
