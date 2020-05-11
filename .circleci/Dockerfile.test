@@ -1,4 +1,4 @@
-FROM matthewjamesbriggs/mxci:v002
+FROM matthewjamesbriggs/mxci:v001
 
 ENV BASEDIR="/mx"
 WORKDIR $BASEDIR
