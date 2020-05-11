@@ -6,7 +6,6 @@
 
 #include "mx/api/ApiCommon.h"
 #include "mx/api/AppearanceData.h"
-#include "mx/api/PageLayoutData.h"
 
 #include <string>
 #include <vector>
@@ -35,7 +34,17 @@ namespace mx
                 return tenthsPerMillimeter() * 25.4;
             }
 
-            PageLayoutData pageLayout;
+            long double pageWidth;             // negative number represent the absence of a value
+            long double pageHeight;            // negative number represent the absence of a value
+
+            long double oddPageLeftMargin;     // negative number represent the absence of a value
+            long double oddPageRightMargin;    // negative number represent the absence of a value
+            long double oddPageTopMargin;      // negative number represent the absence of a value
+            long double oddPageBottomMargin;   // negative number represent the absence of a value
+            long double evenPageLeftMargin;    // negative number represent the absence of a value
+            long double evenPageRightMargin;   // negative number represent the absence of a value
+            long double evenPageTopMargin;     // negative number represent the absence of a value
+            long double evenPageBottomMargin;  // negative number represent the absence of a value
 
             long double systemLeftMargin;      // negative number represent the absence of a value
             long double systemRightMargin;     // negative number represent the absence of a value
@@ -49,7 +58,16 @@ namespace mx
             LayoutData()
             : scalingMillimeters( -1.0 )
             , scalingTenths( -1.0 )
-            , pageLayout{}
+            , pageWidth( -1.0 )
+            , pageHeight( -1.0 )
+            , oddPageLeftMargin( -1.0 )
+            , oddPageRightMargin( -1.0 )
+            , oddPageTopMargin( -1.0 )
+            , oddPageBottomMargin( -1.0 )
+            , evenPageLeftMargin( -1.0 )
+            , evenPageRightMargin( -1.0 )
+            , evenPageTopMargin( -1.0 )
+            , evenPageBottomMargin( -1.0 )
             , systemLeftMargin( -1.0 )
             , systemRightMargin( -1.0 )
             , systemDistance( -1.0 )
@@ -62,10 +80,45 @@ namespace mx
             }
 
 
+            inline bool areOddMarginsValid() const
+            {
+                return oddPageLeftMargin > 0
+                    && oddPageRightMargin > 0
+                    && oddPageTopMargin > 0
+                    && oddPageBottomMargin > 0;
+            }
+
+
+            inline bool areEvenMarginsValid() const
+            {
+                return evenPageLeftMargin > 0
+                    && evenPageRightMargin > 0
+                    && evenPageTopMargin > 0
+                    && evenPageBottomMargin > 0;
+            }
+
+
+            inline bool areOddEvenMarginsTheSame() const
+            {
+                return areSame(oddPageLeftMargin, evenPageLeftMargin)
+                    && areSame(oddPageRightMargin, evenPageRightMargin)
+                    && areSame(oddPageTopMargin, evenPageTopMargin)
+                    && areSame(oddPageBottomMargin, evenPageBottomMargin);
+            }
+
         };
         
         MXAPI_EQUALS_BEGIN( LayoutData )
-        MXAPI_EQUALS_MEMBER( pageLayout )
+        MXAPI_EQUALS_MEMBER( pageWidth )
+        MXAPI_EQUALS_MEMBER( pageHeight )
+        MXAPI_EQUALS_MEMBER( oddPageLeftMargin )
+        MXAPI_EQUALS_MEMBER( oddPageRightMargin )
+        MXAPI_EQUALS_MEMBER( oddPageTopMargin )
+        MXAPI_EQUALS_MEMBER( oddPageBottomMargin )
+        MXAPI_EQUALS_MEMBER( evenPageLeftMargin )
+        MXAPI_EQUALS_MEMBER( evenPageRightMargin )
+        MXAPI_EQUALS_MEMBER( evenPageTopMargin )
+        MXAPI_EQUALS_MEMBER( evenPageBottomMargin )
         MXAPI_EQUALS_MEMBER( systemLeftMargin )
         MXAPI_EQUALS_MEMBER( systemRightMargin )
         MXAPI_EQUALS_MEMBER( systemDistance )
