@@ -3,6 +3,7 @@ project(Mx)
 
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
+set(CPP_VERSION 17)
 
 option(MX_BUILD_TESTS "build or skip the test suite" OFF)
 
@@ -12,7 +13,6 @@ option(
     OFF
 )
 
-set(CPP_VERSION 20)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
