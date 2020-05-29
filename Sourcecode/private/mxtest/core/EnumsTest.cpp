@@ -7,6 +7,7 @@
 
 #include "cpul/cpulTestHarness.h"
 #include "mx/core/Enums.h"
+#include <sstream>
 
 using namespace mx::core;
 

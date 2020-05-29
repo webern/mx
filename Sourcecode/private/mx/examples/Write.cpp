@@ -123,5 +123,8 @@ int main(int argc, const char * argv[])
     // write to a file
     mgr.writeToFile( documentID, "./example.musicxml" );
 
+    // we need to explicitly delete the object held by the manager
+    mgr.destroyDocument( documentID );
+
     return 0;
 }

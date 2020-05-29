@@ -2,6 +2,7 @@
 // Copyright (c) by Matthew James Briggs
 // Distributed under the MIT License
 
+#include "mx/core/Elements.h"
 #include "mx/impl/PropertiesWriter.h"
 #include "mx/core/elements/Properties.h"
 #include "mx/core/elements/Clef.h"
@@ -9,6 +10,7 @@
 #include "mx/core/elements/Divisions.h"
 #include "mx/core/elements/EditorialGroup.h"
 #include "mx/core/elements/Footnote.h"
+#include "mx/core/elements/KeyAccidental.h"
 #include "mx/core/elements/Instruments.h"
 #include "mx/core/elements/Key.h"
 #include "mx/core/elements/Level.h"
@@ -155,32 +157,70 @@ namespace mx
         
         void PropertiesWriter::writeKey( int staffIndex, const api::KeyData& inKeyData )
         {
-            // TODO - support non-traditional keys
             // TODO - support placement and other attributes
+
             auto key = core::makeKey();
-            
+
             if( staffIndex >= 0 )
             {
                 key->getAttributes()->hasNumber = true;
                 key->getAttributes()->number = core::StaffNumber{ staffIndex + 1 };
             }
-            
+
+            if( inKeyData.nonTraditional.empty() )
+            {
+                writeTraditionalKey( inKeyData, key );
+            }
+            else
+            {
+                writeNonTraditionalKey( inKeyData, key );
+            }
+
+            myProperties->addKey( key );
+        }
+
+        void PropertiesWriter::writeNonTraditionalKey( const api::KeyData& inKeyData, mx::core::KeyPtr& key )
+        {
+            Converter converter;
+            key->getKeyChoice()->setChoice( core::KeyChoice::Choice::nonTraditionalKey );
+            for( const auto& keyComponent : inKeyData.nonTraditional )
+            {
+                auto nt = core::makeNonTraditionalKey();
+                if( keyComponent.accidental != api::Accidental::none )
+                {
+                    nt->setHasKeyAccidental( true );
+                    const auto a = nt->getKeyAccidental();
+
+                    a->setValue( converter.convert( keyComponent.accidental ) );
+                }
+
+                const auto isUnknown = keyComponent.step == api::Step::unspecified; // || keyComponent.step == api::Step::count;
+                const auto step = isUnknown ? api::Step::c : keyComponent.step;
+                nt->getKeyStep()->setValue( converter.convert( step ) );
+
+                const auto alter = Converter::convertToAlter( keyComponent.alter, keyComponent.cents );
+                nt->getKeyAlter()->setValue( core::Semitones{ alter } );
+                key->getKeyChoice()->addNonTraditionalKey( nt );
+            }
+        }
+
+        void PropertiesWriter::writeTraditionalKey( const api::KeyData& inKeyData, mx::core::KeyPtr& key )
+        {
             key->getKeyChoice()->setChoice( core::KeyChoice::Choice::traditionalKey );
             auto traditionalKey = key->getKeyChoice()->getTraditionalKey();
             traditionalKey->getFifths()->setValue( core::FifthsValue{ inKeyData.fifths } );
-            
+
             if ( inKeyData.cancel != 0 )
             {
                 traditionalKey->setHasCancel( true );
                 traditionalKey->getCancel()->setValue( core::FifthsValue{ inKeyData.cancel } );
             }
-            
+
             if( inKeyData.mode == api::KeyMode::major || inKeyData.mode == api::KeyMode::minor )
             {
                 traditionalKey->setHasMode( true );
                 traditionalKey->getMode()->setValue( core::ModeValue{ inKeyData.mode == api::KeyMode::major ? core::ModeEnum::major : core::ModeEnum::minor } );
             }
-            myProperties->addKey( key );
         }
         
         

@@ -3,6 +3,7 @@ project(Mx)
 
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
+set(CPP_VERSION 17)
 
 option(MX_BUILD_TESTS "build or skip the test suite" OFF)
 
@@ -12,7 +13,6 @@ option(
     OFF
 )
 
-#set(CMAKE_BINARY_DIR "./Build")
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
@@ -24,9 +24,8 @@ file(GLOB_RECURSE HEADERS_MX_API ${PUBLIC_DIR}/mx/api/*.h)
 file(GLOB_RECURSE SRC_MX_API ${PRIVATE_DIR}/mx/api/*.cpp ${PRIVATE_DIR}/mx/api/*.h)
 file(GLOB_RECURSE SRC_MX_CORE ${PRIVATE_DIR}/mx/core/*.c* ${PRIVATE_DIR}/mx/core/*.h*)
 file(GLOB_RECURSE SRC_MX_IMPL ${PRIVATE_DIR}/mx/impl/*.cpp ${PRIVATE_DIR}/mx/impl/*.h)
-file(GLOB_RECURSE SRC_MX_PUGIXML ${PRIVATE_DIR}/mx/pugixml/*.cpp ${PRIVATE_DIR}/mx/pugixml/*.hpp)
 file(GLOB_RECURSE SRC_MX_UTILITY ${PRIVATE_DIR}/mx/utility/*.cpp ${PRIVATE_DIR}/mx/utility/*.h)
-file(GLOB_RECURSE SRC_MX_EXTERN ${PRIVATE_DIR}/extern/*.cpp ${PRIVATE_DIR}/extern/*.h)
+file(GLOB_RECURSE SRC_MX_EZXML ${PRIVATE_DIR}/mx/ezxml/*.cpp ${PRIVATE_DIR}/mx/ezxml/*.h*)
 
 file(GLOB_RECURSE SRC_MX_TEST_API ${PRIVATE_DIR}/mxtest/api/*.cpp ${PRIVATE_DIR}/mxtest/api/*.h)
 file(GLOB_RECURSE SRC_MX_TEST_CONTROL ${PRIVATE_DIR}/mxtest/control/*.cpp ${PRIVATE_DIR}/mxtest/control/*.h)
@@ -35,24 +34,26 @@ file(GLOB_RECURSE SRC_MX_TEST_IMPL ${PRIVATE_DIR}/mxtest/impl/*.cpp ${PRIVATE_DI
 file(GLOB_RECURSE SRC_MX_TEST_CORE ${PRIVATE_DIR}/mxtest/core/*.cpp ${PRIVATE_DIR}/mxtest/core/*.h)
 file(GLOB_RECURSE SRC_MX_TEST_IMPORT ${PRIVATE_DIR}/mxtest/import/*.cpp ${PRIVATE_DIR}/mxtest/import/*.h)
 file(GLOB_RECURSE SRC_MX_TEST_UTILITY ${PRIVATE_DIR}/mxtest/utility/*.cpp ${PRIVATE_DIR}/mxtest/utility/*.h)
-#file(GLOB_RECURSE SRC_MX_TEST_XML ${PRIVATE_DIR}/mxtest/xml/*.cpp ${PRIVATE_DIR}/mxtest/xml/*.h)
 file(GLOB_RECURSE SRC_CPUL ${PRIVATE_DIR}/cpul/*.cpp ${SOURCE}/cpul/*.h)
 
 # Mx Library
-add_library(${PROJECT_NAME} STATIC ${SRC_MX_API} ${SRC_MX_CORE} ${SRC_MX_IMPL} ${SRC_MX_PUGIXML} ${SRC_MX_UTILITY})
+add_library(${PROJECT_NAME} STATIC ${SRC_MX_API} ${SRC_MX_CORE} ${SRC_MX_IMPL} ${SRC_MX_UTILITY} ${SRC_MX_EZXML})
 source_group( "api-public" FILES ${HEADERS_MX_API})
 source_group( "api" FILES ${SRC_MX_API} )
 source_group( "core" FILES ${SRC_MX_CORE} )
 source_group( "impl" FILES ${SRC_MX_IMPL} )
-source_group( "pugixml" FILES ${SRC_MX_PUGIXML} )
 source_group( "utility" FILES ${SRC_MX_UTILITY} )
-source_group( "extern" FILES ${SRC_MX_EXTERN} )
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 14)
+source_group( "ezxml" FILES ${SRC_MX_EZXML} )
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD ${CPP_VERSION})
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${PRIVATE_DIR})
-add_subdirectory("${PRIVATE_DIR}/extern/ezxml")
-target_link_libraries(${PROJECT_NAME} PUBLIC ezxml)
-target_include_directories(${PROJECT_NAME} PRIVATE "${PRIVATE_DIR}/extern/ezxml/src/include")
+
+# these header paths are a little different to make it easier to copy-and-paste the ezxml code over to
+# here http://github.com/webern/ezxml. However, as far as mx is concerned, ezxml is just another
+# namespace in the mx library (that has a slightly different #include path convention)
+target_include_directories(${PROJECT_NAME} PRIVATE "${PRIVATE_DIR}/mx/ezxml/src/include")
+target_include_directories(${PROJECT_NAME} PRIVATE "${PRIVATE_DIR}/mx/ezxml/src/private")
+
 target_include_directories(${PROJECT_NAME} PUBLIC
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
     $<BUILD_INTERFACE:${PUBLIC_DIR}>
@@ -90,38 +91,55 @@ file(WRITE ${PRIVATE_DIR}/mxtest/file/PathRoot.h
 
 # MxTest
 if(MX_BUILD_TESTS)
-    message("tests will be compiled")
+    set(TEST_BINARY_NAME MxTest)
+    message(STATUS "${PROJECT_NAME}:${CMAKE_CURRENT_LIST_LINE} tests will be compiled")
     if(MX_BUILD_CORE_TESTS)
-        message("core tests will be compiled")
-        # add_compile_definitions(MX_COMPILE_CORE_TESTS)
+        message(STATUS "${PROJECT_NAME}:${CMAKE_CURRENT_LIST_LINE} core tests will be compiled")
         add_definitions(-DMX_COMPILE_CORE_TESTS)
     else()
-        message("core tests will not be compiled")
-    endif()    
+        message(STATUS "${PROJECT_NAME}:${CMAKE_CURRENT_LIST_LINE} core tests will NOT be compiled")
+    endif()
     find_package( Threads )
-    add_executable(MxTest ${SRC_MX_TEST_API} ${SRC_MX_TEST_CONTROL} ${SRC_MX_TEST_CORE} ${SRC_MX_TEST_FILE} ${SRC_MX_TEST_IMPL} ${SRC_MX_TEST_IMPORT} ${SRC_MX_TEST_UTILITY} ${SRC_MX_TEST_XML} ${SRC_CPUL})
-    target_include_directories(MxTest PRIVATE ${PRIVATE_DIR})
-    target_include_directories(MxTest PRIVATE "${PRIVATE_DIR}/extern/ezxml/src/include")
-    target_link_libraries(MxTest ${PROJECT_NAME})
-    target_link_libraries(MxTest ${CMAKE_THREAD_LIBS_INIT})
-    set_property(TARGET MxTest PROPERTY CXX_STANDARD 14)
+
+    add_executable(
+            ${TEST_BINARY_NAME}
+            ${SRC_MX_TEST_API}
+            ${SRC_MX_TEST_CONTROL}
+            ${SRC_MX_TEST_CORE}
+            ${SRC_MX_TEST_FILE}
+            ${SRC_MX_TEST_IMPL}
+            ${SRC_MX_TEST_IMPORT}
+            ${SRC_MX_TEST_UTILITY}
+            ${SRC_MX_TEST_XML}
+            ${SRC_CPUL}
+    )
+
+    target_include_directories(${TEST_BINARY_NAME} PRIVATE ${PRIVATE_DIR})
+
+    # See above: ezxml has a slightly different path convention, and it is used by certain tests even though it is
+    # not considered part of the public API of mx.
+    target_include_directories(${TEST_BINARY_NAME} PRIVATE "${PRIVATE_DIR}/mx/ezxml/src/include")
+    target_include_directories(${TEST_BINARY_NAME} PRIVATE "${PRIVATE_DIR}/mx/ezxml/src/private")
+
+    target_link_libraries(${TEST_BINARY_NAME} ${PROJECT_NAME})
+    target_link_libraries(${TEST_BINARY_NAME} ${CMAKE_THREAD_LIBS_INIT})
+    set_property(TARGET ${TEST_BINARY_NAME} PROPERTY CXX_STANDARD ${CPP_VERSION})
 else()
-  message("tests will not be compiled")
+    message(STATUS "${PROJECT_NAME}:${CMAKE_CURRENT_LIST_LINE} tests will NOT be compiled")
 endif()
 
 # MxExamples
 if(MX_BUILD_EXAMPLES)
-    message("examples will be compiled")   
-    find_package( Threads )
+    message(STATUS "${PROJECT_NAME}:${CMAKE_CURRENT_LIST_LINE} examples will be compiled")
     add_executable(MxRead ${PRIVATE_DIR}/mx/examples/Read.cpp)
     add_executable(MxWrite ${PRIVATE_DIR}/mx/examples/Write.cpp)
     add_executable(MxHide ${PRIVATE_DIR}/mx/examples/Hide.cpp)
     target_link_libraries(MxRead ${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
     target_link_libraries(MxWrite ${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
     target_link_libraries(MxHide ${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
-    set_property(TARGET MxRead PROPERTY CXX_STANDARD 14)
-    set_property(TARGET MxWrite PROPERTY CXX_STANDARD 14)
-    set_property(TARGET MxHide PROPERTY CXX_STANDARD 14)
+    set_property(TARGET MxRead PROPERTY CXX_STANDARD ${CPP_VERSION})
+    set_property(TARGET MxWrite PROPERTY CXX_STANDARD ${CPP_VERSION})
+    set_property(TARGET MxHide PROPERTY CXX_STANDARD ${CPP_VERSION})
 else()
-  message("examples will not be compiled")
+    message(STATUS "${PROJECT_NAME}:${CMAKE_CURRENT_LIST_LINE} examples will NOT be compiled")
 endif()

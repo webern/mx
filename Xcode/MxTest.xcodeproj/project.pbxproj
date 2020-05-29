@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		29126F0B245A81F700B1F839 /* KeyDataTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29126F0A245A81F700B1F839 /* KeyDataTest.cpp */; };
+		29A04F34244FBA62004A5D3C /* NewSystemTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A04F31244FBA62004A5D3C /* NewSystemTest.cpp */; };
+		29A04F35244FBA62004A5D3C /* PitchDataTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A04F32244FBA62004A5D3C /* PitchDataTest.cpp */; };
+		29A04F36244FBA62004A5D3C /* MxlTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A04F33244FBA62004A5D3C /* MxlTest.cpp */; };
 		29DC3AD3225C0FC200814240 /* PositionFunctionsTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DC3878225C0FC100814240 /* PositionFunctionsTest.cpp */; };
 		29DC3AD4225C0FC200814240 /* PrintFunctionsTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DC3879225C0FC100814240 /* PrintFunctionsTest.cpp */; };
 		29DC3AD5225C0FC200814240 /* DirectionReaderTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DC387A225C0FC100814240 /* DirectionReaderTest.cpp */; };
@@ -14,9 +18,7 @@
 		29DC3AD7225C0FC200814240 /* CurveFunctionsTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DC387C225C0FC100814240 /* CurveFunctionsTest.cpp */; };
 		29DC3AD8225C0FC200814240 /* MagicTemplatesTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DC387D225C0FC100814240 /* MagicTemplatesTest.cpp */; };
 		29DC3AD9225C0FC200814240 /* DirectionWriterTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DC387E225C0FC100814240 /* DirectionWriterTest.cpp */; };
-		29DC3ADA225C0FC200814240 /* PartWriterTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DC387F225C0FC100814240 /* PartWriterTest.cpp */; };
 		29DC3ADB225C0FC200814240 /* MeasureWriterTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DC3880225C0FC100814240 /* MeasureWriterTest.cpp */; };
-		29DC3ADC225C0FC200814240 /* NoteWriterTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DC3881225C0FC100814240 /* NoteWriterTest.cpp */; };
 		29DC3ADD225C0FC200814240 /* ImportTestImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DC3883225C0FC100814240 /* ImportTestImpl.cpp */; };
 		29DC3ADE225C0FC200814240 /* ImportTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DC3888225C0FC100814240 /* ImportTest.cpp */; };
 		29DC3ADF225C0FC200814240 /* SortAttributes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DC3889225C0FC100814240 /* SortAttributes.cpp */; };
@@ -49,8 +51,6 @@
 		29DC3AFA225C0FC200814240 /* TimeSignatureApiTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DC38BC225C0FC100814240 /* TimeSignatureApiTest.cpp */; };
 		29DC3AFB225C0FC200814240 /* ApiK009bSlurTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DC38BD225C0FC100814240 /* ApiK009bSlurTest.cpp */; };
 		29DC3AFC225C0FC200814240 /* ChordDataSaveAndLoadTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DC38BF225C0FC100814240 /* ChordDataSaveAndLoadTest.cpp */; };
-		29DC3AFD225C0FC200814240 /* UtilityTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DC38C1225C0FC100814240 /* UtilityTest.cpp */; };
-		29DC3AFE225C0FC200814240 /* UtilityImplTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DC38C2225C0FC100814240 /* UtilityImplTest.cpp */; };
 		29DC3AFF225C0FC200814240 /* OpenStringTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DC38C5225C0FC100814240 /* OpenStringTest.cpp */; };
 		29DC3B00225C0FC200814240 /* GroupAbbreviationDisplayTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DC38C7225C0FC100814240 /* GroupAbbreviationDisplayTest.cpp */; };
 		29DC3B01225C0FC200814240 /* ArrowDirectionTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DC38C8225C0FC100814240 /* ArrowDirectionTest.cpp */; };
@@ -464,11 +464,6 @@
 		29DC3C99225C0FC300814240 /* StaffDistanceTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DC3ACC225C0FC200814240 /* StaffDistanceTest.cpp */; };
 		29DC3C9A225C0FC300814240 /* StaccatoTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DC3ACD225C0FC200814240 /* StaccatoTest.cpp */; };
 		29DC3C9D225C10ED00814240 /* libMx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 29DC3C9C225C10ED00814240 /* libMx.a */; };
-		29DC3CAE225C11C100814240 /* cpulTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DC3C9F225C11C000814240 /* cpulTest.cpp */; };
-		29DC3CAF225C11C100814240 /* cpulTestRegistry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DC3CA5225C11C000814240 /* cpulTestRegistry.cpp */; };
-		29DC3CB0225C11C100814240 /* cpulFailure.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DC3CA8225C11C000814240 /* cpulFailure.cpp */; };
-		29DC3CB1225C11C100814240 /* cpulRun.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DC3CAA225C11C000814240 /* cpulRun.cpp */; };
-		29DC3CB2225C11C100814240 /* cpulTestResult.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DC3CAB225C11C000814240 /* cpulTestResult.cpp */; };
 		29DC3CB3225C11C100814240 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29DC3CAC225C11C000814240 /* main.cpp */; };
 /* End PBXBuildFile section */
 
@@ -485,6 +480,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		29126F0A245A81F700B1F839 /* KeyDataTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyDataTest.cpp; sourceTree = "<group>"; };
+		29A04F2D244FBA4D004A5D3C /* catchDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = catchDefines.h; sourceTree = "<group>"; };
+		29A04F2E244FBA4D004A5D3C /* unusedParameter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = unusedParameter.h; sourceTree = "<group>"; };
+		29A04F2F244FBA4D004A5D3C /* msNoexceptHack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = msNoexceptHack.h; sourceTree = "<group>"; };
+		29A04F30244FBA4D004A5D3C /* catch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = catch.h; sourceTree = "<group>"; };
+		29A04F31244FBA62004A5D3C /* NewSystemTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NewSystemTest.cpp; sourceTree = "<group>"; };
+		29A04F32244FBA62004A5D3C /* PitchDataTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PitchDataTest.cpp; sourceTree = "<group>"; };
+		29A04F33244FBA62004A5D3C /* MxlTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MxlTest.cpp; sourceTree = "<group>"; };
 		29DC3878225C0FC100814240 /* PositionFunctionsTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PositionFunctionsTest.cpp; sourceTree = "<group>"; };
 		29DC3879225C0FC100814240 /* PrintFunctionsTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PrintFunctionsTest.cpp; sourceTree = "<group>"; };
 		29DC387A225C0FC100814240 /* DirectionReaderTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DirectionReaderTest.cpp; sourceTree = "<group>"; };
@@ -492,9 +495,7 @@
 		29DC387C225C0FC100814240 /* CurveFunctionsTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CurveFunctionsTest.cpp; sourceTree = "<group>"; };
 		29DC387D225C0FC100814240 /* MagicTemplatesTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MagicTemplatesTest.cpp; sourceTree = "<group>"; };
 		29DC387E225C0FC100814240 /* DirectionWriterTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DirectionWriterTest.cpp; sourceTree = "<group>"; };
-		29DC387F225C0FC100814240 /* PartWriterTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PartWriterTest.cpp; sourceTree = "<group>"; };
 		29DC3880225C0FC100814240 /* MeasureWriterTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MeasureWriterTest.cpp; sourceTree = "<group>"; };
-		29DC3881225C0FC100814240 /* NoteWriterTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NoteWriterTest.cpp; sourceTree = "<group>"; };
 		29DC3883225C0FC100814240 /* ImportTestImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ImportTestImpl.cpp; sourceTree = "<group>"; };
 		29DC3884225C0FC100814240 /* ChangeValues.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangeValues.h; sourceTree = "<group>"; };
 		29DC3885225C0FC100814240 /* DecimalFields.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DecimalFields.h; sourceTree = "<group>"; };
@@ -553,8 +554,6 @@
 		29DC38BD225C0FC100814240 /* ApiK009bSlurTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ApiK009bSlurTest.cpp; sourceTree = "<group>"; };
 		29DC38BE225C0FC100814240 /* ApiK014aFermatasScoreData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApiK014aFermatasScoreData.h; sourceTree = "<group>"; };
 		29DC38BF225C0FC100814240 /* ChordDataSaveAndLoadTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ChordDataSaveAndLoadTest.cpp; sourceTree = "<group>"; };
-		29DC38C1225C0FC100814240 /* UtilityTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UtilityTest.cpp; sourceTree = "<group>"; };
-		29DC38C2225C0FC100814240 /* UtilityImplTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UtilityImplTest.cpp; sourceTree = "<group>"; };
 		29DC38C4225C0FC100814240 /* UnpitchedTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnpitchedTest.h; sourceTree = "<group>"; };
 		29DC38C5225C0FC100814240 /* OpenStringTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OpenStringTest.cpp; sourceTree = "<group>"; };
 		29DC38C6225C0FC100814240 /* HelperFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelperFunctions.h; sourceTree = "<group>"; };
@@ -1078,21 +1077,11 @@
 		29DC3ACC225C0FC200814240 /* StaffDistanceTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StaffDistanceTest.cpp; sourceTree = "<group>"; };
 		29DC3ACD225C0FC200814240 /* StaccatoTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StaccatoTest.cpp; sourceTree = "<group>"; };
 		29DC3C9C225C10ED00814240 /* libMx.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libMx.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		29DC3C9F225C11C000814240 /* cpulTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cpulTest.cpp; sourceTree = "<group>"; };
-		29DC3CA0225C11C000814240 /* cpulTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cpulTest.h; sourceTree = "<group>"; };
 		29DC3CA1225C11C000814240 /* cpulTestTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cpulTestTimer.h; sourceTree = "<group>"; };
 		29DC3CA2225C11C000814240 /* cpulTestHarness.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cpulTestHarness.h; sourceTree = "<group>"; };
 		29DC3CA3225C11C000814240 /* cpulRun.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cpulRun.h; sourceTree = "<group>"; };
-		29DC3CA4225C11C000814240 /* cpulTestRegistry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cpulTestRegistry.h; sourceTree = "<group>"; };
-		29DC3CA5225C11C000814240 /* cpulTestRegistry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cpulTestRegistry.cpp; sourceTree = "<group>"; };
 		29DC3CA6225C11C000814240 /* cpulVsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cpulVsTest.h; sourceTree = "<group>"; };
-		29DC3CA7225C11C000814240 /* cpulTestResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cpulTestResult.h; sourceTree = "<group>"; };
-		29DC3CA8225C11C000814240 /* cpulFailure.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cpulFailure.cpp; sourceTree = "<group>"; };
-		29DC3CA9225C11C000814240 /* cpulDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cpulDefines.h; sourceTree = "<group>"; };
-		29DC3CAA225C11C000814240 /* cpulRun.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cpulRun.cpp; sourceTree = "<group>"; };
-		29DC3CAB225C11C000814240 /* cpulTestResult.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cpulTestResult.cpp; sourceTree = "<group>"; };
 		29DC3CAC225C11C000814240 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		29DC3CAD225C11C000814240 /* cpulFailure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cpulFailure.h; sourceTree = "<group>"; };
 		9CD50B87238A178B00ED7DD8 /* MxTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MxTest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -1127,7 +1116,6 @@
 				29DC388F225C0FC100814240 /* file */,
 				29DC3877225C0FC100814240 /* impl */,
 				29DC3882225C0FC100814240 /* import */,
-				29DC38C0225C0FC100814240 /* utility */,
 			);
 			name = mxtest;
 			path = ../Sourcecode/private/mxtest;
@@ -1143,9 +1131,7 @@
 				29DC387C225C0FC100814240 /* CurveFunctionsTest.cpp */,
 				29DC387D225C0FC100814240 /* MagicTemplatesTest.cpp */,
 				29DC387E225C0FC100814240 /* DirectionWriterTest.cpp */,
-				29DC387F225C0FC100814240 /* PartWriterTest.cpp */,
 				29DC3880225C0FC100814240 /* MeasureWriterTest.cpp */,
-				29DC3881225C0FC100814240 /* NoteWriterTest.cpp */,
 			);
 			path = impl;
 			sourceTree = "<group>";
@@ -1196,6 +1182,10 @@
 		29DC389B225C0FC100814240 /* api */ = {
 			isa = PBXGroup;
 			children = (
+				29126F0A245A81F700B1F839 /* KeyDataTest.cpp */,
+				29A04F33244FBA62004A5D3C /* MxlTest.cpp */,
+				29A04F31244FBA62004A5D3C /* NewSystemTest.cpp */,
+				29A04F32244FBA62004A5D3C /* PitchDataTest.cpp */,
 				29DC389C225C0FC100814240 /* TestHelpers.h */,
 				29DC389D225C0FC100814240 /* ApiK007aTest.cpp */,
 				29DC389E225C0FC100814240 /* DirectionDataTest.cpp */,
@@ -1234,15 +1224,6 @@
 				29DC38BF225C0FC100814240 /* ChordDataSaveAndLoadTest.cpp */,
 			);
 			path = api;
-			sourceTree = "<group>";
-		};
-		29DC38C0225C0FC100814240 /* utility */ = {
-			isa = PBXGroup;
-			children = (
-				29DC38C1225C0FC100814240 /* UtilityTest.cpp */,
-				29DC38C2225C0FC100814240 /* UtilityImplTest.cpp */,
-			);
-			path = utility;
 			sourceTree = "<group>";
 		};
 		29DC38C3225C0FC100814240 /* core */ = {
@@ -1785,18 +1766,12 @@
 		29DC3C9E225C118E00814240 /* cpul */ = {
 			isa = PBXGroup;
 			children = (
-				29DC3CA9225C11C000814240 /* cpulDefines.h */,
-				29DC3CA8225C11C000814240 /* cpulFailure.cpp */,
-				29DC3CAD225C11C000814240 /* cpulFailure.h */,
-				29DC3CAA225C11C000814240 /* cpulRun.cpp */,
+				29A04F30244FBA4D004A5D3C /* catch.h */,
+				29A04F2D244FBA4D004A5D3C /* catchDefines.h */,
+				29A04F2F244FBA4D004A5D3C /* msNoexceptHack.h */,
+				29A04F2E244FBA4D004A5D3C /* unusedParameter.h */,
 				29DC3CA3225C11C000814240 /* cpulRun.h */,
-				29DC3C9F225C11C000814240 /* cpulTest.cpp */,
-				29DC3CA0225C11C000814240 /* cpulTest.h */,
 				29DC3CA2225C11C000814240 /* cpulTestHarness.h */,
-				29DC3CA5225C11C000814240 /* cpulTestRegistry.cpp */,
-				29DC3CA4225C11C000814240 /* cpulTestRegistry.h */,
-				29DC3CAB225C11C000814240 /* cpulTestResult.cpp */,
-				29DC3CA7225C11C000814240 /* cpulTestResult.h */,
 				29DC3CA1225C11C000814240 /* cpulTestTimer.h */,
 				29DC3CA6225C11C000814240 /* cpulVsTest.h */,
 				29DC3CAC225C11C000814240 /* main.cpp */,
@@ -1831,7 +1806,7 @@
 		299F7FEE1CA8D2620084CAE5 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1010;
+				LastUpgradeCheck = 1140;
 				ORGANIZATIONNAME = "Matthew James Briggs";
 			};
 			buildConfigurationList = 299F7FF11CA8D2620084CAE5 /* Build configuration list for PBXProject "MxTest" */;
@@ -1860,7 +1835,6 @@
 				29DC3B55225C0FC200814240 /* FermataTest.cpp in Sources */,
 				29DC3BD8225C0FC300814240 /* GroupTest.cpp in Sources */,
 				29DC3B98225C0FC300814240 /* DegreeValueTest.cpp in Sources */,
-				29DC3CAE225C11C100814240 /* cpulTest.cpp in Sources */,
 				29DC3C36225C0FC300814240 /* ClefTest.cpp in Sources */,
 				29DC3B0F225C0FC200814240 /* PartListTest.cpp in Sources */,
 				29DC3B21225C0FC200814240 /* HarmonicTypeChoiceTest.cpp in Sources */,
@@ -1881,6 +1855,7 @@
 				29DC3BAC225C0FC300814240 /* FiguredBassTest.cpp in Sources */,
 				29DC3B33225C0FC200814240 /* MidiProgramTest.cpp in Sources */,
 				29DC3BE1225C0FC300814240 /* NormalDotTest.cpp in Sources */,
+				29126F0B245A81F700B1F839 /* KeyDataTest.cpp in Sources */,
 				29DC3BB6225C0FC300814240 /* MeasureLayoutTest.cpp in Sources */,
 				29DC3BDD225C0FC300814240 /* SlideTest.cpp in Sources */,
 				29DC3B5C225C0FC200814240 /* AccordionLowTest.cpp in Sources */,
@@ -1953,7 +1928,6 @@
 				29DC3B80225C0FC300814240 /* HoleTest.cpp in Sources */,
 				29DC3B8E225C0FC300814240 /* DampAllTest.cpp in Sources */,
 				29DC3BC4225C0FC300814240 /* StaffSizeTest.cpp in Sources */,
-				29DC3CB1225C11C100814240 /* cpulRun.cpp in Sources */,
 				29DC3C86225C0FC300814240 /* FingernailsTest.cpp in Sources */,
 				29DC3B3A225C0FC200814240 /* TuningAlterTest.cpp in Sources */,
 				29DC3BE9225C0FC300814240 /* BendChoiceTest.cpp in Sources */,
@@ -2045,14 +2019,12 @@
 				29DC3B57225C0FC200814240 /* PlayTest.cpp in Sources */,
 				29DC3C11225C0FC300814240 /* SourceTest.cpp in Sources */,
 				29DC3C6F225C0FC300814240 /* GraceNoteGroupTest.cpp in Sources */,
-				29DC3CB0225C11C100814240 /* cpulFailure.cpp in Sources */,
 				29DC3B05225C0FC200814240 /* PedalStepTest.cpp in Sources */,
 				29DC3BC7225C0FC300814240 /* CreditChoiceTest.cpp in Sources */,
 				29DC3C38225C0FC300814240 /* MusicDataGroupTest.cpp in Sources */,
 				29DC3C5C225C0FC300814240 /* ModeTest.cpp in Sources */,
 				29DC3C8F225C0FC300814240 /* TransposeTest.cpp in Sources */,
 				29DC3BD1225C0FC300814240 /* LineWidthTest.cpp in Sources */,
-				29DC3CB2225C11C100814240 /* cpulTestResult.cpp in Sources */,
 				29DC3B90225C0FC300814240 /* ForwardTest.cpp in Sources */,
 				29DC3BBE225C0FC300814240 /* SoftwareTest.cpp in Sources */,
 				29DC3C02225C0FC300814240 /* ElisionTest.cpp in Sources */,
@@ -2068,6 +2040,7 @@
 				29DC3AF4225C0FC200814240 /* ApiK016aMiscTest.cpp in Sources */,
 				29DC3BBD225C0FC300814240 /* SoundingPitchTest.cpp in Sources */,
 				29DC3BC3225C0FC300814240 /* PageWidthTest.cpp in Sources */,
+				29A04F35244FBA62004A5D3C /* PitchDataTest.cpp in Sources */,
 				29DC3C2C225C0FC300814240 /* InvertedMordentTest.cpp in Sources */,
 				29DC3BF2225C0FC300814240 /* SegnoTest.cpp in Sources */,
 				29DC3C73225C0FC300814240 /* GroupBarlineTest.cpp in Sources */,
@@ -2110,7 +2083,6 @@
 				29DC3C78225C0FC300814240 /* HoleClosedTest.cpp in Sources */,
 				29DC3C1E225C0FC300814240 /* FrameStringsTest.cpp in Sources */,
 				29DC3C87225C0FC300814240 /* NoteSizeTest.cpp in Sources */,
-				29DC3AFE225C0FC200814240 /* UtilityImplTest.cpp in Sources */,
 				29DC3C8B225C0FC300814240 /* EnsembleTest.cpp in Sources */,
 				29DC3B16225C0FC200814240 /* WavyLineTest.cpp in Sources */,
 				29DC3B3F225C0FC200814240 /* VirtualLibraryTest.cpp in Sources */,
@@ -2225,18 +2197,14 @@
 				29DC3B59225C0FC200814240 /* SlashTest.cpp in Sources */,
 				29DC3C17225C0FC300814240 /* AccidentalTextTest.cpp in Sources */,
 				29DC3C82225C0FC300814240 /* ScorePartTest.cpp in Sources */,
-				29DC3AFD225C0FC200814240 /* UtilityTest.cpp in Sources */,
 				29DC3B49225C0FC200814240 /* CancelTest.cpp in Sources */,
 				29DC3BA5225C0FC300814240 /* WoodTest.cpp in Sources */,
 				29DC3B0C225C0FC200814240 /* SemiPitchedTest.cpp in Sources */,
 				29DC3C41225C0FC300814240 /* TechnicalChoiceTest.cpp in Sources */,
-				29DC3CAF225C11C100814240 /* cpulTestRegistry.cpp in Sources */,
-				29DC3ADA225C0FC200814240 /* PartWriterTest.cpp in Sources */,
 				29DC3AF0225C0FC200814240 /* ApiK007cTest.cpp in Sources */,
 				29DC3AD5225C0FC200814240 /* DirectionReaderTest.cpp in Sources */,
 				29DC3B5F225C0FC200814240 /* ScorePartwiseTest.cpp in Sources */,
 				29DC3C8D225C0FC300814240 /* AccordTest.cpp in Sources */,
-				29DC3ADC225C0FC200814240 /* NoteWriterTest.cpp in Sources */,
 				29DC3B19225C0FC200814240 /* KindTest.cpp in Sources */,
 				29DC3BFB225C0FC300814240 /* FrameFretsTest.cpp in Sources */,
 				29DC3BDB225C0FC300814240 /* DivisionsTest.cpp in Sources */,
@@ -2250,6 +2218,7 @@
 				29DC3B04225C0FC200814240 /* DoubleTest.cpp in Sources */,
 				29DC3B46225C0FC200814240 /* PedalAlterTest.cpp in Sources */,
 				29DC3B1F225C0FC200814240 /* StickLocationTest.cpp in Sources */,
+				29A04F36244FBA62004A5D3C /* MxlTest.cpp in Sources */,
 				29DC3BCC225C0FC300814240 /* DelayedTurnTest.cpp in Sources */,
 				29DC3C15225C0FC300814240 /* ActualNotesTest.cpp in Sources */,
 				29DC3C2B225C0FC300814240 /* TiedTest.cpp in Sources */,
@@ -2283,6 +2252,7 @@
 				29DC3AE6225C0FC200814240 /* ApiK007aTest.cpp in Sources */,
 				29DC3C49225C0FC300814240 /* FullNoteTypeChoiceTest.cpp in Sources */,
 				29DC3B20225C0FC200814240 /* OtherArticulationTest.cpp in Sources */,
+				29A04F34244FBA62004A5D3C /* NewSystemTest.cpp in Sources */,
 				29DC3B25225C0FC200814240 /* MordentTest.cpp in Sources */,
 				29DC3C0B225C0FC300814240 /* PartwiseMeasureTest.cpp in Sources */,
 				29DC3C10225C0FC300814240 /* VolumeTest.cpp in Sources */,
@@ -2329,7 +2299,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -2374,7 +2345,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
-				USER_HEADER_SEARCH_PATHS = "$PROJECT_DIR/../Sourcecode/include $PROJECT_DIR/../Sourcecode/private $PROJECT_DIR/../Sourcecode/private/extern/ezxml/src/include $PROJECT_DIR/../Sourcecode/private/extern/ezxml/src/private";
+				USER_HEADER_SEARCH_PATHS = "$PROJECT_DIR/../Sourcecode/include $PROJECT_DIR/../Sourcecode/private $PROJECT_DIR/../Sourcecode/private/mx/ezxml/src/include $PROJECT_DIR/../Sourcecode/private/mx/ezxml/src/private";
 			};
 			name = Debug;
 		};
@@ -2382,7 +2353,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -2425,13 +2397,14 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				SDKROOT = macosx;
-				USER_HEADER_SEARCH_PATHS = "$PROJECT_DIR/../Sourcecode/include $PROJECT_DIR/../Sourcecode/private $PROJECT_DIR/../Sourcecode/private/extern/ezxml/src/include $PROJECT_DIR/../Sourcecode/private/extern/ezxml/src/private";
+				USER_HEADER_SEARCH_PATHS = "$PROJECT_DIR/../Sourcecode/include $PROJECT_DIR/../Sourcecode/private $PROJECT_DIR/../Sourcecode/private/mx/ezxml/src/include $PROJECT_DIR/../Sourcecode/private/mx/ezxml/src/private";
 			};
 			name = Release;
 		};
 		299F80001CA8D2620084CAE5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"DEBUG=1",
@@ -2444,6 +2417,7 @@
 		299F80011CA8D2620084CAE5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";

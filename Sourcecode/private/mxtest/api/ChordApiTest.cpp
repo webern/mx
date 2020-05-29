@@ -247,7 +247,6 @@ TEST( KompChordBug_PIVOTAL_147058063, ChordApi )
     docMgr.destroyDocument( docID );
     const auto scorePartwisePtr = documentPtr->getScorePartwise();
     const auto xml = mxtest::toXml( originalScore );
-//    std::cout << xml << std::endl;
     const auto savedScore = mxtest::fromXml( xml );
     const auto& savedPart = savedScore.parts.at(0);
     const auto& savedMeasure = savedPart.measures.at(0);

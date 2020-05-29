@@ -5,7 +5,7 @@ MusicXML Class Library
 - License: MIT
 - Version: 1.0
 - Supported MusicXML Version: 3.0
-- Language: C++14
+- Language: C++17
 
 -----------------------------------------
 
@@ -13,29 +13,11 @@ MusicXML Class Library
 
 ## Introduction
 
-This project is a C++ library for working with MusicXML files.  MusicXML files are represented as statically typed objects.  This structure can be serialized and deserialize to/from MusicXML.
+This project is a C++ library for working with MusicXML.
 
-## Compiling
+# Build
 
-The project is tested with the following:
-* Clang (Xcode 10 and higher)
-* g++ (Debian 6.3.0-18+deb9u1) 6.3.0 20170516
-* cmake version 3.7.2
-* MSVC2019
-
-Visual Studio should be very close to working. A good first pull request would be to compile with VS and add the version to the list above.
-
-There are three cmake options:
-
-```
-    -DMX_BUILD_TESTS=on
-    -DMX_BUILD_CORE_TESTS=off
-    -DMX_BUILD_EXAMPLES=on
-```
-
-The configuration shown above is the recommended configuration for development. If you just need the lib then turn off all three of the cmake options.
-
-Here's an example of a clean build of the project followed by a test run.
+Building and running tests should be as simple as:
 
 ```
 git clone https://github.com/webern/mx.git mx
@@ -46,11 +28,44 @@ make -j6
 ./MxTest
 ```
 
-The Xcode project (checked-in to the repo) has targets for iOS and macOS frameworks and dylibs.  These are not specified in the cmake file.
+### Cmake Options
+
+There are three `cmake` options:
+
+```
+    -DMX_BUILD_TESTS=on
+    -DMX_BUILD_CORE_TESTS=off
+    -DMX_BUILD_EXAMPLES=on
+```
+
+The configuration shown above is the recommended configuration for development.
+If you just need the lib then turn off all three of the `cmake` options.
+The 'core tests' take a long time to compile.
+You only need to run them if you make changes in the `mx::core` namespace.
+
+### Build Tenets
+
+* `mx` should not depend on any outside libraries (no deps).
+* `mx` third-party code should be kept to a minimum.
+* `mx` third-party code should be checked into the `mx` repo and compiled as part of the `mx` library.
+* `mx` should not depened on any package manager, though it may be published into any package manager.
+
+### Xcode Project
+
+The Xcode project (checked-in to the repo) has targets for iOS and macOS frameworks and dylibs.
+These are not specified in the cmake file.
+Contributors are not required to keep the Xcode project up-to-date.
+If you add, move or remove files from the codebase, it is likely that the Xcode CI run will fail.
+This will not prevent a contribution from being merged, the maintainer will fix the project after-the-fact.
+
+# Using `mx`
 
 ## API
 
-The `mx::api` namespace is intended to be a simplified structural representation of MusicXML. It should be slightly more intuitive than manipulating the DOM representation directly. In particular, voices and time positions are more explicitly managed.
+The `mx::api` namespace is intended to be a simplified structural representation of MusicXML.
+It should be more intuitive than manipulating the DOM representation directly.
+In particular, voices and time positions are more explicitly managed.
+Some complexities, on the other hand, are retained in `mx::api`, such as the need to manage beam starts and stops explicitly. 
 
 #### Writing MusicXML with `mx::api`
 
@@ -64,7 +79,7 @@ The `mx::api` namespace is intended to be a simplified structural representation
 #include "mx/api/ScoreData.h"
 
 // set this to 1 if you want to see the xml in your console
-#define MX_WRITE_THIS_TO_THE_CONSOLE 1
+#define MX_WRITE_THIS_TO_THE_CONSOLE 0
 
 int main(int argc, const char * argv[])
 {
@@ -180,6 +195,9 @@ int main(int argc, const char * argv[])
     // write to a file
     mgr.writeToFile( documentID, "./example.musicxml" );
 
+    // we need to explicitly delete the object held by the manager
+    mgr.destroyDocument( documentID );
+
     return 0;
 }
 ```
@@ -284,51 +302,141 @@ int main(int argc, const char * argv[])
 }
 ```
 
-## Core Implementation Details
+# Implementation Details
 
-The MusicXML classes in `mx::core` are tightly bound to the `musicxml.xsd` specification.  MusicXML can be challenging to use and the `mx::core` class structure mirrors the complexity of the MusicXML specification.  A slightly simplified representation is available in `mx::api`. It is possible to work with a subset of MusicXML using only `mx::api`, without delving into `mx::core`.
+The MusicXML classes in `mx::core` are tightly bound to the `musicxml.xsd` specification.
+MusicXML can be challenging to use and the `mx::core` class structure mirrors the complexity of the MusicXML specification.
+A simplified representation is available in `mx::api`.
+It is possible to work with a subset of MusicXML using only `mx::api`, without delving into `mx::core`.
 
 ##### Namespaces
 
-```
-using namespace ezxml;
-using namespace mx::api;
-using namespace mx::core;
+```C++
+using namespace mx::api;    // an easier interface for reading and writing MusicXML
+using namespace mx::core;   // a direct representation of a musicxml document in C++ classes
+using namespace mx::impl    // the logic that translates between mx::api and mx::core
+using namespace mx::utility // a typical catch-all for generic stuff like logging macros
+using namespace ezxml;      // generic serialization and deserialization of xml
 ```
 
-The `mx::core` namespace contains the MusicXML representation objects such as elements and attributes.  In the musicxml.xsd there are many cases of 'xs:choice' or 'xs:group' being used.  These constructs are typically represented in the mx::core class structure the same way that they are found in the musicxml.xsd specification.  The interfaces in this namespace are relatively stable, however they are tightly bound to MusicXML's specification and thus they will change when it comes time to support a future version of MusicXML.
+##### `mx::api`
 
-The `::ezxml::` namespace contains generic XML DOM functionality.  Under the hood [pugixml](http://pugixml.org/) is being used.  See the XML DOM section for more information.
+The `mx::api` namespace is a set of 'plain old data' structs that represent a simplified model of MusicXML.
+For example, here is the `ScoreData.h`, which represents the top level of the object heirarchy:
+
+```C++
+class ScoreData
+{
+public:
+    ScoreData();
+    MusicXmlVersion musicXmlVersion;
+    std::string musicXmlType;
+    std::string workTitle;
+    std::string workNumber;
+    std::string movementTitle;
+    std::string movementNumber;
+    std::string composer;
+    std::string lyricist;
+    std::string arranger;
+    std::string publisher;
+    std::string copyright;
+    EncodingData encoding;
+    std::vector<PageTextData> pageTextItems;
+    LayoutData layout;
+    std::vector<PartData> parts;
+    std::vector<PartGroupData> partGroups;
+    int ticksPerQuarter;
+    std::set<SystemData> systems;
+
+    int getNumMeasures() const;
+    int getNumStavesPerSystem() const;
+
+    /// sorts all of the events, directions, etc.
+    /// it is good to call this before writing to xml.
+    void sort();
+};
+```
+
+`mx::api` and `mx::core` are kept completely separate.\
+That is, `mx::api` data is serialized into `mx::core` data, which is then serialized into MusicXML.
+The `mx::api` struct allow us to simplify things like specifying a note's tick time position, and allowing the serialization process to take care of details such as `<forward>` `<backup>` elements.
+
+##### `mx::core`
+
+The `mx::core` namespace contains the MusicXML representation objects such as elements and attributes.
+`mx::core` was mostly generated from `musicxml.xsd` with plenty of intervention by hand.
+
+###### XML Choices and Groups
+
+In the `musicxml.xsd` there are many cases of `xs:choice` or `xs:group` being used.
+These constructs are typically represented in the `mx::core` class structure the same way that they are found in the `musicxml.xsd` specification.
+The interfaces in this namespace are relatively stable, however they are tightly bound to MusicXML's specification and thus they will change when it comes time to support a future version of MusicXML.
+
+##### `mx::impl`
+
+`mx::impl` is the translation layer between `mx::api` and `mx::core`.
+
+##### `mx::utility`
+
+This namespace is small.
+It mostly contains macros and small, generic functions.
+
+##### `ezxml`
+
+The `ezxml` namespace contains generic XML DOM functionality.
+Under the hood [pugixml](http://pugixml.org/) is being used.
+See the XML DOM section for more information.
+Note that, even though `ezxml` can stand alone as a useful abstraction, we build it as if it were entirely owned by the `mx` project.
+Additionally, we check the `pugixml` library in and build it as if it were part of the `mx` project.
+This is in keeping with the build tenets [above](#build-tenets)
 
 ##### Partwise vs. Timewise
-There are two types of MusicXML documents, 'partwise' and 'timewise'.  A partwise document consists of a set of parts which contain measures.  A timewise document consists of a set of measures which contain parts.  Partwise is used more often by MusicXML applications while Timewise documents seem to be rare or even nonresistant.  Nonetheless *MusicXML Class Library* implements both Timewise and Partwise.  The class `mx::core::Document` can hold *either* a Partwise *or* a Timewise score.  Note that is actually holds both, but only one or the other is 'active'.  You can check the inner document type with the getChoice function.  You can convert between Partwise and Timewise with the convertContents function.
+There are two types of MusicXML documents, `partwise` and `timewise`.
+A partwise document consists of a set of parts which contain measures.
+A timewise document consists of a set of measures which contain parts.
+Partwise is used more often by MusicXML applications while Timewise documents seem to be rare or even nonresistant.
+Nonetheless *MusicXML Class Library* implements both Timewise and Partwise.
+The class `mx::core::Document` can hold *either* a Partwise *or* a Timewise score.
+Note that it actually holds both, but only one or the other is 'active' (this is similar to how `xsd` `choice` constructs are handled).
+You can check the inner document type with the getChoice function.
+You can convert between Partwise and Timewise with the convertContents function.
 
 ##### Elements
-Each XML element is represented by a class which derives from ElementInterface.  Elements are created and used by way of shared pointers.  Each element comes with a set of using/typedef statements as well as a convenience function for making the shared pointers.
+Each XML element is represented by a class which derives from ElementInterface.
+Elements are created and used by way of shared pointers.
+Each element comes with a set of using/typedef statements as well as a convenience function for making the shared pointers.
 
 ##### Shared Pointers
-Many elements contain other elements.  When they do, these data members will also be shared pointers.  Get/set functions will allow access to the data members by accepting and returning shared pointers.  If you attempt to set a data member to a nullptr, the setter function will silently do nothing.  Thus we can be reasonably assured our objects will never return nullptr.
+Many elements contain other elements.
+When they do, these data members will also be shared pointers.
+Get/set functions will allow access to the data members by accepting and returning shared pointers.
+If you attempt to set a data member to a nullptr, the setter function will silently do nothing.
+Thus we can be reasonably assured our objects will never return nullptr.
 
 For example
 
-```
+```C++
 std::shared_ptr<Foo> foo; /* nullptr! */
-bar->setFoo( foo ); /* no-op because you passed a nullptr */
-auto x = bar->getFoo(); /* guaranteed not to be null */
-x->somefuntion(); /* OK to dereference without checking for nullptr */
+bar->setFoo( foo );       /* no-op because you passed a nullptr */
+auto x = bar->getFoo();   /* guaranteed not to be null */
+x->somefuntion();         /* OK to dereference without checking for nullptr */
 ```
 
 ##### Optional Member Data
-Many of the elements in MusicXML are optional.  In these cases there is a bool which indicates whether or not the element is present.  The bool serves as a flag indicating whether or not the optional element will be output when you stream out your MusicXML document.  The bool has no side-effect on the element who's presence/absence it represents.  So for example we may set some data:
+Many of the elements in MusicXML are optional.
+In these cases there is a bool which indicates whether or not the element is present.
+The bool serves as a flag indicating whether or not the optional element will be output when you stream out your MusicXML document.
+The bool has no side-effect on the element who's presence/absence it represents.
+So for example we may set some data:
 
-```
+```C++
 foo->setValue( "hello" );
 bar->setFoo( foo );
 ```
 
 But in this example, if Foo is an optional member of Bar, then we must also set hasFoo to *true* or else foo will not be in the XML output.
 
-```
+```C++
 bar->toStream(...); /* Foo is not in the output! */
 bar->setHasFoo( true );
 bar->toStream(...); /* Now we see <foo>hello</foo> in the output. */
@@ -336,21 +444,22 @@ bar->toStream(...); /* Now we see <foo>hello</foo> in the output. */
 
 Also note that setting HasFoo to *false* does not mean that Foo's value is gone.
 
-```
+```C++
 bar->setHasFoo( false ); /* The XML document no longer has a Foo */
 bar->getFoo()->getValue() == "hello"; /* True! The value still exists but is not present in the XML. */
 ```
 
 ##### Optional Member Data with Unbounded Occurrences
-Sometimes an element may contain zero, one, or many occurrences of another element.  For example
+Sometimes an element may contain zero, one, or many occurrences of another element.
+For example
 
-```
+```xml
 <xs:element name="key" type="key" minOccurs="0" maxOccurs="unbounded">
 ```
 
 In this case there will be a collection of Key objects and the getter/setters will look like this, where `KeySet` is a typedef of `std::vector<Key>`.
 
-```
+```C++
 const KeySet& getKeySet() const;
 void addKey( const KeyPtr& value );
 void removeKey( const KeySetIterConst& value );
@@ -359,15 +468,17 @@ KeyPtr getKey( const KeySetIterConst& setIterator ) const;
 ```
 
 ##### Required Member Data with Unbounded Occurrences
-Sometimes an element is required, but you may optionally have more than one.  For example
+Sometimes an element is required, but you may optionally have more than one.
+For example
 
-```
+```xml
 <xs:element name="direction-type" type="direction-type" maxOccurs="unbounded"/>
 ```
 
-In this case, minOccurs="1" (by default per XSD language rules).  The functions will look just like the previous example, but they will behave differently
+In this case, minOccurs="1" (by default per XSD language rules).
+The functions will look just like the previous example, but they will behave differently
 
-```
+```C++
 const DirectionTypeSet& getDirectionTypeSet() const;
 void addDirectionType( const DirectionTypePtr& value );
 void removeDirectionType( const DirectionTypeSetIterConst& value );
@@ -375,17 +486,23 @@ void clearDirectionTypeSet();
 DirectionTypePtr getDirectionType( const DirectionTypeSetIterConst& setIterator ) const;
 ```
 
-When the containing element is constructed, a single DirectionType will be default constructed and pushed onto the vector.  Thus you will have one default constructed DirectionType in the set upon construction.
+When the containing element is constructed, a single DirectionType will be default constructed and pushed onto the vector.
+Thus you will have one default constructed DirectionType in the set upon construction.
 
-If you try to call removeDirectionType with only one DirectionType in the set (size==1) nothing will happen.  You will still have a single DirectionType in the collection.
+If you try to call removeDirectionType with only one DirectionType in the set (size==1) nothing will happen.
+You will still have a single DirectionType in the collection.
 
 When you call clearDirectionTypeSet vector.clear() will be called but it will follow up by pushing a default constructed DirectionType onto the vector so you will still have size==1.
 
-As it turns out, this design choice tends to be annoying in practice.  On the upside, it does guarantee that your MusicXML document will be valid, even if you forget to add a required element.  The downside is that it means you have to deal with the fact that a default constructed element always exists in the set, so you must replace or remove the first element.  Furthermore, you cannot remove the existing element until another one has been added.  Here are the two patterns I have used for this (pseudocode).
+As it turns out, this design choice tends to be annoying in practice.
+On the upside, it does guarantee that your MusicXML document will be valid, even if you forget to add a required element.
+The downside is that it means you have to deal with the fact that a default constructed element always exists in the set, so you must replace or remove the first element.
+Furthermore, you cannot remove the existing element until another one has been added.
+Here are the two patterns I have used for this (pseudocode).
 
 **Pattern 1:** Replace the first element by dereferencing the begin() iterator:
 
-```
+```C++
 bool isFirstAdded = false;
 for( auto stuffElement : stuffElementsIWantToAdd )
 {
@@ -403,7 +520,7 @@ for( auto stuffElement : stuffElementsIWantToAdd )
 
 **Pattern 2:** Remove the default element *After* adding a replacement:
 
-```
+```C++
 bool isFirstAdded = false;
 for( auto stuffElement : stuffIWantToAdd )
 {
@@ -416,18 +533,21 @@ for( auto stuffElement : stuffIWantToAdd )
 }
 ```
 
-Pattern 1 always works, even if you're not sure whether or not the `minOccurs="1"` or `"0"`.  Pattern 2 only works when `minOccurs="1"`.  There are no cases where `minOccurs` is greater than 1.
+Pattern 1 always works, even if you're not sure whether or not the `minOccurs="1"` or `"0"`.
+Pattern 2 only works when `minOccurs="1"`.
+There are no cases where `minOccurs` is greater than 1.
 
 ##### Member Data with Bounded maxOccurs
-```
+```xml
 <xs:element name="beam" type="beam" minOccurs="0" maxOccurs="8"/>
 ```
 In this case if you call addBeam when there are already 8 beams in the vector, nothing will happen.
 
 ##### xs:groups
-For an xs:group there is usually a single 'element' class which represents the group of elements.  For example this XSD snippet:
+For an xs:group there is usually a single 'element' class which represents the group of elements.
+For example this XSD snippet:
 
-```
+```xml
 <xs:group name="editorial">
 	<xs:sequence>
 		<xs:group ref="footnote" minOccurs="0"/>
@@ -438,7 +558,7 @@ For an xs:group there is usually a single 'element' class which represents the g
 
 is represented by this class:
 
-```
+```C++
 class EditorialGroup : public ElementInterface
 {
 public:
@@ -470,9 +590,12 @@ private:
 
 ##### xs:choices
 
-There are a few exceptions (mistakes) but for the most part, `xs:choice` constructs are represented by a class with a name ending in 'Choice'.  The element will have an enum named 'Choice' in the public scope of the class.  Each of the possible 'choices' will exist as data members of the class, but only one of them will be 'active' (was present in, or will be written to, XML).  For example, this xsd construct:
+There are a few exceptions (mistakes) but for the most part, `xs:choice` constructs are represented by a class with a name ending in 'Choice'.
+The element will have an enum named 'Choice' in the public scope of the class.
+Each of the possible 'choices' will exist as data members of the class, but only one of them will be 'active' (was present in, or will be written to, XML).
+For example, this xsd construct:
 
-```
+```xml
 <xs:choice minOccurs="0">
     <xs:element name="pre-bend" type="empty">
         <xs:annotation>
@@ -489,7 +612,7 @@ There are a few exceptions (mistakes) but for the most part, `xs:choice` constru
 
 Is represented by this class:
 
-```
+```C++
 class BendChoice : public ElementInterface
 {
 public:
@@ -526,13 +649,16 @@ When `getChoice() == BendChoice::Choice::preBend` then we will see `<pre-bend/>`
 
 ### XML DOM (::ezxml::)
 
-Any XML document can be read and manipulated with the classes in the `::ezxml::` namespace.  Most notably, look at the following pure virtual interfaces XDoc, XElement, XAttribute.  Also look at the STL-compliant iterators XElementIterator and XAttributeIterator.
+Any XML document can be read and manipulated with the classes in the `::ezxml::` namespace.
+Most notably, look at the following pure virtual interfaces XDoc, XElement, XAttribute.
+Also look at the STL-compliant iterators XElementIterator and XAttributeIterator.
 
-These interfaces are designed to wrap any underlying XML DOM software so that `mx::core` does not care or know about the XML DOM code.  A set of implementation classes wrapping pugixml are provided, but if you need to use, say Xerces or RapidXML, you can look at the PugiElement, PugiDoc, etc classes and wrap whatever library you need.
+These interfaces are designed to wrap any underlying XML DOM software so that `mx::core` does not care or know about the XML DOM code.
+A set of implementation classes wrapping pugixml are provided, but if you need to use, say Xerces or RapidXML, you can look at the PugiElement, PugiDoc, etc classes and wrap whatever library you need.
 
 Here's how you can read a MusicXML document into `mx::core` classes by way of `::ezxml::`.
 
-```
+```C++
 #include "mx/core/Document.h"
 #include "mx/utility/Utility.h"
 #include "functions.h"
@@ -588,9 +714,10 @@ int main(int argc, const char *argv[])
 ```
 
 ### Hello World using mx::core
-On the MusicXML home page there is an example of a "Hello World" simple MusicXML file.  Here is a main function that would output this "Hello World" MusicXML example to std::cout.
+On the MusicXML home page there is an example of a "Hello World" simple MusicXML file.
+Here is a main function that would output this "Hello World" MusicXML example to std::cout.
 
-```
+```C++
 #include <iostream>
 #include "DocumentPartwise.h"
 #include "Elements.h"
@@ -645,14 +772,12 @@ int main(int argc, const char * argv[])
 
 ### Unit Test Framework
 
-An executable program named MxTest is also included in the project.  MxTest utilizes the CppUnitLite macro library by Michael Feathers.  Licensing of this library is not clear, [here is a link](http://c2.com/cgi/wiki?CppUnitLite) to the source of this library.
-CppUnitLite appears to be abandonware, but it is very useful.
-Here are some additional CppUnitLite links
-  * [http://www.objectmentor.com/resources/downloads.html](http://www.objectmentor.com/resources/downloads.html)
-  * [https://github.com/smikes/CppUnitLite](https://github.com/smikes/CppUnitLite)
-  * [https://github.com/webern/CppUnitLite](https://github.com/webern/CppUnitLite)
+An executable program named MxTest is also included in the project.
+MxTest utilizes the Catch2 test framework.
+The core tests are slow to compile, see the [`cmake` options](#cmake-options) section for more info on how to skip compilation of the tests.
 
-The tests are slow to compile, see the *Compiling* section for more info on how to skip compilation of the tests.
+(*TODO*: move this to a changelog and describe the problem with premature 1.0.0 semver tagging)
+(*TODO*: decide and describe how we will use semver)
 
 #### Release Notes
 
@@ -662,11 +787,18 @@ The tests are slow to compile, see the *Compiling* section for more info on how 
 
 #### Historical Notes
 
-**Historical Note: April 7, 2019** Trying to button up a '1.0' 'release' by tying up some of the loose ends with the build, continuous integration, testing, and header leakage. The use of the semver `1.0` implies that we hope there won't be many breaking changes. I suppose the way I will use semver is as follows: a patch release may cause slight compilation annoyances, but nothing that would cause any rewriting of code. A minor release may similarly require some tweaks but hopefully nothing too major. A major release could be anything up-to a complete re-write.
+**Historical Note: April 7, 2019** Trying to button up a '1.0' 'release' by tying up some of the loose ends with the build, continuous integration, testing, and header leakage.
+The use of the semver `1.0` implies that we hope there won't be many breaking changes.
+I suppose the way I will use semver is as follows: a patch release may cause slight compilation annoyances, but nothing that would cause any rewriting of code.
+A minor release may similarly require some tweaks but hopefully nothing too major.
+A major release could be anything up-to a complete re-write.
 
-**Historical Note: October 6, 2016:** Significant progress has been made on the `api` namespace, which is a simplified set of data structures to represent a MusicXML document.  These are being implemented as mostly-POD structs.  Currently the importing of data into these structures is well-underway, but the exporting from these data structures has not been implemented.
+**Historical Note: October 6, 2016:** Significant progress has been made on the `api` namespace, which is a simplified set of data structures to represent a MusicXML document.
+These are being implemented as mostly-POD structs.
+Currently the importing of data into these structures is well-underway, but the exporting from these data structures has not been implemented.
 
-**Historical Note: August 16, 2016:** All tests are passing (core, xml and import).  The remaining items to do on the ximport feature are
+**Historical Note: August 16, 2016:** All tests are passing (core, xml and import).
+The remaining items to do on the ximport feature are
 - search for all `\\TODO's` and fix those that can be fixed
 - Standardize the code file copyrights and bump to version 0.2
 - Rename XElement functions to better names
@@ -674,13 +806,24 @@ The tests are slow to compile, see the *Compiling* section for more info on how 
 
 **Historical Note: August 11, 2016:** The feature to import MusicXML files is essentially complete with most "round-trip" integration tests passing.
 
-**Historical Note: June 27, 2016:** An "integration" tester has been added to the MxTest executable.  This exists in ImportTest.cpp, and ImportTestImpl.h/cpp.  A top level directory "Resources" has been added to hold test input (i.e. "golden") files.  The input files are gathered from Recordare, Lilypond and MuseScore and to this I have added a few of my own scores as exported by Finale Dolet.
+**Historical Note: June 27, 2016:** An "integration" tester has been added to the MxTest executable.
+This exists in ImportTest.cpp, and ImportTestImpl.h/cpp.
+A top level directory "Resources" has been added to hold test input (i.e. "golden") files.
+The input files are gathered from Recordare, Lilypond and MuseScore and to this I have added a few of my own scores as exported by Finale Dolet.
 
-Each of these test input files has been "scrubbed" using the XDoc classes (i.e. it has been round-tripped through pugixml and has been updated to a normalized MusicXML 3.0 header format.  The resultant scrubbed files are in Resources/expected.  During the test run, a csv file is written in Resources/testOutput recording a row for each test (Pass/Fail, duration of test, messages, etc).  Each time a test failure is encountered the expected file and the error file will be saved to the Resources/testOutput directory to allow for visual inspection.
+Each of these test input files has been "scrubbed" using the XDoc classes (i.e. it has been round-tripped through pugixml and has been updated to a normalized MusicXML 3.0 header format.
+The resultant scrubbed files are in Resources/expected.
+During the test run, a csv file is written in Resources/testOutput recording a row for each test (Pass/Fail, duration of test, messages, etc).
+Each time a test failure is encountered the expected file and the error file will be saved to the Resources/testOutput directory to allow for visual inspection.
 
-Currently this tester is a "wire-up".  All 263 of these round-trip import/export tests fail because the implementation does not yet exist in mx::core.  The next body of work will be the mx::core implementation.
+Currently this tester is a "wire-up".
+All 263 of these round-trip import/export tests fail because the implementation does not yet exist in mx::core.
+The next body of work will be the mx::core implementation.
 
-**Historical Note: June 20, 2016:** A simple interface to for XML DOM has been added in the ::ezxml:: namespace.  The key classes (pure virtual) are XDoc, XElement, XAttribute, XElementIterator, XAttributeIterator.  These are implemented by concrete classes PugiDoc, PugiElement, etc. which serve as a wrapper for the pugixml library (http://pugixml.org/).  Although this is a static library, a class XFactory can be used to create a Pugi instance of the XDoc interface.
+**Historical Note: June 20, 2016:** A simple interface to for XML DOM has been added in the ::ezxml:: namespace.
+The key classes (pure virtual) are XDoc, XElement, XAttribute, XElementIterator, XAttributeIterator.
+These are implemented by concrete classes PugiDoc, PugiElement, etc. which serve as a wrapper for the pugixml library (http://pugixml.org/).
+Although this is a static library, a class XFactory can be used to create a Pugi instance of the XDoc interface.
 
 The idea behind using a pure virtual interface is that the client of the Music XML Class Library can, in theory choose a different XML DOM library (Xerces, TinyXML, etc) and wrap with instances of the XDoc interfaces and the Music XML core classes will not know the difference.
 

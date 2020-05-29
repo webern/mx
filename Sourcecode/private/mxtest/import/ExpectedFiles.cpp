@@ -143,10 +143,6 @@ namespace mxtest
         openInputFile( inputFile, fullPath );
         auto xdoc = ::ezxml::XFactory::makeXDoc();
         xdoc->loadStream( inputFile );
-//        std::stringstream ss;
-//        xdoc->saveStream( ss );
-//        std::cout << ss.str() << std::endl;
-//        inputFile.close();
         return xdoc;
     }
     
@@ -260,20 +256,23 @@ namespace mxtest
     {
         return filePath( "expected", getExpectedFileName( subdir, fileName ) );
     }
-    
+
+    // Don't print a dot for every file, just print a dot for every X files processed
+    static constexpr const int PRINT_DOT_STRIDE_SIZE = 10;
     
     void deleteExpectedFiles()
     {
         std::cout << "deleting expected files" << std::flush;
         auto testFiles = MxFileRepository::getTestFiles( 0 );
-        for( auto it = testFiles.cbegin(); it != testFiles.cend(); ++it )
+        int processedFileCount = 0;
+        for(const auto & testFile : testFiles)
         {
-            std::string fullpath = getExpectedFileFullPath( it->subdirectory, it->fileName );
-            bool isDeleted = deleteFileNoThrow( fullpath );
-            if( isDeleted )
+            ++processedFileCount;
+            std::string fullpath = getExpectedFileFullPath( testFile.subdirectory, testFile.fileName );
+            deleteFileNoThrow( fullpath );
+            if( processedFileCount % PRINT_DOT_STRIDE_SIZE == 0 )
             {
                 std::cout << "." << std::flush;
-                //std::cout << "deleting expected file - " << fullpath << it->fileName << std::endl;
             }
         }
         std::cout << "done" << std::endl;
@@ -286,17 +285,21 @@ namespace mxtest
         const int maxConcurrency = 48;
         std::list<std::future<void>> q;
         auto testFiles = MxFileRepository::getTestFiles( MX_COMPILE_MAX_FILE_SIZE_BYTES );
-        for( auto it = testFiles.cbegin(); it != testFiles.cend(); ++it )
+        int processedFileCount = 0;
+        for(const auto& testFile : testFiles)
         {
-            std::cout << "." << std::flush;
-            // std::cout << "creating expected file - " << it->subdirectory << " - " << it->fileName << std::endl;
-            auto fut = std::async( std::launch::async, generateExpectedFile, it->subdirectory.c_str(), it->fileName.c_str() );
+            ++processedFileCount;
+            if( processedFileCount % PRINT_DOT_STRIDE_SIZE == 0 )
+            {
+                std::cout << "." << std::flush;
+            }
+            auto fut = std::async( std::launch::async, generateExpectedFile, testFile.subdirectory.c_str(), testFile.fileName.c_str() );
             
             while( q.size() >= maxConcurrency && q.begin() != q.end() )
             {
                 for( auto qIter = q.begin(); qIter != q.end(); ++qIter )
                 {
-                    if( qIter->wait_for( std::chrono::milliseconds(0) ) == std::future_status::ready )
+                    if( qIter->wait_for( std::chrono::milliseconds(2) ) == std::future_status::ready )
                     {
                         qIter->wait();
                         q.erase( qIter );
@@ -308,17 +311,17 @@ namespace mxtest
             q.push_front( std::move( fut ) );
         }
         
-        while( q.size() > 0 )
+        while( !q.empty() )
         {
             for( auto qIter = q.begin(); qIter != q.end(); ++qIter )
             {
-                if( qIter->wait_for( std::chrono::milliseconds(0) ) == std::future_status::ready )
+                if( qIter->wait_for( std::chrono::milliseconds(10) ) == std::future_status::ready )
                 {
                     qIter->wait();
                     q.erase( qIter );
                     break;
                 }
-                std::this_thread::sleep_for( std::chrono::milliseconds(10) );
+                std::this_thread::sleep_for( std::chrono::milliseconds(50) );
             }
         }
         std::cout << "done" << std::endl;

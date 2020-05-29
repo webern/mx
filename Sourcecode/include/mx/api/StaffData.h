@@ -58,7 +58,7 @@ namespace mx
         MXAPI_EQUALS_MEMBER( directions )
         if( !( voicesAreEqual( lhs.voices, rhs.voices ) ) )
         {
-            streamComparisonUnequalMessage( "StaffData", "voices" );
+            MX_SHOW_UNEQUAL( "StaffData", "voices" );
             return false;
         }
         MXAPI_EQUALS_END;

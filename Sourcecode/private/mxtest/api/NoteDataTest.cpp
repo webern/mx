@@ -3,35 +3,36 @@
 // Distributed under the MIT License
 
 #include "mxtest/control/CompileControl.h"
+
 #ifdef MX_COMPILE_API_TESTS
 
-#include "cpul/cpulTestHarness.h"
-#include "mxtest/api/RoundTrip.h"
-#include "mx/api/DocumentManager.h"
-#include "mx/core/Document.h"
-#include "mx/core/elements/ScorePartwise.h"
-#include "mx/core/elements/PartwisePart.h"
-#include "mx/core/elements/PartwiseMeasure.h"
-#include "mx/core/elements/MusicDataGroup.h"
-#include "mx/core/elements/Note.h"
-#include "mx/core/elements/NoteChoice.h"
-#include "mx/core/elements/NormalNoteGroup.h"
-#include "mx/core/elements/FullNoteGroup.h"
-#include "mx/core/elements/FullNoteTypeChoice.h"
-#include "mx/core/elements/Pitch.h"
-#include "mx/core/elements/Notations.h"
-#include "mx/core/elements/NotationsChoice.h"
-#include "mx/core/elements/Tied.h"
-#include "mx/core/Document.h"
-#include "mx/core/elements/ScorePartwise.h"
-#include "mx/core/elements/PartwisePart.h"
-#include "mx/core/elements/PartwiseMeasure.h"
-#include "mx/core/elements/MusicDataGroup.h"
-#include "mx/core/elements/MusicDataChoice.h"
-#include "mx/core/elements/Direction.h"
-#include "mx/core/elements/DirectionType.h"
-#include "mx/core/elements/Offset.h"
-#include "mx/core/elements/Pedal.h"
+    #include "cpul/cpulTestHarness.h"
+    #include "mxtest/api/RoundTrip.h"
+    #include "mx/api/DocumentManager.h"
+    #include "mx/core/Document.h"
+    #include "mx/core/elements/ScorePartwise.h"
+    #include "mx/core/elements/PartwisePart.h"
+    #include "mx/core/elements/PartwiseMeasure.h"
+    #include "mx/core/elements/MusicDataGroup.h"
+    #include "mx/core/elements/Note.h"
+    #include "mx/core/elements/NoteChoice.h"
+    #include "mx/core/elements/NormalNoteGroup.h"
+    #include "mx/core/elements/FullNoteGroup.h"
+    #include "mx/core/elements/FullNoteTypeChoice.h"
+    #include "mx/core/elements/Pitch.h"
+    #include "mx/core/elements/Notations.h"
+    #include "mx/core/elements/NotationsChoice.h"
+    #include "mx/core/elements/Tied.h"
+    #include "mx/core/Document.h"
+    #include "mx/core/elements/ScorePartwise.h"
+    #include "mx/core/elements/PartwisePart.h"
+    #include "mx/core/elements/PartwiseMeasure.h"
+    #include "mx/core/elements/MusicDataGroup.h"
+    #include "mx/core/elements/MusicDataChoice.h"
+    #include "mx/core/elements/Direction.h"
+    #include "mx/core/elements/DirectionType.h"
+    #include "mx/core/elements/Offset.h"
+    #include "mx/core/elements/Pedal.h"
 
 using namespace std;
 using namespace mx::api;
@@ -59,12 +60,12 @@ TEST( otherArticulation, NoteData )
     auto& mgr = DocumentManager::getInstance();
     auto docId = mgr.createFromScore( score );
     std::stringstream ss;
-    mgr.writeToStream(docId, ss);
-    mgr.destroyDocument(docId);
+    mgr.writeToStream( docId, ss );
+    mgr.destroyDocument( docId );
     const std::string xml = ss.str();
     std::istringstream iss{ xml };
     docId = mgr.createFromStream( iss );
-    auto oscore = mgr.getData(docId);
+    auto oscore = mgr.getData( docId );
 
     // get the data after the round trip
     auto& opart = oscore.parts.back();
@@ -84,6 +85,7 @@ TEST( otherArticulation, NoteData )
     CHECK_EQUAL( "october 2018", md.name );
     CHECK( md.positionData.placement == Placement::unspecified );
 }
+
 T_END;
 
 TEST( customErrorUnknown, MarkData )
@@ -111,24 +113,24 @@ TEST( customArticulation, NoteData )
     auto& voice = staff.voices[0];
     voice.notes.emplace_back();
     auto& note = voice.notes.back();
-    
+
     note.noteAttachmentData.marks.emplace_back( Placement::unspecified, MarkType::customAccentTenuto );
     note.noteAttachmentData.marks.back().positionData.isDefaultXSpecified = true;
     note.noteAttachmentData.marks.back().positionData.defaultX = 333.3;
-    
+
     // round trip it through xml
     auto& mgr = DocumentManager::getInstance();
     auto docId = mgr.createFromScore( score );
     std::stringstream ss;
-    mgr.writeToStream(docId, ss);
+    mgr.writeToStream( docId, ss );
     // TODO - SMUFLKILL - remove
     mgr.writeToFile( docId, "./bloop.xml" );
-    mgr.destroyDocument(docId);
+    mgr.destroyDocument( docId );
     const std::string xml = ss.str();
     std::istringstream iss{ xml };
     docId = mgr.createFromStream( iss );
-    auto oscore = mgr.getData(docId);
-    
+    auto oscore = mgr.getData( docId );
+
     // get the data after the round trip
     auto& opart = oscore.parts.back();
     auto& omeasure = opart.measures.back();
@@ -138,7 +140,7 @@ TEST( customArticulation, NoteData )
     auto& oattachments = onote.noteAttachmentData;
     auto& omarks = oattachments.marks;
     auto oIter = omarks.cbegin();
-    
+
     auto md = *oIter;
     CHECK( md.markType == MarkType::customAccentTenuto );
     CHECK( md.positionData.isDefaultXSpecified );
@@ -147,6 +149,7 @@ TEST( customArticulation, NoteData )
     CHECK_EQUAL( mx::api::markStringCustomAccentTenuto, md.name );
     CHECK( md.positionData.placement == Placement::unspecified );
 }
+
 T_END;
 
 TEST( otherOrnament, NoteData )
@@ -171,12 +174,12 @@ TEST( otherOrnament, NoteData )
     auto& mgr = DocumentManager::getInstance();
     auto docId = mgr.createFromScore( score );
     std::stringstream ss;
-    mgr.writeToStream(docId, ss);
-    mgr.destroyDocument(docId);
+    mgr.writeToStream( docId, ss );
+    mgr.destroyDocument( docId );
     const std::string xml = ss.str();
     std::istringstream iss{ xml };
     docId = mgr.createFromStream( iss );
-    auto oscore = mgr.getData(docId);
+    auto oscore = mgr.getData( docId );
 
     // get the data after the round trip
     auto& opart = oscore.parts.back();
@@ -196,6 +199,7 @@ TEST( otherOrnament, NoteData )
     CHECK_EQUAL( "**()00))&</>", md.name );
     CHECK( md.positionData.placement == Placement::unspecified );
 }
+
 T_END;
 
 TEST( technical, NoteData )
@@ -224,12 +228,12 @@ TEST( technical, NoteData )
     auto& mgr = DocumentManager::getInstance();
     auto docId = mgr.createFromScore( score );
     std::stringstream ss;
-    mgr.writeToStream(docId, ss);
-    mgr.destroyDocument(docId);
+    mgr.writeToStream( docId, ss );
+    mgr.destroyDocument( docId );
     const std::string xml = ss.str();
     std::istringstream iss{ xml };
     docId = mgr.createFromStream( iss );
-    auto oscore = mgr.getData(docId);
+    auto oscore = mgr.getData( docId );
 
     // get the data after the round trip
     auto& opart = oscore.parts.back();
@@ -255,6 +259,7 @@ TEST( technical, NoteData )
     CHECK_DOUBLES_EQUAL( -456.0, md.positionData.defaultY, 0.00001 );
     CHECK_EQUAL( "Bob", md.name );
 }
+
 T_END;
 
 TEST( words, NoteData )
@@ -274,7 +279,7 @@ TEST( words, NoteData )
     words.positionData.defaultX = 1.1;
     words.text = "Hello";
     direction.words.push_back( words );
-    directions.push_back(direction);
+    directions.push_back( direction );
 
     direction = DirectionData{};
     words = WordsData{};
@@ -285,18 +290,18 @@ TEST( words, NoteData )
     words.isColorSpecified = true;
     words.text = "Two";
     direction.words.push_back( words );
-    directions.push_back(direction);
+    directions.push_back( direction );
 
     // round trip it through xml
     auto& mgr = DocumentManager::getInstance();
     auto docId = mgr.createFromScore( score );
     std::stringstream ss;
-    mgr.writeToStream(docId, ss);
-    mgr.destroyDocument(docId);
+    mgr.writeToStream( docId, ss );
+    mgr.destroyDocument( docId );
     const std::string xml = ss.str();
     std::istringstream iss{ xml };
     docId = mgr.createFromStream( iss );
-    auto oscore = mgr.getData(docId);
+    auto oscore = mgr.getData( docId );
 
     // get the data after the round trip
     const auto& opart = oscore.parts.back();
@@ -308,14 +313,14 @@ TEST( words, NoteData )
     const auto& firstWordVec = firstDirection.words;
     CHECK_EQUAL( 1, firstWordVec.size() );
     const auto& firstWords = firstWordVec.front();
-    CHECK_EQUAL( "Hello", firstWords.text);
+    CHECK_EQUAL( "Hello", firstWords.text );
     CHECK( firstWords.positionData.isDefaultXSpecified );
     CHECK_DOUBLES_EQUAL( 1.1, firstWords.positionData.defaultX, 0.0001 );
 
-    const auto& secondDirection = odirections.at(1);
+    const auto& secondDirection = odirections.at( 1 );
     CHECK_EQUAL( 2, secondDirection.words.size() );
-    const auto& wordsOne = secondDirection.words.at(0);
-    const auto& wordsTwo = secondDirection.words.at(1);
+    const auto& wordsOne = secondDirection.words.at( 0 );
+    const auto& wordsTwo = secondDirection.words.at( 1 );
 
     CHECK_EQUAL( "One", wordsOne.text );
     CHECK( wordsOne.fontData.style == mx::api::FontStyle::italic );
@@ -325,6 +330,7 @@ TEST( words, NoteData )
     // TODO - oops bug opened for this
 //    CHECK( wordsTwo.isColorSpecified );
 }
+
 T_END;
 
 TEST( tremolos, NoteData )
@@ -357,18 +363,18 @@ TEST( tremolos, NoteData )
     auto& mgr = DocumentManager::getInstance();
     auto docId = mgr.createFromScore( score );
     std::stringstream ss;
-    mgr.writeToStream(docId, ss);
-    mgr.destroyDocument(docId);
+    mgr.writeToStream( docId, ss );
+    mgr.destroyDocument( docId );
     const std::string xml = ss.str();
     std::istringstream iss{ xml };
     docId = mgr.createFromStream( iss );
-    auto oscore = mgr.getData(docId);
+    auto oscore = mgr.getData( docId );
 
     // get the data after the round trip
     const auto& opart = oscore.parts.back();
     const auto& omeasure = opart.measures.back();
     const auto& ostaff = omeasure.staves.back();
-    const auto& ovoice = ostaff.voices.at(0);
+    const auto& ovoice = ostaff.voices.at( 0 );
     const auto& onote = ovoice.notes.back();
     const auto& omarks = onote.noteAttachmentData.marks;
 
@@ -378,6 +384,7 @@ TEST( tremolos, NoteData )
         CHECK_EQUAL( i, numTremoloSlashes( markData.markType ) );
     }
 }
+
 T_END;
 
 TEST( miscFields, NoteData )
@@ -400,12 +407,12 @@ TEST( miscFields, NoteData )
     auto& mgr = DocumentManager::getInstance();
     auto docId = mgr.createFromScore( score );
     std::stringstream ss;
-    mgr.writeToStream(docId, ss);
-    mgr.destroyDocument(docId);
+    mgr.writeToStream( docId, ss );
+    mgr.destroyDocument( docId );
     const std::string xml = ss.str();
     std::istringstream iss{ xml };
     docId = mgr.createFromStream( iss );
-    auto oscore = mgr.getData(docId);
+    auto oscore = mgr.getData( docId );
 
     // get the data after the round trip
     auto& opart = oscore.parts.back();
@@ -417,23 +424,22 @@ TEST( miscFields, NoteData )
     auto iter = omisc.cbegin();
     const auto end = omisc.cend();
 
-    //std::cout << xml << std::endl;
-
     // assert
     CHECK( iter != end );
-    CHECK_EQUAL( "Hello_There", *iter);
+    CHECK_EQUAL( "Hello_There", *iter );
     ++iter;
 
     CHECK( iter != end );
-    CHECK_EQUAL( "Bones", *iter);
+    CHECK_EQUAL( "Bones", *iter );
     ++iter;
 
     CHECK( iter != end );
-    CHECK_EQUAL( "Bishop", *iter);
+    CHECK_EQUAL( "Bishop", *iter );
     ++iter;
 
     CHECK( iter == end );
 }
+
 T_END;
 
 TEST( SlurTieNumberLevelA, NoteData )
@@ -449,7 +455,7 @@ TEST( SlurTieNumberLevelA, NoteData )
     mdg->addMusicDataChoice( mdc );
     mdc->setChoice( MusicDataChoice::Choice::note );
     const auto note = mdc->getNote();
-    note->setHasType(true);
+    note->setHasType( true );
     note->getType()->setValue( NoteTypeValue::quarter );
     note->getNoteChoice()->setChoice( NoteChoice::Choice::normal );
     auto nng = note->getNoteChoice()->getNormalNoteGroup();
@@ -471,11 +477,12 @@ TEST( SlurTieNumberLevelA, NoteData )
     const auto scoreData = mgr.getData( id );
     mgr.destroyDocument( id );
 
-    const auto& noteData = scoreData.parts.at(0).measures.at(0).staves.at(0).voices.at(0).notes.front();
+    const auto& noteData = scoreData.parts.at( 0 ).measures.at( 0 ).staves.at( 0 ).voices.at( 0 ).notes.front();
     const auto& curveStart = noteData.noteAttachmentData.curveStarts.front();
     CHECK_EQUAL( -1, curveStart.numberLevel );
     CHECK( curveStart.curveType == mx::api::CurveType::tie );
 }
+
 T_END;
 
 TEST( SlurTieNumberLevelB, NoteData )
@@ -491,7 +498,7 @@ TEST( SlurTieNumberLevelB, NoteData )
     mdg->addMusicDataChoice( mdc );
     mdc->setChoice( MusicDataChoice::Choice::note );
     const auto note = mdc->getNote();
-    note->setHasType(true);
+    note->setHasType( true );
     note->getType()->setValue( NoteTypeValue::quarter );
     note->getNoteChoice()->setChoice( NoteChoice::Choice::normal );
     auto nng = note->getNoteChoice()->getNormalNoteGroup();
@@ -513,11 +520,12 @@ TEST( SlurTieNumberLevelB, NoteData )
     const auto scoreData = mgr.getData( id );
     mgr.destroyDocument( id );
 
-    const auto& noteData = scoreData.parts.at(0).measures.at(0).staves.at(0).voices.at(0).notes.front();
+    const auto& noteData = scoreData.parts.at( 0 ).measures.at( 0 ).staves.at( 0 ).voices.at( 0 ).notes.front();
     const auto& curveContinue = noteData.noteAttachmentData.curveContinuations.front();
     CHECK_EQUAL( -1, curveContinue.numberLevel );
     CHECK( curveContinue.curveType == mx::api::CurveType::tie );
 }
+
 T_END;
 
 TEST( SlurTieNumberLevelC, NoteData )
@@ -533,7 +541,7 @@ TEST( SlurTieNumberLevelC, NoteData )
     mdg->addMusicDataChoice( mdc );
     mdc->setChoice( MusicDataChoice::Choice::note );
     const auto note = mdc->getNote();
-    note->setHasType(true);
+    note->setHasType( true );
     note->getType()->setValue( NoteTypeValue::quarter );
     note->getNoteChoice()->setChoice( NoteChoice::Choice::normal );
     auto nng = note->getNoteChoice()->getNormalNoteGroup();
@@ -555,11 +563,12 @@ TEST( SlurTieNumberLevelC, NoteData )
     const auto scoreData = mgr.getData( id );
     mgr.destroyDocument( id );
 
-    const auto& noteData = scoreData.parts.at(0).measures.at(0).staves.at(0).voices.at(0).notes.front();
+    const auto& noteData = scoreData.parts.at( 0 ).measures.at( 0 ).staves.at( 0 ).voices.at( 0 ).notes.front();
     const auto& curveStop = noteData.noteAttachmentData.curveStops.front();
     CHECK_EQUAL( -1, curveStop.numberLevel );
     CHECK( curveStop.curveType == mx::api::CurveType::tie );
 }
+
 T_END;
 
 TEST( ornaments, NoteData )
@@ -587,12 +596,12 @@ TEST( ornaments, NoteData )
     auto& mgr = DocumentManager::getInstance();
     auto docId = mgr.createFromScore( score );
     std::stringstream ss;
-    mgr.writeToStream(docId, ss);
-    mgr.destroyDocument(docId);
+    mgr.writeToStream( docId, ss );
+    mgr.destroyDocument( docId );
     const std::string xml = ss.str();
     std::istringstream iss{ xml };
     docId = mgr.createFromStream( iss );
-    auto oscore = mgr.getData(docId);
+    auto oscore = mgr.getData( docId );
 
     // get the data after the round trip
     auto& opart = oscore.parts.back();
@@ -617,6 +626,7 @@ TEST( ornaments, NoteData )
     CHECK( md.positionData.isDefaultYSpecified );
     CHECK_DOUBLES_EQUAL( -456.0, md.positionData.defaultY, 0.00001 );
 }
+
 T_END;
 
 TEST( pedalStart, NoteData )
@@ -640,12 +650,12 @@ TEST( pedalStart, NoteData )
     auto& mgr = DocumentManager::getInstance();
     auto docId = mgr.createFromScore( score );
     std::stringstream ss;
-    mgr.writeToStream(docId, ss);
-    mgr.destroyDocument(docId);
+    mgr.writeToStream( docId, ss );
+    mgr.destroyDocument( docId );
     const std::string xml = ss.str();
     std::istringstream iss{ xml };
     docId = mgr.createFromStream( iss );
-    auto oscore = mgr.getData(docId);
+    auto oscore = mgr.getData( docId );
 
     // get the data after the round trip
     auto& opart = oscore.parts.back();
@@ -658,6 +668,7 @@ TEST( pedalStart, NoteData )
     CHECK( omark.markType == MarkType::pedal );
     CHECK_EQUAL( odirection.tickTimePosition, odirection.tickTimePosition );
 }
+
 T_END;
 
 TEST( pedalStop, NoteData )
@@ -681,12 +692,12 @@ TEST( pedalStop, NoteData )
     auto& mgr = DocumentManager::getInstance();
     auto docId = mgr.createFromScore( score );
     std::stringstream ss;
-    mgr.writeToStream(docId, ss);
-    mgr.destroyDocument(docId);
+    mgr.writeToStream( docId, ss );
+    mgr.destroyDocument( docId );
     const std::string xml = ss.str();
     std::istringstream iss{ xml };
     docId = mgr.createFromStream( iss );
-    auto oscore = mgr.getData(docId);
+    auto oscore = mgr.getData( docId );
 
     // get the data after the round trip
     auto& opart = oscore.parts.back();
@@ -699,6 +710,7 @@ TEST( pedalStop, NoteData )
     CHECK( omark.markType == MarkType::damp );
     CHECK_EQUAL( odirection.tickTimePosition, odirection.tickTimePosition );
 }
+
 T_END;
 
 TEST( directionOrder, NoteData )
@@ -759,9 +771,8 @@ TEST( directionOrder, NoteData )
     auto docId = mgr.createFromScore( score );
     auto docPtr = mgr.getDocument( docId );
     std::stringstream ss;
-    mgr.writeToStream(docId, ss);
-    mgr.destroyDocument(docId);
-//    std::cout << ss.str() << std::endl;
+    mgr.writeToStream( docId, ss );
+    mgr.destroyDocument( docId );
 
     const auto& partwise = docPtr->getScorePartwise();
     const auto& partwisePartSet = partwise->getPartwisePartSet();
@@ -829,6 +840,7 @@ TEST( directionOrder, NoteData )
     dirElement = mdc->getDirection();
     CHECK( !dirElement->getHasOffset() );
 }
+
 T_END;
 
 TEST( directionOrderRoundTrip, NoteData )
@@ -921,15 +933,16 @@ TEST( directionOrderRoundTrip, NoteData )
     auto docId = mgr.createFromScore( score );
     auto docPtr = mgr.getDocument( docId );
     std::stringstream ss;
-    mgr.writeToStream(docId, ss);
-    mgr.destroyDocument(docId);
+    mgr.writeToStream( docId, ss );
+    mgr.destroyDocument( docId );
     const std::string xml = ss.str();
     std::istringstream iss{ xml };
     docId = mgr.createFromStream( iss );
-    auto oscore = mgr.getData(docId);
-    CHECK( score == oscore )
+    auto oscore = mgr.getData( docId );
+    CHECK( score == oscore );
 
 }
+
 T_END;
 
 TEST( notePositionRoundTrip, NoteData )
@@ -962,15 +975,15 @@ TEST( notePositionRoundTrip, NoteData )
     auto docId = mgr.createFromScore( score );
     auto docPtr = mgr.getDocument( docId );
     std::stringstream ss;
-    mgr.writeToStream(docId, ss);
-    mgr.destroyDocument(docId);
+    mgr.writeToStream( docId, ss );
+    mgr.destroyDocument( docId );
     const std::string xml = ss.str();
     std::istringstream iss{ xml };
     docId = mgr.createFromStream( iss );
-    auto oscore = mgr.getData(docId);
-    CHECK( score == oscore )
-    
+    auto oscore = mgr.getData( docId );
+    CHECK( score == oscore );
 }
+
 T_END;
 
 #endif

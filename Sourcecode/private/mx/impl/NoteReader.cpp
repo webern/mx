@@ -44,6 +44,7 @@
 
 #include <map>
 #include "mx/api/PitchData.h"
+#include "Converter.h"
 
 namespace mx
 {
@@ -214,16 +215,11 @@ namespace mx
                     const auto& pitch = *fullNoteTypeChoice.getPitch();
                     myStep = pitch.getStep()->getValue();
                     myOctave = pitch.getOctave()->getValue().getValue();
-                    const auto xmlAlter = pitch.getAlter()->getValue().getValue();
-                    const auto intAlter = static_cast<int>( xmlAlter );
-                    myAlter = intAlter;
-                    const auto micro = xmlAlter - static_cast<mx::core::DecimalType> ( intAlter );
-                    const auto microDistance = std::abs( micro );
-                    if( microDistance >= 0.000000000001 )
+                    if( pitch.getHasAlter() )
                     {
-                        const auto theCents = micro * 100.0;
-                        const auto theNarrowCents = static_cast<decltype(mx::api::PitchData::cents)>( theCents );
-                        myCents = theNarrowCents;
+                        const auto semitonesAndCents = mx::impl::Converter::convertToSemitonesAndCents( pitch.getAlter()->getValue().getValue() );
+                        myAlter = semitonesAndCents.first;
+                        myCents = semitonesAndCents.second;
                     }
                     break;
                 }
