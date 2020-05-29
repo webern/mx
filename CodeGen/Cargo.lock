@@ -36,6 +36,21 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cf1de2fe8c75bc145a2f577add951f8134889b4795d47466a54a5c846d691693"
 
 [[package]]
+name = "cargo-readme"
+version = "3.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "66dbfc9307f5b2429656e07533613cd3f26803fd2857fc33be22aa2711181d58"
+dependencies = [
+ "clap",
+ "lazy_static",
+ "percent-encoding",
+ "regex",
+ "serde",
+ "serde_derive",
+ "toml",
+]
+
+[[package]]
 name = "cfg-if"
 version = "0.1.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -76,6 +91,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "exile"
+version = "0.0.1"
+dependencies = [
+ "cargo-readme",
+ "xdoc",
+ "xtest",
+]
+
+[[package]]
 name = "heck"
 version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -101,6 +125,12 @@ checksum = "df004cfca50ef23c36850aaaa59ad52cc70d0e90243c3c7737a4dd32dc7a3c4f"
 dependencies = [
  "quick-error",
 ]
+
+[[package]]
+name = "itoa"
+version = "0.4.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b8b7a7c0c47db5545ed3fef7468ee7bb5b74691498139e4b3f6a20685dc6dd8e"
 
 [[package]]
 name = "lazy_static"
@@ -134,10 +164,17 @@ name = "musicxml-code-gen"
 version = "0.1.0"
 dependencies = [
  "env_logger",
+ "exile",
  "log",
  "snafu",
  "structopt",
 ]
+
+[[package]]
+name = "percent-encoding"
+version = "2.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d4fd5641d01c8f18a23da7b6fe29298ff4b55afcccdf78973b24cf3175fee32e"
 
 [[package]]
 name = "proc-macro-error"
@@ -206,6 +243,52 @@ name = "regex-syntax"
 version = "0.6.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7fe5bd57d1d7414c6b5ed48563a2c855d995ff777729dcd91c369ec7fea395ae"
+
+[[package]]
+name = "ryu"
+version = "1.0.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ed3d612bc64430efeb3f7ee6ef26d590dce0c43249217bddc62112540c7941e1"
+
+[[package]]
+name = "serde"
+version = "1.0.110"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "99e7b308464d16b56eba9964e4972a3eee817760ab60d88c3f86e1fecb08204c"
+dependencies = [
+ "serde_derive",
+]
+
+[[package]]
+name = "serde_derive"
+version = "1.0.110"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "818fbf6bfa9a42d3bfcaca148547aa00c7b915bec71d1757aa2d44ca68771984"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "serde_json"
+version = "1.0.53"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "993948e75b189211a9b31a7528f950c6adc21f9720b6438ff80a7fa2f864cea2"
+dependencies = [
+ "itoa",
+ "ryu",
+ "serde",
+]
+
+[[package]]
+name = "serde_plain"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "625fb0da2b006092b426a94acc1611bec52f2ec27bb27b266a9f93c29ee38eda"
+dependencies = [
+ "serde",
+]
 
 [[package]]
 name = "snafu"
@@ -308,6 +391,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "toml"
+version = "0.5.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ffc92d160b1eef40665be3a05630d003936a3bc7da7421277846c2613e92c71a"
+dependencies = [
+ "serde",
+]
+
+[[package]]
 name = "unicode-segmentation"
 version = "1.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -367,3 +459,22 @@ name = "winapi-x86_64-pc-windows-gnu"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"
+
+[[package]]
+name = "xdoc"
+version = "0.0.1"
+dependencies = [
+ "cargo-readme",
+ "serde",
+]
+
+[[package]]
+name = "xtest"
+version = "0.0.1"
+dependencies = [
+ "cargo-readme",
+ "serde",
+ "serde_json",
+ "serde_plain",
+ "xdoc",
+]

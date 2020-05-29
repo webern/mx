@@ -11,3 +11,4 @@ snafu = "0.6.2"
 structopt = "0.3.11"
 env_logger = "0.7.1"
 log = "0.4.8"
+exile = { version = "0.0.1", path = "/Users/mjb/repos/exile/exile" }
