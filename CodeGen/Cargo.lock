@@ -72,6 +72,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "derive_more"
+version = "0.99.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2127768764f1556535c01b5326ef94bd60ff08dcfbdc544d53e69ed155610f5d"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "doc-comment"
 version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -163,6 +174,7 @@ checksum = "3728d817d99e5ac407411fa471ff9800a778d88a24685968b36824eaf4bee400"
 name = "musicxml-code-gen"
 version = "0.1.0"
 dependencies = [
+ "derive_more",
  "env_logger",
  "exile",
  "log",

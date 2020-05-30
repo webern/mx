@@ -12,6 +12,7 @@ pub(crate) enum Error {
         message: String,
         backtrace: Backtrace,
     },
+    TOTO {},
 }
 
 impl From<Infallible> for Error {
