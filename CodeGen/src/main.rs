@@ -8,6 +8,7 @@ use crate::error::Result;
 
 mod error;
 mod generate;
+mod xsd;
 
 #[derive(Debug, StructOpt)]
 enum Command {

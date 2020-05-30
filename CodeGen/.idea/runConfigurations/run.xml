@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="run" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
     <option name="channel" value="DEFAULT" />
-    <option name="command" value="run --package musicxml-code-gen --bin musicxml-code-gen -- generate --xsd $PROJECT_DIR$/../../../Documents/musicxml.xsd" />
+    <option name="command" value="run --package musicxml-code-gen --bin musicxml-code-gen -- generate --xsd $PROJECT_DIR$/../Documents/musicxml.xsd" />
     <option name="allFeatures" value="false" />
     <option name="nocapture" value="false" />
     <option name="emulateTerminal" value="false" />
