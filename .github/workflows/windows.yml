@@ -1,0 +1,34 @@
+name: C/C++ CI
+
+on: [pull_request]
+
+jobs:  
+  windows:
+    name: Windows
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Cmake
+      run: |
+          cmake -DMX_BUILD_EXAMPLES=on -DMX_BUILD_TESTS=on -DMX_BUILD_CORE_TESTS=off .
+    
+    - name: Build
+      run: |
+          cmake --build .
+
+    - name: List Directory
+      run: dir
+    
+    #- name: List Debug Dir
+    #  run: cd x64 -and dir
+      
+    - name: Run Example MxWrite
+      run: Debug\MxWrite.exe
+    
+    - name: Run Example MxRead
+      run: Debug\MxRead.exe
+    
+    - name: Run Tests
+      run: Debug\MxTest.exe

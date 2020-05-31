@@ -1,0 +1,43 @@
+name: C/C++ CI
+
+on: [pull_request]
+
+jobs:
+  macos:
+    name: macOS
+    runs-on: macos-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Cmake
+      run: |
+          cmake -DMX_BUILD_EXAMPLES=on -DMX_BUILD_TESTS=on -DMX_BUILD_CORE_TESTS=off .
+    
+    - name: Build
+      run: |
+          cmake --build .
+    
+    - name: Run Example MxWrite
+      run: ./MxWrite
+    
+    - name: Run Example MxRead
+      run: ./MxRead
+    
+    - name: Run Tests
+      run: ./MxTest
+
+  xcode:
+    name: Xcode
+    runs-on: macos-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Build
+      run: |
+          DevScripts/build-for-apple.sh \
+          --outdir ./xcode-build-artifacts \
+          --test false \
+          --configuration Release \
+          --cleanup true
