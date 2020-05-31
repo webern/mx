@@ -1,11 +1,8 @@
-extern crate env_logger;
-
 use std::fs::{read_to_string, remove_file, File, OpenOptions};
 use std::io::Write;
 use std::path::{Path, PathBuf};
 use std::str::FromStr;
 
-use snafu::{Backtrace, GenerateBacktrace, ResultExt};
 use structopt::StructOpt;
 
 use crate::error::{Error, Result};
@@ -27,22 +24,9 @@ fn path_to_repo() -> PathBuf {
     p.canonicalize().unwrap()
 }
 
-// fn path_to_mx() -> PathBuf {
-//     let mut p = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-//     p.pop();
-//     p.pop();
-//     p.join("Sourcecode").join("mx")
-// }
-//
-// pub fn test_data() -> PathBuf {
-//     let mut p = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-//     p.pop();
-//     p.join("tough").join("tests").join("data")
-// }
-
 impl GenerateArgs {
     pub(crate) fn run(&self) -> Result<()> {
-        trace!("args: {:?}", self);
+        println!("args: {:?}", self);
         let g = Generator::new(
             self.xsd.clone(),
             Language::Cpp(CppOptions {
@@ -95,7 +79,6 @@ pub(crate) fn open_file<P: AsRef<Path>>(p: P) -> File {
         .read(true)
         .write(true)
         .create(true)
-        // .create_new(true)
         .open(p)
         .unwrap()
 }
@@ -129,10 +112,6 @@ impl Generator {
         find_simple_type_restriction_bases(doc.root(), true);
         let simple_types = parse_simple_types(doc.root(), true).unwrap();
         opt.write_enums(&simple_types)?;
-        // Err(Error::CommandExec {
-        //     message: "generate".to_string(),
-        //     backtrace: Backtrace::generate(),
-        // })
         Ok(())
     }
 }

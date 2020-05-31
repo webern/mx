@@ -4,8 +4,7 @@ use std::panic::resume_unwind;
 
 use derive_more::Display;
 
-use crate::error::Error::TOTO;
-use crate::error::Result;
+use crate::error::{self, Result};
 
 pub(crate) const XS_STRING: &str = "xs:string";
 pub(crate) const XS_TOKEN: &str = "xs:token";
@@ -71,7 +70,7 @@ impl Base {
                     BuiltinNumericType::XsPositiveInteger,
                 ))),
                 XS_DATE => Ok(Base::BuiltinType(BuiltinType::XsDate)),
-                _ => Err(TOTO {}),
+                _ => raise!("unsupported base: '{}'", s),
             }
         }
     }
@@ -159,15 +158,27 @@ pub(crate) struct Restriction {
 impl Restriction {
     pub(crate) fn parse(x: &exile::Element) -> Result<SimpleDerivation> {
         let mut restriction = Restriction::default();
-        let base_str = x.attributes.map().get("base").ok_or(TOTO {})?;
+        let base_str = x
+            .attributes
+            .map()
+            .get("base")
+            .ok_or(make_err!("base attribute not found"))?;
         let base = Base::parse(base_str)?;
         restriction.base = base;
         for child in x.children() {
             if child.name == "enumeration" {
-                let value = child.attributes.map().get("value").ok_or(TOTO {})?;
+                let value = child
+                    .attributes
+                    .map()
+                    .get("value")
+                    .ok_or(make_err!("value attribute not found"))?;
                 restriction.enumerations.push(value.into());
             } else if child.name == "pattern" {
-                let value = child.attributes.map().get("value").ok_or(TOTO {})?;
+                let value = child
+                    .attributes
+                    .map()
+                    .get("value")
+                    .ok_or(make_err!("value attribute not found"))?;
                 restriction.patterns.push(value.into());
             }
         }
@@ -190,7 +201,11 @@ impl SimpleType {
     }
 
     pub(crate) fn parse(x: &exile::Element) -> Result<Self> {
-        let name = x.attributes.map().get("name").ok_or(TOTO {})?;
+        let name = x
+            .attributes
+            .map()
+            .get("name")
+            .ok_or(make_err!("name attribute not found"))?;
         let mut simple_type = SimpleType::new(name.into());
         if let Some(r) = x.child("restriction") {
             simple_type.derivation = Restriction::parse(r)?;

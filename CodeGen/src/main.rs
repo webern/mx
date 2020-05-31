@@ -1,11 +1,8 @@
-#[macro_use]
-extern crate log;
-
-use snafu::ErrorCompat;
 use structopt::StructOpt;
 
 use crate::error::Result;
 
+#[macro_use]
 mod error;
 mod generate;
 mod xsd;
@@ -25,18 +22,10 @@ impl Command {
 }
 
 fn main() {
-    env_logger::init();
     std::process::exit(match Command::from_args().run() {
         Ok(()) => 0,
         Err(err) => {
             eprintln!("{}", err);
-            if let Some(var) = std::env::var_os("RUST_BACKTRACE") {
-                if var != "0" {
-                    if let Some(backtrace) = err.backtrace() {
-                        eprintln!("\n{:?}", backtrace);
-                    }
-                }
-            }
             1
         }
     })
