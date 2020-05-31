@@ -52,12 +52,24 @@ impl Base {
             Ok(Base::CustomType(s.into()))
         } else {
             match s {
-                XS_STRING => Ok(Base::BuiltinType(BuiltinType::String(BuiltinStringType::XsString))),
-                XS_TOKEN => Ok(Base::BuiltinType(BuiltinType::String(BuiltinStringType::XsToken))),
-                XS_DECIMAL => Ok(Base::BuiltinType(BuiltinType::Numeric(BuiltinNumericType::XsDecimal))),
-                XS_INTEGER => Ok(Base::BuiltinType(BuiltinType::Numeric(BuiltinNumericType::XsInteger))),
-                XS_NON_NEGATIVE_INTEGER => Ok(Base::BuiltinType(BuiltinType::Numeric(BuiltinNumericType::XsNonNegativeInteger))),
-                XS_POSITIVE_INTEGER => Ok(Base::BuiltinType(BuiltinType::Numeric(BuiltinNumericType::XsPositiveInteger))),
+                XS_STRING => Ok(Base::BuiltinType(BuiltinType::String(
+                    BuiltinStringType::XsString,
+                ))),
+                XS_TOKEN => Ok(Base::BuiltinType(BuiltinType::String(
+                    BuiltinStringType::XsToken,
+                ))),
+                XS_DECIMAL => Ok(Base::BuiltinType(BuiltinType::Numeric(
+                    BuiltinNumericType::XsDecimal,
+                ))),
+                XS_INTEGER => Ok(Base::BuiltinType(BuiltinType::Numeric(
+                    BuiltinNumericType::XsInteger,
+                ))),
+                XS_NON_NEGATIVE_INTEGER => Ok(Base::BuiltinType(BuiltinType::Numeric(
+                    BuiltinNumericType::XsNonNegativeInteger,
+                ))),
+                XS_POSITIVE_INTEGER => Ok(Base::BuiltinType(BuiltinType::Numeric(
+                    BuiltinNumericType::XsPositiveInteger,
+                ))),
                 XS_DATE => Ok(Base::BuiltinType(BuiltinType::XsDate)),
                 _ => Err(TOTO {}),
             }
@@ -136,9 +148,9 @@ pub(crate) enum SimpleDerivation {
 
 #[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Default)]
 pub(crate) struct Restriction {
-    base: Base,
-    enumerations: Vec<String>,
-    patterns: Vec<String>,
+    pub(crate) base: Base,
+    pub(crate) enumerations: Vec<String>,
+    pub(crate) patterns: Vec<String>,
     // not used in musicxml
     // min_length: Option<UInt>,
     // max_length: Option<UInt>,
