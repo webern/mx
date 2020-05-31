@@ -17,10 +17,12 @@ pub(crate) fn compile_mx<P: AsRef<Path>>(path_to_mx: P) -> Result<()> {
         tempdir.path(),
     )?;
     let _ = run(Command::new("make").arg("-j9"), tempdir.path())?;
+    run_mx_tests(tempdir.path())?;
     Ok(())
 }
 
-fn run_mx_tests() -> Result<()> {
+fn run_mx_tests<P: AsRef<Path>>(path: P) -> Result<()> {
+    let _ = run(&mut Command::new("./mxtest"), path.as_ref())?;
     Ok(())
 }
 
