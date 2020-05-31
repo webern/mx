@@ -8,13 +8,17 @@ use structopt::StructOpt;
 use crate::error::{Error, Result};
 use crate::xsd::{Base, SimpleDerivation, SimpleType};
 
+mod compile_mx;
+
+use compile_mx::compile_mx;
+
 #[derive(Debug, StructOpt)]
 pub struct GenerateArgs {
     /// Path to musicxml.xsd
     #[structopt(short = "x", long = "xsd")]
     xsd: PathBuf,
     /// Path to the mx repo root
-    #[structopt(short = "o", long = "repo")]
+    #[structopt(short = "m", long = "mxrepo")]
     mx_repo: Option<PathBuf>,
 }
 
@@ -112,6 +116,7 @@ impl Generator {
         find_simple_type_restriction_bases(doc.root(), true);
         let simple_types = parse_simple_types(doc.root(), true).unwrap();
         opt.write_enums(&simple_types)?;
+        wrap!(compile_mx(&opt.mx_repo))?;
         Ok(())
     }
 }

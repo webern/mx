@@ -21,6 +21,20 @@ impl Display for crate::error::Error {
     }
 }
 
+impl std::error::Error for crate::error::Error {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            Error::Message(e) => {
+                if let Some(s) = &e.source {
+                    Some(s.as_ref())
+                } else {
+                    None
+                }
+            }
+        }
+    }
+}
+
 #[derive(Debug)]
 pub struct MessageError {
     pub throw_site: ThrowSite,
@@ -70,6 +84,16 @@ impl From<Infallible> for Error {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // internal macros
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+pub(crate) fn box_err<E>(err: Option<E>) -> Option<Box<dyn std::error::Error>>
+where
+    E: std::error::Error + 'static,
+{
+    match err {
+        None => None,
+        Some(e) => Some(e.into()),
+    }
+}
 
 /// This macro is used internally to obtain the current file and line (in the sourcecode).
 macro_rules! throw_site {

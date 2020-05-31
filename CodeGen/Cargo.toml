@@ -1,12 +1,12 @@
 [package]
 name = "musicxml-code-gen"
 version = "0.1.0"
-authors = ["Matt Briggs <matthew.james.briggs@gmail.com>"]
+authors = ["Matthew James Briggs <matthew.james.briggs@gmail.com>"]
 edition = "2018"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
-structopt = "0.3.11"
 exile = { version = "0.0.1", path = "/Users/mjb/repos/exile/exile" }
 derive_more = "0.99.7"
+structopt = "0.3.11"
+tempfile = "3.1.0"
+uuid = { version = "0.8", features = ["v4"] }
