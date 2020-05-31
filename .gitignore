@@ -1,0 +1,4 @@
+cmake-build-*
+CodeGen/target
+Sourcecode/private/mxtest/file/PathRoot.h
+**/xcuserdata/
