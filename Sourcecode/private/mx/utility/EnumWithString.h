@@ -1,64 +1,66 @@
-// Zeus, Copyright 2017 by Matthew James Briggs
+// MusicXML Class Library
+// Copyright (c) by Matthew James Briggs
+// Distributed under the MIT License
 
 // Adapted from info found here:
 // https://en.wikibooks.org/wiki/C_Programming/Preprocessor#X-Macros
 
-#ifndef ZEUS_ENUM_CLASS_NAME
-    #error ZEUS_ENUM_CLASS_NAME must be defined
+#ifndef MX_ENUM_CLASS_NAME
+    #error MX_ENUM_CLASS_NAME must be defined
 #endif
 
-#ifndef ZEUS_ENUM_MEMBERS
-    #error ZEUS_ENUM_MEMBERS must be defined
+#ifndef MX_ENUM_MEMBERS
+    #error MX_ENUM_MEMBERS must be defined
 #endif
 
-#define RETURN_ZEUS_ENUM_CLASS_NAME(ZEUS_ENUM_CLASS_NAME) ZEUS_ENUM_CLASS_NAME
+#define RETURN_MX_ENUM_CLASS_NAME(MX_ENUM_CLASS_NAME) MX_ENUM_CLASS_NAME
 
-#define ZEUS_CAT(a, ...) ZEUS_PRIMITIVE_CAT(a, __VA_ARGS__)
-#define ZEUS_PRIMITIVE_CAT(a, ...) a ## __VA_ARGS__
+#define MX_CAT(a, ...) MX_PRIMITIVE_CAT(a, __VA_ARGS__)
+#define MX_PRIMITIVE_CAT(a, ...) a ## __VA_ARGS__
 
-#define ZEUS_ENUM_VALUE(value, string) value,
+#define MX_ENUM_VALUE(value, string) value,
 
-enum class ZEUS_ENUM_CLASS_NAME { ZEUS_ENUM_MEMBERS(ZEUS_ENUM_VALUE) };
+enum class MX_ENUM_CLASS_NAME { MX_ENUM_MEMBERS(MX_ENUM_VALUE) };
 
-#undef ZEUS_ENUM_VALUE
-#ifdef ZEUS_STRING_CONSTANT_NAME
-#undef ZEUS_STRING_CONSTANT_NAME
+#undef MX_ENUM_VALUE
+#ifdef MX_STRING_CONSTANT_NAME
+#undef MX_STRING_CONSTANT_NAME
 #endif
 
-#define ZEUS_STRING_CONSTANT_NAME(XXX, value) ZEUS_CAT(ZEUS_CAT(XXX, _), ZEUS_CAT(value, _String))
+#define MX_STRING_CONSTANT_NAME(XXX, value) MX_CAT(MX_CAT(XXX, _), MX_CAT(value, _String))
 
-#define ZEUS_ENUM_VALUE(value, string) static constexpr const char* const ZEUS_STRING_CONSTANT_NAME(  RETURN_ZEUS_ENUM_CLASS_NAME( ZEUS_ENUM_CLASS_NAME ) , value ) = string;
+#define MX_ENUM_VALUE(value, string) static constexpr const char* const MX_STRING_CONSTANT_NAME(  RETURN_MX_ENUM_CLASS_NAME( MX_ENUM_CLASS_NAME ) , value ) = string;
 
-ZEUS_ENUM_MEMBERS(ZEUS_ENUM_VALUE);
+MX_ENUM_MEMBERS(MX_ENUM_VALUE);
 
-#undef ZEUS_ENUM_VALUE
+#undef MX_ENUM_VALUE
 
-#define ZEUS_ENUM_VALUE(value, string) case ZEUS_ENUM_CLASS_NAME::value: return ZEUS_STRING_CONSTANT_NAME(  RETURN_ZEUS_ENUM_CLASS_NAME( ZEUS_ENUM_CLASS_NAME ) , value );
+#define MX_ENUM_VALUE(value, string) case MX_ENUM_CLASS_NAME::value: return MX_STRING_CONSTANT_NAME(  RETURN_MX_ENUM_CLASS_NAME( MX_ENUM_CLASS_NAME ) , value );
 
-#define ZEUS_ENUM_TO_STRING(A) ZEUS_PRIMITIVE_CAT(A, ToString)
+#define MX_ENUM_TO_STRING(A) MX_PRIMITIVE_CAT(A, ToString)
 
-inline const char* const ZEUS_ENUM_TO_STRING(ZEUS_ENUM_CLASS_NAME) ( ZEUS_ENUM_CLASS_NAME inValue ) {
+inline const char* const MX_ENUM_TO_STRING(MX_ENUM_CLASS_NAME) ( MX_ENUM_CLASS_NAME inValue ) {
     switch (inValue) {
-        ZEUS_ENUM_MEMBERS(ZEUS_ENUM_VALUE)
+        MX_ENUM_MEMBERS(MX_ENUM_VALUE)
     }
     throw std::runtime_error("bad enum value");
 }
 
-#undef ZEUS_ENUM_VALUE
+#undef MX_ENUM_VALUE
 
-#define ZEUS_ENUM_VALUE(value, string) if (inValue == ZEUS_STRING_CONSTANT_NAME(  RETURN_ZEUS_ENUM_CLASS_NAME( ZEUS_ENUM_CLASS_NAME ) , value )) { \
-    return ZEUS_ENUM_CLASS_NAME::value; \
+#define MX_ENUM_VALUE(value, string) if (inValue == MX_STRING_CONSTANT_NAME(  RETURN_MX_ENUM_CLASS_NAME( MX_ENUM_CLASS_NAME ) , value )) { \
+    return MX_ENUM_CLASS_NAME::value; \
 } \
 
-#define ZEUS_TO_ENUM(A) ZEUS_PRIMITIVE_CAT(A, FromString)
+#define MX_TO_ENUM(A) MX_PRIMITIVE_CAT(A, FromString)
 
-inline ZEUS_ENUM_CLASS_NAME ZEUS_TO_ENUM(ZEUS_ENUM_CLASS_NAME) ( const std::string& inValue ) {
-    ZEUS_ENUM_MEMBERS(ZEUS_ENUM_VALUE)
+inline MX_ENUM_CLASS_NAME MX_TO_ENUM(MX_ENUM_CLASS_NAME) ( const std::string& inValue ) {
+    MX_ENUM_MEMBERS(MX_ENUM_VALUE)
     throw std::runtime_error("bad string value");
 }
 
-#undef ZEUS_TO_ENUM_FUNCTION_DECLARATION
-#undef ZEUS_ENUM_VALUE
-#undef ZEUS_ENUM_VALUES
-#undef ZEUS_ENUM_CLASS_NAME
-#undef ZEUS_ENUM_MEMBERS
+#undef MX_TO_ENUM_FUNCTION_DECLARATION
+#undef MX_ENUM_VALUE
+#undef MX_ENUM_VALUES
+#undef MX_ENUM_CLASS_NAME
+#undef MX_ENUM_MEMBERS
