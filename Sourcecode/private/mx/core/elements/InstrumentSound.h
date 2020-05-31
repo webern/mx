@@ -4,9 +4,10 @@
 
 #pragma once
 
-#include "mx/core/ForwardDeclare.h"
 #include "mx/core/ElementInterface.h"
 #include "mx/core/Enums.h"
+#include "mx/core/ForwardDeclare.h"
+#include "mx/core/PlaybackSound.h"
 
 #include <iosfwd>
 #include <memory>
