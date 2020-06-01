@@ -203,6 +203,7 @@ namespace mx
             const auto& pageData = myScoreWriter.findPageLayoutData( myHistory.getCursor().measureIndex );
             if( pageData )
             {
+                writePageInfo( *pageData );
                 // TODO - write page data
             }
 
@@ -272,6 +273,7 @@ namespace mx
             auto& print = *printMdc->getPrint();
             print.getAttributes()->hasNewSystem = true;
             print.getAttributes()->newSystem = core::YesNo::yes;
+
             auto& layoutGroup = *print.getLayoutGroup();
             myOutMeasure->getMusicDataGroup()->addMusicDataChoice( printMdc );
             myHistory.log( "writePrint" );
@@ -301,6 +303,24 @@ namespace mx
                     systemLayout.getSystemDistance()->setValue( core::TenthsValue{static_cast<core::DecimalType>( systemData.systemDistance ) } );
                 }
            }
+        }
+
+        void MeasureWriter::writePageInfo( const api::PageData& inNewPageData )
+        {
+            if( !myOutMeasure->getMusicDataGroup()->getMusicDataChoiceSet().empty() )
+            {
+                const auto first = myOutMeasure->getMusicDataGroup()->getMusicDataChoiceSet().front();
+                if( first->getChoice() == core::MusicDataChoice::Choice::print )
+                {
+                    auto print = first->getPrint();
+                    // TODO - add page layout stuff
+                }
+                else
+                {
+                    MX_THROW( "this is a bug, we should not have written anything else before the print element" );
+                }
+            }
+            MX_THROW( "not implemented" );
         }
         
         

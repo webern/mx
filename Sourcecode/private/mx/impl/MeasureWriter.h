@@ -5,6 +5,7 @@
 #pragma once
 
 #include "mx/api/MeasureData.h"
+#include "mx/api/PageData.h"
 #include "mx/impl/MeasureCursor.h"
 #include "mx/api/SystemData.h"
 #include "mx/api/BarlineData.h"
@@ -209,6 +210,7 @@ namespace mx
         private:
             void writeMeasureGlobals();
             void writeSystemInfo();
+            void writePageInfo( const api::PageData& inNewPageData );
             void writeStaves();
             void writeVoices( const api::StaffData& inStaff );
             void writeForwardOrBackupIfNeeded( const api::NoteData& currentNote );

@@ -35,7 +35,7 @@ namespace mx
         void addLayoutData( const api::LayoutData& inLayout, core::ScoreHeaderGroup& outScoreHeaderGroup )
         {
             addScaling( inLayout, outScoreHeaderGroup );
-            addPageLayoutOld(inLayout.pageLayout, outScoreHeaderGroup);
+            addPageLayout(inLayout.pageLayout, outScoreHeaderGroup);
             addSystemMargins( inLayout, outScoreHeaderGroup );
             addAppearance( inLayout, outScoreHeaderGroup );
         }
@@ -133,7 +133,7 @@ namespace mx
         }
         
         
-        void addPageLayoutOld( const api::PageLayoutData& inPageLayout, core::ScoreHeaderGroup& outScoreHeaderGroup )
+        void addPageLayout(const api::PageLayoutData& inPageLayout, core::ScoreHeaderGroup& outScoreHeaderGroup )
         {
             if( !inPageLayout.isUsed() )
             {
