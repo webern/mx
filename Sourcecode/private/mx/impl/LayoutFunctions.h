@@ -13,7 +13,7 @@ namespace mx
     {
         void addLayoutData( const api::LayoutData& inScore, core::ScoreHeaderGroup& outScoreHeaderGroup );
         void addScaling( const api::LayoutData& inScore, core::ScoreHeaderGroup& outScoreHeaderGroup );
-        void addPageMargins( const api::LayoutData& inScore, core::ScoreHeaderGroup& outScoreHeaderGroup );
+        void addPageMargins( const api::PageLayoutData& inPageLayout, core::ScoreHeaderGroup& outScoreHeaderGroup );
         void addSystemMargins( const api::LayoutData& inScore, core::ScoreHeaderGroup& outScoreHeaderGroup );
         void addAppearance( const api::LayoutData& inScore, core::ScoreHeaderGroup& outScoreHeaderGroup );
         

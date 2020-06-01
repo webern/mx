@@ -8,6 +8,7 @@
 #include "mx/impl/Cursor.h"
 
 #include <mutex>
+#include <optional>
 
 namespace mx
 {
