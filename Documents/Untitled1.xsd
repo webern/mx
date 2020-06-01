@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+    <xs:simpleType name="newSimpleType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="x"/>
+            <xs:enumeration value="y"/>
+            <xs:enumeration value="z"/>
+            <xs:minLength value="1"/>
+            <xs:maxLength value="2"/>
+            <xs:length value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="newSimpleType1">
+        <xs:restriction base="xs:positiveInteger"/>
+    </xs:simpleType>
+</xs:schema>
