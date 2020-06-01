@@ -79,17 +79,9 @@ namespace mx
             areEvenOddSame &= api::areSame( inLayout.pageLayout.pageMargins.evenPageTopMargin, inLayout.pageLayout.pageMargins.oddPageTopMargin );
             areEvenOddSame &= api::areSame( inLayout.pageLayout.pageMargins.evenPageBottomMargin, inLayout.pageLayout.pageMargins.oddPageBottomMargin );
 
-            bool areOddPagesSpecified =    inLayout.pageLayout.pageMargins.oddPageLeftMargin > 0
-                                        || inLayout.pageLayout.pageMargins.oddPageRightMargin > 0
-                                        || inLayout.pageLayout.pageMargins.oddPageTopMargin > 0
-                                        || inLayout.pageLayout.pageMargins.oddPageBottomMargin > 0;
-            
-            bool areEvenPagesSpecified =   inLayout.pageLayout.pageMargins.evenPageLeftMargin > 0
-                                        || inLayout.pageLayout.pageMargins.evenPageRightMargin > 0
-                                        || inLayout.pageLayout.pageMargins.evenPageTopMargin > 0
-                                        || inLayout.pageLayout.pageMargins.evenPageBottomMargin > 0;
-            
-            if( !areOddPagesSpecified && !areEvenPagesSpecified )
+            bool areOddPagesSpecified = inLayout.pageLayout.pageMargins.areOddMarginsSpecified();
+            bool areEvenPagesSpecified = inLayout.pageLayout.pageMargins.areEvenMarginsSpecified();
+            if( !inLayout.pageLayout.pageMargins.areMarginsSpecified() )
             {
                 return;
             }

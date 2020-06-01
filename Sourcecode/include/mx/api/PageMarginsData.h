@@ -64,19 +64,39 @@ namespace mx
                        && oddPageBottomMargin > 0;
             }
 
+            inline bool areOddMarginsSpecified() const
+            {
+                return oddPageLeftMargin > 0
+                       || oddPageRightMargin > 0
+                       || oddPageTopMargin > 0
+                       || oddPageBottomMargin > 0;
+            }
 
             inline bool areEvenMarginsValid() const
             {
-                return evenPageLeftMargin > 0
+                return    evenPageLeftMargin > 0
                        && evenPageRightMargin > 0
                        && evenPageTopMargin > 0
                        && evenPageBottomMargin > 0;
             }
 
+            inline bool areEvenMarginsSpecified() const
+            {
+                return    evenPageLeftMargin > 0
+                       || evenPageRightMargin > 0
+                       || evenPageTopMargin > 0
+                       || evenPageBottomMargin > 0;
+            }
+
+            inline bool areMarginsSpecified() const
+            {
+                return areOddMarginsSpecified() || areEvenMarginsSpecified();
+            }
+
 
             inline bool areOddEvenMarginsTheSame() const
             {
-                return areSame(oddPageLeftMargin, evenPageLeftMargin)
+                return    areSame(oddPageLeftMargin, evenPageLeftMargin)
                        && areSame(oddPageRightMargin, evenPageRightMargin)
                        && areSame(oddPageTopMargin, evenPageTopMargin)
                        && areSame(oddPageBottomMargin, evenPageBottomMargin);

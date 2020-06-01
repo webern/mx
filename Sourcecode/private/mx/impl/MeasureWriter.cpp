@@ -199,7 +199,13 @@ namespace mx
             {
                 writeSystemInfo();
             }
-            
+
+            const auto& pageData = myScoreWriter.findPageLayoutData( myHistory.getCursor().measureIndex );
+            if( pageData )
+            {
+                // TODO - write page data
+            }
+
             if( myHistory.getCursor().isFirstMeasureInPart )
             {
                 myPropertiesWriter->writeDivisions( myHistory.getCursor().getGlobalTicksPerQuarter() );
