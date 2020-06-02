@@ -116,6 +116,7 @@
 #include "mx/core/elements/Words.h"
 #include "mx/impl/Converter.h"
 #include "mx/impl/DirectionWriter.h"
+#include "mx/impl/LayoutFunctions.h"
 #include "mx/impl/NoteWriter.h"
 #include "mx/impl/ScoreWriter.h"
 
@@ -262,7 +263,9 @@ namespace mx
                 || systemData.isSystemDistanceSpecified
                 || systemData.isTopSystemDistanceSpecified
                 || systemData.measureIndex >= 0;
-            
+
+            // TODO - this looks wrong. should the system info be in every part or just the first?
+            // TODO - should be || ?
             if( !isSystemDataSpecified && !myHistory.getCursor().isFirstMeasureInPart )
             {
                 return;
@@ -305,22 +308,46 @@ namespace mx
            }
         }
 
-        void MeasureWriter::writePageInfo( const api::PageData& inNewPageData )
+        void MeasureWriter::writePageInfo( const api::PageData& inPageData )
         {
-            if( !myOutMeasure->getMusicDataGroup()->getMusicDataChoiceSet().empty() )
+            // since a print object may have been added by writeSystemInfo, we don't want to add another one. we will
+            // search for a print object and use it if we find it, otherwise we will add a new one.
+            core::PrintPtr outPrint = nullptr;
+            for( const auto& mdc : myOutMeasure->getMusicDataGroup()->getMusicDataChoiceSet() )
             {
-                const auto first = myOutMeasure->getMusicDataGroup()->getMusicDataChoiceSet().front();
-                if( first->getChoice() == core::MusicDataChoice::Choice::print )
+                if( mdc->getChoice() == core::MusicDataChoice::Choice::print )
                 {
-                    auto print = first->getPrint();
-                    // TODO - add page layout stuff
-                }
-                else
-                {
-                    MX_THROW( "this is a bug, we should not have written anything else before the print element" );
+                    outPrint = mdc->getPrint();
+                    break;
                 }
             }
-            MX_THROW( "not implemented" );
+            if( outPrint == nullptr )
+            {
+                // since we didn't find an existing print object, we will create one and add it to the measure
+                auto mdc = core::makeMusicDataChoice();
+                mdc->setChoice( core::MusicDataChoice::Choice::print );
+                outPrint = mdc->getPrint();
+                myOutMeasure->getMusicDataGroup()->addMusicDataChoice( mdc );
+            }
+
+            if( inPageData.newPage )
+            {
+                outPrint->getAttributes()->hasNewPage = true;
+                outPrint->getAttributes()->newPage = *inPageData.newPage ? core::YesNo::yes : core::YesNo::no;
+            }
+
+            if( inPageData.pageLayoutData && inPageData.pageLayoutData->isUsed() )
+            {
+                const auto outPageLayout = createPageLayout( *inPageData.pageLayoutData );
+                outPrint->getLayoutGroup()->setHasPageLayout( true );
+                outPrint->getLayoutGroup()->setPageLayout( outPageLayout );
+            }
+
+            if( inPageData.pageNumber )
+            {
+                outPrint->getAttributes()->hasPageNumber = true;
+                outPrint->getAttributes()->pageNumber = *inPageData.pageNumber;
+            }
         }
         
         

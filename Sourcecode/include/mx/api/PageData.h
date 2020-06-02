@@ -34,13 +34,15 @@ namespace mx
             inline explicit PageData(
                     StartSpecifier inStartSpecifier,
                     int inMeasureOrSystemIndex,
-                    bool inNewPage = true,
-                    std::optional<PageLayoutData> inPageLayoutData = std::nullopt
+                    std::optional<bool> inNewPage = true,
+                    std::optional<PageLayoutData> inPageLayoutData = std::nullopt,
+                    std::optional<std::string> inPageNumber = std::nullopt
              )
              : startSpecifier{ inStartSpecifier }
              , measureOrSystemIndex{ inMeasureOrSystemIndex }
              , newPage{ inNewPage }
              , pageLayoutData{ inPageLayoutData }
+             , pageNumber{ std::move( inPageNumber ) }
             {
 
             }
@@ -58,11 +60,15 @@ namespace mx
             /// whether this number is a measure index or a system index using the startSpecifier field.
             int measureOrSystemIndex;
 
-            /// `true` will cause a page break at the specified measure index or system index.
-            bool newPage;
+            /// `true` will cause a page break at the specified measure index or system index. `false` indicates that a
+            /// page break should be avoided. defaults to 'true'
+            std::optional<bool> newPage;
 
             /// Optionally change the page layout settings starting with this page (and continuing thereafter).
             std::optional<PageLayoutData> pageLayoutData;
+
+            /// The displayed page number.
+            std::optional<std::string> pageNumber;
         };
 
         inline bool operator<( const PageData& lhs, const PageData& rhs )
@@ -80,6 +86,7 @@ namespace mx
             MXAPI_EQUALS_MEMBER( measureOrSystemIndex )
             MXAPI_EQUALS_MEMBER( newPage )
             MXAPI_EQUALS_MEMBER( pageLayoutData )
+            MXAPI_EQUALS_MEMBER( pageNumber )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( PageData );
     }
