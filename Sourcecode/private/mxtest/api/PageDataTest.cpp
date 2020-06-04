@@ -8,6 +8,7 @@
 
 #include "mx/api/ScoreData.h"
 #include "mx/api/DocumentManager.h"
+#include <sstream>
 
 using namespace std;
 using namespace mx::api;
@@ -17,18 +18,16 @@ TEST( EqualityOfOptional, PitchData )
 {
     PageData a;
     PageData b;
-    a.pageLayoutData = PageLayoutData{};
-    CHECK( a.pageLayoutData );
-    CHECK( !b.pageLayoutData );
+    a.pageNumber = "x";
+    CHECK( a.pageNumber );
+    CHECK( !b.pageNumber );
     CHECK( a != b );
     PageData c;
-    c.pageLayoutData = PageLayoutData{};
-    c.pageLayoutData->pageWidth = 1;
+    c.pageNumber = "1";
     PageData d;
-    d.pageLayoutData = PageLayoutData{};
-    d.pageLayoutData->pageWidth = 2;
+    d.pageNumber = "2";
     CHECK( c != d );
-    d.pageLayoutData->pageWidth = 1;
+    d.pageNumber = "1";
     CHECK( c == d );
     d.pageNumber = "foo";
     CHECK( c != d );
@@ -86,11 +85,11 @@ namespace pageDataTest
 
 TEST( TestPageData, PageData )
 {
-    auto score = pageDataTest::makeSomeBoringMusic( 33 );
+    auto score1 = pageDataTest::makeSomeBoringMusic(33 );
     auto& docMgr = DocumentManager::getInstance();
     SystemData sd;
     sd.measureIndex = 1;
-    score.systems.emplace( sd );
+    score1.systems.emplace(sd );
     sd = SystemData{};
     sd.measureIndex = 5;
     sd.topSystemDistance = 23;
@@ -99,29 +98,41 @@ TEST( TestPageData, PageData )
     sd.isSystemDistanceSpecified = true;
     sd.isTopSystemDistanceSpecified = true;
     sd.isMarginSpecified = true;
-    score.systems.emplace( sd );
+    score1.systems.emplace(sd );
     sd.measureIndex = 10;
-    score.systems.emplace( sd );
+    score1.systems.emplace(sd );
     sd.measureIndex = 20;
-    score.systems.emplace( sd );
+    score1.systems.emplace(sd );
     sd.measureIndex = 30;
-    score.systems.emplace( sd );
+    score1.systems.emplace(sd );
     sd.measureIndex = 40;
-    score.systems.emplace( sd );
-    PageData pd{ StartSpecifier::measureIndex, 6 };
-    pd.pageLayoutData = PageLayoutData{};
-    pd.pageLayoutData->pageWidth = 1500;
-    pd.pageLayoutData->pageHeight = 1501;
-    pd.pageLayoutData->pageMargins.evenPageLeftMargin = 12;
-    pd.pageLayoutData->pageMargins.oddPageLeftMargin = 12;
-    score.pages.emplace( pd );
-    pd = PageData{ StartSpecifier::systemIndex, 3 };
-    pd.newPage = false;
-    score.pages.emplace( pd );
-    const auto id = docMgr.createFromScore( score );
-    docMgr.writeToStream( id, std::cout );
-    docMgr.writeToFile( id, "/Users/mjb/Desktop/foo.musicxml");
-    docMgr.destroyDocument( id );
+    score1.systems.emplace(sd );
+    PageData pd;
+    pd.pageLayoutData.pageWidth = 1500;
+    pd.pageLayoutData.pageHeight = 1501;
+    pd.pageLayoutData.pageMargins.evenPageLeftMargin = 12;
+    pd.pageLayoutData.pageMargins.oddPageLeftMargin = 12;
+    score1.pages.emplace(6, pd );
+    pd = PageData{};
+    pd.newPage = Bool::no;
+    score1.pages.emplace(10, pd );
+    const auto id1 = docMgr.createFromScore(score1 );
+    std::stringstream xml1;
+    // TODO - remove this debug write
+    docMgr.writeToStream( id1, std::cout );
+    docMgr.writeToStream( id1, xml1 );
+    // TODO - remove this debug write
+    docMgr.writeToFile( id1, "/Users/mjb/Desktop/foo.musicxml");
+    docMgr.destroyDocument( id1 );
+    std::istringstream xml1is{ xml1.str() };
+    const auto id2 = docMgr.createFromStream( xml1is );
+    const auto score2 = docMgr.getData( id2 );
+    CHECK( score1 == score2 );
+    docMgr.destroyDocument( id2 );
+    const auto id3 = docMgr.createFromScore( score2 );
+    std::stringstream xml3;
+    docMgr.writeToStream( id3, xml3 );
+    CHECK( xml1.str() == xml3.str() );
 }
 
 #endif

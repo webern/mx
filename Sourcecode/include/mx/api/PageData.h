@@ -15,75 +15,38 @@ namespace mx
 {
     namespace api
     {
-        /// The location of a page break or page layout change can be specified either by giving the measure index (i.e.
-        /// in the case of a page break, the index of the first measure that should appear on the new page) or by giving
-        /// a system index (i.e. in the case of a page break, the index of the first SystemData that should appear on
-        /// the new page).
-        enum StartSpecifier
-        {
-            measureIndex,
-            systemIndex,
-        };
-
         /// PageData allows the specification of a new page, or the prevention of a new page, along with the ability
-        /// to change the page layout settings. `firstSystemIndex` is the index of the first system (in score.systems)
-        /// on the page.
+        /// to change the page layout settings. In the score these are stored in a map where the map key is the measure
+        /// index of where the PageData takes affect in the score.
         class PageData
         {
         public:
             inline explicit PageData(
-                    StartSpecifier inStartSpecifier,
-                    int inMeasureOrSystemIndex,
-                    std::optional<bool> inNewPage = true,
-                    std::optional<PageLayoutData> inPageLayoutData = std::nullopt,
+                    Bool inNewPage = Bool::yes,
+                    PageLayoutData inPageLayoutData = PageLayoutData{},
                     std::optional<std::string> inPageNumber = std::nullopt
              )
-             : startSpecifier{ inStartSpecifier }
-             , measureOrSystemIndex{ inMeasureOrSystemIndex }
-             , newPage{ inNewPage }
+             : newPage{ inNewPage }
              , pageLayoutData{ inPageLayoutData }
              , pageNumber{ std::move( inPageNumber ) }
             {
 
             }
 
-            inline PageData()
-            : PageData{ StartSpecifier::measureIndex, 0 }
-            {
+            /// `yes` will cause a page break at the specified measure index or system index. `no` indicates that a
+            /// page break should be avoided. 'unspecified' means that no page-break attribute will be shown.
+            Bool newPage;
 
-            }
+            /// Optionally change the page layout settings starting with this page (and continuing thereafter). The
+            /// default constructed PageLayoutData will not affect page layout. Only if you change one or more of its
+            /// values to non-zero numbers will page layout information be written.
+            PageLayoutData pageLayoutData;
 
-            /// Indicate whether the `startIndex` is a measureIndex or a systemIndex.
-            StartSpecifier startSpecifier;
-
-            /// This is the index of either the measure or the system at which this `PageData` takes effect. Indicate
-            /// whether this number is a measure index or a system index using the startSpecifier field.
-            int measureOrSystemIndex;
-
-            /// `true` will cause a page break at the specified measure index or system index. `false` indicates that a
-            /// page break should be avoided. defaults to 'true'
-            std::optional<bool> newPage;
-
-            /// Optionally change the page layout settings starting with this page (and continuing thereafter).
-            std::optional<PageLayoutData> pageLayoutData;
-
-            /// The displayed page number.
+            /// The displayed page number. std::nullopt indicates the absence of a page-number attribute.
             std::optional<std::string> pageNumber;
         };
 
-        inline bool operator<( const PageData& lhs, const PageData& rhs )
-        {
-            if( lhs.startSpecifier == rhs.startSpecifier )
-            {
-                return lhs.measureOrSystemIndex < rhs.measureOrSystemIndex;
-            }
-
-            return static_cast<int>( lhs.startSpecifier ) < static_cast<int>( rhs.startSpecifier );
-        }
-
         MXAPI_EQUALS_BEGIN( PageData )
-            MXAPI_EQUALS_MEMBER( startSpecifier )
-            MXAPI_EQUALS_MEMBER( measureOrSystemIndex )
             MXAPI_EQUALS_MEMBER( newPage )
             MXAPI_EQUALS_MEMBER( pageLayoutData )
             MXAPI_EQUALS_MEMBER( pageNumber )

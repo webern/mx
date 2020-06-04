@@ -350,31 +350,15 @@ namespace mx
             return iter != myScoreData.systems.cend();
         }
 
-        std::optional<api::PageData> ScoreWriter::findPageLayoutData( int measureIndex ) const
+
+        std::optional<api::PageData> ScoreWriter::findPageLayoutData( api::MeasureIndex measureIndex ) const
         {
-            for( const auto& pageData : myScoreData.pages )
+            const auto iter = myScoreData.pages.find( measureIndex );
+            if( iter == std::cend( myScoreData.pages ) )
             {
-                if( pageData.startSpecifier == api::StartSpecifier::measureIndex &&
-                   pageData.measureOrSystemIndex == measureIndex )
-                {
-                    return pageData;
-                }
-                else if( pageData.startSpecifier == api::StartSpecifier::systemIndex )
-                {
-                    int systemIndex = 0;
-                    for( const auto& system : myScoreData.systems )
-                    {
-                        if( systemIndex == pageData.startSpecifier )
-                        {
-                            if( system.measureIndex == measureIndex )
-                            {
-                                return pageData;
-                            }
-                        }
-                    }
-                }
+                return std::nullopt;
             }
-            return std::nullopt;
+            return iter->second;
         }
         
         

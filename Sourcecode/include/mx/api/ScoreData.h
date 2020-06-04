@@ -52,7 +52,8 @@ namespace mx
             std::set<SystemData> systems;
 
             // TODO - document how these are used
-            std::set<PageData> pages;
+            /// A map of measure indices and
+            std::map<MeasureIndex, PageData> pages;
 
             int getNumMeasures() const;
             int getNumStavesPerSystem() const;

@@ -330,15 +330,16 @@ namespace mx
                 myOutMeasure->getMusicDataGroup()->addMusicDataChoice( mdc );
             }
 
-            if( inPageData.newPage )
+            if( isSpecified( inPageData.newPage ) )
             {
                 outPrint->getAttributes()->hasNewPage = true;
-                outPrint->getAttributes()->newPage = *inPageData.newPage ? core::YesNo::yes : core::YesNo::no;
+                outPrint->getAttributes()->newPage =
+                        inPageData.newPage == api::Bool::yes ? core::YesNo::yes : core::YesNo::no;
             }
 
-            if( inPageData.pageLayoutData && inPageData.pageLayoutData->isUsed() )
+            if( inPageData.pageLayoutData.isUsed() )
             {
-                const auto outPageLayout = createPageLayout( *inPageData.pageLayoutData );
+                const auto outPageLayout = createPageLayout( inPageData.pageLayoutData );
                 outPrint->getLayoutGroup()->setHasPageLayout( true );
                 outPrint->getLayoutGroup()->setPageLayout( outPageLayout );
             }

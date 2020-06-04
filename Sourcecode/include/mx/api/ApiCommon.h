@@ -27,7 +27,11 @@ namespace mx
             yes,
             no
         };
-        
+
+        inline bool toBool( Bool b ) { return b == Bool::yes; }
+        inline Bool fromBool( bool b ) { return b ? Bool::yes : Bool::no; }
+        inline bool isSpecified( Bool b ) { return b != Bool::unspecified; }
+
         enum class Placement
         {
             unspecified,
