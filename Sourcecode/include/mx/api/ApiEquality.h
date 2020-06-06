@@ -9,7 +9,7 @@
 #include <map>
 #include <iostream>
 
-// #define MX_DEBUG // shows traces to std::cout
+#define MX_DEBUG // shows traces to std::cout
 
 namespace mx
 {

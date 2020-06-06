@@ -45,6 +45,7 @@ namespace pageDataTest
         const auto ticksPerQuarter = 1024;
         const auto whole = ticksPerQuarter * 4;
         PartData p;
+        p.uniqueId = "BORING_MUSIC";
         for( int i=0; i < inNumMeasures; ++i )
         {
             NoteData n;
@@ -60,6 +61,7 @@ namespace pageDataTest
             }
             n.durationData.durationName = DurationName::whole;
             n.durationData.durationTimeTicks = whole;
+            n.userRequestedVoiceNumber = 1;
             VoiceData v;
             v.notes.emplace_back( n );
             StaffData s;
@@ -89,7 +91,7 @@ TEST( TestPageData, PageData )
     auto& docMgr = DocumentManager::getInstance();
     SystemData sd;
     sd.measureIndex = 1;
-    score1.systems.emplace(sd );
+    score1.systems.emplace( sd );
     sd = SystemData{};
     sd.measureIndex = 5;
     sd.topSystemDistance = 23;
@@ -98,15 +100,13 @@ TEST( TestPageData, PageData )
     sd.isSystemDistanceSpecified = true;
     sd.isTopSystemDistanceSpecified = true;
     sd.isMarginSpecified = true;
-    score1.systems.emplace(sd );
+    score1.systems.emplace( sd );
     sd.measureIndex = 10;
-    score1.systems.emplace(sd );
+    score1.systems.emplace( sd );
     sd.measureIndex = 20;
-    score1.systems.emplace(sd );
+    score1.systems.emplace( sd );
     sd.measureIndex = 30;
-    score1.systems.emplace(sd );
-    sd.measureIndex = 40;
-    score1.systems.emplace(sd );
+    score1.systems.emplace( sd );
     PageData pd;
     pd.pageLayoutData.pageWidth = 1500;
     pd.pageLayoutData.pageHeight = 1501;
