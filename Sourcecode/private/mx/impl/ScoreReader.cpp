@@ -535,6 +535,11 @@ namespace mx
                     {
                         outPageData.newPage = api::Bool::unspecified;
                     }
+                    if( print.getAttributes()->hasPageNumber )
+                    {
+                        outPageData.pageNumber =
+                            print.getAttributes()->pageNumber.getValue();
+                    }
                     const auto& layoutGroup = print.getLayoutGroup();
                     if( layoutGroup->getHasPageLayout() )
                     {
