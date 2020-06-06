@@ -119,12 +119,7 @@ TEST( TestPageData, PageData )
     score1.pages.emplace(10, pd );
     const auto id1 = docMgr.createFromScore(score1 );
     std::stringstream xml1;
-    // TODO - remove this debug write
-//    docMgr.writeToStream( id1, std::cout );
     docMgr.writeToStream( id1, xml1 );
-    docMgr.writeToFile( id1, "/Users/mjb/Desktop/expected.xml" );
-    // TODO - remove this debug write
-    docMgr.writeToFile( id1, "/Users/mjb/Desktop/foo.musicxml");
     docMgr.destroyDocument( id1 );
     std::istringstream xml1is{ xml1.str() };
     const auto id2 = docMgr.createFromStream( xml1is );
@@ -134,7 +129,6 @@ TEST( TestPageData, PageData )
     const auto id3 = docMgr.createFromScore( score2 );
     std::stringstream xml3;
     docMgr.writeToStream( id3, xml3 );
-    docMgr.writeToFile( id3, "/Users/mjb/Desktop/actual.xml" );
     CHECK( xml1.str() == xml3.str() );
 }
 
@@ -145,7 +139,7 @@ TEST( LoadFinaleExport, PageData )
     const auto id = docMgr.createFromFile( filepath );
     const auto score = docMgr.getData( id );
     docMgr.destroyDocument( id );
-    std::cout << filepath << std::endl;
+
     // The loaded file has page and system information as follows:
     // measure number 1  index 0  : page : system
     // measure number 3  index 2  :      : system
@@ -170,7 +164,7 @@ TEST( LoadFinaleExport, PageData )
     const auto& pageM21 = it->second;
 
     // Check that the SystemData objects are populated in the set with the appropriate measure indices.
-    // TODO - a set is a terrible data structure for this.
+    // TODO - std::set is a terrible data structure for this.
     int sdindex = 0;
     SystemData systemM0{};
     SystemData systemM2{};

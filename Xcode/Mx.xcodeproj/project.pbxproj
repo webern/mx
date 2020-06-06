@@ -3516,6 +3516,10 @@
 		2948959A1FC4011400A06219 /* AppearanceData.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AppearanceData.cpp; sourceTree = "<group>"; };
 		2975944D1F044C7600DE2F30 /* ChordData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ChordData.cpp; sourceTree = "<group>"; };
 		297594591F04783100DE2F30 /* Round.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Round.h; sourceTree = "<group>"; };
+		29843ACF248C0CA9006A8E34 /* PageData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PageData.h; sourceTree = "<group>"; };
+		29843AD0248C0CA9006A8E34 /* PageLayoutData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PageLayoutData.h; sourceTree = "<group>"; };
+		29843AD1248C0CA9006A8E34 /* PageMarginsData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PageMarginsData.h; sourceTree = "<group>"; };
+		29843AD2248C0CA9006A8E34 /* KeyComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KeyComponent.h; sourceTree = "<group>"; };
 		299F7FE61CA8D2200084CAE5 /* libMx.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMx.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		29A02E781FE0F71A00B74FDE /* Version.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Version.cpp; sourceTree = "<group>"; };
 		29A02E841FE0FA5000B74FDE /* EncodingData.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = EncodingData.cpp; sourceTree = "<group>"; };
@@ -4999,6 +5003,7 @@
 		29A8DD581EF0475D00AD2478 /* api */ = {
 			isa = PBXGroup;
 			children = (
+				2948959A1FC4011400A06219 /* AppearanceData.cpp */,
 				2975944D1F044C7600DE2F30 /* ChordData.cpp */,
 				29A8DD5C1EF0475D00AD2478 /* ClefData.cpp */,
 				29A8DD611EF0475D00AD2478 /* DocumentManager.cpp */,
@@ -5011,7 +5016,6 @@
 				29A8DD7A1EF0475D00AD2478 /* ScoreData.cpp */,
 				29A800621EF0876500AD2478 /* SoundID.cpp */,
 				29A02E781FE0F71A00B74FDE /* Version.cpp */,
-				2948959A1FC4011400A06219 /* AppearanceData.cpp */,
 			);
 			path = api;
 			sourceTree = "<group>";
@@ -6383,6 +6387,7 @@
 				29DC385B225C0DB700814240 /* DurationData.h */,
 				29DC3862225C0DB700814240 /* EncodingData.h */,
 				29DC384D225C0DB500814240 /* FontData.h */,
+				29843AD2248C0CA9006A8E34 /* KeyComponent.h */,
 				29DC3843225C0DB400814240 /* KeyData.h */,
 				29DC385C225C0DB700814240 /* LayoutData.h */,
 				29DC3854225C0DB600814240 /* LineData.h */,
@@ -6394,6 +6399,9 @@
 				29DC3866225C0DB800814240 /* NoteAttachmentData.h */,
 				29DC385A225C0DB600814240 /* NoteData.h */,
 				29DC3851225C0DB500814240 /* OttavaData.h */,
+				29843ACF248C0CA9006A8E34 /* PageData.h */,
+				29843AD0248C0CA9006A8E34 /* PageLayoutData.h */,
+				29843AD1248C0CA9006A8E34 /* PageMarginsData.h */,
 				29DC3844225C0DB400814240 /* PageTextData.h */,
 				29DC3858225C0DB600814240 /* PartData.h */,
 				29DC3845225C0DB400814240 /* PartGroupData.h */,

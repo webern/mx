@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		29126F0B245A81F700B1F839 /* KeyDataTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29126F0A245A81F700B1F839 /* KeyDataTest.cpp */; };
+		29843AD4248C0CCD006A8E34 /* PageDataTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29843AD3248C0CCD006A8E34 /* PageDataTest.cpp */; };
 		29A04F34244FBA62004A5D3C /* NewSystemTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A04F31244FBA62004A5D3C /* NewSystemTest.cpp */; };
 		29A04F35244FBA62004A5D3C /* PitchDataTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A04F32244FBA62004A5D3C /* PitchDataTest.cpp */; };
 		29A04F36244FBA62004A5D3C /* MxlTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A04F33244FBA62004A5D3C /* MxlTest.cpp */; };
@@ -481,6 +482,7 @@
 
 /* Begin PBXFileReference section */
 		29126F0A245A81F700B1F839 /* KeyDataTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyDataTest.cpp; sourceTree = "<group>"; };
+		29843AD3248C0CCD006A8E34 /* PageDataTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PageDataTest.cpp; sourceTree = "<group>"; };
 		29A04F2D244FBA4D004A5D3C /* catchDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = catchDefines.h; sourceTree = "<group>"; };
 		29A04F2E244FBA4D004A5D3C /* unusedParameter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = unusedParameter.h; sourceTree = "<group>"; };
 		29A04F2F244FBA4D004A5D3C /* msNoexceptHack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = msNoexceptHack.h; sourceTree = "<group>"; };
@@ -1182,46 +1184,47 @@
 		29DC389B225C0FC100814240 /* api */ = {
 			isa = PBXGroup;
 			children = (
-				29126F0A245A81F700B1F839 /* KeyDataTest.cpp */,
-				29A04F33244FBA62004A5D3C /* MxlTest.cpp */,
-				29A04F31244FBA62004A5D3C /* NewSystemTest.cpp */,
-				29A04F32244FBA62004A5D3C /* PitchDataTest.cpp */,
-				29DC389C225C0FC100814240 /* TestHelpers.h */,
-				29DC389D225C0FC100814240 /* ApiK007aTest.cpp */,
-				29DC389E225C0FC100814240 /* DirectionDataTest.cpp */,
-				29DC389F225C0FC100814240 /* ApiK015aLayoutScoreData.h */,
-				29DC38A0225C0FC100814240 /* FreezingRoundTrip.cpp */,
-				29DC38A1225C0FC100814240 /* ApiK007cScoreData.h */,
-				29DC38A2225C0FC100814240 /* FreezingTest.cpp */,
-				29DC38A3225C0FC100814240 /* DocumentManagerTest.cpp */,
-				29DC38A4225C0FC100814240 /* ApiK009bSlurScoreData.h */,
-				29DC38A5225C0FC100814240 /* BombeTest.cpp */,
-				29DC38A6225C0FC100814240 /* ApiTester.h */,
-				29DC38A7225C0FC100814240 /* ApiK007aScoreData.h */,
-				29DC38A8225C0FC100814240 /* ApiK016aMiscScoreData.h */,
-				29DC38A9225C0FC100814240 /* ChordApiTest.cpp */,
-				29DC38AA225C0FC100814240 /* ChordTimeTest.cpp */,
-				29DC38AB225C0FC100814240 /* ApiChordSimpleTest.cpp */,
-				29DC38AC225C0FC100814240 /* ApiTester.cpp */,
-				29DC38AD225C0FC100814240 /* RoundTrip.h */,
-				29DC38AE225C0FC100814240 /* ApiK007cTest.cpp */,
-				29DC38AF225C0FC100814240 /* MeasureDataTest.cpp */,
-				29DC38B0225C0FC100814240 /* NoteDataTest.cpp */,
-				29DC38B1225C0FC100814240 /* ScoreDataCreator.h */,
-				29DC38B2225C0FC100814240 /* MetronomeApiTest.cpp */,
-				29DC38B3225C0FC100814240 /* ApiLy43eScoreData.h */,
-				29DC38B4225C0FC100814240 /* ApiK016aMiscTest.cpp */,
-				29DC38B5225C0FC100814240 /* ApiK015aLayoutTest.cpp */,
-				29DC38B6225C0FC100814240 /* ApiLoadSurvivalTest.cpp */,
-				29DC38B7225C0FC100814240 /* ApiMuAccidentals1Test.cpp */,
-				29DC38B8225C0FC100814240 /* ApiK014aFermatasTest.cpp */,
 				29DC38B9225C0FC100814240 /* ApiChordSimpleScoreData.h */,
-				29DC38BA225C0FC100814240 /* ApiLy43eTest.cpp */,
-				29DC38BB225C0FC100814240 /* ApiMuAccidentals1ScoreData.h */,
-				29DC38BC225C0FC100814240 /* TimeSignatureApiTest.cpp */,
+				29DC38AB225C0FC100814240 /* ApiChordSimpleTest.cpp */,
+				29DC38A7225C0FC100814240 /* ApiK007aScoreData.h */,
+				29DC389D225C0FC100814240 /* ApiK007aTest.cpp */,
+				29DC38A1225C0FC100814240 /* ApiK007cScoreData.h */,
+				29DC38AE225C0FC100814240 /* ApiK007cTest.cpp */,
+				29DC38A4225C0FC100814240 /* ApiK009bSlurScoreData.h */,
 				29DC38BD225C0FC100814240 /* ApiK009bSlurTest.cpp */,
 				29DC38BE225C0FC100814240 /* ApiK014aFermatasScoreData.h */,
+				29DC38B8225C0FC100814240 /* ApiK014aFermatasTest.cpp */,
+				29DC389F225C0FC100814240 /* ApiK015aLayoutScoreData.h */,
+				29DC38B5225C0FC100814240 /* ApiK015aLayoutTest.cpp */,
+				29DC38A8225C0FC100814240 /* ApiK016aMiscScoreData.h */,
+				29DC38B4225C0FC100814240 /* ApiK016aMiscTest.cpp */,
+				29DC38B6225C0FC100814240 /* ApiLoadSurvivalTest.cpp */,
+				29DC38B3225C0FC100814240 /* ApiLy43eScoreData.h */,
+				29DC38BA225C0FC100814240 /* ApiLy43eTest.cpp */,
+				29DC38BB225C0FC100814240 /* ApiMuAccidentals1ScoreData.h */,
+				29DC38B7225C0FC100814240 /* ApiMuAccidentals1Test.cpp */,
+				29DC38AC225C0FC100814240 /* ApiTester.cpp */,
+				29DC38A6225C0FC100814240 /* ApiTester.h */,
+				29DC38A5225C0FC100814240 /* BombeTest.cpp */,
+				29DC38A9225C0FC100814240 /* ChordApiTest.cpp */,
 				29DC38BF225C0FC100814240 /* ChordDataSaveAndLoadTest.cpp */,
+				29DC38AA225C0FC100814240 /* ChordTimeTest.cpp */,
+				29DC389E225C0FC100814240 /* DirectionDataTest.cpp */,
+				29DC38A3225C0FC100814240 /* DocumentManagerTest.cpp */,
+				29DC38A0225C0FC100814240 /* FreezingRoundTrip.cpp */,
+				29DC38A2225C0FC100814240 /* FreezingTest.cpp */,
+				29126F0A245A81F700B1F839 /* KeyDataTest.cpp */,
+				29DC38AF225C0FC100814240 /* MeasureDataTest.cpp */,
+				29DC38B2225C0FC100814240 /* MetronomeApiTest.cpp */,
+				29A04F33244FBA62004A5D3C /* MxlTest.cpp */,
+				29A04F31244FBA62004A5D3C /* NewSystemTest.cpp */,
+				29DC38B0225C0FC100814240 /* NoteDataTest.cpp */,
+				29843AD3248C0CCD006A8E34 /* PageDataTest.cpp */,
+				29A04F32244FBA62004A5D3C /* PitchDataTest.cpp */,
+				29DC38AD225C0FC100814240 /* RoundTrip.h */,
+				29DC38B1225C0FC100814240 /* ScoreDataCreator.h */,
+				29DC389C225C0FC100814240 /* TestHelpers.h */,
+				29DC38BC225C0FC100814240 /* TimeSignatureApiTest.cpp */,
 			);
 			path = api;
 			sourceTree = "<group>";
@@ -1890,6 +1893,7 @@
 				29DC3AF6225C0FC200814240 /* ApiLoadSurvivalTest.cpp in Sources */,
 				29DC3B26225C0FC200814240 /* InstrumentNameTest.cpp in Sources */,
 				29DC3B8A225C0FC300814240 /* StaffLinesTest.cpp in Sources */,
+				29843AD4248C0CCD006A8E34 /* PageDataTest.cpp in Sources */,
 				29DC3BAA225C0FC300814240 /* SpiccatoTest.cpp in Sources */,
 				29DC3BA0225C0FC300814240 /* ImageTest.cpp in Sources */,
 				29DC3AF2225C0FC200814240 /* NoteDataTest.cpp in Sources */,
