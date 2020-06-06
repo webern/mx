@@ -22,7 +22,7 @@ namespace mx
         {
         public:
             inline explicit PageData(
-                    Bool inNewPage = Bool::yes,
+                    Bool inNewPage = Bool::unspecified,
                     PageLayoutData inPageLayoutData = PageLayoutData{},
                     std::optional<std::string> inPageNumber = std::nullopt
              )
@@ -44,6 +44,12 @@ namespace mx
 
             /// The displayed page number. std::nullopt indicates the absence of a page-number attribute.
             std::optional<std::string> pageNumber;
+
+            /// Indicates whether any values have been assigned.
+            inline bool isUsed() const
+            {
+                return isSpecified( newPage ) || pageLayoutData.isUsed() || pageNumber;
+            }
         };
 
         MXAPI_EQUALS_BEGIN( PageData )

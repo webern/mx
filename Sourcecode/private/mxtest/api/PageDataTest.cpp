@@ -119,8 +119,9 @@ TEST( TestPageData, PageData )
     const auto id1 = docMgr.createFromScore(score1 );
     std::stringstream xml1;
     // TODO - remove this debug write
-    docMgr.writeToStream( id1, std::cout );
+//    docMgr.writeToStream( id1, std::cout );
     docMgr.writeToStream( id1, xml1 );
+    docMgr.writeToFile( id1, "/Users/mjb/Desktop/expected.xml" );
     // TODO - remove this debug write
     docMgr.writeToFile( id1, "/Users/mjb/Desktop/foo.musicxml");
     docMgr.destroyDocument( id1 );
@@ -132,6 +133,7 @@ TEST( TestPageData, PageData )
     const auto id3 = docMgr.createFromScore( score2 );
     std::stringstream xml3;
     docMgr.writeToStream( id3, xml3 );
+    docMgr.writeToFile( id3, "/Users/mjb/Desktop/actual.xml" );
     CHECK( xml1.str() == xml3.str() );
 }
 

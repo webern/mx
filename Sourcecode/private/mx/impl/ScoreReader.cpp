@@ -2,8 +2,9 @@
 // Copyright (c) by Matthew James Briggs
 // Distributed under the MIT License
 
-#include "mx/impl/ScoreReader.h"
+#include "mx/core/elements/BottomMargin.h"
 #include "mx/core/elements/Creator.h"
+#include "mx/core/elements/Divisions.h"
 #include "mx/core/elements/Encoding.h"
 #include "mx/core/elements/EncodingChoice.h"
 #include "mx/core/elements/GroupAbbreviation.h"
@@ -12,48 +13,52 @@
 #include "mx/core/elements/GroupNameDisplay.h"
 #include "mx/core/elements/GroupSymbol.h"
 #include "mx/core/elements/Identification.h"
+#include "mx/core/elements/LayoutGroup.h"
+#include "mx/core/elements/LeftMargin.h"
+#include "mx/core/elements/MeasureLayout.h"
+#include "mx/core/elements/MeasureNumbering.h"
 #include "mx/core/elements/Miscellaneous.h"
+#include "mx/core/elements/MiscellaneousField.h"
 #include "mx/core/elements/MovementNumber.h"
 #include "mx/core/elements/MovementTitle.h"
+#include "mx/core/elements/MusicDataChoice.h"
+#include "mx/core/elements/MusicDataGroup.h"
 #include "mx/core/elements/Opus.h"
+#include "mx/core/elements/PageHeight.h"
+#include "mx/core/elements/PageMargins.h"
+#include "mx/core/elements/PageWidth.h"
 #include "mx/core/elements/PartGroup.h"
 #include "mx/core/elements/PartGroupOrScorePart.h"
 #include "mx/core/elements/PartList.h"
 #include "mx/core/elements/PartwiseMeasure.h"
 #include "mx/core/elements/PartwisePart.h"
+#include "mx/core/elements/Print.h"
+#include "mx/core/elements/Properties.h"
 #include "mx/core/elements/Relation.h"
+#include "mx/core/elements/RightMargin.h"
 #include "mx/core/elements/Rights.h"
 #include "mx/core/elements/ScoreHeaderGroup.h"
 #include "mx/core/elements/ScorePart.h"
 #include "mx/core/elements/ScorePartwise.h"
 #include "mx/core/elements/Source.h"
+#include "mx/core/elements/SystemDistance.h"
+#include "mx/core/elements/SystemDividers.h"
+#include "mx/core/elements/SystemLayout.h"
+#include "mx/core/elements/SystemMargins.h"
+#include "mx/core/elements/TopMargin.h"
+#include "mx/core/elements/TopSystemDistance.h"
 #include "mx/core/elements/Work.h"
 #include "mx/core/elements/WorkNumber.h"
 #include "mx/core/elements/WorkTitle.h"
 #include "mx/impl/Converter.h"
 #include "mx/impl/EncodingFunctions.h"
 #include "mx/impl/LayoutFunctions.h"
+#include "mx/impl/LcmGcd.h"
 #include "mx/impl/PageTextFunctions.h"
 #include "mx/impl/PartReader.h"
+#include "mx/impl/ScoreReader.h"
 #include "mx/impl/TimeReader.h"
 #include "mx/utility/StringToInt.h"
-#include "mx/core/elements/MusicDataGroup.h"
-#include "mx/core/elements/MusicDataChoice.h"
-#include "mx/core/elements/Print.h"
-#include "mx/core/elements/LayoutGroup.h"
-#include "mx/core/elements/MeasureLayout.h"
-#include "mx/core/elements/MeasureNumbering.h"
-#include "mx/core/elements/SystemLayout.h"
-#include "mx/core/elements/SystemDistance.h"
-#include "mx/core/elements/SystemDividers.h"
-#include "mx/core/elements/SystemMargins.h"
-#include "mx/core/elements/TopSystemDistance.h"
-#include "mx/core/elements/LeftMargin.h"
-#include "mx/core/elements/RightMargin.h"
-#include "mx/core/elements/Properties.h"
-#include "mx/core/elements/Divisions.h"
-#include "mx/core/elements/MiscellaneousField.h"
-#include "mx/impl/LcmGcd.h"
 
 namespace mx
 {
@@ -291,8 +296,10 @@ namespace mx
                 const auto cursorReturn = reader.getCursor();
                 divisionsValue = cursorReturn.ticksPerQuarter;
             }
-            
+
+            // TODO - refactor and do system and page info in one pass
             scanForSystemInfo();
+            scanForPageInfo();
             
             api::ScoreData temp{ std::move( myOutScoreData ) };
             myOutScoreData = api::ScoreData{};
@@ -478,7 +485,9 @@ namespace mx
                             systemData.isTopSystemDistanceSpecified = true;
                             systemData.topSystemDistance = static_cast<int>( std::ceil( systemLayout.getTopSystemDistance()->getValue().getValue() - 0.5 ) );
                         }
-                        
+
+                        // TODO - why was this here?
+#if 0
                         if( myOutScoreData.systems.size() == 0 && systemData.measureIndex > 0 )
                         {
                             // ensure we have one of these for the first system even if it was
@@ -487,11 +496,98 @@ namespace mx
                             firstSystem.measureIndex = 0;
                             myOutScoreData.systems.emplace( std::move( firstSystem ) );
                         }
+#endif
                         myOutScoreData.systems.emplace( std::move( systemData ) );
                     }
                 }
                 ++measureIndex;
             }
+        }
+
+        void ScoreReader::scanForPageInfo() const
+        {
+            // scan only the top part looking for system layout information
+            if( myScorePartwise.getPartwisePartSet().size() == 0 )
+            {
+                return;
+            }
+
+            const auto& topPart = *myScorePartwise.getPartwisePartSet().front();
+
+            int measureIndex = 0;
+            for( const auto& m : topPart.getPartwiseMeasureSet() )
+            {
+                const auto& measure = *m;
+                for( const auto& mdc : measure.getMusicDataGroup()->getMusicDataChoiceSet() )
+                {
+                    if( !( mdc->getChoice() == core::MusicDataChoice::Choice::print ) )
+                    {
+                        continue;
+                    }
+                    const auto& print = *mdc->getPrint();
+                    api::PageData outPageData{};
+                    if( print.getAttributes()->hasNewPage )
+                    {
+                        outPageData.newPage =
+                            print.getAttributes()->newPage == core::YesNo::yes ? api::Bool::yes : api::Bool::no;
+                    }
+                    else
+                    {
+                        outPageData.newPage = api::Bool::unspecified;
+                    }
+                    const auto& layoutGroup = print.getLayoutGroup();
+                    if( layoutGroup->getHasPageLayout() )
+                    {
+                        const auto& pageLayout = *layoutGroup->getPageLayout();
+                        outPageData.pageLayoutData.pageHeight =
+                                static_cast<long double>( pageLayout.getPageHeight()->getValue().getValue() );
+                        outPageData.pageLayoutData.pageWidth =
+                                static_cast<long double>( pageLayout.getPageWidth()->getValue().getValue() );
+                        for( const auto& pageMargins : pageLayout.getPageMarginsSet() )
+                        {
+                            // TODO - this implementation may not be exactly right
+                            // musicxml.xsd says: "Page margins are specified either for both even and odd pages, or via
+                            // separate odd and even page number values. The type attribute is not needed when used as part
+                            // of a print element. If omitted when the page-margins type is used in the defaults element,
+                            // "both" is the default value."
+                            // This might mean that a print element can only affect the page layout of even pages (by
+                            // appearing on an even page) or odd pages (by appearing on an odd page). I'm not sure, either
+                            // way it seems doubtful that notation applications will agree.
+                            auto t = core::MarginType::both;
+                            if( pageMargins->getAttributes()->hasType )
+                            {
+                                t = pageMargins->getAttributes()->type;
+                            }
+                            const long double left = pageMargins->getLeftMargin()->getValue().getValue();
+                            const long double right = pageMargins->getRightMargin()->getValue().getValue();
+                            const long double top = pageMargins->getTopMargin()->getValue().getValue();
+                            const long double bottom = pageMargins->getBottomMargin()->getValue().getValue();
+                            const bool writeOdd = t == core::MarginType::both || t == core::MarginType::odd;
+                            const bool writeEven = t == core::MarginType::both || t == core::MarginType::even;
+                            if( writeOdd )
+                            {
+                                outPageData.pageLayoutData.pageMargins.oddPageLeftMargin = left;
+                                outPageData.pageLayoutData.pageMargins.oddPageRightMargin = right;
+                                outPageData.pageLayoutData.pageMargins.oddPageTopMargin = top;
+                                outPageData.pageLayoutData.pageMargins.oddPageBottomMargin = bottom;
+                            }
+                            if( writeEven )
+                            {
+                                outPageData.pageLayoutData.pageMargins.evenPageLeftMargin = left;
+                                outPageData.pageLayoutData.pageMargins.evenPageRightMargin = right;
+                                outPageData.pageLayoutData.pageMargins.evenPageTopMargin = top;
+                                outPageData.pageLayoutData.pageMargins.evenPageBottomMargin = bottom;
+                            }
+                        } // for each PageMargins element
+                    } // if hasPageLayout
+                    if( outPageData.isUsed() )
+                    {
+                        myOutScoreData.pages.emplace( measureIndex, outPageData );
+                        // TODO break?
+                    }
+                } // for each mdc
+                ++measureIndex;
+            } // for each measure
         }
         
         
