@@ -4,6 +4,7 @@ On 2020-05-31, two tags were deleted from origin, `v1.0.0` and `v1.0.1` and repl
 If you cloned/forked the repository before 2020-05-31, consider making a new clone/fork or otherwise repairing the tags.
 
 ## [Unreleased]
+- Add support for `new-page` attributes and page layout [#94]
 - Support non-traditional key signatures in `mx::api` [#81]
 - Add a constructor for `PitchData` [#90]
 - Provide a hint in the exception message when a zip file is attempted [#67]
@@ -18,6 +19,7 @@ If you cloned/forked the repository before 2020-05-31, consider making a new clo
 [#90]: https://github.com/webern/mx/pull/90
 [#91]: https://github.com/webern/mx/pull/91
 [#93]: https://github.com/webern/mx/pull/93
+[#94]: https://github.com/webern/mx/pull/94
 [#97]: https://github.com/webern/mx/pull/97
 
 ## [v0.4.1] - 2019-11-23
