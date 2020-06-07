@@ -498,6 +498,13 @@ namespace mx
 #endif
                         myOutScoreData.systems.emplace( std::move( systemData ) );
                     }
+                    else if( print.getAttributes()->hasNewSystem && print.getAttributes()->newSystem == core::YesNo::yes )
+                    {
+                        // TODO - new-page should not be implicit in SystemData
+                        api::SystemData systemData{};
+                        systemData.measureIndex = measureIndex;
+                        myOutScoreData.systems.emplace( std::move( systemData ) );
+                    }
                 }
                 ++measureIndex;
             }

@@ -86,6 +86,8 @@ namespace pageDataTest
     }
 }
 
+#define MJB_DEBUG
+
 TEST( TestPageData, PageData )
 {
     auto score1 = pageDataTest::makeSomeBoringMusic(33 );
@@ -116,8 +118,8 @@ TEST( TestPageData, PageData )
     const auto id1 = docMgr.createFromScore(score1 );
     std::stringstream xml1;
     docMgr.writeToStream( id1, xml1 );
-#if 1
-    docMgr.writeToFile( id1, "/Users/mjb/Desktop/TestPageData.musicxml" );
+#ifdef MJB_DEBUG
+    docMgr.writeToFile( id1, "/Users/mjb/Desktop/xml1.xml" );
 #endif
     docMgr.destroyDocument( id1 );
     std::istringstream xml1is{ xml1.str() };
@@ -128,6 +130,9 @@ TEST( TestPageData, PageData )
     const auto id3 = docMgr.createFromScore( score2 );
     std::stringstream xml3;
     docMgr.writeToStream( id3, xml3 );
+#ifdef MJB_DEBUG
+    docMgr.writeToFile( id3, "/Users/mjb/Desktop/xml3.xml" );
+#endif
     CHECK( xml1.str() == xml3.str() );
 }
 
@@ -238,7 +243,7 @@ TEST( LoadFinaleExport, PageData )
     CHECK( systemM2.layout.systemDistance );
     CHECK_DOUBLES_EQUAL( 114.0, systemM2.layout.systemDistance.value(), MX_API_EQUALITY_EPSILON );
     CHECK( !systemM2.layout.topSystemDistance );
-    
+
     // Measure 5 (measure index 4)
     // <print new-page="yes" page-number="2"/>
     CHECK( pageM4.isUsed() );

@@ -277,12 +277,12 @@ namespace mx
 
             if( systemData.isUsed() )
             {
-                layoutGroup.setHasSystemLayout( true );
                 auto& outSystemLayout = *layoutGroup.getSystemLayout();
                 const auto& inSystemLayout = systemData.layout;
 
                 if( inSystemLayout.margins )
                 {
+                    layoutGroup.setHasSystemLayout( true );
                     const auto& inMargins = inSystemLayout.margins.value();
                     outSystemLayout.setHasSystemMargins(true );
                     auto& margins = *outSystemLayout.getSystemMargins();
@@ -292,6 +292,7 @@ namespace mx
 
                 if( inSystemLayout.topSystemDistance )
                 {
+                    layoutGroup.setHasSystemLayout( true );
                     outSystemLayout.setHasTopSystemDistance(true );
                     outSystemLayout.getTopSystemDistance()->setValue(core::TenthsValue{
                         static_cast<core::DecimalType>( inSystemLayout.topSystemDistance.value() )
@@ -300,6 +301,7 @@ namespace mx
 
                 if( inSystemLayout.systemDistance )
                 {
+                    layoutGroup.setHasSystemLayout( true );
                     outSystemLayout.setHasSystemDistance(true );
                     outSystemLayout.getSystemDistance()->setValue( core::TenthsValue{
                         static_cast<core::DecimalType>( inSystemLayout.systemDistance.value() )
