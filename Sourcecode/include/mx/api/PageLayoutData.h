@@ -7,6 +7,7 @@
 #include "mx/api/ApiCommon.h"
 #include "mx/api/AppearanceData.h"
 #include "mx/api/PageMarginsData.h"
+#include "mx/api/SizeData.h"
 
 #include <string>
 #include <vector>
@@ -15,35 +16,32 @@ namespace mx
 {
     namespace api
     {
-
         class PageLayoutData
         {
         public:
-            long double pageWidth;   // a negative number represents the absence of a value
-            long double pageHeight;  // a negative number represents the absence of a value
 
-            PageMarginsData pageMargins;
+            /// Page size, in tenths.
+            std::optional<SizeData> size;
+
+            /// Page margin data (note all members of PageMarginsData are optional).
+            PageMarginsData margins;
 
             PageLayoutData()
-                :   pageWidth( -1.0 )
-                  , pageHeight( -1.0 )
-                  , pageMargins{}
+                : size( std::nullopt )
+                  , margins{}
             {
 
             }
 
             inline bool isUsed() const
             {
-                return pageWidth >= 0.0 ||
-                    pageHeight >= 0.0 ||
-                    pageMargins.isUsed();
+                return size || margins.isUsed();
             }
         };
 
         MXAPI_EQUALS_BEGIN( PageLayoutData )
-            MXAPI_EQUALS_MEMBER( pageWidth )
-            MXAPI_EQUALS_MEMBER( pageHeight )
-            MXAPI_EQUALS_MEMBER( pageMargins )
+            MXAPI_EQUALS_MEMBER( size )
+            MXAPI_EQUALS_MEMBER( margins )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( PageLayoutData );
     }

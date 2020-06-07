@@ -544,10 +544,11 @@ namespace mx
                     if( layoutGroup->getHasPageLayout() )
                     {
                         const auto& pageLayout = *layoutGroup->getPageLayout();
-                        outPageData.pageLayoutData.pageHeight =
-                                static_cast<long double>( pageLayout.getPageHeight()->getValue().getValue() );
-                        outPageData.pageLayoutData.pageWidth =
-                                static_cast<long double>( pageLayout.getPageWidth()->getValue().getValue() );
+                        outPageData.pageLayoutData.size =
+                                api::SizeData{
+                                        static_cast<long double>( pageLayout.getPageHeight()->getValue().getValue()),
+                                        static_cast<long double>( pageLayout.getPageWidth()->getValue().getValue())
+                                };
                         for( const auto& pageMargins : pageLayout.getPageMarginsSet() )
                         {
                             // TODO - this implementation may not be exactly right
@@ -572,11 +573,11 @@ namespace mx
                             const bool writeEven = t == core::MarginType::both || t == core::MarginType::even;
                             if( writeOdd )
                             {
-                                outPageData.pageLayoutData.pageMargins.odd = margins;
+                                outPageData.pageLayoutData.margins.odd = margins;
                             }
                             if( writeEven )
                             {
-                                outPageData.pageLayoutData.pageMargins.even = margins;
+                                outPageData.pageLayoutData.margins.even = margins;
                             }
                         } // for each PageMargins element
                     } // if hasPageLayout

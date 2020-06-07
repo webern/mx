@@ -112,18 +112,19 @@ namespace mx
         {
             auto outPageLayout = core::makePageLayout();
 
-            if( inPageLayout.pageWidth >= 0 || inPageLayout.pageHeight >= 0 )
+            if( inPageLayout.size )
             {
-                outPageLayout->getPageWidth()->setValue(core::TenthsValue{ inPageLayout.pageWidth } );
-                outPageLayout->getPageHeight()->setValue(core::TenthsValue{ inPageLayout.pageHeight } );
+                const auto& size = inPageLayout.size.value();
+                outPageLayout->getPageHeight()->setValue( core::TenthsValue{ size.height } );
+                outPageLayout->getPageWidth()->setValue( core::TenthsValue{ size.width } );
             }
 
-            if( !inPageLayout.pageMargins.isUsed() )
+            if( !inPageLayout.margins.isUsed() )
             {
                 return outPageLayout;
             }
 
-            auto outPageMarginsSet = createPageMargins( inPageLayout.pageMargins );
+            auto outPageMarginsSet = createPageMargins( inPageLayout.margins );
             for( auto& outPageMargins : outPageMarginsSet )
             {
                 outPageLayout->addPageMargins( outPageMargins );
@@ -282,11 +283,11 @@ namespace mx
             }
             
             auto pageLayout = inScoreHeaderGroup.getDefaults()->getLayoutGroup()->getPageLayout();
-            outLayoutData.pageLayout.pageWidth = pageLayout->getPageWidth()->getValue().getValue();
-            outLayoutData.pageLayout.pageHeight = pageLayout->getPageHeight()->getValue().getValue();
-            
+            outLayoutData.pageLayout.size = api::SizeData{
+                    pageLayout->getPageHeight()->getValue().getValue(),
+                    pageLayout->getPageWidth()->getValue().getValue()
+            };
             auto pageMargins = pageLayout->getPageMarginsSet();
-            
             for( const auto& m : pageMargins )
             {
                 const auto a = m->getAttributes();
@@ -294,7 +295,7 @@ namespace mx
                 
                 if( !a->hasType || t == core::MarginType::both || t == core::MarginType::odd )
                 {
-                    outLayoutData.pageLayout.pageMargins.odd =
+                    outLayoutData.pageLayout.margins.odd =
                             api::MarginsData{
                                     m->getLeftMargin()->getValue().getValue(),
                                     m->getRightMargin()->getValue().getValue(),
@@ -305,7 +306,7 @@ namespace mx
                 
                 if( !a->hasType || t == core::MarginType::both || t == core::MarginType::even )
                 {
-                    outLayoutData.pageLayout.pageMargins.even =
+                    outLayoutData.pageLayout.margins.even =
                             api::MarginsData{
                                     m->getLeftMargin()->getValue().getValue(),
                                     m->getRightMargin()->getValue().getValue(),

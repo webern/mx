@@ -25,12 +25,11 @@ namespace mxtest
         score.encoding.supportedItems.emplace_back( supported );
         supported.attributeName = "new-page";
         score.encoding.supportedItems.emplace_back( supported );
-        score.layout.pageLayout.pageHeight = 1545;
-        score.layout.pageLayout.pageWidth = 1194;
+        score.layout.pageLayout.size = SizeData{ 1545, 1194 };
         score.layout.scalingMillimeters = 7.2319;
         score.layout.scalingTenths = 40;
-        score.layout.pageLayout.pageMargins.odd = MarginsData{ 70, 70, 88, 88 };
-        score.layout.pageLayout.pageMargins.even = MarginsData{ 70, 70, 88, 88 };
+        score.layout.pageLayout.margins.odd = MarginsData{70, 70, 88, 88 };
+        score.layout.pageLayout.margins.even = MarginsData{70, 70, 88, 88 };
         score.layout.systemLeftMargin = 125;
         score.layout.systemRightMargin = 503;
         score.layout.topSystemDistance = 70;
@@ -74,7 +73,7 @@ namespace mxtest
         // 1
         part.measures.emplace_back( MeasureData{} );
         auto measure = &part.measures.back();
-        measure->width =
+        measure->width = 0.0;
         measure->timeSignature.beats = 4;
         measure->timeSignature.beatType = 4;
         measure->timeSignature.isImplicit = false;

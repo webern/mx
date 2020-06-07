@@ -109,10 +109,9 @@ TEST( TestPageData, PageData )
     sd.measureIndex = 30;
     score1.systems.emplace( sd );
     PageData pd;
-    pd.pageLayoutData.pageWidth = 1500;
-    pd.pageLayoutData.pageHeight = 1501;
-    pd.pageLayoutData.pageMargins.even = MarginsData{ 12.0, 0.0, 0.0, 0.0 };
-    pd.pageLayoutData.pageMargins.odd = MarginsData{ 12.0, 0.0, 0.0, 0.0 };
+    pd.pageLayoutData.size = SizeData{ 1501, 1500 };
+    pd.pageLayoutData.margins.even = MarginsData{12.0, 0.0, 0.0, 0.0 };
+    pd.pageLayoutData.margins.odd = MarginsData{12.0, 0.0, 0.0, 0.0 };
     score1.pages.emplace(6, pd );
     pd = PageData{};
     pd.newPage = Bool::no;
@@ -215,9 +214,9 @@ TEST( LoadFinaleExport, PageData )
     CHECK( pageM0.isUsed() );
     CHECK( Bool::unspecified == pageM0.newPage);
     CHECK( pageM0.pageLayoutData.isUsed() );
-    CHECK_DOUBLES_EQUAL( 1545.0, pageM0.pageLayoutData.pageHeight, MX_API_EQUALITY_EPSILON );
-    CHECK_DOUBLES_EQUAL( 1194.0, pageM0.pageLayoutData.pageWidth, MX_API_EQUALITY_EPSILON );
-    CHECK( !pageM0.pageLayoutData.pageMargins.isUsed() );
+    CHECK_DOUBLES_EQUAL( 1545.0, pageM0.pageLayoutData.size.value().height, MX_API_EQUALITY_EPSILON );
+    CHECK_DOUBLES_EQUAL( 1194.0, pageM0.pageLayoutData.size.value().width, MX_API_EQUALITY_EPSILON );
+    CHECK( !pageM0.pageLayoutData.margins.isUsed() );
     CHECK( pageM0.pageNumber );
     CHECK( "1" == *pageM0.pageNumber );
     // TODO check for new-system = unspecified
@@ -249,9 +248,7 @@ TEST( LoadFinaleExport, PageData )
     CHECK( pageM4.isUsed() );
     CHECK( Bool::yes == pageM4.newPage );
     CHECK( !pageM4.pageLayoutData.isUsed() );
-    CHECK_DOUBLES_EQUAL( -1.0, pageM4.pageLayoutData.pageHeight, MX_API_EQUALITY_EPSILON );
-    CHECK_DOUBLES_EQUAL( -1.0, pageM4.pageLayoutData.pageWidth, MX_API_EQUALITY_EPSILON );
-    CHECK( !pageM4.pageLayoutData.pageMargins.isUsed() );
+    CHECK( !pageM4.pageLayoutData.margins.isUsed() );
     CHECK( pageM4.pageNumber );
     CHECK( "2" == *pageM4.pageNumber );
 
@@ -279,9 +276,9 @@ TEST( LoadFinaleExport, PageData )
     // </print>
     CHECK( Bool::yes == pageM12.newPage);
     CHECK( pageM12.pageLayoutData.isUsed() );
-    CHECK_DOUBLES_EQUAL( 1545.0, pageM12.pageLayoutData.pageHeight, MX_API_EQUALITY_EPSILON );
-    CHECK_DOUBLES_EQUAL( 1194.0, pageM12.pageLayoutData.pageWidth, MX_API_EQUALITY_EPSILON );
-    CHECK( !pageM12.pageLayoutData.pageMargins.isUsed() );
+    CHECK_DOUBLES_EQUAL( 1599.0, pageM12.pageLayoutData.size.value().height, MX_API_EQUALITY_EPSILON );
+    CHECK_DOUBLES_EQUAL( 1203.0, pageM12.pageLayoutData.size.value().width, MX_API_EQUALITY_EPSILON );
+    CHECK( !pageM12.pageLayoutData.margins.isUsed() );
     CHECK( pageM12.pageNumber );
     CHECK( "3" == *pageM12.pageNumber );
 
@@ -294,9 +291,9 @@ TEST( LoadFinaleExport, PageData )
     // </print>
     CHECK( Bool::yes == pageM21.newPage);
     CHECK( pageM21.pageLayoutData.isUsed() );
-    CHECK_DOUBLES_EQUAL( 1545.0, pageM21.pageLayoutData.pageHeight, MX_API_EQUALITY_EPSILON );
-    CHECK_DOUBLES_EQUAL( 1194.0, pageM21.pageLayoutData.pageWidth, MX_API_EQUALITY_EPSILON );
-    CHECK( !pageM21.pageLayoutData.pageMargins.isUsed() );
+    CHECK_DOUBLES_EQUAL( 1775.0, pageM21.pageLayoutData.size.value().height, MX_API_EQUALITY_EPSILON );
+    CHECK_DOUBLES_EQUAL( 1776.0, pageM21.pageLayoutData.size.value().width, MX_API_EQUALITY_EPSILON );
+    CHECK( !pageM21.pageLayoutData.margins.isUsed() );
     CHECK( pageM21.pageNumber );
     CHECK( "4" == *pageM21.pageNumber );
 }
