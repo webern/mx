@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "mx/api/LayoutData.h"
+#include "mx/api/SetupData.h"
 #include "mx/core/elements/ScoreHeaderGroup.h"
 #include "mx/core/elements/Tenths.h"
 #include "mx/core/elements/PageMargins.h"
@@ -20,22 +20,22 @@ namespace mx
         core::PageLayoutPtr createPageLayout( const api::PageLayoutData& inPageLayout );
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // api::LayoutData -> core::ScoreHeaderGroup
-        void addLayoutData( const api::LayoutData& inScore, core::ScoreHeaderGroup& outScoreHeaderGroup );
-        void addScaling( const api::LayoutData& inScore, core::ScoreHeaderGroup& outScoreHeaderGroup );
-        void addPageLayout(const api::PageLayoutData& inPageLayout, core::ScoreHeaderGroup& outScoreHeaderGroup );
-        void addPageMargins(const api::PageMarginsData& inPageMargins, core::PageLayout& outPageLayout );
-        void addSystemMargins( const api::LayoutData& inScore, core::ScoreHeaderGroup& outScoreHeaderGroup );
-        void addAppearance( const api::LayoutData& inScore, core::ScoreHeaderGroup& outScoreHeaderGroup );
+        // api::SetupData -> core::ScoreHeaderGroup
+        void addLayoutData( const api::SetupData& inScore, core::ScoreHeaderGroup& outScoreHeaderGroup );
+        void addScaling( const api::SetupData& inScore, core::ScoreHeaderGroup& outScoreHeaderGroup );
+        void addPageLayout( const api::PageLayoutData& inPageLayout, core::ScoreHeaderGroup& outScoreHeaderGroup );
+        void addPageMargins( const api::PageMarginsData& inPageMargins, core::PageLayout& outPageLayout );
+        void addSystemMargins( const api::SetupData& inScore, core::ScoreHeaderGroup& outScoreHeaderGroup );
+        void addAppearance( const api::SetupData& inScore, core::ScoreHeaderGroup& outScoreHeaderGroup );
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // core::ScoreHeaderGroup -> api::LayoutData
-        api::LayoutData createLayout( const core::ScoreHeaderGroup& inScoreHeaderGroup );
-        void addScaling( const core::ScoreHeaderGroup& inScoreHeaderGroup, api::LayoutData& outLayoutData );
-        void addPageMargins( const core::ScoreHeaderGroup& inScoreHeaderGroup, api::LayoutData& outLayoutData );
-        void addSystemMargins( const core::ScoreHeaderGroup& inScoreHeaderGroup, api::LayoutData& outLayoutData );
-        void addStaffLayout( const core::ScoreHeaderGroup& inScoreHeaderGroup, api::LayoutData& outLayoutData );
-        void addAppearance( const core::ScoreHeaderGroup& inScoreHeaderGroup, api::LayoutData& outLayoutData );
+        // core::ScoreHeaderGroup -> api::SetupData
+        api::SetupData createLayout( const core::ScoreHeaderGroup& inScoreHeaderGroup );
+        void addScaling( const core::ScoreHeaderGroup& inScoreHeaderGroup, api::SetupData& outLayoutData );
+        void addPageMargins( const core::ScoreHeaderGroup& inScoreHeaderGroup, api::SetupData& outLayoutData );
+        void addSystemMargins( const core::ScoreHeaderGroup& inScoreHeaderGroup, api::SetupData& outLayoutData );
+        void addStaffLayout( const core::ScoreHeaderGroup& inScoreHeaderGroup, api::SetupData& outLayoutData );
+        void addAppearance( const core::ScoreHeaderGroup& inScoreHeaderGroup, api::SetupData& outLayoutData );
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Util
