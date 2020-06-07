@@ -342,7 +342,7 @@ public:
     std::string copyright;
     EncodingData encoding;
     std::vector<PageTextData> pageTextItems;
-    SetupData layout;
+    LayoutData layout;
     std::vector<PartData> parts;
     std::vector<PartGroupData> partGroups;
     int ticksPerQuarter;

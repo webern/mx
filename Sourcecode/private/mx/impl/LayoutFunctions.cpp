@@ -32,7 +32,7 @@ namespace mx
 {
     namespace impl
     {
-        void addLayoutData( const api::SetupData& inLayout, core::ScoreHeaderGroup& outScoreHeaderGroup )
+        void addLayoutData( const api::LayoutData& inLayout, core::ScoreHeaderGroup& outScoreHeaderGroup )
         {
             addScaling( inLayout, outScoreHeaderGroup );
             addPageLayout(inLayout.pageLayout, outScoreHeaderGroup);
@@ -41,7 +41,7 @@ namespace mx
         }
         
         
-        void addScaling( const api::SetupData& inLayout, core::ScoreHeaderGroup& outScoreHeaderGroup )
+        void addScaling( const api::LayoutData& inLayout, core::ScoreHeaderGroup& outScoreHeaderGroup )
         {
             if( inLayout.scalingMillimeters > 0 )
             {
@@ -134,7 +134,7 @@ namespace mx
         }
         
         
-        void addPageLayout( const api::PageLayoutData& inPageLayout, core::ScoreHeaderGroup& outScoreHeaderGroup )
+        void addPageLayout(const api::PageLayoutData& inPageLayout, core::ScoreHeaderGroup& outScoreHeaderGroup )
         {
             if( !inPageLayout.isUsed() )
             {
@@ -149,7 +149,7 @@ namespace mx
             outLayout.setPageLayout( outPageLayout );
         }
 
-        void addSystemMargins( const api::SetupData& inLayout, core::ScoreHeaderGroup& outScoreHeaderGroup )
+        void addSystemMargins( const api::LayoutData& inLayout, core::ScoreHeaderGroup& outScoreHeaderGroup )
         {
             auto& defaults = *outScoreHeaderGroup.getDefaults();
             auto& layoutGroup = *defaults.getLayoutGroup();
@@ -200,7 +200,7 @@ namespace mx
         }
 
 
-        void addAppearance( const api::SetupData& inLayoutData, core::ScoreHeaderGroup& outScoreHeaderGroup )
+        void addAppearance( const api::LayoutData& inLayoutData, core::ScoreHeaderGroup& outScoreHeaderGroup )
         {
             for( const auto& appearanceData : inLayoutData.appearance )
             {
@@ -247,9 +247,9 @@ namespace mx
         }
         
         
-        api::SetupData createLayout( const core::ScoreHeaderGroup& inScoreHeaderGroup )
+        api::LayoutData createLayout( const core::ScoreHeaderGroup& inScoreHeaderGroup )
         {
-            api::SetupData layout;
+            api::LayoutData layout;
             addScaling( inScoreHeaderGroup, layout );
             addPageMargins( inScoreHeaderGroup, layout );
             addSystemMargins( inScoreHeaderGroup, layout );
@@ -259,7 +259,7 @@ namespace mx
         }
         
         
-        void addScaling( const core::ScoreHeaderGroup& inScoreHeaderGroup, api::SetupData& outLayoutData )
+        void addScaling( const core::ScoreHeaderGroup& inScoreHeaderGroup, api::LayoutData& outLayoutData )
         {
             if( inScoreHeaderGroup.getHasDefaults() && inScoreHeaderGroup.getDefaults()->getHasScaling() )
             {
@@ -275,7 +275,7 @@ namespace mx
         }
         
         
-        void addPageMargins( const core::ScoreHeaderGroup& inScoreHeaderGroup, api::SetupData& outLayoutData )
+        void addPageMargins( const core::ScoreHeaderGroup& inScoreHeaderGroup, api::LayoutData& outLayoutData )
         {
             if( !inScoreHeaderGroup.getHasDefaults() || !inScoreHeaderGroup.getDefaults()->getLayoutGroup()->getHasPageLayout() )
             {
@@ -320,7 +320,7 @@ namespace mx
         }
         
         
-        void addSystemMargins( const core::ScoreHeaderGroup& inScoreHeaderGroup, api::SetupData& outLayoutData )
+        void addSystemMargins( const core::ScoreHeaderGroup& inScoreHeaderGroup, api::LayoutData& outLayoutData )
         {
             if( !inScoreHeaderGroup.getHasDefaults() || !inScoreHeaderGroup.getDefaults()->getLayoutGroup()->getHasSystemLayout() )
             {
@@ -349,7 +349,7 @@ namespace mx
         }
         
         
-        void addStaffLayout( const core::ScoreHeaderGroup& inScoreHeaderGroup, api::SetupData& outLayoutData )
+        void addStaffLayout( const core::ScoreHeaderGroup& inScoreHeaderGroup, api::LayoutData& outLayoutData )
         {
             const auto& layoutSet = inScoreHeaderGroup.getDefaults()->getLayoutGroup()->getStaffLayoutSet();
             if( !inScoreHeaderGroup.getHasDefaults() || layoutSet.empty() )
@@ -366,7 +366,7 @@ namespace mx
         }
 
 
-        void addAppearance( const core::ScoreHeaderGroup& inScoreHeaderGroup, api::SetupData& outLayoutData )
+        void addAppearance( const core::ScoreHeaderGroup& inScoreHeaderGroup, api::LayoutData& outLayoutData )
         {
             outLayoutData.appearance.clear();
 
