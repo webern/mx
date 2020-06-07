@@ -5,6 +5,7 @@
 #pragma once
 
 #include "mx/api/ApiCommon.h"
+#include "mx/api/SystemLayoutData.h"
 
 namespace mx
 {
@@ -35,31 +36,13 @@ namespace mx
             // score.  Specify the measure index for the first measure in the
             // system. 'new-system' will be set to yes for the this measure.
             int measureIndex;
-            
-            // System margins are relative to the page margins. Positive values
-            // indent and negative values reduce the margin size.
-            int rightMargin;
-            int leftMargin;
-            bool isMarginSpecified;
 
-            // system-distance is not clearly defined in the MusicXML specification.
-            int systemDistance;
-            bool isSystemDistanceSpecified;
-            
-            // top-system-distance is not clearly defined in the MusicXML
-            // specification.
-            int topSystemDistance;
-            bool isTopSystemDistanceSpecified;
+            /// System layout. Note, all members of SystemLayoutData are optional.
+            SystemLayoutData layout;
             
             SystemData()
             : measureIndex{ -1 }
-            , rightMargin{ 0 }
-            , leftMargin{ 0 }
-            , isMarginSpecified{ false }
-            , systemDistance{ 0 }
-            , isSystemDistanceSpecified{ false }
-            , topSystemDistance{ 0 }
-            , isTopSystemDistanceSpecified{ false }
+            , layout{}
             {
                 
             }
@@ -69,13 +52,7 @@ namespace mx
 
         MXAPI_EQUALS_BEGIN( SystemData )
         MXAPI_EQUALS_MEMBER( measureIndex )
-        MXAPI_EQUALS_MEMBER( rightMargin )
-        MXAPI_EQUALS_MEMBER( leftMargin )
-        MXAPI_EQUALS_MEMBER( isMarginSpecified )
-        MXAPI_EQUALS_MEMBER( systemDistance )
-        MXAPI_EQUALS_MEMBER( isSystemDistanceSpecified )
-        MXAPI_EQUALS_MEMBER( topSystemDistance )
-        MXAPI_EQUALS_MEMBER( isTopSystemDistanceSpecified )
+        MXAPI_EQUALS_MEMBER( layout )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( SystemData );
     }
