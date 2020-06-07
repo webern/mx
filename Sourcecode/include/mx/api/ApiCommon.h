@@ -6,11 +6,14 @@
 
 #include <cmath>
 #include <limits>
+#include <optional>
 
 namespace mx
 {
     namespace api
     {
+        using Double = long double;
+        using OptionalDouble = std::optional<Double>;
         constexpr const long double MX_API_EQUALITY_EPSILON = 0.00000001;
 
         inline bool areSame( long double left, long double right )

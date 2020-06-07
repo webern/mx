@@ -29,15 +29,8 @@ namespace mxtest
         score.layout.pageLayout.pageWidth = 1194;
         score.layout.scalingMillimeters = 7.2319;
         score.layout.scalingTenths = 40;
-        score.layout.pageLayout.pageMargins.oddPageLeftMargin = 70;
-        score.layout.pageLayout.pageMargins.oddPageRightMargin = 70;
-        score.layout.pageLayout.pageMargins.oddPageTopMargin = 88;
-        score.layout.pageLayout.pageMargins.oddPageBottomMargin = 88;
-        score.layout.pageLayout.pageMargins.evenPageLeftMargin = 70;
-        score.layout.pageLayout.pageMargins.evenPageRightMargin = 70;
-        score.layout.pageLayout.pageMargins.evenPageTopMargin = 88;
-        score.layout.pageLayout.pageMargins.evenPageBottomMargin = 88;
-        
+        score.layout.pageLayout.pageMargins.odd = MarginsData{ 70, 70, 88, 88 };
+        score.layout.pageLayout.pageMargins.even = MarginsData{ 70, 70, 88, 88 };
         score.layout.systemLeftMargin = 125;
         score.layout.systemRightMargin = 503;
         score.layout.topSystemDistance = 70;

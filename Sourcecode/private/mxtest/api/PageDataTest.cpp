@@ -111,8 +111,8 @@ TEST( TestPageData, PageData )
     PageData pd;
     pd.pageLayoutData.pageWidth = 1500;
     pd.pageLayoutData.pageHeight = 1501;
-    pd.pageLayoutData.pageMargins.evenPageLeftMargin = 12;
-    pd.pageLayoutData.pageMargins.oddPageLeftMargin = 12;
+    pd.pageLayoutData.pageMargins.even = MarginsData{ 12.0, 0.0, 0.0, 0.0 };
+    pd.pageLayoutData.pageMargins.odd = MarginsData{ 12.0, 0.0, 0.0, 0.0 };
     score1.pages.emplace(6, pd );
     pd = PageData{};
     pd.newPage = Bool::no;

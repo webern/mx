@@ -567,21 +567,16 @@ namespace mx
                             const long double right = pageMargins->getRightMargin()->getValue().getValue();
                             const long double top = pageMargins->getTopMargin()->getValue().getValue();
                             const long double bottom = pageMargins->getBottomMargin()->getValue().getValue();
+                            const api::MarginsData margins{ left, right, top, bottom };
                             const bool writeOdd = t == core::MarginType::both || t == core::MarginType::odd;
                             const bool writeEven = t == core::MarginType::both || t == core::MarginType::even;
                             if( writeOdd )
                             {
-                                outPageData.pageLayoutData.pageMargins.oddPageLeftMargin = left;
-                                outPageData.pageLayoutData.pageMargins.oddPageRightMargin = right;
-                                outPageData.pageLayoutData.pageMargins.oddPageTopMargin = top;
-                                outPageData.pageLayoutData.pageMargins.oddPageBottomMargin = bottom;
+                                outPageData.pageLayoutData.pageMargins.odd = margins;
                             }
                             if( writeEven )
                             {
-                                outPageData.pageLayoutData.pageMargins.evenPageLeftMargin = left;
-                                outPageData.pageLayoutData.pageMargins.evenPageRightMargin = right;
-                                outPageData.pageLayoutData.pageMargins.evenPageTopMargin = top;
-                                outPageData.pageLayoutData.pageMargins.evenPageBottomMargin = bottom;
+                                outPageData.pageLayoutData.pageMargins.even = margins;
                             }
                         } // for each PageMargins element
                     } // if hasPageLayout
