@@ -29,10 +29,6 @@ namespace mx
         class SystemData
         {
         public:
-
-            // TODO - delete this and use a map
-            int measureIndex;
-
             /// Should a system break occur at this measure.
             Bool systemBreak;
 
@@ -40,12 +36,11 @@ namespace mx
             SystemLayoutData layout;
 
             /// Returns true if any of the members of SystemData have values.
-            inline bool isUsed() const { return layout.isUsed() || measureIndex >= 0; }
+            inline bool isUsed() const { return systemBreak != Bool::unspecified || layout.isUsed(); }
 
             /// Explicit constructor.
             inline explicit SystemData( Bool inSystemBreak, SystemLayoutData inLayout = SystemLayoutData{} )
-                : measureIndex{ -1 }
-                , systemBreak{ inSystemBreak }
+                : systemBreak{ inSystemBreak }
                 , layout{ std::move( inLayout ) }
             {
 
@@ -58,12 +53,9 @@ namespace mx
                 
             }
         };
-        
-        inline bool operator<( const SystemData& lhs, const SystemData& rhs ) { return lhs.measureIndex < rhs.measureIndex; }
 
         MXAPI_EQUALS_BEGIN( SystemData )
         MXAPI_EQUALS_MEMBER( systemBreak )
-        MXAPI_EQUALS_MEMBER( measureIndex )
         MXAPI_EQUALS_MEMBER( layout )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( SystemData );

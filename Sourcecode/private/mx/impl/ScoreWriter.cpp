@@ -341,41 +341,38 @@ namespace mx
         
         bool ScoreWriter::isStartOfSystem( int measureIndex ) const
         {
-            auto lambda = [&]( const api::SystemData& sysData )
+            const auto iter = myScoreData.xxbadnames.find( measureIndex );
+            if( iter == std::cend( myScoreData.xxbadnames ) )
             {
-                return measureIndex == sysData.measureIndex;
-            };
-            
-            const auto iter = std::find_if( myScoreData.systems.cbegin(), myScoreData.systems.cend(), lambda );
-            return iter != myScoreData.systems.cend();
+                return false;
+            }
+            return iter->second.system.systemBreak == api::Bool::yes;
         }
 
 
         std::optional<api::PageData> ScoreWriter::findPageLayoutData( api::MeasureIndex measureIndex ) const
         {
-            const auto iter = myScoreData.pages.find( measureIndex );
-            if( iter == std::cend( myScoreData.pages ) )
+            const auto iter = myScoreData.xxbadnames.find( measureIndex );
+            if( iter == std::cend( myScoreData.xxbadnames ) )
             {
                 return std::nullopt;
             }
-            return iter->second;
+            if( !iter->second.page.isUsed() )
+            {
+                return std::nullopt;
+            }
+            return iter->second.page;
         }
         
         
         api::SystemData ScoreWriter::getSystemData( int measureIndex ) const
         {
-            auto lambda = [&]( const api::SystemData& sysData )
-            {
-                return measureIndex == sysData.measureIndex;
-            };
-            
-            const auto iter = std::find_if( myScoreData.systems.cbegin(), myScoreData.systems.cend(), lambda );
-  
-            if( iter == myScoreData.systems.cend() )
+            const auto iter = myScoreData.xxbadnames.find( measureIndex );
+            if( iter == std::cend( myScoreData.xxbadnames ) )
             {
                 return api::SystemData{};
             }
-            return *iter;
+            return iter->second.system;
         }
     }
 }

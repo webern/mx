@@ -35,21 +35,10 @@ namespace mxtest
         score.layout.systemLayout.systemDistance = 121;
         
         SystemData system;
-        system.measureIndex = 0;
+        MeasureIndex measureIndex = 0;
         system.layout.margins = LeftRight{ 0, 515 };
         system.layout.topSystemDistance = 211;
-        
-        /*
-         : measureIndex{ -1 }
-         , rightMargin{ 0 }
-         , leftMargin{ 0 }
-         , isMarginSpecified{ false }
-         , systemDistance{ 0 }
-         , isSystemDistanceSpecified{ false }
-         , topSystemDistance{ 0 }
-         , isTopSystemDistanceSpecified{ false }
-         */
-        score.systems.emplace( system );
+        score.xxbadnames[measureIndex].system = system;
         
         /*
          <print page-number="1">

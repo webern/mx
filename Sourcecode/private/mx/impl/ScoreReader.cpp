@@ -460,11 +460,15 @@ namespace mx
                         continue;
                     }
                     const auto& print = *mdc->getPrint();
+                    auto systemData = api::SystemData{};
+                    if( print.getAttributes()->hasNewSystem )
+                    {
+                        const auto newSystem = print.getAttributes()->newSystem == core::YesNo::yes;
+                        systemData.systemBreak = api::fromBool( newSystem );
+                    }
                     const auto& layoutGroup = *print.getLayoutGroup();
                     if( layoutGroup.getHasSystemLayout() )
                     {
-                        auto systemData = api::SystemData{};
-                        systemData.measureIndex = measureIndex;
                         const auto& systemLayout = *layoutGroup.getSystemLayout();
                         if( systemLayout.getHasSystemMargins() )
                         {
@@ -496,14 +500,11 @@ namespace mx
                             myOutScoreData.systems.emplace( std::move( firstSystem ) );
                         }
 #endif
-                        myOutScoreData.systems.emplace( std::move( systemData ) );
                     }
-                    else if( print.getAttributes()->hasNewSystem && print.getAttributes()->newSystem == core::YesNo::yes )
+                    if( systemData.isUsed() )
                     {
-                        // TODO - new-page should not be implicit in SystemData
-                        api::SystemData systemData{};
-                        systemData.measureIndex = measureIndex;
-                        myOutScoreData.systems.emplace( std::move( systemData ) );
+                        auto& xxbadname = myOutScoreData.xxbadnames[measureIndex];
+                        xxbadname.system = systemData;
                     }
                 }
                 ++measureIndex;
@@ -589,7 +590,8 @@ namespace mx
                     } // if hasPageLayout
                     if( outPageData.isUsed() )
                     {
-                        myOutScoreData.pages.emplace( measureIndex, outPageData );
+                        auto& xxbadname = myOutScoreData.xxbadnames[measureIndex];
+                        xxbadname.page = outPageData;
                         // TODO break?
                     }
                 } // for each mdc

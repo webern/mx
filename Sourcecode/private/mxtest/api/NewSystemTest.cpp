@@ -52,23 +52,19 @@ TEST( newSystem, doesItWork )
     pd.measures = measures;
     ScoreData s;
     s.parts.push_back( pd );
-    SystemData system;
-    system.measureIndex = 0;
-    s.systems.insert( system );
-    system.measureIndex = 3;
-    s.systems.insert( system );
-    system.measureIndex = 7;
-    s.systems.insert( system );
-    system.measureIndex = 13;
-    s.systems.insert( system );
-    system.measureIndex = 17;
-    s.systems.insert( system );
-    system.measureIndex = 25;
-    s.systems.insert( system );
-    system.measureIndex = 50;
-    s.systems.insert( system );
-    system.measureIndex = 75;
-    s.systems.insert( system );
+    XXBadName systemBreak{ true };
+    const auto addSystemBreak = [&]( MeasureIndex measureIndex )
+    {
+        s.xxbadnames.emplace( measureIndex, systemBreak );
+    };
+    addSystemBreak( 0 );
+    addSystemBreak( 3 );
+    addSystemBreak( 7 );
+    addSystemBreak( 13 );
+    addSystemBreak( 17 );
+    addSystemBreak( 25 );
+    addSystemBreak( 50 );
+    addSystemBreak( 75 );
     auto& docMgr = DocumentManager::getInstance();
     const auto id = docMgr.createFromScore( s );
     const auto doc = docMgr.getDocument( id );

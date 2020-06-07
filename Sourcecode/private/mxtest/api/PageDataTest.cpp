@@ -93,28 +93,28 @@ TEST( TestPageData, PageData )
     auto score1 = pageDataTest::makeSomeBoringMusic(33 );
     auto& docMgr = DocumentManager::getInstance();
     SystemData sd;
-    sd.measureIndex = 1;
-    score1.systems.emplace( sd );
+    MeasureIndex measureIndex = 1;
+    score1.xxbadnames[measureIndex].system = sd;
     sd = SystemData{};
-    sd.measureIndex = 5;
+    measureIndex = 5;
     sd.layout.topSystemDistance = 23;
     sd.layout.margins = LeftRight{ 55, 56 };
     sd.layout.systemDistance = 0;
-    score1.systems.emplace( sd );
-    sd.measureIndex = 10;
-    score1.systems.emplace( sd );
-    sd.measureIndex = 20;
-    score1.systems.emplace( sd );
-    sd.measureIndex = 30;
-    score1.systems.emplace( sd );
+    score1.xxbadnames[measureIndex].system = sd;
+    measureIndex = 10;
+    score1.xxbadnames[measureIndex].system = sd;
+    measureIndex = 20;
+    score1.xxbadnames[measureIndex].system = sd;
+    measureIndex = 30;
+    score1.xxbadnames[measureIndex].system = sd;
     PageData pd;
     pd.pageLayoutData.size = SizeData{ 1501, 1500 };
     pd.pageLayoutData.margins.even = MarginsData{12.0, 0.0, 0.0, 0.0 };
     pd.pageLayoutData.margins.odd = MarginsData{12.0, 0.0, 0.0, 0.0 };
-    score1.pages.emplace(6, pd );
+    score1.xxbadnames[6].page = pd;
     pd = PageData{};
     pd.newPage = Bool::no;
-    score1.pages.emplace(10, pd );
+    score1.xxbadnames[10].page = pd;
     const auto id1 = docMgr.createFromScore(score1 );
     std::stringstream xml1;
     docMgr.writeToStream( id1, xml1 );
@@ -154,52 +154,34 @@ TEST( LoadFinaleExport, PageData )
     // measure number 31 index 30 :      : system
 
     // Check that PageData objects are populated in the map for the appropriate measures.
-    auto it = score.pages.find( 0 );
-    REQUIRE( it != std::cend( score.pages ) );
-    const auto& pageM0 = it->second;
-    it = score.pages.find( 4 );
-    REQUIRE( it != std::cend( score.pages ) );
-    const auto& pageM4 = it->second;
-    it = score.pages.find( 12 );
-    REQUIRE( it != std::cend( score.pages ) );
-    const auto& pageM12 = it->second;
-    it = score.pages.find( 21 );
-    REQUIRE( it != std::cend( score.pages ) );
-    const auto& pageM21 = it->second;
+    auto it = score.xxbadnames.find( 0 );
+    REQUIRE( it != std::cend( score.xxbadnames ) );
+    const auto& pageM0 = it->second.page;
+    it = score.xxbadnames.find( 4 );
+    REQUIRE( it != std::cend( score.xxbadnames ) );
+    const auto& pageM4 = it->second.page;
+    it = score.xxbadnames.find( 12 );
+    REQUIRE( it != std::cend( score.xxbadnames ) );
+    const auto& pageM12 = it->second.page;
+    it = score.xxbadnames.find( 21 );
+    REQUIRE( it != std::cend( score.xxbadnames ) );
+    const auto& pageM21 = it->second.page;
 
     // Check that the SystemData objects are populated in the set with the appropriate measure indices.
-    // TODO - std::set is a terrible data structure for this.
-    int sdindex = 0;
-    SystemData systemM0{};
-    SystemData systemM2{};
-    SystemData systemM8{};
-    SystemData systemM30{};
-    for( const auto& sd : score.systems )
-    {
-        if( sdindex == 0 )
-        {
-            systemM0 = sd;
-        }
-        else if( sdindex == 1 )
-        {
-            systemM2 = sd;
-        }
-        else if( sdindex == 2 )
-        {
-            systemM8 = sd;
-        }
-        else if( sdindex == 3 )
-        {
-            systemM30 = sd;
-        }
-        ++sdindex;
-    }
-    CHECK( 0 == systemM0.measureIndex );
-    CHECK( 2 == systemM2.measureIndex );
-    CHECK( 8 == systemM8.measureIndex );
-    CHECK( 30 == systemM30.measureIndex );
+    it = score.xxbadnames.find( 0 );
+    REQUIRE( it != std::cend( score.xxbadnames ) );
+    const auto systemM0 = it->second.system;
+    it = score.xxbadnames.find( 2 );
+    REQUIRE( it != std::cend( score.xxbadnames ) );
+    const auto systemM2 = it->second.system;
+    it = score.xxbadnames.find( 8 );
+    REQUIRE( it != std::cend( score.xxbadnames ) );
+    const auto systemM8 = it->second.system;
+    it = score.xxbadnames.find( 30 );
+    REQUIRE( it != std::cend( score.xxbadnames ) );
+    const auto systemM30 = it->second.system;
 
-    // Check that the SystemData and PageData objects contain the correct inforation
+    // Check that the SystemData and PageData objects contain the correct information
 
     // Measure 1 (measure index 0)
     // <print page-number="1">
