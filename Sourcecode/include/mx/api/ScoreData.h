@@ -12,6 +12,7 @@
 #include "mx/api/PartData.h"
 #include "mx/api/PartGroupData.h"
 #include "mx/api/SystemData.h"
+#include "mx/api/XXBadName.h"
 
 #include <vector>
 #include <set>

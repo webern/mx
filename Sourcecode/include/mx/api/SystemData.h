@@ -29,13 +29,12 @@ namespace mx
         class SystemData
         {
         public:
-            
-            // instead of placing these within the part and measure data (like
-            // MusicXML does), the SystemData class will declaritively specify
-            // instructions about the system layout at the top-level of the
-            // score.  Specify the measure index for the first measure in the
-            // system. 'new-system' will be set to yes for the this measure.
+
+            // TODO - delete this and use a map
             int measureIndex;
+
+            /// Should a system break occur at this measure.
+            Bool systemBreak;
 
             /// System layout. Note, all members of SystemLayoutData are optional.
             SystemLayoutData layout;
@@ -43,9 +42,18 @@ namespace mx
             /// Returns true if any of the members of SystemData have values.
             inline bool isUsed() const { return layout.isUsed() || measureIndex >= 0; }
 
+            /// Explicit constructor.
+            inline explicit SystemData( Bool inSystemBreak, SystemLayoutData inLayout = SystemLayoutData{} )
+                : measureIndex{ -1 }
+                , systemBreak{ inSystemBreak }
+                , layout{ std::move( inLayout ) }
+            {
+
+            }
+
+            /// Default constructor.
             SystemData()
-            : measureIndex{ -1 }
-            , layout{}
+                : SystemData{ Bool::unspecified  }
             {
                 
             }
@@ -54,6 +62,7 @@ namespace mx
         inline bool operator<( const SystemData& lhs, const SystemData& rhs ) { return lhs.measureIndex < rhs.measureIndex; }
 
         MXAPI_EQUALS_BEGIN( SystemData )
+        MXAPI_EQUALS_MEMBER( systemBreak )
         MXAPI_EQUALS_MEMBER( measureIndex )
         MXAPI_EQUALS_MEMBER( layout )
         MXAPI_EQUALS_END;
