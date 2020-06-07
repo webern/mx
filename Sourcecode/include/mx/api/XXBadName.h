@@ -6,6 +6,9 @@
 
 #include "mx/api/ApiCommon.h"
 #include "mx/api/SystemLayoutData.h"
+#include "mx/api/MeasureData.h"
+
+#include <map>
 
 namespace mx
 {
@@ -63,5 +66,29 @@ namespace mx
             MXAPI_EQUALS_MEMBER( page )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( XXBadName );
+
+        inline bool operator==( const std::map<MeasureIndex, XXBadName>& a, const std::map<MeasureIndex, XXBadName>& b )
+        {
+            if( a.size() != b.size() )
+            {
+                return false;
+            }
+            auto ai = a.cbegin();
+            auto bi = b.cbegin();
+            const auto aend = a.cend();
+            const auto bend = b.cend();
+            for( ; ai != aend && bi != bend; ++ai, ++bi )
+            {
+                if( ai->first != bi->first )
+                {
+                    return false;
+                }
+                if( ai->second != bi->second )
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }

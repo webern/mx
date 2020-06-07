@@ -86,26 +86,38 @@ namespace pageDataTest
     }
 }
 
-#define MJB_DEBUG
+//#define MJB_DEBUG
 
 TEST( TestPageData, PageData )
 {
     auto score1 = pageDataTest::makeSomeBoringMusic(33 );
     auto& docMgr = DocumentManager::getInstance();
-    SystemData sd;
+    SystemData sd{ Bool::yes };
     MeasureIndex measureIndex = 1;
     score1.xxbadnames[measureIndex].system = sd;
-    sd = SystemData{};
     measureIndex = 5;
-    sd.layout.topSystemDistance = 23;
-    sd.layout.margins = LeftRight{ 55, 56 };
+    sd = SystemData{ Bool::yes };
+    sd.layout.topSystemDistance = 1;
+    sd.layout.margins = LeftRight{ 2, 3 };
     sd.layout.systemDistance = 0;
     score1.xxbadnames[measureIndex].system = sd;
     measureIndex = 10;
+    sd = SystemData{ Bool::yes };
+    sd.layout.topSystemDistance = 4;
+    sd.layout.margins = LeftRight{ 5, 6 };
+    sd.layout.systemDistance = std::nullopt;
     score1.xxbadnames[measureIndex].system = sd;
     measureIndex = 20;
+    sd = SystemData{ Bool::yes };
+    sd.layout.topSystemDistance = std::nullopt;
+    sd.layout.margins = LeftRight{ 7, 8 };
+    sd.layout.systemDistance = 9;
     score1.xxbadnames[measureIndex].system = sd;
     measureIndex = 30;
+    sd = SystemData{ Bool::yes };
+    sd.layout.topSystemDistance = 10;
+    sd.layout.margins = LeftRight{ 11, 12 };
+    sd.layout.systemDistance = 13;
     score1.xxbadnames[measureIndex].system = sd;
     PageData pd;
     pd.pageLayoutData.size = SizeData{ 1501, 1500 };

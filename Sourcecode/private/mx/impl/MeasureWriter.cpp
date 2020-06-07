@@ -205,7 +205,6 @@ namespace mx
             if( pageData )
             {
                 writePageInfo( *pageData );
-                // TODO - write page data
             }
 
             if( myHistory.getCursor().isFirstMeasureInPart )
@@ -265,34 +264,38 @@ namespace mx
                 return;
             }
             
-            auto printMdc = core::makeMusicDataChoice();
-            printMdc->setChoice( core::MusicDataChoice::Choice::print );
-            auto& print = *printMdc->getPrint();
-            print.getAttributes()->hasNewSystem = true;
-            print.getAttributes()->newSystem = core::YesNo::yes;
-
-            auto& layoutGroup = *print.getLayoutGroup();
-            myOutMeasure->getMusicDataGroup()->addMusicDataChoice( printMdc );
+            auto outPrintMdc = core::makeMusicDataChoice();
+            outPrintMdc->setChoice(core::MusicDataChoice::Choice::print );
+            auto& outPrint = *outPrintMdc->getPrint();
+            auto& outLayoutGroup = *outPrint.getLayoutGroup();
+            myOutMeasure->getMusicDataGroup()->addMusicDataChoice( outPrintMdc );
             myHistory.log( "writePrint" );
 
-            if( systemData.isUsed() )
+            if( isSpecified( systemData.systemBreak ) )
             {
-                auto& outSystemLayout = *layoutGroup.getSystemLayout();
+                outPrint.getAttributes()->hasNewSystem = true;
+                outPrint.getAttributes()->newSystem =
+                        systemData.systemBreak == api::Bool::yes ? core::YesNo::yes : core::YesNo::no;
+            }
+
+            if( systemData.layout.isUsed() )
+            {
+                auto& outSystemLayout = *outLayoutGroup.getSystemLayout();
                 const auto& inSystemLayout = systemData.layout;
 
                 if( inSystemLayout.margins )
                 {
-                    layoutGroup.setHasSystemLayout( true );
+                    outLayoutGroup.setHasSystemLayout(true );
                     const auto& inMargins = inSystemLayout.margins.value();
                     outSystemLayout.setHasSystemMargins(true );
                     auto& margins = *outSystemLayout.getSystemMargins();
-                    margins.getLeftMargin()->setValue( core::TenthsValue{static_cast<core::DecimalType>( inMargins.left ) } );
-                    margins.getRightMargin()->setValue( core::TenthsValue{static_cast<core::DecimalType>( inMargins.right ) } );
+                    margins.getLeftMargin()->setValue( core::TenthsValue{ static_cast<core::DecimalType>( inMargins.left ) } );
+                    margins.getRightMargin()->setValue( core::TenthsValue{ static_cast<core::DecimalType>( inMargins.right ) } );
                 }
 
                 if( inSystemLayout.topSystemDistance )
                 {
-                    layoutGroup.setHasSystemLayout( true );
+                    outLayoutGroup.setHasSystemLayout(true );
                     outSystemLayout.setHasTopSystemDistance(true );
                     outSystemLayout.getTopSystemDistance()->setValue(core::TenthsValue{
                         static_cast<core::DecimalType>( inSystemLayout.topSystemDistance.value() )
@@ -301,13 +304,13 @@ namespace mx
 
                 if( inSystemLayout.systemDistance )
                 {
-                    layoutGroup.setHasSystemLayout( true );
+                    outLayoutGroup.setHasSystemLayout(true );
                     outSystemLayout.setHasSystemDistance(true );
                     outSystemLayout.getSystemDistance()->setValue( core::TenthsValue{
                         static_cast<core::DecimalType>( inSystemLayout.systemDistance.value() )
                     });
                 }
-           }
+            }
         }
 
         void MeasureWriter::writePageInfo( const api::PageData& inPageData )
@@ -356,7 +359,6 @@ namespace mx
         
         void MeasureWriter::writeStaves()
         {
-            
             myHistory.resetCursorFofStaffIterations();
             myPreviousCursor = myHistory.getCursor();
             for( const auto& staff : myMeasureData.staves )
