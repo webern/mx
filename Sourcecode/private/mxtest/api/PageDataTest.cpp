@@ -119,6 +119,9 @@ TEST( TestPageData, PageData )
     const auto id1 = docMgr.createFromScore(score1 );
     std::stringstream xml1;
     docMgr.writeToStream( id1, xml1 );
+#if 1
+    docMgr.writeToFile( id1, "/Users/mjb/Desktop/TestPageData.musicxml" );
+#endif
     docMgr.destroyDocument( id1 );
     std::istringstream xml1is{ xml1.str() };
     const auto id2 = docMgr.createFromStream( xml1is );
