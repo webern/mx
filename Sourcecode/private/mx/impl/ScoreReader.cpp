@@ -469,21 +469,20 @@ namespace mx
                         if( systemLayout.getHasSystemMargins() )
                         {
                             const auto& margins = *systemLayout.getSystemMargins();
-                            systemData.isMarginSpecified = true;
-                            systemData.leftMargin = static_cast<int>( std::ceil( margins.getLeftMargin()->getValue().getValue() - 0.5 ) );
-                            systemData.rightMargin = static_cast<int>( std::ceil( margins.getRightMargin()->getValue().getValue() - 0.5 ) );
+                            systemData.layout.margins = api::LeftRight{
+                                    margins.getLeftMargin()->getValue().getValue(),
+                                    margins.getRightMargin()->getValue().getValue()
+                            };
                         }
                         
                         if( systemLayout.getHasSystemDistance() )
                         {
-                            systemData.isSystemDistanceSpecified = true;
-                            systemData.systemDistance = static_cast<int>( std::ceil( systemLayout.getSystemDistance()->getValue().getValue() - 0.5 ) );
+                            systemData.layout.systemDistance = systemLayout.getSystemDistance()->getValue().getValue();
                         }
                         
                         if( systemLayout.getHasTopSystemDistance() )
                         {
-                            systemData.isTopSystemDistanceSpecified = true;
-                            systemData.topSystemDistance = static_cast<int>( std::ceil( systemLayout.getTopSystemDistance()->getValue().getValue() - 0.5 ) );
+                            systemData.layout.topSystemDistance = systemLayout.getTopSystemDistance()->getValue().getValue();
                         }
 
                         // TODO - why was this here?

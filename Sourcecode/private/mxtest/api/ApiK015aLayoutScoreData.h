@@ -30,16 +30,14 @@ namespace mxtest
         score.layout.scalingTenths = 40;
         score.layout.pageLayout.margins.odd = MarginsData{70, 70, 88, 88 };
         score.layout.pageLayout.margins.even = MarginsData{70, 70, 88, 88 };
-        score.layout.systemLeftMargin = 125;
-        score.layout.systemRightMargin = 503;
-        score.layout.topSystemDistance = 70;
-        score.layout.systemDistance = 121;
+        score.layout.systemLayout.margins = LeftRight{ 125, 503 };
+        score.layout.systemLayout.topSystemDistance = 70;
+        score.layout.systemLayout.systemDistance = 121;
         
         SystemData system;
         system.measureIndex = 0;
-        system.rightMargin = 0;
-        system.leftMargin = 515;
-        system.topSystemDistance = 211;
+        system.layout.margins = LeftRight{ 0, 515 };
+        system.layout.topSystemDistance = 211;
         
         /*
          : measureIndex{ -1 }

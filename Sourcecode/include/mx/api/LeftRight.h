@@ -26,14 +26,18 @@ namespace mx
             /// Right measurement, in tenths.
             Double right;
 
-            LeftRight()
-                : left( 0.0 )
-                , right( 0.0 )
+            inline explicit LeftRight( Double inLeft, Double inRight )
+            : left{ inLeft }
+            , right{ inRight }
             {
 
             }
 
+            LeftRight()
+                : LeftRight{ 0.0, 0.0 }
+            {
 
+            }
         };
 
         MXAPI_EQUALS_BEGIN( LeftRight )

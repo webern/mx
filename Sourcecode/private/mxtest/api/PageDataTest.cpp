@@ -95,12 +95,9 @@ TEST( TestPageData, PageData )
     score1.systems.emplace( sd );
     sd = SystemData{};
     sd.measureIndex = 5;
-    sd.topSystemDistance = 23;
-    sd.leftMargin = 55;
-    sd.rightMargin = 56;
-    sd.isSystemDistanceSpecified = true;
-    sd.isTopSystemDistanceSpecified = true;
-    sd.isMarginSpecified = true;
+    sd.layout.topSystemDistance = 23;
+    sd.layout.margins = LeftRight{ 55, 56 };
+    sd.layout.systemDistance = 0;
     score1.systems.emplace( sd );
     sd.measureIndex = 10;
     score1.systems.emplace( sd );
@@ -223,13 +220,12 @@ TEST( LoadFinaleExport, PageData )
     CHECK( pageM0.pageNumber );
     CHECK( "1" == *pageM0.pageNumber );
     // TODO check for new-system = unspecified
-    CHECK( systemM0.isMarginSpecified );
-    CHECK_DOUBLES_EQUAL( 0.0, systemM0.rightMargin, MX_API_EQUALITY_EPSILON );
-    CHECK_DOUBLES_EQUAL( 70.0, systemM0.leftMargin, MX_API_EQUALITY_EPSILON );
-    CHECK( !systemM0.isSystemDistanceSpecified );
-    CHECK_DOUBLES_EQUAL( 0.0, systemM0.systemDistance, MX_API_EQUALITY_EPSILON );
-    CHECK( systemM0.isTopSystemDistanceSpecified );
-    CHECK_DOUBLES_EQUAL( 211.0, systemM0.topSystemDistance, MX_API_EQUALITY_EPSILON );
+    CHECK( systemM0.layout.margins );
+    CHECK_DOUBLES_EQUAL( 0.0, systemM0.layout.margins.value().right, MX_API_EQUALITY_EPSILON );
+    CHECK_DOUBLES_EQUAL( 70.0, systemM0.layout.margins.value().left, MX_API_EQUALITY_EPSILON );
+    CHECK( !systemM0.layout.systemDistance );
+    CHECK( systemM0.layout.topSystemDistance );
+    CHECK_DOUBLES_EQUAL( 211.0, systemM0.layout.topSystemDistance.value(), MX_API_EQUALITY_EPSILON );
 
     // Measure 3 (measure index 2)
     // <print new-system="yes">
@@ -238,14 +234,11 @@ TEST( LoadFinaleExport, PageData )
     //   </system-layout>
     // </print>
     // TODO check for new-system = yes
-    CHECK( !systemM2.isMarginSpecified );
-    CHECK_DOUBLES_EQUAL( 0.0, systemM2.rightMargin, MX_API_EQUALITY_EPSILON );
-    CHECK_DOUBLES_EQUAL( 0.0, systemM2.leftMargin, MX_API_EQUALITY_EPSILON );
-    CHECK( systemM2.isSystemDistanceSpecified );
-    CHECK_DOUBLES_EQUAL( 114.0, systemM2.systemDistance, MX_API_EQUALITY_EPSILON );
-    CHECK( !systemM2.isTopSystemDistanceSpecified );
-    CHECK_DOUBLES_EQUAL( 0.0, systemM2.topSystemDistance, MX_API_EQUALITY_EPSILON );
-
+    CHECK( !systemM2.layout.margins );
+    CHECK( systemM2.layout.systemDistance );
+    CHECK_DOUBLES_EQUAL( 114.0, systemM2.layout.systemDistance.value(), MX_API_EQUALITY_EPSILON );
+    CHECK( !systemM2.layout.topSystemDistance );
+    
     // Measure 5 (measure index 4)
     // <print new-page="yes" page-number="2"/>
     CHECK( pageM4.isUsed() );
@@ -262,13 +255,10 @@ TEST( LoadFinaleExport, PageData )
     //   </system-layout>
     // </print>
     // TODO check for new-system = yes
-    CHECK( !systemM8.isMarginSpecified );
-    CHECK_DOUBLES_EQUAL( 0.0, systemM8.rightMargin, MX_API_EQUALITY_EPSILON );
-    CHECK_DOUBLES_EQUAL( 0.0, systemM8.leftMargin, MX_API_EQUALITY_EPSILON );
-    CHECK( systemM8.isSystemDistanceSpecified );
-    CHECK_DOUBLES_EQUAL( 114.0, systemM8.systemDistance, MX_API_EQUALITY_EPSILON );
-    CHECK( !systemM8.isTopSystemDistanceSpecified );
-    CHECK_DOUBLES_EQUAL( 0.0, systemM8.topSystemDistance, MX_API_EQUALITY_EPSILON );
+    CHECK( !systemM8.layout.margins );
+    CHECK( systemM8.layout.systemDistance );
+    CHECK_DOUBLES_EQUAL( 114.0, systemM8.layout.systemDistance.value(), MX_API_EQUALITY_EPSILON );
+    CHECK( !systemM8.layout.topSystemDistance );
 
     // Measure 13 (measure index 12)
     // <print new-page="yes" page-number="3">

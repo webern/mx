@@ -3520,6 +3520,10 @@
 		29843AD0248C0CA9006A8E34 /* PageLayoutData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PageLayoutData.h; sourceTree = "<group>"; };
 		29843AD1248C0CA9006A8E34 /* PageMarginsData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PageMarginsData.h; sourceTree = "<group>"; };
 		29843AD2248C0CA9006A8E34 /* KeyComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KeyComponent.h; sourceTree = "<group>"; };
+		29843AD5248D47E9006A8E34 /* SystemLayoutData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SystemLayoutData.h; sourceTree = "<group>"; };
+		29843AD6248D47E9006A8E34 /* SizeData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SizeData.h; sourceTree = "<group>"; };
+		29843AD7248D47EA006A8E34 /* LeftRight.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LeftRight.h; sourceTree = "<group>"; };
+		29843AD8248D47EA006A8E34 /* MarginsData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MarginsData.h; sourceTree = "<group>"; };
 		299F7FE61CA8D2200084CAE5 /* libMx.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMx.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		29A02E781FE0F71A00B74FDE /* Version.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Version.cpp; sourceTree = "<group>"; };
 		29A02E841FE0FA5000B74FDE /* EncodingData.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = EncodingData.cpp; sourceTree = "<group>"; };
@@ -6390,8 +6394,10 @@
 				29843AD2248C0CA9006A8E34 /* KeyComponent.h */,
 				29DC3843225C0DB400814240 /* KeyData.h */,
 				29DC385C225C0DB700814240 /* LayoutData.h */,
+				29843AD7248D47EA006A8E34 /* LeftRight.h */,
 				29DC3854225C0DB600814240 /* LineData.h */,
 				29DC3860225C0DB700814240 /* LyricData.h */,
+				29843AD8248D47EA006A8E34 /* MarginsData.h */,
 				29DC385D225C0DB700814240 /* MarkData.h */,
 				29DC385F225C0DB700814240 /* MeasureData.h */,
 				29DC385E225C0DB700814240 /* MeasureLocation.h */,
@@ -6409,10 +6415,12 @@
 				29DC3850225C0DB500814240 /* PositionData.h */,
 				29DC3846225C0DB400814240 /* PrintData.h */,
 				29DC3847225C0DB400814240 /* ScoreData.h */,
+				29843AD6248D47E9006A8E34 /* SizeData.h */,
 				29DC3849225C0DB500814240 /* SoundID.h */,
 				29DC3848225C0DB400814240 /* SpannerData.h */,
 				29DC3864225C0DB800814240 /* StaffData.h */,
 				29DC384C225C0DB500814240 /* SystemData.h */,
+				29843AD5248D47E9006A8E34 /* SystemLayoutData.h */,
 				29DC384E225C0DB500814240 /* TempoData.h */,
 				29DC3842225C0DB400814240 /* TimeSignatureData.h */,
 				29DC3853225C0DB600814240 /* TupletData.h */,
@@ -10290,7 +10298,7 @@
 				INFOPLIST_FILE = MxmacOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.matthewjamesbriggs.MxmacOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -10323,7 +10331,7 @@
 				INFOPLIST_FILE = MxmacOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.matthewjamesbriggs.MxmacOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -10354,7 +10362,7 @@
 				HEADER_SEARCH_PATHS = /usr/local/include;
 				INFOPLIST_FILE = MxiOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "";
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -10394,7 +10402,7 @@
 				HEADER_SEARCH_PATHS = /usr/local/include;
 				INFOPLIST_FILE = MxiOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "";
 				MTL_ENABLE_DEBUG_INFO = NO;

@@ -39,7 +39,10 @@ namespace mx
 
             /// System layout. Note, all members of SystemLayoutData are optional.
             SystemLayoutData layout;
-            
+
+            /// Returns true if any of the members of SystemData have values.
+            inline bool isUsed() const { return layout.isUsed() || measureIndex >= 0; }
+
             SystemData()
             : measureIndex{ -1 }
             , layout{}

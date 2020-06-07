@@ -257,16 +257,10 @@ namespace mx
         void MeasureWriter::writeSystemInfo()
         {
             auto systemData = myScoreWriter.getSystemData( myHistory.getCursor().measureIndex );
-            
-            const bool isSystemDataSpecified =
-                   systemData.isMarginSpecified
-                || systemData.isSystemDistanceSpecified
-                || systemData.isTopSystemDistanceSpecified
-                || systemData.measureIndex >= 0;
 
             // TODO - this looks wrong. should the system info be in every part or just the first?
             // TODO - should be || ?
-            if( !isSystemDataSpecified && !myHistory.getCursor().isFirstMeasureInPart )
+            if( !systemData.isUsed() && !myHistory.getCursor().isFirstMeasureInPart )
             {
                 return;
             }
@@ -281,29 +275,35 @@ namespace mx
             myOutMeasure->getMusicDataGroup()->addMusicDataChoice( printMdc );
             myHistory.log( "writePrint" );
 
-            if( isSystemDataSpecified )
+            if( systemData.isUsed() )
             {
                 layoutGroup.setHasSystemLayout( true );
-                auto& systemLayout = *layoutGroup.getSystemLayout();
+                auto& outSystemLayout = *layoutGroup.getSystemLayout();
+                const auto& inSystemLayout = systemData.layout;
 
-                if( systemData.isMarginSpecified )
+                if( inSystemLayout.margins )
                 {
-                    systemLayout.setHasSystemMargins( true );
-                    auto& margins = *systemLayout.getSystemMargins();
-                    margins.getLeftMargin()->setValue( core::TenthsValue{static_cast<core::DecimalType>( systemData.leftMargin ) } );
-                    margins.getRightMargin()->setValue( core::TenthsValue{static_cast<core::DecimalType>( systemData.rightMargin ) } );
+                    const auto& inMargins = inSystemLayout.margins.value();
+                    outSystemLayout.setHasSystemMargins(true );
+                    auto& margins = *outSystemLayout.getSystemMargins();
+                    margins.getLeftMargin()->setValue( core::TenthsValue{static_cast<core::DecimalType>( inMargins.left ) } );
+                    margins.getRightMargin()->setValue( core::TenthsValue{static_cast<core::DecimalType>( inMargins.right ) } );
                 }
 
-                if( systemData.isTopSystemDistanceSpecified )
+                if( inSystemLayout.topSystemDistance )
                 {
-                    systemLayout.setHasTopSystemDistance( true );
-                    systemLayout.getTopSystemDistance()->setValue( core::TenthsValue{static_cast<core::DecimalType>( systemData.topSystemDistance ) } );
+                    outSystemLayout.setHasTopSystemDistance(true );
+                    outSystemLayout.getTopSystemDistance()->setValue(core::TenthsValue{
+                        static_cast<core::DecimalType>( inSystemLayout.topSystemDistance.value() )
+                    });
                 }
 
-                if( systemData.isSystemDistanceSpecified )
+                if( inSystemLayout.systemDistance )
                 {
-                    systemLayout.setHasSystemDistance( true );
-                    systemLayout.getSystemDistance()->setValue( core::TenthsValue{static_cast<core::DecimalType>( systemData.systemDistance ) } );
+                    outSystemLayout.setHasSystemDistance(true );
+                    outSystemLayout.getSystemDistance()->setValue( core::TenthsValue{
+                        static_cast<core::DecimalType>( inSystemLayout.systemDistance.value() )
+                    });
                 }
            }
         }

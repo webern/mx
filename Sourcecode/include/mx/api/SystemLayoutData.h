@@ -33,6 +33,9 @@ namespace mx
             /// the space between staves within the same system, in tenths.
             OptionalDouble staffDistance;
 
+            /// Returns true if any of the members have values.
+            inline bool isUsed() const { return margins || systemDistance || topSystemDistance || staffDistance; }
+
             explicit inline SystemLayoutData(
                     std::optional<LeftRight> inMargins = std::nullopt,
                     OptionalDouble inSystemDistance = std::nullopt,

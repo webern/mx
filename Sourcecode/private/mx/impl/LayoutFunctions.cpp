@@ -156,46 +156,48 @@ namespace mx
             auto& systemLayout = *layoutGroup.getSystemLayout();
             auto& systemMargins = *systemLayout.getSystemMargins();
 
-            if( inLayout.systemDistance > 0 )
+            if( inLayout.systemLayout.systemDistance )
             {
                 outScoreHeaderGroup.setHasDefaults( true );
                 layoutGroup.setHasSystemLayout( true );
                 systemLayout.setHasSystemDistance( true );
-                systemLayout.getSystemDistance()->setValue( core::TenthsValue{ inLayout.systemDistance } );
+                systemLayout.getSystemDistance()->setValue(
+                        core::TenthsValue{ inLayout.systemLayout.systemDistance.value() }
+                );
             }
             
-            if( inLayout.staffDistance > 0 )
+            if( inLayout.systemLayout.staffDistance )
             {
                 outScoreHeaderGroup.setHasDefaults( true );
                 auto staffLayout = core::makeStaffLayout();
                 staffLayout->setHasStaffDistance( true );
-                staffLayout->getStaffDistance()->setValue( core::TenthsValue{ inLayout.staffDistance } );
+                staffLayout->getStaffDistance()->setValue(
+                        core::TenthsValue{ inLayout.systemLayout.staffDistance.value() }
+                );
                 layoutGroup.addStaffLayout( staffLayout );
             }
             
-            if( inLayout.systemLeftMargin > 0 )
+            if( inLayout.systemLayout.margins )
             {
+                const auto& margins = inLayout.systemLayout.margins.value();
                 outScoreHeaderGroup.setHasDefaults( true );
                 layoutGroup.setHasSystemLayout( true );
                 systemLayout.setHasSystemMargins( true );
-                systemMargins.getLeftMargin()->setValue( core::TenthsValue{ inLayout.systemLeftMargin } );
-            }
-            
-            if( inLayout.systemRightMargin > 0 )
-            {
+                systemMargins.getLeftMargin()->setValue( core::TenthsValue{ margins.left } );
                 outScoreHeaderGroup.setHasDefaults( true );
                 layoutGroup.setHasSystemLayout( true );
                 systemLayout.setHasSystemMargins( true );
-                systemMargins.getRightMargin()->setValue( core::TenthsValue{ inLayout.systemRightMargin } );
+                systemMargins.getRightMargin()->setValue( core::TenthsValue{ margins.right } );
             }
             
-            if( inLayout.topSystemDistance > 0 )
+            if( inLayout.systemLayout.topSystemDistance )
             {
+                const auto& top = inLayout.systemLayout.topSystemDistance.value();
                 outScoreHeaderGroup.setHasDefaults( true );
                 layoutGroup.setHasSystemLayout( true );
                 systemLayout.setHasSystemMargins( true );
                 systemLayout.setHasTopSystemDistance( true );
-                systemLayout.getTopSystemDistance()->setValue( core::TenthsValue{ inLayout.topSystemDistance } );
+                systemLayout.getTopSystemDistance()->setValue( core::TenthsValue{ top } );
             }
         }
 
@@ -331,21 +333,25 @@ namespace mx
             
             if( systemLayout->getHasTopSystemDistance() )
             {
-                outLayoutData.topSystemDistance = systemLayout->getTopSystemDistance()->getValue().getValue();
+                outLayoutData.systemLayout.topSystemDistance =
+                        systemLayout->getTopSystemDistance()->getValue().getValue();
             }
             
             if( systemLayout->getHasSystemDistance() )
             {
-                outLayoutData.systemDistance = systemLayout->getSystemDistance()->getValue().getValue();
+                outLayoutData.systemLayout.systemDistance =
+                        systemLayout->getSystemDistance()->getValue().getValue();
             }
             
             if( systemLayout->getHasSystemMargins() )
             {
                 auto systemMargins = systemLayout->getSystemMargins();
-                outLayoutData.systemLeftMargin = systemMargins->getLeftMargin()->getValue().getValue();
-                outLayoutData.systemRightMargin = systemMargins->getRightMargin()->getValue().getValue();
+                outLayoutData.systemLayout.margins =
+                        api::LeftRight{
+                            systemMargins->getLeftMargin()->getValue().getValue(),
+                            systemMargins->getRightMargin()->getValue().getValue()
+                };
             }
-        
         }
         
         
@@ -361,7 +367,8 @@ namespace mx
             
             if( firstStaffLayout->getHasStaffDistance() )
             {
-                outLayoutData.staffDistance = firstStaffLayout->getStaffDistance()->getValue().getValue();
+                outLayoutData.systemLayout.staffDistance =
+                        firstStaffLayout->getStaffDistance()->getValue().getValue();
             }
         }
 
