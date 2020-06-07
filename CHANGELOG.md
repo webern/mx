@@ -4,14 +4,18 @@ On 2020-05-31, two tags were deleted from origin, `v1.0.0` and `v1.0.1` and repl
 If you cloned/forked the repository before 2020-05-31, consider making a new clone/fork or otherwise repairing the tags.
 
 ## [Unreleased]
+
+### Breaking Changes
 - Add support for `new-page` attributes and page layout [#94]
+
+### Non-Breaking Changes
+- Bump C++ standard to 17 [#93]
 - Support non-traditional key signatures in `mx::api` [#81]
 - Add a constructor for `PitchData` [#90]
 - Provide a hint in the exception message when a zip file is attempted [#67]
 - Update the readme fairly substantially [#91]
 - Add a changelog [#97]
 - Hide the independence of the XML parser to reduce confusion about dependency management [#79]
-- Bump C++ standard to 17 [#93]
 
 [#67]: https://github.com/webern/mx/pull/67
 [#79]: https://github.com/webern/mx/pull/79
