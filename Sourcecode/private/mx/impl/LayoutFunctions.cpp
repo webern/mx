@@ -54,7 +54,7 @@ namespace mx
             {
                 outScoreHeaderGroup.setHasDefaults( true );
                 outScoreHeaderGroup.getDefaults()->setHasScaling( true );
-                outScoreHeaderGroup.getDefaults()->getScaling()->getTenths()->setValue( core::PositiveDecimal{inDefaults.scalingTenths } );
+                outScoreHeaderGroup.getDefaults()->getScaling()->getTenths()->setValue( core::PositiveDecimal{ inDefaults.scalingTenths } );
             }
         }
 
