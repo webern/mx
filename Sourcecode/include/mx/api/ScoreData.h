@@ -12,7 +12,7 @@
 #include "mx/api/PartData.h"
 #include "mx/api/PartGroupData.h"
 #include "mx/api/SystemData.h"
-#include "mx/api/XXBadName.h"
+#include "mx/api/LayoutData.h"
 
 #include <vector>
 #include <set>
@@ -50,7 +50,7 @@ namespace mx
             int ticksPerQuarter;
 
             // TODO - document and rename
-            std::map<MeasureIndex, XXBadName> xxbadnames;
+            std::map<MeasureIndex, LayoutData> layout;
 
             int getNumMeasures() const;
             int getNumStavesPerSystem() const;

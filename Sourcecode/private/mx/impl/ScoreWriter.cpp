@@ -341,8 +341,8 @@ namespace mx
         
         bool ScoreWriter::isStartOfSystem( int measureIndex ) const
         {
-            const auto iter = myScoreData.xxbadnames.find( measureIndex );
-            if( iter == std::cend( myScoreData.xxbadnames ) )
+            const auto iter = myScoreData.layout.find( measureIndex );
+            if( iter == std::cend( myScoreData.layout ) )
             {
                 return false;
             }
@@ -352,8 +352,8 @@ namespace mx
 
         std::optional<api::PageData> ScoreWriter::findPageLayoutData( api::MeasureIndex measureIndex ) const
         {
-            const auto iter = myScoreData.xxbadnames.find( measureIndex );
-            if( iter == std::cend( myScoreData.xxbadnames ) )
+            const auto iter = myScoreData.layout.find( measureIndex );
+            if( iter == std::cend( myScoreData.layout ) )
             {
                 return std::nullopt;
             }
@@ -367,8 +367,8 @@ namespace mx
         
         api::SystemData ScoreWriter::getSystemData( int measureIndex ) const
         {
-            const auto iter = myScoreData.xxbadnames.find( measureIndex );
-            if( iter == std::cend( myScoreData.xxbadnames ) )
+            const auto iter = myScoreData.layout.find( measureIndex );
+            if( iter == std::cend( myScoreData.layout ) )
             {
                 return api::SystemData{};
             }

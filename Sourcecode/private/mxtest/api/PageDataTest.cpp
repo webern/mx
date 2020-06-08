@@ -41,7 +41,7 @@ T_END;
 
 namespace pageDataTest
 {
-    inline mx::api::ScoreData makeSomeBoringMusic(int inNumMeasures)
+    inline mx::api::ScoreData makeSomeBoringMusic( int inNumMeasures)
     {
         const auto ticksPerQuarter = 1024;
         const auto whole = ticksPerQuarter * 4;
@@ -90,44 +90,44 @@ namespace pageDataTest
 
 TEST( TestPageData, PageData )
 {
-    auto score1 = pageDataTest::makeSomeBoringMusic(33 );
+    auto score1 = pageDataTest::makeSomeBoringMusic( 33 );
     auto& docMgr = DocumentManager::getInstance();
     SystemData sd{ Bool::yes };
     MeasureIndex measureIndex = 1;
-    score1.xxbadnames[measureIndex].system = sd;
+    score1.layout[measureIndex].system = sd;
     measureIndex = 5;
     sd = SystemData{ Bool::yes };
     sd.layout.topSystemDistance = 1;
     sd.layout.margins = LeftRight{ 2, 3 };
     sd.layout.systemDistance = 0;
-    score1.xxbadnames[measureIndex].system = sd;
+    score1.layout[measureIndex].system = sd;
     measureIndex = 10;
     sd = SystemData{ Bool::yes };
     sd.layout.topSystemDistance = 4;
     sd.layout.margins = LeftRight{ 5, 6 };
     sd.layout.systemDistance = std::nullopt;
-    score1.xxbadnames[measureIndex].system = sd;
+    score1.layout[measureIndex].system = sd;
     measureIndex = 20;
     sd = SystemData{ Bool::yes };
     sd.layout.topSystemDistance = std::nullopt;
     sd.layout.margins = LeftRight{ 7, 8 };
     sd.layout.systemDistance = 9;
-    score1.xxbadnames[measureIndex].system = sd;
+    score1.layout[measureIndex].system = sd;
     measureIndex = 30;
     sd = SystemData{ Bool::yes };
     sd.layout.topSystemDistance = 10;
     sd.layout.margins = LeftRight{ 11, 12 };
     sd.layout.systemDistance = 13;
-    score1.xxbadnames[measureIndex].system = sd;
+    score1.layout[measureIndex].system = sd;
     PageData pd;
     pd.pageLayoutData.size = SizeData{ 1501, 1500 };
     pd.pageLayoutData.margins.even = MarginsData{12.0, 0.0, 0.0, 0.0 };
     pd.pageLayoutData.margins.odd = MarginsData{12.0, 0.0, 0.0, 0.0 };
-    score1.xxbadnames[6].page = pd;
+    score1.layout[6].page = pd;
     pd = PageData{};
     pd.newPage = Bool::no;
-    score1.xxbadnames[10].page = pd;
-    const auto id1 = docMgr.createFromScore(score1 );
+    score1.layout[10].page = pd;
+    const auto id1 = docMgr.createFromScore( score1 );
     std::stringstream xml1;
     docMgr.writeToStream( id1, xml1 );
 #ifdef MJB_DEBUG
@@ -166,31 +166,31 @@ TEST( LoadFinaleExport, PageData )
     // measure number 31 index 30 :      : system
 
     // Check that PageData objects are populated in the map for the appropriate measures.
-    auto it = score.xxbadnames.find( 0 );
-    REQUIRE( it != std::cend( score.xxbadnames ) );
+    auto it = score.layout.find( 0 );
+    REQUIRE( it != std::cend( score.layout ) );
     const auto& pageM0 = it->second.page;
-    it = score.xxbadnames.find( 4 );
-    REQUIRE( it != std::cend( score.xxbadnames ) );
+    it = score.layout.find( 4 );
+    REQUIRE( it != std::cend( score.layout ) );
     const auto& pageM4 = it->second.page;
-    it = score.xxbadnames.find( 12 );
-    REQUIRE( it != std::cend( score.xxbadnames ) );
+    it = score.layout.find( 12 );
+    REQUIRE( it != std::cend( score.layout ) );
     const auto& pageM12 = it->second.page;
-    it = score.xxbadnames.find( 21 );
-    REQUIRE( it != std::cend( score.xxbadnames ) );
+    it = score.layout.find( 21 );
+    REQUIRE( it != std::cend( score.layout ) );
     const auto& pageM21 = it->second.page;
 
     // Check that the SystemData objects are populated in the set with the appropriate measure indices.
-    it = score.xxbadnames.find( 0 );
-    REQUIRE( it != std::cend( score.xxbadnames ) );
+    it = score.layout.find( 0 );
+    REQUIRE( it != std::cend( score.layout ) );
     const auto systemM0 = it->second.system;
-    it = score.xxbadnames.find( 2 );
-    REQUIRE( it != std::cend( score.xxbadnames ) );
+    it = score.layout.find( 2 );
+    REQUIRE( it != std::cend( score.layout ) );
     const auto systemM2 = it->second.system;
-    it = score.xxbadnames.find( 8 );
-    REQUIRE( it != std::cend( score.xxbadnames ) );
+    it = score.layout.find( 8 );
+    REQUIRE( it != std::cend( score.layout ) );
     const auto systemM8 = it->second.system;
-    it = score.xxbadnames.find( 30 );
-    REQUIRE( it != std::cend( score.xxbadnames ) );
+    it = score.layout.find( 30 );
+    REQUIRE( it != std::cend( score.layout ) );
     const auto systemM30 = it->second.system;
 
     // Check that the SystemData and PageData objects contain the correct information

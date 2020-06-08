@@ -52,10 +52,10 @@ TEST( newSystem, doesItWork )
     pd.measures = measures;
     ScoreData s;
     s.parts.push_back( pd );
-    XXBadName systemBreak{ true };
+    LayoutData systemBreak{true };
     const auto addSystemBreak = [&]( MeasureIndex measureIndex )
     {
-        s.xxbadnames.emplace( measureIndex, systemBreak );
+        s.layout.emplace( measureIndex, systemBreak );
     };
     addSystemBreak( 0 );
     addSystemBreak( 3 );

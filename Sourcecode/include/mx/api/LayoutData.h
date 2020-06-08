@@ -14,12 +14,12 @@ namespace mx
 {
     namespace api
     {
-        /// XXBadName represents the Page and System layout instructions that are found in the <print> element.
+        /// LayoutData represents the Page and System layout instructions that are found in the <print> element.
         /// These are held in the ScoreData in a map where the key is the measure index. For example, to start a new
-        /// page at measure index 39: score.xxbadnames.emplace( 39, XXBadName{ true, true } );
-        /// Where the constructor XXBadName{ true, true } is a convenience constructor indicating that both a new system
+        /// page at measure index 39: score.layout.emplace( 39, LayoutData{ true, true } );
+        /// Where the constructor LayoutData{ true, true } is a convenience constructor indicating that both a new system
         /// and a new page are indicated.
-        class XXBadName
+        class LayoutData
         {
         public:
             /// System information, such as whether a system break should occur. Note: all members are optional.
@@ -32,9 +32,9 @@ namespace mx
             /// breaks. That is, if you do not need to fuss with margins or spacing and only want to indicate the start
             /// of a new system or page, you can use this constructor. The first bool indicates that a new system should
             /// start. The second bool indicates that a new page should also start. For example:
-            /// XXBadName{ true } produces <print new-system="yes" />
-            /// XXBadName{ true, true } produces <print new-system="yes" new-page="yes" />
-            inline explicit XXBadName( bool inNewSystem, bool inNewPage = false )
+            /// LayoutData{ true } produces <print new-system="yes" />
+            /// LayoutData{ true, true } produces <print new-system="yes" new-page="yes" />
+            inline explicit LayoutData( bool inNewSystem, bool inNewPage = false )
                 : system{ inNewSystem ? Bool::yes : Bool::unspecified }
                 , page{ inNewPage ? Bool::yes : Bool::unspecified }
             {
@@ -43,14 +43,14 @@ namespace mx
 
             /// The default constructor does not specify any page or system details. i.e. a default constructed object
             /// will not produce a <print> element.
-            inline XXBadName()
-                : XXBadName{ SystemData{}, PageData{} }
+            inline LayoutData()
+                : LayoutData{SystemData{}, PageData{} }
             {
 
             }
 
             /// The explicit constructor takes fully constructed members.
-            inline explicit XXBadName( SystemData inSystem, PageData inPage )
+            inline explicit LayoutData( SystemData inSystem, PageData inPage )
                 : system{ std::move( inSystem ) }
                 , page{ std::move( inPage ) }
             {
@@ -61,13 +61,13 @@ namespace mx
             inline bool isUsed() const { return system.isUsed() || page.isUsed(); }
         };
 
-        MXAPI_EQUALS_BEGIN( XXBadName )
+        MXAPI_EQUALS_BEGIN( LayoutData )
             MXAPI_EQUALS_MEMBER( system )
             MXAPI_EQUALS_MEMBER( page )
         MXAPI_EQUALS_END;
-        MXAPI_NOT_EQUALS_AND_VECTORS( XXBadName );
+        MXAPI_NOT_EQUALS_AND_VECTORS( LayoutData );
 
-        inline bool operator==( const std::map<MeasureIndex, XXBadName>& a, const std::map<MeasureIndex, XXBadName>& b )
+        inline bool operator==( const std::map<MeasureIndex, LayoutData>& a, const std::map<MeasureIndex, LayoutData>& b )
         {
             if( a.size() != b.size() )
             {
