@@ -80,7 +80,6 @@ namespace mx
         MXAPI_EQUALS_MEMBER( parts )
         MXAPI_EQUALS_MEMBER( partGroups )
         MXAPI_EQUALS_MEMBER( ticksPerQuarter )
-        // TODO - create an MXAPI_MAPS_EQUALS?
         MXAPI_EQUALS_MEMBER( xxbadnames )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( ScoreData );
