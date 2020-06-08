@@ -47,14 +47,14 @@ namespace mx
             {
                 outScoreHeaderGroup.setHasDefaults( true );
                 outScoreHeaderGroup.getDefaults()->setHasScaling( true );
-                outScoreHeaderGroup.getDefaults()->getScaling()->getMillimeters()->setValue( core::MillimetersValue{inDefaults.scalingMillimeters } );
+                outScoreHeaderGroup.getDefaults()->getScaling()->getMillimeters()->setValue( core::MillimetersValue{ inDefaults.scalingMillimeters } );
             }
             
             if( inDefaults.scalingTenths > 0 )
             {
                 outScoreHeaderGroup.setHasDefaults( true );
                 outScoreHeaderGroup.getDefaults()->setHasScaling( true );
-                outScoreHeaderGroup.getDefaults()->getScaling()->getTenths()->setValue( core::PositiveDecimal{inDefaults.scalingTenths } );
+                outScoreHeaderGroup.getDefaults()->getScaling()->getTenths()->setValue( core::PositiveDecimal{ inDefaults.scalingTenths } );
             }
         }
 

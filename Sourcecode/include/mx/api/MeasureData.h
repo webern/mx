@@ -19,7 +19,7 @@ namespace mx
 {
     namespace api
     {
-        /// This typedef help readability in a few places such as the pages map in ScoreData.
+        /// This typedef help readability in a few places such as the layout map in ScoreData.
         using MeasureIndex = int;
 
         class MeasureData
