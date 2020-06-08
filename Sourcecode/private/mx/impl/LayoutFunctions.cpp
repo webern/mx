@@ -149,37 +149,37 @@ namespace mx
             outLayout.setPageLayout( outPageLayout );
         }
 
-        void addSystemMargins( const api::DefaultsData& inLayout, core::ScoreHeaderGroup& outScoreHeaderGroup )
+        void addSystemMargins( const api::DefaultsData& inDefaults, core::ScoreHeaderGroup& outScoreHeaderGroup )
         {
             auto& defaults = *outScoreHeaderGroup.getDefaults();
             auto& layoutGroup = *defaults.getLayoutGroup();
             auto& systemLayout = *layoutGroup.getSystemLayout();
             auto& systemMargins = *systemLayout.getSystemMargins();
 
-            if( inLayout.systemLayout.systemDistance )
+            if( inDefaults.systemLayout.systemDistance )
             {
                 outScoreHeaderGroup.setHasDefaults( true );
                 layoutGroup.setHasSystemLayout( true );
                 systemLayout.setHasSystemDistance( true );
                 systemLayout.getSystemDistance()->setValue(
-                        core::TenthsValue{ inLayout.systemLayout.systemDistance.value() }
+                        core::TenthsValue{ inDefaults.systemLayout.systemDistance.value() }
                 );
             }
             
-            if( inLayout.systemLayout.staffDistance )
+            if( inDefaults.systemLayout.staffDistance )
             {
                 outScoreHeaderGroup.setHasDefaults( true );
                 auto staffLayout = core::makeStaffLayout();
                 staffLayout->setHasStaffDistance( true );
                 staffLayout->getStaffDistance()->setValue(
-                        core::TenthsValue{ inLayout.systemLayout.staffDistance.value() }
+                        core::TenthsValue{ inDefaults.systemLayout.staffDistance.value() }
                 );
                 layoutGroup.addStaffLayout( staffLayout );
             }
             
-            if( inLayout.systemLayout.margins )
+            if( inDefaults.systemLayout.margins )
             {
-                const auto& margins = inLayout.systemLayout.margins.value();
+                const auto& margins = inDefaults.systemLayout.margins.value();
                 outScoreHeaderGroup.setHasDefaults( true );
                 layoutGroup.setHasSystemLayout( true );
                 systemLayout.setHasSystemMargins( true );
@@ -190,9 +190,9 @@ namespace mx
                 systemMargins.getRightMargin()->setValue( core::TenthsValue{ margins.right } );
             }
             
-            if( inLayout.systemLayout.topSystemDistance )
+            if( inDefaults.systemLayout.topSystemDistance )
             {
-                const auto& top = inLayout.systemLayout.topSystemDistance.value();
+                const auto& top = inDefaults.systemLayout.topSystemDistance.value();
                 outScoreHeaderGroup.setHasDefaults( true );
                 layoutGroup.setHasSystemLayout( true );
                 systemLayout.setHasSystemMargins( true );
@@ -202,9 +202,9 @@ namespace mx
         }
 
 
-        void addAppearance( const api::DefaultsData& inLayoutData, core::ScoreHeaderGroup& outScoreHeaderGroup )
+        void addAppearance( const api::DefaultsData& inDefaults, core::ScoreHeaderGroup& outScoreHeaderGroup )
         {
-            for( const auto& appearanceData : inLayoutData.appearance )
+            for( const auto& appearanceData : inDefaults.appearance )
             {
                 if( appearanceData.appearanceType == api::AppearanceType::LineWidth )
                 {
