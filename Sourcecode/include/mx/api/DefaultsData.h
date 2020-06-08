@@ -19,7 +19,7 @@ namespace mx
         
         // distance values are in 'tenths' governed by the 'scaling' values
 
-        class LayoutData
+        class DefaultsData
         {
         public:
 
@@ -45,7 +45,7 @@ namespace mx
             std::vector<AppearanceData> appearance;
             MeasureNumbering measureNumbering; // measure numbering setting at the global level, will be stated in first measure's <print> tag.  can be overridden by a value in the Measure
             
-            LayoutData()
+            DefaultsData()
             : scalingMillimeters{ -1.0 }
             , scalingTenths{ -1.0 }
             , pageLayout{}
@@ -57,12 +57,12 @@ namespace mx
             }
         };
         
-        MXAPI_EQUALS_BEGIN( LayoutData )
+        MXAPI_EQUALS_BEGIN( DefaultsData )
         MXAPI_EQUALS_MEMBER( pageLayout )
         MXAPI_EQUALS_MEMBER( systemLayout )
         MXAPI_EQUALS_MEMBER( appearance )
         MXAPI_EQUALS_MEMBER( measureNumbering )
         MXAPI_EQUALS_END;
-        MXAPI_NOT_EQUALS_AND_VECTORS( LayoutData );
+        MXAPI_NOT_EQUALS_AND_VECTORS( DefaultsData );
     }
 }

@@ -8,7 +8,7 @@
 #include "cpul/cpulTestHarness.h"
 #include "mxtest/file/Path.h"
 #include "mx/api/DocumentManager.h"
-#include "mx/api/LayoutData.h"
+#include "mx/api/DefaultsData.h"
 #include "mx/core/Document.h"
 #include "mx/core/elements/PageMargins.h"
 #include "mx/core/elements/LeftMargin.h"

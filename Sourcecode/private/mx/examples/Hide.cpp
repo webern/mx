@@ -24,7 +24,7 @@
 #include "mx/api/EncodingData.h"
 #include "mx/api/FontData.h"
 #include "mx/api/KeyData.h"
-#include "mx/api/LayoutData.h"
+#include "mx/api/DefaultsData.h"
 #include "mx/api/LineData.h"
 #include "mx/api/LyricData.h"
 #include "mx/api/MarkData.h"

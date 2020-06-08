@@ -6,7 +6,7 @@
 
 #include "mx/api/ApiCommon.h"
 #include "mx/api/EncodingData.h"
-#include "mx/api/LayoutData.h"
+#include "mx/api/DefaultsData.h"
 #include "mx/api/PageData.h"
 #include "mx/api/PageTextData.h"
 #include "mx/api/PartData.h"
@@ -44,7 +44,7 @@ namespace mx
             std::string copyright;
             EncodingData encoding;
             std::vector<PageTextData> pageTextItems;
-            LayoutData layout;
+            DefaultsData layout;
             std::vector<PartData> parts;
             std::vector<PartGroupData> partGroups;
             int ticksPerQuarter;
