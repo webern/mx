@@ -32,29 +32,29 @@ namespace mx
 {
     namespace impl
     {
-        void addLayoutData( const api::DefaultsData& inLayout, core::ScoreHeaderGroup& outScoreHeaderGroup )
+        void addDefaultsData( const api::DefaultsData& inDefaults, core::ScoreHeaderGroup& outScoreHeaderGroup )
         {
-            addScaling( inLayout, outScoreHeaderGroup );
-            addPageLayout( inLayout.pageLayout, outScoreHeaderGroup);
-            addSystemMargins( inLayout, outScoreHeaderGroup );
-            addAppearance( inLayout, outScoreHeaderGroup );
+            addScaling( inDefaults, outScoreHeaderGroup );
+            addPageLayout( inDefaults.pageLayout, outScoreHeaderGroup);
+            addSystemMargins( inDefaults, outScoreHeaderGroup );
+            addAppearance( inDefaults, outScoreHeaderGroup );
         }
         
         
-        void addScaling( const api::DefaultsData& inLayout, core::ScoreHeaderGroup& outScoreHeaderGroup )
+        void addScaling( const api::DefaultsData& inDefaults, core::ScoreHeaderGroup& outScoreHeaderGroup )
         {
-            if( inLayout.scalingMillimeters > 0 )
+            if( inDefaults.scalingMillimeters > 0 )
             {
                 outScoreHeaderGroup.setHasDefaults( true );
                 outScoreHeaderGroup.getDefaults()->setHasScaling( true );
-                outScoreHeaderGroup.getDefaults()->getScaling()->getMillimeters()->setValue( core::MillimetersValue{ inLayout.scalingMillimeters } );
+                outScoreHeaderGroup.getDefaults()->getScaling()->getMillimeters()->setValue( core::MillimetersValue{inDefaults.scalingMillimeters } );
             }
             
-            if( inLayout.scalingTenths > 0 )
+            if( inDefaults.scalingTenths > 0 )
             {
                 outScoreHeaderGroup.setHasDefaults( true );
                 outScoreHeaderGroup.getDefaults()->setHasScaling( true );
-                outScoreHeaderGroup.getDefaults()->getScaling()->getTenths()->setValue( core::PositiveDecimal{ inLayout.scalingTenths } );
+                outScoreHeaderGroup.getDefaults()->getScaling()->getTenths()->setValue( core::PositiveDecimal{inDefaults.scalingTenths } );
             }
         }
 
@@ -144,7 +144,7 @@ namespace mx
             auto& outDefaults = *outScoreHeaderGroup.getDefaults();
             auto& outLayout = *outDefaults.getLayoutGroup();
             outScoreHeaderGroup.setHasDefaults( true );
-            outLayout.setHasPageLayout(true );
+            outLayout.setHasPageLayout( true );
             auto outPageLayout = createPageLayout( inPageLayout );
             outLayout.setPageLayout( outPageLayout );
         }
