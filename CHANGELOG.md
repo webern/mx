@@ -8,6 +8,8 @@ If you cloned/forked the repository before 2020-05-31, consider making a new clo
 ### Breaking Changes
 - Add support for `new-page` attributes and page layout [#94]
 - Systems are no longer specified as a `std::set<SystemData`. Instead there is a `std::map<MeasureIndex, PrintData` named `print` which holds both `SystemData` and `PageData` information. [#94]
+- What used to be called `LayoutData` and was the `layout` field in `ScoreData` is now called `DefaultsData` and `defaults` to match the name of the MusicXML element, and to free up the word `layout` for use with `SystemLayoutData` and `PageLayoutData`. [#94]
+- 
 
 
 ### Non-Breaking Changes
