@@ -3524,6 +3524,7 @@
 		29843AD6248D47E9006A8E34 /* SizeData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SizeData.h; sourceTree = "<group>"; };
 		29843AD7248D47EA006A8E34 /* LeftRight.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LeftRight.h; sourceTree = "<group>"; };
 		29843AD8248D47EA006A8E34 /* MarginsData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MarginsData.h; sourceTree = "<group>"; };
+		29843AD9248DE951006A8E34 /* DefaultsData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DefaultsData.h; sourceTree = "<group>"; };
 		299F7FE61CA8D2200084CAE5 /* libMx.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMx.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		29A02E781FE0F71A00B74FDE /* Version.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Version.cpp; sourceTree = "<group>"; };
 		29A02E841FE0FA5000B74FDE /* EncodingData.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = EncodingData.cpp; sourceTree = "<group>"; };
@@ -6378,6 +6379,7 @@
 		29DC383C225C0D4000814240 /* api-include */ = {
 			isa = PBXGroup;
 			children = (
+				29843AD9248DE951006A8E34 /* DefaultsData.h */,
 				29DC3863225C0DB800814240 /* ApiCommon.h */,
 				29DC3856225C0DB600814240 /* ApiEquality.h */,
 				29DC3841225C0DB400814240 /* AppearanceData.h */,
