@@ -30,7 +30,7 @@ namespace mxtest
         score.defaults.scalingTenths = 40;
         score.defaults.pageLayout.margins.odd = MarginsData{70, 70, 88, 88 };
         score.defaults.pageLayout.margins.even = MarginsData{70, 70, 88, 88 };
-        score.defaults.systemLayout.margins = LeftRight{125, 503 };
+        score.defaults.systemLayout.margins = LeftRight{ 125, 503 };
         score.defaults.systemLayout.topSystemDistance = 70;
         score.defaults.systemLayout.systemDistance = 121;
         
