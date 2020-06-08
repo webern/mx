@@ -55,7 +55,7 @@ TEST( newSystem, doesItWork )
     XXBadName systemBreak{ true };
     const auto addSystemBreak = [&]( MeasureIndex measureIndex )
     {
-        s.xxbadnames.emplace( measureIndex, systemBreak );
+        s.print.emplace(measureIndex, systemBreak );
     };
     addSystemBreak( 0 );
     addSystemBreak( 3 );

@@ -503,7 +503,7 @@ namespace mx
                     }
                     if( systemData.isUsed() )
                     {
-                        auto& xxbadname = myOutScoreData.xxbadnames[measureIndex];
+                        auto& xxbadname = myOutScoreData.print[measureIndex];
                         xxbadname.system = systemData;
                     }
                 }
@@ -590,7 +590,7 @@ namespace mx
                     } // if hasPageLayout
                     if( outPageData.isUsed() )
                     {
-                        auto& xxbadname = myOutScoreData.xxbadnames[measureIndex];
+                        auto& xxbadname = myOutScoreData.print[measureIndex];
                         xxbadname.page = outPageData;
                         // TODO break?
                     }
