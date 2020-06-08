@@ -79,8 +79,8 @@ namespace pageDataTest
         }
         ScoreData score;
         score.ticksPerQuarter = ticksPerQuarter;
-        score.layout.scalingMillimeters = 7.2319;
-        score.layout.scalingTenths = 40;
+        score.defaults.scalingMillimeters = 7.2319;
+        score.defaults.scalingTenths = 40;
         score.parts.emplace_back( p );
         return score;
     }

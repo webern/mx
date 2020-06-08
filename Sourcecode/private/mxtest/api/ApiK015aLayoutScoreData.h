@@ -25,14 +25,14 @@ namespace mxtest
         score.encoding.supportedItems.emplace_back( supported );
         supported.attributeName = "new-page";
         score.encoding.supportedItems.emplace_back( supported );
-        score.layout.pageLayout.size = SizeData{ 1545, 1194 };
-        score.layout.scalingMillimeters = 7.2319;
-        score.layout.scalingTenths = 40;
-        score.layout.pageLayout.margins.odd = MarginsData{70, 70, 88, 88 };
-        score.layout.pageLayout.margins.even = MarginsData{70, 70, 88, 88 };
-        score.layout.systemLayout.margins = LeftRight{ 125, 503 };
-        score.layout.systemLayout.topSystemDistance = 70;
-        score.layout.systemLayout.systemDistance = 121;
+        score.defaults.pageLayout.size = SizeData{1545, 1194 };
+        score.defaults.scalingMillimeters = 7.2319;
+        score.defaults.scalingTenths = 40;
+        score.defaults.pageLayout.margins.odd = MarginsData{70, 70, 88, 88 };
+        score.defaults.pageLayout.margins.even = MarginsData{70, 70, 88, 88 };
+        score.defaults.systemLayout.margins = LeftRight{125, 503 };
+        score.defaults.systemLayout.topSystemDistance = 70;
+        score.defaults.systemLayout.systemDistance = 121;
         
         SystemData system;
         MeasureIndex measureIndex = 0;

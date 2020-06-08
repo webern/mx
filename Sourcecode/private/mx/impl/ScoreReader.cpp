@@ -107,7 +107,7 @@ namespace mx
             
             for( const auto& preliminaryGroup : partList.getPartGroupSet() )
             {
-                handlePartGroup(partIndex, preliminaryGroup );
+                handlePartGroup( partIndex, preliminaryGroup );
             }
             
             auto scorePart = partList.getScorePart();
@@ -277,12 +277,12 @@ namespace mx
                     }
                 }
                 
-                myOutScoreData.encoding = std::move(encodingData);
+                myOutScoreData.encoding = std::move( encodingData );
             }
             
             if( myHeaderGroup.getHasDefaults() )
             {
-                myOutScoreData.layout = createLayout( myHeaderGroup );
+                myOutScoreData.defaults = createLayout( myHeaderGroup );
             }
 
             createPageTextItems( myHeaderGroup, myOutScoreData.pageTextItems );
@@ -335,7 +335,7 @@ namespace mx
                 grpData.abbreviation = inPartGroup->getGroupAbbreviation()->getValue().getValue();
             }
 
-            if (inPartGroup->getHasGroupSymbol() )
+            if ( inPartGroup->getHasGroupSymbol() )
             {
                 Converter c;
                 grpData.bracketType = c.convert( inPartGroup->getGroupSymbol()->getValue() );

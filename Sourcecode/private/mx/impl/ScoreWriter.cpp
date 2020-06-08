@@ -120,7 +120,7 @@ namespace mx
             }
             
             createEncoding( myScoreData.encoding, *header );
-            addLayoutData( myScoreData.layout, *header );
+            addLayoutData( myScoreData.defaults, *header );
             createPageTextItems( myScoreData.pageTextItems, *header );
             
             using PartPair = std::pair<core::ScorePartPtr, core::PartwisePartPtr>;

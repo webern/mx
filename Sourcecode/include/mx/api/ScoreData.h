@@ -44,7 +44,7 @@ namespace mx
             std::string copyright;
             EncodingData encoding;
             std::vector<PageTextData> pageTextItems;
-            DefaultsData layout;
+            DefaultsData defaults;
             std::vector<PartData> parts;
             std::vector<PartGroupData> partGroups;
             int ticksPerQuarter;
