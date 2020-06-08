@@ -47,7 +47,7 @@ namespace mx
             {
                 outScoreHeaderGroup.setHasDefaults( true );
                 outScoreHeaderGroup.getDefaults()->setHasScaling( true );
-                outScoreHeaderGroup.getDefaults()->getScaling()->getMillimeters()->setValue( core::MillimetersValue{inDefaults.scalingMillimeters } );
+                outScoreHeaderGroup.getDefaults()->getScaling()->getMillimeters()->setValue( core::MillimetersValue{ inDefaults.scalingMillimeters } );
             }
             
             if( inDefaults.scalingTenths > 0 )
