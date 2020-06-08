@@ -56,7 +56,8 @@ namespace mx
             /// Specifies page breaks, system breaks, and changes to system and page layout. Global/default page and
             /// system layout settings should be set in `defaults`. MeasureIndex is the index of the measure in which
             /// the layout/break is applied. For example, a newPage at MeasureIndex 10 indicates that measure index 10
-            /// will be the first measure on a new page. `layout` corresponds to the `<print>` MusicXML element.
+            /// will be the first measure on a new page. `layout` corresponds to the `<print>` MusicXML element. (Note:
+            /// prior to v0.5.0 we have `std::set<SystemData> systems`. The `layout` map replaces `systems`.)
             std::map<MeasureIndex, LayoutData> layout;
 
             int getNumMeasures() const;
