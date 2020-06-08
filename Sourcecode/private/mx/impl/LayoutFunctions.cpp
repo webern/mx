@@ -249,15 +249,15 @@ namespace mx
         }
         
         
-        api::DefaultsData createLayout( const core::ScoreHeaderGroup& inScoreHeaderGroup )
+        api::DefaultsData createDefaults( const core::ScoreHeaderGroup& inScoreHeaderGroup )
         {
-            api::DefaultsData layout;
-            addScaling( inScoreHeaderGroup, layout );
-            addPageMargins( inScoreHeaderGroup, layout );
-            addSystemMargins( inScoreHeaderGroup, layout );
-            addStaffLayout( inScoreHeaderGroup, layout );
-            addAppearance( inScoreHeaderGroup, layout );
-            return layout;
+            api::DefaultsData defaults;
+            addScaling( inScoreHeaderGroup, defaults );
+            addPageMargins( inScoreHeaderGroup, defaults );
+            addSystemMargins( inScoreHeaderGroup, defaults );
+            addStaffLayout( inScoreHeaderGroup, defaults );
+            addAppearance( inScoreHeaderGroup, defaults );
+            return defaults;
         }
         
         

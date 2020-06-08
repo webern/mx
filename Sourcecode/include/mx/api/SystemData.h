@@ -29,6 +29,7 @@ namespace mx
         class SystemData
         {
         public:
+            // TODO - rename to `newSystem`
             /// Should a system break occur at this measure.
             Bool systemBreak;
 

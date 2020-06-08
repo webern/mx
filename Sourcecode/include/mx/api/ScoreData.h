@@ -76,7 +76,7 @@ namespace mx
         MXAPI_EQUALS_MEMBER( copyright )
         MXAPI_EQUALS_MEMBER( encoding )
         MXAPI_EQUALS_MEMBER( pageTextItems )
-        MXAPI_EQUALS_MEMBER( layout )
+        MXAPI_EQUALS_MEMBER( defaults )
         MXAPI_EQUALS_MEMBER( parts )
         MXAPI_EQUALS_MEMBER( partGroups )
         MXAPI_EQUALS_MEMBER( ticksPerQuarter )

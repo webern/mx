@@ -282,7 +282,7 @@ namespace mx
             
             if( myHeaderGroup.getHasDefaults() )
             {
-                myOutScoreData.defaults = createLayout( myHeaderGroup );
+                myOutScoreData.defaults = createDefaults( myHeaderGroup );
             }
 
             createPageTextItems( myHeaderGroup, myOutScoreData.pageTextItems );

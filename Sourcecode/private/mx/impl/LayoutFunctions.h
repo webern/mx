@@ -30,7 +30,7 @@ namespace mx
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // core::ScoreHeaderGroup -> api::DefaultsData
-        api::DefaultsData createLayout( const core::ScoreHeaderGroup& inScoreHeaderGroup );
+        api::DefaultsData createDefaults( const core::ScoreHeaderGroup& inScoreHeaderGroup );
         void addScaling( const core::ScoreHeaderGroup& inScoreHeaderGroup, api::DefaultsData& outLayoutData );
         void addPageMargins( const core::ScoreHeaderGroup& inScoreHeaderGroup, api::DefaultsData& outLayoutData );
         void addSystemMargins( const core::ScoreHeaderGroup& inScoreHeaderGroup, api::DefaultsData& outLayoutData );
