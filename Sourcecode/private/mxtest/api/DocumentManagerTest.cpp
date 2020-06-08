@@ -138,7 +138,7 @@ T_END
 TEST( scalingMillimeters, DocumentManager )
 {
     auto score = getScore();
-    CHECK_DOUBLES_EQUAL( 6.35, score.layout.scalingMillimeters, MX_API_EQUALITY_EPSILON )
+    CHECK_DOUBLES_EQUAL( 6.35, score.defaults.scalingMillimeters, MX_API_EQUALITY_EPSILON )
 }
 T_END
 
@@ -146,7 +146,7 @@ T_END
 TEST( scalingTenths, DocumentManager )
 {
     auto score = getScore();
-    CHECK_DOUBLES_EQUAL( 40, score.layout.scalingTenths, MX_API_EQUALITY_EPSILON )
+    CHECK_DOUBLES_EQUAL( 40, score.defaults.scalingTenths, MX_API_EQUALITY_EPSILON )
 }
 T_END
 
@@ -154,14 +154,14 @@ T_END
 TEST( tenthsPerMillimeter, DocumentManager )
 {
     auto score = getScore();
-    CHECK_DOUBLES_EQUAL( 6.299212598425197, score.layout.tenthsPerMillimeter(), MX_API_EQUALITY_EPSILON )
+    CHECK_DOUBLES_EQUAL( 6.299212598425197, score.defaults.tenthsPerMillimeter(), MX_API_EQUALITY_EPSILON )
 }
 T_END
 
 TEST( tenthsPerInch, DocumentManager )
 {
     auto score = getActorPreludeScore();
-    CHECK_DOUBLES_EQUAL( 160, score.layout.tenthsPerInch(), MX_API_EQUALITY_EPSILON )
+    CHECK_DOUBLES_EQUAL( 160, score.defaults.tenthsPerInch(), MX_API_EQUALITY_EPSILON )
 }
 T_END
 
@@ -272,21 +272,21 @@ T_END
 
 using LongDouble = long double;
 
-ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.scalingMillimeters, scalingMillimeters, 5.451, 0 );
-ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.scalingTenths, scalingTenths, 5.452, 0 );
-ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.oddPageLeftMargin, oddPageLeftMargin, 5.453, 0 );
-ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.oddPageRightMargin, oddPageRightMargin, 5.454, 0 );
-ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.oddPageTopMargin, oddPageTopMargin, 5.455, 0 );
-ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.oddPageBottomMargin, oddPageBottomMargin, 5.456, 0 );
-ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.evenPageLeftMargin, evenPageLeftMargin, 5.457, 0 );
-ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.evenPageRightMargin, evenPageRightMargin, 5.458, 0 );
-ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.evenPageTopMargin, evenPageTopMargin, 5.459, 0 );
-ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.evenPageBottomMargin, evenPageBottomMargin, 5.4501, 0 );
-ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.systemLeftMargin, systemLeftMargin, 5.4502, 0 );
-ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.systemRightMargin, systemRightMargin, 5.4503, 0 );
-ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.systemDistance, systemDistance, 5.4504, 0 );
-ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.topSystemDistance, topSystemDistance, 5.4505, 0 );
-ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, layout.staffDistance, staffDistance, 5.4506, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, defaults.scalingMillimeters, scalingMillimeters, 5.451, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, defaults.scalingTenths, scalingTenths, 5.452, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, defaults.oddPageLeftMargin, oddPageLeftMargin, 5.453, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, defaults.oddPageRightMargin, oddPageRightMargin, 5.454, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, defaults.oddPageTopMargin, oddPageTopMargin, 5.455, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, defaults.oddPageBottomMargin, oddPageBottomMargin, 5.456, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, defaults.evenPageLeftMargin, evenPageLeftMargin, 5.457, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, defaults.evenPageRightMargin, evenPageRightMargin, 5.458, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, defaults.evenPageTopMargin, evenPageTopMargin, 5.459, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, defaults.evenPageBottomMargin, evenPageBottomMargin, 5.4501, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, defaults.systemLeftMargin, systemLeftMargin, 5.4502, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, defaults.systemRightMargin, systemRightMargin, 5.4503, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, defaults.systemDistance, systemDistance, 5.4504, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, defaults.topSystemDistance, topSystemDistance, 5.4505, 0 );
+ROUND_TRIP_TEST_SCALAR_DOUBLE( LongDouble, defaults.staffDistance, staffDistance, 5.4506, 0 );
 
 
 TEST( Layout_PageMarginsBoth, DocumentManager )
@@ -296,14 +296,14 @@ TEST( Layout_PageMarginsBoth, DocumentManager )
     const long double right = 0.2;
     const long double top = 0.3;
     const long double bottom = 0.4;
-    score.layout.oddPageLeftMargin = left;
-    score.layout.evenPageLeftMargin = left;
-    score.layout.oddPageRightMargin = right;
-    score.layout.evenPageRightMargin = right;
-    score.layout.oddPageTopMargin = top;
-    score.layout.evenPageTopMargin = top;
-    score.layout.oddPageBottomMargin = bottom;
-    score.layout.evenPageBottomMargin = bottom;
+    score.defaults.oddPageLeftMargin = left;
+    score.defaults.evenPageLeftMargin = left;
+    score.defaults.oddPageRightMargin = right;
+    score.defaults.evenPageRightMargin = right;
+    score.defaults.oddPageTopMargin = top;
+    score.defaults.evenPageTopMargin = top;
+    score.defaults.oddPageBottomMargin = bottom;
+    score.defaults.evenPageBottomMargin = bottom;
     auto docId = DocumentManager::getInstance().createFromScore( score );
     auto mxDoc = DocumentManager::getInstance().getDocument( docId );
     const auto& pageMarginsSet = mxDoc->getScorePartwise()->getScoreHeaderGroup()->getDefaults()->getLayoutGroup()->getPageLayout()->getPageMarginsSet();
@@ -320,14 +320,14 @@ TEST( Layout_PageMarginsEvenOdd, DocumentManager )
     const long double right = 0.2;
     const long double top = 0.3;
     const long double bottom = 0.4;
-    score.layout.oddPageLeftMargin = left + 100.0;
-    score.layout.evenPageLeftMargin = left;
-    score.layout.oddPageRightMargin = right;
-    score.layout.evenPageRightMargin = right;
-    score.layout.oddPageTopMargin = top;
-    score.layout.evenPageTopMargin = top;
-    score.layout.oddPageBottomMargin = bottom;
-    score.layout.evenPageBottomMargin = bottom;
+    score.defaults.oddPageLeftMargin = left + 100.0;
+    score.defaults.evenPageLeftMargin = left;
+    score.defaults.oddPageRightMargin = right;
+    score.defaults.evenPageRightMargin = right;
+    score.defaults.oddPageTopMargin = top;
+    score.defaults.evenPageTopMargin = top;
+    score.defaults.oddPageBottomMargin = bottom;
+    score.defaults.evenPageBottomMargin = bottom;
     auto docId = DocumentManager::getInstance().createFromScore( score );
     auto mxDoc = DocumentManager::getInstance().getDocument( docId );
     const auto& pageMarginsSet = mxDoc->getScorePartwise()->getScoreHeaderGroup()->getDefaults()->getLayoutGroup()->getPageLayout()->getPageMarginsSet();
