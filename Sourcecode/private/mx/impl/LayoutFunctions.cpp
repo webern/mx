@@ -261,23 +261,23 @@ namespace mx
         }
         
         
-        void addScaling( const core::ScoreHeaderGroup& inScoreHeaderGroup, api::DefaultsData& outLayoutData )
+        void addScaling( const core::ScoreHeaderGroup& inScoreHeaderGroup, api::DefaultsData& outDefaults )
         {
             if( inScoreHeaderGroup.getHasDefaults() && inScoreHeaderGroup.getDefaults()->getHasScaling() )
             {
                 auto scaling = inScoreHeaderGroup.getDefaults()->getScaling();
-                outLayoutData.scalingMillimeters = scaling->getMillimeters()->getValue().getValue();
-                outLayoutData.scalingTenths = scaling->getTenths()->getValue().getValue();
+                outDefaults.scalingMillimeters = scaling->getMillimeters()->getValue().getValue();
+                outDefaults.scalingTenths = scaling->getTenths()->getValue().getValue();
             }
             else
             {
-                outLayoutData.scalingMillimeters = -1.0;
-                outLayoutData.scalingTenths = -1.0;
+                outDefaults.scalingMillimeters = -1.0;
+                outDefaults.scalingTenths = -1.0;
             }
         }
         
         
-        void addPageMargins( const core::ScoreHeaderGroup& inScoreHeaderGroup, api::DefaultsData& outLayoutData )
+        void addPageMargins( const core::ScoreHeaderGroup& inScoreHeaderGroup, api::DefaultsData& outDefaults )
         {
             if( !inScoreHeaderGroup.getHasDefaults() || !inScoreHeaderGroup.getDefaults()->getLayoutGroup()->getHasPageLayout() )
             {
@@ -285,7 +285,7 @@ namespace mx
             }
             
             auto pageLayout = inScoreHeaderGroup.getDefaults()->getLayoutGroup()->getPageLayout();
-            outLayoutData.pageLayout.size = api::SizeData{
+            outDefaults.pageLayout.size = api::SizeData{
                     pageLayout->getPageHeight()->getValue().getValue(),
                     pageLayout->getPageWidth()->getValue().getValue()
             };
@@ -297,7 +297,7 @@ namespace mx
                 
                 if( !a->hasType || t == core::MarginType::both || t == core::MarginType::odd )
                 {
-                    outLayoutData.pageLayout.margins.odd =
+                    outDefaults.pageLayout.margins.odd =
                             api::MarginsData{
                                     m->getLeftMargin()->getValue().getValue(),
                                     m->getRightMargin()->getValue().getValue(),
@@ -308,7 +308,7 @@ namespace mx
                 
                 if( !a->hasType || t == core::MarginType::both || t == core::MarginType::even )
                 {
-                    outLayoutData.pageLayout.margins.even =
+                    outDefaults.pageLayout.margins.even =
                             api::MarginsData{
                                     m->getLeftMargin()->getValue().getValue(),
                                     m->getRightMargin()->getValue().getValue(),
@@ -322,7 +322,7 @@ namespace mx
         }
         
         
-        void addSystemMargins( const core::ScoreHeaderGroup& inScoreHeaderGroup, api::DefaultsData& outLayoutData )
+        void addSystemMargins( const core::ScoreHeaderGroup& inScoreHeaderGroup, api::DefaultsData& outDefaults )
         {
             if( !inScoreHeaderGroup.getHasDefaults() || !inScoreHeaderGroup.getDefaults()->getLayoutGroup()->getHasSystemLayout() )
             {
@@ -333,20 +333,20 @@ namespace mx
             
             if( systemLayout->getHasTopSystemDistance() )
             {
-                outLayoutData.systemLayout.topSystemDistance =
+                outDefaults.systemLayout.topSystemDistance =
                         systemLayout->getTopSystemDistance()->getValue().getValue();
             }
             
             if( systemLayout->getHasSystemDistance() )
             {
-                outLayoutData.systemLayout.systemDistance =
+                outDefaults.systemLayout.systemDistance =
                         systemLayout->getSystemDistance()->getValue().getValue();
             }
             
             if( systemLayout->getHasSystemMargins() )
             {
                 auto systemMargins = systemLayout->getSystemMargins();
-                outLayoutData.systemLayout.margins =
+                outDefaults.systemLayout.margins =
                         api::LeftRight{
                             systemMargins->getLeftMargin()->getValue().getValue(),
                             systemMargins->getRightMargin()->getValue().getValue()
@@ -355,7 +355,7 @@ namespace mx
         }
         
         
-        void addStaffLayout( const core::ScoreHeaderGroup& inScoreHeaderGroup, api::DefaultsData& outLayoutData )
+        void addStaffLayout( const core::ScoreHeaderGroup& inScoreHeaderGroup, api::DefaultsData& outDefaults )
         {
             const auto& layoutSet = inScoreHeaderGroup.getDefaults()->getLayoutGroup()->getStaffLayoutSet();
             if( !inScoreHeaderGroup.getHasDefaults() || layoutSet.empty() )
@@ -367,15 +367,15 @@ namespace mx
             
             if( firstStaffLayout->getHasStaffDistance() )
             {
-                outLayoutData.systemLayout.staffDistance =
+                outDefaults.systemLayout.staffDistance =
                         firstStaffLayout->getStaffDistance()->getValue().getValue();
             }
         }
 
 
-        void addAppearance( const core::ScoreHeaderGroup& inScoreHeaderGroup, api::DefaultsData& outLayoutData )
+        void addAppearance( const core::ScoreHeaderGroup& inScoreHeaderGroup, api::DefaultsData& outDefaults )
         {
-            outLayoutData.appearance.clear();
+            outDefaults.appearance.clear();
 
             if( !inScoreHeaderGroup.getHasDefaults() )
             {
@@ -397,7 +397,7 @@ namespace mx
                 data.appearanceType = api::AppearanceType::LineWidth;
                 data.appearanceSubType = core::toString( lineWidth->getAttributes()->type );
                 data.value = lineWidth->getValue().getValue();
-                outLayoutData.appearance.emplace_back( std::move( data ) );
+                outDefaults.appearance.emplace_back(std::move(data ) );
             }
 
             for( const auto& noteSize : appearance.getNoteSizeSet() )
@@ -406,7 +406,7 @@ namespace mx
                 data.appearanceType = api::AppearanceType::NoteSize;
                 data.appearanceSubType = core::toString( noteSize->getAttributes()->type );
                 data.value = noteSize->getValue().getValue();
-                outLayoutData.appearance.emplace_back( std::move( data ) );
+                outDefaults.appearance.emplace_back(std::move(data ) );
             }
 
             for( const auto& distance : appearance.getDistanceSet() )
@@ -415,7 +415,7 @@ namespace mx
                 data.appearanceType = api::AppearanceType::Distance;
                 data.appearanceSubType = core::toString( distance->getAttributes()->type );
                 data.value = distance->getValue().getValue();
-                outLayoutData.appearance.emplace_back( std::move( data ) );
+                outDefaults.appearance.emplace_back(std::move(data ) );
             }
 
             for( const auto& other : appearance.getOtherAppearanceSet() )
@@ -426,7 +426,7 @@ namespace mx
 
                 // TODO - fix
                 data.value = 0.0;//other->getValue().getValue();
-                outLayoutData.appearance.emplace_back( std::move( data ) );
+                outDefaults.appearance.emplace_back(std::move(data ) );
             }
         }
     }
