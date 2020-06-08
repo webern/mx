@@ -16,7 +16,7 @@ namespace mx
     {
         /// XXBadName represents the Page and System layout instructions that are found in the <print> element.
         /// These are held in the ScoreData in a map where the key is the measure index. For example, to start a new
-        /// page at measure index 39: score.print.emplace( 39, XXBadName{ true, true } );
+        /// page at measure index 39: score.xxbadnames.emplace( 39, XXBadName{ true, true } );
         /// Where the constructor XXBadName{ true, true } is a convenience constructor indicating that both a new system
         /// and a new page are indicated.
         class XXBadName

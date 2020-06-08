@@ -94,39 +94,39 @@ TEST( TestPageData, PageData )
     auto& docMgr = DocumentManager::getInstance();
     SystemData sd{ Bool::yes };
     MeasureIndex measureIndex = 1;
-    score1.print[measureIndex].system = sd;
+    score1.xxbadnames[measureIndex].system = sd;
     measureIndex = 5;
     sd = SystemData{ Bool::yes };
     sd.layout.topSystemDistance = 1;
     sd.layout.margins = LeftRight{ 2, 3 };
     sd.layout.systemDistance = 0;
-    score1.print[measureIndex].system = sd;
+    score1.xxbadnames[measureIndex].system = sd;
     measureIndex = 10;
     sd = SystemData{ Bool::yes };
     sd.layout.topSystemDistance = 4;
     sd.layout.margins = LeftRight{ 5, 6 };
     sd.layout.systemDistance = std::nullopt;
-    score1.print[measureIndex].system = sd;
+    score1.xxbadnames[measureIndex].system = sd;
     measureIndex = 20;
     sd = SystemData{ Bool::yes };
     sd.layout.topSystemDistance = std::nullopt;
     sd.layout.margins = LeftRight{ 7, 8 };
     sd.layout.systemDistance = 9;
-    score1.print[measureIndex].system = sd;
+    score1.xxbadnames[measureIndex].system = sd;
     measureIndex = 30;
     sd = SystemData{ Bool::yes };
     sd.layout.topSystemDistance = 10;
     sd.layout.margins = LeftRight{ 11, 12 };
     sd.layout.systemDistance = 13;
-    score1.print[measureIndex].system = sd;
+    score1.xxbadnames[measureIndex].system = sd;
     PageData pd;
     pd.pageLayoutData.size = SizeData{ 1501, 1500 };
     pd.pageLayoutData.margins.even = MarginsData{12.0, 0.0, 0.0, 0.0 };
     pd.pageLayoutData.margins.odd = MarginsData{12.0, 0.0, 0.0, 0.0 };
-    score1.print[6].page = pd;
+    score1.xxbadnames[6].page = pd;
     pd = PageData{};
     pd.newPage = Bool::no;
-    score1.print[10].page = pd;
+    score1.xxbadnames[10].page = pd;
     const auto id1 = docMgr.createFromScore(score1 );
     std::stringstream xml1;
     docMgr.writeToStream( id1, xml1 );
@@ -166,31 +166,31 @@ TEST( LoadFinaleExport, PageData )
     // measure number 31 index 30 :      : system
 
     // Check that PageData objects are populated in the map for the appropriate measures.
-    auto it = score.print.find(0 );
-    REQUIRE( it != std::cend( score.print ) );
+    auto it = score.xxbadnames.find( 0 );
+    REQUIRE( it != std::cend( score.xxbadnames ) );
     const auto& pageM0 = it->second.page;
-    it = score.print.find(4 );
-    REQUIRE( it != std::cend( score.print ) );
+    it = score.xxbadnames.find( 4 );
+    REQUIRE( it != std::cend( score.xxbadnames ) );
     const auto& pageM4 = it->second.page;
-    it = score.print.find(12 );
-    REQUIRE( it != std::cend( score.print ) );
+    it = score.xxbadnames.find( 12 );
+    REQUIRE( it != std::cend( score.xxbadnames ) );
     const auto& pageM12 = it->second.page;
-    it = score.print.find(21 );
-    REQUIRE( it != std::cend( score.print ) );
+    it = score.xxbadnames.find( 21 );
+    REQUIRE( it != std::cend( score.xxbadnames ) );
     const auto& pageM21 = it->second.page;
 
     // Check that the SystemData objects are populated in the set with the appropriate measure indices.
-    it = score.print.find(0 );
-    REQUIRE( it != std::cend( score.print ) );
+    it = score.xxbadnames.find( 0 );
+    REQUIRE( it != std::cend( score.xxbadnames ) );
     const auto systemM0 = it->second.system;
-    it = score.print.find(2 );
-    REQUIRE( it != std::cend( score.print ) );
+    it = score.xxbadnames.find( 2 );
+    REQUIRE( it != std::cend( score.xxbadnames ) );
     const auto systemM2 = it->second.system;
-    it = score.print.find(8 );
-    REQUIRE( it != std::cend( score.print ) );
+    it = score.xxbadnames.find( 8 );
+    REQUIRE( it != std::cend( score.xxbadnames ) );
     const auto systemM8 = it->second.system;
-    it = score.print.find(30 );
-    REQUIRE( it != std::cend( score.print ) );
+    it = score.xxbadnames.find( 30 );
+    REQUIRE( it != std::cend( score.xxbadnames ) );
     const auto systemM30 = it->second.system;
 
     // Check that the SystemData and PageData objects contain the correct information

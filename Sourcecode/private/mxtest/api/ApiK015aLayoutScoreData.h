@@ -38,7 +38,7 @@ namespace mxtest
         MeasureIndex measureIndex = 0;
         system.layout.margins = LeftRight{ 0, 515 };
         system.layout.topSystemDistance = 211;
-        score.print[measureIndex].system = system;
+        score.xxbadnames[measureIndex].system = system;
         
         /*
          <print page-number="1">
