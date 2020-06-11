@@ -52,7 +52,7 @@ TEST( newSystem, doesItWork )
     pd.measures = measures;
     ScoreData s;
     s.parts.push_back( pd );
-    LayoutData systemBreak{true };
+    LayoutData systemBreak{ true };
     const auto addSystemBreak = [&]( MeasureIndex measureIndex )
     {
         s.layout.emplace( measureIndex, systemBreak );
