@@ -27,8 +27,8 @@ namespace mx
             Double right;
 
             inline explicit LeftRight( Double inLeft, Double inRight )
-            : left{ inLeft }
-            , right{ inRight }
+                : left{ inLeft }
+                , right{ inRight }
             {
 
             }

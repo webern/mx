@@ -16,6 +16,7 @@ namespace mx
 {
     namespace api
     {
+        // TODO - documentations
         class PageLayoutData
         {
         public:
@@ -28,7 +29,7 @@ namespace mx
 
             PageLayoutData()
                 : size( std::nullopt )
-                  , margins{}
+                , margins{}
             {
 
             }

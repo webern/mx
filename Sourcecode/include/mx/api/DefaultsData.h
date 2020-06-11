@@ -17,6 +17,7 @@ namespace mx
     namespace api
     {
         
+        // TODO - documentation (also noting that it used to be called LayoutData)
         // distance values are in 'tenths' governed by the 'scaling' values
 
         class DefaultsData

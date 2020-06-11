@@ -17,18 +17,18 @@ namespace mx
     {
         /// PageData allows the specification of a new page, or the prevention of a new page, along with the ability
         /// to change the page layout settings. In the score these are stored in a map where the map key is the measure
-        /// index of where the PageData takes affect in the score.
+        /// index of where the PageData takes effect in the score.
         class PageData
         {
         public:
             inline explicit PageData(
-                    Bool inNewPage = Bool::unspecified,
-                    PageLayoutData inPageLayoutData = PageLayoutData{},
-                    std::optional<std::string> inPageNumber = std::nullopt
-             )
-             : newPage{ inNewPage }
-             , pageLayoutData{ inPageLayoutData }
-             , pageNumber{ std::move( inPageNumber ) }
+                Bool inNewPage = Bool::unspecified,
+                PageLayoutData inPageLayoutData = PageLayoutData{},
+                std::optional<std::string> inPageNumber = std::nullopt
+            )
+                : newPage{ inNewPage }
+                , pageLayoutData{ inPageLayoutData }
+                , pageNumber{ std::move( inPageNumber ) }
             {
 
             }

@@ -27,14 +27,14 @@ namespace mx
             Double width;
 
             inline explicit SizeData( Double inHeight, Double inWidth )
-            : height{ inHeight }
-            , width{ inWidth }
+                : height{ inHeight }
+                , width{ inWidth }
             {
 
             }
 
             inline SizeData()
-                    : SizeData{0.0, 0.0 }
+                : SizeData{ 0.0, 0.0 }
             {
 
             }
