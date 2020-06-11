@@ -7,19 +7,33 @@ If you cloned/forked the repository before 2020-05-31, consider making a new clo
 
 ### Breaking Changes
 - Add support for `new-page` attributes and page layout [#94]
-- Systems are no longer specified as a `std::set<SystemData`. Instead there is a `std::map<MeasureIndex, PrintData` named `print` which holds both `SystemData` and `PageData` information. [#94]
-- What used to be called `LayoutData` and was the `layout` field in `ScoreData` is now called `DefaultsData` and `defaults` to match the name of the MusicXML element, and to free up the word `layout` for use with `SystemLayoutData` and `PageLayoutData`. [#94]
-- 
+- The `LayoutData layout` field of `ScoreData` has been renamed to `DefaultsData defaults` [#94]
+  - What used to be the `LayoutData` class has been renamed to `DefaultsData`.
+  - This name change freed up the name `LayoutsData` to be used for a new class that better fits the name.
+- The `std::set<SystemData> systems` field of `ScoreData` has been replaced by `std::map<MeasureIndex, LayoutData>`. [#94]
+	- `LayoutData` is a new class (not to be confused with `DefaultsData` which previously held the name).
+	- `LayoutData` holds a `SystemData` and a `PageData` (new) to specify system and page layout.
+- Some recurring data patterns were factored out into new classes. [#94]
+  - The existing classes affected by these changes are:
+    - `DefaultsData` (which used to be called `LayoutData`).
+    - `SystemData`
+  - The new classes are:
+    - `LeftRight`
+    - `MarginsData`
+    - `PageLayoutData`
+    - `PageMarginsData`
+    - `SizeData`
+    - `SystemLayoutData`
 
-
-### Non-Breaking Changes
+### Other Changes
 - Bump C++ standard to 17 [#93]
-- Support non-traditional key signatures in `mx::api` [#81]
-- Add a constructor for `PitchData` [#90]
-- Provide a hint in the exception message when a zip file is attempted [#67]
-- Update the readme fairly substantially [#91]
-- Add a changelog [#97]
-- Hide the independence of the XML parser to reduce confusion about dependency management [#79]
+- Support non-traditional key signatures in `mx::api`. [#81]
+- Add a constructor for `PitchData`. [#90]
+- Provide a hint in the exception message when a zip file is attempted. [#67]
+- Update the readme fairly substantially. [#91]
+- Add a changelog. [#97]
+- Hide the independence of the XML parser to reduce confusion about dependency management. [#79]
+- The introduction of `std::optional` as a pattern for specifying optional data. [#94]
 
 [#67]: https://github.com/webern/mx/pull/67
 [#79]: https://github.com/webern/mx/pull/79
