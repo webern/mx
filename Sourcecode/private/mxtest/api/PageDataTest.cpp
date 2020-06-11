@@ -6,9 +6,10 @@
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_API_TESTS
 
-#include "mx/api/ScoreData.h"
 #include "mx/api/DocumentManager.h"
+#include "mx/api/ScoreData.h"
 #include "mxtest/file/MxFileRepository.h"
+
 #include <sstream>
 
 using namespace std;

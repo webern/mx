@@ -4,16 +4,16 @@
 
 #pragma once
 
-#include "mx/api/StaffData.h"
-#include "mx/api/TimeSignatureData.h"
+#include "mx/api/BarlineData.h"
 #include "mx/api/ClefData.h"
-#include "mx/api/TempoData.h"
 #include "mx/api/DirectionData.h"
 #include "mx/api/KeyData.h"
-#include "mx/api/BarlineData.h"
+#include "mx/api/StaffData.h"
+#include "mx/api/TempoData.h"
+#include "mx/api/TimeSignatureData.h"
 
-#include <string>
 #include <map>
+#include <string>
 
 namespace mx
 {

@@ -6,15 +6,15 @@
 #ifdef MX_COMPILE_API_TESTS
 
 #include "cpul/cpulTestHarness.h"
-#include "mxtest/file/Path.h"
-#include "mx/api/DocumentManager.h"
 #include "mx/api/DefaultsData.h"
+#include "mx/api/DocumentManager.h"
 #include "mx/core/Document.h"
-#include "mx/core/elements/PageMargins.h"
+#include "mx/core/elements/BottomMargin.h"
 #include "mx/core/elements/LeftMargin.h"
+#include "mx/core/elements/PageMargins.h"
 #include "mx/core/elements/RightMargin.h"
 #include "mx/core/elements/TopMargin.h"
-#include "mx/core/elements/BottomMargin.h"
+#include "mxtest/file/Path.h"
 
 
 using namespace std;

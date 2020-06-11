@@ -4,9 +4,6 @@
 
 #include "mx/api/ScoreData.h"
 
-#include <vector>
-#include <set>
-
 namespace mx
 {
     namespace api

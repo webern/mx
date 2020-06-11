@@ -5,17 +5,17 @@
 #pragma once
 
 #include "mx/api/ApiCommon.h"
-#include "mx/api/EncodingData.h"
 #include "mx/api/DefaultsData.h"
+#include "mx/api/EncodingData.h"
+#include "mx/api/LayoutData.h"
 #include "mx/api/PageData.h"
 #include "mx/api/PageTextData.h"
 #include "mx/api/PartData.h"
 #include "mx/api/PartGroupData.h"
 #include "mx/api/SystemData.h"
-#include "mx/api/LayoutData.h"
 
+#include <map>
 #include <vector>
-#include <set>
 
 namespace mx
 {

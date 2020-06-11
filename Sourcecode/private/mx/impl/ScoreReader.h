@@ -6,10 +6,10 @@
 
 #include "mx/api/ScoreData.h"
 
-#include <mutex>
 #include <list>
 #include <map>
 #include <memory>
+#include <mutex>
 
 namespace mx
 {

@@ -2,17 +2,16 @@
 // Copyright (c) by Matthew James Briggs
 // Distributed under the MIT License
 
-#include "mx/impl/ScoreWriter.h"
 #include "mx/core/elements/Creator.h"
 #include "mx/core/elements/Encoding.h"
 #include "mx/core/elements/GroupBarline.h"
 #include "mx/core/elements/GroupName.h"
+#include "mx/core/elements/GroupSymbol.h"
 #include "mx/core/elements/Identification.h"
 #include "mx/core/elements/Miscellaneous.h"
 #include "mx/core/elements/MovementNumber.h"
 #include "mx/core/elements/MovementTitle.h"
 #include "mx/core/elements/PartGroup.h"
-#include "mx/core/elements/GroupSymbol.h"
 #include "mx/core/elements/PartGroupOrScorePart.h"
 #include "mx/core/elements/PartList.h"
 #include "mx/core/elements/PartwisePart.h"
@@ -26,13 +25,14 @@
 #include "mx/core/elements/Work.h"
 #include "mx/core/elements/WorkNumber.h"
 #include "mx/core/elements/WorkTitle.h"
+#include "mx/impl/Converter.h"
 #include "mx/impl/EncodingFunctions.h"
 #include "mx/impl/LayoutFunctions.h"
 #include "mx/impl/PageTextFunctions.h"
 #include "mx/impl/PartReader.h"
 #include "mx/impl/PartWriter.h"
+#include "mx/impl/ScoreWriter.h"
 #include "mx/impl/TimeReader.h"
-#include "mx/impl/Converter.h"
 
 namespace mx
 {

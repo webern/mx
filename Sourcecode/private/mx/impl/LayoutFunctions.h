@@ -5,10 +5,10 @@
 #pragma once
 
 #include "mx/api/DefaultsData.h"
+#include "mx/core/elements/PageLayout.h"
+#include "mx/core/elements/PageMargins.h"
 #include "mx/core/elements/ScoreHeaderGroup.h"
 #include "mx/core/elements/Tenths.h"
-#include "mx/core/elements/PageMargins.h"
-#include "mx/core/elements/PageLayout.h"
 
 namespace mx
 {

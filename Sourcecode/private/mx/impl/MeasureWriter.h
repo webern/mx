@@ -4,13 +4,13 @@
 
 #pragma once
 
+#include "mx/api/BarlineData.h"
 #include "mx/api/MeasureData.h"
 #include "mx/api/PageData.h"
-#include "mx/impl/MeasureCursor.h"
 #include "mx/api/SystemData.h"
-#include "mx/api/BarlineData.h"
-#include "mx/impl/PropertiesWriter.h"
 #include "mx/impl/Converter.h"
+#include "mx/impl/MeasureCursor.h"
+#include "mx/impl/PropertiesWriter.h"
 
 #include <list>
 #include <sstream>

@@ -2,12 +2,12 @@
 // Copyright (c) by Matthew James Briggs
 // Distributed under the MIT License
 
+#include "mx/api/DocumentManager.h"
 #include "mxtest/file/MxFileRepository.h"
 #include "mxtest/file/Path.h"
-#include "mx/api/DocumentManager.h"
 
-#include <fstream>
 #include <algorithm>
+#include <fstream>
 
 namespace mxtest
 {
