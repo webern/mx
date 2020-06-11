@@ -6,7 +6,8 @@
 
 #include "mx/api/ApiCommon.h"
 #include "mx/api/MeasureData.h"
-#include "mx/api/SystemLayoutData.h"
+#include "mx/api/PageData.h"
+#include "mx/api/SystemData.h"
 
 #include <map>
 
