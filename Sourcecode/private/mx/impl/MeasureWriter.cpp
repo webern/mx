@@ -271,11 +271,11 @@ namespace mx
             myOutMeasure->getMusicDataGroup()->addMusicDataChoice( outPrintMdc );
             myHistory.log( "writePrint" );
 
-            if( isSpecified( systemData.systemBreak ) )
+            if( isSpecified( systemData.newSystem ) )
             {
                 outPrint.getAttributes()->hasNewSystem = true;
                 outPrint.getAttributes()->newSystem =
-                        systemData.systemBreak == api::Bool::yes ? core::YesNo::yes : core::YesNo::no;
+                        systemData.newSystem == api::Bool::yes ? core::YesNo::yes : core::YesNo::no;
             }
 
             if( systemData.layout.isUsed() )

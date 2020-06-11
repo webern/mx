@@ -464,7 +464,7 @@ namespace mx
                     if( print.getAttributes()->hasNewSystem )
                     {
                         const auto newSystem = print.getAttributes()->newSystem == core::YesNo::yes;
-                        systemData.systemBreak = api::fromBool( newSystem );
+                        systemData.newSystem = api::fromBool( newSystem );
                     }
                     const auto& layoutGroup = *print.getLayoutGroup();
                     if( layoutGroup.getHasSystemLayout() )

@@ -346,7 +346,7 @@ namespace mx
             {
                 return false;
             }
-            return iter->second.system.systemBreak == api::Bool::yes;
+            return iter->second.system.newSystem == api::Bool::yes;
         }
 
 

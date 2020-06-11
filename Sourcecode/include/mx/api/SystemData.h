@@ -29,19 +29,18 @@ namespace mx
         class SystemData
         {
         public:
-            // TODO - rename to `newSystem`
-            /// Should a system break occur at this measure.
-            Bool systemBreak;
+            /// Should this measure be at the start of a new system, i.e. <print new-system="yes" />
+            Bool newSystem;
 
             /// System layout. Note, all members of SystemLayoutData are optional.
             SystemLayoutData layout;
 
             /// Returns true if any of the members of SystemData have values.
-            inline bool isUsed() const { return systemBreak != Bool::unspecified || layout.isUsed(); }
+            inline bool isUsed() const { return newSystem != Bool::unspecified || layout.isUsed(); }
 
             /// Explicit constructor.
             inline explicit SystemData( Bool inSystemBreak, SystemLayoutData inLayout = SystemLayoutData{} )
-                : systemBreak{ inSystemBreak }
+                : newSystem{inSystemBreak }
                 , layout{ std::move( inLayout ) }
             {
 
