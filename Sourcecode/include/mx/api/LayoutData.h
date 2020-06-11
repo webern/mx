@@ -44,7 +44,7 @@ namespace mx
             /// The default constructor does not specify any page or system details. i.e. a default constructed object
             /// will not produce a <print> element.
             inline LayoutData()
-                : LayoutData{SystemData{}, PageData{} }
+                : LayoutData{ SystemData{}, PageData{} }
             {
 
             }

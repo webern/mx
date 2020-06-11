@@ -40,7 +40,7 @@ namespace mx
 
             /// Explicit constructor.
             inline explicit SystemData( Bool inSystemBreak, SystemLayoutData inLayout = SystemLayoutData{} )
-                : newSystem{inSystemBreak }
+                : newSystem{ inSystemBreak }
                 , layout{ std::move( inLayout ) }
             {
 
@@ -55,7 +55,7 @@ namespace mx
         };
 
         MXAPI_EQUALS_BEGIN( SystemData )
-        MXAPI_EQUALS_MEMBER( systemBreak )
+        MXAPI_EQUALS_MEMBER( newSystem )
         MXAPI_EQUALS_MEMBER( layout )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( SystemData );
