@@ -406,7 +406,7 @@ namespace mx
                 data.appearanceType = api::AppearanceType::NoteSize;
                 data.appearanceSubType = core::toString( noteSize->getAttributes()->type );
                 data.value = noteSize->getValue().getValue();
-                outDefaults.appearance.emplace_back(std::move(data ) );
+                outDefaults.appearance.emplace_back( std::move( data ) );
             }
 
             for( const auto& distance : appearance.getDistanceSet() )
