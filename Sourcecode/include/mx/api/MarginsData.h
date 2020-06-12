@@ -14,7 +14,7 @@ namespace mx
     namespace api
     {
 
-        /// Top, bottom, left, right. Measurements are in tenths.
+        /// Left, right, top, bottom. Measurements are in tenths.
         class MarginsData
         {
         public:
