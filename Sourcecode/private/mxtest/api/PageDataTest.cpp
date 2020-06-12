@@ -16,7 +16,7 @@ using namespace std;
 using namespace mx::api;
 
 // Make sure the equality macros (i.e. operator==) works correctly with std::optional
-TEST( EqualityOfOptional, PitchData )
+TEST( EqualityOfOptional, PageData )
 {
     PageData a;
     PageData b;
