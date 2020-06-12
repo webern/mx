@@ -42,7 +42,7 @@ T_END;
 
 namespace pageDataTest
 {
-    inline mx::api::ScoreData makeSomeBoringMusic( int inNumMeasures)
+    inline mx::api::ScoreData makeSomeBoringMusic( int inNumMeasures )
     {
         const auto ticksPerQuarter = 1024;
         const auto whole = ticksPerQuarter * 4;
