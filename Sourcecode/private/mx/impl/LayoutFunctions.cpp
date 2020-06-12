@@ -415,7 +415,7 @@ namespace mx
                 data.appearanceType = api::AppearanceType::Distance;
                 data.appearanceSubType = core::toString( distance->getAttributes()->type );
                 data.value = distance->getValue().getValue();
-                outDefaults.appearance.emplace_back(std::move(data ) );
+                outDefaults.appearance.emplace_back( std::move( data ) );
             }
 
             for( const auto& other : appearance.getOtherAppearanceSet() )
