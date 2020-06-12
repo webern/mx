@@ -87,7 +87,6 @@ namespace pageDataTest
     }
 }
 
-//#define MJB_DEBUG
 
 TEST( TestPageData, PageData )
 {
