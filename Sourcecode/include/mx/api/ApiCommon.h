@@ -14,7 +14,7 @@ namespace mx
     {
         using Double = long double;
         using OptionalDouble = std::optional<Double>;
-        constexpr const long double MX_API_EQUALITY_EPSILON = 0.00000001;
+        constexpr const Double MX_API_EQUALITY_EPSILON = 0.00000001;
 
         inline bool areSame( long double left, long double right )
         {
