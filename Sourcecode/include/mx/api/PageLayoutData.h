@@ -16,7 +16,7 @@ namespace mx
 {
     namespace api
     {
-        // TODO - documentations
+        /// PageLayoutData allows for the setting of page sizes and margins.
         class PageLayoutData
         {
         public:
