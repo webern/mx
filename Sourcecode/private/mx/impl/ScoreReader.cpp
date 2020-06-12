@@ -558,7 +558,7 @@ namespace mx
                                 };
                         for( const auto& pageMargins : pageLayout.getPageMarginsSet() )
                         {
-                            // TODO - this implementation may not be exactly right
+                            // Warning - this implementation may not be exactly correct.
                             // musicxml.xsd says: "Page margins are specified either for both even and odd pages, or via
                             // separate odd and even page number values. The type attribute is not needed when used as part
                             // of a print element. If omitted when the page-margins type is used in the defaults element,
