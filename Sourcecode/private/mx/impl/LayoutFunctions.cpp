@@ -87,7 +87,7 @@ namespace mx
                 outPageMargins.push_back( outMargins );
             }
 
-            // these margins ('even') are only needed if 'both' was not specified above because.
+            // 'even' margins are only needed if 'both' was not specified above.
             if( inPageMargins.even && !areEvenOddSame )
             {
                 auto outEvenMargins = core::makePageMargins();
@@ -317,8 +317,6 @@ namespace mx
                             };
                 }
             }
-            
-            
         }
         
         
@@ -426,7 +424,7 @@ namespace mx
 
                 // TODO - fix
                 data.value = 0.0;//other->getValue().getValue();
-                outDefaults.appearance.emplace_back(std::move(data ) );
+                outDefaults.appearance.emplace_back( std::move( data ) );
             }
         }
     }

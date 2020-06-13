@@ -103,11 +103,12 @@ namespace mx
             SystemLayoutData systemLayout;
 
             std::vector<AppearanceData> appearance;
-            
+
+            // TODO - this appears not to be used anywhere, please do not use
             /// Measure numbering setting, at the global level, will be stated
             /// in first measure's <print> tag. This can can be overridden by a
             /// value in the Measure.
-            MeasureNumbering measureNumbering; 
+            MeasureNumbering measureNumbering;
             
             DefaultsData()
             : scalingMillimeters{ -1.0 }

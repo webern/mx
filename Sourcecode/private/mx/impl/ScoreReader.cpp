@@ -297,7 +297,6 @@ namespace mx
                 divisionsValue = cursorReturn.ticksPerQuarter;
             }
 
-            // TODO - refactor and do system and page info in one pass
             scanForSystemInfo();
             scanForPageInfo();
             
