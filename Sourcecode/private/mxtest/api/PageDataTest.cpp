@@ -130,9 +130,6 @@ TEST( TestPageData, PageData )
     const auto id1 = docMgr.createFromScore( score1 );
     std::stringstream xml1;
     docMgr.writeToStream( id1, xml1 );
-#ifdef MJB_DEBUG
-    docMgr.writeToFile( id1, "/Users/mjb/Desktop/xml1.xml" );
-#endif
     docMgr.destroyDocument( id1 );
     std::istringstream xml1is{ xml1.str() };
     const auto id2 = docMgr.createFromStream( xml1is );
@@ -142,9 +139,6 @@ TEST( TestPageData, PageData )
     const auto id3 = docMgr.createFromScore( score2 );
     std::stringstream xml3;
     docMgr.writeToStream( id3, xml3 );
-#ifdef MJB_DEBUG
-    docMgr.writeToFile( id3, "/Users/mjb/Desktop/xml3.xml" );
-#endif
     CHECK( xml1.str() == xml3.str() );
 }
 
