@@ -5,6 +5,7 @@ If you cloned/forked the repository before 2020-05-31, consider making a new clo
 
 ## [Unreleased]
 
+## [v0.5.0] - 2020-06-13
 ### Breaking Changes
 - Add support for `new-page` attributes and page layout [#94]
 - The `LayoutData layout` field of `ScoreData` has been renamed to `DefaultsData defaults` [#94]
@@ -65,7 +66,8 @@ If you cloned/forked the repository before 2020-05-31, consider making a new clo
 [v0.3.0]: https://github.com/webern/mx/compare/v0.2.0..v0.3.0
 [v0.4.0]: https://github.com/webern/mx/compare/v0.3.0..v0.4.0
 [v0.4.1]: https://github.com/webern/mx/compare/v0.4.0..v0.4.1
-[Unreleased]: https://github.com/webern/mx/compare/v0.4.1...HEAD
+[v0.5.0]: https://github.com/webern/mx/compare/v0.4.1..v0.5.0
+[Unreleased]: https://github.com/webern/mx/compare/v0.5.0...HEAD
 
 #### Historical Notes
 
