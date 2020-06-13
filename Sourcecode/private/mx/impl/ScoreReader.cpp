@@ -487,18 +487,6 @@ namespace mx
                         {
                             systemData.layout.topSystemDistance = systemLayout.getTopSystemDistance()->getValue().getValue();
                         }
-
-                        // TODO - why was this here?
-#if 0
-                        if( myOutScoreData.systems.size() == 0 && systemData.measureIndex > 0 )
-                        {
-                            // ensure we have one of these for the first system even if it was
-                            // missing from the MusicXML file
-                            auto firstSystem = api::SystemData{};
-                            firstSystem.measureIndex = 0;
-                            myOutScoreData.systems.emplace( std::move( firstSystem ) );
-                        }
-#endif
                     }
                     if( systemData.isUsed() )
                     {
