@@ -45,6 +45,7 @@ namespace mx
             ///      <tenths>40</tenths>
             ///      ...
             ///    </scaling>
+            ///  </defaults>
             ///
             /// In this example, Finale is saying that the size of the staff is
             /// 7.2319 millimeters.
