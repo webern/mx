@@ -5,11 +5,13 @@
 #pragma once
 
 #include "mx/api/ApiCommon.h"
+#include "mx/api/SystemLayoutData.h"
 
 namespace mx
 {
     namespace api
     {
+        // TODO - the documentation below if from MusicXML XSD and not very helpful for our case, improve documentation.
         // A system is a group of staves that are read and played simultaneously.
         // System layout includes left and right margins and the vertical distance
         // from the previous system. The system distance is measured from the
@@ -27,54 +29,34 @@ namespace mx
         class SystemData
         {
         public:
-            
-            // instead of placing these within the part and measure data (like
-            // MusicXML does), the SystemData class will declaritively specify
-            // instructions about the system layout at the top-level of the
-            // score.  Specify the measure index for the first measure in the
-            // system. 'new-system' will be set to yes for the this measure.
-            int measureIndex;
-            
-            // System margins are relative to the page margins. Positive values
-            // indent and negative values reduce the margin size.
-            int rightMargin;
-            int leftMargin;
-            bool isMarginSpecified;
+            /// Should this measure be at the start of a new system, i.e. <print new-system="yes" />
+            Bool newSystem;
 
-            // system-distance is not clearly defined in the MusicXML specification.
-            int systemDistance;
-            bool isSystemDistanceSpecified;
-            
-            // top-system-distance is not clearly defined in the MusicXML
-            // specification.
-            int topSystemDistance;
-            bool isTopSystemDistanceSpecified;
-            
+            /// System layout. Note, all members of SystemLayoutData are optional.
+            SystemLayoutData layout;
+
+            /// Returns true if any of the members of SystemData have values.
+            inline bool isUsed() const { return newSystem != Bool::unspecified || layout.isUsed(); }
+
+            /// Explicit constructor.
+            inline explicit SystemData( Bool inSystemBreak, SystemLayoutData inLayout = SystemLayoutData{} )
+                : newSystem{ inSystemBreak }
+                , layout{ std::move( inLayout ) }
+            {
+
+            }
+
+            /// Default constructor.
             SystemData()
-            : measureIndex{ -1 }
-            , rightMargin{ 0 }
-            , leftMargin{ 0 }
-            , isMarginSpecified{ false }
-            , systemDistance{ 0 }
-            , isSystemDistanceSpecified{ false }
-            , topSystemDistance{ 0 }
-            , isTopSystemDistanceSpecified{ false }
+                : SystemData{ Bool::unspecified  }
             {
                 
             }
         };
-        
-        inline bool operator<( const SystemData& lhs, const SystemData& rhs ) { return lhs.measureIndex < rhs.measureIndex; }
 
         MXAPI_EQUALS_BEGIN( SystemData )
-        MXAPI_EQUALS_MEMBER( measureIndex )
-        MXAPI_EQUALS_MEMBER( rightMargin )
-        MXAPI_EQUALS_MEMBER( leftMargin )
-        MXAPI_EQUALS_MEMBER( isMarginSpecified )
-        MXAPI_EQUALS_MEMBER( systemDistance )
-        MXAPI_EQUALS_MEMBER( isSystemDistanceSpecified )
-        MXAPI_EQUALS_MEMBER( topSystemDistance )
-        MXAPI_EQUALS_MEMBER( isTopSystemDistanceSpecified )
+        MXAPI_EQUALS_MEMBER( newSystem )
+        MXAPI_EQUALS_MEMBER( layout )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( SystemData );
     }

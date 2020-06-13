@@ -6,10 +6,10 @@
 
 #include "mx/api/ScoreData.h"
 
-#include <mutex>
 #include <list>
 #include <map>
 #include <memory>
+#include <mutex>
 
 namespace mx
 {
@@ -60,6 +60,7 @@ namespace mx
             api::PartGroupData popMostRecentGroupFromStack() const;
             int parsePartGroupNumber( const core::PartGroupPtr& inPartGroup ) const;
             void scanForSystemInfo() const;
+            void scanForPageInfo() const;
             int findMaxDivisionsPerQuarter() const;
     	};
     }

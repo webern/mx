@@ -4,13 +4,36 @@ On 2020-05-31, two tags were deleted from origin, `v1.0.0` and `v1.0.1` and repl
 If you cloned/forked the repository before 2020-05-31, consider making a new clone/fork or otherwise repairing the tags.
 
 ## [Unreleased]
-- Support non-traditional key signatures in `mx::api` [#81]
-- Add a constructor for `PitchData` [#90]
-- Provide a hint in the exception message when a zip file is attempted [#67]
-- Update the readme fairly substantially [#91]
-- Add a changelog [#97]
-- Hide the independence of the XML parser to reduce confusion about dependency management [#79]
+
+### Breaking Changes
+- Add support for `new-page` attributes and page layout [#94]
+- The `LayoutData layout` field of `ScoreData` has been renamed to `DefaultsData defaults` [#94]
+  - What used to be the `LayoutData` class has been renamed to `DefaultsData`.
+  - This name change freed up the name `LayoutsData` to be used for a new class that better fits the name.
+- The `std::set<SystemData> systems` field of `ScoreData` has been replaced by `std::map<MeasureIndex, LayoutData>`. [#94]
+	- `LayoutData` is a new class (not to be confused with `DefaultsData` which previously held the name).
+	- `LayoutData` holds a `SystemData` and a `PageData` (new) to specify system and page layout.
+- Some recurring data patterns were factored out into new classes. [#94]
+  - The existing classes affected by these changes are:
+    - `DefaultsData` (which used to be called `LayoutData`).
+    - `SystemData`
+  - The new classes are:
+    - `LeftRight`
+    - `MarginsData`
+    - `PageLayoutData`
+    - `PageMarginsData`
+    - `SizeData`
+    - `SystemLayoutData`
+
+### Other Changes
 - Bump C++ standard to 17 [#93]
+- Support non-traditional key signatures in `mx::api`. [#81]
+- Add a constructor for `PitchData`. [#90]
+- Provide a hint in the exception message when a zip file is attempted. [#67]
+- Update the readme fairly substantially. [#91]
+- Add a changelog. [#97]
+- Hide the independence of the XML parser to reduce confusion about dependency management. [#79]
+- The introduction of `std::optional` as a pattern for specifying optional data. [#94]
 
 [#67]: https://github.com/webern/mx/pull/67
 [#79]: https://github.com/webern/mx/pull/79
@@ -18,6 +41,7 @@ If you cloned/forked the repository before 2020-05-31, consider making a new clo
 [#90]: https://github.com/webern/mx/pull/90
 [#91]: https://github.com/webern/mx/pull/91
 [#93]: https://github.com/webern/mx/pull/93
+[#94]: https://github.com/webern/mx/pull/94
 [#97]: https://github.com/webern/mx/pull/97
 
 ## [v0.4.1] - 2019-11-23

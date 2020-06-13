@@ -4,21 +4,24 @@
 
 #pragma once
 
-#include "mx/api/StaffData.h"
-#include "mx/api/TimeSignatureData.h"
+#include "mx/api/BarlineData.h"
 #include "mx/api/ClefData.h"
-#include "mx/api/TempoData.h"
 #include "mx/api/DirectionData.h"
 #include "mx/api/KeyData.h"
-#include "mx/api/BarlineData.h"
+#include "mx/api/StaffData.h"
+#include "mx/api/TempoData.h"
+#include "mx/api/TimeSignatureData.h"
 
-#include <string>
 #include <map>
+#include <string>
 
 namespace mx
 {
     namespace api
     {
+        /// This typedef help readability in a few places such as the layout map in ScoreData.
+        using MeasureIndex = int;
+
         class MeasureData
         {
         public:

@@ -2,12 +2,12 @@
 // Copyright (c) by Matthew James Briggs
 // Distributed under the MIT License
 
+#include "mx/api/DocumentManager.h"
 #include "mxtest/file/MxFileRepository.h"
 #include "mxtest/file/Path.h"
-#include "mx/api/DocumentManager.h"
 
-#include <fstream>
 #include <algorithm>
+#include <fstream>
 
 namespace mxtest
 {
@@ -474,6 +474,7 @@ namespace mxtest
         // other
         myNameSubdirectoryMap.emplace( "logic01a_homoSapiens.xml", "logicpro" );
         myNameSubdirectoryMap.emplace( "Schubert_der_Mueller.xml", "foundsuite" );
+        myNameSubdirectoryMap.emplace( "systems-and-pages.xml", "custom" );
 
         // mxl
         myNameSubdirectoryMap.emplace( "Dichterliebe01.mxl", "mxl" );

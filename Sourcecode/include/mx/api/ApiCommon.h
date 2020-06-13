@@ -6,14 +6,17 @@
 
 #include <cmath>
 #include <limits>
+#include <optional>
 
 namespace mx
 {
     namespace api
     {
-        constexpr const long double MX_API_EQUALITY_EPSILON = 0.00000001;
+        using Double = long double;
+        using OptionalDouble = std::optional<Double>;
+        constexpr const Double MX_API_EQUALITY_EPSILON = 0.00000001;
 
-        inline bool areSame( long double left, long double right )
+        inline bool areSame( Double left, Double right )
         {
             return ( std::abs( left - right ) < MX_API_EQUALITY_EPSILON );
         }
@@ -27,7 +30,11 @@ namespace mx
             yes,
             no
         };
-        
+
+        inline bool toBool( Bool b ) { return b == Bool::yes; }
+        inline Bool fromBool( bool b ) { return b ? Bool::yes : Bool::no; }
+        inline bool isSpecified( Bool b ) { return b != Bool::unspecified; }
+
         enum class Placement
         {
             unspecified,

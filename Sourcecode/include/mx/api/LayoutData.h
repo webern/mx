@@ -5,128 +5,102 @@
 #pragma once
 
 #include "mx/api/ApiCommon.h"
-#include "mx/api/AppearanceData.h"
+#include "mx/api/MeasureData.h"
+#include "mx/api/PageData.h"
+#include "mx/api/SystemData.h"
 
-#include <string>
-#include <vector>
+#include <map>
 
 namespace mx
 {
     namespace api
     {
-        
-        // distance values are in 'tenths' governed by the 'scaling' values
-
+        /// LayoutData represents the page and system layout instructions that
+        /// are found in the <print> element. These are held in `ScoreData` in a
+        /// map where the key is the measure index. For example, to start a new
+        /// page at measure index 39:
+        /// `score.layout.emplace( 39, LayoutData{ true, true } );`, where the
+        /// constructor `LayoutData{ true, true }` is a constructor indicating
+        /// that both a new system and a new page are indicated.
         class LayoutData
         {
         public:
+            /// System information, such as whether a system break should occur.
+            /// Note: all members are optional.
+            SystemData system;
 
-            long double scalingMillimeters;
-            long double scalingTenths;
+            /// Page information, such as whether a page break should occur.
+            /// Note: all members are optional.
+            PageData page;
 
-            inline long double tenthsPerMillimeter() const
-            {
-                return scalingTenths / scalingMillimeters;
-            }
-
-            inline long double tenthsPerInch() const
-            {
-                return tenthsPerMillimeter() * 25.4;
-            }
-
-            long double pageWidth;             // negative number represent the absence of a value
-            long double pageHeight;            // negative number represent the absence of a value
-
-            long double oddPageLeftMargin;     // negative number represent the absence of a value
-            long double oddPageRightMargin;    // negative number represent the absence of a value
-            long double oddPageTopMargin;      // negative number represent the absence of a value
-            long double oddPageBottomMargin;   // negative number represent the absence of a value
-            long double evenPageLeftMargin;    // negative number represent the absence of a value
-            long double evenPageRightMargin;   // negative number represent the absence of a value
-            long double evenPageTopMargin;     // negative number represent the absence of a value
-            long double evenPageBottomMargin;  // negative number represent the absence of a value
-
-            long double systemLeftMargin;      // negative number represent the absence of a value
-            long double systemRightMargin;     // negative number represent the absence of a value
-            long double systemDistance;        // distance from bollom line of one system to top line of next system, negative number represent the absence of a value
-            long double topSystemDistance;     // first system distance from top margin to top line of first staff, negative number represent the absence of a value
-            long double staffDistance;         // the space between staves within the same system, negative number represent the absence of a value
-
-            std::vector<AppearanceData> appearance;
-            MeasureNumbering measureNumbering; // measure numbering setting at the global level, will be stated in first measure's <print> tag.  can be overridden by a value in the Measure
-            
-            LayoutData()
-            : scalingMillimeters( -1.0 )
-            , scalingTenths( -1.0 )
-            , pageWidth( -1.0 )
-            , pageHeight( -1.0 )
-            , oddPageLeftMargin( -1.0 )
-            , oddPageRightMargin( -1.0 )
-            , oddPageTopMargin( -1.0 )
-            , oddPageBottomMargin( -1.0 )
-            , evenPageLeftMargin( -1.0 )
-            , evenPageRightMargin( -1.0 )
-            , evenPageTopMargin( -1.0 )
-            , evenPageBottomMargin( -1.0 )
-            , systemLeftMargin( -1.0 )
-            , systemRightMargin( -1.0 )
-            , systemDistance( -1.0 )
-            , topSystemDistance( -1.0 )
-            , staffDistance( -1.0 )
-            , appearance()
-            , measureNumbering{ MeasureNumbering::unspecified }
+            /// Convenience constructor for the use case where we only care
+            /// about specifying system breaks and page breaks. That is, if you
+            /// do not need to fuss with margins or spacing and only want to
+            /// indicate the start of a new system or page, you can use this
+            /// constructor. The first bool indicates that a new system should
+            /// start. The second bool indicates that a new page should also
+            /// start. For example: `LayoutData{ true }` produces 
+            /// `<print new-system="yes" />` and `LayoutData{ true, true }`
+            /// produces `<print new-system="yes" new-page="yes" />`
+            inline explicit LayoutData( bool inNewSystem, bool inNewPage = false )
+                : system{ inNewSystem ? Bool::yes : Bool::unspecified }
+                , page{ inNewPage ? Bool::yes : Bool::unspecified }
             {
 
             }
 
-
-            inline bool areOddMarginsValid() const
+            /// The default constructor does not specify any page or system
+            /// details. i.e. a default constructed object will not produce a
+            /// `<print>` element.
+            inline LayoutData()
+                : LayoutData{ SystemData{}, PageData{} }
             {
-                return oddPageLeftMargin > 0
-                    && oddPageRightMargin > 0
-                    && oddPageTopMargin > 0
-                    && oddPageBottomMargin > 0;
+
             }
 
-
-            inline bool areEvenMarginsValid() const
+            /// The explicit constructor takes fully constructed members.
+            inline explicit LayoutData( SystemData inSystem, PageData inPage )
+                : system{ std::move( inSystem ) }
+                , page{ std::move( inPage ) }
             {
-                return evenPageLeftMargin > 0
-                    && evenPageRightMargin > 0
-                    && evenPageTopMargin > 0
-                    && evenPageBottomMargin > 0;
+
             }
 
-
-            inline bool areOddEvenMarginsTheSame() const
-            {
-                return areSame(oddPageLeftMargin, evenPageLeftMargin)
-                    && areSame(oddPageRightMargin, evenPageRightMargin)
-                    && areSame(oddPageTopMargin, evenPageTopMargin)
-                    && areSame(oddPageBottomMargin, evenPageBottomMargin);
-            }
-
+            /// Tells us whether any members have been specified or not.
+            inline bool isUsed() const { return system.isUsed() || page.isUsed(); }
         };
-        
+
         MXAPI_EQUALS_BEGIN( LayoutData )
-        MXAPI_EQUALS_MEMBER( pageWidth )
-        MXAPI_EQUALS_MEMBER( pageHeight )
-        MXAPI_EQUALS_MEMBER( oddPageLeftMargin )
-        MXAPI_EQUALS_MEMBER( oddPageRightMargin )
-        MXAPI_EQUALS_MEMBER( oddPageTopMargin )
-        MXAPI_EQUALS_MEMBER( oddPageBottomMargin )
-        MXAPI_EQUALS_MEMBER( evenPageLeftMargin )
-        MXAPI_EQUALS_MEMBER( evenPageRightMargin )
-        MXAPI_EQUALS_MEMBER( evenPageTopMargin )
-        MXAPI_EQUALS_MEMBER( evenPageBottomMargin )
-        MXAPI_EQUALS_MEMBER( systemLeftMargin )
-        MXAPI_EQUALS_MEMBER( systemRightMargin )
-        MXAPI_EQUALS_MEMBER( systemDistance )
-        MXAPI_EQUALS_MEMBER( topSystemDistance )
-        MXAPI_EQUALS_MEMBER( staffDistance )
-        MXAPI_EQUALS_MEMBER( appearance )
-        MXAPI_EQUALS_MEMBER( measureNumbering )
+            MXAPI_EQUALS_MEMBER( system )
+            MXAPI_EQUALS_MEMBER( page )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( LayoutData );
+
+        inline bool operator==(
+            const std::map<MeasureIndex, LayoutData>& a,
+            const std::map<MeasureIndex, LayoutData>& b
+        )
+        {
+            if( a.size() != b.size() )
+            {
+                return false;
+            }
+            auto ai = a.cbegin();
+            auto bi = b.cbegin();
+            const auto aend = a.cend();
+            const auto bend = b.cend();
+            for( ; ai != aend && bi != bend; ++ai, ++bi )
+            {
+                if( ai->first != bi->first )
+                {
+                    return false;
+                }
+                if( ai->second != bi->second )
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }

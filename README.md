@@ -328,7 +328,6 @@ For example, here is the `ScoreData.h`, which represents the top level of the ob
 class ScoreData
 {
 public:
-    ScoreData();
     MusicXmlVersion musicXmlVersion;
     std::string musicXmlType;
     std::string workTitle;
@@ -342,18 +341,11 @@ public:
     std::string copyright;
     EncodingData encoding;
     std::vector<PageTextData> pageTextItems;
-    LayoutData layout;
+    DefaultsData defaults;
     std::vector<PartData> parts;
     std::vector<PartGroupData> partGroups;
     int ticksPerQuarter;
-    std::set<SystemData> systems;
-
-    int getNumMeasures() const;
-    int getNumStavesPerSystem() const;
-
-    /// sorts all of the events, directions, etc.
-    /// it is good to call this before writing to xml.
-    void sort();
+    std::map<MeasureIndex, LayoutData> layout;
 };
 ```
 

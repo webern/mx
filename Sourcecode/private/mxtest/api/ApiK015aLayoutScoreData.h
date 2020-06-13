@@ -5,8 +5,8 @@
 #pragma once
 
 #include "mx/api/ScoreData.h"
-#include "mx/impl/Converter.h"
 #include "mx/core/Enums.h"
+#include "mx/impl/Converter.h"
 
 namespace mxtest
 {
@@ -25,41 +25,20 @@ namespace mxtest
         score.encoding.supportedItems.emplace_back( supported );
         supported.attributeName = "new-page";
         score.encoding.supportedItems.emplace_back( supported );
-        score.layout.pageHeight = 1545;
-        score.layout.pageWidth = 1194;
-        score.layout.scalingMillimeters = 7.2319;
-        score.layout.scalingTenths = 40;
-        score.layout.oddPageLeftMargin = 70;
-        score.layout.oddPageRightMargin = 70;
-        score.layout.oddPageTopMargin = 88;
-        score.layout.oddPageBottomMargin = 88;
-        score.layout.evenPageLeftMargin = 70;
-        score.layout.evenPageRightMargin = 70;
-        score.layout.evenPageTopMargin = 88;
-        score.layout.evenPageBottomMargin = 88;
-        
-        score.layout.systemLeftMargin = 125;
-        score.layout.systemRightMargin = 503;
-        score.layout.topSystemDistance = 70;
-        score.layout.systemDistance = 121;
+        score.defaults.pageLayout.size = SizeData{1545, 1194 };
+        score.defaults.scalingMillimeters = 7.2319;
+        score.defaults.scalingTenths = 40;
+        score.defaults.pageLayout.margins.odd = MarginsData{ 70, 70, 88, 88 };
+        score.defaults.pageLayout.margins.even = MarginsData{ 70, 70, 88, 88 };
+        score.defaults.systemLayout.margins = LeftRight{ 125, 503 };
+        score.defaults.systemLayout.topSystemDistance = 70;
+        score.defaults.systemLayout.systemDistance = 121;
         
         SystemData system;
-        system.measureIndex = 0;
-        system.rightMargin = 0;
-        system.leftMargin = 515;
-        system.topSystemDistance = 211;
-        
-        /*
-         : measureIndex{ -1 }
-         , rightMargin{ 0 }
-         , leftMargin{ 0 }
-         , isMarginSpecified{ false }
-         , systemDistance{ 0 }
-         , isSystemDistanceSpecified{ false }
-         , topSystemDistance{ 0 }
-         , isTopSystemDistanceSpecified{ false }
-         */
-        score.systems.emplace( system );
+        MeasureIndex measureIndex = 0;
+        system.layout.margins = LeftRight{ 0, 515 };
+        system.layout.topSystemDistance = 211;
+        score.layout[measureIndex].system = system;
         
         /*
          <print page-number="1">
@@ -81,7 +60,7 @@ namespace mxtest
         // 1
         part.measures.emplace_back( MeasureData{} );
         auto measure = &part.measures.back();
-        measure->width =
+        measure->width = 0.0;
         measure->timeSignature.beats = 4;
         measure->timeSignature.beatType = 4;
         measure->timeSignature.isImplicit = false;

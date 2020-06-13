@@ -3516,6 +3516,15 @@
 		2948959A1FC4011400A06219 /* AppearanceData.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AppearanceData.cpp; sourceTree = "<group>"; };
 		2975944D1F044C7600DE2F30 /* ChordData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ChordData.cpp; sourceTree = "<group>"; };
 		297594591F04783100DE2F30 /* Round.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Round.h; sourceTree = "<group>"; };
+		29843ACF248C0CA9006A8E34 /* PageData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PageData.h; sourceTree = "<group>"; };
+		29843AD0248C0CA9006A8E34 /* PageLayoutData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PageLayoutData.h; sourceTree = "<group>"; };
+		29843AD1248C0CA9006A8E34 /* PageMarginsData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PageMarginsData.h; sourceTree = "<group>"; };
+		29843AD2248C0CA9006A8E34 /* KeyComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KeyComponent.h; sourceTree = "<group>"; };
+		29843AD5248D47E9006A8E34 /* SystemLayoutData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SystemLayoutData.h; sourceTree = "<group>"; };
+		29843AD6248D47E9006A8E34 /* SizeData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SizeData.h; sourceTree = "<group>"; };
+		29843AD7248D47EA006A8E34 /* LeftRight.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LeftRight.h; sourceTree = "<group>"; };
+		29843AD8248D47EA006A8E34 /* MarginsData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MarginsData.h; sourceTree = "<group>"; };
+		29843AD9248DE951006A8E34 /* DefaultsData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DefaultsData.h; sourceTree = "<group>"; };
 		299F7FE61CA8D2200084CAE5 /* libMx.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMx.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		29A02E781FE0F71A00B74FDE /* Version.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Version.cpp; sourceTree = "<group>"; };
 		29A02E841FE0FA5000B74FDE /* EncodingData.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = EncodingData.cpp; sourceTree = "<group>"; };
@@ -4999,6 +5008,7 @@
 		29A8DD581EF0475D00AD2478 /* api */ = {
 			isa = PBXGroup;
 			children = (
+				2948959A1FC4011400A06219 /* AppearanceData.cpp */,
 				2975944D1F044C7600DE2F30 /* ChordData.cpp */,
 				29A8DD5C1EF0475D00AD2478 /* ClefData.cpp */,
 				29A8DD611EF0475D00AD2478 /* DocumentManager.cpp */,
@@ -5011,7 +5021,6 @@
 				29A8DD7A1EF0475D00AD2478 /* ScoreData.cpp */,
 				29A800621EF0876500AD2478 /* SoundID.cpp */,
 				29A02E781FE0F71A00B74FDE /* Version.cpp */,
-				2948959A1FC4011400A06219 /* AppearanceData.cpp */,
 			);
 			path = api;
 			sourceTree = "<group>";
@@ -6370,6 +6379,7 @@
 		29DC383C225C0D4000814240 /* api-include */ = {
 			isa = PBXGroup;
 			children = (
+				29843AD9248DE951006A8E34 /* DefaultsData.h */,
 				29DC3863225C0DB800814240 /* ApiCommon.h */,
 				29DC3856225C0DB600814240 /* ApiEquality.h */,
 				29DC3841225C0DB400814240 /* AppearanceData.h */,
@@ -6383,10 +6393,13 @@
 				29DC385B225C0DB700814240 /* DurationData.h */,
 				29DC3862225C0DB700814240 /* EncodingData.h */,
 				29DC384D225C0DB500814240 /* FontData.h */,
+				29843AD2248C0CA9006A8E34 /* KeyComponent.h */,
 				29DC3843225C0DB400814240 /* KeyData.h */,
 				29DC385C225C0DB700814240 /* LayoutData.h */,
+				29843AD7248D47EA006A8E34 /* LeftRight.h */,
 				29DC3854225C0DB600814240 /* LineData.h */,
 				29DC3860225C0DB700814240 /* LyricData.h */,
+				29843AD8248D47EA006A8E34 /* MarginsData.h */,
 				29DC385D225C0DB700814240 /* MarkData.h */,
 				29DC385F225C0DB700814240 /* MeasureData.h */,
 				29DC385E225C0DB700814240 /* MeasureLocation.h */,
@@ -6394,6 +6407,9 @@
 				29DC3866225C0DB800814240 /* NoteAttachmentData.h */,
 				29DC385A225C0DB600814240 /* NoteData.h */,
 				29DC3851225C0DB500814240 /* OttavaData.h */,
+				29843ACF248C0CA9006A8E34 /* PageData.h */,
+				29843AD0248C0CA9006A8E34 /* PageLayoutData.h */,
+				29843AD1248C0CA9006A8E34 /* PageMarginsData.h */,
 				29DC3844225C0DB400814240 /* PageTextData.h */,
 				29DC3858225C0DB600814240 /* PartData.h */,
 				29DC3845225C0DB400814240 /* PartGroupData.h */,
@@ -6401,10 +6417,12 @@
 				29DC3850225C0DB500814240 /* PositionData.h */,
 				29DC3846225C0DB400814240 /* PrintData.h */,
 				29DC3847225C0DB400814240 /* ScoreData.h */,
+				29843AD6248D47E9006A8E34 /* SizeData.h */,
 				29DC3849225C0DB500814240 /* SoundID.h */,
 				29DC3848225C0DB400814240 /* SpannerData.h */,
 				29DC3864225C0DB800814240 /* StaffData.h */,
 				29DC384C225C0DB500814240 /* SystemData.h */,
+				29843AD5248D47E9006A8E34 /* SystemLayoutData.h */,
 				29DC384E225C0DB500814240 /* TempoData.h */,
 				29DC3842225C0DB400814240 /* TimeSignatureData.h */,
 				29DC3853225C0DB600814240 /* TupletData.h */,
@@ -10018,7 +10036,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "$(inherited)";
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
@@ -10031,7 +10049,6 @@
 				EXECUTABLE_PREFIX = lib;
 				GCC_ENABLE_CPP_EXCEPTIONS = YES;
 				GCC_ENABLE_CPP_RTTI = YES;
-				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_NAME = "mx-macOS";
@@ -10043,7 +10060,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "$(inherited)";
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
@@ -10056,7 +10073,6 @@
 				EXECUTABLE_PREFIX = lib;
 				GCC_ENABLE_CPP_EXCEPTIONS = YES;
 				GCC_ENABLE_CPP_RTTI = YES;
-				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = "mx-macOS";
@@ -10109,10 +10125,9 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
 				GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS = YES;
-				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
@@ -10122,7 +10137,7 @@
 				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
 				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
 				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
-				GCC_WARN_PEDANTIC = YES;
+				GCC_WARN_PEDANTIC = NO;
 				GCC_WARN_SHADOW = YES;
 				GCC_WARN_SIGN_COMPARE = YES;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -10189,7 +10204,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
 				GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS = YES;
-				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
@@ -10199,7 +10214,7 @@
 				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
 				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
 				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
-				GCC_WARN_PEDANTIC = YES;
+				GCC_WARN_PEDANTIC = NO;
 				GCC_WARN_SHADOW = YES;
 				GCC_WARN_SIGN_COMPARE = YES;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -10268,7 +10283,7 @@
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "$(inherited)";
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = NO;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
@@ -10285,7 +10300,7 @@
 				INFOPLIST_FILE = MxmacOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.matthewjamesbriggs.MxmacOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -10301,7 +10316,7 @@
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "$(inherited)";
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = NO;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
@@ -10318,7 +10333,7 @@
 				INFOPLIST_FILE = MxmacOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.matthewjamesbriggs.MxmacOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -10333,7 +10348,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "$(inherited)";
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = NO;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
@@ -10349,7 +10364,7 @@
 				HEADER_SEARCH_PATHS = /usr/local/include;
 				INFOPLIST_FILE = MxiOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "";
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -10372,7 +10387,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "$(inherited)";
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = NO;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
@@ -10389,7 +10404,7 @@
 				HEADER_SEARCH_PATHS = /usr/local/include;
 				INFOPLIST_FILE = MxiOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "";
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -10413,7 +10428,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "$(inherited)";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
@@ -10428,7 +10443,6 @@
 				EXECUTABLE_PREFIX = lib;
 				GCC_ENABLE_CPP_EXCEPTIONS = YES;
 				GCC_ENABLE_CPP_RTTI = YES;
-				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = NO;
@@ -10443,7 +10457,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "$(inherited)";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
@@ -10458,7 +10472,6 @@
 				EXECUTABLE_PREFIX = lib;
 				GCC_ENABLE_CPP_EXCEPTIONS = YES;
 				GCC_ENABLE_CPP_RTTI = YES;
-				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = YES;
