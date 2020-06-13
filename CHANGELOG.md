@@ -5,6 +5,9 @@ If you cloned/forked the repository before 2020-05-31, consider making a new clo
 
 ## [Unreleased]
 
+## [v0.5.1] - 2020-06-13
+- Fix xcode build, new headers were missing from frameworks.
+
 ## [v0.5.0] - 2020-06-13
 ### Breaking Changes
 - Add support for `new-page` attributes and page layout [#94]
@@ -12,8 +15,8 @@ If you cloned/forked the repository before 2020-05-31, consider making a new clo
   - What used to be the `LayoutData` class has been renamed to `DefaultsData`.
   - This name change freed up the name `LayoutsData` to be used for a new class that better fits the name.
 - The `std::set<SystemData> systems` field of `ScoreData` has been replaced by `std::map<MeasureIndex, LayoutData>`. [#94]
-	- `LayoutData` is a new class (not to be confused with `DefaultsData` which previously held the name).
-	- `LayoutData` holds a `SystemData` and a `PageData` (new) to specify system and page layout.
+  - `LayoutData` is a new class (not to be confused with `DefaultsData` which previously held the name).
+  - `LayoutData` holds a `SystemData` and a `PageData` (new) to specify system and page layout.
 - Some recurring data patterns were factored out into new classes. [#94]
   - The existing classes affected by these changes are:
     - `DefaultsData` (which used to be called `LayoutData`).
@@ -67,7 +70,8 @@ If you cloned/forked the repository before 2020-05-31, consider making a new clo
 [v0.4.0]: https://github.com/webern/mx/compare/v0.3.0..v0.4.0
 [v0.4.1]: https://github.com/webern/mx/compare/v0.4.0..v0.4.1
 [v0.5.0]: https://github.com/webern/mx/compare/v0.4.1..v0.5.0
-[Unreleased]: https://github.com/webern/mx/compare/v0.5.0...HEAD
+[v0.5.1]: https://github.com/webern/mx/compare/v0.5.0..v0.5.1
+[Unreleased]: https://github.com/webern/mx/compare/v0.5.1...HEAD
 
 #### Historical Notes
 
