@@ -12,6 +12,24 @@
 		294895A21FC4011400A06219 /* AppearanceData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2948959A1FC4011400A06219 /* AppearanceData.cpp */; };
 		294895A31FC4011400A06219 /* AppearanceData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2948959A1FC4011400A06219 /* AppearanceData.cpp */; };
 		294895A41FC4011400A06219 /* AppearanceData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2948959A1FC4011400A06219 /* AppearanceData.cpp */; };
+		29703A06249549E300D0E3B3 /* DefaultsData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29843AD9248DE951006A8E34 /* DefaultsData.h */; };
+		29703A07249549E300D0E3B3 /* KeyComponent.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29843AD2248C0CA9006A8E34 /* KeyComponent.h */; };
+		29703A08249549E300D0E3B3 /* LeftRight.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29843AD7248D47EA006A8E34 /* LeftRight.h */; };
+		29703A09249549E300D0E3B3 /* MarginsData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29843AD8248D47EA006A8E34 /* MarginsData.h */; };
+		29703A0A249549E300D0E3B3 /* PageData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29843ACF248C0CA9006A8E34 /* PageData.h */; };
+		29703A0B249549E300D0E3B3 /* PageLayoutData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29843AD0248C0CA9006A8E34 /* PageLayoutData.h */; };
+		29703A0C249549E300D0E3B3 /* PageMarginsData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29843AD1248C0CA9006A8E34 /* PageMarginsData.h */; };
+		29703A0D249549E300D0E3B3 /* SizeData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29843AD6248D47E9006A8E34 /* SizeData.h */; };
+		29703A0E249549E300D0E3B3 /* SystemLayoutData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29843AD5248D47E9006A8E34 /* SystemLayoutData.h */; };
+		29703A0F24954A1600D0E3B3 /* DefaultsData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29843AD9248DE951006A8E34 /* DefaultsData.h */; };
+		29703A1024954A1600D0E3B3 /* KeyComponent.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29843AD2248C0CA9006A8E34 /* KeyComponent.h */; };
+		29703A1124954A1600D0E3B3 /* LeftRight.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29843AD7248D47EA006A8E34 /* LeftRight.h */; };
+		29703A1224954A1600D0E3B3 /* MarginsData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29843AD8248D47EA006A8E34 /* MarginsData.h */; };
+		29703A1324954A1600D0E3B3 /* PageData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29843ACF248C0CA9006A8E34 /* PageData.h */; };
+		29703A1424954A1600D0E3B3 /* PageLayoutData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29843AD0248C0CA9006A8E34 /* PageLayoutData.h */; };
+		29703A1524954A1600D0E3B3 /* PageMarginsData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29843AD1248C0CA9006A8E34 /* PageMarginsData.h */; };
+		29703A1624954A1600D0E3B3 /* SizeData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29843AD6248D47E9006A8E34 /* SizeData.h */; };
+		29703A1724954A1600D0E3B3 /* SystemLayoutData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29843AD5248D47E9006A8E34 /* SystemLayoutData.h */; };
 		2975944F1F044C7600DE2F30 /* ChordData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2975944D1F044C7600DE2F30 /* ChordData.cpp */; };
 		297594501F044C7600DE2F30 /* ChordData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2975944D1F044C7600DE2F30 /* ChordData.cpp */; };
 		297594511F044C7600DE2F30 /* ChordData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2975944D1F044C7600DE2F30 /* ChordData.cpp */; };
@@ -3413,6 +3431,15 @@
 			dstPath = mx/api;
 			dstSubfolderSpec = 6;
 			files = (
+				29703A0F24954A1600D0E3B3 /* DefaultsData.h in CopyFiles */,
+				29703A1024954A1600D0E3B3 /* KeyComponent.h in CopyFiles */,
+				29703A1124954A1600D0E3B3 /* LeftRight.h in CopyFiles */,
+				29703A1224954A1600D0E3B3 /* MarginsData.h in CopyFiles */,
+				29703A1324954A1600D0E3B3 /* PageData.h in CopyFiles */,
+				29703A1424954A1600D0E3B3 /* PageLayoutData.h in CopyFiles */,
+				29703A1524954A1600D0E3B3 /* PageMarginsData.h in CopyFiles */,
+				29703A1624954A1600D0E3B3 /* SizeData.h in CopyFiles */,
+				29703A1724954A1600D0E3B3 /* SystemLayoutData.h in CopyFiles */,
 				9CD50C25238A323100ED7DD8 /* ApiCommon.h in CopyFiles */,
 				9CD50C26238A323100ED7DD8 /* ApiEquality.h in CopyFiles */,
 				9CD50C27238A323100ED7DD8 /* AppearanceData.h in CopyFiles */,
@@ -3464,6 +3491,15 @@
 			dstPath = mx/api;
 			dstSubfolderSpec = 7;
 			files = (
+				29703A06249549E300D0E3B3 /* DefaultsData.h in CopyFiles */,
+				29703A07249549E300D0E3B3 /* KeyComponent.h in CopyFiles */,
+				29703A08249549E300D0E3B3 /* LeftRight.h in CopyFiles */,
+				29703A09249549E300D0E3B3 /* MarginsData.h in CopyFiles */,
+				29703A0A249549E300D0E3B3 /* PageData.h in CopyFiles */,
+				29703A0B249549E300D0E3B3 /* PageLayoutData.h in CopyFiles */,
+				29703A0C249549E300D0E3B3 /* PageMarginsData.h in CopyFiles */,
+				29703A0D249549E300D0E3B3 /* SizeData.h in CopyFiles */,
+				29703A0E249549E300D0E3B3 /* SystemLayoutData.h in CopyFiles */,
 				9CD50C4F238A329F00ED7DD8 /* ApiCommon.h in CopyFiles */,
 				9CD50C50238A329F00ED7DD8 /* ApiEquality.h in CopyFiles */,
 				9CD50C51238A329F00ED7DD8 /* AppearanceData.h in CopyFiles */,
