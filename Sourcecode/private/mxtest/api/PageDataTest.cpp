@@ -165,35 +165,48 @@ TEST( LoadFinaleExport, PageData )
     // measure number 22 index 21 : page :
     // measure number 31 index 30 :      : system
 
-    // Check that PageData objects are populated in the map for the appropriate measures.
     auto it = score.layout.find( 0 );
     REQUIRE( it != std::cend( score.layout ) );
+    CHECK( it->second.page.isUsed() );
+    CHECK( it->second.system.isUsed() );
     const auto& pageM0 = it->second.page;
-    it = score.layout.find( 4 );
-    REQUIRE( it != std::cend( score.layout ) );
-    const auto& pageM4 = it->second.page;
-    it = score.layout.find( 12 );
-    REQUIRE( it != std::cend( score.layout ) );
-    const auto& pageM12 = it->second.page;
-    it = score.layout.find( 21 );
-    REQUIRE( it != std::cend( score.layout ) );
-    const auto& pageM21 = it->second.page;
+    const auto& systemM0 = it->second.system;
 
-    // Check that the SystemData objects are populated in the set with the appropriate measure indices.
-    it = score.layout.find( 0 );
-    REQUIRE( it != std::cend( score.layout ) );
-    const auto systemM0 = it->second.system;
     it = score.layout.find( 2 );
     REQUIRE( it != std::cend( score.layout ) );
+    CHECK( !it->second.page.isUsed() );
+    CHECK( it->second.system.isUsed() );
     const auto systemM2 = it->second.system;
+
+    it = score.layout.find( 4 );
+    REQUIRE( it != std::cend( score.layout ) );
+    CHECK( it->second.page.isUsed() );
+    CHECK( !it->second.system.isUsed() );
+    const auto& pageM4 = it->second.page;
+
     it = score.layout.find( 8 );
     REQUIRE( it != std::cend( score.layout ) );
+    CHECK( !it->second.page.isUsed() );
+    CHECK( it->second.system.isUsed() );
     const auto systemM8 = it->second.system;
+
+    it = score.layout.find( 12 );
+    REQUIRE( it != std::cend( score.layout ) );
+    CHECK( it->second.page.isUsed() );
+    CHECK( !it->second.system.isUsed() );
+    const auto& pageM12 = it->second.page;
+
+    it = score.layout.find( 21 );
+    REQUIRE( it != std::cend( score.layout ) );
+    CHECK( it->second.page.isUsed() );
+    CHECK( !it->second.system.isUsed() );
+    const auto& pageM21 = it->second.page;
+
     it = score.layout.find( 30 );
     REQUIRE( it != std::cend( score.layout ) );
+    CHECK( !it->second.page.isUsed() );
+    CHECK( it->second.system.isUsed() );
     const auto systemM30 = it->second.system;
-
-    // Check that the SystemData and PageData objects contain the correct information
 
     // Measure 1 (measure index 0)
     // <print page-number="1">
@@ -218,7 +231,7 @@ TEST( LoadFinaleExport, PageData )
     CHECK( !pageM0.pageLayoutData.margins.isUsed() );
     CHECK( pageM0.pageNumber );
     CHECK( "1" == *pageM0.pageNumber );
-    // TODO check for new-system = unspecified
+    CHECK( Bool::unspecified == systemM0.newSystem );
     CHECK( systemM0.layout.margins );
     CHECK_DOUBLES_EQUAL( 0.0, systemM0.layout.margins.value().right, MX_API_EQUALITY_EPSILON );
     CHECK_DOUBLES_EQUAL( 70.0, systemM0.layout.margins.value().left, MX_API_EQUALITY_EPSILON );
@@ -232,7 +245,7 @@ TEST( LoadFinaleExport, PageData )
     //     <system-distance>114</system-distance>
     //   </system-layout>
     // </print>
-    // TODO check for new-system = yes
+    CHECK( Bool::yes == systemM2.newSystem );
     CHECK( !systemM2.layout.margins );
     CHECK( systemM2.layout.systemDistance );
     CHECK_DOUBLES_EQUAL( 114.0, systemM2.layout.systemDistance.value(), MX_API_EQUALITY_EPSILON );
@@ -253,7 +266,7 @@ TEST( LoadFinaleExport, PageData )
     //     <system-distance>114</system-distance>
     //   </system-layout>
     // </print>
-    // TODO check for new-system = yes
+    CHECK( Bool::yes == systemM8.newSystem );
     CHECK( !systemM8.layout.margins );
     CHECK( systemM8.layout.systemDistance );
     CHECK_DOUBLES_EQUAL( 114.0, systemM8.layout.systemDistance.value(), MX_API_EQUALITY_EPSILON );
