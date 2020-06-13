@@ -490,8 +490,8 @@ namespace mx
                     }
                     if( systemData.isUsed() )
                     {
-                        auto& xxbadname = myOutScoreData.layout[measureIndex];
-                        xxbadname.system = systemData;
+                        auto& layout = myOutScoreData.layout[measureIndex];
+                        layout.system = systemData;
                     }
                 }
                 ++measureIndex;
@@ -577,8 +577,8 @@ namespace mx
                     } // if hasPageLayout
                     if( outPageData.isUsed() )
                     {
-                        auto& xxbadname = myOutScoreData.layout[measureIndex];
-                        xxbadname.page = outPageData;
+                        auto& layout = myOutScoreData.layout[measureIndex];
+                        layout.page = outPageData;
                         // TODO break?
                     }
                 } // for each mdc
