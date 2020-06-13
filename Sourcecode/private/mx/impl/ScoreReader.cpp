@@ -2,6 +2,7 @@
 // Copyright (c) by Matthew James Briggs
 // Distributed under the MIT License
 
+#include "mx/impl/ScoreReader.h"
 #include "mx/core/elements/BottomMargin.h"
 #include "mx/core/elements/Creator.h"
 #include "mx/core/elements/Divisions.h"
@@ -56,7 +57,6 @@
 #include "mx/impl/LcmGcd.h"
 #include "mx/impl/PageTextFunctions.h"
 #include "mx/impl/PartReader.h"
-#include "mx/impl/ScoreReader.h"
 #include "mx/impl/TimeReader.h"
 #include "mx/utility/StringToInt.h"
 
