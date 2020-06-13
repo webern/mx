@@ -15,26 +15,33 @@ namespace mx
 {
     namespace api
     {
-        /// LayoutData represents the Page and System layout instructions that are found in the <print> element.
-        /// These are held in the ScoreData in a map where the key is the measure index. For example, to start a new
-        /// page at measure index 39: score.layout.emplace( 39, LayoutData{ true, true } );
-        /// Where the constructor LayoutData{ true, true } is a convenience constructor indicating that both a new system
-        /// and a new page are indicated.
+        /// LayoutData represents the page and system layout instructions that
+        /// are found in the <print> element. These are held in `ScoreData` in a
+        /// map where the key is the measure index. For example, to start a new
+        /// page at measure index 39:
+        /// `score.layout.emplace( 39, LayoutData{ true, true } );`, where the
+        /// constructor `LayoutData{ true, true }` is a constructor indicating
+        /// that both a new system and a new page are indicated.
         class LayoutData
         {
         public:
-            /// System information, such as whether a system break should occur. Note: all members are optional.
+            /// System information, such as whether a system break should occur.
+            /// Note: all members are optional.
             SystemData system;
 
-            /// Page information, such as whether a page break should occur. Note: all members are optional.
+            /// Page information, such as whether a page break should occur.
+            /// Note: all members are optional.
             PageData page;
 
-            /// Convenience constructor for the use case where we only care about specifying system breaks and page
-            /// breaks. That is, if you do not need to fuss with margins or spacing and only want to indicate the start
-            /// of a new system or page, you can use this constructor. The first bool indicates that a new system should
-            /// start. The second bool indicates that a new page should also start. For example:
-            /// LayoutData{ true } produces <print new-system="yes" />
-            /// LayoutData{ true, true } produces <print new-system="yes" new-page="yes" />
+            /// Convenience constructor for the use case where we only care
+            /// about specifying system breaks and page breaks. That is, if you
+            /// do not need to fuss with margins or spacing and only want to
+            /// indicate the start of a new system or page, you can use this
+            /// constructor. The first bool indicates that a new system should
+            /// start. The second bool indicates that a new page should also
+            /// start. For example: `LayoutData{ true }` produces 
+            /// `<print new-system="yes" />` and `LayoutData{ true, true }`
+            /// produces `<print new-system="yes" new-page="yes" />`
             inline explicit LayoutData( bool inNewSystem, bool inNewPage = false )
                 : system{ inNewSystem ? Bool::yes : Bool::unspecified }
                 , page{ inNewPage ? Bool::yes : Bool::unspecified }
@@ -42,8 +49,9 @@ namespace mx
 
             }
 
-            /// The default constructor does not specify any page or system details. i.e. a default constructed object
-            /// will not produce a <print> element.
+            /// The default constructor does not specify any page or system
+            /// details. i.e. a default constructed object will not produce a
+            /// `<print>` element.
             inline LayoutData()
                 : LayoutData{ SystemData{}, PageData{} }
             {
@@ -68,7 +76,10 @@ namespace mx
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( LayoutData );
 
-        inline bool operator==( const std::map<MeasureIndex, LayoutData>& a, const std::map<MeasureIndex, LayoutData>& b )
+        inline bool operator==(
+            const std::map<MeasureIndex, LayoutData>& a,
+            const std::map<MeasureIndex, LayoutData>& b
+        )
         {
             if( a.size() != b.size() )
             {
