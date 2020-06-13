@@ -257,9 +257,8 @@ namespace mx
         {
             auto systemData = myScoreWriter.getSystemData( myHistory.getCursor().measureIndex );
 
-            // TODO - this looks wrong. should the system info be in every part or just the first?
-            // TODO - should be || ?
-            if( !systemData.isUsed() && !myHistory.getCursor().isFirstMeasureInPart )
+            // early exit if there is nothing to do
+            if( !systemData.isUsed() )
             {
                 return;
             }
