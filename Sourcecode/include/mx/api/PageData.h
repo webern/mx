@@ -38,8 +38,8 @@ namespace mx
             Bool newPage;
 
             /// Optionally change the page layout settings starting with this page (and continuing thereafter). The
-            /// default constructed PageLayoutData will not affect page layout. Only if you change one or more of its
-            /// values to non-zero numbers will page layout information be written.
+            /// default constructed PageLayoutData will not affect page layout. Page layout information will only be
+            /// written if you set one or more of its optional values.
             PageLayoutData pageLayoutData;
 
             /// The displayed page number. std::nullopt indicates the absence of a page-number attribute.
