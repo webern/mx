@@ -513,12 +513,12 @@ namespace mx
 
         void ScoreReader::scanForPageInfo() const
         {
-            // scan only the top part looking for system layout information
             if( myScorePartwise.getPartwisePartSet().size() == 0 )
             {
                 return;
             }
 
+            // scan only the top part looking for system layout information
             const auto& topPart = *myScorePartwise.getPartwisePartSet().front();
 
             int measureIndex = 0;
