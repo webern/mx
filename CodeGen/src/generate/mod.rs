@@ -11,6 +11,7 @@ use crate::xsd::{Base, SimpleDerivation, SimpleType};
 mod compile_mx;
 
 use compile_mx::compile_mx;
+use std::collections::HashMap;
 
 #[derive(Debug, StructOpt)]
 pub struct GenerateArgs {
@@ -239,15 +240,38 @@ fn sep() {
     );
 }
 
+macro_rules! map (
+    { $($key:expr => $value:expr),+ } => {
+        {
+            let mut m = ::std::collections::
+            $(
+                m.insert($key, $value);
+            )+
+            m
+        }
+     };
+);
+
 impl CppOptions {
     fn write_enums(&self, simple_types: &Vec<SimpleType>) -> Result<()> {
         let mut h = self.open_mx_core_file("Enums.h");
         let mut cpp = self.open_mx_core_file("Enums.cpp");
         self.write_enum_h_begin(&mut h)?;
         self.write_enum_cpp_begin(&mut cpp)?;
-        let keywords = vec!["double", "short", "continue", "do", "explicit"];
+        let mut substitutions = HashMap::new();
+        substitutions.insert("16th".to_string(), "sixteenth".to_string());
+        substitutions.insert("32nd".to_string(), "thirtySecond".to_string());
+        substitutions.insert("64th".to_string(), "sixtyFourth".to_string());
+        substitutions.insert("128th".to_string(), "oneHundredTwentyEighth".to_string());
+        substitutions.insert("256th".to_string(), "twoHundredFifthySixth".to_string());
+        substitutions.insert("512th".to_string(), "fiveHundredTwelfth".to_string());
+        substitutions.insert("1024th".to_string(), "oneThousandTwentyFourth".to_string());
+        let sanitizer = StringSanitizer {
+            keywords: vec!["double", "short", "long", "continue", "do", "explicit"],
+            substitutions,
+        };
         for (i, simple_type) in simple_types.iter().enumerate() {
-            self.write_enum(simple_type, &mut cpp, &mut h, &keywords)?;
+            self.write_enum(simple_type, &mut cpp, &mut h, &sanitizer)?;
             if i < simple_types.len() - 1 {
                 writeln!(h, "").unwrap();
             }
@@ -262,7 +286,7 @@ impl CppOptions {
         simple_type: &SimpleType,
         cpp: &mut File,
         h: &mut File,
-        keywords: &Vec<&'static str>,
+        sanitizer: &StringSanitizer,
     ) -> Result<()> {
         let restriction =
             if let SimpleDerivation::Restriction(restriction) = &simple_type.derivation {
@@ -273,11 +297,13 @@ impl CppOptions {
         if restriction.enumerations.is_empty() {
             return Ok(());
         }
-        let en = pascal_case(simple_type.name.as_str(), &keywords);
+        let en = sanitizer.pascal_case(simple_type.name.as_str());
+        let en = sanitizer.sanitize(en);
         writeln!(h, "        enum class {}", en).unwrap();
         writeln!(h, "        {{").unwrap();
         for (i, enval) in restriction.enumerations.iter().enumerate() {
-            let enval = camel_case_cpp(enval, &keywords);
+            let enval = sanitizer.camel_case_cpp(enval);
+            let enval = sanitizer.sanitize(enval);
             write!(h, "             {} = {}", enval, i).unwrap();
             if i < restriction.enumerations.len() - 1 {
                 write!(h, ",").unwrap();
@@ -334,50 +360,99 @@ impl CppOptions {
     }
 }
 
-pub(crate) fn suffix_if_keyword<S: AsRef<str>>(name: S, keywords: &Vec<&'static str>) -> String {
-    let name = name.as_ref();
-    for &keyword in keywords {
-        if keyword == name {
-            return format!("{}_", name);
-        }
-    }
-    name.into()
+pub(crate) struct StringSanitizer {
+    pub(crate) keywords: Vec<&'static str>,
+    pub(crate) substitutions: HashMap<String, String>,
 }
 
-pub(crate) fn pascal_case<S: AsRef<str>>(s: S, keywords: &Vec<&'static str>) -> String {
-    let mut out = String::new();
-    let mut upper = true;
-    for c in s.as_ref().chars() {
-        if c == '-' || c == ' ' {
-            upper = true;
-            continue;
-        }
-        if upper {
-            let uc = c.to_uppercase().next().unwrap();
-            out.push(uc);
-        } else {
-            out.push(c);
-        }
-        upper = false;
+impl StringSanitizer {
+    pub(crate) fn sanitize<S: AsRef<str>>(&self, s: S) -> String {
+        self.do_substitution(self.suffix_if_keyword(replace_if_empty(s)))
     }
-    suffix_if_keyword(&out, &keywords)
+
+    pub(crate) fn suffix_if_keyword<S>(&self, name: S) -> String
+    where
+        S: AsRef<str>,
+    {
+        let name = name.as_ref();
+        for &keyword in &self.keywords {
+            if keyword == name {
+                return format!("{}_", name);
+            }
+        }
+        name.into()
+    }
+
+    pub(crate) fn pascal_case<S: AsRef<str>>(&self, s: S) -> String {
+        let mut out = String::new();
+        let mut upper = true;
+        for c in s.as_ref().chars() {
+            if c == '-' || c == ' ' {
+                upper = true;
+                continue;
+            }
+            if upper {
+                let uc = c.to_uppercase().next().unwrap();
+                out.push(uc);
+            } else {
+                out.push(c);
+            }
+            upper = false;
+        }
+        out
+    }
+
+    pub(crate) fn do_substitution<S: AsRef<str>>(&self, name: S) -> String {
+        if let Some(substitute) = self.substitutions.get(name.as_ref()) {
+            return substitute.clone();
+        }
+        name.as_ref().into()
+    }
+
+    pub(crate) fn camel_case_cpp<S: AsRef<str>>(&self, s: S) -> String {
+        let mut out = String::new();
+        let mut upper = false;
+        for c in s.as_ref().chars() {
+            if c == '-' || c == ' ' {
+                upper = true;
+                continue;
+            }
+            if upper {
+                let uc = c.to_uppercase().next().unwrap();
+                out.push(uc);
+            } else {
+                out.push(c);
+            }
+            upper = false;
+        }
+        out
+    }
 }
 
-pub(crate) fn camel_case_cpp<S: AsRef<str>>(s: S, keywords: &Vec<&'static str>) -> String {
-    let mut out = String::new();
-    let mut upper = false;
-    for c in s.as_ref().chars() {
-        if c == '-' || c == ' ' {
-            upper = true;
-            continue;
-        }
-        if upper {
-            let uc = c.to_uppercase().next().unwrap();
-            out.push(uc);
-        } else {
-            out.push(c);
-        }
-        upper = false;
+pub(crate) fn replace_if_empty<S: AsRef<str>>(s: S) -> String {
+    if s.as_ref().is_empty() {
+        return "emptystring".into();
     }
-    suffix_if_keyword(&out, &keywords)
+    s.as_ref().into()
 }
+
+// pub(crate) fn prefix_if_starts_with_number<S: AsRef<str>>(s: S) -> String {}
+
+// pub(crate) fn camel_case_cpp<S: AsRef<str>>(s: S, keywords: &Vec<&'static str>) -> String {
+//     let mut out = String::new();
+//     let mut upper = false;
+//     for c in s.as_ref().chars() {
+//         if c == '-' || c == ' ' {
+//             upper = true;
+//             continue;
+//         }
+//         if upper {
+//             let uc = c.to_uppercase().next().unwrap();
+//             out.push(uc);
+//         } else {
+//             out.push(c);
+//         }
+//         upper = false;
+//     }
+//     suffix_if_keyword(&out, &keywords)
+// }

@@ -126,7 +126,7 @@ namespace mx
              heavyLight = 6,
              heavyHeavy = 7,
              tick = 8,
-             short = 9,
+             short_ = 9,
              none = 10
         };
 
@@ -139,7 +139,7 @@ namespace mx
         enum class BeamValue
         {
              begin = 0,
-             continue = 1,
+             continue_ = 1,
              end = 2,
              forwardHook = 3,
              backwardHook = 4
@@ -178,7 +178,7 @@ namespace mx
 
         enum class BreathMarkValue
         {
-              = 0,
+             emptystring = 0,
              comma = 1,
              tick = 2
         };
@@ -331,7 +331,7 @@ namespace mx
              normal = 0,
              angled = 1,
              square = 2,
-              = 3
+             emptystring = 3
         };
 
         FermataShape parseFermataShape( const std::string& value );
@@ -421,7 +421,7 @@ namespace mx
 
         enum class HarmonyType
         {
-             explicit = 0,
+             explicit_ = 0,
              implied = 1,
              alternate = 2
         };
@@ -681,19 +681,19 @@ namespace mx
 
         enum class NoteTypeValue
         {
-             1024th = 0,
-             512th = 1,
-             256th = 2,
-             128th = 3,
-             64th = 4,
-             32nd = 5,
-             16th = 6,
+             oneThousandTwentyFourth = 0,
+             fiveHundredTwelfth = 1,
+             twoHundredFifthySixth = 2,
+             oneHundredTwentyEighth = 3,
+             sixtyFourth = 4,
+             thirtySecond = 5,
+             sixteenth = 6,
              eighth = 7,
              quarter = 8,
              half = 9,
              whole = 10,
              breve = 11,
-             long = 12,
+             long_ = 12,
              maxima = 13
         };
 
@@ -722,7 +722,7 @@ namespace mx
              leftTriangle = 15,
              rectangle = 16,
              none = 17,
-             do = 18,
+             do_ = 18,
              re = 19,
              mi = 20,
              fa = 21,
@@ -892,7 +892,7 @@ namespace mx
              start = 0,
              stop = 1,
              change = 2,
-             continue = 3
+             continue_ = 3
         };
 
         StartStopChangeContinue parseStartStopChangeContinue( const std::string& value );
@@ -904,7 +904,7 @@ namespace mx
         {
              start = 0,
              stop = 1,
-             continue = 2
+             continue_ = 2
         };
 
         StartStopContinue parseStartStopContinue( const std::string& value );
@@ -1161,7 +1161,7 @@ namespace mx
              up = 0,
              down = 1,
              stop = 2,
-             continue = 3
+             continue_ = 3
         };
 
         UpDownStopContinue parseUpDownStopContinue( const std::string& value );
@@ -1210,7 +1210,7 @@ namespace mx
              crescendo = 0,
              diminuendo = 1,
              stop = 2,
-             continue = 3
+             continue_ = 3
         };
 
         WedgeType parseWedgeType( const std::string& value );
