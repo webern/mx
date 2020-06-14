@@ -74,6 +74,7 @@ impl CppOptions {
             remove_file(&p).unwrap();
         }
         // let _ = std::fs::remove(&p);
+        println!("opening a file for writing: '{}'", p.display());
         open_file(p)
     }
 }
@@ -116,7 +117,7 @@ impl Generator {
         find_simple_type_restriction_bases(doc.root(), true);
         let simple_types = parse_simple_types(doc.root(), true).unwrap();
         opt.write_enums(&simple_types)?;
-        wrap!(compile_mx(&opt.mx_repo))?;
+        // wrap!(compile_mx(&opt.mx_repo))?;
         Ok(())
     }
 }
