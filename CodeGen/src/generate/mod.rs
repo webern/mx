@@ -241,12 +241,13 @@ fn sep() {
 
 impl CppOptions {
     fn write_enums(&self, simple_types: &Vec<SimpleType>) -> Result<()> {
-        let mut h = self.open_mx_core_file("Enums.new.h");
-        let mut cpp = self.open_mx_core_file("Enums.new.cpp");
+        let mut h = self.open_mx_core_file("Enums.h");
+        let mut cpp = self.open_mx_core_file("Enums.cpp");
         self.write_enum_h_begin(&mut h)?;
         self.write_enum_cpp_begin(&mut cpp)?;
+        let keywords = vec!["double", "short", "continue", "do", "explicit"];
         for (i, simple_type) in simple_types.iter().enumerate() {
-            self.write_enum(simple_type, &mut cpp, &mut h)?;
+            self.write_enum(simple_type, &mut cpp, &mut h, &keywords)?;
             if i < simple_types.len() - 1 {
                 writeln!(h, "").unwrap();
             }
@@ -256,7 +257,13 @@ impl CppOptions {
         Ok(())
     }
 
-    fn write_enum(&self, simple_type: &SimpleType, cpp: &mut File, h: &mut File) -> Result<()> {
+    fn write_enum(
+        &self,
+        simple_type: &SimpleType,
+        cpp: &mut File,
+        h: &mut File,
+        keywords: &Vec<&'static str>,
+    ) -> Result<()> {
         let restriction =
             if let SimpleDerivation::Restriction(restriction) = &simple_type.derivation {
                 restriction
@@ -266,11 +273,11 @@ impl CppOptions {
         if restriction.enumerations.is_empty() {
             return Ok(());
         }
-        let en = pascal_case(simple_type.name.as_str());
+        let en = pascal_case(simple_type.name.as_str(), &keywords);
         writeln!(h, "        enum class {}", en).unwrap();
         writeln!(h, "        {{").unwrap();
         for (i, enval) in restriction.enumerations.iter().enumerate() {
-            let enval = camel_case_cpp(enval);
+            let enval = camel_case_cpp(enval, &keywords);
             write!(h, "             {} = {}", enval, i).unwrap();
             if i < restriction.enumerations.len() - 1 {
                 write!(h, ",").unwrap();
@@ -327,7 +334,17 @@ impl CppOptions {
     }
 }
 
-pub(crate) fn pascal_case<S: AsRef<str>>(s: S) -> String {
+pub(crate) fn suffix_if_keyword<S: AsRef<str>>(name: S, keywords: &Vec<&'static str>) -> String {
+    let name = name.as_ref();
+    for &keyword in keywords {
+        if keyword == name {
+            return format!("{}_", name);
+        }
+    }
+    name.into()
+}
+
+pub(crate) fn pascal_case<S: AsRef<str>>(s: S, keywords: &Vec<&'static str>) -> String {
     let mut out = String::new();
     let mut upper = true;
     for c in s.as_ref().chars() {
@@ -343,10 +360,10 @@ pub(crate) fn pascal_case<S: AsRef<str>>(s: S) -> String {
         }
         upper = false;
     }
-    out
+    suffix_if_keyword(&out, &keywords)
 }
 
-pub(crate) fn camel_case_cpp<S: AsRef<str>>(s: S) -> String {
+pub(crate) fn camel_case_cpp<S: AsRef<str>>(s: S, keywords: &Vec<&'static str>) -> String {
     let mut out = String::new();
     let mut upper = false;
     for c in s.as_ref().chars() {
@@ -362,5 +379,5 @@ pub(crate) fn camel_case_cpp<S: AsRef<str>>(s: S) -> String {
         }
         upper = false;
     }
-    out
+    suffix_if_keyword(&out, &keywords)
 }
