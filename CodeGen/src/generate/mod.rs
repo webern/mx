@@ -268,7 +268,16 @@ impl CppOptions {
         substitutions.insert("1024th".to_string(), "oneThousandTwentyFourth".to_string());
         let sanitizer = StringSanitizer {
             keywords: vec!["double", "short", "long", "continue", "do", "explicit"],
-            substitutions,
+            enum_substitutions: substitutions,
+            enum_suffixed: vec![
+                "Step",
+                "ArrowDirection",
+                "ArrowStyle",
+                "CircularArrow",
+                "Syllabic",
+                "BarStyle",
+                "TimeRelation",
+            ],
         };
         for (i, simple_type) in simple_types.iter().enumerate() {
             self.write_enum(simple_type, &mut cpp, &mut h, &sanitizer)?;
@@ -297,8 +306,10 @@ impl CppOptions {
         if restriction.enumerations.is_empty() {
             return Ok(());
         }
+        // en = enum_name, given a short name because rustfmt is way too aggressive with line breaks
         let en = sanitizer.pascal_case(simple_type.name.as_str());
         let en = sanitizer.sanitize(en);
+        let en = sanitizer.do_enum_name_suffix(en);
         writeln!(h, "        enum class {}", en).unwrap();
         writeln!(h, "        {{").unwrap();
         for (i, enval) in restriction.enumerations.iter().enumerate() {
@@ -337,8 +348,8 @@ impl CppOptions {
         writeln!(f, "").unwrap();
         writeln!(f, "#pragma once").unwrap();
         writeln!(f, "").unwrap();
-        writeln!(f, "#include <iostream>").unwrap();
-        writeln!(f, "#include <string>").unwrap();
+        writeln!(f, "#include \"mx/core/EnumsBuiltin.h\"").unwrap();
+        // writeln!(f, "#include <string>").unwrap();
         writeln!(f, "").unwrap();
         writeln!(f, "namespace mx").unwrap();
         writeln!(f, "{{").unwrap();
@@ -362,7 +373,16 @@ impl CppOptions {
 
 pub(crate) struct StringSanitizer {
     pub(crate) keywords: Vec<&'static str>,
-    pub(crate) substitutions: HashMap<String, String>,
+
+    /// These are enum value strings that are substituted arbitrarily. This was used to spell out
+    /// enum values that started with numbers. For example, the pair `"16th" => "sixteenth"` ensures
+    /// that the `16th` is not used as an enum value (which would be illegal.
+    pub(crate) enum_substitutions: HashMap<String, String>,
+
+    /// These are enum class names that I decided to suffix with the word `Enum` for various.
+    /// So, for example, if this vector contains `"Display"` then the enum will be declared as
+    /// `enum class DisplayEnum`.
+    pub(crate) enum_suffixed: Vec<&'static str>,
 }
 
 impl StringSanitizer {
@@ -403,7 +423,7 @@ impl StringSanitizer {
     }
 
     pub(crate) fn do_substitution<S: AsRef<str>>(&self, name: S) -> String {
-        if let Some(substitute) = self.substitutions.get(name.as_ref()) {
+        if let Some(substitute) = self.enum_substitutions.get(name.as_ref()) {
             return substitute.clone();
         }
         name.as_ref().into()
@@ -426,6 +446,15 @@ impl StringSanitizer {
             upper = false;
         }
         out
+    }
+
+    pub(crate) fn do_enum_name_suffix<S: AsRef<str>>(&self, name: S) -> String {
+        for &s in &self.enum_suffixed {
+            if s == name.as_ref() {
+                return format!("{}Enum", name.as_ref());
+            }
+        }
+        name.as_ref().to_string()
     }
 }
 

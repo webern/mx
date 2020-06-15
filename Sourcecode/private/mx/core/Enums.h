@@ -4,8 +4,7 @@
 
 #pragma once
 
-#include <iostream>
-#include <string>
+#include "mx/core/EnumsBuiltin.h"
 
 namespace mx
 {
@@ -66,7 +65,7 @@ namespace mx
         std::ostream& operator<<( std::ostream& os, const AccidentalValue value );
 
 
-        enum class ArrowDirection
+        enum class ArrowDirectionEnum
         {
              left = 0,
              up = 1,
@@ -83,12 +82,12 @@ namespace mx
              other = 12
         };
 
-        ArrowDirection parseArrowDirection( const std::string& value );
-        std::string toString( const ArrowDirection value );
-        std::ostream& toStream( std::ostream& os, const ArrowDirection value );
-        std::ostream& operator<<( std::ostream& os, const ArrowDirection value );
+        ArrowDirectionEnum parseArrowDirectionEnum( const std::string& value );
+        std::string toString( const ArrowDirectionEnum value );
+        std::ostream& toStream( std::ostream& os, const ArrowDirectionEnum value );
+        std::ostream& operator<<( std::ostream& os, const ArrowDirectionEnum value );
 
-        enum class ArrowStyle
+        enum class ArrowStyleEnum
         {
              single = 0,
              double_ = 1,
@@ -99,10 +98,10 @@ namespace mx
              other = 6
         };
 
-        ArrowStyle parseArrowStyle( const std::string& value );
-        std::string toString( const ArrowStyle value );
-        std::ostream& toStream( std::ostream& os, const ArrowStyle value );
-        std::ostream& operator<<( std::ostream& os, const ArrowStyle value );
+        ArrowStyleEnum parseArrowStyleEnum( const std::string& value );
+        std::string toString( const ArrowStyleEnum value );
+        std::ostream& toStream( std::ostream& os, const ArrowStyleEnum value );
+        std::ostream& operator<<( std::ostream& os, const ArrowStyleEnum value );
 
         enum class BackwardForward
         {
@@ -115,7 +114,7 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const BackwardForward value );
         std::ostream& operator<<( std::ostream& os, const BackwardForward value );
 
-        enum class BarStyle
+        enum class BarStyleEnum
         {
              regular = 0,
              dotted = 1,
@@ -130,10 +129,10 @@ namespace mx
              none = 10
         };
 
-        BarStyle parseBarStyle( const std::string& value );
-        std::string toString( const BarStyle value );
-        std::ostream& toStream( std::ostream& os, const BarStyle value );
-        std::ostream& operator<<( std::ostream& os, const BarStyle value );
+        BarStyleEnum parseBarStyleEnum( const std::string& value );
+        std::string toString( const BarStyleEnum value );
+        std::ostream& toStream( std::ostream& os, const BarStyleEnum value );
+        std::ostream& operator<<( std::ostream& os, const BarStyleEnum value );
 
 
         enum class BeamValue
@@ -200,16 +199,16 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const CancelLocation value );
         std::ostream& operator<<( std::ostream& os, const CancelLocation value );
 
-        enum class CircularArrow
+        enum class CircularArrowEnum
         {
              clockwise = 0,
              anticlockwise = 1
         };
 
-        CircularArrow parseCircularArrow( const std::string& value );
-        std::string toString( const CircularArrow value );
-        std::ostream& toStream( std::ostream& os, const CircularArrow value );
-        std::ostream& operator<<( std::ostream& os, const CircularArrow value );
+        CircularArrowEnum parseCircularArrowEnum( const std::string& value );
+        std::string toString( const CircularArrowEnum value );
+        std::ostream& toStream( std::ostream& os, const CircularArrowEnum value );
+        std::ostream& operator<<( std::ostream& os, const CircularArrowEnum value );
 
         enum class ClefSign
         {
@@ -949,7 +948,7 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const StemValue value );
         std::ostream& operator<<( std::ostream& os, const StemValue value );
 
-        enum class Step
+        enum class StepEnum
         {
              A = 0,
              B = 1,
@@ -960,10 +959,10 @@ namespace mx
              G = 6
         };
 
-        Step parseStep( const std::string& value );
-        std::string toString( const Step value );
-        std::ostream& toStream( std::ostream& os, const Step value );
-        std::ostream& operator<<( std::ostream& os, const Step value );
+        StepEnum parseStepEnum( const std::string& value );
+        std::string toString( const StepEnum value );
+        std::ostream& toStream( std::ostream& os, const StepEnum value );
+        std::ostream& operator<<( std::ostream& os, const StepEnum value );
 
         enum class StickLocation
         {
@@ -1007,7 +1006,7 @@ namespace mx
         std::ostream& operator<<( std::ostream& os, const StickType value );
 
 
-        enum class Syllabic
+        enum class SyllabicEnum
         {
              single = 0,
              begin = 1,
@@ -1015,10 +1014,10 @@ namespace mx
              middle = 3
         };
 
-        Syllabic parseSyllabic( const std::string& value );
-        std::string toString( const Syllabic value );
-        std::ostream& toStream( std::ostream& os, const Syllabic value );
-        std::ostream& operator<<( std::ostream& os, const Syllabic value );
+        SyllabicEnum parseSyllabicEnum( const std::string& value );
+        std::string toString( const SyllabicEnum value );
+        std::ostream& toStream( std::ostream& os, const SyllabicEnum value );
+        std::ostream& operator<<( std::ostream& os, const SyllabicEnum value );
 
         enum class SymbolSize
         {
@@ -1047,7 +1046,7 @@ namespace mx
         std::ostream& operator<<( std::ostream& os, const TextDirection value );
 
 
-        enum class TimeRelation
+        enum class TimeRelationEnum
         {
              parentheses = 0,
              bracket = 1,
@@ -1057,10 +1056,10 @@ namespace mx
              hyphen = 5
         };
 
-        TimeRelation parseTimeRelation( const std::string& value );
-        std::string toString( const TimeRelation value );
-        std::ostream& toStream( std::ostream& os, const TimeRelation value );
-        std::ostream& operator<<( std::ostream& os, const TimeRelation value );
+        TimeRelationEnum parseTimeRelationEnum( const std::string& value );
+        std::string toString( const TimeRelationEnum value );
+        std::ostream& toStream( std::ostream& os, const TimeRelationEnum value );
+        std::ostream& operator<<( std::ostream& os, const TimeRelationEnum value );
 
         enum class TimeSeparator
         {
