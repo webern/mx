@@ -9,6 +9,9 @@ use crate::error::{Error, Result};
 use crate::xsd::{Base, SimpleDerivation, SimpleType};
 
 mod compile_mx;
+mod musicxml_xsd;
+mod musicxml_xsd_constants;
+mod musicxml_xsd_parser;
 
 use compile_mx::compile_mx;
 use std::collections::HashMap;
@@ -254,10 +257,6 @@ macro_rules! map (
 
 impl CppOptions {
     fn write_enums(&self, simple_types: &Vec<SimpleType>) -> Result<()> {
-        let mut h = self.open_mx_core_file("Enums.h");
-        let mut cpp = self.open_mx_core_file("Enums.cpp");
-        self.write_enum_h_begin(&mut h)?;
-        self.write_enum_cpp_begin(&mut cpp)?;
         let mut substitutions = HashMap::new();
         substitutions.insert("16th".to_string(), "sixteenth".to_string());
         substitutions.insert("32nd".to_string(), "thirtySecond".to_string());
@@ -279,21 +278,32 @@ impl CppOptions {
                 "TimeRelation",
             ],
         };
+        self.write_enums_h(simple_types, &sanitizer)?;
+        self.write_enums_cpp(simple_types, &sanitizer)?;
+        Ok(())
+    }
+
+    fn write_enums_h(&self, simple_types: &Vec<SimpleType>, sanitizer: &StringSanitizer) -> Result<()> {
+        let mut h = self.open_mx_core_file("Enums.h");
+        self.write_enum_h_begin(&mut h)?;
         for (i, simple_type) in simple_types.iter().enumerate() {
-            self.write_enum(simple_type, &mut cpp, &mut h, &sanitizer)?;
+            self.write_enum_declaration(simple_type, &mut h, &sanitizer)?;
             if i < simple_types.len() - 1 {
                 writeln!(h, "").unwrap();
             }
         }
-        self.write_enum_h_end(&mut h)?;
-        self.write_enum_cpp_end(&mut cpp)?;
-        Ok(())
+        self.write_enum_h_end(&mut h)
     }
 
-    fn write_enum(
+    fn write_enums_cpp(&self, simple_types: &Vec<SimpleType>, sanitizer: &StringSanitizer) -> Result<()> {
+        let mut cpp = self.open_mx_core_file("Enums.cpp");
+        self.write_enum_cpp_begin(&mut cpp)?;
+        self.write_enum_cpp_end(&mut cpp)
+    }
+
+    fn write_enum_declaration(
         &self,
         simple_type: &SimpleType,
-        cpp: &mut File,
         h: &mut File,
         sanitizer: &StringSanitizer,
     ) -> Result<()> {
@@ -313,7 +323,7 @@ impl CppOptions {
         writeln!(h, "        enum class {}", en).unwrap();
         writeln!(h, "        {{").unwrap();
         for (i, enval) in restriction.enumerations.iter().enumerate() {
-            let enval = sanitizer.camel_case_cpp(enval);
+            let enval = sanitizer.camel_calse(enval);
             let enval = sanitizer.sanitize(enval);
             write!(h, "             {} = {}", enval, i).unwrap();
             if i < restriction.enumerations.len() - 1 {
@@ -331,13 +341,13 @@ impl CppOptions {
             "{}std::ostream& toStream( std::ostream& os, const {} value );",
             sp, en
         )
-        .unwrap();
+            .unwrap();
         writeln!(
             h,
             "{}std::ostream& operator<<( std::ostream& os, const {} value );",
             sp, en
         )
-        .unwrap();
+            .unwrap();
         Ok(())
     }
 
@@ -349,7 +359,6 @@ impl CppOptions {
         writeln!(f, "#pragma once").unwrap();
         writeln!(f, "").unwrap();
         writeln!(f, "#include \"mx/core/EnumsBuiltin.h\"").unwrap();
-        // writeln!(f, "#include <string>").unwrap();
         writeln!(f, "").unwrap();
         writeln!(f, "namespace mx").unwrap();
         writeln!(f, "{{").unwrap();
@@ -359,6 +368,16 @@ impl CppOptions {
     }
 
     fn write_enum_cpp_begin(&self, f: &mut File) -> Result<()> {
+        writeln!(f, "// MusicXML Class Library").unwrap();
+        writeln!(f, "// Copyright (c) by Matthew James Briggs").unwrap();
+        writeln!(f, "// Distributed under the MIT License").unwrap();
+        writeln!(f, "").unwrap();
+        writeln!(f, "#include \"mx/core/Enums.h\"").unwrap();
+        writeln!(f, "").unwrap();
+        writeln!(f, "namespace mx").unwrap();
+        writeln!(f, "{{").unwrap();
+        writeln!(f, "    namespace core").unwrap();
+        writeln!(f, "    {{").unwrap();
         Ok(())
     }
     fn write_enum_h_end(&self, f: &mut File) -> Result<()> {
@@ -367,6 +386,8 @@ impl CppOptions {
         Ok(())
     }
     fn write_enum_cpp_end(&self, f: &mut File) -> Result<()> {
+        writeln!(f, "    }}").unwrap();
+        writeln!(f, "}}").unwrap();
         Ok(())
     }
 }
@@ -391,8 +412,8 @@ impl StringSanitizer {
     }
 
     pub(crate) fn suffix_if_keyword<S>(&self, name: S) -> String
-    where
-        S: AsRef<str>,
+        where
+            S: AsRef<str>,
     {
         let name = name.as_ref();
         for &keyword in &self.keywords {
@@ -429,7 +450,7 @@ impl StringSanitizer {
         name.as_ref().into()
     }
 
-    pub(crate) fn camel_case_cpp<S: AsRef<str>>(&self, s: S) -> String {
+    pub(crate) fn camel_calse<S: AsRef<str>>(&self, s: S) -> String {
         let mut out = String::new();
         let mut upper = false;
         for c in s.as_ref().chars() {
@@ -441,10 +462,17 @@ impl StringSanitizer {
                 let uc = c.to_uppercase().next().unwrap();
                 out.push(uc);
             } else {
+                let uc = c.to_lowercase().next().unwrap();
                 out.push(c);
             }
             upper = false;
         }
+
+        // StepEnum is coming out wrong, don't know why.
+        if out.len() == 1 {
+            return out.to_lowercase();
+        }
+
         out
     }
 
@@ -464,24 +492,3 @@ pub(crate) fn replace_if_empty<S: AsRef<str>>(s: S) -> String {
     }
     s.as_ref().into()
 }
-
-// pub(crate) fn prefix_if_starts_with_number<S: AsRef<str>>(s: S) -> String {}
-
-// pub(crate) fn camel_case_cpp<S: AsRef<str>>(s: S, keywords: &Vec<&'static str>) -> String {
-//     let mut out = String::new();
-//     let mut upper = false;
-//     for c in s.as_ref().chars() {
-//         if c == '-' || c == ' ' {
-//             upper = true;
-//             continue;
-//         }
-//         if upper {
-//             let uc = c.to_uppercase().next().unwrap();
-//             out.push(uc);
-//         } else {
-//             out.push(c);
-//         }
-//         upper = false;
-//     }
-//     suffix_if_keyword(&out, &keywords)
-// }

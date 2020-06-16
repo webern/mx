@@ -6,7 +6,7 @@ edition = "2018"
 
 [dependencies]
 exile = { version = "0.0.1", path = "/Users/mjb/repos/exile/exile" }
-derive_more = "0.99.7"
+indexmap = "1.4.0"
 structopt = "0.3.11"
 tempfile = "3.1.0"
 uuid = { version = "0.8", features = ["v4"] }

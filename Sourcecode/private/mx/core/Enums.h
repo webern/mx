@@ -212,9 +212,9 @@ namespace mx
 
         enum class ClefSign
         {
-             G = 0,
-             F = 1,
-             C = 2,
+             g = 0,
+             f = 1,
+             c = 2,
              percussion = 3,
              TAB = 4,
              jianpu = 5,
@@ -950,13 +950,13 @@ namespace mx
 
         enum class StepEnum
         {
-             A = 0,
-             B = 1,
-             C = 2,
-             D = 3,
-             E = 4,
-             F = 5,
-             G = 6
+             a = 0,
+             b = 1,
+             c = 2,
+             d = 3,
+             e = 4,
+             f = 5,
+             g = 6
         };
 
         StepEnum parseStepEnum( const std::string& value );

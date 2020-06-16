@@ -2,7 +2,7 @@ use core::fmt;
 use std::fmt::{Debug, Display, Formatter};
 use std::panic::resume_unwind;
 
-use derive_more::Display;
+// use derive_more::Display;
 
 use crate::error::{self, Result};
 
