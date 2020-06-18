@@ -5,6 +5,7 @@ authors = ["Matthew James Briggs <matthew.james.briggs@gmail.com>"]
 edition = "2018"
 
 [dependencies]
+derive_more = "0.99.8"
 exile = { version = "0.0.1", path = "/Users/mjb/repos/exile/exile" }
 indexmap = "1.4.0"
 structopt = "0.3.11"

@@ -13,6 +13,7 @@ mod musicxml_xsd;
 mod musicxml_xsd_constants;
 mod musicxml_xsd_parser;
 
+use crate::generate::musicxml_xsd_parser::parse_musicxml_xsd;
 use compile_mx::compile_mx;
 use std::collections::HashMap;
 
@@ -102,6 +103,7 @@ impl Generator {
         println!("{}", self.xsd.display());
         let xsd = read_to_string(&self.xsd).unwrap();
         let doc = exile::parse(xsd.as_str()).unwrap();
+        let xsd = parse_musicxml_xsd(&doc).unwrap();
         let opt = if let Language::Cpp(o) = &self.language {
             o
         } else {
@@ -283,7 +285,11 @@ impl CppOptions {
         Ok(())
     }
 
-    fn write_enums_h(&self, simple_types: &Vec<SimpleType>, sanitizer: &StringSanitizer) -> Result<()> {
+    fn write_enums_h(
+        &self,
+        simple_types: &Vec<SimpleType>,
+        sanitizer: &StringSanitizer,
+    ) -> Result<()> {
         let mut h = self.open_mx_core_file("Enums.h");
         self.write_enum_h_begin(&mut h)?;
         for (i, simple_type) in simple_types.iter().enumerate() {
@@ -295,7 +301,11 @@ impl CppOptions {
         self.write_enum_h_end(&mut h)
     }
 
-    fn write_enums_cpp(&self, simple_types: &Vec<SimpleType>, sanitizer: &StringSanitizer) -> Result<()> {
+    fn write_enums_cpp(
+        &self,
+        simple_types: &Vec<SimpleType>,
+        sanitizer: &StringSanitizer,
+    ) -> Result<()> {
         let mut cpp = self.open_mx_core_file("Enums.cpp");
         self.write_enum_cpp_begin(&mut cpp)?;
         self.write_enum_cpp_end(&mut cpp)
@@ -341,13 +351,13 @@ impl CppOptions {
             "{}std::ostream& toStream( std::ostream& os, const {} value );",
             sp, en
         )
-            .unwrap();
+        .unwrap();
         writeln!(
             h,
             "{}std::ostream& operator<<( std::ostream& os, const {} value );",
             sp, en
         )
-            .unwrap();
+        .unwrap();
         Ok(())
     }
 
@@ -412,8 +422,8 @@ impl StringSanitizer {
     }
 
     pub(crate) fn suffix_if_keyword<S>(&self, name: S) -> String
-        where
-            S: AsRef<str>,
+    where
+        S: AsRef<str>,
     {
         let name = name.as_ref();
         for &keyword in &self.keywords {
