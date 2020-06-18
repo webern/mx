@@ -13,7 +13,7 @@ mod musicxml_xsd;
 mod musicxml_xsd_constants;
 mod musicxml_xsd_parser;
 
-use crate::generate::musicxml_xsd_parser::parse_musicxml_xsd;
+use crate::generate::musicxml_xsd_parser::{parse_musicxml_xsd, Enumeration, TypeDefinition};
 use compile_mx::compile_mx;
 use std::collections::HashMap;
 
@@ -122,7 +122,7 @@ impl Generator {
         }
         find_simple_type_restriction_bases(doc.root(), true);
         let simple_types = parse_simple_types(doc.root(), true).unwrap();
-        opt.write_enums(&simple_types)?;
+        opt.write_enums(&xsd.type_definitions)?;
         // wrap!(compile_mx(&opt.mx_repo))?;
         Ok(())
     }
@@ -258,7 +258,7 @@ macro_rules! map (
 );
 
 impl CppOptions {
-    fn write_enums(&self, simple_types: &Vec<SimpleType>) -> Result<()> {
+    fn write_enums(&self, types: &Vec<TypeDefinition>) -> Result<()> {
         let mut substitutions = HashMap::new();
         substitutions.insert("16th".to_string(), "sixteenth".to_string());
         substitutions.insert("32nd".to_string(), "thirtySecond".to_string());
@@ -280,21 +280,26 @@ impl CppOptions {
                 "TimeRelation",
             ],
         };
-        self.write_enums_h(simple_types, &sanitizer)?;
-        self.write_enums_cpp(simple_types, &sanitizer)?;
+        let mut enumerations = Vec::new();
+        for x in types {
+            if let TypeDefinition::Simple(simple) = x {
+                if let musicxml_xsd_parser::SimpleType::Enum(enumeration) = simple {
+                    enumerations.push(enumeration);
+                }
+            }
+        }
+        enumerations.sort_by(|&a, &b| Ord::cmp(&a.name, &b.name));
+        self.write_enums_h(&enumerations, &sanitizer)?;
+        self.write_enums_cpp(&enumerations, &sanitizer)?;
         Ok(())
     }
 
-    fn write_enums_h(
-        &self,
-        simple_types: &Vec<SimpleType>,
-        sanitizer: &StringSanitizer,
-    ) -> Result<()> {
+    fn write_enums_h(&self, enums: &Vec<&Enumeration>, sanitizer: &StringSanitizer) -> Result<()> {
         let mut h = self.open_mx_core_file("Enums.h");
         self.write_enum_h_begin(&mut h)?;
-        for (i, simple_type) in simple_types.iter().enumerate() {
+        for (i, simple_type) in enums.iter().enumerate() {
             self.write_enum_declaration(simple_type, &mut h, &sanitizer)?;
-            if i < simple_types.len() - 1 {
+            if i < enums.len() - 1 {
                 writeln!(h, "").unwrap();
             }
         }
@@ -303,7 +308,7 @@ impl CppOptions {
 
     fn write_enums_cpp(
         &self,
-        simple_types: &Vec<SimpleType>,
+        enums: &Vec<&Enumeration>,
         sanitizer: &StringSanitizer,
     ) -> Result<()> {
         let mut cpp = self.open_mx_core_file("Enums.cpp");
@@ -313,30 +318,21 @@ impl CppOptions {
 
     fn write_enum_declaration(
         &self,
-        simple_type: &SimpleType,
+        enumeration: &Enumeration,
         h: &mut File,
         sanitizer: &StringSanitizer,
     ) -> Result<()> {
-        let restriction =
-            if let SimpleDerivation::Restriction(restriction) = &simple_type.derivation {
-                restriction
-            } else {
-                return Ok(());
-            };
-        if restriction.enumerations.is_empty() {
-            return Ok(());
-        }
         // en = enum_name, given a short name because rustfmt is way too aggressive with line breaks
-        let en = sanitizer.pascal_case(simple_type.name.as_str());
+        let en = sanitizer.pascal_case(enumeration.name.as_str());
         let en = sanitizer.sanitize(en);
         let en = sanitizer.do_enum_name_suffix(en);
         writeln!(h, "        enum class {}", en).unwrap();
         writeln!(h, "        {{").unwrap();
-        for (i, enval) in restriction.enumerations.iter().enumerate() {
+        for (i, enval) in enumeration.members.iter().enumerate() {
             let enval = sanitizer.camel_calse(enval);
             let enval = sanitizer.sanitize(enval);
             write!(h, "             {} = {}", enval, i).unwrap();
-            if i < restriction.enumerations.len() - 1 {
+            if i < enumeration.members.len() - 1 {
                 write!(h, ",").unwrap();
             }
             write!(h, "\n").unwrap();

@@ -1,4 +1,8 @@
-pub(crate) struct MusicXSD {}
+use super::musicxml_xsd_parser::TypeDefinition;
+
+pub(crate) struct MusicXSD {
+    pub(crate) type_definitions: Vec<TypeDefinition>,
+}
 
 enum Type {
     Simple,

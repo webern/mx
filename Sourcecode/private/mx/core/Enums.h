@@ -64,7 +64,6 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const AccidentalValue value );
         std::ostream& operator<<( std::ostream& os, const AccidentalValue value );
 
-
         enum class ArrowDirectionEnum
         {
              left = 0,
@@ -133,7 +132,6 @@ namespace mx
         std::string toString( const BarStyleEnum value );
         std::ostream& toStream( std::ostream& os, const BarStyleEnum value );
         std::ostream& operator<<( std::ostream& os, const BarStyleEnum value );
-
 
         enum class BeamValue
         {
@@ -226,8 +224,6 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const ClefSign value );
         std::ostream& operator<<( std::ostream& os, const ClefSign value );
 
-
-
         enum class CssFontSize
         {
              xxSmall = 0,
@@ -270,8 +266,6 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const DegreeTypeValue value );
         std::ostream& operator<<( std::ostream& os, const DegreeTypeValue value );
 
-
-
         enum class Effect
         {
              anvil = 0,
@@ -312,7 +306,6 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const EnclosureShape value );
         std::ostream& operator<<( std::ostream& os, const EnclosureShape value );
 
-
         enum class Fan
         {
              accel = 0,
@@ -337,8 +330,6 @@ namespace mx
         std::string toString( const FermataShape value );
         std::ostream& toStream( std::ostream& os, const FermataShape value );
         std::ostream& operator<<( std::ostream& os, const FermataShape value );
-
-
 
         enum class FontStyle
         {
@@ -558,7 +549,6 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const LineType value );
         std::ostream& operator<<( std::ostream& os, const LineType value );
 
-
         enum class MarginType
         {
              odd = 0,
@@ -636,11 +626,6 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const Metal value );
         std::ostream& operator<<( std::ostream& os, const Metal value );
 
-
-
-
-
-
         enum class Mute
         {
              on = 0,
@@ -664,7 +649,6 @@ namespace mx
         std::string toString( const Mute value );
         std::ostream& toStream( std::ostream& os, const Mute value );
         std::ostream& operator<<( std::ostream& os, const Mute value );
-
 
         enum class NoteSizeType
         {
@@ -736,10 +720,6 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const NoteheadValue value );
         std::ostream& operator<<( std::ostream& os, const NoteheadValue value );
 
-
-
-
-
         enum class OnOff
         {
              on = 0,
@@ -762,7 +742,6 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const OverUnder value );
         std::ostream& operator<<( std::ostream& os, const OverUnder value );
 
-
         enum class Pitched
         {
              chimes = 0,
@@ -778,9 +757,6 @@ namespace mx
         std::string toString( const Pitched value );
         std::ostream& toStream( std::ostream& os, const Pitched value );
         std::ostream& operator<<( std::ostream& os, const Pitched value );
-
-
-
 
         enum class PrincipalVoiceSymbol
         {
@@ -807,7 +783,6 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const RightLeftMiddle value );
         std::ostream& operator<<( std::ostream& os, const RightLeftMiddle value );
 
-
         enum class SemiPitched
         {
              high = 0,
@@ -822,7 +797,6 @@ namespace mx
         std::string toString( const SemiPitched value );
         std::ostream& toStream( std::ostream& os, const SemiPitched value );
         std::ostream& operator<<( std::ostream& os, const SemiPitched value );
-
 
         enum class ShowFrets
         {
@@ -846,8 +820,6 @@ namespace mx
         std::string toString( const ShowTuplet value );
         std::ostream& toStream( std::ostream& os, const ShowTuplet value );
         std::ostream& operator<<( std::ostream& os, const ShowTuplet value );
-
-
 
         enum class StaffType
         {
@@ -1005,7 +977,6 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const StickType value );
         std::ostream& operator<<( std::ostream& os, const StickType value );
 
-
         enum class SyllabicEnum
         {
              single = 0,
@@ -1031,7 +1002,6 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const SymbolSize value );
         std::ostream& operator<<( std::ostream& os, const SymbolSize value );
 
-
         enum class TextDirection
         {
              ltr = 0,
@@ -1044,7 +1014,6 @@ namespace mx
         std::string toString( const TextDirection value );
         std::ostream& toStream( std::ostream& os, const TextDirection value );
         std::ostream& operator<<( std::ostream& os, const TextDirection value );
-
 
         enum class TimeRelationEnum
         {
@@ -1117,8 +1086,6 @@ namespace mx
         std::string toString( const TopBottom value );
         std::ostream& toStream( std::ostream& os, const TopBottom value );
         std::ostream& operator<<( std::ostream& os, const TopBottom value );
-
-
 
         enum class TrillStep
         {
@@ -1264,7 +1231,5 @@ namespace mx
         std::string toString( const YesNo value );
         std::ostream& toStream( std::ostream& os, const YesNo value );
         std::ostream& operator<<( std::ostream& os, const YesNo value );
-
-
     }
 }

@@ -14,6 +14,11 @@ pub(crate) enum Error {
     NameAttributeNotFound(String),
     XlinkNamespaceNotFound,
     DuplicateXsInfoID(String),
+    UnexpectedNode(String),
+    SimpleTypeBaseNotFound,
+    ExpectedOneChildOfXsAnnotation,
+    ExpectedDocumentationNode,
+    ExpectedDocumentationNodeToReturnText,
 }
 
 static COUNTER: AtomicUsize = AtomicUsize::new(0);
@@ -24,15 +29,15 @@ pub(crate) fn parse_musicxml_xsd(doc: &Document) -> Result<MusicXSD, Error> {
         return Err(SchemaNotFound);
     }
     let mut type_nodes = parse_type_nodes(doc)?;
-    let something = dobeedobeedo(&type_nodes)?;
+    let type_definitions = parse_type_definitions(&type_nodes)?;
     for (_, n) in type_nodes {
         println!("{}", n);
     }
 
-    Ok(MusicXSD {})
+    Ok(MusicXSD { type_definitions })
 }
 
-fn parse_type_nodes(doc: &Document) -> Result<HashMap<String, XsdTypeNode>, Error> {
+fn parse_type_nodes(doc: &Document) -> Result<HashMap<String, XsTypeNode>, Error> {
     let mut type_nodes = HashMap::new();
     for node in doc.root().children() {
         let x = parse_xs_info(node)?;
@@ -52,26 +57,26 @@ const XS_IMPORT: &str = "xs:import";
 const XS_SIMPLE_TYPE: &str = "xs:simpleType";
 
 #[derive(Debug, Clone)]
-pub(crate) struct XsdTypeNode<'a> {
-    pub(crate) xsd_type: XsdType,
+pub(crate) struct XsTypeNode<'a> {
+    pub(crate) xsd_type: XsType,
     pub(crate) index: usize,
     pub(crate) id: String,
     pub(crate) name: String,
     pub(crate) node: &'a Element,
 }
 
-impl<'a> Display for XsdTypeNode<'_> {
+impl<'a> Display for XsTypeNode<'_> {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}-{}-{}", self.index, self.id, self.name)
     }
 }
 
-fn parse_xs_info(node: &Element) -> Result<XsdTypeNode, Error> {
+fn parse_xs_info(node: &Element) -> Result<XsTypeNode, Error> {
     let index = COUNTER.fetch_add(1, Ordering::Relaxed);
-    let xsd_type = XsdType::parse(node)?;
+    let xsd_type = XsType::parse(node)?;
     let name = match xsd_type {
-        XsdType::XsAnnotation => format!("{}:{}", XS_ANNOTATION, index),
-        XsdType::XsImport => format!(
+        XsType::XsAnnotation => format!("{}:{}", XS_ANNOTATION, index),
+        XsType::XsImport => format!(
             "{}:{}",
             XS_IMPORT,
             node.attributes
@@ -87,10 +92,10 @@ fn parse_xs_info(node: &Element) -> Result<XsdTypeNode, Error> {
             .clone(),
     };
     let id = match xsd_type {
-        XsdType::XsAnnotation | XsdType::XsImport => name.clone(),
+        XsType::XsAnnotation | XsType::XsImport => name.clone(),
         _ => format!("{}:{}", node.fullname(), name),
     };
-    Ok(XsdTypeNode {
+    Ok(XsTypeNode {
         xsd_type,
         index,
         id,
@@ -100,7 +105,7 @@ fn parse_xs_info(node: &Element) -> Result<XsdTypeNode, Error> {
 }
 
 #[derive(Debug, Display, Clone, Eq, PartialEq, Ord, PartialOrd, Hash)]
-pub(crate) enum XsdType {
+pub(crate) enum XsType {
     XsAnnotation,
     XsAttributeGroup,
     XsComplexType,
@@ -110,47 +115,70 @@ pub(crate) enum XsdType {
     XsSimpleType,
 }
 
-impl XsdType {
+impl XsType {
     fn parse(node: &Element) -> Result<Self, Error> {
         let fullname = node.fullname();
         match fullname.as_str() {
-            XS_ANNOTATION => Ok(XsdType::XsAnnotation),
-            XS_ATTRIBUTE_GROUP => Ok(XsdType::XsAttributeGroup),
-            XS_COMPLEX_TYPE => Ok(XsdType::XsComplexType),
-            XS_ELEMENT => Ok(XsdType::XsElement),
-            XS_GROUP => Ok(XsdType::XsGroup),
-            XS_IMPORT => Ok(XsdType::XsImport),
-            XS_SIMPLE_TYPE => Ok(XsdType::XsSimpleType),
+            XS_ANNOTATION => Ok(XsType::XsAnnotation),
+            XS_ATTRIBUTE_GROUP => Ok(XsType::XsAttributeGroup),
+            XS_COMPLEX_TYPE => Ok(XsType::XsComplexType),
+            XS_ELEMENT => Ok(XsType::XsElement),
+            XS_GROUP => Ok(XsType::XsGroup),
+            XS_IMPORT => Ok(XsType::XsImport),
+            XS_SIMPLE_TYPE => Ok(XsType::XsSimpleType),
             _ => Err(Error::UnknownSchemaNode(fullname)),
         }
     }
 }
 
-enum TypeDefinition {
+pub(crate) enum TypeDefinition {
     Simple(SimpleType),
 }
 
-enum SimpleType {
-    Enum(Enum),
+pub(crate) enum SimpleType {
+    Enum(Enumeration),
 }
 
-struct Enum {}
+pub(crate) struct Enumeration {
+    pub(crate) index: usize,
+    pub(crate) id: String,
+    pub(crate) name: String,
+    pub(crate) base: String,
+    pub(crate) documentation: String,
+    pub(crate) members: Vec<String>,
+}
 
-fn dobeedobeedo(xsd_nodes: &HashMap<String, XsdTypeNode>) -> Result<Vec<TypeDefinition>, Error> {
-    for (_, x) in xsd_nodes {
-        if (x.xsd_type != XsdType::XsSimpleType) {
-            continue;
+impl Default for Enumeration {
+    fn default() -> Enumeration {
+        Enumeration {
+            index: 0,
+            id: String::default(),
+            name: String::default(),
+            base: String::default(),
+            documentation: String::default(),
+            members: Vec::new(),
         }
-        if !is_enumeration_simple_type(x.node) {
-            continue;
-        }
-        println!("enumeration");
     }
-    Ok(Vec::new())
 }
 
-fn is_enumeration_simple_type(node: &Element) -> bool {
-    for child in node.children() {
+fn parse_type_definitions(
+    xsd_nodes: &HashMap<String, XsTypeNode>,
+) -> Result<Vec<TypeDefinition>, Error> {
+    let mut type_definitions = Vec::new();
+    for (_, x) in xsd_nodes {
+        if (x.xsd_type != XsType::XsSimpleType) {
+            continue;
+        }
+        if is_enumeration_simple_type(x) {
+            let eee = parse_enumeration(x)?;
+            type_definitions.push(TypeDefinition::Simple(SimpleType::Enum(eee)));
+        }
+    }
+    Ok(type_definitions)
+}
+
+fn is_enumeration_simple_type(node: &XsTypeNode) -> bool {
+    for child in node.node.children() {
         if child.fullname() == "xs:restriction" {
             for restriction in child.children() {
                 if restriction.fullname() == "xs:enumeration" {
@@ -160,4 +188,41 @@ fn is_enumeration_simple_type(node: &Element) -> bool {
         }
     }
     false
+}
+
+fn parse_enumeration(node: &XsTypeNode) -> Result<Enumeration, Error> {
+    let mut en = Enumeration::default();
+    en.id = node.id.clone();
+    en.name = node.name.clone();
+    en.index = node.index;
+    for child in node.node.children() {
+        if child.fullname() == "xs:restriction" {
+            if let Some(base) = child.attributes.map().get("base") {
+                en.base = base.clone();
+            } else {
+                return Err(Error::SimpleTypeBaseNotFound);
+            }
+            for restriction in child.children() {
+                if restriction.fullname() == "xs:enumeration" {
+                    if let Some(value) = restriction.attributes.map().get("value") {
+                        en.members.push(value.clone())
+                    }
+                } else {
+                    return Err(Error::UnexpectedNode(restriction.fullname()));
+                }
+            }
+        } else if child.fullname().as_str() == XS_ANNOTATION {
+            let mut docsnodes = child.children();
+            let documentation_node = docsnodes
+                .next()
+                .ok_or_else(|| Error::ExpectedOneChildOfXsAnnotation)?;
+            if documentation_node.fullname().as_str() != "xs:documentation" {
+                return Err(Error::ExpectedDocumentationNode);
+            }
+            en.documentation = documentation_node
+                .text()
+                .ok_or_else(|| Error::ExpectedDocumentationNodeToReturnText)?;
+        }
+    }
+    Ok(en)
 }
