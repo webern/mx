@@ -69,5 +69,7 @@ pub(crate) fn reserved_words() -> IndexSet<String> {
     keywords.insert("long".into());
     keywords.insert("continue".into());
     keywords.insert("explicit".into());
+    keywords.insert("do".into());
+    keywords.insert("while".into());
     keywords
 }

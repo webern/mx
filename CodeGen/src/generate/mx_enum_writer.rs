@@ -12,6 +12,27 @@ pub(crate) enum Error {
     BadThingsHappened,
 }
 
+pub(crate) fn write_tabs<W: Write>(w: &mut W, num: u32) -> std::io::Result<()> {
+    for _ in 0..num {
+        write!(w, "    ")?;
+    }
+    Ok(())
+}
+
+macro_rules! w {
+    ($w:expr, $tabs:expr, $($arg:expr),+) => {{
+        crate::generate::mx_enum_writer::write_tabs($w, $tabs)?;
+        write!($w, $($arg),+)
+    }};
+}
+
+macro_rules! l {
+    ($w:expr, $tabs:expr, $($arg:expr),+) => {{
+        crate::generate::mx_enum_writer::write_tabs($w, $tabs)?;
+        writeln!($w, $($arg),+)
+    }};
+}
+
 pub(crate) struct MxEnum {
     pub(crate) id: String,
     pub(crate) index: usize,
@@ -124,28 +145,30 @@ impl MxEnum {
 
     pub(crate) fn write_declaration<W: Write>(&self, w: &mut W) -> std::io::Result<()> {
         let n = self.pascal_case.value();
-        writeln!(w, "enum class {}", n)?;
-        writeln!(w, "{{")?;
+        l!(w, 2, "enum class {}", n)?;
+        l!(w, 2, "{{")?;
         for (i, m) in self.members.iter().enumerate() {
             let is_last = i == self.members.len() - 1;
-            write!(w, "{} = {}", m.value(), i)?;
+            w!(w, 3, "{} = {}", m.value(), i)?;
             if is_last {
-                write!(w, "\n")?;
+                w!(w, 0, "\n")?;
             } else {
-                write!(w, ",\n")?;
+                w!(w, 0, ",\n")?;
             }
         }
-        writeln!(w, "}};")?;
-        writeln!(w, "")?;
-        writeln!(w, "{} parse{}( const std::string& value );", n, n)?;
-        writeln!(w, "std::string toString( const {} value );", n)?;
-        writeln!(
+        l!(w, 2, "}};")?;
+        l!(w, 0, "")?;
+        l!(w, 2, "{} parse{}( const std::string& value );", n, n)?;
+        l!(w, 2, "std::string toString( const {} value );", n)?;
+        l!(
             w,
+            2,
             "std::ostream& toStream( std::ostream& os, const {} value );",
             n
         )?;
-        writeln!(
+        l!(
             w,
+            2,
             "std::ostream& operator<<( std::ostream& os, const {} value );",
             n
         )?;
@@ -189,32 +212,37 @@ impl MxEnumWriter {
 
     pub(crate) fn write_declarations<W: Write>(&self, w: &mut W) -> std::io::Result<()> {
         self.write_h_file_open(w)?;
-        for e in &self.enums {
+        for (i, e) in self.enums.iter().enumerate() {
+            let is_last = i == self.enums.len() - 1;
             e.write_declaration(w)?;
+            if !is_last {
+                l!(w, 0, "")?;
+            }
         }
         self.write_h_file_close(w)?;
         Ok(())
     }
 
     fn write_h_file_open<W: Write>(&self, w: &mut W) -> std::io::Result<()> {
-        writeln!(w, "// MusicXML Class Library")?;
-        writeln!(w, "// Copyright (c) by Matthew James Briggs")?;
-        writeln!(w, "// Distributed under the MIT License")?;
-        writeln!(w, "")?;
-        writeln!(w, "#pragma once")?;
-        writeln!(w, "")?;
-        writeln!(w, "#include \"mx/core/EnumsBuiltin.h\"")?;
-        writeln!(w, "")?;
-        writeln!(w, "namespace mx")?;
-        writeln!(w, "{{")?;
-        writeln!(w, "    namespace core")?;
-        writeln!(w, "    {{")?;
+        // write_tab!(w);
+        l!(w, 0, "// MusicXML Class Library")?;
+        l!(w, 0, "// Copyright (c) by Matthew James Briggs")?;
+        l!(w, 0, "// Distributed under the MIT License")?;
+        l!(w, 0, "")?;
+        l!(w, 0, "#pragma once")?;
+        l!(w, 0, "")?;
+        l!(w, 0, "#include \"mx/core/EnumsBuiltin.h\"")?;
+        l!(w, 0, "")?;
+        l!(w, 0, "namespace mx")?;
+        l!(w, 0, "{{")?;
+        l!(w, 1, "namespace core")?;
+        l!(w, 1, "{{")?;
         Ok(())
     }
 
     fn write_h_file_close<W: Write>(&self, w: &mut W) -> std::io::Result<()> {
-        writeln!(w, "    }}")?;
-        writeln!(w, "}}")?;
+        l!(w, 1, "}}")?;
+        l!(w, 0, "}}")?;
         Ok(())
     }
 }
