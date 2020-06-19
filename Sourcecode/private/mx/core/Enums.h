@@ -266,6 +266,38 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const DegreeTypeValue value );
         std::ostream& operator<<( std::ostream& os, const DegreeTypeValue value );
 
+        enum class DistanceTypeEnum
+        {
+            beam = 0,
+            hyphen = 1,
+            other = 2
+        };
+
+        DistanceTypeEnum parseDistanceTypeEnum( const std::string& value );
+        std::string toString( const DistanceTypeEnum value );
+        std::ostream& toStream( std::ostream& os, const DistanceTypeEnum value );
+        std::ostream& operator<<( std::ostream& os, const DistanceTypeEnum value );
+
+        class DistanceType
+        {
+        public:
+            explicit DistanceType( const DistanceTypeEnum value );
+            explicit DistanceType( const std::string& value );
+            DistanceType();
+            DistanceTypeEnum getValue() const;
+            std::string getValueString() const;
+            void setValue( const DistanceTypeEnum value );
+            void setValue( const std::string& value );
+        private:
+            DistanceTypeEnum myEnum;
+            std::string myCustomValue;
+        };
+
+        DistanceType parseDistanceType( const std::string& value );
+        std::string toString( const DistanceType& value );
+        std::ostream& toStream( std::ostream& os, const DistanceType& value );
+        std::ostream& operator<<( std::ostream& os, const DistanceType& value );
+
         enum class Effect
         {
             anvil = 0,
@@ -548,6 +580,55 @@ namespace mx
         std::string toString( const LineType value );
         std::ostream& toStream( std::ostream& os, const LineType value );
         std::ostream& operator<<( std::ostream& os, const LineType value );
+
+        enum class LineWidthTypeEnum
+        {
+            beam = 0,
+            bracket = 1,
+            dashes = 2,
+            enclosure = 3,
+            ending = 4,
+            extend = 5,
+            heavyBarline = 6,
+            leger = 7,
+            lightBarline = 8,
+            octaveShift = 9,
+            pedal = 10,
+            slurMiddle = 11,
+            slurTip = 12,
+            staff = 13,
+            stem = 14,
+            tieMiddle = 15,
+            tieTip = 16,
+            tupletBracket = 17,
+            wedge = 18,
+            other = 19
+        };
+
+        LineWidthTypeEnum parseLineWidthTypeEnum( const std::string& value );
+        std::string toString( const LineWidthTypeEnum value );
+        std::ostream& toStream( std::ostream& os, const LineWidthTypeEnum value );
+        std::ostream& operator<<( std::ostream& os, const LineWidthTypeEnum value );
+
+        class LineWidthType
+        {
+        public:
+            explicit LineWidthType( const LineWidthTypeEnum value );
+            explicit LineWidthType( const std::string& value );
+            LineWidthType();
+            LineWidthTypeEnum getValue() const;
+            std::string getValueString() const;
+            void setValue( const LineWidthTypeEnum value );
+            void setValue( const std::string& value );
+        private:
+            LineWidthTypeEnum myEnum;
+            std::string myCustomValue;
+        };
+
+        LineWidthType parseLineWidthType( const std::string& value );
+        std::string toString( const LineWidthType& value );
+        std::ostream& toStream( std::ostream& os, const LineWidthType& value );
+        std::ostream& operator<<( std::ostream& os, const LineWidthType& value );
 
         enum class MarginType
         {

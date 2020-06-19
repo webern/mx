@@ -51,12 +51,14 @@ pub(crate) fn enum_member_substitutions() -> HashMap<String, String> {
 /// code will be `enum class SomethingEnum`.
 pub(crate) fn suffixed_enum_names() -> IndexSet<String> {
     let mut names = IndexSet::new();
-    names.insert("Step".into());
     names.insert("ArrowDirection".into());
     names.insert("ArrowStyle".into());
-    names.insert("CircularArrow".into());
-    names.insert("Syllabic".into());
     names.insert("BarStyle".into());
+    names.insert("CircularArrow".into());
+    names.insert("DistanceType".into());
+    names.insert("LineWidthType".into());
+    names.insert("Step".into());
+    names.insert("Syllabic".into());
     names.insert("TimeRelation".into());
     names
 }
@@ -64,19 +66,22 @@ pub(crate) fn suffixed_enum_names() -> IndexSet<String> {
 /// Returns a list of C++ keywords, to be used to avoid conflict with MusicXML names.
 pub(crate) fn reserved_words() -> IndexSet<String> {
     let mut keywords = IndexSet::new();
-    keywords.insert("double".into());
-    keywords.insert("short".into());
-    keywords.insert("long".into());
     keywords.insert("continue".into());
-    keywords.insert("explicit".into());
     keywords.insert("do".into());
+    keywords.insert("double".into());
+    keywords.insert("explicit".into());
+    keywords.insert("long".into());
+    keywords.insert("short".into());
     keywords.insert("while".into());
     keywords
 }
 
 pub(crate) struct PseudoEnumSpec {
     pub(crate) members: Vec<String>,
+    /// The name of the field that is added to the enum, which can hold any value.
     pub(crate) extra_field_name: String,
+    /// The name of the class which "wraps" the enum with the ability to hold an arbitrary string.
+    pub(crate) class_name: String,
 }
 
 /// e.g. `line-width-type` and `distance-type` which give enum values in the documentation but do
@@ -89,6 +94,7 @@ pub(crate) fn pseudo_enums() -> HashMap<String, PseudoEnumSpec> {
         PseudoEnumSpec {
             members: vec!["beam".to_owned(), "hyphen".to_owned()],
             extra_field_name: "other".to_owned(),
+            class_name: "DistanceType".to_owned(),
         },
     );
     map.insert(
@@ -116,6 +122,7 @@ pub(crate) fn pseudo_enums() -> HashMap<String, PseudoEnumSpec> {
                 "wedge".to_owned(),
             ],
             extra_field_name: "other".to_owned(),
+            class_name: "LineWidthType".to_owned(),
         },
     );
     map

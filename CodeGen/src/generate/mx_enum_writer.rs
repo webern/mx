@@ -33,6 +33,15 @@ macro_rules! l {
     }};
 }
 
+/// This represents an enum where an extra enumeration is added, e.g. `other`, and a wrapper class
+/// is created allowing any arbitrary string to be held when e.g. `other` is the enum value.
+#[derive(Clone)]
+pub(crate) struct MxEnumOption {
+    pub(crate) other_field_name: String,
+    pub(crate) wrapper_class_name: String,
+}
+
+#[derive(Clone)]
 pub(crate) struct MxEnum {
     pub(crate) id: String,
     pub(crate) index: usize,
@@ -41,7 +50,7 @@ pub(crate) struct MxEnum {
     pub(crate) members: Vec<Symbol>,
     /// These are enums that I handled specially because they were part of an element that allowed
     /// for an "other" field that could hold a string. These Enums require custom handling.
-    pub(crate) is_algebraic: bool,
+    pub(crate) other_field: Option<MxEnumOption>,
 }
 
 impl MxEnum {
@@ -102,7 +111,7 @@ impl MxEnum {
     }
 
     fn replace_word(s: Symbol, params: &MxEnumWriterParams) -> Symbol {
-        match params.member_substitutions.get(s.value().as_str()) {
+        match params.member_substitutions.get(s.value()) {
             None => s,
             Some(new_name) => match s {
                 Symbol::Unaltered(u) => Symbol::Altered(Altered {
@@ -151,7 +160,13 @@ impl MxEnum {
             let is_last = i == self.members.len() - 1;
             w!(w, 3, "{} = {}", m.value(), i)?;
             if is_last {
-                w!(w, 0, "\n")?;
+                if let Some(other_field) = &self.other_field {
+                    w!(w, 0, ",\n")?;
+                    w!(w, 3, "{} = {}", other_field.other_field_name, i + 1)?;
+                    w!(w, 0, "\n")?;
+                } else {
+                    w!(w, 0, "\n")?;
+                }
             } else {
                 w!(w, 0, ",\n")?;
             }
@@ -172,6 +187,42 @@ impl MxEnum {
             "std::ostream& operator<<( std::ostream& os, const {} value );",
             n
         )?;
+
+        if let Some(other_field) = &self.other_field {
+            let cn = other_field.wrapper_class_name.as_str();
+            let en = self.pascal_case.value();
+            l!(w, 0, "")?;
+            l!(w, 2, "class {}", cn)?;
+            l!(w, 2, "{{")?;
+            l!(w, 2, "public:")?;
+            l!(w, 3, "explicit {}( const {} value );", cn, en)?;
+            l!(w, 3, "explicit {}( const std::string& value );", cn)?;
+            l!(w, 3, "{}();", &other_field.wrapper_class_name)?;
+            l!(w, 3, "{} getValue() const;", en)?;
+            l!(w, 3, "std::string getValueString() const;")?;
+            l!(w, 3, "void setValue( const {} value );", en)?;
+            l!(w, 3, "void setValue( const std::string& value );")?;
+            l!(w, 2, "private:")?;
+            l!(w, 3, "{} myEnum;", en)?;
+            l!(w, 3, "std::string myCustomValue;")?;
+            l!(w, 2, "}};")?;
+            l!(w, 0, "")?;
+            l!(w, 2, "{} parse{}( const std::string& value );", cn, cn)?;
+            l!(w, 2, "std::string toString( const {}& value );", cn)?;
+            l!(
+                w,
+                2,
+                "std::ostream& toStream( std::ostream& os, const {}& value );",
+                cn
+            )?;
+            l!(
+                w,
+                2,
+                "std::ostream& operator<<( std::ostream& os, const {}& value );",
+                cn
+            )?;
+        }
+
         Ok(())
     }
 }
@@ -200,7 +251,7 @@ impl MxEnumWriter {
                 camel_case: MxEnum::rename(camel_case(&e.name), &params),
                 pascal_case: MxEnum::rename(pascal_case(&e.name), &params),
                 members: MxEnum::members(e, &params)?,
-                is_algebraic: MxEnum::is_algebraic(e, &params)?,
+                other_field: e.other_field.clone(),
             };
             mx_enums.push(mx)
         }

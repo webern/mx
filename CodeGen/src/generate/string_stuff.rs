@@ -30,10 +30,10 @@ impl Symbol {
         Symbol::Unaltered(s.as_ref().to_string())
     }
 
-    pub fn value(&self) -> String {
+    pub fn value(&self) -> &str {
         match self {
-            Symbol::Unaltered(s) => s.clone(),
-            Symbol::Altered(a) => a.value.clone(),
+            Symbol::Unaltered(s) => s.as_str(),
+            Symbol::Altered(a) => a.value.as_str(),
         }
     }
 }

@@ -2,6 +2,7 @@ use super::musicxml_xsd::{Enumeration, MusicXSD, SimpleType, TypeDefinition};
 
 use crate::generate::musicxml_xsd_constants::PseudoEnumSpec;
 use crate::generate::musicxml_xsd_parser::Error::SchemaNotFound;
+use crate::generate::mx_enum_writer::MxEnumOption;
 use derive_more::Display;
 use exile::{Document, Element};
 use std::collections::HashMap;
@@ -37,7 +38,7 @@ pub(crate) fn parse_musicxml_xsd(
         return Err(SchemaNotFound);
     }
     let mut type_nodes = parse_type_nodes(doc)?;
-    let type_definitions = parse_type_definitions(&type_nodes)?;
+    let type_definitions = parse_type_definitions(&type_nodes, &params)?;
     for (_, n) in type_nodes {
         println!("{}", n);
     }
@@ -141,6 +142,7 @@ impl XsType {
 
 fn parse_type_definitions(
     xsd_nodes: &HashMap<String, XsTypeNode>,
+    params: &XsdParserParams,
 ) -> Result<Vec<TypeDefinition>, Error> {
     let mut type_definitions = Vec::new();
     for (_, x) in xsd_nodes {
@@ -149,6 +151,20 @@ fn parse_type_definitions(
         }
         if is_enumeration_simple_type(x) {
             let eee = parse_enumeration(x)?;
+            type_definitions.push(TypeDefinition::Simple(SimpleType::Enum(eee)));
+        } else if let Some(pe) = params.pseudo_enums.get(&x.id) {
+            let eee = Enumeration {
+                index: x.index,
+                id: x.id.clone(),
+                name: x.name.clone(),
+                base: "TODO_FIND_THE_BASE".to_owned(), // TODO
+                documentation: "TODO_FIND_THE_DOCUMENTAITON".to_owned(), // TODO
+                members: pe.members.clone(),
+                other_field: Some(MxEnumOption {
+                    other_field_name: pe.extra_field_name.clone(),
+                    wrapper_class_name: pe.class_name.clone(),
+                }),
+            };
             type_definitions.push(TypeDefinition::Simple(SimpleType::Enum(eee)));
         }
     }

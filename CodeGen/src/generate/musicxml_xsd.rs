@@ -1,3 +1,5 @@
+use crate::generate::mx_enum_writer::MxEnumOption;
+
 pub(crate) struct MusicXSD {
     type_definitions: Vec<TypeDefinition>,
 }
@@ -39,6 +41,9 @@ pub(crate) struct Enumeration {
     pub(crate) base: String,
     pub(crate) documentation: String,
     pub(crate) members: Vec<String>,
+    /// For pseudo-enums and other types that append an enumeration named, e.g. `other` which
+    /// signals that any string can be contained with the enum value is set to e.g. `other`
+    pub(crate) other_field: Option<MxEnumOption>,
 }
 
 impl Default for Enumeration {
@@ -50,6 +55,7 @@ impl Default for Enumeration {
             base: String::default(),
             documentation: String::default(),
             members: Vec::new(),
+            other_field: None,
         }
     }
 }
