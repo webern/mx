@@ -1,5 +1,6 @@
 use super::musicxml_xsd::{Enumeration, MusicXSD, SimpleType, TypeDefinition};
 
+use crate::generate::musicxml_xsd_constants::PseudoEnumSpec;
 use crate::generate::musicxml_xsd_parser::Error::SchemaNotFound;
 use derive_more::Display;
 use exile::{Document, Element};
@@ -23,7 +24,14 @@ pub(crate) enum Error {
 
 static COUNTER: AtomicUsize = AtomicUsize::new(0);
 
-pub(crate) fn parse_musicxml_xsd(doc: &Document) -> Result<MusicXSD, Error> {
+pub(crate) struct XsdParserParams {
+    pub(crate) pseudo_enums: HashMap<String, PseudoEnumSpec>,
+}
+
+pub(crate) fn parse_musicxml_xsd(
+    doc: &Document,
+    params: XsdParserParams,
+) -> Result<MusicXSD, Error> {
     let root = doc.root();
     if root.fullname().as_str() != "xs:schema" {
         return Err(SchemaNotFound);

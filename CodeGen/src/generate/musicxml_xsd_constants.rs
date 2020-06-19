@@ -73,3 +73,50 @@ pub(crate) fn reserved_words() -> IndexSet<String> {
     keywords.insert("while".into());
     keywords
 }
+
+pub(crate) struct PseudoEnumSpec {
+    pub(crate) members: Vec<String>,
+    pub(crate) extra_field_name: String,
+}
+
+/// e.g. `line-width-type` and `distance-type` which give enum values in the documentation but do
+/// not restrict the string via xsd. In this case we have extracted the enum values from the
+/// documentation by hand and use an `other` 'variant' to hold any string other than those listed.
+pub(crate) fn pseudo_enums() -> HashMap<String, PseudoEnumSpec> {
+    let mut map = HashMap::new();
+    map.insert(
+        "xs:simpleType:distance-type".to_owned(),
+        PseudoEnumSpec {
+            members: vec!["beam".to_owned(), "hyphen".to_owned()],
+            extra_field_name: "other".to_owned(),
+        },
+    );
+    map.insert(
+        "xs:simpleType:line-width-type".to_owned(),
+        PseudoEnumSpec {
+            members: vec![
+                "beam".to_owned(),
+                "bracket".to_owned(),
+                "dashes".to_owned(),
+                "enclosure".to_owned(),
+                "ending".to_owned(),
+                "extend".to_owned(),
+                "heavy barline".to_owned(),
+                "leger".to_owned(),
+                "light barline".to_owned(),
+                "octave shift".to_owned(),
+                "pedal".to_owned(),
+                "slur middle".to_owned(),
+                "slur tip".to_owned(),
+                "staff".to_owned(),
+                "stem".to_owned(),
+                "tie middle".to_owned(),
+                "tie tip".to_owned(),
+                "tuplet bracket".to_owned(),
+                "wedge".to_owned(),
+            ],
+            extra_field_name: "other".to_owned(),
+        },
+    );
+    map
+}

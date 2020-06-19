@@ -16,8 +16,8 @@ mod mx_enum_writer;
 mod mx_writer;
 mod string_stuff;
 
-use crate::generate::musicxml_xsd_constants::{reserved_words, suffixed_enum_names};
-use crate::generate::musicxml_xsd_parser::parse_musicxml_xsd;
+use crate::generate::musicxml_xsd_constants::{pseudo_enums, reserved_words, suffixed_enum_names};
+use crate::generate::musicxml_xsd_parser::{parse_musicxml_xsd, XsdParserParams};
 use crate::generate::mx_enum_writer::{MxEnumWriter, MxEnumWriterParams};
 use crate::generate::mx_writer::MxWriter;
 use compile_mx::compile_mx;
@@ -111,7 +111,13 @@ impl Generator {
         println!("{}", self.xsd.display());
         let xsd = read_to_string(&self.xsd).unwrap();
         let doc = exile::parse(xsd.as_str()).unwrap();
-        let xsd = parse_musicxml_xsd(&doc).unwrap();
+        let xsd = parse_musicxml_xsd(
+            &doc,
+            XsdParserParams {
+                pseudo_enums: pseudo_enums(),
+            },
+        )
+        .unwrap();
         let opt = if let Language::Cpp(o) = &self.language {
             o
         } else {
