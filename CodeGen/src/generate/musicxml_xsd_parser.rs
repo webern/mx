@@ -1,4 +1,4 @@
-use crate::generate::musicxml_xsd::MusicXSD;
+use super::musicxml_xsd::{Enumeration, MusicXSD, SimpleType, TypeDefinition};
 
 use crate::generate::musicxml_xsd_parser::Error::SchemaNotFound;
 use derive_more::Display;
@@ -34,7 +34,7 @@ pub(crate) fn parse_musicxml_xsd(doc: &Document) -> Result<MusicXSD, Error> {
         println!("{}", n);
     }
 
-    Ok(MusicXSD { type_definitions })
+    Ok(MusicXSD::new(type_definitions))
 }
 
 fn parse_type_nodes(doc: &Document) -> Result<HashMap<String, XsTypeNode>, Error> {
@@ -127,36 +127,6 @@ impl XsType {
             XS_IMPORT => Ok(XsType::XsImport),
             XS_SIMPLE_TYPE => Ok(XsType::XsSimpleType),
             _ => Err(Error::UnknownSchemaNode(fullname)),
-        }
-    }
-}
-
-pub(crate) enum TypeDefinition {
-    Simple(SimpleType),
-}
-
-pub(crate) enum SimpleType {
-    Enum(Enumeration),
-}
-
-pub(crate) struct Enumeration {
-    pub(crate) index: usize,
-    pub(crate) id: String,
-    pub(crate) name: String,
-    pub(crate) base: String,
-    pub(crate) documentation: String,
-    pub(crate) members: Vec<String>,
-}
-
-impl Default for Enumeration {
-    fn default() -> Enumeration {
-        Enumeration {
-            index: 0,
-            id: String::default(),
-            name: String::default(),
-            base: String::default(),
-            documentation: String::default(),
-            members: Vec::new(),
         }
     }
 }

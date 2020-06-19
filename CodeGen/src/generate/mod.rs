@@ -13,8 +13,9 @@ mod musicxml_xsd;
 mod musicxml_xsd_constants;
 mod musicxml_xsd_parser;
 
-use crate::generate::musicxml_xsd_parser::{parse_musicxml_xsd, Enumeration, TypeDefinition};
+use crate::generate::musicxml_xsd_parser::parse_musicxml_xsd;
 use compile_mx::compile_mx;
+use musicxml_xsd::{Enumeration, TypeDefinition};
 use std::collections::HashMap;
 
 #[derive(Debug, StructOpt)]
@@ -122,7 +123,7 @@ impl Generator {
         }
         find_simple_type_restriction_bases(doc.root(), true);
         let simple_types = parse_simple_types(doc.root(), true).unwrap();
-        opt.write_enums(&xsd.type_definitions)?;
+        opt.write_enums(&xsd.enumerations())?;
         // wrap!(compile_mx(&opt.mx_repo))?;
         Ok(())
     }
@@ -258,7 +259,7 @@ macro_rules! map (
 );
 
 impl CppOptions {
-    fn write_enums(&self, types: &Vec<TypeDefinition>) -> Result<()> {
+    fn write_enums(&self, enumerations: &[Enumeration]) -> Result<()> {
         let mut substitutions = HashMap::new();
         substitutions.insert("16th".to_string(), "sixteenth".to_string());
         substitutions.insert("32nd".to_string(), "thirtySecond".to_string());
@@ -280,21 +281,12 @@ impl CppOptions {
                 "TimeRelation",
             ],
         };
-        let mut enumerations = Vec::new();
-        for x in types {
-            if let TypeDefinition::Simple(simple) = x {
-                if let musicxml_xsd_parser::SimpleType::Enum(enumeration) = simple {
-                    enumerations.push(enumeration);
-                }
-            }
-        }
-        enumerations.sort_by(|&a, &b| Ord::cmp(&a.name, &b.name));
-        self.write_enums_h(&enumerations, &sanitizer)?;
-        self.write_enums_cpp(&enumerations, &sanitizer)?;
+        self.write_enums_h(enumerations, &sanitizer)?;
+        self.write_enums_cpp(enumerations, &sanitizer)?;
         Ok(())
     }
 
-    fn write_enums_h(&self, enums: &Vec<&Enumeration>, sanitizer: &StringSanitizer) -> Result<()> {
+    fn write_enums_h(&self, enums: &[Enumeration], sanitizer: &StringSanitizer) -> Result<()> {
         let mut h = self.open_mx_core_file("Enums.h");
         self.write_enum_h_begin(&mut h)?;
         for (i, simple_type) in enums.iter().enumerate() {
@@ -306,11 +298,7 @@ impl CppOptions {
         self.write_enum_h_end(&mut h)
     }
 
-    fn write_enums_cpp(
-        &self,
-        enums: &Vec<&Enumeration>,
-        sanitizer: &StringSanitizer,
-    ) -> Result<()> {
+    fn write_enums_cpp(&self, enums: &[Enumeration], sanitizer: &StringSanitizer) -> Result<()> {
         let mut cpp = self.open_mx_core_file("Enums.cpp");
         self.write_enum_cpp_begin(&mut cpp)?;
         self.write_enum_cpp_end(&mut cpp)
