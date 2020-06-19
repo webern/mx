@@ -4,8 +4,10 @@ use indexmap::set::IndexSet;
 use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::fmt::{Display, Formatter};
+use std::io::Write;
 use std::path::PathBuf;
 
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub(crate) enum Error {
     BadThingsHappened,
 }
@@ -21,26 +23,29 @@ pub(crate) struct MxEnum {
     pub(crate) is_algebraic: bool,
 }
 
-// impl Default for MxEnum {
-//     fn default() -> Self {
-//         Self {
-//             id: "".to_string(),
-//             index: 0,
-//             camel_case: Symbol::Unaltered("".to_string()),
-//             pascal_case: Symbol::Unaltered("".to_string()),
-//             name: Symbol::Unaltered("".to_string()),
-//             members: vec![Symbol::Unaltered("".to_string())],
-//             is_algebraic: false,
-//         }
-//     }
-// }
-
 impl MxEnum {
     fn rename(s: Symbol, params: &MxEnumWriterParams) -> Symbol {
-        MxEnum::add_reserved_suffix(
-            MxEnum::add_enum_suffix(MxEnum::replace_word(s, &params), &params),
-            &params,
-        )
+        let s = MxEnum::replace_empty_string(s);
+        let s = MxEnum::replace_word(s, &params);
+        let s = MxEnum::add_enum_suffix(s, &params);
+        let s = MxEnum::add_reserved_suffix(s, &params);
+        s
+    }
+
+    fn replace_empty_string(s: Symbol) -> Symbol {
+        if !s.value().is_empty() {
+            return s;
+        }
+        match s {
+            Symbol::Unaltered(u) => Symbol::Altered(Altered {
+                value: "emptyString".to_owned(),
+                original: u,
+            }),
+            Symbol::Altered(a) => Symbol::Altered(Altered {
+                value: "emptyString".to_owned(),
+                original: a.original,
+            }),
+        }
     }
 
     fn add_enum_suffix(s: Symbol, params: &MxEnumWriterParams) -> Symbol {
@@ -65,11 +70,11 @@ impl MxEnum {
         }
         match s {
             Symbol::Unaltered(u) => Symbol::Altered(Altered {
-                value: format!("{}Enum", &u),
+                value: format!("{}_", &u),
                 original: u,
             }),
             Symbol::Altered(a) => Symbol::Altered(Altered {
-                value: format!("{}Enum", &a.value),
+                value: format!("{}_", &a.value),
                 original: a.original,
             }),
         }
@@ -91,45 +96,60 @@ impl MxEnum {
         }
     }
 
-    // fn add_reserved_word_suffix(s: Symbol, is_reserved_word: bool) -> Symbol {
-    //     match s {
-    //         Symbol::Unaltered(u) => {
-    //             if is_enum_suffixed {
-    //                 Symbol::Altered(Altered {
-    //                     value: format!("{}_", &u),
-    //                     original: u,
-    //                 })
-    //             } else {
-    //                 Symbol::Unaltered(u)
-    //             }
-    //         }
-    //         Symbol::Altered(a) => {
-    //             if is_enum_suffixed {
-    //                 Symbol::Altered(Altered {
-    //                     value: format!("{}_", &a.value),
-    //                     original: a.original,
-    //                 })
-    //             } else {
-    //                 Symbol::Altered(a)
-    //             }
-    //         }
-    //     }
-    // }
-
     fn is_enum_suffixed<S: AsRef<str>>(s: S, params: &MxEnumWriterParams) -> bool {
-        params.suffixed_enum_names.get(s.as_ref()) != None
+        for n in &params.suffixed_enum_names {
+            if n.to_lowercase() == s.as_ref().to_lowercase() {
+                return true;
+            }
+        }
+        false
     }
 
     fn is_reserved_word<S: AsRef<str>>(s: S, params: &MxEnumWriterParams) -> bool {
         params.reserved_words.get(s.as_ref()) != None
     }
 
-    fn members(e: &Enumeration, p: &MxEnumWriterParams) -> Result<Vec<Symbol>, Error> {
-        Err(Error::BadThingsHappened)
+    fn members(e: &Enumeration, params: &MxEnumWriterParams) -> Result<Vec<Symbol>, Error> {
+        let x = e
+            .members
+            .iter()
+            .map(|m| MxEnum::rename(camel_case(&m), params))
+            .collect();
+        Ok(x)
     }
 
     fn is_algebraic(e: &Enumeration, p: &MxEnumWriterParams) -> Result<bool, Error> {
-        Err(Error::BadThingsHappened)
+        Ok(false)
+    }
+
+    pub(crate) fn write_declaration<W: Write>(&self, w: &mut W) -> std::io::Result<()> {
+        let n = self.pascal_case.value();
+        writeln!(w, "enum class {}", n)?;
+        writeln!(w, "{{")?;
+        for (i, m) in self.members.iter().enumerate() {
+            let is_last = i == self.members.len() - 1;
+            write!(w, "{} = {}", m.value(), i)?;
+            if is_last {
+                write!(w, "\n")?;
+            } else {
+                write!(w, ",\n")?;
+            }
+        }
+        writeln!(w, "}};")?;
+        writeln!(w, "")?;
+        writeln!(w, "{} parse{}( const std::string& value );", n, n)?;
+        writeln!(w, "std::string toString( const {} value );", n)?;
+        writeln!(
+            w,
+            "std::ostream& toStream( std::ostream& os, const {} value );",
+            n
+        )?;
+        writeln!(
+            w,
+            "std::ostream& operator<<( std::ostream& os, const {} value );",
+            n
+        )?;
+        Ok(())
     }
 }
 
@@ -154,8 +174,8 @@ impl MxEnumWriter {
             let mx = MxEnum {
                 id: e.id.clone(),
                 index: e.index,
-                camel_case: MxEnum::rename(Symbol::new(&e.name), &params),
-                pascal_case: MxEnum::rename(Symbol::new(&e.name), &params),
+                camel_case: MxEnum::rename(camel_case(&e.name), &params),
+                pascal_case: MxEnum::rename(pascal_case(&e.name), &params),
                 members: MxEnum::members(e, &params)?,
                 is_algebraic: MxEnum::is_algebraic(e, &params)?,
             };
@@ -165,5 +185,36 @@ impl MxEnumWriter {
             params,
             enums: mx_enums,
         })
+    }
+
+    pub(crate) fn write_declarations<W: Write>(&self, w: &mut W) -> std::io::Result<()> {
+        self.write_h_file_open(w)?;
+        for e in &self.enums {
+            e.write_declaration(w)?;
+        }
+        self.write_h_file_close(w)?;
+        Ok(())
+    }
+
+    fn write_h_file_open<W: Write>(&self, w: &mut W) -> std::io::Result<()> {
+        writeln!(w, "// MusicXML Class Library")?;
+        writeln!(w, "// Copyright (c) by Matthew James Briggs")?;
+        writeln!(w, "// Distributed under the MIT License")?;
+        writeln!(w, "")?;
+        writeln!(w, "#pragma once")?;
+        writeln!(w, "")?;
+        writeln!(w, "#include \"mx/core/EnumsBuiltin.h\"")?;
+        writeln!(w, "")?;
+        writeln!(w, "namespace mx")?;
+        writeln!(w, "{{")?;
+        writeln!(w, "    namespace core")?;
+        writeln!(w, "    {{")?;
+        Ok(())
+    }
+
+    fn write_h_file_close<W: Write>(&self, w: &mut W) -> std::io::Result<()> {
+        writeln!(w, "    }}")?;
+        writeln!(w, "}}")?;
+        Ok(())
     }
 }

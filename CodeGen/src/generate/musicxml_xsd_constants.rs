@@ -26,12 +26,12 @@ fn write_enums(&self, simple_types: &Vec<SimpleType>) -> Result<()> {
         Ok(())
  */
 
-use std::collections::HashMap;
 use indexmap::set::IndexSet;
+use std::collections::HashMap;
 
 /// Returns a list of simple-type enumeration values that are mapped to something different in the
 /// generated code.
-fn enum_member_substitutions() -> HashMap<String, String> {
+pub(crate) fn enum_member_substitutions() -> HashMap<String, String> {
     let mut substitutions = HashMap::new();
     // for better or worse, i chose to map these enum members that start with numbers like so...
     substitutions.insert("16th".to_string(), "sixteenth".to_string());
@@ -49,7 +49,7 @@ fn enum_member_substitutions() -> HashMap<String, String> {
 /// because I wanted to 'wrap' the enum in a custom class (i.e. when the usage in MusicXML allows
 /// for an 'other' string field. These are given as uppercase, as in `Something` where the resulting
 /// code will be `enum class SomethingEnum`.
-fn suffixed_enum_names() -> IndexSet<String> {
+pub(crate) fn suffixed_enum_names() -> IndexSet<String> {
     let mut names = IndexSet::new();
     names.insert("Step".into());
     names.insert("ArrowDirection".into());
@@ -62,7 +62,7 @@ fn suffixed_enum_names() -> IndexSet<String> {
 }
 
 /// Returns a list of C++ keywords, to be used to avoid conflict with MusicXML names.
-fn keywords() -> IndexSet<String> {
+pub(crate) fn reserved_words() -> IndexSet<String> {
     let mut keywords = IndexSet::new();
     keywords.insert("double".into());
     keywords.insert("short".into());
