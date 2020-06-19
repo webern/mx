@@ -12,6 +12,9 @@ mod compile_mx;
 mod musicxml_xsd;
 mod musicxml_xsd_constants;
 mod musicxml_xsd_parser;
+mod mx_enum_writer;
+mod mx_writer;
+mod string_stuff;
 
 use crate::generate::musicxml_xsd_parser::parse_musicxml_xsd;
 use compile_mx::compile_mx;
@@ -317,7 +320,7 @@ impl CppOptions {
         writeln!(h, "        enum class {}", en).unwrap();
         writeln!(h, "        {{").unwrap();
         for (i, enval) in enumeration.members.iter().enumerate() {
-            let enval = sanitizer.camel_calse(enval);
+            let enval = sanitizer.camel_case(enval);
             let enval = sanitizer.sanitize(enval);
             write!(h, "             {} = {}", enval, i).unwrap();
             if i < enumeration.members.len() - 1 {
@@ -418,25 +421,6 @@ impl StringSanitizer {
         name.into()
     }
 
-    pub(crate) fn pascal_case<S: AsRef<str>>(&self, s: S) -> String {
-        let mut out = String::new();
-        let mut upper = true;
-        for c in s.as_ref().chars() {
-            if c == '-' || c == ' ' {
-                upper = true;
-                continue;
-            }
-            if upper {
-                let uc = c.to_uppercase().next().unwrap();
-                out.push(uc);
-            } else {
-                out.push(c);
-            }
-            upper = false;
-        }
-        out
-    }
-
     pub(crate) fn do_substitution<S: AsRef<str>>(&self, name: S) -> String {
         if let Some(substitute) = self.enum_substitutions.get(name.as_ref()) {
             return substitute.clone();
@@ -444,30 +428,12 @@ impl StringSanitizer {
         name.as_ref().into()
     }
 
-    pub(crate) fn camel_calse<S: AsRef<str>>(&self, s: S) -> String {
-        let mut out = String::new();
-        let mut upper = false;
-        for c in s.as_ref().chars() {
-            if c == '-' || c == ' ' {
-                upper = true;
-                continue;
-            }
-            if upper {
-                let uc = c.to_uppercase().next().unwrap();
-                out.push(uc);
-            } else {
-                let uc = c.to_lowercase().next().unwrap();
-                out.push(c);
-            }
-            upper = false;
-        }
+    pub(crate) fn camel_case<S: AsRef<str>>(&self, s: S) -> String {
+        string_stuff::camel_case(s)
+    }
 
-        // StepEnum is coming out wrong, don't know why.
-        if out.len() == 1 {
-            return out.to_lowercase();
-        }
-
-        out
+    pub(crate) fn pascal_case<S: AsRef<str>>(&self, s: S) -> String {
+        string_stuff::pascal_case(s)
     }
 
     pub(crate) fn do_enum_name_suffix<S: AsRef<str>>(&self, name: S) -> String {
