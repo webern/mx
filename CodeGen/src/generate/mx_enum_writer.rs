@@ -1,4 +1,5 @@
 use super::musicxml_xsd::Enumeration;
+use crate::generate::string_stuff::{camel_case, pascal_case, Altered, Symbol};
 use indexmap::set::IndexSet;
 use std::cmp::Ordering;
 use std::collections::HashMap;
@@ -9,59 +10,11 @@ pub(crate) enum Error {
     BadThingsHappened,
 }
 
-#[derive(Debug, Clone, Eq, PartialEq, Ord, Hash, Default)]
-pub struct Altered {
-    value: String,
-    original: String,
-}
-
-impl Display for Altered {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}({})", self.value, self.original)
-    }
-}
-
-impl PartialOrd for Altered {
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        Some(self.value.cmp(&other.value))
-    }
-}
-
-#[derive(Debug, Clone, Eq, PartialEq, Ord, Hash)]
-pub enum Symbol {
-    Unaltered(String),
-    Altered(Altered),
-}
-
-impl Symbol {
-    pub fn get(&self) -> String {
-        match self {
-            Symbol::Unaltered(s) => s.clone(),
-            Symbol::Altered(a) => a.value.clone(),
-        }
-    }
-}
-
-impl PartialOrd for Symbol {
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        let a = match self {
-            Symbol::Unaltered(s) => s,
-            Symbol::Altered(x) => &x.value,
-        };
-        let b = match other {
-            Symbol::Unaltered(s) => s,
-            Symbol::Altered(x) => &x.value,
-        };
-        Some(a.cmp(b))
-    }
-}
-
 pub(crate) struct MxEnum {
     pub(crate) id: String,
     pub(crate) index: usize,
     pub(crate) camel_case: Symbol,
     pub(crate) pascal_case: Symbol,
-    pub(crate) name: Symbol,
     pub(crate) members: Vec<Symbol>,
     /// These are enums that I handled specially because they were part of an element that allowed
     /// for an "other" field that could hold a string. These Enums require custom handling.
@@ -83,16 +36,92 @@ pub(crate) struct MxEnum {
 // }
 
 impl MxEnum {
-    fn camel_case(e: &Enumeration, p: &MxEnumWriterParams) -> Result<Symbol, Error> {
-        Err(Error::BadThingsHappened)
+    fn rename(s: Symbol, params: &MxEnumWriterParams) -> Symbol {
+        MxEnum::add_reserved_suffix(
+            MxEnum::add_enum_suffix(MxEnum::replace_word(s, &params), &params),
+            &params,
+        )
     }
 
-    fn pascal_case(e: &Enumeration, p: &MxEnumWriterParams) -> Result<Symbol, Error> {
-        Err(Error::BadThingsHappened)
+    fn add_enum_suffix(s: Symbol, params: &MxEnumWriterParams) -> Symbol {
+        if !MxEnum::is_enum_suffixed(s.value(), &params) {
+            return s;
+        }
+        match s {
+            Symbol::Unaltered(u) => Symbol::Altered(Altered {
+                value: format!("{}Enum", &u),
+                original: u,
+            }),
+            Symbol::Altered(a) => Symbol::Altered(Altered {
+                value: format!("{}Enum", &a.value),
+                original: a.original,
+            }),
+        }
     }
 
-    fn name(e: &Enumeration, p: &MxEnumWriterParams) -> Result<Symbol, Error> {
-        Err(Error::BadThingsHappened)
+    fn add_reserved_suffix(s: Symbol, params: &MxEnumWriterParams) -> Symbol {
+        if !MxEnum::is_reserved_word(s.value(), &params) {
+            return s;
+        }
+        match s {
+            Symbol::Unaltered(u) => Symbol::Altered(Altered {
+                value: format!("{}Enum", &u),
+                original: u,
+            }),
+            Symbol::Altered(a) => Symbol::Altered(Altered {
+                value: format!("{}Enum", &a.value),
+                original: a.original,
+            }),
+        }
+    }
+
+    fn replace_word(s: Symbol, params: &MxEnumWriterParams) -> Symbol {
+        match params.member_substitutions.get(s.value().as_str()) {
+            None => s,
+            Some(new_name) => match s {
+                Symbol::Unaltered(u) => Symbol::Altered(Altered {
+                    value: new_name.clone(),
+                    original: u,
+                }),
+                Symbol::Altered(a) => Symbol::Altered(Altered {
+                    value: new_name.clone(),
+                    original: a.original,
+                }),
+            },
+        }
+    }
+
+    // fn add_reserved_word_suffix(s: Symbol, is_reserved_word: bool) -> Symbol {
+    //     match s {
+    //         Symbol::Unaltered(u) => {
+    //             if is_enum_suffixed {
+    //                 Symbol::Altered(Altered {
+    //                     value: format!("{}_", &u),
+    //                     original: u,
+    //                 })
+    //             } else {
+    //                 Symbol::Unaltered(u)
+    //             }
+    //         }
+    //         Symbol::Altered(a) => {
+    //             if is_enum_suffixed {
+    //                 Symbol::Altered(Altered {
+    //                     value: format!("{}_", &a.value),
+    //                     original: a.original,
+    //                 })
+    //             } else {
+    //                 Symbol::Altered(a)
+    //             }
+    //         }
+    //     }
+    // }
+
+    fn is_enum_suffixed<S: AsRef<str>>(s: S, params: &MxEnumWriterParams) -> bool {
+        params.suffixed_enum_names.get(s.as_ref()) != None
+    }
+
+    fn is_reserved_word<S: AsRef<str>>(s: S, params: &MxEnumWriterParams) -> bool {
+        params.reserved_words.get(s.as_ref()) != None
     }
 
     fn members(e: &Enumeration, p: &MxEnumWriterParams) -> Result<Vec<Symbol>, Error> {
@@ -108,7 +137,7 @@ pub(crate) struct MxEnumWriterParams {
     pub(crate) enumerations: Vec<Enumeration>,
     pub(crate) member_substitutions: HashMap<String, String>,
     pub(crate) suffixed_enum_names: IndexSet<String>,
-    pub(crate) keywords: IndexSet<String>,
+    pub(crate) reserved_words: IndexSet<String>,
     pub(crate) enums_h: PathBuf,
     pub(crate) enums_cpp: PathBuf,
 }
@@ -125,9 +154,8 @@ impl MxEnumWriter {
             let mx = MxEnum {
                 id: e.id.clone(),
                 index: e.index,
-                camel_case: MxEnum::camel_case(e, &params)?,
-                pascal_case: MxEnum::pascal_case(e, &params)?,
-                name: MxEnum::name(e, &params)?,
+                camel_case: MxEnum::rename(Symbol::new(&e.name), &params),
+                pascal_case: MxEnum::rename(Symbol::new(&e.name), &params),
                 members: MxEnum::members(e, &params)?,
                 is_algebraic: MxEnum::is_algebraic(e, &params)?,
             };

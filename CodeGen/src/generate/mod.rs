@@ -429,11 +429,11 @@ impl StringSanitizer {
     }
 
     pub(crate) fn camel_case<S: AsRef<str>>(&self, s: S) -> String {
-        string_stuff::camel_case(s)
+        string_stuff::camel_case(s).value()
     }
 
     pub(crate) fn pascal_case<S: AsRef<str>>(&self, s: S) -> String {
-        string_stuff::pascal_case(s)
+        string_stuff::pascal_case(s).value()
     }
 
     pub(crate) fn do_enum_name_suffix<S: AsRef<str>>(&self, name: S) -> String {
