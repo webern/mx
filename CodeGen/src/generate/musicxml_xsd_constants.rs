@@ -32,9 +32,13 @@ pub(crate) fn suffixed_enum_names() -> IndexSet<String> {
     names.insert("Glass".into());
     names.insert("LineWidthType".into());
     names.insert("Membrane".into());
+    names.insert("Metal".into());
+    names.insert("Mode".into());
+    names.insert("Mute".into());
     names.insert("Step".into());
     names.insert("Syllabic".into());
     names.insert("TimeRelation".into());
+    //
     names
 }
 
@@ -98,6 +102,25 @@ pub(crate) fn pseudo_enums() -> HashMap<String, PseudoEnumSpec> {
             ],
             extra_field_name: "other".to_owned(),
             class_name: "LineWidthType".to_owned(),
+        },
+    );
+    map.insert(
+        "xs:simpleType:mode".to_owned(),
+        PseudoEnumSpec {
+            members: vec![
+                "major".to_owned(),
+                "minor".to_owned(),
+                "dorian".to_owned(),
+                "phrygian".to_owned(),
+                "lydian".to_owned(),
+                "mixolydian".to_owned(),
+                "aeolian".to_owned(),
+                "ionian".to_owned(),
+                "locrian".to_owned(),
+                "none".to_owned(),
+            ],
+            extra_field_name: "other".to_owned(),
+            class_name: "ModeValue".to_owned(),
         },
     );
     map

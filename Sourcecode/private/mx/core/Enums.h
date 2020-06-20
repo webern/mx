@@ -728,7 +728,7 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const MembraneEnum value );
         std::ostream& operator<<( std::ostream& os, const MembraneEnum value );
 
-        enum class Metal
+        enum class MetalEnum
         {
             almglocken = 0,
             bell = 1,
@@ -755,12 +755,52 @@ namespace mx
             VietnameseHat = 22
         };
 
-        Metal parseMetal( const std::string& value );
-        std::string toString( const Metal value );
-        std::ostream& toStream( std::ostream& os, const Metal value );
-        std::ostream& operator<<( std::ostream& os, const Metal value );
+        MetalEnum parseMetalEnum( const std::string& value );
+        std::string toString( const MetalEnum value );
+        std::ostream& toStream( std::ostream& os, const MetalEnum value );
+        std::ostream& operator<<( std::ostream& os, const MetalEnum value );
 
-        enum class Mute
+        enum class ModeEnum
+        {
+            major = 0,
+            minor = 1,
+            dorian = 2,
+            phrygian = 3,
+            lydian = 4,
+            mixolydian = 5,
+            aeolian = 6,
+            ionian = 7,
+            locrian = 8,
+            none = 9,
+            other = 10
+        };
+
+        ModeEnum parseModeEnum( const std::string& value );
+        std::string toString( const ModeEnum value );
+        std::ostream& toStream( std::ostream& os, const ModeEnum value );
+        std::ostream& operator<<( std::ostream& os, const ModeEnum value );
+
+        class ModeValue
+        {
+        public:
+            explicit ModeValue( const ModeEnum value );
+            explicit ModeValue( const std::string& value );
+            ModeValue();
+            ModeEnum getValue() const;
+            std::string getValueString() const;
+            void setValue( const ModeEnum value );
+            void setValue( const std::string& value );
+        private:
+            ModeEnum myEnum;
+            std::string myCustomValue;
+        };
+
+        ModeValue parseModeValue( const std::string& value );
+        std::string toString( const ModeValue& value );
+        std::ostream& toStream( std::ostream& os, const ModeValue& value );
+        std::ostream& operator<<( std::ostream& os, const ModeValue& value );
+
+        enum class MuteEnum
         {
             on = 0,
             off = 1,
@@ -779,10 +819,10 @@ namespace mx
             palm = 14
         };
 
-        Mute parseMute( const std::string& value );
-        std::string toString( const Mute value );
-        std::ostream& toStream( std::ostream& os, const Mute value );
-        std::ostream& operator<<( std::ostream& os, const Mute value );
+        MuteEnum parseMuteEnum( const std::string& value );
+        std::string toString( const MuteEnum value );
+        std::ostream& toStream( std::ostream& os, const MuteEnum value );
+        std::ostream& operator<<( std::ostream& os, const MuteEnum value );
 
         enum class NoteSizeType
         {
