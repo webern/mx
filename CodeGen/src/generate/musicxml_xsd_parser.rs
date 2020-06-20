@@ -2,6 +2,7 @@ use super::musicxml_xsd::{Enumeration, MusicXSD, SimpleType, TypeDefinition};
 
 use crate::generate::musicxml_xsd_constants::PseudoEnumSpec;
 use crate::generate::musicxml_xsd_parser::Error::SchemaNotFound;
+use crate::generate::musicxml_xsd_parser::XsType::XsComplexType;
 use crate::generate::mx_enum_writer::MxEnumOption;
 use derive_more::Display;
 use exile::{Document, Element};
@@ -59,6 +60,7 @@ fn parse_type_nodes(doc: &Document) -> Result<HashMap<String, XsTypeNode>, Error
 
 const XS_ANNOTATION: &str = "xs:annotation";
 const XS_ATTRIBUTE_GROUP: &str = "xs:attributeGroup";
+const XS_CHOICE: &str = "xs:choice";
 const XS_COMPLEX_TYPE: &str = "xs:complexType";
 const XS_ELEMENT: &str = "xs:element";
 const XS_GROUP: &str = "xs:group";
@@ -146,6 +148,11 @@ fn parse_type_definitions(
 ) -> Result<Vec<TypeDefinition>, Error> {
     let mut type_definitions = Vec::new();
     for (_, x) in xsd_nodes {
+        // handle the very special case of the dynamics `complexType`, transformed to an enum here.
+        if let Some(dynamics) = parse_if_dynamics_complex_type(&x, &params)? {
+            type_definitions.push(TypeDefinition::Simple(SimpleType::Enum(dynamics)));
+            continue;
+        }
         if (x.xsd_type != XsType::XsSimpleType) {
             continue;
         }
@@ -157,8 +164,8 @@ fn parse_type_definitions(
                 index: x.index,
                 id: x.id.clone(),
                 name: x.name.clone(),
-                base: "TODO_FIND_THE_BASE".to_owned(), // TODO
-                documentation: "TODO_FIND_THE_DOCUMENTAITON".to_owned(), // TODO
+                base: find_base(&x)?,
+                documentation: find_documentation(&x)?,
                 members: pe.members.clone(),
                 other_field: Some(MxEnumOption {
                     other_field_name: pe.extra_field_name.clone(),
@@ -219,4 +226,79 @@ fn parse_enumeration(node: &XsTypeNode) -> Result<Enumeration, Error> {
         }
     }
     Ok(en)
+}
+
+fn find_base(node: &XsTypeNode) -> Result<String, Error> {
+    for child in node.node.children() {
+        if child.fullname() == "xs:restriction" {
+            if let Some(base) = child.attributes.map().get("base") {
+                return Ok(base.clone());
+            }
+        }
+    }
+    Err(Error::SimpleTypeBaseNotFound)
+}
+
+fn find_documentation(node: &XsTypeNode) -> Result<String, Error> {
+    let mut en = Enumeration::default();
+    en.id = node.id.clone();
+    en.name = node.name.clone();
+    en.index = node.index;
+    for child in node.node.children() {
+        if child.fullname().as_str() == XS_ANNOTATION {
+            let mut docsnodes = child.children();
+            let documentation_node = docsnodes
+                .next()
+                .ok_or_else(|| Error::ExpectedOneChildOfXsAnnotation)?;
+            if documentation_node.fullname().as_str() != "xs:documentation" {
+                return Err(Error::ExpectedDocumentationNode);
+            }
+            return documentation_node
+                .text()
+                .ok_or_else(|| Error::ExpectedDocumentationNodeToReturnText);
+        }
+    }
+    Ok("".to_owned())
+}
+
+fn parse_if_dynamics_complex_type(
+    node: &XsTypeNode,
+    params: &XsdParserParams,
+) -> Result<Option<Enumeration>, Error> {
+    if node.xsd_type != XsComplexType {
+        return Ok(None);
+    }
+    if node.id.as_str() != "xs:complexType:dynamics" {
+        return Ok(None);
+    }
+    let documentation = find_documentation(node)?;
+    let mut members = Vec::new();
+    for child in node.node.children() {
+        if child.fullname() == XS_CHOICE {
+            for member in child.children() {
+                if member.fullname() == XS_ELEMENT {
+                    let s = member
+                        .attributes
+                        .map()
+                        .get("name")
+                        .ok_or_else(|| Error::NameAttributeNotFound(node.id.clone()))?;
+                    if s != "other-dynamics" {
+                        members.push(s.to_owned());
+                    }
+                }
+            }
+        }
+    }
+    Ok(Some(Enumeration {
+        index: node.index,
+        id: "mx:customType:dynamics".to_string(),
+        name: "DynamicsEnum".to_string(),
+        base: "xs:string".to_string(),
+        documentation,
+        members,
+        other_field: Some(MxEnumOption {
+            other_field_name: "other-dynamics".to_owned(),
+            wrapper_class_name: "DynamicsValue".to_owned(),
+        }),
+    }))
 }

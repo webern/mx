@@ -1,7 +1,7 @@
 use std::cmp::Ordering;
 use std::fmt::{Display, Formatter};
 
-#[derive(Debug, Clone, Eq, PartialEq, Ord, Hash, Default)]
+#[derive(Debug, Clone, Eq, Ord, Hash, Default)]
 pub struct Altered {
     pub value: String,
     pub original: String,
@@ -19,10 +19,28 @@ impl PartialOrd for Altered {
     }
 }
 
-#[derive(Debug, Clone, Eq, PartialEq, Ord, Hash)]
+impl PartialEq for Altered {
+    fn eq(&self, other: &Altered) -> bool {
+        self.value == other.value
+    }
+}
+
+#[derive(Debug, Clone, Eq, Ord, Hash)]
 pub enum Symbol {
     Unaltered(String),
     Altered(Altered),
+}
+
+impl PartialOrd for Symbol {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.value().cmp(other.value()))
+    }
+}
+
+impl PartialEq for Symbol {
+    fn eq(&self, other: &Symbol) -> bool {
+        self.value() == other.value()
+    }
 }
 
 impl Symbol {
@@ -35,20 +53,6 @@ impl Symbol {
             Symbol::Unaltered(s) => s.as_str(),
             Symbol::Altered(a) => a.value.as_str(),
         }
-    }
-}
-
-impl PartialOrd for Symbol {
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        let a = match self {
-            Symbol::Unaltered(s) => s,
-            Symbol::Altered(x) => &x.value,
-        };
-        let b = match other {
-            Symbol::Unaltered(s) => s,
-            Symbol::Altered(x) => &x.value,
-        };
-        Some(a.cmp(b))
     }
 }
 

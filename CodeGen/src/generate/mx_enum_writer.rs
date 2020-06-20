@@ -255,6 +255,7 @@ impl MxEnumWriter {
             };
             mx_enums.push(mx)
         }
+        mx_enums.sort_by(|a, b| a.camel_case.cmp(&b.camel_case));
         Ok(MxEnumWriter {
             params,
             enums: mx_enums,
