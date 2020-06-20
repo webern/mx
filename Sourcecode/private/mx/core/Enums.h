@@ -214,7 +214,7 @@ namespace mx
             f = 1,
             c = 2,
             percussion = 3,
-            TAB = 4,
+            tab = 4,
             jianpu = 5,
             none = 6
         };
@@ -452,7 +452,7 @@ namespace mx
         {
             yes = 0,
             no = 1,
-            Mensurstrich = 2
+            mensurstrich = 2
         };
 
         GroupBarlineValue parseGroupBarlineValue( const std::string& value );
@@ -557,13 +557,13 @@ namespace mx
             minor13th = 21,
             suspendedSecond = 22,
             suspendedFourth = 23,
-            Neapolitan = 24,
-            Italian = 25,
-            French = 26,
-            German = 27,
+            neapolitan = 24,
+            italian = 25,
+            french = 26,
+            german = 27,
             pedal = 28,
             power = 29,
-            Tristan = 30,
+            tristan = 30,
             other = 31,
             none = 32
         };
@@ -734,7 +734,7 @@ namespace mx
             bell = 1,
             bellPlate = 2,
             brakeDrum = 3,
-            ChineseCymbal = 4,
+            chineseCymbal = 4,
             cowbell = 5,
             crashCymbals = 6,
             crotale = 7,
@@ -752,7 +752,7 @@ namespace mx
             suspendedCymbal = 19,
             tamTam = 20,
             triangle = 21,
-            VietnameseHat = 22
+            vietnameseHat = 22
         };
 
         MetalEnum parseMetalEnum( const std::string& value );
@@ -934,8 +934,8 @@ namespace mx
 
         enum class PrincipalVoiceSymbol
         {
-            Hauptstimme = 0,
-            Nebenstimme = 1,
+            hauptstimme = 0,
+            nebenstimme = 1,
             plain = 2,
             none = 3
         };
@@ -957,7 +957,7 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const RightLeftMiddle value );
         std::ostream& operator<<( std::ostream& os, const RightLeftMiddle value );
 
-        enum class SemiPitched
+        enum class SemiPitchedEnum
         {
             high = 0,
             mediumHigh = 1,
@@ -967,10 +967,10 @@ namespace mx
             veryLow = 5
         };
 
-        SemiPitched parseSemiPitched( const std::string& value );
-        std::string toString( const SemiPitched value );
-        std::ostream& toStream( std::ostream& os, const SemiPitched value );
-        std::ostream& operator<<( std::ostream& os, const SemiPitched value );
+        SemiPitchedEnum parseSemiPitchedEnum( const std::string& value );
+        std::string toString( const SemiPitchedEnum value );
+        std::ostream& toStream( std::ostream& os, const SemiPitchedEnum value );
+        std::ostream& operator<<( std::ostream& os, const SemiPitchedEnum value );
 
         enum class ShowFrets
         {
@@ -995,7 +995,7 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const ShowTuplet value );
         std::ostream& operator<<( std::ostream& os, const ShowTuplet value );
 
-        enum class StaffType
+        enum class StaffTypeEnum
         {
             ossia = 0,
             cue = 1,
@@ -1004,10 +1004,10 @@ namespace mx
             alternate = 4
         };
 
-        StaffType parseStaffType( const std::string& value );
-        std::string toString( const StaffType value );
-        std::ostream& toStream( std::ostream& os, const StaffType value );
-        std::ostream& operator<<( std::ostream& os, const StaffType value );
+        StaffTypeEnum parseStaffTypeEnum( const std::string& value );
+        std::string toString( const StaffTypeEnum value );
+        std::ostream& toStream( std::ostream& os, const StaffTypeEnum value );
+        std::ostream& operator<<( std::ostream& os, const StaffTypeEnum value );
 
         enum class StartNote
         {
@@ -1372,7 +1372,7 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const Winged value );
         std::ostream& operator<<( std::ostream& os, const Winged value );
 
-        enum class Wood
+        enum class WoodEnum
         {
             boardClapper = 0,
             cabasa = 1,
@@ -1390,10 +1390,10 @@ namespace mx
             woodBlock = 13
         };
 
-        Wood parseWood( const std::string& value );
-        std::string toString( const Wood value );
-        std::ostream& toStream( std::ostream& os, const Wood value );
-        std::ostream& operator<<( std::ostream& os, const Wood value );
+        WoodEnum parseWoodEnum( const std::string& value );
+        std::string toString( const WoodEnum value );
+        std::ostream& toStream( std::ostream& os, const WoodEnum value );
+        std::ostream& operator<<( std::ostream& os, const WoodEnum value );
 
         enum class YesNo
         {

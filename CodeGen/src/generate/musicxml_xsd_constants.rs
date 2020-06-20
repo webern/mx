@@ -43,9 +43,9 @@ pub(crate) fn suffixed_enum_names() -> IndexSet<String> {
     names.insert("StickLocation".into());
     names.insert("StickMaterial".into());
     names.insert("StickType".into());
-    //names.insert("XXX".into());
-    //names.insert("XXX".into());
-    //names.insert("XXX".into());
+    names.insert("Wood".into());
+    names.insert("SemiPitched".into());
+    names.insert("StaffType".into());
     //names.insert("XXX".into());
     //names.insert("XXX".into());
     //names.insert("XXX".into());
