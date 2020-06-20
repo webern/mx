@@ -916,7 +916,7 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const OverUnder value );
         std::ostream& operator<<( std::ostream& os, const OverUnder value );
 
-        enum class Pitched
+        enum class PitchedEnum
         {
             chimes = 0,
             glockenspiel = 1,
@@ -927,10 +927,10 @@ namespace mx
             xylophone = 6
         };
 
-        Pitched parsePitched( const std::string& value );
-        std::string toString( const Pitched value );
-        std::ostream& toStream( std::ostream& os, const Pitched value );
-        std::ostream& operator<<( std::ostream& os, const Pitched value );
+        PitchedEnum parsePitchedEnum( const std::string& value );
+        std::string toString( const PitchedEnum value );
+        std::ostream& toStream( std::ostream& os, const PitchedEnum value );
+        std::ostream& operator<<( std::ostream& os, const PitchedEnum value );
 
         enum class PrincipalVoiceSymbol
         {
