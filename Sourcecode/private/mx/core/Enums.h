@@ -175,7 +175,7 @@ namespace mx
 
         enum class BreathMarkValue
         {
-            emptyString = 0,
+            emptystring = 0,
             comma = 1,
             tick = 2
         };
@@ -408,7 +408,7 @@ namespace mx
             normal = 0,
             angled = 1,
             square = 2,
-            emptyString = 3
+            emptystring = 3
         };
 
         FermataShape parseFermataShape( const std::string& value );
@@ -1110,7 +1110,7 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const StepEnum value );
         std::ostream& operator<<( std::ostream& os, const StepEnum value );
 
-        enum class StickLocation
+        enum class StickLocationEnum
         {
             center = 0,
             rim = 1,
@@ -1118,12 +1118,12 @@ namespace mx
             cymbalEdge = 3
         };
 
-        StickLocation parseStickLocation( const std::string& value );
-        std::string toString( const StickLocation value );
-        std::ostream& toStream( std::ostream& os, const StickLocation value );
-        std::ostream& operator<<( std::ostream& os, const StickLocation value );
+        StickLocationEnum parseStickLocationEnum( const std::string& value );
+        std::string toString( const StickLocationEnum value );
+        std::ostream& toStream( std::ostream& os, const StickLocationEnum value );
+        std::ostream& operator<<( std::ostream& os, const StickLocationEnum value );
 
-        enum class StickMaterial
+        enum class StickMaterialEnum
         {
             soft = 0,
             medium = 1,
@@ -1132,12 +1132,12 @@ namespace mx
             x = 4
         };
 
-        StickMaterial parseStickMaterial( const std::string& value );
-        std::string toString( const StickMaterial value );
-        std::ostream& toStream( std::ostream& os, const StickMaterial value );
-        std::ostream& operator<<( std::ostream& os, const StickMaterial value );
+        StickMaterialEnum parseStickMaterialEnum( const std::string& value );
+        std::string toString( const StickMaterialEnum value );
+        std::ostream& toStream( std::ostream& os, const StickMaterialEnum value );
+        std::ostream& operator<<( std::ostream& os, const StickMaterialEnum value );
 
-        enum class StickType
+        enum class StickTypeEnum
         {
             bassDrum = 0,
             doubleBassDrum = 1,
@@ -1146,10 +1146,10 @@ namespace mx
             yarn = 4
         };
 
-        StickType parseStickType( const std::string& value );
-        std::string toString( const StickType value );
-        std::ostream& toStream( std::ostream& os, const StickType value );
-        std::ostream& operator<<( std::ostream& os, const StickType value );
+        StickTypeEnum parseStickTypeEnum( const std::string& value );
+        std::string toString( const StickTypeEnum value );
+        std::ostream& toStream( std::ostream& os, const StickTypeEnum value );
+        std::ostream& operator<<( std::ostream& os, const StickTypeEnum value );
 
         enum class SyllabicEnum
         {

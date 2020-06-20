@@ -68,11 +68,11 @@ impl MxEnum {
         }
         match s {
             Symbol::Unaltered(u) => Symbol::Altered(Altered {
-                value: "emptyString".to_owned(),
+                value: "emptystring".to_owned(),
                 original: u,
             }),
             Symbol::Altered(a) => Symbol::Altered(Altered {
-                value: "emptyString".to_owned(),
+                value: "emptystring".to_owned(),
                 original: a.original,
             }),
         }

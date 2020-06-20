@@ -40,9 +40,9 @@ pub(crate) fn suffixed_enum_names() -> IndexSet<String> {
     names.insert("Step".into());
     names.insert("Syllabic".into());
     names.insert("TimeRelation".into());
-    //names.insert("XXX".into());
-    //names.insert("XXX".into());
-    //names.insert("XXX".into());
+    names.insert("StickLocation".into());
+    names.insert("StickMaterial".into());
+    names.insert("StickType".into());
     //names.insert("XXX".into());
     //names.insert("XXX".into());
     //names.insert("XXX".into());
