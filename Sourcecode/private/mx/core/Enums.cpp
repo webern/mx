@@ -81,10 +81,10 @@ namespace mx
         }
 
         DistanceType::DistanceType()
-        :myEnum( DistanceTypeEnum::XXXUHOHDEFAULT )
+        :myEnum( DistanceTypeEnum::beam )
         ,myCustomValue( "" )
         {
-            setValue( DistanceTypeEnum::XXXUHOHDEFAULT );
+            setValue( DistanceTypeEnum::beam );
         }
 
         DistanceTypeEnum DistanceType::getValue() const
@@ -242,10 +242,10 @@ namespace mx
         }
 
         DynamicsValue::DynamicsValue()
-        :myEnum( DynamicsEnum::XXXUHOHDEFAULT )
+        :myEnum( DynamicsEnum::OtherDynamic )
         ,myCustomValue( "" )
         {
-            setValue( DynamicsEnum::XXXUHOHDEFAULT );
+            setValue( DynamicsEnum::OtherDynamic );
         }
 
         DynamicsEnum DynamicsValue::getValue() const
@@ -414,10 +414,10 @@ namespace mx
         }
 
         LineWidthType::LineWidthType()
-        :myEnum( LineWidthTypeEnum::XXXUHOHDEFAULT )
+        :myEnum( LineWidthTypeEnum::beam )
         ,myCustomValue( "" )
         {
-            setValue( LineWidthTypeEnum::XXXUHOHDEFAULT );
+            setValue( LineWidthTypeEnum::beam );
         }
 
         LineWidthTypeEnum LineWidthType::getValue() const
@@ -553,10 +553,10 @@ namespace mx
         }
 
         ModeValue::ModeValue()
-        :myEnum( ModeEnum::XXXUHOHDEFAULT )
+        :myEnum( ModeEnum::major )
         ,myCustomValue( "" )
         {
-            setValue( ModeEnum::XXXUHOHDEFAULT );
+            setValue( ModeEnum::major );
         }
 
         ModeEnum ModeValue::getValue() const

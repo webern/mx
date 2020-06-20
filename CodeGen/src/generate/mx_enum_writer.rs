@@ -39,6 +39,7 @@ macro_rules! l {
 pub(crate) struct MxEnumOption {
     pub(crate) other_field_name: Symbol,
     pub(crate) wrapper_class_name: Symbol,
+    pub(crate) default_value: Symbol,
 }
 
 #[derive(Clone)]
@@ -312,10 +313,10 @@ impl MxEnum {
         l!(w, 2, "}}")?;
         l!(w, 0, "")?;
         l!(w, 2, "{}::{}()", cn, cn)?;
-        l!(w, 2, ":myEnum( {}::XXXUHOHDEFAULT )", pc)?;
+        l!(w, 2, ":myEnum( {}::{} )", pc, other.default_value.value())?;
         l!(w, 2, ",myCustomValue( \"\" )")?;
         l!(w, 2, "{{")?;
-        l!(w, 3, "setValue( {}::XXXUHOHDEFAULT );", pc)?;
+        l!(w, 3, "setValue( {}::{} );", pc,other.default_value.value())?;
         l!(w, 2, "}}")?;
         l!(w, 0, "")?;
         l!(w, 2, "{} {}::getValue() const", pc, cn)?;

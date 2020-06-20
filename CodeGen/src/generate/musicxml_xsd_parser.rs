@@ -171,6 +171,7 @@ fn parse_type_definitions(
                 other_field: Some(MxEnumOption {
                     other_field_name: Symbol::new(pe.extra_field_name.clone()),
                     wrapper_class_name: Symbol::new(pe.class_name.clone()),
+                    default_value: Symbol::new(pe.default_value.clone()),
                 }),
             };
             type_definitions.push(TypeDefinition::Simple(SimpleType::Enum(eee)));
@@ -300,6 +301,7 @@ fn parse_if_dynamics_complex_type(
         other_field: Some(MxEnumOption {
             other_field_name: camel_case("other-dynamics"),
             wrapper_class_name: pascal_case("dynamics-value"),
+            default_value: pascal_case("other-dynamic"),
         }),
     }))
 }
