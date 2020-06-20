@@ -4,6 +4,7 @@ use crate::generate::musicxml_xsd_constants::PseudoEnumSpec;
 use crate::generate::musicxml_xsd_parser::Error::SchemaNotFound;
 use crate::generate::musicxml_xsd_parser::XsType::XsComplexType;
 use crate::generate::mx_enum_writer::MxEnumOption;
+use crate::generate::string_stuff::{camel_case, pascal_case, Symbol};
 use derive_more::Display;
 use exile::{Document, Element};
 use std::collections::HashMap;
@@ -168,8 +169,8 @@ fn parse_type_definitions(
                 documentation: find_documentation(&x)?,
                 members: pe.members.clone(),
                 other_field: Some(MxEnumOption {
-                    other_field_name: pe.extra_field_name.clone(),
-                    wrapper_class_name: pe.class_name.clone(),
+                    other_field_name: Symbol::new(pe.extra_field_name.clone()),
+                    wrapper_class_name: Symbol::new(pe.class_name.clone()),
                 }),
             };
             type_definitions.push(TypeDefinition::Simple(SimpleType::Enum(eee)));
@@ -292,13 +293,13 @@ fn parse_if_dynamics_complex_type(
     Ok(Some(Enumeration {
         index: node.index,
         id: "mx:customType:dynamics".to_string(),
-        name: "DynamicsEnum".to_string(),
+        name: "dynamics-enum".to_string(),
         base: "xs:string".to_string(),
         documentation,
         members,
         other_field: Some(MxEnumOption {
-            other_field_name: "other-dynamics".to_owned(),
-            wrapper_class_name: "DynamicsValue".to_owned(),
+            other_field_name: camel_case("other-dynamics"),
+            wrapper_class_name: pascal_case("dynamics-value"),
         }),
     }))
 }

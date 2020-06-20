@@ -37,8 +37,8 @@ macro_rules! l {
 /// is created allowing any arbitrary string to be held when e.g. `other` is the enum value.
 #[derive(Clone)]
 pub(crate) struct MxEnumOption {
-    pub(crate) other_field_name: String,
-    pub(crate) wrapper_class_name: String,
+    pub(crate) other_field_name: Symbol,
+    pub(crate) wrapper_class_name: Symbol,
 }
 
 #[derive(Clone)]
@@ -162,7 +162,7 @@ impl MxEnum {
             if is_last {
                 if let Some(other_field) = &self.other_field {
                     w!(w, 0, ",\n")?;
-                    w!(w, 3, "{} = {}", other_field.other_field_name, i + 1)?;
+                    w!(w, 3, "{} = {}", other_field.other_field_name.value(), i + 1)?;
                     w!(w, 0, "\n")?;
                 } else {
                     w!(w, 0, "\n")?;
@@ -189,7 +189,7 @@ impl MxEnum {
         )?;
 
         if let Some(other_field) = &self.other_field {
-            let cn = other_field.wrapper_class_name.as_str();
+            let cn = other_field.wrapper_class_name.value();
             let en = self.pascal_case.value();
             l!(w, 0, "")?;
             l!(w, 2, "class {}", cn)?;
@@ -197,7 +197,7 @@ impl MxEnum {
             l!(w, 2, "public:")?;
             l!(w, 3, "explicit {}( const {} value );", cn, en)?;
             l!(w, 3, "explicit {}( const std::string& value );", cn)?;
-            l!(w, 3, "{}();", &other_field.wrapper_class_name)?;
+            l!(w, 3, "{}();", cn)?;
             l!(w, 3, "{} getValue() const;", en)?;
             l!(w, 3, "std::string getValueString() const;")?;
             l!(w, 3, "void setValue( const {} value );", en)?;
@@ -255,7 +255,11 @@ impl MxEnumWriter {
             };
             mx_enums.push(mx)
         }
-        mx_enums.sort_by(|a, b| a.camel_case.cmp(&b.camel_case));
+        mx_enums.sort_by(|a, b| {
+            let astr = a.camel_case.value();
+            let bstr = b.camel_case.value();
+            astr.cmp(bstr)
+        });
         Ok(MxEnumWriter {
             params,
             enums: mx_enums,

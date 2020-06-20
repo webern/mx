@@ -10,247 +10,6 @@ namespace mx
 {
     namespace core
     {
-        enum class DynamicsEnum
-        {
-            p = 0,
-            pp = 1,
-            ppp = 2,
-            pppp = 3,
-            ppppp = 4,
-            pppppp = 5,
-            f = 6,
-            ff = 7,
-            fff = 8,
-            ffff = 9,
-            fffff = 10,
-            ffffff = 11,
-            mp = 12,
-            mf = 13,
-            sf = 14,
-            sfp = 15,
-            sfpp = 16,
-            fp = 17,
-            rf = 18,
-            rfz = 19,
-            sfz = 20,
-            sffz = 21,
-            fz = 22,
-            other-dynamics = 23
-        };
-
-        DynamicsEnum parseDynamicsEnum( const std::string& value );
-        std::string toString( const DynamicsEnum value );
-        std::ostream& toStream( std::ostream& os, const DynamicsEnum value );
-        std::ostream& operator<<( std::ostream& os, const DynamicsEnum value );
-
-        class DynamicsValue
-        {
-        public:
-            explicit DynamicsValue( const DynamicsEnum value );
-            explicit DynamicsValue( const std::string& value );
-            DynamicsValue();
-            DynamicsEnum getValue() const;
-            std::string getValueString() const;
-            void setValue( const DynamicsEnum value );
-            void setValue( const std::string& value );
-        private:
-            DynamicsEnum myEnum;
-            std::string myCustomValue;
-        };
-
-        DynamicsValue parseDynamicsValue( const std::string& value );
-        std::string toString( const DynamicsValue& value );
-        std::ostream& toStream( std::ostream& os, const DynamicsValue& value );
-        std::ostream& operator<<( std::ostream& os, const DynamicsValue& value );
-
-        enum class Effect
-        {
-            anvil = 0,
-            autoHorn = 1,
-            birdWhistle = 2,
-            cannon = 3,
-            duckCall = 4,
-            gunShot = 5,
-            klaxonHorn = 6,
-            lionsRoar = 7,
-            policeWhistle = 8,
-            siren = 9,
-            slideWhistle = 10,
-            thunderSheet = 11,
-            windMachine = 12,
-            windWhistle = 13
-        };
-
-        Effect parseEffect( const std::string& value );
-        std::string toString( const Effect value );
-        std::ostream& toStream( std::ostream& os, const Effect value );
-        std::ostream& operator<<( std::ostream& os, const Effect value );
-
-        enum class Fan
-        {
-            accel = 0,
-            rit = 1,
-            none = 2
-        };
-
-        Fan parseFan( const std::string& value );
-        std::string toString( const Fan value );
-        std::ostream& toStream( std::ostream& os, const Fan value );
-        std::ostream& operator<<( std::ostream& os, const Fan value );
-
-        enum class Glass
-        {
-            windChimes = 0
-        };
-
-        Glass parseGlass( const std::string& value );
-        std::string toString( const Glass value );
-        std::ostream& toStream( std::ostream& os, const Glass value );
-        std::ostream& operator<<( std::ostream& os, const Glass value );
-
-        enum class Membrane
-        {
-            bassDrum = 0,
-            bassDrumOnSide = 1,
-            bongos = 2,
-            congaDrum = 3,
-            gobletDrum = 4,
-            militaryDrum = 5,
-            snareDrum = 6,
-            snareDrumSnaresOff = 7,
-            tambourine = 8,
-            tenorDrum = 9,
-            timbales = 10,
-            tomtom = 11
-        };
-
-        Membrane parseMembrane( const std::string& value );
-        std::string toString( const Membrane value );
-        std::ostream& toStream( std::ostream& os, const Membrane value );
-        std::ostream& operator<<( std::ostream& os, const Membrane value );
-
-        enum class Metal
-        {
-            almglocken = 0,
-            bell = 1,
-            bellPlate = 2,
-            brakeDrum = 3,
-            ChineseCymbal = 4,
-            cowbell = 5,
-            crashCymbals = 6,
-            crotale = 7,
-            cymbalTongs = 8,
-            domedGong = 9,
-            fingerCymbals = 10,
-            flexatone = 11,
-            gong = 12,
-            hiHat = 13,
-            highHatCymbals = 14,
-            handbell = 15,
-            sistrum = 16,
-            sizzleCymbal = 17,
-            sleighBells = 18,
-            suspendedCymbal = 19,
-            tamTam = 20,
-            triangle = 21,
-            VietnameseHat = 22
-        };
-
-        Metal parseMetal( const std::string& value );
-        std::string toString( const Metal value );
-        std::ostream& toStream( std::ostream& os, const Metal value );
-        std::ostream& operator<<( std::ostream& os, const Metal value );
-
-        enum class Mute
-        {
-            on = 0,
-            off = 1,
-            straight = 2,
-            cup = 3,
-            harmonNoStem = 4,
-            harmonStem = 5,
-            bucket = 6,
-            plunger = 7,
-            hat = 8,
-            solotone = 9,
-            practice = 10,
-            stopMute = 11,
-            stopHand = 12,
-            echo = 13,
-            palm = 14
-        };
-
-        Mute parseMute( const std::string& value );
-        std::string toString( const Mute value );
-        std::ostream& toStream( std::ostream& os, const Mute value );
-        std::ostream& operator<<( std::ostream& os, const Mute value );
-
-        enum class Pitched
-        {
-            chimes = 0,
-            glockenspiel = 1,
-            mallet = 2,
-            marimba = 3,
-            tubularChimes = 4,
-            vibraphone = 5,
-            xylophone = 6
-        };
-
-        Pitched parsePitched( const std::string& value );
-        std::string toString( const Pitched value );
-        std::ostream& toStream( std::ostream& os, const Pitched value );
-        std::ostream& operator<<( std::ostream& os, const Pitched value );
-
-        enum class Valign
-        {
-            top = 0,
-            middle = 1,
-            bottom = 2,
-            baseline = 3
-        };
-
-        Valign parseValign( const std::string& value );
-        std::string toString( const Valign value );
-        std::ostream& toStream( std::ostream& os, const Valign value );
-        std::ostream& operator<<( std::ostream& os, const Valign value );
-
-        enum class Winged
-        {
-            none = 0,
-            straight = 1,
-            curved = 2,
-            doubleStraight = 3,
-            doubleCurved = 4
-        };
-
-        Winged parseWinged( const std::string& value );
-        std::string toString( const Winged value );
-        std::ostream& toStream( std::ostream& os, const Winged value );
-        std::ostream& operator<<( std::ostream& os, const Winged value );
-
-        enum class Wood
-        {
-            boardClapper = 0,
-            cabasa = 1,
-            castanets = 2,
-            claves = 3,
-            guiro = 4,
-            logDrum = 5,
-            maraca = 6,
-            maracas = 7,
-            ratchet = 8,
-            sandpaperBlocks = 9,
-            slitDrum = 10,
-            templeBlock = 11,
-            vibraslap = 12,
-            woodBlock = 13
-        };
-
-        Wood parseWood( const std::string& value );
-        std::string toString( const Wood value );
-        std::ostream& toStream( std::ostream& os, const Wood value );
-        std::ostream& operator<<( std::ostream& os, const Wood value );
-
         enum class AboveBelow
         {
             above = 0,
@@ -539,6 +298,82 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const DistanceType& value );
         std::ostream& operator<<( std::ostream& os, const DistanceType& value );
 
+        enum class DynamicsEnum
+        {
+            p = 0,
+            pp = 1,
+            ppp = 2,
+            pppp = 3,
+            ppppp = 4,
+            pppppp = 5,
+            f = 6,
+            ff = 7,
+            fff = 8,
+            ffff = 9,
+            fffff = 10,
+            ffffff = 11,
+            mp = 12,
+            mf = 13,
+            sf = 14,
+            sfp = 15,
+            sfpp = 16,
+            fp = 17,
+            rf = 18,
+            rfz = 19,
+            sfz = 20,
+            sffz = 21,
+            fz = 22,
+            otherDynamics = 23
+        };
+
+        DynamicsEnum parseDynamicsEnum( const std::string& value );
+        std::string toString( const DynamicsEnum value );
+        std::ostream& toStream( std::ostream& os, const DynamicsEnum value );
+        std::ostream& operator<<( std::ostream& os, const DynamicsEnum value );
+
+        class DynamicsValue
+        {
+        public:
+            explicit DynamicsValue( const DynamicsEnum value );
+            explicit DynamicsValue( const std::string& value );
+            DynamicsValue();
+            DynamicsEnum getValue() const;
+            std::string getValueString() const;
+            void setValue( const DynamicsEnum value );
+            void setValue( const std::string& value );
+        private:
+            DynamicsEnum myEnum;
+            std::string myCustomValue;
+        };
+
+        DynamicsValue parseDynamicsValue( const std::string& value );
+        std::string toString( const DynamicsValue& value );
+        std::ostream& toStream( std::ostream& os, const DynamicsValue& value );
+        std::ostream& operator<<( std::ostream& os, const DynamicsValue& value );
+
+        enum class EffectEnum
+        {
+            anvil = 0,
+            autoHorn = 1,
+            birdWhistle = 2,
+            cannon = 3,
+            duckCall = 4,
+            gunShot = 5,
+            klaxonHorn = 6,
+            lionsRoar = 7,
+            policeWhistle = 8,
+            siren = 9,
+            slideWhistle = 10,
+            thunderSheet = 11,
+            windMachine = 12,
+            windWhistle = 13
+        };
+
+        EffectEnum parseEffectEnum( const std::string& value );
+        std::string toString( const EffectEnum value );
+        std::ostream& toStream( std::ostream& os, const EffectEnum value );
+        std::ostream& operator<<( std::ostream& os, const EffectEnum value );
+
         enum class EnclosureShape
         {
             rectangle = 0,
@@ -555,6 +390,18 @@ namespace mx
         std::string toString( const EnclosureShape value );
         std::ostream& toStream( std::ostream& os, const EnclosureShape value );
         std::ostream& operator<<( std::ostream& os, const EnclosureShape value );
+
+        enum class Fan
+        {
+            accel = 0,
+            rit = 1,
+            none = 2
+        };
+
+        Fan parseFan( const std::string& value );
+        std::string toString( const Fan value );
+        std::ostream& toStream( std::ostream& os, const Fan value );
+        std::ostream& operator<<( std::ostream& os, const Fan value );
 
         enum class FermataShape
         {
@@ -590,6 +437,16 @@ namespace mx
         std::string toString( const FontWeight value );
         std::ostream& toStream( std::ostream& os, const FontWeight value );
         std::ostream& operator<<( std::ostream& os, const FontWeight value );
+
+        enum class GlassEnum
+        {
+            windChimes = 0
+        };
+
+        GlassEnum parseGlassEnum( const std::string& value );
+        std::string toString( const GlassEnum value );
+        std::ostream& toStream( std::ostream& os, const GlassEnum value );
+        std::ostream& operator<<( std::ostream& os, const GlassEnum value );
 
         enum class GroupBarlineValue
         {
@@ -850,6 +707,83 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const MeasureNumberingValue value );
         std::ostream& operator<<( std::ostream& os, const MeasureNumberingValue value );
 
+        enum class MembraneEnum
+        {
+            bassDrum = 0,
+            bassDrumOnSide = 1,
+            bongos = 2,
+            congaDrum = 3,
+            gobletDrum = 4,
+            militaryDrum = 5,
+            snareDrum = 6,
+            snareDrumSnaresOff = 7,
+            tambourine = 8,
+            tenorDrum = 9,
+            timbales = 10,
+            tomtom = 11
+        };
+
+        MembraneEnum parseMembraneEnum( const std::string& value );
+        std::string toString( const MembraneEnum value );
+        std::ostream& toStream( std::ostream& os, const MembraneEnum value );
+        std::ostream& operator<<( std::ostream& os, const MembraneEnum value );
+
+        enum class Metal
+        {
+            almglocken = 0,
+            bell = 1,
+            bellPlate = 2,
+            brakeDrum = 3,
+            ChineseCymbal = 4,
+            cowbell = 5,
+            crashCymbals = 6,
+            crotale = 7,
+            cymbalTongs = 8,
+            domedGong = 9,
+            fingerCymbals = 10,
+            flexatone = 11,
+            gong = 12,
+            hiHat = 13,
+            highHatCymbals = 14,
+            handbell = 15,
+            sistrum = 16,
+            sizzleCymbal = 17,
+            sleighBells = 18,
+            suspendedCymbal = 19,
+            tamTam = 20,
+            triangle = 21,
+            VietnameseHat = 22
+        };
+
+        Metal parseMetal( const std::string& value );
+        std::string toString( const Metal value );
+        std::ostream& toStream( std::ostream& os, const Metal value );
+        std::ostream& operator<<( std::ostream& os, const Metal value );
+
+        enum class Mute
+        {
+            on = 0,
+            off = 1,
+            straight = 2,
+            cup = 3,
+            harmonNoStem = 4,
+            harmonStem = 5,
+            bucket = 6,
+            plunger = 7,
+            hat = 8,
+            solotone = 9,
+            practice = 10,
+            stopMute = 11,
+            stopHand = 12,
+            echo = 13,
+            palm = 14
+        };
+
+        Mute parseMute( const std::string& value );
+        std::string toString( const Mute value );
+        std::ostream& toStream( std::ostream& os, const Mute value );
+        std::ostream& operator<<( std::ostream& os, const Mute value );
+
         enum class NoteSizeType
         {
             cue = 0,
@@ -941,6 +875,22 @@ namespace mx
         std::string toString( const OverUnder value );
         std::ostream& toStream( std::ostream& os, const OverUnder value );
         std::ostream& operator<<( std::ostream& os, const OverUnder value );
+
+        enum class Pitched
+        {
+            chimes = 0,
+            glockenspiel = 1,
+            mallet = 2,
+            marimba = 3,
+            tubularChimes = 4,
+            vibraphone = 5,
+            xylophone = 6
+        };
+
+        Pitched parsePitched( const std::string& value );
+        std::string toString( const Pitched value );
+        std::ostream& toStream( std::ostream& os, const Pitched value );
+        std::ostream& operator<<( std::ostream& os, const Pitched value );
 
         enum class PrincipalVoiceSymbol
         {
@@ -1330,6 +1280,19 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const UprightInverted value );
         std::ostream& operator<<( std::ostream& os, const UprightInverted value );
 
+        enum class Valign
+        {
+            top = 0,
+            middle = 1,
+            bottom = 2,
+            baseline = 3
+        };
+
+        Valign parseValign( const std::string& value );
+        std::string toString( const Valign value );
+        std::ostream& toStream( std::ostream& os, const Valign value );
+        std::ostream& operator<<( std::ostream& os, const Valign value );
+
         enum class ValignImage
         {
             top = 0,
@@ -1354,6 +1317,43 @@ namespace mx
         std::string toString( const WedgeType value );
         std::ostream& toStream( std::ostream& os, const WedgeType value );
         std::ostream& operator<<( std::ostream& os, const WedgeType value );
+
+        enum class Winged
+        {
+            none = 0,
+            straight = 1,
+            curved = 2,
+            doubleStraight = 3,
+            doubleCurved = 4
+        };
+
+        Winged parseWinged( const std::string& value );
+        std::string toString( const Winged value );
+        std::ostream& toStream( std::ostream& os, const Winged value );
+        std::ostream& operator<<( std::ostream& os, const Winged value );
+
+        enum class Wood
+        {
+            boardClapper = 0,
+            cabasa = 1,
+            castanets = 2,
+            claves = 3,
+            guiro = 4,
+            logDrum = 5,
+            maraca = 6,
+            maracas = 7,
+            ratchet = 8,
+            sandpaperBlocks = 9,
+            slitDrum = 10,
+            templeBlock = 11,
+            vibraslap = 12,
+            woodBlock = 13
+        };
+
+        Wood parseWood( const std::string& value );
+        std::string toString( const Wood value );
+        std::ostream& toStream( std::ostream& os, const Wood value );
+        std::ostream& operator<<( std::ostream& os, const Wood value );
 
         enum class YesNo
         {
