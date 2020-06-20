@@ -177,14 +177,12 @@ impl MxEnum {
         l!(w, 2, "std::string toString( const {} value );", n)?;
         l!(
             w,
-            2,
-            "std::ostream& toStream( std::ostream& os, const {} value );",
+            2,"std::ostream& toStream( std::ostream& os, const {} value );",
             n
         )?;
         l!(
             w,
-            2,
-            "std::ostream& operator<<( std::ostream& os, const {} value );",
+            2,"std::ostream& operator<<( std::ostream& os, const {} value );",
             n
         )?;
 
@@ -212,18 +210,162 @@ impl MxEnum {
             l!(
                 w,
                 2,
-                "std::ostream& toStream( std::ostream& os, const {}& value );",
+       "std::ostream& toStream( std::ostream& os, const {}& value );",
                 cn
             )?;
             l!(
                 w,
                 2,
-                "std::ostream& operator<<( std::ostream& os, const {}& value );",
+        "std::ostream& operator<<( std::ostream& os, const {}& value );",
                 cn
             )?;
         }
 
         Ok(())
+    }
+
+    pub(crate) fn write_definition<W: Write>(&self, w: &mut W) -> std::io::Result<()> {
+        if self.other_field.is_some() {
+            write_standard_definition(w)
+        } else {
+            write_mx_option_definition(w)
+        }
+    }
+
+    pub(crate) fn write_standard_definition<W: Write>(&self, w: &mut W) -> std::io::Result<()> {
+        Ok(())
+    }
+
+    pub(crate) fn write_mx_option_definition<W: Write>(&self, w: &mut W) -> std::io::Result<()> {
+        let pc = self.pascal_case.value();
+        let cc = self.camel_case.value();
+        let other = let Some(other_field) = &self.other_field
+        {
+            other_field
+        } else {
+            panic!("bug");
+        }
+        let of_orig = other.other_field_name.original();
+        let of_pasc = other.other_field_name.value();
+        let cn = other.wrapper_class_name.as_str();
+        l!(w, 2, "{} parse{}( const std::string& value, bool& success )", pc, pc)?;
+        l!(w, 2, "{{")?;
+        l!(w, 3, "success = true;")?;
+        for (i, member) in self.members.iter().enumerate() {
+            let o = member.original.as_str();
+            let n = member.value();
+            if i == 0 {
+                l!(w, 3, "if ( value == \"{}\" ) {{ return {}::{}; }}", o, pc, n)?;
+            } else {
+                l!(w, 3, "else if ( value == \"{}\" ) {{ return {}::{}; }}", o, pc, n)?;
+            }
+        }
+        l!(w, 3, "else if ( value == \"{}\" ) {{ return {}::{}; }}", of_orig, pc, of_pasc)?;
+        l!(w, 3, "success = false;")?;
+        l!(w, 3, "return {}::{};", pc, of_pasc)?;
+        l!(w, 2, "}}")?;
+        l!(w, 2, "{} parse{}( const std::string& value )", pc, pc)?;
+        l!(w, 2, "{{")?;
+        l!(w, 3, "bool success = true;")?;
+        l!(w, 3, "return parse{}( value, success );", pc)?;
+        l!(w, 2, "}}")?;
+        l!(w, 0, "")?;
+        l!(w, 2, "std::string toString( const {} value )", pc)?;
+        l!(w, 2, "{{")?;
+        l!(w, 3, "switch ( value )")?;
+        l!(w, 3, "{{")?;
+        for (i, member) in self.members.iter().enumerate() {
+            let o = member.original.as_str();
+            let n = member.value();
+            l!(w, 4, "case {}::{}: {{ return \"{}\"; }}", pc, n, o)?;
+        }
+        l!(w, 4, "case {}::{}: {{ return \"{}\"; }}", pc, of_pasc, of_orig)?;
+        l!(w, 4, "default: break;")?;
+        l!(w, 3, "}}")?;
+        l!(w, 3, "return \"default\";")?;
+        l!(w, 2, "}}")?;
+        l!(w, 0, "")?;
+        l!(w, 2, "std::ostream& toStream( std::ostream& os, const {} value )", pc)?;
+        l!(w, 2, "{{")?;
+        l!(w, 3, "return os << toString( value );")?;
+        l!(w, 2, "}}")?;
+        l!(w, 0, "")?;
+        l!(w, 2, "std::ostream& operator<<( std::ostream& os, const {} value )", pc)?;
+        l!(w, 2, "{{")?;
+        l!(w, 3, "return toStream( os, value );")?;
+        l!(w, 2, "}}")?;
+        l!(w, 0, "")?;
+        l!(w, 2, "{}::{}( const {} value )", cn,cn, pc)?;
+        l!(w, 2, ":myEnum( value )")?;
+        l!(w, 2, ",myCustomValue( \"\" )")?;
+        l!(w, 2, "{{")?;
+        l!(w, 3, "setValue( value );")?;
+        l!(w, 2, "}}")?;
+        l!(w, 2, "{}::{}( const std::string& value )", cn, cn)?;
+        l!(w, 2, ":myEnum( {}::{} )", pc, of_pasc)?;
+        l!(w, 2, ",myCustomValue( value )")?;
+        l!(w, 2, "{{")?;
+        l!(w, 3, "setValue( value );")?;
+        l!(w, 2, "}}")?;
+        l!(w, 2, "{}::{}()", cn, cn)?;
+        l!(w, 2, ":myEnum( {}::mf )", pc)?;
+        l!(w, 2, ",myCustomValue( \"\" )")?;
+        l!(w, 2, "{{")?;
+        l!(w, 3, "setValue( {}::XXXUHOHDEFAULT );", pc)?;
+        l!(w, 2, "}}")?;
+        l!(w, 2, "{} {}::getValue() const", pc, cn)?;
+        l!(w, 2, "{{")?;
+        l!(w, 3, "return myEnum;")?;
+        l!(w, 2, "}}")?;
+        l!(w, 0, "")?;
+        l!(w, 2, "std::string {}::getValueString() const", cn)?;
+        l!(w, 2, "{{")?;
+        l!(w, 3, "if ( myEnum != {}::{} )", pc, of_pasc)?;
+        l!(w, 3, "{{")?;
+        l!(w, 4, "return toString( myEnum );")?;
+        l!(w, 3, "}}")?;
+        l!(w, 3, "else")?;
+        l!(w, 3, "{{")?;
+        l!(w, 4, "return myCustomValue;")?;
+        l!(w, 3, "}}")?;
+        l!(w, 2, "}}")?;
+        l!(w, 2, "void {}::setValue( const {} value )", cn, pc)?;
+        l!(w, 2, "{{")?;
+        l!(w, 3, "myEnum = value;")?;
+        l!(w, 2, "}}")?;
+        l!(w, 2, "void {}::setValue( const std::string& value )", cn)?;
+        l!(w, 2, "{{")?;
+        l!(w, 3, "bool found = false;")?;
+        l!(w, 3, "{} temp = parse{}( value, found );", pc, pc)?;
+        l!(w, 3, "if ( found )")?;
+        l!(w, 3, "{{")?;
+        l!(w, 4, "myEnum = temp;")?;
+        l!(w, 3, "}}")?;
+        l!(w, 3, "else")?;
+        l!(w, 3, "{{")?;
+        l!(w, 4, "setValue( {}::{} );", pc, of_pasc)?;
+        l!(w, 4, "myCustomValue = value;")?;
+        l!(w, 3, "}}")?;
+        l!(w, 2, "}}")?;
+        l!(w, 2, "{} parse{}( const std::string& value )", cn, cn)?;
+        l!(w, 2, "{{")?;
+        l!(w, 3, "return {}( value );", cn)?;
+        l!(w, 2, "}}")?;
+        l!(w, 2, "")?;
+        l!(w, 2, "std::string toString( const {}& value )", cn)?;
+        l!(w, 2, "{{")?;
+        l!(w, 3, "return value.getValueString();")?;
+        l!(w, 2, "}}")?;
+        l!(w, 2, "")?;
+        l!(w, 2, "std::ostream& toStream( std::ostream& os, const {}& value )", cn)?;
+        l!(w, 2, "{{")?;
+        l!(w, 3, "return os << toString( value );")?;
+        l!(w, 2, "}}")?;
+        l!(w, 2, "")?;
+        l!(w, 2, "std::ostream& operator<<( std::ostream& os, const {}& value )", cn)?;
+        l!(w, 2, "{{")?;
+        l!(w, 3, "return toStream( os, value );")?;
+        l!(w, 2, "}}")?;
     }
 }
 
