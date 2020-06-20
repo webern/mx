@@ -1,5 +1,6 @@
 use std::cmp::Ordering;
 use std::fmt::{Display, Formatter};
+use crate::generate::mx_writer::HAPPY_WIDTH;
 
 #[derive(Debug, Clone, Eq, Ord, Hash, Default)]
 pub struct Altered {
@@ -50,9 +51,9 @@ impl Symbol {
 
     /// If `altered` and `original` are equal, returns `Unaltered`, else returns `Altered`.
     pub fn from<S1, S2>(altered: S1, original: S2) -> Self
-    where
-        S1: AsRef<str>,
-        S2: AsRef<str>,
+        where
+            S1: AsRef<str>,
+            S2: AsRef<str>,
     {
         if altered.as_ref() == original.as_ref() {
             Symbol::new(original.as_ref())
@@ -68,6 +69,13 @@ impl Symbol {
         match self {
             Symbol::Unaltered(s) => s.as_str(),
             Symbol::Altered(a) => a.value.as_str(),
+        }
+    }
+
+    pub fn original(&self) -> &str {
+        match self {
+            Symbol::Unaltered(s) => s.as_str(),
+            Symbol::Altered(a) => a.original.as_str(),
         }
     }
 }
@@ -214,4 +222,20 @@ mod tests {
             panic!("expected Symbol::Altered");
         }
     }
+}
+
+pub fn sep<S: AsRef<str>>(s: S, subtract_indentations: usize) -> String {
+    let mut out = "//".to_owned();
+    let width = (HAPPY_WIDTH - (subtract_indentations * 4));
+    let s = s.as_ref();
+    if !s.is_empty() {
+        out.push_str(format!(" {} ", s).as_str());
+    }
+    loop {
+        if out.len() >= width {
+            break;
+        }
+        out.push('/');
+    }
+    out
 }

@@ -117,7 +117,7 @@ impl Generator {
                 pseudo_enums: pseudo_enums(),
             },
         )
-        .unwrap();
+            .unwrap();
         let opt = if let Language::Cpp(o) = &self.language {
             o
         } else {
@@ -138,6 +138,10 @@ impl Generator {
         {
             let mut h = opt.open_mx_core_file("Enums.h");
             writer.write_enum_declarations(&mut h).unwrap();
+        }
+        {
+            let mut cpp = opt.open_mx_core_file("Enums.cpp");
+            writer.write_enum_definitions(&mut cpp).unwrap();
         }
         Ok(())
     }
