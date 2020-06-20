@@ -92,6 +92,10 @@ fn case<S: AsRef<str>>(s: S, cs: Case) -> Symbol {
     for c in s.as_ref().chars() {
         if !c.is_alphanumeric() {
             is_next_upper = true;
+        } else if c.is_ascii_digit() {
+            // idiosyncrasy of the first implementation
+            out.push(c);
+            is_next_upper = true;
         } else if is_next_upper {
             out.push(c.to_ascii_uppercase());
             is_next_upper = false;
@@ -177,6 +181,32 @@ mod tests {
         let input = "wind cHIMES";
         let got = super::camel_case(input);
         let want = "windChimes".to_string();
+        assert_eq!(got.value(), want);
+        if let Symbol::Altered(altered) = got {
+            assert_eq!(altered.original.as_str(), input);
+        } else {
+            panic!("expected Symbol::Altered");
+        }
+    }
+
+    #[test]
+    fn pascal_case_chord_kind() {
+        let input = "DomInAnt11th";
+        let got = super::pascal_case(input);
+        let want = "Dominant11Th".to_string();
+        assert_eq!(got.value(), want);
+        if let Symbol::Altered(altered) = got {
+            assert_eq!(altered.original.as_str(), input);
+        } else {
+            panic!("expected Symbol::Altered");
+        }
+    }
+
+    #[test]
+    fn camel_case_step_chord_kind() {
+        let input = "DomInAnt 1 1th";
+        let got = super::camel_case(input);
+        let want = "dominant11Th".to_string();
         assert_eq!(got.value(), want);
         if let Symbol::Altered(altered) = got {
             assert_eq!(altered.original.as_str(), input);
