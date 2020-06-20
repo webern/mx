@@ -301,7 +301,7 @@ fn parse_if_dynamics_complex_type(
         other_field: Some(MxEnumOption {
             other_field_name: camel_case("other-dynamics"),
             wrapper_class_name: pascal_case("dynamics-value"),
-            default_value: pascal_case("other-dynamic"),
+            default_value: camel_case("other-dynamics"),
         }),
     }))
 }
