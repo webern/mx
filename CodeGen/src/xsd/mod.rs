@@ -19,16 +19,16 @@ pub(crate) type Int = i64;
 
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub(crate) enum BuiltinStringType {
-    XsString,
-    XsToken,
+    String,
+    Token,
 }
 
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub(crate) enum BuiltinNumericType {
-    XsDecimal,
-    XsInteger,
-    XsNonNegativeInteger,
-    XsPositiveInteger,
+    Decimal,
+    Integer,
+    NonNegativeInteger,
+    PositiveInteger,
 }
 
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -52,22 +52,22 @@ impl Base {
         } else {
             match s {
                 XS_STRING => Ok(Base::BuiltinType(BuiltinType::String(
-                    BuiltinStringType::XsString,
+                    BuiltinStringType::String,
                 ))),
                 XS_TOKEN => Ok(Base::BuiltinType(BuiltinType::String(
-                    BuiltinStringType::XsToken,
+                    BuiltinStringType::Token,
                 ))),
                 XS_DECIMAL => Ok(Base::BuiltinType(BuiltinType::Numeric(
-                    BuiltinNumericType::XsDecimal,
+                    BuiltinNumericType::Decimal,
                 ))),
                 XS_INTEGER => Ok(Base::BuiltinType(BuiltinType::Numeric(
-                    BuiltinNumericType::XsInteger,
+                    BuiltinNumericType::Integer,
                 ))),
                 XS_NON_NEGATIVE_INTEGER => Ok(Base::BuiltinType(BuiltinType::Numeric(
-                    BuiltinNumericType::XsNonNegativeInteger,
+                    BuiltinNumericType::NonNegativeInteger,
                 ))),
                 XS_POSITIVE_INTEGER => Ok(Base::BuiltinType(BuiltinType::Numeric(
-                    BuiltinNumericType::XsPositiveInteger,
+                    BuiltinNumericType::PositiveInteger,
                 ))),
                 XS_DATE => Ok(Base::BuiltinType(BuiltinType::XsDate)),
                 _ => raise!("unsupported base: '{}'", s),
@@ -79,8 +79,8 @@ impl Base {
 impl Display for BuiltinStringType {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match self {
-            BuiltinStringType::XsString => write!(f, "{}", XS_STRING),
-            BuiltinStringType::XsToken => write!(f, "{}", XS_TOKEN),
+            BuiltinStringType::String => write!(f, "{}", XS_STRING),
+            BuiltinStringType::Token => write!(f, "{}", XS_TOKEN),
         }
     }
 }
@@ -94,10 +94,10 @@ impl Debug for BuiltinStringType {
 impl Display for BuiltinNumericType {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match self {
-            BuiltinNumericType::XsDecimal => write!(f, "{}", XS_DECIMAL),
-            BuiltinNumericType::XsInteger => write!(f, "{}", XS_INTEGER),
-            BuiltinNumericType::XsNonNegativeInteger => write!(f, "{}", XS_NON_NEGATIVE_INTEGER),
-            BuiltinNumericType::XsPositiveInteger => write!(f, "{}", XS_POSITIVE_INTEGER),
+            BuiltinNumericType::Decimal => write!(f, "{}", XS_DECIMAL),
+            BuiltinNumericType::Integer => write!(f, "{}", XS_INTEGER),
+            BuiltinNumericType::NonNegativeInteger => write!(f, "{}", XS_NON_NEGATIVE_INTEGER),
+            BuiltinNumericType::PositiveInteger => write!(f, "{}", XS_POSITIVE_INTEGER),
         }
     }
 }
@@ -135,7 +135,7 @@ impl Display for Base {
 
 impl Default for Base {
     fn default() -> Self {
-        Base::BuiltinType(BuiltinType::Numeric(BuiltinNumericType::XsPositiveInteger))
+        Base::BuiltinType(BuiltinType::Numeric(BuiltinNumericType::PositiveInteger))
     }
 }
 
