@@ -81,11 +81,11 @@ impl Symbol {
     }
 }
 
-pub(crate) fn pascal_case<S: AsRef<str>>(s: S) -> Symbol {
+pub fn pascal_case<S: AsRef<str>>(s: S) -> Symbol {
     case(s, Case::Pascal)
 }
 
-pub(crate) fn camel_case<S: AsRef<str>>(s: S) -> Symbol {
+pub fn camel_case<S: AsRef<str>>(s: S) -> Symbol {
     case(s, Case::Camel)
 }
 
@@ -158,7 +158,7 @@ where
     Ok(())
 }
 
-pub(crate) fn linestart<W: Write>(
+pub fn linestart<W: Write>(
     w: &mut W,
     indents: usize,
     add_space: bool,
@@ -177,7 +177,7 @@ pub(crate) fn linestart<W: Write>(
     Ok(pos)
 }
 
-pub(crate) fn words<S: AsRef<str>>(s: S) -> Vec<String> {
+pub fn words<S: AsRef<str>>(s: S) -> Vec<String> {
     let mut result = Vec::new();
     let mut consecutive_newlines = 0;
     let mut word = String::new();

@@ -3,7 +3,7 @@ use std::collections::HashMap;
 
 /// Returns a list of simple-type enumeration values that are mapped to something different in the
 /// generated code.
-pub(crate) fn enum_member_substitutions() -> HashMap<String, String> {
+pub fn enum_member_substitutions() -> HashMap<String, String> {
     let mut substitutions = HashMap::new();
     // for better or worse, i chose to map these enum members that start with numbers like so...
     substitutions.insert("16Th".to_string(), "sixteenth".to_string());
@@ -21,7 +21,7 @@ pub(crate) fn enum_member_substitutions() -> HashMap<String, String> {
 /// because I wanted to 'wrap' the enum in a custom class (i.e. when the usage in MusicXML allows
 /// for an 'other' string field. These are given as uppercase, as in `Something` where the resulting
 /// code will be `enum class SomethingEnum`.
-pub(crate) fn suffixed_enum_names() -> IndexSet<String> {
+pub fn suffixed_enum_names() -> IndexSet<String> {
     // TODO - this list can probably be computed by observing the name conflicts in the XSD.
     let mut names = IndexSet::new();
     names.insert("ArrowDirection".into());
@@ -56,7 +56,7 @@ pub(crate) fn suffixed_enum_names() -> IndexSet<String> {
 }
 
 /// Returns a list of C++ keywords, to be used to avoid conflict with MusicXML names.
-pub(crate) fn reserved_words() -> IndexSet<String> {
+pub fn reserved_words() -> IndexSet<String> {
     let mut keywords = IndexSet::new();
     keywords.insert("continue".into());
     keywords.insert("do".into());
@@ -68,20 +68,20 @@ pub(crate) fn reserved_words() -> IndexSet<String> {
     keywords
 }
 
-pub(crate) struct PseudoEnumSpec {
-    pub(crate) members: Vec<String>,
+pub struct PseudoEnumSpec {
+    pub members: Vec<String>,
     /// The name of the field that is added to the enum, which can hold any value.
-    pub(crate) extra_field_name: String,
+    pub extra_field_name: String,
     /// The name of the class which "wraps" the enum with the ability to hold an arbitrary string.
-    pub(crate) class_name: String,
+    pub class_name: String,
     /// The enum value when the wrapper class is default constructed.
-    pub(crate) default_value: String,
+    pub default_value: String,
 }
 
 /// e.g. `line-width-type` and `distance-type` which give enum values in the documentation but do
 /// not restrict the string via xsd. In this case we have extracted the enum values from the
 /// documentation by hand and use an `other` 'variant' to hold any string other than those listed.
-pub(crate) fn pseudo_enums() -> HashMap<String, PseudoEnumSpec> {
+pub fn pseudo_enums() -> HashMap<String, PseudoEnumSpec> {
     let mut map = HashMap::new();
     map.insert(
         "xs:simpleType:distance-type".to_owned(),

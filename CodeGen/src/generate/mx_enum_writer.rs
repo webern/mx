@@ -9,7 +9,7 @@ use std::io::Write;
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub struct Error {}
 
-pub(crate) fn write_tabs<W: Write>(w: &mut W, num: u32) -> std::io::Result<()> {
+pub fn write_tabs<W: Write>(w: &mut W, num: u32) -> std::io::Result<()> {
     for _ in 0..num {
         write!(w, "    ")?;
     }
@@ -33,23 +33,23 @@ macro_rules! l {
 /// This represents an enum where an extra enumeration is added, e.g. `other`, and a wrapper class
 /// is created allowing any arbitrary string to be held when e.g. `other` is the enum value.
 #[derive(Clone)]
-pub(crate) struct MxEnumOption {
-    pub(crate) other_field_name: Symbol,
-    pub(crate) wrapper_class_name: Symbol,
-    pub(crate) default_value: Symbol,
+pub struct MxEnumOption {
+    pub other_field_name: Symbol,
+    pub wrapper_class_name: Symbol,
+    pub default_value: Symbol,
 }
 
 #[derive(Clone)]
-pub(crate) struct MxEnum {
-    pub(crate) id: String,
-    pub(crate) index: usize,
-    pub(crate) camel_case: Symbol,
-    pub(crate) pascal_case: Symbol,
-    pub(crate) members: Vec<Symbol>,
-    pub(crate) documentation: String,
+pub struct MxEnum {
+    pub id: String,
+    pub index: usize,
+    pub camel_case: Symbol,
+    pub pascal_case: Symbol,
+    pub members: Vec<Symbol>,
+    pub documentation: String,
     /// These are enums that I handled specially because they were part of an element that allowed
     /// for an "other" field that could hold a string. These Enums require custom handling.
-    pub(crate) other_field: Option<MxEnumOption>,
+    pub other_field: Option<MxEnumOption>,
 }
 
 impl MxEnum {
@@ -148,7 +148,7 @@ impl MxEnum {
         Ok(x)
     }
 
-    pub(crate) fn write_declaration<W: Write>(&self, w: &mut W) -> std::io::Result<()> {
+    pub fn write_declaration<W: Write>(&self, w: &mut W) -> std::io::Result<()> {
         let n = self.pascal_case.value();
         l!(w, 2, "{}", sep(n, 2))?;
         linestart(w, 2, false)?;
@@ -229,7 +229,7 @@ impl MxEnum {
         Ok(())
     }
 
-    pub(crate) fn write_definition<W: Write>(&self, w: &mut W) -> std::io::Result<()> {
+    pub fn write_definition<W: Write>(&self, w: &mut W) -> std::io::Result<()> {
         if self.other_field.is_some() {
             self.write_mx_option_definition(w)
         } else {
@@ -604,19 +604,19 @@ impl MxEnum {
     }
 }
 
-pub(crate) struct MxEnumWriterParams {
-    pub(crate) enumerations: Vec<Enumeration>,
-    pub(crate) member_substitutions: HashMap<String, String>,
-    pub(crate) suffixed_enum_names: IndexSet<String>,
-    pub(crate) reserved_words: IndexSet<String>,
+pub struct MxEnumWriterParams {
+    pub enumerations: Vec<Enumeration>,
+    pub member_substitutions: HashMap<String, String>,
+    pub suffixed_enum_names: IndexSet<String>,
+    pub reserved_words: IndexSet<String>,
 }
 
-pub(crate) struct MxEnumWriter {
+pub struct MxEnumWriter {
     enums: Vec<MxEnum>,
 }
 
 impl MxEnumWriter {
-    pub(crate) fn new(params: MxEnumWriterParams) -> Result<Self, Error> {
+    pub fn new(params: MxEnumWriterParams) -> Result<Self, Error> {
         let mut mx_enums = Vec::new();
         for e in &params.enumerations {
             let mx = MxEnum {
@@ -638,7 +638,7 @@ impl MxEnumWriter {
         Ok(MxEnumWriter { enums: mx_enums })
     }
 
-    pub(crate) fn write_declarations<W: Write>(&self, w: &mut W) -> std::io::Result<()> {
+    pub fn write_declarations<W: Write>(&self, w: &mut W) -> std::io::Result<()> {
         self.write_h_file_open(w)?;
         for (i, e) in self.enums.iter().enumerate() {
             let is_last = i == self.enums.len() - 1;
@@ -651,7 +651,7 @@ impl MxEnumWriter {
         Ok(())
     }
 
-    pub(crate) fn write_definitions<W: Write>(&self, w: &mut W) -> std::io::Result<()> {
+    pub fn write_definitions<W: Write>(&self, w: &mut W) -> std::io::Result<()> {
         self.write_cpp_file_open(w)?;
         for (i, e) in self.enums.iter().enumerate() {
             let is_last = i == self.enums.len() - 1;

@@ -1,6 +1,6 @@
 use crate::generate::mx_enum_writer::MxEnumOption;
 
-pub(crate) struct MusicXSD {
+pub struct MusicXSD {
     type_definitions: Vec<TypeDefinition>,
 }
 
@@ -11,7 +11,7 @@ impl MusicXSD {
 }
 
 impl MusicXSD {
-    pub(crate) fn enumerations(&self) -> Vec<Enumeration> {
+    pub fn enumerations(&self) -> Vec<Enumeration> {
         let mut result = Vec::new();
         for t in &self.type_definitions {
             if let TypeDefinition::Simple(simple_type) = t {
@@ -25,29 +25,29 @@ impl MusicXSD {
     }
 }
 
-pub(crate) enum TypeDefinition {
+pub enum TypeDefinition {
     Simple(SimpleType),
     #[allow(dead_code)]
     Todo,
 }
 
-pub(crate) enum SimpleType {
+pub enum SimpleType {
     Enum(Enumeration),
     #[allow(dead_code)]
     Todo,
 }
 
 #[derive(Clone)]
-pub(crate) struct Enumeration {
-    pub(crate) index: usize,
-    pub(crate) id: String,
-    pub(crate) name: String,
-    pub(crate) base: String,
-    pub(crate) documentation: String,
-    pub(crate) members: Vec<String>,
+pub struct Enumeration {
+    pub index: usize,
+    pub id: String,
+    pub name: String,
+    pub base: String,
+    pub documentation: String,
+    pub members: Vec<String>,
     /// For pseudo-enums and other types that append an enumeration named, e.g. `other` which
     /// signals that any string can be contained with the enum value is set to e.g. `other`
-    pub(crate) other_field: Option<MxEnumOption>,
+    pub other_field: Option<MxEnumOption>,
 }
 
 impl Default for Enumeration {

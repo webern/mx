@@ -1,8 +1,16 @@
 [package]
-name = "musicxml-code-gen"
+name = "mxgen"
 version = "0.1.0"
 authors = ["Matthew James Briggs <matthew.james.briggs@gmail.com>"]
 edition = "2018"
+
+[[bin]]
+name = "mxgen"
+path = "src/bin/main.rs"
+
+[lib]
+name = "libmxgen"
+path = "src/lib.rs"
 
 [dependencies]
 derive_more = "0.99.8"

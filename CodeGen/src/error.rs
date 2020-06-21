@@ -6,10 +6,10 @@ use core::fmt;
 use std::convert::Infallible;
 use std::fmt::{Display, Formatter};
 
-pub(crate) type Result<T> = std::result::Result<T, Error>;
+pub type Result<T> = std::result::Result<T, Error>;
 
 #[derive(Debug)]
-pub(crate) enum Error {
+pub enum Error {
     Message(MessageError),
 }
 
@@ -85,9 +85,9 @@ impl From<Infallible> for Error {
 // internal macros
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-pub(crate) fn box_err<E>(err: Option<E>) -> Option<Box<dyn std::error::Error>>
-where
-    E: std::error::Error + 'static,
+pub fn box_err<E>(err: Option<E>) -> Option<Box<dyn std::error::Error>>
+    where
+        E: std::error::Error + 'static,
 {
     match err {
         None => None,

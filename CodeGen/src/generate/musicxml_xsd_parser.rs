@@ -12,7 +12,7 @@ use std::fmt::{Display, Formatter};
 use std::sync::atomic::{AtomicUsize, Ordering};
 
 #[derive(Debug, Display, Clone, Eq, PartialEq, Ord, PartialOrd, Hash)]
-pub(crate) enum Error {
+pub enum Error {
     SchemaNotFound,
     UnknownSchemaNode(String),
     NameAttributeNotFound(String),
@@ -27,11 +27,11 @@ pub(crate) enum Error {
 
 static COUNTER: AtomicUsize = AtomicUsize::new(0);
 
-pub(crate) struct XsdParserParams {
-    pub(crate) pseudo_enums: HashMap<String, PseudoEnumSpec>,
+pub struct XsdParserParams {
+    pub pseudo_enums: HashMap<String, PseudoEnumSpec>,
 }
 
-pub(crate) fn parse_musicxml_xsd(
+pub fn parse_musicxml_xsd(
     doc: &Document,
     params: XsdParserParams,
 ) -> Result<MusicXSD, Error> {
@@ -65,12 +65,12 @@ const XS_IMPORT: &str = "xs:import";
 const XS_SIMPLE_TYPE: &str = "xs:simpleType";
 
 #[derive(Debug, Clone)]
-pub(crate) struct XsTypeNode<'a> {
-    pub(crate) xsd_type: XsType,
-    pub(crate) index: usize,
-    pub(crate) id: String,
-    pub(crate) name: String,
-    pub(crate) node: &'a Element,
+pub struct XsTypeNode<'a> {
+    pub xsd_type: XsType,
+    pub index: usize,
+    pub id: String,
+    pub name: String,
+    pub node: &'a Element,
 }
 
 impl<'a> Display for XsTypeNode<'_> {
@@ -113,7 +113,7 @@ fn parse_xs_info(node: &Element) -> Result<XsTypeNode, Error> {
 }
 
 #[derive(Debug, Display, Clone, Eq, PartialEq, Ord, PartialOrd, Hash)]
-pub(crate) enum XsType {
+pub enum XsType {
     Annotation,
     AttributeGroup,
     ComplexType,
