@@ -118,7 +118,7 @@ namespace mx
         {
             return toStream( os, value );
         }
-        
+
         XmlSpace parseXmlSpace( const std::string& value )
         {
             if ( value == "default" ) { return XmlSpace::default_; }
