@@ -1,7 +1,9 @@
 use crate::generate::mx_enum_writer::MxEnumWriter;
 use std::io::Write;
 
-pub(crate) const HAPPY_WIDTH: usize = 100;
+pub(crate) const LINE_WIDTH: usize = 100;
+pub(crate) const INDENT: &str = "    ";
+pub(crate) const DOC_COMMENT: &str = "///";
 
 pub(crate) struct MxWriter {
     pub(crate) enum_writer: MxEnumWriter,

@@ -1,5 +1,7 @@
 use super::musicxml_xsd::Enumeration;
-use crate::generate::string_stuff::{camel_case, pascal_case, sep, Altered, Symbol};
+use crate::generate::string_stuff::{
+    camel_case, linestart, pascal_case, sep, write_documentation, Altered, Symbol,
+};
 use indexmap::set::IndexSet;
 use std::cmp::Ordering;
 use std::collections::HashMap;
@@ -49,6 +51,7 @@ pub(crate) struct MxEnum {
     pub(crate) camel_case: Symbol,
     pub(crate) pascal_case: Symbol,
     pub(crate) members: Vec<Symbol>,
+    pub(crate) documentation: String,
     /// These are enums that I handled specially because they were part of an element that allowed
     /// for an "other" field that could hold a string. These Enums require custom handling.
     pub(crate) other_field: Option<MxEnumOption>,
@@ -155,6 +158,13 @@ impl MxEnum {
 
     pub(crate) fn write_declaration<W: Write>(&self, w: &mut W) -> std::io::Result<()> {
         let n = self.pascal_case.value();
+        l!(w, 2, "{}", sep(n, 2))?;
+        linestart(w, 2, false)?;
+        writeln!(w)?;
+        write_documentation(w, self.documentation.as_str(), 2)?;
+        writeln!(w)?;
+        linestart(w, 2, false)?;
+        writeln!(w)?;
         l!(w, 2, "enum class {}", n)?;
         l!(w, 2, "{{")?;
         for (i, m) in self.members.iter().enumerate() {
@@ -628,6 +638,7 @@ impl MxEnumWriter {
                 camel_case: MxEnum::rename(camel_case(&e.name), &params),
                 pascal_case: MxEnum::rename(pascal_case(&e.name), &params),
                 members: MxEnum::members(e, &params)?,
+                documentation: e.documentation.clone(),
                 other_field: e.other_field.clone(),
             };
             mx_enums.push(mx)

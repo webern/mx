@@ -10,6 +10,11 @@ namespace mx
 {
     namespace core
     {
+        /// AboveBelow /////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The above-below type is used to indicate whether one element appears above or
+        /// below another element.
+        ///
         enum class AboveBelow
         {
             above = 0,
@@ -21,6 +26,19 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const AboveBelow value );
         std::ostream& operator<<( std::ostream& os, const AboveBelow value );
 
+        /// AccidentalValue ////////////////////////////////////////////////////////////////////////
+        ///
+        /// The accidental-value type represents notated accidentals supported by MusicXML.
+        /// In the MusicXML 2.0 DTD this was a string with values that could be included.
+        /// The XSD strengthens the data typing to an enumerated list. The quarter- and
+        /// three-quarters- accidentals are Tartini-style quarter-tone accidentals. The
+        /// -down and -up accidentals are quarter-tone accidentals that include arrows
+        /// pointing down or up. The slash- accidentals are used in Turkish classical
+        /// music. The numbered sharp and flat accidentals are superscripted versions of
+        /// the accidental signs, used in Turkish folk music. The sori and koron
+        /// accidentals are microtonal sharp and flat accidentals used in Iranian and
+        /// Persian music.
+        ///
         enum class AccidentalValue
         {
             sharp = 0,
@@ -64,6 +82,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const AccidentalValue value );
         std::ostream& operator<<( std::ostream& os, const AccidentalValue value );
 
+        /// ArrowDirectionEnum /////////////////////////////////////////////////////////////////////
+        ///
+        /// The arrow-direction type represents the direction in which an arrow points,
+        /// using Unicode arrow terminology.
+        ///
         enum class ArrowDirectionEnum
         {
             left = 0,
@@ -86,6 +109,14 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const ArrowDirectionEnum value );
         std::ostream& operator<<( std::ostream& os, const ArrowDirectionEnum value );
 
+        /// ArrowStyleEnum /////////////////////////////////////////////////////////////////////////
+        ///
+        /// The arrow-style type represents the style of an arrow, using Unicode arrow
+        /// terminology. Filled and hollow arrows indicate polygonal single arrows. Paired
+        /// arrows are duplicate single arrows in the same direction. Combined arrows apply
+        /// to double direction arrows like left right, indicating that an arrow in one
+        /// direction should be combined with an arrow in the other direction.
+        ///
         enum class ArrowStyleEnum
         {
             single = 0,
@@ -102,6 +133,12 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const ArrowStyleEnum value );
         std::ostream& operator<<( std::ostream& os, const ArrowStyleEnum value );
 
+        /// BackwardForward ////////////////////////////////////////////////////////////////////////
+        ///
+        /// The backward-forward type is used to specify repeat directions. The start of
+        /// the repeat has a forward direction while the end of the repeat has a backward
+        /// direction.
+        ///
         enum class BackwardForward
         {
             backward = 0,
@@ -113,6 +150,13 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const BackwardForward value );
         std::ostream& operator<<( std::ostream& os, const BackwardForward value );
 
+        /// BarStyleEnum ///////////////////////////////////////////////////////////////////////////
+        ///
+        /// The bar-style type represents barline style information. Choices are regular,
+        /// dotted, dashed, heavy, light-light, light-heavy, heavy-light, heavy-heavy, tick
+        /// (a short stroke through the top line), short (a partial barline between the 2nd
+        /// and 4th lines), and none.
+        ///
         enum class BarStyleEnum
         {
             regular = 0,
@@ -133,6 +177,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const BarStyleEnum value );
         std::ostream& operator<<( std::ostream& os, const BarStyleEnum value );
 
+        /// BeamValue //////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The beam-value type represents the type of beam associated with each of 8 beam
+        /// levels (up to 1024th notes) available for each note.
+        ///
         enum class BeamValue
         {
             begin = 0,
@@ -147,6 +196,12 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const BeamValue value );
         std::ostream& operator<<( std::ostream& os, const BeamValue value );
 
+        /// BeaterValue ////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The beater-value type represents pictograms for beaters, mallets, and sticks
+        /// that do not have different materials represented in the pictogram. The finger
+        /// and hammer values are in addition to Stone's list.
+        ///
         enum class BeaterValue
         {
             bow = 0,
@@ -173,6 +228,10 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const BeaterValue value );
         std::ostream& operator<<( std::ostream& os, const BeaterValue value );
 
+        /// BreathMarkValue ////////////////////////////////////////////////////////////////////////
+        ///
+        /// The breath-mark-value type represents the symbol used for a breath mark.
+        ///
         enum class BreathMarkValue
         {
             emptystring = 0,
@@ -185,6 +244,14 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const BreathMarkValue value );
         std::ostream& operator<<( std::ostream& os, const BreathMarkValue value );
 
+        /// CancelLocation /////////////////////////////////////////////////////////////////////////
+        ///
+        /// The cancel-location type is used to indicate where a key signature cancellation
+        /// appears relative to a new key signature: to the left, to the right, or before
+        /// the barline and to the left. It is left by default. For mid-measure key
+        /// elements, a cancel-location of before-barline should be treated like a
+        /// cancel-location of left.
+        ///
         enum class CancelLocation
         {
             left = 0,
@@ -197,6 +264,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const CancelLocation value );
         std::ostream& operator<<( std::ostream& os, const CancelLocation value );
 
+        /// CircularArrowEnum //////////////////////////////////////////////////////////////////////
+        ///
+        /// The circular-arrow type represents the direction in which a circular arrow
+        /// points, using Unicode arrow terminology.
+        ///
         enum class CircularArrowEnum
         {
             clockwise = 0,
@@ -208,6 +280,14 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const CircularArrowEnum value );
         std::ostream& operator<<( std::ostream& os, const CircularArrowEnum value );
 
+        /// ClefSign ///////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The clef-sign element represents the different clef symbols. The jianpu sign
+        /// indicates that the music that follows should be in jianpu numbered notation,
+        /// just as the TAB sign indicates that the music that follows should be in
+        /// tablature notation. Unlike TAB, a jianpu sign does not correspond to a visual
+        /// clef notation.
+        ///
         enum class ClefSign
         {
             g = 0,
@@ -224,6 +304,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const ClefSign value );
         std::ostream& operator<<( std::ostream& os, const ClefSign value );
 
+        /// CssFontSize ////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The css-font-size type includes the CSS font sizes used as an alternative to a
+        /// numeric point size.
+        ///
         enum class CssFontSize
         {
             xxSmall = 0,
@@ -240,6 +325,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const CssFontSize value );
         std::ostream& operator<<( std::ostream& os, const CssFontSize value );
 
+        /// DegreeSymbolValue //////////////////////////////////////////////////////////////////////
+        ///
+        /// The degree-symbol-value type indicates indicates that a symbol should be used
+        /// in specifying the degree.
+        ///
         enum class DegreeSymbolValue
         {
             major = 0,
@@ -254,6 +344,12 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const DegreeSymbolValue value );
         std::ostream& operator<<( std::ostream& os, const DegreeSymbolValue value );
 
+        /// DegreeTypeValue ////////////////////////////////////////////////////////////////////////
+        ///
+        /// The degree-type-value type indicates whether the current degree element is an
+        /// addition, alteration, or subtraction to the kind of the current chord in the
+        /// harmony element.
+        ///
         enum class DegreeTypeValue
         {
             add = 0,
@@ -266,6 +362,13 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const DegreeTypeValue value );
         std::ostream& operator<<( std::ostream& os, const DegreeTypeValue value );
 
+        /// DistanceTypeEnum ///////////////////////////////////////////////////////////////////////
+        ///
+        /// The distance-type defines what type of distance is being defined in a distance
+        /// element. Values include beam and hyphen. This is left as a string so that other
+        /// application-specific types can be defined, but it is made a separate type so
+        /// that it can be redefined more strictly.
+        ///
         enum class DistanceTypeEnum
         {
             beam = 0,
@@ -298,6 +401,27 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const DistanceType& value );
         std::ostream& operator<<( std::ostream& os, const DistanceType& value );
 
+        /// DynamicsEnum ///////////////////////////////////////////////////////////////////////////
+        ///
+        /// Dynamics can be associated either with a note or a general musical direction.
+        /// To avoid inconsistencies between and amongst the letter abbreviations for
+        /// dynamics (what is sf vs. sfz, standing alone or with a trailing dynamic that is
+        /// not always piano), we use the actual letters as the names of these dynamic
+        /// elements. The other-dynamics element allows other dynamic marks that are not
+        /// covered here, but many of those should perhaps be included in a more general
+        /// musical direction element. Dynamics elements may also be combined to create
+        /// marks not covered by a single element, such as sfmp.
+        ///
+        ///
+        ///
+        /// These letter dynamic symbols are separated from crescendo, decrescendo, and
+        /// wedge indications. Dynamic representation is inconsistent in scores. Many
+        /// things are assumed by the composer and left out, such as returns to original
+        /// dynamics. Systematic representations are quite complex: for example, Humdrum
+        /// has at least 3 representation formats related to dynamics. The MusicXML format
+        /// captures what is in the score, but does not try to be optimal for analysis or
+        /// synthesis of dynamics.
+        ///
         enum class DynamicsEnum
         {
             p = 0,
@@ -351,6 +475,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const DynamicsValue& value );
         std::ostream& operator<<( std::ostream& os, const DynamicsValue& value );
 
+        /// EffectEnum /////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The effect type represents pictograms for sound effect percussion instruments.
+        /// The cannon value is in addition to Stone's list.
+        ///
         enum class EffectEnum
         {
             anvil = 0,
@@ -374,6 +503,12 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const EffectEnum value );
         std::ostream& operator<<( std::ostream& os, const EffectEnum value );
 
+        /// EnclosureShape /////////////////////////////////////////////////////////////////////////
+        ///
+        /// The enclosure-shape type describes the shape and presence / absence of an
+        /// enclosure around text or symbols. A bracket enclosure is similar to a rectangle
+        /// with the bottom line missing, as is common in jazz notation.
+        ///
         enum class EnclosureShape
         {
             rectangle = 0,
@@ -391,6 +526,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const EnclosureShape value );
         std::ostream& operator<<( std::ostream& os, const EnclosureShape value );
 
+        /// Fan ////////////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The fan type represents the type of beam fanning present on a note, used to
+        /// represent accelerandos and ritardandos.
+        ///
         enum class Fan
         {
             accel = 0,
@@ -403,6 +543,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const Fan value );
         std::ostream& operator<<( std::ostream& os, const Fan value );
 
+        /// FermataShape ///////////////////////////////////////////////////////////////////////////
+        ///
+        /// The fermata-shape type represents the shape of the fermata sign. The empty
+        /// value is equivalent to the normal value.
+        ///
         enum class FermataShape
         {
             normal = 0,
@@ -416,6 +561,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const FermataShape value );
         std::ostream& operator<<( std::ostream& os, const FermataShape value );
 
+        /// FontStyle //////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The font-style type represents a simplified version of the CSS font-style
+        /// property.
+        ///
         enum class FontStyle
         {
             normal = 0,
@@ -427,6 +577,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const FontStyle value );
         std::ostream& operator<<( std::ostream& os, const FontStyle value );
 
+        /// FontWeight /////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The font-weight type represents a simplified version of the CSS font-weight
+        /// property.
+        ///
         enum class FontWeight
         {
             normal = 0,
@@ -438,6 +593,10 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const FontWeight value );
         std::ostream& operator<<( std::ostream& os, const FontWeight value );
 
+        /// GlassEnum //////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The glass type represents pictograms for glass percussion instruments.
+        ///
         enum class GlassEnum
         {
             windChimes = 0
@@ -448,6 +607,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const GlassEnum value );
         std::ostream& operator<<( std::ostream& os, const GlassEnum value );
 
+        /// GroupBarlineValue //////////////////////////////////////////////////////////////////////
+        ///
+        /// The group-barline-value type indicates if the group should have common
+        /// barlines.
+        ///
         enum class GroupBarlineValue
         {
             yes = 0,
@@ -460,6 +624,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const GroupBarlineValue value );
         std::ostream& operator<<( std::ostream& os, const GroupBarlineValue value );
 
+        /// GroupSymbolValue ///////////////////////////////////////////////////////////////////////
+        ///
+        /// The group-symbol-value type indicates how the symbol for a group is indicated
+        /// in the score. The default value is none.
+        ///
         enum class GroupSymbolValue
         {
             none = 0,
@@ -474,6 +643,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const GroupSymbolValue value );
         std::ostream& operator<<( std::ostream& os, const GroupSymbolValue value );
 
+        /// HandbellValue //////////////////////////////////////////////////////////////////////////
+        ///
+        /// The handbell-value type represents the type of handbell technique being
+        /// notated.
+        ///
         enum class HandbellValue
         {
             damp = 0,
@@ -494,6 +668,13 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const HandbellValue value );
         std::ostream& operator<<( std::ostream& os, const HandbellValue value );
 
+        /// HarmonyType ////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The harmony-type type differentiates different types of harmonies when
+        /// alternate harmonies are possible. Explicit harmonies have all note present in
+        /// the music; implied have some notes missing but implied; alternate represents
+        /// alternate analyses.
+        ///
         enum class HarmonyType
         {
             explicit_ = 0,
@@ -506,6 +687,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const HarmonyType value );
         std::ostream& operator<<( std::ostream& os, const HarmonyType value );
 
+        /// HoleClosedLocation /////////////////////////////////////////////////////////////////////
+        ///
+        /// The hole-closed-location type indicates which portion of the hole is filled in
+        /// when the corresponding hole-closed-value is half.
+        ///
         enum class HoleClosedLocation
         {
             right = 0,
@@ -519,6 +705,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const HoleClosedLocation value );
         std::ostream& operator<<( std::ostream& os, const HoleClosedLocation value );
 
+        /// HoleClosedValue ////////////////////////////////////////////////////////////////////////
+        ///
+        /// The hole-closed-value type represents whether the hole is closed, open, or
+        /// half-open.
+        ///
         enum class HoleClosedValue
         {
             yes = 0,
@@ -531,6 +722,99 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const HoleClosedValue value );
         std::ostream& operator<<( std::ostream& os, const HoleClosedValue value );
 
+        /// KindValue //////////////////////////////////////////////////////////////////////////////
+        ///
+        /// A kind-value indicates the type of chord. Degree elements can then add,
+        /// subtract, or alter from these starting points. Values include:
+        ///
+        ///
+        ///
+        /// Triads:
+        ///
+        /// major (major third, perfect fifth)
+        ///
+        /// minor (minor third, perfect fifth)
+        ///
+        /// augmented (major third, augmented fifth)
+        ///
+        /// diminished (minor third, diminished fifth)
+        ///
+        /// Sevenths:
+        ///
+        /// dominant (major triad, minor seventh)
+        ///
+        /// major-seventh (major triad, major seventh)
+        ///
+        /// minor-seventh (minor triad, minor seventh)
+        ///
+        /// diminished-seventh (diminished triad, diminished seventh)
+        ///
+        /// augmented-seventh (augmented triad, minor seventh)
+        ///
+        /// half-diminished (diminished triad, minor seventh)
+        ///
+        /// major-minor (minor triad, major seventh)
+        ///
+        /// Sixths:
+        ///
+        /// major-sixth (major triad, added sixth)
+        ///
+        /// minor-sixth (minor triad, added sixth)
+        ///
+        /// Ninths:
+        ///
+        /// dominant-ninth (dominant-seventh, major ninth)
+        ///
+        /// major-ninth (major-seventh, major ninth)
+        ///
+        /// minor-ninth (minor-seventh, major ninth)
+        ///
+        /// 11ths (usually as the basis for alteration):
+        ///
+        /// dominant-11th (dominant-ninth, perfect 11th)
+        ///
+        /// major-11th (major-ninth, perfect 11th)
+        ///
+        /// minor-11th (minor-ninth, perfect 11th)
+        ///
+        /// 13ths (usually as the basis for alteration):
+        ///
+        /// dominant-13th (dominant-11th, major 13th)
+        ///
+        /// major-13th (major-11th, major 13th)
+        ///
+        /// minor-13th (minor-11th, major 13th)
+        ///
+        /// Suspended:
+        ///
+        /// suspended-second (major second, perfect fifth)
+        ///
+        /// suspended-fourth (perfect fourth, perfect fifth)
+        ///
+        /// Functional sixths:
+        ///
+        /// Neapolitan
+        ///
+        /// Italian
+        ///
+        /// French
+        ///
+        /// German
+        ///
+        /// Other:
+        ///
+        /// pedal (pedal-point bass)
+        ///
+        /// power (perfect fifth)
+        ///
+        /// Tristan
+        ///
+        ///
+        ///
+        /// The "other" kind is used when the harmony is entirely composed of add elements.
+        /// The "none" kind is used to explicitly encode absence of chords or functional
+        /// harmony.
+        ///
         enum class KindValue
         {
             major = 0,
@@ -573,6 +857,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const KindValue value );
         std::ostream& operator<<( std::ostream& os, const KindValue value );
 
+        /// LeftCenterRight ////////////////////////////////////////////////////////////////////////
+        ///
+        /// The left-center-right type is used to define horizontal alignment and text
+        /// justification.
+        ///
         enum class LeftCenterRight
         {
             left = 0,
@@ -585,6 +874,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const LeftCenterRight value );
         std::ostream& operator<<( std::ostream& os, const LeftCenterRight value );
 
+        /// LeftRight //////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The left-right type is used to indicate whether one element appears to the left
+        /// or the right of another element.
+        ///
         enum class LeftRight
         {
             left = 0,
@@ -596,6 +890,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const LeftRight value );
         std::ostream& operator<<( std::ostream& os, const LeftRight value );
 
+        /// LineEnd ////////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The line-end type specifies if there is a jog up or down (or both), an arrow,
+        /// or nothing at the start or end of a bracket.
+        ///
         enum class LineEnd
         {
             up = 0,
@@ -610,6 +909,10 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const LineEnd value );
         std::ostream& operator<<( std::ostream& os, const LineEnd value );
 
+        /// LineShape //////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The line-shape type distinguishes between straight and curved lines.
+        ///
         enum class LineShape
         {
             straight = 0,
@@ -621,6 +924,10 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const LineShape value );
         std::ostream& operator<<( std::ostream& os, const LineShape value );
 
+        /// LineType ///////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The line-type type distinguishes between solid, dashed, dotted, and wavy lines.
+        ///
         enum class LineType
         {
             solid = 0,
@@ -634,6 +941,15 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const LineType value );
         std::ostream& operator<<( std::ostream& os, const LineType value );
 
+        /// LineWidthTypeEnum //////////////////////////////////////////////////////////////////////
+        ///
+        /// The line-width-type defines what type of line is being defined in a line-width
+        /// element. Values include beam, bracket, dashes, enclosure, ending, extend, heavy
+        /// barline, leger, light barline, octave shift, pedal, slur middle, slur tip,
+        /// staff, stem, tie middle, tie tip, tuplet bracket, and wedge. This is left as a
+        /// string so that other application-specific types can be defined, but it is made
+        /// a separate type so that it can be redefined more strictly.
+        ///
         enum class LineWidthTypeEnum
         {
             beam = 0,
@@ -683,6 +999,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const LineWidthType& value );
         std::ostream& operator<<( std::ostream& os, const LineWidthType& value );
 
+        /// MarginType /////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The margin-type type specifies whether margins apply to even page, odd pages,
+        /// or both.
+        ///
         enum class MarginType
         {
             odd = 0,
@@ -695,6 +1016,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const MarginType value );
         std::ostream& operator<<( std::ostream& os, const MarginType value );
 
+        /// MeasureNumberingValue //////////////////////////////////////////////////////////////////
+        ///
+        /// The measure-numbering-value type describes how measure numbers are displayed on
+        /// this part: no numbers, numbers every measure, or numbers every system.
+        ///
         enum class MeasureNumberingValue
         {
             none = 0,
@@ -707,6 +1033,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const MeasureNumberingValue value );
         std::ostream& operator<<( std::ostream& os, const MeasureNumberingValue value );
 
+        /// MembraneEnum ///////////////////////////////////////////////////////////////////////////
+        ///
+        /// The membrane type represents pictograms for membrane percussion instruments.
+        /// The goblet drum value is in addition to Stone's list.
+        ///
         enum class MembraneEnum
         {
             bassDrum = 0,
@@ -728,6 +1059,12 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const MembraneEnum value );
         std::ostream& operator<<( std::ostream& os, const MembraneEnum value );
 
+        /// MetalEnum //////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The metal type represents pictograms for metal percussion instruments. The
+        /// hi-hat value refers to a pictogram like Stone's high-hat cymbals but without
+        /// the long vertical line at the bottom.
+        ///
         enum class MetalEnum
         {
             almglocken = 0,
@@ -760,6 +1097,12 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const MetalEnum value );
         std::ostream& operator<<( std::ostream& os, const MetalEnum value );
 
+        /// ModeEnum ///////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The mode type is used to specify major/minor and other mode distinctions. Valid
+        /// mode values include major, minor, dorian, phrygian, lydian, mixolydian,
+        /// aeolian, ionian, locrian, and none.
+        ///
         enum class ModeEnum
         {
             major = 0,
@@ -800,6 +1143,12 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const ModeValue& value );
         std::ostream& operator<<( std::ostream& os, const ModeValue& value );
 
+        /// MuteEnum ///////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The mute type represents muting for different instruments, including brass,
+        /// winds, and strings. The on and off values are used for undifferentiated mutes.
+        /// The remaining values represent specific mutes.
+        ///
         enum class MuteEnum
         {
             on = 0,
@@ -824,6 +1173,14 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const MuteEnum value );
         std::ostream& operator<<( std::ostream& os, const MuteEnum value );
 
+        /// NoteSizeType ///////////////////////////////////////////////////////////////////////////
+        ///
+        /// The note-size-type type indicates the type of note being defined by a note-size
+        /// element. The grace type is used for notes of cue size that that include a grace
+        /// element. The cue type is used for all other notes with cue size, whether
+        /// defined explicitly or implicitly via a cue element. The large type is used for
+        /// notes of large size.
+        ///
         enum class NoteSizeType
         {
             cue = 0,
@@ -836,6 +1193,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const NoteSizeType value );
         std::ostream& operator<<( std::ostream& os, const NoteSizeType value );
 
+        /// NoteTypeValue //////////////////////////////////////////////////////////////////////////
+        ///
+        /// The note-type type is used for the MusicXML type element and represents the
+        /// graphic note type, from 1024th (shortest) to maxima (longest).
+        ///
         enum class NoteTypeValue
         {
             oneThousandTwentyFourth = 0,
@@ -859,6 +1221,22 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const NoteTypeValue value );
         std::ostream& operator<<( std::ostream& os, const NoteTypeValue value );
 
+        /// NoteheadValue //////////////////////////////////////////////////////////////////////////
+        ///
+        /// The notehead type indicates shapes other than the open and closed ovals
+        /// associated with note durations. The values do, re, mi, fa, fa up, so, la, and
+        /// ti correspond to Aikin's 7-shape system. The fa up shape is typically used with
+        /// upstems; the fa shape is typically used with downstems or no stems.
+        ///
+        ///
+        ///
+        /// The arrow shapes differ from triangle and inverted triangle by being centered
+        /// on the stem. Slashed and back slashed notes include both the normal notehead
+        /// and a slash. The triangle shape has the tip of the triangle pointing up; the
+        /// inverted triangle shape has the tip of the triangle pointing down. The left
+        /// triangle shape is a right triangle with the hypotenuse facing up and to the
+        /// left.
+        ///
         enum class NoteheadValue
         {
             slash = 0,
@@ -894,6 +1272,10 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const NoteheadValue value );
         std::ostream& operator<<( std::ostream& os, const NoteheadValue value );
 
+        /// OnOff //////////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The on-off type is used for notation elements such as string mutes.
+        ///
         enum class OnOff
         {
             on = 0,
@@ -905,6 +1287,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const OnOff value );
         std::ostream& operator<<( std::ostream& os, const OnOff value );
 
+        /// OverUnder //////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The over-under type is used to indicate whether the tips of curved lines such
+        /// as slurs and ties are overhand (tips down) or underhand (tips up).
+        ///
         enum class OverUnder
         {
             over = 0,
@@ -916,6 +1303,12 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const OverUnder value );
         std::ostream& operator<<( std::ostream& os, const OverUnder value );
 
+        /// PitchedEnum ////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The pitched type represents pictograms for pitched percussion instruments. The
+        /// chimes and tubular chimes values distinguish the single-line and double-line
+        /// versions of the pictogram. The mallet value is in addition to Stone's list.
+        ///
         enum class PitchedEnum
         {
             chimes = 0,
@@ -932,6 +1325,13 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const PitchedEnum value );
         std::ostream& operator<<( std::ostream& os, const PitchedEnum value );
 
+        /// PrincipalVoiceSymbol ///////////////////////////////////////////////////////////////////
+        ///
+        /// The principal-voice-symbol type represents the type of symbol used to indicate
+        /// the start of a principal or secondary voice. The "plain" value represents a
+        /// plain square bracket. The value of "none" is used for analysis markup when the
+        /// principal-voice element does not have a corresponding appearance in the score.
+        ///
         enum class PrincipalVoiceSymbol
         {
             hauptstimme = 0,
@@ -945,6 +1345,10 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const PrincipalVoiceSymbol value );
         std::ostream& operator<<( std::ostream& os, const PrincipalVoiceSymbol value );
 
+        /// RightLeftMiddle ////////////////////////////////////////////////////////////////////////
+        ///
+        /// The right-left-middle type is used to specify barline location.
+        ///
         enum class RightLeftMiddle
         {
             right = 0,
@@ -957,6 +1361,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const RightLeftMiddle value );
         std::ostream& operator<<( std::ostream& os, const RightLeftMiddle value );
 
+        /// SemiPitchedEnum ////////////////////////////////////////////////////////////////////////
+        ///
+        /// The semi-pitched type represents categories of indefinite pitch for percussion
+        /// instruments.
+        ///
         enum class SemiPitchedEnum
         {
             high = 0,
@@ -972,6 +1381,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const SemiPitchedEnum value );
         std::ostream& operator<<( std::ostream& os, const SemiPitchedEnum value );
 
+        /// ShowFrets //////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The show-frets type indicates whether to show tablature frets as numbers (0, 1,
+        /// 2) or letters (a, b, c). The default choice is numbers.
+        ///
         enum class ShowFrets
         {
             numbers = 0,
@@ -983,6 +1397,12 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const ShowFrets value );
         std::ostream& operator<<( std::ostream& os, const ShowFrets value );
 
+        /// ShowTuplet /////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The show-tuplet type indicates whether to show a part of a tuplet relating to
+        /// the tuplet-actual element, both the tuplet-actual and tuplet-normal elements,
+        /// or neither.
+        ///
         enum class ShowTuplet
         {
             actual = 0,
@@ -995,6 +1415,13 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const ShowTuplet value );
         std::ostream& operator<<( std::ostream& os, const ShowTuplet value );
 
+        /// StaffTypeEnum //////////////////////////////////////////////////////////////////////////
+        ///
+        /// The staff-type value can be ossia, cue, editorial, regular, or alternate. An
+        /// alternate staff indicates one that shares the same musical data as the prior
+        /// staff, but displayed differently (e.g., treble and bass clef, standard notation
+        /// and tab).
+        ///
         enum class StaffTypeEnum
         {
             ossia = 0,
@@ -1009,6 +1436,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const StaffTypeEnum value );
         std::ostream& operator<<( std::ostream& os, const StaffTypeEnum value );
 
+        /// StartNote //////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The start-note type describes the starting note of trills and mordents for
+        /// playback, relative to the current note.
+        ///
         enum class StartNote
         {
             upper = 0,
@@ -1021,6 +1453,20 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const StartNote value );
         std::ostream& operator<<( std::ostream& os, const StartNote value );
 
+        /// StartStop //////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The start-stop type is used for an attribute of musical elements that can
+        /// either start or stop, such as tuplets.
+        ///
+        ///
+        ///
+        /// The values of start and stop refer to how an element appears in musical score
+        /// order, not in MusicXML document order. An element with a stop attribute may
+        /// precede the corresponding element with a start attribute within a MusicXML
+        /// document. This is particularly common in multi-staff music. For example, the
+        /// stopping point for a tuplet may appear in staff 1 before the starting point for
+        /// the tuplet appears in staff 2 later in the document.
+        ///
         enum class StartStop
         {
             start = 0,
@@ -1032,6 +1478,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const StartStop value );
         std::ostream& operator<<( std::ostream& os, const StartStop value );
 
+        /// StartStopChangeContinue ////////////////////////////////////////////////////////////////
+        ///
+        /// The start-stop-change-continue type is used to distinguish types of pedal
+        /// directions.
+        ///
         enum class StartStopChangeContinue
         {
             start = 0,
@@ -1045,6 +1496,22 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const StartStopChangeContinue value );
         std::ostream& operator<<( std::ostream& os, const StartStopChangeContinue value );
 
+        /// StartStopContinue //////////////////////////////////////////////////////////////////////
+        ///
+        /// The start-stop-continue type is used for an attribute of musical elements that
+        /// can either start or stop, but also need to refer to an intermediate point in
+        /// the symbol, as for complex slurs or for formatting of symbols across system
+        /// breaks.
+        ///
+        ///
+        ///
+        /// The values of start, stop, and continue refer to how an element appears in
+        /// musical score order, not in MusicXML document order. An element with a stop
+        /// attribute may precede the corresponding element with a start attribute within a
+        /// MusicXML document. This is particularly common in multi-staff music. For
+        /// example, the stopping point for a slur may appear in staff 1 before the
+        /// starting point for the slur appears in staff 2 later in the document.
+        ///
         enum class StartStopContinue
         {
             start = 0,
@@ -1057,6 +1524,16 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const StartStopContinue value );
         std::ostream& operator<<( std::ostream& os, const StartStopContinue value );
 
+        /// StartStopDiscontinue ///////////////////////////////////////////////////////////////////
+        ///
+        /// The start-stop-discontinue type is used to specify ending types. Typically, the
+        /// start type is associated with the left barline of the first measure in an
+        /// ending. The stop and discontinue types are associated with the right barline of
+        /// the last measure in an ending. Stop is used when the ending mark concludes with
+        /// a downward jog, as is typical for first endings. Discontinue is used when there
+        /// is no downward jog, as is typical for second endings that do not conclude a
+        /// piece.
+        ///
         enum class StartStopDiscontinue
         {
             start = 0,
@@ -1069,6 +1546,12 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const StartStopDiscontinue value );
         std::ostream& operator<<( std::ostream& os, const StartStopDiscontinue value );
 
+        /// StartStopSingle ////////////////////////////////////////////////////////////////////////
+        ///
+        /// The start-stop-single type is used for an attribute of musical elements that
+        /// can be used for either multi-note or single-note musical elements, as for
+        /// tremolos.
+        ///
         enum class StartStopSingle
         {
             start = 0,
@@ -1081,6 +1564,10 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const StartStopSingle value );
         std::ostream& operator<<( std::ostream& os, const StartStopSingle value );
 
+        /// StemValue //////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The stem type represents the notated stem direction.
+        ///
         enum class StemValue
         {
             down = 0,
@@ -1094,6 +1581,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const StemValue value );
         std::ostream& operator<<( std::ostream& os, const StemValue value );
 
+        /// StepEnum ///////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The step type represents a step of the diatonic scale, represented using the
+        /// English letters A through G.
+        ///
         enum class StepEnum
         {
             a = 0,
@@ -1110,6 +1602,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const StepEnum value );
         std::ostream& operator<<( std::ostream& os, const StepEnum value );
 
+        /// StickLocationEnum //////////////////////////////////////////////////////////////////////
+        ///
+        /// The stick-location type represents pictograms for the location of sticks,
+        /// beaters, or mallets on cymbals, gongs, drums, and other instruments.
+        ///
         enum class StickLocationEnum
         {
             center = 0,
@@ -1123,6 +1620,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const StickLocationEnum value );
         std::ostream& operator<<( std::ostream& os, const StickLocationEnum value );
 
+        /// StickMaterialEnum //////////////////////////////////////////////////////////////////////
+        ///
+        /// The stick-material type represents the material being displayed in a stick
+        /// pictogram.
+        ///
         enum class StickMaterialEnum
         {
             soft = 0,
@@ -1137,6 +1639,12 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const StickMaterialEnum value );
         std::ostream& operator<<( std::ostream& os, const StickMaterialEnum value );
 
+        /// StickTypeEnum //////////////////////////////////////////////////////////////////////////
+        ///
+        /// The stick-type type represents the shape of pictograms where the material
+        ///
+        /// in the stick, mallet, or beater is represented in the pictogram.
+        ///
         enum class StickTypeEnum
         {
             bassDrum = 0,
@@ -1151,6 +1659,12 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const StickTypeEnum value );
         std::ostream& operator<<( std::ostream& os, const StickTypeEnum value );
 
+        /// SyllabicEnum ///////////////////////////////////////////////////////////////////////////
+        ///
+        /// Lyric hyphenation is indicated by the syllabic type. The single, begin, end,
+        /// and middle values represent single-syllable words, word-beginning syllables,
+        /// word-ending syllables, and mid-word syllables, respectively.
+        ///
         enum class SyllabicEnum
         {
             single = 0,
@@ -1164,6 +1678,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const SyllabicEnum value );
         std::ostream& operator<<( std::ostream& os, const SyllabicEnum value );
 
+        /// SymbolSize /////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The symbol-size type is used to indicate full vs. cue-sized vs. oversized
+        /// symbols. The large value for oversized symbols was added in version 1.1.
+        ///
         enum class SymbolSize
         {
             full = 0,
@@ -1176,6 +1695,17 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const SymbolSize value );
         std::ostream& operator<<( std::ostream& os, const SymbolSize value );
 
+        /// TextDirection //////////////////////////////////////////////////////////////////////////
+        ///
+        /// The text-direction type is used to adjust and override the Unicode
+        /// bidirectional text algorithm, similar to the W3C Internationalization Tag Set
+        /// recommendation. Values are ltr (left-to-right embed), rtl (right-to-left
+        /// embed), lro (left-to-right bidi-override), and rlo (right-to-left
+        /// bidi-override). The default value is ltr. This type is typically used by
+        /// applications that store text in left-to-right visual order rather than logical
+        /// order. Such applications can use the lro value to better communicate with other
+        /// applications that more fully support bidirectional text.
+        ///
         enum class TextDirection
         {
             ltr = 0,
@@ -1189,6 +1719,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const TextDirection value );
         std::ostream& operator<<( std::ostream& os, const TextDirection value );
 
+        /// TimeRelationEnum ///////////////////////////////////////////////////////////////////////
+        ///
+        /// The time-relation type indicates the symbol used to represent the
+        /// interchangeable aspect of dual time signatures.
+        ///
         enum class TimeRelationEnum
         {
             parentheses = 0,
@@ -1204,6 +1739,17 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const TimeRelationEnum value );
         std::ostream& operator<<( std::ostream& os, const TimeRelationEnum value );
 
+        /// TimeSeparator //////////////////////////////////////////////////////////////////////////
+        ///
+        /// The time-separator type indicates how to display the arrangement between the
+        /// beats and beat-type values in a time signature. The default value is none. The
+        /// horizontal, diagonal, and vertical values represent horizontal, diagonal
+        /// lower-left to upper-right, and vertical lines respectively. For these values,
+        /// the beats and beat-type values are arranged on either side of the separator
+        /// line. The none value represents no separator with the beats and beat-type
+        /// arranged vertically. The adjacent value represents no separator with the beats
+        /// and beat-type arranged horizontally.
+        ///
         enum class TimeSeparator
         {
             none = 0,
@@ -1218,6 +1764,17 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const TimeSeparator value );
         std::ostream& operator<<( std::ostream& os, const TimeSeparator value );
 
+        /// TimeSymbol /////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The time-symbol type indicates how to display a time signature. The normal
+        /// value is the usual fractional display, and is the implied symbol type if none
+        /// is specified. Other options are the common and cut time symbols, as well as a
+        /// single number with an implied denominator. The note symbol indicates that the
+        /// beat-type should be represented with the corresponding downstem note rather
+        /// than a number. The dotted-note symbol indicates that the beat-type should be
+        /// represented with a dotted downstem note that corresponds to three times the
+        /// beat-type value, and a numerator that is one third the beats value.
+        ///
         enum class TimeSymbol
         {
             common = 0,
@@ -1233,6 +1790,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const TimeSymbol value );
         std::ostream& operator<<( std::ostream& os, const TimeSymbol value );
 
+        /// TipDirection ///////////////////////////////////////////////////////////////////////////
+        ///
+        /// The tip-direction type represents the direction in which the tip of a stick or
+        /// beater points, using Unicode arrow terminology.
+        ///
         enum class TipDirection
         {
             up = 0,
@@ -1250,6 +1812,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const TipDirection value );
         std::ostream& operator<<( std::ostream& os, const TipDirection value );
 
+        /// TopBottom //////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The top-bottom type is used to indicate the top or bottom part of a vertical
+        /// shape like non-arpeggiate.
+        ///
         enum class TopBottom
         {
             top = 0,
@@ -1261,6 +1828,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const TopBottom value );
         std::ostream& operator<<( std::ostream& os, const TopBottom value );
 
+        /// TrillStep //////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The trill-step type describes the alternating note of trills and mordents for
+        /// playback, relative to the current note.
+        ///
         enum class TrillStep
         {
             whole = 0,
@@ -1273,6 +1845,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const TrillStep value );
         std::ostream& operator<<( std::ostream& os, const TrillStep value );
 
+        /// TwoNoteTurn ////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The two-note-turn type describes the ending notes of trills and mordents for
+        /// playback, relative to the current note.
+        ///
         enum class TwoNoteTurn
         {
             whole = 0,
@@ -1285,6 +1862,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const TwoNoteTurn value );
         std::ostream& operator<<( std::ostream& os, const TwoNoteTurn value );
 
+        /// UpDown /////////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The up-down type is used for the direction of arrows and other pointed symbols
+        /// like vertical accents, indicating which way the tip is pointing.
+        ///
         enum class UpDown
         {
             up = 0,
@@ -1296,6 +1878,12 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const UpDown value );
         std::ostream& operator<<( std::ostream& os, const UpDown value );
 
+        /// UpDownStopContinue /////////////////////////////////////////////////////////////////////
+        ///
+        /// The up-down-stop-continue type is used for octave-shift elements, indicating
+        /// the direction of the shift from their true pitched values because of printing
+        /// difficulty.
+        ///
         enum class UpDownStopContinue
         {
             up = 0,
@@ -1309,6 +1897,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const UpDownStopContinue value );
         std::ostream& operator<<( std::ostream& os, const UpDownStopContinue value );
 
+        /// UprightInverted ////////////////////////////////////////////////////////////////////////
+        ///
+        /// The upright-inverted type describes the appearance of a fermata element. The
+        /// value is upright if not specified.
+        ///
         enum class UprightInverted
         {
             upright = 0,
@@ -1320,6 +1913,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const UprightInverted value );
         std::ostream& operator<<( std::ostream& os, const UprightInverted value );
 
+        /// Valign /////////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The valign type is used to indicate vertical alignment to the top, middle,
+        /// bottom, or baseline of the text. Defaults are implementation-dependent.
+        ///
         enum class Valign
         {
             top = 0,
@@ -1333,6 +1931,12 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const Valign value );
         std::ostream& operator<<( std::ostream& os, const Valign value );
 
+        /// ValignImage ////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The valign-image type is used to indicate vertical alignment for images and
+        /// graphics, so it does not include a baseline value. Defaults are
+        /// implementation-dependent.
+        ///
         enum class ValignImage
         {
             top = 0,
@@ -1345,6 +1949,14 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const ValignImage value );
         std::ostream& operator<<( std::ostream& os, const ValignImage value );
 
+        /// WedgeType //////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The wedge type is crescendo for the start of a wedge that is closed at the left
+        /// side, diminuendo for the start of a wedge that is closed on the right side, and
+        /// stop for the end of a wedge. The continue type is used for formatting wedges
+        /// over a system break, or for other situations where a single wedge is divided
+        /// into multiple segments.
+        ///
         enum class WedgeType
         {
             crescendo = 0,
@@ -1358,6 +1970,13 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const WedgeType value );
         std::ostream& operator<<( std::ostream& os, const WedgeType value );
 
+        /// Winged /////////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The winged attribute indicates whether the repeat has winged extensions that
+        /// appear above and below the barline. The straight and curved values represent
+        /// single wings, while the double-straight and double-curved values represent
+        /// double wings. The none value indicates no wings and is the default.
+        ///
         enum class Winged
         {
             none = 0,
@@ -1372,6 +1991,12 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const Winged value );
         std::ostream& operator<<( std::ostream& os, const Winged value );
 
+        /// WoodEnum ///////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The wood type represents pictograms for wood percussion instruments. The maraca
+        /// and maracas values distinguish the one- and two-maraca versions of the
+        /// pictogram. The vibraslap and castanets values are in addition to Stone's list.
+        ///
         enum class WoodEnum
         {
             boardClapper = 0,
@@ -1395,6 +2020,11 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const WoodEnum value );
         std::ostream& operator<<( std::ostream& os, const WoodEnum value );
 
+        /// YesNo //////////////////////////////////////////////////////////////////////////////////
+        ///
+        /// The yes-no type is used for boolean-like attributes. We cannot use W3C XML
+        /// Schema booleans due to their restrictions on expression of boolean values.
+        ///
         enum class YesNo
         {
             yes = 0,
