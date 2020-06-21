@@ -1,5 +1,4 @@
 use std::fs::{read_to_string, remove_file, File, OpenOptions};
-use std::io::Write;
 use std::path::{Path, PathBuf};
 use std::str::FromStr;
 
@@ -107,7 +106,6 @@ impl Generator {
     }
 
     fn generate(&self) -> Result<()> {
-        println!("doing the generate thing");
         println!("{}", self.xsd.display());
         let xsd = read_to_string(&self.xsd).unwrap();
         let doc = exile::parse(xsd.as_str()).unwrap();
@@ -117,7 +115,7 @@ impl Generator {
                 pseudo_enums: pseudo_enums(),
             },
         )
-            .unwrap();
+        .unwrap();
         let opt = if let Language::Cpp(o) = &self.language {
             o
         } else {

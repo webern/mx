@@ -41,10 +41,6 @@ pub(crate) fn parse_musicxml_xsd(
     }
     let mut type_nodes = parse_type_nodes(doc)?;
     let type_definitions = parse_type_definitions(&type_nodes, &params)?;
-    for (_, n) in type_nodes {
-        println!("{}", n);
-    }
-
     Ok(MusicXSD::new(type_definitions))
 }
 

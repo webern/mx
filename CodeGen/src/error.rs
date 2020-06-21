@@ -4,7 +4,7 @@
 
 use core::fmt;
 use std::convert::Infallible;
-use std::fmt::{Display, Formatter, Pointer};
+use std::fmt::{Display, Formatter};
 
 pub(crate) type Result<T> = std::result::Result<T, Error>;
 
