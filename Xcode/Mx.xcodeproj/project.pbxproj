@@ -7,6 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		293B06EF249F0BB800429597 /* EnumsBuiltin.h in Headers */ = {isa = PBXBuildFile; fileRef = 293B06ED249F0BB800429597 /* EnumsBuiltin.h */; };
+		293B06F0249F0BB800429597 /* EnumsBuiltin.h in Headers */ = {isa = PBXBuildFile; fileRef = 293B06ED249F0BB800429597 /* EnumsBuiltin.h */; };
+		293B06F1249F0BB800429597 /* EnumsBuiltin.h in Headers */ = {isa = PBXBuildFile; fileRef = 293B06ED249F0BB800429597 /* EnumsBuiltin.h */; };
+		293B06F2249F0BB800429597 /* EnumsBuiltin.h in Headers */ = {isa = PBXBuildFile; fileRef = 293B06ED249F0BB800429597 /* EnumsBuiltin.h */; };
+		293B06F3249F0BB800429597 /* EnumsBuiltin.h in Headers */ = {isa = PBXBuildFile; fileRef = 293B06ED249F0BB800429597 /* EnumsBuiltin.h */; };
+		293B06F4249F0BB800429597 /* EnumsBuiltin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 293B06EE249F0BB800429597 /* EnumsBuiltin.cpp */; };
+		293B06F5249F0BB800429597 /* EnumsBuiltin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 293B06EE249F0BB800429597 /* EnumsBuiltin.cpp */; };
+		293B06F6249F0BB800429597 /* EnumsBuiltin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 293B06EE249F0BB800429597 /* EnumsBuiltin.cpp */; };
+		293B06F7249F0BB800429597 /* EnumsBuiltin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 293B06EE249F0BB800429597 /* EnumsBuiltin.cpp */; };
+		293B06F8249F0BB800429597 /* EnumsBuiltin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 293B06EE249F0BB800429597 /* EnumsBuiltin.cpp */; };
 		294895A01FC4011400A06219 /* AppearanceData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2948959A1FC4011400A06219 /* AppearanceData.cpp */; };
 		294895A11FC4011400A06219 /* AppearanceData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2948959A1FC4011400A06219 /* AppearanceData.cpp */; };
 		294895A21FC4011400A06219 /* AppearanceData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2948959A1FC4011400A06219 /* AppearanceData.cpp */; };
@@ -3548,6 +3558,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		293B06ED249F0BB800429597 /* EnumsBuiltin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EnumsBuiltin.h; sourceTree = "<group>"; };
+		293B06EE249F0BB800429597 /* EnumsBuiltin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EnumsBuiltin.cpp; sourceTree = "<group>"; };
 		293FFED21DD25C74001477E8 /* libmx-macOS.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libmx-macOS.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2948959A1FC4011400A06219 /* AppearanceData.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AppearanceData.cpp; sourceTree = "<group>"; };
 		2975944D1F044C7600DE2F30 /* ChordData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ChordData.cpp; sourceTree = "<group>"; };
@@ -5064,6 +5076,8 @@
 		29A8DD881EF0475D00AD2478 /* core */ = {
 			isa = PBXGroup;
 			children = (
+				293B06EE249F0BB800429597 /* EnumsBuiltin.cpp */,
+				293B06ED249F0BB800429597 /* EnumsBuiltin.h */,
 				29A8DD891EF0475D00AD2478 /* AttributesInterface.cpp */,
 				29A8DD8A1EF0475D00AD2478 /* AttributesInterface.h */,
 				29A8DD8B1EF0475D00AD2478 /* Color.cpp */,
@@ -6544,6 +6558,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				29E76341205E2DEE00B754D5 /* LyricType.h in Headers */,
+				293B06F0249F0BB800429597 /* EnumsBuiltin.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6552,6 +6567,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				29E76340205E2DEE00B754D5 /* LyricType.h in Headers */,
+				293B06EF249F0BB800429597 /* EnumsBuiltin.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6559,6 +6575,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				293B06F3249F0BB800429597 /* EnumsBuiltin.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6566,6 +6583,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				293B06F2249F0BB800429597 /* EnumsBuiltin.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6574,6 +6592,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				29E76342205E2DEE00B754D5 /* LyricType.h in Headers */,
+				293B06F1249F0BB800429597 /* EnumsBuiltin.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6793,6 +6812,7 @@
 				29A8F3461EF0476800AD2478 /* PartNameDisplayAttributes.cpp in Sources */,
 				29A8E89C1EF0476400AD2478 /* DisplayTextOrAccidentalText.cpp in Sources */,
 				29A8FB7A1EF0476D00AD2478 /* PreciseDecimal.cpp in Sources */,
+				293B06F5249F0BB800429597 /* EnumsBuiltin.cpp in Sources */,
 				29A8EF901EF0476700AD2478 /* MetronomeRelationGroup.cpp in Sources */,
 				29A8F4E51EF0476900AD2478 /* RestAttributes.cpp in Sources */,
 				29A8EF361EF0476700AD2478 /* Membrane.cpp in Sources */,
@@ -7462,6 +7482,7 @@
 				29A8F3451EF0476800AD2478 /* PartNameDisplayAttributes.cpp in Sources */,
 				29A8E89B1EF0476400AD2478 /* DisplayTextOrAccidentalText.cpp in Sources */,
 				29A8FB791EF0476D00AD2478 /* PreciseDecimal.cpp in Sources */,
+				293B06F4249F0BB800429597 /* EnumsBuiltin.cpp in Sources */,
 				29A8EF8F1EF0476700AD2478 /* MetronomeRelationGroup.cpp in Sources */,
 				29A8F4E41EF0476900AD2478 /* RestAttributes.cpp in Sources */,
 				29A8EF351EF0476700AD2478 /* Membrane.cpp in Sources */,
@@ -8131,6 +8152,7 @@
 				29A8FE0D1EF0499200AD2478 /* BeatUnit.cpp in Sources */,
 				29A8FE0E1EF0499200AD2478 /* BeatUnitDot.cpp in Sources */,
 				29A8FE0F1EF0499200AD2478 /* BeatUnitGroup.cpp in Sources */,
+				293B06F8249F0BB800429597 /* EnumsBuiltin.cpp in Sources */,
 				29A8FE101EF0499200AD2478 /* BeatUnitPer.cpp in Sources */,
 				29A8FE111EF0499200AD2478 /* BeatUnitPerOrNoteRelationNoteChoice.cpp in Sources */,
 				29A8FE121EF0499200AD2478 /* Bend.cpp in Sources */,
@@ -8800,6 +8822,7 @@
 				29A8F3481EF0476800AD2478 /* PartNameDisplayAttributes.cpp in Sources */,
 				29A8E89E1EF0476400AD2478 /* DisplayTextOrAccidentalText.cpp in Sources */,
 				29A8FB7C1EF0476D00AD2478 /* PreciseDecimal.cpp in Sources */,
+				293B06F7249F0BB800429597 /* EnumsBuiltin.cpp in Sources */,
 				29A8EF921EF0476700AD2478 /* MetronomeRelationGroup.cpp in Sources */,
 				29A8F4E71EF0476900AD2478 /* RestAttributes.cpp in Sources */,
 				29A8EF381EF0476700AD2478 /* Membrane.cpp in Sources */,
@@ -9469,6 +9492,7 @@
 				29A8F3471EF0476800AD2478 /* PartNameDisplayAttributes.cpp in Sources */,
 				29A8E89D1EF0476400AD2478 /* DisplayTextOrAccidentalText.cpp in Sources */,
 				29A8FB7B1EF0476D00AD2478 /* PreciseDecimal.cpp in Sources */,
+				293B06F6249F0BB800429597 /* EnumsBuiltin.cpp in Sources */,
 				29A8EF911EF0476700AD2478 /* MetronomeRelationGroup.cpp in Sources */,
 				29A8F4E61EF0476900AD2478 /* RestAttributes.cpp in Sources */,
 				29A8EF371EF0476700AD2478 /* Membrane.cpp in Sources */,
