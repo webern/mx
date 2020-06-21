@@ -22,7 +22,7 @@ pub(crate) fn enum_member_substitutions() -> HashMap<String, String> {
 /// for an 'other' string field. These are given as uppercase, as in `Something` where the resulting
 /// code will be `enum class SomethingEnum`.
 pub(crate) fn suffixed_enum_names() -> IndexSet<String> {
-    /// TODO - this list can probably be computed by observing the name conflicts in the XSD.
+    // TODO - this list can probably be computed by observing the name conflicts in the XSD.
     let mut names = IndexSet::new();
     names.insert("ArrowDirection".into());
     names.insert("ArrowStyle".into());

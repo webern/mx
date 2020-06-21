@@ -5,7 +5,6 @@ use crate::error::Result;
 #[macro_use]
 mod error;
 mod generate;
-mod xsd;
 
 #[derive(Debug, StructOpt)]
 enum Command {

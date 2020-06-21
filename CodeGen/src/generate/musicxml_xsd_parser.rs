@@ -2,7 +2,7 @@ use super::musicxml_xsd::{Enumeration, MusicXSD, SimpleType, TypeDefinition};
 
 use crate::generate::musicxml_xsd_constants::PseudoEnumSpec;
 use crate::generate::musicxml_xsd_parser::Error::SchemaNotFound;
-use crate::generate::musicxml_xsd_parser::XsType::XsComplexType;
+use crate::generate::musicxml_xsd_parser::XsType::ComplexType;
 use crate::generate::mx_enum_writer::MxEnumOption;
 use crate::generate::string_stuff::{camel_case, pascal_case, Symbol};
 use derive_more::Display;
@@ -39,7 +39,7 @@ pub(crate) fn parse_musicxml_xsd(
     if root.fullname().as_str() != "xs:schema" {
         return Err(SchemaNotFound);
     }
-    let mut type_nodes = parse_type_nodes(doc)?;
+    let type_nodes = parse_type_nodes(doc)?;
     let type_definitions = parse_type_definitions(&type_nodes, &params)?;
     Ok(MusicXSD::new(type_definitions))
 }
@@ -49,7 +49,7 @@ fn parse_type_nodes(doc: &Document) -> Result<HashMap<String, XsTypeNode>, Error
     for node in doc.root().children() {
         let x = parse_xs_info(node)?;
         if let Some(existing) = type_nodes.insert(x.id.clone(), x) {
-            return Err(Error::DuplicateXsInfoID(existing.id.clone()));
+            return Err(Error::DuplicateXsInfoID(existing.id));
         }
     }
     Ok(type_nodes)
@@ -83,8 +83,8 @@ fn parse_xs_info(node: &Element) -> Result<XsTypeNode, Error> {
     let index = COUNTER.fetch_add(1, Ordering::Relaxed);
     let xsd_type = XsType::parse(node)?;
     let name = match xsd_type {
-        XsType::XsAnnotation => format!("{}:{}", XS_ANNOTATION, index),
-        XsType::XsImport => format!(
+        XsType::Annotation => format!("{}:{}", XS_ANNOTATION, index),
+        XsType::Import => format!(
             "{}:{}",
             XS_IMPORT,
             node.attributes
@@ -100,7 +100,7 @@ fn parse_xs_info(node: &Element) -> Result<XsTypeNode, Error> {
             .clone(),
     };
     let id = match xsd_type {
-        XsType::XsAnnotation | XsType::XsImport => name.clone(),
+        XsType::Annotation | XsType::Import => name.clone(),
         _ => format!("{}:{}", node.fullname(), name),
     };
     Ok(XsTypeNode {
@@ -114,26 +114,26 @@ fn parse_xs_info(node: &Element) -> Result<XsTypeNode, Error> {
 
 #[derive(Debug, Display, Clone, Eq, PartialEq, Ord, PartialOrd, Hash)]
 pub(crate) enum XsType {
-    XsAnnotation,
-    XsAttributeGroup,
-    XsComplexType,
-    XsElement,
-    XsGroup,
-    XsImport,
-    XsSimpleType,
+    Annotation,
+    AttributeGroup,
+    ComplexType,
+    Element,
+    Group,
+    Import,
+    SimpleType,
 }
 
 impl XsType {
     fn parse(node: &Element) -> Result<Self, Error> {
         let fullname = node.fullname();
         match fullname.as_str() {
-            XS_ANNOTATION => Ok(XsType::XsAnnotation),
-            XS_ATTRIBUTE_GROUP => Ok(XsType::XsAttributeGroup),
-            XS_COMPLEX_TYPE => Ok(XsType::XsComplexType),
-            XS_ELEMENT => Ok(XsType::XsElement),
-            XS_GROUP => Ok(XsType::XsGroup),
-            XS_IMPORT => Ok(XsType::XsImport),
-            XS_SIMPLE_TYPE => Ok(XsType::XsSimpleType),
+            XS_ANNOTATION => Ok(XsType::Annotation),
+            XS_ATTRIBUTE_GROUP => Ok(XsType::AttributeGroup),
+            XS_COMPLEX_TYPE => Ok(XsType::ComplexType),
+            XS_ELEMENT => Ok(XsType::Element),
+            XS_GROUP => Ok(XsType::Group),
+            XS_IMPORT => Ok(XsType::Import),
+            XS_SIMPLE_TYPE => Ok(XsType::SimpleType),
             _ => Err(Error::UnknownSchemaNode(fullname)),
         }
     }
@@ -144,13 +144,13 @@ fn parse_type_definitions(
     params: &XsdParserParams,
 ) -> Result<Vec<TypeDefinition>, Error> {
     let mut type_definitions = Vec::new();
-    for (_, x) in xsd_nodes {
+    for x in xsd_nodes.values() {
         // handle the very special case of the dynamics `complexType`, transformed to an enum here.
-        if let Some(dynamics) = parse_if_dynamics_complex_type(&x, &params)? {
+        if let Some(dynamics) = parse_if_dynamics_complex_type(&x)? {
             type_definitions.push(TypeDefinition::Simple(SimpleType::Enum(dynamics)));
             continue;
         }
-        if (x.xsd_type != XsType::XsSimpleType) {
+        if x.xsd_type != XsType::SimpleType {
             continue;
         }
         if is_enumeration_simple_type(x) {
@@ -259,11 +259,8 @@ fn find_documentation(node: &XsTypeNode) -> Result<String, Error> {
     Ok("".to_owned())
 }
 
-fn parse_if_dynamics_complex_type(
-    node: &XsTypeNode,
-    params: &XsdParserParams,
-) -> Result<Option<Enumeration>, Error> {
-    if node.xsd_type != XsComplexType {
+fn parse_if_dynamics_complex_type(node: &XsTypeNode) -> Result<Option<Enumeration>, Error> {
+    if node.xsd_type != ComplexType {
         return Ok(None);
     }
     if node.id.as_str() != "xs:complexType:dynamics" {

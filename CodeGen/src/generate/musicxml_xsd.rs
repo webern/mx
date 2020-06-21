@@ -27,10 +27,14 @@ impl MusicXSD {
 
 pub(crate) enum TypeDefinition {
     Simple(SimpleType),
+    #[allow(dead_code)]
+    Todo,
 }
 
 pub(crate) enum SimpleType {
     Enum(Enumeration),
+    #[allow(dead_code)]
+    Todo,
 }
 
 #[derive(Clone)]

@@ -3,16 +3,11 @@ use crate::generate::string_stuff::{
     camel_case, linestart, pascal_case, sep, write_documentation, Altered, Symbol,
 };
 use indexmap::set::IndexSet;
-use std::cmp::Ordering;
 use std::collections::HashMap;
-use std::fmt::{Display, Formatter};
 use std::io::Write;
-use std::path::PathBuf;
 
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd)]
-pub(crate) enum Error {
-    BadThingsHappened,
-}
+pub struct Error {}
 
 pub(crate) fn write_tabs<W: Write>(w: &mut W, num: u32) -> std::io::Result<()> {
     for _ in 0..num {
@@ -62,6 +57,7 @@ impl MxEnum {
         let s = MxEnum::replace_empty_string(s);
         let s = MxEnum::replace_word(s, &params);
         let s = MxEnum::add_enum_suffix(s, &params);
+        #[allow(clippy::let_and_return)]
         let s = MxEnum::add_reserved_suffix(s, &params);
         s
     }
@@ -150,10 +146,6 @@ impl MxEnum {
             .map(|m| MxEnum::rename(camel_case(&m), params))
             .collect();
         Ok(x)
-    }
-
-    fn is_algebraic(e: &Enumeration, p: &MxEnumWriterParams) -> Result<bool, Error> {
-        Ok(false)
     }
 
     pub(crate) fn write_declaration<W: Write>(&self, w: &mut W) -> std::io::Result<()> {
@@ -247,7 +239,6 @@ impl MxEnum {
 
     fn write_standard_definition<W: Write>(&self, w: &mut W) -> std::io::Result<()> {
         let pc = self.pascal_case.value();
-        let cc = self.camel_case.value();
         if self.other_field.is_some() {
             panic!("bug");
         }
@@ -291,7 +282,7 @@ impl MxEnum {
         l!(w, 2, "{{")?;
         l!(w, 3, "switch ( value )")?;
         l!(w, 3, "{{")?;
-        for (i, member) in self.members.iter().enumerate() {
+        for member in &self.members {
             let o = member.original();
             let n = member.value();
             l!(w, 4, "case {}::{}: {{ return \"{}\"; }}", pc, n, o)?;
@@ -419,7 +410,6 @@ impl MxEnum {
 
     fn write_mx_option_definition<W: Write>(&self, w: &mut W) -> std::io::Result<()> {
         let pc = self.pascal_case.value();
-        let cc = self.camel_case.value();
         let other = if let Some(other_field) = &self.other_field {
             other_field
         } else {
@@ -484,7 +474,7 @@ impl MxEnum {
         l!(w, 2, "{{")?;
         l!(w, 3, "switch ( value )")?;
         l!(w, 3, "{{")?;
-        for (i, member) in self.members.iter().enumerate() {
+        for member in &self.members {
             let o = member.original();
             let n = member.value();
             l!(w, 4, "case {}::{}: {{ return \"{}\"; }}", pc, n, o)?;
@@ -619,13 +609,10 @@ pub(crate) struct MxEnumWriterParams {
     pub(crate) member_substitutions: HashMap<String, String>,
     pub(crate) suffixed_enum_names: IndexSet<String>,
     pub(crate) reserved_words: IndexSet<String>,
-    pub(crate) enums_h: PathBuf,
-    pub(crate) enums_cpp: PathBuf,
 }
 
 pub(crate) struct MxEnumWriter {
     enums: Vec<MxEnum>,
-    params: MxEnumWriterParams,
 }
 
 impl MxEnumWriter {
@@ -648,10 +635,7 @@ impl MxEnumWriter {
             let bstr = b.camel_case.value();
             astr.cmp(bstr)
         });
-        Ok(MxEnumWriter {
-            params,
-            enums: mx_enums,
-        })
+        Ok(MxEnumWriter { enums: mx_enums })
     }
 
     pub(crate) fn write_declarations<W: Write>(&self, w: &mut W) -> std::io::Result<()> {

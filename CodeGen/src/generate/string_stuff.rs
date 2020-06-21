@@ -3,7 +3,7 @@ use std::cmp::Ordering;
 use std::fmt::{Display, Formatter};
 use std::io::Write;
 
-#[derive(Debug, Clone, Eq, Ord, Hash, Default)]
+#[derive(Debug, Clone, Eq, Ord, Default)]
 pub struct Altered {
     pub value: String,
     pub original: String,
@@ -27,7 +27,7 @@ impl PartialEq for Altered {
     }
 }
 
-#[derive(Debug, Clone, Eq, Ord, Hash)]
+#[derive(Debug, Clone, Eq, Ord)]
 pub enum Symbol {
     Unaltered(String),
     Altered(Altered),
@@ -118,7 +118,7 @@ fn case<S: AsRef<str>>(s: S, cs: Case) -> Symbol {
 
 pub fn sep<S: AsRef<str>>(s: S, subtract_indentations: usize) -> String {
     let mut out = DOC_COMMENT.to_owned();
-    let width = (LINE_WIDTH - (subtract_indentations * 4));
+    let width = LINE_WIDTH - (subtract_indentations * 4);
     let s = s.as_ref();
     if !s.is_empty() {
         out.push_str(format!(" {} ", s).as_str());
@@ -142,16 +142,16 @@ where
     let line_width = LINE_WIDTH - (indents * INDENT.len());
     for word in words {
         if word.as_str() == "\n" {
-            writeln!(w);
+            writeln!(w)?;
             linestart(w, indents, false)?;
-            writeln!(w);
+            writeln!(w)?;
             pos = linestart(w, indents, false)?;
         } else if !word.is_empty() && word.len() + pos + 1 >= line_width {
-            writeln!(w);
+            writeln!(w)?;
             pos = linestart(w, indents, false)?;
         }
         if !word.is_empty() && word.as_str() != "\n" {
-            write!(w, " {}", word.as_str());
+            write!(w, " {}", word.as_str())?;
             pos = pos + word.len() + 1;
         }
     }

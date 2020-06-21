@@ -1,11 +1,7 @@
+use crate::error::Result;
 use std::fs::{read_to_string, remove_file, File, OpenOptions};
 use std::path::{Path, PathBuf};
-use std::str::FromStr;
-
 use structopt::StructOpt;
-
-use crate::error::{Error, Result};
-use crate::xsd::{Base, SimpleDerivation, SimpleType};
 
 mod compile_mx;
 mod musicxml_xsd;
@@ -19,10 +15,7 @@ use crate::generate::musicxml_xsd_constants::{pseudo_enums, reserved_words, suff
 use crate::generate::musicxml_xsd_parser::{parse_musicxml_xsd, XsdParserParams};
 use crate::generate::mx_enum_writer::{MxEnumWriter, MxEnumWriterParams};
 use crate::generate::mx_writer::MxWriter;
-use compile_mx::compile_mx;
-use musicxml_xsd::{Enumeration, TypeDefinition};
 use musicxml_xsd_constants::enum_member_substitutions;
-use std::collections::HashMap;
 
 #[derive(Debug, StructOpt)]
 pub struct GenerateArgs {
@@ -58,8 +51,9 @@ impl GenerateArgs {
 }
 
 pub enum Language {
-    Rust,
     Cpp(CppOptions),
+    #[allow(dead_code)]
+    Rust,
 }
 
 pub struct Generator {
@@ -119,7 +113,7 @@ impl Generator {
         let opt = if let Language::Cpp(o) = &self.language {
             o
         } else {
-            panic!("unsupported output language");
+            panic!("unsopported language")
         };
         println!("{}", opt.mx_repo.display());
 
@@ -128,8 +122,6 @@ impl Generator {
             member_substitutions: enum_member_substitutions(),
             suffixed_enum_names: suffixed_enum_names(),
             reserved_words: reserved_words(),
-            enums_h: Default::default(),
-            enums_cpp: Default::default(),
         };
         let enum_writer = MxEnumWriter::new(enum_params).unwrap();
         let writer = MxWriter::new(enum_writer);

@@ -1,11 +1,11 @@
 use crate::error::Result;
 use std::fs::{read_to_string, File};
-use std::io::Write;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use std::process::{Command, Output, Stdio};
 use tempfile::TempDir;
 use uuid::Uuid;
 
+#[allow(unused)]
 pub(crate) fn compile_mx<P: AsRef<Path>>(path_to_mx: P) -> Result<()> {
     let tempdir = wrap!(TempDir::new())?;
     let _ = run(
@@ -21,11 +21,13 @@ pub(crate) fn compile_mx<P: AsRef<Path>>(path_to_mx: P) -> Result<()> {
     Ok(())
 }
 
+#[allow(unused)]
 fn run_mx_tests<P: AsRef<Path>>(path: P) -> Result<()> {
     let _ = run(&mut Command::new("./mxtest"), path.as_ref())?;
     Ok(())
 }
 
+#[allow(unused)]
 fn run<P: AsRef<Path>>(cmd: &mut Command, dir: P) -> Result<(String, Output)> {
     let u = Uuid::new_v4();
     let opath = dir.as_ref().join(format!("combined_output.log.{}", u));
