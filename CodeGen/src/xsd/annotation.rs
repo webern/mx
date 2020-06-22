@@ -2,9 +2,11 @@ use crate::error::{Error, Result};
 use crate::xsd;
 use std::convert::TryInto;
 use crate::xsd::annotation::Item::Documentation;
-use crate::xsd::ANNOTATION;
+use crate::xsd::{ANNOTATION, ID, EntryType};
 
 pub struct Annotation {
+    pub id: ID,
+    pub index: u64,
     pub items: Vec<Item>,
 }
 
@@ -26,7 +28,7 @@ impl Annotation {
         "".to_owned()
     }
 
-    pub fn from_xml(node: &exile::Element) -> Result<Self> {
+    pub fn from_xml(node: &exile::Element, index: u64) -> Result<Self> {
         let mut items = Vec::new();
         if node.name.as_str() != xsd::ANNOTATION {
             return raise!("expected '{}', got '{}'", xsd::ANNOTATION, &node.name);
@@ -41,13 +43,19 @@ impl Annotation {
                 }
             }
         }
-        Ok(Annotation { items })
+        let id = ID {
+            entry_type: EntryType::Annotation,
+            name: format!("{}", index),
+        };
+        Ok(Annotation { id, index, items })
     }
 }
 
 #[test]
 fn parse() {
-    let want = "bishop is sleeping.";
+    let want_index: u64 = 13;
+    let want_name = "13";
+    let want_doc = "bishop is sleeping.";
     let xml = exile::Element {
         namespace: Some("xs".to_owned()),
         name: ANNOTATION.to_owned(),
@@ -56,11 +64,17 @@ fn parse() {
             namespace: Some("xs".to_owned()),
             name: DOCUMENTATION.to_owned(),
             attributes: Default::default(),
-            nodes: vec![exile::Node::Text(want.to_owned())],
+            nodes: vec![exile::Node::Text(want_doc.to_owned())],
         })],
     };
 
-    let annotation = Annotation::from_xml(&xml).unwrap();
-    let got = annotation.documentation();
-    assert_eq!(got.as_str(), want);
+    let annotation = Annotation::from_xml(&xml, want_index).unwrap();
+    let got_doc = annotation.documentation();
+    assert_eq!(got_doc.as_str(), want_doc);
+    let got_index = annotation.index;
+    assert_eq!(got_index, want_index);
+    let got_name = annotation.id.name;
+    assert_eq!(got_name, want_name);
+    let got_type = annotation.id.entry_type;
+    assert_eq!(got_type, EntryType::Annotation);
 }

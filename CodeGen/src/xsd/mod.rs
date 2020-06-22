@@ -1,4 +1,5 @@
 mod annotation;
+mod simple_type;
 
 use std::fmt::{Display, Formatter};
 use crate::xsd::Entry::SimpleType;
