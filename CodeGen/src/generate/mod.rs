@@ -1,7 +1,5 @@
 use crate::error::Result;
-use std::fs::{read_to_string, remove_file, File, OpenOptions};
-use std::path::{Path, PathBuf};
-use structopt::StructOpt;
+use std::fs::{read_to_string};
 
 mod compile_mx;
 mod musicxml_xsd;
