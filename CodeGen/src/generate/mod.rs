@@ -1,5 +1,5 @@
 use crate::error::Result;
-use std::fs::{read_to_string};
+use std::fs::read_to_string;
 
 mod compile_mx;
 mod musicxml_xsd;
@@ -7,15 +7,15 @@ mod musicxml_xsd_constants;
 mod musicxml_xsd_parser;
 mod mx_enum_writer;
 mod mx_writer;
+pub mod paths;
 mod string_stuff;
-mod paths;
 
 use crate::generate::musicxml_xsd_constants::{pseudo_enums, reserved_words, suffixed_enum_names};
 use crate::generate::musicxml_xsd_parser::{parse_musicxml_xsd, XsdParserParams};
 use crate::generate::mx_enum_writer::{MxEnumWriter, MxEnumWriterParams};
 use crate::generate::mx_writer::MxWriter;
-use musicxml_xsd_constants::enum_member_substitutions;
 use crate::generate::paths::Paths;
+use musicxml_xsd_constants::enum_member_substitutions;
 
 pub struct GenArgs {
     pub paths: Paths,
@@ -39,7 +39,8 @@ pub fn run(args: GenArgs) -> Result<()> {
         XsdParserParams {
             pseudo_enums: pseudo_enums(),
         },
-    ).unwrap();
+    )
+    .unwrap();
 
     let enum_params = MxEnumWriterParams {
         enumerations: xsd.enumerations(),

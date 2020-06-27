@@ -49,19 +49,19 @@ length|minLength|maxLength|enumeration|whiteSpace|pattern)*))
 </restriction>
  */
 // TODO - support additional facets
-const ENUMERATION: &str = "enumeration";
-const LENGTH: &str = "length";
-const MAX_EXCLUSIVE: &str = "maxExclusive";
-const MAX_INCLUSIVE: &str = "maxInclusive";
-const MAX_LENGTH: &str = "maxLength";
-const MIN_EXCLUSIVE: &str = "minExclusive";
-const MIN_INCLUSIVE: &str = "minInclusive";
-const MIN_LENGTH: &str = "minLength";
-const PATTERN: &str = "pattern";
+pub const ENUMERATION: &str = "enumeration";
+pub const LENGTH: &str = "length";
+pub const MAX_EXCLUSIVE: &str = "maxExclusive";
+pub const MAX_INCLUSIVE: &str = "maxInclusive";
+pub const MAX_LENGTH: &str = "maxLength";
+pub const MIN_EXCLUSIVE: &str = "minExclusive";
+pub const MIN_INCLUSIVE: &str = "minInclusive";
+pub const MIN_LENGTH: &str = "minLength";
+pub const PATTERN: &str = "pattern";
 
 /// Attributes
-const BASE: &str = "base";
-const VALUE: &str = "value";
+pub const BASE: &str = "base";
+pub const VALUE: &str = "value";
 
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Ord, PartialOrd)]
 pub enum FacetType {
