@@ -69,3 +69,28 @@ impl SimpleType {
         })
     }
 }
+
+#[test]
+fn parse() {
+    let xml_str = r#"
+	<xs:simpleType name="above-below">
+		<xs:annotation>
+			<xs:documentation>The above-below type is used to indicate whether one element appears above or below another element.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="above"/>
+			<xs:enumeration value="below"/>
+		</xs:restriction>
+	</xs:simpleType>"#;
+    let doc = exile::parse(xml_str).unwrap();
+    let xml = doc.root();
+    let want_index: u64 = 3;
+    let st = SimpleType::from_xml(&xml, want_index).unwrap();
+    assert_eq!(st.index, want_index);
+    let got_id = st.id.to_string();
+    let want_id = "above-below (simpleType)".to_owned();
+    assert_eq!(got_id, want_id);
+    let got_doc = st.documentation();
+    let want_doc = "The above-below type is used to indicate whether one element appears above or below another element.";
+    assert_eq!(got_doc, want_doc);
+}
