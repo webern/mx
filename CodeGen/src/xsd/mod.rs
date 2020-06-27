@@ -70,6 +70,8 @@ pub const SIMPLE_TYPE: &str = "simpleType";
 
 // attributes
 pub const NAME: &str = "name";
+pub const REF: &str = "ref";
+pub const TYPE: &str = "type";
 pub const VALUE: &str = "value";
 
 pub enum Entry {
@@ -202,4 +204,12 @@ pub(crate) fn name_attribute(node: &exile::Element) -> Result<String> {
 
 pub(crate) fn value_attribute(node: &exile::Element) -> Result<String> {
     get_attribute(node, VALUE)
+}
+
+pub(crate) fn ref_attribute(node: &exile::Element) -> Result<String> {
+    get_attribute(node, REF)
+}
+
+pub(crate) fn type_attribute(node: &exile::Element) -> Result<String> {
+    get_attribute(node, TYPE)
 }
