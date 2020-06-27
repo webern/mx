@@ -1,4 +1,8 @@
 mod annotation;
+mod attribute_group;
+mod complex_type;
+mod element;
+mod group;
 mod import;
 mod list;
 mod restriction;
@@ -6,21 +10,24 @@ mod simple_type;
 mod union;
 
 use crate::error::Result;
-use annotation::Annotation;
-use exile::Element;
-use import::Import;
-use simple_type::SimpleType;
+use crate::xsd::annotation::Annotation;
+use crate::xsd::attribute_group::AttributeGroup;
+use crate::xsd::complex_type::ComplexType;
+use crate::xsd::element::Element;
+use crate::xsd::group::Group;
+use crate::xsd::import::Import;
+use crate::xsd::simple_type::SimpleType;
 use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::convert::TryInto;
 use std::fmt::{Display, Formatter};
 use std::path::Path;
 
-pub struct XSD {
+pub struct Xsd {
     entries: Vec<Entry>,
 }
 
-impl XSD {
+impl Xsd {
     pub fn load<P: AsRef<Path>>(filepath: P) -> Result<Self> {
         let xml_str = wrap!(
             std::fs::read_to_string(filepath.as_ref()),
@@ -40,7 +47,16 @@ impl XSD {
             let entry = Entry::from_xml(entry_node, i as u64)?;
             entries.push(entry);
         }
-        Ok(XSD { entries: entries })
+        Ok(Xsd { entries: entries })
+    }
+}
+
+impl Display for Xsd {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        for entry in &self.entries {
+            writeln!(f, "{}", entry.id())?;
+        }
+        Ok(())
     }
 }
 
@@ -58,42 +74,44 @@ pub const VALUE: &str = "value";
 
 pub enum Entry {
     Annotation(Annotation),
-    AttributeGroup,
-    ComplexType,
-    Element,
-    Group,
+    AttributeGroup(AttributeGroup),
+    ComplexType(ComplexType),
+    Element(Element),
+    Group(Group),
     Import(Import),
     SimpleType(SimpleType),
 }
 
 impl Entry {
-    pub fn from_xml(node: &Element, index: u64) -> Result<Self> {
+    pub fn from_xml(node: &exile::Element, index: u64) -> Result<Self> {
         let n = node.name.as_str();
         let t = EntryType::parse(n)?;
         match t {
             EntryType::Annotation => Ok(Entry::Annotation(Annotation::from_xml(node, index)?)),
-            EntryType::AttributeGroup => {
-                // TODO - implement AttributeGroups
-                panic!("'{}' is not an implemented node type", ATTRIBUTE_GROUP);
-            }
-            EntryType::ComplexType => {
-                // TODO - implement ComplexType
-                panic!("'{}' is not an implemented node type", COMPLEX_TYPE);
-            }
-            EntryType::Element => {
-                // TODO - implement Element
-                panic!("'{}' is not an implemented node type", ELEMENT);
-            }
-            EntryType::Group => {
-                // TODO - implement Group
-                panic!("'{}' is not an implemented node type", GROUP);
-            }
+            EntryType::AttributeGroup => Ok(Entry::AttributeGroup(AttributeGroup::from_xml(
+                node, index,
+            )?)),
+            EntryType::ComplexType => Ok(Entry::ComplexType(ComplexType::from_xml(node, index)?)),
+            EntryType::Element => Ok(Entry::Element(Element::from_xml(node, index)?)),
+            EntryType::Group => Ok(Entry::Group(Group::from_xml(node, index)?)),
             EntryType::Import => Ok(Entry::Import(Import::from_xml(node, index)?)),
             EntryType::SimpleType => Ok(Entry::SimpleType(SimpleType::from_xml(node, index)?)),
             EntryType::Other(s) => {
                 // TODO - implement AttributeGroups
                 panic!("'{}' is not an implemented node type", s.as_str());
             }
+        }
+    }
+
+    pub fn id(&self) -> &ID {
+        match self {
+            Entry::Annotation(x) => &x.id,
+            Entry::AttributeGroup(x) => &x.id,
+            Entry::ComplexType(x) => &x.id,
+            Entry::Element(x) => &x.id,
+            Entry::Group(x) => &x.id,
+            Entry::Import(x) => &x.id,
+            Entry::SimpleType(x) => &x.id,
         }
     }
 }
@@ -161,4 +179,27 @@ impl PartialOrd for ID {
         }
         Some(self.name.cmp(&other.name))
     }
+}
+
+pub(crate) fn get_attribute<S: AsRef<str>>(
+    node: &exile::Element,
+    attribute_name: S,
+) -> Result<String> {
+    Ok(node
+        .attributes
+        .map()
+        .get(attribute_name.as_ref())
+        .ok_or(make_err!(
+            "'{}' attribute not found",
+            attribute_name.as_ref()
+        ))?
+        .clone())
+}
+
+pub(crate) fn name_attribute(node: &exile::Element) -> Result<String> {
+    get_attribute(node, NAME)
+}
+
+pub(crate) fn value_attribute(node: &exile::Element) -> Result<String> {
+    get_attribute(node, VALUE)
 }

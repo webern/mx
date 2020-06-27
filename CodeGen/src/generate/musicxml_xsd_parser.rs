@@ -31,10 +31,7 @@ pub struct XsdParserParams {
     pub pseudo_enums: HashMap<String, PseudoEnumSpec>,
 }
 
-pub fn parse_musicxml_xsd(
-    doc: &Document,
-    params: XsdParserParams,
-) -> Result<MusicXSD, Error> {
+pub fn parse_musicxml_xsd(doc: &Document, params: XsdParserParams) -> Result<MusicXSD, Error> {
     let root = doc.root();
     if root.fullname().as_str() != "xs:schema" {
         return Err(SchemaNotFound);
