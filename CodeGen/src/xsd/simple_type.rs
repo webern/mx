@@ -1,51 +1,71 @@
 use crate::error::{Error, Result};
 use crate::xsd;
-use std::convert::TryInto;
+use crate::xsd::annotation::Annotation;
 use crate::xsd::annotation::Item::Documentation;
-use crate::xsd::{ANNOTATION, ID, EntryType};
+use crate::xsd::list::List;
+use crate::xsd::restriction::Restriction;
+use crate::xsd::union::Union;
+use crate::xsd::{EntryType, ANNOTATION, ID, SIMPLE_TYPE};
+use std::convert::TryInto;
 
 pub struct SimpleType {
     pub id: ID,
     pub index: u64,
+    pub annotation: Option<Annotation>,
+    pub payload: Payload,
 }
 
+pub const BASE: &str = "base";
+pub const LIST: &str = "list";
 pub const RESTRICTION: &str = "restriction";
-pub const APP_INFO: &str = "appinfo";
+pub const UNION: &str = "union";
 
-pub enum Item {
-    Documentation(String),
-    AppInfo(String),
+pub enum Payload {
+    Restriction(Restriction),
+    List(List),
+    Union(Union),
 }
 
 impl SimpleType {
     pub fn documentation(&self) -> String {
-        for item in &self.items {
-            if let Item::Documentation(s) = &item {
-                return s.clone();
-            }
+        if let Some(annotation) = &self.annotation {
+            return annotation.documentation();
         }
         "".to_owned()
     }
 
     pub fn from_xml(node: &exile::Element, index: u64) -> Result<Self> {
-        let mut items = Vec::new();
-        if node.name.as_str() != xsd::ANNOTATION {
-            return raise!("expected '{}', got '{}'", xsd::ANNOTATION, &node.name);
+        // let mut items = Vec::new();
+        if node.name.as_str() != SIMPLE_TYPE {
+            return raise!("expected '{}', got '{}'", SIMPLE_TYPE, &node.name);
         }
+        let mut annotation = None;
+        let mut payload = None;
         for inner in node.children() {
             let t = inner.name.as_str();
-            if let Some(s) = inner.text() {
-                match t {
-                    DOCUMENTATION => { items.push(Item::Documentation(s)) }
-                    APP_INFO => { items.push(Item::AppInfo(s)) }
-                    _ => return raise!("expected either '{}' or '{}', got '{}'", DOCUMENTATION, APP_INFO, t)
+            let payload = match t {
+                ANNOTATION => {
+                    annotation = Some(Annotation::from_xml(inner, index)?);
+                    continue;
                 }
-            }
+                RESTRICTION => Some(Payload::Restriction(Restriction::from_xml(inner, index)?)),
+                LIST => Some(Payload::List(List::from_xml(inner, index)?)),
+                UNION => Some(Payload::Union(Union::from_xml(inner, index)?)),
+                _ => {
+                    return raise!("unexpected element name '{}'", t);
+                }
+            };
         }
         let id = ID {
             entry_type: EntryType::Annotation,
             name: format!("{}", index),
         };
-        Ok(Annotation { id, index, items })
+        let payload = payload.ok_or(make_err!("{} is incomplete", SIMPLE_TYPE))?;
+        Ok(SimpleType {
+            id,
+            index,
+            annotation,
+            payload,
+        })
     }
 }

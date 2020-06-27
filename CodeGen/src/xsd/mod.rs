@@ -1,11 +1,14 @@
 mod annotation;
+mod list;
+mod restriction;
 mod simple_type;
+mod union;
 
-use std::fmt::{Display, Formatter};
 use crate::xsd::Entry::SimpleType;
-use std::convert::TryInto;
 use std::cmp::Ordering;
 use std::collections::HashMap;
+use std::convert::TryInto;
+use std::fmt::{Display, Formatter};
 
 pub struct XSD {
     entries: HashMap<ID, Entry>,
@@ -35,17 +38,19 @@ pub enum EntryType {
     Element,
     Group,
     SimpleType,
+    Other(String),
 }
 
 impl Display for EntryType {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         let s = match self {
-            EntryType::Annotation => { ANNOTATION }
-            EntryType::AttributeGroup => { ATTRIBUTE_GROUP }
-            EntryType::ComplexType => { COMPLEX_TYPE }
-            EntryType::Element => { ELEMENT }
-            EntryType::Group => { GROUP }
-            EntryType::SimpleType => { SIMPLE_TYPE }
+            EntryType::Annotation => ANNOTATION,
+            EntryType::AttributeGroup => ATTRIBUTE_GROUP,
+            EntryType::ComplexType => COMPLEX_TYPE,
+            EntryType::Element => ELEMENT,
+            EntryType::Group => GROUP,
+            EntryType::SimpleType => SIMPLE_TYPE,
+            EntryType::Other(s) => s.as_str(),
         };
         write!(f, "{}", s)
     }
