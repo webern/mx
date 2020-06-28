@@ -9,7 +9,7 @@ mod restriction;
 mod simple_type;
 mod union;
 
-use crate::error::Result;
+use crate::error::{Error, Result};
 use crate::xsd::annotation::Annotation;
 use crate::xsd::attribute_group::AttributeGroup;
 use crate::xsd::complex_type::ComplexType;
@@ -71,7 +71,9 @@ pub const SIMPLE_TYPE: &str = "simpleType";
 // attributes
 pub const NAME: &str = "name";
 pub const REF: &str = "ref";
+pub const REQUIRED: &str = "required";
 pub const TYPE: &str = "type";
+pub const USE: &str = "use";
 pub const VALUE: &str = "value";
 
 pub enum Entry {
@@ -192,8 +194,9 @@ pub(crate) fn get_attribute<S: AsRef<str>>(
         .map()
         .get(attribute_name.as_ref())
         .ok_or(make_err!(
-            "'{}' attribute not found",
-            attribute_name.as_ref()
+            "'{}' attribute not found in '{}' node",
+            attribute_name.as_ref(),
+            node.name.as_str()
         ))?
         .clone())
 }
@@ -212,4 +215,11 @@ pub(crate) fn ref_attribute(node: &exile::Element) -> Result<String> {
 
 pub(crate) fn type_attribute(node: &exile::Element) -> Result<String> {
     get_attribute(node, TYPE)
+}
+
+pub(crate) fn use_required(node: &exile::Element) -> bool {
+    match get_attribute(node, USE) {
+        Ok(val) => val.as_str() == REQUIRED,
+        Err(_) => false,
+    }
 }
