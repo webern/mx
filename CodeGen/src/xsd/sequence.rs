@@ -5,6 +5,27 @@ use crate::xsd::constants::{ANNOTATION, SEQUENCE};
 use crate::xsd::{name_attribute, EntryType, ID};
 use std::convert::TryInto;
 
+// A sequence can have any of:
+// choice element group sequence
+
+/*
+Here are a couple of interesting ones
+score-part:
+element
+element
+element
+element
+element
+element
+element
+sequence
+
+part-list:
+group
+group
+choice
+ */
+
 pub struct Sequence {
     pub id: ID,
     pub index: u64,

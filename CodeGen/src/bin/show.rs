@@ -7,7 +7,7 @@ fn main() {
     let paths = Paths::default();
     let xml_str = std::fs::read_to_string(paths.xsd_3_0).unwrap();
     let doc = exile::parse(&xml_str).unwrap();
-    print_group_children(doc.root());
+    print_sequence_children(doc.root());
 }
 
 fn find_xs_nodes(node: &exile::Element, xs_nodes: &mut IndexSet<String>) {
@@ -22,6 +22,13 @@ fn find_xs_nodes(node: &exile::Element, xs_nodes: &mut IndexSet<String>) {
 }
 
 fn print_group_children(root: &Element) {
+    println!(
+        "=========================================================================================="
+    );
+    println!("GROUPS");
+    println!(
+        "=========================================================================================="
+    );
     let mut the_stuf = HashMap::new();
     for child in root.children() {
         if child.name.as_str() == "group" {
@@ -41,5 +48,41 @@ fn print_group_children(root: &Element) {
         for x in val {
             println!("{}", x);
         }
+    }
+}
+
+fn print_sequence_children(root: &Element) {
+    println!(
+        "=========================================================================================="
+    );
+    println!("SEQUENCES");
+    println!(
+        "=========================================================================================="
+    );
+    print_sequence_children_recursively(root, "");
+}
+
+fn print_sequence_children_recursively(node: &Element, parent_name: &str) {
+    let mut most_recent_name = parent_name.to_owned();
+    if let Some(nm) = node.attributes.map().get("name") {
+        most_recent_name = nm.clone();
+    }
+    if node.name.as_str() == "sequence" {
+        print_sequence_children_the_children_part(node, most_recent_name.as_str());
+    } else {
+        for child in node.children() {
+            print_sequence_children_recursively(child, most_recent_name.as_str());
+        }
+    }
+}
+
+fn print_sequence_children_the_children_part(node: &Element, parent_name: &str) {
+    if node.name.as_str() != "sequence" {
+        panic!("wtf");
+    }
+    println!("");
+    println!("{}:", parent_name);
+    for child in node.children() {
+        println!("{}", child.name.as_str())
     }
 }
