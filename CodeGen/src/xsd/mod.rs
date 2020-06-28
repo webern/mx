@@ -20,15 +20,16 @@ use crate::xsd::annotation::Annotation;
 use crate::xsd::attribute_group::AttributeGroup;
 use crate::xsd::complex_type::ComplexType;
 use crate::xsd::constants::{
-    ANNOTATION, ATTRIBUTE_GROUP, BASE, COMPLEX_TYPE, DEFAULT, ELEMENT, FIXED, GROUP, IMPORT, NAME,
-    NAMESPACE, REF, REQUIRED, SIMPLE_TYPE, TYPE, USE, VALUE,
+    ANNOTATION, ATTRIBUTE_GROUP, BASE, COMPLEX_TYPE, DEFAULT, ELEMENT, FIXED, GROUP, IMPORT,
+    MAX_OCCURS, MIN_OCCURS, NAME, NAMESPACE, REF, REQUIRED, SIMPLE_TYPE, TYPE, UNBOUNDED, USE,
+    VALUE,
 };
 use crate::xsd::element::Element;
-use crate::xsd::group::Group;
+use crate::xsd::group::GroupDefinition;
 use crate::xsd::import::Import;
 use crate::xsd::simple_type::SimpleType;
 use std::cmp::Ordering;
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 use std::convert::TryInto;
 use std::fmt::{Display, Formatter};
 use std::path::Path;
@@ -75,7 +76,7 @@ pub enum Entry {
     AttributeGroup(AttributeGroup),
     ComplexType(ComplexType),
     Element(Element),
-    Group(Group),
+    Group(GroupDefinition),
     Import(Import),
     SimpleType(SimpleType),
 }
@@ -91,7 +92,7 @@ impl Entry {
             )?)),
             EntryType::ComplexType => Ok(Entry::ComplexType(ComplexType::from_xml(node, index)?)),
             EntryType::Element => Ok(Entry::Element(Element::from_xml(node, index)?)),
-            EntryType::Group => Ok(Entry::Group(Group::from_xml(node, index)?)),
+            EntryType::Group => Ok(Entry::Group(GroupDefinition::from_xml(node, index)?)),
             EntryType::Import => Ok(Entry::Import(Import::from_xml(node, index)?)),
             EntryType::SimpleType => Ok(Entry::SimpleType(SimpleType::from_xml(node, index)?)),
             EntryType::Other(s) => {
@@ -230,6 +231,68 @@ pub(crate) fn fixed_attribute(node: &exile::Element) -> Option<String> {
     node.attributes.map().get(FIXED).cloned()
 }
 
+pub(crate) fn is_ref(node: &exile::Element) -> bool {
+    node.attributes.map().get(REF).is_some()
+}
+
 pub(crate) fn base_attribute(node: &exile::Element) -> Result<String> {
     get_attribute(node, BASE)
+}
+
+#[derive(Copy, Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
+pub struct Occurs {
+    pub min_occurs: u64,
+
+    /// None means `unbounded`
+    pub max_occurs: Option<u64>,
+}
+
+impl Default for Occurs {
+    fn default() -> Self {
+        Self {
+            min_occurs: 1,
+            max_occurs: Some(1),
+        }
+    }
+}
+
+impl Occurs {
+    pub fn from_xml(node: &exile::Element) -> Result<Occurs> {
+        Ok(Self::from_map(node.attributes.map())?)
+    }
+
+    pub fn from_map(map: &BTreeMap<String, String>) -> Result<Occurs> {
+        let min_occurs: u64 = if let Some(sval) = map.get(MIN_OCCURS) {
+            wrap!(sval.parse::<u64>())?
+        } else {
+            1
+        };
+
+        let max_occurs: Option<u64> = if let Some(sval) = map.get(MAX_OCCURS) {
+            if sval.as_str() == UNBOUNDED {
+                None
+            } else {
+                Some(wrap!(sval.parse::<u64>())?)
+            }
+        } else {
+            Some(1)
+        };
+        if let Some(the_max) = max_occurs {
+            if min_occurs > the_max {
+                return raise!(
+                    "{} cannot be greater than {}, in this case {} is {} and {} is {}",
+                    MIN_OCCURS,
+                    MAX_OCCURS,
+                    MIN_OCCURS,
+                    min_occurs,
+                    MAX_OCCURS,
+                    the_max
+                );
+            }
+        }
+        Ok(Self {
+            min_occurs,
+            max_occurs,
+        })
+    }
 }

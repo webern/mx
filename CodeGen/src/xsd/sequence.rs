@@ -33,7 +33,7 @@ impl Sequence {
         }
         let id = ID {
             entry_type: EntryType::Element,
-            name: name_attribute(node)?,
+            name: "name_attribute(node)?".to_owned(),
         };
         Ok(Sequence {
             id,
