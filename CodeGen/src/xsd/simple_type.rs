@@ -15,7 +15,6 @@ pub struct SimpleType {
     pub payload: Payload,
 }
 
-pub const BASE: &str = "base";
 pub const LIST: &str = "list";
 pub const RESTRICTION: &str = "restriction";
 pub const UNION: &str = "union";

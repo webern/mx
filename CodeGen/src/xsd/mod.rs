@@ -2,6 +2,7 @@ mod annotation;
 mod attribute_group;
 mod complex_type;
 mod element;
+mod extension;
 mod group;
 mod import;
 mod list;
@@ -69,6 +70,7 @@ pub const IMPORT: &str = "import";
 pub const SIMPLE_TYPE: &str = "simpleType";
 
 // attributes
+pub const BASE: &str = "base";
 pub const DEFAULT: &str = "default";
 pub const FIXED: &str = "fixed";
 pub const NAME: &str = "name";
@@ -232,4 +234,8 @@ pub(crate) fn default_attribute(node: &exile::Element) -> Option<String> {
 
 pub(crate) fn fixed_attribute(node: &exile::Element) -> Option<String> {
     node.attributes.map().get(FIXED).cloned()
+}
+
+pub(crate) fn base_attribute(node: &exile::Element) -> Result<String> {
+    get_attribute(node, BASE)
 }

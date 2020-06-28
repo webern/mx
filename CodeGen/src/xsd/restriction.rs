@@ -4,7 +4,7 @@ use crate::xsd::annotation::Annotation;
 use crate::xsd::annotation::Item::Documentation;
 use crate::xsd::restriction::FacetType::Pattern;
 use crate::xsd::simple_type::{LIST, RESTRICTION};
-use crate::xsd::{EntryType, ANNOTATION, ID};
+use crate::xsd::{base_attribute, value_attribute, EntryType, ANNOTATION, ID};
 use exile::Element;
 use std::convert::TryInto;
 use std::fmt::{Display, Formatter};
@@ -58,10 +58,6 @@ pub const MIN_EXCLUSIVE: &str = "minExclusive";
 pub const MIN_INCLUSIVE: &str = "minInclusive";
 pub const MIN_LENGTH: &str = "minLength";
 pub const PATTERN: &str = "pattern";
-
-/// Attributes
-pub const BASE: &str = "base";
-pub const VALUE: &str = "value";
 
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Ord, PartialOrd)]
 pub enum FacetType {
@@ -142,11 +138,7 @@ pub enum Facet {
 impl Facet {
     fn from_xml(node: &Element) -> Result<Facet> {
         let t = FacetType::parse(&node.name)?;
-        let v = node
-            .attributes
-            .map()
-            .get(VALUE)
-            .ok_or(make_err!("attribute '{}' not found", VALUE))?;
+        let v = value_attribute(node)?;
         let result = match t {
             FacetType::Enumeration => Facet::Enumeration(v.clone()),
             FacetType::Length => {
@@ -203,12 +195,7 @@ impl Restriction {
         if node.name.as_str() != RESTRICTION {
             return raise!("expected '{}', got '{}'", RESTRICTION, &node.name);
         }
-        let base = node
-            .attributes
-            .map()
-            .get(BASE)
-            .ok_or_else(|| make_err!("'{}' attribute not found", BASE))?
-            .clone();
+        let base = base_attribute(node)?;
         let mut annotation = None;
         let mut facets = Vec::new();
         for inner in node.children() {

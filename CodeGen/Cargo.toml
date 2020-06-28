@@ -8,6 +8,10 @@ edition = "2018"
 name = "mxgen"
 path = "src/bin/main.rs"
 
+[[bin]]
+name = "show"
+path = "src/bin/show.rs"
+
 [lib]
 name = "libmxgen"
 path = "src/lib.rs"

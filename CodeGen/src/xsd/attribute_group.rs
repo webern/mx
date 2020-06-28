@@ -70,17 +70,9 @@ impl AttributeGroup {
                     annotation = Some(Annotation::from_xml(inner, index)?);
                 }
                 ATTRIBUTE => members.push(parse_attribute(inner, index)?),
-                ATTRIBUTE_GROUP => {
-                    let name = ref_attribute(inner)?;
-                    members.push(Member::AttributeGroupRef(AttributeGroupRef {
-                        id: ID {
-                            entry_type: EntryType::Other(ATTRIBUTE.into()),
-                            name: name.clone(),
-                        },
-                        index,
-                        ref_: name,
-                    }))
-                }
+                ATTRIBUTE_GROUP => members.push(Member::AttributeGroupRef(
+                    parse_attribute_group_ref(inner, index)?,
+                )),
                 _ => return raise!("unexpected node '{}'", t),
             }
         }
@@ -105,7 +97,7 @@ fn parse_attribute(inner: &exile::Element, index: u64) -> Result<Member> {
     }
 }
 
-fn parse_attribute_type(inner: &exile::Element, index: u64) -> Result<AttributeType> {
+pub(crate) fn parse_attribute_type(inner: &exile::Element, index: u64) -> Result<AttributeType> {
     let name = name_attribute(inner)?;
     let type_ = type_attribute(inner)?;
     let required = use_required(inner);
@@ -121,7 +113,7 @@ fn parse_attribute_type(inner: &exile::Element, index: u64) -> Result<AttributeT
     })
 }
 
-fn parse_attribute_ref(inner: &exile::Element, index: u64) -> Result<AttributeRef> {
+pub(crate) fn parse_attribute_ref(inner: &exile::Element, index: u64) -> Result<AttributeRef> {
     let ref_ = ref_attribute(inner)?;
     let required = use_required(inner);
     let fixed = fixed_attribute(inner);
@@ -136,6 +128,21 @@ fn parse_attribute_ref(inner: &exile::Element, index: u64) -> Result<AttributeRe
         required,
         default,
         fixed,
+    })
+}
+
+pub(crate) fn parse_attribute_group_ref(
+    inner: &exile::Element,
+    index: u64,
+) -> Result<AttributeGroupRef> {
+    let ref_ = ref_attribute(inner)?;
+    Ok(AttributeGroupRef {
+        id: ID {
+            entry_type: EntryType::Other(ATTRIBUTE.into()),
+            name: ref_.clone(),
+        },
+        index,
+        ref_,
     })
 }
 
