@@ -2,10 +2,11 @@ use crate::error::{Error, Result};
 use crate::xsd;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::annotation::Item::Documentation;
+use crate::xsd::constants::{ANNOTATION, LIST, NAME, RESTRICTION, SIMPLE_TYPE, UNION};
 use crate::xsd::list::List;
 use crate::xsd::restriction::Restriction;
 use crate::xsd::union::Union;
-use crate::xsd::{EntryType, ANNOTATION, ID, NAME, SIMPLE_TYPE};
+use crate::xsd::{EntryType, ID};
 use std::convert::TryInto;
 
 pub struct SimpleType {
@@ -14,10 +15,6 @@ pub struct SimpleType {
     pub annotation: Option<Annotation>,
     pub payload: Payload,
 }
-
-pub const LIST: &str = "list";
-pub const RESTRICTION: &str = "restriction";
-pub const UNION: &str = "union";
 
 pub enum Payload {
     Restriction(Restriction),
@@ -76,7 +73,8 @@ impl SimpleType {
 
 #[test]
 fn parse_enum() {
-    use super::restriction::{Facet, ENUMERATION};
+    use super::restriction::Facet;
+    use crate::xsd::constants::*;
     let xml_str = r#"
 	<xs:simpleType name="above-below">
 		<xs:annotation>
@@ -120,7 +118,8 @@ fn parse_enum() {
 
 #[test]
 fn parse_numeric() {
-    use super::restriction::{Facet, Number, ENUMERATION, MAX_INCLUSIVE, MIN_INCLUSIVE};
+    use super::restriction::{Facet, Number};
+    use crate::xsd::constants::*;
     let xml_str = r#"
 	<xs:simpleType name="midi-16">
 		<xs:annotation>
@@ -166,7 +165,8 @@ fn parse_numeric() {
 
 #[test]
 fn parse_pattern() {
-    use super::restriction::{Facet, PATTERN};
+    use super::restriction::Facet;
+    use crate::xsd::constants::*;
     let xml_str = r#"
 	<xs:simpleType name="time-only">
 		<xs:annotation>

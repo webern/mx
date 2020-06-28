@@ -2,11 +2,12 @@ use crate::error::{Error, Result};
 use crate::xsd;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::annotation::Item::Documentation;
-use crate::xsd::attribute_group::{parse_attribute_group_ref, ATTRIBUTE};
+use crate::xsd::attribute_group::parse_attribute_group_ref;
 use crate::xsd::attribute_group::{
     parse_attribute_ref, parse_attribute_type, AttributeGroupRef, AttributeRef, AttributeType,
 };
-use crate::xsd::{base_attribute, EntryType, ANNOTATION, ID, IMPORT, REF};
+use crate::xsd::constants::{ANNOTATION, ATTRIBUTE, ATTRIBUTE_GROUP, EXTENSION, REF};
+use crate::xsd::{base_attribute, EntryType, ID};
 use std::convert::TryInto;
 
 pub struct Extension {
@@ -22,8 +23,6 @@ pub enum Member {
     AttributeRef(AttributeRef),
     AttributeGroupRef(AttributeGroupRef),
 }
-
-pub const EXTENSION: &str = "extension";
 
 impl Extension {
     pub fn documentation(&self) -> String {

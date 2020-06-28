@@ -1,13 +1,12 @@
 use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::annotation::Item::Documentation;
+use crate::xsd::constants::{ANNOTATION, ATTRIBUTE, ATTRIBUTE_GROUP, REF};
 use crate::xsd::{
     default_attribute, fixed_attribute, name_attribute, ref_attribute, type_attribute,
-    use_required, EntryType, ANNOTATION, ATTRIBUTE_GROUP, ID, REF,
+    use_required, EntryType, ID,
 };
 use std::convert::TryInto;
-
-pub const ATTRIBUTE: &str = "attribute";
 
 pub struct AttributeGroup {
     pub id: ID,

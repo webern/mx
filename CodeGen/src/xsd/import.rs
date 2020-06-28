@@ -2,7 +2,8 @@ use crate::error::{Error, Result};
 use crate::xsd;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::annotation::Item::Documentation;
-use crate::xsd::{EntryType, ANNOTATION, ID, IMPORT};
+use crate::xsd::constants::{ANNOTATION, IMPORT, SCHEMA_LOCATION};
+use crate::xsd::{namespace_attribute, EntryType, ID};
 use std::convert::TryInto;
 
 pub struct Import {
@@ -12,9 +13,6 @@ pub struct Import {
     pub namespace: String,
     pub schema_location: String,
 }
-
-pub const NAMESPACE: &str = "namespace";
-pub const SCHEMA_LOCATION: &str = "schemaLocation";
 
 impl Import {
     pub fn documentation(&self) -> String {
@@ -28,12 +26,7 @@ impl Import {
         if node.name.as_str() != IMPORT {
             return raise!("expected '{}', got '{}'", IMPORT, &node.name);
         }
-        let namespace = node
-            .attributes
-            .map()
-            .get(NAMESPACE)
-            .ok_or_else(|| make_err!("'{}' attribute not found", NAMESPACE))?
-            .clone();
+        let namespace = namespace_attribute(node)?;
         let schema_location = node
             .attributes
             .map()

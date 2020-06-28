@@ -1,13 +1,16 @@
 mod annotation;
 mod attribute_group;
+mod choice;
 mod complex_content;
 mod complex_type;
+mod constants;
 mod element;
 mod extension;
 mod group;
 mod import;
 mod list;
 mod restriction;
+mod sequence;
 mod simple_content;
 mod simple_type;
 mod union;
@@ -16,6 +19,10 @@ use crate::error::{Error, Result};
 use crate::xsd::annotation::Annotation;
 use crate::xsd::attribute_group::AttributeGroup;
 use crate::xsd::complex_type::ComplexType;
+use crate::xsd::constants::{
+    ANNOTATION, ATTRIBUTE_GROUP, BASE, COMPLEX_TYPE, DEFAULT, ELEMENT, FIXED, GROUP, IMPORT, NAME,
+    NAMESPACE, REF, REQUIRED, SIMPLE_TYPE, TYPE, USE, VALUE,
+};
 use crate::xsd::element::Element;
 use crate::xsd::group::Group;
 use crate::xsd::import::Import;
@@ -62,25 +69,6 @@ impl Display for Xsd {
         Ok(())
     }
 }
-
-pub const ANNOTATION: &str = "annotation";
-pub const ATTRIBUTE_GROUP: &str = "attributeGroup";
-pub const COMPLEX_TYPE: &str = "complexType";
-pub const ELEMENT: &str = "element";
-pub const GROUP: &str = "group";
-pub const IMPORT: &str = "import";
-pub const SIMPLE_TYPE: &str = "simpleType";
-
-// attributes
-pub const BASE: &str = "base";
-pub const DEFAULT: &str = "default";
-pub const FIXED: &str = "fixed";
-pub const NAME: &str = "name";
-pub const REF: &str = "ref";
-pub const REQUIRED: &str = "required";
-pub const TYPE: &str = "type";
-pub const USE: &str = "use";
-pub const VALUE: &str = "value";
 
 pub enum Entry {
     Annotation(Annotation),
@@ -209,6 +197,10 @@ pub(crate) fn get_attribute<S: AsRef<str>>(
 
 pub(crate) fn name_attribute(node: &exile::Element) -> Result<String> {
     get_attribute(node, NAME)
+}
+
+pub(crate) fn namespace_attribute(node: &exile::Element) -> Result<String> {
+    get_attribute(node, NAMESPACE)
 }
 
 pub(crate) fn value_attribute(node: &exile::Element) -> Result<String> {

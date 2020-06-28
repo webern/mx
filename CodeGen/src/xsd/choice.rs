@@ -1,17 +1,17 @@
 use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::annotation::Item::Documentation;
-use crate::xsd::constants::{ANNOTATION, GROUP};
+use crate::xsd::constants::{ANNOTATION, CHOICE};
 use crate::xsd::{name_attribute, EntryType, ID};
 use std::convert::TryInto;
 
-pub struct Group {
+pub struct Choice {
     pub id: ID,
     pub index: u64,
     pub annotation: Option<Annotation>,
 }
 
-impl Group {
+impl Choice {
     pub fn documentation(&self) -> String {
         if let Some(annotation) = &self.annotation {
             return annotation.documentation();
@@ -20,8 +20,8 @@ impl Group {
     }
 
     pub fn from_xml(node: &exile::Element, index: u64) -> Result<Self> {
-        if node.name.as_str() != GROUP {
-            return raise!("expected '{}', got '{}'", GROUP, node.name.as_str());
+        if node.name.as_str() != CHOICE {
+            return raise!("expected '{}', got '{}'", CHOICE, node.name.as_str());
         }
         let mut annotation = None;
         for inner in node.children() {
@@ -32,10 +32,10 @@ impl Group {
             }
         }
         let id = ID {
-            entry_type: EntryType::Group,
+            entry_type: EntryType::Element,
             name: name_attribute(node)?,
         };
-        Ok(Group {
+        Ok(Choice {
             id,
             index,
             annotation,

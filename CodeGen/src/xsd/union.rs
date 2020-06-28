@@ -2,7 +2,8 @@ use crate::error::{Error, Result};
 use crate::xsd;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::annotation::Item::Documentation;
-use crate::xsd::{EntryType, ANNOTATION, ID};
+use crate::xsd::constants::{ANNOTATION, MEMBER_TYPES, UNION};
+use crate::xsd::{EntryType, ID};
 use std::convert::TryInto;
 
 pub struct Union {
@@ -11,9 +12,6 @@ pub struct Union {
     pub annotation: Option<Annotation>,
     pub members: Vec<String>,
 }
-
-pub const UNION: &str = "union";
-pub const MEMBER_TYPES: &str = "memberTypes";
 
 impl Union {
     pub fn documentation(&self) -> String {

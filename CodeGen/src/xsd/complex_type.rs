@@ -1,7 +1,8 @@
 use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::annotation::Item::Documentation;
-use crate::xsd::{name_attribute, EntryType, ANNOTATION, COMPLEX_TYPE, ID};
+use crate::xsd::constants::{ANNOTATION, COMPLEX_TYPE};
+use crate::xsd::{name_attribute, EntryType, ID};
 use std::convert::TryInto;
 
 pub struct ComplexType {

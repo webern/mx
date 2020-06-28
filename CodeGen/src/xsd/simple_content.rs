@@ -2,12 +2,13 @@ use crate::error::{Error, Result};
 use crate::xsd;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::annotation::Item::Documentation;
-use crate::xsd::attribute_group::{parse_attribute_group_ref, ATTRIBUTE};
+use crate::xsd::attribute_group::parse_attribute_group_ref;
 use crate::xsd::attribute_group::{
     parse_attribute_ref, parse_attribute_type, AttributeGroupRef, AttributeRef, AttributeType,
 };
-use crate::xsd::extension::{Extension, EXTENSION};
-use crate::xsd::{base_attribute, EntryType, ANNOTATION, ID, IMPORT, REF};
+use crate::xsd::constants::{ANNOTATION, EXTENSION, SIMPLE_CONTENT};
+use crate::xsd::extension::Extension;
+use crate::xsd::{base_attribute, EntryType, ID};
 use std::convert::TryInto;
 
 pub struct SimpleContent {
@@ -20,8 +21,6 @@ pub struct SimpleContent {
 pub enum Payload {
     Extension(Extension),
 }
-
-pub const SIMPLE_CONTENT: &str = "simpleContent";
 
 impl SimpleContent {
     pub fn documentation(&self) -> String {

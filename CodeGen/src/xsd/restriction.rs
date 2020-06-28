@@ -2,9 +2,12 @@ use crate::error::{Error, Result};
 use crate::xsd;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::annotation::Item::Documentation;
+use crate::xsd::constants::{
+    ANNOTATION, ENUMERATION, LENGTH, MAX_EXCLUSIVE, MAX_INCLUSIVE, MAX_LENGTH, MIN_EXCLUSIVE,
+    MIN_INCLUSIVE, MIN_LENGTH, PATTERN, RESTRICTION,
+};
 use crate::xsd::restriction::FacetType::Pattern;
-use crate::xsd::simple_type::{LIST, RESTRICTION};
-use crate::xsd::{base_attribute, value_attribute, EntryType, ANNOTATION, ID};
+use crate::xsd::{base_attribute, value_attribute, EntryType, ID};
 use exile::Element;
 use std::convert::TryInto;
 use std::fmt::{Display, Formatter};
@@ -49,15 +52,6 @@ length|minLength|maxLength|enumeration|whiteSpace|pattern)*))
 </restriction>
  */
 // TODO - support additional facets
-pub const ENUMERATION: &str = "enumeration";
-pub const LENGTH: &str = "length";
-pub const MAX_EXCLUSIVE: &str = "maxExclusive";
-pub const MAX_INCLUSIVE: &str = "maxInclusive";
-pub const MAX_LENGTH: &str = "maxLength";
-pub const MIN_EXCLUSIVE: &str = "minExclusive";
-pub const MIN_INCLUSIVE: &str = "minInclusive";
-pub const MIN_LENGTH: &str = "minLength";
-pub const PATTERN: &str = "pattern";
 
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Ord, PartialOrd)]
 pub enum FacetType {
