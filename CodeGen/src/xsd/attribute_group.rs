@@ -2,8 +2,8 @@ use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::annotation::Item::Documentation;
 use crate::xsd::{
-    name_attribute, ref_attribute, type_attribute, use_required, EntryType, ANNOTATION,
-    ATTRIBUTE_GROUP, ID,
+    default_attribute, fixed_attribute, name_attribute, ref_attribute, type_attribute,
+    use_required, EntryType, ANNOTATION, ATTRIBUTE_GROUP, ID, REF,
 };
 use std::convert::TryInto;
 
@@ -98,22 +98,45 @@ impl AttributeGroup {
 }
 
 fn parse_attribute(inner: &exile::Element, index: u64) -> Result<Member> {
-    // TODO parse either AttributeType or AttributeRef
+    if let Some(_) = inner.attributes.map().get(REF) {
+        Ok(Member::AttributeRef(parse_attribute_ref(inner, index)?))
+    } else {
+        Ok(Member::AttributeType(parse_attribute_type(inner, index)?))
+    }
+}
+
+fn parse_attribute_type(inner: &exile::Element, index: u64) -> Result<AttributeType> {
     let name = name_attribute(inner)?;
-    Ok(Member::AttributeType(AttributeType {
+    let type_ = type_attribute(inner)?;
+    let required = use_required(inner);
+    Ok(AttributeType {
         id: ID {
             entry_type: EntryType::Other(ATTRIBUTE.into()),
             name: name.clone(),
         },
         index,
         name,
-        type_: type_attribute(inner)?,
-        required: use_required(inner),
-    }))
+        type_,
+        required,
+    })
 }
 
-fn parse_attribute_type(inner: &exile::Element, index: u64) -> Result<AttributeType> {
-    let name = name_attribute(inner)?;
+fn parse_attribute_ref(inner: &exile::Element, index: u64) -> Result<AttributeRef> {
+    let ref_ = ref_attribute(inner)?;
+    let required = use_required(inner);
+    let fixed = fixed_attribute(inner);
+    let default = default_attribute(inner);
+    Ok(AttributeRef {
+        id: ID {
+            entry_type: EntryType::Other(ATTRIBUTE.into()),
+            name: ref_.clone(),
+        },
+        index,
+        ref_,
+        required,
+        default,
+        fixed,
+    })
 }
 
 #[test]
@@ -192,7 +215,7 @@ fn parse_group_ref() {
             assert_eq!(ar.type_.as_str(), "xs:anyURI");
             assert!(ar.required);
         }
-        _ => panic!("expected 'AttributeRef'"),
+        _ => panic!("expected 'AttributeType'"),
     }
     let member = ag.members.get(2).unwrap();
     match member {
@@ -204,11 +227,11 @@ fn parse_group_ref() {
 }
 
 #[test]
-fn parse_attribute_ref() {
+fn parse_attribute_ref_test() {
     let xml_str = r#"
 	<xs:attributeGroup name="link-attributes">
 		<xs:annotation>
-			<xs:documentation>The link-attributes group includes all the simple XLink attributes supported in the MusicXML format.</xs:documentation>
+			<xs:documentation>The link-attributes...</xs:documentation>
 		</xs:annotation>
 		<!--<xs:attribute ref="xmnls:xlink" fixed="http://www.w3.org/1999/xlink"/>-->
 		<xs:attribute ref="xlink:href" use="required"/>
@@ -224,26 +247,40 @@ fn parse_attribute_ref() {
     let ag = AttributeGroup::from_xml(&xml, want_index).unwrap();
     assert_eq!(ag.index, want_index);
     let got_id = ag.id.to_string();
-    let want_id = "image-attributes (attributeGroup)".to_owned();
+    let want_id = "link-attributes (attributeGroup)".to_owned();
     assert_eq!(got_id, want_id);
     let got_doc = ag.documentation();
-    let want_doc = "flerbin";
+    let want_doc = "The link-attributes...";
     assert_eq!(got_doc, want_doc);
-    assert_eq!(ag.members.len(), 5);
+    assert_eq!(ag.members.len(), 6);
     let member = ag.members.get(0).unwrap();
     match member {
-        Member::AttributeType(ar) => {
-            assert_eq!(ar.name.as_str(), "source");
-            assert_eq!(ar.type_.as_str(), "xs:anyURI");
+        Member::AttributeRef(ar) => {
+            assert_eq!(ar.ref_.as_str(), "xlink:href");
             assert!(ar.required);
+            assert!(ar.default.is_none());
+            assert!(ar.fixed.is_none());
         }
         _ => panic!("expected 'AttributeRef'"),
     }
-    let member = ag.members.get(2).unwrap();
+    let member = ag.members.get(1).unwrap();
     match member {
-        Member::AttributeGroupRef(agr) => {
-            assert_eq!(agr.ref_.as_str(), "position");
+        Member::AttributeRef(ar) => {
+            assert_eq!(ar.ref_.as_str(), "xlink:type");
+            assert!(!ar.required);
+            assert!(ar.default.is_none());
+            assert_eq!(ar.fixed.as_deref().unwrap(), "simple");
         }
-        _ => panic!("expected 'AttributeGroupRef'"),
+        _ => panic!("expected 'AttributeRef'"),
+    }
+    let member = ag.members.get(5).unwrap();
+    match member {
+        Member::AttributeRef(ar) => {
+            assert_eq!(ar.ref_.as_str(), "xlink:actuate");
+            assert!(!ar.required);
+            assert_eq!(ar.default.as_deref().unwrap(), "onRequest");
+            assert!(ar.fixed.is_none());
+        }
+        _ => panic!("expected 'AttributeRef'"),
     }
 }

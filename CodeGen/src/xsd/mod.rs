@@ -69,6 +69,8 @@ pub const IMPORT: &str = "import";
 pub const SIMPLE_TYPE: &str = "simpleType";
 
 // attributes
+pub const DEFAULT: &str = "default";
+pub const FIXED: &str = "fixed";
 pub const NAME: &str = "name";
 pub const REF: &str = "ref";
 pub const REQUIRED: &str = "required";
@@ -222,4 +224,12 @@ pub(crate) fn use_required(node: &exile::Element) -> bool {
         Ok(val) => val.as_str() == REQUIRED,
         Err(_) => false,
     }
+}
+
+pub(crate) fn default_attribute(node: &exile::Element) -> Option<String> {
+    node.attributes.map().get(DEFAULT).cloned()
+}
+
+pub(crate) fn fixed_attribute(node: &exile::Element) -> Option<String> {
+    node.attributes.map().get(FIXED).cloned()
 }
