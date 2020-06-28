@@ -56,6 +56,7 @@ impl Extension {
                         inner, index,
                     )?));
                 }
+                _ => return raise!("unsupported {} member '{}'", EXTENSION, t),
             }
         }
         let id = ID {

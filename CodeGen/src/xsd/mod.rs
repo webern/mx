@@ -7,6 +7,7 @@ mod group;
 mod import;
 mod list;
 mod restriction;
+mod simple_content;
 mod simple_type;
 mod union;
 
