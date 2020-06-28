@@ -1,5 +1,6 @@
 mod annotation;
 mod attribute_group;
+mod complex_content;
 mod complex_type;
 mod element;
 mod extension;
