@@ -296,3 +296,56 @@ impl Occurs {
         })
     }
 }
+
+#[test]
+fn parse_occurs() {
+    let test_cases = vec![
+        (
+            r#"<xyz minOccurs="1"/>"#,
+            Occurs {
+                min_occurs: 1,
+                max_occurs: Some(1),
+            },
+        ),
+        (
+            r#"<xyz maxOccurs="unbounded"/>"#,
+            Occurs {
+                min_occurs: 1,
+                max_occurs: None,
+            },
+        ),
+        (
+            r#"<xyz/>"#,
+            Occurs {
+                min_occurs: 1,
+                max_occurs: Some(1),
+            },
+        ),
+        (
+            r#"<xyz minOccurs="2" maxOccurs="3"/>"#,
+            Occurs {
+                min_occurs: 2,
+                max_occurs: Some(3),
+            },
+        ),
+    ];
+
+    for (xml, want) in test_cases {
+        let doc = exile::parse(xml).unwrap();
+        let got = Occurs::from_xml(doc.root()).unwrap();
+        assert_eq!(got, want)
+    }
+}
+
+#[test]
+fn parse_occurs_err() {
+    let test_cases = vec![
+        r#"<xyz minOccurs="10" maxOccurs="1"/>"#,
+        r#"<xyz maxOccurs="unexpectedString"/>"#,
+    ];
+
+    for xml in test_cases {
+        let doc = exile::parse(xml).unwrap();
+        assert!(Occurs::from_xml(doc.root()).is_err());
+    }
+}
