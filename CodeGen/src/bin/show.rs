@@ -7,7 +7,7 @@ fn main() {
     let paths = Paths::default();
     let xml_str = std::fs::read_to_string(paths.xsd_3_0).unwrap();
     let doc = exile::parse(&xml_str).unwrap();
-    let children_types = print_sequence_children(doc.root(), "element");
+    let children_types = print_sequence_children(doc.root(), "attributeGroup");
     println!(
         "=========================================================================================="
     );

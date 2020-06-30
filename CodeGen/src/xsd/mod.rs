@@ -1,6 +1,8 @@
 mod annotation;
-mod attribute_group;
+mod attribute;
+mod attributes;
 mod choice;
+mod common;
 mod complex_content;
 mod complex_type;
 mod constants;
@@ -17,7 +19,7 @@ mod union;
 
 use crate::error::{Error, Result};
 use crate::xsd::annotation::Annotation;
-use crate::xsd::attribute_group::AttributeGroup;
+use crate::xsd::attributes::AttributeGroup;
 use crate::xsd::complex_type::ComplexType;
 use crate::xsd::constants::{
     ANNOTATION, ATTRIBUTE_GROUP, BASE, COMPLEX_TYPE, DEFAULT, ELEMENT, FIXED, GROUP, IMPORT,

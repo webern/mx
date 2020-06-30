@@ -2,8 +2,8 @@ use crate::error::{Error, Result};
 use crate::xsd;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::annotation::Item::Documentation;
-use crate::xsd::attribute_group::parse_attribute_group_ref;
-use crate::xsd::attribute_group::{
+use crate::xsd::attributes::parse_attribute_group_ref;
+use crate::xsd::attributes::{
     parse_attribute_ref, parse_attribute_type, AttributeGroupRef, AttributeRef, AttributeType,
 };
 use crate::xsd::constants::{ANNOTATION, COMPLEX_CONTENT, EXTENSION};

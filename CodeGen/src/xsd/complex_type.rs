@@ -1,14 +1,39 @@
 use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::annotation::Item::Documentation;
+use crate::xsd::attributes::AttributeGroup;
+use crate::xsd::choice::Choice;
+use crate::xsd::complex_content::ComplexContent;
 use crate::xsd::constants::{ANNOTATION, COMPLEX_TYPE};
-use crate::xsd::{name_attribute, EntryType, ID};
+use crate::xsd::group::Group;
+use crate::xsd::sequence::Sequence;
+use crate::xsd::simple_content::SimpleContent;
+use crate::xsd::{name_attribute, simple_content, EntryType, ID};
 use std::convert::TryInto;
 
 pub struct ComplexType {
     pub id: ID,
     pub index: u64,
+    pub name: String,
     pub annotation: Option<Annotation>,
+    pub payload: Payload,
+}
+
+pub enum Payload {
+    ComplexContent(ComplexContent),
+    SimpleContent(SimpleContent),
+    Parent(Parent),
+}
+
+pub enum Children {
+    Choice(Choice),
+    Group(Group),
+    Sequence(Sequence),
+}
+
+pub struct Parent {
+    attributes: Vec<AttributeGroup>,
+    children: Option<Children>,
 }
 
 impl ComplexType {
@@ -38,7 +63,12 @@ impl ComplexType {
         Ok(ComplexType {
             id,
             index,
+            name: "TODO".into(),
             annotation,
+            payload: Payload::Parent(Parent {
+                attributes: vec![],
+                children: None,
+            }),
         })
     }
 }
