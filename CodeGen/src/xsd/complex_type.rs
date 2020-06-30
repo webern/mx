@@ -33,7 +33,7 @@ impl ComplexType {
         }
         let id = ID {
             entry_type: EntryType::ComplexType,
-            name: name_attribute(node)?,
+            name: "TODO".into(),
         };
         Ok(ComplexType {
             id,

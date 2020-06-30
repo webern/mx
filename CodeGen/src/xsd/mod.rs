@@ -30,7 +30,6 @@ use crate::xsd::import::Import;
 use crate::xsd::simple_type::SimpleType;
 use std::cmp::Ordering;
 use std::collections::{BTreeMap, HashMap};
-use std::convert::TryInto;
 use std::fmt::{Display, Formatter};
 use std::path::Path;
 
@@ -96,7 +95,6 @@ impl Entry {
             EntryType::Import => Ok(Entry::Import(Import::from_xml(node, index)?)),
             EntryType::SimpleType => Ok(Entry::SimpleType(SimpleType::from_xml(node, index)?)),
             EntryType::Other(s) => {
-                // TODO - implement AttributeGroups
                 panic!("'{}' is not an implemented node type", s.as_str());
             }
         }
@@ -107,7 +105,7 @@ impl Entry {
             Entry::Annotation(x) => &x.id,
             Entry::AttributeGroup(x) => &x.id,
             Entry::ComplexType(x) => &x.id,
-            Entry::Element(x) => &x.id,
+            Entry::Element(x) => x.id(),
             Entry::Group(x) => &x.id,
             Entry::Import(x) => &x.id,
             Entry::SimpleType(x) => &x.id,

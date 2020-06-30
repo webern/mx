@@ -7,9 +7,17 @@ fn main() {
     let paths = Paths::default();
     let xml_str = std::fs::read_to_string(paths.xsd_3_0).unwrap();
     let doc = exile::parse(&xml_str).unwrap();
-    print_sequence_children(doc.root());
+    let children_types = print_sequence_children(doc.root(), "element");
+    println!(
+        "=========================================================================================="
+    );
+    println!("\nAll Subtypes:");
+    for child_type in children_types {
+        println!("{}", child_type)
+    }
 }
 
+#[allow(unused)]
 fn find_xs_nodes(node: &exile::Element, xs_nodes: &mut IndexSet<String>) {
     if let Some(ns) = &node.namespace {
         if ns == "xs" {
@@ -21,6 +29,7 @@ fn find_xs_nodes(node: &exile::Element, xs_nodes: &mut IndexSet<String>) {
     }
 }
 
+#[allow(unused)]
 fn print_group_children(root: &Element) {
     println!(
         "=========================================================================================="
@@ -51,38 +60,69 @@ fn print_group_children(root: &Element) {
     }
 }
 
-fn print_sequence_children(root: &Element) {
+fn print_sequence_children(root: &Element, target_element: &str) -> IndexSet<String> {
     println!(
         "=========================================================================================="
     );
-    println!("SEQUENCES");
+    println!("{}", target_element.to_uppercase());
     println!(
         "=========================================================================================="
     );
-    print_sequence_children_recursively(root, "");
+    let mut children_types: IndexSet<String> = IndexSet::new();
+    print_sequence_children_recursively(root, target_element, "", &mut children_types);
+    children_types
 }
 
-fn print_sequence_children_recursively(node: &Element, parent_name: &str) {
+fn print_sequence_children_recursively(
+    node: &Element,
+    target_element: &str,
+    parent_name: &str,
+    children_types: &mut IndexSet<String>,
+) {
     let mut most_recent_name = parent_name.to_owned();
     if let Some(nm) = node.attributes.map().get("name") {
         most_recent_name = nm.clone();
     }
-    if node.name.as_str() == "sequence" {
-        print_sequence_children_the_children_part(node, most_recent_name.as_str());
+    let mut attributes = Vec::new();
+    for (k, _) in node.attributes.map() {
+        attributes.push(k.clone());
+    }
+    attributes.sort();
+    if node.name.as_str() == target_element {
+        print_sequence_children_the_children_part(
+            node,
+            target_element,
+            most_recent_name.as_str(),
+            &attributes,
+            children_types,
+        );
     } else {
         for child in node.children() {
-            print_sequence_children_recursively(child, most_recent_name.as_str());
+            print_sequence_children_recursively(
+                child,
+                target_element,
+                most_recent_name.as_str(),
+                children_types,
+            );
         }
     }
 }
 
-fn print_sequence_children_the_children_part(node: &Element, parent_name: &str) {
-    if node.name.as_str() != "sequence" {
+fn print_sequence_children_the_children_part(
+    node: &Element,
+    target_element: &str,
+    parent_name: &str,
+    attributes: &Vec<String>,
+    children_types: &mut IndexSet<String>,
+) {
+    if node.name.as_str() != target_element {
         panic!("wtf");
     }
     println!("");
     println!("{}:", parent_name);
+    println!("[{}]", attributes.join(" "));
     for child in node.children() {
-        println!("{}", child.name.as_str())
+        println!("{}", child.name.as_str());
+        children_types.insert(child.name.clone());
     }
 }
