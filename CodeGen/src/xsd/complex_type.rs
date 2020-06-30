@@ -1,7 +1,7 @@
 use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::annotation::Item::Documentation;
-use crate::xsd::attributes::AttributeGroup;
+use crate::xsd::attributes::Attributes;
 use crate::xsd::choice::Choice;
 use crate::xsd::complex_content::ComplexContent;
 use crate::xsd::constants::{ANNOTATION, COMPLEX_TYPE};
@@ -32,7 +32,7 @@ pub enum Children {
 }
 
 pub struct Parent {
-    attributes: Vec<AttributeGroup>,
+    attributes: Attributes,
     children: Option<Children>,
 }
 

@@ -1,5 +1,6 @@
 mod annotation;
 mod attribute;
+mod attribute_group;
 mod attributes;
 mod choice;
 mod common;
@@ -19,7 +20,7 @@ mod union;
 
 use crate::error::{Error, Result};
 use crate::xsd::annotation::Annotation;
-use crate::xsd::attributes::AttributeGroup;
+use crate::xsd::attribute_group::AttributeGroup;
 use crate::xsd::complex_type::ComplexType;
 use crate::xsd::constants::{
     ANNOTATION, ATTRIBUTE_GROUP, BASE, COMPLEX_TYPE, DEFAULT, ELEMENT, FIXED, GROUP, IMPORT,
@@ -105,7 +106,7 @@ impl Entry {
     pub fn id(&self) -> &ID {
         match self {
             Entry::Annotation(x) => &x.id,
-            Entry::AttributeGroup(x) => &x.id,
+            Entry::AttributeGroup(x) => x.id(),
             Entry::ComplexType(x) => &x.id,
             Entry::Element(x) => x.id(),
             Entry::Group(x) => &x.id,

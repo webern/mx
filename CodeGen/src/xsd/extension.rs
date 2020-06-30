@@ -2,10 +2,7 @@ use crate::error::{Error, Result};
 use crate::xsd;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::annotation::Item::Documentation;
-use crate::xsd::attributes::parse_attribute_group_ref;
-use crate::xsd::attributes::{
-    parse_attribute_ref, parse_attribute_type, AttributeGroupRef, AttributeRef, AttributeType,
-};
+use crate::xsd::attributes::{AttributeItem, Attributes};
 use crate::xsd::constants::{ANNOTATION, ATTRIBUTE, ATTRIBUTE_GROUP, EXTENSION, REF};
 use crate::xsd::{base_attribute, EntryType, ID};
 use std::convert::TryInto;
@@ -15,13 +12,7 @@ pub struct Extension {
     pub index: u64,
     pub annotation: Option<Annotation>,
     pub base: String,
-    pub members: Vec<Member>,
-}
-
-pub enum Member {
-    AttributeType(AttributeType),
-    AttributeRef(AttributeRef),
-    AttributeGroupRef(AttributeGroupRef),
+    pub attributes: Attributes,
 }
 
 impl Extension {
@@ -38,22 +29,13 @@ impl Extension {
         }
         let base = base_attribute(node)?;
         let mut annotation = None;
-        let mut members = Vec::new();
+        let mut attributes = Attributes::new();
         for inner in node.children() {
             let t = inner.name.as_str();
             match t {
                 ANNOTATION => annotation = Some(Annotation::from_xml(inner, index)?),
-                ATTRIBUTE => {
-                    if let Some(_) = inner.attributes.map().get(REF) {
-                        members.push(Member::AttributeRef(parse_attribute_ref(inner, index)?));
-                    } else {
-                        members.push(Member::AttributeType(parse_attribute_type(inner, index)?));
-                    }
-                }
-                ATTRIBUTE_GROUP => {
-                    members.push(Member::AttributeGroupRef(parse_attribute_group_ref(
-                        inner, index,
-                    )?));
+                ATTRIBUTE | ATTRIBUTE_GROUP => {
+                    attributes.push(AttributeItem::from_xml(inner, index)?);
                 }
                 _ => return raise!("unsupported {} member '{}'", EXTENSION, t),
             }
@@ -67,7 +49,7 @@ impl Extension {
             index,
             annotation,
             base,
-            members,
+            attributes,
         })
     }
 }
