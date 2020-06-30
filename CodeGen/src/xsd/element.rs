@@ -152,56 +152,85 @@ impl ElementRef {
     }
 }
 
+// #[test]
+// fn parse_score_partwise() {
+//     let xml_str = r#"
+//     	<xs:element name="score-partwise" block="extension substitution" final="\#all">
+// 		<xs:annotation>
+// 			<xs:documentation>bleep bleep bloop bloop</xs:documentation>
+// 		</xs:annotation>
+// 		<xs:complexType>
+// 			<xs:sequence>
+// 				<xs:group ref="score-header"/>
+// 				<xs:element name="part" maxOccurs="unbounded">
+// 					<xs:complexType>
+// 						<xs:sequence>
+// 							<xs:element name="measure" maxOccurs="unbounded">
+// 								<xs:complexType>
+// 									<xs:group ref="music-data"/>
+// 									<xs:attributeGroup ref="measure-attributes"/>
+// 								</xs:complexType>
+// 							</xs:element>
+// 						</xs:sequence>
+// 						<xs:attributeGroup ref="part-attributes"/>
+// 					</xs:complexType>
+// 				</xs:element>
+// 			</xs:sequence>
+// 			<xs:attributeGroup ref="document-attributes"/>
+// 		</xs:complexType>
+// 	</xs:element>"#;
+//     let doc = exile::parse(xml_str).unwrap();
+//     let xml = doc.root();
+//     let want_index: u64 = 3;
+//     let ele = Element::from_xml(&xml, want_index).unwrap();
+//     let got_id = format!("{}", ele.id());
+//     let want_id = "score-partwise (element)";
+//     assert_eq!(got_id.as_str(), want_id);
+//     let got_doc = ele.documentation();
+//     let want_doc = "bleep bleep bloop bloop";
+//     assert_eq!(got_doc, want_doc);
+//     let ele = match ele {
+//         Element::Definition(x) => x,
+//         Element::Reference(_) => panic!("expected Definition, got Reference"),
+//     };
+//     assert_eq!(
+//         ele.occurs,
+//         Occurs {
+//             min_occurs: 1,
+//             max_occurs: Some(1),
+//         }
+//     );
+//     match ele.complex_type {
+//         ComplexType::Inline(_) => {}
+//         ComplexType::Named(_) => panic!("expected ComplexType::Inline, got ComplexType::Named"),
+//     }
+// }
+
 #[test]
-fn parse_score_partwise() {
-    let xml_str = r#"
-    	<xs:element name="score-partwise" block="extension substitution" final="\#all">
-		<xs:annotation>
-			<xs:documentation>bleep bleep bloop bloop</xs:documentation>
-		</xs:annotation>
-		<xs:complexType>
-			<xs:sequence>
-				<xs:group ref="score-header"/>
-				<xs:element name="part" maxOccurs="unbounded">
-					<xs:complexType>
-						<xs:sequence>
-							<xs:element name="measure" maxOccurs="unbounded">
-								<xs:complexType>
-									<xs:group ref="music-data"/>
-									<xs:attributeGroup ref="measure-attributes"/>
-								</xs:complexType>
-							</xs:element>
-						</xs:sequence>
-						<xs:attributeGroup ref="part-attributes"/>
-					</xs:complexType>
-				</xs:element>
-			</xs:sequence>
-			<xs:attributeGroup ref="document-attributes"/>
-		</xs:complexType>
-	</xs:element>"#;
+fn parse_credit() {
+    let xml_str =
+        r#"<xs:element name="credit" type="credit" minOccurs="0" maxOccurs="unbounded"/>"#;
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
-    let want_index: u64 = 3;
+    let want_index: u64 = 6;
     let ele = Element::from_xml(&xml, want_index).unwrap();
     let got_id = format!("{}", ele.id());
-    let want_id = "score-partwise (element)";
+    let want_id = "credit (element)";
     assert_eq!(got_id.as_str(), want_id);
     let got_doc = ele.documentation();
-    let want_doc = "bleep bleep bloop bloop";
+    let want_doc = "";
     assert_eq!(got_doc, want_doc);
     let ele = match ele {
-        Element::Definition(x) => x,
-        Element::Reference(_) => panic!("expected Definition, got Reference"),
+        Element::Definition(_) => panic!("expected Reference, got Definition"),
+        Element::Reference(x) => x,
     };
+    assert_eq!(ele.name.as_str(), "credit");
+    assert_eq!(ele.type_.as_str(), "credit");
     assert_eq!(
         ele.occurs,
         Occurs {
-            min_occurs: 1,
-            max_occurs: Some(1),
+            min_occurs: 0,
+            max_occurs: None,
         }
     );
-    match ele.complex_type {
-        ComplexType::Inline(_) => {}
-        ComplexType::Named(_) => panic!("expected ComplexType::Inline, got ComplexType::Named");
-    }
 }
