@@ -1,12 +1,12 @@
 use crate::error::Result;
 use crate::xsd::annotation::Annotation;
-use crate::xsd::annotation::Item::Documentation;
+
 use crate::xsd::choice::Choice;
-use crate::xsd::constants::{ANNOTATION, CHOICE, ELEMENT, GROUP, NAME, SEQUENCE};
+use crate::xsd::constants::{ANNOTATION, CHOICE, ELEMENT, GROUP, SEQUENCE};
 use crate::xsd::element::Element;
 use crate::xsd::sequence::Sequence;
 use crate::xsd::{is_ref, name_attribute, ref_attribute, EntryType, Occurs, ID};
-use std::convert::TryInto;
+
 
 pub enum Group {
     Definition(GroupDefinition),

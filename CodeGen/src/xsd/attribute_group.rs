@@ -1,6 +1,6 @@
 use crate::error::Result;
 use crate::xsd::annotation::Annotation;
-use crate::xsd::attribute::Attribute;
+
 use crate::xsd::attributes::{add_attributes_from_xml, Attributes};
 use crate::xsd::constants::{ANNOTATION, REF};
 use crate::xsd::{name_attribute, ref_attribute, EntryType, ID};
@@ -42,7 +42,7 @@ impl AttributeGroup {
     }
 
     pub fn from_xml(node: &exile::Element, index: u64) -> Result<AttributeGroup> {
-        if let Some(ref_) = node.attributes.map().get(REF) {
+        if let Some(_ref_) = node.attributes.map().get(REF) {
             Ok(AttributeGroup::Ref(AttributeGroupRef::from_xml(
                 node, index,
             )?))

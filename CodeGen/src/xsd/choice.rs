@@ -1,9 +1,9 @@
 use crate::error::Result;
 use crate::xsd::annotation::Annotation;
-use crate::xsd::annotation::Item::Documentation;
-use crate::xsd::constants::{ANNOTATION, CHOICE};
-use crate::xsd::{name_attribute, EntryType, ID};
-use std::convert::TryInto;
+
+use crate::xsd::constants::{ANNOTATION};
+use crate::xsd::{EntryType, ID};
+
 
 pub struct Choice {
     pub id: ID,

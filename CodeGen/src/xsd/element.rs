@@ -1,10 +1,10 @@
 use crate::error::Result;
 use crate::xsd::annotation::Annotation;
-use crate::xsd::annotation::Item::Documentation;
+
 use crate::xsd::complex_type::ComplexType;
 use crate::xsd::constants::{ANNOTATION, COMPLEX_TYPE, ELEMENT, TYPE};
 use crate::xsd::{name_attribute, type_attribute, EntryType, Occurs, ID};
-use std::convert::TryInto;
+
 
 /*
 annotation

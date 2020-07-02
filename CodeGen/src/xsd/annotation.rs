@@ -1,10 +1,10 @@
-use crate::error::{Error, Result};
-use crate::xsd;
-use crate::xsd::annotation::Item::Documentation;
+use crate::error::{Result};
+
+
 use crate::xsd::constants::{ANNOTATION, APP_INFO, DOCUMENTATION};
-use crate::xsd::{EntryType, Occurs, ID};
-use std::collections::HashMap;
-use std::convert::TryInto;
+use crate::xsd::{EntryType, ID};
+
+
 
 pub struct Annotation {
     pub id: ID,

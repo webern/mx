@@ -18,7 +18,7 @@ mod simple_content;
 mod simple_type;
 mod union;
 
-use crate::error::{Error, Result};
+use crate::error::{Result};
 use crate::xsd::annotation::Annotation;
 use crate::xsd::attribute_group::AttributeGroup;
 use crate::xsd::complex_type::ComplexType;
@@ -32,7 +32,7 @@ use crate::xsd::group::GroupDefinition;
 use crate::xsd::import::Import;
 use crate::xsd::simple_type::SimpleType;
 use std::cmp::Ordering;
-use std::collections::{BTreeMap, HashMap};
+use std::collections::{BTreeMap};
 use std::fmt::{Display, Formatter};
 use std::path::Path;
 

@@ -1,7 +1,7 @@
-use crate::error::{Error, Result};
-use crate::xsd;
+use crate::error::{Result};
+
 use crate::xsd::annotation::Annotation;
-use crate::xsd::annotation::Item::Documentation;
+
 use crate::xsd::constants::{
     ANNOTATION, ENUMERATION, LENGTH, MAX_EXCLUSIVE, MAX_INCLUSIVE, MAX_LENGTH, MIN_EXCLUSIVE,
     MIN_INCLUSIVE, MIN_LENGTH, PATTERN, RESTRICTION,
@@ -9,9 +9,9 @@ use crate::xsd::constants::{
 use crate::xsd::restriction::FacetType::Pattern;
 use crate::xsd::{base_attribute, value_attribute, EntryType, ID};
 use exile::Element;
-use std::convert::TryInto;
+
 use std::fmt::{Display, Formatter};
-use std::str::FromStr;
+
 
 /*
 enumeration	Defines a list of acceptable values

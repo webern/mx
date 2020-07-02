@@ -1,6 +1,6 @@
 use crate::error::Result;
 use crate::xsd::annotation::Annotation;
-use crate::xsd::annotation::Item::Documentation;
+
 use crate::xsd::attributes::Attributes;
 use crate::xsd::choice::Choice;
 use crate::xsd::complex_content::ComplexContent;
@@ -8,8 +8,8 @@ use crate::xsd::constants::{ANNOTATION, COMPLEX_TYPE};
 use crate::xsd::group::Group;
 use crate::xsd::sequence::Sequence;
 use crate::xsd::simple_content::SimpleContent;
-use crate::xsd::{name_attribute, simple_content, EntryType, ID};
-use std::convert::TryInto;
+use crate::xsd::{EntryType, ID};
+
 
 pub struct ComplexType {
     pub id: ID,

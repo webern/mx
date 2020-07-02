@@ -1,12 +1,12 @@
-use crate::error::{Error, Result};
-use crate::xsd;
+use crate::error::{Result};
+
 use crate::xsd::annotation::Annotation;
-use crate::xsd::annotation::Item::Documentation;
+
 use crate::xsd::constants::{ANNOTATION, COMPLEX_CONTENT, EXTENSION};
 use crate::xsd::extension::Extension;
-use crate::xsd::EntryType::AttributeGroup;
-use crate::xsd::{base_attribute, EntryType, ID};
-use std::convert::TryInto;
+
+use crate::xsd::{EntryType, ID};
+
 
 pub struct ComplexContent {
     pub id: ID,
