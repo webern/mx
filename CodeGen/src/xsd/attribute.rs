@@ -2,7 +2,7 @@ use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::common::DefinedBy;
 use crate::xsd::constants::{ANNOTATION, ATTRIBUTE, DEFAULT, FIXED, NAME, REF, TYPE};
-use crate::xsd::{EntryType, ID};
+use crate::xsd::{use_required, EntryType, ID};
 
 pub struct Attribute {
     pub id: ID,
@@ -10,6 +10,7 @@ pub struct Attribute {
     pub name: String,
     pub annotation: Option<Annotation>,
     pub defined_by: DefinedBy,
+    pub required: bool,
     pub default: Option<String>,
     pub fixed: Option<String>,
 }
@@ -34,6 +35,7 @@ impl Attribute {
             index,
             name,
             annotation: Self::parse_annotation(node, index)?,
+            required: use_required(node),
             defined_by,
             default: node.attributes.map().get(DEFAULT).cloned(),
             fixed: node.attributes.map().get(FIXED).cloned(),

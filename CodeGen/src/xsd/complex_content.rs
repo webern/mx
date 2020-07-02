@@ -89,7 +89,8 @@ fn parse() {
     match a {
         AttributeItem::Attribute(x) => {
             assert_eq!(x.name.as_str(), "type");
-            assert_eq!(x.type_.as_str(), "start-stop");
+            assert!(x.defined_by.is_type());
+            assert_eq!(x.defined_by.value(), "start-stop");
             assert!(x.required);
         }
         AttributeItem::AttributeGroup(_) => panic!("expected 'Attribute' but got 'AttributeGroup'"),

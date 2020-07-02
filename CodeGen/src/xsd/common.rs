@@ -7,10 +7,25 @@ pub enum DefinedBy {
 }
 
 impl DefinedBy {
+    /// A quicker way, if you don't care whether it is a Ref or a Def
     pub fn value(&self) -> &str {
         match self {
             DefinedBy::Ref(s) => s.as_str(),
             DefinedBy::Type(s) => s.as_str(),
+        }
+    }
+
+    pub fn is_ref(&self) -> bool {
+        match self {
+            DefinedBy::Ref(_) => true,
+            _ => false,
+        }
+    }
+
+    pub fn is_type(&self) -> bool {
+        match self {
+            DefinedBy::Type(_) => true,
+            _ => false,
         }
     }
 }

@@ -20,9 +20,9 @@ impl Choice {
     }
 
     pub fn from_xml(node: &exile::Element, index: u64) -> Result<Self> {
-        if node.name.as_str() != CHOICE {
-            return raise!("expected '{}', got '{}'", CHOICE, node.name.as_str());
-        }
+        // if node.name.as_str() != CHOICE {
+        //     return raise!("expected '{}', got '{}'", CHOICE, node.name.as_str());
+        // }
         let mut annotation = None;
         for inner in node.children() {
             let t = inner.name.as_str();
@@ -33,7 +33,7 @@ impl Choice {
         }
         let id = ID {
             entry_type: EntryType::Element,
-            name: name_attribute(node)?,
+            name: "name_attribute(node)?".into(),
         };
         Ok(Choice {
             id,
