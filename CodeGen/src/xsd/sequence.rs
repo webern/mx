@@ -64,7 +64,7 @@ impl Sequence {
 
 #[test]
 fn parse() {
-    use crate::xsd::constants::*;
+    
     let xml_str = r#"
     <xs:sequence>
 		<xs:element name="identification" type="identification" minOccurs="0"/>
@@ -109,7 +109,7 @@ fn parse() {
     };
     match seq.members.get(7).unwrap() {
         Member::Choice(_) => panic!("expecting '{}', got '{}'", "Sequence", "Choice"),
-        Member::Element(e) => panic!("expecting '{}', got '{}'", "Sequence", "Element"),
+        Member::Element(_e) => panic!("expecting '{}', got '{}'", "Sequence", "Element"),
         Member::Group(_) => panic!("expecting '{}', got '{}'", "Sequence", "Group"),
         Member::Sequence(_) => {}
     };

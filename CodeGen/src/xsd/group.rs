@@ -126,8 +126,8 @@ impl GroupReference {
 
 #[test]
 fn parse_group_definition() {
-    use super::restriction::Facet;
-    use crate::xsd::constants::*;
+    
+    
     let xml_str = r#"
 	<xs:group name="harmony-chord">
 		<xs:annotation>
@@ -174,8 +174,8 @@ fn parse_group_definition() {
 
 #[test]
 fn parse_group_reference() {
-    use super::restriction::Facet;
-    use crate::xsd::constants::*;
+    
+    
     let xml_str = r#"<xs:group ref="non-traditional-key" minOccurs="0" maxOccurs="unbounded"/>"#;
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
@@ -198,8 +198,8 @@ fn parse_group_reference() {
 
 #[test]
 fn parse_group_reference_max_occurs() {
-    use super::restriction::Facet;
-    use crate::xsd::constants::*;
+    
+    
     let xml_str = r#"<xs:group ref="non-traditional-key" minOccurs="1" maxOccurs="8"/>"#;
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();

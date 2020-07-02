@@ -208,7 +208,7 @@ pub fn words<S: AsRef<str>>(s: S) -> Vec<String> {
 #[cfg(test)]
 mod tests {
     use super::{words, Symbol};
-    use std::io::{Cursor, Write};
+    use std::io::{Cursor};
 
     #[test]
     fn pascal_case_clef_tab() {
