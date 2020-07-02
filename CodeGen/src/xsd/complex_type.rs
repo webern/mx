@@ -1,6 +1,5 @@
 use crate::error::Result;
 use crate::xsd::annotation::Annotation;
-
 use crate::xsd::attribute_group::AttributeGroup;
 use crate::xsd::attributes::{AttributeItem, Attributes};
 use crate::xsd::choice::Choice;
@@ -35,8 +34,8 @@ pub enum Children {
 }
 
 pub struct Parent {
-    attributes: Attributes,
-    children: Option<Children>,
+    pub attributes: Attributes,
+    pub children: Option<Children>,
 }
 
 impl ComplexType {
