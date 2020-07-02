@@ -4,6 +4,7 @@ use crate::xsd::annotation::Annotation;
 use crate::xsd::annotation::Item::Documentation;
 use crate::xsd::constants::{ANNOTATION, COMPLEX_CONTENT, EXTENSION};
 use crate::xsd::extension::Extension;
+use crate::xsd::EntryType::AttributeGroup;
 use crate::xsd::{base_attribute, EntryType, ID};
 use std::convert::TryInto;
 
@@ -58,6 +59,7 @@ impl ComplexContent {
 
 #[test]
 fn parse() {
+    use super::attributes::AttributeItem;
     let xml_str = r#"
 		<xs:complexContent>
 			<xs:extension base="time-modification">
@@ -80,18 +82,16 @@ fn parse() {
     assert_eq!(got_id, want_id);
     let got_type = sc.id.entry_type;
     assert_eq!(got_type, EntryType::Other(COMPLEX_CONTENT.to_owned()));
+    let extension = &sc.extension;
     assert_eq!(extension.base.as_str(), "time-modification");
-    assert_eq!(extension.members.len(), 3);
-    let member = extension.members.get(0).unwrap();
-    match member {
-        Member::AttributeType(x) => {
+    assert_eq!(extension.attributes.len(), 3);
+    let a = extension.attributes.get(0).unwrap();
+    match a {
+        AttributeItem::Attribute(x) => {
             assert_eq!(x.name.as_str(), "type");
             assert_eq!(x.type_.as_str(), "start-stop");
             assert!(x.required);
         }
-        Member::AttributeRef(_) => panic!("expected 'AttributeType' but got 'AttributeRef'"),
-        Member::AttributeGroupRef(_) => {
-            panic!("expected 'AttributeType' but got 'AttributeGroupRef'")
-        }
+        AttributeItem::AttributeGroup(_) => panic!("expected 'Attribute' but got 'AttributeGroup'"),
     }
 }

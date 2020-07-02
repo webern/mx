@@ -2,6 +2,7 @@ use crate::error::{Error, Result};
 use crate::xsd;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::annotation::Item::Documentation;
+use crate::xsd::attribute_group::AttributeGroup;
 use crate::xsd::constants::{ANNOTATION, EXTENSION, SIMPLE_CONTENT};
 use crate::xsd::extension::Extension;
 use crate::xsd::{base_attribute, EntryType, ID};
@@ -62,6 +63,7 @@ impl SimpleContent {
 
 #[test]
 fn parse() {
+    use super::attributes::AttributeItem;
     let xml_str = r#"
     <xs:simpleContent>
 		<xs:extension base="xs:string">
@@ -84,18 +86,16 @@ fn parse() {
     assert_eq!(got_type, EntryType::Other(SIMPLE_CONTENT.to_owned()));
     match sc.payload {
         Payload::Extension(ext) => {
-            assert_eq!(ext.members.len(), 1);
-            let member = ext.members.get(0).unwrap();
-            match member {
-                Member::AttributeType(_) => {
-                    panic!("expected 'AttributeGroupRef' but got 'AttributeType'")
+            assert_eq!(ext.attributes.len(), 1);
+            let a = ext.attributes.get(0).unwrap();
+            match a {
+                AttributeItem::Attribute(_) => {
+                    panic!("expected 'AttributeGroup' but got 'Attribute'")
                 }
-                Member::AttributeRef(_) => {
-                    panic!("expected 'AttributeGroupRef' but got 'AttributeRef'")
-                }
-                Member::AttributeGroupRef(x) => {
-                    assert_eq!(x.ref_.as_str(), "part-name-text");
-                }
+                AttributeItem::AttributeGroup(x) => match x {
+                    AttributeGroup::Def(_) => panic!("expected Ref got Def"),
+                    AttributeGroup::Ref(r) => assert_eq!(r.ref_.as_str(), "part-name-text"),
+                },
             }
         }
     }
