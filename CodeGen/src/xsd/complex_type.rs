@@ -25,6 +25,7 @@ pub enum Payload {
     ComplexContent(ComplexContent),
     SimpleContent(SimpleContent),
     Parent(Parent),
+    None,
 }
 
 pub enum Children {
@@ -51,25 +52,22 @@ impl ComplexType {
             return raise!("expected '{}', got '{}'", COMPLEX_TYPE, node.name.as_str());
         }
         let mut annotation = None;
-        let mut payload = None;
+        let mut payload = Payload::None;
         for inner in node.children() {
             let t = inner.name.as_str();
             match t {
                 ANNOTATION => annotation = Some(Annotation::from_xml(inner, index)?),
                 CHOICE | GROUP | SEQUENCE => {
-                    payload = Some(Payload::Parent(Parent::from_xml(node, index)?));
+                    payload = Payload::Parent(Parent::from_xml(node, index)?);
                     break;
                 }
                 COMPLEX_CONTENT => {
-                    payload = Some(Payload::ComplexContent(ComplexContent::from_xml(
-                        node, index,
-                    )?))
+                    payload = Payload::ComplexContent(ComplexContent::from_xml(inner, index)?)
                 }
                 SIMPLE_CONTENT => {
-                    payload = Some(Payload::SimpleContent(SimpleContent::from_xml(
-                        node, index,
-                    )?))
+                    payload = Payload::SimpleContent(SimpleContent::from_xml(inner, index)?)
                 }
+                ATTRIBUTE | ATTRIBUTE_GROUP => { /* will be parsed by Parent::from_xml() */ }
                 _ => return raise!("unexpected node '{}' while parsing complexType", t),
             }
         }
@@ -85,11 +83,6 @@ impl ComplexType {
             } else {
                 name.clone()
             },
-        };
-        let payload = if let Some(p) = payload {
-            p
-        } else {
-            return raise!("could not parse the complexType");
         };
         Ok(ComplexType {
             id,
@@ -122,6 +115,7 @@ impl Parent {
                 ATTRIBUTE | ATTRIBUTE_GROUP => parent
                     .attributes
                     .push(AttributeItem::from_xml(inner, index)?),
+                ANNOTATION => { /* ignore because it's parsed by ComplexType::from_xml */ }
                 _ => return raise!("unable to parse complexType, unexpected node '{}'", t),
             }
         }
