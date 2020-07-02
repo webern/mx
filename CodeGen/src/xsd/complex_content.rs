@@ -11,11 +11,7 @@ pub struct ComplexContent {
     pub id: ID,
     pub index: u64,
     pub annotation: Option<Annotation>,
-    pub payload: Payload,
-}
-
-pub enum Payload {
-    Extension(Extension),
+    pub extension: Extension,
 }
 
 impl ComplexContent {
@@ -31,13 +27,13 @@ impl ComplexContent {
             return raise!("expected '{}', got '{}'", COMPLEX_CONTENT, &node.name);
         }
         let mut annotation = None;
-        let mut payload = None;
+        let mut extension = None;
         for inner in node.children() {
             let t = inner.name.as_str();
             match t {
                 ANNOTATION => annotation = Some(Annotation::from_xml(inner, index)?),
                 EXTENSION => {
-                    payload = Some(Payload::Extension(Extension::from_xml(inner, index)?));
+                    extension = Some(Extension::from_xml(inner, index)?);
                 }
                 _ => return raise!("unsupported simpleContent node '{}'", t),
             }
@@ -46,8 +42,8 @@ impl ComplexContent {
             entry_type: EntryType::Other(COMPLEX_CONTENT.to_owned()),
             name: format!("{}", index),
         };
-        let payload = if let Some(p) = payload {
-            p
+        let extension = if let Some(ext) = extension {
+            ext
         } else {
             return raise!("{} payload was not found", COMPLEX_CONTENT);
         };
@@ -55,14 +51,13 @@ impl ComplexContent {
             id,
             index,
             annotation,
-            payload,
+            extension,
         })
     }
 }
 
 #[test]
 fn parse() {
-    use super::extension::Member;
     let xml_str = r#"
 		<xs:complexContent>
 			<xs:extension base="time-modification">
@@ -85,24 +80,18 @@ fn parse() {
     assert_eq!(got_id, want_id);
     let got_type = sc.id.entry_type;
     assert_eq!(got_type, EntryType::Other(COMPLEX_CONTENT.to_owned()));
-    match sc.payload {
-        Payload::Extension(ext) => {
-            assert_eq!(ext.base.as_str(), "time-modification");
-            assert_eq!(ext.members.len(), 3);
-            let member = ext.members.get(0).unwrap();
-            match member {
-                Member::AttributeType(x) => {
-                    assert_eq!(x.name.as_str(), "type");
-                    assert_eq!(x.type_.as_str(), "start-stop");
-                    assert!(x.required);
-                }
-                Member::AttributeRef(_) => {
-                    panic!("expected 'AttributeType' but got 'AttributeRef'")
-                }
-                Member::AttributeGroupRef(_) => {
-                    panic!("expected 'AttributeType' but got 'AttributeGroupRef'")
-                }
-            }
+    assert_eq!(extension.base.as_str(), "time-modification");
+    assert_eq!(extension.members.len(), 3);
+    let member = extension.members.get(0).unwrap();
+    match member {
+        Member::AttributeType(x) => {
+            assert_eq!(x.name.as_str(), "type");
+            assert_eq!(x.type_.as_str(), "start-stop");
+            assert!(x.required);
+        }
+        Member::AttributeRef(_) => panic!("expected 'AttributeType' but got 'AttributeRef'"),
+        Member::AttributeGroupRef(_) => {
+            panic!("expected 'AttributeType' but got 'AttributeGroupRef'")
         }
     }
 }

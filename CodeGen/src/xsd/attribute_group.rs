@@ -7,7 +7,7 @@ use crate::xsd::{name_attribute, EntryType, ID};
 
 pub enum AttributeGroup {
     Def(AttributeGroupDef),
-    Ref(String),
+    Ref(AttributeGroupRef),
 }
 
 pub struct AttributeGroupDef {
@@ -16,6 +16,13 @@ pub struct AttributeGroupDef {
     pub name: String,
     pub annotation: Option<Annotation>,
     pub attributes: Attributes,
+}
+
+pub struct AttributeGroupRef {
+    pub id: ID,
+    pub index: u64,
+    pub annotation: Option<Annotation>,
+    pub ref_: String,
 }
 
 impl AttributeGroup {

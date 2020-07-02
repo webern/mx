@@ -62,7 +62,6 @@ impl SimpleContent {
 
 #[test]
 fn parse() {
-    use super::extension::Member;
     let xml_str = r#"
     <xs:simpleContent>
 		<xs:extension base="xs:string">

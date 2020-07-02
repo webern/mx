@@ -2,6 +2,7 @@ use crate::error::{Error, Result};
 use crate::xsd;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::annotation::Item::Documentation;
+use crate::xsd::attribute_group::AttributeGroup;
 use crate::xsd::attributes::{AttributeItem, Attributes};
 use crate::xsd::constants::{ANNOTATION, ATTRIBUTE, ATTRIBUTE_GROUP, EXTENSION, REF};
 use crate::xsd::{base_attribute, EntryType, ID};
@@ -80,24 +81,23 @@ fn parse() {
     let want_base = "xs:string";
     assert_eq!(got_base, want_base);
     assert_eq!(ext.members.len(), 3);
-    let member = ext.members.get(0).unwrap();
-    match member {
-        Member::AttributeType(x) => {
+    let attribute_item = ext.attributes.get(0).unwrap();
+    match attribute_item {
+        AttributeItem::Attribute(x) => {
             assert_eq!(x.name.as_str(), "type");
             assert_eq!(x.type_.as_str(), "start-stop");
             assert!(x.required);
         }
-        Member::AttributeRef(_) => panic!("expected 'AttributeType' but got 'AttributeRef'"),
-        Member::AttributeGroupRef(_) => {
-            panic!("expected 'AttributeType' but got 'AttributeGroupRef'")
-        }
+        AttributeItem::AttributeGroup(_) => panic!("expected 'Attribute' but got 'AttributeGroup'"),
     }
-    let member = ext.members.get(2).unwrap();
-    match member {
-        Member::AttributeType(_) => panic!("expected 'AttributeGroupRef' but got 'AttributeType'"),
-        Member::AttributeRef(_) => panic!("expected 'AttributeGroupRef' but got 'AttributeRef'"),
-        Member::AttributeGroupRef(x) => {
-            assert_eq!(x.ref_.as_str(), "print-style-align");
-        }
+    let attribute_item = ext.members.get(2).unwrap();
+    match attribute_item {
+        AttributeItem::Attribute(_) => panic!("expected 'AttributeGroup' but got 'Attribute'"),
+        AttributeItem::AttributeGroup(x) => match x {
+            AttributeGroup::Def(_) => panic!("expected 'Ref' but got 'Def'"),
+            AttributeGroup::Ref(r) => {
+                assert_eq!(r.ref_.as_str(), "print-style-align");
+            }
+        },
     }
 }
