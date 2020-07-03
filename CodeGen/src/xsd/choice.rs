@@ -101,7 +101,7 @@ impl Choice {
 */
 #[test]
 fn parse_credit() {
-    use super::simple_content;
+    
     let xml_str = r#"
     <xs:choice>
         <xs:element name="credit-image" type="image"/>

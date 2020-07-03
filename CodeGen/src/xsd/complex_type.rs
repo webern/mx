@@ -1,6 +1,5 @@
 use crate::error::Result;
 use crate::xsd::annotation::Annotation;
-use crate::xsd::attribute_group::AttributeGroup;
 use crate::xsd::attributes::{AttributeItem, Attributes};
 use crate::xsd::choice::Choice;
 use crate::xsd::complex_content::ComplexContent;
@@ -125,6 +124,7 @@ impl Parent {
 
 #[test]
 fn parse_parent_sequence() {
+    use crate::xsd::attribute_group::AttributeGroup;
     let xml_str = r#"
     <xs:complexType>
 		<xs:sequence>
@@ -206,6 +206,7 @@ fn parse_parent_group() {
 
 #[test]
 fn parse_parent_choice() {
+    use crate::xsd::attribute_group::AttributeGroup;
     let xml_str = r#"
 	<xs:complexType name="arrow">
 		<xs:annotation>
