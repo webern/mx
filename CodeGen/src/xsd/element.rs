@@ -1,6 +1,6 @@
 use crate::error::Result;
 use crate::xsd::annotation::Annotation;
-use crate::xsd::complex_type::{Children, ComplexType, Payload};
+use crate::xsd::complex_type::ComplexType;
 use crate::xsd::constants::{ANNOTATION, COMPLEX_TYPE, ELEMENT, TYPE};
 use crate::xsd::{name_attribute, type_attribute, EntryType, Occurs, ID};
 
@@ -155,6 +155,7 @@ impl ElementRef {
 
 #[test]
 fn parse_score_partwise() {
+    use crate::xsd::complex_type::{Children, Payload};
     let xml_str = r#"
     	<xs:element name="score-partwise" block="extension substitution" final="\#all">
 		<xs:annotation>
