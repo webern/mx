@@ -33,6 +33,20 @@ impl Element {
         }
     }
 
+    pub fn name(&self) -> &str {
+        match self {
+            Element::Definition(d) => d.name.as_str(),
+            Element::Reference(r) => r.name.as_str(),
+        }
+    }
+
+    pub fn occurs(&self) -> &Occurs {
+        match self {
+            Element::Definition(d) => &d.occurs,
+            Element::Reference(r) => &r.occurs,
+        }
+    }
+
     pub fn from_xml(node: &exile::Element, index: u64) -> Result<Element> {
         if let Some(_) = node.attributes.map().get(TYPE) {
             Ok(Element::Reference(ElementRef::from_xml(node, index)?))
@@ -192,9 +206,10 @@ fn parse_score_partwise() {
         Payload::SimpleContent(_) => panic!("want Parent got SimpleContent"),
         Payload::Parent(p) => match &p.children.unwrap() {
             Children::Choice(_) => panic!("want Sequence got Choice"),
-            Children::Group(_) => panic!("want Group got Choice"),
+            Children::Group(_) => panic!("want Sequence got Group"),
             Children::Sequence(_) => {}
         },
+        Payload::None => panic!("want Parent got None"),
     }
 }
 

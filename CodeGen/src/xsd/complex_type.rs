@@ -124,7 +124,7 @@ impl Parent {
 }
 
 #[test]
-fn parse_parent() {
+fn parse_parent_sequence() {
     let xml_str = r#"
     <xs:complexType>
 		<xs:sequence>
@@ -170,5 +170,173 @@ fn parse_parent() {
         Children::Choice(_) => panic!("want Sequence got Choice"),
         Children::Group(_) => panic!("want Sequence got Group"),
         Children::Sequence(_) => {}
+    }
+}
+
+#[test]
+fn parse_parent_group() {
+    let xml_str = r#"
+    <xs:complexType name="system-margins">
+		<xs:annotation>
+			<xs:documentation>System margins are relative to the page margins.</xs:documentation>
+		</xs:annotation>
+		<xs:group ref="left-right-margins"/>
+	</xs:complexType>"#;
+    let doc = exile::parse(xml_str).unwrap();
+    let xml = doc.root();
+    let want_index: u64 = 6;
+    let ct = ComplexType::from_xml(&xml, want_index).unwrap();
+    assert_eq!(format!("{}", ct.id), "system-margins (complexType)");
+    assert_eq!(
+        ct.documentation().as_str(),
+        "System margins are relative to the page margins."
+    );
+    let parent = if let Payload::Parent(p) = ct.payload {
+        p
+    } else {
+        panic!("wrong payload type");
+    };
+    assert_eq!(parent.attributes.len(), 0);
+    match parent.children.unwrap() {
+        Children::Choice(_) => panic!("want Group got Choice"),
+        Children::Group(_) => {}
+        Children::Sequence(_) => panic!("want Group got Sequence"),
+    }
+}
+
+#[test]
+fn parse_parent_choice() {
+    let xml_str = r#"
+	<xs:complexType name="arrow">
+		<xs:annotation>
+			<xs:documentation>The arrow element represents an arrow.</xs:documentation>
+		</xs:annotation>
+		<xs:choice>
+			<xs:sequence>
+				<xs:element name="arrow-direction" type="arrow-direction"/>
+				<xs:element name="arrow-style" type="arrow-style" minOccurs="0"/>
+			</xs:sequence>
+			<xs:element name="circular-arrow" type="circular-arrow"/>
+		</xs:choice>
+		<xs:attributeGroup ref="print-style"/>
+		<xs:attributeGroup ref="placement"/>
+	</xs:complexType>"#;
+    let doc = exile::parse(xml_str).unwrap();
+    let xml = doc.root();
+    let want_index: u64 = 6;
+    let ct = ComplexType::from_xml(&xml, want_index).unwrap();
+    assert_eq!(format!("{}", ct.id), "arrow (complexType)");
+    assert_eq!(
+        ct.documentation().as_str(),
+        "The arrow element represents an arrow."
+    );
+    let parent = if let Payload::Parent(p) = ct.payload {
+        p
+    } else {
+        panic!("wrong payload type");
+    };
+    assert_eq!(parent.attributes.len(), 2);
+    match parent.attributes.get(0).unwrap() {
+        AttributeItem::AttributeGroup(ag) => match ag {
+            AttributeGroup::Def(_) => panic!("expected Ref got Def"),
+            AttributeGroup::Ref(s) => {
+                assert_eq!(s.ref_.as_str(), "print-style");
+            }
+        },
+        AttributeItem::Attribute(_) => panic!("expected AttributeGroup got Attribute"),
+    }
+    match parent.attributes.get(1).unwrap() {
+        AttributeItem::AttributeGroup(ag) => match ag {
+            AttributeGroup::Def(_) => panic!("expected Ref got Def"),
+            AttributeGroup::Ref(s) => {
+                assert_eq!(s.ref_.as_str(), "placement");
+            }
+        },
+        AttributeItem::Attribute(_) => panic!("expected AttributeGroup got Attribute"),
+    }
+    match parent.children.unwrap() {
+        Children::Choice(_) => {}
+        Children::Group(_) => panic!("want Choice got Group"),
+        Children::Sequence(_) => panic!("want Choice got Sequence"),
+    }
+}
+
+#[test]
+fn parse_complex_content() {
+    let xml_str = r#"
+   <xs:complexType name="heel-toe">
+       <xs:annotation>
+           <xs:documentation>Heel and toe elements are used with organ pedals.</xs:documentation>
+       </xs:annotation>
+       <xs:complexContent>
+           <xs:extension base="empty-placement">
+               <xs:attribute name="substitution" type="yes-no"/>
+           </xs:extension>
+       </xs:complexContent>
+   </xs:complexType>"#;
+    let doc = exile::parse(xml_str).unwrap();
+    let xml = doc.root();
+    let want_index: u64 = 6;
+    let ct = ComplexType::from_xml(&xml, want_index).unwrap();
+    assert_eq!(format!("{}", ct.id), "heel-toe (complexType)");
+    assert_eq!(
+        ct.documentation().as_str(),
+        "Heel and toe elements are used with organ pedals."
+    );
+    let cc = if let Payload::ComplexContent(cc) = ct.payload {
+        cc
+    } else {
+        panic!("wrong payload type");
+    };
+    assert_eq!(cc.extension.attributes.len(), 1);
+    match cc.extension.attributes.get(0).unwrap() {
+        AttributeItem::Attribute(a) => {
+            assert_eq!(a.name.as_str(), "substitution");
+            assert!(a.defined_by.is_type());
+            assert_eq!(a.defined_by.value(), "yes-no");
+        }
+        AttributeItem::AttributeGroup(_) => panic!("expected Attribute got AttributeGroup"),
+    }
+}
+
+#[test]
+fn parse_simple_content() {
+    use super::simple_content;
+    let xml_str = r#"
+    <xs:complexType name="hole-closed">
+        <xs:annotation>
+            <xs:documentation>The hole-closed type represents whether the...</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="hole-closed-value">
+                <xs:attribute name="location" type="hole-closed-location"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>"#;
+    let doc = exile::parse(xml_str).unwrap();
+    let xml = doc.root();
+    let want_index: u64 = 6;
+    let ct = ComplexType::from_xml(&xml, want_index).unwrap();
+    assert_eq!(format!("{}", ct.id), "hole-closed (complexType)");
+    assert_eq!(
+        ct.documentation().as_str(),
+        "The hole-closed type represents whether the..."
+    );
+    let sc = if let Payload::SimpleContent(sc) = ct.payload {
+        sc
+    } else {
+        panic!("wrong payload type");
+    };
+    let ext = match &sc.payload {
+        simple_content::Payload::Extension(x) => x,
+    };
+    assert_eq!(ext.base.as_str(), "hole-closed-value");
+    assert_eq!(ext.attributes.len(), 1);
+    match ext.attributes.get(0).unwrap() {
+        AttributeItem::AttributeGroup(_) => panic!("expected Attribute got AttributeGroup"),
+        AttributeItem::Attribute(a) => {
+            assert!(a.defined_by.is_type());
+            assert_eq!(a.defined_by.value(), "hole-closed-location");
+        }
     }
 }
