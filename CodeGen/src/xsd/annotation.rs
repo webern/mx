@@ -1,6 +1,7 @@
 use crate::error::Result;
 use crate::xsd::constants::{ANNOTATION, APP_INFO, DOCUMENTATION};
-use crate::xsd::{EntryType, Id};
+use crate::xsd::id::Id;
+use crate::xsd::EntryType;
 use std::fmt::{Debug, Formatter};
 
 #[derive(Clone, Debug)]

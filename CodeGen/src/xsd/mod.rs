@@ -10,6 +10,7 @@ mod constants;
 mod element;
 mod extension;
 mod group;
+mod id;
 mod import;
 mod list;
 mod restriction;
@@ -29,6 +30,7 @@ use crate::xsd::constants::{
 };
 use crate::xsd::element::Element;
 use crate::xsd::group::GroupDefinition;
+use crate::xsd::id::Id;
 use crate::xsd::import::Import;
 use crate::xsd::simple_type::SimpleType;
 use std::cmp::Ordering;
@@ -200,27 +202,6 @@ impl EntryType {
             _ => EntryType::Other(s.as_ref().into()),
         };
         Ok(et)
-    }
-}
-
-#[derive(Clone, Debug, Eq, PartialEq, Ord)]
-pub struct Id {
-    pub entry_type: EntryType,
-    pub name: String,
-}
-
-impl Display for Id {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}:{}", self.entry_type, self.name)
-    }
-}
-
-impl PartialOrd for Id {
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        if self.entry_type != other.entry_type {
-            return Some(self.entry_type.cmp(&other.entry_type));
-        }
-        Some(self.name.cmp(&other.name))
     }
 }
 

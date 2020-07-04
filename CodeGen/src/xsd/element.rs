@@ -2,7 +2,8 @@ use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::complex_type::ComplexType;
 use crate::xsd::constants::{ANNOTATION, COMPLEX_TYPE, ELEMENT, TYPE};
-use crate::xsd::{name_attribute, type_attribute, EntryType, Id, Occurs};
+use crate::xsd::id::Id;
+use crate::xsd::{name_attribute, type_attribute, EntryType, Occurs};
 
 #[derive(Clone, Debug)]
 pub enum Element {

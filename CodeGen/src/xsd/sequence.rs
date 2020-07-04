@@ -4,7 +4,8 @@ use crate::xsd::choice::Choice;
 use crate::xsd::constants::{ANNOTATION, CHOICE, ELEMENT, GROUP, SEQUENCE};
 use crate::xsd::element::Element;
 use crate::xsd::group::Group;
-use crate::xsd::{EntryType, Id, Occurs};
+use crate::xsd::id::Id;
+use crate::xsd::{EntryType, Occurs};
 
 #[derive(Clone, Debug)]
 pub struct Sequence {

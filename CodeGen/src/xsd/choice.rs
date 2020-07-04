@@ -3,8 +3,9 @@ use crate::xsd::annotation::Annotation;
 use crate::xsd::constants::{ANNOTATION, CHOICE, ELEMENT, GROUP, NAME, SEQUENCE};
 use crate::xsd::element::Element;
 use crate::xsd::group::Group;
+use crate::xsd::id::Id;
 use crate::xsd::sequence::Sequence;
-use crate::xsd::{EntryType, Id};
+use crate::xsd::EntryType;
 
 #[derive(Clone, Debug)]
 pub struct Choice {

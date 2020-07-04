@@ -1,15 +1,14 @@
 use crate::error::Result;
-
 use crate::xsd::annotation::Annotation;
-
 use crate::xsd::constants::{
     ANNOTATION, ENUMERATION, LENGTH, MAX_EXCLUSIVE, MAX_INCLUSIVE, MAX_LENGTH, MIN_EXCLUSIVE,
     MIN_INCLUSIVE, MIN_LENGTH, PATTERN, RESTRICTION,
 };
 use crate::xsd::restriction::FacetType::Pattern;
-use crate::xsd::{base_attribute, value_attribute, EntryType, Id};
+use crate::xsd::{base_attribute, value_attribute, EntryType};
 use exile::Element;
 
+use crate::xsd::id::Id;
 use std::fmt::{Display, Formatter};
 
 /*

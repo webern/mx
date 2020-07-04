@@ -1,10 +1,9 @@
 use crate::error::Result;
-
 use crate::xsd::annotation::Annotation;
-
 use crate::xsd::constants::{ANNOTATION, EXTENSION, SIMPLE_CONTENT};
 use crate::xsd::extension::Extension;
-use crate::xsd::{EntryType, Id};
+use crate::xsd::id::Id;
+use crate::xsd::EntryType;
 
 #[derive(Clone, Debug)]
 pub struct SimpleContent {
