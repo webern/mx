@@ -10,7 +10,7 @@ mod constants;
 mod element;
 mod extension;
 mod group;
-mod id;
+pub mod id;
 mod import;
 mod list;
 mod restriction;

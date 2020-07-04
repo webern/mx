@@ -58,7 +58,12 @@ impl GroupDefinition {
         if node.name.as_str() != GROUP {
             return raise!("expected '{}', got '{}'", GROUP, node.name.as_str());
         }
-        let id = lineage.parent().unwrap().clone();
+        // way funky: The first match arm happens if it is a top-level root entry, otherwise the
+        // caller has already created an ID for this and the second match arm is in effect.
+        let (id, lineage) = match lineage {
+            Lineage::Index(i) => Id::make(Lineage::Index(i), node)?,
+            Lineage::Parent(p) => (p.clone(), Lineage::Parent(p.clone())),
+        };
         let mut annotation = None;
         let mut members = Vec::new();
         for inner in node.children() {
