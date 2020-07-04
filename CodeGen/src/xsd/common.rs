@@ -38,3 +38,19 @@ impl Display for DefinedBy {
         }
     }
 }
+
+#[test]
+fn defined_by_tests() {
+    let t = DefinedBy::Type("x".into());
+    assert!(t.is_type());
+    assert!(!t.is_ref());
+    assert_eq!(t.value(), "x");
+    let r = DefinedBy::Ref("y".into());
+    assert!(!r.is_type());
+    assert!(r.is_ref());
+    assert_eq!(r.value(), "y");
+    let ts = format!("{}", &t);
+    assert_eq!("type:x", ts.as_str());
+    let rs = format!("{}", &r);
+    assert_eq!("ref:y", rs.as_str());
+}

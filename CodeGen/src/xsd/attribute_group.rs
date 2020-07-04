@@ -54,6 +54,20 @@ impl AttributeGroup {
             )?))
         }
     }
+
+    pub fn is_ref(&self) -> bool {
+        match self {
+            AttributeGroup::Def(_) => false,
+            AttributeGroup::Ref(_) => true,
+        }
+    }
+
+    pub fn is_def(&self) -> bool {
+        match self {
+            AttributeGroup::Def(_) => true,
+            AttributeGroup::Ref(_) => false,
+        }
+    }
 }
 
 impl AttributeGroupDef {
