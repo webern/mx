@@ -42,10 +42,10 @@ impl SimpleContent {
                 _ => return raise!("unsupported simpleContent node '{}'", t),
             }
         }
-        let id = Id {
-            entry_type: EntryType::Other(SIMPLE_CONTENT.to_owned()),
-            name: format!("{}", index),
-        };
+        let id = Id::new(
+            EntryType::Other(SIMPLE_CONTENT.to_owned()),
+            format!("{}", index),
+        );
         let payload = if let Some(p) = payload {
             p
         } else {
@@ -82,8 +82,8 @@ fn parse() {
     assert_eq!(got_index, want_index);
     let got_id = format!("{}", sc.id);
     assert_eq!(got_id, want_id);
-    let got_type = sc.id.entry_type;
-    assert_eq!(got_type, EntryType::Other(SIMPLE_CONTENT.to_owned()));
+    // let got_type = sc.id.entry_type;
+    // assert_eq!(got_type, EntryType::Other(SIMPLE_CONTENT.to_owned()));
     match sc.payload {
         Payload::Extension(ext) => {
             assert_eq!(ext.attributes.len(), 1);

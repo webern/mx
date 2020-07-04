@@ -37,10 +37,10 @@ impl ComplexContent {
                 _ => return raise!("unsupported simpleContent node '{}'", t),
             }
         }
-        let id = Id {
-            entry_type: EntryType::Other(COMPLEX_CONTENT.to_owned()),
-            name: format!("{}", index),
-        };
+        let id = Id::new(
+            EntryType::Other(COMPLEX_CONTENT.to_owned()),
+            format!("{}", index),
+        );
         let extension = if let Some(ext) = extension {
             ext
         } else {
@@ -78,8 +78,8 @@ fn parse() {
     assert_eq!(got_index, want_index);
     let got_id = format!("{}", sc.id);
     assert_eq!(got_id, want_id);
-    let got_type = sc.id.entry_type;
-    assert_eq!(got_type, EntryType::Other(COMPLEX_CONTENT.to_owned()));
+    // let got_type = sc.id.entry_type;
+    // assert_eq!(got_type, EntryType::Other(COMPLEX_CONTENT.to_owned()));
     let extension = &sc.extension;
     assert_eq!(extension.base.as_str(), "time-modification");
     assert_eq!(extension.attributes.len(), 3);

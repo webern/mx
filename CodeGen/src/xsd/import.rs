@@ -42,10 +42,7 @@ impl Import {
                 break;
             }
         }
-        let id = Id {
-            entry_type: EntryType::Other(IMPORT.to_owned()),
-            name: schema_location.clone(),
-        };
+        let id = Id::new(EntryType::Other(IMPORT.to_owned()), schema_location.clone());
         Ok(Import {
             id,
             index,

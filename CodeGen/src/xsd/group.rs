@@ -80,10 +80,7 @@ impl GroupDefinition {
                 _ => return raise!("unsupported {} node, '{}'", GROUP, t),
             }
         }
-        let id = Id {
-            entry_type: EntryType::Group,
-            name: name_attribute(node)?,
-        };
+        let id = Id::new(EntryType::Group, name_attribute(node)?);
         Ok(GroupDefinition {
             id,
             index,
@@ -113,10 +110,7 @@ impl GroupReference {
                 _ => return raise!("unsupported {} node, '{}'", GROUP, t),
             }
         }
-        let id = Id {
-            entry_type: EntryType::Group,
-            name: format!("{}", index),
-        };
+        let id = Id::new(EntryType::Group, format!("{}", index));
         Ok(GroupReference {
             id,
             index,

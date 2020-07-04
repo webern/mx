@@ -82,10 +82,7 @@ impl AttributeGroupDef {
 
     pub fn from_xml(node: &exile::Element, index: u64) -> Result<Self> {
         let name = name_attribute(node)?;
-        let id = Id {
-            entry_type: EntryType::AttributeGroup,
-            name: name.clone(),
-        };
+        let id = Id::new(EntryType::AttributeGroup, name.clone());
         Ok(Self {
             id,
             index,
@@ -116,10 +113,7 @@ impl AttributeGroupRef {
 
     pub fn from_xml(node: &exile::Element, index: u64) -> Result<Self> {
         let ref_ = ref_attribute(node)?;
-        let id = Id {
-            entry_type: EntryType::Other("attributeGroup:ref".into()),
-            name: ref_.clone(),
-        };
+        let id = Id::new(EntryType::Other("attributeGroup:ref".into()), ref_.clone());
         Ok(Self {
             id,
             index,

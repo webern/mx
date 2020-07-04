@@ -63,14 +63,14 @@ impl Attribute {
     }
 
     fn parse_id(name: &str, defined_by: &DefinedBy) -> Id {
-        Id {
-            entry_type: EntryType::Other(ATTRIBUTE.to_owned()),
-            name: if name.is_empty() {
+        Id::new(
+            EntryType::Other(ATTRIBUTE.to_owned()),
+            if name.is_empty() {
                 defined_by.value().to_owned()
             } else {
                 name.to_owned()
             },
-        }
+        )
     }
 
     fn parse_annotation(node: &exile::Element, index: u64) -> Result<Option<Annotation>> {

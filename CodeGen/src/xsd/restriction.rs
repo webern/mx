@@ -201,10 +201,10 @@ impl Restriction {
             }
         }
         // TODO - this may not be unique
-        let id = Id {
-            entry_type: EntryType::Other(RESTRICTION.to_owned()),
-            name: format!("{}", index),
-        };
+        let id = Id::new(
+            EntryType::Other(RESTRICTION.to_owned()),
+            format!("{}", index),
+        );
         Ok(Restriction {
             id,
             index,
@@ -235,8 +235,8 @@ fn parse() {
     assert_eq!(got_index, want_index);
     let got_id = format!("{}", r.id);
     assert_eq!(got_id, want_id);
-    let got_type = r.id.entry_type;
-    assert_eq!(got_type, EntryType::Other(RESTRICTION.to_owned()));
+    // let got_type = r.id.entry_type;
+    // assert_eq!(got_type, EntryType::Other(RESTRICTION.to_owned()));
     let got_base = r.base.as_str();
     let want_base = "xs:positiveInteger";
     assert_eq!(got_base, want_base);

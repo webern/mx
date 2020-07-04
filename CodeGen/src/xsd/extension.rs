@@ -39,10 +39,7 @@ impl Extension {
                 _ => return raise!("unsupported {} member '{}'", EXTENSION, t),
             }
         }
-        let id = Id {
-            entry_type: EntryType::Other(EXTENSION.to_owned()),
-            name: format!("{}", index),
-        };
+        let id = Id::new(EntryType::Other(EXTENSION.to_owned()), format!("{}", index));
         Ok(Extension {
             id,
             index,
@@ -75,8 +72,8 @@ fn parse() {
     assert_eq!(got_index, want_index);
     let got_id = format!("{}", ext.id);
     assert_eq!(got_id, want_id);
-    let got_type = ext.id.entry_type;
-    assert_eq!(got_type, EntryType::Other(EXTENSION.to_owned()));
+    // let got_type = ext.id.entry_type;
+    // assert_eq!(got_type, EntryType::Other(EXTENSION.to_owned()));
     let got_base = ext.base.as_str();
     let want_base = "xs:string";
     assert_eq!(got_base, want_base);

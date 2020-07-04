@@ -80,14 +80,14 @@ impl ComplexType {
         } else {
             "".to_owned()
         };
-        let id = Id {
-            entry_type: EntryType::ComplexType,
-            name: if name.is_empty() {
+        let id = Id::new(
+            EntryType::ComplexType,
+            if name.is_empty() {
                 format!("{}", index)
             } else {
                 name.clone()
             },
-        };
+        );
         Ok(ComplexType {
             id,
             index,

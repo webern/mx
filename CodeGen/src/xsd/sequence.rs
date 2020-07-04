@@ -49,10 +49,7 @@ impl Sequence {
                 _ => return raise!("unknown {} member: '{}'", SEQUENCE, t),
             }
         }
-        let id = Id {
-            entry_type: EntryType::Other(SEQUENCE.to_owned()),
-            name: format!("{}", index),
-        };
+        let id = Id::new(EntryType::Other(SEQUENCE.to_owned()), format!("{}", index));
         Ok(Sequence {
             id,
             index,

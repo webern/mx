@@ -4,8 +4,18 @@ use std::fmt::{Display, Formatter};
 
 #[derive(Clone, Debug, Eq, PartialEq, Ord)]
 pub struct Id {
-    pub entry_type: EntryType,
-    pub name: String,
+    entry_type: EntryType,
+    name: String,
+}
+
+impl Id {
+    pub fn new(entry_type: EntryType, name: String) -> Self {
+        Self { entry_type, name }
+    }
+
+    pub fn name(&self) -> Option<&str> {
+        Some(self.name.as_str())
+    }
 }
 
 impl Display for Id {

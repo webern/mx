@@ -48,10 +48,10 @@ impl Choice {
                 _ => return raise!("cannot parse '{}', unexpected node '{}'", CHOICE, t),
             }
         }
-        let id = Id {
-            entry_type: EntryType::Other(CHOICE.into()),
-            name: Self::name_or_index(node, index),
-        };
+        let id = Id::new(
+            EntryType::Other(CHOICE.into()),
+            Self::name_or_index(node, index),
+        );
         Ok(Choice {
             id,
             index,

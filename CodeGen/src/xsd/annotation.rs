@@ -49,10 +49,7 @@ impl Annotation {
                 }
             }
         }
-        let id = Id {
-            entry_type: EntryType::Annotation,
-            name: format!("{}", index),
-        };
+        let id = Id::new(EntryType::Annotation, format!("{}", index));
         Ok(Annotation { id, index, items })
     }
 }
@@ -79,8 +76,8 @@ fn parse() {
     assert_eq!(got_doc.as_str(), want_doc);
     let got_index = annotation.index;
     assert_eq!(got_index, want_index);
-    let got_name = annotation.id.name;
+    let got_name = annotation.id.name().unwrap();
     assert_eq!(got_name, want_name);
-    let got_type = annotation.id.entry_type;
-    assert_eq!(got_type, EntryType::Annotation);
+    // let got_type = annotation.id.entry_type;
+    // assert_eq!(got_type, EntryType::Annotation);
 }

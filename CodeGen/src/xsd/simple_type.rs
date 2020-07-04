@@ -57,10 +57,7 @@ impl SimpleType {
                 }
             };
         }
-        let id = Id {
-            entry_type: EntryType::SimpleType,
-            name,
-        };
+        let id = Id::new(EntryType::SimpleType, name);
         let payload = payload.ok_or(make_err!("{} is incomplete", SIMPLE_TYPE))?;
         Ok(SimpleType {
             id,

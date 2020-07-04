@@ -41,10 +41,7 @@ impl List {
             }
         }
         // TODO - this may not be unique
-        let id = Id {
-            entry_type: EntryType::Other(LIST.to_owned()),
-            name: format!("{}", index),
-        };
+        let id = Id::new(EntryType::Other(LIST.to_owned()), format!("{}", index));
         Ok(List {
             id,
             index,
@@ -75,8 +72,8 @@ fn parse() {
     assert_eq!(got_index, want_index);
     let got_id = format!("{}", list.id);
     assert_eq!(got_id, want_id);
-    let got_type = list.id.entry_type;
-    assert_eq!(got_type, EntryType::Other(LIST.to_owned()));
+    // let got_type = list.id.entry_type;
+    // assert_eq!(got_type, EntryType::Other(LIST.to_owned()));
     let want_item_type = "xs:integer".to_owned();
     assert_eq!(list.item_type, want_item_type);
 }

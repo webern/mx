@@ -96,10 +96,7 @@ impl ElementDef {
             return raise!("{} not found!", COMPLEX_TYPE);
         };
         let name = name_attribute(node)?;
-        let id = Id {
-            entry_type: EntryType::Element,
-            name: name.clone(),
-        };
+        let id = Id::new(EntryType::Element, name.clone());
         Ok(ElementDef {
             id,
             index,
@@ -142,10 +139,7 @@ impl ElementRef {
             }
         }
         let name = name_attribute(node)?;
-        let id = Id {
-            entry_type: EntryType::Element,
-            name: name.clone(),
-        };
+        let id = Id::new(EntryType::Element, name.clone());
         Ok(ElementRef {
             id,
             index,
