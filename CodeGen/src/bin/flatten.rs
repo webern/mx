@@ -1,5 +1,5 @@
 use libmxgen::generate::paths::Paths;
-use libmxgen::xsd::{EntryType, Xsd, ID};
+use libmxgen::xsd::{EntryType, Id, Xsd};
 
 const EXIT_SUCCESS: i32 = 0;
 const EXIT_FAIL: i32 = 1;
@@ -19,7 +19,7 @@ macro_rules! must {
 fn main() {
     let paths = Paths::default();
     let mut xsd = must!(Xsd::load(&paths.xsd_3_0));
-    let id = ID {
+    let id = Id {
         entry_type: EntryType::Element,
         name: "score-partwise".to_string(),
     };

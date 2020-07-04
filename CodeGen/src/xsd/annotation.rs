@@ -1,11 +1,11 @@
 use crate::error::Result;
 use crate::xsd::constants::{ANNOTATION, APP_INFO, DOCUMENTATION};
-use crate::xsd::{EntryType, ID};
+use crate::xsd::{EntryType, Id};
 use std::fmt::{Debug, Formatter};
 
 #[derive(Clone, Debug)]
 pub struct Annotation {
-    pub id: ID,
+    pub id: Id,
     pub index: u64,
     pub items: Vec<Item>,
 }
@@ -48,7 +48,7 @@ impl Annotation {
                 }
             }
         }
-        let id = ID {
+        let id = Id {
             entry_type: EntryType::Annotation,
             name: format!("{}", index),
         };

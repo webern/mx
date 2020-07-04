@@ -4,11 +4,11 @@ use crate::xsd::choice::Choice;
 use crate::xsd::constants::{ANNOTATION, CHOICE, ELEMENT, GROUP, SEQUENCE};
 use crate::xsd::element::Element;
 use crate::xsd::group::Group;
-use crate::xsd::{EntryType, Occurs, ID};
+use crate::xsd::{EntryType, Id, Occurs};
 
 #[derive(Clone, Debug)]
 pub struct Sequence {
-    pub id: ID,
+    pub id: Id,
     pub index: u64,
     pub annotation: Option<Annotation>,
     pub occurs: Occurs,
@@ -48,7 +48,7 @@ impl Sequence {
                 _ => return raise!("unknown {} member: '{}'", SEQUENCE, t),
             }
         }
-        let id = ID {
+        let id = Id {
             entry_type: EntryType::Other(SEQUENCE.to_owned()),
             name: format!("{}", index),
         };
@@ -87,7 +87,7 @@ fn parse() {
     let want_index: u64 = 3;
     let seq = Sequence::from_xml(&xml, want_index).unwrap();
     let got_id = format!("{}", seq.id);
-    let want_id = "3 (sequence)";
+    let want_id = "sequence:3";
     assert_eq!(got_id.as_str(), want_id);
     let got_doc = seq.documentation();
     let want_doc = "";

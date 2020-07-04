@@ -1,5 +1,5 @@
-use std::path::{PathBuf, Path};
-use std::fs::{File, remove_file, OpenOptions};
+use std::fs::{remove_file, File, OpenOptions};
+use std::path::{Path, PathBuf};
 
 pub fn repo() -> PathBuf {
     let mut p = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
@@ -7,6 +7,7 @@ pub fn repo() -> PathBuf {
     p.canonicalize().unwrap()
 }
 
+#[derive(Clone, Debug)]
 pub struct Paths {
     pub repo: PathBuf,
     pub core: PathBuf,
@@ -42,7 +43,6 @@ fn open_file<P: AsRef<Path>>(p: P) -> File {
         .open(p)
         .unwrap() // TODO - error?
 }
-
 
 impl Paths {
     pub fn create_core_file<S: AsRef<str>>(&self, filename: S) -> File {

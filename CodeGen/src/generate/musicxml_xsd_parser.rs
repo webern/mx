@@ -41,7 +41,7 @@ pub fn parse_musicxml_xsd(doc: &Document, params: XsdParserParams) -> Result<Mus
     Ok(MusicXSD::new(type_definitions))
 }
 
-fn parse_type_nodes(doc: &Document) -> Result<HashMap<String, XsTypeNode>, Error> {
+fn parse_type_nodes(doc: &Document) -> Result<HashMap<String, XsTypeNode<'_>>, Error> {
     let mut type_nodes = HashMap::new();
     for node in doc.root().children() {
         let x = parse_xs_info(node)?;
@@ -76,7 +76,7 @@ impl<'a> Display for XsTypeNode<'_> {
     }
 }
 
-fn parse_xs_info(node: &Element) -> Result<XsTypeNode, Error> {
+fn parse_xs_info(node: &Element) -> Result<XsTypeNode<'_>, Error> {
     let index = COUNTER.fetch_add(1, Ordering::Relaxed);
     let xsd_type = XsType::parse(node)?;
     let name = match xsd_type {
@@ -137,7 +137,7 @@ impl XsType {
 }
 
 fn parse_type_definitions(
-    xsd_nodes: &HashMap<String, XsTypeNode>,
+    xsd_nodes: &HashMap<String, XsTypeNode<'_>>,
     params: &XsdParserParams,
 ) -> Result<Vec<TypeDefinition>, Error> {
     let mut type_definitions = Vec::new();
@@ -173,7 +173,7 @@ fn parse_type_definitions(
     Ok(type_definitions)
 }
 
-fn is_enumeration_simple_type(node: &XsTypeNode) -> bool {
+fn is_enumeration_simple_type(node: &XsTypeNode<'_>) -> bool {
     for child in node.node.children() {
         if child.fullname() == "xs:restriction" {
             for restriction in child.children() {
@@ -186,7 +186,7 @@ fn is_enumeration_simple_type(node: &XsTypeNode) -> bool {
     false
 }
 
-fn parse_enumeration(node: &XsTypeNode) -> Result<Enumeration, Error> {
+fn parse_enumeration(node: &XsTypeNode<'_>) -> Result<Enumeration, Error> {
     let mut en = Enumeration::default();
     en.id = node.id.clone();
     en.name = node.name.clone();
@@ -223,7 +223,7 @@ fn parse_enumeration(node: &XsTypeNode) -> Result<Enumeration, Error> {
     Ok(en)
 }
 
-fn find_base(node: &XsTypeNode) -> Result<String, Error> {
+fn find_base(node: &XsTypeNode<'_>) -> Result<String, Error> {
     for child in node.node.children() {
         if child.fullname() == "xs:restriction" {
             if let Some(base) = child.attributes.map().get("base") {
@@ -234,7 +234,7 @@ fn find_base(node: &XsTypeNode) -> Result<String, Error> {
     Err(Error::SimpleTypeBaseNotFound)
 }
 
-fn find_documentation(node: &XsTypeNode) -> Result<String, Error> {
+fn find_documentation(node: &XsTypeNode<'_>) -> Result<String, Error> {
     let mut en = Enumeration::default();
     en.id = node.id.clone();
     en.name = node.name.clone();
@@ -256,7 +256,7 @@ fn find_documentation(node: &XsTypeNode) -> Result<String, Error> {
     Ok("".to_owned())
 }
 
-fn parse_if_dynamics_complex_type(node: &XsTypeNode) -> Result<Option<Enumeration>, Error> {
+fn parse_if_dynamics_complex_type(node: &XsTypeNode<'_>) -> Result<Option<Enumeration>, Error> {
     if node.xsd_type != ComplexType {
         return Ok(None);
     }

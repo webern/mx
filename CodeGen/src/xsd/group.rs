@@ -4,7 +4,7 @@ use crate::xsd::choice::Choice;
 use crate::xsd::constants::{ANNOTATION, CHOICE, ELEMENT, GROUP, SEQUENCE};
 use crate::xsd::element::Element;
 use crate::xsd::sequence::Sequence;
-use crate::xsd::{is_ref, name_attribute, ref_attribute, EntryType, Occurs, ID};
+use crate::xsd::{is_ref, name_attribute, ref_attribute, EntryType, Id, Occurs};
 
 #[derive(Clone, Debug)]
 pub enum Group {
@@ -24,7 +24,7 @@ impl Group {
 
 #[derive(Clone, Debug)]
 pub struct GroupDefinition {
-    pub id: ID,
+    pub id: Id,
     pub index: u64,
     pub annotation: Option<Annotation>,
     pub members: Vec<Member>,
@@ -32,7 +32,7 @@ pub struct GroupDefinition {
 
 #[derive(Clone, Debug)]
 pub struct GroupReference {
-    pub id: ID,
+    pub id: Id,
     pub index: u64,
     pub annotation: Option<Annotation>,
     pub ref_: String,
@@ -79,7 +79,7 @@ impl GroupDefinition {
                 _ => return raise!("unsupported {} node, '{}'", GROUP, t),
             }
         }
-        let id = ID {
+        let id = Id {
             entry_type: EntryType::Group,
             name: name_attribute(node)?,
         };
@@ -112,7 +112,7 @@ impl GroupReference {
                 _ => return raise!("unsupported {} node, '{}'", GROUP, t),
             }
         }
-        let id = ID {
+        let id = Id {
             entry_type: EntryType::Group,
             name: format!("{}", index),
         };
@@ -158,7 +158,7 @@ fn parse_group_definition() {
     };
     assert_eq!(grp.index, want_index);
     let got_id = grp.id.to_string();
-    let want_id = "harmony-chord (group)".to_owned();
+    let want_id = "group:harmony-chord".to_owned();
     assert_eq!(got_id, want_id);
     let got_doc = grp.documentation();
     let want_doc = "blerp bloop bleep blop";
@@ -185,7 +185,7 @@ fn parse_group_reference() {
     };
     assert_eq!(grp.index, want_index);
     let got_id = grp.id.to_string();
-    let want_id = "3 (group)".to_owned();
+    let want_id = "group:3".to_owned();
     assert_eq!(got_id, want_id);
     let got_doc = grp.documentation();
     let want_doc = "";
@@ -207,7 +207,7 @@ fn parse_group_reference_max_occurs() {
     };
     assert_eq!(grp.index, want_index);
     let got_id = grp.id.to_string();
-    let want_id = "3 (group)".to_owned();
+    let want_id = "group:3".to_owned();
     assert_eq!(got_id, want_id);
     let got_doc = grp.documentation();
     let want_doc = "";

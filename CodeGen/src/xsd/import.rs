@@ -3,11 +3,11 @@ use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 
 use crate::xsd::constants::{ANNOTATION, IMPORT, SCHEMA_LOCATION};
-use crate::xsd::{namespace_attribute, EntryType, ID};
+use crate::xsd::{namespace_attribute, EntryType, Id};
 
 #[derive(Clone, Debug)]
 pub struct Import {
-    pub id: ID,
+    pub id: Id,
     pub index: u64,
     pub annotation: Option<Annotation>,
     pub namespace: String,
@@ -41,7 +41,7 @@ impl Import {
                 break;
             }
         }
-        let id = ID {
+        let id = Id {
             entry_type: EntryType::Other(IMPORT.to_owned()),
             name: schema_location.clone(),
         };

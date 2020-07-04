@@ -2,11 +2,11 @@ use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::constants::{ANNOTATION, COMPLEX_CONTENT, EXTENSION};
 use crate::xsd::extension::Extension;
-use crate::xsd::{EntryType, ID};
+use crate::xsd::{EntryType, Id};
 
 #[derive(Clone, Debug)]
 pub struct ComplexContent {
-    pub id: ID,
+    pub id: Id,
     pub index: u64,
     pub annotation: Option<Annotation>,
     pub extension: Extension,
@@ -36,7 +36,7 @@ impl ComplexContent {
                 _ => return raise!("unsupported simpleContent node '{}'", t),
             }
         }
-        let id = ID {
+        let id = Id {
             entry_type: EntryType::Other(COMPLEX_CONTENT.to_owned()),
             name: format!("{}", index),
         };
@@ -68,7 +68,7 @@ fn parse() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let want_index: u64 = 1;
-    let want_id = "1 (complexContent)".to_owned();
+    let want_id = "complexContent:1".to_owned();
     let want_doc = "";
     let sc = ComplexContent::from_xml(&xml, want_index).unwrap();
     let got_doc = sc.documentation();

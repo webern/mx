@@ -1,11 +1,11 @@
 use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::constants::{ANNOTATION, LIST};
-use crate::xsd::{EntryType, ID};
+use crate::xsd::{EntryType, Id};
 
 #[derive(Clone, Debug)]
 pub struct List {
-    pub id: ID,
+    pub id: Id,
     pub index: u64,
     pub annotation: Option<Annotation>,
     pub item_type: String,
@@ -40,7 +40,7 @@ impl List {
             }
         }
         // TODO - this may not be unique
-        let id = ID {
+        let id = Id {
             entry_type: EntryType::Other(LIST.to_owned()),
             name: format!("{}", index),
         };
@@ -65,7 +65,7 @@ fn parse() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let want_index: u64 = 5;
-    let want_id = "5 (list)".to_owned();
+    let want_id = "list:5".to_owned();
     let want_doc = "Hello";
     let list = List::from_xml(&xml, want_index).unwrap();
     let got_doc = list.documentation();

@@ -1,11 +1,11 @@
 use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::constants::{ANNOTATION, MEMBER_TYPES, UNION};
-use crate::xsd::{EntryType, ID};
+use crate::xsd::{EntryType, Id};
 
 #[derive(Clone, Debug)]
 pub struct Union {
-    pub id: ID,
+    pub id: Id,
     pub index: u64,
     pub annotation: Option<Annotation>,
     pub members: Vec<String>,
@@ -42,7 +42,7 @@ impl Union {
                 break;
             }
         }
-        let id = ID {
+        let id = Id {
             entry_type: EntryType::Other(UNION.to_owned()),
             name: format!("{}", index),
         };
@@ -61,7 +61,7 @@ fn parse() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let want_index: u64 = 0;
-    let want_id = "0 (union)".to_owned();
+    let want_id = "union:0".to_owned();
     let want_doc = "";
     let union = Union::from_xml(&xml, want_index).unwrap();
     let got_doc = union.documentation();

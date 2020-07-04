@@ -2,7 +2,7 @@ use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::attributes::{add_attributes_from_xml, Attributes};
 use crate::xsd::constants::{ANNOTATION, REF};
-use crate::xsd::{name_attribute, ref_attribute, EntryType, ID};
+use crate::xsd::{name_attribute, ref_attribute, EntryType, Id};
 
 #[derive(Clone, Debug)]
 pub enum AttributeGroup {
@@ -12,7 +12,7 @@ pub enum AttributeGroup {
 
 #[derive(Clone, Debug)]
 pub struct AttributeGroupDef {
-    pub id: ID,
+    pub id: Id,
     pub index: u64,
     pub name: String,
     pub annotation: Option<Annotation>,
@@ -21,14 +21,14 @@ pub struct AttributeGroupDef {
 
 #[derive(Clone, Debug)]
 pub struct AttributeGroupRef {
-    pub id: ID,
+    pub id: Id,
     pub index: u64,
     pub annotation: Option<Annotation>,
     pub ref_: String,
 }
 
 impl AttributeGroup {
-    pub fn id(&self) -> &ID {
+    pub fn id(&self) -> &Id {
         match self {
             AttributeGroup::Def(x) => &x.id,
             AttributeGroup::Ref(x) => &x.id,
@@ -67,7 +67,7 @@ impl AttributeGroupDef {
 
     pub fn from_xml(node: &exile::Element, index: u64) -> Result<Self> {
         let name = name_attribute(node)?;
-        let id = ID {
+        let id = Id {
             entry_type: EntryType::AttributeGroup,
             name: name.clone(),
         };
@@ -101,7 +101,7 @@ impl AttributeGroupRef {
 
     pub fn from_xml(node: &exile::Element, index: u64) -> Result<Self> {
         let ref_ = ref_attribute(node)?;
-        let id = ID {
+        let id = Id {
             entry_type: EntryType::Other("attributeGroup:ref".into()),
             name: ref_.clone(),
         };

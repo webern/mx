@@ -2,7 +2,7 @@ use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::complex_type::ComplexType;
 use crate::xsd::constants::{ANNOTATION, COMPLEX_TYPE, ELEMENT, TYPE};
-use crate::xsd::{name_attribute, type_attribute, EntryType, Occurs, ID};
+use crate::xsd::{name_attribute, type_attribute, EntryType, Id, Occurs};
 
 #[derive(Clone, Debug)]
 pub enum Element {
@@ -27,7 +27,7 @@ impl Element {
         return "".to_owned();
     }
 
-    pub fn id(&self) -> &ID {
+    pub fn id(&self) -> &Id {
         match self {
             Element::Definition(x) => &x.id,
             Element::Reference(x) => &x.id,
@@ -59,7 +59,7 @@ impl Element {
 
 #[derive(Clone, Debug)]
 pub struct ElementDef {
-    pub id: ID,
+    pub id: Id,
     pub index: u64,
     pub annotation: Option<Annotation>,
     pub name: String,
@@ -95,7 +95,7 @@ impl ElementDef {
             return raise!("{} not found!", COMPLEX_TYPE);
         };
         let name = name_attribute(node)?;
-        let id = ID {
+        let id = Id {
             entry_type: EntryType::Element,
             name: name.clone(),
         };
@@ -112,7 +112,7 @@ impl ElementDef {
 
 #[derive(Clone, Debug)]
 pub struct ElementRef {
-    pub id: ID,
+    pub id: Id,
     pub index: u64,
     pub annotation: Option<Annotation>,
     pub name: String,
@@ -141,7 +141,7 @@ impl ElementRef {
             }
         }
         let name = name_attribute(node)?;
-        let id = ID {
+        let id = Id {
             entry_type: EntryType::Element,
             name: name.clone(),
         };
@@ -189,7 +189,7 @@ fn parse_score_partwise() {
     let want_index: u64 = 3;
     let ele = Element::from_xml(&xml, want_index).unwrap();
     let got_id = format!("{}", ele.id());
-    let want_id = "score-partwise (element)";
+    let want_id = "element:score-partwise";
     assert_eq!(got_id.as_str(), want_id);
     let got_doc = ele.documentation();
     let want_doc = "bleep bleep bloop bloop";
@@ -226,7 +226,7 @@ fn parse_credit() {
     let want_index: u64 = 6;
     let ele = Element::from_xml(&xml, want_index).unwrap();
     let got_id = format!("{}", ele.id());
-    let want_id = "credit (element)";
+    let want_id = "element:credit";
     assert_eq!(got_id.as_str(), want_id);
     let got_doc = ele.documentation();
     let want_doc = "";

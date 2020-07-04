@@ -10,11 +10,11 @@ use crate::xsd::constants::{
 use crate::xsd::group::Group;
 use crate::xsd::sequence::Sequence;
 use crate::xsd::simple_content::SimpleContent;
-use crate::xsd::{EntryType, ID};
+use crate::xsd::{EntryType, Id};
 
 #[derive(Clone, Debug)]
 pub struct ComplexType {
-    pub id: ID,
+    pub id: Id,
     pub index: u64,
     pub name: String,
     pub annotation: Option<Annotation>,
@@ -79,7 +79,7 @@ impl ComplexType {
         } else {
             "".to_owned()
         };
-        let id = ID {
+        let id = Id {
             entry_type: EntryType::ComplexType,
             name: if name.is_empty() {
                 format!("{}", index)
@@ -153,7 +153,7 @@ fn parse_parent_sequence() {
     let xml = doc.root();
     let want_index: u64 = 6;
     let ct = ComplexType::from_xml(&xml, want_index).unwrap();
-    assert_eq!(format!("{}", ct.id), "6 (complexType)");
+    assert_eq!(format!("{}", ct.id), "complexType:6");
     assert_eq!(ct.documentation().as_str(), "");
     let parent = if let Payload::Parent(p) = ct.payload {
         p
@@ -190,7 +190,7 @@ fn parse_parent_group() {
     let xml = doc.root();
     let want_index: u64 = 6;
     let ct = ComplexType::from_xml(&xml, want_index).unwrap();
-    assert_eq!(format!("{}", ct.id), "system-margins (complexType)");
+    assert_eq!(format!("{}", ct.id), "complexType:system-margins");
     assert_eq!(
         ct.documentation().as_str(),
         "System margins are relative to the page margins."
@@ -230,7 +230,7 @@ fn parse_parent_choice() {
     let xml = doc.root();
     let want_index: u64 = 6;
     let ct = ComplexType::from_xml(&xml, want_index).unwrap();
-    assert_eq!(format!("{}", ct.id), "arrow (complexType)");
+    assert_eq!(format!("{}", ct.id), "complexType:arrow");
     assert_eq!(
         ct.documentation().as_str(),
         "The arrow element represents an arrow."
@@ -283,7 +283,7 @@ fn parse_complex_content() {
     let xml = doc.root();
     let want_index: u64 = 6;
     let ct = ComplexType::from_xml(&xml, want_index).unwrap();
-    assert_eq!(format!("{}", ct.id), "heel-toe (complexType)");
+    assert_eq!(format!("{}", ct.id), "complexType:heel-toe");
     assert_eq!(
         ct.documentation().as_str(),
         "Heel and toe elements are used with organ pedals."
@@ -322,7 +322,7 @@ fn parse_simple_content() {
     let xml = doc.root();
     let want_index: u64 = 6;
     let ct = ComplexType::from_xml(&xml, want_index).unwrap();
-    assert_eq!(format!("{}", ct.id), "hole-closed (complexType)");
+    assert_eq!(format!("{}", ct.id), "complexType:hole-closed");
     assert_eq!(
         ct.documentation().as_str(),
         "The hole-closed type represents whether the..."

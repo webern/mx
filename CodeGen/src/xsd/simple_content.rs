@@ -4,11 +4,11 @@ use crate::xsd::annotation::Annotation;
 
 use crate::xsd::constants::{ANNOTATION, EXTENSION, SIMPLE_CONTENT};
 use crate::xsd::extension::Extension;
-use crate::xsd::{EntryType, ID};
+use crate::xsd::{EntryType, Id};
 
 #[derive(Clone, Debug)]
 pub struct SimpleContent {
-    pub id: ID,
+    pub id: Id,
     pub index: u64,
     pub annotation: Option<Annotation>,
     pub payload: Payload,
@@ -43,7 +43,7 @@ impl SimpleContent {
                 _ => return raise!("unsupported simpleContent node '{}'", t),
             }
         }
-        let id = ID {
+        let id = Id {
             entry_type: EntryType::Other(SIMPLE_CONTENT.to_owned()),
             name: format!("{}", index),
         };
@@ -74,7 +74,7 @@ fn parse() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let want_index: u64 = 1;
-    let want_id = "1 (simpleContent)".to_owned();
+    let want_id = "simpleContent:1".to_owned();
     let want_doc = "";
     let sc = SimpleContent::from_xml(&xml, want_index).unwrap();
     let got_doc = sc.documentation();

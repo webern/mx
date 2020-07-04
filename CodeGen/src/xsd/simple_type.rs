@@ -6,11 +6,11 @@ use crate::xsd::constants::{ANNOTATION, LIST, NAME, RESTRICTION, SIMPLE_TYPE, UN
 use crate::xsd::list::List;
 use crate::xsd::restriction::Restriction;
 use crate::xsd::union::Union;
-use crate::xsd::{EntryType, ID};
+use crate::xsd::{EntryType, Id};
 
 #[derive(Clone, Debug)]
 pub struct SimpleType {
-    pub id: ID,
+    pub id: Id,
     pub index: u64,
     pub annotation: Option<Annotation>,
     pub payload: Payload,
@@ -58,7 +58,7 @@ impl SimpleType {
                 }
             };
         }
-        let id = ID {
+        let id = Id {
             entry_type: EntryType::SimpleType,
             name,
         };
@@ -92,7 +92,7 @@ fn parse_enum() {
     let st = SimpleType::from_xml(&xml, want_index).unwrap();
     assert_eq!(st.index, want_index);
     let got_id = st.id.to_string();
-    let want_id = "above-below (simpleType)".to_owned();
+    let want_id = "simpleType:above-below".to_owned();
     assert_eq!(got_id, want_id);
     let got_doc = st.documentation();
     let want_doc = "The above-below type is used to indicate whether one element appears above or below another element.";
@@ -137,7 +137,7 @@ fn parse_numeric() {
     let st = SimpleType::from_xml(&xml, want_index).unwrap();
     assert_eq!(st.index, want_index);
     let got_id = st.id.to_string();
-    let want_id = "midi-16 (simpleType)".to_owned();
+    let want_id = "simpleType:midi-16".to_owned();
     assert_eq!(got_id, want_id);
     let got_doc = st.documentation();
     let want_doc = "The midi-16 type is used to express MIDI 1.0 values that range from 1 to 16.";
@@ -183,7 +183,7 @@ fn parse_pattern() {
     let st = SimpleType::from_xml(&xml, want_index).unwrap();
     assert_eq!(st.index, want_index);
     let got_id = st.id.to_string();
-    let want_id = "time-only (simpleType)".to_owned();
+    let want_id = "simpleType:time-only".to_owned();
     assert_eq!(got_id, want_id);
     let got_doc = st.documentation();
     let want_doc = "blerp";

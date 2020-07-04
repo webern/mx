@@ -78,7 +78,7 @@ impl Xsd {
         Ok(())
     }
 
-    pub fn find(&self, id: &ID) -> Result<&Entry> {
+    pub fn find(&self, id: &Id) -> Result<&Entry> {
         // TODO - make an efficient lookup
         for entry in &self.entries {
             if entry.id() == id {
@@ -88,7 +88,7 @@ impl Xsd {
         raise!("id '{}' not found", id)
     }
 
-    pub fn remove(&mut self, id: &ID) -> Result<Entry> {
+    pub fn remove(&mut self, id: &Id) -> Result<Entry> {
         // TODO - efficient removal
         let mut pos = None;
         for (i, entry) in self.entries.iter().enumerate() {
@@ -146,7 +146,7 @@ impl Entry {
         }
     }
 
-    pub fn id(&self) -> &ID {
+    pub fn id(&self) -> &Id {
         match self {
             Entry::Annotation(x) => &x.id,
             Entry::AttributeGroup(x) => x.id(),
@@ -204,18 +204,18 @@ impl EntryType {
 }
 
 #[derive(Clone, Debug, Eq, PartialEq, Ord)]
-pub struct ID {
+pub struct Id {
     pub entry_type: EntryType,
     pub name: String,
 }
 
-impl Display for ID {
+impl Display for Id {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{} ({})", self.name, self.entry_type)
+        write!(f, "{}:{}", self.entry_type, self.name)
     }
 }
 
-impl PartialOrd for ID {
+impl PartialOrd for Id {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         if self.entry_type != other.entry_type {
             return Some(self.entry_type.cmp(&other.entry_type));

@@ -7,7 +7,7 @@ use crate::xsd::constants::{
     MIN_INCLUSIVE, MIN_LENGTH, PATTERN, RESTRICTION,
 };
 use crate::xsd::restriction::FacetType::Pattern;
-use crate::xsd::{base_attribute, value_attribute, EntryType, ID};
+use crate::xsd::{base_attribute, value_attribute, EntryType, Id};
 use exile::Element;
 
 use std::fmt::{Display, Formatter};
@@ -100,7 +100,7 @@ impl FacetType {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub enum Number {
     Integer(i64),
     Decimal(f64),
@@ -170,7 +170,7 @@ impl Facet {
 
 #[derive(Clone, Debug)]
 pub struct Restriction {
-    pub id: ID,
+    pub id: Id,
     pub index: u64,
     pub annotation: Option<Annotation>,
     pub base: String,
@@ -202,7 +202,7 @@ impl Restriction {
             }
         }
         // TODO - this may not be unique
-        let id = ID {
+        let id = Id {
             entry_type: EntryType::Other(RESTRICTION.to_owned()),
             name: format!("{}", index),
         };
@@ -227,7 +227,7 @@ fn parse() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let want_index: u64 = 3;
-    let want_id = "3 (restriction)".to_owned();
+    let want_id = "restriction:3".to_owned();
     let want_doc = "";
     let r = Restriction::from_xml(&xml, want_index).unwrap();
     let got_doc = r.documentation();
@@ -262,6 +262,4 @@ fn parse() {
     } else {
         panic!("wrong facet type");
     }
-    // let want_item_type = "xs:integer".to_owned();
-    // assert_eq!(list.item_type, want_item_type);
 }

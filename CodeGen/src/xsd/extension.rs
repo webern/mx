@@ -4,11 +4,11 @@ use crate::xsd::annotation::Annotation;
 
 use crate::xsd::attributes::{AttributeItem, Attributes};
 use crate::xsd::constants::{ANNOTATION, ATTRIBUTE, ATTRIBUTE_GROUP, EXTENSION};
-use crate::xsd::{base_attribute, EntryType, ID};
+use crate::xsd::{base_attribute, EntryType, Id};
 
 #[derive(Clone, Debug)]
 pub struct Extension {
-    pub id: ID,
+    pub id: Id,
     pub index: u64,
     pub annotation: Option<Annotation>,
     pub base: String,
@@ -40,7 +40,7 @@ impl Extension {
                 _ => return raise!("unsupported {} member '{}'", EXTENSION, t),
             }
         }
-        let id = ID {
+        let id = Id {
             entry_type: EntryType::Other(EXTENSION.to_owned()),
             name: format!("{}", index),
         };
@@ -67,7 +67,7 @@ fn parse() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let want_index: u64 = 989898;
-    let want_id = "989898 (extension)".to_owned();
+    let want_id = "extension:989898".to_owned();
     let want_doc = "";
     let ext = Extension::from_xml(&xml, want_index).unwrap();
     let got_doc = ext.documentation();

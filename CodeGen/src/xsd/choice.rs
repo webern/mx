@@ -4,11 +4,11 @@ use crate::xsd::constants::{ANNOTATION, CHOICE, ELEMENT, GROUP, NAME, SEQUENCE};
 use crate::xsd::element::Element;
 use crate::xsd::group::Group;
 use crate::xsd::sequence::Sequence;
-use crate::xsd::{EntryType, ID};
+use crate::xsd::{EntryType, Id};
 
 #[derive(Clone, Debug)]
 pub struct Choice {
-    pub id: ID,
+    pub id: Id,
     pub index: u64,
     pub annotation: Option<Annotation>,
     pub choices: Choices,
@@ -47,7 +47,7 @@ impl Choice {
                 _ => return raise!("cannot parse '{}', unexpected node '{}'", CHOICE, t),
             }
         }
-        let id = ID {
+        let id = Id {
             entry_type: EntryType::Other(CHOICE.into()),
             name: Self::name_or_index(node, index),
         };
@@ -111,7 +111,7 @@ fn parse_credit() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let ch = Choice::from_xml(&xml, 6).unwrap();
-    assert_eq!(format!("{}", ch.id), "6 (choice)");
+    assert_eq!(format!("{}", ch.id), "choice:6");
     assert_eq!(ch.documentation().as_str(), "");
     assert_eq!(ch.choices.len(), 2);
     let ele = if let ChoiceItem::Element(el) = ch.choices.get(0).unwrap() {

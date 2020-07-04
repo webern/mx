@@ -2,11 +2,11 @@ use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::common::DefinedBy;
 use crate::xsd::constants::{ANNOTATION, ATTRIBUTE, DEFAULT, FIXED, NAME, REF, TYPE};
-use crate::xsd::{use_required, EntryType, ID};
+use crate::xsd::{use_required, EntryType, Id};
 
 #[derive(Clone, Debug)]
 pub struct Attribute {
-    pub id: ID,
+    pub id: Id,
     pub index: u64,
     pub name: String,
     pub annotation: Option<Annotation>,
@@ -61,8 +61,8 @@ impl Attribute {
         }
     }
 
-    fn parse_id(name: &str, defined_by: &DefinedBy) -> ID {
-        ID {
+    fn parse_id(name: &str, defined_by: &DefinedBy) -> Id {
+        Id {
             entry_type: EntryType::Other(ATTRIBUTE.to_owned()),
             name: if name.is_empty() {
                 defined_by.value().to_owned()

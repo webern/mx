@@ -17,6 +17,7 @@ use crate::generate::mx_writer::MxWriter;
 use crate::generate::paths::Paths;
 use musicxml_xsd_constants::enum_member_substitutions;
 
+#[derive(Clone, Debug)]
 pub struct GenArgs {
     pub paths: Paths,
 }
