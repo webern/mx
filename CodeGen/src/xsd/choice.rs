@@ -3,7 +3,7 @@ use crate::xsd::annotation::Annotation;
 use crate::xsd::constants::{ANNOTATION, CHOICE, ELEMENT, GROUP, NAME, SEQUENCE};
 use crate::xsd::element::Element;
 use crate::xsd::group::Group;
-use crate::xsd::id::{EntryType, Id};
+use crate::xsd::id::{Id, RootNodeType};
 use crate::xsd::sequence::Sequence;
 
 #[derive(Clone, Debug)]
@@ -48,7 +48,7 @@ impl Choice {
             }
         }
         let id = Id::new(
-            EntryType::Other(CHOICE.into()),
+            RootNodeType::Other(CHOICE.into()),
             Self::name_or_index(node, index),
         );
         Ok(Choice {

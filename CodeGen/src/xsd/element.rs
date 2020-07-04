@@ -2,7 +2,7 @@ use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::complex_type::ComplexType;
 use crate::xsd::constants::{ANNOTATION, COMPLEX_TYPE, ELEMENT, TYPE};
-use crate::xsd::id::{EntryType, Id};
+use crate::xsd::id::{Id, RootNodeType};
 use crate::xsd::{name_attribute, type_attribute, Occurs};
 
 #[derive(Clone, Debug)]
@@ -96,7 +96,7 @@ impl ElementDef {
             return raise!("{} not found!", COMPLEX_TYPE);
         };
         let name = name_attribute(node)?;
-        let id = Id::new(EntryType::Element, name.clone());
+        let id = Id::new(RootNodeType::Element, name.clone());
         Ok(ElementDef {
             id,
             index,
@@ -139,7 +139,7 @@ impl ElementRef {
             }
         }
         let name = name_attribute(node)?;
-        let id = Id::new(EntryType::Element, name.clone());
+        let id = Id::new(RootNodeType::Element, name.clone());
         Ok(ElementRef {
             id,
             index,

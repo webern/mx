@@ -2,7 +2,7 @@ use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::attributes::{add_attributes_from_xml, Attributes};
 use crate::xsd::constants::{ANNOTATION, REF};
-use crate::xsd::id::{EntryType, Id};
+use crate::xsd::id::{Id, RootNodeType};
 use crate::xsd::{name_attribute, ref_attribute};
 
 #[derive(Clone, Debug)]
@@ -82,7 +82,7 @@ impl AttributeGroupDef {
 
     pub fn from_xml(node: &exile::Element, index: u64) -> Result<Self> {
         let name = name_attribute(node)?;
-        let id = Id::new(EntryType::AttributeGroup, name.clone());
+        let id = Id::new(RootNodeType::AttributeGroup, name.clone());
         Ok(Self {
             id,
             index,
@@ -113,7 +113,10 @@ impl AttributeGroupRef {
 
     pub fn from_xml(node: &exile::Element, index: u64) -> Result<Self> {
         let ref_ = ref_attribute(node)?;
-        let id = Id::new(EntryType::Other("attributeGroup:ref".into()), ref_.clone());
+        let id = Id::new(
+            RootNodeType::Other("attributeGroup:ref".into()),
+            ref_.clone(),
+        );
         Ok(Self {
             id,
             index,

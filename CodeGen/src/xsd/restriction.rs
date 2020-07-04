@@ -8,7 +8,7 @@ use crate::xsd::restriction::FacetType::Pattern;
 use crate::xsd::{base_attribute, value_attribute};
 use exile::Element;
 
-use crate::xsd::id::{EntryType, Id};
+use crate::xsd::id::{Id, RootNodeType};
 use std::fmt::{Display, Formatter};
 
 /*
@@ -202,7 +202,7 @@ impl Restriction {
         }
         // TODO - this may not be unique
         let id = Id::new(
-            EntryType::Other(RESTRICTION.to_owned()),
+            RootNodeType::Other(RESTRICTION.to_owned()),
             format!("{}", index),
         );
         Ok(Restriction {

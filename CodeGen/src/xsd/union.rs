@@ -1,7 +1,7 @@
 use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::constants::{ANNOTATION, MEMBER_TYPES, UNION};
-use crate::xsd::id::{EntryType, Id};
+use crate::xsd::id::{Id, RootNodeType};
 
 #[derive(Clone, Debug)]
 pub struct Union {
@@ -42,7 +42,7 @@ impl Union {
                 break;
             }
         }
-        let id = Id::new(EntryType::Other(UNION.to_owned()), format!("{}", index));
+        let id = Id::new(RootNodeType::Other(UNION.to_owned()), format!("{}", index));
         Ok(Union {
             id,
             index,

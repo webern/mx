@@ -1,7 +1,7 @@
 use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::constants::{ANNOTATION, LIST};
-use crate::xsd::id::{EntryType, Id};
+use crate::xsd::id::{Id, RootNodeType};
 
 #[derive(Clone, Debug)]
 pub struct List {
@@ -40,7 +40,7 @@ impl List {
             }
         }
         // TODO - this may not be unique
-        let id = Id::new(EntryType::Other(LIST.to_owned()), format!("{}", index));
+        let id = Id::new(RootNodeType::Other(LIST.to_owned()), format!("{}", index));
         Ok(List {
             id,
             index,

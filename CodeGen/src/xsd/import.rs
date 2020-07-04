@@ -3,7 +3,7 @@ use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 
 use crate::xsd::constants::{ANNOTATION, IMPORT, SCHEMA_LOCATION};
-use crate::xsd::id::{EntryType, Id};
+use crate::xsd::id::{Id, RootNodeType};
 use crate::xsd::namespace_attribute;
 
 #[derive(Clone, Debug)]
@@ -42,7 +42,10 @@ impl Import {
                 break;
             }
         }
-        let id = Id::new(EntryType::Other(IMPORT.to_owned()), schema_location.clone());
+        let id = Id::new(
+            RootNodeType::Other(IMPORT.to_owned()),
+            schema_location.clone(),
+        );
         Ok(Import {
             id,
             index,

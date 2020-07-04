@@ -1,7 +1,7 @@
 use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::constants::{ANNOTATION, LIST, NAME, RESTRICTION, SIMPLE_TYPE, UNION};
-use crate::xsd::id::{EntryType, Id};
+use crate::xsd::id::{Id, RootNodeType};
 use crate::xsd::list::List;
 use crate::xsd::restriction::Restriction;
 use crate::xsd::union::Union;
@@ -56,7 +56,7 @@ impl SimpleType {
                 }
             };
         }
-        let id = Id::new(EntryType::SimpleType, name);
+        let id = Id::new(RootNodeType::SimpleType, name);
         let payload = payload.ok_or(make_err!("{} is incomplete", SIMPLE_TYPE))?;
         Ok(SimpleType {
             id,

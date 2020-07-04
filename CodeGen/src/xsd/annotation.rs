@@ -1,6 +1,6 @@
 use crate::error::Result;
 use crate::xsd::constants::{ANNOTATION, APP_INFO, DOCUMENTATION};
-use crate::xsd::id::{EntryType, Id};
+use crate::xsd::id::{Id, RootNodeType};
 use std::fmt::{Debug, Formatter};
 
 #[derive(Clone, Debug)]
@@ -48,7 +48,7 @@ impl Annotation {
                 }
             }
         }
-        let id = Id::new(EntryType::Annotation, format!("{}", index));
+        let id = Id::new(RootNodeType::Annotation, format!("{}", index));
         Ok(Annotation { id, index, items })
     }
 }

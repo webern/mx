@@ -8,7 +8,7 @@ use crate::xsd::constants::{
     SEQUENCE, SIMPLE_CONTENT,
 };
 use crate::xsd::group::Group;
-use crate::xsd::id::{EntryType, Id};
+use crate::xsd::id::{Id, RootNodeType};
 use crate::xsd::sequence::Sequence;
 use crate::xsd::simple_content::SimpleContent;
 
@@ -80,7 +80,7 @@ impl ComplexType {
             "".to_owned()
         };
         let id = Id::new(
-            EntryType::ComplexType,
+            RootNodeType::ComplexType,
             if name.is_empty() {
                 format!("{}", index)
             } else {

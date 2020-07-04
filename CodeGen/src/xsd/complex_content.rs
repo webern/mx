@@ -2,7 +2,7 @@ use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::constants::{ANNOTATION, COMPLEX_CONTENT, EXTENSION};
 use crate::xsd::extension::Extension;
-use crate::xsd::id::{EntryType, Id};
+use crate::xsd::id::{Id, RootNodeType};
 
 #[derive(Clone, Debug)]
 pub struct ComplexContent {
@@ -37,7 +37,7 @@ impl ComplexContent {
             }
         }
         let id = Id::new(
-            EntryType::Other(COMPLEX_CONTENT.to_owned()),
+            RootNodeType::Other(COMPLEX_CONTENT.to_owned()),
             format!("{}", index),
         );
         let extension = if let Some(ext) = extension {

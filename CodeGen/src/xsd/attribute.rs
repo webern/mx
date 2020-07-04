@@ -2,7 +2,7 @@ use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::common::DefinedBy;
 use crate::xsd::constants::{ANNOTATION, ATTRIBUTE, DEFAULT, FIXED, NAME, REF, TYPE};
-use crate::xsd::id::{EntryType, Id};
+use crate::xsd::id::{Id, RootNodeType};
 use crate::xsd::use_required;
 
 #[derive(Clone, Debug)]
@@ -64,7 +64,7 @@ impl Attribute {
 
     fn parse_id(name: &str, defined_by: &DefinedBy) -> Id {
         Id::new(
-            EntryType::Other(ATTRIBUTE.to_owned()),
+            RootNodeType::Other(ATTRIBUTE.to_owned()),
             if name.is_empty() {
                 defined_by.value().to_owned()
             } else {

@@ -3,7 +3,7 @@ use crate::xsd::annotation::Annotation;
 use crate::xsd::choice::Choice;
 use crate::xsd::constants::{ANNOTATION, CHOICE, ELEMENT, GROUP, SEQUENCE};
 use crate::xsd::element::Element;
-use crate::xsd::id::{EntryType, Id};
+use crate::xsd::id::{Id, RootNodeType};
 use crate::xsd::sequence::Sequence;
 use crate::xsd::{is_ref, name_attribute, ref_attribute, Occurs};
 
@@ -80,7 +80,7 @@ impl GroupDefinition {
                 _ => return raise!("unsupported {} node, '{}'", GROUP, t),
             }
         }
-        let id = Id::new(EntryType::Group, name_attribute(node)?);
+        let id = Id::new(RootNodeType::Group, name_attribute(node)?);
         Ok(GroupDefinition {
             id,
             index,
@@ -110,7 +110,7 @@ impl GroupReference {
                 _ => return raise!("unsupported {} node, '{}'", GROUP, t),
             }
         }
-        let id = Id::new(EntryType::Group, format!("{}", index));
+        let id = Id::new(RootNodeType::Group, format!("{}", index));
         Ok(GroupReference {
             id,
             index,

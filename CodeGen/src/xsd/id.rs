@@ -7,12 +7,12 @@ use std::fmt::{Display, Formatter};
 
 #[derive(Clone, Debug, Eq, PartialEq, Ord)]
 pub struct Id {
-    entry_type: EntryType,
+    entry_type: RootNodeType,
     name: String,
 }
 
 impl Id {
-    pub fn new(entry_type: EntryType, name: String) -> Self {
+    pub fn new(entry_type: RootNodeType, name: String) -> Self {
         Self { entry_type, name }
     }
 
@@ -37,7 +37,7 @@ impl PartialOrd for Id {
 }
 
 #[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
-pub enum EntryType {
+pub enum RootNodeType {
     Annotation,
     AttributeGroup,
     ComplexType,
@@ -48,34 +48,48 @@ pub enum EntryType {
     Other(String),
 }
 
-impl Display for EntryType {
+impl Display for RootNodeType {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         let s = match self {
-            EntryType::Annotation => ANNOTATION,
-            EntryType::AttributeGroup => ATTRIBUTE_GROUP,
-            EntryType::ComplexType => COMPLEX_TYPE,
-            EntryType::Element => ELEMENT,
-            EntryType::Group => GROUP,
-            EntryType::Import => IMPORT,
-            EntryType::SimpleType => SIMPLE_TYPE,
-            EntryType::Other(s) => s.as_str(),
+            RootNodeType::Annotation => ANNOTATION,
+            RootNodeType::AttributeGroup => ATTRIBUTE_GROUP,
+            RootNodeType::ComplexType => COMPLEX_TYPE,
+            RootNodeType::Element => ELEMENT,
+            RootNodeType::Group => GROUP,
+            RootNodeType::Import => IMPORT,
+            RootNodeType::SimpleType => SIMPLE_TYPE,
+            RootNodeType::Other(s) => s.as_str(),
         };
         write!(f, "{}", s)
     }
 }
 
-impl EntryType {
-    pub fn parse<S: AsRef<str>>(s: S) -> Result<EntryType> {
+impl RootNodeType {
+    pub fn parse<S: AsRef<str>>(s: S) -> Result<RootNodeType> {
         let et = match s.as_ref() {
-            ANNOTATION => EntryType::Annotation,
-            ATTRIBUTE_GROUP => EntryType::AttributeGroup,
-            COMPLEX_TYPE => EntryType::ComplexType,
-            ELEMENT => EntryType::Element,
-            GROUP => EntryType::Group,
-            IMPORT => EntryType::Import,
-            SIMPLE_TYPE => EntryType::SimpleType,
-            _ => EntryType::Other(s.as_ref().into()),
+            ANNOTATION => RootNodeType::Annotation,
+            ATTRIBUTE_GROUP => RootNodeType::AttributeGroup,
+            COMPLEX_TYPE => RootNodeType::ComplexType,
+            ELEMENT => RootNodeType::Element,
+            GROUP => RootNodeType::Group,
+            IMPORT => RootNodeType::Import,
+            SIMPLE_TYPE => RootNodeType::SimpleType,
+            _ => RootNodeType::Other(s.as_ref().into()),
         };
         Ok(et)
     }
+}
+
+#[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
+pub struct RootNodeId {
+    index: u64,
+    type_: RootNodeType,
+    name: String,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
+pub struct ChildNodeId {
+    type_: String,
+    name: Option<String>,
+    parent: Id,
 }

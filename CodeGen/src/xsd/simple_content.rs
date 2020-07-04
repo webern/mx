@@ -2,7 +2,7 @@ use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::constants::{ANNOTATION, EXTENSION, SIMPLE_CONTENT};
 use crate::xsd::extension::Extension;
-use crate::xsd::id::{EntryType, Id};
+use crate::xsd::id::{Id, RootNodeType};
 
 #[derive(Clone, Debug)]
 pub struct SimpleContent {
@@ -42,7 +42,7 @@ impl SimpleContent {
             }
         }
         let id = Id::new(
-            EntryType::Other(SIMPLE_CONTENT.to_owned()),
+            RootNodeType::Other(SIMPLE_CONTENT.to_owned()),
             format!("{}", index),
         );
         let payload = if let Some(p) = payload {

@@ -30,7 +30,7 @@ use crate::xsd::constants::{
 };
 use crate::xsd::element::Element;
 use crate::xsd::group::GroupDefinition;
-use crate::xsd::id::{EntryType, Id};
+use crate::xsd::id::{Id, RootNodeType};
 use crate::xsd::import::Import;
 use crate::xsd::simple_type::SimpleType;
 use std::cmp::Ordering;
@@ -131,18 +131,20 @@ pub enum Entry {
 impl Entry {
     pub fn from_xml(node: &exile::Element, index: u64) -> Result<Self> {
         let n = node.name.as_str();
-        let t = EntryType::parse(n)?;
+        let t = RootNodeType::parse(n)?;
         match t {
-            EntryType::Annotation => Ok(Entry::Annotation(Annotation::from_xml(node, index)?)),
-            EntryType::AttributeGroup => Ok(Entry::AttributeGroup(AttributeGroup::from_xml(
+            RootNodeType::Annotation => Ok(Entry::Annotation(Annotation::from_xml(node, index)?)),
+            RootNodeType::AttributeGroup => Ok(Entry::AttributeGroup(AttributeGroup::from_xml(
                 node, index,
             )?)),
-            EntryType::ComplexType => Ok(Entry::ComplexType(ComplexType::from_xml(node, index)?)),
-            EntryType::Element => Ok(Entry::Element(Element::from_xml(node, index)?)),
-            EntryType::Group => Ok(Entry::Group(GroupDefinition::from_xml(node, index)?)),
-            EntryType::Import => Ok(Entry::Import(Import::from_xml(node, index)?)),
-            EntryType::SimpleType => Ok(Entry::SimpleType(SimpleType::from_xml(node, index)?)),
-            EntryType::Other(s) => {
+            RootNodeType::ComplexType => {
+                Ok(Entry::ComplexType(ComplexType::from_xml(node, index)?))
+            }
+            RootNodeType::Element => Ok(Entry::Element(Element::from_xml(node, index)?)),
+            RootNodeType::Group => Ok(Entry::Group(GroupDefinition::from_xml(node, index)?)),
+            RootNodeType::Import => Ok(Entry::Import(Import::from_xml(node, index)?)),
+            RootNodeType::SimpleType => Ok(Entry::SimpleType(SimpleType::from_xml(node, index)?)),
+            RootNodeType::Other(s) => {
                 panic!("'{}' is not an implemented node type", s.as_str());
             }
         }

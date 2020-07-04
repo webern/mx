@@ -3,7 +3,7 @@ use crate::xsd::annotation::Annotation;
 use crate::xsd::attributes::{AttributeItem, Attributes};
 use crate::xsd::base_attribute;
 use crate::xsd::constants::{ANNOTATION, ATTRIBUTE, ATTRIBUTE_GROUP, EXTENSION};
-use crate::xsd::id::{EntryType, Id};
+use crate::xsd::id::{Id, RootNodeType};
 
 #[derive(Clone, Debug)]
 pub struct Extension {
@@ -39,7 +39,10 @@ impl Extension {
                 _ => return raise!("unsupported {} member '{}'", EXTENSION, t),
             }
         }
-        let id = Id::new(EntryType::Other(EXTENSION.to_owned()), format!("{}", index));
+        let id = Id::new(
+            RootNodeType::Other(EXTENSION.to_owned()),
+            format!("{}", index),
+        );
         Ok(Extension {
             id,
             index,
