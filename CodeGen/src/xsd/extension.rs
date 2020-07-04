@@ -1,9 +1,9 @@
 use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::attributes::{AttributeItem, Attributes};
+use crate::xsd::base_attribute;
 use crate::xsd::constants::{ANNOTATION, ATTRIBUTE, ATTRIBUTE_GROUP, EXTENSION};
-use crate::xsd::id::Id;
-use crate::xsd::{base_attribute, EntryType};
+use crate::xsd::id::{EntryType, Id};
 
 #[derive(Clone, Debug)]
 pub struct Extension {

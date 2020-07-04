@@ -30,7 +30,7 @@ use crate::xsd::constants::{
 };
 use crate::xsd::element::Element;
 use crate::xsd::group::GroupDefinition;
-use crate::xsd::id::Id;
+use crate::xsd::id::{EntryType, Id};
 use crate::xsd::import::Import;
 use crate::xsd::simple_type::SimpleType;
 use std::cmp::Ordering;
@@ -158,50 +158,6 @@ impl Entry {
             Entry::Import(x) => &x.id,
             Entry::SimpleType(x) => &x.id,
         }
-    }
-}
-
-#[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
-pub enum EntryType {
-    Annotation,
-    AttributeGroup,
-    ComplexType,
-    Element,
-    Group,
-    Import,
-    SimpleType,
-    Other(String),
-}
-
-impl Display for EntryType {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        let s = match self {
-            EntryType::Annotation => ANNOTATION,
-            EntryType::AttributeGroup => ATTRIBUTE_GROUP,
-            EntryType::ComplexType => COMPLEX_TYPE,
-            EntryType::Element => ELEMENT,
-            EntryType::Group => GROUP,
-            EntryType::Import => IMPORT,
-            EntryType::SimpleType => SIMPLE_TYPE,
-            EntryType::Other(s) => s.as_str(),
-        };
-        write!(f, "{}", s)
-    }
-}
-
-impl EntryType {
-    pub fn parse<S: AsRef<str>>(s: S) -> Result<EntryType> {
-        let et = match s.as_ref() {
-            ANNOTATION => EntryType::Annotation,
-            ATTRIBUTE_GROUP => EntryType::AttributeGroup,
-            COMPLEX_TYPE => EntryType::ComplexType,
-            ELEMENT => EntryType::Element,
-            GROUP => EntryType::Group,
-            IMPORT => EntryType::Import,
-            SIMPLE_TYPE => EntryType::SimpleType,
-            _ => EntryType::Other(s.as_ref().into()),
-        };
-        Ok(et)
     }
 }
 

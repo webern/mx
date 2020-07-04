@@ -2,8 +2,8 @@ use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::attributes::{add_attributes_from_xml, Attributes};
 use crate::xsd::constants::{ANNOTATION, REF};
-use crate::xsd::id::Id;
-use crate::xsd::{name_attribute, ref_attribute, EntryType};
+use crate::xsd::id::{EntryType, Id};
+use crate::xsd::{name_attribute, ref_attribute};
 
 #[derive(Clone, Debug)]
 pub enum AttributeGroup {

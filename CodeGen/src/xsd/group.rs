@@ -3,9 +3,9 @@ use crate::xsd::annotation::Annotation;
 use crate::xsd::choice::Choice;
 use crate::xsd::constants::{ANNOTATION, CHOICE, ELEMENT, GROUP, SEQUENCE};
 use crate::xsd::element::Element;
-use crate::xsd::id::Id;
+use crate::xsd::id::{EntryType, Id};
 use crate::xsd::sequence::Sequence;
-use crate::xsd::{is_ref, name_attribute, ref_attribute, EntryType, Occurs};
+use crate::xsd::{is_ref, name_attribute, ref_attribute, Occurs};
 
 #[derive(Clone, Debug)]
 pub enum Group {

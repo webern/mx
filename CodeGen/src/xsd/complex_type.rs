@@ -8,10 +8,9 @@ use crate::xsd::constants::{
     SEQUENCE, SIMPLE_CONTENT,
 };
 use crate::xsd::group::Group;
-use crate::xsd::id::Id;
+use crate::xsd::id::{EntryType, Id};
 use crate::xsd::sequence::Sequence;
 use crate::xsd::simple_content::SimpleContent;
-use crate::xsd::EntryType;
 
 #[derive(Clone, Debug)]
 pub struct ComplexType {

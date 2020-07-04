@@ -5,10 +5,10 @@ use crate::xsd::constants::{
     MIN_INCLUSIVE, MIN_LENGTH, PATTERN, RESTRICTION,
 };
 use crate::xsd::restriction::FacetType::Pattern;
-use crate::xsd::{base_attribute, value_attribute, EntryType};
+use crate::xsd::{base_attribute, value_attribute};
 use exile::Element;
 
-use crate::xsd::id::Id;
+use crate::xsd::id::{EntryType, Id};
 use std::fmt::{Display, Formatter};
 
 /*

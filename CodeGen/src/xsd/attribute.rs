@@ -2,8 +2,8 @@ use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::common::DefinedBy;
 use crate::xsd::constants::{ANNOTATION, ATTRIBUTE, DEFAULT, FIXED, NAME, REF, TYPE};
-use crate::xsd::id::Id;
-use crate::xsd::{use_required, EntryType};
+use crate::xsd::id::{EntryType, Id};
+use crate::xsd::use_required;
 
 #[derive(Clone, Debug)]
 pub struct Attribute {

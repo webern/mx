@@ -1,4 +1,7 @@
-use crate::xsd::EntryType;
+use crate::error::Result;
+use crate::xsd::constants::{
+    ANNOTATION, ATTRIBUTE_GROUP, COMPLEX_TYPE, ELEMENT, GROUP, IMPORT, SIMPLE_TYPE,
+};
 use std::cmp::Ordering;
 use std::fmt::{Display, Formatter};
 
@@ -30,5 +33,49 @@ impl PartialOrd for Id {
             return Some(self.entry_type.cmp(&other.entry_type));
         }
         Some(self.name.cmp(&other.name))
+    }
+}
+
+#[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
+pub enum EntryType {
+    Annotation,
+    AttributeGroup,
+    ComplexType,
+    Element,
+    Group,
+    Import,
+    SimpleType,
+    Other(String),
+}
+
+impl Display for EntryType {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        let s = match self {
+            EntryType::Annotation => ANNOTATION,
+            EntryType::AttributeGroup => ATTRIBUTE_GROUP,
+            EntryType::ComplexType => COMPLEX_TYPE,
+            EntryType::Element => ELEMENT,
+            EntryType::Group => GROUP,
+            EntryType::Import => IMPORT,
+            EntryType::SimpleType => SIMPLE_TYPE,
+            EntryType::Other(s) => s.as_str(),
+        };
+        write!(f, "{}", s)
+    }
+}
+
+impl EntryType {
+    pub fn parse<S: AsRef<str>>(s: S) -> Result<EntryType> {
+        let et = match s.as_ref() {
+            ANNOTATION => EntryType::Annotation,
+            ATTRIBUTE_GROUP => EntryType::AttributeGroup,
+            COMPLEX_TYPE => EntryType::ComplexType,
+            ELEMENT => EntryType::Element,
+            GROUP => EntryType::Group,
+            IMPORT => EntryType::Import,
+            SIMPLE_TYPE => EntryType::SimpleType,
+            _ => EntryType::Other(s.as_ref().into()),
+        };
+        Ok(et)
     }
 }

@@ -2,8 +2,7 @@ use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::constants::{ANNOTATION, COMPLEX_CONTENT, EXTENSION};
 use crate::xsd::extension::Extension;
-use crate::xsd::id::Id;
-use crate::xsd::EntryType;
+use crate::xsd::id::{EntryType, Id};
 
 #[derive(Clone, Debug)]
 pub struct ComplexContent {

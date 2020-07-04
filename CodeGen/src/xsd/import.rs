@@ -3,8 +3,8 @@ use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 
 use crate::xsd::constants::{ANNOTATION, IMPORT, SCHEMA_LOCATION};
-use crate::xsd::id::Id;
-use crate::xsd::{namespace_attribute, EntryType};
+use crate::xsd::id::{EntryType, Id};
+use crate::xsd::namespace_attribute;
 
 #[derive(Clone, Debug)]
 pub struct Import {
