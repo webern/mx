@@ -1,13 +1,12 @@
 use crate::error::Result;
 use crate::xsd::annotation::Annotation;
-
 use crate::xsd::choice::Choice;
 use crate::xsd::constants::{ANNOTATION, CHOICE, ELEMENT, GROUP, SEQUENCE};
 use crate::xsd::element::Element;
 use crate::xsd::group::Group;
 use crate::xsd::{EntryType, Occurs, ID};
 
-
+#[derive(Clone, Debug)]
 pub struct Sequence {
     pub id: ID,
     pub index: u64,
@@ -16,6 +15,7 @@ pub struct Sequence {
     pub members: Vec<Member>,
 }
 
+#[derive(Clone, Debug)]
 pub enum Member {
     Choice(Choice),
     Element(Element),
@@ -64,7 +64,6 @@ impl Sequence {
 
 #[test]
 fn parse() {
-    
     let xml_str = r#"
     <xs:sequence>
 		<xs:element name="identification" type="identification" minOccurs="0"/>

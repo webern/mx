@@ -4,6 +4,7 @@ use crate::xsd::complex_type::ComplexType;
 use crate::xsd::constants::{ANNOTATION, COMPLEX_TYPE, ELEMENT, TYPE};
 use crate::xsd::{name_attribute, type_attribute, EntryType, Occurs, ID};
 
+#[derive(Clone, Debug)]
 pub enum Element {
     Definition(ElementDef),
     Reference(ElementRef),
@@ -56,6 +57,7 @@ impl Element {
     }
 }
 
+#[derive(Clone, Debug)]
 pub struct ElementDef {
     pub id: ID,
     pub index: u64,
@@ -108,6 +110,7 @@ impl ElementDef {
     }
 }
 
+#[derive(Clone, Debug)]
 pub struct ElementRef {
     pub id: ID,
     pub index: u64,

@@ -1,13 +1,12 @@
 use crate::error::Result;
 use crate::xsd::annotation::Annotation;
-
 use crate::xsd::choice::Choice;
 use crate::xsd::constants::{ANNOTATION, CHOICE, ELEMENT, GROUP, SEQUENCE};
 use crate::xsd::element::Element;
 use crate::xsd::sequence::Sequence;
 use crate::xsd::{is_ref, name_attribute, ref_attribute, EntryType, Occurs, ID};
 
-
+#[derive(Clone, Debug)]
 pub enum Group {
     Definition(GroupDefinition),
     Reference(GroupReference),
@@ -23,6 +22,7 @@ impl Group {
     }
 }
 
+#[derive(Clone, Debug)]
 pub struct GroupDefinition {
     pub id: ID,
     pub index: u64,
@@ -30,6 +30,7 @@ pub struct GroupDefinition {
     pub members: Vec<Member>,
 }
 
+#[derive(Clone, Debug)]
 pub struct GroupReference {
     pub id: ID,
     pub index: u64,
@@ -38,6 +39,7 @@ pub struct GroupReference {
     pub occurs: Occurs,
 }
 
+#[derive(Clone, Debug)]
 pub enum Member {
     Choice(Choice),
     Element(Element),
@@ -126,8 +128,6 @@ impl GroupReference {
 
 #[test]
 fn parse_group_definition() {
-    
-    
     let xml_str = r#"
 	<xs:group name="harmony-chord">
 		<xs:annotation>
@@ -174,8 +174,6 @@ fn parse_group_definition() {
 
 #[test]
 fn parse_group_reference() {
-    
-    
     let xml_str = r#"<xs:group ref="non-traditional-key" minOccurs="0" maxOccurs="unbounded"/>"#;
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
@@ -198,8 +196,6 @@ fn parse_group_reference() {
 
 #[test]
 fn parse_group_reference_max_occurs() {
-    
-    
     let xml_str = r#"<xs:group ref="non-traditional-key" minOccurs="1" maxOccurs="8"/>"#;
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();

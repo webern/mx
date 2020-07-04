@@ -1,15 +1,16 @@
 use crate::error::Result;
 use crate::xsd::annotation::Annotation;
-
 use crate::xsd::attributes::{add_attributes_from_xml, Attributes};
 use crate::xsd::constants::{ANNOTATION, REF};
 use crate::xsd::{name_attribute, ref_attribute, EntryType, ID};
 
+#[derive(Clone, Debug)]
 pub enum AttributeGroup {
     Def(AttributeGroupDef),
     Ref(AttributeGroupRef),
 }
 
+#[derive(Clone, Debug)]
 pub struct AttributeGroupDef {
     pub id: ID,
     pub index: u64,
@@ -18,6 +19,7 @@ pub struct AttributeGroupDef {
     pub attributes: Attributes,
 }
 
+#[derive(Clone, Debug)]
 pub struct AttributeGroupRef {
     pub id: ID,
     pub index: u64,

@@ -6,6 +6,7 @@ use crate::xsd::attributes::{AttributeItem, Attributes};
 use crate::xsd::constants::{ANNOTATION, ATTRIBUTE, ATTRIBUTE_GROUP, EXTENSION};
 use crate::xsd::{base_attribute, EntryType, ID};
 
+#[derive(Clone, Debug)]
 pub struct Extension {
     pub id: ID,
     pub index: u64,

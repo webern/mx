@@ -1,11 +1,9 @@
-use crate::error::{Result};
-
+use crate::error::Result;
 use crate::xsd::annotation::Annotation;
-
 use crate::xsd::constants::{ANNOTATION, MEMBER_TYPES, UNION};
 use crate::xsd::{EntryType, ID};
 
-
+#[derive(Clone, Debug)]
 pub struct Union {
     pub id: ID,
     pub index: u64,

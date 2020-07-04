@@ -12,6 +12,10 @@ path = "src/bin/main.rs"
 name = "show"
 path = "src/bin/show.rs"
 
+[[bin]]
+name = "flatten"
+path = "src/bin/flatten.rs"
+
 [lib]
 name = "libmxgen"
 path = "src/lib.rs"

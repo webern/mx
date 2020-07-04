@@ -12,6 +12,7 @@ use crate::xsd::sequence::Sequence;
 use crate::xsd::simple_content::SimpleContent;
 use crate::xsd::{EntryType, ID};
 
+#[derive(Clone, Debug)]
 pub struct ComplexType {
     pub id: ID,
     pub index: u64,
@@ -20,6 +21,7 @@ pub struct ComplexType {
     pub payload: Payload,
 }
 
+#[derive(Clone, Debug)]
 pub enum Payload {
     ComplexContent(ComplexContent),
     SimpleContent(SimpleContent),
@@ -27,12 +29,14 @@ pub enum Payload {
     None,
 }
 
+#[derive(Clone, Debug)]
 pub enum Children {
     Choice(Choice),
     Group(Group),
     Sequence(Sequence),
 }
 
+#[derive(Clone, Debug)]
 pub struct Parent {
     pub attributes: Attributes,
     pub children: Option<Children>,

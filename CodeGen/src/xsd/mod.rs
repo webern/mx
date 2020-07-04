@@ -18,7 +18,7 @@ mod simple_content;
 mod simple_type;
 mod union;
 
-use crate::error::{Result};
+use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::attribute_group::AttributeGroup;
 use crate::xsd::complex_type::ComplexType;
@@ -32,12 +32,21 @@ use crate::xsd::group::GroupDefinition;
 use crate::xsd::import::Import;
 use crate::xsd::simple_type::SimpleType;
 use std::cmp::Ordering;
-use std::collections::{BTreeMap};
+use std::collections::BTreeMap;
 use std::fmt::{Display, Formatter};
 use std::path::Path;
 
+#[derive(Clone, Debug)]
 pub struct Xsd {
     entries: Vec<Entry>,
+}
+
+impl Default for Xsd {
+    fn default() -> Self {
+        Self {
+            entries: Vec::new(),
+        }
+    }
 }
 
 impl Xsd {
@@ -55,12 +64,45 @@ impl Xsd {
         if root.name != "schema" {
             return raise!("expected the root node to be named 'schema'");
         }
-        let mut entries = Vec::new();
+        let mut xsd = Xsd::default();
         for (i, entry_node) in root.children().enumerate() {
             let entry = Entry::from_xml(entry_node, i as u64)?;
-            entries.push(entry);
+            xsd.add_entry(entry)?;
         }
-        Ok(Xsd { entries: entries })
+        Ok(xsd)
+    }
+
+    pub fn add_entry(&mut self, entry: Entry) -> Result<()> {
+        // TODO - make an efficient storage
+        self.entries.push(entry);
+        Ok(())
+    }
+
+    pub fn find(&self, id: &ID) -> Result<&Entry> {
+        // TODO - make an efficient lookup
+        for entry in &self.entries {
+            if entry.id() == id {
+                return Ok(entry);
+            }
+        }
+        raise!("id '{}' not found", id)
+    }
+
+    pub fn remove(&mut self, id: &ID) -> Result<Entry> {
+        // TODO - efficient removal
+        let mut pos = None;
+        for (i, entry) in self.entries.iter().enumerate() {
+            if entry.id() == id {
+                pos = Some(i);
+                break;
+            }
+        }
+        if let Some(i) = pos {
+            // TODO - this can panic
+            Ok(self.entries.remove(i))
+        } else {
+            raise!("entry '{}' not found", id)
+        }
     }
 }
 
@@ -73,6 +115,7 @@ impl Display for Xsd {
     }
 }
 
+#[derive(Clone, Debug)]
 pub enum Entry {
     Annotation(Annotation),
     AttributeGroup(AttributeGroup),
@@ -116,7 +159,7 @@ impl Entry {
     }
 }
 
-#[derive(Debug, Eq, PartialEq, Ord, PartialOrd)]
+#[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub enum EntryType {
     Annotation,
     AttributeGroup,
@@ -160,7 +203,7 @@ impl EntryType {
     }
 }
 
-#[derive(Debug, Eq, PartialEq, Ord)]
+#[derive(Clone, Debug, Eq, PartialEq, Ord)]
 pub struct ID {
     pub entry_type: EntryType,
     pub name: String,

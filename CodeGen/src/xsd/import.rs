@@ -1,11 +1,11 @@
-use crate::error::{Result};
+use crate::error::Result;
 
 use crate::xsd::annotation::Annotation;
 
 use crate::xsd::constants::{ANNOTATION, IMPORT, SCHEMA_LOCATION};
 use crate::xsd::{namespace_attribute, EntryType, ID};
 
-
+#[derive(Clone, Debug)]
 pub struct Import {
     pub id: ID,
     pub index: u64,

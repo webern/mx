@@ -1,18 +1,12 @@
 use crate::error::Result;
 use crate::xsd::annotation::Annotation;
-
 use crate::xsd::constants::{ANNOTATION, CHOICE, ELEMENT, GROUP, NAME, SEQUENCE};
 use crate::xsd::element::Element;
 use crate::xsd::group::Group;
 use crate::xsd::sequence::Sequence;
 use crate::xsd::{EntryType, ID};
 
-/*
-element
-group
-sequence
- */
-
+#[derive(Clone, Debug)]
 pub struct Choice {
     pub id: ID,
     pub index: u64,
@@ -20,6 +14,7 @@ pub struct Choice {
     pub choices: Choices,
 }
 
+#[derive(Clone, Debug)]
 pub enum ChoiceItem {
     Element(Element),
     Group(Group),
@@ -101,7 +96,6 @@ impl Choice {
 */
 #[test]
 fn parse_credit() {
-    
     let xml_str = r#"
     <xs:choice>
         <xs:element name="credit-image" type="image"/>

@@ -6,6 +6,7 @@ use crate::xsd::constants::{ANNOTATION, EXTENSION, SIMPLE_CONTENT};
 use crate::xsd::extension::Extension;
 use crate::xsd::{EntryType, ID};
 
+#[derive(Clone, Debug)]
 pub struct SimpleContent {
     pub id: ID,
     pub index: u64,
@@ -13,6 +14,7 @@ pub struct SimpleContent {
     pub payload: Payload,
 }
 
+#[derive(Clone, Debug)]
 pub enum Payload {
     Extension(Extension),
 }

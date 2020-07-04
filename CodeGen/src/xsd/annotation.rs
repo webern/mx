@@ -1,17 +1,16 @@
-use crate::error::{Result};
-
-
+use crate::error::Result;
 use crate::xsd::constants::{ANNOTATION, APP_INFO, DOCUMENTATION};
 use crate::xsd::{EntryType, ID};
+use std::fmt::{Debug, Formatter};
 
-
-
+#[derive(Clone, Debug)]
 pub struct Annotation {
     pub id: ID,
     pub index: u64,
     pub items: Vec<Item>,
 }
 
+#[derive(Clone, Debug)]
 pub enum Item {
     Documentation(String),
     AppInfo(String),

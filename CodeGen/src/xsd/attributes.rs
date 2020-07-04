@@ -1,14 +1,12 @@
 use crate::error::Result;
 
-
 use crate::xsd::attribute::Attribute;
 use crate::xsd::attribute_group::AttributeGroup;
 use crate::xsd::constants::{ANNOTATION, ATTRIBUTE, ATTRIBUTE_GROUP};
 
-
-
 pub type Attributes = Vec<AttributeItem>;
 
+#[derive(Clone, Debug)]
 pub enum AttributeItem {
     AttributeGroup(AttributeGroup),
     Attribute(Attribute),

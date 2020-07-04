@@ -1,4 +1,4 @@
-use crate::error::{Result};
+use crate::error::Result;
 
 use crate::xsd::annotation::Annotation;
 
@@ -11,7 +11,6 @@ use crate::xsd::{base_attribute, value_attribute, EntryType, ID};
 use exile::Element;
 
 use std::fmt::{Display, Formatter};
-
 
 /*
 enumeration	Defines a list of acceptable values
@@ -169,6 +168,7 @@ impl Facet {
     }
 }
 
+#[derive(Clone, Debug)]
 pub struct Restriction {
     pub id: ID,
     pub index: u64,

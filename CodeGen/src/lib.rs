@@ -2,7 +2,7 @@
 #![deny(non_snake_case)]
 #![deny(non_snake_case)]
 #![deny(non_upper_case_globals)]
-//#![allow(unused)]
+#![allow(unused)]
 
 #[macro_use]
 pub mod error;

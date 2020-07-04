@@ -4,6 +4,7 @@ use crate::xsd::common::DefinedBy;
 use crate::xsd::constants::{ANNOTATION, ATTRIBUTE, DEFAULT, FIXED, NAME, REF, TYPE};
 use crate::xsd::{use_required, EntryType, ID};
 
+#[derive(Clone, Debug)]
 pub struct Attribute {
     pub id: ID,
     pub index: u64,

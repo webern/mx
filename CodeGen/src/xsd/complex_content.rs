@@ -1,13 +1,10 @@
-use crate::error::{Result};
-
+use crate::error::Result;
 use crate::xsd::annotation::Annotation;
-
 use crate::xsd::constants::{ANNOTATION, COMPLEX_CONTENT, EXTENSION};
 use crate::xsd::extension::Extension;
-
 use crate::xsd::{EntryType, ID};
 
-
+#[derive(Clone, Debug)]
 pub struct ComplexContent {
     pub id: ID,
     pub index: u64,

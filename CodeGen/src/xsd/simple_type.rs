@@ -1,4 +1,4 @@
-use crate::error::{Result};
+use crate::error::Result;
 
 use crate::xsd::annotation::Annotation;
 
@@ -8,7 +8,7 @@ use crate::xsd::restriction::Restriction;
 use crate::xsd::union::Union;
 use crate::xsd::{EntryType, ID};
 
-
+#[derive(Clone, Debug)]
 pub struct SimpleType {
     pub id: ID,
     pub index: u64,
@@ -16,6 +16,7 @@ pub struct SimpleType {
     pub payload: Payload,
 }
 
+#[derive(Clone, Debug)]
 pub enum Payload {
     Restriction(Restriction),
     List(List),
