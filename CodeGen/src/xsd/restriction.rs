@@ -2,13 +2,13 @@ use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::constants::{
     ANNOTATION, ENUMERATION, LENGTH, MAX_EXCLUSIVE, MAX_INCLUSIVE, MAX_LENGTH, MIN_EXCLUSIVE,
-    MIN_INCLUSIVE, MIN_LENGTH, PATTERN, RESTRICTION,
+    MIN_INCLUSIVE, MIN_LENGTH, NAME, PATTERN, RESTRICTION,
 };
 use crate::xsd::restriction::FacetType::Pattern;
 use crate::xsd::{base_attribute, value_attribute};
 use exile::Element;
 
-use crate::xsd::id::{Id, RootNodeType};
+use crate::xsd::id::{Id, Lineage, RootNodeType};
 use std::fmt::{Display, Formatter};
 
 /*
@@ -129,6 +129,7 @@ pub enum Facet {
 
 impl Facet {
     fn from_xml(node: &Element) -> Result<Facet> {
+        // let (id, lineage) = Id::make(lineage, node)?;
         let t = FacetType::parse(&node.name)?;
         let v = value_attribute(node)?;
         let result = match t {
@@ -170,7 +171,6 @@ impl Facet {
 #[derive(Clone, Debug)]
 pub struct Restriction {
     pub id: Id,
-    pub index: u64,
     pub annotation: Option<Annotation>,
     pub base: String,
     pub facets: Vec<Facet>,
@@ -184,30 +184,26 @@ impl Restriction {
         return "".to_owned();
     }
 
-    pub fn from_xml(node: &exile::Element, index: u64) -> Result<Self> {
+    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Self> {
         if node.name.as_str() != RESTRICTION {
             return raise!("expected '{}', got '{}'", RESTRICTION, &node.name);
         }
+        let (id, lineage) = Id::make(lineage, node)?;
         let base = base_attribute(node)?;
         let mut annotation = None;
         let mut facets = Vec::new();
         for inner in node.children() {
             let t = inner.name.as_str();
             if t == ANNOTATION {
-                annotation = Some(Annotation::from_xml(inner, index)?);
+                annotation = Some(Annotation::from_xml(inner, lineage.clone())?);
             } else {
                 let facet = Facet::from_xml(inner)?;
                 facets.push(facet);
             }
         }
-        // TODO - this may not be unique
-        let id = Id::new(
-            RootNodeType::Other(RESTRICTION.to_owned()),
-            format!("{}", index),
-        );
+
         Ok(Restriction {
             id,
-            index,
             annotation,
             base,
             facets,
@@ -217,6 +213,8 @@ impl Restriction {
 
 #[test]
 fn parse() {
+    let parent = crate::xsd::id::Id::sldkjfgh(crate::xsd::id::RootNodeType::Element, "foo".into());
+    let lineage = Lineage::Parent(parent);
     let xml_str = r#"
 		<xs:restriction base="xs:positiveInteger">
 			<xs:minInclusive value="1"/>
@@ -225,18 +223,15 @@ fn parse() {
         "#;
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
-    let want_index: u64 = 3;
-    let want_id = "restriction:3".to_owned();
+    let want_id = "element:foo:restriction:18375205485067440936".to_owned();
     let want_doc = "";
-    let r = Restriction::from_xml(&xml, want_index).unwrap();
+    let r = Restriction::from_xml(&xml, lineage).unwrap();
     let got_doc = r.documentation();
     assert_eq!(got_doc.as_str(), want_doc);
-    let got_index = r.index;
-    assert_eq!(got_index, want_index);
     let got_id = format!("{}", r.id);
     assert_eq!(got_id, want_id);
     // let got_type = r.id.entry_type;
-    // assert_eq!(got_type, EntryType::Other(RESTRICTION.to_owned()));
+    // assert_eq!(got_type, RootNodeType::Other(RESTRICTION.to_owned()));
     let got_base = r.base.as_str();
     let want_base = "xs:positiveInteger";
     assert_eq!(got_base, want_base);

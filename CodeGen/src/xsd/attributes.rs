@@ -3,6 +3,7 @@ use crate::error::Result;
 use crate::xsd::attribute::Attribute;
 use crate::xsd::attribute_group::AttributeGroup;
 use crate::xsd::constants::{ANNOTATION, ATTRIBUTE, ATTRIBUTE_GROUP};
+use crate::xsd::id::Lineage;
 
 pub type Attributes = Vec<AttributeItem>;
 
@@ -13,11 +14,13 @@ pub enum AttributeItem {
 }
 
 impl AttributeItem {
-    pub fn from_xml(node: &exile::Element, index: u64) -> Result<Self> {
+    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Self> {
         let t = node.name.as_str();
         match t {
-            ATTRIBUTE => Ok(Self::Attribute(Attribute::from_xml(node, index)?)),
-            ATTRIBUTE_GROUP => Ok(Self::AttributeGroup(AttributeGroup::from_xml(node, index)?)),
+            ATTRIBUTE => Ok(Self::Attribute(Attribute::from_xml(node, lineage)?)),
+            ATTRIBUTE_GROUP => Ok(Self::AttributeGroup(AttributeGroup::from_xml(
+                node, lineage,
+            )?)),
             _ => return raise!("unexpected node '{}'", t),
         }
     }
@@ -25,13 +28,13 @@ impl AttributeItem {
 
 /// Ignores `parent` but parses each of its children into an AttributeItem. Ignores `annotation`
 /// and returns an error if anything else other then `attribute` or `attributeGroup` is found.
-pub fn add_attributes_from_xml(parent: &exile::Element, index: u64) -> Result<Attributes> {
+pub fn add_attributes_from_xml(parent: &exile::Element, lineage: Lineage) -> Result<Attributes> {
     let mut items = Attributes::new();
     for it in parent.children() {
         let t = it.name.as_str();
         match t {
             ANNOTATION => continue,
-            _ => items.push(AttributeItem::from_xml(it, index)?),
+            _ => items.push(AttributeItem::from_xml(it, lineage.clone())?),
         }
     }
     Ok(items)
@@ -39,10 +42,11 @@ pub fn add_attributes_from_xml(parent: &exile::Element, index: u64) -> Result<At
 
 #[test]
 fn parse_attribute_group() {
+    let parent = crate::xsd::id::Id::sldkjfgh(crate::xsd::id::RootNodeType::Element, "foo".into());
     let xml_str = r#"<xs:attributeGroup ref="document-attributes"/>"#;
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
-    let result = AttributeItem::from_xml(&xml, 6).unwrap();
+    let result = AttributeItem::from_xml(&xml, Lineage::Parent(parent)).unwrap();
     match &result {
         AttributeItem::AttributeGroup(x) => assert!(x.is_ref()),
         AttributeItem::Attribute(_) => panic!("expected AttributeGroup got Attribute"),
@@ -51,10 +55,11 @@ fn parse_attribute_group() {
 
 #[test]
 fn parse_attribute() {
+    let parent = crate::xsd::id::Id::sldkjfgh(crate::xsd::id::RootNodeType::Element, "foo".into());
     let xml_str = r#"<xs:attribute name="accelerate" type="yes-no"/>"#;
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
-    let result = AttributeItem::from_xml(&xml, 6).unwrap();
+    let result = AttributeItem::from_xml(&xml, Lineage::Parent(parent)).unwrap();
     match &result {
         AttributeItem::AttributeGroup(_) => panic!("expected AttributeGroup got Attribute"),
         AttributeItem::Attribute(a) => assert_eq!(a.name, "accelerate"),
@@ -63,6 +68,7 @@ fn parse_attribute() {
 
 #[test]
 fn attributes() {
+    let parent = crate::xsd::id::Id::sldkjfgh(crate::xsd::id::RootNodeType::Element, "foo".into());
     let xml_str = r#"
     	<xs:attributeGroup name="printout">
 		<xs:annotation>
@@ -75,7 +81,7 @@ fn attributes() {
 	</xs:attributeGroup>"#;
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
-    let result = add_attributes_from_xml(&xml, 6).unwrap();
+    let result = add_attributes_from_xml(&xml, Lineage::Parent(parent)).unwrap();
     assert_eq!(result.len(), 4);
     match result.get(0).unwrap() {
         AttributeItem::AttributeGroup(ag) => assert!(ag.is_ref()),

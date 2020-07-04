@@ -3,13 +3,12 @@ use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 
 use crate::xsd::constants::{ANNOTATION, IMPORT, SCHEMA_LOCATION};
-use crate::xsd::id::{Id, RootNodeType};
+use crate::xsd::id::{Id, Lineage, RootNodeType};
 use crate::xsd::namespace_attribute;
 
 #[derive(Clone, Debug)]
 pub struct Import {
     pub id: Id,
-    pub index: u64,
     pub annotation: Option<Annotation>,
     pub namespace: String,
     pub schema_location: String,
@@ -23,10 +22,11 @@ impl Import {
         return "".to_owned();
     }
 
-    pub fn from_xml(node: &exile::Element, index: u64) -> Result<Self> {
+    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Self> {
         if node.name.as_str() != IMPORT {
             return raise!("expected '{}', got '{}'", IMPORT, &node.name);
         }
+        let (id, lineage) = Id::make(lineage, node)?;
         let namespace = namespace_attribute(node)?;
         let schema_location = node
             .attributes
@@ -38,17 +38,12 @@ impl Import {
         for inner in node.children() {
             let t = inner.name.as_str();
             if t == ANNOTATION {
-                annotation = Some(Annotation::from_xml(inner, index)?);
+                annotation = Some(Annotation::from_xml(inner, lineage.clone())?);
                 break;
             }
         }
-        let id = Id::new(
-            RootNodeType::Other(IMPORT.to_owned()),
-            schema_location.clone(),
-        );
         Ok(Import {
             id,
-            index,
             annotation,
             namespace,
             schema_location,

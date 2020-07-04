@@ -1,8 +1,8 @@
 use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::attributes::{add_attributes_from_xml, Attributes};
-use crate::xsd::constants::{ANNOTATION, REF};
-use crate::xsd::id::{Id, RootNodeType};
+use crate::xsd::constants::{ANNOTATION, ATTRIBUTE_GROUP, NAME, REF};
+use crate::xsd::id::{Id, Lineage, RootNodeType};
 use crate::xsd::{name_attribute, ref_attribute};
 
 #[derive(Clone, Debug)]
@@ -14,7 +14,6 @@ pub enum AttributeGroup {
 #[derive(Clone, Debug)]
 pub struct AttributeGroupDef {
     pub id: Id,
-    pub index: u64,
     pub name: String,
     pub annotation: Option<Annotation>,
     pub attributes: Attributes,
@@ -23,7 +22,6 @@ pub struct AttributeGroupDef {
 #[derive(Clone, Debug)]
 pub struct AttributeGroupRef {
     pub id: Id,
-    pub index: u64,
     pub annotation: Option<Annotation>,
     pub ref_: String,
 }
@@ -44,14 +42,15 @@ impl AttributeGroup {
         }
     }
 
-    pub fn from_xml(node: &exile::Element, index: u64) -> Result<AttributeGroup> {
+    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<AttributeGroup> {
+        let (id, lineage) = Id::make(lineage, node)?;
         if let Some(_ref_) = node.attributes.map().get(REF) {
             Ok(AttributeGroup::Ref(AttributeGroupRef::from_xml(
-                node, index,
+                node, lineage,
             )?))
         } else {
             Ok(AttributeGroup::Def(AttributeGroupDef::from_xml(
-                node, index,
+                node, lineage,
             )?))
         }
     }
@@ -80,22 +79,21 @@ impl AttributeGroupDef {
         }
     }
 
-    pub fn from_xml(node: &exile::Element, index: u64) -> Result<Self> {
+    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Self> {
         let name = name_attribute(node)?;
-        let id = Id::new(RootNodeType::AttributeGroup, name.clone());
+        let id = lineage.parent().unwrap();
         Ok(Self {
-            id,
-            index,
+            id: id.clone(),
             name,
-            annotation: Self::parse_annotation(node, index)?,
-            attributes: add_attributes_from_xml(node, index)?,
+            annotation: Self::parse_annotation(node, lineage.clone())?,
+            attributes: add_attributes_from_xml(node, lineage.clone())?,
         })
     }
 
-    fn parse_annotation(node: &exile::Element, index: u64) -> Result<Option<Annotation>> {
+    fn parse_annotation(node: &exile::Element, lineage: Lineage) -> Result<Option<Annotation>> {
         for inner in node.children() {
             if inner.name.as_str() == ANNOTATION {
-                return Ok(Some(Annotation::from_xml(inner, index)?));
+                return Ok(Some(Annotation::from_xml(inner, lineage)?));
             }
         }
         Ok(None)
@@ -111,24 +109,20 @@ impl AttributeGroupRef {
         }
     }
 
-    pub fn from_xml(node: &exile::Element, index: u64) -> Result<Self> {
+    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Self> {
         let ref_ = ref_attribute(node)?;
-        let id = Id::new(
-            RootNodeType::Other("attributeGroup:ref".into()),
-            ref_.clone(),
-        );
+        let id = lineage.parent().unwrap();
         Ok(Self {
-            id,
-            index,
-            annotation: Self::parse_annotation(node, index)?,
+            id: id.clone(),
+            annotation: Self::parse_annotation(node, lineage.clone())?,
             ref_,
         })
     }
 
-    fn parse_annotation(node: &exile::Element, index: u64) -> Result<Option<Annotation>> {
+    fn parse_annotation(node: &exile::Element, lineage: Lineage) -> Result<Option<Annotation>> {
         for inner in node.children() {
             if inner.name.as_str() == ANNOTATION {
-                return Ok(Some(Annotation::from_xml(inner, index)?));
+                return Ok(Some(Annotation::from_xml(inner, lineage)?));
             }
         }
         Ok(None)

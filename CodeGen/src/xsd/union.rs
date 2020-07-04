@@ -1,12 +1,11 @@
 use crate::error::Result;
 use crate::xsd::annotation::Annotation;
-use crate::xsd::constants::{ANNOTATION, MEMBER_TYPES, UNION};
-use crate::xsd::id::{Id, RootNodeType};
+use crate::xsd::constants::{ANNOTATION, MEMBER_TYPES, NAME, UNION};
+use crate::xsd::id::{Id, Lineage, RootNodeType};
 
 #[derive(Clone, Debug)]
 pub struct Union {
     pub id: Id,
-    pub index: u64,
     pub annotation: Option<Annotation>,
     pub members: Vec<String>,
 }
@@ -19,11 +18,12 @@ impl Union {
         return "".to_owned();
     }
 
-    pub fn from_xml(node: &exile::Element, index: u64) -> Result<Self> {
-        let mut items = Vec::new();
+    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Self> {
         if node.name.as_str() != UNION {
             return raise!("expected '{}', got '{}'", UNION, &node.name);
         }
+        let (id, lineage) = Id::make(lineage, node)?;
+        let mut items = Vec::new();
         let members = node
             .attributes
             .map()
@@ -38,14 +38,12 @@ impl Union {
         for inner in node.children() {
             let t = inner.name.as_str();
             if t == ANNOTATION {
-                annotation = Some(Annotation::from_xml(inner, index)?);
+                annotation = Some(Annotation::from_xml(inner, lineage.clone())?);
                 break;
             }
         }
-        let id = Id::new(RootNodeType::Other(UNION.to_owned()), format!("{}", index));
         Ok(Union {
             id,
-            index,
             annotation,
             members: items,
         })
@@ -54,21 +52,20 @@ impl Union {
 
 #[test]
 fn parse() {
+    let parent = crate::xsd::id::Id::sldkjfgh(crate::xsd::id::RootNodeType::Element, "foo".into());
+    let lineage = Lineage::Parent(parent);
     let xml_str = r#"<xs:union memberTypes="xs:decimal css-font-size"/>"#;
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
-    let want_index: u64 = 0;
-    let want_id = "union:0".to_owned();
+    let want_id = "element:foo:union:18365985102726890478".to_owned();
     let want_doc = "";
-    let union = Union::from_xml(&xml, want_index).unwrap();
+    let union = Union::from_xml(&xml, lineage).unwrap();
     let got_doc = union.documentation();
     assert_eq!(got_doc.as_str(), want_doc);
-    let got_index = union.index;
-    assert_eq!(got_index, want_index);
     let got_id = format!("{}", union.id);
     assert_eq!(got_id, want_id);
     // let got_type = union.id.entry_type;
-    // assert_eq!(got_type, EntryType::Other(UNION.to_owned()));
+    // assert_eq!(got_type, RootNodeType::Other(UNION.to_owned()));
     let want_members = vec!["xs:decimal".to_owned(), "css-font-size".to_owned()];
     assert_eq!(union.members, want_members);
 }

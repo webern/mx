@@ -1,7 +1,7 @@
 use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::constants::{ANNOTATION, LIST, NAME, RESTRICTION, SIMPLE_TYPE, UNION};
-use crate::xsd::id::{Id, RootNodeType};
+use crate::xsd::id::{Id, Lineage, RootNodeType};
 use crate::xsd::list::List;
 use crate::xsd::restriction::Restriction;
 use crate::xsd::union::Union;
@@ -9,7 +9,6 @@ use crate::xsd::union::Union;
 #[derive(Clone, Debug)]
 pub struct SimpleType {
     pub id: Id,
-    pub index: u64,
     pub annotation: Option<Annotation>,
     pub payload: Payload,
 }
@@ -29,10 +28,11 @@ impl SimpleType {
         "".to_owned()
     }
 
-    pub fn from_xml(node: &exile::Element, index: u64) -> Result<Self> {
+    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Self> {
         if node.name.as_str() != SIMPLE_TYPE {
             return raise!("expected '{}', got '{}'", SIMPLE_TYPE, &node.name);
         }
+        let (id, lineage) = Id::make(lineage, node)?;
         let name = node
             .attributes
             .map()
@@ -45,22 +45,23 @@ impl SimpleType {
             let t = inner.name.as_str();
             payload = match t {
                 ANNOTATION => {
-                    annotation = Some(Annotation::from_xml(inner, index)?);
+                    annotation = Some(Annotation::from_xml(inner, lineage.clone())?);
                     continue;
                 }
-                RESTRICTION => Some(Payload::Restriction(Restriction::from_xml(inner, index)?)),
-                LIST => Some(Payload::List(List::from_xml(inner, index)?)),
-                UNION => Some(Payload::Union(Union::from_xml(inner, index)?)),
+                RESTRICTION => Some(Payload::Restriction(Restriction::from_xml(
+                    inner,
+                    lineage.clone(),
+                )?)),
+                LIST => Some(Payload::List(List::from_xml(inner, lineage.clone())?)),
+                UNION => Some(Payload::Union(Union::from_xml(inner, lineage.clone())?)),
                 _ => {
                     return raise!("unexpected element name '{}'", t);
                 }
             };
         }
-        let id = Id::new(RootNodeType::SimpleType, name);
         let payload = payload.ok_or(make_err!("{} is incomplete", SIMPLE_TYPE))?;
         Ok(SimpleType {
             id,
-            index,
             annotation,
             payload,
         })
@@ -84,8 +85,8 @@ fn parse_enum() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let want_index: u64 = 3;
-    let st = SimpleType::from_xml(&xml, want_index).unwrap();
-    assert_eq!(st.index, want_index);
+    let st = SimpleType::from_xml(&xml, Lineage::Index(want_index)).unwrap();
+    assert_eq!(st.id.index().unwrap(), want_index);
     let got_id = st.id.to_string();
     let want_id = "simpleType:above-below".to_owned();
     assert_eq!(got_id, want_id);
@@ -129,8 +130,8 @@ fn parse_numeric() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let want_index: u64 = 4;
-    let st = SimpleType::from_xml(&xml, want_index).unwrap();
-    assert_eq!(st.index, want_index);
+    let st = SimpleType::from_xml(&xml, Lineage::Index(want_index)).unwrap();
+    assert_eq!(st.id.index().unwrap(), want_index);
     let got_id = st.id.to_string();
     let want_id = "simpleType:midi-16".to_owned();
     assert_eq!(got_id, want_id);
@@ -175,8 +176,8 @@ fn parse_pattern() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let want_index: u64 = 3;
-    let st = SimpleType::from_xml(&xml, want_index).unwrap();
-    assert_eq!(st.index, want_index);
+    let st = SimpleType::from_xml(&xml, Lineage::Index(want_index)).unwrap();
+    assert_eq!(st.id.index().unwrap(), want_index);
     let got_id = st.id.to_string();
     let want_id = "simpleType:time-only".to_owned();
     assert_eq!(got_id, want_id);

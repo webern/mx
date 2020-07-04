@@ -1,16 +1,15 @@
 use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::choice::Choice;
-use crate::xsd::constants::{ANNOTATION, CHOICE, ELEMENT, GROUP, SEQUENCE};
+use crate::xsd::constants::{ANNOTATION, CHOICE, ELEMENT, GROUP, NAME, SEQUENCE};
 use crate::xsd::element::Element;
 use crate::xsd::group::Group;
-use crate::xsd::id::Id;
-use crate::xsd::{EntryType, Occurs};
+use crate::xsd::id::{Id, Lineage, RootNodeType};
+use crate::xsd::Occurs;
 
 #[derive(Clone, Debug)]
 pub struct Sequence {
     pub id: Id,
-    pub index: u64,
     pub annotation: Option<Annotation>,
     pub occurs: Occurs,
     pub members: Vec<Member>,
@@ -32,27 +31,31 @@ impl Sequence {
         return "".to_owned();
     }
 
-    pub fn from_xml(node: &exile::Element, index: u64) -> Result<Self> {
+    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Self> {
         if node.name.as_str() != SEQUENCE {
             return raise!("expected '{}', got '{}'", SEQUENCE, node.name.as_str());
         }
+        let (id, lineage) = Id::make(lineage, node)?;
         let mut annotation = None;
         let mut members = Vec::new();
         for inner in node.children() {
             let t = inner.name.as_str();
             match t {
-                ANNOTATION => annotation = Some(Annotation::from_xml(inner, index)?),
-                CHOICE => members.push(Member::Choice(Choice::from_xml(inner, index)?)),
-                ELEMENT => members.push(Member::Element(Element::from_xml(inner, index)?)),
-                GROUP => members.push(Member::Group(Group::from_xml(inner, index)?)),
-                SEQUENCE => members.push(Member::Sequence(Sequence::from_xml(inner, index)?)),
+                ANNOTATION => annotation = Some(Annotation::from_xml(inner, lineage.clone())?),
+                CHOICE => members.push(Member::Choice(Choice::from_xml(inner, lineage.clone())?)),
+                ELEMENT => {
+                    members.push(Member::Element(Element::from_xml(inner, lineage.clone())?))
+                }
+                GROUP => members.push(Member::Group(Group::from_xml(inner, lineage.clone())?)),
+                SEQUENCE => members.push(Member::Sequence(Sequence::from_xml(
+                    inner,
+                    lineage.clone(),
+                )?)),
                 _ => return raise!("unknown {} member: '{}'", SEQUENCE, t),
             }
         }
-        let id = Id::new(EntryType::Other(SEQUENCE.to_owned()), format!("{}", index));
         Ok(Sequence {
             id,
-            index,
             annotation,
             occurs: Occurs::from_xml(node)?,
             members,
@@ -62,6 +65,8 @@ impl Sequence {
 
 #[test]
 fn parse() {
+    let parent = crate::xsd::id::Id::sldkjfgh(crate::xsd::id::RootNodeType::Element, "foo".into());
+    let lineage = Lineage::Parent(parent);
     let xml_str = r#"
     <xs:sequence>
 		<xs:element name="identification" type="identification" minOccurs="0"/>
@@ -83,9 +88,9 @@ fn parse() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let want_index: u64 = 3;
-    let seq = Sequence::from_xml(&xml, want_index).unwrap();
+    let seq = Sequence::from_xml(&xml, lineage).unwrap();
     let got_id = format!("{}", seq.id);
-    let want_id = "sequence:3";
+    let want_id = "element:foo:sequence:12280079412076832312";
     assert_eq!(got_id.as_str(), want_id);
     let got_doc = seq.documentation();
     let want_doc = "";

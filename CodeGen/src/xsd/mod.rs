@@ -30,7 +30,7 @@ use crate::xsd::constants::{
 };
 use crate::xsd::element::Element;
 use crate::xsd::group::GroupDefinition;
-use crate::xsd::id::{Id, RootNodeType};
+use crate::xsd::id::{Id, Lineage, RootNodeType};
 use crate::xsd::import::Import;
 use crate::xsd::simple_type::SimpleType;
 use std::cmp::Ordering;
@@ -68,7 +68,7 @@ impl Xsd {
         }
         let mut xsd = Xsd::default();
         for (i, entry_node) in root.children().enumerate() {
-            let entry = Entry::from_xml(entry_node, i as u64)?;
+            let entry = Entry::from_xml(entry_node, Lineage::Index(i as u64))?;
             xsd.add_entry(entry)?;
         }
         Ok(xsd)
@@ -129,24 +129,21 @@ pub enum Entry {
 }
 
 impl Entry {
-    pub fn from_xml(node: &exile::Element, index: u64) -> Result<Self> {
+    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Self> {
         let n = node.name.as_str();
         let t = RootNodeType::parse(n)?;
         match t {
-            RootNodeType::Annotation => Ok(Entry::Annotation(Annotation::from_xml(node, index)?)),
+            RootNodeType::Annotation => Ok(Entry::Annotation(Annotation::from_xml(node, lineage)?)),
             RootNodeType::AttributeGroup => Ok(Entry::AttributeGroup(AttributeGroup::from_xml(
-                node, index,
+                node, lineage,
             )?)),
             RootNodeType::ComplexType => {
-                Ok(Entry::ComplexType(ComplexType::from_xml(node, index)?))
+                Ok(Entry::ComplexType(ComplexType::from_xml(node, lineage)?))
             }
-            RootNodeType::Element => Ok(Entry::Element(Element::from_xml(node, index)?)),
-            RootNodeType::Group => Ok(Entry::Group(GroupDefinition::from_xml(node, index)?)),
-            RootNodeType::Import => Ok(Entry::Import(Import::from_xml(node, index)?)),
-            RootNodeType::SimpleType => Ok(Entry::SimpleType(SimpleType::from_xml(node, index)?)),
-            RootNodeType::Other(s) => {
-                panic!("'{}' is not an implemented node type", s.as_str());
-            }
+            RootNodeType::Element => Ok(Entry::Element(Element::from_xml(node, lineage)?)),
+            RootNodeType::Group => Ok(Entry::Group(GroupDefinition::from_xml(node, lineage)?)),
+            RootNodeType::Import => Ok(Entry::Import(Import::from_xml(node, lineage)?)),
+            RootNodeType::SimpleType => Ok(Entry::SimpleType(SimpleType::from_xml(node, lineage)?)),
         }
     }
 

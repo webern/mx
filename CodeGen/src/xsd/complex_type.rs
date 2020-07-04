@@ -8,14 +8,13 @@ use crate::xsd::constants::{
     SEQUENCE, SIMPLE_CONTENT,
 };
 use crate::xsd::group::Group;
-use crate::xsd::id::{Id, RootNodeType};
+use crate::xsd::id::{Id, Lineage, RootNodeId, RootNodeType};
 use crate::xsd::sequence::Sequence;
 use crate::xsd::simple_content::SimpleContent;
 
 #[derive(Clone, Debug)]
 pub struct ComplexType {
     pub id: Id,
-    pub index: u64,
     pub name: String,
     pub annotation: Option<Annotation>,
     pub payload: Payload,
@@ -50,25 +49,28 @@ impl ComplexType {
         return "".to_owned();
     }
 
-    pub fn from_xml(node: &exile::Element, index: u64) -> Result<Self> {
+    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Self> {
         if node.name.as_str() != COMPLEX_TYPE {
             return raise!("expected '{}', got '{}'", COMPLEX_TYPE, node.name.as_str());
         }
+        let (id, lineage) = Id::make(lineage, node)?;
         let mut annotation = None;
         let mut payload = Payload::None;
         for inner in node.children() {
             let t = inner.name.as_str();
             match t {
-                ANNOTATION => annotation = Some(Annotation::from_xml(inner, index)?),
+                ANNOTATION => annotation = Some(Annotation::from_xml(inner, lineage.clone())?),
                 CHOICE | GROUP | SEQUENCE => {
-                    payload = Payload::Parent(Parent::from_xml(node, index)?);
+                    payload = Payload::Parent(Parent::from_xml(node, lineage.clone())?);
                     break;
                 }
                 COMPLEX_CONTENT => {
-                    payload = Payload::ComplexContent(ComplexContent::from_xml(inner, index)?)
+                    payload =
+                        Payload::ComplexContent(ComplexContent::from_xml(inner, lineage.clone())?)
                 }
                 SIMPLE_CONTENT => {
-                    payload = Payload::SimpleContent(SimpleContent::from_xml(inner, index)?)
+                    payload =
+                        Payload::SimpleContent(SimpleContent::from_xml(inner, lineage.clone())?)
                 }
                 ATTRIBUTE | ATTRIBUTE_GROUP => { /* will be parsed by Parent::from_xml() */ }
                 _ => return raise!("unexpected node '{}' while parsing complexType", t),
@@ -79,17 +81,8 @@ impl ComplexType {
         } else {
             "".to_owned()
         };
-        let id = Id::new(
-            RootNodeType::ComplexType,
-            if name.is_empty() {
-                format!("{}", index)
-            } else {
-                name.clone()
-            },
-        );
         Ok(ComplexType {
             id,
-            index,
             name,
             annotation,
             payload,
@@ -98,7 +91,7 @@ impl ComplexType {
 }
 
 impl Parent {
-    pub fn from_xml(node: &exile::Element, index: u64) -> Result<Self> {
+    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Self> {
         let mut parent = Parent {
             attributes: vec![],
             children: None,
@@ -107,17 +100,22 @@ impl Parent {
             let t = inner.name.as_str();
             match t {
                 CHOICE => {
-                    parent.children = Some(Children::Choice(Choice::from_xml(inner, index)?));
+                    parent.children =
+                        Some(Children::Choice(Choice::from_xml(inner, lineage.clone())?));
                 }
                 GROUP => {
-                    parent.children = Some(Children::Group(Group::from_xml(inner, index)?));
+                    parent.children =
+                        Some(Children::Group(Group::from_xml(inner, lineage.clone())?));
                 }
                 SEQUENCE => {
-                    parent.children = Some(Children::Sequence(Sequence::from_xml(inner, index)?));
+                    parent.children = Some(Children::Sequence(Sequence::from_xml(
+                        inner,
+                        lineage.clone(),
+                    )?));
                 }
                 ATTRIBUTE | ATTRIBUTE_GROUP => parent
                     .attributes
-                    .push(AttributeItem::from_xml(inner, index)?),
+                    .push(AttributeItem::from_xml(inner, lineage.clone())?),
                 ANNOTATION => { /* ignore because it's parsed by ComplexType::from_xml */ }
                 _ => return raise!("unable to parse complexType, unexpected node '{}'", t),
             }
@@ -152,8 +150,8 @@ fn parse_parent_sequence() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let want_index: u64 = 6;
-    let ct = ComplexType::from_xml(&xml, want_index).unwrap();
-    assert_eq!(format!("{}", ct.id), "complexType:6");
+    let ct = ComplexType::from_xml(&xml, Lineage::Index(want_index)).unwrap();
+    assert_eq!(format!("{}", ct.id), "complexType:14524941899531583637");
     assert_eq!(ct.documentation().as_str(), "");
     let parent = if let Payload::Parent(p) = ct.payload {
         p
@@ -189,7 +187,7 @@ fn parse_parent_group() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let want_index: u64 = 6;
-    let ct = ComplexType::from_xml(&xml, want_index).unwrap();
+    let ct = ComplexType::from_xml(&xml, Lineage::Index(want_index)).unwrap();
     assert_eq!(format!("{}", ct.id), "complexType:system-margins");
     assert_eq!(
         ct.documentation().as_str(),
@@ -229,7 +227,7 @@ fn parse_parent_choice() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let want_index: u64 = 6;
-    let ct = ComplexType::from_xml(&xml, want_index).unwrap();
+    let ct = ComplexType::from_xml(&xml, Lineage::Index(want_index)).unwrap();
     assert_eq!(format!("{}", ct.id), "complexType:arrow");
     assert_eq!(
         ct.documentation().as_str(),
@@ -282,7 +280,7 @@ fn parse_complex_content() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let want_index: u64 = 6;
-    let ct = ComplexType::from_xml(&xml, want_index).unwrap();
+    let ct = ComplexType::from_xml(&xml, Lineage::Index(want_index)).unwrap();
     assert_eq!(format!("{}", ct.id), "complexType:heel-toe");
     assert_eq!(
         ct.documentation().as_str(),
@@ -321,7 +319,7 @@ fn parse_simple_content() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let want_index: u64 = 6;
-    let ct = ComplexType::from_xml(&xml, want_index).unwrap();
+    let ct = ComplexType::from_xml(&xml, Lineage::Index(want_index)).unwrap();
     assert_eq!(format!("{}", ct.id), "complexType:hole-closed");
     assert_eq!(
         ct.documentation().as_str(),

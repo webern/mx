@@ -20,7 +20,7 @@ fn main() {
     let paths = Paths::default();
     let mut xsd = must!(Xsd::load(&paths.xsd_3_0));
     let id = Id {
-        entry_type: EntryType::Element,
+        entry_type: RootNodeType::Element,
         name: "score-partwise".to_string(),
     };
     let found = must!(xsd.find(&id)).to_owned();

@@ -2,13 +2,12 @@ use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::common::DefinedBy;
 use crate::xsd::constants::{ANNOTATION, ATTRIBUTE, DEFAULT, FIXED, NAME, REF, TYPE};
-use crate::xsd::id::{Id, RootNodeType};
+use crate::xsd::id::{Id, Lineage, RootNodeType};
 use crate::xsd::use_required;
 
 #[derive(Clone, Debug)]
 pub struct Attribute {
     pub id: Id,
-    pub index: u64,
     pub name: String,
     pub annotation: Option<Annotation>,
     pub defined_by: DefinedBy,
@@ -26,17 +25,17 @@ impl Attribute {
         }
     }
 
-    pub fn from_xml(node: &exile::Element, index: u64) -> Result<Self> {
+    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Self> {
         if node.name.as_str() != ATTRIBUTE {
             return raise!("expected '{}', got '{}'", ATTRIBUTE, node.name.as_str());
         }
+        let (id, lineage) = Id::make(lineage, node)?;
         let name = Self::parse_name(node);
         let defined_by = Self::parse_defined_by(node)?;
         Ok(Attribute {
-            id: Self::parse_id(name.as_str(), &defined_by),
-            index,
+            id,
             name,
-            annotation: Self::parse_annotation(node, index)?,
+            annotation: Self::parse_annotation(node, lineage)?,
             required: use_required(node),
             defined_by,
             default: node.attributes.map().get(DEFAULT).cloned(),
@@ -62,22 +61,11 @@ impl Attribute {
         }
     }
 
-    fn parse_id(name: &str, defined_by: &DefinedBy) -> Id {
-        Id::new(
-            RootNodeType::Other(ATTRIBUTE.to_owned()),
-            if name.is_empty() {
-                defined_by.value().to_owned()
-            } else {
-                name.to_owned()
-            },
-        )
-    }
-
-    fn parse_annotation(node: &exile::Element, index: u64) -> Result<Option<Annotation>> {
+    fn parse_annotation(node: &exile::Element, lineage: Lineage) -> Result<Option<Annotation>> {
         for child in node.children() {
             let t = child.name.as_str();
             match t {
-                ANNOTATION => return Ok(Some(Annotation::from_xml(node, index)?)),
+                ANNOTATION => return Ok(Some(Annotation::from_xml(node, lineage)?)),
                 _ => return raise!("unexpected node '{}'", t),
             }
         }

@@ -1,12 +1,11 @@
 use crate::error::Result;
-use crate::xsd::constants::{ANNOTATION, APP_INFO, DOCUMENTATION};
-use crate::xsd::id::{Id, RootNodeType};
+use crate::xsd::constants::{ANNOTATION, APP_INFO, DOCUMENTATION, NAME};
+use crate::xsd::id::{Id, Lineage, RootNodeType};
 use std::fmt::{Debug, Formatter};
 
 #[derive(Clone, Debug)]
 pub struct Annotation {
     pub id: Id,
-    pub index: u64,
     pub items: Vec<Item>,
 }
 
@@ -26,7 +25,8 @@ impl Annotation {
         "".to_owned()
     }
 
-    pub fn from_xml(node: &exile::Element, index: u64) -> Result<Self> {
+    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Self> {
+        let (id, lineage) = Id::make(lineage, node)?;
         let mut items = Vec::new();
         if node.name.as_str() != ANNOTATION {
             return raise!("expected '{}', got '{}'", ANNOTATION, &node.name);
@@ -48,15 +48,14 @@ impl Annotation {
                 }
             }
         }
-        let id = Id::new(RootNodeType::Annotation, format!("{}", index));
-        Ok(Annotation { id, index, items })
+        Ok(Annotation { id, items })
     }
 }
 
 #[test]
 fn parse() {
     let want_index: u64 = 13;
-    let want_name = "13";
+    let want_name = "4594507136952412519";
     let want_doc = "bishop is sleeping.";
     let xml = exile::Element {
         namespace: Some("xs".to_owned()),
@@ -70,13 +69,13 @@ fn parse() {
         })],
     };
 
-    let annotation = Annotation::from_xml(&xml, want_index).unwrap();
+    let annotation = Annotation::from_xml(&xml, Lineage::Index(want_index)).unwrap();
     let got_doc = annotation.documentation();
     assert_eq!(got_doc.as_str(), want_doc);
-    let got_index = annotation.index;
+    let got_index = annotation.id.index().unwrap();
     assert_eq!(got_index, want_index);
-    let got_name = annotation.id.name().unwrap();
+    let got_name = annotation.id.name();
     assert_eq!(got_name, want_name);
-    // let got_type = annotation.id.entry_type;
-    // assert_eq!(got_type, EntryType::Annotation);
+    let got_type = annotation.id.root_node_type().unwrap();
+    assert_eq!(got_type, RootNodeType::Annotation);
 }

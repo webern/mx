@@ -3,13 +3,12 @@ use crate::xsd::annotation::Annotation;
 use crate::xsd::constants::{ANNOTATION, CHOICE, ELEMENT, GROUP, NAME, SEQUENCE};
 use crate::xsd::element::Element;
 use crate::xsd::group::Group;
-use crate::xsd::id::{Id, RootNodeType};
+use crate::xsd::id::{Id, Lineage, RootNodeType};
 use crate::xsd::sequence::Sequence;
 
 #[derive(Clone, Debug)]
 pub struct Choice {
     pub id: Id,
-    pub index: u64,
     pub annotation: Option<Annotation>,
     pub choices: Choices,
 }
@@ -31,40 +30,34 @@ impl Choice {
         return "".to_owned();
     }
 
-    pub fn from_xml(node: &exile::Element, index: u64) -> Result<Self> {
+    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Self> {
         if node.name.as_str() != CHOICE {
             return raise!("expected '{}', got '{}'", CHOICE, node.name.as_str());
         }
+        let (id, lineage) = Id::make(lineage, node)?;
         let mut annotation = None;
         let mut choices = Choices::new();
         for inner in node.children() {
             let t = inner.name.as_str();
             match t {
-                ANNOTATION => annotation = Some(Annotation::from_xml(inner, index)?),
-                ELEMENT => choices.push(ChoiceItem::Element(Element::from_xml(inner, index)?)),
-                GROUP => choices.push(ChoiceItem::Group(Group::from_xml(inner, index)?)),
-                SEQUENCE => choices.push(ChoiceItem::Sequence(Sequence::from_xml(inner, index)?)),
+                ANNOTATION => annotation = Some(Annotation::from_xml(inner, lineage.clone())?),
+                ELEMENT => choices.push(ChoiceItem::Element(Element::from_xml(
+                    inner,
+                    lineage.clone(),
+                )?)),
+                GROUP => choices.push(ChoiceItem::Group(Group::from_xml(inner, lineage.clone())?)),
+                SEQUENCE => choices.push(ChoiceItem::Sequence(Sequence::from_xml(
+                    inner,
+                    lineage.clone(),
+                )?)),
                 _ => return raise!("cannot parse '{}', unexpected node '{}'", CHOICE, t),
             }
         }
-        let id = Id::new(
-            RootNodeType::Other(CHOICE.into()),
-            Self::name_or_index(node, index),
-        );
         Ok(Choice {
             id,
-            index,
             annotation,
             choices,
         })
-    }
-
-    fn name_or_index(node: &exile::Element, index: u64) -> String {
-        if let Some(n) = node.attributes.map().get(NAME) {
-            n.clone()
-        } else {
-            format!("{}", index)
-        }
     }
 }
 /*
@@ -96,6 +89,7 @@ impl Choice {
 */
 #[test]
 fn parse_credit() {
+    let parent = crate::xsd::id::Id::sldkjfgh(crate::xsd::id::RootNodeType::Element, "foo".into());
     let xml_str = r#"
     <xs:choice>
         <xs:element name="credit-image" type="image"/>
@@ -110,8 +104,11 @@ fn parse_credit() {
     </xs:choice>"#;
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
-    let ch = Choice::from_xml(&xml, 6).unwrap();
-    assert_eq!(format!("{}", ch.id), "choice:6");
+    let ch = Choice::from_xml(&xml, Lineage::Parent(parent)).unwrap();
+    assert_eq!(
+        format!("{}", ch.id),
+        "element:foo:choice:863778347360799337"
+    );
     assert_eq!(ch.documentation().as_str(), "");
     assert_eq!(ch.choices.len(), 2);
     let ele = if let ChoiceItem::Element(el) = ch.choices.get(0).unwrap() {
