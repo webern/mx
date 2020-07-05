@@ -20,7 +20,7 @@ macro_rules! must {
 fn main() {
     let paths = Paths::default();
     let mut xsd = must!(Xsd::load(&paths.xsd_3_0));
-    let id = Id::sldkjfgh(RootNodeType::Element, "score-partwise".to_owned());
+    let id = Id::new(RootNodeType::Element, "score-partwise".to_owned());
     let found = must!(xsd.find(&id)).to_owned();
     let entity = must!(xsd.remove(found.id()));
     println!("{:?}", &entity);

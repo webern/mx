@@ -52,7 +52,7 @@ impl Union {
 
 #[test]
 fn parse() {
-    let parent = crate::xsd::id::Id::sldkjfgh(crate::xsd::id::RootNodeType::Element, "foo".into());
+    let parent = crate::xsd::id::Id::new(crate::xsd::id::RootNodeType::Element, "foo".into());
     let lineage = Lineage::Parent(parent);
     let xml_str = r#"<xs:union memberTypes="xs:decimal css-font-size"/>"#;
     let doc = exile::parse(xml_str).unwrap();

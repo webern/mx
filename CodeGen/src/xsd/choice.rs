@@ -89,7 +89,7 @@ impl Choice {
 */
 #[test]
 fn parse_credit() {
-    let parent = crate::xsd::id::Id::sldkjfgh(crate::xsd::id::RootNodeType::Element, "foo".into());
+    let parent = crate::xsd::id::Id::new(crate::xsd::id::RootNodeType::Element, "foo".into());
     let xml_str = r#"
     <xs:choice>
         <xs:element name="credit-image" type="image"/>

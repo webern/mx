@@ -52,7 +52,7 @@ impl Extension {
 fn parse() {
     use super::attribute_group::AttributeGroup;
     use super::common::DefinedBy;
-    let parent = crate::xsd::id::Id::sldkjfgh(crate::xsd::id::RootNodeType::Element, "foo".into());
+    let parent = crate::xsd::id::Id::new(crate::xsd::id::RootNodeType::Element, "foo".into());
     let lineage = Lineage::Parent(parent);
     let xml_str = r#"
 	<xs:extension base="xs:string">

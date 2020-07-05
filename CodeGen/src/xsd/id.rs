@@ -15,7 +15,7 @@ pub enum Id {
 }
 
 impl Id {
-    pub fn sldkjfgh(type_: RootNodeType, name: String) -> Self {
+    pub fn new(type_: RootNodeType, name: String) -> Self {
         Id::Root(RootNodeId {
             index: None,
             type_,
@@ -74,29 +74,6 @@ impl Id {
             Id::Child(_) => None,
         }
     }
-
-    // pub(crate) fn poop<S1, S2>(lineage: Lineage, type_: S1, name: S2) -> Result<Self>
-    // where
-    //     S1: AsRef<str>,
-    //     S2: AsRef<str>,
-    // {
-    //     match lineage {
-    //         Lineage::Index(i) => Ok(Id::Root(RootNodeId {
-    //             index: Some(i),
-    //             type_: RootNodeType::parse(type_)?,
-    //             name: name.as_ref().into(),
-    //         })),
-    //         Lineage::Parent(p) => Ok(Id::Child(ChildNodeId {
-    //             type_: type_.as_ref().into(),
-    //             name: if name.as_ref().is_empty() {
-    //                 None
-    //             } else {
-    //                 Some(name.as_ref().into())
-    //             },
-    //             parent: Box::new(p),
-    //         })),
-    //     }
-    // }
 
     pub(crate) fn make(lineage: Lineage, node: &exile::Element) -> Result<(Self, Lineage)> {
         let attrs = node.attributes.map();

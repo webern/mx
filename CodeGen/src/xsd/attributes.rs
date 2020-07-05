@@ -42,7 +42,7 @@ pub fn add_attributes_from_xml(parent: &exile::Element, lineage: Lineage) -> Res
 
 #[test]
 fn parse_attribute_group() {
-    let parent = crate::xsd::id::Id::sldkjfgh(crate::xsd::id::RootNodeType::Element, "foo".into());
+    let parent = crate::xsd::id::Id::new(crate::xsd::id::RootNodeType::Element, "foo".into());
     let xml_str = r#"<xs:attributeGroup ref="document-attributes"/>"#;
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
@@ -55,7 +55,7 @@ fn parse_attribute_group() {
 
 #[test]
 fn parse_attribute() {
-    let parent = crate::xsd::id::Id::sldkjfgh(crate::xsd::id::RootNodeType::Element, "foo".into());
+    let parent = crate::xsd::id::Id::new(crate::xsd::id::RootNodeType::Element, "foo".into());
     let xml_str = r#"<xs:attribute name="accelerate" type="yes-no"/>"#;
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
@@ -68,7 +68,7 @@ fn parse_attribute() {
 
 #[test]
 fn attributes() {
-    let parent = crate::xsd::id::Id::sldkjfgh(crate::xsd::id::RootNodeType::Element, "foo".into());
+    let parent = crate::xsd::id::Id::new(crate::xsd::id::RootNodeType::Element, "foo".into());
     let xml_str = r#"
     	<xs:attributeGroup name="printout">
 		<xs:annotation>
