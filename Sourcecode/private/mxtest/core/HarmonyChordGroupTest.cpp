@@ -88,7 +88,7 @@ namespace mxtest
             {
                 o->setRoot( tgenRoot( v ) );
                 o->setChoice( HarmonyChordGroup::Choice::root );
-                o->getKind()->setValue( KindValue::dominant13Th );
+                o->getKind()->setValue( KindValue::dominant13th );
                 o->setHasBass( true );
                 o->setBass( tgenBass( v ) );
                 o->addDegree( tgenDegree( variant::one ) );
