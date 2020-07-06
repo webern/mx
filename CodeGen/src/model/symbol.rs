@@ -1,13 +1,20 @@
 use crate::generate::string_stuff::tokenize;
 use std::borrow::Cow;
 
+/// Holds a name or symbol in the many ways that it may need to be 'spelled' during code generation.
 #[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd)]
 pub struct Symbol {
+    /// The original symbol, as defined in the XSD document. e.g. `foo bar`.
     original: String,
+    /// An optional renaming of the symbol. `foo baz`
     renamed_to: String,
+    /// Snake case, e.g. `foo_baz`.
     snake: String,
+    /// Screaming snake case, e.g. `FOO_BAZ`.
     screaming_snake: String,
+    /// Camel case, e.g. `fooBaz`.
     camel: String,
+    /// Pascal case, e.g. `FooBaz`.
     pascal: String,
 }
 

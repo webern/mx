@@ -27,6 +27,10 @@ use crate::xsd::{Entry, Xsd};
 /// Any error type may be used. Returning `Err` will stop all processing.
 ///  
 pub trait Create {
+    /// The error type.
     type E;
+
+    /// Creates models based on a top-level XSD entry. Returns `None` if the XSD entry cannot be
+    /// handled.
     fn create(entry: &Entry, xsd: &Xsd) -> std::result::Result<Option<Vec<Model>>, Self::E>;
 }
