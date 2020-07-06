@@ -6,13 +6,13 @@ use std::collections::HashMap;
 pub fn enum_member_substitutions() -> HashMap<String, String> {
     let mut substitutions = HashMap::new();
     // for better or worse, i chose to map these enum members that start with numbers like so...
-    substitutions.insert("16Th".to_string(), "sixteenth".to_string());
-    substitutions.insert("32Nd".to_string(), "thirtySecond".to_string());
-    substitutions.insert("64Th".to_string(), "sixtyFourth".to_string());
-    substitutions.insert("128Th".to_string(), "oneHundredTwentyEighth".to_string());
-    substitutions.insert("256Th".to_string(), "twoHundredFifthySixth".to_string());
-    substitutions.insert("512Th".to_string(), "fiveHundredTwelfth".to_string());
-    substitutions.insert("1024Th".to_string(), "oneThousandTwentyFourth".to_string());
+    substitutions.insert("16th".to_string(), "sixteenth".to_string());
+    substitutions.insert("32nd".to_string(), "thirtySecond".to_string());
+    substitutions.insert("64th".to_string(), "sixtyFourth".to_string());
+    substitutions.insert("128th".to_string(), "oneHundredTwentyEighth".to_string());
+    substitutions.insert("256th".to_string(), "twoHundredFifthySixth".to_string());
+    substitutions.insert("512th".to_string(), "fiveHundredTwelfth".to_string());
+    substitutions.insert("1024th".to_string(), "oneThousandTwentyFourth".to_string());
     substitutions
 }
 
