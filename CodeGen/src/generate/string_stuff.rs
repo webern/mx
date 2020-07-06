@@ -81,6 +81,35 @@ impl Symbol {
     }
 }
 
+pub fn tokenize<S: AsRef<str>>(s: S) -> Vec<String> {
+    let mut tokens = Vec::new();
+    let mut buf = String::new();
+    let mut is_word_start = true;
+    for c in s.as_ref().chars() {
+        if !c.is_alphanumeric() {
+            is_word_start = true;
+        } else if c.is_ascii_digit() {
+            // idiosyncrasy of the first implementation
+            buf.push(c);
+            is_word_start = true;
+        } else if is_word_start {
+            if !buf.is_empty() {
+                tokens.push(buf);
+                buf = String::new();
+            }
+            buf.push(c.to_ascii_uppercase());
+            is_word_start = false;
+        } else {
+            buf.push(c.to_ascii_lowercase());
+            is_word_start = false;
+        }
+    }
+    if !buf.is_empty() {
+        tokens.push(buf);
+    }
+    tokens
+}
+
 pub fn pascal_case<S: AsRef<str>>(s: S) -> Symbol {
     case(s, Case::Pascal)
 }
@@ -158,11 +187,7 @@ where
     Ok(())
 }
 
-pub fn linestart<W: Write>(
-    w: &mut W,
-    indents: usize,
-    add_space: bool,
-) -> std::io::Result<usize> {
+pub fn linestart<W: Write>(w: &mut W, indents: usize, add_space: bool) -> std::io::Result<usize> {
     let mut pos: usize = 0;
     for _ in 0..indents {
         write!(w, "{}", INDENT)?;
@@ -208,7 +233,7 @@ pub fn words<S: AsRef<str>>(s: S) -> Vec<String> {
 #[cfg(test)]
 mod tests {
     use super::{words, Symbol};
-    use std::io::{Cursor};
+    use std::io::Cursor;
 
     #[test]
     fn pascal_case_clef_tab() {
@@ -299,6 +324,14 @@ mod tests {
         } else {
             panic!("expected Symbol::Altered");
         }
+    }
+
+    #[test]
+    fn tokenize_chord_kind() {
+        let input = "DomInAnt11th";
+        let got = super::tokenize(input);
+        let want = vec!["Dominant11".to_owned(), "Th".to_owned()];
+        assert_eq!(got, want);
     }
 
     #[test]

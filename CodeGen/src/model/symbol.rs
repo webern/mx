@@ -1,3 +1,4 @@
+use crate::generate::string_stuff::tokenize;
 use std::borrow::Cow;
 
 #[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd)]
@@ -35,12 +36,23 @@ impl Symbol {
         self.pascal.as_str()
     }
 
-    pub fn new<S: AsRef<str>>(original: S, tokenized: &[&str]) -> Self {
+    pub fn new<S>(original: S) -> Self
+    where
+        S: AsRef<str>,
+    {
+        let tokens = tokenize(original.as_ref());
+        Self::new_with_tokens(original, tokens.as_slice())
+    }
+
+    pub fn new_with_tokens<S>(original: S, tokenized: &[String]) -> Self
+    where
+        S: AsRef<str>,
+    {
         let snake: String = tokenized.join("_").to_lowercase();
         let screaming_snake = snake.to_uppercase();
         let pascal = tokenized
             .iter()
-            .map(|&s| {
+            .map(|s| {
                 let mut c = s.chars();
                 match c.next() {
                     None => String::new(),
@@ -71,7 +83,7 @@ impl Symbol {
 fn symbol_1() {
     let original = "bones the cat";
     let tokenized = vec!["bones", "the", "cat"];
-    let symbol = Symbol::new(original, &tokenized);
+    let symbol = Symbol::new(original);
     assert_eq!(symbol.original(), original);
     assert_eq!(symbol.renamed_to(), original);
     assert_eq!(symbol.snake(), "bones_the_cat");

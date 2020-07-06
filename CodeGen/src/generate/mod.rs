@@ -8,7 +8,7 @@ mod musicxml_xsd_parser;
 mod mx_enum_writer;
 mod mx_writer;
 pub mod paths;
-mod string_stuff;
+pub mod string_stuff;
 
 use crate::generate::musicxml_xsd_constants::{pseudo_enums, reserved_words, suffixed_enum_names};
 use crate::generate::musicxml_xsd_parser::{parse_musicxml_xsd, XsdParserParams};
