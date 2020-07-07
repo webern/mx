@@ -3,6 +3,7 @@ pub mod create;
 pub mod creator;
 pub mod enumeration;
 pub mod symbol;
+pub mod transform;
 
 use crate::generate::string_stuff::tokenize;
 use crate::model::create::{Create, CreateError, CreateResult};
@@ -19,6 +20,7 @@ pub enum Model {
     Enumeration(Enumeration),
 }
 
+// TODO - move this to another file
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Ord, PartialOrd)]
 pub struct DefaultCreate {}
 
@@ -35,17 +37,17 @@ impl Create for DefaultCreate {
 
     fn create(&self, entry: &Entry, xsd: &Xsd) -> CreateResult {
         match entry {
-            Entry::Annotation(_) => Ok(None),     // TODO - implement Annotation
-            Entry::AttributeGroup(_) => Ok(None), // TODO - implement AttributeGroup
-            Entry::ComplexType(_) => Ok(None),    // TODO - implement ComplexType
-            Entry::Element(_) => Ok(None),        // TODO - implement Element
-            Entry::Group(_) => Ok(None),          // TODO - implement Group
-            Entry::Import(_) => Ok(None),         // TODO - implement Import
+            Entry::Annotation(_) => Ok(Some(Vec::new())), // TODO - implement Annotation
+            Entry::AttributeGroup(_) => Ok(Some(Vec::new())), // TODO - implement AttributeGroup
+            Entry::ComplexType(_) => Ok(Some(Vec::new())), // TODO - implement ComplexType
+            Entry::Element(_) => Ok(Some(Vec::new())),    // TODO - implement Element
+            Entry::Group(_) => Ok(Some(Vec::new())),      // TODO - implement Group
+            Entry::Import(_) => Ok(Some(Vec::new())),     // TODO - implement Import
             Entry::SimpleType(st) => {
                 if is_enumeration(st) {
                     model_enumeration(st, xsd)
                 } else {
-                    unimplemented!();
+                    Ok(Some(Vec::new())) // TODO - implement other simple types
                 }
             }
         }

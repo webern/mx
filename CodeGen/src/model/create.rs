@@ -30,6 +30,7 @@ use std::fmt::{Display, Formatter};
 pub trait Create {
     /// The name of this `Create` object (for debugging).
     fn name(&self) -> &'static str;
+
     /// Creates models based on a top-level XSD entry. Returns `None` if the XSD entry cannot be
     /// handled.
     fn create(&self, entry: &Entry, xsd: &Xsd) -> CreateResult;
