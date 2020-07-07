@@ -1,6 +1,7 @@
 use super::musicxml_xsd::Enumeration;
-use crate::generate::string_stuff::{
-    camel_case, linestart, pascal_case, sep, write_documentation, Altered, Symbol,
+use crate::generate::mx_writer::{DOC_COMMENT, LINE_WIDTH};
+use crate::utils::string_stuff::{
+    camel_case, linestart, pascal_case, separator, write_documentation, Altered, Symbol,
 };
 use indexmap::set::IndexSet;
 use std::collections::HashMap;
