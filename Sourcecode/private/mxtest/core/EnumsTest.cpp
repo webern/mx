@@ -4850,7 +4850,7 @@ TEST( KindValue_minorNinth, Enums )
 
 TEST( KindValue_dominant11Th, Enums )
 {
-	KindValue e = KindValue::dominant11Th;
+	KindValue e = KindValue::dominant11th;
 	std::string expected = "dominant-11th";
 	std::string actual = toString( e );
 	CHECK_EQUAL( expected, actual );
@@ -4871,7 +4871,7 @@ TEST( KindValue_dominant11Th, Enums )
 
 TEST( KindValue_major11Th, Enums )
 {
-	KindValue e = KindValue::major11Th;
+	KindValue e = KindValue::major11th;
 	std::string expected = "major-11th";
 	std::string actual = toString( e );
 	CHECK_EQUAL( expected, actual );
@@ -4892,7 +4892,7 @@ TEST( KindValue_major11Th, Enums )
 
 TEST( KindValue_minor11Th, Enums )
 {
-	KindValue e = KindValue::minor11Th;
+	KindValue e = KindValue::minor11th;
 	std::string expected = "minor-11th";
 	std::string actual = toString( e );
 	CHECK_EQUAL( expected, actual );
@@ -4913,7 +4913,7 @@ TEST( KindValue_minor11Th, Enums )
 
 TEST( KindValue_dominant13Th, Enums )
 {
-	KindValue e = KindValue::dominant13Th;
+	KindValue e = KindValue::dominant13th;
 	std::string expected = "dominant-13th";
 	std::string actual = toString( e );
 	CHECK_EQUAL( expected, actual );
@@ -4934,7 +4934,7 @@ TEST( KindValue_dominant13Th, Enums )
 
 TEST( KindValue_major13Th, Enums )
 {
-	KindValue e = KindValue::major13Th;
+	KindValue e = KindValue::major13th;
 	std::string expected = "major-13th";
 	std::string actual = toString( e );
 	CHECK_EQUAL( expected, actual );
@@ -4955,7 +4955,7 @@ TEST( KindValue_major13Th, Enums )
 
 TEST( KindValue_minor13Th, Enums )
 {
-	KindValue e = KindValue::minor13Th;
+	KindValue e = KindValue::minor13th;
 	std::string expected = "minor-13th";
 	std::string actual = toString( e );
 	CHECK_EQUAL( expected, actual );

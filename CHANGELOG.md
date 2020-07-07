@@ -4,6 +4,9 @@ On 2020-05-31, two tags were deleted from origin, `v1.0.0` and `v1.0.1` and repl
 If you cloned/forked the repository before 2020-05-31, consider making a new clone/fork or otherwise repairing the tags.
 
 ## [Unreleased]
+- Change the spelling of `KindValue` enums from, e.g. `dominant11Th` to `dominant11th`. [#105]
+
+[#105]: https://github.com/webern/mx/pull/105
 
 ## [v0.5.1] - 2020-06-13
 - Fix xcode build, new headers were missing from frameworks.

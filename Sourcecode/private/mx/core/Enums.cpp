@@ -1407,12 +1407,12 @@ namespace mx
             else if ( value == "dominant-ninth" ) { return KindValue::dominantNinth; }
             else if ( value == "major-ninth" ) { return KindValue::majorNinth; }
             else if ( value == "minor-ninth" ) { return KindValue::minorNinth; }
-            else if ( value == "dominant-11th" ) { return KindValue::dominant11Th; }
-            else if ( value == "major-11th" ) { return KindValue::major11Th; }
-            else if ( value == "minor-11th" ) { return KindValue::minor11Th; }
-            else if ( value == "dominant-13th" ) { return KindValue::dominant13Th; }
-            else if ( value == "major-13th" ) { return KindValue::major13Th; }
-            else if ( value == "minor-13th" ) { return KindValue::minor13Th; }
+            else if ( value == "dominant-11th" ) { return KindValue::dominant11th; }
+            else if ( value == "major-11th" ) { return KindValue::major11th; }
+            else if ( value == "minor-11th" ) { return KindValue::minor11th; }
+            else if ( value == "dominant-13th" ) { return KindValue::dominant13th; }
+            else if ( value == "major-13th" ) { return KindValue::major13th; }
+            else if ( value == "minor-13th" ) { return KindValue::minor13th; }
             else if ( value == "suspended-second" ) { return KindValue::suspendedSecond; }
             else if ( value == "suspended-fourth" ) { return KindValue::suspendedFourth; }
             else if ( value == "Neapolitan" ) { return KindValue::neapolitan; }
@@ -1447,12 +1447,12 @@ namespace mx
                 case KindValue::dominantNinth: { return "dominant-ninth"; }
                 case KindValue::majorNinth: { return "major-ninth"; }
                 case KindValue::minorNinth: { return "minor-ninth"; }
-                case KindValue::dominant11Th: { return "dominant-11th"; }
-                case KindValue::major11Th: { return "major-11th"; }
-                case KindValue::minor11Th: { return "minor-11th"; }
-                case KindValue::dominant13Th: { return "dominant-13th"; }
-                case KindValue::major13Th: { return "major-13th"; }
-                case KindValue::minor13Th: { return "minor-13th"; }
+                case KindValue::dominant11th: { return "dominant-11th"; }
+                case KindValue::major11th: { return "major-11th"; }
+                case KindValue::minor11th: { return "minor-11th"; }
+                case KindValue::dominant13th: { return "dominant-13th"; }
+                case KindValue::major13th: { return "major-13th"; }
+                case KindValue::minor13th: { return "minor-13th"; }
                 case KindValue::suspendedSecond: { return "suspended-second"; }
                 case KindValue::suspendedFourth: { return "suspended-fourth"; }
                 case KindValue::neapolitan: { return "Neapolitan"; }
