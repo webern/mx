@@ -10,4 +10,5 @@
 pub mod error;
 pub mod generate;
 pub mod model;
+pub mod utils;
 pub mod xsd;
