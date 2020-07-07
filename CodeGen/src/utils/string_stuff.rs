@@ -1,3 +1,8 @@
+// TODO - constants are bad
+pub const LINE_WIDTH: usize = 100;
+pub const INDENT: &str = "    ";
+pub const DOC_COMMENT: &str = "///";
+
 use std::cmp::Ordering;
 use std::fmt::{Display, Formatter};
 use std::io::Write;
