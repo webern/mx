@@ -1,4 +1,4 @@
-use crate::generate::string_stuff::tokenize;
+use crate::utils::string_stuff::tokenize;
 use std::borrow::Cow;
 
 /// Holds a name or symbol in the many ways that it may need to be 'spelled' during code generation.

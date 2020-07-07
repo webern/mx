@@ -5,7 +5,6 @@ pub mod enumeration;
 pub mod symbol;
 pub mod transform;
 
-use crate::generate::string_stuff::tokenize;
 use crate::model::create::{Create, CreateError, CreateResult};
 use crate::model::enumeration::Enumeration;
 use crate::model::symbol::Symbol;
