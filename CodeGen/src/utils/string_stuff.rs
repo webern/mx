@@ -1,4 +1,3 @@
-use crate::generate::mx_writer::{DOC_COMMENT, INDENT, LINE_WIDTH};
 use std::cmp::Ordering;
 use std::fmt::{Display, Formatter};
 use std::io::Write;
