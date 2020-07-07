@@ -21,6 +21,15 @@ impl Default for Creator {
     }
 }
 
+impl Creator {
+    pub fn new(transforms: Vec<Box<dyn Transform>>, creates: Vec<Box<dyn Create>>) -> Self {
+        Self {
+            transforms,
+            creates,
+        }
+    }
+}
+
 impl Debug for Creator {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "Creator{{ creates: [")?;
@@ -34,14 +43,14 @@ impl Debug for Creator {
 impl Creator {
     pub fn create(&self, xsd: &Xsd) -> Result<Vec<Model>> {
         let mut models = Vec::new();
-        for entry in xsd.entries() {
-            let mut entry = Cow::Borrowed(entry);
+        for mut entry in xsd.entries() {
+            let mut entry = entry.clone();
             for transform in &self.transforms {
-                entry = wrap!(transform.transform(entry.as_ref(), xsd))?;
+                entry = wrap!(transform.transform(&entry, xsd))?;
             }
             let mut is_handled = false;
             for create in &self.creates {
-                if let Some(mut more_models) = wrap!(create.create(entry.as_ref(), xsd))? {
+                if let Some(mut more_models) = wrap!(create.create(&entry, xsd))? {
                     models.append(&mut more_models);
                     is_handled = true;
                     break;
@@ -50,7 +59,7 @@ impl Creator {
             if !is_handled {
                 return raise!(
                     "the entry {} was not handled by any Create objects",
-                    entry.as_ref().id()
+                    entry.id()
                 );
             }
             // TODO - if we get here then there was no handler, this is an error.

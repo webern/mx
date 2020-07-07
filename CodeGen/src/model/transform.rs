@@ -1,7 +1,6 @@
 use crate::model::create::CreateError;
 use crate::model::Model;
 use crate::xsd::{Entry, Xsd};
-use std::borrow::Cow;
 use std::fmt::{Display, Formatter};
 
 /// # Create Trait
@@ -14,9 +13,5 @@ pub trait Transform {
     fn name(&self) -> &'static str;
 
     /// Transforms and `Entry`.
-    fn transform(
-        &self,
-        entry: &Entry,
-        xsd: &Xsd,
-    ) -> std::result::Result<Cow<'_, Entry>, CreateError>;
+    fn transform(&self, entry: &Entry, xsd: &Xsd) -> std::result::Result<Entry, CreateError>;
 }
