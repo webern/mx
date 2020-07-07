@@ -106,6 +106,11 @@ impl Xsd {
             raise!("entry '{}' not found", id)
         }
     }
+
+    // TODO - this will need to be an iterator so the underlying data structure can change.
+    pub fn entries(&self) -> &Vec<Entry> {
+        &self.entries
+    }
 }
 
 impl Display for Xsd {

@@ -15,6 +15,8 @@ use crate::generate::musicxml_xsd_parser::{parse_musicxml_xsd, XsdParserParams};
 use crate::generate::mx_enum_writer::{MxEnumWriter, MxEnumWriterParams};
 use crate::generate::mx_writer::MxWriter;
 use crate::generate::paths::Paths;
+use crate::model::creator::Creator;
+use crate::xsd::Xsd;
 use musicxml_xsd_constants::enum_member_substitutions;
 
 #[derive(Clone, Debug)]
@@ -35,6 +37,11 @@ pub fn run(args: GenArgs) -> Result<()> {
     println!("{}", args.paths.xsd_3_0.display());
     let xsd = read_to_string(&args.paths.xsd_3_0).unwrap();
     let doc = exile::parse(xsd.as_str()).unwrap();
+    let new_xsd = Xsd::load(&args.paths.xsd_3_0)?;
+    let creator = Creator::default();
+    let models = creator.create(&new_xsd)?;
+
+    // TODO - this is the first implementation, remove it when done with new implementation.
     let xsd = parse_musicxml_xsd(
         &doc,
         XsdParserParams {

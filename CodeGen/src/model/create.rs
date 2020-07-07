@@ -1,5 +1,6 @@
 use crate::model::Model;
 use crate::xsd::{Entry, Xsd};
+use std::fmt::{Display, Formatter};
 
 /// # Create Trait
 ///
@@ -24,13 +25,39 @@ use crate::xsd::{Entry, Xsd};
 ///
 /// # Error
 ///
-/// Any error type may be used. Returning `Err` will stop all processing.
+/// We define a simple error type instead of using generics.
 ///  
 pub trait Create {
-    /// The error type.
-    type E;
-
+    /// The name of this `Create` object (for debugging).
+    fn name(&self) -> &'static str;
     /// Creates models based on a top-level XSD entry. Returns `None` if the XSD entry cannot be
     /// handled.
-    fn create(entry: &Entry, xsd: &Xsd) -> std::result::Result<Option<Vec<Model>>, Self::E>;
+    fn create(&self, entry: &Entry, xsd: &Xsd) -> CreateResult;
+}
+
+pub type CreateResult = std::result::Result<Option<Vec<Model>>, CreateError>;
+
+#[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd)]
+pub struct CreateError {
+    pub message: String,
+}
+
+impl Display for CreateError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.message.as_str())
+    }
+}
+
+impl std::error::Error for CreateError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        None
+    }
+}
+
+impl CreateError {
+    pub fn new<S: AsRef<str>>(message: S) -> Self {
+        Self {
+            message: message.as_ref().into(),
+        }
+    }
 }

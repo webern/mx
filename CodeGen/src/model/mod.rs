@@ -1,10 +1,11 @@
 pub mod builtin;
 pub mod create;
+pub mod creator;
 pub mod enumeration;
 pub mod symbol;
 
 use crate::generate::string_stuff::tokenize;
-use crate::model::create::Create;
+use crate::model::create::{Create, CreateError, CreateResult};
 use crate::model::enumeration::Enumeration;
 use crate::model::symbol::Symbol;
 use crate::xsd::restriction::Facet;
@@ -21,9 +22,18 @@ pub enum Model {
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Ord, PartialOrd)]
 pub struct DefaultCreate {}
 
+impl Default for DefaultCreate {
+    fn default() -> Self {
+        Self {}
+    }
+}
+
 impl Create for DefaultCreate {
-    type E = crate::error::Error;
-    fn create(entry: &Entry, xsd: &Xsd) -> crate::error::Result<Option<Vec<Model>>> {
+    fn name(&self) -> &'static str {
+        "default"
+    }
+
+    fn create(&self, entry: &Entry, xsd: &Xsd) -> CreateResult {
         match entry {
             Entry::Annotation(_) => Ok(None),     // TODO - implement Annotation
             Entry::AttributeGroup(_) => Ok(None), // TODO - implement AttributeGroup
@@ -57,18 +67,18 @@ fn is_enumeration(st: &SimpleType) -> bool {
     }
 }
 
-fn model_enumeration(st: &SimpleType, xsd: &Xsd) -> crate::error::Result<Option<Vec<Model>>> {
+fn model_enumeration(st: &SimpleType, xsd: &Xsd) -> CreateResult {
     let restriction = if let simple_type::Payload::Restriction(r) = &st.payload {
         r
     } else {
-        return raise!("not a restriction!");
+        return Err(CreateError::new("expected restriction"));
     };
     let mut members = Vec::new();
     for facet in &restriction.facets {
         let s = if let Facet::Enumeration(s) = facet {
             s
         } else {
-            return raise!("not an enumeration!");
+            return Err(CreateError::new("expected enumeration"));
         };
         members.push(Symbol::new(s.as_str()));
     }
