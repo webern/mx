@@ -4,7 +4,7 @@ use crate::generate::musicxml_xsd_constants::PseudoEnumSpec;
 use crate::generate::musicxml_xsd_parser::Error::SchemaNotFound;
 use crate::generate::musicxml_xsd_parser::XsType::ComplexType;
 use crate::generate::mx_enum_writer::MxEnumOption;
-use crate::generate::string_stuff::{camel_case, pascal_case, Symbol};
+use crate::utils::string_stuff::{camel_case, pascal_case, Symbol};
 use derive_more::Display;
 use exile::{Document, Element};
 use std::collections::HashMap;
