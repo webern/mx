@@ -19,14 +19,14 @@ pub fn write_tabs<W: Write>(w: &mut W, num: u32) -> std::io::Result<()> {
 
 macro_rules! w {
     ($w:expr, $tabs:expr, $($arg:expr),+) => {{
-        crate::generate::mx_enum_writer::write_tabs($w, $tabs)?;
+        crate::generate::cpp::write_enums::write_tabs($w, $tabs)?;
         write!($w, $($arg),+)
     }};
 }
 
 macro_rules! l {
     ($w:expr, $tabs:expr, $($arg:expr),+) => {{
-        crate::generate::mx_enum_writer::write_tabs($w, $tabs)?;
+        crate::generate::cpp::write_enums::write_tabs($w, $tabs)?;
         writeln!($w, $($arg),+)
     }};
 }
