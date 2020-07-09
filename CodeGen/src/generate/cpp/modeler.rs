@@ -128,6 +128,7 @@ impl MxModeler {
                     name: Symbol::new(other_field_name),
                     type_: BuiltinString::String,
                     wrapper_class_name: Symbol::new("dynamics value"),
+                    default_value: Symbol::new("mf"),
                 })
             }
         }
@@ -260,6 +261,7 @@ fn create_pseudo_enum(entry: &Entry, spec: &PseudoEnumSpec) -> CreateResult {
             // TODO - check if it's actually xs:token
             type_: BuiltinString::String,
             wrapper_class_name: Symbol::new(spec.class_name.as_str()),
+            default_value: Symbol::new(spec.default_value.as_str()),
         }),
     };
     for s in &spec.members {
