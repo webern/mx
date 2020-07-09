@@ -45,31 +45,33 @@ pub fn run(args: GenArgs) -> Result<()> {
     let creates: Vec<Box<dyn Create>> = vec![Box::new(MxModeler::new())];
     let creator = Creator::new_with_default(transforms, creates);
     let models = creator.create(&new_xsd)?;
+    let cpp_writer = cpp::writer::Writer::new(models);
+    cpp_writer.write_code()?;
 
     // TODO - this is the first implementation, remove it when done with new implementation.
-    let xsd = parse_musicxml_xsd(
-        &doc,
-        XsdParserParams {
-            pseudo_enums: pseudo_enums(),
-        },
-    )
-    .unwrap();
-
-    let enum_params = MxEnumWriterParams {
-        enumerations: xsd.enumerations(),
-        member_substitutions: enum_member_substitutions(),
-        suffixed_enum_names: suffixed_enum_names(),
-        reserved_words: reserved_words(),
-    };
-    let enum_writer = MxEnumWriter::new(enum_params).unwrap();
-    let writer = MxWriter::new(enum_writer);
-    {
-        let mut h = args.paths.create_core_file("Enums.h");
-        writer.write_enum_declarations(&mut h).unwrap();
-    }
-    {
-        let mut cpp = args.paths.create_core_file("Enums.cpp");
-        writer.write_enum_definitions(&mut cpp).unwrap();
-    }
+    // let xsd = parse_musicxml_xsd(
+    //     &doc,
+    //     XsdParserParams {
+    //         pseudo_enums: pseudo_enums(),
+    //     },
+    // )
+    // .unwrap();
+    //
+    // let enum_params = MxEnumWriterParams {
+    //     enumerations: xsd.enumerations(),
+    //     member_substitutions: enum_member_substitutions(),
+    //     suffixed_enum_names: suffixed_enum_names(),
+    //     reserved_words: reserved_words(),
+    // };
+    // let enum_writer = MxEnumWriter::new(enum_params).unwrap();
+    // let writer = MxWriter::new(enum_writer);
+    // {
+    //     let mut h = args.paths.create_core_file("Enums.h");
+    //     writer.write_enum_declarations(&mut h).unwrap();
+    // }
+    // {
+    //     let mut cpp = args.paths.create_core_file("Enums.cpp");
+    //     writer.write_enum_definitions(&mut cpp).unwrap();
+    // }
     Ok(())
 }
