@@ -32,8 +32,8 @@ impl Transform for MxModeler {
     }
 
     fn transform(&self, entry: &Entry, xsd: &Xsd) -> Result<Entry, CreateError> {
-        let mut entry = entry.clone();
-        if let Entry::SimpleType(st) = &mut entry {
+        let mut cloned = entry.clone();
+        if let Entry::SimpleType(st) = &mut cloned {
             let symbolized = Symbol::new(st.name.as_str());
             if self.suffixed_enum_names.contains(symbolized.pascal()) {
                 st.name.push_str("-enum");
@@ -48,13 +48,14 @@ impl Transform for MxModeler {
                         }
                         // do reserved word renames, e.g. "continue" to "continue_"
                         if self.reserved_words.contains(enumer.as_str()) {
+                            // TODO - problem, this gets stripped off again by the tokenizer
                             enumer.push('_');
                         }
                     }
                 }
             }
         }
-        Ok(entry)
+        Ok(cloned)
     }
 }
 
@@ -95,7 +96,7 @@ impl MxModeler {
         let (ct, p, choice) = self.unwrap_dynamics(entry)?;
         let mut enumer = model::enumeration::Enumeration {
             /// TODO - get the name in a generic manner
-            name: Symbol::new("dynamics value"),
+            name: Symbol::new("dynamics enum"),
             members: vec![],
             documentation: entry.documentation(),
             other_field: None,
@@ -114,6 +115,7 @@ impl MxModeler {
                 enumer.other_field = Some(OtherField {
                     name: Symbol::new(other_field_name),
                     type_: BuiltinString::String,
+                    wrapper_class_name: Symbol::new("dynamics value"),
                 })
             }
         }
@@ -241,6 +243,7 @@ fn create_pseudo_enum(entry: &Entry, spec: &PseudoEnumSpec) -> CreateResult {
             name: Symbol::new(spec.extra_field_name.as_str()),
             // TODO - check if it's actually xs:token
             type_: BuiltinString::String,
+            wrapper_class_name: Symbol::new(spec.class_name.as_str()),
         }),
     };
     for s in &spec.members {

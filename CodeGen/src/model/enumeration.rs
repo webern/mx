@@ -22,4 +22,7 @@ pub struct Enumeration {
 pub struct OtherField {
     pub name: Symbol,
     pub type_: BuiltinString,
+    /// A language like Rust wouln't need this, but in, e.g. C++, an enum cannot contain a value,
+    /// so the enum and the potential 'other' value need to be 'wrapped' together in some way.
+    pub wrapper_class_name: Symbol,
 }

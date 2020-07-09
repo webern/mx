@@ -56,6 +56,9 @@ impl Create for DefaultCreate {
 fn is_enumeration(st: &SimpleType) -> bool {
     match &st.payload {
         Payload::Restriction(r) => {
+            if r.facets.is_empty() {
+                return false;
+            }
             for facet in &r.facets {
                 match facet {
                     Facet::Enumeration(_) => continue,
@@ -84,7 +87,7 @@ fn model_enumeration(st: &SimpleType, xsd: &Xsd) -> CreateResult {
         members.push(Symbol::new(s.as_str()));
     }
     let enm = Enumeration {
-        name: Symbol::new(st.id.name()),
+        name: Symbol::new(st.name.as_str()),
         members,
         documentation: st.documentation(),
         other_field: None,
