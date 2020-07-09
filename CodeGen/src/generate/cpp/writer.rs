@@ -17,6 +17,7 @@ impl Writer {
     }
 
     pub fn write_code(&self) -> Result<()> {
+        self.write_enums()?;
         Ok(())
     }
 }

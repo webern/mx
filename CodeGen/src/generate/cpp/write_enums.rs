@@ -1,6 +1,7 @@
 use crate::error::Result;
 use crate::generate::cpp::writer::Writer;
 use crate::model::enumeration::Enumeration;
+use crate::model::Model;
 use crate::utils::string_stuff::{
     camel_case, linestart, pascal_case, sep, write_documentation, Altered, Symbol,
 };
@@ -31,29 +32,47 @@ macro_rules! l {
 }
 
 impl Writer {
-    fn write_enums(&self) -> Result<()> {
+    pub(crate) fn write_enums(&self) -> Result<()> {
         let enumerations = self.collect_enums()?;
-        let mut hwrite = self.open_enums_h()?;
+        let mut hwrite = wrap!(self.open_enums_h())?;
         let mut cwrite = self.open_enums_cpp()?;
         for enumer in &enumerations {
             wrap!(self.write_enum_h(enumer, &mut hwrite))?;
             wrap!(self.write_enum_cpp(enumer, &mut cwrite))?;
         }
         self.close_enums_h(&mut hwrite)?;
-        self.clone_enums_cpp(&mut cwrite)?;
+        self.close_enums_cpp(&mut cwrite)?;
         Ok(())
     }
 
-    fn collect_enums(&self) -> Result<Vec<Enumeration>> {
-        Ok(Vec::new())
+    fn collect_enums(&self) -> Result<Vec<&Enumeration>> {
+        let mut result = Vec::new();
+        for model in &self.models {
+            if let Model::Enumeration(enumer) = model {
+                result.push(enumer);
+            }
+        }
+        Ok(result)
     }
 
-    fn open_enums_h(&self) -> Result<impl Write> {
+    fn open_enums_h(&self) -> std::io::Result<impl Write> {
         let _igore_error = std::fs::remove_file(&self.paths.enums_h);
-        let mut f = wrap!(OpenOptions::new()
+        let mut f = OpenOptions::new()
             .write(true)
-            .append(true)
-            .open(&self.paths.enums_h))?;
+            .create(true)
+            .open(&self.paths.enums_h)?;
+        l!(&mut f, 0, "// MusicXML Class Library")?;
+        l!(&mut f, 0, "// Copyright (c) by Matthew James Briggs")?;
+        l!(&mut f, 0, "// Distributed under the MIT License")?;
+        l!(&mut f, 0, "")?;
+        l!(&mut f, 0, "#pragma once")?;
+        l!(&mut f, 0, "")?;
+        l!(&mut f, 0, "#include \"mx/core/EnumsBuiltin.h\"")?;
+        l!(&mut f, 0, "")?;
+        l!(&mut f, 0, "namespace mx")?;
+        l!(&mut f, 0, "{{")?;
+        l!(&mut f, 1, "namespace core")?;
+        l!(&mut f, 1, "{{")?;
         Ok(f)
     }
 
@@ -61,7 +80,7 @@ impl Writer {
         let _igore_error = std::fs::remove_file(&self.paths.enums_cpp);
         let mut f = wrap!(OpenOptions::new()
             .write(true)
-            .append(true)
+            .create(true)
             .open(&self.paths.enums_cpp))?;
         Ok(f)
     }
