@@ -89,23 +89,30 @@ pub fn tokenize<S: AsRef<str>>(s: S) -> Vec<String> {
     let mut tokens = Vec::new();
     let mut buf = String::new();
     let mut is_word_start = true;
+    let mut was_lowercase = true;
+    let mut was_digit = false;
     for c in s.as_ref().chars() {
+        if was_lowercase && c.is_uppercase() {
+            is_word_start = true;
+        }
+        if c.is_ascii_digit() {
+            is_word_start = !was_digit;
+        }
         if !c.is_alphanumeric() {
             is_word_start = true;
-        } else if c.is_ascii_digit() {
-            buf.push(c);
-            is_word_start = false;
         } else if is_word_start {
             if !buf.is_empty() {
                 tokens.push(buf);
                 buf = String::new();
             }
-            buf.push(c.to_ascii_uppercase());
+            buf.push(c.to_ascii_lowercase());
             is_word_start = false;
         } else {
             buf.push(c.to_ascii_lowercase());
             is_word_start = false;
         }
+        was_lowercase = !c.is_ascii_digit() && c.is_lowercase();
+        was_digit = c.is_ascii_digit();
     }
     if !buf.is_empty() {
         tokens.push(buf);
@@ -235,6 +242,7 @@ pub fn words<S: AsRef<str>>(s: S) -> Vec<String> {
 #[cfg(test)]
 mod tests {
     use super::{words, Symbol};
+    use crate::utils::string_stuff::tokenize;
     use std::io::Cursor;
 
     #[test]
@@ -329,14 +337,6 @@ mod tests {
     }
 
     #[test]
-    fn tokenize_chord_kind() {
-        let input = "DomInAnt11th";
-        let got = super::tokenize(input);
-        let want = vec!["Dominant11th".to_owned()];
-        assert_eq!(got, want);
-    }
-
-    #[test]
     fn camel_case_step_chord_kind() {
         let input = "DomInAnt 1 1th";
         let got = super::camel_case(input);
@@ -420,5 +420,36 @@ mod tests {
     ///
     /// d"#;
         assert_eq!(got, want);
+    }
+
+    #[test]
+    fn tokenize_strings() {
+        struct TestCase {
+            input: &'static str,
+            want: Vec<String>,
+        }
+        let mut test_cases = vec![
+            TestCase {
+                input: "modeValue",
+                want: vec!["mode".to_owned(), "value".to_owned()],
+            },
+            TestCase {
+                input: "DomInAnt11th",
+                want: vec![
+                    "dom".to_owned(),
+                    "in".to_owned(),
+                    "ant".to_owned(),
+                    "11th".to_owned(),
+                ],
+            },
+            TestCase {
+                input: "dominant11th",
+                want: vec!["dominant".to_owned(), "11th".to_owned()],
+            },
+        ];
+        for test_case in &test_cases {
+            let got = tokenize(test_case.input);
+            assert_eq!(got, test_case.want);
+        }
     }
 }
