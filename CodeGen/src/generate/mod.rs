@@ -21,6 +21,7 @@ use crate::model::creator::Creator;
 use crate::model::transform::Transform;
 use crate::xsd::Xsd;
 use musicxml_xsd_constants::enum_member_substitutions;
+use std::sync::Arc;
 
 #[derive(Clone, Debug)]
 pub struct GenArgs {
@@ -44,7 +45,7 @@ pub fn run(args: GenArgs) -> Result<()> {
     let mx_modeler = MxModeler::new();
     let transforms: Vec<Box<dyn Transform>> = vec![Box::new(mx_modeler)];
     let creates: Vec<Box<dyn Create>> = Vec::new();
-    let creator = Creator::new(transforms, creates);
+    let creator = Creator::new_with_default(transforms, creates);
     let models = creator.create(&new_xsd)?;
 
     // TODO - this is the first implementation, remove it when done with new implementation.

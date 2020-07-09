@@ -22,7 +22,21 @@ impl Default for Creator {
 }
 
 impl Creator {
+    /// Create a new `Creator` object by passing in the transform and create objects.
     pub fn new(transforms: Vec<Box<dyn Transform>>, creates: Vec<Box<dyn Create>>) -> Self {
+        Self {
+            transforms,
+            creates,
+        }
+    }
+
+    /// Create a new `Creator` object by passing in the tranform and create objects. This function
+    /// will append the default `Create` implementation as the last last `Create` object.
+    pub fn new_with_default(
+        transforms: Vec<Box<dyn Transform>>,
+        mut creates: Vec<Box<dyn Create>>,
+    ) -> Self {
+        creates.push(Box::new(DefaultCreate::default()));
         Self {
             transforms,
             creates,
