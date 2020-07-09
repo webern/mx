@@ -4,14 +4,12 @@ use std::fs::read_to_string;
 mod compile_mx;
 pub mod cpp;
 mod musicxml_xsd;
-mod musicxml_xsd_constants;
 mod musicxml_xsd_parser;
 mod mx_enum_writer;
 mod mx_writer;
 pub mod paths;
 
-use crate::generate::cpp::mx_modeler::MxModeler;
-use crate::generate::musicxml_xsd_constants::{pseudo_enums, reserved_words, suffixed_enum_names};
+use crate::generate::cpp::modeler::MxModeler;
 use crate::generate::musicxml_xsd_parser::{parse_musicxml_xsd, XsdParserParams};
 use crate::generate::mx_enum_writer::{MxEnumWriter, MxEnumWriterParams};
 use crate::generate::mx_writer::MxWriter;
@@ -20,7 +18,8 @@ use crate::model::create::Create;
 use crate::model::creator::Creator;
 use crate::model::transform::Transform;
 use crate::xsd::Xsd;
-use musicxml_xsd_constants::enum_member_substitutions;
+use cpp::constants::enum_member_substitutions;
+use cpp::constants::{pseudo_enums, reserved_words, suffixed_enum_names};
 use std::sync::Arc;
 
 #[derive(Clone, Debug)]
@@ -42,9 +41,8 @@ pub fn run(args: GenArgs) -> Result<()> {
     let xsd = read_to_string(&args.paths.xsd_3_0).unwrap();
     let doc = exile::parse(xsd.as_str()).unwrap();
     let new_xsd = Xsd::load(&args.paths.xsd_3_0)?;
-    let mx_modeler = MxModeler::new();
-    let transforms: Vec<Box<dyn Transform>> = vec![Box::new(mx_modeler)];
-    let creates: Vec<Box<dyn Create>> = Vec::new();
+    let transforms: Vec<Box<dyn Transform>> = vec![Box::new(MxModeler::new())];
+    let creates: Vec<Box<dyn Create>> = vec![Box::new(MxModeler::new())];
     let creator = Creator::new_with_default(transforms, creates);
     let models = creator.create(&new_xsd)?;
 

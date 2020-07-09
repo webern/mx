@@ -1,6 +1,6 @@
 use super::musicxml_xsd::{Enumeration, MusicXSD, SimpleType, TypeDefinition};
 
-use crate::generate::musicxml_xsd_constants::PseudoEnumSpec;
+use crate::generate::cpp::constants::PseudoEnumSpec;
 use crate::generate::musicxml_xsd_parser::Error::SchemaNotFound;
 use crate::generate::musicxml_xsd_parser::XsType::ComplexType;
 use crate::generate::mx_enum_writer::MxEnumOption;

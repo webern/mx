@@ -75,6 +75,10 @@ impl Id {
         }
     }
 
+    pub fn display(&self) -> String {
+        format!("{}", &self)
+    }
+
     pub(crate) fn make(lineage: Lineage, node: &exile::Element) -> Result<(Self, Lineage)> {
         let attrs = node.attributes.map();
         let name = if let Some(s) = attrs.get("id") {

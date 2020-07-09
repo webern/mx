@@ -46,12 +46,6 @@ pub fn suffixed_enum_names() -> IndexSet<String> {
     names.insert("Wood".into());
     names.insert("SemiPitched".into());
     names.insert("StaffType".into());
-    //names.insert("XXX".into());
-    //names.insert("XXX".into());
-    //names.insert("XXX".into());
-    //names.insert("XXX".into());
-    //names.insert("XXX".into());
-    //names.insert("XXX".into());
     names
 }
 
@@ -68,6 +62,7 @@ pub fn reserved_words() -> IndexSet<String> {
     keywords
 }
 
+#[derive(Debug, Clone)]
 pub struct PseudoEnumSpec {
     pub members: Vec<String>,
     /// The name of the field that is added to the enum, which can hold any value.

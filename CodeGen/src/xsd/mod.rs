@@ -163,6 +163,18 @@ impl Entry {
             Entry::SimpleType(x) => &x.id,
         }
     }
+
+    pub fn documentation(&self) -> String {
+        match self {
+            Entry::Annotation(x) => x.documentation(),
+            Entry::AttributeGroup(x) => x.documentation(),
+            Entry::ComplexType(x) => x.documentation(),
+            Entry::Element(x) => x.documentation(),
+            Entry::Group(x) => x.documentation(),
+            Entry::Import(x) => x.documentation(),
+            Entry::SimpleType(x) => x.documentation(),
+        }
+    }
 }
 
 pub(crate) fn get_attribute<S: AsRef<str>>(

@@ -51,6 +51,10 @@ impl Symbol {
         Self::new_with_tokens(original, tokens.as_slice())
     }
 
+    pub fn set_camel<S: AsRef<str>>(&mut self, value: S) {
+        self.camel = value.as_ref().into();
+    }
+
     pub fn new_with_tokens<S>(original: S, tokenized: &[String]) -> Self
     where
         S: AsRef<str>,

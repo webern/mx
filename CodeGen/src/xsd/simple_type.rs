@@ -3,12 +3,14 @@ use crate::xsd::annotation::Annotation;
 use crate::xsd::constants::{ANNOTATION, LIST, NAME, RESTRICTION, SIMPLE_TYPE, UNION};
 use crate::xsd::id::{Id, Lineage, RootNodeType};
 use crate::xsd::list::List;
+use crate::xsd::name_attribute;
 use crate::xsd::restriction::Restriction;
 use crate::xsd::union::Union;
 
 #[derive(Clone, Debug)]
 pub struct SimpleType {
     pub id: Id,
+    pub name: String,
     pub annotation: Option<Annotation>,
     pub payload: Payload,
 }
@@ -33,12 +35,6 @@ impl SimpleType {
             return raise!("expected '{}', got '{}'", SIMPLE_TYPE, &node.name);
         }
         let (id, lineage) = Id::make(lineage, node)?;
-        let name = node
-            .attributes
-            .map()
-            .get(NAME)
-            .ok_or(make_err!("'{}' attribute not found", NAME))?
-            .clone();
         let mut annotation = None;
         let mut payload = None;
         for inner in node.children() {
@@ -62,6 +58,7 @@ impl SimpleType {
         let payload = payload.ok_or(make_err!("{} is incomplete", SIMPLE_TYPE))?;
         Ok(SimpleType {
             id,
+            name: name_attribute(node)?,
             annotation,
             payload,
         })
