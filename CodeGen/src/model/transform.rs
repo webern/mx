@@ -3,7 +3,7 @@ use crate::model::Model;
 use crate::xsd::{Entry, Xsd};
 use std::fmt::{Display, Formatter};
 
-/// # Create Trait
+/// # Transform Trait
 ///
 /// An object that takes a top-level `Entry` from the XSD document, alters it in some way, and
 /// returns the altered `Entry`.

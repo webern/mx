@@ -55,6 +55,14 @@ impl Symbol {
         self.camel = value.as_ref().into();
     }
 
+    pub fn replace<S: AsRef<str>>(&mut self, replacement: S) {
+        let replace_with = Symbol::new(replacement);
+        *self = Symbol {
+            original: self.original.clone(),
+            ..replace_with
+        }
+    }
+
     pub fn new_with_tokens<S>(original: S, tokenized: &[String]) -> Self
     where
         S: AsRef<str>,
@@ -101,4 +109,18 @@ fn symbol_1() {
     assert_eq!(symbol.screaming_snake(), "BONES_THE_CAT");
     assert_eq!(symbol.camel(), "bonesTheCat");
     assert_eq!(symbol.pascal(), "BonesTheCat");
+}
+
+#[test]
+fn symbol_2() {
+    let original = "bones the cat";
+    let tokenized = vec!["bones", "the", "cat"];
+    let mut symbol = Symbol::new(original);
+    symbol.replace("bleep bloop");
+    assert_eq!(symbol.original(), original);
+    assert_eq!(symbol.renamed_to(), "bleep bloop");
+    assert_eq!(symbol.snake(), "bleep_bloop");
+    assert_eq!(symbol.screaming_snake(), "BLEEP_BLOOP");
+    assert_eq!(symbol.camel(), "bleepBloop");
+    assert_eq!(symbol.pascal(), "BleepBloop");
 }

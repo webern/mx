@@ -16,6 +16,7 @@ use crate::generate::mx_writer::MxWriter;
 use crate::generate::paths::Paths;
 use crate::model::create::Create;
 use crate::model::creator::Creator;
+use crate::model::post_process::PostProcess;
 use crate::model::transform::Transform;
 use crate::xsd::Xsd;
 use cpp::constants::enum_member_substitutions;
@@ -43,7 +44,8 @@ pub fn run(args: GenArgs) -> Result<()> {
     let new_xsd = Xsd::load(&args.paths.xsd_3_0)?;
     let transforms: Vec<Box<dyn Transform>> = vec![Box::new(MxModeler::new())];
     let creates: Vec<Box<dyn Create>> = vec![Box::new(MxModeler::new())];
-    let creator = Creator::new_with_default(transforms, creates);
+    let post_processors: Vec<Box<dyn PostProcess>> = vec![Box::new(MxModeler::new())];
+    let creator = Creator::new_with_default(Some(transforms), Some(creates), Some(post_processors));
     let models = creator.create(&new_xsd)?;
     let cpp_writer = cpp::writer::Writer::new(models);
     cpp_writer.write_code()?;

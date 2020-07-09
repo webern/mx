@@ -2,6 +2,7 @@ pub mod builtin;
 pub mod create;
 pub mod creator;
 pub mod enumeration;
+pub mod post_process;
 pub mod symbol;
 pub mod transform;
 

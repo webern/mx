@@ -122,7 +122,7 @@ impl Writer {
         let n = enumer.name.pascal();
 
         // TODO remove this debugging
-        if n == "ArrowDirection" {
+        if n == "DistanceType" {
             println!("poo");
         }
 

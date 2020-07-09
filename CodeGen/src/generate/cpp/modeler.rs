@@ -5,6 +5,7 @@ use crate::model;
 use crate::model::builtin::BuiltinString;
 use crate::model::create::{Create, CreateError, CreateResult};
 use crate::model::enumeration::OtherField;
+use crate::model::post_process::PostProcess;
 use crate::model::symbol::Symbol;
 use crate::model::transform::Transform;
 use crate::model::Model::Enumeration;
@@ -38,22 +39,6 @@ impl Transform for MxModeler {
             if self.suffixed_enum_names.contains(symbolized.pascal()) {
                 st.name.push_str("-enum");
             }
-            if let simple_type::Payload::Restriction(res) = &mut st.payload {
-                for facet in &mut res.facets {
-                    if let Facet::Enumeration(enumer) = facet {
-                        // do explicit enumeration member renames, e.g. "16th" to "sixteenth"
-                        if let Some(to) = self.enum_member_substitutions.get(enumer) {
-                            enumer.clear();
-                            enumer.push_str(to);
-                        }
-                        // do reserved word renames, e.g. "continue" to "continue_"
-                        if self.reserved_words.contains(enumer.as_str()) {
-                            // TODO - problem, this gets stripped off again by the tokenizer
-                            enumer.push('_');
-                        }
-                    }
-                }
-            }
         }
         Ok(cloned)
     }
@@ -79,6 +64,33 @@ impl Create for MxModeler {
             }
         }
         Ok(None)
+    }
+}
+
+impl PostProcess for MxModeler {
+    fn name(&self) -> &'static str {
+        "mx-cpp"
+    }
+
+    fn process(&self, model: &Model, xsd: &Xsd) -> Result<Model, CreateError> {
+        if let Model::Enumeration(enumer) = model {
+            let mut cloned = enumer.clone();
+            for member in &mut cloned.members {
+                if self.reserved_words.contains(member.camel()) {
+                    let mut replacement = member.camel().to_owned();
+                    replacement.push('_');
+                    member.set_camel(replacement)
+                }
+                if let Some(replacement) = self.enum_member_substitutions.get(member.original()) {
+                    member.replace(replacement);
+                }
+                if member.original() == "" {
+                    member.replace("emptystring");
+                }
+            }
+            return Ok(Model::Enumeration(cloned));
+        }
+        Ok(model.clone())
     }
 }
 
@@ -235,8 +247,12 @@ impl MxModeler {
 }
 
 fn create_pseudo_enum(entry: &Entry, spec: &PseudoEnumSpec) -> CreateResult {
+    let original = entry.id().name();
+    let rename = format!("{}-enum", original);
+    let mut symbol = Symbol::new(original);
+    symbol.replace(rename);
     let mut enumer = model::enumeration::Enumeration {
-        name: Symbol::new(spec.class_name.as_str()),
+        name: symbol,
         members: vec![],
         documentation: entry.documentation(),
         other_field: Some(OtherField {
