@@ -4,20 +4,25 @@
 
 use core::fmt;
 use std::convert::Infallible;
-use std::fmt::{Display, Formatter};
+use std::fmt::{Debug, Display, Formatter};
 
-pub(crate) type Result<T> = std::result::Result<T, Error>;
+pub type Result<T> = std::result::Result<T, Error>;
 
-#[derive(Debug)]
-pub(crate) enum Error {
+pub enum Error {
     Message(MessageError),
 }
 
 impl Display for crate::error::Error {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match self {
-            Error::Message(me) => me.fmt(f),
+            Error::Message(me) => Display::fmt(me, f),
         }
+    }
+}
+
+impl Debug for Error {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        Display::fmt(self, f)
     }
 }
 
@@ -59,7 +64,8 @@ impl Display for ThrowSite {
 
 impl Display for MessageError {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        self.throw_site.fmt(f)?;
+        // self.throw_site.fmt(f)?;
+        Display::fmt(&self.throw_site, f)?;
         if let Some(msg) = &self.message {
             if !msg.is_empty() {
                 write!(f, " - {}", msg)?;
@@ -85,7 +91,7 @@ impl From<Infallible> for Error {
 // internal macros
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-pub(crate) fn box_err<E>(err: Option<E>) -> Option<Box<dyn std::error::Error>>
+pub fn box_err<E>(err: Option<E>) -> Option<Box<dyn std::error::Error>>
 where
     E: std::error::Error + 'static,
 {

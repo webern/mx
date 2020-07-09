@@ -6,7 +6,7 @@ use tempfile::TempDir;
 use uuid::Uuid;
 
 #[allow(unused)]
-pub(crate) fn compile_mx<P: AsRef<Path>>(path_to_mx: P) -> Result<()> {
+pub fn compile_mx<P: AsRef<Path>>(path_to_mx: P) -> Result<()> {
     let tempdir = wrap!(TempDir::new())?;
     let _ = run(
         Command::new("cmake")
