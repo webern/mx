@@ -35,13 +35,13 @@ impl Writer {
     pub(crate) fn write_enums(&self) -> Result<()> {
         let enumerations = self.collect_enums()?;
         let mut hwrite = wrap!(self.open_enums_h())?;
-        let mut cwrite = self.open_enums_cpp()?;
+        let mut cwrite = wrap!(self.open_enums_cpp())?;
         for enumer in &enumerations {
             wrap!(self.write_enum_h(enumer, &mut hwrite))?;
             wrap!(self.write_enum_cpp(enumer, &mut cwrite))?;
         }
-        self.close_enums_h(&mut hwrite)?;
-        self.close_enums_cpp(&mut cwrite)?;
+        wrap!(self.close_enums_h(&mut hwrite))?;
+        wrap!(self.close_enums_cpp(&mut cwrite))?;
         Ok(())
     }
 
@@ -76,21 +76,38 @@ impl Writer {
         Ok(f)
     }
 
-    fn open_enums_cpp(&self) -> Result<impl Write> {
+    fn open_enums_cpp(&self) -> std::io::Result<impl Write> {
         let _igore_error = std::fs::remove_file(&self.paths.enums_cpp);
-        let mut f = wrap!(OpenOptions::new()
+        let mut f = OpenOptions::new()
             .write(true)
             .create(true)
-            .open(&self.paths.enums_cpp))?;
+            .open(&self.paths.enums_cpp)?;
+        l!(&mut f, 0, "// MusicXML Class Library")?;
+        l!(&mut f, 0, "// Copyright (c) by Matthew James Briggs")?;
+        l!(&mut f, 0, "// Distributed under the MIT License")?;
+        l!(&mut f, 0, "")?;
+        l!(&mut f, 0, "#include \"mx/core/Enums.h\"")?;
+        l!(&mut f, 0, "")?;
+        l!(&mut f, 0, "#include <ostream>")?;
+        l!(&mut f, 0, "#include <string>")?;
+        l!(&mut f, 0, "")?;
+        l!(&mut f, 0, "namespace mx")?;
+        l!(&mut f, 0, "{{")?;
+        l!(&mut f, 1, "namespace core")?;
+        l!(&mut f, 1, "{{")?;
         Ok(f)
     }
 
-    fn close_enums_h<W: Write>(&self, w: W) -> Result<()> {
-        unimplemented!();
+    fn close_enums_h<W: Write>(&self, w: &mut W) -> std::io::Result<()> {
+        l!(w, 1, "}}")?;
+        l!(w, 0, "}}")?;
+        Ok(())
     }
 
-    fn close_enums_cpp<W: Write>(&self, w: W) -> Result<()> {
-        unimplemented!();
+    fn close_enums_cpp<W: Write>(&self, w: &mut W) -> std::io::Result<()> {
+        l!(w, 1, "}}")?;
+        l!(w, 0, "}}")?;
+        Ok(())
     }
 
     fn write_enum_h<W: Write>(&self, enumer: &Enumeration, w: &mut W) -> std::io::Result<()> {
