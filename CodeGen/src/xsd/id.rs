@@ -180,8 +180,14 @@ pub struct RootNodeId {
 }
 
 impl RootNodeId {
+    pub fn index(&self) -> Option<u64> {
+        self.index
+    }
     pub fn name(&self) -> Cow<'_, str> {
         Cow::Borrowed(self.name.as_str())
+    }
+    pub fn type_(&self) -> RootNodeType {
+        self.type_
     }
 }
 
