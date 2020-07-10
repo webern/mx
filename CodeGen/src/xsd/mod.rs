@@ -13,6 +13,7 @@ pub mod group;
 pub mod id;
 pub mod import;
 pub mod list;
+pub mod primitives;
 pub mod restriction;
 pub mod sequence;
 pub mod simple_content;
@@ -41,12 +42,14 @@ use std::path::Path;
 #[derive(Clone, Debug)]
 pub struct Xsd {
     entries: Vec<Entry>,
+    xsd_prefix: String,
 }
 
 impl Default for Xsd {
     fn default() -> Self {
         Self {
             entries: Vec::new(),
+            xsd_prefix: "xs".to_owned(),
         }
     }
 }
@@ -66,7 +69,27 @@ impl Xsd {
         if root.name != "schema" {
             return raise!("expected the root node to be named 'schema'");
         }
-        let mut xsd = Xsd::default();
+        let mut prefix = "";
+        for (k, v) in root.attributes.map() {
+            if v.as_str() == "http://www.w3.org/2001/XMLSchema" {
+                if k.starts_with("xmlns:") {
+                    let mut split = k.split(':');
+                    let _ = split.next().ok_or(make_err!("expected to find xmlns:"))?;
+                    let ns: &str = split
+                        .next()
+                        .ok_or(make_err!("expected to find xmlns prefix"))?;
+                    prefix = ns;
+                    break;
+                }
+            }
+        }
+        if prefix.is_empty() {
+            return raise!("xmlns prefix is empty");
+        }
+        let mut xsd = Xsd {
+            entries: Vec::new(),
+            xsd_prefix: prefix.to_owned(),
+        };
         for (i, entry_node) in root.children().enumerate() {
             let entry = Entry::from_xml(entry_node, Lineage::Index(i as u64))?;
             xsd.add_entry(entry)?;
@@ -100,14 +123,14 @@ impl Xsd {
             }
         }
         if let Some(i) = pos {
-            // TODO - this can panic
+            // Note - this can panic, but shouldn't unless a data race occurs.
             Ok(self.entries.remove(i))
         } else {
             raise!("entry '{}' not found", id)
         }
     }
 
-    // TODO - this will need to be an iterator so the underlying data structure can change.
+    // TODO - this should be an iterator so the underlying data structure can change.
     pub fn entries(&self) -> &Vec<Entry> {
         &self.entries
     }

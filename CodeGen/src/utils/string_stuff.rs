@@ -1,4 +1,4 @@
-// TODO - constants are bad
+// TODO - these string constants are inflexible.
 pub const LINE_WIDTH: usize = 100;
 pub const INDENT: &str = "    ";
 pub const DOC_COMMENT: &str = "///";

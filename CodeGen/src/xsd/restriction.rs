@@ -49,8 +49,8 @@ length|minLength|maxLength|enumeration|whiteSpace|pattern)*))
   pattern | assertion | explicitTimezone | {any with namespace: ##other})*))
 </restriction>
  */
-// TODO - support additional facets
 
+/// Restriction facets. Note, not all are supported.
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Ord, PartialOrd)]
 pub enum FacetType {
     Enumeration,
