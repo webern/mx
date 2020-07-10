@@ -5,6 +5,7 @@ use crate::xsd::element::Element;
 use crate::xsd::group::Group;
 use crate::xsd::id::{Id, Lineage, RootNodeType};
 use crate::xsd::sequence::Sequence;
+use crate::xsd::Xsd;
 
 #[derive(Clone, Debug)]
 pub struct Choice {
@@ -30,7 +31,7 @@ impl Choice {
         return "".to_owned();
     }
 
-    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Self> {
+    pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
         if node.name.as_str() != CHOICE {
             return raise!("expected '{}', got '{}'", CHOICE, node.name.as_str());
         }
@@ -40,15 +41,21 @@ impl Choice {
         for inner in node.children() {
             let t = inner.name.as_str();
             match t {
-                ANNOTATION => annotation = Some(Annotation::from_xml(inner, lineage.clone())?),
+                ANNOTATION => annotation = Some(Annotation::from_xml(inner, lineage.clone(), xsd)?),
                 ELEMENT => choices.push(ChoiceItem::Element(Element::from_xml(
                     inner,
                     lineage.clone(),
+                    xsd,
                 )?)),
-                GROUP => choices.push(ChoiceItem::Group(Group::from_xml(inner, lineage.clone())?)),
+                GROUP => choices.push(ChoiceItem::Group(Group::from_xml(
+                    inner,
+                    lineage.clone(),
+                    xsd,
+                )?)),
                 SEQUENCE => choices.push(ChoiceItem::Sequence(Sequence::from_xml(
                     inner,
                     lineage.clone(),
+                    xsd,
                 )?)),
                 _ => return raise!("cannot parse '{}', unexpected node '{}'", CHOICE, t),
             }

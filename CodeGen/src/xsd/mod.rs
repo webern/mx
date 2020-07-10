@@ -91,7 +91,7 @@ impl Xsd {
             xsd_prefix: prefix.to_owned(),
         };
         for (i, entry_node) in root.children().enumerate() {
-            let entry = Entry::from_xml(entry_node, Lineage::Index(i as u64))?;
+            let entry = Entry::from_xml(entry_node, Lineage::Index(i as u64), &xsd)?;
             xsd.add_entry(entry)?;
         }
         Ok(xsd)
@@ -157,21 +157,25 @@ pub enum Entry {
 }
 
 impl Entry {
-    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Self> {
+    pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
         let n = node.name.as_str();
         let t = RootNodeType::parse(n)?;
         match t {
-            RootNodeType::Annotation => Ok(Entry::Annotation(Annotation::from_xml(node, lineage)?)),
-            RootNodeType::AttributeGroup => Ok(Entry::AttributeGroup(AttributeGroup::from_xml(
-                node, lineage,
-            )?)),
-            RootNodeType::ComplexType => {
-                Ok(Entry::ComplexType(ComplexType::from_xml(node, lineage)?))
+            RootNodeType::Annotation => {
+                Ok(Entry::Annotation(Annotation::from_xml(node, lineage, xsd)?))
             }
-            RootNodeType::Element => Ok(Entry::Element(Element::from_xml(node, lineage)?)),
-            RootNodeType::Group => Ok(Entry::Group(GroupDefinition::from_xml(node, lineage)?)),
-            RootNodeType::Import => Ok(Entry::Import(Import::from_xml(node, lineage)?)),
-            RootNodeType::SimpleType => Ok(Entry::SimpleType(SimpleType::from_xml(node, lineage)?)),
+            RootNodeType::AttributeGroup => Ok(Entry::AttributeGroup(AttributeGroup::from_xml(
+                node, lineage, xsd,
+            )?)),
+            RootNodeType::ComplexType => Ok(Entry::ComplexType(ComplexType::from_xml(
+                node, lineage, xsd,
+            )?)),
+            RootNodeType::Element => Ok(Entry::Element(Element::from_xml(node, lineage, xsd)?)),
+            RootNodeType::Group => Ok(Entry::Group(GroupDefinition::from_xml(node, lineage, xsd)?)),
+            RootNodeType::Import => Ok(Entry::Import(Import::from_xml(node, lineage, xsd)?)),
+            RootNodeType::SimpleType => {
+                Ok(Entry::SimpleType(SimpleType::from_xml(node, lineage, xsd)?))
+            }
         }
     }
 

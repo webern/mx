@@ -3,7 +3,7 @@ use crate::xsd::annotation::Annotation;
 use crate::xsd::complex_type::ComplexType;
 use crate::xsd::constants::{ANNOTATION, COMPLEX_TYPE, ELEMENT, NAME, TYPE};
 use crate::xsd::id::{Id, Lineage, RootNodeType};
-use crate::xsd::{name_attribute, type_attribute, Occurs};
+use crate::xsd::{name_attribute, type_attribute, Occurs, Xsd};
 
 #[derive(Clone, Debug)]
 pub enum Element {
@@ -49,12 +49,16 @@ impl Element {
         }
     }
 
-    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Element> {
+    pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Element> {
         let (id, lineage) = Id::make(lineage, node)?;
         if let Some(_) = node.attributes.map().get(TYPE) {
-            Ok(Element::Reference(ElementRef::from_xml(node, lineage)?))
+            Ok(Element::Reference(ElementRef::from_xml(
+                node, lineage, xsd,
+            )?))
         } else {
-            Ok(Element::Definition(ElementDef::from_xml(node, lineage)?))
+            Ok(Element::Definition(ElementDef::from_xml(
+                node, lineage, xsd,
+            )?))
         }
     }
 }
@@ -76,7 +80,7 @@ impl ElementDef {
         return "".to_owned();
     }
 
-    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Self> {
+    pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
         let id = lineage.parent().unwrap();
         if node.name.as_str() != ELEMENT {
             return raise!("expected '{}', got '{}'", ELEMENT, node.name.as_str());
@@ -86,8 +90,10 @@ impl ElementDef {
         for inner in node.children() {
             let t = inner.name.as_str();
             match t {
-                ANNOTATION => annotation = Some(Annotation::from_xml(inner, lineage.clone())?),
-                COMPLEX_TYPE => complex_type = Some(ComplexType::from_xml(inner, lineage.clone())?),
+                ANNOTATION => annotation = Some(Annotation::from_xml(inner, lineage.clone(), xsd)?),
+                COMPLEX_TYPE => {
+                    complex_type = Some(ComplexType::from_xml(inner, lineage.clone(), xsd)?)
+                }
                 _ => return raise!("unsupported inner type: '{}'", t),
             }
         }
@@ -124,7 +130,7 @@ impl ElementRef {
         return "".to_owned();
     }
 
-    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Self> {
+    pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
         if node.name.as_str() != ELEMENT {
             return raise!("expected '{}', got '{}'", ELEMENT, node.name.as_str());
         }
@@ -133,7 +139,7 @@ impl ElementRef {
         for inner in node.children() {
             let t = inner.name.as_str();
             if t == ANNOTATION {
-                annotation = Some(Annotation::from_xml(inner, lineage.clone())?);
+                annotation = Some(Annotation::from_xml(inner, lineage.clone(), xsd)?);
                 break;
             }
         }

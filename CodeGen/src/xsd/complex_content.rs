@@ -3,6 +3,7 @@ use crate::xsd::annotation::Annotation;
 use crate::xsd::constants::{ANNOTATION, COMPLEX_CONTENT, EXTENSION, NAME};
 use crate::xsd::extension::Extension;
 use crate::xsd::id::{Id, Lineage, RootNodeType};
+use crate::xsd::Xsd;
 
 #[derive(Clone, Debug)]
 pub struct ComplexContent {
@@ -19,7 +20,7 @@ impl ComplexContent {
         return "".to_owned();
     }
 
-    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Self> {
+    pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
         if node.name.as_str() != COMPLEX_CONTENT {
             return raise!("expected '{}', got '{}'", COMPLEX_CONTENT, &node.name);
         }
@@ -29,9 +30,9 @@ impl ComplexContent {
         for inner in node.children() {
             let t = inner.name.as_str();
             match t {
-                ANNOTATION => annotation = Some(Annotation::from_xml(inner, lineage.clone())?),
+                ANNOTATION => annotation = Some(Annotation::from_xml(inner, lineage.clone(), xsd)?),
                 EXTENSION => {
-                    extension = Some(Extension::from_xml(inner, lineage.clone())?);
+                    extension = Some(Extension::from_xml(inner, lineage.clone(), xsd)?);
                 }
                 _ => return raise!("unsupported simpleContent node '{}'", t),
             }

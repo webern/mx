@@ -5,7 +5,7 @@ use crate::xsd::constants::{
     MIN_INCLUSIVE, MIN_LENGTH, NAME, PATTERN, RESTRICTION,
 };
 use crate::xsd::restriction::FacetType::Pattern;
-use crate::xsd::{base_attribute, value_attribute};
+use crate::xsd::{base_attribute, value_attribute, Xsd};
 use exile::Element;
 
 use crate::xsd::id::{Id, Lineage, RootNodeType};
@@ -184,7 +184,7 @@ impl Restriction {
         return "".to_owned();
     }
 
-    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Self> {
+    pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
         if node.name.as_str() != RESTRICTION {
             return raise!("expected '{}', got '{}'", RESTRICTION, &node.name);
         }
@@ -195,7 +195,7 @@ impl Restriction {
         for inner in node.children() {
             let t = inner.name.as_str();
             if t == ANNOTATION {
-                annotation = Some(Annotation::from_xml(inner, lineage.clone())?);
+                annotation = Some(Annotation::from_xml(inner, lineage.clone(), xsd)?);
             } else {
                 let facet = Facet::from_xml(inner)?;
                 facets.push(facet);

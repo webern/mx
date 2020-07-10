@@ -5,7 +5,7 @@ use crate::xsd::constants::{ANNOTATION, CHOICE, ELEMENT, GROUP, NAME, SEQUENCE};
 use crate::xsd::element::Element;
 use crate::xsd::group::Group;
 use crate::xsd::id::{Id, Lineage, RootNodeType};
-use crate::xsd::Occurs;
+use crate::xsd::{Occurs, Xsd};
 
 #[derive(Clone, Debug)]
 pub struct Sequence {
@@ -31,7 +31,7 @@ impl Sequence {
         return "".to_owned();
     }
 
-    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Self> {
+    pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
         if node.name.as_str() != SEQUENCE {
             return raise!("expected '{}', got '{}'", SEQUENCE, node.name.as_str());
         }
@@ -41,15 +41,22 @@ impl Sequence {
         for inner in node.children() {
             let t = inner.name.as_str();
             match t {
-                ANNOTATION => annotation = Some(Annotation::from_xml(inner, lineage.clone())?),
-                CHOICE => members.push(Member::Choice(Choice::from_xml(inner, lineage.clone())?)),
-                ELEMENT => {
-                    members.push(Member::Element(Element::from_xml(inner, lineage.clone())?))
-                }
-                GROUP => members.push(Member::Group(Group::from_xml(inner, lineage.clone())?)),
+                ANNOTATION => annotation = Some(Annotation::from_xml(inner, lineage.clone(), xsd)?),
+                CHOICE => members.push(Member::Choice(Choice::from_xml(
+                    inner,
+                    lineage.clone(),
+                    xsd,
+                )?)),
+                ELEMENT => members.push(Member::Element(Element::from_xml(
+                    inner,
+                    lineage.clone(),
+                    xsd,
+                )?)),
+                GROUP => members.push(Member::Group(Group::from_xml(inner, lineage.clone(), xsd)?)),
                 SEQUENCE => members.push(Member::Sequence(Sequence::from_xml(
                     inner,
                     lineage.clone(),
+                    xsd,
                 )?)),
                 _ => return raise!("unknown {} member: '{}'", SEQUENCE, t),
             }

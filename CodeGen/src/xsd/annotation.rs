@@ -1,6 +1,7 @@
 use crate::error::Result;
 use crate::xsd::constants::{ANNOTATION, APP_INFO, DOCUMENTATION, NAME};
 use crate::xsd::id::{Id, Lineage, RootNodeType};
+use crate::xsd::Xsd;
 use std::fmt::{Debug, Formatter};
 
 #[derive(Clone, Debug)]
@@ -25,7 +26,7 @@ impl Annotation {
         "".to_owned()
     }
 
-    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Self> {
+    pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
         let (id, lineage) = Id::make(lineage, node)?;
         let mut items = Vec::new();
         if node.name.as_str() != ANNOTATION {

@@ -1,9 +1,9 @@
 use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::attributes::{AttributeItem, Attributes};
-use crate::xsd::base_attribute;
 use crate::xsd::constants::{ANNOTATION, ATTRIBUTE, ATTRIBUTE_GROUP, EXTENSION, NAME};
 use crate::xsd::id::{Id, Lineage, RootNodeType};
+use crate::xsd::{base_attribute, Xsd};
 
 #[derive(Clone, Debug)]
 pub struct Extension {
@@ -21,7 +21,7 @@ impl Extension {
         return "".to_owned();
     }
 
-    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Self> {
+    pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
         if node.name.as_str() != EXTENSION {
             return raise!("expected '{}', got '{}'", EXTENSION, &node.name);
         }
@@ -32,9 +32,9 @@ impl Extension {
         for inner in node.children() {
             let t = inner.name.as_str();
             match t {
-                ANNOTATION => annotation = Some(Annotation::from_xml(inner, lineage.clone())?),
+                ANNOTATION => annotation = Some(Annotation::from_xml(inner, lineage.clone(), xsd)?),
                 ATTRIBUTE | ATTRIBUTE_GROUP => {
-                    attributes.push(AttributeItem::from_xml(inner, lineage.clone())?);
+                    attributes.push(AttributeItem::from_xml(inner, lineage.clone(), xsd)?);
                 }
                 _ => return raise!("unsupported {} member '{}'", EXTENSION, t),
             }

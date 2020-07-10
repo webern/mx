@@ -4,6 +4,7 @@ use crate::xsd::attribute::Attribute;
 use crate::xsd::attribute_group::AttributeGroup;
 use crate::xsd::constants::{ANNOTATION, ATTRIBUTE, ATTRIBUTE_GROUP};
 use crate::xsd::id::Lineage;
+use crate::xsd::Xsd;
 
 pub type Attributes = Vec<AttributeItem>;
 
@@ -14,12 +15,12 @@ pub enum AttributeItem {
 }
 
 impl AttributeItem {
-    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Self> {
+    pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
         let t = node.name.as_str();
         match t {
-            ATTRIBUTE => Ok(Self::Attribute(Attribute::from_xml(node, lineage)?)),
+            ATTRIBUTE => Ok(Self::Attribute(Attribute::from_xml(node, lineage, xsd)?)),
             ATTRIBUTE_GROUP => Ok(Self::AttributeGroup(AttributeGroup::from_xml(
-                node, lineage,
+                node, lineage, xsd,
             )?)),
             _ => return raise!("unexpected node '{}'", t),
         }
@@ -28,13 +29,17 @@ impl AttributeItem {
 
 /// Ignores `parent` but parses each of its children into an AttributeItem. Ignores `annotation`
 /// and returns an error if anything else other then `attribute` or `attributeGroup` is found.
-pub fn add_attributes_from_xml(parent: &exile::Element, lineage: Lineage) -> Result<Attributes> {
+pub fn add_attributes_from_xml(
+    parent: &exile::Element,
+    lineage: Lineage,
+    xsd: &Xsd,
+) -> Result<Attributes> {
     let mut items = Attributes::new();
     for it in parent.children() {
         let t = it.name.as_str();
         match t {
             ANNOTATION => continue,
-            _ => items.push(AttributeItem::from_xml(it, lineage.clone())?),
+            _ => items.push(AttributeItem::from_xml(it, lineage.clone(), xsd)?),
         }
     }
     Ok(items)
