@@ -1,4 +1,8 @@
-use crate::generate::mx_writer::{DOC_COMMENT, INDENT, LINE_WIDTH};
+// TODO - constants are bad
+pub const LINE_WIDTH: usize = 100;
+pub const INDENT: &str = "    ";
+pub const DOC_COMMENT: &str = "///";
+
 use std::cmp::Ordering;
 use std::fmt::{Display, Formatter};
 use std::io::Write;
@@ -81,11 +85,46 @@ impl Symbol {
     }
 }
 
-pub(crate) fn pascal_case<S: AsRef<str>>(s: S) -> Symbol {
+pub fn tokenize<S: AsRef<str>>(s: S) -> Vec<String> {
+    let mut tokens = Vec::new();
+    let mut buf = String::new();
+    let mut is_word_start = true;
+    let mut was_lowercase = true;
+    let mut was_digit = false;
+    for c in s.as_ref().chars() {
+        if was_lowercase && c.is_uppercase() {
+            is_word_start = true;
+        }
+        if c.is_ascii_digit() {
+            is_word_start = !was_digit;
+        }
+        if !c.is_alphanumeric() {
+            is_word_start = true;
+        } else if is_word_start {
+            if !buf.is_empty() {
+                tokens.push(buf);
+                buf = String::new();
+            }
+            buf.push(c.to_ascii_lowercase());
+            is_word_start = false;
+        } else {
+            buf.push(c.to_ascii_lowercase());
+            is_word_start = false;
+        }
+        was_lowercase = !c.is_ascii_digit() && c.is_lowercase();
+        was_digit = c.is_ascii_digit();
+    }
+    if !buf.is_empty() {
+        tokens.push(buf);
+    }
+    tokens
+}
+
+pub fn pascal_case<S: AsRef<str>>(s: S) -> Symbol {
     case(s, Case::Pascal)
 }
 
-pub(crate) fn camel_case<S: AsRef<str>>(s: S) -> Symbol {
+pub fn camel_case<S: AsRef<str>>(s: S) -> Symbol {
     case(s, Case::Camel)
 }
 
@@ -102,9 +141,8 @@ fn case<S: AsRef<str>>(s: S, cs: Case) -> Symbol {
         if !c.is_alphanumeric() {
             is_next_upper = true;
         } else if c.is_ascii_digit() {
-            // idiosyncrasy of the first implementation
             out.push(c);
-            is_next_upper = true;
+            is_next_upper = false;
         } else if is_next_upper {
             out.push(c.to_ascii_uppercase());
             is_next_upper = false;
@@ -158,11 +196,7 @@ where
     Ok(())
 }
 
-pub(crate) fn linestart<W: Write>(
-    w: &mut W,
-    indents: usize,
-    add_space: bool,
-) -> std::io::Result<usize> {
+pub fn linestart<W: Write>(w: &mut W, indents: usize, add_space: bool) -> std::io::Result<usize> {
     let mut pos: usize = 0;
     for _ in 0..indents {
         write!(w, "{}", INDENT)?;
@@ -177,7 +211,7 @@ pub(crate) fn linestart<W: Write>(
     Ok(pos)
 }
 
-pub(crate) fn words<S: AsRef<str>>(s: S) -> Vec<String> {
+pub fn words<S: AsRef<str>>(s: S) -> Vec<String> {
     let mut result = Vec::new();
     let mut consecutive_newlines = 0;
     let mut word = String::new();
@@ -208,7 +242,8 @@ pub(crate) fn words<S: AsRef<str>>(s: S) -> Vec<String> {
 #[cfg(test)]
 mod tests {
     use super::{words, Symbol};
-    use std::io::{Cursor, Write};
+    use crate::utils::string_stuff::tokenize;
+    use std::io::Cursor;
 
     #[test]
     fn pascal_case_clef_tab() {
@@ -290,9 +325,9 @@ mod tests {
 
     #[test]
     fn pascal_case_chord_kind() {
-        let input = "DomInAnt11th";
+        let input = "dominant-11th";
         let got = super::pascal_case(input);
-        let want = "Dominant11Th".to_string();
+        let want = "Dominant11th".to_string();
         assert_eq!(got.value(), want);
         if let Symbol::Altered(altered) = got {
             assert_eq!(altered.original.as_str(), input);
@@ -305,7 +340,7 @@ mod tests {
     fn camel_case_step_chord_kind() {
         let input = "DomInAnt 1 1th";
         let got = super::camel_case(input);
-        let want = "dominant11Th".to_string();
+        let want = "dominant11th".to_string();
         assert_eq!(got.value(), want);
         if let Symbol::Altered(altered) = got {
             assert_eq!(altered.original.as_str(), input);
@@ -385,5 +420,36 @@ mod tests {
     ///
     /// d"#;
         assert_eq!(got, want);
+    }
+
+    #[test]
+    fn tokenize_strings() {
+        struct TestCase {
+            input: &'static str,
+            want: Vec<String>,
+        }
+        let mut test_cases = vec![
+            TestCase {
+                input: "modeValue",
+                want: vec!["mode".to_owned(), "value".to_owned()],
+            },
+            TestCase {
+                input: "DomInAnt11th",
+                want: vec![
+                    "dom".to_owned(),
+                    "in".to_owned(),
+                    "ant".to_owned(),
+                    "11th".to_owned(),
+                ],
+            },
+            TestCase {
+                input: "dominant11th",
+                want: vec!["dominant".to_owned(), "11th".to_owned()],
+            },
+        ];
+        for test_case in &test_cases {
+            let got = tokenize(test_case.input);
+            assert_eq!(got, test_case.want);
+        }
     }
 }

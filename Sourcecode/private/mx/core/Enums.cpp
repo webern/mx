@@ -859,10 +859,10 @@ namespace mx
         }
 
         DynamicsValue::DynamicsValue()
-        :myEnum( DynamicsEnum::otherDynamics )
+        :myEnum( DynamicsEnum::mf )
         ,myCustomValue( "" )
         {
-            setValue( DynamicsEnum::otherDynamics );
+            setValue( DynamicsEnum::mf );
         }
 
         DynamicsEnum DynamicsValue::getValue() const
