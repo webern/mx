@@ -31,9 +31,6 @@ impl Annotation {
         check!(ANNOTATION, node, xsd)?;
         let (id, lineage) = Id::make(lineage, node)?;
         let mut items = Vec::new();
-        // if node.name.as_str() != ANNOTATION {
-        //     return raise!("expected '{}', got '{}'", ANNOTATION, &node.name);
-        // }
         for inner in node.children() {
             let t = inner.name.as_str();
             if let Some(s) = inner.text() {
@@ -82,4 +79,46 @@ fn parse() {
     assert_eq!(got_name, want_name);
     let got_type = annotation.id.root_node_type().unwrap();
     assert_eq!(got_type, RootNodeType::Annotation);
+}
+
+#[test]
+fn parse_foo_err() {
+    let want_index: u64 = 13;
+    let want_name = "4594507136952412519";
+    let want_doc = "bishop is sleeping.";
+    let xml = exile::Element {
+        namespace: Some("xs".to_owned()),
+        name: ANNOTATION.to_owned(),
+        attributes: Default::default(),
+        nodes: vec![exile::Node::Element(exile::Element {
+            namespace: Some("xs".to_owned()),
+            name: DOCUMENTATION.to_owned(),
+            attributes: Default::default(),
+            nodes: vec![exile::Node::Text(want_doc.to_owned())],
+        })],
+    };
+
+    let result = Annotation::from_xml(&xml, Lineage::Index(want_index), &Xsd::new("foo"));
+    assert!(result.is_err());
+}
+
+#[test]
+fn parse_foo_ok() {
+    let want_index: u64 = 13;
+    let want_name = "4594507136952412519";
+    let want_doc = "bishop is sleeping.";
+    let xml = exile::Element {
+        namespace: Some("foo".to_owned()),
+        name: ANNOTATION.to_owned(),
+        attributes: Default::default(),
+        nodes: vec![exile::Node::Element(exile::Element {
+            namespace: Some("foo".to_owned()),
+            name: DOCUMENTATION.to_owned(),
+            attributes: Default::default(),
+            nodes: vec![exile::Node::Text(want_doc.to_owned())],
+        })],
+    };
+
+    let result = Annotation::from_xml(&xml, Lineage::Index(want_index), &Xsd::new("foo"));
+    assert!(result.is_ok());
 }
