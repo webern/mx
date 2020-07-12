@@ -26,9 +26,7 @@ impl SimpleContent {
     }
 
     pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
-        if node.name.as_str() != SIMPLE_CONTENT {
-            return raise!("expected '{}', got '{}'", SIMPLE_CONTENT, &node.name);
-        }
+        check!(SIMPLE_CONTENT, node, xsd)?;
         let (id, lineage) = Id::make(lineage, node)?;
         let mut annotation = None;
         let mut payload = None;
@@ -75,7 +73,7 @@ fn parse() {
     let xml = doc.root();
     let want_id = "element:foo:simpleContent:17852308769138094955".to_owned();
     let want_doc = "";
-    let sc = SimpleContent::from_xml(&xml, lineage).unwrap();
+    let sc = SimpleContent::from_xml(&xml, lineage, &Xsd::new("xs")).unwrap();
     let got_doc = sc.documentation();
     assert_eq!(got_doc.as_str(), want_doc);
     let got_id = format!("{}", sc.id);

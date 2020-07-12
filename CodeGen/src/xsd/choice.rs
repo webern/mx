@@ -32,9 +32,7 @@ impl Choice {
     }
 
     pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
-        if node.name.as_str() != CHOICE {
-            return raise!("expected '{}', got '{}'", CHOICE, node.name.as_str());
-        }
+        check!(CHOICE, node, xsd)?;
         let (id, lineage) = Id::make(lineage, node)?;
         let mut annotation = None;
         let mut choices = Choices::new();
@@ -111,7 +109,7 @@ fn parse_credit() {
     </xs:choice>"#;
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
-    let ch = Choice::from_xml(&xml, Lineage::Parent(parent)).unwrap();
+    let ch = Choice::from_xml(&xml, Lineage::Parent(parent), &Xsd::new("xs")).unwrap();
     assert_eq!(
         format!("{}", ch.id),
         "element:foo:choice:863778347360799337"

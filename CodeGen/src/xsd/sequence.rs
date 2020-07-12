@@ -32,9 +32,7 @@ impl Sequence {
     }
 
     pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
-        if node.name.as_str() != SEQUENCE {
-            return raise!("expected '{}', got '{}'", SEQUENCE, node.name.as_str());
-        }
+        check!(SEQUENCE, node, xsd)?;
         let (id, lineage) = Id::make(lineage, node)?;
         let mut annotation = None;
         let mut members = Vec::new();
@@ -95,7 +93,7 @@ fn parse() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let want_index: u64 = 3;
-    let seq = Sequence::from_xml(&xml, lineage).unwrap();
+    let seq = Sequence::from_xml(&xml, lineage, &Xsd::new("xs")).unwrap();
     let got_id = format!("{}", seq.id);
     let want_id = "element:foo:sequence:12280079412076832312";
     assert_eq!(got_id.as_str(), want_id);

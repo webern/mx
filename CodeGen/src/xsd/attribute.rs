@@ -26,9 +26,7 @@ impl Attribute {
     }
 
     pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
-        if node.name.as_str() != ATTRIBUTE {
-            return raise!("expected '{}', got '{}'", ATTRIBUTE, node.name.as_str());
-        }
+        check!(ATTRIBUTE, node, xsd)?;
         let (id, lineage) = Id::make(lineage, node)?;
         let name = Self::parse_name(node);
         let defined_by = Self::parse_defined_by(node)?;

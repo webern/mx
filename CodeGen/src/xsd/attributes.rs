@@ -51,7 +51,7 @@ fn parse_attribute_group() {
     let xml_str = r#"<xs:attributeGroup ref="document-attributes"/>"#;
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
-    let result = AttributeItem::from_xml(&xml, Lineage::Parent(parent)).unwrap();
+    let result = AttributeItem::from_xml(&xml, Lineage::Parent(parent), &Xsd::new("xs")).unwrap();
     match &result {
         AttributeItem::AttributeGroup(x) => assert!(x.is_ref()),
         AttributeItem::Attribute(_) => panic!("expected AttributeGroup got Attribute"),
@@ -64,7 +64,7 @@ fn parse_attribute() {
     let xml_str = r#"<xs:attribute name="accelerate" type="yes-no"/>"#;
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
-    let result = AttributeItem::from_xml(&xml, Lineage::Parent(parent)).unwrap();
+    let result = AttributeItem::from_xml(&xml, Lineage::Parent(parent), &Xsd::new("xs")).unwrap();
     match &result {
         AttributeItem::AttributeGroup(_) => panic!("expected AttributeGroup got Attribute"),
         AttributeItem::Attribute(a) => assert_eq!(a.name, "accelerate"),
@@ -86,7 +86,7 @@ fn attributes() {
 	</xs:attributeGroup>"#;
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
-    let result = add_attributes_from_xml(&xml, Lineage::Parent(parent)).unwrap();
+    let result = add_attributes_from_xml(&xml, Lineage::Parent(parent), &Xsd::new("xs")).unwrap();
     assert_eq!(result.len(), 4);
     match result.get(0).unwrap() {
         AttributeItem::AttributeGroup(ag) => assert!(ag.is_ref()),

@@ -51,9 +51,7 @@ impl ComplexType {
     }
 
     pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
-        if node.name.as_str() != COMPLEX_TYPE {
-            return raise!("expected '{}', got '{}'", COMPLEX_TYPE, node.name.as_str());
-        }
+        check!(COMPLEX_TYPE, node, xsd)?;
         let (id, lineage) = Id::make(lineage, node)?;
         let mut annotation = None;
         let mut payload = Payload::None;
@@ -166,7 +164,7 @@ fn parse_parent_sequence() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let want_index: u64 = 6;
-    let ct = ComplexType::from_xml(&xml, Lineage::Index(want_index)).unwrap();
+    let ct = ComplexType::from_xml(&xml, Lineage::Index(want_index), &Xsd::new("xs")).unwrap();
     assert_eq!(format!("{}", ct.id), "complexType:14524941899531583637");
     assert_eq!(ct.documentation().as_str(), "");
     let parent = if let Payload::Parent(p) = ct.payload {
@@ -203,7 +201,7 @@ fn parse_parent_group() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let want_index: u64 = 6;
-    let ct = ComplexType::from_xml(&xml, Lineage::Index(want_index)).unwrap();
+    let ct = ComplexType::from_xml(&xml, Lineage::Index(want_index), &Xsd::new("xs")).unwrap();
     assert_eq!(format!("{}", ct.id), "complexType:system-margins");
     assert_eq!(
         ct.documentation().as_str(),
@@ -243,7 +241,7 @@ fn parse_parent_choice() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let want_index: u64 = 6;
-    let ct = ComplexType::from_xml(&xml, Lineage::Index(want_index)).unwrap();
+    let ct = ComplexType::from_xml(&xml, Lineage::Index(want_index), &Xsd::new("xs")).unwrap();
     assert_eq!(format!("{}", ct.id), "complexType:arrow");
     assert_eq!(
         ct.documentation().as_str(),
@@ -296,7 +294,7 @@ fn parse_complex_content() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let want_index: u64 = 6;
-    let ct = ComplexType::from_xml(&xml, Lineage::Index(want_index)).unwrap();
+    let ct = ComplexType::from_xml(&xml, Lineage::Index(want_index), &Xsd::new("xs")).unwrap();
     assert_eq!(format!("{}", ct.id), "complexType:heel-toe");
     assert_eq!(
         ct.documentation().as_str(),
@@ -335,7 +333,7 @@ fn parse_simple_content() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let want_index: u64 = 6;
-    let ct = ComplexType::from_xml(&xml, Lineage::Index(want_index)).unwrap();
+    let ct = ComplexType::from_xml(&xml, Lineage::Index(want_index), &Xsd::new("xs")).unwrap();
     assert_eq!(format!("{}", ct.id), "complexType:hole-closed");
     assert_eq!(
         ct.documentation().as_str(),

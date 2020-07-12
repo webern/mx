@@ -23,9 +23,7 @@ impl Import {
     }
 
     pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
-        if node.name.as_str() != IMPORT {
-            return raise!("expected '{}', got '{}'", IMPORT, &node.name);
-        }
+        check!(IMPORT, node, xsd)?;
         let (id, lineage) = Id::make(lineage, node)?;
         let namespace = namespace_attribute(node)?;
         let schema_location = node

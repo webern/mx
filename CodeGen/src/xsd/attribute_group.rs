@@ -43,6 +43,7 @@ impl AttributeGroup {
     }
 
     pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<AttributeGroup> {
+        check!(ATTRIBUTE_GROUP, node, xsd)?;
         let (id, lineage) = Id::make(lineage, node)?;
         if let Some(_ref_) = node.attributes.map().get(REF) {
             Ok(AttributeGroup::Ref(AttributeGroupRef::from_xml(

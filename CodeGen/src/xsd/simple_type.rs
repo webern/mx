@@ -31,9 +31,7 @@ impl SimpleType {
     }
 
     pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
-        if node.name.as_str() != SIMPLE_TYPE {
-            return raise!("expected '{}', got '{}'", SIMPLE_TYPE, &node.name);
-        }
+        check!(SIMPLE_TYPE, node, xsd)?;
         let (id, lineage) = Id::make(lineage, node)?;
         let mut annotation = None;
         let mut payload = None;
@@ -87,7 +85,7 @@ fn parse_enum() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let want_index: u64 = 3;
-    let st = SimpleType::from_xml(&xml, Lineage::Index(want_index)).unwrap();
+    let st = SimpleType::from_xml(&xml, Lineage::Index(want_index), &Xsd::new("xs")).unwrap();
     assert_eq!(st.id.index().unwrap(), want_index);
     let got_id = st.id.to_string();
     let want_id = "simpleType:above-below".to_owned();
@@ -132,7 +130,7 @@ fn parse_numeric() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let want_index: u64 = 4;
-    let st = SimpleType::from_xml(&xml, Lineage::Index(want_index)).unwrap();
+    let st = SimpleType::from_xml(&xml, Lineage::Index(want_index), &Xsd::new("xs")).unwrap();
     assert_eq!(st.id.index().unwrap(), want_index);
     let got_id = st.id.to_string();
     let want_id = "simpleType:midi-16".to_owned();
@@ -178,7 +176,7 @@ fn parse_pattern() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let want_index: u64 = 3;
-    let st = SimpleType::from_xml(&xml, Lineage::Index(want_index)).unwrap();
+    let st = SimpleType::from_xml(&xml, Lineage::Index(want_index), &Xsd::new("xs")).unwrap();
     assert_eq!(st.id.index().unwrap(), want_index);
     let got_id = st.id.to_string();
     let want_id = "simpleType:time-only".to_owned();

@@ -81,10 +81,8 @@ impl ElementDef {
     }
 
     pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
+        check!(ELEMENT, node, xsd)?;
         let id = lineage.parent().unwrap();
-        if node.name.as_str() != ELEMENT {
-            return raise!("expected '{}', got '{}'", ELEMENT, node.name.as_str());
-        }
         let mut annotation = None;
         let mut complex_type = None;
         for inner in node.children() {
@@ -185,7 +183,7 @@ fn parse_score_partwise() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let want_index: u64 = 3;
-    let ele = Element::from_xml(&xml, Lineage::Index(want_index)).unwrap();
+    let ele = Element::from_xml(&xml, Lineage::Index(want_index), &Xsd::new("xs")).unwrap();
     let got_id = format!("{}", ele.id());
     let want_id = "element:score-partwise";
     assert_eq!(got_id.as_str(), want_id);
@@ -222,7 +220,7 @@ fn parse_credit() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let want_index: u64 = 6;
-    let ele = Element::from_xml(&xml, Lineage::Index(want_index)).unwrap();
+    let ele = Element::from_xml(&xml, Lineage::Index(want_index), &Xsd::new("xs")).unwrap();
     let got_id = format!("{}", ele.id());
     let want_id = "element:credit";
     assert_eq!(got_id.as_str(), want_id);

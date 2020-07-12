@@ -128,8 +128,8 @@ pub enum Facet {
 }
 
 impl Facet {
-    fn from_xml(node: &Element) -> Result<Facet> {
-        // let (id, lineage) = Id::make(lineage, node)?;
+    fn from_xml(node: &Element, xsd: &Xsd) -> Result<Facet> {
+        check!(FACET, node, xsd)?;
         let t = FacetType::parse(&node.name)?;
         let v = value_attribute(node)?;
         let result = match t {
@@ -185,9 +185,7 @@ impl Restriction {
     }
 
     pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
-        if node.name.as_str() != RESTRICTION {
-            return raise!("expected '{}', got '{}'", RESTRICTION, &node.name);
-        }
+        check!(RESTRICTION, node, xsd)?;
         let (id, lineage) = Id::make(lineage, node)?;
         let base = base_attribute(node)?;
         let mut annotation = None;
@@ -197,7 +195,7 @@ impl Restriction {
             if t == ANNOTATION {
                 annotation = Some(Annotation::from_xml(inner, lineage.clone(), xsd)?);
             } else {
-                let facet = Facet::from_xml(inner)?;
+                let facet = Facet::from_xml(inner, xsd)?;
                 facets.push(facet);
             }
         }
@@ -225,7 +223,7 @@ fn parse() {
     let xml = doc.root();
     let want_id = "element:foo:restriction:18375205485067440936".to_owned();
     let want_doc = "";
-    let r = Restriction::from_xml(&xml, lineage).unwrap();
+    let r = Restriction::from_xml(&xml, lineage, &Xsd::new("xs")).unwrap();
     let got_doc = r.documentation();
     assert_eq!(got_doc.as_str(), want_doc);
     let got_id = format!("{}", r.id);

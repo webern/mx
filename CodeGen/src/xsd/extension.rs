@@ -22,9 +22,7 @@ impl Extension {
     }
 
     pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
-        if node.name.as_str() != EXTENSION {
-            return raise!("expected '{}', got '{}'", EXTENSION, &node.name);
-        }
+        check!(EXTENSION, node, xsd)?;
         let (id, lineage) = Id::make(lineage, node)?;
         let base = base_attribute(node)?;
         let mut annotation = None;
@@ -64,7 +62,7 @@ fn parse() {
     let xml = doc.root();
     let want_id = "element:foo:extension:2676136846689128820".to_owned();
     let want_doc = "";
-    let ext = Extension::from_xml(&xml, lineage).unwrap();
+    let ext = Extension::from_xml(&xml, lineage, &Xsd::new("xs")).unwrap();
     let got_doc = ext.documentation();
     assert_eq!(got_doc.as_str(), want_doc);
     let got_id = format!("{}", ext.id);

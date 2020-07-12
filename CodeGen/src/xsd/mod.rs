@@ -1,3 +1,7 @@
+#[macro_use]
+// has macros, must go first
+mod utils;
+
 pub mod annotation;
 pub mod attribute;
 pub mod attribute_group;
@@ -42,14 +46,14 @@ use std::path::Path;
 #[derive(Clone, Debug)]
 pub struct Xsd {
     entries: Vec<Entry>,
-    xsd_prefix: String,
+    prefix: String,
 }
 
 impl Default for Xsd {
     fn default() -> Self {
         Self {
             entries: Vec::new(),
-            xsd_prefix: "xs".to_owned(),
+            prefix: "xs".to_owned(),
         }
     }
 }
@@ -88,13 +92,23 @@ impl Xsd {
         }
         let mut xsd = Xsd {
             entries: Vec::new(),
-            xsd_prefix: prefix.to_owned(),
+            prefix: prefix.to_owned(),
         };
         for (i, entry_node) in root.children().enumerate() {
             let entry = Entry::from_xml(entry_node, Lineage::Index(i as u64), &xsd)?;
             xsd.add_entry(entry)?;
         }
         Ok(xsd)
+    }
+
+    pub fn new<S: AsRef<str>>(prefix: S) -> Self {
+        Self {
+            entries: Vec::new(),
+            prefix: prefix.as_ref().into(),
+        }
+    }
+    pub fn prefix(&self) -> &str {
+        self.prefix.as_str()
     }
 
     pub fn add_entry(&mut self, entry: Entry) -> Result<()> {

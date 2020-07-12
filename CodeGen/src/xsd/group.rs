@@ -59,9 +59,7 @@ impl GroupDefinition {
     }
 
     pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
-        if node.name.as_str() != GROUP {
-            return raise!("expected '{}', got '{}'", GROUP, node.name.as_str());
-        }
+        check!(GROUP, node, xsd)?;
         // way funky: The first match arm happens if it is a top-level root entry, otherwise the
         // caller has already created an ID for this and the second match arm is in effect.
         let (id, lineage) = match lineage {
@@ -153,7 +151,7 @@ fn parse_group_definition() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let want_index: u64 = 3;
-    let grp = Group::from_xml(&xml, Lineage::Index(want_index)).unwrap();
+    let grp = Group::from_xml(&xml, Lineage::Index(want_index), &Xsd::new("xs")).unwrap();
     let grp = match grp {
         Group::Definition(def) => def,
         Group::Reference(_) => panic!("expected Definition, got Reference"),
@@ -180,7 +178,7 @@ fn parse_group_reference() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let want_index: u64 = 3;
-    let grp = Group::from_xml(&xml, Lineage::Index(want_index)).unwrap();
+    let grp = Group::from_xml(&xml, Lineage::Index(want_index), &Xsd::new("xs")).unwrap();
     let grp = match grp {
         Group::Definition(_) => panic!("expected Reference, got Definition"),
         Group::Reference(ref_) => ref_,
@@ -202,7 +200,7 @@ fn parse_group_reference_max_occurs() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let want_index: u64 = 3;
-    let grp = Group::from_xml(&xml, Lineage::Index(want_index)).unwrap();
+    let grp = Group::from_xml(&xml, Lineage::Index(want_index), &Xsd::new("xs")).unwrap();
     let grp = match grp {
         Group::Definition(_) => panic!("expected Reference, got Definition"),
         Group::Reference(ref_) => ref_,
