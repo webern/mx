@@ -38,9 +38,9 @@ pub trait PrefixedParse {
 }
 
 pub trait PrefixedString {
-    fn name(&self) -> &'static str;
+    fn name(&self) -> &str;
 
-    fn as_str(&self, prefix: &str) -> Cow<'static, str> {
+    fn as_str(&self, prefix: &str) -> Cow<'_, str> {
         let s = self.name();
         if prefix.is_empty() {
             Cow::Borrowed(s)
@@ -53,6 +53,43 @@ pub trait PrefixedString {
 impl Display for dyn PrefixedString {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.name())
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// BaseType
+
+#[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
+pub enum BaseType {
+    Primitive(Primitive),
+    Other(String),
+}
+
+impl PrefixedParse for BaseType {
+    type ParsedThing = BaseType;
+
+    fn parse<S: AsRef<str>>(parseable: S) -> Result<Self::ParsedThing> {
+        Ok(BaseType::Primitive(Primitive::parse(parseable)?))
+    }
+
+    fn parse_prefixed<S1, S2>(s: S1, prefix: S2) -> Result<Self::ParsedThing>
+    where
+        S1: AsRef<str>,
+        S2: AsRef<str>,
+    {
+        match Primitive::parse_prefixed(&s, &prefix) {
+            Ok(primitive) => Ok(BaseType::Primitive(primitive)),
+            Err(_) => Ok(BaseType::Other(s.as_ref().to_owned())),
+        }
+    }
+}
+
+impl PrefixedString for BaseType {
+    fn name(&self) -> &str {
+        match self {
+            BaseType::Primitive(p) => p.name(),
+            BaseType::Other(o) => o.as_str(),
+        }
     }
 }
 
@@ -83,6 +120,16 @@ impl PrefixedParse for Primitive {
             "'{}' could not be parsed as a primitive type",
             parseable.as_ref()
         )
+    }
+}
+
+impl PrefixedString for Primitive {
+    fn name(&self) -> &str {
+        match self {
+            Primitive::Numeric(x) => x.name(),
+            Primitive::Character(x) => x.name(),
+            Primitive::DateTime(x) => x.name(),
+        }
     }
 }
 
@@ -132,8 +179,8 @@ impl PrefixedParse for Numeric {
 }
 
 impl PrefixedString for Numeric {
-    fn name(&self) -> &'static str {
-        match self {
+    fn name(&self) -> &str {
+        let s = match self {
             Numeric::Byte => BYTE,
             Numeric::Decimal => DECIMAL,
             Numeric::Int => INT,
@@ -148,7 +195,8 @@ impl PrefixedString for Numeric {
             Numeric::UnsignedInt => UNSIGNED_INT,
             Numeric::UnsignedShort => UNSIGNED_SHORT,
             Numeric::UnsignedByte => UNSIGNED_BYTE,
-        }
+        };
+        s
     }
 }
 
@@ -186,8 +234,8 @@ impl PrefixedParse for Character {
 }
 
 impl PrefixedString for Character {
-    fn name(&self) -> &'static str {
-        match self {
+    fn name(&self) -> &str {
+        let s = match self {
             Character::ID => ID,
             Character::IDREF => IDREF,
             Character::Language => LANGUAGE,
@@ -196,7 +244,8 @@ impl PrefixedString for Character {
             Character::NormalizedString => NORMALIZED_STRING,
             Character::String => STRING,
             Character::Token => TOKEN,
-        }
+        };
+        s
     }
 }
 
@@ -236,8 +285,8 @@ impl PrefixedParse for DateTime {
 }
 
 impl PrefixedString for DateTime {
-    fn name(&self) -> &'static str {
-        match self {
+    fn name(&self) -> &str {
+        let s = match self {
             DateTime::Date => DATE,
             DateTime::DateTime => DATETIME,
             DateTime::Duration => DURATION,
@@ -247,7 +296,8 @@ impl PrefixedString for DateTime {
             DateTime::GYear => G_YEAR,
             DateTime::GYearMonth => G_YEAR_MONTH,
             DateTime::Time => TIME,
-        }
+        };
+        s
     }
 }
 
@@ -330,4 +380,34 @@ fn parse_primitive_xs_byte() {
     let got = Primitive::parse_prefixed(input, "floop").unwrap();
     let want = Primitive::Numeric(Numeric::Byte);
     assert_eq!(got, want);
+}
+
+#[test]
+fn parse_base_type() {
+    struct TestCase {
+        prefix: &'static str,
+        input: &'static str,
+        want: BaseType,
+    }
+    let test_cases = vec![
+        TestCase {
+            prefix: "foo",
+            input: "foo:bar",
+            want: BaseType::Other("foo:bar".to_owned()),
+        },
+        TestCase {
+            prefix: "xs",
+            input: "xs:string",
+            want: BaseType::Primitive(Primitive::Character(Character::String)),
+        },
+        TestCase {
+            prefix: "xs",
+            input: "bloop:blerp",
+            want: BaseType::Other("bloop:blerp".to_owned()),
+        },
+    ];
+    for test_case in &test_cases {
+        let got = BaseType::parse_prefixed(test_case.input, test_case.prefix).unwrap();
+        assert_eq!(&got, &test_case.want);
+    }
 }
