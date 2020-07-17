@@ -14,6 +14,7 @@ use crate::xsd::choice::{Choice, ChoiceItem};
 use crate::xsd::complex_type::{Children, ComplexType, Parent};
 use crate::xsd::element::{ElementDef, ElementRef};
 use crate::xsd::id::{Id, RootNodeType};
+use crate::xsd::primitives::{BaseType, Character, PrefixedString, Primitive};
 use crate::xsd::restriction::Facet;
 use crate::xsd::{complex_type, element, simple_type, Entry, Xsd};
 use indexmap::set::IndexSet;
@@ -190,7 +191,7 @@ impl MxModeler {
             });
         };
 
-        if ref_.type_ == "empty" {
+        if ref_.type_ == BaseType::Other("empty".to_owned()) {
             Ok(Some(ref_.name.as_str()))
         } else {
             Ok(None)
@@ -200,7 +201,7 @@ impl MxModeler {
     fn unwrap_simple_element<'a>(
         &self,
         c: &'a ChoiceItem,
-    ) -> std::result::Result<Option<(&'a str, &'a str)>, CreateError> {
+    ) -> std::result::Result<Option<(&'a str, &'a BaseType)>, CreateError> {
         let ref_: &ElementRef = if let ChoiceItem::Element(wrapped) = c {
             let ref_ = if let element::Element::Reference(ref_) = wrapped {
                 ref_
@@ -216,9 +217,11 @@ impl MxModeler {
             });
         };
 
-        /// TODO - checking of the type is janky
-        if ref_.type_ == "xs:string" || ref_.type_ == "xs:token" {
-            Ok(Some((ref_.name.as_str(), ref_.type_.as_str())))
+        /// TODO - allow all base types?
+        if ref_.type_ == BaseType::Primitive(Primitive::Character(Character::String))
+            || ref_.type_ == BaseType::Primitive(Primitive::Character(Character::Token))
+        {
+            Ok(Some((ref_.name.as_str(), &ref_.type_)))
         } else {
             Ok(None)
         }
@@ -235,11 +238,11 @@ impl MxModeler {
                 message: "create_dynamics: unable to unwrap the 'other' field".to_string(),
             });
         };
-        if found_stuff.1 != "xs:string" {
+        if *found_stuff.1 != BaseType::Primitive(Primitive::Character(Character::String)) {
             return return Err(CreateError {
                 message: format!(
                     "unwrap_other_field: unsupported 'other' field type '{}'",
-                    found_stuff.1
+                    found_stuff.1.name()
                 ),
             });
         }

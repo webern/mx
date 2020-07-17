@@ -37,7 +37,7 @@ pub trait PrefixedParse {
     }
 }
 
-pub trait PrefixedString {
+pub trait PrefixedString: Display {
     fn name(&self) -> &str;
 
     fn as_str(&self, prefix: &str) -> Cow<'_, str> {
@@ -47,12 +47,6 @@ pub trait PrefixedString {
         } else {
             Cow::Owned(format!("{}:{}", prefix, s))
         }
-    }
-}
-
-impl Display for dyn PrefixedString {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.name())
     }
 }
 
@@ -93,6 +87,12 @@ impl PrefixedString for BaseType {
     }
 }
 
+impl Display for BaseType {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.name())
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Primitive
 
@@ -130,6 +130,12 @@ impl PrefixedString for Primitive {
             Primitive::Character(x) => x.name(),
             Primitive::DateTime(x) => x.name(),
         }
+    }
+}
+
+impl Display for Primitive {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.name())
     }
 }
 
@@ -200,6 +206,12 @@ impl PrefixedString for Numeric {
     }
 }
 
+impl Display for Numeric {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.name())
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // String Types - named Character for disambiguation
 
@@ -246,6 +258,12 @@ impl PrefixedString for Character {
             Character::Token => TOKEN,
         };
         s
+    }
+}
+
+impl Display for Character {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.name())
     }
 }
 
@@ -298,6 +316,12 @@ impl PrefixedString for DateTime {
             DateTime::Time => TIME,
         };
         s
+    }
+}
+
+impl Display for DateTime {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.name())
     }
 }
 
@@ -410,4 +434,20 @@ fn parse_base_type() {
         let got = BaseType::parse_prefixed(test_case.input, test_case.prefix).unwrap();
         assert_eq!(&got, &test_case.want);
     }
+}
+
+#[test]
+fn display_numeric() {
+    let numeric = Numeric::Byte;
+    let got = format!("{}", numeric);
+    let want = "byte";
+    assert_eq!(got.as_str(), want);
+}
+
+#[test]
+fn display_base_type() {
+    let base_type = BaseType::Primitive(Primitive::Numeric(Numeric::Byte));
+    let got = format!("{}", base_type);
+    let want = "byte";
+    assert_eq!(got.as_str(), want);
 }

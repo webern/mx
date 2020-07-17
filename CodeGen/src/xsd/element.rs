@@ -3,6 +3,7 @@ use crate::xsd::annotation::Annotation;
 use crate::xsd::complex_type::ComplexType;
 use crate::xsd::constants::{ANNOTATION, COMPLEX_TYPE, ELEMENT, NAME, TYPE};
 use crate::xsd::id::{Id, Lineage, RootNodeType};
+use crate::xsd::primitives::{BaseType, PrefixedParse, PrefixedString};
 use crate::xsd::{name_attribute, type_attribute, Occurs, Xsd};
 
 #[derive(Clone, Debug)]
@@ -116,7 +117,7 @@ pub struct ElementRef {
     pub id: Id,
     pub annotation: Option<Annotation>,
     pub name: String,
-    pub type_: String,
+    pub type_: BaseType,
     pub occurs: Occurs,
 }
 
@@ -146,7 +147,7 @@ impl ElementRef {
             id: id.clone(),
             annotation,
             name,
-            type_: type_attribute(node)?,
+            type_: BaseType::parse_prefixed(type_attribute(node)?, xsd.prefix.as_str())?,
             occurs: Occurs::from_xml(node)?,
         })
     }
@@ -232,7 +233,7 @@ fn parse_credit() {
         Element::Reference(x) => x,
     };
     assert_eq!(ele.name.as_str(), "credit");
-    assert_eq!(ele.type_.as_str(), "credit");
+    assert_eq!(ele.type_, BaseType::Other("credit".to_owned()));
     assert_eq!(
         ele.occurs,
         Occurs {

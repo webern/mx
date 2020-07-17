@@ -9,6 +9,7 @@ use crate::xsd::{base_attribute, value_attribute, Xsd};
 use exile::Element;
 
 use crate::xsd::id::{Id, Lineage, RootNodeType};
+use crate::xsd::primitives::{BaseType, Numeric, PrefixedParse, Primitive};
 use std::fmt::{Display, Formatter};
 
 /*
@@ -172,7 +173,7 @@ impl Facet {
 pub struct Restriction {
     pub id: Id,
     pub annotation: Option<Annotation>,
-    pub base: String,
+    pub base: BaseType,
     pub facets: Vec<Facet>,
 }
 
@@ -188,6 +189,7 @@ impl Restriction {
         check!(RESTRICTION, node, xsd)?;
         let (id, lineage) = Id::make(lineage, node)?;
         let base = base_attribute(node)?;
+        let base = BaseType::parse_prefixed(base.as_str(), xsd.prefix.as_str())?;
         let mut annotation = None;
         let mut facets = Vec::new();
         for inner in node.children() {
@@ -230,8 +232,8 @@ fn parse() {
     assert_eq!(got_id, want_id);
     // let got_type = r.id.entry_type;
     // assert_eq!(got_type, RootNodeType::Other(RESTRICTION.to_owned()));
-    let got_base = r.base.as_str();
-    let want_base = "xs:positiveInteger";
+    let got_base = r.base;
+    let want_base = BaseType::Primitive(Primitive::Numeric(Numeric::PositiveInteger));
     assert_eq!(got_base, want_base);
     assert_eq!(r.facets.len(), 2);
     let min = r.facets.get(0).unwrap();
