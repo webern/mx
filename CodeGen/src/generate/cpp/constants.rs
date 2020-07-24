@@ -79,7 +79,7 @@ pub struct PseudoEnumSpec {
 pub fn pseudo_enums() -> HashMap<String, PseudoEnumSpec> {
     let mut map = HashMap::new();
     map.insert(
-        "xs:simpleType:distance-type".to_owned(),
+        "simpleType:distance-type".to_owned(),
         PseudoEnumSpec {
             members: vec!["beam".to_owned(), "hyphen".to_owned()],
             extra_field_name: "other".to_owned(),
@@ -88,7 +88,7 @@ pub fn pseudo_enums() -> HashMap<String, PseudoEnumSpec> {
         },
     );
     map.insert(
-        "xs:simpleType:line-width-type".to_owned(),
+        "simpleType:line-width-type".to_owned(),
         PseudoEnumSpec {
             members: vec![
                 "beam".to_owned(),
@@ -117,7 +117,7 @@ pub fn pseudo_enums() -> HashMap<String, PseudoEnumSpec> {
         },
     );
     map.insert(
-        "xs:simpleType:mode".to_owned(),
+        "simpleType:mode".to_owned(),
         PseudoEnumSpec {
             members: vec![
                 "major".to_owned(),

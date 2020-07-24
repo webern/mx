@@ -227,6 +227,12 @@ pub enum Character {
     Token,
 }
 
+impl Default for Character {
+    fn default() -> Self {
+        Character::String
+    }
+}
+
 impl PrefixedParse for Character {
     type ParsedThing = Character;
 

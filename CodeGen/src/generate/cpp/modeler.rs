@@ -51,11 +51,8 @@ impl Create for MxModeler {
     }
 
     fn create(&self, entry: &Entry, xsd: &Xsd) -> CreateResult {
-        // TODO - boo - change the keys to match exactly once old impl is gone
-        for (k, v) in &self.pseudo_enums {
-            if k.contains(entry.id().display().as_str()) {
-                return create_pseudo_enum(entry, v);
-            }
+        if let Some(spec) = self.pseudo_enums.get(entry.id().display().as_str()) {
+            return create_pseudo_enum(entry, spec);
         }
         if let Id::Root(rid) = entry.id() {
             if rid.type_() == RootNodeType::ComplexType {
