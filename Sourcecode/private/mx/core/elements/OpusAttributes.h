@@ -7,7 +7,9 @@
 #include "mx/core/ForwardDeclare.h"
 #include "mx/core/AttributesInterface.h"
 #include "mx/core/Enums.h"
-#include "mx/core/Strings.h"
+#include "mx/core/XlinkHref.h"
+#include "mx/core/XlinkRole.h"
+#include "mx/core/XlinkTitle.h"
 
 #include <iosfwd>
 #include <memory>

@@ -6,8 +6,10 @@
 
 #include "mx/core/ForwardDeclare.h"
 #include "mx/core/AttributesInterface.h"
+#include "mx/core/CommaSeparatedText.h"
 #include "mx/core/Enums.h"
-#include "mx/core/Strings.h"
+#include "mx/core/XsNMToken.h"
+#include "mx/core/XsToken.h"
 
 #include <iosfwd>
 #include <memory>

@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "mx/core/Strings.h"
+#include "mx/core/XsString.h"
 
 #include <string>
 #include <iostream>

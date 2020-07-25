@@ -6,9 +6,8 @@
 #ifdef MX_COMPILE_CORE_TESTS
 
 #include "DocumentPartwiseCreate.h"
-#include "mx/core/Strings.h"
-#include "mx/core/Elements.h"
 #include "mx/core/Document.h"
+#include "mx/core/Elements.h"
 #include <sstream>
 
 using namespace mx::core;

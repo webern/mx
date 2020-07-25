@@ -8,7 +8,6 @@
 #include "DocumentPartwiseCreate.h"
 #include "DocumentTimewiseCreate.h"
 
-#include "mx/core/Strings.h"
 #include "mx/core/Elements.h"
 #include "mx/core/Document.h"
 #include <sstream>

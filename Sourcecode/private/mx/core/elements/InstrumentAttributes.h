@@ -6,7 +6,7 @@
 
 #include "mx/core/ForwardDeclare.h"
 #include "mx/core/AttributesInterface.h"
-#include "mx/core/Strings.h"
+#include "mx/core/XsIDREF.h"
 
 #include <iosfwd>
 #include <memory>

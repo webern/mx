@@ -6,8 +6,8 @@
 
 #include "mx/api/FontData.h"
 #include "mx/core/Enums.h"
+#include "mx/core/CommaSeparatedText.h"
 #include "mx/core/FontSize.h"
-#include "mx/core/Strings.h"
 #include "mx/impl/Converter.h"
 #include "mx/utility/OptionalMembers.h"
 

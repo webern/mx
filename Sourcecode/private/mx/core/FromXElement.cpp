@@ -3,62 +3,56 @@
 // Distributed under the MIT License
 
 #include "mx/core/FromXElement.h"
+#include "mx/core/Color.h"
+#include "mx/core/CommaSeparatedPositiveIntegers.h"
+#include "mx/core/Date.h"
+#include "mx/core/PositiveIntegerOrEmpty.h"
+#include "mx/core/YesNoNumber.h"
+#include "mx/core/elements/BeatType.h"
+#include "mx/core/elements/BeatUnit.h"
+#include "mx/core/elements/BeatUnitDot.h"
+#include "mx/core/elements/BeatUnitGroup.h"
+#include "mx/core/elements/Beats.h"
+#include "mx/core/elements/DisplayOctave.h"
 #include "mx/core/elements/DisplayStep.h"
 #include "mx/core/elements/DisplayStepOctaveGroup.h"
-#include "mx/core/elements/DisplayOctave.h"
 #include "mx/core/elements/EditorialGroup.h"
-#include "mx/core/elements/EditorialVoiceGroup.h"
 #include "mx/core/elements/EditorialVoiceDirectionGroup.h"
-#include "mx/core/elements/Footnote.h"
-#include "mx/core/elements/LayoutGroup.h"
-#include "mx/core/elements/Level.h"
-#include "mx/core/elements/PageLayout.h"
-#include "mx/core/elements/StaffLayout.h"
-#include "mx/core/elements/SystemLayout.h"
-#include "mx/core/elements/Voice.h"
-
-#include "mx/core/elements/SyllabicTextGroup.h"
+#include "mx/core/elements/EditorialVoiceGroup.h"
+#include "mx/core/elements/Elevation.h"
 #include "mx/core/elements/Elision.h"
 #include "mx/core/elements/ElisionSyllabicGroup.h"
 #include "mx/core/elements/ElisionSyllabicTextGroup.h"
 #include "mx/core/elements/Extend.h"
-#include "mx/core/elements/Syllabic.h"
-#include "mx/core/elements/Text.h"
-
-#include "mx/core/elements/BeatUnitGroup.h"
-#include "mx/core/elements/BeatUnit.h"
-#include "mx/core/elements/BeatUnitDot.h"
-
-#include "mx/core/elements/MetronomeRelationGroup.h"
+#include "mx/core/elements/Footnote.h"
+#include "mx/core/elements/Interchangeable.h"
+#include "mx/core/elements/LayoutGroup.h"
+#include "mx/core/elements/Level.h"
 #include "mx/core/elements/MetronomeNote.h"
 #include "mx/core/elements/MetronomeRelation.h"
-
-#include "mx/core/Color.h"
-#include "mx/core/Date.h"
-#include "mx/core/PositiveIntegerOrEmpty.h"
-#include "mx/core/YesNoNumber.h"
-
-#include "mx/core/elements/TimeSignatureGroup.h"
-#include "mx/core/elements/BeatType.h"
-#include "mx/core/elements/Beats.h"
-#include "mx/core/elements/MidiInstrument.h"
-#include "mx/core/elements/Interchangeable.h"
-#include "mx/core/elements/Elevation.h"
+#include "mx/core/elements/MetronomeRelationGroup.h"
 #include "mx/core/elements/MidiBank.h"
 #include "mx/core/elements/MidiChannel.h"
+#include "mx/core/elements/MidiInstrument.h"
 #include "mx/core/elements/MidiName.h"
 #include "mx/core/elements/MidiProgram.h"
 #include "mx/core/elements/MidiUnpitched.h"
+#include "mx/core/elements/PageLayout.h"
 #include "mx/core/elements/Pan.h"
-#include "mx/core/elements/Volume.h"
-
 #include "mx/core/elements/PerMinuteOrBeatUnitChoice.h"
+#include "mx/core/elements/StaffLayout.h"
+#include "mx/core/elements/Syllabic.h"
+#include "mx/core/elements/SyllabicTextGroup.h"
+#include "mx/core/elements/SystemLayout.h"
+#include "mx/core/elements/Text.h"
+#include "mx/core/elements/TimeSignatureGroup.h"
+#include "mx/core/elements/Voice.h"
+#include "mx/core/elements/Volume.h"
 
 namespace mx
 {
     namespace core
     {
-
         bool importElement(
             std::ostream& message,
             ::ezxml::XElement& xelement,
@@ -911,4 +905,3 @@ namespace mx
         }
     }
 }
-
