@@ -1,5 +1,6 @@
 use crate::generate::cpp::constants::{
-    enum_member_substitutions, pseudo_enums, reserved_words, suffixed_enum_names, PseudoEnumSpec,
+    custom_scalar_strings, enum_member_substitutions, pseudo_enums, reserved_words,
+    suffixed_enum_names, PseudoEnumSpec,
 };
 use crate::model;
 use crate::model::builtin::BuiltinString;
@@ -26,6 +27,7 @@ pub struct MxModeler {
     suffixed_enum_names: IndexSet<String>,
     reserved_words: IndexSet<String>,
     pseudo_enums: HashMap<String, PseudoEnumSpec>,
+    custom_scalar_strings: IndexSet<&'static str>,
 }
 
 impl Transform for MxModeler {
@@ -74,19 +76,30 @@ impl PostProcess for MxModeler {
         if let Model::Enumeration(enumer) = model {
             let mut cloned = enumer.clone();
             for member in &mut cloned.members {
+                // add an underscore as a suffix to camel case representations that would otherwise
+                // collide with reserved words in C++.
                 if self.reserved_words.contains(member.camel()) {
                     let mut replacement = member.camel().to_owned();
                     replacement.push('_');
                     member.set_camel(replacement)
                 }
+                // replace certain enum representations that would be illegal in C++, e.g. 16th.
                 if let Some(replacement) = self.enum_member_substitutions.get(member.original()) {
                     member.replace(replacement);
                 }
+                // replace an empty string value with some kind of symbol name.
                 if member.original() == "" {
                     member.replace("emptystring");
                 }
             }
             return Ok(Model::Enumeration(cloned));
+        } else if let Model::ScalarString(scalar_string) = model {
+            if self
+                .custom_scalar_strings
+                .contains(scalar_string.name.original())
+            {
+                return Ok(Model::CustomScalarString(scalar_string.clone()));
+            }
         }
         Ok(model.clone())
     }
@@ -99,6 +112,7 @@ impl MxModeler {
             suffixed_enum_names: suffixed_enum_names(),
             reserved_words: reserved_words(),
             pseudo_enums: pseudo_enums(),
+            custom_scalar_strings: custom_scalar_strings(),
         }
     }
 

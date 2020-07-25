@@ -138,3 +138,12 @@ pub fn pseudo_enums() -> HashMap<String, PseudoEnumSpec> {
     );
     map
 }
+
+pub fn custom_scalar_strings() -> IndexSet<&'static str> {
+    let mut set = IndexSet::new();
+    set.insert("comma-separated-text");
+    set.insert("color");
+    set.insert("time-only");
+    set.insert("ending-number");
+    set
+}

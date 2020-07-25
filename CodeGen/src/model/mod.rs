@@ -25,4 +25,5 @@ use std::ops::Deref;
 pub enum Model {
     Enumeration(Enumeration),
     ScalarString(ScalarString),
+    CustomScalarString(ScalarString),
 }
