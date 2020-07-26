@@ -1,5 +1,6 @@
 use crate::generate::cpp::constants::{
-    enum_member_substitutions, pseudo_enums, reserved_words, suffixed_enum_names, PseudoEnumSpec,
+    custom_scalar_strings, enum_member_substitutions, pseudo_enums, reserved_words,
+    suffixed_enum_names, PseudoEnumSpec,
 };
 use crate::model;
 use crate::model::builtin::BuiltinString;
@@ -14,6 +15,7 @@ use crate::xsd::choice::{Choice, ChoiceItem};
 use crate::xsd::complex_type::{Children, ComplexType, Parent};
 use crate::xsd::element::{ElementDef, ElementRef};
 use crate::xsd::id::{Id, RootNodeType};
+use crate::xsd::primitives::{BaseType, Character, PrefixedString, Primitive};
 use crate::xsd::restriction::Facet;
 use crate::xsd::{complex_type, element, simple_type, Entry, Xsd};
 use indexmap::set::IndexSet;
@@ -25,6 +27,7 @@ pub struct MxModeler {
     suffixed_enum_names: IndexSet<String>,
     reserved_words: IndexSet<String>,
     pseudo_enums: HashMap<String, PseudoEnumSpec>,
+    custom_scalar_strings: IndexSet<&'static str>,
 }
 
 impl Transform for MxModeler {
@@ -50,11 +53,8 @@ impl Create for MxModeler {
     }
 
     fn create(&self, entry: &Entry, xsd: &Xsd) -> CreateResult {
-        // TODO - boo - change the keys to match exactly once old impl is gone
-        for (k, v) in &self.pseudo_enums {
-            if k.contains(entry.id().display().as_str()) {
-                return create_pseudo_enum(entry, v);
-            }
+        if let Some(spec) = self.pseudo_enums.get(entry.id().display().as_str()) {
+            return create_pseudo_enum(entry, spec);
         }
         if let Id::Root(rid) = entry.id() {
             if rid.type_() == RootNodeType::ComplexType {
@@ -76,19 +76,30 @@ impl PostProcess for MxModeler {
         if let Model::Enumeration(enumer) = model {
             let mut cloned = enumer.clone();
             for member in &mut cloned.members {
+                // add an underscore as a suffix to camel case representations that would otherwise
+                // collide with reserved words in C++.
                 if self.reserved_words.contains(member.camel()) {
                     let mut replacement = member.camel().to_owned();
                     replacement.push('_');
                     member.set_camel(replacement)
                 }
+                // replace certain enum representations that would be illegal in C++, e.g. 16th.
                 if let Some(replacement) = self.enum_member_substitutions.get(member.original()) {
                     member.replace(replacement);
                 }
+                // replace an empty string value with some kind of symbol name.
                 if member.original() == "" {
                     member.replace("emptystring");
                 }
             }
             return Ok(Model::Enumeration(cloned));
+        } else if let Model::ScalarString(scalar_string) = model {
+            if self
+                .custom_scalar_strings
+                .contains(scalar_string.name.original())
+            {
+                return Ok(Model::CustomScalarString(scalar_string.clone()));
+            }
         }
         Ok(model.clone())
     }
@@ -101,6 +112,7 @@ impl MxModeler {
             suffixed_enum_names: suffixed_enum_names(),
             reserved_words: reserved_words(),
             pseudo_enums: pseudo_enums(),
+            custom_scalar_strings: custom_scalar_strings(),
         }
     }
 
@@ -190,7 +202,7 @@ impl MxModeler {
             });
         };
 
-        if ref_.type_ == "empty" {
+        if ref_.type_ == BaseType::Other("empty".to_owned()) {
             Ok(Some(ref_.name.as_str()))
         } else {
             Ok(None)
@@ -200,7 +212,7 @@ impl MxModeler {
     fn unwrap_simple_element<'a>(
         &self,
         c: &'a ChoiceItem,
-    ) -> std::result::Result<Option<(&'a str, &'a str)>, CreateError> {
+    ) -> std::result::Result<Option<(&'a str, &'a BaseType)>, CreateError> {
         let ref_: &ElementRef = if let ChoiceItem::Element(wrapped) = c {
             let ref_ = if let element::Element::Reference(ref_) = wrapped {
                 ref_
@@ -216,9 +228,11 @@ impl MxModeler {
             });
         };
 
-        /// TODO - checking of the type is janky
-        if ref_.type_ == "xs:string" || ref_.type_ == "xs:token" {
-            Ok(Some((ref_.name.as_str(), ref_.type_.as_str())))
+        /// TODO - allow all base types?
+        if ref_.type_ == BaseType::Primitive(Primitive::Character(Character::String))
+            || ref_.type_ == BaseType::Primitive(Primitive::Character(Character::Token))
+        {
+            Ok(Some((ref_.name.as_str(), &ref_.type_)))
         } else {
             Ok(None)
         }
@@ -235,11 +249,11 @@ impl MxModeler {
                 message: "create_dynamics: unable to unwrap the 'other' field".to_string(),
             });
         };
-        if found_stuff.1 != "xs:string" {
+        if *found_stuff.1 != BaseType::Primitive(Primitive::Character(Character::String)) {
             return return Err(CreateError {
                 message: format!(
                     "unwrap_other_field: unsupported 'other' field type '{}'",
-                    found_stuff.1
+                    found_stuff.1.name()
                 ),
             });
         }

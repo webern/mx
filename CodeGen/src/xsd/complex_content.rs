@@ -3,6 +3,7 @@ use crate::xsd::annotation::Annotation;
 use crate::xsd::constants::{ANNOTATION, COMPLEX_CONTENT, EXTENSION, NAME};
 use crate::xsd::extension::Extension;
 use crate::xsd::id::{Id, Lineage, RootNodeType};
+use crate::xsd::Xsd;
 
 #[derive(Clone, Debug)]
 pub struct ComplexContent {
@@ -19,19 +20,17 @@ impl ComplexContent {
         return "".to_owned();
     }
 
-    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Self> {
-        if node.name.as_str() != COMPLEX_CONTENT {
-            return raise!("expected '{}', got '{}'", COMPLEX_CONTENT, &node.name);
-        }
+    pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
+        check!(COMPLEX_CONTENT, node, xsd)?;
         let (id, lineage) = Id::make(lineage, node)?;
         let mut annotation = None;
         let mut extension = None;
         for inner in node.children() {
             let t = inner.name.as_str();
             match t {
-                ANNOTATION => annotation = Some(Annotation::from_xml(inner, lineage.clone())?),
+                ANNOTATION => annotation = Some(Annotation::from_xml(inner, lineage.clone(), xsd)?),
                 EXTENSION => {
-                    extension = Some(Extension::from_xml(inner, lineage.clone())?);
+                    extension = Some(Extension::from_xml(inner, lineage.clone(), xsd)?);
                 }
                 _ => return raise!("unsupported simpleContent node '{}'", t),
             }
@@ -66,7 +65,7 @@ fn parse() {
     let xml = doc.root();
     let want_id = "element:foo:complexContent:10793997753492324063".to_owned();
     let want_doc = "";
-    let sc = ComplexContent::from_xml(&xml, lineage).unwrap();
+    let sc = ComplexContent::from_xml(&xml, lineage, &Xsd::new("xs")).unwrap();
     let got_doc = sc.documentation();
     assert_eq!(got_doc.as_str(), want_doc);
     let got_id = format!("{}", sc.id);

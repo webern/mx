@@ -2,6 +2,7 @@ use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::constants::{ANNOTATION, LIST, NAME};
 use crate::xsd::id::{Id, Lineage, RootNodeType};
+use crate::xsd::Xsd;
 
 #[derive(Clone, Debug)]
 pub struct List {
@@ -20,10 +21,8 @@ impl List {
         return "".to_owned();
     }
 
-    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Self> {
-        if node.name.as_str() != LIST {
-            return raise!("expected '{}', got '{}'", LIST, &node.name);
-        }
+    pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
+        check!(LIST, node, xsd)?;
         let (id, lineage) = Id::make(lineage, node)?;
         let item_type = node
             .attributes
@@ -35,7 +34,7 @@ impl List {
         for inner in node.children() {
             let t = inner.name.as_str();
             if t == ANNOTATION {
-                annotation = Some(Annotation::from_xml(inner, lineage.clone())?);
+                annotation = Some(Annotation::from_xml(inner, lineage.clone(), xsd)?);
                 break;
             }
         }
@@ -62,7 +61,7 @@ fn parse() {
     let xml = doc.root();
     let want_id = "element:foo:list:4941444217670409626".to_owned();
     let want_doc = "Hello";
-    let list = List::from_xml(&xml, lineage).unwrap();
+    let list = List::from_xml(&xml, lineage, &Xsd::new("xs")).unwrap();
     let got_doc = list.documentation();
     assert_eq!(got_doc.as_str(), want_doc);
     let got_id = format!("{}", list.id);

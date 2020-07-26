@@ -5,7 +5,7 @@ use crate::xsd::constants::{ANNOTATION, CHOICE, ELEMENT, GROUP, SEQUENCE};
 use crate::xsd::element::Element;
 use crate::xsd::id::{Id, Lineage, RootNodeType};
 use crate::xsd::sequence::Sequence;
-use crate::xsd::{is_ref, name_attribute, ref_attribute, Occurs};
+use crate::xsd::{is_ref, name_attribute, ref_attribute, Occurs, Xsd};
 
 #[derive(Clone, Debug)]
 pub enum Group {
@@ -14,12 +14,16 @@ pub enum Group {
 }
 
 impl Group {
-    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Self> {
+    pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
         let (id, lineage) = Id::make(lineage, node)?;
         if is_ref(node) {
-            Ok(Group::Reference(GroupReference::from_xml(node, lineage)?))
+            Ok(Group::Reference(GroupReference::from_xml(
+                node, lineage, xsd,
+            )?))
         } else {
-            Ok(Group::Definition(GroupDefinition::from_xml(node, lineage)?))
+            Ok(Group::Definition(GroupDefinition::from_xml(
+                node, lineage, xsd,
+            )?))
         }
     }
 }
@@ -54,10 +58,8 @@ impl GroupDefinition {
         return "".to_owned();
     }
 
-    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Self> {
-        if node.name.as_str() != GROUP {
-            return raise!("expected '{}', got '{}'", GROUP, node.name.as_str());
-        }
+    pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
+        check!(GROUP, node, xsd)?;
         // way funky: The first match arm happens if it is a top-level root entry, otherwise the
         // caller has already created an ID for this and the second match arm is in effect.
         let (id, lineage) = match lineage {
@@ -69,17 +71,17 @@ impl GroupDefinition {
         for inner in node.children() {
             let t = inner.name.as_str();
             match t {
-                ANNOTATION => annotation = Some(Annotation::from_xml(inner, lineage.clone())?),
+                ANNOTATION => annotation = Some(Annotation::from_xml(inner, lineage.clone(), xsd)?),
                 CHOICE => {
-                    let choice = Choice::from_xml(inner, lineage.clone())?;
+                    let choice = Choice::from_xml(inner, lineage.clone(), xsd)?;
                     members.push(Member::Choice(choice));
                 }
                 ELEMENT => {
-                    let element = Element::from_xml(inner, lineage.clone())?;
+                    let element = Element::from_xml(inner, lineage.clone(), xsd)?;
                     members.push(Member::Element(element));
                 }
                 SEQUENCE => {
-                    let sequence = Sequence::from_xml(inner, lineage.clone())?;
+                    let sequence = Sequence::from_xml(inner, lineage.clone(), xsd)?;
                     members.push(Member::Sequence(sequence));
                 }
                 _ => return raise!("unsupported {} node, '{}'", GROUP, t),
@@ -101,7 +103,7 @@ impl GroupReference {
         return "".to_owned();
     }
 
-    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Self> {
+    pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
         let id = lineage.parent().unwrap();
         if node.name.as_str() != GROUP {
             return raise!("expected '{}', got '{}'", GROUP, node.name.as_str());
@@ -110,7 +112,7 @@ impl GroupReference {
         for inner in node.children() {
             let t = inner.name.as_str();
             match t {
-                ANNOTATION => annotation = Some(Annotation::from_xml(inner, lineage.clone())?),
+                ANNOTATION => annotation = Some(Annotation::from_xml(inner, lineage.clone(), xsd)?),
                 _ => return raise!("unsupported {} node, '{}'", GROUP, t),
             }
         }
@@ -149,7 +151,7 @@ fn parse_group_definition() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let want_index: u64 = 3;
-    let grp = Group::from_xml(&xml, Lineage::Index(want_index)).unwrap();
+    let grp = Group::from_xml(&xml, Lineage::Index(want_index), &Xsd::new("xs")).unwrap();
     let grp = match grp {
         Group::Definition(def) => def,
         Group::Reference(_) => panic!("expected Definition, got Reference"),
@@ -176,7 +178,7 @@ fn parse_group_reference() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let want_index: u64 = 3;
-    let grp = Group::from_xml(&xml, Lineage::Index(want_index)).unwrap();
+    let grp = Group::from_xml(&xml, Lineage::Index(want_index), &Xsd::new("xs")).unwrap();
     let grp = match grp {
         Group::Definition(_) => panic!("expected Reference, got Definition"),
         Group::Reference(ref_) => ref_,
@@ -198,7 +200,7 @@ fn parse_group_reference_max_occurs() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let want_index: u64 = 3;
-    let grp = Group::from_xml(&xml, Lineage::Index(want_index)).unwrap();
+    let grp = Group::from_xml(&xml, Lineage::Index(want_index), &Xsd::new("xs")).unwrap();
     let grp = match grp {
         Group::Definition(_) => panic!("expected Reference, got Definition"),
         Group::Reference(ref_) => ref_,

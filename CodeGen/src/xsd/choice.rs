@@ -5,6 +5,7 @@ use crate::xsd::element::Element;
 use crate::xsd::group::Group;
 use crate::xsd::id::{Id, Lineage, RootNodeType};
 use crate::xsd::sequence::Sequence;
+use crate::xsd::Xsd;
 
 #[derive(Clone, Debug)]
 pub struct Choice {
@@ -30,25 +31,29 @@ impl Choice {
         return "".to_owned();
     }
 
-    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Self> {
-        if node.name.as_str() != CHOICE {
-            return raise!("expected '{}', got '{}'", CHOICE, node.name.as_str());
-        }
+    pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
+        check!(CHOICE, node, xsd)?;
         let (id, lineage) = Id::make(lineage, node)?;
         let mut annotation = None;
         let mut choices = Choices::new();
         for inner in node.children() {
             let t = inner.name.as_str();
             match t {
-                ANNOTATION => annotation = Some(Annotation::from_xml(inner, lineage.clone())?),
+                ANNOTATION => annotation = Some(Annotation::from_xml(inner, lineage.clone(), xsd)?),
                 ELEMENT => choices.push(ChoiceItem::Element(Element::from_xml(
                     inner,
                     lineage.clone(),
+                    xsd,
                 )?)),
-                GROUP => choices.push(ChoiceItem::Group(Group::from_xml(inner, lineage.clone())?)),
+                GROUP => choices.push(ChoiceItem::Group(Group::from_xml(
+                    inner,
+                    lineage.clone(),
+                    xsd,
+                )?)),
                 SEQUENCE => choices.push(ChoiceItem::Sequence(Sequence::from_xml(
                     inner,
                     lineage.clone(),
+                    xsd,
                 )?)),
                 _ => return raise!("cannot parse '{}', unexpected node '{}'", CHOICE, t),
             }
@@ -104,7 +109,7 @@ fn parse_credit() {
     </xs:choice>"#;
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
-    let ch = Choice::from_xml(&xml, Lineage::Parent(parent)).unwrap();
+    let ch = Choice::from_xml(&xml, Lineage::Parent(parent), &Xsd::new("xs")).unwrap();
     assert_eq!(
         format!("{}", ch.id),
         "element:foo:choice:863778347360799337"

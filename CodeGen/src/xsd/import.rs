@@ -4,7 +4,7 @@ use crate::xsd::annotation::Annotation;
 
 use crate::xsd::constants::{ANNOTATION, IMPORT, SCHEMA_LOCATION};
 use crate::xsd::id::{Id, Lineage, RootNodeType};
-use crate::xsd::namespace_attribute;
+use crate::xsd::{namespace_attribute, Xsd};
 
 #[derive(Clone, Debug)]
 pub struct Import {
@@ -22,10 +22,8 @@ impl Import {
         return "".to_owned();
     }
 
-    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Self> {
-        if node.name.as_str() != IMPORT {
-            return raise!("expected '{}', got '{}'", IMPORT, &node.name);
-        }
+    pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
+        check!(IMPORT, node, xsd)?;
         let (id, lineage) = Id::make(lineage, node)?;
         let namespace = namespace_attribute(node)?;
         let schema_location = node
@@ -38,7 +36,7 @@ impl Import {
         for inner in node.children() {
             let t = inner.name.as_str();
             if t == ANNOTATION {
-                annotation = Some(Annotation::from_xml(inner, lineage.clone())?);
+                annotation = Some(Annotation::from_xml(inner, lineage.clone(), xsd)?);
                 break;
             }
         }

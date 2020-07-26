@@ -62,3 +62,30 @@ impl CreateError {
         }
     }
 }
+
+/// This macro is used internally to create an `Err(crate::error::Error::Message)`.
+macro_rules! make_create_err {
+    () => {
+        crate::model::create::CreateError{
+            message: "".to_owned(),
+        }
+    };
+    ($msg:expr) => {
+        crate::model::create::CreateError{
+            message: $msg.into(),
+        }
+    };
+    ($fmt:expr, $($arg:expr),+) => {
+        crate::model::create::CreateError{
+            message: format!($fmt, $($arg),+),
+        }
+    };
+}
+
+macro_rules! some_create_err {
+    ($($x:tt)*) => {
+        {
+            Some(Err(make_create_err!($($x)*)))
+        }
+    }
+}
