@@ -32,8 +32,12 @@ macro_rules! l {
 }
 
 impl Writer {
-    pub(crate) fn write_enums(&self) -> Result<()> {
-        let enumerations = self.collect_enums()?;
+    pub(crate) fn write_enums(&self, enumerations: &mut [&Enumeration]) -> Result<()> {
+        enumerations.sort_by(|&a, &b| {
+            let a = a.name.pascal();
+            let b = b.name.pascal();
+            a.cmp(b)
+        });
         let mut hwrite = wrap!(self.open_enums_h())?;
         let mut cwrite = wrap!(self.open_enums_cpp())?;
         for (i, &enumer) in enumerations.iter().enumerate() {
