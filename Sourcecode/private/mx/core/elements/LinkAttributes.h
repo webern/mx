@@ -9,7 +9,11 @@
 #include "mx/core/Decimals.h"
 #include "mx/core/Enums.h"
 #include "mx/core/Integers.h"
-#include "mx/core/Strings.h"
+#include "mx/core/XlinkHref.h"
+#include "mx/core/XlinkRole.h"
+#include "mx/core/XlinkTitle.h"
+#include "mx/core/XsNMToken.h"
+#include "mx/core/XsToken.h"
 
 #include <iosfwd>
 #include <memory>

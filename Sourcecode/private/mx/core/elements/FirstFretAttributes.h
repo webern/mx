@@ -7,7 +7,9 @@
 #include "mx/core/ForwardDeclare.h"
 #include "mx/core/AttributesInterface.h"
 #include "mx/core/Enums.h"
-#include "mx/core/Strings.h"
+#include "mx/core/XmlLang.h"
+#include "mx/core/XsString.h"
+#include "mx/core/XsToken.h"
 
 #include <iosfwd>
 #include <memory>

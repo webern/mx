@@ -6,7 +6,7 @@
 
 #include "mx/core/ForwardDeclare.h"
 #include "mx/core/ElementInterface.h"
-#include "mx/core/Strings.h"
+#include "mx/core/XsString.h"
 
 #include <iosfwd>
 #include <memory>
@@ -16,7 +16,6 @@ namespace mx
 {
     namespace core
     {
-
         MX_FORWARD_DECLARE_ELEMENT( MidiName )
 
         inline MidiNamePtr makeMidiName() { return std::make_shared<MidiName>(); }

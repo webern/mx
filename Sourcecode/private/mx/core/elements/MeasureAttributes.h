@@ -8,7 +8,7 @@
 #include "mx/core/AttributesInterface.h"
 #include "mx/core/Decimals.h"
 #include "mx/core/Enums.h"
-#include "mx/core/Strings.h"
+#include "mx/core/XsToken.h"
 
 #include <iosfwd>
 #include <memory>
@@ -18,7 +18,6 @@ namespace mx
 {
     namespace core
     {
-
         MX_FORWARD_DECLARE_ATTRIBUTES( MeasureAttributes )
 
         struct MeasureAttributes : public AttributesInterface

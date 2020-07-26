@@ -44,7 +44,7 @@
 #include "mx/core/elements/Type.h"
 #include "mx/core/elements/Unpitched.h"
 #include "mx/core/elements/Voice.h"
-#include "mx/core/Strings.h"
+#include "mx/core/XsString.h"
 #include "mx/impl/NotationsWriter.h"
 #include "mx/impl/ScoreWriter.h"
 
