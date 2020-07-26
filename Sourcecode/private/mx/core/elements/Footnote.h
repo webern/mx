@@ -6,7 +6,6 @@
 
 #include "mx/core/ForwardDeclare.h"
 #include "mx/core/ElementInterface.h"
-#include "mx/core/Strings.h"
 #include "mx/core/elements/FootnoteAttributes.h"
 
 #include <iosfwd>

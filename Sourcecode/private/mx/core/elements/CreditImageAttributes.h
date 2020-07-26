@@ -8,7 +8,8 @@
 #include "mx/core/AttributesInterface.h"
 #include "mx/core/Decimals.h"
 #include "mx/core/Enums.h"
-#include "mx/core/Strings.h"
+#include "mx/core/XsAnyUri.h"
+#include "mx/core/XsToken.h"
 
 #include <iosfwd>
 #include <memory>

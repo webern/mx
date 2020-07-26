@@ -7,12 +7,13 @@
 #include "mx/core/ForwardDeclare.h"
 #include "mx/core/AttributesInterface.h"
 #include "mx/core/Color.h"
+#include "mx/core/CommaSeparatedText.h"
 #include "mx/core/Decimals.h"
 #include "mx/core/Enums.h"
-#include "mx/core/Integers.h"
-#include "mx/core/Strings.h"
 #include "mx/core/FontSize.h"
+#include "mx/core/Integers.h"
 #include "mx/core/NumberOrNormal.h"
+#include "mx/core/XmlLang.h"
 
 #include <iosfwd>
 #include <memory>

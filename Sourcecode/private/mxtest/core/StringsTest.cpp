@@ -6,7 +6,18 @@
 #ifdef MX_COMPILE_CORE_TESTS
 
 #include "cpul/cpulTestHarness.h"
-#include "mx/core/Strings.h"
+#include "mx/core/EndingNumber.h"
+#include "mx/core/TimeOnly.h"
+#include "mx/core/XlinkHref.h"
+#include "mx/core/XlinkRole.h"
+#include "mx/core/XlinkTitle.h"
+#include "mx/core/XmlLang.h"
+#include "mx/core/XsAnyUri.h"
+#include "mx/core/XsID.h"
+#include "mx/core/XsIDREF.h"
+#include "mx/core/XsNMToken.h"
+#include "mx/core/XsString.h"
+#include "mx/core/XsToken.h"
 #include <sstream>
 
 using namespace mx::core;
@@ -451,6 +462,12 @@ TEST( TimeOnly02, Strings )
     expected = "1,2,3";
     actual = ss.str();
     CHECK_EQUAL( expected, actual );
+}
+
+TEST( XlinkHref01, Strings )
+{
+    XlinkHref x{ "vodjs" };
+    CHECK_EQUAL( "vodjs", x.getValue() );
 }
 
 #endif

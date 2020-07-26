@@ -1,14 +1,17 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 On 2020-05-31, two tags were deleted from origin, `v1.0.0` and `v1.0.1` and replaced with `v0.4.0` and `v0.4.1` respectively.
-If you cloned/forked the repository before 2020-05-31, consider making a new clone/fork or otherwise repairing the tags.
+If you cloned/forked the repository before 2020-05-31, you should delete `v1.0.0` and `v1.0.1` and pull tags.
 
 ## [Unreleased]
 - Change the default-constructed value of `DynamicsEnum` to `mf` instead of `otherDynamics`. [#106]/[8a5cd6b]
 - Change the spelling of `KindValue` enums from, e.g. `dominant11Th` to `dominant11th`. [#105]
+- Break up `Strings.h` into multiple `.h` files, one for each type [#107]. (Related to codegen, [#58]).
 
 [#105]: https://github.com/webern/mx/pull/105
 [#106]: https://github.com/webern/mx/pull/106
+[#107]: https://github.com/webern/mx/pull/107
+[#58]: https://github.com/webern/mx/issues/58
 [8a5cd6b]: https://github.com/webern/mx/commit/8a5cd6b
 
 ## [v0.5.1] - 2020-06-13
