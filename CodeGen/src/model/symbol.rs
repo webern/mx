@@ -2,7 +2,7 @@ use crate::utils::string_stuff::tokenize;
 use std::borrow::Cow;
 
 /// Holds a name or symbol in the many ways that it may need to be 'spelled' during code generation.
-#[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd)]
+#[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Default)]
 pub struct Symbol {
     /// The original symbol, as defined in the XSD document. e.g. `foo bar`.
     original: String,

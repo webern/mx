@@ -1,3 +1,7 @@
+#[macro_use]
+// has macros, must go first
+mod utils;
+
 pub mod annotation;
 pub mod attribute;
 pub mod attribute_group;
@@ -13,6 +17,7 @@ pub mod group;
 pub mod id;
 pub mod import;
 pub mod list;
+pub mod primitives;
 pub mod restriction;
 pub mod sequence;
 pub mod simple_content;
@@ -41,12 +46,14 @@ use std::path::Path;
 #[derive(Clone, Debug)]
 pub struct Xsd {
     entries: Vec<Entry>,
+    prefix: String,
 }
 
 impl Default for Xsd {
     fn default() -> Self {
         Self {
             entries: Vec::new(),
+            prefix: "xs".to_owned(),
         }
     }
 }
@@ -66,12 +73,42 @@ impl Xsd {
         if root.name != "schema" {
             return raise!("expected the root node to be named 'schema'");
         }
-        let mut xsd = Xsd::default();
+        let mut prefix = "";
+        for (k, v) in root.attributes.map() {
+            if v.as_str() == "http://www.w3.org/2001/XMLSchema" {
+                if k.starts_with("xmlns:") {
+                    let mut split = k.split(':');
+                    let _ = split.next().ok_or(make_err!("expected to find xmlns:"))?;
+                    let ns: &str = split
+                        .next()
+                        .ok_or(make_err!("expected to find xmlns prefix"))?;
+                    prefix = ns;
+                    break;
+                }
+            }
+        }
+        if prefix.is_empty() {
+            return raise!("xmlns prefix is empty");
+        }
+        let mut xsd = Xsd {
+            entries: Vec::new(),
+            prefix: prefix.to_owned(),
+        };
         for (i, entry_node) in root.children().enumerate() {
-            let entry = Entry::from_xml(entry_node, Lineage::Index(i as u64))?;
+            let entry = Entry::from_xml(entry_node, Lineage::Index(i as u64), &xsd)?;
             xsd.add_entry(entry)?;
         }
         Ok(xsd)
+    }
+
+    pub fn new<S: AsRef<str>>(prefix: S) -> Self {
+        Self {
+            entries: Vec::new(),
+            prefix: prefix.as_ref().into(),
+        }
+    }
+    pub fn prefix(&self) -> &str {
+        self.prefix.as_str()
     }
 
     pub fn add_entry(&mut self, entry: Entry) -> Result<()> {
@@ -100,14 +137,14 @@ impl Xsd {
             }
         }
         if let Some(i) = pos {
-            // TODO - this can panic
+            // Note - this can panic, but shouldn't unless a data race occurs.
             Ok(self.entries.remove(i))
         } else {
             raise!("entry '{}' not found", id)
         }
     }
 
-    // TODO - this will need to be an iterator so the underlying data structure can change.
+    // TODO - this should be an iterator so the underlying data structure can change.
     pub fn entries(&self) -> &Vec<Entry> {
         &self.entries
     }
@@ -134,21 +171,25 @@ pub enum Entry {
 }
 
 impl Entry {
-    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Self> {
+    pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
         let n = node.name.as_str();
         let t = RootNodeType::parse(n)?;
         match t {
-            RootNodeType::Annotation => Ok(Entry::Annotation(Annotation::from_xml(node, lineage)?)),
-            RootNodeType::AttributeGroup => Ok(Entry::AttributeGroup(AttributeGroup::from_xml(
-                node, lineage,
-            )?)),
-            RootNodeType::ComplexType => {
-                Ok(Entry::ComplexType(ComplexType::from_xml(node, lineage)?))
+            RootNodeType::Annotation => {
+                Ok(Entry::Annotation(Annotation::from_xml(node, lineage, xsd)?))
             }
-            RootNodeType::Element => Ok(Entry::Element(Element::from_xml(node, lineage)?)),
-            RootNodeType::Group => Ok(Entry::Group(GroupDefinition::from_xml(node, lineage)?)),
-            RootNodeType::Import => Ok(Entry::Import(Import::from_xml(node, lineage)?)),
-            RootNodeType::SimpleType => Ok(Entry::SimpleType(SimpleType::from_xml(node, lineage)?)),
+            RootNodeType::AttributeGroup => Ok(Entry::AttributeGroup(AttributeGroup::from_xml(
+                node, lineage, xsd,
+            )?)),
+            RootNodeType::ComplexType => Ok(Entry::ComplexType(ComplexType::from_xml(
+                node, lineage, xsd,
+            )?)),
+            RootNodeType::Element => Ok(Entry::Element(Element::from_xml(node, lineage, xsd)?)),
+            RootNodeType::Group => Ok(Entry::Group(GroupDefinition::from_xml(node, lineage, xsd)?)),
+            RootNodeType::Import => Ok(Entry::Import(Import::from_xml(node, lineage, xsd)?)),
+            RootNodeType::SimpleType => {
+                Ok(Entry::SimpleType(SimpleType::from_xml(node, lineage, xsd)?))
+            }
         }
     }
 

@@ -2,6 +2,7 @@ use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::constants::{ANNOTATION, MEMBER_TYPES, NAME, UNION};
 use crate::xsd::id::{Id, Lineage, RootNodeType};
+use crate::xsd::Xsd;
 
 #[derive(Clone, Debug)]
 pub struct Union {
@@ -18,10 +19,8 @@ impl Union {
         return "".to_owned();
     }
 
-    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Self> {
-        if node.name.as_str() != UNION {
-            return raise!("expected '{}', got '{}'", UNION, &node.name);
-        }
+    pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
+        check!(UNION, node, xsd)?;
         let (id, lineage) = Id::make(lineage, node)?;
         let mut items = Vec::new();
         let members = node
@@ -38,7 +37,7 @@ impl Union {
         for inner in node.children() {
             let t = inner.name.as_str();
             if t == ANNOTATION {
-                annotation = Some(Annotation::from_xml(inner, lineage.clone())?);
+                annotation = Some(Annotation::from_xml(inner, lineage.clone(), xsd)?);
                 break;
             }
         }
@@ -59,7 +58,7 @@ fn parse() {
     let xml = doc.root();
     let want_id = "element:foo:union:18365985102726890478".to_owned();
     let want_doc = "";
-    let union = Union::from_xml(&xml, lineage).unwrap();
+    let union = Union::from_xml(&xml, lineage, &Xsd::new("xs")).unwrap();
     let got_doc = union.documentation();
     assert_eq!(got_doc.as_str(), want_doc);
     let got_id = format!("{}", union.id);

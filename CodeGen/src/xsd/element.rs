@@ -3,7 +3,8 @@ use crate::xsd::annotation::Annotation;
 use crate::xsd::complex_type::ComplexType;
 use crate::xsd::constants::{ANNOTATION, COMPLEX_TYPE, ELEMENT, NAME, TYPE};
 use crate::xsd::id::{Id, Lineage, RootNodeType};
-use crate::xsd::{name_attribute, type_attribute, Occurs};
+use crate::xsd::primitives::{BaseType, PrefixedParse, PrefixedString};
+use crate::xsd::{name_attribute, type_attribute, Occurs, Xsd};
 
 #[derive(Clone, Debug)]
 pub enum Element {
@@ -49,12 +50,16 @@ impl Element {
         }
     }
 
-    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Element> {
+    pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Element> {
         let (id, lineage) = Id::make(lineage, node)?;
         if let Some(_) = node.attributes.map().get(TYPE) {
-            Ok(Element::Reference(ElementRef::from_xml(node, lineage)?))
+            Ok(Element::Reference(ElementRef::from_xml(
+                node, lineage, xsd,
+            )?))
         } else {
-            Ok(Element::Definition(ElementDef::from_xml(node, lineage)?))
+            Ok(Element::Definition(ElementDef::from_xml(
+                node, lineage, xsd,
+            )?))
         }
     }
 }
@@ -76,18 +81,18 @@ impl ElementDef {
         return "".to_owned();
     }
 
-    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Self> {
+    pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
+        check!(ELEMENT, node, xsd)?;
         let id = lineage.parent().unwrap();
-        if node.name.as_str() != ELEMENT {
-            return raise!("expected '{}', got '{}'", ELEMENT, node.name.as_str());
-        }
         let mut annotation = None;
         let mut complex_type = None;
         for inner in node.children() {
             let t = inner.name.as_str();
             match t {
-                ANNOTATION => annotation = Some(Annotation::from_xml(inner, lineage.clone())?),
-                COMPLEX_TYPE => complex_type = Some(ComplexType::from_xml(inner, lineage.clone())?),
+                ANNOTATION => annotation = Some(Annotation::from_xml(inner, lineage.clone(), xsd)?),
+                COMPLEX_TYPE => {
+                    complex_type = Some(ComplexType::from_xml(inner, lineage.clone(), xsd)?)
+                }
                 _ => return raise!("unsupported inner type: '{}'", t),
             }
         }
@@ -112,7 +117,7 @@ pub struct ElementRef {
     pub id: Id,
     pub annotation: Option<Annotation>,
     pub name: String,
-    pub type_: String,
+    pub type_: BaseType,
     pub occurs: Occurs,
 }
 
@@ -124,7 +129,7 @@ impl ElementRef {
         return "".to_owned();
     }
 
-    pub fn from_xml(node: &exile::Element, lineage: Lineage) -> Result<Self> {
+    pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
         if node.name.as_str() != ELEMENT {
             return raise!("expected '{}', got '{}'", ELEMENT, node.name.as_str());
         }
@@ -133,7 +138,7 @@ impl ElementRef {
         for inner in node.children() {
             let t = inner.name.as_str();
             if t == ANNOTATION {
-                annotation = Some(Annotation::from_xml(inner, lineage.clone())?);
+                annotation = Some(Annotation::from_xml(inner, lineage.clone(), xsd)?);
                 break;
             }
         }
@@ -142,7 +147,7 @@ impl ElementRef {
             id: id.clone(),
             annotation,
             name,
-            type_: type_attribute(node)?,
+            type_: BaseType::parse_prefixed(type_attribute(node)?, xsd.prefix.as_str())?,
             occurs: Occurs::from_xml(node)?,
         })
     }
@@ -179,7 +184,7 @@ fn parse_score_partwise() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let want_index: u64 = 3;
-    let ele = Element::from_xml(&xml, Lineage::Index(want_index)).unwrap();
+    let ele = Element::from_xml(&xml, Lineage::Index(want_index), &Xsd::new("xs")).unwrap();
     let got_id = format!("{}", ele.id());
     let want_id = "element:score-partwise";
     assert_eq!(got_id.as_str(), want_id);
@@ -216,7 +221,7 @@ fn parse_credit() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let want_index: u64 = 6;
-    let ele = Element::from_xml(&xml, Lineage::Index(want_index)).unwrap();
+    let ele = Element::from_xml(&xml, Lineage::Index(want_index), &Xsd::new("xs")).unwrap();
     let got_id = format!("{}", ele.id());
     let want_id = "element:credit";
     assert_eq!(got_id.as_str(), want_id);
@@ -228,7 +233,7 @@ fn parse_credit() {
         Element::Reference(x) => x,
     };
     assert_eq!(ele.name.as_str(), "credit");
-    assert_eq!(ele.type_.as_str(), "credit");
+    assert_eq!(ele.type_, BaseType::Other("credit".to_owned()));
     assert_eq!(
         ele.occurs,
         Occurs {
