@@ -1,7 +1,7 @@
 use crate::error::Result;
 use crate::generate::cpp::check_file_exists;
 use crate::generate::paths::Paths;
-use crate::model::scalar_string::ScalarString;
+use crate::model::scalar::ScalarString;
 
 pub(super) fn write_color(model: &ScalarString, paths: &Paths) -> Result<()> {
     if model.name.original() != "color" {

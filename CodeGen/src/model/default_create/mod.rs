@@ -1,9 +1,11 @@
 mod enumeration;
-mod scalar_string;
+mod scalar;
 
+#[macro_use]
 use crate::model::create::{Create, CreateError, CreateResult};
+
 use crate::model::default_create::enumeration::{is_enumeration, model_enumeration};
-use crate::model::default_create::scalar_string::model_scalar_string;
+use crate::model::default_create::scalar::model_scalar_string;
 use crate::model::enumeration::Enumeration;
 use crate::model::symbol::Symbol;
 use crate::model::Model;
@@ -43,9 +45,12 @@ impl Create for DefaultCreate {
 fn dispatch_simple_type(st: &SimpleType, xsd: &Xsd) -> CreateResult {
     if is_enumeration(st) {
         model_enumeration(st, xsd)
-    } else if let Some(scalar_string_result) = model_scalar_string(st, xsd) {
-        scalar_string_result
+    } else if let Some(result) = model_scalar_string(st, xsd) {
+        result
+    // } else if let Some(result) = model_scalar_number(st, xsd) {
+    //     result
     } else {
-        Ok(Some(Vec::new())) // TODO - implement other simple types
+        Err(make_create_err!("Unhandled SimpleType: '{}'", st.name))
+        // Ok(Some(Vec::new())) // TODO - implement other simple types
     }
 }

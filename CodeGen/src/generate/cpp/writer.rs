@@ -39,6 +39,7 @@ impl Writer {
                     "ending-number" => write_ending_number(cs, &self.paths)?,
                     unhandled => return raise!("Unhandled CustomScalarString '{}'", unhandled),
                 },
+                Model::ScalarNumber(sn) => panic!(),
             }
         }
         self.write_enums(&mut enums)?;
