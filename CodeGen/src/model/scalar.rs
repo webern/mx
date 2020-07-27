@@ -69,7 +69,7 @@ where
     T: Debug + Clone + Copy + PartialEq + PartialOrd + Default,
 {
     pub name: Symbol,
-    pub base_type: Character,
+    pub base_type: Numeric,
     pub documentation: String,
     pub range: Range<T>,
 }

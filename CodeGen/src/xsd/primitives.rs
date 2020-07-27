@@ -160,6 +160,12 @@ pub enum Numeric {
     UnsignedByte,
 }
 
+impl Default for Numeric {
+    fn default() -> Self {
+        Numeric::Int
+    }
+}
+
 impl PrefixedParse for Numeric {
     type ParsedThing = Numeric;
 

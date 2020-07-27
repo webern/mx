@@ -4,7 +4,7 @@ use crate::model::scalar::{Bound, Range, ScalarNumeric, ScalarNumericData, Scala
 use crate::model::symbol::Symbol;
 use crate::model::Model;
 use crate::xsd::primitives::{BaseType, Character, Numeric, Primitive};
-use crate::xsd::restriction::{Facet, Restriction};
+use crate::xsd::restriction::{Facet, Number, Restriction};
 use crate::xsd::simple_type::{Payload, SimpleType};
 use crate::xsd::Xsd;
 
@@ -96,35 +96,35 @@ fn produce_the_scalar_numeric(
             ))
         }
         Numeric::Decimal => ScalarNumeric::Decimal(ScalarNumericData {
-            name: Default::default(),
-            base_type: Default::default(),
-            documentation: "".to_string(),
+            name: Symbol::new(st.name.as_str()),
+            base_type,
+            documentation: st.documentation(),
             range: parse_decimal_range(Range::default(), &r.facets)?,
         }),
 
         Numeric::NegativeInteger => ScalarNumeric::Integer(ScalarNumericData {
-            name: Default::default(),
-            base_type: Default::default(),
-            documentation: "".to_string(),
-            range: parse_integer_range(Range::new(None, Some(Bound::Exclusive(0))))?,
+            name: Symbol::new(st.name.as_str()),
+            base_type,
+            documentation: st.documentation(),
+            range: parse_integer_range(Range::new(None, Some(Bound::Exclusive(0))), &r.facets)?,
         }),
         Numeric::NonNegativeInteger => ScalarNumeric::Integer(ScalarNumericData {
-            name: Default::default(),
-            base_type: Default::default(),
-            documentation: "".to_string(),
-            range: parse_integer_range(Range::new(None, Some(Bound::Exclusive(0))))?,
+            name: Symbol::new(st.name.as_str()),
+            base_type,
+            documentation: st.documentation(),
+            range: parse_integer_range(Range::new(None, Some(Bound::Exclusive(0))), &r.facets)?,
         }),
         Numeric::NonPositiveInteger => ScalarNumeric::Integer(ScalarNumericData {
-            name: Default::default(),
-            base_type: Default::default(),
-            documentation: "".to_string(),
-            range: parse_integer_range(Range::new(None, Some(Bound::Exclusive(0))))?,
+            name: Symbol::new(st.name.as_str()),
+            base_type,
+            documentation: st.documentation(),
+            range: parse_integer_range(Range::new(None, Some(Bound::Exclusive(0))), &r.facets)?,
         }),
         Numeric::PositiveInteger => ScalarNumeric::Integer(ScalarNumericData {
-            name: Default::default(),
-            base_type: Default::default(),
-            documentation: "".to_string(),
-            range: parse_integer_range(Range::new(None, Some(Bound::Exclusive(0))))?,
+            name: Symbol::new(st.name.as_str()),
+            base_type,
+            documentation: st.documentation(),
+            range: parse_integer_range(Range::new(None, Some(Bound::Exclusive(0))), &r.facets)?,
         }),
 
         Numeric::Int
@@ -134,19 +134,26 @@ fn produce_the_scalar_numeric(
         | Numeric::UnsignedLong
         | Numeric::UnsignedInt
         | Numeric::UnsignedShort => ScalarNumeric::Integer(ScalarNumericData {
-            name: Default::default(),
-            base_type: Default::default(),
-            documentation: "".to_string(),
-            range: parse_integer_range(Range::default())?,
+            name: Symbol::new(st.name.as_str()),
+            base_type,
+            documentation: st.documentation(),
+            range: parse_integer_range(Range::default(), &r.facets)?,
         }),
     };
     Ok(Some(vec![Model::ScalarNumber(scalar_numeric)]))
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Wow what an incredible mess
+
 fn parse_decimal_range(
     starting_range: Range<f64>,
     facets: &[Facet],
 ) -> std::result::Result<Range<f64>, CreateError> {
+    let mut min = starting_range.min.and_then(|some| match some {
+        Bound::Inclusive(i) => Some(LowerFloatBound::Inclusive(i)),
+        Bound::Exclusive(e) => Some(LowerFloatBound::Exclusive(e)),
+    });
     let mut max = starting_range.max.and_then(|some| match some {
         Bound::Inclusive(i) => Some(UpperFloatBound::Inclusive(i)),
         Bound::Exclusive(e) => Some(UpperFloatBound::Exclusive(e)),
@@ -159,17 +166,180 @@ fn parse_decimal_range(
             | Facet::MinLength(_)
             | Facet::Pattern(_) => return Err(make_create_err!("unsupported facet '{:?}'", facet)),
 
-            Facet::MaxExclusive(maxex_number) => {}
-            Facet::MaxInclusive(maxin_number) => {}
-            Facet::MinExclusive(minex_number) => {}
-            Facet::MinInclusive(minin_number) => {}
+            Facet::MaxExclusive(n) => {
+                let new_upper = UpperFloatBound::Exclusive(match n {
+                    Number::Integer(i) => *i as f64,
+                    Number::Decimal(f) => *f,
+                });
+                max = match max {
+                    None => Some(new_upper),
+                    Some(current) => {
+                        if current.is_other_more_restrictive(&new_upper) {
+                            Some(new_upper)
+                        } else {
+                            Some(current)
+                        }
+                    }
+                }
+            }
+            Facet::MaxInclusive(n) => {
+                let new_upper = UpperFloatBound::Inclusive(match n {
+                    Number::Integer(i) => *i as f64,
+                    Number::Decimal(f) => *f,
+                });
+                max = match max {
+                    None => Some(new_upper),
+                    Some(current) => {
+                        if current.is_other_more_restrictive(&new_upper) {
+                            Some(new_upper)
+                        } else {
+                            Some(current)
+                        }
+                    }
+                }
+            }
+            Facet::MinExclusive(n) => {
+                let new_lower = LowerFloatBound::Exclusive(match n {
+                    Number::Integer(i) => *i as f64,
+                    Number::Decimal(f) => *f,
+                });
+                min = match min {
+                    None => Some(new_lower),
+                    Some(current) => {
+                        if current.is_other_more_restrictive(&new_lower) {
+                            Some(new_lower)
+                        } else {
+                            Some(current)
+                        }
+                    }
+                }
+            }
+            Facet::MinInclusive(n) => {
+                let new_lower = LowerFloatBound::Inclusive(match n {
+                    Number::Integer(i) => *i as f64,
+                    Number::Decimal(f) => *f,
+                });
+                min = match min {
+                    None => Some(new_lower),
+                    Some(current) => {
+                        if current.is_other_more_restrictive(&new_lower) {
+                            Some(new_lower)
+                        } else {
+                            Some(current)
+                        }
+                    }
+                }
+            }
         }
     }
-    Ok(Range::default())
+    Ok(Range {
+        min: min.and_then(|some| match some {
+            LowerFloatBound::Inclusive(x) => Some(Bound::Inclusive(x)),
+            LowerFloatBound::Exclusive(x) => Some(Bound::Exclusive(x)),
+        }),
+        max: max.and_then(|some| match some {
+            UpperFloatBound::Inclusive(x) => Some(Bound::Inclusive(x)),
+            UpperFloatBound::Exclusive(x) => Some(Bound::Inclusive(x)),
+        }),
+    })
 }
 
-fn parse_integer_range(starting_range: Range<i64>) -> std::result::Result<Range<i64>, CreateError> {
-    Ok(Range::default())
+fn parse_integer_range(
+    starting_range: Range<i64>,
+    facets: &[Facet],
+) -> std::result::Result<Range<i64>, CreateError> {
+    let mut min = starting_range.min.and_then(|some| match some {
+        Bound::Inclusive(i) => Some(LowerIntegerBound::Inclusive(i)),
+        Bound::Exclusive(e) => Some(LowerIntegerBound::Exclusive(e)),
+    });
+    let mut max = starting_range.max.and_then(|some| match some {
+        Bound::Inclusive(i) => Some(UpperIntegerBound::Inclusive(i)),
+        Bound::Exclusive(e) => Some(UpperIntegerBound::Exclusive(e)),
+    });
+    for facet in facets {
+        match facet {
+            Facet::Enumeration(_)
+            | Facet::Length(_)
+            | Facet::MaxLength(_)
+            | Facet::MinLength(_)
+            | Facet::Pattern(_) => return Err(make_create_err!("unsupported facet '{:?}'", facet)),
+
+            Facet::MaxExclusive(n) => {
+                let new_upper = UpperIntegerBound::Exclusive(match n {
+                    Number::Integer(i) => *i,
+                    Number::Decimal(f) => *f as i64,
+                });
+                max = match max {
+                    None => Some(new_upper),
+                    Some(current) => {
+                        if current.is_other_more_restrictive(&new_upper) {
+                            Some(new_upper)
+                        } else {
+                            Some(current)
+                        }
+                    }
+                }
+            }
+            Facet::MaxInclusive(n) => {
+                let new_upper = UpperIntegerBound::Inclusive(match n {
+                    Number::Integer(i) => *i,
+                    Number::Decimal(f) => *f as i64,
+                });
+                max = match max {
+                    None => Some(new_upper),
+                    Some(current) => {
+                        if current.is_other_more_restrictive(&new_upper) {
+                            Some(new_upper)
+                        } else {
+                            Some(current)
+                        }
+                    }
+                }
+            }
+            Facet::MinExclusive(n) => {
+                let new_lower = LowerIntegerBound::Exclusive(match n {
+                    Number::Integer(i) => *i,
+                    Number::Decimal(f) => *f as i64,
+                });
+                min = match min {
+                    None => Some(new_lower),
+                    Some(current) => {
+                        if current.is_other_more_restrictive(&new_lower) {
+                            Some(new_lower)
+                        } else {
+                            Some(current)
+                        }
+                    }
+                }
+            }
+            Facet::MinInclusive(n) => {
+                let new_lower = LowerIntegerBound::Inclusive(match n {
+                    Number::Integer(i) => *i,
+                    Number::Decimal(f) => *f as i64,
+                });
+                min = match min {
+                    None => Some(new_lower),
+                    Some(current) => {
+                        if current.is_other_more_restrictive(&new_lower) {
+                            Some(new_lower)
+                        } else {
+                            Some(current)
+                        }
+                    }
+                }
+            }
+        }
+    }
+    Ok(Range {
+        min: min.and_then(|some| match some {
+            LowerIntegerBound::Inclusive(x) => Some(Bound::Inclusive(x)),
+            LowerIntegerBound::Exclusive(x) => Some(Bound::Exclusive(x)),
+        }),
+        max: max.and_then(|some| match some {
+            UpperIntegerBound::Inclusive(x) => Some(Bound::Inclusive(x)),
+            UpperIntegerBound::Exclusive(x) => Some(Bound::Inclusive(x)),
+        }),
+    })
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
