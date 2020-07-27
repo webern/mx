@@ -106,25 +106,25 @@ fn produce_the_scalar_numeric(
             name: Symbol::new(st.name.as_str()),
             base_type,
             documentation: st.documentation(),
-            range: parse_integer_range(Range::new(None, Some(Bound::Exclusive(0))), &r.facets)?,
+            range: parse_integer_range(Range::new(None, Some(Bound::Inclusive(-1))), &r.facets)?,
         }),
         Numeric::NonNegativeInteger => ScalarNumeric::Integer(ScalarNumericData {
             name: Symbol::new(st.name.as_str()),
             base_type,
             documentation: st.documentation(),
-            range: parse_integer_range(Range::new(None, Some(Bound::Exclusive(0))), &r.facets)?,
+            range: parse_integer_range(Range::new(Some(Bound::Inclusive(0)), None), &r.facets)?,
         }),
         Numeric::NonPositiveInteger => ScalarNumeric::Integer(ScalarNumericData {
             name: Symbol::new(st.name.as_str()),
             base_type,
             documentation: st.documentation(),
-            range: parse_integer_range(Range::new(None, Some(Bound::Exclusive(0))), &r.facets)?,
+            range: parse_integer_range(Range::new(None, Some(Bound::Inclusive(0))), &r.facets)?,
         }),
         Numeric::PositiveInteger => ScalarNumeric::Integer(ScalarNumericData {
             name: Symbol::new(st.name.as_str()),
             base_type,
             documentation: st.documentation(),
-            range: parse_integer_range(Range::new(None, Some(Bound::Exclusive(0))), &r.facets)?,
+            range: parse_integer_range(Range::new(Some(Bound::Inclusive(1)), None), &r.facets)?,
         }),
 
         Numeric::Int

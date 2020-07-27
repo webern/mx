@@ -7,6 +7,7 @@ use crate::model::create::{Create, CreateError, CreateResult};
 use crate::model::default_create::enumeration::{is_enumeration, model_enumeration};
 use crate::model::default_create::scalar::{model_scalar_number, model_scalar_string};
 use crate::model::enumeration::Enumeration;
+use crate::model::scalar::ScalarNumeric;
 use crate::model::symbol::Symbol;
 use crate::model::Model;
 use crate::xsd::restriction::Facet;
@@ -48,16 +49,9 @@ fn dispatch_simple_type(st: &SimpleType, xsd: &Xsd) -> CreateResult {
     } else if let Some(result) = model_scalar_string(st, xsd) {
         result
     } else if let Some(result) = model_scalar_number(st, xsd) {
-        if let Ok(thing) = &result {
-            if let Some(the_thing) = thing {
-                if !the_thing.is_empty() {
-                    println!("{:?}", the_thing.get(0).unwrap());
-                }
-            }
-        }
         result
     } else {
-        Err(make_create_err!("Unhandled SimpleType: '{}'", st.name))
-        // Ok(Some(Vec::new())) // TODO - implement other simple types
+        //Err(make_create_err!("Unhandled SimpleType: '{}'", st.name))
+        Ok(Some(Vec::new())) // TODO - implement other simple types
     }
 }
