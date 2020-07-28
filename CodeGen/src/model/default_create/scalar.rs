@@ -1,6 +1,6 @@
 #[macro_use]
 use crate::model::create::{CreateError, CreateResult};
-use crate::model::scalar::{Bound, Range, ScalarNumeric, ScalarNumericData, ScalarString};
+use crate::model::scalar::{Bound, NumericData, Range, ScalarNumeric, ScalarString};
 use crate::model::symbol::Symbol;
 use crate::model::Model;
 use crate::xsd::primitives::{BaseType, Character, Numeric, Primitive};
@@ -95,32 +95,32 @@ fn produce_the_scalar_numeric(
                 base_type
             ))
         }
-        Numeric::Decimal => ScalarNumeric::Decimal(ScalarNumericData {
+        Numeric::Decimal => ScalarNumeric::Decimal(NumericData {
             name: Symbol::new(st.name.as_str()),
             base_type,
             documentation: st.documentation(),
             range: parse_decimal_range(Range::default(), &r.facets)?,
         }),
 
-        Numeric::NegativeInteger => ScalarNumeric::Integer(ScalarNumericData {
+        Numeric::NegativeInteger => ScalarNumeric::Integer(NumericData {
             name: Symbol::new(st.name.as_str()),
             base_type,
             documentation: st.documentation(),
             range: parse_integer_range(Range::new(None, Some(Bound::Inclusive(-1))), &r.facets)?,
         }),
-        Numeric::NonNegativeInteger => ScalarNumeric::Integer(ScalarNumericData {
+        Numeric::NonNegativeInteger => ScalarNumeric::Integer(NumericData {
             name: Symbol::new(st.name.as_str()),
             base_type,
             documentation: st.documentation(),
             range: parse_integer_range(Range::new(Some(Bound::Inclusive(0)), None), &r.facets)?,
         }),
-        Numeric::NonPositiveInteger => ScalarNumeric::Integer(ScalarNumericData {
+        Numeric::NonPositiveInteger => ScalarNumeric::Integer(NumericData {
             name: Symbol::new(st.name.as_str()),
             base_type,
             documentation: st.documentation(),
             range: parse_integer_range(Range::new(None, Some(Bound::Inclusive(0))), &r.facets)?,
         }),
-        Numeric::PositiveInteger => ScalarNumeric::Integer(ScalarNumericData {
+        Numeric::PositiveInteger => ScalarNumeric::Integer(NumericData {
             name: Symbol::new(st.name.as_str()),
             base_type,
             documentation: st.documentation(),
@@ -133,7 +133,7 @@ fn produce_the_scalar_numeric(
         | Numeric::Short
         | Numeric::UnsignedLong
         | Numeric::UnsignedInt
-        | Numeric::UnsignedShort => ScalarNumeric::Integer(ScalarNumericData {
+        | Numeric::UnsignedShort => ScalarNumeric::Integer(NumericData {
             name: Symbol::new(st.name.as_str()),
             base_type,
             documentation: st.documentation(),

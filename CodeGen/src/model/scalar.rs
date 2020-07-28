@@ -17,13 +17,13 @@ pub struct ScalarString {
 
 #[derive(Debug, Clone, PartialEq, PartialOrd)]
 pub enum ScalarNumeric {
-    Decimal(ScalarNumericData<f64>),
-    Integer(ScalarNumericData<i64>),
+    Decimal(NumericData<f64>),
+    Integer(NumericData<i64>),
 }
 
 impl Default for ScalarNumeric {
     fn default() -> Self {
-        ScalarNumeric::Integer(ScalarNumericData::default())
+        ScalarNumeric::Integer(NumericData::default())
     }
 }
 
@@ -64,7 +64,7 @@ where
 }
 
 #[derive(Debug, Clone, PartialEq, PartialOrd, Default)]
-pub struct ScalarNumericData<T>
+pub struct NumericData<T>
 where
     T: Debug + Clone + Copy + PartialEq + PartialOrd + Default,
 {

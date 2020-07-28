@@ -3,6 +3,7 @@ use crate::generate::cpp::write_custom::{
     write_color, write_comma_separated_text, write_ending_number, write_time_only,
 };
 use crate::generate::paths::Paths;
+use crate::model::scalar::ScalarNumeric;
 use crate::model::Model;
 
 #[derive(Debug, Clone)]
@@ -21,6 +22,8 @@ impl Writer {
 
     pub fn write_code(&self) -> Result<()> {
         let mut enums = Vec::new();
+        let mut decimals = Vec::new();
+        let mut integers = Vec::new();
         for model in &self.models {
             match model {
                 Model::Enumeration(e) => enums.push(e),
@@ -39,10 +42,15 @@ impl Writer {
                     "ending-number" => write_ending_number(cs, &self.paths)?,
                     unhandled => return raise!("Unhandled CustomScalarString '{}'", unhandled),
                 },
-                Model::ScalarNumber(sn) => println!("TODO: write code for '{:?}", sn),
+                Model::ScalarNumber(sn) => match sn {
+                    ScalarNumeric::Decimal(d) => decimals.push(d),
+                    ScalarNumeric::Integer(i) => integers.push(i),
+                },
             }
         }
         self.write_enums(&mut enums)?;
+        self.write_integers(&mut integers)?;
+        self.write_decimals(&mut decimals)?;
         Ok(())
     }
 }

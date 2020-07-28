@@ -56,16 +56,16 @@ impl Writer {
         Ok(())
     }
 
-    fn collect_enums(&self) -> Result<Vec<&Enumeration>> {
-        let mut result = Vec::new();
-        for model in &self.models {
-            if let Model::Enumeration(enumer) = model {
-                result.push(enumer);
-            }
-        }
-        result.sort_by(|a, b| a.name.camel().cmp(b.name.camel()));
-        Ok(result)
-    }
+    // fn collect_enums(&self) -> Result<Vec<&Enumeration>> {
+    //     let mut result = Vec::new();
+    //     for model in &self.models {
+    //         if let Model::Enumeration(enumer) = model {
+    //             result.push(enumer);
+    //         }
+    //     }
+    //     result.sort_by(|a, b| a.name.camel().cmp(b.name.camel()));
+    //     Ok(result)
+    // }
 
     fn open_enums_h(&self) -> std::io::Result<impl Write> {
         let _igore_error = std::fs::remove_file(&self.paths.enums_h);
