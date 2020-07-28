@@ -1,6 +1,7 @@
 use crate::error::Result;
 use crate::generate::cpp::writer::Writer;
-use crate::model::scalar::NumericData;
+use crate::model::scalar::{Bound, NumericData};
+use crate::utils::string_stuff::write_documentation;
 use std::fs::OpenOptions;
 use std::io::Write;
 
@@ -69,10 +70,11 @@ impl Writer {
         l!(&mut f, 1, "{{")?;
         l!(
             &mut f,
-            1,
+            2,
             "/* alias for the int size used by this library */"
         )?;
-        l!(&mut f, 1, "using IntType = int");
+        l!(&mut f, 2, "using IntType = int;");
+        l!(&mut f, 0, "")?;
         Ok(f)
     }
 
@@ -99,6 +101,48 @@ impl Writer {
         numeric: &NumericData<i64>,
         w: &mut W,
     ) -> std::io::Result<()> {
+        let c = numeric.name.pascal();
+        write_documentation(w, numeric.documentation.as_str(), 2)?;
+        l!(w, 0, "")?;
+        let range = format!(
+            "Minimum: {}, Maximum: {}",
+            match &numeric.range.min {
+                None => "Unbounded".to_owned(),
+                Some(x) => format!("{:?}", x),
+            },
+            match &numeric.range.max {
+                None => "Unbounded".to_owned(),
+                Some(x) => format!("{:?}", x),
+            }
+        );
+        write_documentation(w, range.as_str(), 2)?;
+        l!(w, 0, "")?;
+        l!(w, 2, "class {}", c)?;
+        l!(w, 2, "{{")?;
+        l!(w, 3, "public:")?;
+        l!(w, 3, "explicit {}( IntType value );", c)?;
+        l!(w, 3, "{}();", c)?;
+        l!(w, 3, "IntType getValue() const;")?;
+        l!(w, 3, "virtual void setValue( IntType value );")?;
+        l!(w, 3, "virtual void parse( const std::string& value );")?;
+        l!(w, 2, "private:")?;
+        l!(w, 3, "IntType myValue;")?;
+        l!(w, 2, "}};")?;
+        l!(w, 0, "")?;
+        l!(w, 2, "std::string toString( const {}& value );", c)?;
+        l!(
+            w,
+            2,
+            "std::ostream& toStream( std::ostream& os, const {}& value );",
+            c
+        )?;
+        l!(
+            w,
+            2,
+            "std::ostream& operator<<( std::ostream& os, const {}& value );",
+            c
+        )?;
+
         Ok(())
     }
 
