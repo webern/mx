@@ -13,6 +13,10 @@ pub struct Paths {
     pub core: PathBuf,
     pub enums_h: PathBuf,
     pub enums_cpp: PathBuf,
+    pub integers_h: PathBuf,
+    pub integers_cpp: PathBuf,
+    pub decimals_h: PathBuf,
+    pub decimals_cpp: PathBuf,
     pub xsd_3_0: PathBuf,
     pub xsd_3_1: PathBuf,
 }
@@ -21,13 +25,15 @@ impl Default for Paths {
     fn default() -> Self {
         let r = repo();
         let core = r.join("Sourcecode").join("private").join("mx").join("core");
-        let enums_h = core.join("Enums.h");
-        let enums_cpp = core.join("Enums.cpp");
         Self {
             repo: r,
-            core,
-            enums_h,
-            enums_cpp,
+            core: core.clone(),
+            enums_h: core.join("Enums.h"),
+            enums_cpp: core.join("Enums.cpp"),
+            integers_h: core.join("Integers.h"),
+            integers_cpp: core.join("Integers.cpp"),
+            decimals_h: core.join("Decimals.h"),
+            decimals_cpp: core.join("Decimals.cpp"),
             xsd_3_0: repo().join("Documents").join("musicxml.xsd"),
             xsd_3_1: repo().join("Documents").join("musicxml-3.1.xsd"),
         }

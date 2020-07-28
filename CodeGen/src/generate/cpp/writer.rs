@@ -49,8 +49,8 @@ impl Writer {
             }
         }
         self.write_enums(&mut enums)?;
-        self.write_integers(&mut integers)?;
-        self.write_decimals(&mut decimals)?;
+        self.write_integers(integers.as_mut_slice())?;
+        self.write_decimals(decimals.as_mut_slice())?;
         Ok(())
     }
 }
