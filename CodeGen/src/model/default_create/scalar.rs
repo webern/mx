@@ -39,11 +39,7 @@ pub(super) fn model_scalar_string(st: &SimpleType, _xsd: &Xsd) -> Option<CreateR
             };
             for facet in &r.facets {
                 match facet {
-                    Facet::Enumeration(_)
-                    | Facet::MaxExclusive(_)
-                    | Facet::MaxInclusive(_)
-                    | Facet::MinExclusive(_)
-                    | Facet::MinInclusive(_) => {
+                    Facet::Enumeration(_) | Facet::MaxExclusive(_) | Facet::MaxInclusive(_) | Facet::MinExclusive(_) | Facet::MinInclusive(_) => {
                         return some_create_err!("unsupported facet '{:?}'", facet)
                     }
                     Facet::Length(l) => {
@@ -82,19 +78,9 @@ pub(super) fn model_scalar_number(st: &SimpleType, _xsd: &Xsd) -> Option<CreateR
     }
 }
 
-fn produce_the_scalar_numeric(
-    base_type: Numeric,
-    r: &Restriction,
-    st: &SimpleType,
-    _xsd: &Xsd,
-) -> CreateResult {
+fn produce_the_scalar_numeric(base_type: Numeric, r: &Restriction, st: &SimpleType, _xsd: &Xsd) -> CreateResult {
     let mut scalar_numeric = match base_type {
-        Numeric::Byte | Numeric::UnsignedByte => {
-            return Err(make_create_err!(
-                "Unsupported numeric type: '{}'",
-                base_type
-            ))
-        }
+        Numeric::Byte | Numeric::UnsignedByte => return Err(make_create_err!("Unsupported numeric type: '{}'", base_type)),
         Numeric::Decimal => ScalarNumeric::Decimal(NumericData {
             name: Symbol::new(st.name.as_str()),
             base_type,
@@ -127,18 +113,14 @@ fn produce_the_scalar_numeric(
             range: parse_integer_range(Range::new(Some(Bound::Inclusive(1)), None), &r.facets)?,
         }),
 
-        Numeric::Int
-        | Numeric::Integer
-        | Numeric::Long
-        | Numeric::Short
-        | Numeric::UnsignedLong
-        | Numeric::UnsignedInt
-        | Numeric::UnsignedShort => ScalarNumeric::Integer(NumericData {
-            name: Symbol::new(st.name.as_str()),
-            base_type,
-            documentation: st.documentation(),
-            range: parse_integer_range(Range::default(), &r.facets)?,
-        }),
+        Numeric::Int | Numeric::Integer | Numeric::Long | Numeric::Short | Numeric::UnsignedLong | Numeric::UnsignedInt | Numeric::UnsignedShort => {
+            ScalarNumeric::Integer(NumericData {
+                name: Symbol::new(st.name.as_str()),
+                base_type,
+                documentation: st.documentation(),
+                range: parse_integer_range(Range::default(), &r.facets)?,
+            })
+        }
     };
     Ok(Some(vec![Model::ScalarNumber(scalar_numeric)]))
 }
@@ -146,10 +128,7 @@ fn produce_the_scalar_numeric(
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Wow what an incredible mess
 
-fn parse_decimal_range(
-    starting_range: Range<f64>,
-    facets: &[Facet],
-) -> std::result::Result<Range<f64>, CreateError> {
+fn parse_decimal_range(starting_range: Range<f64>, facets: &[Facet]) -> std::result::Result<Range<f64>, CreateError> {
     let mut min = starting_range.min.and_then(|some| match some {
         Bound::Inclusive(i) => Some(LowerFloatBound::Inclusive(i)),
         Bound::Exclusive(e) => Some(LowerFloatBound::Exclusive(e)),
@@ -160,11 +139,9 @@ fn parse_decimal_range(
     });
     for facet in facets {
         match facet {
-            Facet::Enumeration(_)
-            | Facet::Length(_)
-            | Facet::MaxLength(_)
-            | Facet::MinLength(_)
-            | Facet::Pattern(_) => return Err(make_create_err!("unsupported facet '{:?}'", facet)),
+            Facet::Enumeration(_) | Facet::Length(_) | Facet::MaxLength(_) | Facet::MinLength(_) | Facet::Pattern(_) => {
+                return Err(make_create_err!("unsupported facet '{:?}'", facet))
+            }
 
             Facet::MaxExclusive(n) => {
                 let new_upper = UpperFloatBound::Exclusive(match n {
@@ -244,10 +221,7 @@ fn parse_decimal_range(
     })
 }
 
-fn parse_integer_range(
-    starting_range: Range<i64>,
-    facets: &[Facet],
-) -> std::result::Result<Range<i64>, CreateError> {
+fn parse_integer_range(starting_range: Range<i64>, facets: &[Facet]) -> std::result::Result<Range<i64>, CreateError> {
     let mut min = starting_range.min.and_then(|some| match some {
         Bound::Inclusive(i) => Some(LowerIntegerBound::Inclusive(i)),
         Bound::Exclusive(e) => Some(LowerIntegerBound::Exclusive(e)),
@@ -258,11 +232,9 @@ fn parse_integer_range(
     });
     for facet in facets {
         match facet {
-            Facet::Enumeration(_)
-            | Facet::Length(_)
-            | Facet::MaxLength(_)
-            | Facet::MinLength(_)
-            | Facet::Pattern(_) => return Err(make_create_err!("unsupported facet '{:?}'", facet)),
+            Facet::Enumeration(_) | Facet::Length(_) | Facet::MaxLength(_) | Facet::MinLength(_) | Facet::Pattern(_) => {
+                return Err(make_create_err!("unsupported facet '{:?}'", facet))
+            }
 
             Facet::MaxExclusive(n) => {
                 let new_upper = UpperIntegerBound::Exclusive(match n {

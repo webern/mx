@@ -1,12 +1,10 @@
-use crate::generate::cpp::constants::{
-    custom_scalar_strings, enum_member_substitutions, pseudo_enums, reserved_words,
-    suffixed_enum_names, PseudoEnumSpec,
-};
+use crate::generate::cpp::constants::{custom_scalar_strings, enum_member_substitutions, pseudo_enums, reserved_words, suffixed_enum_names, PseudoEnumSpec};
 use crate::model;
 use crate::model::builtin::BuiltinString;
 use crate::model::create::{Create, CreateError, CreateResult};
 use crate::model::enumeration::OtherField;
 use crate::model::post_process::PostProcess;
+use crate::model::scalar::ScalarNumeric;
 use crate::model::symbol::Symbol;
 use crate::model::transform::Transform;
 use crate::model::Model::Enumeration;
@@ -15,6 +13,7 @@ use crate::xsd::choice::{Choice, ChoiceItem};
 use crate::xsd::complex_type::{Children, ComplexType, Parent};
 use crate::xsd::element::{ElementDef, ElementRef};
 use crate::xsd::id::{Id, RootNodeType};
+use crate::xsd::primitives::Numeric;
 use crate::xsd::primitives::{BaseType, Character, PrefixedString, Primitive};
 use crate::xsd::restriction::Facet;
 use crate::xsd::{complex_type, element, simple_type, Entry, Xsd};
@@ -94,10 +93,7 @@ impl PostProcess for MxModeler {
             }
             return Ok(Model::Enumeration(cloned));
         } else if let Model::ScalarString(scalar_string) = model {
-            if self
-                .custom_scalar_strings
-                .contains(scalar_string.name.original())
-            {
+            if self.custom_scalar_strings.contains(scalar_string.name.original()) {
                 return Ok(Model::CustomScalarString(scalar_string.clone()));
             }
         }
@@ -148,10 +144,7 @@ impl MxModeler {
         Ok(Some(vec![Model::Enumeration(enumer)]))
     }
 
-    fn unwrap_dynamics<'a>(
-        &self,
-        entry: &'a Entry,
-    ) -> std::result::Result<(&'a ComplexType, &'a Parent, &'a Choice), CreateError> {
+    fn unwrap_dynamics<'a>(&self, entry: &'a Entry) -> std::result::Result<(&'a ComplexType, &'a Parent, &'a Choice), CreateError> {
         let ct = if let Entry::ComplexType(ct) = entry {
             ct
         } else {
@@ -183,10 +176,7 @@ impl MxModeler {
         Ok((ct, p, choice))
     }
 
-    fn unwrap_empty_element<'a>(
-        &self,
-        c: &'a ChoiceItem,
-    ) -> std::result::Result<Option<&'a str>, CreateError> {
+    fn unwrap_empty_element<'a>(&self, c: &'a ChoiceItem) -> std::result::Result<Option<&'a str>, CreateError> {
         let ref_: &ElementRef = if let ChoiceItem::Element(wrapped) = c {
             let ref_ = if let element::Element::Reference(ref_) = wrapped {
                 ref_
@@ -209,10 +199,7 @@ impl MxModeler {
         }
     }
 
-    fn unwrap_simple_element<'a>(
-        &self,
-        c: &'a ChoiceItem,
-    ) -> std::result::Result<Option<(&'a str, &'a BaseType)>, CreateError> {
+    fn unwrap_simple_element<'a>(&self, c: &'a ChoiceItem) -> std::result::Result<Option<(&'a str, &'a BaseType)>, CreateError> {
         let ref_: &ElementRef = if let ChoiceItem::Element(wrapped) = c {
             let ref_ = if let element::Element::Reference(ref_) = wrapped {
                 ref_
@@ -238,10 +225,7 @@ impl MxModeler {
         }
     }
 
-    fn unwrap_other_field<'a>(
-        &self,
-        c: &'a ChoiceItem,
-    ) -> std::result::Result<&'a str, CreateError> {
+    fn unwrap_other_field<'a>(&self, c: &'a ChoiceItem) -> std::result::Result<&'a str, CreateError> {
         let found_stuff = if let Some(other_field) = self.unwrap_simple_element(c)? {
             other_field
         } else {
@@ -251,10 +235,7 @@ impl MxModeler {
         };
         if *found_stuff.1 != BaseType::Primitive(Primitive::Character(Character::String)) {
             return return Err(CreateError {
-                message: format!(
-                    "unwrap_other_field: unsupported 'other' field type '{}'",
-                    found_stuff.1.name()
-                ),
+                message: format!("unwrap_other_field: unsupported 'other' field type '{}'", found_stuff.1.name()),
             });
         }
         Ok(found_stuff.0)
