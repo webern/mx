@@ -1,4 +1,4 @@
-use crate::generate::cpp::constants::{custom_scalar_strings, enum_member_substitutions, pseudo_enums, reserved_words, suffixed_enum_names, PseudoEnumSpec};
+use crate::generate::cpp::constants::{custom_scalar_strings, enum_member_substitutions, pseudo_enums, reserved_words, suffixed_enum_names, PseudoEnumSpec, suffixed_value_names};
 use crate::model;
 use crate::model::builtin::BuiltinString;
 use crate::model::create::{Create, CreateError, CreateResult};
@@ -24,6 +24,7 @@ use std::collections::HashMap;
 pub struct MxModeler {
     enum_member_substitutions: HashMap<String, String>,
     suffixed_enum_names: IndexSet<String>,
+    suffixed_value_names: HashMap<String, String>,
     reserved_words: IndexSet<String>,
     pseudo_enums: HashMap<String, PseudoEnumSpec>,
     custom_scalar_strings: IndexSet<&'static str>,
@@ -95,6 +96,26 @@ impl PostProcess for MxModeler {
         } else if let Model::ScalarString(scalar_string) = model {
             if self.custom_scalar_strings.contains(scalar_string.name.original()) {
                 return Ok(Model::CustomScalarString(scalar_string.clone()));
+            } else if let Some(new_name) = self.suffixed_value_names.get(scalar_string.name.original()) {
+                let mut st = scalar_string.clone();
+                st.name.replace(&new_name);
+                return Ok(Model::ScalarString(st))
+            }
+        } else if let Model::ScalarNumber(scalar_number) = model {
+            match scalar_number {
+                ScalarNumeric::Decimal(n) => {
+                    if let Some(new_name) = self.suffixed_value_names.get(n.name.original()) {
+                    let mut n = n.clone();
+                    n.name.replace(&new_name);
+                    return Ok(Model::ScalarNumber(ScalarNumeric::Decimal(n)))
+                }},
+                ScalarNumeric::Integer(n) => {
+                    if let Some(new_name) = self.suffixed_value_names.get(n.name.original()) {
+                        let mut mut_num = n.clone();
+                        mut_num.name.replace(&new_name);
+                        return Ok(Model::ScalarNumber(ScalarNumeric::Integer(mut_num)))
+                    }
+                },
             }
         }
         Ok(model.clone())
@@ -106,6 +127,7 @@ impl MxModeler {
         Self {
             enum_member_substitutions: enum_member_substitutions(),
             suffixed_enum_names: suffixed_enum_names(),
+            suffixed_value_names: suffixed_value_names(),
             reserved_words: reserved_words(),
             pseudo_enums: pseudo_enums(),
             custom_scalar_strings: custom_scalar_strings(),

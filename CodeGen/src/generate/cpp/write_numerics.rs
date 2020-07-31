@@ -66,6 +66,7 @@ impl Writer {
             },
         };
         numerics.push(positive_integer);
+        numerics.push(non_negative_integer);
         numerics.push(byte);
         numerics.sort_by(|a, b| {
             let a = a.name.pascal();
@@ -107,9 +108,23 @@ impl Writer {
         l!(&mut f, 0, "{{")?;
         l!(&mut f, 1, "namespace core")?;
         l!(&mut f, 1, "{{")?;
-        l!(&mut f, 2, "/* alias for the int size used by this library */")?;
+        l!(&mut f, 2, "/// Alias for the int type we will use throughout this library.")?;
         l!(&mut f, 2, "using IntType = int;");
         l!(&mut f, 0, "")?;
+        l!(&mut f, 2, "/// A base class for integer types")?;
+        l!(&mut f, 2, "class Integer")?;
+        l!(&mut f, 2, "{{")?;
+            l!(&mut f, 3, "public:")?;
+            l!(&mut f, 3, "virtual ~Integer() = default;")?;
+            l!(&mut f, 3, "virtual IntType getValue() const = 0;")?;
+            l!(&mut f, 3, "virtual void setValue( IntType value ) = 0;")?;
+            l!(&mut f, 3, "virtual void parse( const std::string& value ) = 0;")?;
+        l!(&mut f, 2, "}};")?;
+        l!(&mut f, 2, "")?;
+        l!(&mut f, 2, "std::string toString( const Integer& value );")?;
+        l!(&mut f, 2, "std::ostream& toStream( std::ostream& os, const Integer& value );")?;
+        l!(&mut f, 2, "std::ostream& operator<<( std::ostream& os, const Integer& value );")?;
+        l!(&mut f, 2, "")?;
         Ok(f)
     }
 
@@ -148,21 +163,19 @@ impl Writer {
         );
         write_documentation(w, range.as_str(), 2)?;
         l!(w, 0, "")?;
-        l!(w, 2, "class {}", c)?;
+        l!(w, 2, "class {} final : public Integer", c)?;
         l!(w, 2, "{{")?;
-        l!(w, 3, "public:")?;
+        l!(w, 2, "public:")?;
         l!(w, 3, "explicit {}( IntType value );", c)?;
         l!(w, 3, "{}();", c)?;
-        l!(w, 3, "IntType getValue() const;")?;
-        l!(w, 3, "virtual void setValue( IntType value );")?;
-        l!(w, 3, "virtual void parse( const std::string& value );")?;
+        l!(w, 3, "virtual ~{}() = default;", c)?;
+        l!(w, 3, "virtual IntType getValue() const override;")?;
+        l!(w, 3, "virtual void setValue( IntType value ) override;")?;
+        l!(w, 3, "virtual void parse( const std::string& value ) override;")?;
         l!(w, 2, "private:")?;
         l!(w, 3, "IntType myValue;")?;
         l!(w, 2, "}};")?;
         l!(w, 0, "")?;
-        l!(w, 2, "std::string toString( const {}& value );", c)?;
-        l!(w, 2, "std::ostream& toStream( std::ostream& os, const {}& value );", c)?;
-        l!(w, 2, "std::ostream& operator<<( std::ostream& os, const {}& value );", c)?;
         Ok(())
     }
 
