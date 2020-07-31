@@ -95,7 +95,7 @@ namespace mx
             if( myDirectionData.isStaffValueSpecified || myCursor.staffIndex != 0 )
             {
                 directionPtr->setHasStaff( true );
-                directionPtr->getStaff()->setValue( core::StaffNumber{ myCursor.staffIndex + 1 } );
+                directionPtr->getStaff()->setValue( core::PositiveInteger{ myCursor.staffIndex + 1 } );
             }
 
             int offset = 0;
