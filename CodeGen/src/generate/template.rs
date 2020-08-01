@@ -7,10 +7,15 @@ use std::collections::BTreeMap;
 use std::fs;
 use std::path::{Path, PathBuf};
 
-const CARGO_MANIFEST_DIR: &str = "CARGO_MANIFEST_DIR";
+pub const CORE_CPP: &str = "core.cpp.template";
+pub const CORE_H: &str = "core.h.template";
+pub const INTEGER_BUILTINS_CPP: &str = "integer_builtins.cpp.template";
+pub const INTEGER_BUILTINS_H: &str = "integer_builtins.h.template";
+pub const INTEGER_TYPE_CPP: &str = "integer_type.cpp.template";
+pub const INTEGER_TYPE_H: &str = "integer_type.h.template";
 
 lazy_static! {
-    static ref DIR: PathBuf = PathBuf::from("CARGO_MANIFEST_DIR").join("src").join("generate").join("data");
+    static ref DIR: PathBuf = manifest_dir().join("src").join("generate").join("data");
 }
 
 lazy_static! {
@@ -30,12 +35,18 @@ where
     SERIALIZE: Serialize,
 {
     let h = &HANDLEBARS;
-    h.render(name.as_ref(), data)
-        .map_err(|e| make_err!("unable to render template '{}': {}", name.as_ref(), e))
+    let rendered = h.render(name.as_ref(), data)
+        .map_err(|e| make_err!("unable to render template '{}': {}", name.as_ref(), e))?;
+    Ok(rendered.replace("&amp;","&").replace("&lt;","<").replace("&gt;",">"))
 }
 
 fn template_dir() -> &'static Path {
     &DIR
+}
+
+fn manifest_dir() -> PathBuf {
+    let dir = env!("CARGO_MANIFEST_DIR");
+    PathBuf::from(dir)
 }
 
 fn template_path<S: AsRef<str>>(filename: S) -> PathBuf {

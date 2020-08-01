@@ -1,0 +1,42 @@
+        /// Alias for the int type used by this library.
+        using IntType = int;
+        constexpr const IntType IntMax = std::numeric_limits<IntType>::max();
+        constexpr const IntType IntMin = std::numeric_limits<IntType>::min();
+
+        /// A base class for all integer types.
+        class Integer
+        {
+        public:
+            explicit Integer( IntType value );
+            Integer();
+            virtual ~Integer();
+            IntType getValue() const;
+            virtual void setValue( IntType value );
+            virtual void parse( const std::string& value );
+        private:
+            IntType myValue;
+        };
+
+
+        std::string toString( const Integer& value );
+        std::ostream& toStream( std::ostream& os, const Integer& value );
+        std::ostream& operator<<( std::ostream& os, const Integer& value );
+
+        /// A 'clamped', or 'ranged' Integer where the value can never be set
+        /// less than min or greater than max.
+        class IntRange : public Integer
+        {
+        public:
+            explicit IntRange( IntType min, IntType max, IntType value );
+            virtual ~IntRange();
+            IntRange( const IntRange& ) = default;
+            IntRange( IntRange&& );
+            IntRange& operator=( const IntRange& );
+            IntRange& operator=( IntRange&& );
+
+            virtual void setValue( IntType value );
+            virtual void parse( const std::string& value );
+        private:
+            const IntType myMin;
+            const IntType myMax;
+        };

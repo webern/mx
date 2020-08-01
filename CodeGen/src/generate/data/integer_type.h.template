@@ -1,0 +1,7 @@
+{{ documentation }}
+        class {{ classname }} : public IntRange
+        {
+        public:
+            explicit {{ classname }}( IntType value );
+            {{ classname }}();
+        };
