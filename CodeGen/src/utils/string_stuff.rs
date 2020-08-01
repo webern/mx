@@ -435,12 +435,7 @@ mod tests {
             },
             TestCase {
                 input: "DomInAnt11th",
-                want: vec![
-                    "dom".to_owned(),
-                    "in".to_owned(),
-                    "ant".to_owned(),
-                    "11th".to_owned(),
-                ],
+                want: vec!["dom".to_owned(), "in".to_owned(), "ant".to_owned(), "11th".to_owned()],
             },
             TestCase {
                 input: "dominant11th",

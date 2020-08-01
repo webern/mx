@@ -73,21 +73,23 @@ impl Writer {
             let b = b.name.pascal();
             a.cmp(b)
         });
-        let mut hwrite = wrap!(self.open_integers_h())?;
-        let mut cwrite = wrap!(self.open_integers_cpp())?;
-        for (i, integer) in numerics.iter().enumerate() {
-            let is_last = i == numerics.len() - 1;
-            wrap!(self.write_integer_h(&integer, &mut hwrite))?;
-            if !is_last {
-                wrap!(writeln!(hwrite, ""))?;
-            }
-            wrap!(self.write_integer_cpp(&integer, &mut cwrite))?;
-            if !is_last {
-                wrap!(writeln!(cwrite, ""))?;
-            }
-        }
-        wrap!(self.close_file(&mut hwrite))?;
-        wrap!(self.close_file(&mut cwrite))?;
+        self.write_h(&numerics);
+        self.write_cpp(&numerics);
+        // let mut hwrite = wrap!(self.open_integers_h())?;
+        // let mut cwrite = wrap!(self.open_integers_cpp())?;
+        // for (i, integer) in numerics.iter().enumerate() {
+        //     let is_last = i == numerics.len() - 1;
+        //     wrap!(self.write_integer_h(&integer, &mut hwrite))?;
+        //     if !is_last {
+        //         wrap!(writeln!(hwrite, ""))?;
+        //     }
+        //     wrap!(self.write_integer_cpp(&integer, &mut cwrite))?;
+        //     if !is_last {
+        //         wrap!(writeln!(cwrite, ""))?;
+        //     }
+        // }
+        // wrap!(self.close_file(&mut hwrite))?;
+        // wrap!(self.close_file(&mut cwrite))?;
         Ok(())
     }
 
@@ -148,26 +150,26 @@ impl Writer {
         l!(&mut f, 1, "namespace core")?;
         l!(&mut f, 1, "{{")?;
         l!(&mut f, 2, "Integer::Integer()")?;
-            l!(&mut f, 2, ": Integer{{ 0 }}")?;
+        l!(&mut f, 2, ": Integer{{ 0 }}")?;
         l!(&mut f, 2, "{{")?;
         l!(&mut f, 0, "")?;
         l!(&mut f, 2, "}}")?;
         l!(&mut f, 0, "")?;
-    l!(&mut f, 2, "Integer::Integer( IntType value )")?;
+        l!(&mut f, 2, "Integer::Integer( IntType value )")?;
         l!(&mut f, 2, ": myValue{{}}")?;
         l!(&mut f, 2, "{{")?;
-            l!(&mut f, 3, "// for child classes that clamp the range")?;
-            l!(&mut f, 3, "setValue( 0 );")?;
+        l!(&mut f, 3, "// for child classes that clamp the range")?;
+        l!(&mut f, 3, "setValue( 0 );")?;
         l!(&mut f, 2, "}}")?;
         l!(&mut f, 0, "")?;
         l!(&mut f, 2, "IntType Integer::getValue() const")?;
         l!(&mut f, 2, "{{")?;
-            l!(&mut f, 3, "return myValue;")?;
+        l!(&mut f, 3, "return myValue;")?;
         l!(&mut f, 2, "}}")?;
         l!(&mut f, 0, "")?;
         l!(&mut f, 2, "void Integer::setValue( IntType value )")?;
         l!(&mut f, 2, "{{")?;
-            l!(&mut f, 3, "myValue = value;")?;
+        l!(&mut f, 3, "myValue = value;")?;
         l!(&mut f, 2, "}}")?;
         l!(&mut f, 0, "")?;
         l!(&mut f, 2, "void Integer::parse( const std::string& value )")?;
@@ -199,20 +201,20 @@ impl Writer {
             }
         );
         write_documentation(w, range.as_str(), 2)?;
-        l!(w, 0, "")?;
-        l!(w, 2, "class {} final : public Integer", c)?;
-        l!(w, 2, "{{")?;
-        l!(w, 2, "public:")?;
-        l!(w, 3, "{}();", c)?;
-        l!(w, 3, "explicit {}( IntType value );", c)?;
-        l!(w, 3, "virtual ~{}() = default;", c)?;
-        // l!(w, 3, "virtual IntType getValue() const override;")?;
-        l!(w, 3, "virtual void setValue( IntType value ) override;")?;
-        // l!(w, 3, "virtual void parse( const std::string& value ) override;")?;
-        // l!(w, 2, "private:")?;
-        // l!(w, 3, "IntType myValue;")?;
-        l!(w, 2, "}};")?;
-        l!(w, 0, "")?;
+        // l!(w, 0, "")?;
+        // l!(w, 2, "class {} final : public Integer", c)?;
+        // l!(w, 2, "{{")?;
+        // l!(w, 2, "public:")?;
+        // l!(w, 3, "{}();", c)?;
+        // l!(w, 3, "explicit {}( IntType value );", c)?;
+        // l!(w, 3, "virtual ~{}() = default;", c)?;
+        // // l!(w, 3, "virtual IntType getValue() const override;")?;
+        // l!(w, 3, "virtual void setValue( IntType value ) override;")?;
+        // // l!(w, 3, "virtual void parse( const std::string& value ) override;")?;
+        // // l!(w, 2, "private:")?;
+        // // l!(w, 3, "IntType myValue;")?;
+        // l!(w, 2, "}};")?;
+        // l!(w, 0, "")?;
         Ok(())
     }
 

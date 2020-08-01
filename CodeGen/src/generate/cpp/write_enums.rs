@@ -2,9 +2,7 @@ use crate::error::Result;
 use crate::generate::cpp::writer::Writer;
 use crate::model::enumeration::{Enumeration, OtherField};
 use crate::model::Model;
-use crate::utils::string_stuff::{
-    camel_case, linestart, pascal_case, sep, write_documentation, Altered, Symbol,
-};
+use crate::utils::string_stuff::{camel_case, linestart, pascal_case, sep, write_documentation, Altered, Symbol};
 use indexmap::set::IndexSet;
 use std::collections::HashMap;
 use std::fs::OpenOptions;
@@ -69,10 +67,7 @@ impl Writer {
 
     fn open_enums_h(&self) -> std::io::Result<impl Write> {
         let _igore_error = std::fs::remove_file(&self.paths.enums_h);
-        let mut f = OpenOptions::new()
-            .write(true)
-            .create(true)
-            .open(&self.paths.enums_h)?;
+        let mut f = OpenOptions::new().write(true).create(true).open(&self.paths.enums_h)?;
         l!(&mut f, 0, "// MusicXML Class Library")?;
         l!(&mut f, 0, "// Copyright (c) by Matthew James Briggs")?;
         l!(&mut f, 0, "// Distributed under the MIT License")?;
@@ -90,10 +85,7 @@ impl Writer {
 
     fn open_enums_cpp(&self) -> std::io::Result<impl Write> {
         let _igore_error = std::fs::remove_file(&self.paths.enums_cpp);
-        let mut f = OpenOptions::new()
-            .write(true)
-            .create(true)
-            .open(&self.paths.enums_cpp)?;
+        let mut f = OpenOptions::new().write(true).create(true).open(&self.paths.enums_cpp)?;
         l!(&mut f, 0, "// MusicXML Class Library")?;
         l!(&mut f, 0, "// Copyright (c) by Matthew James Briggs")?;
         l!(&mut f, 0, "// Distributed under the MIT License")?;
@@ -152,18 +144,8 @@ impl Writer {
         l!(w, 0, "")?;
         l!(w, 2, "{} parse{}( const std::string& value );", n, n)?;
         l!(w, 2, "std::string toString( const {} value );", n)?;
-        l!(
-            w,
-            2,
-            "std::ostream& toStream( std::ostream& os, const {} value );",
-            n
-        )?;
-        l!(
-            w,
-            2,
-            "std::ostream& operator<<( std::ostream& os, const {} value );",
-            n
-        )?;
+        l!(w, 2, "std::ostream& toStream( std::ostream& os, const {} value );", n)?;
+        l!(w, 2, "std::ostream& operator<<( std::ostream& os, const {} value );", n)?;
 
         if let Some(other_field) = &enumer.other_field {
             let cn = other_field.wrapper_class_name.pascal();
@@ -186,18 +168,8 @@ impl Writer {
             l!(w, 0, "")?;
             l!(w, 2, "{} parse{}( const std::string& value );", cn, cn)?;
             l!(w, 2, "std::string toString( const {}& value );", cn)?;
-            l!(
-                w,
-                2,
-                "std::ostream& toStream( std::ostream& os, const {}& value );",
-                cn
-            )?;
-            l!(
-                w,
-                2,
-                "std::ostream& operator<<( std::ostream& os, const {}& value );",
-                cn
-            )?;
+            l!(w, 2, "std::ostream& toStream( std::ostream& os, const {}& value );", cn)?;
+            l!(w, 2, "std::ostream& operator<<( std::ostream& os, const {}& value );", cn)?;
         }
 
         Ok(())
@@ -211,11 +183,7 @@ impl Writer {
         }
     }
 
-    fn write_enum_cpp_normal_enum<W: Write>(
-        &self,
-        enumer: &Enumeration,
-        w: &mut W,
-    ) -> std::io::Result<()> {
+    fn write_enum_cpp_normal_enum<W: Write>(&self, enumer: &Enumeration, w: &mut W) -> std::io::Result<()> {
         let pc = enumer.name.pascal();
         l!(w, 2, "{}", sep(pc, 2))?;
         l!(w, 0, "")?;
@@ -225,32 +193,12 @@ impl Writer {
             let o = member.original();
             let n = member.camel();
             if i == 0 {
-                l!(
-                    w,
-                    3,
-                    "if ( value == \"{}\" ) {{ return {}::{}; }}",
-                    o,
-                    pc,
-                    n
-                )?;
+                l!(w, 3, "if ( value == \"{}\" ) {{ return {}::{}; }}", o, pc, n)?;
             } else {
-                l!(
-                    w,
-                    3,
-                    "else if ( value == \"{}\" ) {{ return {}::{}; }}",
-                    o,
-                    pc,
-                    n
-                )?;
+                l!(w, 3, "else if ( value == \"{}\" ) {{ return {}::{}; }}", o, pc, n)?;
             }
         }
-        l!(
-            w,
-            3,
-            "return {}::{};",
-            pc,
-            enumer.members.get(0).unwrap().camel()
-        )?;
+        l!(w, 3, "return {}::{};", pc, enumer.members.get(0).unwrap().camel())?;
         l!(w, 2, "}}")?;
         l!(w, 0, "")?;
         l!(w, 2, "std::string toString( const {} value )", pc)?;
@@ -264,42 +212,22 @@ impl Writer {
         }
         l!(w, 4, "default: break;")?;
         l!(w, 3, "}}")?;
-        l!(
-            w,
-            3,
-            "return \"{}\";",
-            enumer.members.get(0).unwrap().original()
-        )?;
+        l!(w, 3, "return \"{}\";", enumer.members.get(0).unwrap().original())?;
         l!(w, 2, "}}")?;
         l!(w, 0, "")?;
-        l!(
-            w,
-            2,
-            "std::ostream& toStream( std::ostream& os, const {} value )",
-            pc
-        )?;
+        l!(w, 2, "std::ostream& toStream( std::ostream& os, const {} value )", pc)?;
         l!(w, 2, "{{")?;
         l!(w, 3, "return os << toString( value );")?;
         l!(w, 2, "}}")?;
         l!(w, 0, "")?;
-        l!(
-            w,
-            2,
-            "std::ostream& operator<<( std::ostream& os, const {} value )",
-            pc
-        )?;
+        l!(w, 2, "std::ostream& operator<<( std::ostream& os, const {} value )", pc)?;
         l!(w, 2, "{{")?;
         l!(w, 3, "return toStream( os, value );")?;
         l!(w, 2, "}}")?;
         Ok(())
     }
 
-    fn write_enum_cpp_other_enum<W: Write>(
-        &self,
-        enumer: &Enumeration,
-        other_field: &OtherField,
-        w: &mut W,
-    ) -> std::io::Result<()> {
+    fn write_enum_cpp_other_enum<W: Write>(&self, enumer: &Enumeration, other_field: &OtherField, w: &mut W) -> std::io::Result<()> {
         let pc = enumer.name.pascal();
         let other = other_field;
         let of_orig = other.name.original();
@@ -307,46 +235,19 @@ impl Writer {
         let cn = other.wrapper_class_name.pascal();
         l!(w, 2, "{}", sep(pc, 2))?;
         l!(w, 0, "")?;
-        l!(
-            w,
-            2,
-            "{} parse{}( const std::string& value, bool& success )",
-            pc,
-            pc
-        )?;
+        l!(w, 2, "{} parse{}( const std::string& value, bool& success )", pc, pc)?;
         l!(w, 2, "{{")?;
         l!(w, 3, "success = true;")?;
         for (i, member) in enumer.members.iter().enumerate() {
             let o = member.original();
             let n = member.camel();
             if i == 0 {
-                l!(
-                    w,
-                    3,
-                    "if ( value == \"{}\" ) {{ return {}::{}; }}",
-                    o,
-                    pc,
-                    n
-                )?;
+                l!(w, 3, "if ( value == \"{}\" ) {{ return {}::{}; }}", o, pc, n)?;
             } else {
-                l!(
-                    w,
-                    3,
-                    "else if ( value == \"{}\" ) {{ return {}::{}; }}",
-                    o,
-                    pc,
-                    n
-                )?;
+                l!(w, 3, "else if ( value == \"{}\" ) {{ return {}::{}; }}", o, pc, n)?;
             }
         }
-        l!(
-            w,
-            3,
-            "else if ( value == \"{}\" ) {{ return {}::{}; }}",
-            of_orig,
-            pc,
-            of_pasc
-        )?;
+        l!(w, 3, "else if ( value == \"{}\" ) {{ return {}::{}; }}", of_orig, pc, of_pasc)?;
         l!(w, 3, "success = false;")?;
         l!(w, 3, "return {}::{};", pc, of_pasc)?;
         l!(w, 2, "}}")?;
@@ -366,35 +267,18 @@ impl Writer {
             let n = member.camel();
             l!(w, 4, "case {}::{}: {{ return \"{}\"; }}", pc, n, o)?;
         }
-        l!(
-            w,
-            4,
-            "case {}::{}: {{ return \"{}\"; }}",
-            pc,
-            of_pasc,
-            of_orig
-        )?;
+        l!(w, 4, "case {}::{}: {{ return \"{}\"; }}", pc, of_pasc, of_orig)?;
         l!(w, 4, "default: break;")?;
         l!(w, 3, "}}")?;
         l!(w, 3, "return \"default\";")?;
         l!(w, 2, "}}")?;
         l!(w, 0, "")?;
-        l!(
-            w,
-            2,
-            "std::ostream& toStream( std::ostream& os, const {} value )",
-            pc
-        )?;
+        l!(w, 2, "std::ostream& toStream( std::ostream& os, const {} value )", pc)?;
         l!(w, 2, "{{")?;
         l!(w, 3, "return os << toString( value );")?;
         l!(w, 2, "}}")?;
         l!(w, 0, "")?;
-        l!(
-            w,
-            2,
-            "std::ostream& operator<<( std::ostream& os, const {} value )",
-            pc
-        )?;
+        l!(w, 2, "std::ostream& operator<<( std::ostream& os, const {} value )", pc)?;
         l!(w, 2, "{{")?;
         l!(w, 3, "return toStream( os, value );")?;
         l!(w, 2, "}}")?;
@@ -468,22 +352,12 @@ impl Writer {
         l!(w, 3, "return value.getValueString();")?;
         l!(w, 2, "}}")?;
         l!(w, 2, "")?;
-        l!(
-            w,
-            2,
-            "std::ostream& toStream( std::ostream& os, const {}& value )",
-            cn
-        )?;
+        l!(w, 2, "std::ostream& toStream( std::ostream& os, const {}& value )", cn)?;
         l!(w, 2, "{{")?;
         l!(w, 3, "return os << toString( value );")?;
         l!(w, 2, "}}")?;
         l!(w, 2, "")?;
-        l!(
-            w,
-            2,
-            "std::ostream& operator<<( std::ostream& os, const {}& value )",
-            cn
-        )?;
+        l!(w, 2, "std::ostream& operator<<( std::ostream& os, const {}& value )", cn)?;
         l!(w, 2, "{{")?;
         l!(w, 3, "return toStream( os, value );")?;
         l!(w, 2, "}}")?;

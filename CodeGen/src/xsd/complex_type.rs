@@ -3,10 +3,7 @@ use crate::xsd::annotation::Annotation;
 use crate::xsd::attributes::{AttributeItem, Attributes};
 use crate::xsd::choice::Choice;
 use crate::xsd::complex_content::ComplexContent;
-use crate::xsd::constants::{
-    ANNOTATION, ATTRIBUTE, ATTRIBUTE_GROUP, CHOICE, COMPLEX_CONTENT, COMPLEX_TYPE, GROUP, NAME,
-    SEQUENCE, SIMPLE_CONTENT,
-};
+use crate::xsd::constants::{ANNOTATION, ATTRIBUTE, ATTRIBUTE_GROUP, CHOICE, COMPLEX_CONTENT, COMPLEX_TYPE, GROUP, NAME, SEQUENCE, SIMPLE_CONTENT};
 use crate::xsd::group::Group;
 use crate::xsd::id::{Id, Lineage, RootNodeId, RootNodeType};
 use crate::xsd::sequence::Sequence;
@@ -63,20 +60,8 @@ impl ComplexType {
                     payload = Payload::Parent(Parent::from_xml(node, lineage.clone(), xsd)?);
                     break;
                 }
-                COMPLEX_CONTENT => {
-                    payload = Payload::ComplexContent(ComplexContent::from_xml(
-                        inner,
-                        lineage.clone(),
-                        xsd,
-                    )?)
-                }
-                SIMPLE_CONTENT => {
-                    payload = Payload::SimpleContent(SimpleContent::from_xml(
-                        inner,
-                        lineage.clone(),
-                        xsd,
-                    )?)
-                }
+                COMPLEX_CONTENT => payload = Payload::ComplexContent(ComplexContent::from_xml(inner, lineage.clone(), xsd)?),
+                SIMPLE_CONTENT => payload = Payload::SimpleContent(SimpleContent::from_xml(inner, lineage.clone(), xsd)?),
                 ATTRIBUTE | ATTRIBUTE_GROUP => { /* will be parsed by Parent::from_xml() */ }
                 _ => return raise!("unexpected node '{}' while parsing complexType", t),
             }
@@ -86,12 +71,7 @@ impl ComplexType {
         } else {
             "".to_owned()
         };
-        Ok(ComplexType {
-            id,
-            name,
-            annotation,
-            payload,
-        })
+        Ok(ComplexType { id, name, annotation, payload })
     }
 }
 
@@ -105,31 +85,15 @@ impl Parent {
             let t = inner.name.as_str();
             match t {
                 CHOICE => {
-                    parent.children = Some(Children::Choice(Choice::from_xml(
-                        inner,
-                        lineage.clone(),
-                        xsd,
-                    )?));
+                    parent.children = Some(Children::Choice(Choice::from_xml(inner, lineage.clone(), xsd)?));
                 }
                 GROUP => {
-                    parent.children = Some(Children::Group(Group::from_xml(
-                        inner,
-                        lineage.clone(),
-                        xsd,
-                    )?));
+                    parent.children = Some(Children::Group(Group::from_xml(inner, lineage.clone(), xsd)?));
                 }
                 SEQUENCE => {
-                    parent.children = Some(Children::Sequence(Sequence::from_xml(
-                        inner,
-                        lineage.clone(),
-                        xsd,
-                    )?));
+                    parent.children = Some(Children::Sequence(Sequence::from_xml(inner, lineage.clone(), xsd)?));
                 }
-                ATTRIBUTE | ATTRIBUTE_GROUP => {
-                    parent
-                        .attributes
-                        .push(AttributeItem::from_xml(inner, lineage.clone(), xsd)?)
-                }
+                ATTRIBUTE | ATTRIBUTE_GROUP => parent.attributes.push(AttributeItem::from_xml(inner, lineage.clone(), xsd)?),
                 ANNOTATION => { /* ignore because it's parsed by ComplexType::from_xml */ }
                 _ => return raise!("unable to parse complexType, unexpected node '{}'", t),
             }
@@ -203,10 +167,7 @@ fn parse_parent_group() {
     let want_index: u64 = 6;
     let ct = ComplexType::from_xml(&xml, Lineage::Index(want_index), &Xsd::new("xs")).unwrap();
     assert_eq!(format!("{}", ct.id), "complexType:system-margins");
-    assert_eq!(
-        ct.documentation().as_str(),
-        "System margins are relative to the page margins."
-    );
+    assert_eq!(ct.documentation().as_str(), "System margins are relative to the page margins.");
     let parent = if let Payload::Parent(p) = ct.payload {
         p
     } else {
@@ -243,10 +204,7 @@ fn parse_parent_choice() {
     let want_index: u64 = 6;
     let ct = ComplexType::from_xml(&xml, Lineage::Index(want_index), &Xsd::new("xs")).unwrap();
     assert_eq!(format!("{}", ct.id), "complexType:arrow");
-    assert_eq!(
-        ct.documentation().as_str(),
-        "The arrow element represents an arrow."
-    );
+    assert_eq!(ct.documentation().as_str(), "The arrow element represents an arrow.");
     let parent = if let Payload::Parent(p) = ct.payload {
         p
     } else {
@@ -296,10 +254,7 @@ fn parse_complex_content() {
     let want_index: u64 = 6;
     let ct = ComplexType::from_xml(&xml, Lineage::Index(want_index), &Xsd::new("xs")).unwrap();
     assert_eq!(format!("{}", ct.id), "complexType:heel-toe");
-    assert_eq!(
-        ct.documentation().as_str(),
-        "Heel and toe elements are used with organ pedals."
-    );
+    assert_eq!(ct.documentation().as_str(), "Heel and toe elements are used with organ pedals.");
     let cc = if let Payload::ComplexContent(cc) = ct.payload {
         cc
     } else {
@@ -335,10 +290,7 @@ fn parse_simple_content() {
     let want_index: u64 = 6;
     let ct = ComplexType::from_xml(&xml, Lineage::Index(want_index), &Xsd::new("xs")).unwrap();
     assert_eq!(format!("{}", ct.id), "complexType:hole-closed");
-    assert_eq!(
-        ct.documentation().as_str(),
-        "The hole-closed type represents whether the..."
-    );
+    assert_eq!(ct.documentation().as_str(), "The hole-closed type represents whether the...");
     let sc = if let Payload::SimpleContent(sc) = ct.payload {
         sc
     } else {

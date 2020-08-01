@@ -42,12 +42,7 @@ impl Default for Paths {
 
 fn open_file<P: AsRef<Path>>(p: P) -> File {
     println!("opening a file for writing: '{}'", p.as_ref().display());
-    OpenOptions::new()
-        .read(true)
-        .write(true)
-        .create(true)
-        .open(p)
-        .unwrap() // TODO - error?
+    OpenOptions::new().read(true).write(true).create(true).open(p).unwrap() // TODO - error?
 }
 
 impl Paths {

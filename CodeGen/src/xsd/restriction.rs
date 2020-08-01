@@ -1,8 +1,7 @@
 use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::constants::{
-    ANNOTATION, ENUMERATION, LENGTH, MAX_EXCLUSIVE, MAX_INCLUSIVE, MAX_LENGTH, MIN_EXCLUSIVE,
-    MIN_INCLUSIVE, MIN_LENGTH, NAME, PATTERN, RESTRICTION,
+    ANNOTATION, ENUMERATION, LENGTH, MAX_EXCLUSIVE, MAX_INCLUSIVE, MAX_LENGTH, MIN_EXCLUSIVE, MIN_INCLUSIVE, MIN_LENGTH, NAME, PATTERN, RESTRICTION,
 };
 use crate::xsd::restriction::FacetType::Pattern;
 use crate::xsd::{base_attribute, value_attribute, Xsd};
@@ -202,12 +201,7 @@ impl Restriction {
             }
         }
 
-        Ok(Restriction {
-            id,
-            annotation,
-            base,
-            facets,
-        })
+        Ok(Restriction { id, annotation, base, facets })
     }
 }
 

@@ -9,271 +9,479 @@ namespace mx
 {
     namespace core
     {
-        Integer::Integer( IntType value )
-        :myValue( value )
-        {}
-        
-        
         Integer::Integer()
-        :myValue( 0 )
-        {}
-        
-        
-        Integer::~Integer() {}
-        
-        
+        : Integer{ 0 }
+        {
+
+        }
+
+        Integer::Integer( IntType value )
+        : myValue{}
+        {
+            // for child classes that clamp the range
+            setValue( 0 );
+        }
+
         IntType Integer::getValue() const
         {
             return myValue;
         }
-        
-        
+
         void Integer::setValue( IntType value )
         {
             myValue = value;
         }
-        
-        
+
         void Integer::parse( const std::string& value )
         {
             std::stringstream ss( value );
             IntType temp = 0;
             if ((ss >> temp).fail() || !(ss >> std::ws).eof())
-            {
                 return;
             }
-            ss >> temp;
             setValue( temp );
         }
-        
-        
-        IntRange::IntRange( IntType min, IntType max, IntType value )
-        :Integer( value )
-        ,myMin( min )
-        ,myMax( max )
+
+        /// AccordionMiddleValue ///////////////////////////////////////////////////////////////////
+
+        AccordionMiddleValue::AccordionMiddleValue()
+        : Integer{}
         {
-            setValue( value );
+
         }
-        
-        
-        IntRange::~IntRange() {}
-        
-        
-        IntRange::IntRange( IntRange&& other )
-        :Integer( std::move( other ) )
-        ,myMin( std::move( other.myMin ) )
-        ,myMax( std::move( other.myMax ) )
-        {}
-        
-        
-        IntRange& IntRange::operator=( const IntRange& other )
+
+        AccordionMiddleValue::AccordionMiddleValue( IntType value )
+        : Integer{ value }
         {
-            this->setValue( other.getValue() );
-            return *this;
+
         }
-        
-        
-        IntRange& IntRange::operator=( IntRange&& other )
+
+        void AccordionMiddleValue::setValue( IntType value )
         {
-            this->setValue( other.getValue() );
-            return *this;
-        }
-        
-        
-        void IntRange::setValue( IntType value )
-        {
-            if ( value < myMin )
+            if( value < 1 )
             {
-                Integer::setValue( myMin );
+                myValue = 1;
             }
-            else if ( value > myMax )
+            else if( value > 3 )
             {
-                Integer::setValue( myMax );
+                myValue = 3;
             }
             else
             {
-                Integer::setValue( value );
+                myValue = value;
             }
         }
-        
-        
-        void IntRange::parse( const std::string& value )
+
+        /// BeamLevel //////////////////////////////////////////////////////////////////////////////
+
+        BeamLevel::BeamLevel()
+        : Integer{}
         {
-            std::stringstream ss( value );
-            IntType temp = 0;
-            if ((ss >> temp).fail() || !(ss >> std::ws).eof())
+
+        }
+
+        BeamLevel::BeamLevel( IntType value )
+        : Integer{ value }
+        {
+
+        }
+
+        void BeamLevel::setValue( IntType value )
+        {
+            if( value < 1 )
             {
-                return;
+                myValue = 1;
             }
-            setValue( temp );
-        }
-        
-        
-        PositiveInteger::PositiveInteger( IntType value )
-        :Integer( value )
-        {
-            setValue( value );
-        }
-        
-        
-        PositiveInteger::PositiveInteger()
-        :Integer( 1 ) {}
-        
-        
-        PositiveInteger::~PositiveInteger() {}
-        
-        
-        void PositiveInteger::setValue( IntType value )
-        {
-            if ( value < 1 )
+            else if( value > 8 )
             {
-                Integer::setValue( 1 );
+                myValue = 8;
             }
             else
             {
-                Integer::setValue( value );
+                myValue = value;
             }
         }
-        
-        
-        void PositiveInteger::parse( const std::string& value )
+
+        /// Byte ///////////////////////////////////////////////////////////////////////////////////
+
+        Byte::Byte()
+        : Integer{}
         {
-            std::stringstream ss( value );
-            IntType temp = 1;
-            if ((ss >> temp).fail() || !(ss >> std::ws).eof())
+
+        }
+
+        Byte::Byte( IntType value )
+        : Integer{ value }
+        {
+
+        }
+
+        void Byte::setValue( IntType value )
+        {
+            if( value < 0 )
             {
-                return;
+                myValue = 0;
             }
-            setValue( temp );
+            else if( value > 255 )
+            {
+                myValue = 255;
+            }
+            else
+            {
+                myValue = value;
+            }
         }
-        
-        
-        NonNegativeInteger::NonNegativeInteger( IntType value )
-        :Integer( value )
+
+        /// FifthsValue ////////////////////////////////////////////////////////////////////////////
+
+        FifthsValue::FifthsValue()
+        : Integer{}
         {
-            setValue( value );
+
         }
-        
-        
+
+        FifthsValue::FifthsValue( IntType value )
+        : Integer{ value }
+        {
+
+        }
+
+        void FifthsValue::setValue( IntType value )
+        {
+            myValue = value;
+        }
+
+        /// Midi128 ////////////////////////////////////////////////////////////////////////////////
+
+        Midi128::Midi128()
+        : Integer{}
+        {
+
+        }
+
+        Midi128::Midi128( IntType value )
+        : Integer{ value }
+        {
+
+        }
+
+        void Midi128::setValue( IntType value )
+        {
+            if( value < 1 )
+            {
+                myValue = 1;
+            }
+            else if( value > 128 )
+            {
+                myValue = 128;
+            }
+            else
+            {
+                myValue = value;
+            }
+        }
+
+        /// Midi16 /////////////////////////////////////////////////////////////////////////////////
+
+        Midi16::Midi16()
+        : Integer{}
+        {
+
+        }
+
+        Midi16::Midi16( IntType value )
+        : Integer{ value }
+        {
+
+        }
+
+        void Midi16::setValue( IntType value )
+        {
+            if( value < 1 )
+            {
+                myValue = 1;
+            }
+            else if( value > 16 )
+            {
+                myValue = 16;
+            }
+            else
+            {
+                myValue = value;
+            }
+        }
+
+        /// Midi16384 //////////////////////////////////////////////////////////////////////////////
+
+        Midi16384::Midi16384()
+        : Integer{}
+        {
+
+        }
+
+        Midi16384::Midi16384( IntType value )
+        : Integer{ value }
+        {
+
+        }
+
+        void Midi16384::setValue( IntType value )
+        {
+            if( value < 1 )
+            {
+                myValue = 1;
+            }
+            else if( value > 16384 )
+            {
+                myValue = 16384;
+            }
+            else
+            {
+                myValue = value;
+            }
+        }
+
+        /// NonNegativeInteger /////////////////////////////////////////////////////////////////////
+
         NonNegativeInteger::NonNegativeInteger()
-        :Integer( 1 )
+        : Integer{}
         {
-            setValue( 1 );
+
         }
-        
-        
-        NonNegativeInteger::~NonNegativeInteger() {}
-        
-        
+
+        NonNegativeInteger::NonNegativeInteger( IntType value )
+        : Integer{ value }
+        {
+
+        }
+
         void NonNegativeInteger::setValue( IntType value )
         {
-            if ( value < 0 )
+            if( value < 0 )
             {
-                Integer::setValue( 0 );
+                myValue = 0;
             }
             else
             {
-                Integer::setValue( value );
+                myValue = value;
             }
         }
-        
-        
-        void NonNegativeInteger::parse( const std::string& value )
-        {
-            std::stringstream ss( value );
-            IntType temp = 0;
-            if ((ss >> temp).fail() || !(ss >> std::ws).eof())
-            {
-                return;
-            }
-            this->setValue( temp );
-        }
-        
-        
-        std::string toString( const Integer& value )
-        {
-            std::stringstream ss;
-            toStream( ss, value );
-            return ss.str();
-        }
 
+        /// NumberLevel ////////////////////////////////////////////////////////////////////////////
 
-        std::ostream& toStream( std::ostream& os, const Integer& value )
-        {
-            return os << value.getValue();
-        }
-
-
-        std::ostream& operator<<( std::ostream& os, const Integer& value )
-        {
-            return toStream( os, value );
-        }
-        
-        
-        AccordionMiddleValue::AccordionMiddleValue( IntType value )
-        :IntRange( 0, 3, value ) {}
-        AccordionMiddleValue::AccordionMiddleValue()
-        :IntRange( 0, 3, 0 ) {}
-        
-        
-        BeamLevel::BeamLevel( IntType value )
-        :IntRange( 1, 8, value ) {}
-        BeamLevel::BeamLevel()
-        :IntRange( 1, 8, 1 ) {}
-        
-        
-        FifthsValue::FifthsValue( IntType value )
-        :Integer( value ) {}
-        FifthsValue::FifthsValue()
-        :Integer( 0 ) {}
-        
-        
-        Midi16::Midi16( IntType value )
-        :IntRange( 1, 16, value ) {}
-        Midi16::Midi16()
-        :IntRange( 1, 16, 1 ) {}
-        
-        
-        Midi128::Midi128( IntType value )
-        :IntRange( 1, 128, value ) {}
-        Midi128::Midi128()
-        :IntRange( 1, 128, 1 ) {}
-        
-        
-        Midi16384::Midi16384( IntType value )
-        :IntRange( 1, 16384, value ) {}
-        Midi16384::Midi16384()
-        :IntRange( 1, 16384, 1 ) {}
-        
-        
-        NumberLevel::NumberLevel( IntType value )
-        :IntRange( 1, 6, value ) {}
         NumberLevel::NumberLevel()
-        :IntRange( 1, 6, 1 ) {}
-        
-        
-        NumberOfLines::NumberOfLines( IntType value )
-        :IntRange( 0, 3, value ) {}
+        : Integer{}
+        {
+
+        }
+
+        NumberLevel::NumberLevel( IntType value )
+        : Integer{ value }
+        {
+
+        }
+
+        void NumberLevel::setValue( IntType value )
+        {
+            if( value < 1 )
+            {
+                myValue = 1;
+            }
+            else if( value > 6 )
+            {
+                myValue = 6;
+            }
+            else
+            {
+                myValue = value;
+            }
+        }
+
+        /// NumberOfLines //////////////////////////////////////////////////////////////////////////
+
         NumberOfLines::NumberOfLines()
-        :IntRange( 0, 3, 0 ) {}
-        
-        
-        OctaveValue::OctaveValue( IntType value )
-        :IntRange( 0, 9, value ) {}
+        : Integer{}
+        {
+
+        }
+
+        NumberOfLines::NumberOfLines( IntType value )
+        : Integer{ value }
+        {
+
+        }
+
+        void NumberOfLines::setValue( IntType value )
+        {
+            if( value < 0 )
+            {
+                myValue = 0;
+            }
+            else if( value > 3 )
+            {
+                myValue = 3;
+            }
+            else
+            {
+                myValue = value;
+            }
+        }
+
+        /// OctaveValue ////////////////////////////////////////////////////////////////////////////
+
         OctaveValue::OctaveValue()
-        :IntRange( 0, 9, 0 ) {}
-        
-        
-        StaffLine::StaffLine( IntType value )
-        :Integer( value ) {}
+        : Integer{}
+        {
+
+        }
+
+        OctaveValue::OctaveValue( IntType value )
+        : Integer{ value }
+        {
+
+        }
+
+        void OctaveValue::setValue( IntType value )
+        {
+            if( value < 0 )
+            {
+                myValue = 0;
+            }
+            else if( value > 9 )
+            {
+                myValue = 9;
+            }
+            else
+            {
+                myValue = value;
+            }
+        }
+
+        /// PositiveInteger ////////////////////////////////////////////////////////////////////////
+
+        PositiveInteger::PositiveInteger()
+        : Integer{}
+        {
+
+        }
+
+        PositiveInteger::PositiveInteger( IntType value )
+        : Integer{ value }
+        {
+
+        }
+
+        void PositiveInteger::setValue( IntType value )
+        {
+            if( value < 1 )
+            {
+                myValue = 1;
+            }
+            else
+            {
+                myValue = value;
+            }
+        }
+
+        /// StaffLine //////////////////////////////////////////////////////////////////////////////
+
         StaffLine::StaffLine()
-        :Integer( 0 ) {}
-        
-        
-        TremoloMarks::TremoloMarks( IntType value )
-        :IntRange( 0, 8, value ) {}
+        : Integer{}
+        {
+
+        }
+
+        StaffLine::StaffLine( IntType value )
+        : Integer{ value }
+        {
+
+        }
+
+        void StaffLine::setValue( IntType value )
+        {
+            myValue = value;
+        }
+
+        /// StaffNumber ////////////////////////////////////////////////////////////////////////////
+
+        StaffNumber::StaffNumber()
+        : Integer{}
+        {
+
+        }
+
+        StaffNumber::StaffNumber( IntType value )
+        : Integer{ value }
+        {
+
+        }
+
+        void StaffNumber::setValue( IntType value )
+        {
+            if( value < 1 )
+            {
+                myValue = 1;
+            }
+            else
+            {
+                myValue = value;
+            }
+        }
+
+        /// StringNumber ///////////////////////////////////////////////////////////////////////////
+
+        StringNumber::StringNumber()
+        : Integer{}
+        {
+
+        }
+
+        StringNumber::StringNumber( IntType value )
+        : Integer{ value }
+        {
+
+        }
+
+        void StringNumber::setValue( IntType value )
+        {
+            if( value < 1 )
+            {
+                myValue = 1;
+            }
+            else
+            {
+                myValue = value;
+            }
+        }
+
+        /// TremoloMarks ///////////////////////////////////////////////////////////////////////////
+
         TremoloMarks::TremoloMarks()
-        :IntRange( 0, 8, 0 ) {}
-        
+        : Integer{}
+        {
+
+        }
+
+        TremoloMarks::TremoloMarks( IntType value )
+        : Integer{ value }
+        {
+
+        }
+
+        void TremoloMarks::setValue( IntType value )
+        {
+            if( value < 0 )
+            {
+                myValue = 0;
+            }
+            else if( value > 8 )
+            {
+                myValue = 8;
+            }
+            else
+            {
+                myValue = value;
+            }
+        }
     }
 }

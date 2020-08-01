@@ -1,0 +1,36 @@
+        Integer::Integer( IntType value )
+        :myValue( value )
+        {}
+
+
+        Integer::Integer()
+        :myValue( 0 )
+        {}
+
+
+        Integer::~Integer() {}
+
+
+        IntType Integer::getValue() const
+        {
+            return myValue;
+        }
+
+
+        void Integer::setValue( IntType value )
+        {
+            myValue = value;
+        }
+
+
+        void Integer::parse( const std::string& value )
+        {
+            std::stringstream ss( value );
+            IntType temp = 0;
+            if ((ss >> temp).fail() || !(ss >> std::ws).eof())
+            {
+                return;
+            }
+            ss >> temp;
+            setValue( temp );
+        }

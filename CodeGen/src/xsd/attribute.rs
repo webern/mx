@@ -59,11 +59,7 @@ impl Attribute {
         }
     }
 
-    fn parse_annotation(
-        node: &exile::Element,
-        lineage: Lineage,
-        xsd: &Xsd,
-    ) -> Result<Option<Annotation>> {
+    fn parse_annotation(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Option<Annotation>> {
         for child in node.children() {
             let t = child.name.as_str();
             match t {

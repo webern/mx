@@ -8,9 +8,7 @@ fn main() {
     let xml_str = std::fs::read_to_string(paths.xsd_3_0).unwrap();
     let doc = exile::parse(&xml_str).unwrap();
     let children_types = print_sequence_children(doc.root(), "choice");
-    println!(
-        "=========================================================================================="
-    );
+    println!("==========================================================================================");
     println!("\nAll Subtypes:");
     for child_type in children_types {
         println!("{}", child_type)
@@ -31,13 +29,9 @@ fn find_xs_nodes(node: &exile::Element, xs_nodes: &mut IndexSet<String>) {
 
 #[allow(unused)]
 fn print_group_children(root: &Element) {
-    println!(
-        "=========================================================================================="
-    );
+    println!("==========================================================================================");
     println!("GROUPS");
-    println!(
-        "=========================================================================================="
-    );
+    println!("==========================================================================================");
     let mut the_stuf = HashMap::new();
     for child in root.children() {
         if child.name.as_str() == "group" {
@@ -61,24 +55,15 @@ fn print_group_children(root: &Element) {
 }
 
 fn print_sequence_children(root: &Element, target_element: &str) -> IndexSet<String> {
-    println!(
-        "=========================================================================================="
-    );
+    println!("==========================================================================================");
     println!("{}", target_element.to_uppercase());
-    println!(
-        "=========================================================================================="
-    );
+    println!("==========================================================================================");
     let mut children_types: IndexSet<String> = IndexSet::new();
     print_sequence_children_recursively(root, target_element, "", &mut children_types);
     children_types
 }
 
-fn print_sequence_children_recursively(
-    node: &Element,
-    target_element: &str,
-    parent_name: &str,
-    children_types: &mut IndexSet<String>,
-) {
+fn print_sequence_children_recursively(node: &Element, target_element: &str, parent_name: &str, children_types: &mut IndexSet<String>) {
     let mut most_recent_name = parent_name.to_owned();
     if let Some(nm) = node.attributes.map().get("name") {
         most_recent_name = nm.clone();
@@ -89,21 +74,10 @@ fn print_sequence_children_recursively(
     }
     attributes.sort();
     if node.name.as_str() == target_element {
-        print_sequence_children_the_children_part(
-            node,
-            target_element,
-            most_recent_name.as_str(),
-            &attributes,
-            children_types,
-        );
+        print_sequence_children_the_children_part(node, target_element, most_recent_name.as_str(), &attributes, children_types);
     } else {
         for child in node.children() {
-            print_sequence_children_recursively(
-                child,
-                target_element,
-                most_recent_name.as_str(),
-                children_types,
-            );
+            print_sequence_children_recursively(child, target_element, most_recent_name.as_str(), children_types);
         }
     }
 }

@@ -1,4 +1,6 @@
-use crate::generate::cpp::constants::{custom_scalar_strings, enum_member_substitutions, pseudo_enums, reserved_words, suffixed_enum_names, PseudoEnumSpec, suffixed_value_names};
+use crate::generate::cpp::constants::{
+    custom_scalar_strings, enum_member_substitutions, pseudo_enums, reserved_words, suffixed_enum_names, suffixed_value_names, PseudoEnumSpec,
+};
 use crate::model;
 use crate::model::builtin::BuiltinString;
 use crate::model::create::{Create, CreateError, CreateResult};
@@ -99,23 +101,24 @@ impl PostProcess for MxModeler {
             } else if let Some(new_name) = self.suffixed_value_names.get(scalar_string.name.original()) {
                 let mut st = scalar_string.clone();
                 st.name.replace(&new_name);
-                return Ok(Model::ScalarString(st))
+                return Ok(Model::ScalarString(st));
             }
         } else if let Model::ScalarNumber(scalar_number) = model {
             match scalar_number {
                 ScalarNumeric::Decimal(n) => {
                     if let Some(new_name) = self.suffixed_value_names.get(n.name.original()) {
-                    let mut n = n.clone();
-                    n.name.replace(&new_name);
-                    return Ok(Model::ScalarNumber(ScalarNumeric::Decimal(n)))
-                }},
+                        let mut n = n.clone();
+                        n.name.replace(&new_name);
+                        return Ok(Model::ScalarNumber(ScalarNumeric::Decimal(n)));
+                    }
+                }
                 ScalarNumeric::Integer(n) => {
                     if let Some(new_name) = self.suffixed_value_names.get(n.name.original()) {
                         let mut mut_num = n.clone();
                         mut_num.name.replace(&new_name);
-                        return Ok(Model::ScalarNumber(ScalarNumeric::Integer(mut_num)))
+                        return Ok(Model::ScalarNumber(ScalarNumeric::Integer(mut_num)));
                     }
-                },
+                }
             }
         }
         Ok(model.clone())

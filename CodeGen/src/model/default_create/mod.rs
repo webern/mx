@@ -32,12 +32,12 @@ impl Create for DefaultCreate {
 
     fn create(&self, entry: &Entry, xsd: &Xsd) -> CreateResult {
         match entry {
-            Entry::Annotation(_) => Ok(Some(Vec::new())), // TODO - implement Annotation
+            Entry::Annotation(_) => Ok(Some(Vec::new())),     // TODO - implement Annotation
             Entry::AttributeGroup(_) => Ok(Some(Vec::new())), // TODO - implement AttributeGroup
-            Entry::ComplexType(_) => Ok(Some(Vec::new())), // TODO - implement ComplexType
-            Entry::Element(_) => Ok(Some(Vec::new())),    // TODO - implement Element
-            Entry::Group(_) => Ok(Some(Vec::new())),      // TODO - implement Group
-            Entry::Import(_) => Ok(Some(Vec::new())),     // TODO - implement Import
+            Entry::ComplexType(_) => Ok(Some(Vec::new())),    // TODO - implement ComplexType
+            Entry::Element(_) => Ok(Some(Vec::new())),        // TODO - implement Element
+            Entry::Group(_) => Ok(Some(Vec::new())),          // TODO - implement Group
+            Entry::Import(_) => Ok(Some(Vec::new())),         // TODO - implement Import
             Entry::SimpleType(st) => dispatch_simple_type(st, xsd),
         }
     }
