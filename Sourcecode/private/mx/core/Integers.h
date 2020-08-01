@@ -21,12 +21,12 @@ namespace mx
         class Integer
         {
         public:
-            explicit Integer( IntType value );
             Integer();
-            virtual ~Integer();
+            explicit Integer( IntType value );
+            virtual ~Integer() = default;
             IntType getValue() const;
             virtual void setValue( IntType value );
-            virtual void parse( const std::string& value );
+            virtual void parse( const std::string& value ) final;
         private:
             IntType myValue;
         };
@@ -42,14 +42,8 @@ namespace mx
         {
         public:
             explicit IntRange( IntType min, IntType max, IntType value );
-            virtual ~IntRange();
-            IntRange( const IntRange& ) = default;
-            IntRange( IntRange&& );
-            IntRange& operator=( const IntRange& );
-            IntRange& operator=( IntRange&& );
-
-            virtual void setValue( IntType value );
-            virtual void parse( const std::string& value );
+            virtual ~IntRange() = default;
+            virtual void setValue( IntType value ) override;
         private:
             const IntType myMin;
             const IntType myMax;
