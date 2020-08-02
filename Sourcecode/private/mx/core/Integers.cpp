@@ -100,7 +100,7 @@ namespace mx
         }
 
         AccordionMiddleValue::AccordionMiddleValue( IntType value )
-        :IntRange( 1, 3, value )
+        :IntRange( 0, 3, value )
         {
 
         }
@@ -184,7 +184,7 @@ namespace mx
         }
 
         NonNegativeInteger::NonNegativeInteger( IntType value )
-        :IntRange( 0, IntMax, value )
+        :IntRange( 1, IntMax, value )
         {
 
         }

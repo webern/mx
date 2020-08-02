@@ -56,7 +56,7 @@ impl Writer {
             base_type: Numeric::NonNegativeInteger,
             documentation: String::from("The built-in primitive xs:nonNegativeInteger"),
             range: Range {
-                min: Some(Bound::Inclusive(0 as i64)),
+                min: Some(Bound::Inclusive(1 as i64)),
                 max: None,
             },
         };
@@ -144,5 +144,31 @@ fn min_max_ints(numeric: &NumericData<i64>) -> (String, String) {
             Bound::Exclusive(e) => format!("{}", *e - 1),
         },
     };
+    (min, max)
+}
+
+fn maybe_min_max_ints(numeric: &NumericData<i64>) -> (Option<String>, Option<String>) {
+    let min = numeric.range.min.as_ref().and_then(|bound| match bound {
+        Bound::Inclusive(i) => Some(format!("{}", *i)),
+        Bound::Exclusive(e) => Some(format!("{}", *e + 1)),
+    });
+    let max = numeric.range.max.as_ref().and_then(|bound| match bound {
+        Bound::Inclusive(i) => Some(format!("{}", *i)),
+        Bound::Exclusive(e) => Some(format!("{}", *e - 1)),
+    });
+    // let min = match &numeric.range.min {
+    //     None => "IntMin".to_owned(),
+    //     Some(bound) => match bound {
+    //         Bound::Inclusive(i) => format!("{}", *i),
+    //         Bound::Exclusive(e) => format!("{}", *e + 1),
+    //     },
+    // };
+    // let max = match &numeric.range.max {
+    //     None => "IntMax".to_owned(),
+    //     Some(bound) => match bound {
+    //         Bound::Inclusive(i) => format!("{}", *i),
+    //         Bound::Exclusive(e) => format!("{}", *e - 1),
+    //     },
+    // };
     (min, max)
 }

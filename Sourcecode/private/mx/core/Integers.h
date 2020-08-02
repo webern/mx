@@ -55,6 +55,10 @@ namespace mx
 
         /// The accordion-middle type may have values of 1, 2, or 3, corresponding to
         /// having 1 to 3 dots in the middle section of the accordion registration symbol.
+        ///
+        /// Note: MusicXML specifies the minimum allowable value as 1, however test
+        /// documents exist that have a value of 0. This library supports a minimum value
+        /// of 0.
         class AccordionMiddleValue : public IntRange
         {
         public:
