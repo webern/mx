@@ -38,12 +38,7 @@ impl Annotation {
                     DOCUMENTATION => items.push(Item::Documentation(s)),
                     APP_INFO => items.push(Item::AppInfo(s)),
                     _ => {
-                        return raise!(
-                            "expected either '{}' or '{}', got '{}'",
-                            DOCUMENTATION,
-                            APP_INFO,
-                            t
-                        );
+                        return raise!("expected either '{}' or '{}', got '{}'", DOCUMENTATION, APP_INFO, t);
                     }
                 }
             }
@@ -69,8 +64,7 @@ fn parse() {
         })],
     };
 
-    let annotation =
-        Annotation::from_xml(&xml, Lineage::Index(want_index), &Xsd::new("xs")).unwrap();
+    let annotation = Annotation::from_xml(&xml, Lineage::Index(want_index), &Xsd::new("xs")).unwrap();
     let got_doc = annotation.documentation();
     assert_eq!(got_doc.as_str(), want_doc);
     let got_index = annotation.id.index().unwrap();

@@ -46,13 +46,9 @@ impl AttributeGroup {
         check!(ATTRIBUTE_GROUP, node, xsd)?;
         let (id, lineage) = Id::make(lineage, node)?;
         if let Some(_ref_) = node.attributes.map().get(REF) {
-            Ok(AttributeGroup::Ref(AttributeGroupRef::from_xml(
-                node, lineage, xsd,
-            )?))
+            Ok(AttributeGroup::Ref(AttributeGroupRef::from_xml(node, lineage, xsd)?))
         } else {
-            Ok(AttributeGroup::Def(AttributeGroupDef::from_xml(
-                node, lineage, xsd,
-            )?))
+            Ok(AttributeGroup::Def(AttributeGroupDef::from_xml(node, lineage, xsd)?))
         }
     }
 
@@ -91,11 +87,7 @@ impl AttributeGroupDef {
         })
     }
 
-    fn parse_annotation(
-        node: &exile::Element,
-        lineage: Lineage,
-        xsd: &Xsd,
-    ) -> Result<Option<Annotation>> {
+    fn parse_annotation(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Option<Annotation>> {
         for inner in node.children() {
             if inner.name.as_str() == ANNOTATION {
                 return Ok(Some(Annotation::from_xml(inner, lineage, xsd)?));
@@ -124,11 +116,7 @@ impl AttributeGroupRef {
         })
     }
 
-    fn parse_annotation(
-        node: &exile::Element,
-        lineage: Lineage,
-        xsd: &Xsd,
-    ) -> Result<Option<Annotation>> {
+    fn parse_annotation(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Option<Annotation>> {
         for inner in node.children() {
             if inner.name.as_str() == ANNOTATION {
                 return Ok(Some(Annotation::from_xml(inner, lineage, xsd)?));

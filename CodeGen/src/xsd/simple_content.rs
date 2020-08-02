@@ -35,11 +35,7 @@ impl SimpleContent {
             match t {
                 ANNOTATION => annotation = Some(Annotation::from_xml(inner, lineage.clone(), xsd)?),
                 EXTENSION => {
-                    payload = Some(Payload::Extension(Extension::from_xml(
-                        inner,
-                        lineage.clone(),
-                        xsd,
-                    )?));
+                    payload = Some(Payload::Extension(Extension::from_xml(inner, lineage.clone(), xsd)?));
                 }
                 _ => return raise!("unsupported simpleContent node '{}'", t),
             }
@@ -49,11 +45,7 @@ impl SimpleContent {
         } else {
             return raise!("{} payload was not found", SIMPLE_CONTENT);
         };
-        Ok(SimpleContent {
-            id,
-            annotation,
-            payload,
-        })
+        Ok(SimpleContent { id, annotation, payload })
     }
 }
 
@@ -85,9 +77,7 @@ fn parse() {
             assert_eq!(ext.attributes.len(), 1);
             let a = ext.attributes.get(0).unwrap();
             match a {
-                AttributeItem::Attribute(_) => {
-                    panic!("expected 'AttributeGroup' but got 'Attribute'")
-                }
+                AttributeItem::Attribute(_) => panic!("expected 'AttributeGroup' but got 'Attribute'"),
                 AttributeItem::AttributeGroup(x) => match x {
                     AttributeGroup::Def(_) => panic!("expected Ref got Def"),
                     AttributeGroup::Ref(r) => assert_eq!(r.ref_.as_str(), "part-name-text"),
