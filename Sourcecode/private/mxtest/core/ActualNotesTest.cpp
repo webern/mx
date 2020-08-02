@@ -22,7 +22,7 @@ TEST( Test01, ActualNotes )
 	object1.toStream( default_constructed, 0 );
 	std::stringstream object2_stream;
 	object2.toStream( object2_stream, 2 );
-	std::string expected = R"(<actual-notes>1</actual-notes>)";
+	std::string expected = R"(<actual-notes>0</actual-notes>)";
 	std::string actual = default_constructed.str();
 	CHECK_EQUAL( expected, actual )
 	expected = indentString+indentString+R"(<actual-notes>3</actual-notes>)";

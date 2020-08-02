@@ -18,8 +18,8 @@ TEST( Test01, MetronomeTuplet )
 	MetronomeTuplet object;
 	stringstream expected;
 	streamLine( expected, 1, R"(<metronome-tuplet type="start">)" );
-	streamLine( expected, 2, R"(<actual-notes>1</actual-notes>)" );
-	streamLine( expected, 2, R"(<normal-notes>1</normal-notes>)" );
+	streamLine( expected, 2, R"(<actual-notes>0</actual-notes>)" );
+	streamLine( expected, 2, R"(<normal-notes>0</normal-notes>)" );
 	streamLine( expected, 1, R"(</metronome-tuplet>)", false );
 	stringstream actual;
 	// object.toStream( std::cout, 1 );

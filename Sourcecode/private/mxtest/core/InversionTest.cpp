@@ -28,7 +28,7 @@ TEST( Test01, Inversion )
 	object1.toStream( default_constructed, 0 );
 	std::stringstream object2_stream;
 	object2.toStream( object2_stream, 2 );
-	std::string expected = R"(<inversion>1</inversion>)";
+	std::string expected = R"(<inversion>0</inversion>)";
 	std::string actual = default_constructed.str();
 	CHECK_EQUAL( expected, actual )
 	expected = indentString+indentString+R"(<inversion font-style="italic">3</inversion>)";

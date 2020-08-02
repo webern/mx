@@ -19,7 +19,7 @@ TEST( Test01, FrameNote )
 	stringstream expected;
 	streamLine( expected, 1, R"(<frame-note>)" );
 	streamLine( expected, 2, R"(<string>1</string>)" );
-	streamLine( expected, 2, R"(<fret>1</fret>)" );
+	streamLine( expected, 2, R"(<fret>0</fret>)" );
 	streamLine( expected, 1, R"(</frame-note>)", false );
 	stringstream actual;
 	// object.toStream( std::cout, 1 );

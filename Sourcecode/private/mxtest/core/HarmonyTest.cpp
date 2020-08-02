@@ -124,7 +124,7 @@ namespace mxtest
                 streamLine( os, i+2, R"(<frame-frets>1</frame-frets>)" );
                 streamLine( os, i+2, R"(<frame-note>)" );
                 streamLine( os, i+3, R"(<string>1</string>)" );
-                streamLine( os, i+3, R"(<fret>1</fret>)" );
+                streamLine( os, i+3, R"(<fret>0</fret>)" );
                 streamLine( os, i+2, R"(</frame-note>)" );
                 streamLine( os, i+1, R"(</frame>)" );
                 streamLine( os, i+1, R"(<staff>2</staff>)" );
