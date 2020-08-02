@@ -124,8 +124,8 @@ namespace mxtest
             case variant::one:
             {
                 streamLine( os, i, R"(<time-modification>)" );
-                streamLine( os, i+1, R"(<actual-notes>1</actual-notes>)" );
-                streamLine( os, i+1, R"(<normal-notes>1</normal-notes>)" );
+                streamLine( os, i+1, R"(<actual-notes>0</actual-notes>)" );
+                streamLine( os, i+1, R"(<normal-notes>0</normal-notes>)" );
                 streamLine( os, i, R"(</time-modification>)", false );
             }
                 break;

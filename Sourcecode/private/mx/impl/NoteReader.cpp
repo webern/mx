@@ -323,6 +323,7 @@ namespace mx
             {
                 myTimeModificationActualNotes = 1;
                 myTimeModificationNormalNotes = 1;
+                return;
             }
             
             const auto& mxTimeMod = *myNote.getTimeModification();

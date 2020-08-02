@@ -17,28 +17,28 @@ namespace mx
                  const IntType red,
                  const IntType green,
                  const IntType blue )
-            :myAlpha( 0, 255, alpha )
-            ,myRed( 0, 255, red )
-            ,myGreen( 0, 255, green )
-            ,myBlue( 0, 255, blue )
+            :myAlpha( alpha )
+            ,myRed( red )
+            ,myGreen( green )
+            ,myBlue( blue )
             ,myColorType( Color::ColorType::ARGB )
             {}
             
             impl( const IntType red,
                   const IntType green,
                   const IntType blue )
-            :myAlpha( 0, 255, 255 )
-            ,myRed( 0, 255, red )
-            ,myGreen( 0, 255, green )
-            ,myBlue( 0, 255, blue )
+            :myAlpha(255 )
+            ,myRed( red )
+            ,myGreen( green )
+            ,myBlue( blue )
             ,myColorType( Color::ColorType::RGB )
             {}
             
             impl()
-            :myAlpha( 0, 255, 255 )
-            ,myRed( 0, 255, 255 )
-            ,myGreen( 0, 255, 255 )
-            ,myBlue( 0, 255, 255 )
+            :myAlpha( 255 )
+            ,myRed( 255 )
+            ,myGreen( 255 )
+            ,myBlue( 255 )
             ,myColorType( ColorType::RGB )
             {}
             
@@ -134,10 +134,10 @@ namespace mx
             }
             
         private:
-            IntRange myAlpha;
-            IntRange myRed;
-            IntRange myGreen;
-            IntRange myBlue;
+            Byte myAlpha;
+            Byte myRed;
+            Byte myGreen;
+            Byte myBlue;
             Color::ColorType myColorType;
             IntType getInt( const std::string& str, int startpos )
             {

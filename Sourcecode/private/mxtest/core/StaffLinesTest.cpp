@@ -22,7 +22,7 @@ TEST( Test01, StaffLines )
 	object1.toStream( default_constructed, 0 );
 	std::stringstream object2_stream;
 	object2.toStream( object2_stream, 2 );
-	std::string expected = R"(<staff-lines>1</staff-lines>)";
+	std::string expected = R"(<staff-lines>0</staff-lines>)";
 	std::string actual = default_constructed.str();
 	CHECK_EQUAL( expected, actual )
 	expected = indentString+indentString+R"(<staff-lines>3</staff-lines>)";

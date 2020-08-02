@@ -386,7 +386,7 @@ namespace mx
             if( myCursor.getNumStaves() > 1 && myCursor.staffIndex >= 0 )
             {
                 myOutNote->setHasStaff( true );
-                myOutNote->getStaff()->setValue( core::StaffNumber{ myCursor.staffIndex + 1 } );
+                myOutNote->getStaff()->setValue( core::PositiveInteger{ myCursor.staffIndex + 1 } );
             }
             
             if( myCursor.voiceIndex >= 0 )
