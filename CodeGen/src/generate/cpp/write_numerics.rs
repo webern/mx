@@ -148,3 +148,20 @@ fn maybe_min_max_ints(numeric: &NumericData<i64>) -> (Option<String>, Option<Str
     });
     (min, max)
 }
+
+fn describe_range_ints(numeric: &NumericData<i64>) -> String {
+    let (min, max) = maybe_min_max_ints(numeric);
+    format!(
+        "Range: min={}, max={}",
+        min.unwrap_or_else(|| String::from("None")),
+        max.unwrap_or_else(|| String::from("None"))
+    )
+}
+
+fn document_int(numeric: &NumericData<i64>) -> String {
+    if numeric.documentation.is_empty() {
+        describe_range_ints(numeric)
+    } else {
+        format!("{}\n\n{}", numeric.documentation, describe_range_ints(numeric))
+    }
+}
