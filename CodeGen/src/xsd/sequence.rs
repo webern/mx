@@ -40,22 +40,10 @@ impl Sequence {
             let t = inner.name.as_str();
             match t {
                 ANNOTATION => annotation = Some(Annotation::from_xml(inner, lineage.clone(), xsd)?),
-                CHOICE => members.push(Member::Choice(Choice::from_xml(
-                    inner,
-                    lineage.clone(),
-                    xsd,
-                )?)),
-                ELEMENT => members.push(Member::Element(Element::from_xml(
-                    inner,
-                    lineage.clone(),
-                    xsd,
-                )?)),
+                CHOICE => members.push(Member::Choice(Choice::from_xml(inner, lineage.clone(), xsd)?)),
+                ELEMENT => members.push(Member::Element(Element::from_xml(inner, lineage.clone(), xsd)?)),
                 GROUP => members.push(Member::Group(Group::from_xml(inner, lineage.clone(), xsd)?)),
-                SEQUENCE => members.push(Member::Sequence(Sequence::from_xml(
-                    inner,
-                    lineage.clone(),
-                    xsd,
-                )?)),
+                SEQUENCE => members.push(Member::Sequence(Sequence::from_xml(inner, lineage.clone(), xsd)?)),
                 _ => return raise!("unknown {} member: '{}'", SEQUENCE, t),
             }
         }

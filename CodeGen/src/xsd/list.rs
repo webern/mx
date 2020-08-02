@@ -38,11 +38,7 @@ impl List {
                 break;
             }
         }
-        Ok(List {
-            id,
-            annotation,
-            item_type,
-        })
+        Ok(List { id, annotation, item_type })
     }
 }
 

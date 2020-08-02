@@ -6,13 +6,13 @@ pub mod creator;
 pub mod default_create;
 pub mod enumeration;
 pub mod post_process;
-pub mod scalar_string;
+pub mod scalar;
 pub mod symbol;
 pub mod transform;
 
 use crate::model::create::{Create, CreateError, CreateResult};
 use crate::model::enumeration::Enumeration;
-use crate::model::scalar_string::ScalarString;
+use crate::model::scalar::{ScalarNumeric, ScalarString};
 use crate::model::symbol::Symbol;
 use crate::xsd::restriction::Facet;
 use crate::xsd::simple_type::{Payload, SimpleType};
@@ -21,9 +21,10 @@ pub use default_create::DefaultCreate;
 use std::borrow::Borrow;
 use std::ops::Deref;
 
-#[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd)]
+#[derive(Debug, Clone, PartialEq, PartialOrd)]
 pub enum Model {
     Enumeration(Enumeration),
     ScalarString(ScalarString),
+    ScalarNumber(ScalarNumeric),
     CustomScalarString(ScalarString),
 }

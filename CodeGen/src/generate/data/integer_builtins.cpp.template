@@ -1,0 +1,80 @@
+        Integer::Integer()
+        : Integer{ 0 }
+        {
+
+        }
+
+        Integer::Integer( IntType value )
+        : myValue{ value }
+        {
+
+        }
+        
+        IntType Integer::getValue() const
+        {
+            return myValue;
+        }
+
+        void Integer::setValue( IntType value )
+        {
+            myValue = value;
+        }
+
+        void Integer::parse( const std::string& value )
+        {
+            std::stringstream ss( value );
+            IntType temp = 0;
+            if ((ss >> temp).fail() || !(ss >> std::ws).eof())
+            {
+                return;
+            }
+            ss >> temp;
+            setValue( temp );
+        }
+
+        std::string toString( const Integer& value )
+        {
+            std::stringstream ss;
+            toStream( ss, value );
+            return ss.str();
+        }
+
+        std::ostream& toStream( std::ostream& os, const Integer& value )
+        {
+            return os << value.getValue();
+        }
+
+
+        std::ostream& operator<<( std::ostream& os, const Integer& value )
+        {
+            return toStream( os, value );
+        }
+
+        inline IntType clamp( IntType min, IntType max, IntType value )
+        {
+            if( value < min )
+            {
+                return min;
+            }
+            else if( value > max )
+            {
+                return max;
+            }
+            else
+            {
+                return value;
+            }
+        }
+
+        IntRange::IntRange( IntType min, IntType max, IntType value )
+        : Integer{ clamp( min, max, value ) }
+        , myMin{ min }
+        , myMax{ max }
+        {
+            
+        }
+
+        void IntRange::setValue( IntType value )
+        {
+            Integer::setValue( clamp( myMin, myMax, value ) );
+        }

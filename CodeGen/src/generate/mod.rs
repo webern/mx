@@ -1,10 +1,9 @@
-use crate::error::Result;
-use std::fs::read_to_string;
-
 mod compile_mx;
 pub mod cpp;
 pub mod paths;
+mod template;
 
+use crate::error::Result;
 use crate::generate::cpp::modeler::MxModeler;
 use crate::generate::paths::Paths;
 use crate::model::create::Create;
@@ -14,6 +13,7 @@ use crate::model::transform::Transform;
 use crate::xsd::Xsd;
 use cpp::constants::enum_member_substitutions;
 use cpp::constants::{pseudo_enums, reserved_words, suffixed_enum_names};
+use std::fs::read_to_string;
 use std::sync::Arc;
 
 #[derive(Clone, Debug)]
@@ -23,9 +23,7 @@ pub struct GenArgs {
 
 impl Default for GenArgs {
     fn default() -> Self {
-        Self {
-            paths: Paths::default(),
-        }
+        Self { paths: Paths::default() }
     }
 }
 

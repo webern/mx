@@ -53,13 +53,9 @@ impl Element {
     pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Element> {
         let (id, lineage) = Id::make(lineage, node)?;
         if let Some(_) = node.attributes.map().get(TYPE) {
-            Ok(Element::Reference(ElementRef::from_xml(
-                node, lineage, xsd,
-            )?))
+            Ok(Element::Reference(ElementRef::from_xml(node, lineage, xsd)?))
         } else {
-            Ok(Element::Definition(ElementDef::from_xml(
-                node, lineage, xsd,
-            )?))
+            Ok(Element::Definition(ElementDef::from_xml(node, lineage, xsd)?))
         }
     }
 }
@@ -90,9 +86,7 @@ impl ElementDef {
             let t = inner.name.as_str();
             match t {
                 ANNOTATION => annotation = Some(Annotation::from_xml(inner, lineage.clone(), xsd)?),
-                COMPLEX_TYPE => {
-                    complex_type = Some(ComplexType::from_xml(inner, lineage.clone(), xsd)?)
-                }
+                COMPLEX_TYPE => complex_type = Some(ComplexType::from_xml(inner, lineage.clone(), xsd)?),
                 _ => return raise!("unsupported inner type: '{}'", t),
             }
         }
@@ -216,8 +210,7 @@ fn parse_score_partwise() {
 
 #[test]
 fn parse_credit() {
-    let xml_str =
-        r#"<xs:element name="credit" type="credit" minOccurs="0" maxOccurs="unbounded"/>"#;
+    let xml_str = r#"<xs:element name="credit" type="credit" minOccurs="0" maxOccurs="unbounded"/>"#;
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let want_index: u64 = 6;
