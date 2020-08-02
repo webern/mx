@@ -139,7 +139,7 @@ namespace mx
 
         /// The built-in primitive xs:nonNegativeInteger
         ///
-        /// Range: min=1, max=None
+        /// Range: min=0, max=None
         class NonNegativeInteger : public IntRange
         {
         public:

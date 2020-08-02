@@ -184,7 +184,7 @@ namespace mx
         }
 
         NonNegativeInteger::NonNegativeInteger( IntType value )
-        :IntRange( 1, IntMax, value )
+        :IntRange( 0, IntMax, value )
         {
 
         }

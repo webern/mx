@@ -56,7 +56,7 @@ impl Writer {
             base_type: Numeric::NonNegativeInteger,
             documentation: String::from("The built-in primitive xs:nonNegativeInteger"),
             range: Range {
-                min: Some(Bound::Inclusive(1 as i64)),
+                min: Some(Bound::Inclusive(0 as i64)),
                 max: None,
             },
         };
