@@ -22,7 +22,7 @@ TEST( Test01, Frame )
 	streamLine( expected, 2, R"(<frame-frets>1</frame-frets>)" );
 	streamLine( expected, 2, R"(<frame-note>)" );
 	streamLine( expected, 3, R"(<string>1</string>)" );
-	streamLine( expected, 3, R"(<fret>1</fret>)" );
+	streamLine( expected, 3, R"(<fret>0</fret>)" );
 	streamLine( expected, 2, R"(</frame-note>)" );
     streamLine( expected, 1, R"(</frame>)", false );
 	stringstream actual;
@@ -53,7 +53,7 @@ TEST( Test02, Frame )
 	streamLine( expected, 2, R"(<first-fret>1</first-fret>)" );
 	streamLine( expected, 2, R"(<frame-note>)" );
     streamLine( expected, 3, R"(<string>2</string>)" );
-    streamLine( expected, 3, R"(<fret>1</fret>)" );
+    streamLine( expected, 3, R"(<fret>0</fret>)" );
     streamLine( expected, 2, R"(</frame-note>)" );
     streamLine( expected, 2, R"(<frame-note>)" );
     streamLine( expected, 3, R"(<string>8</string>)" );

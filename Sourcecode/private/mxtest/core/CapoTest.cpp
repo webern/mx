@@ -22,7 +22,7 @@ TEST( Test01, Capo )
 	object1.toStream( default_constructed, 0 );
 	std::stringstream object2_stream;
 	object2.toStream( object2_stream, 2 );
-	std::string expected = R"(<capo>1</capo>)";
+	std::string expected = R"(<capo>0</capo>)";
 	std::string actual = default_constructed.str();
 	CHECK_EQUAL( expected, actual )
 	expected = indentString+indentString+R"(<capo>3</capo>)";
