@@ -130,21 +130,11 @@ impl Writer {
 }
 
 fn min_max_ints(numeric: &NumericData<i64>) -> (String, String) {
-    let min = match &numeric.range.min {
-        None => "IntMin".to_owned(),
-        Some(bound) => match bound {
-            Bound::Inclusive(i) => format!("{}", *i),
-            Bound::Exclusive(e) => format!("{}", *e + 1),
-        },
-    };
-    let max = match &numeric.range.max {
-        None => "IntMax".to_owned(),
-        Some(bound) => match bound {
-            Bound::Inclusive(i) => format!("{}", *i),
-            Bound::Exclusive(e) => format!("{}", *e - 1),
-        },
-    };
-    (min, max)
+    let (min, max) = maybe_min_max_ints(numeric);
+    (
+        min.unwrap_or_else(|| String::from("IntMin")),
+        max.unwrap_or_else(|| String::from("IntMax")),
+    )
 }
 
 fn maybe_min_max_ints(numeric: &NumericData<i64>) -> (Option<String>, Option<String>) {
@@ -156,19 +146,5 @@ fn maybe_min_max_ints(numeric: &NumericData<i64>) -> (Option<String>, Option<Str
         Bound::Inclusive(i) => Some(format!("{}", *i)),
         Bound::Exclusive(e) => Some(format!("{}", *e - 1)),
     });
-    // let min = match &numeric.range.min {
-    //     None => "IntMin".to_owned(),
-    //     Some(bound) => match bound {
-    //         Bound::Inclusive(i) => format!("{}", *i),
-    //         Bound::Exclusive(e) => format!("{}", *e + 1),
-    //     },
-    // };
-    // let max = match &numeric.range.max {
-    //     None => "IntMax".to_owned(),
-    //     Some(bound) => match bound {
-    //         Bound::Inclusive(i) => format!("{}", *i),
-    //         Bound::Exclusive(e) => format!("{}", *e - 1),
-    //     },
-    // };
     (min, max)
 }
