@@ -13,10 +13,8 @@ where
     S: AsRef<str>,
 {
     let mut map = HashMap::new();
-    let mut extra_newline = false;
     if let Some(includes) = lib_includes {
         if !includes.is_empty() {
-            extra_newline = true;
             includes.sort();
             let mut rendered = String::new();
             rendered.push('\n');
@@ -29,7 +27,6 @@ where
     }
     if let Some(includes) = std_includes {
         if !includes.is_empty() {
-            extra_newline = true;
             includes.sort();
             let mut rendered = String::new();
             rendered.push('\n');
@@ -40,15 +37,7 @@ where
             map.insert("std_includes", rendered);
         }
     }
-    let contents = contents.as_ref();
-    let contents = if extra_newline && !contents.is_empty() {
-        let mut new_contents = format!("\n{}", contents);
-        new_contents
-    } else {
-        contents.to_owned()
-    };
-
-    map.insert("contents", contents);
+    map.insert("contents", contents.as_ref().to_owned());
     render(CORE_H, &map)
 }
 

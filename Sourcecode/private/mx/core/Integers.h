@@ -12,7 +12,6 @@ namespace mx
 {
     namespace core
     {
-
         /// Alias for the int type used by this library.
         using IntType = int;
         constexpr const IntType IntMax = std::numeric_limits<IntType>::max();
