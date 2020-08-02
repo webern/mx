@@ -93,7 +93,7 @@ impl Writer {
         for numeric in numerics {
             let mut data = HashMap::new();
             data.insert("classname", numeric.name.pascal().to_owned());
-            data.insert("documentation", documentation(&numeric.documentation, 2)?);
+            data.insert("documentation", documentation(document_int(numeric), 2)?);
             let rendered_type = render(INTEGER_TYPE_H, &data)?;
             contents.push('\n');
             contents.push('\n');

@@ -58,7 +58,11 @@ namespace mx
         ///
         /// Note: MusicXML specifies the minimum allowable value as 1, however test
         /// documents exist that have a value of 0. This library supports a minimum value
-        /// of 0.
+        /// of 0. Per https://github.com/w3c/musicxml/issues/134, the correct
+        /// representation for 0 dots is to omit the element, so it is possible to create
+        /// invalid MusicXML by setting the value to 0 here.
+        ///
+        /// Range: min=0, max=3
         class AccordionMiddleValue : public IntRange
         {
         public:
@@ -70,6 +74,8 @@ namespace mx
         /// the number-level type, the beam-level type identifies concurrent beams in a
         /// beam group. It does not distinguish overlapping beams such as grace notes
         /// within regular notes, or beams used in different voices.
+        ///
+        /// Range: min=1, max=8
         class BeamLevel : public IntRange
         {
         public:
@@ -78,6 +84,8 @@ namespace mx
         };
 
         /// This is not part of MusicXML. It represents a clamped byte.
+        ///
+        /// Range: min=0, max=255
         class Byte : public IntRange
         {
         public:
@@ -89,6 +97,8 @@ namespace mx
         /// signature. Negative numbers are used for flats and positive numbers for sharps,
         /// reflecting the key's placement within the circle of fifths (hence the type
         /// name).
+        ///
+        /// Range: min=None, max=None
         class FifthsValue : public IntRange
         {
         public:
@@ -97,6 +107,8 @@ namespace mx
         };
 
         /// The midi-16 type is used to express MIDI 1.0 values that range from 1 to 128.
+        ///
+        /// Range: min=1, max=128
         class Midi128 : public IntRange
         {
         public:
@@ -105,6 +117,8 @@ namespace mx
         };
 
         /// The midi-16 type is used to express MIDI 1.0 values that range from 1 to 16.
+        ///
+        /// Range: min=1, max=16
         class Midi16 : public IntRange
         {
         public:
@@ -114,6 +128,8 @@ namespace mx
 
         /// The midi-16 type is used to express MIDI 1.0 values that range from 1 to
         /// 16,384.
+        ///
+        /// Range: min=1, max=16384
         class Midi16384 : public IntRange
         {
         public:
@@ -122,6 +138,8 @@ namespace mx
         };
 
         /// The built-in primitive xs:nonNegativeInteger
+        ///
+        /// Range: min=1, max=None
         class NonNegativeInteger : public IntRange
         {
         public:
@@ -135,6 +153,8 @@ namespace mx
         /// handle cases where the number-levels stop in an arbitrary order. Different
         /// numbers are needed when the features overlap in MusicXML document order. When a
         /// number-level value is implied, the value is 1 by default.
+        ///
+        /// Range: min=1, max=6
         class NumberLevel : public IntRange
         {
         public:
@@ -144,6 +164,8 @@ namespace mx
 
         /// The number-of-lines type is used to specify the number of lines in text
         /// decoration attributes.
+        ///
+        /// Range: min=0, max=3
         class NumberOfLines : public IntRange
         {
         public:
@@ -153,6 +175,8 @@ namespace mx
 
         /// Octaves are represented by the numbers 0 to 9, where 4 indicates the octave
         /// started by middle C.
+        ///
+        /// Range: min=0, max=9
         class OctaveValue : public IntRange
         {
         public:
@@ -161,6 +185,8 @@ namespace mx
         };
 
         /// The built-in primitive xs:positiveInteger
+        ///
+        /// Range: min=1, max=None
         class PositiveInteger : public IntRange
         {
         public:
@@ -172,6 +198,8 @@ namespace mx
         /// numbered from bottom to top, with 1 being the bottom line on a staff. Staff
         /// line values can be used to specify positions outside the staff, such as a C
         /// clef positioned in the middle of a grand staff.
+        ///
+        /// Range: min=None, max=None
         class StaffLine : public IntRange
         {
         public:
@@ -181,6 +209,8 @@ namespace mx
 
         /// The staff-number type indicates staff numbers within a multi-staff part. Staves
         /// are numbered from top to bottom, with 1 being the top staff on a part.
+        ///
+        /// Range: min=1, max=None
         class StaffNumber : public IntRange
         {
         public:
@@ -190,6 +220,8 @@ namespace mx
 
         /// The string-number type indicates a string number. Strings are numbered from
         /// high to low, with 1 being the highest pitched string.
+        ///
+        /// Range: min=1, max=None
         class StringNumber : public IntRange
         {
         public:
@@ -199,6 +231,8 @@ namespace mx
 
         /// The number of tremolo marks is represented by a number from 0 to 8: the same as
         /// beam-level with 0 added.
+        ///
+        /// Range: min=0, max=8
         class TremoloMarks : public IntRange
         {
         public:

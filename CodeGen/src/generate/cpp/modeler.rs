@@ -121,7 +121,9 @@ impl PostProcess for MxModeler {
                         changed.documentation.push_str(
                             "\n\nNote: MusicXML specifies the minimum allowable value \
                         as 1, however test documents exist that have a value of 0. This library supports \
-                        a minimum value of 0.",
+                        a minimum value of 0. Per https://github.com/w3c/musicxml/issues/134, the correct \
+                        representation for 0 dots is to omit the element, so it is possible to create \
+                        invalid MusicXML by setting the value to 0 here.",
                         );
                         is_changed = true;
                         changed
