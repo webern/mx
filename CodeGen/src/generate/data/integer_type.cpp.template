@@ -1,0 +1,11 @@
+        {{ classname }}::{{ classname }}()
+        :{{ classname }}{ 0 }
+        {
+
+        }
+
+        {{ classname }}::{{ classname }}( IntType value )
+        :IntRange( {{ min_val }}, {{ max_val }}, value )
+        {
+
+        }

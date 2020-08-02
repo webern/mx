@@ -12,6 +12,7 @@ namespace mx
 {
     namespace core
     {
+
         /// Alias for the int type used by this library.
         using IntType = int;
         constexpr const IntType IntMax = std::numeric_limits<IntType>::max();
@@ -24,7 +25,11 @@ namespace mx
             Integer();
             explicit Integer( IntType value );
             virtual ~Integer() = default;
-            IntType getValue() const;
+            Integer( const Integer& ) = default;
+            Integer( Integer&& ) = default;
+            Integer& operator=( const Integer& ) = default;
+            Integer& operator=( Integer&& ) = default;
+            [[nodiscard]] IntType getValue() const;
             virtual void setValue( IntType value );
             virtual void parse( const std::string& value ) final;
         private:
@@ -42,11 +47,10 @@ namespace mx
         {
         public:
             explicit IntRange( IntType min, IntType max, IntType value );
-            virtual ~IntRange() = default;
-            virtual void setValue( IntType value ) override;
+            void setValue( IntType value ) override;
         private:
-            const IntType myMin;
-            const IntType myMax;
+            IntType myMin;
+            IntType myMax;
         };
 
         /// The accordion-middle type may have values of 1, 2, or 3, corresponding to

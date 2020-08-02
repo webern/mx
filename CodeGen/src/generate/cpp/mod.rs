@@ -1,6 +1,6 @@
+mod cpp_template;
 use crate::error::Result;
 use std::path::Path;
-
 pub mod constants;
 pub mod modeler;
 mod write_custom;

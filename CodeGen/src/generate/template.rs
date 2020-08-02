@@ -4,6 +4,7 @@ use lazy_static::lazy_static;
 use serde::Serialize;
 use std::borrow::Borrow;
 use std::collections::BTreeMap;
+use std::collections::HashMap;
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -29,15 +30,24 @@ lazy_static! {
     };
 }
 
+lazy_static! {
+    pub(crate) static ref NO_DATA: HashMap<String, String> = HashMap::new();
+}
+
 pub(crate) fn render<STR, SERIALIZE>(name: STR, data: &SERIALIZE) -> Result<String>
 where
     STR: AsRef<str>,
     SERIALIZE: Serialize,
 {
     let h = &HANDLEBARS;
-    let rendered = h.render(name.as_ref(), data)
+    let rendered = h
+        .render(name.as_ref(), data)
         .map_err(|e| make_err!("unable to render template '{}': {}", name.as_ref(), e))?;
-    Ok(rendered.replace("&amp;","&").replace("&lt;","<").replace("&gt;",">"))
+    Ok(rendered
+        .replace("&amp;", "&")
+        .replace("&lt;", "<")
+        .replace("&gt;", ">")
+        .replace("&quot;", "\""))
 }
 
 fn template_dir() -> &'static Path {
@@ -89,8 +99,12 @@ fn list_template_files() -> Result<Vec<(String, PathBuf)>> {
         if ext != "template" {
             continue;
         }
-        let filename = path.file_name().ok_or_else(|| make_err!("no filename: '{}'", entry.path().display()))?;
-        let filename = filename.to_str().ok_or_else(|| make_err!("not utf-8: '{:?}'", filename))?;
+        let filename = path
+            .file_name()
+            .ok_or_else(|| make_err!("no filename: '{}'", entry.path().display()))?;
+        let filename = filename
+            .to_str()
+            .ok_or_else(|| make_err!("not utf-8: '{:?}'", filename))?;
         list.push((filename.to_owned(), path))
     }
     Ok(list)

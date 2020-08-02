@@ -2,7 +2,7 @@
 // Copyright (c) by Matthew James Briggs
 // Distributed under the MIT License
 
-#pragma once{{ library_includes }}{{ std_includes }}
+#pragma once{{ lib_includes }}{{ std_includes }}
 
 namespace mx
 {

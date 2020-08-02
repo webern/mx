@@ -1,17 +1,21 @@
 use crate::error::Result;
+use crate::generate::cpp::cpp_template::{render_core_cpp, render_core_h};
 use crate::generate::cpp::writer::Writer;
-use crate::generate::template::{render, INTEGER_BUILTINS_CPP, INTEGER_BUILTINS_H, CORE_H, INTEGER_TYPE_H};
+use crate::generate::template::{
+    render, CORE_H, INTEGER_BUILTINS_CPP, INTEGER_BUILTINS_H, INTEGER_TYPE_CPP, INTEGER_TYPE_H, NO_DATA,
+};
 use crate::model::scalar::{Bound, NumericData, Range};
 use crate::model::scalar::{ScalarNumeric, ScalarString};
 use crate::model::symbol::Symbol;
 use crate::model::Model;
-use crate::utils::string_stuff::{sep, write_documentation, documentation};
+use crate::utils::string_stuff::{documentation, sep, write_documentation};
 use crate::xsd::primitives::BaseType;
 use crate::xsd::primitives::Numeric;
 use crate::xsd::primitives::Primitive;
 use std::collections::HashMap;
 use std::fs::OpenOptions;
 use std::io::Write;
+use std::ops::Deref;
 
 pub fn write_tabs<W: Write>(w: &mut W, num: u32) -> std::io::Result<()> {
     for _ in 0..num {
@@ -82,15 +86,11 @@ impl Writer {
 
     fn write_integers_h(&self, numerics: &[NumericData<i64>]) -> Result<()> {
         let mut contents = String::new();
-        let mut nothing = HashMap::<String,String>::new();
+        let mut nothing = HashMap::<String, String>::new();
 
         let builtins = render(INTEGER_BUILTINS_H, &nothing)?;
         contents.push_str(&builtins);
         for numeric in numerics {
-            // // TODO - remove
-            // if numeric.name.original() == "positiveInteger" || numeric.name.original() == "nonNegativeInteger" {
-            //     continue;
-            // }
             let mut data = HashMap::new();
             data.insert("classname", numeric.name.pascal().to_owned());
             data.insert("documentation", documentation(&numeric.documentation, 2)?);
@@ -99,30 +99,27 @@ impl Writer {
             contents.push('\n');
             contents.push_str(&rendered_type);
         }
-        let mut final_data = HashMap::new();
-        final_data.insert("contents", contents);
-        final_data.insert("std_includes", r#"
-
-#include <iostream>
-#include <limits>
-#include <string>"#.to_owned());
-        let final_contents = render(CORE_H, &final_data)?;
-        wrap!(std::fs::write(&self.paths.integers_h, final_contents))?;
+        let file_contents = render_core_h(contents, None, Some(&mut ["iostream", "string", "limits"]))?;
+        wrap!(std::fs::write(&self.paths.integers_h, file_contents))?;
         Ok(())
     }
 
     fn write_integers_cpp(&self, numerics: &[NumericData<i64>]) -> Result<()> {
-        // let nothing = HashMap::<String,String>::new();
-        // let builtins = render(INTEGER_BUILTINS_CPP, &nothing)?;
-        // let mut rendered_types = Vec::new();
-        // for numeric in numerics {
-        //     // TODO - remove
-        //     if numeric.name.original() == "positiveInteger" || numeric.name.original() == "nonNegativeInteger" {
-        //         continue;
-        //     }
-        //     let rendered_type = render(INTEGER_BUILTINS_CPP, &nothing)?;
-        //     rendered_types.push(rendered_type);
-        // }
+        let mut contents = render("integer_builtins.cpp.template", NO_DATA.deref())?;
+        for (i, numeric) in numerics.iter().enumerate() {
+            let (min, max) = min_max_ints(numeric);
+            let classname = numeric.name.pascal();
+            let mut data = HashMap::new();
+            data.insert("min_val", min);
+            data.insert("max_val", max);
+            data.insert("classname", classname.to_owned());
+            let mut rendered = String::from("\n\n");
+            rendered.push_str(render(INTEGER_TYPE_CPP, &data)?.as_str());
+            if i < numerics.len() - 1 {}
+            contents.push_str(&rendered);
+        }
+        let file_contents = render_core_cpp(contents, Some("mx/core/Integers.h"), None, Some(&mut ["sstream"]))?;
+        wrap!(std::fs::write(&self.paths.integers_cpp, file_contents))?;
         Ok(())
     }
 
@@ -130,4 +127,22 @@ impl Writer {
     pub(crate) fn write_decimals(&self, numerics: &mut [&NumericData<f64>]) -> Result<()> {
         Ok(())
     }
+}
+
+fn min_max_ints(numeric: &NumericData<i64>) -> (String, String) {
+    let min = match &numeric.range.min {
+        None => "IntMin".to_owned(),
+        Some(bound) => match bound {
+            Bound::Inclusive(i) => format!("{}", *i),
+            Bound::Exclusive(e) => format!("{}", *e + 1),
+        },
+    };
+    let max = match &numeric.range.max {
+        None => "IntMax".to_owned(),
+        Some(bound) => match bound {
+            Bound::Inclusive(i) => format!("{}", *i),
+            Bound::Exclusive(e) => format!("{}", *e - 1),
+        },
+    };
+    (min, max)
 }
