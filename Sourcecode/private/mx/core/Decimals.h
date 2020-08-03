@@ -4,17 +4,14 @@
 
 #pragma once
 
+#include <functional>
 #include <iostream>
 #include <string>
-#include <memory>
-#include <cmath>
-#include <functional>
 
 namespace mx
 {
     namespace core
     {
-        
         /// The type we use for non-integral numbers in this library.
         using DecimalType = long double;
         constexpr const DecimalType DecimalMin = std::numeric_limits<DecimalType>::min();
@@ -103,12 +100,12 @@ namespace mx
         };
         
         std::string toString( const Decimal& value, unsigned short precision = DEFAULT_PRECISION );
-		std::ostream& toStream( std::ostream& os, const Decimal& value, unsigned short precision = DEFAULT_PRECISION );
-		std::ostream& operator<<( std::ostream& os, const Decimal& value );
+        std::ostream& toStream( std::ostream& os, const Decimal& value, unsigned short precision = DEFAULT_PRECISION );
+        std::ostream& operator<<( std::ostream& os, const Decimal& value );
 
-		/// This type is an implementation detail. It represent a function that
-		/// clamps a DecimalType to a range.
-		using DecimalClamp = std::function<DecimalType(DecimalType)>;
+        /// This type is an implementation detail. It represent a function that
+        /// clamps a DecimalType to a range.
+        using DecimalClamp = std::function<DecimalType(DecimalType)>;
 
         /// A 'clamped', or 'ranged' Decimal where the value of min and max are
         /// governed by the DecimalClamp functions.
@@ -121,50 +118,110 @@ namespace mx
             DecimalClamp myMinClamp;
             DecimalClamp myMaxClamp;
         };
-        
-        /* MIN = 0 EXCLUSIVE!, MAX = N/A, DEFAULT = 1 */
-        class PositiveDecimal: public DecimalRange
+
+        /// The divisions type is used to express values in terms of the musical divisions
+        /// defined by the divisions element. It is preferred that these be integer values
+        /// both for MIDI interoperability and to avoid roundoff errors.
+        ///
+        /// Range: min=None, max=None
+        class Divisions : public DecimalRange
         {
         public:
-            explicit PositiveDecimal( DecimalType value );
-            PositiveDecimal(); /* Initializes to 1 */
+            explicit Divisions( DecimalType value );
+            Divisions();
         };
-        
-        /* MIN = 0, MAX = N/A, DEFAULT = 0 */
-        class NonNegativeDecimal: public DecimalRange
+
+        /// The millimeters type is a number representing millimeters. This is used in the
+        /// scaling element to provide a default scaling from tenths to physical units.
+        ///
+        /// Range: min=None, max=None
+        class Millimeters : public DecimalRange
+        {
+        public:
+            explicit Millimeters( DecimalType value );
+            Millimeters();
+        };
+
+        /// The non-negative-decimal type specifies a non-negative decimal value.
+        ///
+        /// Range: min=Inclusive(0), max=None
+        class NonNegativeDecimal : public DecimalRange
         {
         public:
             explicit NonNegativeDecimal( DecimalType value );
             NonNegativeDecimal();
         };
-        
-        /* MIN = 0, MAX = N/A, DEFAULT = 0 */
-        using DivisionsValue = Decimal;
-        using MillimetersValue = Decimal;
-        
-        /* MIN = 0, MAX = 100, DEFAULT = 0 */
+
+        /// The percent type specifies a percentage from 0 to 100.
+        ///
+        /// Range: min=Inclusive(0), max=Inclusive(100)
         class Percent : public DecimalRange
         {
         public:
             explicit Percent( DecimalType value );
             Percent();
         };
-        
-        using PositiveDivisionsValue = PositiveDecimal;
-        
-        /* MIN = -180, MAX = 180, DEFAULT = 0 */
+
+        /// The positive-decimal type specifies a positive decimal value.
+        ///
+        /// Range: min=Exclusive(0), max=None
+        class PositiveDecimal : public DecimalRange
+        {
+        public:
+            explicit PositiveDecimal( DecimalType value );
+            PositiveDecimal();
+        };
+
+        /// The rotation-degrees type specifies rotation, pan, and elevation values in
+        /// degrees. Values range from -180 to 180.
+        ///
+        /// Range: min=Inclusive(-180), max=Inclusive(180)
         class RotationDegrees : public DecimalRange
         {
         public:
             explicit RotationDegrees( DecimalType value );
             RotationDegrees();
         };
-        
-        using Semitones = Decimal;
-        using TenthsValue = Decimal;
-        
-        /* MIN = 2, MAX = N/A, DEFAULT = 2 */
-        class TrillBeats: public DecimalRange
+
+        /// The semitones type is a number representing semitones, used for chromatic
+        /// alteration. A value of -1 corresponds to a flat and a value of 1 to a sharp.
+        /// Decimal values like 0.5 (quarter tone sharp) are used for microtones.
+        ///
+        /// Range: min=None, max=None
+        class Semitones : public DecimalRange
+        {
+        public:
+            explicit Semitones( DecimalType value );
+            Semitones();
+        };
+
+        /// The tenths type is a number representing tenths of interline staff space
+        /// (positive or negative). Both integer and decimal values are allowed, such as 5
+        /// for a half space and 2.5 for a quarter space. Interline space is measured from
+        /// the middle of a staff line.
+        ///
+        ///
+        ///
+        /// Distances in a MusicXML file are measured in tenths of staff space. Tenths are
+        /// then scaled to millimeters within the scaling element, used in the defaults
+        /// element at the start of a score. Individual staves can apply a scaling factor
+        /// to adjust staff size. When a MusicXML element or attribute refers to tenths, it
+        /// means the global tenths defined by the scaling element, not the local tenths as
+        /// adjusted by the staff-size element.
+        ///
+        /// Range: min=None, max=None
+        class Tenths : public DecimalRange
+        {
+        public:
+            explicit Tenths( DecimalType value );
+            Tenths();
+        };
+
+        /// The trill-beats type specifies the beats used in a trill-sound or bend-sound
+        /// attribute group. It is a decimal value with a minimum value of 2.
+        ///
+        /// Range: min=Inclusive(2), max=None
+        class TrillBeats : public DecimalRange
         {
         public:
             explicit TrillBeats( DecimalType value );

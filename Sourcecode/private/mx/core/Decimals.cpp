@@ -2,12 +2,15 @@
 // Copyright (c) by Matthew James Briggs
 // Distributed under the MIT License
 
+// self
 #include "mx/core/Decimals.h"
+
+// lib
 #include "mx/core/UnusedParameter.h"
 
+// std
+#include <cmath>
 #include <sstream>
-#include <iomanip>
-#include <mutex>
 
 namespace mx
 {
@@ -412,20 +415,32 @@ namespace mx
 #define MXMAXIN( maxbound ) DecimalClamp( []( DecimalType value ){ return maxInclusive( maxbound, value ); } )
 #define MX_NOOP DecimalClamp( noOp )
 
-        PositiveDecimal::PositiveDecimal( DecimalType value )
-        : DecimalRange{ MXMINEX( 0.0 ), MX_NOOP, value }
+        Divisions::Divisions( DecimalType value )
+        : DecimalRange{ MX_NOOP, MX_NOOP, value }
         {
 
         }
 
-        PositiveDecimal::PositiveDecimal()
-        : PositiveDecimal{ 1 }
+        Divisions::Divisions()
+        : Divisions{ 0.0 }
+        {
+
+        }
+
+        Millimeters::Millimeters( DecimalType value )
+        : DecimalRange{ MX_NOOP, MX_NOOP, value }
+        {
+
+        }
+
+        Millimeters::Millimeters()
+        : Millimeters{ 0.0 }
         {
 
         }
 
         NonNegativeDecimal::NonNegativeDecimal( DecimalType value )
-        : DecimalRange{ MXMININ( 0.0 ), MX_NOOP, value }
+        : DecimalRange{ MXMININ( 0 ), MX_NOOP, value }
         {
 
         }
@@ -436,9 +451,8 @@ namespace mx
 
         }
 
-        
         Percent::Percent( DecimalType value )
-        : DecimalRange{ MXMININ( 0.0 ), MXMAXIN( 100.0 ), value }
+        : DecimalRange{ MXMININ( 0 ), MXMAXIN( 100 ), value }
         {
 
         }
@@ -448,13 +462,24 @@ namespace mx
         {
 
         }
-        
-        RotationDegrees::RotationDegrees( DecimalType value )
-        : DecimalRange{ MXMININ( -180.0 ), MXMAXIN( 180.0 ), value }
+
+        PositiveDecimal::PositiveDecimal( DecimalType value )
+        : DecimalRange{ MXMINEX( 0 ), MX_NOOP, value }
         {
 
         }
 
+        PositiveDecimal::PositiveDecimal()
+        : PositiveDecimal{ 1 }
+        {
+
+        }
+
+        RotationDegrees::RotationDegrees( DecimalType value )
+        : DecimalRange{ MXMININ( -180 ), MXMAXIN( 180 ), value }
+        {
+
+        }
 
         RotationDegrees::RotationDegrees()
         : RotationDegrees{ 0.0 }
@@ -462,15 +487,38 @@ namespace mx
 
         }
 
-        
-        TrillBeats::TrillBeats( DecimalType value )
-        : DecimalRange{ MXMININ( 2.0 ), MX_NOOP, value }
+        Semitones::Semitones( DecimalType value )
+        : DecimalRange{ MX_NOOP, MX_NOOP, value }
         {
-            this->setValue( value );
+
+        }
+
+        Semitones::Semitones()
+        : Semitones{ 0.0 }
+        {
+
+        }
+
+        Tenths::Tenths( DecimalType value )
+        : DecimalRange{ MX_NOOP, MX_NOOP, value }
+        {
+
+        }
+
+        Tenths::Tenths()
+        : Tenths{ 0.0 }
+        {
+
+        }
+
+        TrillBeats::TrillBeats( DecimalType value )
+        : DecimalRange{ MXMININ( 2 ), MX_NOOP, value }
+        {
+
         }
 
         TrillBeats::TrillBeats()
-        : TrillBeats{ 0.0 }
+        : TrillBeats{ 2 }
         {
 
         }

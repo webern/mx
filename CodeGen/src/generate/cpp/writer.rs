@@ -1,5 +1,7 @@
 use crate::error::Result;
-use crate::generate::cpp::write_custom::{write_color, write_comma_separated_text, write_ending_number, write_time_only};
+use crate::generate::cpp::write_custom::{
+    write_color, write_comma_separated_text, write_ending_number, write_time_only,
+};
 use crate::generate::paths::Paths;
 use crate::model::scalar::ScalarNumeric;
 use crate::model::Model;
@@ -28,7 +30,10 @@ impl Writer {
                 Model::ScalarString(s) => {
                     // We handle all of the scalar strings that we know of in musicxml.xsd with
                     // custom implementations, thus there is currently no 'generic' implementation.
-                    return raise!("Encountered ScalarString '{}', no handler available.", s.name.original());
+                    return raise!(
+                        "Encountered ScalarString '{}', no handler available.",
+                        s.name.original()
+                    );
                 }
                 Model::CustomScalarString(cs) => match cs.name.original() {
                     "color" => write_color(cs, &self.paths)?,
@@ -38,14 +43,14 @@ impl Writer {
                     unhandled => return raise!("Unhandled CustomScalarString '{}'", unhandled),
                 },
                 Model::ScalarNumber(sn) => match sn {
-                    ScalarNumeric::Decimal(d) => decimals.push(d),
+                    ScalarNumeric::Decimal(d) => decimals.push(d.to_owned()),
                     ScalarNumeric::Integer(i) => integers.push(i.to_owned()),
                 },
             }
         }
         self.write_enums(&mut enums)?;
         self.write_integers(integers)?;
-        self.write_decimals(decimals.as_mut_slice())?;
+        self.write_decimals(decimals)?;
         Ok(())
     }
 }

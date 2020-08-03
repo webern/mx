@@ -2,7 +2,8 @@ use crate::error::Result;
 use crate::generate::cpp::cpp_template::{render_core_cpp, render_core_h};
 use crate::generate::cpp::writer::Writer;
 use crate::generate::template::{
-    render, CORE_H, INTEGER_BUILTINS_CPP, INTEGER_BUILTINS_H, INTEGER_TYPE_CPP, INTEGER_TYPE_H, NO_DATA,
+    render, CORE_H, DECIMAL_BUILTINS_CPP, DECIMAL_BUILTINS_H, DECIMAL_TYPE_CPP, DECIMAL_TYPE_H, INTEGER_BUILTINS_CPP,
+    INTEGER_BUILTINS_H, INTEGER_TYPE_CPP, INTEGER_TYPE_H, NO_DATA,
 };
 use crate::model::scalar::{Bound, NumericData, Range};
 use crate::model::scalar::{ScalarNumeric, ScalarString};
@@ -105,7 +106,7 @@ impl Writer {
     }
 
     fn write_integers_cpp(&self, numerics: &[NumericData<i64>]) -> Result<()> {
-        let mut contents = render("integer_builtins.cpp.template", NO_DATA.deref())?;
+        let mut contents = render(INTEGER_BUILTINS_CPP, NO_DATA.deref())?;
         for (i, numeric) in numerics.iter().enumerate() {
             let (min, max) = min_max_ints(numeric);
             let classname = numeric.name.pascal();
@@ -124,7 +125,60 @@ impl Writer {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    pub(crate) fn write_decimals(&self, numerics: &mut [&NumericData<f64>]) -> Result<()> {
+    pub(crate) fn write_decimals(&self, mut numerics: Vec<NumericData<f64>>) -> Result<()> {
+        numerics.sort_by(|a, b| {
+            let a = a.name.pascal();
+            let b = b.name.pascal();
+            a.cmp(b)
+        });
+        self.write_decimals_h(&numerics)?;
+        self.write_decimals_cpp(&numerics)?;
+        Ok(())
+    }
+
+    fn write_decimals_h(&self, numerics: &[NumericData<f64>]) -> Result<()> {
+        let mut contents = String::new();
+        let mut nothing = HashMap::<String, String>::new();
+
+        let builtins = render(DECIMAL_BUILTINS_H, &nothing)?;
+        contents.push_str(&builtins);
+        for numeric in numerics {
+            let mut data = HashMap::new();
+            data.insert("classname", numeric.name.pascal().to_owned());
+            data.insert("documentation", documentation(document_decimal(numeric), 2)?);
+            let rendered_type = render(DECIMAL_TYPE_H, &data)?;
+            contents.push('\n');
+            contents.push('\n');
+            contents.push_str(&rendered_type);
+        }
+        let file_contents = render_core_h(contents, None, Some(&mut ["iostream", "string", "functional"]))?;
+        wrap!(std::fs::write(&self.paths.decimals_h, file_contents))?;
+        Ok(())
+    }
+
+    fn write_decimals_cpp(&self, numerics: &[NumericData<f64>]) -> Result<()> {
+        let mut contents = render(DECIMAL_BUILTINS_CPP, NO_DATA.deref())?;
+        for (i, numeric) in numerics.iter().enumerate() {
+            let (minexpr, maxexpr) = minmax_expr_decimal(numeric);
+            let defaultval = defaultval(numeric);
+            let classname = numeric.name.pascal();
+            let mut data = HashMap::new();
+            data.insert("classname", classname.to_owned());
+            data.insert("minexpr", minexpr);
+            data.insert("maxexpr", maxexpr);
+            data.insert("defaultval", defaultval);
+            let mut rendered = String::from("\n\n");
+            rendered.push_str(render(DECIMAL_TYPE_CPP, &data)?.as_str());
+            if i < numerics.len() - 1 {}
+            contents.push_str(&rendered);
+        }
+        let file_contents = render_core_cpp(
+            contents,
+            Some("mx/core/Decimals.h"),
+            Some(&mut ["mx/core/UnusedParameter.h"]),
+            Some(&mut ["sstream", "cmath"]),
+        )?;
+        wrap!(std::fs::write(&self.paths.decimals_cpp, file_contents))?;
         Ok(())
     }
 }
@@ -149,7 +203,7 @@ fn maybe_min_max_ints(numeric: &NumericData<i64>) -> (Option<String>, Option<Str
     (min, max)
 }
 
-fn describe_range_ints(numeric: &NumericData<i64>) -> String {
+fn describe_range_int(numeric: &NumericData<i64>) -> String {
     let (min, max) = maybe_min_max_ints(numeric);
     format!(
         "Range: min={}, max={}",
@@ -158,10 +212,82 @@ fn describe_range_ints(numeric: &NumericData<i64>) -> String {
     )
 }
 
+fn describe_range_decimal(minmax: (String, String)) -> String {
+    // let (min, max) = maybe_min_max_ints(numeric);
+    format!("Range: min={}, max={}", minmax.0, minmax.1)
+}
+
+fn minmax_expr_decimal(numeric: &NumericData<f64>) -> (String, String) {
+    let min = match numeric.range.min.as_ref() {
+        None => String::from("MX_NOOP"),
+        Some(bound) => match bound {
+            Bound::Inclusive(f) => format!("MXMININ( {} )", f),
+            Bound::Exclusive(f) => format!("MXMINEX( {} )", f),
+        },
+    };
+    let max = match numeric.range.max.as_ref() {
+        None => String::from("MX_NOOP"),
+        Some(bound) => match bound {
+            Bound::Inclusive(f) => format!("MXMAXIN( {} )", f),
+            Bound::Exclusive(f) => format!("MXMAXEX( {} )", f),
+        },
+    };
+    (min, max)
+}
+
+fn defaultval(numeric: &NumericData<f64>) -> String {
+    match numeric.range.min.as_ref() {
+        None => String::from("0.0"),
+        Some(bound) => match bound {
+            Bound::Inclusive(f) => {
+                if *f > 0.0 {
+                    format!("{}", f)
+                } else {
+                    String::from("0.0")
+                }
+            }
+            Bound::Exclusive(f) => {
+                if *f >= 0.0 {
+                    format!("{}", f + 1.0)
+                } else {
+                    String::from("0.0")
+                }
+            }
+        },
+    }
+}
+
 fn document_int(numeric: &NumericData<i64>) -> String {
     if numeric.documentation.is_empty() {
-        describe_range_ints(numeric)
+        describe_range_int(numeric)
     } else {
-        format!("{}\n\n{}", numeric.documentation, describe_range_ints(numeric))
+        format!("{}\n\n{}", numeric.documentation, describe_range_int(numeric))
     }
+}
+
+fn document_decimal(numeric: &NumericData<f64>) -> String {
+    let range = describe_range_decimal(decimal_range_doc_strings(numeric));
+    if numeric.documentation.is_empty() {
+        range
+    } else {
+        format!("{}\n\n{}", numeric.documentation, range)
+    }
+}
+
+fn decimal_range_doc_strings(numeric: &NumericData<f64>) -> (String, String) {
+    let min = match numeric.range.min.as_ref() {
+        None => String::from("None"),
+        Some(bound) => match bound {
+            Bound::Inclusive(f) => format!("Inclusive({})", f),
+            Bound::Exclusive(f) => format!("Exclusive({})", f),
+        },
+    };
+    let max = match numeric.range.max.as_ref() {
+        None => String::from("None"),
+        Some(bound) => match bound {
+            Bound::Inclusive(f) => format!("Inclusive({})", f),
+            Bound::Exclusive(f) => format!("Exclusive({})", f),
+        },
+    };
+    (min, max)
 }
