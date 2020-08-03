@@ -6,7 +6,7 @@
 #ifdef MX_COMPILE_NEW_DECIMAL_TESTS
 
 #include "cpul/cpulTestHarness.h"
-#include "mx/core/PreciseDecimal.h"
+#include "mx/core/Decimals.h"
 #include <sstream>
 
 using namespace mx::core;
