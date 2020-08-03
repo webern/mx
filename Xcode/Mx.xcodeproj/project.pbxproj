@@ -211,7 +211,6 @@
 		29A800311EF0499300AD2478 /* Integers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2461EF0476200AD2478 /* Integers.cpp */; };
 		29A800321EF0499300AD2478 /* NumberOrNormal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2481EF0476200AD2478 /* NumberOrNormal.cpp */; };
 		29A800331EF0499300AD2478 /* PositiveIntegerOrEmpty.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E24A1EF0476200AD2478 /* PositiveIntegerOrEmpty.cpp */; };
-		29A800341EF0499300AD2478 /* PreciseDecimal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E24C1EF0476200AD2478 /* PreciseDecimal.cpp */; };
 		29A800351EF0499300AD2478 /* ScoreConversions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E24E1EF0476200AD2478 /* ScoreConversions.cpp */; };
 		29A800371EF0499300AD2478 /* YesNoNumber.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2531EF0476200AD2478 /* YesNoNumber.cpp */; };
 		29A800381EF0499300AD2478 /* AccidentalMarkFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E2561EF0476200AD2478 /* AccidentalMarkFunctions.cpp */; };
@@ -2700,10 +2699,6 @@
 		29A8FB701EF0476D00AD2478 /* PositiveIntegerOrEmpty.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E24A1EF0476200AD2478 /* PositiveIntegerOrEmpty.cpp */; };
 		29A8FB711EF0476D00AD2478 /* PositiveIntegerOrEmpty.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E24A1EF0476200AD2478 /* PositiveIntegerOrEmpty.cpp */; };
 		29A8FB721EF0476D00AD2478 /* PositiveIntegerOrEmpty.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E24A1EF0476200AD2478 /* PositiveIntegerOrEmpty.cpp */; };
-		29A8FB791EF0476D00AD2478 /* PreciseDecimal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E24C1EF0476200AD2478 /* PreciseDecimal.cpp */; };
-		29A8FB7A1EF0476D00AD2478 /* PreciseDecimal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E24C1EF0476200AD2478 /* PreciseDecimal.cpp */; };
-		29A8FB7B1EF0476D00AD2478 /* PreciseDecimal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E24C1EF0476200AD2478 /* PreciseDecimal.cpp */; };
-		29A8FB7C1EF0476D00AD2478 /* PreciseDecimal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E24C1EF0476200AD2478 /* PreciseDecimal.cpp */; };
 		29A8FB831EF0476D00AD2478 /* ScoreConversions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E24E1EF0476200AD2478 /* ScoreConversions.cpp */; };
 		29A8FB841EF0476D00AD2478 /* ScoreConversions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E24E1EF0476200AD2478 /* ScoreConversions.cpp */; };
 		29A8FB851EF0476D00AD2478 /* ScoreConversions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8E24E1EF0476200AD2478 /* ScoreConversions.cpp */; };
@@ -4920,8 +4915,6 @@
 		29A8E2491EF0476200AD2478 /* NumberOrNormal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NumberOrNormal.h; sourceTree = "<group>"; };
 		29A8E24A1EF0476200AD2478 /* PositiveIntegerOrEmpty.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PositiveIntegerOrEmpty.cpp; sourceTree = "<group>"; };
 		29A8E24B1EF0476200AD2478 /* PositiveIntegerOrEmpty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PositiveIntegerOrEmpty.h; sourceTree = "<group>"; };
-		29A8E24C1EF0476200AD2478 /* PreciseDecimal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PreciseDecimal.cpp; sourceTree = "<group>"; };
-		29A8E24D1EF0476200AD2478 /* PreciseDecimal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreciseDecimal.h; sourceTree = "<group>"; };
 		29A8E24E1EF0476200AD2478 /* ScoreConversions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScoreConversions.cpp; sourceTree = "<group>"; };
 		29A8E24F1EF0476200AD2478 /* ScoreConversions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScoreConversions.h; sourceTree = "<group>"; };
 		29A8E2521EF0476200AD2478 /* UnusedParameter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnusedParameter.h; sourceTree = "<group>"; };
@@ -5237,8 +5230,6 @@
 				2999A89A24CD0AEA004637BA /* PlaybackSound.h */,
 				29A8E24A1EF0476200AD2478 /* PositiveIntegerOrEmpty.cpp */,
 				29A8E24B1EF0476200AD2478 /* PositiveIntegerOrEmpty.h */,
-				29A8E24C1EF0476200AD2478 /* PreciseDecimal.cpp */,
-				29A8E24D1EF0476200AD2478 /* PreciseDecimal.h */,
 				29EAD7391F0EA96B00BDE782 /* ProcessingInstruction.cpp */,
 				29EAD73A1F0EA96B00BDE782 /* ProcessingInstruction.h */,
 				29A8E24E1EF0476200AD2478 /* ScoreConversions.cpp */,
@@ -7031,7 +7022,6 @@
 				29A8E7AC1EF0476400AD2478 /* Degree.cpp in Sources */,
 				29A8F3461EF0476800AD2478 /* PartNameDisplayAttributes.cpp in Sources */,
 				29A8E89C1EF0476400AD2478 /* DisplayTextOrAccidentalText.cpp in Sources */,
-				29A8FB7A1EF0476D00AD2478 /* PreciseDecimal.cpp in Sources */,
 				293B06F5249F0BB800429597 /* EnumsBuiltin.cpp in Sources */,
 				29A8EF901EF0476700AD2478 /* MetronomeRelationGroup.cpp in Sources */,
 				29A8F4E51EF0476900AD2478 /* RestAttributes.cpp in Sources */,
@@ -7705,7 +7695,6 @@
 				29A8E7AB1EF0476400AD2478 /* Degree.cpp in Sources */,
 				29A8F3451EF0476800AD2478 /* PartNameDisplayAttributes.cpp in Sources */,
 				29A8E89B1EF0476400AD2478 /* DisplayTextOrAccidentalText.cpp in Sources */,
-				29A8FB791EF0476D00AD2478 /* PreciseDecimal.cpp in Sources */,
 				293B06F4249F0BB800429597 /* EnumsBuiltin.cpp in Sources */,
 				29A8EF8F1EF0476700AD2478 /* MetronomeRelationGroup.cpp in Sources */,
 				29A8F4E41EF0476900AD2478 /* RestAttributes.cpp in Sources */,
@@ -8944,7 +8933,6 @@
 				29A800311EF0499300AD2478 /* Integers.cpp in Sources */,
 				29A800321EF0499300AD2478 /* NumberOrNormal.cpp in Sources */,
 				29A800331EF0499300AD2478 /* PositiveIntegerOrEmpty.cpp in Sources */,
-				29A800341EF0499300AD2478 /* PreciseDecimal.cpp in Sources */,
 				29A800351EF0499300AD2478 /* ScoreConversions.cpp in Sources */,
 				29A800371EF0499300AD2478 /* YesNoNumber.cpp in Sources */,
 				29A800381EF0499300AD2478 /* AccidentalMarkFunctions.cpp in Sources */,
@@ -9053,7 +9041,6 @@
 				29A8E7AE1EF0476400AD2478 /* Degree.cpp in Sources */,
 				29A8F3481EF0476800AD2478 /* PartNameDisplayAttributes.cpp in Sources */,
 				29A8E89E1EF0476400AD2478 /* DisplayTextOrAccidentalText.cpp in Sources */,
-				29A8FB7C1EF0476D00AD2478 /* PreciseDecimal.cpp in Sources */,
 				293B06F7249F0BB800429597 /* EnumsBuiltin.cpp in Sources */,
 				29A8EF921EF0476700AD2478 /* MetronomeRelationGroup.cpp in Sources */,
 				29A8F4E71EF0476900AD2478 /* RestAttributes.cpp in Sources */,
@@ -9727,7 +9714,6 @@
 				29A8E7AD1EF0476400AD2478 /* Degree.cpp in Sources */,
 				29A8F3471EF0476800AD2478 /* PartNameDisplayAttributes.cpp in Sources */,
 				29A8E89D1EF0476400AD2478 /* DisplayTextOrAccidentalText.cpp in Sources */,
-				29A8FB7B1EF0476D00AD2478 /* PreciseDecimal.cpp in Sources */,
 				293B06F6249F0BB800429597 /* EnumsBuiltin.cpp in Sources */,
 				29A8EF911EF0476700AD2478 /* MetronomeRelationGroup.cpp in Sources */,
 				29A8F4E61EF0476900AD2478 /* RestAttributes.cpp in Sources */,
