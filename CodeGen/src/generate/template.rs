@@ -14,6 +14,10 @@ pub const INTEGER_BUILTINS_CPP: &str = "integer_builtins.cpp.template";
 pub const INTEGER_BUILTINS_H: &str = "integer_builtins.h.template";
 pub const INTEGER_TYPE_CPP: &str = "integer_type.cpp.template";
 pub const INTEGER_TYPE_H: &str = "integer_type.h.template";
+pub const DECIMAL_BUILTINS_CPP: &str = "decimal_builtins.cpp.template";
+pub const DECIMAL_BUILTINS_H: &str = "decimal_builtins.h.template";
+pub const DECIMAL_TYPE_CPP: &str = "decimal_type.cpp.template";
+pub const DECIMAL_TYPE_H: &str = "decimal_type.h.template";
 
 lazy_static! {
     static ref DIR: PathBuf = manifest_dir().join("src").join("generate").join("data");
