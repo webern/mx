@@ -8,6 +8,7 @@
 #include <string>
 #include <memory>
 #include <cmath>
+#include <functional>
 
 namespace mx
 {

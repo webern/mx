@@ -332,6 +332,17 @@ namespace mx
             return value.toStream( os );
         }
 
+        std::string toString( const Decimal& value, unsigned short precision )
+        {
+            MX_UNUSED( precision );
+            return value.toString();
+        }
+
+        std::ostream& toStream( std::ostream& os, const Decimal& value, unsigned short precision )
+        {
+            MX_UNUSED( precision );
+            return value.toStream( os );
+        }
 
         std::ostream& operator<<( std::ostream& os, const Decimal& value )
         {
