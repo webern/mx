@@ -94,10 +94,40 @@ TEST( Decimal06, Decimals )
     CHECK_DOUBLES_EQUAL( expected, actual, kThreshold )
 }
 
+using functype = std::function<DecimalType (DecimalType)>;
+using minmax = std::pair<functype, functype>;
+
+inline minmax makeFuncs( DecimalType min, DecimalType max )
+{
+    const auto fmin = [min]( DecimalType value )
+    {
+        if( value < min )
+        {
+            return min;
+        }
+        return value;
+    };
+    const auto fmax = [max]( DecimalType value )
+    {
+        if( value > max )
+        {
+            return max;
+        }
+        return value;
+    };
+    return std::make_pair<functype, functype>( functype( fmin ), functype( fmax ) );
+}
+
+inline DecimalRange decimalRange( DecimalType min, DecimalType max, DecimalType value )
+{
+    const auto fpair = makeFuncs( min, max );
+    return DecimalRange{ fpair.first, fpair.second, value };
+}
+
 // class DecimalRange : public Decimal
 TEST( DecimalRange01, Decimals )
 {
-    DecimalRange d( -1, 1, 0 );
+    auto d = decimalRange( -1, 1, 0 );
     DecimalType expected = 0;
     DecimalType actual = d.getValue();
     CHECK_DOUBLES_EQUAL( expected, actual, kThreshold )
@@ -105,7 +135,7 @@ TEST( DecimalRange01, Decimals )
 
 TEST( DecimalRange02, Decimals )
 {
-    DecimalRange d( -1, 1, 1.234 );
+    auto d = decimalRange( -1, 1, 1.234 );
     DecimalType expected = 1;
     DecimalType actual = d.getValue();
     CHECK_DOUBLES_EQUAL( expected, actual, kThreshold )
@@ -113,7 +143,7 @@ TEST( DecimalRange02, Decimals )
 
 TEST( DecimalRange02b, Decimals )
 {
-    DecimalRange d( -1, 123456789013, 123456789012.123456789012 );
+    auto d = decimalRange( -1, 123456789013, 123456789012.123456789012 );
     DecimalType expected = 123456789012.123456789012;
     DecimalType actual = d.getValue();
     CHECK_DOUBLES_EQUAL( expected, actual, kThreshold )
@@ -121,7 +151,7 @@ TEST( DecimalRange02b, Decimals )
 
 TEST( DecimalRange03, Decimals )
 {
-    DecimalRange d( -100, 100, 1.234 );
+    auto d = decimalRange( -100, 100, 1.234 );
     d.setValue( 0.00000384 );
     DecimalType expected = 0.00000384;
     DecimalType actual = d.getValue();
@@ -130,7 +160,7 @@ TEST( DecimalRange03, Decimals )
 
 TEST( DecimalRange04, Decimals )
 {
-    DecimalRange d( -1, 1, 1.234 );
+    auto d = decimalRange( -1, 1, 1.234 );
     d.setValue( 0.00000384109 );
     std::string expected = "0.000004";
     std::string actual = toString( d, 11 );
@@ -149,7 +179,7 @@ TEST( DecimalRange04, Decimals )
 
 TEST( DecimalRange05, Decimals )
 {
-    DecimalRange d( -1, 1, 1.234 );
+    auto d = decimalRange( -1, 1, 1.234 );
     d.setValue( 0.00000384 );
     d.parse( "-0.3164978546312" );
     DecimalType expected = -0.3164978546312;
@@ -159,7 +189,7 @@ TEST( DecimalRange05, Decimals )
 
 TEST( DecimalRange06, Decimals )
 {
-    DecimalRange d( -1, 1, 1.234 );
+    auto d = decimalRange( -1, 1, 1.234 );
     d.setValue( 0.00000384 );
     d.parse( "- 435.249" );
     DecimalType expected = 0.00000384;
