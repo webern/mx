@@ -8,87 +8,134 @@
 #include <string>
 #include <memory>
 #include <cmath>
+#include <functional>
 
 namespace mx
 {
     namespace core
     {
         
-        /* alias for the floating point size used by this library.
-         Note, "decimal" is synonymous with "float" in this context. */
+        /// The type we use for non-integral numbers in this library.
         using DecimalType = long double;
+        constexpr const DecimalType DecimalMin = std::numeric_limits<DecimalType>::min();
+        constexpr const DecimalType DecimalMax = std::numeric_limits<DecimalType>::max();
         
-        /* decimals will be rounded to this number of places,
-           you must recompile if this number is changed */
-        const unsigned short DEFAULT_PRECISION = 6;
+        /// Decimals will be rounded to this number of places.
+        constexpr const unsigned short DEFAULT_PRECISION = 6;
         
-        /* when a Decimal's range is Exclusive and you try to assign
-         out-of-range, this amount will be added to the exclusive minimum.
-         For example if a Decimal is constrainted to be a positive number,
-         and you try to assign the value 0, the value will by set to 
-         NON_ZERO_AMOUNT instead */
-        const DecimalType NON_ZERO_AMOUNT = 0.000001;
-        
+        /// When a Decimal's range is Exclusive and you try to assign a number
+        /// that is out-of-range, this amount will be added to the exclusive
+        /// minimum. For example if a Decimal is constrained to be a positive
+        /// number, and you try to assign the value 0, the value will be set to
+        /// NON_ZERO_AMOUNT instead.
+        constexpr const DecimalType NON_ZERO_AMOUNT = 0.000001;
+
+        using DecimalType = long double;
+
+        /// @brief A precision representation of a decimal number
+        ///
+        /// @detailed Represents a decimal number with precision. Clamps
+        /// if an attempt is made to assign an unrepresentable number.
+        /// Rounds input values to the given MaxDecimalDigits or if a
+        /// change in precision would lead to data loss.  Precision can
+        /// be changed at runtime. A number such as 123.4567 would require
+        /// a minimum precision setting of MaxIntegerDigits = 3,
+        /// MaxDecimalDigits = 4.
+        ///
+        class PreciseDecimal
+        {
+        public:
+            PreciseDecimal( short inMaxIntegerDigits, short inMaxDecimalDigits, DecimalType inValue );
+            PreciseDecimal( short inMaxIntegerDigits, short inMaxDecimalDigits );
+            PreciseDecimal( DecimalType inValue);
+            PreciseDecimal();
+            DecimalType getValue() const;
+            void setValue( DecimalType inValue );
+            short getMaxIntegerDigits() const;
+            short getMaxDecimalDigits() const;
+            DecimalType getMaxExpressibleNumber() const;
+            DecimalType getMinExpressibleNumber() const;
+            std::ostream& toStream( std::ostream& os ) const;
+            std::string toString() const;
+
+        private:
+            bool myIsNegative;
+            uint64_t myInteger;
+            uint64_t myDecimal;
+            short myMaxIntegerDigits;
+            short myMaxDecimalDigits;
+            uint64_t myMaxExpressibleInteger;
+            uint64_t myMaxExpressibleDecimal;
+
+        private:
+            void setMaxIntegerDigits( short inNumDigits );
+            void setMaxDecimalDigits( short inNumDigits );
+            static decltype( myInteger ) findMax( short inNumDigits );
+            void setMaxExpressibleInteger();
+            void setMaxExpressibleDecimal();
+            void setMaxExpressibleNumber();
+            static DecimalType express( uint64_t inInteger, uint64_t inDecimal, short inMaxDecimalDigits, bool inIsNegative );
+
+        private:
+            static constexpr const short DEFAULT_MAX_INTEGER_DIGITS = 10;
+            static constexpr const short DEFAULT_MAX_DECIMAL_DIGITS = 6;
+            static constexpr const short MAX_STORAGE_TYPE_DIGITS = 19;
+            static constexpr const uint64_t MAX_STORAGE_TYPE_VALUE = 9999999999999999999ULL;
+        };
+
         class Decimal
         {
         public:
-            explicit Decimal( DecimalType value );
             Decimal();
-            virtual ~Decimal();
-            Decimal( const Decimal& other );
-            Decimal( Decimal&& other );
-            Decimal& operator=( const Decimal& other );
-            Decimal& operator=( Decimal&& other );
-            
+            explicit Decimal( DecimalType value );
+            virtual ~Decimal() = default;
+            Decimal( const Decimal& ) = default;
+            Decimal( Decimal&& ) = default;
+            Decimal& operator=( const Decimal& ) = default;
+            Decimal& operator=( Decimal&& ) = default;
             DecimalType getValue() const;
             virtual void setValue( DecimalType value );
-            virtual void parse( const std::string& value );
+            void parse( const std::string& value );
             std::string toString() const;
             std::ostream& toStream( std::ostream& os ) const;
-
         private:
-            class impl;
-            std::unique_ptr<impl> myImpl;
+            PreciseDecimal myValue;
         };
         
-        std::string toString( const Decimal& value, unsigned int precision = DEFAULT_PRECISION );
-		std::ostream& toStream( std::ostream& os, const Decimal& value, unsigned int precision = DEFAULT_PRECISION );
+        std::string toString( const Decimal& value, unsigned short precision = DEFAULT_PRECISION );
+		std::ostream& toStream( std::ostream& os, const Decimal& value, unsigned short precision = DEFAULT_PRECISION );
 		std::ostream& operator<<( std::ostream& os, const Decimal& value );
-        
+
+		/// This type is an implementation detail. It represent a function that
+		/// clamps a DecimalType to a range.
+		using DecimalClamp = std::function<DecimalType(DecimalType)>;
+
+        /// A 'clamped', or 'ranged' Decimal where the value of min and max are
+        /// governed by the DecimalClamp functions.
         class DecimalRange : public Decimal
         {
         public:
-            explicit DecimalRange( DecimalType min, DecimalType max, DecimalType value );
-            // virtual ~DecimalRange();
-            DecimalRange( const DecimalRange& other ) = default;
-            DecimalRange( DecimalRange&& other );
-            DecimalRange& operator=( const DecimalRange& other );
-            DecimalRange& operator=( DecimalRange&& other );
+            explicit DecimalRange( DecimalClamp min, DecimalClamp max, DecimalType value );
             virtual void setValue( DecimalType value );
-            virtual void parse( const std::string& value );
         private:
-            const DecimalType myMin;
-            const DecimalType myMax;
+            DecimalClamp myMinClamp;
+            DecimalClamp myMaxClamp;
         };
         
         /* MIN = 0 EXCLUSIVE!, MAX = N/A, DEFAULT = 1 */
-        class PositiveDecimal: public Decimal
+        class PositiveDecimal: public DecimalRange
         {
         public:
             explicit PositiveDecimal( DecimalType value );
             PositiveDecimal(); /* Initializes to 1 */
-            virtual void setValue( DecimalType value );
-            virtual void parse( const std::string& value );
         };
         
         /* MIN = 0, MAX = N/A, DEFAULT = 0 */
-        class NonNegativeDecimal: public Decimal
+        class NonNegativeDecimal: public DecimalRange
         {
         public:
             explicit NonNegativeDecimal( DecimalType value );
             NonNegativeDecimal();
-            virtual void setValue( DecimalType value );
-            virtual void parse( const std::string& value );
         };
         
         /* MIN = 0, MAX = N/A, DEFAULT = 0 */
@@ -117,14 +164,11 @@ namespace mx
         using TenthsValue = Decimal;
         
         /* MIN = 2, MAX = N/A, DEFAULT = 2 */
-        class TrillBeats: public Decimal
+        class TrillBeats: public DecimalRange
         {
         public:
             explicit TrillBeats( DecimalType value );
             TrillBeats();
-            // virtual ~TrillBeats();
-            virtual void setValue( DecimalType value );
-            virtual void parse( const std::string& value );
         };
     }
 }
