@@ -124,11 +124,11 @@ namespace mx
         /// both for MIDI interoperability and to avoid roundoff errors.
         ///
         /// Range: min=None, max=None
-        class Divisions : public DecimalRange
+        class DivisionsValue : public DecimalRange
         {
         public:
-            explicit Divisions( DecimalType value );
-            Divisions();
+            explicit DivisionsValue( DecimalType value );
+            DivisionsValue();
         };
 
         /// The millimeters type is a number representing millimeters. This is used in the
@@ -210,11 +210,11 @@ namespace mx
         /// adjusted by the staff-size element.
         ///
         /// Range: min=None, max=None
-        class Tenths : public DecimalRange
+        class TenthsValue : public DecimalRange
         {
         public:
-            explicit Tenths( DecimalType value );
-            Tenths();
+            explicit TenthsValue( DecimalType value );
+            TenthsValue();
         };
 
         /// The trill-beats type specifies the beats used in a trill-sound or bend-sound

@@ -55,6 +55,9 @@ pub fn suffixed_value_names() -> HashMap<String, String> {
     names.insert("accordion-middle".to_owned(), "accordion-middle-value".to_owned());
     names.insert("fifths".to_owned(), "fifths-value".to_owned());
     names.insert("octave".to_owned(), "octave-value".to_owned());
+    names.insert("tenths".to_owned(), "tenths-value".to_owned());
+    names.insert("divisions".to_owned(), "divisions-value".to_owned());
+    names.insert("positive-divisions".to_owned(), "positive-divisions-value".to_owned());
     names
 }
 

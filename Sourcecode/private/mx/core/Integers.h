@@ -14,8 +14,8 @@ namespace mx
     {
         /// Alias for the int type used by this library.
         using IntType = int;
-        constexpr const IntType IntMax = std::numeric_limits<IntType>::max();
         constexpr const IntType IntMin = std::numeric_limits<IntType>::min();
+        constexpr const IntType IntMax = std::numeric_limits<IntType>::max();
 
         /// A base class for all integer types.
         class Integer

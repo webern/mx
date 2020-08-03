@@ -415,14 +415,14 @@ namespace mx
 #define MXMAXIN( maxbound ) DecimalClamp( []( DecimalType value ){ return maxInclusive( maxbound, value ); } )
 #define MX_NOOP DecimalClamp( noOp )
 
-        Divisions::Divisions( DecimalType value )
+        DivisionsValue::DivisionsValue( DecimalType value )
         : DecimalRange{ MX_NOOP, MX_NOOP, value }
         {
 
         }
 
-        Divisions::Divisions()
-        : Divisions{ 0.0 }
+        DivisionsValue::DivisionsValue()
+        : DivisionsValue{ 0.0 }
         {
 
         }
@@ -499,14 +499,14 @@ namespace mx
 
         }
 
-        Tenths::Tenths( DecimalType value )
+        TenthsValue::TenthsValue( DecimalType value )
         : DecimalRange{ MX_NOOP, MX_NOOP, value }
         {
 
         }
 
-        Tenths::Tenths()
-        : Tenths{ 0.0 }
+        TenthsValue::TenthsValue()
+        : TenthsValue{ 0.0 }
         {
 
         }
