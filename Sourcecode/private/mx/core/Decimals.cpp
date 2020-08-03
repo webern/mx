@@ -406,12 +406,14 @@ namespace mx
             Decimal::setValue( myMinClamp( myMaxClamp( value ) ) );
         }
 
+#define MXMINEX( minbound ) DecimalClamp( []( DecimalType value ){ return minExclusive( minbound, value ); } )
+#define MXMAXEX( maxbound ) DecimalClamp( []( DecimalType value ){ return maxExclusive( maxbound, value ); } )
+#define MXMININ( minbound ) DecimalClamp( []( DecimalType value ){ return minInclusive( minbound, value ); } )
+#define MXMAXIN( maxbound ) DecimalClamp( []( DecimalType value ){ return maxInclusive( maxbound, value ); } )
+#define MX_NOOP DecimalClamp( noOp )
+
         PositiveDecimal::PositiveDecimal( DecimalType value )
-        : DecimalRange{
-            std::function<DecimalType(DecimalType)>( []( DecimalType value ){ return minExclusive( 0.0, value ); } ),
-            std::function<DecimalType(DecimalType)>( noOp ),
-            value
-        }
+        : DecimalRange{ MXMINEX( 0.0 ), MX_NOOP, value }
         {
 
         }
@@ -423,11 +425,7 @@ namespace mx
         }
 
         NonNegativeDecimal::NonNegativeDecimal( DecimalType value )
-        : DecimalRange{
-            std::function<DecimalType(DecimalType)>( []( DecimalType value ){ return minInclusive( 0.0, value ); } ),
-            std::function<DecimalType(DecimalType)>( noOp ),
-            value
-        }
+        : DecimalRange{ MXMININ( 0.0 ), MX_NOOP, value }
         {
 
         }
@@ -440,11 +438,7 @@ namespace mx
 
         
         Percent::Percent( DecimalType value )
-        : DecimalRange{
-            std::function<DecimalType(DecimalType)>( []( DecimalType value ){ return minInclusive( 0.0, value ); } ),
-            std::function<DecimalType(DecimalType)>( []( DecimalType value ){ return maxInclusive( 100.0, value ); } ),
-            value
-        }
+        : DecimalRange{ MXMININ( 0.0 ), MXMAXIN( 100.0 ), value }
         {
 
         }
@@ -456,11 +450,7 @@ namespace mx
         }
         
         RotationDegrees::RotationDegrees( DecimalType value )
-        : DecimalRange{
-            std::function<DecimalType(DecimalType)>( []( DecimalType value ){ return minInclusive( -180.0, value ); } ),
-            std::function<DecimalType(DecimalType)>( []( DecimalType value ){ return maxInclusive( 180.0, value ); } ),
-            value
-        }
+        : DecimalRange{ MXMININ( -180.0 ), MXMAXIN( 180.0 ), value }
         {
 
         }
@@ -474,11 +464,7 @@ namespace mx
 
         
         TrillBeats::TrillBeats( DecimalType value )
-        : DecimalRange{
-            std::function<DecimalType(DecimalType)>( []( DecimalType value ){ return minInclusive( 2.0, value ); } ),
-            std::function<DecimalType(DecimalType)>( noOp ),
-            value
-        }
+        : DecimalRange{ MXMININ( 2.0 ), MX_NOOP, value }
         {
             this->setValue( value );
         }
