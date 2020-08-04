@@ -24,6 +24,7 @@ impl Writer {
         let mut enums = Vec::new();
         let mut decimals = Vec::new();
         let mut integers = Vec::new();
+        let mut unions = Vec::new();
         for model in &self.models {
             match model {
                 Model::Enumeration(e) => enums.push(e),
@@ -46,11 +47,14 @@ impl Writer {
                     ScalarNumeric::Decimal(d) => decimals.push(d.to_owned()),
                     ScalarNumeric::Integer(i) => integers.push(i.to_owned()),
                 },
+                Model::DerivedSimpleType(derived_from) => panic!("{:?}", derived_from),
+                Model::UnionSimpleType(u) => unions.push(u),
             }
         }
         self.write_enums(&mut enums)?;
         self.write_integers(integers)?;
         self.write_decimals(decimals)?;
+        self.write_unions(unions.as_slice())?;
         Ok(())
     }
 }

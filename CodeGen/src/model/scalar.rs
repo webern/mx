@@ -1,7 +1,7 @@
 use crate::error::Result;
 use crate::model::builtin::BuiltinString;
 use crate::model::symbol::Symbol;
-use crate::xsd::primitives::{Character, Numeric};
+use crate::xsd::primitives::{BaseType, Character, Numeric};
 use std::fmt::Debug;
 use std::num::NonZeroU64;
 
@@ -72,4 +72,18 @@ where
     pub base_type: Numeric,
     pub documentation: String,
     pub range: Range<T>,
+}
+
+#[derive(Debug, Clone, PartialEq, PartialOrd, Default)]
+pub struct DerivedSimpleTypeData {
+    pub name: Symbol,
+    pub base_type: String,
+    pub documentation: String,
+}
+
+#[derive(Debug, Clone, PartialEq, PartialOrd, Default)]
+pub struct UnionData {
+    pub name: Symbol,
+    pub members: Vec<BaseType>,
+    pub documentation: String,
 }

@@ -12,7 +12,7 @@ pub mod transform;
 
 use crate::model::create::{Create, CreateError, CreateResult};
 use crate::model::enumeration::Enumeration;
-use crate::model::scalar::{ScalarNumeric, ScalarString};
+use crate::model::scalar::{DerivedSimpleTypeData, ScalarNumeric, ScalarString, UnionData};
 use crate::model::symbol::Symbol;
 use crate::xsd::restriction::Facet;
 use crate::xsd::simple_type::{Payload, SimpleType};
@@ -27,4 +27,6 @@ pub enum Model {
     ScalarString(ScalarString),
     ScalarNumber(ScalarNumeric),
     CustomScalarString(ScalarString),
+    DerivedSimpleType(DerivedSimpleTypeData),
+    UnionSimpleType(UnionData),
 }

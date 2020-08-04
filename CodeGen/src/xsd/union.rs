@@ -2,13 +2,14 @@ use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::constants::{ANNOTATION, MEMBER_TYPES, NAME, UNION};
 use crate::xsd::id::{Id, Lineage, RootNodeType};
+use crate::xsd::primitives::{BaseType, PrefixedParse};
 use crate::xsd::Xsd;
 
 #[derive(Clone, Debug)]
 pub struct Union {
     pub id: Id,
     pub annotation: Option<Annotation>,
-    pub members: Vec<String>,
+    pub members: Vec<BaseType>,
 }
 
 impl Union {
@@ -41,10 +42,15 @@ impl Union {
                 break;
             }
         }
+        let mut members = Vec::new();
+        for item in &items {
+            let base_type = BaseType::parse_prefixed(item.as_str(), xsd.prefix.as_str())?;
+            members.push(base_type);
+        }
         Ok(Union {
             id,
             annotation,
-            members: items,
+            members,
         })
     }
 }

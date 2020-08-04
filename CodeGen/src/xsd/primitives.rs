@@ -331,6 +331,393 @@ impl Display for DateTime {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+// Conveniences
+
+impl Primitive {
+    pub fn is_id(&self) -> bool {
+        match self {
+            Primitive::Character(x) => *x == Character::ID,
+            _ => false,
+        }
+    }
+    pub fn is_idref(&self) -> bool {
+        match self {
+            Primitive::Character(x) => *x == Character::IDREF,
+            _ => false,
+        }
+    }
+    pub fn is_language(&self) -> bool {
+        match self {
+            Primitive::Character(x) => *x == Character::Language,
+            _ => false,
+        }
+    }
+    pub fn is_name(&self) -> bool {
+        match self {
+            Primitive::Character(x) => *x == Character::Name,
+            _ => false,
+        }
+    }
+    pub fn is_nmtoken(&self) -> bool {
+        match self {
+            Primitive::Character(x) => *x == Character::NmToken,
+            _ => false,
+        }
+    }
+    pub fn is_normalized_string(&self) -> bool {
+        match self {
+            Primitive::Character(x) => *x == Character::NormalizedString,
+            _ => false,
+        }
+    }
+    pub fn is_string(&self) -> bool {
+        match self {
+            Primitive::Character(x) => *x == Character::String,
+            _ => false,
+        }
+    }
+    pub fn is_token(&self) -> bool {
+        match self {
+            Primitive::Character(x) => *x == Character::Token,
+            _ => false,
+        }
+    }
+    pub fn is_byte(&self) -> bool {
+        match self {
+            Primitive::Numeric(x) => *x == Numeric::Byte,
+            _ => false,
+        }
+    }
+    pub fn is_decimal(&self) -> bool {
+        match self {
+            Primitive::Numeric(x) => *x == Numeric::Decimal,
+            _ => false,
+        }
+    }
+    pub fn is_int(&self) -> bool {
+        match self {
+            Primitive::Numeric(x) => *x == Numeric::Int,
+            _ => false,
+        }
+    }
+    pub fn is_integer(&self) -> bool {
+        match self {
+            Primitive::Numeric(x) => *x == Numeric::Integer,
+            _ => false,
+        }
+    }
+    pub fn is_long(&self) -> bool {
+        match self {
+            Primitive::Numeric(x) => *x == Numeric::Long,
+            _ => false,
+        }
+    }
+    pub fn is_negative_integer(&self) -> bool {
+        match self {
+            Primitive::Numeric(x) => *x == Numeric::NegativeInteger,
+            _ => false,
+        }
+    }
+    pub fn is_non_negative_integer(&self) -> bool {
+        match self {
+            Primitive::Numeric(x) => *x == Numeric::NonNegativeInteger,
+            _ => false,
+        }
+    }
+    pub fn is_non_positive_integer(&self) -> bool {
+        match self {
+            Primitive::Numeric(x) => *x == Numeric::NonPositiveInteger,
+            _ => false,
+        }
+    }
+    pub fn is_positive_integer(&self) -> bool {
+        match self {
+            Primitive::Numeric(x) => *x == Numeric::PositiveInteger,
+            _ => false,
+        }
+    }
+    pub fn is_short(&self) -> bool {
+        match self {
+            Primitive::Numeric(x) => *x == Numeric::Short,
+            _ => false,
+        }
+    }
+    pub fn is_unsigned_long(&self) -> bool {
+        match self {
+            Primitive::Numeric(x) => *x == Numeric::UnsignedLong,
+            _ => false,
+        }
+    }
+    pub fn is_unsigned_int(&self) -> bool {
+        match self {
+            Primitive::Numeric(x) => *x == Numeric::UnsignedInt,
+            _ => false,
+        }
+    }
+    pub fn is_unsigned_short(&self) -> bool {
+        match self {
+            Primitive::Numeric(x) => *x == Numeric::UnsignedShort,
+            _ => false,
+        }
+    }
+    pub fn is_unsigned_byte(&self) -> bool {
+        match self {
+            Primitive::Numeric(x) => *x == Numeric::UnsignedByte,
+            _ => false,
+        }
+    }
+    pub fn is_date(&self) -> bool {
+        match self {
+            Primitive::DateTime(x) => *x == DateTime::Date,
+            _ => false,
+        }
+    }
+    pub fn is_datetime(&self) -> bool {
+        match self {
+            Primitive::DateTime(x) => *x == DateTime::DateTime,
+            _ => false,
+        }
+    }
+    pub fn is_duration(&self) -> bool {
+        match self {
+            Primitive::DateTime(x) => *x == DateTime::Duration,
+            _ => false,
+        }
+    }
+    pub fn is_gday(&self) -> bool {
+        match self {
+            Primitive::DateTime(x) => *x == DateTime::GDay,
+            _ => false,
+        }
+    }
+    pub fn is_gmonth(&self) -> bool {
+        match self {
+            Primitive::DateTime(x) => *x == DateTime::GMonth,
+            _ => false,
+        }
+    }
+    pub fn is_gmonthday(&self) -> bool {
+        match self {
+            Primitive::DateTime(x) => *x == DateTime::GMonthDay,
+            _ => false,
+        }
+    }
+    pub fn is_gyear(&self) -> bool {
+        match self {
+            Primitive::DateTime(x) => *x == DateTime::GYear,
+            _ => false,
+        }
+    }
+    pub fn is_gyearmonth(&self) -> bool {
+        match self {
+            Primitive::DateTime(x) => *x == DateTime::GYearMonth,
+            _ => false,
+        }
+    }
+    pub fn is_time(&self) -> bool {
+        match self {
+            Primitive::DateTime(x) => *x == DateTime::Time,
+            _ => false,
+        }
+    }
+}
+
+impl BaseType {
+    pub fn is_other(&self) -> bool {
+        match self {
+            BaseType::Primitive(_) => false,
+            BaseType::Other(_) => true,
+        }
+    }
+    pub fn is_id(&self) -> bool {
+        match self {
+            BaseType::Primitive(x) => x.is_id(),
+            BaseType::Other(_) => false,
+        }
+    }
+    pub fn is_idref(&self) -> bool {
+        match self {
+            BaseType::Primitive(x) => x.is_idref(),
+            BaseType::Other(_) => false,
+        }
+    }
+    pub fn is_language(&self) -> bool {
+        match self {
+            BaseType::Primitive(x) => x.is_language(),
+            BaseType::Other(_) => false,
+        }
+    }
+    pub fn is_name(&self) -> bool {
+        match self {
+            BaseType::Primitive(x) => x.is_name(),
+            BaseType::Other(_) => false,
+        }
+    }
+    pub fn is_nmtoken(&self) -> bool {
+        match self {
+            BaseType::Primitive(x) => x.is_nmtoken(),
+            BaseType::Other(_) => false,
+        }
+    }
+    pub fn is_normalized_string(&self) -> bool {
+        match self {
+            BaseType::Primitive(x) => x.is_normalized_string(),
+            BaseType::Other(_) => false,
+        }
+    }
+    pub fn is_string(&self) -> bool {
+        match self {
+            BaseType::Primitive(x) => x.is_string(),
+            BaseType::Other(_) => false,
+        }
+    }
+    pub fn is_token(&self) -> bool {
+        match self {
+            BaseType::Primitive(x) => x.is_token(),
+            BaseType::Other(_) => false,
+        }
+    }
+    pub fn is_byte(&self) -> bool {
+        match self {
+            BaseType::Primitive(x) => x.is_byte(),
+            BaseType::Other(_) => false,
+        }
+    }
+    pub fn is_decimal(&self) -> bool {
+        match self {
+            BaseType::Primitive(x) => x.is_decimal(),
+            BaseType::Other(_) => false,
+        }
+    }
+    pub fn is_int(&self) -> bool {
+        match self {
+            BaseType::Primitive(x) => x.is_int(),
+            BaseType::Other(_) => false,
+        }
+    }
+    pub fn is_integer(&self) -> bool {
+        match self {
+            BaseType::Primitive(x) => x.is_integer(),
+            BaseType::Other(_) => false,
+        }
+    }
+    pub fn is_long(&self) -> bool {
+        match self {
+            BaseType::Primitive(x) => x.is_long(),
+            BaseType::Other(_) => false,
+        }
+    }
+    pub fn is_negative_integer(&self) -> bool {
+        match self {
+            BaseType::Primitive(x) => x.is_negative_integer(),
+            BaseType::Other(_) => false,
+        }
+    }
+    pub fn is_non_negative_integer(&self) -> bool {
+        match self {
+            BaseType::Primitive(x) => x.is_non_negative_integer(),
+            BaseType::Other(_) => false,
+        }
+    }
+    pub fn is_non_positive_integer(&self) -> bool {
+        match self {
+            BaseType::Primitive(x) => x.is_non_positive_integer(),
+            BaseType::Other(_) => false,
+        }
+    }
+    pub fn is_positive_integer(&self) -> bool {
+        match self {
+            BaseType::Primitive(x) => x.is_positive_integer(),
+            BaseType::Other(_) => false,
+        }
+    }
+    pub fn is_short(&self) -> bool {
+        match self {
+            BaseType::Primitive(x) => x.is_short(),
+            BaseType::Other(_) => false,
+        }
+    }
+    pub fn is_unsigned_long(&self) -> bool {
+        match self {
+            BaseType::Primitive(x) => x.is_unsigned_long(),
+            BaseType::Other(_) => false,
+        }
+    }
+    pub fn is_unsigned_int(&self) -> bool {
+        match self {
+            BaseType::Primitive(x) => x.is_unsigned_int(),
+            BaseType::Other(_) => false,
+        }
+    }
+    pub fn is_unsigned_short(&self) -> bool {
+        match self {
+            BaseType::Primitive(x) => x.is_unsigned_short(),
+            BaseType::Other(_) => false,
+        }
+    }
+    pub fn is_unsigned_byte(&self) -> bool {
+        match self {
+            BaseType::Primitive(x) => x.is_unsigned_byte(),
+            BaseType::Other(_) => false,
+        }
+    }
+    pub fn is_date(&self) -> bool {
+        match self {
+            BaseType::Primitive(x) => x.is_date(),
+            BaseType::Other(_) => false,
+        }
+    }
+    pub fn is_datetime(&self) -> bool {
+        match self {
+            BaseType::Primitive(x) => x.is_datetime(),
+            BaseType::Other(_) => false,
+        }
+    }
+    pub fn is_duration(&self) -> bool {
+        match self {
+            BaseType::Primitive(x) => x.is_duration(),
+            BaseType::Other(_) => false,
+        }
+    }
+    pub fn is_gday(&self) -> bool {
+        match self {
+            BaseType::Primitive(x) => x.is_gday(),
+            BaseType::Other(_) => false,
+        }
+    }
+    pub fn is_gmonth(&self) -> bool {
+        match self {
+            BaseType::Primitive(x) => x.is_gmonth(),
+            BaseType::Other(_) => false,
+        }
+    }
+    pub fn is_gmonthday(&self) -> bool {
+        match self {
+            BaseType::Primitive(x) => x.is_gmonthday(),
+            BaseType::Other(_) => false,
+        }
+    }
+    pub fn is_gyear(&self) -> bool {
+        match self {
+            BaseType::Primitive(x) => x.is_gyear(),
+            BaseType::Other(_) => false,
+        }
+    }
+    pub fn is_gyearmonth(&self) -> bool {
+        match self {
+            BaseType::Primitive(x) => x.is_gyearmonth(),
+            BaseType::Other(_) => false,
+        }
+    }
+    pub fn is_time(&self) -> bool {
+        match self {
+            BaseType::Primitive(x) => x.is_time(),
+            BaseType::Other(_) => false,
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 // Helpers
 
 fn split_raw_str(raw_str: &str) -> (&str, &str) {
