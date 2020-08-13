@@ -10,6 +10,8 @@ use std::path::{Path, PathBuf};
 
 pub const CORE_CPP: &str = "core.cpp.template";
 pub const CORE_H: &str = "core.h.template";
+pub const ENUM_CPP: &str = "enum.cpp.template";
+pub const ENUM_H: &str = "enum.h.template";
 pub const INTEGER_BUILTINS_CPP: &str = "integer_builtins.cpp.template";
 pub const INTEGER_BUILTINS_H: &str = "integer_builtins.h.template";
 pub const INTEGER_TYPE_CPP: &str = "integer_type.cpp.template";

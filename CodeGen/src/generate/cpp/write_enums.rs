@@ -1,8 +1,12 @@
 use crate::error::Result;
+use crate::generate::cpp::cpp_template::{render_core_cpp, render_core_h};
 use crate::generate::cpp::writer::Writer;
+use crate::generate::template::{render, ENUM_CPP, ENUM_H};
 use crate::model::enumeration::{Enumeration, OtherField};
 use crate::model::Model;
-use crate::utils::string_stuff::{camel_case, linestart, pascal_case, sep, write_documentation, Altered, Symbol};
+use crate::utils::string_stuff::{
+    camel_case, documentation, linestart, pascal_case, sep, write_documentation, Altered, Symbol,
+};
 use indexmap::set::IndexSet;
 use std::collections::HashMap;
 use std::fs::OpenOptions;
@@ -36,21 +40,53 @@ impl Writer {
             let b = b.name.pascal();
             a.cmp(b)
         });
-        let mut hwrite = wrap!(self.open_enums_h())?;
-        let mut cwrite = wrap!(self.open_enums_cpp())?;
-        for (i, &enumer) in enumerations.iter().enumerate() {
-            let is_last = i == enumerations.len() - 1;
-            wrap!(self.write_enum_h(enumer, &mut hwrite))?;
-            if !is_last {
-                wrap!(writeln!(hwrite, ""))?;
+        let mut contents_h = String::new();
+        let mut contents_cpp = String::new();
+        for (i, enumeration) in enumerations.iter().enumerate() {
+            let enumeration = *enumeration;
+            let first = i == 0;
+            let mut data = HashMap::new();
+            data.insert("classname", enumeration.name.pascal().to_owned());
+            data.insert("documentation", documentation(&enumeration.documentation, 2)?);
+            data.insert("enum_members_declare", enum_members_declare(enumeration));
+            data.insert("enum_members_parse", enum_members_parse(enumeration));
+            data.insert("enum_members_to_string", enum_members_to_string(enumeration));
+            let rendered_h = render(ENUM_H, &data)?;
+            if !first {
+                contents_h.push('\n');
+                contents_h.push('\n');
             }
-            wrap!(self.write_enum_cpp(enumer, &mut cwrite))?;
-            if !is_last {
-                wrap!(writeln!(cwrite, ""))?;
+            contents_h.push_str(&rendered_h);
+            let rendered_cpp = render(ENUM_CPP, &data)?;
+            if !first {
+                contents_cpp.push('\n');
+                contents_cpp.push('\n');
             }
+            contents_cpp.push_str(&rendered_cpp);
         }
-        wrap!(self.close_enums_h(&mut hwrite))?;
-        wrap!(self.close_enums_cpp(&mut cwrite))?;
+        let file_h = render_core_h(
+            contents_h,
+            Some(&mut ["mx/core/EnumsBuiltin.h"]),
+            Some(&mut ["iostream", "string"]),
+        )?;
+        let file_cpp = render_core_cpp(contents_cpp, Some("mx/core/Enums.h"), None, Some(&mut ["sstream"]))?;
+        wrap!(std::fs::write(&self.paths.enums_h, file_h))?;
+        wrap!(std::fs::write(&self.paths.enums_cpp, file_cpp))?;
+
+        //
+        // for (i, &enumer) in enumerations.iter().enumerate() {
+        //     let is_last = i == enumerations.len() - 1;
+        //     wrap!(self.write_enum_h(enumer, &mut hwrite))?;
+        //     if !is_last {
+        //         wrap!(writeln!(hwrite, ""))?;
+        //     }
+        //     wrap!(self.write_enum_cpp(enumer, &mut cwrite))?;
+        //     if !is_last {
+        //         wrap!(writeln!(cwrite, ""))?;
+        //     }
+        // }
+        // wrap!(self.close_enums_h(&mut hwrite))?;
+        // wrap!(self.close_enums_cpp(&mut cwrite))?;
         Ok(())
     }
 
@@ -85,7 +121,10 @@ impl Writer {
 
     fn open_enums_cpp(&self) -> std::io::Result<impl Write> {
         let _igore_error = std::fs::remove_file(&self.paths.enums_cpp);
-        let mut f = OpenOptions::new().write(true).create(true).open(&self.paths.enums_cpp)?;
+        let mut f = OpenOptions::new()
+            .write(true)
+            .create(true)
+            .open(&self.paths.enums_cpp)?;
         l!(&mut f, 0, "// MusicXML Class Library")?;
         l!(&mut f, 0, "// Copyright (c) by Matthew James Briggs")?;
         l!(&mut f, 0, "// Distributed under the MIT License")?;
@@ -169,7 +208,12 @@ impl Writer {
             l!(w, 2, "{} parse{}( const std::string& value );", cn, cn)?;
             l!(w, 2, "std::string toString( const {}& value );", cn)?;
             l!(w, 2, "std::ostream& toStream( std::ostream& os, const {}& value );", cn)?;
-            l!(w, 2, "std::ostream& operator<<( std::ostream& os, const {}& value );", cn)?;
+            l!(
+                w,
+                2,
+                "std::ostream& operator<<( std::ostream& os, const {}& value );",
+                cn
+            )?;
         }
 
         Ok(())
@@ -227,7 +271,12 @@ impl Writer {
         Ok(())
     }
 
-    fn write_enum_cpp_other_enum<W: Write>(&self, enumer: &Enumeration, other_field: &OtherField, w: &mut W) -> std::io::Result<()> {
+    fn write_enum_cpp_other_enum<W: Write>(
+        &self,
+        enumer: &Enumeration,
+        other_field: &OtherField,
+        w: &mut W,
+    ) -> std::io::Result<()> {
         let pc = enumer.name.pascal();
         let other = other_field;
         let of_orig = other.name.original();
@@ -247,7 +296,14 @@ impl Writer {
                 l!(w, 3, "else if ( value == \"{}\" ) {{ return {}::{}; }}", o, pc, n)?;
             }
         }
-        l!(w, 3, "else if ( value == \"{}\" ) {{ return {}::{}; }}", of_orig, pc, of_pasc)?;
+        l!(
+            w,
+            3,
+            "else if ( value == \"{}\" ) {{ return {}::{}; }}",
+            of_orig,
+            pc,
+            of_pasc
+        )?;
         l!(w, 3, "success = false;")?;
         l!(w, 3, "return {}::{};", pc, of_pasc)?;
         l!(w, 2, "}}")?;
@@ -357,10 +413,102 @@ impl Writer {
         l!(w, 3, "return os << toString( value );")?;
         l!(w, 2, "}}")?;
         l!(w, 2, "")?;
-        l!(w, 2, "std::ostream& operator<<( std::ostream& os, const {}& value )", cn)?;
+        l!(
+            w,
+            2,
+            "std::ostream& operator<<( std::ostream& os, const {}& value )",
+            cn
+        )?;
         l!(w, 2, "{{")?;
         l!(w, 3, "return toStream( os, value );")?;
         l!(w, 2, "}}")?;
         Ok(())
     }
 }
+
+fn enum_members_declare(e: &Enumeration) -> String {
+    let mut s = String::new();
+    for (i, m) in e.members.iter().enumerate() {
+        s.push_str(format!("            {} = {}", m.camel(), i).as_str());
+        if i < e.members.len() - 1 {
+            s.push(',');
+            s.push('\n');
+        }
+    }
+    s
+}
+
+fn enum_members_parse(e: &Enumeration) -> String {
+    let mut s = String::new();
+    for (i, m) in e.members.iter().enumerate() {
+        let first = i == 0;
+        if !first {
+            s.push('\n');
+        }
+        s.push_str("            ");
+        if !first {
+            s.push_str("else ");
+        }
+        s.push_str(
+            format!(
+                "if( value == \"{}\" ) {{ return {}::{}; }}",
+                m.original(),
+                e.name.pascal(),
+                m.camel()
+            )
+            .as_str(),
+        );
+    }
+    s.push_str(
+        format!(
+            "\n            return {}::{};",
+            e.name.pascal(),
+            e.members.get(0).unwrap().camel()
+        )
+        .as_str(),
+    );
+    s
+}
+
+fn enum_members_to_string(e: &Enumeration) -> String {
+    let mut s = String::new();
+    s.push_str("            switch ( value )\n");
+    s.push_str("            {\n");
+    for (i, m) in e.members.iter().enumerate() {
+        s.push_str("                ");
+        s.push_str(
+            format!(
+                "case {}::{}: {{ return \"{}\"; }}\n",
+                e.name.pascal(),
+                m.camel(),
+                m.original()
+            )
+            .as_str(),
+        );
+    }
+    s.push_str("                default: break;\n");
+    s.push_str("            }\n");
+    s.push_str(format!("            return \"{}\";", e.members.get(0).unwrap().original()).as_str());
+    s
+}
+
+/*
+           switch ( value )
+           {
+               case ArrowDirectionEnum::left: { return "left"; }
+               case ArrowDirectionEnum::up: { return "up"; }
+               case ArrowDirectionEnum::right: { return "right"; }
+               case ArrowDirectionEnum::down: { return "down"; }
+               case ArrowDirectionEnum::northwest: { return "northwest"; }
+               case ArrowDirectionEnum::northeast: { return "northeast"; }
+               case ArrowDirectionEnum::southeast: { return "southeast"; }
+               case ArrowDirectionEnum::southwest: { return "southwest"; }
+               case ArrowDirectionEnum::leftRight: { return "left right"; }
+               case ArrowDirectionEnum::upDown: { return "up down"; }
+               case ArrowDirectionEnum::northwestSoutheast: { return "northwest southeast"; }
+               case ArrowDirectionEnum::northeastSouthwest: { return "northeast southwest"; }
+               case ArrowDirectionEnum::other: { return "other"; }
+               default: break;
+           }
+           return "left";
+*/

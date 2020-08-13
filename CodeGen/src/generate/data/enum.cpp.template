@@ -1,0 +1,21 @@
+        ////////////////////////////////////////////////////////////////////////////////////////////
+
+        {{ classname }} parse{{ classname }}( const std::string& value )
+        {
+{{ enum_members_parse }}
+        }
+
+        std::string toString( const {{ classname }} value )
+        {
+{{ enum_members_to_string }}
+        }
+
+        std::ostream& toStream( std::ostream& os, const {{ classname }} value )
+        {
+            return os << toString( value );
+        }
+
+        std::ostream& operator<<( std::ostream& os, const {{ classname }} value )
+        {
+            return toStream( os, value );
+        }
