@@ -1,0 +1,82 @@
+        {{ wrapper_classname }}::{{ wrapper_classname }}( const {{ classname }} value )
+        : myEnum( value )
+        , myCustomValue( "" )
+        {
+            setValue( value );
+        }
+
+        {{ wrapper_classname }}::{{ wrapper_classname }}( const std::string& value )
+        : myEnum( {{ classname }}::{{ other_field_name }} )
+        , myCustomValue( value )
+        {
+            setValue( value );
+        }
+
+        {{ wrapper_classname }}::{{ wrapper_classname }}()
+        : myEnum( {{ classname }}::{{ default_value_enum }} )
+        , myCustomValue( "" )
+        {
+            setValue( {{ classname }}::{{ default_value_enum }} );
+        }
+
+        {{ classname }} {{ wrapper_classname }}::getValue() const
+        {
+            return myEnum;
+        }
+
+        std::string {{ wrapper_classname }}::getValueString() const
+        {
+            if ( myEnum != {{ classname }}::{{ other_field_name }} )
+            {
+                return toString( myEnum );
+            }
+
+            else
+            {
+                return myCustomValue;
+            }
+        }
+
+        void {{ wrapper_classname }}::setValue( const {{ classname }} value )
+        {
+            myEnum = value;
+            if( value != {{ classname }}::{{ other_field_name }} && !myCustomValue.empty() )
+            {
+                myCustomValue = "";
+            }
+        }
+
+        void {{ wrapper_classname }}::setValue( const std::string& value )
+        {
+            bool found = false;
+            const auto temp = tryParse{{ classname }}( value );
+            if ( temp )
+            {
+                myEnum = temp.value();
+            }
+            else
+            {
+                setValue( {{ classname }}::{{ other_field_name }} );
+                myCustomValue = value;
+            }
+        }
+
+        {{ wrapper_classname }} parse{{ wrapper_classname }}( const std::string& value )
+        {
+            return {{ wrapper_classname }}( value );
+        }
+
+        std::string toString( const {{ wrapper_classname }}& value )
+        {
+            return value.getValueString();
+        }
+
+        std::ostream& toStream( std::ostream& os, const {{ wrapper_classname }}& value )
+        {
+            return os << toString( value );
+        }
+
+        std::ostream& operator<<( std::ostream& os, const {{ wrapper_classname }}& value )
+        {
+            return toStream( os, value );
+        }

@@ -1,0 +1,19 @@
+        class {{ wrapper_classname }}
+        {
+        public:
+            explicit {{ wrapper_classname }}( const {{ classname }} value );
+            explicit {{ wrapper_classname }}( const std::string& value );
+            {{ wrapper_classname }}();
+            {{ classname }} getValue() const;
+            std::string getValueString() const;
+            void setValue( const {{ classname }} value );
+            void setValue( const std::string& value );
+        private:
+            {{ classname }} myEnum;
+            std::string myCustomValue;
+        };
+
+        {{ wrapper_classname }} parse{{ wrapper_classname }}( const std::string& value );
+        std::string toString( const {{ wrapper_classname }}& value );
+        std::ostream& toStream( std::ostream& os, const {{ wrapper_classname }}& value );
+        std::ostream& operator<<( std::ostream& os, const {{ wrapper_classname }}& value );

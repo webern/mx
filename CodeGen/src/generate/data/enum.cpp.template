@@ -1,8 +1,15 @@
-        ////////////////////////////////////////////////////////////////////////////////////////////
+        {{ banner }}
 
         {{ classname }} parse{{ classname }}( const std::string& value )
         {
+            const auto opt = tryParse{{ classname }}( value );
+            return opt.value_or( {{ classname }}::{{ default_value_enum }} );
+        }
+
+        std::optional<{{ classname }}> tryParse{{ classname }}( const std::string& value )
+        {
 {{ enum_members_parse }}
+            return std::optional<{{ classname }}>{};
         }
 
         std::string toString( const {{ classname }} value )

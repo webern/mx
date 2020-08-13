@@ -6,6 +6,10 @@
 
 #include "mx/core/EnumsBuiltin.h"
 
+#include <iostream>
+#include <optional>
+#include <string>
+
 namespace mx
 {
     namespace core
@@ -22,6 +26,7 @@ namespace mx
         };
 
         AboveBelow parseAboveBelow( const std::string& value );
+        std::optional<AboveBelow> tryParseAboveBelow( const std::string& value );
         std::string toString( const AboveBelow value );
         std::ostream& toStream( std::ostream& os, const AboveBelow value );
         std::ostream& operator<<( std::ostream& os, const AboveBelow value );
@@ -78,6 +83,7 @@ namespace mx
         };
 
         AccidentalValue parseAccidentalValue( const std::string& value );
+        std::optional<AccidentalValue> tryParseAccidentalValue( const std::string& value );
         std::string toString( const AccidentalValue value );
         std::ostream& toStream( std::ostream& os, const AccidentalValue value );
         std::ostream& operator<<( std::ostream& os, const AccidentalValue value );
@@ -105,6 +111,7 @@ namespace mx
         };
 
         ArrowDirectionEnum parseArrowDirectionEnum( const std::string& value );
+        std::optional<ArrowDirectionEnum> tryParseArrowDirectionEnum( const std::string& value );
         std::string toString( const ArrowDirectionEnum value );
         std::ostream& toStream( std::ostream& os, const ArrowDirectionEnum value );
         std::ostream& operator<<( std::ostream& os, const ArrowDirectionEnum value );
@@ -129,6 +136,7 @@ namespace mx
         };
 
         ArrowStyleEnum parseArrowStyleEnum( const std::string& value );
+        std::optional<ArrowStyleEnum> tryParseArrowStyleEnum( const std::string& value );
         std::string toString( const ArrowStyleEnum value );
         std::ostream& toStream( std::ostream& os, const ArrowStyleEnum value );
         std::ostream& operator<<( std::ostream& os, const ArrowStyleEnum value );
@@ -146,6 +154,7 @@ namespace mx
         };
 
         BackwardForward parseBackwardForward( const std::string& value );
+        std::optional<BackwardForward> tryParseBackwardForward( const std::string& value );
         std::string toString( const BackwardForward value );
         std::ostream& toStream( std::ostream& os, const BackwardForward value );
         std::ostream& operator<<( std::ostream& os, const BackwardForward value );
@@ -173,6 +182,7 @@ namespace mx
         };
 
         BarStyleEnum parseBarStyleEnum( const std::string& value );
+        std::optional<BarStyleEnum> tryParseBarStyleEnum( const std::string& value );
         std::string toString( const BarStyleEnum value );
         std::ostream& toStream( std::ostream& os, const BarStyleEnum value );
         std::ostream& operator<<( std::ostream& os, const BarStyleEnum value );
@@ -192,6 +202,7 @@ namespace mx
         };
 
         BeamValue parseBeamValue( const std::string& value );
+        std::optional<BeamValue> tryParseBeamValue( const std::string& value );
         std::string toString( const BeamValue value );
         std::ostream& toStream( std::ostream& os, const BeamValue value );
         std::ostream& operator<<( std::ostream& os, const BeamValue value );
@@ -224,6 +235,7 @@ namespace mx
         };
 
         BeaterValue parseBeaterValue( const std::string& value );
+        std::optional<BeaterValue> tryParseBeaterValue( const std::string& value );
         std::string toString( const BeaterValue value );
         std::ostream& toStream( std::ostream& os, const BeaterValue value );
         std::ostream& operator<<( std::ostream& os, const BeaterValue value );
@@ -240,6 +252,7 @@ namespace mx
         };
 
         BreathMarkValue parseBreathMarkValue( const std::string& value );
+        std::optional<BreathMarkValue> tryParseBreathMarkValue( const std::string& value );
         std::string toString( const BreathMarkValue value );
         std::ostream& toStream( std::ostream& os, const BreathMarkValue value );
         std::ostream& operator<<( std::ostream& os, const BreathMarkValue value );
@@ -260,6 +273,7 @@ namespace mx
         };
 
         CancelLocation parseCancelLocation( const std::string& value );
+        std::optional<CancelLocation> tryParseCancelLocation( const std::string& value );
         std::string toString( const CancelLocation value );
         std::ostream& toStream( std::ostream& os, const CancelLocation value );
         std::ostream& operator<<( std::ostream& os, const CancelLocation value );
@@ -276,6 +290,7 @@ namespace mx
         };
 
         CircularArrowEnum parseCircularArrowEnum( const std::string& value );
+        std::optional<CircularArrowEnum> tryParseCircularArrowEnum( const std::string& value );
         std::string toString( const CircularArrowEnum value );
         std::ostream& toStream( std::ostream& os, const CircularArrowEnum value );
         std::ostream& operator<<( std::ostream& os, const CircularArrowEnum value );
@@ -300,6 +315,7 @@ namespace mx
         };
 
         ClefSign parseClefSign( const std::string& value );
+        std::optional<ClefSign> tryParseClefSign( const std::string& value );
         std::string toString( const ClefSign value );
         std::ostream& toStream( std::ostream& os, const ClefSign value );
         std::ostream& operator<<( std::ostream& os, const ClefSign value );
@@ -321,6 +337,7 @@ namespace mx
         };
 
         CssFontSize parseCssFontSize( const std::string& value );
+        std::optional<CssFontSize> tryParseCssFontSize( const std::string& value );
         std::string toString( const CssFontSize value );
         std::ostream& toStream( std::ostream& os, const CssFontSize value );
         std::ostream& operator<<( std::ostream& os, const CssFontSize value );
@@ -340,6 +357,7 @@ namespace mx
         };
 
         DegreeSymbolValue parseDegreeSymbolValue( const std::string& value );
+        std::optional<DegreeSymbolValue> tryParseDegreeSymbolValue( const std::string& value );
         std::string toString( const DegreeSymbolValue value );
         std::ostream& toStream( std::ostream& os, const DegreeSymbolValue value );
         std::ostream& operator<<( std::ostream& os, const DegreeSymbolValue value );
@@ -358,6 +376,7 @@ namespace mx
         };
 
         DegreeTypeValue parseDegreeTypeValue( const std::string& value );
+        std::optional<DegreeTypeValue> tryParseDegreeTypeValue( const std::string& value );
         std::string toString( const DegreeTypeValue value );
         std::ostream& toStream( std::ostream& os, const DegreeTypeValue value );
         std::ostream& operator<<( std::ostream& os, const DegreeTypeValue value );
@@ -377,6 +396,7 @@ namespace mx
         };
 
         DistanceTypeEnum parseDistanceTypeEnum( const std::string& value );
+        std::optional<DistanceTypeEnum> tryParseDistanceTypeEnum( const std::string& value );
         std::string toString( const DistanceTypeEnum value );
         std::ostream& toStream( std::ostream& os, const DistanceTypeEnum value );
         std::ostream& operator<<( std::ostream& os, const DistanceTypeEnum value );
@@ -451,6 +471,7 @@ namespace mx
         };
 
         DynamicsEnum parseDynamicsEnum( const std::string& value );
+        std::optional<DynamicsEnum> tryParseDynamicsEnum( const std::string& value );
         std::string toString( const DynamicsEnum value );
         std::ostream& toStream( std::ostream& os, const DynamicsEnum value );
         std::ostream& operator<<( std::ostream& os, const DynamicsEnum value );
@@ -499,6 +520,7 @@ namespace mx
         };
 
         EffectEnum parseEffectEnum( const std::string& value );
+        std::optional<EffectEnum> tryParseEffectEnum( const std::string& value );
         std::string toString( const EffectEnum value );
         std::ostream& toStream( std::ostream& os, const EffectEnum value );
         std::ostream& operator<<( std::ostream& os, const EffectEnum value );
@@ -522,6 +544,7 @@ namespace mx
         };
 
         EnclosureShape parseEnclosureShape( const std::string& value );
+        std::optional<EnclosureShape> tryParseEnclosureShape( const std::string& value );
         std::string toString( const EnclosureShape value );
         std::ostream& toStream( std::ostream& os, const EnclosureShape value );
         std::ostream& operator<<( std::ostream& os, const EnclosureShape value );
@@ -539,6 +562,7 @@ namespace mx
         };
 
         Fan parseFan( const std::string& value );
+        std::optional<Fan> tryParseFan( const std::string& value );
         std::string toString( const Fan value );
         std::ostream& toStream( std::ostream& os, const Fan value );
         std::ostream& operator<<( std::ostream& os, const Fan value );
@@ -557,6 +581,7 @@ namespace mx
         };
 
         FermataShape parseFermataShape( const std::string& value );
+        std::optional<FermataShape> tryParseFermataShape( const std::string& value );
         std::string toString( const FermataShape value );
         std::ostream& toStream( std::ostream& os, const FermataShape value );
         std::ostream& operator<<( std::ostream& os, const FermataShape value );
@@ -573,6 +598,7 @@ namespace mx
         };
 
         FontStyle parseFontStyle( const std::string& value );
+        std::optional<FontStyle> tryParseFontStyle( const std::string& value );
         std::string toString( const FontStyle value );
         std::ostream& toStream( std::ostream& os, const FontStyle value );
         std::ostream& operator<<( std::ostream& os, const FontStyle value );
@@ -589,6 +615,7 @@ namespace mx
         };
 
         FontWeight parseFontWeight( const std::string& value );
+        std::optional<FontWeight> tryParseFontWeight( const std::string& value );
         std::string toString( const FontWeight value );
         std::ostream& toStream( std::ostream& os, const FontWeight value );
         std::ostream& operator<<( std::ostream& os, const FontWeight value );
@@ -603,6 +630,7 @@ namespace mx
         };
 
         GlassEnum parseGlassEnum( const std::string& value );
+        std::optional<GlassEnum> tryParseGlassEnum( const std::string& value );
         std::string toString( const GlassEnum value );
         std::ostream& toStream( std::ostream& os, const GlassEnum value );
         std::ostream& operator<<( std::ostream& os, const GlassEnum value );
@@ -620,6 +648,7 @@ namespace mx
         };
 
         GroupBarlineValue parseGroupBarlineValue( const std::string& value );
+        std::optional<GroupBarlineValue> tryParseGroupBarlineValue( const std::string& value );
         std::string toString( const GroupBarlineValue value );
         std::ostream& toStream( std::ostream& os, const GroupBarlineValue value );
         std::ostream& operator<<( std::ostream& os, const GroupBarlineValue value );
@@ -639,6 +668,7 @@ namespace mx
         };
 
         GroupSymbolValue parseGroupSymbolValue( const std::string& value );
+        std::optional<GroupSymbolValue> tryParseGroupSymbolValue( const std::string& value );
         std::string toString( const GroupSymbolValue value );
         std::ostream& toStream( std::ostream& os, const GroupSymbolValue value );
         std::ostream& operator<<( std::ostream& os, const GroupSymbolValue value );
@@ -664,6 +694,7 @@ namespace mx
         };
 
         HandbellValue parseHandbellValue( const std::string& value );
+        std::optional<HandbellValue> tryParseHandbellValue( const std::string& value );
         std::string toString( const HandbellValue value );
         std::ostream& toStream( std::ostream& os, const HandbellValue value );
         std::ostream& operator<<( std::ostream& os, const HandbellValue value );
@@ -683,6 +714,7 @@ namespace mx
         };
 
         HarmonyType parseHarmonyType( const std::string& value );
+        std::optional<HarmonyType> tryParseHarmonyType( const std::string& value );
         std::string toString( const HarmonyType value );
         std::ostream& toStream( std::ostream& os, const HarmonyType value );
         std::ostream& operator<<( std::ostream& os, const HarmonyType value );
@@ -701,6 +733,7 @@ namespace mx
         };
 
         HoleClosedLocation parseHoleClosedLocation( const std::string& value );
+        std::optional<HoleClosedLocation> tryParseHoleClosedLocation( const std::string& value );
         std::string toString( const HoleClosedLocation value );
         std::ostream& toStream( std::ostream& os, const HoleClosedLocation value );
         std::ostream& operator<<( std::ostream& os, const HoleClosedLocation value );
@@ -718,6 +751,7 @@ namespace mx
         };
 
         HoleClosedValue parseHoleClosedValue( const std::string& value );
+        std::optional<HoleClosedValue> tryParseHoleClosedValue( const std::string& value );
         std::string toString( const HoleClosedValue value );
         std::ostream& toStream( std::ostream& os, const HoleClosedValue value );
         std::ostream& operator<<( std::ostream& os, const HoleClosedValue value );
@@ -853,6 +887,7 @@ namespace mx
         };
 
         KindValue parseKindValue( const std::string& value );
+        std::optional<KindValue> tryParseKindValue( const std::string& value );
         std::string toString( const KindValue value );
         std::ostream& toStream( std::ostream& os, const KindValue value );
         std::ostream& operator<<( std::ostream& os, const KindValue value );
@@ -870,6 +905,7 @@ namespace mx
         };
 
         LeftCenterRight parseLeftCenterRight( const std::string& value );
+        std::optional<LeftCenterRight> tryParseLeftCenterRight( const std::string& value );
         std::string toString( const LeftCenterRight value );
         std::ostream& toStream( std::ostream& os, const LeftCenterRight value );
         std::ostream& operator<<( std::ostream& os, const LeftCenterRight value );
@@ -886,6 +922,7 @@ namespace mx
         };
 
         LeftRight parseLeftRight( const std::string& value );
+        std::optional<LeftRight> tryParseLeftRight( const std::string& value );
         std::string toString( const LeftRight value );
         std::ostream& toStream( std::ostream& os, const LeftRight value );
         std::ostream& operator<<( std::ostream& os, const LeftRight value );
@@ -905,6 +942,7 @@ namespace mx
         };
 
         LineEnd parseLineEnd( const std::string& value );
+        std::optional<LineEnd> tryParseLineEnd( const std::string& value );
         std::string toString( const LineEnd value );
         std::ostream& toStream( std::ostream& os, const LineEnd value );
         std::ostream& operator<<( std::ostream& os, const LineEnd value );
@@ -920,6 +958,7 @@ namespace mx
         };
 
         LineShape parseLineShape( const std::string& value );
+        std::optional<LineShape> tryParseLineShape( const std::string& value );
         std::string toString( const LineShape value );
         std::ostream& toStream( std::ostream& os, const LineShape value );
         std::ostream& operator<<( std::ostream& os, const LineShape value );
@@ -937,6 +976,7 @@ namespace mx
         };
 
         LineType parseLineType( const std::string& value );
+        std::optional<LineType> tryParseLineType( const std::string& value );
         std::string toString( const LineType value );
         std::ostream& toStream( std::ostream& os, const LineType value );
         std::ostream& operator<<( std::ostream& os, const LineType value );
@@ -975,6 +1015,7 @@ namespace mx
         };
 
         LineWidthTypeEnum parseLineWidthTypeEnum( const std::string& value );
+        std::optional<LineWidthTypeEnum> tryParseLineWidthTypeEnum( const std::string& value );
         std::string toString( const LineWidthTypeEnum value );
         std::ostream& toStream( std::ostream& os, const LineWidthTypeEnum value );
         std::ostream& operator<<( std::ostream& os, const LineWidthTypeEnum value );
@@ -1012,6 +1053,7 @@ namespace mx
         };
 
         MarginType parseMarginType( const std::string& value );
+        std::optional<MarginType> tryParseMarginType( const std::string& value );
         std::string toString( const MarginType value );
         std::ostream& toStream( std::ostream& os, const MarginType value );
         std::ostream& operator<<( std::ostream& os, const MarginType value );
@@ -1029,6 +1071,7 @@ namespace mx
         };
 
         MeasureNumberingValue parseMeasureNumberingValue( const std::string& value );
+        std::optional<MeasureNumberingValue> tryParseMeasureNumberingValue( const std::string& value );
         std::string toString( const MeasureNumberingValue value );
         std::ostream& toStream( std::ostream& os, const MeasureNumberingValue value );
         std::ostream& operator<<( std::ostream& os, const MeasureNumberingValue value );
@@ -1055,6 +1098,7 @@ namespace mx
         };
 
         MembraneEnum parseMembraneEnum( const std::string& value );
+        std::optional<MembraneEnum> tryParseMembraneEnum( const std::string& value );
         std::string toString( const MembraneEnum value );
         std::ostream& toStream( std::ostream& os, const MembraneEnum value );
         std::ostream& operator<<( std::ostream& os, const MembraneEnum value );
@@ -1093,6 +1137,7 @@ namespace mx
         };
 
         MetalEnum parseMetalEnum( const std::string& value );
+        std::optional<MetalEnum> tryParseMetalEnum( const std::string& value );
         std::string toString( const MetalEnum value );
         std::ostream& toStream( std::ostream& os, const MetalEnum value );
         std::ostream& operator<<( std::ostream& os, const MetalEnum value );
@@ -1119,6 +1164,7 @@ namespace mx
         };
 
         ModeEnum parseModeEnum( const std::string& value );
+        std::optional<ModeEnum> tryParseModeEnum( const std::string& value );
         std::string toString( const ModeEnum value );
         std::ostream& toStream( std::ostream& os, const ModeEnum value );
         std::ostream& operator<<( std::ostream& os, const ModeEnum value );
@@ -1169,6 +1215,7 @@ namespace mx
         };
 
         MuteEnum parseMuteEnum( const std::string& value );
+        std::optional<MuteEnum> tryParseMuteEnum( const std::string& value );
         std::string toString( const MuteEnum value );
         std::ostream& toStream( std::ostream& os, const MuteEnum value );
         std::ostream& operator<<( std::ostream& os, const MuteEnum value );
@@ -1189,6 +1236,7 @@ namespace mx
         };
 
         NoteSizeType parseNoteSizeType( const std::string& value );
+        std::optional<NoteSizeType> tryParseNoteSizeType( const std::string& value );
         std::string toString( const NoteSizeType value );
         std::ostream& toStream( std::ostream& os, const NoteSizeType value );
         std::ostream& operator<<( std::ostream& os, const NoteSizeType value );
@@ -1217,6 +1265,7 @@ namespace mx
         };
 
         NoteTypeValue parseNoteTypeValue( const std::string& value );
+        std::optional<NoteTypeValue> tryParseNoteTypeValue( const std::string& value );
         std::string toString( const NoteTypeValue value );
         std::ostream& toStream( std::ostream& os, const NoteTypeValue value );
         std::ostream& operator<<( std::ostream& os, const NoteTypeValue value );
@@ -1268,6 +1317,7 @@ namespace mx
         };
 
         NoteheadValue parseNoteheadValue( const std::string& value );
+        std::optional<NoteheadValue> tryParseNoteheadValue( const std::string& value );
         std::string toString( const NoteheadValue value );
         std::ostream& toStream( std::ostream& os, const NoteheadValue value );
         std::ostream& operator<<( std::ostream& os, const NoteheadValue value );
@@ -1283,6 +1333,7 @@ namespace mx
         };
 
         OnOff parseOnOff( const std::string& value );
+        std::optional<OnOff> tryParseOnOff( const std::string& value );
         std::string toString( const OnOff value );
         std::ostream& toStream( std::ostream& os, const OnOff value );
         std::ostream& operator<<( std::ostream& os, const OnOff value );
@@ -1299,6 +1350,7 @@ namespace mx
         };
 
         OverUnder parseOverUnder( const std::string& value );
+        std::optional<OverUnder> tryParseOverUnder( const std::string& value );
         std::string toString( const OverUnder value );
         std::ostream& toStream( std::ostream& os, const OverUnder value );
         std::ostream& operator<<( std::ostream& os, const OverUnder value );
@@ -1321,6 +1373,7 @@ namespace mx
         };
 
         PitchedEnum parsePitchedEnum( const std::string& value );
+        std::optional<PitchedEnum> tryParsePitchedEnum( const std::string& value );
         std::string toString( const PitchedEnum value );
         std::ostream& toStream( std::ostream& os, const PitchedEnum value );
         std::ostream& operator<<( std::ostream& os, const PitchedEnum value );
@@ -1341,6 +1394,7 @@ namespace mx
         };
 
         PrincipalVoiceSymbol parsePrincipalVoiceSymbol( const std::string& value );
+        std::optional<PrincipalVoiceSymbol> tryParsePrincipalVoiceSymbol( const std::string& value );
         std::string toString( const PrincipalVoiceSymbol value );
         std::ostream& toStream( std::ostream& os, const PrincipalVoiceSymbol value );
         std::ostream& operator<<( std::ostream& os, const PrincipalVoiceSymbol value );
@@ -1357,6 +1411,7 @@ namespace mx
         };
 
         RightLeftMiddle parseRightLeftMiddle( const std::string& value );
+        std::optional<RightLeftMiddle> tryParseRightLeftMiddle( const std::string& value );
         std::string toString( const RightLeftMiddle value );
         std::ostream& toStream( std::ostream& os, const RightLeftMiddle value );
         std::ostream& operator<<( std::ostream& os, const RightLeftMiddle value );
@@ -1377,6 +1432,7 @@ namespace mx
         };
 
         SemiPitchedEnum parseSemiPitchedEnum( const std::string& value );
+        std::optional<SemiPitchedEnum> tryParseSemiPitchedEnum( const std::string& value );
         std::string toString( const SemiPitchedEnum value );
         std::ostream& toStream( std::ostream& os, const SemiPitchedEnum value );
         std::ostream& operator<<( std::ostream& os, const SemiPitchedEnum value );
@@ -1393,6 +1449,7 @@ namespace mx
         };
 
         ShowFrets parseShowFrets( const std::string& value );
+        std::optional<ShowFrets> tryParseShowFrets( const std::string& value );
         std::string toString( const ShowFrets value );
         std::ostream& toStream( std::ostream& os, const ShowFrets value );
         std::ostream& operator<<( std::ostream& os, const ShowFrets value );
@@ -1411,6 +1468,7 @@ namespace mx
         };
 
         ShowTuplet parseShowTuplet( const std::string& value );
+        std::optional<ShowTuplet> tryParseShowTuplet( const std::string& value );
         std::string toString( const ShowTuplet value );
         std::ostream& toStream( std::ostream& os, const ShowTuplet value );
         std::ostream& operator<<( std::ostream& os, const ShowTuplet value );
@@ -1432,6 +1490,7 @@ namespace mx
         };
 
         StaffTypeEnum parseStaffTypeEnum( const std::string& value );
+        std::optional<StaffTypeEnum> tryParseStaffTypeEnum( const std::string& value );
         std::string toString( const StaffTypeEnum value );
         std::ostream& toStream( std::ostream& os, const StaffTypeEnum value );
         std::ostream& operator<<( std::ostream& os, const StaffTypeEnum value );
@@ -1449,6 +1508,7 @@ namespace mx
         };
 
         StartNote parseStartNote( const std::string& value );
+        std::optional<StartNote> tryParseStartNote( const std::string& value );
         std::string toString( const StartNote value );
         std::ostream& toStream( std::ostream& os, const StartNote value );
         std::ostream& operator<<( std::ostream& os, const StartNote value );
@@ -1474,6 +1534,7 @@ namespace mx
         };
 
         StartStop parseStartStop( const std::string& value );
+        std::optional<StartStop> tryParseStartStop( const std::string& value );
         std::string toString( const StartStop value );
         std::ostream& toStream( std::ostream& os, const StartStop value );
         std::ostream& operator<<( std::ostream& os, const StartStop value );
@@ -1492,6 +1553,7 @@ namespace mx
         };
 
         StartStopChangeContinue parseStartStopChangeContinue( const std::string& value );
+        std::optional<StartStopChangeContinue> tryParseStartStopChangeContinue( const std::string& value );
         std::string toString( const StartStopChangeContinue value );
         std::ostream& toStream( std::ostream& os, const StartStopChangeContinue value );
         std::ostream& operator<<( std::ostream& os, const StartStopChangeContinue value );
@@ -1520,6 +1582,7 @@ namespace mx
         };
 
         StartStopContinue parseStartStopContinue( const std::string& value );
+        std::optional<StartStopContinue> tryParseStartStopContinue( const std::string& value );
         std::string toString( const StartStopContinue value );
         std::ostream& toStream( std::ostream& os, const StartStopContinue value );
         std::ostream& operator<<( std::ostream& os, const StartStopContinue value );
@@ -1542,6 +1605,7 @@ namespace mx
         };
 
         StartStopDiscontinue parseStartStopDiscontinue( const std::string& value );
+        std::optional<StartStopDiscontinue> tryParseStartStopDiscontinue( const std::string& value );
         std::string toString( const StartStopDiscontinue value );
         std::ostream& toStream( std::ostream& os, const StartStopDiscontinue value );
         std::ostream& operator<<( std::ostream& os, const StartStopDiscontinue value );
@@ -1560,6 +1624,7 @@ namespace mx
         };
 
         StartStopSingle parseStartStopSingle( const std::string& value );
+        std::optional<StartStopSingle> tryParseStartStopSingle( const std::string& value );
         std::string toString( const StartStopSingle value );
         std::ostream& toStream( std::ostream& os, const StartStopSingle value );
         std::ostream& operator<<( std::ostream& os, const StartStopSingle value );
@@ -1577,6 +1642,7 @@ namespace mx
         };
 
         StemValue parseStemValue( const std::string& value );
+        std::optional<StemValue> tryParseStemValue( const std::string& value );
         std::string toString( const StemValue value );
         std::ostream& toStream( std::ostream& os, const StemValue value );
         std::ostream& operator<<( std::ostream& os, const StemValue value );
@@ -1598,6 +1664,7 @@ namespace mx
         };
 
         StepEnum parseStepEnum( const std::string& value );
+        std::optional<StepEnum> tryParseStepEnum( const std::string& value );
         std::string toString( const StepEnum value );
         std::ostream& toStream( std::ostream& os, const StepEnum value );
         std::ostream& operator<<( std::ostream& os, const StepEnum value );
@@ -1616,6 +1683,7 @@ namespace mx
         };
 
         StickLocationEnum parseStickLocationEnum( const std::string& value );
+        std::optional<StickLocationEnum> tryParseStickLocationEnum( const std::string& value );
         std::string toString( const StickLocationEnum value );
         std::ostream& toStream( std::ostream& os, const StickLocationEnum value );
         std::ostream& operator<<( std::ostream& os, const StickLocationEnum value );
@@ -1635,6 +1703,7 @@ namespace mx
         };
 
         StickMaterialEnum parseStickMaterialEnum( const std::string& value );
+        std::optional<StickMaterialEnum> tryParseStickMaterialEnum( const std::string& value );
         std::string toString( const StickMaterialEnum value );
         std::ostream& toStream( std::ostream& os, const StickMaterialEnum value );
         std::ostream& operator<<( std::ostream& os, const StickMaterialEnum value );
@@ -1655,6 +1724,7 @@ namespace mx
         };
 
         StickTypeEnum parseStickTypeEnum( const std::string& value );
+        std::optional<StickTypeEnum> tryParseStickTypeEnum( const std::string& value );
         std::string toString( const StickTypeEnum value );
         std::ostream& toStream( std::ostream& os, const StickTypeEnum value );
         std::ostream& operator<<( std::ostream& os, const StickTypeEnum value );
@@ -1674,6 +1744,7 @@ namespace mx
         };
 
         SyllabicEnum parseSyllabicEnum( const std::string& value );
+        std::optional<SyllabicEnum> tryParseSyllabicEnum( const std::string& value );
         std::string toString( const SyllabicEnum value );
         std::ostream& toStream( std::ostream& os, const SyllabicEnum value );
         std::ostream& operator<<( std::ostream& os, const SyllabicEnum value );
@@ -1691,6 +1762,7 @@ namespace mx
         };
 
         SymbolSize parseSymbolSize( const std::string& value );
+        std::optional<SymbolSize> tryParseSymbolSize( const std::string& value );
         std::string toString( const SymbolSize value );
         std::ostream& toStream( std::ostream& os, const SymbolSize value );
         std::ostream& operator<<( std::ostream& os, const SymbolSize value );
@@ -1715,6 +1787,7 @@ namespace mx
         };
 
         TextDirection parseTextDirection( const std::string& value );
+        std::optional<TextDirection> tryParseTextDirection( const std::string& value );
         std::string toString( const TextDirection value );
         std::ostream& toStream( std::ostream& os, const TextDirection value );
         std::ostream& operator<<( std::ostream& os, const TextDirection value );
@@ -1735,6 +1808,7 @@ namespace mx
         };
 
         TimeRelationEnum parseTimeRelationEnum( const std::string& value );
+        std::optional<TimeRelationEnum> tryParseTimeRelationEnum( const std::string& value );
         std::string toString( const TimeRelationEnum value );
         std::ostream& toStream( std::ostream& os, const TimeRelationEnum value );
         std::ostream& operator<<( std::ostream& os, const TimeRelationEnum value );
@@ -1760,6 +1834,7 @@ namespace mx
         };
 
         TimeSeparator parseTimeSeparator( const std::string& value );
+        std::optional<TimeSeparator> tryParseTimeSeparator( const std::string& value );
         std::string toString( const TimeSeparator value );
         std::ostream& toStream( std::ostream& os, const TimeSeparator value );
         std::ostream& operator<<( std::ostream& os, const TimeSeparator value );
@@ -1786,6 +1861,7 @@ namespace mx
         };
 
         TimeSymbol parseTimeSymbol( const std::string& value );
+        std::optional<TimeSymbol> tryParseTimeSymbol( const std::string& value );
         std::string toString( const TimeSymbol value );
         std::ostream& toStream( std::ostream& os, const TimeSymbol value );
         std::ostream& operator<<( std::ostream& os, const TimeSymbol value );
@@ -1808,6 +1884,7 @@ namespace mx
         };
 
         TipDirection parseTipDirection( const std::string& value );
+        std::optional<TipDirection> tryParseTipDirection( const std::string& value );
         std::string toString( const TipDirection value );
         std::ostream& toStream( std::ostream& os, const TipDirection value );
         std::ostream& operator<<( std::ostream& os, const TipDirection value );
@@ -1824,6 +1901,7 @@ namespace mx
         };
 
         TopBottom parseTopBottom( const std::string& value );
+        std::optional<TopBottom> tryParseTopBottom( const std::string& value );
         std::string toString( const TopBottom value );
         std::ostream& toStream( std::ostream& os, const TopBottom value );
         std::ostream& operator<<( std::ostream& os, const TopBottom value );
@@ -1841,6 +1919,7 @@ namespace mx
         };
 
         TrillStep parseTrillStep( const std::string& value );
+        std::optional<TrillStep> tryParseTrillStep( const std::string& value );
         std::string toString( const TrillStep value );
         std::ostream& toStream( std::ostream& os, const TrillStep value );
         std::ostream& operator<<( std::ostream& os, const TrillStep value );
@@ -1858,6 +1937,7 @@ namespace mx
         };
 
         TwoNoteTurn parseTwoNoteTurn( const std::string& value );
+        std::optional<TwoNoteTurn> tryParseTwoNoteTurn( const std::string& value );
         std::string toString( const TwoNoteTurn value );
         std::ostream& toStream( std::ostream& os, const TwoNoteTurn value );
         std::ostream& operator<<( std::ostream& os, const TwoNoteTurn value );
@@ -1874,6 +1954,7 @@ namespace mx
         };
 
         UpDown parseUpDown( const std::string& value );
+        std::optional<UpDown> tryParseUpDown( const std::string& value );
         std::string toString( const UpDown value );
         std::ostream& toStream( std::ostream& os, const UpDown value );
         std::ostream& operator<<( std::ostream& os, const UpDown value );
@@ -1893,6 +1974,7 @@ namespace mx
         };
 
         UpDownStopContinue parseUpDownStopContinue( const std::string& value );
+        std::optional<UpDownStopContinue> tryParseUpDownStopContinue( const std::string& value );
         std::string toString( const UpDownStopContinue value );
         std::ostream& toStream( std::ostream& os, const UpDownStopContinue value );
         std::ostream& operator<<( std::ostream& os, const UpDownStopContinue value );
@@ -1909,6 +1991,7 @@ namespace mx
         };
 
         UprightInverted parseUprightInverted( const std::string& value );
+        std::optional<UprightInverted> tryParseUprightInverted( const std::string& value );
         std::string toString( const UprightInverted value );
         std::ostream& toStream( std::ostream& os, const UprightInverted value );
         std::ostream& operator<<( std::ostream& os, const UprightInverted value );
@@ -1927,6 +2010,7 @@ namespace mx
         };
 
         Valign parseValign( const std::string& value );
+        std::optional<Valign> tryParseValign( const std::string& value );
         std::string toString( const Valign value );
         std::ostream& toStream( std::ostream& os, const Valign value );
         std::ostream& operator<<( std::ostream& os, const Valign value );
@@ -1945,6 +2029,7 @@ namespace mx
         };
 
         ValignImage parseValignImage( const std::string& value );
+        std::optional<ValignImage> tryParseValignImage( const std::string& value );
         std::string toString( const ValignImage value );
         std::ostream& toStream( std::ostream& os, const ValignImage value );
         std::ostream& operator<<( std::ostream& os, const ValignImage value );
@@ -1966,6 +2051,7 @@ namespace mx
         };
 
         WedgeType parseWedgeType( const std::string& value );
+        std::optional<WedgeType> tryParseWedgeType( const std::string& value );
         std::string toString( const WedgeType value );
         std::ostream& toStream( std::ostream& os, const WedgeType value );
         std::ostream& operator<<( std::ostream& os, const WedgeType value );
@@ -1987,6 +2073,7 @@ namespace mx
         };
 
         Winged parseWinged( const std::string& value );
+        std::optional<Winged> tryParseWinged( const std::string& value );
         std::string toString( const Winged value );
         std::ostream& toStream( std::ostream& os, const Winged value );
         std::ostream& operator<<( std::ostream& os, const Winged value );
@@ -2016,6 +2103,7 @@ namespace mx
         };
 
         WoodEnum parseWoodEnum( const std::string& value );
+        std::optional<WoodEnum> tryParseWoodEnum( const std::string& value );
         std::string toString( const WoodEnum value );
         std::ostream& toStream( std::ostream& os, const WoodEnum value );
         std::ostream& operator<<( std::ostream& os, const WoodEnum value );
@@ -2032,6 +2120,7 @@ namespace mx
         };
 
         YesNo parseYesNo( const std::string& value );
+        std::optional<YesNo> tryParseYesNo( const std::string& value );
         std::string toString( const YesNo value );
         std::ostream& toStream( std::ostream& os, const YesNo value );
         std::ostream& operator<<( std::ostream& os, const YesNo value );

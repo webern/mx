@@ -1,7 +1,7 @@
 use crate::error::Result;
 use crate::generate::cpp::cpp_template::{render_core_cpp, render_core_h};
 use crate::generate::cpp::writer::Writer;
-use crate::generate::template::{render, ENUM_CPP, ENUM_H};
+use crate::generate::template::{render, ENUM_CPP, ENUM_H, ENUM_WRAPPER_CPP, ENUM_WRAPPER_H};
 use crate::model::enumeration::{Enumeration, OtherField};
 use crate::model::Model;
 use crate::utils::string_stuff::{
@@ -47,10 +47,20 @@ impl Writer {
             let first = i == 0;
             let mut data = HashMap::new();
             data.insert("classname", enumeration.name.pascal().to_owned());
+            data.insert("banner", sep(enumeration.name.pascal(), 2));
             data.insert("documentation", documentation(&enumeration.documentation, 2)?);
             data.insert("enum_members_declare", enum_members_declare(enumeration));
             data.insert("enum_members_parse", enum_members_parse(enumeration));
             data.insert("enum_members_to_string", enum_members_to_string(enumeration));
+            if let Some(of) = &enumeration.other_field {
+                data.insert("default_value_enum", of.default_value.camel().into());
+                data.insert("default_value_string", of.default_value.original().into());
+                data.insert("other_field_name", of.name.camel().into());
+            } else {
+                let first_member = enumeration.members.first().unwrap();
+                data.insert("default_value_enum", first_member.camel().into());
+                data.insert("default_value_string", first_member.original().into());
+            }
             let rendered_h = render(ENUM_H, &data)?;
             if !first {
                 contents_h.push('\n');
@@ -63,11 +73,18 @@ impl Writer {
                 contents_cpp.push('\n');
             }
             contents_cpp.push_str(&rendered_cpp);
+            if let Some(of) = &enumeration.other_field {
+                data.insert("wrapper_classname", of.wrapper_class_name.pascal().into());
+                contents_h.push_str("\n\n");
+                contents_cpp.push_str("\n\n");
+                contents_h.push_str(render(ENUM_WRAPPER_H, &data)?.as_str());
+                contents_cpp.push_str(render(ENUM_WRAPPER_CPP, &data)?.as_str());
+            }
         }
         let file_h = render_core_h(
             contents_h,
             Some(&mut ["mx/core/EnumsBuiltin.h"]),
-            Some(&mut ["iostream", "string"]),
+            Some(&mut ["iostream", "string", "optional"]),
         )?;
         let file_cpp = render_core_cpp(contents_cpp, Some("mx/core/Enums.h"), None, Some(&mut ["sstream"]))?;
         wrap!(std::fs::write(&self.paths.enums_h, file_h))?;
@@ -430,10 +447,13 @@ fn enum_members_declare(e: &Enumeration) -> String {
     let mut s = String::new();
     for (i, m) in e.members.iter().enumerate() {
         s.push_str(format!("            {} = {}", m.camel(), i).as_str());
-        if i < e.members.len() - 1 {
+        if i < e.members.len() - 1 || e.other_field.is_some() {
             s.push(',');
             s.push('\n');
         }
+    }
+    if let Some(of) = &e.other_field {
+        s.push_str(format!("            {} = {}", of.name.camel(), e.members.len()).as_str());
     }
     s
 }
@@ -459,14 +479,6 @@ fn enum_members_parse(e: &Enumeration) -> String {
             .as_str(),
         );
     }
-    s.push_str(
-        format!(
-            "\n            return {}::{};",
-            e.name.pascal(),
-            e.members.get(0).unwrap().camel()
-        )
-        .as_str(),
-    );
     s
 }
 

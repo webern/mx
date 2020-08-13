@@ -2,15 +2,12 @@
 // Copyright (c) by Matthew James Briggs
 // Distributed under the MIT License
 
-// self
 #include "mx/core/Decimals.h"
-
-// lib
 #include "mx/core/UnusedParameter.h"
 
-// std
-#include <cmath>
 #include <sstream>
+#include <iomanip>
+#include <mutex>
 
 namespace mx
 {
@@ -298,16 +295,15 @@ namespace mx
             myValue.setValue( value );
         }
 
-        bool Decimal::parse( const std::string& value )
+        void Decimal::parse( const std::string& value )
         {
             std::stringstream ss( value );
             DecimalType temp = 0;
-            if ( ( ss >> temp ).fail() || !( ss >> std::ws ).eof())
+            if ( ( ss >> temp).fail() || !( ss >> std::ws).eof())
             {
-                return false;
+                return;
             }
             setValue( temp );
-            return true;
         }
 
         std::string Decimal::toString() const
@@ -410,62 +406,12 @@ namespace mx
             Decimal::setValue( myMinClamp( myMaxClamp( value ) ) );
         }
 
-#define MXMINEX( minbound ) DecimalClamp( []( DecimalType value ){ return minExclusive( minbound, value ); } )
-#define MXMAXEX( maxbound ) DecimalClamp( []( DecimalType value ){ return maxExclusive( maxbound, value ); } )
-#define MXMININ( minbound ) DecimalClamp( []( DecimalType value ){ return minInclusive( minbound, value ); } )
-#define MXMAXIN( maxbound ) DecimalClamp( []( DecimalType value ){ return maxInclusive( maxbound, value ); } )
-#define MX_NOOP DecimalClamp( noOp )
-
-        DivisionsValue::DivisionsValue( DecimalType value )
-        : DecimalRange{ MX_NOOP, MX_NOOP, value }
-        {
-
-        }
-
-        DivisionsValue::DivisionsValue()
-        : DivisionsValue{ 0.0 }
-        {
-
-        }
-
-        Millimeters::Millimeters( DecimalType value )
-        : DecimalRange{ MX_NOOP, MX_NOOP, value }
-        {
-
-        }
-
-        Millimeters::Millimeters()
-        : Millimeters{ 0.0 }
-        {
-
-        }
-
-        NonNegativeDecimal::NonNegativeDecimal( DecimalType value )
-        : DecimalRange{ MXMININ( 0 ), MX_NOOP, value }
-        {
-
-        }
-
-        NonNegativeDecimal::NonNegativeDecimal()
-        : NonNegativeDecimal{ 0.0 }
-        {
-
-        }
-
-        Percent::Percent( DecimalType value )
-        : DecimalRange{ MXMININ( 0 ), MXMAXIN( 100 ), value }
-        {
-
-        }
-
-        Percent::Percent()
-        : Percent{ 0.0 }
-        {
-
-        }
-
         PositiveDecimal::PositiveDecimal( DecimalType value )
-        : DecimalRange{ MXMINEX( 0 ), MX_NOOP, value }
+        : DecimalRange{
+            std::function<DecimalType(DecimalType)>( []( DecimalType value ){ return minExclusive( 0.0, value ); } ),
+            std::function<DecimalType(DecimalType)>( noOp ),
+            value
+        }
         {
 
         }
@@ -476,23 +422,49 @@ namespace mx
 
         }
 
-        PositiveDivisions::PositiveDivisions( DecimalType value )
-        : DecimalRange{ MXMINEX( 0 ), MX_NOOP, value }
+        NonNegativeDecimal::NonNegativeDecimal( DecimalType value )
+        : DecimalRange{
+            std::function<DecimalType(DecimalType)>( []( DecimalType value ){ return minInclusive( 0.0, value ); } ),
+            std::function<DecimalType(DecimalType)>( noOp ),
+            value
+        }
         {
 
         }
 
-        PositiveDivisions::PositiveDivisions()
-        : PositiveDivisions{ 1 }
+        NonNegativeDecimal::NonNegativeDecimal()
+        : NonNegativeDecimal{ 0.0 }
         {
 
         }
 
+        
+        Percent::Percent( DecimalType value )
+        : DecimalRange{
+            std::function<DecimalType(DecimalType)>( []( DecimalType value ){ return minInclusive( 0.0, value ); } ),
+            std::function<DecimalType(DecimalType)>( []( DecimalType value ){ return maxInclusive( 100.0, value ); } ),
+            value
+        }
+        {
+
+        }
+
+        Percent::Percent()
+        : Percent{ 0.0 }
+        {
+
+        }
+        
         RotationDegrees::RotationDegrees( DecimalType value )
-        : DecimalRange{ MXMININ( -180 ), MXMAXIN( 180 ), value }
+        : DecimalRange{
+            std::function<DecimalType(DecimalType)>( []( DecimalType value ){ return minInclusive( -180.0, value ); } ),
+            std::function<DecimalType(DecimalType)>( []( DecimalType value ){ return maxInclusive( 180.0, value ); } ),
+            value
+        }
         {
 
         }
+
 
         RotationDegrees::RotationDegrees()
         : RotationDegrees{ 0.0 }
@@ -500,38 +472,19 @@ namespace mx
 
         }
 
-        Semitones::Semitones( DecimalType value )
-        : DecimalRange{ MX_NOOP, MX_NOOP, value }
-        {
-
-        }
-
-        Semitones::Semitones()
-        : Semitones{ 0.0 }
-        {
-
-        }
-
-        TenthsValue::TenthsValue( DecimalType value )
-        : DecimalRange{ MX_NOOP, MX_NOOP, value }
-        {
-
-        }
-
-        TenthsValue::TenthsValue()
-        : TenthsValue{ 0.0 }
-        {
-
-        }
-
+        
         TrillBeats::TrillBeats( DecimalType value )
-        : DecimalRange{ MXMININ( 2 ), MX_NOOP, value }
+        : DecimalRange{
+            std::function<DecimalType(DecimalType)>( []( DecimalType value ){ return minInclusive( 2.0, value ); } ),
+            std::function<DecimalType(DecimalType)>( noOp ),
+            value
+        }
         {
-
+            this->setValue( value );
         }
 
         TrillBeats::TrillBeats()
-        : TrillBeats{ 2 }
+        : TrillBeats{ 0.0 }
         {
 
         }

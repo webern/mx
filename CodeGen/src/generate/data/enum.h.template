@@ -1,10 +1,14 @@
+        {{ banner }}
+        ///
 {{ documentation }}
+        ///
         enum class {{ classname }}
         {
 {{ enum_members_declare }}
         };
 
         {{ classname }} parse{{ classname }}( const std::string& value );
+        std::optional<{{ classname }}> tryParse{{ classname }}( const std::string& value );
         std::string toString( const {{ classname }} value );
         std::ostream& toStream( std::ostream& os, const {{ classname }} value );
         std::ostream& operator<<( std::ostream& os, const {{ classname }} value );
