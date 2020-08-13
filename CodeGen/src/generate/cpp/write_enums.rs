@@ -55,11 +55,13 @@ impl Writer {
             if let Some(of) = &enumeration.other_field {
                 data.insert("default_value_enum", of.default_value.camel().into());
                 data.insert("default_value_string", of.default_value.original().into());
+                data.insert("to_string_default_return", of.name.original().into());
                 data.insert("other_field_name", of.name.camel().into());
             } else {
                 let first_member = enumeration.members.first().unwrap();
                 data.insert("default_value_enum", first_member.camel().into());
                 data.insert("default_value_string", first_member.original().into());
+                data.insert("to_string_default_return", first_member.original().into());
             }
             let rendered_h = render(ENUM_H, &data)?;
             if !first {
@@ -478,6 +480,19 @@ fn enum_members_parse(e: &Enumeration) -> String {
             )
             .as_str(),
         );
+
+        if let Some(of) = &e.other_field {
+            s.push_str("            else ");
+            s.push_str(
+                format!(
+                    "if( value == \"{}\" ) {{ return {}::{}; }}",
+                    of.name.original(),
+                    e.name.pascal(),
+                    of.name.camel()
+                )
+                .as_str(),
+            );
+        }
     }
     s
 }
@@ -499,8 +514,8 @@ fn enum_members_to_string(e: &Enumeration) -> String {
         );
     }
     s.push_str("                default: break;\n");
-    s.push_str("            }\n");
-    s.push_str(format!("            return \"{}\";", e.members.get(0).unwrap().original()).as_str());
+    s.push_str("            }");
+    // s.push_str(format!("            return \"{}\";", e.members.get(0).unwrap().original()).as_str());
     s
 }
 

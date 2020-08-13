@@ -757,7 +757,7 @@ namespace mx
                 case DistanceTypeEnum::hyphen: { return "hyphen"; }
                 default: break;
             }
-            return "beam";
+            return "other";
         }
 
         std::ostream& toStream( std::ostream& os, const DistanceTypeEnum value )
@@ -820,11 +820,11 @@ namespace mx
 
         void DistanceType::setValue( const std::string& value )
         {
-            bool found = false;
             const auto temp = tryParseDistanceTypeEnum( value );
             if ( temp )
             {
                 myEnum = temp.value();
+                myCustomValue = "";
             }
             else
             {
@@ -918,7 +918,7 @@ namespace mx
                 case DynamicsEnum::fz: { return "fz"; }
                 default: break;
             }
-            return "p";
+            return "other-dynamics";
         }
 
         std::ostream& toStream( std::ostream& os, const DynamicsEnum value )
@@ -981,11 +981,11 @@ namespace mx
 
         void DynamicsValue::setValue( const std::string& value )
         {
-            bool found = false;
             const auto temp = tryParseDynamicsEnum( value );
             if ( temp )
             {
                 myEnum = temp.value();
+                myCustomValue = "";
             }
             else
             {
@@ -1903,7 +1903,7 @@ namespace mx
                 case LineWidthTypeEnum::wedge: { return "wedge"; }
                 default: break;
             }
-            return "beam";
+            return "other";
         }
 
         std::ostream& toStream( std::ostream& os, const LineWidthTypeEnum value )
@@ -1966,11 +1966,11 @@ namespace mx
 
         void LineWidthType::setValue( const std::string& value )
         {
-            bool found = false;
             const auto temp = tryParseLineWidthTypeEnum( value );
             if ( temp )
             {
                 myEnum = temp.value();
+                myCustomValue = "";
             }
             else
             {
@@ -2248,7 +2248,7 @@ namespace mx
                 case ModeEnum::none: { return "none"; }
                 default: break;
             }
-            return "major";
+            return "other";
         }
 
         std::ostream& toStream( std::ostream& os, const ModeEnum value )
@@ -2311,11 +2311,11 @@ namespace mx
 
         void ModeValue::setValue( const std::string& value )
         {
-            bool found = false;
             const auto temp = tryParseModeEnum( value );
             if ( temp )
             {
                 myEnum = temp.value();
+                myCustomValue = "";
             }
             else
             {

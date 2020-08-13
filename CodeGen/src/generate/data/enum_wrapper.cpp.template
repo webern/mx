@@ -48,11 +48,11 @@
 
         void {{ wrapper_classname }}::setValue( const std::string& value )
         {
-            bool found = false;
             const auto temp = tryParse{{ classname }}( value );
             if ( temp )
             {
                 myEnum = temp.value();
+                myCustomValue = "";
             }
             else
             {

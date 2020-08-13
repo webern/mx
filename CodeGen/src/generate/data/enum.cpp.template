@@ -15,6 +15,7 @@
         std::string toString( const {{ classname }} value )
         {
 {{ enum_members_to_string }}
+            return "{{ to_string_default_return }}";
         }
 
         std::ostream& toStream( std::ostream& os, const {{ classname }} value )
