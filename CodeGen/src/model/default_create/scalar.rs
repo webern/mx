@@ -98,11 +98,8 @@ pub(super) fn model_derived_simple_type(st: &SimpleType, _xsd: &Xsd) -> Option<C
         Payload::Union(u) => {
             return Some(Ok(Some(vec![Model::UnionSimpleType(UnionData {
                 name: Symbol::new(&st.name),
-                members: {
-                    let mut members = Vec::new();
-                    members
-                },
-                documentation: "".to_string(),
+                members: u.members.clone(),
+                documentation: u.documentation(),
             })])));
         }
         payload => {

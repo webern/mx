@@ -47,7 +47,9 @@ impl Writer {
                     ScalarNumeric::Decimal(d) => decimals.push(d.to_owned()),
                     ScalarNumeric::Integer(i) => integers.push(i.to_owned()),
                 },
-                Model::DerivedSimpleType(derived_from) => panic!("{:?}", derived_from),
+                Model::DerivedSimpleType(derived_from) => {
+                    return raise!("DerivedSimpleTypes not implemented: '{}'", derived_from.name.original())
+                }
                 Model::UnionSimpleType(u) => unions.push(u),
             }
         }

@@ -7,7 +7,7 @@ use crate::model::builtin::BuiltinString;
 use crate::model::create::{Create, CreateError, CreateResult};
 use crate::model::enumeration::OtherField;
 use crate::model::post_process::PostProcess;
-use crate::model::scalar::{Bound, ScalarNumeric};
+use crate::model::scalar::{Bound, NumericData, Range, ScalarNumeric};
 use crate::model::symbol::Symbol;
 use crate::model::transform::Transform;
 use crate::model::Model::Enumeration;
@@ -138,6 +138,26 @@ impl PostProcess for MxModeler {
                         mut_num.name.replace(&new_name);
                         return Ok(Model::ScalarNumber(ScalarNumeric::Integer(mut_num)));
                     }
+                }
+            }
+        } else if let Model::DerivedSimpleType(derived) = model {
+            match derived.name.original() {
+                "positive-divisions" => {
+                    let replacement = NumericData {
+                        name: derived.name.clone(),
+                        base_type: Numeric::Decimal,
+                        documentation: derived.documentation.clone(),
+                        range: Range {
+                            min: Some(Bound::Exclusive(0.0)),
+                            max: None,
+                        },
+                    };
+                    return Ok(Model::ScalarNumber(ScalarNumeric::Decimal(replacement)));
+                }
+                unhandled => {
+                    return Err(CreateError {
+                        message: format!("Unhandled DerivedSimpleType: '{}'", unhandled),
+                    })
                 }
             }
         }

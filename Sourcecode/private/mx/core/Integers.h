@@ -30,7 +30,7 @@ namespace mx
             Integer& operator=( Integer&& ) = default;
             [[nodiscard]] IntType getValue() const;
             virtual void setValue( IntType value );
-            virtual void parse( const std::string& value ) final;
+            bool parse( const std::string& value );
         private:
             IntType myValue;
         };

@@ -78,7 +78,7 @@
             Decimal& operator=( Decimal&& ) = default;
             DecimalType getValue() const;
             virtual void setValue( DecimalType value );
-            void parse( const std::string& value );
+            bool parse( const std::string& value );
             std::string toString() const;
             std::ostream& toStream( std::ostream& os ) const;
         private:

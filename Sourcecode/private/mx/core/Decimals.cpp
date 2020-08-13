@@ -298,15 +298,16 @@ namespace mx
             myValue.setValue( value );
         }
 
-        void Decimal::parse( const std::string& value )
+        bool Decimal::parse( const std::string& value )
         {
             std::stringstream ss( value );
             DecimalType temp = 0;
-            if ( ( ss >> temp).fail() || !( ss >> std::ws).eof())
+            if ( ( ss >> temp ).fail() || !( ss >> std::ws ).eof())
             {
-                return;
+                return false;
             }
             setValue( temp );
+            return true;
         }
 
         std::string Decimal::toString() const
@@ -471,6 +472,18 @@ namespace mx
 
         PositiveDecimal::PositiveDecimal()
         : PositiveDecimal{ 1 }
+        {
+
+        }
+
+        PositiveDivisions::PositiveDivisions( DecimalType value )
+        : DecimalRange{ MXMINEX( 0 ), MX_NOOP, value }
+        {
+
+        }
+
+        PositiveDivisions::PositiveDivisions()
+        : PositiveDivisions{ 1 }
         {
 
         }

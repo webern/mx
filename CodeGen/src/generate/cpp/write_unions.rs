@@ -21,14 +21,14 @@ use std::ops::Deref;
 
 impl Writer {
     pub(crate) fn write_unions(&self, mut unions: &[&UnionData]) -> Result<()> {
-        for union in unions {
+        for &union in unions {
             // we check each union to make sure its members match our expectations,
             // then we copy the hand-written implementation. by checking the members
             // we ensure that we don't miss a change in musicxml.xsd
             match union.name.original() {
                 "font-size" => {
                     if union.members.len() != 2 {
-                        return raise!("font-size has wrong number of members");
+                        return raise!("font-size has wrong number of members: {:?}", union);
                     }
                     if !union.members.get(0).unwrap().is_decimal() {
                         return raise!("font-size expected decimal");

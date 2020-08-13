@@ -92,7 +92,7 @@ namespace mx
             Decimal& operator=( Decimal&& ) = default;
             DecimalType getValue() const;
             virtual void setValue( DecimalType value );
-            void parse( const std::string& value );
+            bool parse( const std::string& value );
             std::string toString() const;
             std::ostream& toStream( std::ostream& os ) const;
         private:
@@ -170,6 +170,16 @@ namespace mx
         public:
             explicit PositiveDecimal( DecimalType value );
             PositiveDecimal();
+        };
+
+        /// The positive-divisions type restricts divisions values to positive numbers.
+        ///
+        /// Range: min=Exclusive(0), max=None
+        class PositiveDivisions : public DecimalRange
+        {
+        public:
+            explicit PositiveDivisions( DecimalType value );
+            PositiveDivisions();
         };
 
         /// The rotation-degrees type specifies rotation, pan, and elevation values in
