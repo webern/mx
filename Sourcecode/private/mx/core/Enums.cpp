@@ -746,6 +746,7 @@ namespace mx
         {
             if( value == "beam" ) { return DistanceTypeEnum::beam; }
             else if( value == "hyphen" ) { return DistanceTypeEnum::hyphen; }
+            else if( value == "other" ) { return DistanceTypeEnum::other; }
             return std::optional<DistanceTypeEnum>{};
         }
 
@@ -886,6 +887,7 @@ namespace mx
             else if( value == "sfz" ) { return DynamicsEnum::sfz; }
             else if( value == "sffz" ) { return DynamicsEnum::sffz; }
             else if( value == "fz" ) { return DynamicsEnum::fz; }
+            else if( value == "other-dynamics" ) { return DynamicsEnum::otherDynamics; }
             return std::optional<DynamicsEnum>{};
         }
 
@@ -1875,6 +1877,7 @@ namespace mx
             else if( value == "tie tip" ) { return LineWidthTypeEnum::tieTip; }
             else if( value == "tuplet bracket" ) { return LineWidthTypeEnum::tupletBracket; }
             else if( value == "wedge" ) { return LineWidthTypeEnum::wedge; }
+            else if( value == "other" ) { return LineWidthTypeEnum::other; }
             return std::optional<LineWidthTypeEnum>{};
         }
 
@@ -2229,6 +2232,7 @@ namespace mx
             else if( value == "ionian" ) { return ModeEnum::ionian; }
             else if( value == "locrian" ) { return ModeEnum::locrian; }
             else if( value == "none" ) { return ModeEnum::none; }
+            else if( value == "other" ) { return ModeEnum::other; }
             return std::optional<ModeEnum>{};
         }
 

@@ -480,19 +480,18 @@ fn enum_members_parse(e: &Enumeration) -> String {
             )
             .as_str(),
         );
-
-        if let Some(of) = &e.other_field {
-            s.push_str("            else ");
-            s.push_str(
-                format!(
-                    "if( value == \"{}\" ) {{ return {}::{}; }}",
-                    of.name.original(),
-                    e.name.pascal(),
-                    of.name.camel()
-                )
-                .as_str(),
-            );
-        }
+    }
+    if let Some(of) = &e.other_field {
+        s.push_str("\n            else ");
+        s.push_str(
+            format!(
+                "if( value == \"{}\" ) {{ return {}::{}; }}",
+                of.name.original(),
+                e.name.pascal(),
+                of.name.camel()
+            )
+            .as_str(),
+        );
     }
     s
 }
