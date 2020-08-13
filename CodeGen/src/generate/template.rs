@@ -76,7 +76,8 @@ fn read<P: AsRef<Path>>(p: P) -> Result<String> {
     if !p.is_file() {
         return raise!("not a file: '{}'", p.display());
     }
-    Ok(std::fs::read_to_string(p).map_err(|e| make_err!("cannot read file '{}': {}", p.display(), e))?)
+    Ok(std::fs::read_to_string(p)
+        .map_err(|e| make_err!("cannot read file '{}': {}", p.display(), e))?)
 }
 
 fn list_template_files() -> Result<Vec<(String, PathBuf)>> {
@@ -89,8 +90,11 @@ fn list_template_files() -> Result<Vec<(String, PathBuf)>> {
         return raise!("not a directory: '{}'", dir.display())?;
     }
     let mut list = Vec::new();
-    for entry in fs::read_dir(&dir).map_err(|e| make_err!("unable to read dir '{}': {}", dir.display(), e))? {
-        let entry = entry.map_err(|e| make_err!("unable to read entry in dir '{}': {}", dir.display(), e))?;
+    for entry in fs::read_dir(&dir)
+        .map_err(|e| make_err!("unable to read dir '{}': {}", dir.display(), e))?
+    {
+        let entry = entry
+            .map_err(|e| make_err!("unable to read entry in dir '{}': {}", dir.display(), e))?;
         if !entry.path().is_file() {
             continue;
         }

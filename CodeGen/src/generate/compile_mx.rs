@@ -33,7 +33,12 @@ fn run<P: AsRef<Path>>(cmd: &mut Command, dir: P) -> Result<(String, Output)> {
     let opath = dir.as_ref().join(format!("combined_output.log.{}", u));
     let ofile = wrap!(File::create(&opath))?;
     let efile = wrap!(ofile.try_clone())?;
-    let result = wrap!(cmd.current_dir(&dir.as_ref()).stdout(Stdio::from(ofile)).stderr(Stdio::from(efile)).spawn())?.wait_with_output();
+    let result = wrap!(cmd
+        .current_dir(&dir.as_ref())
+        .stdout(Stdio::from(ofile))
+        .stderr(Stdio::from(efile))
+        .spawn())?
+    .wait_with_output();
     let output = wrap!(result)?;
     let outstr = wrap!(read_to_string(&opath))?;
     if !output.status.success() {

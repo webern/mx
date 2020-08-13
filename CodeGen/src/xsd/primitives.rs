@@ -27,7 +27,11 @@ pub trait PrefixedParse {
     {
         let (ns, val) = split_raw_str(s.as_ref());
         if ns != prefix.as_ref() {
-            return raise!("wrong namespace prefix. expected '{}', got '{}'", prefix.as_ref(), ns);
+            return raise!(
+                "wrong namespace prefix. expected '{}', got '{}'",
+                prefix.as_ref(),
+                ns
+            );
         }
         Self::parse(val)
     }
@@ -112,7 +116,10 @@ impl PrefixedParse for Primitive {
         if let Ok(x) = DateTime::parse(&parseable) {
             return Ok(Self::DateTime(x));
         }
-        raise!("'{}' could not be parsed as a primitive type", parseable.as_ref())
+        raise!(
+            "'{}' could not be parsed as a primitive type",
+            parseable.as_ref()
+        )
     }
 }
 

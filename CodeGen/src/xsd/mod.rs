@@ -29,8 +29,9 @@ use crate::xsd::annotation::Annotation;
 use crate::xsd::attribute_group::AttributeGroup;
 use crate::xsd::complex_type::ComplexType;
 use crate::xsd::constants::{
-    ANNOTATION, ATTRIBUTE_GROUP, BASE, COMPLEX_TYPE, DEFAULT, ELEMENT, FIXED, GROUP, IMPORT, MAX_OCCURS, MIN_OCCURS, NAME, NAMESPACE, REF, REQUIRED,
-    SIMPLE_TYPE, TYPE, UNBOUNDED, USE, VALUE,
+    ANNOTATION, ATTRIBUTE_GROUP, BASE, COMPLEX_TYPE, DEFAULT, ELEMENT, FIXED, GROUP, IMPORT,
+    MAX_OCCURS, MIN_OCCURS, NAME, NAMESPACE, REF, REQUIRED, SIMPLE_TYPE, TYPE, UNBOUNDED, USE,
+    VALUE,
 };
 use crate::xsd::element::Element;
 use crate::xsd::group::GroupDefinition;
@@ -59,7 +60,11 @@ impl Default for Xsd {
 
 impl Xsd {
     pub fn load<P: AsRef<Path>>(filepath: P) -> Result<Self> {
-        let xml_str = wrap!(std::fs::read_to_string(filepath.as_ref()), "unable to load '{}'", filepath.as_ref().display())?;
+        let xml_str = wrap!(
+            std::fs::read_to_string(filepath.as_ref()),
+            "unable to load '{}'",
+            filepath.as_ref().display()
+        )?;
         let doc = exile::parse(&xml_str).unwrap();
         Self::parse(doc.root())
     }
@@ -74,7 +79,9 @@ impl Xsd {
                 if k.starts_with("xmlns:") {
                     let mut split = k.split(':');
                     let _ = split.next().ok_or(make_err!("expected to find xmlns:"))?;
-                    let ns: &str = split.next().ok_or(make_err!("expected to find xmlns prefix"))?;
+                    let ns: &str = split
+                        .next()
+                        .ok_or(make_err!("expected to find xmlns prefix"))?;
                     prefix = ns;
                     break;
                 }
@@ -168,13 +175,21 @@ impl Entry {
         let n = node.name.as_str();
         let t = RootNodeType::parse(n)?;
         match t {
-            RootNodeType::Annotation => Ok(Entry::Annotation(Annotation::from_xml(node, lineage, xsd)?)),
-            RootNodeType::AttributeGroup => Ok(Entry::AttributeGroup(AttributeGroup::from_xml(node, lineage, xsd)?)),
-            RootNodeType::ComplexType => Ok(Entry::ComplexType(ComplexType::from_xml(node, lineage, xsd)?)),
+            RootNodeType::Annotation => {
+                Ok(Entry::Annotation(Annotation::from_xml(node, lineage, xsd)?))
+            }
+            RootNodeType::AttributeGroup => Ok(Entry::AttributeGroup(AttributeGroup::from_xml(
+                node, lineage, xsd,
+            )?)),
+            RootNodeType::ComplexType => Ok(Entry::ComplexType(ComplexType::from_xml(
+                node, lineage, xsd,
+            )?)),
             RootNodeType::Element => Ok(Entry::Element(Element::from_xml(node, lineage, xsd)?)),
             RootNodeType::Group => Ok(Entry::Group(GroupDefinition::from_xml(node, lineage, xsd)?)),
             RootNodeType::Import => Ok(Entry::Import(Import::from_xml(node, lineage, xsd)?)),
-            RootNodeType::SimpleType => Ok(Entry::SimpleType(SimpleType::from_xml(node, lineage, xsd)?)),
+            RootNodeType::SimpleType => {
+                Ok(Entry::SimpleType(SimpleType::from_xml(node, lineage, xsd)?))
+            }
         }
     }
 
@@ -203,12 +218,19 @@ impl Entry {
     }
 }
 
-pub(crate) fn get_attribute<S: AsRef<str>>(node: &exile::Element, attribute_name: S) -> Result<String> {
+pub(crate) fn get_attribute<S: AsRef<str>>(
+    node: &exile::Element,
+    attribute_name: S,
+) -> Result<String> {
     Ok(node
         .attributes
         .map()
         .get(attribute_name.as_ref())
-        .ok_or(make_err!("'{}' attribute not found in '{}' node", attribute_name.as_ref(), node.name.as_str()))?
+        .ok_or(make_err!(
+            "'{}' attribute not found in '{}' node",
+            attribute_name.as_ref(),
+            node.name.as_str()
+        ))?
         .clone())
 }
 
@@ -306,7 +328,10 @@ impl Occurs {
                 );
             }
         }
-        Ok(Self { min_occurs, max_occurs })
+        Ok(Self {
+            min_occurs,
+            max_occurs,
+        })
     }
 }
 
@@ -352,7 +377,10 @@ fn parse_occurs() {
 
 #[test]
 fn parse_occurs_err() {
-    let test_cases = vec![r#"<xyz minOccurs="10" maxOccurs="1"/>"#, r#"<xyz maxOccurs="unexpectedString"/>"#];
+    let test_cases = vec![
+        r#"<xyz minOccurs="10" maxOccurs="1"/>"#,
+        r#"<xyz maxOccurs="unexpectedString"/>"#,
+    ];
 
     for xml in test_cases {
         let doc = exile::parse(xml).unwrap();

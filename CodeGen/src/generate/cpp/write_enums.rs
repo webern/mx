@@ -48,10 +48,16 @@ impl Writer {
             let mut data = HashMap::new();
             data.insert("classname", enumeration.name.pascal().to_owned());
             data.insert("banner", sep(enumeration.name.pascal(), 2));
-            data.insert("documentation", documentation(&enumeration.documentation, 2)?);
+            data.insert(
+                "documentation",
+                documentation(&enumeration.documentation, 2)?,
+            );
             data.insert("enum_members_declare", enum_members_declare(enumeration));
             data.insert("enum_members_parse", enum_members_parse(enumeration));
-            data.insert("enum_members_to_string", enum_members_to_string(enumeration));
+            data.insert(
+                "enum_members_to_string",
+                enum_members_to_string(enumeration),
+            );
             if let Some(of) = &enumeration.other_field {
                 data.insert("default_value_enum", of.default_value.camel().into());
                 data.insert("default_value_string", of.default_value.original().into());
@@ -88,7 +94,12 @@ impl Writer {
             Some(&mut ["mx/core/EnumsBuiltin.h"]),
             Some(&mut ["iostream", "string", "optional"]),
         )?;
-        let file_cpp = render_core_cpp(contents_cpp, Some("mx/core/Enums.h"), None, Some(&mut ["sstream"]))?;
+        let file_cpp = render_core_cpp(
+            contents_cpp,
+            Some("mx/core/Enums.h"),
+            None,
+            Some(&mut ["sstream"]),
+        )?;
         wrap!(std::fs::write(&self.paths.enums_h, file_h))?;
         wrap!(std::fs::write(&self.paths.enums_cpp, file_cpp))?;
         Ok(())

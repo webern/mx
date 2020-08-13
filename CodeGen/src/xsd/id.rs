@@ -1,5 +1,7 @@
 use crate::error::Result;
-use crate::xsd::constants::{ANNOTATION, ATTRIBUTE_GROUP, COMPLEX_TYPE, ELEMENT, GROUP, IMPORT, NAME, REF, SIMPLE_TYPE, TYPE};
+use crate::xsd::constants::{
+    ANNOTATION, ATTRIBUTE_GROUP, COMPLEX_TYPE, ELEMENT, GROUP, IMPORT, NAME, REF, SIMPLE_TYPE, TYPE,
+};
 use std::borrow::Cow;
 use std::cmp::Ordering;
 use std::collections::hash_map::DefaultHasher;
@@ -14,7 +16,11 @@ pub enum Id {
 
 impl Id {
     pub fn new(type_: RootNodeType, name: String) -> Self {
-        Id::Root(RootNodeId { index: None, type_, name })
+        Id::Root(RootNodeId {
+            index: None,
+            type_,
+            name,
+        })
     }
 
     pub fn root_with_index(index: u64, type_: RootNodeType, name: String) -> Self {
@@ -32,7 +38,11 @@ impl Id {
     {
         Id::Child(ChildNodeId {
             type_: type_.as_ref().into(),
-            name: if let Some(s) = name { Some(s.as_ref().into()) } else { None },
+            name: if let Some(s) = name {
+                Some(s.as_ref().into())
+            } else {
+                None
+            },
             parent: Box::new(parent.clone()),
         })
     }
@@ -98,7 +108,11 @@ impl Id {
             Lineage::Parent(p) => {
                 let id = Id::Child(ChildNodeId {
                     type_: type_.into(),
-                    name: if name.is_empty() { None } else { Some(name.into()) },
+                    name: if name.is_empty() {
+                        None
+                    } else {
+                        Some(name.into())
+                    },
                     parent: Box::new(p),
                 });
                 Ok((id.clone(), Lineage::Parent(id.clone())))

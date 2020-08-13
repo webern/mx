@@ -3,10 +3,10 @@ pub const LINE_WIDTH: usize = 100;
 pub const INDENT: &str = "    ";
 pub const DOC_COMMENT: &str = "///";
 
+use crate::error::Result;
 use std::cmp::Ordering;
 use std::fmt::{Display, Formatter};
-use std::io::{Write, Cursor};
-use crate::error::Result;
+use std::io::{Cursor, Write};
 
 #[derive(Debug, Clone, Eq, Ord, Default)]
 pub struct Altered {
@@ -442,7 +442,12 @@ mod tests {
             },
             TestCase {
                 input: "DomInAnt11th",
-                want: vec!["dom".to_owned(), "in".to_owned(), "ant".to_owned(), "11th".to_owned()],
+                want: vec![
+                    "dom".to_owned(),
+                    "in".to_owned(),
+                    "ant".to_owned(),
+                    "11th".to_owned(),
+                ],
             },
             TestCase {
                 input: "dominant11th",

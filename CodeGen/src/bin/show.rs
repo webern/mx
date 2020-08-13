@@ -63,7 +63,12 @@ fn print_sequence_children(root: &Element, target_element: &str) -> IndexSet<Str
     children_types
 }
 
-fn print_sequence_children_recursively(node: &Element, target_element: &str, parent_name: &str, children_types: &mut IndexSet<String>) {
+fn print_sequence_children_recursively(
+    node: &Element,
+    target_element: &str,
+    parent_name: &str,
+    children_types: &mut IndexSet<String>,
+) {
     let mut most_recent_name = parent_name.to_owned();
     if let Some(nm) = node.attributes.map().get("name") {
         most_recent_name = nm.clone();
@@ -74,10 +79,21 @@ fn print_sequence_children_recursively(node: &Element, target_element: &str, par
     }
     attributes.sort();
     if node.name.as_str() == target_element {
-        print_sequence_children_the_children_part(node, target_element, most_recent_name.as_str(), &attributes, children_types);
+        print_sequence_children_the_children_part(
+            node,
+            target_element,
+            most_recent_name.as_str(),
+            &attributes,
+            children_types,
+        );
     } else {
         for child in node.children() {
-            print_sequence_children_recursively(child, target_element, most_recent_name.as_str(), children_types);
+            print_sequence_children_recursively(
+                child,
+                target_element,
+                most_recent_name.as_str(),
+                children_types,
+            );
         }
     }
 }

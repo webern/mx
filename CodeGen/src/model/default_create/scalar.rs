@@ -1,6 +1,8 @@
 #[macro_use]
 use crate::model::create::{CreateError, CreateResult};
-use crate::model::scalar::{Bound, DerivedSimpleTypeData, NumericData, Range, ScalarNumeric, ScalarString, UnionData};
+use crate::model::scalar::{
+    Bound, DerivedSimpleTypeData, NumericData, Range, ScalarNumeric, ScalarString, UnionData,
+};
 use crate::model::symbol::Symbol;
 use crate::model::Model;
 use crate::xsd::primitives::{BaseType, Character, Numeric, Primitive};
@@ -43,7 +45,9 @@ pub(super) fn model_scalar_string(st: &SimpleType, _xsd: &Xsd) -> Option<CreateR
                     | Facet::MaxExclusive(_)
                     | Facet::MaxInclusive(_)
                     | Facet::MinExclusive(_)
-                    | Facet::MinInclusive(_) => return some_create_err!("unsupported facet '{:?}'", facet),
+                    | Facet::MinInclusive(_) => {
+                        return some_create_err!("unsupported facet '{:?}'", facet)
+                    }
                     Facet::Length(l) => {
                         scalar_string.min_length = Some(*l);
                         scalar_string.max_length = Some(*l);
@@ -89,11 +93,13 @@ pub(super) fn model_derived_simple_type(st: &SimpleType, _xsd: &Xsd) -> Option<C
                 // not a derived type
                 return None;
             };
-            return Some(Ok(Some(vec![Model::DerivedSimpleType(DerivedSimpleTypeData {
-                name: Symbol::new(&st.name),
-                base_type: base_type.into(),
-                documentation: st.documentation(),
-            })])));
+            return Some(Ok(Some(vec![Model::DerivedSimpleType(
+                DerivedSimpleTypeData {
+                    name: Symbol::new(&st.name),
+                    base_type: base_type.into(),
+                    documentation: st.documentation(),
+                },
+            )])));
         }
         Payload::Union(u) => {
             return Some(Ok(Some(vec![Model::UnionSimpleType(UnionData {
@@ -111,10 +117,18 @@ pub(super) fn model_derived_simple_type(st: &SimpleType, _xsd: &Xsd) -> Option<C
     }
 }
 
-fn produce_the_scalar_numeric(base_type: Numeric, r: &Restriction, st: &SimpleType, _xsd: &Xsd) -> CreateResult {
+fn produce_the_scalar_numeric(
+    base_type: Numeric,
+    r: &Restriction,
+    st: &SimpleType,
+    _xsd: &Xsd,
+) -> CreateResult {
     let mut scalar_numeric = match base_type {
         Numeric::Byte | Numeric::UnsignedByte => {
-            return Err(make_create_err!("Unsupported numeric type: '{}'", base_type))
+            return Err(make_create_err!(
+                "Unsupported numeric type: '{}'",
+                base_type
+            ))
         }
         Numeric::Decimal => ScalarNumeric::Decimal(NumericData {
             name: Symbol::new(st.name.as_str()),
@@ -166,7 +180,10 @@ fn produce_the_scalar_numeric(base_type: Numeric, r: &Restriction, st: &SimpleTy
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Wow what an incredible mess
 
-fn parse_decimal_range(starting_range: Range<f64>, facets: &[Facet]) -> std::result::Result<Range<f64>, CreateError> {
+fn parse_decimal_range(
+    starting_range: Range<f64>,
+    facets: &[Facet],
+) -> std::result::Result<Range<f64>, CreateError> {
     let mut min = starting_range.min.and_then(|some| match some {
         Bound::Inclusive(i) => Some(LowerFloatBound::Inclusive(i)),
         Bound::Exclusive(e) => Some(LowerFloatBound::Exclusive(e)),
@@ -261,7 +278,10 @@ fn parse_decimal_range(starting_range: Range<f64>, facets: &[Facet]) -> std::res
     })
 }
 
-fn parse_integer_range(starting_range: Range<i64>, facets: &[Facet]) -> std::result::Result<Range<i64>, CreateError> {
+fn parse_integer_range(
+    starting_range: Range<i64>,
+    facets: &[Facet],
+) -> std::result::Result<Range<i64>, CreateError> {
     let mut min = starting_range.min.and_then(|some| match some {
         Bound::Inclusive(i) => Some(LowerIntegerBound::Inclusive(i)),
         Bound::Exclusive(e) => Some(LowerIntegerBound::Exclusive(e)),

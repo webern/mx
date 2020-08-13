@@ -2,8 +2,8 @@ use crate::error::Result;
 use crate::generate::cpp::cpp_template::{render_core_cpp, render_core_h};
 use crate::generate::cpp::writer::Writer;
 use crate::generate::template::{
-    render, CORE_H, DECIMAL_BUILTINS_CPP, DECIMAL_BUILTINS_H, DECIMAL_TYPE_CPP, DECIMAL_TYPE_H, INTEGER_BUILTINS_CPP,
-    INTEGER_BUILTINS_H, INTEGER_TYPE_CPP, INTEGER_TYPE_H, NO_DATA,
+    render, CORE_H, DECIMAL_BUILTINS_CPP, DECIMAL_BUILTINS_H, DECIMAL_TYPE_CPP, DECIMAL_TYPE_H,
+    INTEGER_BUILTINS_CPP, INTEGER_BUILTINS_H, INTEGER_TYPE_CPP, INTEGER_TYPE_H, NO_DATA,
 };
 use crate::model::scalar::{Bound, NumericData, Range, UnionData};
 use crate::model::scalar::{ScalarNumeric, ScalarString};
@@ -60,9 +60,15 @@ impl Writer {
         let template_h = format!("{}.template", filename_h);
         let template_cpp = format!("{}.template", filename_cpp);
         let contents_h = render(template_h, &data)?;
-        wrap!(std::fs::write(self.paths.core.join(&filename_h), contents_h));
+        wrap!(std::fs::write(
+            self.paths.core.join(&filename_h),
+            contents_h
+        ));
         let contents_cpp = render(template_cpp, &data)?;
-        wrap!(std::fs::write(self.paths.core.join(&filename_cpp), contents_cpp));
+        wrap!(std::fs::write(
+            self.paths.core.join(&filename_cpp),
+            contents_cpp
+        ));
         Ok(())
     }
 }

@@ -5,7 +5,9 @@ mod scalar;
 use crate::model::create::{Create, CreateError, CreateResult};
 
 use crate::model::default_create::enumeration::{is_enumeration, model_enumeration};
-use crate::model::default_create::scalar::{model_derived_simple_type, model_scalar_number, model_scalar_string};
+use crate::model::default_create::scalar::{
+    model_derived_simple_type, model_scalar_number, model_scalar_string,
+};
 use crate::model::enumeration::Enumeration;
 use crate::model::scalar::ScalarNumeric;
 use crate::model::symbol::Symbol;

@@ -1,6 +1,6 @@
 use crate::generate::cpp::constants::{
-    custom_scalar_strings, enum_member_substitutions, pseudo_enums, reserved_words, suffixed_enum_names,
-    suffixed_value_names, PseudoEnumSpec,
+    custom_scalar_strings, enum_member_substitutions, pseudo_enums, reserved_words,
+    suffixed_enum_names, suffixed_value_names, PseudoEnumSpec,
 };
 use crate::model;
 use crate::model::builtin::BuiltinString;
@@ -97,9 +97,14 @@ impl PostProcess for MxModeler {
             }
             return Ok(Model::Enumeration(cloned));
         } else if let Model::ScalarString(scalar_string) = model {
-            if self.custom_scalar_strings.contains(scalar_string.name.original()) {
+            if self
+                .custom_scalar_strings
+                .contains(scalar_string.name.original())
+            {
                 return Ok(Model::CustomScalarString(scalar_string.clone()));
-            } else if let Some(new_name) = self.suffixed_value_names.get(scalar_string.name.original()) {
+            } else if let Some(new_name) =
+                self.suffixed_value_names.get(scalar_string.name.original())
+            {
                 let mut st = scalar_string.clone();
                 st.name.replace(&new_name);
                 return Ok(Model::ScalarString(st));
@@ -244,7 +249,10 @@ impl MxModeler {
         Ok((ct, p, choice))
     }
 
-    fn unwrap_empty_element<'a>(&self, c: &'a ChoiceItem) -> std::result::Result<Option<&'a str>, CreateError> {
+    fn unwrap_empty_element<'a>(
+        &self,
+        c: &'a ChoiceItem,
+    ) -> std::result::Result<Option<&'a str>, CreateError> {
         let ref_: &ElementRef = if let ChoiceItem::Element(wrapped) = c {
             let ref_ = if let element::Element::Reference(ref_) = wrapped {
                 ref_
@@ -296,7 +304,10 @@ impl MxModeler {
         }
     }
 
-    fn unwrap_other_field<'a>(&self, c: &'a ChoiceItem) -> std::result::Result<&'a str, CreateError> {
+    fn unwrap_other_field<'a>(
+        &self,
+        c: &'a ChoiceItem,
+    ) -> std::result::Result<&'a str, CreateError> {
         let found_stuff = if let Some(other_field) = self.unwrap_simple_element(c)? {
             other_field
         } else {

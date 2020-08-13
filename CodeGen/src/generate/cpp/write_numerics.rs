@@ -2,8 +2,8 @@ use crate::error::Result;
 use crate::generate::cpp::cpp_template::{render_core_cpp, render_core_h};
 use crate::generate::cpp::writer::Writer;
 use crate::generate::template::{
-    render, CORE_H, DECIMAL_BUILTINS_CPP, DECIMAL_BUILTINS_H, DECIMAL_TYPE_CPP, DECIMAL_TYPE_H, INTEGER_BUILTINS_CPP,
-    INTEGER_BUILTINS_H, INTEGER_TYPE_CPP, INTEGER_TYPE_H, NO_DATA,
+    render, CORE_H, DECIMAL_BUILTINS_CPP, DECIMAL_BUILTINS_H, DECIMAL_TYPE_CPP, DECIMAL_TYPE_H,
+    INTEGER_BUILTINS_CPP, INTEGER_BUILTINS_H, INTEGER_TYPE_CPP, INTEGER_TYPE_H, NO_DATA,
 };
 use crate::model::scalar::{Bound, NumericData, Range};
 use crate::model::scalar::{ScalarNumeric, ScalarString};
@@ -66,7 +66,9 @@ impl Writer {
         let byte = NumericData {
             name: Symbol::new("byte"),
             base_type: Numeric::NonNegativeInteger,
-            documentation: String::from("This is not part of MusicXML. It represents a clamped byte."),
+            documentation: String::from(
+                "This is not part of MusicXML. It represents a clamped byte.",
+            ),
             range: Range {
                 min: Some(Bound::Inclusive(0 as i64)),
                 max: Some(Bound::Inclusive(255 as i64)),
@@ -100,7 +102,8 @@ impl Writer {
             contents.push('\n');
             contents.push_str(&rendered_type);
         }
-        let file_contents = render_core_h(contents, None, Some(&mut ["iostream", "string", "limits"]))?;
+        let file_contents =
+            render_core_h(contents, None, Some(&mut ["iostream", "string", "limits"]))?;
         wrap!(std::fs::write(&self.paths.integers_h, file_contents))?;
         Ok(())
     }
@@ -119,7 +122,12 @@ impl Writer {
             if i < numerics.len() - 1 {}
             contents.push_str(&rendered);
         }
-        let file_contents = render_core_cpp(contents, Some("mx/core/Integers.h"), None, Some(&mut ["sstream"]))?;
+        let file_contents = render_core_cpp(
+            contents,
+            Some("mx/core/Integers.h"),
+            None,
+            Some(&mut ["sstream"]),
+        )?;
         wrap!(std::fs::write(&self.paths.integers_cpp, file_contents))?;
         Ok(())
     }
@@ -145,13 +153,20 @@ impl Writer {
         for numeric in numerics {
             let mut data = HashMap::new();
             data.insert("classname", numeric.name.pascal().to_owned());
-            data.insert("documentation", documentation(document_decimal(numeric), 2)?);
+            data.insert(
+                "documentation",
+                documentation(document_decimal(numeric), 2)?,
+            );
             let rendered_type = render(DECIMAL_TYPE_H, &data)?;
             contents.push('\n');
             contents.push('\n');
             contents.push_str(&rendered_type);
         }
-        let file_contents = render_core_h(contents, None, Some(&mut ["iostream", "string", "functional"]))?;
+        let file_contents = render_core_h(
+            contents,
+            None,
+            Some(&mut ["iostream", "string", "functional"]),
+        )?;
         wrap!(std::fs::write(&self.paths.decimals_h, file_contents))?;
         Ok(())
     }
@@ -261,7 +276,11 @@ fn document_int(numeric: &NumericData<i64>) -> String {
     if numeric.documentation.is_empty() {
         describe_range_int(numeric)
     } else {
-        format!("{}\n\n{}", numeric.documentation, describe_range_int(numeric))
+        format!(
+            "{}\n\n{}",
+            numeric.documentation,
+            describe_range_int(numeric)
+        )
     }
 }
 
