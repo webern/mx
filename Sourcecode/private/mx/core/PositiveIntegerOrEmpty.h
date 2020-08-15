@@ -4,36 +4,40 @@
 
 #pragma once
 
+#include <iostream>
+#include "mx/core/Integers.h"
+#include <memory>
+
 namespace mx
 {
     namespace core
     {
-documentation()
-        class classname
+        class PositiveIntegerOrEmpty
         {
         public:
-            explicit classname();
-            // explicit classname( const Decimal& value );
-            // explicit classname( const SomeEnumType value );
-            variants_ctor_decl
-            explicit classname( const std::string& value );
-            // bool getIsSomeEnumType() const;
-            // bool getIsNumber() const;
-            variants_get_is_decl
-            // void setValue( const SomeEnumType value );
-            // void setValue( const Decimal& value );
-            variants_set_decl
-            // SomeEnumType getValueSomeEnumType() const;
-            // Decimal getValueNumber() const;
-            variants_get_decl
-            bool parse( const std::string& value );
+            explicit PositiveIntegerOrEmpty();
+            explicit PositiveIntegerOrEmpty( const PositiveInteger& value );
+            explicit PositiveIntegerOrEmpty( const std::string& value );
+            virtual ~PositiveIntegerOrEmpty();
+            PositiveIntegerOrEmpty( const PositiveIntegerOrEmpty& other );
+            PositiveIntegerOrEmpty( PositiveIntegerOrEmpty&& other );
+            PositiveIntegerOrEmpty& operator=( const PositiveIntegerOrEmpty& other );
+            PositiveIntegerOrEmpty& operator=( PositiveIntegerOrEmpty&& other );
+            
+            bool getIsEmpty() const;
+            bool getIsNumber() const;
+            void setValueEmpty();
+            void setValue( const PositiveInteger& value );
+            PositiveInteger getValueNumber() const;
+            void parse( const std::string& value );
             
         private:
-            std::variant<variants_template_decl> myValue;
+            class impl;
+            std::unique_ptr<impl> myImpl;
         };
         
-        std::string toString( const classname& value );
-		std::ostream& toStream( std::ostream& os, const classname& value );
-		std::ostream& operator<<( std::ostream& os, const classname& value );
+        std::string toString( const PositiveIntegerOrEmpty& value );
+		std::ostream& toStream( std::ostream& os, const PositiveIntegerOrEmpty& value );
+		std::ostream& operator<<( std::ostream& os, const PositiveIntegerOrEmpty& value );
     }
 }

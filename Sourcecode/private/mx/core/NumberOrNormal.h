@@ -4,36 +4,40 @@
 
 #pragma once
 
+#include <iostream>
+#include "mx/core/Decimals.h"
+#include <memory>
+
 namespace mx
 {
     namespace core
     {
-documentation()
-        class classname
+        class NumberOrNormal
         {
         public:
-            explicit classname();
-            // explicit classname( const Decimal& value );
-            // explicit classname( const SomeEnumType value );
-            variants_ctor_decl
-            explicit classname( const std::string& value );
-            // bool getIsSomeEnumType() const;
-            // bool getIsNumber() const;
-            variants_get_is_decl
-            // void setValue( const SomeEnumType value );
-            // void setValue( const Decimal& value );
-            variants_set_decl
-            // SomeEnumType getValueSomeEnumType() const;
-            // Decimal getValueNumber() const;
-            variants_get_decl
-            bool parse( const std::string& value );
+            explicit NumberOrNormal();
+            explicit NumberOrNormal( const Decimal& value );
+            explicit NumberOrNormal( const std::string& value );
+            virtual ~NumberOrNormal();
+            NumberOrNormal( const NumberOrNormal& other );
+            NumberOrNormal( NumberOrNormal&& other );
+            NumberOrNormal& operator=( const NumberOrNormal& other );
+            NumberOrNormal& operator=( NumberOrNormal&& other );
+            
+            bool getIsNormal() const;
+            bool getIsNumber() const;
+            void setValueNormal();
+            void setValue( const Decimal& value );
+            Decimal getValueNumber() const;
+            void parse( const std::string& value );
             
         private:
-            std::variant<variants_template_decl> myValue;
+            class impl;
+            std::unique_ptr<impl> myImpl;
         };
         
-        std::string toString( const classname& value );
-		std::ostream& toStream( std::ostream& os, const classname& value );
-		std::ostream& operator<<( std::ostream& os, const classname& value );
+        std::string toString( const NumberOrNormal& value );
+		std::ostream& toStream( std::ostream& os, const NumberOrNormal& value );
+		std::ostream& operator<<( std::ostream& os, const NumberOrNormal& value );
     }
 }

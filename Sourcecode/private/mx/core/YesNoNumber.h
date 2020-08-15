@@ -4,36 +4,43 @@
 
 #pragma once
 
+#include <iostream>
+#include "mx/core/Decimals.h"
+#include "mx/core/Enums.h"
+#include <memory>
+
 namespace mx
 {
     namespace core
     {
-documentation()
-        class classname
+        class YesNoNumber
         {
         public:
-            explicit classname();
-            // explicit classname( const Decimal& value );
-            // explicit classname( const SomeEnumType value );
-            variants_ctor_decl
-            explicit classname( const std::string& value );
-            // bool getIsSomeEnumType() const;
-            // bool getIsNumber() const;
-            variants_get_is_decl
-            // void setValue( const SomeEnumType value );
-            // void setValue( const Decimal& value );
-            variants_set_decl
-            // SomeEnumType getValueSomeEnumType() const;
-            // Decimal getValueNumber() const;
-            variants_get_decl
-            bool parse( const std::string& value );
+            explicit YesNoNumber();
+            explicit YesNoNumber( const Decimal& value );
+            explicit YesNoNumber( const YesNo value );
+            explicit YesNoNumber( const std::string& value );
+            virtual ~YesNoNumber();
+            YesNoNumber( const YesNoNumber& other );
+            YesNoNumber( YesNoNumber&& other );
+            YesNoNumber& operator=( const YesNoNumber& other );
+            YesNoNumber& operator=( YesNoNumber&& other );
+            
+            bool getIsYesNo() const;
+            bool getIsNumber() const;
+            void setValue( const YesNo value );
+            void setValue( const Decimal& value );
+            YesNo getValueYesNo() const;
+            Decimal getValueNumber() const;
+            void parse( const std::string& value );
             
         private:
-            std::variant<variants_template_decl> myValue;
+            class impl;
+            std::unique_ptr<impl> myImpl;
         };
         
-        std::string toString( const classname& value );
-		std::ostream& toStream( std::ostream& os, const classname& value );
-		std::ostream& operator<<( std::ostream& os, const classname& value );
+        std::string toString( const YesNoNumber& value );
+		std::ostream& toStream( std::ostream& os, const YesNoNumber& value );
+		std::ostream& operator<<( std::ostream& os, const YesNoNumber& value );
     }
 }
