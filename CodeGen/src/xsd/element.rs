@@ -233,7 +233,7 @@ fn parse_credit() {
         Element::Reference(x) => x,
     };
     assert_eq!(ele.name.as_str(), "credit");
-    assert_eq!(ele.type_, BaseType::Other("credit".to_owned()));
+    assert_eq!(ele.type_, BaseType::Custom("credit".to_owned()));
     assert_eq!(
         ele.occurs,
         Occurs {

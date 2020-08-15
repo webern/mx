@@ -268,7 +268,7 @@ impl MxModeler {
             });
         };
 
-        if ref_.type_ == BaseType::Other("empty".to_owned()) {
+        if ref_.type_ == BaseType::Custom("empty".to_owned()) {
             Ok(Some(ref_.name.as_str()))
         } else {
             Ok(None)

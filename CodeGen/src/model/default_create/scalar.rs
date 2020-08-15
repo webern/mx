@@ -87,7 +87,7 @@ pub(super) fn model_scalar_number(st: &SimpleType, _xsd: &Xsd) -> Option<CreateR
 pub(super) fn model_derived_simple_type(st: &SimpleType, _xsd: &Xsd) -> Option<CreateResult> {
     match &st.payload {
         Payload::Restriction(r) => {
-            let base_type = if let BaseType::Other(s) = &r.base {
+            let base_type = if let BaseType::Custom(s) = &r.base {
                 s
             } else {
                 // not a derived type
