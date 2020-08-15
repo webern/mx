@@ -27,6 +27,15 @@ impl Default for ScalarNumeric {
     }
 }
 
+impl ScalarNumeric {
+    pub fn name(&self) -> &Symbol{
+        match self {
+            ScalarNumeric::Decimal(x) => {&x.name},
+            ScalarNumeric::Integer(x) => {&x.name},
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, PartialOrd)]
 pub enum Bound<T>
 where

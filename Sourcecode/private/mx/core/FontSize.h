@@ -4,37 +4,36 @@
 
 #pragma once
 
-#include "mx/core/Decimals.h"
-#include "mx/core/Enums.h"
-
-#include <variant>
-
 namespace mx
 {
     namespace core
     {
-        class FontSize
+documentation()
+        class classname
         {
         public:
-            explicit FontSize();
-            explicit FontSize( const Decimal& value );
-            explicit FontSize( const CssFontSize value );
-            explicit FontSize( const std::string& value );
-
-            bool getIsCssFontSize() const;
-            bool getIsNumber() const;
-            void setValue( const CssFontSize value );
-            void setValue( const Decimal& value );
-            CssFontSize getValueCssFontSize() const;
-            Decimal getValueNumber() const;
+            explicit classname();
+            // explicit classname( const Decimal& value );
+            // explicit classname( const SomeEnumType value );
+            variants_ctor_decl
+            explicit classname( const std::string& value );
+            // bool getIsSomeEnumType() const;
+            // bool getIsNumber() const;
+            variants_get_is_decl
+            // void setValue( const SomeEnumType value );
+            // void setValue( const Decimal& value );
+            variants_set_decl
+            // SomeEnumType getValueSomeEnumType() const;
+            // Decimal getValueNumber() const;
+            variants_get_decl
             bool parse( const std::string& value );
             
         private:
-            std::variant<CssFontSize, Decimal> myValue;
+            std::variant<variants_template_decl> myValue;
         };
         
-        std::string toString( const FontSize& value );
-		std::ostream& toStream( std::ostream& os, const FontSize& value );
-		std::ostream& operator<<( std::ostream& os, const FontSize& value );
+        std::string toString( const classname& value );
+		std::ostream& toStream( std::ostream& os, const classname& value );
+		std::ostream& operator<<( std::ostream& os, const classname& value );
     }
 }

@@ -2,146 +2,115 @@
 // Copyright (c) by Matthew James Briggs
 // Distributed under the MIT License
 
+// self
 #include "mx/core/PositiveIntegerOrEmpty.h"
-#include <string>
-#include <sstream>
-#include <memory>
 
 namespace mx
 {
     namespace core
     {
-        
-        class PositiveIntegerOrEmpty::impl
+        template<class> inline constexpr bool always_false_v = false;
+
+        classname::classname()
+        : myValue{ default_value }
         {
-        public:
-            explicit impl()
-            :myPositiveInteger( 1 )
-            ,myIsEmpty( true )
-            {}
-            
-            explicit impl( const PositiveInteger& value )
-            :myPositiveInteger( value )
-            ,myIsEmpty( false )
-            {}
-            
-            explicit impl( const std::string& value )
-            :myPositiveInteger( 1 )
-            ,myIsEmpty( false )
-            {
-                parse( value );
-            }
-            
-            bool getIsEmpty() const
-            {
-                return myIsEmpty;
-            }
-            bool getIsNumber() const
-            {
-                return ! myIsEmpty;
-            }
-            void setValueEmpty()
-            {
-                myPositiveInteger = PositiveInteger( 1 );
-                myIsEmpty = true;;
-            }
-            void setValue( const PositiveInteger& value )
-            {
-                myPositiveInteger = PositiveInteger( value );
-                myIsEmpty = false;
-            }
-            PositiveInteger getValueNumber() const
-            {
-                return myPositiveInteger;
-            }
-            void parse( const std::string& value )
-            {
-                if ( value == "" )
-                {
-                    myPositiveInteger = PositiveInteger( 1 );
-                    myIsEmpty = true;
-                }
-                else
-                {
-                    /* if it contains only numeric
-                     characters it must be a number */
-                    myPositiveInteger.parse( value );
-                    myIsEmpty = false;
-                }
-            }
-        private:
-            PositiveInteger myPositiveInteger;
-            bool myIsEmpty;
-        };
-        
-        
-        PositiveIntegerOrEmpty::PositiveIntegerOrEmpty()
-        :myImpl( new impl() )
-        {}
-        
-        PositiveIntegerOrEmpty::PositiveIntegerOrEmpty( const PositiveInteger& value )
-        :myImpl( new impl( value ) )
-        {}
-        
-        PositiveIntegerOrEmpty::PositiveIntegerOrEmpty( const std::string& value )
-        :myImpl( new impl( value ) )
-        {}
-        
-        PositiveIntegerOrEmpty::~PositiveIntegerOrEmpty() {}
-        
-        PositiveIntegerOrEmpty::PositiveIntegerOrEmpty( const PositiveIntegerOrEmpty& other )
-        :myImpl( new PositiveIntegerOrEmpty::impl( *other.myImpl ) )
-        {}
-        
-        PositiveIntegerOrEmpty::PositiveIntegerOrEmpty( PositiveIntegerOrEmpty&& other )
-        :myImpl( std::move( other.myImpl ) )
-        {}
-        
-        PositiveIntegerOrEmpty& PositiveIntegerOrEmpty::operator=( PositiveIntegerOrEmpty&& other )
-        {
-            myImpl = std::move( other.myImpl );
-            return *this;
+
         }
         
-        PositiveIntegerOrEmpty& PositiveIntegerOrEmpty::operator=( const PositiveIntegerOrEmpty& other )
-        {
-            this->myImpl = std::unique_ptr<PositiveIntegerOrEmpty::impl>( new PositiveIntegerOrEmpty::impl( *other.myImpl ) );
-            return *this;
-        }
+        // classname::classname( const Decimal& value )
+        // : myValue{ value }
+        // {}
         
-        bool PositiveIntegerOrEmpty::getIsEmpty() const
+        // classname::classname( const SomeEnumType value )
+        // : myValue{ value }
+        // {}
+variants_ctor_def        
+
+        classname::classname( const std::string& value )
+        : classname{}
         {
-            return myImpl->getIsEmpty();
+            parse( value );
         }
-        bool PositiveIntegerOrEmpty::getIsNumber() const
+
+        // bool classname::getIsSomeEnumType() const
+        // {
+        //     return myValue.index() == 0;
+        // }
+
+        // bool classname::getIsNumber() const
+        // {
+        //     return myValue.index() == 1;
+        // }
+variants_get_is_def
+
+        // void classname::setValue( const SomeEnumType value )
+        // {
+        //     myValue.emplace<SomeEnumType>( value );
+        // }
+
+        // void classname::setValue( const Decimal& value )
+        // {
+        //     myValue.emplace<Decimal>( value );
+        // }
+variants_set_def
+
+        // SomeEnumType classname::getValueSomeEnumType() const
+        // {
+        //     auto result = SomeEnumType::medium;
+        //     std::visit([&](auto&& arg) {
+        //         using T = std::decay_t<decltype(arg)>;
+        //         if constexpr (std::is_same_v<T, SomeEnumType>)
+        //             result = arg;
+        //         else if constexpr (std::is_same_v<T, Decimal>)
+        //             result = SomeEnumType::medium;
+        //         else
+        //             static_assert(always_false_v<T>, "non-exhaustive visitor!");
+        //     }, myValue);
+        //     return result;
+        // }
+
+        // Decimal classname::getValueNumber() const
+        // {
+        //     auto result = Decimal{};
+        //     std::visit([&](auto&& arg) {
+        //         using T = std::decay_t<decltype(arg)>;
+        //         if constexpr (std::is_same_v<T, SomeEnumType>)
+        //             result = Decimal{};
+        //         else if constexpr (std::is_same_v<T, Decimal>)
+        //             result = arg;
+        //         else
+        //             static_assert(always_false_v<T>, "non-exhaustive visitor!");
+        //     }, myValue);
+        //     return result;
+        // }
+variants_get_def
+
+        bool classname::parse( const std::string& value )
         {
-            return myImpl->getIsNumber();
+            // const auto SomeEnumType = tryParseSomeEnumType( value );
+            // if( SomeEnumType )
+            // {
+            //     setValue( *SomeEnumType );
+            //     return true;
+            // }
+            // auto decimal = Decimal{};
+            // if( decimal.parse( value ) )
+            // {
+            //     setValue( decimal );
+            //     return true;
+            // }
+            // return false;
+parse_def
         }
-        void PositiveIntegerOrEmpty::setValueEmpty()
-        {
-            myImpl->setValueEmpty();
-        }
-        void PositiveIntegerOrEmpty::setValue( const PositiveInteger& value )
-        {
-            myImpl->setValue( value );
-        }
-        PositiveInteger PositiveIntegerOrEmpty::getValueNumber() const
-        {
-            return myImpl->getValueNumber();
-        }
-        
-        void PositiveIntegerOrEmpty::parse( const std::string& value )
-        {
-            myImpl->parse( value );
-        }
-        
-        std::string toString( const PositiveIntegerOrEmpty& value )
+
+        std::string toString( const classname& value )
         {
             std::stringstream ss;
             toStream( ss, value );
             return ss.str();
         }
-		std::ostream& toStream( std::ostream& os, const PositiveIntegerOrEmpty& value )
+
+		std::ostream& toStream( std::ostream& os, const classname& value )
         {
             if ( value.getIsNumber() )
             {
@@ -149,15 +118,14 @@ namespace mx
             }
             else
             {
-                ; // os << "";
+                toStream( os, value.getValueSomeEnumType() );
             }
             return os;
         }
-		std::ostream& operator<<( std::ostream& os, const PositiveIntegerOrEmpty& value )
+
+		std::ostream& operator<<( std::ostream& os, const classname& value )
         {
             return toStream( os, value );
         }
-        
-        
     }
 }

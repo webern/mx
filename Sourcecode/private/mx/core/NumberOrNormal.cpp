@@ -2,143 +2,115 @@
 // Copyright (c) by Matthew James Briggs
 // Distributed under the MIT License
 
+// self
 #include "mx/core/NumberOrNormal.h"
-#include <sstream>
 
 namespace mx
 {
     namespace core
     {
-        
-        class NumberOrNormal::impl
+        template<class> inline constexpr bool always_false_v = false;
+
+        classname::classname()
+        : myValue{ default_value }
         {
-        public:
-            explicit impl()
-            :myDecimal( 0 )
-            ,myIsNormal( true )
-            {}
-            
-            explicit impl( const Decimal& value )
-            :myDecimal( value )
-            ,myIsNormal( false )
-            {}
-            
-            explicit impl( const std::string& value )
-            :myDecimal( 0 )
-            ,myIsNormal( false )
-            {
-                parse( value );
-            }
-            
-            bool getIsNormal() const
-            {
-                return myIsNormal;
-            }
-            bool getIsNumber() const
-            {
-                return ! myIsNormal;
-            }
-            void setValueNormal()
-            {
-                myDecimal = Decimal( 0 );
-                myIsNormal = true;;
-            }
-            void setValue( const Decimal& value )
-            {
-                myDecimal = Decimal( value );
-                myIsNormal = false;
-            }
-            Decimal getValueNumber() const
-            {
-                return myDecimal;
-            }
-            void parse( const std::string& value )
-            {
-                if ( value == "normal" )
-                {
-                    myDecimal = Decimal( 0 );
-                    myIsNormal = true;
-                }
-                else
-                {
-                    /* if it contains only numeric
-                     characters it must be a number */
-                    myDecimal.parse( value );
-                    myIsNormal = false;
-                }
-            }
-        private:
-            Decimal myDecimal;
-            bool myIsNormal;
-        };
-        
-        
-        NumberOrNormal::NumberOrNormal()
-        :myImpl( new impl() )
-        {}
-        
-        NumberOrNormal::NumberOrNormal( const Decimal& value )
-        :myImpl( new impl( value ) )
-        {}
-        
-        NumberOrNormal::NumberOrNormal( const std::string& value )
-        :myImpl( new impl( value ) )
-        {}
-        
-        NumberOrNormal::~NumberOrNormal() {}
-        
-        NumberOrNormal::NumberOrNormal( const NumberOrNormal& other )
-        :myImpl( new NumberOrNormal::impl( *other.myImpl ) )
-        {}
-        
-        NumberOrNormal::NumberOrNormal( NumberOrNormal&& other )
-        :myImpl( std::move( other.myImpl ) )
-        {}
-        
-        NumberOrNormal& NumberOrNormal::operator=( NumberOrNormal&& other )
-        {
-            myImpl = std::move( other.myImpl );
-            return *this;
+
         }
         
-        NumberOrNormal& NumberOrNormal::operator=( const NumberOrNormal& other )
-        {
-            this->myImpl = std::unique_ptr<NumberOrNormal::impl>( new NumberOrNormal::impl( *other.myImpl ) );
-            return *this;
-        }
-        bool NumberOrNormal::getIsNormal() const
-        {
-            return myImpl->getIsNormal();
-        }
-        bool NumberOrNormal::getIsNumber() const
-        {
-            return myImpl->getIsNumber();
-        }
-        void NumberOrNormal::setValueNormal()
-        {
-            myImpl->setValueNormal();
-        }
-        void NumberOrNormal::setValue( const Decimal& value )
-        {
-            myImpl->setValue( value );
-        }
-        Decimal NumberOrNormal::getValueNumber() const
-        {
-            return myImpl->getValueNumber();
-        }
+        // classname::classname( const Decimal& value )
+        // : myValue{ value }
+        // {}
         
-        void NumberOrNormal::parse( const std::string& value )
+        // classname::classname( const SomeEnumType value )
+        // : myValue{ value }
+        // {}
+variants_ctor_def        
+
+        classname::classname( const std::string& value )
+        : classname{}
         {
-            myImpl->parse( value );
+            parse( value );
         }
-        
-        std::string toString( const NumberOrNormal& value )
+
+        // bool classname::getIsSomeEnumType() const
+        // {
+        //     return myValue.index() == 0;
+        // }
+
+        // bool classname::getIsNumber() const
+        // {
+        //     return myValue.index() == 1;
+        // }
+variants_get_is_def
+
+        // void classname::setValue( const SomeEnumType value )
+        // {
+        //     myValue.emplace<SomeEnumType>( value );
+        // }
+
+        // void classname::setValue( const Decimal& value )
+        // {
+        //     myValue.emplace<Decimal>( value );
+        // }
+variants_set_def
+
+        // SomeEnumType classname::getValueSomeEnumType() const
+        // {
+        //     auto result = SomeEnumType::medium;
+        //     std::visit([&](auto&& arg) {
+        //         using T = std::decay_t<decltype(arg)>;
+        //         if constexpr (std::is_same_v<T, SomeEnumType>)
+        //             result = arg;
+        //         else if constexpr (std::is_same_v<T, Decimal>)
+        //             result = SomeEnumType::medium;
+        //         else
+        //             static_assert(always_false_v<T>, "non-exhaustive visitor!");
+        //     }, myValue);
+        //     return result;
+        // }
+
+        // Decimal classname::getValueNumber() const
+        // {
+        //     auto result = Decimal{};
+        //     std::visit([&](auto&& arg) {
+        //         using T = std::decay_t<decltype(arg)>;
+        //         if constexpr (std::is_same_v<T, SomeEnumType>)
+        //             result = Decimal{};
+        //         else if constexpr (std::is_same_v<T, Decimal>)
+        //             result = arg;
+        //         else
+        //             static_assert(always_false_v<T>, "non-exhaustive visitor!");
+        //     }, myValue);
+        //     return result;
+        // }
+variants_get_def
+
+        bool classname::parse( const std::string& value )
+        {
+            // const auto SomeEnumType = tryParseSomeEnumType( value );
+            // if( SomeEnumType )
+            // {
+            //     setValue( *SomeEnumType );
+            //     return true;
+            // }
+            // auto decimal = Decimal{};
+            // if( decimal.parse( value ) )
+            // {
+            //     setValue( decimal );
+            //     return true;
+            // }
+            // return false;
+parse_def
+        }
+
+        std::string toString( const classname& value )
         {
             std::stringstream ss;
             toStream( ss, value );
             return ss.str();
         }
-		std::ostream& toStream( std::ostream& os, const NumberOrNormal& value )
+
+		std::ostream& toStream( std::ostream& os, const classname& value )
         {
             if ( value.getIsNumber() )
             {
@@ -146,15 +118,14 @@ namespace mx
             }
             else
             {
-                os << "normal";
+                toStream( os, value.getValueSomeEnumType() );
             }
             return os;
         }
-		std::ostream& operator<<( std::ostream& os, const NumberOrNormal& value )
+
+		std::ostream& operator<<( std::ostream& os, const classname& value )
         {
             return toStream( os, value );
         }
-        
-        
     }
 }

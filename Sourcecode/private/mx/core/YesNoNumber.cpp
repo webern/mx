@@ -2,175 +2,115 @@
 // Copyright (c) by Matthew James Briggs
 // Distributed under the MIT License
 
+// self
 #include "mx/core/YesNoNumber.h"
-#include <sstream>
 
 namespace mx
 {
     namespace core
     {
-        
-        class YesNoNumber::impl
+        template<class> inline constexpr bool always_false_v = false;
+
+        classname::classname()
+        : myValue{ default_value }
         {
-        public:
-            explicit impl()
-            :myYesNo( YesNo::no )
-            ,myDecimal( 0 )
-            ,myIsDecimal( false )
-            {}
-            
-            explicit impl( const Decimal& value )
-            :myYesNo( YesNo::no )
-            ,myDecimal( value )
-            ,myIsDecimal( true )
-            {}
-            
-            explicit impl( const YesNo value )
-            :myYesNo( value )
-            ,myDecimal( 0 )
-            ,myIsDecimal( false )
-            {}
-            
-            explicit impl( const std::string& value )
-            :myYesNo( YesNo::no )
-            ,myDecimal( 0 )
-            ,myIsDecimal( false )
-            {
-                parse( value );
-            }
-            
-            bool getIsYesNo() const
-            {
-                return !myIsDecimal;
-            }
-            bool getIsNumber() const
-            {
-                return myIsDecimal;
-            }
-            void setValue( const YesNo value )
-            {
-                myYesNo = value;
-                myIsDecimal = false;
-            }
-            void setValue( const Decimal& value )
-            {
-                myDecimal = Decimal( value );
-                myIsDecimal = true;
-            }
-            YesNo getValueYesNo() const
-            {
-                return myYesNo;
-            }
-            Decimal getValueNumber() const
-            {
-                return myDecimal;
-            }
-            void parse( const std::string& value )
-            {
-                Decimal d( 0 );
-                YesNo e = YesNo::no;
-                if ( value.find_first_not_of( "-.0123456789" ) != std::string::npos )
-                {
-                    if ( value.find_first_not_of( "yesno" ) == std::string::npos )
-                    {
-                        /* it must be an enum if it has
-                         non numeric characters */
-                        e = parseYesNo( value );
-                        this->setValue( e );
-                    }
-                }
-                else
-                {
-                    /* if it contains only numeric
-                     characters it must be a number */
-                    d.parse( value );
-                    this->setValue( d );
-                }
-            }
-            
-        private:
-            YesNo myYesNo;
-            Decimal myDecimal;
-            bool myIsDecimal;
-        };
-        
-        
-        YesNoNumber::YesNoNumber()
-        :myImpl( new impl() )
-        {}
-        
-        YesNoNumber::YesNoNumber( const Decimal& value )
-        :myImpl( new impl( value ) )
-        {}
-        
-        YesNoNumber::YesNoNumber( const YesNo value )
-        :myImpl( new impl( value ) )
-        {}
-        
-        YesNoNumber::YesNoNumber( const std::string& value )
-        :myImpl( new impl( value ) )
-        {}
-        
-        YesNoNumber::~YesNoNumber() {}
-        
-        YesNoNumber::YesNoNumber( const YesNoNumber& other )
-        :myImpl( new YesNoNumber::impl( *other.myImpl ) )
-        {}
-        
-        YesNoNumber::YesNoNumber( YesNoNumber&& other )
-        :myImpl( std::move( other.myImpl ) )
-        {}
-        
-        YesNoNumber& YesNoNumber::operator=( YesNoNumber&& other )
-        {
-            myImpl = std::move( other.myImpl );
-            return *this;
+
         }
         
-        YesNoNumber& YesNoNumber::operator=( const YesNoNumber& other )
-        {
-            this->myImpl = std::unique_ptr<YesNoNumber::impl>( new YesNoNumber::impl( *other.myImpl ) );
-            return *this;
-        }
+        // classname::classname( const Decimal& value )
+        // : myValue{ value }
+        // {}
         
-        bool YesNoNumber::getIsYesNo() const
+        // classname::classname( const SomeEnumType value )
+        // : myValue{ value }
+        // {}
+variants_ctor_def        
+
+        classname::classname( const std::string& value )
+        : classname{}
         {
-            return myImpl->getIsYesNo();
+            parse( value );
         }
-        bool YesNoNumber::getIsNumber() const
+
+        // bool classname::getIsSomeEnumType() const
+        // {
+        //     return myValue.index() == 0;
+        // }
+
+        // bool classname::getIsNumber() const
+        // {
+        //     return myValue.index() == 1;
+        // }
+variants_get_is_def
+
+        // void classname::setValue( const SomeEnumType value )
+        // {
+        //     myValue.emplace<SomeEnumType>( value );
+        // }
+
+        // void classname::setValue( const Decimal& value )
+        // {
+        //     myValue.emplace<Decimal>( value );
+        // }
+variants_set_def
+
+        // SomeEnumType classname::getValueSomeEnumType() const
+        // {
+        //     auto result = SomeEnumType::medium;
+        //     std::visit([&](auto&& arg) {
+        //         using T = std::decay_t<decltype(arg)>;
+        //         if constexpr (std::is_same_v<T, SomeEnumType>)
+        //             result = arg;
+        //         else if constexpr (std::is_same_v<T, Decimal>)
+        //             result = SomeEnumType::medium;
+        //         else
+        //             static_assert(always_false_v<T>, "non-exhaustive visitor!");
+        //     }, myValue);
+        //     return result;
+        // }
+
+        // Decimal classname::getValueNumber() const
+        // {
+        //     auto result = Decimal{};
+        //     std::visit([&](auto&& arg) {
+        //         using T = std::decay_t<decltype(arg)>;
+        //         if constexpr (std::is_same_v<T, SomeEnumType>)
+        //             result = Decimal{};
+        //         else if constexpr (std::is_same_v<T, Decimal>)
+        //             result = arg;
+        //         else
+        //             static_assert(always_false_v<T>, "non-exhaustive visitor!");
+        //     }, myValue);
+        //     return result;
+        // }
+variants_get_def
+
+        bool classname::parse( const std::string& value )
         {
-            return myImpl->getIsNumber();
+            // const auto SomeEnumType = tryParseSomeEnumType( value );
+            // if( SomeEnumType )
+            // {
+            //     setValue( *SomeEnumType );
+            //     return true;
+            // }
+            // auto decimal = Decimal{};
+            // if( decimal.parse( value ) )
+            // {
+            //     setValue( decimal );
+            //     return true;
+            // }
+            // return false;
+parse_def
         }
-        void YesNoNumber::setValue( const YesNo value )
-        {
-            myImpl->setValue( value );
-        }
-        void YesNoNumber::setValue( const Decimal& value )
-        {
-            myImpl->setValue( value );
-        }
-        
-        YesNo YesNoNumber::getValueYesNo() const
-        {
-            return myImpl->getValueYesNo();
-        }
-        Decimal YesNoNumber::getValueNumber() const
-        {
-            return Decimal( myImpl->getValueNumber().getValue() );
-        }
-        
-        void YesNoNumber::parse( const std::string& value )
-        {
-            myImpl->parse( value );
-        }
-        
-        std::string toString( const YesNoNumber& value )
+
+        std::string toString( const classname& value )
         {
             std::stringstream ss;
             toStream( ss, value );
             return ss.str();
         }
-		std::ostream& toStream( std::ostream& os, const YesNoNumber& value )
+
+		std::ostream& toStream( std::ostream& os, const classname& value )
         {
             if ( value.getIsNumber() )
             {
@@ -178,15 +118,14 @@ namespace mx
             }
             else
             {
-                toStream( os, value.getValueYesNo() );
+                toStream( os, value.getValueSomeEnumType() );
             }
             return os;
         }
-		std::ostream& operator<<( std::ostream& os, const YesNoNumber& value )
+
+		std::ostream& operator<<( std::ostream& os, const classname& value )
         {
             return toStream( os, value );
         }
-        
-        
     }
 }
