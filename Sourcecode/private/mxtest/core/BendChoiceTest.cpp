@@ -18,7 +18,7 @@ using namespace mxtest;
 
 TEST( Test01, BendChoice )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	BendChoicePtr object = tgenBendChoice( v );
 	stringstream expected;
 	tgenBendChoiceExpected( expected, 1, v );
@@ -32,7 +32,7 @@ TEST( Test01, BendChoice )
 }
 TEST( Test02, BendChoice )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	BendChoicePtr object = tgenBendChoice( v );
 	stringstream expected;
 	tgenBendChoiceExpected( expected, 1, v );
@@ -46,7 +46,7 @@ TEST( Test02, BendChoice )
 }
 TEST( Test03, BendChoice )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	BendChoicePtr object = tgenBendChoice( v );
 	stringstream expected;
 	tgenBendChoiceExpected( expected, 1, v );
@@ -61,22 +61,22 @@ TEST( Test03, BendChoice )
 
 namespace mxtest
 {
-    BendChoicePtr tgenBendChoice( variant v )
+    BendChoicePtr tgenBendChoice( TestMode v )
     {
         BendChoicePtr o = makeBendChoice();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setChoice( BendChoice::Choice::release );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setChoice( BendChoice::Choice::preBend );
             }
@@ -86,23 +86,23 @@ namespace mxtest
         }
         return o;
     }
-    void tgenBendChoiceExpected( std::ostream& os, int i, variant v )
+    void tgenBendChoiceExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<pre-bend/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 
                 streamLine( os, i, R"(<release/>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 
                 streamLine( os, i, R"(<pre-bend/>)", false );

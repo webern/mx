@@ -16,7 +16,7 @@ using namespace mxtest;
 
 TEST( Test01, Measure )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	PartwiseMeasurePtr object = tgenPartwiseMeasure( v );
 	stringstream expected;
 	tgenPartwiseMeasureExpected( expected, 1, v );
@@ -29,7 +29,7 @@ TEST( Test01, Measure )
 }
 TEST( Test02, Measure )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	PartwiseMeasurePtr object = tgenPartwiseMeasure( v );
 	stringstream expected;
 	tgenPartwiseMeasureExpected( expected, 1, v );
@@ -42,7 +42,7 @@ TEST( Test02, Measure )
 }
 TEST( Test03, Measure )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	PartwiseMeasurePtr object = tgenPartwiseMeasure( v );
 	stringstream expected;
 	tgenPartwiseMeasureExpected( expected, 1, v );
@@ -56,23 +56,23 @@ TEST( Test03, Measure )
 
 namespace mxtest
 {
-    PartwiseMeasurePtr tgenPartwiseMeasure( variant v )
+    PartwiseMeasurePtr tgenPartwiseMeasure( TestMode v )
     {
         PartwiseMeasurePtr o = makePartwiseMeasure();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getAttributes()->number = XsToken( "200" );
                 o->setMusicDataGroup( tgenMusicDataGroup( v ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getAttributes()->number = XsToken( "300" );
                 o->getAttributes()->hasImplicit = true;
@@ -87,17 +87,17 @@ namespace mxtest
         }
         return o;
     }
-    void tgenPartwiseMeasureExpected( std::ostream& os, int i, variant v )
+    void tgenPartwiseMeasureExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<measure number=""/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<measure number="200">)" );
                 tgenMusicDataGroupExpected( os, i+1,  v );
@@ -105,7 +105,7 @@ namespace mxtest
                 streamLine( os, i, R"(</measure>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<measure number="300" implicit="no" width="45.1">)" );
                 tgenMusicDataGroupExpected( os, i+1,  v );

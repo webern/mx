@@ -19,7 +19,7 @@ using namespace mxtest;
 
 TEST( Test01, Print )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	PrintPtr object = tgenPrint( v );
 	stringstream expected;
 	tgenPrintExpected( expected, 1, v );
@@ -32,7 +32,7 @@ TEST( Test01, Print )
 }
 TEST( Test02, Print )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	PrintPtr object = tgenPrint( v );
 	stringstream expected;
 	tgenPrintExpected( expected, 1, v );
@@ -45,7 +45,7 @@ TEST( Test02, Print )
 }
 TEST( Test03, Print )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	PrintPtr object = tgenPrint( v );
 	stringstream expected;
 	tgenPrintExpected( expected, 1, v );
@@ -59,17 +59,17 @@ TEST( Test03, Print )
 
 namespace mxtest
 {
-    PrintPtr tgenPrint( variant v )
+    PrintPtr tgenPrint( TestMode v )
     {
         PrintPtr o = makePrint();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getAttributes()->hasBlankPage = true;
                 o->getAttributes()->blankPage = PositiveInteger( 2 );
@@ -84,7 +84,7 @@ namespace mxtest
                 o->setPartAbbreviationDisplay( tgenPartAbbreviationDisplay( v ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getAttributes()->hasNewPage = true;
                 o->getAttributes()->newPage = YesNo::yes;
@@ -106,17 +106,17 @@ namespace mxtest
         }
         return o;
     }
-    void tgenPrintExpected( std::ostream& os, int i, variant v )
+    void tgenPrintExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<print/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<print blank-page="2">)" );
                 tgenLayoutGroupExpected( os, i+1, v );
@@ -131,7 +131,7 @@ namespace mxtest
                 streamLine( os, i, R"(</print>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<print new-system="no" new-page="yes">)" );
                 tgenLayoutGroupExpected( os, i+1, v );

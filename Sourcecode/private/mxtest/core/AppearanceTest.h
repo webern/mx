@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::AppearancePtr tgenAppearance( variant v );
-    void tgenAppearanceExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::AppearancePtr tgenAppearance( TestMode v );
+    void tgenAppearanceExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

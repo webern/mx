@@ -18,7 +18,7 @@ using namespace mxtest;
 
 TEST( Test01, Articulations )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	ArticulationsPtr object = tgenArticulations( v );
 	stringstream expected;
 	tgenArticulationsExpected( expected, 1, v );
@@ -31,7 +31,7 @@ TEST( Test01, Articulations )
 }
 TEST( Test02, Articulations )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	ArticulationsPtr object = tgenArticulations( v );
 	stringstream expected;
 	tgenArticulationsExpected( expected, 1, v );
@@ -44,7 +44,7 @@ TEST( Test02, Articulations )
 }
 TEST( Test03, Articulations )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	ArticulationsPtr object = tgenArticulations( v );
 	stringstream expected;
 	tgenArticulationsExpected( expected, 1, v );
@@ -58,26 +58,26 @@ TEST( Test03, Articulations )
 
 namespace mxtest
 {
-    ArticulationsChoicePtr tgenArticulationsChoice( variant v )
+    ArticulationsChoicePtr tgenArticulationsChoice( TestMode v )
     {
         ArticulationsChoicePtr o = makeArticulationsChoice();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 o->setChoice( ArticulationsChoice::Choice::breathMark );
                 o->getBreathMark()->getAttributes()->hasFontStyle = true;
                 o->getBreathMark()->getAttributes()->fontStyle = FontStyle::italic;
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setChoice( ArticulationsChoice::Choice::strongAccent );
                 o->getStrongAccent()->getAttributes()->hasColor = true;
                 o->getStrongAccent()->getAttributes()->color = Color( 56, 90, 12 );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setChoice( ArticulationsChoice::Choice::tenuto );
                 o->getTenuto()->getAttributes()->hasPlacement = true;
@@ -89,28 +89,28 @@ namespace mxtest
         }
         return o;
     }
-    ArticulationsPtr tgenArticulations( variant v )
+    ArticulationsPtr tgenArticulations( TestMode v )
     {
         ArticulationsPtr o = makeArticulations();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 ;
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
-                o->addArticulationsChoice( tgenArticulationsChoice( variant::one ) );
-                o->addArticulationsChoice( tgenArticulationsChoice( variant::three ) );
+                o->addArticulationsChoice( tgenArticulationsChoice( TestMode::one ) );
+                o->addArticulationsChoice( tgenArticulationsChoice( TestMode::three ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
-                o->addArticulationsChoice( tgenArticulationsChoice( variant::two ) );
-                o->addArticulationsChoice( tgenArticulationsChoice( variant::three ) );
-                o->addArticulationsChoice( tgenArticulationsChoice( variant::one ) );
-                o->addArticulationsChoice( tgenArticulationsChoice( variant::two ) );
+                o->addArticulationsChoice( tgenArticulationsChoice( TestMode::two ) );
+                o->addArticulationsChoice( tgenArticulationsChoice( TestMode::three ) );
+                o->addArticulationsChoice( tgenArticulationsChoice( TestMode::one ) );
+                o->addArticulationsChoice( tgenArticulationsChoice( TestMode::two ) );
             }
                 break;
             default:
@@ -118,17 +118,17 @@ namespace mxtest
         }
         return o;
     }
-    void tgenArticulationsExpected( std::ostream& os, int i, variant v )
+    void tgenArticulationsExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<articulations/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<articulations>)" );
                 streamLine( os, i+1, R"(<breath-mark font-style="italic"></breath-mark>)" );
@@ -136,7 +136,7 @@ namespace mxtest
                 streamLine( os, i, R"(</articulations>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<articulations>)" );
                 streamLine( os, i+1, R"(<strong-accent color="#385A0C"/>)" );

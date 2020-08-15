@@ -12,8 +12,8 @@
 
 namespace mxtest
 {
-    mx::core::SystemMarginsPtr tgenSystemMargins( variant v );
-    void tgenSystemMarginsExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::SystemMarginsPtr tgenSystemMargins( TestMode v );
+    void tgenSystemMarginsExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::PageLayoutPtr tgenPageLayout( variant v );
-    void tgenPageLayoutExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::PageLayoutPtr tgenPageLayout( TestMode v );
+    void tgenPageLayoutExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

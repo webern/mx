@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::ElisionSyllabicTextGroupPtr tgenElisionSyllabicTextGroup( variant v );
-    void tgenElisionSyllabicTextGroupExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::ElisionSyllabicTextGroupPtr tgenElisionSyllabicTextGroup( TestMode v );
+    void tgenElisionSyllabicTextGroupExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

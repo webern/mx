@@ -18,7 +18,7 @@ using namespace mxtest;
 
 TEST( Test01, NoteheadText )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	NoteheadTextPtr object = tgenNoteheadText( v );
 	stringstream expected;
 	tgenNoteheadTextExpected( expected, 1, v );
@@ -31,7 +31,7 @@ TEST( Test01, NoteheadText )
 }
 TEST( Test02, NoteheadText )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	NoteheadTextPtr object = tgenNoteheadText( v );
 	stringstream expected;
 	tgenNoteheadTextExpected( expected, 1, v );
@@ -44,7 +44,7 @@ TEST( Test02, NoteheadText )
 }
 TEST( Test03, NoteheadText )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	NoteheadTextPtr object = tgenNoteheadText( v );
 	stringstream expected;
 	tgenNoteheadTextExpected( expected, 1, v );
@@ -58,17 +58,17 @@ TEST( Test03, NoteheadText )
 
 namespace mxtest
 {
-    NoteheadTextPtr tgenNoteheadText( variant v )
+    NoteheadTextPtr tgenNoteheadText( TestMode v )
     {
         NoteheadTextPtr o = makeNoteheadText();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 auto dt = makeNoteheadTextChoice();
                 dt->setChoice( NoteheadTextChoice::Choice::displayText );
@@ -82,7 +82,7 @@ namespace mxtest
                 o->addNoteheadTextChoice( at );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 auto dt = makeNoteheadTextChoice();
                 dt->setChoice( NoteheadTextChoice::Choice::displayText );
@@ -102,12 +102,12 @@ namespace mxtest
         }
         return o;
     }
-    void tgenNoteheadTextExpected( std::ostream& os, int i, variant v )
+    void tgenNoteheadTextExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<notehead-text>)" );
                 streamLine( os, i+1, R"(<display-text></display-text>)" );
@@ -115,7 +115,7 @@ namespace mxtest
                 streamLine( os, i, R"(</notehead-text>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<notehead-text>)" );
                 streamLine( os, i+1, R"(<display-text>B</display-text>)" );
@@ -123,7 +123,7 @@ namespace mxtest
                 streamLine( os, i, R"(</notehead-text>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<notehead-text>)" );
                 streamLine( os, i+1, R"(<display-text>C</display-text>)" );

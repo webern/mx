@@ -12,8 +12,8 @@
 
 namespace mxtest
 {
-    mx::core::SoundPtr tgenSound( variant v );
-    void tgenSoundExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::SoundPtr tgenSound( TestMode v );
+    void tgenSoundExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

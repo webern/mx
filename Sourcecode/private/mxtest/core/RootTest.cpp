@@ -16,7 +16,7 @@ using namespace mxtest;
 
 TEST( Test01, Root )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	RootPtr object = tgenRoot( v );
 	stringstream expected;
 	tgenRootExpected( expected, 1, v );
@@ -29,7 +29,7 @@ TEST( Test01, Root )
 }
 TEST( Test02, Root )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	RootPtr object = tgenRoot( v );
 	stringstream expected;
 	tgenRootExpected( expected, 1, v );
@@ -42,7 +42,7 @@ TEST( Test02, Root )
 }
 TEST( Test03, Root )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	RootPtr object = tgenRoot( v );
 	stringstream expected;
 	tgenRootExpected( expected, 1, v );
@@ -56,24 +56,24 @@ TEST( Test03, Root )
 
 namespace mxtest
 {
-    RootPtr tgenRoot( variant v )
+    RootPtr tgenRoot( TestMode v )
     {
         RootPtr o = makeRoot();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setHasRootAlter( true );
                 o->getRootAlter()->setValue( Semitones( -2 ) );
                 o->getRootStep()->setValue( StepEnum::f );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setHasRootAlter( true );
                 o->getRootAlter()->setValue( Semitones( 1.1 ) );
@@ -85,19 +85,19 @@ namespace mxtest
         }
         return o;
     }
-    void tgenRootExpected( std::ostream& os, int i, variant v )
+    void tgenRootExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<root>)" );
                 streamLine( os, i+1, R"(<root-step>A</root-step>)" );
                 streamLine( os, i, R"(</root>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<root>)" );
                 streamLine( os, i+1, R"(<root-step>F</root-step>)" );
@@ -105,7 +105,7 @@ namespace mxtest
                 streamLine( os, i, R"(</root>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<root>)" );
                 streamLine( os, i+1, R"(<root-step>C</root-step>)" );

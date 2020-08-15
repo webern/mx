@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::FigurePtr tgenFigure( variant v );
-    void tgenFigureExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::FigurePtr tgenFigure( TestMode v );
+    void tgenFigureExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::PartwiseMeasurePtr tgenPartwiseMeasure( variant v );
-    void tgenPartwiseMeasureExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::PartwiseMeasurePtr tgenPartwiseMeasure( TestMode v );
+    void tgenPartwiseMeasureExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

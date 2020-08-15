@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::ArrowPtr tgenArrow( variant v );
-    void tgenArrowExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::ArrowPtr tgenArrow( TestMode v );
+    void tgenArrowExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

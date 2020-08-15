@@ -12,8 +12,8 @@
 
 namespace mxtest
 {
-    mx::core::StrongAccentPtr tgenStrongAccent( variant v );
-    void tgenStrongAccentExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::StrongAccentPtr tgenStrongAccent( TestMode v );
+    void tgenStrongAccentExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

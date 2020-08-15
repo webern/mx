@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::DirectionTypePtr tgenDirectionType( variant v );
-    void tgenDirectionTypeExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::DirectionTypePtr tgenDirectionType( TestMode v );
+    void tgenDirectionTypeExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

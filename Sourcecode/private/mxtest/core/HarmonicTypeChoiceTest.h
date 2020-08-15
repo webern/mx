@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::HarmonicTypeChoicePtr tgenHarmonicTypeChoice( variant v );
-    void tgenHarmonicTypeChoiceExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::HarmonicTypeChoicePtr tgenHarmonicTypeChoice( TestMode v );
+    void tgenHarmonicTypeChoiceExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

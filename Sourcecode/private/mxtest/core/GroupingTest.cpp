@@ -15,7 +15,7 @@ using namespace mxtest;
 
 TEST( Test01, Grouping )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	GroupingPtr object = tgenGrouping( v );
 	stringstream expected;
 	tgenGroupingExpected( expected, 1, v );
@@ -28,7 +28,7 @@ TEST( Test01, Grouping )
 }
 TEST( Test02, Grouping )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	GroupingPtr object = tgenGrouping( v );
 	stringstream expected;
 	tgenGroupingExpected( expected, 1, v );
@@ -41,7 +41,7 @@ TEST( Test02, Grouping )
 }
 TEST( Test03, Grouping )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	GroupingPtr object = tgenGrouping( v );
 	stringstream expected;
 	tgenGroupingExpected( expected, 1, v );
@@ -55,17 +55,17 @@ TEST( Test03, Grouping )
 
 namespace mxtest
 {
-    GroupingPtr tgenGrouping( variant v )
+    GroupingPtr tgenGrouping( TestMode v )
     {
         GroupingPtr o = makeGrouping();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getAttributes()->hasNumber = true;
                 auto f1 = makeFeature();
@@ -75,7 +75,7 @@ namespace mxtest
                 o->addFeature( f1 );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getAttributes()->hasMemberOf = true;
                 o->getAttributes()->type = StartStopSingle::stop;
@@ -95,24 +95,24 @@ namespace mxtest
         }
         return o;
     }
-    void tgenGroupingExpected( std::ostream& os, int i, variant v )
+    void tgenGroupingExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<grouping type="single"/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<grouping type="single" number="1">)" );
                 streamLine( os, i+1, R"(<feature type="Type Two">Schenker</feature>)" );
                 streamLine( os, i, R"(</grouping>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<grouping type="stop" member-of="Some Member">)" );
                 streamLine( os, i+1, R"(<feature type="Type Three">Strauss</feature>)" );

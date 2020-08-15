@@ -12,8 +12,8 @@
 
 namespace mxtest
 {
-    mx::core::SystemLayoutPtr tgenSystemLayout( variant v );
-    void tgenSystemLayoutExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::SystemLayoutPtr tgenSystemLayout( TestMode v );
+    void tgenSystemLayoutExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

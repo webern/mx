@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::ScalingPtr tgenScaling( variant v );
-    void tgenScalingExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::ScalingPtr tgenScaling( TestMode v );
+    void tgenScalingExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

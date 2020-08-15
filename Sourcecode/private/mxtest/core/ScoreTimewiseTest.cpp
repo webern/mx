@@ -18,7 +18,7 @@ using namespace mxtest;
 
 TEST( Test01, ScoreTimewise )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	ScoreTimewisePtr object = tgenScoreTimewise( v );
 	stringstream expected;
 	tgenScoreTimewiseExpected( expected, 1, v );
@@ -31,7 +31,7 @@ TEST( Test01, ScoreTimewise )
 }
 TEST( Test02, ScoreTimewise )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	ScoreTimewisePtr object = tgenScoreTimewise( v );
 	stringstream expected;
 	tgenScoreTimewiseExpected( expected, 1, v );
@@ -44,7 +44,7 @@ TEST( Test02, ScoreTimewise )
 }
 TEST( Test03, ScoreTimewise )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	ScoreTimewisePtr object = tgenScoreTimewise( v );
 	stringstream expected;
 	tgenScoreTimewiseExpected( expected, 1, v );
@@ -58,17 +58,17 @@ TEST( Test03, ScoreTimewise )
 
 namespace mxtest
 {
-    ScoreTimewisePtr tgenScoreTimewise( variant v )
+    ScoreTimewisePtr tgenScoreTimewise( TestMode v )
     {
         ScoreTimewisePtr o = makeScoreTimewise();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getAttributes()->hasVersion = true;
                 o->getAttributes()->version = XsToken( "3.0" );
@@ -77,13 +77,13 @@ namespace mxtest
                 o->removeTimewiseMeasure( o->getTimewiseMeasureSet().cbegin() );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setScoreHeaderGroup( tgenScoreHeaderGroup( v ) );
                 o->addTimewiseMeasure( tgenTimewiseMeasure( v ) );
                 o->removeTimewiseMeasure( o->getTimewiseMeasureSet().cbegin() );
-                o->addTimewiseMeasure( tgenTimewiseMeasure( variant::one ) );
-                o->addTimewiseMeasure( tgenTimewiseMeasure( variant::two ) );
+                o->addTimewiseMeasure( tgenTimewiseMeasure( TestMode::one ) );
+                o->addTimewiseMeasure( tgenTimewiseMeasure( TestMode::two ) );
             }
                 break;
             default:
@@ -91,12 +91,12 @@ namespace mxtest
         }
         return o;
     }
-    void tgenScoreTimewiseExpected( std::ostream& os, int i, variant v )
+    void tgenScoreTimewiseExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<score-timewise>)" );
                 tgenScoreHeaderGroupExpected( os, i+1,  v );
@@ -106,7 +106,7 @@ namespace mxtest
                 streamLine( os, i, R"(</score-timewise>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<score-timewise version="3.0">)" );
                 tgenScoreHeaderGroupExpected( os, i+1,  v );
@@ -116,16 +116,16 @@ namespace mxtest
                 streamLine( os, i, R"(</score-timewise>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<score-timewise>)" );
                 tgenScoreHeaderGroupExpected( os, i+1,  v );
                 os << std::endl;
                 tgenTimewiseMeasureExpected( os, i+1, v );
                 os << std::endl;
-                tgenTimewiseMeasureExpected( os, i+1, variant::one );
+                tgenTimewiseMeasureExpected(os, i+1, TestMode::one );
                 os << std::endl;
-                tgenTimewiseMeasureExpected( os, i+1, variant::two );
+                tgenTimewiseMeasureExpected(os, i+1, TestMode::two );
                 os << std::endl;
                 streamLine( os, i, R"(</score-timewise>)", false );
             }

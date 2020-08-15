@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::ScoreInstrumentPtr tgenScoreInstrument( variant v );
-    void tgenScoreInstrumentExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::ScoreInstrumentPtr tgenScoreInstrument( TestMode v );
+    void tgenScoreInstrumentExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

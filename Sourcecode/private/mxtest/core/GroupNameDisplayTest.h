@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::GroupNameDisplayPtr tgenGroupNameDisplay( variant v );
-    void tgenGroupNameDisplayExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::GroupNameDisplayPtr tgenGroupNameDisplay( TestMode v );
+    void tgenGroupNameDisplayExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

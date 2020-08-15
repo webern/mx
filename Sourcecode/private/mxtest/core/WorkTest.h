@@ -12,8 +12,8 @@
 
 namespace mxtest
 {
-    mx::core::WorkPtr tgenWork( variant v );
-    void tgenWorkExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::WorkPtr tgenWork( TestMode v );
+    void tgenWorkExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

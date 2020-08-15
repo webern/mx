@@ -17,7 +17,7 @@ using namespace mxtest;
 
 TEST( Test01, Pitch )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	PitchPtr object = tgenPitch( v );
 	stringstream expected;
 	tgenPitchExpected( expected, 1, v );
@@ -30,7 +30,7 @@ TEST( Test01, Pitch )
 }
 TEST( Test02, Pitch )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	PitchPtr object = tgenPitch( v );
 	stringstream expected;
 	tgenPitchExpected( expected, 1, v );
@@ -43,7 +43,7 @@ TEST( Test02, Pitch )
 }
 TEST( Test03, Pitch )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	PitchPtr object = tgenPitch( v );
 	stringstream expected;
 	tgenPitchExpected( expected, 1, v );
@@ -57,23 +57,23 @@ TEST( Test03, Pitch )
 
 namespace mxtest
 {
-    PitchPtr tgenPitch( variant v )
+    PitchPtr tgenPitch( TestMode v )
     {
         PitchPtr o = makePitch();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getOctave()->setValue( OctaveValue( 3 ) );
                 o->getStep()->setValue( StepEnum::d );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getOctave()->setValue( OctaveValue( 6 ) );
                 o->getStep()->setValue( StepEnum::e );
@@ -86,12 +86,12 @@ namespace mxtest
         }
         return o;
     }
-    void tgenPitchExpected( std::ostream& os, int i, variant v )
+    void tgenPitchExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<pitch>)" );
                 streamLine( os, i+1, R"(<step>A</step>)" );
@@ -99,7 +99,7 @@ namespace mxtest
                 streamLine( os, i, R"(</pitch>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<pitch>)" );
                 streamLine( os, i+1, R"(<step>D</step>)" );
@@ -107,7 +107,7 @@ namespace mxtest
                 streamLine( os, i, R"(</pitch>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<pitch>)" );
                 streamLine( os, i+1, R"(<step>E</step>)" );

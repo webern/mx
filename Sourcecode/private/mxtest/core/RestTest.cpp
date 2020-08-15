@@ -16,7 +16,7 @@ using namespace mxtest;
 
 TEST( Test01, Rest )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	RestPtr object = tgenRest( v );
 	stringstream expected;
 	tgenRestExpected( expected, 1, v );
@@ -29,7 +29,7 @@ TEST( Test01, Rest )
 }
 TEST( Test02, Rest )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	RestPtr object = tgenRest( v );
 	stringstream expected;
 	tgenRestExpected( expected, 1, v );
@@ -42,7 +42,7 @@ TEST( Test02, Rest )
 }
 TEST( Test03, Rest )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	RestPtr object = tgenRest( v );
 	stringstream expected;
 	tgenRestExpected( expected, 1, v );
@@ -56,17 +56,17 @@ TEST( Test03, Rest )
 
 namespace mxtest
 {
-    RestPtr tgenRest( variant v )
+    RestPtr tgenRest( TestMode v )
     {
         RestPtr o = makeRest();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getAttributes()->hasMeasure = true;
                 o->getAttributes()->measure = YesNo::yes;
@@ -74,7 +74,7 @@ namespace mxtest
                 o->setDisplayStepOctaveGroup( tgenDisplayStepOctaveGroup( v ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getAttributes()->hasMeasure = true;
                 o->getAttributes()->measure = YesNo::no;
@@ -87,17 +87,17 @@ namespace mxtest
         }
         return o;
     }
-    void tgenRestExpected( std::ostream& os, int i, variant v )
+    void tgenRestExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<rest/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<rest measure="yes">)" );
                 tgenDisplayStepOctaveGroupExpected( os, i+1, v );
@@ -105,7 +105,7 @@ namespace mxtest
                 streamLine( os, i, R"(</rest>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<rest measure="no">)" );
                 tgenDisplayStepOctaveGroupExpected( os, i+1, v );

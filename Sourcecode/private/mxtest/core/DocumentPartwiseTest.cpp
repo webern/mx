@@ -17,7 +17,7 @@ using namespace mxtest;
 
 TEST( Test01, DocumentPartwise )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	DocumentPtr object = tgenDocumentPartwise( v );
 	stringstream expected;
 	tgenDocumentPartwiseExpected( expected, 1, v );
@@ -28,7 +28,7 @@ TEST( Test01, DocumentPartwise )
 }
 TEST( Test02, DocumentPartwise )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	DocumentPtr object = tgenDocumentPartwise( v );
 	stringstream expected;
 	tgenDocumentPartwiseExpected( expected, 1, v );
@@ -39,7 +39,7 @@ TEST( Test02, DocumentPartwise )
 }
 TEST( Test03, DocumentPartwise )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	DocumentPtr object = tgenDocumentPartwise( v );
 	stringstream expected;
 	tgenDocumentPartwiseExpected( expected, 1, v );
@@ -51,22 +51,22 @@ TEST( Test03, DocumentPartwise )
 
 namespace mxtest
 {
-    DocumentPtr tgenDocumentPartwise( variant v )
+    DocumentPtr tgenDocumentPartwise( TestMode v )
     {
         DocumentPtr o = makeDocument();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setScorePartwise( tgenScorePartwise( v ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setScorePartwise( tgenScorePartwise( v ) );
             }
@@ -76,26 +76,26 @@ namespace mxtest
         }
         return o;
     }
-    void tgenDocumentPartwiseExpected( std::ostream& os, int i, variant v )
+    void tgenDocumentPartwiseExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 tgenDocumentHeaderExpected( os, DocumentType::partwise );
                 os << std::endl;
                 tgenScorePartwiseExpected( os, 0, v );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 tgenDocumentHeaderExpected( os, DocumentType::partwise );
                 os << std::endl;
                 tgenScorePartwiseExpected( os, 0, v );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 tgenDocumentHeaderExpected( os, DocumentType::partwise );
                 os << std::endl;

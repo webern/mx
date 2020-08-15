@@ -16,7 +16,7 @@ using namespace mxtest;
 
 TEST( Test01, FullNoteGroup )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	FullNoteGroupPtr object = tgenFullNoteGroup( v );
 	stringstream expected;
 	tgenFullNoteGroupExpected( expected, 1, v );
@@ -30,7 +30,7 @@ TEST( Test01, FullNoteGroup )
 }
 TEST( Test02, FullNoteGroup )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	FullNoteGroupPtr object = tgenFullNoteGroup( v );
 	stringstream expected;
 	tgenFullNoteGroupExpected( expected, 1, v );
@@ -44,7 +44,7 @@ TEST( Test02, FullNoteGroup )
 }
 TEST( Test03, FullNoteGroup )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	FullNoteGroupPtr object = tgenFullNoteGroup( v );
 	stringstream expected;
 	tgenFullNoteGroupExpected( expected, 1, v );
@@ -59,22 +59,22 @@ TEST( Test03, FullNoteGroup )
 
 namespace mxtest
 {
-    FullNoteGroupPtr tgenFullNoteGroup( variant v )
+    FullNoteGroupPtr tgenFullNoteGroup( TestMode v )
     {
         FullNoteGroupPtr o = makeFullNoteGroup();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setFullNoteTypeChoice( tgenFullNoteTypeChoice( v ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setHasChord( true );
                 o->setFullNoteTypeChoice( tgenFullNoteTypeChoice( v ) );
@@ -85,22 +85,22 @@ namespace mxtest
         }
         return o;
     }
-    void tgenFullNoteGroupExpected( std::ostream& os, int i, variant v )
+    void tgenFullNoteGroupExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 tgenFullNoteTypeChoiceExpected( os, i, v );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 tgenFullNoteTypeChoiceExpected( os, i, v );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<chord/>)" );
                 tgenFullNoteTypeChoiceExpected( os, i, v );

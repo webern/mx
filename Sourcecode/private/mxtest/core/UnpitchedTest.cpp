@@ -16,7 +16,7 @@ using namespace mxtest;
 
 TEST( Test01, Unpitched )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	UnpitchedPtr object = tgenUnpitched( v );
 	stringstream expected;
 	tgenUnpitchedExpected( expected, 1, v );
@@ -29,7 +29,7 @@ TEST( Test01, Unpitched )
 }
 TEST( Test02, Unpitched )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	UnpitchedPtr object = tgenUnpitched( v );
 	stringstream expected;
 	tgenUnpitchedExpected( expected, 1, v );
@@ -42,7 +42,7 @@ TEST( Test02, Unpitched )
 }
 TEST( Test03, Unpitched )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	UnpitchedPtr object = tgenUnpitched( v );
 	stringstream expected;
 	tgenUnpitchedExpected( expected, 1, v );
@@ -56,23 +56,23 @@ TEST( Test03, Unpitched )
 
 namespace mxtest
 {
-    UnpitchedPtr tgenUnpitched( variant v )
+    UnpitchedPtr tgenUnpitched( TestMode v )
     {
         UnpitchedPtr o = makeUnpitched();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setHasDisplayStepOctaveGroup( true );
                 o->setDisplayStepOctaveGroup( tgenDisplayStepOctaveGroup( v ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setHasDisplayStepOctaveGroup( true );
                 o->setDisplayStepOctaveGroup( tgenDisplayStepOctaveGroup( v ) );
@@ -83,17 +83,17 @@ namespace mxtest
         }
         return o;
     }
-    void tgenUnpitchedExpected( std::ostream& os, int i, variant v )
+    void tgenUnpitchedExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<unpitched/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<unpitched>)" );
                 tgenDisplayStepOctaveGroupExpected( os, i+1, v );
@@ -101,7 +101,7 @@ namespace mxtest
                 streamLine( os, i, R"(</unpitched>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<unpitched>)" );
                 tgenDisplayStepOctaveGroupExpected( os, i+1, v );

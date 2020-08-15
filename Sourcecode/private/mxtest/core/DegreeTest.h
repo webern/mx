@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::DegreePtr tgenDegree( variant v );
-    void tgenDegreeExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::DegreePtr tgenDegree( TestMode v );
+    void tgenDegreeExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

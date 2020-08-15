@@ -18,7 +18,7 @@ using namespace mxtest;
 
 TEST( Test01, Mordent )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	MordentPtr object = tgenMordent( v );
 	stringstream expected;
 	tgenMordentExpected( expected, 1, v );
@@ -31,7 +31,7 @@ TEST( Test01, Mordent )
 }
 TEST( Test02, Mordent )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	MordentPtr object = tgenMordent( v );
 	stringstream expected;
 	tgenMordentExpected( expected, 1, v );
@@ -44,7 +44,7 @@ TEST( Test02, Mordent )
 }
 TEST( Test03, Mordent )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	MordentPtr object = tgenMordent( v );
 	stringstream expected;
 	tgenMordentExpected( expected, 1, v );
@@ -58,17 +58,17 @@ TEST( Test03, Mordent )
 
 namespace mxtest
 {
-    MordentPtr tgenMordent( variant v )
+    MordentPtr tgenMordent( TestMode v )
     {
         MordentPtr o = makeMordent();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getAttributes()->hasBeats = true;
                 o->getAttributes()->beats = TrillBeats( 1.2 );
@@ -78,7 +78,7 @@ namespace mxtest
                 o->getAttributes()->accelerate = YesNo::yes;
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getAttributes()->hasDeparture = true;
                 o->getAttributes()->departure = AboveBelow::below;
@@ -89,22 +89,22 @@ namespace mxtest
         }
         return o;
     }
-    void tgenMordentExpected( std::ostream& os, int i, variant v )
+    void tgenMordentExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<mordent/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<mordent accelerate="yes" beats="2" approach="above"/>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<mordent departure="below"/>)", false );
             }

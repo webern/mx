@@ -17,7 +17,7 @@ using namespace mxtest;
 
 TEST( Test01, StaffLayout )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	StaffLayoutPtr object = tgenStaffLayout( v );
 	stringstream expected;
 	tgenStaffLayoutExpected( expected, 1, v );
@@ -30,7 +30,7 @@ TEST( Test01, StaffLayout )
 }
 TEST( Test02, StaffLayout )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	StaffLayoutPtr object = tgenStaffLayout( v );
 	stringstream expected;
 	tgenStaffLayoutExpected( expected, 1, v );
@@ -43,7 +43,7 @@ TEST( Test02, StaffLayout )
 }
 TEST( Test03, StaffLayout )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	StaffLayoutPtr object = tgenStaffLayout( v );
 	stringstream expected;
 	tgenStaffLayoutExpected( expected, 1, v );
@@ -57,17 +57,17 @@ TEST( Test03, StaffLayout )
 
 namespace mxtest
 {
-    StaffLayoutPtr tgenStaffLayout( variant v )
+    StaffLayoutPtr tgenStaffLayout( TestMode v )
     {
         StaffLayoutPtr o = makeStaffLayout();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setHasStaffDistance( true );
                 o->getStaffDistance()->setValue( TenthsValue( 12.1 ) );
@@ -75,7 +75,7 @@ namespace mxtest
                 o->getAttributes()->number = StaffNumber( 5 );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setHasStaffDistance( true );
                 o->getStaffDistance()->setValue( TenthsValue( 13.3 ) );
@@ -88,24 +88,24 @@ namespace mxtest
         }
         return o;
     }
-    void tgenStaffLayoutExpected( std::ostream& os, int i, variant v )
+    void tgenStaffLayoutExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<staff-layout/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<staff-layout number="5">)" );
                 streamLine( os, i+1, R"(<staff-distance>12.1</staff-distance>)" );
                 streamLine( os, i, R"(</staff-layout>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<staff-layout number="7">)" );
                 streamLine( os, i+1, R"(<staff-distance>13.3</staff-distance>)" );

@@ -16,7 +16,7 @@ using namespace mxtest;
 
 TEST( Test01, PartNameDisplay )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	PartNameDisplayPtr object = tgenPartNameDisplay( v );
 	stringstream expected;
 	tgenPartNameDisplayExpected( expected, 1, v );
@@ -29,7 +29,7 @@ TEST( Test01, PartNameDisplay )
 }
 TEST( Test02, PartNameDisplay )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	PartNameDisplayPtr object = tgenPartNameDisplay( v );
 	stringstream expected;
 	tgenPartNameDisplayExpected( expected, 1, v );
@@ -42,7 +42,7 @@ TEST( Test02, PartNameDisplay )
 }
 TEST( Test03, PartNameDisplay )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	PartNameDisplayPtr object = tgenPartNameDisplay( v );
 	stringstream expected;
 	tgenPartNameDisplayExpected( expected, 1, v );
@@ -56,34 +56,34 @@ TEST( Test03, PartNameDisplay )
 
 namespace mxtest
 {
-    PartNameDisplayPtr tgenPartNameDisplay( variant v )
+    PartNameDisplayPtr tgenPartNameDisplay( TestMode v )
     {
         PartNameDisplayPtr o = makePartNameDisplay();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 ;
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getAttributes()->hasPrintObject = true;
                 o->getAttributes()->printObject = YesNo::no;
-                o->addDisplayTextOrAccidentalText( tgenDisplayTextOrAccidentalText( variant::one ) );
-                o->addDisplayTextOrAccidentalText( tgenDisplayTextOrAccidentalText( variant::two ) );
+                o->addDisplayTextOrAccidentalText( tgenDisplayTextOrAccidentalText( TestMode::one ) );
+                o->addDisplayTextOrAccidentalText( tgenDisplayTextOrAccidentalText( TestMode::two ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getAttributes()->hasPrintObject = true;
                 o->getAttributes()->printObject = YesNo::yes;
-                o->addDisplayTextOrAccidentalText( tgenDisplayTextOrAccidentalText( variant::two ) );
-                o->addDisplayTextOrAccidentalText( tgenDisplayTextOrAccidentalText( variant::three ) );
-                o->addDisplayTextOrAccidentalText( tgenDisplayTextOrAccidentalText( variant::two ) );
-                o->addDisplayTextOrAccidentalText( tgenDisplayTextOrAccidentalText( variant::three ) );
-                o->addDisplayTextOrAccidentalText( tgenDisplayTextOrAccidentalText( variant::two ) );
-                o->addDisplayTextOrAccidentalText( tgenDisplayTextOrAccidentalText( variant::one ) );
+                o->addDisplayTextOrAccidentalText( tgenDisplayTextOrAccidentalText( TestMode::two ) );
+                o->addDisplayTextOrAccidentalText( tgenDisplayTextOrAccidentalText( TestMode::three ) );
+                o->addDisplayTextOrAccidentalText( tgenDisplayTextOrAccidentalText( TestMode::two ) );
+                o->addDisplayTextOrAccidentalText( tgenDisplayTextOrAccidentalText( TestMode::three ) );
+                o->addDisplayTextOrAccidentalText( tgenDisplayTextOrAccidentalText( TestMode::two ) );
+                o->addDisplayTextOrAccidentalText( tgenDisplayTextOrAccidentalText( TestMode::one ) );
             }
                 break;
             default:
@@ -91,17 +91,17 @@ namespace mxtest
         }
         return o;
     }
-    void tgenPartNameDisplayExpected( std::ostream& os, int i, variant v )
+    void tgenPartNameDisplayExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<part-name-display></part-name-display>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<part-name-display print-object="no">)" );
                 streamLine( os, i+1, R"(<accidental-text enclosure="oval">flat-flat</accidental-text>)" );
@@ -109,7 +109,7 @@ namespace mxtest
                 streamLine( os, i, R"(</part-name-display>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<part-name-display print-object="yes">)" );
                 streamLine( os, i+1, R"(<display-text justify="center">two</display-text>)" );
@@ -125,12 +125,12 @@ namespace mxtest
                 break;
         }
     }
-    DisplayTextOrAccidentalTextPtr tgenDisplayTextOrAccidentalText( variant v )
+    DisplayTextOrAccidentalTextPtr tgenDisplayTextOrAccidentalText( TestMode v )
     {
         DisplayTextOrAccidentalTextPtr o = makeDisplayTextOrAccidentalText();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 o->setChoice( DisplayTextOrAccidentalText::Choice::accidentalText );
                 o->getAccidentalText()->setValue( AccidentalValue::flatFlat );
@@ -139,7 +139,7 @@ namespace mxtest
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setChoice( DisplayTextOrAccidentalText::Choice::displayText );
                 o->getDisplayText()->setValue( XsString( "two" ) );
@@ -147,7 +147,7 @@ namespace mxtest
                 o->getDisplayText()->getAttributes()->justify = LeftCenterRight::center;
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setChoice( DisplayTextOrAccidentalText::Choice::displayText );
                 o->getDisplayText()->setValue( XsString( "three" ) );

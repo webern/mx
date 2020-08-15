@@ -12,8 +12,8 @@
 
 namespace mxtest
 {
-    mx::core::SyllabicTextGroupPtr tgenSyllabicTextGroup( variant v );
-    void tgenSyllabicTextGroupExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::SyllabicTextGroupPtr tgenSyllabicTextGroup( TestMode v );
+    void tgenSyllabicTextGroupExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

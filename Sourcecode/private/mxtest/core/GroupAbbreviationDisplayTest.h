@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::GroupAbbreviationDisplayPtr tgenGroupAbbreviationDisplay( variant v );
-    void tgenGroupAbbreviationDisplayExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::GroupAbbreviationDisplayPtr tgenGroupAbbreviationDisplay( TestMode v );
+    void tgenGroupAbbreviationDisplayExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

@@ -12,8 +12,8 @@
 
 namespace mxtest
 {
-    mx::core::VirtualInstrumentPtr tgenVirtualInstrument( variant v );
-    void tgenVirtualInstrumentExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::VirtualInstrumentPtr tgenVirtualInstrument( TestMode v );
+    void tgenVirtualInstrumentExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

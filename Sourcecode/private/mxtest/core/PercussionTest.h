@@ -11,9 +11,9 @@
 
 namespace mxtest
 {
-    mx::core::PercussionChoicePtr tgenPercussionChoice( variant v );
-    mx::core::PercussionPtr tgenPercussion( variant v );
-    void tgenPercussionExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::PercussionChoicePtr tgenPercussionChoice( TestMode v );
+    mx::core::PercussionPtr tgenPercussion( TestMode v );
+    void tgenPercussionExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

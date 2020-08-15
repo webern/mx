@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::FiguredBassPtr tgenFiguredBass( variant v );
-    void tgenFiguredBassExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::FiguredBassPtr tgenFiguredBass( TestMode v );
+    void tgenFiguredBassExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

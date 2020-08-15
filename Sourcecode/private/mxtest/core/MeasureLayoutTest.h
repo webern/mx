@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::MeasureLayoutPtr tgenMeasureLayout( variant v );
-    void tgenMeasureLayoutExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::MeasureLayoutPtr tgenMeasureLayout( TestMode v );
+    void tgenMeasureLayoutExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

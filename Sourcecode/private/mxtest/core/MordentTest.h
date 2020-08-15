@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::MordentPtr tgenMordent( variant v );
-    void tgenMordentExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::MordentPtr tgenMordent( TestMode v );
+    void tgenMordentExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

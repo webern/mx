@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::HolePtr tgenHole( variant v );
-    void tgenHoleExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::HolePtr tgenHole( TestMode v );
+    void tgenHoleExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

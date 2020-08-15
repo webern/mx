@@ -19,7 +19,7 @@ using namespace mxtest;
 
 TEST( Test01, Tuplet )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	TupletPtr object = tgenTuplet( v );
 	stringstream expected;
 	tgenTupletExpected( expected, 1, v );
@@ -32,7 +32,7 @@ TEST( Test01, Tuplet )
 }
 TEST( Test02, Tuplet )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	TupletPtr object = tgenTuplet( v );
 	stringstream expected;
 	tgenTupletExpected( expected, 1, v );
@@ -45,7 +45,7 @@ TEST( Test02, Tuplet )
 }
 TEST( Test03, Tuplet )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	TupletPtr object = tgenTuplet( v );
 	stringstream expected;
 	tgenTupletExpected( expected, 1, v );
@@ -59,17 +59,17 @@ TEST( Test03, Tuplet )
 
 namespace mxtest
 {
-    TupletPtr tgenTuplet( variant v )
+    TupletPtr tgenTuplet( TestMode v )
     {
         TupletPtr o = makeTuplet();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getAttributes()->type = StartStop::stop;
                 o->setHasTupletActual( true );
@@ -78,7 +78,7 @@ namespace mxtest
                 o->setTupletNormal( tgenTupletNormal( v ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getAttributes()->hasBracket = true;
                 o->getAttributes()->bracket = YesNo::yes;
@@ -95,17 +95,17 @@ namespace mxtest
         }
         return o;
     }
-    void tgenTupletExpected( std::ostream& os, int i, variant v )
+    void tgenTupletExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<tuplet type="start"/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<tuplet type="stop">)" );
                 tgenTupletActualExpected( os, i+1, v );
@@ -115,7 +115,7 @@ namespace mxtest
                 streamLine( os, i, R"(</tuplet>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<tuplet type="start" bracket="yes" line-shape="curved">)" );
                 tgenTupletNormalExpected( os, i+1, v );

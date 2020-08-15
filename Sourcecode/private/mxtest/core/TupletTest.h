@@ -12,8 +12,8 @@
 
 namespace mxtest
 {
-    mx::core::TupletPtr tgenTuplet( variant v );
-    void tgenTupletExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::TupletPtr tgenTuplet( TestMode v );
+    void tgenTupletExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::MidiInstrumentPtr tgenMidiInstrument( variant v );
-    void tgenMidiInstrumentExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::MidiInstrumentPtr tgenMidiInstrument( TestMode v );
+    void tgenMidiInstrumentExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

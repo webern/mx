@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::ScordaturaPtr tgenScordatura( variant v );
-    void tgenScordaturaExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::ScordaturaPtr tgenScordatura( TestMode v );
+    void tgenScordaturaExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

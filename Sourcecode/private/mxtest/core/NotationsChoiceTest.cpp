@@ -19,7 +19,7 @@ using namespace mxtest;
 
 TEST( Test01, NotationsChoice )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	NotationsChoicePtr object = tgenNotationsChoice( v );
 	stringstream expected;
 	tgenNotationsChoiceExpected( expected, 1, v );
@@ -33,7 +33,7 @@ TEST( Test01, NotationsChoice )
 }
 TEST( Test02, NotationsChoice )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	NotationsChoicePtr object = tgenNotationsChoice( v );
 	stringstream expected;
 	tgenNotationsChoiceExpected( expected, 1, v );
@@ -47,7 +47,7 @@ TEST( Test02, NotationsChoice )
 }
 TEST( Test03, NotationsChoice )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	NotationsChoicePtr object = tgenNotationsChoice( v );
 	stringstream expected;
 	tgenNotationsChoiceExpected( expected, 1, v );
@@ -62,23 +62,23 @@ TEST( Test03, NotationsChoice )
 
 namespace mxtest
 {
-    NotationsChoicePtr tgenNotationsChoice( variant v )
+    NotationsChoicePtr tgenNotationsChoice( TestMode v )
     {
         NotationsChoicePtr o;
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 o = makeNotationsChoice();
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o = tgenNotationsChoice();
                 o->setChoice( NotationsChoice::Choice::dynamics );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o = tgenNotationsChoice();
                 o->setChoice( NotationsChoice::Choice::technical );
@@ -89,26 +89,26 @@ namespace mxtest
         }
         return o;
     }
-    void tgenNotationsChoiceExpected( std::ostream& os, int i, variant v )
+    void tgenNotationsChoiceExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<tied type="start"/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<dynamics>)" );
                 streamLine( os, i+1, R"(<fz/>)" );
                 streamLine( os, i, R"(</dynamics>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
-                tgenTechnicalExpected( os, i, variant::two );
+                tgenTechnicalExpected(os, i, TestMode::two );
             }
                 break;
             default:
@@ -122,12 +122,12 @@ namespace mxtest
         o->getTied()->getAttributes()->bezierOffset = DivisionsValue( 2.2 );
         o->getSlur()->getAttributes()->hasBezierOffset2 = true;
         o->getSlur()->getAttributes()->bezierOffset2 = DivisionsValue( 3.1 );
-        o->setTuplet( tgenTuplet( variant::two ) );
+        o->setTuplet( tgenTuplet( TestMode::two ) );
         o->getGlissando()->setValue( XsString( "Weeee" ) );
         o->getSlide()->setValue( XsString( "Geronamo?" ) );
-        o->setOrnaments( tgenOrnaments( variant::three ) );
-        o->setTechnical( tgenTechnical( variant::two ) );
-        o->setArticulations( tgenArticulations( variant::three ) );
+        o->setOrnaments( tgenOrnaments( TestMode::three ) );
+        o->setTechnical( tgenTechnical( TestMode::two ) );
+        o->setArticulations( tgenArticulations( TestMode::three ) );
         o->getDynamics()->setValue( DynamicsValue( DynamicsEnum::fz ) );
         o->getFermata()->setValue( FermataShape::square );
         o->getArpeggiate()->getAttributes()->hasNumber = true;

@@ -16,7 +16,7 @@ using namespace mxtest;
 
 TEST( Test01, TimewisePart )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	TimewisePartPtr object = tgenTimewisePart( v );
 	stringstream expected;
 	tgenTimewisePartExpected( expected, 1, v );
@@ -29,7 +29,7 @@ TEST( Test01, TimewisePart )
 }
 TEST( Test02, TimewisePart )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	TimewisePartPtr object = tgenTimewisePart( v );
 	stringstream expected;
 	tgenTimewisePartExpected( expected, 1, v );
@@ -42,7 +42,7 @@ TEST( Test02, TimewisePart )
 }
 TEST( Test03, TimewisePart )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	TimewisePartPtr object = tgenTimewisePart( v );
 	stringstream expected;
 	tgenTimewisePartExpected( expected, 1, v );
@@ -56,23 +56,23 @@ TEST( Test03, TimewisePart )
 
 namespace mxtest
 {
-    TimewisePartPtr tgenTimewisePart( variant v )
+    TimewisePartPtr tgenTimewisePart( TestMode v )
     {
         TimewisePartPtr o = makeTimewisePart();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getAttributes()->id = XsID( "IDTWO" );
                 o->setMusicDataGroup( tgenMusicDataGroup( v ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getAttributes()->id = XsID( "ID300" );
                 o->setMusicDataGroup( tgenMusicDataGroup( v ) );
@@ -83,17 +83,17 @@ namespace mxtest
         }
         return o;
     }
-    void tgenTimewisePartExpected( std::ostream& os, int i, variant v )
+    void tgenTimewisePartExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<part id="ID"/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<part id="IDTWO">)" );
                 tgenMusicDataGroupExpected( os, i+1,  v );
@@ -101,7 +101,7 @@ namespace mxtest
                 streamLine( os, i, R"(</part>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<part id="ID300">)" );
                 tgenMusicDataGroupExpected( os, i+1,  v );

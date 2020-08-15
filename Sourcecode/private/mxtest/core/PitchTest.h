@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::PitchPtr tgenPitch( variant v );
-    void tgenPitchExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::PitchPtr tgenPitch( TestMode v );
+    void tgenPitchExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

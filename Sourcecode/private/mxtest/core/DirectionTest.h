@@ -11,9 +11,9 @@
 
 namespace mxtest
 {
-    mx::core::DirectionPtr tgenDirection( variant v );
-    mx::core::EditorialVoiceDirectionGroupPtr tgenEditorialVoiceDirectionGroup( variant v );
-    void tgenDirectionExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::DirectionPtr tgenDirection( TestMode v );
+    mx::core::EditorialVoiceDirectionGroupPtr tgenEditorialVoiceDirectionGroup( TestMode v );
+    void tgenDirectionExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

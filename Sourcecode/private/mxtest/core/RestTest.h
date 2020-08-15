@@ -12,8 +12,8 @@
 
 namespace mxtest
 {
-    mx::core::RestPtr tgenRest( variant v );
-    void tgenRestExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::RestPtr tgenRest( TestMode v );
+    void tgenRestExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::NotationsPtr tgenNotations( variant v );
-    void tgenNotationsExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::NotationsPtr tgenNotations( TestMode v );
+    void tgenNotationsExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

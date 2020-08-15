@@ -12,8 +12,8 @@
 
 namespace mxtest
 {
-    mx::core::UnpitchedPtr tgenUnpitched( variant v );
-    void tgenUnpitchedExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::UnpitchedPtr tgenUnpitched( TestMode v );
+    void tgenUnpitchedExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

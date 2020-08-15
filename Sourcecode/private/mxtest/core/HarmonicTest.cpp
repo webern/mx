@@ -17,7 +17,7 @@ using namespace mxtest;
 
 TEST( Test01, Harmonic )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	HarmonicPtr object = tgenHarmonic( v );
 	stringstream expected;
 	tgenHarmonicExpected( expected, 1, v );
@@ -30,7 +30,7 @@ TEST( Test01, Harmonic )
 }
 TEST( Test02, Harmonic )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	HarmonicPtr object = tgenHarmonic( v );
 	stringstream expected;
 	tgenHarmonicExpected( expected, 1, v );
@@ -43,7 +43,7 @@ TEST( Test02, Harmonic )
 }
 TEST( Test03, Harmonic )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	HarmonicPtr object = tgenHarmonic( v );
 	stringstream expected;
 	tgenHarmonicExpected( expected, 1, v );
@@ -57,17 +57,17 @@ TEST( Test03, Harmonic )
 
 namespace mxtest
 {
-    HarmonicPtr tgenHarmonic( variant v )
+    HarmonicPtr tgenHarmonic( TestMode v )
     {
         HarmonicPtr o = makeHarmonic();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setHasHarmonicTypeChoice( true );
                 o->setHarmonicTypeChoice( tgenHarmonicTypeChoice( v ) );
@@ -79,7 +79,7 @@ namespace mxtest
                 o->getAttributes()->fontWeight = FontWeight::bold;
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setHasHarmonicTypeChoice( true );
                 o->setHarmonicTypeChoice( tgenHarmonicTypeChoice( v ) );
@@ -92,18 +92,18 @@ namespace mxtest
         }
         return o;
     }
-    void tgenHarmonicExpected( std::ostream& os, int i, variant v )
+    void tgenHarmonicExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
 
                 streamLine( os, i, R"(<harmonic/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<harmonic print-object="no" font-weight="bold">)" );
                 tgenHarmonicTypeChoiceExpected( os, i+1, v );
@@ -113,7 +113,7 @@ namespace mxtest
                 streamLine( os, i, R"(</harmonic>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<harmonic>)" );
                 tgenHarmonicTypeChoiceExpected( os, i+1, v );
