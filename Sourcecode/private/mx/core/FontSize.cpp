@@ -4,164 +4,100 @@
 
 #include "mx/core/FontSize.h"
 #include <sstream>
+#include <type_traits>
+
+namespace
+{
+    template<class> inline constexpr bool always_false_v = false;
+}
 
 namespace mx
 {
     namespace core
     {
-
-        class FontSize::impl
-        {
-        public:
-            explicit impl()
-            :myCssFontSize( CssFontSize::medium )
-            ,myDecimal( 0 )
-            ,myIsDecimal( false )
-            {}
-            
-            explicit impl( const Decimal& value )
-            :myCssFontSize( CssFontSize::medium )
-            ,myDecimal( value )
-            ,myIsDecimal( true )
-            {}
-            
-            explicit impl( const CssFontSize value )
-            :myCssFontSize( value )
-            ,myDecimal( 0 )
-            ,myIsDecimal( false )
-            {}
-            
-            explicit impl( const std::string& value )
-            :myCssFontSize( CssFontSize::medium )
-            ,myDecimal( 0 )
-            ,myIsDecimal( false )
-            {
-                parse( value );
-            }
-            
-            bool getIsCssFontSize() const
-            {
-                return !myIsDecimal;
-            }
-            bool getIsNumber() const
-            {
-                return myIsDecimal;
-            }
-            void setValue( const CssFontSize value )
-            {
-                myCssFontSize = value;
-                myIsDecimal = false;
-            }
-            void setValue( const Decimal& value )
-            {
-                myDecimal = Decimal( value );
-                myIsDecimal = true;
-            }
-            CssFontSize getValueCssFontSize() const
-            {
-                return myCssFontSize;
-            }
-            Decimal getValueNumber() const
-            {
-                return myDecimal;
-            }
-            void parse( const std::string& value )
-            {
-                Decimal d( 0 );
-                CssFontSize e = CssFontSize::medium;
-                if ( value.find_first_not_of( "-.0123456789" ) != std::string::npos )
-                {
-                    if ( value.find_first_not_of( "-xsmalrgemdiu" ) == std::string::npos )
-                    {
-                        /* it must be an enum if it has
-                         non numeric characters */
-                        e = parseCssFontSize( value );
-                        this->setValue( e );
-                    }
-                }
-                else
-                {
-                    /* if it contains only numeric
-                     characters it must be a number */
-                    d.parse( value );
-                    this->setValue( d );
-                }
-            }
-            
-        private:
-            CssFontSize myCssFontSize;
-            Decimal myDecimal;
-            bool myIsDecimal;
-        };
-
-        
         FontSize::FontSize()
-        :myImpl( new impl() )
+        : myValue{ CssFontSize::medium }
         {}
         
         FontSize::FontSize( const Decimal& value )
-        :myImpl( new impl( value ) )
+        : myValue{ value }
         {}
         
         FontSize::FontSize( const CssFontSize value )
-        :myImpl( new impl( value ) )
+        : myValue{ value }
         {}
         
         FontSize::FontSize( const std::string& value )
-        :myImpl( new impl( value ) )
-        {}
-        
-        FontSize::~FontSize() {}
-        
-        FontSize::FontSize( const FontSize& other )
-        :myImpl( new FontSize::impl( *other.myImpl ) )
-        {}
-        
-        FontSize::FontSize( FontSize&& other )
-        :myImpl( std::move( other.myImpl ) )
-        {}
-        
-        FontSize& FontSize::operator=( FontSize&& other )
+        : FontSize{}
         {
-            myImpl = std::move( other.myImpl );
-            return *this;
-        }
-        
-        FontSize& FontSize::operator=( const FontSize& other )
-        {
-            this->myImpl = std::unique_ptr<FontSize::impl>( new FontSize::impl( *other.myImpl ) );
-            return *this;
+            parse( value );
         }
 
         bool FontSize::getIsCssFontSize() const
         {
-            return myImpl->getIsCssFontSize();
+            return myValue.index() == 0;
         }
+
         bool FontSize::getIsNumber() const
         {
-            return myImpl->getIsNumber();
+            return myValue.index() == 1;
         }
+
         void FontSize::setValue( const CssFontSize value )
         {
-            myImpl->setValue( value );
+            myValue.emplace<CssFontSize>( value );
         }
+
         void FontSize::setValue( const Decimal& value )
         {
-            myImpl->setValue( value );
+            myValue.emplace<Decimal>( value );
         }
 
         CssFontSize FontSize::getValueCssFontSize() const
         {
-            return myImpl->getValueCssFontSize();
+            auto result = CssFontSize::medium;
+            std::visit([&](auto&& arg) {
+                using T = std::decay_t<decltype(arg)>;
+                if constexpr (std::is_same_v<T, CssFontSize>)
+                    result = arg;
+                else if constexpr (std::is_same_v<T, Decimal>)
+                    result = CssFontSize::medium;
+                else
+                    static_assert(always_false_v<T>, "non-exhaustive visitor!");
+            }, myValue);
+            return result;
         }
+
         Decimal FontSize::getValueNumber() const
         {
-            return Decimal( myImpl->getValueNumber().getValue() );
+            auto result = Decimal{};
+            std::visit([&](auto&& arg) {
+                using T = std::decay_t<decltype(arg)>;
+                if constexpr (std::is_same_v<T, CssFontSize>)
+                    result = Decimal{};
+                else if constexpr (std::is_same_v<T, Decimal>)
+                    result = arg;
+                else
+                    static_assert(always_false_v<T>, "non-exhaustive visitor!");
+            }, myValue);
+            return result;
         }
   
-        void FontSize::parse( const std::string& value )
+        bool FontSize::parse( const std::string& value )
         {
-            myImpl->parse( value );
+            const auto cssFontSize = tryParseCssFontSize( value );
+            if( cssFontSize )
+            {
+                setValue( *cssFontSize );
+                return true;
+            }
+            auto decimal = Decimal{};
+            if( decimal.parse( value ) )
+            {
+                setValue( decimal );
+                return true;
+            }
+            return false;
         }
 
         std::string toString( const FontSize& value )
@@ -170,6 +106,7 @@ namespace mx
             toStream( ss, value );
             return ss.str();
         }
+
 		std::ostream& toStream( std::ostream& os, const FontSize& value )
         {
             if ( value.getIsNumber() )
@@ -182,11 +119,10 @@ namespace mx
             }
             return os;
         }
+
 		std::ostream& operator<<( std::ostream& os, const FontSize& value )
         {
             return toStream( os, value );
         }
-        
-
     }
 }

@@ -7,6 +7,8 @@
 #include "mx/core/Decimals.h"
 #include "mx/core/Enums.h"
 
+#include <variant>
+
 namespace mx
 {
     namespace core
@@ -30,11 +32,10 @@ namespace mx
             void setValue( const Decimal& value );
             CssFontSize getValueCssFontSize() const;
             Decimal getValueNumber() const;
-            void parse( const std::string& value );
+            bool parse( const std::string& value );
             
         private:
-            class impl;
-            std::unique_ptr<impl> myImpl;
+            std::variant<CssFontSize, Decimal> myValue;
         };
         
         std::string toString( const FontSize& value );
