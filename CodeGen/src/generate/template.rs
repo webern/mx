@@ -22,6 +22,8 @@ pub const DECIMAL_BUILTINS_CPP: &str = "decimal_builtins.cpp.template";
 pub const DECIMAL_BUILTINS_H: &str = "decimal_builtins.h.template";
 pub const DECIMAL_TYPE_CPP: &str = "decimal_type.cpp.template";
 pub const DECIMAL_TYPE_H: &str = "decimal_type.h.template";
+pub const UNION_CPP: &str = "union.cpp.template";
+pub const UNION_H: &str = "union.h.template";
 
 lazy_static! {
     static ref DIR: PathBuf = manifest_dir().join("src").join("generate").join("data");
