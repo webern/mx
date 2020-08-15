@@ -12,8 +12,8 @@
 
 namespace mxtest
 {
-    mx::core::DocumentPtr tgenDocumentPartwise( variant v );
-    void tgenDocumentPartwiseExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::DocumentPtr tgenDocumentPartwise( TestMode v );
+    void tgenDocumentPartwiseExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

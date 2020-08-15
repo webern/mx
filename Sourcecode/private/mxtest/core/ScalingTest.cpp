@@ -17,7 +17,7 @@ using namespace mxtest;
 
 TEST( Test01, Scaling )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	ScalingPtr object = tgenScaling( v );
 	stringstream expected;
 	tgenScalingExpected( expected, 1, v );
@@ -30,7 +30,7 @@ TEST( Test01, Scaling )
 }
 TEST( Test02, Scaling )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	ScalingPtr object = tgenScaling( v );
 	stringstream expected;
 	tgenScalingExpected( expected, 1, v );
@@ -43,7 +43,7 @@ TEST( Test02, Scaling )
 }
 TEST( Test03, Scaling )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	ScalingPtr object = tgenScaling( v );
 	stringstream expected;
 	tgenScalingExpected( expected, 1, v );
@@ -57,23 +57,23 @@ TEST( Test03, Scaling )
 
 namespace mxtest
 {
-    ScalingPtr tgenScaling( variant v )
+    ScalingPtr tgenScaling( TestMode v )
     {
         ScalingPtr o = makeScaling();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getMillimeters()->setValue( MillimetersValue( 9 ) );
                 o->getTenths()->setValue( TenthsValue( 42 ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getMillimeters()->setValue( MillimetersValue( 11 ) );
                 o->getTenths()->setValue( TenthsValue( 44 ) );
@@ -84,12 +84,12 @@ namespace mxtest
         }
         return o;
     }
-    void tgenScalingExpected( std::ostream& os, int i, variant v )
+    void tgenScalingExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<scaling>)" );
                 streamLine( os, i+1, R"(<millimeters>7</millimeters>)" );
@@ -97,7 +97,7 @@ namespace mxtest
                 streamLine( os, i, R"(</scaling>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<scaling>)" );
                 streamLine( os, i+1, R"(<millimeters>9</millimeters>)" );
@@ -105,7 +105,7 @@ namespace mxtest
                 streamLine( os, i, R"(</scaling>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<scaling>)" );
                 streamLine( os, i+1, R"(<millimeters>11</millimeters>)" );

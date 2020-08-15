@@ -27,7 +27,7 @@ using namespace mxtest;
 
 TEST( Test01, MusicDataChoice )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	MusicDataChoicePtr object = tgenMusicDataChoice( v );
 	stringstream expected;
 	tgenMusicDataChoiceExpected( expected, 1, v );
@@ -40,7 +40,7 @@ TEST( Test01, MusicDataChoice )
 }
 TEST( Test02, MusicDataChoice )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	MusicDataChoicePtr object = tgenMusicDataChoice( v );
 	stringstream expected;
 	tgenMusicDataChoiceExpected( expected, 1, v );
@@ -53,7 +53,7 @@ TEST( Test02, MusicDataChoice )
 }
 TEST( Test03, MusicDataChoice )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	MusicDataChoicePtr object = tgenMusicDataChoice( v );
 	stringstream expected;
 	tgenMusicDataChoiceExpected( expected, 1, v );
@@ -67,23 +67,23 @@ TEST( Test03, MusicDataChoice )
 
 namespace mxtest
 {
-    MusicDataChoicePtr tgenMusicDataChoice( variant v )
+    MusicDataChoicePtr tgenMusicDataChoice( TestMode v )
     {
         MusicDataChoicePtr o;
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 o = makeMusicDataChoice();
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o = tgenMusicDataChoiceAll( v );
                 o->setChoice( MusicDataChoice::Choice::barline );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o = tgenMusicDataChoiceAll( v );
                 o->setChoice( MusicDataChoice::Choice::figuredBass );
@@ -94,22 +94,22 @@ namespace mxtest
         }
         return o;
     }
-    void tgenMusicDataChoiceExpected( std::ostream& os, int i, variant v )
+    void tgenMusicDataChoiceExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 tgenNoteExpected( os, i, v );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 tgenBarlineExpected( os, i, v );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 tgenFiguredBassExpected( os, i, v );
             }
@@ -118,7 +118,7 @@ namespace mxtest
                 break;
         }
     }
-    MusicDataChoicePtr tgenMusicDataChoiceAll( variant v )
+    MusicDataChoicePtr tgenMusicDataChoiceAll( TestMode v )
     {
         MusicDataChoicePtr o = makeMusicDataChoice();
         /*
@@ -151,19 +151,19 @@ namespace mxtest
         StringType bookmarkString;
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 linkString = "linkStringOne";
                 bookmarkString = "bookmarkStringOne";
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 linkString = "linkStringTwo";
                 bookmarkString = "bookmarkStringTwo";
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 linkString = "linkStringThree";
                 bookmarkString = "bookmarkStringThree";

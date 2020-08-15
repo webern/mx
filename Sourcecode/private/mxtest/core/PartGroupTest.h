@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::PartGroupPtr tgenPartGroup( variant v );
-    void tgenPartGroupExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::PartGroupPtr tgenPartGroup( TestMode v );
+    void tgenPartGroupExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

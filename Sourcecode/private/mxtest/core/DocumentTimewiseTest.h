@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::DocumentPtr tgenDocumentTimewise( variant v );
-    void tgenDocumentTimewiseExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::DocumentPtr tgenDocumentTimewise( TestMode v );
+    void tgenDocumentTimewiseExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

@@ -17,7 +17,7 @@ using namespace mxtest;
 
 TEST( Test01, TimeModification )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	TimeModificationPtr object = tgenTimeModification( v );
 	stringstream expected;
 	tgenTimeModificationExpected( expected, 1, v );
@@ -30,7 +30,7 @@ TEST( Test01, TimeModification )
 }
 TEST( Test02, TimeModification )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	TimeModificationPtr object = tgenTimeModification( v );
 	stringstream expected;
 	tgenTimeModificationExpected( expected, 1, v );
@@ -43,7 +43,7 @@ TEST( Test02, TimeModification )
 }
 TEST( Test03, TimeModification )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	TimeModificationPtr object = tgenTimeModification( v );
 	stringstream expected;
 	tgenTimeModificationExpected( expected, 1, v );
@@ -57,17 +57,17 @@ TEST( Test03, TimeModification )
 
 namespace mxtest
 {
-    NormalTypeNormalDotGroupPtr tgenNormalTypeNormalDotGroup( variant v )
+    NormalTypeNormalDotGroupPtr tgenNormalTypeNormalDotGroup( TestMode v )
     {
         NormalTypeNormalDotGroupPtr o = makeNormalTypeNormalDotGroup();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getNormalType()->setValue( NoteTypeValue::half );
                 o->addNormalDot( makeNormalDot() );
@@ -75,7 +75,7 @@ namespace mxtest
 
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getNormalType()->setValue( NoteTypeValue::thirtySecond );
             }
@@ -85,17 +85,17 @@ namespace mxtest
         }
         return o;
     }
-    TimeModificationPtr tgenTimeModification( variant v )
+    TimeModificationPtr tgenTimeModification( TestMode v )
     {
         TimeModificationPtr o = makeTimeModification();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setHasNormalTypeNormalDotGroup( true );
                 o->setNormalTypeNormalDotGroup( tgenNormalTypeNormalDotGroup( v ) );
@@ -103,7 +103,7 @@ namespace mxtest
                 o->getNormalNotes()->setValue( NonNegativeInteger( 4 ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setHasNormalTypeNormalDotGroup( true );
                 o->setNormalTypeNormalDotGroup( tgenNormalTypeNormalDotGroup( v ) );
@@ -116,12 +116,12 @@ namespace mxtest
         }
         return o;
     }
-    void tgenTimeModificationExpected( std::ostream& os, int i, variant v )
+    void tgenTimeModificationExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<time-modification>)" );
                 streamLine( os, i+1, R"(<actual-notes>0</actual-notes>)" );
@@ -129,7 +129,7 @@ namespace mxtest
                 streamLine( os, i, R"(</time-modification>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<time-modification>)" );
                 streamLine( os, i+1, R"(<actual-notes>5</actual-notes>)" );
@@ -140,7 +140,7 @@ namespace mxtest
                 streamLine( os, i, R"(</time-modification>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<time-modification>)" );
                 streamLine( os, i+1, R"(<actual-notes>4</actual-notes>)" );

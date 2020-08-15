@@ -16,7 +16,7 @@ using namespace mxtest;
 
 TEST( Test01, Miscellaneous )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	MiscellaneousPtr object = tgenMiscellaneous( v );
 	stringstream expected;
 	tgenMiscellaneousExpected( expected, 1, v );
@@ -29,7 +29,7 @@ TEST( Test01, Miscellaneous )
 }
 TEST( Test02, Miscellaneous )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	MiscellaneousPtr object = tgenMiscellaneous( v );
 	stringstream expected;
 	tgenMiscellaneousExpected( expected, 1, v );
@@ -42,7 +42,7 @@ TEST( Test02, Miscellaneous )
 }
 TEST( Test03, Miscellaneous )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	MiscellaneousPtr object = tgenMiscellaneous( v );
 	stringstream expected;
 	tgenMiscellaneousExpected( expected, 1, v );
@@ -56,17 +56,17 @@ TEST( Test03, Miscellaneous )
 
 namespace mxtest
 {
-    MiscellaneousPtr tgenMiscellaneous( variant v )
+    MiscellaneousPtr tgenMiscellaneous( TestMode v )
     {
         MiscellaneousPtr o = makeMiscellaneous();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 auto m1 = makeMiscellaneousField();
                 m1->setValue( XsString( "Something" ) );
@@ -78,7 +78,7 @@ namespace mxtest
                 o->addMiscellaneousField( m2 );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 auto m1 = makeMiscellaneousField();
                 m1->setValue( XsString( "One Line Only Here" ) );
@@ -91,17 +91,17 @@ namespace mxtest
         }
         return o;
     }
-    void tgenMiscellaneousExpected( std::ostream& os, int i, variant v )
+    void tgenMiscellaneousExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<miscellaneous/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<miscellaneous>)" );
                 streamLine( os, i+1, R"(<miscellaneous-field name="one">Something</miscellaneous-field>)" );
@@ -109,7 +109,7 @@ namespace mxtest
                 streamLine( os, i, R"(</miscellaneous>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<miscellaneous>)" );
                 streamLine( os, i+1, R"(<miscellaneous-field name="ricky">One Line Only Here</miscellaneous-field>)" );

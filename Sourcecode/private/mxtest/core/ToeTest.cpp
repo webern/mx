@@ -17,7 +17,7 @@ using namespace mxtest;
 
 TEST( Test01, Toe )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	ToePtr object = tgenToe( v );
 	stringstream expected;
 	tgenToeExpected( expected, 1, v );
@@ -30,7 +30,7 @@ TEST( Test01, Toe )
 }
 TEST( Test02, Toe )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	ToePtr object = tgenToe( v );
 	stringstream expected;
 	tgenToeExpected( expected, 1, v );
@@ -43,7 +43,7 @@ TEST( Test02, Toe )
 }
 TEST( Test03, Toe )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	ToePtr object = tgenToe( v );
 	stringstream expected;
 	tgenToeExpected( expected, 1, v );
@@ -57,17 +57,17 @@ TEST( Test03, Toe )
 
 namespace mxtest
 {
-    ToePtr tgenToe( variant v )
+    ToePtr tgenToe( TestMode v )
     {
         ToePtr o = makeToe();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getAttributes()->hasSubstitution = true;
                 o->getAttributes()->substitution = YesNo::yes;
@@ -77,7 +77,7 @@ namespace mxtest
                 o->getAttributes()->color = Color( 83, 102, 30, 22 );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getAttributes()->hasFontFamily = true;
                 o->getAttributes()->fontFamily = CommaSeparatedText( "Bish,and,Bones" );
@@ -88,22 +88,22 @@ namespace mxtest
         }
         return o;
     }
-    void tgenToeExpected( std::ostream& os, int i, variant v )
+    void tgenToeExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<toe/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<toe font-style="italic" color="#53661E16" substitution="yes"/>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<toe font-family="Bish,and,Bones"/>)", false );
             }

@@ -22,7 +22,7 @@ using namespace mxtest;
 
 TEST( Test01, Note )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	NotePtr object = tgenNote( v );
 	stringstream expected;
 	tgenNoteExpected( expected, 1, v );
@@ -35,7 +35,7 @@ TEST( Test01, Note )
 }
 TEST( Test02, Note )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	NotePtr object = tgenNote( v );
 	stringstream expected;
 	tgenNoteExpected( expected, 1, v );
@@ -48,7 +48,7 @@ TEST( Test02, Note )
 }
 TEST( Test03, Note )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	NotePtr object = tgenNote( v );
 	stringstream expected;
 	tgenNoteExpected( expected, 1, v );
@@ -62,17 +62,17 @@ TEST( Test03, Note )
 
 namespace mxtest
 {
-    NotePtr tgenNote( variant v )
+    NotePtr tgenNote( TestMode v )
     {
         NotePtr o = makeNote();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 o->setNoteChoice( tgenNoteChoice( v ) );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getAttributes()->hasAttack = true;
                 o->getAttributes()->attack = DivisionsValue( 33 );
@@ -94,12 +94,12 @@ namespace mxtest
                 o->getBeam( o->getBeamSet().cbegin() )->setValue( BeamValue::backwardHook );
                 o->addNotations( tgenNotations( v ) );
                 o->addLyric( tgenLyric( v ) );
-                o->addLyric( tgenLyric( variant::one ) );
+                o->addLyric( tgenLyric( TestMode::one ) );
                 o->setHasPlay( true );
                 o->setPlay( tgenPlay( v ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setNoteChoice( tgenNoteChoice( v ) );
                 o->getAttributes()->hasColor = true;
@@ -116,7 +116,7 @@ namespace mxtest
                 o->setHasTimeModification( true );
                 o->setTimeModification( tgenTimeModification( v ) );
                 o->addNotations( tgenNotations( v ) );
-                o->addNotations( tgenNotations( variant::one ) );
+                o->addNotations( tgenNotations( TestMode::one ) );
                 o->addLyric( tgenLyric( v ) );
                 o->setHasPlay( true );
                 o->setPlay( tgenPlay( v ) );
@@ -127,12 +127,12 @@ namespace mxtest
         }
         return o;
     }
-    void tgenNoteExpected( std::ostream& os, int i, variant v )
+    void tgenNoteExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<note>)" );
                 tgenNoteChoiceExpected( os, i+1, v );
@@ -140,7 +140,7 @@ namespace mxtest
                 streamLine( os, i, R"(</note>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<note dynamics="126.99" attack="33">)" );
                 tgenNoteChoiceExpected( os, i+1, v );
@@ -159,14 +159,14 @@ namespace mxtest
                 os << std::endl;
                 tgenLyricExpected( os, i+1,  v );
                 os << std::endl;
-                tgenLyricExpected( os, i+1,  variant::one );
+                tgenLyricExpected(os, i+1, TestMode::one );
                 os << std::endl;
                 tgenPlayExpected( os, i+1, v );
                 os << std::endl;
                 streamLine( os, i, R"(</note>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<note color="#010203" pizzicato="yes">)" );
                 tgenNoteChoiceExpected( os, i+1, v );
@@ -180,7 +180,7 @@ namespace mxtest
                 os << std::endl;
                 tgenNotationsExpected( os, i+1,  v );
                 os << std::endl;
-                tgenNotationsExpected( os, i+1,  variant::one );
+                tgenNotationsExpected(os, i+1, TestMode::one );
                 os << std::endl;
                 tgenLyricExpected( os, i+1,  v );
                 os << std::endl;

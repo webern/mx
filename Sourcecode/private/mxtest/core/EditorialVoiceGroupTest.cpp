@@ -18,7 +18,7 @@ using namespace mxtest;
 
 TEST( Test01, EditorialVoiceGroup )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	EditorialVoiceGroupPtr object = tgenEditorialVoiceGroup( v );
 	stringstream expected;
 	tgenEditorialVoiceGroupExpected( expected, 0, v );
@@ -32,7 +32,7 @@ TEST( Test01, EditorialVoiceGroup )
 }
 TEST( Test02, EditorialVoiceGroup )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	EditorialVoiceGroupPtr object = tgenEditorialVoiceGroup( v );
 	stringstream expected;
 	tgenEditorialVoiceGroupExpected( expected, 1, v );
@@ -46,7 +46,7 @@ TEST( Test02, EditorialVoiceGroup )
 }
 TEST( Test03, EditorialVoiceGroup )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	EditorialVoiceGroupPtr object = tgenEditorialVoiceGroup( v );
 	stringstream expected;
 	tgenEditorialVoiceGroupExpected( expected, 1, v );
@@ -61,16 +61,16 @@ TEST( Test03, EditorialVoiceGroup )
 
 namespace mxtest
 {
-    EditorialVoiceGroupPtr tgenEditorialVoiceGroup( variant v )
+    EditorialVoiceGroupPtr tgenEditorialVoiceGroup( TestMode v )
     {
         EditorialVoiceGroupPtr o = makeEditorialVoiceGroup();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setHasLevel( true );
                 o->getLevel()->setValue( XsString( "LevelTwo" ) );
@@ -80,7 +80,7 @@ namespace mxtest
                 o->getVoice()->setValue( XsString( "123" ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setHasFootnote( true );
                 o->getFootnote()->setValue( XsString( "FootNoteThree" ) );
@@ -93,24 +93,24 @@ namespace mxtest
         }
         return o;
     }
-    void tgenEditorialVoiceGroupExpected( std::ostream& os, int i, variant v )
+    void tgenEditorialVoiceGroupExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"()", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<footnote>FootNoteTwo</footnote>)" );
                 streamLine( os, i, R"(<level>LevelTwo</level>)" );
                 streamLine( os, i, R"(<voice>123</voice>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<footnote>FootNoteThree</footnote>)" );
                 streamLine( os, i, R"(<voice>456</voice>)", false );

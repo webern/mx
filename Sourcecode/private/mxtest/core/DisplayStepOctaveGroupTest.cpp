@@ -17,7 +17,7 @@ using namespace mxtest;
 
 TEST( Test01, DisplayStepOctaveGroup )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	DisplayStepOctaveGroupPtr object = tgenDisplayStepOctaveGroup( v );
 	stringstream expected;
 	tgenDisplayStepOctaveGroupExpected( expected, 1, v );
@@ -31,7 +31,7 @@ TEST( Test01, DisplayStepOctaveGroup )
 }
 TEST( Test02, DisplayStepOctaveGroup )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	DisplayStepOctaveGroupPtr object = tgenDisplayStepOctaveGroup( v );
 	stringstream expected;
 	tgenDisplayStepOctaveGroupExpected( expected, 1, v );
@@ -45,7 +45,7 @@ TEST( Test02, DisplayStepOctaveGroup )
 }
 TEST( Test03, DisplayStepOctaveGroup )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	DisplayStepOctaveGroupPtr object = tgenDisplayStepOctaveGroup( v );
 	stringstream expected;
 	tgenDisplayStepOctaveGroupExpected( expected, 1, v );
@@ -60,23 +60,23 @@ TEST( Test03, DisplayStepOctaveGroup )
 
 namespace mxtest
 {
-    DisplayStepOctaveGroupPtr tgenDisplayStepOctaveGroup( variant v )
+    DisplayStepOctaveGroupPtr tgenDisplayStepOctaveGroup( TestMode v )
     {
         DisplayStepOctaveGroupPtr o = makeDisplayStepOctaveGroup();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getDisplayOctave()->setValue( OctaveValue( 7 ) );
                 o->getDisplayStep()->setValue( StepEnum::g );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getDisplayOctave()->setValue( OctaveValue( 5 ) );
                 o->getDisplayStep()->setValue( StepEnum::b );
@@ -87,24 +87,24 @@ namespace mxtest
         }
         return o;
     }
-    void tgenDisplayStepOctaveGroupExpected( std::ostream& os, int i, variant v )
+    void tgenDisplayStepOctaveGroupExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<display-step>A</display-step>)" );
                 streamLine( os, i, R"(<display-octave>0</display-octave>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<display-step>G</display-step>)" );
                 streamLine( os, i, R"(<display-octave>7</display-octave>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<display-step>B</display-step>)" );
                 streamLine( os, i, R"(<display-octave>5</display-octave>)", false );

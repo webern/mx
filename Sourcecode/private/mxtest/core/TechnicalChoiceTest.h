@@ -12,8 +12,8 @@
 
 namespace mxtest
 {
-    mx::core::TechnicalChoicePtr tgenTechnicalChoice( variant v );
-    void tgenTechnicalChoiceExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::TechnicalChoicePtr tgenTechnicalChoice( TestMode v );
+    void tgenTechnicalChoiceExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

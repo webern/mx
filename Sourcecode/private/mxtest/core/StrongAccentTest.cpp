@@ -18,7 +18,7 @@ using namespace mxtest;
 
 TEST( Test01, StrongAccent )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	StrongAccentPtr object = tgenStrongAccent( v );
 	stringstream expected;
 	tgenStrongAccentExpected( expected, 1, v );
@@ -31,7 +31,7 @@ TEST( Test01, StrongAccent )
 }
 TEST( Test02, StrongAccent )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	StrongAccentPtr object = tgenStrongAccent( v );
 	stringstream expected;
 	tgenStrongAccentExpected( expected, 1, v );
@@ -44,7 +44,7 @@ TEST( Test02, StrongAccent )
 }
 TEST( Test03, StrongAccent )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	StrongAccentPtr object = tgenStrongAccent( v );
 	stringstream expected;
 	tgenStrongAccentExpected( expected, 1, v );
@@ -58,24 +58,24 @@ TEST( Test03, StrongAccent )
 
 namespace mxtest
 {
-    StrongAccentPtr tgenStrongAccent( variant v )
+    StrongAccentPtr tgenStrongAccent( TestMode v )
     {
         StrongAccentPtr o = makeStrongAccent();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getAttributes()->hasFontStyle = true;
                 o->getAttributes()->hasRelativeX = true;
                 o->getAttributes()->relativeX = TenthsValue( -1.1 );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getAttributes()->hasDefaultY = true;
                 o->getAttributes()->defaultY = TenthsValue( 2.2 );
@@ -86,22 +86,22 @@ namespace mxtest
         }
         return o;
     }
-    void tgenStrongAccentExpected( std::ostream& os, int i, variant v )
+    void tgenStrongAccentExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<strong-accent/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<strong-accent relative-x="-1.1" font-style="normal"/>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<strong-accent default-y="2.2"/>)", false );
 

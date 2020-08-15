@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::LayoutGroupPtr tgenLayoutGroup( variant v );
-    void tgenLayoutGroupExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::LayoutGroupPtr tgenLayoutGroup( TestMode v );
+    void tgenLayoutGroupExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

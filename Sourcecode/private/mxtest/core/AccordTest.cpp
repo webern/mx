@@ -16,7 +16,7 @@ using namespace mxtest;
 
 TEST( Test01, Accord )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	AccordPtr object = tgenAccord( v );
 	stringstream expected;
 	tgenAccordExpected( expected, 1, v );
@@ -29,7 +29,7 @@ TEST( Test01, Accord )
 }
 TEST( Test02, Accord )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	AccordPtr object = tgenAccord( v );
 	stringstream expected;
 	tgenAccordExpected( expected, 1, v );
@@ -42,7 +42,7 @@ TEST( Test02, Accord )
 }
 TEST( Test03, Accord )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	AccordPtr object = tgenAccord( v );
 	stringstream expected;
 	tgenAccordExpected( expected, 1, v );
@@ -55,17 +55,17 @@ TEST( Test03, Accord )
 }
 namespace mxtest
 {
-    AccordPtr tgenAccord( variant v )
+    AccordPtr tgenAccord( TestMode v )
     {
         AccordPtr o = makeAccord();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 ;
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getTuningStep()->setValue( StepEnum::c );
                 o->setHasTuningAlter( true );
@@ -73,7 +73,7 @@ namespace mxtest
                 o->getTuningOctave()->setValue( OctaveValue( 4 ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getTuningStep()->setValue( StepEnum::f );
                 o->setHasTuningAlter( true );
@@ -86,12 +86,12 @@ namespace mxtest
         }
         return o;
     }
-    void tgenAccordExpected( std::ostream& os, int i, variant v )
+    void tgenAccordExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<accord>)" );
                 streamLine( os, i+1, R"(<tuning-step>A</tuning-step>)" );
@@ -99,7 +99,7 @@ namespace mxtest
                 streamLine( os, i, R"(</accord>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<accord>)" );
                 streamLine( os, i+1, R"(<tuning-step>C</tuning-step>)" );
@@ -108,7 +108,7 @@ namespace mxtest
                 streamLine( os, i, R"(</accord>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<accord>)" );
                 streamLine( os, i+1, R"(<tuning-step>F</tuning-step>)" );

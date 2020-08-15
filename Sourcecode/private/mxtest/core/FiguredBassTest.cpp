@@ -17,7 +17,7 @@ using namespace mxtest;
 
 TEST( Test01, FiguredBass )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	FiguredBassPtr object = tgenFiguredBass( v );
 	stringstream expected;
 	tgenFiguredBassExpected( expected, 1, v );
@@ -30,7 +30,7 @@ TEST( Test01, FiguredBass )
 }
 TEST( Test02, FiguredBass )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	FiguredBassPtr object = tgenFiguredBass( v );
 	stringstream expected;
 	tgenFiguredBassExpected( expected, 1, v );
@@ -43,7 +43,7 @@ TEST( Test02, FiguredBass )
 }
 TEST( Test03, FiguredBass )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	FiguredBassPtr object = tgenFiguredBass( v );
 	stringstream expected;
 	tgenFiguredBassExpected( expected, 1, v );
@@ -57,21 +57,21 @@ TEST( Test03, FiguredBass )
 
 namespace mxtest
 {
-    FiguredBassPtr tgenFiguredBass( variant v )
+    FiguredBassPtr tgenFiguredBass( TestMode v )
     {
         FiguredBassPtr o = makeFiguredBass();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setHasDuration( true );
                 o->getDuration()->setValue( PositiveDivisionsValue( 29 ) );
-                o->addFigure( tgenFigure( variant::three ) );
+                o->addFigure( tgenFigure( TestMode::three ) );
                 o->addFigure( tgenFigure( v ) );
                 o->removeFigure( o->getFigureSet().cbegin() );
                 o->setEditorialGroup( tgenEditorialGroup( v ) );
@@ -79,9 +79,9 @@ namespace mxtest
                 o->getAttributes()->parentheses = YesNo::yes;
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
-                o->addFigure( tgenFigure( variant::one ) );
+                o->addFigure( tgenFigure( TestMode::one ) );
                 o->addFigure( tgenFigure( v ) );
                 o->removeFigure( o->getFigureSet().cbegin() );
                 o->setEditorialGroup( tgenEditorialGroup( v ) );
@@ -96,22 +96,22 @@ namespace mxtest
         }
         return o;
     }
-    void tgenFiguredBassExpected( std::ostream& os, int i, variant v )
+    void tgenFiguredBassExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<figured-bass>)" );
                 streamLine( os, i+1, R"(<figure/>)" );
                 streamLine( os, i, R"(</figured-bass>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<figured-bass parentheses="yes">)" );
-                tgenFigureExpected( os, i+1, variant::three );
+                tgenFigureExpected(os, i+1, TestMode::three );
                 os << std::endl;
                 tgenFigureExpected( os, i+1, v );
                 os << std::endl;
@@ -121,10 +121,10 @@ namespace mxtest
                 streamLine( os, i, R"(</figured-bass>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<figured-bass print-dot="no" parentheses="yes">)" );
-                tgenFigureExpected( os, i+1, variant::one );
+                tgenFigureExpected(os, i+1, TestMode::one );
                 os << std::endl;
                 tgenFigureExpected( os, i+1, v );
                 os << std::endl;

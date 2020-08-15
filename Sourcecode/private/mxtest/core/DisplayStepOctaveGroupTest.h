@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::DisplayStepOctaveGroupPtr tgenDisplayStepOctaveGroup( variant v );
-    void tgenDisplayStepOctaveGroupExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::DisplayStepOctaveGroupPtr tgenDisplayStepOctaveGroup( TestMode v );
+    void tgenDisplayStepOctaveGroupExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

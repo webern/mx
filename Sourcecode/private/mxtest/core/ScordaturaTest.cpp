@@ -17,7 +17,7 @@ using namespace mxtest;
 
 TEST( Test01, Scordatura )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	ScordaturaPtr object = tgenScordatura( v );
 	stringstream expected;
 	tgenScordaturaExpected( expected, 1, v );
@@ -30,7 +30,7 @@ TEST( Test01, Scordatura )
 }
 TEST( Test02, Scordatura )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	ScordaturaPtr object = tgenScordatura( v );
 	stringstream expected;
 	tgenScordaturaExpected( expected, 1, v );
@@ -43,7 +43,7 @@ TEST( Test02, Scordatura )
 }
 TEST( Test03, Scordatura )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	ScordaturaPtr object = tgenScordatura( v );
 	stringstream expected;
 	tgenScordaturaExpected( expected, 1, v );
@@ -57,29 +57,29 @@ TEST( Test03, Scordatura )
 
 namespace mxtest
 {
-    ScordaturaPtr tgenScordatura( variant v )
+    ScordaturaPtr tgenScordatura( TestMode v )
     {
         ScordaturaPtr o = makeScordatura();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 ;
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
-                o->addAccord( tgenAccord( variant::two ) );
+                o->addAccord( tgenAccord( TestMode::two ) );
                 o->removeAccord( o->getAccordSet().cbegin() );
-                o->addAccord( tgenAccord( variant::three ) );
+                o->addAccord( tgenAccord( TestMode::three ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
-                o->addAccord( tgenAccord( variant::three ) );
+                o->addAccord( tgenAccord( TestMode::three ) );
                 o->removeAccord( o->getAccordSet().cbegin() );
-                o->addAccord( tgenAccord( variant::two ) );
-                o->addAccord( tgenAccord( variant::one ) );
+                o->addAccord( tgenAccord( TestMode::two ) );
+                o->addAccord( tgenAccord( TestMode::one ) );
             }
                 break;
             default:
@@ -87,37 +87,37 @@ namespace mxtest
         }
         return o;
     }
-    void tgenScordaturaExpected( std::ostream& os, int i, variant v )
+    void tgenScordaturaExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<scordatura>)" );
-                tgenAccordExpected( os, i+1, variant::one );
+                tgenAccordExpected(os, i+1, TestMode::one );
                 os << std::endl;
                 streamLine( os, i, R"(</scordatura>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<scordatura>)" );
-                tgenAccordExpected( os, i+1, variant::two );
+                tgenAccordExpected(os, i+1, TestMode::two );
                 os << std::endl;
-                tgenAccordExpected( os, i+1, variant::three );
+                tgenAccordExpected(os, i+1, TestMode::three );
                 os << std::endl;
                 streamLine( os, i, R"(</scordatura>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<scordatura>)" );
-                tgenAccordExpected( os, i+1, variant::three );
+                tgenAccordExpected(os, i+1, TestMode::three );
                 os << std::endl;
-                tgenAccordExpected( os, i+1, variant::two );
+                tgenAccordExpected(os, i+1, TestMode::two );
                 os << std::endl;
-                tgenAccordExpected( os, i+1, variant::one );
+                tgenAccordExpected(os, i+1, TestMode::one );
                 os << std::endl;
                 streamLine( os, i, R"(</scordatura>)", false );
             }

@@ -16,7 +16,7 @@ using namespace mxtest;
 
 TEST( Test01, TimewiseMeasure )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	TimewiseMeasurePtr object = tgenTimewiseMeasure( v );
 	stringstream expected;
 	tgenTimewiseMeasureExpected( expected, 1, v );
@@ -29,7 +29,7 @@ TEST( Test01, TimewiseMeasure )
 }
 TEST( Test02, TimewiseMeasure )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	TimewiseMeasurePtr object = tgenTimewiseMeasure( v );
 	stringstream expected;
 	tgenTimewiseMeasureExpected( expected, 1, v );
@@ -42,7 +42,7 @@ TEST( Test02, TimewiseMeasure )
 }
 TEST( Test03, TimewiseMeasure )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	TimewiseMeasurePtr object = tgenTimewiseMeasure( v );
 	stringstream expected;
 	tgenTimewiseMeasureExpected( expected, 1, v );
@@ -56,32 +56,32 @@ TEST( Test03, TimewiseMeasure )
 
 namespace mxtest
 {
-    TimewiseMeasurePtr tgenTimewiseMeasure( variant v )
+    TimewiseMeasurePtr tgenTimewiseMeasure( TestMode v )
     {
         TimewiseMeasurePtr o = makeTimewiseMeasure();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getAttributes()->number = XsToken( "215" );
                 o->addTimewisePart( tgenTimewisePart( v ) );
                 o->removeTimewisePart( o->getTimewisePartSet().cbegin() );
-                o->addTimewisePart( tgenTimewisePart( variant::three ) );
+                o->addTimewisePart( tgenTimewisePart( TestMode::three ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getAttributes()->number = XsToken( "105" );
                 o->getAttributes()->hasImplicit = true;
                 o->getAttributes()->implicit = YesNo::no;
                 o->addTimewisePart( tgenTimewisePart( v ) );
                 o->removeTimewisePart( o->getTimewisePartSet().cbegin() );
-                o->addTimewisePart( tgenTimewisePart( variant::two ) );
+                o->addTimewisePart( tgenTimewisePart( TestMode::two ) );
             }
                 break;
             default:
@@ -89,12 +89,12 @@ namespace mxtest
         }
         return o;
     }
-    void tgenTimewiseMeasureExpected( std::ostream& os, int i, variant v )
+    void tgenTimewiseMeasureExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<measure number="">)" );
                 tgenTimewisePartExpected( os, i+1,  v );
@@ -102,22 +102,22 @@ namespace mxtest
                 streamLine( os, i, R"(</measure>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<measure number="215">)" );
                 tgenTimewisePartExpected( os, i+1,  v );
                 os << std::endl;
-                tgenTimewisePartExpected( os, i+1,  variant::three );
+                tgenTimewisePartExpected(os, i+1, TestMode::three );
                 os << std::endl;
                 streamLine( os, i, R"(</measure>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<measure number="105" implicit="no">)" );
                 tgenTimewisePartExpected( os, i+1,  v );
                 os << std::endl;
-                tgenTimewisePartExpected( os, i+1,  variant::two );
+                tgenTimewisePartExpected(os, i+1, TestMode::two );
                 os << std::endl;
                 streamLine( os, i, R"(</measure>)", false );
             }

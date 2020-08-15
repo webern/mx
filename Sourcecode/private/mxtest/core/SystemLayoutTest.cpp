@@ -18,7 +18,7 @@ using namespace mxtest;
 
 TEST( Test01, SystemLayout )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	SystemLayoutPtr object = tgenSystemLayout( v );
 	stringstream expected;
 	tgenSystemLayoutExpected( expected, 1, v );
@@ -31,7 +31,7 @@ TEST( Test01, SystemLayout )
 }
 TEST( Test02, SystemLayout )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	SystemLayoutPtr object = tgenSystemLayout( v );
 	stringstream expected;
 	tgenSystemLayoutExpected( expected, 1, v );
@@ -44,7 +44,7 @@ TEST( Test02, SystemLayout )
 }
 TEST( Test03, SystemLayout )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	SystemLayoutPtr object = tgenSystemLayout( v );
 	stringstream expected;
 	tgenSystemLayoutExpected( expected, 1, v );
@@ -58,17 +58,17 @@ TEST( Test03, SystemLayout )
 
 namespace mxtest
 {
-    SystemLayoutPtr tgenSystemLayout( variant v )
+    SystemLayoutPtr tgenSystemLayout( TestMode v )
     {
         SystemLayoutPtr o = makeSystemLayout();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setHasSystemMargins( true );
                 o->setSystemMargins( tgenSystemMargins( v ) );
@@ -80,7 +80,7 @@ namespace mxtest
                 o->setSystemDividers( tgenSystemDividers( v ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setHasSystemMargins( true );
                 o->setSystemMargins( tgenSystemMargins( v ) );
@@ -95,17 +95,17 @@ namespace mxtest
         }
         return o;
     }
-    void tgenSystemLayoutExpected( std::ostream& os, int i, variant v )
+    void tgenSystemLayoutExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<system-layout/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<system-layout>)" );
                 tgenSystemMarginsExpected( os, i+1, v );
@@ -117,7 +117,7 @@ namespace mxtest
                 streamLine( os, i, R"(</system-layout>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<system-layout>)" );
                 tgenSystemMarginsExpected( os, i+1, v );

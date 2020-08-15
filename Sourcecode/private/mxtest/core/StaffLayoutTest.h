@@ -12,8 +12,8 @@
 
 namespace mxtest
 {
-    mx::core::StaffLayoutPtr tgenStaffLayout( variant v );
-    void tgenStaffLayoutExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::StaffLayoutPtr tgenStaffLayout( TestMode v );
+    void tgenStaffLayoutExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

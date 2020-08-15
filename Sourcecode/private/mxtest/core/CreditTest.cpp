@@ -16,7 +16,7 @@ using namespace mxtest;
 
 TEST( Test01, Credit )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	CreditPtr object = tgenCredit( v );
 	stringstream expected;
 	tgenCreditExpected( expected, 1, v );
@@ -29,7 +29,7 @@ TEST( Test01, Credit )
 }
 TEST( Test02, Credit )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	CreditPtr object = tgenCredit( v );
 	stringstream expected;
 	tgenCreditExpected( expected, 1, v );
@@ -42,7 +42,7 @@ TEST( Test02, Credit )
 }
 TEST( Test03, Credit )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	CreditPtr object = tgenCredit( v );
 	stringstream expected;
 	tgenCreditExpected( expected, 1, v );
@@ -56,17 +56,17 @@ TEST( Test03, Credit )
 
 namespace mxtest
 {
-    CreditPtr tgenCredit( variant v )
+    CreditPtr tgenCredit( TestMode v )
     {
         CreditPtr o = makeCredit();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 o->setCreditChoice( tgenCreditChoice( v ) );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getAttributes()->hasPage = true;
                 o->getAttributes()->page = PositiveInteger( 2 );
@@ -87,7 +87,7 @@ namespace mxtest
                 o->addBookmark( b2 );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getAttributes()->hasPage = true;
                 o->getAttributes()->page = PositiveInteger( 3 );
@@ -112,12 +112,12 @@ namespace mxtest
         }
         return o;
     }
-    void tgenCreditExpected( std::ostream& os, int i, variant v )
+    void tgenCreditExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<credit>)" );
                 tgenCreditChoiceExpected( os, i+1, v );
@@ -125,7 +125,7 @@ namespace mxtest
                 streamLine( os, i, R"(</credit>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<credit page="2">)" );
                 streamLine( os, i+1, R"(<link xlink:href="hfrefABC"/>)" );
@@ -137,7 +137,7 @@ namespace mxtest
                 streamLine( os, i, R"(</credit>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<credit page="3">)" );
                 streamLine( os, i+1, R"(<credit-type>composer</credit-type>)" );

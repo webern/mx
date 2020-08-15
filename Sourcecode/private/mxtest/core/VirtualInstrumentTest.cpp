@@ -17,7 +17,7 @@ using namespace mxtest;
 
 TEST( Test01, VirtualInstrument )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	VirtualInstrumentPtr object = tgenVirtualInstrument( v );
 	stringstream expected;
 	tgenVirtualInstrumentExpected( expected, 1, v );
@@ -30,7 +30,7 @@ TEST( Test01, VirtualInstrument )
 }
 TEST( Test02, VirtualInstrument )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	VirtualInstrumentPtr object = tgenVirtualInstrument( v );
 	stringstream expected;
 	tgenVirtualInstrumentExpected( expected, 1, v );
@@ -43,7 +43,7 @@ TEST( Test02, VirtualInstrument )
 }
 TEST( Test03, VirtualInstrument )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	VirtualInstrumentPtr object = tgenVirtualInstrument( v );
 	stringstream expected;
 	tgenVirtualInstrumentExpected( expected, 1, v );
@@ -57,23 +57,23 @@ TEST( Test03, VirtualInstrument )
 
 namespace mxtest
 {
-    VirtualInstrumentPtr tgenVirtualInstrument( variant v )
+    VirtualInstrumentPtr tgenVirtualInstrument( TestMode v )
     {
         VirtualInstrumentPtr o = makeVirtualInstrument();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setHasVirtualName( true );
                 o->getVirtualName()->setValue( XsString( "VI1" ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setHasVirtualName( true );
                 o->getVirtualName()->setValue( XsString( "VI2" ) );
@@ -86,24 +86,24 @@ namespace mxtest
         }
         return o;
     }
-    void tgenVirtualInstrumentExpected( std::ostream& os, int i, variant v )
+    void tgenVirtualInstrumentExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<virtual-instrument/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<virtual-instrument>)" );
                 streamLine( os, i+1, R"(<virtual-name>VI1</virtual-name>)" );
                 streamLine( os, i, R"(</virtual-instrument>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<virtual-instrument>)" );
                 streamLine( os, i+1, R"(<virtual-library>VL2</virtual-library>)" );

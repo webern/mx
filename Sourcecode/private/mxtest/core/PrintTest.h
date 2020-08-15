@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::PrintPtr tgenPrint( variant v );
-    void tgenPrintExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::PrintPtr tgenPrint( TestMode v );
+    void tgenPrintExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

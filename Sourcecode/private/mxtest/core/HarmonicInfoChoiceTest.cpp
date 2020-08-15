@@ -15,7 +15,7 @@ using namespace mxtest;
 
 TEST( Test01, HarmonicInfoChoice )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	HarmonicInfoChoicePtr object = tgenHarmonicInfoChoice( v );
 	stringstream expected;
 	tgenHarmonicInfoChoiceExpected( expected, 1, v );
@@ -29,7 +29,7 @@ TEST( Test01, HarmonicInfoChoice )
 }
 TEST( Test02, HarmonicInfoChoice )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	HarmonicInfoChoicePtr object = tgenHarmonicInfoChoice( v );
 	stringstream expected;
 	tgenHarmonicInfoChoiceExpected( expected, 1, v );
@@ -43,7 +43,7 @@ TEST( Test02, HarmonicInfoChoice )
 }
 TEST( Test03, HarmonicInfoChoice )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	HarmonicInfoChoicePtr object = tgenHarmonicInfoChoice( v );
 	stringstream expected;
 	tgenHarmonicInfoChoiceExpected( expected, 1, v );
@@ -58,22 +58,22 @@ TEST( Test03, HarmonicInfoChoice )
 
 namespace mxtest
 {
-    HarmonicInfoChoicePtr tgenHarmonicInfoChoice( variant v )
+    HarmonicInfoChoicePtr tgenHarmonicInfoChoice( TestMode v )
     {
         HarmonicInfoChoicePtr o = makeHarmonicInfoChoice();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setChoice( HarmonicInfoChoice::Choice::touchingPitch );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setChoice( HarmonicInfoChoice::Choice::soundingPitch );
             }
@@ -83,22 +83,22 @@ namespace mxtest
         }
         return o;
     }
-    void tgenHarmonicInfoChoiceExpected( std::ostream& os, int i, variant v )
+    void tgenHarmonicInfoChoiceExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<base-pitch/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<touching-pitch/>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<sounding-pitch/>)", false );
             }

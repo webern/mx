@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::PartAbbreviationDisplayPtr tgenPartAbbreviationDisplay( variant v );
-    void tgenPartAbbreviationDisplayExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::PartAbbreviationDisplayPtr tgenPartAbbreviationDisplay( TestMode v );
+    void tgenPartAbbreviationDisplayExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

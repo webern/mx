@@ -12,8 +12,8 @@
 
 namespace mxtest
 {
-    mx::core::SystemDividersPtr tgenSystemDividers( variant v );
-    void tgenSystemDividersExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::SystemDividersPtr tgenSystemDividers( TestMode v );
+    void tgenSystemDividersExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

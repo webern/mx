@@ -16,7 +16,7 @@ using namespace mxtest;
 
 TEST( Test01, PartwisePart )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	PartwisePartPtr object = tgenPartwisePart( v );
 	stringstream expected;
 	tgenPartwisePartExpected( expected, 1, v );
@@ -29,7 +29,7 @@ TEST( Test01, PartwisePart )
 }
 TEST( Test02, PartwisePart )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	PartwisePartPtr object = tgenPartwisePart( v );
 	stringstream expected;
 	tgenPartwisePartExpected( expected, 1, v );
@@ -42,7 +42,7 @@ TEST( Test02, PartwisePart )
 }
 TEST( Test03, PartwisePart )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	PartwisePartPtr object = tgenPartwisePart( v );
 	stringstream expected;
 	tgenPartwisePartExpected( expected, 1, v );
@@ -56,30 +56,30 @@ TEST( Test03, PartwisePart )
 
 namespace mxtest
 {
-    PartwisePartPtr tgenPartwisePart( variant v )
+    PartwisePartPtr tgenPartwisePart( TestMode v )
     {
         PartwisePartPtr o = makePartwisePart();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getAttributes()->id = XsIDREF( "IDTWO" );
                 o->addPartwiseMeasure( tgenPartwiseMeasure( v ) );
                 o->removePartwiseMeasure( o->getPartwiseMeasureSet().cbegin() );
-                o->addPartwiseMeasure( tgenPartwiseMeasure( variant::three ) );
+                o->addPartwiseMeasure( tgenPartwiseMeasure( TestMode::three ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getAttributes()->id = XsIDREF( "ID3" );
                 o->addPartwiseMeasure( tgenPartwiseMeasure( v ) );
                 o->removePartwiseMeasure( o->getPartwiseMeasureSet().cbegin() );
-                o->addPartwiseMeasure( tgenPartwiseMeasure( variant::two ) );
+                o->addPartwiseMeasure( tgenPartwiseMeasure( TestMode::two ) );
             }
                 break;
             default:
@@ -87,12 +87,12 @@ namespace mxtest
         }
         return o;
     }
-    void tgenPartwisePartExpected( std::ostream& os, int i, variant v )
+    void tgenPartwisePartExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<part id="ID">)" );
                 tgenPartwiseMeasureExpected( os, i+1,  v );
@@ -100,22 +100,22 @@ namespace mxtest
                 streamLine( os, i, R"(</part>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<part id="IDTWO">)" );
                 tgenPartwiseMeasureExpected( os, i+1,  v );
                 os << std::endl;
-                tgenPartwiseMeasureExpected( os, i+1,  variant::three );
+                tgenPartwiseMeasureExpected(os, i+1, TestMode::three );
                 os << std::endl;
                 streamLine( os, i, R"(</part>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<part id="ID3">)" );
                 tgenPartwiseMeasureExpected( os, i+1,  v );
                 os << std::endl;
-                tgenPartwiseMeasureExpected( os, i+1,  variant::two );
+                tgenPartwiseMeasureExpected(os, i+1, TestMode::two );
                 os << std::endl;
                 streamLine( os, i, R"(</part>)", false );
             }

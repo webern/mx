@@ -21,7 +21,7 @@ using namespace mxtest;
 
 TEST( Test01, Appearance )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	AppearancePtr object = tgenAppearance( v );
 	stringstream expected;
 	tgenAppearanceExpected( expected, 1, v );
@@ -34,7 +34,7 @@ TEST( Test01, Appearance )
 }
 TEST( Test02, Appearance )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	AppearancePtr object = tgenAppearance( v );
 	stringstream expected;
 	tgenAppearanceExpected( expected, 1, v );
@@ -47,7 +47,7 @@ TEST( Test02, Appearance )
 }
 TEST( Test03, Appearance )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	AppearancePtr object = tgenAppearance( v );
 	stringstream expected;
 	tgenAppearanceExpected( expected, 1, v );
@@ -61,17 +61,17 @@ TEST( Test03, Appearance )
 #endif
 namespace mxtest
 {
-    AppearancePtr tgenAppearance( variant v )
+    AppearancePtr tgenAppearance( TestMode v )
     {
         AppearancePtr o = makeAppearance();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 OtherAppearancePtr oa1 = makeOtherAppearance();
                 OtherAppearancePtr oa2 = makeOtherAppearance();
@@ -95,7 +95,7 @@ namespace mxtest
                 o->addOtherAppearance( oa2 );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 OtherAppearancePtr oa1 = makeOtherAppearance();
                 OtherAppearancePtr oa2 = makeOtherAppearance();
@@ -125,17 +125,17 @@ namespace mxtest
         }
         return o;
     }
-    void tgenAppearanceExpected( std::ostream& os, int i, variant v )
+    void tgenAppearanceExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<appearance/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<appearance>)" );
                 streamLine( os, i+1, R"(<line-width type="dashes">11.1</line-width>)" );
@@ -146,7 +146,7 @@ namespace mxtest
                 streamLine( os, i, R"(</appearance>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<appearance>)" );
                 streamLine( os, i+1, R"(<line-width type="dashes">1.1</line-width>)" );

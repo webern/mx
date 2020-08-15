@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::CreditPtr tgenCredit( variant v );
-    void tgenCreditExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::CreditPtr tgenCredit( TestMode v );
+    void tgenCreditExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

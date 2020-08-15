@@ -17,7 +17,7 @@ using namespace mxtest;
 
 TEST( Test01, PartGroupOrScorePart )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	PartGroupOrScorePartPtr object = tgenPartGroupOrScorePart( v );
 	stringstream expected;
 	tgenPartGroupOrScorePartExpected( expected, 1, v );
@@ -31,7 +31,7 @@ TEST( Test01, PartGroupOrScorePart )
 }
 TEST( Test02, PartGroupOrScorePart )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	PartGroupOrScorePartPtr object = tgenPartGroupOrScorePart( v );
 	stringstream expected;
 	tgenPartGroupOrScorePartExpected( expected, 1, v );
@@ -45,7 +45,7 @@ TEST( Test02, PartGroupOrScorePart )
 }
 TEST( Test03, PartGroupOrScorePart )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	PartGroupOrScorePartPtr object = tgenPartGroupOrScorePart( v );
 	stringstream expected;
 	tgenPartGroupOrScorePartExpected( expected, 1, v );
@@ -60,23 +60,23 @@ TEST( Test03, PartGroupOrScorePart )
 
 namespace mxtest
 {
-    PartGroupOrScorePartPtr tgenPartGroupOrScorePart( variant v )
+    PartGroupOrScorePartPtr tgenPartGroupOrScorePart( TestMode v )
     {
         PartGroupOrScorePartPtr o = makePartGroupOrScorePart();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setChoice( PartGroupOrScorePart::Choice::scorePart );
                 o->setScorePart( tgenScorePart( v ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setChoice( PartGroupOrScorePart::Choice::partGroup );
                 o->setPartGroup( tgenPartGroup( v ) );
@@ -87,22 +87,22 @@ namespace mxtest
         }
         return o;
     }
-    void tgenPartGroupOrScorePartExpected( std::ostream& os, int i, variant v )
+    void tgenPartGroupOrScorePartExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 tgenPartGroupExpected( os, i, v );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 tgenScorePartExpected( os, i, v );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 tgenPartGroupExpected( os, i, v );
             }

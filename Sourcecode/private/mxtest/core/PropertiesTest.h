@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::PropertiesPtr tgenProperties( variant v );
-    void tgenPropertiesExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::PropertiesPtr tgenProperties( TestMode v );
+    void tgenPropertiesExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

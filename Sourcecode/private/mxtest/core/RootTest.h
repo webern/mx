@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::RootPtr tgenRoot( variant v );
-    void tgenRootExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::RootPtr tgenRoot( TestMode v );
+    void tgenRootExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

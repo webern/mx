@@ -19,7 +19,7 @@ using namespace mxtest;
 
 TEST( Test01, ScorePart )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	ScorePartPtr object = tgenScorePart( v );
 	stringstream expected;
 	tgenScorePartExpected( expected, 1, v );
@@ -32,7 +32,7 @@ TEST( Test01, ScorePart )
 }
 TEST( Test02, ScorePart )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	ScorePartPtr object = tgenScorePart( v );
 	stringstream expected;
 	tgenScorePartExpected( expected, 1, v );
@@ -45,7 +45,7 @@ TEST( Test02, ScorePart )
 }
 TEST( Test03, ScorePart )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	ScorePartPtr object = tgenScorePart( v );
 	stringstream expected;
 	tgenScorePartExpected( expected, 1, v );
@@ -59,17 +59,17 @@ TEST( Test03, ScorePart )
 
 namespace mxtest
 {
-    ScorePartPtr tgenScorePart( variant v )
+    ScorePartPtr tgenScorePart( TestMode v )
     {
         ScorePartPtr o = makeScorePart();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getAttributes()->id = XsID( "P001" );
                 o->setHasIdentification( true );
@@ -121,7 +121,7 @@ namespace mxtest
                 
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getAttributes()->id = XsID( "XXX123" );
                 o->setHasIdentification( true );
@@ -150,19 +150,19 @@ namespace mxtest
         }
         return o;
     }
-    void tgenScorePartExpected( std::ostream& os, int i, variant v )
+    void tgenScorePartExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<score-part id="ID">)" );
                 streamLine( os, i+1, R"(<part-name></part-name>)" );
                 streamLine( os, i, R"(</score-part>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<score-part id="P001">)" );
                 tgenIdentificationExpected( os, i+1, v );
@@ -189,7 +189,7 @@ namespace mxtest
                 streamLine( os, i, R"(</score-part>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<score-part id="XXX123">)" );
                 tgenIdentificationExpected( os, i+1, v );

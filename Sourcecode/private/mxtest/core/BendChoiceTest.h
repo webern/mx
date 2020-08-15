@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::BendChoicePtr tgenBendChoice( variant v );
-    void tgenBendChoiceExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::BendChoicePtr tgenBendChoice( TestMode v );
+    void tgenBendChoiceExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

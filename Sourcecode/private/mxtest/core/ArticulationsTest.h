@@ -11,9 +11,9 @@
 
 namespace mxtest
 {
-    mx::core::ArticulationsChoicePtr tgenArticulationsChoice( variant v );
-    mx::core::ArticulationsPtr tgenArticulations( variant v );
-    void tgenArticulationsExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::ArticulationsChoicePtr tgenArticulationsChoice( TestMode v );
+    mx::core::ArticulationsPtr tgenArticulations( TestMode v );
+    void tgenArticulationsExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

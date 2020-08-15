@@ -18,7 +18,7 @@ using namespace mxtest;
 
 TEST( Test01, LayoutGroup )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	LayoutGroupPtr object = tgenLayoutGroup( v );
 	stringstream expected;
 	tgenLayoutGroupExpected( expected, 1, v );
@@ -33,7 +33,7 @@ TEST( Test01, LayoutGroup )
 }
 TEST( Test02, LayoutGroup )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	LayoutGroupPtr object = tgenLayoutGroup( v );
 	stringstream expected;
 	tgenLayoutGroupExpected( expected, 1, v );
@@ -47,7 +47,7 @@ TEST( Test02, LayoutGroup )
 }
 TEST( Test03, LayoutGroup )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	LayoutGroupPtr object = tgenLayoutGroup( v );
 	stringstream expected;
 	tgenLayoutGroupExpected( expected, 1, v );
@@ -62,17 +62,17 @@ TEST( Test03, LayoutGroup )
 
 namespace mxtest
 {
-    LayoutGroupPtr tgenLayoutGroup( variant v )
+    LayoutGroupPtr tgenLayoutGroup( TestMode v )
     {
         LayoutGroupPtr o = makeLayoutGroup();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setHasPageLayout( true );
                 o->setPageLayout( tgenPageLayout( v ) );
@@ -80,11 +80,11 @@ namespace mxtest
                 o->setSystemLayout( tgenSystemLayout( v ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
-                o->addStaffLayout( tgenStaffLayout( variant::one ) );
-                o->addStaffLayout( tgenStaffLayout( variant::two ) );
-                o->addStaffLayout( tgenStaffLayout( variant::three ) );
+                o->addStaffLayout( tgenStaffLayout( TestMode::one ) );
+                o->addStaffLayout( tgenStaffLayout( TestMode::two ) );
+                o->addStaffLayout( tgenStaffLayout( TestMode::three ) );
             }
                 break;
             default:
@@ -92,30 +92,30 @@ namespace mxtest
         }
         return o;
     }
-    void tgenLayoutGroupExpected( std::ostream& os, int i, variant v )
+    void tgenLayoutGroupExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 tgenPageLayoutExpected( os, i, v );
                 os << std::endl;
                 tgenSystemLayoutExpected( os, i, v );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
-                tgenStaffLayoutExpected( os, i, variant::one );
+                tgenStaffLayoutExpected(os, i, TestMode::one );
                 os << std::endl;
-                tgenStaffLayoutExpected( os, i, variant::two );
+                tgenStaffLayoutExpected(os, i, TestMode::two );
                 os << std::endl;
-                tgenStaffLayoutExpected( os, i, variant::three );
+                tgenStaffLayoutExpected(os, i, TestMode::three );
             }
                 break;
             default:

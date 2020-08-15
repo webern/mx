@@ -18,7 +18,7 @@ TEST( Test01, Stick )
 {
 	Stick object;
 	stringstream expected;
-	tgenStickExpected( expected, 1, variant::one );
+	tgenStickExpected(expected, 1, TestMode::one );
 	stringstream actual;
 	// object.toStream( std::cout, 1 );
 	object.toStream( actual, 1 );
@@ -28,9 +28,9 @@ TEST( Test01, Stick )
 }
 TEST( Test02, Stick )
 {
-	StickPtr object = tgenStick( variant::two );
+	StickPtr object = tgenStick( TestMode::two );
 	stringstream expected;
-	tgenStickExpected( expected, 1, variant::two );
+	tgenStickExpected(expected, 1, TestMode::two );
 	stringstream actual;
 	// object->toStream( std::cout, 1 );
 	object->toStream( actual, 1 );
@@ -40,9 +40,9 @@ TEST( Test02, Stick )
 }
 TEST( Test03, Stick )
 {
-	StickPtr object = tgenStick( variant::three );
+	StickPtr object = tgenStick( TestMode::three );
 	stringstream expected;
-	tgenStickExpected( expected, 1, variant::three );
+	tgenStickExpected(expected, 1, TestMode::three );
 	stringstream actual;
 	// object->toStream( std::cout, 1 );
 	object->toStream( actual, 1 );
@@ -53,17 +53,17 @@ TEST( Test03, Stick )
 
 namespace mxtest
 {
-    StickPtr tgenStick( variant v )
+    StickPtr tgenStick( TestMode v )
     {
         StickPtr o = makeStick();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 ;
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getStickMaterial()->setValue( StickMaterialEnum::x );
                 o->getStickType()->setValue( StickTypeEnum::xylophone );
@@ -72,7 +72,7 @@ namespace mxtest
 
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getStickMaterial()->setValue( StickMaterialEnum::shaded );
                 o->getStickType()->setValue( StickTypeEnum::doubleBassDrum );
@@ -85,12 +85,12 @@ namespace mxtest
         }
         return o;
     }
-    void tgenStickExpected( std::ostream& os, int i, variant v )
+    void tgenStickExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<stick>)" );
                 streamLine( os, i+1, R"(<stick-type>yarn</stick-type>)" );
@@ -98,7 +98,7 @@ namespace mxtest
                 streamLine( os, i, R"(</stick>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<stick tip="southwest">)" );
                 streamLine( os, i+1, R"(<stick-type>xylophone</stick-type>)" );
@@ -106,7 +106,7 @@ namespace mxtest
                 streamLine( os, i, R"(</stick>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<stick tip="up">)" );
                 streamLine( os, i+1, R"(<stick-type>double bass drum</stick-type>)" );

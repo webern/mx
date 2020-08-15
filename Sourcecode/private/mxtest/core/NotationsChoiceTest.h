@@ -12,8 +12,8 @@
 namespace mxtest
 {
     mx::core::NotationsChoicePtr tgenNotationsChoice(); /* fully loaded with data */
-    mx::core::NotationsChoicePtr tgenNotationsChoice( variant v );
-    void tgenNotationsChoiceExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::NotationsChoicePtr tgenNotationsChoice( TestMode v );
+    void tgenNotationsChoiceExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

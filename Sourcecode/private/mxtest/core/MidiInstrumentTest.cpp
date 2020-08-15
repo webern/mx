@@ -17,7 +17,7 @@ using namespace mxtest;
 
 TEST( Test01, MidiInstrument )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	MidiInstrumentPtr object = tgenMidiInstrument( v );
 	stringstream expected;
 	tgenMidiInstrumentExpected( expected, 1, v );
@@ -30,7 +30,7 @@ TEST( Test01, MidiInstrument )
 }
 TEST( Test02, MidiInstrument )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	MidiInstrumentPtr object = tgenMidiInstrument( v );
 	stringstream expected;
 	tgenMidiInstrumentExpected( expected, 1, v );
@@ -43,7 +43,7 @@ TEST( Test02, MidiInstrument )
 }
 TEST( Test03, MidiInstrument )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	MidiInstrumentPtr object = tgenMidiInstrument( v );
 	stringstream expected;
 	tgenMidiInstrumentExpected( expected, 1, v );
@@ -57,17 +57,17 @@ TEST( Test03, MidiInstrument )
 
 namespace mxtest
 {
-    MidiInstrumentPtr tgenMidiInstrument( variant v )
+    MidiInstrumentPtr tgenMidiInstrument( TestMode v )
     {
         MidiInstrumentPtr o = makeMidiInstrument();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getAttributes()->id = XsIDREF( "M1" );
                 o->setHasMidiChannel( true );
@@ -86,7 +86,7 @@ namespace mxtest
                 o->getElevation()->setValue( RotationDegrees( 101.112 ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getAttributes()->id = XsIDREF( "X2" );
                 o->setHasMidiChannel( true );
@@ -110,17 +110,17 @@ namespace mxtest
         }
         return o;
     }
-    void tgenMidiInstrumentExpected( std::ostream& os, int i, variant v )
+    void tgenMidiInstrumentExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<midi-instrument id="ID"/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<midi-instrument id="M1">)" );
                 streamLine( os, i+1, R"(<midi-channel>2</midi-channel>)" );
@@ -131,7 +131,7 @@ namespace mxtest
                 streamLine( os, i, R"(</midi-instrument>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<midi-instrument id="X2">)" );
                 streamLine( os, i+1, R"(<midi-channel>3</midi-channel>)" );

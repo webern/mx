@@ -16,7 +16,7 @@ using namespace mxtest;
 
 TEST( Test01, TechnicalChoice )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	TechnicalChoicePtr object = tgenTechnicalChoice( v );
 	stringstream expected;
 	tgenTechnicalChoiceExpected( expected, 1, v );
@@ -30,7 +30,7 @@ TEST( Test01, TechnicalChoice )
 }
 TEST( Test02, TechnicalChoice )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	TechnicalChoicePtr object = tgenTechnicalChoice( v );
 	stringstream expected;
 	tgenTechnicalChoiceExpected( expected, 1, v );
@@ -44,7 +44,7 @@ TEST( Test02, TechnicalChoice )
 }
 TEST( Test03, TechnicalChoice )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	TechnicalChoicePtr object = tgenTechnicalChoice( v );
 	stringstream expected;
 	tgenTechnicalChoiceExpected( expected, 1, v );
@@ -59,23 +59,23 @@ TEST( Test03, TechnicalChoice )
 
 namespace mxtest
 {
-    TechnicalChoicePtr tgenTechnicalChoice( variant v )
+    TechnicalChoicePtr tgenTechnicalChoice( TestMode v )
     {
         TechnicalChoicePtr o = makeTechnicalChoice();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setChoice( TechnicalChoice::Choice::string_ );
                 o->getString()->setValue( StringNumber( 4 ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setChoice( TechnicalChoice::Choice::harmonic );
                 o->setHarmonic( tgenHarmonic( v ) );
@@ -86,22 +86,22 @@ namespace mxtest
         }
         return o;
     }
-    void tgenTechnicalChoiceExpected( std::ostream& os, int i, variant v )
+    void tgenTechnicalChoiceExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<up-bow/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<string>4</string>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 tgenHarmonicExpected( os, i, v );
             }

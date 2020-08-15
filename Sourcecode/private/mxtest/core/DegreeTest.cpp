@@ -16,7 +16,7 @@ using namespace mxtest;
 
 TEST( Test01, Degree )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	DegreePtr object = tgenDegree( v );
 	stringstream expected;
 	tgenDegreeExpected( expected, 1, v );
@@ -29,7 +29,7 @@ TEST( Test01, Degree )
 }
 TEST( Test02, Degree )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	DegreePtr object = tgenDegree( v );
 	stringstream expected;
 	tgenDegreeExpected( expected, 1, v );
@@ -42,7 +42,7 @@ TEST( Test02, Degree )
 }
 TEST( Test03, Degree )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	DegreePtr object = tgenDegree( v );
 	stringstream expected;
 	tgenDegreeExpected( expected, 1, v );
@@ -56,24 +56,24 @@ TEST( Test03, Degree )
 
 namespace mxtest
 {
-    DegreePtr tgenDegree( variant v )
+    DegreePtr tgenDegree( TestMode v )
     {
         DegreePtr o = makeDegree();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getDegreeAlter()->setValue( Semitones( 1.01 ) );
                 o->getDegreeType()->setValue( DegreeTypeValue::subtract );
                 o->getDegreeValue()->setValue( PositiveInteger( 9 ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getAttributes()->hasPrintObject = true;
                 o->getAttributes()->printObject = YesNo::no;
@@ -87,12 +87,12 @@ namespace mxtest
         }
         return o;
     }
-    void tgenDegreeExpected( std::ostream& os, int i, variant v )
+    void tgenDegreeExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<degree>)" );
                 streamLine( os, i+1, R"(<degree-value>1</degree-value>)" );
@@ -101,7 +101,7 @@ namespace mxtest
                 streamLine( os, i, R"(</degree>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<degree>)" );
                 streamLine( os, i+1, R"(<degree-value>9</degree-value>)" );
@@ -110,7 +110,7 @@ namespace mxtest
                 streamLine( os, i, R"(</degree>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<degree print-object="no">)" );
                 streamLine( os, i+1, R"(<degree-value>7</degree-value>)" );

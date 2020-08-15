@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::IdentificationPtr tgenIdentification( variant v );
-    void tgenIdentificationExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::IdentificationPtr tgenIdentification( TestMode v );
+    void tgenIdentificationExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

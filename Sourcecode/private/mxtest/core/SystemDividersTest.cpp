@@ -19,7 +19,7 @@ using namespace mxtest;
 
 TEST( Test01, SystemDividers )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	SystemDividersPtr object = tgenSystemDividers( v );
 	stringstream expected;
 	tgenSystemDividersExpected( expected, 1, v );
@@ -32,7 +32,7 @@ TEST( Test01, SystemDividers )
 }
 TEST( Test02, SystemDividers )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	SystemDividersPtr object = tgenSystemDividers( v );
 	stringstream expected;
 	tgenSystemDividersExpected( expected, 1, v );
@@ -45,7 +45,7 @@ TEST( Test02, SystemDividers )
 }
 TEST( Test03, SystemDividers )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	SystemDividersPtr object = tgenSystemDividers( v );
 	stringstream expected;
 	tgenSystemDividersExpected( expected, 1, v );
@@ -59,23 +59,23 @@ TEST( Test03, SystemDividers )
 
 namespace mxtest
 {
-    SystemDividersPtr tgenSystemDividers( variant v )
+    SystemDividersPtr tgenSystemDividers( TestMode v )
     {
         SystemDividersPtr o = makeSystemDividers();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getLeftDivider()->getAttributes()->hasHalign = true;
                 o->getRightDivider()->getAttributes()->hasFontSize = true;
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getLeftDivider()->getAttributes()->hasDefaultY = true;
                 o->getRightDivider()->getAttributes()->hasRelativeX = true;
@@ -86,12 +86,12 @@ namespace mxtest
         }
         return o;
     }
-    void tgenSystemDividersExpected( std::ostream& os, int i, variant v )
+    void tgenSystemDividersExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<system-dividers>)" );
                 streamLine( os, i+1, R"(<left-divider/>)" );
@@ -99,7 +99,7 @@ namespace mxtest
                 streamLine( os, i, R"(</system-dividers>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<system-dividers>)" );
                 streamLine( os, i+1, R"(<left-divider halign="center"/>)" );
@@ -107,7 +107,7 @@ namespace mxtest
                 streamLine( os, i, R"(</system-dividers>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<system-dividers>)" );
                 streamLine( os, i+1, R"(<left-divider default-y="0"/>)" );

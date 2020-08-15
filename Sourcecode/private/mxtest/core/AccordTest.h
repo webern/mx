@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::AccordPtr tgenAccord( variant v );
-    void tgenAccordExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::AccordPtr tgenAccord( TestMode v );
+    void tgenAccordExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::FullNoteTypeChoicePtr tgenFullNoteTypeChoice( variant v );
-    void tgenFullNoteTypeChoiceExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::FullNoteTypeChoicePtr tgenFullNoteTypeChoice( TestMode v );
+    void tgenFullNoteTypeChoiceExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

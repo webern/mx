@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::ScorePartPtr tgenScorePart( variant v );
-    void tgenScorePartExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::ScorePartPtr tgenScorePart( TestMode v );
+    void tgenScorePartExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

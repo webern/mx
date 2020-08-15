@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::ForwardPtr tgenForward( variant v );
-    void tgenForwardExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::ForwardPtr tgenForward( TestMode v );
+    void tgenForwardExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

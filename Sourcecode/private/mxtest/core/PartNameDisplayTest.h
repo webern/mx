@@ -11,9 +11,9 @@
 
 namespace mxtest
 {
-    mx::core::DisplayTextOrAccidentalTextPtr tgenDisplayTextOrAccidentalText( variant v );
-    mx::core::PartNameDisplayPtr tgenPartNameDisplay( variant v );
-    void tgenPartNameDisplayExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::DisplayTextOrAccidentalTextPtr tgenDisplayTextOrAccidentalText( TestMode v );
+    mx::core::PartNameDisplayPtr tgenPartNameDisplay( TestMode v );
+    void tgenPartNameDisplayExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

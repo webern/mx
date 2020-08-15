@@ -16,7 +16,7 @@ using namespace mxtest;
 
 TEST( Test01, Properties )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	PropertiesPtr object = tgenProperties( v );
 	stringstream expected;
 	tgenPropertiesExpected( expected, 1, v );
@@ -29,7 +29,7 @@ TEST( Test01, Properties )
 }
 TEST( Test02, Properties )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	PropertiesPtr object = tgenProperties( v );
 	stringstream expected;
 	tgenPropertiesExpected( expected, 1, v );
@@ -42,7 +42,7 @@ TEST( Test02, Properties )
 }
 TEST( Test03, Properties )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	PropertiesPtr object = tgenProperties( v );
 	stringstream expected;
 	tgenPropertiesExpected( expected, 1, v );
@@ -56,17 +56,17 @@ TEST( Test03, Properties )
 
 namespace mxtest
 {
-    PropertiesPtr tgenProperties( variant v )
+    PropertiesPtr tgenProperties( TestMode v )
     {
         PropertiesPtr o = makeProperties();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setEditorialGroup( tgenEditorialGroup( v ) );
                 auto d = makeDivisions();
@@ -116,7 +116,7 @@ namespace mxtest
                 o->addMeasureStyle( ms );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setEditorialGroup( tgenEditorialGroup( v ) );
                 auto d = makeDivisions();
@@ -177,17 +177,17 @@ namespace mxtest
         }
         return o;
     }
-    void tgenPropertiesExpected( std::ostream& os, int i, variant v )
+    void tgenPropertiesExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<attributes/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<attributes>)" );
                 tgenEditorialGroupExpected( os, i+1, v );
@@ -221,7 +221,7 @@ namespace mxtest
                 streamLine( os, i, R"(</attributes>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<attributes>)" );
                 tgenEditorialGroupExpected( os, i+1, v );

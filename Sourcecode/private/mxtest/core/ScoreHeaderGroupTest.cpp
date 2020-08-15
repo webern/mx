@@ -20,7 +20,7 @@ using namespace mxtest;
 
 TEST( Test01, ScoreHeaderGroup )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	ScoreHeaderGroupPtr object = tgenScoreHeaderGroup( v );
 	stringstream expected;
 	tgenScoreHeaderGroupExpected( expected, 1, v );
@@ -33,7 +33,7 @@ TEST( Test01, ScoreHeaderGroup )
 }
 TEST( Test02, ScoreHeaderGroup )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	ScoreHeaderGroupPtr object = tgenScoreHeaderGroup( v );
 	stringstream expected;
 	tgenScoreHeaderGroupExpected( expected, 1, v );
@@ -46,7 +46,7 @@ TEST( Test02, ScoreHeaderGroup )
 }
 TEST( Test03, ScoreHeaderGroup )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	ScoreHeaderGroupPtr object = tgenScoreHeaderGroup( v );
 	stringstream expected;
 	tgenScoreHeaderGroupExpected( expected, 1, v );
@@ -60,17 +60,17 @@ TEST( Test03, ScoreHeaderGroup )
 
 namespace mxtest
 {
-    ScoreHeaderGroupPtr tgenScoreHeaderGroup( variant v )
+    ScoreHeaderGroupPtr tgenScoreHeaderGroup( TestMode v )
     {
         ScoreHeaderGroupPtr o = makeScoreHeaderGroup();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setHasWork( true );
                 o->setWork( tgenWork( v ) );
@@ -81,10 +81,10 @@ namespace mxtest
                 o->setPartList( tgenPartList( v ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
-                o->addCredit( tgenCredit( variant::two ) );
-                o->addCredit( tgenCredit( variant::three ) );
+                o->addCredit( tgenCredit( TestMode::two ) );
+                o->addCredit( tgenCredit( TestMode::three ) );
                 o->setPartList( tgenPartList( v ) );
             }
                 break;
@@ -93,17 +93,17 @@ namespace mxtest
         }
         return o;
     }
-    void tgenScoreHeaderGroupExpected( std::ostream& os, int i, variant v )
+    void tgenScoreHeaderGroupExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 tgenPartListExpected( os, i, v );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 tgenWorkExpected( os, i, v );
                 os << std::endl;
@@ -112,11 +112,11 @@ namespace mxtest
                 tgenPartListExpected( os, i, v );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
-                tgenCreditExpected( os, i, variant::two );
+                tgenCreditExpected(os, i, TestMode::two );
                 os << std::endl;
-                tgenCreditExpected( os, i, variant::three );
+                tgenCreditExpected(os, i, TestMode::three );
                 os << std::endl;
                 tgenPartListExpected( os, i, v );
             }

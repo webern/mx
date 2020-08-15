@@ -16,7 +16,7 @@ using namespace mxtest;
 
 TEST( Test01, CueNoteGroup )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	CueNoteGroupPtr object = tgenCueNoteGroup( v );
 	stringstream expected;
 	tgenCueNoteGroupExpected( expected, 1, v );
@@ -30,7 +30,7 @@ TEST( Test01, CueNoteGroup )
 }
 TEST( Test02, CueNoteGroup )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	CueNoteGroupPtr object = tgenCueNoteGroup( v );
 	stringstream expected;
 	tgenCueNoteGroupExpected( expected, 1, v );
@@ -44,7 +44,7 @@ TEST( Test02, CueNoteGroup )
 }
 TEST( Test03, CueNoteGroup )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	CueNoteGroupPtr object = tgenCueNoteGroup( v );
 	stringstream expected;
 	tgenCueNoteGroupExpected( expected, 1, v );
@@ -59,24 +59,24 @@ TEST( Test03, CueNoteGroup )
 
 namespace mxtest
 {
-    CueNoteGroupPtr tgenCueNoteGroup( variant v )
+    CueNoteGroupPtr tgenCueNoteGroup( TestMode v )
     {
         CueNoteGroupPtr o = makeCueNoteGroup();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setFullNoteGroup( tgenFullNoteGroup( v ) );
                 o->setDuration( makeDuration( PositiveDivisionsValue( 123 ) ) );
                 
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setFullNoteGroup( tgenFullNoteGroup( v ) );
                 
@@ -88,12 +88,12 @@ namespace mxtest
         }
         return o;
     }
-    void tgenCueNoteGroupExpected( std::ostream& os, int i, variant v )
+    void tgenCueNoteGroupExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<cue/>)" );
                 tgenFullNoteGroupExpected( os, i, v );
@@ -101,7 +101,7 @@ namespace mxtest
                 streamLine( os, i, R"(<duration>1</duration>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<cue/>)" );
                 tgenFullNoteGroupExpected( os, i, v );
@@ -109,7 +109,7 @@ namespace mxtest
                 streamLine( os, i, R"(<duration>123</duration>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<cue/>)" );
                 tgenFullNoteGroupExpected( os, i, v );

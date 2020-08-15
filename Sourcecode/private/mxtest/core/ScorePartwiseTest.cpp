@@ -18,7 +18,7 @@ using namespace mxtest;
 
 TEST( Test01, ScorePartwise )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	ScorePartwisePtr object = tgenScorePartwise( v );
 	stringstream expected;
 	tgenScorePartwiseExpected( expected, 1, v );
@@ -31,7 +31,7 @@ TEST( Test01, ScorePartwise )
 }
 TEST( Test02, ScorePartwise )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	ScorePartwisePtr object = tgenScorePartwise( v );
 	stringstream expected;
 	tgenScorePartwiseExpected( expected, 1, v );
@@ -44,7 +44,7 @@ TEST( Test02, ScorePartwise )
 }
 TEST( Test03, ScorePartwise )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	ScorePartwisePtr object = tgenScorePartwise( v );
 	stringstream expected;
 	tgenScorePartwiseExpected( expected, 1, v );
@@ -58,17 +58,17 @@ TEST( Test03, ScorePartwise )
 
 namespace mxtest
 {
-    ScorePartwisePtr tgenScorePartwise( variant v )
+    ScorePartwisePtr tgenScorePartwise( TestMode v )
     {
         ScorePartwisePtr o = makeScorePartwise();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getAttributes()->hasVersion = true;
                 o->getAttributes()->version = XsToken( "3.0" );
@@ -77,13 +77,13 @@ namespace mxtest
                 o->removePartwisePart( o->getPartwisePartSet().cbegin() );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setScoreHeaderGroup( tgenScoreHeaderGroup( v ) );
                 o->addPartwisePart( tgenPartwisePart( v ) );
                 o->removePartwisePart( o->getPartwisePartSet().cbegin() );
-                o->addPartwisePart( tgenPartwisePart( variant::one ) );
-                o->addPartwisePart( tgenPartwisePart( variant::two ) );
+                o->addPartwisePart( tgenPartwisePart( TestMode::one ) );
+                o->addPartwisePart( tgenPartwisePart( TestMode::two ) );
             }
                 break;
             default:
@@ -91,12 +91,12 @@ namespace mxtest
         }
         return o;
     }
-    void tgenScorePartwiseExpected( std::ostream& os, int i, variant v )
+    void tgenScorePartwiseExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<score-partwise>)" );
                 tgenScoreHeaderGroupExpected( os, i+1,  v );
@@ -106,7 +106,7 @@ namespace mxtest
                 streamLine( os, i, R"(</score-partwise>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<score-partwise version="3.0">)" );
                 tgenScoreHeaderGroupExpected( os, i+1,  v );
@@ -116,16 +116,16 @@ namespace mxtest
                 streamLine( os, i, R"(</score-partwise>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<score-partwise>)" );
                 tgenScoreHeaderGroupExpected( os, i+1,  v );
                 os << std::endl;
                 tgenPartwisePartExpected( os, i+1, v );
                 os << std::endl;
-                tgenPartwisePartExpected( os, i+1, variant::one );
+                tgenPartwisePartExpected(os, i+1, TestMode::one );
                 os << std::endl;
-                tgenPartwisePartExpected( os, i+1, variant::two );
+                tgenPartwisePartExpected(os, i+1, TestMode::two );
                 os << std::endl;
                 streamLine( os, i, R"(</score-partwise>)", false );
             }

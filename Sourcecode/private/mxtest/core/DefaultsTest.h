@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::DefaultsPtr tgenDefaults( variant v );
-    void tgenDefaultsExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::DefaultsPtr tgenDefaults( TestMode v );
+    void tgenDefaultsExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

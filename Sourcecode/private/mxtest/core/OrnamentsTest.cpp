@@ -16,7 +16,7 @@ using namespace mxtest;
 
 TEST( Test01, Ornaments )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	OrnamentsPtr object = tgenOrnaments( v );
 	stringstream expected;
 	tgenOrnamentsExpected( expected, 1, v );
@@ -29,7 +29,7 @@ TEST( Test01, Ornaments )
 }
 TEST( Test02, Ornaments )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	OrnamentsPtr object = tgenOrnaments( v );
 	stringstream expected;
 	tgenOrnamentsExpected( expected, 1, v );
@@ -42,7 +42,7 @@ TEST( Test02, Ornaments )
 }
 TEST( Test03, Ornaments )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	OrnamentsPtr object = tgenOrnaments( v );
 	stringstream expected;
 	tgenOrnamentsExpected( expected, 1, v );
@@ -56,18 +56,18 @@ TEST( Test03, Ornaments )
 
 namespace mxtest
 {
-    OrnamentsPtr tgenOrnaments( variant v )
+    OrnamentsPtr tgenOrnaments( TestMode v )
     {
         OrnamentsPtr o = makeOrnaments();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 auto choice = tgenOrnamentsChoice( v );
                 o->addOrnamentsChoice( choice );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 auto choice = tgenOrnamentsChoice( v );
                 o->addOrnamentsChoice( choice );
@@ -76,7 +76,7 @@ namespace mxtest
                 o->addAccidentalMark( mark1 );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 auto choice = tgenOrnamentsChoice( v );
                 o->addOrnamentsChoice( choice );
@@ -93,12 +93,12 @@ namespace mxtest
         }
         return o;
     }
-    void tgenOrnamentsExpected( std::ostream& os, int i, variant v )
+    void tgenOrnamentsExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<ornaments>)" );
                 tgenOrnamentsChoiceExpected( os, i+1, v );
@@ -106,7 +106,7 @@ namespace mxtest
                 streamLine( os, i, R"(</ornaments>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<ornaments>)" );
                 tgenOrnamentsChoiceExpected( os, i+1, v );
@@ -115,7 +115,7 @@ namespace mxtest
                 streamLine( os, i, R"(</ornaments>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<ornaments>)" );
                 tgenOrnamentsChoiceExpected( os, i+1, v );

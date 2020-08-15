@@ -16,7 +16,7 @@ using namespace mxtest;
 
 TEST( Test01, Backup )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	BackupPtr object = tgenBackup( v );
 	stringstream expected;
 	tgenBackupExpected( expected, 1, v );
@@ -29,7 +29,7 @@ TEST( Test01, Backup )
 }
 TEST( Test02, Backup )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	BackupPtr object = tgenBackup( v );
 	stringstream expected;
 	tgenBackupExpected( expected, 1, v );
@@ -42,7 +42,7 @@ TEST( Test02, Backup )
 }
 TEST( Test03, Backup )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	BackupPtr object = tgenBackup( v );
 	stringstream expected;
 	tgenBackupExpected( expected, 1, v );
@@ -56,22 +56,22 @@ TEST( Test03, Backup )
 
 namespace mxtest
 {
-    BackupPtr tgenBackup( variant v )
+    BackupPtr tgenBackup( TestMode v )
     {
         BackupPtr o = makeBackup();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getDuration()->setValue( PositiveDivisionsValue( 31 ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getDuration()->setValue( PositiveDivisionsValue( 32 ) );
                 o->setEditorialGroup( tgenEditorialGroup( v ) );
@@ -82,26 +82,26 @@ namespace mxtest
         }
         return o;
     }
-    void tgenBackupExpected( std::ostream& os, int i, variant v )
+    void tgenBackupExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<backup>)" );
                 streamLine( os, i+1, R"(<duration>1</duration>)" );
                 streamLine( os, i, R"(</backup>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<backup>)" );
                 streamLine( os, i+1, R"(<duration>31</duration>)" );
                 streamLine( os, i, R"(</backup>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<backup>)" );
                 streamLine( os, i+1, R"(<duration>32</duration>)" );

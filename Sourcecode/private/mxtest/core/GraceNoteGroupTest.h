@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::GraceNoteGroupPtr tgenGraceNoteGroup( variant v );
-    void tgenGraceNoteGroupExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::GraceNoteGroupPtr tgenGraceNoteGroup( TestMode v );
+    void tgenGraceNoteGroupExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

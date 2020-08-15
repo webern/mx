@@ -15,7 +15,7 @@ using namespace mxtest;
 
 TEST( Test01, HarmonicTypeChoice )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	HarmonicTypeChoicePtr object = tgenHarmonicTypeChoice( v );
 	stringstream expected;
 	tgenHarmonicTypeChoiceExpected( expected, 1, v );
@@ -29,7 +29,7 @@ TEST( Test01, HarmonicTypeChoice )
 }
 TEST( Test02, HarmonicTypeChoice )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	HarmonicTypeChoicePtr object = tgenHarmonicTypeChoice( v );
 	stringstream expected;
 	tgenHarmonicTypeChoiceExpected( expected, 1, v );
@@ -43,7 +43,7 @@ TEST( Test02, HarmonicTypeChoice )
 }
 TEST( Test03, HarmonicTypeChoice )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	HarmonicTypeChoicePtr object = tgenHarmonicTypeChoice( v );
 	stringstream expected;
 	tgenHarmonicTypeChoiceExpected( expected, 1, v );
@@ -58,22 +58,22 @@ TEST( Test03, HarmonicTypeChoice )
 
 namespace mxtest
 {
-    HarmonicTypeChoicePtr tgenHarmonicTypeChoice( variant v )
+    HarmonicTypeChoicePtr tgenHarmonicTypeChoice( TestMode v )
     {
         HarmonicTypeChoicePtr o = makeHarmonicTypeChoice();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setChoice( HarmonicTypeChoice::Choice::artificial );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setChoice( HarmonicTypeChoice::Choice::natural );
             }
@@ -83,22 +83,22 @@ namespace mxtest
         }
         return o;
     }
-    void tgenHarmonicTypeChoiceExpected( std::ostream& os, int i, variant v )
+    void tgenHarmonicTypeChoiceExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<natural/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<artificial/>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<natural/>)", false );
             }

@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::BarlinePtr tgenBarline( variant v );
-    void tgenBarlineExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::BarlinePtr tgenBarline( TestMode v );
+    void tgenBarlineExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

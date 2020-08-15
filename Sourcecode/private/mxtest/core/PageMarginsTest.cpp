@@ -18,7 +18,7 @@ using namespace mxtest;
 
 TEST( Test01, PageMargins )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	PageMarginsPtr object = tgenPageMargins( v );
 	stringstream expected;
 	tgenPageMarginsExpected( expected, 1, v );
@@ -31,7 +31,7 @@ TEST( Test01, PageMargins )
 }
 TEST( Test02, PageMargins )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	PageMarginsPtr object = tgenPageMargins( v );
 	stringstream expected;
 	tgenPageMarginsExpected( expected, 1, v );
@@ -44,7 +44,7 @@ TEST( Test02, PageMargins )
 }
 TEST( Test03, PageMargins )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	PageMarginsPtr object = tgenPageMargins( v );
 	stringstream expected;
 	tgenPageMarginsExpected( expected, 1, v );
@@ -58,17 +58,17 @@ TEST( Test03, PageMargins )
 
 namespace mxtest
 {
-    PageMarginsPtr tgenPageMargins( variant v )
+    PageMarginsPtr tgenPageMargins( TestMode v )
     {
         PageMarginsPtr o = makePageMargins();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getLeftMargin()->setValue( TenthsValue( 11.1 ) );
                 o->getRightMargin()->setValue( TenthsValue( 12.2 ) );
@@ -77,7 +77,7 @@ namespace mxtest
                 o->getAttributes()->hasType = true;
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getLeftMargin()->setValue( TenthsValue( 110.1 ) );
                 o->getRightMargin()->setValue( TenthsValue( 120.2 ) );
@@ -92,12 +92,12 @@ namespace mxtest
         }
         return o;
     }
-    void tgenPageMarginsExpected( std::ostream& os, int i, variant v )
+    void tgenPageMarginsExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<page-margins>)" );
                 streamLine( os, i+1, R"(<left-margin>0</left-margin>)" );
@@ -107,7 +107,7 @@ namespace mxtest
                 streamLine( os, i, R"(</page-margins>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<page-margins type="both">)" );
                 streamLine( os, i+1, R"(<left-margin>11.1</left-margin>)" );
@@ -117,7 +117,7 @@ namespace mxtest
                 streamLine( os, i, R"(</page-margins>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<page-margins type="even">)" );
                 streamLine( os, i+1, R"(<left-margin>110.1</left-margin>)" );

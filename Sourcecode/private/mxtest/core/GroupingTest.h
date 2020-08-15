@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::GroupingPtr tgenGrouping( variant v );
-    void tgenGroupingExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::GroupingPtr tgenGrouping( TestMode v );
+    void tgenGroupingExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::ScoreTimewisePtr tgenScoreTimewise( variant v );
-    void tgenScoreTimewiseExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::ScoreTimewisePtr tgenScoreTimewise( TestMode v );
+    void tgenScoreTimewiseExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

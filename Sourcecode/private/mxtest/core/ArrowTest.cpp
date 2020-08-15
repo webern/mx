@@ -17,7 +17,7 @@ using namespace mxtest;
 
 TEST( Test01, Arrow )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	ArrowPtr object = tgenArrow( v );
 	stringstream expected;
 	tgenArrowExpected( expected, 1, v );
@@ -30,7 +30,7 @@ TEST( Test01, Arrow )
 }
 TEST( Test02, Arrow )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	ArrowPtr object = tgenArrow( v );
 	stringstream expected;
 	tgenArrowExpected( expected, 1, v );
@@ -43,7 +43,7 @@ TEST( Test02, Arrow )
 }
 TEST( Test03, Arrow )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	ArrowPtr object = tgenArrow( v );
 	stringstream expected;
 	tgenArrowExpected( expected, 1, v );
@@ -57,17 +57,17 @@ TEST( Test03, Arrow )
 #endif
 namespace mxtest
 {
-    ArrowPtr tgenArrow( variant v )
+    ArrowPtr tgenArrow( TestMode v )
     {
         ArrowPtr o = makeArrow();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setChoice( Arrow::Choice::arrowGroup );
                 auto ag = makeArrowGroup();
@@ -79,7 +79,7 @@ namespace mxtest
                 o->getAttributes()->placement = AboveBelow::below;
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setChoice( Arrow::Choice::circularArrow );
                 o->getCircularArrow()->setValue( CircularArrowEnum::anticlockwise );
@@ -92,19 +92,19 @@ namespace mxtest
         }
         return o;
     }
-    void tgenArrowExpected( std::ostream& os, int i, variant v )
+    void tgenArrowExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<arrow>)" );
                 streamLine( os, i+1, R"(<arrow-direction>up</arrow-direction>)" );
                 streamLine( os, i, R"(</arrow>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<arrow placement="below">)" );
                 streamLine( os, i+1, R"(<arrow-direction>left right</arrow-direction>)" );
@@ -112,7 +112,7 @@ namespace mxtest
                 streamLine( os, i, R"(</arrow>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<arrow relative-y="0.1">)" );
                 streamLine( os, i+1, R"(<circular-arrow>anticlockwise</circular-arrow>)" );

@@ -19,7 +19,7 @@ using namespace mxtest;
 
 TEST( Test01, SystemMargins )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	SystemMarginsPtr object = tgenSystemMargins( v );
 	stringstream expected;
 	tgenSystemMarginsExpected( expected, 1, v );
@@ -32,7 +32,7 @@ TEST( Test01, SystemMargins )
 }
 TEST( Test02, SystemMargins )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	SystemMarginsPtr object = tgenSystemMargins( v );
 	stringstream expected;
 	tgenSystemMarginsExpected( expected, 1, v );
@@ -45,7 +45,7 @@ TEST( Test02, SystemMargins )
 }
 TEST( Test03, SystemMargins )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	SystemMarginsPtr object = tgenSystemMargins( v );
 	stringstream expected;
 	tgenSystemMarginsExpected( expected, 1, v );
@@ -59,23 +59,23 @@ TEST( Test03, SystemMargins )
 
 namespace mxtest
 {
-    SystemMarginsPtr tgenSystemMargins( variant v )
+    SystemMarginsPtr tgenSystemMargins( TestMode v )
     {
         SystemMarginsPtr o = makeSystemMargins();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getLeftMargin()->setValue( TenthsValue( 11.1 ) );
                 o->getRightMargin()->setValue( TenthsValue( 12.2 ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getLeftMargin()->setValue( TenthsValue( 110.1 ) );
                 o->getRightMargin()->setValue( TenthsValue( 120.2 ) );
@@ -86,12 +86,12 @@ namespace mxtest
         }
         return o;
     }
-    void tgenSystemMarginsExpected( std::ostream& os, int i, variant v )
+    void tgenSystemMarginsExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<system-margins>)" );
                 streamLine( os, i+1, R"(<left-margin>0</left-margin>)" );
@@ -99,7 +99,7 @@ namespace mxtest
                 streamLine( os, i, R"(</system-margins>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<system-margins>)" );
                 streamLine( os, i+1, R"(<left-margin>11.1</left-margin>)" );
@@ -107,7 +107,7 @@ namespace mxtest
                 streamLine( os, i, R"(</system-margins>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<system-margins>)" );
                 streamLine( os, i+1, R"(<left-margin>110.1</left-margin>)" );

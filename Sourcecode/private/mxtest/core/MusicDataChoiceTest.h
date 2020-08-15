@@ -11,9 +11,9 @@
 
 namespace mxtest
 {
-    mx::core::MusicDataChoicePtr tgenMusicDataChoice( variant v );
-    mx::core::MusicDataChoicePtr tgenMusicDataChoiceAll( variant v );
-    void tgenMusicDataChoiceExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::MusicDataChoicePtr tgenMusicDataChoice( TestMode v );
+    mx::core::MusicDataChoicePtr tgenMusicDataChoiceAll( TestMode v );
+    void tgenMusicDataChoiceExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

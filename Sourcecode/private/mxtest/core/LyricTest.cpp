@@ -23,7 +23,7 @@ using namespace mxtest;
 
 TEST( Test01, Lyric )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	LyricPtr object = tgenLyric( v );
 	stringstream expected;
 	tgenLyricExpected( expected, 1, v );
@@ -36,7 +36,7 @@ TEST( Test01, Lyric )
 }
 TEST( Test02, Lyric )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	LyricPtr object = tgenLyric( v );
 	stringstream expected;
 	tgenLyricExpected( expected, 1, v );
@@ -49,7 +49,7 @@ TEST( Test02, Lyric )
 }
 TEST( Test03, Lyric )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	LyricPtr object = tgenLyric( v );
 	stringstream expected;
 	tgenLyricExpected( expected, 1, v );
@@ -63,17 +63,17 @@ TEST( Test03, Lyric )
 
 namespace mxtest
 {
-    LyricPtr tgenLyric( variant v )
+    LyricPtr tgenLyric( TestMode v )
     {
         LyricPtr o = makeLyric();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 o->setLyricTextChoice( tgenLyricTextChoice( v ) );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getAttributes()->hasName = true;
                 o->getAttributes()->name = XsToken( "Toker" );
@@ -82,7 +82,7 @@ namespace mxtest
                 o->setHasEndLine( true );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getAttributes()->hasName = true;
                 o->getAttributes()->name = XsToken( "YOLO" );
@@ -98,12 +98,12 @@ namespace mxtest
         }
         return o;
     }
-    void tgenLyricExpected( std::ostream& os, int i, variant v )
+    void tgenLyricExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<lyric>)" );
                 tgenLyricTextChoiceExpected( os, i+1, v );
@@ -111,7 +111,7 @@ namespace mxtest
                 streamLine( os, i, R"(</lyric>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<lyric name="Toker">)" );
                 tgenLyricTextChoiceExpected( os, i+1, v );
@@ -122,7 +122,7 @@ namespace mxtest
                 streamLine( os, i, R"(</lyric>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<lyric number="Looser" name="YOLO">)" );
                 tgenLyricTextChoiceExpected( os, i+1, v );

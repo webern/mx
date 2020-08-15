@@ -28,7 +28,7 @@ using namespace mxtest;
 
 TEST( Test01, MusicDataGroup )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	MusicDataGroupPtr object = tgenMusicDataGroup( v );
 	stringstream expected;
 	tgenMusicDataGroupExpected( expected, 1, v );
@@ -41,7 +41,7 @@ TEST( Test01, MusicDataGroup )
 }
 TEST( Test02, MusicDataGroup )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	MusicDataGroupPtr object = tgenMusicDataGroup( v );
 	stringstream expected;
 	tgenMusicDataGroupExpected( expected, 1, v );
@@ -54,7 +54,7 @@ TEST( Test02, MusicDataGroup )
 }
 TEST( Test03, MusicDataGroup )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	MusicDataGroupPtr object = tgenMusicDataGroup( v );
 	stringstream expected;
 	tgenMusicDataGroupExpected( expected, 1, v );
@@ -68,17 +68,17 @@ TEST( Test03, MusicDataGroup )
 
 namespace mxtest
 {
-    MusicDataGroupPtr tgenMusicDataGroup( variant v )
+    MusicDataGroupPtr tgenMusicDataGroup( TestMode v )
     {
         MusicDataGroupPtr o = makeMusicDataGroup();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 /* <xs:element name="note" type="note"/>
                  <xs:element name="backup" type="backup"/>
@@ -129,7 +129,7 @@ namespace mxtest
                 x.reset();
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 /* <xs:element name="note" type="note"/>
                  <xs:element name="backup" type="backup"/>
@@ -180,17 +180,17 @@ namespace mxtest
         }
         return o;
     }
-    void tgenMusicDataGroupExpected( std::ostream& os, int i, variant v )
+    void tgenMusicDataGroupExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 tgenNoteExpected( os, i, v );
                 os << std::endl;
@@ -207,7 +207,7 @@ namespace mxtest
                 streamLine( os, i, R"(<bookmark id="ID" name="bookmarkStringTwo"/>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 tgenBackupExpected( os, i, v );
                 os << std::endl;
