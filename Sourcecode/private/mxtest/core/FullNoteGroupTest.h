@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::FullNoteGroupPtr tgenFullNoteGroup( variant v );
-    void tgenFullNoteGroupExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::FullNoteGroupPtr tgenFullNoteGroup( TestMode v );
+    void tgenFullNoteGroupExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

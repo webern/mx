@@ -18,7 +18,7 @@ using namespace mxtest;
 
 TEST( Test01, OrnamentsChoice )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	OrnamentsChoicePtr object = tgenOrnamentsChoice( v );
 	stringstream expected;
 	tgenOrnamentsChoiceExpected( expected, 1, v );
@@ -32,7 +32,7 @@ TEST( Test01, OrnamentsChoice )
 }
 TEST( Test02, OrnamentsChoice )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	OrnamentsChoicePtr object = tgenOrnamentsChoice( v );
 	stringstream expected;
 	tgenOrnamentsChoiceExpected( expected, 1, v );
@@ -46,7 +46,7 @@ TEST( Test02, OrnamentsChoice )
 }
 TEST( Test03, OrnamentsChoice )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	OrnamentsChoicePtr object = tgenOrnamentsChoice( v );
 	stringstream expected;
 	tgenOrnamentsChoiceExpected( expected, 1, v );
@@ -61,25 +61,25 @@ TEST( Test03, OrnamentsChoice )
 
 namespace mxtest
 {
-    OrnamentsChoicePtr tgenOrnamentsChoice( variant v )
+    OrnamentsChoicePtr tgenOrnamentsChoice( TestMode v )
     {
         OrnamentsChoicePtr o = makeOrnamentsChoice();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 o->getTrillMark()->getAttributes()->hasFontStyle = true;
                 o->getTrillMark()->getAttributes()->fontStyle = FontStyle::italic;
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setChoice( OrnamentsChoice::Choice::otherOrnament );
                 o->getOtherOrnament()->setValue( XsString( "Mordiarty" ) );
                 o->getOtherOrnament()->getAttributes()->hasPlacement = true;
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setChoice( OrnamentsChoice::Choice::shake );
             }
@@ -89,23 +89,23 @@ namespace mxtest
         }
         return o;
     }
-    void tgenOrnamentsChoiceExpected( std::ostream& os, int i, variant v )
+    void tgenOrnamentsChoiceExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<trill-mark font-style="italic"/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
 
                 streamLine( os, i, R"(<other-ornament placement="above">Mordiarty</other-ornament>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
 
                 streamLine( os, i, R"(<shake/>)", false );

@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::BackupPtr tgenBackup( variant v );
-    void tgenBackupExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::BackupPtr tgenBackup( TestMode v );
+    void tgenBackupExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

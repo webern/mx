@@ -16,7 +16,7 @@ using namespace mxtest;
 
 TEST( Test01, Bend )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	BendPtr object = tgenBend( v );
 	stringstream expected;
 	tgenBendExpected( expected, 1, v );
@@ -29,7 +29,7 @@ TEST( Test01, Bend )
 }
 TEST( Test02, Bend )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	BendPtr object = tgenBend( v );
 	stringstream expected;
 	tgenBendExpected( expected, 1, v );
@@ -42,7 +42,7 @@ TEST( Test02, Bend )
 }
 TEST( Test03, Bend )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	BendPtr object = tgenBend( v );
 	stringstream expected;
 	tgenBendExpected( expected, 1, v );
@@ -56,17 +56,17 @@ TEST( Test03, Bend )
 
 namespace mxtest
 {
-    BendPtr tgenBend( variant v )
+    BendPtr tgenBend( TestMode v )
     {
         BendPtr o = makeBend();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 o->setBendChoice( tgenBendChoice( v ) );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setBendChoice( tgenBendChoice( v ) );
                 o->getBendAlter()->setValue( Semitones( 2 ) );
@@ -76,7 +76,7 @@ namespace mxtest
                 o->setHasBendChoice( true );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setBendChoice( tgenBendChoice( v ) );
                 o->getBendAlter()->setValue( Semitones( -1.1 ) );
@@ -94,12 +94,12 @@ namespace mxtest
         }
         return o;
     }
-    void tgenBendExpected( std::ostream& os, int i, variant v )
+    void tgenBendExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<bend>)" );
                 streamLine( os, i+1, R"(<bend-alter>0</bend-alter>)" );
@@ -108,7 +108,7 @@ namespace mxtest
                 streamLine( os, i, R"(</bend>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<bend accelerate="no" beats="3">)" );
                 streamLine( os, i+1, R"(<bend-alter>2</bend-alter>)" );
@@ -117,7 +117,7 @@ namespace mxtest
                 streamLine( os, i, R"(</bend>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<bend color="#2B5A7B" last-beat="0.999">)" );
                 streamLine( os, i+1, R"(<bend-alter>-1.1</bend-alter>)" );

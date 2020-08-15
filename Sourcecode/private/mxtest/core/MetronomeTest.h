@@ -14,14 +14,14 @@ using namespace std;
 
 namespace mxtest
 {
-    BeatUnitGroupPtr tgenBeatUnitGroup( variant v );
-    MetronomeRelationGroupPtr tgenMetronomeRelationGroup( variant v );
-    NoteRelationNotePtr tgenNoteRelationNote( variant v );
-    PerMinuteOrBeatUnitChoicePtr tgenPerMinuteOrBeatUnitChoice( variant v );
-    BeatUnitPerPtr tgenBeatUnitPer( variant v );
-    BeatUnitPerOrNoteRelationNoteChoicePtr tgenBeatUnitPerOrNoteRelationNoteChoice( variant v );
-    MetronomeAttributesPtr tgenMetronomeAttributesPtr( variant v );
-    MetronomePtr tgenMetronome( variant v );
+    BeatUnitGroupPtr tgenBeatUnitGroup( TestMode v );
+    MetronomeRelationGroupPtr tgenMetronomeRelationGroup( TestMode v );
+    NoteRelationNotePtr tgenNoteRelationNote( TestMode v );
+    PerMinuteOrBeatUnitChoicePtr tgenPerMinuteOrBeatUnitChoice( TestMode v );
+    BeatUnitPerPtr tgenBeatUnitPer( TestMode v );
+    BeatUnitPerOrNoteRelationNoteChoicePtr tgenBeatUnitPerOrNoteRelationNoteChoice( TestMode v );
+    MetronomeAttributesPtr tgenMetronomeAttributesPtr( TestMode v );
+    MetronomePtr tgenMetronome( TestMode v );
 }
 
 #endif

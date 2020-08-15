@@ -15,7 +15,7 @@ using namespace mxtest;
 
 TEST( Test01, GroupAbbreviationDisplay )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	GroupAbbreviationDisplayPtr object = tgenGroupAbbreviationDisplay( v );
 	stringstream expected;
 	tgenGroupAbbreviationDisplayExpected( expected, 1, v );
@@ -28,7 +28,7 @@ TEST( Test01, GroupAbbreviationDisplay )
 }
 TEST( Test02, GroupAbbreviationDisplay )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	GroupAbbreviationDisplayPtr object = tgenGroupAbbreviationDisplay( v );
 	stringstream expected;
 	tgenGroupAbbreviationDisplayExpected( expected, 1, v );
@@ -41,7 +41,7 @@ TEST( Test02, GroupAbbreviationDisplay )
 }
 TEST( Test03, GroupAbbreviationDisplay )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	GroupAbbreviationDisplayPtr object = tgenGroupAbbreviationDisplay( v );
 	stringstream expected;
 	tgenGroupAbbreviationDisplayExpected( expected, 1, v );
@@ -55,17 +55,17 @@ TEST( Test03, GroupAbbreviationDisplay )
 
 namespace mxtest
 {
-    GroupAbbreviationDisplayPtr tgenGroupAbbreviationDisplay( variant v )
+    GroupAbbreviationDisplayPtr tgenGroupAbbreviationDisplay( TestMode v )
     {
         GroupAbbreviationDisplayPtr o = makeGroupAbbreviationDisplay();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 auto ch = makeDisplayTextOrAccidentalText();
                 ch->setChoice( DisplayTextOrAccidentalText::Choice::accidentalText );
@@ -75,7 +75,7 @@ namespace mxtest
                 o->getAttributes()->printObject = YesNo::no;
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 auto ch = makeDisplayTextOrAccidentalText();
                 ch->setChoice( DisplayTextOrAccidentalText::Choice::displayText );
@@ -90,24 +90,24 @@ namespace mxtest
         }
         return o;
     }
-    void tgenGroupAbbreviationDisplayExpected( std::ostream& os, int i, variant v )
+    void tgenGroupAbbreviationDisplayExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<group-abbreviation-display/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<group-abbreviation-display print-object="no">)" );
                 streamLine( os, i+1, R"(<accidental-text>double-sharp</accidental-text>)" );
                 streamLine( os, i, R"(</group-abbreviation-display>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<group-abbreviation-display>)" );
                 streamLine( os, i+1, R"(<display-text xml:space="preserve">My Display String!</display-text>)" );

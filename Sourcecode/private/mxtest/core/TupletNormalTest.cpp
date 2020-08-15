@@ -17,7 +17,7 @@ using namespace mxtest;
 
 TEST( Test01, TupletNormal )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	TupletNormalPtr object = tgenTupletNormal( v );
 	stringstream expected;
 	tgenTupletNormalExpected( expected, 1, v );
@@ -30,7 +30,7 @@ TEST( Test01, TupletNormal )
 }
 TEST( Test02, TupletNormal )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	TupletNormalPtr object = tgenTupletNormal( v );
 	stringstream expected;
 	tgenTupletNormalExpected( expected, 1, v );
@@ -43,7 +43,7 @@ TEST( Test02, TupletNormal )
 }
 TEST( Test03, TupletNormal )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	TupletNormalPtr object = tgenTupletNormal( v );
 	stringstream expected;
 	tgenTupletNormalExpected( expected, 1, v );
@@ -57,17 +57,17 @@ TEST( Test03, TupletNormal )
 
 namespace mxtest
 {
-    TupletNormalPtr tgenTupletNormal( variant v )
+    TupletNormalPtr tgenTupletNormal( TestMode v )
     {
         TupletNormalPtr o = makeTupletNormal();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setHasTupletNumber( true );
                 o->getTupletNumber()->setValue( NonNegativeInteger( 5 ) );
@@ -75,7 +75,7 @@ namespace mxtest
                 o->getTupletType()->setValue( NoteTypeValue::eighth );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setHasTupletNumber( true );
                 o->getTupletNumber()->setValue( NonNegativeInteger( 3 ) );
@@ -89,17 +89,17 @@ namespace mxtest
         }
         return o;
     }
-    void tgenTupletNormalExpected( std::ostream& os, int i, variant v )
+    void tgenTupletNormalExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<tuplet-normal/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<tuplet-normal>)" );
                 streamLine( os, i+1, R"(<tuplet-number>5</tuplet-number>)" );
@@ -107,7 +107,7 @@ namespace mxtest
                 streamLine( os, i, R"(</tuplet-normal>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<tuplet-normal>)" );
                 streamLine( os, i+1, R"(<tuplet-number>3</tuplet-number>)" );

@@ -16,7 +16,7 @@ using namespace mxtest;
 
 TEST( Test01, Play )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	PlayPtr object = tgenPlay( v );
 	stringstream expected;
 	tgenPlayExpected( expected, 1, v );
@@ -29,7 +29,7 @@ TEST( Test01, Play )
 }
 TEST( Test02, Play )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	PlayPtr object = tgenPlay( v );
 	stringstream expected;
 	tgenPlayExpected( expected, 1, v );
@@ -42,7 +42,7 @@ TEST( Test02, Play )
 }
 TEST( Test03, Play )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	PlayPtr object = tgenPlay( v );
 	stringstream expected;
 	tgenPlayExpected( expected, 1, v );
@@ -56,23 +56,23 @@ TEST( Test03, Play )
 
 namespace mxtest
 {
-    PlayPtr tgenPlay( variant v )
+    PlayPtr tgenPlay( TestMode v )
     {
         PlayPtr o = makePlay();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setChoice( Play::Choice::mute );
                 o->getMute()->setValue( MuteEnum::hat );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setChoice( Play::Choice::otherPlay );
                 o->getOtherPlay()->setValue( XsString( "SomeString" ) );
@@ -84,26 +84,26 @@ namespace mxtest
         }
         return o;
     }
-    void tgenPlayExpected( std::ostream& os, int i, variant v )
+    void tgenPlayExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<play>)" );
                 streamLine( os, i+1, R"(<ipa></ipa>)" );
                 streamLine( os, i, R"(</play>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<play>)" );
                 streamLine( os, i+1, R"(<mute>hat</mute>)" );
                 streamLine( os, i, R"(</play>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<play>)" );
                 streamLine( os, i+1, R"(<other-play type="sometype">SomeString</other-play>)" );

@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::PageMarginsPtr tgenPageMargins( variant v );
-    void tgenPageMarginsExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::PageMarginsPtr tgenPageMargins( TestMode v );
+    void tgenPageMarginsExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

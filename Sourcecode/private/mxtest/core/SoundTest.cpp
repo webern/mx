@@ -19,7 +19,7 @@ using namespace mxtest;
 
 TEST( Test01, Sound )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	SoundPtr object = tgenSound( v );
 	stringstream expected;
 	tgenSoundExpected( expected, 1, v );
@@ -32,7 +32,7 @@ TEST( Test01, Sound )
 }
 TEST( Test02, Sound )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	SoundPtr object = tgenSound( v );
 	stringstream expected;
 	tgenSoundExpected( expected, 1, v );
@@ -45,7 +45,7 @@ TEST( Test02, Sound )
 }
 TEST( Test03, Sound )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	SoundPtr object = tgenSound( v );
 	stringstream expected;
 	tgenSoundExpected( expected, 1, v );
@@ -59,17 +59,17 @@ TEST( Test03, Sound )
 
 namespace mxtest
 {
-    SoundPtr tgenSound( variant v )
+    SoundPtr tgenSound( TestMode v )
     {
         SoundPtr o = makeSound();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getAttributes()->hasCoda = true;
                 o->getAttributes()->coda = XsToken( "TestCoda" );
@@ -81,7 +81,7 @@ namespace mxtest
                 o->getMidiDevice()->setValue( XsString( "lello" ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getAttributes()->hasSoftPedal = true;
                 o->getAttributes()->softPedal = YesNoNumber( Decimal( 0.1 ) );
@@ -97,17 +97,17 @@ namespace mxtest
         }
         return o;
     }
-    void tgenSoundExpected( std::ostream& os, int i, variant v )
+    void tgenSoundExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<sound/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<sound coda="TestCoda" pizzicato="yes">)" );
                 streamLine( os, i+1, R"(<midi-device>lello</midi-device>)" );
@@ -116,7 +116,7 @@ namespace mxtest
                 streamLine( os, i, R"(</sound>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<sound soft-pedal="0.1">)" );
                 streamLine( os, i+1, R"(<midi-device></midi-device>)" );

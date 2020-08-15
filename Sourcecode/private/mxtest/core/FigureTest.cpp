@@ -17,7 +17,7 @@ using namespace mxtest;
 
 TEST( Test01, Figure )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	FigurePtr object = tgenFigure( v );
 	stringstream expected;
 	tgenFigureExpected( expected, 1, v );
@@ -30,7 +30,7 @@ TEST( Test01, Figure )
 }
 TEST( Test02, Figure )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	FigurePtr object = tgenFigure( v );
 	stringstream expected;
 	tgenFigureExpected( expected, 1, v );
@@ -43,7 +43,7 @@ TEST( Test02, Figure )
 }
 TEST( Test03, Figure )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	FigurePtr object = tgenFigure( v );
 	stringstream expected;
 	tgenFigureExpected( expected, 1, v );
@@ -57,17 +57,17 @@ TEST( Test03, Figure )
 
 namespace mxtest
 {
-    FigurePtr tgenFigure( variant v )
+    FigurePtr tgenFigure( TestMode v )
     {
         FigurePtr o = makeFigure();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setHasExtend( true );
                 o->setHasPrefix( true );
@@ -75,7 +75,7 @@ namespace mxtest
                 o->getPrefix()->setValue( XsString( "-" ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setHasExtend( true );
                 o->setHasPrefix( true );
@@ -92,17 +92,17 @@ namespace mxtest
         }
         return o;
     }
-    void tgenFigureExpected( std::ostream& os, int i, variant v )
+    void tgenFigureExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<figure/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<figure>)" );
                 streamLine( os, i+1, R"(<prefix>-</prefix>)" );
@@ -110,7 +110,7 @@ namespace mxtest
                 streamLine( os, i, R"(</figure>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<figure>)" );
                 streamLine( os, i+1, R"(<prefix>-</prefix>)" );

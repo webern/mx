@@ -16,7 +16,7 @@ using namespace mxtest;
 
 TEST( Test01, MeasureLayout )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	MeasureLayoutPtr object = tgenMeasureLayout( v );
 	stringstream expected;
 	tgenMeasureLayoutExpected( expected, 1, v );
@@ -29,7 +29,7 @@ TEST( Test01, MeasureLayout )
 }
 TEST( Test02, MeasureLayout )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	MeasureLayoutPtr object = tgenMeasureLayout( v );
 	stringstream expected;
 	tgenMeasureLayoutExpected( expected, 1, v );
@@ -42,7 +42,7 @@ TEST( Test02, MeasureLayout )
 }
 TEST( Test03, MeasureLayout )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	MeasureLayoutPtr object = tgenMeasureLayout( v );
 	stringstream expected;
 	tgenMeasureLayoutExpected( expected, 1, v );
@@ -56,23 +56,23 @@ TEST( Test03, MeasureLayout )
 
 namespace mxtest
 {
-    MeasureLayoutPtr tgenMeasureLayout( variant v )
+    MeasureLayoutPtr tgenMeasureLayout( TestMode v )
     {
         MeasureLayoutPtr o = makeMeasureLayout();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 ;
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setHasMeasureDistance( true );
                 o->setMeasureDistance( makeMeasureDistance( TenthsValue( 13.43 ) ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setHasMeasureDistance( true );
                 o->setMeasureDistance( makeMeasureDistance( TenthsValue( -1 ) ) );
@@ -83,24 +83,24 @@ namespace mxtest
         }
         return o;
     }
-    void tgenMeasureLayoutExpected( std::ostream& os, int i, variant v )
+    void tgenMeasureLayoutExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<measure-layout></measure-layout>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<measure-layout>)" );
                 streamLine( os, i+1, R"(<measure-distance>13.43</measure-distance>)" );
                 streamLine( os, i, R"(</measure-layout>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<measure-layout>)" );
                 streamLine( os, i+1, R"(<measure-distance>-1</measure-distance>)" );

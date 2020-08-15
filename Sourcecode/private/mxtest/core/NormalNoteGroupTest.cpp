@@ -16,7 +16,7 @@ using namespace mxtest;
 
 TEST( Test01, NormalNoteGroup )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	NormalNoteGroupPtr object = tgenNormalNoteGroup( v );
 	stringstream expected;
 	tgenNormalNoteGroupExpected( expected, 1, v );
@@ -30,7 +30,7 @@ TEST( Test01, NormalNoteGroup )
 }
 TEST( Test02, NormalNoteGroup )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	NormalNoteGroupPtr object = tgenNormalNoteGroup( v );
 	stringstream expected;
 	tgenNormalNoteGroupExpected( expected, 1, v );
@@ -44,7 +44,7 @@ TEST( Test02, NormalNoteGroup )
 }
 TEST( Test03, NormalNoteGroup )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	NormalNoteGroupPtr object = tgenNormalNoteGroup( v );
 	stringstream expected;
 	tgenNormalNoteGroupExpected( expected, 1, v );
@@ -59,17 +59,17 @@ TEST( Test03, NormalNoteGroup )
 
 namespace mxtest
 {
-    NormalNoteGroupPtr tgenNormalNoteGroup( variant v )
+    NormalNoteGroupPtr tgenNormalNoteGroup( TestMode v )
     {
         NormalNoteGroupPtr o = makeNormalNoteGroup();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setFullNoteGroup( tgenFullNoteGroup( v ) );
                 auto start = makeTie();
@@ -82,7 +82,7 @@ namespace mxtest
                 o->getDuration()->setValue( PositiveDivisionsValue( 456 ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setFullNoteGroup( tgenFullNoteGroup( v ) );
                 o->getDuration()->setValue( PositiveDivisionsValue( 654 ) );
@@ -93,19 +93,19 @@ namespace mxtest
         }
         return o;
     }
-    void tgenNormalNoteGroupExpected( std::ostream& os, int i, variant v )
+    void tgenNormalNoteGroupExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 tgenFullNoteGroupExpected( os, i, v );
                 os << std::endl;
                 streamLine( os, i, R"(<duration>1</duration>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 tgenFullNoteGroupExpected( os, i, v );
                 os << std::endl;
@@ -114,7 +114,7 @@ namespace mxtest
                 streamLine( os, i, R"(<tie type="stop"/>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 tgenFullNoteGroupExpected( os, i, v );
                 os << std::endl;

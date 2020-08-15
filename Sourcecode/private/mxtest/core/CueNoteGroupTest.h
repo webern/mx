@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::CueNoteGroupPtr tgenCueNoteGroup( variant v );
-    void tgenCueNoteGroupExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::CueNoteGroupPtr tgenCueNoteGroup( TestMode v );
+    void tgenCueNoteGroupExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

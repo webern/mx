@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::CreditWordsGroupPtr tgenCreditWordsGroup( variant v );
-    void tgenCreditWordsGroupExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::CreditWordsGroupPtr tgenCreditWordsGroup( TestMode v );
+    void tgenCreditWordsGroupExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

@@ -12,8 +12,8 @@
 
 namespace mxtest
 {
-    mx::core::TimewiseMeasurePtr tgenTimewiseMeasure( variant v );
-    void tgenTimewiseMeasureExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::TimewiseMeasurePtr tgenTimewiseMeasure( TestMode v );
+    void tgenTimewiseMeasureExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

@@ -17,7 +17,7 @@ using namespace mxtest;
 
 TEST( Test01, TupletActual )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	TupletActualPtr object = tgenTupletActual( v );
 	stringstream expected;
 	tgenTupletActualExpected( expected, 1, v );
@@ -30,7 +30,7 @@ TEST( Test01, TupletActual )
 }
 TEST( Test02, TupletActual )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	TupletActualPtr object = tgenTupletActual( v );
 	stringstream expected;
 	tgenTupletActualExpected( expected, 1, v );
@@ -43,7 +43,7 @@ TEST( Test02, TupletActual )
 }
 TEST( Test03, TupletActual )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	TupletActualPtr object = tgenTupletActual( v );
 	stringstream expected;
 	tgenTupletActualExpected( expected, 1, v );
@@ -57,17 +57,17 @@ TEST( Test03, TupletActual )
 
 namespace mxtest
 {
-    TupletActualPtr tgenTupletActual( variant v )
+    TupletActualPtr tgenTupletActual( TestMode v )
     {
         TupletActualPtr o = makeTupletActual();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setHasTupletNumber( true );
                 o->getTupletNumber()->setValue( NonNegativeInteger( 2 ) );
@@ -76,7 +76,7 @@ namespace mxtest
                 o->addTupletDot( makeTupletDot() );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setHasTupletNumber( true );
                 o->getTupletNumber()->setValue( NonNegativeInteger( 3 ) );
@@ -91,17 +91,17 @@ namespace mxtest
         }
         return o;
     }
-    void tgenTupletActualExpected( std::ostream& os, int i, variant v )
+    void tgenTupletActualExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<tuplet-actual/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<tuplet-actual>)" );
                 streamLine( os, i+1, R"(<tuplet-number>2</tuplet-number>)" );
@@ -110,7 +110,7 @@ namespace mxtest
                 streamLine( os, i, R"(</tuplet-actual>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<tuplet-actual>)" );
                 streamLine( os, i+1, R"(<tuplet-number>3</tuplet-number>)" );

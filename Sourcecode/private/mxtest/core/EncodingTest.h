@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::EncodingPtr tgenEncoding( variant v );
-    void tgenEncodingExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::EncodingPtr tgenEncoding( TestMode v );
+    void tgenEncodingExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

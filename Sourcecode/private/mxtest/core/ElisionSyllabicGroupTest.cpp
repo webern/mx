@@ -18,7 +18,7 @@ using namespace mxtest;
 
 TEST( Test01, ElisionSyllabicGroup )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	ElisionSyllabicGroupPtr object = tgenElisionSyllabicGroup( v );
 	stringstream expected;
 	tgenElisionSyllabicGroupExpected( expected, 1, v );
@@ -32,7 +32,7 @@ TEST( Test01, ElisionSyllabicGroup )
 }
 TEST( Test02, ElisionSyllabicGroup )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	ElisionSyllabicGroupPtr object = tgenElisionSyllabicGroup( v );
 	stringstream expected;
 	tgenElisionSyllabicGroupExpected( expected, 1, v );
@@ -46,7 +46,7 @@ TEST( Test02, ElisionSyllabicGroup )
 }
 TEST( Test03, ElisionSyllabicGroup )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	ElisionSyllabicGroupPtr object = tgenElisionSyllabicGroup( v );
 	stringstream expected;
 	tgenElisionSyllabicGroupExpected( expected, 1, v );
@@ -61,24 +61,24 @@ TEST( Test03, ElisionSyllabicGroup )
 
 namespace mxtest
 {
-    ElisionSyllabicGroupPtr tgenElisionSyllabicGroup( variant v )
+    ElisionSyllabicGroupPtr tgenElisionSyllabicGroup( TestMode v )
     {
         ElisionSyllabicGroupPtr o = makeElisionSyllabicGroup();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 o->getElision()->setValue( XsString( "A" ) );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getElision()->setValue( XsString( "B" ) );
                 o->setHasSyllabic( true );
                 o->getSyllabic()->setValue( SyllabicEnum::single );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getElision()->setValue( XsString( "C" ) );
                 o->setHasSyllabic( true );
@@ -90,24 +90,24 @@ namespace mxtest
         }
         return o;
     }
-    void tgenElisionSyllabicGroupExpected( std::ostream& os, int i, variant v )
+    void tgenElisionSyllabicGroupExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
 
                 streamLine( os, i, R"(<elision>A</elision>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<elision>B</elision>)" );
                 streamLine( os, i, R"(<syllabic>single</syllabic>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<elision>C</elision>)" );
                 streamLine( os, i, R"(<syllabic>middle</syllabic>)", false );

@@ -15,7 +15,7 @@ using namespace mxtest;
 
 TEST( Test01, CreditWordsGroup )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	CreditWordsGroupPtr object = tgenCreditWordsGroup( v );
 	stringstream expected;
 	tgenCreditWordsGroupExpected( expected, 1, v );
@@ -29,7 +29,7 @@ TEST( Test01, CreditWordsGroup )
 }
 TEST( Test02, CreditWordsGroup )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	CreditWordsGroupPtr object = tgenCreditWordsGroup( v );
 	stringstream expected;
 	tgenCreditWordsGroupExpected( expected, 1, v );
@@ -43,7 +43,7 @@ TEST( Test02, CreditWordsGroup )
 }
 TEST( Test03, CreditWordsGroup )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	CreditWordsGroupPtr object = tgenCreditWordsGroup( v );
 	stringstream expected;
 	tgenCreditWordsGroupExpected( expected, 1, v );
@@ -58,17 +58,17 @@ TEST( Test03, CreditWordsGroup )
 
 namespace mxtest
 {
-    CreditWordsGroupPtr tgenCreditWordsGroup( variant v )
+    CreditWordsGroupPtr tgenCreditWordsGroup( TestMode v )
     {
         CreditWordsGroupPtr o = makeCreditWordsGroup();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getCreditWords()->setValue( XsString( "Matthew James Briggs" ) );
                 auto l1 = makeLink();
@@ -80,7 +80,7 @@ namespace mxtest
                 o->addBookmark( b1 );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getCreditWords()->setValue( XsString( ".mjb" ) );
                 auto l1 = makeLink();
@@ -104,24 +104,24 @@ namespace mxtest
         }
         return o;
     }
-    void tgenCreditWordsGroupExpected( std::ostream& os, int i, variant v )
+    void tgenCreditWordsGroupExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<credit-words></credit-words>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<link xlink:href="matthewjamesbriggs.com"/>)" );
                 streamLine( os, i, R"(<bookmark id="ID" element="NMToken1"/>)" );
                 streamLine( os, i, R"(<credit-words>Matthew James Briggs</credit-words>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<link xlink:href="matthewjamesbriggs.com"/>)" );
                 streamLine( os, i, R"(<link xlink:href="somethingelse.com"/>)" );

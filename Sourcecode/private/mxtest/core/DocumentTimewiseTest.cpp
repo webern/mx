@@ -18,7 +18,7 @@ using namespace mxtest;
 
 TEST( Test01, DocumentTimewise )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	auto object = tgenDocumentTimewise( v );
 	stringstream expected;
 	tgenDocumentTimewiseExpected( expected, 1, v );
@@ -29,7 +29,7 @@ TEST( Test01, DocumentTimewise )
 }
 TEST( Test02, DocumentTimewise )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	auto object = tgenDocumentTimewise( v );
 	stringstream expected;
 	tgenDocumentTimewiseExpected( expected, 1, v );
@@ -40,7 +40,7 @@ TEST( Test02, DocumentTimewise )
 }
 TEST( Test03, DocumentTimewise )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	auto object = tgenDocumentTimewise( v );
 	stringstream expected;
 	tgenDocumentTimewiseExpected( expected, 1, v );
@@ -52,22 +52,22 @@ TEST( Test03, DocumentTimewise )
 
 namespace mxtest
 {
-    DocumentPtr tgenDocumentTimewise( variant v )
+    DocumentPtr tgenDocumentTimewise( TestMode v )
     {
         DocumentPtr o = makeDocument( DocumentChoice::timewise );
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setScoreTimewise( tgenScoreTimewise( v ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setScoreTimewise( tgenScoreTimewise( v ) );
             }
@@ -77,26 +77,26 @@ namespace mxtest
         }
         return o;
     }
-    void tgenDocumentTimewiseExpected( std::ostream& os, int i, variant v )
+    void tgenDocumentTimewiseExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 tgenDocumentHeaderExpected( os, DocumentType::timewise );
                 os << std::endl;
                 tgenScoreTimewiseExpected( os, 0, v );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 tgenDocumentHeaderExpected( os, DocumentType::timewise );
                 os << std::endl;
                 tgenScoreTimewiseExpected( os, 0, v );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 tgenDocumentHeaderExpected( os, DocumentType::timewise );
                 os << std::endl;

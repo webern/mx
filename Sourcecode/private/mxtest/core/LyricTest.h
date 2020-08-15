@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::LyricPtr tgenLyric( variant v );
-    void tgenLyricExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::LyricPtr tgenLyric( TestMode v );
+    void tgenLyricExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

@@ -16,7 +16,7 @@ using namespace mxtest;
 
 TEST( Test01, Technical )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	TechnicalPtr object = tgenTechnical( v );
 	stringstream expected;
 	tgenTechnicalExpected( expected, 1, v );
@@ -29,7 +29,7 @@ TEST( Test01, Technical )
 }
 TEST( Test02, Technical )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	TechnicalPtr object = tgenTechnical( v );
 	stringstream expected;
 	tgenTechnicalExpected( expected, 1, v );
@@ -42,7 +42,7 @@ TEST( Test02, Technical )
 }
 TEST( Test03, Technical )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	TechnicalPtr object = tgenTechnical( v );
 	stringstream expected;
 	tgenTechnicalExpected( expected, 1, v );
@@ -56,27 +56,27 @@ TEST( Test03, Technical )
 
 namespace mxtest
 {
-    TechnicalPtr tgenTechnical( variant v )
+    TechnicalPtr tgenTechnical( TestMode v )
     {
         TechnicalPtr o = makeTechnical();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
-                o->addTechnicalChoice( tgenTechnicalChoice( variant::one ) );
-                o->addTechnicalChoice( tgenTechnicalChoice( variant::two ) );
+                o->addTechnicalChoice( tgenTechnicalChoice( TestMode::one ) );
+                o->addTechnicalChoice( tgenTechnicalChoice( TestMode::two ) );
                 auto x = makeTechnicalChoice();
                 x->setChoice( TechnicalChoice::Choice::handbell );
                 x->getHandbell()->setValue( HandbellValue::gyro );
                 o->addTechnicalChoice( x );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->addTechnicalChoice( tgenTechnicalChoice( v ) );
                 auto x = makeTechnicalChoice();
@@ -92,28 +92,28 @@ namespace mxtest
         }
         return o;
     }
-    void tgenTechnicalExpected( std::ostream& os, int i, variant v )
+    void tgenTechnicalExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<technical/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<technical>)" );
-                tgenTechnicalChoiceExpected( os, i+1, variant::one );
+                tgenTechnicalChoiceExpected(os, i+1, TestMode::one );
                 os << std::endl;
-                tgenTechnicalChoiceExpected( os, i+1, variant::two );
+                tgenTechnicalChoiceExpected(os, i+1, TestMode::two );
                 os << std::endl;
                 streamLine( os, i+1, R"(<handbell>gyro</handbell>)" );
                 streamLine( os, i, R"(</technical>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<technical>)" );
                 tgenTechnicalChoiceExpected( os, i+1, v );

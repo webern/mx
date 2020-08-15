@@ -12,9 +12,9 @@
 
 namespace mxtest
 {
-    mx::core::NormalTypeNormalDotGroupPtr tgenNormalTypeNormalDotGroup( variant v );
-    mx::core::TimeModificationPtr tgenTimeModification( variant v );
-    void tgenTimeModificationExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::NormalTypeNormalDotGroupPtr tgenNormalTypeNormalDotGroup( TestMode v );
+    mx::core::TimeModificationPtr tgenTimeModification( TestMode v );
+    void tgenTimeModificationExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

@@ -18,7 +18,7 @@ using namespace mxtest;
 
 TEST( Test01, ElisionSyllabicTextGroup )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	ElisionSyllabicTextGroupPtr object = tgenElisionSyllabicTextGroup( v );
 	stringstream expected;
 	tgenElisionSyllabicTextGroupExpected( expected, 1, v );
@@ -32,7 +32,7 @@ TEST( Test01, ElisionSyllabicTextGroup )
 }
 TEST( Test02, ElisionSyllabicTextGroup )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	ElisionSyllabicTextGroupPtr object = tgenElisionSyllabicTextGroup( v );
 	stringstream expected;
 	tgenElisionSyllabicTextGroupExpected( expected, 1, v );
@@ -46,7 +46,7 @@ TEST( Test02, ElisionSyllabicTextGroup )
 }
 TEST( Test03, ElisionSyllabicTextGroup )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	ElisionSyllabicTextGroupPtr object = tgenElisionSyllabicTextGroup( v );
 	stringstream expected;
 	tgenElisionSyllabicTextGroupExpected( expected, 1, v );
@@ -61,25 +61,25 @@ TEST( Test03, ElisionSyllabicTextGroup )
 
 namespace mxtest
 {
-    ElisionSyllabicTextGroupPtr tgenElisionSyllabicTextGroup( variant v )
+    ElisionSyllabicTextGroupPtr tgenElisionSyllabicTextGroup( TestMode v )
     {
         ElisionSyllabicTextGroupPtr o = makeElisionSyllabicTextGroup();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 o->setElisionSyllabicGroup( tgenElisionSyllabicGroup( v ) );
                 o->getText()->setValue( XsString( "Brahms" ) );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setElisionSyllabicGroup( tgenElisionSyllabicGroup( v ) );
                 o->setHasElisionSyllabicGroup( true );
                 o->getText()->setValue( XsString( "Beethoven" ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setElisionSyllabicGroup( tgenElisionSyllabicGroup( v ) );
                 o->setHasElisionSyllabicGroup( true );
@@ -92,25 +92,25 @@ namespace mxtest
         }
         return o;
     }
-    void tgenElisionSyllabicTextGroupExpected( std::ostream& os, int i, variant v )
+    void tgenElisionSyllabicTextGroupExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
                 streamLine( os, i, R"(<text>Brahms</text>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 tgenElisionSyllabicGroupExpected( os, i, v );
                 os << std::endl;
                 streamLine( os, i, R"(<text>Beethoven</text>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 tgenElisionSyllabicGroupExpected( os, i, v );
                 os << std::endl;

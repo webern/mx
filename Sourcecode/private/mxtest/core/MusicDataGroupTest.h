@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::MusicDataGroupPtr tgenMusicDataGroup( variant v );
-    void tgenMusicDataGroupExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::MusicDataGroupPtr tgenMusicDataGroup( TestMode v );
+    void tgenMusicDataGroupExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

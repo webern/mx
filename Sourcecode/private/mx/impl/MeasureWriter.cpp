@@ -185,7 +185,7 @@ namespace mx
             if( myMeasureData.width >= 0.0 )
             {
                 measureAttr.hasWidth = true;
-                measureAttr.width = core::PositiveDivisionsValue{ myMeasureData.width };
+                measureAttr.width = core::TenthsValue{ myMeasureData.width };
             }
             
             Converter converter;

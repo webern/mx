@@ -19,7 +19,7 @@ using namespace mxtest;
 
 TEST( Test01, Hole )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	HolePtr object = tgenHole( v );
 	stringstream expected;
 	tgenHoleExpected( expected, 1, v );
@@ -32,7 +32,7 @@ TEST( Test01, Hole )
 }
 TEST( Test02, Hole )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	HolePtr object = tgenHole( v );
 	stringstream expected;
 	tgenHoleExpected( expected, 1, v );
@@ -45,7 +45,7 @@ TEST( Test02, Hole )
 }
 TEST( Test03, Hole )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	HolePtr object = tgenHole( v );
 	stringstream expected;
 	tgenHoleExpected( expected, 1, v );
@@ -59,17 +59,17 @@ TEST( Test03, Hole )
 
 namespace mxtest
 {
-    HolePtr tgenHole( variant v )
+    HolePtr tgenHole( TestMode v )
     {
         HolePtr o = makeHole();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getHoleClosed()->setValue( HoleClosedValue::half );
                 o->setHasHoleShape( true );
@@ -78,7 +78,7 @@ namespace mxtest
                 o->getAttributes()->color = Color( 1, 2, 3 );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getHoleClosed()->setValue( HoleClosedValue::yes );
                 o->setHasHoleShape( true );
@@ -96,19 +96,19 @@ namespace mxtest
         }
         return o;
     }
-    void tgenHoleExpected( std::ostream& os, int i, variant v )
+    void tgenHoleExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<hole>)" );
                 streamLine( os, i+1, R"(<hole-closed>no</hole-closed>)" );
                 streamLine( os, i, R"(</hole>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<hole color="#010203">)" );
                 streamLine( os, i+1, R"(<hole-closed>half</hole-closed>)" );
@@ -116,7 +116,7 @@ namespace mxtest
                 streamLine( os, i, R"(</hole>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<hole default-y="-1.1" placement="above">)" );
                 streamLine( os, i+1, R"(<hole-type>foobar</hole-type>)" );

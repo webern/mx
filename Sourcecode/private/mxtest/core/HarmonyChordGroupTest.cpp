@@ -20,7 +20,7 @@ using namespace mxtest;
 
 TEST( Test01, HarmonyChordGroup )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	HarmonyChordGroupPtr object = tgenHarmonyChordGroup( v );
 	stringstream expected;
 	tgenHarmonyChordGroupExpected( expected, 1, v );
@@ -34,7 +34,7 @@ TEST( Test01, HarmonyChordGroup )
 }
 TEST( Test02, HarmonyChordGroup )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	HarmonyChordGroupPtr object = tgenHarmonyChordGroup( v );
 	stringstream expected;
 	tgenHarmonyChordGroupExpected( expected, 1, v );
@@ -48,7 +48,7 @@ TEST( Test02, HarmonyChordGroup )
 }
 TEST( Test03, HarmonyChordGroup )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	HarmonyChordGroupPtr object = tgenHarmonyChordGroup( v );
 	stringstream expected;
 	tgenHarmonyChordGroupExpected( expected, 1, v );
@@ -63,17 +63,17 @@ TEST( Test03, HarmonyChordGroup )
 
 namespace mxtest
 {
-    HarmonyChordGroupPtr tgenHarmonyChordGroup( variant v )
+    HarmonyChordGroupPtr tgenHarmonyChordGroup( TestMode v )
     {
         HarmonyChordGroupPtr o = makeHarmonyChordGroup();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setRoot( tgenRoot( v ) );
                 o->setChoice( HarmonyChordGroup::Choice::function );
@@ -84,15 +84,15 @@ namespace mxtest
                 o->addDegree( tgenDegree( v ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setRoot( tgenRoot( v ) );
                 o->setChoice( HarmonyChordGroup::Choice::root );
                 o->getKind()->setValue( KindValue::dominant13th );
                 o->setHasBass( true );
                 o->setBass( tgenBass( v ) );
-                o->addDegree( tgenDegree( variant::one ) );
-                o->addDegree( tgenDegree( variant::three ) );
+                o->addDegree( tgenDegree( TestMode::one ) );
+                o->addDegree( tgenDegree( TestMode::three ) );
             }
                 break;
             default:
@@ -100,19 +100,19 @@ namespace mxtest
         }
         return o;
     }
-    void tgenHarmonyChordGroupExpected( std::ostream& os, int i, variant v )
+    void tgenHarmonyChordGroupExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 tgenRootExpected( os, i, v );
                 os << std::endl;
                 streamLine( os, i, R"(<kind>none</kind>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<function>II</function>)" );
                 streamLine( os, i, R"(<kind>diminished</kind>)" );
@@ -121,16 +121,16 @@ namespace mxtest
                 tgenDegreeExpected( os, i, v );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 tgenRootExpected( os, i, v );
                 os << std::endl;
                 streamLine( os, i, R"(<kind>dominant-13th</kind>)" );
                 tgenBassExpected( os, i, v );
                 os << std::endl;
-                tgenDegreeExpected( os, i, variant::one );
+                tgenDegreeExpected(os, i, TestMode::one );
                 os << std::endl;
-                tgenDegreeExpected( os, i, variant::three );
+                tgenDegreeExpected(os, i, TestMode::three );
             }
                 break;
             default:

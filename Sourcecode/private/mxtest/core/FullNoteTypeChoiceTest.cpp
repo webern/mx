@@ -18,7 +18,7 @@ using namespace mxtest;
 
 TEST( Test01, FullNoteTypeChoice )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	FullNoteTypeChoicePtr object = tgenFullNoteTypeChoice( v );
 	stringstream expected;
 	tgenFullNoteTypeChoiceExpected( expected, 1, v );
@@ -32,7 +32,7 @@ TEST( Test01, FullNoteTypeChoice )
 }
 TEST( Test02, FullNoteTypeChoice )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	FullNoteTypeChoicePtr object = tgenFullNoteTypeChoice( v );
 	stringstream expected;
 	tgenFullNoteTypeChoiceExpected( expected, 1, v );
@@ -46,7 +46,7 @@ TEST( Test02, FullNoteTypeChoice )
 }
 TEST( Test03, FullNoteTypeChoice )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	FullNoteTypeChoicePtr object = tgenFullNoteTypeChoice( v );
 	stringstream expected;
 	tgenFullNoteTypeChoiceExpected( expected, 1, v );
@@ -61,23 +61,23 @@ TEST( Test03, FullNoteTypeChoice )
 
 namespace mxtest
 {
-    FullNoteTypeChoicePtr tgenFullNoteTypeChoice( variant v )
+    FullNoteTypeChoicePtr tgenFullNoteTypeChoice( TestMode v )
     {
         FullNoteTypeChoicePtr o = makeFullNoteTypeChoice();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setChoice( FullNoteTypeChoice::Choice::unpitched );
                 o->setUnpitched( tgenUnpitched( v ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setChoice( FullNoteTypeChoice::Choice::rest );
                 o->setRest( tgenRest( v ) );
@@ -88,22 +88,22 @@ namespace mxtest
         }
         return o;
     }
-    void tgenFullNoteTypeChoiceExpected( std::ostream& os, int i, variant v )
+    void tgenFullNoteTypeChoiceExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 tgenPitchExpected( os, i, v );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 tgenUnpitchedExpected( os, i, v );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 tgenRestExpected( os, i, v );
             }

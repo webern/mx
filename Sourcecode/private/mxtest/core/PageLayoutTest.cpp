@@ -17,7 +17,7 @@ using namespace mxtest;
 
 TEST( Test01, PageLayout )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	PageLayoutPtr object = tgenPageLayout( v );
 	stringstream expected;
 	tgenPageLayoutExpected( expected, 1, v );
@@ -30,7 +30,7 @@ TEST( Test01, PageLayout )
 }
 TEST( Test02, PageLayout )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	PageLayoutPtr object = tgenPageLayout( v );
 	stringstream expected;
 	tgenPageLayoutExpected( expected, 1, v );
@@ -43,7 +43,7 @@ TEST( Test02, PageLayout )
 }
 TEST( Test03, PageLayout )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	PageLayoutPtr object = tgenPageLayout( v );
 	stringstream expected;
 	tgenPageLayoutExpected( expected, 1, v );
@@ -57,29 +57,29 @@ TEST( Test03, PageLayout )
 
 namespace mxtest
 {
-    PageLayoutPtr tgenPageLayout( variant v )
+    PageLayoutPtr tgenPageLayout( TestMode v )
     {
         PageLayoutPtr o = makePageLayout();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getPageHeight()->setValue( TenthsValue( 2534 ) );
                 o->getPageWidth()->setValue( TenthsValue( 4352 ) );
-                o->addPageMargins( tgenPageMargins( variant::one ) );
-                o->addPageMargins( tgenPageMargins( variant::two ) );
+                o->addPageMargins( tgenPageMargins( TestMode::one ) );
+                o->addPageMargins( tgenPageMargins( TestMode::two ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getPageHeight()->setValue( TenthsValue( 3524 ) );
                 o->getPageWidth()->setValue( TenthsValue( 3241 ) );
-                o->addPageMargins( tgenPageMargins( variant::three ) );
+                o->addPageMargins( tgenPageMargins( TestMode::three ) );
             }
                 break;
             default:
@@ -87,12 +87,12 @@ namespace mxtest
         }
         return o;
     }
-    void tgenPageLayoutExpected( std::ostream& os, int i, variant v )
+    void tgenPageLayoutExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<page-layout>)" );
                 streamLine( os, i+1, R"(<page-height>0</page-height>)" );
@@ -100,24 +100,24 @@ namespace mxtest
                 streamLine( os, i, R"(</page-layout>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<page-layout>)" );
                 streamLine( os, i+1, R"(<page-height>2534</page-height>)" );
                 streamLine( os, i+1, R"(<page-width>4352</page-width>)" );
-                tgenPageMarginsExpected( os, i+1, variant::one );
+                tgenPageMarginsExpected(os, i+1, TestMode::one );
                 os << std::endl;
-                tgenPageMarginsExpected( os, i+1, variant::two );
+                tgenPageMarginsExpected(os, i+1, TestMode::two );
                 os << std::endl;
                 streamLine( os, i, R"(</page-layout>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<page-layout>)" );
                 streamLine( os, i+1, R"(<page-height>3524</page-height>)" );
                 streamLine( os, i+1, R"(<page-width>3241</page-width>)" );
-                tgenPageMarginsExpected( os, i+1, variant::three );
+                tgenPageMarginsExpected(os, i+1, TestMode::three );
                 os << std::endl;
                 streamLine( os, i, R"(</page-layout>)", false );
             }

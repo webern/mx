@@ -12,8 +12,8 @@
 
 namespace mxtest
 {
-    mx::core::TimewisePartPtr tgenTimewisePart( variant v );
-    void tgenTimewisePartExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::TimewisePartPtr tgenTimewisePart( TestMode v );
+    void tgenTimewisePartExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

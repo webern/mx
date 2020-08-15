@@ -19,7 +19,7 @@ using namespace mxtest;
 
 TEST( Test01, Heel )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	HeelPtr object = tgenHeel( v );
 	stringstream expected;
 	tgenHeelExpected( expected, 1, v );
@@ -32,7 +32,7 @@ TEST( Test01, Heel )
 }
 TEST( Test02, Heel )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	HeelPtr object = tgenHeel( v );
 	stringstream expected;
 	tgenHeelExpected( expected, 1, v );
@@ -45,7 +45,7 @@ TEST( Test02, Heel )
 }
 TEST( Test03, Heel )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	HeelPtr object = tgenHeel( v );
 	stringstream expected;
 	tgenHeelExpected( expected, 1, v );
@@ -59,17 +59,17 @@ TEST( Test03, Heel )
 
 namespace mxtest
 {
-    HeelPtr tgenHeel( variant v )
+    HeelPtr tgenHeel( TestMode v )
     {
         HeelPtr o = makeHeel();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getAttributes()->hasSubstitution = true;
                 o->getAttributes()->substitution = YesNo::yes;
@@ -79,7 +79,7 @@ namespace mxtest
                 o->getAttributes()->color = Color( 83, 102, 30, 22 );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getAttributes()->hasFontFamily = true;
                 o->getAttributes()->fontFamily = CommaSeparatedText( "Bish,and,Bones" );
@@ -90,22 +90,22 @@ namespace mxtest
         }
         return o;
     }
-    void tgenHeelExpected( std::ostream& os, int i, variant v )
+    void tgenHeelExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<heel/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<heel font-style="italic" color="#53661E16" substitution="yes"/>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<heel font-family="Bish,and,Bones"/>)", false );
             }

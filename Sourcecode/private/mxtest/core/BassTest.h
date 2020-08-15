@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::BassPtr tgenBass( variant v );
-    void tgenBassExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::BassPtr tgenBass( TestMode v );
+    void tgenBassExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

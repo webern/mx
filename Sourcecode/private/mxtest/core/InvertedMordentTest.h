@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::InvertedMordentPtr tgenInvertedMordent( variant v );
-    void tgenInvertedMordentExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::InvertedMordentPtr tgenInvertedMordent( TestMode v );
+    void tgenInvertedMordentExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

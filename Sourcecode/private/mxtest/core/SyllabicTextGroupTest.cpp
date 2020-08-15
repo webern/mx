@@ -19,7 +19,7 @@ using namespace mxtest;
 
 TEST( Test01, SyllabicTextGroup )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	SyllabicTextGroupPtr object = tgenSyllabicTextGroup( v );
 	stringstream expected;
 	tgenSyllabicTextGroupExpected( expected, 1, v );
@@ -33,7 +33,7 @@ TEST( Test01, SyllabicTextGroup )
 }
 TEST( Test02, SyllabicTextGroup )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	SyllabicTextGroupPtr object = tgenSyllabicTextGroup( v );
 	stringstream expected;
 	tgenSyllabicTextGroupExpected( expected, 1, v );
@@ -47,7 +47,7 @@ TEST( Test02, SyllabicTextGroup )
 }
 TEST( Test03, SyllabicTextGroup )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	SyllabicTextGroupPtr object = tgenSyllabicTextGroup( v );
 	stringstream expected;
 	tgenSyllabicTextGroupExpected( expected, 1, v );
@@ -62,28 +62,28 @@ TEST( Test03, SyllabicTextGroup )
 
 namespace mxtest
 {
-    SyllabicTextGroupPtr tgenSyllabicTextGroup( variant v )
+    SyllabicTextGroupPtr tgenSyllabicTextGroup( TestMode v )
     {
         SyllabicTextGroupPtr o = makeSyllabicTextGroup();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 o->getText()->setValue( XsString( "tgenSyllabicTextGroup One" ) );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getText()->setValue( XsString( "tgenSyllabicTextGroup Two" ) );
                 o->addElisionSyllabicTextGroup( tgenElisionSyllabicTextGroup( v ) );
                 o->setHasExtend( true );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getText()->setValue( XsString( "tgenSyllabicTextGroup Three" ) );
                 o->addElisionSyllabicTextGroup( tgenElisionSyllabicTextGroup( v ) );
-                o->addElisionSyllabicTextGroup( tgenElisionSyllabicTextGroup( variant::one ) );
+                o->addElisionSyllabicTextGroup( tgenElisionSyllabicTextGroup( TestMode::one ) );
                 o->setHasSyllabic( true );
                 o->setHasExtend( true );
             }
@@ -93,18 +93,18 @@ namespace mxtest
         }
         return o;
     }
-    void tgenSyllabicTextGroupExpected( std::ostream& os, int i, variant v )
+    void tgenSyllabicTextGroupExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
                 streamLine( os, i, R"(<text>tgenSyllabicTextGroup One</text>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<text>tgenSyllabicTextGroup Two</text>)" );
                 tgenElisionSyllabicTextGroupExpected( os, i, v );
@@ -112,13 +112,13 @@ namespace mxtest
                 streamLine( os, i, R"(<extend/>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<syllabic>begin</syllabic>)" );
                 streamLine( os, i, R"(<text>tgenSyllabicTextGroup Three</text>)" );
                 tgenElisionSyllabicTextGroupExpected( os, i, v );
                 os << std::endl;
-                tgenElisionSyllabicTextGroupExpected( os, i, variant::one );
+                tgenElisionSyllabicTextGroupExpected(os, i, TestMode::one );
                 os << std::endl;
                 streamLine( os, i, R"(<extend/>)", false );
             }

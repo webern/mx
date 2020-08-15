@@ -14,8 +14,8 @@ namespace mx
     {
         /// Alias for the int type used by this library.
         using IntType = int;
-        constexpr const IntType IntMax = std::numeric_limits<IntType>::max();
         constexpr const IntType IntMin = std::numeric_limits<IntType>::min();
+        constexpr const IntType IntMax = std::numeric_limits<IntType>::max();
 
         /// A base class for all integer types.
         class Integer
@@ -30,7 +30,7 @@ namespace mx
             Integer& operator=( Integer&& ) = default;
             [[nodiscard]] IntType getValue() const;
             virtual void setValue( IntType value );
-            virtual void parse( const std::string& value ) final;
+            bool parse( const std::string& value );
         private:
             IntType myValue;
         };

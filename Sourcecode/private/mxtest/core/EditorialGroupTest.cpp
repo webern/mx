@@ -18,7 +18,7 @@ using namespace mxtest;
 
 TEST( Test01, EditorialGroup )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	EditorialGroupPtr object = tgenEditorialGroup( v );
 	stringstream expected;
 	tgenEditorialGroupExpected( expected, 0, v );
@@ -32,7 +32,7 @@ TEST( Test01, EditorialGroup )
 }
 TEST( Test02, EditorialGroup )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	EditorialGroupPtr object = tgenEditorialGroup( v );
 	stringstream expected;
 	tgenEditorialGroupExpected( expected, 1, v );
@@ -46,7 +46,7 @@ TEST( Test02, EditorialGroup )
 }
 TEST( Test03, EditorialGroup )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	EditorialGroupPtr object = tgenEditorialGroup( v );
 	stringstream expected;
 	tgenEditorialGroupExpected( expected, 1, v );
@@ -61,16 +61,16 @@ TEST( Test03, EditorialGroup )
 
 namespace mxtest
 {
-    EditorialGroupPtr tgenEditorialGroup( variant v )
+    EditorialGroupPtr tgenEditorialGroup( TestMode v )
     {
         EditorialGroupPtr o = makeEditorialGroup();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setHasLevel( true );
                 o->getLevel()->setValue( XsString( "LevelTwo" ) );
@@ -78,7 +78,7 @@ namespace mxtest
                 o->getFootnote()->setValue( XsString( "FootNoteTwo" ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setHasFootnote( true );
                 o->getFootnote()->setValue( XsString( "FootNoteThree" ) );
@@ -89,23 +89,23 @@ namespace mxtest
         }
         return o;
     }
-    void tgenEditorialGroupExpected( std::ostream& os, int i, variant v )
+    void tgenEditorialGroupExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"()", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<footnote>FootNoteTwo</footnote>)" );
                 streamLine( os, i, R"(<level>LevelTwo</level>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<footnote>FootNoteThree</footnote>)", false );
             }

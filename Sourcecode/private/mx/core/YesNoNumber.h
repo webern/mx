@@ -7,6 +7,7 @@
 #include <iostream>
 #include "mx/core/Decimals.h"
 #include "mx/core/Enums.h"
+#include <memory>
 
 namespace mx
 {

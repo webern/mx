@@ -16,7 +16,7 @@ using namespace mxtest;
 
 TEST( Test01, Encoding )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	EncodingPtr object = tgenEncoding( v );
 	stringstream expected;
 	tgenEncodingExpected( expected, 1, v );
@@ -29,7 +29,7 @@ TEST( Test01, Encoding )
 }
 TEST( Test02, Encoding )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	EncodingPtr object = tgenEncoding( v );
 	stringstream expected;
 	tgenEncodingExpected( expected, 1, v );
@@ -42,7 +42,7 @@ TEST( Test02, Encoding )
 }
 TEST( Test03, Encoding )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	EncodingPtr object = tgenEncoding( v );
 	stringstream expected;
 	tgenEncodingExpected( expected, 1, v );
@@ -56,17 +56,17 @@ TEST( Test03, Encoding )
 
 namespace mxtest
 {
-    EncodingPtr tgenEncoding( variant v )
+    EncodingPtr tgenEncoding( TestMode v )
     {
         EncodingPtr o = makeEncoding();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 auto encodingChoice = makeEncodingChoice();
                 encodingChoice->setChoice( EncodingChoice::Choice::software );
@@ -74,7 +74,7 @@ namespace mxtest
                 o->addEncodingChoice( encodingChoice );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 auto encodingChoice = makeEncodingChoice();
                 encodingChoice->setChoice( EncodingChoice::Choice::software );
@@ -94,24 +94,24 @@ namespace mxtest
         }
         return o;
     }
-    void tgenEncodingExpected( std::ostream& os, int i, variant v )
+    void tgenEncodingExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<encoding/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<encoding>)" );
                 streamLine( os, i+1, R"(<software>My Software!</software>)" );
                 streamLine( os, i, R"(</encoding>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<encoding>)" );
                 streamLine( os, i+1, R"(<software>Described</software>)" );

@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::OrnamentsPtr tgenOrnaments( variant v );
-    void tgenOrnamentsExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::OrnamentsPtr tgenOrnaments( TestMode v );
+    void tgenOrnamentsExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::HarmonyChordGroupPtr tgenHarmonyChordGroup( variant v );
-    void tgenHarmonyChordGroupExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::HarmonyChordGroupPtr tgenHarmonyChordGroup( TestMode v );
+    void tgenHarmonyChordGroupExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

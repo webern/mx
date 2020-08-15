@@ -16,7 +16,7 @@ using namespace mxtest;
 
 TEST( Test01, GraceNoteGroup )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	GraceNoteGroupPtr object = tgenGraceNoteGroup( v );
 	stringstream expected;
 	tgenGraceNoteGroupExpected( expected, 1, v );
@@ -30,7 +30,7 @@ TEST( Test01, GraceNoteGroup )
 }
 TEST( Test02, GraceNoteGroup )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	GraceNoteGroupPtr object = tgenGraceNoteGroup( v );
 	stringstream expected;
 	tgenGraceNoteGroupExpected( expected, 1, v );
@@ -44,7 +44,7 @@ TEST( Test02, GraceNoteGroup )
 }
 TEST( Test03, GraceNoteGroup )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	GraceNoteGroupPtr object = tgenGraceNoteGroup( v );
 	stringstream expected;
 	tgenGraceNoteGroupExpected( expected, 1, v );
@@ -59,17 +59,17 @@ TEST( Test03, GraceNoteGroup )
 
 namespace mxtest
 {
-    GraceNoteGroupPtr tgenGraceNoteGroup( variant v )
+    GraceNoteGroupPtr tgenGraceNoteGroup( TestMode v )
     {
         GraceNoteGroupPtr o = makeGraceNoteGroup();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setFullNoteGroup( tgenFullNoteGroup( v ) );
                 auto start = makeTie();
@@ -81,7 +81,7 @@ namespace mxtest
                 
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setFullNoteGroup( tgenFullNoteGroup( v ) );
             }
@@ -91,18 +91,18 @@ namespace mxtest
         }
         return o;
     }
-    void tgenGraceNoteGroupExpected( std::ostream& os, int i, variant v )
+    void tgenGraceNoteGroupExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<grace/>)" );
                 tgenFullNoteGroupExpected( os, i, v );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<grace/>)" );
                 tgenFullNoteGroupExpected( os, i, v );
@@ -111,7 +111,7 @@ namespace mxtest
                 streamLine( os, i, R"(<tie type="stop"/>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<grace/>)" );
                 tgenFullNoteGroupExpected( os, i, v );

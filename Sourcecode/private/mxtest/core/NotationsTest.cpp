@@ -20,7 +20,7 @@ using namespace mxtest;
 
 TEST( Test01, Notations )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	NotationsPtr object = tgenNotations( v );
 	stringstream expected;
 	tgenNotationsExpected( expected, 1, v );
@@ -33,7 +33,7 @@ TEST( Test01, Notations )
 }
 TEST( Test02, Notations )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	NotationsPtr object = tgenNotations( v );
 	stringstream expected;
 	tgenNotationsExpected( expected, 1, v );
@@ -46,7 +46,7 @@ TEST( Test02, Notations )
 }
 TEST( Test03, Notations )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	NotationsPtr object = tgenNotations( v );
 	stringstream expected;
 	tgenNotationsExpected( expected, 1, v );
@@ -60,17 +60,17 @@ TEST( Test03, Notations )
 
 namespace mxtest
 {
-    NotationsPtr tgenNotations( variant v )
+    NotationsPtr tgenNotations( TestMode v )
     {
         NotationsPtr o = makeNotations();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getAttributes()->hasPrintObject = true;
                 o->getAttributes()->printObject = YesNo::yes;
@@ -117,7 +117,7 @@ namespace mxtest
                 
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getAttributes()->hasPrintObject = true;
                 o->getAttributes()->printObject = YesNo::no;
@@ -158,35 +158,35 @@ namespace mxtest
         }
         return o;
     }
-    void tgenNotationsExpected( std::ostream& os, int i, variant v )
+    void tgenNotationsExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<notations/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<notations print-object="yes">)" );
                 streamLine( os, i+1, R"(<tied type="start" bezier-offset="2.2"/>)" );
                 streamLine( os, i+1, R"(<slur type="start" bezier-offset2="3.1"/>)" );
-                tgenTupletExpected( os, i+1, variant::two );
+                tgenTupletExpected(os, i+1, TestMode::two );
                 os << std::endl;
                 streamLine( os, i+1, R"(<glissando type="start">Weeee</glissando>)" );
                 streamLine( os, i+1, R"(<slide type="start">Geronamo?</slide>)" );
-                tgenOrnamentsExpected( os, i+1, variant::three );
+                tgenOrnamentsExpected(os, i+1, TestMode::three );
                 os << std::endl;
-                tgenTechnicalExpected( os, i+1, variant::two );
+                tgenTechnicalExpected(os, i+1, TestMode::two );
                 os << std::endl;
-                tgenArticulationsExpected( os, i+1, variant::three );
+                tgenArticulationsExpected(os, i+1, TestMode::three );
                 os << std::endl;
                 streamLine( os, i, R"(</notations>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<notations print-object="no">)" );
                 streamLine( os, i+1, R"(<dynamics>)" );

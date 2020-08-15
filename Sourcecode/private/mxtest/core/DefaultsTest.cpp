@@ -18,7 +18,7 @@ using namespace mxtest;
 
 TEST( Test01, Defaults )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	DefaultsPtr object = tgenDefaults( v );
 	stringstream expected;
 	tgenDefaultsExpected( expected, 1, v );
@@ -31,7 +31,7 @@ TEST( Test01, Defaults )
 }
 TEST( Test02, Defaults )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	DefaultsPtr object = tgenDefaults( v );
 	stringstream expected;
 	tgenDefaultsExpected( expected, 1, v );
@@ -44,7 +44,7 @@ TEST( Test02, Defaults )
 }
 TEST( Test03, Defaults )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	DefaultsPtr object = tgenDefaults( v );
 	stringstream expected;
 	tgenDefaultsExpected( expected, 1, v );
@@ -58,17 +58,17 @@ TEST( Test03, Defaults )
 
 namespace mxtest
 {
-    DefaultsPtr tgenDefaults( variant v )
+    DefaultsPtr tgenDefaults( TestMode v )
     {
         DefaultsPtr o = makeDefaults();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setHasScaling( true );
                 o->setScaling( tgenScaling( v ) );
@@ -88,7 +88,7 @@ namespace mxtest
                 o->addLyricFont( l2 );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setHasScaling( true );
                 o->setScaling( tgenScaling( v ) );
@@ -117,17 +117,17 @@ namespace mxtest
         }
         return o;
     }
-    void tgenDefaultsExpected( std::ostream& os, int i, variant v )
+    void tgenDefaultsExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<defaults/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<defaults>)" );
                 tgenScalingExpected( os, i+1, v ); os << std::endl;
@@ -139,7 +139,7 @@ namespace mxtest
                 streamLine( os, i, R"(</defaults>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<defaults>)" );
                 tgenScalingExpected( os, i+1, v ); os << std::endl;

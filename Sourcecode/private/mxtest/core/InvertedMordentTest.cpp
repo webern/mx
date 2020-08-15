@@ -19,7 +19,7 @@ using namespace mxtest;
 
 TEST( Test01, InvertedMordent )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	InvertedMordentPtr object = tgenInvertedMordent( v );
 	stringstream expected;
 	tgenInvertedMordentExpected( expected, 1, v );
@@ -32,7 +32,7 @@ TEST( Test01, InvertedMordent )
 }
 TEST( Test02, InvertedMordent )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	InvertedMordentPtr object = tgenInvertedMordent( v );
 	stringstream expected;
 	tgenInvertedMordentExpected( expected, 1, v );
@@ -45,7 +45,7 @@ TEST( Test02, InvertedMordent )
 }
 TEST( Test03, InvertedMordent )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	InvertedMordentPtr object = tgenInvertedMordent( v );
 	stringstream expected;
 	tgenInvertedMordentExpected( expected, 1, v );
@@ -59,17 +59,17 @@ TEST( Test03, InvertedMordent )
 
 namespace mxtest
 {
-    InvertedMordentPtr tgenInvertedMordent( variant v )
+    InvertedMordentPtr tgenInvertedMordent( TestMode v )
     {
         InvertedMordentPtr o = makeInvertedMordent();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getAttributes()->hasBeats = true;
                 o->getAttributes()->beats = TrillBeats( 1.2 );
@@ -79,7 +79,7 @@ namespace mxtest
                 o->getAttributes()->accelerate = YesNo::yes;
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getAttributes()->hasDeparture = true;
                 o->getAttributes()->departure = AboveBelow::below;
@@ -90,22 +90,22 @@ namespace mxtest
         }
         return o;
     }
-    void tgenInvertedMordentExpected( std::ostream& os, int i, variant v )
+    void tgenInvertedMordentExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<inverted-mordent/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<inverted-mordent accelerate="yes" beats="2" approach="above"/>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<inverted-mordent departure="below"/>)", false );
             }

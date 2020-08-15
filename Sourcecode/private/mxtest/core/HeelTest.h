@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::HeelPtr tgenHeel( variant v );
-    void tgenHeelExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::HeelPtr tgenHeel( TestMode v );
+    void tgenHeelExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

@@ -15,7 +15,7 @@ using namespace mxtest;
 
 TEST( Test01, Work )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	WorkPtr object = tgenWork( v );
 	stringstream expected;
 	tgenWorkExpected( expected, 1, v );
@@ -28,7 +28,7 @@ TEST( Test01, Work )
 }
 TEST( Test02, Work )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	WorkPtr object = tgenWork( v );
 	stringstream expected;
 	tgenWorkExpected( expected, 1, v );
@@ -41,7 +41,7 @@ TEST( Test02, Work )
 }
 TEST( Test03, Work )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	WorkPtr object = tgenWork( v );
 	stringstream expected;
 	tgenWorkExpected( expected, 1, v );
@@ -55,23 +55,23 @@ TEST( Test03, Work )
 
 namespace mxtest
 {
-    WorkPtr tgenWork( variant v )
+    WorkPtr tgenWork( TestMode v )
     {
         WorkPtr o = makeWork();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setHasWorkTitle( true );
                 o->getWorkTitle()->setValue( XsString( "The Incident at Ezinar" ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setHasWorkTitle( true );
                 o->getWorkTitle()->setValue( XsString( "Freezing Pieces" ) );
@@ -89,24 +89,24 @@ namespace mxtest
         }
         return o;
     }
-    void tgenWorkExpected( std::ostream& os, int i, variant v )
+    void tgenWorkExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<work/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<work>)" );
                 streamLine( os, i+1, R"(<work-title>The Incident at Ezinar</work-title>)" );
                 streamLine( os, i, R"(</work>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<work>)" );
                 streamLine( os, i+1, R"(<work-number>1</work-number>)" );

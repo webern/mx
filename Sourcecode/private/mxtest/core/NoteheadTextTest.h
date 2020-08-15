@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::NoteheadTextPtr tgenNoteheadText( variant v );
-    void tgenNoteheadTextExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::NoteheadTextPtr tgenNoteheadText( TestMode v );
+    void tgenNoteheadTextExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

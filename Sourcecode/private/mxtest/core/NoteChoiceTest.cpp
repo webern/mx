@@ -19,7 +19,7 @@ using namespace mxtest;
 
 TEST( Test01, NoteChoice )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	NoteChoicePtr object = tgenNoteChoice( v );
 	stringstream expected;
 	tgenNoteChoiceExpected( expected, 1, v );
@@ -33,7 +33,7 @@ TEST( Test01, NoteChoice )
 }
 TEST( Test02, NoteChoice )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	NoteChoicePtr object = tgenNoteChoice( v );
 	stringstream expected;
 	tgenNoteChoiceExpected( expected, 1, v );
@@ -47,7 +47,7 @@ TEST( Test02, NoteChoice )
 }
 TEST( Test03, NoteChoice )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	NoteChoicePtr object = tgenNoteChoice( v );
 	stringstream expected;
 	tgenNoteChoiceExpected( expected, 1, v );
@@ -62,24 +62,24 @@ TEST( Test03, NoteChoice )
 
 namespace mxtest
 {
-    NoteChoicePtr tgenNoteChoice( variant v )
+    NoteChoicePtr tgenNoteChoice( TestMode v )
     {
         NoteChoicePtr o = makeNoteChoice();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 o->setChoice( NoteChoice::Choice::normal );
                 o->setNormalNoteGroup( tgenNormalNoteGroup( v ) );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setChoice( NoteChoice::Choice::grace );
                 o->setGraceNoteGroup( tgenGraceNoteGroup( v ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setChoice( NoteChoice::Choice::cue );
                 o->setCueNoteGroup( tgenCueNoteGroup( v ) );
@@ -90,22 +90,22 @@ namespace mxtest
         }
         return o;
     }
-    void tgenNoteChoiceExpected( std::ostream& os, int i, variant v )
+    void tgenNoteChoiceExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 tgenNormalNoteGroupExpected( os, i, v );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 tgenGraceNoteGroupExpected( os, i, v );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 tgenCueNoteGroupExpected( os, i, v );
             }

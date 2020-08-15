@@ -18,7 +18,7 @@ using namespace mxtest;
 
 TEST( Test01, PartGroup )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	PartGroupPtr object = tgenPartGroup( v );
 	stringstream expected;
 	tgenPartGroupExpected( expected, 1, v );
@@ -31,7 +31,7 @@ TEST( Test01, PartGroup )
 }
 TEST( Test02, PartGroup )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	PartGroupPtr object = tgenPartGroup( v );
 	stringstream expected;
 	tgenPartGroupExpected( expected, 1, v );
@@ -44,7 +44,7 @@ TEST( Test02, PartGroup )
 }
 TEST( Test03, PartGroup )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	PartGroupPtr object = tgenPartGroup( v );
 	stringstream expected;
 	tgenPartGroupExpected( expected, 1, v );
@@ -58,17 +58,17 @@ TEST( Test03, PartGroup )
 
 namespace mxtest
 {
-    PartGroupPtr tgenPartGroup( variant v )
+    PartGroupPtr tgenPartGroup( TestMode v )
     {
         PartGroupPtr o = makePartGroup();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getAttributes()->type = StartStop::stop;
                 o->getAttributes()->hasNumber = true;
@@ -88,7 +88,7 @@ namespace mxtest
                 o->setEditorialGroup( tgenEditorialGroup( v ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getAttributes()->type = StartStop::start;
                 o->getAttributes()->hasNumber = true;
@@ -113,17 +113,17 @@ namespace mxtest
         }
         return o;
     }
-    void tgenPartGroupExpected( std::ostream& os, int i, variant v )
+    void tgenPartGroupExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<part-group type="start"/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<part-group type="stop" number="1">)" );
                 streamLine( os, i+1, R"(<group-name>Some Group of Instruments</group-name>)" );
@@ -140,7 +140,7 @@ namespace mxtest
                 streamLine( os, i, R"(</part-group>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<part-group type="start" number="2">)" );
                 streamLine( os, i+1, R"(<group-name>Piano</group-name>)" );

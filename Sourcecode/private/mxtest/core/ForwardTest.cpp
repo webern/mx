@@ -16,7 +16,7 @@ using namespace mxtest;
 
 TEST( Test01, Forward )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	ForwardPtr object = tgenForward( v );
 	stringstream expected;
 	tgenForwardExpected( expected, 1, v );
@@ -29,7 +29,7 @@ TEST( Test01, Forward )
 }
 TEST( Test02, Forward )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	ForwardPtr object = tgenForward( v );
 	stringstream expected;
 	tgenForwardExpected( expected, 1, v );
@@ -42,7 +42,7 @@ TEST( Test02, Forward )
 }
 TEST( Test03, Forward )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	ForwardPtr object = tgenForward( v );
 	stringstream expected;
 	tgenForwardExpected( expected, 1, v );
@@ -56,23 +56,23 @@ TEST( Test03, Forward )
 
 namespace mxtest
 {
-    ForwardPtr tgenForward( variant v )
+    ForwardPtr tgenForward( TestMode v )
     {
         ForwardPtr o = makeForward();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getDuration()->setValue( PositiveDivisionsValue( 31 ) );
                 o->setEditorialVoiceGroup( tgenEditorialVoiceGroup( v ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getDuration()->setValue( PositiveDivisionsValue( 32 ) );
                 o->setEditorialVoiceGroup( tgenEditorialVoiceGroup( v ) );
@@ -83,19 +83,19 @@ namespace mxtest
         }
         return o;
     }
-    void tgenForwardExpected( std::ostream& os, int i, variant v )
+    void tgenForwardExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<forward>)" );
                 streamLine( os, i+1, R"(<duration>1</duration>)" );
                 streamLine( os, i, R"(</forward>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<forward>)" );
                 streamLine( os, i+1, R"(<duration>31</duration>)" );
@@ -104,7 +104,7 @@ namespace mxtest
                 streamLine( os, i, R"(</forward>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<forward>)" );
                 streamLine( os, i+1, R"(<duration>32</duration>)" );

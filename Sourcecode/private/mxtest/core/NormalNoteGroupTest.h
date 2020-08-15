@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::NormalNoteGroupPtr tgenNormalNoteGroup( variant v );
-    void tgenNormalNoteGroupExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::NormalNoteGroupPtr tgenNormalNoteGroup( TestMode v );
+    void tgenNormalNoteGroupExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

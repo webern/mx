@@ -20,7 +20,7 @@ using namespace mxtest;
 
 TEST( Test01, LyricTextChoice )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	LyricTextChoicePtr object = tgenLyricTextChoice( v );
 	stringstream expected;
 	tgenLyricTextChoiceExpected( expected, 1, v );
@@ -34,7 +34,7 @@ TEST( Test01, LyricTextChoice )
 }
 TEST( Test02, LyricTextChoice )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	LyricTextChoicePtr object = tgenLyricTextChoice( v );
 	stringstream expected;
 	tgenLyricTextChoiceExpected( expected, 1, v );
@@ -48,7 +48,7 @@ TEST( Test02, LyricTextChoice )
 }
 TEST( Test03, LyricTextChoice )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	LyricTextChoicePtr object = tgenLyricTextChoice( v );
 	stringstream expected;
 	tgenLyricTextChoiceExpected( expected, 1, v );
@@ -62,7 +62,7 @@ TEST( Test03, LyricTextChoice )
 }
 TEST( Test04, LyricTextChoice )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	LyricTextChoicePtr object = tgenLyricTextChoice( v );
     object->setChoice( LyricTextChoice::Choice::extend );
 	stringstream expected( R"(<extend/>)" );
@@ -76,7 +76,7 @@ TEST( Test04, LyricTextChoice )
 }
 TEST( Test05, LyricTextChoice )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	LyricTextChoicePtr object = tgenLyricTextChoice( v );
     object->setChoice( LyricTextChoice::Choice::humming );
 	stringstream expected( R"(<humming/>)" );
@@ -91,23 +91,23 @@ TEST( Test05, LyricTextChoice )
 
 namespace mxtest
 {
-    LyricTextChoicePtr tgenLyricTextChoice( variant v )
+    LyricTextChoicePtr tgenLyricTextChoice( TestMode v )
     {
         LyricTextChoicePtr o = makeLyricTextChoice();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 o->setChoice( LyricTextChoice::Choice::laughing );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setChoice( LyricTextChoice::Choice::syllabicTextGroup );
                 o->setSyllabicTextGroup( tgenSyllabicTextGroup( v ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setChoice( LyricTextChoice::Choice::syllabicTextGroup );
                 o->setSyllabicTextGroup( tgenSyllabicTextGroup( v ) );
@@ -118,23 +118,23 @@ namespace mxtest
         }
         return o;
     }
-    void tgenLyricTextChoiceExpected( std::ostream& os, int i, variant v )
+    void tgenLyricTextChoiceExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
                 streamLine( os, i, R"(<laughing/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 tgenSyllabicTextGroupExpected( os, i, v );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 tgenSyllabicTextGroupExpected( os, i, v );
             }

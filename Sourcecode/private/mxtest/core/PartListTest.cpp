@@ -18,7 +18,7 @@ using namespace mxtest;
 
 TEST( Test01, PartList )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	PartListPtr object = tgenPartList( v );
 	stringstream expected;
 	tgenPartListExpected( expected, 1, v );
@@ -31,7 +31,7 @@ TEST( Test01, PartList )
 }
 TEST( Test02, PartList )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	PartListPtr object = tgenPartList( v );
 	stringstream expected;
 	tgenPartListExpected( expected, 1, v );
@@ -44,7 +44,7 @@ TEST( Test02, PartList )
 }
 TEST( Test03, PartList )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	PartListPtr object = tgenPartList( v );
 	stringstream expected;
 	tgenPartListExpected( expected, 1, v );
@@ -58,27 +58,27 @@ TEST( Test03, PartList )
 
 namespace mxtest
 {
-    PartListPtr tgenPartList( variant v )
+    PartListPtr tgenPartList( TestMode v )
     {
         PartListPtr o = makePartList();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->addPartGroup( tgenPartGroup( v ) );
-                o->addPartGroup( tgenPartGroup( variant::three ) );
+                o->addPartGroup( tgenPartGroup( TestMode::three ) );
                 o->setScorePart( tgenScorePart( v ) );
                 o->addPartGroupOrScorePart( tgenPartGroupOrScorePart( v ) );
-                o->addPartGroupOrScorePart( tgenPartGroupOrScorePart( variant::one ) );
-                o->addPartGroupOrScorePart( tgenPartGroupOrScorePart( variant::three ) );
+                o->addPartGroupOrScorePart( tgenPartGroupOrScorePart( TestMode::one ) );
+                o->addPartGroupOrScorePart( tgenPartGroupOrScorePart( TestMode::three ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setScorePart( tgenScorePart( v ) );
                 o->addPartGroupOrScorePart( tgenPartGroupOrScorePart( v ) );
@@ -89,12 +89,12 @@ namespace mxtest
         }
         return o;
     }
-    void tgenPartListExpected( std::ostream& os, int i, variant v )
+    void tgenPartListExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<part-list>)" );
                 tgenScorePartExpected( os, i+1, v );
@@ -102,25 +102,25 @@ namespace mxtest
                 streamLine( os, i, R"(</part-list>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<part-list>)" );
                 tgenPartGroupExpected( os, i+1, v );
                 os << std::endl;
-                tgenPartGroupExpected( os, i+1, variant::three );
+                tgenPartGroupExpected(os, i+1, TestMode::three );
                 os << std::endl;
                 tgenScorePartExpected( os, i+1, v );
                 os << std::endl;
                 tgenPartGroupOrScorePartExpected( os, i+1, v );
                 os << std::endl;
-                tgenPartGroupOrScorePartExpected( os, i+1, variant::one );
+                tgenPartGroupOrScorePartExpected(os, i+1, TestMode::one );
                 os << std::endl;
-                tgenPartGroupOrScorePartExpected( os, i+1, variant::three );
+                tgenPartGroupOrScorePartExpected(os, i+1, TestMode::three );
                 os << std::endl;
                 streamLine( os, i, R"(</part-list>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<part-list>)" );
                 tgenScorePartExpected( os, i+1, v );

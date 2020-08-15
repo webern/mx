@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::EditorialVoiceGroupPtr tgenEditorialVoiceGroup( variant v );
-    void tgenEditorialVoiceGroupExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::EditorialVoiceGroupPtr tgenEditorialVoiceGroup( TestMode v );
+    void tgenEditorialVoiceGroupExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

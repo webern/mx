@@ -12,8 +12,8 @@
 
 namespace mxtest
 {
-    mx::core::StickPtr tgenStick( variant v );
-    void tgenStickExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::StickPtr tgenStick( TestMode v );
+    void tgenStickExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

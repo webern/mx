@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::MiscellaneousPtr tgenMiscellaneous( variant v );
-    void tgenMiscellaneousExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::MiscellaneousPtr tgenMiscellaneous( TestMode v );
+    void tgenMiscellaneousExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

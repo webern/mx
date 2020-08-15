@@ -17,7 +17,7 @@ using namespace mxtest;
 
 TEST( Test01, Harmony )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	HarmonyPtr object = tgenHarmony( v );
 	stringstream expected;
 	tgenHarmonyExpected( expected, 1, v );
@@ -30,7 +30,7 @@ TEST( Test01, Harmony )
 }
 TEST( Test02, Harmony )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	HarmonyPtr object = tgenHarmony( v );
 	stringstream expected;
 	tgenHarmonyExpected( expected, 1, v );
@@ -43,7 +43,7 @@ TEST( Test02, Harmony )
 }
 TEST( Test03, Harmony )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	HarmonyPtr object = tgenHarmony( v );
 	stringstream expected;
 	tgenHarmonyExpected( expected, 1, v );
@@ -57,38 +57,38 @@ TEST( Test03, Harmony )
 
 namespace mxtest
 {
-    HarmonyPtr tgenHarmony( variant v )
+    HarmonyPtr tgenHarmony( TestMode v )
     {
         HarmonyPtr o = makeHarmony();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
-                o->addHarmonyChordGroup( tgenHarmonyChordGroup( variant::one ) );
+                o->addHarmonyChordGroup( tgenHarmonyChordGroup( TestMode::one ) );
                 o->removeHarmonyChordGroup( o->getHarmonyChordGroupSet().cbegin() );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getAttributes()->hasPlacement = true;
                 o->getAttributes()->placement = AboveBelow::below;
-                o->addHarmonyChordGroup( tgenHarmonyChordGroup( variant::one ) );
+                o->addHarmonyChordGroup( tgenHarmonyChordGroup( TestMode::one ) );
                 o->removeHarmonyChordGroup( o->getHarmonyChordGroupSet().cbegin() );
-                o->addHarmonyChordGroup( tgenHarmonyChordGroup( variant::two ) );
+                o->addHarmonyChordGroup( tgenHarmonyChordGroup( TestMode::two ) );
                 o->setHasFrame( true );
                 o->getFrame()->getFrameStrings()->setValue( PositiveInteger( 3 ) );
                 o->setHasStaff( true );
                 o->getStaff()->setValue( PositiveInteger( 2 ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getAttributes()->hasDefaultX = true;
                 o->getAttributes()->defaultX = TenthsValue( 5 );
-                o->addHarmonyChordGroup( tgenHarmonyChordGroup( variant::one ) );
+                o->addHarmonyChordGroup( tgenHarmonyChordGroup( TestMode::one ) );
                 o->removeHarmonyChordGroup( o->getHarmonyChordGroupSet().cbegin() );
-                o->addHarmonyChordGroup( tgenHarmonyChordGroup( variant::two ) );
-                o->addHarmonyChordGroup( tgenHarmonyChordGroup( variant::three ) );
+                o->addHarmonyChordGroup( tgenHarmonyChordGroup( TestMode::two ) );
+                o->addHarmonyChordGroup( tgenHarmonyChordGroup( TestMode::three ) );
                 o->setHasOffset( true );
                 o->getOffset()->setValue( DivisionsValue( 1.1 ) );
                 o->setEditorialGroup( tgenEditorialGroup( v ) );
@@ -99,25 +99,25 @@ namespace mxtest
         }
         return o;
     }
-    void tgenHarmonyExpected( std::ostream& os, int i, variant v )
+    void tgenHarmonyExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<harmony>)" );
-                tgenHarmonyChordGroupExpected( os, i+1, variant::one );
+                tgenHarmonyChordGroupExpected(os, i+1, TestMode::one );
                 os << std::endl;
                 streamLine( os, i, R"(</harmony>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<harmony placement="below">)" );
-                tgenHarmonyChordGroupExpected( os, i+1, variant::one );
+                tgenHarmonyChordGroupExpected(os, i+1, TestMode::one );
                 os << std::endl;
-                tgenHarmonyChordGroupExpected( os, i+1, variant::two );
+                tgenHarmonyChordGroupExpected(os, i+1, TestMode::two );
                 os << std::endl;
                 streamLine( os, i+1, R"(<frame>)" );
                 streamLine( os, i+2, R"(<frame-strings>3</frame-strings>)" );
@@ -131,17 +131,17 @@ namespace mxtest
                 streamLine( os, i, R"(</harmony>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<harmony default-x="5">)" );
-                tgenHarmonyChordGroupExpected( os, i+1, variant::one );
+                tgenHarmonyChordGroupExpected(os, i+1, TestMode::one );
                 os << std::endl;
-                tgenHarmonyChordGroupExpected( os, i+1, variant::two );
+                tgenHarmonyChordGroupExpected(os, i+1, TestMode::two );
                 os << std::endl;
-                tgenHarmonyChordGroupExpected( os, i+1, variant::three );
+                tgenHarmonyChordGroupExpected(os, i+1, TestMode::three );
                 os << std::endl;
                 streamLine( os, i+1, R"(<offset>1.1</offset>)" );
-                tgenEditorialGroupExpected( os, i+1, variant::three );
+                tgenEditorialGroupExpected(os, i+1, TestMode::three );
                 os << std::endl;
                 streamLine( os, i, R"(</harmony>)", false );
             }

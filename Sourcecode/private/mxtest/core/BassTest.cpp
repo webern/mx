@@ -17,7 +17,7 @@ using namespace mxtest;
 
 TEST( Test01, Bass )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	BassPtr object = tgenBass( v );
 	stringstream expected;
 	tgenBassExpected( expected, 1, v );
@@ -30,7 +30,7 @@ TEST( Test01, Bass )
 }
 TEST( Test02, Bass )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	BassPtr object = tgenBass( v );
 	stringstream expected;
 	tgenBassExpected( expected, 1, v );
@@ -43,7 +43,7 @@ TEST( Test02, Bass )
 }
 TEST( Test03, Bass )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	BassPtr object = tgenBass( v );
 	stringstream expected;
 	tgenBassExpected( expected, 1, v );
@@ -57,24 +57,24 @@ TEST( Test03, Bass )
 
 namespace mxtest
 {
-    BassPtr tgenBass( variant v )
+    BassPtr tgenBass( TestMode v )
     {
         BassPtr o = makeBass();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setHasBassAlter( true );
                 o->getBassAlter()->setValue( Semitones( -2 ) );
                 o->getBassStep()->setValue( StepEnum::f );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setHasBassAlter( true );
                 o->getBassAlter()->setValue( Semitones( 1.1 ) );
@@ -86,19 +86,19 @@ namespace mxtest
         }
         return o;
     }
-    void tgenBassExpected( std::ostream& os, int i, variant v )
+    void tgenBassExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<bass>)" );
                 streamLine( os, i+1, R"(<bass-step>A</bass-step>)" );
                 streamLine( os, i, R"(</bass>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<bass>)" );
                 streamLine( os, i+1, R"(<bass-step>F</bass-step>)" );
@@ -106,7 +106,7 @@ namespace mxtest
                 streamLine( os, i, R"(</bass>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<bass>)" );
                 streamLine( os, i+1, R"(<bass-step>C</bass-step>)" );

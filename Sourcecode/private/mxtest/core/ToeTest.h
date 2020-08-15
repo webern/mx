@@ -12,8 +12,8 @@
 
 namespace mxtest
 {
-    mx::core::ToePtr tgenToe( variant v );
-    void tgenToeExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::ToePtr tgenToe( TestMode v );
+    void tgenToeExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

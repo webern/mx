@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::ScoreHeaderGroupPtr tgenScoreHeaderGroup( variant v );
-    void tgenScoreHeaderGroupExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::ScoreHeaderGroupPtr tgenScoreHeaderGroup( TestMode v );
+    void tgenScoreHeaderGroupExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

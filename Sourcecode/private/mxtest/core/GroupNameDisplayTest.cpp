@@ -15,7 +15,7 @@ using namespace mxtest;
 
 TEST( Test01, GroupNameDisplay )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	GroupNameDisplayPtr object = tgenGroupNameDisplay( v );
 	stringstream expected;
 	tgenGroupNameDisplayExpected( expected, 1, v );
@@ -28,7 +28,7 @@ TEST( Test01, GroupNameDisplay )
 }
 TEST( Test02, GroupNameDisplay )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	GroupNameDisplayPtr object = tgenGroupNameDisplay( v );
 	stringstream expected;
 	tgenGroupNameDisplayExpected( expected, 1, v );
@@ -41,7 +41,7 @@ TEST( Test02, GroupNameDisplay )
 }
 TEST( Test03, GroupNameDisplay )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	GroupNameDisplayPtr object = tgenGroupNameDisplay( v );
 	stringstream expected;
 	tgenGroupNameDisplayExpected( expected, 1, v );
@@ -55,17 +55,17 @@ TEST( Test03, GroupNameDisplay )
 
 namespace mxtest
 {
-    GroupNameDisplayPtr tgenGroupNameDisplay( variant v )
+    GroupNameDisplayPtr tgenGroupNameDisplay( TestMode v )
     {
         GroupNameDisplayPtr o = makeGroupNameDisplay();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 auto ch = makeDisplayTextOrAccidentalText();
                 ch->setChoice( DisplayTextOrAccidentalText::Choice::accidentalText );
@@ -75,7 +75,7 @@ namespace mxtest
                 o->getAttributes()->printObject = YesNo::no;
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 auto ch = makeDisplayTextOrAccidentalText();
                 ch->setChoice( DisplayTextOrAccidentalText::Choice::displayText );
@@ -90,24 +90,24 @@ namespace mxtest
         }
         return o;
     }
-    void tgenGroupNameDisplayExpected( std::ostream& os, int i, variant v )
+    void tgenGroupNameDisplayExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<group-name-display/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<group-name-display print-object="no">)" );
                 streamLine( os, i+1, R"(<accidental-text>double-sharp</accidental-text>)" );
                 streamLine( os, i, R"(</group-name-display>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<group-name-display>)" );
                 streamLine( os, i+1, R"(<display-text xml:space="preserve">My Display String!</display-text>)" );

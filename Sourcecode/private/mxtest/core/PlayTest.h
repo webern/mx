@@ -11,8 +11,8 @@
 
 namespace mxtest
 {
-    mx::core::PlayPtr tgenPlay( variant v );
-    void tgenPlayExpected( std::ostream& os, int indentLevel, variant v );
+    mx::core::PlayPtr tgenPlay( TestMode v );
+    void tgenPlayExpected(std::ostream& os, int indentLevel, TestMode v );
 }
 
 #endif

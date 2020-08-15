@@ -16,7 +16,7 @@ using namespace mxtest;
 
 TEST( Test01, Barline )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	BarlinePtr object = tgenBarline( v );
 	stringstream expected;
 	tgenBarlineExpected( expected, 1, v );
@@ -29,7 +29,7 @@ TEST( Test01, Barline )
 }
 TEST( Test02, Barline )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	BarlinePtr object = tgenBarline( v );
 	stringstream expected;
 	tgenBarlineExpected( expected, 1, v );
@@ -42,7 +42,7 @@ TEST( Test02, Barline )
 }
 TEST( Test03, Barline )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	BarlinePtr object = tgenBarline( v );
 	stringstream expected;
 	tgenBarlineExpected( expected, 1, v );
@@ -56,17 +56,17 @@ TEST( Test03, Barline )
 
 namespace mxtest
 {
-    BarlinePtr tgenBarline( variant v )
+    BarlinePtr tgenBarline( TestMode v )
     {
         BarlinePtr o = makeBarline();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setEditorialGroup( tgenEditorialGroup( v ) );
                 o->setHasCoda( true );
@@ -78,7 +78,7 @@ namespace mxtest
                 
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getAttributes()->hasLocation = true;
                 o->setHasWavyLine( true );
@@ -89,17 +89,17 @@ namespace mxtest
         }
         return o;
     }
-    void tgenBarlineExpected( std::ostream& os, int i, variant v )
+    void tgenBarlineExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<barline/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<barline coda="Loda">)" );
                 tgenEditorialGroupExpected( os, i+1, v );
@@ -109,7 +109,7 @@ namespace mxtest
                 streamLine( os, i, R"(</barline>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<barline location="right">)" );
                 streamLine( os, i+1, R"(<wavy-line type="start"/>)" );

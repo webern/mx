@@ -17,7 +17,7 @@ using namespace mxtest;
 
 TEST( Test01, ScoreInstrument )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	ScoreInstrumentPtr object = tgenScoreInstrument( v );
 	stringstream expected;
 	tgenScoreInstrumentExpected( expected, 1, v );
@@ -30,7 +30,7 @@ TEST( Test01, ScoreInstrument )
 }
 TEST( Test02, ScoreInstrument )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	ScoreInstrumentPtr object = tgenScoreInstrument( v );
 	stringstream expected;
 	tgenScoreInstrumentExpected( expected, 1, v );
@@ -43,7 +43,7 @@ TEST( Test02, ScoreInstrument )
 }
 TEST( Test03, ScoreInstrument )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	ScoreInstrumentPtr object = tgenScoreInstrument( v );
 	stringstream expected;
 	tgenScoreInstrumentExpected( expected, 1, v );
@@ -57,17 +57,17 @@ TEST( Test03, ScoreInstrument )
 
 namespace mxtest
 {
-    ScoreInstrumentPtr tgenScoreInstrument( variant v )
+    ScoreInstrumentPtr tgenScoreInstrument( TestMode v )
     {
         ScoreInstrumentPtr o = makeScoreInstrument();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getInstrumentName()->setValue( XsString( "Bassoon" ) );
                 o->setHasInstrumentAbbreviation( true );
@@ -79,7 +79,7 @@ namespace mxtest
                 
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getInstrumentName()->setValue( XsString( "Trumpet" ) );
                 o->setHasInstrumentAbbreviation( true );
@@ -98,19 +98,19 @@ namespace mxtest
         }
         return o;
     }
-    void tgenScoreInstrumentExpected( std::ostream& os, int i, variant v )
+    void tgenScoreInstrumentExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<score-instrument id="ID">)" );
                 streamLine( os, i+1, R"(<instrument-name></instrument-name>)" );
                 streamLine( os, i, R"(</score-instrument>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<score-instrument id="Instrument01">)" );
                 streamLine( os, i+1, R"(<instrument-name>Bassoon</instrument-name>)" );
@@ -121,7 +121,7 @@ namespace mxtest
                 streamLine( os, i, R"(</score-instrument>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<score-instrument id="Instrument02">)" );
                 streamLine( os, i+1, R"(<instrument-name>Trumpet</instrument-name>)" );

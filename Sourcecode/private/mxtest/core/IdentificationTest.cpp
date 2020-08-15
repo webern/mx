@@ -17,7 +17,7 @@ using namespace mxtest;
 
 TEST( Test01, Identification )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	IdentificationPtr object = tgenIdentification( v );
 	stringstream expected;
 	tgenIdentificationExpected( expected, 1, v );
@@ -30,7 +30,7 @@ TEST( Test01, Identification )
 }
 TEST( Test02, Identification )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	IdentificationPtr object = tgenIdentification( v );
 	stringstream expected;
 	tgenIdentificationExpected( expected, 1, v );
@@ -43,7 +43,7 @@ TEST( Test02, Identification )
 }
 TEST( Test03, Identification )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	IdentificationPtr object = tgenIdentification( v );
 	stringstream expected;
 	tgenIdentificationExpected( expected, 1, v );
@@ -57,17 +57,17 @@ TEST( Test03, Identification )
 
 namespace mxtest
 {
-    IdentificationPtr tgenIdentification( variant v )
+    IdentificationPtr tgenIdentification( TestMode v )
     {
         IdentificationPtr o = makeIdentification();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 auto creator1 = makeCreator( XsString( "Matthew James Briggs" ) );
                 creator1->getAttributes()->hasType = true;
@@ -89,7 +89,7 @@ namespace mxtest
                 o->getSource()->setValue( XsString( "My Brain" ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 auto creator1 = makeCreator( XsString( "world" ) );
                 creator1->getAttributes()->hasType = true;
@@ -120,17 +120,17 @@ namespace mxtest
         }
         return o;
     }
-    void tgenIdentificationExpected( std::ostream& os, int i, variant v )
+    void tgenIdentificationExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<identification/>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<identification>)" );
                 streamLine( os, i+1, R"(<creator type="composer">Matthew James Briggs</creator>)" );
@@ -144,7 +144,7 @@ namespace mxtest
                 streamLine( os, i, R"(</identification>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<identification>)" );
                 streamLine( os, i+1, R"(<creator type="hello">world</creator>)" );

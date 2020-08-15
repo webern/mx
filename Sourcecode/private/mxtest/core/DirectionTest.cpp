@@ -18,7 +18,7 @@ using namespace mxtest;
 
 TEST( Test01, Direction )
 {
-    variant v = variant::one;
+    TestMode v = TestMode::one;
 	DirectionPtr object = tgenDirection( v );
 	stringstream expected;
 	tgenDirectionExpected( expected, 1, v );
@@ -31,7 +31,7 @@ TEST( Test01, Direction )
 }
 TEST( Test02, Direction )
 {
-    variant v = variant::two;
+    TestMode v = TestMode::two;
 	DirectionPtr object = tgenDirection( v );
 	stringstream expected;
 	tgenDirectionExpected( expected, 1, v );
@@ -44,7 +44,7 @@ TEST( Test02, Direction )
 }
 TEST( Test03, Direction )
 {
-    variant v = variant::three;
+    TestMode v = TestMode::three;
 	DirectionPtr object = tgenDirection( v );
 	stringstream expected;
 	tgenDirectionExpected( expected, 1, v );
@@ -58,17 +58,17 @@ TEST( Test03, Direction )
 
 namespace mxtest
 {
-    DirectionPtr tgenDirection( variant v )
+    DirectionPtr tgenDirection( TestMode v )
     {
         DirectionPtr o = makeDirection();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->getAttributes()->hasDirective = true;
                 o->getAttributes()->directive = YesNo::yes;
@@ -82,7 +82,7 @@ namespace mxtest
                 o->setEditorialVoiceDirectionGroup( tgenEditorialVoiceDirectionGroup( v ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->getAttributes()->hasDirective = true;
                 o->getAttributes()->directive = YesNo::no;
@@ -106,16 +106,16 @@ namespace mxtest
         }
         return o;
     }
-    EditorialVoiceDirectionGroupPtr tgenEditorialVoiceDirectionGroup( variant v )
+    EditorialVoiceDirectionGroupPtr tgenEditorialVoiceDirectionGroup( TestMode v )
     {
         EditorialVoiceDirectionGroupPtr o = makeEditorialVoiceDirectionGroup();
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 o->setHasLevel( true );
                 o->getLevel()->setValue( XsString( "LevelTwo" ) );
@@ -125,7 +125,7 @@ namespace mxtest
                 o->getVoice()->setValue( XsString( "123" ) );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 o->setHasFootnote( true );
                 o->getFootnote()->setValue( XsString( "FootNoteThree" ) );
@@ -138,12 +138,12 @@ namespace mxtest
         }
         return o;
     }
-    void tgenDirectionExpected( std::ostream& os, int i, variant v )
+    void tgenDirectionExpected(std::ostream& os, int i, TestMode v )
     {
         
         switch ( v )
         {
-            case variant::one:
+            case TestMode::one:
             {
                 streamLine( os, i, R"(<direction>)" );
                 streamLine( os, i+1, R"(<direction-type>)" );
@@ -152,7 +152,7 @@ namespace mxtest
                 streamLine( os, i, R"(</direction>)", false );
             }
                 break;
-            case variant::two:
+            case TestMode::two:
             {
                 streamLine( os, i, R"(<direction directive="yes">)" );
                 tgenDirectionTypeExpected( os, i+1, v );
@@ -166,7 +166,7 @@ namespace mxtest
                 streamLine( os, i, R"(</direction>)", false );
             }
                 break;
-            case variant::three:
+            case TestMode::three:
             {
                 streamLine( os, i, R"(<direction placement="below" directive="no">)" );
                 tgenDirectionTypeExpected( os, i+1, v );
