@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include "mx/core/Decimals.h"
+#include <memory>
 
 namespace mx
 {
