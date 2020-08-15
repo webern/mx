@@ -2,7 +2,6 @@ use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::constants::{ANNOTATION, MEMBER_TYPES, NAME, UNION};
 use crate::xsd::id::{Id, Lineage, RootNodeType};
-use crate::xsd::primitives::BaseType::Primitive;
 use crate::xsd::primitives::{BaseType, PrefixedParse};
 use crate::xsd::Xsd;
 
@@ -74,9 +73,6 @@ fn parse() {
     assert_eq!(got_id, want_id);
     // let got_type = union.id.entry_type;
     // assert_eq!(got_type, RootNodeType::Other(UNION.to_owned()));
-    let want_members = vec![
-        BaseType::Primitive(Primitive::Decimal),
-        "css-font-size".to_owned(),
-    ];
+    let want_members = vec![BaseType::Decimal, "css-font-size".to_owned()];
     assert_eq!(union.members, want_members);
 }

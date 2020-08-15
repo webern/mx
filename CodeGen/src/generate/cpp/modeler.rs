@@ -295,9 +295,7 @@ impl MxModeler {
         };
 
         /// TODO - allow all base types?
-        if ref_.type_ == BaseType::Primitive(Primitive::Character(Character::String))
-            || ref_.type_ == BaseType::Primitive(Primitive::Character(Character::Token))
-        {
+        if ref_.type_.is_string() || ref_.type_.is_token() {
             Ok(Some((ref_.name.as_str(), &ref_.type_)))
         } else {
             Ok(None)

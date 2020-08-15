@@ -16,18 +16,10 @@ pub(super) fn model_scalar_string(st: &SimpleType, _xsd: &Xsd) -> Option<CreateR
             if r.facets.is_empty() {
                 return None;
             }
-            let base_type = if let BaseType::Primitive(p) = r.base {
-                p
-            } else {
-                // not a primitive type (such as string)
+            if !r.base.is_character() {
                 return None;
-            };
-            let base_type = if let Primitive::Character(c) = base_type {
-                c
-            } else {
-                // not a character (i.e. string) type
-                return None;
-            };
+            }
+            let base_type = r.base.as_character().unwrap();
             let mut scalar_string = match base_type {
                 Character::Language | Character::Name | Character::NormalizedString => {
                     return some_create_err!("'{}' is not supported", base_type);
@@ -66,18 +58,10 @@ pub(super) fn model_scalar_string(st: &SimpleType, _xsd: &Xsd) -> Option<CreateR
 pub(super) fn model_scalar_number(st: &SimpleType, _xsd: &Xsd) -> Option<CreateResult> {
     match &st.payload {
         Payload::Restriction(r) => {
-            let base_type = if let BaseType::Primitive(p) = r.base {
-                p
-            } else {
-                // not a primitive type (such as int or float)
+            if !r.base.is_numeric() {
                 return None;
-            };
-            let base_type = if let Primitive::Numeric(n) = base_type {
-                n
-            } else {
-                // not a numeric type
-                return None;
-            };
+            }
+            let base_type = r.base.as_numeric().unwrap();
             return Some(produce_the_scalar_numeric(base_type, r, st, _xsd));
         }
         _ => return None,

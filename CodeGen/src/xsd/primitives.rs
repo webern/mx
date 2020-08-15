@@ -240,9 +240,10 @@ impl BaseType {
         self.primitive() == Primitive::Character
     }
 
-    pub fn is_datetime(&self) -> bool {
+    pub fn is_datetime_datetime(&self) -> bool {
         self.primitive() == Primitive::DateTime
     }
+
     pub fn is_custom(&self) -> bool {
         self.primitive() == Primitive::None
     }
@@ -662,29 +663,29 @@ fn numeric_parse_bad_value() {
     assert!(result.is_err());
 }
 
-// #[test]
-// fn parse_primitive_xs_datetime() {
-//     let input = "xs:dateTime";
-//     let got = Primitive::parse_prefixed(input, "xs").unwrap();
-//     let want = Primitive::DateTime(DateTime::DateTime);
-//     assert_eq!(got, want);
-// }
-//
-// #[test]
-// fn parse_primitive_xs_string() {
-//     let input = "xs:string";
-//     let got = Primitive::parse_prefixed(input, "xs").unwrap();
-//     let want = Primitive::Character(Character::String);
-//     assert_eq!(got, want);
-// }
-//
-// #[test]
-// fn parse_primitive_xs_byte() {
-//     let input = "floop:byte";
-//     let got = Primitive::parse_prefixed(input, "floop").unwrap();
-//     let want = Primitive::Numeric(Numeric::Byte);
-//     assert_eq!(got, want);
-// }
+#[test]
+fn parse_primitive_xs_datetime() {
+    let input = "xs:dateTime";
+    let got = BaseType::parse_prefixed(input, "xs").unwrap();
+    let want = BaseType::DateTime;
+    assert_eq!(got, want);
+}
+
+#[test]
+fn parse_primitive_xs_string() {
+    let input = "xs:string";
+    let got = BaseType::parse_prefixed(input, "xs").unwrap();
+    let want = BaseType::String;
+    assert_eq!(got, want);
+}
+
+#[test]
+fn parse_primitive_xs_byte() {
+    let input = "floop:byte";
+    let got = BaseType::parse_prefixed(input, "floop").unwrap();
+    let want = BaseType::Byte;
+    assert_eq!(got, want);
+}
 
 #[test]
 fn parse_base_type() {
