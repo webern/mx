@@ -1,7 +1,7 @@
 use crate::model::create::{CreateError, CreateResult};
 use crate::model::enumeration::Enumeration;
 use crate::model::symbol::Symbol;
-use crate::model::Model;
+use crate::model::Def;
 use crate::xsd::restriction::Facet;
 use crate::xsd::simple_type::{Payload, SimpleType};
 use crate::xsd::{simple_type, Xsd};
@@ -45,5 +45,5 @@ pub(super) fn model_enumeration(st: &SimpleType, xsd: &Xsd) -> CreateResult {
         documentation: st.documentation(),
         other_field: None,
     };
-    Ok(Some(vec![Model::Enumeration(enm)]))
+    Ok(Some(vec![Def::Enumeration(enm)]))
 }

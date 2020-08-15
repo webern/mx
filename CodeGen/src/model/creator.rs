@@ -2,7 +2,7 @@ use crate::error::Result;
 use crate::model::create::{Create, CreateError};
 use crate::model::post_process::PostProcess;
 use crate::model::transform::Transform;
-use crate::model::{DefaultCreate, Model};
+use crate::model::{DefaultCreate, Def};
 use crate::xsd::{Entry, Xsd};
 use std::borrow::Cow;
 use std::fmt::{Debug, Formatter};
@@ -70,8 +70,8 @@ impl Debug for Creator {
 }
 
 impl Creator {
-    pub fn create(&self, xsd: &Xsd) -> Result<Vec<Model>> {
-        let mut models: Vec<Model> = Vec::new();
+    pub fn create(&self, xsd: &Xsd) -> Result<Vec<Def>> {
+        let mut models: Vec<Def> = Vec::new();
         for mut entry in xsd.entries() {
             let mut entry = entry.clone();
             if let Some(transforms) = &self.transforms {

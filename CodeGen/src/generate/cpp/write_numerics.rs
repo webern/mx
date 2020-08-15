@@ -8,7 +8,7 @@ use crate::generate::template::{
 use crate::model::scalar::{Bound, NumericData, Range};
 use crate::model::scalar::{ScalarNumeric, ScalarString};
 use crate::model::symbol::Symbol;
-use crate::model::Model;
+use crate::model::Def;
 use crate::utils::string_stuff::{documentation, sep, write_documentation};
 use crate::xsd::primitives::BaseType;
 use crate::xsd::primitives::Numeric;

@@ -4,16 +4,16 @@ use crate::generate::cpp::write_custom::{
 };
 use crate::generate::paths::Paths;
 use crate::model::scalar::ScalarNumeric;
-use crate::model::Model;
+use crate::model::Def;
 
 #[derive(Debug, Clone)]
 pub struct Writer {
-    pub models: Vec<Model>,
+    pub models: Vec<Def>,
     pub paths: Paths,
 }
 
 impl Writer {
-    pub fn new(models: Vec<Model>) -> Self {
+    pub fn new(models: Vec<Def>) -> Self {
         Self {
             models,
             paths: Paths::default(),
@@ -27,8 +27,8 @@ impl Writer {
         let mut unions = Vec::new();
         for model in &self.models {
             match model {
-                Model::Enumeration(e) => enums.push(e),
-                Model::ScalarString(s) => {
+                Def::Enumeration(e) => enums.push(e),
+                Def::ScalarString(s) => {
                     // We handle all of the scalar strings that we know of in musicxml.xsd with
                     // custom implementations, thus there is currently no 'generic' implementation.
                     return raise!(
@@ -36,24 +36,24 @@ impl Writer {
                         s.name.original()
                     );
                 }
-                Model::CustomScalarString(cs) => match cs.name.original() {
+                Def::CustomScalarString(cs) => match cs.name.original() {
                     "color" => write_color(cs, &self.paths)?,
                     "comma-separated-text" => write_comma_separated_text(cs, &self.paths)?,
                     "time-only" => write_time_only(cs, &self.paths)?,
                     "ending-number" => write_ending_number(cs, &self.paths)?,
                     unhandled => return raise!("Unhandled CustomScalarString '{}'", unhandled),
                 },
-                Model::ScalarNumber(sn) => match sn {
+                Def::ScalarNumber(sn) => match sn {
                     ScalarNumeric::Decimal(d) => decimals.push(d.to_owned()),
                     ScalarNumeric::Integer(i) => integers.push(i.to_owned()),
                 },
-                Model::DerivedSimpleType(derived_from) => {
+                Def::DerivedSimpleType(derived_from) => {
                     return raise!(
                         "DerivedSimpleTypes not implemented: '{}'",
                         derived_from.name.original()
                     )
                 }
-                Model::UnionSimpleType(u) => unions.push(u),
+                Def::UnionSimpleType(u) => unions.push(u),
             }
         }
         self.write_enums(&mut enums)?;

@@ -10,8 +10,8 @@ use crate::model::post_process::PostProcess;
 use crate::model::scalar::{Bound, NumericData, Range, ScalarNumeric};
 use crate::model::symbol::Symbol;
 use crate::model::transform::Transform;
-use crate::model::Model::Enumeration;
-use crate::model::{DefaultCreate, Model};
+use crate::model::Def::Enumeration;
+use crate::model::{DefaultCreate, Def};
 use crate::xsd::choice::{Choice, ChoiceItem};
 use crate::xsd::complex_type::{Children, ComplexType, Parent};
 use crate::xsd::element::{ElementDef, ElementRef};
@@ -75,8 +75,8 @@ impl PostProcess for MxModeler {
         "mx-cpp"
     }
 
-    fn process(&self, model: &Model, xsd: &Xsd) -> Result<Model, CreateError> {
-        if let Model::Enumeration(enumer) = model {
+    fn process(&self, model: &Def, xsd: &Xsd) -> Result<Def, CreateError> {
+        if let Def::Enumeration(enumer) = model {
             let mut cloned = enumer.clone();
             for member in &mut cloned.members {
                 // add an underscore as a suffix to camel case representations that would otherwise
@@ -95,27 +95,27 @@ impl PostProcess for MxModeler {
                     member.replace("emptystring");
                 }
             }
-            return Ok(Model::Enumeration(cloned));
-        } else if let Model::ScalarString(scalar_string) = model {
+            return Ok(Def::Enumeration(cloned));
+        } else if let Def::ScalarString(scalar_string) = model {
             if self
                 .custom_scalar_strings
                 .contains(scalar_string.name.original())
             {
-                return Ok(Model::CustomScalarString(scalar_string.clone()));
+                return Ok(Def::CustomScalarString(scalar_string.clone()));
             } else if let Some(new_name) =
                 self.suffixed_value_names.get(scalar_string.name.original())
             {
                 let mut st = scalar_string.clone();
                 st.name.replace(&new_name);
-                return Ok(Model::ScalarString(st));
+                return Ok(Def::ScalarString(st));
             }
-        } else if let Model::ScalarNumber(scalar_number) = model {
+        } else if let Def::ScalarNumber(scalar_number) = model {
             match scalar_number {
                 ScalarNumeric::Decimal(n) => {
                     if let Some(new_name) = self.suffixed_value_names.get(n.name.original()) {
                         let mut n = n.clone();
                         n.name.replace(&new_name);
-                        return Ok(Model::ScalarNumber(ScalarNumeric::Decimal(n)));
+                        return Ok(Def::ScalarNumber(ScalarNumeric::Decimal(n)));
                     }
                 }
                 ScalarNumeric::Integer(n) => {
@@ -141,11 +141,11 @@ impl PostProcess for MxModeler {
                         is_changed = true;
                         let mut mut_num = n.clone();
                         mut_num.name.replace(&new_name);
-                        return Ok(Model::ScalarNumber(ScalarNumeric::Integer(mut_num)));
+                        return Ok(Def::ScalarNumber(ScalarNumeric::Integer(mut_num)));
                     }
                 }
             }
-        } else if let Model::DerivedSimpleType(derived) = model {
+        } else if let Def::DerivedSimpleType(derived) = model {
             match derived.name.original() {
                 "positive-divisions" => {
                     let replacement = NumericData {
@@ -157,7 +157,7 @@ impl PostProcess for MxModeler {
                             max: None,
                         },
                     };
-                    return Ok(Model::ScalarNumber(ScalarNumeric::Decimal(replacement)));
+                    return Ok(Def::ScalarNumber(ScalarNumeric::Decimal(replacement)));
                 }
                 unhandled => {
                     return Err(CreateError {
@@ -211,7 +211,7 @@ impl MxModeler {
             }
         }
         // TODO - also create the 'wrapping' element named 'dynamics'
-        Ok(Some(vec![Model::Enumeration(enumer)]))
+        Ok(Some(vec![Def::Enumeration(enumer)]))
     }
 
     fn unwrap_dynamics<'a>(
@@ -345,5 +345,5 @@ fn create_pseudo_enum(entry: &Entry, spec: &PseudoEnumSpec) -> CreateResult {
     for s in &spec.members {
         enumer.members.push(Symbol::new(s.as_str()));
     }
-    Ok(Some(vec![Model::Enumeration(enumer)]))
+    Ok(Some(vec![Def::Enumeration(enumer)]))
 }

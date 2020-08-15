@@ -1,4 +1,4 @@
-use crate::model::Model;
+use crate::model::Def;
 use crate::xsd::{Entry, Xsd};
 use std::fmt::{Display, Formatter};
 
@@ -36,7 +36,7 @@ pub trait Create {
     fn create(&self, entry: &Entry, xsd: &Xsd) -> CreateResult;
 }
 
-pub type CreateResult = std::result::Result<Option<Vec<Model>>, CreateError>;
+pub type CreateResult = std::result::Result<Option<Vec<Def>>, CreateError>;
 
 #[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd)]
 pub struct CreateError {

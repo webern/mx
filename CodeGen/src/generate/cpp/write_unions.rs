@@ -5,7 +5,7 @@ use crate::generate::template::{render, CORE_H, DECIMAL_BUILTINS_CPP, DECIMAL_BU
 use crate::model::scalar::{Bound, NumericData, Range, UnionData};
 use crate::model::scalar::{ScalarNumeric, ScalarString};
 use crate::model::symbol::Symbol;
-use crate::model::Model;
+use crate::model::Def;
 use crate::utils::string_stuff::{documentation, sep, write_documentation};
 use crate::xsd::primitives::Numeric;
 use crate::xsd::primitives::Primitive;

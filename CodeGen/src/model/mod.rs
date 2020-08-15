@@ -22,7 +22,7 @@ use std::borrow::Borrow;
 use std::ops::Deref;
 
 #[derive(Debug, Clone, PartialEq, PartialOrd)]
-pub enum Model {
+pub enum Def {
     Enumeration(Enumeration),
     ScalarString(ScalarString),
     ScalarNumber(ScalarNumeric),

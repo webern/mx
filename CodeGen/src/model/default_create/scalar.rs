@@ -4,7 +4,7 @@ use crate::model::scalar::{
     Bound, DerivedSimpleTypeData, NumericData, Range, ScalarNumeric, ScalarString, UnionData,
 };
 use crate::model::symbol::Symbol;
-use crate::model::Model;
+use crate::model::Def;
 use crate::xsd::primitives::{BaseType, Character, Numeric, Primitive};
 use crate::xsd::restriction::{Facet, Number, Restriction};
 use crate::xsd::simple_type::{Payload, SimpleType};
@@ -49,7 +49,7 @@ pub(super) fn model_scalar_string(st: &SimpleType, _xsd: &Xsd) -> Option<CreateR
                     Facet::Pattern(p) => scalar_string.pattern = Some(p.clone()),
                 }
             }
-            return Some(Ok(Some(vec![Model::ScalarString(scalar_string)])));
+            return Some(Ok(Some(vec![Def::ScalarString(scalar_string)])));
         }
         _ => return None,
     }
@@ -77,7 +77,7 @@ pub(super) fn model_derived_simple_type(st: &SimpleType, _xsd: &Xsd) -> Option<C
                 // not a derived type
                 return None;
             };
-            return Some(Ok(Some(vec![Model::DerivedSimpleType(
+            return Some(Ok(Some(vec![Def::DerivedSimpleType(
                 DerivedSimpleTypeData {
                     name: Symbol::new(&st.name),
                     base_type: base_type.into(),
@@ -86,7 +86,7 @@ pub(super) fn model_derived_simple_type(st: &SimpleType, _xsd: &Xsd) -> Option<C
             )])));
         }
         Payload::Union(u) => {
-            return Some(Ok(Some(vec![Model::UnionSimpleType(UnionData {
+            return Some(Ok(Some(vec![Def::UnionSimpleType(UnionData {
                 name: Symbol::new(&st.name),
                 members: u.members.clone(),
                 documentation: u.documentation(),
@@ -158,7 +158,7 @@ fn produce_the_scalar_numeric(
             range: parse_integer_range(Range::default(), &r.facets)?,
         }),
     };
-    Ok(Some(vec![Model::ScalarNumber(scalar_numeric)]))
+    Ok(Some(vec![Def::ScalarNumber(scalar_numeric)]))
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

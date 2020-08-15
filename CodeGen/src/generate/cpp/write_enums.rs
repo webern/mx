@@ -3,7 +3,7 @@ use crate::generate::cpp::cpp_template::{render_core_cpp, render_core_h};
 use crate::generate::cpp::writer::Writer;
 use crate::generate::template::{render, ENUM_CPP, ENUM_H, ENUM_WRAPPER_CPP, ENUM_WRAPPER_H};
 use crate::model::enumeration::{Enumeration, OtherField};
-use crate::model::Model;
+use crate::model::Def;
 use crate::utils::string_stuff::{
     camel_case, documentation, linestart, pascal_case, sep, write_documentation, Altered, Symbol,
 };
