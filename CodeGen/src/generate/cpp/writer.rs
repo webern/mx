@@ -4,18 +4,18 @@ use crate::generate::cpp::write_custom::{
 };
 use crate::generate::paths::Paths;
 use crate::model::scalar::ScalarNumeric;
-use crate::model::Def;
+use crate::model::{Def, Model};
 
 #[derive(Debug, Clone)]
 pub struct Writer {
-    pub models: Vec<Def>,
+    pub model: Model,
     pub paths: Paths,
 }
 
 impl Writer {
-    pub fn new(models: Vec<Def>) -> Self {
+    pub fn new(model: Model) -> Self {
         Self {
-            models,
+            model,
             paths: Paths::default(),
         }
     }
@@ -25,7 +25,7 @@ impl Writer {
         let mut decimals = Vec::new();
         let mut integers = Vec::new();
         let mut unions = Vec::new();
-        for model in &self.models {
+        for model in self.model.defs() {
             match model {
                 Def::Enumeration(e) => enums.push(e),
                 Def::ScalarString(s) => {
