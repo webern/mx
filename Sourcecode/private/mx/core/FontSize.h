@@ -20,12 +20,7 @@ namespace mx
             explicit FontSize( const Decimal& value );
             explicit FontSize( const CssFontSize value );
             explicit FontSize( const std::string& value );
-            virtual ~FontSize();
-            FontSize( const FontSize& other );
-            FontSize( FontSize&& other );
-            FontSize& operator=( const FontSize& other );
-            FontSize& operator=( FontSize&& other );
-            
+
             bool getIsCssFontSize() const;
             bool getIsNumber() const;
             void setValue( const CssFontSize value );
