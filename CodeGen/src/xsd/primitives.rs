@@ -235,15 +235,15 @@ impl BaseType {
             BaseType::String => Primitive::Character,
             BaseType::Token => Primitive::Character,
             // Dates
-            BaseType::Date => Primitive::Character,
-            BaseType::DateTime => Primitive::Character,
-            BaseType::Duration => Primitive::Character,
-            BaseType::GDay => Primitive::Character,
-            BaseType::GMonth => Primitive::Character,
-            BaseType::GMonthDay => Primitive::Character,
-            BaseType::GYear => Primitive::Character,
-            BaseType::GYearMonth => Primitive::Character,
-            BaseType::Time => Primitive::Character,
+            BaseType::Date => Primitive::DateType,
+            BaseType::DateTime => Primitive::DateType,
+            BaseType::Duration => Primitive::DateType,
+            BaseType::GDay => Primitive::DateType,
+            BaseType::GMonth => Primitive::DateType,
+            BaseType::GMonthDay => Primitive::DateType,
+            BaseType::GYear => Primitive::DateType,
+            BaseType::GYearMonth => Primitive::DateType,
+            BaseType::Time => Primitive::DateType,
             // Custom
             BaseType::Custom(o) => Primitive::None,
         }
@@ -257,8 +257,8 @@ impl BaseType {
         self.primitive() == Primitive::Character
     }
 
-    pub fn is_datetime_primitive(&self) -> bool {
-        self.primitive() == Primitive::DateTime
+    pub fn is_datetype(&self) -> bool {
+        self.primitive() == Primitive::DateType
     }
 
     pub fn is_custom(&self) -> bool {
@@ -340,7 +340,7 @@ pub enum Primitive {
     None,
     Numeric,
     Character,
-    DateTime,
+    DateType,
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
