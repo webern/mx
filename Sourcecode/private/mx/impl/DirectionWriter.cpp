@@ -174,7 +174,7 @@ namespace mx
                 if( wedgeStart.isSpreadSpecified )
                 {
                     attr.hasSpread = true;
-                    attr.spread = core::DivisionsValue{ static_cast<core::DecimalType>( wedgeStart.spread ) };
+                    attr.spread = core::TenthsValue{ static_cast<core::DecimalType>( wedgeStart.spread ) };
                 }
                 
                 auto& attributes = *wedgePtr->getAttributes();
@@ -196,7 +196,7 @@ namespace mx
                 if( wedgeStop.isSpreadSpecified )
                 {
                     attr.hasSpread = true;
-                    attr.spread = core::DivisionsValue{ static_cast<core::DecimalType>( wedgeStop.spread ) };
+                    attr.spread = core::TenthsValue{ static_cast<core::DecimalType>( wedgeStop.spread ) };
                 }
                 auto& attributes = *wedgePtr->getAttributes();
                 setAttributesFromPositionData( wedgeStop.positionData, attributes );

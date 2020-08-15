@@ -151,7 +151,7 @@ namespace mx
         void PropertiesWriter::writeDivisions( int value )
         {
             myProperties->setHasDivisions( true );
-            myProperties->getDivisions()->setValue( core::PositiveDecimal{ static_cast<long double>( value ) } );
+            myProperties->getDivisions()->setValue( core::PositiveDivisionsValue{ static_cast<long double>( value ) } );
         }
     
         

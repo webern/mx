@@ -428,14 +428,14 @@ namespace mx
 
         }
 
-        Millimeters::Millimeters( DecimalType value )
+        MillimetersValue::MillimetersValue( DecimalType value )
         : DecimalRange{ MX_NOOP, MX_NOOP, value }
         {
 
         }
 
-        Millimeters::Millimeters()
-        : Millimeters{ 0.0 }
+        MillimetersValue::MillimetersValue()
+        : MillimetersValue{ 0.0 }
         {
 
         }
@@ -484,6 +484,18 @@ namespace mx
 
         PositiveDivisions::PositiveDivisions()
         : PositiveDivisions{ 1 }
+        {
+
+        }
+
+        PositiveDivisionsValue::PositiveDivisionsValue( DecimalType value )
+        : DecimalRange{ MXMINEX( 0 ), MX_NOOP, value }
+        {
+
+        }
+
+        PositiveDivisionsValue::PositiveDivisionsValue()
+        : PositiveDivisionsValue{ 1 }
         {
 
         }

@@ -134,6 +134,17 @@ impl Writer {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     pub(crate) fn write_decimals(&self, mut numerics: Vec<NumericData<f64>>) -> Result<()> {
+        // TODO - this needs to be properly generated
+        let positive_divisions_value = NumericData {
+            name: Symbol::new("positive-divisions-value"),
+            base_type: Numeric::Decimal,
+            documentation: String::from("TODO - this needs to be properly generated"),
+            range: Range {
+                min: Some(Bound::Exclusive(0 as f64)),
+                max: None,
+            },
+        };
+        numerics.push(positive_divisions_value);
         numerics.sort_by(|a, b| {
             let a = a.name.pascal();
             let b = b.name.pascal();

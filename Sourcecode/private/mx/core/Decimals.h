@@ -135,11 +135,11 @@ namespace mx
         /// scaling element to provide a default scaling from tenths to physical units.
         ///
         /// Range: min=None, max=None
-        class Millimeters : public DecimalRange
+        class MillimetersValue : public DecimalRange
         {
         public:
-            explicit Millimeters( DecimalType value );
-            Millimeters();
+            explicit MillimetersValue( DecimalType value );
+            MillimetersValue();
         };
 
         /// The non-negative-decimal type specifies a non-negative decimal value.
@@ -180,6 +180,16 @@ namespace mx
         public:
             explicit PositiveDivisions( DecimalType value );
             PositiveDivisions();
+        };
+
+        /// TODO - this needs to be properly generated
+        ///
+        /// Range: min=Exclusive(0), max=None
+        class PositiveDivisionsValue : public DecimalRange
+        {
+        public:
+            explicit PositiveDivisionsValue( DecimalType value );
+            PositiveDivisionsValue();
         };
 
         /// The rotation-degrees type specifies rotation, pan, and elevation values in
