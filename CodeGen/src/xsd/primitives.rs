@@ -139,6 +139,23 @@ impl PrefixedParse for BaseType {
             custom => Ok(BaseType::Custom(custom.into())),
         }
     }
+
+    fn parse_prefixed<S1, S2>(s: S1, prefix: S2) -> Result<Self::ParsedThing>
+    where
+        S1: AsRef<str>,
+        S2: AsRef<str>,
+    {
+        let prefix = prefix.as_ref();
+        let s = s.as_ref();
+        let (ns, val) = split_raw_str(s);
+        if ns != prefix {
+            return Ok(BaseType::Custom(s.into()));
+        }
+        Ok(match Self::parse(val)? {
+            BaseType::Custom(_) => BaseType::Custom(s.into()),
+            anything_else => anything_else,
+        })
+    }
 }
 
 impl PrefixedString for BaseType {
@@ -240,7 +257,7 @@ impl BaseType {
         self.primitive() == Primitive::Character
     }
 
-    pub fn is_datetime_datetime(&self) -> bool {
+    pub fn is_datetime_primitive(&self) -> bool {
         self.primitive() == Primitive::DateTime
     }
 
@@ -296,6 +313,23 @@ impl BaseType {
             _ => None,
         }
     }
+
+    // pub fn parse_prefixed_or_custom<S1, S2>(s: S1, prefix: S2) -> Self
+    // where
+    //     S1: AsRef<str>,
+    //     S2: AsRef<str>,
+    // {
+    //     match Self::parse_prefixed(&s, &prefix) {
+    //         Ok(ok) => ok,
+    //         Err(_) => {
+    //             if prefix.as_ref().is_empty() {
+    //
+    //             } else {
+    //                 BaseType::Custom(format!("{}:{}", prefix.as_ref(), s.as_ref()))
+    //             }
+    //         }
+    //     }
+    // }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -512,97 +546,97 @@ impl Display for DateTime {
 
 impl BaseType {
     pub fn is_id(&self) -> bool {
-        self == BaseType::ID
+        *self == BaseType::ID
     }
     pub fn is_idref(&self) -> bool {
-        self == BaseType::IDREF
+        *self == BaseType::IDREF
     }
     pub fn is_language(&self) -> bool {
-        self == BaseType::Language
+        *self == BaseType::Language
     }
     pub fn is_name(&self) -> bool {
-        self == BaseType::Name
+        *self == BaseType::Name
     }
     pub fn is_nmtoken(&self) -> bool {
-        self == BaseType::NmToken
+        *self == BaseType::NmToken
     }
     pub fn is_normalized_string(&self) -> bool {
-        self == BaseType::NormalizedString
+        *self == BaseType::NormalizedString
     }
     pub fn is_string(&self) -> bool {
-        self == BaseType::String
+        *self == BaseType::String
     }
     pub fn is_token(&self) -> bool {
-        self == BaseType::Token
+        *self == BaseType::Token
     }
     pub fn is_byte(&self) -> bool {
-        self == BaseType::Byte
+        *self == BaseType::Byte
     }
     pub fn is_decimal(&self) -> bool {
-        self == BaseType::Decimal
+        *self == BaseType::Decimal
     }
     pub fn is_int(&self) -> bool {
-        self == BaseType::Int
+        *self == BaseType::Int
     }
     pub fn is_integer(&self) -> bool {
-        self == BaseType::Integer
+        *self == BaseType::Integer
     }
     pub fn is_long(&self) -> bool {
-        self == BaseType::Long
+        *self == BaseType::Long
     }
     pub fn is_negative_integer(&self) -> bool {
-        self == BaseType::NegativeInteger
+        *self == BaseType::NegativeInteger
     }
     pub fn is_non_negative_integer(&self) -> bool {
-        self == BaseType::NonNegativeInteger
+        *self == BaseType::NonNegativeInteger
     }
     pub fn is_non_positive_integer(&self) -> bool {
-        self == BaseType::PositiveInteger
+        *self == BaseType::PositiveInteger
     }
     pub fn is_positive_integer(&self) -> bool {
-        self == BaseType::NonPositiveInteger
+        *self == BaseType::NonPositiveInteger
     }
     pub fn is_short(&self) -> bool {
-        self == BaseType::Short
+        *self == BaseType::Short
     }
     pub fn is_unsigned_long(&self) -> bool {
-        self == BaseType::UnsignedLong
+        *self == BaseType::UnsignedLong
     }
     pub fn is_unsigned_int(&self) -> bool {
-        self == BaseType::UnsignedInt
+        *self == BaseType::UnsignedInt
     }
     pub fn is_unsigned_short(&self) -> bool {
-        self == BaseType::UnsignedShort
+        *self == BaseType::UnsignedShort
     }
     pub fn is_unsigned_byte(&self) -> bool {
-        self == BaseType::UnsignedByte
+        *self == BaseType::UnsignedByte
     }
     pub fn is_date(&self) -> bool {
-        self == BaseType::Date
+        *self == BaseType::Date
     }
     pub fn is_datetime(&self) -> bool {
-        self == BaseType::DateTime
+        *self == BaseType::DateTime
     }
     pub fn is_duration(&self) -> bool {
-        self == BaseType::Duration
+        *self == BaseType::Duration
     }
     pub fn is_gday(&self) -> bool {
-        self == BaseType::GDay
+        *self == BaseType::GDay
     }
     pub fn is_gmonth(&self) -> bool {
-        self == BaseType::GMonth
+        *self == BaseType::GMonth
     }
     pub fn is_gmonthday(&self) -> bool {
-        self == BaseType::GMonthDay
+        *self == BaseType::GMonthDay
     }
     pub fn is_gyear(&self) -> bool {
-        self == BaseType::GYear
+        *self == BaseType::GYear
     }
     pub fn is_gyearmonth(&self) -> bool {
-        self == BaseType::GYearMonth
+        *self == BaseType::GYearMonth
     }
     pub fn is_time(&self) -> bool {
-        self == BaseType::Time
+        *self == BaseType::Time
     }
 }
 
@@ -694,16 +728,29 @@ fn parse_base_type() {
         input: &'static str,
         want: BaseType,
     }
+    let test_cases = vec![TestCase {
+        prefix: "xs",
+        input: "xs:string",
+        want: BaseType::String,
+    }];
+    for test_case in &test_cases {
+        let got = BaseType::parse_prefixed(test_case.input, test_case.prefix).unwrap();
+        assert_eq!(&got, &test_case.want);
+    }
+}
+
+#[test]
+fn parse_base_type_custom() {
+    struct TestCase {
+        prefix: &'static str,
+        input: &'static str,
+        want: BaseType,
+    }
     let test_cases = vec![
         TestCase {
             prefix: "foo",
             input: "foo:bar",
             want: BaseType::Custom("foo:bar".to_owned()),
-        },
-        TestCase {
-            prefix: "xs",
-            input: "xs:string",
-            want: BaseType::String,
         },
         TestCase {
             prefix: "xs",

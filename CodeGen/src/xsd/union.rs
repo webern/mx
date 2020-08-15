@@ -73,6 +73,9 @@ fn parse() {
     assert_eq!(got_id, want_id);
     // let got_type = union.id.entry_type;
     // assert_eq!(got_type, RootNodeType::Other(UNION.to_owned()));
-    let want_members = vec![BaseType::Decimal, "css-font-size".to_owned()];
+    let want_members = vec![
+        BaseType::Decimal,
+        BaseType::Custom("css-font-size".to_owned()),
+    ];
     assert_eq!(union.members, want_members);
 }

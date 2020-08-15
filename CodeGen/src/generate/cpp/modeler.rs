@@ -313,7 +313,7 @@ impl MxModeler {
                 message: "create_dynamics: unable to unwrap the 'other' field".to_string(),
             });
         };
-        if *found_stuff.1 != BaseType::Primitive(Primitive::Character(Character::String)) {
+        if *found_stuff.1 != BaseType::String {
             return return Err(CreateError {
                 message: format!(
                     "unwrap_other_field: unsupported 'other' field type '{}'",
