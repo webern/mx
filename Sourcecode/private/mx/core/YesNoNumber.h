@@ -4,39 +4,36 @@
 
 #pragma once
 
-#include <iostream>
 #include "mx/core/Decimals.h"
 #include "mx/core/Enums.h"
-#include <memory>
+
+#include <ostream>
+#include <string>
+#include <variant>
 
 namespace mx
 {
     namespace core
     {
+        /// The yes-no-number type is used for attributes that can be either boolean or numeric
+        /// values.
         class YesNoNumber
         {
         public:
             explicit YesNoNumber();
-            explicit YesNoNumber( const Decimal& value );
-            explicit YesNoNumber( const YesNo value );
+            explicit YesNoNumber( YesNo value );
+            explicit YesNoNumber( Decimal value );
             explicit YesNoNumber( const std::string& value );
-            virtual ~YesNoNumber();
-            YesNoNumber( const YesNoNumber& other );
-            YesNoNumber( YesNoNumber&& other );
-            YesNoNumber& operator=( const YesNoNumber& other );
-            YesNoNumber& operator=( YesNoNumber&& other );
-            
             bool getIsYesNo() const;
-            bool getIsNumber() const;
-            void setValue( const YesNo value );
-            void setValue( const Decimal& value );
+            bool getIsDecimal() const;
+            void setYesNo( YesNo value );
+            void setDecimal( Decimal value );
             YesNo getValueYesNo() const;
-            Decimal getValueNumber() const;
-            void parse( const std::string& value );
+            Decimal getValueDecimal() const;
+            bool parse( const std::string& value );
             
         private:
-            class impl;
-            std::unique_ptr<impl> myImpl;
+            std::variant<YesNo, Decimal> myValue;
         };
         
         std::string toString( const YesNoNumber& value );

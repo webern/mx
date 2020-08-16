@@ -2,16 +2,16 @@
 // Copyright (c) by Matthew James Briggs
 // Distributed under the MIT License
 
+// self
 #include "mx/core/PositiveIntegerOrEmpty.h"
-#include <string>
+
+// std
 #include <sstream>
-#include <memory>
 
 namespace mx
 {
     namespace core
     {
-        
         class PositiveIntegerOrEmpty::impl
         {
         public:
@@ -141,6 +141,7 @@ namespace mx
             toStream( ss, value );
             return ss.str();
         }
+        
 		std::ostream& toStream( std::ostream& os, const PositiveIntegerOrEmpty& value )
         {
             if ( value.getIsNumber() )
@@ -153,11 +154,10 @@ namespace mx
             }
             return os;
         }
+
 		std::ostream& operator<<( std::ostream& os, const PositiveIntegerOrEmpty& value )
         {
             return toStream( os, value );
         }
-        
-        
     }
 }

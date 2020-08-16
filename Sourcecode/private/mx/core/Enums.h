@@ -16,8 +16,8 @@ namespace mx
     {
         /// AboveBelow /////////////////////////////////////////////////////////////////////////////
         ///
-        /// The above-below type is used to indicate whether one element appears above or
-        /// below another element.
+        /// The above-below type is used to indicate whether one element appears above or below
+        /// another element.
         ///
         enum class AboveBelow
         {
@@ -33,15 +33,14 @@ namespace mx
 
         /// AccidentalValue ////////////////////////////////////////////////////////////////////////
         ///
-        /// The accidental-value type represents notated accidentals supported by MusicXML.
-        /// In the MusicXML 2.0 DTD this was a string with values that could be included.
-        /// The XSD strengthens the data typing to an enumerated list. The quarter- and
-        /// three-quarters- accidentals are Tartini-style quarter-tone accidentals. The
-        /// -down and -up accidentals are quarter-tone accidentals that include arrows
-        /// pointing down or up. The slash- accidentals are used in Turkish classical
-        /// music. The numbered sharp and flat accidentals are superscripted versions of
-        /// the accidental signs, used in Turkish folk music. The sori and koron
-        /// accidentals are microtonal sharp and flat accidentals used in Iranian and
+        /// The accidental-value type represents notated accidentals supported by MusicXML. In the
+        /// MusicXML 2.0 DTD this was a string with values that could be included. The XSD
+        /// strengthens the data typing to an enumerated list. The quarter- and three-quarters-
+        /// accidentals are Tartini-style quarter-tone accidentals. The -down and -up accidentals
+        /// are quarter-tone accidentals that include arrows pointing down or up. The slash-
+        /// accidentals are used in Turkish classical music. The numbered sharp and flat accidentals
+        /// are superscripted versions of the accidental signs, used in Turkish folk music. The sori
+        /// and koron accidentals are microtonal sharp and flat accidentals used in Iranian and
         /// Persian music.
         ///
         enum class AccidentalValue
@@ -90,8 +89,8 @@ namespace mx
 
         /// ArrowDirectionEnum /////////////////////////////////////////////////////////////////////
         ///
-        /// The arrow-direction type represents the direction in which an arrow points,
-        /// using Unicode arrow terminology.
+        /// The arrow-direction type represents the direction in which an arrow points, using
+        /// Unicode arrow terminology.
         ///
         enum class ArrowDirectionEnum
         {
@@ -118,11 +117,11 @@ namespace mx
 
         /// ArrowStyleEnum /////////////////////////////////////////////////////////////////////////
         ///
-        /// The arrow-style type represents the style of an arrow, using Unicode arrow
-        /// terminology. Filled and hollow arrows indicate polygonal single arrows. Paired
-        /// arrows are duplicate single arrows in the same direction. Combined arrows apply
-        /// to double direction arrows like left right, indicating that an arrow in one
-        /// direction should be combined with an arrow in the other direction.
+        /// The arrow-style type represents the style of an arrow, using Unicode arrow terminology.
+        /// Filled and hollow arrows indicate polygonal single arrows. Paired arrows are duplicate
+        /// single arrows in the same direction. Combined arrows apply to double direction arrows
+        /// like left right, indicating that an arrow in one direction should be combined with an
+        /// arrow in the other direction.
         ///
         enum class ArrowStyleEnum
         {
@@ -143,9 +142,8 @@ namespace mx
 
         /// BackwardForward ////////////////////////////////////////////////////////////////////////
         ///
-        /// The backward-forward type is used to specify repeat directions. The start of
-        /// the repeat has a forward direction while the end of the repeat has a backward
-        /// direction.
+        /// The backward-forward type is used to specify repeat directions. The start of the repeat
+        /// has a forward direction while the end of the repeat has a backward direction.
         ///
         enum class BackwardForward
         {
@@ -161,10 +159,10 @@ namespace mx
 
         /// BarStyleEnum ///////////////////////////////////////////////////////////////////////////
         ///
-        /// The bar-style type represents barline style information. Choices are regular,
-        /// dotted, dashed, heavy, light-light, light-heavy, heavy-light, heavy-heavy, tick
-        /// (a short stroke through the top line), short (a partial barline between the 2nd
-        /// and 4th lines), and none.
+        /// The bar-style type represents barline style information. Choices are regular, dotted,
+        /// dashed, heavy, light-light, light-heavy, heavy-light, heavy-heavy, tick (a short stroke
+        /// through the top line), short (a partial barline between the 2nd and 4th lines), and
+        /// none.
         ///
         enum class BarStyleEnum
         {
@@ -189,8 +187,8 @@ namespace mx
 
         /// BeamValue //////////////////////////////////////////////////////////////////////////////
         ///
-        /// The beam-value type represents the type of beam associated with each of 8 beam
-        /// levels (up to 1024th notes) available for each note.
+        /// The beam-value type represents the type of beam associated with each of 8 beam levels
+        /// (up to 1024th notes) available for each note.
         ///
         enum class BeamValue
         {
@@ -209,9 +207,9 @@ namespace mx
 
         /// BeaterValue ////////////////////////////////////////////////////////////////////////////
         ///
-        /// The beater-value type represents pictograms for beaters, mallets, and sticks
-        /// that do not have different materials represented in the pictogram. The finger
-        /// and hammer values are in addition to Stone's list.
+        /// The beater-value type represents pictograms for beaters, mallets, and sticks that do not
+        /// have different materials represented in the pictogram. The finger and hammer values are
+        /// in addition to Stone's list.
         ///
         enum class BeaterValue
         {
@@ -259,11 +257,10 @@ namespace mx
 
         /// CancelLocation /////////////////////////////////////////////////////////////////////////
         ///
-        /// The cancel-location type is used to indicate where a key signature cancellation
-        /// appears relative to a new key signature: to the left, to the right, or before
-        /// the barline and to the left. It is left by default. For mid-measure key
-        /// elements, a cancel-location of before-barline should be treated like a
-        /// cancel-location of left.
+        /// The cancel-location type is used to indicate where a key signature cancellation appears
+        /// relative to a new key signature: to the left, to the right, or before the barline and to
+        /// the left. It is left by default. For mid-measure key elements, a cancel-location of
+        /// before-barline should be treated like a cancel-location of left.
         ///
         enum class CancelLocation
         {
@@ -280,8 +277,8 @@ namespace mx
 
         /// CircularArrowEnum //////////////////////////////////////////////////////////////////////
         ///
-        /// The circular-arrow type represents the direction in which a circular arrow
-        /// points, using Unicode arrow terminology.
+        /// The circular-arrow type represents the direction in which a circular arrow points, using
+        /// Unicode arrow terminology.
         ///
         enum class CircularArrowEnum
         {
@@ -297,11 +294,10 @@ namespace mx
 
         /// ClefSign ///////////////////////////////////////////////////////////////////////////////
         ///
-        /// The clef-sign element represents the different clef symbols. The jianpu sign
-        /// indicates that the music that follows should be in jianpu numbered notation,
-        /// just as the TAB sign indicates that the music that follows should be in
-        /// tablature notation. Unlike TAB, a jianpu sign does not correspond to a visual
-        /// clef notation.
+        /// The clef-sign element represents the different clef symbols. The jianpu sign indicates
+        /// that the music that follows should be in jianpu numbered notation, just as the TAB sign
+        /// indicates that the music that follows should be in tablature notation. Unlike TAB, a
+        /// jianpu sign does not correspond to a visual clef notation.
         ///
         enum class ClefSign
         {
@@ -322,8 +318,8 @@ namespace mx
 
         /// CssFontSize ////////////////////////////////////////////////////////////////////////////
         ///
-        /// The css-font-size type includes the CSS font sizes used as an alternative to a
-        /// numeric point size.
+        /// The css-font-size type includes the CSS font sizes used as an alternative to a numeric
+        /// point size.
         ///
         enum class CssFontSize
         {
@@ -344,8 +340,8 @@ namespace mx
 
         /// DegreeSymbolValue //////////////////////////////////////////////////////////////////////
         ///
-        /// The degree-symbol-value type indicates indicates that a symbol should be used
-        /// in specifying the degree.
+        /// The degree-symbol-value type indicates indicates that a symbol should be used in
+        /// specifying the degree.
         ///
         enum class DegreeSymbolValue
         {
@@ -364,9 +360,8 @@ namespace mx
 
         /// DegreeTypeValue ////////////////////////////////////////////////////////////////////////
         ///
-        /// The degree-type-value type indicates whether the current degree element is an
-        /// addition, alteration, or subtraction to the kind of the current chord in the
-        /// harmony element.
+        /// The degree-type-value type indicates whether the current degree element is an addition,
+        /// alteration, or subtraction to the kind of the current chord in the harmony element.
         ///
         enum class DegreeTypeValue
         {
@@ -383,10 +378,10 @@ namespace mx
 
         /// DistanceTypeEnum ///////////////////////////////////////////////////////////////////////
         ///
-        /// The distance-type defines what type of distance is being defined in a distance
-        /// element. Values include beam and hyphen. This is left as a string so that other
-        /// application-specific types can be defined, but it is made a separate type so
-        /// that it can be redefined more strictly.
+        /// The distance-type defines what type of distance is being defined in a distance element.
+        /// Values include beam and hyphen. This is left as a string so that other application-
+        /// specific types can be defined, but it is made a separate type so that it can be
+        /// redefined more strictly.
         ///
         enum class DistanceTypeEnum
         {
@@ -423,24 +418,20 @@ namespace mx
 
         /// DynamicsEnum ///////////////////////////////////////////////////////////////////////////
         ///
-        /// Dynamics can be associated either with a note or a general musical direction.
-        /// To avoid inconsistencies between and amongst the letter abbreviations for
-        /// dynamics (what is sf vs. sfz, standing alone or with a trailing dynamic that is
-        /// not always piano), we use the actual letters as the names of these dynamic
-        /// elements. The other-dynamics element allows other dynamic marks that are not
-        /// covered here, but many of those should perhaps be included in a more general
-        /// musical direction element. Dynamics elements may also be combined to create
-        /// marks not covered by a single element, such as sfmp.
-        ///
-        ///
-        ///
-        /// These letter dynamic symbols are separated from crescendo, decrescendo, and
-        /// wedge indications. Dynamic representation is inconsistent in scores. Many
-        /// things are assumed by the composer and left out, such as returns to original
-        /// dynamics. Systematic representations are quite complex: for example, Humdrum
-        /// has at least 3 representation formats related to dynamics. The MusicXML format
-        /// captures what is in the score, but does not try to be optimal for analysis or
-        /// synthesis of dynamics.
+        /// Dynamics can be associated either with a note or a general musical direction. To avoid
+        /// inconsistencies between and amongst the letter abbreviations for dynamics (what is sf
+        /// vs. sfz, standing alone or with a trailing dynamic that is not always piano), we use the
+        /// actual letters as the names of these dynamic elements. The other-dynamics element allows
+        /// other dynamic marks that are not covered here, but many of those should perhaps be
+        /// included in a more general musical direction element. Dynamics elements may also be
+        /// combined to create marks not covered by a single element, such as sfmp.
+        ///    
+        /// These letter dynamic symbols are separated from crescendo, decrescendo, and wedge
+        /// indications. Dynamic representation is inconsistent in scores. Many things are assumed
+        /// by the composer and left out, such as returns to original dynamics. Systematic
+        /// representations are quite complex: for example, Humdrum has at least 3 representation
+        /// formats related to dynamics. The MusicXML format captures what is in the score, but does
+        /// not try to be optimal for analysis or synthesis of dynamics.
         ///
         enum class DynamicsEnum
         {
@@ -498,8 +489,8 @@ namespace mx
 
         /// EffectEnum /////////////////////////////////////////////////////////////////////////////
         ///
-        /// The effect type represents pictograms for sound effect percussion instruments.
-        /// The cannon value is in addition to Stone's list.
+        /// The effect type represents pictograms for sound effect percussion instruments. The
+        /// cannon value is in addition to Stone's list.
         ///
         enum class EffectEnum
         {
@@ -527,9 +518,9 @@ namespace mx
 
         /// EnclosureShape /////////////////////////////////////////////////////////////////////////
         ///
-        /// The enclosure-shape type describes the shape and presence / absence of an
-        /// enclosure around text or symbols. A bracket enclosure is similar to a rectangle
-        /// with the bottom line missing, as is common in jazz notation.
+        /// The enclosure-shape type describes the shape and presence / absence of an enclosure
+        /// around text or symbols. A bracket enclosure is similar to a rectangle with the bottom
+        /// line missing, as is common in jazz notation.
         ///
         enum class EnclosureShape
         {
@@ -551,8 +542,8 @@ namespace mx
 
         /// Fan ////////////////////////////////////////////////////////////////////////////////////
         ///
-        /// The fan type represents the type of beam fanning present on a note, used to
-        /// represent accelerandos and ritardandos.
+        /// The fan type represents the type of beam fanning present on a note, used to represent
+        /// accelerandos and ritardandos.
         ///
         enum class Fan
         {
@@ -569,8 +560,8 @@ namespace mx
 
         /// FermataShape ///////////////////////////////////////////////////////////////////////////
         ///
-        /// The fermata-shape type represents the shape of the fermata sign. The empty
-        /// value is equivalent to the normal value.
+        /// The fermata-shape type represents the shape of the fermata sign. The empty value is
+        /// equivalent to the normal value.
         ///
         enum class FermataShape
         {
@@ -588,8 +579,7 @@ namespace mx
 
         /// FontStyle //////////////////////////////////////////////////////////////////////////////
         ///
-        /// The font-style type represents a simplified version of the CSS font-style
-        /// property.
+        /// The font-style type represents a simplified version of the CSS font-style property.
         ///
         enum class FontStyle
         {
@@ -605,8 +595,7 @@ namespace mx
 
         /// FontWeight /////////////////////////////////////////////////////////////////////////////
         ///
-        /// The font-weight type represents a simplified version of the CSS font-weight
-        /// property.
+        /// The font-weight type represents a simplified version of the CSS font-weight property.
         ///
         enum class FontWeight
         {
@@ -637,8 +626,7 @@ namespace mx
 
         /// GroupBarlineValue //////////////////////////////////////////////////////////////////////
         ///
-        /// The group-barline-value type indicates if the group should have common
-        /// barlines.
+        /// The group-barline-value type indicates if the group should have common barlines.
         ///
         enum class GroupBarlineValue
         {
@@ -655,8 +643,8 @@ namespace mx
 
         /// GroupSymbolValue ///////////////////////////////////////////////////////////////////////
         ///
-        /// The group-symbol-value type indicates how the symbol for a group is indicated
-        /// in the score. The default value is none.
+        /// The group-symbol-value type indicates how the symbol for a group is indicated in the
+        /// score. The default value is none.
         ///
         enum class GroupSymbolValue
         {
@@ -675,8 +663,7 @@ namespace mx
 
         /// HandbellValue //////////////////////////////////////////////////////////////////////////
         ///
-        /// The handbell-value type represents the type of handbell technique being
-        /// notated.
+        /// The handbell-value type represents the type of handbell technique being notated.
         ///
         enum class HandbellValue
         {
@@ -701,10 +688,9 @@ namespace mx
 
         /// HarmonyType ////////////////////////////////////////////////////////////////////////////
         ///
-        /// The harmony-type type differentiates different types of harmonies when
-        /// alternate harmonies are possible. Explicit harmonies have all note present in
-        /// the music; implied have some notes missing but implied; alternate represents
-        /// alternate analyses.
+        /// The harmony-type type differentiates different types of harmonies when alternate
+        /// harmonies are possible. Explicit harmonies have all note present in the music; implied
+        /// have some notes missing but implied; alternate represents alternate analyses.
         ///
         enum class HarmonyType
         {
@@ -721,8 +707,8 @@ namespace mx
 
         /// HoleClosedLocation /////////////////////////////////////////////////////////////////////
         ///
-        /// The hole-closed-location type indicates which portion of the hole is filled in
-        /// when the corresponding hole-closed-value is half.
+        /// The hole-closed-location type indicates which portion of the hole is filled in when the
+        /// corresponding hole-closed-value is half.
         ///
         enum class HoleClosedLocation
         {
@@ -740,8 +726,7 @@ namespace mx
 
         /// HoleClosedValue ////////////////////////////////////////////////////////////////////////
         ///
-        /// The hole-closed-value type represents whether the hole is closed, open, or
-        /// half-open.
+        /// The hole-closed-value type represents whether the hole is closed, open, or half-open.
         ///
         enum class HoleClosedValue
         {
@@ -758,96 +743,52 @@ namespace mx
 
         /// KindValue //////////////////////////////////////////////////////////////////////////////
         ///
-        /// A kind-value indicates the type of chord. Degree elements can then add,
-        /// subtract, or alter from these starting points. Values include:
-        ///
-        ///
-        ///
+        /// A kind-value indicates the type of chord. Degree elements can then add, subtract, or
+        /// alter from these starting points. Values include:
+        ///    
         /// Triads:
-        ///
-        /// major (major third, perfect fifth)
-        ///
-        /// minor (minor third, perfect fifth)
-        ///
-        /// augmented (major third, augmented fifth)
-        ///
-        /// diminished (minor third, diminished fifth)
-        ///
+        ///     major (major third, perfect fifth)
+        ///     minor (minor third, perfect fifth)
+        ///     augmented (major third, augmented fifth)
+        ///     diminished (minor third, diminished fifth)
         /// Sevenths:
-        ///
-        /// dominant (major triad, minor seventh)
-        ///
-        /// major-seventh (major triad, major seventh)
-        ///
-        /// minor-seventh (minor triad, minor seventh)
-        ///
-        /// diminished-seventh (diminished triad, diminished seventh)
-        ///
-        /// augmented-seventh (augmented triad, minor seventh)
-        ///
-        /// half-diminished (diminished triad, minor seventh)
-        ///
-        /// major-minor (minor triad, major seventh)
-        ///
+        ///     dominant (major triad, minor seventh)
+        ///     major-seventh (major triad, major seventh)
+        ///     minor-seventh (minor triad, minor seventh)
+        ///     diminished-seventh (diminished triad, diminished seventh)
+        ///     augmented-seventh (augmented triad, minor seventh)
+        ///     half-diminished (diminished triad, minor seventh)
+        ///     major-minor (minor triad, major seventh)
         /// Sixths:
-        ///
-        /// major-sixth (major triad, added sixth)
-        ///
-        /// minor-sixth (minor triad, added sixth)
-        ///
+        ///     major-sixth (major triad, added sixth)
+        ///     minor-sixth (minor triad, added sixth)
         /// Ninths:
-        ///
-        /// dominant-ninth (dominant-seventh, major ninth)
-        ///
-        /// major-ninth (major-seventh, major ninth)
-        ///
-        /// minor-ninth (minor-seventh, major ninth)
-        ///
+        ///     dominant-ninth (dominant-seventh, major ninth)
+        ///     major-ninth (major-seventh, major ninth)
+        ///     minor-ninth (minor-seventh, major ninth)
         /// 11ths (usually as the basis for alteration):
-        ///
-        /// dominant-11th (dominant-ninth, perfect 11th)
-        ///
-        /// major-11th (major-ninth, perfect 11th)
-        ///
-        /// minor-11th (minor-ninth, perfect 11th)
-        ///
+        ///     dominant-11th (dominant-ninth, perfect 11th)
+        ///     major-11th (major-ninth, perfect 11th)
+        ///     minor-11th (minor-ninth, perfect 11th)
         /// 13ths (usually as the basis for alteration):
-        ///
-        /// dominant-13th (dominant-11th, major 13th)
-        ///
-        /// major-13th (major-11th, major 13th)
-        ///
-        /// minor-13th (minor-11th, major 13th)
-        ///
+        ///     dominant-13th (dominant-11th, major 13th)
+        ///     major-13th (major-11th, major 13th)
+        ///     minor-13th (minor-11th, major 13th)
         /// Suspended:
-        ///
-        /// suspended-second (major second, perfect fifth)
-        ///
-        /// suspended-fourth (perfect fourth, perfect fifth)
-        ///
+        ///     suspended-second (major second, perfect fifth)
+        ///     suspended-fourth (perfect fourth, perfect fifth)
         /// Functional sixths:
-        ///
-        /// Neapolitan
-        ///
-        /// Italian
-        ///
-        /// French
-        ///
-        /// German
-        ///
+        ///     Neapolitan
+        ///     Italian
+        ///     French
+        ///     German
         /// Other:
-        ///
-        /// pedal (pedal-point bass)
-        ///
-        /// power (perfect fifth)
-        ///
-        /// Tristan
-        ///
-        ///
-        ///
-        /// The "other" kind is used when the harmony is entirely composed of add elements.
-        /// The "none" kind is used to explicitly encode absence of chords or functional
-        /// harmony.
+        ///     pedal (pedal-point bass)
+        ///     power (perfect fifth)
+        ///     Tristan
+        ///    
+        /// The "other" kind is used when the harmony is entirely composed of add elements. The
+        /// "none" kind is used to explicitly encode absence of chords or functional harmony.
         ///
         enum class KindValue
         {
@@ -912,8 +853,8 @@ namespace mx
 
         /// LeftRight //////////////////////////////////////////////////////////////////////////////
         ///
-        /// The left-right type is used to indicate whether one element appears to the left
-        /// or the right of another element.
+        /// The left-right type is used to indicate whether one element appears to the left or the
+        /// right of another element.
         ///
         enum class LeftRight
         {
@@ -929,8 +870,8 @@ namespace mx
 
         /// LineEnd ////////////////////////////////////////////////////////////////////////////////
         ///
-        /// The line-end type specifies if there is a jog up or down (or both), an arrow,
-        /// or nothing at the start or end of a bracket.
+        /// The line-end type specifies if there is a jog up or down (or both), an arrow, or nothing
+        /// at the start or end of a bracket.
         ///
         enum class LineEnd
         {
@@ -983,12 +924,12 @@ namespace mx
 
         /// LineWidthTypeEnum //////////////////////////////////////////////////////////////////////
         ///
-        /// The line-width-type defines what type of line is being defined in a line-width
-        /// element. Values include beam, bracket, dashes, enclosure, ending, extend, heavy
-        /// barline, leger, light barline, octave shift, pedal, slur middle, slur tip,
-        /// staff, stem, tie middle, tie tip, tuplet bracket, and wedge. This is left as a
-        /// string so that other application-specific types can be defined, but it is made
-        /// a separate type so that it can be redefined more strictly.
+        /// The line-width-type defines what type of line is being defined in a line-width element.
+        /// Values include beam, bracket, dashes, enclosure, ending, extend, heavy barline, leger,
+        /// light barline, octave shift, pedal, slur middle, slur tip, staff, stem, tie middle, tie
+        /// tip, tuplet bracket, and wedge. This is left as a string so that other application-
+        /// specific types can be defined, but it is made a separate type so that it can be
+        /// redefined more strictly.
         ///
         enum class LineWidthTypeEnum
         {
@@ -1042,8 +983,7 @@ namespace mx
 
         /// MarginType /////////////////////////////////////////////////////////////////////////////
         ///
-        /// The margin-type type specifies whether margins apply to even page, odd pages,
-        /// or both.
+        /// The margin-type type specifies whether margins apply to even page, odd pages, or both.
         ///
         enum class MarginType
         {
@@ -1060,8 +1000,8 @@ namespace mx
 
         /// MeasureNumberingValue //////////////////////////////////////////////////////////////////
         ///
-        /// The measure-numbering-value type describes how measure numbers are displayed on
-        /// this part: no numbers, numbers every measure, or numbers every system.
+        /// The measure-numbering-value type describes how measure numbers are displayed on this
+        /// part: no numbers, numbers every measure, or numbers every system.
         ///
         enum class MeasureNumberingValue
         {
@@ -1078,8 +1018,8 @@ namespace mx
 
         /// MembraneEnum ///////////////////////////////////////////////////////////////////////////
         ///
-        /// The membrane type represents pictograms for membrane percussion instruments.
-        /// The goblet drum value is in addition to Stone's list.
+        /// The membrane type represents pictograms for membrane percussion instruments. The goblet
+        /// drum value is in addition to Stone's list.
         ///
         enum class MembraneEnum
         {
@@ -1105,9 +1045,9 @@ namespace mx
 
         /// MetalEnum //////////////////////////////////////////////////////////////////////////////
         ///
-        /// The metal type represents pictograms for metal percussion instruments. The
-        /// hi-hat value refers to a pictogram like Stone's high-hat cymbals but without
-        /// the long vertical line at the bottom.
+        /// The metal type represents pictograms for metal percussion instruments. The hi-hat value
+        /// refers to a pictogram like Stone's high-hat cymbals but without the long vertical line
+        /// at the bottom.
         ///
         enum class MetalEnum
         {
@@ -1144,9 +1084,9 @@ namespace mx
 
         /// ModeEnum ///////////////////////////////////////////////////////////////////////////////
         ///
-        /// The mode type is used to specify major/minor and other mode distinctions. Valid
-        /// mode values include major, minor, dorian, phrygian, lydian, mixolydian,
-        /// aeolian, ionian, locrian, and none.
+        /// The mode type is used to specify major/minor and other mode distinctions. Valid mode
+        /// values include major, minor, dorian, phrygian, lydian, mixolydian, aeolian, ionian,
+        /// locrian, and none.
         ///
         enum class ModeEnum
         {
@@ -1191,9 +1131,9 @@ namespace mx
 
         /// MuteEnum ///////////////////////////////////////////////////////////////////////////////
         ///
-        /// The mute type represents muting for different instruments, including brass,
-        /// winds, and strings. The on and off values are used for undifferentiated mutes.
-        /// The remaining values represent specific mutes.
+        /// The mute type represents muting for different instruments, including brass, winds, and
+        /// strings. The on and off values are used for undifferentiated mutes. The remaining values
+        /// represent specific mutes.
         ///
         enum class MuteEnum
         {
@@ -1222,11 +1162,10 @@ namespace mx
 
         /// NoteSizeType ///////////////////////////////////////////////////////////////////////////
         ///
-        /// The note-size-type type indicates the type of note being defined by a note-size
-        /// element. The grace type is used for notes of cue size that that include a grace
-        /// element. The cue type is used for all other notes with cue size, whether
-        /// defined explicitly or implicitly via a cue element. The large type is used for
-        /// notes of large size.
+        /// The note-size-type type indicates the type of note being defined by a note-size element.
+        /// The grace type is used for notes of cue size that that include a grace element. The cue
+        /// type is used for all other notes with cue size, whether defined explicitly or implicitly
+        /// via a cue element. The large type is used for notes of large size.
         ///
         enum class NoteSizeType
         {
@@ -1243,8 +1182,8 @@ namespace mx
 
         /// NoteTypeValue //////////////////////////////////////////////////////////////////////////
         ///
-        /// The note-type type is used for the MusicXML type element and represents the
-        /// graphic note type, from 1024th (shortest) to maxima (longest).
+        /// The note-type type is used for the MusicXML type element and represents the graphic note
+        /// type, from 1024th (shortest) to maxima (longest).
         ///
         enum class NoteTypeValue
         {
@@ -1272,19 +1211,16 @@ namespace mx
 
         /// NoteheadValue //////////////////////////////////////////////////////////////////////////
         ///
-        /// The notehead type indicates shapes other than the open and closed ovals
-        /// associated with note durations. The values do, re, mi, fa, fa up, so, la, and
-        /// ti correspond to Aikin's 7-shape system. The fa up shape is typically used with
-        /// upstems; the fa shape is typically used with downstems or no stems.
+        /// The notehead type indicates shapes other than the open and closed ovals associated with
+        /// note durations. The values do, re, mi, fa, fa up, so, la, and ti correspond to Aikin's
+        /// 7-shape system.  The fa up shape is typically used with upstems; the fa shape is
+        /// typically used with downstems or no stems.
         ///
-        ///
-        ///
-        /// The arrow shapes differ from triangle and inverted triangle by being centered
-        /// on the stem. Slashed and back slashed notes include both the normal notehead
-        /// and a slash. The triangle shape has the tip of the triangle pointing up; the
-        /// inverted triangle shape has the tip of the triangle pointing down. The left
-        /// triangle shape is a right triangle with the hypotenuse facing up and to the
-        /// left.
+        /// The arrow shapes differ from triangle and inverted triangle by being centered on the
+        /// stem. Slashed and back slashed notes include both the normal notehead and a slash. The
+        /// triangle shape has the tip of the triangle pointing up; the inverted triangle shape has
+        /// the tip of the triangle pointing down. The left triangle shape is a right triangle with
+        /// the hypotenuse facing up and to the left.
         ///
         enum class NoteheadValue
         {
@@ -1340,8 +1276,8 @@ namespace mx
 
         /// OverUnder //////////////////////////////////////////////////////////////////////////////
         ///
-        /// The over-under type is used to indicate whether the tips of curved lines such
-        /// as slurs and ties are overhand (tips down) or underhand (tips up).
+        /// The over-under type is used to indicate whether the tips of curved lines such as slurs
+        /// and ties are overhand (tips down) or underhand (tips up).
         ///
         enum class OverUnder
         {
@@ -1357,9 +1293,9 @@ namespace mx
 
         /// PitchedEnum ////////////////////////////////////////////////////////////////////////////
         ///
-        /// The pitched type represents pictograms for pitched percussion instruments. The
-        /// chimes and tubular chimes values distinguish the single-line and double-line
-        /// versions of the pictogram. The mallet value is in addition to Stone's list.
+        /// The pitched type represents pictograms for pitched percussion instruments. The chimes
+        /// and tubular chimes values distinguish the single-line and double-line versions of the
+        /// pictogram. The mallet value is in addition to Stone's list.
         ///
         enum class PitchedEnum
         {
@@ -1380,10 +1316,10 @@ namespace mx
 
         /// PrincipalVoiceSymbol ///////////////////////////////////////////////////////////////////
         ///
-        /// The principal-voice-symbol type represents the type of symbol used to indicate
-        /// the start of a principal or secondary voice. The "plain" value represents a
-        /// plain square bracket. The value of "none" is used for analysis markup when the
-        /// principal-voice element does not have a corresponding appearance in the score.
+        /// The principal-voice-symbol type represents the type of symbol used to indicate the start
+        /// of a principal or secondary voice. The "plain" value represents a plain square bracket.
+        /// The value of "none" is used for analysis markup when the principal-voice element does
+        /// not have a corresponding appearance in the score.
         ///
         enum class PrincipalVoiceSymbol
         {
@@ -1439,8 +1375,8 @@ namespace mx
 
         /// ShowFrets //////////////////////////////////////////////////////////////////////////////
         ///
-        /// The show-frets type indicates whether to show tablature frets as numbers (0, 1,
-        /// 2) or letters (a, b, c). The default choice is numbers.
+        /// The show-frets type indicates whether to show tablature frets as numbers (0, 1, 2) or
+        /// letters (a, b, c). The default choice is numbers.
         ///
         enum class ShowFrets
         {
@@ -1456,9 +1392,8 @@ namespace mx
 
         /// ShowTuplet /////////////////////////////////////////////////////////////////////////////
         ///
-        /// The show-tuplet type indicates whether to show a part of a tuplet relating to
-        /// the tuplet-actual element, both the tuplet-actual and tuplet-normal elements,
-        /// or neither.
+        /// The show-tuplet type indicates whether to show a part of a tuplet relating to the
+        /// tuplet-actual element, both the tuplet-actual and tuplet-normal elements, or neither.
         ///
         enum class ShowTuplet
         {
@@ -1475,10 +1410,9 @@ namespace mx
 
         /// StaffTypeEnum //////////////////////////////////////////////////////////////////////////
         ///
-        /// The staff-type value can be ossia, cue, editorial, regular, or alternate. An
-        /// alternate staff indicates one that shares the same musical data as the prior
-        /// staff, but displayed differently (e.g., treble and bass clef, standard notation
-        /// and tab).
+        /// The staff-type value can be ossia, cue, editorial, regular, or alternate. An alternate
+        /// staff indicates one that shares the same musical data as the prior staff, but displayed
+        /// differently (e.g., treble and bass clef, standard notation and tab).
         ///
         enum class StaffTypeEnum
         {
@@ -1497,8 +1431,8 @@ namespace mx
 
         /// StartNote //////////////////////////////////////////////////////////////////////////////
         ///
-        /// The start-note type describes the starting note of trills and mordents for
-        /// playback, relative to the current note.
+        /// The start-note type describes the starting note of trills and mordents for playback,
+        /// relative to the current note.
         ///
         enum class StartNote
         {
@@ -1515,17 +1449,15 @@ namespace mx
 
         /// StartStop //////////////////////////////////////////////////////////////////////////////
         ///
-        /// The start-stop type is used for an attribute of musical elements that can
-        /// either start or stop, such as tuplets.
-        ///
-        ///
-        ///
-        /// The values of start and stop refer to how an element appears in musical score
-        /// order, not in MusicXML document order. An element with a stop attribute may
-        /// precede the corresponding element with a start attribute within a MusicXML
-        /// document. This is particularly common in multi-staff music. For example, the
-        /// stopping point for a tuplet may appear in staff 1 before the starting point for
-        /// the tuplet appears in staff 2 later in the document.
+        /// The start-stop type is used for an attribute of musical elements that can either start
+        /// or stop, such as tuplets.
+        ///                                    
+        /// The values of start and stop refer to how an element appears in musical score order, not
+        /// in MusicXML document order. An element with a stop attribute may precede the
+        /// corresponding element with a start attribute within a MusicXML document. This is
+        /// particularly common in multi-staff music. For example, the stopping point for a tuplet
+        /// may appear in staff 1 before the starting point for the tuplet appears in staff 2 later
+        /// in the document.
         ///
         enum class StartStop
         {
@@ -1541,8 +1473,7 @@ namespace mx
 
         /// StartStopChangeContinue ////////////////////////////////////////////////////////////////
         ///
-        /// The start-stop-change-continue type is used to distinguish types of pedal
-        /// directions.
+        /// The start-stop-change-continue type is used to distinguish types of pedal directions.
         ///
         enum class StartStopChangeContinue
         {
@@ -1560,19 +1491,16 @@ namespace mx
 
         /// StartStopContinue //////////////////////////////////////////////////////////////////////
         ///
-        /// The start-stop-continue type is used for an attribute of musical elements that
-        /// can either start or stop, but also need to refer to an intermediate point in
-        /// the symbol, as for complex slurs or for formatting of symbols across system
-        /// breaks.
-        ///
-        ///
-        ///
-        /// The values of start, stop, and continue refer to how an element appears in
-        /// musical score order, not in MusicXML document order. An element with a stop
-        /// attribute may precede the corresponding element with a start attribute within a
-        /// MusicXML document. This is particularly common in multi-staff music. For
-        /// example, the stopping point for a slur may appear in staff 1 before the
-        /// starting point for the slur appears in staff 2 later in the document.
+        /// The start-stop-continue type is used for an attribute of musical elements that can
+        /// either start or stop, but also need to refer to an intermediate point in the symbol, as
+        /// for complex slurs or for formatting of symbols across system breaks.
+        ///                        
+        /// The values of start, stop, and continue refer to how an element appears in musical score
+        /// order, not in MusicXML document order. An element with a stop attribute may precede the
+        /// corresponding element with a start attribute within a MusicXML document. This is
+        /// particularly common in multi-staff music. For example, the stopping point for a slur may
+        /// appear in staff 1 before the starting point for the slur appears in staff 2 later in the
+        /// document.
         ///
         enum class StartStopContinue
         {
@@ -1589,13 +1517,12 @@ namespace mx
 
         /// StartStopDiscontinue ///////////////////////////////////////////////////////////////////
         ///
-        /// The start-stop-discontinue type is used to specify ending types. Typically, the
-        /// start type is associated with the left barline of the first measure in an
-        /// ending. The stop and discontinue types are associated with the right barline of
-        /// the last measure in an ending. Stop is used when the ending mark concludes with
-        /// a downward jog, as is typical for first endings. Discontinue is used when there
-        /// is no downward jog, as is typical for second endings that do not conclude a
-        /// piece.
+        /// The start-stop-discontinue type is used to specify ending types. Typically, the start
+        /// type is associated with the left barline of the first measure in an ending. The stop and
+        /// discontinue types are associated with the right barline of the last measure in an
+        /// ending. Stop is used when the ending mark concludes with a downward jog, as is typical
+        /// for first endings. Discontinue is used when there is no downward jog, as is typical for
+        /// second endings that do not conclude a piece.
         ///
         enum class StartStopDiscontinue
         {
@@ -1612,9 +1539,8 @@ namespace mx
 
         /// StartStopSingle ////////////////////////////////////////////////////////////////////////
         ///
-        /// The start-stop-single type is used for an attribute of musical elements that
-        /// can be used for either multi-note or single-note musical elements, as for
-        /// tremolos.
+        /// The start-stop-single type is used for an attribute of musical elements that can be used
+        /// for either multi-note or single-note musical elements, as for tremolos.
         ///
         enum class StartStopSingle
         {
@@ -1649,8 +1575,8 @@ namespace mx
 
         /// StepEnum ///////////////////////////////////////////////////////////////////////////////
         ///
-        /// The step type represents a step of the diatonic scale, represented using the
-        /// English letters A through G.
+        /// The step type represents a step of the diatonic scale, represented using the English
+        /// letters A through G.
         ///
         enum class StepEnum
         {
@@ -1671,8 +1597,8 @@ namespace mx
 
         /// StickLocationEnum //////////////////////////////////////////////////////////////////////
         ///
-        /// The stick-location type represents pictograms for the location of sticks,
-        /// beaters, or mallets on cymbals, gongs, drums, and other instruments.
+        /// The stick-location type represents pictograms for the location of sticks, beaters, or
+        /// mallets on cymbals, gongs, drums, and other instruments.
         ///
         enum class StickLocationEnum
         {
@@ -1690,8 +1616,7 @@ namespace mx
 
         /// StickMaterialEnum //////////////////////////////////////////////////////////////////////
         ///
-        /// The stick-material type represents the material being displayed in a stick
-        /// pictogram.
+        /// The stick-material type represents the material being displayed in a stick pictogram.
         ///
         enum class StickMaterialEnum
         {
@@ -1711,8 +1636,7 @@ namespace mx
         /// StickTypeEnum //////////////////////////////////////////////////////////////////////////
         ///
         /// The stick-type type represents the shape of pictograms where the material
-        ///
-        /// in the stick, mallet, or beater is represented in the pictogram.
+        ///     in the stick, mallet, or beater is represented in the pictogram.
         ///
         enum class StickTypeEnum
         {
@@ -1731,9 +1655,9 @@ namespace mx
 
         /// SyllabicEnum ///////////////////////////////////////////////////////////////////////////
         ///
-        /// Lyric hyphenation is indicated by the syllabic type. The single, begin, end,
-        /// and middle values represent single-syllable words, word-beginning syllables,
-        /// word-ending syllables, and mid-word syllables, respectively.
+        /// Lyric hyphenation is indicated by the syllabic type. The single, begin, end, and middle
+        /// values represent single-syllable words, word-beginning syllables, word-ending syllables,
+        /// and mid-word syllables, respectively.
         ///
         enum class SyllabicEnum
         {
@@ -1751,8 +1675,8 @@ namespace mx
 
         /// SymbolSize /////////////////////////////////////////////////////////////////////////////
         ///
-        /// The symbol-size type is used to indicate full vs. cue-sized vs. oversized
-        /// symbols. The large value for oversized symbols was added in version 1.1.
+        /// The symbol-size type is used to indicate full vs. cue-sized vs. oversized symbols. The
+        /// large value for oversized symbols was added in version 1.1.
         ///
         enum class SymbolSize
         {
@@ -1769,12 +1693,11 @@ namespace mx
 
         /// TextDirection //////////////////////////////////////////////////////////////////////////
         ///
-        /// The text-direction type is used to adjust and override the Unicode
-        /// bidirectional text algorithm, similar to the W3C Internationalization Tag Set
-        /// recommendation. Values are ltr (left-to-right embed), rtl (right-to-left
-        /// embed), lro (left-to-right bidi-override), and rlo (right-to-left
-        /// bidi-override). The default value is ltr. This type is typically used by
-        /// applications that store text in left-to-right visual order rather than logical
+        /// The text-direction type is used to adjust and override the Unicode bidirectional text
+        /// algorithm, similar to the W3C Internationalization Tag Set recommendation. Values are
+        /// ltr (left-to-right embed), rtl (right-to-left embed), lro (left-to-right bidi-override),
+        /// and rlo (right-to-left bidi-override). The default value is ltr. This type is typically
+        /// used by applications that store text in left-to-right visual order rather than logical
         /// order. Such applications can use the lro value to better communicate with other
         /// applications that more fully support bidirectional text.
         ///
@@ -1794,8 +1717,8 @@ namespace mx
 
         /// TimeRelationEnum ///////////////////////////////////////////////////////////////////////
         ///
-        /// The time-relation type indicates the symbol used to represent the
-        /// interchangeable aspect of dual time signatures.
+        /// The time-relation type indicates the symbol used to represent the interchangeable aspect
+        /// of dual time signatures.
         ///
         enum class TimeRelationEnum
         {
@@ -1815,14 +1738,13 @@ namespace mx
 
         /// TimeSeparator //////////////////////////////////////////////////////////////////////////
         ///
-        /// The time-separator type indicates how to display the arrangement between the
-        /// beats and beat-type values in a time signature. The default value is none. The
-        /// horizontal, diagonal, and vertical values represent horizontal, diagonal
-        /// lower-left to upper-right, and vertical lines respectively. For these values,
-        /// the beats and beat-type values are arranged on either side of the separator
-        /// line. The none value represents no separator with the beats and beat-type
-        /// arranged vertically. The adjacent value represents no separator with the beats
-        /// and beat-type arranged horizontally.
+        /// The time-separator type indicates how to display the arrangement between the beats and
+        /// beat-type values in a time signature. The default value is none. The horizontal,
+        /// diagonal, and vertical values represent horizontal, diagonal lower-left to upper-right,
+        /// and vertical lines respectively. For these values, the beats and beat-type values are
+        /// arranged on either side of the separator line. The none value represents no separator
+        /// with the beats and beat-type arranged vertically. The adjacent value represents no
+        /// separator with the beats and beat-type arranged horizontally.
         ///
         enum class TimeSeparator
         {
@@ -1841,14 +1763,13 @@ namespace mx
 
         /// TimeSymbol /////////////////////////////////////////////////////////////////////////////
         ///
-        /// The time-symbol type indicates how to display a time signature. The normal
-        /// value is the usual fractional display, and is the implied symbol type if none
-        /// is specified. Other options are the common and cut time symbols, as well as a
-        /// single number with an implied denominator. The note symbol indicates that the
-        /// beat-type should be represented with the corresponding downstem note rather
-        /// than a number. The dotted-note symbol indicates that the beat-type should be
-        /// represented with a dotted downstem note that corresponds to three times the
-        /// beat-type value, and a numerator that is one third the beats value.
+        /// The time-symbol type indicates how to display a time signature. The normal value is the
+        /// usual fractional display, and is the implied symbol type if none is specified. Other
+        /// options are the common and cut time symbols, as well as a single number with an implied
+        /// denominator. The note symbol indicates that the beat-type should be represented with the
+        /// corresponding downstem note rather than a number. The dotted-note symbol indicates that
+        /// the beat-type should be represented with a dotted downstem note that corresponds to
+        /// three times the beat-type value, and a numerator that is one third the beats value.
         ///
         enum class TimeSymbol
         {
@@ -1868,8 +1789,8 @@ namespace mx
 
         /// TipDirection ///////////////////////////////////////////////////////////////////////////
         ///
-        /// The tip-direction type represents the direction in which the tip of a stick or
-        /// beater points, using Unicode arrow terminology.
+        /// The tip-direction type represents the direction in which the tip of a stick or beater
+        /// points, using Unicode arrow terminology.
         ///
         enum class TipDirection
         {
@@ -1891,8 +1812,8 @@ namespace mx
 
         /// TopBottom //////////////////////////////////////////////////////////////////////////////
         ///
-        /// The top-bottom type is used to indicate the top or bottom part of a vertical
-        /// shape like non-arpeggiate.
+        /// The top-bottom type is used to indicate the top or bottom part of a vertical shape like
+        /// non-arpeggiate.
         ///
         enum class TopBottom
         {
@@ -1908,8 +1829,8 @@ namespace mx
 
         /// TrillStep //////////////////////////////////////////////////////////////////////////////
         ///
-        /// The trill-step type describes the alternating note of trills and mordents for
-        /// playback, relative to the current note.
+        /// The trill-step type describes the alternating note of trills and mordents for playback,
+        /// relative to the current note.
         ///
         enum class TrillStep
         {
@@ -1926,8 +1847,8 @@ namespace mx
 
         /// TwoNoteTurn ////////////////////////////////////////////////////////////////////////////
         ///
-        /// The two-note-turn type describes the ending notes of trills and mordents for
-        /// playback, relative to the current note.
+        /// The two-note-turn type describes the ending notes of trills and mordents for playback,
+        /// relative to the current note.
         ///
         enum class TwoNoteTurn
         {
@@ -1944,8 +1865,8 @@ namespace mx
 
         /// UpDown /////////////////////////////////////////////////////////////////////////////////
         ///
-        /// The up-down type is used for the direction of arrows and other pointed symbols
-        /// like vertical accents, indicating which way the tip is pointing.
+        /// The up-down type is used for the direction of arrows and other pointed symbols like
+        /// vertical accents, indicating which way the tip is pointing.
         ///
         enum class UpDown
         {
@@ -1961,9 +1882,8 @@ namespace mx
 
         /// UpDownStopContinue /////////////////////////////////////////////////////////////////////
         ///
-        /// The up-down-stop-continue type is used for octave-shift elements, indicating
-        /// the direction of the shift from their true pitched values because of printing
-        /// difficulty.
+        /// The up-down-stop-continue type is used for octave-shift elements, indicating the
+        /// direction of the shift from their true pitched values because of printing difficulty.
         ///
         enum class UpDownStopContinue
         {
@@ -1981,8 +1901,8 @@ namespace mx
 
         /// UprightInverted ////////////////////////////////////////////////////////////////////////
         ///
-        /// The upright-inverted type describes the appearance of a fermata element. The
-        /// value is upright if not specified.
+        /// The upright-inverted type describes the appearance of a fermata element. The value is
+        /// upright if not specified.
         ///
         enum class UprightInverted
         {
@@ -1998,8 +1918,8 @@ namespace mx
 
         /// Valign /////////////////////////////////////////////////////////////////////////////////
         ///
-        /// The valign type is used to indicate vertical alignment to the top, middle,
-        /// bottom, or baseline of the text. Defaults are implementation-dependent.
+        /// The valign type is used to indicate vertical alignment to the top, middle, bottom, or
+        /// baseline of the text. Defaults are implementation-dependent.
         ///
         enum class Valign
         {
@@ -2017,9 +1937,8 @@ namespace mx
 
         /// ValignImage ////////////////////////////////////////////////////////////////////////////
         ///
-        /// The valign-image type is used to indicate vertical alignment for images and
-        /// graphics, so it does not include a baseline value. Defaults are
-        /// implementation-dependent.
+        /// The valign-image type is used to indicate vertical alignment for images and graphics, so
+        /// it does not include a baseline value. Defaults are implementation-dependent.
         ///
         enum class ValignImage
         {
@@ -2036,11 +1955,10 @@ namespace mx
 
         /// WedgeType //////////////////////////////////////////////////////////////////////////////
         ///
-        /// The wedge type is crescendo for the start of a wedge that is closed at the left
-        /// side, diminuendo for the start of a wedge that is closed on the right side, and
-        /// stop for the end of a wedge. The continue type is used for formatting wedges
-        /// over a system break, or for other situations where a single wedge is divided
-        /// into multiple segments.
+        /// The wedge type is crescendo for the start of a wedge that is closed at the left side,
+        /// diminuendo for the start of a wedge that is closed on the right side, and stop for the
+        /// end of a wedge. The continue type is used for formatting wedges over a system break, or
+        /// for other situations where a single wedge is divided into multiple segments.
         ///
         enum class WedgeType
         {
@@ -2058,10 +1976,10 @@ namespace mx
 
         /// Winged /////////////////////////////////////////////////////////////////////////////////
         ///
-        /// The winged attribute indicates whether the repeat has winged extensions that
-        /// appear above and below the barline. The straight and curved values represent
-        /// single wings, while the double-straight and double-curved values represent
-        /// double wings. The none value indicates no wings and is the default.
+        /// The winged attribute indicates whether the repeat has winged extensions that appear
+        /// above and below the barline. The straight and curved values represent single wings,
+        /// while the double-straight and double-curved values represent double wings. The none
+        /// value indicates no wings and is the default.
         ///
         enum class Winged
         {
@@ -2080,9 +1998,9 @@ namespace mx
 
         /// WoodEnum ///////////////////////////////////////////////////////////////////////////////
         ///
-        /// The wood type represents pictograms for wood percussion instruments. The maraca
-        /// and maracas values distinguish the one- and two-maraca versions of the
-        /// pictogram. The vibraslap and castanets values are in addition to Stone's list.
+        /// The wood type represents pictograms for wood percussion instruments. The maraca and
+        /// maracas values distinguish the one- and two-maraca versions of the pictogram. The
+        /// vibraslap and castanets values are in addition to Stone's list.
         ///
         enum class WoodEnum
         {
@@ -2110,8 +2028,8 @@ namespace mx
 
         /// YesNo //////////////////////////////////////////////////////////////////////////////////
         ///
-        /// The yes-no type is used for boolean-like attributes. We cannot use W3C XML
-        /// Schema booleans due to their restrictions on expression of boolean values.
+        /// The yes-no type is used for boolean-like attributes. We cannot use W3C XML Schema
+        /// booleans due to their restrictions on expression of boolean values.
         ///
         enum class YesNo
         {

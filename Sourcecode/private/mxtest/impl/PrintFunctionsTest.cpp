@@ -174,8 +174,8 @@ TEST( everythingSet, PrintFunctions )
     CHECK( attr.hasUnderline );
     CHECK_EQUAL( 3, attr.underline.getValue() );
     CHECK( attr.hasFontSize );
-    CHECK( attr.fontSize.getIsNumber() );
-    CHECK_DOUBLES_EQUAL( 2.0, attr.fontSize.getValueNumber().getValue(), 0.01 );
+    CHECK( attr.fontSize.getIsDecimal() );
+    CHECK_DOUBLES_EQUAL( 2.0, attr.fontSize.getValueDecimal().getValue(), 0.01 );
     CHECK( attr.hasFontStyle );
     CHECK( core::FontStyle::italic == attr.fontStyle );
     CHECK( attr.hasFontWeight );
@@ -199,7 +199,7 @@ TEST( everythingGet, PrintFunctions )
     attr.hasUnderline = true;
     attr.underline.setValue( 3 );
     attr.hasFontSize = true;
-    attr.fontSize.setValue( core::PositiveDecimal{ 2.0 } );
+    attr.fontSize.setDecimal( core::Decimal{ 2.0 } );
     attr.hasFontStyle = true;
     attr.fontStyle = core::FontStyle::italic;
     attr.hasFontWeight = true;

@@ -2,14 +2,16 @@
 // Copyright (c) by Matthew James Briggs
 // Distributed under the MIT License
 
+// self
 #include "mx/core/NumberOrNormal.h"
+
+// std
 #include <sstream>
 
 namespace mx
 {
     namespace core
     {
-        
         class NumberOrNormal::impl
         {
         public:
@@ -154,7 +156,5 @@ namespace mx
         {
             return toStream( os, value );
         }
-        
-        
     }
 }

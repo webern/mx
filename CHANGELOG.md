@@ -10,6 +10,7 @@ If you cloned/forked the repository before 2020-05-31, you should delete `v1.0.0
 - Rewrite `Integers.h` and `Integers.cpp`. Changed `NonNegativeInteger` to default to 0, and changed the tests that had locked-in that behavior. [#109]. (Related to codegen, [#58]).
 - Rewrite `Decimals.h` and `Decimals.cpp`. [#111]. (Related to codegen, [#58]).
 - Rewrite `Enums`, `Integers` and `Decimals`. Add try parse and return bool from parse methods. [#112]. (Related to codegen, [#58]).
+- Rewrite union types `FontSize` and `YesNoNumber`. Also reformat a bunch of documentation. [#113]. (Related to codegen, [#58]).
 
 [#105]: https://github.com/webern/mx/pull/105
 [#106]: https://github.com/webern/mx/pull/106
@@ -17,6 +18,7 @@ If you cloned/forked the repository before 2020-05-31, you should delete `v1.0.0
 [#109]: https://github.com/webern/mx/pull/109
 [#111]: https://github.com/webern/mx/pull/111
 [#112]: https://github.com/webern/mx/pull/112
+[#113]: https://github.com/webern/mx/pull/113
 [#58]: https://github.com/webern/mx/issues/58
 [8a5cd6b]: https://github.com/webern/mx/commit/8a5cd6b
 
