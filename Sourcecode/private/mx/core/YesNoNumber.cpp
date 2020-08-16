@@ -49,12 +49,12 @@ namespace mx
             return myValue.index() == 1;
         }
 
-        void YesNoNumber::setYesNo( YesNo value ) const
+        void YesNoNumber::setYesNo( YesNo value )
         {
             myValue.emplace<YesNo>( value );
         }
 
-        void YesNoNumber::setDecimal( Decimal value ) const
+        void YesNoNumber::setDecimal( Decimal value )
         {
             myValue.emplace<Decimal>( value );
         }
@@ -68,7 +68,7 @@ namespace mx
                 if constexpr( std::is_same_v<T, YesNo> )
                     result = arg;
                 else if constexpr( std::is_same_v<T, Decimal> )
-                    result = Decimal{};
+                    result = YesNo::yes;
                 else
                     static_assert(always_false_v<T>, "non-exhaustive visitor!");
             }, myValue);
@@ -82,7 +82,7 @@ namespace mx
             {
                 using T = std::decay_t<decltype(arg)>;
                 if constexpr( std::is_same_v<T, YesNo> )
-                    result = YesNo::yes;
+                    result = Decimal{};
                 else if constexpr( std::is_same_v<T, Decimal> )
                     result = arg;
                 else
@@ -96,13 +96,13 @@ namespace mx
             const auto yesNo = tryParseYesNo( value );
             if( yesNo )
             {
-                setValue( *yesNo );
+                setYesNo( *yesNo );
                 return true;
             }
             auto decimal = Decimal{};
             if( decimal.parse( value ) )
             {
-                setValue( decimal );
+                setDecimal( decimal );
                 return true;
             }
             return false;
@@ -117,11 +117,11 @@ namespace mx
 
 		std::ostream& toStream( std::ostream& os, const YesNoNumber& value )
         {
-            if( getIsYesNo() )
+            if( value.getIsYesNo() )
             {
                 toStream( os, value.getValueYesNo() );
             }
-            if( getIsDecimal() )
+            if( value.getIsDecimal() )
             {
                 toStream( os, value.getValueDecimal() );
             }

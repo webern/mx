@@ -49,12 +49,12 @@ namespace mx
             return myValue.index() == 1;
         }
 
-        void FontSize::setDecimal( Decimal value ) const
+        void FontSize::setDecimal( Decimal value )
         {
             myValue.emplace<Decimal>( value );
         }
 
-        void FontSize::setCssFontSize( CssFontSize value ) const
+        void FontSize::setCssFontSize( CssFontSize value )
         {
             myValue.emplace<CssFontSize>( value );
         }
@@ -68,7 +68,7 @@ namespace mx
                 if constexpr( std::is_same_v<T, Decimal> )
                     result = arg;
                 else if constexpr( std::is_same_v<T, CssFontSize> )
-                    result = CssFontSize::xxSmall;
+                    result = Decimal{};
                 else
                     static_assert(always_false_v<T>, "non-exhaustive visitor!");
             }, myValue);
@@ -82,7 +82,7 @@ namespace mx
             {
                 using T = std::decay_t<decltype(arg)>;
                 if constexpr( std::is_same_v<T, Decimal> )
-                    result = Decimal{};
+                    result = CssFontSize::xxSmall;
                 else if constexpr( std::is_same_v<T, CssFontSize> )
                     result = arg;
                 else
@@ -96,13 +96,13 @@ namespace mx
             auto decimal = Decimal{};
             if( decimal.parse( value ) )
             {
-                setValue( decimal );
+                setDecimal( decimal );
                 return true;
             }
             const auto cssFontSize = tryParseCssFontSize( value );
             if( cssFontSize )
             {
-                setValue( *cssFontSize );
+                setCssFontSize( *cssFontSize );
                 return true;
             }
             return false;
@@ -117,11 +117,11 @@ namespace mx
 
 		std::ostream& toStream( std::ostream& os, const FontSize& value )
         {
-            if( getIsDecimal() )
+            if( value.getIsDecimal() )
             {
                 toStream( os, value.getValueDecimal() );
             }
-            if( getIsCssFontSize() )
+            if( value.getIsCssFontSize() )
             {
                 toStream( os, value.getValueCssFontSize() );
             }

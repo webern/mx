@@ -317,7 +317,7 @@ fn parse_def(i: &Info<'_>) -> Result<String> {
                 s.push_str(format!("            if( {} )\n", enumer.name.camel()).as_str());
                 s.push_str("            {\n");
                 s.push_str(
-                    format!("                setValue( *{} );\n", enumer.name.camel()).as_str(),
+                    format!("                set{}( *{} );\n", enumer.name.pascal(), enumer.name.camel()).as_str(),
                 );
                 s.push_str("                return true;\n");
                 s.push_str("            }\n");
@@ -334,7 +334,7 @@ fn parse_def(i: &Info<'_>) -> Result<String> {
                 );
                 s.push_str(format!("            if( {}.parse( value ) )\n", name.camel()).as_str());
                 s.push_str("            {\n");
-                s.push_str(format!("                setValue( {} );\n", name.camel()).as_str());
+                s.push_str(format!("                set{}( {} );\n", name.pascal(), name.camel()).as_str());
                 s.push_str("                return true;\n");
                 s.push_str("            }\n");
             }
@@ -350,7 +350,7 @@ fn parse_def(i: &Info<'_>) -> Result<String> {
             );
             s.push_str(format!("            if( {}.parse( value ) )\n", name.camel()).as_str());
             s.push_str("            {\n");
-            s.push_str(format!("                setValue( {} );\n", name.camel()).as_str());
+            s.push_str(format!("                set{}( {} );\n", name.pascal(), name.camel()).as_str());
             s.push_str("                return true;\n");
             s.push_str("            }\n");
         }
@@ -443,7 +443,7 @@ fn variants_get_def(i: &Info<'_>) -> Result<String> {
             let equals = if inner.name() == m.name() {
                 String::from("arg")
             } else {
-                i.construction(inner)?
+                i.construction(m)?
             };
             let else_str = if k == 0 { "" } else { "else " };
             s.push_str(
@@ -519,7 +519,7 @@ fn variants_set_def(i: &Info<'_>) -> Result<String> {
         let pascal = symbol.pascal();
         s.push_str(
             format!(
-                "        void {}::set{}( {} value ) const\n",
+                "        void {}::set{}( {} value )\n",
                 clss, pascal, pascal
             )
             .as_str(),
@@ -551,7 +551,7 @@ fn variants_to_stream_decl(i: &Info<'_>) -> String {
     for (j, m) in i.union.members.iter().enumerate() {
         let symbol = m.to_symbol();
         let pascal = symbol.pascal();
-        s.push_str(format!("            if( getIs{}() )\n", pascal).as_str());
+        s.push_str(format!("            if( value.getIs{}() )\n", pascal).as_str());
         s.push_str("            {\n");
         s.push_str(
             format!(
