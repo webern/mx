@@ -10,19 +10,19 @@ pub mod scalar;
 pub mod symbol;
 pub mod transform;
 
+use crate::error::Result;
 use crate::model::create::{Create, CreateError, CreateResult};
 use crate::model::enumeration::Enumeration;
 use crate::model::scalar::{DerivedSimpleTypeData, ScalarNumeric, ScalarString, UnionData};
 use crate::model::symbol::Symbol;
+use crate::xsd::primitives::BaseType;
 use crate::xsd::restriction::Facet;
 use crate::xsd::simple_type::{Payload, SimpleType};
 use crate::xsd::{simple_type, Entry, Xsd};
 pub use default_create::DefaultCreate;
 use std::borrow::Borrow;
-use std::ops::Deref;
 use std::collections::HashMap;
-use crate::xsd::primitives::BaseType;
-use crate::error::Result;
+use std::ops::Deref;
 
 #[derive(Debug, Clone, PartialEq, PartialOrd)]
 pub enum Def {
@@ -38,11 +38,11 @@ impl Def {
     pub fn name(&self) -> &Symbol {
         match self {
             Def::Enumeration(x) => &x.name,
-            Def::ScalarString(x) => {&x.name},
-            Def::ScalarNumber(x) => {x.name()},
-            Def::CustomScalarString(x) => {&x.name},
-            Def::DerivedSimpleType(x) => {&x.name},
-            Def::UnionSimpleType(x) => {&x.name},
+            Def::ScalarString(x) => &x.name,
+            Def::ScalarNumber(x) => x.name(),
+            Def::CustomScalarString(x) => &x.name,
+            Def::DerivedSimpleType(x) => &x.name,
+            Def::UnionSimpleType(x) => &x.name,
         }
     }
 }
@@ -83,27 +83,33 @@ impl Model {
             Def::DerivedSimpleType(_) => Shape::Simple,
             Def::UnionSimpleType(_) => Shape::Simple,
         };
-        let ipseity = Ipseity{ shape, name: def.name().original().into() };
-        match self.map.insert(ipseity.clone(), def){
+        let ipseity = Ipseity {
+            shape,
+            name: def.name().original().into(),
+        };
+        match self.map.insert(ipseity.clone(), def) {
             None => Ok(()),
             Some(_) => raise!("duplicate item {:?}", ipseity),
         }
     }
 
-    pub fn get_ips(&self, ipseity: &Ipseity) -> Option<&Def>{
+    pub fn get_ips(&self, ipseity: &Ipseity) -> Option<&Def> {
         self.map.get(ipseity)
     }
 
     pub fn get<S: AsRef<str>>(&self, shape: Shape, name: S) -> Option<&Def> {
-        let ips = Ipseity{shape,name:name.as_ref().into()};
+        let ips = Ipseity {
+            shape,
+            name: name.as_ref().into(),
+        };
         self.get_ips(&ips)
     }
 
-    pub fn defs(&self) -> impl Iterator<Item=&Def> {
+    pub fn defs(&self) -> impl Iterator<Item = &Def> {
         self.map.values()
     }
 
-    pub fn iter(&self) -> impl Iterator<Item=(&Ipseity,&Def)> {
+    pub fn iter(&self) -> impl Iterator<Item = (&Ipseity, &Def)> {
         self.map.iter()
     }
 }

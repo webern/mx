@@ -1,7 +1,12 @@
-use crate::error::{Result, Error};
+use crate::error::{Error, Result};
 use crate::generate::cpp::cpp_template::{render_core_cpp, render_core_h};
+use crate::generate::cpp::helpers::{default_construct, enum_default};
 use crate::generate::cpp::writer::Writer;
-use crate::generate::template::{render, CORE_H, DECIMAL_BUILTINS_CPP, DECIMAL_BUILTINS_H, DECIMAL_TYPE_CPP, DECIMAL_TYPE_H, INTEGER_BUILTINS_CPP, INTEGER_BUILTINS_H, INTEGER_TYPE_CPP, INTEGER_TYPE_H, NO_DATA, UNION_H, UNION_CPP};
+use crate::generate::template::{
+    render, CORE_H, DECIMAL_BUILTINS_CPP, DECIMAL_BUILTINS_H, DECIMAL_TYPE_CPP, DECIMAL_TYPE_H,
+    INTEGER_BUILTINS_CPP, INTEGER_BUILTINS_H, INTEGER_TYPE_CPP, INTEGER_TYPE_H, NO_DATA, UNION_CPP,
+    UNION_H,
+};
 use crate::model::scalar::{Bound, NumericData, Range, UnionData};
 use crate::model::scalar::{ScalarNumeric, ScalarString};
 use crate::model::symbol::Symbol;
@@ -10,13 +15,12 @@ use crate::utils::string_stuff::{documentation, sep, write_documentation};
 use crate::xsd::primitives::Numeric;
 use crate::xsd::primitives::Primitive;
 use crate::xsd::primitives::{BaseType, PrefixedString};
+use indexmap::set::IndexSet;
 use indexmap::Equivalent;
 use std::collections::HashMap;
-use std::fs::{OpenOptions, write};
+use std::fs::{write, OpenOptions};
 use std::io::Write;
 use std::ops::Deref;
-use indexmap::set::IndexSet;
-use crate::generate::cpp::helpers::{default_construct, enum_default};
 
 struct Info<'a> {
     union: &'a UnionData,
@@ -42,7 +46,7 @@ impl<'a> Info<'a> {
                 }
                 return raise!("could not find def");
             }
-            _=>{
+            _ => {
                 for (k, _) in self.primitive_members {
                     return Ok(format!("{}{{}}", k));
                 }
@@ -51,8 +55,12 @@ impl<'a> Info<'a> {
         }
     }
 
-    fn construct_first(&self)->Result<String> {
-        let first = self.union.members.first().ok_or_else(|| make_err!("no members"))?;
+    fn construct_first(&self) -> Result<String> {
+        let first = self
+            .union
+            .members
+            .first()
+            .ok_or_else(|| make_err!("no members"))?;
         self.construction(first)
     }
 
@@ -60,15 +68,29 @@ impl<'a> Info<'a> {
         let mut map = HashMap::new();
         for &def in self.named_members {
             match def {
-                Def::Enumeration(e) => { let _ = map.insert("mx/core/Enums.h".to_owned(), ()); },
-                Def::ScalarString(_) => { let _ = map.insert("mx/core/Strings.h".to_owned(), ()); }, // TODO dumb?
-                Def::ScalarNumber(n) => match n{
-                    ScalarNumeric::Decimal(_) => { let _ = map.insert("mx/core/Decimals.h".to_owned(), ()); },
-                    ScalarNumeric::Integer(_) => { let _ = map.insert("mx/core/Integers.h".to_owned(), ()); },
+                Def::Enumeration(e) => {
+                    let _ = map.insert("mx/core/Enums.h".to_owned(), ());
+                }
+                Def::ScalarString(_) => {
+                    let _ = map.insert("mx/core/Strings.h".to_owned(), ());
+                } // TODO dumb?
+                Def::ScalarNumber(n) => match n {
+                    ScalarNumeric::Decimal(_) => {
+                        let _ = map.insert("mx/core/Decimals.h".to_owned(), ());
+                    }
+                    ScalarNumeric::Integer(_) => {
+                        let _ = map.insert("mx/core/Integers.h".to_owned(), ());
+                    }
                 },
-                Def::CustomScalarString(s) => { let _ = map.insert(format!("mx/core/{}.h", s.name.pascal()), ()); },
-                Def::DerivedSimpleType(s) => { let _ = map.insert(format!("mx/core/{}.h", s.name.pascal()), ()); },
-                Def::UnionSimpleType(s) => { let _ = map.insert(format!("mx/core/{}.h", s.name.pascal()), ()); },
+                Def::CustomScalarString(s) => {
+                    let _ = map.insert(format!("mx/core/{}.h", s.name.pascal()), ());
+                }
+                Def::DerivedSimpleType(s) => {
+                    let _ = map.insert(format!("mx/core/{}.h", s.name.pascal()), ());
+                }
+                Def::UnionSimpleType(s) => {
+                    let _ = map.insert(format!("mx/core/{}.h", s.name.pascal()), ());
+                }
             }
         }
         for (_, &include) in self.primitive_members {
@@ -83,7 +105,6 @@ impl<'a> Info<'a> {
     }
 }
 
-
 impl Writer {
     pub(crate) fn write_unions(&self, mut unions: &[&UnionData]) -> Result<()> {
         for &union in unions {
@@ -95,11 +116,17 @@ impl Writer {
                 match member {
                     BaseType::Custom(name) => {
                         let found = match self.model.get(Shape::Simple, name) {
-                        None => return raise!("the dependency '{}' could not be found for union '{}'", name, union.name.original()),
-                        Some(f) => f,
+                            None => {
+                                return raise!(
+                                    "the dependency '{}' could not be found for union '{}'",
+                                    name,
+                                    union.name.original()
+                                )
+                            }
+                            Some(f) => f,
                         };
                         named_members.push(found);
-                    },
+                    }
                     p => {
                         let primitive = p.primitive();
                         let primitive_name = format!("{}", Symbol::new(format!("{}", p)).pascal());
@@ -107,25 +134,36 @@ impl Writer {
                             Primitive::None => panic!("can't happen"),
                             Primitive::Numeric => {
                                 if member.is_decimal() {
-                                    primitive_members.insert(primitive_name.clone(), "mx/core/Decimals.h");
+                                    primitive_members
+                                        .insert(primitive_name.clone(), "mx/core/Decimals.h");
                                 } else {
-                                    primitive_members.insert(primitive_name.clone(), "mx/core/Integers.h");
+                                    primitive_members
+                                        .insert(primitive_name.clone(), "mx/core/Integers.h");
                                 }
-                            },
-                            Primitive::Character => {let _ = primitive_members.insert(primitive_name.clone(), "mx/core/Strings.h");}
-                            Primitive::DateType => {let _ = primitive_members.insert(primitive_name.clone(), "mx/core/Date.h");}
+                            }
+                            Primitive::Character => {
+                                let _ = primitive_members
+                                    .insert(primitive_name.clone(), "mx/core/Strings.h");
+                            }
+                            Primitive::DateType => {
+                                let _ = primitive_members
+                                    .insert(primitive_name.clone(), "mx/core/Date.h");
+                            }
                         }
                     }
                 }
             }
-            let info = Info{
+            let info = Info {
                 union,
                 named_members: &named_members,
-                primitive_members: &primitive_members
+                primitive_members: &primitive_members,
             };
             data.insert("classname", union.name.pascal().into());
             data.insert("default_value", info.construct_first()?);
-            data.insert("documentation", documentation(union.documentation.as_str(), 2)?);
+            data.insert(
+                "documentation",
+                documentation(union.documentation.as_str(), 2)?,
+            );
             data.insert("parse_def", parse_def(&info)?);
             data.insert("variants_ctor_decl", variants_ctor_decl(&info)?);
             data.insert("variants_ctor_def", variants_ctor_def(&info)?);
@@ -137,17 +175,26 @@ impl Writer {
             data.insert("variants_set_def", variants_set_def(&info)?);
             data.insert("variants_template_decl", variants_template_decl(&info));
             data.insert("variants_to_stream_decl", variants_to_stream_decl(&info));
-            let hpath = self.paths.core.join(format!("{}.h",union.name.pascal()));
-            let cpppath = self.paths.core.join(format!("{}.cpp",union.name.pascal()));
+            let hpath = self.paths.core.join(format!("{}.h", union.name.pascal()));
+            let cpppath = self.paths.core.join(format!("{}.cpp", union.name.pascal()));
             let hcontents = render(UNION_H, &data)?;
             let cppcontents = render(UNION_CPP, &data)?;
             let mut h_includes = info.h_includes();
             let mut h_strs: Vec<&str> = h_includes.iter().map(|s| s.as_str()).collect();
             let mut std_h = vec!["string", "variant", "ostream"];
-            let h = render_core_h(hcontents, Some(h_strs.as_mut_slice()), Some(std_h.as_mut_slice()))?;
+            let h = render_core_h(
+                hcontents,
+                Some(h_strs.as_mut_slice()),
+                Some(std_h.as_mut_slice()),
+            )?;
             let self_import = format!("mx/core/{}.h", union.name.pascal());
             let mut std_cpp = vec!["sstream", "type_traits"];
-            let cpp = render_core_cpp(cppcontents, Some(self_import), None, Some(std_cpp.as_mut_slice()))?;
+            let cpp = render_core_cpp(
+                cppcontents,
+                Some(self_import),
+                None,
+                Some(std_cpp.as_mut_slice()),
+            )?;
             wrap!(write(hpath, h))?;
             wrap!(write(cpppath, cpp))?;
         }
@@ -213,26 +260,48 @@ fn parse_def(i: &Info<'_>) -> Result<String> {
         if let BaseType::Custom(name) = m {
             let def = i.find_def(name)?;
             if let Def::Enumeration(enumer) = def {
-                s.push_str(format!("            const auto {} = tryParse{}( value );\n", enumer.name.camel(), enumer.name.pascal()).as_str());
+                s.push_str(
+                    format!(
+                        "            const auto {} = tryParse{}( value );\n",
+                        enumer.name.camel(),
+                        enumer.name.pascal()
+                    )
+                    .as_str(),
+                );
                 s.push_str(format!("            if( {} )\n", enumer.name.camel()).as_str());
                 s.push_str("            {\n");
-                s.push_str(format!("                setValue( *{} );\n", enumer.name.camel()).as_str());
+                s.push_str(
+                    format!("                setValue( *{} );\n", enumer.name.camel()).as_str(),
+                );
                 s.push_str("                return true;\n");
                 s.push_str("            }\n");
                 continue;
             } else {
                 let name = Symbol::new(format!("{}", m));
-                s.push_str(format!("            auto {} = {}{{}};\n", name.camel(), name.pascal()).as_str());
+                s.push_str(
+                    format!(
+                        "            auto {} = {}{{}};\n",
+                        name.camel(),
+                        name.pascal()
+                    )
+                    .as_str(),
+                );
                 s.push_str(format!("            if( {}.parse( value ) )\n", name.camel()).as_str());
                 s.push_str("            {\n");
                 s.push_str(format!("                setValue( {} );\n", name.camel()).as_str());
                 s.push_str("                return true;\n");
                 s.push_str("            }\n");
             }
-
         } else {
             let name = Symbol::new(format!("{}", m));
-            s.push_str(format!("            auto {} = {}{{}};\n", name.camel(), name.pascal()).as_str());
+            s.push_str(
+                format!(
+                    "            auto {} = {}{{}};\n",
+                    name.camel(),
+                    name.pascal()
+                )
+                .as_str(),
+            );
             s.push_str(format!("            if( {}.parse( value ) )\n", name.camel()).as_str());
             s.push_str("            {\n");
             s.push_str(format!("                setValue( {} );\n", name.camel()).as_str());
@@ -248,17 +317,33 @@ fn variants_ctor_decl(i: &Info<'_>) -> Result<String> {
     let mut s = String::new();
     let clss = i.union.name.pascal();
     for (j, m) in i.union.members.iter().enumerate() {
-        s.push_str(format!("            explicit {}( {} value );", clss, m.to_symbol().pascal()).as_str());
+        s.push_str(
+            format!(
+                "            explicit {}( {} value );",
+                clss,
+                m.to_symbol().pascal()
+            )
+            .as_str(),
+        );
         if j < i.union.members.len() - 1 {
             s.push('\n');
         }
     }
     Ok(s)
 }
-fn variants_ctor_def(i: &Info<'_>) -> Result<String> {     let mut s = String::new();
+fn variants_ctor_def(i: &Info<'_>) -> Result<String> {
+    let mut s = String::new();
     let clss = i.union.name.pascal();
     for (j, m) in i.union.members.iter().enumerate() {
-        s.push_str(format!("        {}::{}( {} value )\n", clss, clss, m.to_symbol().pascal()).as_str());
+        s.push_str(
+            format!(
+                "        {}::{}( {} value )\n",
+                clss,
+                clss,
+                m.to_symbol().pascal()
+            )
+            .as_str(),
+        );
         let do_move = match i.find_def(m.name()) {
             Ok(ok) => match ok {
                 Def::Enumeration(_) => false,
@@ -314,16 +399,20 @@ fn variants_get_def(i: &Info<'_>) -> Result<String> {
             } else {
                 i.construction(inner)?
             };
-            let else_str = if k == 0 {
-                ""
-            } else {
-                "else "
-            };
-            s.push_str(format!("                {}if constexpr( std::is_same_v<T, {}> )\n", else_str, inner_pascal).as_str());
+            let else_str = if k == 0 { "" } else { "else " };
+            s.push_str(
+                format!(
+                    "                {}if constexpr( std::is_same_v<T, {}> )\n",
+                    else_str, inner_pascal
+                )
+                .as_str(),
+            );
             s.push_str(format!("                    result = {};\n", equals).as_str());
         }
         s.push_str("                else\n");
-        s.push_str("                    static_assert(always_false_v<T>, \"non-exhaustive visitor!\");\n");
+        s.push_str(
+            "                    static_assert(always_false_v<T>, \"non-exhaustive visitor!\");\n",
+        );
         s.push_str("            }, myValue);\n");
         s.push_str("            return result;\n");
         s.push_str("        }");
@@ -382,7 +471,13 @@ fn variants_set_def(i: &Info<'_>) -> Result<String> {
     for (j, m) in i.union.members.iter().enumerate() {
         let symbol = m.to_symbol();
         let pascal = symbol.pascal();
-        s.push_str(format!("        void {}::set{}( {} value ) const\n", clss, pascal, pascal).as_str());
+        s.push_str(
+            format!(
+                "        void {}::set{}( {} value ) const\n",
+                clss, pascal, pascal
+            )
+            .as_str(),
+        );
         s.push_str("        {\n");
         s.push_str(format!("            myValue.emplace<{}>( value );\n", pascal).as_str());
         s.push_str("        }\n");
@@ -394,7 +489,13 @@ fn variants_set_def(i: &Info<'_>) -> Result<String> {
 }
 
 fn variants_template_decl(i: &Info<'_>) -> String {
-    let names: Vec<String> = i.union.members.iter().map(|m| m.to_symbol()).map(|s| s.pascal().to_owned()).collect();
+    let names: Vec<String> = i
+        .union
+        .members
+        .iter()
+        .map(|m| m.to_symbol())
+        .map(|s| s.pascal().to_owned())
+        .collect();
     names.join(", ")
 }
 
@@ -406,7 +507,13 @@ fn variants_to_stream_decl(i: &Info<'_>) -> String {
         let pascal = symbol.pascal();
         s.push_str(format!("            if( getIs{}() )\n", pascal).as_str());
         s.push_str("            {\n");
-        s.push_str(format!("                toStream( os, value.getValue{}() );\n", pascal).as_str());
+        s.push_str(
+            format!(
+                "                toStream( os, value.getValue{}() );\n",
+                pascal
+            )
+            .as_str(),
+        );
         s.push_str("            }");
         if j < i.union.members.len() - 1 {
             s.push('\n');

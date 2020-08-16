@@ -11,7 +11,7 @@ use crate::model::scalar::{Bound, NumericData, Range, ScalarNumeric};
 use crate::model::symbol::Symbol;
 use crate::model::transform::Transform;
 use crate::model::Def::Enumeration;
-use crate::model::{DefaultCreate, Def};
+use crate::model::{Def, DefaultCreate};
 use crate::xsd::choice::{Choice, ChoiceItem};
 use crate::xsd::complex_type::{Children, ComplexType, Parent};
 use crate::xsd::element::{ElementDef, ElementRef};

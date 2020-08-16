@@ -2,7 +2,7 @@ use crate::error::Result;
 use crate::model::create::{Create, CreateError};
 use crate::model::post_process::PostProcess;
 use crate::model::transform::Transform;
-use crate::model::{DefaultCreate, Def, Model};
+use crate::model::{Def, DefaultCreate, Model};
 use crate::xsd::{Entry, Xsd};
 use std::borrow::Cow;
 use std::fmt::{Debug, Formatter};

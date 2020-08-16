@@ -1,11 +1,11 @@
 use crate::error::{Error, Result};
 use crate::model::builtin::Builtin::Number;
+use crate::model::symbol::Symbol;
 use crate::xsd::constants::*;
 use std::borrow::Cow;
 use std::convert::TryFrom;
 use std::fmt::{Display, Formatter};
 use std::io::BufRead;
-use crate::model::symbol::Symbol;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Traits
