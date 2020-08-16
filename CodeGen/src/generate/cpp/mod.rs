@@ -1,3 +1,4 @@
+mod helpers;
 pub mod constants;
 mod cpp_template;
 pub mod modeler;

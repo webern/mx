@@ -6,6 +6,7 @@ pub struct Enumeration {
     pub name: Symbol,
     pub members: Vec<Symbol>,
     pub documentation: String,
+    pub default: Symbol,
     /// There are enums that are handled specially because they were part of an element that allowed
     /// for an "other" field that could hold a string. If `other_field.is_some()`, it means that the
     /// enum behaves like a variant where some value can be held in a field that might be named, for
@@ -25,8 +26,4 @@ pub struct OtherField {
     /// A language like Rust wouldn't need this, but in, e.g. C++, an enum cannot contain a value,
     /// so the enum and the potential 'other' value need to be 'wrapped' together in some way.
     pub wrapper_class_name: Symbol,
-    /// In the event that there is a wrapper class, what value should it have when default
-    /// constructed? This needs to match one of the members as the downstream code will treat it as
-    /// an enum value and not as a string.
-    pub default_value: Symbol,
 }

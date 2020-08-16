@@ -59,15 +59,15 @@ impl Writer {
                 enum_members_to_string(enumeration),
             );
             if let Some(of) = &enumeration.other_field {
-                data.insert("default_value_enum", of.default_value.camel().into());
-                data.insert("default_value_string", of.default_value.original().into());
+                data.insert("default_value_enum", enumeration.default.camel().into());
+                data.insert("default_value_string", enumeration.default.original().into());
                 data.insert("to_string_default_return", of.name.original().into());
                 data.insert("other_field_name", of.name.camel().into());
             } else {
                 let first_member = enumeration.members.first().unwrap();
-                data.insert("default_value_enum", first_member.camel().into());
-                data.insert("default_value_string", first_member.original().into());
-                data.insert("to_string_default_return", first_member.original().into());
+                data.insert("default_value_enum", enumeration.default.camel().into());
+                data.insert("default_value_string", enumeration.default.original().into());
+                data.insert("to_string_default_return", enumeration.default.original().into());
             }
             let rendered_h = render(ENUM_H, &data)?;
             if !first {

@@ -5,7 +5,7 @@ use crate::generate::template::{render, CORE_H, DECIMAL_BUILTINS_CPP, DECIMAL_BU
 use crate::model::scalar::{Bound, NumericData, Range, UnionData};
 use crate::model::scalar::{ScalarNumeric, ScalarString};
 use crate::model::symbol::Symbol;
-use crate::model::Def;
+use crate::model::{Def, Shape};
 use crate::utils::string_stuff::{documentation, sep, write_documentation};
 use crate::xsd::primitives::Numeric;
 use crate::xsd::primitives::Primitive;
@@ -15,24 +15,67 @@ use std::collections::HashMap;
 use std::fs::{OpenOptions, write};
 use std::io::Write;
 use std::ops::Deref;
+use indexmap::set::IndexSet;
+use crate::generate::cpp::helpers::default_construct;
+
+struct Info<'a> {
+    union: &'a UnionData,
+    named_members: &'a Vec<&'a Def>,
+    primitive_members: &'a HashMap<String, &'a str>,
+}
 
 impl Writer {
     pub(crate) fn write_unions(&self, mut unions: &[&UnionData]) -> Result<()> {
         for &union in unions {
             let mut data = HashMap::new();
-            data.insert("classname", classname());
-            data.insert("default_value", default_value());
-            data.insert("documentation", String::from("documentation()"));
-            data.insert("parse_def", parse_def());
-            data.insert("variants_ctor_decl", variants_ctor_decl());
-            data.insert("variants_ctor_def", variants_ctor_def());
-            data.insert("variants_get_decl", variants_get_decl());
-            data.insert("variants_get_def", variants_get_def());
-            data.insert("variants_get_is_decl", variants_get_is_decl());
-            data.insert("variants_get_is_def", variants_get_is_def());
-            data.insert("variants_set_decl", variants_set_decl());
-            data.insert("variants_set_def", variants_set_def());
-            data.insert("variants_template_decl", variants_template_decl());
+            // find dependencies
+            let mut named_members = Vec::new();
+            let mut primitive_members = HashMap::new();
+            for member in &union.members {
+                match member {
+                    BaseType::Custom(name) => {
+                        let found = match self.model.get(Shape::Simple, name) {
+                        None => return raise!("the dependency '{}' could not be found for union '{}'", name, union.name.original()),
+                        Some(f) => f,
+                        };
+                        named_members.push(found);
+                    },
+                    p => {
+                        let primitive = p.primitive();
+                        let primitive_name = format!("{}", Symbol::new(format!("{}", p)).pascal());
+                        match primitive {
+                            Primitive::None => panic!("can't happen"),
+                            Primitive::Numeric => {
+                                if member.is_decimal() {
+                                    primitive_members.insert(primitive_name.clone(), "mx/core/Decimals.h");
+                                } else {
+                                    primitive_members.insert(primitive_name.clone(), "mx/core/Integers.h");
+                                }
+                            },
+                            Primitive::Character => {let _ = primitive_members.insert(primitive_name.clone(), "mx/core/Strings.h");}
+                            Primitive::DateType => {let _ = primitive_members.insert(primitive_name.clone(), "mx/core/Date.h");}
+                        }
+                    }
+                }
+            }
+            let info = Info{
+                union,
+                named_members: &named_members,
+                primitive_members: &primitive_members
+            };
+            data.insert("classname", union.name.pascal().into());
+            data.insert("default_value", default_value(&info));
+            data.insert("documentation", documentation(union.documentation.as_str(), 2)?);
+            data.insert("parse_def", parse_def(&info));
+            data.insert("variants_ctor_decl", variants_ctor_decl(&info));
+            data.insert("variants_ctor_def", variants_ctor_def(&info));
+            data.insert("variants_get_decl", variants_get_decl(&info));
+            data.insert("variants_get_def", variants_get_def(&info));
+            data.insert("variants_get_is_decl", variants_get_is_decl(&info));
+            data.insert("variants_get_is_def", variants_get_is_def(&info));
+            data.insert("variants_set_decl", variants_set_decl(&info));
+            data.insert("variants_set_def", variants_set_def(&info));
+            data.insert("variants_template_decl", variants_template_decl(&info));
             let hpath = self.paths.core.join(format!("{}.h",union.name.pascal()));
             let cpppath = self.paths.core.join(format!("{}.cpp",union.name.pascal()));
             let hcontents = render(UNION_H, &data)?;
@@ -99,16 +142,32 @@ impl Writer {
     }
 }
 
-fn classname() -> String { String::from("classname") }
-fn default_value() -> String { String::from("default_value") }
-// fn documentation() -> String { String::from("documentation") }
-fn parse_def() -> String { String::from("parse_def") }
-fn variants_ctor_decl() -> String { String::from("variants_ctor_decl") }
-fn variants_ctor_def() -> String { String::from("variants_ctor_def") }
-fn variants_get_decl() -> String { String::from("variants_get_decl") }
-fn variants_get_def() -> String { String::from("variants_get_def") }
-fn variants_get_is_decl() -> String { String::from("variants_get_is_decl") }
-fn variants_get_is_def() -> String { String::from("variants_get_is_def") }
-fn variants_set_decl() -> String { String::from("variants_set_decl") }
-fn variants_set_def() -> String { String::from("variants_set_def") }
-fn variants_template_decl() -> String { String::from("variants_template_decl") }
+fn default_value(i: &Info<'_>) -> String {
+    let first = i.union.members.first().unwrap();
+    match first {
+        BaseType::Custom(custom) => {
+            for &def in i.named_members {
+                return default_construct(def);
+            }
+            panic!("could not find the default value for a named base type");
+        }
+        _=>{
+            for (k, _) in i.primitive_members {
+                return format!("{}{{}}", k);
+            }
+            panic!("could not find the default primitive value");
+        }
+    }
+}
+
+fn parse_def(i: &Info<'_>) -> String { String::from("parse_def") }
+
+fn variants_ctor_decl(i: &Info<'_>) -> String { String::from("variants_ctor_decl") }
+fn variants_ctor_def(i: &Info<'_>) -> String { String::from("variants_ctor_def") }
+fn variants_get_decl(i: &Info<'_>) -> String { String::from("variants_get_decl") }
+fn variants_get_def(i: &Info<'_>) -> String { String::from("variants_get_def") }
+fn variants_get_is_decl(i: &Info<'_>) -> String { String::from("variants_get_is_decl") }
+fn variants_get_is_def(i: &Info<'_>) -> String { String::from("variants_get_is_def") }
+fn variants_set_decl(i: &Info<'_>) -> String { String::from("variants_set_decl") }
+fn variants_set_def(i: &Info<'_>) -> String { String::from("variants_set_def") }
+fn variants_template_decl(i: &Info<'_>) -> String { String::from("variants_template_decl") }

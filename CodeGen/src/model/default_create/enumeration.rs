@@ -39,10 +39,12 @@ pub(super) fn model_enumeration(st: &SimpleType, xsd: &Xsd) -> CreateResult {
         };
         members.push(Symbol::new(s.as_str()));
     }
+    let default = members.first().ok_or_else(|| make_create_err!("no members!"))?.clone();
     let enm = Enumeration {
         name: Symbol::new(st.name.as_str()),
         members,
         documentation: st.documentation(),
+        default,
         other_field: None,
     };
     Ok(Some(vec![Def::Enumeration(enm)]))

@@ -189,6 +189,7 @@ impl MxModeler {
             name: Symbol::new("dynamics enum"),
             members: vec![],
             documentation: entry.documentation(),
+            default: Symbol::new("mf"),
             other_field: None,
         };
         for c in &choice.choices {
@@ -206,7 +207,6 @@ impl MxModeler {
                     name: Symbol::new(other_field_name),
                     type_: BuiltinString::String,
                     wrapper_class_name: Symbol::new("dynamics value"),
-                    default_value: Symbol::new("mf"),
                 })
             }
         }
@@ -334,12 +334,12 @@ fn create_pseudo_enum(entry: &Entry, spec: &PseudoEnumSpec) -> CreateResult {
         name: symbol,
         members: vec![],
         documentation: entry.documentation(),
+        default: Symbol::new(spec.default_value.as_str()),
         other_field: Some(OtherField {
             name: Symbol::new(spec.extra_field_name.as_str()),
             // TODO - check if it's actually xs:token
             type_: BuiltinString::String,
             wrapper_class_name: Symbol::new(spec.class_name.as_str()),
-            default_value: Symbol::new(spec.default_value.as_str()),
         }),
     };
     for s in &spec.members {
