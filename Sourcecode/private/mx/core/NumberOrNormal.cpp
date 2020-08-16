@@ -2,91 +2,159 @@
 // Copyright (c) by Matthew James Briggs
 // Distributed under the MIT License
 
-// self
 #include "mx/core/NumberOrNormal.h"
-
-// std
 #include <sstream>
-#include <type_traits>
 
 namespace mx
 {
     namespace core
     {
-        template<class> inline constexpr bool always_false_v = false;
-
+        
+        class NumberOrNormal::impl
+        {
+        public:
+            explicit impl()
+            :myDecimal( 0 )
+            ,myIsNormal( true )
+            {}
+            
+            explicit impl( const Decimal& value )
+            :myDecimal( value )
+            ,myIsNormal( false )
+            {}
+            
+            explicit impl( const std::string& value )
+            :myDecimal( 0 )
+            ,myIsNormal( false )
+            {
+                parse( value );
+            }
+            
+            bool getIsNormal() const
+            {
+                return myIsNormal;
+            }
+            bool getIsNumber() const
+            {
+                return ! myIsNormal;
+            }
+            void setValueNormal()
+            {
+                myDecimal = Decimal( 0 );
+                myIsNormal = true;;
+            }
+            void setValue( const Decimal& value )
+            {
+                myDecimal = Decimal( value );
+                myIsNormal = false;
+            }
+            Decimal getValueNumber() const
+            {
+                return myDecimal;
+            }
+            void parse( const std::string& value )
+            {
+                if ( value == "normal" )
+                {
+                    myDecimal = Decimal( 0 );
+                    myIsNormal = true;
+                }
+                else
+                {
+                    /* if it contains only numeric
+                     characters it must be a number */
+                    myDecimal.parse( value );
+                    myIsNormal = false;
+                }
+            }
+        private:
+            Decimal myDecimal;
+            bool myIsNormal;
+        };
+        
+        
         NumberOrNormal::NumberOrNormal()
-        : myValue{ Decimal{} }
-        {
-
-        }
-
-        NumberOrNormal::NumberOrNormal( Decimal value )
-        : myValue{ std::move( value ) }
-        {
-
-        }
+        :myImpl( new impl() )
+        {}
+        
+        NumberOrNormal::NumberOrNormal( const Decimal& value )
+        :myImpl( new impl( value ) )
+        {}
         
         NumberOrNormal::NumberOrNormal( const std::string& value )
-        : NumberOrNormal{}
+        :myImpl( new impl( value ) )
+        {}
+        
+        NumberOrNormal::~NumberOrNormal() {}
+        
+        NumberOrNormal::NumberOrNormal( const NumberOrNormal& other )
+        :myImpl( new NumberOrNormal::impl( *other.myImpl ) )
+        {}
+        
+        NumberOrNormal::NumberOrNormal( NumberOrNormal&& other )
+        :myImpl( std::move( other.myImpl ) )
+        {}
+        
+        NumberOrNormal& NumberOrNormal::operator=( NumberOrNormal&& other )
         {
-            parse( value );
+            myImpl = std::move( other.myImpl );
+            return *this;
         }
-
-        bool NumberOrNormal::getIsDecimal() const
+        
+        NumberOrNormal& NumberOrNormal::operator=( const NumberOrNormal& other )
         {
-            return myValue.index() == 0;
+            this->myImpl = std::unique_ptr<NumberOrNormal::impl>( new NumberOrNormal::impl( *other.myImpl ) );
+            return *this;
         }
-
-        void NumberOrNormal::setDecimal( Decimal value ) const
+        bool NumberOrNormal::getIsNormal() const
         {
-            myValue.emplace<Decimal>( value );
+            return myImpl->getIsNormal();
         }
-
-        Decimal NumberOrNormal::getValueDecimal() const
+        bool NumberOrNormal::getIsNumber() const
         {
-            auto result = Decimal{};
-            std::visit([&](auto&& arg)
-            {
-                using T = std::decay_t<decltype(arg)>;
-                if constexpr( std::is_same_v<T, Decimal> )
-                    result = arg;
-                else
-                    static_assert(always_false_v<T>, "non-exhaustive visitor!");
-            }, myValue);
-            return result;
+            return myImpl->getIsNumber();
         }
-
-        bool NumberOrNormal::parse( const std::string& value )
+        void NumberOrNormal::setValueNormal()
         {
-            auto decimal = Decimal{};
-            if( decimal.parse( value ) )
-            {
-                setValue( decimal );
-                return true;
-            }
-            return false;
+            myImpl->setValueNormal();
         }
-
+        void NumberOrNormal::setValue( const Decimal& value )
+        {
+            myImpl->setValue( value );
+        }
+        Decimal NumberOrNormal::getValueNumber() const
+        {
+            return myImpl->getValueNumber();
+        }
+        
+        void NumberOrNormal::parse( const std::string& value )
+        {
+            myImpl->parse( value );
+        }
+        
         std::string toString( const NumberOrNormal& value )
         {
             std::stringstream ss;
             toStream( ss, value );
             return ss.str();
         }
-
 		std::ostream& toStream( std::ostream& os, const NumberOrNormal& value )
         {
-            if( getIsDecimal() )
+            if ( value.getIsNumber() )
             {
-                toStream( os, value.getValueDecimal() );
+                toStream( os, value.getValueNumber() );
+            }
+            else
+            {
+                os << "normal";
             }
             return os;
         }
-
 		std::ostream& operator<<( std::ostream& os, const NumberOrNormal& value )
         {
             return toStream( os, value );
         }
+        
+        
     }
 }

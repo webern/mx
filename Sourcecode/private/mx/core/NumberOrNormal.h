@@ -4,31 +4,36 @@
 
 #pragma once
 
+#include <iostream>
 #include "mx/core/Decimals.h"
-
-#include <ostream>
-#include <string>
-#include <variant>
+#include <memory>
 
 namespace mx
 {
     namespace core
     {
-        /// The number-or-normal values can be either a decimal number or the string "normal". This
-        /// is used by the line-height and letter-spacing attributes.
         class NumberOrNormal
         {
         public:
             explicit NumberOrNormal();
-            explicit NumberOrNormal( Decimal value );
+            explicit NumberOrNormal( const Decimal& value );
             explicit NumberOrNormal( const std::string& value );
-            bool getIsDecimal() const;
-            void setDecimal( Decimal value );
-            Decimal getValueDecimal() const;
-            bool parse( const std::string& value );
+            virtual ~NumberOrNormal();
+            NumberOrNormal( const NumberOrNormal& other );
+            NumberOrNormal( NumberOrNormal&& other );
+            NumberOrNormal& operator=( const NumberOrNormal& other );
+            NumberOrNormal& operator=( NumberOrNormal&& other );
+            
+            bool getIsNormal() const;
+            bool getIsNumber() const;
+            void setValueNormal();
+            void setValue( const Decimal& value );
+            Decimal getValueNumber() const;
+            void parse( const std::string& value );
             
         private:
-            std::variant<Decimal> myValue;
+            class impl;
+            std::unique_ptr<impl> myImpl;
         };
         
         std::string toString( const NumberOrNormal& value );
