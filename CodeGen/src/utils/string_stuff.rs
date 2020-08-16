@@ -4,6 +4,7 @@ pub const INDENT: &str = "    ";
 pub const DOC_COMMENT: &str = "///";
 
 use crate::error::Result;
+use std::borrow::Cow;
 use std::cmp::Ordering;
 use std::fmt::{Display, Formatter};
 use std::io::{Cursor, Write};
@@ -182,25 +183,65 @@ where
     W: Write,
     S: AsRef<str>,
 {
-    let words = words(documentation);
-    let mut pos: usize = linestart(w, indents, false)?;
-    let line_width = LINE_WIDTH - (indents * INDENT.len());
-    for word in words {
-        if word.as_str() == "\n" {
-            writeln!(w)?;
-            linestart(w, indents, false)?;
-            writeln!(w)?;
-            pos = linestart(w, indents, false)?;
-        } else if !word.is_empty() && word.len() + pos + 1 >= line_width {
-            writeln!(w)?;
-            pos = linestart(w, indents, false)?;
+    let orig = documentation.as_ref();
+    let orig_lines = orig.lines();
+    let mut consec_empty = 0;
+    let mut clean_lines: Vec<String> = Vec::new();
+    for line in orig_lines {
+        let mut line: String = line.into();
+        let line = line.replace("\t", "    ");
+        if is_empty(&line) {
+            if consec_empty < 2 {
+                clean_lines.push(line.clone());
+            }
+            consec_empty += 1;
+        } else {
+            clean_lines.push(line.clone());
+            consec_empty = 0;
         }
-        if !word.is_empty() && word.as_str() != "\n" {
-            write!(w, " {}", word.as_str())?;
-            pos = pos + word.len() + 1;
+        // clean_lines.push(line.clone());
+    }
+    let width = LINE_WIDTH - (DOC_COMMENT.len() + 1) - (INDENT.len() * indents);
+    let mut final_lines: Vec<Cow<'_, str>> = Vec::new();
+    for line in &clean_lines {
+        if is_empty(line.as_str()) {
+            final_lines.push(Cow::Borrowed(line))
+        }
+        let mut result = textwrap::wrap(line.as_str(), width);
+        final_lines.append(&mut result);
+    }
+    consec_empty = 0;
+    for (i, line) in final_lines.iter().enumerate() {
+        let line = line.as_ref();
+        let line_is_empty = is_empty(line);
+        let last_line = i == final_lines.len() - 1;
+        if line_is_empty && consec_empty > 0 {
+            consec_empty += 1;
+            continue;
+        }
+        if line_is_empty {
+            linestart(w, indents, false)?;
+            consec_empty += 1;
+        } else {
+            linestart(w, indents, true)?;
+            consec_empty = 0;
+        }
+        if last_line {
+            write!(w, "{}", line)?;
+        } else {
+            write!(w, "{}\n", line)?;
         }
     }
     Ok(())
+}
+
+fn is_empty<S: AsRef<str>>(line: S) -> bool {
+    for c in line.as_ref().chars() {
+        if !c.is_whitespace() {
+            return false;
+        }
+    }
+    true
 }
 
 pub fn linestart<W: Write>(w: &mut W, indents: usize, add_space: bool) -> std::io::Result<usize> {
@@ -248,7 +289,7 @@ pub fn words<S: AsRef<str>>(s: S) -> Vec<String> {
 
 #[cfg(test)]
 mod tests {
-    use super::{words, Symbol};
+    use super::{documentation, words, Symbol};
     use crate::utils::string_stuff::tokenize;
     use std::io::Cursor;
 
@@ -396,8 +437,7 @@ mod tests {
         super::write_documentation(&mut w, input, 1).unwrap();
         let got = String::from_utf8_lossy(w.get_ref());
         let want = r#"    /// Here is a sentence. And another sentence, which has a comma:
-    ///
-    /// With extra spaces and newlines, etc."#;
+    ///         With extra spaces and newlines, etc."#;
         assert_eq!(got, want);
     }
 
@@ -408,8 +448,8 @@ mod tests {
         let mut w = Cursor::new(vec![0; 15]);
         super::write_documentation(&mut w, input, 1).unwrap();
         let got = String::from_utf8_lossy(w.get_ref());
-        let want = r#"    /// Here is a sentence. And another sentence, which has a comma: without a newline it goes
-    /// on for a long time and must be wrapped it's really quite remarkable"#;
+        let want = r#"    /// Here is a sentence. And another sentence, which has a comma: without a newline it goes on
+    /// for a long time and must be wrapped it's really quite remarkable"#;
         assert_eq!(got, want);
     }
 
@@ -420,7 +460,6 @@ mod tests {
         super::write_documentation(&mut w, input, 1).unwrap();
         let got = String::from_utf8_lossy(w.get_ref());
         let want = r#"    /// a
-    ///
     /// b
     ///
     /// c
@@ -458,5 +497,131 @@ mod tests {
             let got = tokenize(test_case.input);
             assert_eq!(got, test_case.want);
         }
+    }
+
+    const DYNAMICS_DOCUMENTATION: &str = r#"Dynamics can be associated either with a note or a general musical direction. To avoid inconsistencies between and amongst the letter abbreviations for dynamics (what is sf vs. sfz, standing alone or with a trailing dynamic that is not always piano), we use the actual letters as the names of these dynamic elements. The other-dynamics element allows other dynamic marks that are not covered here, but many of those should perhaps be included in a more general musical direction element. Dynamics elements may also be combined to create marks not covered by a single element, such as sfmp.
+
+
+
+
+These letter dynamic symbols are separated from crescendo, decrescendo, and wedge indications. Dynamic representation is inconsistent in scores. Many things are assumed by the composer and left out, such as returns to original dynamics. Systematic representations are quite complex: for example, Humdrum has at least 3 representation formats related to dynamics. The MusicXML format captures what is in the score, but does not try to be optimal for analysis or synthesis of dynamics."#;
+    const DYNAMICS_EXPECTED: &str = r#"        /// Dynamics can be associated either with a note or a general musical direction. To avoid
+        /// inconsistencies between and amongst the letter abbreviations for dynamics (what is sf
+        /// vs. sfz, standing alone or with a trailing dynamic that is not always piano), we use the
+        /// actual letters as the names of these dynamic elements. The other-dynamics element allows
+        /// other dynamic marks that are not covered here, but many of those should perhaps be
+        /// included in a more general musical direction element. Dynamics elements may also be
+        /// combined to create marks not covered by a single element, such as sfmp.
+        ///
+        /// These letter dynamic symbols are separated from crescendo, decrescendo, and wedge
+        /// indications. Dynamic representation is inconsistent in scores. Many things are assumed
+        /// by the composer and left out, such as returns to original dynamics. Systematic
+        /// representations are quite complex: for example, Humdrum has at least 3 representation
+        /// formats related to dynamics. The MusicXML format captures what is in the score, but does
+        /// not try to be optimal for analysis or synthesis of dynamics."#;
+
+    #[test]
+    fn test_documentation() {
+        let got = documentation(DYNAMICS_DOCUMENTATION, 2).unwrap();
+        let want = DYNAMICS_EXPECTED;
+        assert_eq!(got, want);
+    }
+
+    const KIND_DOCUMENTATION: &str = r#"A kind-value indicates the type of chord. Degree elements can then add, subtract, or alter from these starting points. Values include:
+
+Triads:
+	major (major third, perfect fifth)
+	minor (minor third, perfect fifth)
+	augmented (major third, augmented fifth)
+	diminished (minor third, diminished fifth)
+Sevenths:
+	dominant (major triad, minor seventh)
+	major-seventh (major triad, major seventh)
+	minor-seventh (minor triad, minor seventh)
+	diminished-seventh (diminished triad, diminished seventh)
+	augmented-seventh (augmented triad, minor seventh)
+	half-diminished (diminished triad, minor seventh)
+	major-minor (minor triad, major seventh)
+Sixths:
+	major-sixth (major triad, added sixth)
+	minor-sixth (minor triad, added sixth)
+Ninths:
+	dominant-ninth (dominant-seventh, major ninth)
+	major-ninth (major-seventh, major ninth)
+	minor-ninth (minor-seventh, major ninth)
+11ths (usually as the basis for alteration):
+	dominant-11th (dominant-ninth, perfect 11th)
+	major-11th (major-ninth, perfect 11th)
+	minor-11th (minor-ninth, perfect 11th)
+13ths (usually as the basis for alteration):
+	dominant-13th (dominant-11th, major 13th)
+	major-13th (major-11th, major 13th)
+	minor-13th (minor-11th, major 13th)
+Suspended:
+	suspended-second (major second, perfect fifth)
+	suspended-fourth (perfect fourth, perfect fifth)
+Functional sixths:
+	Neapolitan
+	Italian
+	French
+	German
+Other:
+	pedal (pedal-point bass)
+	power (perfect fifth)
+	Tristan
+
+The "other" kind is used when the harmony is entirely composed of add elements. The "none" kind is used to explicitly encode absence of chords or functional harmony."#;
+    const KIND_EXPECTED: &str = r#"        /// A kind-value indicates the type of chord. Degree elements can then add, subtract, or
+        /// alter from these starting points. Values include:
+        ///
+        /// Triads:
+        ///     major (major third, perfect fifth)
+        ///     minor (minor third, perfect fifth)
+        ///     augmented (major third, augmented fifth)
+        ///     diminished (minor third, diminished fifth)
+        /// Sevenths:
+        ///     dominant (major triad, minor seventh)
+        ///     major-seventh (major triad, major seventh)
+        ///     minor-seventh (minor triad, minor seventh)
+        ///     diminished-seventh (diminished triad, diminished seventh)
+        ///     augmented-seventh (augmented triad, minor seventh)
+        ///     half-diminished (diminished triad, minor seventh)
+        ///     major-minor (minor triad, major seventh)
+        /// Sixths:
+        ///     major-sixth (major triad, added sixth)
+        ///     minor-sixth (minor triad, added sixth)
+        /// Ninths:
+        ///     dominant-ninth (dominant-seventh, major ninth)
+        ///     major-ninth (major-seventh, major ninth)
+        ///     minor-ninth (minor-seventh, major ninth)
+        /// 11ths (usually as the basis for alteration):
+        ///     dominant-11th (dominant-ninth, perfect 11th)
+        ///     major-11th (major-ninth, perfect 11th)
+        ///     minor-11th (minor-ninth, perfect 11th)
+        /// 13ths (usually as the basis for alteration):
+        ///     dominant-13th (dominant-11th, major 13th)
+        ///     major-13th (major-11th, major 13th)
+        ///     minor-13th (minor-11th, major 13th)
+        /// Suspended:
+        ///     suspended-second (major second, perfect fifth)
+        ///     suspended-fourth (perfect fourth, perfect fifth)
+        /// Functional sixths:
+        ///     Neapolitan
+        ///     Italian
+        ///     French
+        ///     German
+        /// Other:
+        ///     pedal (pedal-point bass)
+        ///     power (perfect fifth)
+        ///     Tristan
+        ///
+        /// The "other" kind is used when the harmony is entirely composed of add elements. The
+        /// "none" kind is used to explicitly encode absence of chords or functional harmony."#;
+
+    #[test]
+    fn test_kind_documentation() {
+        let got = documentation(KIND_DOCUMENTATION, 2).unwrap();
+        let want = KIND_EXPECTED;
+        assert_eq!(got, want);
     }
 }

@@ -29,4 +29,5 @@ lazy_static = "1.4.0"
 serde = "1.0.114"
 structopt = "0.3.11"
 tempfile = "3.1.0"
+textwrap = "0.12.1"
 uuid = { version = "0.8", features = ["v4"] }
