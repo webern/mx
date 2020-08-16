@@ -1,17 +1,3 @@
-// MusicXML Class Library
-// Copyright (c) by Matthew James Briggs
-// Distributed under the MIT License
-
-// self
-#include "mx/core/PositiveIntegerOrEmpty.h"
-
-// std
-#include <sstream>
-
-namespace mx
-{
-    namespace core
-    {
         class PositiveIntegerOrEmpty::impl
         {
         public:
@@ -159,5 +145,3 @@ namespace mx
         {
             return toStream( os, value );
         }
-    }
-}

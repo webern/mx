@@ -4,8 +4,9 @@ use crate::generate::cpp::helpers::{default_construct, enum_default};
 use crate::generate::cpp::writer::Writer;
 use crate::generate::template::{
     render, CORE_H, DECIMAL_BUILTINS_CPP, DECIMAL_BUILTINS_H, DECIMAL_TYPE_CPP, DECIMAL_TYPE_H,
-    INTEGER_BUILTINS_CPP, INTEGER_BUILTINS_H, INTEGER_TYPE_CPP, INTEGER_TYPE_H, NO_DATA, UNION_CPP,
-    UNION_H,
+    INTEGER_BUILTINS_CPP, INTEGER_BUILTINS_H, INTEGER_TYPE_CPP, INTEGER_TYPE_H, NO_DATA,
+    NUMBER_OR_NORMAL_CPP, NUMBER_OR_NORMAL_H, POSITIVE_INTEGER_OR_EMPTY_CPP,
+    POSITIVE_INTEGER_OR_EMPTY_H, UNION_CPP, UNION_H,
 };
 use crate::model::scalar::{Bound, NumericData, Range, UnionData};
 use crate::model::scalar::{ScalarNumeric, ScalarString};
@@ -175,6 +176,15 @@ impl Writer {
             data.insert("variants_set_def", variants_set_def(&info)?);
             data.insert("variants_template_decl", variants_template_decl(&info));
             data.insert("variants_to_stream_decl", variants_to_stream_decl(&info));
+
+            // These are funky
+            if union.name.original() == "positive-integer-or-empty"
+                || union.name.original() == "number-or-normal"
+            {
+                self.custom_unions(union, &mut data)?;
+                continue;
+            }
+
             let hpath = self.paths.core.join(format!("{}.h", union.name.pascal()));
             let cpppath = self.paths.core.join(format!("{}.cpp", union.name.pascal()));
             let hcontents = render(UNION_H, &data)?;
@@ -250,6 +260,42 @@ impl Writer {
             self.paths.core.join(&filename_cpp),
             contents_cpp
         ));
+        Ok(())
+    }
+
+    fn custom_unions(&self, union: &UnionData, data: &mut HashMap<&str, String>) -> Result<()> {
+        let (hfilename, cppfilename, mut includes) = if union.name.original() == "positive-integer-or-empty" {
+            (
+                POSITIVE_INTEGER_OR_EMPTY_H,
+                POSITIVE_INTEGER_OR_EMPTY_CPP,
+                vec!["mx/core/Integers.h"],
+            )
+        } else if union.name.original() == "number-or-normal" {
+            (
+                NUMBER_OR_NORMAL_H,
+                NUMBER_OR_NORMAL_CPP,
+                vec!["mx/core/Decimals.h"],
+            )
+        } else {
+            return raise!("unexpected type '{}'", union.name.original());
+        };
+        let hstuff = render(hfilename, data)?;
+        let cstuff = render(cppfilename, data)?;
+        let h = render_core_h(
+            hstuff,
+            Some(includes.as_mut_slice()),
+            Some(vec!["string", "memory", "iostream"].as_mut_slice()),
+        )?;
+        let self_include = format!("mx/core/{}.h", union.name.pascal());
+        let mut c_include = vec!["sstream"];
+        let c = render_core_cpp(
+            cstuff,
+            Some(&self_include),
+            None,
+            Some(c_include.as_mut_slice()),
+        )?;
+        wrap!(write(self.paths.core.join(format!("{}.h", union.name.pascal())), h))?;
+        wrap!(write(self.paths.core.join(format!("{}.cpp", union.name.pascal())), c))?;
         Ok(())
     }
 }
@@ -521,3 +567,5 @@ fn variants_to_stream_decl(i: &Info<'_>) -> String {
     }
     s
 }
+
+
