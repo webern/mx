@@ -14,9 +14,9 @@ using namespace mx::core;
 TEST( FontSize01, FontSize )
 {
     FontSize x;
-    std::string expected = "medium";
-    CHECK( x.getIsCssFontSize() )
-    CHECK( !x.getIsDecimal() )
+    std::string expected = "0";
+    CHECK( !x.getIsCssFontSize() )
+    CHECK( x.getIsDecimal() )
     std::string actual = toString( x );
     CHECK_EQUAL( expected, actual )
 }
