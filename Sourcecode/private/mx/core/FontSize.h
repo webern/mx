@@ -15,7 +15,7 @@ namespace mx
 {
     namespace core
     {
-        ///
+        /// The font-size can be one of the CSS font sizes or a numeric point size.
         class FontSize
         {
         public:

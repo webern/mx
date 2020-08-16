@@ -15,7 +15,8 @@ namespace mx
 {
     namespace core
     {
-        ///
+        /// The yes-no-number type is used for attributes that can be either boolean or
+        /// numeric values.
         class YesNoNumber
         {
         public:

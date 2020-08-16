@@ -47,6 +47,7 @@ impl Union {
             let base_type = BaseType::parse_prefixed(item.as_str(), xsd.prefix.as_str())?;
             members.push(base_type);
         }
+        // TODO also parse in-line definitions of xs:simpleType
         let u = Union {
             id,
             annotation,
