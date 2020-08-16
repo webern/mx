@@ -20,16 +20,16 @@
             myValue = value;
         }
 
-        void Integer::parse( const std::string& value )
+        bool Integer::parse( const std::string& value )
         {
             std::stringstream ss( value );
             IntType temp = 0;
-            if ((ss >> temp).fail() || !(ss >> std::ws).eof())
+            if ( ( ss >> temp ).fail() || !( ss >> std::ws ).eof())
             {
-                return;
+                return false;
             }
-            ss >> temp;
             setValue( temp );
+            return true;
         }
 
         std::string toString( const Integer& value )

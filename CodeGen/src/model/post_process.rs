@@ -1,5 +1,5 @@
 use crate::model::create::CreateError;
-use crate::model::Model;
+use crate::model::Def;
 use crate::xsd::Xsd;
 
 /// Changes a `Model`
@@ -8,5 +8,5 @@ pub trait PostProcess {
     fn name(&self) -> &'static str;
 
     /// Transforms and `Entry`.
-    fn process(&self, model: &Model, xsd: &Xsd) -> std::result::Result<Model, CreateError>;
+    fn process(&self, model: &Def, xsd: &Xsd) -> std::result::Result<Def, CreateError>;
 }

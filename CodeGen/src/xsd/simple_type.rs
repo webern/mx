@@ -42,9 +42,17 @@ impl SimpleType {
                     annotation = Some(Annotation::from_xml(inner, lineage.clone(), xsd)?);
                     continue;
                 }
-                RESTRICTION => Some(Payload::Restriction(Restriction::from_xml(inner, lineage.clone(), xsd)?)),
+                RESTRICTION => Some(Payload::Restriction(Restriction::from_xml(
+                    inner,
+                    lineage.clone(),
+                    xsd,
+                )?)),
                 LIST => Some(Payload::List(List::from_xml(inner, lineage.clone(), xsd)?)),
-                UNION => Some(Payload::Union(Union::from_xml(inner, lineage.clone(), xsd)?)),
+                UNION => Some(Payload::Union(Union::from_xml(
+                    inner,
+                    lineage.clone(),
+                    xsd,
+                )?)),
                 _ => {
                     return raise!("unexpected element name '{}'", t);
                 }

@@ -1,0 +1,11 @@
+        {{ classname }}::{{ classname }}( DecimalType value )
+        : DecimalRange{ {{ minexpr }}, {{ maxexpr }}, value }
+        {
+
+        }
+
+        {{ classname }}::{{ classname }}()
+        : {{ classname }}{ {{ defaultval }} }
+        {
+
+        }

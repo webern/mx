@@ -23,7 +23,9 @@ pub struct GenArgs {
 
 impl Default for GenArgs {
     fn default() -> Self {
-        Self { paths: Paths::default() }
+        Self {
+            paths: Paths::default(),
+        }
     }
 }
 

@@ -1,17 +1,17 @@
 use crate::generate::cpp::constants::{
-    custom_scalar_strings, enum_member_substitutions, pseudo_enums, reserved_words, suffixed_enum_names,
-    suffixed_value_names, PseudoEnumSpec,
+    custom_scalar_strings, enum_member_substitutions, pseudo_enums, reserved_words,
+    suffixed_enum_names, suffixed_value_names, PseudoEnumSpec,
 };
 use crate::model;
 use crate::model::builtin::BuiltinString;
 use crate::model::create::{Create, CreateError, CreateResult};
 use crate::model::enumeration::OtherField;
 use crate::model::post_process::PostProcess;
-use crate::model::scalar::{Bound, ScalarNumeric};
+use crate::model::scalar::{Bound, NumericData, Range, ScalarNumeric};
 use crate::model::symbol::Symbol;
 use crate::model::transform::Transform;
-use crate::model::Model::Enumeration;
-use crate::model::{DefaultCreate, Model};
+use crate::model::Def::Enumeration;
+use crate::model::{Def, DefaultCreate};
 use crate::xsd::choice::{Choice, ChoiceItem};
 use crate::xsd::complex_type::{Children, ComplexType, Parent};
 use crate::xsd::element::{ElementDef, ElementRef};
@@ -75,10 +75,10 @@ impl PostProcess for MxModeler {
         "mx-cpp"
     }
 
-    fn process(&self, model: &Model, xsd: &Xsd) -> Result<Model, CreateError> {
-        if let Model::Enumeration(enumer) = model {
+    fn process(&self, model: &Def, xsd: &Xsd) -> Result<Def, CreateError> {
+        if let Def::Enumeration(enumer) = model {
             let mut cloned = enumer.clone();
-            for member in &mut cloned.members {
+            for (i, member) in cloned.members.iter_mut().enumerate() {
                 // add an underscore as a suffix to camel case representations that would otherwise
                 // collide with reserved words in C++.
                 if self.reserved_words.contains(member.camel()) {
@@ -94,23 +94,36 @@ impl PostProcess for MxModeler {
                 if member.original() == "" {
                     member.replace("emptystring");
                 }
+                if i == 0 && member.original() == cloned.default.original() {
+                    if member.renamed_to() != cloned.default.renamed_to() {
+                        cloned.default.replace(member.renamed_to());
+                    }
+                    if member.camel() != cloned.default.camel() {
+                        cloned.default.set_camel(member.camel());
+                    }
+                }
             }
-            return Ok(Model::Enumeration(cloned));
-        } else if let Model::ScalarString(scalar_string) = model {
-            if self.custom_scalar_strings.contains(scalar_string.name.original()) {
-                return Ok(Model::CustomScalarString(scalar_string.clone()));
-            } else if let Some(new_name) = self.suffixed_value_names.get(scalar_string.name.original()) {
+            return Ok(Def::Enumeration(cloned));
+        } else if let Def::ScalarString(scalar_string) = model {
+            if self
+                .custom_scalar_strings
+                .contains(scalar_string.name.original())
+            {
+                return Ok(Def::CustomScalarString(scalar_string.clone()));
+            } else if let Some(new_name) =
+                self.suffixed_value_names.get(scalar_string.name.original())
+            {
                 let mut st = scalar_string.clone();
                 st.name.replace(&new_name);
-                return Ok(Model::ScalarString(st));
+                return Ok(Def::ScalarString(st));
             }
-        } else if let Model::ScalarNumber(scalar_number) = model {
+        } else if let Def::ScalarNumber(scalar_number) = model {
             match scalar_number {
                 ScalarNumeric::Decimal(n) => {
                     if let Some(new_name) = self.suffixed_value_names.get(n.name.original()) {
                         let mut n = n.clone();
                         n.name.replace(&new_name);
-                        return Ok(Model::ScalarNumber(ScalarNumeric::Decimal(n)));
+                        return Ok(Def::ScalarNumber(ScalarNumeric::Decimal(n)));
                     }
                 }
                 ScalarNumeric::Integer(n) => {
@@ -136,8 +149,28 @@ impl PostProcess for MxModeler {
                         is_changed = true;
                         let mut mut_num = n.clone();
                         mut_num.name.replace(&new_name);
-                        return Ok(Model::ScalarNumber(ScalarNumeric::Integer(mut_num)));
+                        return Ok(Def::ScalarNumber(ScalarNumeric::Integer(mut_num)));
                     }
+                }
+            }
+        } else if let Def::DerivedSimpleType(derived) = model {
+            match derived.name.original() {
+                "positive-divisions" => {
+                    let replacement = NumericData {
+                        name: derived.name.clone(),
+                        base_type: Numeric::Decimal,
+                        documentation: derived.documentation.clone(),
+                        range: Range {
+                            min: Some(Bound::Exclusive(0.0)),
+                            max: None,
+                        },
+                    };
+                    return Ok(Def::ScalarNumber(ScalarNumeric::Decimal(replacement)));
+                }
+                unhandled => {
+                    return Err(CreateError {
+                        message: format!("Unhandled DerivedSimpleType: '{}'", unhandled),
+                    })
                 }
             }
         }
@@ -164,6 +197,7 @@ impl MxModeler {
             name: Symbol::new("dynamics enum"),
             members: vec![],
             documentation: entry.documentation(),
+            default: Symbol::new("mf"),
             other_field: None,
         };
         for c in &choice.choices {
@@ -181,12 +215,11 @@ impl MxModeler {
                     name: Symbol::new(other_field_name),
                     type_: BuiltinString::String,
                     wrapper_class_name: Symbol::new("dynamics value"),
-                    default_value: Symbol::new("mf"),
                 })
             }
         }
         // TODO - also create the 'wrapping' element named 'dynamics'
-        Ok(Some(vec![Model::Enumeration(enumer)]))
+        Ok(Some(vec![Def::Enumeration(enumer)]))
     }
 
     fn unwrap_dynamics<'a>(
@@ -224,7 +257,10 @@ impl MxModeler {
         Ok((ct, p, choice))
     }
 
-    fn unwrap_empty_element<'a>(&self, c: &'a ChoiceItem) -> std::result::Result<Option<&'a str>, CreateError> {
+    fn unwrap_empty_element<'a>(
+        &self,
+        c: &'a ChoiceItem,
+    ) -> std::result::Result<Option<&'a str>, CreateError> {
         let ref_: &ElementRef = if let ChoiceItem::Element(wrapped) = c {
             let ref_ = if let element::Element::Reference(ref_) = wrapped {
                 ref_
@@ -240,7 +276,7 @@ impl MxModeler {
             });
         };
 
-        if ref_.type_ == BaseType::Other("empty".to_owned()) {
+        if ref_.type_ == BaseType::Custom("empty".to_owned()) {
             Ok(Some(ref_.name.as_str()))
         } else {
             Ok(None)
@@ -267,16 +303,17 @@ impl MxModeler {
         };
 
         /// TODO - allow all base types?
-        if ref_.type_ == BaseType::Primitive(Primitive::Character(Character::String))
-            || ref_.type_ == BaseType::Primitive(Primitive::Character(Character::Token))
-        {
+        if ref_.type_.is_string() || ref_.type_.is_token() {
             Ok(Some((ref_.name.as_str(), &ref_.type_)))
         } else {
             Ok(None)
         }
     }
 
-    fn unwrap_other_field<'a>(&self, c: &'a ChoiceItem) -> std::result::Result<&'a str, CreateError> {
+    fn unwrap_other_field<'a>(
+        &self,
+        c: &'a ChoiceItem,
+    ) -> std::result::Result<&'a str, CreateError> {
         let found_stuff = if let Some(other_field) = self.unwrap_simple_element(c)? {
             other_field
         } else {
@@ -284,7 +321,7 @@ impl MxModeler {
                 message: "create_dynamics: unable to unwrap the 'other' field".to_string(),
             });
         };
-        if *found_stuff.1 != BaseType::Primitive(Primitive::Character(Character::String)) {
+        if *found_stuff.1 != BaseType::String {
             return return Err(CreateError {
                 message: format!(
                     "unwrap_other_field: unsupported 'other' field type '{}'",
@@ -305,16 +342,16 @@ fn create_pseudo_enum(entry: &Entry, spec: &PseudoEnumSpec) -> CreateResult {
         name: symbol,
         members: vec![],
         documentation: entry.documentation(),
+        default: Symbol::new(spec.default_value.as_str()),
         other_field: Some(OtherField {
             name: Symbol::new(spec.extra_field_name.as_str()),
             // TODO - check if it's actually xs:token
             type_: BuiltinString::String,
             wrapper_class_name: Symbol::new(spec.class_name.as_str()),
-            default_value: Symbol::new(spec.default_value.as_str()),
         }),
     };
     for s in &spec.members {
         enumer.members.push(Symbol::new(s.as_str()));
     }
-    Ok(Some(vec![Model::Enumeration(enumer)]))
+    Ok(Some(vec![Def::Enumeration(enumer)]))
 }

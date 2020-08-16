@@ -75,6 +75,7 @@ where
     }
     if let Some(includes) = std_includes {
         if !includes.is_empty() {
+            includes.sort();
             let mut rendered = String::new();
             rendered.push_str("\n\n// std");
             for include in includes {

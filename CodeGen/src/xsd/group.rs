@@ -17,9 +17,13 @@ impl Group {
     pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
         let (id, lineage) = Id::make(lineage, node)?;
         if is_ref(node) {
-            Ok(Group::Reference(GroupReference::from_xml(node, lineage, xsd)?))
+            Ok(Group::Reference(GroupReference::from_xml(
+                node, lineage, xsd,
+            )?))
         } else {
-            Ok(Group::Definition(GroupDefinition::from_xml(node, lineage, xsd)?))
+            Ok(Group::Definition(GroupDefinition::from_xml(
+                node, lineage, xsd,
+            )?))
         }
     }
 }
@@ -83,7 +87,11 @@ impl GroupDefinition {
                 _ => return raise!("unsupported {} node, '{}'", GROUP, t),
             }
         }
-        Ok(GroupDefinition { id, annotation, members })
+        Ok(GroupDefinition {
+            id,
+            annotation,
+            members,
+        })
     }
 }
 
