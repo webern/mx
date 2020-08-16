@@ -14,7 +14,7 @@ using namespace mx::core;
 TEST( YesNoNumber01, YesNoNumber )
 {
     YesNoNumber x;
-    std::string expected = "no";
+    std::string expected = "yes";
     CHECK( x.getIsYesNo() )
     CHECK( !x.getIsDecimal() )
     std::string actual = toString( x );
