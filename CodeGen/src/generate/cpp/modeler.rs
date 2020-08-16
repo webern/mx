@@ -78,7 +78,7 @@ impl PostProcess for MxModeler {
     fn process(&self, model: &Def, xsd: &Xsd) -> Result<Def, CreateError> {
         if let Def::Enumeration(enumer) = model {
             let mut cloned = enumer.clone();
-            for member in &mut cloned.members {
+            for (i, member) in cloned.members.iter_mut().enumerate() {
                 // add an underscore as a suffix to camel case representations that would otherwise
                 // collide with reserved words in C++.
                 if self.reserved_words.contains(member.camel()) {
@@ -93,6 +93,14 @@ impl PostProcess for MxModeler {
                 // replace an empty string value with some kind of symbol name.
                 if member.original() == "" {
                     member.replace("emptystring");
+                }
+                if i == 0 && member.original() == cloned.default.original() {
+                    if member.renamed_to() != cloned.default.renamed_to() {
+                        cloned.default.replace(member.renamed_to());
+                    }
+                    if member.camel() != cloned.default.camel() {
+                        cloned.default.set_camel(member.camel());
+                    }
                 }
             }
             return Ok(Def::Enumeration(cloned));
