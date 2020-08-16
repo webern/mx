@@ -6,6 +6,7 @@
 
 #include "mx/core/Integers.h"
 
+#include <ostream>
 #include <string>
 #include <variant>
 

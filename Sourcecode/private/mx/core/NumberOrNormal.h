@@ -6,6 +6,7 @@
 
 #include "mx/core/Decimals.h"
 
+#include <ostream>
 #include <string>
 #include <variant>
 

@@ -5,6 +5,10 @@
 // self
 #include "mx/core/FontSize.h"
 
+// std
+#include <sstream>
+#include <type_traits>
+
 namespace mx
 {
     namespace core

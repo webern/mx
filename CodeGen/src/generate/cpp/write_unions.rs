@@ -143,10 +143,11 @@ impl Writer {
             let cppcontents = render(UNION_CPP, &data)?;
             let mut h_includes = info.h_includes();
             let mut h_strs: Vec<&str> = h_includes.iter().map(|s| s.as_str()).collect();
-            let mut std_h = vec!["string", "variant"];
+            let mut std_h = vec!["string", "variant", "ostream"];
             let h = render_core_h(hcontents, Some(h_strs.as_mut_slice()), Some(std_h.as_mut_slice()))?;
             let self_import = format!("mx/core/{}.h", union.name.pascal());
-            let cpp = render_core_cpp(cppcontents, Some(self_import), None, None)?;
+            let mut std_cpp = vec!["sstream", "type_traits"];
+            let cpp = render_core_cpp(cppcontents, Some(self_import), None, Some(std_cpp.as_mut_slice()))?;
             wrap!(write(hpath, h))?;
             wrap!(write(cpppath, cpp))?;
         }
