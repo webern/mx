@@ -264,21 +264,22 @@ impl Writer {
     }
 
     fn custom_unions(&self, union: &UnionData, data: &mut HashMap<&str, String>) -> Result<()> {
-        let (hfilename, cppfilename, mut includes) = if union.name.original() == "positive-integer-or-empty" {
-            (
-                POSITIVE_INTEGER_OR_EMPTY_H,
-                POSITIVE_INTEGER_OR_EMPTY_CPP,
-                vec!["mx/core/Integers.h"],
-            )
-        } else if union.name.original() == "number-or-normal" {
-            (
-                NUMBER_OR_NORMAL_H,
-                NUMBER_OR_NORMAL_CPP,
-                vec!["mx/core/Decimals.h"],
-            )
-        } else {
-            return raise!("unexpected type '{}'", union.name.original());
-        };
+        let (hfilename, cppfilename, mut includes) =
+            if union.name.original() == "positive-integer-or-empty" {
+                (
+                    POSITIVE_INTEGER_OR_EMPTY_H,
+                    POSITIVE_INTEGER_OR_EMPTY_CPP,
+                    vec!["mx/core/Integers.h"],
+                )
+            } else if union.name.original() == "number-or-normal" {
+                (
+                    NUMBER_OR_NORMAL_H,
+                    NUMBER_OR_NORMAL_CPP,
+                    vec!["mx/core/Decimals.h"],
+                )
+            } else {
+                return raise!("unexpected type '{}'", union.name.original());
+            };
         let hstuff = render(hfilename, data)?;
         let cstuff = render(cppfilename, data)?;
         let h = render_core_h(
@@ -294,8 +295,14 @@ impl Writer {
             None,
             Some(c_include.as_mut_slice()),
         )?;
-        wrap!(write(self.paths.core.join(format!("{}.h", union.name.pascal())), h))?;
-        wrap!(write(self.paths.core.join(format!("{}.cpp", union.name.pascal())), c))?;
+        wrap!(write(
+            self.paths.core.join(format!("{}.h", union.name.pascal())),
+            h
+        ))?;
+        wrap!(write(
+            self.paths.core.join(format!("{}.cpp", union.name.pascal())),
+            c
+        ))?;
         Ok(())
     }
 }
@@ -317,7 +324,12 @@ fn parse_def(i: &Info<'_>) -> Result<String> {
                 s.push_str(format!("            if( {} )\n", enumer.name.camel()).as_str());
                 s.push_str("            {\n");
                 s.push_str(
-                    format!("                set{}( *{} );\n", enumer.name.pascal(), enumer.name.camel()).as_str(),
+                    format!(
+                        "                set{}( *{} );\n",
+                        enumer.name.pascal(),
+                        enumer.name.camel()
+                    )
+                    .as_str(),
                 );
                 s.push_str("                return true;\n");
                 s.push_str("            }\n");
@@ -334,7 +346,14 @@ fn parse_def(i: &Info<'_>) -> Result<String> {
                 );
                 s.push_str(format!("            if( {}.parse( value ) )\n", name.camel()).as_str());
                 s.push_str("            {\n");
-                s.push_str(format!("                set{}( {} );\n", name.pascal(), name.camel()).as_str());
+                s.push_str(
+                    format!(
+                        "                set{}( {} );\n",
+                        name.pascal(),
+                        name.camel()
+                    )
+                    .as_str(),
+                );
                 s.push_str("                return true;\n");
                 s.push_str("            }\n");
             }
@@ -350,7 +369,14 @@ fn parse_def(i: &Info<'_>) -> Result<String> {
             );
             s.push_str(format!("            if( {}.parse( value ) )\n", name.camel()).as_str());
             s.push_str("            {\n");
-            s.push_str(format!("                set{}( {} );\n", name.pascal(), name.camel()).as_str());
+            s.push_str(
+                format!(
+                    "                set{}( {} );\n",
+                    name.pascal(),
+                    name.camel()
+                )
+                .as_str(),
+            );
             s.push_str("                return true;\n");
             s.push_str("            }\n");
         }
@@ -517,13 +543,7 @@ fn variants_set_def(i: &Info<'_>) -> Result<String> {
     for (j, m) in i.union.members.iter().enumerate() {
         let symbol = m.to_symbol();
         let pascal = symbol.pascal();
-        s.push_str(
-            format!(
-                "        void {}::set{}( {} value )\n",
-                clss, pascal, pascal
-            )
-            .as_str(),
-        );
+        s.push_str(format!("        void {}::set{}( {} value )\n", clss, pascal, pascal).as_str());
         s.push_str("        {\n");
         s.push_str(format!("            myValue.emplace<{}>( value );\n", pascal).as_str());
         s.push_str("        }\n");
@@ -567,5 +587,3 @@ fn variants_to_stream_decl(i: &Info<'_>) -> String {
     }
     s
 }
-
-
