@@ -2,30 +2,32 @@
 // Copyright (c) by Matthew James Briggs
 // Distributed under the MIT License
 
+// self
 #include "mx/core/FontSize.h"
-#include <sstream>
-#include <type_traits>
-
-namespace
-{
-    template<class> inline constexpr bool always_false_v = false;
-}
 
 namespace mx
 {
     namespace core
     {
+        template<class> inline constexpr bool always_false_v = false;
+
         FontSize::FontSize()
-        : myValue{ CssFontSize::medium }
-        {}
-        
-        FontSize::FontSize( const Decimal& value )
+        : myValue{ Decimal{} }
+        {
+
+        }
+
+        FontSize::FontSize( Decimal value )
+        : myValue{ std::move( value ) }
+        {
+
+        }
+
+        FontSize::FontSize( CssFontSize value )
         : myValue{ value }
-        {}
-        
-        FontSize::FontSize( const CssFontSize value )
-        : myValue{ value }
-        {}
+        {
+
+        }
         
         FontSize::FontSize( const std::string& value )
         : FontSize{}
@@ -33,68 +35,70 @@ namespace mx
             parse( value );
         }
 
-        bool FontSize::getIsCssFontSize() const
+        bool FontSize::getIsDecimal() const
         {
             return myValue.index() == 0;
         }
 
-        bool FontSize::getIsNumber() const
+        bool FontSize::getIsCssFontSize() const
         {
             return myValue.index() == 1;
         }
 
-        void FontSize::setValue( const CssFontSize value )
-        {
-            myValue.emplace<CssFontSize>( value );
-        }
-
-        void FontSize::setValue( const Decimal& value )
+        void FontSize::setDecimal( Decimal value ) const
         {
             myValue.emplace<Decimal>( value );
         }
 
-        CssFontSize FontSize::getValueCssFontSize() const
+        void FontSize::setCssFontSize( CssFontSize value ) const
         {
-            auto result = CssFontSize::medium;
-            std::visit([&](auto&& arg) {
+            myValue.emplace<CssFontSize>( value );
+        }
+
+        Decimal FontSize::getValueDecimal() const
+        {
+            auto result = Decimal{};
+            std::visit([&](auto&& arg)
+            {
                 using T = std::decay_t<decltype(arg)>;
-                if constexpr (std::is_same_v<T, CssFontSize>)
+                if constexpr( std::is_same_v<T, Decimal> )
                     result = arg;
-                else if constexpr (std::is_same_v<T, Decimal>)
-                    result = CssFontSize::medium;
+                else if constexpr( std::is_same_v<T, CssFontSize> )
+                    result = CssFontSize::xxSmall;
                 else
                     static_assert(always_false_v<T>, "non-exhaustive visitor!");
             }, myValue);
             return result;
         }
 
-        Decimal FontSize::getValueNumber() const
+        CssFontSize FontSize::getValueCssFontSize() const
         {
-            auto result = Decimal{};
-            std::visit([&](auto&& arg) {
+            auto result = CssFontSize::xxSmall;
+            std::visit([&](auto&& arg)
+            {
                 using T = std::decay_t<decltype(arg)>;
-                if constexpr (std::is_same_v<T, CssFontSize>)
+                if constexpr( std::is_same_v<T, Decimal> )
                     result = Decimal{};
-                else if constexpr (std::is_same_v<T, Decimal>)
+                else if constexpr( std::is_same_v<T, CssFontSize> )
                     result = arg;
                 else
                     static_assert(always_false_v<T>, "non-exhaustive visitor!");
             }, myValue);
             return result;
         }
-  
+
         bool FontSize::parse( const std::string& value )
         {
-            const auto cssFontSize = tryParseCssFontSize( value );
-            if( cssFontSize )
-            {
-                setValue( *cssFontSize );
-                return true;
-            }
             auto decimal = Decimal{};
             if( decimal.parse( value ) )
             {
                 setValue( decimal );
+                return true;
+            }
+            const auto cssFontSize = tryParseCssFontSize( value );
+            if( cssFontSize )
+            {
+                setValue( *cssFontSize );
                 return true;
             }
             return false;
@@ -109,11 +113,11 @@ namespace mx
 
 		std::ostream& toStream( std::ostream& os, const FontSize& value )
         {
-            if ( value.getIsNumber() )
+            if( getIsDecimal() )
             {
-                toStream( os, value.getValueNumber() );
+                toStream( os, value.getValueDecimal() );
             }
-            else
+            if( getIsCssFontSize() )
             {
                 toStream( os, value.getValueCssFontSize() );
             }

@@ -7,30 +7,31 @@
 #include "mx/core/Decimals.h"
 #include "mx/core/Enums.h"
 
+#include <string>
 #include <variant>
 
 namespace mx
 {
     namespace core
     {
+        ///
         class FontSize
         {
         public:
             explicit FontSize();
-            explicit FontSize( const Decimal& value );
-            explicit FontSize( const CssFontSize value );
+            explicit FontSize( Decimal value );
+            explicit FontSize( CssFontSize value );
             explicit FontSize( const std::string& value );
-
+            bool getIsDecimal() const;
             bool getIsCssFontSize() const;
-            bool getIsNumber() const;
-            void setValue( const CssFontSize value );
-            void setValue( const Decimal& value );
+            void setDecimal( Decimal value );
+            void setCssFontSize( CssFontSize value );
+            Decimal getValueDecimal() const;
             CssFontSize getValueCssFontSize() const;
-            Decimal getValueNumber() const;
             bool parse( const std::string& value );
             
         private:
-            std::variant<CssFontSize, Decimal> myValue;
+            std::variant<Decimal, CssFontSize> myValue;
         };
         
         std::string toString( const FontSize& value );

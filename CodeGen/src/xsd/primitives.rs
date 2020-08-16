@@ -5,6 +5,7 @@ use std::borrow::Cow;
 use std::convert::TryFrom;
 use std::fmt::{Display, Formatter};
 use std::io::BufRead;
+use crate::model::symbol::Symbol;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Traits
@@ -312,6 +313,10 @@ impl BaseType {
             BaseType::Time => Some(DateTime::Time),
             _ => None,
         }
+    }
+
+    pub fn to_symbol(&self) -> Symbol {
+        Symbol::new(format!("{}", self))
     }
 
     // pub fn parse_prefixed_or_custom<S1, S2>(s: S1, prefix: S2) -> Self
