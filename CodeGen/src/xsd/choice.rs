@@ -40,13 +40,29 @@ impl Choice {
             let t = inner.name.as_str();
             match t {
                 ANNOTATION => annotation = Some(Annotation::from_xml(inner, lineage.clone(), xsd)?),
-                ELEMENT => choices.push(ChoiceItem::Element(Element::from_xml(inner, lineage.clone(), xsd)?)),
-                GROUP => choices.push(ChoiceItem::Group(Group::from_xml(inner, lineage.clone(), xsd)?)),
-                SEQUENCE => choices.push(ChoiceItem::Sequence(Sequence::from_xml(inner, lineage.clone(), xsd)?)),
+                ELEMENT => choices.push(ChoiceItem::Element(Element::from_xml(
+                    inner,
+                    lineage.clone(),
+                    xsd,
+                )?)),
+                GROUP => choices.push(ChoiceItem::Group(Group::from_xml(
+                    inner,
+                    lineage.clone(),
+                    xsd,
+                )?)),
+                SEQUENCE => choices.push(ChoiceItem::Sequence(Sequence::from_xml(
+                    inner,
+                    lineage.clone(),
+                    xsd,
+                )?)),
                 _ => return raise!("cannot parse '{}', unexpected node '{}'", CHOICE, t),
             }
         }
-        Ok(Choice { id, annotation, choices })
+        Ok(Choice {
+            id,
+            annotation,
+            choices,
+        })
     }
 }
 /*
@@ -94,7 +110,10 @@ fn parse_credit() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let ch = Choice::from_xml(&xml, Lineage::Parent(parent), &Xsd::new("xs")).unwrap();
-    assert_eq!(format!("{}", ch.id), "element:foo:choice:863778347360799337");
+    assert_eq!(
+        format!("{}", ch.id),
+        "element:foo:choice:863778347360799337"
+    );
     assert_eq!(ch.documentation().as_str(), "");
     assert_eq!(ch.choices.len(), 2);
     let ele = if let ChoiceItem::Element(el) = ch.choices.get(0).unwrap() {

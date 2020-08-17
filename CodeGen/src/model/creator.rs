@@ -2,7 +2,7 @@ use crate::error::Result;
 use crate::model::create::{Create, CreateError};
 use crate::model::post_process::PostProcess;
 use crate::model::transform::Transform;
-use crate::model::{DefaultCreate, Model};
+use crate::model::{Def, DefaultCreate, Model};
 use crate::xsd::{Entry, Xsd};
 use std::borrow::Cow;
 use std::fmt::{Debug, Formatter};
@@ -26,7 +26,11 @@ impl Default for Creator {
 
 impl Creator {
     /// Create a new `Creator` object by passing in the transform and create objects.
-    pub fn new(transforms: Option<Vec<Box<dyn Transform>>>, creates: Vec<Box<dyn Create>>, post_processors: Option<Vec<Box<dyn PostProcess>>>) -> Self {
+    pub fn new(
+        transforms: Option<Vec<Box<dyn Transform>>>,
+        creates: Vec<Box<dyn Create>>,
+        post_processors: Option<Vec<Box<dyn PostProcess>>>,
+    ) -> Self {
         Self {
             transforms,
             creates,
@@ -41,7 +45,11 @@ impl Creator {
         mut creates: Option<Vec<Box<dyn Create>>>,
         post_processors: Option<Vec<Box<dyn PostProcess>>>,
     ) -> Self {
-        let mut creates = if let Some(the_goods) = creates { the_goods } else { Vec::new() };
+        let mut creates = if let Some(the_goods) = creates {
+            the_goods
+        } else {
+            Vec::new()
+        };
         creates.push(Box::new(DefaultCreate::default()));
         Self {
             transforms,
@@ -62,8 +70,8 @@ impl Debug for Creator {
 }
 
 impl Creator {
-    pub fn create(&self, xsd: &Xsd) -> Result<Vec<Model>> {
-        let mut models: Vec<Model> = Vec::new();
+    pub fn create(&self, xsd: &Xsd) -> Result<Model> {
+        let mut defs: Vec<Def> = Vec::new();
         for mut entry in xsd.entries() {
             let mut entry = entry.clone();
             if let Some(transforms) = &self.transforms {
@@ -80,24 +88,36 @@ impl Creator {
                         for model in &more_models {
                             let mut model_being_processed = model.clone();
                             for post_processor in post_processors {
-                                model_being_processed = wrap!(post_processor.process(&model_being_processed, xsd))?;
+                                model_being_processed =
+                                    wrap!(post_processor.process(&model_being_processed, xsd))?;
                             }
                             post_processed_models.push(model_being_processed);
                         }
                         more_models = post_processed_models;
                     }
-                    models.append(&mut more_models);
+                    defs.append(&mut more_models);
                     break;
                 }
             }
             if !is_handled {
-                return raise!("the entry {} was not handled by any Create objects", entry.id());
+                return raise!(
+                    "the entry {} was not handled by any Create objects",
+                    entry.id()
+                );
             }
         }
-        Ok(models)
+        let mut model = Model::default();
+        for def in defs {
+            model.add(def);
+        }
+        Ok(model)
     }
 
-    fn transform<'a>(&'a self, entry: &'a Entry, xsd: &Xsd) -> std::result::Result<Cow<'a, Entry>, CreateError> {
+    fn transform<'a>(
+        &'a self,
+        entry: &'a Entry,
+        xsd: &Xsd,
+    ) -> std::result::Result<Cow<'a, Entry>, CreateError> {
         Ok(Cow::Borrowed(entry))
     }
 }

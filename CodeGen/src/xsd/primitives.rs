@@ -1,5 +1,6 @@
 use crate::error::{Error, Result};
 use crate::model::builtin::Builtin::Number;
+use crate::model::symbol::Symbol;
 use crate::xsd::constants::*;
 use std::borrow::Cow;
 use std::convert::TryFrom;
@@ -27,7 +28,11 @@ pub trait PrefixedParse {
     {
         let (ns, val) = split_raw_str(s.as_ref());
         if ns != prefix.as_ref() {
-            return raise!("wrong namespace prefix. expected '{}', got '{}'", prefix.as_ref(), ns);
+            return raise!(
+                "wrong namespace prefix. expected '{}', got '{}'",
+                prefix.as_ref(),
+                ns
+            );
         }
         Self::parse(val)
     }
@@ -51,15 +56,89 @@ pub trait PrefixedString: Display {
 
 #[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
 pub enum BaseType {
-    Primitive(Primitive),
-    Other(String),
+    // Numerics
+    Byte,
+    Decimal,
+    Int,
+    Integer,
+    Long,
+    NegativeInteger,
+    NonNegativeInteger,
+    NonPositiveInteger,
+    PositiveInteger,
+    Short,
+    UnsignedLong,
+    UnsignedInt,
+    UnsignedShort,
+    UnsignedByte,
+
+    // Strings
+    ID,
+    IDREF,
+    Language,
+    Name,
+    NmToken,
+    NormalizedString,
+    String,
+    Token,
+
+    // Dates
+    Date,
+    DateTime,
+    Duration,
+    GDay,
+    GMonth,
+    GMonthDay,
+    GYear,
+    GYearMonth,
+    Time,
+
+    // Custom
+    Custom(String),
 }
 
 impl PrefixedParse for BaseType {
     type ParsedThing = BaseType;
 
     fn parse<S: AsRef<str>>(parseable: S) -> Result<Self::ParsedThing> {
-        Ok(BaseType::Primitive(Primitive::parse(parseable)?))
+        let s = parseable.as_ref();
+        match s {
+            BYTE => Ok(BaseType::Byte),
+            DECIMAL => Ok(BaseType::Decimal),
+            INT => Ok(BaseType::Int),
+            INTEGER => Ok(BaseType::Integer),
+            LONG => Ok(BaseType::Long),
+            NEGATIVE_INTEGER => Ok(BaseType::NegativeInteger),
+            NON_NEGATIVE_INTEGER => Ok(BaseType::NonNegativeInteger),
+            NON_POSITIVE_INTEGER => Ok(BaseType::NonPositiveInteger),
+            POSITIVE_INTEGER => Ok(BaseType::PositiveInteger),
+            SHORT => Ok(BaseType::Short),
+            UNSIGNED_LONG => Ok(BaseType::UnsignedLong),
+            UNSIGNED_INT => Ok(BaseType::UnsignedInt),
+            UNSIGNED_SHORT => Ok(BaseType::UnsignedShort),
+            UNSIGNED_BYTE => Ok(BaseType::UnsignedByte),
+            //
+            ID => Ok(BaseType::ID),
+            IDREF => Ok(BaseType::IDREF),
+            LANGUAGE => Ok(BaseType::Language),
+            NAME => Ok(BaseType::Name),
+            NMTOKEN => Ok(BaseType::NmToken),
+            NORMALIZED_STRING => Ok(BaseType::NormalizedString),
+            STRING => Ok(BaseType::String),
+            TOKEN => Ok(BaseType::Token),
+            //
+            DATE => Ok(BaseType::Date),
+            DATETIME => Ok(BaseType::DateTime),
+            DURATION => Ok(BaseType::Duration),
+            G_DAY => Ok(BaseType::GDay),
+            G_MONTH => Ok(BaseType::GMonth),
+            G_MONTH_DAY => Ok(BaseType::GMonthDay),
+            G_YEAR => Ok(BaseType::GYear),
+            G_YEAR_MONTH => Ok(BaseType::GYearMonth),
+            TIME => Ok(BaseType::Time),
+            //
+            custom => Ok(BaseType::Custom(custom.into())),
+        }
     }
 
     fn parse_prefixed<S1, S2>(s: S1, prefix: S2) -> Result<Self::ParsedThing>
@@ -67,18 +146,58 @@ impl PrefixedParse for BaseType {
         S1: AsRef<str>,
         S2: AsRef<str>,
     {
-        match Primitive::parse_prefixed(&s, &prefix) {
-            Ok(primitive) => Ok(BaseType::Primitive(primitive)),
-            Err(_) => Ok(BaseType::Other(s.as_ref().to_owned())),
+        let prefix = prefix.as_ref();
+        let s = s.as_ref();
+        let (ns, val) = split_raw_str(s);
+        if ns != prefix {
+            return Ok(BaseType::Custom(s.into()));
         }
+        Ok(match Self::parse(val)? {
+            BaseType::Custom(_) => BaseType::Custom(s.into()),
+            anything_else => anything_else,
+        })
     }
 }
 
 impl PrefixedString for BaseType {
     fn name(&self) -> &str {
         match self {
-            BaseType::Primitive(p) => p.name(),
-            BaseType::Other(o) => o.as_str(),
+            // Numerics
+            BaseType::Byte => BYTE,
+            BaseType::Decimal => DECIMAL,
+            BaseType::Int => INT,
+            BaseType::Integer => INTEGER,
+            BaseType::Long => LONG,
+            BaseType::NegativeInteger => NEGATIVE_INTEGER,
+            BaseType::NonNegativeInteger => NON_NEGATIVE_INTEGER,
+            BaseType::NonPositiveInteger => NON_POSITIVE_INTEGER,
+            BaseType::PositiveInteger => POSITIVE_INTEGER,
+            BaseType::Short => SHORT,
+            BaseType::UnsignedLong => UNSIGNED_LONG,
+            BaseType::UnsignedInt => UNSIGNED_INT,
+            BaseType::UnsignedShort => UNSIGNED_SHORT,
+            BaseType::UnsignedByte => UNSIGNED_BYTE,
+            // Strings
+            BaseType::ID => ID,
+            BaseType::IDREF => IDREF,
+            BaseType::Language => LANGUAGE,
+            BaseType::Name => NAME,
+            BaseType::NmToken => NMTOKEN,
+            BaseType::NormalizedString => NORMALIZED_STRING,
+            BaseType::String => STRING,
+            BaseType::Token => TOKEN,
+            // Dates
+            BaseType::Date => DATE,
+            BaseType::DateTime => DATETIME,
+            BaseType::Duration => DURATION,
+            BaseType::GDay => G_DAY,
+            BaseType::GMonth => G_MONTH,
+            BaseType::GMonthDay => G_MONTH_DAY,
+            BaseType::GYear => G_YEAR,
+            BaseType::GYearMonth => G_YEAR_MONTH,
+            BaseType::Time => TIME,
+            // Custom
+            BaseType::Custom(o) => o.as_str(),
         }
     }
 }
@@ -89,47 +208,144 @@ impl Display for BaseType {
     }
 }
 
+impl BaseType {
+    pub fn primitive(&self) -> Primitive {
+        match self {
+            // Numerics
+            BaseType::Byte => Primitive::Numeric,
+            BaseType::Decimal => Primitive::Numeric,
+            BaseType::Int => Primitive::Numeric,
+            BaseType::Integer => Primitive::Numeric,
+            BaseType::Long => Primitive::Numeric,
+            BaseType::NegativeInteger => Primitive::Numeric,
+            BaseType::NonNegativeInteger => Primitive::Numeric,
+            BaseType::NonPositiveInteger => Primitive::Numeric,
+            BaseType::PositiveInteger => Primitive::Numeric,
+            BaseType::Short => Primitive::Numeric,
+            BaseType::UnsignedLong => Primitive::Numeric,
+            BaseType::UnsignedInt => Primitive::Numeric,
+            BaseType::UnsignedShort => Primitive::Numeric,
+            BaseType::UnsignedByte => Primitive::Numeric,
+            // Strings
+            BaseType::ID => Primitive::Character,
+            BaseType::IDREF => Primitive::Character,
+            BaseType::Language => Primitive::Character,
+            BaseType::Name => Primitive::Character,
+            BaseType::NmToken => Primitive::Character,
+            BaseType::NormalizedString => Primitive::Character,
+            BaseType::String => Primitive::Character,
+            BaseType::Token => Primitive::Character,
+            // Dates
+            BaseType::Date => Primitive::DateType,
+            BaseType::DateTime => Primitive::DateType,
+            BaseType::Duration => Primitive::DateType,
+            BaseType::GDay => Primitive::DateType,
+            BaseType::GMonth => Primitive::DateType,
+            BaseType::GMonthDay => Primitive::DateType,
+            BaseType::GYear => Primitive::DateType,
+            BaseType::GYearMonth => Primitive::DateType,
+            BaseType::Time => Primitive::DateType,
+            // Custom
+            BaseType::Custom(o) => Primitive::None,
+        }
+    }
+
+    pub fn is_numeric(&self) -> bool {
+        self.primitive() == Primitive::Numeric
+    }
+
+    pub fn is_character(&self) -> bool {
+        self.primitive() == Primitive::Character
+    }
+
+    pub fn is_datetype(&self) -> bool {
+        self.primitive() == Primitive::DateType
+    }
+
+    pub fn is_custom(&self) -> bool {
+        self.primitive() == Primitive::None
+    }
+
+    pub fn as_numeric(&self) -> Option<Numeric> {
+        match self {
+            BaseType::Byte => Some(Numeric::Byte),
+            BaseType::Decimal => Some(Numeric::Decimal),
+            BaseType::Int => Some(Numeric::Int),
+            BaseType::Integer => Some(Numeric::Integer),
+            BaseType::Long => Some(Numeric::Long),
+            BaseType::NegativeInteger => Some(Numeric::NegativeInteger),
+            BaseType::NonNegativeInteger => Some(Numeric::NonNegativeInteger),
+            BaseType::NonPositiveInteger => Some(Numeric::NonPositiveInteger),
+            BaseType::PositiveInteger => Some(Numeric::PositiveInteger),
+            BaseType::Short => Some(Numeric::Short),
+            BaseType::UnsignedLong => Some(Numeric::UnsignedLong),
+            BaseType::UnsignedInt => Some(Numeric::UnsignedInt),
+            BaseType::UnsignedShort => Some(Numeric::UnsignedShort),
+            BaseType::UnsignedByte => Some(Numeric::UnsignedByte),
+            _ => None,
+        }
+    }
+
+    pub fn as_character(&self) -> Option<Character> {
+        match self {
+            BaseType::ID => Some(Character::ID),
+            BaseType::IDREF => Some(Character::IDREF),
+            BaseType::Language => Some(Character::Language),
+            BaseType::Name => Some(Character::Name),
+            BaseType::NmToken => Some(Character::NmToken),
+            BaseType::NormalizedString => Some(Character::NormalizedString),
+            BaseType::String => Some(Character::String),
+            BaseType::Token => Some(Character::Token),
+            _ => None,
+        }
+    }
+
+    pub fn as_datetime(&self) -> Option<DateTime> {
+        match self {
+            BaseType::Date => Some(DateTime::Date),
+            BaseType::DateTime => Some(DateTime::DateTime),
+            BaseType::Duration => Some(DateTime::Duration),
+            BaseType::GDay => Some(DateTime::GDay),
+            BaseType::GMonth => Some(DateTime::GMonth),
+            BaseType::GMonthDay => Some(DateTime::GMonthDay),
+            BaseType::GYear => Some(DateTime::GYear),
+            BaseType::GYearMonth => Some(DateTime::GYearMonth),
+            BaseType::Time => Some(DateTime::Time),
+            _ => None,
+        }
+    }
+
+    pub fn to_symbol(&self) -> Symbol {
+        Symbol::new(format!("{}", self))
+    }
+
+    // pub fn parse_prefixed_or_custom<S1, S2>(s: S1, prefix: S2) -> Self
+    // where
+    //     S1: AsRef<str>,
+    //     S2: AsRef<str>,
+    // {
+    //     match Self::parse_prefixed(&s, &prefix) {
+    //         Ok(ok) => ok,
+    //         Err(_) => {
+    //             if prefix.as_ref().is_empty() {
+    //
+    //             } else {
+    //                 BaseType::Custom(format!("{}:{}", prefix.as_ref(), s.as_ref()))
+    //             }
+    //         }
+    //     }
+    // }
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Primitive
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
 pub enum Primitive {
-    Numeric(Numeric),
-    Character(Character),
-    DateTime(DateTime),
-}
-
-impl PrefixedParse for Primitive {
-    type ParsedThing = Primitive;
-
-    fn parse<S: AsRef<str>>(parseable: S) -> Result<Self::ParsedThing> {
-        if let Ok(x) = Numeric::parse(&parseable) {
-            return Ok(Self::Numeric(x));
-        }
-        if let Ok(x) = Character::parse(&parseable) {
-            return Ok(Self::Character(x));
-        }
-        if let Ok(x) = DateTime::parse(&parseable) {
-            return Ok(Self::DateTime(x));
-        }
-        raise!("'{}' could not be parsed as a primitive type", parseable.as_ref())
-    }
-}
-
-impl PrefixedString for Primitive {
-    fn name(&self) -> &str {
-        match self {
-            Primitive::Numeric(x) => x.name(),
-            Primitive::Character(x) => x.name(),
-            Primitive::DateTime(x) => x.name(),
-        }
-    }
-}
-
-impl Display for Primitive {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.name())
-    }
+    None,
+    Numeric,
+    Character,
+    DateType,
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -331,6 +547,105 @@ impl Display for DateTime {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+// Conveniences
+
+impl BaseType {
+    pub fn is_id(&self) -> bool {
+        *self == BaseType::ID
+    }
+    pub fn is_idref(&self) -> bool {
+        *self == BaseType::IDREF
+    }
+    pub fn is_language(&self) -> bool {
+        *self == BaseType::Language
+    }
+    pub fn is_name(&self) -> bool {
+        *self == BaseType::Name
+    }
+    pub fn is_nmtoken(&self) -> bool {
+        *self == BaseType::NmToken
+    }
+    pub fn is_normalized_string(&self) -> bool {
+        *self == BaseType::NormalizedString
+    }
+    pub fn is_string(&self) -> bool {
+        *self == BaseType::String
+    }
+    pub fn is_token(&self) -> bool {
+        *self == BaseType::Token
+    }
+    pub fn is_byte(&self) -> bool {
+        *self == BaseType::Byte
+    }
+    pub fn is_decimal(&self) -> bool {
+        *self == BaseType::Decimal
+    }
+    pub fn is_int(&self) -> bool {
+        *self == BaseType::Int
+    }
+    pub fn is_integer(&self) -> bool {
+        *self == BaseType::Integer
+    }
+    pub fn is_long(&self) -> bool {
+        *self == BaseType::Long
+    }
+    pub fn is_negative_integer(&self) -> bool {
+        *self == BaseType::NegativeInteger
+    }
+    pub fn is_non_negative_integer(&self) -> bool {
+        *self == BaseType::NonNegativeInteger
+    }
+    pub fn is_non_positive_integer(&self) -> bool {
+        *self == BaseType::PositiveInteger
+    }
+    pub fn is_positive_integer(&self) -> bool {
+        *self == BaseType::NonPositiveInteger
+    }
+    pub fn is_short(&self) -> bool {
+        *self == BaseType::Short
+    }
+    pub fn is_unsigned_long(&self) -> bool {
+        *self == BaseType::UnsignedLong
+    }
+    pub fn is_unsigned_int(&self) -> bool {
+        *self == BaseType::UnsignedInt
+    }
+    pub fn is_unsigned_short(&self) -> bool {
+        *self == BaseType::UnsignedShort
+    }
+    pub fn is_unsigned_byte(&self) -> bool {
+        *self == BaseType::UnsignedByte
+    }
+    pub fn is_date(&self) -> bool {
+        *self == BaseType::Date
+    }
+    pub fn is_datetime(&self) -> bool {
+        *self == BaseType::DateTime
+    }
+    pub fn is_duration(&self) -> bool {
+        *self == BaseType::Duration
+    }
+    pub fn is_gday(&self) -> bool {
+        *self == BaseType::GDay
+    }
+    pub fn is_gmonth(&self) -> bool {
+        *self == BaseType::GMonth
+    }
+    pub fn is_gmonthday(&self) -> bool {
+        *self == BaseType::GMonthDay
+    }
+    pub fn is_gyear(&self) -> bool {
+        *self == BaseType::GYear
+    }
+    pub fn is_gyearmonth(&self) -> bool {
+        *self == BaseType::GYearMonth
+    }
+    pub fn is_time(&self) -> bool {
+        *self == BaseType::Time
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 // Helpers
 
 fn split_raw_str(raw_str: &str) -> (&str, &str) {
@@ -390,24 +705,24 @@ fn numeric_parse_bad_value() {
 #[test]
 fn parse_primitive_xs_datetime() {
     let input = "xs:dateTime";
-    let got = Primitive::parse_prefixed(input, "xs").unwrap();
-    let want = Primitive::DateTime(DateTime::DateTime);
+    let got = BaseType::parse_prefixed(input, "xs").unwrap();
+    let want = BaseType::DateTime;
     assert_eq!(got, want);
 }
 
 #[test]
 fn parse_primitive_xs_string() {
     let input = "xs:string";
-    let got = Primitive::parse_prefixed(input, "xs").unwrap();
-    let want = Primitive::Character(Character::String);
+    let got = BaseType::parse_prefixed(input, "xs").unwrap();
+    let want = BaseType::String;
     assert_eq!(got, want);
 }
 
 #[test]
 fn parse_primitive_xs_byte() {
     let input = "floop:byte";
-    let got = Primitive::parse_prefixed(input, "floop").unwrap();
-    let want = Primitive::Numeric(Numeric::Byte);
+    let got = BaseType::parse_prefixed(input, "floop").unwrap();
+    let want = BaseType::Byte;
     assert_eq!(got, want);
 }
 
@@ -418,21 +733,34 @@ fn parse_base_type() {
         input: &'static str,
         want: BaseType,
     }
+    let test_cases = vec![TestCase {
+        prefix: "xs",
+        input: "xs:string",
+        want: BaseType::String,
+    }];
+    for test_case in &test_cases {
+        let got = BaseType::parse_prefixed(test_case.input, test_case.prefix).unwrap();
+        assert_eq!(&got, &test_case.want);
+    }
+}
+
+#[test]
+fn parse_base_type_custom() {
+    struct TestCase {
+        prefix: &'static str,
+        input: &'static str,
+        want: BaseType,
+    }
     let test_cases = vec![
         TestCase {
             prefix: "foo",
             input: "foo:bar",
-            want: BaseType::Other("foo:bar".to_owned()),
-        },
-        TestCase {
-            prefix: "xs",
-            input: "xs:string",
-            want: BaseType::Primitive(Primitive::Character(Character::String)),
+            want: BaseType::Custom("foo:bar".to_owned()),
         },
         TestCase {
             prefix: "xs",
             input: "bloop:blerp",
-            want: BaseType::Other("bloop:blerp".to_owned()),
+            want: BaseType::Custom("bloop:blerp".to_owned()),
         },
     ];
     for test_case in &test_cases {
@@ -451,7 +779,7 @@ fn display_numeric() {
 
 #[test]
 fn display_base_type() {
-    let base_type = BaseType::Primitive(Primitive::Numeric(Numeric::Byte));
+    let base_type = BaseType::Byte;
     let got = format!("{}", base_type);
     let want = "byte";
     assert_eq!(got.as_str(), want);

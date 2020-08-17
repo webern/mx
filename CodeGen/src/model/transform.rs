@@ -1,5 +1,5 @@
 use crate::model::create::CreateError;
-use crate::model::Model;
+use crate::model::Def;
 use crate::xsd::{Entry, Xsd};
 use std::fmt::{Display, Formatter};
 

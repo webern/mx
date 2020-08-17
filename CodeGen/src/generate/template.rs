@@ -10,10 +10,24 @@ use std::path::{Path, PathBuf};
 
 pub const CORE_CPP: &str = "core.cpp.template";
 pub const CORE_H: &str = "core.h.template";
+pub const DECIMAL_BUILTINS_CPP: &str = "decimal_builtins.cpp.template";
+pub const DECIMAL_BUILTINS_H: &str = "decimal_builtins.h.template";
+pub const DECIMAL_TYPE_CPP: &str = "decimal_type.cpp.template";
+pub const DECIMAL_TYPE_H: &str = "decimal_type.h.template";
+pub const ENUM_CPP: &str = "enum.cpp.template";
+pub const ENUM_H: &str = "enum.h.template";
+pub const ENUM_WRAPPER_CPP: &str = "enum_wrapper.cpp.template";
+pub const ENUM_WRAPPER_H: &str = "enum_wrapper.h.template";
 pub const INTEGER_BUILTINS_CPP: &str = "integer_builtins.cpp.template";
 pub const INTEGER_BUILTINS_H: &str = "integer_builtins.h.template";
 pub const INTEGER_TYPE_CPP: &str = "integer_type.cpp.template";
 pub const INTEGER_TYPE_H: &str = "integer_type.h.template";
+pub const NUMBER_OR_NORMAL_CPP: &str = "NumberOrNormal.cpp.template";
+pub const NUMBER_OR_NORMAL_H: &str = "NumberOrNormal.h.template";
+pub const POSITIVE_INTEGER_OR_EMPTY_CPP: &str = "PositiveIntegerOrEmpty.cpp.template";
+pub const POSITIVE_INTEGER_OR_EMPTY_H: &str = "PositiveIntegerOrEmpty.h.template";
+pub const UNION_CPP: &str = "union.cpp.template";
+pub const UNION_H: &str = "union.h.template";
 
 lazy_static! {
     static ref DIR: PathBuf = manifest_dir().join("src").join("generate").join("data");
@@ -68,7 +82,8 @@ fn read<P: AsRef<Path>>(p: P) -> Result<String> {
     if !p.is_file() {
         return raise!("not a file: '{}'", p.display());
     }
-    Ok(std::fs::read_to_string(p).map_err(|e| make_err!("cannot read file '{}': {}", p.display(), e))?)
+    Ok(std::fs::read_to_string(p)
+        .map_err(|e| make_err!("cannot read file '{}': {}", p.display(), e))?)
 }
 
 fn list_template_files() -> Result<Vec<(String, PathBuf)>> {
@@ -81,8 +96,11 @@ fn list_template_files() -> Result<Vec<(String, PathBuf)>> {
         return raise!("not a directory: '{}'", dir.display())?;
     }
     let mut list = Vec::new();
-    for entry in fs::read_dir(&dir).map_err(|e| make_err!("unable to read dir '{}': {}", dir.display(), e))? {
-        let entry = entry.map_err(|e| make_err!("unable to read entry in dir '{}': {}", dir.display(), e))?;
+    for entry in fs::read_dir(&dir)
+        .map_err(|e| make_err!("unable to read dir '{}': {}", dir.display(), e))?
+    {
+        let entry = entry
+            .map_err(|e| make_err!("unable to read entry in dir '{}': {}", dir.display(), e))?;
         if !entry.path().is_file() {
             continue;
         }

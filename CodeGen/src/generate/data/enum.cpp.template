@@ -1,0 +1,29 @@
+        {{ banner }}
+
+        {{ classname }} parse{{ classname }}( const std::string& value )
+        {
+            const auto opt = tryParse{{ classname }}( value );
+            return opt.value_or( {{ classname }}::{{ default_value_enum }} );
+        }
+
+        std::optional<{{ classname }}> tryParse{{ classname }}( const std::string& value )
+        {
+{{ enum_members_parse }}
+            return std::optional<{{ classname }}>{};
+        }
+
+        std::string toString( const {{ classname }} value )
+        {
+{{ enum_members_to_string }}
+            return "{{ to_string_default_return }}";
+        }
+
+        std::ostream& toStream( std::ostream& os, const {{ classname }} value )
+        {
+            return os << toString( value );
+        }
+
+        std::ostream& operator<<( std::ostream& os, const {{ classname }} value )
+        {
+            return toStream( os, value );
+        }

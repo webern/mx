@@ -2,13 +2,14 @@ use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::constants::{ANNOTATION, MEMBER_TYPES, NAME, UNION};
 use crate::xsd::id::{Id, Lineage, RootNodeType};
+use crate::xsd::primitives::{BaseType, PrefixedParse};
 use crate::xsd::Xsd;
 
 #[derive(Clone, Debug)]
 pub struct Union {
     pub id: Id,
     pub annotation: Option<Annotation>,
-    pub members: Vec<String>,
+    pub members: Vec<BaseType>,
 }
 
 impl Union {
@@ -41,14 +42,22 @@ impl Union {
                 break;
             }
         }
-        Ok(Union {
+        let mut members = Vec::new();
+        for item in &items {
+            let base_type = BaseType::parse_prefixed(item.as_str(), xsd.prefix.as_str())?;
+            members.push(base_type);
+        }
+        // TODO also parse in-line definitions of xs:simpleType
+        let u = Union {
             id,
             annotation,
-            members: items,
-        })
+            members,
+        };
+        Ok(u)
     }
 }
 
+// TODO fix test
 #[test]
 fn parse() {
     let parent = crate::xsd::id::Id::new(crate::xsd::id::RootNodeType::Element, "foo".into());
@@ -65,6 +74,9 @@ fn parse() {
     assert_eq!(got_id, want_id);
     // let got_type = union.id.entry_type;
     // assert_eq!(got_type, RootNodeType::Other(UNION.to_owned()));
-    let want_members = vec!["xs:decimal".to_owned(), "css-font-size".to_owned()];
+    let want_members = vec![
+        BaseType::Decimal,
+        BaseType::Custom("css-font-size".to_owned()),
+    ];
     assert_eq!(union.members, want_members);
 }

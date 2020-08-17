@@ -19,7 +19,9 @@ impl AttributeItem {
         let t = node.name.as_str();
         match t {
             ATTRIBUTE => Ok(Self::Attribute(Attribute::from_xml(node, lineage, xsd)?)),
-            ATTRIBUTE_GROUP => Ok(Self::AttributeGroup(AttributeGroup::from_xml(node, lineage, xsd)?)),
+            ATTRIBUTE_GROUP => Ok(Self::AttributeGroup(AttributeGroup::from_xml(
+                node, lineage, xsd,
+            )?)),
             _ => return raise!("unexpected node '{}'", t),
         }
     }
@@ -27,7 +29,11 @@ impl AttributeItem {
 
 /// Ignores `parent` but parses each of its children into an AttributeItem. Ignores `annotation`
 /// and returns an error if anything else other then `attribute` or `attributeGroup` is found.
-pub fn add_attributes_from_xml(parent: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Attributes> {
+pub fn add_attributes_from_xml(
+    parent: &exile::Element,
+    lineage: Lineage,
+    xsd: &Xsd,
+) -> Result<Attributes> {
     let mut items = Attributes::new();
     for it in parent.children() {
         let t = it.name.as_str();

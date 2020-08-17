@@ -1,0 +1,41 @@
+        template<class> inline constexpr bool always_false_v = false;
+
+        {{ classname }}::{{ classname }}()
+        : myValue{ {{ default_value }} }
+        {
+
+        }
+
+{{ variants_ctor_def }}        
+        {{ classname }}::{{ classname }}( const std::string& value )
+        : {{ classname }}{}
+        {
+            parse( value );
+        }
+
+{{ variants_get_is_def }}
+{{ variants_set_def }}
+{{ variants_get_def }}
+
+        bool {{ classname }}::parse( const std::string& value )
+        {
+{{ parse_def }}
+        }
+
+        std::string toString( const {{ classname }}& value )
+        {
+            std::stringstream ss;
+            toStream( ss, value );
+            return ss.str();
+        }
+
+		std::ostream& toStream( std::ostream& os, const {{ classname }}& value )
+        {
+{{ variants_to_stream_decl }}
+            return os;
+        }
+
+		std::ostream& operator<<( std::ostream& os, const {{ classname }}& value )
+        {
+            return toStream( os, value );
+        }

@@ -40,7 +40,11 @@ impl ComplexContent {
         } else {
             return raise!("{} payload was not found", COMPLEX_CONTENT);
         };
-        Ok(ComplexContent { id, annotation, extension })
+        Ok(ComplexContent {
+            id,
+            annotation,
+            extension,
+        })
     }
 }
 

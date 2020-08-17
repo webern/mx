@@ -1,7 +1,8 @@
 use crate::error::Result;
 use crate::xsd::annotation::Annotation;
 use crate::xsd::constants::{
-    ANNOTATION, ENUMERATION, LENGTH, MAX_EXCLUSIVE, MAX_INCLUSIVE, MAX_LENGTH, MIN_EXCLUSIVE, MIN_INCLUSIVE, MIN_LENGTH, NAME, PATTERN, RESTRICTION,
+    ANNOTATION, ENUMERATION, LENGTH, MAX_EXCLUSIVE, MAX_INCLUSIVE, MAX_LENGTH, MIN_EXCLUSIVE,
+    MIN_INCLUSIVE, MIN_LENGTH, NAME, PATTERN, RESTRICTION,
 };
 use crate::xsd::restriction::FacetType::Pattern;
 use crate::xsd::{base_attribute, value_attribute, Xsd};
@@ -201,7 +202,12 @@ impl Restriction {
             }
         }
 
-        Ok(Restriction { id, annotation, base, facets })
+        Ok(Restriction {
+            id,
+            annotation,
+            base,
+            facets,
+        })
     }
 }
 
@@ -227,7 +233,7 @@ fn parse() {
     // let got_type = r.id.entry_type;
     // assert_eq!(got_type, RootNodeType::Other(RESTRICTION.to_owned()));
     let got_base = r.base;
-    let want_base = BaseType::Primitive(Primitive::Numeric(Numeric::PositiveInteger));
+    let want_base = BaseType::PositiveInteger;
     assert_eq!(got_base, want_base);
     assert_eq!(r.facets.len(), 2);
     let min = r.facets.get(0).unwrap();
