@@ -106,7 +106,7 @@ namespace mx
             }
             else
             {
-                outPointSize = coreFontSize.getValueNumber().getValue();
+                outPointSize = coreFontSize.getValueDecimal().getValue();
                 outCssSize = api::CssSize::unspecified;
                 return api::FontSizeType::point;
             }
@@ -226,11 +226,11 @@ namespace mx
             
             if( value.sizeType == api::FontSizeType::css )
             {
-                fontSize.setValue( converter.convert( value.sizeCss ) );
+                fontSize.setCssFontSize( converter.convert( value.sizeCss ) );
             }
             else if( value.sizeType == api::FontSizeType::point )
             {
-                fontSize.setValue( core::PositiveDecimal{ value.sizePoint } );
+                fontSize.setDecimal( core::Decimal{ value.sizePoint } );
             }
             
             lookForAndSetFontSize( fontSize, &outAttributes );

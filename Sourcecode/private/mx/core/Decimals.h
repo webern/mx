@@ -119,9 +119,9 @@ namespace mx
             DecimalClamp myMaxClamp;
         };
 
-        /// The divisions type is used to express values in terms of the musical divisions
-        /// defined by the divisions element. It is preferred that these be integer values
-        /// both for MIDI interoperability and to avoid roundoff errors.
+        /// The divisions type is used to express values in terms of the musical divisions defined
+        /// by the divisions element. It is preferred that these be integer values both for MIDI
+        /// interoperability and to avoid roundoff errors.
         ///
         /// Range: min=None, max=None
         class DivisionsValue : public DecimalRange
@@ -131,8 +131,8 @@ namespace mx
             DivisionsValue();
         };
 
-        /// The millimeters type is a number representing millimeters. This is used in the
-        /// scaling element to provide a default scaling from tenths to physical units.
+        /// The millimeters type is a number representing millimeters. This is used in the scaling
+        /// element to provide a default scaling from tenths to physical units.
         ///
         /// Range: min=None, max=None
         class MillimetersValue : public DecimalRange
@@ -192,8 +192,8 @@ namespace mx
             PositiveDivisionsValue();
         };
 
-        /// The rotation-degrees type specifies rotation, pan, and elevation values in
-        /// degrees. Values range from -180 to 180.
+        /// The rotation-degrees type specifies rotation, pan, and elevation values in degrees.
+        /// Values range from -180 to 180.
         ///
         /// Range: min=Inclusive(-180), max=Inclusive(180)
         class RotationDegrees : public DecimalRange
@@ -203,9 +203,9 @@ namespace mx
             RotationDegrees();
         };
 
-        /// The semitones type is a number representing semitones, used for chromatic
-        /// alteration. A value of -1 corresponds to a flat and a value of 1 to a sharp.
-        /// Decimal values like 0.5 (quarter tone sharp) are used for microtones.
+        /// The semitones type is a number representing semitones, used for chromatic alteration. A
+        /// value of -1 corresponds to a flat and a value of 1 to a sharp. Decimal values like 0.5
+        /// (quarter tone sharp) are used for microtones.
         ///
         /// Range: min=None, max=None
         class Semitones : public DecimalRange
@@ -215,19 +215,16 @@ namespace mx
             Semitones();
         };
 
-        /// The tenths type is a number representing tenths of interline staff space
-        /// (positive or negative). Both integer and decimal values are allowed, such as 5
-        /// for a half space and 2.5 for a quarter space. Interline space is measured from
-        /// the middle of a staff line.
+        /// The tenths type is a number representing tenths of interline staff space (positive or
+        /// negative). Both integer and decimal values are allowed, such as 5 for a half space and
+        /// 2.5 for a quarter space. Interline space is measured from the middle of a staff line.
         ///
-        ///
-        ///
-        /// Distances in a MusicXML file are measured in tenths of staff space. Tenths are
-        /// then scaled to millimeters within the scaling element, used in the defaults
-        /// element at the start of a score. Individual staves can apply a scaling factor
-        /// to adjust staff size. When a MusicXML element or attribute refers to tenths, it
-        /// means the global tenths defined by the scaling element, not the local tenths as
-        /// adjusted by the staff-size element.
+        /// Distances in a MusicXML file are measured in tenths of staff space. Tenths are then
+        /// scaled to millimeters within the scaling element, used in the defaults element at the
+        /// start of a score. Individual staves can apply a scaling factor to adjust staff size.
+        /// When a MusicXML element or attribute refers to tenths, it means the global tenths
+        /// defined by the scaling element, not the local tenths as adjusted by the staff-size
+        /// element.
         ///
         /// Range: min=None, max=None
         class TenthsValue : public DecimalRange
@@ -237,8 +234,8 @@ namespace mx
             TenthsValue();
         };
 
-        /// The trill-beats type specifies the beats used in a trill-sound or bend-sound
-        /// attribute group. It is a decimal value with a minimum value of 2.
+        /// The trill-beats type specifies the beats used in a trill-sound or bend-sound attribute
+        /// group. It is a decimal value with a minimum value of 2.
         ///
         /// Range: min=Inclusive(2), max=None
         class TrillBeats : public DecimalRange

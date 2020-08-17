@@ -4,14 +4,18 @@
 
 #pragma once
 
-#include <iostream>
 #include "mx/core/Integers.h"
+
+#include <iostream>
 #include <memory>
+#include <string>
 
 namespace mx
 {
     namespace core
     {
+        /// The positive-integer-or-empty values can be either a positive integer or an empty
+        /// string.
         class PositiveIntegerOrEmpty
         {
         public:
