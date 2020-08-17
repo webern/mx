@@ -19,6 +19,7 @@ pub enum ChoiceItem {
     Element(Element),
     Group(Group),
     Sequence(Sequence),
+    Choice(Box<Choice>),
 }
 
 pub type Choices = Vec<ChoiceItem>;
@@ -55,7 +56,13 @@ impl Choice {
                     lineage.clone(),
                     xsd,
                 )?)),
-                _ => return raise!("cannot parse '{}', unexpected node '{}'", CHOICE, t),
+                CHOICE =>{
+                    let inner_choice = Choice::from_xml(inner, lineage.clone(), xsd)?;
+                    let inner_box = Box::new(inner_choice);
+                    let item = ChoiceItem::Choice(inner_box);
+                    choices.push(item);
+                }
+                _ => return raise!("cannot parse {} '{}', unexpected node '{}'", CHOICE, id, t),
             }
         }
         Ok(Choice {
