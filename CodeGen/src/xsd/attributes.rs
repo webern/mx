@@ -5,10 +5,13 @@ use crate::xsd::attribute_group::AttributeGroup;
 use crate::xsd::constants::{ANNOTATION, ATTRIBUTE, ATTRIBUTE_GROUP};
 use crate::xsd::id::Lineage;
 use crate::xsd::Xsd;
+use serde::export::Formatter;
+use std::cmp::Ordering;
+use std::fmt::Debug;
 
-pub type Attributes = Vec<AttributeItem>;
+pub struct Attributes(Vec<AttributeItem>);
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub enum AttributeItem {
     AttributeGroup(AttributeGroup),
     Attribute(Attribute),
@@ -95,5 +98,41 @@ fn attributes() {
     match result.get(1).unwrap() {
         AttributeItem::AttributeGroup(_) => panic!("wrong variant"),
         AttributeItem::Attribute(a) => assert!(a.defined_by.is_type()),
+    }
+}
+
+// What a pain in the ass!
+// #[derive(Clone, Debug, PartialOrd, PartialEq)]
+impl Attributes {
+    pub fn new() -> Self {
+        Self(Vec::new())
+    }
+
+    pub fn push(&mut self, item: AttributeItem) {
+        self.0.push(item)
+    }
+}
+
+impl Clone for Attributes {
+    fn clone(&self) -> Self {
+        Self(self.0.clone())
+    }
+}
+
+impl Debug for Attributes {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        Debug::fmt(&self.0, f)
+    }
+}
+
+impl PartialEq for Attributes {
+    fn eq(&self, other: &Self) -> bool {
+        self.0.eq(&other.0)
+    }
+}
+
+impl PartialOrd for Attributes {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        self.0.partial_cmp(&other.0)
     }
 }

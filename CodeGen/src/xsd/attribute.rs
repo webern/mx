@@ -5,7 +5,7 @@ use crate::xsd::constants::{ANNOTATION, ATTRIBUTE, DEFAULT, FIXED, NAME, REF, TY
 use crate::xsd::id::{Id, Lineage, RootNodeType};
 use crate::xsd::{use_required, Xsd};
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub struct Attribute {
     pub id: Id,
     pub name: String,

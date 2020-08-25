@@ -7,7 +7,7 @@ use crate::xsd::id::{Id, Lineage, RootNodeType};
 use crate::xsd::sequence::Sequence;
 use crate::xsd::Xsd;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub struct Choice {
     pub id: Id,
     pub annotation: Option<Annotation>,
@@ -56,7 +56,7 @@ impl Choice {
                     lineage.clone(),
                     xsd,
                 )?)),
-                CHOICE =>{
+                CHOICE => {
                     let inner_choice = Choice::from_xml(inner, lineage.clone(), xsd)?;
                     let inner_box = Box::new(inner_choice);
                     let item = ChoiceItem::Choice(inner_box);

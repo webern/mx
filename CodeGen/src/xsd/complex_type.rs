@@ -29,7 +29,7 @@ pub enum Payload {
     None,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub enum Children {
     Choice(Choice),
     Group(Group),

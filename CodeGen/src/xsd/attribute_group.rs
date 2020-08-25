@@ -5,13 +5,13 @@ use crate::xsd::constants::{ANNOTATION, ATTRIBUTE_GROUP, NAME, REF};
 use crate::xsd::id::{Id, Lineage, RootNodeType};
 use crate::xsd::{name_attribute, ref_attribute, Xsd};
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub enum AttributeGroup {
     Def(AttributeGroupDef),
     Ref(AttributeGroupRef),
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub struct AttributeGroupDef {
     pub id: Id,
     pub name: String,
@@ -19,7 +19,7 @@ pub struct AttributeGroupDef {
     pub attributes: Attributes,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub struct AttributeGroupRef {
     pub id: Id,
     pub annotation: Option<Annotation>,
