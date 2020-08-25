@@ -98,7 +98,7 @@ impl ComplexType {
 impl Parent {
     pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
         let mut parent = Parent {
-            attributes: vec![],
+            attributes: Attributes::new(),
             children: None,
         };
         for inner in node.children() {

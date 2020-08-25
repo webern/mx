@@ -7,7 +7,7 @@ use crate::xsd::id::{Id, Lineage, RootNodeType};
 use crate::xsd::sequence::Sequence;
 use crate::xsd::{is_ref, name_attribute, ref_attribute, Occurs, Xsd};
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub enum Group {
     Definition(GroupDefinition),
     Reference(GroupReference),
@@ -28,14 +28,14 @@ impl Group {
     }
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub struct GroupDefinition {
     pub id: Id,
     pub annotation: Option<Annotation>,
     pub members: Vec<Member>,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub struct GroupReference {
     pub id: Id,
     pub annotation: Option<Annotation>,
@@ -43,7 +43,7 @@ pub struct GroupReference {
     pub occurs: Occurs,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub enum Member {
     Choice(Choice),
     Element(Element),

@@ -12,7 +12,7 @@ pub struct SimpleContent {
     pub payload: Payload,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub enum Payload {
     Extension(Extension),
 }

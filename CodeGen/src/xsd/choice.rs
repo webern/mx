@@ -6,6 +6,8 @@ use crate::xsd::group::Group;
 use crate::xsd::id::{Id, Lineage, RootNodeType};
 use crate::xsd::sequence::Sequence;
 use crate::xsd::Xsd;
+use std::cmp::Ordering;
+use std::fmt::{Debug, Formatter};
 
 #[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub struct Choice {
@@ -14,7 +16,7 @@ pub struct Choice {
     pub choices: Choices,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub enum ChoiceItem {
     Element(Element),
     Group(Group),
@@ -22,7 +24,7 @@ pub enum ChoiceItem {
     Choice(Box<Choice>),
 }
 
-pub type Choices = Vec<ChoiceItem>;
+pub struct Choices(Vec<ChoiceItem>);
 
 impl Choice {
     pub fn documentation(&self) -> String {
@@ -136,4 +138,48 @@ fn parse_credit() {
     };
     assert_eq!(seq.occurs.min_occurs, 1);
     assert_eq!(seq.occurs.max_occurs, Some(1));
+}
+
+// What a pain in the ass!
+// #[derive(Clone, Debug, PartialOrd, PartialEq)]
+impl Choices {
+    pub fn new() -> Self {
+        Self(Vec::new())
+    }
+
+    pub fn push(&mut self, item: ChoiceItem) {
+        self.0.push(item)
+    }
+
+    pub fn inner(&self) -> &Vec<ChoiceItem> {
+        &self.0
+    }
+
+    pub fn mut_inner(&mut self) -> &mut Vec<ChoiceItem> {
+        &mut self.0
+    }
+}
+
+impl Clone for Choices {
+    fn clone(&self) -> Self {
+        Self(self.0.clone())
+    }
+}
+
+impl Debug for Choices {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        Debug::fmt(&self.0, f)
+    }
+}
+
+impl PartialEq for Choices {
+    fn eq(&self, other: &Self) -> bool {
+        self.0.eq(&other.0)
+    }
+}
+
+impl PartialOrd for Choices {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        self.0.partial_cmp(&other.0)
+    }
 }
