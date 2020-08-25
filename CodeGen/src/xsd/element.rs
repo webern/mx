@@ -6,7 +6,7 @@ use crate::xsd::id::{Id, Lineage, RootNodeType};
 use crate::xsd::primitives::{BaseType, PrefixedParse, PrefixedString};
 use crate::xsd::{name_attribute, type_attribute, Occurs, Xsd};
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub enum Element {
     Definition(ElementDef),
     Reference(ElementRef),
@@ -64,7 +64,7 @@ impl Element {
     }
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub struct ElementDef {
     pub id: Id,
     pub annotation: Option<Annotation>,
@@ -112,7 +112,7 @@ impl ElementDef {
     }
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub struct ElementRef {
     pub id: Id,
     pub annotation: Option<Annotation>,

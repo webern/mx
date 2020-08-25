@@ -4,6 +4,7 @@ pub mod create;
 pub mod builtin;
 pub mod creator;
 pub mod default_create;
+pub mod element;
 pub mod enumeration;
 pub mod post_process;
 pub mod scalar;

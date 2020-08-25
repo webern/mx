@@ -1,11 +1,11 @@
 use crate::error::Result;
 use crate::xsd::annotation::Annotation;
-use crate::xsd::attributes::{AttributeItem, Attributes};
+use crate::xsd::attributes::AttributeItem;
 use crate::xsd::constants::{ANNOTATION, ATTRIBUTE, ATTRIBUTE_GROUP, EXTENSION, NAME};
 use crate::xsd::id::{Id, Lineage, RootNodeType};
 use crate::xsd::{base_attribute, Xsd};
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub struct Extension {
     pub id: Id,
     pub annotation: Option<Annotation>,
