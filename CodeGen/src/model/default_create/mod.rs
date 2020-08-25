@@ -8,6 +8,7 @@ use crate::model::default_create::enumeration::{is_enumeration, model_enumeratio
 use crate::model::default_create::scalar::{
     model_derived_simple_type, model_scalar_number, model_scalar_string,
 };
+use crate::model::element::Element;
 use crate::model::enumeration::Enumeration;
 use crate::model::scalar::ScalarNumeric;
 use crate::model::symbol::Symbol;
@@ -37,9 +38,9 @@ impl Create for DefaultCreate {
             Entry::Annotation(_) => Ok(Some(Vec::new())), // TODO - implement Annotation
             Entry::AttributeGroup(_) => Ok(Some(Vec::new())), // TODO - implement AttributeGroup
             Entry::ComplexType(_) => Ok(Some(Vec::new())), // TODO - implement ComplexType
-            Entry::Element(_) => Ok(Some(Vec::new())),    // TODO - implement Element
-            Entry::Group(_) => Ok(Some(Vec::new())),      // TODO - implement Group
-            Entry::Import(_) => Ok(Some(Vec::new())),     // TODO - implement Import
+            Entry::Element(eee) => Ok(Some(vec![Def::Element(Element::new(eee.clone()))])), // TODO - implement Element
+            Entry::Group(_) => Ok(Some(Vec::new())), // TODO - implement Group
+            Entry::Import(_) => Ok(Some(Vec::new())), // TODO - implement Import
             Entry::SimpleType(st) => dispatch_simple_type(st, xsd),
         }
     }

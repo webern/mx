@@ -92,6 +92,12 @@ impl<'a> Info<'a> {
                 Def::UnionSimpleType(s) => {
                     let _ = map.insert(format!("mx/core/{}.h", s.name.pascal()), ());
                 }
+                Def::Element(element) => {
+                    panic!(
+                        "An element should not be encountered here: '{}'",
+                        element.name().original()
+                    );
+                }
             }
         }
         for (_, &include) in self.primitive_members {

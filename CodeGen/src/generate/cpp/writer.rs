@@ -54,6 +54,7 @@ impl Writer {
                     )
                 }
                 Def::UnionSimpleType(u) => unions.push(u),
+                Def::Element(element) => println!("Element: {}", element.name().original()),
             }
         }
         self.write_enums(&mut enums)?;

@@ -13,6 +13,7 @@ pub mod transform;
 
 use crate::error::Result;
 use crate::model::create::{Create, CreateError, CreateResult};
+use crate::model::element::Element;
 use crate::model::enumeration::Enumeration;
 use crate::model::scalar::{DerivedSimpleTypeData, ScalarNumeric, ScalarString, UnionData};
 use crate::model::symbol::Symbol;
@@ -33,6 +34,7 @@ pub enum Def {
     CustomScalarString(ScalarString),
     DerivedSimpleType(DerivedSimpleTypeData),
     UnionSimpleType(UnionData),
+    Element(Element),
 }
 
 impl Def {
@@ -44,6 +46,7 @@ impl Def {
             Def::CustomScalarString(x) => &x.name,
             Def::DerivedSimpleType(x) => &x.name,
             Def::UnionSimpleType(x) => &x.name,
+            Def::Element(x) => x.name(),
         }
     }
 }
@@ -83,6 +86,7 @@ impl Model {
             Def::CustomScalarString(_) => Shape::Simple,
             Def::DerivedSimpleType(_) => Shape::Simple,
             Def::UnionSimpleType(_) => Shape::Simple,
+            Def::Element(_) => Shape::Complex,
         };
         let ipseity = Ipseity {
             shape,
