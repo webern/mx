@@ -5,13 +5,13 @@ use crate::xsd::id::{Id, Lineage, RootNodeType};
 use crate::xsd::Xsd;
 use std::fmt::{Debug, Formatter};
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub struct Annotation {
     pub id: Id,
     pub items: Vec<Item>,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub enum Item {
     Documentation(String),
     AppInfo(String),

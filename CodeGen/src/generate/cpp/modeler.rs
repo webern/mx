@@ -200,7 +200,7 @@ impl MxModeler {
             default: Symbol::new("mf"),
             other_field: None,
         };
-        for c in &choice.choices {
+        for c in choice.choices.inner().iter() {
             let mut is_other_field_found = false;
             if let Some(name) = self.unwrap_empty_element(c)? {
                 enumer.members.push(Symbol::new(name));

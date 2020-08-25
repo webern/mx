@@ -5,7 +5,7 @@ use crate::xsd::extension::Extension;
 use crate::xsd::id::{Id, Lineage, RootNodeType};
 use crate::xsd::Xsd;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub struct ComplexContent {
     pub id: Id,
     pub annotation: Option<Annotation>,

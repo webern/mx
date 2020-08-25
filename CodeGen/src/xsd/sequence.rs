@@ -7,7 +7,7 @@ use crate::xsd::group::Group;
 use crate::xsd::id::{Id, Lineage, RootNodeType};
 use crate::xsd::{Occurs, Xsd};
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub struct Sequence {
     pub id: Id,
     pub annotation: Option<Annotation>,
@@ -15,7 +15,7 @@ pub struct Sequence {
     pub members: Vec<Member>,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub enum Member {
     Choice(Choice),
     Element(Element),

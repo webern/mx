@@ -13,7 +13,7 @@ use crate::xsd::sequence::Sequence;
 use crate::xsd::simple_content::SimpleContent;
 use crate::xsd::Xsd;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub struct ComplexType {
     pub id: Id,
     pub name: String,
@@ -21,7 +21,7 @@ pub struct ComplexType {
     pub payload: Payload,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub enum Payload {
     ComplexContent(ComplexContent),
     SimpleContent(SimpleContent),
@@ -29,14 +29,14 @@ pub enum Payload {
     None,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub enum Children {
     Choice(Choice),
     Group(Group),
     Sequence(Sequence),
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub struct Parent {
     pub attributes: Attributes,
     pub children: Option<Children>,
@@ -98,7 +98,7 @@ impl ComplexType {
 impl Parent {
     pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
         let mut parent = Parent {
-            attributes: vec![],
+            attributes: Attributes::new(),
             children: None,
         };
         for inner in node.children() {
