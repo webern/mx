@@ -44,7 +44,7 @@ pub enum TypeFamily {
     /// some attributes defined as attribute groups (structures, or nested structures). In practice,
     /// all of an element's attributes can be described by one Structure or NestedStructure.
     NestedStructure,
-    /// A sum type, for example defined by xs:choice.
+    /// A sum type, for example defined by xs:choice. The variants must all be elements.
     Variant,
     /// A collection of named types, of any TypeFamily, each of which can be optional (e.g.
     /// minOccurs=0, maxOccurs=1), required (e.g. minOccurs=1 maxOccurs=1), or numerous (e.g.
