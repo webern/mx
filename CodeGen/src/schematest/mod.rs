@@ -1,5 +1,5 @@
-mod xsd;
-
+#[cfg(test)]
+mod tests;
 use crate::error::Result;
 use crate::xsd::Xsd;
 use exile::Element;
@@ -7,6 +7,7 @@ use flate2::read::GzDecoder;
 use lazy_static::lazy_static;
 use pathdiff::diff_paths;
 use reqwest::blocking::Client;
+use std::collections::HashMap;
 use std::fs::{read_to_string, File};
 use std::path::{Path, PathBuf};
 use std::time::Duration;
@@ -28,11 +29,134 @@ pub struct TestID {
 }
 
 #[derive(Debug, Clone)]
+pub struct Tests {
+    list: Vec<Test>,
+    map: HashMap<String, usize>,
+}
+
+impl Tests {
+    fn new(list: Vec<Test>) -> Self {
+        let mut list = list;
+        let mut map_temp = HashMap::new();
+        for test in list.iter_mut() {
+            let smallest = test.id.smallest();
+            let bigger = test.id.bigger();
+            let biggest = test.id.biggest();
+            if !map_temp.contains_key(smallest.as_str()) {
+                test.unique_symbol = smallest.clone();
+            } else if !map_temp.contains_key(bigger.as_str()) {
+                test.unique_symbol = bigger.clone();
+            // println!("warning: bigger was used for '{}'", test.id.name);
+            } else {
+                test.unique_symbol = biggest.clone();
+                // println!("warning: biggest was used for '{}'", test.id.name);
+            }
+            map_temp.insert(test.unique_symbol.as_str(), ());
+        }
+        let mut map = HashMap::new();
+        for (i, test) in list.iter().enumerate() {
+            if map.insert(test.unique_symbol.clone(), i).is_some() {
+                panic!("this should be impossible");
+            }
+        }
+        Self { list, map }
+    }
+
+    pub fn tests(&self) -> &Vec<Test> {
+        &self.list
+    }
+
+    pub fn map(&self) -> &HashMap<String, usize> {
+        &self.map
+    }
+
+    pub fn get<S: AsRef<str>>(&self, id: S) -> Option<&Test> {
+        if let Some(index) = self.map.get(id.as_ref()) {
+            self.list.get(*index)
+        } else {
+            None
+        }
+    }
+}
+
+pub fn snake<S: AsRef<str>>(s: S) -> String {
+    let mut o = String::new();
+    for c in s.as_ref().chars() {
+        if c.is_alphanumeric() {
+            o.push_str(c.to_lowercase().to_string().as_str());
+        } else {
+            o.push('_');
+        }
+    }
+    o
+}
+
+impl TestID {
+    pub fn snake(&self) -> String {
+        snake(format!("{:?}", self))
+    }
+}
+
+#[derive(Debug, Clone)]
 pub struct Test {
     pub id: TestID,
     pub test_type: TestType,
     pub validity: Validity,
     pub document: PathBuf,
+    pub unique_symbol: String,
+}
+
+impl Validity {
+    pub fn snake(&self) -> String {
+        snake(format!("{:?}", self))
+    }
+}
+
+impl TestType {
+    pub fn snake(&self) -> String {
+        snake(format!("{:?}", self))
+    }
+}
+
+impl TestID {
+    pub fn snake_suite(&self) -> String {
+        self.suite.snake()
+    }
+
+    pub fn snake_set(&self) -> String {
+        snake(&self.set)
+    }
+
+    pub fn snake_group(&self) -> String {
+        snake(&self.group)
+    }
+
+    pub fn snake_name(&self) -> String {
+        snake(&self.name)
+    }
+
+    pub fn smallest(&self) -> String {
+        format!("{}_{}", self.snake_suite(), self.snake_name())
+    }
+
+    pub fn bigger(&self) -> String {
+        format!(
+            "{}_{}_{}",
+            self.snake_suite(),
+            self.snake_set(),
+            self.snake_name(),
+        )
+    }
+
+    pub fn biggest(&self) -> String {
+        format!(
+            "{}_{}_{}_{}",
+            self.snake_suite(),
+            self.snake_set(),
+            self.snake_group(),
+            self.snake_name(),
+        )
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -55,12 +179,16 @@ pub enum TestSuite {
     Sun,
 }
 
+impl TestSuite {
+    fn snake(&self) -> String {
+        snake(format!("{:?}", self))
+    }
+}
+
 lazy_static! {
     static ref DATA_DIR: PathBuf = {
         let p_str = env!("CARGO_MANIFEST_DIR");
-        let p = PathBuf::from(p_str).join("data");
-        std::fs::create_dir_all(&p).unwrap();
-        p
+        PathBuf::from(p_str).join("data")
     };
 }
 
@@ -69,23 +197,28 @@ lazy_static! {
 }
 
 lazy_static! {
-    static ref XSD_TESTS: Vec<Test> = {
+    static ref XSD_TESTS: Tests = {
         if !data_dir().is_dir() {
             std::fs::create_dir_all(data_dir()).unwrap();
         }
-        if !testsuite_dir().is_dir() || !tarball_path().is_file() {
-            let _ = std::fs::remove_dir_all(testsuite_dir());
-            let _ = std::fs::remove_file(testsuite_dir());
-            let _ = std::fs::remove_dir_all(tarball_path());
-            let _ = std::fs::remove_file(tarball_path());
-            download().unwrap();
-            unpack().unwrap();
-        }
-        find_suite_definition_files().unwrap()
+        ensure_test_data();
+        let list = find_suite_definition_files().unwrap();
+        Tests::new(list)
     };
 }
 
-fn xsd_tests() -> &'static [Test] {
+pub(crate) fn ensure_test_data() {
+    if !testsuite_dir().is_dir() || !tarball_path().is_file() {
+        let _ = std::fs::remove_dir_all(testsuite_dir());
+        let _ = std::fs::remove_file(testsuite_dir());
+        let _ = std::fs::remove_dir_all(tarball_path());
+        let _ = std::fs::remove_file(tarball_path());
+        download().unwrap();
+        unpack().unwrap();
+    }
+}
+
+fn xsd_tests() -> &'static Tests {
     &XSD_TESTS
 }
 
@@ -201,9 +334,9 @@ fn find_tests_in_test_set(path_str: &str) -> Result<Vec<Test>> {
     } else if dirname.starts_with("ms") {
         TestSuite::Ms
     } else if dirname.starts_with("nist") {
-        TestSuite::Ms
+        TestSuite::Nist
     } else if dirname.starts_with("sun") {
-        TestSuite::Ms
+        TestSuite::Sun
     } else {
         return raise!("unknown test suite directory '{}'", dirname);
     };
@@ -311,24 +444,63 @@ fn parse_test_element(
         test_type,
         validity: validity.ok_or_else(|| make_err!("validity property not found"))?,
         document,
+        unique_symbol: String::from(""),
     })
 }
 
 #[test]
+#[ignore]
 fn generate_tests() {
-    // let d = data_dir();
-    // download().unwrap();
-    // unpack().unwrap();
+    use pathdiff::diff_paths;
+    use std::io::Write;
     let dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("src")
         .join("schematest")
-        .join("xsd")
         .canonicalize()
         .unwrap();
+    let file = dir.join("tests.rs");
 
+    let _ = std::fs::remove_file(&file);
+    let mut file = File::create(&file).unwrap();
+    writeln!(file, "{}", HEADER).unwrap();
     let tests = xsd_tests();
-    for test in tests {
-        let xsd = Xsd::load(&test.document).unwrap();
-        println!("{:?}", xsd)
+    for test in tests.tests() {
+        if test.validity != Validity::Valid || test.test_type != TestType::Schema {
+            continue;
+        }
+        let rel = diff_paths(&test.document, &dir).unwrap();
+        writeln!(file, "{}", make_test(test, &rel)).unwrap();
     }
+}
+
+const HEADER: &str = r#"
+use crate::xsd::Xsd;
+use lazy_static::lazy_static;
+use std::path::PathBuf;
+
+lazy_static! {
+    static ref DIR: PathBuf = {
+        let manifest_dir = env!("CARGO_MANIFEST_DIR");
+        PathBuf::from(manifest_dir).join("src").join("schematest")
+    };
+}
+
+fn to(rel: &str) -> PathBuf {
+    let un = (&DIR).join(rel);
+    un.canonicalize().unwrap_or_else(|err| {
+        panic!("unable to canonicalize '{}'", un.display());
+    })
+}
+"#;
+
+fn make_test(test: &Test, rel: &Path) -> String {
+    format!(
+        r#"#[test]
+fn {}() {{
+    let path = to("{}");
+    let _ = Xsd::load(PathBuf::from(&path)).unwrap();
+}}"#,
+        &test.unique_symbol,
+        rel.display(),
+    )
 }
