@@ -229,7 +229,7 @@ where
         if last_line {
             write!(w, "{}", line)?;
         } else {
-            write!(w, "{}\n", line)?;
+            writeln!(w, "{}", line)?;
         }
     }
     Ok(())

@@ -158,6 +158,14 @@ impl Choices {
     pub fn mut_inner(&mut self) -> &mut Vec<ChoiceItem> {
         &mut self.0
     }
+
+    pub fn len(&self) -> usize {
+        self.0.len()
+    }
+
+    pub fn get(&self, index: usize) -> Option<&ChoiceItem> {
+        self.0.get(index)
+    }
 }
 
 impl Clone for Choices {

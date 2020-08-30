@@ -11,5 +11,6 @@ pub mod error;
 pub mod generate;
 pub mod model;
 pub mod modelv2;
+mod schematest;
 pub mod utils;
 pub mod xsd;

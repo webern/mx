@@ -8,6 +8,7 @@ use crate::xsd::Xsd;
 use serde::export::Formatter;
 use std::cmp::Ordering;
 use std::fmt::Debug;
+use std::slice::SliceIndex;
 
 pub struct Attributes(Vec<AttributeItem>);
 
@@ -118,6 +119,14 @@ impl Attributes {
 
     pub fn mut_inner(&mut self) -> &mut Vec<AttributeItem> {
         &mut self.0
+    }
+
+    pub fn len(&self) -> usize {
+        self.0.len()
+    }
+
+    pub fn get(&self, index: usize) -> Option<&AttributeItem> {
+        self.0.get(index)
     }
 }
 
