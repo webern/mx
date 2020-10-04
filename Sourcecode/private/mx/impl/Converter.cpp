@@ -2,6 +2,9 @@
 // Copyright (c) by Matthew James Briggs
 // Distributed under the MIT License
 
+#include "mx/core/elements/Chromatic.h"
+#include "mx/core/elements/Diatonic.h"
+#include "mx/core/elements/OctaveChange.h"
 #include "mx/impl/Converter.h"
 #include "mx/utility/Throw.h"
 
@@ -1832,6 +1835,128 @@ namespace mx
                 myCents = theNarrowCents;
             }
             return std::make_pair( intAlter, myCents );
+        }
+
+        mx::core::TransposePtr Converter::convertToTranspose( const mx::api::TransposeData& inTransposeData )
+        {
+            // the transpose element uses an octave-change element for intervals larger than an octave.
+            // mx::api does away with the octave-change concept. so a translation is necessary.
+            mx::core::TransposePtr transposePtr = mx::core::makeTranspose();
+            int octave = 0;
+
+            if( inTransposeData.chromatic != 0 )
+            {
+                octave = inTransposeData.chromatic / 12;
+                const auto negative = inTransposeData.chromatic < 0;
+                const auto absMod = std::abs( inTransposeData.chromatic ) % 12;
+                const auto chromatic = negative ? -1 * absMod : absMod;
+                if( octave != 0 )
+                {
+                    transposePtr->setHasOctaveChange( true );
+                    auto oc = transposePtr->getOctaveChange();
+                    oc->setValue( mx::core::Integer{ octave } );
+                }
+                auto chr = transposePtr->getChromatic();
+                chr->setValue(
+                        mx::core::Semitones{
+                                mx::core::DecimalType{
+                                        static_cast<mx::core::DecimalType>( chromatic )
+                                }
+                        });
+            }
+
+            if( inTransposeData.diatonic != 0 )
+            {
+                auto harmonic = inTransposeData.diatonic;
+                if( octave != 0 )
+                {
+                    harmonic += octave * -7;
+                }
+                if( harmonic != 0 )
+                {
+                    transposePtr->setHasDiatonic( true );
+                    auto dia = transposePtr->getDiatonic();
+                    dia->setValue( mx::core::Integer{ harmonic } );
+                }
+            }
+
+            return transposePtr;
+        }
+
+        inline int figureOutDiatonic( int inChromatic )
+        {
+            // guess the transposition based on chromatic only. try to choose less evil options based
+            // on common transpositions and key signature accidental counts.
+            switch ( inChromatic )
+            {
+                case -11: return -6; // in Db
+                case -10: return -6; // in D
+                case -9: return -5;  // in Eb
+                case -8: return -5;  // in E
+                case -7: return -4;  // in F
+                case -6: return -3;  // in Gb
+                case -5: return -3;  // in G
+                case -4: return -2;  // in Ab
+                case -3: return -2;  // in A
+                case -2: return -1;  // in Bb
+                case -1: return -1;  // in B
+                case 0: return 0;    // in C
+                case 1: return 1;    // in Db
+                case 2: return 1;    // in D
+                case 3: return 2;    // in Eb
+                case 4: return 2;    // in E
+                case 5: return 3;    // in F
+                case 6: return 3;    // in F#
+                case 7: return 4;    // in G
+                case 8: return 5;    // in Ab
+                case 9: return 5;    // in A
+                case 10: return 6;   // in Bb
+                case 11: return 6;   // in B
+                default: return -1;  // error
+            }
+        }
+
+        mx::api::TransposeData Converter::convertToTransposeData( const mx::core::Transpose& inTranspose )
+        {
+            // the transpose element has restrictions in its usage that are not enforced by XSD range restrictions.
+            // we do our best if the transpose element is used incorrectly, or the diatonic element (which is 
+            // optional in musicxml) is not present. TransposeData does away with the octave-change concept and
+            // requires use of the diatonic value, so we translate as necessary.
+            const int specifiedChromatic = static_cast<int>( inTranspose.getChromatic()->getValue().getValue() );
+            std::optional<int> specifiedOctave;
+            if( inTranspose.getHasOctaveChange() )
+            {
+                specifiedOctave = static_cast<int>( inTranspose.getOctaveChange()->getValue().getValue() );
+            }
+            std::optional<int> specifiedDiatonic;
+            if( inTranspose.getHasDiatonic() )
+            {
+                specifiedDiatonic = static_cast<int>( inTranspose.getDiatonic()->getValue().getValue() );
+            }
+            int diatonic = 0;
+            if( specifiedDiatonic.has_value() )
+            {
+                // if diatonic is specified we will use it as-is
+                diatonic = specifiedDiatonic.value();
+            }
+            else if( specifiedChromatic >= -11 && specifiedChromatic <= 11 )
+            {
+                // if chromatic is used correctly, and diatonic is not given, we guess its value
+                diatonic = figureOutDiatonic( specifiedChromatic );
+            }
+            else
+            {
+                // the transpose element is badly misused, make shit up
+                const int octaves = specifiedChromatic / 12;
+                int semitones = std::abs( specifiedChromatic ) % 12;
+                semitones *= specifiedChromatic < 0 ? -1 : 1;
+                diatonic = figureOutDiatonic( semitones );
+                diatonic += octaves * 7;
+            }
+            const auto octaves = specifiedOctave.has_value() ? specifiedOctave.value() : 0;
+            diatonic += octaves * 7;
+            const auto chromatic = specifiedChromatic + ( octaves * 12 );
+            return mx::api::TransposeData{ chromatic, diatonic };
         }
     }
 }

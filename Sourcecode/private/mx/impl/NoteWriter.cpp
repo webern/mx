@@ -414,8 +414,11 @@ namespace mx
         
         void NoteWriter::setNotehead() const
         {
-            myOutNote->setHasNotehead( true );
-            myOutNote->getNotehead()->setValue( myConverter.convert( myNoteData.notehead ) );
+            if( myNoteData.notehead != mx::api::Notehead::normal )
+            {
+                myOutNote->setHasNotehead( true );
+                myOutNote->getNotehead()->setValue( myConverter.convert( myNoteData.notehead ) );
+            }
         }
         
         void NoteWriter::setStemDirection() const

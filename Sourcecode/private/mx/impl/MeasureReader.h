@@ -39,15 +39,15 @@ namespace mx
     namespace impl
     {
 
-    	class MeasureReader
-    	{
-    	public:
-    		MeasureReader( const core::PartwiseMeasure& inPartwiseMeasureRef, const MeasureCursor& cursor, const MeasureCursor& previousMeasureCursor );
+        class MeasureReader
+        {
+        public:
+            MeasureReader( const core::PartwiseMeasure& inPartwiseMeasureRef, const MeasureCursor& cursor, const MeasureCursor& previousMeasureCursor );
 
-    		api::MeasureData getMeasureData() const;
+            std::pair<api::MeasureData, std::optional<api::TransposeData>> getMeasureData() const;
             impl::MeasureCursor getCursor() const;
 
-    	private:
+        private:
             mutable std::mutex myMutex;
             const core::PartwiseMeasure& myPartwiseMeasure;
             const Converter myConverter;
@@ -72,12 +72,27 @@ namespace mx
         private:
             void addStavesToOutMeasure() const;
             void parseTimeSignature() const;
-            void parseMusicDataChoice( const core::MusicDataChoice& mdc, const core::NotePtr& nextNotePtr ) const;
+
+            /// Parses the contents of the measure and writes data to myOutMeasureData. In mx::api,
+            /// the first transposition at the zero position of the first measure is considered a 
+            /// property of the part (not the measure). Since we don't have access to the part in
+            /// this function (as far as I can tell), the transpose info is returned up the call
+            /// stack if measure index is zero and time index is zero.
+            std::optional<api::TransposeData> parseMusicDataChoice( 
+                const core::MusicDataChoice& mdc, const core::NotePtr& nextNotePtr ) const;
+
             void parseNote( const core::Note& inMxNote, const core::NotePtr& nextNotePtr ) const;
             void parseBackup( const core::Backup& inMxBackup ) const;
             void parseForward( const core::Forward& inMxForward ) const;
             void parseDirection( std::shared_ptr<const core::Direction> inDirection ) const;
-            void parseProperties( const core::Properties& inMxProperties ) const;
+            
+            /// Parses the measure 'properties' (i.e. the `<attributes>` element) and writes data to
+            /// myOutMeasureData. In mx::api, the first transposition at the zero position of the
+            /// first measure is considered a property of the part (not the measure). Since we don't
+            /// have access to the part in this function (as far as I can tell), the transpose info
+            /// is returned up the call stack if measure index is zero and time index is zero.
+            std::optional<api::TransposeData> parseProperties( const core::Properties& inMxProperties ) const;
+            
             void parseHarmony( std::shared_ptr<const core::Harmony> inHarmony ) const;
             void parseFiguredBass( const core::FiguredBass& inMxFiguredBass ) const;
             void parsePrint( const core::Print& inMxPrint ) const;
@@ -98,6 +113,6 @@ namespace mx
             bool isUserRequestedVoiceNumberConsistentAccrossAllVoices( const api::StaffData& staff ) const;
             int getUserRequestedVoiceNumber( const api::VoiceData& voiceData ) const;
             void advanceTickTimePosition( int amount, std::string reason ) const;
-    	};
+        };
     }
 }
