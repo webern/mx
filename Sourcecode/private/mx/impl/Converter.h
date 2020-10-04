@@ -12,11 +12,12 @@
 #include "mx/api/ScoreData.h"
 #include "mx/api/SoundID.h"
 #include "mx/core/Decimals.h"
+#include "mx/core/Enums.h"
+#include "mx/core/PlaybackSound.h"
 #include "mx/core/elements/ArticulationsChoice.h"
 #include "mx/core/elements/OrnamentsChoice.h"
 #include "mx/core/elements/TechnicalChoice.h"
-#include "mx/core/Enums.h"
-#include "mx/core/PlaybackSound.h"
+#include "mx/core/elements/Transpose.h"
 
 #include <map>
 
@@ -121,6 +122,9 @@ namespace mx
 
             static mx::core::DecimalType convertToAlter( int semitones, double cents );
             static std::pair<int, double> convertToSemitonesAndCents( mx::core::DecimalType alter );
+
+            static mx::core::TransposePtr convertToTranspose( const mx::api::TransposeData& inTransposeData );
+            static mx::api::TransposeData convertToTransposeData( const mx::core::Transpose& inTranspose );
 
             const static std::map<core::StepEnum, api::Step> stepMap;
             const static std::map<core::NoteTypeValue, api::DurationName> durationMap;

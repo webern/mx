@@ -3659,6 +3659,7 @@
 		2948959A1FC4011400A06219 /* AppearanceData.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AppearanceData.cpp; sourceTree = "<group>"; };
 		2975944D1F044C7600DE2F30 /* ChordData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ChordData.cpp; sourceTree = "<group>"; };
 		297594591F04783100DE2F30 /* Round.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Round.h; sourceTree = "<group>"; };
+		297B99C1252A263B0089E958 /* TransposeData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TransposeData.h; sourceTree = "<group>"; };
 		29843ACF248C0CA9006A8E34 /* PageData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PageData.h; sourceTree = "<group>"; };
 		29843AD0248C0CA9006A8E34 /* PageLayoutData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PageLayoutData.h; sourceTree = "<group>"; };
 		29843AD1248C0CA9006A8E34 /* PageMarginsData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PageMarginsData.h; sourceTree = "<group>"; };
@@ -6558,7 +6559,6 @@
 		29DC383C225C0D4000814240 /* api-include */ = {
 			isa = PBXGroup;
 			children = (
-				29843AD9248DE951006A8E34 /* DefaultsData.h */,
 				29DC3863225C0DB800814240 /* ApiCommon.h */,
 				29DC3856225C0DB600814240 /* ApiEquality.h */,
 				29DC3841225C0DB400814240 /* AppearanceData.h */,
@@ -6567,6 +6567,7 @@
 				29DC383D225C0DB300814240 /* ClefData.h */,
 				29DC3861225C0DB700814240 /* ColorData.h */,
 				29DC3859225C0DB600814240 /* CurveData.h */,
+				29843AD9248DE951006A8E34 /* DefaultsData.h */,
 				29DC384B225C0DB500814240 /* DirectionData.h */,
 				29DC3840225C0DB400814240 /* DocumentManager.h */,
 				29DC385B225C0DB700814240 /* DurationData.h */,
@@ -6604,6 +6605,7 @@
 				29843AD5248D47E9006A8E34 /* SystemLayoutData.h */,
 				29DC384E225C0DB500814240 /* TempoData.h */,
 				29DC3842225C0DB400814240 /* TimeSignatureData.h */,
+				297B99C1252A263B0089E958 /* TransposeData.h */,
 				29DC3853225C0DB600814240 /* TupletData.h */,
 				29DC384F225C0DB500814240 /* Version.h */,
 				29DC3865225C0DB800814240 /* VoiceData.h */,

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		29126F0B245A81F700B1F839 /* KeyDataTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29126F0A245A81F700B1F839 /* KeyDataTest.cpp */; };
+		297B99C3252A265F0089E958 /* TranspositionTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297B99C2252A265F0089E958 /* TranspositionTest.cpp */; };
 		29843AD4248C0CCD006A8E34 /* PageDataTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29843AD3248C0CCD006A8E34 /* PageDataTest.cpp */; };
 		29A04F34244FBA62004A5D3C /* NewSystemTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A04F31244FBA62004A5D3C /* NewSystemTest.cpp */; };
 		29A04F35244FBA62004A5D3C /* PitchDataTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A04F32244FBA62004A5D3C /* PitchDataTest.cpp */; };
@@ -482,6 +483,7 @@
 
 /* Begin PBXFileReference section */
 		29126F0A245A81F700B1F839 /* KeyDataTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyDataTest.cpp; sourceTree = "<group>"; };
+		297B99C2252A265F0089E958 /* TranspositionTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TranspositionTest.cpp; sourceTree = "<group>"; };
 		29843AD3248C0CCD006A8E34 /* PageDataTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PageDataTest.cpp; sourceTree = "<group>"; };
 		29A04F2D244FBA4D004A5D3C /* catchDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = catchDefines.h; sourceTree = "<group>"; };
 		29A04F2E244FBA4D004A5D3C /* unusedParameter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = unusedParameter.h; sourceTree = "<group>"; };
@@ -1225,6 +1227,7 @@
 				29DC38B1225C0FC100814240 /* ScoreDataCreator.h */,
 				29DC389C225C0FC100814240 /* TestHelpers.h */,
 				29DC38BC225C0FC100814240 /* TimeSignatureApiTest.cpp */,
+				297B99C2252A265F0089E958 /* TranspositionTest.cpp */,
 			);
 			path = api;
 			sourceTree = "<group>";
@@ -1907,6 +1910,7 @@
 				29DC3BCE225C0FC300814240 /* CreditImageTest.cpp in Sources */,
 				29DC3AE8225C0FC200814240 /* FreezingRoundTrip.cpp in Sources */,
 				29DC3C2D225C0FC300814240 /* DashesTest.cpp in Sources */,
+				297B99C3252A265F0089E958 /* TranspositionTest.cpp in Sources */,
 				29DC3BFD225C0FC300814240 /* LayoutGroupTest.cpp in Sources */,
 				29DC3B66225C0FC200814240 /* EndLineTest.cpp in Sources */,
 				29DC3B27225C0FC200814240 /* PerMinuteTest.cpp in Sources */,

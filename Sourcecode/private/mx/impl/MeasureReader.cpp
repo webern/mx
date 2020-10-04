@@ -2,17 +2,16 @@
 // Copyright (c) by Matthew James Briggs
 // Distributed under the MIT License
 
-#include "mx/impl/MeasureReader.h"
 #include "mx/api/ClefData.h"
 #include "mx/api/KeyData.h"
 #include "mx/api/NoteData.h"
 #include "mx/core/elements/Alter.h"
 #include "mx/core/elements/Backup.h"
+#include "mx/core/elements/BarStyle.h"
 #include "mx/core/elements/Barline.h"
-#include "mx/core/elements/Beats.h"
 #include "mx/core/elements/BeatType.h"
+#include "mx/core/elements/Beats.h"
 #include "mx/core/elements/Bookmark.h"
-#include "mx/core/elements/Cancel.h"
 #include "mx/core/elements/Cancel.h"
 #include "mx/core/elements/Clef.h"
 #include "mx/core/elements/ClefOctaveChange.h"
@@ -25,7 +24,6 @@
 #include "mx/core/elements/Duration.h"
 #include "mx/core/elements/EditorialVoiceGroup.h"
 #include "mx/core/elements/Ending.h"
-#include "mx/core/elements/Fifths.h"
 #include "mx/core/elements/Fifths.h"
 #include "mx/core/elements/FiguredBass.h"
 #include "mx/core/elements/Forward.h"
@@ -45,7 +43,6 @@
 #include "mx/core/elements/MeasureStyle.h"
 #include "mx/core/elements/MeasureStyleChoice.h"
 #include "mx/core/elements/Mode.h"
-#include "mx/core/elements/Mode.h"
 #include "mx/core/elements/MultipleRest.h"
 #include "mx/core/elements/MusicDataChoice.h"
 #include "mx/core/elements/MusicDataGroup.h"
@@ -56,7 +53,6 @@
 #include "mx/core/elements/Octave.h"
 #include "mx/core/elements/Pitch.h"
 #include "mx/core/elements/Print.h"
-#include "mx/core/elements/Properties.h"
 #include "mx/core/elements/Properties.h"
 #include "mx/core/elements/Rest.h"
 #include "mx/core/elements/Sign.h"
@@ -69,10 +65,10 @@
 #include "mx/core/elements/TraditionalKey.h"
 #include "mx/core/elements/Type.h"
 #include "mx/core/elements/Unpitched.h"
-#include "mx/core/elements/BarStyle.h"
 #include "mx/core/elements/Voice.h"
 #include "mx/impl/Converter.h"
 #include "mx/impl/DirectionReader.h"
+#include "mx/impl/MeasureReader.h"
 #include "mx/impl/NoteFunctions.h"
 #include "mx/impl/NoteReader.h"
 #include "mx/impl/TimeReader.h"
@@ -111,7 +107,7 @@ namespace mx
             }
         }
 
-        api::MeasureData MeasureReader::getMeasureData() const
+        std::pair<api::MeasureData, std::optional<api::TransposeData>> MeasureReader::getMeasureData() const
         {
             // lock due to the use of a mutable in const function
             // TODO - that's stupid, remove const designations
@@ -119,7 +115,10 @@ namespace mx
             myOutMeasureData = api::MeasureData{};
             const auto& attr = *myPartwiseMeasure.getAttributes();
             myOutMeasureData.number = attr.number.getValue();
-            
+
+            // if we are parsing the first measure of the part, then we need to return transpose information
+            std::optional<api::TransposeData> transpose;
+
             if( myOutMeasureData.number == std::to_string( myCurrentCursor.measureIndex + 1 ) )
             {
                 myOutMeasureData.number = "";
@@ -165,7 +164,11 @@ namespace mx
                     nextNotePtr = (*peekAheadAtNextNoteIter)->getNote();
                 }
                 
-                parseMusicDataChoice( mdc, nextNotePtr );
+                auto maybeTranspose = parseMusicDataChoice( mdc, nextNotePtr );
+                if( myCurrentCursor.isFirstMeasureInPart && maybeTranspose.has_value() )
+                {
+                    transpose = maybeTranspose;
+                }
             }
             
             myCurrentCursor.isFirstMeasureInPart = false;
@@ -175,7 +178,7 @@ namespace mx
             // move the data to a temp then return the temp
             auto temp = api::MeasureData{ std::move(myOutMeasureData) };
             myOutMeasureData = api::MeasureData{};
-            return temp;
+            return std::make_pair(temp, transpose);
         }
 
 
@@ -208,10 +211,14 @@ namespace mx
             myCurrentCursor.timeSignature = timeSignature;
             advanceTickTimePosition( 0, "parseTimeSignature" );
         }
-        
-        
-        void MeasureReader::parseMusicDataChoice( const core::MusicDataChoice& mdc, const core::NotePtr& nextNotePtr ) const
+
+
+        // see .h file for explanation of the return value
+        std::optional<api::TransposeData>
+        MeasureReader::parseMusicDataChoice( const core::MusicDataChoice& mdc, const core::NotePtr& nextNotePtr ) const
         {
+            // if we are parsing the first measure of the part, then we need to return transpose information
+            std::optional<api::TransposeData> transpose;
             switch ( mdc.getChoice() )
             {
                 case core::MusicDataChoice::Choice::note:
@@ -242,7 +249,7 @@ namespace mx
                 case core::MusicDataChoice::Choice::properties:
                 {
                     myCurrentCursor.isBackupInProgress = false;
-                    parseProperties( *mdc.getProperties() );
+                    transpose = parseProperties( *mdc.getProperties() );
                     advanceTickTimePosition( 0, "parseProperties" );
                     break;
                 }
@@ -307,6 +314,7 @@ namespace mx
                     MX_THROW( "unsupported MusicDataChoice::Choice value" );
                 }
             }
+            return transpose;
         }
         
         
@@ -419,10 +427,13 @@ namespace mx
         {
             parseDirectionImpl<core::Direction>( inDirection, myOutMeasureData, myCurrentCursor );
         }
-        
-        
-        void MeasureReader::parseProperties( const core::Properties& inMxProperties ) const
+
+
+        std::optional<api::TransposeData>
+        MeasureReader::parseProperties( const core::Properties& inMxProperties ) const
         {
+            // if we are parsing the first measure of the part, then we need to return transpose information
+            std::optional<api::TransposeData> transpose;
             if( inMxProperties.getHasDivisions() )
             {
                 const auto newDivisionsValueDecimal = inMxProperties.getDivisions()->getValue().getValue();
@@ -522,6 +533,17 @@ namespace mx
                 myOutMeasureData.keys.emplace_back( std::move( keyData ) );
             }
             importClefs( inMxProperties.getClefSet() );
+
+            if( !inMxProperties.getTransposeSet().empty() )
+            {
+                // TODO support transpositions at places other than the start of the score
+                if( myCurrentCursor.measureIndex == 0 && myCurrentCursor.tickTimePosition == 0 )
+                {
+                    const auto& coreTranspose = *inMxProperties.getTransposeSet().front();
+                    transpose = Converter::convertToTransposeData( coreTranspose );
+                }
+            }
+            return transpose;
         }
         
         

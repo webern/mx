@@ -97,7 +97,17 @@ namespace mx
             {
                 const auto& mxMeasure = *mxMeasurePtr;
                 MeasureReader reader{ mxMeasure, myCurrentCursor, myPreviousCursor };
-                auto measureData = reader.getMeasureData();
+                // the reader returns the measure data and any data that needs to be written at
+                // the part-level (e.g. transposition). currently this is done as a pair.
+                auto measureDataPair = reader.getMeasureData();
+                auto measureData = measureDataPair.first;
+                auto& transpositionData = measureDataPair.second;
+                // if it's the first measure, and if we received transposition data, then we
+                // should write it to the part.
+                if( myCurrentCursor.isFirstMeasureInPart && transpositionData.has_value() )
+                {
+                    myOutPartData.transposition = transpositionData;
+                }
                 myCurrentCursor.timeSignature = measureData.timeSignature;
                 myCurrentCursor.ticksPerQuarter = reader.getCursor().ticksPerQuarter;
                 myOutPartData.measures.emplace_back( std::move( measureData ) );
