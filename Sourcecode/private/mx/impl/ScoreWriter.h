@@ -12,9 +12,9 @@
 
 namespace mx
 {
-	namespace core
-	{
-		class ScorePartwise;
+    namespace core
+    {
+        class ScorePartwise;
         using ScorePartwisePtr = std::shared_ptr<ScorePartwise>;
         class PartGroup;
         using PartGroupPtr = std::shared_ptr<PartGroup>;
@@ -24,23 +24,27 @@ namespace mx
         using ScorePartPtr = std::shared_ptr<ScorePart>;
         class PartwisePart;
         using PartwisePartPtr = std::shared_ptr<PartwisePart>;
-	}
+    }
 
     namespace impl
     {
-    	class ScoreWriter
-    	{
-    	public:
+        class ScoreWriter
+        {
+        public:
             ScoreWriter( const api::ScoreData& inScoreData );
 
-    		core::ScorePartwisePtr getScorePartwise() const;
+            core::ScorePartwisePtr getScorePartwise() const;
+            inline const api::ScoreData& getScoreData() const { return myScoreData; }
 
-            bool isStartOfSystem( int measureIndex ) const;
+            /// Finds the part in ScoreData and returns it. Throws if out-of-range.
+            const api::PartData& getPart( int inPartIndex ) const;
+
+            bool isSystemInfo(int measureIndex ) const;
             std::optional<api::PageData> findPageLayoutData( api::MeasureIndex measureIndex ) const;
             api::SystemData getSystemData( int measureIndex ) const;
             
-    	private:
-    		api::ScoreData myScoreData;
+        private:
+            api::ScoreData myScoreData;
             mutable std::mutex myMutex;
             mutable core::ScorePartwisePtr myOutScorePartwise;
             
@@ -55,7 +59,7 @@ namespace mx
             core::PartGroupPtr makePartGroupStop( const api::PartGroupData& apiGrp ) const;
             core::PartGroupOrScorePartPtr makePartGroupOrScorePart( const core::PartGroupPtr& grp ) const;
             core::PartGroupOrScorePartPtr makePartGroupOrScorePart( const core::ScorePartPtr& spr ) const;
-    	};
+        };
     }
 }
 
@@ -63,7 +67,7 @@ namespace mx
 
 /*
  // TODO
- if( myScoreWriter.isStartOfSystem( myCursor.measureIndex ) )
+ if( myScoreWriter.isSystemInfo( myCursor.measureIndex ) )
  {
  auto systemData = myScoreWriter.getSystemData( myCursor.measureIndex );
  // TODO - add it to the measure

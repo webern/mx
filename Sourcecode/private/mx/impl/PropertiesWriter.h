@@ -7,22 +7,31 @@
 #include "mx/api/TimeSignatureData.h"
 #include "mx/api/KeyData.h"
 #include "mx/api/ClefData.h"
+#include "mx/api/TransposeData.h"
 #include <memory>
 
 namespace mx
 {
-	namespace core
-	{
+    namespace core
+    {
         class PartwiseMeasure;
         using PartwiseMeasurePtr = std::shared_ptr<PartwiseMeasure>;
         class Properties;
         using PropertiesPtr = std::shared_ptr<Properties>;
         class Key;
         using KeyPtr = std::shared_ptr<Key>;
-	}
+    }
 
     namespace impl
     {
+        /// Provides a way to ensure that properties (i.e. things in the `<attributes>` element) are
+        /// added to a single <attributes> element instead of creating a new <attributes> element
+        /// for each property.
+        ///
+        /// The design is weird. It holds the current meausre that we are writing, and acts like a
+        /// buffer of properties. You can write things like clefs and time signatures to the
+        /// PropertiesWriter, and then when you call `flushBuffer()` everything gets written to the
+        /// measure.
         class PropertiesWriter
         {
         public:
@@ -50,6 +59,7 @@ namespace mx
             void writeTime( const api::TimeSignatureData& value );
             void writeNumStaves( int value );
             void writeClef( int staffIndex, const api::ClefData& inClefData );
+            void writeTranspose( const api::TransposeData& inTransposeData );
 
         private:
             void allocate();
