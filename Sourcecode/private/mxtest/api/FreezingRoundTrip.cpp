@@ -223,6 +223,10 @@ TEST( roundTripViolaDynamicWrongTime, Freezing )
     const auto savedMdcEnd = savedMdcSet.cend();
 
     CHECK( savedMdcIter != savedMdcEnd );
+    CHECK( MusicDataChoice::Choice::print == (*savedMdcIter)->getChoice() );
+
+    ++savedMdcIter;
+    CHECK( savedMdcIter != savedMdcEnd );
     CHECK( MusicDataChoice::Choice::note == (*savedMdcIter)->getChoice() );
     auto savedCurrentNote = (*savedMdcIter)->getNote();
     CHECK_DOUBLES_EQUAL( 30.0 * tickTimeScaleFactor, savedCurrentNote->getNoteChoice()->getNormalNoteGroup()->getDuration()->getValue().getValue(), 0.0001 );

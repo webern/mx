@@ -116,13 +116,6 @@ namespace mx
             MX_ASSERT( myPartwiseMeasure != nullptr );
         }
 
-        
-        void PropertiesWriter::clearBuffer()
-        {
-            allocate();
-        }
-        
-        
         void PropertiesWriter::flushBuffer()
         {
             if( !isPropertiesEmpty() )
@@ -131,8 +124,8 @@ namespace mx
                 mdc->setChoice( core::MusicDataChoice::Choice::properties );
                 mdc->setProperties( myProperties );
                 myPartwiseMeasure->getMusicDataGroup()->addMusicDataChoice( mdc );
-                allocate();
             }
+            allocate();
         }
         
         
@@ -289,7 +282,12 @@ namespace mx
             }
             myProperties->addClef( mxClef );
         }
-        
+
+        void PropertiesWriter::writeTranspose( const api::TransposeData& inTransposeData )
+        {
+            auto transposePtr = Converter::convertToTranspose( inTransposeData );
+            myProperties->addTranspose( transposePtr );
+        }
         
         void PropertiesWriter::allocate()
         {

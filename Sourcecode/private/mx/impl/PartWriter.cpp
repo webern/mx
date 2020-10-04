@@ -245,26 +245,42 @@ namespace mx
         {
             if( myPartData.measures.size() == 0 )
             {
-                return;
+                // since we store the part's (at least initial) transposition in the PartData,
+                // and because musicxml stores this in the measure data, if there are no measures
+                // then the transposition would be lost. so instead we add a measure in order to
+                // preserve the transposition data.
+                if( myPartData.transposition.has_value() )
+                {
+                    auto copiedPart = myPartData;
+                    copiedPart.measures.emplace_back( mx::api::MeasureData{} );
+                    writeMeasures( copiedPart );
+                }
             }
-            
-            MeasureCursor cursor{ static_cast<int>( myPartData.measures.at( 0 ).staves.size() ), myTicksPerQuarter };
+            else
+            {
+                writeMeasures( myPartData );
+            }
+        }
+
+        void PartWriter::writeMeasures( const mx::api::PartData& inPartData ) const
+        {
+            MeasureCursor cursor{ static_cast<int>( inPartData.measures.at( 0 ).staves.size() ), myTicksPerQuarter };
             cursor.measureIndex = 0;
             cursor.partIndex = myPartIndex;
             cursor.isFirstMeasureInPart = true;
-            
-            for( const auto& measure : myPartData.measures )
+
+            for( const auto& measure : inPartData.measures )
             {
                 MeasureWriter writer{ measure, cursor, myScoreWriter };
                 myOutPartwisePart->addPartwiseMeasure( writer.getPartwiseMeasure() );
-                
+
                 auto& partwiseMeasureSet = myOutPartwisePart->getPartwiseMeasureSet();
-                
+
                 if( cursor.measureIndex == 0 && partwiseMeasureSet.size() == 2 )
                 {
                     myOutPartwisePart->removePartwiseMeasure( partwiseMeasureSet.cbegin() );
                 }
-                
+
                 cursor.isFirstMeasureInPart = false;
                 ++cursor.measureIndex;
             }

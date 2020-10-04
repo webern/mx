@@ -16,9 +16,9 @@
 
 #define CHECK_WITH_MESSAGE( trueStatement, msg ) \
 { \
-    if(!(#trueStatement)) \
+    if(!(trueStatement)) \
     { \
-        FAIL( (#msg) ); \
+        FAIL( (msg) ); \
     } \
 }
 

@@ -16,6 +16,7 @@
 #include "mx/core/elements/Clef.h"
 #include "mx/core/elements/Clef.h"
 #include "mx/core/elements/ClefOctaveChange.h"
+#include "mx/core/elements/Chromatic.h"
 #include "mx/core/elements/Coda.h"
 #include "mx/core/elements/Coda.h"
 #include "mx/core/elements/Cue.h"
@@ -23,6 +24,7 @@
 #include "mx/core/elements/Damp.h"
 #include "mx/core/elements/DampAll.h"
 #include "mx/core/elements/Dashes.h"
+#include "mx/core/elements/Diatonic.h"
 #include "mx/core/elements/Direction.h"
 #include "mx/core/elements/DirectionType.h"
 #include "mx/core/elements/Directive.h"
@@ -69,6 +71,7 @@
 #include "mx/core/elements/NoteChoice.h"
 #include "mx/core/elements/Notehead.h"
 #include "mx/core/elements/NoteheadText.h"
+#include "mx/core/elements/OctaveChange.h"
 #include "mx/core/elements/OctaveShift.h"
 #include "mx/core/elements/Offset.h"
 #include "mx/core/elements/OtherDirection.h"
@@ -196,7 +199,7 @@ namespace mx
                 measureAttr.implicit = converter.convert( myMeasureData.implicit );
             }
             
-            if( myScoreWriter.isStartOfSystem( myHistory.getCursor().measureIndex ) )
+            if( myScoreWriter.isSystemInfo( myHistory.getCursor().measureIndex ) )
             {
                 writeSystemInfo();
             }
@@ -250,6 +253,18 @@ namespace mx
                 myPropertiesWriter->writeKey( myMeasureKeysIter->staffIndex, *myMeasureKeysIter );
                 ++myMeasureKeysIter;
             }
+
+            // The transpose element goes into the measures, but for convenience we have added it to
+            // the mx::api::PartData struct since the most typical use case is to add it as part of
+            // an instrument/part definition.
+            if( cursor().measureIndex == 0 && cursor().tickTimePosition == 0 )
+            {
+                const auto& part = this->myScoreWriter.getPart( cursor().partIndex );
+                if( part.transposition && part.transposition->isUsed() )
+                {
+                    myPropertiesWriter->writeTranspose( part.transposition.value() );
+                }
+            }
         }
 
 
@@ -264,7 +279,7 @@ namespace mx
             }
             
             auto outPrintMdc = core::makeMusicDataChoice();
-            outPrintMdc->setChoice(core::MusicDataChoice::Choice::print );
+            outPrintMdc->setChoice( core::MusicDataChoice::Choice::print );
             auto& outPrint = *outPrintMdc->getPrint();
             auto& outLayoutGroup = *outPrint.getLayoutGroup();
             myOutMeasure->getMusicDataGroup()->addMusicDataChoice( outPrintMdc );
@@ -284,9 +299,9 @@ namespace mx
 
                 if( inSystemLayout.margins )
                 {
-                    outLayoutGroup.setHasSystemLayout(true );
+                    outLayoutGroup.setHasSystemLayout( true );
                     const auto& inMargins = inSystemLayout.margins.value();
-                    outSystemLayout.setHasSystemMargins(true );
+                    outSystemLayout.setHasSystemMargins( true );
                     auto& margins = *outSystemLayout.getSystemMargins();
                     margins.getLeftMargin()->setValue( core::TenthsValue{ static_cast<core::DecimalType>( inMargins.left ) } );
                     margins.getRightMargin()->setValue( core::TenthsValue{ static_cast<core::DecimalType>( inMargins.right ) } );
@@ -294,8 +309,8 @@ namespace mx
 
                 if( inSystemLayout.topSystemDistance )
                 {
-                    outLayoutGroup.setHasSystemLayout(true );
-                    outSystemLayout.setHasTopSystemDistance(true );
+                    outLayoutGroup.setHasSystemLayout( true );
+                    outSystemLayout.setHasTopSystemDistance( true );
                     outSystemLayout.getTopSystemDistance()->setValue(core::TenthsValue{
                         static_cast<core::DecimalType>( inSystemLayout.topSystemDistance.value() )
                     });
@@ -303,8 +318,8 @@ namespace mx
 
                 if( inSystemLayout.systemDistance )
                 {
-                    outLayoutGroup.setHasSystemLayout(true );
-                    outSystemLayout.setHasSystemDistance(true );
+                    outLayoutGroup.setHasSystemLayout( true );
+                    outSystemLayout.setHasSystemDistance( true );
                     outSystemLayout.getSystemDistance()->setValue( core::TenthsValue{
                         static_cast<core::DecimalType>( inSystemLayout.systemDistance.value() )
                     });
@@ -615,7 +630,7 @@ namespace mx
         
         void MeasureWriter::advanceCursorIfNeeded( const api::NoteData& currentNote, const NoteIter& inIter, const NoteIter& inEnd )
         {
-            if (isAdvanceNeeded( currentNote, inIter, inEnd ) )
+            if( isAdvanceNeeded( currentNote, inIter, inEnd ) )
             {
                 const auto curTime = std::max( myHistory.getCursor().tickTimePosition, 0 );
                 const auto duration = std::max( currentNote.durationData.durationTimeTicks, 0 );

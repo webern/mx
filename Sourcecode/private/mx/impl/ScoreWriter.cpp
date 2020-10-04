@@ -145,7 +145,11 @@ namespace mx
 
             return myOutScorePartwise;
         }
-        
+
+        const api::PartData& ScoreWriter::getPart( int inPartIndex ) const
+        {
+            return getScoreData().parts.at( inPartIndex );
+        }
         
         void ScoreWriter::addScorePart( int partIndex, const core::ScorePartPtr& scorePart ) const
         {
@@ -339,14 +343,14 @@ namespace mx
         }
         
         
-        bool ScoreWriter::isStartOfSystem( int measureIndex ) const
+        bool ScoreWriter::isSystemInfo( int measureIndex ) const
         {
             const auto iter = myScoreData.layout.find( measureIndex );
             if( iter == std::cend( myScoreData.layout ) )
             {
                 return false;
             }
-            return iter->second.system.newSystem == api::Bool::yes;
+            return iter->second.system.isUsed();
         }
 
 
