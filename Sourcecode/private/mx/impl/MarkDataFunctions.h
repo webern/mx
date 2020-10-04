@@ -13,7 +13,7 @@ namespace mx
     namespace impl
     {
         template<typename ATTRIBUTES_TYPE>
-        void parseMarkDataAttributes(const ATTRIBUTES_TYPE& attr, api::MarkData& outMarkData )
+        void parseMarkDataAttributes( const ATTRIBUTES_TYPE& attr, api::MarkData& outMarkData )
         {
             outMarkData.positionData = getPositionData<ATTRIBUTES_TYPE>( attr );
             outMarkData.printData = getPrintData<ATTRIBUTES_TYPE>( attr );

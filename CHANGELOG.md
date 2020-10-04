@@ -4,6 +4,10 @@ On 2020-05-31, two tags were deleted from origin, `v1.0.0` and `v1.0.1` and repl
 If you cloned/forked the repository before 2020-05-31, you should delete `v1.0.0` and `v1.0.1` and pull tags.
 
 ## [Unreleased]
+### API Changes
+- Add support for setting an instrument's transposition at the start of the score. [#116]
+
+### Internal Changes
 - Change the default-constructed value of `DynamicsEnum` to `mf` instead of `otherDynamics`. [#106]/[8a5cd6b]
 - Change the spelling of `KindValue` enums from, e.g. `dominant11Th` to `dominant11th`. [#105]
 - Break up `Strings.h` into multiple `.h` files, one for each type [#107]. (Related to codegen, [#58]).
@@ -19,6 +23,7 @@ If you cloned/forked the repository before 2020-05-31, you should delete `v1.0.0
 [#111]: https://github.com/webern/mx/pull/111
 [#112]: https://github.com/webern/mx/pull/112
 [#113]: https://github.com/webern/mx/pull/113
+[#116]: https://github.com/webern/mx/pull/116
 [#58]: https://github.com/webern/mx/issues/58
 [8a5cd6b]: https://github.com/webern/mx/commit/8a5cd6b
 

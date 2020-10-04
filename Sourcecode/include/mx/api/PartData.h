@@ -6,7 +6,9 @@
 
 #include "mx/api/MeasureData.h"
 #include "mx/api/SoundID.h"
+#include "mx/api/TransposeData.h"
 
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -124,6 +126,14 @@ namespace mx
             PositionData displayAbbreviationPositionData;
             
             InstrumentData instrumentData;
+
+            /// The initial transposition for the part. If the music entered into the part is not in
+            /// concert pitch, then this field is used to specify the transposition that is in-
+            /// effect. Note, MusicXML encodes transposition in the measure data, not in the part
+            /// data. Here we offer a convient way to set the transposition in the first measure of
+            /// the part. Subsequent transposition changes are not currently supported by mx::api.
+            std::optional<TransposeData> transposition;
+
             std::vector<MeasureData> measures;
             
             inline int getNumStaves() const
@@ -205,6 +215,7 @@ namespace mx
         MXAPI_EQUALS_MEMBER( displayAbbreviationPrintData )
         MXAPI_EQUALS_MEMBER( displayAbbreviationPositionData )
         MXAPI_EQUALS_MEMBER( instrumentData )
+        MXAPI_EQUALS_MEMBER( transposition )
         MXAPI_EQUALS_MEMBER( measures )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( PartData );

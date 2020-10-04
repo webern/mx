@@ -223,6 +223,7 @@ namespace mx
             using dIter = dirs::const_iterator;
             void writeDirections( dIter& directionIter, const dIter& directionEnd, const NoteIter& inNoteIter, const NoteIter& inNotesBegin, const NoteIter& inNoteEnd );
             void writeDirection( const api::DirectionData& inDirectionData );
+            inline const MeasureCursor& cursor() const { return myHistory.getCursor(); }
 
             template<typename T>
             std::vector<T> findItemsAtTimePosition( const std::vector<T>& inItems, int inTickTimePosition )
