@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.7.2)
-project(Mx)
+project(mx)
 
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
@@ -36,7 +36,7 @@ file(GLOB_RECURSE SRC_MX_TEST_IMPORT ${PRIVATE_DIR}/mxtest/import/*.cpp ${PRIVAT
 file(GLOB_RECURSE SRC_MX_TEST_UTILITY ${PRIVATE_DIR}/mxtest/utility/*.cpp ${PRIVATE_DIR}/mxtest/utility/*.h)
 file(GLOB_RECURSE SRC_CPUL ${PRIVATE_DIR}/cpul/*.cpp ${SOURCE}/cpul/*.h)
 
-# Mx Library
+# mx static library
 add_library(${PROJECT_NAME} STATIC ${SRC_MX_API} ${SRC_MX_CORE} ${SRC_MX_IMPL} ${SRC_MX_UTILITY} ${SRC_MX_EZXML})
 source_group( "api-public" FILES ${HEADERS_MX_API})
 source_group( "api" FILES ${SRC_MX_API} )
@@ -89,9 +89,9 @@ file(WRITE ${PRIVATE_DIR}/mxtest/file/PathRoot.h
 )
 
 
-# MxTest
+# mxtest
 if(MX_BUILD_TESTS)
-    set(TEST_BINARY_NAME MxTest)
+    set(TEST_BINARY_NAME mxtest)
     message(STATUS "${PROJECT_NAME}:${CMAKE_CURRENT_LIST_LINE} tests will be compiled")
     if(MX_BUILD_CORE_TESTS)
         message(STATUS "${PROJECT_NAME}:${CMAKE_CURRENT_LIST_LINE} core tests will be compiled")
@@ -128,18 +128,18 @@ else()
     message(STATUS "${PROJECT_NAME}:${CMAKE_CURRENT_LIST_LINE} tests will NOT be compiled")
 endif()
 
-# MxExamples
+# mx examples
 if(MX_BUILD_EXAMPLES)
     message(STATUS "${PROJECT_NAME}:${CMAKE_CURRENT_LIST_LINE} examples will be compiled")
-    add_executable(MxRead ${PRIVATE_DIR}/mx/examples/Read.cpp)
-    add_executable(MxWrite ${PRIVATE_DIR}/mx/examples/Write.cpp)
-    add_executable(MxHide ${PRIVATE_DIR}/mx/examples/Hide.cpp)
-    target_link_libraries(MxRead ${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
-    target_link_libraries(MxWrite ${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
-    target_link_libraries(MxHide ${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
-    set_property(TARGET MxRead PROPERTY CXX_STANDARD ${CPP_VERSION})
-    set_property(TARGET MxWrite PROPERTY CXX_STANDARD ${CPP_VERSION})
-    set_property(TARGET MxHide PROPERTY CXX_STANDARD ${CPP_VERSION})
+    add_executable(mxread ${PRIVATE_DIR}/mx/examples/Read.cpp)
+    add_executable(mxwrite ${PRIVATE_DIR}/mx/examples/Write.cpp)
+    add_executable(mxhide ${PRIVATE_DIR}/mx/examples/Hide.cpp)
+    target_link_libraries(mxread ${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
+    target_link_libraries(mxwrite ${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
+    target_link_libraries(mxhide ${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
+    set_property(TARGET mxread PROPERTY CXX_STANDARD ${CPP_VERSION})
+    set_property(TARGET mxwrite PROPERTY CXX_STANDARD ${CPP_VERSION})
+    set_property(TARGET mxhide PROPERTY CXX_STANDARD ${CPP_VERSION})
 else()
     message(STATUS "${PROJECT_NAME}:${CMAKE_CURRENT_LIST_LINE} examples will NOT be compiled")
 endif()

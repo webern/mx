@@ -20,23 +20,23 @@ sep
 make -j12
 
 sep
-echo "running MxHide"
-./MxHide
+echo "running mxhide"
+./mxhide
 echo "success"
 
 sep
-echo "running MxWrite"
-./MxWrite
+echo "running mxwrite"
+./mxwrite
 echo "success"
 
 sep
-echo "running MxRead"
-./MxRead
+echo "running mxread"
+./mxread
 echo "success"
 
 sep
-echo "running MxTest"
-./MxTest
+echo "running mxtest"
+./mxtest
 echo "success"
 
 echo ""

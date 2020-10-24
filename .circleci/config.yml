@@ -27,11 +27,11 @@ jobs:
 
       - run:
           name: Run Examples
-          command: ./MxRead && ./MxWrite
+          command: ./mxread && ./mxwrite
 
       - run:
           name: Test
-          command: ./MxTest
+          command: ./mxtest
 
       # - store_artifacts:
       #     path: /tmp/coverage/

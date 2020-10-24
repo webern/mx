@@ -25,7 +25,7 @@ mkdir build
 cd build
 cmake ../mx -DMX_BUILD_TESTS=on -DMX_BUILD_CORE_TESTS=off -DMX_BUILD_EXAMPLES=on
 make -j6
-./MxTest
+./mxtest
 ```
 
 ### Cmake Options
@@ -764,6 +764,6 @@ int main(int argc, const char * argv[])
 
 ### Unit Test Framework
 
-An executable program named MxTest is also included in the project.
-MxTest utilizes the Catch2 test framework.
+An executable program named mxtest is also included in the project.
+mxtest utilizes the Catch2 test framework.
 The core tests are slow to compile, see the [`cmake` options](#cmake-options) section for more info on how to skip compilation of the tests.
