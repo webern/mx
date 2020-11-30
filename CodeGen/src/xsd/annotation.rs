@@ -32,7 +32,7 @@ impl Annotation {
         let (id, lineage) = Id::make(lineage, node)?;
         let mut items = Vec::new();
         for inner in node.children() {
-            let t = inner.name.as_str();
+            let t = inner.name();
             if let Some(s) = inner.text() {
                 match t {
                     DOCUMENTATION => items.push(Item::Documentation(s)),
@@ -86,19 +86,23 @@ fn parse_foo_err() {
     let want_index: u64 = 13;
     let want_name = "4594507136952412519";
     let want_doc = "bishop is sleeping.";
-    let xml = exile::Element {
-        namespace: Some("xs".to_owned()),
-        name: ANNOTATION.to_owned(),
-        attributes: Default::default(),
-        nodes: vec![exile::Node::Element(exile::Element {
-            namespace: Some("xs".to_owned()),
-            name: DOCUMENTATION.to_owned(),
-            attributes: Default::default(),
-            nodes: vec![exile::Node::Text(want_doc.to_owned())],
-        })],
-    };
+    let xml = exile::parse(format!(r#"<xs:annotation>
+        <xs:documentation>{}</xs:documentation>
+    </xs:annotation>
+    "#, want_doc)).unwrap();
+    // let xml = exile::Element {
+    //     namespace: Some("xs".to_owned()),
+    //     name: ANNOTATION.to_owned(),
+    //     attributes: Default::default(),
+    //     nodes: vec![exile::Node::Element(exile::Element {
+    //         namespace: Some("xs".to_owned()),
+    //         name: DOCUMENTATION.to_owned(),
+    //         attributes: Default::default(),
+    //         nodes: vec![exile::Node::Text(want_doc.to_owned())],
+    //     })],
+    // };
 
-    let result = Annotation::from_xml(&xml, Lineage::Index(want_index), &Xsd::new("foo"));
+    let result = Annotation::from_xml(xml.root(), Lineage::Index(want_index), &Xsd::new("foo"));
     assert!(result.is_err());
 }
 

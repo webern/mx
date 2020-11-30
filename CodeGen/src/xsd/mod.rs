@@ -70,12 +70,12 @@ impl Xsd {
     }
 
     pub fn parse(root: &exile::Element) -> Result<Self> {
-        if root.name != "schema" {
+        if root.name() != "schema" {
             return raise!("expected the root node to be named 'schema'");
         }
         let mut prefix = "";
-        for (k, v) in root.attributes.map() {
-            if v.as_str() == "http://www.w3.org/2001/XMLSchema" {
+        for (k, v) in root.attributes() {
+            if v == "http://www.w3.org/2001/XMLSchema" {
                 if k.starts_with("xmlns:") {
                     let mut split = k.split(':');
                     let _ = split.next().ok_or(make_err!("expected to find xmlns:"))?;
@@ -172,7 +172,7 @@ pub enum Entry {
 
 impl Entry {
     pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
-        let n = node.name.as_str();
+        let n = node.name();
         let t = RootNodeType::parse(n)?;
         match t {
             RootNodeType::Annotation => {
@@ -223,15 +223,13 @@ pub(crate) fn get_attribute<S: AsRef<str>>(
     attribute_name: S,
 ) -> Result<String> {
     Ok(node
-        .attributes
-        .map()
-        .get(attribute_name.as_ref())
+        .attribute(attribute_name.as_ref())
         .ok_or(make_err!(
             "'{}' attribute not found in '{}' node",
             attribute_name.as_ref(),
-            node.name.as_str()
+            node.name()
         ))?
-        .clone())
+        .to_owned())
 }
 
 pub(crate) fn name_attribute(node: &exile::Element) -> Result<String> {
@@ -262,15 +260,15 @@ pub(crate) fn use_required(node: &exile::Element) -> bool {
 }
 
 pub(crate) fn default_attribute(node: &exile::Element) -> Option<String> {
-    node.attributes.map().get(DEFAULT).cloned()
+    node.attribute(DEFAULT).map(String::from)
 }
 
 pub(crate) fn fixed_attribute(node: &exile::Element) -> Option<String> {
-    node.attributes.map().get(FIXED).cloned()
+    node.attribute(FIXED).map(String::from)
 }
 
 pub(crate) fn is_ref(node: &exile::Element) -> bool {
-    node.attributes.map().get(REF).is_some()
+    node.attribute(REF).is_some()
 }
 
 pub(crate) fn base_attribute(node: &exile::Element) -> Result<String> {
@@ -296,18 +294,14 @@ impl Default for Occurs {
 
 impl Occurs {
     pub fn from_xml(node: &exile::Element) -> Result<Occurs> {
-        Ok(Self::from_map(node.attributes.map())?)
-    }
-
-    pub fn from_map(map: &BTreeMap<String, String>) -> Result<Occurs> {
-        let min_occurs: u64 = if let Some(sval) = map.get(MIN_OCCURS) {
+        let min_occurs: u64 = if let Some(sval) = node.attribute(MIN_OCCURS) {
             wrap!(sval.parse::<u64>())?
         } else {
             1
         };
 
-        let max_occurs: Option<u64> = if let Some(sval) = map.get(MAX_OCCURS) {
-            if sval.as_str() == UNBOUNDED {
+        let max_occurs: Option<u64> = if let Some(sval) = node.attribute(MAX_OCCURS) {
+            if sval == UNBOUNDED {
                 None
             } else {
                 Some(wrap!(sval.parse::<u64>())?)

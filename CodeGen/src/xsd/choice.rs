@@ -40,7 +40,7 @@ impl Choice {
         let mut annotation = None;
         let mut choices = Choices::new();
         for inner in node.children() {
-            let t = inner.name.as_str();
+            let t = inner.name();
             match t {
                 ANNOTATION => annotation = Some(Annotation::from_xml(inner, lineage.clone(), xsd)?),
                 ELEMENT => choices.push(ChoiceItem::Element(Element::from_xml(

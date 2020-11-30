@@ -132,11 +132,10 @@ dependencies = [
 
 [[package]]
 name = "exile"
-version = "0.0.2"
+version = "0.0.4"
+source = "git+https://github.com/webern/exile?rev=cd5178f#cd5178f87196946cb01b0fc53783c587b54863be"
 dependencies = [
  "cargo-readme",
- "xdoc",
- "xtest",
 ]
 
 [[package]]
@@ -457,9 +456,6 @@ name = "serde"
 version = "1.0.114"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5317f7588f0a5078ee60ef675ef96735a1442132dc645eb1d12c018620ed8cd3"
-dependencies = [
- "serde_derive",
-]
 
 [[package]]
 name = "serde_derive"
@@ -480,15 +476,6 @@ checksum = "993948e75b189211a9b31a7528f950c6adc21f9720b6438ff80a7fa2f864cea2"
 dependencies = [
  "itoa",
  "ryu",
- "serde",
-]
-
-[[package]]
-name = "serde_plain"
-version = "0.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "625fb0da2b006092b426a94acc1611bec52f2ec27bb27b266a9f93c29ee38eda"
-dependencies = [
  "serde",
 ]
 
@@ -684,22 +671,3 @@ name = "winapi-x86_64-pc-windows-gnu"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"
-
-[[package]]
-name = "xdoc"
-version = "0.0.2"
-dependencies = [
- "cargo-readme",
- "serde",
-]
-
-[[package]]
-name = "xtest"
-version = "0.0.2"
-dependencies = [
- "cargo-readme",
- "serde",
- "serde_json",
- "serde_plain",
- "xdoc",
-]

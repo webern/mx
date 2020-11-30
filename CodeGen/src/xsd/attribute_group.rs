@@ -45,7 +45,7 @@ impl AttributeGroup {
     pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<AttributeGroup> {
         check!(ATTRIBUTE_GROUP, node, xsd)?;
         let (id, lineage) = Id::make(lineage, node)?;
-        if let Some(_ref_) = node.attributes.map().get(REF) {
+        if let Some(_ref_) = node.attribute(REF) {
             Ok(AttributeGroup::Ref(AttributeGroupRef::from_xml(
                 node, lineage, xsd,
             )?))
@@ -97,7 +97,7 @@ impl AttributeGroupDef {
         xsd: &Xsd,
     ) -> Result<Option<Annotation>> {
         for inner in node.children() {
-            if inner.name.as_str() == ANNOTATION {
+            if inner.name() == ANNOTATION {
                 return Ok(Some(Annotation::from_xml(inner, lineage, xsd)?));
             }
         }
@@ -130,7 +130,7 @@ impl AttributeGroupRef {
         xsd: &Xsd,
     ) -> Result<Option<Annotation>> {
         for inner in node.children() {
-            if inner.name.as_str() == ANNOTATION {
+            if inner.name() == ANNOTATION {
                 return Ok(Some(Annotation::from_xml(inner, lineage, xsd)?));
             }
         }

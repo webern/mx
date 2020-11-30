@@ -56,7 +56,7 @@ impl ComplexType {
         let mut annotation = None;
         let mut payload = Payload::None;
         for inner in node.children() {
-            let t = inner.name.as_str();
+            let t = inner.name();
             match t {
                 ANNOTATION => annotation = Some(Annotation::from_xml(inner, lineage.clone(), xsd)?),
                 CHOICE | GROUP | SEQUENCE => {
@@ -81,8 +81,8 @@ impl ComplexType {
                 _ => return raise!("unexpected node '{}' while parsing complexType", t),
             }
         }
-        let name = if let Some(n) = node.attributes.map().get(NAME) {
-            n.clone()
+        let name = if let Some(n) = node.attribute(NAME) {
+            n.to_owned()
         } else {
             "".to_owned()
         };
@@ -102,7 +102,7 @@ impl Parent {
             children: None,
         };
         for inner in node.children() {
-            let t = inner.name.as_str();
+            let t = inner.name();
             match t {
                 CHOICE => {
                     parent.children = Some(Children::Choice(Choice::from_xml(

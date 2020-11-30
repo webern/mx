@@ -36,26 +36,26 @@ impl Attribute {
             annotation: Self::parse_annotation(node, lineage, xsd)?,
             required: use_required(node),
             defined_by,
-            default: node.attributes.map().get(DEFAULT).cloned(),
-            fixed: node.attributes.map().get(FIXED).cloned(),
+            default: node.attribute(DEFAULT).map(String::from),
+            fixed: node.attribute(FIXED).map(String::from),
         })
     }
 
     fn parse_defined_by(node: &exile::Element) -> Result<DefinedBy> {
-        if let Some(ref_) = node.attributes.map().get(REF) {
-            Ok(DefinedBy::Ref(ref_.clone()))
-        } else if let Some(type_) = node.attributes.map().get(TYPE) {
-            Ok(DefinedBy::Type(type_.clone()))
+        if let Some(ref_) = node.attribute(REF) {
+            Ok(DefinedBy::Ref(ref_.into()))
+        } else if let Some(type_) = node.attribute(TYPE) {
+            Ok(DefinedBy::Type(type_.into()))
         } else {
             raise!("could not find either '{}' or '{}' attribute", REF, TYPE)
         }
     }
 
     fn parse_name(node: &exile::Element) -> String {
-        if let Some(name) = node.attributes.map().get(NAME) {
-            name.clone()
+        if let Some(name) = node.attribute(NAME) {
+            name.into()
         } else {
-            "".to_owned()
+            "".into()
         }
     }
 
@@ -65,7 +65,7 @@ impl Attribute {
         xsd: &Xsd,
     ) -> Result<Option<Annotation>> {
         for child in node.children() {
-            let t = child.name.as_str();
+            let t = child.name();
             match t {
                 ANNOTATION => return Ok(Some(Annotation::from_xml(node, lineage, xsd)?)),
                 _ => return raise!("unexpected node '{}'", t),

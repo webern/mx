@@ -27,14 +27,12 @@ impl Import {
         let (id, lineage) = Id::make(lineage, node)?;
         let namespace = namespace_attribute(node)?;
         let schema_location = node
-            .attributes
-            .map()
-            .get(SCHEMA_LOCATION)
+            .attribute(SCHEMA_LOCATION)
             .ok_or_else(|| make_err!("'{}' attribute not found", SCHEMA_LOCATION))?
-            .clone();
+            .to_owned();
         let mut annotation = None;
         for inner in node.children() {
-            let t = inner.name.as_str();
+            let t = inner.name();
             if t == ANNOTATION {
                 annotation = Some(Annotation::from_xml(inner, lineage.clone(), xsd)?);
                 break;

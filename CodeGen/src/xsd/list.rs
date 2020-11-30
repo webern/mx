@@ -25,14 +25,12 @@ impl List {
         check!(LIST, node, xsd)?;
         let (id, lineage) = Id::make(lineage, node)?;
         let item_type = node
-            .attributes
-            .map()
-            .get(ITEM_TYPE)
+            .attribute(ITEM_TYPE)
             .ok_or_else(|| make_err!("'{}' attribute not found", ITEM_TYPE))?
-            .clone();
+            .to_owned();
         let mut annotation = None;
         for inner in node.children() {
-            let t = inner.name.as_str();
+            let t = inner.name();
             if t == ANNOTATION {
                 annotation = Some(Annotation::from_xml(inner, lineage.clone(), xsd)?);
                 break;

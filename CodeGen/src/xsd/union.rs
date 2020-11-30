@@ -25,9 +25,7 @@ impl Union {
         let (id, lineage) = Id::make(lineage, node)?;
         let mut items = Vec::new();
         let members = node
-            .attributes
-            .map()
-            .get(MEMBER_TYPES)
+            .attribute(MEMBER_TYPES)
             .ok_or_else(|| make_err!("'{}' attribute not found", MEMBER_TYPES))?;
         for item in members.split(' ') {
             if !item.is_empty() {
@@ -36,7 +34,7 @@ impl Union {
         }
         let mut annotation = None;
         for inner in node.children() {
-            let t = inner.name.as_str();
+            let t = inner.name();
             if t == ANNOTATION {
                 annotation = Some(Annotation::from_xml(inner, lineage.clone(), xsd)?);
                 break;

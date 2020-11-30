@@ -19,7 +19,7 @@ pub enum AttributeItem {
 
 impl AttributeItem {
     pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
-        let t = node.name.as_str();
+        let t = node.name();
         match t {
             ATTRIBUTE => Ok(Self::Attribute(Attribute::from_xml(node, lineage, xsd)?)),
             ATTRIBUTE_GROUP => Ok(Self::AttributeGroup(AttributeGroup::from_xml(
@@ -39,7 +39,7 @@ pub fn add_attributes_from_xml(
 ) -> Result<Attributes> {
     let mut items = Attributes::new();
     for it in parent.children() {
-        let t = it.name.as_str();
+        let t = it.name();
         match t {
             ANNOTATION => continue,
             _ => items.push(AttributeItem::from_xml(it, lineage.clone(), xsd)?),

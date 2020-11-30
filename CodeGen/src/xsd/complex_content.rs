@@ -26,7 +26,7 @@ impl ComplexContent {
         let mut annotation = None;
         let mut extension = None;
         for inner in node.children() {
-            let t = inner.name.as_str();
+            let t = inner.name();
             match t {
                 ANNOTATION => annotation = Some(Annotation::from_xml(inner, lineage.clone(), xsd)?),
                 EXTENSION => {

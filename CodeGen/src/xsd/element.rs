@@ -52,7 +52,7 @@ impl Element {
 
     pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Element> {
         let (id, lineage) = Id::make(lineage, node)?;
-        if let Some(_) = node.attributes.map().get(TYPE) {
+        if let Some(_) = node.attribute(TYPE) {
             Ok(Element::Reference(ElementRef::from_xml(
                 node, lineage, xsd,
             )?))
@@ -87,7 +87,7 @@ impl ElementDef {
         let mut annotation = None;
         let mut complex_type = None;
         for inner in node.children() {
-            let t = inner.name.as_str();
+            let t = inner.name();
             match t {
                 ANNOTATION => annotation = Some(Annotation::from_xml(inner, lineage.clone(), xsd)?),
                 COMPLEX_TYPE => {

@@ -5,12 +5,12 @@ use crate::xsd::Xsd;
 // expected: &str, node: &exile::Element, xsd: &Xsd
 macro_rules! check {
     ($expected:expr, $node:expr, $xsd:expr) => {{
-        if let Some(ns) = &$node.namespace {
-            if ns.as_str() != $xsd.prefix() {
+        if let Some(ns) = $node.prefix() {
+            if ns != $xsd.prefix() {
                 return raise!(
                     "expected namespace prefix '{}', got '{}'.",
                     $xsd.prefix(),
-                    ns.as_str()
+                    ns
                 );
             }
         } else {
