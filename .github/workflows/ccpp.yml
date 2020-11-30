@@ -24,10 +24,10 @@ jobs:
       run: export CORE_COUNT=$(nproc --all) && make -j$CORE_COUNT
       
     - name: Run Examples
-      run: ./MxRead && ./MxWrite
+      run: ./mxread && ./mxwrite
       
     - name: Run Tests
-      run: ./MxTest
+      run: ./mxtest
   
   windows:
     name: Windows
@@ -50,14 +50,14 @@ jobs:
     #- name: List Debug Dir
     #  run: cd x64 -and dir
       
-    - name: Run Example MxWrite
-      run: Debug\MxWrite.exe
+    - name: Run Example mxwrite
+      run: Debug\mxwrite.exe
     
-    - name: Run Example MxRead
-      run: Debug\MxRead.exe
+    - name: Run Example mxread
+      run: Debug\mxread.exe
     
     - name: Run Tests
-      run: Debug\MxTest.exe
+      run: Debug\mxtest.exe
   
   macos:
     name: macOS
@@ -74,14 +74,14 @@ jobs:
       run: |
           cmake --build .
     
-    - name: Run Example MxWrite
-      run: ./MxWrite
+    - name: Run Example mxwrite
+      run: ./mxwrite
     
-    - name: Run Example MxRead
-      run: ./MxRead
+    - name: Run Example mxread
+      run: ./mxread
     
     - name: Run Tests
-      run: ./MxTest
+      run: ./mxtest
 
   xcode:
     name: Xcode
