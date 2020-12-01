@@ -57,20 +57,16 @@ fn parse() {
     let want_index: u64 = 13;
     let want_name = "4594507136952412519";
     let want_doc = "bishop is sleeping.";
-    let xml = exile::Element {
-        namespace: Some("xs".to_owned()),
-        name: ANNOTATION.to_owned(),
-        attributes: Default::default(),
-        nodes: vec![exile::Node::Element(exile::Element {
-            namespace: Some("xs".to_owned()),
-            name: DOCUMENTATION.to_owned(),
-            attributes: Default::default(),
-            nodes: vec![exile::Node::Text(want_doc.to_owned())],
-        })],
-    };
-
+    let xml = exile::parse(format!(
+        r#"<xs:annotation>
+        <xs:documentation>{}</xs:documentation>
+    </xs:annotation>
+    "#,
+        want_doc
+    ))
+    .unwrap();
     let annotation =
-        Annotation::from_xml(&xml, Lineage::Index(want_index), &Xsd::new("xs")).unwrap();
+        Annotation::from_xml(xml.root(), Lineage::Index(want_index), &Xsd::new("xs")).unwrap();
     let got_doc = annotation.documentation();
     assert_eq!(got_doc.as_str(), want_doc);
     let got_index = annotation.id.index().unwrap();
@@ -86,21 +82,14 @@ fn parse_foo_err() {
     let want_index: u64 = 13;
     let want_name = "4594507136952412519";
     let want_doc = "bishop is sleeping.";
-    let xml = exile::parse(format!(r#"<xs:annotation>
+    let xml = exile::parse(format!(
+        r#"<xs:annotation>
         <xs:documentation>{}</xs:documentation>
     </xs:annotation>
-    "#, want_doc)).unwrap();
-    // let xml = exile::Element {
-    //     namespace: Some("xs".to_owned()),
-    //     name: ANNOTATION.to_owned(),
-    //     attributes: Default::default(),
-    //     nodes: vec![exile::Node::Element(exile::Element {
-    //         namespace: Some("xs".to_owned()),
-    //         name: DOCUMENTATION.to_owned(),
-    //         attributes: Default::default(),
-    //         nodes: vec![exile::Node::Text(want_doc.to_owned())],
-    //     })],
-    // };
+    "#,
+        want_doc
+    ))
+    .unwrap();
 
     let result = Annotation::from_xml(xml.root(), Lineage::Index(want_index), &Xsd::new("foo"));
     assert!(result.is_err());
@@ -111,18 +100,14 @@ fn parse_foo_ok() {
     let want_index: u64 = 13;
     let want_name = "4594507136952412519";
     let want_doc = "bishop is sleeping.";
-    let xml = exile::Element {
-        namespace: Some("foo".to_owned()),
-        name: ANNOTATION.to_owned(),
-        attributes: Default::default(),
-        nodes: vec![exile::Node::Element(exile::Element {
-            namespace: Some("foo".to_owned()),
-            name: DOCUMENTATION.to_owned(),
-            attributes: Default::default(),
-            nodes: vec![exile::Node::Text(want_doc.to_owned())],
-        })],
-    };
-
-    let result = Annotation::from_xml(&xml, Lineage::Index(want_index), &Xsd::new("foo"));
+    let xml = exile::parse(format!(
+        r#"<xs:annotation>
+        <xs:documentation>{}</xs:documentation>
+    </xs:annotation>
+    "#,
+        want_doc
+    ))
+    .unwrap();
+    let result = Annotation::from_xml(xml.root(), Lineage::Index(want_index), &Xsd::new("foo"));
     assert!(result.is_ok());
 }

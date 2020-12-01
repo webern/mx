@@ -18,6 +18,7 @@ use crate::xsd::primitives::Primitive;
 use crate::xsd::primitives::{BaseType, PrefixedString};
 use indexmap::set::IndexSet;
 use indexmap::Equivalent;
+use log::error;
 use std::collections::HashMap;
 use std::fs::{write, OpenOptions};
 use std::io::Write;
@@ -97,6 +98,9 @@ impl<'a> Info<'a> {
                         "An element should not be encountered here: '{}'",
                         element.name().original()
                     );
+                }
+                Def::AttributeGroup(ag) => {
+                    error!("unhandled: {}", ag.name().original())
                 }
             }
         }

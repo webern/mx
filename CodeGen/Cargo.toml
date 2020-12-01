@@ -16,19 +16,25 @@ path = "src/bin/show.rs"
 name = "flatten"
 path = "src/bin/flatten.rs"
 
+[[bin]]
+name = "logger_example"
+path = "src/bin/logger_example.rs"
+
 [lib]
 name = "libmxgen"
 path = "src/lib.rs"
 
 [dependencies]
+chrono = "0.4.19"
 derive_more = "0.99.8"
+env_logger = "0.8.2"
 exile = { git = "https://github.com/webern/exile", rev = "cd5178f" }
 handlebars = "3.3.0"
 indexmap = "1.4.0"
 lazy_static = "1.4.0"
+log = "0.4.11"
 serde = "1.0.114"
 structopt = "0.3.11"
 tempfile = "3.1.0"
 textwrap = "0.12.1"
 uuid = { version = "0.8", features = ["v4"] }
-

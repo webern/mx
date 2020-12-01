@@ -82,8 +82,8 @@ fn parse() {
     // assert_eq!(got_type, RootNodeType::Other(SIMPLE_CONTENT.to_owned()));
     match sc.payload {
         Payload::Extension(ext) => {
-            assert_eq!(ext.attributes.len(), 1);
-            let a = ext.attributes.get(0).unwrap();
+            assert_eq!(ext.attributes.inner().len(), 1);
+            let a = ext.attributes.inner().get(0).unwrap();
             match a {
                 AttributeItem::Attribute(_) => {
                     panic!("expected 'AttributeGroup' but got 'Attribute'")

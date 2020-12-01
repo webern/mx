@@ -90,12 +90,12 @@ fn attributes() {
     let doc = exile::parse(xml_str).unwrap();
     let xml = doc.root();
     let result = add_attributes_from_xml(&xml, Lineage::Parent(parent), &Xsd::new("xs")).unwrap();
-    assert_eq!(result.len(), 4);
-    match result.get(0).unwrap() {
+    assert_eq!(result.inner().len(), 4);
+    match result.inner().get(0).unwrap() {
         AttributeItem::AttributeGroup(ag) => assert!(ag.is_ref()),
         AttributeItem::Attribute(_) => panic!("wrong variant"),
     }
-    match result.get(1).unwrap() {
+    match result.inner().get(1).unwrap() {
         AttributeItem::AttributeGroup(_) => panic!("wrong variant"),
         AttributeItem::Attribute(a) => assert!(a.defined_by.is_type()),
     }

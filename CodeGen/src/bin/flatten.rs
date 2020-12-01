@@ -1,6 +1,7 @@
 use libmxgen::generate::paths::Paths;
 use libmxgen::xsd::id::{Id, RootNodeType};
 use libmxgen::xsd::Xsd;
+use log::error;
 
 const EXIT_SUCCESS: i32 = 0;
 const EXIT_FAIL: i32 = 1;
@@ -9,7 +10,7 @@ macro_rules! must {
     ($result:expr) => {
         match $result {
             Err(e) => {
-                eprintln!("{}:{} {:?}", file!(), line!(), e);
+                error!("{}:{} {:?}", file!(), line!(), e);
                 std::process::exit(EXIT_FAIL);
             }
             Ok(o) => o,

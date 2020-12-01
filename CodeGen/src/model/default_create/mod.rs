@@ -4,6 +4,7 @@ mod scalar;
 #[macro_use]
 use crate::model::create::{Create, CreateError, CreateResult};
 
+use crate::model;
 use crate::model::default_create::enumeration::{is_enumeration, model_enumeration};
 use crate::model::default_create::scalar::{
     model_derived_simple_type, model_scalar_number, model_scalar_string,
@@ -16,6 +17,7 @@ use crate::model::Def;
 use crate::xsd::restriction::Facet;
 use crate::xsd::simple_type::{Payload, SimpleType};
 use crate::xsd::{simple_type, Entry, Xsd};
+use log::trace;
 use std::borrow::Borrow;
 use std::ops::Deref;
 
@@ -35,12 +37,22 @@ impl Create for DefaultCreate {
 
     fn create(&self, entry: &Entry, xsd: &Xsd) -> CreateResult {
         match entry {
-            Entry::Annotation(_) => Ok(Some(Vec::new())), // TODO - implement Annotation
-            Entry::AttributeGroup(_) => Ok(Some(Vec::new())), // TODO - implement AttributeGroup
-            Entry::ComplexType(_) => Ok(Some(Vec::new())), // TODO - implement ComplexType
-            Entry::Element(eee) => Ok(Some(vec![Def::Element(Element::new(eee.clone()))])), // TODO - implement Element
-            Entry::Group(_) => Ok(Some(Vec::new())), // TODO - implement Group
-            Entry::Import(_) => Ok(Some(Vec::new())), // TODO - implement Import
+            Entry::Annotation(a) => Ok(Some(Vec::new())), // ignore
+            Entry::AttributeGroup(x) => Ok(Some(vec![Def::AttributeGroup(
+                model::attribute_group::AttributeGroup::new(x.clone()),
+            )])),
+            Entry::ComplexType(x) => {
+                // TODO - implement
+                trace!("unimplemented: {}", x.id);
+                Ok(Some(Vec::new()))
+            }
+            Entry::Element(eee) => Ok(Some(vec![Def::Element(Element::new(eee.clone()))])),
+            Entry::Group(x) => {
+                // TODO - implement
+                trace!("unimplemented: {}", x.id);
+                Ok(Some(Vec::new()))
+            }
+            Entry::Import(x) => Ok(Some(Vec::new())), // ignore
             Entry::SimpleType(st) => dispatch_simple_type(st, xsd),
         }
     }

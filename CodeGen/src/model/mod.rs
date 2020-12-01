@@ -1,6 +1,7 @@
 #[macro_use]
 pub mod create;
 
+pub mod attribute_group;
 pub mod builtin;
 pub mod creator;
 pub mod default_create;
@@ -12,6 +13,7 @@ pub mod symbol;
 pub mod transform;
 
 use crate::error::Result;
+use crate::model::attribute_group::AttributeGroup;
 use crate::model::create::{Create, CreateError, CreateResult};
 use crate::model::element::Element;
 use crate::model::enumeration::Enumeration;
@@ -28,25 +30,27 @@ use std::ops::Deref;
 
 #[derive(Debug, Clone, PartialEq, PartialOrd)]
 pub enum Def {
-    Enumeration(Enumeration),
-    ScalarString(ScalarString),
-    ScalarNumber(ScalarNumeric),
+    AttributeGroup(AttributeGroup),
     CustomScalarString(ScalarString),
     DerivedSimpleType(DerivedSimpleTypeData),
-    UnionSimpleType(UnionData),
     Element(Element),
+    Enumeration(Enumeration),
+    ScalarNumber(ScalarNumeric),
+    ScalarString(ScalarString),
+    UnionSimpleType(UnionData),
 }
 
 impl Def {
     pub fn name(&self) -> &Symbol {
         match self {
-            Def::Enumeration(x) => &x.name,
-            Def::ScalarString(x) => &x.name,
-            Def::ScalarNumber(x) => x.name(),
+            Def::AttributeGroup(x) => x.name(),
             Def::CustomScalarString(x) => &x.name,
             Def::DerivedSimpleType(x) => &x.name,
-            Def::UnionSimpleType(x) => &x.name,
             Def::Element(x) => x.name(),
+            Def::Enumeration(x) => &x.name,
+            Def::ScalarNumber(x) => x.name(),
+            Def::ScalarString(x) => &x.name,
+            Def::UnionSimpleType(x) => &x.name,
         }
     }
 }
@@ -80,13 +84,14 @@ pub struct Model {
 impl Model {
     pub fn add(&mut self, def: Def) -> Result<()> {
         let shape = match def {
-            Def::Enumeration(_) => Shape::Simple,
-            Def::ScalarString(_) => Shape::Simple,
-            Def::ScalarNumber(_) => Shape::Simple,
+            Def::AttributeGroup(_) => Shape::Complex,
             Def::CustomScalarString(_) => Shape::Simple,
             Def::DerivedSimpleType(_) => Shape::Simple,
-            Def::UnionSimpleType(_) => Shape::Simple,
             Def::Element(_) => Shape::Complex,
+            Def::Enumeration(_) => Shape::Simple,
+            Def::ScalarNumber(_) => Shape::Simple,
+            Def::ScalarString(_) => Shape::Simple,
+            Def::UnionSimpleType(_) => Shape::Simple,
         };
         let ipseity = Ipseity {
             shape,

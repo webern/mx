@@ -74,8 +74,8 @@ fn parse() {
     // assert_eq!(got_type, RootNodeType::Other(COMPLEX_CONTENT.to_owned()));
     let extension = &sc.extension;
     assert_eq!(extension.base.as_str(), "time-modification");
-    assert_eq!(extension.attributes.len(), 3);
-    let a = extension.attributes.get(0).unwrap();
+    assert_eq!(extension.attributes.inner().len(), 3);
+    let a = extension.attributes.inner().get(0).unwrap();
     match a {
         AttributeItem::Attribute(x) => {
             assert_eq!(x.name.as_str(), "type");

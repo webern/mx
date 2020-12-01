@@ -5,6 +5,7 @@ use crate::generate::cpp::write_custom::{
 use crate::generate::paths::Paths;
 use crate::model::scalar::ScalarNumeric;
 use crate::model::{Def, Model};
+use log::{error, trace};
 
 #[derive(Debug, Clone)]
 pub struct Writer {
@@ -54,7 +55,8 @@ impl Writer {
                     )
                 }
                 Def::UnionSimpleType(u) => unions.push(u),
-                Def::Element(element) => println!("Element: {}", element.name().original()),
+                Def::Element(element) => trace!("unimplemented: {}", element.id()),
+                Def::AttributeGroup(ag) => error!("unimplemented: {}", ag.name().original()),
             }
         }
         self.write_enums(&mut enums)?;

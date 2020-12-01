@@ -17,9 +17,9 @@ fn main() {
 
 #[allow(unused)]
 fn find_xs_nodes(node: &exile::Element, xs_nodes: &mut IndexSet<String>) {
-    if let Some(ns) = &node.namespace {
+    if let Some(ns) = node.prefix() {
         if ns == "xs" {
-            xs_nodes.insert(node.fullname());
+            xs_nodes.insert(node.fullname().to_owned());
         }
     }
     for child in node.children() {
@@ -34,12 +34,12 @@ fn print_group_children(root: &Element) {
     println!("==========================================================================================");
     let mut the_stuf = HashMap::new();
     for child in root.children() {
-        if child.name.as_str() == "group" {
-            let name = child.attributes.map().get("name").unwrap().clone();
+        if child.name() == "group" {
+            let name = child.attribute("name").unwrap().clone();
             let mut xs_nodes = IndexSet::<String>::new();
             for xs_thingy in child.children() {
-                if xs_thingy.name.as_str() != "annotation" {
-                    xs_nodes.insert(xs_thingy.fullname());
+                if xs_thingy.name() != "annotation" {
+                    xs_nodes.insert(xs_thingy.fullname().into());
                 }
             }
             the_stuf.insert(name, xs_nodes);
@@ -70,15 +70,15 @@ fn print_sequence_children_recursively(
     children_types: &mut IndexSet<String>,
 ) {
     let mut most_recent_name = parent_name.to_owned();
-    if let Some(nm) = node.attributes.map().get("name") {
-        most_recent_name = nm.clone();
+    if let Some(nm) = node.attribute("name") {
+        most_recent_name = nm.into();
     }
     let mut attributes = Vec::new();
-    for (k, _) in node.attributes.map() {
+    for (k, _) in node.attributes() {
         attributes.push(k.clone());
     }
     attributes.sort();
-    if node.name.as_str() == target_element {
+    if node.name() == target_element {
         print_sequence_children_the_children_part(
             node,
             target_element,
@@ -105,14 +105,14 @@ fn print_sequence_children_the_children_part(
     attributes: &Vec<String>,
     children_types: &mut IndexSet<String>,
 ) {
-    if node.name.as_str() != target_element {
+    if node.name() != target_element {
         panic!("wtf");
     }
     println!("");
     println!("{}:", parent_name);
     println!("[{}]", attributes.join(" "));
     for child in node.children() {
-        println!("{}", child.name.as_str());
-        children_types.insert(child.name.clone());
+        println!("{}", child.name());
+        children_types.insert(child.name().into());
     }
 }

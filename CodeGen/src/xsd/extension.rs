@@ -72,8 +72,8 @@ fn parse() {
     let got_base = ext.base.as_str();
     let want_base = "xs:string";
     assert_eq!(got_base, want_base);
-    assert_eq!(ext.attributes.len(), 3);
-    let attribute_item = ext.attributes.get(0).unwrap();
+    assert_eq!(ext.attributes.inner().len(), 3);
+    let attribute_item = ext.attributes.inner().get(0).unwrap();
     match attribute_item {
         AttributeItem::Attribute(x) => {
             assert_eq!(x.name.as_str(), "type");
@@ -85,7 +85,7 @@ fn parse() {
         }
         AttributeItem::AttributeGroup(_) => panic!("expected 'Attribute' but got 'AttributeGroup'"),
     }
-    let attribute_item = ext.attributes.get(2).unwrap();
+    let attribute_item = ext.attributes.inner().get(2).unwrap();
     match attribute_item {
         AttributeItem::Attribute(_) => panic!("expected 'AttributeGroup' but got 'Attribute'"),
         AttributeItem::AttributeGroup(x) => match x {

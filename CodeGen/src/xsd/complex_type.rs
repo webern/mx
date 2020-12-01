@@ -172,8 +172,8 @@ fn parse_parent_sequence() {
     } else {
         panic!("wrong payload type");
     };
-    assert_eq!(parent.attributes.len(), 1);
-    match parent.attributes.get(0).unwrap() {
+    assert_eq!(parent.attributes.inner().len(), 1);
+    match parent.attributes.inner().get(0).unwrap() {
         AttributeItem::AttributeGroup(ag) => match ag {
             AttributeGroup::Def(_) => panic!("expected Ref got Def"),
             AttributeGroup::Ref(s) => {
@@ -212,7 +212,7 @@ fn parse_parent_group() {
     } else {
         panic!("wrong payload type");
     };
-    assert_eq!(parent.attributes.len(), 0);
+    assert_eq!(parent.attributes.inner().len(), 0);
     match parent.children.unwrap() {
         Children::Choice(_) => panic!("want Group got Choice"),
         Children::Group(_) => {}
@@ -252,8 +252,8 @@ fn parse_parent_choice() {
     } else {
         panic!("wrong payload type");
     };
-    assert_eq!(parent.attributes.len(), 2);
-    match parent.attributes.get(0).unwrap() {
+    assert_eq!(parent.attributes.inner().len(), 2);
+    match parent.attributes.inner().get(0).unwrap() {
         AttributeItem::AttributeGroup(ag) => match ag {
             AttributeGroup::Def(_) => panic!("expected Ref got Def"),
             AttributeGroup::Ref(s) => {
@@ -262,7 +262,7 @@ fn parse_parent_choice() {
         },
         AttributeItem::Attribute(_) => panic!("expected AttributeGroup got Attribute"),
     }
-    match parent.attributes.get(1).unwrap() {
+    match parent.attributes.inner().get(1).unwrap() {
         AttributeItem::AttributeGroup(ag) => match ag {
             AttributeGroup::Def(_) => panic!("expected Ref got Def"),
             AttributeGroup::Ref(s) => {
@@ -305,8 +305,8 @@ fn parse_complex_content() {
     } else {
         panic!("wrong payload type");
     };
-    assert_eq!(cc.extension.attributes.len(), 1);
-    match cc.extension.attributes.get(0).unwrap() {
+    assert_eq!(cc.extension.attributes.inner().len(), 1);
+    match cc.extension.attributes.inner().get(0).unwrap() {
         AttributeItem::Attribute(a) => {
             assert_eq!(a.name.as_str(), "substitution");
             assert!(a.defined_by.is_type());
@@ -348,8 +348,8 @@ fn parse_simple_content() {
         simple_content::Payload::Extension(x) => x,
     };
     assert_eq!(ext.base.as_str(), "hole-closed-value");
-    assert_eq!(ext.attributes.len(), 1);
-    match ext.attributes.get(0).unwrap() {
+    assert_eq!(ext.attributes.inner().len(), 1);
+    match ext.attributes.inner().get(0).unwrap() {
         AttributeItem::AttributeGroup(_) => panic!("expected Attribute got AttributeGroup"),
         AttributeItem::Attribute(a) => {
             assert!(a.defined_by.is_type());

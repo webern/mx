@@ -124,14 +124,14 @@ fn parse_credit() {
         "element:foo:choice:863778347360799337"
     );
     assert_eq!(ch.documentation().as_str(), "");
-    assert_eq!(ch.choices.len(), 2);
-    let ele = if let ChoiceItem::Element(el) = ch.choices.get(0).unwrap() {
+    assert_eq!(ch.choices.inner().len(), 2);
+    let ele = if let ChoiceItem::Element(el) = ch.choices.inner().get(0).unwrap() {
         el
     } else {
         panic!("expected Element");
     };
     assert_eq!(ele.name(), "credit-image");
-    let seq = if let ChoiceItem::Sequence(s) = ch.choices.get(1).unwrap() {
+    let seq = if let ChoiceItem::Sequence(s) = ch.choices.inner().get(1).unwrap() {
         s
     } else {
         panic!("expected Sequence");
