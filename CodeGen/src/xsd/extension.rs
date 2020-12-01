@@ -28,7 +28,7 @@ impl Extension {
         let mut annotation = None;
         let mut attributes = Attributes::new();
         for inner in node.children() {
-            let t = inner.name.as_str();
+            let t = inner.name();
             match t {
                 ANNOTATION => annotation = Some(Annotation::from_xml(inner, lineage.clone(), xsd)?),
                 ATTRIBUTE | ATTRIBUTE_GROUP => {

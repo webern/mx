@@ -424,14 +424,13 @@ namespace mx
         /// actual letters as the names of these dynamic elements. The other-dynamics element allows
         /// other dynamic marks that are not covered here, but many of those should perhaps be
         /// included in a more general musical direction element. Dynamics elements may also be
-        /// combined to create marks not covered by a single element, such as sfmp.
-        ///    
-        /// These letter dynamic symbols are separated from crescendo, decrescendo, and wedge
-        /// indications. Dynamic representation is inconsistent in scores. Many things are assumed
-        /// by the composer and left out, such as returns to original dynamics. Systematic
-        /// representations are quite complex: for example, Humdrum has at least 3 representation
-        /// formats related to dynamics. The MusicXML format captures what is in the score, but does
-        /// not try to be optimal for analysis or synthesis of dynamics.
+        /// combined to create marks not covered by a single element, such as sfmp. These letter
+        /// dynamic symbols are separated from crescendo, decrescendo, and wedge indications.
+        /// Dynamic representation is inconsistent in scores. Many things are assumed by the
+        /// composer and left out, such as returns to original dynamics. Systematic representations
+        /// are quite complex: for example, Humdrum has at least 3 representation formats related to
+        /// dynamics. The MusicXML format captures what is in the score, but does not try to be
+        /// optimal for analysis or synthesis of dynamics.
         ///
         enum class DynamicsEnum
         {
@@ -744,51 +743,24 @@ namespace mx
         /// KindValue //////////////////////////////////////////////////////////////////////////////
         ///
         /// A kind-value indicates the type of chord. Degree elements can then add, subtract, or
-        /// alter from these starting points. Values include:
-        ///    
-        /// Triads:
-        ///     major (major third, perfect fifth)
-        ///     minor (minor third, perfect fifth)
-        ///     augmented (major third, augmented fifth)
-        ///     diminished (minor third, diminished fifth)
-        /// Sevenths:
-        ///     dominant (major triad, minor seventh)
-        ///     major-seventh (major triad, major seventh)
-        ///     minor-seventh (minor triad, minor seventh)
-        ///     diminished-seventh (diminished triad, diminished seventh)
-        ///     augmented-seventh (augmented triad, minor seventh)
-        ///     half-diminished (diminished triad, minor seventh)
-        ///     major-minor (minor triad, major seventh)
-        /// Sixths:
-        ///     major-sixth (major triad, added sixth)
-        ///     minor-sixth (minor triad, added sixth)
-        /// Ninths:
-        ///     dominant-ninth (dominant-seventh, major ninth)
-        ///     major-ninth (major-seventh, major ninth)
-        ///     minor-ninth (minor-seventh, major ninth)
-        /// 11ths (usually as the basis for alteration):
-        ///     dominant-11th (dominant-ninth, perfect 11th)
-        ///     major-11th (major-ninth, perfect 11th)
-        ///     minor-11th (minor-ninth, perfect 11th)
-        /// 13ths (usually as the basis for alteration):
-        ///     dominant-13th (dominant-11th, major 13th)
-        ///     major-13th (major-11th, major 13th)
-        ///     minor-13th (minor-11th, major 13th)
-        /// Suspended:
-        ///     suspended-second (major second, perfect fifth)
-        ///     suspended-fourth (perfect fourth, perfect fifth)
-        /// Functional sixths:
-        ///     Neapolitan
-        ///     Italian
-        ///     French
-        ///     German
-        /// Other:
-        ///     pedal (pedal-point bass)
-        ///     power (perfect fifth)
-        ///     Tristan
-        ///    
-        /// The "other" kind is used when the harmony is entirely composed of add elements. The
-        /// "none" kind is used to explicitly encode absence of chords or functional harmony.
+        /// alter from these starting points. Values include: Triads: major (major third, perfect
+        /// fifth) minor (minor third, perfect fifth) augmented (major third, augmented fifth)
+        /// diminished (minor third, diminished fifth) Sevenths: dominant (major triad, minor
+        /// seventh) major-seventh (major triad, major seventh) minor-seventh (minor triad, minor
+        /// seventh) diminished-seventh (diminished triad, diminished seventh) augmented-seventh
+        /// (augmented triad, minor seventh) half-diminished (diminished triad, minor seventh)
+        /// major-minor (minor triad, major seventh) Sixths: major-sixth (major triad, added sixth)
+        /// minor-sixth (minor triad, added sixth) Ninths: dominant-ninth (dominant-seventh, major
+        /// ninth) major-ninth (major-seventh, major ninth) minor-ninth (minor-seventh, major ninth)
+        /// 11ths (usually as the basis for alteration): dominant-11th (dominant-ninth, perfect
+        /// 11th) major-11th (major-ninth, perfect 11th) minor-11th (minor-ninth, perfect 11th)
+        /// 13ths (usually as the basis for alteration): dominant-13th (dominant-11th, major 13th)
+        /// major-13th (major-11th, major 13th) minor-13th (minor-11th, major 13th) Suspended:
+        /// suspended-second (major second, perfect fifth) suspended-fourth (perfect fourth, perfect
+        /// fifth) Functional sixths: Neapolitan Italian French German Other: pedal (pedal-point
+        /// bass) power (perfect fifth) Tristan The "other" kind is used when the harmony is
+        /// entirely composed of add elements. The "none" kind is used to explicitly encode absence
+        /// of chords or functional harmony.
         ///
         enum class KindValue
         {
@@ -1213,14 +1185,12 @@ namespace mx
         ///
         /// The notehead type indicates shapes other than the open and closed ovals associated with
         /// note durations. The values do, re, mi, fa, fa up, so, la, and ti correspond to Aikin's
-        /// 7-shape system.  The fa up shape is typically used with upstems; the fa shape is
-        /// typically used with downstems or no stems.
-        ///
-        /// The arrow shapes differ from triangle and inverted triangle by being centered on the
-        /// stem. Slashed and back slashed notes include both the normal notehead and a slash. The
-        /// triangle shape has the tip of the triangle pointing up; the inverted triangle shape has
-        /// the tip of the triangle pointing down. The left triangle shape is a right triangle with
-        /// the hypotenuse facing up and to the left.
+        /// 7-shape system. The fa up shape is typically used with upstems; the fa shape is
+        /// typically used with downstems or no stems. The arrow shapes differ from triangle and
+        /// inverted triangle by being centered on the stem. Slashed and back slashed notes include
+        /// both the normal notehead and a slash. The triangle shape has the tip of the triangle
+        /// pointing up; the inverted triangle shape has the tip of the triangle pointing down. The
+        /// left triangle shape is a right triangle with the hypotenuse facing up and to the left.
         ///
         enum class NoteheadValue
         {
@@ -1450,14 +1420,12 @@ namespace mx
         /// StartStop //////////////////////////////////////////////////////////////////////////////
         ///
         /// The start-stop type is used for an attribute of musical elements that can either start
-        /// or stop, such as tuplets.
-        ///                                    
-        /// The values of start and stop refer to how an element appears in musical score order, not
-        /// in MusicXML document order. An element with a stop attribute may precede the
-        /// corresponding element with a start attribute within a MusicXML document. This is
-        /// particularly common in multi-staff music. For example, the stopping point for a tuplet
-        /// may appear in staff 1 before the starting point for the tuplet appears in staff 2 later
-        /// in the document.
+        /// or stop, such as tuplets. The values of start and stop refer to how an element appears
+        /// in musical score order, not in MusicXML document order. An element with a stop attribute
+        /// may precede the corresponding element with a start attribute within a MusicXML document.
+        /// This is particularly common in multi-staff music. For example, the stopping point for a
+        /// tuplet may appear in staff 1 before the starting point for the tuplet appears in staff 2
+        /// later in the document.
         ///
         enum class StartStop
         {
@@ -1493,14 +1461,12 @@ namespace mx
         ///
         /// The start-stop-continue type is used for an attribute of musical elements that can
         /// either start or stop, but also need to refer to an intermediate point in the symbol, as
-        /// for complex slurs or for formatting of symbols across system breaks.
-        ///                        
-        /// The values of start, stop, and continue refer to how an element appears in musical score
-        /// order, not in MusicXML document order. An element with a stop attribute may precede the
-        /// corresponding element with a start attribute within a MusicXML document. This is
-        /// particularly common in multi-staff music. For example, the stopping point for a slur may
-        /// appear in staff 1 before the starting point for the slur appears in staff 2 later in the
-        /// document.
+        /// for complex slurs or for formatting of symbols across system breaks. The values of
+        /// start, stop, and continue refer to how an element appears in musical score order, not in
+        /// MusicXML document order. An element with a stop attribute may precede the corresponding
+        /// element with a start attribute within a MusicXML document. This is particularly common
+        /// in multi-staff music. For example, the stopping point for a slur may appear in staff 1
+        /// before the starting point for the slur appears in staff 2 later in the document.
         ///
         enum class StartStopContinue
         {
@@ -1635,8 +1601,8 @@ namespace mx
 
         /// StickTypeEnum //////////////////////////////////////////////////////////////////////////
         ///
-        /// The stick-type type represents the shape of pictograms where the material
-        ///     in the stick, mallet, or beater is represented in the pictogram.
+        /// The stick-type type represents the shape of pictograms where the material in the stick,
+        /// mallet, or beater is represented in the pictogram.
         ///
         enum class StickTypeEnum
         {

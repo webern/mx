@@ -80,22 +80,21 @@ impl Id {
     }
 
     pub(crate) fn make(lineage: Lineage, node: &exile::Element) -> Result<(Self, Lineage)> {
-        let attrs = node.attributes.map();
-        let name = if let Some(s) = attrs.get("id") {
-            s.clone()
-        } else if let Some(s) = attrs.get(NAME) {
-            s.clone()
-        } else if let Some(s) = attrs.get(TYPE) {
-            s.clone()
-        } else if let Some(s) = attrs.get(REF) {
-            s.clone()
+        let name = if let Some(s) = node.attribute("id") {
+            s.to_owned()
+        } else if let Some(s) = node.attribute(NAME) {
+            s.to_owned()
+        } else if let Some(s) = node.attribute(TYPE) {
+            s.to_owned()
+        } else if let Some(s) = node.attribute(REF) {
+            s.to_owned()
         } else {
             let mut hasher = DefaultHasher::new();
             node.hash(&mut hasher);
             let result = hasher.finish();
             format!("{}", result)
         };
-        let type_ = node.name.as_str();
+        let type_ = node.name();
         match lineage {
             Lineage::Index(i) => {
                 let id = Id::Root(RootNodeId {

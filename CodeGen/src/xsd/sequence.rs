@@ -37,7 +37,7 @@ impl Sequence {
         let mut annotation = None;
         let mut members = Vec::new();
         for inner in node.children() {
-            let t = inner.name.as_str();
+            let t = inner.name();
             match t {
                 ANNOTATION => annotation = Some(Annotation::from_xml(inner, lineage.clone(), xsd)?),
                 CHOICE => members.push(Member::Choice(Choice::from_xml(

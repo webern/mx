@@ -130,13 +130,13 @@ impl ElementRef {
     }
 
     pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
-        if node.name.as_str() != ELEMENT {
-            return raise!("expected '{}', got '{}'", ELEMENT, node.name.as_str());
+        if node.name() != ELEMENT {
+            return raise!("expected '{}', got '{}'", ELEMENT, node.name());
         }
         let id = lineage.parent().unwrap();
         let mut annotation = None;
         for inner in node.children() {
-            let t = inner.name.as_str();
+            let t = inner.name();
             if t == ANNOTATION {
                 annotation = Some(Annotation::from_xml(inner, lineage.clone(), xsd)?);
                 break;

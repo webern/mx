@@ -131,7 +131,7 @@ pub enum Facet {
 impl Facet {
     fn from_xml(node: &Element, xsd: &Xsd) -> Result<Facet> {
         check!(FACET, node, xsd)?;
-        let t = FacetType::parse(&node.name)?;
+        let t = FacetType::parse(&node.name())?;
         let v = value_attribute(node)?;
         let result = match t {
             FacetType::Enumeration => Facet::Enumeration(v.clone()),
@@ -193,7 +193,7 @@ impl Restriction {
         let mut annotation = None;
         let mut facets = Vec::new();
         for inner in node.children() {
-            let t = inner.name.as_str();
+            let t = inner.name();
             if t == ANNOTATION {
                 annotation = Some(Annotation::from_xml(inner, lineage.clone(), xsd)?);
             } else {

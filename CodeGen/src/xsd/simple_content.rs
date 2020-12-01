@@ -31,7 +31,7 @@ impl SimpleContent {
         let mut annotation = None;
         let mut payload = None;
         for inner in node.children() {
-            let t = inner.name.as_str();
+            let t = inner.name();
             match t {
                 ANNOTATION => annotation = Some(Annotation::from_xml(inner, lineage.clone(), xsd)?),
                 EXTENSION => {

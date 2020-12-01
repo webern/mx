@@ -69,7 +69,7 @@ impl GroupDefinition {
         let mut annotation = None;
         let mut members = Vec::new();
         for inner in node.children() {
-            let t = inner.name.as_str();
+            let t = inner.name();
             match t {
                 ANNOTATION => annotation = Some(Annotation::from_xml(inner, lineage.clone(), xsd)?),
                 CHOICE => {
@@ -105,12 +105,12 @@ impl GroupReference {
 
     pub fn from_xml(node: &exile::Element, lineage: Lineage, xsd: &Xsd) -> Result<Self> {
         let id = lineage.parent().unwrap();
-        if node.name.as_str() != GROUP {
-            return raise!("expected '{}', got '{}'", GROUP, node.name.as_str());
+        if node.name() != GROUP {
+            return raise!("expected '{}', got '{}'", GROUP, node.name());
         }
         let mut annotation = None;
         for inner in node.children() {
-            let t = inner.name.as_str();
+            let t = inner.name();
             match t {
                 ANNOTATION => annotation = Some(Annotation::from_xml(inner, lineage.clone(), xsd)?),
                 _ => return raise!("unsupported {} node, '{}'", GROUP, t),
