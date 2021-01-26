@@ -50,6 +50,103 @@ You only need to run them if you make changes in the `mx::core` namespace.
 * `mx` third-party code should be checked into the `mx` repo and compiled as part of the `mx` library.
 * `mx` should not depened on any package manager, though it may be published into any package manager.
 
+### Using `mx` in a Cmake Project
+
+The following script demonstrates how you can start a new cmake project that uses `mx` by commiting its sourcecode into your project:
+
+```sh
+#!/bin/bash
+se -eou pipefail
+
+# this script demonstrates how to depend on mx by including it in your
+# sourcecode tree.
+
+# if given, the first argument is a path to directory where the new
+# project will be created.
+REPO="${1:-/tmp/$(uuidgen)}"
+echo "Creating a new project in: ${REPO}"
+
+# create a new git repository for your project
+mkdir -p "${REPO}"
+cd "${REPO}"
+git init
+# bring the mx sourcecode into your project into a temporary location
+git clone https://github.com/webern/mx.git mxtemp
+
+# copy only what we need.  all we need is the Sourcode directory, the
+# cmake file, the license, and the .gitignore file (helpful since there
+# is one generated file.)
+mkdir mx
+mv mxtemp/Sourcecode mx/Sourcecode
+mv mxtemp/.gitignore mx/.gitignore
+mv mxtemp/LICENSE.txt mx/LICENSE.txt
+mv mxtemp/CMakeLists.txt mx/CMakeLists.txt
+# we don't need the test code, either
+rm -rf mx/Sourcecode/private/mxtest
+rm -rf mxtemp
+
+# commit the mx sourcecode to our project repo
+git add --all && git commit -m'mx sourcecode'
+
+# create a main.cpp file
+cat <<- "EOF" > main.cpp
+#include <iostream>
+#include "mx/api/ScoreData.h"
+#include "mx/api/DocumentManager.h"
+
+int main () {
+    using namespace mx::api;
+    ScoreData score{};
+    score.workTitle = "Hello World";
+    NoteData note{};
+    note.durationData.durationName = DurationName::quarter;
+    note.pitchData.step = Step::d;
+    VoiceData voiceData{};
+    voiceData.notes.push_back(note);
+    StaffData staff{};
+    staff.voices[0] = voiceData;
+    MeasureData measure{};
+    measure.staves.push_back(staff);
+    PartData part{};
+    part.measures.push_back(measure);
+    score.parts.push_back(part);
+    auto& mgr = DocumentManager::getInstance();
+    const auto id = mgr.createFromScore(score);
+    mgr.writeToStream(id, std::cout);
+    mgr.destroyDocument(id);
+}
+EOF
+
+# create a cmake file
+cat <<- "EOF" > CMakeLists.txt
+cmake_minimum_required(VERSION 3.17)
+project(my-musicxml-proj)
+set(CMAKE_CXX_STANDARD 17)
+set(CPP_VERSION 17)
+
+add_executable(my-musicxml-proj main.cpp)
+add_subdirectory(mx)
+target_link_libraries(my-musicxml-proj mx)
+target_include_directories(my-musicxml-proj PRIVATE mx/Sourcecode/include)
+EOF
+
+# create a .gitignore file to ignore a build directory
+cat <<- "EOF" > .gitignore
+build/
+EOF
+
+git add --all && git commit -m'musicxml hello world'
+
+# create a build directory
+mkdir build
+
+# build your project
+cd build
+cmake .. && make -j10
+# run your executable
+./my-musicxml-proj
+```
+
 ### Xcode Project
 
 The Xcode project (checked-in to the repo) has targets for iOS and macOS frameworks and dylibs.
@@ -65,7 +162,7 @@ This will not prevent a contribution from being merged, the maintainer will fix 
 The `mx::api` namespace is intended to be a simplified structural representation of MusicXML.
 It should be more intuitive than manipulating the DOM representation directly.
 In particular, voices and time positions are more explicitly managed.
-Some complexities, on the other hand, are retained in `mx::api`, such as the need to manage beam starts and stops explicitly. 
+Some complexities, on the other hand, are retained in `mx::api`, such as the need to manage beam starts and stops explicitly.
 
 #### Writing MusicXML with `mx::api`
 
