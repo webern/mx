@@ -59,7 +59,7 @@ parse_args() {
     case "${1}" in
       # required
       --outdir ) shift; OUTDIR="${1}" ;;
-      
+
       # optional
       --build-dir ) shift; BUILD_DIR="${1}" ;;
       --test ) shift; TEST="${1}" ;;
@@ -98,6 +98,7 @@ parse_args() {
 
 delete_build_dir() {
   if [ "${CLEANUP}" = "true" ]; then
+    echo "deleting build dir"
     rm -rf "${BUILD_DIR}"
   fi;
 }
@@ -164,15 +165,20 @@ build_for_macos() {
 }
 
 create_ios_fat_binary() {
+  echo "create_ios_fat_binary"
+  rm -f "/tmp/MxiOS-x86_64"
+  lipo "${ios_simulator_build_binary}" -extract x86_64 -output "/tmp/MxiOS-x86_64"
+
   lipo -create -output "${ios_binary_temp_path}" \
     "${ios_build_binary}" \
-    "${ios_simulator_build_binary}"
+    "/tmp/MxiOS-x86_64"
 
     # in the ios framework, replace the 'skinny' binary with the 'fat' one
     cp -f "${ios_binary_temp_path}" "${ios_build_binary}"
 }
 
 move_outputs() {
+  echo "move_outputs"
   rm -rf "${OUTDIR}/${ios_framework_name}"
   rm -rf "${OUTDIR}/${macos_framework_name}"
   mv -f "${ios_build_path}/" "${OUTDIR}/"
@@ -187,11 +193,11 @@ main() {
 
   mkdir -p "${BUILD_DIR}"
   mkdir -p "${OUTDIR}"
-  
+
   if [ "${TEST}" = "true" ]; then
-    do_tests    
+    do_tests
   fi;
-  
+
   build_for_ios
   build_for_macos
   create_ios_fat_binary
