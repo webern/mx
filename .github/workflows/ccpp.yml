@@ -6,10 +6,10 @@ jobs:
   linux:
     name: Linux
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v2
-    
+
     - name: Cmake
       run: |
               [ "$(git rev-parse --abbrev-ref HEAD)" == "master" ] && \
@@ -19,81 +19,90 @@ jobs:
       run: |
               export CORE_COUNT=$(nproc --all) && echo "CORE_COUNT: $CORE_COUNT" && \
               lscpu
-                       
+
     - name: Build
       run: export CORE_COUNT=$(nproc --all) && make -j$CORE_COUNT
-      
+
     - name: Run Examples
       run: ./mxread && ./mxwrite
-      
+
     - name: Run Tests
       run: ./mxtest
-  
+
   windows:
     name: Windows
     runs-on: windows-latest
-    
+
     steps:
     - uses: actions/checkout@v2
-    
+
     - name: Cmake
       run: |
           cmake -DMX_BUILD_EXAMPLES=on -DMX_BUILD_TESTS=on -DMX_BUILD_CORE_TESTS=off .
-    
+
     - name: Build
       run: |
           cmake --build .
 
     - name: List Directory
       run: dir
-    
-    #- name: List Debug Dir
-    #  run: cd x64 -and dir
-      
+
     - name: Run Example mxwrite
       run: Debug\mxwrite.exe
-    
+
     - name: Run Example mxread
       run: Debug\mxread.exe
-    
+
     - name: Run Tests
       run: Debug\mxtest.exe
-  
+
   macos:
     name: macOS
     runs-on: macos-latest
-    
+
     steps:
     - uses: actions/checkout@v2
-    
+
     - name: Cmake
       run: |
           cmake -DMX_BUILD_EXAMPLES=on -DMX_BUILD_TESTS=on -DMX_BUILD_CORE_TESTS=off .
-    
+
     - name: Build
       run: |
           cmake --build .
-    
+
     - name: Run Example mxwrite
       run: ./mxwrite
-    
+
     - name: Run Example mxread
       run: ./mxread
-    
+
     - name: Run Tests
       run: ./mxtest
 
   xcode:
     name: Xcode
     runs-on: macos-latest
-    
+
     steps:
     - uses: actions/checkout@v2
-    
+
+    - name: Build Cache
+      uses: actions/cache@v2
+      env:
+        cache-name: cargo-home
+      with:
+        path: ./xcode-build
+        key: ${{ hashFiles('.github/cache-bust') }}-${{ hashFiles('Xcode/mx.xcworkspace', 'Xcode/Mx.xcodeproj', 'Xcode/MxTest.xcodeproj') }}-${{ hashFiles('Sourcecode/*') }}
+        restore-keys: |
+          ${{ hashFiles('.github/cache-bust') }}-${{ hashFiles('Xcode/mx.xcworkspace', 'Xcode/Mx.xcodeproj', 'Xcode/MxTest.xcodeproj') }}-
+          ${{ hashFiles('.github/cache-bust') }}-
+
     - name: Build
       run: |
           DevScripts/build-for-apple.sh \
-          --outdir ./xcode-build-artifacts \
+          --outdir ./xcode-out \
+          --build-dir ./xcode-build \
           --test false \
           --configuration Release \
-          --cleanup true
+          --cleanup false
