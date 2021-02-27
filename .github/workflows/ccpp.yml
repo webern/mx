@@ -89,11 +89,11 @@ jobs:
     - name: Cmake
       run: |
           mkdir build && cd build && \
-          cmake -DMX_BUILD_EXAMPLES=on -DMX_BUILD_TESTS=on -DMX_BUILD_CORE_TESTS=off .
+          cmake -DMX_BUILD_EXAMPLES=on -DMX_BUILD_TESTS=on -DMX_BUILD_CORE_TESTS=off ..
 
     - name: Build
       run: |
-          cmake --build ..
+          cd build && make
 
     - name: Run Example mxwrite
       run: ./build/mxwrite
@@ -103,30 +103,3 @@ jobs:
 
     - name: Run Tests
       run: ./build/mxtest
-
-  xcode:
-    name: Xcode
-    runs-on: macos-latest
-
-    steps:
-    - uses: actions/checkout@v2
-
-    - name: Build Cache
-      uses: actions/cache@v2
-      env:
-        cache-name: cargo-home
-      with:
-        path: ./xcode-build
-        key: ${{ hashFiles('.github/cache-bust') }}-${{ hashFiles('Xcode/mx.xcworkspace', 'Xcode/Mx.xcodeproj', 'Xcode/MxTest.xcodeproj') }}-${{ hashFiles('Sourcecode/*') }}
-        restore-keys: |
-          ${{ hashFiles('.github/cache-bust') }}-${{ hashFiles('Xcode/mx.xcworkspace', 'Xcode/Mx.xcodeproj', 'Xcode/MxTest.xcodeproj') }}-
-          ${{ hashFiles('.github/cache-bust') }}-
-
-    - name: Build
-      run: |
-          DevScripts/build-for-apple.sh \
-          --outdir ./xcode-out \
-          --build-dir ./xcode-build \
-          --test false \
-          --configuration Release \
-          --cleanup false
