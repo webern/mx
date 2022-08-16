@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <limits>
 #include <functional>
 #include <iostream>
 #include <string>
