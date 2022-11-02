@@ -3527,6 +3527,8 @@
 		9CD50CCA238A3D2900ED7DD8 /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD50C8B238A3CFA00ED7DD8 /* pugixml.cpp */; };
 		9CD50CCB238A3D2900ED7DD8 /* XFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD50C8F238A3CFA00ED7DD8 /* XFactory.cpp */; };
 		9CD50CCC238A3D2900ED7DD8 /* PugiDoc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9CD50C92238A3CFA00ED7DD8 /* PugiDoc.cpp */; };
+		F28C5CDE2912E2530057288B /* TransposeData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 297B99C1252A263B0089E958 /* TransposeData.h */; };
+		F28C5CDF2912E5AD0057288B /* TransposeData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 297B99C1252A263B0089E958 /* TransposeData.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -3582,6 +3584,7 @@
 				9CD50C47238A323100ED7DD8 /* SystemData.h in CopyFiles */,
 				9CD50C48238A323100ED7DD8 /* TempoData.h in CopyFiles */,
 				9CD50C49238A323100ED7DD8 /* TimeSignatureData.h in CopyFiles */,
+				F28C5CDF2912E5AD0057288B /* TransposeData.h in CopyFiles */,
 				9CD50C4A238A323100ED7DD8 /* TupletData.h in CopyFiles */,
 				9CD50C4B238A323100ED7DD8 /* Version.h in CopyFiles */,
 				9CD50C4C238A323100ED7DD8 /* VoiceData.h in CopyFiles */,
@@ -3642,6 +3645,7 @@
 				9CD50C71238A32A100ED7DD8 /* SystemData.h in CopyFiles */,
 				9CD50C72238A32A100ED7DD8 /* TempoData.h in CopyFiles */,
 				9CD50C73238A32A100ED7DD8 /* TimeSignatureData.h in CopyFiles */,
+				F28C5CDE2912E2530057288B /* TransposeData.h in CopyFiles */,
 				9CD50C74238A32A100ED7DD8 /* TupletData.h in CopyFiles */,
 				9CD50C75238A32A100ED7DD8 /* Version.h in CopyFiles */,
 				9CD50C76238A32A100ED7DD8 /* VoiceData.h in CopyFiles */,

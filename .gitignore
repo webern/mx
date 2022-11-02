@@ -2,3 +2,4 @@ build/
 cmake-build-*
 Sourcecode/private/mxtest/file/PathRoot.h
 **/xcuserdata/
+*.DS_Store
