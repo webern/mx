@@ -324,7 +324,16 @@ namespace mx
         
         void DirectionReader::parseSegno( const core::DirectionType& directionType)
         {
-            MX_UNUSED( directionType );
+            const auto& segnoSet = directionType.getSegnoSet();
+
+            for( const auto& segnoPtr : segnoSet )
+            {
+                api::SegnoData outSegno;
+                const auto& attr = *segnoPtr->getAttributes();
+                outSegno.positionData = getPositionData( attr );
+                outSegno.colorData = getColor( attr );
+                myOutDirectionData.segnos.emplace_back( std::move( outSegno ) );
+            }
         }
         
         

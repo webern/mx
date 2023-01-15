@@ -5,12 +5,13 @@
 #pragma once
 
 #include "mx/api/ApiCommon.h"
-#include "mx/api/WedgeData.h"
-#include "mx/api/MarkData.h"
-#include "mx/api/TempoData.h"
-#include "mx/api/OttavaData.h"
-#include "mx/api/WordsData.h"
 #include "mx/api/ChordData.h"
+#include "mx/api/MarkData.h"
+#include "mx/api/OttavaData.h"
+#include "mx/api/SegnoData.h"
+#include "mx/api/TempoData.h"
+#include "mx/api/WedgeData.h"
+#include "mx/api/WordsData.h"
 
 namespace mx
 {
@@ -62,6 +63,7 @@ namespace mx
             std::vector<SpannerStop> bracketStops;
             std::vector<WordsData> words;
             std::vector<ChordData> chords;
+            std::vector<SegnoData> segnos;
             
             DirectionData()
             : tickTimePosition{ 0 }
@@ -77,6 +79,7 @@ namespace mx
             , bracketStops{}
             , words{}
             , chords{}
+            , segnos{}
             {
                 
             }
@@ -93,7 +96,8 @@ namespace mx
             directionData.tempos.size() == 0 &&
             directionData.ottavaStarts.size() == 0 &&
             directionData.ottavaStops.size() == 0 &&
-            directionData.words.size() == 0;
+            directionData.words.size() == 0 &&
+            directionData.segnos.size() == 0;
         }
         
         MXAPI_EQUALS_BEGIN( DirectionData )
@@ -111,6 +115,7 @@ namespace mx
         MXAPI_EQUALS_MEMBER( bracketStops )
         MXAPI_EQUALS_MEMBER( words )
         MXAPI_EQUALS_MEMBER( chords )
+        MXAPI_EQUALS_MEMBER( segnos )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( DirectionData );
 	}
