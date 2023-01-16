@@ -9,6 +9,7 @@
 #include "mx/api/CodaData.h"
 #include "mx/api/MarkData.h"
 #include "mx/api/OttavaData.h"
+#include "mx/api/RehearsalData.h"
 #include "mx/api/SegnoData.h"
 #include "mx/api/TempoData.h"
 #include "mx/api/WedgeData.h"
@@ -66,6 +67,7 @@ namespace mx
             std::vector<ChordData> chords;
             std::vector<SegnoData> segnos;
             std::vector<CodaData> codas;
+            std::vector<RehearsalData> rehearsals;
             
             DirectionData()
             : tickTimePosition{ 0 }

@@ -3402,6 +3402,10 @@
 		3DC0222F2974B2D200A69637 /* SegnoData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3DC022282974A13600A69637 /* SegnoData.h */; };
 		3DC022452975110C00A69637 /* CodaData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3DC02242297510DE00A69637 /* CodaData.h */; };
 		3DC022462975114300A69637 /* CodaData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3DC02242297510DE00A69637 /* CodaData.h */; };
+		3DC022482975D1C700A69637 /* RehearsalData.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DC022472975D1C700A69637 /* RehearsalData.h */; };
+		3DC022492975D1C700A69637 /* RehearsalData.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DC022472975D1C700A69637 /* RehearsalData.h */; };
+		3DC0224A2975D86B00A69637 /* RehearsalData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3DC022472975D1C700A69637 /* RehearsalData.h */; };
+		3DC0224B2975D89E00A69637 /* RehearsalData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3DC022472975D1C700A69637 /* RehearsalData.h */; };
 		9CD50C25238A323100ED7DD8 /* ApiCommon.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3863225C0DB800814240 /* ApiCommon.h */; };
 		9CD50C26238A323100ED7DD8 /* ApiEquality.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3856225C0DB600814240 /* ApiEquality.h */; };
 		9CD50C27238A323100ED7DD8 /* AppearanceData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3841225C0DB400814240 /* AppearanceData.h */; };
@@ -3580,6 +3584,7 @@
 				9CD50C40238A323100ED7DD8 /* PitchData.h in CopyFiles */,
 				9CD50C41238A323100ED7DD8 /* PositionData.h in CopyFiles */,
 				9CD50C42238A323100ED7DD8 /* PrintData.h in CopyFiles */,
+				3DC0224B2975D89E00A69637 /* RehearsalData.h in CopyFiles */,
 				9CD50C43238A323100ED7DD8 /* ScoreData.h in CopyFiles */,
 				3DC0222E2974B19F00A69637 /* SegnoData.h in CopyFiles */,
 				29703A1624954A1600D0E3B3 /* SizeData.h in CopyFiles */,
@@ -3645,6 +3650,7 @@
 				9CD50C6A238A32A100ED7DD8 /* PitchData.h in CopyFiles */,
 				9CD50C6B238A32A100ED7DD8 /* PositionData.h in CopyFiles */,
 				9CD50C6C238A32A100ED7DD8 /* PrintData.h in CopyFiles */,
+				3DC0224A2975D86B00A69637 /* RehearsalData.h in CopyFiles */,
 				9CD50C6D238A32A100ED7DD8 /* ScoreData.h in CopyFiles */,
 				3DC0222F2974B2D200A69637 /* SegnoData.h in CopyFiles */,
 				9CD50C6E238A32A100ED7DD8 /* SoundID.h in CopyFiles */,
@@ -5064,6 +5070,7 @@
 		29F9465C245E72A6007E2308 /* AttributesIterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AttributesIterface.h; sourceTree = "<group>"; };
 		3DC022282974A13600A69637 /* SegnoData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SegnoData.h; sourceTree = "<group>"; };
 		3DC02242297510DE00A69637 /* CodaData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CodaData.h; sourceTree = "<group>"; };
+		3DC022472975D1C700A69637 /* RehearsalData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RehearsalData.h; sourceTree = "<group>"; };
 		9CD50C7F238A3CFA00ED7DD8 /* XAttributeIterator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = XAttributeIterator.cpp; sourceTree = "<group>"; };
 		9CD50C80238A3CFA00ED7DD8 /* pugiconfig.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = pugiconfig.hpp; sourceTree = "<group>"; };
 		9CD50C81238A3CFA00ED7DD8 /* XElementIterator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = XElementIterator.cpp; sourceTree = "<group>"; };
@@ -6611,6 +6618,7 @@
 				29DC383F225C0DB400814240 /* PitchData.h */,
 				29DC3850225C0DB500814240 /* PositionData.h */,
 				29DC3846225C0DB400814240 /* PrintData.h */,
+				3DC022472975D1C700A69637 /* RehearsalData.h */,
 				29DC3847225C0DB400814240 /* ScoreData.h */,
 				3DC022282974A13600A69637 /* SegnoData.h */,
 				29843AD6248D47E9006A8E34 /* SizeData.h */,
@@ -6770,6 +6778,7 @@
 				2999A8F624CD0AEC004637BA /* XlinkTitle.h in Headers */,
 				2999A8FB24CD0AEC004637BA /* XmlLang.h in Headers */,
 				2999A90024CD0AEC004637BA /* XsID.h in Headers */,
+				3DC022492975D1C700A69637 /* RehearsalData.h in Headers */,
 				2999A8CE24CD0AEC004637BA /* CommaSeparatedText.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6794,6 +6803,7 @@
 				2999A8F524CD0AEC004637BA /* XlinkTitle.h in Headers */,
 				2999A8FA24CD0AEC004637BA /* XmlLang.h in Headers */,
 				2999A8FF24CD0AEC004637BA /* XsID.h in Headers */,
+				3DC022482975D1C700A69637 /* RehearsalData.h in Headers */,
 				2999A8CD24CD0AEC004637BA /* CommaSeparatedText.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -318,6 +318,18 @@ namespace mx
         
         void DirectionReader::parseRehearsal( const core::DirectionType& directionType)
         {
+            const auto& rehearsalSet = directionType.getRehearsalSet();
+
+            for( const auto& rehearsalPtr : rehearsalSet )
+            {
+                api::RehearsalData outRehearsal;
+                const auto& attr = *rehearsalPtr->getAttributes();
+                outRehearsal.text = rehearsalPtr->getValue().getValue();
+                outRehearsal.positionData = getPositionData( attr );
+                outRehearsal.colorData = getColor( attr );
+                myOutDirectionData.rehearsals.emplace_back( std::move( outRehearsal ) );
+            }
+
             MX_UNUSED( directionType );
         }
         
