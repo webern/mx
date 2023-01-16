@@ -3400,6 +3400,8 @@
 		29EAD73F1F0EA96B00BDE782 /* ProcessingInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EAD7391F0EA96B00BDE782 /* ProcessingInstruction.cpp */; };
 		3DC022292974A13600A69637 /* SegnoData.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DC022282974A13600A69637 /* SegnoData.h */; };
 		3DC0222A2974A13600A69637 /* SegnoData.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DC022282974A13600A69637 /* SegnoData.h */; };
+		3DC0222E2974B19F00A69637 /* SegnoData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3DC022282974A13600A69637 /* SegnoData.h */; };
+		3DC0222F2974B2D200A69637 /* SegnoData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3DC022282974A13600A69637 /* SegnoData.h */; };
 		9CD50C25238A323100ED7DD8 /* ApiCommon.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3863225C0DB800814240 /* ApiCommon.h */; };
 		9CD50C26238A323100ED7DD8 /* ApiEquality.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3856225C0DB600814240 /* ApiEquality.h */; };
 		9CD50C27238A323100ED7DD8 /* AppearanceData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3841225C0DB400814240 /* AppearanceData.h */; };
@@ -3540,15 +3542,6 @@
 			dstPath = mx/api;
 			dstSubfolderSpec = 6;
 			files = (
-				29703A0F24954A1600D0E3B3 /* DefaultsData.h in CopyFiles */,
-				29703A1024954A1600D0E3B3 /* KeyComponent.h in CopyFiles */,
-				29703A1124954A1600D0E3B3 /* LeftRight.h in CopyFiles */,
-				29703A1224954A1600D0E3B3 /* MarginsData.h in CopyFiles */,
-				29703A1324954A1600D0E3B3 /* PageData.h in CopyFiles */,
-				29703A1424954A1600D0E3B3 /* PageLayoutData.h in CopyFiles */,
-				29703A1524954A1600D0E3B3 /* PageMarginsData.h in CopyFiles */,
-				29703A1624954A1600D0E3B3 /* SizeData.h in CopyFiles */,
-				29703A1724954A1600D0E3B3 /* SystemLayoutData.h in CopyFiles */,
 				9CD50C25238A323100ED7DD8 /* ApiCommon.h in CopyFiles */,
 				9CD50C26238A323100ED7DD8 /* ApiEquality.h in CopyFiles */,
 				9CD50C27238A323100ED7DD8 /* AppearanceData.h in CopyFiles */,
@@ -3557,15 +3550,19 @@
 				9CD50C2A238A323100ED7DD8 /* ClefData.h in CopyFiles */,
 				9CD50C2B238A323100ED7DD8 /* ColorData.h in CopyFiles */,
 				9CD50C2C238A323100ED7DD8 /* CurveData.h in CopyFiles */,
+				29703A0F24954A1600D0E3B3 /* DefaultsData.h in CopyFiles */,
 				9CD50C2D238A323100ED7DD8 /* DirectionData.h in CopyFiles */,
 				9CD50C2E238A323100ED7DD8 /* DocumentManager.h in CopyFiles */,
 				9CD50C2F238A323100ED7DD8 /* DurationData.h in CopyFiles */,
 				9CD50C30238A323100ED7DD8 /* EncodingData.h in CopyFiles */,
 				9CD50C31238A323100ED7DD8 /* FontData.h in CopyFiles */,
+				29703A1024954A1600D0E3B3 /* KeyComponent.h in CopyFiles */,
 				9CD50C32238A323100ED7DD8 /* KeyData.h in CopyFiles */,
 				9CD50C33238A323100ED7DD8 /* LayoutData.h in CopyFiles */,
+				29703A1124954A1600D0E3B3 /* LeftRight.h in CopyFiles */,
 				9CD50C34238A323100ED7DD8 /* LineData.h in CopyFiles */,
 				9CD50C35238A323100ED7DD8 /* LyricData.h in CopyFiles */,
+				29703A1224954A1600D0E3B3 /* MarginsData.h in CopyFiles */,
 				9CD50C36238A323100ED7DD8 /* MarkData.h in CopyFiles */,
 				9CD50C37238A323100ED7DD8 /* MeasureData.h in CopyFiles */,
 				9CD50C38238A323100ED7DD8 /* MeasureLocation.h in CopyFiles */,
@@ -3573,6 +3570,9 @@
 				9CD50C3A238A323100ED7DD8 /* NoteAttachmentData.h in CopyFiles */,
 				9CD50C3B238A323100ED7DD8 /* NoteData.h in CopyFiles */,
 				9CD50C3C238A323100ED7DD8 /* OttavaData.h in CopyFiles */,
+				29703A1324954A1600D0E3B3 /* PageData.h in CopyFiles */,
+				29703A1424954A1600D0E3B3 /* PageLayoutData.h in CopyFiles */,
+				29703A1524954A1600D0E3B3 /* PageMarginsData.h in CopyFiles */,
 				9CD50C3D238A323100ED7DD8 /* PageTextData.h in CopyFiles */,
 				9CD50C3E238A323100ED7DD8 /* PartData.h in CopyFiles */,
 				9CD50C3F238A323100ED7DD8 /* PartGroupData.h in CopyFiles */,
@@ -3580,10 +3580,13 @@
 				9CD50C41238A323100ED7DD8 /* PositionData.h in CopyFiles */,
 				9CD50C42238A323100ED7DD8 /* PrintData.h in CopyFiles */,
 				9CD50C43238A323100ED7DD8 /* ScoreData.h in CopyFiles */,
+				3DC0222E2974B19F00A69637 /* SegnoData.h in CopyFiles */,
+				29703A1624954A1600D0E3B3 /* SizeData.h in CopyFiles */,
 				9CD50C44238A323100ED7DD8 /* SoundID.h in CopyFiles */,
 				9CD50C45238A323100ED7DD8 /* SpannerData.h in CopyFiles */,
 				9CD50C46238A323100ED7DD8 /* StaffData.h in CopyFiles */,
 				9CD50C47238A323100ED7DD8 /* SystemData.h in CopyFiles */,
+				29703A1724954A1600D0E3B3 /* SystemLayoutData.h in CopyFiles */,
 				9CD50C48238A323100ED7DD8 /* TempoData.h in CopyFiles */,
 				9CD50C49238A323100ED7DD8 /* TimeSignatureData.h in CopyFiles */,
 				F28C5CDF2912E5AD0057288B /* TransposeData.h in CopyFiles */,
@@ -3641,6 +3644,7 @@
 				9CD50C6B238A32A100ED7DD8 /* PositionData.h in CopyFiles */,
 				9CD50C6C238A32A100ED7DD8 /* PrintData.h in CopyFiles */,
 				9CD50C6D238A32A100ED7DD8 /* ScoreData.h in CopyFiles */,
+				3DC0222F2974B2D200A69637 /* SegnoData.h in CopyFiles */,
 				9CD50C6E238A32A100ED7DD8 /* SoundID.h in CopyFiles */,
 				9CD50C6F238A32A100ED7DD8 /* SpannerData.h in CopyFiles */,
 				9CD50C70238A32A100ED7DD8 /* StaffData.h in CopyFiles */,
