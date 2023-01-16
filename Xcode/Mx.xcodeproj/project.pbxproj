@@ -3398,10 +3398,10 @@
 		29EAD73D1F0EA96B00BDE782 /* ProcessingInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EAD7391F0EA96B00BDE782 /* ProcessingInstruction.cpp */; };
 		29EAD73E1F0EA96B00BDE782 /* ProcessingInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EAD7391F0EA96B00BDE782 /* ProcessingInstruction.cpp */; };
 		29EAD73F1F0EA96B00BDE782 /* ProcessingInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29EAD7391F0EA96B00BDE782 /* ProcessingInstruction.cpp */; };
-		3DC022292974A13600A69637 /* SegnoData.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DC022282974A13600A69637 /* SegnoData.h */; };
-		3DC0222A2974A13600A69637 /* SegnoData.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DC022282974A13600A69637 /* SegnoData.h */; };
 		3DC0222E2974B19F00A69637 /* SegnoData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3DC022282974A13600A69637 /* SegnoData.h */; };
 		3DC0222F2974B2D200A69637 /* SegnoData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3DC022282974A13600A69637 /* SegnoData.h */; };
+		3DC022452975110C00A69637 /* CodaData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3DC02242297510DE00A69637 /* CodaData.h */; };
+		3DC022462975114300A69637 /* CodaData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3DC02242297510DE00A69637 /* CodaData.h */; };
 		9CD50C25238A323100ED7DD8 /* ApiCommon.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3863225C0DB800814240 /* ApiCommon.h */; };
 		9CD50C26238A323100ED7DD8 /* ApiEquality.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3856225C0DB600814240 /* ApiEquality.h */; };
 		9CD50C27238A323100ED7DD8 /* AppearanceData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3841225C0DB400814240 /* AppearanceData.h */; };
@@ -3548,6 +3548,7 @@
 				9CD50C28238A323100ED7DD8 /* BarlineData.h in CopyFiles */,
 				9CD50C29238A323100ED7DD8 /* ChordData.h in CopyFiles */,
 				9CD50C2A238A323100ED7DD8 /* ClefData.h in CopyFiles */,
+				3DC022452975110C00A69637 /* CodaData.h in CopyFiles */,
 				9CD50C2B238A323100ED7DD8 /* ColorData.h in CopyFiles */,
 				9CD50C2C238A323100ED7DD8 /* CurveData.h in CopyFiles */,
 				29703A0F24954A1600D0E3B3 /* DefaultsData.h in CopyFiles */,
@@ -3619,6 +3620,7 @@
 				9CD50C52238A32A000ED7DD8 /* BarlineData.h in CopyFiles */,
 				9CD50C53238A32A000ED7DD8 /* ChordData.h in CopyFiles */,
 				9CD50C54238A32A000ED7DD8 /* ClefData.h in CopyFiles */,
+				3DC022462975114300A69637 /* CodaData.h in CopyFiles */,
 				9CD50C55238A32A000ED7DD8 /* ColorData.h in CopyFiles */,
 				9CD50C56238A32A000ED7DD8 /* CurveData.h in CopyFiles */,
 				9CD50C57238A32A000ED7DD8 /* DirectionData.h in CopyFiles */,
@@ -5061,6 +5063,7 @@
 		29EAD73A1F0EA96B00BDE782 /* ProcessingInstruction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProcessingInstruction.h; sourceTree = "<group>"; };
 		29F9465C245E72A6007E2308 /* AttributesIterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AttributesIterface.h; sourceTree = "<group>"; };
 		3DC022282974A13600A69637 /* SegnoData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SegnoData.h; sourceTree = "<group>"; };
+		3DC02242297510DE00A69637 /* CodaData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CodaData.h; sourceTree = "<group>"; };
 		9CD50C7F238A3CFA00ED7DD8 /* XAttributeIterator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = XAttributeIterator.cpp; sourceTree = "<group>"; };
 		9CD50C80238A3CFA00ED7DD8 /* pugiconfig.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = pugiconfig.hpp; sourceTree = "<group>"; };
 		9CD50C81238A3CFA00ED7DD8 /* XElementIterator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = XElementIterator.cpp; sourceTree = "<group>"; };
@@ -6576,6 +6579,7 @@
 				29DC3852225C0DB600814240 /* BarlineData.h */,
 				29DC384A225C0DB500814240 /* ChordData.h */,
 				29DC383D225C0DB300814240 /* ClefData.h */,
+				3DC02242297510DE00A69637 /* CodaData.h */,
 				29DC3861225C0DB700814240 /* ColorData.h */,
 				29DC3859225C0DB600814240 /* CurveData.h */,
 				29843AD9248DE951006A8E34 /* DefaultsData.h */,
@@ -6757,7 +6761,6 @@
 				2999A90F24CD0AEC004637BA /* XlinkRole.h in Headers */,
 				2999A90A24CD0AEC004637BA /* XsIDREF.h in Headers */,
 				2999A8D324CD0AEC004637BA /* EndingNumber.h in Headers */,
-				3DC0222A2974A13600A69637 /* SegnoData.h in Headers */,
 				2999A8B524CD0AEC004637BA /* XsNMToken.h in Headers */,
 				2999A8C924CD0AEC004637BA /* TimeOnly.h in Headers */,
 				293B06F3249F0BB800429597 /* EnumsBuiltin.h in Headers */,
@@ -6782,7 +6785,6 @@
 				2999A90E24CD0AEC004637BA /* XlinkRole.h in Headers */,
 				2999A90924CD0AEC004637BA /* XsIDREF.h in Headers */,
 				2999A8D224CD0AEC004637BA /* EndingNumber.h in Headers */,
-				3DC022292974A13600A69637 /* SegnoData.h in Headers */,
 				2999A8B424CD0AEC004637BA /* XsNMToken.h in Headers */,
 				2999A8C824CD0AEC004637BA /* TimeOnly.h in Headers */,
 				293B06F2249F0BB800429597 /* EnumsBuiltin.h in Headers */,

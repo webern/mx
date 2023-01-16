@@ -12,14 +12,14 @@ namespace mx
 {
     namespace api
     {
-        class SegnoData
+        class CodaData
         {
         public:
             PositionData positionData;
             bool isColorSpecified;
             ColorData colorData;
 
-            SegnoData()
+            CodaData()
             : positionData{}
             , isColorSpecified{ false }
             , colorData{}
@@ -27,11 +27,11 @@ namespace mx
             }
         };
         
-        MXAPI_EQUALS_BEGIN( SegnoData )
+        MXAPI_EQUALS_BEGIN( CodaData )
         MXAPI_EQUALS_MEMBER( positionData )
         MXAPI_EQUALS_MEMBER( isColorSpecified )
         MXAPI_EQUALS_MEMBER( colorData )
         MXAPI_EQUALS_END;
-        MXAPI_NOT_EQUALS_AND_VECTORS( SegnoData );
+        MXAPI_NOT_EQUALS_AND_VECTORS( CodaData );
     }
 }

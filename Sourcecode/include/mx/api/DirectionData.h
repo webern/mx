@@ -6,6 +6,7 @@
 
 #include "mx/api/ApiCommon.h"
 #include "mx/api/ChordData.h"
+#include "mx/api/CodaData.h"
 #include "mx/api/MarkData.h"
 #include "mx/api/OttavaData.h"
 #include "mx/api/SegnoData.h"
@@ -64,6 +65,7 @@ namespace mx
             std::vector<WordsData> words;
             std::vector<ChordData> chords;
             std::vector<SegnoData> segnos;
+            std::vector<CodaData> codas;
             
             DirectionData()
             : tickTimePosition{ 0 }
@@ -97,7 +99,8 @@ namespace mx
             directionData.ottavaStarts.size() == 0 &&
             directionData.ottavaStops.size() == 0 &&
             directionData.words.size() == 0 &&
-            directionData.segnos.size() == 0;
+            directionData.segnos.size() == 0 &&
+            directionData.codas.size() == 0;
         }
         
         MXAPI_EQUALS_BEGIN( DirectionData )
@@ -116,6 +119,7 @@ namespace mx
         MXAPI_EQUALS_MEMBER( words )
         MXAPI_EQUALS_MEMBER( chords )
         MXAPI_EQUALS_MEMBER( segnos )
+        MXAPI_EQUALS_MEMBER( codas )
         MXAPI_EQUALS_END;
         MXAPI_NOT_EQUALS_AND_VECTORS( DirectionData );
 	}

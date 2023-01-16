@@ -356,7 +356,16 @@ namespace mx
         
         void DirectionReader::parseCoda( const core::DirectionType& directionType)
         {
-            MX_UNUSED( directionType );
+            const auto& codaSet = directionType.getCodaSet();
+
+            for( const auto& codaPtr : codaSet )
+            {
+                api::CodaData outCoda;
+                const auto& attr = *codaPtr->getAttributes();
+                outCoda.positionData = getPositionData( attr );
+                outCoda.colorData = getColor( attr );
+                myOutDirectionData.codas.emplace_back( std::move( outCoda ) );
+            }
         }
         
         
