@@ -13,11 +13,16 @@ namespace mx
 {
     namespace api
     {
-
         enum class MarkType
         {
             unspecified,
             
+            // arpeggiate
+            arpeggiateNormal,
+            arpeggiateBracket,
+            arpeggiateDown,
+            arpeggiateUp,
+
             // articulations
             accent,
             strongAccent,    // marcato
@@ -185,13 +190,15 @@ namespace mx
         static constexpr const char* const markStringCustomErrorUnknown = "";
         static constexpr const char* const markStringCustomAccentTenuto = "gjhsldjhglskdjhfg";
 
-        bool isMarkDynamic( MarkType );
+        bool isMarkArpeggiate( MarkType );
         bool isMarkArticulation( MarkType );
-        bool isMarkOrnament( MarkType );
+        bool isMarkDynamic( MarkType );
         bool isMarkFermata( MarkType );
+        bool isMarkOrnament( MarkType );
         bool isMarkPedal( MarkType );
         bool isMarkTechnical( MarkType );
         bool isMarkTremolo( MarkType );
+    
         bool isMarkCustom( MarkType );
         std::string getCustomMarkName( MarkType );
         MarkType getMarkTypeFromCustomString( const std::string& );

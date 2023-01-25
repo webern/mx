@@ -39,6 +39,20 @@ namespace mx
             ( markType == MarkType::otherDynamics );
         }
         
+        bool isMarkArpeggiate( MarkType markType )
+        {
+            arpeggiateNormal,
+            arpeggiateBracket,
+            arpeggiateDown,
+            arpeggiateUp,
+
+            
+            return ( markType == MarkType::arpeggiateNormal ) ||
+            ( markType == MarkType::arpeggiateBracket ) ||
+            ( markType == MarkType::arpeggiateDown ) ||
+            ( markType == MarkType::arpeggiateUp );
+        }
+    
         bool isMarkArticulation( MarkType markType )
         {
             return ( markType == MarkType::accent ) ||
