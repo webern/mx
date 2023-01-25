@@ -17,12 +17,6 @@ namespace mx
         {
             unspecified,
             
-            // arpeggiate
-            arpeggiateNormal,
-            arpeggiateBracket,
-            arpeggiateDown,
-            arpeggiateUp,
-
             // articulations
             accent,
             strongAccent,    // marcato
@@ -181,6 +175,14 @@ namespace mx
             pedal, // the typical piano pedal mark
             damp,  // the typical piano end-pedal mark
             
+            // arpeggiate
+            arpeggiate,
+            arpeggiateDown,
+            arpeggiateUp,
+
+            // nonArpeggiate
+            nonArpeggiate,
+            
             // these are cust additions that will be written to, and read from, the
             // other-articulations (or other-*) elements.
             customErrorUnknown, // used to represent an error when parsing from a string
@@ -190,15 +192,16 @@ namespace mx
         static constexpr const char* const markStringCustomErrorUnknown = "";
         static constexpr const char* const markStringCustomAccentTenuto = "gjhsldjhglskdjhfg";
 
-        bool isMarkArpeggiate( MarkType );
-        bool isMarkArticulation( MarkType );
-        bool isMarkDynamic( MarkType );
-        bool isMarkFermata( MarkType );
         bool isMarkOrnament( MarkType );
         bool isMarkPedal( MarkType );
         bool isMarkTechnical( MarkType );
+        bool isMarkArticulation( MarkType );
         bool isMarkTremolo( MarkType );
-    
+        bool isMarkDynamic( MarkType );
+        bool isMarkFermata( MarkType );
+        bool isMarkArpeggiate( MarkType );
+        bool isMarkNonArpeggiate( MarkType );
+
         bool isMarkCustom( MarkType );
         std::string getCustomMarkName( MarkType );
         MarkType getMarkTypeFromCustomString( const std::string& );
