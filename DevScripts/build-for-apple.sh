@@ -144,15 +144,6 @@ do_tests() {
 
 build_for_ios() {
 
-  xcodebuild archive \
-    -scheme MxmacOS \
-    -destination "platform=macOS" \
-    -archivePath "build/Mx.macOS.xcarchive" \
-    -configuration "Release"
-    -derivedDataPath "/tmp" \
-    SKIP_INSTALL=NO
-
-
   xcodebuild \
     -workspace "${xcworkspace}" \
     -scheme "${ios_name}" \
