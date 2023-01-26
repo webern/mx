@@ -318,13 +318,34 @@ namespace mx
         
         void DirectionReader::parseRehearsal( const core::DirectionType& directionType)
         {
+            const auto& rehearsalSet = directionType.getRehearsalSet();
+
+            for( const auto& rehearsalPtr : rehearsalSet )
+            {
+                api::RehearsalData outRehearsal;
+                const auto& attr = *rehearsalPtr->getAttributes();
+                outRehearsal.text = rehearsalPtr->getValue().getValue();
+                outRehearsal.positionData = getPositionData( attr );
+                outRehearsal.colorData = getColor( attr );
+                myOutDirectionData.rehearsals.emplace_back( std::move( outRehearsal ) );
+            }
+
             MX_UNUSED( directionType );
         }
         
         
         void DirectionReader::parseSegno( const core::DirectionType& directionType)
         {
-            MX_UNUSED( directionType );
+            const auto& segnoSet = directionType.getSegnoSet();
+
+            for( const auto& segnoPtr : segnoSet )
+            {
+                api::SegnoData outSegno;
+                const auto& attr = *segnoPtr->getAttributes();
+                outSegno.positionData = getPositionData( attr );
+                outSegno.colorData = getColor( attr );
+                myOutDirectionData.segnos.emplace_back( std::move( outSegno ) );
+            }
         }
         
         
@@ -347,7 +368,16 @@ namespace mx
         
         void DirectionReader::parseCoda( const core::DirectionType& directionType)
         {
-            MX_UNUSED( directionType );
+            const auto& codaSet = directionType.getCodaSet();
+
+            for( const auto& codaPtr : codaSet )
+            {
+                api::CodaData outCoda;
+                const auto& attr = *codaPtr->getAttributes();
+                outCoda.positionData = getPositionData( attr );
+                outCoda.colorData = getColor( attr );
+                myOutDirectionData.codas.emplace_back( std::move( outCoda ) );
+            }
         }
         
         

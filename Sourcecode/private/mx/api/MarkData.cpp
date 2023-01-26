@@ -39,6 +39,13 @@ namespace mx
             ( markType == MarkType::otherDynamics );
         }
         
+        bool isMarkArpeggiate( MarkType markType )
+        {
+            return ( markType == MarkType::arpeggiate ) ||
+            ( markType == MarkType::arpeggiateDown ) ||
+            ( markType == MarkType::arpeggiateUp );
+        }
+    
         bool isMarkArticulation( MarkType markType )
         {
             return ( markType == MarkType::accent ) ||
@@ -99,7 +106,13 @@ namespace mx
             ( markType == MarkType::fermataSquareInverted );
         }
         
-        
+    
+        bool isMarkNonArpeggiate( MarkType markType )
+        {
+            return ( markType == MarkType::nonArpeggiate );
+        }
+
+    
         bool isMarkPedal( MarkType markType )
         {
             return ( markType == MarkType::pedal ) ||
