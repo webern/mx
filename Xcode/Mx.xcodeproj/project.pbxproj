@@ -3406,6 +3406,36 @@
 		3DC022492975D1C700A69637 /* RehearsalData.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DC022472975D1C700A69637 /* RehearsalData.h */; };
 		3DC0224A2975D86B00A69637 /* RehearsalData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3DC022472975D1C700A69637 /* RehearsalData.h */; };
 		3DC0224B2975D89E00A69637 /* RehearsalData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3DC022472975D1C700A69637 /* RehearsalData.h */; };
+		3DDCB5082982EB620000BD6D /* ArpeggiateFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DDCB5062982EB620000BD6D /* ArpeggiateFunctions.h */; };
+		3DDCB5092982EB620000BD6D /* ArpeggiateFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DDCB5062982EB620000BD6D /* ArpeggiateFunctions.h */; };
+		3DDCB50A2982EB620000BD6D /* ArpeggiateFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DDCB5062982EB620000BD6D /* ArpeggiateFunctions.h */; };
+		3DDCB50B2982EB620000BD6D /* ArpeggiateFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DDCB5062982EB620000BD6D /* ArpeggiateFunctions.h */; };
+		3DDCB50C2982EB620000BD6D /* ArpeggiateFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DDCB5062982EB620000BD6D /* ArpeggiateFunctions.h */; };
+		3DDCB50D2982EB620000BD6D /* ArpeggiateFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DDCB5072982EB620000BD6D /* ArpeggiateFunctions.cpp */; };
+		3DDCB50E2982EB620000BD6D /* ArpeggiateFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DDCB5072982EB620000BD6D /* ArpeggiateFunctions.cpp */; };
+		3DDCB50F2982EB620000BD6D /* ArpeggiateFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DDCB5072982EB620000BD6D /* ArpeggiateFunctions.cpp */; };
+		3DDCB5102982EB620000BD6D /* ArpeggiateFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DDCB5072982EB620000BD6D /* ArpeggiateFunctions.cpp */; };
+		3DDCB5112982EB620000BD6D /* ArpeggiateFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DDCB5072982EB620000BD6D /* ArpeggiateFunctions.cpp */; };
+		3DDCB5142982EF5A0000BD6D /* FermataFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DDCB5122982EF5A0000BD6D /* FermataFunctions.cpp */; };
+		3DDCB5152982EF5A0000BD6D /* FermataFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DDCB5122982EF5A0000BD6D /* FermataFunctions.cpp */; };
+		3DDCB5162982EF5A0000BD6D /* FermataFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DDCB5122982EF5A0000BD6D /* FermataFunctions.cpp */; };
+		3DDCB5172982EF5A0000BD6D /* FermataFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DDCB5122982EF5A0000BD6D /* FermataFunctions.cpp */; };
+		3DDCB5182982EF5A0000BD6D /* FermataFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DDCB5122982EF5A0000BD6D /* FermataFunctions.cpp */; };
+		3DDCB5192982EF5A0000BD6D /* FermataFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DDCB5132982EF5A0000BD6D /* FermataFunctions.h */; };
+		3DDCB51A2982EF5A0000BD6D /* FermataFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DDCB5132982EF5A0000BD6D /* FermataFunctions.h */; };
+		3DDCB51B2982EF5A0000BD6D /* FermataFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DDCB5132982EF5A0000BD6D /* FermataFunctions.h */; };
+		3DDCB51C2982EF5A0000BD6D /* FermataFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DDCB5132982EF5A0000BD6D /* FermataFunctions.h */; };
+		3DDCB51D2982EF5A0000BD6D /* FermataFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DDCB5132982EF5A0000BD6D /* FermataFunctions.h */; };
+		3DDCB5202982F07F0000BD6D /* NonArpeggiateFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DDCB51E2982F07F0000BD6D /* NonArpeggiateFunctions.h */; };
+		3DDCB5212982F07F0000BD6D /* NonArpeggiateFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DDCB51E2982F07F0000BD6D /* NonArpeggiateFunctions.h */; };
+		3DDCB5222982F07F0000BD6D /* NonArpeggiateFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DDCB51E2982F07F0000BD6D /* NonArpeggiateFunctions.h */; };
+		3DDCB5232982F07F0000BD6D /* NonArpeggiateFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DDCB51E2982F07F0000BD6D /* NonArpeggiateFunctions.h */; };
+		3DDCB5242982F07F0000BD6D /* NonArpeggiateFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DDCB51E2982F07F0000BD6D /* NonArpeggiateFunctions.h */; };
+		3DDCB5252982F07F0000BD6D /* NonArpeggiateFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DDCB51F2982F07F0000BD6D /* NonArpeggiateFunctions.cpp */; };
+		3DDCB5262982F07F0000BD6D /* NonArpeggiateFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DDCB51F2982F07F0000BD6D /* NonArpeggiateFunctions.cpp */; };
+		3DDCB5272982F07F0000BD6D /* NonArpeggiateFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DDCB51F2982F07F0000BD6D /* NonArpeggiateFunctions.cpp */; };
+		3DDCB5282982F07F0000BD6D /* NonArpeggiateFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DDCB51F2982F07F0000BD6D /* NonArpeggiateFunctions.cpp */; };
+		3DDCB5292982F07F0000BD6D /* NonArpeggiateFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DDCB51F2982F07F0000BD6D /* NonArpeggiateFunctions.cpp */; };
 		9CD50C25238A323100ED7DD8 /* ApiCommon.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3863225C0DB800814240 /* ApiCommon.h */; };
 		9CD50C26238A323100ED7DD8 /* ApiEquality.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3856225C0DB600814240 /* ApiEquality.h */; };
 		9CD50C27238A323100ED7DD8 /* AppearanceData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 29DC3841225C0DB400814240 /* AppearanceData.h */; };
@@ -5071,6 +5101,14 @@
 		3DC022282974A13600A69637 /* SegnoData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SegnoData.h; sourceTree = "<group>"; };
 		3DC02242297510DE00A69637 /* CodaData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CodaData.h; sourceTree = "<group>"; };
 		3DC022472975D1C700A69637 /* RehearsalData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RehearsalData.h; sourceTree = "<group>"; };
+		3DDCB5062982EB620000BD6D /* ArpeggiateFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArpeggiateFunctions.h; sourceTree = "<group>"; };
+		3DDCB5072982EB620000BD6D /* ArpeggiateFunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ArpeggiateFunctions.cpp; sourceTree = "<group>"; };
+		3DDCB5122982EF5A0000BD6D /* FermataFunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FermataFunctions.cpp; sourceTree = "<group>"; };
+		3DDCB5132982EF5A0000BD6D /* FermataFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FermataFunctions.h; sourceTree = "<group>"; };
+		3DDCB51E2982F07F0000BD6D /* NonArpeggiateFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NonArpeggiateFunctions.h; sourceTree = "<group>"; };
+		3DDCB51F2982F07F0000BD6D /* NonArpeggiateFunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NonArpeggiateFunctions.cpp; sourceTree = "<group>"; };
+		3DDCB52A2982F2000000BD6D /* SlideFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideFunctions.h; sourceTree = "<group>"; };
+		3DDCB52B2982F2000000BD6D /* SlideFunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SlideFunctions.cpp; sourceTree = "<group>"; };
 		9CD50C7F238A3CFA00ED7DD8 /* XAttributeIterator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = XAttributeIterator.cpp; sourceTree = "<group>"; };
 		9CD50C80238A3CFA00ED7DD8 /* pugiconfig.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = pugiconfig.hpp; sourceTree = "<group>"; };
 		9CD50C81238A3CFA00ED7DD8 /* XElementIterator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = XElementIterator.cpp; sourceTree = "<group>"; };
@@ -6472,6 +6510,8 @@
 			children = (
 				29A8E2561EF0476200AD2478 /* AccidentalMarkFunctions.cpp */,
 				29A8E2571EF0476200AD2478 /* AccidentalMarkFunctions.h */,
+				3DDCB5072982EB620000BD6D /* ArpeggiateFunctions.cpp */,
+				3DDCB5062982EB620000BD6D /* ArpeggiateFunctions.h */,
 				29A8E2581EF0476200AD2478 /* ArticulationsFunctions.cpp */,
 				29A8E2591EF0476200AD2478 /* ArticulationsFunctions.h */,
 				29A8E25A1EF0476200AD2478 /* Converter.cpp */,
@@ -6489,6 +6529,8 @@
 				29A8E2661EF0476200AD2478 /* DynamicsWriter.h */,
 				29A8E2671EF0476200AD2478 /* EncodingFunctions.cpp */,
 				29A8E2681EF0476200AD2478 /* EncodingFunctions.h */,
+				3DDCB5122982EF5A0000BD6D /* FermataFunctions.cpp */,
+				3DDCB5132982EF5A0000BD6D /* FermataFunctions.h */,
 				29A8E2691EF0476200AD2478 /* FontFunctions.h */,
 				29A8E26A1EF0476200AD2478 /* LayoutFunctions.cpp */,
 				29A8E26B1EF0476200AD2478 /* LayoutFunctions.h */,
@@ -6506,6 +6548,8 @@
 				29A8E2751EF0476200AD2478 /* MetronomeReader.cpp */,
 				29A8E2761EF0476200AD2478 /* MetronomeReader.h */,
 				29A8E2771EF0476200AD2478 /* MxVersionDefines.h */,
+				3DDCB51F2982F07F0000BD6D /* NonArpeggiateFunctions.cpp */,
+				3DDCB51E2982F07F0000BD6D /* NonArpeggiateFunctions.h */,
 				29A8E2781EF0476200AD2478 /* NotationsWriter.cpp */,
 				29A8E2791EF0476200AD2478 /* NotationsWriter.h */,
 				29A8E27A1EF0476200AD2478 /* NoteFunctions.cpp */,
@@ -6530,6 +6574,8 @@
 				29A8E28D1EF0476300AD2478 /* ScoreReader.h */,
 				29A8E28E1EF0476300AD2478 /* ScoreWriter.cpp */,
 				29A8E28F1EF0476300AD2478 /* ScoreWriter.h */,
+				3DDCB52B2982F2000000BD6D /* SlideFunctions.cpp */,
+				3DDCB52A2982F2000000BD6D /* SlideFunctions.h */,
 				29A8E2911EF0476300AD2478 /* SpannerFunctions.h */,
 				29A8E2921EF0476300AD2478 /* StaffFunctions.cpp */,
 				29A8E2931EF0476300AD2478 /* StaffFunctions.h */,
@@ -6717,10 +6763,13 @@
 				2999A8E424CD0AEC004637BA /* StringUtils.h in Headers */,
 				2999A90724CD0AEC004637BA /* XsIDREF.h in Headers */,
 				2999A90224CD0AEC004637BA /* XsString.h in Headers */,
+				3DDCB5212982F07F0000BD6D /* NonArpeggiateFunctions.h in Headers */,
 				2999A8B224CD0AEC004637BA /* XsNMToken.h in Headers */,
 				2999A8B724CD0AEC004637BA /* XsToken.h in Headers */,
 				2999A8AD24CD0AEC004637BA /* CommaSeparatedPositiveIntegers.h in Headers */,
 				2999A8E924CD0AEC004637BA /* XlinkHref.h in Headers */,
+				3DDCB51A2982EF5A0000BD6D /* FermataFunctions.h in Headers */,
+				3DDCB5092982EB620000BD6D /* ArpeggiateFunctions.h in Headers */,
 				2999A8C624CD0AEC004637BA /* TimeOnly.h in Headers */,
 				2999A8BC24CD0AEC004637BA /* PlaybackSound.h in Headers */,
 				2999A8DA24CD0AEC004637BA /* XsAnyUri.h in Headers */,
@@ -6742,10 +6791,13 @@
 				2999A8E324CD0AEC004637BA /* StringUtils.h in Headers */,
 				2999A90624CD0AEC004637BA /* XsIDREF.h in Headers */,
 				2999A90124CD0AEC004637BA /* XsString.h in Headers */,
+				3DDCB5202982F07F0000BD6D /* NonArpeggiateFunctions.h in Headers */,
 				2999A8B124CD0AEC004637BA /* XsNMToken.h in Headers */,
 				2999A8B624CD0AEC004637BA /* XsToken.h in Headers */,
 				2999A8AC24CD0AEC004637BA /* CommaSeparatedPositiveIntegers.h in Headers */,
 				2999A8E824CD0AEC004637BA /* XlinkHref.h in Headers */,
+				3DDCB5192982EF5A0000BD6D /* FermataFunctions.h in Headers */,
+				3DDCB5082982EB620000BD6D /* ArpeggiateFunctions.h in Headers */,
 				2999A8C524CD0AEC004637BA /* TimeOnly.h in Headers */,
 				2999A8BB24CD0AEC004637BA /* PlaybackSound.h in Headers */,
 				2999A8D924CD0AEC004637BA /* XsAnyUri.h in Headers */,
@@ -6767,10 +6819,13 @@
 				2999A8B024CD0AEC004637BA /* CommaSeparatedPositiveIntegers.h in Headers */,
 				2999A8BF24CD0AEC004637BA /* PlaybackSound.h in Headers */,
 				2999A90F24CD0AEC004637BA /* XlinkRole.h in Headers */,
+				3DDCB5242982F07F0000BD6D /* NonArpeggiateFunctions.h in Headers */,
 				2999A90A24CD0AEC004637BA /* XsIDREF.h in Headers */,
 				2999A8D324CD0AEC004637BA /* EndingNumber.h in Headers */,
 				2999A8B524CD0AEC004637BA /* XsNMToken.h in Headers */,
 				2999A8C924CD0AEC004637BA /* TimeOnly.h in Headers */,
+				3DDCB51D2982EF5A0000BD6D /* FermataFunctions.h in Headers */,
+				3DDCB50C2982EB620000BD6D /* ArpeggiateFunctions.h in Headers */,
 				293B06F3249F0BB800429597 /* EnumsBuiltin.h in Headers */,
 				2999A8BA24CD0AEC004637BA /* XsToken.h in Headers */,
 				2999A90524CD0AEC004637BA /* XsString.h in Headers */,
@@ -6792,10 +6847,13 @@
 				2999A8AF24CD0AEC004637BA /* CommaSeparatedPositiveIntegers.h in Headers */,
 				2999A8BE24CD0AEC004637BA /* PlaybackSound.h in Headers */,
 				2999A90E24CD0AEC004637BA /* XlinkRole.h in Headers */,
+				3DDCB5232982F07F0000BD6D /* NonArpeggiateFunctions.h in Headers */,
 				2999A90924CD0AEC004637BA /* XsIDREF.h in Headers */,
 				2999A8D224CD0AEC004637BA /* EndingNumber.h in Headers */,
 				2999A8B424CD0AEC004637BA /* XsNMToken.h in Headers */,
 				2999A8C824CD0AEC004637BA /* TimeOnly.h in Headers */,
+				3DDCB51C2982EF5A0000BD6D /* FermataFunctions.h in Headers */,
+				3DDCB50B2982EB620000BD6D /* ArpeggiateFunctions.h in Headers */,
 				293B06F2249F0BB800429597 /* EnumsBuiltin.h in Headers */,
 				2999A8B924CD0AEC004637BA /* XsToken.h in Headers */,
 				2999A90424CD0AEC004637BA /* XsString.h in Headers */,
@@ -6817,10 +6875,13 @@
 				2999A8E524CD0AEC004637BA /* StringUtils.h in Headers */,
 				2999A90824CD0AEC004637BA /* XsIDREF.h in Headers */,
 				2999A90324CD0AEC004637BA /* XsString.h in Headers */,
+				3DDCB5222982F07F0000BD6D /* NonArpeggiateFunctions.h in Headers */,
 				2999A8B324CD0AEC004637BA /* XsNMToken.h in Headers */,
 				2999A8B824CD0AEC004637BA /* XsToken.h in Headers */,
 				2999A8AE24CD0AEC004637BA /* CommaSeparatedPositiveIntegers.h in Headers */,
 				2999A8EA24CD0AEC004637BA /* XlinkHref.h in Headers */,
+				3DDCB51B2982EF5A0000BD6D /* FermataFunctions.h in Headers */,
+				3DDCB50A2982EB620000BD6D /* ArpeggiateFunctions.h in Headers */,
 				2999A8C724CD0AEC004637BA /* TimeOnly.h in Headers */,
 				2999A8BD24CD0AEC004637BA /* PlaybackSound.h in Headers */,
 				2999A8DB24CD0AEC004637BA /* XsAnyUri.h in Headers */,
@@ -7339,6 +7400,7 @@
 				29A8EA181EF0476500AD2478 /* Eyeglasses.cpp in Sources */,
 				29A8EE461EF0476600AD2478 /* Level.cpp in Sources */,
 				29A8F9311EF0476C00AD2478 /* TopMargin.cpp in Sources */,
+				3DDCB5262982F07F0000BD6D /* NonArpeggiateFunctions.cpp in Sources */,
 				29A8E98C1EF0476400AD2478 /* EmptyTrillSoundAttributes.cpp in Sources */,
 				29A8E9641EF0476400AD2478 /* ElisionSyllabicTextGroup.cpp in Sources */,
 				29A8EBF81EF0476500AD2478 /* GroupNameDisplay.cpp in Sources */,
@@ -7566,6 +7628,7 @@
 				29A8F7511EF0476B00AD2478 /* Stick.cpp in Sources */,
 				29A8F8911EF0476C00AD2478 /* Tie.cpp in Sources */,
 				29A8F21A1EF0476800AD2478 /* OtherArticulationAttributes.cpp in Sources */,
+				3DDCB5152982EF5A0000BD6D /* FermataFunctions.cpp in Sources */,
 				29A8EB8A1EF0476500AD2478 /* Group.cpp in Sources */,
 				29A8FA8A1EF0476D00AD2478 /* Voice.cpp in Sources */,
 				29A8F5AD1EF0476A00AD2478 /* ScorePartwiseAttributes.cpp in Sources */,
@@ -7594,6 +7657,7 @@
 				29A8EA901EF0476500AD2478 /* Fingering.cpp in Sources */,
 				29A8F0261EF0476700AD2478 /* Miscellaneous.cpp in Sources */,
 				29EAD73C1F0EA96B00BDE782 /* ProcessingInstruction.cpp in Sources */,
+				3DDCB50E2982EB620000BD6D /* ArpeggiateFunctions.cpp in Sources */,
 				29A8F13E1EF0476700AD2478 /* NoteChoice.cpp in Sources */,
 				29A8F61B1EF0476A00AD2478 /* SlashType.cpp in Sources */,
 				29A8FCAB1EF0476E00AD2478 /* PropertiesWriter.cpp in Sources */,
@@ -8012,6 +8076,7 @@
 				29A8EA171EF0476500AD2478 /* Eyeglasses.cpp in Sources */,
 				29A8EE451EF0476600AD2478 /* Level.cpp in Sources */,
 				29A8F9301EF0476C00AD2478 /* TopMargin.cpp in Sources */,
+				3DDCB5252982F07F0000BD6D /* NonArpeggiateFunctions.cpp in Sources */,
 				29A8E98B1EF0476400AD2478 /* EmptyTrillSoundAttributes.cpp in Sources */,
 				29A8E9631EF0476400AD2478 /* ElisionSyllabicTextGroup.cpp in Sources */,
 				29A8EBF71EF0476500AD2478 /* GroupNameDisplay.cpp in Sources */,
@@ -8239,6 +8304,7 @@
 				29A8F7501EF0476B00AD2478 /* Stick.cpp in Sources */,
 				29A8F8901EF0476B00AD2478 /* Tie.cpp in Sources */,
 				29A8F2191EF0476800AD2478 /* OtherArticulationAttributes.cpp in Sources */,
+				3DDCB5142982EF5A0000BD6D /* FermataFunctions.cpp in Sources */,
 				29A8EB891EF0476500AD2478 /* Group.cpp in Sources */,
 				29A8FA891EF0476D00AD2478 /* Voice.cpp in Sources */,
 				29A8F5AC1EF0476A00AD2478 /* ScorePartwiseAttributes.cpp in Sources */,
@@ -8267,6 +8333,7 @@
 				29A8EA8F1EF0476500AD2478 /* Fingering.cpp in Sources */,
 				29A8F0251EF0476700AD2478 /* Miscellaneous.cpp in Sources */,
 				29EAD73B1F0EA96B00BDE782 /* ProcessingInstruction.cpp in Sources */,
+				3DDCB50D2982EB620000BD6D /* ArpeggiateFunctions.cpp in Sources */,
 				29A8F13D1EF0476700AD2478 /* NoteChoice.cpp in Sources */,
 				29A8F61A1EF0476A00AD2478 /* SlashType.cpp in Sources */,
 				29A8FCAA1EF0476E00AD2478 /* PropertiesWriter.cpp in Sources */,
@@ -8685,6 +8752,7 @@
 				294895A41FC4011400A06219 /* AppearanceData.cpp in Sources */,
 				29A8FF201EF0499200AD2478 /* Mute.cpp in Sources */,
 				29A8FF211EF0499200AD2478 /* Natural.cpp in Sources */,
+				3DDCB5292982F07F0000BD6D /* NonArpeggiateFunctions.cpp in Sources */,
 				29A8FF221EF0499200AD2478 /* NonArpeggiate.cpp in Sources */,
 				29A8FF231EF0499200AD2478 /* NonArpeggiateAttributes.cpp in Sources */,
 				29A8FF241EF0499200AD2478 /* NonTraditionalKey.cpp in Sources */,
@@ -8912,6 +8980,7 @@
 				29A800001EF0499300AD2478 /* TransposeAttributes.cpp in Sources */,
 				29A800011EF0499300AD2478 /* Tremolo.cpp in Sources */,
 				29A800021EF0499300AD2478 /* TremoloAttributes.cpp in Sources */,
+				3DDCB5182982EF5A0000BD6D /* FermataFunctions.cpp in Sources */,
 				29A800031EF0499300AD2478 /* TrillMark.cpp in Sources */,
 				29A800041EF0499300AD2478 /* TripleTongue.cpp in Sources */,
 				29A800051EF0499300AD2478 /* TuningAlter.cpp in Sources */,
@@ -8940,6 +9009,7 @@
 				29A8001C1EF0499300AD2478 /* VirtualName.cpp in Sources */,
 				29A8001D1EF0499300AD2478 /* Voice.cpp in Sources */,
 				29A8001E1EF0499300AD2478 /* Volume.cpp in Sources */,
+				3DDCB5112982EB620000BD6D /* ArpeggiateFunctions.cpp in Sources */,
 				29A8001F1EF0499300AD2478 /* WavyLine.cpp in Sources */,
 				29A800201EF0499300AD2478 /* WavyLineAttributes.cpp in Sources */,
 				29A800211EF0499300AD2478 /* Wedge.cpp in Sources */,
@@ -9358,6 +9428,7 @@
 				29A8EA1A1EF0476500AD2478 /* Eyeglasses.cpp in Sources */,
 				29A8EE481EF0476600AD2478 /* Level.cpp in Sources */,
 				29A8F9331EF0476C00AD2478 /* TopMargin.cpp in Sources */,
+				3DDCB5282982F07F0000BD6D /* NonArpeggiateFunctions.cpp in Sources */,
 				29A8E98E1EF0476400AD2478 /* EmptyTrillSoundAttributes.cpp in Sources */,
 				29A8E9661EF0476400AD2478 /* ElisionSyllabicTextGroup.cpp in Sources */,
 				29A8EBFA1EF0476500AD2478 /* GroupNameDisplay.cpp in Sources */,
@@ -9585,6 +9656,7 @@
 				29A8F7531EF0476B00AD2478 /* Stick.cpp in Sources */,
 				29A8F8931EF0476C00AD2478 /* Tie.cpp in Sources */,
 				29A8F21C1EF0476800AD2478 /* OtherArticulationAttributes.cpp in Sources */,
+				3DDCB5172982EF5A0000BD6D /* FermataFunctions.cpp in Sources */,
 				29A8EB8C1EF0476500AD2478 /* Group.cpp in Sources */,
 				29A8FA8C1EF0476D00AD2478 /* Voice.cpp in Sources */,
 				29A8F5AF1EF0476A00AD2478 /* ScorePartwiseAttributes.cpp in Sources */,
@@ -9613,6 +9685,7 @@
 				29A8EA921EF0476500AD2478 /* Fingering.cpp in Sources */,
 				29A8F0281EF0476700AD2478 /* Miscellaneous.cpp in Sources */,
 				29EAD73E1F0EA96B00BDE782 /* ProcessingInstruction.cpp in Sources */,
+				3DDCB5102982EB620000BD6D /* ArpeggiateFunctions.cpp in Sources */,
 				29A8F1401EF0476700AD2478 /* NoteChoice.cpp in Sources */,
 				29A8F61D1EF0476A00AD2478 /* SlashType.cpp in Sources */,
 				29A8FCAD1EF0476E00AD2478 /* PropertiesWriter.cpp in Sources */,
@@ -10031,6 +10104,7 @@
 				29A8EA191EF0476500AD2478 /* Eyeglasses.cpp in Sources */,
 				29A8EE471EF0476600AD2478 /* Level.cpp in Sources */,
 				29A8F9321EF0476C00AD2478 /* TopMargin.cpp in Sources */,
+				3DDCB5272982F07F0000BD6D /* NonArpeggiateFunctions.cpp in Sources */,
 				29A8E98D1EF0476400AD2478 /* EmptyTrillSoundAttributes.cpp in Sources */,
 				29A8E9651EF0476400AD2478 /* ElisionSyllabicTextGroup.cpp in Sources */,
 				29A8EBF91EF0476500AD2478 /* GroupNameDisplay.cpp in Sources */,
@@ -10258,6 +10332,7 @@
 				29A8F7521EF0476B00AD2478 /* Stick.cpp in Sources */,
 				29A8F8921EF0476C00AD2478 /* Tie.cpp in Sources */,
 				29A8F21B1EF0476800AD2478 /* OtherArticulationAttributes.cpp in Sources */,
+				3DDCB5162982EF5A0000BD6D /* FermataFunctions.cpp in Sources */,
 				29A8EB8B1EF0476500AD2478 /* Group.cpp in Sources */,
 				29A8FA8B1EF0476D00AD2478 /* Voice.cpp in Sources */,
 				29A8F5AE1EF0476A00AD2478 /* ScorePartwiseAttributes.cpp in Sources */,
@@ -10286,6 +10361,7 @@
 				29A8EA911EF0476500AD2478 /* Fingering.cpp in Sources */,
 				29A8F0271EF0476700AD2478 /* Miscellaneous.cpp in Sources */,
 				29EAD73D1F0EA96B00BDE782 /* ProcessingInstruction.cpp in Sources */,
+				3DDCB50F2982EB620000BD6D /* ArpeggiateFunctions.cpp in Sources */,
 				29A8F13F1EF0476700AD2478 /* NoteChoice.cpp in Sources */,
 				29A8F61C1EF0476A00AD2478 /* SlashType.cpp in Sources */,
 				29A8FCAC1EF0476E00AD2478 /* PropertiesWriter.cpp in Sources */,

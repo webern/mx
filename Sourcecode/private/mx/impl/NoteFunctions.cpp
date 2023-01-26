@@ -47,13 +47,17 @@
 #include "mx/core/elements/Footnote.h"
 #include "mx/core/FromXElement.h"
 #include "mx/impl/AccidentalMarkFunctions.h"
+#include "mx/impl/ArpeggiateFunctions.h"
 #include "mx/impl/ArticulationsFunctions.h"
 #include "mx/impl/CurveFunctions.h"
 #include "mx/impl/DynamicsReader.h"
+#include "mx/impl/FermataFunctions.h"
+#include "mx/impl/NonArpeggiateFunctions.h"
 #include "mx/impl/NoteReader.h"
 #include "mx/impl/OrnamentsFunctions.h"
 #include "mx/impl/PositionFunctions.h"
 #include "mx/impl/PrintFunctions.h"
+#include "mx/impl/SlideFunctions.h"
 #include "mx/impl/TechnicalFunctions.h"
 #include "mx/impl/TimeReader.h"
 #include "mx/impl/TupletReader.h"
@@ -273,29 +277,9 @@ namespace mx
                         }
                         case core::NotationsChoice::Choice::slide:
                         {
-//                            const auto& slide = *notationsChoice.getSlide();
-//                            const auto& attr = *slide.getAttributes();
-//                            const auto slideType = attr.type;
-
-//                            api::SpannerData spannerData;
-//                            spannerData.name = "slide";
-//                            spannerData.spannerType = api::SpannerType::slide;
-//                            spannerData.tickTimePosition = myCursor.tickTimePosition;
-//                            
-//                            if( attr.hasNumber )
-//                            {
-//                                spannerData.numberLevel = attr.number.getValue();
-//                            }
-//
-//                            if( slideType == core::StartStop::start )
-//                            {
-//                                myOutNoteData.noteAttachmentData.spannerStarts.emplace_back( std::move( spannerData ) );
-//                            }
-//                            else
-//                            {
-//                                myOutNoteData.noteAttachmentData.spannerStops.emplace_back( std::move( spannerData ) );
-//                            }
-                            
+                            // TODO - import slide
+                            //SlideFunctions funcs{ *notationsChoice.getSlide(), myCursor };
+                            //myOutNoteData.noteAttachmentData.marks.emplace_back( funcs.parseSlide() );
                             break;
                         }
                         case core::NotationsChoice::Choice::glissando:
@@ -329,90 +313,20 @@ namespace mx
                         }
                         case core::NotationsChoice::Choice::fermata:
                         {
-                            const auto& fermata = *notationsChoice.getFermata();
-                            const auto& attr = *fermata.getAttributes();
-                            const auto shape = fermata.getValue();
-                            auto markType = api::MarkType::fermata;
-                            
-                            if( shape == core::FermataShape::emptystring )
-                            {
-                                if( !attr.hasType )
-                                {
-                                    markType = api::MarkType::fermata;
-                                }
-                                else if ( attr.type == core::UprightInverted::upright )
-                                {
-                                    markType = api::MarkType::fermataUpright;
-                                }
-                                else if ( attr.type == core::UprightInverted::inverted )
-                                {
-                                    markType = api::MarkType::fermataInverted;
-                                }
-                            }
-                            else if( shape == core::FermataShape::normal )
-                            {
-                                if( !attr.hasType )
-                                {
-                                    markType = api::MarkType::fermataNormal;
-                                }
-                                else if ( attr.type == core::UprightInverted::upright )
-                                {
-                                    markType = api::MarkType::fermataNormalUpright;
-                                }
-                                else if ( attr.type == core::UprightInverted::inverted )
-                                {
-                                    markType = api::MarkType::fermataNormalInverted;
-                                }
-                                
-                            }
-                            else if( shape == core::FermataShape::angled )
-                            {
-                                if( !attr.hasType )
-                                {
-                                    markType = api::MarkType::fermataAngled;
-                                }
-                                else if ( attr.type == core::UprightInverted::upright )
-                                {
-                                    markType = api::MarkType::fermataAngledUpright;
-                                }
-                                else if ( attr.type == core::UprightInverted::inverted )
-                                {
-                                    markType = api::MarkType::fermataAngledInverted;
-                                }
-                            }
-                            else if( shape == core::FermataShape::square )
-                            {
-                                if( !attr.hasType )
-                                {
-                                    markType = api::MarkType::fermataSquare;
-                                }
-                                else if ( attr.type == core::UprightInverted::upright )
-                                {
-                                    markType = api::MarkType::fermataSquareUpright;
-                                }
-                                else if ( attr.type == core::UprightInverted::inverted )
-                                {
-                                    markType = api::MarkType::fermataSquareInverted;
-                                }
-                            }
-                            
-                            // Unfortunately, without doing a lot of guess word, we can't
-                            // know whether the correct glyph is "above" or "below"
-                            api::MarkData markData{ markType };
-                            impl::parseMarkDataAttributes( attr, markData );
-                            markData.tickTimePosition = myCursor.tickTimePosition;
-                            impl::parseMarkDataAttributes( attr, markData );
-                            myOutNoteData.noteAttachmentData.marks.emplace_back( std::move( markData ) );
+                            FermataFunctions funcs{ *notationsChoice.getFermata(), myCursor };
+                            myOutNoteData.noteAttachmentData.marks.emplace_back( funcs.parseFermata() );
                             break;
                         }
                         case core::NotationsChoice::Choice::arpeggiate:
                         {
-                            // TODO - import arpeggiate
+                            ArpeggiateFunctions funcs{ *notationsChoice.getArpeggiate(), myCursor };
+                            myOutNoteData.noteAttachmentData.marks.emplace_back( funcs.parseArpeggiate() );
                             break;
                         }
                         case core::NotationsChoice::Choice::nonArpeggiate:
                         {
-                            // TODO - import non-arpeggiate
+                            NonArpeggiateFunctions funcs{ *notationsChoice.getNonArpeggiate(), myCursor };
+                            myOutNoteData.noteAttachmentData.marks.emplace_back( funcs.parseNonArpeggiate() );
                             break;
                         }
                         case core::NotationsChoice::Choice::accidentalMark:
