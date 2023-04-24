@@ -474,6 +474,7 @@ namespace mxtest
         // other
         myNameSubdirectoryMap.emplace( "logic01a_homoSapiens.xml", "logicpro" );
         myNameSubdirectoryMap.emplace( "Schubert_der_Mueller.xml", "foundsuite" );
+        myNameSubdirectoryMap.emplace( "musescore-slur-start-stop.musicxml", "custom" );
         myNameSubdirectoryMap.emplace( "systems-and-pages.xml", "custom" );
         myNameSubdirectoryMap.emplace( "transposition.musicxml", "custom" );
 
