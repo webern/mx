@@ -14,9 +14,11 @@ cmake "${mx}" \
   -DMX_BUILD_CORE_TESTS=on \
   -DMX_BUILD_EXAMPLES=on
 make -C "${bld}" -j"${procs:=48}"
-echo "Running MxRead"
-"${bld}/MxRead"
-echo "Running MxWrite"
-"${bld}/MxWrite"
-echo "Running MxTest"
-"${bld}/MxTest"
+echo "Running mxread"
+"${bld}/mxread"
+echo "Running mxwrite"
+"${bld}/mxwrite"
+echo "Running mxhide"
+"${bld}/mxhide"
+echo "Running mxtest"
+"${bld}/mxtest"
