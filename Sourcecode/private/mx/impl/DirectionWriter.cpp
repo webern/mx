@@ -158,6 +158,24 @@ namespace mx
                 }
             }
             
+            for( const auto& wedgeStop : myDirectionData.wedgeStops )
+            {
+                auto wedgeStartDirectionTypePtr = core::makeDirectionType();
+                wedgeStartDirectionTypePtr->setChoice( core::DirectionType::Choice::wedge );
+                this->addDirectionType( wedgeStartDirectionTypePtr, directionPtr );
+                auto wedgePtr = wedgeStartDirectionTypePtr->getWedge();
+                auto& attr = *wedgePtr->getAttributes();
+                attr.type = core::WedgeType::stop;
+                
+                if( wedgeStop.isSpreadSpecified )
+                {
+                    attr.hasSpread = true;
+                    attr.spread = core::TenthsValue{ static_cast<core::DecimalType>( wedgeStop.spread ) };
+                }
+                auto& attributes = *wedgePtr->getAttributes();
+                setAttributesFromPositionData( wedgeStop.positionData, attributes );
+            }
+            
             for( const auto& wedgeStart : myDirectionData.wedgeStarts )
             {
                 auto wedgeStartDirectionTypePtr = core::makeDirectionType();
@@ -184,22 +202,15 @@ namespace mx
                 setAttributesFromColorData(wedgeStart.colorData, attributes);
             }
             
-            for( const auto& wedgeStop : myDirectionData.wedgeStops )
+            for( const auto& ottavaStop : myDirectionData.ottavaStops )
             {
-                auto wedgeStartDirectionTypePtr = core::makeDirectionType();
-                wedgeStartDirectionTypePtr->setChoice( core::DirectionType::Choice::wedge );
-                this->addDirectionType( wedgeStartDirectionTypePtr, directionPtr );
-                auto wedgePtr = wedgeStartDirectionTypePtr->getWedge();
-                auto& attr = *wedgePtr->getAttributes();
-                attr.type = core::WedgeType::stop;
-                
-                if( wedgeStop.isSpreadSpecified )
-                {
-                    attr.hasSpread = true;
-                    attr.spread = core::TenthsValue{ static_cast<core::DecimalType>( wedgeStop.spread ) };
-                }
-                auto& attributes = *wedgePtr->getAttributes();
-                setAttributesFromPositionData( wedgeStop.positionData, attributes );
+                auto oStopDir = core::makeDirectionType();
+                this->addDirectionType( oStopDir, directionPtr );
+                oStopDir->setChoice( core::DirectionType::Choice::octaveShift );
+                auto oStart = oStopDir->getOctaveShift();
+                auto& attr = *oStart->getAttributes();
+                attr.type = core::UpDownStopContinue::stop;
+                MX_UNUSED( ottavaStop );
             }
             
             for( const auto& ottavaStart : myDirectionData.ottavaStarts )
@@ -241,17 +252,6 @@ namespace mx
                     }
                     default: break;
                 }
-            }
-            
-            for( const auto& ottavaStop : myDirectionData.ottavaStops )
-            {
-                auto oStopDir = core::makeDirectionType();
-                this->addDirectionType( oStopDir, directionPtr );
-                oStopDir->setChoice( core::DirectionType::Choice::octaveShift );
-                auto oStart = oStopDir->getOctaveShift();
-                auto& attr = *oStart->getAttributes();
-                attr.type = core::UpDownStopContinue::stop;
-                MX_UNUSED( ottavaStop );
             }
             
             for( const auto& item : myDirectionData.bracketStarts )
@@ -330,33 +330,6 @@ namespace mx
                 if( isFirstWordsAdded )
                 {
                     addDirectionType( outDirType, directionPtr );
-                }
-            }
-            
-            if( myDirectionData.segnos.size() > 0 ) {
-
-                for( const auto& rehearsal : myDirectionData.segnos ) {
-                    auto outDirType = core::makeDirectionType();
-                    outDirType->setChoice( core::DirectionType::Choice::segno );
-                    this->addDirectionType( outDirType, directionPtr );
-                }
-            }
-
-            if( myDirectionData.codas.size() > 0 ) {
-
-                for( const auto& rehearsal : myDirectionData.codas ) {
-                    auto outDirType = core::makeDirectionType();
-                    outDirType->setChoice( core::DirectionType::Choice::coda );
-                    this->addDirectionType( outDirType, directionPtr );
-                }
-            }
-
-            if( myDirectionData.rehearsals.size() > 0 ) {
-                
-                for( const auto& rehearsal : myDirectionData.rehearsals ) {
-                    auto outDirType = core::makeDirectionType();
-                    outDirType->setChoice( core::DirectionType::Choice::rehearsal );
-                    this->addDirectionType( outDirType, directionPtr );
                 }
             }
 

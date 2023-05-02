@@ -4,7 +4,6 @@
 
 #include "mx/impl/NotationsWriter.h"
 #include "mx/core/elements/Accent.h"
-#include "mx/core/elements/Arpeggiate.h"
 #include "mx/core/elements/Arrow.h"
 #include "mx/core/elements/Articulations.h"
 #include "mx/core/elements/ArticulationsChoice.h"
@@ -31,7 +30,6 @@
 #include "mx/core/elements/InvertedMordent.h"
 #include "mx/core/elements/InvertedTurn.h"
 #include "mx/core/elements/Mordent.h"
-#include "mx/core/elements/NonArpeggiate.h"
 #include "mx/core/elements/Notations.h"
 #include "mx/core/elements/NotationsChoice.h"
 #include "mx/core/elements/OpenString.h"
@@ -105,6 +103,48 @@ namespace mx
             auto technicalNotationChoice = makeTechnicalNotationsChoice();
             auto technicals = technicalNotationChoice->getTechnical();
 
+            for( const auto& curve : myNoteData.noteAttachmentData.curveStops )
+            {
+                auto curveNotationsChoice = core::makeNotationsChoice();
+                myOutNotations->addNotationsChoice( curveNotationsChoice );
+                
+                if( curve.curveType == api::CurveType::tie )
+                {
+                    curveNotationsChoice->setChoice( core::NotationsChoice::Choice::tied );
+                    auto element = curveNotationsChoice->getTied();
+                    auto attr = element->getAttributes();
+                    writeAttributesFromCurveStop( curve, *attr );
+                }
+                else if( curve.curveType == api::CurveType::slur )
+                {
+                    curveNotationsChoice->setChoice( core::NotationsChoice::Choice::slur );
+                    auto element = curveNotationsChoice->getSlur();
+                    auto attr = element->getAttributes();
+                    writeAttributesFromCurveStop( curve, *attr );
+                }
+            }
+
+            for( const auto& curve : myNoteData.noteAttachmentData.curveContinuations )
+            {
+                auto curveNotationsChoice = core::makeNotationsChoice();
+                myOutNotations->addNotationsChoice( curveNotationsChoice );
+                
+                if( curve.curveType == api::CurveType::tie )
+                {
+                    curveNotationsChoice->setChoice( core::NotationsChoice::Choice::tied );
+                    auto element = curveNotationsChoice->getTied();
+                    auto attr = element->getAttributes();
+                    writeAttributesFromCurveContinue( curve, *attr );
+                }
+                else if( curve.curveType == api::CurveType::slur )
+                {
+                    curveNotationsChoice->setChoice( core::NotationsChoice::Choice::slur );
+                    auto element = curveNotationsChoice->getSlur();
+                    auto attr = element->getAttributes();
+                    writeAttributesFromCurveContinue( curve, *attr );
+                }
+            }
+
             for( const auto& curve : myNoteData.noteAttachmentData.curveStarts )
             {
                 auto curveNotationsChoice = core::makeNotationsChoice();
@@ -126,45 +166,20 @@ namespace mx
                 }
             }
             
-            for( const auto& curve : myNoteData.noteAttachmentData.curveContinuations )
-            {
-                auto curveNotationsChoice = core::makeNotationsChoice();
-                myOutNotations->addNotationsChoice( curveNotationsChoice );
-                
-                if( curve.curveType == api::CurveType::tie )
-                {
-                    curveNotationsChoice->setChoice( core::NotationsChoice::Choice::tied );
-                    auto element = curveNotationsChoice->getTied();
-                    auto attr = element->getAttributes();
-                    writeAttributesFromCurveContinue( curve, *attr );
-                }
-                else if( curve.curveType == api::CurveType::slur )
-                {
-                    curveNotationsChoice->setChoice( core::NotationsChoice::Choice::slur );
-                    auto element = curveNotationsChoice->getSlur();
-                    auto attr = element->getAttributes();
-                    writeAttributesFromCurveContinue( curve, *attr );
-                }
-            }
             
-            for( const auto& curve : myNoteData.noteAttachmentData.curveStops )
+            
+            for( const auto& tupletStop : myNoteData.noteAttachmentData.tupletStops )
             {
-                auto curveNotationsChoice = core::makeNotationsChoice();
-                myOutNotations->addNotationsChoice( curveNotationsChoice );
+                auto tupletNotationsChoice = core::makeNotationsChoice();
+                myOutNotations->addNotationsChoice( tupletNotationsChoice );
+                tupletNotationsChoice->setChoice( core::NotationsChoice::Choice::tuplet );
+                auto tuplet = tupletNotationsChoice->getTuplet();
+                tuplet->getAttributes()->type = core::StartStop::stop;
                 
-                if( curve.curveType == api::CurveType::tie )
+                if( tupletStop.numberLevel > 0 )
                 {
-                    curveNotationsChoice->setChoice( core::NotationsChoice::Choice::tied );
-                    auto element = curveNotationsChoice->getTied();
-                    auto attr = element->getAttributes();
-                    writeAttributesFromCurveStop( curve, *attr );
-                }
-                else if( curve.curveType == api::CurveType::slur )
-                {
-                    curveNotationsChoice->setChoice( core::NotationsChoice::Choice::slur );
-                    auto element = curveNotationsChoice->getSlur();
-                    auto attr = element->getAttributes();
-                    writeAttributesFromCurveStop( curve, *attr );
+                    tuplet->getAttributes()->hasNumber = true;
+                    tuplet->getAttributes()->number = core::NumberLevel{ tupletStop.numberLevel };
                 }
             }
             
@@ -235,21 +250,6 @@ namespace mx
                 }
             }
             
-            
-            for( const auto& tupletStop : myNoteData.noteAttachmentData.tupletStops )
-            {
-                auto tupletNotationsChoice = core::makeNotationsChoice();
-                myOutNotations->addNotationsChoice( tupletNotationsChoice );
-                tupletNotationsChoice->setChoice( core::NotationsChoice::Choice::tuplet );
-                auto tuplet = tupletNotationsChoice->getTuplet();
-                tuplet->getAttributes()->type = core::StartStop::stop;
-                
-                if( tupletStop.numberLevel > 0 )
-                {
-                    tuplet->getAttributes()->hasNumber = true;
-                    tuplet->getAttributes()->number = core::NumberLevel{ tupletStop.numberLevel };
-                }
-            }
             
             
             for( const auto& mark : myNoteData.noteAttachmentData.marks )
@@ -351,42 +351,10 @@ namespace mx
                         attr.hasType = true;
                         attr.type = core::UprightInverted::inverted;
                     }
-                }
-                else if( isMarkNonArpeggiate( mark.markType) )
-                {
-                    auto nonArpeggiateNotationsChoice = core::makeNotationsChoice();
-                    myOutNotations->addNotationsChoice( nonArpeggiateNotationsChoice );
-                    nonArpeggiateNotationsChoice->setChoice( core::NotationsChoice::Choice::nonArpeggiate );
-                    auto& nonArpeggiate = *nonArpeggiateNotationsChoice->getNonArpeggiate();
-                    auto& attr = *nonArpeggiate.getAttributes();
-                    impl::setAttributesFromMarkData( mark, attr );
-                }
-                else if( isMarkArpeggiate( mark.markType ) )
-                {
-                    auto arpeggiateNotationsChoice = core::makeNotationsChoice();
-                    myOutNotations->addNotationsChoice( arpeggiateNotationsChoice );
-                    arpeggiateNotationsChoice->setChoice( core::NotationsChoice::Choice::arpeggiate );
-                    auto& arpeggiate = *arpeggiateNotationsChoice->getArpeggiate();
-                    auto& attr = *arpeggiate.getAttributes();
-                    impl::setAttributesFromMarkData( mark, attr );
                     
-                    if( mark.markType == api::MarkType::arpeggiate )
-                    {
-                        attr.hasDirection = false;
-                    }
-                    else if( mark.markType == api::MarkType::arpeggiateUp )
-                    {
-                        attr.direction = core::UpDown::up;
-                        attr.hasDirection = true;
-                    }
-                    else if( mark.markType == api::MarkType::arpeggiateDown )
-                    {
-                        attr.direction = core::UpDown::down;
-                        attr.hasDirection = true;
-                    }
                 }
             }
-
+            
             if( articulations->getArticulationsChoiceSet().size() > 0 )
             {
                 myOutNotations->addNotationsChoice( articulationsNotationChoice );
