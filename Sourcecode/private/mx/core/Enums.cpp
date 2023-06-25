@@ -3830,6 +3830,42 @@ namespace mx
             return toStream( os, value );
         }
 
+        /// UpDownNone /////////////////////////////////////////////////////////////////////////////////
+
+        UpDownNone parseUpDownNone( const std::string& value )
+        {
+            const auto opt = tryParseUpDownNone( value );
+            return opt.value_or( UpDownNone::none );
+        }
+
+        std::optional<UpDownNone> tryParseUpDownNone( const std::string& value )
+        {
+            if( value == "up" ) { return UpDownNone::up; }
+            else if( value == "down" ) { return UpDownNone::down; }
+            return std::optional<UpDownNone>{};
+        }
+
+        std::string toString( const UpDownNone value )
+        {
+            switch ( value )
+            {
+                case UpDownNone::up: { return "up"; }
+                case UpDownNone::down: { return "down"; }
+                default: break;
+            }
+            return "up";
+        }
+
+        std::ostream& toStream( std::ostream& os, const UpDownNone value )
+        {
+            return os << toString( value );
+        }
+
+        std::ostream& operator<<( std::ostream& os, const UpDownNone value )
+        {
+            return toStream( os, value );
+        }
+    
         /// UpDownStopContinue /////////////////////////////////////////////////////////////////////
 
         UpDownStopContinue parseUpDownStopContinue( const std::string& value )
