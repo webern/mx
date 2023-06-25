@@ -67,7 +67,7 @@ namespace mx
             for( ; it != endIter; ++it )
             {
                 if( parseAttribute( message, it, className, isSuccess, number, hasNumber, "number" ) ) { continue; }
-                if( parseAttribute( message, it, className, isSuccess, direction, hasDirection, "direction", &parseUpDown ) ) { continue; }
+                if( parseAttribute( message, it, className, isSuccess, direction, hasDirection, "direction", &parseUpDownNone ) ) { continue; }
                 if( parseAttribute( message, it, className, isSuccess, defaultX, hasDefaultX, "default-x" ) ) { continue; }
                 if( parseAttribute( message, it, className, isSuccess, defaultY, hasDefaultY, "default-y" ) ) { continue; }
                 if( parseAttribute( message, it, className, isSuccess, relativeX, hasRelativeX, "relative-x" ) ) { continue; }

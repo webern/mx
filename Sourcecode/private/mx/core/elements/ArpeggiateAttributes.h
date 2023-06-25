@@ -28,7 +28,7 @@ namespace mx
             virtual bool hasValues() const;
             virtual std::ostream& toStream( std::ostream& os ) const;
             NumberLevel number;
-            UpDown direction;
+            UpDownNone direction;
             TenthsValue defaultX;
             TenthsValue defaultY;
             TenthsValue relativeX;

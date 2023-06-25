@@ -332,6 +332,33 @@ namespace mx
                     addDirectionType( outDirType, directionPtr );
                 }
             }
+            
+            if( myDirectionData.segnos.size() > 0 ) {
+
+                for( const auto& rehearsal : myDirectionData.segnos ) {
+                    auto outDirType = core::makeDirectionType();
+                    outDirType->setChoice( core::DirectionType::Choice::segno );
+                    this->addDirectionType( outDirType, directionPtr );
+                }
+            }
+
+            if( myDirectionData.codas.size() > 0 ) {
+
+                for( const auto& rehearsal : myDirectionData.codas ) {
+                    auto outDirType = core::makeDirectionType();
+                    outDirType->setChoice( core::DirectionType::Choice::coda );
+                    this->addDirectionType( outDirType, directionPtr );
+                }
+            }
+
+            if( myDirectionData.rehearsals.size() > 0 ) {
+                
+                for( const auto& rehearsal : myDirectionData.rehearsals ) {
+                    auto outDirType = core::makeDirectionType();
+                    outDirType->setChoice( core::DirectionType::Choice::rehearsal );
+                    this->addDirectionType( outDirType, directionPtr );
+                }
+            }
 
             if( myIsFirstDirectionTypeAdded )
             {

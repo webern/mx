@@ -1899,6 +1899,24 @@ namespace mx
         std::ostream& toStream( std::ostream& os, const UpDownStopContinue value );
         std::ostream& operator<<( std::ostream& os, const UpDownStopContinue value );
 
+        /// UpDownNone /////////////////////////////////////////////////////////////////////
+        ///
+        /// The up-down-none type is used for octave-shift elements, indicating the
+        /// direction of the shift from their true pitched values because of printing difficulty.
+        ///
+        enum class UpDownNone
+        {
+            up = 0,
+            down = 1,
+            none = 2
+        };
+
+        UpDownNone parseUpDownNone( const std::string& value );
+        std::optional<UpDownNone> tryParseUpDownNone( const std::string& value );
+        std::string toString( const UpDownNone value );
+        std::ostream& toStream( std::ostream& os, const UpDownNone value );
+        std::ostream& operator<<( std::ostream& os, const UpDownNone value );
+    
         /// UprightInverted ////////////////////////////////////////////////////////////////////////
         ///
         /// The upright-inverted type describes the appearance of a fermata element. The value is
