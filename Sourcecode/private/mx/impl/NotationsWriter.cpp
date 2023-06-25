@@ -372,16 +372,17 @@ namespace mx
                     
                     if( mark.markType == api::MarkType::arpeggiate )
                     {
+                        attr.direction = core::UpDownNone::none;
                         attr.hasDirection = false;
                     }
                     else if( mark.markType == api::MarkType::arpeggiateUp )
                     {
-                        attr.direction = core::UpDown::up;
+                        attr.direction = core::UpDownNone::up;
                         attr.hasDirection = true;
                     }
                     else if( mark.markType == api::MarkType::arpeggiateDown )
                     {
-                        attr.direction = core::UpDown::down;
+                        attr.direction = core::UpDownNone::down;
                         attr.hasDirection = true;
                     }
                 }
