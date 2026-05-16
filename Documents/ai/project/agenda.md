@@ -7,7 +7,7 @@ This is the project plan for supporting MusicXML 4.0
 - [x] Create a Makefile
 - [x] fix the line endind issues in markdown files like README.md
 - [x] write build-and-ci-design.md
-- [ ] implement changes per build-and-ci-design.md
+- [x] implement changes per build-and-ci-design.md
 - [ ] See how this now interacts with JetBrains CLion (which seems to create a `cmake-build-debug` directory)
 - [ ] Codefy Change Quality Gates in AGENTS.md
 

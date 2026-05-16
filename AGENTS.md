@@ -41,6 +41,28 @@ version of the specification. MusicxML 4.0 has been out for a long time, and we 
 new code-gen tooling to reproduce the emission of the core types and then expose the new features in
 `Sourcecode/include/mx/api/`.
 
+## Quality Gates
+
+When modifying any file under `Sourcecode/`, run:
+
+```
+make test && make check
+```
+
+before considering the change complete. This enforces formatting (clang-format), zero compiler
+warnings, and lint (clang-tidy). On failure, run `make fmt` to fix formatting, then address any
+remaining warnings manually.
+
+If the changes include anything under `Sourcecode/private/mx/core/`, run:
+
+`make test && make check && make test-core`
+
+If `check-tools` reports a missing tool, install it (see `.clang-format` and `.clang-tidy` for
+the tool versions, or run `make help`).
+
+See `Documents/ai/project/build-and-ci-design.md` for full details on the CI pipeline and
+quality gate design.
+
 ## The Project
 
 We are working on reverse engineering a new codegen system to regenerate mx/core for MusicXML 4.0. See the project
