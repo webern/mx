@@ -203,6 +203,7 @@ check: check-tools
 	@echo "=== fmt-check ==="
 	@$(FIND_CPP) | xargs clang-format --dry-run --Werror
 	@echo "=== build (warning-free) ==="
+	@mkdir -p $(BUILD_ROOT)
 	@$(CMAKE) -S . -B $(call mode_dir,dev) \
 		-DCMAKE_BUILD_TYPE=$(BUILD_TYPE) \
 		-DMX_BUILD_TESTS=on \

@@ -23,7 +23,10 @@ jobs:
             ${{ runner.os }}-build-
 
       - name: Install tools
-        run: sudo apt-get update && sudo apt-get install -y clang-format clang-tidy
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-tidy
+          pip install --break-system-packages clang-format
 
       - name: Quality gate
         run: make check
@@ -48,11 +51,12 @@ jobs:
             ${{ runner.os }}-build-
 
       - name: Install tools
-        run: brew install clang-format llvm
+        run: |
+          brew install llvm
+          pip install --break-system-packages clang-format
+          echo "/opt/homebrew/opt/llvm/bin" >> $GITHUB_PATH
 
       - name: Quality gate
-        env:
-          PATH: /opt/homebrew/opt/llvm/bin:${{ env.PATH }}
         run: make check
 
       - name: Run tests
@@ -81,7 +85,9 @@ jobs:
         run: choco install make -y
 
       - name: Install LLVM
-        run: choco install llvm -y
+        run: |
+          choco install llvm -y
+          pip install --break-system-packages clang-format
 
       - name: Quality gate
         shell: bash
