@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include "mx/core/ForwardDeclare.h"
 #include "mx/core/AttributesInterface.h"
 #include "mx/core/Enums.h"
+#include "mx/core/ForwardDeclare.h"
 
 #include <iosfwd>
 #include <memory>
@@ -14,22 +14,22 @@
 
 namespace mx
 {
-    namespace core
-    {
+namespace core
+{
 
-        MX_FORWARD_DECLARE_ATTRIBUTES( PageMarginsAttributes )
+MX_FORWARD_DECLARE_ATTRIBUTES(PageMarginsAttributes)
 
-        struct PageMarginsAttributes : public AttributesInterface
-        {
-        public:
-            PageMarginsAttributes();
-            virtual bool hasValues() const;
-            virtual std::ostream& toStream( std::ostream& os ) const;
-            MarginType type;
-            bool hasType;
+struct PageMarginsAttributes : public AttributesInterface
+{
+  public:
+    PageMarginsAttributes();
+    virtual bool hasValues() const;
+    virtual std::ostream &toStream(std::ostream &os) const;
+    MarginType type;
+    bool hasType;
 
-            private:
-            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
-        };
-    }
-}
+  private:
+    virtual bool fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement);
+};
+} // namespace core
+} // namespace mx

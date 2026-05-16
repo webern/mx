@@ -1,7 +1,7 @@
-#include <string>
-#include <iostream>
 #include <cstdint>
+#include <iostream>
 #include <sstream>
+#include <string>
 
 // The purpose of this executable is to demonstrate whether or
 // not there is any leakage from `mx::impl` or `mx::api` headers
@@ -53,7 +53,7 @@
 #include "mx/api/WedgeData.h"
 #include "mx/api/WordsData.h"
 
-int main(int argc, const char * argv[])
+int main(int argc, const char *argv[])
 {
     using namespace mx::api;
     const auto qticks = 4;
@@ -64,7 +64,7 @@ int main(int argc, const char * argv[])
     std::stringstream ss;
     ss << score.workTitle;
 
-    if( ss.str().empty() )
+    if (ss.str().empty())
     {
         return 1;
     }

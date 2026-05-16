@@ -6,25 +6,26 @@
 
 namespace mx
 {
-    namespace core
-    {
-        bool AttributesInterface::hasValues() const { return false; }
-        std::ostream& AttributesInterface::toStream( std::ostream& os ) const
-        {
-            return os;
-        }
-
-
-        std::ostream& operator<<( std::ostream& os, const AttributesInterface& value )
-        {
-            return value.toStream( os );
-        }
-
-
-        bool
-        AttributesInterface::fromXElement( std::ostream& message, ::ezxml::XElement& xelement )
-        {
-            return this->fromXElementImpl( message, xelement );
-        }
-    }
+namespace core
+{
+bool AttributesInterface::hasValues() const
+{
+    return false;
 }
+
+std::ostream &AttributesInterface::toStream(std::ostream &os) const
+{
+    return os;
+}
+
+std::ostream &operator<<(std::ostream &os, const AttributesInterface &value)
+{
+    return value.toStream(os);
+}
+
+bool AttributesInterface::fromXElement(std::ostream &message, ::ezxml::XElement &xelement)
+{
+    return this->fromXElementImpl(message, xelement);
+}
+} // namespace core
+} // namespace mx

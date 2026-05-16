@@ -8,8 +8,8 @@
 
 namespace mx
 {
-    namespace core
-    {
-        using XmlLang = XsString;
-    }
+namespace core
+{
+using XmlLang = XsString;
 }
+} // namespace mx

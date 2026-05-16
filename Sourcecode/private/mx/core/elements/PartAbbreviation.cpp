@@ -8,92 +8,80 @@
 
 namespace mx
 {
-    namespace core
+namespace core
+{
+PartAbbreviation::PartAbbreviation() : myValue(), myAttributes(std::make_shared<PartAbbreviationAttributes>())
+{
+}
+
+PartAbbreviation::PartAbbreviation(const XsString &value)
+    : myValue(value), myAttributes(std::make_shared<PartAbbreviationAttributes>())
+{
+}
+
+bool PartAbbreviation::hasAttributes() const
+{
+    return myAttributes->hasValues();
+}
+
+bool PartAbbreviation::hasContents() const
+{
+    return true;
+}
+
+std::ostream &PartAbbreviation::streamAttributes(std::ostream &os) const
+{
+    if (myAttributes)
     {
-        PartAbbreviation::PartAbbreviation()
-        :myValue()
-        ,myAttributes( std::make_shared<PartAbbreviationAttributes>() )
-        {}
+        myAttributes->toStream(os);
+    }
+    return os;
+}
 
+std::ostream &PartAbbreviation::streamName(std::ostream &os) const
+{
+    os << "part-abbreviation";
+    return os;
+}
 
-        PartAbbreviation::PartAbbreviation( const XsString& value )
-        :myValue( value )
-        ,myAttributes( std::make_shared<PartAbbreviationAttributes>() )
-        {}
+std::ostream &PartAbbreviation::streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const
+{
+    MX_UNUSED(indentLevel);
+    isOneLineOnly = true;
+    os << myValue;
+    return os;
+}
 
+PartAbbreviationAttributesPtr PartAbbreviation::getAttributes() const
+{
+    return myAttributes;
+}
 
-        bool PartAbbreviation::hasAttributes() const
-        {
-            return myAttributes->hasValues();
-        }
-
-
-        bool PartAbbreviation::hasContents() const
-        {
-            return true;
-        }
-
-
-        std::ostream& PartAbbreviation::streamAttributes( std::ostream& os ) const
-        {
-            if ( myAttributes )
-            {
-                myAttributes->toStream( os );
-            }
-            return os;
-        }
-
-
-        std::ostream& PartAbbreviation::streamName( std::ostream& os ) const
-        {
-            os << "part-abbreviation";
-            return os;
-        }
-
-
-        std::ostream& PartAbbreviation::streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly  ) const
-        {
-            MX_UNUSED( indentLevel );
-            isOneLineOnly = true;
-            os << myValue;
-            return os;
-        }
-
-
-        PartAbbreviationAttributesPtr PartAbbreviation::getAttributes() const
-        {
-            return myAttributes;
-        }
-
-
-        void PartAbbreviation::setAttributes( const PartAbbreviationAttributesPtr& value )
-        {
-            if ( value )
-            {
-                myAttributes = value;
-            }
-        }
-
-
-        XsString PartAbbreviation::getValue() const
-        {
-            return myValue;
-        }
-
-
-        void PartAbbreviation::setValue( const XsString& value )
-        {
-            myValue = value;
-        }
-
-
-        bool PartAbbreviation::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
-        {
-            bool isSuccess = true;
-            isSuccess &= myAttributes->fromXElement( message, xelement );
-            myValue.setValue( xelement.getValue() );
-            return isSuccess;
-        }
-
+void PartAbbreviation::setAttributes(const PartAbbreviationAttributesPtr &value)
+{
+    if (value)
+    {
+        myAttributes = value;
     }
 }
+
+XsString PartAbbreviation::getValue() const
+{
+    return myValue;
+}
+
+void PartAbbreviation::setValue(const XsString &value)
+{
+    myValue = value;
+}
+
+bool PartAbbreviation::fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement)
+{
+    bool isSuccess = true;
+    isSuccess &= myAttributes->fromXElement(message, xelement);
+    myValue.setValue(xelement.getValue());
+    return isSuccess;
+}
+
+} // namespace core
+} // namespace mx

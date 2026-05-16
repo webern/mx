@@ -4,14 +4,14 @@
 
 #pragma once
 
+#include "ezxml/XAttribute.h"
+#include "ezxml/XAttributeIterator.h"
 #include "ezxml/XDoc.h"
 #include "ezxml/XElement.h"
-#include "ezxml/XAttribute.h"
 #include "ezxml/XElementIterator.h"
-#include "ezxml/XAttributeIterator.h"
 
-#include <string>
 #include <set>
+#include <string>
 
 // Some of the test files (particularly MuseScore and Recordare) have
 // trailing zeros after decimal points.  Mx does not do this, so for
@@ -21,103 +21,92 @@
 namespace mxtest
 {
 
-    const std::set<std::string> decimalFields =
-    {
-        "top-system-distance",
-        "dynamics",
-        "left-margin",
-        "right-margin",
-        "staff-distance",
-        "system-distance",
-        "default-y",
-        "default-x",
-        "tenths"
-    };
+const std::set<std::string> decimalFields = {"top-system-distance", "dynamics",       "left-margin",
+                                             "right-margin",        "staff-distance", "system-distance",
+                                             "default-y",           "default-x",      "tenths"};
 
-    inline int trailingCharsToStrip( const std::string& value )
+inline int trailingCharsToStrip(const std::string &value)
+{
+    bool isDecimalFound = false;
+    bool isNonZeroFound = false;
+    int zeroCount = 0;
+    for (auto it = value.crbegin(); it != value.crend(); ++it)
     {
-        bool isDecimalFound = false;
-        bool isNonZeroFound = false;
-        int zeroCount = 0;
-        for ( auto it = value.crbegin(); it != value.crend(); ++it )
+        if (*it == '0')
         {
-            if ( *it == '0' )
+            if (!isDecimalFound && !isNonZeroFound)
             {
-                if ( !isDecimalFound && !isNonZeroFound )
-                {
-                    ++zeroCount;
-                }
-            }
-            else if ( *it == '.' )
-            {
-                isDecimalFound = true;
-                break;
-            }
-            else
-            {
-                isNonZeroFound = true;
+                ++zeroCount;
             }
         }
-
-        if ( !isDecimalFound )
+        else if (*it == '.')
         {
-            return 0;
+            isDecimalFound = true;
+            break;
         }
-
-        if ( !isNonZeroFound )
+        else
         {
-            // add 1 to strip the decimal
-            return zeroCount + 1;
-        }
-
-        return zeroCount;
-    }
-
-
-    inline void stripZeros( ::ezxml::XElement& xelement )
-    {
-        const auto initialValue = xelement.getValue();
-
-        if ( initialValue.empty() )
-        {
-            return;
-        }
-
-        const int chars = trailingCharsToStrip( initialValue );
-
-        if ( chars != 0 )
-        {
-            xelement.setValue( initialValue.substr( 0, initialValue.size() - chars ) );
-        }
-
-        auto str = xelement.getValue();
-        if( str == "-0" )
-        {
-            xelement.setValue( "0" );
+            isNonZeroFound = true;
         }
     }
 
-
-    inline void stripZeros( ::ezxml::XAttribute& xattribute )
+    if (!isDecimalFound)
     {
-        const auto initialValue = xattribute.getValue();
+        return 0;
+    }
 
-        if ( initialValue.empty() )
-        {
-            return;
-        }
+    if (!isNonZeroFound)
+    {
+        // add 1 to strip the decimal
+        return zeroCount + 1;
+    }
 
-        const int chars = trailingCharsToStrip( initialValue );
+    return zeroCount;
+}
 
-        if ( chars != 0 )
-        {
-            xattribute.setValue( initialValue.substr( 0, initialValue.size() - chars ) );
-        }
+inline void stripZeros(::ezxml::XElement &xelement)
+{
+    const auto initialValue = xelement.getValue();
 
-        auto str = xattribute.getValue();
-        if( str == "-0" )
-        {
-            xattribute.setValue( "0" );
-        }
+    if (initialValue.empty())
+    {
+        return;
+    }
+
+    const int chars = trailingCharsToStrip(initialValue);
+
+    if (chars != 0)
+    {
+        xelement.setValue(initialValue.substr(0, initialValue.size() - chars));
+    }
+
+    auto str = xelement.getValue();
+    if (str == "-0")
+    {
+        xelement.setValue("0");
     }
 }
+
+inline void stripZeros(::ezxml::XAttribute &xattribute)
+{
+    const auto initialValue = xattribute.getValue();
+
+    if (initialValue.empty())
+    {
+        return;
+    }
+
+    const int chars = trailingCharsToStrip(initialValue);
+
+    if (chars != 0)
+    {
+        xattribute.setValue(initialValue.substr(0, initialValue.size() - chars));
+    }
+
+    auto str = xattribute.getValue();
+    if (str == "-0")
+    {
+        xattribute.setValue("0");
+    }
+}
+} // namespace mxtest

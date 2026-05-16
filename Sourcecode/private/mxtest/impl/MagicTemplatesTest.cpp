@@ -6,11 +6,11 @@
 #ifdef MX_COMPILE_IMPL_TESTS
 
 #include "cpul/cpulTestHarness.h"
-#include "mx/impl/DirectionWriter.h"
+#include "mx/api/OttavaData.h"
 #include "mx/core/elements/Direction.h"
 #include "mx/core/elements/DirectionType.h"
-#include "mx/api/OttavaData.h"
 #include "mx/core/elements/OctaveShift.h"
+#include "mx/impl/DirectionWriter.h"
 
 #include <memory>
 

@@ -8,59 +8,61 @@
 
 namespace mx
 {
-    namespace core
+namespace core
+{
+Scoop::Scoop() : ElementInterface(), myAttributes(std::make_shared<EmptyLineAttributes>())
+{
+}
+
+bool Scoop::hasAttributes() const
+{
+    return myAttributes->hasValues();
+}
+
+bool Scoop::hasContents() const
+{
+    return false;
+}
+
+std::ostream &Scoop::streamAttributes(std::ostream &os) const
+{
+    if (myAttributes)
     {
-        Scoop::Scoop()
-        :ElementInterface()
-        ,myAttributes( std::make_shared<EmptyLineAttributes>() )
-        {}
+        myAttributes->toStream(os);
+    }
+    return os;
+}
 
+std::ostream &Scoop::streamName(std::ostream &os) const
+{
+    os << "scoop";
+    return os;
+}
 
-        bool Scoop::hasAttributes() const
-        {
-            return myAttributes->hasValues();
-        }
+std::ostream &Scoop::streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const
+{
+    MX_UNUSED(indentLevel);
+    isOneLineOnly = true;
+    return os;
+}
 
+EmptyLineAttributesPtr Scoop::getAttributes() const
+{
+    return myAttributes;
+}
 
-        bool Scoop::hasContents() const  { return false; }
-        std::ostream& Scoop::streamAttributes( std::ostream& os ) const
-        {
-            if ( myAttributes )
-            {
-                myAttributes->toStream( os );
-            }
-            return os;
-        }
-
-
-        std::ostream& Scoop::streamName( std::ostream& os ) const  { os << "scoop"; return os; }
-        std::ostream& Scoop::streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly ) const
-        {
-            MX_UNUSED( indentLevel );
-            isOneLineOnly = true;
-            return os;
-        }
-
-
-        EmptyLineAttributesPtr Scoop::getAttributes() const
-        {
-            return myAttributes;
-        }
-
-
-        void Scoop::setAttributes( const EmptyLineAttributesPtr& value )
-        {
-            if ( value )
-            {
-                myAttributes = value;
-            }
-        }
-
-
-        bool Scoop::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
-        {
-            return myAttributes->fromXElement( message, xelement );
-        }
-
+void Scoop::setAttributes(const EmptyLineAttributesPtr &value)
+{
+    if (value)
+    {
+        myAttributes = value;
     }
 }
+
+bool Scoop::fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement)
+{
+    return myAttributes->fromXElement(message, xelement);
+}
+
+} // namespace core
+} // namespace mx

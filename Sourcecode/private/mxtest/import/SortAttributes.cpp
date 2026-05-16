@@ -6,46 +6,44 @@
 
 namespace mxtest
 {
-    void sortAttributes( ::ezxml::XDoc& xdoc )
+void sortAttributes(::ezxml::XDoc &xdoc)
+{
+    sortAttributes(*xdoc.getRoot());
+}
+
+void sortAttributes(::ezxml::XElement &xelement)
+{
+    StringMap stringMap;
+
+    for (auto it = xelement.attributesBegin(); it != xelement.attributesEnd(); ++it)
     {
-        sortAttributes( *xdoc.getRoot() );
+        stringMap[it->getName()] = it->getValue();
     }
-    
-    
-    void sortAttributes ( ::ezxml::XElement& xelement )
+
+    while (xelement.attributesBegin() != xelement.attributesEnd())
     {
-        StringMap stringMap;
-        
-        for( auto it = xelement.attributesBegin(); it != xelement.attributesEnd(); ++ it )
-        {
-            stringMap[it->getName()] = it->getValue();
-        }
-        
-        while( xelement.attributesBegin() != xelement.attributesEnd() )
-        {
-            deleteFirstAttribute( xelement );
-        }
-        
-        for( auto mapIter = stringMap.cbegin(); mapIter != stringMap.cend(); ++mapIter )
-        {
-            xelement.appendAttribute( mapIter->first )->setValue( mapIter->second );
-        }
-        
-        if( xelement.getType() == ::ezxml::XElementType::element )
-        {
-            for( auto elementIter = xelement.begin(); elementIter != xelement.end(); ++elementIter )
-            {
-                sortAttributes( *elementIter );
-            }
-        }
+        deleteFirstAttribute(xelement);
     }
-    
-    
-    void deleteFirstAttribute( ::ezxml::XElement& xelement )
+
+    for (auto mapIter = stringMap.cbegin(); mapIter != stringMap.cend(); ++mapIter)
     {
-        if( xelement.attributesBegin() != xelement.attributesEnd() )
+        xelement.appendAttribute(mapIter->first)->setValue(mapIter->second);
+    }
+
+    if (xelement.getType() == ::ezxml::XElementType::element)
+    {
+        for (auto elementIter = xelement.begin(); elementIter != xelement.end(); ++elementIter)
         {
-            xelement.removeAttribute( xelement.attributesBegin() );
+            sortAttributes(*elementIter);
         }
     }
 }
+
+void deleteFirstAttribute(::ezxml::XElement &xelement)
+{
+    if (xelement.attributesBegin() != xelement.attributesEnd())
+    {
+        xelement.removeAttribute(xelement.attributesBegin());
+    }
+}
+} // namespace mxtest

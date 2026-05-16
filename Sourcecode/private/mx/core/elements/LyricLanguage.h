@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "mx/core/ForwardDeclare.h"
 #include "mx/core/ElementInterface.h"
+#include "mx/core/ForwardDeclare.h"
 #include "mx/core/elements/LyricLanguageAttributes.h"
 
 #include <iosfwd>
@@ -14,32 +14,35 @@
 
 namespace mx
 {
-    namespace core
-    {
+namespace core
+{
 
-        MX_FORWARD_DECLARE_ATTRIBUTES( LyricLanguageAttributes )
-        MX_FORWARD_DECLARE_ELEMENT( LyricLanguage )
+MX_FORWARD_DECLARE_ATTRIBUTES(LyricLanguageAttributes)
+MX_FORWARD_DECLARE_ELEMENT(LyricLanguage)
 
-        inline LyricLanguagePtr makeLyricLanguage() { return std::make_shared<LyricLanguage>(); }
-
-        class LyricLanguage : public ElementInterface
-        {
-        public:
-            LyricLanguage();
-
-            virtual bool hasAttributes() const;
-            virtual bool hasContents() const;
-            virtual std::ostream& streamAttributes( std::ostream& os ) const;
-            virtual std::ostream& streamName( std::ostream& os ) const;
-            virtual std::ostream& streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly ) const;
-            LyricLanguageAttributesPtr getAttributes() const;
-            void setAttributes( const LyricLanguageAttributesPtr& attributes );
-
-            private:
-            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
-
-        private:
-            LyricLanguageAttributesPtr myAttributes;
-        };
-    }
+inline LyricLanguagePtr makeLyricLanguage()
+{
+    return std::make_shared<LyricLanguage>();
 }
+
+class LyricLanguage : public ElementInterface
+{
+  public:
+    LyricLanguage();
+
+    virtual bool hasAttributes() const;
+    virtual bool hasContents() const;
+    virtual std::ostream &streamAttributes(std::ostream &os) const;
+    virtual std::ostream &streamName(std::ostream &os) const;
+    virtual std::ostream &streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const;
+    LyricLanguageAttributesPtr getAttributes() const;
+    void setAttributes(const LyricLanguageAttributesPtr &attributes);
+
+  private:
+    virtual bool fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement);
+
+  private:
+    LyricLanguageAttributesPtr myAttributes;
+};
+} // namespace core
+} // namespace mx

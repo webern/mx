@@ -6,16 +6,13 @@
 
 namespace ezxml
 {
-    XDocPtr
-    XFactory::makeXDoc()
-    {
-        return XDocPtr{ new PugiDoc{} };
-    }
-
-
-    XElementPtr
-    XFactory::makeXElement()
-    {
-        return XElementPtr{ new PugiElement{} };
-    }
+XDocPtr XFactory::makeXDoc()
+{
+    return XDocPtr{new PugiDoc{}};
 }
+
+XElementPtr XFactory::makeXElement()
+{
+    return XElementPtr{new PugiElement{}};
+}
+} // namespace ezxml

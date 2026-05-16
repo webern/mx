@@ -10,25 +10,25 @@
 
 namespace mx
 {
-    namespace core
-    {
-        class NonArpeggiate;
-    }
-    
-    namespace impl
-    {
-        class NonArpeggiateFunctions
-        {
-        public:
-            NonArpeggiateFunctions( const core::NonArpeggiate& inNonArpeggiate, impl::Cursor inCursor );
-            ~NonArpeggiateFunctions() = default;
-            NonArpeggiateFunctions( const NonArpeggiateFunctions& ) = default;
-            NonArpeggiateFunctions( NonArpeggiateFunctions&& ) = default;
-            api::MarkData parseNonArpeggiate() const;
-            
-        private:
-            const core::NonArpeggiate& myNonArpeggiate;
-            const impl::Cursor myCursor;
-        };
-    }
+namespace core
+{
+class NonArpeggiate;
 }
+
+namespace impl
+{
+class NonArpeggiateFunctions
+{
+  public:
+    NonArpeggiateFunctions(const core::NonArpeggiate &inNonArpeggiate, impl::Cursor inCursor);
+    ~NonArpeggiateFunctions() = default;
+    NonArpeggiateFunctions(const NonArpeggiateFunctions &) = default;
+    NonArpeggiateFunctions(NonArpeggiateFunctions &&) = default;
+    api::MarkData parseNonArpeggiate() const;
+
+  private:
+    const core::NonArpeggiate &myNonArpeggiate;
+    const impl::Cursor myCursor;
+};
+} // namespace impl
+} // namespace mx

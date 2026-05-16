@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "mx/core/ForwardDeclare.h"
 #include "mx/core/ElementInterface.h"
+#include "mx/core/ForwardDeclare.h"
 #include "mx/core/elements/OctaveShiftAttributes.h"
 
 #include <iosfwd>
@@ -14,32 +14,35 @@
 
 namespace mx
 {
-    namespace core
-    {
+namespace core
+{
 
-        MX_FORWARD_DECLARE_ATTRIBUTES( OctaveShiftAttributes )
-        MX_FORWARD_DECLARE_ELEMENT( OctaveShift )
+MX_FORWARD_DECLARE_ATTRIBUTES(OctaveShiftAttributes)
+MX_FORWARD_DECLARE_ELEMENT(OctaveShift)
 
-        inline OctaveShiftPtr makeOctaveShift() { return std::make_shared<OctaveShift>(); }
-
-        class OctaveShift : public ElementInterface
-        {
-        public:
-            OctaveShift();
-
-            virtual bool hasAttributes() const;
-            virtual bool hasContents() const;
-            virtual std::ostream& streamAttributes( std::ostream& os ) const;
-            virtual std::ostream& streamName( std::ostream& os ) const;
-            virtual std::ostream& streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly ) const;
-            OctaveShiftAttributesPtr getAttributes() const;
-            void setAttributes( const OctaveShiftAttributesPtr& attributes );
-
-            private:
-            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
-
-        private:
-            OctaveShiftAttributesPtr myAttributes;
-        };
-    }
+inline OctaveShiftPtr makeOctaveShift()
+{
+    return std::make_shared<OctaveShift>();
 }
+
+class OctaveShift : public ElementInterface
+{
+  public:
+    OctaveShift();
+
+    virtual bool hasAttributes() const;
+    virtual bool hasContents() const;
+    virtual std::ostream &streamAttributes(std::ostream &os) const;
+    virtual std::ostream &streamName(std::ostream &os) const;
+    virtual std::ostream &streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const;
+    OctaveShiftAttributesPtr getAttributes() const;
+    void setAttributes(const OctaveShiftAttributesPtr &attributes);
+
+  private:
+    virtual bool fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement);
+
+  private:
+    OctaveShiftAttributesPtr myAttributes;
+};
+} // namespace core
+} // namespace mx

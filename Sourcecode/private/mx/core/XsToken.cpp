@@ -7,24 +7,20 @@
 
 namespace mx
 {
-    namespace core
-    {
-        XsToken::XsToken()
-        :XsString()
-        {
-
-        }
-        
-        XsToken::XsToken( const StringType& value )
-        :XsString( value )
-        {
-            XsToken::setValue( value );
-        }
-
-
-        void XsToken::setValue( const StringType& value )
-        {
-            XsString::setValue( reduce( value ) );
-        }
-    }
+namespace core
+{
+XsToken::XsToken() : XsString()
+{
 }
+
+XsToken::XsToken(const StringType &value) : XsString(value)
+{
+    XsToken::setValue(value);
+}
+
+void XsToken::setValue(const StringType &value)
+{
+    XsString::setValue(reduce(value));
+}
+} // namespace core
+} // namespace mx

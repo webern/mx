@@ -8,46 +8,44 @@
 
 namespace mx
 {
-    namespace core
-    {
-        StaffTuningAttributes::StaffTuningAttributes()
-        :line()
-        ,hasLine( false )
-        {}
-
-
-        bool StaffTuningAttributes::hasValues() const
-        {
-            return hasLine;
-        }
-
-
-        std::ostream& StaffTuningAttributes::toStream( std::ostream& os ) const
-        {
-            if ( hasValues() )
-            {
-                streamAttribute( os, line, "line", hasLine );
-            }
-            return os;
-        }
-
-
-        bool StaffTuningAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
-        {
-            const char* const className = "StaffTuningAttributes";
-            bool isSuccess = true;
-        
-            auto it = xelement.attributesBegin();
-            auto endIter = xelement.attributesEnd();
-        
-            for( ; it != endIter; ++it )
-            {
-                if( parseAttribute( message, it, className, isSuccess, line, hasLine, "line" ) ) { continue; }
-            }
-        
-        
-            return isSuccess;
-        }
-
-    }
+namespace core
+{
+StaffTuningAttributes::StaffTuningAttributes() : line(), hasLine(false)
+{
 }
+
+bool StaffTuningAttributes::hasValues() const
+{
+    return hasLine;
+}
+
+std::ostream &StaffTuningAttributes::toStream(std::ostream &os) const
+{
+    if (hasValues())
+    {
+        streamAttribute(os, line, "line", hasLine);
+    }
+    return os;
+}
+
+bool StaffTuningAttributes::fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement)
+{
+    const char *const className = "StaffTuningAttributes";
+    bool isSuccess = true;
+
+    auto it = xelement.attributesBegin();
+    auto endIter = xelement.attributesEnd();
+
+    for (; it != endIter; ++it)
+    {
+        if (parseAttribute(message, it, className, isSuccess, line, hasLine, "line"))
+        {
+            continue;
+        }
+    }
+
+    return isSuccess;
+}
+
+} // namespace core
+} // namespace mx

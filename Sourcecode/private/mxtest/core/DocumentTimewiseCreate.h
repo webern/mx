@@ -6,30 +6,27 @@
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_CORE_TESTS
 
-#include <memory>
-#include "mx/core/Enums.h"
-#include "mx/core/Elements.h"
 #include "mx/core/Document.h"
+#include "mx/core/Elements.h"
+#include "mx/core/Enums.h"
+#include <memory>
 
 namespace mx
 {
-    namespace core
-    {
-        class DocumentTimewise;
-        using DocumentTimewisePtr = std::shared_ptr<DocumentTimewise>;
-    }
-}
+namespace core
+{
+class DocumentTimewise;
+using DocumentTimewisePtr = std::shared_ptr<DocumentTimewise>;
+} // namespace core
+} // namespace mx
 
 namespace mxtest
 {
-    mx::core::DocumentPtr createDocumentTimewise();
-    void setTimewiseMeasureProperties( mx::core::TimewiseMeasurePtr& measure,
-                                      int measureNumber,
-                                      int divisions,
-                                      int beats,
-                                      int beatType );
-    mx::core::MusicDataGroupPtr getConstructedMusicDataGroup( const std::string& beats );
-    
+mx::core::DocumentPtr createDocumentTimewise();
+void setTimewiseMeasureProperties(mx::core::TimewiseMeasurePtr &measure, int measureNumber, int divisions, int beats,
+                                  int beatType);
+mx::core::MusicDataGroupPtr getConstructedMusicDataGroup(const std::string &beats);
+
 //    MusicDataChoicePtr makeNote( mx::t::StepEnum step,
 //                                       int octave,
 //                                       mx::t::NoteTypeValue duration,
@@ -43,6 +40,6 @@ namespace mxtest
 //    void addP3M1Data( const MusicDataGroupPtr& musicDataGroup );
 //    void addP3M2Data( const MusicDataGroupPtr& musicDataGroup );
 //    void addP3M3Data( const MusicDataGroupPtr& musicDataGroup );
-}
+} // namespace mxtest
 
 #endif

@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "mx/core/ForwardDeclare.h"
 #include "mx/core/AttributesInterface.h"
+#include "mx/core/ForwardDeclare.h"
 
 #include <iosfwd>
 #include <memory>
@@ -13,17 +13,17 @@
 
 namespace mx
 {
-    namespace core
-    {
+namespace core
+{
 
-        MX_FORWARD_DECLARE_ATTRIBUTES( AttributesIterface )
+MX_FORWARD_DECLARE_ATTRIBUTES(AttributesIterface)
 
-        struct AttributesIterface : public AttributesInterface
-        {
-        public:
-            AttributesIterface();
-            virtual bool hasValues() const;
-            virtual std::ostream& toStream( std::ostream& os ) const;
-        };
-    }
-}
+struct AttributesIterface : public AttributesInterface
+{
+  public:
+    AttributesIterface();
+    virtual bool hasValues() const;
+    virtual std::ostream &toStream(std::ostream &os) const;
+};
+} // namespace core
+} // namespace mx

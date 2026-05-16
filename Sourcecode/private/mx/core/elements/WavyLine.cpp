@@ -8,59 +8,61 @@
 
 namespace mx
 {
-    namespace core
+namespace core
+{
+WavyLine::WavyLine() : ElementInterface(), myAttributes(std::make_shared<WavyLineAttributes>())
+{
+}
+
+bool WavyLine::hasAttributes() const
+{
+    return myAttributes->hasValues();
+}
+
+bool WavyLine::hasContents() const
+{
+    return false;
+}
+
+std::ostream &WavyLine::streamAttributes(std::ostream &os) const
+{
+    if (myAttributes)
     {
-        WavyLine::WavyLine()
-        :ElementInterface()
-        ,myAttributes( std::make_shared<WavyLineAttributes>() )
-        {}
+        myAttributes->toStream(os);
+    }
+    return os;
+}
 
+std::ostream &WavyLine::streamName(std::ostream &os) const
+{
+    os << "wavy-line";
+    return os;
+}
 
-        bool WavyLine::hasAttributes() const
-        {
-            return myAttributes->hasValues();
-        }
+std::ostream &WavyLine::streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const
+{
+    MX_UNUSED(indentLevel);
+    isOneLineOnly = true;
+    return os;
+}
 
+WavyLineAttributesPtr WavyLine::getAttributes() const
+{
+    return myAttributes;
+}
 
-        bool WavyLine::hasContents() const  { return false; }
-        std::ostream& WavyLine::streamAttributes( std::ostream& os ) const
-        {
-            if ( myAttributes )
-            {
-                myAttributes->toStream( os );
-            }
-            return os;
-        }
-
-
-        std::ostream& WavyLine::streamName( std::ostream& os ) const  { os << "wavy-line"; return os; }
-        std::ostream& WavyLine::streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly ) const
-        {
-            MX_UNUSED( indentLevel );
-            isOneLineOnly = true;
-            return os;
-        }
-
-
-        WavyLineAttributesPtr WavyLine::getAttributes() const
-        {
-            return myAttributes;
-        }
-
-
-        void WavyLine::setAttributes( const WavyLineAttributesPtr& value )
-        {
-            if ( value )
-            {
-                myAttributes = value;
-            }
-        }
-
-
-        bool WavyLine::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
-        {
-            return myAttributes->fromXElement( message, xelement );
-        }
-
+void WavyLine::setAttributes(const WavyLineAttributesPtr &value)
+{
+    if (value)
+    {
+        myAttributes = value;
     }
 }
+
+bool WavyLine::fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement)
+{
+    return myAttributes->fromXElement(message, xelement);
+}
+
+} // namespace core
+} // namespace mx

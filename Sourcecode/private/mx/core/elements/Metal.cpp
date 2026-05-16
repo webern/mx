@@ -8,70 +8,61 @@
 
 namespace mx
 {
-    namespace core
-    {
-        Metal::Metal()
-        :myValue( MetalEnum::bell )
-        {}
-
-
-        Metal::Metal( const MetalEnum& value )
-        :myValue( value )
-        {}
-
-
-        bool Metal::hasAttributes() const
-        {
-            return false;
-        }
-
-
-        bool Metal::hasContents() const
-        {
-            return true;
-        }
-
-
-        std::ostream& Metal::streamAttributes( std::ostream& os ) const
-        {
-            return os;
-        }
-
-
-        std::ostream& Metal::streamName( std::ostream& os ) const
-        {
-            os << "metal";
-            return os;
-        }
-
-
-        std::ostream& Metal::streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly  ) const
-        {
-            MX_UNUSED( indentLevel );
-            isOneLineOnly = true;
-            os << myValue;
-            return os;
-        }
-
-
-        MetalEnum Metal::getValue() const
-        {
-            return myValue;
-        }
-
-
-        void Metal::setValue( const MetalEnum& value )
-        {
-            myValue = value;
-        }
-
-
-        bool Metal::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
-        {
-            MX_UNUSED( message );
-            myValue = parseMetalEnum( xelement.getValue() );
-            return true;
-        }
-
-    }
+namespace core
+{
+Metal::Metal() : myValue(MetalEnum::bell)
+{
 }
+
+Metal::Metal(const MetalEnum &value) : myValue(value)
+{
+}
+
+bool Metal::hasAttributes() const
+{
+    return false;
+}
+
+bool Metal::hasContents() const
+{
+    return true;
+}
+
+std::ostream &Metal::streamAttributes(std::ostream &os) const
+{
+    return os;
+}
+
+std::ostream &Metal::streamName(std::ostream &os) const
+{
+    os << "metal";
+    return os;
+}
+
+std::ostream &Metal::streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const
+{
+    MX_UNUSED(indentLevel);
+    isOneLineOnly = true;
+    os << myValue;
+    return os;
+}
+
+MetalEnum Metal::getValue() const
+{
+    return myValue;
+}
+
+void Metal::setValue(const MetalEnum &value)
+{
+    myValue = value;
+}
+
+bool Metal::fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement)
+{
+    MX_UNUSED(message);
+    myValue = parseMetalEnum(xelement.getValue());
+    return true;
+}
+
+} // namespace core
+} // namespace mx

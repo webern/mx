@@ -8,92 +8,79 @@
 
 namespace mx
 {
-    namespace core
+namespace core
+{
+WithBar::WithBar() : myValue(), myAttributes(std::make_shared<WithBarAttributes>())
+{
+}
+
+WithBar::WithBar(const XsString &value) : myValue(value), myAttributes(std::make_shared<WithBarAttributes>())
+{
+}
+
+bool WithBar::hasAttributes() const
+{
+    return myAttributes->hasValues();
+}
+
+bool WithBar::hasContents() const
+{
+    return true;
+}
+
+std::ostream &WithBar::streamAttributes(std::ostream &os) const
+{
+    if (myAttributes)
     {
-        WithBar::WithBar()
-        :myValue()
-        ,myAttributes( std::make_shared<WithBarAttributes>() )
-        {}
+        myAttributes->toStream(os);
+    }
+    return os;
+}
 
+std::ostream &WithBar::streamName(std::ostream &os) const
+{
+    os << "with-bar";
+    return os;
+}
 
-        WithBar::WithBar( const XsString& value )
-        :myValue( value )
-        ,myAttributes( std::make_shared<WithBarAttributes>() )
-        {}
+std::ostream &WithBar::streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const
+{
+    MX_UNUSED(indentLevel);
+    isOneLineOnly = true;
+    os << myValue;
+    return os;
+}
 
+WithBarAttributesPtr WithBar::getAttributes() const
+{
+    return myAttributes;
+}
 
-        bool WithBar::hasAttributes() const
-        {
-            return myAttributes->hasValues();
-        }
-
-
-        bool WithBar::hasContents() const
-        {
-            return true;
-        }
-
-
-        std::ostream& WithBar::streamAttributes( std::ostream& os ) const
-        {
-            if ( myAttributes )
-            {
-                myAttributes->toStream( os );
-            }
-            return os;
-        }
-
-
-        std::ostream& WithBar::streamName( std::ostream& os ) const
-        {
-            os << "with-bar";
-            return os;
-        }
-
-
-        std::ostream& WithBar::streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly  ) const
-        {
-            MX_UNUSED( indentLevel );
-            isOneLineOnly = true;
-            os << myValue;
-            return os;
-        }
-
-
-        WithBarAttributesPtr WithBar::getAttributes() const
-        {
-            return myAttributes;
-        }
-
-
-        void WithBar::setAttributes( const WithBarAttributesPtr& value )
-        {
-            if ( value )
-            {
-                myAttributes = value;
-            }
-        }
-
-
-        XsString WithBar::getValue() const
-        {
-            return myValue;
-        }
-
-
-        void WithBar::setValue( const XsString& value )
-        {
-            myValue = value;
-        }
-
-
-        bool WithBar::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
-        {
-            bool isSuccess = true;
-            isSuccess &= myAttributes->fromXElement( message, xelement );
-            myValue.setValue( xelement.getValue() );
-            MX_RETURN_IS_SUCCESS;
-        }
-
+void WithBar::setAttributes(const WithBarAttributesPtr &value)
+{
+    if (value)
+    {
+        myAttributes = value;
     }
 }
+
+XsString WithBar::getValue() const
+{
+    return myValue;
+}
+
+void WithBar::setValue(const XsString &value)
+{
+    myValue = value;
+}
+
+bool WithBar::fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement)
+{
+    bool isSuccess = true;
+    isSuccess &= myAttributes->fromXElement(message, xelement);
+    myValue.setValue(xelement.getValue());
+    MX_RETURN_IS_SUCCESS;
+}
+
+} // namespace core
+} // namespace mx

@@ -8,59 +8,61 @@
 
 namespace mx
 {
-    namespace core
+namespace core
+{
+Coda::Coda() : ElementInterface(), myAttributes(std::make_shared<EmptyPrintObjectStyleAlignAttributes>())
+{
+}
+
+bool Coda::hasAttributes() const
+{
+    return myAttributes->hasValues();
+}
+
+bool Coda::hasContents() const
+{
+    return false;
+}
+
+std::ostream &Coda::streamAttributes(std::ostream &os) const
+{
+    if (myAttributes)
     {
-        Coda::Coda()
-        :ElementInterface()
-        ,myAttributes( std::make_shared<EmptyPrintObjectStyleAlignAttributes>() )
-        {}
+        myAttributes->toStream(os);
+    }
+    return os;
+}
 
+std::ostream &Coda::streamName(std::ostream &os) const
+{
+    os << "coda";
+    return os;
+}
 
-        bool Coda::hasAttributes() const
-        {
-            return myAttributes->hasValues();
-        }
+std::ostream &Coda::streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const
+{
+    MX_UNUSED(indentLevel);
+    isOneLineOnly = true;
+    return os;
+}
 
+EmptyPrintObjectStyleAlignAttributesPtr Coda::getAttributes() const
+{
+    return myAttributes;
+}
 
-        bool Coda::hasContents() const  { return false; }
-        std::ostream& Coda::streamAttributes( std::ostream& os ) const
-        {
-            if ( myAttributes )
-            {
-                myAttributes->toStream( os );
-            }
-            return os;
-        }
-
-
-        std::ostream& Coda::streamName( std::ostream& os ) const  { os << "coda"; return os; }
-        std::ostream& Coda::streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly ) const
-        {
-            MX_UNUSED( indentLevel );
-            isOneLineOnly = true;
-            return os;
-        }
-
-
-        EmptyPrintObjectStyleAlignAttributesPtr Coda::getAttributes() const
-        {
-            return myAttributes;
-        }
-
-
-        void Coda::setAttributes( const EmptyPrintObjectStyleAlignAttributesPtr& value )
-        {
-            if ( value )
-            {
-                myAttributes = value;
-            }
-        }
-
-
-        bool Coda::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
-        {
-            return myAttributes->fromXElement( message, xelement );
-        }
-
+void Coda::setAttributes(const EmptyPrintObjectStyleAlignAttributesPtr &value)
+{
+    if (value)
+    {
+        myAttributes = value;
     }
 }
+
+bool Coda::fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement)
+{
+    return myAttributes->fromXElement(message, xelement);
+}
+
+} // namespace core
+} // namespace mx

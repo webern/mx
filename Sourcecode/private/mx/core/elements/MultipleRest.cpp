@@ -8,92 +8,80 @@
 
 namespace mx
 {
-    namespace core
+namespace core
+{
+MultipleRest::MultipleRest() : myValue(), myAttributes(std::make_shared<MultipleRestAttributes>())
+{
+}
+
+MultipleRest::MultipleRest(const PositiveIntegerOrEmpty &value)
+    : myValue(value), myAttributes(std::make_shared<MultipleRestAttributes>())
+{
+}
+
+bool MultipleRest::hasAttributes() const
+{
+    return myAttributes->hasValues();
+}
+
+bool MultipleRest::hasContents() const
+{
+    return true;
+}
+
+std::ostream &MultipleRest::streamAttributes(std::ostream &os) const
+{
+    if (myAttributes)
     {
-        MultipleRest::MultipleRest()
-        :myValue()
-        ,myAttributes( std::make_shared<MultipleRestAttributes>() )
-        {}
+        myAttributes->toStream(os);
+    }
+    return os;
+}
 
+std::ostream &MultipleRest::streamName(std::ostream &os) const
+{
+    os << "multiple-rest";
+    return os;
+}
 
-        MultipleRest::MultipleRest( const PositiveIntegerOrEmpty& value )
-        :myValue( value )
-        ,myAttributes( std::make_shared<MultipleRestAttributes>() )
-        {}
+std::ostream &MultipleRest::streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const
+{
+    MX_UNUSED(indentLevel);
+    isOneLineOnly = true;
+    os << myValue;
+    return os;
+}
 
+MultipleRestAttributesPtr MultipleRest::getAttributes() const
+{
+    return myAttributes;
+}
 
-        bool MultipleRest::hasAttributes() const
-        {
-            return myAttributes->hasValues();
-        }
-
-
-        bool MultipleRest::hasContents() const
-        {
-            return true;
-        }
-
-
-        std::ostream& MultipleRest::streamAttributes( std::ostream& os ) const
-        {
-            if ( myAttributes )
-            {
-                myAttributes->toStream( os );
-            }
-            return os;
-        }
-
-
-        std::ostream& MultipleRest::streamName( std::ostream& os ) const
-        {
-            os << "multiple-rest";
-            return os;
-        }
-
-
-        std::ostream& MultipleRest::streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly  ) const
-        {
-            MX_UNUSED( indentLevel );
-            isOneLineOnly = true;
-            os << myValue;
-            return os;
-        }
-
-
-        MultipleRestAttributesPtr MultipleRest::getAttributes() const
-        {
-            return myAttributes;
-        }
-
-
-        void MultipleRest::setAttributes( const MultipleRestAttributesPtr& value )
-        {
-            if ( value )
-            {
-                myAttributes = value;
-            }
-        }
-
-
-        PositiveIntegerOrEmpty MultipleRest::getValue() const
-        {
-            return myValue;
-        }
-
-
-        void MultipleRest::setValue( const PositiveIntegerOrEmpty& value )
-        {
-            myValue = value;
-        }
-
-
-        bool MultipleRest::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
-        {
-            bool isSuccess = true;
-            isSuccess &= myAttributes->fromXElement( message, xelement );
-            myValue.parse( xelement.getValue() );
-            MX_RETURN_IS_SUCCESS;
-        }
-
+void MultipleRest::setAttributes(const MultipleRestAttributesPtr &value)
+{
+    if (value)
+    {
+        myAttributes = value;
     }
 }
+
+PositiveIntegerOrEmpty MultipleRest::getValue() const
+{
+    return myValue;
+}
+
+void MultipleRest::setValue(const PositiveIntegerOrEmpty &value)
+{
+    myValue = value;
+}
+
+bool MultipleRest::fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement)
+{
+    bool isSuccess = true;
+    isSuccess &= myAttributes->fromXElement(message, xelement);
+    myValue.parse(xelement.getValue());
+    MX_RETURN_IS_SUCCESS;
+}
+
+} // namespace core
+} // namespace mx

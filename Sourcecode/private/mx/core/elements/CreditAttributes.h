@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "mx/core/ForwardDeclare.h"
 #include "mx/core/AttributesInterface.h"
+#include "mx/core/ForwardDeclare.h"
 #include "mx/core/Integers.h"
 
 #include <iosfwd>
@@ -14,22 +14,22 @@
 
 namespace mx
 {
-    namespace core
-    {
+namespace core
+{
 
-        MX_FORWARD_DECLARE_ATTRIBUTES( CreditAttributes )
+MX_FORWARD_DECLARE_ATTRIBUTES(CreditAttributes)
 
-        struct CreditAttributes : public AttributesInterface
-        {
-        public:
-            CreditAttributes();
-            virtual bool hasValues() const;
-            virtual std::ostream& toStream( std::ostream& os ) const;
-            PositiveInteger page;
-            bool hasPage;
+struct CreditAttributes : public AttributesInterface
+{
+  public:
+    CreditAttributes();
+    virtual bool hasValues() const;
+    virtual std::ostream &toStream(std::ostream &os) const;
+    PositiveInteger page;
+    bool hasPage;
 
-            private:
-            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
-        };
-    }
-}
+  private:
+    virtual bool fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement);
+};
+} // namespace core
+} // namespace mx

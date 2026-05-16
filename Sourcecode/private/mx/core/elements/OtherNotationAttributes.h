@@ -4,12 +4,12 @@
 
 #pragma once
 
-#include "mx/core/ForwardDeclare.h"
 #include "mx/core/AttributesInterface.h"
 #include "mx/core/CommaSeparatedText.h"
 #include "mx/core/Decimals.h"
 #include "mx/core/Enums.h"
 #include "mx/core/FontSize.h"
+#include "mx/core/ForwardDeclare.h"
 #include "mx/core/Integers.h"
 
 #include <iosfwd>
@@ -18,44 +18,44 @@
 
 namespace mx
 {
-    namespace core
-    {
+namespace core
+{
 
-        MX_FORWARD_DECLARE_ATTRIBUTES( OtherNotationAttributes )
+MX_FORWARD_DECLARE_ATTRIBUTES(OtherNotationAttributes)
 
-        struct OtherNotationAttributes : public AttributesInterface
-        {
-        public:
-            OtherNotationAttributes();
-            virtual bool hasValues() const;
-            virtual std::ostream& toStream( std::ostream& os ) const;
-            StartStopSingle type;
-            NumberLevel number;
-            YesNo printObject;
-            TenthsValue defaultX;
-            TenthsValue defaultY;
-            TenthsValue relativeX;
-            TenthsValue relativeY;
-            CommaSeparatedText fontFamily;
-            FontStyle fontStyle;
-            FontSize fontSize;
-            FontWeight fontWeight;
-            AboveBelow placement;
-            const bool hasType;
-            bool hasNumber;
-            bool hasPrintObject;
-            bool hasDefaultX;
-            bool hasDefaultY;
-            bool hasRelativeX;
-            bool hasRelativeY;
-            bool hasFontFamily;
-            bool hasFontStyle;
-            bool hasFontSize;
-            bool hasFontWeight;
-            bool hasPlacement;
+struct OtherNotationAttributes : public AttributesInterface
+{
+  public:
+    OtherNotationAttributes();
+    virtual bool hasValues() const;
+    virtual std::ostream &toStream(std::ostream &os) const;
+    StartStopSingle type;
+    NumberLevel number;
+    YesNo printObject;
+    TenthsValue defaultX;
+    TenthsValue defaultY;
+    TenthsValue relativeX;
+    TenthsValue relativeY;
+    CommaSeparatedText fontFamily;
+    FontStyle fontStyle;
+    FontSize fontSize;
+    FontWeight fontWeight;
+    AboveBelow placement;
+    const bool hasType;
+    bool hasNumber;
+    bool hasPrintObject;
+    bool hasDefaultX;
+    bool hasDefaultY;
+    bool hasRelativeX;
+    bool hasRelativeY;
+    bool hasFontFamily;
+    bool hasFontStyle;
+    bool hasFontSize;
+    bool hasFontWeight;
+    bool hasPlacement;
 
-            private:
-            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
-        };
-    }
-}
+  private:
+    virtual bool fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement);
+};
+} // namespace core
+} // namespace mx

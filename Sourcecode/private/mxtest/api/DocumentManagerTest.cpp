@@ -16,42 +16,42 @@
 #include "mx/core/elements/TopMargin.h"
 #include "mxtest/file/Path.h"
 
-
 using namespace std;
 using namespace mx::api;
 
 inline int loadDoc()
 {
-    auto& docMngr = DocumentManager::getInstance();
-    return docMngr.createFromFile( std::string{ mxtest::getResourcesDirectoryPath() } + std::string{ "/recsuite/Dichterliebe01.xml" } );
+    auto &docMngr = DocumentManager::getInstance();
+    return docMngr.createFromFile(std::string{mxtest::getResourcesDirectoryPath()} +
+                                  std::string{"/recsuite/Dichterliebe01.xml"});
 }
 
 inline int loadActorPreludeDoc()
 {
-    auto& docMngr = DocumentManager::getInstance();
-    return docMngr.createFromFile( std::string{ mxtest::getResourcesDirectoryPath() } + std::string{ "/recsuite/ActorPreludeSample.xml" } );
+    auto &docMngr = DocumentManager::getInstance();
+    return docMngr.createFromFile(std::string{mxtest::getResourcesDirectoryPath()} +
+                                  std::string{"/recsuite/ActorPreludeSample.xml"});
 }
 
-inline void destroyDoc( int documentId )
+inline void destroyDoc(int documentId)
 {
-    auto& docMngr = DocumentManager::getInstance();
-    docMngr.destroyDocument( documentId );
+    auto &docMngr = DocumentManager::getInstance();
+    docMngr.destroyDocument(documentId);
 }
-
 
 inline ScoreData getScore()
 {
     auto documentId = loadDoc();
-    auto score = DocumentManager::getInstance().getData( documentId );
-    destroyDoc( documentId );
+    auto score = DocumentManager::getInstance().getData(documentId);
+    destroyDoc(documentId);
     return score;
 }
 
 inline ScoreData getActorPreludeScore()
 {
     auto documentId = loadActorPreludeDoc();
-    auto score = DocumentManager::getInstance().getData( documentId );
-    destroyDoc( documentId );
+    auto score = DocumentManager::getInstance().getData(documentId);
+    destroyDoc(documentId);
     return score;
 }
 
@@ -210,27 +210,26 @@ TEST( RoundTrip_WorkTitle, DocumentManager )
 }
 T_END
 
-
-#define ROUND_TRIP_TEST_SCALAR( scalarType, fieldPath, fieldName, value, nameSuffix ) \
-TEST( RoundTrip_##structType##_##fieldName##_##nameSuffix, DocumentManager ) \
-{ \
-    auto testValue = scalarType{ value }; \
-    auto expectedStruct = ScoreData{}; \
-    auto actualStruct = ScoreData{}; \
-    auto& actualValue = actualStruct.fieldPath; \
-    auto& expectedValue = expectedStruct.fieldPath; \
-    expectedValue = testValue; \
-    auto documentId = DocumentManager::getInstance().createFromScore( expectedStruct ); \
-    std::ostringstream oss; \
-    DocumentManager::getInstance().writeToStream( documentId, oss ); \
-    DocumentManager::getInstance().destroyDocument( documentId ); \
-    std::istringstream iss{ oss.str() }; \
-    documentId = DocumentManager::getInstance().createFromStream( iss ); \
-    actualStruct = DocumentManager::getInstance().getData( documentId ); \
-    DocumentManager::getInstance().destroyDocument( documentId ); \
-    CHECK_EQUAL( expectedValue, actualValue ); \
-} \
-T_END
+#define ROUND_TRIP_TEST_SCALAR(scalarType, fieldPath, fieldName, value, nameSuffix)                                    \
+    TEST(RoundTrip_##structType##_##fieldName##_##nameSuffix, DocumentManager)                                         \
+    {                                                                                                                  \
+        auto testValue = scalarType{value};                                                                            \
+        auto expectedStruct = ScoreData{};                                                                             \
+        auto actualStruct = ScoreData{};                                                                               \
+        auto &actualValue = actualStruct.fieldPath;                                                                    \
+        auto &expectedValue = expectedStruct.fieldPath;                                                                \
+        expectedValue = testValue;                                                                                     \
+        auto documentId = DocumentManager::getInstance().createFromScore(expectedStruct);                              \
+        std::ostringstream oss;                                                                                        \
+        DocumentManager::getInstance().writeToStream(documentId, oss);                                                 \
+        DocumentManager::getInstance().destroyDocument(documentId);                                                    \
+        std::istringstream iss{oss.str()};                                                                             \
+        documentId = DocumentManager::getInstance().createFromStream(iss);                                             \
+        actualStruct = DocumentManager::getInstance().getData(documentId);                                             \
+        DocumentManager::getInstance().destroyDocument(documentId);                                                    \
+        CHECK_EQUAL(expectedValue, actualValue);                                                                       \
+    }                                                                                                                  \
+    T_END
 
 ROUND_TRIP_TEST_SCALAR( std::string, musicXmlType, musicXmlType, "timewise", 0 );
 ROUND_TRIP_TEST_SCALAR( std::string, musicXmlType, musicXmlType, "partwise", 1 );
@@ -250,27 +249,26 @@ ROUND_TRIP_TEST_SCALAR( int, encoding.encodingDate.day, day, 12, 0 );
 
 //#endif
 
-
-#define ROUND_TRIP_TEST_SCALAR_DOUBLE( scalarType, fieldPath, fieldName, value, nameSuffix ) \
-TEST( RoundTrip_##structType##_##fieldName##_##nameSuffix, DocumentManager ) \
-{ \
-auto testValue = scalarType{ value }; \
-auto expectedStruct = ScoreData{}; \
-auto actualStruct = ScoreData{}; \
-auto& actualValue = actualStruct.fieldPath; \
-auto& expectedValue = expectedStruct.fieldPath; \
-expectedValue = testValue; \
-auto documentId = DocumentManager::getInstance().createFromScore( expectedStruct ); \
-std::ostringstream oss; \
-DocumentManager::getInstance().writeToStream( documentId, oss ); \
-DocumentManager::getInstance().destroyDocument( documentId ); \
-std::istringstream iss{ oss.str() }; \
-documentId = DocumentManager::getInstance().createFromStream( iss ); \
-actualStruct = DocumentManager::getInstance().getData( documentId ); \
-DocumentManager::getInstance().destroyDocument( documentId ); \
-CHECK_DOUBLES_EQUAL( expectedValue, actualValue, MX_API_EQUALITY_EPSILON ); \
-} \
-T_END
+#define ROUND_TRIP_TEST_SCALAR_DOUBLE(scalarType, fieldPath, fieldName, value, nameSuffix)                             \
+    TEST(RoundTrip_##structType##_##fieldName##_##nameSuffix, DocumentManager)                                         \
+    {                                                                                                                  \
+        auto testValue = scalarType{value};                                                                            \
+        auto expectedStruct = ScoreData{};                                                                             \
+        auto actualStruct = ScoreData{};                                                                               \
+        auto &actualValue = actualStruct.fieldPath;                                                                    \
+        auto &expectedValue = expectedStruct.fieldPath;                                                                \
+        expectedValue = testValue;                                                                                     \
+        auto documentId = DocumentManager::getInstance().createFromScore(expectedStruct);                              \
+        std::ostringstream oss;                                                                                        \
+        DocumentManager::getInstance().writeToStream(documentId, oss);                                                 \
+        DocumentManager::getInstance().destroyDocument(documentId);                                                    \
+        std::istringstream iss{oss.str()};                                                                             \
+        documentId = DocumentManager::getInstance().createFromStream(iss);                                             \
+        actualStruct = DocumentManager::getInstance().getData(documentId);                                             \
+        DocumentManager::getInstance().destroyDocument(documentId);                                                    \
+        CHECK_DOUBLES_EQUAL(expectedValue, actualValue, MX_API_EQUALITY_EPSILON);                                      \
+    }                                                                                                                  \
+    T_END
 
 using LongDouble = long double;
 

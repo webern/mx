@@ -8,8 +8,8 @@
 
 namespace mx
 {
-    namespace core
-    {
-        using XsAnyUri = XsString;
-    }
+namespace core
+{
+using XsAnyUri = XsString;
 }
+} // namespace mx

@@ -4,12 +4,12 @@
 
 #pragma once
 
-#include "mx/core/ForwardDeclare.h"
 #include "mx/core/AttributesInterface.h"
 #include "mx/core/CommaSeparatedText.h"
 #include "mx/core/Decimals.h"
 #include "mx/core/Enums.h"
 #include "mx/core/FontSize.h"
+#include "mx/core/ForwardDeclare.h"
 
 #include <iosfwd>
 #include <memory>
@@ -17,40 +17,40 @@
 
 namespace mx
 {
-    namespace core
-    {
+namespace core
+{
 
-        MX_FORWARD_DECLARE_ATTRIBUTES( StringMuteAttributes )
+MX_FORWARD_DECLARE_ATTRIBUTES(StringMuteAttributes)
 
-        struct StringMuteAttributes : public AttributesInterface
-        {
-        public:
-            StringMuteAttributes();
-            virtual bool hasValues() const;
-            virtual std::ostream& toStream( std::ostream& os ) const;
-            OnOff type;
-            TenthsValue defaultX;
-            TenthsValue defaultY;
-            TenthsValue relativeX;
-            TenthsValue relativeY;
-            CommaSeparatedText fontFamily;
-            FontStyle fontStyle;
-            FontSize fontSize;
-            FontWeight fontWeight;
-            LeftCenterRight halign;
-            const bool hasType;
-            bool hasDefaultX;
-            bool hasDefaultY;
-            bool hasRelativeX;
-            bool hasRelativeY;
-            bool hasFontFamily;
-            bool hasFontStyle;
-            bool hasFontSize;
-            bool hasFontWeight;
-            bool hasHalign;
+struct StringMuteAttributes : public AttributesInterface
+{
+  public:
+    StringMuteAttributes();
+    virtual bool hasValues() const;
+    virtual std::ostream &toStream(std::ostream &os) const;
+    OnOff type;
+    TenthsValue defaultX;
+    TenthsValue defaultY;
+    TenthsValue relativeX;
+    TenthsValue relativeY;
+    CommaSeparatedText fontFamily;
+    FontStyle fontStyle;
+    FontSize fontSize;
+    FontWeight fontWeight;
+    LeftCenterRight halign;
+    const bool hasType;
+    bool hasDefaultX;
+    bool hasDefaultY;
+    bool hasRelativeX;
+    bool hasRelativeY;
+    bool hasFontFamily;
+    bool hasFontStyle;
+    bool hasFontSize;
+    bool hasFontWeight;
+    bool hasHalign;
 
-            private:
-            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
-        };
-    }
-}
+  private:
+    virtual bool fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement);
+};
+} // namespace core
+} // namespace mx

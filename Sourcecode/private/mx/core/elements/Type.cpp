@@ -8,92 +8,79 @@
 
 namespace mx
 {
-    namespace core
+namespace core
+{
+Type::Type() : myValue(NoteTypeValue::quarter), myAttributes(std::make_shared<TypeAttributes>())
+{
+}
+
+Type::Type(const NoteTypeValue &value) : myValue(value), myAttributes(std::make_shared<TypeAttributes>())
+{
+}
+
+bool Type::hasAttributes() const
+{
+    return myAttributes->hasValues();
+}
+
+bool Type::hasContents() const
+{
+    return true;
+}
+
+std::ostream &Type::streamAttributes(std::ostream &os) const
+{
+    if (myAttributes)
     {
-        Type::Type()
-        :myValue( NoteTypeValue::quarter )
-        ,myAttributes( std::make_shared<TypeAttributes>() )
-        {}
+        myAttributes->toStream(os);
+    }
+    return os;
+}
 
+std::ostream &Type::streamName(std::ostream &os) const
+{
+    os << "type";
+    return os;
+}
 
-        Type::Type( const NoteTypeValue& value )
-        :myValue( value )
-        ,myAttributes( std::make_shared<TypeAttributes>() )
-        {}
+std::ostream &Type::streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const
+{
+    MX_UNUSED(indentLevel);
+    isOneLineOnly = true;
+    os << myValue;
+    return os;
+}
 
+TypeAttributesPtr Type::getAttributes() const
+{
+    return myAttributes;
+}
 
-        bool Type::hasAttributes() const
-        {
-            return myAttributes->hasValues();
-        }
-
-
-        bool Type::hasContents() const
-        {
-            return true;
-        }
-
-
-        std::ostream& Type::streamAttributes( std::ostream& os ) const
-        {
-            if ( myAttributes )
-            {
-                myAttributes->toStream( os );
-            }
-            return os;
-        }
-
-
-        std::ostream& Type::streamName( std::ostream& os ) const
-        {
-            os << "type";
-            return os;
-        }
-
-
-        std::ostream& Type::streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly  ) const
-        {
-            MX_UNUSED( indentLevel );
-            isOneLineOnly = true;
-            os << myValue;
-            return os;
-        }
-
-
-        TypeAttributesPtr Type::getAttributes() const
-        {
-            return myAttributes;
-        }
-
-
-        void Type::setAttributes( const TypeAttributesPtr& value )
-        {
-            if ( value )
-            {
-                myAttributes = value;
-            }
-        }
-
-
-        NoteTypeValue Type::getValue() const
-        {
-            return myValue;
-        }
-
-
-        void Type::setValue( const NoteTypeValue& value )
-        {
-            myValue = value;
-        }
-
-
-        bool Type::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
-        {
-            bool isSuccess = true;
-            isSuccess &= myAttributes->fromXElement( message, xelement );
-            myValue = parseNoteTypeValue( xelement.getValue() );
-            MX_RETURN_IS_SUCCESS;
-        }
-
+void Type::setAttributes(const TypeAttributesPtr &value)
+{
+    if (value)
+    {
+        myAttributes = value;
     }
 }
+
+NoteTypeValue Type::getValue() const
+{
+    return myValue;
+}
+
+void Type::setValue(const NoteTypeValue &value)
+{
+    myValue = value;
+}
+
+bool Type::fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement)
+{
+    bool isSuccess = true;
+    isSuccess &= myAttributes->fromXElement(message, xelement);
+    myValue = parseNoteTypeValue(xelement.getValue());
+    MX_RETURN_IS_SUCCESS;
+}
+
+} // namespace core
+} // namespace mx

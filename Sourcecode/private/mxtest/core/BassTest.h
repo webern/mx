@@ -6,13 +6,13 @@
 #ifdef MX_COMPILE_CORE_TESTS
 
 #pragma once
-#include "mxtest/core/HelperFunctions.h"
 #include "mx/core/Elements.h"
+#include "mxtest/core/HelperFunctions.h"
 
 namespace mxtest
 {
-    mx::core::BassPtr tgenBass( TestMode v );
-    void tgenBassExpected(std::ostream& os, int indentLevel, TestMode v );
-}
+mx::core::BassPtr tgenBass(TestMode v);
+void tgenBassExpected(std::ostream &os, int indentLevel, TestMode v);
+} // namespace mxtest
 
 #endif

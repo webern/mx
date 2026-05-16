@@ -8,59 +8,61 @@
 
 namespace mx
 {
-    namespace core
+namespace core
+{
+Dot::Dot() : ElementInterface(), myAttributes(std::make_shared<EmptyPlacementAttributes>())
+{
+}
+
+bool Dot::hasAttributes() const
+{
+    return myAttributes->hasValues();
+}
+
+bool Dot::hasContents() const
+{
+    return false;
+}
+
+std::ostream &Dot::streamAttributes(std::ostream &os) const
+{
+    if (myAttributes)
     {
-        Dot::Dot()
-        :ElementInterface()
-        ,myAttributes( std::make_shared<EmptyPlacementAttributes>() )
-        {}
+        myAttributes->toStream(os);
+    }
+    return os;
+}
 
+std::ostream &Dot::streamName(std::ostream &os) const
+{
+    os << "dot";
+    return os;
+}
 
-        bool Dot::hasAttributes() const
-        {
-            return myAttributes->hasValues();
-        }
+std::ostream &Dot::streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const
+{
+    MX_UNUSED(indentLevel);
+    isOneLineOnly = true;
+    return os;
+}
 
+EmptyPlacementAttributesPtr Dot::getAttributes() const
+{
+    return myAttributes;
+}
 
-        bool Dot::hasContents() const  { return false; }
-        std::ostream& Dot::streamAttributes( std::ostream& os ) const
-        {
-            if ( myAttributes )
-            {
-                myAttributes->toStream( os );
-            }
-            return os;
-        }
-
-
-        std::ostream& Dot::streamName( std::ostream& os ) const  { os << "dot"; return os; }
-        std::ostream& Dot::streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly ) const
-        {
-            MX_UNUSED( indentLevel );
-            isOneLineOnly = true;
-            return os;
-        }
-
-
-        EmptyPlacementAttributesPtr Dot::getAttributes() const
-        {
-            return myAttributes;
-        }
-
-
-        void Dot::setAttributes( const EmptyPlacementAttributesPtr& value )
-        {
-            if ( value )
-            {
-                myAttributes = value;
-            }
-        }
-
-
-        bool Dot::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
-        {
-            return myAttributes->fromXElement( message, xelement );
-        }
-
+void Dot::setAttributes(const EmptyPlacementAttributesPtr &value)
+{
+    if (value)
+    {
+        myAttributes = value;
     }
 }
+
+bool Dot::fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement)
+{
+    return myAttributes->fromXElement(message, xelement);
+}
+
+} // namespace core
+} // namespace mx

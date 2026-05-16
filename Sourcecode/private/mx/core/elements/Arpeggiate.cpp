@@ -8,59 +8,61 @@
 
 namespace mx
 {
-    namespace core
+namespace core
+{
+Arpeggiate::Arpeggiate() : ElementInterface(), myAttributes(std::make_shared<ArpeggiateAttributes>())
+{
+}
+
+bool Arpeggiate::hasAttributes() const
+{
+    return myAttributes->hasValues();
+}
+
+bool Arpeggiate::hasContents() const
+{
+    return false;
+}
+
+std::ostream &Arpeggiate::streamAttributes(std::ostream &os) const
+{
+    if (myAttributes)
     {
-        Arpeggiate::Arpeggiate()
-        :ElementInterface()
-        ,myAttributes( std::make_shared<ArpeggiateAttributes>() )
-        {}
+        myAttributes->toStream(os);
+    }
+    return os;
+}
 
+std::ostream &Arpeggiate::streamName(std::ostream &os) const
+{
+    os << "arpeggiate";
+    return os;
+}
 
-        bool Arpeggiate::hasAttributes() const
-        {
-            return myAttributes->hasValues();
-        }
+std::ostream &Arpeggiate::streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const
+{
+    MX_UNUSED(indentLevel);
+    isOneLineOnly = true;
+    return os;
+}
 
+ArpeggiateAttributesPtr Arpeggiate::getAttributes() const
+{
+    return myAttributes;
+}
 
-        bool Arpeggiate::hasContents() const  { return false; }
-        std::ostream& Arpeggiate::streamAttributes( std::ostream& os ) const
-        {
-            if ( myAttributes )
-            {
-                myAttributes->toStream( os );
-            }
-            return os;
-        }
-
-
-        std::ostream& Arpeggiate::streamName( std::ostream& os ) const  { os << "arpeggiate"; return os; }
-        std::ostream& Arpeggiate::streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly ) const
-        {
-            MX_UNUSED( indentLevel );
-            isOneLineOnly = true;
-            return os;
-        }
-
-
-        ArpeggiateAttributesPtr Arpeggiate::getAttributes() const
-        {
-            return myAttributes;
-        }
-
-
-        void Arpeggiate::setAttributes( const ArpeggiateAttributesPtr& value )
-        {
-            if ( value )
-            {
-                myAttributes = value;
-            }
-        }
-
-
-        bool Arpeggiate::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
-        {
-            return myAttributes->fromXElement( message, xelement );
-        }
-
+void Arpeggiate::setAttributes(const ArpeggiateAttributesPtr &value)
+{
+    if (value)
+    {
+        myAttributes = value;
     }
 }
+
+bool Arpeggiate::fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement)
+{
+    return myAttributes->fromXElement(message, xelement);
+}
+
+} // namespace core
+} // namespace mx

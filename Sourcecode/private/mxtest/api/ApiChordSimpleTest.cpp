@@ -5,38 +5,32 @@
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_API_TESTS
 
+#include "cpul/cpulTestHarness.h"
+#include "mx/api/DocumentManager.h"
+#include "mx/api/ScoreData.h"
+#include "mxtest/api/ApiChordSimpleScoreData.h"
 #include "mxtest/api/ApiTester.h"
 #include "mxtest/file/MxFileTest.h"
 #include "mxtest/file/MxFileTestGroup.h"
-#include "mx/api/DocumentManager.h"
-#include "cpul/cpulTestHarness.h"
-#include "mx/api/ScoreData.h"
-#include "mxtest/api/ApiTester.h"
-#include "mxtest/api/ApiChordSimpleScoreData.h"
 
 using namespace mx::api;
 
 namespace mxtest
 {
-    constexpr const char* const testFileName = "chords_simple.xml";
+constexpr const char *const testFileName = "chords_simple.xml";
 
-    class ApiChordSimpleScoreData : public ScoreDataCreator
+class ApiChordSimpleScoreData : public ScoreDataCreator
+{
+    virtual mx::api::ScoreData createScoreData() const override
     {
-        virtual mx::api::ScoreData createScoreData() const override
-        {
-            return apiChordSimpleScoreData();
-        }
-    };
+        return apiChordSimpleScoreData();
+    }
+};
 
-    class ApiChordSimpleScoreData;
+class ApiChordSimpleScoreData;
 
-    static const ApiTester ApiChordSimpleTest
-    {
-        ScoreDataCreatorPtr{ new ApiChordSimpleScoreData{} },
-        MxFileRepository::getTestFile( testFileName ),
-        __FILE__,
-        __LINE__
-    };
-}
+static const ApiTester ApiChordSimpleTest{ScoreDataCreatorPtr{new ApiChordSimpleScoreData{}},
+                                          MxFileRepository::getTestFile(testFileName), __FILE__, __LINE__};
+} // namespace mxtest
 
 #endif

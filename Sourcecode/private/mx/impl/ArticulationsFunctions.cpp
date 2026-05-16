@@ -25,149 +25,130 @@
 #include "mx/impl/PositionFunctions.h"
 #include "mx/impl/PrintFunctions.h"
 
-
 #include <mutex>
 
 namespace mx
 {
-    namespace impl
+namespace impl
+{
+ArticulationsFunctions::ArticulationsFunctions(const core::ArticulationsChoiceSet &inArticulations,
+                                               impl::Cursor inCursor)
+    : myArticulations{inArticulations}, myCursor{inCursor}
+{
+}
+
+void ArticulationsFunctions::parseArticulations(std::vector<api::MarkData> &outMarks) const
+{
+    for (const auto &articulation : myArticulations)
     {
-        ArticulationsFunctions::ArticulationsFunctions( const core::ArticulationsChoiceSet& inArticulations, impl::Cursor inCursor )
-        : myArticulations{ inArticulations }
-        , myCursor{ inCursor }
-        {
-            
-        }
-        
-        
-        void ArticulationsFunctions::parseArticulations( std::vector<api::MarkData>& outMarks ) const
-        {
-            for( const auto& articulation : myArticulations )
-            {
-                const auto articulationType = articulation->getChoice();
-                Converter converter;
-                const auto markType = converter.convertArticulation( articulationType );
-                auto markData = api::MarkData{};
-                markData.markType = markType;
-                markData.tickTimePosition = myCursor.tickTimePosition;
-                
-                parseArticulation( *articulation, markData );
-                outMarks.emplace_back( std::move( markData ) );
-            }
-        }
-        
-        
-        void ArticulationsFunctions::parseArticulation( const core::ArticulationsChoice& inArticulation, api::MarkData& outMark ) const
-        {
-            switch ( inArticulation.getChoice() )
-            {
-                case core::ArticulationsChoice::Choice::accent:
-                {
-                    parseMarkDataAttributes( *inArticulation.getAccent()->getAttributes(), outMark );
-                    outMark.name = "accent";
-                    break;
-                }
-                case core::ArticulationsChoice::Choice::strongAccent:
-                {
-                    parseMarkDataAttributes( *inArticulation.getStrongAccent()->getAttributes(), outMark );
-                    outMark.name = "strong-accent";
-                    break;
-                }
-                case core::ArticulationsChoice::Choice::staccato:
-                {
-                    parseMarkDataAttributes( *inArticulation.getStaccato()->getAttributes(), outMark );
-                    outMark.name = "staccato";
-                    break;
-                }
-                case core::ArticulationsChoice::Choice::tenuto:
-                {
-                    parseMarkDataAttributes( *inArticulation.getTenuto()->getAttributes(), outMark );
-                    outMark.name = "tenuto";
-                    break;
-                }
-                case core::ArticulationsChoice::Choice::detachedLegato:
-                {
-                    parseMarkDataAttributes( *inArticulation.getDetachedLegato()->getAttributes(), outMark );
-                    outMark.name = "detached-legato";
-                    break;
-                }
-                case core::ArticulationsChoice::Choice::staccatissimo:
-                {
-                    parseMarkDataAttributes( *inArticulation.getStaccatissimo()->getAttributes(), outMark );
-                    outMark.name = "staccatissimo";
-                    break;
-                }
-                case core::ArticulationsChoice::Choice::spiccato:
-                {
-                    parseMarkDataAttributes( *inArticulation.getSpiccato()->getAttributes(), outMark );
-                    outMark.name = "spiccato";
-                    break;
-                }
-                case core::ArticulationsChoice::Choice::scoop:
-                {
-                    parseMarkDataAttributes( *inArticulation.getScoop()->getAttributes(), outMark );
-                    outMark.name = "scoop";
-                    break;
-                }
-                case core::ArticulationsChoice::Choice::plop:
-                {
-                    parseMarkDataAttributes( *inArticulation.getPlop()->getAttributes(), outMark );
-                    outMark.name = "plop";
-                    break;
-                }
-                case core::ArticulationsChoice::Choice::doit:
-                {
-                    parseMarkDataAttributes( *inArticulation.getDoit()->getAttributes(), outMark );
-                    outMark.name = "doit";
-                    break;
-                }
-                case core::ArticulationsChoice::Choice::falloff:
-                {
-                    parseMarkDataAttributes( *inArticulation.getFalloff()->getAttributes(), outMark );
-                    outMark.name = "falloff";
-                    break;
-                }
-                case core::ArticulationsChoice::Choice::breathMark:
-                {
-                    parseMarkDataAttributes( *inArticulation.getBreathMark()->getAttributes(), outMark );
-                    outMark.name = "breath-mark";
-                    break;
-                }
-                case core::ArticulationsChoice::Choice::caesura:
-                {
-                    parseMarkDataAttributes( *inArticulation.getCaesura()->getAttributes(), outMark );
-                    outMark.name = "caesura";
-                    break;
-                }
-                case core::ArticulationsChoice::Choice::stress:
-                {
-                    parseMarkDataAttributes( *inArticulation.getStress()->getAttributes(), outMark );
-                    outMark.name = "stress";
-                    break;
-                }
-                case core::ArticulationsChoice::Choice::unstress:
-                {
-                    parseMarkDataAttributes( *inArticulation.getUnstress()->getAttributes(), outMark );
-                    outMark.name = "unstress";
-                    break;
-                }
-                case core::ArticulationsChoice::Choice::otherArticulation:
-                {
-                    parseMarkDataAttributes( *inArticulation.getOtherArticulation()->getAttributes(), outMark );
-                    outMark.name = inArticulation.getOtherArticulation()->getValue().getValue();
-                    
-                    const auto possibleCustomMarkType = mx::api::getMarkTypeFromCustomString( outMark.name );
-                    
-                    if( possibleCustomMarkType != mx::api::MarkType::customErrorUnknown )
-                    {
-                        outMark.markType = possibleCustomMarkType;
-                    }
-                    
-                    break;
-                }
-                default:
-                    break;
-            }
-        }
+        const auto articulationType = articulation->getChoice();
+        Converter converter;
+        const auto markType = converter.convertArticulation(articulationType);
+        auto markData = api::MarkData{};
+        markData.markType = markType;
+        markData.tickTimePosition = myCursor.tickTimePosition;
+
+        parseArticulation(*articulation, markData);
+        outMarks.emplace_back(std::move(markData));
     }
 }
+
+void ArticulationsFunctions::parseArticulation(const core::ArticulationsChoice &inArticulation,
+                                               api::MarkData &outMark) const
+{
+    switch (inArticulation.getChoice())
+    {
+    case core::ArticulationsChoice::Choice::accent: {
+        parseMarkDataAttributes(*inArticulation.getAccent()->getAttributes(), outMark);
+        outMark.name = "accent";
+        break;
+    }
+    case core::ArticulationsChoice::Choice::strongAccent: {
+        parseMarkDataAttributes(*inArticulation.getStrongAccent()->getAttributes(), outMark);
+        outMark.name = "strong-accent";
+        break;
+    }
+    case core::ArticulationsChoice::Choice::staccato: {
+        parseMarkDataAttributes(*inArticulation.getStaccato()->getAttributes(), outMark);
+        outMark.name = "staccato";
+        break;
+    }
+    case core::ArticulationsChoice::Choice::tenuto: {
+        parseMarkDataAttributes(*inArticulation.getTenuto()->getAttributes(), outMark);
+        outMark.name = "tenuto";
+        break;
+    }
+    case core::ArticulationsChoice::Choice::detachedLegato: {
+        parseMarkDataAttributes(*inArticulation.getDetachedLegato()->getAttributes(), outMark);
+        outMark.name = "detached-legato";
+        break;
+    }
+    case core::ArticulationsChoice::Choice::staccatissimo: {
+        parseMarkDataAttributes(*inArticulation.getStaccatissimo()->getAttributes(), outMark);
+        outMark.name = "staccatissimo";
+        break;
+    }
+    case core::ArticulationsChoice::Choice::spiccato: {
+        parseMarkDataAttributes(*inArticulation.getSpiccato()->getAttributes(), outMark);
+        outMark.name = "spiccato";
+        break;
+    }
+    case core::ArticulationsChoice::Choice::scoop: {
+        parseMarkDataAttributes(*inArticulation.getScoop()->getAttributes(), outMark);
+        outMark.name = "scoop";
+        break;
+    }
+    case core::ArticulationsChoice::Choice::plop: {
+        parseMarkDataAttributes(*inArticulation.getPlop()->getAttributes(), outMark);
+        outMark.name = "plop";
+        break;
+    }
+    case core::ArticulationsChoice::Choice::doit: {
+        parseMarkDataAttributes(*inArticulation.getDoit()->getAttributes(), outMark);
+        outMark.name = "doit";
+        break;
+    }
+    case core::ArticulationsChoice::Choice::falloff: {
+        parseMarkDataAttributes(*inArticulation.getFalloff()->getAttributes(), outMark);
+        outMark.name = "falloff";
+        break;
+    }
+    case core::ArticulationsChoice::Choice::breathMark: {
+        parseMarkDataAttributes(*inArticulation.getBreathMark()->getAttributes(), outMark);
+        outMark.name = "breath-mark";
+        break;
+    }
+    case core::ArticulationsChoice::Choice::caesura: {
+        parseMarkDataAttributes(*inArticulation.getCaesura()->getAttributes(), outMark);
+        outMark.name = "caesura";
+        break;
+    }
+    case core::ArticulationsChoice::Choice::stress: {
+        parseMarkDataAttributes(*inArticulation.getStress()->getAttributes(), outMark);
+        outMark.name = "stress";
+        break;
+    }
+    case core::ArticulationsChoice::Choice::unstress: {
+        parseMarkDataAttributes(*inArticulation.getUnstress()->getAttributes(), outMark);
+        outMark.name = "unstress";
+        break;
+    }
+    case core::ArticulationsChoice::Choice::otherArticulation: {
+        parseMarkDataAttributes(*inArticulation.getOtherArticulation()->getAttributes(), outMark);
+        outMark.name = inArticulation.getOtherArticulation()->getValue().getValue();
+
+        const auto possibleCustomMarkType = mx::api::getMarkTypeFromCustomString(outMark.name);
+
+        if (possibleCustomMarkType != mx::api::MarkType::customErrorUnknown)
+        {
+            outMark.markType = possibleCustomMarkType;
+        }
+
+        break;
+    }
+    default:
+        break;
+    }
+}
+} // namespace impl
+} // namespace mx

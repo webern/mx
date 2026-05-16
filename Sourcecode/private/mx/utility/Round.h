@@ -6,12 +6,11 @@
 
 namespace mx
 {
-    namespace utility
-    {
-        template<typename INPUT, typename OUTPUT>
-        inline OUTPUT roundTo( INPUT inValue )
-        {
-            return static_cast<OUTPUT>( std::ceil( inValue - static_cast<INPUT>( 0.5 ) ) );
-        }
-    }
+namespace utility
+{
+template <typename INPUT, typename OUTPUT> inline OUTPUT roundTo(INPUT inValue)
+{
+    return static_cast<OUTPUT>(std::ceil(inValue - static_cast<INPUT>(0.5)));
 }
+} // namespace utility
+} // namespace mx

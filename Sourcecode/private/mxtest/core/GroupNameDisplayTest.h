@@ -6,13 +6,13 @@
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_CORE_TESTS
 
-#include "mxtest/core/HelperFunctions.h"
 #include "mx/core/Elements.h"
+#include "mxtest/core/HelperFunctions.h"
 
 namespace mxtest
 {
-    mx::core::GroupNameDisplayPtr tgenGroupNameDisplay( TestMode v );
-    void tgenGroupNameDisplayExpected(std::ostream& os, int indentLevel, TestMode v );
-}
+mx::core::GroupNameDisplayPtr tgenGroupNameDisplay(TestMode v);
+void tgenGroupNameDisplayExpected(std::ostream &os, int indentLevel, TestMode v);
+} // namespace mxtest
 
 #endif

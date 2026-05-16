@@ -8,30 +8,22 @@
 
 namespace mx
 {
-    namespace impl
+namespace impl
+{
+class MeasureCursor : public Cursor
+{
+  public:
+    int partIndex;
+    int measureIndex;
+
+    MeasureCursor(int numStaves, int globalTicksPerQuarter)
+        : Cursor{numStaves, globalTicksPerQuarter}, partIndex{0}, measureIndex{0}
     {
-        class MeasureCursor : public Cursor
-        {
-        public:
-            int partIndex;
-            int measureIndex;
-
-            MeasureCursor( int numStaves, int globalTicksPerQuarter )
-            : Cursor{ numStaves, globalTicksPerQuarter }
-            , partIndex{ 0 }
-            , measureIndex{ 0 }
-            {
-                
-            }
-
-            MeasureCursor()
-            : Cursor{ -1, -1 }
-            , partIndex{ -1 }
-            , measureIndex{ -1 }
-            {
-
-            }
-
-        };
     }
-}
+
+    MeasureCursor() : Cursor{-1, -1}, partIndex{-1}, measureIndex{-1}
+    {
+    }
+};
+} // namespace impl
+} // namespace mx

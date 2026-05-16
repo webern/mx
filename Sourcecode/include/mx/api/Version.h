@@ -9,30 +9,30 @@
 
 namespace mx
 {
-    namespace api
-    {
-        /// @brief TODO
-        ///
-        /// @detailed TODO
-        ///
-        class Version
-        {
-        public:
-            static int getVersionMajor();
-            static int getVersionMinor();
-            static int getVersionPatch();
-            static const std::string& getString();
+namespace api
+{
+/// @brief TODO
+///
+/// @detailed TODO
+///
+class Version
+{
+  public:
+    static int getVersionMajor();
+    static int getVersionMinor();
+    static int getVersionPatch();
+    static const std::string &getString();
 
-        private:
-            int myMajor;
-            int myMinor;
-            int myPatch;
-            int myBuild;
-            std::string myString;
+  private:
+    int myMajor;
+    int myMinor;
+    int myPatch;
+    int myBuild;
+    std::string myString;
 
-        private:
-            Version();
-            static const Version& getInstance();
-        };
-    }
-}
+  private:
+    Version();
+    static const Version &getInstance();
+};
+} // namespace api
+} // namespace mx

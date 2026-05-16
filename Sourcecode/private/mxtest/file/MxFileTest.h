@@ -9,40 +9,48 @@
 
 namespace mxtest
 {
-	class MxFileTest
-	{
-	public:
-		MxFileTest(
-            mxtest::MxFile inTestFile,
-            std::string inTestName,
-            std::string inTestCppFileName,
-            int inTestCppFileLineNumber );
+class MxFileTest
+{
+  public:
+    MxFileTest(mxtest::MxFile inTestFile, std::string inTestName, std::string inTestCppFileName,
+               int inTestCppFileLineNumber);
 
-		virtual void runTest() final;
+    virtual void runTest() final;
 
-		virtual const std::string& testFileName() const final;
-		virtual const std::string testFileNamePart() const final;
-		virtual const std::string testFileExtension() const final;
-		virtual const std::string& testFilePath() const final;
-		virtual const std::string& testSubdirectory() const final;
-        virtual const bool isLoadFailureExpected() const final { return myTestFile.isLoadFailureExpected; }
+    virtual const std::string &testFileName() const final;
+    virtual const std::string testFileNamePart() const final;
+    virtual const std::string testFileExtension() const final;
+    virtual const std::string &testFilePath() const final;
+    virtual const std::string &testSubdirectory() const final;
 
-		virtual bool getIsSuccess() const final;
-		virtual void setIsSuccess( bool inIsSuccess ) final;
-		virtual const std::string& getFailureMessage() const final;
-		virtual void setFailureMessage( std::string inMessage ) final;
+    virtual const bool isLoadFailureExpected() const final
+    {
+        return myTestFile.isLoadFailureExpected;
+    }
 
-        virtual inline const std::string& getCppFileName() const final { return myCppFileName; }
-        virtual inline const int getCppFileLineNumber() const final { return myCppFileLineNumber; }
+    virtual bool getIsSuccess() const final;
+    virtual void setIsSuccess(bool inIsSuccess) final;
+    virtual const std::string &getFailureMessage() const final;
+    virtual void setFailureMessage(std::string inMessage) final;
 
-		virtual void runTestCode() = 0;
+    virtual inline const std::string &getCppFileName() const final
+    {
+        return myCppFileName;
+    }
 
-    private:
-        mxtest::MxFile myTestFile;
-        std::string myTestName;
-        std::string myCppFileName;
-        int myCppFileLineNumber;
-        bool myIsSuccess;
-        std::string myFailureMessage;
-	};
-}
+    virtual inline const int getCppFileLineNumber() const final
+    {
+        return myCppFileLineNumber;
+    }
+
+    virtual void runTestCode() = 0;
+
+  private:
+    mxtest::MxFile myTestFile;
+    std::string myTestName;
+    std::string myCppFileName;
+    int myCppFileLineNumber;
+    bool myIsSuccess;
+    std::string myFailureMessage;
+};
+} // namespace mxtest

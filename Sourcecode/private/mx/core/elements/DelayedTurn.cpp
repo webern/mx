@@ -8,59 +8,61 @@
 
 namespace mx
 {
-    namespace core
+namespace core
+{
+DelayedTurn::DelayedTurn() : ElementInterface(), myAttributes(std::make_shared<DelayedTurnAttributes>())
+{
+}
+
+bool DelayedTurn::hasAttributes() const
+{
+    return myAttributes->hasValues();
+}
+
+bool DelayedTurn::hasContents() const
+{
+    return false;
+}
+
+std::ostream &DelayedTurn::streamAttributes(std::ostream &os) const
+{
+    if (myAttributes)
     {
-        DelayedTurn::DelayedTurn()
-        :ElementInterface()
-        ,myAttributes( std::make_shared<DelayedTurnAttributes>() )
-        {}
+        myAttributes->toStream(os);
+    }
+    return os;
+}
 
+std::ostream &DelayedTurn::streamName(std::ostream &os) const
+{
+    os << "delayed-turn";
+    return os;
+}
 
-        bool DelayedTurn::hasAttributes() const
-        {
-            return myAttributes->hasValues();
-        }
+std::ostream &DelayedTurn::streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const
+{
+    MX_UNUSED(indentLevel);
+    isOneLineOnly = true;
+    return os;
+}
 
+DelayedTurnAttributesPtr DelayedTurn::getAttributes() const
+{
+    return myAttributes;
+}
 
-        bool DelayedTurn::hasContents() const  { return false; }
-        std::ostream& DelayedTurn::streamAttributes( std::ostream& os ) const
-        {
-            if ( myAttributes )
-            {
-                myAttributes->toStream( os );
-            }
-            return os;
-        }
-
-
-        std::ostream& DelayedTurn::streamName( std::ostream& os ) const  { os << "delayed-turn"; return os; }
-        std::ostream& DelayedTurn::streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly ) const
-        {
-            MX_UNUSED( indentLevel );
-            isOneLineOnly = true;
-            return os;
-        }
-
-
-        DelayedTurnAttributesPtr DelayedTurn::getAttributes() const
-        {
-            return myAttributes;
-        }
-
-
-        void DelayedTurn::setAttributes( const DelayedTurnAttributesPtr& value )
-        {
-            if ( value )
-            {
-                myAttributes = value;
-            }
-        }
-
-
-        bool DelayedTurn::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
-        {
-            return myAttributes->fromXElement( message, xelement );
-        }
-
+void DelayedTurn::setAttributes(const DelayedTurnAttributesPtr &value)
+{
+    if (value)
+    {
+        myAttributes = value;
     }
 }
+
+bool DelayedTurn::fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement)
+{
+    return myAttributes->fromXElement(message, xelement);
+}
+
+} // namespace core
+} // namespace mx

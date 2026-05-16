@@ -14,21 +14,21 @@
 
 namespace mx
 {
-    namespace core
-    {
-        MX_FORWARD_DECLARE_ATTRIBUTES( ScorePartwiseAttributes )
+namespace core
+{
+MX_FORWARD_DECLARE_ATTRIBUTES(ScorePartwiseAttributes)
 
-        struct ScorePartwiseAttributes : public AttributesInterface
-        {
-        public:
-            ScorePartwiseAttributes();
-            virtual bool hasValues() const;
-            virtual std::ostream& toStream( std::ostream& os ) const;
-            XsToken version;
-            bool hasVersion;
+struct ScorePartwiseAttributes : public AttributesInterface
+{
+  public:
+    ScorePartwiseAttributes();
+    virtual bool hasValues() const;
+    virtual std::ostream &toStream(std::ostream &os) const;
+    XsToken version;
+    bool hasVersion;
 
-            private:
-            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
-        };
-    }
-}
+  private:
+    virtual bool fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement);
+};
+} // namespace core
+} // namespace mx

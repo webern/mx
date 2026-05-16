@@ -24,29 +24,29 @@
 
 namespace mx
 {
-    namespace core
-    {
-        class TechnicalChoice;
-        using TechnicalChoicePtr = std::shared_ptr<TechnicalChoice>;
-        using TechnicalChoiceSet = std::vector<TechnicalChoicePtr>;
-    }
-    
-    namespace impl
-    {
-        class TechnicalFunctions
-        {
+namespace core
+{
+class TechnicalChoice;
+using TechnicalChoicePtr = std::shared_ptr<TechnicalChoice>;
+using TechnicalChoiceSet = std::vector<TechnicalChoicePtr>;
+} // namespace core
 
-        public:
-            TechnicalFunctions( const core::TechnicalChoiceSet& inTechincalChoiceSet, Cursor inCursor );
-            
-            void parseTechnicalMarks( std::vector<api::MarkData>& outMarks ) const;
-            
-        private:
-            const core::TechnicalChoiceSet& myTechincalChoiceSet;
-            const Cursor myCursor;
-            
-        private:
-            bool parseTechicalMark( const core::TechnicalChoice& techicalChoice, api::MarkData& outMarkData ) const;
-        };
-    }
-}
+namespace impl
+{
+class TechnicalFunctions
+{
+
+  public:
+    TechnicalFunctions(const core::TechnicalChoiceSet &inTechincalChoiceSet, Cursor inCursor);
+
+    void parseTechnicalMarks(std::vector<api::MarkData> &outMarks) const;
+
+  private:
+    const core::TechnicalChoiceSet &myTechincalChoiceSet;
+    const Cursor myCursor;
+
+  private:
+    bool parseTechicalMark(const core::TechnicalChoice &techicalChoice, api::MarkData &outMarkData) const;
+};
+} // namespace impl
+} // namespace mx

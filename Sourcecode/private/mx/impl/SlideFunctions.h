@@ -10,25 +10,25 @@
 
 namespace mx
 {
-    namespace core
-    {
-        class Slide;
-    }
-    
-    namespace impl
-    {
-        class SlideFunctions
-        {
-        public:
-            SlideFunctions( const core::Slide& inSlide, impl::Cursor inCursor );
-            ~SlideFunctions() = default;
-            SlideFunctions( const SlideFunctions& ) = default;
-            SlideFunctions( SlideFunctions&& ) = default;
-            void parseSlide( api::NoteAttachmentData& inNoteAttachmentData ) const;
-            
-        private:
-            const core::Slide& mySlide;
-            const impl::Cursor myCursor;
-        };
-    }
+namespace core
+{
+class Slide;
 }
+
+namespace impl
+{
+class SlideFunctions
+{
+  public:
+    SlideFunctions(const core::Slide &inSlide, impl::Cursor inCursor);
+    ~SlideFunctions() = default;
+    SlideFunctions(const SlideFunctions &) = default;
+    SlideFunctions(SlideFunctions &&) = default;
+    void parseSlide(api::NoteAttachmentData &inNoteAttachmentData) const;
+
+  private:
+    const core::Slide &mySlide;
+    const impl::Cursor myCursor;
+};
+} // namespace impl
+} // namespace mx

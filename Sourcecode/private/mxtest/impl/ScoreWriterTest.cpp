@@ -13,13 +13,14 @@ using namespace mx::impl;
 
 // TODO - make real tests
 
-TEST( testName, ScoreWriter)
+TEST(testName, ScoreWriter)
 {
     api::ScoreData scoreData;
-    ScoreWriter scoreWriter{ scoreData };
+    ScoreWriter scoreWriter{scoreData};
     const auto scorePartwise = scoreWriter.getScorePartwise();
-    CHECK( scorePartwise != nullptr );
+    CHECK(scorePartwise != nullptr);
 }
+
 T_END
 
 #endif

@@ -6,47 +6,32 @@
 
 namespace mx
 {
-    namespace api
-    {
+namespace api
+{
 
 ////////////////////////////////////////////////////////////////////////////////
 // CTOR AND COPY ///////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-        Extension::Extension()
-        : extensionType{ ExtensionType::add }
-        , extensionAlter{ ExtensionAlter::none }
-        , extensionNumber{ ExtensionNumber::first }
-        , printObject{ Bool::unspecified }
-        {
+Extension::Extension()
+    : extensionType{ExtensionType::add}, extensionAlter{ExtensionAlter::none}, extensionNumber{ExtensionNumber::first},
+      printObject{Bool::unspecified}
+{
+}
 
-        }
-
-
-        ChordData::ChordData()
-        : root{ Step::c }
-        , rootAlter{ 0 }
-        , chordKind{ ChordKind::unspecified }
-        , text{}
-        , useSymbols{ Bool::unspecified }
-        , bass{ Step::unspecified }
-        , bassAlter{ 0 }
-        , extensions{}
-        , miscData{}
-        , positionData{}
-        {
-
-        }
+ChordData::ChordData()
+    : root{Step::c}, rootAlter{0}, chordKind{ChordKind::unspecified}, text{}, useSymbols{Bool::unspecified},
+      bass{Step::unspecified}, bassAlter{0}, extensions{}, miscData{}, positionData{}
+{
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // PUBLIC FUNCTIONS ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-
-
 ////////////////////////////////////////////////////////////////////////////////
 // PRIVATE FUNCTIONS ///////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-    }
-}
+} // namespace api
+} // namespace mx

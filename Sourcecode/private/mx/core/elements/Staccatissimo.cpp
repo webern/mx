@@ -8,59 +8,61 @@
 
 namespace mx
 {
-    namespace core
+namespace core
+{
+Staccatissimo::Staccatissimo() : ElementInterface(), myAttributes(std::make_shared<EmptyPlacementAttributes>())
+{
+}
+
+bool Staccatissimo::hasAttributes() const
+{
+    return myAttributes->hasValues();
+}
+
+bool Staccatissimo::hasContents() const
+{
+    return false;
+}
+
+std::ostream &Staccatissimo::streamAttributes(std::ostream &os) const
+{
+    if (myAttributes)
     {
-        Staccatissimo::Staccatissimo()
-        :ElementInterface()
-        ,myAttributes( std::make_shared<EmptyPlacementAttributes>() )
-        {}
+        myAttributes->toStream(os);
+    }
+    return os;
+}
 
+std::ostream &Staccatissimo::streamName(std::ostream &os) const
+{
+    os << "staccatissimo";
+    return os;
+}
 
-        bool Staccatissimo::hasAttributes() const
-        {
-            return myAttributes->hasValues();
-        }
+std::ostream &Staccatissimo::streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const
+{
+    MX_UNUSED(indentLevel);
+    isOneLineOnly = true;
+    return os;
+}
 
+EmptyPlacementAttributesPtr Staccatissimo::getAttributes() const
+{
+    return myAttributes;
+}
 
-        bool Staccatissimo::hasContents() const  { return false; }
-        std::ostream& Staccatissimo::streamAttributes( std::ostream& os ) const
-        {
-            if ( myAttributes )
-            {
-                myAttributes->toStream( os );
-            }
-            return os;
-        }
-
-
-        std::ostream& Staccatissimo::streamName( std::ostream& os ) const  { os << "staccatissimo"; return os; }
-        std::ostream& Staccatissimo::streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly ) const
-        {
-            MX_UNUSED( indentLevel );
-            isOneLineOnly = true;
-            return os;
-        }
-
-
-        EmptyPlacementAttributesPtr Staccatissimo::getAttributes() const
-        {
-            return myAttributes;
-        }
-
-
-        void Staccatissimo::setAttributes( const EmptyPlacementAttributesPtr& value )
-        {
-            if ( value )
-            {
-                myAttributes = value;
-            }
-        }
-
-
-        bool Staccatissimo::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
-        {
-            return myAttributes->fromXElement( message, xelement );
-        }
-
+void Staccatissimo::setAttributes(const EmptyPlacementAttributesPtr &value)
+{
+    if (value)
+    {
+        myAttributes = value;
     }
 }
+
+bool Staccatissimo::fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement)
+{
+    return myAttributes->fromXElement(message, xelement);
+}
+
+} // namespace core
+} // namespace mx

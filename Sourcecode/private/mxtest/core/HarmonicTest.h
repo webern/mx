@@ -6,13 +6,13 @@
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_CORE_TESTS
 
-#include "mxtest/core/HelperFunctions.h"
 #include "mx/core/Elements.h"
+#include "mxtest/core/HelperFunctions.h"
 
 namespace mxtest
 {
-    mx::core::HarmonicPtr tgenHarmonic( TestMode v );
-    void tgenHarmonicExpected(std::ostream& os, int indentLevel, TestMode v );
-}
+mx::core::HarmonicPtr tgenHarmonic(TestMode v);
+void tgenHarmonicExpected(std::ostream &os, int indentLevel, TestMode v);
+} // namespace mxtest
 
 #endif

@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "mx/core/ForwardDeclare.h"
 #include "mx/core/ElementInterface.h"
+#include "mx/core/ForwardDeclare.h"
 #include "mx/core/XsString.h"
 
 #include <iosfwd>
@@ -14,34 +14,45 @@
 
 namespace mx
 {
-    namespace core
-    {
+namespace core
+{
 
-        MX_FORWARD_DECLARE_ELEMENT( Source )
+MX_FORWARD_DECLARE_ELEMENT(Source)
 
-        inline SourcePtr makeSource() { return std::make_shared<Source>(); }
-		inline SourcePtr makeSource( const XsString& value ) { return std::make_shared<Source>( value ); }
-		inline SourcePtr makeSource( XsString&& value ) { return std::make_shared<Source>( std::move( value ) ); }
-
-        class Source : public ElementInterface
-        {
-        public:
-            Source();
-            Source( const XsString& value );
-
-            virtual bool hasAttributes() const;
-            virtual bool hasContents() const;
-            virtual std::ostream& streamAttributes( std::ostream& os ) const;
-            virtual std::ostream& streamName( std::ostream& os ) const;
-            virtual std::ostream& streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly ) const;
-            XsString getValue() const;
-            void setValue( const XsString& value );
-
-            private:
-            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
-
-        private:
-            XsString myValue;
-        };
-    }
+inline SourcePtr makeSource()
+{
+    return std::make_shared<Source>();
 }
+
+inline SourcePtr makeSource(const XsString &value)
+{
+    return std::make_shared<Source>(value);
+}
+
+inline SourcePtr makeSource(XsString &&value)
+{
+    return std::make_shared<Source>(std::move(value));
+}
+
+class Source : public ElementInterface
+{
+  public:
+    Source();
+    Source(const XsString &value);
+
+    virtual bool hasAttributes() const;
+    virtual bool hasContents() const;
+    virtual std::ostream &streamAttributes(std::ostream &os) const;
+    virtual std::ostream &streamName(std::ostream &os) const;
+    virtual std::ostream &streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const;
+    XsString getValue() const;
+    void setValue(const XsString &value);
+
+  private:
+    virtual bool fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement);
+
+  private:
+    XsString myValue;
+};
+} // namespace core
+} // namespace mx

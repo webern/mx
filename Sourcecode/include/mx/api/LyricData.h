@@ -8,18 +8,20 @@
 
 namespace mx
 {
-    namespace api
+namespace api
+{
+class LyricData
+{
+  public:
+    LyricData()
     {
-        class LyricData
-        {
-        public:
-            LyricData() {}
-            
-            std::string text;
-        };
-        
-        MXAPI_EQUALS_BEGIN( LyricData )
-        MXAPI_EQUALS_END;
-        MXAPI_NOT_EQUALS_AND_VECTORS( LyricData );
     }
-}
+
+    std::string text;
+};
+
+MXAPI_EQUALS_BEGIN(LyricData)
+MXAPI_EQUALS_END;
+MXAPI_NOT_EQUALS_AND_VECTORS(LyricData);
+} // namespace api
+} // namespace mx

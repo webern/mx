@@ -8,52 +8,51 @@
 
 namespace mx
 {
-    namespace core
-    {
-        BarreAttributes::BarreAttributes()
-        :type( StartStop::start )
-        ,hasType( true )
-        {}
-
-
-        bool BarreAttributes::hasValues() const
-        {
-            return hasType;
-        }
-
-
-        std::ostream& BarreAttributes::toStream( std::ostream& os ) const
-        {
-            if ( hasValues() )
-            {
-                streamAttribute( os, type, "type", hasType );
-            }
-            return os;
-        }
-
-
-        bool BarreAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
-        {
-            const char* const className = "BarreAttributes";
-            bool isSuccess = true;
-            bool isTypeFound = false;
-        
-            auto it = xelement.attributesBegin();
-            auto endIter = xelement.attributesEnd();
-        
-            for( ; it != endIter; ++it )
-            {
-                if( parseAttribute( message, it, className, isSuccess, type, isTypeFound, "type", &parseStartStop ) ) { continue; }
-            }
-        
-            if( !isTypeFound )
-            {
-                isSuccess = false;
-                message << className << ": 'number' is a required attribute but was not found" << std::endl;
-            }
-        
-            return isSuccess;
-        }
-
-    }
+namespace core
+{
+BarreAttributes::BarreAttributes() : type(StartStop::start), hasType(true)
+{
 }
+
+bool BarreAttributes::hasValues() const
+{
+    return hasType;
+}
+
+std::ostream &BarreAttributes::toStream(std::ostream &os) const
+{
+    if (hasValues())
+    {
+        streamAttribute(os, type, "type", hasType);
+    }
+    return os;
+}
+
+bool BarreAttributes::fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement)
+{
+    const char *const className = "BarreAttributes";
+    bool isSuccess = true;
+    bool isTypeFound = false;
+
+    auto it = xelement.attributesBegin();
+    auto endIter = xelement.attributesEnd();
+
+    for (; it != endIter; ++it)
+    {
+        if (parseAttribute(message, it, className, isSuccess, type, isTypeFound, "type", &parseStartStop))
+        {
+            continue;
+        }
+    }
+
+    if (!isTypeFound)
+    {
+        isSuccess = false;
+        message << className << ": 'number' is a required attribute but was not found" << std::endl;
+    }
+
+    return isSuccess;
+}
+
+} // namespace core
+} // namespace mx

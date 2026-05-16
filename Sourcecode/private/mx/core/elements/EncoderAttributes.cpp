@@ -8,46 +8,44 @@
 
 namespace mx
 {
-    namespace core
-    {
-        EncoderAttributes::EncoderAttributes()
-        :type()
-        ,hasType( false )
-        {}
-
-
-        bool EncoderAttributes::hasValues() const
-        {
-            return hasType;
-        }
-
-
-        std::ostream& EncoderAttributes::toStream( std::ostream& os ) const
-        {
-            if ( hasValues() )
-            {
-                streamAttribute( os, type, "type", hasType );
-            }
-            return os;
-        }
-
-
-        bool EncoderAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
-        {
-            const char* const className = "EncoderAttributes";
-            bool isSuccess = true;
-        
-            auto it = xelement.attributesBegin();
-            auto endIter = xelement.attributesEnd();
-        
-            for( ; it != endIter; ++it )
-            {
-                if( parseAttribute( message, it, className, isSuccess, type, hasType, "type" ) ) { continue; }
-            }
-        
-        
-            return isSuccess;
-        }
-
-    }
+namespace core
+{
+EncoderAttributes::EncoderAttributes() : type(), hasType(false)
+{
 }
+
+bool EncoderAttributes::hasValues() const
+{
+    return hasType;
+}
+
+std::ostream &EncoderAttributes::toStream(std::ostream &os) const
+{
+    if (hasValues())
+    {
+        streamAttribute(os, type, "type", hasType);
+    }
+    return os;
+}
+
+bool EncoderAttributes::fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement)
+{
+    const char *const className = "EncoderAttributes";
+    bool isSuccess = true;
+
+    auto it = xelement.attributesBegin();
+    auto endIter = xelement.attributesEnd();
+
+    for (; it != endIter; ++it)
+    {
+        if (parseAttribute(message, it, className, isSuccess, type, hasType, "type"))
+        {
+            continue;
+        }
+    }
+
+    return isSuccess;
+}
+
+} // namespace core
+} // namespace mx

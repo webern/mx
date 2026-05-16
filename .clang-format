@@ -1,2 +1,3 @@
 BasedOnStyle: Microsoft
 ColumnLimit: 120
+SeparateDefinitionBlocks: Always

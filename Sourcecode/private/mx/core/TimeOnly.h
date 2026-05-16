@@ -8,8 +8,8 @@
 
 namespace mx
 {
-    namespace core
-    {
-        using TimeOnly = CommaSeparatedListOfPositiveIntegers;
-    }
+namespace core
+{
+using TimeOnly = CommaSeparatedListOfPositiveIntegers;
 }
+} // namespace mx

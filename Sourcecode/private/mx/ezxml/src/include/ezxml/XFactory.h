@@ -7,10 +7,10 @@
 
 namespace ezxml
 {
-    class XFactory
-    {
-    public:
-        static XDocPtr makeXDoc();
-        static XElementPtr makeXElement();
-    };
-}
+class XFactory
+{
+  public:
+    static XDocPtr makeXDoc();
+    static XElementPtr makeXElement();
+};
+} // namespace ezxml

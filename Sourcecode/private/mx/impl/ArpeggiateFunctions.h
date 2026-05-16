@@ -10,25 +10,25 @@
 
 namespace mx
 {
-    namespace core
-    {
-        class Arpeggiate;
-    }
-    
-    namespace impl
-    {
-        class ArpeggiateFunctions
-        {
-        public:
-            ArpeggiateFunctions( const core::Arpeggiate& inArpeggiate, impl::Cursor inCursor );
-            ~ArpeggiateFunctions() = default;
-            ArpeggiateFunctions( const ArpeggiateFunctions& ) = default;
-            ArpeggiateFunctions( ArpeggiateFunctions&& ) = default;
-            api::MarkData parseArpeggiate() const;
-            
-        private:
-            const core::Arpeggiate& myArpeggiate;
-            const impl::Cursor myCursor;
-        };
-    }
+namespace core
+{
+class Arpeggiate;
 }
+
+namespace impl
+{
+class ArpeggiateFunctions
+{
+  public:
+    ArpeggiateFunctions(const core::Arpeggiate &inArpeggiate, impl::Cursor inCursor);
+    ~ArpeggiateFunctions() = default;
+    ArpeggiateFunctions(const ArpeggiateFunctions &) = default;
+    ArpeggiateFunctions(ArpeggiateFunctions &&) = default;
+    api::MarkData parseArpeggiate() const;
+
+  private:
+    const core::Arpeggiate &myArpeggiate;
+    const impl::Cursor myCursor;
+};
+} // namespace impl
+} // namespace mx

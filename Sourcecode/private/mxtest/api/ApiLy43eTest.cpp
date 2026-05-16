@@ -5,42 +5,35 @@
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_API_TESTS
 
+#include "cpul/cpulTestHarness.h"
+#include "mx/api/DocumentManager.h"
+#include "mx/api/ScoreData.h"
+#include "mxtest/api/ApiLy43eScoreData.h"
 #include "mxtest/api/ApiTester.h"
 #include "mxtest/file/MxFileTest.h"
 #include "mxtest/file/MxFileTestGroup.h"
-#include "mx/api/DocumentManager.h"
-#include "cpul/cpulTestHarness.h"
-#include "mx/api/ScoreData.h"
-#include "mxtest/api/ApiTester.h"
-#include "mxtest/api/ApiLy43eScoreData.h"
 
 using namespace mx::api;
 
 namespace mxtest
 {
-	constexpr const char* const testFileName = "ly43e_Multistaff_ClefDynamics.xml";
-    
-    class ApiLy43eScoreData : public ScoreDataCreator
+constexpr const char *const testFileName = "ly43e_Multistaff_ClefDynamics.xml";
+
+class ApiLy43eScoreData : public ScoreDataCreator
+{
+    virtual mx::api::ScoreData createScoreData() const override
     {
-        virtual mx::api::ScoreData createScoreData() const override
-        {
-            return apiLy43eScoreData();
-        }
-    };
-    
-    class ApiLy43eScoreData;
-    
-    static const ApiTester ApiLy43eTest
-    {
-        ScoreDataCreatorPtr{ new ApiLy43eScoreData{} },
-        MxFileRepository::getTestFile( testFileName ),
-        __FILE__,
-        __LINE__
-    };
-}
+        return apiLy43eScoreData();
+    }
+};
+
+class ApiLy43eScoreData;
+
+static const ApiTester ApiLy43eTest{ScoreDataCreatorPtr{new ApiLy43eScoreData{}},
+                                    MxFileRepository::getTestFile(testFileName), __FILE__, __LINE__};
+} // namespace mxtest
 
 #endif
-
 
 /*
 <?xml version="1.0" encoding="UTF-8"?>
@@ -49,8 +42,8 @@ namespace mxtest
 <score-partwise>
   <identification>
     <miscellaneous>
-      <miscellaneous-field name="description">A piano staff with dynamics and 
-          clef changes, where each element (ffff, wedge and clef changes) 
+      <miscellaneous-field name="description">A piano staff with dynamics and
+          clef changes, where each element (ffff, wedge and clef changes)
           applies only to one voice or one staff, respectively.</miscellaneous-field>
     </miscellaneous>
   </identification>

@@ -8,59 +8,61 @@
 
 namespace mx
 {
-    namespace core
+namespace core
+{
+Unstress::Unstress() : ElementInterface(), myAttributes(std::make_shared<EmptyPlacementAttributes>())
+{
+}
+
+bool Unstress::hasAttributes() const
+{
+    return myAttributes->hasValues();
+}
+
+bool Unstress::hasContents() const
+{
+    return false;
+}
+
+std::ostream &Unstress::streamAttributes(std::ostream &os) const
+{
+    if (myAttributes)
     {
-        Unstress::Unstress()
-        :ElementInterface()
-        ,myAttributes( std::make_shared<EmptyPlacementAttributes>() )
-        {}
+        myAttributes->toStream(os);
+    }
+    return os;
+}
 
+std::ostream &Unstress::streamName(std::ostream &os) const
+{
+    os << "unstress";
+    return os;
+}
 
-        bool Unstress::hasAttributes() const
-        {
-            return myAttributes->hasValues();
-        }
+std::ostream &Unstress::streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const
+{
+    MX_UNUSED(indentLevel);
+    isOneLineOnly = true;
+    return os;
+}
 
+EmptyPlacementAttributesPtr Unstress::getAttributes() const
+{
+    return myAttributes;
+}
 
-        bool Unstress::hasContents() const  { return false; }
-        std::ostream& Unstress::streamAttributes( std::ostream& os ) const
-        {
-            if ( myAttributes )
-            {
-                myAttributes->toStream( os );
-            }
-            return os;
-        }
-
-
-        std::ostream& Unstress::streamName( std::ostream& os ) const  { os << "unstress"; return os; }
-        std::ostream& Unstress::streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly ) const
-        {
-            MX_UNUSED( indentLevel );
-            isOneLineOnly = true;
-            return os;
-        }
-
-
-        EmptyPlacementAttributesPtr Unstress::getAttributes() const
-        {
-            return myAttributes;
-        }
-
-
-        void Unstress::setAttributes( const EmptyPlacementAttributesPtr& value )
-        {
-            if ( value )
-            {
-                myAttributes = value;
-            }
-        }
-
-
-        bool Unstress::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
-        {
-            return myAttributes->fromXElement( message, xelement );
-        }
-
+void Unstress::setAttributes(const EmptyPlacementAttributesPtr &value)
+{
+    if (value)
+    {
+        myAttributes = value;
     }
 }
+
+bool Unstress::fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement)
+{
+    return myAttributes->fromXElement(message, xelement);
+}
+
+} // namespace core
+} // namespace mx

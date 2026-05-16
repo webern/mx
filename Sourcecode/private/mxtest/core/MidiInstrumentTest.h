@@ -6,13 +6,13 @@
 #ifdef MX_COMPILE_CORE_TESTS
 
 #pragma once
-#include "mxtest/core/HelperFunctions.h"
 #include "mx/core/Elements.h"
+#include "mxtest/core/HelperFunctions.h"
 
 namespace mxtest
 {
-    mx::core::MidiInstrumentPtr tgenMidiInstrument( TestMode v );
-    void tgenMidiInstrumentExpected(std::ostream& os, int indentLevel, TestMode v );
-}
+mx::core::MidiInstrumentPtr tgenMidiInstrument(TestMode v);
+void tgenMidiInstrumentExpected(std::ostream &os, int indentLevel, TestMode v);
+} // namespace mxtest
 
 #endif

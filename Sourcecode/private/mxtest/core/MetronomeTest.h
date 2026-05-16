@@ -6,22 +6,22 @@
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_CORE_TESTS
 
-#include "mxtest/core/HelperFunctions.h"
 #include "mx/core/Elements.h"
+#include "mxtest/core/HelperFunctions.h"
 
 using namespace mx::core;
 using namespace std;
 
 namespace mxtest
 {
-    BeatUnitGroupPtr tgenBeatUnitGroup( TestMode v );
-    MetronomeRelationGroupPtr tgenMetronomeRelationGroup( TestMode v );
-    NoteRelationNotePtr tgenNoteRelationNote( TestMode v );
-    PerMinuteOrBeatUnitChoicePtr tgenPerMinuteOrBeatUnitChoice( TestMode v );
-    BeatUnitPerPtr tgenBeatUnitPer( TestMode v );
-    BeatUnitPerOrNoteRelationNoteChoicePtr tgenBeatUnitPerOrNoteRelationNoteChoice( TestMode v );
-    MetronomeAttributesPtr tgenMetronomeAttributesPtr( TestMode v );
-    MetronomePtr tgenMetronome( TestMode v );
-}
+BeatUnitGroupPtr tgenBeatUnitGroup(TestMode v);
+MetronomeRelationGroupPtr tgenMetronomeRelationGroup(TestMode v);
+NoteRelationNotePtr tgenNoteRelationNote(TestMode v);
+PerMinuteOrBeatUnitChoicePtr tgenPerMinuteOrBeatUnitChoice(TestMode v);
+BeatUnitPerPtr tgenBeatUnitPer(TestMode v);
+BeatUnitPerOrNoteRelationNoteChoicePtr tgenBeatUnitPerOrNoteRelationNoteChoice(TestMode v);
+MetronomeAttributesPtr tgenMetronomeAttributesPtr(TestMode v);
+MetronomePtr tgenMetronome(TestMode v);
+} // namespace mxtest
 
 #endif

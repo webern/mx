@@ -8,8 +8,8 @@
 
 namespace mx
 {
-    namespace core
-    {
-        using XlinkHref = XsAnyUri;
-    }
+namespace core
+{
+using XlinkHref = XsAnyUri;
 }
+} // namespace mx

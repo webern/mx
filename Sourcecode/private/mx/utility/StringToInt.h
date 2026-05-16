@@ -9,21 +9,21 @@
 
 namespace mx
 {
-    namespace utility
+namespace utility
+{
+// only assigns if successful. also returns isSuccess as a bool
+inline bool stringToInt(const std::string &inStr, int &outInt)
+{
+    auto temp = std::atoi(inStr.c_str());
+    auto tempStr = std::to_string(temp);
+    bool isSuccess = (tempStr == inStr);
+
+    if (isSuccess)
     {
-        // only assigns if successful. also returns isSuccess as a bool
-        inline bool stringToInt( const std::string& inStr, int& outInt )
-        {
-            auto temp = std::atoi( inStr.c_str() );
-            auto tempStr = std::to_string( temp );
-            bool isSuccess = ( tempStr == inStr );
-            
-            if( isSuccess )
-            {
-                outInt = temp;
-            }
-            
-            return isSuccess;
-        }
+        outInt = temp;
     }
+
+    return isSuccess;
 }
+} // namespace utility
+} // namespace mx

@@ -8,59 +8,61 @@
 
 namespace mx
 {
-    namespace core
+namespace core
+{
+Turn::Turn() : ElementInterface(), myAttributes(std::make_shared<TurnAttributes>())
+{
+}
+
+bool Turn::hasAttributes() const
+{
+    return myAttributes->hasValues();
+}
+
+bool Turn::hasContents() const
+{
+    return false;
+}
+
+std::ostream &Turn::streamAttributes(std::ostream &os) const
+{
+    if (myAttributes)
     {
-        Turn::Turn()
-        :ElementInterface()
-        ,myAttributes( std::make_shared<TurnAttributes>() )
-        {}
+        myAttributes->toStream(os);
+    }
+    return os;
+}
 
+std::ostream &Turn::streamName(std::ostream &os) const
+{
+    os << "turn";
+    return os;
+}
 
-        bool Turn::hasAttributes() const
-        {
-            return myAttributes->hasValues();
-        }
+std::ostream &Turn::streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const
+{
+    MX_UNUSED(indentLevel);
+    isOneLineOnly = true;
+    return os;
+}
 
+TurnAttributesPtr Turn::getAttributes() const
+{
+    return myAttributes;
+}
 
-        bool Turn::hasContents() const  { return false; }
-        std::ostream& Turn::streamAttributes( std::ostream& os ) const
-        {
-            if ( myAttributes )
-            {
-                myAttributes->toStream( os );
-            }
-            return os;
-        }
-
-
-        std::ostream& Turn::streamName( std::ostream& os ) const  { os << "turn"; return os; }
-        std::ostream& Turn::streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly ) const
-        {
-            MX_UNUSED( indentLevel );
-            isOneLineOnly = true;
-            return os;
-        }
-
-
-        TurnAttributesPtr Turn::getAttributes() const
-        {
-            return myAttributes;
-        }
-
-
-        void Turn::setAttributes( const TurnAttributesPtr& value )
-        {
-            if ( value )
-            {
-                myAttributes = value;
-            }
-        }
-
-
-        bool Turn::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
-        {
-            return myAttributes->fromXElement( message, xelement );
-        }
-
+void Turn::setAttributes(const TurnAttributesPtr &value)
+{
+    if (value)
+    {
+        myAttributes = value;
     }
 }
+
+bool Turn::fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement)
+{
+    return myAttributes->fromXElement(message, xelement);
+}
+
+} // namespace core
+} // namespace mx

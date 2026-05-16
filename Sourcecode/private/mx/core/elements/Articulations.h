@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "mx/core/ForwardDeclare.h"
 #include "mx/core/ElementInterface.h"
+#include "mx/core/ForwardDeclare.h"
 
 #include <iosfwd>
 #include <memory>
@@ -13,37 +13,40 @@
 
 namespace mx
 {
-    namespace core
-    {
+namespace core
+{
 
-        MX_FORWARD_DECLARE_ELEMENT( ArticulationsChoice )
-        MX_FORWARD_DECLARE_ELEMENT( Articulations )
+MX_FORWARD_DECLARE_ELEMENT(ArticulationsChoice)
+MX_FORWARD_DECLARE_ELEMENT(Articulations)
 
-        inline ArticulationsPtr makeArticulations() { return std::make_shared<Articulations>(); }
-
-        class Articulations : public ElementInterface
-        {
-        public:
-            Articulations();
-
-            virtual bool hasAttributes() const;
-            virtual std::ostream& streamAttributes( std::ostream& os ) const;
-            virtual std::ostream& streamName( std::ostream& os ) const;
-            virtual bool hasContents() const;
-            virtual std::ostream& streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly ) const;
-
-            /* _________ ArticulationsChoice minOccurs = 0, maxOccurs = unbounded _________ */
-            const ArticulationsChoiceSet& getArticulationsChoiceSet() const;
-            void addArticulationsChoice( const ArticulationsChoicePtr& value );
-            void removeArticulationsChoice( const ArticulationsChoiceSetIterConst& value );
-            void clearArticulationsChoiceSet();
-            ArticulationsChoicePtr getArticulationsChoice( const ArticulationsChoiceSetIterConst& setIterator ) const;
-
-            private:
-            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
-
-        private:
-            ArticulationsChoiceSet myArticulationsChoiceSet;
-        };
-    }
+inline ArticulationsPtr makeArticulations()
+{
+    return std::make_shared<Articulations>();
 }
+
+class Articulations : public ElementInterface
+{
+  public:
+    Articulations();
+
+    virtual bool hasAttributes() const;
+    virtual std::ostream &streamAttributes(std::ostream &os) const;
+    virtual std::ostream &streamName(std::ostream &os) const;
+    virtual bool hasContents() const;
+    virtual std::ostream &streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const;
+
+    /* _________ ArticulationsChoice minOccurs = 0, maxOccurs = unbounded _________ */
+    const ArticulationsChoiceSet &getArticulationsChoiceSet() const;
+    void addArticulationsChoice(const ArticulationsChoicePtr &value);
+    void removeArticulationsChoice(const ArticulationsChoiceSetIterConst &value);
+    void clearArticulationsChoiceSet();
+    ArticulationsChoicePtr getArticulationsChoice(const ArticulationsChoiceSetIterConst &setIterator) const;
+
+  private:
+    virtual bool fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement);
+
+  private:
+    ArticulationsChoiceSet myArticulationsChoiceSet;
+};
+} // namespace core
+} // namespace mx

@@ -8,46 +8,44 @@
 
 namespace mx
 {
-    namespace core
-    {
-        MultipleRestAttributes::MultipleRestAttributes()
-        :useSymbols()
-        ,hasUseSymbols( false )
-        {}
-
-
-        bool MultipleRestAttributes::hasValues() const
-        {
-            return hasUseSymbols;
-        }
-
-
-        std::ostream& MultipleRestAttributes::toStream( std::ostream& os ) const
-        {
-            if ( hasValues() )
-            {
-                streamAttribute( os, useSymbols, "use-symbols", hasUseSymbols );
-            }
-            return os;
-        }
-
-
-        bool MultipleRestAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
-        {
-            const char* const className = "MultipleRestAttributes";
-            bool isSuccess = true;
-        
-            auto it = xelement.attributesBegin();
-            auto endIter = xelement.attributesEnd();
-        
-            for( ; it != endIter; ++it )
-            {
-                if( parseAttribute( message, it, className, isSuccess, useSymbols, hasUseSymbols, "use-symbols", &parseYesNo ) ) { continue; }
-            }
-        
-        
-            MX_RETURN_IS_SUCCESS;
-        }
-
-    }
+namespace core
+{
+MultipleRestAttributes::MultipleRestAttributes() : useSymbols(), hasUseSymbols(false)
+{
 }
+
+bool MultipleRestAttributes::hasValues() const
+{
+    return hasUseSymbols;
+}
+
+std::ostream &MultipleRestAttributes::toStream(std::ostream &os) const
+{
+    if (hasValues())
+    {
+        streamAttribute(os, useSymbols, "use-symbols", hasUseSymbols);
+    }
+    return os;
+}
+
+bool MultipleRestAttributes::fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement)
+{
+    const char *const className = "MultipleRestAttributes";
+    bool isSuccess = true;
+
+    auto it = xelement.attributesBegin();
+    auto endIter = xelement.attributesEnd();
+
+    for (; it != endIter; ++it)
+    {
+        if (parseAttribute(message, it, className, isSuccess, useSymbols, hasUseSymbols, "use-symbols", &parseYesNo))
+        {
+            continue;
+        }
+    }
+
+    MX_RETURN_IS_SUCCESS;
+}
+
+} // namespace core
+} // namespace mx

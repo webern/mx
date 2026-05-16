@@ -10,28 +10,25 @@
 
 namespace mx
 {
-    namespace api
-    {
-        class CodaData
-        {
-        public:
-            PositionData positionData;
-            bool isColorSpecified;
-            ColorData colorData;
+namespace api
+{
+class CodaData
+{
+  public:
+    PositionData positionData;
+    bool isColorSpecified;
+    ColorData colorData;
 
-            CodaData()
-            : positionData{}
-            , isColorSpecified{ false }
-            , colorData{}
-            {
-            }
-        };
-        
-        MXAPI_EQUALS_BEGIN( CodaData )
-        MXAPI_EQUALS_MEMBER( positionData )
-        MXAPI_EQUALS_MEMBER( isColorSpecified )
-        MXAPI_EQUALS_MEMBER( colorData )
-        MXAPI_EQUALS_END;
-        MXAPI_NOT_EQUALS_AND_VECTORS( CodaData );
+    CodaData() : positionData{}, isColorSpecified{false}, colorData{}
+    {
     }
-}
+};
+
+MXAPI_EQUALS_BEGIN(CodaData)
+MXAPI_EQUALS_MEMBER(positionData)
+MXAPI_EQUALS_MEMBER(isColorSpecified)
+MXAPI_EQUALS_MEMBER(colorData)
+MXAPI_EQUALS_END;
+MXAPI_NOT_EQUALS_AND_VECTORS(CodaData);
+} // namespace api
+} // namespace mx

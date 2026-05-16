@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include "mx/core/ForwardDeclare.h"
 #include "mx/core/ElementInterface.h"
 #include "mx/core/Enums.h"
+#include "mx/core/ForwardDeclare.h"
 
 #include <iosfwd>
 #include <memory>
@@ -14,34 +14,45 @@
 
 namespace mx
 {
-    namespace core
-    {
+namespace core
+{
 
-        MX_FORWARD_DECLARE_ELEMENT( CircularArrow )
+MX_FORWARD_DECLARE_ELEMENT(CircularArrow)
 
-        inline CircularArrowPtr makeCircularArrow() { return std::make_shared<CircularArrow>(); }
-		inline CircularArrowPtr makeCircularArrow( const CircularArrowEnum& value ) { return std::make_shared<CircularArrow>( value ); }
-		inline CircularArrowPtr makeCircularArrow( CircularArrowEnum&& value ) { return std::make_shared<CircularArrow>( std::move( value ) ); }
-
-        class CircularArrow : public ElementInterface
-        {
-        public:
-            CircularArrow();
-            CircularArrow( const CircularArrowEnum& value );
-
-            virtual bool hasAttributes() const;
-            virtual bool hasContents() const;
-            virtual std::ostream& streamAttributes( std::ostream& os ) const;
-            virtual std::ostream& streamName( std::ostream& os ) const;
-            virtual std::ostream& streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly ) const;
-            CircularArrowEnum getValue() const;
-            void setValue( const CircularArrowEnum& value );
-
-            private:
-            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
-
-        private:
-            CircularArrowEnum myValue;
-        };
-    }
+inline CircularArrowPtr makeCircularArrow()
+{
+    return std::make_shared<CircularArrow>();
 }
+
+inline CircularArrowPtr makeCircularArrow(const CircularArrowEnum &value)
+{
+    return std::make_shared<CircularArrow>(value);
+}
+
+inline CircularArrowPtr makeCircularArrow(CircularArrowEnum &&value)
+{
+    return std::make_shared<CircularArrow>(std::move(value));
+}
+
+class CircularArrow : public ElementInterface
+{
+  public:
+    CircularArrow();
+    CircularArrow(const CircularArrowEnum &value);
+
+    virtual bool hasAttributes() const;
+    virtual bool hasContents() const;
+    virtual std::ostream &streamAttributes(std::ostream &os) const;
+    virtual std::ostream &streamName(std::ostream &os) const;
+    virtual std::ostream &streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const;
+    CircularArrowEnum getValue() const;
+    void setValue(const CircularArrowEnum &value);
+
+  private:
+    virtual bool fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement);
+
+  private:
+    CircularArrowEnum myValue;
+};
+} // namespace core
+} // namespace mx

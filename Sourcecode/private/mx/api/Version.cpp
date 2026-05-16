@@ -8,65 +8,50 @@
 
 namespace mx
 {
-    namespace api
-    {
+namespace api
+{
 
 ////////////////////////////////////////////////////////////////////////////////
 // PUBLIC FUNCTIONS ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-        int
-        Version::getVersionMajor()
-        {
-            return getInstance().myMajor;
-        }
+int Version::getVersionMajor()
+{
+    return getInstance().myMajor;
+}
 
+int Version::getVersionMinor()
+{
+    return getInstance().myMinor;
+}
 
-        int
-        Version::getVersionMinor()
-        {
-            return getInstance().myMinor;
-        }
+int Version::getVersionPatch()
+{
+    return getInstance().myPatch;
+}
 
-
-        int
-        Version::getVersionPatch()
-        {
-            return getInstance().myPatch;
-        }
-
-
-        const std::string&
-        Version::getString()
-        {
-            return getInstance().myString;
-        }
+const std::string &Version::getString()
+{
+    return getInstance().myString;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // PRIVATE FUNCTIONS ///////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-        Version::Version()
-        : myMajor{ MX_VERSION_MAJOR }
-        , myMinor{ MX_VERSION_MINOR }
-        , myPatch{ MX_VERSION_PATCH }
-        , myBuild{ MX_VERSION_BUILD }
-        , myString{}
-        {
-            std::stringstream ss;
-            ss <<
-            myMajor << "." <<
-            myMinor << "." <<
-            myPatch << " (" <<
-            myBuild << ")";
-            myString = ss.str();
-        }
-
-        const Version&
-        Version::getInstance()
-        {
-            const static Version v;
-            return v;
-        }
-    }
+Version::Version()
+    : myMajor{MX_VERSION_MAJOR}, myMinor{MX_VERSION_MINOR}, myPatch{MX_VERSION_PATCH}, myBuild{MX_VERSION_BUILD},
+      myString{}
+{
+    std::stringstream ss;
+    ss << myMajor << "." << myMinor << "." << myPatch << " (" << myBuild << ")";
+    myString = ss.str();
 }
+
+const Version &Version::getInstance()
+{
+    const static Version v;
+    return v;
+}
+} // namespace api
+} // namespace mx

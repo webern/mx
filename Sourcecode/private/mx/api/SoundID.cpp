@@ -8,40 +8,39 @@
 
 namespace mx
 {
-    namespace api
+namespace api
+{
+std::string SoundIDToString(SoundID inSoundID)
+{
+    if (inSoundID == SoundID::unspecified)
     {
-        std::string SoundIDToString( SoundID inSoundID )
-        {
-            if( inSoundID == SoundID::unspecified )
-            {
-                return "unspecified";
-            }
-            else if( inSoundID == SoundID::errorBadString )
-            {
-                return "error.bad.string";
-            }
-
-            impl::Converter c;
-            return core::PlaybackSoundToString( c.convert( inSoundID ) );
-        }
-
-
-        SoundID SoundIDFromString( const std::string& inString )
-        {
-            SoundID result = SoundID::keyboardPiano;
-
-            try
-            {
-                const auto p = core::PlaybackSoundFromString( inString );
-                impl::Converter c;
-                result = c.convert( p );
-            }
-            catch (...)
-            {
-                result = SoundID::errorBadString;
-            }
-
-            return result;
-        }
+        return "unspecified";
     }
+    else if (inSoundID == SoundID::errorBadString)
+    {
+        return "error.bad.string";
+    }
+
+    impl::Converter c;
+    return core::PlaybackSoundToString(c.convert(inSoundID));
 }
+
+SoundID SoundIDFromString(const std::string &inString)
+{
+    SoundID result = SoundID::keyboardPiano;
+
+    try
+    {
+        const auto p = core::PlaybackSoundFromString(inString);
+        impl::Converter c;
+        result = c.convert(p);
+    }
+    catch (...)
+    {
+        result = SoundID::errorBadString;
+    }
+
+    return result;
+}
+} // namespace api
+} // namespace mx

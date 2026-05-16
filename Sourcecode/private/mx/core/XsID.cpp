@@ -7,34 +7,29 @@
 
 namespace mx
 {
-    namespace core
-    {
-        XsID::XsID()
-        :XsString( "ID" )
-        {
-
-        }
-
-        
-        XsID::XsID( const StringType& value )
-        :XsString( value )
-        {
-            XsID::setValue( value );
-        }
-        
-
-        void XsID::setValue( const StringType& value )
-        {
-            std::string scrubbed = onlyAllow( value );
-            if ( scrubbed.length() == 0 )
-            {
-                scrubbed = "ID";
-            }
-            else if ( isdigit( scrubbed[0] ) )
-            {
-                scrubbed = "ID" + scrubbed;
-            }
-            XsString::setValue( scrubbed );
-        }
-    }
+namespace core
+{
+XsID::XsID() : XsString("ID")
+{
 }
+
+XsID::XsID(const StringType &value) : XsString(value)
+{
+    XsID::setValue(value);
+}
+
+void XsID::setValue(const StringType &value)
+{
+    std::string scrubbed = onlyAllow(value);
+    if (scrubbed.length() == 0)
+    {
+        scrubbed = "ID";
+    }
+    else if (isdigit(scrubbed[0]))
+    {
+        scrubbed = "ID" + scrubbed;
+    }
+    XsString::setValue(scrubbed);
+}
+} // namespace core
+} // namespace mx

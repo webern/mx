@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "mx/core/ForwardDeclare.h"
 #include "mx/core/AttributesInterface.h"
+#include "mx/core/ForwardDeclare.h"
 #include "mx/core/Integers.h"
 #include "mx/core/XsID.h"
 #include "mx/core/XsNMToken.h"
@@ -16,28 +16,28 @@
 
 namespace mx
 {
-    namespace core
-    {
+namespace core
+{
 
-        MX_FORWARD_DECLARE_ATTRIBUTES( BookmarkAttributes )
+MX_FORWARD_DECLARE_ATTRIBUTES(BookmarkAttributes)
 
-        struct BookmarkAttributes : public AttributesInterface
-        {
-        public:
-            BookmarkAttributes();
-            virtual bool hasValues() const;
-            virtual std::ostream& toStream( std::ostream& os ) const;
-            XsID id;
-            XsToken name;
-            XsNMToken element;
-            PositiveInteger position;
-            const bool hasId;
-            bool hasName;
-            bool hasElement;
-            bool hasPosition;
+struct BookmarkAttributes : public AttributesInterface
+{
+  public:
+    BookmarkAttributes();
+    virtual bool hasValues() const;
+    virtual std::ostream &toStream(std::ostream &os) const;
+    XsID id;
+    XsToken name;
+    XsNMToken element;
+    PositiveInteger position;
+    const bool hasId;
+    bool hasName;
+    bool hasElement;
+    bool hasPosition;
 
-            private:
-            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
-        };
-    }
-}
+  private:
+    virtual bool fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement);
+};
+} // namespace core
+} // namespace mx

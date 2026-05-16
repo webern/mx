@@ -14,36 +14,32 @@
 
 namespace mx
 {
-    namespace api
+namespace api
+{
+/// PageLayoutData allows for the setting of page sizes and margins.
+class PageLayoutData
+{
+  public:
+    /// Page size, in tenths.
+    std::optional<SizeData> size;
+
+    /// Page margin data (note all members of PageMarginsData are optional).
+    PageMarginsData margins;
+
+    PageLayoutData() : size(std::nullopt), margins{}
     {
-        /// PageLayoutData allows for the setting of page sizes and margins.
-        class PageLayoutData
-        {
-        public:
-
-            /// Page size, in tenths.
-            std::optional<SizeData> size;
-
-            /// Page margin data (note all members of PageMarginsData are optional).
-            PageMarginsData margins;
-
-            PageLayoutData()
-                : size( std::nullopt )
-                , margins{}
-            {
-
-            }
-
-            inline bool isUsed() const
-            {
-                return size || margins.isUsed();
-            }
-        };
-
-        MXAPI_EQUALS_BEGIN( PageLayoutData )
-            MXAPI_EQUALS_MEMBER( size )
-            MXAPI_EQUALS_MEMBER( margins )
-        MXAPI_EQUALS_END;
-        MXAPI_NOT_EQUALS_AND_VECTORS( PageLayoutData );
     }
-}
+
+    inline bool isUsed() const
+    {
+        return size || margins.isUsed();
+    }
+};
+
+MXAPI_EQUALS_BEGIN(PageLayoutData)
+MXAPI_EQUALS_MEMBER(size)
+MXAPI_EQUALS_MEMBER(margins)
+MXAPI_EQUALS_END;
+MXAPI_NOT_EQUALS_AND_VECTORS(PageLayoutData);
+} // namespace api
+} // namespace mx

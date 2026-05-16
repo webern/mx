@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "mx/core/ForwardDeclare.h"
 #include "mx/core/ElementInterface.h"
+#include "mx/core/ForwardDeclare.h"
 #include "mx/core/elements/CreditImageAttributes.h"
 
 #include <iosfwd>
@@ -14,32 +14,35 @@
 
 namespace mx
 {
-    namespace core
-    {
+namespace core
+{
 
-        MX_FORWARD_DECLARE_ATTRIBUTES( CreditImageAttributes )
-        MX_FORWARD_DECLARE_ELEMENT( CreditImage )
+MX_FORWARD_DECLARE_ATTRIBUTES(CreditImageAttributes)
+MX_FORWARD_DECLARE_ELEMENT(CreditImage)
 
-        inline CreditImagePtr makeCreditImage() { return std::make_shared<CreditImage>(); }
-
-        class CreditImage : public ElementInterface
-        {
-        public:
-            CreditImage();
-
-            virtual bool hasAttributes() const;
-            virtual bool hasContents() const;
-            virtual std::ostream& streamAttributes( std::ostream& os ) const;
-            virtual std::ostream& streamName( std::ostream& os ) const;
-            virtual std::ostream& streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly ) const;
-            CreditImageAttributesPtr getAttributes() const;
-            void setAttributes( const CreditImageAttributesPtr& attributes );
-
-            private:
-            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
-
-        private:
-            CreditImageAttributesPtr myAttributes;
-        };
-    }
+inline CreditImagePtr makeCreditImage()
+{
+    return std::make_shared<CreditImage>();
 }
+
+class CreditImage : public ElementInterface
+{
+  public:
+    CreditImage();
+
+    virtual bool hasAttributes() const;
+    virtual bool hasContents() const;
+    virtual std::ostream &streamAttributes(std::ostream &os) const;
+    virtual std::ostream &streamName(std::ostream &os) const;
+    virtual std::ostream &streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const;
+    CreditImageAttributesPtr getAttributes() const;
+    void setAttributes(const CreditImageAttributesPtr &attributes);
+
+  private:
+    virtual bool fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement);
+
+  private:
+    CreditImageAttributesPtr myAttributes;
+};
+} // namespace core
+} // namespace mx

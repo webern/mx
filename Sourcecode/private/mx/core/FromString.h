@@ -3,14 +3,14 @@
 // Distributed under the MIT License
 
 #pragma once
-#include "ezxml/XElement.h"
 #include "ezxml/XAttributeIterator.h"
+#include "ezxml/XElement.h"
 #include <iosfwd>
 
 namespace mx
 {
-	namespace core
-	{
-		
-	}
+namespace core
+{
+
 }
+} // namespace mx

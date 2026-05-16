@@ -11,13 +11,13 @@
 
 using namespace mx::core;
 
-TEST( Test01, Dynamics )
+TEST(Test01, Dynamics)
 {
-    Dynamics x( (DynamicsValue( DynamicsEnum::p )) );
+    Dynamics x((DynamicsValue(DynamicsEnum::p)));
     DynamicsAttributesPtr da = x.getAttributes();
-    da->defaultX = TenthsValue( 66 );
+    da->defaultX = TenthsValue(66);
     da->hasDefaultX = true;
-    da->defaultY = TenthsValue( -68 );
+    da->defaultY = TenthsValue(-68);
     da->hasDefaultY = true;
     da->halign = LeftCenterRight::center;
     da->hasHalign = true;
@@ -27,16 +27,17 @@ TEST( Test01, Dynamics )
     expected << INDENT << "<p/>" << std::endl;
     expected << "</dynamics>";
     std::stringstream actual;
-    x.toStream( actual, 0 );
-    CHECK_EQUAL( expected.str(), actual.str() )
+    x.toStream(actual, 0);
+    CHECK_EQUAL(expected.str(), actual.str())
 }
-TEST( Test02, Dynamics )
+
+TEST(Test02, Dynamics)
 {
-    Dynamics x( (DynamicsValue( "purple" )) );
+    Dynamics x((DynamicsValue("purple")));
     DynamicsAttributesPtr da = x.getAttributes();
-    da->defaultX = TenthsValue( 66 );
+    da->defaultX = TenthsValue(66);
     da->hasDefaultX = true;
-    da->defaultY = TenthsValue( -68 );
+    da->defaultY = TenthsValue(-68);
     da->hasDefaultY = true;
     da->halign = LeftCenterRight::center;
     da->hasHalign = true;
@@ -45,8 +46,8 @@ TEST( Test02, Dynamics )
     expected << INDENT << "<other-dynamics>purple</other-dynamics>" << std::endl;
     expected << "</dynamics>";
     std::stringstream actual;
-    x.toStream( actual, 0 );
-    CHECK_EQUAL( expected.str(), actual.str() )
+    x.toStream(actual, 0);
+    CHECK_EQUAL(expected.str(), actual.str())
 }
 
 #endif

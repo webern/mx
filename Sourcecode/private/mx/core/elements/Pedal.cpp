@@ -8,59 +8,61 @@
 
 namespace mx
 {
-    namespace core
+namespace core
+{
+Pedal::Pedal() : ElementInterface(), myAttributes(std::make_shared<PedalAttributes>())
+{
+}
+
+bool Pedal::hasAttributes() const
+{
+    return myAttributes->hasValues();
+}
+
+bool Pedal::hasContents() const
+{
+    return false;
+}
+
+std::ostream &Pedal::streamAttributes(std::ostream &os) const
+{
+    if (myAttributes)
     {
-        Pedal::Pedal()
-        :ElementInterface()
-        ,myAttributes( std::make_shared<PedalAttributes>() )
-        {}
+        myAttributes->toStream(os);
+    }
+    return os;
+}
 
+std::ostream &Pedal::streamName(std::ostream &os) const
+{
+    os << "pedal";
+    return os;
+}
 
-        bool Pedal::hasAttributes() const
-        {
-            return myAttributes->hasValues();
-        }
+std::ostream &Pedal::streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const
+{
+    MX_UNUSED(indentLevel);
+    isOneLineOnly = true;
+    return os;
+}
 
+PedalAttributesPtr Pedal::getAttributes() const
+{
+    return myAttributes;
+}
 
-        bool Pedal::hasContents() const  { return false; }
-        std::ostream& Pedal::streamAttributes( std::ostream& os ) const
-        {
-            if ( myAttributes )
-            {
-                myAttributes->toStream( os );
-            }
-            return os;
-        }
-
-
-        std::ostream& Pedal::streamName( std::ostream& os ) const  { os << "pedal"; return os; }
-        std::ostream& Pedal::streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly ) const
-        {
-            MX_UNUSED( indentLevel );
-            isOneLineOnly = true;
-            return os;
-        }
-
-
-        PedalAttributesPtr Pedal::getAttributes() const
-        {
-            return myAttributes;
-        }
-
-
-        void Pedal::setAttributes( const PedalAttributesPtr& value )
-        {
-            if ( value )
-            {
-                myAttributes = value;
-            }
-        }
-
-
-        bool Pedal::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
-        {
-            return myAttributes->fromXElement( message, xelement );
-        }
-
+void Pedal::setAttributes(const PedalAttributesPtr &value)
+{
+    if (value)
+    {
+        myAttributes = value;
     }
 }
+
+bool Pedal::fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement)
+{
+    return myAttributes->fromXElement(message, xelement);
+}
+
+} // namespace core
+} // namespace mx

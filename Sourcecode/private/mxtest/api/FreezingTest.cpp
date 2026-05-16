@@ -6,8 +6,8 @@
 #ifdef MX_COMPILE_API_TESTS
 
 #include "cpul/cpulTestHarness.h"
-#include "mxtest/api/RoundTrip.h"
 #include "mx/api/DocumentManager.h"
+#include "mxtest/api/RoundTrip.h"
 
 using namespace std;
 using namespace mx::api;

@@ -4,12 +4,12 @@
 
 #pragma once
 
-#include "mx/core/ForwardDeclare.h"
 #include "mx/core/AttributesInterface.h"
 #include "mx/core/CommaSeparatedText.h"
 #include "mx/core/Decimals.h"
 #include "mx/core/Enums.h"
 #include "mx/core/FontSize.h"
+#include "mx/core/ForwardDeclare.h"
 
 #include <iosfwd>
 #include <memory>
@@ -17,46 +17,46 @@
 
 namespace mx
 {
-    namespace core
-    {
+namespace core
+{
 
-        MX_FORWARD_DECLARE_ATTRIBUTES( EmptyLineAttributes )
+MX_FORWARD_DECLARE_ATTRIBUTES(EmptyLineAttributes)
 
-        struct EmptyLineAttributes : public AttributesInterface
-        {
-        public:
-            EmptyLineAttributes();
-            virtual bool hasValues() const;
-            virtual std::ostream& toStream( std::ostream& os ) const;
-            LineShape lineShape;
-            LineType lineType;
-            TenthsValue dashLength;
-            TenthsValue spaceLength;
-            TenthsValue defaultX;
-            TenthsValue defaultY;
-            TenthsValue relativeX;
-            TenthsValue relativeY;
-            CommaSeparatedText fontFamily;
-            FontStyle fontStyle;
-            FontSize fontSize;
-            FontWeight fontWeight;
-            AboveBelow placement;
-            bool hasLineShape;
-            bool hasLineType;
-            bool hasDashLength;
-            bool hasSpaceLength;
-            bool hasDefaultX;
-            bool hasDefaultY;
-            bool hasRelativeX;
-            bool hasRelativeY;
-            bool hasFontFamily;
-            bool hasFontStyle;
-            bool hasFontSize;
-            bool hasFontWeight;
-            bool hasPlacement;
+struct EmptyLineAttributes : public AttributesInterface
+{
+  public:
+    EmptyLineAttributes();
+    virtual bool hasValues() const;
+    virtual std::ostream &toStream(std::ostream &os) const;
+    LineShape lineShape;
+    LineType lineType;
+    TenthsValue dashLength;
+    TenthsValue spaceLength;
+    TenthsValue defaultX;
+    TenthsValue defaultY;
+    TenthsValue relativeX;
+    TenthsValue relativeY;
+    CommaSeparatedText fontFamily;
+    FontStyle fontStyle;
+    FontSize fontSize;
+    FontWeight fontWeight;
+    AboveBelow placement;
+    bool hasLineShape;
+    bool hasLineType;
+    bool hasDashLength;
+    bool hasSpaceLength;
+    bool hasDefaultX;
+    bool hasDefaultY;
+    bool hasRelativeX;
+    bool hasRelativeY;
+    bool hasFontFamily;
+    bool hasFontStyle;
+    bool hasFontSize;
+    bool hasFontWeight;
+    bool hasPlacement;
 
-            private:
-            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
-        };
-    }
-}
+  private:
+    virtual bool fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement);
+};
+} // namespace core
+} // namespace mx

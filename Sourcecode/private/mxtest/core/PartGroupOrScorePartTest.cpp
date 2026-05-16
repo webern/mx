@@ -8,109 +8,105 @@
 #include "cpul/cpulTestHarness.h"
 #include "mxtest/core/HelperFunctions.h"
 #include "mxtest/core/PartGroupOrScorePartTest.h"
-#include "mxtest/core/ScorePartTest.h"
 #include "mxtest/core/PartGroupTest.h"
+#include "mxtest/core/ScorePartTest.h"
 
 using namespace mx::core;
 using namespace std;
 using namespace mxtest;
 
-TEST( Test01, PartGroupOrScorePart )
+TEST(Test01, PartGroupOrScorePart)
 {
     TestMode v = TestMode::one;
-	PartGroupOrScorePartPtr object = tgenPartGroupOrScorePart( v );
-	stringstream expected;
-	tgenPartGroupOrScorePartExpected( expected, 1, v );
-	stringstream actual;
-	// object->toStream( std::cout, 1 );
+    PartGroupOrScorePartPtr object = tgenPartGroupOrScorePart(v);
+    stringstream expected;
+    tgenPartGroupOrScorePartExpected(expected, 1, v);
+    stringstream actual;
+    // object->toStream( std::cout, 1 );
     bool isOneLineOnly = true;
-	object->streamContents( actual, 1, isOneLineOnly );
-	CHECK_EQUAL( expected.str(), actual.str() )
-	CHECK( ! object->hasAttributes() )
-	CHECK( ! object->hasContents() )
+    object->streamContents(actual, 1, isOneLineOnly);
+    CHECK_EQUAL(expected.str(), actual.str())
+    CHECK(!object->hasAttributes())
+    CHECK(!object->hasContents())
 }
-TEST( Test02, PartGroupOrScorePart )
+
+TEST(Test02, PartGroupOrScorePart)
 {
     TestMode v = TestMode::two;
-	PartGroupOrScorePartPtr object = tgenPartGroupOrScorePart( v );
-	stringstream expected;
-	tgenPartGroupOrScorePartExpected( expected, 1, v );
-	stringstream actual;
-	// object->toStream( std::cout, 1 );
+    PartGroupOrScorePartPtr object = tgenPartGroupOrScorePart(v);
+    stringstream expected;
+    tgenPartGroupOrScorePartExpected(expected, 1, v);
+    stringstream actual;
+    // object->toStream( std::cout, 1 );
     bool isOneLineOnly = true;
-	object->streamContents( actual, 1, isOneLineOnly );
-	CHECK_EQUAL( expected.str(), actual.str() )
-	CHECK( ! object->hasAttributes() )
-	CHECK( object->hasContents() )
+    object->streamContents(actual, 1, isOneLineOnly);
+    CHECK_EQUAL(expected.str(), actual.str())
+    CHECK(!object->hasAttributes())
+    CHECK(object->hasContents())
 }
-TEST( Test03, PartGroupOrScorePart )
+
+TEST(Test03, PartGroupOrScorePart)
 {
     TestMode v = TestMode::three;
-	PartGroupOrScorePartPtr object = tgenPartGroupOrScorePart( v );
-	stringstream expected;
-	tgenPartGroupOrScorePartExpected( expected, 1, v );
-	stringstream actual;
-	// object->toStream( std::cout, 1 );
+    PartGroupOrScorePartPtr object = tgenPartGroupOrScorePart(v);
+    stringstream expected;
+    tgenPartGroupOrScorePartExpected(expected, 1, v);
+    stringstream actual;
+    // object->toStream( std::cout, 1 );
     bool isOneLineOnly = true;
-	object->streamContents( actual, 1, isOneLineOnly );
-	CHECK_EQUAL( expected.str(), actual.str() )
-	CHECK( ! object->hasAttributes() )
-	CHECK( object->hasContents() )
+    object->streamContents(actual, 1, isOneLineOnly);
+    CHECK_EQUAL(expected.str(), actual.str())
+    CHECK(!object->hasAttributes())
+    CHECK(object->hasContents())
 }
 
 namespace mxtest
 {
-    PartGroupOrScorePartPtr tgenPartGroupOrScorePart( TestMode v )
+PartGroupOrScorePartPtr tgenPartGroupOrScorePart(TestMode v)
+{
+    PartGroupOrScorePartPtr o = makePartGroupOrScorePart();
+    switch (v)
     {
-        PartGroupOrScorePartPtr o = makePartGroupOrScorePart();
-        switch ( v )
-        {
-            case TestMode::one:
-            {
-                
-            }
-                break;
-            case TestMode::two:
-            {
-                o->setChoice( PartGroupOrScorePart::Choice::scorePart );
-                o->setScorePart( tgenScorePart( v ) );
-            }
-                break;
-            case TestMode::three:
-            {
-                o->setChoice( PartGroupOrScorePart::Choice::partGroup );
-                o->setPartGroup( tgenPartGroup( v ) );
-            }
-                break;
-            default:
-                break;
-        }
-        return o;
+    case TestMode::one: {
     }
-    void tgenPartGroupOrScorePartExpected(std::ostream& os, int i, TestMode v )
+    break;
+    case TestMode::two: {
+        o->setChoice(PartGroupOrScorePart::Choice::scorePart);
+        o->setScorePart(tgenScorePart(v));
+    }
+    break;
+    case TestMode::three: {
+        o->setChoice(PartGroupOrScorePart::Choice::partGroup);
+        o->setPartGroup(tgenPartGroup(v));
+    }
+    break;
+    default:
+        break;
+    }
+    return o;
+}
+
+void tgenPartGroupOrScorePartExpected(std::ostream &os, int i, TestMode v)
+{
+
+    switch (v)
     {
-        
-        switch ( v )
-        {
-            case TestMode::one:
-            {
-                tgenPartGroupExpected( os, i, v );
-            }
-                break;
-            case TestMode::two:
-            {
-                tgenScorePartExpected( os, i, v );
-            }
-                break;
-            case TestMode::three:
-            {
-                tgenPartGroupExpected( os, i, v );
-            }
-                break;
-            default:
-                break;
-        }
+    case TestMode::one: {
+        tgenPartGroupExpected(os, i, v);
+    }
+    break;
+    case TestMode::two: {
+        tgenScorePartExpected(os, i, v);
+    }
+    break;
+    case TestMode::three: {
+        tgenPartGroupExpected(os, i, v);
+    }
+    break;
+    default:
+        break;
     }
 }
+} // namespace mxtest
 
 #endif

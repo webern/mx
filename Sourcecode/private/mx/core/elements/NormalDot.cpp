@@ -8,31 +8,46 @@
 
 namespace mx
 {
-    namespace core
-    {
-        NormalDot::NormalDot() : ElementInterface() {}
-
-
-        bool NormalDot::hasAttributes() const { return false; }
-
-
-        bool NormalDot::hasContents() const  { return false; }
-        std::ostream& NormalDot::streamAttributes( std::ostream& os ) const { return os; }
-        std::ostream& NormalDot::streamName( std::ostream& os ) const  { os << "normal-dot"; return os; }
-        std::ostream& NormalDot::streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly ) const
-        {
-            MX_UNUSED( indentLevel );
-            isOneLineOnly = true;
-            return os;
-        }
-
-
-        bool NormalDot::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
-        {
-            MX_UNUSED( message );
-            MX_UNUSED( xelement );
-            return true;
-        }
-
-    }
+namespace core
+{
+NormalDot::NormalDot() : ElementInterface()
+{
 }
+
+bool NormalDot::hasAttributes() const
+{
+    return false;
+}
+
+bool NormalDot::hasContents() const
+{
+    return false;
+}
+
+std::ostream &NormalDot::streamAttributes(std::ostream &os) const
+{
+    return os;
+}
+
+std::ostream &NormalDot::streamName(std::ostream &os) const
+{
+    os << "normal-dot";
+    return os;
+}
+
+std::ostream &NormalDot::streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const
+{
+    MX_UNUSED(indentLevel);
+    isOneLineOnly = true;
+    return os;
+}
+
+bool NormalDot::fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement)
+{
+    MX_UNUSED(message);
+    MX_UNUSED(xelement);
+    return true;
+}
+
+} // namespace core
+} // namespace mx

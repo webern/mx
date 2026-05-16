@@ -4,10 +4,10 @@
 
 #pragma once
 
-#include "mx/core/ForwardDeclare.h"
 #include "mx/core/AttributesInterface.h"
 #include "mx/core/Decimals.h"
 #include "mx/core/Enums.h"
+#include "mx/core/ForwardDeclare.h"
 #include "mx/core/Integers.h"
 
 #include <iosfwd>
@@ -16,34 +16,34 @@
 
 namespace mx
 {
-    namespace core
-    {
+namespace core
+{
 
-        MX_FORWARD_DECLARE_ATTRIBUTES( NonArpeggiateAttributes )
+MX_FORWARD_DECLARE_ATTRIBUTES(NonArpeggiateAttributes)
 
-        struct NonArpeggiateAttributes : public AttributesInterface
-        {
-        public:
-            NonArpeggiateAttributes();
-            virtual bool hasValues() const;
-            virtual std::ostream& toStream( std::ostream& os ) const;
-            TopBottom type;
-            NumberLevel number;
-            TenthsValue defaultX;
-            TenthsValue defaultY;
-            TenthsValue relativeX;
-            TenthsValue relativeY;
-            AboveBelow placement;
-            const bool hasType;
-            bool hasNumber;
-            bool hasDefaultX;
-            bool hasDefaultY;
-            bool hasRelativeX;
-            bool hasRelativeY;
-            bool hasPlacement;
+struct NonArpeggiateAttributes : public AttributesInterface
+{
+  public:
+    NonArpeggiateAttributes();
+    virtual bool hasValues() const;
+    virtual std::ostream &toStream(std::ostream &os) const;
+    TopBottom type;
+    NumberLevel number;
+    TenthsValue defaultX;
+    TenthsValue defaultY;
+    TenthsValue relativeX;
+    TenthsValue relativeY;
+    AboveBelow placement;
+    const bool hasType;
+    bool hasNumber;
+    bool hasDefaultX;
+    bool hasDefaultY;
+    bool hasRelativeX;
+    bool hasRelativeY;
+    bool hasPlacement;
 
-            private:
-            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
-        };
-    }
-}
+  private:
+    virtual bool fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement);
+};
+} // namespace core
+} // namespace mx

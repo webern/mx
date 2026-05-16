@@ -2,7 +2,7 @@
 // Copyright (c) by Matthew James Briggs
 // Distributed under the MIT License
 
-#pragma once 
+#pragma once
 
 #include "mx/api/ScoreData.h"
 #include "mxtest/api/ScoreDataCreator.h"
@@ -11,26 +11,21 @@
 
 namespace mxtest
 {
-    class ApiTester : public MxFileTest
-    {
-    public:
-        ApiTester(
-        	ScoreDataCreatorPtr&& inScoreDataCreator,
-        	MxFile inFile,
-          	std::string cppFileName,
-          	int cppFileLineNumber); 
+class ApiTester : public MxFileTest
+{
+  public:
+    ApiTester(ScoreDataCreatorPtr &&inScoreDataCreator, MxFile inFile, std::string cppFileName, int cppFileLineNumber);
 
     virtual void runTestCode() override;
-        
-    private:
-        ScoreDataCreatorPtr myScoreDataCreator;
-        std::string myIntermediateFilePath;
-        std::string myScrubbedFilePath;
-        std::string myExpectedFilePath;
-        std::string myFinalFilePath;
-        
-    private:
-        void deleteFiles() const;
-    };
-}
 
+  private:
+    ScoreDataCreatorPtr myScoreDataCreator;
+    std::string myIntermediateFilePath;
+    std::string myScrubbedFilePath;
+    std::string myExpectedFilePath;
+    std::string myFinalFilePath;
+
+  private:
+    void deleteFiles() const;
+};
+} // namespace mxtest

@@ -8,59 +8,61 @@
 
 namespace mx
 {
-    namespace core
+namespace core
+{
+Caesura::Caesura() : ElementInterface(), myAttributes(std::make_shared<EmptyPlacementAttributes>())
+{
+}
+
+bool Caesura::hasAttributes() const
+{
+    return myAttributes->hasValues();
+}
+
+bool Caesura::hasContents() const
+{
+    return false;
+}
+
+std::ostream &Caesura::streamAttributes(std::ostream &os) const
+{
+    if (myAttributes)
     {
-        Caesura::Caesura()
-        :ElementInterface()
-        ,myAttributes( std::make_shared<EmptyPlacementAttributes>() )
-        {}
+        myAttributes->toStream(os);
+    }
+    return os;
+}
 
+std::ostream &Caesura::streamName(std::ostream &os) const
+{
+    os << "caesura";
+    return os;
+}
 
-        bool Caesura::hasAttributes() const
-        {
-            return myAttributes->hasValues();
-        }
+std::ostream &Caesura::streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const
+{
+    MX_UNUSED(indentLevel);
+    isOneLineOnly = true;
+    return os;
+}
 
+EmptyPlacementAttributesPtr Caesura::getAttributes() const
+{
+    return myAttributes;
+}
 
-        bool Caesura::hasContents() const  { return false; }
-        std::ostream& Caesura::streamAttributes( std::ostream& os ) const
-        {
-            if ( myAttributes )
-            {
-                myAttributes->toStream( os );
-            }
-            return os;
-        }
-
-
-        std::ostream& Caesura::streamName( std::ostream& os ) const  { os << "caesura"; return os; }
-        std::ostream& Caesura::streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly ) const
-        {
-            MX_UNUSED( indentLevel );
-            isOneLineOnly = true;
-            return os;
-        }
-
-
-        EmptyPlacementAttributesPtr Caesura::getAttributes() const
-        {
-            return myAttributes;
-        }
-
-
-        void Caesura::setAttributes( const EmptyPlacementAttributesPtr& value )
-        {
-            if ( value )
-            {
-                myAttributes = value;
-            }
-        }
-
-
-        bool Caesura::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
-        {
-            return myAttributes->fromXElement( message, xelement );
-        }
-
+void Caesura::setAttributes(const EmptyPlacementAttributesPtr &value)
+{
+    if (value)
+    {
+        myAttributes = value;
     }
 }
+
+bool Caesura::fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement)
+{
+    return myAttributes->fromXElement(message, xelement);
+}
+
+} // namespace core
+} // namespace mx

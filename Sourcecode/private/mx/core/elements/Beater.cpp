@@ -8,92 +8,79 @@
 
 namespace mx
 {
-    namespace core
+namespace core
+{
+Beater::Beater() : myValue(BeaterValue::snareStick), myAttributes(std::make_shared<BeaterAttributes>())
+{
+}
+
+Beater::Beater(const BeaterValue &value) : myValue(value), myAttributes(std::make_shared<BeaterAttributes>())
+{
+}
+
+bool Beater::hasAttributes() const
+{
+    return myAttributes->hasValues();
+}
+
+bool Beater::hasContents() const
+{
+    return true;
+}
+
+std::ostream &Beater::streamAttributes(std::ostream &os) const
+{
+    if (myAttributes)
     {
-        Beater::Beater()
-        :myValue( BeaterValue::snareStick )
-        ,myAttributes( std::make_shared<BeaterAttributes>() )
-        {}
+        myAttributes->toStream(os);
+    }
+    return os;
+}
 
+std::ostream &Beater::streamName(std::ostream &os) const
+{
+    os << "beater";
+    return os;
+}
 
-        Beater::Beater( const BeaterValue& value )
-        :myValue( value )
-        ,myAttributes( std::make_shared<BeaterAttributes>() )
-        {}
+std::ostream &Beater::streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const
+{
+    MX_UNUSED(indentLevel);
+    isOneLineOnly = true;
+    os << myValue;
+    return os;
+}
 
+BeaterAttributesPtr Beater::getAttributes() const
+{
+    return myAttributes;
+}
 
-        bool Beater::hasAttributes() const
-        {
-            return myAttributes->hasValues();
-        }
-
-
-        bool Beater::hasContents() const
-        {
-            return true;
-        }
-
-
-        std::ostream& Beater::streamAttributes( std::ostream& os ) const
-        {
-            if ( myAttributes )
-            {
-                myAttributes->toStream( os );
-            }
-            return os;
-        }
-
-
-        std::ostream& Beater::streamName( std::ostream& os ) const
-        {
-            os << "beater";
-            return os;
-        }
-
-
-        std::ostream& Beater::streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly  ) const
-        {
-            MX_UNUSED( indentLevel );
-            isOneLineOnly = true;
-            os << myValue;
-            return os;
-        }
-
-
-        BeaterAttributesPtr Beater::getAttributes() const
-        {
-            return myAttributes;
-        }
-
-
-        void Beater::setAttributes( const BeaterAttributesPtr& value )
-        {
-            if ( value )
-            {
-                myAttributes = value;
-            }
-        }
-
-
-        BeaterValue Beater::getValue() const
-        {
-            return myValue;
-        }
-
-
-        void Beater::setValue( const BeaterValue& value )
-        {
-            myValue = value;
-        }
-
-
-        bool Beater::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
-        {
-            bool isSuccess = true;
-            isSuccess &= myAttributes->fromXElement( message, xelement );
-            myValue = parseBeaterValue( xelement.getValue() );
-            MX_RETURN_IS_SUCCESS;
-        }
-
+void Beater::setAttributes(const BeaterAttributesPtr &value)
+{
+    if (value)
+    {
+        myAttributes = value;
     }
 }
+
+BeaterValue Beater::getValue() const
+{
+    return myValue;
+}
+
+void Beater::setValue(const BeaterValue &value)
+{
+    myValue = value;
+}
+
+bool Beater::fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement)
+{
+    bool isSuccess = true;
+    isSuccess &= myAttributes->fromXElement(message, xelement);
+    myValue = parseBeaterValue(xelement.getValue());
+    MX_RETURN_IS_SUCCESS;
+}
+
+} // namespace core
+} // namespace mx

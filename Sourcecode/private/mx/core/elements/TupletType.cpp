@@ -8,92 +8,80 @@
 
 namespace mx
 {
-    namespace core
+namespace core
+{
+TupletType::TupletType() : myValue(NoteTypeValue::eighth), myAttributes(std::make_shared<TupletTypeAttributes>())
+{
+}
+
+TupletType::TupletType(const NoteTypeValue &value)
+    : myValue(value), myAttributes(std::make_shared<TupletTypeAttributes>())
+{
+}
+
+bool TupletType::hasAttributes() const
+{
+    return myAttributes->hasValues();
+}
+
+bool TupletType::hasContents() const
+{
+    return true;
+}
+
+std::ostream &TupletType::streamAttributes(std::ostream &os) const
+{
+    if (myAttributes)
     {
-        TupletType::TupletType()
-        :myValue( NoteTypeValue::eighth )
-        ,myAttributes( std::make_shared<TupletTypeAttributes>() )
-        {}
+        myAttributes->toStream(os);
+    }
+    return os;
+}
 
+std::ostream &TupletType::streamName(std::ostream &os) const
+{
+    os << "tuplet-type";
+    return os;
+}
 
-        TupletType::TupletType( const NoteTypeValue& value )
-        :myValue( value )
-        ,myAttributes( std::make_shared<TupletTypeAttributes>() )
-        {}
+std::ostream &TupletType::streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const
+{
+    MX_UNUSED(indentLevel);
+    isOneLineOnly = true;
+    os << myValue;
+    return os;
+}
 
+TupletTypeAttributesPtr TupletType::getAttributes() const
+{
+    return myAttributes;
+}
 
-        bool TupletType::hasAttributes() const
-        {
-            return myAttributes->hasValues();
-        }
-
-
-        bool TupletType::hasContents() const
-        {
-            return true;
-        }
-
-
-        std::ostream& TupletType::streamAttributes( std::ostream& os ) const
-        {
-            if ( myAttributes )
-            {
-                myAttributes->toStream( os );
-            }
-            return os;
-        }
-
-
-        std::ostream& TupletType::streamName( std::ostream& os ) const
-        {
-            os << "tuplet-type";
-            return os;
-        }
-
-
-        std::ostream& TupletType::streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly  ) const
-        {
-            MX_UNUSED( indentLevel );
-            isOneLineOnly = true;
-            os << myValue;
-            return os;
-        }
-
-
-        TupletTypeAttributesPtr TupletType::getAttributes() const
-        {
-            return myAttributes;
-        }
-
-
-        void TupletType::setAttributes( const TupletTypeAttributesPtr& value )
-        {
-            if ( value )
-            {
-                myAttributes = value;
-            }
-        }
-
-
-        NoteTypeValue TupletType::getValue() const
-        {
-            return myValue;
-        }
-
-
-        void TupletType::setValue( const NoteTypeValue& value )
-        {
-            myValue = value;
-        }
-
-
-        bool TupletType::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
-        {
-            bool isSuccess = true;
-            isSuccess &= myAttributes->fromXElement( message, xelement );
-            myValue = parseNoteTypeValue( xelement.getValue() );
-            MX_RETURN_IS_SUCCESS;
-        }
-
+void TupletType::setAttributes(const TupletTypeAttributesPtr &value)
+{
+    if (value)
+    {
+        myAttributes = value;
     }
 }
+
+NoteTypeValue TupletType::getValue() const
+{
+    return myValue;
+}
+
+void TupletType::setValue(const NoteTypeValue &value)
+{
+    myValue = value;
+}
+
+bool TupletType::fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement)
+{
+    bool isSuccess = true;
+    isSuccess &= myAttributes->fromXElement(message, xelement);
+    myValue = parseNoteTypeValue(xelement.getValue());
+    MX_RETURN_IS_SUCCESS;
+}
+
+} // namespace core
+} // namespace mx

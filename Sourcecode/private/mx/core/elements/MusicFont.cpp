@@ -8,59 +8,61 @@
 
 namespace mx
 {
-    namespace core
+namespace core
+{
+MusicFont::MusicFont() : ElementInterface(), myAttributes(std::make_shared<EmptyFontAttributes>())
+{
+}
+
+bool MusicFont::hasAttributes() const
+{
+    return myAttributes->hasValues();
+}
+
+bool MusicFont::hasContents() const
+{
+    return false;
+}
+
+std::ostream &MusicFont::streamAttributes(std::ostream &os) const
+{
+    if (myAttributes)
     {
-        MusicFont::MusicFont()
-        :ElementInterface()
-        ,myAttributes( std::make_shared<EmptyFontAttributes>() )
-        {}
+        myAttributes->toStream(os);
+    }
+    return os;
+}
 
+std::ostream &MusicFont::streamName(std::ostream &os) const
+{
+    os << "music-font";
+    return os;
+}
 
-        bool MusicFont::hasAttributes() const
-        {
-            return myAttributes->hasValues();
-        }
+std::ostream &MusicFont::streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const
+{
+    MX_UNUSED(indentLevel);
+    isOneLineOnly = true;
+    return os;
+}
 
+EmptyFontAttributesPtr MusicFont::getAttributes() const
+{
+    return myAttributes;
+}
 
-        bool MusicFont::hasContents() const  { return false; }
-        std::ostream& MusicFont::streamAttributes( std::ostream& os ) const
-        {
-            if ( myAttributes )
-            {
-                myAttributes->toStream( os );
-            }
-            return os;
-        }
-
-
-        std::ostream& MusicFont::streamName( std::ostream& os ) const  { os << "music-font"; return os; }
-        std::ostream& MusicFont::streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly ) const
-        {
-            MX_UNUSED( indentLevel );
-            isOneLineOnly = true;
-            return os;
-        }
-
-
-        EmptyFontAttributesPtr MusicFont::getAttributes() const
-        {
-            return myAttributes;
-        }
-
-
-        void MusicFont::setAttributes( const EmptyFontAttributesPtr& value )
-        {
-            if ( value )
-            {
-                myAttributes = value;
-            }
-        }
-
-
-        bool MusicFont::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
-        {
-            return myAttributes->fromXElement( message, xelement );
-        }
-
+void MusicFont::setAttributes(const EmptyFontAttributesPtr &value)
+{
+    if (value)
+    {
+        myAttributes = value;
     }
 }
+
+bool MusicFont::fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement)
+{
+    return myAttributes->fromXElement(message, xelement);
+}
+
+} // namespace core
+} // namespace mx

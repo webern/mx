@@ -8,8 +8,8 @@
 
 namespace mx
 {
-    namespace core
-    {
-    	using XsNMToken = XsToken;
-    }
+namespace core
+{
+using XsNMToken = XsToken;
 }
+} // namespace mx

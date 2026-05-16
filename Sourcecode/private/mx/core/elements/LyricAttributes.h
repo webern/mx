@@ -4,11 +4,11 @@
 
 #pragma once
 
-#include "mx/core/ForwardDeclare.h"
 #include "mx/core/AttributesInterface.h"
 #include "mx/core/Color.h"
 #include "mx/core/Decimals.h"
 #include "mx/core/Enums.h"
+#include "mx/core/ForwardDeclare.h"
 #include "mx/core/XsNMToken.h"
 #include "mx/core/XsToken.h"
 
@@ -18,40 +18,40 @@
 
 namespace mx
 {
-    namespace core
-    {
+namespace core
+{
 
-        MX_FORWARD_DECLARE_ATTRIBUTES( LyricAttributes )
+MX_FORWARD_DECLARE_ATTRIBUTES(LyricAttributes)
 
-        struct LyricAttributes : public AttributesInterface
-        {
-        public:
-            LyricAttributes();
-            virtual bool hasValues() const;
-            virtual std::ostream& toStream( std::ostream& os ) const;
-            XsNMToken number;
-            XsToken name;
-            LeftCenterRight justify;
-            TenthsValue defaultX;
-            TenthsValue defaultY;
-            TenthsValue relativeX;
-            TenthsValue relativeY;
-            AboveBelow placement;
-            Color color;
-            YesNo printObject;
-            bool hasNumber;
-            bool hasName;
-            bool hasJustify;
-            bool hasDefaultX;
-            bool hasDefaultY;
-            bool hasRelativeX;
-            bool hasRelativeY;
-            bool hasPlacement;
-            bool hasColor;
-            bool hasPrintObject;
+struct LyricAttributes : public AttributesInterface
+{
+  public:
+    LyricAttributes();
+    virtual bool hasValues() const;
+    virtual std::ostream &toStream(std::ostream &os) const;
+    XsNMToken number;
+    XsToken name;
+    LeftCenterRight justify;
+    TenthsValue defaultX;
+    TenthsValue defaultY;
+    TenthsValue relativeX;
+    TenthsValue relativeY;
+    AboveBelow placement;
+    Color color;
+    YesNo printObject;
+    bool hasNumber;
+    bool hasName;
+    bool hasJustify;
+    bool hasDefaultX;
+    bool hasDefaultY;
+    bool hasRelativeX;
+    bool hasRelativeY;
+    bool hasPlacement;
+    bool hasColor;
+    bool hasPrintObject;
 
-            private:
-            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
-        };
-    }
-}
+  private:
+    virtual bool fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement);
+};
+} // namespace core
+} // namespace mx

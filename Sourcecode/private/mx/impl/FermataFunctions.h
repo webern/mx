@@ -10,25 +10,25 @@
 
 namespace mx
 {
-    namespace core
-    {
-        class Fermata;
-    }
-    
-    namespace impl
-    {
-        class FermataFunctions
-        {
-        public:
-            FermataFunctions( const core::Fermata& inFermata, impl::Cursor inCursor );
-            ~FermataFunctions() = default;
-            FermataFunctions( const FermataFunctions& ) = default;
-            FermataFunctions( FermataFunctions&& ) = default;
-            api::MarkData parseFermata() const;
-            
-        private:
-            const core::Fermata& myFermata;
-            const impl::Cursor myCursor;
-        };
-    }
+namespace core
+{
+class Fermata;
 }
+
+namespace impl
+{
+class FermataFunctions
+{
+  public:
+    FermataFunctions(const core::Fermata &inFermata, impl::Cursor inCursor);
+    ~FermataFunctions() = default;
+    FermataFunctions(const FermataFunctions &) = default;
+    FermataFunctions(FermataFunctions &&) = default;
+    api::MarkData parseFermata() const;
+
+  private:
+    const core::Fermata &myFermata;
+    const impl::Cursor myCursor;
+};
+} // namespace impl
+} // namespace mx

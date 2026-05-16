@@ -10,25 +10,25 @@
 
 namespace mx
 {
-    namespace core
-    {
-        class AccidentalMark;
-    }
-    
-    namespace impl
-    {
-        class AccidentalMarkFunctions
-        {
-        public:
-            AccidentalMarkFunctions( const core::AccidentalMark& inAccidentalMark, impl::Cursor inCursor );
-            ~AccidentalMarkFunctions() = default;
-            AccidentalMarkFunctions( const AccidentalMarkFunctions& ) = default;
-            AccidentalMarkFunctions( AccidentalMarkFunctions&& ) = default;            
-            api::MarkData parseAccidentalMark() const;
-            
-        private:
-            const core::AccidentalMark& myAccidentalMark;
-            const impl::Cursor myCursor;
-        };
-    }
+namespace core
+{
+class AccidentalMark;
 }
+
+namespace impl
+{
+class AccidentalMarkFunctions
+{
+  public:
+    AccidentalMarkFunctions(const core::AccidentalMark &inAccidentalMark, impl::Cursor inCursor);
+    ~AccidentalMarkFunctions() = default;
+    AccidentalMarkFunctions(const AccidentalMarkFunctions &) = default;
+    AccidentalMarkFunctions(AccidentalMarkFunctions &&) = default;
+    api::MarkData parseAccidentalMark() const;
+
+  private:
+    const core::AccidentalMark &myAccidentalMark;
+    const impl::Cursor myCursor;
+};
+} // namespace impl
+} // namespace mx

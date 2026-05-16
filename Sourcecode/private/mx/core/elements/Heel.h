@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "mx/core/ForwardDeclare.h"
 #include "mx/core/ElementInterface.h"
+#include "mx/core/ForwardDeclare.h"
 #include "mx/core/elements/HeelAttributes.h"
 
 #include <iosfwd>
@@ -14,32 +14,35 @@
 
 namespace mx
 {
-    namespace core
-    {
+namespace core
+{
 
-        MX_FORWARD_DECLARE_ATTRIBUTES( HeelAttributes )
-        MX_FORWARD_DECLARE_ELEMENT( Heel )
+MX_FORWARD_DECLARE_ATTRIBUTES(HeelAttributes)
+MX_FORWARD_DECLARE_ELEMENT(Heel)
 
-        inline HeelPtr makeHeel() { return std::make_shared<Heel>(); }
-
-        class Heel : public ElementInterface
-        {
-        public:
-            Heel();
-
-            virtual bool hasAttributes() const;
-            virtual std::ostream& streamAttributes( std::ostream& os ) const;
-            virtual std::ostream& streamName( std::ostream& os ) const;
-            virtual bool hasContents() const;
-            virtual std::ostream& streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly ) const;
-            HeelAttributesPtr getAttributes() const;
-            void setAttributes( const HeelAttributesPtr& value );
-
-            private:
-            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
-
-        private:
-            HeelAttributesPtr myAttributes;
-        };
-    }
+inline HeelPtr makeHeel()
+{
+    return std::make_shared<Heel>();
 }
+
+class Heel : public ElementInterface
+{
+  public:
+    Heel();
+
+    virtual bool hasAttributes() const;
+    virtual std::ostream &streamAttributes(std::ostream &os) const;
+    virtual std::ostream &streamName(std::ostream &os) const;
+    virtual bool hasContents() const;
+    virtual std::ostream &streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const;
+    HeelAttributesPtr getAttributes() const;
+    void setAttributes(const HeelAttributesPtr &value);
+
+  private:
+    virtual bool fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement);
+
+  private:
+    HeelAttributesPtr myAttributes;
+};
+} // namespace core
+} // namespace mx

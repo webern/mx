@@ -8,59 +8,61 @@
 
 namespace mx
 {
-    namespace core
+namespace core
+{
+Bookmark::Bookmark() : ElementInterface(), myAttributes(std::make_shared<BookmarkAttributes>())
+{
+}
+
+bool Bookmark::hasAttributes() const
+{
+    return myAttributes->hasValues();
+}
+
+bool Bookmark::hasContents() const
+{
+    return false;
+}
+
+std::ostream &Bookmark::streamAttributes(std::ostream &os) const
+{
+    if (myAttributes)
     {
-        Bookmark::Bookmark()
-        :ElementInterface()
-        ,myAttributes( std::make_shared<BookmarkAttributes>() )
-        {}
+        myAttributes->toStream(os);
+    }
+    return os;
+}
 
+std::ostream &Bookmark::streamName(std::ostream &os) const
+{
+    os << "bookmark";
+    return os;
+}
 
-        bool Bookmark::hasAttributes() const
-        {
-            return myAttributes->hasValues();
-        }
+std::ostream &Bookmark::streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const
+{
+    MX_UNUSED(indentLevel);
+    isOneLineOnly = true;
+    return os;
+}
 
+BookmarkAttributesPtr Bookmark::getAttributes() const
+{
+    return myAttributes;
+}
 
-        bool Bookmark::hasContents() const  { return false; }
-        std::ostream& Bookmark::streamAttributes( std::ostream& os ) const
-        {
-            if ( myAttributes )
-            {
-                myAttributes->toStream( os );
-            }
-            return os;
-        }
-
-
-        std::ostream& Bookmark::streamName( std::ostream& os ) const  { os << "bookmark"; return os; }
-        std::ostream& Bookmark::streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly ) const
-        {
-            MX_UNUSED( indentLevel );
-            isOneLineOnly = true;
-            return os;
-        }
-
-
-        BookmarkAttributesPtr Bookmark::getAttributes() const
-        {
-            return myAttributes;
-        }
-
-
-        void Bookmark::setAttributes( const BookmarkAttributesPtr& value )
-        {
-            if ( value )
-            {
-                myAttributes = value;
-            }
-        }
-
-
-        bool Bookmark::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
-        {
-            return myAttributes->fromXElement( message, xelement );
-        }
-
+void Bookmark::setAttributes(const BookmarkAttributesPtr &value)
+{
+    if (value)
+    {
+        myAttributes = value;
     }
 }
+
+bool Bookmark::fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement)
+{
+    return myAttributes->fromXElement(message, xelement);
+}
+
+} // namespace core
+} // namespace mx

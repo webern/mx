@@ -10,10 +10,10 @@
 
 namespace mx
 {
-    namespace impl
-    {
+namespace impl
+{
 
-        
-        void createStavesFromMx( int inGlobalTicksPerQuarter, const core::PartwiseMeasureSet& inMxMeasures, std::vector<api::StaffData>& outStaves );
-    }
+void createStavesFromMx(int inGlobalTicksPerQuarter, const core::PartwiseMeasureSet &inMxMeasures,
+                        std::vector<api::StaffData> &outStaves);
 }
+} // namespace mx

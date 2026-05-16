@@ -8,8 +8,8 @@
 
 namespace mx
 {
-    namespace core
-    {
-        using XlinkRole = XsToken;
-    }
+namespace core
+{
+using XlinkRole = XsToken;
 }
+} // namespace mx

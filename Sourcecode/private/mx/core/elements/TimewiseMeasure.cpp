@@ -9,158 +9,143 @@
 
 namespace mx
 {
-    namespace core
+namespace core
+{
+TimewiseMeasure::TimewiseMeasure() : myAttributes(std::make_shared<MeasureAttributes>()), myTimewisePartSet()
+{
+    myTimewisePartSet.push_back(makeTimewisePart());
+}
+
+bool TimewiseMeasure::hasAttributes() const
+{
+    return myAttributes->hasValues();
+}
+
+std::ostream &TimewiseMeasure::streamAttributes(std::ostream &os) const
+{
+    return myAttributes->toStream(os);
+}
+
+std::ostream &TimewiseMeasure::streamName(std::ostream &os) const
+{
+    os << "measure";
+    return os;
+}
+
+bool TimewiseMeasure::hasContents() const
+{
+    return true;
+}
+
+std::ostream &TimewiseMeasure::streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const
+{
+    if (hasContents())
     {
-        TimewiseMeasure::TimewiseMeasure()
-        :myAttributes( std::make_shared<MeasureAttributes>() )
-        ,myTimewisePartSet()
+        for (auto x : myTimewisePartSet)
         {
-            myTimewisePartSet.push_back( makeTimewisePart() );
+            os << std::endl;
+            x->toStream(os, indentLevel + 1);
         }
+        os << std::endl;
+        isOneLineOnly = false;
+    }
+    else
+    {
+        isOneLineOnly = true;
+    }
+    return os;
+}
 
+MeasureAttributesPtr TimewiseMeasure::getAttributes() const
+{
+    return myAttributes;
+}
 
-        bool TimewiseMeasure::hasAttributes() const
+void TimewiseMeasure::setAttributes(const MeasureAttributesPtr &value)
+{
+    if (value)
+    {
+        myAttributes = value;
+    }
+}
+
+const TimewisePartSet &TimewiseMeasure::getTimewisePartSet() const
+{
+    return myTimewisePartSet;
+}
+
+void TimewiseMeasure::addTimewisePart(const TimewisePartPtr &value)
+{
+    if (value)
+    {
+        myTimewisePartSet.push_back(value);
+    }
+}
+
+void TimewiseMeasure::removeTimewisePart(const TimewisePartSetIterConst &value)
+{
+    if (value != myTimewisePartSet.cend())
+    {
+        myTimewisePartSet.erase(value);
+    }
+}
+
+void TimewiseMeasure::clearTimewisePartSet()
+{
+    myTimewisePartSet.clear();
+}
+
+TimewisePartPtr TimewiseMeasure::getTimewisePart(const TimewisePartSetIterConst &setIterator) const
+{
+    if (setIterator != myTimewisePartSet.cend())
+    {
+        return *setIterator;
+    }
+    return TimewisePartPtr();
+}
+
+bool TimewiseMeasure::fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement)
+{
+    bool isSuccess = true;
+    isSuccess &= myAttributes->fromXElement(message, xelement);
+
+    bool isFirstTimewisePartFound = false;
+
+    for (auto it = xelement.begin(); it != xelement.end(); ++it)
+    {
+        const std::string elementName = it->getName();
+
+        if (elementName != "part")
         {
-            return myAttributes->hasValues();
+            isSuccess = false;
+            message << "TimewiseMeasure: unexpected element '" << elementName << "' encountered" << std::endl;
         }
-
-
-        std::ostream& TimewiseMeasure::streamAttributes( std::ostream& os ) const
+        else
         {
-            return myAttributes->toStream( os );
-        }
+            auto timewisePart = makeTimewisePart();
+            isSuccess &= timewisePart->fromXElement(message, *it);
 
-
-        std::ostream& TimewiseMeasure::streamName( std::ostream& os ) const
-        {
-            os << "measure";
-            return os;
-        }
-
-
-        bool TimewiseMeasure::hasContents() const
-        {
-            return true;
-        }
-
-
-        std::ostream& TimewiseMeasure::streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly ) const
-        {
-            if ( hasContents() )
+            if (!isFirstTimewisePartFound && myTimewisePartSet.size() == 1)
             {
-                for ( auto x : myTimewisePartSet )
-                {
-                    os << std::endl;
-                    x->toStream( os, indentLevel+1 );
-                }
-                os << std::endl;
-                isOneLineOnly = false;
+                *(myTimewisePartSet.begin()) = timewisePart;
+                isFirstTimewisePartFound = true;
             }
             else
             {
-                isOneLineOnly = true;
-            }
-            return os;
-        }
-
-
-        MeasureAttributesPtr TimewiseMeasure::getAttributes() const
-        {
-            return myAttributes;
-        }
-
-
-        void TimewiseMeasure::setAttributes( const MeasureAttributesPtr& value )
-        {
-            if ( value )
-            {
-                myAttributes = value;
+                myTimewisePartSet.push_back(timewisePart);
+                isFirstTimewisePartFound = true;
             }
         }
-
-
-        const TimewisePartSet& TimewiseMeasure::getTimewisePartSet() const
-        {
-            return myTimewisePartSet;
-        }
-
-
-        void TimewiseMeasure::addTimewisePart( const TimewisePartPtr& value )
-        {
-            if ( value )
-            {
-                myTimewisePartSet.push_back( value );
-            }
-        }
-
-
-        void TimewiseMeasure::removeTimewisePart( const TimewisePartSetIterConst& value )
-        {
-            if ( value != myTimewisePartSet.cend() )
-            {
-                myTimewisePartSet.erase( value );
-            }
-        }
-
-
-        void TimewiseMeasure::clearTimewisePartSet()
-        {
-            myTimewisePartSet.clear();
-        }
-
-
-        TimewisePartPtr TimewiseMeasure::getTimewisePart( const TimewisePartSetIterConst& setIterator ) const
-        {
-            if( setIterator != myTimewisePartSet.cend() )
-            {
-                return *setIterator;
-            }
-            return TimewisePartPtr();
-        }
-        
-        
-        bool TimewiseMeasure::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
-        {
-            bool isSuccess = true;
-            isSuccess &= myAttributes->fromXElement( message, xelement );
-
-            bool isFirstTimewisePartFound = false;
-            
-            for( auto it = xelement.begin(); it != xelement.end(); ++it )
-            {
-                const std::string elementName = it->getName();
-                
-                if( elementName != "part" )
-                {
-                    isSuccess = false;
-                    message << "TimewiseMeasure: unexpected element '" << elementName << "' encountered" << std::endl;
-                }
-                else
-                {
-                    auto timewisePart = makeTimewisePart();
-                    isSuccess &= timewisePart->fromXElement( message, *it );
-                    
-                    if( !isFirstTimewisePartFound && myTimewisePartSet.size() == 1 )
-                    {
-                        *( myTimewisePartSet.begin() ) = timewisePart;
-                        isFirstTimewisePartFound = true;
-                    }
-                    else
-                    {
-                        myTimewisePartSet.push_back( timewisePart );
-                        isFirstTimewisePartFound = true;
-                    }
-                }
-            }
-            
-            if( !isFirstTimewisePartFound )
-            {
-                message << "TimewiseMeasure: no 'part' elements were found";
-                isSuccess = false;
-            }
-            
-            return isSuccess;
-        }
-
     }
+
+    if (!isFirstTimewisePartFound)
+    {
+        message << "TimewiseMeasure: no 'part' elements were found";
+        isSuccess = false;
+    }
+
+    return isSuccess;
 }
+
+} // namespace core
+} // namespace mx

@@ -8,70 +8,61 @@
 
 namespace mx
 {
-    namespace core
-    {
-        Glass::Glass()
-        :myValue( GlassEnum::windChimes )
-        {}
-
-
-        Glass::Glass( const GlassEnum& value )
-        :myValue( value )
-        {}
-
-
-        bool Glass::hasAttributes() const
-        {
-            return false;
-        }
-
-
-        bool Glass::hasContents() const
-        {
-            return true;
-        }
-
-
-        std::ostream& Glass::streamAttributes( std::ostream& os ) const
-        {
-            return os;
-        }
-
-
-        std::ostream& Glass::streamName( std::ostream& os ) const
-        {
-            os << "glass";
-            return os;
-        }
-
-
-        std::ostream& Glass::streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly  ) const
-        {
-            MX_UNUSED( indentLevel );
-            isOneLineOnly = true;
-            os << myValue;
-            return os;
-        }
-
-
-        GlassEnum Glass::getValue() const
-        {
-            return myValue;
-        }
-
-
-        void Glass::setValue( const GlassEnum& value )
-        {
-            myValue = value;
-        }
-
-
-        bool Glass::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
-        {
-            MX_UNUSED( message );
-            myValue = parseGlassEnum( xelement.getValue() );
-            return true;
-        }
-
-    }
+namespace core
+{
+Glass::Glass() : myValue(GlassEnum::windChimes)
+{
 }
+
+Glass::Glass(const GlassEnum &value) : myValue(value)
+{
+}
+
+bool Glass::hasAttributes() const
+{
+    return false;
+}
+
+bool Glass::hasContents() const
+{
+    return true;
+}
+
+std::ostream &Glass::streamAttributes(std::ostream &os) const
+{
+    return os;
+}
+
+std::ostream &Glass::streamName(std::ostream &os) const
+{
+    os << "glass";
+    return os;
+}
+
+std::ostream &Glass::streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const
+{
+    MX_UNUSED(indentLevel);
+    isOneLineOnly = true;
+    os << myValue;
+    return os;
+}
+
+GlassEnum Glass::getValue() const
+{
+    return myValue;
+}
+
+void Glass::setValue(const GlassEnum &value)
+{
+    myValue = value;
+}
+
+bool Glass::fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement)
+{
+    MX_UNUSED(message);
+    myValue = parseGlassEnum(xelement.getValue());
+    return true;
+}
+
+} // namespace core
+} // namespace mx

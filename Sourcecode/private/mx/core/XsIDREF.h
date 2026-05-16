@@ -8,8 +8,8 @@
 
 namespace mx
 {
-    namespace core
-    {
-        using XsIDREF = XsID;
-    }
+namespace core
+{
+using XsIDREF = XsID;
 }
+} // namespace mx

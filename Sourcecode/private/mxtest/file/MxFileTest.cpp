@@ -9,102 +9,90 @@
 
 namespace mxtest
 {
-    MxFileTest::MxFileTest( mxtest::MxFile inTestFile, std::string inTestName, std::string inTestCppFileName, int inTestCppFileLineNumber )
-    : myTestFile{ std::move(inTestFile) }
-    , myTestName{ std::move(inTestName) }
-    , myCppFileName{ std::move(inTestCppFileName) }
-    , myCppFileLineNumber{ inTestCppFileLineNumber }
-    , myIsSuccess{ false }
-    , myFailureMessage{}
+MxFileTest::MxFileTest(mxtest::MxFile inTestFile, std::string inTestName, std::string inTestCppFileName,
+                       int inTestCppFileLineNumber)
+    : myTestFile{std::move(inTestFile)}, myTestName{std::move(inTestName)}, myCppFileName{std::move(inTestCppFileName)},
+      myCppFileLineNumber{inTestCppFileLineNumber}, myIsSuccess{false}, myFailureMessage{}
+{
+}
+
+void MxFileTest::runTest()
+{
+    bool isExceptionThrown = false;
+    std::string exceptionMessage;
+
+    try
     {
-        
+        this->runTestCode();
     }
-    
-    
-    void MxFileTest::runTest()
+    catch (std::exception &e)
     {
-        bool isExceptionThrown = false;
-        std::string exceptionMessage;
-        
-        try
-        {
-            this->runTestCode();
-        }
-        catch ( std::exception& e )
-        {
-            isExceptionThrown = true;
-            exceptionMessage = std::string{ e.what() };
-        }
-        catch ( ... )
-        {
-            isExceptionThrown = true;
-            exceptionMessage = "exception of unknown (non-standard) type";
-        }
-        
-        if( isExceptionThrown )
-        {
-            std::stringstream failureMessage;
-            failureMessage << "'" << myTestName << "' "  << testFileName() << " exception was thrown '" << exceptionMessage << "'";
-            FAIL( failureMessage.str() );
-        }
-        else if( !getIsSuccess() )
-        {
-            std::stringstream failureMessage;
-            failureMessage << "'" << myTestName << "' "  << testFileName() << " '" << getFailureMessage() << "'";
-            FAIL( failureMessage.str() );
-        }
+        isExceptionThrown = true;
+        exceptionMessage = std::string{e.what()};
     }
-    
-    const std::string& MxFileTest::testFileName() const
+    catch (...)
     {
-        return myTestFile.fileName;
+        isExceptionThrown = true;
+        exceptionMessage = "exception of unknown (non-standard) type";
     }
-    
-    
-    const std::string MxFileTest::testFileNamePart() const
+
+    if (isExceptionThrown)
     {
-        return myTestFile.getFileNamePart();
+        std::stringstream failureMessage;
+        failureMessage << "'" << myTestName << "' " << testFileName() << " exception was thrown '" << exceptionMessage
+                       << "'";
+        FAIL(failureMessage.str());
     }
-    
-    
-    const std::string MxFileTest::testFileExtension() const
+    else if (!getIsSuccess())
     {
-        return myTestFile.fileName.substr( myTestFile.fileName.size() - 3, 3 );
-    }
-    
-    
-    const std::string& MxFileTest::testFilePath() const
-    {
-        return myTestFile.path;
-    }
-    
-    
-    const std::string& MxFileTest::testSubdirectory() const
-    {
-        return myTestFile.subdirectory;
-    }
-    
-    
-    bool MxFileTest::getIsSuccess() const
-    {
-        return myIsSuccess;
-    }
-    
-    
-    void MxFileTest::setIsSuccess( bool inIsSuccess )
-    {
-        myIsSuccess = inIsSuccess;
-    }
-    
-    
-    const std::string& MxFileTest::getFailureMessage() const
-    {
-        return myFailureMessage;
-    }
-    
-    
-    void MxFileTest::setFailureMessage( std::string inMessage )
-    {
-        myFailureMessage = inMessage;
+        std::stringstream failureMessage;
+        failureMessage << "'" << myTestName << "' " << testFileName() << " '" << getFailureMessage() << "'";
+        FAIL(failureMessage.str());
     }
 }
+
+const std::string &MxFileTest::testFileName() const
+{
+    return myTestFile.fileName;
+}
+
+const std::string MxFileTest::testFileNamePart() const
+{
+    return myTestFile.getFileNamePart();
+}
+
+const std::string MxFileTest::testFileExtension() const
+{
+    return myTestFile.fileName.substr(myTestFile.fileName.size() - 3, 3);
+}
+
+const std::string &MxFileTest::testFilePath() const
+{
+    return myTestFile.path;
+}
+
+const std::string &MxFileTest::testSubdirectory() const
+{
+    return myTestFile.subdirectory;
+}
+
+bool MxFileTest::getIsSuccess() const
+{
+    return myIsSuccess;
+}
+
+void MxFileTest::setIsSuccess(bool inIsSuccess)
+{
+    myIsSuccess = inIsSuccess;
+}
+
+const std::string &MxFileTest::getFailureMessage() const
+{
+    return myFailureMessage;
+}
+
+void MxFileTest::setFailureMessage(std::string inMessage)
+{
+    myFailureMessage = inMessage;
+}
+} // namespace mxtest

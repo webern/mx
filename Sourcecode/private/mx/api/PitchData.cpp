@@ -6,37 +6,49 @@
 
 namespace mx
 {
-    namespace api
-    {
-        PitchData::PitchData()
-        : PitchData{ Step::c }
-        {
-            
-        }
+namespace api
+{
+PitchData::PitchData() : PitchData{Step::c}
+{
+}
 
-        void PitchData::showAccidental()
-        {
-            switch( alter )
-            {
-                case -3: accidental = Accidental::tripleFlat; break;
-                case -2: accidental = Accidental::flatFlat; break;
-                case -1: accidental = Accidental::flat; break;
-                case  0: accidental = Accidental::natural; break;
-                case  1: accidental = Accidental::sharp; break;
-                case  2: accidental = Accidental::doubleSharp; break;
-                case  3: accidental = Accidental::tripleSharp; break;
-                default: accidental = Accidental::none;
-            }
-        }
-        
-        
-        void PitchData::hideAccidental()
-        {
-            accidental = Accidental::none;
-            isAccidentalBracketed = false;
-            isAccidentalCautionary = false;
-            isAccidentalEditorial = false;
-            isAccidentalParenthetical = false;
-        }
+void PitchData::showAccidental()
+{
+    switch (alter)
+    {
+    case -3:
+        accidental = Accidental::tripleFlat;
+        break;
+    case -2:
+        accidental = Accidental::flatFlat;
+        break;
+    case -1:
+        accidental = Accidental::flat;
+        break;
+    case 0:
+        accidental = Accidental::natural;
+        break;
+    case 1:
+        accidental = Accidental::sharp;
+        break;
+    case 2:
+        accidental = Accidental::doubleSharp;
+        break;
+    case 3:
+        accidental = Accidental::tripleSharp;
+        break;
+    default:
+        accidental = Accidental::none;
     }
 }
+
+void PitchData::hideAccidental()
+{
+    accidental = Accidental::none;
+    isAccidentalBracketed = false;
+    isAccidentalCautionary = false;
+    isAccidentalEditorial = false;
+    isAccidentalParenthetical = false;
+}
+} // namespace api
+} // namespace mx

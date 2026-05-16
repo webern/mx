@@ -8,46 +8,44 @@
 
 namespace mx
 {
-    namespace core
-    {
-        GroupAbbreviationDisplayAttributes::GroupAbbreviationDisplayAttributes()
-        :printObject( YesNo::no )
-        ,hasPrintObject( false )
-        {}
-
-
-        bool GroupAbbreviationDisplayAttributes::hasValues() const
-        {
-            return hasPrintObject;
-        }
-
-
-        std::ostream& GroupAbbreviationDisplayAttributes::toStream( std::ostream& os ) const
-        {
-            if ( hasValues() )
-            {
-                streamAttribute( os, printObject, "print-object", hasPrintObject );
-            }
-            return os;
-        }
-
-
-        bool GroupAbbreviationDisplayAttributes::fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement )
-        {
-            const char* const className = "GroupAbbreviationDisplayAttributes";
-            bool isSuccess = true;
-        
-            auto it = xelement.attributesBegin();
-            auto endIter = xelement.attributesEnd();
-        
-            for( ; it != endIter; ++it )
-            {
-                if( parseAttribute( message, it, className, isSuccess, printObject, hasPrintObject, "print-object", &parseYesNo ) ) { continue; }
-            }
-        
-        
-            MX_RETURN_IS_SUCCESS;
-        }
-
-    }
+namespace core
+{
+GroupAbbreviationDisplayAttributes::GroupAbbreviationDisplayAttributes() : printObject(YesNo::no), hasPrintObject(false)
+{
 }
+
+bool GroupAbbreviationDisplayAttributes::hasValues() const
+{
+    return hasPrintObject;
+}
+
+std::ostream &GroupAbbreviationDisplayAttributes::toStream(std::ostream &os) const
+{
+    if (hasValues())
+    {
+        streamAttribute(os, printObject, "print-object", hasPrintObject);
+    }
+    return os;
+}
+
+bool GroupAbbreviationDisplayAttributes::fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement)
+{
+    const char *const className = "GroupAbbreviationDisplayAttributes";
+    bool isSuccess = true;
+
+    auto it = xelement.attributesBegin();
+    auto endIter = xelement.attributesEnd();
+
+    for (; it != endIter; ++it)
+    {
+        if (parseAttribute(message, it, className, isSuccess, printObject, hasPrintObject, "print-object", &parseYesNo))
+        {
+            continue;
+        }
+    }
+
+    MX_RETURN_IS_SUCCESS;
+}
+
+} // namespace core
+} // namespace mx

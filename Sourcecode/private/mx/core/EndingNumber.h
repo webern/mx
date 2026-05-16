@@ -8,8 +8,8 @@
 
 namespace mx
 {
-    namespace core
-    {
-        using EndingNumber = CommaSeparatedListOfPositiveIntegers;
-    }
+namespace core
+{
+using EndingNumber = CommaSeparatedListOfPositiveIntegers;
 }
+} // namespace mx

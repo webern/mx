@@ -8,14 +8,14 @@
 
 namespace mx
 {
-    namespace core
-    {
-        class XsID : public XsString
-        {
-        public:
-            XsID();
-            XsID( const StringType& value );
-            virtual void setValue( const StringType& value );
-        };
-    }
-}
+namespace core
+{
+class XsID : public XsString
+{
+  public:
+    XsID();
+    XsID(const StringType &value);
+    virtual void setValue(const StringType &value);
+};
+} // namespace core
+} // namespace mx

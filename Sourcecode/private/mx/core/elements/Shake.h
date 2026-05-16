@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "mx/core/ForwardDeclare.h"
 #include "mx/core/ElementInterface.h"
+#include "mx/core/ForwardDeclare.h"
 #include "mx/core/elements/EmptyTrillSoundAttributes.h"
 
 #include <iosfwd>
@@ -14,32 +14,35 @@
 
 namespace mx
 {
-    namespace core
-    {
+namespace core
+{
 
-        MX_FORWARD_DECLARE_ATTRIBUTES( EmptyTrillSoundAttributes )
-        MX_FORWARD_DECLARE_ELEMENT( Shake )
+MX_FORWARD_DECLARE_ATTRIBUTES(EmptyTrillSoundAttributes)
+MX_FORWARD_DECLARE_ELEMENT(Shake)
 
-        inline ShakePtr makeShake() { return std::make_shared<Shake>(); }
-
-        class Shake : public ElementInterface
-        {
-        public:
-            Shake();
-
-            virtual bool hasAttributes() const;
-            virtual bool hasContents() const;
-            virtual std::ostream& streamAttributes( std::ostream& os ) const;
-            virtual std::ostream& streamName( std::ostream& os ) const;
-            virtual std::ostream& streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly ) const;
-            EmptyTrillSoundAttributesPtr getAttributes() const;
-            void setAttributes( const EmptyTrillSoundAttributesPtr& attributes );
-
-            private:
-            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
-
-        private:
-            EmptyTrillSoundAttributesPtr myAttributes;
-        };
-    }
+inline ShakePtr makeShake()
+{
+    return std::make_shared<Shake>();
 }
+
+class Shake : public ElementInterface
+{
+  public:
+    Shake();
+
+    virtual bool hasAttributes() const;
+    virtual bool hasContents() const;
+    virtual std::ostream &streamAttributes(std::ostream &os) const;
+    virtual std::ostream &streamName(std::ostream &os) const;
+    virtual std::ostream &streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const;
+    EmptyTrillSoundAttributesPtr getAttributes() const;
+    void setAttributes(const EmptyTrillSoundAttributesPtr &attributes);
+
+  private:
+    virtual bool fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement);
+
+  private:
+    EmptyTrillSoundAttributesPtr myAttributes;
+};
+} // namespace core
+} // namespace mx

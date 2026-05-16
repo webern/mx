@@ -11,40 +11,34 @@
 
 namespace mx
 {
-    namespace api
+namespace api
+{
+
+/// Left, right, top, bottom. Measurements are in tenths.
+class MarginsData
+{
+  public:
+    Double left;
+    Double right;
+    Double top;
+    Double bottom;
+
+    inline MarginsData() : MarginsData{0.0, 0.0, 0.0, 0.0}
     {
-
-        /// Left, right, top, bottom. Measurements are in tenths.
-        class MarginsData
-        {
-        public:
-            Double left;
-            Double right;
-            Double top;
-            Double bottom;
-
-            inline MarginsData()
-                : MarginsData{ 0.0, 0.0, 0.0, 0.0 }
-            {
-
-            }
-
-            inline explicit MarginsData( Double inLeft, Double inRight, Double inTop, Double inBottom )
-                : left{ inLeft }
-                , right{ inRight }
-                , top{ inTop }
-                , bottom{ inBottom }
-            {
-
-            }
-        };
-
-        MXAPI_EQUALS_BEGIN( MarginsData )
-            MXAPI_EQUALS_MEMBER( left )
-            MXAPI_EQUALS_MEMBER( right )
-            MXAPI_EQUALS_MEMBER( top )
-            MXAPI_EQUALS_MEMBER( bottom )
-        MXAPI_EQUALS_END;
-        MXAPI_NOT_EQUALS_AND_VECTORS( MarginsData );
     }
-}
+
+    inline explicit MarginsData(Double inLeft, Double inRight, Double inTop, Double inBottom)
+        : left{inLeft}, right{inRight}, top{inTop}, bottom{inBottom}
+    {
+    }
+};
+
+MXAPI_EQUALS_BEGIN(MarginsData)
+MXAPI_EQUALS_MEMBER(left)
+MXAPI_EQUALS_MEMBER(right)
+MXAPI_EQUALS_MEMBER(top)
+MXAPI_EQUALS_MEMBER(bottom)
+MXAPI_EQUALS_END;
+MXAPI_NOT_EQUALS_AND_VECTORS(MarginsData);
+} // namespace api
+} // namespace mx

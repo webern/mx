@@ -6,21 +6,14 @@
 
 namespace mx
 {
-    namespace impl
-    {
-        LyricType::LyricType()
-        : mySyllabic( core::SyllabicEnum::single )
-        {
-            
-        }
-
-        
-        LyricType::LyricType( const std::string& value, core::SyllabicEnum syllabic )
-        : myText{ value }
-        , mySyllabic{ syllabic }
-        {
-            
-        }
-    }
+namespace impl
+{
+LyricType::LyricType() : mySyllabic(core::SyllabicEnum::single)
+{
 }
 
+LyricType::LyricType(const std::string &value, core::SyllabicEnum syllabic) : myText{value}, mySyllabic{syllabic}
+{
+}
+} // namespace impl
+} // namespace mx

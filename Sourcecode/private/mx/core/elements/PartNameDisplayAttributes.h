@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include "mx/core/ForwardDeclare.h"
 #include "mx/core/AttributesInterface.h"
 #include "mx/core/Enums.h"
+#include "mx/core/ForwardDeclare.h"
 
 #include <iosfwd>
 #include <memory>
@@ -14,22 +14,22 @@
 
 namespace mx
 {
-    namespace core
-    {
+namespace core
+{
 
-        MX_FORWARD_DECLARE_ATTRIBUTES( PartNameDisplayAttributes )
+MX_FORWARD_DECLARE_ATTRIBUTES(PartNameDisplayAttributes)
 
-        struct PartNameDisplayAttributes : public AttributesInterface
-        {
-        public:
-            PartNameDisplayAttributes();
-            virtual bool hasValues() const;
-            virtual std::ostream& toStream( std::ostream& os ) const;
-            YesNo printObject;
-            bool hasPrintObject;
+struct PartNameDisplayAttributes : public AttributesInterface
+{
+  public:
+    PartNameDisplayAttributes();
+    virtual bool hasValues() const;
+    virtual std::ostream &toStream(std::ostream &os) const;
+    YesNo printObject;
+    bool hasPrintObject;
 
-            private:
-            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
-        };
-    }
-}
+  private:
+    virtual bool fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement);
+};
+} // namespace core
+} // namespace mx

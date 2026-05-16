@@ -9,13 +9,16 @@
 
 namespace mxtest
 {
-    class ScoreDataCreator;
-    using ScoreDataCreatorPtr = std::unique_ptr<const ScoreDataCreator>;
-    
-    class ScoreDataCreator
+class ScoreDataCreator;
+using ScoreDataCreatorPtr = std::unique_ptr<const ScoreDataCreator>;
+
+class ScoreDataCreator
+{
+  public:
+    virtual ~ScoreDataCreator()
     {
-    public:
-        virtual ~ScoreDataCreator() {}
-        virtual mx::api::ScoreData createScoreData() const = 0;
-    };
-}
+    }
+
+    virtual mx::api::ScoreData createScoreData() const = 0;
+};
+} // namespace mxtest

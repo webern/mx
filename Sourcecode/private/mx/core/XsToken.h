@@ -8,14 +8,14 @@
 
 namespace mx
 {
-    namespace core
-    {
-    	class XsToken : public XsString
-        {
-        public:
-            XsToken();
-            XsToken( const StringType& value );
-            virtual void setValue( const StringType& value );
-        };
-    }
-}
+namespace core
+{
+class XsToken : public XsString
+{
+  public:
+    XsToken();
+    XsToken(const StringType &value);
+    virtual void setValue(const StringType &value);
+};
+} // namespace core
+} // namespace mx

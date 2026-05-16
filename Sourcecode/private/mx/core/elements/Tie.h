@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "mx/core/ForwardDeclare.h"
 #include "mx/core/ElementInterface.h"
+#include "mx/core/ForwardDeclare.h"
 #include "mx/core/elements/TieAttributes.h"
 
 #include <iosfwd>
@@ -14,32 +14,35 @@
 
 namespace mx
 {
-    namespace core
-    {
+namespace core
+{
 
-        MX_FORWARD_DECLARE_ATTRIBUTES( TieAttributes )
-        MX_FORWARD_DECLARE_ELEMENT( Tie )
+MX_FORWARD_DECLARE_ATTRIBUTES(TieAttributes)
+MX_FORWARD_DECLARE_ELEMENT(Tie)
 
-        inline TiePtr makeTie() { return std::make_shared<Tie>(); }
-
-        class Tie : public ElementInterface
-        {
-        public:
-            Tie();
-
-            virtual bool hasAttributes() const;
-            virtual bool hasContents() const;
-            virtual std::ostream& streamAttributes( std::ostream& os ) const;
-            virtual std::ostream& streamName( std::ostream& os ) const;
-            virtual std::ostream& streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly ) const;
-            TieAttributesPtr getAttributes() const;
-            void setAttributes( const TieAttributesPtr& attributes );
-
-            private:
-            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
-
-        private:
-            TieAttributesPtr myAttributes;
-        };
-    }
+inline TiePtr makeTie()
+{
+    return std::make_shared<Tie>();
 }
+
+class Tie : public ElementInterface
+{
+  public:
+    Tie();
+
+    virtual bool hasAttributes() const;
+    virtual bool hasContents() const;
+    virtual std::ostream &streamAttributes(std::ostream &os) const;
+    virtual std::ostream &streamName(std::ostream &os) const;
+    virtual std::ostream &streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const;
+    TieAttributesPtr getAttributes() const;
+    void setAttributes(const TieAttributesPtr &attributes);
+
+  private:
+    virtual bool fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement);
+
+  private:
+    TieAttributesPtr myAttributes;
+};
+} // namespace core
+} // namespace mx

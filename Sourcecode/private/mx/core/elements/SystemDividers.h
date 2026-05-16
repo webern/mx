@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "mx/core/ForwardDeclare.h"
 #include "mx/core/ElementInterface.h"
+#include "mx/core/ForwardDeclare.h"
 
 #include <iosfwd>
 #include <memory>
@@ -13,40 +13,43 @@
 
 namespace mx
 {
-    namespace core
-    {
+namespace core
+{
 
-        MX_FORWARD_DECLARE_ELEMENT( LeftDivider )
-        MX_FORWARD_DECLARE_ELEMENT( RightDivider )
-        MX_FORWARD_DECLARE_ELEMENT( SystemDividers )
+MX_FORWARD_DECLARE_ELEMENT(LeftDivider)
+MX_FORWARD_DECLARE_ELEMENT(RightDivider)
+MX_FORWARD_DECLARE_ELEMENT(SystemDividers)
 
-        inline SystemDividersPtr makeSystemDividers() { return std::make_shared<SystemDividers>(); }
-
-        class SystemDividers : public ElementInterface
-        {
-        public:
-            SystemDividers();
-
-            virtual bool hasAttributes() const;
-            virtual std::ostream& streamAttributes( std::ostream& os ) const;
-            virtual std::ostream& streamName( std::ostream& os ) const;
-            virtual bool hasContents() const;
-            virtual std::ostream& streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly ) const;
-
-            /* _________ LeftDivider minOccurs = 1, maxOccurs = 1 _________ */
-            LeftDividerPtr getLeftDivider() const;
-            void setLeftDivider( const LeftDividerPtr& value );
-
-            /* _________ RightDivider minOccurs = 1, maxOccurs = 1 _________ */
-            RightDividerPtr getRightDivider() const;
-            void setRightDivider( const RightDividerPtr& value );
-
-            private:
-            virtual bool fromXElementImpl( std::ostream& message, ::ezxml::XElement& xelement );
-
-        private:
-            LeftDividerPtr myLeftDivider;
-            RightDividerPtr myRightDivider;
-        };
-    }
+inline SystemDividersPtr makeSystemDividers()
+{
+    return std::make_shared<SystemDividers>();
 }
+
+class SystemDividers : public ElementInterface
+{
+  public:
+    SystemDividers();
+
+    virtual bool hasAttributes() const;
+    virtual std::ostream &streamAttributes(std::ostream &os) const;
+    virtual std::ostream &streamName(std::ostream &os) const;
+    virtual bool hasContents() const;
+    virtual std::ostream &streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const;
+
+    /* _________ LeftDivider minOccurs = 1, maxOccurs = 1 _________ */
+    LeftDividerPtr getLeftDivider() const;
+    void setLeftDivider(const LeftDividerPtr &value);
+
+    /* _________ RightDivider minOccurs = 1, maxOccurs = 1 _________ */
+    RightDividerPtr getRightDivider() const;
+    void setRightDivider(const RightDividerPtr &value);
+
+  private:
+    virtual bool fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement);
+
+  private:
+    LeftDividerPtr myLeftDivider;
+    RightDividerPtr myRightDivider;
+};
+} // namespace core
+} // namespace mx

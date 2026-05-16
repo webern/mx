@@ -10,96 +10,84 @@
 
 namespace mx
 {
-    namespace core
+namespace core
+{
+ElisionSyllabicTextGroup::ElisionSyllabicTextGroup()
+    : myElisionSyllabicGroup(makeElisionSyllabicGroup()), myHasElisionSyllabicGroup(false), myText(makeText())
+{
+}
+
+bool ElisionSyllabicTextGroup::hasAttributes() const
+{
+    return false;
+}
+
+std::ostream &ElisionSyllabicTextGroup::streamAttributes(std::ostream &os) const
+{
+    return os;
+}
+
+std::ostream &ElisionSyllabicTextGroup::streamName(std::ostream &os) const
+{
+    return os;
+}
+
+bool ElisionSyllabicTextGroup::hasContents() const
+{
+    return true;
+}
+
+std::ostream &ElisionSyllabicTextGroup::streamContents(std::ostream &os, const int indentLevel,
+                                                       bool &isOneLineOnly) const
+{
+    isOneLineOnly = true;
+    if (myHasElisionSyllabicGroup)
     {
-        ElisionSyllabicTextGroup::ElisionSyllabicTextGroup()
-        :myElisionSyllabicGroup( makeElisionSyllabicGroup() )
-        ,myHasElisionSyllabicGroup( false )
-        ,myText( makeText() )
-        {}
+        myElisionSyllabicGroup->streamContents(os, indentLevel, isOneLineOnly);
+        isOneLineOnly = false;
+        os << std::endl;
+    }
+    myText->toStream(os, indentLevel);
+    return os;
+}
 
+ElisionSyllabicGroupPtr ElisionSyllabicTextGroup::getElisionSyllabicGroup() const
+{
+    return myElisionSyllabicGroup;
+}
 
-        bool ElisionSyllabicTextGroup::hasAttributes() const
-        {
-            return false;
-        }
-
-
-        std::ostream& ElisionSyllabicTextGroup::streamAttributes( std::ostream& os ) const
-        {
-            return os;
-        }
-
-
-        std::ostream& ElisionSyllabicTextGroup::streamName( std::ostream& os ) const
-        {
-            return os;
-        }
-
-
-        bool ElisionSyllabicTextGroup::hasContents() const
-        {
-            return true;
-        }
-
-
-        std::ostream& ElisionSyllabicTextGroup::streamContents( std::ostream& os, const int indentLevel, bool& isOneLineOnly ) const
-        {
-            isOneLineOnly = true;
-            if ( myHasElisionSyllabicGroup )
-            {
-                myElisionSyllabicGroup->streamContents( os, indentLevel, isOneLineOnly );
-                isOneLineOnly = false;
-                os << std::endl;
-            }
-            myText->toStream( os, indentLevel );
-            return os;
-        }
-
-
-        ElisionSyllabicGroupPtr ElisionSyllabicTextGroup::getElisionSyllabicGroup() const
-        {
-            return myElisionSyllabicGroup;
-        }
-
-
-        void ElisionSyllabicTextGroup::setElisionSyllabicGroup( const ElisionSyllabicGroupPtr& value )
-        {
-            if ( value )
-            {
-                myElisionSyllabicGroup = value;
-            }
-        }
-
-
-        bool ElisionSyllabicTextGroup::getHasElisionSyllabicGroup() const
-        {
-            return myHasElisionSyllabicGroup;
-        }
-
-
-        void ElisionSyllabicTextGroup::setHasElisionSyllabicGroup( const bool value )
-        {
-            myHasElisionSyllabicGroup = value;
-        }
-
-
-        TextPtr ElisionSyllabicTextGroup::getText() const
-        {
-            return myText;
-        }
-
-
-        void ElisionSyllabicTextGroup::setText( const TextPtr& value )
-        {
-            if ( value )
-            {
-                myText = value;
-            }
-        }
-        
-        
-        MX_FROM_XELEMENT_UNUSED( ElisionSyllabicTextGroup );
-
+void ElisionSyllabicTextGroup::setElisionSyllabicGroup(const ElisionSyllabicGroupPtr &value)
+{
+    if (value)
+    {
+        myElisionSyllabicGroup = value;
     }
 }
+
+bool ElisionSyllabicTextGroup::getHasElisionSyllabicGroup() const
+{
+    return myHasElisionSyllabicGroup;
+}
+
+void ElisionSyllabicTextGroup::setHasElisionSyllabicGroup(const bool value)
+{
+    myHasElisionSyllabicGroup = value;
+}
+
+TextPtr ElisionSyllabicTextGroup::getText() const
+{
+    return myText;
+}
+
+void ElisionSyllabicTextGroup::setText(const TextPtr &value)
+{
+    if (value)
+    {
+        myText = value;
+    }
+}
+
+MX_FROM_XELEMENT_UNUSED(ElisionSyllabicTextGroup);
+
+} // namespace core
+} // namespace mx

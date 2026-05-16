@@ -10,20 +10,20 @@
 
 namespace mx
 {
-    namespace impl
-    {
-        template<typename ATTRIBUTES_TYPE>
-        void parseMarkDataAttributes( const ATTRIBUTES_TYPE& attr, api::MarkData& outMarkData )
-        {
-            outMarkData.positionData = getPositionData<ATTRIBUTES_TYPE>( attr );
-            outMarkData.printData = getPrintData<ATTRIBUTES_TYPE>( attr );
-        }
-        
-        template<typename ATTRIBUTES_TYPE>
-        void setAttributesFromMarkData( const api::MarkData& markData, ATTRIBUTES_TYPE& outAttributes )
-        {
-            setAttributesFromPositionData( markData.positionData, outAttributes );
-            setAttributesFromPrintData( markData.printData, outAttributes );
-        }
-	}
+namespace impl
+{
+template <typename ATTRIBUTES_TYPE>
+void parseMarkDataAttributes(const ATTRIBUTES_TYPE &attr, api::MarkData &outMarkData)
+{
+    outMarkData.positionData = getPositionData<ATTRIBUTES_TYPE>(attr);
+    outMarkData.printData = getPrintData<ATTRIBUTES_TYPE>(attr);
 }
+
+template <typename ATTRIBUTES_TYPE>
+void setAttributesFromMarkData(const api::MarkData &markData, ATTRIBUTES_TYPE &outAttributes)
+{
+    setAttributesFromPositionData(markData.positionData, outAttributes);
+    setAttributesFromPrintData(markData.printData, outAttributes);
+}
+} // namespace impl
+} // namespace mx

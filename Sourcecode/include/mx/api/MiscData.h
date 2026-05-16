@@ -10,19 +10,19 @@
 
 namespace mx
 {
-    namespace api
-    {
-        class MiscData
-        {
-        public:
-            std::string name;
-            std::string data;
-        };
+namespace api
+{
+class MiscData
+{
+  public:
+    std::string name;
+    std::string data;
+};
 
-        MXAPI_EQUALS_BEGIN( MiscData )
-        MXAPI_EQUALS_MEMBER( name )
-        MXAPI_EQUALS_MEMBER( data )
-        MXAPI_EQUALS_END;
-        MXAPI_NOT_EQUALS_AND_VECTORS( MiscData );
-    }
-}
+MXAPI_EQUALS_BEGIN(MiscData)
+MXAPI_EQUALS_MEMBER(name)
+MXAPI_EQUALS_MEMBER(data)
+MXAPI_EQUALS_END;
+MXAPI_NOT_EQUALS_AND_VECTORS(MiscData);
+} // namespace api
+} // namespace mx
