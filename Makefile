@@ -215,12 +215,8 @@ check: check-tools
 		if grep -q 'warning:' $(BUILD_ROOT)/build.log; then \
 			echo "ERROR: build emitted warnings (see above)"; exit 1; \
 		fi
-	@if [ -z "$(IS_WINDOWS)" ]; then \
-		echo "=== lint ==="; \
-		$(FIND_CPP) | xargs clang-tidy -p $(call mode_dir,dev); \
-	else \
-		echo "=== lint skipped (Windows) ==="; \
-	fi
+	@echo "=== lint ==="
+	@$(FIND_CPP) | xargs clang-tidy -p $(call mode_dir,dev)
 	@echo "=== check passed ==="
 
 # --- Xcode targets ----------------------------------------------------------

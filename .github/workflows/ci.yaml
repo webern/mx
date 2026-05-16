@@ -57,7 +57,7 @@ jobs:
           echo "/opt/homebrew/opt/llvm/bin" >> $GITHUB_PATH
 
       - name: Quality gate
-        run: make check
+        run: SDKROOT=$(xcrun --show-sdk-path) make check
 
       - name: Run tests
         run: make test
