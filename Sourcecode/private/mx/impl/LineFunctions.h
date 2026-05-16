@@ -6,6 +6,7 @@
 
 #include "mx/api/LineData.h"
 #include "mx/core/Enums.h"
+#include "mx/impl/Converter.h"
 #include "mx/utility/OptionalMembers.h"
 
 namespace mx

@@ -5,3 +5,4 @@ Sourcecode/private/mxtest/file/PathRoot.h
 **/xcuserdata/
 **/xcshareddata/
 *.DS_Store
+compile_commands.json

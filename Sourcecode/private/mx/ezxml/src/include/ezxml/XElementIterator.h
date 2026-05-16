@@ -3,11 +3,16 @@
 #pragma once
 
 #include "ezxml/XElement.h"
-#include "ezxml/XElementIterImpl.h"
 
 #include <cstddef>
 #include <iostream>
 #include <memory>
+
+namespace ezxml
+{
+class XElementIterImpl;
+using XElementIterImplUP = std::unique_ptr<XElementIterImpl>;
+} // namespace ezxml
 
 namespace ezxml
 {
@@ -18,10 +23,10 @@ class XElementIterator final
     XElementIterator();
     explicit XElementIterator(const XElementIterImpl &impl);
     XElementIterator(const XElementIterator &other);
-    XElementIterator(XElementIterator &&other) = default;
+    XElementIterator(XElementIterator &&other) noexcept;
     XElementIterator &operator=(const XElementIterator &other);
-    XElementIterator &operator=(XElementIterator &&other) = default;
-    ~XElementIterator() = default;
+    XElementIterator &operator=(XElementIterator &&other) noexcept;
+    ~XElementIterator();
 
     // STL Iterator Compliance
     typedef ptrdiff_t difference_type; // ???

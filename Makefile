@@ -90,13 +90,13 @@ endef
 # multi-config ones (MSVC, Xcode), so probe both. $1 = mode dir, $2 = binary
 # name, $3 = extra args.
 define run_bin
-	@d='$(1)'; b='$(2)'; found=''; bindir=''; \
+	@d='$(1)'; b='$(2)'; found=''; \
 	for p in "$$d/$$b" "$$d/$$b.exe" "$$d/$(BUILD_TYPE)/$$b" "$$d/$(BUILD_TYPE)/$$b.exe"; do \
-		if [ -x "$$p" ]; then found="$$p"; bindir="$$(dirname $$p)"; break; fi; \
+		if [ -x "$$p" ]; then found="$$p"; break; fi; \
 	done; \
 	if [ -z "$$found" ]; then echo "error: $$b not found under $$d" >&2; exit 1; fi; \
 	echo ">> $$found $(3)"; \
-	cd "$$bindir" && "$$found" $(3)
+	"$$found" $(3)
 endef
 
 .DEFAULT_GOAL := help

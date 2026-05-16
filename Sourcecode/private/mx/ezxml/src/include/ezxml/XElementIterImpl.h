@@ -8,9 +8,6 @@
 
 namespace ezxml
 {
-class XElementIterImpl;
-using XElementIterImplUP = std::unique_ptr<XElementIterImpl>;
-
 class XElementIterImpl
 {
   public:

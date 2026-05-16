@@ -12,6 +12,7 @@
 #include "mx/core/elements/MusicDataChoice.h"
 #include "mxtest/api/RoundTrip.h"
 #include "mxtest/file/MxFileRepository.h"
+#include "mxtest/file/StupidFileFunctions.h"
 
 // TODO - replace with specific includes
 #include "mx/core/Elements.h"
@@ -35,8 +36,9 @@ namespace
 inline bool writeRoundTrip(std::string inFilename)
 {
     const auto nameWithoutExtension = mxtest::MxFileRepository::getNameWithoutExtension(inFilename);
-    const auto outBeforeFilepath = std::string{"./"} + nameWithoutExtension + std::string{"_before.xml"};
-    const auto outAfterFilepath = std::string{"./"} + nameWithoutExtension + std::string{"_after.xml"};
+    const auto outDir = mxtest::getTestOutputFullDirectoryPath();
+    const auto outBeforeFilepath = outDir + nameWithoutExtension + std::string{"_before.xml"};
+    const auto outAfterFilepath = outDir + nameWithoutExtension + std::string{"_after.xml"};
     const auto scoreData = mxtest::MxFileRepository::loadFile(inFilename);
     const auto filePath = mxtest::MxFileRepository::getFullPath(inFilename);
     auto &docMgr = DocumentManager::getInstance();

@@ -118,8 +118,6 @@ TEST(customArticulation, NoteData)
     auto docId = mgr.createFromScore(score);
     std::stringstream ss;
     mgr.writeToStream(docId, ss);
-    // TODO - SMUFLKILL - remove
-    mgr.writeToFile(docId, "./bloop.xml");
     mgr.destroyDocument(docId);
     const std::string xml = ss.str();
     std::istringstream iss{xml};

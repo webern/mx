@@ -1,12 +1,17 @@
 // Copyright (c) Matthew James Briggs
 
 #include "ezxml/XElementIterator.h"
+#include "ezxml/XElementIterImpl.h"
 
 namespace ezxml
 {
 XElementIterator::XElementIterator() : myImpl(nullptr)
 {
 }
+
+XElementIterator::XElementIterator(XElementIterator &&other) noexcept = default;
+XElementIterator &XElementIterator::operator=(XElementIterator &&other) noexcept = default;
+XElementIterator::~XElementIterator() = default;
 
 XElementIterator::XElementIterator(const XElementIterImpl &impl) : myImpl(impl.clone())
 {
