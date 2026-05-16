@@ -17,31 +17,44 @@ This project is a C++ library for working with MusicXML.
 
 # Build
 
+A top-level `Makefile` wraps CMake and encodes the build/test configurations this project uses.
+It is a convenience layer, not a replacement for CMake. It needs `cmake` (>= 3.13) and a POSIX
+shell. On Windows it is best-effort: install CMake plus GNU make and a POSIX shell (Git Bash,
+MSYS2, or WSL); the underlying compiler can still be MSVC, since builds go through
+`cmake --build`.
+
 Building and running tests should be as simple as:
 
 ```
 git clone https://github.com/webern/mx.git mx
-mkdir build
-cd build
-cmake ../mx -DMX_BUILD_TESTS=on -DMX_BUILD_CORE_TESTS=off -DMX_BUILD_EXAMPLES=on
-make -j6
-./mxtest
+cd mx
+make test
 ```
 
-### Cmake Options
+Run `make` (or `make help`) to list every target.
 
-There are three `cmake` options:
+### Build Modes
 
-```
-    -DMX_BUILD_TESTS=on
-    -DMX_BUILD_CORE_TESTS=off
-    -DMX_BUILD_EXAMPLES=on
-```
+There are three `cmake` options (`MX_BUILD_TESTS`, `MX_BUILD_CORE_TESTS`, `MX_BUILD_EXAMPLES`).
+Only three combinations are useful workflows, exposed as three build targets:
 
-The configuration shown above is the recommended configuration for development.
-If you just need the lib then turn off all three of the `cmake` options.
-The 'core tests' take a long time to compile.
-You only need to run them if you make changes in the `mx::core` namespace.
+| Target     | Builds                                                  | Notes                                              |
+|------------|---------------------------------------------------------|----------------------------------------------------|
+| `make lib` | the static library only                                 | fastest; use this if you just need the lib         |
+| `make dev` | tests (no core tests) + examples                        | recommended for development                        |
+| `make core`| tests including the `mx::core` tests + examples         | slow to compile; only needed for `mx::core` changes|
+
+The `core` tests take a long time to compile. You only need them if you make changes in the
+`mx::core` namespace.
+
+Run targets build the needed mode first, then run binaries: `make test` (runs `mxtest`),
+`make test-core` (full `mxtest`), `make examples-run` (runs the examples), and `make all`
+(full build, examples, and full `mxtest`). `make clean` removes the build tree.
+
+Each mode builds into `build/<mode>/<BUILD_TYPE>` with its own cache and incremental state, so
+switching modes never recompiles another mode's tree. Knobs: `JOBS` (parallelism, auto-detected),
+`BUILD_TYPE` (default `Debug`), `GENERATOR` (default: CMake's platform default), and `ARGS`
+(forwarded to `mxtest`, e.g. `make test ARGS='[core]'`).
 
 ### Build Tenets
 
@@ -864,4 +877,4 @@ int main(int argc, const char * argv[])
 
 An executable program named mxtest is also included in the project.
 mxtest utilizes the Catch2 test framework.
-The core tests are slow to compile, see the [`cmake` options](#cmake-options) section for more info on how to skip compilation of the tests.
+The core tests are slow to compile, see the [Build Modes](#build-modes) section for more info on how to skip compilation of the tests.
