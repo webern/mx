@@ -100,7 +100,7 @@ define run_bin
 endef
 
 .DEFAULT_GOAL := help
-.PHONY: help lib dev core test test-core examples-run all clean
+.PHONY: help lib dev core test test-core examples-run all clean check-tools fmt
 
 help:
 	@echo 'mx build/test targets (see comments at the top of the Makefile for rationale):'
@@ -115,6 +115,8 @@ help:
 	@echo '  make all            Build core, run examples, run full mxtest.'
 	@echo ''
 	@echo '  make clean          Remove the entire $(BUILD_ROOT)/ tree.'
+	@echo ''
+	@echo '  make fmt            Format all C++ files under Sourcecode/.'
 	@echo ''
 	@echo 'Knobs:  JOBS (=$(JOBS))  BUILD_TYPE (=$(BUILD_TYPE))  GENERATOR  ARGS'
 	@echo 'Layout: $(BUILD_ROOT)/<mode>/$(BUILD_TYPE)/'
@@ -154,3 +156,28 @@ all: core
 
 clean:
 	rm -rf $(BUILD_ROOT)
+
+# --- Quality targets --------------------------------------------------------
+
+check-tools:
+	@command -v clang-format >/dev/null 2>&1 || \
+		{ echo "clang-format not found."; \
+		  echo "  macOS: brew install clang-format"; \
+		  echo "  Linux: sudo apt-get install clang-format"; \
+		  exit 1; }
+	@command -v clang-tidy >/dev/null 2>&1 || \
+		{ echo "clang-tidy not found."; \
+		  echo "  macOS: brew install llvm"; \
+		  echo "  Linux: sudo apt-get install clang-tidy"; \
+		  exit 1; }
+
+FIND_CPP := find Sourcecode \
+	-path 'Sourcecode/private/cpul' -prune -o \
+	-name 'pugixml.cpp' -prune -o \
+	-name 'pugixml.hpp' -prune -o \
+	-name 'pugiconfig.hpp' -prune -o \
+	-type f \( -name '*.cpp' -o -name '*.h' -o -name '*.hpp' \) -print
+
+fmt: check-tools
+	@$(FIND_CPP) | xargs clang-format -i
+	@echo "Formatted all C++ files under Sourcecode/"
