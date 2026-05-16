@@ -195,9 +195,6 @@ api::ScoreData ScoreReader::getScoreData() const
 
     bool isComposerFound = false;
     bool isCopyrightFound = false;
-    bool isArrangerFound = false;
-    bool isLyricistFound = false;
-    bool isPublisherFound = false;
 
     if (myHeaderGroup.getHasIdentification())
     {
@@ -219,19 +216,16 @@ api::ScoreData ScoreReader::getScoreData() const
             if (a->type.getValue() == "lyricist")
             {
                 myOutScoreData.lyricist = i->getValue().getValue();
-                isLyricistFound = true;
             }
 
             if (a->type.getValue() == "arranger")
             {
                 myOutScoreData.lyricist = i->getValue().getValue();
-                isArrangerFound = true;
             }
 
             if (a->type.getValue() == "publisher")
             {
                 myOutScoreData.lyricist = i->getValue().getValue();
-                isPublisherFound = true;
             }
         }
 

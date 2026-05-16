@@ -162,7 +162,6 @@ bool Lyric::fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement)
 {
     bool isSuccess = true;
     isSuccess &= myAttributes->fromXElement(message, xelement);
-    bool isLyricTextChoiceFound = false;
 
     auto endIter = xelement.end();
     for (auto it = xelement.begin(); it != endIter; ++it)
@@ -171,7 +170,7 @@ bool Lyric::fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement)
         if (checkSetChoiceMember(message, *it, isSuccess, myLyricTextChoice, "extend", &LyricTextChoice::getExtend,
                                  static_cast<int>(LyricTextChoice::Choice::extend)))
         {
-            isLyricTextChoiceFound = true;
+
             continue;
         }
 
@@ -179,14 +178,14 @@ bool Lyric::fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement)
                                       &LyricTextChoice::getLaughing,
                                       static_cast<int>(LyricTextChoice::Choice::laughing)))
         {
-            isLyricTextChoiceFound = true;
+
             continue;
         }
 
         else if (checkSetChoiceMember(message, *it, isSuccess, myLyricTextChoice, "humming",
                                       &LyricTextChoice::getHumming, static_cast<int>(LyricTextChoice::Choice::humming)))
         {
-            isLyricTextChoiceFound = true;
+
             continue;
         }
 

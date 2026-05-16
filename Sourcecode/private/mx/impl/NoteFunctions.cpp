@@ -69,7 +69,7 @@ namespace mx
 namespace impl
 {
 NoteFunctions::NoteFunctions(const core::Note &inMxNote, impl::Cursor inCursor)
-    : myNote{inMxNote}, myCursor{inCursor}, myOutNoteData{}, myConverter()
+    : myNote{inMxNote}, myCursor{inCursor}, myOutNoteData{}
 {
 }
 

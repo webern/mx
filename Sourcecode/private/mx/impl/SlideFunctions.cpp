@@ -16,8 +16,9 @@ SlideFunctions::SlideFunctions(const core::Slide &inSlide, impl::Cursor inCursor
 {
 }
 
-void SlideFunctions::parseSlide(api::NoteAttachmentData &inNoteAttachmentData) const
+void SlideFunctions::parseSlide(api::NoteAttachmentData & /*inNoteAttachmentData*/) const
 {
+    (void)mySlide;
     //            const auto& attr = mySlide.getAttributes();
     //            const auto slideType = attr->type;
     //

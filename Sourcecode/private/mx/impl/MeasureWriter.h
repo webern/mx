@@ -52,7 +52,7 @@ class MeasureWriter
 
     struct History
     {
-        History(const MeasureCursor &inCursor) : myCursor{inCursor}, history{}
+        History(const MeasureCursor &inCursor) : history{}, myCursor{inCursor}
         {
             HistoryRecord record;
             record.reason = "initialize history";

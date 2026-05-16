@@ -83,8 +83,8 @@ namespace mx
 namespace impl
 {
 NotationsWriter::NotationsWriter(const api::NoteData &inNoteData, const MeasureCursor &inCursor,
-                                 const ScoreWriter &inScoreWriter)
-    : myNoteData{inNoteData}, myCursor{inCursor}, myScoreWriter{inScoreWriter}, myConverter{}, myOutNotations{nullptr}
+                                 const ScoreWriter & /*inScoreWriter*/)
+    : myNoteData{inNoteData}, myCursor{inCursor}, myConverter{}, myOutNotations{nullptr}
 {
 }
 

@@ -29,7 +29,6 @@ class DynamicsWriter
   private:
     const api::MarkData &myMarkData;
     const impl::Cursor myCursor;
-    const api::Placement myDirectionPlacement;
     const Converter myConverter;
 
   private:

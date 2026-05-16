@@ -46,7 +46,7 @@ MX_ENUM_MEMBERS(MX_ENUM_VALUE);
 
 #define MX_ENUM_TO_STRING(A) MX_PRIMITIVE_CAT(A, ToString)
 
-inline const char *const MX_ENUM_TO_STRING(MX_ENUM_CLASS_NAME)(MX_ENUM_CLASS_NAME inValue)
+inline const char *MX_ENUM_TO_STRING(MX_ENUM_CLASS_NAME)(MX_ENUM_CLASS_NAME inValue)
 {
     switch (inValue)
     {

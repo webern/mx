@@ -47,7 +47,6 @@ class NoteFunctions
     const impl::Cursor myCursor;
     mutable api::NoteData myOutNoteData;
     mutable std::mutex myMutex;
-    const Converter myConverter;
 
   private:
     api::DurationName deriveNoteTypeFromDurationValue(const NoteReader &reader) const;
