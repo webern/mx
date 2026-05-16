@@ -1,0 +1,8 @@
+# ignore memory items that claude might write when you get mad at it
+projects/
+
+# ignore this high churn file that is written whenever you allow a tool use
+settings.local.json
+
+# allow developers to write their own instructions here without checking them in
+CLAUDE.local.md
