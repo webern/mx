@@ -100,7 +100,7 @@ define run_bin
 endef
 
 .DEFAULT_GOAL := help
-.PHONY: help lib dev core test test-core examples-run all clean check-tools check-format check-lint fmt lint
+.PHONY: help lib dev core test test-core examples-run all clean check-tools check-format check-lint fmt lint check
 
 help:
 	@echo 'mx build/test targets (see comments at the top of the Makefile for rationale):'
@@ -118,6 +118,7 @@ help:
 	@echo ''
 	@echo '  make fmt            Format all C++ files under Sourcecode/.'
 	@echo '  make lint           Run clang-tidy on all C++ files under Sourcecode/.'
+	@echo '  make check          Full quality gate: fmt-check + warning-free build + lint.'
 	@echo ''
 	@echo 'Knobs:  JOBS (=$(JOBS))  BUILD_TYPE (=$(BUILD_TYPE))  GENERATOR  ARGS'
 	@echo 'Layout: $(BUILD_ROOT)/<mode>/$(BUILD_TYPE)/'
@@ -190,3 +191,29 @@ fmt: check-format
 lint: check-lint dev
 	@$(FIND_CPP) | xargs clang-tidy -p $(call mode_dir,dev)
 	@echo "Lint complete."
+
+# Detect Windows (MSVC / Git Bash / MSYS2).
+IS_WINDOWS := $(if $(filter Windows_NT,$(OS)),1,)
+
+check: check-tools
+	@echo "=== fmt-check ==="
+	@$(FIND_CPP) | xargs clang-format --dry-run --Werror
+	@echo "=== build (warning-free) ==="
+	@$(CMAKE) -S . -B $(call mode_dir,dev) \
+		-DCMAKE_BUILD_TYPE=$(BUILD_TYPE) \
+		-DMX_BUILD_TESTS=on \
+		-DMX_BUILD_CORE_TESTS=off \
+		-DMX_BUILD_EXAMPLES=on \
+		$(GEN_ARG) 2>&1 | tee $(BUILD_ROOT)/build.log
+	@$(CMAKE) --build $(call mode_dir,dev) --parallel $(JOBS) --config $(BUILD_TYPE) 2>&1 \
+		| tee -a $(BUILD_ROOT)/build.log; \
+		if grep -q 'warning:' $(BUILD_ROOT)/build.log; then \
+			echo "ERROR: build emitted warnings (see above)"; exit 1; \
+		fi
+	@if [ -z "$(IS_WINDOWS)" ]; then \
+		echo "=== lint ==="; \
+		$(FIND_CPP) | xargs clang-tidy -p $(call mode_dir,dev); \
+	else \
+		echo "=== lint skipped (Windows) ==="; \
+	fi
+	@echo "=== check passed ==="
