@@ -100,7 +100,7 @@ define run_bin
 endef
 
 .DEFAULT_GOAL := help
-.PHONY: help lib dev core test test-core examples-run all clean check-tools check-format check-lint fmt lint check
+.PHONY: help lib dev core test test-core examples-run all clean check-tools check-format check-lint fmt lint check xcode-gen xcode-build xcode-test
 
 help:
 	@echo 'mx build/test targets (see comments at the top of the Makefile for rationale):'
@@ -119,6 +119,10 @@ help:
 	@echo '  make fmt            Format all C++ files under Sourcecode/.'
 	@echo '  make lint           Run clang-tidy on all C++ files under Sourcecode/.'
 	@echo '  make check          Full quality gate: fmt-check + warning-free build + lint.'
+	@echo ''
+	@echo '  make xcode-gen      Generate Xcode project in build/xcode/.'
+	@echo '  make xcode-build    Build the Xcode project.'
+	@echo '  make xcode-test     Run tests via xcodebuild.'
 	@echo ''
 	@echo 'Knobs:  JOBS (=$(JOBS))  BUILD_TYPE (=$(BUILD_TYPE))  GENERATOR  ARGS'
 	@echo 'Layout: $(BUILD_ROOT)/<mode>/$(BUILD_TYPE)/'
@@ -217,3 +221,25 @@ check: check-tools
 		echo "=== lint skipped (Windows) ==="; \
 	fi
 	@echo "=== check passed ==="
+
+# --- Xcode targets ----------------------------------------------------------
+
+XCODE_DIR := $(BUILD_ROOT)/xcode
+
+xcode-gen:
+	$(CMAKE) -G Xcode -S . -B $(XCODE_DIR) \
+		-DMX_BUILD_TESTS=on \
+		-DMX_BUILD_CORE_TESTS=off \
+		-DMX_BUILD_EXAMPLES=on
+
+xcode-build: xcode-gen
+	$(CMAKE) --build $(XCODE_DIR) --config $(BUILD_TYPE)
+
+xcode-test: xcode-build
+	@found=''; \
+	for p in "$(XCODE_DIR)/$(BUILD_TYPE)/mxtest" "$(XCODE_DIR)/Debug/mxtest"; do \
+		if [ -x "$$p" ]; then found="$$p"; break; fi; \
+	done; \
+	if [ -z "$$found" ]; then echo "error: mxtest not found under $(XCODE_DIR)" >&2; exit 1; fi; \
+	echo ">> $$found"; \
+	"$$found"

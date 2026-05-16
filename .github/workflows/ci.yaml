@@ -1,0 +1,117 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+jobs:
+  linux:
+    name: Linux (quality gate + core tests)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache build
+        uses: actions/cache@v4
+        with:
+          path: build/
+          key: ${{ runner.os }}-build-${{ hashFiles('CMakeLists.txt', 'Sourcecode/**') }}-${{ hashFiles('.github/cache-bust') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ hashFiles('CMakeLists.txt', 'Sourcecode/**') }}-
+            ${{ runner.os }}-build-
+
+      - name: Install tools
+        run: sudo apt-get update && sudo apt-get install -y clang-format clang-tidy
+
+      - name: Quality gate
+        run: make check
+
+      - name: Full test suite
+        run: make test-core
+
+  macos:
+    name: macOS (quality gate + tests)
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache build
+        uses: actions/cache@v4
+        with:
+          path: build/
+          key: ${{ runner.os }}-build-${{ hashFiles('CMakeLists.txt', 'Sourcecode/**') }}-${{ hashFiles('.github/cache-bust') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ hashFiles('CMakeLists.txt', 'Sourcecode/**') }}-
+            ${{ runner.os }}-build-
+
+      - name: Install tools
+        run: brew install clang-format llvm
+
+      - name: Quality gate
+        env:
+          PATH: /opt/homebrew/opt/llvm/bin:${{ env.PATH }}
+        run: make check
+
+      - name: Run tests
+        run: make test
+
+      - name: Run examples
+        run: make examples-run
+
+  windows:
+    name: Windows (advisory)
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache build
+        uses: actions/cache@v4
+        with:
+          path: build/
+          key: ${{ runner.os }}-build-${{ hashFiles('CMakeLists.txt', 'Sourcecode/**') }}-${{ hashFiles('.github/cache-bust') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ hashFiles('CMakeLists.txt', 'Sourcecode/**') }}-
+            ${{ runner.os }}-build-
+
+      - name: Install make
+        run: choco install make -y
+
+      - name: Install LLVM
+        run: choco install llvm -y
+
+      - name: Quality gate
+        shell: bash
+        run: make check
+
+      - name: Run tests
+        shell: bash
+        run: make test
+
+  xcode:
+    name: Xcode (advisory)
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache build
+        uses: actions/cache@v4
+        with:
+          path: build/xcode/
+          key: ${{ runner.os }}-xcode-${{ hashFiles('CMakeLists.txt', 'Sourcecode/**') }}-${{ hashFiles('.github/cache-bust') }}
+          restore-keys: |
+            ${{ runner.os }}-xcode-${{ hashFiles('CMakeLists.txt', 'Sourcecode/**') }}-
+            ${{ runner.os }}-xcode-
+
+      - name: Generate project
+        run: make xcode-gen
+
+      - name: Build
+        run: make xcode-build
+
+      - name: Test
+        run: make xcode-test
