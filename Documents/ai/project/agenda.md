@@ -5,12 +5,9 @@ This is the project plan for supporting MusicXML 4.0
 ## Phase 0: Prepare for AI Development
 
 - [x] Create a Makefile
-- [ ] fix the line endind issues in markdown files like README.md
-- [ ] Get .github CI modernized and working
-- [ ] Put a fmt'er in place
-- [ ] Put linters in place
-- [ ] get a handle on .gitattributes and what should be done with it
-- [ ] Put a check of Lints and Fmt's in place
+- [x] fix the line endind issues in markdown files like README.md
+- [x] write build-and-ci-design.md
+- [ ] implement changes per build-and-ci-design.md
 - [ ] See how this now interacts with JetBrains CLion (which seems to create a `cmake-build-debug` directory)
 - [ ] Codefy Change Quality Gates in AGENTS.md
 
