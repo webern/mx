@@ -100,7 +100,7 @@ define run_bin
 endef
 
 .DEFAULT_GOAL := help
-.PHONY: help lib dev core test test-core examples-run all clean check-tools fmt
+.PHONY: help lib dev core test test-core examples-run all clean check-tools check-format check-lint fmt lint
 
 help:
 	@echo 'mx build/test targets (see comments at the top of the Makefile for rationale):'
@@ -117,6 +117,7 @@ help:
 	@echo '  make clean          Remove the entire $(BUILD_ROOT)/ tree.'
 	@echo ''
 	@echo '  make fmt            Format all C++ files under Sourcecode/.'
+	@echo '  make lint           Run clang-tidy on all C++ files under Sourcecode/.'
 	@echo ''
 	@echo 'Knobs:  JOBS (=$(JOBS))  BUILD_TYPE (=$(BUILD_TYPE))  GENERATOR  ARGS'
 	@echo 'Layout: $(BUILD_ROOT)/<mode>/$(BUILD_TYPE)/'
@@ -159,17 +160,21 @@ clean:
 
 # --- Quality targets --------------------------------------------------------
 
-check-tools:
+check-format:
 	@command -v clang-format >/dev/null 2>&1 || \
 		{ echo "clang-format not found."; \
 		  echo "  macOS: brew install clang-format"; \
 		  echo "  Linux: sudo apt-get install clang-format"; \
 		  exit 1; }
+
+check-lint:
 	@command -v clang-tidy >/dev/null 2>&1 || \
 		{ echo "clang-tidy not found."; \
 		  echo "  macOS: brew install llvm"; \
 		  echo "  Linux: sudo apt-get install clang-tidy"; \
 		  exit 1; }
+
+check-tools: check-format check-lint
 
 FIND_CPP := find Sourcecode \
 	-path 'Sourcecode/private/cpul' -prune -o \
@@ -178,6 +183,10 @@ FIND_CPP := find Sourcecode \
 	-name 'pugiconfig.hpp' -prune -o \
 	-type f \( -name '*.cpp' -o -name '*.h' -o -name '*.hpp' \) -print
 
-fmt: check-tools
+fmt: check-format
 	@$(FIND_CPP) | xargs clang-format -i
 	@echo "Formatted all C++ files under Sourcecode/"
+
+lint: check-lint dev
+	@$(FIND_CPP) | xargs clang-tidy -p $(call mode_dir,dev)
+	@echo "Lint complete."

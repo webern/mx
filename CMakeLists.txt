@@ -3,6 +3,7 @@ project(mx)
 
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CPP_VERSION 17)
 
 option(MX_BUILD_TESTS "build or skip the test suite" OFF)
