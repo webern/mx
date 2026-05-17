@@ -18,7 +18,10 @@ This is the project plan for supporting MusicXML 4.0
 - [ ] monitor PR 145 after the force push
 
 - [ ] See how the project now interacts with JetBrains CLion (which seems to create a `cmake-build-debug` directory)
-- [ ] Codefy Change Quality Gates in AGENTS.md
+
+- [ ] Properly instruct coding agents about how many C++ symbols are involved, especially in mxcore. They need to use
+  techniques such as sampling to understand the codebase (sample certain elements at random, for exmple). They need
+  some estimate of how long different build operations will take on a normal laptop.
 
 ## Phase 1: Reverse Engineer Codegen
 
