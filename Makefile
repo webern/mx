@@ -59,6 +59,12 @@ CMAKE      ?= cmake
 BUILD_TYPE ?= Debug
 BUILD_ROOT := build
 
+# Detect Windows (MSYS2, Git Bash, Cygwin all report names starting with MS/MINGW/CYGWIN).
+IS_WINDOWS := $(if $(filter MINGW% MSYS% CYGWIN%,$(shell uname -s 2>/dev/null)),1,)
+ifdef OS
+IS_WINDOWS := $(if $(filter Windows_NT,$(OS)),1,$(IS_WINDOWS))
+endif
+
 # Portable CPU-count detection. Tried in order; the final echo always succeeds
 # (Windows cmd/PowerShell exports NUMBER_OF_PROCESSORS; otherwise fall back 4).
 JOBS ?= $(shell nproc 2>/dev/null \
@@ -179,7 +185,11 @@ check-lint:
 		  echo "  Linux: sudo apt-get install clang-tidy"; \
 		  exit 1; }
 
+ifndef IS_WINDOWS
 check-tools: check-format check-lint
+else
+check-tools: check-format
+endif
 
 FIND_CPP := find Sourcecode \
 	-path 'Sourcecode/private/cpul' -prune -o \
@@ -208,6 +218,7 @@ check: check-tools
 	@mkdir -p $(BUILD_ROOT)
 	@$(CMAKE) -S . -B $(call mode_dir,dev) \
 		-DCMAKE_BUILD_TYPE=$(BUILD_TYPE) \
+		-DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
 		-DMX_BUILD_TESTS=on \
 		-DMX_BUILD_CORE_TESTS=off \
 		-DMX_BUILD_EXAMPLES=on \
@@ -217,8 +228,10 @@ check: check-tools
 		if grep -q 'warning:' $(BUILD_ROOT)/build.log; then \
 			echo "ERROR: build emitted warnings (see above)"; exit 1; \
 		fi
+ifndef IS_WINDOWS
 	@echo "=== lint ==="
 	@$(FIND_CPP_LINT) | xargs clang-tidy -p $(call mode_dir,dev)
+endif
 	@echo "=== check passed ==="
 
 # --- Xcode targets ----------------------------------------------------------
