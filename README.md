@@ -8,8 +8,6 @@
 
 * * *
 
-[![CircleCI](https://circleci.com/gh/webern/mx.svg?style=svg)](https://circleci.com/gh/webern/mx)
-
 ## Introduction
 
 This project is a C++ library for working with MusicXML.
@@ -46,7 +44,7 @@ The `core` tests take a long time to compile. You only need them if you make cha
 `mx::core` namespace.
 
 Run targets build the needed mode first, then run binaries: `make test` (runs `mxtest`),
-`make test-core` (full `mxtest`), `make examples-run` (runs the examples), and `make all` (full
+`make test-all` (full `mxtest`), `make examples-run` (runs the examples), and `make all` (full
 build, examples, and full `mxtest`). `make clean` removes the build tree.
 
 Each mode builds into `build/<mode>/<BUILD_TYPE>` with its own cache and incremental state, so
@@ -93,7 +91,7 @@ git clone https://github.com/webern/mx.git mxtemp
 mkdir mx
 mv mxtemp/src mx/src
 mv mxtemp/.gitignore mx/.gitignore
-mv mxtemp/LICENSE.txt mx/LICENSE.txt
+mv mxtemp/LICENSE mx/LICENSE
 mv mxtemp/CMakeLists.txt mx/CMakeLists.txt
 # we don't need the test code, either
 rm -rf mx/src/private/mxtest

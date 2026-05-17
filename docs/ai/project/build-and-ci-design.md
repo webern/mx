@@ -219,8 +219,8 @@ Runner: `ubuntu-latest`
 | Full test suite | `make test-all` |
 
 Builds and runs the complete test suite including the slow `mx::core` tests using GCC (the system
-compiler). This provides GCC compilation coverage that the Docker gate job (which uses clang) does
-not.
+compiler). The Docker gate job runs `make test` (no core tests); this job runs `make test-all` and
+provides full test-suite coverage.
 
 #### macos (required - build + tests)
 
@@ -301,8 +301,8 @@ other tool installation is needed for quality gates.
 clang-tidy is not currently a quality gate. It was evaluated and removed because running it across
 the whole tree is not viable:
 
-- `src/private/mx/core/` holds ~1131 generated element `.cpp` files. clang-tidy over all of
-  them measured at roughly 8 s/file (~2.6 hours total).
+- `src/private/mx/core/` holds ~590 generated element `.cpp` files (1182 total including headers).
+  clang-tidy over all of them measured at roughly 8 s/file (~1.3 hours total).
 - With a `src/.*` header filter, clang-tidy re-parses shared headers once per translation
   unit and reports millions of duplicated diagnostics.
 - The generated `mx/core` code is slated for replacement by a future codegen rewrite, so linting it
