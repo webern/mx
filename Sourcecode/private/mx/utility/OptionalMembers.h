@@ -42,12 +42,12 @@
                                                                                                                        \
     template <class T>                                                                                                 \
     auto check##attributeFieldNameCapitalized(const T *const attributesRawPtr)                                         \
-        -> decltype(attributesRawPtr->attributeFieldName)                                                              \
+        ->decltype(attributesRawPtr->attributeFieldName)                                                               \
     {                                                                                                                  \
         return attributesRawPtr->attributeFieldName;                                                                   \
     }                                                                                                                  \
                                                                                                                        \
-    template <class T> inline auto check##attributeFieldNameCapitalized(...) -> attributeType                          \
+    template <class T> inline auto check##attributeFieldNameCapitalized(...)->attributeType                            \
     {                                                                                                                  \
         return defaultReturnValue;                                                                                     \
     }
@@ -58,12 +58,12 @@
                                           defaultReturnValue)                                                          \
                                                                                                                        \
     template <class T>                                                                                                 \
-    auto check##attributeFieldNameCapitalized(const T *const obj) -> decltype(obj->attributeFieldName.getValue())      \
+    auto check##attributeFieldNameCapitalized(const T *const obj)->decltype(obj->attributeFieldName.getValue())        \
     {                                                                                                                  \
         return obj->attributeFieldName.getValue();                                                                     \
     }                                                                                                                  \
                                                                                                                        \
-    template <class T> inline auto check##attributeFieldNameCapitalized(...) -> attributeType                          \
+    template <class T> inline auto check##attributeFieldNameCapitalized(...)->attributeType                            \
     {                                                                                                                  \
         return defaultReturnValue;                                                                                     \
     }
@@ -75,7 +75,7 @@
     template <class ATTRIBUTES_STRUCT, class VALUE_TYPE>                                                               \
     auto MXIMPLFUNC_lookForAndSet##attributeFieldNameCapitalized(                                                      \
         VALUE_TYPE valueToSet, ATTRIBUTES_STRUCT *const outAttributesRawPtr, int dummy)                                \
-        -> decltype(outAttributesRawPtr->attributeFieldName)                                                           \
+        ->decltype(outAttributesRawPtr->attributeFieldName)                                                            \
     {                                                                                                                  \
         MX_UNUSED(dummy);                                                                                              \
         outAttributesRawPtr->attributeFieldName = valueToSet;                                                          \
@@ -85,7 +85,7 @@
     template <class ATTRIBUTES_STRUCT, class VALUE_TYPE>                                                               \
     auto MXIMPLFUNC_lookForAndSet##attributeFieldNameCapitalized(                                                      \
         VALUE_TYPE valueToSet, ATTRIBUTES_STRUCT *const outAttributesRawPtr, long dummy)                               \
-        -> decltype(failureReturnValue)                                                                                \
+        ->decltype(failureReturnValue)                                                                                 \
     {                                                                                                                  \
         MX_UNUSED(outAttributesRawPtr);                                                                                \
         MX_UNUSED(dummy);                                                                                              \
@@ -96,7 +96,7 @@
     template <class ATTRIBUTES_STRUCT, class VALUE_TYPE>                                                               \
     auto lookForAndSet##attributeFieldNameCapitalized(VALUE_TYPE valueToSet,                                           \
                                                       ATTRIBUTES_STRUCT *const outAttributesRawPtr)                    \
-        -> decltype(MXIMPLFUNC_lookForAndSet##attributeFieldNameCapitalized(valueToSet, outAttributesRawPtr, 0))       \
+        ->decltype(MXIMPLFUNC_lookForAndSet##attributeFieldNameCapitalized(valueToSet, outAttributesRawPtr, 0))        \
     {                                                                                                                  \
         return MXIMPLFUNC_lookForAndSet##attributeFieldNameCapitalized(valueToSet, outAttributesRawPtr, 0);            \
     }
@@ -109,7 +109,7 @@
     template <class ATTRIBUTES_STRUCT, class VALUE_TYPE>                                                               \
     auto MXIMPLFUNC_lookForAndSet##attributeFieldNameCapitalized(                                                      \
         VALUE_TYPE valueToSet, ATTRIBUTES_STRUCT *const outAttributesRawPtr, int dummy)                                \
-        -> decltype(outAttributesRawPtr->attributeFieldName.setValue(valueToSet))                                      \
+        ->decltype(outAttributesRawPtr->attributeFieldName.setValue(valueToSet))                                       \
     {                                                                                                                  \
         MX_UNUSED(dummy);                                                                                              \
         outAttributesRawPtr->attributeFieldName.setValue(valueToSet);                                                  \
@@ -117,7 +117,8 @@
                                                                                                                        \
     template <class ATTRIBUTES_STRUCT, class VALUE_TYPE>                                                               \
     auto MXIMPLFUNC_lookForAndSet##attributeFieldNameCapitalized(                                                      \
-        VALUE_TYPE valueToSet, ATTRIBUTES_STRUCT *const outAttributesRawPtr, long dummy) -> decltype(void())           \
+        VALUE_TYPE valueToSet, ATTRIBUTES_STRUCT *const outAttributesRawPtr, long dummy)                               \
+        ->decltype(void())                                                                                             \
     {                                                                                                                  \
         MX_UNUSED(outAttributesRawPtr);                                                                                \
         MX_UNUSED(dummy);                                                                                              \
@@ -127,8 +128,8 @@
     template <class ATTRIBUTES_STRUCT, class VALUE_TYPE>                                                               \
     auto lookForAndSet##attributeFieldNameCapitalized(VALUE_TYPE valueToSet,                                           \
                                                       ATTRIBUTES_STRUCT *const outAttributesRawPtr)                    \
-        -> decltype(MXIMPLFUNC_lookForAndSet##attributeFieldNameCapitalized(valueToSet, outAttributesRawPtr, 0),       \
-                    void())                                                                                            \
+        ->decltype(MXIMPLFUNC_lookForAndSet##attributeFieldNameCapitalized(valueToSet, outAttributesRawPtr, 0),        \
+                   void())                                                                                             \
     {                                                                                                                  \
         MXIMPLFUNC_lookForAndSet##attributeFieldNameCapitalized(valueToSet, outAttributesRawPtr, 0);                   \
     }

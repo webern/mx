@@ -2,41 +2,36 @@
 
 ## Overview
 
-This document describes the formatting, linting, compiler-warning enforcement, and CI pipeline for
-mx. It also defines the quality gates that coding agents must satisfy when modifying `Sourcecode/`.
+This document describes the formatting, compiler-warning enforcement, and CI pipeline for mx. It
+also defines the quality gates that coding agents must satisfy when modifying `Sourcecode/`.
 
 ### Note on `mx/core/`
 
 The files in `Sourcecode/private/mx/core/` were originally machine-generated from the MusicXML XSD.
-The codegen program no longer exists. These files are now treated as normal hand-edited source and
-must pass all quality gates like any other code. A future codegen rewrite will re-own these files
-and will be written to emit code that passes the linter from the start.
+The codegen program no longer exists. These files are treated as normal hand-edited source for the
+current gates (formatting and compiler warnings) and must pass them like any other code. They are
+not linted (see Future Work). A future codegen rewrite will re-own these files and emit code that
+passes the gates from the start.
 
 ### Design Principle: One Authoritative Toolchain
 
-Running clang-tidy with one compiler's frontend against another compiler's standard library headers
-is fragile. clang-tidy IS a clang compiler frontend - it builds a full AST, performs template
-instantiation, and runs overload resolution. When it parses code against GCC's libstdc++, the two
-compilers can disagree on edge cases in template internals (e.g. whether `std::sort` requires copy
-assignment vs. move assignment in a particular code path). These disagreements produce spurious
-errors that don't reflect real code bugs.
+Compiler warning sets and clang-format behavior change between tool versions. CI runners
+(`ubuntu-latest`, `macos-latest`, `windows-latest`) float their toolchain versions, so a warning or
+formatting CI break can occur with no code change at all.
 
-Similarly, compiler warning sets and clang-format behavior can change between versions. CI runners
-(`ubuntu-latest`, `macos-latest`) float their toolchain versions, so a CI break can occur with no
-code change.
-
-To eliminate these fragility surfaces, all quality-gate tooling (formatting, linting, compiler
-warnings) runs inside a Docker container with pinned tool versions. This gives deterministic,
-reproducible results on any machine - local or CI. Platform-specific CI jobs only build and test.
+To eliminate that fragility, the quality-gate tooling (clang-format and the warning-enforcing
+compiler) runs inside a Docker container with pinned tool versions. This gives deterministic,
+reproducible results on any machine - local or CI. Platform-specific CI jobs only build and test
+with their native toolchains; they enforce no quality gates.
 
 * * *
 
 ## Toolchain (Docker)
 
-All quality-gate tools are pinned inside a Docker image built from the `Dockerfile` at the repo
-root. The image is based on Ubuntu 24.04 with clang-18 and uses libc++ (clang's own standard
-library) so that clang-tidy's frontend and the standard library headers are from the same
-toolchain.
+The quality-gate tools are pinned inside a Docker image built from the `Dockerfile` at the repo
+root. The image is Ubuntu 24.04 with clang-18, clang-format-18, and libc++. libc++ is used because
+the codebase compiles warning-free under clang-18 + libc++, and pinning the standard library keeps
+the `-Wall -Wextra` warning set deterministic.
 
 ### Formatting: clang-format
 
@@ -48,27 +43,16 @@ The one visible change from the historical style is the removal of spaces inside
 A `.clang-format` file at the repo root encodes this style. All C++ files under `Sourcecode/` are
 formatted, including generated files in `mx/core/`.
 
-### Linting: clang-tidy
+### Linting (deferred)
 
-clang-tidy reads `compile_commands.json` produced by CMake (`-DCMAKE_EXPORT_COMPILE_COMMANDS=ON`).
-This gives it the correct include paths, preprocessor defines, and C++ standard.
-
-The `.clang-tidy` file at the repo root enables a conservative starter set of checks:
-
-| Check group              | Purpose                                                         |
-|--------------------------|-----------------------------------------------------------------|
-| `bugprone-*`             | Flags likely bugs (suspicious constructs, error-prone patterns) |
-| `modernize-use-nullptr`  | Replace `NULL`/`0` with `nullptr`                               |
-| `modernize-use-override` | Add `override` to overriding virtual functions                  |
-| `performance-*`          | Common performance anti-patterns                                |
-
-The check set is intentionally narrow. It can be expanded as the codebase improves.
+clang-tidy is **not** a current quality gate. It was evaluated and removed because running it across
+the whole tree is not viable. See Future Work for the rationale and the intended scoped reintroduction.
 
 ### Compiler Warnings
 
 `CMakeLists.txt` adds `-Wall -Wextra` (GCC/Clang) or `/W4` (MSVC) to the `mx` target. Inside the
 Docker container, clang-18 is the compiler. `make check` treats any `warning:` line in the build
-output as a failure.
+output as a failure, and also fails on configure or build errors.
 
 ### CMake Version
 
@@ -85,11 +69,11 @@ Located at the repo root. Based on Ubuntu 24.04 with pinned clang-18 packages:
 
 - `clang-18`, `libc++-18-dev`, `libc++abi-18-dev` - compiler and standard library
 - `clang-format-18` - formatting
-- `clang-tidy-18` - linting
 - `cmake`, `make` - build tools
 
 The Dockerfile sets `ENV MX_RUNNING_IN_DOCKER=1`. The Makefile checks this variable to decide
-whether to run tools directly or to launch Docker.
+whether to run tools directly or to launch Docker. A `.dockerignore` allowlist keeps the build
+context to the source tree and build configuration only.
 
 ### BuildKit Cache
 
@@ -101,15 +85,15 @@ full recompiles on every `make check` run.
 
 The Makefile detects `MX_RUNNING_IN_DOCKER`:
 
-- **Inside the container** (`MX_RUNNING_IN_DOCKER=1`): runs clang-format, clang-tidy, and the
-  compiler directly.
+- **Inside the container** (`MX_RUNNING_IN_DOCKER=1`): runs clang-format and the compiler directly.
 - **Outside the container**: runs `docker buildx build` to build the image and execute the
   requested target inside it.
 
 For `make fmt`, which needs to write formatted files back to the host, the Makefile uses
-`docker buildx build --output type=local,dest=.` to extract the formatted `Sourcecode/` tree.
+`docker buildx build --output type=local,dest=.` to extract the formatted `Sourcecode/` tree from a
+`scratch` export stage (only `Sourcecode/` is written back).
 
-For `make check` and `make lint`, only the exit code matters - no file extraction needed.
+For `make check`, only the exit code matters - the build runs with `--output type=cacheonly`.
 
 * * *
 
@@ -135,12 +119,11 @@ natively with the local compiler.
 
 ### Quality Targets (Docker)
 
-| Target             | What it does                                                      |
-|--------------------|-------------------------------------------------------------------|
-| `make fmt`         | Formats all C++ files under `Sourcecode/` in-place via Docker     |
-| `make check`       | Full quality gate: fmt-check + warning-free build + lint (Docker) |
-| `make lint`        | Runs clang-tidy only (Docker)                                     |
-| `make clean-docker`| Removes the Docker image and buildx cache                         |
+| Target             | What it does                                                  |
+|--------------------|---------------------------------------------------------------|
+| `make fmt`         | Formats all C++ files under `Sourcecode/` in-place via Docker |
+| `make check`       | Quality gate: fmt-check + warning-free build (Docker)         |
+| `make clean-docker`| Removes the Docker buildx cache                               |
 
 `check-docker` is an internal prerequisite that verifies Docker is available on `PATH`.
 
@@ -171,19 +154,20 @@ natively with the local compiler.
 
 ### Housekeeping
 
-| Target             | What it does                         |
-|--------------------|--------------------------------------|
-| `make clean`       | Remove the entire `build/` tree      |
-| `make clean-docker`| Remove Docker image and buildx cache |
+| Target             | What it does                  |
+|--------------------|-------------------------------|
+| `make clean`       | Remove the entire `build/` tree |
+| `make clean-docker`| Remove the Docker buildx cache  |
 
 ### Knobs
 
-| Variable   | Default            | Purpose                                            |
-|------------|--------------------|----------------------------------------------------|
-| `JOBS`     | auto-detected      | Parallel compile jobs                              |
-| `BUILD_TYPE`| `Debug`           | CMake build type                                   |
-| `GENERATOR`| platform default   | CMake generator override                           |
-| `ARGS`     | (none)             | Forwarded to mxtest (Catch2)                       |
+| Variable    | Default          | Purpose                                            |
+|-------------|------------------|----------------------------------------------------|
+| `JOBS`      | auto-detected    | Parallel compile jobs                              |
+| `BUILD_TYPE`| `Debug`          | CMake build type                                   |
+| `GENERATOR` | platform default | CMake generator override                           |
+| `ARGS`      | (none)           | Forwarded to mxtest (Catch2)                       |
+| `DOCKER`    | `docker`         | Docker executable                                  |
 
 * * *
 
@@ -216,10 +200,11 @@ Runner: `ubuntu-latest`
 | Run tests       | `make test`    |
 
 The Makefile handles Docker internally - CI just runs `make check`. The Docker image is built
-from the repo's `Dockerfile` with BuildKit layer caching via GitHub Actions cache.
+from the repo's `Dockerfile` with BuildKit layer caching via GitHub Actions cache (the Makefile
+auto-detects `ACTIONS_RUNTIME_TOKEN` and enables the gha cache only when present).
 
-This is the authoritative quality gate. Formatting, linting, and compiler warnings are enforced
-here with pinned tool versions.
+This is the authoritative quality gate. Formatting and compiler warnings are enforced here with
+pinned tool versions.
 
 #### linux-core (required - full test suite with GCC)
 
@@ -299,8 +284,27 @@ If the change touches `Sourcecode/private/mx/core/`, run `make test-all` instead
 `make check` enforces:
 
 1. **Formatting** - all files must be formatted per `.clang-format`. `make fmt` fixes formatting.
-2. **Compiler warnings** - the build must emit no `warning:` lines.
-3. **Linting** - all clang-tidy checks in `.clang-tidy` must pass with zero warnings.
+2. **Compiler warnings** - the build must configure, compile, and emit no `warning:` lines.
 
 These commands require Docker. If Docker is not available, `make check` will report the error.
 No other tool installation is needed for quality gates.
+
+* * *
+
+## Future Work: scoped clang-tidy
+
+clang-tidy is not currently a quality gate. It was evaluated and removed because running it across
+the whole tree is not viable:
+
+- `Sourcecode/private/mx/core/` holds ~1131 generated element `.cpp` files. clang-tidy over all of
+  them measured at roughly 8 s/file (~2.6 hours total).
+- With a `Sourcecode/.*` header filter, clang-tidy re-parses shared headers once per translation
+  unit and reports millions of duplicated diagnostics.
+- The generated `mx/core` code is slated for replacement by a future codegen rewrite, so linting
+  it now has little value.
+
+The intended future direction is to reintroduce clang-tidy **scoped to the hand-written public API
+and implementation** - starting with `Sourcecode/include/mx/api/` (`mx/api`) - and explicitly
+**excluding generated `mx/core`**. Scoped that way the file count and header-filter scope are small
+enough to be a fast, useful gate. This is deferred and is not part of the current pipeline; the
+future codegen rewrite is expected to emit `mx/core` that would itself pass such a scoped lint.

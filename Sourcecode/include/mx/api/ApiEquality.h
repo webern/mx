@@ -82,7 +82,10 @@ inline void streamComparisonUnequalMessage(const char *const inClassName, const 
 #define MX_SHOW_UNEQUAL(XtheCurrentClassName, XmxapiMemberName)                                                        \
     streamComparisonUnequalMessage(XtheCurrentClassName, XmxapiMemberName);
 #else
-#define MX_SHOW_UNEQUAL(XtheCurrentClassName, XmxapiMemberName) {MX_API_UNUSED(XtheCurrentClassName)}
+#define MX_SHOW_UNEQUAL(XtheCurrentClassName, XmxapiMemberName)                                                        \
+    {                                                                                                                  \
+        MX_API_UNUSED(XtheCurrentClassName)                                                                            \
+    }
 #endif
 
 #define MXAPI_EQUALS_BEGIN(mxapiClassName)                                                                             \

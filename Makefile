@@ -16,11 +16,12 @@
 # Quality gates run in Docker
 # ----------------------------------------------------------------------------
 #
-# `make fmt`, `make check`, and `make lint` run inside a Docker container with
-# a pinned toolchain (Ubuntu 24.04 + clang-18 + libc++) so formatting, linting,
-# and compiler warnings are deterministic on any machine. The build/test
-# targets (`make test`, `make test-all`, ...) run natively with the local
-# compiler. See Documents/ai/project/build-and-ci-design.md.
+# `make fmt` and `make check` run inside a Docker container with a pinned
+# toolchain (Ubuntu 24.04 + clang-18 + libc++) so formatting and compiler
+# warnings are deterministic on any machine regardless of the floating CI
+# runner image. The build/test targets (`make test`, `make test-all`, ...)
+# run natively with the local compiler.
+# See Documents/ai/project/build-and-ci-design.md.
 #
 # ----------------------------------------------------------------------------
 # Build modes
@@ -122,7 +123,7 @@ endef
 
 .DEFAULT_GOAL := help
 .PHONY: help lib dev core test test-all examples-run all clean clean-docker \
-        check-docker fmt lint check xcode-gen xcode-build xcode-test
+        check-docker fmt check xcode-gen xcode-build xcode-test
 
 help:
 	@echo 'mx build/test targets (see the comments at the top of the Makefile):'
@@ -133,8 +134,7 @@ help:
 	@echo ''
 	@echo 'Quality gates (run in Docker, pinned toolchain):'
 	@echo '  make fmt            Format all C++ files under Sourcecode/.'
-	@echo '  make check          fmt-check + warning-free build + lint.'
-	@echo '  make lint           Run clang-tidy only.'
+	@echo '  make check          fmt-check + warning-free build.'
 	@echo ''
 	@echo 'Build (native):'
 	@echo '  make lib            Build just the static library (no tests/examples).'
@@ -201,7 +201,7 @@ clean-docker:
 
 # --- Quality targets --------------------------------------------------------
 #
-# fmt/check/lint run inside a pinned Docker toolchain. The Makefile detects
+# fmt/check run inside a pinned Docker toolchain. The Makefile detects
 # MX_RUNNING_IN_DOCKER (set by the Dockerfile): inside the container it runs
 # the tools directly; outside it builds the image and runs the target inside
 # it via `docker buildx build`.
@@ -212,11 +212,6 @@ FIND_CPP := find Sourcecode \
 	-name 'pugixml.hpp' -prune -o \
 	-name 'pugiconfig.hpp' -prune -o \
 	-type f \( -name '*.cpp' -o -name '*.h' -o -name '*.hpp' \) -print
-
-FIND_CPP_LINT := find Sourcecode \
-	-path 'Sourcecode/private/cpul' -prune -o \
-	-name 'pugixml.cpp' -prune -o \
-	-type f -name '*.cpp' -print
 
 check-docker:
 	@command -v $(DOCKER) >/dev/null 2>&1 || \
@@ -233,10 +228,6 @@ fmt:
 	@$(FIND_CPP) | xargs clang-format -i
 	@echo "Formatted all C++ files under Sourcecode/"
 
-lint: dev
-	@$(FIND_CPP_LINT) | xargs clang-tidy -p $(call mode_dir,dev)
-	@echo "Lint complete."
-
 check:
 	@echo "=== fmt-check ==="
 	@$(FIND_CPP) | xargs clang-format --dry-run --Werror
@@ -244,7 +235,6 @@ check:
 	@mkdir -p $(BUILD_ROOT)
 	@$(CMAKE) -S . -B $(call mode_dir,dev) \
 		-DCMAKE_BUILD_TYPE=$(BUILD_TYPE) \
-		-DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
 		-DMX_BUILD_TESTS=on \
 		-DMX_BUILD_CORE_TESTS=off \
 		-DMX_BUILD_EXAMPLES=on \
@@ -260,8 +250,6 @@ check:
 		if grep -q 'warning:' $(BUILD_ROOT)/build.log; then \
 			echo "ERROR: build emitted warnings (see above)"; exit 1; \
 		fi
-	@echo "=== lint ==="
-	@$(FIND_CPP_LINT) | xargs clang-tidy -p $(call mode_dir,dev)
 	@echo "=== check passed ==="
 
 else
@@ -273,12 +261,8 @@ fmt: check-docker
 		--output type=local,dest=. $(DOCKER_CACHE) .
 	@echo "Formatted all C++ files under Sourcecode/"
 
-lint: check-docker
-	$(DOCKER) buildx build --target run --build-arg MX_TARGET=lint \
-		--output type=cacheonly $(DOCKER_CACHE) .
-
 check: check-docker
-	$(DOCKER) buildx build --target run --build-arg MX_TARGET=check \
+	$(DOCKER) buildx build --target run \
 		--output type=cacheonly $(DOCKER_CACHE) .
 
 endif

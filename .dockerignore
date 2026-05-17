@@ -1,13 +1,12 @@
-# Keep the build context small and fast. The quality gates only need the
-# source tree plus the build configuration; tests are not run in Docker, so
-# the (large) MusicXML corpus and unrelated trees are excluded.
-build/
-.git/
-.github/
-Xcode/
-Documents/
-DevScripts/
-Resources/
-*.md
-.DS_Store
-.idea/
+# Allowlist: ignore everything, then re-include only what the quality gates
+# need (the source tree + build configuration). Tests are not run in Docker,
+# so the MusicXML corpus, the Rust CodeGen tool, IDE/build dirs, .git, etc.
+# are all excluded. This keeps the build context tiny and stable even when
+# stray build dirs (CLion's cmake-build-debug, etc.) appear at the repo root.
+*
+
+!Sourcecode
+!CMakeLists.txt
+!Makefile
+!.clang-format
+!Dockerfile

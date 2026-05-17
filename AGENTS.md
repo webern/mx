@@ -53,8 +53,9 @@ before considering the change complete. If the changes include anything under
 `Sourcecode/private/mx/core/`, use `make test-all` instead of `make test`.
 
 `make fmt` and `make check` run inside Docker (requires Docker on the host). No other tool
-installation is needed. `make check` enforces formatting (clang-format), zero compiler warnings,
-and lint (clang-tidy) using pinned tool versions.
+installation is needed. `make check` enforces formatting (clang-format) and zero compiler
+warnings using a pinned toolchain. (clang-tidy is deferred future work, scoped to `mx/api`
+only - see the design doc.)
 
 On `make check` failure, run `make fmt` to fix formatting, then address any remaining warnings
 manually.
