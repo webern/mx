@@ -21,7 +21,7 @@
 # warnings are deterministic on any machine regardless of the floating CI
 # runner image. The build/test targets (`make test`, `make test-all`, ...)
 # run natively with the local compiler.
-# See Documents/ai/project/build-and-ci-design.md.
+# See docs/ai/project/build-and-ci-design.md.
 #
 # ----------------------------------------------------------------------------
 # Build modes

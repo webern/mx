@@ -14,7 +14,7 @@
 # `docker buildx build --target ...`; inside the container (where
 # MX_RUNNING_IN_DOCKER=1) the same `make check` runs the tools directly.
 #
-# See Documents/ai/project/build-and-ci-design.md.
+# See docs/ai/project/build-and-ci-design.md.
 
 FROM ubuntu:24.04 AS base
 

@@ -39,7 +39,7 @@ tags.
 ### Repository, Build, and CI
 
 - Set up the repository for AI-assisted development: agent guides (`AGENTS.md`,
-  `Documents/ai/project/`) and a build/CI design document. [#145]
+  `docs/ai/project/`) and a build/CI design document. [#145]
 - Replace `build.sh` with a portable `Makefile` wrapping CMake (build modes, run targets, knobs);
   `make test` and `make test-all` also run the example programs. [#145]
 - Add a `.clang-format` (Microsoft base) and reformat the entire `Sourcecode/` tree; `make fmt`

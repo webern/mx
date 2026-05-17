@@ -21,7 +21,7 @@ Key paths in this repository:
 - `gen/version-b/` — Rust tool that generates the core element classes from the MusicXML XSD
 - `gen/version-b/src/` — Generator source: XSD parsing, model, and C++ emission
 - `Resources/` — MusicXML input files and expected-output suites for round-trip tests
-- `Documents/` — MusicXML XSD specifications and developer notes
+- `docs/` — MusicXML XSD specifications and developer notes
 - `DevScripts/` — Ruby and shell scripts for one-off code maintenance
 - `CMakeLists.txt` — CMake build configuration
 - `Makefile` — Primary build-and-test entry point (wraps CMake; `make help` lists targets)
@@ -63,10 +63,10 @@ design doc.)
 On `make check` failure, run `make fmt` to fix formatting, then address any remaining warnings
 manually.
 
-See `Documents/ai/project/build-and-ci-design.md` for full details on the CI pipeline and quality
+See `docs/ai/project/build-and-ci-design.md` for full details on the CI pipeline and quality
 gate design.
 
 ## The Project
 
 We are working on reverse engineering a new codegen system to regenerate mx/core for MusicXML 4.0.
-See the project directory @./Documents/ai/project/AGENTS.md
+See the project directory @./docs/ai/project/AGENTS.md

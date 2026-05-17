@@ -1,6 +1,6 @@
 require 'rexml/document'
 require 'rexml/xpath'
-doc = REXML::Document.new(File.new('../Documents/musicxml.xsd'))
+doc = REXML::Document.new(File.new('../docs/musicxml.xsd'))
 
 stuff = doc.elements.to_a
 
