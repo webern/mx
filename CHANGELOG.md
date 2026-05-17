@@ -176,16 +176,16 @@ items to do on the ximport feature are
 with most "round-trip" integration tests passing.
 
 **Historical Note: June 27, 2016:** An "integration" tester has been added to the MxTest executable.
-This exists in ImportTest.cpp, and ImportTestImpl.h/cpp. A top level directory "Resources" has been
+This exists in ImportTest.cpp, and ImportTestImpl.h/cpp. A top level directory "data" has been
 added to hold test input (i.e. "golden") files. The input files are gathered from Recordare,
 Lilypond and MuseScore and to this I have added a few of my own scores as exported by Finale Dolet.
 
 Each of these test input files has been "scrubbed" using the XDoc classes (i.e. it has been
 round-tripped through pugixml and has been updated to a normalized MusicXML 3.0 header format. The
-resultant scrubbed files are in Resources/expected. During the test run, a csv file is written in
-Resources/testOutput recording a row for each test (Pass/Fail, duration of test, messages, etc).
+resultant scrubbed files are in data/expected. During the test run, a csv file is written in
+data/testOutput recording a row for each test (Pass/Fail, duration of test, messages, etc).
 Each time a test failure is encountered the expected file and the error file will be saved to the
-Resources/testOutput directory to allow for visual inspection.
+data/testOutput directory to allow for visual inspection.
 
 Currently this tester is a "wire-up". All 263 of these round-trip import/export tests fail because
 the implementation does not yet exist in mx::core. The next body of work will be the mx::core

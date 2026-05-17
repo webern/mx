@@ -1,7 +1,7 @@
 require 'json'
 require 'stringio'
 
-j = JSON.parse( IO.read("../Resources/S-M-U-F-L/glyphnames.json"))
+j = JSON.parse( IO.read("../data/smufl/glyphnames.json"))
 
 content = StringIO.new
 

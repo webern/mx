@@ -20,7 +20,7 @@ Key paths in this repository:
 - `Sourcecode/private/cpul/` — Catch-based unit-test harness and test runner main
 - `gen/version-b/` — Rust tool that generates the core element classes from the MusicXML XSD
 - `gen/version-b/src/` — Generator source: XSD parsing, model, and C++ emission
-- `Resources/` — MusicXML input files and expected-output suites for round-trip tests
+- `data/` — MusicXML input files and expected-output suites for round-trip tests
 - `docs/` — MusicXML XSD specifications and developer notes
 - `DevScripts/` — Ruby and shell scripts for one-off code maintenance
 - `CMakeLists.txt` — CMake build configuration
