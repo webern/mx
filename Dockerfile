@@ -46,9 +46,9 @@ COPY . .
 FROM base AS run
 RUN --mount=type=cache,target=/workspace/build make check
 
-# --- fmt stage: format in place, then export only the Sourcecode tree -------
+# --- fmt stage: format in place, then export only the src tree -------
 FROM base AS fmt
 RUN --mount=type=cache,target=/workspace/build make fmt
 
 FROM scratch AS fmt-out
-COPY --from=fmt /workspace/Sourcecode /Sourcecode
+COPY --from=fmt /workspace/src /src

@@ -5,7 +5,7 @@
 # stray build dirs (CLion's cmake-build-debug, etc.) appear at the repo root.
 *
 
-!Sourcecode
+!src
 !CMakeLists.txt
 !Makefile
 !.clang-format

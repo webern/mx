@@ -7,7 +7,7 @@ and CI targets will lint, build, test and fmt the code.
 
 ## Note on mx/core/
 
-The files in `Sourcecode/private/mx/core/` were originally machine-generated from the MusicXML XSD.
+The files in `src/private/mx/core/` were originally machine-generated from the MusicXML XSD.
 The codegen program no longer exists. These files are normal hand-edited source now and must pass
 all quality gates. A future codegen rewrite will re-own them. Do not treat them as generated or
 read-only.

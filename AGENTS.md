@@ -6,18 +6,18 @@ A library for serializing and deserializing MusicXML in C++. The ./README.md fil
 
 Key paths in this repository:
 
-- `Sourcecode/` — Main C++ source tree (public API, core elements, implementation, tests)
-- `Sourcecode/include/mx/api/` — Public API headers: `*Data` structs and `DocumentManager` entry
+- `src/` — Main C++ source tree (public API, core elements, implementation, tests)
+- `src/include/mx/api/` — Public API headers: `*Data` structs and `DocumentManager` entry
   point
-- `Sourcecode/private/mx/api/` — Public API implementation backing the `include/mx/api` headers
-- `Sourcecode/private/mx/core/` — Strongly-typed MusicXML element classes (mostly code-generated)
-- `Sourcecode/private/mx/core/elements/` — Generated element classes, one pair per MusicXML element
+- `src/private/mx/api/` — Public API implementation backing the `include/mx/api` headers
+- `src/private/mx/core/` — Strongly-typed MusicXML element classes (mostly code-generated)
+- `src/private/mx/core/elements/` — Generated element classes, one pair per MusicXML element
   (1182 files)
-- `Sourcecode/private/mx/impl/` — Conversion layer mapping the core DOM to the public API
-- `Sourcecode/private/mx/ezxml/` — Embedded lightweight XML reader/writer used by the core
-- `Sourcecode/private/mx/utility/` — Shared helpers (string, parsing, file system utilities)
-- `Sourcecode/private/mxtest/` — Test suite (api, core, file, import, impl, control)
-- `Sourcecode/private/cpul/` — Catch-based unit-test harness and test runner main
+- `src/private/mx/impl/` — Conversion layer mapping the core DOM to the public API
+- `src/private/mx/ezxml/` — Embedded lightweight XML reader/writer used by the core
+- `src/private/mx/utility/` — Shared helpers (string, parsing, file system utilities)
+- `src/private/mxtest/` — Test suite (api, core, file, import, impl, control)
+- `src/private/cpul/` — Catch-based unit-test harness and test runner main
 - `gen/version-b/` — Rust tool that generates the core element classes from the MusicXML XSD
 - `gen/version-b/src/` — Generator source: XSD parsing, model, and C++ emission
 - `data/` — MusicXML input files and expected-output suites for round-trip tests
@@ -30,7 +30,7 @@ Key paths in this repository:
 
 ## Historical Context
 
-`Sourcecode/private/mx/core/` and `Sourcecode/private/mx/core/elements/` was originally
+`src/private/mx/core/` and `src/private/mx/core/elements/` was originally
 "hand-generated" by human brute-force using Ruby scripts which can still be found in `./DevScripts`.
 This was never a one-shot solution to generating the code from the XSD spec. Rather, it was an
 iterative process, solving problems encountered one-at-a-time until the XSD spec was entirely
@@ -42,18 +42,18 @@ historical nature of how the types were first generated.
 We are stuck somewhere around MusicXML 3.1 (or maybe 3.0) because we cannot reliably re-generate the
 types from a newer version of the specification. MusicxML 4.0 has been out for a long time, and we
 want to support it. But we need to write new code-gen tooling to reproduce the emission of the core
-types and then expose the new features in `Sourcecode/include/mx/api/`.
+types and then expose the new features in `src/include/mx/api/`.
 
 ## Quality Gates
 
-When modifying any file under `Sourcecode/`, run:
+When modifying any file under `src/`, run:
 
 ```
 make fmt && make check && make test
 ```
 
 before considering the change complete. If the changes include anything under
-`Sourcecode/private/mx/core/`, use `make test-all` instead of `make test`.
+`src/private/mx/core/`, use `make test-all` instead of `make test`.
 
 `make fmt` and `make check` run inside Docker (requires Docker on the host). No other tool
 installation is needed. `make check` enforces formatting (clang-format) and zero compiler warnings

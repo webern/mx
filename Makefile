@@ -141,7 +141,7 @@ help:
 	@echo '  (use make test-all instead of make test if you touched mx/core)'
 	@echo ''
 	@echo 'Quality gates (run in Docker, pinned toolchain):'
-	@echo '  make fmt            Format all C++ files under Sourcecode/.'
+	@echo '  make fmt            Format all C++ files under src/.'
 	@echo '  make check          fmt-check + warning-free build.'
 	@echo ''
 	@echo 'Build (native):'
@@ -212,8 +212,8 @@ clean-docker:
 # the tools directly; outside it builds the image and runs the target inside
 # it via `docker buildx build`.
 
-FIND_CPP := find Sourcecode \
-	-path 'Sourcecode/private/cpul' -prune -o \
+FIND_CPP := find src \
+	-path 'src/private/cpul' -prune -o \
 	-name 'pugixml.cpp' -prune -o \
 	-name 'pugixml.hpp' -prune -o \
 	-name 'pugiconfig.hpp' -prune -o \
@@ -232,7 +232,7 @@ ifdef MX_RUNNING_IN_DOCKER
 
 fmt:
 	@$(FIND_CPP) | xargs clang-format -i
-	@echo "Formatted all C++ files under Sourcecode/"
+	@echo "Formatted all C++ files under src/"
 
 check:
 	@echo "=== fmt-check ==="
@@ -265,7 +265,7 @@ else
 fmt: check-docker
 	$(DOCKER) buildx build --target fmt-out \
 		--output type=local,dest=. $(DOCKER_CACHE) .
-	@echo "Formatted all C++ files under Sourcecode/"
+	@echo "Formatted all C++ files under src/"
 
 check: check-docker
 	$(DOCKER) buildx build --target run \

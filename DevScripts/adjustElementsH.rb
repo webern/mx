@@ -1,12 +1,12 @@
 lines = []
 
-File.open("../Sourcecode/mx/core/Elements.h", "r") do |input_file|
+File.open("../src/mx/core/Elements.h", "r") do |input_file|
     input_file.each_line do |line|
     	lines << line
 	end
 end
 
-File.open("../Sourcecode/mx/core/Elements.h.replace", "w") do |f|
+File.open("../src/mx/core/Elements.h.replace", "w") do |f|
 	write_line = true
     lines.each do |line|
 

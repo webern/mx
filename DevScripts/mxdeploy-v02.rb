@@ -8,7 +8,7 @@ require 'fileutils'
 ###########################################################################
 
 name_mx_pkg = "mx-src-pkg"
-name_mx_src = "Sourcecode"
+name_mx_src = "src"
 name_mx_proj = "Xcode"
 
 dir_this_ruby_script = File.dirname(File.realpath(__FILE__))

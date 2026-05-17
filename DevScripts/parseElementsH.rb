@@ -21,7 +21,7 @@ end
 def parseElementsH
     declarations_found = []
 
-    File.open("../Sourcecode/mx/core/Elements.h", "r") do |f|
+    File.open("../src/mx/core/Elements.h", "r") do |f|
       f.each_with_index do |line, index|
         rx = /^\s*class\s[^\s\;]+/
         is_class = ( line =~ rx ) != nil

@@ -38,7 +38,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: build/
-          key: ${{ runner.os }}-core-${{ hashFiles('CMakeLists.txt', 'Sourcecode/**') }}
+          key: ${{ runner.os }}-core-${{ hashFiles('CMakeLists.txt', 'src/**') }}
           restore-keys: |
             ${{ runner.os }}-core-
 
@@ -56,7 +56,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: build/
-          key: ${{ runner.os }}-build-${{ hashFiles('CMakeLists.txt', 'Sourcecode/**') }}
+          key: ${{ runner.os }}-build-${{ hashFiles('CMakeLists.txt', 'src/**') }}
           restore-keys: |
             ${{ runner.os }}-build-
 

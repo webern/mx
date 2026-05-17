@@ -42,7 +42,7 @@ tags.
   `docs/ai/project/`) and a build/CI design document. [#145]
 - Replace `build.sh` with a portable `Makefile` wrapping CMake (build modes, run targets, knobs);
   `make test` and `make test-all` also run the example programs. [#145]
-- Add a `.clang-format` (Microsoft base) and reformat the entire `Sourcecode/` tree; `make fmt`
+- Add a `.clang-format` (Microsoft base) and reformat the entire `src/` tree; `make fmt`
   formats in place. [#145]
 - Add a pinned-toolchain Docker quality gate: `make check` runs a format check plus a warning-free
   `g++-14` build, reproducible regardless of the floating CI runner images. [#145]

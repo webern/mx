@@ -91,12 +91,12 @@ git clone https://github.com/webern/mx.git mxtemp
 # cmake file, the license, and the .gitignore file (helpful since there
 # is one generated file.)
 mkdir mx
-mv mxtemp/Sourcecode mx/Sourcecode
+mv mxtemp/src mx/src
 mv mxtemp/.gitignore mx/.gitignore
 mv mxtemp/LICENSE.txt mx/LICENSE.txt
 mv mxtemp/CMakeLists.txt mx/CMakeLists.txt
 # we don't need the test code, either
-rm -rf mx/Sourcecode/private/mxtest
+rm -rf mx/src/private/mxtest
 rm -rf mxtemp
 
 # commit the mx sourcecode to our project repo
@@ -141,7 +141,7 @@ set(CPP_VERSION 17)
 add_executable(my-musicxml-proj main.cpp)
 add_subdirectory(mx)
 target_link_libraries(my-musicxml-proj mx)
-target_include_directories(my-musicxml-proj PRIVATE mx/Sourcecode/include)
+target_include_directories(my-musicxml-proj PRIVATE mx/src/include)
 EOF
 
 # create a .gitignore file to ignore a build directory

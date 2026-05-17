@@ -5222,7 +5222,7 @@
 				29A8E29E1EF0476300AD2478 /* utility */,
 			);
 			name = mx;
-			path = ../Sourcecode/private/mx;
+			path = ../src/private/mx;
 			sourceTree = "<group>";
 		};
 		29A8DD581EF0475D00AD2478 /* api */ = {
@@ -6748,7 +6748,7 @@
 				9CD50C9F238A3D0A00ED7DD8 /* XForwardDeclare.h */,
 			);
 			name = ezxml;
-			path = ../Sourcecode/private/mx/ezxml/src/include/ezxml;
+			path = ../src/private/mx/ezxml/src/include/ezxml;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -10543,7 +10543,7 @@
 				);
 				OTHER_LDFLAGS = "";
 				SDKROOT = "";
-				USER_HEADER_SEARCH_PATHS = "$PROJECT_DIR/../Sourcecode/private $PROJECT_DIR/../Sourcecode/include $PROJECT_DIR/../Sourcecode/private/mx/ezxml/src/include $PROJECT_DIR/../Sourcecode/private/mx/ezxml/src/private";
+				USER_HEADER_SEARCH_PATHS = "$PROJECT_DIR/../src/private $PROJECT_DIR/../src/include $PROJECT_DIR/../src/private/mx/ezxml/src/include $PROJECT_DIR/../src/private/mx/ezxml/src/private";
 				VALID_ARCHS = "$(ARCHS_STANDARD)";
 			};
 			name = Debug;
@@ -10619,7 +10619,7 @@
 				);
 				OTHER_LDFLAGS = "";
 				SDKROOT = "";
-				USER_HEADER_SEARCH_PATHS = "$PROJECT_DIR/../Sourcecode/private $PROJECT_DIR/../Sourcecode/include $PROJECT_DIR/../Sourcecode/private/mx/ezxml/src/include $PROJECT_DIR/../Sourcecode/private/mx/ezxml/src/private";
+				USER_HEADER_SEARCH_PATHS = "$PROJECT_DIR/../src/private $PROJECT_DIR/../src/include $PROJECT_DIR/../src/private/mx/ezxml/src/include $PROJECT_DIR/../src/private/mx/ezxml/src/private";
 				VALID_ARCHS = "$(ARCHS_STANDARD)";
 			};
 			name = Release;

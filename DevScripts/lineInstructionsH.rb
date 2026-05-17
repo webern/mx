@@ -63,7 +63,7 @@ def lineInstructionsH
 
 	lines = []
 
-	File.open("../Sourcecode/mx/core/Elements.h", "r") do |f|
+	File.open("../src/mx/core/Elements.h", "r") do |f|
 	    f.each_line do |line|
 	    	lines << line
 		end

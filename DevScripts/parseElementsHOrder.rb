@@ -1,13 +1,13 @@
 lines = []
 
-File.open("../Sourcecode/mx/core/Elements.h", "r") do |input_file|
+File.open("../src/mx/core/Elements.h", "r") do |input_file|
     input_file.each_line do |line|
     	lines << line
 	end
 end
 
 i = 1
-#File.open("../Sourcecode/mx/core/Elements.h.order.csv", "w") do |f|
+#File.open("../src/mx/core/Elements.h.order.csv", "w") do |f|
 	write_line = true
     lines.each do |line|
     	

@@ -9,7 +9,7 @@ mx_repo_root = "/Users/mjb/Dropbox/Programming/MxRepo"
 komp_repo_root = "Users/mjb/komp"
 lib_ios = "libMx-iOS.a"
 lib_macOS = "libMx-macOS.a"
-mx_version_defines_h = "#{mx_repo_root}/Sourcecode/mx/impl/MxVersionDefines.h"
+mx_version_defines_h = "#{mx_repo_root}/src/mx/impl/MxVersionDefines.h"
 upload_dir = "/Users/mjb/Dropbox/Programming/MxKompDeploy"
 
 version_major = 0
@@ -119,7 +119,7 @@ FileUtils.cp(x86_64_a, "#{final_output_dir}")
 
 header_output_dir = "#{final_output_dir}/include/mx/api"
 FileUtils::mkdir_p header_output_dir
-FileUtils.copy_entry "#{mx_repo_root}/Sourcecode/mx/api", "#{header_output_dir}"
+FileUtils.copy_entry "#{mx_repo_root}/src/mx/api", "#{header_output_dir}"
 
 system( "cd \"#{build_root}\" && tar -zcvf \"#{final_name}.tar.gz\" \"#{final_name}\"" )
 

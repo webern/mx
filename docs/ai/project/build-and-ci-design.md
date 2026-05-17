@@ -3,11 +3,11 @@
 ## Overview
 
 This document describes the formatting, compiler-warning enforcement, and CI pipeline for mx. It
-also defines the quality gates that coding agents must satisfy when modifying `Sourcecode/`.
+also defines the quality gates that coding agents must satisfy when modifying `src/`.
 
 ### Note on `mx/core/`
 
-The files in `Sourcecode/private/mx/core/` were originally machine-generated from the MusicXML XSD.
+The files in `src/private/mx/core/` were originally machine-generated from the MusicXML XSD.
 The codegen program no longer exists. These files are treated as normal hand-edited source for the
 current gates (formatting and compiler warnings) and must pass them like any other code. They are
 not linted (see Future Work). A future codegen rewrite will re-own these files and emit code that
@@ -43,7 +43,7 @@ Style base: **Microsoft**. This is the closest standard clang-format style to th
 The one visible change from the historical style is the removal of spaces inside parentheses
 (`func( arg )` becomes `func(arg)`).
 
-A `.clang-format` file at the repo root encodes this style. All C++ files under `Sourcecode/` are
+A `.clang-format` file at the repo root encodes this style. All C++ files under `src/` are
 formatted, including generated files in `mx/core/`.
 
 ### Linting (deferred)
@@ -94,8 +94,8 @@ The Makefile detects `MX_RUNNING_IN_DOCKER`:
   target inside it.
 
 For `make fmt`, which needs to write formatted files back to the host, the Makefile uses
-`docker buildx build --output type=local,dest=.` to extract the formatted `Sourcecode/` tree from a
-`scratch` export stage (only `Sourcecode/` is written back).
+`docker buildx build --output type=local,dest=.` to extract the formatted `src/` tree from a
+`scratch` export stage (only `src/` is written back).
 
 For `make check`, only the exit code matters - the build runs with `--output type=cacheonly`.
 
@@ -105,13 +105,13 @@ For `make check`, only the exit code matters - the build runs with `--output typ
 
 ### Developer Workflow
 
-The standard workflow for any code change under `Sourcecode/`:
+The standard workflow for any code change under `src/`:
 
 ```
 make fmt && make check && make test
 ```
 
-If the change touches files under `Sourcecode/private/mx/core/`:
+If the change touches files under `src/private/mx/core/`:
 
 ```
 make fmt && make check && make test-all
@@ -125,7 +125,7 @@ natively with the local compiler.
 
 | Target              | What it does                                                  |
 |---------------------|---------------------------------------------------------------|
-| `make fmt`          | Formats all C++ files under `Sourcecode/` in-place via Docker |
+| `make fmt`          | Formats all C++ files under `src/` in-place via Docker |
 | `make check`        | Quality gate: fmt-check + warning-free build (Docker)         |
 | `make clean-docker` | Removes the Docker buildx cache                               |
 
@@ -266,7 +266,7 @@ layers change rarely, source code layers change frequently.
 Build-and-test jobs (linux-core, macos, windows) cache their `build/` directory:
 
 ```
-${{ runner.os }}-build-${{ hashFiles('CMakeLists.txt', 'Sourcecode/**') }}
+${{ runner.os }}-build-${{ hashFiles('CMakeLists.txt', 'src/**') }}
 ```
 
 ### Branch Protection
@@ -278,13 +278,13 @@ before merge. The **xcode** job is advisory. Merge strategy: regular merge commi
 
 ## Quality Gates for Coding Agents
 
-When modifying any file under `Sourcecode/`, an agent must run:
+When modifying any file under `src/`, an agent must run:
 
 ```
 make fmt && make check && make test
 ```
 
-If the change touches `Sourcecode/private/mx/core/`, run `make test-all` instead of `make test`.
+If the change touches `src/private/mx/core/`, run `make test-all` instead of `make test`.
 
 `make check` enforces:
 
@@ -301,15 +301,15 @@ other tool installation is needed for quality gates.
 clang-tidy is not currently a quality gate. It was evaluated and removed because running it across
 the whole tree is not viable:
 
-- `Sourcecode/private/mx/core/` holds ~1131 generated element `.cpp` files. clang-tidy over all of
+- `src/private/mx/core/` holds ~1131 generated element `.cpp` files. clang-tidy over all of
   them measured at roughly 8 s/file (~2.6 hours total).
-- With a `Sourcecode/.*` header filter, clang-tidy re-parses shared headers once per translation
+- With a `src/.*` header filter, clang-tidy re-parses shared headers once per translation
   unit and reports millions of duplicated diagnostics.
 - The generated `mx/core` code is slated for replacement by a future codegen rewrite, so linting it
   now has little value.
 
 The intended future direction is to reintroduce clang-tidy **scoped to the hand-written public API
-and implementation** - starting with `Sourcecode/include/mx/api/` (`mx/api`) - and explicitly
+and implementation** - starting with `src/include/mx/api/` (`mx/api`) - and explicitly
 **excluding generated `mx/core`**. Scoped that way the file count and header-filter scope are small
 enough to be a fast, useful gate. This is deferred and is not part of the current pipeline; the
 future codegen rewrite is expected to emit `mx/core` that would itself pass such a scoped lint.

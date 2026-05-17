@@ -15,7 +15,7 @@ def doIncludes io_object, line_info_object
 	element_classes = listElementClasses
 	lines = []
 
-	File.open("../Sourcecode/mx/core/Elements.h", "r") do |f|
+	File.open("../src/mx/core/Elements.h", "r") do |f|
     	f.each_line do |line|
     		lines << line
 		end
@@ -73,7 +73,7 @@ def writeCppFile class_name, original_file_lines, function_objects
 
 	line_info = line_info_selected[0]
 
-	File.open("../Sourcecode/mx/core/elements/#{class_name}.cpp", "w") do |f|
+	File.open("../src/mx/core/elements/#{class_name}.cpp", "w") do |f|
 		copywrite f
 		emptyLine f
 		includeH( f, class_name )
@@ -98,7 +98,7 @@ end
 
 lines = []
 
-File.open("../Sourcecode/mx/core/Elements.cpp", "r") do |f|
+File.open("../src/mx/core/Elements.cpp", "r") do |f|
     f.each_line do |line|
     	lines << line
 	end

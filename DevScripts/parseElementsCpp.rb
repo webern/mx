@@ -29,7 +29,7 @@ def parseElementsCpp
 
     cpp_functions = []
 
-    File.open("../Sourcecode/mx/core/Elements.cpp", "r") do |f|
+    File.open("../src/mx/core/Elements.cpp", "r") do |f|
       f.each_with_index do |line, index|
         
         rx_scope_operator = /([a-zA-Z0-9]+)\:\:([a-zA-Z0-9]+)/

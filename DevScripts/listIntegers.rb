@@ -4,7 +4,7 @@ def listIntegers
 
     item_list = SortedSet.new
 
-    File.open("../Sourcecode/mx/core/Integers.h", "r") do |f|
+    File.open("../src/mx/core/Integers.h", "r") do |f|
         f.each_line do |line|
         	rx = /^\s+class\s([a-zA-Z0-9]+)/
         	matches = line.match(rx)

@@ -10,7 +10,7 @@ require 'tmpdir'
 configuration = "Release"
 
 name_mx_pkg = "mx-version"
-name_mx_src = "Sourcecode"
+name_mx_src = "src"
 name_mx_proj = "Xcode"
 name_versioning_file = "current.txt"
 name_ios_target = "MxiOS"
@@ -24,7 +24,7 @@ dir_build = "/Users/mjb/mx-temp"
 dir_this_ruby_script = File.dirname(File.realpath(__FILE__))
 dir_mx_root = File.expand_path("#{dir_this_ruby_script}/..")
 file_mx_xcode_workspace = "#{dir_mx_root}/Xcode/mx.xcworkspace"
-file_mx_version_defines_h = "#{dir_mx_root}/Sourcecode/mx/impl/MxVersionDefines.h"
+file_mx_version_defines_h = "#{dir_mx_root}/src/mx/impl/MxVersionDefines.h"
 
 dir_komp_root = "/Users/mjb/repos/komp"
 dir_komp_mx = "#{dir_komp_root}/Frameworks/mx"
@@ -179,7 +179,7 @@ FileUtils::copy_entry(dir_osx_build_result, dir_komp_mx_osx_framework)
 FileUtils.rm_rf(dir_komp_mx_headers)
 FileUtils::mkdir_p "#{dir_komp_mx_headers}/mx/api"
 
-file_header_list = Dir["#{dir_mx_root}/Sourcecode/mx/api/*.h"]
+file_header_list = Dir["#{dir_mx_root}/src/mx/api/*.h"]
 
 file_header_list.each do |file_current_header|
   FileUtils.cp(file_current_header, "#{dir_komp_mx_headers}/mx/api")
@@ -220,8 +220,8 @@ open(file_version_hed, 'w') { |f|
 dir_code_copy_before_zipping = "#{dir_build}/#{name_mx_pkg}"
 name_zipped_filename = "#{name_mx_pkg}.tar.gz"
 file_zipped_source = "#{dir_build}/#{name_zipped_filename}"
-FileUtils.mkdir_p "#{dir_code_copy_before_zipping}/Sourcecode"
-FileUtils.cp_r "#{dir_mx_root}/Sourcecode", "#{dir_code_copy_before_zipping}/Sourcecode"
+FileUtils.mkdir_p "#{dir_code_copy_before_zipping}/src"
+FileUtils.cp_r "#{dir_mx_root}/src", "#{dir_code_copy_before_zipping}/src"
 FileUtils.mkdir_p "#{dir_code_copy_before_zipping}/Xcode"
 FileUtils.cp_r "#{dir_mx_root}/Xcode", "#{dir_code_copy_before_zipping}/Xcode"
 system( "cd \"#{dir_build}\" && tar -zcvf \"#{name_zipped_filename}\" \"#{name_mx_pkg}\"" )
