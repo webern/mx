@@ -48,6 +48,13 @@ tags.
   `g++-14` build, reproducible regardless of the floating CI runner images. [#145]
 - Replace the single workflow with a five-job GitHub Actions pipeline (Linux quality gate, Linux GCC
   full suite, macOS, Windows, advisory Xcode); archive the old workflow. [#145]
+- Rename repository directories to lowercase conventional names: `Sourcecode` -> `src`,
+  `Documents` -> `docs`, `Resources` -> `data`, `CodeGen` -> `gen/version-b`,
+  `DevScripts` -> `gen/version-a`, `Xcode` -> `xcode`.
+- Rename `LICENSE.txt` to `LICENSE`.
+- Fix stale information in `README.md` and `docs/ai/project/build-and-ci-design.md`: remove
+  CircleCI badge, correct `make test-core` to `make test-all`, correct `LICENSE.txt` reference,
+  fix incorrect compiler attribution in CI job description, fix element file count.
 - Add Apple `XCFramework` build support. [#124]
 - Update the Catch2 test library to v3.2.1. [#135]
 - Remove the CircleCI configuration. [#136]
