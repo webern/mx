@@ -29,12 +29,12 @@ with their native toolchains; they enforce no quality gates.
 ## Toolchain (Docker)
 
 The quality-gate tools are pinned inside a Docker image built from the `Dockerfile` at the repo
-root. The image is Ubuntu 24.04 with **g++-14** and clang-format-18. The gate compiles with GCC
-(not clang) so it uses the same compiler family and standard library (libstdc++) as the required
-Linux CI jobs - a `make check` pass locally therefore means the GCC jobs compile too. clang-tidy
-was previously the reason to use clang + libc++ here; with clang-tidy removed (see Future Work),
-GCC is the better choice because it removes the local-vs-CI portability blind spot. Pinning keeps
-the `-Wall -Wextra` warning set deterministic.
+root. The image is Ubuntu 24.04 with **g++-14** and clang-format-18. The gate compiles with GCC (not
+clang) so it uses the same compiler family and standard library (libstdc++) as the required Linux CI
+jobs - a `make check` pass locally therefore means the GCC jobs compile too. clang-tidy was
+previously the reason to use clang + libc++ here; with clang-tidy removed (see Future Work), GCC is
+the better choice because it removes the local-vs-CI portability blind spot. Pinning keeps the
+`-Wall -Wextra` warning set deterministic.
 
 ### Formatting: clang-format
 
@@ -49,7 +49,8 @@ formatted, including generated files in `mx/core/`.
 ### Linting (deferred)
 
 clang-tidy is **not** a current quality gate. It was evaluated and removed because running it across
-the whole tree is not viable. See Future Work for the rationale and the intended scoped reintroduction.
+the whole tree is not viable. See Future Work for the rationale and the intended scoped
+reintroduction.
 
 ### Compiler Warnings
 
@@ -89,8 +90,8 @@ full recompiles on every `make check` run.
 The Makefile detects `MX_RUNNING_IN_DOCKER`:
 
 - **Inside the container** (`MX_RUNNING_IN_DOCKER=1`): runs clang-format and the compiler directly.
-- **Outside the container**: runs `docker buildx build` to build the image and execute the
-  requested target inside it.
+- **Outside the container**: runs `docker buildx build` to build the image and execute the requested
+  target inside it.
 
 For `make fmt`, which needs to write formatted files back to the host, the Makefile uses
 `docker buildx build --output type=local,dest=.` to extract the formatted `Sourcecode/` tree from a
@@ -122,55 +123,55 @@ natively with the local compiler.
 
 ### Quality Targets (Docker)
 
-| Target             | What it does                                                  |
-|--------------------|---------------------------------------------------------------|
-| `make fmt`         | Formats all C++ files under `Sourcecode/` in-place via Docker |
-| `make check`       | Quality gate: fmt-check + warning-free build (Docker)         |
-| `make clean-docker`| Removes the Docker buildx cache                               |
+| Target              | What it does                                                  |
+|---------------------|---------------------------------------------------------------|
+| `make fmt`          | Formats all C++ files under `Sourcecode/` in-place via Docker |
+| `make check`        | Quality gate: fmt-check + warning-free build (Docker)         |
+| `make clean-docker` | Removes the Docker buildx cache                               |
 
 `check-docker` is an internal prerequisite that verifies Docker is available on `PATH`.
 
 ### Build Targets (Native)
 
-| Target             | What it does                                                      |
-|--------------------|-------------------------------------------------------------------|
-| `make lib`         | Build just the static library (no tests, no examples)             |
-| `make dev`         | Build tests (no slow core tests) + examples                       |
-| `make core`        | Build the full suite including slow `mx::core` tests              |
+| Target      | What it does                                          |
+|-------------|-------------------------------------------------------|
+| `make lib`  | Build just the static library (no tests, no examples) |
+| `make dev`  | Build tests (no slow core tests) + examples           |
+| `make core` | Build the full suite including slow `mx::core` tests  |
 
 ### Run Targets (Native)
 
-| Target              | What it does                                                     |
-|---------------------|------------------------------------------------------------------|
-| `make test`         | Build dev, run examples + mxtest. `ARGS=` forwarded             |
-| `make test-all`     | Build core, run examples + full mxtest. `ARGS=` forwarded       |
-| `make examples-run` | Build dev, then run mxread/mxwrite/mxhide                       |
-| `make all`          | Build core, run examples, run full mxtest                        |
+| Target              | What it does                                              |
+|---------------------|-----------------------------------------------------------|
+| `make test`         | Build dev, run examples + mxtest. `ARGS=` forwarded       |
+| `make test-all`     | Build core, run examples + full mxtest. `ARGS=` forwarded |
+| `make examples-run` | Build dev, then run mxread/mxwrite/mxhide                 |
+| `make all`          | Build core, run examples, run full mxtest                 |
 
 ### Xcode Targets (Native)
 
 | Target             | What it does                                  |
 |--------------------|-----------------------------------------------|
-| `make xcode-gen`   | Runs `cmake -G Xcode -S . -B build/xcode`    |
+| `make xcode-gen`   | Runs `cmake -G Xcode -S . -B build/xcode`     |
 | `make xcode-build` | Builds the generated project via `xcodebuild` |
 | `make xcode-test`  | Runs tests via `xcodebuild test`              |
 
 ### Housekeeping
 
-| Target             | What it does                  |
-|--------------------|-------------------------------|
-| `make clean`       | Remove the entire `build/` tree |
-| `make clean-docker`| Remove the Docker buildx cache  |
+| Target              | What it does                    |
+|---------------------|---------------------------------|
+| `make clean`        | Remove the entire `build/` tree |
+| `make clean-docker` | Remove the Docker buildx cache  |
 
 ### Knobs
 
-| Variable    | Default          | Purpose                                            |
-|-------------|------------------|----------------------------------------------------|
-| `JOBS`      | auto-detected    | Parallel compile jobs                              |
-| `BUILD_TYPE`| `Debug`          | CMake build type                                   |
-| `GENERATOR` | platform default | CMake generator override                           |
-| `ARGS`      | (none)           | Forwarded to mxtest (Catch2)                       |
-| `DOCKER`    | `docker`         | Docker executable                                  |
+| Variable     | Default          | Purpose                      |
+|--------------|------------------|------------------------------|
+| `JOBS`       | auto-detected    | Parallel compile jobs        |
+| `BUILD_TYPE` | `Debug`          | CMake build type             |
+| `GENERATOR`  | platform default | CMake generator override     |
+| `ARGS`       | (none)           | Forwarded to mxtest (Catch2) |
+| `DOCKER`     | `docker`         | Docker executable            |
 
 * * *
 
@@ -197,13 +198,13 @@ CI runs on every PR update and on every push to `master`.
 
 Runner: `ubuntu-latest`
 
-| Step            | Command        |
-|-----------------|----------------|
-| Quality gate    | `make check`   |
-| Run tests       | `make test`    |
+| Step         | Command      |
+|--------------|--------------|
+| Quality gate | `make check` |
+| Run tests    | `make test`  |
 
-The Makefile handles Docker internally - CI just runs `make check`. The Docker image is built
-from the repo's `Dockerfile` with BuildKit layer caching via GitHub Actions cache (the Makefile
+The Makefile handles Docker internally - CI just runs `make check`. The Docker image is built from
+the repo's `Dockerfile` with BuildKit layer caching via GitHub Actions cache (the Makefile
 auto-detects `ACTIONS_RUNTIME_TOKEN` and enables the gha cache only when present).
 
 This is the authoritative quality gate. Formatting and compiler warnings are enforced here with
@@ -213,21 +214,21 @@ pinned tool versions.
 
 Runner: `ubuntu-latest`
 
-| Step            | Command        |
-|-----------------|----------------|
-| Full test suite | `make test-all`|
+| Step            | Command         |
+|-----------------|-----------------|
+| Full test suite | `make test-all` |
 
-Builds and runs the complete test suite including the slow `mx::core` tests using GCC (the
-system compiler). This provides GCC compilation coverage that the Docker gate job (which uses
-clang) does not.
+Builds and runs the complete test suite including the slow `mx::core` tests using GCC (the system
+compiler). This provides GCC compilation coverage that the Docker gate job (which uses clang) does
+not.
 
 #### macos (required - build + tests)
 
 Runner: `macos-latest`
 
-| Step            | Command     |
-|-----------------|-------------|
-| Run tests       | `make test` |
+| Step      | Command     |
+|-----------|-------------|
+| Run tests | `make test` |
 
 Builds and tests with the system clang. `make test` runs the example programs in addition to
 `mxtest`, so the examples are exercised on every platform that runs tests (not just macOS). No
@@ -237,10 +238,10 @@ quality gates - those are enforced by linux-gate.
 
 Runner: `windows-latest`
 
-| Step            | Command    |
-|-----------------|------------|
-| Install make    | `choco install make` |
-| Run tests       | `make test`|
+| Step         | Command              |
+|--------------|----------------------|
+| Install make | `choco install make` |
+| Run tests    | `make test`          |
 
 Builds and tests with MSVC. No quality gates.
 
@@ -290,8 +291,8 @@ If the change touches `Sourcecode/private/mx/core/`, run `make test-all` instead
 1. **Formatting** - all files must be formatted per `.clang-format`. `make fmt` fixes formatting.
 2. **Compiler warnings** - the build must configure, compile, and emit no `warning:` lines.
 
-These commands require Docker. If Docker is not available, `make check` will report the error.
-No other tool installation is needed for quality gates.
+These commands require Docker. If Docker is not available, `make check` will report the error. No
+other tool installation is needed for quality gates.
 
 * * *
 
@@ -304,8 +305,8 @@ the whole tree is not viable:
   them measured at roughly 8 s/file (~2.6 hours total).
 - With a `Sourcecode/.*` header filter, clang-tidy re-parses shared headers once per translation
   unit and reports millions of duplicated diagnostics.
-- The generated `mx/core` code is slated for replacement by a future codegen rewrite, so linting
-  it now has little value.
+- The generated `mx/core` code is slated for replacement by a future codegen rewrite, so linting it
+  now has little value.
 
 The intended future direction is to reintroduce clang-tidy **scoped to the hand-written public API
 and implementation** - starting with `Sourcecode/include/mx/api/` (`mx/api`) - and explicitly
