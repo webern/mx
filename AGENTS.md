@@ -26,7 +26,7 @@ Key paths in this repository:
 - `CMakeLists.txt` — CMake build configuration
 - `Makefile` — Primary build-and-test entry point (wraps CMake; `make help` lists targets)
 - `README.md` — Project overview, build instructions, and usage examples
-- `Xcode/` — Xcode project and workspace files for macOS/iOS builds
+- `xcode/` — Xcode project and workspace files for macOS/iOS builds
 
 ## Historical Context
 

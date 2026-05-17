@@ -4,6 +4,7 @@ use std::path::{Path, PathBuf};
 pub fn repo() -> PathBuf {
     let mut p = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     p.pop();
+    p.pop();
     p.canonicalize().unwrap()
 }
 
@@ -24,7 +25,7 @@ pub struct Paths {
 impl Default for Paths {
     fn default() -> Self {
         let r = repo();
-        let core = r.join("Sourcecode").join("private").join("mx").join("core");
+        let core = r.join("src").join("private").join("mx").join("core");
         Self {
             repo: r,
             core: core.clone(),
@@ -34,8 +35,8 @@ impl Default for Paths {
             integers_cpp: core.join("Integers.cpp"),
             decimals_h: core.join("Decimals.h"),
             decimals_cpp: core.join("Decimals.cpp"),
-            xsd_3_0: repo().join("Documents").join("musicxml.xsd"),
-            xsd_3_1: repo().join("Documents").join("musicxml-3.1.xsd"),
+            xsd_3_0: repo().join("docs").join("musicxml.xsd"),
+            xsd_3_1: repo().join("docs").join("musicxml-3.1.xsd"),
         }
     }
 }

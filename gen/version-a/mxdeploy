@@ -38,4 +38,4 @@ rm -rf /Users/mjb/komp/Frameworks/mx/headers/
 mkdir /Users/mjb/komp/Frameworks/mx/headers
 mkdir /Users/mjb/komp/Frameworks/mx/headers/mx
 mkdir /Users/mjb/komp/Frameworks/mx/headers/mx/api
-cp /Users/mjb/Dropbox/Programming/MxRepo/Sourcecode/mx/api/*.h  /Users/mjb/komp/Frameworks/mx/headers/mx/api
+cp /Users/mjb/Dropbox/Programming/MxRepo/src/mx/api/*.h  /Users/mjb/komp/Frameworks/mx/headers/mx/api

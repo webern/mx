@@ -93,14 +93,14 @@ jobs:
         cache-name: cargo-home
       with:
         path: ./xcode-build
-        key: ${{ hashFiles('.github/cache-bust') }}-${{ hashFiles('Xcode/mx.xcworkspace', 'Xcode/Mx.xcodeproj', 'Xcode/MxTest.xcodeproj') }}-${{ hashFiles('Sourcecode/*') }}
+        key: ${{ hashFiles('.github/cache-bust') }}-${{ hashFiles('xcode/mx.xcworkspace', 'xcode/Mx.xcodeproj', 'xcode/MxTest.xcodeproj') }}-${{ hashFiles('src/*') }}
         restore-keys: |
-          ${{ hashFiles('.github/cache-bust') }}-${{ hashFiles('Xcode/mx.xcworkspace', 'Xcode/Mx.xcodeproj', 'Xcode/MxTest.xcodeproj') }}-
+          ${{ hashFiles('.github/cache-bust') }}-${{ hashFiles('xcode/mx.xcworkspace', 'xcode/Mx.xcodeproj', 'xcode/MxTest.xcodeproj') }}-
           ${{ hashFiles('.github/cache-bust') }}-
 
     - name: Build
       run: |
-          DevScripts/build-for-apple.sh \
+          gen/version-a/build-for-apple.sh \
           --outdir ./xcode-out \
           --build-dir ./xcode-build \
           --test false \

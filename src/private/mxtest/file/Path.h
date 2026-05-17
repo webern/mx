@@ -20,7 +20,7 @@ inline const std::string getResourcesDirectoryPath()
 {
     std::stringstream ss;
     ss << MX_REPO_ROOT_PATH << FILE_PATH_SEPARATOR;
-    ss << "Resources" << FILE_PATH_SEPARATOR;
+    ss << "data" << FILE_PATH_SEPARATOR;
     return ss.str();
 }
 
