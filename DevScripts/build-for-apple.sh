@@ -111,7 +111,7 @@ set_variables() {
   # directories
   this_script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
   mx_dir="${this_script_dir}/.."
-  xcworkspace="${mx_dir}/Xcode/mx.xcworkspace"
+  xcworkspace="${mx_dir}/xcode/mx.xcworkspace"
 
   # artifact names
   ios_name="MxiOS"

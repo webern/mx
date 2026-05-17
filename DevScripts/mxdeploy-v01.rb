@@ -64,7 +64,7 @@ version = "#{version_major}.#{version_minor}.#{version_patch}.#{version_build}"
 puts "building version #{version}"
 
 build_ios = "xcodebuild \
-	-workspace #{mx_repo_root}/Xcode/mx.xcworkspace \
+	-workspace #{mx_repo_root}/xcode/mx.xcworkspace \
 	-scheme Mx-iOS \
 	build \
 	-derivedDataPath #{build_root} \
@@ -79,7 +79,7 @@ if !is_success
 end
 
 build_mac = "xcodebuild \
-	-workspace #{mx_repo_root}/Xcode/mx.xcworkspace \
+	-workspace #{mx_repo_root}/xcode/mx.xcworkspace \
 	-scheme Mx-macOS \
 	build \
 	-derivedDataPath #{build_root} \

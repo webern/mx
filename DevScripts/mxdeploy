@@ -3,7 +3,7 @@ rm -rf /Users/mjb/MxBin/Build/Products/
 
 # build iOS
 xcodebuild \
-	-workspace ~/Dropbox/Programming/MxRepo/Xcode/mx.xcworkspace \
+	-workspace ~/Dropbox/Programming/MxRepo/xcode/mx.xcworkspace \
 	-scheme dylib-iOS \
 	build \
 	-derivedDataPath ~/MxBin \
@@ -23,7 +23,7 @@ rm -rf /Users/mjb/MxBin/Build/Products/Debug-iphonesimulator
 
 # build macOS
 xcodebuild \
-	-workspace ~/Dropbox/Programming/MxRepo/Xcode/mx.xcworkspace \
+	-workspace ~/Dropbox/Programming/MxRepo/xcode/mx.xcworkspace \
 	-scheme dylib-macOS \
 	build \
 	-derivedDataPath ~/MxBin \

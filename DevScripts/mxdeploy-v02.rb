@@ -9,7 +9,7 @@ require 'fileutils'
 
 name_mx_pkg = "mx-src-pkg"
 name_mx_src = "src"
-name_mx_proj = "Xcode"
+name_mx_proj = "xcode"
 
 dir_this_ruby_script = File.dirname(File.realpath(__FILE__))
 dir_mx_root = "#{dir_this_ruby_script}/.."
@@ -67,7 +67,7 @@ puts "deploying #{name_mx_pkg}"
 
 ###########################################################################
 #
-# Copy sourcecode and Xcode projects to a temporary directory, then zip the
+# Copy sourcecode and xcode projects to a temporary directory, then zip the
 # the temporary directory and delete the unzipped version.
 #
 ###########################################################################
