@@ -18,8 +18,8 @@ Key paths in this repository:
 - `Sourcecode/private/mx/utility/` — Shared helpers (string, parsing, file system utilities)
 - `Sourcecode/private/mxtest/` — Test suite (api, core, file, import, impl, control)
 - `Sourcecode/private/cpul/` — Catch-based unit-test harness and test runner main
-- `CodeGen/` — Rust tool that generates the core element classes from the MusicXML XSD
-- `CodeGen/src/` — Generator source: XSD parsing, model, and C++ emission
+- `gen/version-b/` — Rust tool that generates the core element classes from the MusicXML XSD
+- `gen/version-b/src/` — Generator source: XSD parsing, model, and C++ emission
 - `Resources/` — MusicXML input files and expected-output suites for round-trip tests
 - `Documents/` — MusicXML XSD specifications and developer notes
 - `DevScripts/` — Ruby and shell scripts for one-off code maintenance

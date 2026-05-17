@@ -1,6 +1,6 @@
 # Allowlist: ignore everything, then re-include only what the quality gates
 # need (the source tree + build configuration). Tests are not run in Docker,
-# so the MusicXML corpus, the Rust CodeGen tool, IDE/build dirs, .git, etc.
+# so the MusicXML corpus, the Rust gen/version-b codegen tool, IDE/build dirs, .git, etc.
 # are all excluded. This keeps the build context tiny and stable even when
 # stray build dirs (CLion's cmake-build-debug, etc.) appear at the repo root.
 *
