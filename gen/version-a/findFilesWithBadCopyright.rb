@@ -18,15 +18,15 @@ regexify expected_identifier
 regexify expected_copyright
 
 directories = [
-	"../src/mx/core",
-	"../src/mx/core/elements",
-	"../src/mx/xml",
-	"../src/mx/utility",	
-	"../src/mxtest/utility",	
-	"../src/mxtest/core",	
-	"../src/mxtest/xml",	
-	"../src/mxtest/control",	
-	"../src/mxtest/import"
+	"../../src/mx/core",
+	"../../src/mx/core/elements",
+	"../../src/mx/xml",
+	"../../src/mx/utility",	
+	"../../src/mxtest/utility",	
+	"../../src/mxtest/core",	
+	"../../src/mxtest/xml",	
+	"../../src/mxtest/control",	
+	"../../src/mxtest/import"
 ]
 
 bad_files = []

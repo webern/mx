@@ -1,7 +1,7 @@
 require 'json'
 require 'stringio'
 
-j = JSON.parse( IO.read("../data/smufl/glyphnames.json"))
+j = JSON.parse( IO.read("../../data/smufl/glyphnames.json"))
 
 content = StringIO.new
 
@@ -43,7 +43,7 @@ content << "    }\n"
 content << "}\n"
 
 begin
-  file = File.open("../src/mx/impl/S-M-U-F-LGlyphMap.h", "w")
+  file = File.open("../../src/mx/impl/S-M-U-F-LGlyphMap.h", "w")
   file.write(content.string) 
 rescue IOError => e
   #some error occur, dir not writable etc.

@@ -12,7 +12,7 @@ name_mx_src = "src"
 name_mx_proj = "xcode"
 
 dir_this_ruby_script = File.dirname(File.realpath(__FILE__))
-dir_mx_root = "#{dir_this_ruby_script}/.."
+dir_mx_root = "#{dir_this_ruby_script}/../.."
 dir_mx_src = "#{dir_mx_root}/#{name_mx_src}"
 dir_mx_proj = "#{dir_mx_root}/#{name_mx_proj}"
 dir_komp_root = "/Users/mjb/komp"

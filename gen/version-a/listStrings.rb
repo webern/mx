@@ -1,10 +1,10 @@
 require "set"
 
-def listDecimals
+def listStrings
 
     item_list = SortedSet.new
 
-    File.open("../src/mx/core/Decimals.h", "r") do |f|
+    File.open("../../src/mx/core/Strings.h", "r") do |f|
         f.each_line do |line|
         	rx = /^\s+class\s([a-zA-Z0-9]+)/
         	matches = line.match(rx)
@@ -27,13 +27,13 @@ def listDecimals
     	end
     end
 
-    item_list.delete("impl")
-    item_list << "kDefaultPrecision"
-    item_list << "kNonZeroAmount"
-    return item_list
+    #item_list.delete("impl")
+    #item_list << "kDefaultPrecision"
+    #item_list << "kNonZeroAmount"
+    item_list
 end
 
 
-#listDecimals.each do |d|
+#listStrings.each do |d|
 #	puts d
 #end

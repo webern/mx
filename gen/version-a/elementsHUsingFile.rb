@@ -2,7 +2,7 @@
 
 def elementsHUsingFile( alias_symbol, actual_symbol )
 	# one off stupid files for using statements
-	File.open("../src/mx/core/elements/#{alias_symbol}.h", "w") do |stupid_one_off_file|
+	File.open("../../src/mx/core/elements/#{alias_symbol}.h", "w") do |stupid_one_off_file|
 		stupid_one_off_file << "// MusicXML Class Library v0.1.1" << "\n"
 		stupid_one_off_file << "// Copyright (c) 2015 - 2016 by Matthew James Briggs" << "\n"
 		stupid_one_off_file << "" << "\n"

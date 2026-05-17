@@ -1,6 +1,6 @@
 require_relative 'attributes.rb'
 require 'pathname'
-paths = Dir["../src/mx/core/elements/*.h"]
+paths = Dir["../../src/mx/core/elements/*.h"]
 
 names = []
 

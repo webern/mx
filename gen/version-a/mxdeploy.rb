@@ -22,7 +22,7 @@ name_osx_framework = "#{name_osx_target}.framework"
 
 dir_build = "/Users/mjb/mx-temp"
 dir_this_ruby_script = File.dirname(File.realpath(__FILE__))
-dir_mx_root = File.expand_path("#{dir_this_ruby_script}/..")
+dir_mx_root = File.expand_path("#{dir_this_ruby_script}/../..")
 file_mx_xcode_workspace = "#{dir_mx_root}/xcode/mx.xcworkspace"
 file_mx_version_defines_h = "#{dir_mx_root}/src/mx/impl/MxVersionDefines.h"
 

@@ -22,7 +22,7 @@ Key paths in this repository:
 - `gen/version-b/src/` — Generator source: XSD parsing, model, and C++ emission
 - `data/` — MusicXML input files and expected-output suites for round-trip tests
 - `docs/` — MusicXML XSD specifications and developer notes
-- `DevScripts/` — Ruby and shell scripts for one-off code maintenance
+- `gen/version-a/` — Ruby and shell scripts for one-off code maintenance
 - `CMakeLists.txt` — CMake build configuration
 - `Makefile` — Primary build-and-test entry point (wraps CMake; `make help` lists targets)
 - `README.md` — Project overview, build instructions, and usage examples
@@ -31,7 +31,7 @@ Key paths in this repository:
 ## Historical Context
 
 `src/private/mx/core/` and `src/private/mx/core/elements/` was originally
-"hand-generated" by human brute-force using Ruby scripts which can still be found in `./DevScripts`.
+"hand-generated" by human brute-force using Ruby scripts which can still be found in `./gen/version-a`.
 This was never a one-shot solution to generating the code from the XSD spec. Rather, it was an
 iterative process, solving problems encountered one-at-a-time until the XSD spec was entirely
 covered. As such, it is not viable for re-use at this time, but can be used to understand the

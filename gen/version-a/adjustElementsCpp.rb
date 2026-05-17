@@ -1,12 +1,12 @@
 lines = []
 
-File.open("../src/mx/core/Elements.cpp", "r") do |input_file|
+File.open("../../src/mx/core/Elements.cpp", "r") do |input_file|
     input_file.each_line do |line|
     	lines << line
 	end
 end
 
-File.open("../src/mx/core/Elements.cpp.replace", "w") do |f|
+File.open("../../src/mx/core/Elements.cpp.replace", "w") do |f|
 	write_line = true
     lines.each do |line|
 

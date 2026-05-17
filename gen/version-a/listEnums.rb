@@ -4,7 +4,7 @@ def listEnums
 
     enum_list = SortedSet.new
 
-    File.open("../src/mx/core/Enums.h", "r") do |f|
+    File.open("../../src/mx/core/Enums.h", "r") do |f|
         f.each_line do |line|
         	rx = /^\s+enum\sclass\s([a-zA-Z0-9]+)/
         	matches = line.match(rx)

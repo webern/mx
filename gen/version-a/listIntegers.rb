@@ -1,10 +1,10 @@
 require "set"
 
-def listStrings
+def listIntegers
 
     item_list = SortedSet.new
 
-    File.open("../src/mx/core/Strings.h", "r") do |f|
+    File.open("../../src/mx/core/Integers.h", "r") do |f|
         f.each_line do |line|
         	rx = /^\s+class\s([a-zA-Z0-9]+)/
         	matches = line.match(rx)
@@ -34,6 +34,6 @@ def listStrings
 end
 
 
-#listStrings.each do |d|
+#listIntegers.each do |d|
 #	puts d
 #end

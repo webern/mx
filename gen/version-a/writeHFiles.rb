@@ -73,7 +73,7 @@ end
 
 lines = []
 
-File.open("../src/mx/core/Elements.h", "r") do |f|
+File.open("../../src/mx/core/Elements.h", "r") do |f|
     f.each_line do |line|
     	lines << line
 	end
@@ -83,7 +83,7 @@ end
 
 
 lineInstructionsH.each do |li|
-	File.open("../src/mx/core/elements/#{li.name}.h", "w") do |f|     
+	File.open("../../src/mx/core/elements/#{li.name}.h", "w") do |f|     
 		f << "// MusicXML Class Library v0.1.1" << "\n"
 		f << "// Copyright (c) 2015 - 2016 by Matthew James Briggs" << "\n"
 		f << "" << "\n"

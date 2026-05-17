@@ -18,7 +18,7 @@ class Member
   end
 end
 
-File.open("../src/mx/core/elements/#{class_name}.h", "r") do |f|
+File.open("../../src/mx/core/elements/#{class_name}.h", "r") do |f|
 
 	rx_private = /        private\:/
 	f.each_with_index do |line, index|
@@ -261,7 +261,7 @@ def guts_value_without_attributes io, members
     io << "            return true;\n"
 end
 
-File.open("../src/mx/core/elements/#{class_name}.cpp", "r") do |f|
+File.open("../../src/mx/core/elements/#{class_name}.cpp", "r") do |f|
 	is_first_include_found = false
 	rx_first_include = /\#include/
 	rx_function_close = /        \}/
@@ -283,7 +283,7 @@ File.open("../src/mx/core/elements/#{class_name}.cpp", "r") do |f|
 end
 
 
-File.open("../src/mx/core/elements/#{class_name}.h", "w") do |f|
+File.open("../../src/mx/core/elements/#{class_name}.h", "w") do |f|
 	hlines.each_with_index do |line, index|
 		if( index == hline_private )
 			f << "            bool fromXElement( std::ostream& message, xml::XElement& xelement );" << "\n"
@@ -294,7 +294,7 @@ File.open("../src/mx/core/elements/#{class_name}.h", "w") do |f|
 end
 
 
-File.open("../src/mx/core/elements/#{class_name}.cpp", "w") do |f|
+File.open("../../src/mx/core/elements/#{class_name}.cpp", "w") do |f|
 	clines.each_with_index do |line, index|
 		if( index == cline_first_include )
 			f << line

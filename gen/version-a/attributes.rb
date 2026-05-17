@@ -138,7 +138,7 @@ def implementAttributeImport class_name
 	cline_first_include = -1
 	cline_last_function_close = -1
 
-	File.open("../src/mx/core/elements/#{class_name}.cpp", "r") do |f|
+	File.open("../../src/mx/core/elements/#{class_name}.cpp", "r") do |f|
 		is_first_include_found = false
 		rx_first_include = /\#include/
 		rx_function_close = /        \}/
@@ -163,7 +163,7 @@ def implementAttributeImport class_name
 
 	hintermediates = []
 
-	File.open("../src/mx/core/elements/#{class_name}.h", "r") do |f|
+	File.open("../../src/mx/core/elements/#{class_name}.h", "r") do |f|
 		#puts caller.first
 		rx_public = /        public\:/
 		is_member_list = false
@@ -276,7 +276,7 @@ hmembers.delete_if { |x| ( x.name == nil ) || ( x.name.eql? "" ) }
 
 
 
-	File.open("../src/mx/core/elements/#{class_name}.h", "w") do |f|
+	File.open("../../src/mx/core/elements/#{class_name}.h", "w") do |f|
 		hlines.each_with_index do |line, index|
 			if( index == hlines_last_member )
 				f << "\n"
@@ -287,7 +287,7 @@ hmembers.delete_if { |x| ( x.name == nil ) || ( x.name.eql? "" ) }
 	end
 
 
-	File.open("../src/mx/core/elements/#{class_name}.cpp", "w") do |f|
+	File.open("../../src/mx/core/elements/#{class_name}.cpp", "w") do |f|
 		clines.each_with_index do |line, index|
 			if( index == cline_first_include )
 				f << line
