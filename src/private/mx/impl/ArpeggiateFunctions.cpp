@@ -33,7 +33,7 @@ api::MarkData ArpeggiateFunctions::parseArpeggiate() const
             markType = api::MarkType::arpeggiateDown;
             break;
 
-        case core::UpDownNone::none:
+        case core::UpDownNone::none: // MusicXML 4.0 Backport
             markType = api::MarkType::arpeggiate;
             break;
         }

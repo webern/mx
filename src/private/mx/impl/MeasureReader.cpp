@@ -624,6 +624,11 @@ void MeasureReader::parseFiguredBass(const core::FiguredBass &inMxFiguredBass, c
     words.text = std::move(text);
     direction.words.emplace_back(std::move(words));
 
+    if (myOutMeasureData.staves.empty())
+    {
+        return;
+    }
+
     const auto staffIndex = getFiguredBassStaffIndex(myCurrentCursor, myOutMeasureData, nextNotePtr);
     myOutMeasureData.staves.at(static_cast<size_t>(staffIndex)).directions.emplace_back(std::move(direction));
 }

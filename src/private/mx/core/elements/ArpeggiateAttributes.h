@@ -28,7 +28,7 @@ struct ArpeggiateAttributes : public AttributesInterface
     virtual bool hasValues() const;
     virtual std::ostream &toStream(std::ostream &os) const;
     NumberLevel number;
-    UpDownNone direction;
+    UpDownNone direction; // MusicXML 4.0 Backport: was UpDown in 3.x (no "none" value)
     TenthsValue defaultX;
     TenthsValue defaultY;
     TenthsValue relativeX;

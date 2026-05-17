@@ -29,8 +29,8 @@ inline mx::api::ScoreData apiK009bSlurAttributesScoreData()
     // 1
     part.measures.emplace_back(MeasureData{});
     auto measure = &part.measures.back();
-    measure->timeSignature.beats = 4;
-    measure->timeSignature.beatType = 4;
+    measure->timeSignature.beats = "4";
+    measure->timeSignature.beatType = "4";
     measure->timeSignature.isImplicit = false;
     measure->staves.emplace_back(StaffData{});
     auto staff = &measure->staves.back();

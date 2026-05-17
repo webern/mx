@@ -28,15 +28,15 @@ TEST(implicitCarryover, TimeSignatureApi)
     auto t = measureIter->timeSignature;
 
     CHECK(!t.isImplicit);
-    CHECK_EQUAL(3, t.beats);
-    CHECK_EQUAL(4, t.beatType);
+    CHECK_EQUAL("3", t.beats);
+    CHECK_EQUAL("4", t.beatType);
     CHECK(t.symbol == TimeSignatureSymbol::unspecified);
 
     ++measureIter;
     t = measureIter->timeSignature;
     CHECK(t.isImplicit);
-    CHECK_EQUAL(3, t.beats);
-    CHECK_EQUAL(4, t.beatType);
+    CHECK_EQUAL("3", t.beats);
+    CHECK_EQUAL("4", t.beatType);
     CHECK(t.symbol == TimeSignatureSymbol::unspecified);
 }
 

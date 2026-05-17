@@ -1907,14 +1907,15 @@ std::ostream &operator<<(std::ostream &os, const UpDownStopContinue value);
 
 /// UpDownNone /////////////////////////////////////////////////////////////////////
 ///
-/// The up-down-none type is used for octave-shift elements, indicating the
-/// direction of the shift from their true pitched values because of printing difficulty.
+/// Extends the 3.x up-down type to add a "none" value for arpeggiate direction.
+/// MusicXML 4.0 Backport: the "none" value (no arrow on the arpeggio sign) is
+/// new in MusicXML 4.0. In 3.x the direction attribute used up-down (up/down only).
 ///
 enum class UpDownNone
 {
     up = 0,
     down = 1,
-    none = 2
+    none = 2 // MusicXML 4.0 Backport
 };
 
 UpDownNone parseUpDownNone(const std::string &value);

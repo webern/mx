@@ -15,8 +15,6 @@
 #include "mx/core/elements/Time.h"
 #include "mx/core/elements/TimeChoice.h"
 #include "mx/core/elements/TimeSignatureGroup.h"
-#include "mx/impl/LcmGcd.h"
-#include "mx/utility/StringToInt.h"
 #include "mx/utility/Throw.h"
 
 #include <cmath>
@@ -27,33 +25,6 @@ namespace mx
 {
 namespace impl
 {
-namespace
-{
-bool parseCompoundIntegerString(const std::string &value, int &outResult)
-{
-    int result = 0;
-    size_t start = 0;
-    while (start < value.size())
-    {
-        const auto stop = value.find('+', start);
-        const auto token = value.substr(start, stop == std::string::npos ? std::string::npos : stop - start);
-        int component = 0;
-        if (!utility::stringToInt(token, component))
-        {
-            return false;
-        }
-        result += component;
-        if (stop == std::string::npos)
-        {
-            outResult = result;
-            return true;
-        }
-        start = stop + 1;
-    }
-
-    return false;
-}
-} // namespace
 
 TimeReader::TimeReader(const core::MusicDataChoiceSet &inMusicDataChoices)
     : myMusicDataChoiceSet{inMusicDataChoices}, myIsTimeFound{false}, myTimeSignatureData{}
@@ -107,26 +78,8 @@ bool TimeReader::parseTime()
 
 bool TimeReader::parseTimeSignatureGroup(const core::TimeSignatureGroup &timeSig)
 {
-    const auto beatsStr = timeSig.getBeats()->getValue().getValue();
-    int beats = myTimeSignatureData.beats;
-
-    if (!parseCompoundIntegerString(beatsStr, beats))
-    {
-        return false;
-    }
-
-    const auto beatTypeStr = timeSig.getBeatType()->getValue().getValue();
-    int beatType = myTimeSignatureData.beatType;
-
-    if (!utility::stringToInt(beatTypeStr, beatType))
-    {
-        return false;
-    }
-
-    myTimeSignatureData.beats = beats;
-    myTimeSignatureData.beatsText = beatsStr;
-    myTimeSignatureData.beatType = beatType;
-    myTimeSignatureData.beatTypeText = beatTypeStr;
+    myTimeSignatureData.beats = timeSig.getBeats()->getValue().getValue();
+    myTimeSignatureData.beatType = timeSig.getBeatType()->getValue().getValue();
 
     if (myTime->getAttributes()->hasSymbol)
     {

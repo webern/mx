@@ -22,7 +22,7 @@ TEST(Test01, Arpeggiate)
     attributes1->hasDefaultX = true;
     attributes1->defaultX = TenthsValue{0.1};
     attributes1->hasDirection = true;
-    attributes1->direction = UpDown::up;
+    attributes1->direction = UpDownNone::up;
     attributes1->hasNumber = true;
     attributes1->number = NumberLevel{2};
 

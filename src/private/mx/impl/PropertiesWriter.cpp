@@ -199,10 +199,8 @@ void PropertiesWriter::writeTime(const api::TimeSignatureData &value)
     myProperties->addTime(time);
     time->getTimeChoice()->setChoice(core::TimeChoice::Choice::timeSignature);
     auto sigGrp = time->getTimeChoice()->getTimeSignatureGroupSet().front();
-    const auto beatsString = value.beatsText.empty() ? std::to_string(value.beats) : value.beatsText;
-    const auto beatTypeString = value.beatTypeText.empty() ? std::to_string(value.beatType) : value.beatTypeText;
-    sigGrp->getBeats()->setValue(core::XsString{beatsString});
-    sigGrp->getBeatType()->setValue(core::XsString{beatTypeString});
+    sigGrp->getBeats()->setValue(core::XsString{value.beats});
+    sigGrp->getBeatType()->setValue(core::XsString{value.beatType});
 
     const auto symbol = value.symbol;
     if (symbol != api::TimeSignatureSymbol::unspecified)
