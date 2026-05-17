@@ -28,6 +28,7 @@
 #include "mx/core/elements/ScorePartwise.h"
 #include "mx/core/elements/Tied.h"
 #include "mxtest/api/RoundTrip.h"
+#include "mxtest/file/Path.h"
 
 using namespace std;
 using namespace mx::api;
@@ -83,6 +84,48 @@ TEST(otherArticulation, NoteData)
 
 T_END;
 
+TEST(pitchedRestDisplayStepOctave, NoteData)
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    score.ticksPerQuarter = 96;
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto &staff = measure.staves.back();
+    auto &voice = staff.voices[0];
+
+    NoteData rest;
+    rest.isRest = true;
+    rest.isDisplayStepOctaveSpecified = true;
+    rest.pitchData.step = Step::e;
+    rest.pitchData.octave = 4;
+    rest.durationData.durationName = DurationName::quarter;
+    rest.durationData.durationTimeTicks = 96;
+    voice.notes.push_back(rest);
+
+    auto &mgr = DocumentManager::getInstance();
+    auto docId = mgr.createFromScore(score);
+    std::stringstream ss;
+    mgr.writeToStream(docId, ss);
+    mgr.destroyDocument(docId);
+    const auto xml = ss.str();
+    CHECK(xml.find("<display-step>E</display-step>") != std::string::npos);
+    CHECK(xml.find("<display-octave>4</display-octave>") != std::string::npos);
+
+    std::istringstream iss{xml};
+    docId = mgr.createFromStream(iss);
+    const auto outScore = mgr.getData(docId);
+    mgr.destroyDocument(docId);
+
+    const auto &outRest = outScore.parts.back().measures.back().staves.back().voices.begin()->second.notes.back();
+    CHECK(outRest.isRest);
+    CHECK(outRest.isDisplayStepOctaveSpecified);
+    CHECK(outRest.pitchData.step == Step::e);
+    CHECK_EQUAL(4, outRest.pitchData.octave);
+}
+
 TEST(customErrorUnknown, MarkData)
 {
     const auto expectedMark = mx::api::MarkType::customErrorUnknown;
@@ -118,6 +161,8 @@ TEST(customArticulation, NoteData)
     auto docId = mgr.createFromScore(score);
     std::stringstream ss;
     mgr.writeToStream(docId, ss);
+    // TODO - SMUFLKILL - remove
+    mgr.writeToFile(docId, "./bloop.xml");
     mgr.destroyDocument(docId);
     const std::string xml = ss.str();
     std::istringstream iss{xml};
@@ -251,6 +296,37 @@ TEST(technical, NoteData)
     CHECK(md.positionData.isDefaultYSpecified);
     CHECK_DOUBLES_EQUAL(-456.0, md.positionData.defaultY, 0.00001);
     CHECK_EQUAL("Bob", md.name);
+}
+
+T_END;
+
+TEST(technical_import_file, NoteData)
+{
+    auto &mgr = DocumentManager::getInstance();
+    const auto path = std::string{mxtest::getResourcesDirectoryPath()} + std::string{"/ksuite/k004a_Technical.xml"};
+    const auto docId = mgr.createFromFile(path);
+    const auto score = mgr.getData(docId);
+    mgr.destroyDocument(docId);
+
+    const auto &part = score.parts.at(0);
+
+    const auto &fingernailsMark =
+        part.measures.at(19).staves.at(0).voices.at(0).notes.at(0).noteAttachmentData.marks.at(0);
+    CHECK(fingernailsMark.markType == MarkType::fingernails);
+    CHECK_EQUAL("fingernails", fingernailsMark.name);
+
+    const auto &holeMark = part.measures.at(20).staves.at(0).voices.at(0).notes.at(0).noteAttachmentData.marks.at(0);
+    CHECK(holeMark.markType == MarkType::hole);
+    CHECK_EQUAL("windOpenHole", holeMark.name);
+
+    const auto &arrowMark = part.measures.at(21).staves.at(0).voices.at(0).notes.at(0).noteAttachmentData.marks.at(0);
+    CHECK(arrowMark.markType == MarkType::arrow);
+    CHECK_EQUAL("arrowOpenUp", arrowMark.name);
+
+    const auto &handbellMark =
+        part.measures.at(22).staves.at(0).voices.at(0).notes.at(0).noteAttachmentData.marks.at(0);
+    CHECK(handbellMark.markType == MarkType::handbell);
+    CHECK_EQUAL("handbellsDamp3", handbellMark.name);
 }
 
 T_END;
@@ -875,6 +951,7 @@ TEST(directionOrderRoundTrip, NoteData)
     direction.tickTimePosition = 0;
     mark.tickTimePosition = direction.tickTimePosition;
     direction.marks.push_back(mark);
+    direction.orderedComponents.emplace_back(DirectionComponentKind::mark, 0);
     staff.directions.push_back(direction);
 
     placement = Placement::unspecified;

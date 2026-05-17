@@ -4,6 +4,8 @@
 
 #include "mx/impl/TechnicalFunctions.h"
 #include "mx/core/elements/Arrow.h"
+#include "mx/core/elements/ArrowDirection.h"
+#include "mx/core/elements/ArrowGroup.h"
 #include "mx/core/elements/Bend.h"
 #include "mx/core/elements/DoubleTongue.h"
 #include "mx/core/elements/DownBow.h"
@@ -15,6 +17,7 @@
 #include "mx/core/elements/Harmonic.h"
 #include "mx/core/elements/Heel.h"
 #include "mx/core/elements/Hole.h"
+#include "mx/core/elements/HoleClosed.h"
 #include "mx/core/elements/OpenString.h"
 #include "mx/core/elements/OtherTechnical.h"
 #include "mx/core/elements/Pluck.h"
@@ -31,6 +34,88 @@
 #include "mx/core/elements/UpBow.h"
 #include "mx/impl/Converter.h"
 #include "mx/impl/MarkDataFunctions.h"
+
+namespace
+{
+std::string holeToSmuflName(const mx::core::Hole &hole)
+{
+    const auto closedValue = hole.getHoleClosed()->getValue();
+    switch (closedValue)
+    {
+    case mx::core::HoleClosedValue::yes:
+        return "windClosedHole";
+    case mx::core::HoleClosedValue::half:
+        return "windHalfClosedHole3";
+    case mx::core::HoleClosedValue::no:
+    default:
+        return "windOpenHole";
+    }
+}
+
+std::string arrowToSmuflName(const mx::core::Arrow &arrow)
+{
+    using Direction = mx::core::ArrowDirectionEnum;
+    if (arrow.getChoice() != mx::core::Arrow::Choice::arrowGroup)
+    {
+        return "arrowOpenUp";
+    }
+
+    const auto direction = arrow.getArrowGroup()->getArrowDirection()->getValue();
+    switch (direction)
+    {
+    case Direction::left:
+        return "arrowOpenLeft";
+    case Direction::up:
+        return "arrowOpenUp";
+    case Direction::right:
+        return "arrowOpenRight";
+    case Direction::down:
+        return "arrowOpenDown";
+    case Direction::northwest:
+        return "arrowOpenUpLeft";
+    case Direction::northeast:
+        return "arrowOpenUpRight";
+    case Direction::southeast:
+        return "arrowOpenDownRight";
+    case Direction::southwest:
+        return "arrowOpenDownLeft";
+    default:
+        return "arrowOpenUp";
+    }
+}
+
+std::string handbellToSmuflName(const mx::core::HandbellValue value)
+{
+    using Handbell = mx::core::HandbellValue;
+    switch (value)
+    {
+    case Handbell::damp:
+        return "handbellsDamp3";
+    case Handbell::echo:
+        return "handbellsEcho1";
+    case Handbell::gyro:
+        return "handbellsGyro";
+    case Handbell::handMartellato:
+        return "handbellsHandMartellato";
+    case Handbell::malletLift:
+        return "handbellsMalletLft";
+    case Handbell::malletTable:
+        return "handbellsMalletBellOnTable";
+    case Handbell::martellato:
+        return "handbellsMartellato";
+    case Handbell::martellatoLift:
+        return "handbellsMartellatoLift";
+    case Handbell::mutedMartellato:
+        return "handbellsMutedMartellato";
+    case Handbell::pluckLift:
+        return "handbellsPluckLift";
+    case Handbell::swing:
+        return "handbellsSwing";
+    default:
+        return "handbellsGyro";
+    }
+}
+} // namespace
 
 namespace mx
 {
@@ -124,10 +209,18 @@ bool TechnicalFunctions::parseTechicalMark(const core::TechnicalChoice &techical
         outMarkData.name = "snap-pizzicato";
         return true;
     }
-    case core::TechnicalChoice::Choice::fret:
-        return false;
-    case core::TechnicalChoice::Choice::string_:
-        return false;
+    case core::TechnicalChoice::Choice::fret: {
+        const auto &fret = *techicalChoice.getFret();
+        parseMarkDataAttributes(*fret.getAttributes(), outMarkData);
+        outMarkData.name = core::toString(fret.getValue());
+        return true;
+    }
+    case core::TechnicalChoice::Choice::string_: {
+        const auto &stringNumber = *techicalChoice.getString();
+        parseMarkDataAttributes(*stringNumber.getAttributes(), outMarkData);
+        outMarkData.name = core::toString(stringNumber.getValue());
+        return true;
+    }
     case core::TechnicalChoice::Choice::hammerOn:
         return false;
     case core::TechnicalChoice::Choice::pullOff:
@@ -151,12 +244,24 @@ bool TechnicalFunctions::parseTechicalMark(const core::TechnicalChoice &techical
         outMarkData.name = "fingernails";
         return true;
     }
-    case core::TechnicalChoice::Choice::hole:
-        return false;
-    case core::TechnicalChoice::Choice::arrow:
-        return false;
-    case core::TechnicalChoice::Choice::handbell:
-        return false;
+    case core::TechnicalChoice::Choice::hole: {
+        const auto &hole = *techicalChoice.getHole();
+        parseMarkDataAttributes(*hole.getAttributes(), outMarkData);
+        outMarkData.name = holeToSmuflName(hole);
+        return true;
+    }
+    case core::TechnicalChoice::Choice::arrow: {
+        const auto &arrow = *techicalChoice.getArrow();
+        parseMarkDataAttributes(*arrow.getAttributes(), outMarkData);
+        outMarkData.name = arrowToSmuflName(arrow);
+        return true;
+    }
+    case core::TechnicalChoice::Choice::handbell: {
+        const auto &handbell = *techicalChoice.getHandbell();
+        parseMarkDataAttributes(*handbell.getAttributes(), outMarkData);
+        outMarkData.name = handbellToSmuflName(handbell.getValue());
+        return true;
+    }
     case core::TechnicalChoice::Choice::otherTechnical: {
         const auto &other = *techicalChoice.getOtherTechnical();
         const auto &attr = *other.getAttributes();

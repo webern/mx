@@ -215,6 +215,16 @@ void MeasureWriter::writeMeasureGlobals()
 
     for (const auto &staff : myMeasureData.staves)
     {
+        if (staff.staffLines >= 0)
+        {
+            int desiredStaffIndex = -1;
+            if (myHistory.getCursor().getNumStaves() > 1)
+            {
+                desiredStaffIndex = localStaffCounter;
+            }
+            myPropertiesWriter->writeStaffDetails(desiredStaffIndex, staff.staffLines);
+        }
+
         auto clefIter = staff.clefs.cbegin();
         auto clefEnd = staff.clefs.cend();
         while (clefIter != clefEnd && clefIter->tickTimePosition == 0)
@@ -397,6 +407,11 @@ void MeasureWriter::writeVoices(const api::StaffData &inStaff)
         {
             bool isStartOfChord = false;
 
+            // if we are in a chord, and the next note is part of the same chord, then the next note is NOT independent
+            // if we are in a chord, and the next note is NOT part of the same chord, then the next note IS independent
+            // if we are NOT in a chord, then the next note IS independent
+            bool isNextNoteIndependent = true;
+
             myHistory.setChord(noteIter->isChord);
             const auto &apiNote = *noteIter;
             writeForwardOrBackupIfNeeded(apiNote);
@@ -417,7 +432,13 @@ void MeasureWriter::writeVoices(const api::StaffData &inStaff)
 
                 if (localNextNoteIter != noteEnd)
                 {
-                    (void)localNextNoteIter;
+                    if (localNextNoteIter->isChord)
+                    {
+                        if (localNextNoteIter->tickTimePosition == currentChordTickPosition)
+                        {
+                            isNextNoteIndependent = false;
+                        }
+                    }
                 }
 
                 previousChordTickPosition = currentChordTickPosition;
@@ -446,6 +467,15 @@ void MeasureWriter::writeVoices(const api::StaffData &inStaff)
             }
 
             myPropertiesWriter->flushBuffer();
+
+            int minDirectionTime = myHistory.getCursor().tickTimePosition;
+            int maxDirectionTime = minDirectionTime + noteIter->durationData.durationTimeTicks;
+            auto nextNote = noteIter + 1;
+
+            if (nextNote != noteEnd)
+            {
+                maxDirectionTime = nextNote->tickTimePosition;
+            }
 
             {
                 writeDirections(directionIter, directionEnd, noteIter, std::cbegin(voice.second.notes), noteEnd);

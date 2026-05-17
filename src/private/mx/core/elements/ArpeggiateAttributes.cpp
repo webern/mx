@@ -51,7 +51,7 @@ bool ArpeggiateAttributes::fromXElementImpl(std::ostream &message, ::ezxml::XEle
         {
             continue;
         }
-        if (parseAttribute(message, it, className, isSuccess, direction, hasDirection, "direction", &parseUpDown))
+        if (parseAttribute(message, it, className, isSuccess, direction, hasDirection, "direction", &parseUpDownNone))
         {
             continue;
         }

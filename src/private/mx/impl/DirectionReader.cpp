@@ -5,6 +5,7 @@
 #include "mx/impl/DirectionReader.h"
 #include "mx/api/WedgeData.h"
 #include "mx/core/elements/AccordionRegistration.h"
+#include "mx/core/elements/Barre.h"
 #include "mx/core/elements/Bass.h"
 #include "mx/core/elements/BassAlter.h"
 #include "mx/core/elements/BassStep.h"
@@ -23,8 +24,14 @@
 #include "mx/core/elements/EditorialGroup.h"
 #include "mx/core/elements/EditorialVoiceDirectionGroup.h"
 #include "mx/core/elements/Eyeglasses.h"
+#include "mx/core/elements/Fingering.h"
+#include "mx/core/elements/FirstFret.h"
 #include "mx/core/elements/Footnote.h"
 #include "mx/core/elements/Frame.h"
+#include "mx/core/elements/FrameFrets.h"
+#include "mx/core/elements/FrameNote.h"
+#include "mx/core/elements/FrameStrings.h"
+#include "mx/core/elements/Fret.h"
 #include "mx/core/elements/Function.h"
 #include "mx/core/elements/Harmony.h"
 #include "mx/core/elements/HarmonyChordGroup.h"
@@ -48,6 +55,7 @@
 #include "mx/core/elements/Segno.h"
 #include "mx/core/elements/Sound.h"
 #include "mx/core/elements/Staff.h"
+#include "mx/core/elements/String.h"
 #include "mx/core/elements/StringMute.h"
 #include "mx/core/elements/Voice.h"
 #include "mx/core/elements/Wedge.h"
@@ -177,6 +185,11 @@ mx::api::DirectionData DirectionReader::returnData()
     return temp;
 }
 
+void DirectionReader::appendOrderedComponent(api::DirectionComponentKind kind, int index)
+{
+    myOutDirectionData.orderedComponents.emplace_back(kind, index);
+}
+
 void DirectionReader::parseDirectionType(const core::DirectionType &directionType)
 {
     switch (directionType.getChoice())
@@ -234,7 +247,7 @@ void DirectionReader::parseDirectionType(const core::DirectionType &directionTyp
         break;
     }
     case core::DirectionType::Choice::dampAll: {
-        parseRehearsal(directionType);
+        parseDampAll(directionType);
         break;
     }
     case core::DirectionType::Choice::eyeglasses: {
@@ -285,7 +298,39 @@ void DirectionReader::parseRehearsal(const core::DirectionType &directionType)
         outRehearsal.text = rehearsalPtr->getValue().getValue();
         outRehearsal.positionData = getPositionData(attr);
         outRehearsal.colorData = getColor(attr);
+        if (attr.hasEnclosure)
+        {
+            switch (attr.enclosure)
+            {
+            case core::EnclosureShape::rectangle:
+                outRehearsal.enclosure = api::RehearsalEnclosure::rectangle;
+                break;
+            case core::EnclosureShape::square:
+                outRehearsal.enclosure = api::RehearsalEnclosure::square;
+                break;
+            case core::EnclosureShape::oval:
+                outRehearsal.enclosure = api::RehearsalEnclosure::oval;
+                break;
+            case core::EnclosureShape::circle:
+                outRehearsal.enclosure = api::RehearsalEnclosure::circle;
+                break;
+            case core::EnclosureShape::bracket:
+                outRehearsal.enclosure = api::RehearsalEnclosure::bracket;
+                break;
+            case core::EnclosureShape::triangle:
+                outRehearsal.enclosure = api::RehearsalEnclosure::triangle;
+                break;
+            case core::EnclosureShape::diamond:
+                outRehearsal.enclosure = api::RehearsalEnclosure::diamond;
+                break;
+            case core::EnclosureShape::none:
+                outRehearsal.enclosure = api::RehearsalEnclosure::none;
+                break;
+            }
+        }
         myOutDirectionData.rehearsals.emplace_back(std::move(outRehearsal));
+        appendOrderedComponent(api::DirectionComponentKind::rehearsal,
+                               static_cast<int>(myOutDirectionData.rehearsals.size()) - 1);
     }
 
     MX_UNUSED(directionType);
@@ -302,6 +347,8 @@ void DirectionReader::parseSegno(const core::DirectionType &directionType)
         outSegno.positionData = getPositionData(attr);
         outSegno.colorData = getColor(attr);
         myOutDirectionData.segnos.emplace_back(std::move(outSegno));
+        appendOrderedComponent(api::DirectionComponentKind::segno,
+                               static_cast<int>(myOutDirectionData.segnos.size()) - 1);
     }
 }
 
@@ -317,7 +364,39 @@ void DirectionReader::parseWords(const core::DirectionType &directionType)
         outWords.positionData = getPositionData(attr);
         outWords.colorData = getColor(attr);
         outWords.fontData = getFontData(attr);
+        if (attr.hasEnclosure)
+        {
+            switch (attr.enclosure)
+            {
+            case core::EnclosureShape::rectangle:
+                outWords.enclosure = api::RehearsalEnclosure::rectangle;
+                break;
+            case core::EnclosureShape::square:
+                outWords.enclosure = api::RehearsalEnclosure::square;
+                break;
+            case core::EnclosureShape::oval:
+                outWords.enclosure = api::RehearsalEnclosure::oval;
+                break;
+            case core::EnclosureShape::circle:
+                outWords.enclosure = api::RehearsalEnclosure::circle;
+                break;
+            case core::EnclosureShape::bracket:
+                outWords.enclosure = api::RehearsalEnclosure::bracket;
+                break;
+            case core::EnclosureShape::triangle:
+                outWords.enclosure = api::RehearsalEnclosure::triangle;
+                break;
+            case core::EnclosureShape::diamond:
+                outWords.enclosure = api::RehearsalEnclosure::diamond;
+                break;
+            case core::EnclosureShape::none:
+                outWords.enclosure = api::RehearsalEnclosure::none;
+                break;
+            }
+        }
         myOutDirectionData.words.emplace_back(std::move(outWords));
+        appendOrderedComponent(api::DirectionComponentKind::words,
+                               static_cast<int>(myOutDirectionData.words.size()) - 1);
     }
 }
 
@@ -332,6 +411,8 @@ void DirectionReader::parseCoda(const core::DirectionType &directionType)
         outCoda.positionData = getPositionData(attr);
         outCoda.colorData = getColor(attr);
         myOutDirectionData.codas.emplace_back(std::move(outCoda));
+        appendOrderedComponent(api::DirectionComponentKind::coda,
+                               static_cast<int>(myOutDirectionData.codas.size()) - 1);
     }
 }
 
@@ -360,6 +441,8 @@ void DirectionReader::parseWedge(const core::DirectionType &directionType)
         }
         stop.positionData = positionData;
         myOutDirectionData.wedgeStops.emplace_back(std::move(stop));
+        appendOrderedComponent(api::DirectionComponentKind::wedgeStop,
+                               static_cast<int>(myOutDirectionData.wedgeStops.size()) - 1);
         return;
     }
     else
@@ -379,16 +462,23 @@ void DirectionReader::parseWedge(const core::DirectionType &directionType)
         start.lineData = lineData;
         start.colorData = colorData;
         myOutDirectionData.wedgeStarts.emplace_back(std::move(start));
+        appendOrderedComponent(api::DirectionComponentKind::wedgeStart,
+                               static_cast<int>(myOutDirectionData.wedgeStarts.size()) - 1);
     }
 }
 
 void DirectionReader::parseDynamics(const core::DirectionType &directionType)
 {
+    const auto markCountBefore = myOutDirectionData.marks.size();
     for (const auto &dynamic : directionType.getDynamicsSet())
     {
         DynamicsReader reader{*dynamic, myCursor};
         reader.parseDynamics(myOutDirectionData.marks);
         // parseDynamic( *dynamic );
+    }
+    for (auto i = markCountBefore; i < myOutDirectionData.marks.size(); ++i)
+    {
+        appendOrderedComponent(api::DirectionComponentKind::mark, static_cast<int>(i));
     }
 }
 
@@ -409,11 +499,36 @@ void DirectionReader::parseDynamic(const core::Dynamics &dynamic)
 
     mark.name = valueObject.getValueString();
     myOutDirectionData.marks.emplace_back(std::move(mark));
+    appendOrderedComponent(api::DirectionComponentKind::mark, static_cast<int>(myOutDirectionData.marks.size()) - 1);
 }
 
 void DirectionReader::parseDashes(const core::DirectionType &directionType)
 {
-    MX_UNUSED(directionType);
+    const auto &dashes = *directionType.getDashes();
+    const auto &attr = *dashes.getAttributes();
+
+    if (attr.type == core::StartStopContinue::stop)
+    {
+        auto stop = impl::getSpannerStop(attr);
+        stop.tickTimePosition = myCursor.tickTimePosition;
+        myOutDirectionData.dashesStops.emplace_back(std::move(stop));
+        appendOrderedComponent(api::DirectionComponentKind::dashesStop,
+                               static_cast<int>(myOutDirectionData.dashesStops.size()) - 1);
+        return;
+    }
+    else if (attr.type == core::StartStopContinue::start)
+    {
+        auto start = impl::getSpannerStart(attr);
+        start.tickTimePosition = myCursor.tickTimePosition;
+        if (start.lineData.lineType == api::LineType::unspecified)
+        {
+            start.lineData.lineType = api::LineType::dashed;
+        }
+        myOutDirectionData.dashesStarts.emplace_back(std::move(start));
+        appendOrderedComponent(api::DirectionComponentKind::dashesStart,
+                               static_cast<int>(myOutDirectionData.dashesStarts.size()) - 1);
+        return;
+    }
 }
 
 void DirectionReader::parseBracket(const core::DirectionType &directionType)
@@ -421,13 +536,40 @@ void DirectionReader::parseBracket(const core::DirectionType &directionType)
     const auto &bracket = *directionType.getBracket();
     const auto &attr = *bracket.getAttributes();
 
+    const auto makeBracketLineData = [&]() {
+        api::LineData lineData{};
+        lineData.lineHook = myConverter.convert(attr.lineEnd);
+
+        if (attr.hasLineType)
+        {
+            lineData.lineType = myConverter.convert(attr.lineType);
+        }
+        if (attr.hasEndLength)
+        {
+            lineData.isStopLengthSpecified = true;
+            lineData.endLength = attr.endLength.getValue();
+        }
+        if (attr.hasDashLength)
+        {
+            lineData.isDashLengthSpecified = true;
+            lineData.dashLength = attr.dashLength.getValue();
+        }
+        if (attr.hasSpaceLength)
+        {
+            lineData.isSpaceLengthSpecified = true;
+            lineData.spaceLength = attr.spaceLength.getValue();
+        }
+        return lineData;
+    };
+
     if (attr.type == core::StartStopContinue::stop)
     {
-        api::SpannerStop stop;
+        auto stop = impl::getSpannerStop(attr);
         stop.tickTimePosition = myCursor.tickTimePosition;
-        stop.numberLevel = impl::checkNumber(&attr);
-        stop.positionData = this->parsePositionData(attr);
+        stop.lineData = makeBracketLineData();
         myOutDirectionData.bracketStops.emplace_back(std::move(stop));
+        appendOrderedComponent(api::DirectionComponentKind::bracketStop,
+                               static_cast<int>(myOutDirectionData.bracketStops.size()) - 1);
         return;
     }
     else if (attr.type == core::StartStopContinue::start)
@@ -436,9 +578,11 @@ void DirectionReader::parseBracket(const core::DirectionType &directionType)
         start.tickTimePosition = myCursor.tickTimePosition;
         start.numberLevel = impl::checkNumber(&attr);
         start.positionData = this->parsePositionData(attr);
-        start.lineData = impl::getLineData(attr);
+        start.lineData = makeBracketLineData();
         start.printData = impl::getPrintData(attr);
         myOutDirectionData.bracketStarts.emplace_back(std::move(start));
+        appendOrderedComponent(api::DirectionComponentKind::bracketStart,
+                               static_cast<int>(myOutDirectionData.bracketStarts.size()) - 1);
         return;
     }
 }
@@ -453,6 +597,45 @@ void DirectionReader::parsePedal(const core::DirectionType &directionType)
         return;
     }
 
+    const auto placement =
+        myDirection->getAttributes()->hasPlacement
+            ? (myDirection->getAttributes()->placement == core::AboveBelow::above ? api::Placement::above
+                                                                                  : api::Placement::below)
+            : api::Placement::unspecified;
+
+    myOutDirectionData.placement = placement;
+
+    if (attr.hasLine && attr.line == core::YesNo::yes)
+    {
+        if (attr.type == core::StartStopChangeContinue::start)
+        {
+            api::SpannerStart start;
+            start.tickTimePosition = myOutDirectionData.tickTimePosition;
+            start.positionData = getPositionData(attr);
+            start.positionData.placement = placement;
+            start.lineData.lineType = api::LineType::solid;
+            start.lineData.lineHook = api::LineHook::none;
+            myOutDirectionData.pedalStarts.emplace_back(std::move(start));
+            appendOrderedComponent(api::DirectionComponentKind::pedalStart,
+                                   static_cast<int>(myOutDirectionData.pedalStarts.size()) - 1);
+        }
+        else if (attr.type == core::StartStopChangeContinue::stop)
+        {
+            api::SpannerStop stop;
+            stop.tickTimePosition = myOutDirectionData.tickTimePosition;
+            stop.positionData = getPositionData(attr);
+            stop.positionData.placement = placement;
+            stop.lineData.lineType = api::LineType::solid;
+            stop.lineData.lineHook = api::LineHook::down;
+            stop.lineData.isStopLengthSpecified = true;
+            stop.lineData.endLength = 10.0;
+            myOutDirectionData.pedalStops.emplace_back(std::move(stop));
+            appendOrderedComponent(api::DirectionComponentKind::pedalStop,
+                                   static_cast<int>(myOutDirectionData.pedalStops.size()) - 1);
+        }
+        return;
+    }
+
     auto pedalType = api::MarkType::pedal;
 
     if (attr.type == core::StartStopChangeContinue::stop)
@@ -460,17 +643,11 @@ void DirectionReader::parsePedal(const core::DirectionType &directionType)
         pedalType = api::MarkType::damp;
     }
 
-    const auto placement =
-        myDirection->getAttributes()->hasPlacement
-            ? (myDirection->getAttributes()->placement == core::AboveBelow::above ? api::Placement::above
-                                                                                  : api::Placement::below)
-            : api::Placement::unspecified;
-
     auto mark = api::MarkData{placement, pedalType};
     mark.positionData = getPositionData(attr);
     mark.positionData.placement = placement;
-    myOutDirectionData.placement = placement;
     myOutDirectionData.marks.emplace_back(std::move(mark));
+    appendOrderedComponent(api::DirectionComponentKind::mark, static_cast<int>(myOutDirectionData.marks.size()) - 1);
 }
 
 void DirectionReader::parseMetronome(const core::DirectionType &directionType)
@@ -478,6 +655,7 @@ void DirectionReader::parseMetronome(const core::DirectionType &directionType)
     const auto &metronome = *directionType.getMetronome();
     MetronomeReader reader{metronome};
     myOutDirectionData.tempos.emplace_back(reader.getTempoData());
+    appendOrderedComponent(api::DirectionComponentKind::tempo, static_cast<int>(myOutDirectionData.tempos.size()) - 1);
 }
 
 void DirectionReader::parseOctaveShift(const core::DirectionType &directionType)
@@ -497,6 +675,8 @@ void DirectionReader::parseOctaveShift(const core::DirectionType &directionType)
         auto stop = impl::getSpannerStop(attr);
         stop.tickTimePosition = myCursor.tickTimePosition;
         myOutDirectionData.ottavaStops.emplace_back(std::move(stop));
+        appendOrderedComponent(api::DirectionComponentKind::ottavaStop,
+                               static_cast<int>(myOutDirectionData.ottavaStops.size()) - 1);
         return;
     }
 
@@ -532,6 +712,8 @@ void DirectionReader::parseOctaveShift(const core::DirectionType &directionType)
     start.ottavaType = ottavaType;
     start.spannerStart.tickTimePosition = myCursor.tickTimePosition;
     myOutDirectionData.ottavaStarts.emplace_back(std::move(start));
+    appendOrderedComponent(api::DirectionComponentKind::ottavaStart,
+                           static_cast<int>(myOutDirectionData.ottavaStarts.size()) - 1);
 }
 
 void DirectionReader::parseHarpPedals(const core::DirectionType &directionType)
@@ -743,10 +925,61 @@ void DirectionReader::parseHarmony(const core::Harmony &inHarmony, const core::H
         chord.miscData.push_back(misc);
     }
 
+    if (inHarmony.getHasFrame())
+    {
+        chord.hasFrameData = true;
+        const auto frame = inHarmony.getFrame();
+        chord.frameData.stringCount = static_cast<int>(frame->getFrameStrings()->getValue().getValue());
+        chord.frameData.fretCount = static_cast<int>(frame->getFrameFrets()->getValue().getValue());
+
+        if (frame->getHasFirstFret())
+        {
+            chord.frameData.isFirstFretSpecified = true;
+            chord.frameData.firstFret = static_cast<int>(frame->getFirstFret()->getValue().getValue());
+        }
+
+        for (const auto &frameNotePtr : frame->getFrameNoteSet())
+        {
+            api::FrameNoteData frameNote;
+            frameNote.stringNumber = static_cast<int>(frameNotePtr->getString()->getValue().getValue());
+            frameNote.fretNumber = static_cast<int>(frameNotePtr->getFret()->getValue().getValue());
+
+            if (frameNotePtr->getHasFingering())
+            {
+                const auto fingeringText = frameNotePtr->getFingering()->getValue().getValue();
+                try
+                {
+                    frameNote.fingering = std::stoi(fingeringText);
+                    frameNote.isFingeringSpecified = true;
+                }
+                catch (...)
+                {
+                }
+            }
+
+            if (frameNotePtr->getHasBarre())
+            {
+                const auto barreType = frameNotePtr->getBarre()->getAttributes()->type;
+                switch (barreType)
+                {
+                case core::StartStop::start:
+                    frameNote.barre = api::FrameBarre::start;
+                    break;
+                case core::StartStop::stop:
+                    frameNote.barre = api::FrameBarre::stop;
+                    break;
+                }
+            }
+
+            chord.frameData.notes.push_back(frameNote);
+        }
+    }
+
     const auto &attr = *inHarmony.getAttributes();
     chord.positionData = getPositionData(attr);
 
     myOutDirectionData.chords.push_back(chord);
+    appendOrderedComponent(api::DirectionComponentKind::chord, static_cast<int>(myOutDirectionData.chords.size()) - 1);
 }
 } // namespace impl
 } // namespace mx

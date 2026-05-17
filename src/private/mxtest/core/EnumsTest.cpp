@@ -7613,6 +7613,27 @@ TEST(NoteSizeType_grace, Enums)
     CHECK_EQUAL(e, e2)
 }
 
+TEST(NoteSizeType_graceCue, Enums)
+{
+    NoteSizeType e = NoteSizeType::graceCue;
+    std::string expected = "grace-cue";
+    std::string actual = toString(e);
+    CHECK_EQUAL(expected, actual);
+
+    std::stringstream sstr;
+    toStream(sstr, e);
+    actual = sstr.str();
+    CHECK_EQUAL(expected, actual);
+
+    sstr.str("");
+    sstr << e;
+    actual = sstr.str();
+    CHECK_EQUAL(expected, actual);
+
+    NoteSizeType e2 = parseNoteSizeType(expected);
+    CHECK_EQUAL(e, e2)
+}
+
 TEST(NoteSizeType_large, Enums)
 {
     NoteSizeType e = NoteSizeType::large;

@@ -4,9 +4,9 @@
 
 #pragma once
 
+#include "mx/api/LyricData.h"
 #include "mx/core/Enums.h"
 #include "mx/core/elements/Tie.h"
-#include "mx/impl/LyricType.h"
 #include <vector>
 
 namespace mx
@@ -223,6 +223,11 @@ class NoteReader
         return myIsTieStop;
     }
 
+    inline const std::vector<api::LyricData> &getLyrics() const
+    {
+        return myLyrics;
+    }
+
   private:
     const core::Note &myNote;
     const core::NoteChoice &myNoteChoice;
@@ -263,7 +268,7 @@ class NoteReader
     bool myIsTieStart;
     bool myIsTieStop;
     bool myHasLyric;
-    std::vector<LyricType> myLyrics;
+    std::vector<api::LyricData> myLyrics;
 
   private:
     const core::FullNoteGroup &findFullNoteGroup(const core::NoteChoice &noteChoice) const;

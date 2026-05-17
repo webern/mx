@@ -25,6 +25,33 @@ namespace mx
 {
 namespace impl
 {
+namespace
+{
+template <typename ATTRIBUTES_TYPE>
+void parseMordentSpecificAttributes(const ATTRIBUTES_TYPE &attr, api::MarkData &outMark)
+{
+    Converter converter;
+
+    if (attr.hasLong)
+    {
+        outMark.hasMordentLong = true;
+        outMark.mordentLong = converter.convert(attr.long_);
+    }
+
+    if (attr.hasApproach)
+    {
+        outMark.hasMordentApproach = true;
+        outMark.mordentApproach = converter.convert(attr.approach);
+    }
+
+    if (attr.hasDeparture)
+    {
+        outMark.hasMordentDeparture = true;
+        outMark.mordentDeparture = converter.convert(attr.departure);
+    }
+}
+} // namespace
+
 OrnamentsFunctions::OrnamentsFunctions(const core::Ornaments &inOrnaments, impl::Cursor inCursor)
     : myOrnaments{inOrnaments}, myCursor{inCursor}
 {
@@ -116,12 +143,16 @@ void OrnamentsFunctions::parseOrnament(const core::OrnamentsChoice &choiceObj, a
     }
     case core::OrnamentsChoice::Choice::mordent: {
         outMark.name = "mordent";
-        parseMarkDataAttributes(*choiceObj.getMordent()->getAttributes(), outMark);
+        const auto &attr = *choiceObj.getMordent()->getAttributes();
+        parseMarkDataAttributes(attr, outMark);
+        parseMordentSpecificAttributes(attr, outMark);
         break;
     }
     case core::OrnamentsChoice::Choice::invertedMordent: {
         outMark.name = "inverted-mordent";
-        parseMarkDataAttributes(*choiceObj.getInvertedMordent()->getAttributes(), outMark);
+        const auto &attr = *choiceObj.getInvertedMordent()->getAttributes();
+        parseMarkDataAttributes(attr, outMark);
+        parseMordentSpecificAttributes(attr, outMark);
         break;
     }
     case core::OrnamentsChoice::Choice::schleifer: {

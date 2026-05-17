@@ -4,6 +4,7 @@
 
 #include "mx/impl/MeasureReader.h"
 #include "mx/api/ClefData.h"
+#include "mx/api/DirectionData.h"
 #include "mx/api/KeyData.h"
 #include "mx/api/NoteData.h"
 #include "mx/core/elements/Alter.h"
@@ -26,6 +27,8 @@
 #include "mx/core/elements/EditorialVoiceGroup.h"
 #include "mx/core/elements/Ending.h"
 #include "mx/core/elements/Fifths.h"
+#include "mx/core/elements/Figure.h"
+#include "mx/core/elements/FigureNumber.h"
 #include "mx/core/elements/FiguredBass.h"
 #include "mx/core/elements/Forward.h"
 #include "mx/core/elements/FullNoteGroup.h"
@@ -53,13 +56,17 @@
 #include "mx/core/elements/NoteChoice.h"
 #include "mx/core/elements/Octave.h"
 #include "mx/core/elements/Pitch.h"
+#include "mx/core/elements/Prefix.h"
 #include "mx/core/elements/Print.h"
 #include "mx/core/elements/Properties.h"
 #include "mx/core/elements/Rest.h"
 #include "mx/core/elements/Sign.h"
 #include "mx/core/elements/Sound.h"
 #include "mx/core/elements/Staff.h"
+#include "mx/core/elements/StaffDetails.h"
+#include "mx/core/elements/StaffLines.h"
 #include "mx/core/elements/Step.h"
+#include "mx/core/elements/Suffix.h"
 #include "mx/core/elements/Time.h"
 #include "mx/core/elements/TimeChoice.h"
 #include "mx/core/elements/TimeSignatureGroup.h"
@@ -80,6 +87,73 @@ namespace mx
 {
 namespace impl
 {
+namespace
+{
+std::string figureToText(const core::Figure &figure)
+{
+    std::string text;
+
+    if (figure.getHasPrefix())
+    {
+        text += figure.getPrefix()->getValue().getValue();
+    }
+
+    if (figure.getHasFigureNumber())
+    {
+        text += figure.getFigureNumber()->getValue().getValue();
+    }
+
+    if (figure.getHasSuffix())
+    {
+        text += figure.getSuffix()->getValue().getValue();
+    }
+
+    return text;
+}
+
+std::string figuredBassToText(const core::FiguredBass &figuredBass)
+{
+    std::string text;
+
+    for (const auto &figure : figuredBass.getFigureSet())
+    {
+        const auto figureText = figureToText(*figure);
+
+        if (figureText.empty())
+        {
+            continue;
+        }
+
+        if (!text.empty())
+        {
+            text += "\n";
+        }
+
+        text += figureText;
+    }
+
+    return text;
+}
+
+int getFiguredBassStaffIndex(const MeasureCursor &cursor, const api::MeasureData &measure,
+                             const core::NotePtr &nextNotePtr)
+{
+    auto staffIndex = cursor.staffIndex;
+
+    if (nextNotePtr)
+    {
+        staffIndex = NoteReader{*nextNotePtr}.getStaffNumber() - 1;
+    }
+
+    if (staffIndex < 0 || staffIndex >= static_cast<int>(measure.staves.size()))
+    {
+        return 0;
+    }
+
+    return staffIndex;
+}
+} // namespace
+
 MeasureReader::MeasureReader(const core::PartwiseMeasure &inPartwiseMeasureRef, const MeasureCursor &cursor,
                              const MeasureCursor &previousMeasureCursor)
     : myMutex{}, myPartwiseMeasure{inPartwiseMeasureRef}, myConverter{}, myOutMeasureData{}, myCurrentCursor{cursor},
@@ -248,7 +322,7 @@ std::optional<api::TransposeData> MeasureReader::parseMusicDataChoice(const core
     }
     case core::MusicDataChoice::Choice::figuredBass: {
         myCurrentCursor.isBackupInProgress = false;
-        parseFiguredBass(*mdc.getFiguredBass());
+        parseFiguredBass(*mdc.getFiguredBass(), nextNotePtr);
         advanceTickTimePosition(0, "parseFiguredBass");
         break;
     }
@@ -507,6 +581,7 @@ std::optional<api::TransposeData> MeasureReader::parseProperties(const core::Pro
 
         myOutMeasureData.keys.emplace_back(std::move(keyData));
     }
+    importStaffDetails(inMxProperties);
     importClefs(inMxProperties.getClefSet());
 
     if (!inMxProperties.getTransposeSet().empty())
@@ -526,9 +601,31 @@ void MeasureReader::parseHarmony(std::shared_ptr<const core::Harmony> inHarmony)
     parseDirectionImpl<core::Harmony>(inHarmony, myOutMeasureData, myCurrentCursor);
 }
 
-void MeasureReader::parseFiguredBass(const core::FiguredBass &inMxFiguredBass) const
+void MeasureReader::parseFiguredBass(const core::FiguredBass &inMxFiguredBass, const core::NotePtr &nextNotePtr) const
 {
-    coutItemNotSupported(inMxFiguredBass);
+    auto text = figuredBassToText(inMxFiguredBass);
+
+    if (text.empty())
+    {
+        return;
+    }
+
+    auto direction = api::DirectionData{};
+    direction.tickTimePosition = myCurrentCursor.tickTimePosition;
+    direction.placement = api::Placement::below;
+    direction.isStaffValueSpecified = true;
+
+    if (nextNotePtr)
+    {
+        direction.voice = NoteReader{*nextNotePtr}.getVoiceNumber();
+    }
+
+    auto words = api::WordsData{};
+    words.text = std::move(text);
+    direction.words.emplace_back(std::move(words));
+
+    const auto staffIndex = getFiguredBassStaffIndex(myCurrentCursor, myOutMeasureData, nextNotePtr);
+    myOutMeasureData.staves.at(static_cast<size_t>(staffIndex)).directions.emplace_back(std::move(direction));
 }
 
 void MeasureReader::parsePrint(const core::Print &inMxPrint) const
@@ -632,6 +729,32 @@ void MeasureReader::coutItemNotSupported(const core::ElementInterface &element) 
 {
     MX_UNUSED(element);
     // std::cout << element.getElementName() << " is not supported" << std::endl;
+}
+
+void MeasureReader::importStaffDetails(const core::Properties &inMxProperties) const
+{
+    for (const auto &staffDetailsPtr : inMxProperties.getStaffDetailsSet())
+    {
+        if (!staffDetailsPtr || !staffDetailsPtr->getHasStaffLines())
+        {
+            continue;
+        }
+
+        const auto &attr = *staffDetailsPtr->getAttributes();
+        auto staffIndex = 0;
+        if (attr.hasNumber)
+        {
+            staffIndex = attr.number.getValue() - 1;
+        }
+
+        if (staffIndex < 0 || staffIndex >= static_cast<int>(myOutMeasureData.staves.size()))
+        {
+            continue;
+        }
+
+        myOutMeasureData.staves.at(static_cast<size_t>(staffIndex)).staffLines =
+            staffDetailsPtr->getStaffLines()->getValue().getValue();
+    }
 }
 
 void MeasureReader::importClefs(const core::ClefSet &inClefs) const

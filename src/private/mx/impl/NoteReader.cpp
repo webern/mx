@@ -13,6 +13,9 @@
 #include "mx/core/elements/DisplayStepOctaveGroup.h"
 #include "mx/core/elements/Duration.h"
 #include "mx/core/elements/EditorialVoiceGroup.h"
+#include "mx/core/elements/Elision.h"
+#include "mx/core/elements/ElisionSyllabicGroup.h"
+#include "mx/core/elements/ElisionSyllabicTextGroup.h"
 #include "mx/core/elements/FullNoteGroup.h"
 #include "mx/core/elements/FullNoteTypeChoice.h"
 #include "mx/core/elements/GraceNoteGroup.h"
@@ -39,6 +42,9 @@
 #include "mx/core/elements/Type.h"
 #include "mx/core/elements/Unpitched.h"
 #include "mx/core/elements/Voice.h"
+#include "mx/impl/FontFunctions.h"
+#include "mx/impl/PositionFunctions.h"
+#include "mx/impl/PrintFunctions.h"
 #include "mx/utility/StringToInt.h"
 
 #include "Converter.h"
@@ -49,6 +55,140 @@ namespace mx
 {
 namespace impl
 {
+namespace
+{
+api::LyricSyllabic convertLyricSyllabic(core::SyllabicEnum value)
+{
+    switch (value)
+    {
+    case core::SyllabicEnum::single:
+        return api::LyricSyllabic::single;
+    case core::SyllabicEnum::begin:
+        return api::LyricSyllabic::begin;
+    case core::SyllabicEnum::end:
+        return api::LyricSyllabic::end;
+    case core::SyllabicEnum::middle:
+        return api::LyricSyllabic::middle;
+    }
+
+    return api::LyricSyllabic::single;
+}
+
+api::PositionData getLyricPositionData(const core::LyricAttributes &inAttributes)
+{
+    api::PositionData outPositionData;
+
+    if (inAttributes.hasDefaultX)
+    {
+        outPositionData.isDefaultXSpecified = true;
+        outPositionData.defaultX = inAttributes.defaultX.getValue();
+    }
+
+    if (inAttributes.hasDefaultY)
+    {
+        outPositionData.isDefaultYSpecified = true;
+        outPositionData.defaultY = inAttributes.defaultY.getValue();
+    }
+
+    if (inAttributes.hasRelativeX)
+    {
+        outPositionData.isRelativeXSpecified = true;
+        outPositionData.relativeX = inAttributes.relativeX.getValue();
+    }
+
+    if (inAttributes.hasRelativeY)
+    {
+        outPositionData.isRelativeYSpecified = true;
+        outPositionData.relativeY = inAttributes.relativeY.getValue();
+    }
+
+    Converter converter;
+
+    if (inAttributes.hasPlacement)
+    {
+        outPositionData.placement = converter.convert(inAttributes.placement);
+    }
+
+    if (inAttributes.hasJustify)
+    {
+        outPositionData.horizontalAlignmnet = converter.convert(inAttributes.justify);
+    }
+
+    return outPositionData;
+}
+
+api::PrintData getLyricPrintData(const core::LyricAttributes &lyricAttributes,
+                                 const core::TextAttributes *textAttributes)
+{
+    api::PrintData outPrintData;
+    outPrintData.printObject = getPrintObject(lyricAttributes);
+
+    if (lyricAttributes.hasColor)
+    {
+        outPrintData.isColorSpecified = true;
+        outPrintData.color = getColor(lyricAttributes);
+    }
+
+    if (textAttributes)
+    {
+        outPrintData.fontData = getFontData(*textAttributes);
+    }
+
+    return outPrintData;
+}
+
+std::string getElisionDisplayText(const core::ElisionSyllabicTextGroup &inGroup)
+{
+    if (inGroup.getHasElisionSyllabicGroup())
+    {
+        const auto &elisionGroup = inGroup.getElisionSyllabicGroup();
+        if (elisionGroup)
+        {
+            const auto &elision = elisionGroup->getElision();
+            if (elision)
+            {
+                const auto value = elision->getValue().getValue();
+                if (!value.empty())
+                {
+                    return value;
+                }
+            }
+        }
+    }
+
+    return "\xE2\x80\xBF";
+}
+
+std::string getLyricDisplayText(const core::SyllabicTextGroup &inGroup)
+{
+    std::string result;
+
+    const auto &leadingText = inGroup.getText();
+    if (leadingText)
+    {
+        result += leadingText->getValue().getValue();
+    }
+
+    for (const auto &group : inGroup.getElisionSyllabicTextGroupSet())
+    {
+        if (!group)
+        {
+            continue;
+        }
+
+        result += getElisionDisplayText(*group);
+
+        const auto &text = group->getText();
+        if (text)
+        {
+            result += text->getValue().getValue();
+        }
+    }
+
+    return result;
+}
+} // namespace
+
 NoteReader::NoteReader(const core::Note &mxNote)
     : myNote(mxNote), myNoteChoice(*myNote.getNoteChoice()), myFullNoteGroup(findFullNoteGroup(myNoteChoice)),
       myIsNormal(false), myIsGrace(false), myIsCue(false), myIsRest(false), myIsChord(false), myIsMeasureRest(false),
@@ -371,6 +511,20 @@ void NoteReader::setLyric()
         const auto &textChoice = lyric->getLyricTextChoice();
         if (textChoice)
         {
+            api::LyricData lyricData;
+            const auto &lyricAttributes = *lyric->getAttributes();
+            lyricData.positionData = getLyricPositionData(lyricAttributes);
+
+            if (lyricAttributes.hasNumber)
+            {
+                lyricData.verseNumber = lyricAttributes.number.getValue();
+            }
+
+            if (lyricAttributes.hasName)
+            {
+                lyricData.verseName = lyricAttributes.name.getValue();
+            }
+
             const auto choice = textChoice->getChoice();
             switch (choice)
             {
@@ -387,16 +541,25 @@ void NoteReader::setLyric()
                     const auto &textPtr = textGroup->getText();
                     if (textPtr)
                     {
-                        const auto text = textPtr->getValue();
-                        const LyricType lyricType(text.getValue(), syllabic);
-                        myLyrics.emplace_back(lyricType);
-                        myHasLyric = true;
+                        lyricData.text = getLyricDisplayText(*textGroup);
+                        lyricData.printData = getLyricPrintData(lyricAttributes, textPtr->getAttributes().get());
                     }
+
+                    lyricData.syllabic = convertLyricSyllabic(syllabic);
+                    lyricData.hasExtend = textGroup->getHasExtend();
+                    myLyrics.emplace_back(lyricData);
+                    myHasLyric = true;
                 }
                 break;
             }
 
             case core::LyricTextChoice::Choice::extend:
+                lyricData.hasExtend = true;
+                lyricData.printData = getLyricPrintData(lyricAttributes, nullptr);
+                myLyrics.emplace_back(lyricData);
+                myHasLyric = true;
+                break;
+
             case core::LyricTextChoice::Choice::laughing:
             case core::LyricTextChoice::Choice::humming: {
                 break;

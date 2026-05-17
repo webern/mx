@@ -19,9 +19,18 @@ Extension::Extension()
 {
 }
 
+FrameNoteData::FrameNoteData()
+    : stringNumber{1}, fretNumber{0}, fingering{0}, isFingeringSpecified{false}, barre{FrameBarre::none}
+{
+}
+
+FrameData::FrameData() : stringCount{6}, fretCount{4}, firstFret{1}, isFirstFretSpecified{false}, notes{}
+{
+}
+
 ChordData::ChordData()
     : root{Step::c}, rootAlter{0}, chordKind{ChordKind::unspecified}, text{}, useSymbols{Bool::unspecified},
-      bass{Step::unspecified}, bassAlter{0}, extensions{}, miscData{}, positionData{}
+      bass{Step::unspecified}, bassAlter{0}, extensions{}, miscData{}, hasFrameData{false}, frameData{}, positionData{}
 {
 }
 

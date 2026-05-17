@@ -4174,6 +4174,10 @@ std::optional<NoteSizeType> tryParseNoteSizeType(const std::string &value)
     {
         return NoteSizeType::grace;
     }
+    else if (value == "grace-cue")
+    {
+        return NoteSizeType::graceCue;
+    }
     else if (value == "large")
     {
         return NoteSizeType::large;
@@ -4190,6 +4194,9 @@ std::string toString(const NoteSizeType value)
     }
     case NoteSizeType::grace: {
         return "grace";
+    }
+    case NoteSizeType::graceCue: {
+        return "grace-cue";
     }
     case NoteSizeType::large: {
         return "large";
@@ -6436,6 +6443,53 @@ std::ostream &toStream(std::ostream &os, const UpDown value)
 }
 
 std::ostream &operator<<(std::ostream &os, const UpDown value)
+{
+    return toStream(os, value);
+}
+
+/// UpDownNone /////////////////////////////////////////////////////////////////////////////////
+
+UpDownNone parseUpDownNone(const std::string &value)
+{
+    const auto opt = tryParseUpDownNone(value);
+    return opt.value_or(UpDownNone::none);
+}
+
+std::optional<UpDownNone> tryParseUpDownNone(const std::string &value)
+{
+    if (value == "up")
+    {
+        return UpDownNone::up;
+    }
+    else if (value == "down")
+    {
+        return UpDownNone::down;
+    }
+    return std::optional<UpDownNone>{};
+}
+
+std::string toString(const UpDownNone value)
+{
+    switch (value)
+    {
+    case UpDownNone::up: {
+        return "up";
+    }
+    case UpDownNone::down: {
+        return "down";
+    }
+    default:
+        break;
+    }
+    return "none";
+}
+
+std::ostream &toStream(std::ostream &os, const UpDownNone value)
+{
+    return os << toString(value);
+}
+
+std::ostream &operator<<(std::ostream &os, const UpDownNone value)
 {
     return toStream(os, value);
 }

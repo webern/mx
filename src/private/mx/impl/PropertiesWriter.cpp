@@ -62,6 +62,7 @@
 #include "mx/core/elements/Sign.h"
 #include "mx/core/elements/Staff.h"
 #include "mx/core/elements/StaffDetails.h"
+#include "mx/core/elements/StaffLines.h"
 #include "mx/core/elements/Staves.h"
 #include "mx/core/elements/Stem.h"
 #include "mx/core/elements/SystemDistance.h"
@@ -198,8 +199,10 @@ void PropertiesWriter::writeTime(const api::TimeSignatureData &value)
     myProperties->addTime(time);
     time->getTimeChoice()->setChoice(core::TimeChoice::Choice::timeSignature);
     auto sigGrp = time->getTimeChoice()->getTimeSignatureGroupSet().front();
-    sigGrp->getBeats()->setValue(core::XsString{std::to_string(value.beats)});
-    sigGrp->getBeatType()->setValue(core::XsString{std::to_string(value.beatType)});
+    const auto beatsString = value.beatsText.empty() ? std::to_string(value.beats) : value.beatsText;
+    const auto beatTypeString = value.beatTypeText.empty() ? std::to_string(value.beatType) : value.beatTypeText;
+    sigGrp->getBeats()->setValue(core::XsString{beatsString});
+    sigGrp->getBeatType()->setValue(core::XsString{beatTypeString});
 
     const auto symbol = value.symbol;
     if (symbol != api::TimeSignatureSymbol::unspecified)
@@ -212,6 +215,10 @@ void PropertiesWriter::writeTime(const api::TimeSignatureData &value)
         else if (symbol == api::TimeSignatureSymbol::cut)
         {
             time->getAttributes()->symbol = core::TimeSymbol::cut;
+        }
+        else if (symbol == api::TimeSignatureSymbol::singleNumber)
+        {
+            time->getAttributes()->symbol = core::TimeSymbol::singleNumber;
         }
     }
 
@@ -227,6 +234,20 @@ void PropertiesWriter::writeNumStaves(int value)
 {
     myProperties->setHasStaves(true);
     myProperties->getStaves()->setValue(core::NonNegativeInteger{value});
+}
+
+void PropertiesWriter::writeStaffDetails(int staffIndex, int staffLines)
+{
+    auto staffDetails = core::makeStaffDetails();
+    if (staffIndex >= 0)
+    {
+        staffDetails->getAttributes()->hasNumber = true;
+        staffDetails->getAttributes()->number = core::StaffNumber{staffIndex + 1};
+    }
+
+    staffDetails->setHasStaffLines(true);
+    staffDetails->getStaffLines()->setValue(core::NonNegativeInteger{staffLines});
+    myProperties->addStaffDetails(staffDetails);
 }
 
 void PropertiesWriter::writeClef(int staffIndex, const api::ClefData &inClefData)

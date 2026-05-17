@@ -27,6 +27,34 @@ namespace mx
 {
 namespace impl
 {
+namespace
+{
+bool parseCompoundIntegerString(const std::string &value, int &outResult)
+{
+    int result = 0;
+    size_t start = 0;
+    while (start < value.size())
+    {
+        const auto stop = value.find('+', start);
+        const auto token = value.substr(start, stop == std::string::npos ? std::string::npos : stop - start);
+        int component = 0;
+        if (!utility::stringToInt(token, component))
+        {
+            return false;
+        }
+        result += component;
+        if (stop == std::string::npos)
+        {
+            outResult = result;
+            return true;
+        }
+        start = stop + 1;
+    }
+
+    return false;
+}
+} // namespace
+
 TimeReader::TimeReader(const core::MusicDataChoiceSet &inMusicDataChoices)
     : myMusicDataChoiceSet{inMusicDataChoices}, myIsTimeFound{false}, myTimeSignatureData{}
 {
@@ -82,7 +110,7 @@ bool TimeReader::parseTimeSignatureGroup(const core::TimeSignatureGroup &timeSig
     const auto beatsStr = timeSig.getBeats()->getValue().getValue();
     int beats = myTimeSignatureData.beats;
 
-    if (!utility::stringToInt(beatsStr, beats))
+    if (!parseCompoundIntegerString(beatsStr, beats))
     {
         return false;
     }
@@ -96,7 +124,9 @@ bool TimeReader::parseTimeSignatureGroup(const core::TimeSignatureGroup &timeSig
     }
 
     myTimeSignatureData.beats = beats;
+    myTimeSignatureData.beatsText = beatsStr;
     myTimeSignatureData.beatType = beatType;
+    myTimeSignatureData.beatTypeText = beatTypeStr;
 
     if (myTime->getAttributes()->hasSymbol)
     {
@@ -107,6 +137,10 @@ bool TimeReader::parseTimeSignatureGroup(const core::TimeSignatureGroup &timeSig
         else if (myTime->getAttributes()->symbol == core::TimeSymbol::cut)
         {
             myTimeSignatureData.symbol = api::TimeSignatureSymbol::cut;
+        }
+        else if (myTime->getAttributes()->symbol == core::TimeSymbol::singleNumber)
+        {
+            myTimeSignatureData.symbol = api::TimeSignatureSymbol::singleNumber;
         }
     }
     else

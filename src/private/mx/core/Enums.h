@@ -1167,15 +1167,17 @@ std::ostream &operator<<(std::ostream &os, const MuteEnum value);
 /// NoteSizeType ///////////////////////////////////////////////////////////////////////////
 ///
 /// The note-size-type type indicates the type of note being defined by a note-size element.
-/// The grace type is used for notes of cue size that that include a grace element. The cue
-/// type is used for all other notes with cue size, whether defined explicitly or implicitly
-/// via a cue element. The large type is used for notes of large size.
+/// The grace type is used for notes of cue size that that include a grace element. The
+/// grace-cue type is used for notes that include both a grace and cue element. The cue type
+/// is used for all other notes with cue size, whether defined explicitly or implicitly via a
+/// cue element. The large type is used for notes of large size.
 ///
 enum class NoteSizeType
 {
     cue = 0,
     grace = 1,
-    large = 2
+    graceCue = 2,
+    large = 3
 };
 
 NoteSizeType parseNoteSizeType(const std::string &value);
@@ -1902,6 +1904,24 @@ std::optional<UpDownStopContinue> tryParseUpDownStopContinue(const std::string &
 std::string toString(const UpDownStopContinue value);
 std::ostream &toStream(std::ostream &os, const UpDownStopContinue value);
 std::ostream &operator<<(std::ostream &os, const UpDownStopContinue value);
+
+/// UpDownNone /////////////////////////////////////////////////////////////////////
+///
+/// The up-down-none type is used for octave-shift elements, indicating the
+/// direction of the shift from their true pitched values because of printing difficulty.
+///
+enum class UpDownNone
+{
+    up = 0,
+    down = 1,
+    none = 2
+};
+
+UpDownNone parseUpDownNone(const std::string &value);
+std::optional<UpDownNone> tryParseUpDownNone(const std::string &value);
+std::string toString(const UpDownNone value);
+std::ostream &toStream(std::ostream &os, const UpDownNone value);
+std::ostream &operator<<(std::ostream &os, const UpDownNone value);
 
 /// UprightInverted ////////////////////////////////////////////////////////////////////////
 ///

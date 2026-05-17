@@ -41,6 +41,7 @@ template <typename ATTRIBUTES_TYPE> api::SpannerStop getSpannerStop(const ATTRIB
         stop.numberLevel = checkNumber(&inAttributes);
     }
     stop.positionData = getPositionData(inAttributes);
+    stop.lineData = getLineData(inAttributes);
     return stop;
 }
 
@@ -60,6 +61,24 @@ void setAttributesFromSpannerStart(const api::SpannerStart &start, ATTRIBUTES_TY
         lookForAndSetHasNumber(false, &outAttributes);
         lookForAndSetNumber(1, &outAttributes);
     }
+}
+
+template <typename ATTRIBUTES_TYPE>
+void setAttributesFromSpannerStop(const api::SpannerStop &stop, ATTRIBUTES_TYPE &outAttributes)
+{
+    if (stop.numberLevel > 0)
+    {
+        lookForAndSetHasNumber(true, &outAttributes);
+        lookForAndSetNumber(stop.numberLevel, &outAttributes);
+    }
+    else
+    {
+        lookForAndSetHasNumber(false, &outAttributes);
+        lookForAndSetNumber(1, &outAttributes);
+    }
+
+    setAttributesFromPositionData(stop.positionData, outAttributes);
+    setAttributesFromLineData(stop.lineData, outAttributes);
 }
 } // namespace impl
 } // namespace mx

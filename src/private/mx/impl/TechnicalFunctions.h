@@ -12,8 +12,6 @@
 
 // TODO - import fingering
 // TODO - import pluck
-// TODO - import fret
-// TODO - import string_
 // TODO - import hammerOn
 // TODO - import pullOff
 // TODO - import bend

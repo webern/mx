@@ -175,6 +175,7 @@ api::NoteData NoteFunctions::parseNote() const
     }
     myOutNoteData.isTieStart = reader.getIsTieStart();
     myOutNoteData.isTieStop = reader.getIsTieStop();
+    myOutNoteData.lyrics = reader.getLyrics();
 
     parseMiscData();
     const auto &incomingNoteAttributes = *(myNote.getAttributes());

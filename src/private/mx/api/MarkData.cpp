@@ -76,8 +76,10 @@ bool isMarkTechnical(MarkType markType)
     return (markType == MarkType::upBow) || (markType == MarkType::downBow) || (markType == MarkType::harmonic) ||
            (markType == MarkType::openString) || (markType == MarkType::thumbPosition) ||
            (markType == MarkType::doubleTongue) || (markType == MarkType::tripleTongue) ||
-           (markType == MarkType::stopped) || (markType == MarkType::snapPizzicato) || (markType == MarkType::heel) ||
-           (markType == MarkType::toe) || (markType == MarkType::fingernails) || (markType == MarkType::otherTechnical);
+           (markType == MarkType::stopped) || (markType == MarkType::snapPizzicato) || (markType == MarkType::fret) ||
+           (markType == MarkType::string_) || (markType == MarkType::heel) || (markType == MarkType::toe) ||
+           (markType == MarkType::fingernails) || (markType == MarkType::hole) || (markType == MarkType::arrow) ||
+           (markType == MarkType::handbell) || (markType == MarkType::otherTechnical);
 }
 
 bool isMarkTremolo(MarkType markType)
@@ -145,11 +147,17 @@ int numTremoloSlashes(MarkType markType)
     return -1;
 }
 
-MarkData::MarkData() : markType(MarkType::unspecified), name{}, tickTimePosition{0}, printData{}, positionData{}
+MarkData::MarkData()
+    : markType(MarkType::unspecified), name{}, tickTimePosition{0}, printData{}, positionData{}, mordentLong{Bool::no},
+      hasMordentLong{false}, mordentApproach{Placement::unspecified}, hasMordentApproach{false},
+      mordentDeparture{Placement::unspecified}, hasMordentDeparture{false}
 {
 }
 
-MarkData::MarkData(MarkType inMarkType) : markType(inMarkType), name{}, tickTimePosition{0}, printData{}, positionData{}
+MarkData::MarkData(MarkType inMarkType)
+    : markType(inMarkType), name{}, tickTimePosition{0}, printData{}, positionData{}, mordentLong{Bool::no},
+      hasMordentLong{false}, mordentApproach{Placement::unspecified}, hasMordentApproach{false},
+      mordentDeparture{Placement::unspecified}, hasMordentDeparture{false}
 {
     impl::Converter converter;
     if (isMarkDynamic(markType))
@@ -167,7 +175,9 @@ MarkData::MarkData(MarkType inMarkType) : markType(inMarkType), name{}, tickTime
 }
 
 MarkData::MarkData(Placement inPlacement, MarkType inMarkType)
-    : markType(inMarkType), name{}, tickTimePosition{0}, printData{}, positionData{}
+    : markType(inMarkType), name{}, tickTimePosition{0}, printData{}, positionData{}, mordentLong{Bool::no},
+      hasMordentLong{false}, mordentApproach{Placement::unspecified}, hasMordentApproach{false},
+      mordentDeparture{Placement::unspecified}, hasMordentDeparture{false}
 {
     positionData.placement = inPlacement;
     impl::Converter converter;

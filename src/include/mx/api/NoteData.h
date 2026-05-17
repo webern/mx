@@ -5,6 +5,7 @@
 #pragma once
 
 #include "mx/api/DurationData.h"
+#include "mx/api/LyricData.h"
 #include "mx/api/NoteAttachmentData.h"
 #include "mx/api/PitchData.h"
 #include "mx/api/PositionData.h"
@@ -116,6 +117,7 @@ class NoteData
     PrintData printData;
 
     NoteAttachmentData noteAttachmentData;
+    std::vector<LyricData> lyrics;
 
     // these strings will be stuffed into the editorial <footnote> element
     // preceded by the string ##misc-data##. for example if you have the
@@ -145,6 +147,7 @@ MXAPI_EQUALS_MEMBER(beams)
 MXAPI_EQUALS_MEMBER(positionData)
 MXAPI_EQUALS_MEMBER(printData)
 MXAPI_EQUALS_MEMBER(noteAttachmentData)
+MXAPI_EQUALS_MEMBER(lyrics)
 MXAPI_EQUALS_MEMBER(miscData)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(NoteData);

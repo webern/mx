@@ -5,6 +5,7 @@
 #include "mx/impl/DirectionWriter.h"
 #include "mx/api/BarlineData.h"
 #include "mx/core/elements/AccordionRegistration.h"
+#include "mx/core/elements/Barre.h"
 #include "mx/core/elements/Bass.h"
 #include "mx/core/elements/BassAlter.h"
 #include "mx/core/elements/BassStep.h"
@@ -14,6 +15,7 @@
 #include "mx/core/elements/BeatUnitPer.h"
 #include "mx/core/elements/BeatUnitPerOrNoteRelationNoteChoice.h"
 #include "mx/core/elements/Bracket.h"
+#include "mx/core/elements/BracketAttributes.h"
 #include "mx/core/elements/Coda.h"
 #include "mx/core/elements/Damp.h"
 #include "mx/core/elements/DampAll.h"
@@ -28,8 +30,14 @@
 #include "mx/core/elements/EditorialGroup.h"
 #include "mx/core/elements/EditorialVoiceDirectionGroup.h"
 #include "mx/core/elements/Eyeglasses.h"
+#include "mx/core/elements/Fingering.h"
+#include "mx/core/elements/FirstFret.h"
 #include "mx/core/elements/Footnote.h"
 #include "mx/core/elements/Frame.h"
+#include "mx/core/elements/FrameFrets.h"
+#include "mx/core/elements/FrameNote.h"
+#include "mx/core/elements/FrameStrings.h"
+#include "mx/core/elements/Fret.h"
 #include "mx/core/elements/Function.h"
 #include "mx/core/elements/Harmony.h"
 #include "mx/core/elements/HarmonyChordGroup.h"
@@ -56,6 +64,7 @@
 #include "mx/core/elements/Segno.h"
 #include "mx/core/elements/Sound.h"
 #include "mx/core/elements/Staff.h"
+#include "mx/core/elements/String.h"
 #include "mx/core/elements/StringMute.h"
 #include "mx/core/elements/Voice.h"
 #include "mx/core/elements/Wedge.h"
@@ -154,6 +163,36 @@ core::MusicDataChoiceSet DirectionWriter::getDirectionLikeThings()
         }
     }
 
+    for (const auto &pedalStart : myDirectionData.pedalStarts)
+    {
+        auto directionTypePtr = core::makeDirectionType();
+        this->addDirectionType(directionTypePtr, directionPtr);
+        directionTypePtr->setChoice(core::DirectionType::Choice::pedal);
+        auto pedalPtr = directionTypePtr->getPedal();
+        auto attr = pedalPtr->getAttributes();
+        attr->type = core::StartStopChangeContinue::start;
+        attr->hasLine = true;
+        attr->line = core::YesNo::yes;
+        attr->hasSign = true;
+        attr->sign = core::YesNo::yes;
+        setAttributesFromPositionData(pedalStart.positionData, *attr);
+    }
+
+    for (const auto &pedalStop : myDirectionData.pedalStops)
+    {
+        auto directionTypePtr = core::makeDirectionType();
+        this->addDirectionType(directionTypePtr, directionPtr);
+        directionTypePtr->setChoice(core::DirectionType::Choice::pedal);
+        auto pedalPtr = directionTypePtr->getPedal();
+        auto attr = pedalPtr->getAttributes();
+        attr->type = core::StartStopChangeContinue::stop;
+        attr->hasLine = true;
+        attr->line = core::YesNo::yes;
+        attr->hasSign = true;
+        attr->sign = core::YesNo::yes;
+        setAttributesFromPositionData(pedalStop.positionData, *attr);
+    }
+
     for (const auto &wedgeStop : myDirectionData.wedgeStops)
     {
         auto wedgeStartDirectionTypePtr = core::makeDirectionType();
@@ -247,6 +286,32 @@ core::MusicDataChoiceSet DirectionWriter::getDirectionLikeThings()
         }
     }
 
+    const auto setBracketLineData = [&](const api::LineData &lineData, core::BracketAttributes &attr) {
+        attr.lineEnd = lineData.lineHook == api::LineHook::unspecified ? core::LineEnd::none
+                                                                       : myConverter.convert(lineData.lineHook);
+
+        if (lineData.lineType != api::LineType::unspecified)
+        {
+            attr.hasLineType = true;
+            attr.lineType = myConverter.convert(lineData.lineType);
+        }
+        if (lineData.isStopLengthSpecified)
+        {
+            attr.hasEndLength = true;
+            attr.endLength = core::TenthsValue{static_cast<core::DecimalType>(lineData.endLength)};
+        }
+        if (lineData.isDashLengthSpecified)
+        {
+            attr.hasDashLength = true;
+            attr.dashLength = core::TenthsValue{static_cast<core::DecimalType>(lineData.dashLength)};
+        }
+        if (lineData.isSpaceLengthSpecified)
+        {
+            attr.hasSpaceLength = true;
+            attr.spaceLength = core::TenthsValue{static_cast<core::DecimalType>(lineData.spaceLength)};
+        }
+    };
+
     for (const auto &item : myDirectionData.bracketStarts)
     {
         auto outDirType = core::makeDirectionType();
@@ -255,6 +320,47 @@ core::MusicDataChoiceSet DirectionWriter::getDirectionLikeThings()
         auto outElement = outDirType->getBracket();
         auto &attr = *outElement->getAttributes();
         setAttributesFromSpannerStart(item, attr);
+        attr.type = core::StartStopContinue::start;
+        setAttributesFromPositionData(item.positionData, attr);
+        setAttributesFromPrintData(item.printData, attr);
+        setBracketLineData(item.lineData, attr);
+    }
+
+    for (const auto &item : myDirectionData.bracketStops)
+    {
+        auto outDirType = core::makeDirectionType();
+        this->addDirectionType(outDirType, directionPtr);
+        outDirType->setChoice(core::DirectionType::Choice::bracket);
+        auto outElement = outDirType->getBracket();
+        auto &attr = *outElement->getAttributes();
+        setAttributesFromSpannerStop(item, attr);
+        attr.type = core::StartStopContinue::stop;
+        setBracketLineData(item.lineData, attr);
+    }
+
+    for (const auto &item : myDirectionData.dashesStarts)
+    {
+        auto outDirType = core::makeDirectionType();
+        this->addDirectionType(outDirType, directionPtr);
+        outDirType->setChoice(core::DirectionType::Choice::dashes);
+        auto outElement = outDirType->getDashes();
+        auto &attr = *outElement->getAttributes();
+        setAttributesFromSpannerStart(item, attr);
+        attr.type = core::StartStopContinue::start;
+        setAttributesFromPositionData(item.positionData, attr);
+        setAttributesFromPrintData(item.printData, attr);
+        setAttributesFromLineData(item.lineData, attr);
+    }
+
+    for (const auto &item : myDirectionData.dashesStops)
+    {
+        auto outDirType = core::makeDirectionType();
+        this->addDirectionType(outDirType, directionPtr);
+        outDirType->setChoice(core::DirectionType::Choice::dashes);
+        auto outElement = outDirType->getDashes();
+        auto &attr = *outElement->getAttributes();
+        setAttributesFromSpannerStop(item, attr);
+        attr.type = core::StartStopContinue::stop;
     }
 
     for (const auto &tempo : myDirectionData.tempos)
@@ -527,6 +633,47 @@ core::MusicDataChoiceSet DirectionWriter::createHarmonyElements(int inOffset)
         for (; miscIter != miscEnd; ++miscIter)
         {
             harmony->addProcessingInstruction(core::ProcessingInstruction{miscIter->name, miscIter->data});
+        }
+
+        if (chordIter->hasFrameData)
+        {
+            harmony->setHasFrame(true);
+            auto frame = harmony->getFrame();
+            frame->getFrameStrings()->setValue(core::PositiveInteger{chordIter->frameData.stringCount});
+            frame->getFrameFrets()->setValue(core::PositiveInteger{chordIter->frameData.fretCount});
+
+            if (chordIter->frameData.isFirstFretSpecified)
+            {
+                frame->setHasFirstFret(true);
+                frame->getFirstFret()->setValue(core::PositiveInteger{chordIter->frameData.firstFret});
+            }
+            else
+            {
+                frame->setHasFirstFret(false);
+            }
+
+            frame->clearFrameNoteSet();
+            for (const auto &noteData : chordIter->frameData.notes)
+            {
+                auto frameNote = core::makeFrameNote();
+                frameNote->getString()->setValue(core::StringNumber{noteData.stringNumber});
+                frameNote->getFret()->setValue(core::NonNegativeInteger{noteData.fretNumber});
+
+                if (noteData.isFingeringSpecified)
+                {
+                    frameNote->setHasFingering(true);
+                    frameNote->getFingering()->setValue(core::XsString{std::to_string(noteData.fingering)});
+                }
+
+                if (noteData.barre != api::FrameBarre::none)
+                {
+                    frameNote->setHasBarre(true);
+                    frameNote->getBarre()->getAttributes()->type =
+                        noteData.barre == api::FrameBarre::start ? core::StartStop::start : core::StartStop::stop;
+                }
+
+                frame->addFrameNote(frameNote);
+            }
         }
 
         if (output.empty())

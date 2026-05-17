@@ -142,6 +142,55 @@ MXAPI_EQUALS_MEMBER(printObject)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(Extension);
 
+enum class FrameBarre
+{
+    none,
+    start,
+    stop
+};
+
+class FrameNoteData
+{
+  public:
+    FrameNoteData();
+
+    int stringNumber;
+    int fretNumber;
+    int fingering;
+    bool isFingeringSpecified;
+    FrameBarre barre;
+};
+
+MXAPI_EQUALS_BEGIN(FrameNoteData)
+MXAPI_EQUALS_MEMBER(stringNumber)
+MXAPI_EQUALS_MEMBER(fretNumber)
+MXAPI_EQUALS_MEMBER(fingering)
+MXAPI_EQUALS_MEMBER(isFingeringSpecified)
+MXAPI_EQUALS_MEMBER(barre)
+MXAPI_EQUALS_END;
+MXAPI_NOT_EQUALS_AND_VECTORS(FrameNoteData);
+
+class FrameData
+{
+  public:
+    FrameData();
+
+    int stringCount;
+    int fretCount;
+    int firstFret;
+    bool isFirstFretSpecified;
+    std::vector<FrameNoteData> notes;
+};
+
+MXAPI_EQUALS_BEGIN(FrameData)
+MXAPI_EQUALS_MEMBER(stringCount)
+MXAPI_EQUALS_MEMBER(fretCount)
+MXAPI_EQUALS_MEMBER(firstFret)
+MXAPI_EQUALS_MEMBER(isFirstFretSpecified)
+MXAPI_EQUALS_MEMBER(notes)
+MXAPI_EQUALS_END;
+MXAPI_NOT_EQUALS_AND_VECTORS(FrameData);
+
 class ChordData
 {
   public:
@@ -157,6 +206,8 @@ class ChordData
     int bassAlter;
     std::vector<Extension> extensions;
     std::vector<MiscData> miscData;
+    bool hasFrameData;
+    FrameData frameData;
     PositionData positionData;
 };
 
@@ -170,6 +221,8 @@ MXAPI_EQUALS_MEMBER(bass)
 MXAPI_EQUALS_MEMBER(bassAlter)
 MXAPI_EQUALS_MEMBER(extensions)
 MXAPI_EQUALS_MEMBER(miscData)
+MXAPI_EQUALS_MEMBER(hasFrameData)
+MXAPI_EQUALS_MEMBER(frameData)
 MXAPI_EQUALS_MEMBER(positionData)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(ChordData);

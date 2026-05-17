@@ -131,8 +131,8 @@ enum class MarkType
     tripleTongue,
     stopped,
     snapPizzicato,
-    // fret,
-    // string_,
+    fret,
+    string_,
     // hammerOn,
     // pullOff,
     // bend,
@@ -140,9 +140,9 @@ enum class MarkType
     heel,
     toe,
     fingernails,
-    // hole,
-    // arrow,
-    // handbell,
+    hole,
+    arrow,
+    handbell,
     otherTechnical,
     unknownTechnical,
 
@@ -214,6 +214,12 @@ struct MarkData
     int tickTimePosition;
     PrintData printData;
     PositionData positionData;
+    Bool mordentLong;
+    bool hasMordentLong;
+    Placement mordentApproach;
+    bool hasMordentApproach;
+    Placement mordentDeparture;
+    bool hasMordentDeparture;
 
     MarkData();
     MarkData(MarkType inMarkType);
@@ -226,6 +232,12 @@ MXAPI_EQUALS_MEMBER(name)
 MXAPI_EQUALS_MEMBER(tickTimePosition)
 MXAPI_EQUALS_MEMBER(printData)
 MXAPI_EQUALS_MEMBER(positionData)
+MXAPI_EQUALS_MEMBER(mordentLong)
+MXAPI_EQUALS_MEMBER(hasMordentLong)
+MXAPI_EQUALS_MEMBER(mordentApproach)
+MXAPI_EQUALS_MEMBER(hasMordentApproach)
+MXAPI_EQUALS_MEMBER(mordentDeparture)
+MXAPI_EQUALS_MEMBER(hasMordentDeparture)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(MarkData);
 } // namespace api

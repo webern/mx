@@ -57,6 +57,7 @@ class PropertiesWriter
     static void writeNonTraditionalKey(const api::KeyData &inKeyData, mx::core::KeyPtr &ioKey);
     void writeTime(const api::TimeSignatureData &value);
     void writeNumStaves(int value);
+    void writeStaffDetails(int staffIndex, int staffLines);
     void writeClef(int staffIndex, const api::ClefData &inClefData);
     void writeTranspose(const api::TransposeData &inTransposeData);
 

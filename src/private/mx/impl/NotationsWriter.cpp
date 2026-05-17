@@ -4,6 +4,7 @@
 
 #include "mx/impl/NotationsWriter.h"
 #include "mx/core/elements/Accent.h"
+#include "mx/core/elements/Arpeggiate.h"
 #include "mx/core/elements/Arrow.h"
 #include "mx/core/elements/Articulations.h"
 #include "mx/core/elements/ArticulationsChoice.h"
@@ -30,6 +31,7 @@
 #include "mx/core/elements/InvertedMordent.h"
 #include "mx/core/elements/InvertedTurn.h"
 #include "mx/core/elements/Mordent.h"
+#include "mx/core/elements/NonArpeggiate.h"
 #include "mx/core/elements/Notations.h"
 #include "mx/core/elements/NotationsChoice.h"
 #include "mx/core/elements/OpenString.h"
@@ -82,8 +84,35 @@ namespace mx
 {
 namespace impl
 {
+namespace
+{
+template <typename ATTRIBUTES_TYPE>
+void setMordentSpecificAttributes(const api::MarkData &mark, ATTRIBUTES_TYPE &attributes)
+{
+    Converter converter;
+
+    if (mark.hasMordentLong)
+    {
+        attributes.hasLong = true;
+        attributes.long_ = converter.convert(mark.mordentLong);
+    }
+
+    if (mark.hasMordentApproach && mark.mordentApproach != api::Placement::unspecified)
+    {
+        attributes.hasApproach = true;
+        attributes.approach = converter.convert(mark.mordentApproach);
+    }
+
+    if (mark.hasMordentDeparture && mark.mordentDeparture != api::Placement::unspecified)
+    {
+        attributes.hasDeparture = true;
+        attributes.departure = converter.convert(mark.mordentDeparture);
+    }
+}
+} // namespace
+
 NotationsWriter::NotationsWriter(const api::NoteData &inNoteData, const MeasureCursor &inCursor,
-                                 const ScoreWriter & /*inScoreWriter*/)
+                                 const ScoreWriter &inScoreWriter)
     : myNoteData{inNoteData}, myCursor{inCursor}, myConverter{}, myOutNotations{nullptr}
 {
 }
@@ -343,6 +372,40 @@ core::NotationsPtr NotationsWriter::getNotations() const
                 attr.type = core::UprightInverted::inverted;
             }
         }
+        else if (isMarkNonArpeggiate(mark.markType))
+        {
+            auto nonArpeggiateNotationsChoice = core::makeNotationsChoice();
+            myOutNotations->addNotationsChoice(nonArpeggiateNotationsChoice);
+            nonArpeggiateNotationsChoice->setChoice(core::NotationsChoice::Choice::nonArpeggiate);
+            auto &nonArpeggiate = *nonArpeggiateNotationsChoice->getNonArpeggiate();
+            auto &attr = *nonArpeggiate.getAttributes();
+            impl::setAttributesFromMarkData(mark, attr);
+        }
+        else if (isMarkArpeggiate(mark.markType))
+        {
+            auto arpeggiateNotationsChoice = core::makeNotationsChoice();
+            myOutNotations->addNotationsChoice(arpeggiateNotationsChoice);
+            arpeggiateNotationsChoice->setChoice(core::NotationsChoice::Choice::arpeggiate);
+            auto &arpeggiate = *arpeggiateNotationsChoice->getArpeggiate();
+            auto &attr = *arpeggiate.getAttributes();
+            impl::setAttributesFromMarkData(mark, attr);
+
+            if (mark.markType == api::MarkType::arpeggiate)
+            {
+                attr.direction = core::UpDownNone::none;
+                attr.hasDirection = false;
+            }
+            else if (mark.markType == api::MarkType::arpeggiateUp)
+            {
+                attr.direction = core::UpDownNone::up;
+                attr.hasDirection = true;
+            }
+            else if (mark.markType == api::MarkType::arpeggiateDown)
+            {
+                attr.direction = core::UpDownNone::down;
+                attr.hasDirection = true;
+            }
+        }
     }
 
     if (articulations->getArticulationsChoiceSet().size() > 0)
@@ -569,12 +632,14 @@ void NotationsWriter::addOrnament(const api::MarkData &mark, const core::Ornamen
         auto element = ornamentsChoice->getMordent();
         auto attributes = element->getAttributes();
         setAttributesFromPositionData(mark.positionData, *attributes);
+        setMordentSpecificAttributes(mark, *attributes);
     }
     else if (mark.markType == api::MarkType::invertedMordent)
     {
         auto element = ornamentsChoice->getInvertedMordent();
         auto attributes = element->getAttributes();
         setAttributesFromPositionData(mark.positionData, *attributes);
+        setMordentSpecificAttributes(mark, *attributes);
     }
     else if (mark.markType == api::MarkType::schleifer)
     {
@@ -674,6 +739,20 @@ void NotationsWriter::addTechnical(const api::MarkData &mark, const core::Techni
         auto element = technicalChoice->getSnapPizzicato();
         auto attributes = element->getAttributes();
         setAttributesFromPositionData(mark.positionData, *attributes);
+    }
+    else if (mark.markType == api::MarkType::fret)
+    {
+        auto element = technicalChoice->getFret();
+        auto value = core::NonNegativeInteger{};
+        value.parse(mark.name);
+        element->setValue(value);
+    }
+    else if (mark.markType == api::MarkType::string_)
+    {
+        auto element = technicalChoice->getString();
+        auto value = core::StringNumber{};
+        value.parse(mark.name);
+        element->setValue(value);
     }
     else if (mark.markType == api::MarkType::heel)
     {
