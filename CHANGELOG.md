@@ -6,6 +6,12 @@ If you cloned/forked the repository before 2020-05-31, you should delete `v1.0.0
 ## [Unreleased]
 ### API Changes
 - Add support for setting an instrument's transposition at the start of the score. [#116]
+- Add reading and writing of `arpeggiate`; move mark reading functions into helper classes. [#138]
+
+### Behavior Fixes
+- Export `stop` elements before `start` elements. [#140]
+- Fix a missing `break` in `DocumentSpec` enum `toStream` that produced incorrect text
+  (for example `timewise` rendered as `timewiseerror`). [#145]
 
 ### Internal Changes
 - Change the default-constructed value of `DynamicsEnum` to `mf` instead of `otherDynamics`. [#106]/[8a5cd6b]
@@ -15,7 +21,27 @@ If you cloned/forked the repository before 2020-05-31, you should delete `v1.0.0
 - Rewrite `Decimals.h` and `Decimals.cpp`. [#111]. (Related to codegen, [#58]).
 - Rewrite `Enums`, `Integers` and `Decimals`. Add try parse and return bool from parse methods. [#112]. (Related to codegen, [#58]).
 - Rewrite union types `FontSize` and `YesNoNumber`. Also reformat a bunch of documentation. [#113]. (Related to codegen, [#58]).
+- Change the example binary names to lowercase (`mxread`, `mxwrite`, `mxhide`). [#82]
+- Add missing `<cstdint>` includes for stricter standard libraries and remove an
+  ignored-qualifier cast. [#145]
 
+### Repository, Build, and CI
+- Set up the repository for AI-assisted development: agent guides (`AGENTS.md`,
+  `Documents/ai/project/`) and a build/CI design document. [#145]
+- Replace `build.sh` with a portable `Makefile` wrapping CMake (build modes, run targets,
+  knobs); `make test` and `make test-all` also run the example programs. [#145]
+- Add a `.clang-format` (Microsoft base) and reformat the entire `Sourcecode/` tree; `make fmt`
+  formats in place. [#145]
+- Add a pinned-toolchain Docker quality gate: `make check` runs a format check plus a
+  warning-free `g++-14` build, reproducible regardless of the floating CI runner images. [#145]
+- Replace the single workflow with a five-job GitHub Actions pipeline (Linux quality gate,
+  Linux GCC full suite, macOS, Windows, advisory Xcode); archive the old workflow. [#145]
+- Add Apple `XCFramework` build support. [#124]
+- Update the Catch2 test library to v3.2.1. [#135]
+- Remove the CircleCI configuration. [#136]
+
+[#58]: https://github.com/webern/mx/issues/58
+[#82]: https://github.com/webern/mx/pull/82
 [#105]: https://github.com/webern/mx/pull/105
 [#106]: https://github.com/webern/mx/pull/106
 [#107]: https://github.com/webern/mx/pull/107
@@ -24,7 +50,12 @@ If you cloned/forked the repository before 2020-05-31, you should delete `v1.0.0
 [#112]: https://github.com/webern/mx/pull/112
 [#113]: https://github.com/webern/mx/pull/113
 [#116]: https://github.com/webern/mx/pull/116
-[#58]: https://github.com/webern/mx/issues/58
+[#124]: https://github.com/webern/mx/pull/124
+[#135]: https://github.com/webern/mx/pull/135
+[#136]: https://github.com/webern/mx/pull/136
+[#138]: https://github.com/webern/mx/pull/138
+[#140]: https://github.com/webern/mx/pull/140
+[#145]: https://github.com/webern/mx/pull/145
 [8a5cd6b]: https://github.com/webern/mx/commit/8a5cd6b
 
 ## [v0.5.1] - 2020-06-13
