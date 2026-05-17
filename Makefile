@@ -13,6 +13,16 @@
 # Requires CMake >= 3.13 (for `cmake -S/-B` and `--build --parallel`).
 #
 # ----------------------------------------------------------------------------
+# Quality gates run in Docker
+# ----------------------------------------------------------------------------
+#
+# `make fmt`, `make check`, and `make lint` run inside a Docker container with
+# a pinned toolchain (Ubuntu 24.04 + clang-18 + libc++) so formatting, linting,
+# and compiler warnings are deterministic on any machine. The build/test
+# targets (`make test`, `make test-all`, ...) run natively with the local
+# compiler. See Documents/ai/project/build-and-ci-design.md.
+#
+# ----------------------------------------------------------------------------
 # Build modes
 # ----------------------------------------------------------------------------
 #
@@ -52,17 +62,22 @@
 #               GENERATOR=Ninja make dev
 #   ARGS        Forwarded to the mxtest (Catch2) binary, e.g.
 #               make test ARGS='[core]'  or  make test ARGS='--list-tests'
+#   DOCKER      Docker executable (default: docker).
 #
 # ============================================================================
 
 CMAKE      ?= cmake
+DOCKER     ?= docker
 BUILD_TYPE ?= Debug
 BUILD_ROOT := build
 
-# Detect Windows (MSYS2, Git Bash, Cygwin all report names starting with MS/MINGW/CYGWIN).
-IS_WINDOWS := $(if $(filter MINGW% MSYS% CYGWIN%,$(shell uname -s 2>/dev/null)),1,)
-ifdef OS
-IS_WINDOWS := $(if $(filter Windows_NT,$(OS)),1,$(IS_WINDOWS))
+# In GitHub Actions, crazy-max/ghaction-github-runtime exports
+# ACTIONS_RUNTIME_TOKEN. When present, push/pull the Docker layer cache to the
+# GitHub Actions cache so linux-gate does not reinstall the toolchain every
+# run. Absent (local, fork PRs) -> no flags, plain build. Same `make check`
+# everywhere.
+ifneq ($(ACTIONS_RUNTIME_TOKEN),)
+DOCKER_CACHE := --cache-from type=gha --cache-to type=gha,mode=max
 endif
 
 # Portable CPU-count detection. Tried in order; the final echo always succeeds
@@ -106,31 +121,42 @@ define run_bin
 endef
 
 .DEFAULT_GOAL := help
-.PHONY: help lib dev core test test-core examples-run all clean check-tools check-format check-lint fmt lint check xcode-gen xcode-build xcode-test
+.PHONY: help lib dev core test test-all examples-run all clean clean-docker \
+        check-docker fmt lint check xcode-gen xcode-build xcode-test
 
 help:
-	@echo 'mx build/test targets (see comments at the top of the Makefile for rationale):'
+	@echo 'mx build/test targets (see the comments at the top of the Makefile):'
 	@echo ''
-	@echo '  make lib            Build just the static library (no tests, no examples).'
-	@echo '  make dev            Build tests (no slow core tests) + examples. Dev loop.'
+	@echo 'Done with a code change? Run:'
+	@echo '  make fmt && make check && make test'
+	@echo '  (use make test-all instead of make test if you touched mx/core)'
+	@echo ''
+	@echo 'Quality gates (run in Docker, pinned toolchain):'
+	@echo '  make fmt            Format all C++ files under Sourcecode/.'
+	@echo '  make check          fmt-check + warning-free build + lint.'
+	@echo '  make lint           Run clang-tidy only.'
+	@echo ''
+	@echo 'Build (native):'
+	@echo '  make lib            Build just the static library (no tests/examples).'
+	@echo '  make dev            Build tests (no slow core tests) + examples.'
 	@echo '  make core           Build the full suite incl. slow mx::core tests.'
 	@echo ''
+	@echo 'Run (native):'
 	@echo '  make test           Build dev, then run mxtest.        ARGS= forwarded.'
-	@echo '  make test-core      Build core, then run full mxtest.  ARGS= forwarded.'
+	@echo '  make test-all       Build core, then run full mxtest.  ARGS= forwarded.'
 	@echo '  make examples-run   Build dev, then run mxread/mxwrite/mxhide.'
 	@echo '  make all            Build core, run examples, run full mxtest.'
 	@echo ''
+	@echo 'Housekeeping:'
 	@echo '  make clean          Remove the entire $(BUILD_ROOT)/ tree.'
+	@echo '  make clean-docker   Remove the Docker build cache.'
 	@echo ''
-	@echo '  make fmt            Format all C++ files under Sourcecode/.'
-	@echo '  make lint           Run clang-tidy on all C++ files under Sourcecode/.'
-	@echo '  make check          Full quality gate: fmt-check + warning-free build + lint.'
-	@echo ''
+	@echo 'Xcode:'
 	@echo '  make xcode-gen      Generate Xcode project in build/xcode/.'
 	@echo '  make xcode-build    Build the Xcode project.'
 	@echo '  make xcode-test     Run tests via xcodebuild.'
 	@echo ''
-	@echo 'Knobs:  JOBS (=$(JOBS))  BUILD_TYPE (=$(BUILD_TYPE))  GENERATOR  ARGS'
+	@echo 'Knobs:  JOBS (=$(JOBS))  BUILD_TYPE (=$(BUILD_TYPE))  GENERATOR  ARGS  DOCKER'
 	@echo 'Layout: $(BUILD_ROOT)/<mode>/$(BUILD_TYPE)/'
 
 # --- Compile-only targets ---------------------------------------------------
@@ -149,7 +175,7 @@ core:
 test: dev
 	$(call run_bin,$(call mode_dir,dev),mxtest,$(ARGS))
 
-test-core: core
+test-all: core
 	$(call run_bin,$(call mode_dir,core),mxtest,$(ARGS))
 
 examples-run: dev
@@ -169,27 +195,16 @@ all: core
 clean:
 	rm -rf $(BUILD_ROOT)
 
+clean-docker:
+	-$(DOCKER) buildx prune -af
+	@echo "Removed Docker build cache."
+
 # --- Quality targets --------------------------------------------------------
-
-check-format:
-	@command -v clang-format >/dev/null 2>&1 || \
-		{ echo "clang-format not found."; \
-		  echo "  macOS: brew install clang-format"; \
-		  echo "  Linux: sudo apt-get install clang-format"; \
-		  exit 1; }
-
-check-lint:
-	@command -v clang-tidy >/dev/null 2>&1 || \
-		{ echo "clang-tidy not found."; \
-		  echo "  macOS: brew install llvm"; \
-		  echo "  Linux: sudo apt-get install clang-tidy"; \
-		  exit 1; }
-
-ifndef IS_WINDOWS
-check-tools: check-format check-lint
-else
-check-tools: check-format
-endif
+#
+# fmt/check/lint run inside a pinned Docker toolchain. The Makefile detects
+# MX_RUNNING_IN_DOCKER (set by the Dockerfile): inside the container it runs
+# the tools directly; outside it builds the image and runs the target inside
+# it via `docker buildx build`.
 
 FIND_CPP := find Sourcecode \
 	-path 'Sourcecode/private/cpul' -prune -o \
@@ -203,15 +218,26 @@ FIND_CPP_LINT := find Sourcecode \
 	-name 'pugixml.cpp' -prune -o \
 	-type f -name '*.cpp' -print
 
-fmt: check-format
+check-docker:
+	@command -v $(DOCKER) >/dev/null 2>&1 || \
+		{ echo "Docker not found. The quality gates (fmt/check/lint) run in"; \
+		  echo "Docker with a pinned toolchain. Install Docker to continue:"; \
+		  echo "  https://docs.docker.com/get-docker/"; \
+		  exit 1; }
+
+ifdef MX_RUNNING_IN_DOCKER
+
+# ===== Inside the container: run the pinned tools directly ==================
+
+fmt:
 	@$(FIND_CPP) | xargs clang-format -i
 	@echo "Formatted all C++ files under Sourcecode/"
 
-lint: check-lint dev
+lint: dev
 	@$(FIND_CPP_LINT) | xargs clang-tidy -p $(call mode_dir,dev)
 	@echo "Lint complete."
 
-check: check-tools
+check:
 	@echo "=== fmt-check ==="
 	@$(FIND_CPP) | xargs clang-format --dry-run --Werror
 	@echo "=== build (warning-free) ==="
@@ -222,17 +248,40 @@ check: check-tools
 		-DMX_BUILD_TESTS=on \
 		-DMX_BUILD_CORE_TESTS=off \
 		-DMX_BUILD_EXAMPLES=on \
-		$(GEN_ARG) 2>&1 | tee $(BUILD_ROOT)/build.log
-	@$(CMAKE) --build $(call mode_dir,dev) --parallel $(JOBS) --config $(BUILD_TYPE) 2>&1 \
-		| tee -a $(BUILD_ROOT)/build.log; \
+		$(GEN_ARG) > $(BUILD_ROOT)/build.log 2>&1 \
+		|| { cat $(BUILD_ROOT)/build.log; \
+		     echo "ERROR: cmake configure failed (see above)"; exit 1; }
+	@$(CMAKE) --build $(call mode_dir,dev) --parallel $(JOBS) --config $(BUILD_TYPE) \
+		>> $(BUILD_ROOT)/build.log 2>&1; status=$$?; \
+		cat $(BUILD_ROOT)/build.log; \
+		if [ $$status -ne 0 ]; then \
+			echo "ERROR: build failed (see above)"; exit $$status; \
+		fi; \
 		if grep -q 'warning:' $(BUILD_ROOT)/build.log; then \
 			echo "ERROR: build emitted warnings (see above)"; exit 1; \
 		fi
-ifndef IS_WINDOWS
 	@echo "=== lint ==="
 	@$(FIND_CPP_LINT) | xargs clang-tidy -p $(call mode_dir,dev)
-endif
 	@echo "=== check passed ==="
+
+else
+
+# ===== Outside the container: delegate to Docker ===========================
+
+fmt: check-docker
+	$(DOCKER) buildx build --target fmt-out \
+		--output type=local,dest=. $(DOCKER_CACHE) .
+	@echo "Formatted all C++ files under Sourcecode/"
+
+lint: check-docker
+	$(DOCKER) buildx build --target run --build-arg MX_TARGET=lint \
+		--output type=cacheonly $(DOCKER_CACHE) .
+
+check: check-docker
+	$(DOCKER) buildx build --target run --build-arg MX_TARGET=check \
+		--output type=cacheonly $(DOCKER_CACHE) .
+
+endif
 
 # --- Xcode targets ----------------------------------------------------------
 
