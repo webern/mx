@@ -121,6 +121,14 @@ define run_bin
 	"$$found" $(3)
 endef
 
+# Run the three example programs from the given mode dir ($1). The test
+# targets run these too, so the examples are exercised everywhere tests run.
+define run_examples
+	$(call run_bin,$(1),mxread,)
+	$(call run_bin,$(1),mxwrite,)
+	$(call run_bin,$(1),mxhide,)
+endef
+
 .DEFAULT_GOAL := help
 .PHONY: help lib dev core test test-all examples-run all clean clean-docker \
         check-docker fmt check xcode-gen xcode-build xcode-test
@@ -142,10 +150,10 @@ help:
 	@echo '  make core           Build the full suite incl. slow mx::core tests.'
 	@echo ''
 	@echo 'Run (native):'
-	@echo '  make test           Build dev, then run mxtest.        ARGS= forwarded.'
-	@echo '  make test-all       Build core, then run full mxtest.  ARGS= forwarded.'
+	@echo '  make test           Build dev, run examples + mxtest.   ARGS= forwarded.'
+	@echo '  make test-all       Build core, run examples + full mxtest. ARGS= fwd.'
 	@echo '  make examples-run   Build dev, then run mxread/mxwrite/mxhide.'
-	@echo '  make all            Build core, run examples, run full mxtest.'
+	@echo '  make all            Build core, run examples + full mxtest.'
 	@echo ''
 	@echo 'Housekeeping:'
 	@echo '  make clean          Remove the entire $(BUILD_ROOT)/ tree.'
@@ -173,21 +181,19 @@ core:
 # --- Run targets ------------------------------------------------------------
 
 test: dev
+	$(call run_examples,$(call mode_dir,dev))
 	$(call run_bin,$(call mode_dir,dev),mxtest,$(ARGS))
 
 test-all: core
+	$(call run_examples,$(call mode_dir,core))
 	$(call run_bin,$(call mode_dir,core),mxtest,$(ARGS))
 
 examples-run: dev
-	$(call run_bin,$(call mode_dir,dev),mxread,)
-	$(call run_bin,$(call mode_dir,dev),mxwrite,)
-	$(call run_bin,$(call mode_dir,dev),mxhide,)
+	$(call run_examples,$(call mode_dir,dev))
 
 # Behavioral replacement for the old build.sh: full build + run everything.
 all: core
-	$(call run_bin,$(call mode_dir,core),mxread,)
-	$(call run_bin,$(call mode_dir,core),mxwrite,)
-	$(call run_bin,$(call mode_dir,core),mxhide,)
+	$(call run_examples,$(call mode_dir,core))
 	$(call run_bin,$(call mode_dir,core),mxtest,$(ARGS))
 
 # --- Housekeeping -----------------------------------------------------------

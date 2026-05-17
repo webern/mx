@@ -29,8 +29,11 @@ with their native toolchains; they enforce no quality gates.
 ## Toolchain (Docker)
 
 The quality-gate tools are pinned inside a Docker image built from the `Dockerfile` at the repo
-root. The image is Ubuntu 24.04 with clang-18, clang-format-18, and libc++. libc++ is used because
-the codebase compiles warning-free under clang-18 + libc++, and pinning the standard library keeps
+root. The image is Ubuntu 24.04 with **g++-14** and clang-format-18. The gate compiles with GCC
+(not clang) so it uses the same compiler family and standard library (libstdc++) as the required
+Linux CI jobs - a `make check` pass locally therefore means the GCC jobs compile too. clang-tidy
+was previously the reason to use clang + libc++ here; with clang-tidy removed (see Future Work),
+GCC is the better choice because it removes the local-vs-CI portability blind spot. Pinning keeps
 the `-Wall -Wextra` warning set deterministic.
 
 ### Formatting: clang-format
@@ -51,7 +54,7 @@ the whole tree is not viable. See Future Work for the rationale and the intended
 ### Compiler Warnings
 
 `CMakeLists.txt` adds `-Wall -Wextra` (GCC/Clang) or `/W4` (MSVC) to the `mx` target. Inside the
-Docker container, clang-18 is the compiler. `make check` treats any `warning:` line in the build
+Docker container, g++-14 is the compiler. `make check` treats any `warning:` line in the build
 output as a failure, and also fails on configure or build errors.
 
 ### CMake Version
@@ -67,7 +70,7 @@ of which require 3.13+.
 
 Located at the repo root. Based on Ubuntu 24.04 with pinned clang-18 packages:
 
-- `clang-18`, `libc++-18-dev`, `libc++abi-18-dev` - compiler and standard library
+- `gcc-14`, `g++-14` - compiler and libstdc++ (matches the required Linux CI jobs)
 - `clang-format-18` - formatting
 - `cmake`, `make` - build tools
 
@@ -139,8 +142,8 @@ natively with the local compiler.
 
 | Target              | What it does                                                     |
 |---------------------|------------------------------------------------------------------|
-| `make test`         | Build dev, then run mxtest. `ARGS=` forwarded                    |
-| `make test-all`     | Build core, then run full mxtest. `ARGS=` forwarded              |
+| `make test`         | Build dev, run examples + mxtest. `ARGS=` forwarded             |
+| `make test-all`     | Build core, run examples + full mxtest. `ARGS=` forwarded       |
 | `make examples-run` | Build dev, then run mxread/mxwrite/mxhide                       |
 | `make all`          | Build core, run examples, run full mxtest                        |
 
@@ -222,12 +225,13 @@ clang) does not.
 
 Runner: `macos-latest`
 
-| Step            | Command           |
-|-----------------|-------------------|
-| Run tests       | `make test`       |
-| Run examples    | `make examples-run`|
+| Step            | Command     |
+|-----------------|-------------|
+| Run tests       | `make test` |
 
-Builds and tests with the system clang. No quality gates - those are enforced by linux-gate.
+Builds and tests with the system clang. `make test` runs the example programs in addition to
+`mxtest`, so the examples are exercised on every platform that runs tests (not just macOS). No
+quality gates - those are enforced by linux-gate.
 
 #### windows (required - build + tests)
 

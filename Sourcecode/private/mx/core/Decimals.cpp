@@ -73,7 +73,7 @@ void PreciseDecimal::setValue(DecimalType inValue)
     const auto powerMultiplierAsFloat =
         std::pow(static_cast<DecimalType>(10), static_cast<DecimalType>(getMaxDecimalDigits()));
     const auto powerMultiplier = static_cast<uint64_t>(std::ceil(powerMultiplierAsFloat - POINT_FIVE));
-    const auto decimalDigitsShifted = decimalPartAsFloat * static_cast<decltype(decimalPartAsFloat)>(powerMultiplier);
+    const auto decimalDigitsShifted = decimalPartAsFloat * static_cast<DecimalType>(powerMultiplier);
     const auto decimalDigits = static_cast<decltype(myDecimal)>(std::ceil(decimalDigitsShifted - POINT_FIVE));
 
     if (decimalDigits > myMaxExpressibleDecimal)

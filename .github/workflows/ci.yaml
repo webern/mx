@@ -63,9 +63,6 @@ jobs:
       - name: Run tests
         run: make test
 
-      - name: Run examples
-        run: make examples-run
-
   windows:
     name: Windows (build + tests)
     runs-on: windows-latest

@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <cstdint>
+
 #include "mx/api/ApiCommon.h"
 
 namespace mx

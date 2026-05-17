@@ -20,6 +20,7 @@ std::ostream &toStream(std::ostream &os, const DocumentChoice value)
         break;
     case DocumentChoice::timewise:
         os << "timewise";
+        break;
     default:
         os << "error";
         break;
@@ -56,6 +57,7 @@ std::ostream &toStream(std::ostream &os, const MusicXmlVersion value)
         break;
     case MusicXmlVersion::threePointZero:
         os << "3.0";
+        break;
     default:
         os << "error";
         break;
@@ -88,8 +90,10 @@ std::ostream &toStream(std::ostream &os, const SpecificationType value)
         break;
     case SpecificationType::dtd:
         os << "dtd";
+        break;
     case SpecificationType::xsd:
         os << "xsd";
+        break;
     default:
         os << "error";
         break;

@@ -4,9 +4,11 @@
 #
 # This image is not a deliverable. It is a deterministic environment for the
 # `make fmt` and `make check` quality gates: Ubuntu 24.04 with a pinned
-# clang-18 / clang-format-18 / libc++ toolchain, so clang-format output and
-# the compiler warning set are identical on every machine regardless of the
-# floating CI runner image.
+# g++-14 / clang-format-18 toolchain. It compiles with GCC (not clang) so the
+# gate matches the GCC the required Linux CI jobs use - the same standard
+# library, so a `make check` pass locally means the GCC jobs compile too.
+# Pinning keeps clang-format output and the warning set deterministic
+# regardless of the floating CI runner image.
 #
 # The Makefile drives this file: outside the container `make check` runs
 # `docker buildx build --target ...`; inside the container (where
@@ -18,28 +20,24 @@ FROM ubuntu:24.04 AS base
 
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        clang-18 \
+        gcc-14 \
+        g++-14 \
         clang-format-18 \
-        libc++-18-dev \
-        libc++abi-18-dev \
         cmake \
         make \
     && rm -rf /var/lib/apt/lists/*
 
-# Unversioned names so the Makefile and CMake invoke the pinned tools without
-# knowing the version suffix.
-RUN ln -sf /usr/bin/clang-18        /usr/local/bin/clang \
- && ln -sf /usr/bin/clang++-18      /usr/local/bin/clang++ \
- && ln -sf /usr/bin/clang-format-18 /usr/local/bin/clang-format
+# Unversioned name so the Makefile invokes the pinned formatter without
+# knowing the version suffix. The compiler is selected via CC/CXX below.
+RUN ln -sf /usr/bin/clang-format-18 /usr/local/bin/clang-format
 
-# Build with clang + libc++. CMake reads CC/CXX/CXXFLAGS/LDFLAGS at first
+# Build with the pinned GCC so the gate matches the GCC the required Linux CI
+# jobs use (same compiler family + libstdc++). CMake reads CC/CXX at first
 # configure. MX_RUNNING_IN_DOCKER tells the Makefile it is inside the
 # container and should run the tools directly.
 ENV MX_RUNNING_IN_DOCKER=1 \
-    CC=clang \
-    CXX=clang++ \
-    CXXFLAGS=-stdlib=libc++ \
-    LDFLAGS=-stdlib=libc++
+    CC=gcc-14 \
+    CXX=g++-14
 
 WORKDIR /workspace
 COPY . .
