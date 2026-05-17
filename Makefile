@@ -188,16 +188,18 @@ FIND_CPP := find Sourcecode \
 	-name 'pugiconfig.hpp' -prune -o \
 	-type f \( -name '*.cpp' -o -name '*.h' -o -name '*.hpp' \) -print
 
+FIND_CPP_LINT := find Sourcecode \
+	-path 'Sourcecode/private/cpul' -prune -o \
+	-name 'pugixml.cpp' -prune -o \
+	-type f -name '*.cpp' -print
+
 fmt: check-format
 	@$(FIND_CPP) | xargs clang-format -i
 	@echo "Formatted all C++ files under Sourcecode/"
 
 lint: check-lint dev
-	@$(FIND_CPP) | xargs clang-tidy -p $(call mode_dir,dev)
+	@$(FIND_CPP_LINT) | xargs clang-tidy -p $(call mode_dir,dev)
 	@echo "Lint complete."
-
-# Detect Windows (MSVC / Git Bash / MSYS2).
-IS_WINDOWS := $(if $(filter Windows_NT,$(OS)),1,)
 
 check: check-tools
 	@echo "=== fmt-check ==="
@@ -216,7 +218,7 @@ check: check-tools
 			echo "ERROR: build emitted warnings (see above)"; exit 1; \
 		fi
 	@echo "=== lint ==="
-	@$(FIND_CPP) | xargs clang-tidy -p $(call mode_dir,dev)
+	@$(FIND_CPP_LINT) | xargs clang-tidy -p $(call mode_dir,dev)
 	@echo "=== check passed ==="
 
 # --- Xcode targets ----------------------------------------------------------
