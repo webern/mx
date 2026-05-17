@@ -46,19 +46,18 @@ new code-gen tooling to reproduce the emission of the core types and then expose
 When modifying any file under `Sourcecode/`, run:
 
 ```
-make test && make check
+make fmt && make check && make test
 ```
 
-before considering the change complete. This enforces formatting (clang-format), zero compiler
-warnings, and lint (clang-tidy). On failure, run `make fmt` to fix formatting, then address any
-remaining warnings manually.
+before considering the change complete. If the changes include anything under
+`Sourcecode/private/mx/core/`, use `make test-all` instead of `make test`.
 
-If the changes include anything under `Sourcecode/private/mx/core/`, run:
+`make fmt` and `make check` run inside Docker (requires Docker on the host). No other tool
+installation is needed. `make check` enforces formatting (clang-format), zero compiler warnings,
+and lint (clang-tidy) using pinned tool versions.
 
-`make test && make check && make test-core`
-
-If `check-tools` reports a missing tool, install it (see `.clang-format` and `.clang-tidy` for
-the tool versions, or run `make help`).
+On `make check` failure, run `make fmt` to fix formatting, then address any remaining warnings
+manually.
 
 See `Documents/ai/project/build-and-ci-design.md` for full details on the CI pipeline and
 quality gate design.

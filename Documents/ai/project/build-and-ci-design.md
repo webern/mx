@@ -5,9 +5,6 @@
 This document describes the formatting, linting, compiler-warning enforcement, and CI pipeline for
 mx. It also defines the quality gates that coding agents must satisfy when modifying `Sourcecode/`.
 
-The full implementation is delivered as the commit series at the end of this document. Each commit
-leaves the repository in a buildable, coherent state.
-
 ### Note on `mx/core/`
 
 The files in `Sourcecode/private/mx/core/` were originally machine-generated from the MusicXML XSD.
@@ -15,9 +12,31 @@ The codegen program no longer exists. These files are now treated as normal hand
 must pass all quality gates like any other code. A future codegen rewrite will re-own these files
 and will be written to emit code that passes the linter from the start.
 
+### Design Principle: One Authoritative Toolchain
+
+Running clang-tidy with one compiler's frontend against another compiler's standard library headers
+is fragile. clang-tidy IS a clang compiler frontend - it builds a full AST, performs template
+instantiation, and runs overload resolution. When it parses code against GCC's libstdc++, the two
+compilers can disagree on edge cases in template internals (e.g. whether `std::sort` requires copy
+assignment vs. move assignment in a particular code path). These disagreements produce spurious
+errors that don't reflect real code bugs.
+
+Similarly, compiler warning sets and clang-format behavior can change between versions. CI runners
+(`ubuntu-latest`, `macos-latest`) float their toolchain versions, so a CI break can occur with no
+code change.
+
+To eliminate these fragility surfaces, all quality-gate tooling (formatting, linting, compiler
+warnings) runs inside a Docker container with pinned tool versions. This gives deterministic,
+reproducible results on any machine - local or CI. Platform-specific CI jobs only build and test.
+
 * * *
 
-## Toolchain
+## Toolchain (Docker)
+
+All quality-gate tools are pinned inside a Docker image built from the `Dockerfile` at the repo
+root. The image is based on Ubuntu 24.04 with clang-18 and uses libc++ (clang's own standard
+library) so that clang-tidy's frontend and the standard library headers are from the same
+toolchain.
 
 ### Formatting: clang-format
 
@@ -29,19 +48,10 @@ The one visible change from the historical style is the removal of spaces inside
 A `.clang-format` file at the repo root encodes this style. All C++ files under `Sourcecode/` are
 formatted, including generated files in `mx/core/`.
 
-**Installation**
-
-| Platform | Command                             |
-|----------|-------------------------------------|
-| macOS    | `brew install clang-format`         |
-| Linux    | `sudo apt-get install clang-format` |
-| Windows  | Install LLVM from llvm.org          |
-
 ### Linting: clang-tidy
 
 clang-tidy reads `compile_commands.json` produced by CMake (`-DCMAKE_EXPORT_COMPILE_COMMANDS=ON`).
-This gives it the correct include paths, preprocessor defines, and C++ standard — catching real
-issues rather than false positives from missing context.
+This gives it the correct include paths, preprocessor defines, and C++ standard.
 
 The `.clang-tidy` file at the repo root enables a conservative starter set of checks:
 
@@ -54,103 +64,126 @@ The `.clang-tidy` file at the repo root enables a conservative starter set of ch
 
 The check set is intentionally narrow. It can be expanded as the codebase improves.
 
-**Installation**
-
-| Platform | Command                                   |
-|----------|-------------------------------------------|
-| macOS    | `brew install llvm` (includes clang-tidy) |
-| Linux    | `sudo apt-get install clang-tidy`         |
-| Windows  | Install LLVM from llvm.org                |
-
 ### Compiler Warnings
 
-`CMakeLists.txt` adds `-Wall -Wextra` (GCC/Clang) or `/W4` (MSVC) to the `mx` target. `-Werror` is
-intentionally omitted so that warnings can be addressed in a dedicated commit (4b) rather than
-breaking the build immediately upon enabling them. Instead, `make check` treats any `warning:` line
-in the build output as a failure.
+`CMakeLists.txt` adds `-Wall -Wextra` (GCC/Clang) or `/W4` (MSVC) to the `mx` target. Inside the
+Docker container, clang-18 is the compiler. `make check` treats any `warning:` line in the build
+output as a failure.
 
 ### CMake Version
 
 `CMakeLists.txt` requires CMake >= 3.13. The Makefile uses `-S`/`-B` and `--build --parallel`, both
-of which require 3.13+. The `cmake_minimum_required` in `CMakeLists.txt` is bumped to match in
-commit 4.
+of which require 3.13+.
+
+* * *
+
+## Docker
+
+### Dockerfile
+
+Located at the repo root. Based on Ubuntu 24.04 with pinned clang-18 packages:
+
+- `clang-18`, `libc++-18-dev`, `libc++abi-18-dev` - compiler and standard library
+- `clang-format-18` - formatting
+- `clang-tidy-18` - linting
+- `cmake`, `make` - build tools
+
+The Dockerfile sets `ENV MX_RUNNING_IN_DOCKER=1`. The Makefile checks this variable to decide
+whether to run tools directly or to launch Docker.
+
+### BuildKit Cache
+
+The Dockerfile uses `RUN --mount=type=cache,target=/workspace/build` for the CMake build directory.
+This persists the incremental build cache across Docker invocations on the same machine, avoiding
+full recompiles on every `make check` run.
+
+### Makefile Docker Integration
+
+The Makefile detects `MX_RUNNING_IN_DOCKER`:
+
+- **Inside the container** (`MX_RUNNING_IN_DOCKER=1`): runs clang-format, clang-tidy, and the
+  compiler directly.
+- **Outside the container**: runs `docker buildx build` to build the image and execute the
+  requested target inside it.
+
+For `make fmt`, which needs to write formatted files back to the host, the Makefile uses
+`docker buildx build --output type=local,dest=.` to extract the formatted `Sourcecode/` tree.
+
+For `make check` and `make lint`, only the exit code matters - no file extraction needed.
 
 * * *
 
 ## Makefile Targets
 
-### check-tools
+### Developer Workflow
 
-A prerequisite target that verifies required tools are on `PATH`. It is a dependency of `fmt`,
-`lint`, and `check`. If a tool is missing it prints a platform-appropriate install recommendation
-and exits non-zero.
-
-```makefile
-check-tools:
-    @command -v clang-format >/dev/null 2>&1 || \
-        { echo "clang-format not found."; \
-          echo "  macOS: brew install clang-format"; \
-          echo "  Linux: sudo apt-get install clang-format"; \
-          exit 1; }
-    @command -v clang-tidy >/dev/null 2>&1 || \
-        { echo "clang-tidy not found."; \
-          echo "  macOS: brew install llvm"; \
-          echo "  Linux: sudo apt-get install clang-tidy"; \
-          exit 1; }
-```
-
-### make fmt
-
-Formats all C++ source files under `Sourcecode/` in-place using clang-format.
+The standard workflow for any code change under `Sourcecode/`:
 
 ```
-make fmt
+make fmt && make check && make test
 ```
 
-Depends on `check-tools`. This target modifies files; running it twice is a no-op.
-
-### make lint
-
-Runs clang-tidy against all C++ source files under `Sourcecode/`. Depends on `make dev` to ensure
-`compile_commands.json` is current before linting.
+If the change touches files under `Sourcecode/private/mx/core/`:
 
 ```
-make lint
+make fmt && make check && make test-all
 ```
 
-Depends on `check-tools` and `dev`.
+These three commands are all a developer or AI agent needs to verify their work. `fmt` and `check`
+run in Docker (deterministic, no local tool installation required). `test` and `test-all` run
+natively with the local compiler.
 
-### make check
+### Quality Targets (Docker)
 
-The full quality gate. Runs each sub-check in order and fails on the first violation:
+| Target             | What it does                                                      |
+|--------------------|-------------------------------------------------------------------|
+| `make fmt`         | Formats all C++ files under `Sourcecode/` in-place via Docker     |
+| `make check`       | Full quality gate: fmt-check + warning-free build + lint (Docker) |
+| `make lint`        | Runs clang-tidy only (Docker)                                     |
+| `make clean-docker`| Removes the Docker image and buildx cache                         |
 
-1. **fmt** - runs `clang-format --dry-run --Werror` on all files under `Sourcecode/`. Any
-   unformatted file is a failure.
-2. **build** - runs `make dev`, capturing output. Any `warning:` line is a failure.
-3. **lint** - runs clang-tidy using the `compile_commands.json` produced by step 2. Any warning is a
-   failure.
+`check-docker` is an internal prerequisite that verifies Docker is available on `PATH`.
 
-```
-make check
-```
+### Build Targets (Native)
 
-CI runs `make check` on Linux and macOS. On Windows, `make check` runs steps 1 and 2 (fmt-check and
-warning-grep) but skips clang-tidy because `compile_commands.json` is not produced by the Visual
-Studio generator. MSVC's `/W4` provides adequate static analysis coverage on Windows.
+| Target             | What it does                                                      |
+|--------------------|-------------------------------------------------------------------|
+| `make lib`         | Build just the static library (no tests, no examples)             |
+| `make dev`         | Build tests (no slow core tests) + examples                       |
+| `make core`        | Build the full suite including slow `mx::core` tests              |
 
-Developers can run `make check` locally to confirm their changes will pass before pushing.
+### Run Targets (Native)
 
-### Xcode Targets
+| Target              | What it does                                                     |
+|---------------------|------------------------------------------------------------------|
+| `make test`         | Build dev, then run mxtest. `ARGS=` forwarded                    |
+| `make test-all`     | Build core, then run full mxtest. `ARGS=` forwarded              |
+| `make examples-run` | Build dev, then run mxread/mxwrite/mxhide                       |
+| `make all`          | Build core, run examples, run full mxtest                        |
 
-The Xcode project is generated by CMake and is not checked into the repository. `build/xcode/` is
-added to `.gitignore`. Three Makefile targets cover the Xcode workflow, allowing developers to
-replicate the CI Xcode job locally:
+### Xcode Targets (Native)
 
 | Target             | What it does                                  |
 |--------------------|-----------------------------------------------|
-| `make xcode-gen`   | Runs `cmake -G Xcode -S . -B build/xcode`     |
+| `make xcode-gen`   | Runs `cmake -G Xcode -S . -B build/xcode`    |
 | `make xcode-build` | Builds the generated project via `xcodebuild` |
 | `make xcode-test`  | Runs tests via `xcodebuild test`              |
+
+### Housekeeping
+
+| Target             | What it does                         |
+|--------------------|--------------------------------------|
+| `make clean`       | Remove the entire `build/` tree      |
+| `make clean-docker`| Remove Docker image and buildx cache |
+
+### Knobs
+
+| Variable   | Default            | Purpose                                            |
+|------------|--------------------|----------------------------------------------------|
+| `JOBS`     | auto-detected      | Parallel compile jobs                              |
+| `BUILD_TYPE`| `Debug`           | CMake build type                                   |
+| `GENERATOR`| platform default   | CMake generator override                           |
+| `ARGS`     | (none)             | Forwarded to mxtest (Catch2)                       |
 
 * * *
 
@@ -158,8 +191,7 @@ replicate the CI Xcode job locally:
 
 ### File
 
-`.github/workflows/ci.yaml` - the primary workflow. The old `ccpp.yml` is renamed to
-`ccpp.yml.archived` to preserve history without running it.
+`.github/workflows/ci.yaml` - the primary workflow.
 
 ### Triggers
 
@@ -170,54 +202,58 @@ on:
     branches: [master]
 ```
 
-CI runs on every PR update and on every push to `master`. This ensures `master` is always verified
-green, not just PRs.
+CI runs on every PR update and on every push to `master`.
 
 ### Jobs
 
-All jobs invoke Makefile targets. This is deliberate: a developer can reproduce any CI job locally
-by running the same `make` command.
-
-#### linux (required - quality gate + core tests)
+#### linux-gate (required - quality gate + tests)
 
 Runner: `ubuntu-latest`
 
-| Step            | Command                                   |
-|-----------------|-------------------------------------------|
-| Install tools   | `apt-get install clang-format clang-tidy` |
-| Quality gate    | `make check`                              |
-| Full test suite | `make test-core`                          |
+| Step            | Command        |
+|-----------------|----------------|
+| Quality gate    | `make check`   |
+| Run tests       | `make test`    |
 
-This is the deepest job. It enforces all quality gates (fmt, lint, compiler warnings) and runs the
-complete test suite including the slow `mx::core` tests.
+The Makefile handles Docker internally - CI just runs `make check`. The Docker image is built
+from the repo's `Dockerfile` with BuildKit layer caching via GitHub Actions cache.
 
-#### macos (required - quality gate + tests)
+This is the authoritative quality gate. Formatting, linting, and compiler warnings are enforced
+here with pinned tool versions.
+
+#### linux-core (required - full test suite with GCC)
+
+Runner: `ubuntu-latest`
+
+| Step            | Command        |
+|-----------------|----------------|
+| Full test suite | `make test-all`|
+
+Builds and runs the complete test suite including the slow `mx::core` tests using GCC (the
+system compiler). This provides GCC compilation coverage that the Docker gate job (which uses
+clang) does not.
+
+#### macos (required - build + tests)
 
 Runner: `macos-latest`
 
-| Step            | Command                          |
-|-----------------|----------------------------------|
-| Install tools   | `brew install clang-format llvm` |
-| Quality gate    | `make check`                     |
-| Run tests       | `make test`                      |
-| Run examples    | `make examples-run`              |
+| Step            | Command           |
+|-----------------|-------------------|
+| Run tests       | `make test`       |
+| Run examples    | `make examples-run`|
 
-Runs `make check` (fmt, build with warning-grep, lint) followed by the test suite and examples.
-Verifies macOS-specific build and runtime correctness.
+Builds and tests with the system clang. No quality gates - those are enforced by linux-gate.
 
-#### windows (advisory)
+#### windows (required - build + tests)
 
 Runner: `windows-latest`
 
-| Step            | Command                                        |
-|-----------------|------------------------------------------------|
-| Install make    | `choco install make`                           |
-| Install tools   | Install LLVM (for clang-format)                |
-| Quality gate    | `make check` (fmt-check + warning-grep, no lint) |
-| Run tests       | `make test`                                    |
+| Step            | Command    |
+|-----------------|------------|
+| Install make    | `choco install make` |
+| Run tests       | `make test`|
 
-Uses GNU make installed via Chocolatey. clang-tidy is skipped because the Visual Studio generator
-does not produce `compile_commands.json`. MSVC `/W4` warnings are caught by the warning-grep step.
+Builds and tests with MSVC. No quality gates.
 
 #### xcode (advisory)
 
@@ -233,20 +269,20 @@ Verifies the Xcode generator path separately from the Unix Makefiles build.
 
 ### Caching
 
-All jobs cache their `build/` directory to avoid full rebuilds on every run. The cache key is:
+The linux-gate job caches Docker BuildKit layers via GitHub Actions cache, avoiding a full image
+rebuild on every run. The Dockerfile is structured to maximize layer reuse - tool installation
+layers change rarely, source code layers change frequently.
+
+Build-and-test jobs (linux-core, macos, windows) cache their `build/` directory:
 
 ```
-${{ runner.os }}-build-${{ hashFiles('CMakeLists.txt', 'Sourcecode/**') }}-${{ hashFiles('.github/cache-bust') }}
+${{ runner.os }}-build-${{ hashFiles('CMakeLists.txt', 'Sourcecode/**') }}
 ```
-
-If `CMakeLists.txt` or any source file changes, the cache is invalidated. A `.github/cache-bust`
-file allows manual invalidation when needed.
 
 ### Branch Protection
 
-The `master` branch requires the **linux** and **macos** jobs to pass before merge. The **windows**
-and **xcode** jobs are advisory - failures are visible but do not block merge. Merge strategy:
-regular merge commits (not squash).
+The `master` branch requires **linux-gate**, **linux-core**, **macos**, and **windows** to pass
+before merge. The **xcode** job is advisory. Merge strategy: regular merge commits (not squash).
 
 * * *
 
@@ -255,33 +291,16 @@ regular merge commits (not squash).
 When modifying any file under `Sourcecode/`, an agent must run:
 
 ```
-make check
+make fmt && make check && make test
 ```
 
-before considering the change complete. `make check` enforces:
+If the change touches `Sourcecode/private/mx/core/`, run `make test-all` instead of `make test`.
 
-1. **Formatting** - all files must be formatted per `.clang-format`. Run `make fmt` to fix
-   formatting, then re-run `make check`.
-2. **Linting** - all clang-tidy checks in `.clang-tidy` must pass with zero warnings.
-3. **Compiler warnings** - the build must emit no `warning:` lines.
+`make check` enforces:
 
-If `check-tools` reports a missing tool, install it before running `make check`. The CI Linux and
-macOS jobs are both authoritative gates. If the two platforms disagree on a warning (e.g. GCC emits
-one that Clang does not, or vice versa), both must be fixed.
+1. **Formatting** - all files must be formatted per `.clang-format`. `make fmt` fixes formatting.
+2. **Compiler warnings** - the build must emit no `warning:` lines.
+3. **Linting** - all clang-tidy checks in `.clang-tidy` must pass with zero warnings.
 
-* * *
-
-## Commit Series
-
-The following commits implement this design in order. Each commit leaves the repository in a
-buildable, coherent state.
-
-| #  | Commit message                                    | What it does                                                                                                                                                                                         |
-|----|---------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 1  | `add clang-format config and make fmt target`     | Adds `.clang-format` (Microsoft style), `check-tools` prerequisite, and `make fmt` target to the Makefile. No files are reformatted yet.                                                             |
-| 2  | `reformat Sourcecode/ with clang-format`          | Applies `make fmt` to all of `Sourcecode/`. Pure formatting diff — no logic changes.                                                                                                                 |
-| 3  | `add clang-tidy config and make lint target`      | Adds `.clang-tidy`, enables `CMAKE_EXPORT_COMPILE_COMMANDS=ON` in CMake, adds `make lint` target.                                                                                                    |
-| 4  | `add compiler warnings and make check target`     | Adds `-Wall -Wextra` / `/W4` to `CMakeLists.txt`, bumps `cmake_minimum_required` to 3.13, adds `make check` target combining fmt-check, build-warning grep, and lint. On Windows, `make check` skips lint. |
-| 4b | `fix compiler and clang-tidy warnings`            | Fixes all warnings surfaced by commit 4 across `Sourcecode/`, including the historically-generated files in `mx/core/` (which are normal source today - see Overview).                                |
-| 5  | `modernize CI: new ci.yaml, archive old workflow` | Renames `ccpp.yml` to `ccpp.yml.archived`. Writes `ci.yaml` with linux/macos as required gates, windows/xcode as advisory. Adds Xcode targets, build caching, and `choco install make` for Windows.  |
-| 6  | `add quality gates to AGENTS.md`                  | Documents `make check` as the required pre-commit gate for agents modifying `Sourcecode/`.                                                                                                           |
+These commands require Docker. If Docker is not available, `make check` will report the error.
+No other tool installation is needed for quality gates.
