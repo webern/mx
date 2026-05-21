@@ -1,7 +1,0 @@
-{{ documentation }}
-        class {{ classname }} : public DecimalRange
-        {
-        public:
-            explicit {{ classname }}( DecimalType value );
-            {{ classname }}();
-        };
