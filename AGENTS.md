@@ -56,24 +56,17 @@ specification. Rather, the goal of code generation is bespoke, to produce what i
 
 ## Quality Gates
 
-When modifying any file under `src/`, run:
+Always run `make fmt` after modifying code under `src/`.
 
-```
-make fmt && make check && make test
-```
+To see whether your code changes are sound, follow that with:
+- for changes in `src/private/mx/core/*`: `make test-all` (very slow, can be more than 10 minutes)
+- for changes not in `src/private/mx/core/*`: `make test` (faster, can take a couple minues)
 
-If the changes include anything under `src/private/mx/core/`, use `make test-all` instead of
-`make test`.
+Check for warnings with: `make check`.
 
-`make fmt` and `make check` run inside Docker (requires Docker on the host).
+CI will run all of these plus the `xcode` targets.
 
-On `make check` failure, run `make fmt` to fix formatting, then address any remaining warnings
-manually.
-
-See `docs/ai/project/build-and-ci-design.md` for full details on the CI pipeline and quality gate
-design.
-
-## The Project
+## Current Project
 
 We are working on reverse engineering a new codegen system to regenerate mx/core for MusicXML 4.0.
-See the project directory @./docs/ai/project/AGENTS.md
+See the project directory `./docs/ai/project/gen`.

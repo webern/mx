@@ -1,55 +1,13 @@
 # CHANGE_PENALTY Threshold and Phase 1 Exit Criterion
 
-```text
-Done. Wrote docs/ai/project/change-penalty.md and checked off the agenda item.
-
-  What I studied
-
-  Per /wake-up, I traced AGENTS.md -> docs/ai/project/AGENTS.md -> agenda.md -> gen-overrides.md -> build-and-ci-design.md, plus the WIP commit
-  f723d00a and gen/experiment/. The first Phase 1 grill question (override mechanism) is done. The next problem is the CHANGE_PENALTY threshold (next
-  unchecked item, OUTPUT=./change-penalty.md). I verified the central evidence in code, not just in the prior doc: AccidentalAttributes.h has no color
-  member while ArrowAttributes.h and 25 siblings carry Color color - the FIX inversion is real.
-
-  The recommendation, in brief
-
-  The doc's thesis is contrarian to how the agenda framed the question. "What number is good enough?" is the wrong question:
-
-  1. The raw-diff rubric is inverted. It ranks the cheating generator (hardcode "skip color in 45 structs", ~0 penalty) strictly above the faithful one
-   (emit color, ~225+ points at the 5x .h multiplier). Picking a threshold doesn't fix this - it just sets the price of the bug.
-  2. Fix: score the unexplained residual, not the raw diff. Every differing line is attributed to a gen-overrides.md category
-  (RULE/EXC/SUBSTRATE/FIX/ANOMALY). Classified, justified lines score zero; only unclassified lines accrue penalty. FIX stops competing with cheating.
-  3. Exit = four gates, not a band. No-skip (disqualifying), quality gates, 100% classification completeness, and residual penalty = 0 modulo a closed,
-   named allowance list. A tolerance band is itself a cheating surface across 113k lines.
-  4. Separated two uses the agenda conflated: residual penalty ranks competitors; the four gates exit the phase. Unit of judgment is the distinct
-  root-cause defect (one bad ordering rule != thousands of points), with line-penalty as telemetry/tiebreaker.
-  5. Flagged mx/impl at 10x as too lenient - any mx/impl diff from a core-only generator signals an interface regression; promoted it to
-  justify-or-fail.
-
-  I drew the boundary with scoring-gap.md explicitly (it owns recurrence-counting; this doc owns the shared foundation) so the remaining grill docs
-  don't diverge or duplicate.
-
-  Two open items you may want to weigh in on, since I made the calls unilaterally given no interactive session:
-  - Residual = 0 instead of a tolerance band. This is the strongest and most opinionated claim. It's defensible for a one-time generator, but it raises
-   the Phase 1 exit bar significantly versus the agenda's "good enough" framing.
-  - scoring-gap.md and change-penalty.md overlap heavily (the agenda's own notes put the FIX example in both). I kept them separate per your stated
-  structure but they could arguably be one doc.
-
-✻ Sautéed for 3m 48s
-
-※ recap: Goal: design Phase 1 scoring for the MusicXML codegen rewrite. I wrote docs/ai/project/change-penalty.md recommending
-  residual-after-classification scoring with four exit gates, and checked off the agenda item. Next: your review of the residual=0 decision. (disable
-  recaps in /config)
-```
-
-Resolves the second Phase 1 open question in `agenda.md`: what numeric score is "good enough" to
-exit Phase 1. The short answer is that a generous numeric "good enough" is the wrong instrument. The
-exit criterion is a conjunction of gates; the numeric penalty's job is to be driven to zero on the
-*unexplained residual*, not to define a tolerance budget. This doc depends on the classification
-taxonomy established in `gen-overrides.md` (RULE / EXC / SUBSTRATE / FIX / ANOMALY).
+What numeric score is "good enough" to exit Phase 1? A generous numeric "good enough" is the wrong
+instrument. The exit criterion is a conjunction of gates; the numeric penalty's job is to be driven
+to zero on the *unexplained residual*, not to define a tolerance budget. This doc depends on the
+classification taxonomy established in `overrides.md` (RULE / EXC / SUBSTRATE / FIX / ANOMALY).
 
 ## Context
 
-Two facts shape every decision here, both inherited from `gen-overrides.md`:
+Two facts shape every decision here, both inherited from `overrides.md`:
 
 - **4.0 codegen is a one-time run.** Phase 1 reproduces the current `mx/core` from the current
   schema so the generator can be trusted before it is pointed at 4.0. The pass/fail bar exists to
@@ -85,7 +43,7 @@ defect. The raw metric punishes one mistake thousands of times.
 ## The mechanism: penalty is computed over the unexplained residual
 
 CHANGE_PENALTY must not be computed over the raw diff. It is computed over the **residual** - the
-diff that remains after every differing line is attributed to a category from `gen-overrides.md`.
+diff that remains after every differing line is attributed to a category from `overrides.md`.
 The generator already takes a declarative overrides input; that same manifest is the ledger that
 attributes diff lines:
 
@@ -97,7 +55,7 @@ attributes diff lines:
 - **EXC**: lines produced by a justified slot reproducing a deliberate human choice. Scored zero
   when the slot output matches the checked-in source; any delta is residual.
 - **SUBSTRATE**: not generation output; out of diff scope by construction (namespace-derived,
-  analyzer-enforced per `gen-overrides.md`).
+  analyzer-enforced per `overrides.md`).
 - **ANOMALY**: each anomaly carries a recorded decision (reproduce or correct). The resulting diff
   is scored zero *because the decision is recorded and justified*, not because it is small. An
   anomaly with no recorded decision falls to residual.
@@ -217,7 +175,7 @@ The agenda's table is mostly sound for scoring residual. Three adjustments:
   defect. Inherits this doc's residual-after-classification foundation and defect-as-unit; must not
   redefine them.
 - `codegen-program-quality.md`: `CODEGEN_PROGRAM_QUALITY` judges the override mechanism's design
-  (per `gen-overrides.md`), independent of CHANGE_PENALTY. The two scores are orthogonal; a
+  (per `overrides.md`), independent of CHANGE_PENALTY. The two scores are orthogonal; a
   generator can pass Gate D with a poorly designed override mechanism and still fail Phase 1 on
   quality. Note the cross-dependency, do not merge the metrics.
 - `language-constraints.md`: unaffected by this doc.
@@ -227,7 +185,7 @@ The agenda's table is mostly sound for scoring residual. Three adjustments:
 - Missing-`color` FIX verified directly: `grep` confirms no `color` member in
   `src/private/mx/core/elements/AccidentalAttributes.h`; `Color color` present in
   `ArrowAttributes.h` and 25 siblings. Counts (71 reach `color`, 26 emit, 45 omit) are from
-  `gen-overrides.md`, reproducible via the probes in `gen/experiment/`.
+  `overrides.md`, reproducible via the probes in `gen/`.
 - Tree scale: `src/private/mx/core` is 1182 files and ~113k lines; the 5x `.h` multiplier over 45
   FIX additions (~225 points for one FIX) is the concrete inversion that forces
   residual-after-classification rather than a tuned threshold.
@@ -241,5 +199,5 @@ The agenda's table is mostly sound for scoring residual. Three adjustments:
   makes FIX-scored-zero non-gameable) is a build task, not a design question.
 - The exact diff tooling that attributes lines to manifest entries is an implementation choice; the
   requirement is per-line attribution with no unclassified lines, not a specific tool.
-- ANOMALY decisions (reproduce vs correct) are recorded per `gen-overrides.md`'s ANOMALY table; this
+- ANOMALY decisions (reproduce vs correct) are recorded per `overrides.md`'s ANOMALY table; this
   doc only requires that the decision exists and is justified for the line to score zero.

@@ -6,3 +6,6 @@ src/private/mxtest/file/PathRoot.h
 **/xcshareddata/
 *.DS_Store
 compile_commands.json
+
+# files for my notes and or ai instructions
+.prompt

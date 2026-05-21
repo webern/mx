@@ -1,7 +1,7 @@
 # Codegen Override Mechanism
 
-Resolves the first Phase 1 open question in `agenda.md`: are hand-coded exceptions to codegen
-rules allowed, what form do they take, and how does `CODEGEN_PROGRAM_QUALITY` treat them. The
+Are hand-coded exceptions to codegen rules allowed? What form do they take, and how does
+`CODEGEN_PROGRAM_QUALITY` treat them? The
 design below is grounded in a catalog of the actual non-derivable points in `mx/core`, found
 by deriving code from `docs/musicxml.xsd` and diffing against the checked-in source.
 
@@ -161,7 +161,7 @@ overrides to preserve.
 - **The mechanism must classify, not just override.** EXC and FIX require opposite treatment.
   A mechanism that cannot express "this delta is a FIX, score it as correct" forces an agent
   to either cheat (preserve the bug) or absorb an unfair `CHANGE_PENALTY`.
-- **`change-penalty.md` and `scoring-gap.md` must give faithfulness precedence over diff
+- **`scoring.md` and the systematic-gap design must give faithfulness precedence over diff
   size.** The missing-`color` case is concrete proof: ~45 structs of correct `.h` additions
   (5x multiplier) plus `.cpp` would lose under the rubric as written, which would reward
   reproducing a legacy bug. This finding belongs in those two grill sessions.
@@ -170,7 +170,7 @@ overrides to preserve.
 
 ## Method and scope
 
-Derivation probes live in `gen/experiment/` (Python, stdlib `xml.etree`, chosen for
+Derivation probes live in `gen/` (Python, stdlib `xml.etree`, chosen for
 zero-dependency iteration in this investigation; the production generator language is a
 separate Phase 1 question and is not decided here). Each probe derives one slice from the XSD
 and diffs against `mx/core`; the measured counts above are reproducible by re-running them.
