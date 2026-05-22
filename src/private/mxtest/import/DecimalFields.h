@@ -21,9 +21,9 @@
 namespace mxtest
 {
 
-const std::set<std::string> decimalFields = {"top-system-distance", "dynamics",       "left-margin",
-                                             "right-margin",        "staff-distance", "system-distance",
-                                             "default-y",           "default-x",      "tenths"};
+const std::set<std::string> decimalFields = {
+    "top-system-distance", "dynamics",  "left-margin", "right-margin", "staff-distance",
+    "system-distance",     "default-y", "default-x",   "tenths",       "width"};
 
 inline int trailingCharsToStrip(const std::string &value)
 {
