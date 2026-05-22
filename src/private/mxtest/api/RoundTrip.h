@@ -7,6 +7,7 @@
 #include "mx/api/DocumentManager.h"
 #include "mxtest/control/CompileControl.h"
 #include "mxtest/file/MxFileRepository.h"
+#include "mxtest/file/Path.h"
 #include <sstream>
 
 namespace mxtest
@@ -21,7 +22,9 @@ inline void roundTrip()
     auto scoreData = docMgr.getData(docId);
     docMgr.destroyDocument(docId);
     docId = docMgr.createFromScore(scoreData);
-    docMgr.writeToFile(docId, "./output.xml");
+    const std::string outputPath = std::string{mxtest::getResourcesDirectoryPath()} + "testOutput" +
+                                   FILE_PATH_SEPARATOR + "output.xml";
+    docMgr.writeToFile(docId, outputPath);
     docMgr.destroyDocument(docId);
 }
 

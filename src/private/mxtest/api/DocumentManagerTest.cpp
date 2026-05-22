@@ -187,7 +187,9 @@ TEST( sillyTest, DocumentManager )
     score.encoding.encodingDate.day = 30;
     score.copyright = "© 2016 by Matthew James Briggs";
     auto documentId = DocumentManager::getInstance().createFromScore( score );
-    DocumentManager::getInstance().writeToFile( documentId, "./sillytest.xml" );
+    const std::string outputPath = std::string{mxtest::getResourcesDirectoryPath()} + "testOutput" +
+                                   FILE_PATH_SEPARATOR + "sillytest.xml";
+    DocumentManager::getInstance().writeToFile( documentId, outputPath );
     DocumentManager::getInstance().destroyDocument( documentId );
 }
 T_END
