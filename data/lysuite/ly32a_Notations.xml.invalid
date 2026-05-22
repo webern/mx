@@ -1,0 +1,13 @@
+Not valid against the MusicXML XSD.
+
+Confirmed by xmllint --schema docs/musicxml.xsd. Violations:
+
+- <fret/> empty at line 900; schema requires xs:nonNegativeInteger.
+- <string/> empty at line 924; schema requires string-number.
+
+The core roundtrip suite trips on the empty <fret/>: mx::core defaults the
+missing integer to 0, producing a text mismatch ('' vs '0') against the
+original empty element. Excluding this file from the schema-strict core
+roundtrip is the right call — the input is omitting required content.
+
+See data/README.md for the .invalid marker convention.

@@ -1,0 +1,14 @@
+Not valid against the MusicXML XSD.
+
+Confirmed by xmllint --schema docs/musicxml.xsd. Violations:
+
+- accidental element text 'double-flat' is not in the schema enumeration at
+  lines 138, 149, 160, 171. The schema-correct spelling is 'flat-flat'.
+
+The core roundtrip suite trips on this: mx::core sees an unknown enum value
+and falls back to a default ('sharp'), producing a text mismatch against the
+original 'double-flat'. Excluding this file from the schema-strict core
+roundtrip is the right call — the input is using a name that is not in the
+schema enumeration.
+
+See data/README.md for the .invalid marker convention.

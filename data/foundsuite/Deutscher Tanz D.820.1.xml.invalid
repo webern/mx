@@ -1,0 +1,14 @@
+Not valid against the MusicXML XSD.
+
+Confirmed by xmllint --schema docs/musicxml.xsd. Violations:
+
+- midi-program with value 0 (schema midi-128: must be 1..128) at line 49.
+- sound/@dynamics='-1.11' (minInclusive 0) at lines 167 and 469.
+
+The core roundtrip suite trips on the midi-program=0 case: mx::core clamps
+to the schema-legal range (writes 1), causing a text mismatch against the
+original 0. Excluding this file from the schema-strict core roundtrip is
+the right call — the library is conforming to the schema and the input is
+the deviation.
+
+See data/README.md for the .invalid marker convention.

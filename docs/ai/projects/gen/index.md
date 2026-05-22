@@ -18,6 +18,13 @@ generate updated types.
 - `state.md` - current session state and next-session instructions
 - `log.md` - append-only session log
 
+## Repo conventions introduced by this project
+
+- `{file}.invalid` marker: a sibling file next to any MusicXML input that is
+  intentionally not valid against the XSD. Body is a human-readable
+  explanation. The core roundtrip suite skips such inputs; api import does
+  not. Convention documented in `data/README.md`.
+
 ## Generator location and how to run
 
 The generator lives at `gen/` (not under this project directory):

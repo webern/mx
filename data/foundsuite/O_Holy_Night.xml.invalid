@@ -1,0 +1,20 @@
+Not valid against the MusicXML XSD.
+
+Confirmed by xmllint --schema docs/musicxml.xsd. Violations include:
+
+- midi-channel with value 0 (schema midi-16: must be 1..16) at lines 22, 32,
+  42, 52.
+- midi-program with value 0 (schema midi-128: must be 1..128) at lines 23,
+  33, 43, 53.
+- display-step with value '=' (enum is A..G) at lines 408, 711, 1337, 1791,
+  2025.
+- display-octave with value -104 (minInclusive 0) at adjacent lines.
+- Many duration elements with value 0 (minExclusive 0) starting at line 2584.
+
+The core roundtrip suite trips on midi-channel=0: mx::core clamps to the
+schema-legal range (writes 1), causing a text mismatch against the
+original 0. Excluding this file from the schema-strict core roundtrip is
+the right call — the library is conforming to the schema and the input is
+the deviation.
+
+See data/README.md for the .invalid marker convention.

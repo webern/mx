@@ -1,0 +1,12 @@
+Not valid against the MusicXML XSD.
+
+Confirmed by xmllint --schema docs/musicxml.xsd. Violation:
+
+- <part> at line 16 is missing the required 'id' attribute.
+
+The filename literally says PartNoId. mx::core's fromXDoc rejects the
+document with "PartAttributes: 'id' is a required attribute but was not
+found" — i.e. the parser is correctly enforcing the schema. Excluding this
+file from the schema-strict core roundtrip is the right call.
+
+See data/README.md for the .invalid marker convention.

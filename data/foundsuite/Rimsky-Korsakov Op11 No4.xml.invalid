@@ -1,0 +1,14 @@
+Not valid against the MusicXML XSD.
+
+Confirmed by xmllint --schema docs/musicxml.xsd. Violations:
+
+- sound/@dynamics with value '-1.11' (minInclusive 0) at lines 6224, 8231,
+  11057, 12922, 13151, 13389, 14002.
+
+The core roundtrip suite trips on this attribute: mx::core clamps the
+negative value to the schema-legal range, causing an attribute mismatch
+against the original. Excluding this file from the schema-strict core
+roundtrip is the right call — the library is conforming to the schema and
+the input is the deviation.
+
+See data/README.md for the .invalid marker convention.

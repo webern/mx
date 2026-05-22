@@ -148,3 +148,34 @@ any file with a sibling .invalid marker. Added
 data/musuite/testInvalid.xml.invalid. Other suites (api import) keep
 processing such files; only the schema-strict core roundtrip honors the
 marker.
+
+## 2026-05-22 16:59
+
+Static analysis sweep of all 13 corert failures against the MusicXML XSD
+using xmllint --schema (with xml.xsd and xlink.xsd downloaded to /tmp and
+the schema imports rewritten to local paths). For each failing file
+compared the schema violations against the corert diff symptom; marked a
+file only when (a) the schema flagged a clear violation and (b) the
+violation explains the round-trip diff.
+
+Ten files met both criteria and got .invalid markers:
+- foundsuite/Deutscher Tanz D.820.1.xml (midi-program=0)
+- foundsuite/O_Holy_Night-Adam-1871.xml (midi-channel=0)
+- foundsuite/O_Holy_Night.xml (midi-channel=0)
+- foundsuite/Rimsky-Korsakov Op11 No4.xml (sound/@dynamics=-1.11)
+- lysuite/ly01e_Pitches_ParenthesizedAccidentals.xml (accidental='double-flat')
+- lysuite/ly32a_Notations.xml (empty <fret/>)
+- lysuite/ly41g_PartNoId.xml (part missing required id)
+- lysuite/ly74a_FiguredBass.xml (figured-bass missing required figure)
+- lysuite/ly75a_AccordionRegistrations.xml (accordion-middle out of range)
+- musuite/test_harmony.xml (kind enum violations, degree-type misorder)
+
+Three failures remained because the files are schema-valid and the diff
+is a real library bug: ly22b_Staff_Notestyles.xml (child count mismatch
+in measure-style), ly41e_StaffGroups_InstrumentNames_Linebroken.xml
+(part-name text mismatch), ly45f_Repeats_InvalidEndings.xml (the schema
+allows both "1, 2, 3" and "1,2,3" via the ending-number pattern; mx::core
+is collapsing the spaces, which is a library bug despite the misleading
+"Invalid" in the filename).
+
+Result: test-core-dev 13 -> 3 failed. test stayed at 0.

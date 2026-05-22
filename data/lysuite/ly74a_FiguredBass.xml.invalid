@@ -1,0 +1,13 @@
+Not valid against the MusicXML XSD.
+
+Confirmed by xmllint --schema docs/musicxml.xsd. Violation:
+
+- <figured-bass> at line 90 is missing the required child element <figure>
+  (figured-bass requires at least one figure child per schema).
+
+The core roundtrip suite trips on this: the empty figured-bass round-trips
+to a different child count than the (canonicalized) input. Excluding this
+file from the schema-strict core roundtrip is the right call — the input
+is omitting a required child.
+
+See data/README.md for the .invalid marker convention.

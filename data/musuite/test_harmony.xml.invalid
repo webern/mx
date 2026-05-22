@@ -1,0 +1,18 @@
+Not valid against the MusicXML XSD.
+
+Confirmed by xmllint --schema docs/musicxml.xsd. Violations include:
+
+- <kind> values not in the schema enumeration: '' (empty, line 73), ' '
+  (whitespace, line 82), 'minor-major' (195), 'dominant-seventh' (204, 488,
+  502, 522, 546), 'neapolitan' (316), 'italian' (326), 'french' (335),
+  'german' (344), 'maj69' (355), 'augmented-ninth' (364), 'altered' (374).
+- <degree-type> child appearing where <degree-alter> is expected, at lines
+  388, 401, 597, 610, 614 — element order violates the schema sequence.
+
+The core roundtrip suite trips on the empty <kind/>: mx::core defaults the
+missing enum to 'major', producing a text mismatch ('' vs 'major').
+Excluding this file from the schema-strict core roundtrip is the right
+call — the input is full of values and orderings that are not in the
+schema.
+
+See data/README.md for the .invalid marker convention.

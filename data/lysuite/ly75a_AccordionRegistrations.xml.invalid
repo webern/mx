@@ -1,0 +1,15 @@
+Not valid against the MusicXML XSD.
+
+Confirmed by xmllint --schema docs/musicxml.xsd. Violations:
+
+- <accordion-middle/> empty at line 291 (must be 1..3).
+- <accordion-middle>test</accordion-middle> at line 307 (must be 1..3).
+- <accordion-middle>0</accordion-middle> at line 323 (minInclusive 1).
+- <accordion-middle>5</accordion-middle> at line 339 (maxInclusive 3).
+
+The core roundtrip suite trips on the empty accordion-middle: mx::core
+defaults the missing integer to 0, producing a text mismatch ('' vs '0').
+Excluding this file from the schema-strict core roundtrip is the right
+call — the input is using values outside the schema-allowed range.
+
+See data/README.md for the .invalid marker convention.
