@@ -231,3 +231,24 @@ corert cases; no new failures, no regressions). Committed as
 Iteration 3 done. M3 remaining: ly22b (24-line diff, measure-style
 child count) and ly41e (10-line diff, part-name linebroken text). Next
 session picks the smaller — ly41e.
+
+## 2026-05-22 17:22
+
+M3 iteration 4. Baseline confirmed: test-core-dev=2, test=0.
+Smallest core-roundtrip diff was lysuite/ly41e_StaffGroups_InstrumentNames_Linebroken.xml
+(10 lines) as predicted. Root cause: input has &#xd; in <part-name> text;
+mx::core::XsString::toStream escapes only <, >, &. On write, raw \r is emitted,
+then pugixml's parse_eol normalizes \r to \n on the next load, so the in-memory
+"Long\rStaff\rName" becomes "Long\nStaff\nName" after toXDoc. Fix: add a
+'\r' case to XsString::toStream emitting "&#xd;". XsString.cpp is hand-written
+(only its header path is mapped in gen/), so no regen. Risk minimal — escape only
+fires on the output side and only when a \r is actually present in the string.
+
+## 2026-05-22 17:26
+
+Iteration 4 fix landed in commit 040b2152 ("core: escape carriage return as
+&#xd; in XsString writer"). Verified: make fmt clean, make check clean,
+make test-core-dev 1 failed (was 2), make test 0 failed, make test-all
+3027/3028 (was 3026/3028). Only remaining failure is
+lysuite/ly22b_Staff_Notestyles.xml — child-count mismatch inside
+measure-style/slash. That is the iteration 5 target.
