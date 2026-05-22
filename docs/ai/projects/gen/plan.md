@@ -19,19 +19,48 @@ One WEIRD item deferred to M5: original `mx/core` had a hand-applied MusicXML 4.
 backport that a schema-faithful 3.x regen overwrites. The `// TODO: fixme - MusicXML 4.0 ...`
 comments in `mx/impl` (NotationsWriter.cpp:398, ArpeggiateFunctions.cpp:35) bookmark this.
 
-## Milestone 3: increase test coverage
+## Milestone 3: fix-core-dev - fix bugs surfaced by new core-dev test mode
+
+Session sequence:
+- `rm -rf data/testOutput/*`
+- run `make test-core-dev` : record the number of falures as baseline_core_dev
+- run `make test` : record the number of failures as baseline_test (should be zero)
+- diff each before/after pair in `data/testOutput/corert` and choose the one with the smallest diff.
+  This becomes test_to_fix
+- analyze test_to_fix and try to decide, is this a bug in `gen/*`? For context, bugs in my original
+  hand-rolled gen efforts were dutifly replicated by revgen. So, for example `lang="it"` as default
+  is not a sensible behavior for the library. It is a bug that preexisted before revgen. There are
+  other potential cases, for example defaulting to having an element present when minOcurrs=0 in the
+  spec.
+  - If you think this is a pre-existing bug reproduced by revgen, it might be worth checking with
+    the user to save us all time and tokens, unless you're really sure that a MusicXML file
+    shouldn't be the way that we are treating it right now
+  - If you think this is just a bug in the way revgen decided what to do, that's a no-brainer, it
+    should be fixed
+- When the bug is fixed
+  - run `gen` to regenerate mx/core
+  - `make fmt`
+  - `make check`
+  - `rm -rf data/testOutput/*`
+  - `make test-core-dev` : you must see that you fixed the test you were trying to fix without introducing any new failures
+  - `make test` : should still be at zero failures
+- Commit your work
+- update state.md and any tracking documents you decide to use.
+- report done
+
+## Milestone 4: increase test coverage
 
 Add a lot more MusicXML round-trip input files. Build a dedicated mx/core-level round-trip test
 harness (not just api-level freezing tests). No specific design yet.
 
-## Milestone 4: better-gen — fix garbage
+## Milestone 5: better-gen — fix garbage
 
 The gen program is 12k lines of bad Python. Fix it. Use dedicated mx/core round-trip tests as the
 north star for correctness.
 
-## Milestone 5: mxml4-types — generate MusicXML 4.0 types
+## Milestone 6: mxml4-types — generate MusicXML 4.0 types
 
 Replace `docs/musicxml.xsd` with MusicXML 4.0, regenerate, fix all existing tests. Watch for
-backported or bolted-on features (SMuFL, UpDown, etc.) that were added with hacks to 3.0/3.1 but
-are first-class in 4.0. Be backward-compatible with files `mx` may have written using those hacks.
+backported or bolted-on features (SMuFL, UpDown, etc.) that were added with hacks to 3.0/3.1 but are
+first-class in 4.0. Be backward-compatible with files `mx` may have written using those hacks.
 Restore the `mx/impl` TODOs from revgen.
