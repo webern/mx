@@ -35,10 +35,6 @@ void generateExpectedFile(const std::string &subdir, const std::string &fileName
     // ly01e_Pitches_ParenthesizedAccidentals incorrectly uses "double-flat" which should be "flat-flat" instead
     convertValues(*xdoc, "accidental", "double-flat", "flat-flat");
 
-    // lysuite_ly22b_Staff_Notestyles.xml incorrectly has <slash> elements that are missing required attribute
-    // 'use-stems' and child element 'slash-type'
-    addChildIfNone(*xdoc, "slash", "slash-type", "eighth");
-
     // ly32b_Atriculations_Texts.xml cas a 'color' attribute on the 'words' element
     // I have examined the xsd thoughouly and I believe this is illegal
     removeAttribute(*xdoc, "words", "color");

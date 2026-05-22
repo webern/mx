@@ -1076,13 +1076,7 @@ ELEMENT_HAS_CONTENTS_ALWAYS_TRUE = {
 # (parent_element_xml_name, child_element_xml_name). Use this when XSD group
 # inlining propagates minOccurs=0 from the enclosing group to an element that
 # HEAD treats as unconditionally present (no getHas/setHas accessors).
-CHILD_MIN_OCCURS_OVERRIDE = {
-    # The `slash` group (used by both slash and beat-repeat) has minOccurs="0",
-    # which causes group inlining to set min_occurs=0 on slash-type. HEAD treats
-    # slash-type as always-present (minOccurs=1 within the group), so override.
-    ("slash", "slash-type"): 1,
-    ("beat-repeat", "slash-type"): 1,
-}
+CHILD_MIN_OCCURS_OVERRIDE = {}
 
 
 def _apply_child_min_occurs_override(elem_name: str, children: list) -> list:

@@ -40,9 +40,11 @@ class Slash : public ElementInterface
     SlashAttributesPtr getAttributes() const;
     void setAttributes(const SlashAttributesPtr &attributes);
 
-    /* _________ SlashType minOccurs = 1, maxOccurs = 1 _________ */
+    /* _________ SlashType minOccurs = 0, maxOccurs = 1 _________ */
     SlashTypePtr getSlashType() const;
     void setSlashType(const SlashTypePtr &value);
+    bool getHasSlashType() const;
+    void setHasSlashType(const bool value);
 
     /* _________ SlashDot minOccurs = 0, maxOccurs = unbounded _________ */
     const SlashDotSet &getSlashDotSet() const;
@@ -57,6 +59,7 @@ class Slash : public ElementInterface
   private:
     SlashAttributesPtr myAttributes;
     SlashTypePtr mySlashType;
+    bool myHasSlashType;
     SlashDotSet mySlashDotSet;
 };
 } // namespace core

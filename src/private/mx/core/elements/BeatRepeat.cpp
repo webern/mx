@@ -13,7 +13,8 @@ namespace mx
 namespace core
 {
 BeatRepeat::BeatRepeat()
-    : myAttributes(std::make_shared<BeatRepeatAttributes>()), mySlashType(makeSlashType()), mySlashDotSet()
+    : myAttributes(std::make_shared<BeatRepeatAttributes>()), mySlashType(makeSlashType()), myHasSlashType(false),
+      mySlashDotSet()
 {
 }
 
@@ -35,20 +36,30 @@ std::ostream &BeatRepeat::streamName(std::ostream &os) const
 
 bool BeatRepeat::hasContents() const
 {
-    return true;
+    return myHasSlashType || mySlashDotSet.size() > 0;
 }
 
 std::ostream &BeatRepeat::streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const
 {
-    isOneLineOnly = false;
-    os << std::endl;
-    mySlashType->toStream(os, indentLevel + 1);
+    if (myHasSlashType)
+    {
+        os << std::endl;
+        mySlashType->toStream(os, indentLevel + 1);
+    }
     for (auto x : mySlashDotSet)
     {
         os << std::endl;
         x->toStream(os, indentLevel + 1);
     }
-    os << std::endl;
+    if (myHasSlashType || mySlashDotSet.size() > 0)
+    {
+        isOneLineOnly = false;
+        os << std::endl;
+    }
+    else
+    {
+        isOneLineOnly = true;
+    }
     return os;
 }
 
@@ -76,6 +87,16 @@ void BeatRepeat::setSlashType(const SlashTypePtr &value)
     {
         mySlashType = value;
     }
+}
+
+bool BeatRepeat::getHasSlashType() const
+{
+    return myHasSlashType;
+}
+
+void BeatRepeat::setHasSlashType(const bool value)
+{
+    myHasSlashType = value;
 }
 
 const SlashDotSet &BeatRepeat::getSlashDotSet() const
@@ -117,12 +138,11 @@ bool BeatRepeat::fromXElementImpl(std::ostream &message, ::ezxml::XElement &xele
 {
     bool isSuccess = true;
     isSuccess &= myAttributes->fromXElement(message, xelement);
-    bool isSlashTypeFound = false;
 
     auto endIter = xelement.end();
     for (auto it = xelement.begin(); it != endIter; ++it)
     {
-        if (importElement(message, *it, isSuccess, *mySlashType, isSlashTypeFound))
+        if (importElement(message, *it, isSuccess, *mySlashType, myHasSlashType))
         {
             continue;
         }

@@ -252,3 +252,25 @@ make test-core-dev 1 failed (was 2), make test 0 failed, make test-all
 3027/3028 (was 3026/3028). Only remaining failure is
 lysuite/ly22b_Staff_Notestyles.xml — child-count mismatch inside
 measure-style/slash. That is the iteration 5 target.
+
+## 2026-05-22 17:38
+
+M3 iteration 5 started. Baseline: make test-core-dev = 1 failed (lysuite/ly22b_Staff_Notestyles.xml, child count mismatch in measure-style/slash). make test was 0 at start of M3 iter 4 commit; not re-run this session.
+
+Diagnosed root cause: writer unconditionally emits `<slash-type>eighth</slash-type>` inside every `<slash>` element. XSD has `<xs:group ref="slash" minOccurs="0"/>` inside `complexType slash` (and inside `complexType beat-repeat`), so the entire group is optional and the test input has empty `<slash type="..."/>` with no children. HEAD treats `slash-type` as always-present, no `myHas` flag. Generator preserves this via explicit CHILD_MIN_OCCURS_OVERRIDE entries at gen/generate.py:1083-1084 keyed on (slash, slash-type) and (beat-repeat, slash-type).
+
+Classified as pre-existing hand-rolled bug replicated by revgen — exactly the "defaulting to having an element present when minOccurs=0" category flagged in plan.md M3.
+
+mx/api and mx/impl do not reference Slash, BeatRepeat, or SlashType element classes; only unrelated enums (doubleSlashFlat etc.) carry the substring. No impl/api changes needed.
+
+Confirmed with user: fix both slash and beat-repeat together (single conceptual change), regenerate data/expected/lysuite_ly22b_Staff_Notestyles.xml.expected.xml as the standard api-import fix path.
+
+Plan: drop both override entries, regen mx/core, regen the api-import expected file, run full gate.
+
+## 2026-05-22 18:00
+
+Discovered the actual "buggy assertion" the user anticipated: src/private/mxtest/import/ExpectedFiles.cpp:38-40 patched the test input via `addChildIfNone(*xdoc, "slash", "slash-type", "eighth")` with a comment claiming the input was XSD-invalid. The XSD analysis shows the opposite — the slash group is minOccurs=0, so empty `<slash/>` is fine. Removed the patch (test harness change, pre-authorized in this session). The mx/api / mx/impl layer is untouched; no assertion there to fix.
+
+Generator change: removed both CHILD_MIN_OCCURS_OVERRIDE entries (slash/slash-type and beat-repeat/slash-type) plus their explanatory comment. Regenerated mx/core. Only Slash.{h,cpp} and BeatRepeat.{h,cpp} had semantic diffs (added myHasSlashType + gated emission); other files were pure clang-format whitespace drift resolved by `make fmt`.
+
+Local gates so far: make test-core-dev 350/350 (was 349/350); make test 2717/2717.

@@ -40,9 +40,11 @@ class BeatRepeat : public ElementInterface
     BeatRepeatAttributesPtr getAttributes() const;
     void setAttributes(const BeatRepeatAttributesPtr &attributes);
 
-    /* _________ SlashType minOccurs = 1, maxOccurs = 1 _________ */
+    /* _________ SlashType minOccurs = 0, maxOccurs = 1 _________ */
     SlashTypePtr getSlashType() const;
     void setSlashType(const SlashTypePtr &value);
+    bool getHasSlashType() const;
+    void setHasSlashType(const bool value);
 
     /* _________ SlashDot minOccurs = 0, maxOccurs = unbounded _________ */
     const SlashDotSet &getSlashDotSet() const;
@@ -57,6 +59,7 @@ class BeatRepeat : public ElementInterface
   private:
     BeatRepeatAttributesPtr myAttributes;
     SlashTypePtr mySlashType;
+    bool myHasSlashType;
     SlashDotSet mySlashDotSet;
 };
 } // namespace core

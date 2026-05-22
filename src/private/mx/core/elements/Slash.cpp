@@ -12,7 +12,9 @@ namespace mx
 {
 namespace core
 {
-Slash::Slash() : myAttributes(std::make_shared<SlashAttributes>()), mySlashType(makeSlashType()), mySlashDotSet()
+Slash::Slash()
+    : myAttributes(std::make_shared<SlashAttributes>()), mySlashType(makeSlashType()), myHasSlashType(false),
+      mySlashDotSet()
 {
 }
 
@@ -34,20 +36,30 @@ std::ostream &Slash::streamName(std::ostream &os) const
 
 bool Slash::hasContents() const
 {
-    return true;
+    return myHasSlashType || mySlashDotSet.size() > 0;
 }
 
 std::ostream &Slash::streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const
 {
-    isOneLineOnly = false;
-    os << std::endl;
-    mySlashType->toStream(os, indentLevel + 1);
+    if (myHasSlashType)
+    {
+        os << std::endl;
+        mySlashType->toStream(os, indentLevel + 1);
+    }
     for (auto x : mySlashDotSet)
     {
         os << std::endl;
         x->toStream(os, indentLevel + 1);
     }
-    os << std::endl;
+    if (myHasSlashType || mySlashDotSet.size() > 0)
+    {
+        isOneLineOnly = false;
+        os << std::endl;
+    }
+    else
+    {
+        isOneLineOnly = true;
+    }
     return os;
 }
 
@@ -75,6 +87,16 @@ void Slash::setSlashType(const SlashTypePtr &value)
     {
         mySlashType = value;
     }
+}
+
+bool Slash::getHasSlashType() const
+{
+    return myHasSlashType;
+}
+
+void Slash::setHasSlashType(const bool value)
+{
+    myHasSlashType = value;
 }
 
 const SlashDotSet &Slash::getSlashDotSet() const
@@ -116,12 +138,11 @@ bool Slash::fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement)
 {
     bool isSuccess = true;
     isSuccess &= myAttributes->fromXElement(message, xelement);
-    bool isSlashTypeFound = false;
 
     auto endIter = xelement.end();
     for (auto it = xelement.begin(); it != endIter; ++it)
     {
-        if (importElement(message, *it, isSuccess, *mySlashType, isSlashTypeFound))
+        if (importElement(message, *it, isSuccess, *mySlashType, myHasSlashType))
         {
             continue;
         }
