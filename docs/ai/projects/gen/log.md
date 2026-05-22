@@ -101,3 +101,31 @@ After mass cleanup, 13 failures remained, all metronome/tempo. Re-triaged as D1�
 - Bespoke handlers should still read the parsed XSD model — pattern is "custom algorithm,
   schema-driven data" (Direction's element-name tables derived from
   `model.complex_types["direction-type"].content_tree.branches`).
+
+## M3: fix-core-dev (2026-05-22 — )
+
+### 2026-05-22 16:40 — iteration 1
+
+Baselines on a clean build: `make test-core-dev` = 31 failed / 361 cases;
+`make test` = 0 failed. Smallest diffs in `data/testOutput/corert` (4 lines each):
+`foundsuite_Invention 2.xml`, `foundsuite_Invention_5.xml`, `musuite_testInvalid.xml`.
+
+Picked Invention 2 (Invention 5 is the same root cause). Diff was
+`<measure width="564.40">` vs `<measure width="564.4">`. `width` is a `tenths`
+(decimal) attribute. `PreciseDecimal::toStream` in the hand-written
+`src/private/mx/core/Decimals.cpp` strips trailing zeros from the decimal portion,
+so `mx::core` writes `564.4`. The corert and api-import pipelines already strip
+trailing zeros from the expected XML for 9 other tenths-typed fields
+(`default-x`, `default-y`, `tenths`, ...) via `mxtest::stripZerosFromDecimalFields`
++ the `decimalFields` set in `src/private/mxtest/import/DecimalFields.h`. The set
+was missing `"width"`.
+
+User direction: fix on the test side, normalize the expected XML the same way the
+library normalizes its output. Not a generator bug; nothing to regenerate.
+
+Fix: added `"width"` to `decimalFields`. Result: `make test-core-dev` 31 → 14
+failed; `make test` still 0. No new failures introduced. Cleared 17 failures with
+a one-line change, all driven by the same width-attribute pattern across the
+MuseScore/foundsuite corpus.
+
+Committed as `639d46a3` on branch `fix-core-dev`.
