@@ -1,0 +1,15 @@
+testInvalid.xml is intentionally not a valid MusicXML file.
+
+Per its embedded <miscellaneous-field name="description">: "This file is almost
+identical to testHello.xml, but contains two additional invalid elements to
+test MusicXML validation." Specifically:
+
+- <invalid_element/> appears inside <identification>
+- <another_invalid_element/> appears inside <attributes>
+
+Neither element exists in the MusicXML XSD. mx::core is a strongly-typed DOM
+generated from the schema and has no slot for unknown elements, so fromXDoc
+discards them. The file therefore cannot round-trip losslessly through
+mx::core and is excluded from the core roundtrip suite via this marker.
+
+See data/README.md for the .invalid marker convention.

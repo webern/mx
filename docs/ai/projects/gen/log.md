@@ -129,3 +129,22 @@ a one-line change, all driven by the same width-attribute pattern across the
 MuseScore/foundsuite corpus.
 
 Committed as `639d46a3` on branch `fix-core-dev`.
+
+## 2026-05-22 16:47
+
+M3 iteration 2. Baselines this session: test-core-dev = 14 failed, test = 0
+failed. Picked smallest diff: musuite/testInvalid.xml (4 lines; two non-XSD
+elements <invalid_element/> and <another_invalid_element/> dropped on
+fromXDoc). Not a generator or library bug: the file is intentionally invalid
+MusicXML, named testInvalid.xml, and self-documents that fact in a
+miscellaneous-field. A strongly-typed schema-generated DOM cannot preserve
+unknown elements without an architectural passthrough we do not want.
+
+Per user direction introduced a repo-wide marker convention: a sibling file
+named {file}.invalid next to any invalid MusicXML input, body is a
+human-readable explanation. Documented in data/README.md. Updated
+src/private/mxtest/corert/CoreRoundtripImpl.cpp::discoverInputFiles to skip
+any file with a sibling .invalid marker. Added
+data/musuite/testInvalid.xml.invalid. Other suites (api import) keep
+processing such files; only the schema-strict core roundtrip honors the
+marker.

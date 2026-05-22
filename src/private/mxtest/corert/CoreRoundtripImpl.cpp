@@ -60,6 +60,17 @@ bool hasXmlExtension(const std::filesystem::path &p)
     return ext == ".xml" || ext == ".musicxml";
 }
 
+// A file is marked invalid (and therefore unfit for schema-strict round-trip)
+// when a sibling file with the same name plus a trailing `.invalid` extension
+// exists. See data/README.md for the convention.
+bool hasInvalidMarker(const std::filesystem::path &p)
+{
+    std::filesystem::path marker = p;
+    marker += ".invalid";
+    std::error_code ec;
+    return std::filesystem::exists(marker, ec);
+}
+
 // Set the root `version` attribute to mx::core's supported MusicXML version.
 // Equivalent in shape to mxtest/import's setRootMusicXmlVersion but without
 // the doctype cross-check (which we apply via setDoctype below based on the
@@ -275,6 +286,10 @@ std::vector<std::string> discoverInputFiles()
             continue;
         }
         if (!hasXmlExtension(p))
+        {
+            continue;
+        }
+        if (hasInvalidMarker(p))
         {
             continue;
         }
