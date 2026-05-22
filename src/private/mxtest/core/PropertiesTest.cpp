@@ -111,6 +111,7 @@ PropertiesPtr tgenProperties(TestMode v)
         o->addDirective(dir);
         auto ms = makeMeasureStyle();
         ms->getMeasureStyleChoice()->setChoice(MeasureStyleChoice::Choice::slash);
+        ms->getMeasureStyleChoice()->getSlash()->setHasSlashType(true);
         ms->getMeasureStyleChoice()->getSlash()->getSlashType()->setValue(NoteTypeValue::eighth);
         o->addMeasureStyle(ms);
     }
@@ -166,6 +167,7 @@ PropertiesPtr tgenProperties(TestMode v)
         o->addDirective(dir);
         auto ms = makeMeasureStyle();
         ms->getMeasureStyleChoice()->setChoice(MeasureStyleChoice::Choice::slash);
+        ms->getMeasureStyleChoice()->getSlash()->setHasSlashType(true);
         ms->getMeasureStyleChoice()->getSlash()->getSlashType()->setValue(NoteTypeValue::eighth);
         o->addMeasureStyle(ms);
     }

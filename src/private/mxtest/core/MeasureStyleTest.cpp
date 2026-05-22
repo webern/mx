@@ -32,6 +32,7 @@ TEST(Test02, MeasureStyle)
 {
     MeasureStyle object;
     object.getMeasureStyleChoice()->setChoice(MeasureStyleChoice::Choice::beatRepeat);
+    object.getMeasureStyleChoice()->getBeatRepeat()->setHasSlashType(true);
     object.getMeasureStyleChoice()->getBeatRepeat()->addSlashDot(makeSlashDot());
     object.getAttributes()->hasColor = true;
     object.getAttributes()->color = Color{76, 58, 201, 43};
@@ -54,6 +55,7 @@ TEST(Test03, MeasureStyle)
 {
     MeasureStyle object;
     object.getMeasureStyleChoice()->setChoice(MeasureStyleChoice::Choice::slash);
+    object.getMeasureStyleChoice()->getSlash()->setHasSlashType(true);
     stringstream expected;
     streamLine(expected, 1, R"(<measure-style>)");
     streamLine(expected, 2, R"(<slash type="start">)");

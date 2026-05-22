@@ -16,6 +16,7 @@ using namespace mxtest;
 TEST(Test01, BeatRepeat)
 {
     BeatRepeat object;
+    object.setHasSlashType(true);
     stringstream expected;
     streamLine(expected, 1, R"(<beat-repeat type="start">)");
     streamLine(expected, 2, R"(<slash-type>eighth</slash-type>)");
@@ -35,6 +36,7 @@ TEST(Test02, BeatRepeat)
     object.getAttributes()->hasUseDots = true;
     object.getAttributes()->useDots = YesNo::yes;
     object.getAttributes()->hasSlashes = true;
+    object.setHasSlashType(true);
     object.addSlashDot(makeSlashDot());
     object.addSlashDot(makeSlashDot());
     stringstream expected;

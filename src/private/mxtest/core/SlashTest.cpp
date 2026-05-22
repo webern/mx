@@ -16,6 +16,7 @@ using namespace mxtest;
 TEST(Test01, Slash)
 {
     Slash object;
+    object.setHasSlashType(true);
     stringstream expected;
     streamLine(expected, 1, R"(<slash type="start">)");
     streamLine(expected, 2, R"(<slash-type>eighth</slash-type>)");
@@ -36,6 +37,7 @@ TEST(Test02, Slash)
     object.getAttributes()->useDots = YesNo::yes;
     object.getAttributes()->hasUseStems = true;
     object.getAttributes()->useStems = YesNo::yes;
+    object.setHasSlashType(true);
     object.addSlashDot(makeSlashDot());
     object.addSlashDot(makeSlashDot());
     stringstream expected;
