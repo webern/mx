@@ -22,8 +22,8 @@ inline void roundTrip()
     auto scoreData = docMgr.getData(docId);
     docMgr.destroyDocument(docId);
     docId = docMgr.createFromScore(scoreData);
-    const std::string outputPath = std::string{mxtest::getResourcesDirectoryPath()} + "testOutput" +
-                                   FILE_PATH_SEPARATOR + "output.xml";
+    const std::string outputPath =
+        std::string{mxtest::getResourcesDirectoryPath()} + "testOutput" + FILE_PATH_SEPARATOR + "output.xml";
     docMgr.writeToFile(docId, outputPath);
     docMgr.destroyDocument(docId);
 }
