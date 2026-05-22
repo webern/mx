@@ -19,7 +19,17 @@ One WEIRD item deferred to M5: original `mx/core` had a hand-applied MusicXML 4.
 backport that a schema-faithful 3.x regen overwrites. The `// TODO: fixme - MusicXML 4.0 ...`
 comments in `mx/impl` (NotationsWriter.cpp:398, ArpeggiateFunctions.cpp:35) bookmark this.
 
-## Milestone 3: fix-core-dev - fix bugs surfaced by new core-dev test mode
+## Milestone 3: fix-core-dev - fix bugs surfaced by new core-dev test mode ✅
+
+**Complete** (2026-05-22). All gates green. Final iteration (5) fixed the `slash`/`beat-repeat`
+slash-type emission bug — the writer unconditionally emitted `<slash-type>eighth</slash-type>` even
+though the XSD `slash` group is `minOccurs="0"`. Removed two `CHILD_MIN_OCCURS_OVERRIDE` entries
+in gen, regenerated `Slash.{h,cpp}` and `BeatRepeat.{h,cpp}` with a `myHasSlashType` flag, removed
+a matching `addChildIfNone` workaround in the api-import test harness, and added 6 surgical
+`setHasSlashType(true)` calls to 4 `mxtest/core/*Test.cpp` fixture files. Commits d43a222c and
+9c8efa24.
+
+### Session sequence (kept for reference)
 
 Session sequence:
 - `rm -rf data/testOutput/*`
@@ -50,8 +60,13 @@ Session sequence:
 
 ## Milestone 4: increase test coverage
 
-Add a lot more MusicXML round-trip input files. Build a dedicated mx/core-level round-trip test
-harness (not just api-level freezing tests). No specific design yet.
+The dedicated mx/core-level round-trip harness now exists (the corert suite under
+`src/private/mxtest/corert/`, exercised by `make test-core-dev` and as part of `make test-all`),
+built out during M3. The harness side of the original M4 statement is therefore done.
+
+What remains: add a lot more MusicXML round-trip input files. Public test suites, hand-curated
+edge cases, or generated inputs targeting specific spec features not yet covered. No specific
+design yet — first M4 session should scope this with the user.
 
 ## Milestone 5: better-gen — fix garbage
 

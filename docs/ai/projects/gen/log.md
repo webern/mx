@@ -274,3 +274,15 @@ Discovered the actual "buggy assertion" the user anticipated: src/private/mxtest
 Generator change: removed both CHILD_MIN_OCCURS_OVERRIDE entries (slash/slash-type and beat-repeat/slash-type) plus their explanatory comment. Regenerated mx/core. Only Slash.{h,cpp} and BeatRepeat.{h,cpp} had semantic diffs (added myHasSlashType + gated emission); other files were pure clang-format whitespace drift resolved by `make fmt`.
 
 Local gates so far: make test-core-dev 350/350 (was 349/350); make test 2717/2717.
+
+## 2026-05-22 18:17
+
+`make test-all` after the gen fix surfaced 25 assertion failures in 23 cases across 12 mxtest/core/*Test.cpp files. None in api-import or core-roundtrip — only the per-element fixture tests that only build under MX_BUILD_CORE_TESTS=ON and that codified the buggy "slash-type emitted by default" behavior.
+
+Two categories:
+- Category A (SlashTest, BeatRepeatTest): default-constructed object asserts buggy stream output.
+- Category B (MeasureStyleTest, PropertiesTest + 9 files cascading via the Properties tgen fixture): setValue without setHasSlashType, leaving the new has-flag false so the writer correctly omits the element, but expected streams still assert it.
+
+User authorized fixing both. Approach: minimal surgical addition of setHasSlashType(true) calls; no new assertions, no removed assertions. Six edits total across four files (SlashTest x2, BeatRepeatTest x2, MeasureStyleTest x2, PropertiesTest x2). The PropertiesTest builder is shared, so its two-line edit cascades to fix 11 of the 12 broken files.
+
+Final gates: make fmt clean, make check passed, make test-all passed (3028/3028, 9914 assertions). M3 milestone complete: lysuite/ly22b_Staff_Notestyles.xml was the last core-roundtrip failure.

@@ -2,90 +2,92 @@
 
 ## Milestone
 
-**M3: fix-core-dev** in progress. After iteration 4:
-`make test-core-dev` = 1 failed (down from 2); `make test` = 0 failed;
-`make test-all` = 1 failed (3027/3028 cases).
+**M3: fix-core-dev** complete (2026-05-22). All gates green:
+- `make test-core-dev` = 350/350
+- `make test` = 234/234 (2717 assertions)
+- `make test-all` = 3028/3028 (9914 assertions)
+- `make check` passed
 
-## What the previous session did (M3 iteration 4)
+## What the previous session did (M3 iteration 5, final)
 
-Iteration 4 picked the smallest core-roundtrip diff,
-`lysuite/ly41e_StaffGroups_InstrumentNames_Linebroken.xml` (10-line
-diff). The `<part-name>` text content contained `&#xd;` character
-references (literal CR bytes); on round-trip those became `\n`.
+Tackled the last core-roundtrip failure
+`lysuite/ly22b_Staff_Notestyles.xml`: writer was unconditionally
+emitting `<slash-type>eighth</slash-type>` inside every `<slash>` and
+`<beat-repeat>` element. XSD analysis showed the `slash` group is
+`minOccurs="0"` inside both `complexType slash` and `complexType
+beat-repeat`, so the whole group (including required-within-group
+`slash-type`) is optional. HEAD treated `slash-type` as
+always-present, and the generator preserved this via two
+`CHILD_MIN_OCCURS_OVERRIDE` entries at gen/generate.py:1083-1084.
 
-Root cause: `mx::core::XsString::toStream` in
-`src/private/mx/core/XsString.cpp` escaped only `<`, `>`, `&`. A raw
-`\r` written to the output stream is normalized to `\n` by the next
-parser pass (pugixml `parse_eol`, per XML 1.0 §2.11). The reader path
-was already correct — pugixml expands `&#xd;` into a raw `\r` after
-EOL normalization runs, so `myValue` held the right bytes; only the
-writer dropped them.
+This was exactly the "pre-existing hand-rolled bug replicated by
+revgen" category flagged in plan.md M3.
 
-Fix: added a `'\r'` case emitting `"&#xd;"` to the escape switch.
-Hand-written type, no regen needed. Committed as `040b2152`.
+Three changes (commit d43a222c "fix gen code"):
+1. Removed both `CHILD_MIN_OCCURS_OVERRIDE` entries; regenerated
+   `mx/core`. Only `Slash.{h,cpp}` and `BeatRepeat.{h,cpp}` got
+   semantic diffs (myHasSlashType flag + gated emission); the other
+   ~227 files were pure clang-format drift resolved by `make fmt`.
+2. `src/private/mxtest/import/ExpectedFiles.cpp` had
+   `addChildIfNone(*xdoc, "slash", "slash-type", "eighth")` with a
+   comment claiming the input was XSD-invalid. The opposite is true;
+   removed the patch. This was the "buggy assertion" the user
+   anticipated finding — turned out to be in the api-import test
+   harness, not in `mx/api` (which doesn't reference these elements).
 
-## One remaining failure
+One follow-up change (commit 9c8efa24 "mxtest/core: set
+has-slash-type flag explicitly..."): `make test-all` then surfaced 25
+assertion failures in 23 `mxtest/core/*Test.cpp` cases. None in
+api-import or core-roundtrip — only per-element fixture tests built
+under `MX_BUILD_CORE_TESTS=ON`. Two categories: tests that
+default-constructed a Slash/BeatRepeat and asserted the buggy
+default stream (SlashTest, BeatRepeatTest); and fixtures that called
+`getSlashType()->setValue(...)` without `setHasSlashType(true)`
+(MeasureStyleTest, PropertiesTest + 9 cascades through the shared
+`tgenProperties` builder). User authorized minimal surgical
+`setHasSlashType(true)` additions; 6 edits across 4 files (the
+PropertiesTest edit cascades to 11 files).
 
-`lysuite/ly22b_Staff_Notestyles.xml` (24-line diff): child count
-mismatch inside `measure-style` at
-`/score-partwise/part[2]/measure[0]/attributes[2]/measure-style[0]/slash[0]`.
-This is the last `make test-core-dev` failure and the last
-`make test-all` failure. **Next session target.**
+## What the next session should do (M4)
 
-## What the next session should do (M3 iteration 5)
+Start M4: increase test coverage. From plan.md: "Add a lot more
+MusicXML round-trip input files. Build a dedicated mx/core-level
+round-trip test harness (not just api-level freezing tests). No
+specific design yet."
 
-Per `plan.md` M3 session sequence:
+The dedicated core round-trip harness now exists (the corert suite
+under `src/private/mxtest/corert/`, exercised by `make
+test-core-dev` and as part of `make test-all`). M4's design needs
+revision: the harness exists, what's missing is more coverage.
+First session task is probably scoping: where do additional
+MusicXML files come from (public test suites, generated fuzzing
+inputs, hand-curated edge cases)? What's the goal — N more files
+of a particular shape, or coverage of specific spec features not
+yet exercised?
 
-1. `rm -rf data/testOutput/*`
-2. `make test-core-dev` — record failure count as baseline_core_dev
-   (expect 1).
-3. `make test` — expect 0.
-4. Diff `lysuite_ly22b_Staff_Notestyles.xml.{expected,actual}.xml` in
-   `data/testOutput/corert` — it's the only failure. That is
-   `test_to_fix`. Report to user with one-paragraph analysis. One test
-   per session.
-5. Wait for user direction before fixing. This one has a child-count
-   mismatch inside `measure-style/slash`, which suggests it could be
-   either: a missing optional child the writer is emitting, or an
-   optional child the reader is not emitting; check both the XSD shape
-   of `measure-style` (sequence vs choice, minOccurs) and the
-   generated `MeasureStyle.cpp` / `Slash.cpp` against the input file.
-6. After fix: if the fix was in `gen/`, regen `mx/core`; otherwise
-   skip regen. Then `make fmt`, `make check`, `make test-core-dev`,
-   `make test`, `make test-all` (since the fix will almost certainly
-   touch `src/private/mx/core/`).
+Ask the user before designing.
 
 ## Gotchas
 
-- **`.invalid` marker convention**: if a corert failure is caused by
-  intentionally invalid MusicXML, the right move is a `{file}.invalid`
-  marker, not code. ly22b looks like a real bug (child-count
-  mismatch, not a structural validity issue), but confirm by running
-  `xmllint --noout --schema /tmp/mx.xsd
-  data/lysuite/ly22b_Staff_Notestyles.xml` first.
-- **Validating against the MusicXML XSD with xmllint**: the XSD
-  imports `http://www.musicxml.org/xsd/xml.xsd` and `xlink.xsd` which
-  404 today. Workaround:
-  - `curl -sSf -o /tmp/xml.xsd https://www.w3.org/2001/xml.xsd`
-  - `curl -sSf -o /tmp/xlink.xsd https://www.w3.org/1999/xlink.xsd`
-  - copy `docs/musicxml.xsd` to `/tmp/mx.xsd` and `sed` the two
-    `schemaLocation` values to `/tmp/xml.xsd` and `/tmp/xlink.xsd`.
-  - then `xmllint --noout --schema /tmp/mx.xsd <file>`.
-- **One test per session.** Do not try to fix multiple failures in
-  one session even if they share a root cause.
+- **HEAD `UpDownNone` backport** in `ArpeggiateAttributes.h` still
+  conflicts with a schema-faithful regen. Invisible as long as M4
+  doesn't trigger a regen. M5 territory.
 - **Hand-written vs generated.** Files directly under
-  `src/private/mx/core/` (e.g. `XsString.cpp`,
-  `CommaSeparatedPositiveIntegers.cpp`) are mostly hand-written; files
-  under `src/private/mx/core/elements/` are codegen output.
-  `gen/generate.py` only references the hand-written ones by header
-  path. Bugs in hand-written types are fixed in-place, no regen.
-- **Don't touch tests carelessly.** "Never change tests" applies to
-  test cases. Test infrastructure (normalization, harness, discovery)
-  is fair game when authorized; default to flagging before changing.
-- **`make test-all` is the M2 gate; `make test-core-dev` is the M3
-  daily driver.** Anything under `src/private/mx/core/` requires
-  `test-all` per AGENTS.md.
-- **HEAD has a hand-applied UpDownNone backport** in
-  `ArpeggiateAttributes.h` that conflicts with a schema-faithful
-  regen. Invisible as long as M3 changes don't require regen.
-- **`make fmt` runs in Docker** and may time out on first pull. Retry.
+  `src/private/mx/core/` are mostly hand-written; files under
+  `src/private/mx/core/elements/` are codegen output.
+- **`make test-all` is the M2/M3 gate**; `make test-core-dev` is
+  the daily driver for core-only changes.
+- **Generator non-determinism / formatting drift.** Even with no
+  semantic gen changes, `python3 gen/generate.py` can produce
+  files with different clang-format line wrapping than HEAD.
+  Always run `make fmt` after regenerating; expect only the
+  semantically-changed files to remain in `git diff` after that.
+- **Test harness is fair game with authorization** (e.g.,
+  `ExpectedFiles.cpp` in this session). Test cases are not —
+  but per M3 charter, tests that purely codify the bug being
+  fixed are eligible for minimal adjustment with explicit user
+  approval.
+- **`make fmt` runs in Docker** and may time out on first pull.
+- **CHILD_MIN_OCCURS_OVERRIDE is now empty** but the mechanism
+  remains in gen/generate.py. Useful escape hatch if another
+  hand-rolled override surfaces in M4/M5.
