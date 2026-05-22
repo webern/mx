@@ -5,6 +5,8 @@
 #include "mx/core/CommaSeparatedPositiveIntegers.h"
 #include "mx/core/StringUtils.h"
 
+#include <cctype>
+
 namespace mx
 {
 namespace core
@@ -64,6 +66,24 @@ void CommaSeparatedListOfPositiveIntegers::setValues(const std::set<int> &values
 
 void CommaSeparatedListOfPositiveIntegers::parse(const StringType &commaSeparatedText)
 {
+    // Detect whether the input used the spaced form (e.g. "1, 2, 3") versus the compact
+    // form ("1,2,3"). Both are valid per the MusicXML ending-number pattern
+    // [1-9][0-9]*(, ?[1-9][0-9]*)*, so preserve the lexical choice on round-trip.
+    // Look for a digit-comma-space-digit sequence, which is the spaced form of the
+    // XSD pattern. This avoids being fooled by junk input (e.g. ", 0" inside garbage)
+    // and only flips the flag when the input actually conforms to the spaced form.
+    bool sawSpacedForm = false;
+    for (size_t i = 1; i + 2 < commaSeparatedText.size(); ++i)
+    {
+        if (commaSeparatedText[i] == ',' && commaSeparatedText[i + 1] == ' ' &&
+            std::isdigit(static_cast<unsigned char>(commaSeparatedText[i - 1])) &&
+            std::isdigit(static_cast<unsigned char>(commaSeparatedText[i + 2])))
+        {
+            sawSpacedForm = true;
+            break;
+        }
+    }
+    myIsSpacingDesired = sawSpacedForm;
     StringType cleaned = onlyAllow(commaSeparatedText, "", "1234567890,-");
     myValues.clear();
     std::istringstream iss(cleaned);

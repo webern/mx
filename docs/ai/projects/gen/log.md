@@ -179,3 +179,36 @@ is collapsing the spaces, which is a library bug despite the misleading
 "Invalid" in the filename).
 
 Result: test-core-dev 13 -> 3 failed. test stayed at 0.
+
+## 2026-05-22 17:04
+
+M3 iteration 3 baseline: cleared data/testOutput, ran make test-core-dev
+(3 failed) and make test (0 failed) — matches state.md. Diffed each
+corert pair:
+
+- ly45f_Repeats_InvalidEndings.xml: 8 lines
+- ly41e_StaffGroups_InstrumentNames_Linebroken.xml: 10 lines
+- ly22b_Staff_Notestyles.xml: 24 lines
+
+test_to_fix = ly45f_Repeats_InvalidEndings.xml. Diff is two ending
+@number attributes: expected "1, 2, 3", actual "1,2,3".
+
+Root cause: CommaSeparatedListOfPositiveIntegers in
+src/private/mx/core/CommaSeparatedPositiveIntegers.cpp. parse() runs
+onlyAllow(text, "", "1234567890,-") which strips spaces, then never
+touches myIsSpacingDesired (default false). toStream emits
+"a,b,c" unless myIsSpacingDesired is true. So whether the input had
+spaces is lost on import and the output is always space-less.
+
+The schema's ending-number pattern [1-9][0-9]*(, ?[1-9][0-9]*)* allows
+both "1, 2, 3" and "1,2,3" — they are distinct lexical forms of the same
+value. Round-tripping should preserve which form the input used.
+
+This type is hand-written, not generated (gen/generate.py only maps the
+header path as a dependency; the .h/.cpp are not produced). Fix lives
+directly in CommaSeparatedPositiveIntegers.cpp::parse: detect ", " in
+the raw input and call setUseSpaceBetweenItems(true). Not a gen change,
+not a schema-faithful-defaults question — just a parser losing
+information.
+
+Reporting analysis to user, awaiting direction before fixing.
