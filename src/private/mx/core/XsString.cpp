@@ -57,6 +57,15 @@ std::ostream &toStream(std::ostream &os, const XsString &xsstring, bool useXmlEs
             os << "&amp;";
             break;
 
+        case '\r':
+            // Per XML 1.0 §2.11 (End-of-line handling), a literal 0x0D byte in
+            // element text content is normalized to 0x0A on the next parse. To
+            // preserve a carriage return through an XML round-trip, emit it as
+            // the numeric character reference &#xd; — character references are
+            // not subject to EOL normalization.
+            os << "&#xd;";
+            break;
+
         default:
             os << c;
             break;
