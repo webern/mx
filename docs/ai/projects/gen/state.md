@@ -2,98 +2,98 @@
 
 ## Milestone
 
-**M3: fix-core-dev** in progress. After iteration 2 + sweep:
-`make test-core-dev` = 3 failed (down from 13); `make test` = 0 failed.
+**M3: fix-core-dev** in progress. After iteration 3:
+`make test-core-dev` = 2 failed (down from 3); `make test` = 0 failed;
+`make test-all` = 2 failed (3026/3028 cases).
 
-## What the previous session did (M3 iteration 2 + invalid-marker sweep)
+## What the previous session did (M3 iteration 3)
 
-Iteration 2 picked the smallest core-roundtrip diff
-(`musuite/testInvalid.xml`, 4 lines, two non-XSD elements dropped on
-`fromXDoc`). Not a bug — the file is intentionally invalid MusicXML and
-self-documents that fact. A strongly-typed schema-generated DOM cannot
-preserve unknown elements without an architectural passthrough we do not
-want.
+Iteration 3 picked the smallest core-roundtrip diff,
+`lysuite/ly45f_Repeats_InvalidEndings.xml` (8 lines). The `ending`
+element's `number` attribute was round-tripping `"1, 2, 3"` →
+`"1,2,3"`. The XSD `ending-number` pattern
+`[1-9][0-9]*(, ?[1-9][0-9]*)*` allows both forms; the library was
+losing the lexical choice on import.
 
-Per user direction introduced a repo-wide marker convention: a sibling
-file `{file}.invalid` next to any invalid MusicXML input, body is a
-human-readable explanation. Documented in `data/README.md`. Updated
-`src/private/mxtest/corert/CoreRoundtripImpl.cpp::discoverInputFiles` to
-skip any input with a sibling `.invalid` marker. Committed as
-`b62b663f`.
+Root cause: `CommaSeparatedListOfPositiveIntegers::parse` in
+`src/private/mx/core/CommaSeparatedPositiveIntegers.cpp` ran
+`onlyAllow(text, "", "1234567890,-")` (strips spaces) before
+tokenising and never set `myIsSpacingDesired`, so output always took
+the compact form. `toStream` already handled both forms; only import
+needed the fix.
 
-Sweep: ran xmllint --schema against the MusicXML XSD (with xml.xsd /
-xlink.xsd downloaded locally to /tmp and schema imports rewritten in a
-working copy at /tmp/mx.xsd) for every failing corert input. For each
-file, cross-checked the schema violation against the corert diff
-symptom. Marked a file only when the schema violation explains the
-round-trip diff. Ten more files got markers; three remained as genuine
-library bugs on schema-valid input.
+The type is hand-written, not generated — `gen/generate.py` only maps
+its header path as a dependency. Fix lives directly in the .cpp.
 
-## Three remaining real bugs (candidates for iteration 3+)
+Fix: scan the raw input for digit-comma-space-digit and set
+`myIsSpacingDesired` accordingly. Narrow detection (requires digits on
+both sides of `", "`) so the existing
+`StringsTest::EndingNumber02` case — which feeds junk and expects
+`"1,2,3"` out — stays green. Added `#include <cctype>`. Committed as
+`461b96d2`.
 
-These are schema-valid inputs whose round-trip diff is a real library
-bug. Pick the smallest next session.
+## Two remaining real bugs
 
-1. `lysuite/ly41e_StaffGroups_InstrumentNames_Linebroken.xml` (10-line
-   diff): `part-name` text mismatch. Likely the library normalizing
-   linebroken text content.
-2. `lysuite/ly45f_Repeats_InvalidEndings.xml` (8-line diff): ending
-   `number` attribute `"1, 2, 3"` round-trips as `"1,2,3"`. Despite the
-   "Invalid" in the filename, the schema's `ending-number` pattern
-   `[1-9][0-9]*(, ?[1-9][0-9]*)*` allows both forms. Library is dropping
-   spaces.
-3. `lysuite/ly22b_Staff_Notestyles.xml` (24-line diff): child count
+1. `lysuite/ly41e_StaffGroups_InstrumentNames_Linebroken.xml`
+   (10-line diff): `part-name` text mismatch. Library normalizing
+   linebroken text content. **Next session target.**
+2. `lysuite/ly22b_Staff_Notestyles.xml` (24-line diff): child count
    mismatch inside `measure-style` (attributes block, measure[0]).
 
-## What the next session should do (M3 iteration 3)
+## What the next session should do (M3 iteration 4)
 
 Per `plan.md` M3 session sequence:
 
 1. `rm -rf data/testOutput/*`
 2. `make test-core-dev` — record failure count as baseline_core_dev
-   (should be 3).
+   (should be 2).
 3. `make test` — should be 0.
-4. Diff each pair in `data/testOutput/corert` and pick the smallest diff.
-   That is `test_to_fix`. Report it to the user with a one-paragraph
-   analysis. One test per session.
+4. Diff each pair in `data/testOutput/corert` and pick the smallest.
+   That is `test_to_fix` (expected: `ly41e_StaffGroups_...`). Report
+   to user with one-paragraph analysis. One test per session.
 5. Wait for user direction before fixing.
 6. After fix: regen `mx/core` if the fix was in `gen/`, `make fmt`,
-   `make check`, then re-run baselines.
+   `make check`, then re-run `make test-core-dev` and `make test`. If
+   the fix touched anything under `src/private/mx/core/`, also run
+   `make test-all` (the AGENTS.md rule).
 
 ## Gotchas
 
 - **`.invalid` marker convention**: if you encounter a test failure
-  caused by intentionally invalid MusicXML input, the right move is
-  usually a `{file}.invalid` marker, not a code change. The sweep this
-  session covered every file failing under iteration 2's baseline, so a
-  *new* corert failure is most likely a real library bug; still confirm
-  by reading the file and running xmllint --schema against
-  `/tmp/mx.xsd` (or rebuild it from `docs/musicxml.xsd` per the recipe
-  below).
-- **Validating against the MusicXML XSD with xmllint**: the XSD imports
-  `http://www.musicxml.org/xsd/xml.xsd` and `xlink.xsd` which 404 today.
-  Workaround used this session:
+  caused by intentionally invalid MusicXML input, the right move is a
+  `{file}.invalid` marker, not a code change. The iteration-2 sweep
+  covered every then-failing file, so a *new* corert failure is most
+  likely a real library bug; confirm by reading the file and running
+  xmllint --schema against `/tmp/mx.xsd` (recipe below).
+- **Validating against the MusicXML XSD with xmllint**: the XSD
+  imports `http://www.musicxml.org/xsd/xml.xsd` and `xlink.xsd` which
+  404 today. Workaround:
   - `curl -sSf -o /tmp/xml.xsd https://www.w3.org/2001/xml.xsd`
   - `curl -sSf -o /tmp/xlink.xsd https://www.w3.org/1999/xlink.xsd`
   - copy `docs/musicxml.xsd` to `/tmp/mx.xsd` and `sed` the two
-    `schemaLocation` values to point at `/tmp/xml.xsd` and
-    `/tmp/xlink.xsd`.
+    `schemaLocation` values to `/tmp/xml.xsd` and `/tmp/xlink.xsd`.
   - then `xmllint --noout --schema /tmp/mx.xsd <file>`.
-- **One test per session.** Do not try to fix multiple failures in one
-  session even if they share a root cause; the user wants explicit
-  attention on each.
-- **Don't touch tests carelessly.** The cardinal rule "never change
-  tests" applies to test cases. Test infrastructure (normalization
-  helpers, harness code, discovery rules) is fair game when the user
-  authorizes; default to flagging before changing.
-- **`make test-all` is the M2 gate, `make test-core-dev` is the M3 daily
-  driver.** `make test-core-dev` is faster and surfaces the corert
-  failures; `make test` (api import + others) must also stay at zero
-  each iteration.
+- **One test per session.** Do not try to fix multiple failures in
+  one session even if they share a root cause.
+- **Hand-written types vs generated types.** Some `mx/core` files
+  (e.g. `CommaSeparatedPositiveIntegers.cpp`, `EndingNumber.h`) are
+  hand-written and only referenced as a dependency mapping in
+  `gen/generate.py`. Bugs in those files are fixed in the .cpp/.h
+  directly, no regen. Check whether the file appears under
+  `src/private/mx/core/elements/` (generated) vs the parent
+  `src/private/mx/core/` (mostly hand-written core types).
+- **Don't touch tests carelessly.** The "never change tests" rule
+  applies to test cases. Test infrastructure (normalization helpers,
+  harness code, discovery rules) is fair game when authorized;
+  default to flagging before changing.
+- **`make test-all` is the M2 gate, `make test-core-dev` is the M3
+  daily driver.** test-core-dev surfaces the corert failures fast;
+  `make test` (api import + others) must also stay at zero each
+  iteration. If a fix touches anything under
+  `src/private/mx/core/`, also run `make test-all` per AGENTS.md.
 - **HEAD has a hand-applied UpDownNone backport** in
-  `ArpeggiateAttributes.h` that conflicts with a schema-faithful regen.
-  As long as M3 changes do not require regen this is invisible; if a
-  generator fix is needed, follow M2's workflow (`python3 gen/generate.py
-  && make fmt` THEN test, reset after).
+  `ArpeggiateAttributes.h` that conflicts with a schema-faithful
+  regen. As long as M3 changes do not require regen this is
+  invisible; if a generator fix is needed, follow M2's workflow.
 - **`make fmt` runs in Docker** and may time out on first pull
   (registry latency). Just retry.

@@ -212,3 +212,22 @@ not a schema-faithful-defaults question — just a parser losing
 information.
 
 Reporting analysis to user, awaiting direction before fixing.
+
+## 2026-05-22 17:14
+
+Applied fix to CommaSeparatedListOfPositiveIntegers::parse: detect
+digit-comma-space-digit in the raw input and set myIsSpacingDesired
+accordingly. Added #include <cctype>. Detection is intentionally narrow
+(requires digits on both sides of ", ") so the existing
+StringsTest::EndingNumber02 case — which feeds junk like
+"-2,-1,,,,XYZ, 0,  @#$@*&#^1,2,3,3,3,3,3" and expects "1,2,3" out —
+stays green.
+
+Gates: make fmt clean, make check clean, make test-all 3026/3028
+passed (the two remaining failures are the known ly22b and ly41e
+corert cases; no new failures, no regressions). Committed as
+461b96d2 on branch fix-core-dev.
+
+Iteration 3 done. M3 remaining: ly22b (24-line diff, measure-style
+child count) and ly41e (10-line diff, part-name linebroken text). Next
+session picks the smaller — ly41e.
