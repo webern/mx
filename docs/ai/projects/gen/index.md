@@ -15,7 +15,7 @@ at MusicXML 4.0 to generate updated types.
 
 ## Files
 
-Standard project layout (see the `/project` skill). No bespoke files or subdirectories.
+Standard project layout (see the `/project` skill).
 
 ## Repo conventions introduced by this project
 
@@ -37,17 +37,16 @@ python3 gen/eval.py              # scores diff against checked-in mx/core (secon
 Workflow: `python3 gen/generate.py && make fmt && make test-all`. To reset:
 `git checkout -- src/private/mx/core/ && git clean -fd src/private/mx/core/`.
 
-Quality gates: `make fmt && make check && make test-all`.
+## Fitness function and gates
 
-## Fitness function
-
-`make test-all` pass/fail. **Use `make test-all`, never `make test`** — the latter builds
-`dev` and skips the slow `mxtest/file/` round-trippers, under-reporting failures. Every
-iteration that touches `src/private/mx/core/*` ends with a recorded `make test-all` result.
+`make test-all` pass/fail is authoritative. **Use `make test-all`, never `make test`** —
+the latter builds `dev` and skips the slow `mxtest/file/` round-trippers. Full gate:
+`make fmt && make check && make test-all`. Every iteration that touches
+`src/private/mx/core/*` ends with a recorded `make test-all` result.
 
 ## Cardinal rules
 
-- Never change tests (test cases). Test harness code is fair game with user authorization.
+- Never change test cases. Test harness code is fair game with user authorization.
 - Never change `mx/api`.
 - Minimize changes to `mx/impl`; prefer fixing the generator.
 - Do not autonomously edit `gen/eval_config.yaml`. Flag patterns to the user with sample
@@ -56,11 +55,11 @@ iteration that touches `src/private/mx/core/*` ends with a recorded `make test-a
 
 ## Bespoke generator handlers
 
-Six bespoke handlers registered in `BESPOKE_ELEMENTS` in `gen/generate.py`: credit, lyric,
-part-list, harmony, score-wrapper-family, note, direction. They are acceptable when an
-element's shape cannot be expressed by the shared rule-based path, but they must still
-read the parsed XSD model so spec changes propagate. Pattern: "custom algorithm,
-schema-driven data" — not a hardcoded string dump.
+Six bespoke handlers in `BESPOKE_ELEMENTS` (`gen/generate.py`): credit, lyric, part-list,
+harmony, score-wrapper-family, note, direction. Acceptable when an element's shape cannot
+be expressed by the shared rule-based path, but they must still read the parsed XSD model
+so spec changes propagate. Pattern: "custom algorithm, schema-driven data" — not a
+hardcoded string dump.
 
 Always prefer extending a reusable rule-based path (`TREE_ELEMENTS`,
 `TREE_ELEMENT_CONFIG` flags, shared helpers) over a new bespoke handler. If a pattern
