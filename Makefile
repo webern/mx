@@ -351,7 +351,7 @@ coverage-core-dev:
 		--txt $(COV_DIR)/coverage.txt \
 		--xml $(COV_DIR)/coverage.xml \
 		--html-self-contained --html $(COV_DIR)/index.html \
-		$(call mode_dir,cov-core-dev)
+		$(call mode_dir,cov-core-dev) | tee $(COV_DIR)/summary.txt
 	@echo "=== coverage written to $(COV_DIR)/ ==="
 
 else

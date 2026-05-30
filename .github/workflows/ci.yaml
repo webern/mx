@@ -49,6 +49,11 @@ jobs:
     name: Linux (coverage, core-dev)
     runs-on: ubuntu-latest
 
+    # pull-requests: write lets the sticky coverage comment post/update on PRs.
+    permissions:
+      contents: read
+      pull-requests: write
+
     steps:
       - uses: actions/checkout@v4
 
@@ -62,23 +67,60 @@ jobs:
       - name: Build + run with coverage
         run: make coverage-core-dev
 
-      - name: Job summary
+      # Turn gcovr's 3-line summary (data/testOutput/coverage/summary.txt, e.g.
+      # "lines: 52.1% (17624 out of 33846)") into a Markdown table reused by
+      # both the job summary and the PR comment.
+      - name: Build coverage table
         if: always()
         run: |
           {
-            echo '### Core-dev coverage (src/private/mx/core/)'
+            echo '| Metric | Coverage | Covered / Total |'
+            echo '|---|---:|---:|'
+            awk '/^(lines|functions|branches):/ {
+              m=$1; sub(":","",m);
+              c=$3; sub("[(]","",c);
+              t=$6; sub("[)]","",t);
+              M=toupper(substr(m,1,1)) substr(m,2);
+              printf "| %s | %s | %s / %s |\n", M, $2, c, t
+            }' data/testOutput/coverage/summary.txt
+          } > table.md
+          {
+            echo '### Core-dev coverage `src/private/mx/core/`'
             echo ''
-            echo '```'
-            cat data/testOutput/coverage/coverage.txt
-            echo '```'
+            cat table.md
           } >> "$GITHUB_STEP_SUMMARY"
 
+      # Single self-contained page, stored (compression-level 0). GitHub still
+      # delivers artifacts as a .zip -- there is no raw-file download -- so the
+      # zip just holds one index.html to unzip and open.
       - name: Upload HTML report
+        id: upload
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: coverage-core-dev
-          path: data/testOutput/coverage/
+          path: data/testOutput/coverage/index.html
+          compression-level: 0
+
+      - name: Compose PR comment
+        if: github.event_name == 'pull_request'
+        run: |
+          {
+            echo '### Core-dev coverage `src/private/mx/core/`'
+            echo ''
+            cat table.md
+            echo ''
+            echo '[Download HTML report](${{ steps.upload.outputs.artifact-url }}) - unzip and open `index.html`.'
+            echo ''
+            echo 'Commit `${{ github.sha }}`.'
+          } > comment.md
+
+      - name: Post sticky PR comment
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: coverage-core-dev
+          path: comment.md
 
   macos:
     name: macOS (build + tests)
