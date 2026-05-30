@@ -7,7 +7,7 @@ on:
 
 jobs:
   linux-gate:
-    name: Linux (quality gate + tests)
+    name: Linux (check + test)
     runs-on: ubuntu-latest
 
     steps:
@@ -28,7 +28,7 @@ jobs:
         run: make test
 
   linux-core:
-    name: Linux (full test suite, GCC)
+    name: Linux (test-all, GCC)
     runs-on: ubuntu-latest
 
     steps:
@@ -46,7 +46,7 @@ jobs:
         run: make test-all
 
   coverage:
-    name: Linux (coverage, core-dev)
+    name: Linux (coverage-core-dev)
     runs-on: ubuntu-latest
 
     # pull-requests: write lets the sticky coverage comment post/update on PRs.
@@ -123,7 +123,7 @@ jobs:
           path: comment.md
 
   macos:
-    name: macOS (build + tests)
+    name: macOS (test)
     runs-on: macos-latest
 
     steps:
@@ -141,7 +141,7 @@ jobs:
         run: make test
 
   windows:
-    name: Windows (build + tests)
+    name: Windows (test)
     runs-on: windows-latest
 
     steps:
