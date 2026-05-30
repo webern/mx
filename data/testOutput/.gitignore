@@ -2,3 +2,6 @@
 *.musicxml
 *.txt
 *.xml
+
+# gcovr report tree from `make coverage-core-dev` (.html not matched above)
+coverage/

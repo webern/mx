@@ -58,3 +58,25 @@ RUN --mount=type=cache,target=/workspace/build make fmt
 
 FROM scratch AS fmt-out
 COPY --from=fmt /workspace/src /src
+
+# --- coverage stage: instrumented core-dev build + gcovr report -------------
+# Built via `-f Dockerfile.coverage` (a symlink to this file) so BuildKit picks
+# up Dockerfile.coverage.dockerignore, which re-includes data/. The gate
+# targets build this same file as `Dockerfile` with the tiny .dockerignore and
+# never build these stages, so they never carry the corpus.
+#
+# gcovr is installed here (not in base) so the run/run-core-dev/fmt layer cache
+# is unaffected by introducing coverage. gcov-14 ships with the gcc-14 package
+# already in base, so the .gcda format matches. The single RUN configures,
+# builds with --coverage, runs the core roundtrip suite, and runs gcovr: the
+# .gcda files live under the build/ cache mount and must be consumed in the
+# same layer, so the report is written to data/testOutput/coverage (outside the
+# mount) for the export stage to copy out. A distinct cache id keeps the
+# instrumented objects from mixing with the gate stages' object cache.
+FROM base AS coverage
+RUN apt-get update && apt-get install -y --no-install-recommends gcovr \
+    && rm -rf /var/lib/apt/lists/*
+RUN --mount=type=cache,id=mx-cov-build,target=/workspace/build make coverage-core-dev
+
+FROM scratch AS coverage-out
+COPY --from=coverage /workspace/data/testOutput/coverage /data/testOutput/coverage

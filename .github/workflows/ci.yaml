@@ -45,6 +45,41 @@ jobs:
       - name: Full test suite
         run: make test-all
 
+  coverage:
+    name: Linux (coverage, core-dev)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Same container-driver + runtime-token setup as linux-gate so the
+      # coverage stage reuses the warm toolchain layer cache. Coverage runs in
+      # the pinned container via `make coverage-core-dev`; it is advisory (no
+      # gate) and runs in parallel with the other jobs.
+      - uses: docker/setup-buildx-action@v3
+      - uses: crazy-max/ghaction-github-runtime@v3
+
+      - name: Build + run with coverage
+        run: make coverage-core-dev
+
+      - name: Job summary
+        if: always()
+        run: |
+          {
+            echo '### Core-dev coverage (src/private/mx/core/)'
+            echo ''
+            echo '```'
+            cat data/testOutput/coverage/coverage.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-core-dev
+          path: data/testOutput/coverage/
+
   macos:
     name: macOS (build + tests)
     runs-on: macos-latest

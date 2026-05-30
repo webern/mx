@@ -20,6 +20,25 @@ option(
     OFF
 )
 
+option(
+    MX_COVERAGE
+    "Instrument the build for gcov coverage (GCC/Clang only)."
+    OFF
+)
+
+# Coverage instrumentation. add_compile_options/add_link_options affect every
+# target created after this point, so a core-dev + coverage configure only
+# instruments the core-dev TUs (mx-core + mxtest-core-dev); nothing else is
+# compiled in that mode. gcovr then filters the report to src/private/mx/core/.
+if(MX_COVERAGE)
+    if(MSVC)
+        message(FATAL_ERROR "MX_COVERAGE is not supported with MSVC")
+    endif()
+    message(STATUS "${PROJECT_NAME}: MX_COVERAGE=ON: building with --coverage")
+    add_compile_options(--coverage -O0 -g)
+    add_link_options(--coverage)
+endif()
+
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 

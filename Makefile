@@ -72,6 +72,12 @@ DOCKER     ?= docker
 BUILD_TYPE ?= Debug
 BUILD_ROOT := build
 
+# Coverage report output (exported from the container to the host) and the
+# gcov tool gcovr drives. Default gcov-14 matches the pinned g++-14 toolchain
+# inside the container, where coverage actually runs.
+COV_DIR := data/testOutput/coverage
+GCOV    ?= gcov-14
+
 # In GitHub Actions, crazy-max/ghaction-github-runtime exports
 # ACTIONS_RUNTIME_TOKEN. When present, push/pull the Docker layer cache to the
 # GitHub Actions cache so linux-gate does not reinstall the toolchain every
@@ -138,7 +144,7 @@ endef
 .DEFAULT_GOAL := help
 .PHONY: help lib dev core test test-all examples-run all clean clean-docker \
         check-docker fmt check core-dev check-core-dev test-core-dev \
-        xcode-gen xcode-build xcode-test
+        coverage-core-dev xcode-gen xcode-build xcode-test
 
 help:
 	@echo 'mx build/test targets (see the comments at the top of the Makefile):'
@@ -178,6 +184,8 @@ help:
 	@echo '  make test-core-dev      Build core-dev then run the core roundtrip suite.'
 	@echo '                          Each file under data/ is a separate Catch2 test case.'
 	@echo "                          Filter: make test-core-dev ARGS='[core-roundtrip] lysuite/*'"
+	@echo '  make coverage-core-dev  Instrumented core-dev build (Docker), runs the core'
+	@echo '                          roundtrip suite and gcovr. Report -> $(COV_DIR)/.'
 	@echo ''
 	@echo 'Knobs:  JOBS (=$(JOBS))  BUILD_TYPE (=$(BUILD_TYPE))  GENERATOR  ARGS  DOCKER'
 	@echo 'Layout: $(BUILD_ROOT)/<mode>/$(BUILD_TYPE)/'
@@ -314,6 +322,38 @@ check-core-dev:
 		fi
 	@echo "=== check-core-dev passed ==="
 
+# Instrumented core-dev coverage. One fused recipe because build/ is an
+# ephemeral Docker cache mount: the .gcda files written while running the tests
+# must be consumed by gcovr in the same RUN, and the report must land outside
+# build/ (in data/testOutput/coverage) so the Docker export stage can copy it
+# out. Compiler is the pinned g++-14, so gcov-14 matches the .gcda format.
+# Filtered strictly to src/private/mx/core/ -- the codegen target -- excluding
+# the ezxml/utility deps and the test harness.
+coverage-core-dev:
+	@echo "=== build (core-dev, instrumented) ==="
+	$(CMAKE) -S . -B $(call mode_dir,cov-core-dev) \
+		-DCMAKE_BUILD_TYPE=$(BUILD_TYPE) \
+		-DMX_BUILD_TESTS=off \
+		-DMX_BUILD_CORE_TESTS=off \
+		-DMX_BUILD_EXAMPLES=off \
+		-DMX_CORE_DEV=on \
+		-DMX_COVERAGE=on \
+		$(GEN_ARG)
+	$(CMAKE) --build $(call mode_dir,cov-core-dev) --parallel $(JOBS) --config $(BUILD_TYPE)
+	@echo "=== run core roundtrip suite ==="
+	$(call run_bin,$(call mode_dir,cov-core-dev),mxtest-core-dev,--allow-running-no-tests $(ARGS))
+	@echo "=== gcovr report (src/private/mx/core/) ==="
+	@mkdir -p $(COV_DIR)
+	gcovr --root . \
+		--gcov-executable '$(GCOV)' \
+		--filter 'src/private/mx/core/' \
+		--print-summary \
+		--txt $(COV_DIR)/coverage.txt \
+		--xml $(COV_DIR)/coverage.xml \
+		--html-self-contained --html $(COV_DIR)/index.html \
+		$(call mode_dir,cov-core-dev)
+	@echo "=== coverage written to $(COV_DIR)/ ==="
+
 else
 
 # ===== Outside the container: delegate to Docker ===========================
@@ -332,6 +372,21 @@ check: check-docker
 check-core-dev: check-docker
 	$(DOCKER) buildx build --target run-core-dev \
 		--output type=cacheonly $(DOCKER_CACHE) .
+
+# Build instrumented core-dev in the pinned container, run the core roundtrip
+# suite, run gcovr, and export the report tree to ./data/testOutput/coverage on
+# the host. Same command runs identically in CI. The `coverage-out` scratch
+# stage carries only the report, so type=local writes just that subtree.
+#
+# -f Dockerfile.coverage (a symlink to Dockerfile) selects the data-inclusive
+# Dockerfile.coverage.dockerignore: the corert suite scans data/ at runtime, so
+# the corpus must be in this context. The gate targets keep the tiny
+# .dockerignore. Same single Dockerfile body either way.
+coverage-core-dev: check-docker
+	@rm -rf $(COV_DIR)
+	$(DOCKER) buildx build -f Dockerfile.coverage --target coverage-out \
+		--output type=local,dest=. $(DOCKER_CACHE) .
+	@echo "Coverage written to $(COV_DIR)/ (open $(COV_DIR)/index.html)"
 
 endif
 
