@@ -16,12 +16,15 @@
 # Quality gates run in Docker
 # ----------------------------------------------------------------------------
 #
-# `make fmt` and `make check` run inside a Docker container with a pinned
-# toolchain (Ubuntu 24.04 + clang-18 + libc++) so formatting and compiler
-# warnings are deterministic on any machine regardless of the floating CI
-# runner image. The build/test targets (`make test`, `make test-all`, ...)
-# run natively with the local compiler.
-# See docs/ai/project/build-and-ci-design.md.
+# `make fmt`, `make check`, `make check-core-dev`, and `make coverage-core-dev`
+# run inside a Docker container with a pinned toolchain (Ubuntu 24.04 + g++-14 +
+# clang-format-18) so formatting and compiler warnings are deterministic on any
+# machine regardless of the floating CI runner image. The Makefile builds the
+# image once (tagged `mx-sdk`) from `Dockerfile`, rebuilds it if the Dockerfile
+# changes, then `docker run`s it with the workspace bind-mounted and a named
+# `mx-build` volume mounted at /workspace/build so source edits and incremental
+# build state (objects + ccache) persist between runs. The build/test targets
+# (`make test`, `make test-all`, ...) run natively with the local compiler.
 #
 # ----------------------------------------------------------------------------
 # Build modes
@@ -48,7 +51,10 @@
 # incremental state, e.g. build/dev/Debug, build/core/Debug. Because the modes
 # do not share a directory, switching from `core` back to `dev` (or flipping
 # BUILD_TYPE) never reconfigures and never recompiles the slow core tests.
-# `build/` is already in .gitignore.
+# The Docker-run gates build into the mx-build volume (mounted at build/) with
+# ccache, keeping the pinned-GCC artifacts separate from the native ones so the
+# two compilers never stomp on each other's incremental state. `build/` is
+# already in .gitignore.
 #
 # ----------------------------------------------------------------------------
 # Knobs (environment / make variables -- these are overrides, not modes)
@@ -86,6 +92,34 @@ GCOV    ?= gcov-14
 ifneq ($(ACTIONS_RUNTIME_TOKEN),)
 DOCKER_CACHE := --cache-from type=gha --cache-to type=gha,mode=max
 endif
+
+# Docker SDK image + build volume. The image is the pinned toolchain only (no
+# source). `docker run` bind-mounts the workspace and mounts the mx-build
+# volume at /workspace/build, so incremental state (objects + ccache) persists
+# across runs. CI pre-creates mx-build bind-backed to a workspace path so
+# actions/cache can persist the ccache dir between runs; locally it is a plain
+# named volume.
+DOCKER_IMAGE  := mx-sdk
+DOCKER_VOLUME := mx-build
+DOCKER_STAMP  := $(BUILD_ROOT)/.docker-image-stamp
+
+# On Linux the container runs as root by default, leaving root-owned files in
+# the mounted volume and workspace. Map the host UID/GID through so build
+# artifacts and the CI-cached ccache dir stay readable by the invoking user.
+# Docker Desktop on Mac/Windows handles this itself.
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Linux)
+DOCKER_USER := --user $(shell id -u):$(shell id -g)
+endif
+
+# Mount the whole repo at /workspace and the named build volume at
+# /workspace/build (shadowing the host build/ so docker artifacts stay separate
+# from native ones).
+DOCKER_RUN := $(DOCKER) run --rm \
+	-v $(CURDIR):/workspace \
+	-v $(DOCKER_VOLUME):/workspace/build \
+	$(DOCKER_USER) \
+	$(DOCKER_IMAGE)
 
 # Portable CPU-count detection. Tried in order; the final echo always succeeds
 # (Windows cmd/PowerShell exports NUMBER_OF_PROCESSORS; otherwise fall back 4).
@@ -143,8 +177,8 @@ endef
 
 .DEFAULT_GOAL := help
 .PHONY: help lib dev core test test-all examples-run all clean clean-docker \
-        check-docker fmt check core-dev check-core-dev test-core-dev \
-        coverage-core-dev xcode-gen xcode-build xcode-test
+        check-docker docker-volume fmt check core-dev check-core-dev \
+        test-core-dev coverage-core-dev xcode-gen xcode-build xcode-test
 
 help:
 	@echo 'mx build/test targets (see the comments at the top of the Makefile):'
@@ -153,7 +187,7 @@ help:
 	@echo '  make fmt && make check && make test'
 	@echo '  (use make test-all instead of make test if you touched mx/core)'
 	@echo ''
-	@echo 'Quality gates (run in Docker, pinned toolchain):'
+	@echo 'Quality gates (run in the mx-sdk Docker image, pinned toolchain):'
 	@echo '  make fmt            Format all C++ files under src/.'
 	@echo '  make check          fmt-check + warning-free build.'
 	@echo ''
@@ -170,7 +204,7 @@ help:
 	@echo ''
 	@echo 'Housekeeping:'
 	@echo '  make clean          Remove the entire $(BUILD_ROOT)/ tree.'
-	@echo '  make clean-docker   Remove the Docker build cache.'
+	@echo '  make clean-docker   Remove the mx-sdk image, build volume, and cache.'
 	@echo ''
 	@echo 'Xcode:'
 	@echo '  make xcode-gen      Generate Xcode project in build/xcode/.'
@@ -238,15 +272,19 @@ clean:
 	rm -rf $(BUILD_ROOT)
 
 clean-docker:
+	-rm -f $(DOCKER_STAMP)
+	-$(DOCKER) rmi $(DOCKER_IMAGE) 2>/dev/null || true
+	-$(DOCKER) volume rm $(DOCKER_VOLUME) 2>/dev/null || true
 	-$(DOCKER) buildx prune -af
-	@echo "Removed Docker build cache."
+	@echo "Removed mx-sdk image, mx-build volume, and Docker build cache."
 
 # --- Quality targets --------------------------------------------------------
 #
 # fmt/check run inside a pinned Docker toolchain. The Makefile detects
 # MX_RUNNING_IN_DOCKER (set by the Dockerfile): inside the container it runs
-# the tools directly; outside it builds the image and runs the target inside
-# it via `docker buildx build`.
+# the tools directly; outside it builds the mx-sdk image once and runs the
+# target inside it via `docker run` with the workspace and build volume
+# mounted.
 
 FIND_CPP := find src \
 	-path 'src/private/cpul' -prune -o \
@@ -322,17 +360,22 @@ check-core-dev:
 		fi
 	@echo "=== check-core-dev passed ==="
 
-# Instrumented core-dev coverage. One fused recipe because build/ is an
-# ephemeral Docker cache mount: the .gcda files written while running the tests
-# must be consumed by gcovr in the same RUN, and the report must land outside
-# build/ (in data/testOutput/coverage) so the Docker export stage can copy it
-# out. Compiler is the pinned g++-14, so gcov-14 matches the .gcda format.
-# Filtered strictly to src/private/mx/core/ -- the codegen target -- excluding
-# the ezxml/utility deps and the test harness.
+# Instrumented core-dev coverage. Builds into the mx-build volume, runs the
+# core roundtrip suite to emit .gcda, then runs gcovr. The report lands in
+# data/testOutput/coverage, which is on the bind-mounted workspace, so it
+# appears on the host directly with no export stage. Compiler is the pinned
+# g++-14, so gcov-14 matches the .gcda format. Filtered strictly to
+# src/private/mx/core/ -- the codegen target -- excluding the ezxml/utility
+# deps and the test harness.
 coverage-core-dev:
 	@echo "=== build (core-dev, instrumented) ==="
+	@# Empty *_COMPILER_LAUNCHER overrides the image's ccache default: keep the
+	@# instrumented build off ccache so coverage notes/data stay exact. This is
+	@# the small core-dev subset, so the lost caching is cheap.
 	$(CMAKE) -S . -B $(call mode_dir,cov-core-dev) \
 		-DCMAKE_BUILD_TYPE=$(BUILD_TYPE) \
+		-DCMAKE_C_COMPILER_LAUNCHER= \
+		-DCMAKE_CXX_COMPILER_LAUNCHER= \
 		-DMX_BUILD_TESTS=off \
 		-DMX_BUILD_CORE_TESTS=off \
 		-DMX_BUILD_EXAMPLES=off \
@@ -356,36 +399,44 @@ coverage-core-dev:
 
 else
 
-# ===== Outside the container: delegate to Docker ===========================
+# ===== Outside the container: build the image once, then docker run ========
+#
+# The image is the pinned toolchain only -- no source. `docker run` bind-mounts
+# the workspace and the mx-build volume, so source edits and incremental build
+# state (objects + ccache) live outside the image. Inside the container
+# MX_RUNNING_IN_DOCKER (set by the image) flips the Makefile to its
+# in-container branch above. Every target is the same `docker run` locally and
+# in CI; CI just pre-creates the volume bind-backed and caches its ccache dir.
 
-fmt: check-docker
-	$(DOCKER) buildx build --target fmt-out \
-		--output type=local,dest=. $(DOCKER_CACHE) .
+$(DOCKER_STAMP): Dockerfile | check-docker
+	@mkdir -p $(BUILD_ROOT)
+	$(DOCKER) buildx build $(DOCKER_CACHE) --load -t $(DOCKER_IMAGE) .
+	@touch $@
+
+# Ensure the named build volume exists (idempotent). CI pre-creates it
+# bind-backed to a cacheable workspace path before invoking make, so this
+# inspect succeeds and leaves it alone; locally (or if absent) it creates a
+# plain named volume on first use.
+docker-volume: | check-docker
+	@$(DOCKER) volume inspect $(DOCKER_VOLUME) >/dev/null 2>&1 \
+		|| $(DOCKER) volume create $(DOCKER_VOLUME) >/dev/null
+
+fmt: $(DOCKER_STAMP) docker-volume
+	$(DOCKER_RUN) make fmt
 	@echo "Formatted all C++ files under src/"
 
-check: check-docker
-	$(DOCKER) buildx build --target run \
-		--output type=cacheonly $(DOCKER_CACHE) .
+check: $(DOCKER_STAMP) docker-volume
+	$(DOCKER_RUN) make check
 
-# Core-dev mirror of `check`: delegates to a parallel `run-core-dev` Docker
-# stage that hardcodes `make check-core-dev` against the pinned toolchain.
-check-core-dev: check-docker
-	$(DOCKER) buildx build --target run-core-dev \
-		--output type=cacheonly $(DOCKER_CACHE) .
+check-core-dev: $(DOCKER_STAMP) docker-volume
+	$(DOCKER_RUN) make check-core-dev
 
 # Build instrumented core-dev in the pinned container, run the core roundtrip
-# suite, run gcovr, and export the report tree to ./data/testOutput/coverage on
-# the host. Same command runs identically in CI. The `coverage-out` scratch
-# stage carries only the report, so type=local writes just that subtree.
-#
-# -f Dockerfile.coverage (a symlink to Dockerfile) selects the data-inclusive
-# Dockerfile.coverage.dockerignore: the corert suite scans data/ at runtime, so
-# the corpus must be in this context. The gate targets keep the tiny
-# .dockerignore. Same single Dockerfile body either way.
-coverage-core-dev: check-docker
+# suite, run gcovr; the report tree is written to ./data/testOutput/coverage
+# directly via the workspace mount. Same command runs identically in CI.
+coverage-core-dev: $(DOCKER_STAMP) docker-volume
 	@rm -rf $(COV_DIR)
-	$(DOCKER) buildx build -f Dockerfile.coverage --target coverage-out \
-		--output type=local,dest=. $(DOCKER_CACHE) .
+	$(DOCKER_RUN) make coverage-core-dev
 	@echo "Coverage written to $(COV_DIR)/ (open $(COV_DIR)/index.html)"
 
 endif

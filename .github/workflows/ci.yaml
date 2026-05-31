@@ -21,6 +21,24 @@ jobs:
       - uses: docker/setup-buildx-action@v3
       - uses: crazy-max/ghaction-github-runtime@v3
 
+      # Back the mx-build volume with a workspace path so actions/cache can
+      # persist the ccache dir it holds. `make check` mounts mx-build at
+      # /workspace/build and ccache writes to build/docker/.ccache.
+      - name: Create bind-backed build volume
+        run: |
+          mkdir -p build/docker
+          docker volume create --driver local \
+            --opt type=none --opt o=bind \
+            --opt device="$GITHUB_WORKSPACE/build/docker" mx-build
+
+      # Content-addressed, so it survives checkout resetting source mtimes.
+      - name: Cache ccache
+        uses: actions/cache@v4
+        with:
+          path: build/docker/.ccache
+          key: ccache-${{ runner.os }}-gate-${{ github.sha }}
+          restore-keys: ccache-${{ runner.os }}-gate-
+
       - name: Quality gate
         run: make check
 
@@ -63,6 +81,22 @@ jobs:
       # gate) and runs in parallel with the other jobs.
       - uses: docker/setup-buildx-action@v3
       - uses: crazy-max/ghaction-github-runtime@v3
+
+      # Bind-back mx-build so its ccache dir is cacheable, as in linux-gate. A
+      # distinct key prefix keeps this job's save from racing linux-gate's.
+      - name: Create bind-backed build volume
+        run: |
+          mkdir -p build/docker
+          docker volume create --driver local \
+            --opt type=none --opt o=bind \
+            --opt device="$GITHUB_WORKSPACE/build/docker" mx-build
+
+      - name: Cache ccache
+        uses: actions/cache@v4
+        with:
+          path: build/docker/.ccache
+          key: ccache-${{ runner.os }}-coverage-${{ github.sha }}
+          restore-keys: ccache-${{ runner.os }}-coverage-
 
       - name: Build + run with coverage
         run: make coverage-core-dev
