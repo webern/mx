@@ -98,3 +98,27 @@ symbols. Final three corert failures fixed: PlaybackSound "other" variant
 config in generator). Filed GitHub issue #161 for namespace-prefix limitation.
 
 Final state: `make test-core-dev` 676/676, `make test-all` all pass.
+
+## M6A: gen-quality tooling (2026-06-01) ✅
+
+Designed the scoring methodology with the user via a grill, then built the tooling. Decisions, in
+order: dropped maintainability-index (step-shaped + redundant with CC/Halstead/LOC) and Halstead
+(size-proxy, redundant once a real size axis exists); excluded duplication/coupling/cohesion/DIT
+after measuring that jscpd and pylint both report ~0% duplication on this f-string-heavy emission
+code (the dupes are semantic, not token-identical, so any detector misreads them as clean); moved
+pylint out of the score into a separate `make gen-lint` binary gate. Final rubric: structure 50%
+(LOC-weighted function + file size), cyclomatic 25%, cognitive 25%, all via one smooth
+`target/max(target,value)` transform so partial refactor wins register and tiny stub functions
+cannot game the size axis.
+
+Implemented: rewrote `gen/quality.py` (scores every `gen/*.py` except itself; writes
+`data/testOutput/gen-quality/score.json` with 30 offenders/axis as `path:line` refs, plus
+`report.md` and stdout); added `gen/.pylintrc` (disables the complexity checks gen-quality scores);
+added a pinned analyzer venv to the Dockerfile; added `make gen-quality` / `make gen-lint` with bash
+floor gates; wired both into CI `linux-gate` with a job-summary line and a per-push PR comment.
+Deleted dead `gen/eval.py`, `gen/eval_config.yaml`, and the old `gen/quality-baseline.json`.
+
+Floors are a ratchet, set just under the measured in-container baseline (deterministic, identical to
+local): `GEN_QUALITY_FLOOR=37.7` (composite 37.7 = structure 20.1, cyclomatic 62.8, cognitive 47.9),
+`GEN_LINT_FLOOR=9.4` (pylint 9.49). Generator behavior was off-limits by user direction, so this is
+a tooling-only change; the dead `OVERWRITE_FILE_STEMS` set in `generate.py` was left untouched.

@@ -1,0 +1,19 @@
+# pylint config for `make gen-lint`.
+#
+# gen-lint enforces genuine lint defects (unused names, bad style, dead code,
+# ...) as a pass/fail gate. It deliberately does NOT police complexity or size:
+# those are scored continuously by `make gen-quality`, so enabling pylint's
+# complexity/size checks here would double-gate the same thing. Disable them.
+
+[MESSAGES CONTROL]
+disable=
+    too-many-statements,
+    too-many-branches,
+    too-many-locals,
+    too-many-arguments,
+    too-many-positional-arguments,
+    too-many-return-statements,
+    too-many-nested-blocks,
+    too-many-instance-attributes,
+    too-many-public-methods,
+    too-many-lines,

@@ -2,58 +2,46 @@
 
 ## Milestone
 
-**M5 complete. All corert failures resolved.** `make test-core-dev` 676/676, `make test-all` all
-pass. The 3 remaining failures from the previous session are fixed (see below). All changes are
-in the working tree, uncommitted.
+**M6A complete.** Generator quality gates (`make gen-quality` + `make gen-lint`) are built, wired
+into CI, and gating against a ratcheted floor. Next up: M6B_DATA_MODEL.
 
-## What this session fixed (2026-05-30)
+## What this session did (2026-06-01, M6A)
 
-### PlaybackSound "other" variant (instrument-sound failure)
+Designed the scoring methodology with the user (grill), then implemented the tooling:
 
-- Added `PlaybackSound::other` to the X-macro enum in `PlaybackSound.h`
-- Created `PlaybackSoundType.h/.cpp` wrapper class (same pattern as `DistanceType`): stores
-  the enum when a known value is parsed, stores a custom string for unknown values
-- Generator updated: `ELEMENT_VALUE_TYPE_OVERRIDE` uses `PlaybackSoundType`, added to
-  `STRING_LIKE_TYPES` and `TYPE_TO_HEADER`
-- `InstrumentSound` regenerated: uses `PlaybackSoundType`, `fromXElementImpl` calls
-  `myValue.setValue(string)` which never throws
-- `PartReader.cpp` / `PartWriter.cpp` updated minimally for the type change
-- `InstrumentSoundTest.cpp` updated (variable types)
-- `data/synthetic/instrument-sound.3.0.xml` changed from `"1"` to `"foo-custom-sound"`
-- `data/synthetic/instrument-sound-enum.3.0.xml` created (uses `"brass.alphorn"`)
+- `gen/quality.py` rewritten to the agreed rubric: composite 0-100 from structure 50% (LOC-weighted
+  function + file size), cyclomatic 25% (radon), cognitive 25% (`cognitive_complexity` lib). One
+  smooth `target/max(target,value)` transform per axis, LOC-weighted, so partial refactor wins
+  register. Scores every `gen/*.py` except itself. Writes `data/testOutput/gen-quality/score.json`
+  (composite, components, 30 offenders/axis with `path:line` refs) + `report.md` + stdout.
+- Dropped from the old draft: maintainability-index and Halstead (redundant / step-shaped). pylint
+  left the score and became `make gen-lint` (binary pass/fail). Duplication/coupling/cohesion/DIT
+  evaluated and excluded (unmeasurable in this f-string-heavy code; jscpd and pylint both read ~0%).
+- `gen/.pylintrc` disables the complexity checks gen-quality already scores.
+- Dockerfile: pinned analyzer venv at `/opt/quality-venv` (radon 6.0.1, pylint 4.0.5, astroid 4.0.4,
+  cognitive_complexity 1.3.0) for deterministic scoring.
+- Makefile: `make gen-quality` / `make gen-lint`, docker in/out branches, bash floor gates.
+- CI: both gates added to `linux-gate`; report to job summary + a per-push PR comment (coverage
+  pattern).
+- Deleted dead `gen/eval.py` + `gen/eval_config.yaml` and the old `gen/quality-baseline.json`.
 
-### xmlns:xlink preservation (link/opus failures)
-
-- Added `XMLNS_PRESERVING_ATTRS` config to `gen/generate.py`
-- Generator's `generate_attrs_h/cpp` now conditionally emits xmlns handling for:
-  `ScorePartwiseAttributes`, `ScoreTimewiseAttributes`, `OpusAttributes`, `LinkAttributes`
-- Stores `vector<pair<string,string>> xmlnsDeclarations` in the struct
-- `fromXElementImpl` captures `xmlns:*` attributes instead of silently skipping them
-- `toStream` re-emits them
-- No changes to ezxml or pugixml layers
-
-### Filed
-
-- GitHub issue #161: namespace-prefix limitation (tracking only, not blocking)
+Baseline measured in-container (deterministic, matches local): gen-quality **37.7**, gen-lint
+**9.49**. Floors set just under: `GEN_QUALITY_FLOOR=37.7`, `GEN_LINT_FLOOR=9.4`. CI passes "just
+barely," per the ratchet plan.
 
 ## What the next session should do
 
-1. Commit these changes. The working tree has fixes in: `gen/generate.py`,
-   `src/private/mx/core/PlaybackSound.h`, `src/private/mx/core/PlaybackSoundType.h/.cpp`,
-   regenerated elements (InstrumentSound, ScorePartwiseAttributes, ScoreTimewiseAttributes,
-   OpusAttributes, LinkAttributes), `src/private/mx/impl/PartReader.cpp`,
-   `src/private/mx/impl/PartWriter.cpp`, `src/private/mxtest/core/InstrumentSoundTest.cpp`,
-   and two synthetic data files. Likely a single commit on the fix-tests branch.
-2. Push and open the PR against master (covers M4a + M5 + these fixes).
-3. After the PR merges, pick up M6 (better-gen: Python code quality analysis and refactor).
+- Start M6B_DATA_MODEL (see plan.md): generalize the generator around a common context type.
+- Use `make gen-quality` as the refactor compass: `score.json` offenders are the worklist; raise the
+  floors as the composite climbs. Worst offenders today: `generate_tree_parent_cpp` (CC 208,
+  cognitive 428, 1085 lines), `generate_element_cpp`, `generate_note_cpp`, `main`.
 
 ## Gotchas
 
-- The corert test harness's `sortAttributes` function operates on the XDoc tree, which is
-  built by `Document::toXDoc` via `toStream` -> `loadStream`. The xmlns attrs flow through
-  this path correctly because `toStream` emits them and `loadStream` preserves them.
-- `PlaybackSoundType` uses try-catch around `PlaybackSoundFromString` for the tryParse.
-  Not ideal for hot paths but `instrument-sound` parsing is infrequent.
-- `make test-all` is needed (not just `make test-core-dev`) because impl layer changes.
-- backup-gather branch is the untouched backup; do not touch it.
-- docs/ai/projects/gen/found-files/musetrainer/version-3.1-or-later/ is intentionally kept.
+- The score is deterministic only with the pinned analyzer versions (Dockerfile). Bumping them shifts
+  the score - re-measure and reset `GEN_QUALITY_FLOOR` if you do.
+- gen-quality/gen-lint run in Docker like fmt/check. For ad-hoc host runs, point a venv with the same
+  pins at `python gen/quality.py`.
+- The generator's behavior was off-limits this session by user direction (tooling-only PR). The dead
+  `OVERWRITE_FILE_STEMS` set in `generate.py` was left in place for that reason.
+- `make test-all` is slow (>10 min); iterate on `make test-core-dev` for mx/core changes.

@@ -13,7 +13,20 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         make \
         ccache \
         gcovr \
+        python3 \
+        python3-venv \
     && rm -rf /var/lib/apt/lists/*
+
+# Python quality tooling for `make gen-quality` / `make gen-lint`. Isolated in a
+# venv (Ubuntu 24.04 marks the system Python externally-managed) and version
+# pinned: the gen-quality floor compares an exact score, so the analyzers must
+# be reproducible across CI runs.
+RUN python3 -m venv /opt/quality-venv \
+    && /opt/quality-venv/bin/pip install --no-cache-dir \
+        radon==6.0.1 \
+        astroid==4.0.4 \
+        pylint==4.0.5 \
+        cognitive_complexity==1.3.0
 
 # Unversioned name so the Makefile invokes the pinned formatter without
 # knowing the version suffix.

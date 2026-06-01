@@ -18,6 +18,11 @@ jobs:
     name: Linux (check + test)
     runs-on: ubuntu-latest
 
+    # pull-requests: write lets the gen-quality score comment post on PRs.
+    permissions:
+      contents: read
+      pull-requests: write
+
     steps:
       - uses: actions/checkout@v4
 
@@ -54,6 +59,40 @@ jobs:
 
       - name: Run tests
         run: make test
+
+      # Static-analysis gates on the gen/ generator. Each fails the build below
+      # its floor (GEN_QUALITY_FLOOR / GEN_LINT_FLOOR in the Makefile). Reuses
+      # the warm mx-sdk image built by `make check` above.
+      - name: gen-quality gate
+        run: make gen-quality
+
+      - name: gen-lint gate
+        run: make gen-lint
+
+      # Surface the score in the run summary and (on PRs) as a per-push comment,
+      # mirroring the coverage job. always() so a gate failure still reports why.
+      - name: gen-quality report
+        if: always()
+        run: |
+          {
+            echo '### gen-quality `gen/`'
+            echo ''
+            cat data/testOutput/gen-quality/report.md 2>/dev/null || echo '(no report produced)'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Post gen-quality PR comment
+        if: always() && github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          {
+            echo '### gen-quality `gen/`'
+            echo ''
+            cat data/testOutput/gen-quality/report.md 2>/dev/null || echo '(no report produced)'
+            echo ''
+            echo 'Commit `${{ github.sha }}`.'
+          } > gen-quality-comment.md
+          gh pr comment "${{ github.event.pull_request.number }}" --body-file gen-quality-comment.md
 
   linux-core:
     name: Linux (test-all, GCC)

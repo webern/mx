@@ -12,6 +12,8 @@ completion_dates:
   milestone_2: 2026-05-22
   milestone_3: 2026-05-22
   milestone_4: 2026-05-25
+  milestone_5: 2026-05-30
+  milestone_6a: 2026-06-01
 ---
 # gen
 
@@ -70,11 +72,27 @@ The generator lives at `gen/` (not under this project directory):
 
 ```
 python3 gen/generate.py          # regenerates C++ into src/private/mx/core/elements/
-python3 gen/eval.py              # scores diff against checked-in mx/core (secondary signal)
 ```
 
 Workflow: `python3 gen/generate.py && make fmt && make test-all`. To reset:
 `git checkout -- src/private/mx/core/ && git clean -fd src/private/mx/core/`.
+
+## Generator quality gates (M6A, the better-gen regression detector)
+
+Two Docker gates score the generator's own Python so the M6 refactor can proceed without
+regressing. Both run in the `mx-sdk` image (pinned analyzers in `/opt/quality-venv`) and in CI
+(`linux-gate`).
+
+- `make gen-quality` — composite design score 0-100 (higher = better) from `gen/quality.py`.
+  Rubric: structure 50% (LOC-weighted function + file size), cyclomatic 25%, cognitive 25%; one
+  smooth transform `target/max(target,value)` per axis. Writes `data/testOutput/gen-quality/`
+  (`score.json` for agents/CI, `report.md` for humans) with the worst 30 offenders per axis as
+  `path:line` refs. Fails below `GEN_QUALITY_FLOOR` (Makefile).
+- `make gen-lint` — pylint as a binary gate (`gen/.pylintrc` disables the complexity checks that
+  `gen-quality` already scores). Fails below `GEN_LINT_FLOOR` (Makefile).
+
+Both floors are a ratchet: set just under the current score so CI passes "just barely," then raised
+as the generator improves. Current: `GEN_QUALITY_FLOOR=37.7`, `GEN_LINT_FLOOR=9.4`.
 
 ## Fitness function and gates
 
@@ -91,8 +109,8 @@ with a recorded `make test-all` result.
 - Never change test cases. Test harness code is fair game with user authorization.
 - Never change `mx/api`.
 - Minimize changes to `mx/impl`; prefer fixing the generator.
-- Do not autonomously edit `gen/eval_config.yaml`. Flag patterns to the user with sample diff +
-  reasoning.
+- Do not autonomously change the `GEN_QUALITY_FLOOR` / `GEN_LINT_FLOOR` ratchets except to raise
+  them after a real improvement.
 - Reset generated `mx/core/` before commit if a generator change was tried and reverted.
 
 ## Bespoke generator handlers
@@ -109,7 +127,8 @@ the fix belongs in the shared path with a config-driven flag.
 ## Key external files
 
 - `gen/generate.py` — the generator (~14k lines of Python)
-- `gen/eval.py`, `gen/eval_config.yaml` — diff scoring
+- `gen/quality.py` — design-quality scorer for `make gen-quality` (excluded from its own score)
+- `gen/.pylintrc` — pylint config for `make gen-lint`
 - `docs/musicxml.xsd` — input schema (currently MusicXML 3.0; swap to 4.1 in M6)
 - `src/private/mx/core/elements/` — target output (~590 .h/.cpp pairs)
 - `src/private/mxtest/corert/` — core-roundtrip harness

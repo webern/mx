@@ -69,6 +69,17 @@ BUILD_ROOT := build
 COV_DIR := data/testOutput/coverage
 GCOV    ?= gcov-14
 
+# gen-quality / gen-lint: static analysis of the gen/ generator. The floors are
+# the CI gate -- a build fails below them; ratchet them upward as the generator
+# improves (see docs/ai/projects/gen). gen-quality scores design (size +
+# complexity); gen-lint enforces genuine lint defects. Pinned analyzers live in
+# the mx-sdk venv (see Dockerfile). GEN_PY is every gen/*.py except the measurer.
+QUALITY_VENV      := /opt/quality-venv
+QUALITY_DIR       := data/testOutput/gen-quality
+GEN_PY            := $(filter-out gen/quality.py,$(wildcard gen/*.py))
+GEN_QUALITY_FLOOR ?= 37.7
+GEN_LINT_FLOOR    ?= 9.4
+
 # For GitHub Actions. When present, push/pull the Docker layer cache to the
 # GitHub Actions cache.
 ifneq ($(ACTIONS_RUNTIME_TOKEN),)
@@ -142,7 +153,8 @@ endef
 .DEFAULT_GOAL := help
 .PHONY: help lib dev core test test-all examples-run all clean clean-docker \
         check-docker docker-volume fmt check core-dev check-core-dev \
-        test-core-dev coverage-core-dev xcode-gen xcode-build xcode-test
+        test-core-dev coverage-core-dev gen-quality gen-lint \
+        xcode-gen xcode-build xcode-test
 
 help:
 	@echo 'mx build/test targets:'
@@ -150,6 +162,8 @@ help:
 	@echo 'Quality gates (run in docker):'
 	@echo '  make fmt            Format all C++ files under src/.'
 	@echo '  make check          fmt-check + warning-free build.'
+	@echo '  make gen-quality    Score gen/ design quality; fail below the floor.'
+	@echo '  make gen-lint       Lint gen/ with pylint; fail below the floor.'
 	@echo ''
 	@echo 'Build (native):'
 	@echo '  make lib            Build just the static library (no tests/examples).'
@@ -357,6 +371,27 @@ coverage-core-dev:
 		$(call mode_dir,cov-core-dev) | tee $(COV_DIR)/summary.txt
 	@echo "=== coverage written to $(COV_DIR)/ ==="
 
+# Static analysis of the gen/ generator (in-container branch). quality.py
+# measures and writes the report tree to the workspace mount; the floor check
+# below is the gate. See docs/ai/projects/gen.
+gen-quality:
+	@$(QUALITY_VENV)/bin/python gen/quality.py --floor $(GEN_QUALITY_FLOOR)
+	@score=$$(python3 -c "import json; print(json.load(open('$(QUALITY_DIR)/score.json'))['composite'])"); \
+	 if awk "BEGIN{exit !($$score < $(GEN_QUALITY_FLOOR))}"; then \
+	   echo "ERROR: gen-quality $$score is below floor $(GEN_QUALITY_FLOOR)"; exit 1; \
+	 else echo "=== gen-quality OK: $$score >= floor $(GEN_QUALITY_FLOOR) ==="; fi
+
+# pylint as a binary gate (model-A ratchet). --exit-zero so the parsed rating,
+# not pylint's message-category exit bitmask, decides pass/fail.
+gen-lint:
+	@out=$$($(QUALITY_VENV)/bin/pylint --rcfile=gen/.pylintrc --exit-zero $(GEN_PY) 2>&1); \
+	 echo "$$out"; \
+	 rating=$$(echo "$$out" | sed -n 's/.*rated at \([0-9.]*\)\/10.*/\1/p'); \
+	 if [ -z "$$rating" ]; then echo "ERROR: gen-lint could not parse a pylint rating"; exit 1; fi; \
+	 if awk "BEGIN{exit !($$rating < $(GEN_LINT_FLOOR))}"; then \
+	   echo "ERROR: gen-lint rating $$rating is below floor $(GEN_LINT_FLOOR)"; exit 1; \
+	 else echo "=== gen-lint OK: $$rating >= floor $(GEN_LINT_FLOOR) ==="; fi
+
 else
 
 # ===== Outside the container: build the image once, then docker run ========
@@ -398,6 +433,16 @@ coverage-core-dev: $(DOCKER_STAMP) docker-volume
 	@rm -rf $(COV_DIR)
 	$(DOCKER_RUN) make coverage-core-dev
 	@echo "Coverage written to $(COV_DIR)/ (open $(COV_DIR)/index.html)"
+
+# Static analysis gates. Pure Python -- no C++ build -- so they only need the
+# image. The report tree is written through the workspace mount to
+# ./data/testOutput/gen-quality. Same commands run identically in CI.
+gen-quality: $(DOCKER_STAMP)
+	@rm -rf $(QUALITY_DIR)
+	$(DOCKER_RUN) make gen-quality
+
+gen-lint: $(DOCKER_STAMP)
+	$(DOCKER_RUN) make gen-lint
 
 endif
 

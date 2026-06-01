@@ -5,3 +5,6 @@
 
 # gcovr report tree from `make coverage-core-dev` (.html not matched above)
 coverage/
+
+# report tree from `make gen-quality` (.json/.md not matched above)
+gen-quality/

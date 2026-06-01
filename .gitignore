@@ -12,3 +12,7 @@ compile_commands.json
 node_modules/
 package.json
 package-lock.json
+
+# Python bytecode cache from the gen/ quality tooling
+__pycache__/
+*.pyc

@@ -37,7 +37,15 @@ oracle.
 
 Sub-milestones:
 
-## 6A_QUAL_GATES: research code quality analysis tools for python.
+### 6A_QUAL_GATES: research code quality analysis tools for python. ✅
+
+Delivered 2026-06-01: `make gen-quality` (composite design score 0-100; structure 50% + cyclomatic
+25% + cognitive 25%; smooth `target/max(target,value)` transform; report to
+`data/testOutput/gen-quality/`) and `make gen-lint` (pylint binary gate). Both run in the `mx-sdk`
+image and gate CI against a `GEN_QUALITY_FLOOR` / `GEN_LINT_FLOOR` ratchet. Maintainability-index,
+Halstead, and duplication/coupling/cohesion/DIT were evaluated and deliberately excluded (redundant,
+step-shaped, or unmeasurable in f-string-heavy emission code). Usage in `index.md`. Original spec
+below.
 
 We need to find a way to give the coding distinct feedback scoring on these measures of code
 quality:
@@ -60,7 +68,50 @@ quality:
   cohesion means a component has a singular, well-defined purpose.
 - Code Duplication: The repetition of identical or very similar blocks of code across the project.
   This violates the DRY (Don't Repeat Yourself) principle and causes major maintenance overheads.
-- Standard Linters
+- Standard Linters: let's use industry standard python linters for additional signal
+
+Using whatever tools we can find, create a program or script that statically analyzes the gen/
+python program. This analysis should boil down the code quality of the program to a single, combined
+number, and also provide the breakdown of its make up, so that the coding agent has a clear
+regression detector when it starts refactoring code.
+
+### 6B_DATA_MODEL:
+
+Consider if we were to generalize this program to support the emission of other forms of code
+besides just the C++ mx/core types that it currently generates. Potential targets could include a
+Rust library, documentaion in HTML or Markdown, an Erlang library, an alternate specification (for
+example conversion to JSON schema). We want to begin a process of generalizing our program to
+support other use-cases MusicXML XSD transformation.
+
+Template Context Type: We must consider all the code-generating functions and their input. What is
+the common data-shape that all these generators consume? Can it be abstracted away from C++ grammar
+and syntax such that a codegenerator for a different grammar and syntax can also consume this common
+type?
+
+We should consider a series of transforms:
+- parse: we parse the XSD document into an organizational type still closely tied to the XSD
+  grammar. I think you've already done this, but let's make sure after this step we don't need to go
+  back to the XSD again for anything. I'll refer to this as the xsd-preprocess data type.
+  - each XSD construct, especially anonymous ones, need to be given a reproducable ID
+  - the reproducable ID should not be sensitive to changes in the specification
+  - the common-sense "same" complexType, for example, should get the same ID assignment accross
+    MusicXML XSD versions
+- contexts: instantiate a complete set of context structs from the xsd-preprocess data that could be
+  used, for example, as input into a templating system.
+- create a dependency topology order such that leaf node objects can be created first, followed by
+  those that directly depend on them, and on up the tree such that we process things in the order
+  that, e.g. a build system would.
+- idea: not sure if yagni, each generator could be given an oportunity to mutate the state of the
+  context so that future generators that depend on the output of this one could receive a signal
+  from the dependency
+
+Rework the existing program so that all generating functions now take this context object as its
+argument.
+
+### 6C_NEXT_AND_BEYOND
+
+Definition of the next steps is intentionally left TBD depending on the output ob 6B. I don't want
+to burdon the LLM with where we are going next.
 
 ## Milestone 7: mxml4-types — generate MusicXML 4.1 types
 
