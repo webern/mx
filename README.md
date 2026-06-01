@@ -55,7 +55,7 @@ A `core-dev` mode exists for codegen iteration on `mx/core`; see `AGENTS.md` for
 
 Certain aspects of the development workflow need to be reproducible regardless of host tooling
 (gating on warnings, for example). An `mx-sdk` docker image is used for this. See `Dockerfile` and
-`Makefile` for details on that.
+`Makefile` for details.
 
 ### Build Tenets
 
