@@ -1,7 +1,2 @@
-# Ignore everything: the mx-sdk image is the pinned toolchain only and the
-# Dockerfile has no COPY/ADD, so nothing from the build context enters the
-# image. Source and build state reach the container at `docker run` time via
-# the workspace bind-mount and the mx-build volume, not through the build
-# context. Keeping the context empty makes `docker buildx build` transfer
-# nothing regardless of what sits at the repo root (data/, gen/, build dirs).
+# Ignore everything: the image is a developer tooling sdk.
 *
