@@ -5,6 +5,14 @@ on:
   push:
     branches: [master]
 
+# Cancel an in-flight run when a newer push supersedes it. The group is keyed
+# on the ref, so a new push to a PR cancels that PR's prior run without
+# touching other PRs or master. Limited to pull_request events: each master
+# push still runs to completion rather than aborting mid-build.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   linux-gate:
     name: Linux (check + test)
