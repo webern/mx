@@ -24,6 +24,8 @@ jobs:
       # Back the mx-build volume with a workspace path so actions/cache can
       # persist the ccache dir it holds. `make check` mounts mx-build at
       # /workspace/build and ccache writes to build/docker/.ccache.
+      # Not circular: Docker resolves this backing dir host-side, and the
+      # volume shadows /workspace/build inside the container.
       - name: Create bind-backed build volume
         run: |
           mkdir -p build/docker

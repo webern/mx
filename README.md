@@ -53,6 +53,10 @@ switching modes never recompiles another mode's tree. Knobs: `JOBS` (parallelism
 
 A `core-dev` mode exists for codegen iteration on `mx/core`; see `AGENTS.md` for details.
 
+Certain aspects of the development workflow need to be reproducible regardless of host tooling
+(gating on warnings, for example). An `mx-sdk` docker image is used for this. See `Dockerfile` and
+`Makefile` for details on that.
+
 ### Build Tenets
 
 * `mx` should not depend on any outside libraries (no deps).
