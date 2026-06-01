@@ -2,8 +2,7 @@
 # ============================================================================
 #
 # This Makefile is a thin, portable convenience wrapper around CMake. It does
-# not replace CMake; it just encodes the handful of build/test configurations
-# this project actually uses so you don't have to remember the option combos.
+# not replace CMake but rather encodes the commands to drive it.
 #
 # It assumes a POSIX shell and that `cmake` is on PATH. On Windows it is
 # best-effort: install CMake plus GNU make and a POSIX shell (Git Bash, MSYS2,
@@ -17,22 +16,17 @@
 # ----------------------------------------------------------------------------
 #
 # `make fmt`, `make check`, `make check-core-dev`, and `make coverage-core-dev`
-# run inside a Docker container with a pinned toolchain (Ubuntu 24.04 + g++-14 +
-# clang-format-18) so formatting and compiler warnings are deterministic on any
-# machine regardless of the floating CI runner image. The Makefile builds the
-# image once (tagged `mx-sdk`) from `Dockerfile`, rebuilds it if the Dockerfile
-# changes, then `docker run`s it with the workspace bind-mounted and a named
-# `mx-build` volume mounted at /workspace/build so source edits and incremental
-# build state (objects + ccache) persist between runs. The build/test targets
-# (`make test`, `make test-all`, ...) run natively with the local compiler.
+# run inside a Docker container. The Makefile builds it once (`mx-sdk`) and
+# rebuilds if the Dockerfile changes
+#
+# `docker run` uses an `mx-build` volume mounted so source edits and
+# incremental build state (objects + ccache) persist between runs.
 #
 # ----------------------------------------------------------------------------
 # Build modes
 # ----------------------------------------------------------------------------
 #
-# The project exposes three CMake options: MX_BUILD_TESTS, MX_BUILD_CORE_TESTS,
-# and MX_BUILD_EXAMPLES. Only three points on that matrix are workflows the
-# project actually documents, so those are the three build targets:
+# MX_BUILD_TESTS, MX_BUILD_CORE_TESTS, and MX_BUILD_EXAMPLES.:
 #
 #   lib   TESTS=off  CORE=off  EXAMPLES=off
 #
@@ -47,14 +41,9 @@
 # Build directory layout
 # ----------------------------------------------------------------------------
 #
-# Each mode builds into build/<mode>/<BUILD_TYPE> with its own CMake cache and
-# incremental state, e.g. build/dev/Debug, build/core/Debug. Because the modes
-# do not share a directory, switching from `core` back to `dev` (or flipping
-# BUILD_TYPE) never reconfigures and never recompiles the slow core tests.
+# Each mode builds into build/<mode>/<BUILD_TYPE> with its own CMake cache.
 # The Docker-run gates build into the mx-build volume (mounted at build/) with
-# ccache, keeping the pinned-GCC artifacts separate from the native ones so the
-# two compilers never stomp on each other's incremental state. `build/` is
-# already in .gitignore.
+# ccache, keeping the pinned-GCC artifacts separate from the native ones.
 #
 # ----------------------------------------------------------------------------
 # Knobs (environment / make variables -- these are overrides, not modes)
@@ -64,9 +53,7 @@
 #   BUILD_TYPE  CMake build type, default Debug. Passed as -DCMAKE_BUILD_TYPE
 #               (single-config generators) AND --config (multi-config: MSVC,
 #               Xcode), so it is correct on every generator.
-#   GENERATOR   CMake generator. Unset = CMake's platform default (Unix
-#               Makefiles on Linux/macOS, Visual Studio on Windows). Override:
-#               GENERATOR=Ninja make dev
+#   GENERATOR   CMake generator. Unset = CMake's platform default.
 #   ARGS        Forwarded to the mxtest (Catch2) binary, e.g.
 #               make test ARGS='[core]'  or  make test ARGS='--list-tests'
 #   DOCKER      Docker executable (default: docker).
@@ -78,57 +65,42 @@ DOCKER     ?= docker
 BUILD_TYPE ?= Debug
 BUILD_ROOT := build
 
-# Coverage report output (exported from the container to the host) and the
-# gcov tool gcovr drives. Default gcov-14 matches the pinned g++-14 toolchain
-# inside the container, where coverage actually runs.
+# Coverage report output. gcov-14 matches the pinned g++-14 toolchain
 COV_DIR := data/testOutput/coverage
 GCOV    ?= gcov-14
 
-# In GitHub Actions, crazy-max/ghaction-github-runtime exports
-# ACTIONS_RUNTIME_TOKEN. When present, push/pull the Docker layer cache to the
-# GitHub Actions cache so linux-gate does not reinstall the toolchain every
-# run. Absent (local, fork PRs) -> no flags, plain build. Same `make check`
-# everywhere.
+# For GitHub Actions. When present, push/pull the Docker layer cache to the
+# GitHub Actions cache.
 ifneq ($(ACTIONS_RUNTIME_TOKEN),)
 DOCKER_CACHE := --cache-from type=gha --cache-to type=gha,mode=max
 endif
 
-# Docker SDK image + build volume. The image is the pinned toolchain only (no
-# source). `docker run` bind-mounts the workspace and mounts the mx-build
-# volume at /workspace/build, so incremental state (objects + ccache) persists
-# across runs. CI pre-creates mx-build bind-backed to a workspace path so
-# actions/cache can persist the ccache dir between runs; locally it is a plain
-# named volume.
+# Docker SDK image + build volume. Incremental state (objects + ccache)
+# persists across runs.
 DOCKER_IMAGE  := mx-sdk
 DOCKER_VOLUME := mx-build
 DOCKER_STAMP  := $(BUILD_ROOT)/.docker-image-stamp
 
-# On Linux the container runs as root by default, leaving root-owned files in
-# the mounted volume and workspace. Map the host UID/GID through so build
-# artifacts and the CI-cached ccache dir stay readable by the invoking user.
-# Docker Desktop on Mac/Windows handles this itself.
+# Prevent root-owned files on Linux.
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
 DOCKER_USER := --user $(shell id -u):$(shell id -g)
 endif
 
-# Mount the whole repo at /workspace and the named build volume at
-# /workspace/build (shadowing the host build/ so docker artifacts stay separate
-# from native ones).
+# Run a container.
 DOCKER_RUN := $(DOCKER) run --rm \
 	-v $(CURDIR):/workspace \
 	-v $(DOCKER_VOLUME):/workspace/build \
 	$(DOCKER_USER) \
 	$(DOCKER_IMAGE)
 
-# Portable CPU-count detection. Tried in order; the final echo always succeeds
-# (Windows cmd/PowerShell exports NUMBER_OF_PROCESSORS; otherwise fall back 4).
+# Portable CPU-count detection.
 JOBS ?= $(shell nproc 2>/dev/null \
           || sysctl -n hw.ncpu 2>/dev/null \
           || getconf _NPROCESSORS_ONLN 2>/dev/null \
           || echo "$${NUMBER_OF_PROCESSORS:-4}")
 
-# Optional -G flag. Generator names contain spaces, so quote when set.
+# Optional generator flag.
 ifneq ($(strip $(GENERATOR)),)
 GEN_ARG := -G "$(GENERATOR)"
 endif
@@ -136,9 +108,7 @@ endif
 # build/<mode>/<BUILD_TYPE> for the given mode ($1).
 mode_dir = $(BUILD_ROOT)/$(1)/$(BUILD_TYPE)
 
-# Configure + build a mode. $1 = mode name, then the three MX_BUILD_* values
-# followed by MX_CORE_DEV. core-dev passes MX_CORE_DEV=on with the three
-# MX_BUILD_* flags off; every other mode passes MX_CORE_DEV=off.
+# Define the Cmake build flags and arguments.
 define cmake_build
 	$(CMAKE) -S . -B $(call mode_dir,$(1)) \
 		-DCMAKE_BUILD_TYPE=$(BUILD_TYPE) \
@@ -150,10 +120,7 @@ define cmake_build
 	$(CMAKE) --build $(call mode_dir,$(1)) --parallel $(JOBS) --config $(BUILD_TYPE)
 endef
 
-# Locate and run a built binary. CMake places it at <dir>/<name> for
-# single-config generators but <dir>/<BUILD_TYPE>/<name>(.exe) for
-# multi-config ones (MSVC, Xcode), so probe both. $1 = mode dir, $2 = binary
-# name, $3 = extra args.
+# Locate and run a built binary.
 define run_bin
 	@d='$(1)'; b='$(2)'; found=''; \
 	for p in "$$d/$$b" "$$d/$$b.exe" "$$d/$(BUILD_TYPE)/$$b" "$$d/$(BUILD_TYPE)/$$b.exe"; do \
@@ -164,10 +131,7 @@ define run_bin
 	"$$found" $(3)
 endef
 
-# Run the three example programs from the given mode dir ($1). The test
-# targets run these too, so the examples are exercised everywhere tests run.
-# mxwrite is told to write into data/testOutput so we don't leave an untracked
-# example.musicxml at the repo root (issue #150).
+# Run the three example programs from the given mode dir ($1).
 define run_examples
 	@mkdir -p data/testOutput
 	$(call run_bin,$(1),mxread,)
@@ -181,13 +145,9 @@ endef
         test-core-dev coverage-core-dev xcode-gen xcode-build xcode-test
 
 help:
-	@echo 'mx build/test targets (see the comments at the top of the Makefile):'
+	@echo 'mx build/test targets:'
 	@echo ''
-	@echo 'Done with a code change? Run:'
-	@echo '  make fmt && make check && make test'
-	@echo '  (use make test-all instead of make test if you touched mx/core)'
-	@echo ''
-	@echo 'Quality gates (run in the mx-sdk Docker image, pinned toolchain):'
+	@echo 'Quality gates (run in docker):'
 	@echo '  make fmt            Format all C++ files under src/.'
 	@echo '  make check          fmt-check + warning-free build.'
 	@echo ''
@@ -197,14 +157,14 @@ help:
 	@echo '  make core           Build the full suite incl. slow mx::core tests.'
 	@echo ''
 	@echo 'Run (native):'
-	@echo '  make test           Build dev, run examples + mxtest.   ARGS= forwarded.'
+	@echo '  make test           Build dev, run examples + mxtest. ARGS= forwarded.'
 	@echo '  make test-all       Build core, run examples + full mxtest. ARGS= fwd.'
 	@echo '  make examples-run   Build dev, then run mxread/mxwrite/mxhide.'
 	@echo '  make all            Build core, run examples + full mxtest.'
 	@echo ''
 	@echo 'Housekeeping:'
 	@echo '  make clean          Remove the entire $(BUILD_ROOT)/ tree.'
-	@echo '  make clean-docker   Remove the mx-sdk image, build volume, and cache.'
+	@echo '  make clean-docker   Remove the sdk image, build volume, and cache.'
 	@echo ''
 	@echo 'Xcode:'
 	@echo '  make xcode-gen      Generate Xcode project in build/xcode/.'

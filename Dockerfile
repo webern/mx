@@ -2,26 +2,18 @@
 #
 # Pinned toolchain image for mx quality gates and SDK workflows.
 #
-# This image is not a deliverable. It is a deterministic environment for the
-# `make fmt`, `make check`, `make check-core-dev`, and `make coverage-core-dev`
-# workflows: Ubuntu 24.04 with a pinned g++-14 / clang-format-18 toolchain. It
-# compiles with GCC (not clang) so the gate matches the GCC the required Linux
-# CI jobs use - the same standard library, so a `make check` pass locally means
-# the GCC jobs compile too. Pinning keeps clang-format output and the warning
-# set deterministic regardless of the floating CI runner image.
+# This image is not a deliverable. It is a deterministic environment for
+# certain make commands.
+# 
+# The image is built once (tagged `mx-sdk`) and then driven with `docker
+# run`: the Makefile builds it on demand, rebuilds it when this file
+# changes, and `docker run`s it with the workspace bind-mounted and a
+# named `mx-build` volume mounted at /workspace/build.
 #
-# The image is built once (tagged `mx-sdk`) and then driven with `docker run`,
-# not `docker build`: the Makefile builds it on demand, rebuilds it when this
-# file changes, and `docker run`s it with the workspace bind-mounted and a
-# named `mx-build` volume mounted at /workspace/build. Source edits and
-# incremental build state (objects + ccache) live outside the image and persist
-# between runs. Inside the container MX_RUNNING_IN_DOCKER=1 flips the Makefile
-# to run the pinned tools directly.
+# Inside the container MX_RUNNING_IN_DOCKER=1 flips the Makefile to run
+# the pinned tools directly.
 #
-# ccache is the CMake compiler launcher. Its store lives under the mounted
-# build volume, so it persists across runs locally and - because it is
-# content-addressed, not mtime-based - it can be cached across CI runs even
-# though `actions/checkout` resets source mtimes.
+# The ccache store lives under the mounted build volume.
 
 FROM ubuntu:24.04
 
