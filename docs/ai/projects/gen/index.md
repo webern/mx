@@ -130,7 +130,10 @@ the fix belongs in the shared path with a config-driven flag.
 
 ## Key external files
 
-- `gen/generate.py` — the generator (~14k lines of Python)
+- `gen/generate.py` — the generator orchestrator + C++ emission (~13.4k lines of Python)
+- `gen/parse.py` — XSD parsing: dataclasses + `XsdModel` + `pascal`; injected `ParseConfig`
+  (M6B; pure XSD model, target-neutral)
+- `gen/ids.py` — `NodeId` typed value (M6B; assigned to every node, currently unconsumed)
 - `gen/quality.py` — design-quality scorer for `make gen-quality` (excluded from its own score)
 - `gen/.pylintrc` — pylint config for `make gen-lint`
 - `docs/musicxml.xsd` — input schema (currently MusicXML 3.0; swap to 4.1 in M6)

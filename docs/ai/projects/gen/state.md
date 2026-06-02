@@ -2,46 +2,73 @@
 
 ## Milestone
 
-**M6B_DATA_MODEL, design settled.** Architecture grilled and captured in
-`design/m6b-data-model.md`. Implementation not yet started. This is a pure refactor of the generator
-(no C++ output change).
+**M6B_DATA_MODEL, in progress.** Session 1 (parse.py extraction) is done. Architecture is in
+`design/m6b-data-model.md`. This whole milestone is a pure refactor of the generator: the emitted
+C++ under `src/private/mx/core/` stays byte-identical.
 
-## What the last session did (2026-06-02, M6B design grill)
+## What the last session did (2026-06-02, M6B session 1)
 
-No code changed. Settled the full M6B architecture with the user. See `log.md` 2026-06-02 for the
-decision trail and `design/m6b-data-model.md` for the static design. Headline decisions:
+Stood up `gen/parse.py` and `gen/ids.py` as a pure internal extraction. Zero C++ diff. See `log.md`
+2026-06-02 08:15 for detail. Headline:
 
-- Pipeline `parse.py` (pure XSD, total NodeIds) -> `configure.py` (one config pass, C++-aware,
-  two-phase flat build, output IS the contexts) -> pure f-string renderers (`struct -> str`).
-- Total ID scheme, kind-embedded segments, ordinals for anonymous siblings.
-- Dropped topological-order and context-mutation as YAGNI; renderers are pure.
-- Bespoke families conform (G1) but keep their own structs/renderers.
-- Strangler migration; `generate.py` stays byte-identical throughout.
+- Moved the nine XSD dataclasses, `XsdModel`, and `pascal()` into `gen/parse.py`. `generate.py`
+  imports them back. `camel`/`has_flag_name`/`CPP_KEYWORDS` stayed (C++ lexicon).
+- Config coupling solved by injection, not by moving config into parse: `generate.py` keeps the
+  seven structural-config globals and passes them via a new `ParseConfig` dataclass into
+  `XsdModel(xsd_path, cfg)`. The four sets are by-reference, so synthetic groups the parser records
+  are visible to emission. Avoids a `generate`<->`parse` import cycle; parse stays config-free.
+- Enum docs moved into parse (`model.enum_docs`); `generate_enums_h` reads it. The "pattern B"
+  predicate moved in too (`model.complex_content_or_group_cts`); `_ct_has_complex_content` reads it.
+- `gen/ids.py` defines `NodeId` (frozen value, canonical `kind:name` / `kind#ordinal` path string).
+  `XsdModel._assign_ids` assigns one to every dataclass-backed node. `node_id` fields are
+  `field(default=None, compare=False)`. Additive and unconsumed.
+- Deleted dead `gen/gen_attrs.py`, `gen/gen_enums.py`, `gen/gen_enum_members.py`.
 
-## What the next session should do (M6B session 1)
+## IMPORTANT correction to the design's self-containment claim
 
-Stand up `parse.py` as a pure internal extraction - zero C++ diff.
+The design said `generate_enums_h` was "the one current violation" reaching into `model.root`. That
+was wrong: there were SIX `model.root` users. Two were general-path and are now migrated into parse
+(enum docs, complex-content predicate). **Four are bespoke handlers** (harmony-chord, score-wrapper,
+music-data, full-note) and still walk `model.root` directly. So `model.tree` is severed but
+`model.root` survives, scoped to bespoke-only, until those families migrate. Do not try to delete
+`model.root` until the bespoke families are migrated.
 
-1. Extract `XsdModel` + dataclasses + parsing from `generate.py` into `gen/parse.py`.
-2. Move enum extraction out of `generate_enums_h` (`generate.py:854`) into parse, store on the model,
-   and sever `model.root`/`model.tree` after parse (self-containment invariant).
-3. Add `gen/ids.py` with the `NodeId` typed value and assign a total ID to every node in parse
-   (additive; nothing consumes IDs yet).
-4. Delete dead `gen/gen_attrs.py`, `gen/gen_enums.py`, `gen/gen_enum_members.py`.
-5. Prove the oracle is clean:
-   `python3 gen/generate.py && git diff --quiet src/private/mx/core && make test-core-dev`.
+## What the next session should do (M6B session 2)
 
-Do NOT migrate any unit-kind yet - that is session 2 onward. Keep this increment small and verifiable.
+Migrate the first unit-kind through the new path: **enums**. Per the migration plan in
+`design/m6b-data-model.md`:
+
+1. Build an enum context struct (start `gen/contexts.py`) and a pure renderer (start
+   `gen/render/`, e.g. `render/enums.py`) that takes the struct and returns the Enums.h string -
+   reads only its struct, no `model`/config/XSD.
+2. Build the enum contexts in a configure step (decide whether to start `gen/configure.py` now or
+   keep the build inline in `generate.py` for one more session - your call, but the renderer must be
+   pure).
+3. Route only `generate_enums_h` through the new path; leave every other kind on the old path.
+4. Verify zero C++ diff (see oracle below) and that `gen-quality`/`gen-lint` still clear their floors.
+
+## Oracle (how to prove zero diff)
+
+The committed C++ equals `python3 gen/generate.py && make fmt` - raw generator output is unformatted,
+so the `make fmt` step is REQUIRED (the M6B prompt's oracle omitted it). Two ways to check, tightest
+first:
+
+- Raw-output snapshot: `cp -R src/private/mx/core /tmp/core_before` after a clean generate, make your
+  change, regenerate, then `diff -rq /tmp/core_before src/private/mx/core` must be empty. This is
+  byte-exact and needs no `make fmt`.
+- Committed oracle: `python3 gen/generate.py && make fmt && git diff --quiet src/private/mx/core`.
+
+Then `make test-core-dev`. Reset generated C++ before committing:
+`git checkout -- src/private/mx/core` (the refactor must change only `gen/*.py`).
 
 ## Gotchas
 
-- The oracle is byte-identical C++ output. After any generator edit run
-  `python3 gen/generate.py && git diff --quiet src/private/mx/core` - a non-empty diff means a
-  regression. Reset with `git checkout -- src/private/mx/core/ && git clean -fd src/private/mx/core/`.
-- `make test-all` is slow (>10 min); iterate on `make test-core-dev`. Full gate before merge:
-  `make fmt && make check && make test-all`.
-- Ignore `gen-quality` during the refactor (user directive). Only deal with it if `linux-gate` CI
-  fails at the very end.
-- `git checkout -- src/private/mx/core/` preserves mtimes; incremental cmake can then link stale
-  `.o` files and report wrong counts. Use `make clean` for an authoritative measurement.
-- The three `gen/gen_*.py` helpers are not imported by `generate.py` - safe to delete.
+- `make fmt` (~1 min, Docker) is part of the oracle - the generator emits unformatted C++.
+- CI `linux-gate` runs `make gen-quality` (floor 37.7; currently 38.2) and `make gen-lint` (floor
+  9.4; currently 9.50). New `gen/*.py` files are scored - keep functions small and add docstrings.
+- `gen-quality`/`gen-lint` are otherwise ignored during the refactor (user directive) unless CI
+  fails.
+- Running `python3 gen/generate.py` works because Python puts `gen/` on `sys.path[0]`, so the bare
+  `from parse import ...` / `from ids import ...` resolve.
+- `node_id` fields are `compare=False` on purpose; keep it that way so adding IDs never perturbs
+  dataclass equality.

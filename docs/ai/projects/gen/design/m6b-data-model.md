@@ -29,12 +29,20 @@ render/*.py   pure f-string functions          (struct -> string)
 ### parse.py
 
 Parses `docs/musicxml.xsd` into a self-contained data structure. Pure XSD facts: no C++ names, no
-type mappings, no config. This is the only stage that touches the XML.
+type mappings. The C++-aware structural config the parser consumes (which anonymous sequences become
+synthetic group classes, which inherited groups are renamed) is not hardcoded here; `generate.py`
+injects it as a `ParseConfig` so `parse.py` itself stays config-free. The four synthetic-group sets
+in `ParseConfig` are passed by reference: the parser records discovered synthetic groups into them
+during parse, and the emission code reads the same objects afterward. This is the only stage that
+touches the XML.
 
-Self-containment invariant: after parse returns, the ElementTree (`model.root` / `model.tree`) is
-dropped and never referenced again. Enforced. The one current violation is `generate_enums_h`
-(`generate.py:854`), which iterates `model.root` during emission; enum extraction moves into
-`parse.py` and is stored on the model.
+Self-containment invariant: after parse returns, the ElementTree is not retained on the model.
+`model.tree` is severed. `model.root` is still read by the four bespoke family handlers in
+`generate.py` (harmony-chord, score-wrapper, music-data, full-note) and cannot be dropped until those
+families migrate to parsed data, so for now it survives scoped to bespoke-only. The former
+general-path leaks are closed: enum documentation moved into parse (`model.enum_docs`, consumed by
+`generate_enums_h`) and the "pattern B" complex-content predicate moved in too
+(`model.complex_content_or_group_cts`, consumed by `_ct_has_complex_content`).
 
 parse.py assigns a `NodeId` to every node (see IDs below).
 
@@ -124,14 +132,19 @@ Delete the dead, unimported helpers `gen/gen_attrs.py`, `gen/gen_enums.py`,
 
 ## Oracle and migration
 
-Oracle (pure-refactor correctness): `python3 gen/generate.py && git diff --quiet src/private/mx/core`
-must show no diff, and `make test-core-dev` must pass; `make test-all` before merge. `gen-quality` is
-ignored during the refactor and revisited only if CI fails at the end.
+Oracle (pure-refactor correctness): the committed C++ equals `python3 gen/generate.py && make fmt`
+(raw generator output is unformatted, so the `make fmt` step is required). Thus
+`python3 gen/generate.py && make fmt && git diff --quiet src/private/mx/core` must show no diff, and
+`make test-core-dev` must pass; `make test-all` before merge. The tightest check during a refactor is
+that raw generator output is byte-identical before/after the change (`diff -rq` a pre-change snapshot
+of `src/private/mx/core`). `gen-quality` is ignored during the refactor and revisited only if CI
+fails at the end.
 
 Migration is strangler-style. `generate.py` stays byte-identical the entire time:
 
 1. Extract `parse.py` + total `NodeId`s as a pure internal move (IDs additive, unconsumed); move
-   enum extraction in and sever `model.root`. Verify zero diff.
+   enum extraction (and the complex-content predicate) in and sever `model.tree`. `model.root`
+   survives scoped to the four bespoke handlers pending their migration. Verify zero diff.
 2. Migrate one unit-kind at a time (enums -> attrs -> simple elements -> groups -> choices ->
    containers -> tree-parents -> the 7 bespoke families): build that kind's context struct + pure
    renderer, route only that kind through the new path, leave the rest on the old path, verify zero
