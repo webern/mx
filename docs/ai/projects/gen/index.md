@@ -159,13 +159,25 @@ All pull requests should have a section at the bottom like this:
 All of our work in this project is tracked by #58, but you should determine the best-issue-number.
 
 Do not use project-specific language in the PR title or description. No `M5` or `Milestone 6`. The
-project is a transiant organizational principle not to be encoded long-term in the project's
-historical records on GitHub.
+project is a transient organizational principle not to be encoded long-term in the project's
+historical records on GitHub. You may refer to the project in general as `gen` or `code gen`.
 
-You may refer to the project in general as `gen` or `code gen`.
+The title should be all lowercase and start with a keyword such as:
+- gen
+- build
+- test
+- core (for `mx/core`)
+- api (for `mx/api`)
+- impl (for `mx/impl`)
+- docs (for agent docs project docs )
 
-Use the `/dewordify` skill for your pull request texts. Do not over explain minutia, that is what
-the diff is for. Do not over format. Ovoid overuse of bold, italics and headers.
+Do your best and pick one or make up a similar one if you don't see the right thing. Then your PR
+title should be no more than 72 characters long. Example:
+
+`gen: refactor parsing and annotation logic`
+
+Use the `/dewordify` skill for your pull request description. Do not over explain minutia, that is
+what the diff is for. Do not over format. Ovoid overuse of bold, italics and headers.
 
 Include the following sections:
 - `## Summary`: brief explanation of why we are submitting this pull request
