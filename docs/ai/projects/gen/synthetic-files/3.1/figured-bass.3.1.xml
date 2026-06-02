@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<score-partwise version="3.1">
+  <part-list>
+    <part-group type="start">
+      <footnote>x</footnote>
+      <level>x</level>
+    </part-group>
+    <score-part id="id1">
+      <part-name>x</part-name>
+    </score-part>
+    <part-group type="start">
+      <footnote>x</footnote>
+      <level>x</level>
+    </part-group>
+  </part-list>
+  <part id="id1">
+    <measure number="x">
+      <figured-bass default-x="1" default-y="1" relative-x="1" relative-y="1" font-family="x" font-style="normal" font-size="1" font-weight="normal" color="#FF000000" print-object="yes" print-dot="yes" print-spacing="yes" print-lyric="yes" parentheses="yes" id="id3">
+        <figure>
+          <footnote>x</footnote>
+          <level>x</level>
+        </figure>
+        <duration>1</duration>
+        <footnote>x</footnote>
+        <level>x</level>
+      </figured-bass>
+    </measure>
+  </part>
+</score-partwise>

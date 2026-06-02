@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<score-partwise version="3.1">
+  <part-list>
+    <part-group type="start">
+      <footnote>x</footnote>
+      <level>x</level>
+    </part-group>
+    <score-part id="id1">
+      <part-name>x</part-name>
+    </score-part>
+    <part-group type="start">
+      <footnote>x</footnote>
+      <level>x</level>
+    </part-group>
+  </part-list>
+  <part id="id1">
+    <measure number="x">
+      <direction>
+        <direction-type>
+          <percussion>
+            <pitched smufl="pictGong">celesta</pitched>
+          </percussion>
+        </direction-type>
+        <footnote>x</footnote>
+        <level>x</level>
+        <voice>1</voice>
+        <staff>1</staff>
+      </direction>
+    </measure>
+  </part>
+</score-partwise>

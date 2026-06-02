@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<score-partwise version="4.0">
+  <part-list>
+    <part-group type="start">
+      <footnote>x</footnote>
+      <level>x</level>
+    </part-group>
+    <score-part id="id1">
+      <part-name>x</part-name>
+    </score-part>
+    <part-group type="start">
+      <footnote>x</footnote>
+      <level>x</level>
+    </part-group>
+  </part-list>
+  <part id="id1">
+    <measure number="x">
+      <harmony>
+        <numeral>
+          <numeral-root>1</numeral-root>
+          <numeral-key>
+            <numeral-fifths>1</numeral-fifths>
+            <numeral-mode>major</numeral-mode>
+          </numeral-key>
+        </numeral>
+        <kind>major</kind>
+        <footnote>x</footnote>
+        <level>x</level>
+        <staff>1</staff>
+      </harmony>
+    </measure>
+  </part>
+</score-partwise>

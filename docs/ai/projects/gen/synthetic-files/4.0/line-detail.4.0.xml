@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<score-partwise version="4.0">
+  <part-list>
+    <part-group type="start">
+      <footnote>x</footnote>
+      <level>x</level>
+    </part-group>
+    <score-part id="id1">
+      <part-name>x</part-name>
+    </score-part>
+    <part-group type="start">
+      <footnote>x</footnote>
+      <level>x</level>
+    </part-group>
+  </part-list>
+  <part id="id1">
+    <measure number="x">
+      <attributes>
+        <footnote>x</footnote>
+        <level>x</level>
+        <staff-details>
+          <staff-lines>1</staff-lines>
+          <line-detail line="1" width="1" color="#FF000000" line-type="solid" print-object="yes" />
+        </staff-details>
+      </attributes>
+    </measure>
+  </part>
+</score-partwise>

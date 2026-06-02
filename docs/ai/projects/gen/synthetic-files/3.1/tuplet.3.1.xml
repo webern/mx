@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<score-partwise version="3.1">
+  <part-list>
+    <part-group type="start">
+      <footnote>x</footnote>
+      <level>x</level>
+    </part-group>
+    <score-part id="id1">
+      <part-name>x</part-name>
+    </score-part>
+    <part-group type="start">
+      <footnote>x</footnote>
+      <level>x</level>
+    </part-group>
+  </part-list>
+  <part id="id1">
+    <measure number="x">
+      <note>
+        <grace />
+        <pitch>
+          <step>A</step>
+          <octave>1</octave>
+        </pitch>
+        <footnote>x</footnote>
+        <level>x</level>
+        <voice>1</voice>
+        <staff>1</staff>
+        <notations>
+          <footnote>x</footnote>
+          <level>x</level>
+          <tuplet type="start" number="1" bracket="yes" show-number="actual" show-type="actual" line-shape="straight" default-x="1" default-y="1" relative-x="1" relative-y="1" placement="above" id="id3" />
+        </notations>
+      </note>
+    </measure>
+  </part>
+</score-partwise>
