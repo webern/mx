@@ -1,3 +1,0 @@
-
-The massive synthetic file generating session:
-claude --resume 6ca65083-8f52-4e79-9992-597c43dff97a
