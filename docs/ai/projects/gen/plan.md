@@ -39,41 +39,7 @@ Sub-milestones:
 
 ### 6A_QUAL_GATES: research code quality analysis tools for python. ✅
 
-Delivered 2026-06-01: `make gen-quality` (composite design score 0-100; structure 50% + cyclomatic
-25% + cognitive 25%; smooth `target/max(target,value)` transform; report to
-`data/testOutput/gen-quality/`) and `make gen-lint` (pylint binary gate). Both run in the `mx-sdk`
-image and gate CI against a `GEN_QUALITY_FLOOR` / `GEN_LINT_FLOOR` ratchet. Maintainability-index,
-Halstead, and duplication/coupling/cohesion/DIT were evaluated and deliberately excluded (redundant,
-step-shaped, or unmeasurable in f-string-heavy emission code). Usage in `index.md`. Original spec
-below.
-
-We need to find a way to give the coding distinct feedback scoring on these measures of code
-quality:
-
-- Cyclomatic Complexity: Measures the number of linearly independent paths through source code
-  (e.g., counting if, else, while, and for statements). Lower scores mean the code is easier to test
-  and maintain.
-- Cognitive Complexity: Evaluates code based on human readability rather than just program paths. It
-  accounts for how difficult it is for a developer to mentally parse control flow jumps, nesting,
-  and logical operations.Maintainability Index: A calculated score that indicates how easy it is to
-  support, alter, or analyze the code. Higher scores indicate better overall maintainability.
-- Halstead Complexity: Measures the computational complexity of software by counting the number of
-  unique operators and operands. It helps predict defect-proneness and overall program volume
-- Depth of Inheritance Tree: Counts the number of classes that inherit from one another back to the
-  base class. High values indicate a high risk of breaking changes when modifications are made to
-  parent classes.
-- Coupling measures how dependent different modules or classes are on one another. Loose coupling is
-  highly desired.
-- Cohesion measures how closely the tasks performed by a single module or class are related. High
-  cohesion means a component has a singular, well-defined purpose.
-- Code Duplication: The repetition of identical or very similar blocks of code across the project.
-  This violates the DRY (Don't Repeat Yourself) principle and causes major maintenance overheads.
-- Standard Linters: let's use industry standard python linters for additional signal
-
-Using whatever tools we can find, create a program or script that statically analyzes the gen/
-python program. This analysis should boil down the code quality of the program to a single, combined
-number, and also provide the breakdown of its make up, so that the coding agent has a clear
-regression detector when it starts refactoring code.
+Delivered 2026-06-01: `make gen-quality` and `make gen-lint`
 
 ### 6B_DATA_MODEL:
 
