@@ -122,3 +122,44 @@ Floors are a ratchet, set just under the measured in-container baseline (determi
 local): `GEN_QUALITY_FLOOR=37.7` (composite 37.7 = structure 20.1, cyclomatic 62.8, cognitive 47.9),
 `GEN_LINT_FLOOR=9.4` (pylint 9.49). Generator behavior was off-limits by user direction, so this is
 a tooling-only change; the dead `OVERWRITE_FILE_STEMS` set in `generate.py` was left untouched.
+
+## 2026-06-02 07:49 M6B design grill
+
+Grilled the user to settle the M6B_DATA_MODEL architecture before implementation. No code changed;
+design captured in `design/m6b-data-model.md`. Decisions, in order:
+
+Seam: only `parse.py` is target-neutral (pure XSD). `configure.py` is one config pass and is allowed
+to be C++-aware; we deliberately do not split lexicon-vs-neutral this milestone. Future non-C++
+targets fork after `parse.py`. Rejected splitting structural vs C++ config into two layers - user
+said don't overdo it.
+
+IDs: total - every node gets a `NodeId` (typed value, canonical string). Named roots `kind:name`
+(`cx:note-type`), stable across versions for free; children are parent-ID + `/kind:name` or
+`/kind#ordinal`, kind embedded in every segment, ordinals for anonymous siblings. Found by inspection
+that every structural-config dict keys off a named construct and reaches anonymous structure by
+owner-local ordinal or human slug - so cross-version stability is a non-problem for anonymous nodes
+and they can be cheap positional/run-local. User chose total coverage (incl ~337 unused body/plumbing
+IDs) for a uniform "every node has an ID" invariant.
+
+Context: `configure.py`'s output is the contexts - per-unit render structs (option 2), not a mega-
+context. Built in two flat phases (resolve indices, then build structs). Verified cross-unit refs are
+all name-derivable (`classify_element` called once at top of main loop; `resolve_cpp_type` is a name-
+keyed flat lookup) - so the plan's dependency-topology-order and generators-mutate-context ideas are
+both dropped as YAGNI.
+
+Renderers: pure f-string functions (`struct -> str`), no template engine. Jinja rejected: diff-risk
+against the byte-identical oracle, and moving LOC into `.j2` would be metric-gaming.
+
+Bespoke (7 families): G1 - conform to the architecture (pure renderer, build logic in `configure.py`)
+but keep their own structs/renderers; unify into the shared path only where obviously clean.
+
+Self-containment: after parse, drop `model.root`/`model.tree`. One leak today: `generate_enums_h`
+(`generate.py:854`). The three helpers `gen_attrs.py`/`gen_enums.py`/`gen_enum_members.py` are dead
+(not imported) - delete them.
+
+gen-quality: user directed to ignore it during the refactor and only revisit if CI fails at the end.
+
+Migration: strangler. Keep `generate.py` byte-identical throughout; extract `parse.py` + IDs first,
+then migrate one unit-kind at a time verifying zero C++ diff after each, then delete old dispatch.
+Session-1 scope: stand up `parse.py`, move enum extraction in, sever `model.root`, assign `NodeId`s,
+prove zero diff.

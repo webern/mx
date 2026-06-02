@@ -27,6 +27,10 @@ improve the generator, then point it at MusicXML 4.1 to generate updated types.
 
 Standard project layout (see the `/project` skill).
 
+Design docs (`design/`): static snapshots of current design.
+- `design/m6b-data-model.md`: target architecture for the M6B generator refactor
+  (parse -> configure -> render, ID scheme, strangler migration).
+
 Found Files: Music XML files under consideration for adding to the test suite(s). We need to be
 cognizent of the declared MusicXML version in the file. Before we implement 4.0, then we should only
 add files at 3.0 and lower to the test suite. After we implement 4.0 we want to add the rest.
