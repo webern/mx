@@ -2,9 +2,7 @@
 
 ## Milestone
 
-**M6B_DATA_MODEL, in progress.** Session 1 (parse.py extraction) is done. Architecture is in
-`design/m6b-data-model.md`. This whole milestone is a pure refactor of the generator: the emitted
-C++ under `src/private/mx/core/` stays byte-identical.
+M6B_DATA_MODEL, is done.
 
 ## What the last session did (2026-06-02, M6B session 1)
 

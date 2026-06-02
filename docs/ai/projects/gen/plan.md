@@ -41,21 +41,10 @@ Sub-milestones:
 
 Delivered 2026-06-01: `make gen-quality` and `make gen-lint`
 
-### 6B_DATA_MODEL:
+### 6B_DATA_MODEL: ✅
 
-Refactor the generator into a `parse -> configure -> render` pipeline so every generating function
-consumes a per-unit context struct instead of navigating the global `model` and config dicts inline.
-Pure refactor: byte-identical C++ output. Establishes `parse.py` as a target-neutral, reusable
-artifact for future non-C++ backends (M6B builds no second backend).
-
-Design is settled - see `design/m6b-data-model.md` for the full architecture (pipeline, total ID
-scheme, two-phase flat build, pure f-string renderers, bespoke-family handling, module layout). Two
-plan ideas were dropped as YAGNI after inspection: leaf-first dependency-topology order and
-generators-mutate-context.
-
-Sequencing is strangler-style; `generate.py` stays byte-identical throughout. Session 1: extract
-`parse.py` + total IDs, sever `model.root`, prove zero diff. Sessions 2+: migrate one unit-kind at a
-time, verifying zero C++ diff after each.
+Refactor edthe generator into a `parse -> configure -> render` pipeline - see
+`design/m6b-data-model.md`.
 
 ### 6C_NEXT_AND_BEYOND
 
