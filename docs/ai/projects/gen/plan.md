@@ -46,10 +46,43 @@ Delivered 2026-06-01: `make gen-quality` and `make gen-lint`
 Refactor edthe generator into a `parse -> configure -> render` pipeline - see
 `design/m6b-data-model.md`.
 
-### 6C_NEXT_AND_BEYOND
+### 6C_CONFIG_FILE (next: not started)
 
-Definition of the next steps is intentionally left TBD depending on the output ob 6B. I don't want
-to burdon the LLM with where we are going next.
+Further refactor the gen program so that it reads a toml config file instead of embedding all of the
+bespoke decisions into the python code itself. This requires an excellent design. I want this config
+file to be extensible for future code gen use cases (e.g. Rust, Go, etc. and even perhaps generating
+a new specification that improves upon MusicXML).
+
+Areas to consider during the design phase:
+
+- certain choices I made in the handling of MusicXML might be considered canonically correct, we
+  should see if any enshrined XSD deviations should be hard-coded and if so whether they could be
+  present in the contexts layer automatically without configuration.
+
+- the configuration layer should probably enrich the contexts, or is that the right hook point
+
+- what things will be needed for different use cases, how different can a configuration look and why
+
+### 6D_TEMPLATES
+
+Refactor out the "f-strings" from python. Use a proper template library and move the C++ boilerplate
+to template files that are rendered by the generator.
+
+### 6E_STAND_BACK
+
+Likely multi-session
+
+How good is our design. Let's have an architect look at it through the lense of supporting future
+use cases such as generating code to a different language or generating a new spec inspired by the
+MusicXML spec. For example, let's imagine we want to restructure MusicXML significantly to be easier
+to use and write that new spec as a JSON spec. What needs to be done to make our generator
+extensible in the future (even if we don't add those extensions now, how does the current design break).
+
+Are there oddities in `mx/core`'s codegen that we could removed to get a cleaner generator design?
+
+Try it out with MusicXML 4.0 temporarily. Where did it break. Is it a design problem?
+
+Write a design doc better_generator.md
 
 ## Milestone 7: mxml4-types — generate MusicXML 4.0 types
 
