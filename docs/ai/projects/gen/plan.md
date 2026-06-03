@@ -51,12 +51,12 @@ Refactor edthe generator into a `parse -> configure -> render` pipeline - see
 Definition of the next steps is intentionally left TBD depending on the output ob 6B. I don't want
 to burdon the LLM with where we are going next.
 
-## Milestone 7: mxml4-types — generate MusicXML 4.1 types
+## Milestone 7: mxml4-types — generate MusicXML 4.0 types
 
-Replace `docs/musicxml.xsd` with MusicXML 4.1, regenerate, fix all existing tests. Watch for
+Replace `docs/musicxml.xsd` with MusicXML 4.0, regenerate, fix all existing tests. Watch for
 backported / bolted-on features (SMuFL, `UpDown`, …) that were added with hacks to 3.0/3.1 but are
 first-class in 4.0. Be backward-compatible with files mx may have written using those hacks. Restore
 the `mx/impl` TODOs left from revgen.
 
-## Milestone 8: Surface MusicXML 4.1 features in mx/api
+## Milestone 8: Surface MusicXML 4.0 features in mx/api
 

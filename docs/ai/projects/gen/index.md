@@ -21,7 +21,7 @@ completion_dates:
 
 Reverse engineer the codegen process that produced `mx/core` from MusicXML XSD. Build a generator
 that re-produces the existing C++ code from `docs/musicxml.xsd`, improve testing and coverage,
-improve the generator, then point it at MusicXML 4.1 to generate updated types.
+improve the generator, then point it at MusicXML 4.0 to generate updated types.
 
 ## Files
 
@@ -135,7 +135,7 @@ the fix belongs in the shared path with a config-driven flag.
 - `gen/ids.py` — `NodeId` typed value (M6B; assigned to every node, currently unconsumed)
 - `gen/quality.py` — design-quality scorer for `make gen-quality` (excluded from its own score)
 - `gen/.pylintrc` — pylint config for `make gen-lint`
-- `docs/musicxml.xsd` — input schema (currently MusicXML 3.0; swap to 4.1 in M6)
+- `docs/musicxml.xsd` — input schema (currently MusicXML 3.0; swap to 4.0 in M6)
 - `src/private/mx/core/elements/` — target output (~590 .h/.cpp pairs)
 - `src/private/mxtest/corert/` — core-roundtrip harness
 
