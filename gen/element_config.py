@@ -52,3 +52,146 @@ TREE_ELEMENTS = {
     "play",
     "score-instrument",
 }
+
+TREE_ELEMENT_CONFIG = {
+    "group-abbreviation-display": {
+        "choice_class": "DisplayTextOrAccidentalText",
+    },
+    "group-name-display": {
+        "choice_class": "DisplayTextOrAccidentalText",
+    },
+    "harmonic": {
+        "inline_choices": [
+            {"choice_class": "HarmonicTypeChoice"},
+            {"choice_class": "HarmonicInfoChoice"},
+        ],
+    },
+    "part-abbreviation-display": {
+        "choice_class": "DisplayTextOrAccidentalText",
+    },
+    "part-name-display": {
+        "choice_class": "DisplayTextOrAccidentalText",
+        "always_has_contents": True,
+    },
+    "notehead-text": {
+        "choice_class": "NoteheadTextChoice",
+        "always_has_contents": True,
+        "seed_choice_set": True,
+    },
+    "play": {
+        "inlined_choice": True,
+    },
+    "score-instrument": {
+        "choice_class": "SoloOrEnsembleChoice",
+    },
+    "metronome": {
+        "choice_class": "BeatUnitPerOrNoteRelationNoteChoice",
+        "container_names": {
+            0: "BeatUnitPer",
+            1: "NoteRelationNote",
+        },
+        "branch_enum_names": {
+            0: "beatUnitPer",
+            1: "noteRelationNote",
+        },
+    },
+    "key": {
+        "parent_imports_choice_groups": True,
+    },
+}
+
+ENUM_VALUE_CHOICE_CONFIG = {
+    "dynamics": {
+        "value_type": "DynamicsValue",
+        "enum_type": "DynamicsEnum",
+        "other_variant": "otherDynamics",
+        "other_xml_name": "other-dynamics",
+    },
+}
+
+INLINE_CHOICE_CONFIG = {
+    "arrow": {
+        "branches": [
+            {
+                "enum_name": "arrowGroup",
+                "class_name": "ArrowGroup",
+                "is_group": True,
+                "children": [
+                    {"name": "arrow-direction", "min": 1, "max": 1},
+                    {"name": "arrow-style", "min": 0, "max": 1},
+                ],
+            },
+            {
+                "enum_name": "circularArrow",
+                "class_name": "CircularArrow",
+                "is_group": False,
+                "element_name": "circular-arrow",
+            },
+        ],
+        "enum_start": 1,
+    },
+}
+
+CHOICE_ELEMENT_CONFIG = {
+    "articulations": {
+        "choice_class": "ArticulationsChoice", "is_set": True, "enum_start": 1,
+        "choice_from_x": "manual",
+        "choice_stream_start": "mx_unused", "choice_stream_end": None,
+        "choice_indent_offset": 0, "choice_braces": True,
+        "parent_from_x": "simple_loop", "parent_return": "bare",
+        "parent_else_iol": "true", "parent_if_iol": True,
+    },
+    "technical": {
+        "choice_class": "TechnicalChoice", "is_set": True, "enum_start": 1,
+        "choice_from_x": "unused",
+        "choice_stream_start": None, "choice_stream_end": "is_one_line",
+        "choice_indent_offset": 0, "choice_braces": True,
+        "parent_from_x": "dispatch", "parent_return": "macro",
+        "parent_else_iol": "false", "parent_if_iol": False,
+    },
+    "encoding": {
+        "choice_class": "EncodingChoice", "is_set": True, "enum_start": 1,
+        "choice_from_x": "macro",
+        "choice_stream_start": "endl", "choice_stream_end": "is_one_line",
+        "choice_indent_offset": 1, "choice_braces": True,
+        "parent_from_x": "simple_loop", "parent_return": "macro",
+        "parent_else_iol": None, "parent_if_iol": False,
+        "parent_stream_style": "is_first",
+        "parent_method_order": "remove_add",
+        "parent_no_get": True,
+    },
+    "percussion": {
+        "choice_class": "PercussionChoice", "is_set": False, "enum_start": 1,
+        "choice_is_set": True,
+        "choice_qualified_ctor": True,
+        "choice_from_x": "manual_bad",
+        "choice_stream_start": None, "choice_stream_end": "is_one_line",
+        "choice_indent_offset": 0, "choice_braces": True,
+        "parent_from_x": "child_loop", "parent_return": "macro",
+        "extra_children": ["stick-type", "stick-material"],
+        "extra_children_after": "stick",
+    },
+    "measure-style": {
+        "choice_class": "MeasureStyleChoice", "is_set": False, "enum_start": 0,
+        "choice_from_x": "macro",
+        "choice_stream_start": "is_one_line", "choice_stream_end": None,
+        "choice_indent_offset": 1, "choice_braces": False,
+        "parent_from_x": "for_loop", "parent_return": "macro",
+        "parent_stream_iol_first": True,
+        "parent_stream_indent_offset": 0,
+    },
+    "direction-type": {
+        "choice_class": "DirectionType", "is_set": True, "enum_start": 1,
+        "skip_parent": True,
+        "choice_from_x": "unused",
+        "choice_stream_start": "is_one_line", "choice_stream_end": "is_one_line_endl",
+        "choice_indent_offset": 1, "choice_braces": True,
+    },
+    "time": {
+        "choice_class": "TimeChoice", "is_set": False, "enum_start": 0,
+        "bespoke_choice": True,
+        "parent_from_x": "time_group",
+        "parent_stream_iol_last": True,
+        "first_var_name": "TimeSignature",
+    },
+}
