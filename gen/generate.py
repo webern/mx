@@ -27,6 +27,11 @@ from parse import (
     XsdModel,
     pascal,
 )
+from attrs_config import (
+    CORE_ROOT_ATTRS,
+    ELEMENTS_DIR_SHARED_ATTRS,
+    resolve_attrs_name,
+)
 from element_config import (
     BESPOKE_FAMILY_OWNED,
     CHOICE_ELEMENT_CONFIG,
@@ -180,31 +185,6 @@ def element_attrs_struct_name(elem_name: str, model: XsdModel) -> str:
     return element_class_name(elem_name) + "Attributes"
 
 
-CORE_ROOT_ATTRS = {
-    "EmptyPrintObjectStyleAlignAttributes",
-}
-
-ATTRS_TYPE_ALIAS = {
-    "empty-print-style-align": "empty-print-object-style-align",
-}
-
-ELEMENTS_DIR_SHARED_ATTRS = {
-    "EmptyPlacementAttributes",
-    "EmptyLineAttributes",
-    "EmptyTrillSoundAttributes",
-    "EmptyFontAttributes",
-    "EmptyPrintStyleAlignAttributes",
-}
-
-
-def resolve_attrs_name(elem_name: str, type_name: str, model: XsdModel) -> str:
-    """Determine the correct attributes struct name for an element.
-    Some empty-* types use the type name (shared). Others use element name."""
-    aliased = ATTRS_TYPE_ALIAS.get(type_name, type_name)
-    type_attrs = pascal(aliased) + "Attributes"
-    if type_attrs in CORE_ROOT_ATTRS or type_attrs in ELEMENTS_DIR_SHARED_ATTRS:
-        return type_attrs
-    return element_class_name(elem_name) + "Attributes"
 
 
 def generate_attrs_h(struct_name: str, attrs: list, model: XsdModel) -> str:
