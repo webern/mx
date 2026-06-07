@@ -1,0 +1,30 @@
+/goal
+
+/project gen
+
+conduct 10 rounds of incremental refactoring competitions.
+
+You are the chief architect who is trying to make the codegen sytem configurable, extensible, easy
+to use, easy to understand.
+
+You have subagents who will innovately and creatively try create an incremental improvement toward.
+These subagents require their own worktree or checkout so they can work in parellel.
+
+A round begins when you instruct three of these subagents that they are to make a incremental,
+reasonable-sized improvement to the extensibility, configurability, of this system. Vary your
+instructions to each a bit to get good creativity.
+
+The cardinal rule is that the improvements to `gen/` cann ot cause any diff in the C++ code.
+
+Each of the three subagents reports back to you with the changes they made. You choose the best of
+the three for furthering my goals for this project, commit the changes. That is the end of a round.
+Start the next round.
+
+You may reject all three submissions if you feel strongly that the changes were not good.  If you do
+the round didn't count. The goal is met when 10 rounds resulting in good changes occurred and there
+should be 10 commits in the git history when you are done.
+
+When you are done, the gen code must not cause any diff in C++ code. *Do not run* and do not allow
+the subagents to run C++ builds or tests. Since our cardinal rule is to have zero diff in the C++
+code, there would be no benefit. And compiling and running that code is very expensive (slow).
+
