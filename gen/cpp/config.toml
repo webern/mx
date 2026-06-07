@@ -24,6 +24,34 @@ cpp_type = "PlaybackSoundType"
 header = "mx/core/PlaybackSoundType.h"
 default = "PlaybackSoundType{}"
 
+# Group structural configuration.
+[groups]
+# Groups that get a real fromXElementImpl body (not the UNUSED stub).
+real_from_x = ["score-header", "arrow"]
+# Groups to generate (the subset of XSD groups we emit classes for).
+generate = [
+    "beat-unit", "display-step-octave", "editorial", "editorial-voice",
+    "editorial-voice-direction", "layout", "score-header",
+]
+# Complex types using wrapping (forEachChild) streamContents.
+wrapping_streamcontents = [
+    "defaults", "grouping", "identification", "part-group", "print",
+]
+# Element names triggering extra importGroup call in unbounded-group parsing.
+unbounded_import_group_after = ["midi-instrument"]
+
+# Opt-in: type -> synthetic group ref name for nested optional sequences.
+[groups.nested_optional_as_group]
+time-modification = "normal-type-normal-dot"
+
+# Opt-in: type -> synthetic group ref for unbounded sequences.
+[groups.unbounded_as_group]
+score-part = "midi-device-instrument"
+
+# Opt-in: extending type -> base group -> renamed wrapper group.
+[groups.extension_rename.metronome-tuplet]
+normal-type-normal-dot = "time-modification-normal-type-normal-dot"
+
 [categories.simple-value]
 header_template = "simple_value_h.j2"
 impl_template = "simple_value_cpp.j2"
