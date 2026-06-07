@@ -1,3 +1,29 @@
+# Element dispatch configuration.
+[elements]
+# File stems to always overwrite (even if file already exists).
+overwrite_file_stems = ["Direction", "DirectionType", "DirectionAttributes"]
+# Elements skipped entirely during generation.
+skip = []
+# Elements owned by bespoke family emitters (not generated standalone).
+bespoke_family_owned = ["part", "measure"]
+# Elements handled by tree-based generation path.
+tree = [
+    "bend", "group-abbreviation-display", "group-name-display", "harmonic",
+    "key", "metronome", "notations", "notehead-text", "ornaments",
+    "part-abbreviation-display", "part-name-display", "play",
+    "score-instrument",
+]
+
+# Class name overrides (element-name -> C++ class name).
+[elements.class_name_override]
+attributes = "Properties"
+
+# Value type overrides for specific elements.
+[elements.value_type_override.instrument-sound]
+cpp_type = "PlaybackSoundType"
+header = "mx/core/PlaybackSoundType.h"
+default = "PlaybackSoundType{}"
+
 [categories.simple-value]
 header_template = "simple_value_h.j2"
 impl_template = "simple_value_cpp.j2"
