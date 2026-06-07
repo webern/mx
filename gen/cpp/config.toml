@@ -169,3 +169,42 @@ number = 'XsToken("1")'
 [overrides.attr_default.MetronomeAttributes]
 halign = "LeftCenterRight::center"
 justify = "LeftCenterRight::center"
+
+# Score wrapper (partwise/timewise) per-flavor behavioral knobs.
+[score_wrapper.score-partwise]
+outer_extra_includes = []
+outer_loop_uses_end_var = false
+music_data_holder_attrs_jit = true
+music_data_holder_debug_throw = true
+set_holder_clear_repushes_default = true
+set_holder_remove_has_size_guard = true
+set_holder_post_loop_required = false
+set_holder_first_flag_name = "isFirstAdded"
+set_holder_use_return_macro = true
+set_holder_loop_uses_element_name_var = false
+set_holder_unexpected_order = "message_first"
+set_holder_unexpected_msg = "encountered_quoted"
+set_holder_begin_deref_parens = false
+set_holder_from_x_before_first_check = true
+set_holder_blank_after_first_decl = false
+set_holder_blank_inside_else = false
+set_holder_child_var_source = "xml_name"
+
+[score_wrapper.score-timewise]
+outer_extra_includes = ["ezxml/XElement.h", "ezxml/XElementIterator.h"]
+outer_loop_uses_end_var = true
+music_data_holder_attrs_jit = false
+music_data_holder_debug_throw = false
+set_holder_clear_repushes_default = false
+set_holder_remove_has_size_guard = false
+set_holder_post_loop_required = true
+set_holder_first_flag_name = "isFirstTimewisePartFound"
+set_holder_use_return_macro = false
+set_holder_loop_uses_element_name_var = true
+set_holder_unexpected_order = "issuccess_first"
+set_holder_unexpected_msg = "trailing_encountered"
+set_holder_begin_deref_parens = true
+set_holder_from_x_before_first_check = true
+set_holder_blank_after_first_decl = true
+set_holder_blank_inside_else = true
+set_holder_child_var_source = "class_name"
