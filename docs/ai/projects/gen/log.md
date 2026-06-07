@@ -81,3 +81,34 @@ simple_value_cpp.j2. Added /opt/gen-venv with Jinja2==3.1.6 to Dockerfile. Added
 target to Makefile. Modified gen/generate.py: simple-value elements now render via Jinja2 templates
 instead of the shared generate_element_h/cpp f-string path. Verified zero diff across all 101
 simple-value elements (202 files). Non-simple-value elements remain on the f-string path unchanged.
+
+## 2026-06-07 21:33
+
+M6C session 2: two batches of 10 refactoring rounds (20 commits total on wrk branch).
+
+Batch 1 (rounds 1-10): extract config from generate.py into dedicated Python modules.
+- type_maps.py (280 lines): XSD-to-C++ type mapping tables and resolution logic
+- naming.py (37 lines): C++ keywords, camel/pascal helpers
+- overrides.py (64 lines): per-element/attribute behavioral overrides
+- element_config.py (207 lines): element dispatch config, choice tables, dynamics marks
+- group_config.py (113 lines): group mutable sets, static dicts, group_class_name
+- attrs_config.py (41 lines): attribute struct naming config, resolve_attrs_name
+- score_config.py (59 lines): score wrapper partwise/timewise flavor knobs
+- Also moved default-value tables to config.toml
+
+Batch 2 (rounds 11-20): TOML config and Jinja2 templates.
+TOML additions (config.toml grew from 69 to 281 lines):
+- [overrides.attr_default]: 25 per-attribute default value overrides
+- [overrides]: xmlns_preserving_attrs, has_contents_always_true, child_init_value
+- [score_wrapper]: partwise/timewise behavioral knobs (17 fields each)
+- [attrs]: core_root, shared, type_alias
+- [elements]: overwrite_file_stems, skip, bespoke_family_owned, tree, class_name_override, value_type_override
+- [groups]: generate, wrapping_streamcontents, real_from_x, unbounded_import_group_after, nested_optional_as_group, unbounded_as_group, extension_rename
+
+New Jinja2 templates (4 templates, 380 lines total):
+- group_h.j2, group_cpp.j2: group header/impl generation
+- attrs_h.j2, attrs_cpp.j2: attrs struct header/impl generation
+
+generate.py reduced from 13,441 to 12,343 lines. All syntax verified. Jinja2 infrastructure
+preserved throughout. Cannot run full oracle (jinja2 not installed locally) but all Python modules
+parse cleanly and cross-imports verified.

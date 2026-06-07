@@ -57,9 +57,10 @@ Iteratively stand-up a separation of concerns between
 - Template configuration
 - Use of template files instead of python f-strings
 
-Infrastructure: Jinja2 templates in `gen/cpp/`, TOML routing config, `/opt/gen-venv` in Docker,
-`make generate` target. Simple-value elements (101) are templated. Lookup tables remain in Python
-until all their consumers are templated.
+Infrastructure: Jinja2 templates in `gen/cpp/`, TOML config (281 lines), `/opt/gen-venv` in Docker,
+`make generate` target. Templated: simple-value (101 elements), group h/cpp, attrs h/cpp. Seven
+Python config modules extracted from generate.py. Most lookup tables moved to config.toml; remaining
+mutable sets stay in Python (passed by reference to parser).
 
 ### 6D++
 

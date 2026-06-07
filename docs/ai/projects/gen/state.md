@@ -4,29 +4,31 @@
 
 M6C_CONFIG_FILE, in progress.
 
-## What the last session did (2026-06-07, M6C session 1)
+## What the last session did (2026-06-07, M6C session 2)
 
-Grilled the user on the first M6C changeset, then implemented it:
+Two batches of 10 refactoring rounds (20 commits on `wrk` branch, not pushed):
 
-- Created `gen/cpp/` with `config.toml` (routing), `simple_value_h.j2`, `simple_value_cpp.j2`
-- Added `/opt/gen-venv` with Jinja2==3.1.6 to the Dockerfile (separate from quality-venv)
-- Added `make generate` target (runs `gen/generate.py` inside Docker)
-- Modified `gen/generate.py`: simple-value elements (101 elements) now render via Jinja2 templates.
-  The `_render_simple_value()` function builds a context dict from existing Python lookup tables and
-  renders the templates. The old fake-CT path through `generate_element_h/cpp` is removed for this
-  category.
-- Verified zero diff across all 202 simple-value files
+**Batch 1**: Extracted config from the generate.py monolith into 7 Python modules:
+- `gen/type_maps.py`, `gen/naming.py`, `gen/overrides.py`, `gen/element_config.py`,
+  `gen/group_config.py`, `gen/attrs_config.py`, `gen/score_config.py`
 
-Not yet committed or tested through Docker build / CI. The user needs to rebuild the Docker image
-(`make generate` will trigger it) and verify the full oracle:
-`make generate && make fmt && git diff --quiet src/private/mx/core`.
+**Batch 2**: Moved data to TOML config and created Jinja2 templates:
+- `gen/cpp/config.toml` grew from 69 to 281 lines (all override tables, element dispatch,
+  group config, attrs naming, score wrapper config)
+- 4 new Jinja2 templates: `group_h.j2`, `group_cpp.j2`, `attrs_h.j2`, `attrs_cpp.j2`
+- `generate.py` down to 12,343 lines (from 13,441)
+
+All Python syntax verified. Jinja2 infrastructure intact. Zero-diff oracle not yet run (needs Docker
+rebuild for jinja2 env).
 
 ## What the next session should do
 
-Get instructions from the user. Likely options:
-- Continue M6C: template the next element category (text-value, empty, empty-with-attrs, etc.)
-- At some point, lookup tables (TYPE_DEFAULT_VALUE, etc.) can move to TOML once all their consumers
-  are templated
+1. Run the oracle: `make generate && make fmt && git diff --quiet src/private/mx/core` to confirm
+   zero diff. If any diff, debug and fix.
+2. Run `make gen-quality` and `make gen-lint` to check floor compliance.
+3. Continue M6C: more f-string functions to templates (choice_class_h/cpp, element_h/cpp are big
+   targets). More lookup tables to TOML as their consumers get templated.
+4. Eventually: squash or organize the 20 commits for a clean PR.
 
 ## Oracle (how to prove zero diff)
 
@@ -40,10 +42,17 @@ Then `make test-core-dev`. Reset generated C++ before committing:
 - `make fmt` (~1 min, Docker) is part of the oracle - the generator emits unformatted C++.
 - The generator now requires Jinja2. Running `python3 gen/generate.py` bare requires a Python
   environment with `jinja2` and `tomllib` (Python 3.11+). Use `make generate` to run inside Docker.
-- CI `linux-gate` runs `make gen-quality` (floor 37.7) and `make gen-lint` (floor 9.4). The new
-  `_render_simple_value` function and imports should be scored normally.
+- CI `linux-gate` runs `make gen-quality` (floor 37.7) and `make gen-lint` (floor 9.4).
 - `gen-quality`/`gen-lint` are otherwise ignored during the refactor (user directive) unless CI
   fails.
-- Jinja2 environment uses `trim_blocks=True` and `lstrip_blocks=True` to avoid extra blank lines
-  from block tags. Do not use `-%}` suffix on block tags in templates - it eats leading indentation.
-- `node_id` fields are `compare=False` on purpose; keep it that way.
+- Jinja2 environment uses `trim_blocks=True` and `lstrip_blocks=True`. Do not use `-%}` suffix on
+  block tags in templates.
+- The new modules (`overrides.py`, `attrs_config.py`, `score_config.py`, `element_config.py`,
+  `group_config.py`) each independently load config.toml. This is fine at import time but means
+  the TOML is parsed multiple times. Not a perf concern for a code generator.
+- `SYNTHETIC_OPTIONAL_GROUPS`, `SYNTHETIC_UNBOUNDED_GROUPS`, `SUPPRESS_GROUP_SUFFIX` remain as
+  mutable Python sets in `group_config.py` (they're passed by reference to ParseConfig and
+  mutated during parsing). They cannot move to TOML.
+- `BESPOKE_ELEMENTS` dict maps to function objects - cannot be extracted to config.
+- The `_emit_ctor_init` line-wrapping logic and `_emit_group_real_from_x_impl` are pre-rendered
+  in Python and passed as strings to templates (too complex for Jinja2 logic).
