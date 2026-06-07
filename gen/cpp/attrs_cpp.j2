@@ -1,0 +1,86 @@
+{{ license }}
+
+#include "mx/core/elements/{{ struct_name }}.h"
+#include "mx/core/FromXElement.h"
+#include <iostream>
+
+namespace mx
+{
+namespace core
+{
+{{ ctor_init }}
+{
+}
+
+bool {{ struct_name }}::hasValues() const
+{
+{% if has_values_expr %}
+    return {{ has_values_expr }};
+{% else %}
+    return false;
+{% endif %}
+}
+
+std::ostream &{{ struct_name }}::toStream(std::ostream &os) const
+{
+    if (hasValues())
+    {
+{% for a in attrs %}
+        streamAttribute(os, {{ a.cpp_name }}, "{{ a.xml_name }}", {{ a.has_name }});
+{% endfor %}
+{% if preserves_xmlns %}
+        for (const auto &ns : xmlnsDeclarations)
+        {
+            os << " " << ns.first << "=\"" << ns.second << "\"";
+        }
+{% endif %}
+    }
+    return os;
+}
+
+bool {{ struct_name }}::fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement)
+{
+    const char *const className = "{{ struct_name }}";
+    bool isSuccess = true;
+{% for a in required_attrs %}
+    bool {{ a.found_local }} = false;
+{% endfor %}
+
+    auto it = xelement.attributesBegin();
+    auto endIter = xelement.attributesEnd();
+
+    for (; it != endIter; ++it)
+    {
+{% for a in attrs %}
+{% if a.parse_func %}
+        if (parseAttribute(message, it, className, isSuccess, {{ a.cpp_name }}, {{ a.parse_has }}, "{{ a.xml_name }}", &{{ a.parse_func }}))
+{% else %}
+        if (parseAttribute(message, it, className, isSuccess, {{ a.cpp_name }}, {{ a.parse_has }}, "{{ a.xml_name }}"))
+{% endif %}
+        {
+            continue;
+        }
+{% endfor %}
+{% if preserves_xmlns %}
+        const auto attrName = it->getName();
+        if (attrName == "xmlns" || (attrName.size() > 6 && attrName.substr(0, 6) == "xmlns:"))
+        {
+            xmlnsDeclarations.emplace_back(attrName, it->getValue());
+            continue;
+        }
+{% endif %}
+    }
+
+{% for a in required_attrs %}
+    if (!{{ a.found_local }})
+    {
+        isSuccess = false;
+        message << className << ": '{{ a.xml_name }}' is a required attribute but was not found" << std::endl;
+    }
+
+{% endfor %}
+    MX_RETURN_IS_SUCCESS;
+}
+
+} // namespace core
+} // namespace mx

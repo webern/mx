@@ -244,13 +244,7 @@ def default_value_for_type(cpp_type: str) -> str:
 
 def generate_attrs_cpp(struct_name: str, attrs: list, model: XsdModel) -> str:
     preserves_xmlns = struct_name in XMLNS_PRESERVING_ATTRS
-    lines = [LICENSE]
-    lines.append(f'#include "mx/core/elements/{struct_name}.h"')
-    lines.append('#include "mx/core/FromXElement.h"')
-    lines.append("#include <iostream>\n")
-    lines.append("namespace mx\n{\nnamespace core\n{")
 
-    # constructor
     init_parts = []
     for a in attrs:
         cpp_t = resolve_attr_cpp_type(a, model)
@@ -258,115 +252,61 @@ def generate_attrs_cpp(struct_name: str, attrs: list, model: XsdModel) -> str:
         override = ATTR_DEFAULT_OVERRIDE.get((struct_name, cpp_n))
         if override:
             init_parts.append(f"{cpp_n}({override})")
-            continue
-        dv = default_value_for_type(cpp_t)
-        if dv:
-            init_parts.append(f"{cpp_n}({dv})")
         else:
-            init_parts.append(f"{cpp_n}()")
+            dv = default_value_for_type(cpp_t)
+            init_parts.append(f"{cpp_n}({dv})" if dv else f"{cpp_n}()")
     for a in attrs:
         cpp_n = camel(a.name)
-        has_name = has_flag_name(cpp_n)
         init_val = "true" if a.use == "required" else "false"
-        init_parts.append(f"{has_name}({init_val})")
+        init_parts.append(f"{has_flag_name(cpp_n)}({init_val})")
 
-    _emit_ctor_init(lines, f"{struct_name}::{struct_name}()", init_parts)
-    lines.append("{")
-    lines.append("}\n")
+    ctor_lines = []
+    _emit_ctor_init(ctor_lines, f"{struct_name}::{struct_name}()", init_parts)
+    ctor_init = "\n".join(ctor_lines)
 
-    # hasValues
-    has_parts = []
-    for a in attrs:
-        cpp_n = camel(a.name)
-        has_name = has_flag_name(cpp_n)
-        has_parts.append(has_name)
+    has_parts = [has_flag_name(camel(a.name)) for a in attrs]
     if preserves_xmlns:
         has_parts.append("!xmlnsDeclarations.empty()")
-    lines.append(f"bool {struct_name}::hasValues() const")
-    lines.append("{")
-    if has_parts:
-        lines.append(f"    return {' || '.join(has_parts)};")
-    else:
-        lines.append("    return false;")
-    lines.append("}\n")
+    has_values_expr = " || ".join(has_parts) if has_parts else ""
 
-    # toStream
-    lines.append(f"std::ostream &{struct_name}::toStream(std::ostream &os) const")
-    lines.append("{")
-    lines.append("    if (hasValues())")
-    lines.append("    {")
-    for a in attrs:
-        cpp_n = camel(a.name)
-        has_name = has_flag_name(cpp_n)
-        lines.append(f'        streamAttribute(os, {cpp_n}, "{a.get_xml_name()}", {has_name});')
-    if preserves_xmlns:
-        lines.append("        for (const auto &ns : xmlnsDeclarations)")
-        lines.append("        {")
-        lines.append('            os << " " << ns.first << "=\\"" << ns.second << "\\"";')
-        lines.append("        }")
-    lines.append("    }")
-    lines.append("    return os;")
-    lines.append("}\n")
-
-    # fromXElementImpl
-    lines.append(f"bool {struct_name}::fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement)")
-    lines.append("{")
-    lines.append(f'    const char *const className = "{struct_name}";')
-    lines.append("    bool isSuccess = true;")
     required_locals = []
     for a in attrs:
         if a.use == "required":
-            cpp_n = camel(a.name)
-            local_name = "is" + pascal(a.name) + "Found"
-            required_locals.append((a, local_name))
-            lines.append(f"    bool {local_name} = false;")
-    lines.append("")
-    lines.append("    auto it = xelement.attributesBegin();")
-    lines.append("    auto endIter = xelement.attributesEnd();\n")
-    lines.append("    for (; it != endIter; ++it)")
-    lines.append("    {")
-    required_local_map = {id(a): ln for a, ln in required_locals}
+            required_locals.append({
+                "found_local": "is" + pascal(a.name) + "Found",
+                "xml_name": a.get_xml_name() or a.name,
+            })
+
+    required_local_map = {}
+    for a in attrs:
+        if a.use == "required":
+            required_local_map[a.name] = "is" + pascal(a.name) + "Found"
+
+    attr_data = []
     for a in attrs:
         cpp_t = resolve_attr_cpp_type(a, model)
         cpp_n = camel(a.name)
-        parse_has = required_local_map.get(id(a), has_flag_name(cpp_n))
-        if needs_parse_func(cpp_t):
-            pf = parse_func_name(cpp_t)
-            lines.append(f"        if (parseAttribute(message, it, className, isSuccess, {cpp_n}, {parse_has}, "
-                         f'"{a.get_xml_name()}", &{pf}))')
-        else:
-            lines.append(f"        if (parseAttribute(message, it, className, isSuccess, {cpp_n}, {parse_has}, "
-                         f'"{a.get_xml_name()}"))')
-        lines.append("        {")
-        lines.append("            continue;")
-        lines.append("        }")
-    if preserves_xmlns:
-        lines.append("        const auto attrName = it->getName();")
-        lines.append('        if (attrName == "xmlns" || (attrName.size() > 6 && attrName.substr(0, 6) == "xmlns:"))')
-        lines.append("        {")
-        lines.append("            xmlnsDeclarations.emplace_back(attrName, it->getValue());")
-        lines.append("            continue;")
-        lines.append("        }")
-    lines.append("    }\n")
-    for a, local_name in required_locals:
-        lines.append(f"    if (!{local_name})")
-        lines.append("    {")
-        lines.append("        isSuccess = false;")
-        # Use the XSD attribute name (xml form, e.g. 'non-controlling') in
-        # the error message rather than hardcoding 'number'. The original
-        # codegen had a bug here that produced the wrong attribute name for
-        # any required attribute not named 'number' (visible in committed
-        # ScorePartAttributes.cpp, which says 'number' when it should say
-        # 'id').
-        xml_name = a.get_xml_name() or a.name
-        lines.append(f'        message << className << ": \'{xml_name}\' is a required attribute but was not found" << std::endl;')
-        lines.append("    }\n")
-    lines.append("    MX_RETURN_IS_SUCCESS;")
-    lines.append("}\n")
+        parse_has = required_local_map.get(a.name, has_flag_name(cpp_n))
+        pf = parse_func_name(cpp_t) if needs_parse_func(cpp_t) else None
+        attr_data.append({
+            "cpp_name": cpp_n,
+            "xml_name": a.get_xml_name(),
+            "has_name": has_flag_name(cpp_n),
+            "parse_has": parse_has,
+            "parse_func": pf,
+        })
 
-    lines.append("} // namespace core")
-    lines.append("} // namespace mx")
-    return "\n".join(lines) + "\n"
+    tmpl = _JINJA_ENV.get_template(
+        CPP_CONFIG["categories"]["attrs"]["impl_template"])
+    return tmpl.render(
+        license=LICENSE,
+        struct_name=struct_name,
+        ctor_init=ctor_init,
+        has_values_expr=has_values_expr,
+        preserves_xmlns=preserves_xmlns,
+        attrs=attr_data,
+        required_attrs=required_locals,
+    )
 
 
 # ---------------------------------------------------------------------------
