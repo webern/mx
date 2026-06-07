@@ -27,6 +27,15 @@ from parse import (
     XsdModel,
     pascal,
 )
+from element_config import (
+    BESPOKE_FAMILY_OWNED,
+    ELEMENT_CLASS_NAME_OVERRIDE,
+    ELEMENT_VALUE_TYPE_OVERRIDE,
+    OVERWRITE_FILE_STEMS,
+    SKIP_ELEMENTS,
+    TREE_ELEMENTS,
+    element_class_name,
+)
 from naming import CPP_KEYWORDS, camel, has_flag_name, pascal_to_camel
 from overrides import (
     ATTR_DEFAULT_OVERRIDE,
@@ -1254,90 +1263,6 @@ def _emit_synthetic_unbounded_helper(lines: list, parent_class: str,
 
 # Elements whose generated code intentionally replaces the original bespoke
 # implementation. Diffs are exempt from eval penalty scoring. The set contains
-# file stems (PascalCase, no extension) that eval.py matches against.
-OVERWRITE_FILE_STEMS = {
-    "Direction", "DirectionType", "DirectionAttributes",
-}
-
-# Maps XSD element names to C++ class names when they differ from pascal(elem_name).
-# The XML stream name remains the original elem_name; only the C++ identifier changes.
-ELEMENT_CLASS_NAME_OVERRIDE = {
-    "attributes": "Properties",  # XSD 'attributes' -> C++ class 'Properties'
-}
-
-# Override the value type for a simple-value or text-value element.
-# Each entry maps elem_name -> dict with:
-#   cpp_type:  the C++ type to use instead of whatever the XSD says
-#   header:    the header file providing that type
-#   default:   the default-value expression for the constructor
-#   extra_includes: additional headers to include (list of strings)
-# The streaming / parsing pattern is inferred from XMACRO_ENUM_TYPES,
-# is_enum_value_type, or uses_set_value, just like any other value type.
-ELEMENT_VALUE_TYPE_OVERRIDE = {
-    "instrument-sound": {
-        "cpp_type": "PlaybackSoundType",
-        "header": "mx/core/PlaybackSoundType.h",
-        "default": "PlaybackSoundType{}",
-    },
-}
-
-
-
-def element_class_name(elem_name: str) -> str:
-    """Return the C++ class name for an element, consulting overrides first."""
-    return ELEMENT_CLASS_NAME_OVERRIDE.get(elem_name, pascal(elem_name))
-
-
-SKIP_ELEMENTS = {
-    # score-partwise, score-timewise: handled by shared bespoke generator
-    # _emit_score_wrapper_family, parameterized via SCORE_WRAPPER_FLAVOR_CONFIG.
-    # Each emits {Outer, set holder, music-data holder} + their attrs structs.
-    # part, measure: claimed by the score-wrapper-family handler (both
-    # partwise and timewise dispatch entries claim each name under a
-    # different class prefix). Listed in BESPOKE_FAMILY_OWNED rather than
-    # SKIP_ELEMENTS because they ARE fully generated, just not by their
-    # own dispatch entry.
-    # directive: handled via anonymous_type path (text-with-attrs, anon CT)
-    # part-list: handled by bespoke generator (PartGroupOrScorePart)
-    # credit: handled by bespoke generator (CreditChoice + CreditWordsGroup)
-    # key: handled by tree-based generation
-    # lyric: handled by bespoke generator (LyricTextChoice + SyllabicTextGroup
-    # + ElisionSyllabicTextGroup + ElisionSyllabicGroup)
-    # notations, ornaments: handled by tree-based generation
-    # part-abbreviation-display, part-name-display: handled by tree-based generation
-    # score-instrument: handled by tree-based generation (SoloOrEnsembleChoice)
-    # score-part: handled via UNBOUNDED_SEQUENCE_AS_GROUP -> MidiDeviceInstrumentGroup
-    # time-modification: handled via synthetic NormalTypeNormalDotGroup
-    # (anonymous nested optional sequence promoted to a group class)
-}
-
-# Elements whose code is emitted by some other bespoke handler as part of a
-# family (e.g. score-partwise's family handler emits PartwisePart and
-# PartwiseMeasure too). The main discovery loop must skip these so the default
-# path doesn't try to generate competing files, but they are NOT counted as
-# skipped because they ARE fully generated -- just not by their own dispatch
-# entry. Distinct from SKIP_ELEMENTS which represents elements with no
-# generator coverage at all.
-BESPOKE_FAMILY_OWNED = {
-    "part",     # PartwisePart (partwise) + TimewisePart (timewise)
-    "measure",  # PartwiseMeasure (partwise) + TimewiseMeasure (timewise)
-}
-
-TREE_ELEMENTS = {
-    "bend",
-    "group-abbreviation-display",
-    "group-name-display",
-    "harmonic",
-    "key",
-    "metronome",
-    "notations",
-    "notehead-text",
-    "ornaments",
-    "part-abbreviation-display",
-    "part-name-display",
-    "play",
-    "score-instrument",
-}
 
 TREE_ELEMENT_CONFIG = {
     "group-abbreviation-display": {
