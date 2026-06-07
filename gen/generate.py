@@ -28,6 +28,13 @@ from parse import (
     pascal,
 )
 from naming import CPP_KEYWORDS, camel, has_flag_name, pascal_to_camel
+from overrides import (
+    ATTR_DEFAULT_OVERRIDE,
+    CHILD_INIT_VALUE_OVERRIDE,
+    CHILD_MIN_OCCURS_OVERRIDE,
+    ELEMENT_HAS_CONTENTS_ALWAYS_TRUE,
+    XMLNS_PRESERVING_ATTRS,
+)
 from type_maps import (
     BESPOKE_TYPES,
     NEEDS_PARSE_FUNC_TYPES,
@@ -228,106 +235,6 @@ def generate_attrs_h(struct_name: str, attrs: list, model: XsdModel) -> str:
     return "\n".join(lines) + "\n"
 
 
-# Per-attribute default value override, keyed by (attrs struct name, camelCase
-# attribute field name). The value is the literal C++ initializer expression
-# (e.g. '"it"'). Used when the committed code initializes an attribute to a
-# value that is not encoded in the XSD (typically a hand-applied convention).
-ATTR_DEFAULT_OVERRIDE = {
-    # AccidentalText's xml:lang attribute default: hand-applied "it" by the
-    # original codegen. Test01_AccidentalText asserts that setting hasLang
-    # without a value yields xml:lang="it". Not in the XSD.
-    ("AccidentalTextAttributes", "lang"): '"it"',
-    ("DirectiveAttributes", "lang"): '"it"',
-    # Lyric's justify default is hand-applied; the XSD says only "The default
-    # value varies for different elements". The original codegen chose
-    # 'center' here based on the doc text in the XSD annotation.
-    ("LyricAttributes", "justify"): "LeftCenterRight::center",
-    # Score{Partwise,Timewise}Attributes both expose the 'version' attribute
-    # from the document-attributes group. XSD says default="1.0" but mx/core
-    # hand-applies "3.0" so that newly-constructed scores serialize with the
-    # most recent supported version. Schema-driven generators preserve the
-    # hand-applied value via this override.
-    ("ScorePartwiseAttributes", "version"): '"3.0"',
-    ("ScoreTimewiseAttributes", "version"): '"3.0"',
-    # R4: xml:lang defaults hand-applied as "it" across text-bearing elements.
-    ("WordsAttributes", "lang"): '"it"',
-    ("TextAttributes", "lang"): '"it"',
-    ("RehearsalAttributes", "lang"): '"it"',
-    ("LyricLanguageAttributes", "lang"): '"it"',
-    ("CreditWordsAttributes", "lang"): '"it"',
-    # R4: BracketAttributes line-end default is 'down', not first enum 'up'.
-    ("BracketAttributes", "lineEnd"): "LineEnd::down",
-    # R4: NoteSizeAttributes type default is 'large', not first enum 'cue'.
-    ("NoteSizeAttributes", "type"): "NoteSizeType::large",
-    # R4: EndingAttributes number default is "1".
-    ("EndingAttributes", "number"): '"1"',
-    # R4: GroupingAttributes number default is "1".
-    ("GroupingAttributes", "number"): 'XsToken("1")',
-    # R4: PageMarginsAttributes type default is 'both', not first enum 'odd'.
-    ("PageMarginsAttributes", "type"): "MarginType::both",
-    # R4: LinkAttributes show default is 'replace', not first enum 'new'.
-    # Field name in struct is 'show', not 'xlinkShow'.
-    ("LinkAttributes", "show"): "XlinkShow::replace",
-    # R4: OtherAppearanceAttributes type default is "undefined".
-    ("OtherAppearanceAttributes", "type"): '"undefined"',
-    # R4: OtherNotationAttributes type default is 'start', not first enum 'single'.
-    ("OtherNotationAttributes", "type"): "StartStopSingle::start",
-    # R4: OtherOrnament/TechnicalAttributes placement: default_value_for_type
-    # returns AboveBelow::below but the committed code uses the default ctor
-    # which is AboveBelow::above (= 0).
-    ("OtherOrnamentAttributes", "placement"): "AboveBelow::above",
-    ("OtherTechnicalAttributes", "placement"): "AboveBelow::above",
-    # R4: PrincipalVoiceAttributes symbol default is 'none'.
-    ("PrincipalVoiceAttributes", "symbol"): "PrincipalVoiceSymbol::none",
-    # R4: StringMuteAttributes type default is 'on', not 'off'.
-    ("StringMuteAttributes", "type"): "OnOff::on",
-    # R4: PartGroupAttributes number default is "1".
-    ("PartGroupAttributes", "number"): 'XsToken("1")',
-    # R4: MetronomeAttributes halign/justify defaults are 'center'.
-    ("MetronomeAttributes", "halign"): "LeftCenterRight::center",
-    ("MetronomeAttributes", "justify"): "LeftCenterRight::center",
-}
-
-# Attribute structs that preserve xmlns:* namespace declarations through
-# round-trip. These elements may carry xmlns:xlink or other namespace
-# declarations that mx does not model as typed fields, but must not drop.
-XMLNS_PRESERVING_ATTRS = {
-    "ScorePartwiseAttributes",
-    "ScoreTimewiseAttributes",
-    "OpusAttributes",
-    "LinkAttributes",
-}
-
-# Per-(parent-element-xml-name, child-element-xml-name) override for the
-# constructor argument passed to make{Child}() when initializing the child
-# on the parent's ctor init list. Used when HEAD initializes a required child
-# with a non-default value (e.g. historical author choice rather than XSD spec).
-CHILD_INIT_VALUE_OVERRIDE = {
-    # Scaling's millimeters and tenths use non-zero historical defaults.
-    ("scaling", "millimeters"): "MillimetersValue(7)",
-    ("scaling", "tenths"): "TenthsValue(40)",
-    # StaffDetails defaults staff-lines to 5 (author convention, not in XSD).
-    ("staff-details", "staff-lines"): "NonNegativeInteger(5)",
-}
-
-
-# Elements whose hasContents() should always return true regardless of what the
-# XSD min/max-occurs analysis would produce. Keyed by element xml-name (not
-# class name). Used when the committed HEAD hardcodes `return true;` for an
-# element that has only optional children.
-ELEMENT_HAS_CONTENTS_ALWAYS_TRUE = {
-    # MeasureLayout has a single optional child (measure-distance), but HEAD
-    # returns true unconditionally so that the element serialises as
-    # <measure-layout></measure-layout> rather than <measure-layout/>.
-    "measure-layout",
-}
-
-# Per-(element-name, child-xml-name) override for the min_occurs value that the
-# generator uses when deciding whether a child needs a myHas flag. Keyed by
-# (parent_element_xml_name, child_element_xml_name). Use this when XSD group
-# inlining propagates minOccurs=0 from the enclosing group to an element that
-# HEAD treats as unconditionally present (no getHas/setHas accessors).
-CHILD_MIN_OCCURS_OVERRIDE = {}
 
 
 def _apply_child_min_occurs_override(elem_name: str, children: list) -> list:
