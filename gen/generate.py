@@ -193,55 +193,25 @@ def element_attrs_struct_name(elem_name: str, model: XsdModel) -> str:
 
 def generate_attrs_h(struct_name: str, attrs: list, model: XsdModel) -> str:
     preserves_xmlns = struct_name in XMLNS_PRESERVING_ATTRS
-    includes = set()
-    includes.add("mx/core/AttributesInterface.h")
-    includes.add("mx/core/ForwardDeclare.h")
+    includes = {"mx/core/AttributesInterface.h", "mx/core/ForwardDeclare.h"}
     for a in attrs:
-        cpp_t = resolve_attr_cpp_type(a, model)
-        h = header_for_type(cpp_t)
-        includes.add(h)
+        includes.add(header_for_type(resolve_attr_cpp_type(a, model)))
 
-    lines = [LICENSE, "#pragma once\n"]
-    for inc in sorted(includes):
-        lines.append(f'#include "{inc}"')
-    lines.append("")
-    lines.append("#include <iosfwd>")
-    lines.append("#include <memory>")
-    if preserves_xmlns:
-        lines.append("#include <string>")
-        lines.append("#include <utility>")
-    lines.append("#include <vector>")
-    lines.append("")
-    lines.append("namespace mx\n{\nnamespace core\n{\n")
-    lines.append(f"MX_FORWARD_DECLARE_ATTRIBUTES({struct_name})\n")
-    lines.append(f"struct {struct_name} : public AttributesInterface")
-    lines.append("{")
-    lines.append("  public:")
-    lines.append(f"    {struct_name}();")
-    lines.append("    virtual bool hasValues() const;")
-    lines.append("    virtual std::ostream &toStream(std::ostream &os) const;")
-
-    for a in attrs:
-        cpp_t = resolve_attr_cpp_type(a, model)
-        cpp_n = camel(a.name)
-        lines.append(f"    {cpp_t} {cpp_n};")
-
-    for a in attrs:
-        cpp_n = camel(a.name)
-        has_name = has_flag_name(cpp_n)
-        const_prefix = "const " if a.use == "required" else ""
-        lines.append(f"    {const_prefix}bool {has_name};")
-
-    if preserves_xmlns:
-        lines.append("    std::vector<std::pair<std::string, std::string>> xmlnsDeclarations;")
-
-    lines.append("")
-    lines.append("  private:")
-    lines.append("    virtual bool fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement);")
-    lines.append("};")
-    lines.append("} // namespace core")
-    lines.append("} // namespace mx")
-    return "\n".join(lines) + "\n"
+    tmpl = _JINJA_ENV.get_template(
+        CPP_CONFIG["categories"]["attrs"]["header_template"])
+    return tmpl.render(
+        license=LICENSE,
+        project_includes=sorted(includes),
+        preserves_xmlns=preserves_xmlns,
+        struct_name=struct_name,
+        attrs=[
+            {"cpp_type": resolve_attr_cpp_type(a, model),
+             "cpp_name": camel(a.name),
+             "has_name": has_flag_name(camel(a.name)),
+             "const_prefix": "const " if a.use == "required" else ""}
+            for a in attrs
+        ],
+    )
 
 
 

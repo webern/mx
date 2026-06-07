@@ -1,0 +1,44 @@
+{{ license }}
+
+#pragma once
+
+{% for inc in project_includes %}
+#include "{{ inc }}"
+{% endfor %}
+
+#include <iosfwd>
+#include <memory>
+{% if preserves_xmlns %}
+#include <string>
+#include <utility>
+{% endif %}
+#include <vector>
+
+namespace mx
+{
+namespace core
+{
+
+MX_FORWARD_DECLARE_ATTRIBUTES({{ struct_name }})
+
+struct {{ struct_name }} : public AttributesInterface
+{
+  public:
+    {{ struct_name }}();
+    virtual bool hasValues() const;
+    virtual std::ostream &toStream(std::ostream &os) const;
+{% for a in attrs %}
+    {{ a.cpp_type }} {{ a.cpp_name }};
+{% endfor %}
+{% for a in attrs %}
+    {{ a.const_prefix }}bool {{ a.has_name }};
+{% endfor %}
+{% if preserves_xmlns %}
+    std::vector<std::pair<std::string, std::string>> xmlnsDeclarations;
+{% endif %}
+
+  private:
+    virtual bool fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement);
+};
+} // namespace core
+} // namespace mx
