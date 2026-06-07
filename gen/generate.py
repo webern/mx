@@ -1290,18 +1290,7 @@ def generate_group_h(group_name: str, children: list, model: XsdModel) -> str:
 
 def generate_group_cpp(group_name: str, children: list, model: XsdModel) -> str:
     class_name = group_class_name(group_name)
-
-    lines = [LICENSE]
-    lines.append(f'#include "mx/core/elements/{class_name}.h"')
-    lines.append('#include "mx/core/FromXElement.h"')
-    child_includes = sorted(set(
-        f'#include "mx/core/elements/{child_class_name(c)}.h"'
-        for c in children
-    ))
-    for inc in child_includes:
-        lines.append(inc)
-    lines.append("#include <iostream>\n")
-    lines.append("namespace mx\n{\nnamespace core\n{")
+    child_includes = sorted(set(child_class_name(c) for c in children))
 
     init_parts = []
     for child in children:
@@ -1313,27 +1302,10 @@ def generate_group_cpp(group_name: str, children: list, model: XsdModel) -> str:
             if child.min_occurs == 0:
                 init_parts.append(f"myHas{cc}(false)")
 
-    _emit_ctor_init(lines, f"{class_name}::{class_name}()", init_parts)
-    lines.append("{")
-    lines.append("}\n")
+    ctor_lines = []
+    _emit_ctor_init(ctor_lines, f"{class_name}::{class_name}()", init_parts)
+    ctor_init = "\n".join(ctor_lines)
 
-    lines.append(f"bool {class_name}::hasAttributes() const")
-    lines.append("{")
-    lines.append("    return false;")
-    lines.append("}\n")
-
-    lines.append(f"std::ostream &{class_name}::streamAttributes(std::ostream &os) const")
-    lines.append("{")
-    lines.append("    return os;")
-    lines.append("}\n")
-
-    lines.append(f"std::ostream &{class_name}::streamName(std::ostream &os) const")
-    lines.append("{")
-    lines.append("    return os;")
-    lines.append("}\n")
-
-    lines.append(f"bool {class_name}::hasContents() const")
-    lines.append("{")
     parts = []
     for child in children:
         cc = child_class_name(child)
@@ -1343,136 +1315,35 @@ def generate_group_cpp(group_name: str, children: list, model: XsdModel) -> str:
             parts.append(f"myHas{cc}")
         else:
             parts.append("true")
-    if any("true" == p for p in parts):
-        lines.append("    return true;")
-    elif parts:
-        lines.append(f"    return {' || '.join(parts)};")
-    else:
-        lines.append("    return false;")
-    lines.append("}\n")
 
-    lines.append(f"std::ostream &{class_name}::streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const")
-    lines.append("{")
+    has_contents_always_true = any(p == "true" for p in parts)
+    has_contents_parts = [] if has_contents_always_true else parts
+
     all_optional = all(c.min_occurs == 0 and c.max_occurs == 1 for c in children)
-    if all_optional:
-        lines.append("    bool firstItem = true;")
-        lines.append("    isOneLineOnly = true;")
-        for child in children:
-            cc = child_class_name(child)
-            lines.append(f"    if (myHas{cc})")
-            lines.append("    {")
-            lines.append("        if (!firstItem)")
-            lines.append("            os << std::endl;")
-            lines.append(f"        my{cc}->toStream(os, indentLevel);")
-            lines.append("        firstItem = false;")
-            lines.append("    }")
-    else:
-        lines.append("    bool isFirst = true;")
-        for child in children:
-            cc = child_class_name(child)
-            if child.max_occurs != 1:
-                lines.append(f"    for (auto x : my{cc}Set)")
-                lines.append("    {")
-                lines.append("        if (!isFirst)")
-                lines.append("            os << std::endl;")
-                lines.append("        x->toStream(os, indentLevel);")
-                lines.append("        isFirst = false;")
-                lines.append("    }")
-            elif child.min_occurs == 0:
-                lines.append(f"    if (myHas{cc})")
-                lines.append("    {")
-                lines.append("        if (!isFirst)")
-                lines.append("            os << std::endl;")
-                lines.append(f"        my{cc}->toStream(os, indentLevel);")
-                lines.append("        isFirst = false;")
-                lines.append("    }")
-            else:
-                lines.append("    if (!isFirst)")
-                lines.append("        os << std::endl;")
-                lines.append(f"    my{cc}->toStream(os, indentLevel);")
-                lines.append("    isFirst = false;")
-    lines.append("    isOneLineOnly = !hasContents();")
-    lines.append("    return os;")
-    lines.append("}\n")
 
-    for child in children:
-        cc = child_class_name(child)
-        if child.max_occurs != 1:
-            lines.append(f"const {cc}Set &{class_name}::get{cc}Set() const")
-            lines.append("{")
-            lines.append(f"    return my{cc}Set;")
-            lines.append("}\n")
-            lines.append(f"void {class_name}::remove{cc}(const {cc}SetIterConst &value)")
-            lines.append("{")
-            lines.append(f"    if (value != my{cc}Set.cend())")
-            lines.append("    {")
-            lines.append(f"        my{cc}Set.erase(value);")
-            lines.append("    }")
-            lines.append("}\n")
-            lines.append(f"void {class_name}::add{cc}(const {cc}Ptr &value)")
-            lines.append("{")
-            lines.append("    if (value)")
-            lines.append("    {")
-            lines.append(f"        my{cc}Set.push_back(value);")
-            lines.append("    }")
-            lines.append("}\n")
-            lines.append(f"void {class_name}::clear{cc}Set()")
-            lines.append("{")
-            lines.append(f"    my{cc}Set.clear();")
-            lines.append("}\n")
-            lines.append(f"{cc}Ptr {class_name}::get{cc}(const {cc}SetIterConst &setIterator) const")
-            lines.append("{")
-            lines.append(f"    if (setIterator != my{cc}Set.cend())")
-            lines.append("    {")
-            lines.append("        return *setIterator;")
-            lines.append("    }")
-            lines.append(f"    return {cc}Ptr();")
-            lines.append("}\n")
-        elif child.min_occurs == 0:
-            lines.append(f"{cc}Ptr {class_name}::get{cc}() const")
-            lines.append("{")
-            lines.append(f"    return my{cc};")
-            lines.append("}\n")
-            lines.append(f"void {class_name}::set{cc}(const {cc}Ptr &value)")
-            lines.append("{")
-            lines.append("    if (value)")
-            lines.append("    {")
-            lines.append(f"        my{cc} = value;")
-            lines.append("    }")
-            lines.append("}\n")
-            lines.append(f"bool {class_name}::getHas{cc}() const")
-            lines.append("{")
-            lines.append(f"    return myHas{cc};")
-            lines.append("}\n")
-            lines.append(f"void {class_name}::setHas{cc}(const bool value)")
-            lines.append("{")
-            lines.append(f"    myHas{cc} = value;")
-            lines.append("}\n")
-        else:
-            lines.append(f"{cc}Ptr {class_name}::get{cc}() const")
-            lines.append("{")
-            lines.append(f"    return my{cc};")
-            lines.append("}\n")
-            lines.append(f"void {class_name}::set{cc}(const {cc}Ptr &value)")
-            lines.append("{")
-            lines.append("    if (value)")
-            lines.append("    {")
-            lines.append(f"        my{cc} = value;")
-            lines.append("    }")
-            lines.append("}\n")
-
-    # fromXElementImpl - most groups use the UNUSED macro since they are
-    # imported via importGroup helpers in the parent. score-header is the
-    # exception: ScorePartwise/ScoreTimewise call myScoreHeaderGroup->fromXElement
-    # directly, so it needs a real parsing body.
+    from_x_impl = None
     if _group_needs_real_from_x(group_name):
-        _emit_group_real_from_x_impl(lines, class_name, children)
-    else:
-        lines.append(f"MX_FROM_XELEMENT_UNUSED({class_name});\n")
+        fx_lines = []
+        _emit_group_real_from_x_impl(fx_lines, class_name, children)
+        from_x_impl = "\n".join(fx_lines)
 
-    lines.append("} // namespace core")
-    lines.append("} // namespace mx")
-    return "\n".join(lines) + "\n"
+    tmpl = _JINJA_ENV.get_template(
+        CPP_CONFIG["categories"]["group"]["impl_template"])
+    return tmpl.render(
+        license=LICENSE,
+        class_name=class_name,
+        child_includes=child_includes,
+        ctor_init=ctor_init,
+        has_contents_always_true=has_contents_always_true,
+        has_contents_parts=has_contents_parts,
+        all_optional=all_optional,
+        children=[
+            {"cc": child_class_name(c), "min_occurs": c.min_occurs,
+             "max_occurs": c.max_occurs}
+            for c in children
+        ],
+        from_x_impl=from_x_impl,
+    )
 
 
 def _group_needs_real_from_x(group_name: str) -> bool:

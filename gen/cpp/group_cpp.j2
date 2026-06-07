@@ -1,0 +1,173 @@
+{{ license }}
+
+#include "mx/core/elements/{{ class_name }}.h"
+#include "mx/core/FromXElement.h"
+{% for inc in child_includes %}
+#include "mx/core/elements/{{ inc }}.h"
+{% endfor %}
+#include <iostream>
+
+namespace mx
+{
+namespace core
+{
+{{ ctor_init }}
+{
+}
+
+bool {{ class_name }}::hasAttributes() const
+{
+    return false;
+}
+
+std::ostream &{{ class_name }}::streamAttributes(std::ostream &os) const
+{
+    return os;
+}
+
+std::ostream &{{ class_name }}::streamName(std::ostream &os) const
+{
+    return os;
+}
+
+bool {{ class_name }}::hasContents() const
+{
+{% if has_contents_always_true %}
+    return true;
+{% elif has_contents_parts %}
+    return {{ has_contents_parts | join(' || ') }};
+{% else %}
+    return false;
+{% endif %}
+}
+
+std::ostream &{{ class_name }}::streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const
+{
+{% if all_optional %}
+    bool firstItem = true;
+    isOneLineOnly = true;
+{% for child in children %}
+    if (myHas{{ child.cc }})
+    {
+        if (!firstItem)
+            os << std::endl;
+        my{{ child.cc }}->toStream(os, indentLevel);
+        firstItem = false;
+    }
+{% endfor %}
+{% else %}
+    bool isFirst = true;
+{% for child in children %}
+{% if child.max_occurs != 1 %}
+    for (auto x : my{{ child.cc }}Set)
+    {
+        if (!isFirst)
+            os << std::endl;
+        x->toStream(os, indentLevel);
+        isFirst = false;
+    }
+{% elif child.min_occurs == 0 %}
+    if (myHas{{ child.cc }})
+    {
+        if (!isFirst)
+            os << std::endl;
+        my{{ child.cc }}->toStream(os, indentLevel);
+        isFirst = false;
+    }
+{% else %}
+    if (!isFirst)
+        os << std::endl;
+    my{{ child.cc }}->toStream(os, indentLevel);
+    isFirst = false;
+{% endif %}
+{% endfor %}
+{% endif %}
+    isOneLineOnly = !hasContents();
+    return os;
+}
+
+{% for child in children %}
+{% if child.max_occurs != 1 %}
+const {{ child.cc }}Set &{{ class_name }}::get{{ child.cc }}Set() const
+{
+    return my{{ child.cc }}Set;
+}
+
+void {{ class_name }}::remove{{ child.cc }}(const {{ child.cc }}SetIterConst &value)
+{
+    if (value != my{{ child.cc }}Set.cend())
+    {
+        my{{ child.cc }}Set.erase(value);
+    }
+}
+
+void {{ class_name }}::add{{ child.cc }}(const {{ child.cc }}Ptr &value)
+{
+    if (value)
+    {
+        my{{ child.cc }}Set.push_back(value);
+    }
+}
+
+void {{ class_name }}::clear{{ child.cc }}Set()
+{
+    my{{ child.cc }}Set.clear();
+}
+
+{{ child.cc }}Ptr {{ class_name }}::get{{ child.cc }}(const {{ child.cc }}SetIterConst &setIterator) const
+{
+    if (setIterator != my{{ child.cc }}Set.cend())
+    {
+        return *setIterator;
+    }
+    return {{ child.cc }}Ptr();
+}
+
+{% elif child.min_occurs == 0 %}
+{{ child.cc }}Ptr {{ class_name }}::get{{ child.cc }}() const
+{
+    return my{{ child.cc }};
+}
+
+void {{ class_name }}::set{{ child.cc }}(const {{ child.cc }}Ptr &value)
+{
+    if (value)
+    {
+        my{{ child.cc }} = value;
+    }
+}
+
+bool {{ class_name }}::getHas{{ child.cc }}() const
+{
+    return myHas{{ child.cc }};
+}
+
+void {{ class_name }}::setHas{{ child.cc }}(const bool value)
+{
+    myHas{{ child.cc }} = value;
+}
+
+{% else %}
+{{ child.cc }}Ptr {{ class_name }}::get{{ child.cc }}() const
+{
+    return my{{ child.cc }};
+}
+
+void {{ class_name }}::set{{ child.cc }}(const {{ child.cc }}Ptr &value)
+{
+    if (value)
+    {
+        my{{ child.cc }} = value;
+    }
+}
+
+{% endif %}
+{% endfor %}
+{% if from_x_impl %}
+{{ from_x_impl }}
+{% else %}
+MX_FROM_XELEMENT_UNUSED({{ class_name }});
+
+{% endif %}
+} // namespace core
+} // namespace mx
