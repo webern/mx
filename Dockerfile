@@ -28,6 +28,10 @@ RUN python3 -m venv /opt/quality-venv \
         pylint==4.0.5 \
         cognitive_complexity==1.3.0
 
+RUN python3 -m venv /opt/gen-venv \
+    && /opt/gen-venv/bin/pip install --no-cache-dir \
+        Jinja2==3.1.6
+
 # Unversioned name so the Makefile invokes the pinned formatter without
 # knowing the version suffix.
 RUN ln -sf /usr/bin/clang-format-18 /usr/local/bin/clang-format

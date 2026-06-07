@@ -1,0 +1,73 @@
+{{ license }}
+
+#include "mx/core/elements/{{ class_name }}.h"
+#include "mx/core/FromXElement.h"
+#include <iostream>
+
+namespace mx
+{
+namespace core
+{
+{{ class_name }}::{{ class_name }}(){{ default_init }}
+{
+}
+
+{{ class_name }}::{{ class_name }}(const {{ value_type }} &value) : myValue(value)
+{
+}
+
+bool {{ class_name }}::hasAttributes() const
+{
+    return false;
+}
+
+bool {{ class_name }}::hasContents() const
+{
+    return true;
+}
+
+std::ostream &{{ class_name }}::streamAttributes(std::ostream &os) const
+{
+    return os;
+}
+
+std::ostream &{{ class_name }}::streamName(std::ostream &os) const
+{
+    os << "{{ stream_name }}";
+    return os;
+}
+
+std::ostream &{{ class_name }}::streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const
+{
+    MX_UNUSED(indentLevel);
+    isOneLineOnly = true;
+{% if is_xmacro %}
+    os << {{ value_type }}ToString(myValue);
+{% else %}
+    os << myValue;
+{% endif %}
+    return os;
+}
+
+{{ value_type }} {{ class_name }}::getValue() const
+{
+    return myValue;
+}
+
+void {{ class_name }}::setValue(const {{ value_type }} &value)
+{
+    myValue = value;
+}
+
+bool {{ class_name }}::fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement)
+{
+    MX_UNUSED(message);
+{% if not is_enum %}
+    MX_UNUSED(xelement);
+{% endif %}
+    {{ parse_call }}
+    return true;
+}
+
+} // namespace core
+} // namespace mx

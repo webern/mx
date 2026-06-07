@@ -58,3 +58,26 @@ Seam:
 ## 2026-06-02 08:15
 
 M6B session 1: stood up parse.py + ids.py as a pure internal extraction. Zero C++ diff.
+
+## 2026-06-07 13:32
+
+M6C session 1: grill on the first changeset for template/config separation. User chose to start at
+the leaf: simple-value elements (101 elements, e.g. Step, Duration). These wrap a single scalar
+value with no attributes and no children. Two sub-variants: XMACRO enum types (use ToString/
+FromString free functions) vs. everything else (use operator<< and .parse()).
+
+Decisions from the grill:
+- Jinja2 for templating (not string.Template or hand-rolled)
+- Templates and config in gen/cpp/ (not gen/templates/)
+- TOML config is routing-only (lookup tables stay in Python until all consumers are templated)
+- No data duplication: Python builds the context dict from existing dicts, passes to Jinja2
+- Jinja2 in a new /opt/gen-venv Docker venv (separate from quality-venv)
+- New `make generate` target runs the generator inside Docker
+
+## 2026-06-07 13:54
+
+M6C session 1 implementation: created gen/cpp/ with config.toml, simple_value_h.j2,
+simple_value_cpp.j2. Added /opt/gen-venv with Jinja2==3.1.6 to Dockerfile. Added `make generate`
+target to Makefile. Modified gen/generate.py: simple-value elements now render via Jinja2 templates
+instead of the shared generate_element_h/cpp f-string path. Verified zero diff across all 101
+simple-value elements (202 files). Non-simple-value elements remain on the f-string path unchanged.

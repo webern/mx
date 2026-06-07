@@ -135,6 +135,9 @@ the fix belongs in the shared path with a config-driven flag.
 - `gen/ids.py` — `NodeId` typed value (M6B; assigned to every node, currently unconsumed)
 - `gen/quality.py` — design-quality scorer for `make gen-quality` (excluded from its own score)
 - `gen/.pylintrc` — pylint config for `make gen-lint`
+- `gen/cpp/config.toml` — TOML routing config mapping element categories to Jinja2 templates (M6C)
+- `gen/cpp/simple_value_h.j2` — Jinja2 header template for simple-value elements (M6C)
+- `gen/cpp/simple_value_cpp.j2` — Jinja2 impl template for simple-value elements (M6C)
 - `docs/musicxml.xsd` — input schema (currently MusicXML 3.0; swap to 4.0 in M6)
 - `src/private/mx/core/elements/` — target output (~590 .h/.cpp pairs)
 - `src/private/mxtest/corert/` — core-roundtrip harness

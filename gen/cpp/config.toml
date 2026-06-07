@@ -1,0 +1,3 @@
+[categories.simple-value]
+header_template = "simple_value_h.j2"
+impl_template = "simple_value_cpp.j2"

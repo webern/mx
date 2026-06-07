@@ -46,7 +46,7 @@ Delivered 2026-06-01: `make gen-quality` and `make gen-lint`
 Refactor edthe generator into a `parse -> configure -> render` pipeline - see
 `design/m6b-data-model.md`.
 
-### 6C_CONFIG_FILE (next: not started)
+### 6C_CONFIG_FILE (in progress)
 
 CARDINAL_RULE: ZERO diff is tolerated in the generated C++ files. Diffs must not affect code outside
 of `gen/`.
@@ -56,6 +56,10 @@ Iteratively stand-up a separation of concerns between
 - Configuration transforms
 - Template configuration
 - Use of template files instead of python f-strings
+
+Infrastructure: Jinja2 templates in `gen/cpp/`, TOML routing config, `/opt/gen-venv` in Docker,
+`make generate` target. Simple-value elements (101) are templated. Lookup tables remain in Python
+until all their consumers are templated.
 
 ### 6D++
 

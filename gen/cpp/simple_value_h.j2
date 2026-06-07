@@ -1,0 +1,64 @@
+{{ license }}
+
+#pragma once
+
+{% for inc in project_includes %}
+#include "{{ inc }}"
+{% endfor %}
+
+#include <iosfwd>
+#include <memory>
+#include <vector>
+
+namespace mx
+{
+namespace core
+{
+
+MX_FORWARD_DECLARE_ELEMENT({{ class_name }})
+
+inline {{ class_name }}Ptr make{{ class_name }}()
+{
+    return std::make_shared<{{ class_name }}>();
+}
+{% if is_xmacro %}
+
+inline {{ class_name }}Ptr make{{ class_name }}({{ value_type }} value)
+{
+    return std::make_shared<{{ class_name }}>(value);
+}
+{% else %}
+
+inline {{ class_name }}Ptr make{{ class_name }}(const {{ value_type }} &value)
+{
+    return std::make_shared<{{ class_name }}>(value);
+}
+
+inline {{ class_name }}Ptr make{{ class_name }}({{ value_type }} &&value)
+{
+    return std::make_shared<{{ class_name }}>(std::move(value));
+}
+{% endif %}
+
+class {{ class_name }} : public ElementInterface
+{
+  public:
+    {{ class_name }}();
+    {{ class_name }}(const {{ value_type }} &value);
+
+    virtual bool hasAttributes() const;
+    virtual bool hasContents() const;
+    virtual std::ostream &streamAttributes(std::ostream &os) const;
+    virtual std::ostream &streamName(std::ostream &os) const;
+    virtual std::ostream &streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const;
+    {{ value_type }} getValue() const;
+    void setValue(const {{ value_type }} &value);
+
+  private:
+    virtual bool fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement);
+
+  private:
+    {{ value_type }} myValue;
+};
+} // namespace core
+} // namespace mx

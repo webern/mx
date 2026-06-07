@@ -6,9 +6,12 @@ Iteration 6: Group inlining, fromXElementImpl/streamContents/hasContents fixes.
 import os
 import re
 import sys
+import tomllib
 from collections import OrderedDict
 from dataclasses import dataclass, field
 from typing import Optional
+
+import jinja2
 
 from parse import (
     XS,
@@ -28,6 +31,18 @@ from parse import (
 XSD_PATH = "docs/musicxml.xsd"
 CORE_DIR = "src/private/mx/core"
 ELEM_DIR = os.path.join(CORE_DIR, "elements")
+CPP_DIR = os.path.join(os.path.dirname(__file__), "cpp")
+
+with open(os.path.join(CPP_DIR, "config.toml"), "rb") as _f:
+    CPP_CONFIG = tomllib.load(_f)
+
+_JINJA_ENV = jinja2.Environment(
+    loader=jinja2.FileSystemLoader(CPP_DIR),
+    keep_trailing_newline=True,
+    trim_blocks=True,
+    lstrip_blocks=True,
+    undefined=jinja2.StrictUndefined,
+)
 
 LICENSE = """\
 // MusicXML Class Library
@@ -13006,6 +13021,63 @@ BESPOKE_ELEMENTS = {
 }
 
 
+def _render_simple_value(elem_name, elem, model):
+    """Render a simple-value element via Jinja2 templates."""
+    cat_cfg = CPP_CONFIG["categories"]["simple-value"]
+    h_tmpl = _JINJA_ENV.get_template(cat_cfg["header_template"])
+    cpp_tmpl = _JINJA_ENV.get_template(cat_cfg["impl_template"])
+
+    class_name = element_class_name(elem_name)
+    stream_name = elem_name
+
+    vt_override = ELEMENT_VALUE_TYPE_OVERRIDE.get(elem_name)
+    if vt_override:
+        value_type = vt_override["cpp_type"]
+    else:
+        value_type = resolve_cpp_type(elem.type_name, model)
+
+    is_xmacro = value_type in XMACRO_ENUM_TYPES
+    is_enum = is_enum_value_type(value_type)
+    use_set_value = uses_set_value(value_type)
+
+    includes = sorted({"mx/core/ElementInterface.h", "mx/core/ForwardDeclare.h",
+                        header_for_type(value_type)})
+    if vt_override:
+        for extra in vt_override.get("extra_includes", []):
+            includes = sorted(set(includes) | {extra})
+
+    default_val = ELEMENT_DEFAULT_VALUE.get(
+        elem_name, TYPE_DEFAULT_VALUE.get(value_type, ""))
+    if default_val:
+        default_init = f" : myValue({default_val})"
+    else:
+        default_init = " : myValue()"
+
+    if use_set_value:
+        parse_call = "myValue.setValue(xelement.getValue());"
+    elif is_enum:
+        pfn = parse_func_name(value_type)
+        parse_call = f"myValue = {pfn}(xelement.getValue());"
+    else:
+        parse_call = "myValue.parse(xelement.getValue());"
+
+    ctx = {
+        "license": LICENSE.rstrip(),
+        "class_name": class_name,
+        "stream_name": stream_name,
+        "value_type": value_type,
+        "project_includes": includes,
+        "is_xmacro": is_xmacro,
+        "is_enum": is_enum,
+        "default_init": default_init,
+        "parse_call": parse_call,
+    }
+
+    h_content = h_tmpl.render(ctx)
+    cpp_content = cpp_tmpl.render(ctx)
+    return h_content, cpp_content
+
+
 def _parse_config() -> ParseConfig:
     """Bundle the C++-aware structural-config globals for injection into the parser.
 
@@ -13295,8 +13367,15 @@ def main():
                 else:
                     stats["elem_skipped"] += 1
 
+        elif cat == "simple-value":
+            h_content, cpp_content = _render_simple_value(elem_name, elem, model)
+            class_name = element_class_name(elem_name)
+            write_file(os.path.join(ELEM_DIR, f"{class_name}.h"), h_content)
+            write_file(os.path.join(ELEM_DIR, f"{class_name}.cpp"), cpp_content)
+            stats["elem_written"] += 1
+
         elif cat in ("empty-with-attrs", "text-with-attrs", "complex-with-attrs",
-                    "complex", "text-value", "empty", "simple-value"):
+                    "complex", "text-value", "empty"):
 
             class_name = element_class_name(elem_name)
             stream_name = elem_name
@@ -13312,16 +13391,8 @@ def main():
                     generated_attrs.add(sname)
                     stats["attrs_written"] += 1
 
-            if cat == "simple-value":
-                value_type = resolve_cpp_type(elem.type_name, model)
-                fake_ct = XsdComplexType(name=elem.type_name)
-                fake_ct.has_simple_content = True
-                fake_ct.simple_content_base = elem.type_name
-                h_content = generate_element_h(elem_name, class_name, stream_name, cat, fake_ct, model, type_name)
-                cpp_content = generate_element_cpp(elem_name, class_name, stream_name, cat, fake_ct, model, type_name)
-            else:
-                h_content = generate_element_h(elem_name, class_name, stream_name, cat, ct, model, type_name)
-                cpp_content = generate_element_cpp(elem_name, class_name, stream_name, cat, ct, model, type_name)
+            h_content = generate_element_h(elem_name, class_name, stream_name, cat, ct, model, type_name)
+            cpp_content = generate_element_cpp(elem_name, class_name, stream_name, cat, ct, model, type_name)
 
             write_file(os.path.join(ELEM_DIR, f"{class_name}.h"), h_content)
             write_file(os.path.join(ELEM_DIR, f"{class_name}.cpp"), cpp_content)

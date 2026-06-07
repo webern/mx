@@ -75,6 +75,7 @@ GCOV    ?= gcov-14
 # complexity); gen-lint enforces genuine lint defects. Pinned analyzers live in
 # the mx-sdk venv (see Dockerfile). GEN_PY is every gen/*.py except the measurer.
 QUALITY_VENV      := /opt/quality-venv
+GEN_VENV          := /opt/gen-venv
 QUALITY_DIR       := data/testOutput/gen-quality
 GEN_PY            := $(filter-out gen/quality.py,$(wildcard gen/*.py))
 GEN_QUALITY_FLOOR ?= 37.7
@@ -153,7 +154,7 @@ endef
 .DEFAULT_GOAL := help
 .PHONY: help lib dev core test test-all examples-run all clean clean-docker \
         check-docker docker-volume fmt check core-dev check-core-dev \
-        test-core-dev coverage-core-dev gen-quality gen-lint \
+        test-core-dev coverage-core-dev generate gen-quality gen-lint \
         xcode-gen xcode-build xcode-test
 
 help:
@@ -162,6 +163,7 @@ help:
 	@echo 'Quality gates (run in docker):'
 	@echo '  make fmt            Format all C++ files under src/.'
 	@echo '  make check          fmt-check + warning-free build.'
+	@echo '  make generate       Regenerate C++ from the XSD (gen/generate.py).'
 	@echo '  make gen-quality    Score gen/ design quality; fail below the floor.'
 	@echo '  make gen-lint       Lint gen/ with pylint; fail below the floor.'
 	@echo ''
@@ -371,6 +373,9 @@ coverage-core-dev:
 		$(call mode_dir,cov-core-dev) | tee $(COV_DIR)/summary.txt
 	@echo "=== coverage written to $(COV_DIR)/ ==="
 
+generate:
+	$(GEN_VENV)/bin/python gen/generate.py
+
 # Static analysis of the gen/ generator (in-container branch). quality.py
 # measures and writes the report tree to the workspace mount; the floor check
 # below is the gate. See docs/ai/projects/gen.
@@ -433,6 +438,9 @@ coverage-core-dev: $(DOCKER_STAMP) docker-volume
 	@rm -rf $(COV_DIR)
 	$(DOCKER_RUN) make coverage-core-dev
 	@echo "Coverage written to $(COV_DIR)/ (open $(COV_DIR)/index.html)"
+
+generate: $(DOCKER_STAMP)
+	$(DOCKER_RUN) make generate
 
 # Static analysis gates. Pure Python -- no C++ build -- so they only need the
 # image. The report tree is written through the workspace mount to
