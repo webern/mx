@@ -195,3 +195,12 @@ CHOICE_ELEMENT_CONFIG = {
         "first_var_name": "TimeSignature",
     },
 }
+
+DYNAMICS_MARKS = {
+    "p", "pp", "ppp", "pppp", "ppppp", "pppppp",
+    "f", "ff", "fff", "ffff", "fffff", "ffffff",
+    "mp", "mf", "sf", "sfp", "sfpp", "fp", "rf", "rfz", "sfz", "sffz", "fz",
+    "other-dynamics",
+}
+
+CHOICE_SKIP = set()

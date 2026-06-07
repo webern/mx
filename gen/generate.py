@@ -35,6 +35,8 @@ from attrs_config import (
 from element_config import (
     BESPOKE_FAMILY_OWNED,
     CHOICE_ELEMENT_CONFIG,
+    CHOICE_SKIP,
+    DYNAMICS_MARKS,
     ELEMENT_CLASS_NAME_OVERRIDE,
     ELEMENT_VALUE_TYPE_OVERRIDE,
     ENUM_VALUE_CHOICE_CONFIG,
@@ -56,6 +58,7 @@ from overrides import (
 from group_config import (
     EXTENSION_OPTIONAL_GROUP_RENAME,
     GENERATE_GROUPS,
+    GROUPS_WITH_REAL_FROM_X_ELEMENT,
     NESTED_OPTIONAL_SEQUENCE_AS_GROUP,
     SUPPRESS_GROUP_SUFFIX,
     SYNTHETIC_OPTIONAL_GROUPS,
@@ -1526,21 +1529,7 @@ def generate_group_cpp(group_name: str, children: list, model: XsdModel) -> str:
     return "\n".join(lines) + "\n"
 
 
-GROUPS_WITH_REAL_FROM_X_ELEMENT = {
-    "score-header",
-    # ArrowGroup is the inline-group branch of the <arrow> inline-choice element
-    # (INLINE_CHOICE_CONFIG["arrow"]). Arrow::fromXElementImpl dispatches its
-    # group branch via myArrowGroup->fromXElement(message, xelement), so the
-    # group needs a real parsing body.
-    "arrow",
-}
-
-
 def _group_needs_real_from_x(group_name: str) -> bool:
-    # The original codegen emits a real fromXElementImpl body for the
-    # synthetic optional groups (e.g. NormalTypeNormalDotGroup), even though
-    # they are never invoked directly by the parent (which inlines its own
-    # parsing). Preserve that behavior to minimize diff against committed.
     return (group_name in GROUPS_WITH_REAL_FROM_X_ELEMENT
             or group_name in SYNTHETIC_OPTIONAL_GROUPS)
 
@@ -1610,14 +1599,6 @@ def _emit_group_real_from_x_impl(lines: list, class_name: str, children: list) -
     lines.append("    MX_RETURN_IS_SUCCESS;")
     lines.append("}\n")
 
-DYNAMICS_MARKS = {
-    "p", "pp", "ppp", "pppp", "ppppp", "pppppp",
-    "f", "ff", "fff", "ffff", "fffff", "ffffff",
-    "mp", "mf", "sf", "sfp", "sfpp", "fp", "rf", "rfz", "sfz", "sffz", "fz",
-    "other-dynamics",
-}
-
-CHOICE_SKIP = set()
 
 
 

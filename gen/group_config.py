@@ -92,6 +92,17 @@ WRAPPING_STREAMCONTENTS = {
     "defaults", "grouping", "identification", "part-group", "print",
 }
 
+# Groups whose generated .cpp includes a real fromXElementImpl body (most
+# groups just emit a stub that returns false).
+GROUPS_WITH_REAL_FROM_X_ELEMENT = {
+    "score-header",
+    # ArrowGroup is the inline-group branch of the <arrow> inline-choice element
+    # (INLINE_CHOICE_CONFIG["arrow"]). Arrow::fromXElementImpl dispatches its
+    # group branch via myArrowGroup->fromXElement(message, xelement), so the
+    # group needs a real parsing body.
+    "arrow",
+}
+
 # ---------------------------------------------------------------------------
 # Group class name resolution
 # ---------------------------------------------------------------------------
