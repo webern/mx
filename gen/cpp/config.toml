@@ -2,6 +2,9 @@
 header_template = "simple_value_h.j2"
 impl_template = "simple_value_cpp.j2"
 
+[categories.group]
+header_template = "group_h.j2"
+
 # Default constructor values for C++ attribute types (used in Attributes structs).
 [defaults.attr_type]
 FontStyle = "FontStyle::normal"

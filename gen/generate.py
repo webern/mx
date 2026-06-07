@@ -1271,76 +1271,21 @@ ELEMENT_DEFAULT_VALUE = CPP_CONFIG["defaults"]["element"]
 
 def generate_group_h(group_name: str, children: list, model: XsdModel) -> str:
     class_name = group_class_name(group_name)
-
-    lines = [LICENSE, "#pragma once\n"]
-    lines.append('#include "mx/core/ElementInterface.h"')
-    lines.append('#include "mx/core/ForwardDeclare.h"')
-    lines.append("")
-    lines.append("#include <iosfwd>")
-    lines.append("#include <memory>")
-    lines.append("#include <vector>")
-    lines.append("")
-    lines.append("namespace mx\n{\nnamespace core\n{\n")
-
     child_classes = [child_class_name(c) for c in children]
-    for cc in sorted(set(child_classes)):
-        lines.append(f"MX_FORWARD_DECLARE_ELEMENT({cc})")
-    lines.append(f"MX_FORWARD_DECLARE_ELEMENT({class_name})\n")
+    forward_declares = sorted(set(child_classes))
 
-    lines.append(f"inline {class_name}Ptr make{class_name}()")
-    lines.append("{")
-    lines.append(f"    return std::make_shared<{class_name}>();")
-    lines.append("}")
-
-    lines.append(f"\nclass {class_name} : public ElementInterface")
-    lines.append("{")
-    lines.append("  public:")
-    lines.append(f"    {class_name}();")
-    lines.append("")
-    lines.append("    virtual bool hasAttributes() const;")
-    lines.append("    virtual std::ostream &streamAttributes(std::ostream &os) const;")
-    lines.append("    virtual std::ostream &streamName(std::ostream &os) const;")
-    lines.append("    virtual bool hasContents() const;")
-    lines.append("    virtual std::ostream &streamContents(std::ostream &os, const int indentLevel, bool &isOneLineOnly) const;")
-
-    for child in children:
-        cc = child_class_name(child)
-        if child.max_occurs != 1:
-            lines.append(f"\n    /* _________ {cc} minOccurs = {child.min_occurs}, maxOccurs = unbounded _________ */")
-            lines.append(f"    const {cc}Set &get{cc}Set() const;")
-            lines.append(f"    void add{cc}(const {cc}Ptr &value);")
-            lines.append(f"    void remove{cc}(const {cc}SetIterConst &value);")
-            lines.append(f"    void clear{cc}Set();")
-            lines.append(f"    {cc}Ptr get{cc}(const {cc}SetIterConst &setIterator) const;")
-        elif child.min_occurs == 0:
-            lines.append(f"\n    /* _________ {cc} minOccurs = 0, maxOccurs = 1 _________ */")
-            lines.append(f"    {cc}Ptr get{cc}() const;")
-            lines.append(f"    void set{cc}(const {cc}Ptr &value);")
-            lines.append(f"    bool getHas{cc}() const;")
-            lines.append(f"    void setHas{cc}(const bool value);")
-        else:
-            lines.append(f"\n    /* _________ {cc} minOccurs = 1, maxOccurs = 1 _________ */")
-            lines.append(f"    {cc}Ptr get{cc}() const;")
-            lines.append(f"    void set{cc}(const {cc}Ptr &value);")
-
-    lines.append("")
-    lines.append("  private:")
-    lines.append("    virtual bool fromXElementImpl(std::ostream &message, ::ezxml::XElement &xelement);")
-    lines.append("")
-    lines.append("  private:")
-    for child in children:
-        cc = child_class_name(child)
-        if child.max_occurs != 1:
-            lines.append(f"    {cc}Set my{cc}Set;")
-        else:
-            lines.append(f"    {cc}Ptr my{cc};")
-            if child.min_occurs == 0:
-                lines.append(f"    bool myHas{cc};")
-
-    lines.append("};")
-    lines.append("} // namespace core")
-    lines.append("} // namespace mx")
-    return "\n".join(lines) + "\n"
+    tmpl = _JINJA_ENV.get_template(
+        CPP_CONFIG["categories"]["group"]["header_template"])
+    return tmpl.render(
+        license=LICENSE,
+        class_name=class_name,
+        forward_declares=forward_declares,
+        children=[
+            {"cc": child_class_name(c), "min_occurs": c.min_occurs,
+             "max_occurs": c.max_occurs}
+            for c in children
+        ],
+    )
 
 
 def generate_group_cpp(group_name: str, children: list, model: XsdModel) -> str:
