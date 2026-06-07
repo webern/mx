@@ -75,6 +75,23 @@ duration = "1.0"
 tremolo = "3"
 metronome-relation = '"equals"'
 
+# Attribute struct naming configuration.
+[attrs]
+# Attribute structs at the core root level (not in elements/).
+core_root = ["EmptyPrintObjectStyleAlignAttributes"]
+# Shared attrs in elements/ reused across multiple elements.
+shared = [
+    "EmptyPlacementAttributes",
+    "EmptyLineAttributes",
+    "EmptyTrillSoundAttributes",
+    "EmptyFontAttributes",
+    "EmptyPrintStyleAlignAttributes",
+]
+
+# XSD type name aliases for attribute-struct naming purposes.
+[attrs.type_alias]
+empty-print-style-align = "empty-print-object-style-align"
+
 # Attribute structs that preserve xmlns:* namespace declarations through
 # round-trip (e.g. xmlns:xlink on score-partwise).
 [overrides]

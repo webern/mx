@@ -3,30 +3,21 @@
 
 Controls which attribute structs get type-based (shared) names vs element-based
 names, and provides the resolution function used throughout the generator.
+Source of truth: [attrs] in cpp/config.toml.
 """
+import os
+import tomllib
+
 from parse import pascal
 from element_config import element_class_name
 
-# Attribute structs that live at the core root level (not in elements/).
-CORE_ROOT_ATTRS = {
-    "EmptyPrintObjectStyleAlignAttributes",
-}
+_CPP_DIR = os.path.join(os.path.dirname(__file__), "cpp")
+with open(os.path.join(_CPP_DIR, "config.toml"), "rb") as _f:
+    _CFG = tomllib.load(_f)
 
-# XSD type name aliases: when the type name for an element matches a key here,
-# the aliased type is used for attribute-struct naming purposes.
-ATTRS_TYPE_ALIAS = {
-    "empty-print-style-align": "empty-print-object-style-align",
-}
-
-# Shared attribute structs that live in the elements/ directory but are reused
-# across multiple elements (generated once, included by reference).
-ELEMENTS_DIR_SHARED_ATTRS = {
-    "EmptyPlacementAttributes",
-    "EmptyLineAttributes",
-    "EmptyTrillSoundAttributes",
-    "EmptyFontAttributes",
-    "EmptyPrintStyleAlignAttributes",
-}
+CORE_ROOT_ATTRS = set(_CFG["attrs"]["core_root"])
+ELEMENTS_DIR_SHARED_ATTRS = set(_CFG["attrs"]["shared"])
+ATTRS_TYPE_ALIAS = _CFG["attrs"]["type_alias"]
 
 
 def resolve_attrs_name(elem_name: str, type_name: str, model) -> str:
