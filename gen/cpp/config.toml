@@ -66,3 +66,77 @@ type = "NoteTypeValue::quarter"
 duration = "1.0"
 tremolo = "3"
 metronome-relation = '"equals"'
+
+# Per-attribute default value overrides, keyed by attrs struct name then field.
+[overrides.attr_default.AccidentalTextAttributes]
+lang = '"it"'
+
+[overrides.attr_default.DirectiveAttributes]
+lang = '"it"'
+
+[overrides.attr_default.LyricAttributes]
+justify = "LeftCenterRight::center"
+
+[overrides.attr_default.ScorePartwiseAttributes]
+version = '"3.0"'
+
+[overrides.attr_default.ScoreTimewiseAttributes]
+version = '"3.0"'
+
+[overrides.attr_default.WordsAttributes]
+lang = '"it"'
+
+[overrides.attr_default.TextAttributes]
+lang = '"it"'
+
+[overrides.attr_default.RehearsalAttributes]
+lang = '"it"'
+
+[overrides.attr_default.LyricLanguageAttributes]
+lang = '"it"'
+
+[overrides.attr_default.CreditWordsAttributes]
+lang = '"it"'
+
+[overrides.attr_default.BracketAttributes]
+lineEnd = "LineEnd::down"
+
+[overrides.attr_default.NoteSizeAttributes]
+type = "NoteSizeType::large"
+
+[overrides.attr_default.EndingAttributes]
+number = '"1"'
+
+[overrides.attr_default.GroupingAttributes]
+number = 'XsToken("1")'
+
+[overrides.attr_default.PageMarginsAttributes]
+type = "MarginType::both"
+
+[overrides.attr_default.LinkAttributes]
+show = "XlinkShow::replace"
+
+[overrides.attr_default.OtherAppearanceAttributes]
+type = '"undefined"'
+
+[overrides.attr_default.OtherNotationAttributes]
+type = "StartStopSingle::start"
+
+[overrides.attr_default.OtherOrnamentAttributes]
+placement = "AboveBelow::above"
+
+[overrides.attr_default.OtherTechnicalAttributes]
+placement = "AboveBelow::above"
+
+[overrides.attr_default.PrincipalVoiceAttributes]
+symbol = "PrincipalVoiceSymbol::none"
+
+[overrides.attr_default.StringMuteAttributes]
+type = "OnOff::on"
+
+[overrides.attr_default.PartGroupAttributes]
+number = 'XsToken("1")'
+
+[overrides.attr_default.MetronomeAttributes]
+halign = "LeftCenterRight::center"
+justify = "LeftCenterRight::center"

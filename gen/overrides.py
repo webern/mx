@@ -7,35 +7,20 @@ embeds historical conventions (specific default values, always-true hasContents,
 xmlns preservation) that predate this generator. Making them explicit and
 separate from the generation logic is a step toward a fully data-driven pipeline.
 """
+import os
+import tomllib
+
+_CPP_DIR = os.path.join(os.path.dirname(__file__), "cpp")
+with open(os.path.join(_CPP_DIR, "config.toml"), "rb") as _f:
+    _CFG = tomllib.load(_f)
 
 # Per-attribute default value override, keyed by (attrs struct name, camelCase
 # attribute field name). The value is the literal C++ initializer expression.
+# Source of truth: [overrides.attr_default] in cpp/config.toml.
 ATTR_DEFAULT_OVERRIDE = {
-    ("AccidentalTextAttributes", "lang"): '"it"',
-    ("DirectiveAttributes", "lang"): '"it"',
-    ("LyricAttributes", "justify"): "LeftCenterRight::center",
-    ("ScorePartwiseAttributes", "version"): '"3.0"',
-    ("ScoreTimewiseAttributes", "version"): '"3.0"',
-    ("WordsAttributes", "lang"): '"it"',
-    ("TextAttributes", "lang"): '"it"',
-    ("RehearsalAttributes", "lang"): '"it"',
-    ("LyricLanguageAttributes", "lang"): '"it"',
-    ("CreditWordsAttributes", "lang"): '"it"',
-    ("BracketAttributes", "lineEnd"): "LineEnd::down",
-    ("NoteSizeAttributes", "type"): "NoteSizeType::large",
-    ("EndingAttributes", "number"): '"1"',
-    ("GroupingAttributes", "number"): 'XsToken("1")',
-    ("PageMarginsAttributes", "type"): "MarginType::both",
-    ("LinkAttributes", "show"): "XlinkShow::replace",
-    ("OtherAppearanceAttributes", "type"): '"undefined"',
-    ("OtherNotationAttributes", "type"): "StartStopSingle::start",
-    ("OtherOrnamentAttributes", "placement"): "AboveBelow::above",
-    ("OtherTechnicalAttributes", "placement"): "AboveBelow::above",
-    ("PrincipalVoiceAttributes", "symbol"): "PrincipalVoiceSymbol::none",
-    ("StringMuteAttributes", "type"): "OnOff::on",
-    ("PartGroupAttributes", "number"): 'XsToken("1")',
-    ("MetronomeAttributes", "halign"): "LeftCenterRight::center",
-    ("MetronomeAttributes", "justify"): "LeftCenterRight::center",
+    (struct, field): value
+    for struct, fields in _CFG["overrides"]["attr_default"].items()
+    for field, value in fields.items()
 }
 
 # Attribute structs that preserve xmlns:* namespace declarations through
