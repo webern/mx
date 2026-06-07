@@ -349,26 +349,11 @@ def _apply_child_min_occurs_override(elem_name: str, children: list) -> list:
     return result
 
 
+ATTR_TYPE_DEFAULTS = CPP_CONFIG["defaults"]["attr_type"]
+
+
 def default_value_for_type(cpp_type: str) -> str:
-    defaults = {
-        "FontStyle": "FontStyle::normal",
-        "FontWeight": "FontWeight::normal",
-        "AboveBelow": "AboveBelow::below",
-        "Valign": "Valign::bottom",
-        "ValignImage": "ValignImage::bottom",
-        "LeftCenterRight": "LeftCenterRight::left",
-        "EnclosureShape": "EnclosureShape::none",
-        "YesNo": "YesNo::no",
-        "OnOff": "OnOff::off",
-        "FontSize": "CssFontSize::medium",
-        "StartStop": "StartStop::start",
-        "StartStopContinue": "StartStopContinue::start",
-        "StartStopSingle": "StartStopSingle::single",
-        "LineType": "LineType::solid",
-        "LineShape": "LineShape::straight",
-        "SymbolSize": "SymbolSize::full",
-    }
-    return defaults.get(cpp_type, "")
+    return ATTR_TYPE_DEFAULTS.get(cpp_type, "")
 
 
 def generate_attrs_cpp(struct_name: str, attrs: list, model: XsdModel) -> str:
@@ -1584,51 +1569,8 @@ WRAPPING_STREAMCONTENTS = {
     "defaults", "grouping", "identification", "part-group", "print",
 }
 
-TYPE_DEFAULT_VALUE = {
-    "AccidentalValue": "AccidentalValue::natural",
-    "ArrowDirectionEnum": "ArrowDirectionEnum::up",
-    "ArrowStyleEnum": "ArrowStyleEnum::single",
-    "BarStyleEnum": "BarStyleEnum::regular",
-    "BeamValue": "BeamValue::begin",
-    "BeaterValue": "BeaterValue::snareStick",
-    "BreathMarkValue": "BreathMarkValue::emptystring",
-    "CircularArrowEnum": "CircularArrowEnum::clockwise",
-    "ClefSign": "ClefSign::g",
-    "DegreeTypeValue": "DegreeTypeValue::add",
-    "EffectEnum": "EffectEnum::anvil",
-    "FermataShape": "FermataShape::normal",
-    "GlassEnum": "GlassEnum::windChimes",
-    "GroupBarlineValue": "GroupBarlineValue::yes",
-    "GroupSymbolValue": "GroupSymbolValue::none",
-    "HandbellValue": "HandbellValue::damp",
-    "HoleClosedValue": "HoleClosedValue::no",
-    "KindValue": "KindValue::none",
-    "MeasureNumberingValue": "MeasureNumberingValue::none",
-    "MembraneEnum": "MembraneEnum::snareDrum",
-    "MetalEnum": "MetalEnum::bell",
-    "MuteEnum": "MuteEnum::off",
-    "NoteTypeValue": "NoteTypeValue::eighth",
-    "NoteheadValue": "NoteheadValue::normal",
-    "PitchedEnum": "PitchedEnum::xylophone",
-    "SemiPitchedEnum": "SemiPitchedEnum::medium",
-    "StaffTypeEnum": "StaffTypeEnum::regular",
-    "StemValue": "StemValue::none",
-    "StepEnum": "StepEnum::a",
-    "StickLocationEnum": "StickLocationEnum::center",
-    "StickMaterialEnum": "StickMaterialEnum::medium",
-    "StickTypeEnum": "StickTypeEnum::yarn",
-    "SyllabicEnum": "SyllabicEnum::begin",
-    "TimeRelationEnum": "TimeRelationEnum::equals",
-    "WoodEnum": "WoodEnum::claves",
-    "PlaybackSound": "PlaybackSound::keyboardPiano",
-}
-
-ELEMENT_DEFAULT_VALUE = {
-    "type": "NoteTypeValue::quarter",
-    "duration": "1.0",
-    "tremolo": "3",
-    "metronome-relation": '"equals"',
-}
+TYPE_DEFAULT_VALUE = CPP_CONFIG["defaults"]["value_type"]
+ELEMENT_DEFAULT_VALUE = CPP_CONFIG["defaults"]["element"]
 
 
 def generate_group_h(group_name: str, children: list, model: XsdModel) -> str:
