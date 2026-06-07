@@ -67,6 +67,27 @@ duration = "1.0"
 tremolo = "3"
 metronome-relation = '"equals"'
 
+# Attribute structs that preserve xmlns:* namespace declarations through
+# round-trip (e.g. xmlns:xlink on score-partwise).
+[overrides]
+xmlns_preserving_attrs = [
+    "ScorePartwiseAttributes",
+    "ScoreTimewiseAttributes",
+    "OpusAttributes",
+    "LinkAttributes",
+]
+
+# Elements whose hasContents() should always return true.
+has_contents_always_true = ["measure-layout"]
+
+# Per-(parent-element, child-element) ctor argument overrides.
+[overrides.child_init_value.scaling]
+millimeters = "MillimetersValue(7)"
+tenths = "TenthsValue(40)"
+
+[overrides.child_init_value.staff-details]
+staff-lines = "NonNegativeInteger(5)"
+
 # Per-attribute default value overrides, keyed by attrs struct name then field.
 [overrides.attr_default.AccidentalTextAttributes]
 lang = '"it"'

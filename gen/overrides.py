@@ -23,28 +23,20 @@ ATTR_DEFAULT_OVERRIDE = {
     for field, value in fields.items()
 }
 
-# Attribute structs that preserve xmlns:* namespace declarations through
-# round-trip (e.g. xmlns:xlink on score-partwise).
-XMLNS_PRESERVING_ATTRS = {
-    "ScorePartwiseAttributes",
-    "ScoreTimewiseAttributes",
-    "OpusAttributes",
-    "LinkAttributes",
-}
+# Source of truth: [overrides] in cpp/config.toml.
+XMLNS_PRESERVING_ATTRS = set(_CFG["overrides"]["xmlns_preserving_attrs"])
 
-# Per-(parent-element, child-element) override for the constructor argument
-# passed to make{Child}() on the parent's ctor init list.
+# Source of truth: [overrides.child_init_value] in cpp/config.toml.
 CHILD_INIT_VALUE_OVERRIDE = {
-    ("scaling", "millimeters"): "MillimetersValue(7)",
-    ("scaling", "tenths"): "TenthsValue(40)",
-    ("staff-details", "staff-lines"): "NonNegativeInteger(5)",
+    (parent, child): value
+    for parent, children in _CFG["overrides"]["child_init_value"].items()
+    for child, value in children.items()
 }
 
-# Elements whose hasContents() should always return true regardless of
-# what the XSD min/max-occurs analysis would produce.
-ELEMENT_HAS_CONTENTS_ALWAYS_TRUE = {
-    "measure-layout",
-}
+# Source of truth: [overrides] has_contents_always_true in cpp/config.toml.
+ELEMENT_HAS_CONTENTS_ALWAYS_TRUE = set(
+    _CFG["overrides"]["has_contents_always_true"]
+)
 
 # Per-(element-name, child-xml-name) override for min_occurs. Used when XSD
 # group inlining propagates minOccurs=0 from the enclosing group to an element
