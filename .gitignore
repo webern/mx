@@ -1,9 +1,6 @@
 build/
 cmake-build-*
 src/private/mxtest/file/PathRoot.h
-**/Mx.xcframework
-**/xcuserdata/
-**/xcshareddata/
 *.DS_Store
 compile_commands.json
 
@@ -13,6 +10,6 @@ node_modules/
 package.json
 package-lock.json
 
-# Python bytecode cache from the gen/ quality tooling
+# Python bytecode cache
 __pycache__/
 *.pyc
