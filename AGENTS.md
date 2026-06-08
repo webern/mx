@@ -15,17 +15,20 @@ mx/
   Makefile              <- top-level build driver (native + Docker-gated targets)
   Dockerfile            <- mx-sdk toolchain image (Ubuntu 24.04, GCC 14, Go, libxml2, Python 3)
   CMakeLists.txt        <- C++ project: ezxml library + corert test harness
-  data/                 <- MusicXML test corpus (~830 files, see data/README.md)
+  data/                 <- MusicXML test corpus (~1,347 files, see data/README.md)
   src/private/          <- C++ source
-    mx/ezxml/           <- vendored pugixml-backed XML layer (builds today)
-    mx/core/            <- generated C++ typed model (empty until gen emits code)
-    mx/utility/         <- generated C++ utilities (empty)
+    mx/ezxml/           <- vendored pugixml-backed XML layer
+    mx/core/            <- generated C++ typed model
+    mx/utility/         <- generated C++ utilities
     mxtest/corert/      <- C++ core roundtrip test harness (Catch2, dynamic registration)
     mxtest/import/      <- normalization helpers (sort attrs, strip decimal zeros)
     mxtest/file/        <- PathRoot.h (CMake-generated, gitignored)
     cpul/               <- vendored Catch2 test runner
-  gen/                  <- code generator system
-    __main__.py         <- generator entry point (stub, not yet implemented)
+  gen/                  <- code generator system (see gen/README.md)
+    __main__.py         <- CLI: analyze | ir | <config.toml>
+    README.md           <- architecture, IR glossary, XSD analysis
+    xsd/                <- XSD parser + structural analysis
+    ir/                 <- resolved intermediate representation (IR)
     cpp/config.toml     <- C++ target configuration
     test/go/            <- Go corert test target
       config.toml       <- Go target configuration
@@ -51,34 +54,15 @@ invocation) and outside-container (docker run wrapper) behavior.
 
 ### Makefile targets
 
-**Native C++ (no Docker required):**
-- `make ezxml` - build the ezxml XML layer
-- `make core-dev` - build corert binary (fails until gen emits `mx/core`)
-- `make test-core-dev` - run C++ corert suite
-
-**Generator (via mx-sdk):**
-- `make gen` - run generator for all targets (cpp/go/c)
-- `make gen-cpp`, `make gen-go`, `make gen-c` - single-target gen
-
-**Go test target (via mx-sdk):**
-- `make build-go` - compile Go corert test binary
-- `make test-go` - run Go corert tests
-
-**C test target (via mx-sdk):**
-- `make build-c` - compile C corert test binary
-- `make test-c` - build + run C corert tests
-
-**Housekeeping:**
-- `make fmt` / `make check` - C++ formatting (via mx-sdk)
-- `make sdk` - force-build the Docker image
-- `make clean` - remove all build artifacts
-- `make clean-docker` - remove Docker image and volume
+Run `make help` for the full, current target list (native C++, generator, Go/C test targets,
+housekeeping). Docker-gated targets auto-build and run via mx-sdk.
 
 ## The corert (core roundtrip) test
 
 The corert test is the primary correctness gate. It exercises the generated parser by round-tripping
 every eligible XML file in `data/` through the typed model and comparing the output to a normalized
-form of the input.
+form of the input. The corpus is pinned to version `3.0` throughout (input and expected) even though
+the generator targets the 4.0 schema, so comparison runs against a stable baseline.
 
 ### Flow (same in all three languages)
 
@@ -88,11 +72,9 @@ form of the input.
 2. For each file:
    a. Load the XML into a DOM.
    b. Set the root `version` attribute to `"3.0"`.
-   c. **Parse** into the typed model via `fromXDoc` (this is the generated code -- currently a stub
-      that always fails).
+   c. **Parse** into the typed model via `fromXDoc` (the generated code).
    d. **Serialize** back to XML via `toXDoc`.
-   e. **Normalize** the actual output: set XML declaration, set DOCTYPE, set version, strip trailing
-      zeros from decimal fields, sort attributes alphabetically.
+   e. **Normalize** the actual output (see Normalization pipeline below).
    f. Load a fresh expected document from disk, apply the same normalization.
    g. Apply **fixups** from `.fixup.xml` sidecars to the expected document.
    h. **Compare** the two DOMs depth-first: element names, text content, attributes (with numeric
@@ -130,8 +112,7 @@ Applied to both expected and actual documents before comparison:
 1. Set XML declaration: `<?xml version="1.0" encoding="UTF-8" standalone="no"?>`.
 2. Set DOCTYPE based on root element name (`score-timewise` vs `score-partwise`).
 3. Set root `version` attribute to `"3.0"`.
-4. Strip trailing zeros from decimal fields: `top-system-distance`, `dynamics`, `left-margin`,
-   `right-margin`, `staff-distance`, `system-distance`, `default-y`, `default-x`, `tenths`, `width`.
+4. Strip trailing zeros from decimal fields (the list lives in `DecimalFields.h`).
 5. Sort attributes alphabetically (must be last).
 
 ### Numeric equivalence
@@ -141,15 +122,21 @@ their values instead of their string representations. Float comparison uses epsi
 
 ## Generator architecture
 
-The generator (`gen/`) is a Python program invoked as `python3 -m gen <config.toml>`. It reads the
-MusicXML XSD spec and emits code for a specific language target based on the config file.
+The generator (`gen/`) is a Python program structured as a three-stage pipeline: parse the MusicXML
+XSD into a model (`gen/xsd/`), lower that into a resolved intermediate representation (`gen/ir/`),
+then emit target code from the IR. See `gen/README.md` for the architecture, IR glossary, and a
+structural analysis of the schema.
 
-Each target has:
-- `config.toml` - specifies the output directory (relative to the config file) and will eventually
-  hold language-specific settings.
-- Template files (not yet created) - Jinja2 or similar templates for code generation.
+Commands:
+- `python3 -m gen analyze [xsd]` - print a structural analysis of the XSD.
+- `python3 -m gen ir [--type NAME] [xsd]` - lower the XSD to the IR and print it as JSON.
+- `python3 -m gen <config.toml>` - emit code for the target in the config (not yet implemented).
 
-**Not yet implemented.** The `gen/__main__.py` stub exits with "not implemented".
+Each target has a `config.toml` specifying the output directory (relative to the config file) and,
+eventually, language-specific settings.
+
+**Status.** The parse, IR, and analysis stages exist. The emit stage and its templates are not yet
+implemented, so `python3 -m gen <config.toml>` still exits with an error.
 
 ## Language targets
 

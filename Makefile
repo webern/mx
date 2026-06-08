@@ -44,7 +44,7 @@ FIND_CPP := find src \
 	-type f \( -name '*.cpp' -o -name '*.h' -o -name '*.hpp' \) -print
 
 .DEFAULT_GOAL := help
-.PHONY: help sdk fmt check ezxml core-dev test-core-dev \
+.PHONY: help sdk fmt check ezxml core-dev test-core-dev test-gen \
         gen gen-cpp gen-go gen-c \
         build-go build-c test-go test-c \
         clean clean-docker check-docker docker-volume
@@ -56,6 +56,7 @@ help:
 	@echo '  make ezxml          Build the embedded ezxml XML layer.'
 	@echo '  make core-dev       Build the corert binary (fails until mx/core is regenerated).'
 	@echo "  make test-core-dev  Run the core roundtrip suite. Filter: ARGS='[core-roundtrip] lysuite/*'"
+	@echo '  make test-gen       Run the generator (parser + IR) Python tests.'
 	@echo ''
 	@echo '  Generator (via mx-sdk):'
 	@echo '  make gen            Run the generator for all targets (cpp/go/c).'
@@ -90,6 +91,9 @@ core-dev:
 
 test-core-dev: core-dev
 	$(BUILD_ROOT)/core-dev/mxtest-core-dev --allow-running-no-tests $(ARGS)
+
+test-gen:
+	python3 -m unittest discover -s gen/tests -t . $(ARGS)
 
 # --- Housekeeping -----------------------------------------------------------
 
