@@ -1,0 +1,6 @@
+# C++ generator target configuration.
+# The generator reads this to know where and how to emit C++ code.
+
+[output]
+# Directory for generated source files, relative to this config file.
+dir = "../../src/private/mx/core"
