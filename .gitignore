@@ -13,3 +13,7 @@ package-lock.json
 # Python bytecode cache
 __pycache__/
 *.pyc
+
+# Gen test build artifacts
+gen/test/c/build/
+gen/test/go/build/
