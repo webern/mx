@@ -7,6 +7,7 @@ from collections import Counter
 from gen.xsd import model as xsd
 from gen.xsd.analyze import content_particle, reachable_types
 from gen.ir import model as ir
+from gen.ir.resolve import Resolver
 
 # Map XSD builtin types to canonical IR primitive names.
 _XS_PRIMITIVE = {
@@ -102,9 +103,9 @@ class _Builder:
         ]
         complex_types += [self._complex_type(name, ct) for name, ct in self.synth]
 
-        group_map = {g.name: g for g in groups}
+        resolver = Resolver(groups, attribute_groups, complex_types)
         for ct in complex_types:
-            ct.deps = sorted(self._deps(ct, group_map))
+            ct.deps = sorted(resolver.deps(ct))
         complex_types = self._topo_sort(complex_types)
 
         all_named = set(self.schema.simple_types) | set(self.schema.complex_types)
@@ -204,9 +205,9 @@ class _Builder:
         members: list[ir.UnionMember] = []
         for m in st.content.member_types:
             if m in self.schema.simple_types:
-                members.append(ir.UnionMember(type=m, category="value"))
+                members.append(ir.UnionMember(ir.Ref(m, "value")))
             else:
-                members.append(ir.UnionMember(type=_primitive(m), category="primitive"))
+                members.append(ir.UnionMember(ir.Ref(_primitive(m), "primitive")))
         for inline in st.content.inline_members:
             if isinstance(inline.content, xsd.Restriction) and inline.content.facets.enumerations:
                 members.append(
@@ -289,24 +290,6 @@ class _Builder:
 
     # ----- dependency ordering --------------------------------------------- #
 
-    def _deps(self, ct: ir.ComplexType, groups: dict[str, ir.Group]) -> set[str]:
-        deps: set[str] = set()
-        if ct.base:
-            deps.add(ct.base)
-        self._collect_deps(ct.content, groups, set(), deps)
-        return deps
-
-    def _collect_deps(self, node, groups, seen_groups, deps) -> None:
-        if isinstance(node, (ir.Sequence, ir.Choice)):
-            for item in node.items:
-                self._collect_deps(item, groups, seen_groups, deps)
-        elif isinstance(node, ir.GroupRef):
-            if node.name in groups and node.name not in seen_groups:
-                seen_groups.add(node.name)
-                self._collect_deps(groups[node.name].content, groups, seen_groups, deps)
-        elif isinstance(node, ir.Element) and node.type.category == "complex":
-            deps.add(node.type.name)
-
     def _topo_sort(self, types: list[ir.ComplexType]) -> list[ir.ComplexType]:
         by_name = {t.name: t for t in types}
         ordered: list[ir.ComplexType] = []
@@ -334,7 +317,11 @@ class _Builder:
 
         def deps(v: ir.ValueType) -> list[str]:
             if isinstance(v, ir.UnionType):
-                return [m.type for m in v.members if m.category == "value" and m.type in by_name]
+                return [
+                    m.ref.name
+                    for m in v.members
+                    if m.ref and m.ref.category == "value" and m.ref.name in by_name
+                ]
             return []
 
         def visit(name: str) -> None:

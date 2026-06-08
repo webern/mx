@@ -80,9 +80,9 @@ class StringType:
 
 @dataclass
 class UnionMember:
-    type: str | None = None  # ref to a value type or primitive
-    category: str | None = None  # "value" | "primitive"
-    literals: list[str] | None = None  # inline enumeration literals
+    # Exactly one is set: a Ref to another type, or inline enumeration literals.
+    ref: Ref | None = None
+    literals: list[str] | None = None
 
 
 @dataclass

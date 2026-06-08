@@ -124,12 +124,16 @@ their values instead of their string representations. Float comparison uses epsi
 
 The generator (`gen/`) is a Python program structured as a three-stage pipeline: parse the MusicXML
 XSD into a model (`gen/xsd/`), lower that into a resolved intermediate representation (`gen/ir/`),
-then emit target code from the IR. See `gen/README.md` for the architecture, IR glossary, and a
-structural analysis of the schema.
+then emit target code from the IR. The IR data model preserves the schema's named structure (model
+groups, attribute groups, inheritance edges); `gen/ir/resolve.py` collapses it on demand into the
+flattened view an emitter consumes (attribute groups expanded, group refs spliced into content), so
+that splicing-and-deduping reasoning lives once rather than once per language. See `gen/README.md`
+for the architecture, IR glossary, the resolution layer, and a structural analysis of the schema.
 
 Commands:
 - `python3 -m gen analyze [xsd]` - print a structural analysis of the XSD.
-- `python3 -m gen ir [--type NAME] [xsd]` - lower the XSD to the IR and print it as JSON.
+- `python3 -m gen ir [--type NAME] [--resolve] [xsd]` - lower the XSD to the IR and print it as JSON;
+  `--resolve` prints the collapsed (group-spliced, attribute-flattened) view of complex types.
 - `python3 -m gen <config.toml>` - emit code for the target in the config (not yet implemented).
 
 Each target has a `config.toml` specifying the output directory (relative to the config file) and,

@@ -19,6 +19,7 @@ from pathlib import Path
 
 from gen.ir import build_ir
 from gen.ir import model as ir
+from gen.ir.resolve import Resolver
 from gen.xsd import parse
 from gen.xsd.analyze import element_index, type_graph
 
@@ -92,10 +93,10 @@ class IRIntegrity(unittest.TestCase):
                 for v in m.value_types:
                     if isinstance(v, ir.UnionType):
                         for mem in v.members:
-                            if mem.category == "value" and mem.type in vpos:
+                            if mem.ref and mem.ref.category == "value" and mem.ref.name in vpos:
                                 self.assertLess(
-                                    vpos[mem.type], vpos[v.name],
-                                    f"union {v.name} member {mem.type} out of order",
+                                    vpos[mem.ref.name], vpos[v.name],
+                                    f"union {v.name} member {mem.ref.name} out of order",
                                 )
 
     def _check_references(self, m: ir.Ir) -> None:
@@ -141,6 +142,12 @@ class IRIntegrity(unittest.TestCase):
         for g in m.groups:
             walk(g.content, f"group {g.name}")
 
+        for v in m.value_types:
+            if isinstance(v, ir.UnionType):
+                for mem in v.members:
+                    if mem.ref is not None:
+                        check_ref(mem.ref, f"union {v.name} member")
+
 
 @unittest.skipUnless(XSD_40.exists(), "MusicXML 4.0 XSD not present")
 class DeadTypeRegression(unittest.TestCase):
@@ -162,6 +169,65 @@ class DeadTypeRegression(unittest.TestCase):
         self.assertFalse(self.DEAD & names, "dead types leaked into the IR")
         # measure-text is reachable via measure-attributes/@text, not dead.
         self.assertIn("measure-text", names)
+
+
+class ResolverIntegrity(unittest.TestCase):
+    """The resolution layer must produce a self-contained, resolvable view for
+    every complex type: groups fully spliced, attributes deduped and resolvable,
+    derived types carrying their base chain."""
+
+    def test_content_has_no_group_refs(self):
+        for xsd in XSDS:
+            with self.subTest(xsd=xsd.name):
+                m = build_ir(parse(xsd), xsd.stem)
+                r = Resolver.from_ir(m)
+                for c in m.complex_types:
+                    self._assert_no_group_refs(r.content(c), c.name)
+
+    def test_attributes_unique_and_resolvable(self):
+        for xsd in XSDS:
+            with self.subTest(xsd=xsd.name):
+                m = build_ir(parse(xsd), xsd.stem)
+                r = Resolver.from_ir(m)
+                value_names = {v.name for v in m.value_types}
+                for c in m.complex_types:
+                    names = [a.name for a in r.attributes(c)]
+                    self.assertEqual(len(names), len(set(names)), f"{c.name} dup attrs")
+                    for a in r.attributes(c):
+                        if a.type.category == "value":
+                            self.assertIn(a.type.name, value_names, f"{c.name}/{a.name}")
+
+    def test_elements_match_deps(self):
+        """elements() is the basis for deps: every complex element it surfaces
+        must appear in the type's recorded deps."""
+        for xsd in XSDS:
+            with self.subTest(xsd=xsd.name):
+                m = build_ir(parse(xsd), xsd.stem)
+                r = Resolver.from_ir(m)
+                for c in m.complex_types:
+                    for e in r.elements(c):
+                        if e.type.category == "complex":
+                            self.assertIn(e.type.name, c.deps, f"{c.name} -> {e.type.name}")
+
+    def test_all_attributes_includes_base(self):
+        m = build_ir(parse(XSD_40), "musicxml-4.0")
+        r = Resolver.from_ir(m)
+        derived = [c for c in m.complex_types if c.kind == "derived"]
+        self.assertTrue(derived, "expected derived types in 4.0")
+        for c in derived:
+            own = {a.name for a in r.attributes(c)}
+            full = {a.name for a in r.all_attributes(c)}
+            base = next(b for b in m.complex_types if b.name == c.base)
+            base_attrs = {a.name for a in r.attributes(base)}
+            self.assertTrue(own <= full)
+            self.assertTrue(base_attrs <= full, f"{c.name} missing base {c.base} attrs")
+
+    def _assert_no_group_refs(self, node, where: str) -> None:
+        if isinstance(node, (ir.Sequence, ir.Choice)):
+            for item in node.items:
+                self._assert_no_group_refs(item, where)
+        else:
+            self.assertNotIsInstance(node, ir.GroupRef, f"{where}: unresolved group ref")
 
 
 if __name__ == "__main__":

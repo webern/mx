@@ -31,3 +31,26 @@ def to_jsonable(obj):
 
 def to_json(obj) -> str:
     return json.dumps(to_jsonable(obj), indent=2)
+
+
+def resolved_view(resolver, ct) -> dict:
+    """A complex type as an emitter consumes it: attribute groups flattened into
+    one list, model-group refs spliced into the content. The collapsed form the
+    Resolver computes, shaped for inspection via `ir --resolve`."""
+    view: dict = {"kind": ct.kind, "name": ct.name}
+    attrs = resolver.attributes(ct)
+    if attrs:
+        view["attributes"] = attrs
+    if ct.kind == "derived":
+        view["base"] = ct.base
+        view["all_attributes"] = resolver.all_attributes(ct)
+    if ct.value_type:
+        view["value_type"] = ct.value_type
+    content = resolver.content(ct)
+    if content is not None:
+        view["content"] = content
+    if ct.presence_only:
+        view["presence_only"] = True
+    if ct.doc:
+        view["doc"] = ct.doc
+    return view

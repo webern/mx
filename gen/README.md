@@ -32,6 +32,7 @@ gen/
   ir/
     model.py         the IR dataclasses
     build.py         lowering from the XSD model to the IR
+    resolve.py       collapsed views (group + attribute-group resolution) for emitters
     dump.py          IR to JSON
   cpp/, test/go/, test/c/    per-target config and corert test harnesses
 ```
@@ -44,22 +45,32 @@ gen/
   references, ordering, dead-code removal, naming -- happens once, in the IR, shared by every
   target. Per-language choices (inheritance vs flattening, mixins vs inlined attributes) belong to
   the emitter. The IR takes no configuration.
-- Resolve, but preserve names. The IR computes every resolved answer (effective primitives,
-  cardinalities, dependency order) yet keeps the schema's named structure (aliases, inheritance
-  edges, model groups, attribute groups) so each emitter can decide how much to collapse.
+- Resolve, but preserve names. The IR data model computes every resolved answer (effective
+  primitives, cardinalities, dependency order) yet keeps the schema's named structure (aliases,
+  inheritance edges, model groups, attribute groups) so each emitter can decide how much to collapse.
+- One resolution, shared. The collapsed form most emitters actually want -- attribute groups
+  flattened into a single ordered list, model-group refs spliced into the content, a derived type's
+  full attribute set including its base chain -- is *not* duplicated into the data (which would risk
+  drift). It is computed on demand by the resolution layer (`ir/resolve.py`), so the
+  splicing-and-deduping reasoning lives once and every emitter shares it rather than re-deriving it.
 
 ## Usage
 
 ```
-python3 -m gen analyze [xsd]            # structural analysis report (text)
-python3 -m gen ir [--type NAME] [xsd]   # lower to IR, print as JSON (whole IR, or one type)
-python3 -m gen <config.toml>            # emit code for a target (not yet implemented)
+python3 -m gen analyze [xsd]                     # structural analysis report (text)
+python3 -m gen ir [--type NAME] [--resolve] [xsd] # lower to IR, print as JSON (whole IR, or one type)
+python3 -m gen <config.toml>                     # emit code for a target (not yet implemented)
 ```
+
+`--resolve` prints the *collapsed* view of complex types (attribute groups flattened, model-group
+refs spliced into the content, derived types carrying their full base-chain attribute set) -- the
+form an emitter consumes. Without it, `ir` prints the IR verbatim, with the named structure intact.
 
 `xsd` defaults to `docs/musicxml-4.0-ed15c23.xsd`. Examples:
 
 ```
 python3 -m gen ir --type note                          # one type
+python3 -m gen ir --type note --resolve                # one type, collapsed for an emitter
 python3 -m gen ir > build/ir/musicxml-4.0.ir.json      # whole IR (build/ is gitignored)
 jq '.complex_types[] | select(.name=="note")' build/ir/musicxml-4.0.ir.json
 python3 -m gen analyze docs/musicxml-3.1.xsd           # analyze a different version
@@ -111,7 +122,9 @@ The `stats` block summarizes the lowered model. Every key:
     `patterns` and length constraints. Includes plain string aliases. Emits a string wrapper with an
     optional pattern check.
   - union (4) -- a value that may be any one of several member value types or inline literal sets,
-    e.g. `number-or-normal` = decimal | "normal". IR field: `members`. Emits a small tagged variant.
+    e.g. `number-or-normal` = decimal | "normal". IR field: `members`, each a `UnionMember` holding
+    either a `ref` (a Ref to a value type or primitive) or inline `literals`. Emits a small tagged
+    variant.
 - complex_types (228) -- IR complex types: elements that carry attributes and/or child elements.
   Lowered from XSD complexTypes (including synthesized ones).
 - complex_kinds -- complex types by kind:
@@ -157,12 +170,36 @@ Terms used inside the lowered types, not in `stats`.
   (0 or 1), or `vector` (repeatable). Derived from min/max.
 - presence_only -- true for an empty element with no attributes: its only information is whether it
   appears, so it maps to a bool.
-- base -- for a `derived` complex type, the parent complex type it extends.
+- base -- for a `derived` complex type, the parent complex type it extends. The IR stores only the
+  added attributes; inherited attributes are reached through `base`, or flattened in one call by
+  `resolve.all_attributes`. `ComplexType.content` is defined for derived types but is currently
+  always empty: every MusicXML derivation adds attributes only, never content.
 - value_type -- for a `value` complex type, the Ref to the value type of its text body.
 - deps -- the complex types a type structurally depends on (child element types + base), resolved
   through groups. Drives the ordering below.
 - roots -- the document root elements: `score-partwise` and `score-timewise`.
 - builtins -- the map from XSD/external builtin names to canonical IR primitives.
+
+### Resolution layer
+
+The IR data model preserves the schema's named structure; `ir/resolve.py` collapses it on demand.
+`Resolver.from_ir(ir)` exposes four read-only accessors over a complex type, none of which mutate the
+IR:
+
+- `attributes(ct)` -- the type's own attributes with its `attribute_groups` expanded inline, in
+  declaration order, deduped by name. (`note`: 7 own + 5 groups -> 21 attributes.)
+- `all_attributes(ct)` -- `attributes(ct)` plus the base chain's attributes, base-most first, for a
+  target with no inheritance to lean on. (`mordent`: 3 own -> 20 once `empty-trill-sound` is merged.)
+- `content(ct)` -- `ct.content` with every model-group ref spliced in: a self-contained tree of
+  elements/sequences/choices with no `group` nodes left. Nesting and all min/max bounds are
+  preserved.
+- `elements(ct)` -- every element occurrence in the resolved content, in document order, flattened
+  across sequences/choices/groups (drops the choice/sequence grouping; use `content` when that
+  matters).
+
+`python3 -m gen ir --resolve` dumps this view. `build` itself uses the resolver to compute each
+complex type's `deps`, so the group-walking logic lives in exactly one place rather than once per
+emitter.
 
 ### Ordering
 
