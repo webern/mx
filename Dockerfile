@@ -14,6 +14,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         ccache \
         python3 \
         python3-venv \
+        golang-go \
+        libxml2-dev \
+        pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
 # Unversioned name so the Makefile invokes the formatter without the suffix.
