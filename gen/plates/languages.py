@@ -39,11 +39,22 @@ TYPE_MAPS: dict[str, dict[str, str]] = {
         "token": "std::string",
         "nmtoken": "std::string",
         "date": "std::string",
-        "decimal": "Decimal",
+        "decimal": "double",
         "integer": "int",
         "positive_integer": "int",
         "non_negative_integer": "int",
     },
+}
+
+# How enum constants are scoped, per language: `bare` when the language
+# scopes them inside the type (C++ enum class), `composed` when they share
+# one flat namespace and carry the type's name (Go package-level constants,
+# C's single global namespace). This is a language fact, not configuration;
+# the composition itself happens in the projection so Variant.ident is final.
+VARIANT_SCOPES: dict[str, str] = {
+    "go": "composed",
+    "c": "composed",
+    "cpp": "bare",
 }
 
 # Identifiers the sanitizer must not emit bare, per language: keywords plus
@@ -73,16 +84,21 @@ RESERVED: dict[str, tuple[str, ...]] = {
         "bool", "true", "false",  # <stdbool.h> is assumed by generated code
     ),
     "cpp": (
-        "alignas", "alignof", "and", "asm", "auto", "bool", "break", "case",
-        "catch", "char", "class", "const", "constexpr", "continue", "decltype",
-        "default", "delete", "do", "double", "else", "enum", "explicit",
-        "export", "extern", "false", "float", "for", "friend", "goto", "if",
-        "inline", "int", "long", "mutable", "namespace", "new", "noexcept",
-        "not", "nullptr", "operator", "or", "private", "protected", "public",
-        "register", "return", "short", "signed", "sizeof", "static", "struct",
-        "switch", "template", "this", "throw", "true", "try", "typedef",
-        "typeid", "typename", "union", "unsigned", "using", "virtual", "void",
-        "volatile", "while",
+        "alignas", "alignof", "and", "and_eq", "asm", "auto", "bitand",
+        "bitor", "bool", "break", "case", "catch", "char", "char8_t",
+        "char16_t", "char32_t", "class", "compl", "concept", "const",
+        "consteval", "constexpr", "constinit", "const_cast", "continue",
+        "co_await", "co_return", "co_yield", "decltype", "default", "delete",
+        "do", "double", "dynamic_cast", "else", "enum", "explicit", "export",
+        "extern", "false", "float", "for", "friend", "goto", "if", "inline",
+        "int", "long", "mutable", "namespace", "new", "noexcept", "not",
+        "not_eq", "nullptr", "operator", "or", "or_eq", "private",
+        "protected", "public", "register", "reinterpret_cast", "requires",
+        "return", "short", "signed", "sizeof", "static", "static_assert",
+        "static_cast", "struct", "switch", "template", "this", "thread_local",
+        "throw", "true", "try", "typedef", "typeid", "typename", "union",
+        "unsigned", "using", "virtual", "void", "volatile", "wchar_t",
+        "while", "xor", "xor_eq",
     ),
 }
 
@@ -104,3 +120,7 @@ def reserved_for(language: str) -> tuple[str, ...]:
 def doc_style_for(language: str) -> DocStyle:
     style = DOC_STYLES.get(language)
     return DocStyle(style=style.style, wrap=style.wrap) if style else DocStyle(style="")
+
+
+def variant_scope_for(language: str) -> str:
+    return VARIANT_SCOPES.get(language, "bare")

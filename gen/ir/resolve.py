@@ -47,14 +47,9 @@ class Resolver:
     def all_attributes(self, ct: ir.ComplexType) -> list[ir.Attr]:
         """attributes() plus the base chain's attributes (base-most first), for
         the flattened set an emitter needs when the target has no inheritance."""
-        chain: list[ir.ComplexType] = []
-        cur: ir.ComplexType | None = ct
-        while cur is not None:
-            chain.append(cur)
-            cur = self._complex.get(cur.base) if cur.base else None
         out: list[ir.Attr] = []
         seen: set[str] = set()
-        for c in reversed(chain):
+        for c in self.base_chain(ct):
             self._add_attrs(c.attributes, c.attribute_groups, out, seen, set())
         return out
 
@@ -99,7 +94,9 @@ class Resolver:
     def elements(self, ct: ir.ComplexType) -> list[ir.Element]:
         """Every element occurrence in ct's resolved content, in document order,
         flattened across sequences/choices/groups. Drops the choice/sequence
-        grouping; use content() when that structure matters."""
+        grouping and keeps each occurrence's LOCAL cardinality; use content()
+        when the structure matters and flat_elements() for the effective,
+        deduplicated field view an emitter wants."""
         out: list[ir.Element] = []
         self._collect_elements(self.content(ct), out)
         return out
@@ -110,6 +107,110 @@ class Resolver:
                 self._collect_elements(i, out)
         elif isinstance(p, ir.Element):
             out.append(p)
+
+    def flat_elements(self, ct: ir.ComplexType) -> list[tuple[ir.Element, str]]:
+        """Each distinct element name in ct's resolved content, in document
+        order of first occurrence, with its EFFECTIVE cardinality for a flat
+        one-field-per-name view:
+
+          - an element under any repeated particle (max != 1) is a vector;
+          - an element under a choice, or under an optional wrapper, is at
+            most optional;
+          - only an element required along a spine of exactly-once sequences
+            stays required.
+
+        Occurrences of the same name merge by co-occurrence analysis: if two
+        occurrences sit in different branches of one choice they are mutually
+        exclusive (at most one per instance: optional), but otherwise both
+        can appear in a single instance and the merged field must be a vector
+        (e.g. metronome's beat-unit, which appears on a branch's spine and
+        again inside that same branch's inner choice)."""
+        merged: dict[str, int] = {}  # name -> index into out
+        paths: dict[str, list[tuple]] = {}  # name -> choice paths seen
+        out: list[tuple[ir.Element, str]] = []
+        rank = {"required": 0, "optional": 1, "vector": 2}
+
+        def exclusive(a: tuple, b: tuple) -> bool:
+            """True when the two occurrence paths diverge at two different
+            branches of one choice node, so they can never co-occur."""
+            i = 0
+            while i < len(a) and i < len(b) and a[i] == b[i]:
+                i += 1
+            return (
+                i < len(a)
+                and i < len(b)
+                and a[i][0] == b[i][0]  # same choice node
+                and a[i][1] != b[i][1]  # different branches
+            )
+
+        def walk(node, forced: bool, repeated: bool, path: tuple) -> None:
+            if node is None:
+                return
+            if isinstance(node, ir.Element):
+                if repeated or node.card == "vector":
+                    card = "vector"
+                elif forced and node.card == "required":
+                    card = "required"
+                else:
+                    card = "optional"
+                if node.name not in merged:
+                    merged[node.name] = len(out)
+                    paths[node.name] = [path]
+                    out.append((node, card))
+                    return
+                i = merged[node.name]
+                prev_el, prev_card = out[i]
+                if all(exclusive(path, seen) for seen in paths[node.name]):
+                    # Alternative branches: at most one occurs, but none is
+                    # statically guaranteed.
+                    card = max(card, prev_card, key=lambda c: rank[c])
+                    if card == "required":
+                        card = "optional"
+                else:
+                    # The occurrences can co-occur in one instance.
+                    card = "vector"
+                paths[node.name].append(path)
+                out[i] = (prev_el, card)
+                return
+            if node.max == 0:
+                return  # a never-occurring particle contributes nothing
+            once = node.min >= 1 and node.max == 1
+            again = repeated or node.max != 1
+            if isinstance(node, ir.Sequence):
+                for item in node.items:
+                    walk(item, forced and once, again, path)
+            elif isinstance(node, ir.Choice):
+                for branch, item in enumerate(node.items):
+                    walk(item, False, again, path + ((id(node), branch),))
+            # GroupRef leaves cannot appear: content() spliced them.
+
+        walk(self.content(ct), True, False, ())
+        return out
+
+    def all_flat_elements(self, ct: ir.ComplexType) -> list[tuple[ir.Element, str]]:
+        """flat_elements() merged across the base chain (base-most first,
+        first occurrence of a name wins), mirroring all_attributes, for the
+        flattened view a target without inheritance emits."""
+        out: list[tuple[ir.Element, str]] = []
+        seen: set[str] = set()
+        for c in self.base_chain(ct):
+            for element, card in self.flat_elements(c):
+                if element.name not in seen:
+                    seen.add(element.name)
+                    out.append((element, card))
+        return out
+
+    # ----- derivation ------------------------------------------------------ #
+
+    def base_chain(self, ct: ir.ComplexType) -> list[ir.ComplexType]:
+        """ct's derivation chain, base-most first, ending with ct itself."""
+        chain: list[ir.ComplexType] = []
+        cur: ir.ComplexType | None = ct
+        while cur is not None:
+            chain.append(cur)
+            cur = self._complex.get(cur.base) if cur.base else None
+        chain.reverse()
+        return chain
 
     # ----- dependencies ---------------------------------------------------- #
 

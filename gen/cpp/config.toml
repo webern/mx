@@ -23,5 +23,11 @@ namespace = "mx::core"
 [naming]
 extends = "../naming.base.toml"  # schema-forced renames shared by all targets
 
+[types]
+# mx::core wraps xs:decimal in its own Decimal class; that is this target's
+# decision, not a C++ language fact, so it lives here rather than in the
+# language defaults.
+decimal = "Decimal"
+
 [layout]
 partition = "per-type"

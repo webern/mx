@@ -16,11 +16,44 @@ from gen.plates.model import ComplexPlate, EnumPlate, Plates, UnionPlate
 
 def run_checks(plates: Plates) -> list[str]:
     errors: list[str] = []
-    _check_type_idents(plates, errors)
-    _check_variants(plates, errors)
+    if plates.target.variant_scope == "composed":
+        _check_flat_namespace(plates, errors)
+    else:
+        _check_type_idents(plates, errors)
+        _check_variants_per_type(plates, errors)
     _check_members(plates, errors)
     _check_file_stems(plates, errors)
     return errors
+
+
+def _variant_pairs(plate) -> list[tuple[str, str]]:
+    """(ident, claimant description) for every constant a value plate emits."""
+    if isinstance(plate, EnumPlate):
+        return [(v.ident, f"{plate.name.wire}.{v.wire!r}") for v in plate.variants]
+    if isinstance(plate, UnionPlate):
+        return [
+            (v.ident, f"{plate.name.wire}.{v.wire!r}")
+            for m in plate.members
+            if m.literals
+            for v in m.literals
+        ]
+    return []
+
+
+def _check_flat_namespace(plates: Plates, errors: list[str]) -> None:
+    """For a composed variant scope, the target has one identifier namespace:
+    type identifiers and every (already composed) enum/literal constant must
+    be mutually unique -- this is the namespace the compiler actually sees."""
+    pairs = [
+        (p.ident, f"type {p.name.wire!r}")
+        for p in list(plates.value_types) + list(plates.complex_types)
+    ]
+    for p in plates.value_types:
+        pairs.extend(_variant_pairs(p))
+    for ident, claimants in _collisions(pairs):
+        errors.append(
+            f"identifier collision: {sorted(set(claimants))} all project to '{ident}'"
+        )
 
 
 def _collisions(pairs: list[tuple[str, str]]) -> list[tuple[str, list[str]]]:
@@ -47,19 +80,11 @@ def _check_type_idents(plates: Plates, errors: list[str]) -> None:
         )
 
 
-def _check_variants(plates: Plates, errors: list[str]) -> None:
+def _check_variants_per_type(plates: Plates, errors: list[str]) -> None:
+    """For a bare variant scope, constants live inside their type: uniqueness
+    is per enum (or per union's literal set)."""
     for p in plates.value_types:
-        if isinstance(p, EnumPlate):
-            pairs = [(v.ident, repr(v.wire)) for v in p.variants]
-        elif isinstance(p, UnionPlate):
-            pairs = [
-                (v.ident, repr(v.wire))
-                for m in p.members
-                if m.literals
-                for v in m.literals
-            ]
-        else:
-            continue
+        pairs = _variant_pairs(p)
         for ident, wires in _collisions(pairs):
             errors.append(
                 f"variant identifier collision in '{p.name.wire}': "

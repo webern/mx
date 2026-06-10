@@ -230,5 +230,101 @@ class ResolverIntegrity(unittest.TestCase):
             self.assertNotIsInstance(node, ir.GroupRef, f"{where}: unresolved group ref")
 
 
+class FlatElements(unittest.TestCase):
+    """flat_elements computes the effective cardinality a flat field view
+    needs. The merge must distinguish exclusive duplicates (two branches of
+    one choice: at most one occurs) from co-occurring duplicates (anything
+    else: both can appear in one instance, so the field is a vector)."""
+
+    def _resolver(self, complex_types, groups=()):
+        return Resolver(list(groups), [], list(complex_types))
+
+    def _ct(self, content):
+        return ir.ComplexType("t", "composite", content=content)
+
+    def _el(self, name, card="required", min=1, max=1):
+        return ir.Element(name, ir.Ref(name, "complex"), card, min, max)
+
+    def _flat(self, content) -> dict[str, str]:
+        ct = self._ct(content)
+        r = self._resolver([ct])
+        return {e.name: card for e, card in r.flat_elements(ct)}
+
+    def test_spine_of_exactly_once_sequences_keeps_required(self):
+        flat = self._flat(ir.Sequence([self._el("a"), self._el("b", "optional", 0)]))
+        self.assertEqual(flat, {"a": "required", "b": "optional"})
+
+    def test_choice_demotes_required_to_optional(self):
+        flat = self._flat(ir.Choice([self._el("a"), self._el("b")]))
+        self.assertEqual(flat, {"a": "optional", "b": "optional"})
+
+    def test_optional_sequence_wrapper_demotes(self):
+        flat = self._flat(ir.Sequence([self._el("a")], min=0))
+        self.assertEqual(flat, {"a": "optional"})
+
+    def test_repeated_wrapper_makes_vectors(self):
+        inner = ir.Choice([self._el("a"), self._el("b")], 0, ir.UNBOUNDED)
+        flat = self._flat(ir.Sequence([inner]))
+        self.assertEqual(flat, {"a": "vector", "b": "vector"})
+
+    def test_exclusive_duplicates_merge_to_optional(self):
+        # The same element heads two branches of one choice: never co-occurs.
+        flat = self._flat(
+            ir.Choice(
+                [
+                    ir.Sequence([self._el("a"), self._el("b", "optional", 0)]),
+                    ir.Sequence([self._el("a"), self._el("c")]),
+                ]
+            )
+        )
+        self.assertEqual(flat["a"], "optional")
+
+    def test_co_occurring_duplicates_merge_to_vector(self):
+        # One occurrence on a branch's spine, another inside that same
+        # branch's inner choice: both can appear in one instance (the
+        # metronome beat-unit shape).
+        flat = self._flat(
+            ir.Choice(
+                [
+                    ir.Sequence(
+                        [
+                            self._el("a"),
+                            ir.Choice([self._el("p"), ir.Sequence([self._el("a")])]),
+                        ]
+                    ),
+                    ir.Sequence([self._el("m")]),
+                ]
+            )
+        )
+        self.assertEqual(flat["a"], "vector")
+
+    def test_same_sequence_duplicates_merge_to_vector(self):
+        flat = self._flat(ir.Sequence([self._el("a"), self._el("a")]))
+        self.assertEqual(flat["a"], "vector")
+
+    def test_never_occurring_particle_is_skipped(self):
+        flat = self._flat(ir.Sequence([self._el("a"), ir.Sequence([self._el("z")], 0, 0)]))
+        self.assertEqual(flat, {"a": "required"})
+
+    def test_metronome_beat_unit_is_vector_in_real_schemas(self):
+        for xsd in XSDS:
+            with self.subTest(xsd=xsd.name):
+                m = build_ir(parse(xsd), xsd.stem)
+                r = Resolver.from_ir(m)
+                metronome = next(c for c in m.complex_types if c.name == "metronome")
+                flat = {e.name: card for e, card in r.flat_elements(metronome)}
+                self.assertEqual(flat["beat-unit"], "vector")
+
+    def test_all_flat_elements_merges_base_chain(self):
+        base = ir.ComplexType(
+            "base", "composite", content=ir.Sequence([self._el("a")])
+        )
+        derived = ir.ComplexType("derived", "derived", base="base")
+        r = self._resolver([base, derived])
+        flat = {e.name: card for e, card in r.all_flat_elements(derived)}
+        self.assertEqual(flat, {"a": "required"})
+        self.assertEqual([c.name for c in r.base_chain(derived)], ["base", "derived"])
+
+
 if __name__ == "__main__":
     unittest.main()

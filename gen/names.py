@@ -7,11 +7,15 @@ identifiers, never serialization (design R3).
 
 Conventions live in a registry keyed by name, so adding one later is
 registering one function; every Name simply grows a key (design R1).
+
+This module is deliberately a leaf: it is shared vocabulary for the config
+loader (which validates convention names and rename-entry keys) and for the
+Plates projection, so it sits below both and imports neither.
 """
 
 from __future__ import annotations
 
-from gen.plates.model import Name
+from dataclasses import dataclass
 
 # Word separators, split on and consumed. Hyphen covers ordinary kebab names;
 # dot covers sound ids like `brass.alphorn`; whitespace covers space-separated
@@ -24,11 +28,44 @@ DEFAULT_ACRONYMS = ("midi", "id", "xml", "css", "smufl", "uri", "url")
 
 # Fallback word vector for wire names that tokenize to nothing (the empty enum
 # value of positive-integer-or-empty and a few *-value enums). The wire form
-# stays ""; only the identifier gets a name. Config: [naming] empty-value-word.
-DEFAULT_EMPTY_WORD = "empty"
+# stays ""; only the identifier gets a name. A target wanting a different word
+# for a particular enum renames it: [rename.enum-value.<enum>] "" = "none".
+EMPTY_WORD = "empty"
 
 
-def tokenize(wire: str, empty_word: str = DEFAULT_EMPTY_WORD) -> tuple[str, ...]:
+@dataclass
+class Name:
+    """The neutral/bound name bundle. `wire` is the immutable on-the-wire
+    string (never a code identifier); `words` is the tokenized vector the
+    casings expand from; `cased` maps convention name -> identifier, filled
+    by iterating the convention registry."""
+
+    wire: str
+    words: tuple[str, ...]
+    cased: dict[str, str]
+
+    @property
+    def pascal(self) -> str:
+        return self.cased["pascal"]
+
+    @property
+    def camel(self) -> str:
+        return self.cased["camel"]
+
+    @property
+    def snake(self) -> str:
+        return self.cased["snake"]
+
+    @property
+    def kebab(self) -> str:
+        return self.cased["kebab"]
+
+    @property
+    def screaming(self) -> str:
+        return self.cased["screaming"]
+
+
+def tokenize(wire: str, empty_word: str = EMPTY_WORD) -> tuple[str, ...]:
     """Split a wire name into its canonical lowercase word vector."""
     tokens: list[str] = []
     current: list[str] = []
@@ -91,13 +128,25 @@ CONVENTIONS = {
     "screaming": lambda ws, ac: "_".join(w.upper() for w in ws),
 }
 
+# How a convention joins two already-cased parts when an identifier is
+# composed from a scope plus a member (a type name plus a variant name, for
+# targets whose enum constants share one namespace). Concatenating
+# conventions join with nothing; delimited conventions reuse their delimiter.
+JOINERS = {
+    "pascal": "",
+    "camel": "",
+    "snake": "_",
+    "kebab": "-",
+    "screaming": "_",
+}
+
 
 def sanitize_identifier(ident: str, reserved: frozenset[str], invalid_prefix: str = "_") -> str:
     """Make a recased identifier legal for a code target: non-identifier
     characters become underscores, a leading digit or empty result gets the
-    configured prefix, and reserved words get a trailing underscore (the
-    `suffix-underscore` policy). The pre-sanitized casing stays available on
-    the Name; collision detection runs on the sanitized result."""
+    configured prefix, and reserved words get a trailing underscore. The
+    pre-sanitized casing stays available on the Name; collision detection
+    runs on the sanitized result."""
     out = "".join(ch if ch.isalnum() or ch == "_" else "_" for ch in ident)
     if not out or out[0].isdigit():
         out = invalid_prefix + out
@@ -111,9 +160,10 @@ class NameFactory:
     honoring a fundamental rename (re-expands all casings from the new root)
     and per-convention overrides (pin one flavor, leave the rest expanded)."""
 
-    def __init__(self, acronyms=DEFAULT_ACRONYMS, empty_word: str = DEFAULT_EMPTY_WORD):
-        self.acronyms = frozenset(acronyms)
-        self.empty_word = empty_word
+    def __init__(self, acronyms=DEFAULT_ACRONYMS):
+        # The acronym set matches against already-lowercased words, so it is
+        # normalized here: acronyms = ["MIDI"] must behave like ["midi"].
+        self.acronyms = frozenset(a.lower() for a in acronyms)
 
     def make(
         self,
@@ -122,7 +172,7 @@ class NameFactory:
         overrides: dict[str, str] | None = None,
         pluralize: bool = False,
     ) -> Name:
-        words = tokenize(fundamental if fundamental is not None else wire, self.empty_word)
+        words = tokenize(fundamental if fundamental is not None else wire)
         if pluralize:
             words = words[:-1] + (words[-1] + "s",)
         cased = {conv: fn(words, self.acronyms) for conv, fn in CONVENTIONS.items()}

@@ -1,24 +1,27 @@
 """Project the IR onto one target: build the Plates.
 
 The build consumes the IR and its Resolver (it never re-derives a schema
-fact) plus a Config, and produces the materialized Plates tree. Three phases,
-each failing loud:
+fact: splicing, base-chain merging, and effective cardinality all come from
+gen.ir.resolve) plus a Config, and produces the materialized Plates tree.
+Three phases, each failing loud:
 
-  1. Rename validation: every [rename.*] key must name something the IR
-     actually contains (a stale or misspelled key is a build error).
+  1. Config-against-IR validation: every [rename.*] key must name something
+     the IR actually contains, and every [types] key a real primitive (a
+     stale or misspelled key is a build error).
   2. Projection: names are tokenized and recased, renames and overrides
-     applied, identifiers sanitized, types mapped, strategies and files
-     assigned.
+     applied, identifiers composed per the target's scoping and sanitized,
+     types mapped, strategies and files assigned.
   3. Collision detection (gen.plates.check): distinct wire names that
      collapsed to one identifier under the projection are reported together.
 """
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
+from gen.config import Config
 from gen.ir import model as ir
+from gen.ir.build import PRIMITIVES
 from gen.ir.resolve import Resolver
+from gen.names import DEFAULT_ACRONYMS, JOINERS, NameFactory, sanitize_identifier
 from gen.plates import languages
 from gen.plates.check import run_checks
 from gen.plates.model import (
@@ -37,12 +40,6 @@ from gen.plates.model import (
     UnionPlateMember,
     Variant,
 )
-from gen.plates.names import DEFAULT_ACRONYMS, NameFactory, sanitize_identifier
-
-if TYPE_CHECKING:
-    # Imported for annotations only: gen.config imports the convention
-    # registry from gen.plates.names, so a runtime import here would cycle.
-    from gen.config import Config
 
 
 class PlatesError(Exception):
@@ -72,8 +69,7 @@ class _Builder:
 
         naming = config.naming
         self.factory = NameFactory(
-            naming.acronyms if naming.acronyms is not None else DEFAULT_ACRONYMS,
-            naming.empty_value_word,
+            naming.acronyms if naming.acronyms is not None else DEFAULT_ACRONYMS
         )
         self.reserved = frozenset(languages.reserved_for(config.target.language)) | set(
             config.reserved.words
@@ -81,6 +77,7 @@ class _Builder:
         self.invalid_prefix = config.reserved.invalid_prefix
         self.type_map = languages.type_map_for(config.target.language)
         self.type_map.update(config.types)
+        self.variant_scope = languages.variant_scope_for(config.target.language)
 
         # Every type's Name and final identifier, computed up front so any
         # reference can be resolved to its target spelling in one lookup.
@@ -96,7 +93,7 @@ class _Builder:
     # ----- entry ------------------------------------------------------------ #
 
     def build(self) -> Plates:
-        errors = self._validate_renames()
+        errors = self._validate_config_against_ir()
         if errors:
             raise PlatesError(errors)
 
@@ -106,7 +103,6 @@ class _Builder:
             value_types=[self._value_plate(v) for v in self.m.value_types],
             complex_types=[self._complex_plate(c) for c in self.m.complex_types],
             roots=[self._plate_ref(ir.Ref(r.type, "complex")) for r in self.m.roots],
-            type_map=dict(self.type_map),
         )
         plates.files = self._assign_files(plates)
         return plates
@@ -126,6 +122,7 @@ class _Builder:
             variant_convention=n.variant_convention,
             file_convention=n.file_convention,
             inheritance=t.inheritance,
+            variant_scope=self.variant_scope,
             doc_style=doc_style,
             reserved=sorted(self.reserved),
             partition=self.cfg.layout.partition,
@@ -165,14 +162,35 @@ class _Builder:
         )
 
     def _variant(self, scope_wire: str, value_wire: str) -> Variant:
+        """Project one enum value (or union literal). The final constant
+        identifier follows the target's variant scope: `bare` sanitizes the
+        variant casing alone; `composed` joins the owning type's casing (and
+        symbol prefix) in the variant convention's join style, because the
+        constant will live in a flat namespace."""
         entry = self.cfg.renames.enum_values.get((scope_wire, value_wire))
         name = self.factory.make(
             value_wire,
             fundamental=entry.fundamental if entry else None,
             overrides=entry.cased if entry else None,
         )
-        ident = self._sanitize(name.cased[self.cfg.naming.variant_convention])
-        return Variant(wire=value_wire, name=name, ident=ident)
+        conv = self.cfg.naming.variant_convention
+        if self.variant_scope == "composed":
+            joiner = JOINERS.get(conv, "_")
+            if joiner:
+                parts = []
+                if self.cfg.target.prefix:
+                    prefix_name = self.factory.make(self.cfg.target.prefix)
+                    parts.append(prefix_name.cased[conv])
+                parts.append(self.type_names[scope_wire].cased[conv])
+                parts.append(name.cased[conv])
+                raw = joiner.join(parts)
+            else:
+                # Concatenating conventions: the type identifier (which
+                # already carries the prefix) plus the variant casing.
+                raw = self.type_idents[scope_wire] + name.cased[conv]
+        else:
+            raw = name.cased[conv]
+        return Variant(wire=value_wire, name=name, ident=self._sanitize(raw))
 
     def _field_ident(self, name: Name) -> str:
         raw = self.cfg.naming.field_prefix + name.cased[self.cfg.naming.field_convention]
@@ -224,7 +242,10 @@ class _Builder:
         members = []
         for m in v.members:
             if m.ref is not None:
-                members.append(UnionPlateMember(ref=self._plate_ref(m.ref)))
+                member_name = self.type_names.get(m.ref.name) or self.factory.make(m.ref.name)
+                members.append(
+                    UnionPlateMember(ref=self._plate_ref(m.ref), name=member_name)
+                )
             else:
                 # An inline literal set projects like a tiny anonymous enum;
                 # its variants are addressable for renames under the union's
@@ -246,10 +267,12 @@ class _Builder:
             "derived": "inherit" if self.cfg.target.inheritance else "flatten",
         }[ct.kind]
 
-        members = self._members(ct, self.resolver.attributes(ct))
+        members = self._members(ct, flatten=False)
         all_members = None
         if ct.kind == "derived":
-            all_members = self._members(ct, self.resolver.all_attributes(ct), flatten=True)
+            # Built under either strategy, so the collision gate covers the
+            # merged chain even for inheriting targets.
+            all_members = self._members(ct, flatten=True)
 
         return ComplexPlate(
             name=self.type_names[ct.name],
@@ -264,31 +287,24 @@ class _Builder:
             doc=ct.doc,
         )
 
-    def _members(self, ct: ir.ComplexType, attrs: list[ir.Attr], flatten: bool = False) -> list[Member]:
+    def _members(self, ct: ir.ComplexType, flatten: bool) -> list[Member]:
         """The flat field list: attributes first, then the text value body,
-        then child elements in document order (deduped by wire name). When
-        flattening a derived type, the base chain's value body and elements
-        are merged in (base-most first), mirroring all_attributes."""
-        members = [self._attr_member(ct.name, a) for a in attrs]
-
-        chain = [ct]
+        then child elements in document order. The flattened variant merges
+        the base chain (base-most first) via the Resolver's chain views."""
         if flatten:
-            cur = ct
-            while cur.base and cur.base in self.complex_by_name:
-                cur = self.complex_by_name[cur.base]
-                chain.append(cur)
-            chain.reverse()  # base-most first
+            attrs = self.resolver.all_attributes(ct)
+            elements = self.resolver.all_flat_elements(ct)
+            chain = self.resolver.base_chain(ct)
+        else:
+            attrs = self.resolver.attributes(ct)
+            elements = self.resolver.flat_elements(ct)
+            chain = [ct]
 
+        members = [self._attr_member(ct.name, a) for a in attrs]
         for c in chain:
             if c.value_type is not None:
                 members.append(self._value_member(c.value_type))
-        seen: set[str] = set()
-        for c in chain:
-            for occ_name, element, cardinality in self._element_occurrences(c):
-                if occ_name in seen:
-                    continue
-                seen.add(occ_name)
-                members.append(self._element_member(element, cardinality))
+        members += [self._element_member(e, card) for e, card in elements]
         return members
 
     def _attr_member(self, owner_wire: str, a: ir.Attr) -> Member:
@@ -329,56 +345,6 @@ class _Builder:
             cardinality=cardinality,
             doc=element.doc,
         )
-
-    def _element_occurrences(self, ct: ir.ComplexType) -> list[tuple[str, ir.Element, str]]:
-        """Walk the resolved content tree computing each element's effective
-        cardinality for a flat member list: an element under a repeated
-        sequence/choice is a vector; an element under a choice (or an optional
-        wrapper) is at most optional; only an element required along a spine
-        of exactly-once sequences stays required. Occurrences of the same
-        name (e.g. the same element in two choice branches) are merged by the
-        caller: vector beats optional beats required, first name wins order."""
-        out: list[tuple[str, ir.Element, str]] = []
-        merged: dict[str, int] = {}  # name -> index in out
-        rank = {"required": 0, "optional": 1, "vector": 2}
-
-        def walk(node, forced: bool, repeated: bool) -> None:
-            if node is None:
-                return
-            if isinstance(node, ir.Element):
-                if repeated:
-                    card = "vector"
-                elif node.card == "vector":
-                    card = "vector"
-                elif node.card == "required" and forced:
-                    card = "required"
-                else:
-                    card = "optional"
-                if node.name in merged:
-                    i = merged[node.name]
-                    prev_name, prev_el, prev_card = out[i]
-                    # A second occurrence means alternative branches: the
-                    # member cannot be statically required.
-                    card = max(card, prev_card, key=lambda c: rank[c])
-                    if card == "required":
-                        card = "optional"
-                    out[i] = (prev_name, prev_el, card)
-                else:
-                    merged[node.name] = len(out)
-                    out.append((node.name, node, card))
-                return
-            once = node.min >= 1 and node.max == 1
-            again = repeated or node.max == ir.UNBOUNDED or (node.max != 1)
-            if isinstance(node, ir.Sequence):
-                for item in node.items:
-                    walk(item, forced and once, again)
-            elif isinstance(node, ir.Choice):
-                for item in node.items:
-                    walk(item, False, again)
-            # GroupRef leaves cannot appear: the Resolver spliced them.
-
-        walk(self.resolver.content(ct), True, False)
-        return out
 
     def _default_variant(self, type_ref: ir.Ref, literal: str | None) -> str | None:
         """When a default/fixed literal names a variant of the member's enum
@@ -432,14 +398,21 @@ class _Builder:
                 deps.add(plate.base.wire)
         return deps
 
-    # ----- rename validation ------------------------------------------------------ #
+    # ----- config-against-IR validation ----------------------------------------- #
 
-    def _validate_renames(self) -> list[str]:
-        """Every rename key must address something in the IR (design 6.5):
-        a typo or a key left stale after a schema bump is a build error, not
-        a silently ignored line."""
+    def _validate_config_against_ir(self) -> list[str]:
+        """Every rename key must address something in the IR, and every
+        [types] key a real primitive (design 6.5): a typo or a key left stale
+        after a schema bump is a build error, not a silently ignored line."""
         r = self.cfg.renames
         errors: list[str] = []
+
+        for primitive in self.cfg.types:
+            if primitive not in PRIMITIVES:
+                errors.append(
+                    f"[types] {primitive}: not an IR primitive "
+                    f"({', '.join(sorted(PRIMITIVES))})"
+                )
 
         type_wires = set(self.values_by_name) | set(self.complex_by_name)
         for wire in r.types:

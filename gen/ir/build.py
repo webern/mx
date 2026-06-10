@@ -45,6 +45,11 @@ _EXTERNAL_ATTR = {
 
 _NUMERIC = {"decimal", "integer", "positive_integer", "non_negative_integer"}
 
+# The closed set of canonical IR primitives (the values of the builtins map):
+# everything a Ref with category "primitive" can name, and the keys a target
+# type map may override.
+PRIMITIVES = frozenset(_XS_PRIMITIVE.values()) | frozenset(_EXTERNAL_ATTR.values())
+
 
 def _primitive(name: str) -> str:
     if name in _XS_PRIMITIVE:

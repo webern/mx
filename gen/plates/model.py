@@ -29,38 +29,9 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 from gen.ir import model as ir
+from gen.names import Name
 
-
-@dataclass
-class Name:
-    """The neutral/bound name bundle. `wire` is the immutable on-the-wire
-    string (never a code identifier); `words` is the tokenized vector the
-    casings expand from; `cased` maps convention name -> identifier, filled
-    by iterating the convention registry (gen.plates.names.CONVENTIONS)."""
-
-    wire: str
-    words: tuple[str, ...]
-    cased: dict[str, str]
-
-    @property
-    def pascal(self) -> str:
-        return self.cased["pascal"]
-
-    @property
-    def camel(self) -> str:
-        return self.cased["camel"]
-
-    @property
-    def snake(self) -> str:
-        return self.cased["snake"]
-
-    @property
-    def kebab(self) -> str:
-        return self.cased["kebab"]
-
-    @property
-    def screaming(self) -> str:
-        return self.cased["screaming"]
+__all__ = ["Name"]  # re-exported: templates reach all plate vocabulary here
 
 
 @dataclass
@@ -68,7 +39,9 @@ class PlateRef:
     """A reference to another type, resolved for the target: `wire` and
     `category` mirror the IR Ref; `ident` is the spelling a template prints --
     the referenced plate's type identifier, or the mapped target type when the
-    category is `primitive`."""
+    category is `primitive`. For primitives, `wire` carries the IR's canonical
+    primitive name (e.g. `non_negative_integer`), not an XSD spelling: builtins
+    never appear on the wire themselves."""
 
     wire: str
     category: str  # "complex" | "value" | "primitive"
@@ -96,6 +69,7 @@ class TargetInfo:
     variant_convention: str
     file_convention: str
     inheritance: bool  # derived strategy: True -> inherit, False -> flatten
+    variant_scope: str  # "bare" | "composed" (see Variant)
     doc_style: DocStyle
     reserved: list[str]  # language defaults + [reserved] words, sorted
     partition: str  # "per-type" | "single"
@@ -109,10 +83,12 @@ class TargetInfo:
 @dataclass
 class Variant:
     """One enum value. `wire` is retained for serialization; `ident` is the
-    sanitized identifier in the variant convention. Both are kept: a target
-    whose enum constants are scoped by composition (Go `NoteTypeValue1024th`,
-    C `MX_NOTE_TYPE_VALUE_1024TH`) composes from `name.cased`, while a target
-    whose constants stand alone uses `ident` (where `1024th` -> `_1024th`)."""
+    FINAL emitted constant identifier -- templates print it verbatim, and the
+    collision gate certifies it. Its shape follows the target's variant scope
+    (a language fact seeded in gen.plates.languages): `bare` for languages
+    whose enum constants live inside the type (C++ `enum class` -> `_1024th`),
+    `composed` for languages where they share one flat namespace (Go
+    `NoteTypeValue1024th`, C `MX_NOTE_TYPE_VALUE_1024TH`)."""
 
     wire: str
     name: Name
@@ -172,11 +148,15 @@ class StringPlate:
 
 @dataclass
 class UnionPlateMember:
-    """Exactly one is set: a resolved reference to a member type, or an inline
-    literal set projected like a tiny anonymous enum (each literal carries its
-    wire form and a variant identifier)."""
+    """Exactly one of ref/literals is set: a resolved reference to a member
+    type, or an inline literal set projected like a tiny anonymous enum (each
+    literal carries its wire form and a variant identifier). A ref member also
+    carries `name`, the referenced type's name bundle, so a template can spell
+    the member's tag/field without inventing a name (a primitive member like
+    `positive_integer` has no plate to look it up on)."""
 
     ref: PlateRef | None = None
+    name: Name | None = None
     literals: list[Variant] | None = None
 
 
@@ -226,12 +206,21 @@ class ComplexPlate:
     """One complex type, projected. `members` is the flat, deduped, ordered
     field list a code target emits (attributes, then the value body, then
     child elements in document order); `content` is the resolved
-    sequence/choice particle tree (groups spliced; IR node types) for a
-    target that cares about order and choice structure.
+    sequence/choice particle tree for a target that cares about order and
+    choice structure.
+
+    `content` deliberately re-presents the IR's particle node types
+    (Sequence/Choice/Element from gen.ir.model, groups already spliced): the
+    neutral core IS the IR re-presented, and a parallel node hierarchy would
+    only drift. Those node types are therefore part of this layer's public
+    contract. A template joining a content occurrence back to the field it
+    populates uses `member(wire, kind="element")` rather than re-walking.
 
     A derived plate exposes both the `base` edge (for a target with
     inheritance) and `all_members` (the base chain merged, for one without);
-    `strategy` says which one this target uses."""
+    `strategy` says which one this target uses. Both views are always
+    populated for derived plates so the collision gate covers them under
+    either strategy."""
 
     name: Name
     ident: str
@@ -245,6 +234,15 @@ class ComplexPlate:
     doc: str | None = None
     file: str | None = None
     kind: str = "complex"
+
+    def member(self, wire: str, kind: str | None = None) -> Member:
+        """The member a content occurrence or attribute wire name populates.
+        `kind` disambiguates the rare wire name carried by both an attribute
+        and an element (e.g. barline's segno)."""
+        for m in self.members:
+            if m.name.wire == wire and (kind is None or m.kind == kind):
+                return m
+        raise KeyError(f"{self.name.wire}: no member {wire!r} (kind={kind})")
 
 
 # --------------------------------------------------------------------------- #
@@ -276,7 +274,6 @@ class Plates:
     complex_types: list[ComplexPlate] = field(default_factory=list)
     roots: list[PlateRef] = field(default_factory=list)
     files: list[FileSpec] | None = None  # None when partition == "single"
-    type_map: dict[str, str] = field(default_factory=dict)
 
     def __post_init__(self):
         # Random-access index for templates; a plain attribute (not a

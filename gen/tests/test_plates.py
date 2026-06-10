@@ -25,8 +25,8 @@ from gen.config import Config, ConfigError, RenameEntry
 from gen.ir import model as ir
 from gen.ir.build import build_ir
 from gen.ir.dump import to_json
-from gen.plates import PlatesError, build_plates
-from gen.plates.names import NameFactory, sanitize_identifier, tokenize
+from gen.names import NameFactory, sanitize_identifier, tokenize
+from gen.plates import PlatesError, build_for_config, build_plates
 from gen.xsd import parse
 
 REPO = Path(__file__).resolve().parents[2]
@@ -36,13 +36,8 @@ CPP_CONFIG = REPO / "gen" / "cpp" / "config.toml"
 
 
 def build_for(config_path: Path):
-    config = cfg.load(config_path)
-    m = build_ir(parse(config.xsd), source=config.xsd.stem)
-    if config.sounds_xml is not None:
-        from gen.ir.sounds import patch_sounds, read_sound_ids
-
-        patch_sounds(m, read_sound_ids(config.sounds_xml))
-    return build_plates(m, config), config
+    # The CLI and the tests share one pipeline so they cannot drift.
+    return build_for_config(config_path)
 
 
 class TokenizerAndConventions(unittest.TestCase):
@@ -237,6 +232,80 @@ class Projection(unittest.TestCase):
         members = {m.name.wire: m for m in plates.plate("note").members}
         self.assertEqual(members["default-x"].type_ref.ident, "decimal")
 
+    def test_element_rename_applies_to_members(self):
+        config = Config()
+        config.renames.elements["tie"] = RenameEntry(fundamental="tie-mark")
+        plates = build_plates(tiny_ir(), config)
+        member = plates.plate("note").member("tie", kind="element")
+        self.assertEqual(member.name.snake, "tie_mark")
+        self.assertEqual(member.name.wire, "tie")
+
+    def test_composed_scope_builds_flat_namespace_constants(self):
+        config = Config()
+        config.target.language = "go"
+        config.naming.field_convention = "pascal"
+        config.naming.variant_convention = "pascal"
+        plates = build_plates(tiny_ir(), config)
+        enum = plates.plate("up-down")
+        self.assertEqual([v.ident for v in enum.variants], ["UpDownUp", "UpDownDown"])
+        # A composed constant colliding with a TYPE identifier is caught: pin
+        # casings so type "no" + variant "te" composes to the type ident
+        # "Note" of the existing note type.
+        config.renames.types["up-down"] = RenameEntry(fundamental="no")
+        config.renames.enum_values[("up-down", "up")] = RenameEntry(
+            cased={"pascal": "te"}
+        )
+        with self.assertRaises(PlatesError) as caught:
+            build_plates(tiny_ir(), config)
+        self.assertIn("identifier collision", caught.exception.errors[0])
+        self.assertIn("Note", caught.exception.errors[0])
+
+    def test_composed_scope_with_prefix_screams(self):
+        config = Config()
+        config.target.language = "c"
+        config.target.prefix = "Mx"
+        config.naming.variant_convention = "screaming"
+        plates = build_plates(tiny_ir(), config)
+        enum = plates.plate("up-down")
+        self.assertEqual(enum.variants[0].ident, "MX_UP_DOWN_UP")
+
+    def test_file_stem_collision_checked_case_insensitively(self):
+        config = Config()
+        config.layout.partition = "per-type"
+        # Pin pitch's snake (the file convention) to differ from note's only
+        # by case: distinct identifiers, same file on macOS/Windows.
+        config.renames.types["pitch"] = RenameEntry(cased={"snake": "Note"})
+        with self.assertRaises(PlatesError) as caught:
+            build_plates(tiny_ir(), config)
+        self.assertIn("file stem collision", "\n".join(caught.exception.errors))
+
+    def test_unknown_types_key_fails_loud(self):
+        config = Config(types={"decmial": "double"})
+        with self.assertRaises(PlatesError) as caught:
+            build_plates(tiny_ir(), config)
+        self.assertIn("not an IR primitive", caught.exception.errors[0])
+
+    def test_derived_all_members_built_for_inheriting_targets(self):
+        base = ir.ComplexType(
+            "base-type", "empty",
+            attributes=[ir.Attr("color", ir.Ref("token", "primitive"))],
+        )
+        derived = ir.ComplexType(
+            "derived-type", "derived", base="base-type",
+            attributes=[ir.Attr("size", ir.Ref("token", "primitive"))],
+            deps=["base-type"],
+        )
+        m = tiny_ir()
+        m.complex_types += [base, derived]
+        config = Config()  # inheritance defaults to True
+        plates = build_plates(m, config)
+        plate = plates.plate("derived-type")
+        self.assertEqual(plate.strategy, "inherit")
+        self.assertIsNotNone(plate.all_members)  # gate coverage either way
+        self.assertEqual(
+            [mm.name.wire for mm in plate.all_members], ["color", "size"]
+        )
+
 
 class RealTargets(unittest.TestCase):
     """The shipped configs must project cleanly, deterministically, and with
@@ -276,19 +345,43 @@ class RealTargets(unittest.TestCase):
     def test_empty_enum_value_gets_fallback_identifier(self):
         enum = self.go.plate("breath-mark-value")
         empty = next(v for v in enum.variants if v.wire == "")
-        self.assertEqual(empty.ident, "Empty")
+        self.assertEqual(empty.ident, "BreathMarkValueEmpty")  # composed scope
 
-    def test_digit_led_variant_sanitized_but_casing_kept(self):
-        enum = self.go.plate("note-type-value")
-        v1024 = next(v for v in enum.variants if v.wire == "1024th")
+    def test_variant_idents_are_final_per_scope(self):
+        # Go and C compose into their flat constant namespaces; the digit-led
+        # value needs no sanitizer mangling once composed.
+        go_enum = self.go.plate("note-type-value")
+        v1024 = next(v for v in go_enum.variants if v.wire == "1024th")
         self.assertEqual(v1024.name.pascal, "1024th")  # the ideal is recorded
-        self.assertEqual(v1024.ident, "_1024th")  # the sanitized result
+        self.assertEqual(v1024.ident, "NoteTypeValue1024th")
+        c_enum = self.c.plate("note-type-value")
+        c1024 = next(v for v in c_enum.variants if v.wire == "1024th")
+        self.assertEqual(c1024.ident, "MX_NOTE_TYPE_VALUE_1024TH")
+        self.assertEqual(self.go.target.variant_scope, "composed")
+        self.assertEqual(self.cpp.target.variant_scope, "bare")
+        cpp_enum = self.cpp.plate("note-type-value")
+        cpp1024 = next(v for v in cpp_enum.variants if v.wire == "1024th")
+        self.assertEqual(cpp1024.ident, "_1024th")  # bare: sanitizer applies
 
     def test_default_variant_resolution_in_real_schema(self):
         plate = self.go.plate("strong-accent")
         member = next(m for m in plate.members if m.name.wire == "type")
         self.assertEqual(member.default, "up")
-        self.assertEqual(member.default_variant, "Up")
+        self.assertEqual(member.default_variant, "UpDownUp")
+
+    def test_flat_cardinality_in_real_schema(self):
+        # metronome's beat-unit occurs on a branch spine AND inside that same
+        # branch's inner choice: the occurrences co-occur, so the flat member
+        # must be a vector (the corpus exercises this: beat-unit-tied).
+        metronome = {m.name.wire: m for m in self.go.plate("metronome").members}
+        self.assertEqual(metronome["beat-unit"].cardinality, "vector")
+        # pitch's spine is exactly-once sequences: step stays required.
+        pitch = {m.name.wire: m for m in self.go.plate("pitch").members}
+        self.assertEqual(pitch["step"].cardinality, "required")
+        # note's cue occurs in two exclusive branches of one choice.
+        note = {m.name.wire: m for m in self.go.plate("note").members}
+        self.assertEqual(note["cue"].cardinality, "optional")
+        self.assertEqual(note["tie"].cardinality, "vector")  # maxOccurs=2
 
     def test_sound_id_fold_present_only_with_sounds(self):
         self.assertTrue(self.c.has_plate("sound-id"))
@@ -366,13 +459,33 @@ class ConfigParsing(unittest.TestCase):
         with self.assertRaises(ConfigError):
             self._load("[rename.type.note]\npasta = 'MusicNote'\n")
 
+    def test_unknown_top_level_sections_fail(self):
+        # The flagship fail-loud guarantee must hold at the outermost level:
+        # [renames] (typo) silently dropping every rename would be the worst
+        # silent misconfiguration in the system.
+        with self.assertRaises(ConfigError):
+            self._load("[renames.type]\nnote = 'tone'\n")
+        with self.assertRaises(ConfigError):
+            self._load("[targets]\nlanguage = 'go'\n")
+        with self.assertRaises(ConfigError):
+            self._load("[input]\nxsd_file = 'x.xsd'\n")
+
     def test_unsupported_values_fail(self):
         with self.assertRaises(ConfigError):
             self._load("[layout]\npartition = 'sharded'\n")
         with self.assertRaises(ConfigError):
-            self._load("[reserved]\npolicy = 'rename'\n")
-        with self.assertRaises(ConfigError):
             self._load("[naming]\ntype-convention = 'dot'\n")
+
+    def test_string_lists_reject_bare_strings(self):
+        # A bare TOML string would silently explode into characters.
+        with self.assertRaises(ConfigError):
+            self._load("[naming]\nacronyms = 'midi'\n")
+        with self.assertRaises(ConfigError):
+            self._load("[reserved]\nwords = 'class'\n")
+
+    def test_empty_rename_entry_fails(self):
+        with self.assertRaises(ConfigError):
+            self._load("[rename.type.note]\n")
 
     def test_extends_merges_with_target_precedence(self):
         with tempfile.TemporaryDirectory() as d:
@@ -411,6 +524,32 @@ class ConfigParsing(unittest.TestCase):
         self.assertEqual(
             config.renames.enum_values[("up-down", "down")].fundamental, "base-down"
         )
+
+    def _load_with_base(self, base_text: str, target_text: str) -> Config:
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "base.toml").write_text(base_text)
+            target = Path(d) / "config.toml"
+            target.write_text('[naming]\nextends = "base.toml"\n' + target_text)
+            return cfg.load(target)
+
+    def test_extends_rejects_chained_bases(self):
+        with self.assertRaises(ConfigError):
+            self._load_with_base("[naming]\nextends = 'grand.toml'\n", "")
+
+    def test_extends_rejects_foreign_sections_in_base(self):
+        # A [reserved] or [types] in the base would be silently dead.
+        with self.assertRaises(ConfigError):
+            self._load_with_base("[reserved]\nwords = ['class']\n", "")
+
+    def test_extends_rejects_scope_shape_disagreement(self):
+        # The base addresses an owner scope; the target a global entry of the
+        # same name. Wholesale replacement would quietly drop the base's
+        # renames, so the disagreement must be loud.
+        with self.assertRaises(ConfigError):
+            self._load_with_base(
+                "[rename.attribute.barline]\nsegno = 'segno-sound'\n",
+                "[rename.attribute]\nbarline = 'bar-line'\n",
+            )
 
 
 if __name__ == "__main__":

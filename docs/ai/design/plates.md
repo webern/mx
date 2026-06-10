@@ -673,3 +673,45 @@ these deliberate deltas:
 - **`xs:ID`/`xs:IDREF` canonicalized in the IR.** They surfaced as accidental ninth and tenth
   primitives via the builtin fallback; the IR now folds them to `token`, keeping the primitive set
   the eight this document assumes.
+
+Revised after the first implementation review (one code review, one architecture review):
+
+- **`Variant.ident` is the final emitted constant.** How enum constants are scoped is a language
+  fact seeded in `gen/plates/languages.py`: `bare` where the language scopes them inside the type
+  (C++ `enum class` -> `_1024th`), `composed` where they share one flat namespace (Go
+  `NoteTypeValue1024th`, C `MX_NOTE_TYPE_VALUE_1024TH`). The projection composes (prefix + type
+  casing + variant casing, joined in the variant convention's style), sanitizes, and stores the
+  result; templates print it verbatim. The collision gate runs in the namespace the target actually
+  has: for `composed`, type identifiers and all constants are checked mutually; for `bare`,
+  per-enum. (Originally the composition was left to templates, which both broke "templates do no
+  naming" and blinded the gate to the real namespace.)
+- **Effective cardinality lives in the Resolver.** `Resolver.flat_elements` /
+  `all_flat_elements` / `base_chain` (gen/ir/resolve.py) own the flattened field view: repeated
+  wrappers make vectors, choices demote to optional, and duplicate occurrences of one name merge by
+  co-occurrence analysis -- occurrences in different branches of one choice are exclusive
+  (optional), anything else can co-occur in a single instance and must be a vector. The review
+  caught a real bug here: `metronome`'s `beat-unit` appears on a branch's spine and again inside
+  that branch's inner choice, so it must merge to vector, not optional (the corpus exercises this).
+  Schema reasoning of this kind belongs in the resolution layer, not the projection.
+- **The naming vocabulary is a leaf module.** Tokenizer, convention registry, `Name`, and the
+  sanitizer live in `gen/names.py`, below both `gen/config.py` (which validates convention names)
+  and `gen/plates/` -- removing a latent config -> plates import cycle.
+- **Config surface cuts.** `[layout] include-style` (consumed by nothing), `[reserved] policy` (one
+  legal value), and `[naming] empty-value-word` (strictly weaker than a scoped enum-value rename)
+  were removed. Unknown top-level sections are rejected, as are unknown keys in
+  `[input]`/`[output]`/`[sounds]`. `extends` is hardened: a base may not chain, may hold only
+  `[naming]`/`[rename]`, and a scope/entry shape disagreement between base and target is an error.
+  String-list keys reject bare strings. `[types]` keys must name real IR primitives. The cpp
+  `decimal = "Decimal"` mapping moved from the language seeds to `gen/cpp/config.toml` (it is an
+  mx::core decision, not a C++ fact).
+- **`Plates.type_map` dropped from the public object.** Members and value plates already carry
+  their resolved spellings (`PlateRef.ident`, `target_type`); publishing the raw map a second way
+  was drift surface.
+- **`all_members` is always built for derived plates**, so the collision gate covers the merged
+  chain under both the inherit and flatten strategies.
+- **The build always gates.** `build_plates` runs validation and collision detection
+  unconditionally, so a plain `plates` dump fails loud too; `--check` is the quiet CI entry point,
+  not the only gate.
+- **`UnionPlateMember.name` added.** A union member referencing a primitive (`decimal`) has no
+  plate to take a field name from; the member carries its own name bundle so templates invent
+  nothing.

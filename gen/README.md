@@ -31,6 +31,7 @@ XSD file  --parse-->  XSD model  --lower-->  IR  --project-->  Plates  --emit-->
 gen/
   __main__.py        CLI: analyze | ir | plates | <config.toml>
   config.py          typed config.toml loader (inputs, output, plates sections)
+  names.py           naming vocabulary: tokenizer, convention registry, sanitizer
   naming.base.toml   schema-forced renames shared by all targets
   xsd/
     model.py         dataclasses mirroring the XSD subset MusicXML uses
@@ -39,11 +40,10 @@ gen/
   ir/
     model.py         the IR dataclasses
     build.py         lowering from the XSD model to the IR
-    resolve.py       collapsed views (group + attribute-group resolution) for emitters
+    resolve.py       collapsed views (groups, attributes, flat element fields) for emitters
     dump.py          IR to JSON
   plates/
     model.py         the plate dataclasses (neutral core + target binding)
-    names.py         tokenizer, convention registry, sanitizer
     languages.py     per-language defaults (type maps, reserved words, doc styles)
     build.py         the projection: IR + config -> Plates
     check.py         post-projection collision detection
@@ -223,7 +223,7 @@ Terms used inside the lowered types, not in `stats`.
 ### Resolution layer
 
 The IR data model preserves the schema's named structure; `ir/resolve.py` collapses it on demand.
-`Resolver.from_ir(ir)` exposes four read-only accessors over a complex type, none of which mutate the
+`Resolver.from_ir(ir)` exposes read-only accessors over a complex type, none of which mutate the
 IR:
 
 - `attributes(ct)` -- the type's own attributes with its `attribute_groups` expanded inline, in
@@ -234,8 +234,15 @@ IR:
   elements/sequences/choices with no `group` nodes left. Nesting and all min/max bounds are
   preserved.
 - `elements(ct)` -- every element occurrence in the resolved content, in document order, flattened
-  across sequences/choices/groups (drops the choice/sequence grouping; use `content` when that
-  matters).
+  across sequences/choices/groups (drops the choice/sequence grouping and keeps local cardinality;
+  use `content` when structure matters and `flat_elements` for a field view).
+- `flat_elements(ct)` -- each distinct element name with its *effective* cardinality for a flat
+  one-field-per-name view: repeated wrappers make vectors, choices demote to optional, and
+  duplicate occurrences of one name merge by co-occurrence analysis (occurrences in different
+  branches of one choice are exclusive -> optional; anything else can co-occur in one instance ->
+  vector, e.g. `metronome`'s `beat-unit`).
+- `all_flat_elements(ct)` / `base_chain(ct)` -- the flattened view merged across the derivation
+  chain (base-most first), mirroring `all_attributes`.
 
 `python3 -m gen ir --resolve` dumps this view. `build` itself uses the resolver to compute each
 complex type's `deps`, so the group-walking logic lives in exactly one place rather than once per

@@ -19,7 +19,7 @@ import tomllib
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from gen.plates.names import CONVENTIONS
+from gen.names import CONVENTIONS
 
 # Keys allowed in a rename entry table: a fundamental rename (all casings
 # re-expand from the new root) or per-convention overrides (pin one flavor).
@@ -80,21 +80,18 @@ class NamingSection:
     variant_convention: str = "pascal"
     file_convention: str = "snake"
     field_prefix: str = ""
-    empty_value_word: str = "empty"
     pluralize_vectors: bool = False
 
 
 @dataclass
 class ReservedSection:
     words: tuple[str, ...] = ()  # extends the language defaults
-    policy: str = "suffix-underscore"
     invalid_prefix: str = "_"
 
 
 @dataclass
 class LayoutSection:
     partition: str = "single"  # "per-type" | "single" ("grouped" reserved)
-    include_style: str = "quoted"
     file_prefix: str = ""
 
 
@@ -128,6 +125,15 @@ def load(config_path) -> Config:
     with open(path, "rb") as f:
         data = tomllib.load(f)
     base = path.parent
+    _check_keys(
+        data,
+        {"input", "output", "sounds", "target", "naming", "reserved", "types",
+         "layout", "docs", "rename"},
+        "top level",
+    )
+    _check_keys(data.get("input", {}), {"xsd"}, "input")
+    _check_keys(data.get("output", {}), {"dir"}, "output")
+    _check_keys(data.get("sounds", {}), {"xml"}, "sounds")
 
     # A shared naming base (design: [naming] extends) contributes [naming]
     # keys and [rename.*] entries; the target's own win on any conflict.
@@ -194,24 +200,31 @@ def _target(t: dict) -> TargetSection:
     )
 
 
+def _string_list(value, where: str) -> tuple[str, ...]:
+    """A TOML array of strings. A bare string is rejected rather than being
+    silently exploded into characters."""
+    if not isinstance(value, list) or not all(isinstance(x, str) for x in value):
+        raise ConfigError(f"[{where}] must be an array of strings")
+    return tuple(value)
+
+
 def _naming(t: dict) -> NamingSection:
     _check_keys(
         t,
         {
             "extends", "acronyms", "type-convention", "field-convention",
             "variant-convention", "file-convention", "field-prefix",
-            "empty-value-word", "pluralize-vectors",
+            "pluralize-vectors",
         },
         "naming",
     )
     section = NamingSection(
-        acronyms=tuple(t["acronyms"]) if "acronyms" in t else None,
+        acronyms=_string_list(t["acronyms"], "naming.acronyms") if "acronyms" in t else None,
         type_convention=t.get("type-convention", "pascal"),
         field_convention=t.get("field-convention", "snake"),
         variant_convention=t.get("variant-convention", "pascal"),
         file_convention=t.get("file-convention", "snake"),
         field_prefix=t.get("field-prefix", ""),
-        empty_value_word=t.get("empty-value-word", "empty"),
         pluralize_vectors=bool(t.get("pluralize-vectors", False)),
     )
     for key in ("type_convention", "field_convention", "variant_convention", "file_convention"):
@@ -225,17 +238,11 @@ def _naming(t: dict) -> NamingSection:
 
 
 def _reserved(t: dict) -> ReservedSection:
-    _check_keys(t, {"words", "policy", "invalid-prefix"}, "reserved")
-    section = ReservedSection(
-        words=tuple(t.get("words", ())),
-        policy=t.get("policy", "suffix-underscore"),
+    _check_keys(t, {"words", "invalid-prefix"}, "reserved")
+    return ReservedSection(
+        words=_string_list(t["words"], "reserved.words") if "words" in t else (),
         invalid_prefix=t.get("invalid-prefix", "_"),
     )
-    if section.policy != "suffix-underscore":
-        raise ConfigError(
-            f"[reserved] policy = {section.policy!r}: only 'suffix-underscore' is implemented"
-        )
-    return section
 
 
 def _types(t: dict) -> dict[str, str]:
@@ -246,10 +253,9 @@ def _types(t: dict) -> dict[str, str]:
 
 
 def _layout(t: dict) -> LayoutSection:
-    _check_keys(t, {"partition", "include-style", "file-prefix"}, "layout")
+    _check_keys(t, {"partition", "file-prefix"}, "layout")
     section = LayoutSection(
         partition=t.get("partition", "single"),
-        include_style=t.get("include-style", "quoted"),
         file_prefix=t.get("file-prefix", ""),
     )
     if section.partition not in ("per-type", "single", "grouped"):
@@ -286,6 +292,8 @@ def _entry(value, where: str) -> RenameEntry:
         bad = [k for k, v in value.items() if not isinstance(v, str)]
         if bad:
             raise ConfigError(f"[{where}] {bad[0]} must be a string")
+        if not value:
+            raise ConfigError(f"[{where}] is empty: set fundamental or a convention")
         return RenameEntry(
             fundamental=value.get("fundamental"),
             cased={k: v for k, v in value.items() if k != "fundamental"},
@@ -307,6 +315,10 @@ def _renames(t: dict) -> Renames:
                 f"rename kind '{reserved_kind}' is reserved for targets that emit "
                 f"shared fragments; no current target does"
             )
+
+    for kind in _RENAME_KINDS:
+        if kind in t and not isinstance(t[kind], dict):
+            raise ConfigError(f"[rename.{kind}] must be a table")
 
     r = Renames()
     for wire, value in t.get("type", {}).items():
@@ -343,8 +355,8 @@ def _renames(t: dict) -> Renames:
 
 def _apply_extends(data: dict, base_dir: Path) -> dict:
     """Merge a shared base file under the target's config: the base
-    contributes [naming] keys and whole [rename] entries; the target's own
-    win per key/entry. Other sections never come from the base."""
+    contributes [naming] keys and [rename] entries; the target's own win per
+    key/entry. Anything else in the base is an error, as is chaining bases."""
     extends = data.get("naming", {}).get("extends")
     if not extends:
         return data
@@ -353,10 +365,12 @@ def _apply_extends(data: dict, base_dir: Path) -> dict:
         raise FileNotFoundError(f"naming base not found: {base_path}")
     with open(base_path, "rb") as f:
         shared = tomllib.load(f)
+    _check_keys(shared, {"naming", "rename"}, f"naming base {base_path.name}")
+    if "extends" in shared.get("naming", {}):
+        raise ConfigError(f"naming base {base_path.name} may not chain to another base")
 
     merged = dict(data)
     naming = dict(shared.get("naming", {}))
-    naming.pop("extends", None)  # a base may not chain to another base
     naming.update(data.get("naming", {}))
     naming.pop("extends", None)
     merged["naming"] = naming
@@ -368,12 +382,17 @@ def _apply_extends(data: dict, base_dir: Path) -> dict:
         table: dict = {}
         for key in list(base_table) + [k for k in own_table if k not in base_table]:
             b, o = base_table.get(key), own_table.get(key)
-            if (
-                isinstance(b, dict)
-                and isinstance(o, dict)
-                and not _is_entry_table(b)
-                and not _is_entry_table(o)
-            ):
+            b_scope = isinstance(b, dict) and not _is_entry_table(b)
+            o_scope = isinstance(o, dict) and not _is_entry_table(o)
+            if b is not None and o is not None and b_scope != o_scope:
+                # One side addresses a scope table, the other a single entry:
+                # a silent wholesale replacement would quietly drop the
+                # base's renames, so the disagreement is an error.
+                raise ConfigError(
+                    f"[rename.{kind}.{key}]: the target and its naming base "
+                    f"disagree on whether this is a scope or an entry"
+                )
+            if b_scope and o_scope:
                 # A nested scope (an enum's value table, an owner's attribute
                 # table): merge per inner entry, target winning.
                 table[key] = {**b, **o}
