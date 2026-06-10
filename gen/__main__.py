@@ -1,7 +1,7 @@
 """mx code generator entry point.
 
 Usage:
-  python3 -m gen <config.toml>              generate code for a target (not yet implemented)
+  python3 -m gen <config.toml>              emit code for the target the config describes
   python3 -m gen analyze [xsd]              parse the XSD and print a structural analysis
   python3 -m gen ir [--type N] [--resolve] [--config C] [xsd]
                                             lower the XSD to the IR and print it as JSON;
@@ -41,10 +41,8 @@ def _analyze(args: list[str]) -> int:
 
 
 def _ir(args: list[str]) -> int:
-    from gen.ir.build import build_ir
     from gen.ir.dump import resolved_view, to_json
     from gen.ir.resolve import Resolver
-    from gen.xsd.parser import parse
 
     type_name = None
     resolve = False
@@ -82,14 +80,7 @@ def _ir(args: list[str]) -> int:
     if not xsd.exists():
         print(f"error: XSD not found: {xsd}", file=sys.stderr)
         return 1
-    ir = build_ir(parse(xsd), source=xsd.stem)
-
-    # A target config can fold companion data into the IR before it is consumed:
-    # today, the sounds.xml patch (instrument-sound -> open sound enum).
-    if cfg is not None and cfg.sounds_xml is not None:
-        from gen.ir.sounds import patch_sounds, read_sound_ids
-
-        patch_sounds(ir, read_sound_ids(cfg.sounds_xml))
+    ir = _lower(xsd, cfg)
 
     resolver = Resolver.from_ir(ir) if resolve else None
 
@@ -112,23 +103,18 @@ def _ir(args: list[str]) -> int:
     return 0
 
 
-def _build_target_plates(config_path: str):
-    """Shared loading path for plates-consuming commands: read the target's
-    config, lower its pinned XSD to the IR, apply companion patches, project."""
-    from gen.config import load as load_config
+def _lower(xsd: Path, cfg):
+    """Lower an XSD to the IR, applying a config's companion patches (today:
+    the sounds.xml fold). One definition, shared by every command."""
     from gen.ir.build import build_ir
-    from gen.plates import build_plates
     from gen.xsd.parser import parse
 
-    cfg = load_config(config_path)
-    if cfg.xsd is None:
-        raise FileNotFoundError(f"config has no [input] xsd: {cfg.path}")
-    ir = build_ir(parse(cfg.xsd), source=cfg.xsd.stem)
-    if cfg.sounds_xml is not None:
+    ir = build_ir(parse(xsd), source=xsd.stem)
+    if cfg is not None and cfg.sounds_xml is not None:
         from gen.ir.sounds import patch_sounds, read_sound_ids
 
         patch_sounds(ir, read_sound_ids(cfg.sounds_xml))
-    return build_plates(ir, cfg), cfg
+    return ir
 
 
 def _plates(args: list[str]) -> int:
@@ -156,8 +142,10 @@ def _plates(args: list[str]) -> int:
         print("error: plates requires --config <config.toml>", file=sys.stderr)
         return 2
 
+    from gen.plates import build_for_config
+
     try:
-        plates, _ = _build_target_plates(config_path)
+        plates, _ = build_for_config(config_path)
     except PlatesError as e:
         for line in e.errors:
             print(f"error: {line}", file=sys.stderr)
@@ -184,6 +172,21 @@ def _plates(args: list[str]) -> int:
     return 0
 
 
+def _emit(config_path: str) -> int:
+    from gen.emit import EmitError, emit
+    from gen.plates import PlatesError, build_for_config
+
+    try:
+        plates, cfg = build_for_config(config_path)
+        result = emit(plates, cfg)
+    except (PlatesError, EmitError) as e:
+        message = "\n".join(e.errors) if isinstance(e, PlatesError) else str(e)
+        print(f"error: {message}", file=sys.stderr)
+        return 1
+    print(result.summary())
+    return 0
+
+
 def main(argv: list[str]) -> int:
     if not argv:
         print(__doc__, file=sys.stderr)
@@ -194,8 +197,10 @@ def main(argv: list[str]) -> int:
         return _ir(argv[1:])
     if argv[0] == "plates":
         return _plates(argv[1:])
-    print("error: generator not implemented", file=sys.stderr)
-    return 1
+    if argv[0].endswith(".toml"):
+        return _emit(argv[0])
+    print(f"error: unknown command: {argv[0]}", file=sys.stderr)
+    return 2
 
 
 if __name__ == "__main__":
