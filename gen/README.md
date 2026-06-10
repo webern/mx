@@ -21,8 +21,7 @@ XSD file  --parse-->  XSD model  --lower-->  IR  --project-->  Plates  --emit-->
 3. Project (`gen/plates/`) binds the IR to one target: every per-target decision -- identifier
    casings, renames, primitive type mappings, emit strategies, file layout -- is made here, once,
    producing one **plate** per emitted type. The collection projected for a target is the
-   **Plates**. Designed in [`../docs/ai/design/plates.md`](../docs/ai/design/plates.md); not yet
-   implemented.
+   **Plates**. Designed in [`../docs/ai/design/plates.md`](../docs/ai/design/plates.md).
 4. Emit renders each plate through per-language templates ("dumb renderers": walk the plate, print
    text, no naming logic). Not yet implemented.
 
@@ -30,7 +29,9 @@ XSD file  --parse-->  XSD model  --lower-->  IR  --project-->  Plates  --emit-->
 
 ```
 gen/
-  __main__.py        CLI: analyze | ir | <config.toml>
+  __main__.py        CLI: analyze | ir | plates | <config.toml>
+  config.py          typed config.toml loader (inputs, output, plates sections)
+  naming.base.toml   schema-forced renames shared by all targets
   xsd/
     model.py         dataclasses mirroring the XSD subset MusicXML uses
     parser.py        ElementTree parser, no external dependencies
@@ -40,6 +41,12 @@ gen/
     build.py         lowering from the XSD model to the IR
     resolve.py       collapsed views (group + attribute-group resolution) for emitters
     dump.py          IR to JSON
+  plates/
+    model.py         the plate dataclasses (neutral core + target binding)
+    names.py         tokenizer, convention registry, sanitizer
+    languages.py     per-language defaults (type maps, reserved words, doc styles)
+    build.py         the projection: IR + config -> Plates
+    check.py         post-projection collision detection
   cpp/, test/go/, test/c/    per-target config and corert test harnesses
 ```
 
@@ -81,6 +88,7 @@ type-shaping knob: it selects an *input*, not how a type is emitted.
 ```
 python3 -m gen analyze [xsd]                              # structural analysis report (text)
 python3 -m gen ir [--type NAME] [--resolve] [--config C] [xsd]  # lower to IR, print as JSON
+python3 -m gen plates --config C [--type NAME] [--check]  # project the IR onto a target, print as JSON
 python3 -m gen <config.toml>                              # emit code for a target (not yet implemented)
 ```
 
@@ -92,6 +100,11 @@ form an emitter consumes. Without it, `ir` prints the IR verbatim, with the name
 config pins (`[input] xsd`) and applies the companion patches the config enables (the sounds.xml
 fold, see Companion data). An explicit positional `xsd` still overrides the config's. Without
 `--config`, `ir` shows the pure-XSD IR of the default (or positional) schema.
+
+`plates --config C` projects that same IR onto the target: identifier casings, renames, sanitized
+identifiers, type mappings, strategies, file assignment -- the proof pulled from the plates before
+any code is printed. `--check` runs rename validation and collision detection and exits non-zero on
+any failure, so it can gate CI the way `analyze` guards the DAG and no-collision invariants.
 
 `xsd` defaults to `docs/musicxml-4.0-ed15c23.xsd`. Examples:
 

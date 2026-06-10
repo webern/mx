@@ -1,7 +1,8 @@
 # The Plates: the template-facing, target-projected layer
 
-Status: design only. No code in this change. This document specifies the layer that sits between the
-IR (`gen/ir`) and the per-language templates in the generator pipeline:
+Status: implemented in `gen/plates/` (see Implementation notes, section 11, for the deltas between
+this design and the code). This document specifies the layer that sits between the IR (`gen/ir`)
+and the per-language templates in the generator pipeline:
 
 ```
 XSD file -> XSD model -> IR -> [ Plates ] -> templates -> C++ / Go / C / JSON Schema
@@ -642,3 +643,33 @@ dumb).
   on it for a future mixed-case schema.
 - **Configurable per-enum invalid-identifier prefix.** A single global `invalid-prefix` is assumed;
   some targets might want it per enum (e.g. note-type values prefixed `N`).
+
+## 11. Implementation notes
+
+The implementation (`gen/plates/`: `model.py`, `names.py`, `languages.py`, `build.py`, `check.py`;
+config parsing in `gen/config.py`; tests in `gen/tests/test_plates.py`) follows this document with
+these deliberate deltas:
+
+- **`MemberRepr` dropped.** A member's `cardinality` plus the target type map already fully
+  determine the wrapper spelling (by-value / optional / collection); a descriptor object in between
+  carried no information. The spelling is the template's grammar.
+- **Named convention fields.** `TargetInfo` carries `type_convention` / `field_convention` /
+  `variant_convention` / `file_convention` rather than an anonymous `conventions` list -- the four
+  roles are load-bearing and deserve names.
+- **Final identifiers are materialized.** Every plate, member, and variant carries `ident`: the
+  recased, renamed, prefix-applied, sanitized identifier the target uses. Collision detection runs
+  on these. The pre-sanitized casings stay available in `Name.cased` (section 8.6's both-retained
+  rule).
+- **`grouped` partition deferred.** Config accepts the value; the build rejects it with a clear
+  message until a target needs it. `per-type` and `single` are implemented.
+- **`group` / `attribute-group` rename kinds reserved.** No current target emits shared fragments
+  or mixins, so configuring those kinds is a config error rather than a silently dead table.
+- **One reserved-word policy.** Only `suffix-underscore` is implemented; the config key exists and
+  validates so a future policy is an addition, not a migration.
+- **First contact found a real collision.** `barline` carries both elements and attributes named
+  `segno`/`coda`; every code target's field casing collapses each pair. The shared
+  `gen/naming.base.toml` (the section 6.4 mechanism) renames the attributes' fundamentals to
+  `segno-sound`/`coda-sound`, and all three target configs extend it.
+- **`xs:ID`/`xs:IDREF` canonicalized in the IR.** They surfaced as accidental ninth and tenth
+  primitives via the builtin fallback; the IR now folds them to `token`, keeping the primitive set
+  the eight this document assumes.

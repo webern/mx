@@ -1,0 +1,12 @@
+# Shared naming base for every target ([naming] extends in each config.toml).
+# Holds renames that are forced by the schema itself rather than by any one
+# language, so they stay identical across targets. A target's own entries win
+# over these on any conflict.
+
+# `barline` carries both child ELEMENTS segno/coda (the visible symbols) and
+# ATTRIBUTES segno/coda (sound/playback jump markers). Any field casing
+# collapses each pair to one identifier, so every code target collides. The
+# elements keep their wire-true names; the attributes are qualified.
+[rename.attribute.barline]
+segno = "segno-sound"
+coda = "coda-sound"

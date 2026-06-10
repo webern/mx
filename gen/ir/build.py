@@ -22,6 +22,11 @@ _XS_PRIMITIVE = {
     "xs:date": "date",
     "xs:anyURI": "string",
     "xs:language": "token",
+    # The identity builtins are NCName-derived (whitespace-collapsed tokens);
+    # no target gives them identity semantics, so they canonicalize to token
+    # rather than leaking ID/IDREF as accidental extra primitives.
+    "xs:ID": "token",
+    "xs:IDREF": "token",
 }
 
 # The 10 attribute refs into the imported xml/xlink schemas, resolved to the

@@ -9,6 +9,12 @@ Usage:
                                             attribute-flattened) view of complex types;
                                             --config applies a target's companion patches
                                             (e.g. the sounds.xml fold) before dumping
+  python3 -m gen plates --config C [--type N] [--check]
+                                            project the IR onto the target the config
+                                            describes and print the Plates as JSON;
+                                            --check validates renames and detects
+                                            identifier collisions, exiting non-zero on
+                                            any failure (a CI gate, like analyze)
 
 Reads a MusicXML 4.0 XSD specification and generates typed document
 serialization/deserialization code for the target described in the given
@@ -106,6 +112,78 @@ def _ir(args: list[str]) -> int:
     return 0
 
 
+def _build_target_plates(config_path: str):
+    """Shared loading path for plates-consuming commands: read the target's
+    config, lower its pinned XSD to the IR, apply companion patches, project."""
+    from gen.config import load as load_config
+    from gen.ir.build import build_ir
+    from gen.plates import build_plates
+    from gen.xsd.parser import parse
+
+    cfg = load_config(config_path)
+    if cfg.xsd is None:
+        raise FileNotFoundError(f"config has no [input] xsd: {cfg.path}")
+    ir = build_ir(parse(cfg.xsd), source=cfg.xsd.stem)
+    if cfg.sounds_xml is not None:
+        from gen.ir.sounds import patch_sounds, read_sound_ids
+
+        patch_sounds(ir, read_sound_ids(cfg.sounds_xml))
+    return build_plates(ir, cfg), cfg
+
+
+def _plates(args: list[str]) -> int:
+    from gen.ir.dump import to_json
+    from gen.plates import PlatesError
+
+    config_path = None
+    type_name = None
+    check = False
+    i = 0
+    while i < len(args):
+        if args[i] == "--config" and i + 1 < len(args):
+            config_path = args[i + 1]
+            i += 2
+        elif args[i] == "--type" and i + 1 < len(args):
+            type_name = args[i + 1]
+            i += 2
+        elif args[i] == "--check":
+            check = True
+            i += 1
+        else:
+            print(f"error: unexpected argument: {args[i]}", file=sys.stderr)
+            return 2
+    if config_path is None:
+        print("error: plates requires --config <config.toml>", file=sys.stderr)
+        return 2
+
+    try:
+        plates, _ = _build_target_plates(config_path)
+    except PlatesError as e:
+        for line in e.errors:
+            print(f"error: {line}", file=sys.stderr)
+        return 1
+
+    if check:
+        # Rename validation and collision detection already ran in the build;
+        # reaching here means the projection is clean.
+        n_files = len(plates.files) if plates.files is not None else 0
+        print(
+            f"plates ok: {len(plates.value_types)} value types, "
+            f"{len(plates.complex_types)} complex types, {n_files} files"
+        )
+        return 0
+
+    if type_name:
+        if not plates.has_plate(type_name):
+            print(f"error: type not found in plates: {type_name}", file=sys.stderr)
+            return 1
+        print(to_json(plates.plate(type_name)))
+        return 0
+
+    print(to_json(plates))
+    return 0
+
+
 def main(argv: list[str]) -> int:
     if not argv:
         print(__doc__, file=sys.stderr)
@@ -114,6 +192,8 @@ def main(argv: list[str]) -> int:
         return _analyze(argv[1:])
     if argv[0] == "ir":
         return _ir(argv[1:])
+    if argv[0] == "plates":
+        return _plates(argv[1:])
     print("error: generator not implemented", file=sys.stderr)
     return 1
 

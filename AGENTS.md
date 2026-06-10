@@ -143,6 +143,9 @@ Commands:
 - `python3 -m gen ir [--type NAME] [--resolve] [--config C] [xsd]` - lower the XSD to the IR and
   print it as JSON; `--resolve` prints the collapsed (group-spliced, attribute-flattened) view of
   complex types; `--config` applies a target config's companion patches (the sounds.xml fold) first.
+- `python3 -m gen plates --config C [--type NAME] [--check]` - project the IR onto the target the
+  config describes and print the Plates as JSON; `--check` validates renames and detects identifier
+  collisions (a CI gate, like analyze).
 - `python3 -m gen <config.toml>` - emit code for the target in the config (not yet implemented).
 
 Each target has a `config.toml` specifying the MusicXML XSD it generates from (`[input] xsd`), the
@@ -160,8 +163,8 @@ unioned with an open string (element `instrument-sound` retyped from `string` to
 the only place the IR depends on an input beyond the XSD; it is opt-in per target, so the base IR
 stays a pure function of the schema.
 
-**Status.** The parse, IR, and analysis stages exist. The Plates stage is designed
-(`docs/ai/design/plates.md`) but not yet implemented; the emit stage and its templates are not yet
+**Status.** The parse, IR, analysis, and Plates stages exist (`python3 -m gen plates --config C
+[--check]` dumps or gates the projection); the emit stage and its templates are not yet
 implemented, so `python3 -m gen <config.toml>` still exits with an error.
 
 ## Language targets

@@ -12,3 +12,17 @@ xsd = "../../../docs/musicxml-3.1-8bbe8e5.xsd"
 dir = "mx"
 
 # No [sounds] section: instrument-sound stays a plain string for this target.
+
+[target]
+language  = "go"
+namespace = "mx"  # the Go package name
+
+[naming]
+extends = "../../naming.base.toml"  # schema-forced renames shared by all targets
+# Exported Go identifiers: types, fields, and enum constants are all Pascal.
+field-convention   = "pascal"
+variant-convention = "pascal"
+
+[layout]
+# One generated .go file per type; same-package files need no import graph.
+partition = "per-type"
