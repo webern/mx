@@ -1,43 +1,48 @@
-# The Galley: the template-facing, target-projected layer
+# The Plates: the template-facing, target-projected layer
 
 Status: design only. No code in this change. This document specifies the layer that sits between the
 IR (`gen/ir`) and the per-language templates in the generator pipeline:
 
 ```
-XSD file -> XSD model -> IR -> [ Galley ] -> templates -> C++ / Go / C / JSON Schema
+XSD file -> XSD model -> IR -> [ Plates ] -> templates -> C++ / Go / C / JSON Schema
             (gen.xsd)   (gen.ir)              (dumb renderers)
 ```
 
-The IR is a pure, language-agnostic, config-free function of the schema inputs. The Galley is its
+The IR is a pure, language-agnostic, config-free function of the schema inputs. The Plates are its
 opposite number: the per-target projection of that neutral model into a presentation-ready form a
-template can print without thinking. It is where config.toml meets the IR. Everything a target needs
-to decide -- what an identifier is called in each casing, what a `decimal` maps to, whether a
+template can print without thinking. This is where config.toml meets the IR. Everything a target
+needs to decide -- what an identifier is called in each casing, what a `decimal` maps to, whether a
 derived type uses inheritance or a flattened copy, which file a type lands in -- is decided here,
 once, so the templates stay dumb: walk the structure, print text, no naming logic and no per-element
 special casing.
 
 ## 1. Name and rationale
 
-**Chosen name: the Galley** (Python package `gen/galley/`, CLI `python3 -m gen galley --config C`).
+**Chosen name: the Plates** (Python package `gen/plates/`, CLI `python3 -m gen plates --config C`).
+Each metadata object handed to a template -- one per emitted type -- is a **plate**; the full
+collection projected for a target is the **Plates**.
 
-In letterpress printing a *galley* is the shallow tray into which a compositor sets the actual sorts
-(the metal type) after composing a manuscript: the words are now in concrete type, in final order
-and layout, proofed (the "galley proof") before being locked into the press and inked. The metaphor
-maps exactly onto this layer:
+In music engraving -- the discipline MusicXML exists to serve -- a publisher prepared an edition by
+engraving the manuscript onto metal plates: every spelling, layout, and spacing decision committed
+into the metal, one plate per page, ready for the press to ink and print. Published scores carry
+plate numbers to this day. The metaphor maps exactly onto this layer:
 
 - The IR is the abstract manuscript: neutral content, no typeface, no layout.
-- The Galley is the composed tray: the same content rendered into a *specific* target's concrete
-  identifiers (the casing is the typeface), in that target's order and file layout, ready for the
-  press.
-- The templates are the press: they ink and print what the galley already arranged. They add no
+- A plate is one type engraved for a *specific* target: the same content rendered into that target's
+  concrete identifiers (the casing is the engraving style), in that target's order and file layout,
+  ready for the press.
+- The Plates are the complete set of plates for the edition; one target is one edition.
+- The templates are the press: they ink and print what the plates already fixed. They add no
   composition decisions of their own.
-- `python3 -m gen galley --config C` is the galley proof: a dumpable, diffable preview of the
-  composed tray before any code is printed -- the same role `ir --resolve` plays for the IR.
+- `python3 -m gen plates --config C` is the proof pulled from the plates before the print run: a
+  dumpable, diffable preview of the engraved edition before any code is printed -- the same role
+  `ir --resolve` plays for the IR.
 
-The name is evocative, thematically apt for a project about music engraving (itself a printing
-discipline), and -- importantly -- collides with nothing already in this codebase: not `model`, not
-`IR`, not `facet` (which already means an XSD constraint here), not `resolve`. It reads cleanly as a
-noun, a module, and a command alongside `ir`.
+The name is evocative, thematically exact for a project about music engraving, and collides with
+nothing already in this codebase: not `model`, not `IR`, not `facet` (which already means an XSD
+constraint here), not `resolve`. It reads cleanly as a noun, a module, and a command alongside `ir`,
+and the singular/plural pair names the per-type object and the collection with one word -- a plate,
+the Plates -- so there is no second term to learn.
 
 ### Alternatives considered and rejected
 
@@ -52,7 +57,7 @@ noun, a module, and a command alongside `ir`.
   binding-to-a-target is exactly this. Rejected for the audience: to a systems engineer "binding"
   reads first as FFI / language bindings (bindgen, "Rust bindings to libfoo"). Since this project
   literally emits C++/C/Go libraries, naming the layer "Binding" actively invites the wrong reading.
-  The term survives as the name of the *per-target field group* inside the Galley (see section 4),
+  The term survives as the name of the *per-target field group* inside each plate (see section 4),
   where the FFI reading cannot intrude.
 - **Facet** -- already a load-bearing XSD term in this codebase (enumeration/pattern/minInclusive).
   Reusing it would be a genuine collision.
@@ -61,7 +66,7 @@ noun, a module, and a command alongside `ir`.
 
 ## 2. Responsibilities and non-responsibilities
 
-The Galley owns the per-target projection and nothing else.
+The Plates layer owns the per-target projection and nothing else.
 
 It **is responsible for**:
 
@@ -83,16 +88,16 @@ It **is not responsible for** (stays in the IR):
 
 - Schema resolution: collapsing restriction chains, normalizing cardinalities, hoisting anonymous
   types, dropping dead types, dependency ordering, and the group / attribute-group structure. The
-  Galley consumes the IR and its `Resolver`; it never re-derives a schema fact.
-- The wire names themselves (the Galley preserves them, the IR produces them).
-- The sounds.xml fold (an IR-level, config-gated input selection, already done before the Galley
-  runs).
+  Plates consume the IR and its `Resolver`; they never re-derive a schema fact.
+- The wire names themselves (the plates preserve them, the IR produces them).
+- The sounds.xml fold (an IR-level, config-gated input selection, already done before the Plates
+  are built).
 
 It is **not responsible for** (stays in the templates):
 
 - The literal text: language grammar, punctuation, whitespace, file headers, the actual rendering of
   a strategy tag into source lines. Templates contain no naming logic and no per-element
-  conditionals; they read Galley fields and print.
+  conditionals; they read plate fields and print.
 
 ## 3. One layer or two: decided by the JSON Schema contrast
 
@@ -110,8 +115,8 @@ layer is not new information -- it is the IR, re-presented.
 
 This drives the decision:
 
-**The Galley is one rich, materialized, template-facing object, internally partitioned into two
-field groups on each node:**
+**The Plates are one rich, materialized, template-facing object, and each plate in it is internally
+partitioned into two field groups:**
 
 - a **neutral core** -- wire-faithful, target-independent facts (wire name, shape, resolved
   structure, value lists, facets, docs), mirrored from the IR + Resolver; and
@@ -134,19 +139,19 @@ pay nothing meaningful.
 ## 4. Data shape: materialized, dumpable, built on the Resolver
 
 The IR's `Resolver` is computed-on-demand because it is pure over the IR and is needed *mid-build*
-(to compute `deps`). The Galley has neither property: it depends on a config (a specific target),
-and nothing consumes it mid-build. It is therefore **materialized** -- a plain dataclass tree built
-once per target -- for three reasons:
+(to compute `deps`). The Plates have neither property: they depend on a config (a specific target),
+and nothing consumes them mid-build. They are therefore **materialized** -- a plain dataclass tree
+built once per target -- for three reasons:
 
 1. Collision detection (section 7) and rename validation (section 6) are global passes over all
    projected identifiers; they are naturally build-then-check steps, which fit a materialized
    result.
 2. Inspectability and gating: a materialized tree dumps to JSON via the existing `gen/ir/dump.py`
-   machinery, giving `gen galley --config C` as a diffable artifact and a `--check` CI gate,
+   machinery, giving `gen plates --config C` as a diffable artifact and a `--check` CI gate,
    matching the project's analyze-as-gate ethos.
-3. Templates want random-access to fully-resolved nodes, not recomputation.
+3. Templates want random-access to fully-resolved plates, not recomputation.
 
-It is *built on* the Resolver: the Galley consumes `Resolver.attributes`, `all_attributes`,
+The Plates are *built on* the Resolver: they consume `Resolver.attributes`, `all_attributes`,
 `content`, and `elements` rather than re-deriving any splicing.
 
 Design sketch of the types (shapes and accessors, not implementation):
@@ -161,25 +166,25 @@ Name:
     # `cased` is filled by iterating a CONVENTION REGISTRY, so adding a convention
     # later is registering one function -- zero changes elsewhere (R1).
 
-# --- value types (mirror the IR's 4 value shapes) ---
-GalleyEnum:    name: Name; base: str; variants: list[Variant]; doc: str|None
+# --- value plates (mirror the IR's 4 value shapes) ---
+EnumPlate:     name: Name; base: str; variants: list[Variant]; doc: str|None
 Variant:       wire: str; name: Name; ident: str   # ident = sanitized name.cased[variant-conv]
-GalleyNumber:  name: Name; base: str; bounds: NumberBounds; target_type: str; doc: str|None
-GalleyString:  name: Name; base: str; patterns; length; target_type: str; doc: str|None
-GalleyUnion:   name: Name; members: list[UnionMember]; doc: str|None  # member -> Ref or literal set
+NumberPlate:   name: Name; base: str; bounds: NumberBounds; target_type: str; doc: str|None
+StringPlate:   name: Name; base: str; patterns; length; target_type: str; doc: str|None
+UnionPlate:    name: Name; members: list[UnionMember]; doc: str|None  # member -> Ref or literal set
 
-# --- complex types (mirror the IR's 4 complex shapes) ---
+# --- complex plates (mirror the IR's 4 complex shapes) ---
 Member:        name: Name; kind: str           # "element" | "attribute" | "value"
-               type_ref: GalleyRef; cardinality: str          # required|optional|vector
+               type_ref: PlateRef; cardinality: str           # required|optional|vector
                repr: MemberRepr                # concrete optional/collection wrapper (section 8)
                default: str|None; fixed: str|None
                default_variant: str|None       # variant ident when default/fixed names a variant
                doc: str|None
-GalleyType:    name: Name; shape: str          # value|composite|empty|derived (or value-type shape)
+ComplexPlate:  name: Name; shape: str          # value|composite|empty|derived (or value-type shape)
                strategy: str                   # emit-strategy tag the template switches on
                members: list[Member]           # flat, deduped, ordered (code targets)
                content: ContentNode|None       # resolved sequence/choice tree (schema targets)
-               base: GalleyRef|None             # derived: the inheritance edge
+               base: PlateRef|None             # derived: the inheritance edge
                all_members: list[Member]|None  # derived: flattened (base chain merged)
                presence_only: bool
                file: FileId|None               # None when partition == single
@@ -188,10 +193,10 @@ GalleyType:    name: Name; shape: str          # value|composite|empty|derived (
 # --- the whole projected target ---
 TargetInfo:    language: str; namespace: str; prefix: str
                conventions: list[str]; doc_style: DocStyle; reserved: set[str]; partition: str
-Galley:        target: TargetInfo
-               value_types: list[GalleyEnum|GalleyNumber|GalleyString|GalleyUnion]  # deps-ordered
-               complex_types: list[GalleyType]                                      # deps-ordered
-               roots: list[GalleyRef]
+Plates:        target: TargetInfo
+               value_types: list[EnumPlate|NumberPlate|StringPlate|UnionPlate]  # deps-ordered
+               complex_types: list[ComplexPlate]                                # deps-ordered
+               roots: list[PlateRef]
                files: list[FileSpec]|None       # per-file include graph; None when not partitioned
                type_map: dict[str, str]         # primitive -> target type, after config overrides
 ```
@@ -199,8 +204,8 @@ Galley:        target: TargetInfo
 Build entry point and CLI (mirrors `ir`):
 
 ```
-build_galley(ir: Ir, config: Config) -> Galley     # uses Resolver + a NameFactory + collision check
-python3 -m gen galley --config C [--type N] [--check]
+build_plates(ir: Ir, config: Config) -> Plates   # uses Resolver + a NameFactory + collision check
+python3 -m gen plates --config C [--type N] [--check]
 ```
 
 `--check` runs rename validation and collision detection and exits non-zero on any failure, so it
@@ -281,8 +286,8 @@ Notes on the hard rows:
 - `1024th` shows a digit-led word: the casings are well-defined, but the result is not a legal
   identifier in most code targets. That is fixed in the *binding's* identifier-validity step
   (section 8.6), not here: the wire `1024th` and the recased `1024th` are both kept, and a code
-  target mangles to e.g. `_1024th`. The Galley never silently changes the casing to make it legal;
-  it records the ideal and lets the sanitizer (and the collision check) act on the result.
+  target mangles to e.g. `_1024th`. The casing is never silently changed to make it legal; the
+  plate records the ideal and lets the sanitizer (and the collision check) act on the result.
 - the empty value shows the fallback word vector `["empty"]`; the wire form remains the empty
   string, which is what a serializer must emit.
 
@@ -338,7 +343,7 @@ dir = "../../src/private/mx/core"
 [sounds]
 xml = "../../docs/sounds-4.0-ed15c23.xml"
 
-# ---- new Galley config ----
+# ---- new Plates config ----
 [target]
 language  = "cpp"
 namespace = "mx::core"     # Go: package; C: leave empty and use prefix
@@ -431,7 +436,7 @@ error, not a silently ignored line. Chosen and recommended.
 ## 7. Collision detection (R7)
 
 After tokenizing, recasing, applying renames, and reserved-word / validity mangling, two distinct
-fundamental names can collapse to one identifier. The Galley detects these and reports them as
+fundamental names can collapse to one identifier. The Plates build detects these and reports them as
 errors (`--check` exits non-zero), the way `analyze` guards the DAG and no-collision invariants
 today. The IR's "no element-name collisions" invariant guarantees nothing here, because collisions
 are *induced* by the projection (casing, mangling, prefixing), not present in the wire names.
@@ -444,7 +449,7 @@ Scopes checked, each in the convention(s) the target actually uses:
 - **Enum variant identifiers**: unique within each enum type, in the variant-convention. (Distinct
   wire values that mangle to the same identifier -- e.g. several empty/invalid values all sanitized
   to the same fallback -- are caught here, per-enum.)
-- **Member identifiers**: within a single complex type's flat member list (attributes + child
+- **Member identifiers**: within a single complex plate's flat member list (attributes + child
   elements + the value body), the field identifiers must be unique in the field-convention. This is
   where an attribute and a child element sharing a recased name, or a pluralized vector member
   colliding with another member, would surface.
@@ -464,7 +469,7 @@ identifier they share -- enough to write a targeted rename to resolve it.
 Each IR shape carries an explicit `strategy` tag the template switches on; the template never
 re-derives the shape. The eight shapes and their default strategies:
 
-| IR shape (kind)     | Galley strategy                | Template emits (typical code target)                    |
+| IR shape (kind)     | Plate strategy                 | Template emits (typical code target)                    |
 |---------------------|--------------------------------|---------------------------------------------------------|
 | value: enum         | `enum-class`                   | enum class + wire<->variant lookup tables               |
 | value: number       | `numeric-wrapper`              | wrapper over a target numeric type, range-validating    |
@@ -485,20 +490,20 @@ a `MemberRepr` describing the concrete wrapper, filled from a config mapping and
   plus a value field.
 - **vector** -> the target's collection: C++ `std::vector<T>`, Go `[]T`, C a `T* xs; size_t n_xs`.
 
-The Galley computes the descriptor; the template prints the concrete spelling via the type map, so
+The plate carries the descriptor; the template prints the concrete spelling via the type map, so
 the choice of wrapper is data, not template logic.
 
 ### 8.3 IR primitive -> target type
 
 The IR's primitive set (`string`, `token`, `decimal`, `integer`, `positive_integer`,
-`non_negative_integer`, `date`, `nmtoken`) maps to target types through `Galley.type_map`, seeded
+`non_negative_integer`, `date`, `nmtoken`) maps to target types through `Plates.type_map`, seeded
 with per-language defaults and overridable in `[types]` (section 6.3). The map is the single place a
 target decides that `decimal` is a `Decimal` wrapper or that `token` is just `std::string`.
 
 ### 8.4 Derived types: inheritance vs flattened
 
-The Galley exposes *both* the `base` edge (for a target with inheritance) and `all_members` (the
-base chain merged via `Resolver.all_attributes`, for a target without it). A per-target switch
+A derived plate exposes *both* the `base` edge (for a target with inheritance) and `all_members`
+(the base chain merged via `Resolver.all_attributes`, for a target without it). A per-target switch
 (`[target] inheritance = true|false`, default true for C++/Go-style structs that can embed, false
 for C) selects which the `derived` strategy resolves to (`inherit` vs `flatten`). Templates read
 whichever the strategy names; both are present so the choice is config, not a template fork.
@@ -511,11 +516,12 @@ the variant identifier is always distinct from the wire literal, which is retain
 
 When an attribute's `default` or `fixed` value names an enum variant -- e.g. `strong-accent.type`
 defaults to `up` against enum `up-down`, `barline.location` defaults to `right` against
-`right-left-middle` -- the Galley resolves that wire literal to the variant's target `ident` and
-stores it as `Member.default_variant`, so the emitter writes the enum member (`UpDown::Up`) rather
-than a raw string, while the wire literal stays available for the serializer. A `default`/`fixed` on
-a non-enum member (e.g. `beam.number` default `1`, or `xlink:type` fixed `simple`) is formatted as a
-literal of the member's target type (section 8.8), not resolved to a variant.
+`right-left-middle` -- the Plates build resolves that wire literal to the variant's target `ident`
+and stores it as `Member.default_variant`, so the emitter writes the enum member (`UpDown::Up`)
+rather than a raw string, while the wire literal stays available for the serializer. A
+`default`/`fixed` on a non-enum member (e.g. `beam.number` default `1`, or `xlink:type` fixed
+`simple`) is formatted as a literal of the member's target type (section 8.8), not resolved to a
+variant.
 
 ### 8.6 Identifier validity and reserved words
 
@@ -533,9 +539,9 @@ runs on the *final* identifiers.
 
 Both are exposed, because emitters need different views:
 
-- `GalleyType.content` is the resolved sequence/choice tree (from `Resolver.content`, groups
+- `ComplexPlate.content` is the resolved sequence/choice tree (from `Resolver.content`, groups
   spliced), for a target that cares about order and choice structure (a schema emitter).
-- `GalleyType.members` is the flat, deduped, cardinality-tagged member list (attributes from
+- `ComplexPlate.members` is the flat, deduped, cardinality-tagged member list (attributes from
   `Resolver.attributes`/`all_attributes` + elements from `Resolver.elements`), for a code target
   that emits one field per member.
 
@@ -543,12 +549,12 @@ Both are exposed, because emitters need different views:
 
 `[layout] partition` selects the strategy:
 
-- `per-type` -- one type per file. Each `GalleyType` gets a `file`, and `Galley.files` carries, per
+- `per-type` -- one type per file. Each plate gets a `file`, and `Plates.files` carries, per
   file, the include/import list derived from `deps`: each dependency's file, mapped through the same
   assignment, deduped, self-excluded.
 - `grouped` -- types grouped (by shape or by name prefix) into a fixed set of files; same include
   graph, coarser.
-- `single` -- one document, `file` is `None`, `Galley.files` is `None`, no include graph. This is
+- `single` -- one document, `file` is `None`, `Plates.files` is `None`, no include graph. This is
   the JSON Schema case and the explicit reason partitioning is optional rather than assumed.
 
 ### 8.9 Namespaces, docs, ordering
@@ -557,8 +563,8 @@ Both are exposed, because emitters need different views:
   `prefix` for languages without namespaces (C symbols `MxNote...`).
 - **Doc comments**: the neutral core keeps the raw `doc` text (so JSON Schema can use it verbatim as
   `description`); `TargetInfo.doc_style` carries the comment syntax, wrap column, and escape rules,
-  and the template applies them. The Galley does not pre-bake comment syntax into the doc string.
-- **Ordering**: the Galley preserves the IR's deps-first order for types (so a single-file emit is a
+  and the template applies them. The plate does not pre-bake comment syntax into the doc string.
+- **Ordering**: the Plates preserve the IR's deps-first order for types (so a single-file emit is a
   valid total order) and document order for members and variants. All config-driven maps are
   iterated deterministically. Determinism is a hard rule: the same IR + config always yields
   byte-identical output.
@@ -582,7 +588,7 @@ Both are exposed, because emitters need different views:
 ## 9. Forcing function: a JSON Schema emitter
 
 A template emitting a JSON Schema (Draft 2020-12) version of the MusicXML spec reads only the
-neutral core of the Galley, and configures `[layout] partition = "single"`. Walkthrough of what it
+neutral core of the Plates, and configures `[layout] partition = "single"`. Walkthrough of what it
 touches and what it ignores:
 
 What it reads (all neutral-core fields):
@@ -591,20 +597,20 @@ What it reads (all neutral-core fields):
   names are element/attribute wire names; enum members are wire values. JSON property names can be
   any string, so `default-x`, `brass.alphorn`, and `up down` are used verbatim -- exactly the data
   `Name.wire` preserves, and exactly why the wire form is a first-class field (R3).
-- **Resolved structure.** `GalleyType.content` (the spliced sequence/choice tree) maps directly: a
+- **Resolved structure.** `ComplexPlate.content` (the spliced sequence/choice tree) maps directly: a
   `sequence` -> an `object` with ordered `properties` and a `required` list for required members; a
   `choice` -> `oneOf`; a `vector` member -> `{ "type": "array", "items": ... }`; optional vs
   required -> presence in `required`. No group references remain to chase (the Resolver already
   spliced them).
-- **Enum wire-literal lists.** `GalleyEnum.variants[*].wire` -> `{ "enum": [...] }`. The variant
+- **Enum wire-literal lists.** `EnumPlate.variants[*].wire` -> `{ "enum": [...] }`. The variant
   identifiers (`ident`, casings) are not read at all -- proof the casing machinery is inert here.
-- **Union members -> `anyOf`.** `GalleyUnion.members` -> `anyOf` of member schemas.
+- **Union members -> `anyOf`.** `UnionPlate.members` -> `anyOf` of member schemas.
 - **The open-enum** (`instrument-sound` = `sound-id` enum unioned with open string) -> `anyOf: [ {
-  "enum": [ ...sound ids... ] }, { "type": "string" } ]`. The Galley represents it as an ordinary
+  "enum": [ ...sound ids... ] }, { "type": "string" } ]`. The plate represents it as an ordinary
   union with an enum member and a string member, so the schema falls out with no special case.
-- **Number facets.** `GalleyNumber.bounds` -> `minimum` / `maximum` / `exclusiveMinimum` /
+- **Number facets.** `NumberPlate.bounds` -> `minimum` / `maximum` / `exclusiveMinimum` /
   `exclusiveMaximum`.
-- **String facets.** `GalleyString.patterns` -> `pattern`; length -> `minLength` / `maxLength`.
+- **String facets.** `StringPlate.patterns` -> `pattern`; length -> `minLength` / `maxLength`.
 - **Docs -> `description`.** The raw `doc` text, used verbatim.
 
 What it never touches (the entire target binding):
@@ -628,7 +634,7 @@ dumb).
   different meaning across owners. Scoped attribute overrides handle it manually today;
   auto-detecting divergent uses and warning could be future work.
 - **`xs:list` support.** The IR currently maps the (unused) `xs:list` case defensively to a token
-  string; if a future schema uses real lists, the Galley would need a list `MemberRepr`.
+  string; if a future schema uses real lists, the Plates would need a list `MemberRepr`.
 - **Header/implementation split.** `FileId` is one file per type today; C++ may want a type to span
   a header and a source file, making file assignment one-type-to-many-files.
 - **Acronym splitting of arbitrary camel input.** The case-transition tokenizer rule is specified

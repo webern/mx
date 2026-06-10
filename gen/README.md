@@ -9,8 +9,8 @@ build system, Docker toolchain, and corert test, see [`../AGENTS.md`](../AGENTS.
 ### Pipeline
 
 ```
-XSD file  --parse-->  XSD model  --lower-->  IR  --emit-->  C++ / Go / C
-          (gen.xsd)               (gen.ir)            (templates, not yet built)
+XSD file  --parse-->  XSD model  --lower-->  IR  --project-->  Plates  --emit-->  C++ / Go / C
+          (gen.xsd)               (gen.ir)              (gen.plates, designed)   (templates, not yet built)
 ```
 
 1. Parse (`gen/xsd/`) reads the XSD into a model mirroring it 1:1, still speaking XSD: restriction
@@ -18,7 +18,13 @@ XSD file  --parse-->  XSD model  --lower-->  IR  --emit-->  C++ / Go / C
 2. Lower (`gen/ir/`) resolves that into the intermediate representation (IR): a flat, fully-named,
    dependency-ordered model in code-generation terms. A pure function of the XSD, no configurable
    knobs (see Design principles).
-3. Emit turns the IR into code via per-language templates. Not yet implemented.
+3. Project (`gen/plates/`) binds the IR to one target: every per-target decision -- identifier
+   casings, renames, primitive type mappings, emit strategies, file layout -- is made here, once,
+   producing one **plate** per emitted type. The collection projected for a target is the
+   **Plates**. Designed in [`../docs/ai/design/plates.md`](../docs/ai/design/plates.md); not yet
+   implemented.
+4. Emit renders each plate through per-language templates ("dumb renderers": walk the plate, print
+   text, no naming logic). Not yet implemented.
 
 ### Layout
 
