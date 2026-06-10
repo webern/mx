@@ -27,7 +27,9 @@ from gen.plates.model import Plates
 
 # language -> backend module path, imported lazily so a target can be
 # projected (`gen plates`) without every backend being importable.
-BACKENDS: dict[str, str] = {}
+BACKENDS: dict[str, str] = {
+    "go": "gen.emit.go",
+}
 
 
 class EmitError(Exception):

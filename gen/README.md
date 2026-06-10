@@ -22,8 +22,10 @@ XSD file  --parse-->  XSD model  --lower-->  IR  --project-->  Plates  --emit-->
    casings, renames, primitive type mappings, emit strategies, file layout -- is made here, once,
    producing one **plate** per emitted type. The collection projected for a target is the
    **Plates**. Designed in [`../docs/ai/design/plates.md`](../docs/ai/design/plates.md).
-4. Emit renders each plate through per-language templates ("dumb renderers": walk the plate, print
-   text, no naming logic). Not yet implemented.
+4. Emit (`gen/emit/`) renders each plate through a per-language backend ("dumb renderers": walk
+   the plate, print text, no naming logic; see `gen/emit/__init__.py` for the backend contract).
+   The Go backend currently renders the four value shapes; complex types and the C backend are
+   landing bottom-up.
 
 ### Layout
 

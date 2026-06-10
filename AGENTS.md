@@ -163,9 +163,11 @@ unioned with an open string (element `instrument-sound` retyped from `string` to
 the only place the IR depends on an input beyond the XSD; it is opt-in per target, so the base IR
 stays a pure function of the schema.
 
-**Status.** The parse, IR, analysis, and Plates stages exist (`python3 -m gen plates --config C
-[--check]` dumps or gates the projection); the emit stage and its templates are not yet
-implemented, so `python3 -m gen <config.toml>` still exits with an error.
+**Status.** The parse, IR, analysis, Plates, and emit stages exist (`python3 -m gen plates
+--config C [--check]` dumps or gates the projection; `python3 -m gen <config.toml>` emits).
+Backends are landing bottom-up: the Go backend renders the four value shapes (the leaf types)
+into `gen/test/go/mx/`; complex types, the document entry points, and the C backend are next.
+Generated output is committed.
 
 ## Language targets
 
