@@ -106,8 +106,10 @@ func sortAttributes(el *etree.Element) {
 		return
 	}
 	if len(el.Attr) > 1 {
+		// Qualified names: xlink:href must sort (and compare) as itself, not
+		// as a second "href".
 		sort.Slice(el.Attr, func(i, j int) bool {
-			return el.Attr[i].Key < el.Attr[j].Key
+			return el.Attr[i].FullKey() < el.Attr[j].FullKey()
 		})
 	}
 	for _, child := range el.ChildElements() {

@@ -64,6 +64,8 @@ MxOpus *mx_opus_parse(xmlNodePtr el) {
 xmlNodePtr mx_opus_serialize(const MxOpus *m, xmlNodePtr parent, const char *tag) {
     xmlNodePtr el = parent ? xmlNewChild(parent, NULL, BAD_CAST tag, NULL)
                            : xmlNewNode(NULL, BAD_CAST tag);
+    if (!el)
+        abort(); /* OOM policy: abort, matching the runtime's allocators */
     if (m->has_xlink_href) {
         xmlSetProp(el, BAD_CAST "xlink:href", BAD_CAST m->xlink_href);
     }

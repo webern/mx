@@ -35,7 +35,9 @@ def _guard_identifiers(plates: Plates) -> None:
     """The plates' collision gate certifies projected identifiers; this
     backend also COMPOSES a few (the per-type Child struct, the Children
     field, its support types). A schema name landing on one of those must
-    fail loud here, not as a confusing compile error in generated code."""
+    fail loud here, not as a confusing compile error in generated code.
+    It also rejects the one derivation shape the inherit template cannot
+    render (children spread across the chain)."""
     from gen.plates.model import element_members
 
     type_idents = {p.ident for p in list(plates.value_types) + list(plates.complex_types)}
@@ -61,6 +63,25 @@ def _guard_identifiers(plates: Plates) -> None:
             raise ValueError(
                 f"'{plate.name.wire}' has a member projecting to 'Children', "
                 f"which this backend reserves; rename it in config.toml"
+            )
+    for plate in plates.complex_types:
+        if plate.strategy != "inherit":
+            continue
+        # The inherit template dispatches children against ONE chain member's
+        # child struct. A derivation chain where two members carry element
+        # members (no MusicXML schema has one) would lose the others' children
+        # -- fail loud rather than emit a parser with a blind spot.
+        bearing = []
+        cur = plate
+        while cur is not None:
+            if element_members(cur.members):
+                bearing.append(cur.name.wire)
+            cur = plates.plate(cur.base.wire) if cur.base is not None else None
+        if len(bearing) > 1:
+            raise ValueError(
+                f"'{plate.name.wire}': multiple chain members carry child "
+                f"elements ({', '.join(bearing)}); the inherit template "
+                f"cannot dispatch them all"
             )
 
 

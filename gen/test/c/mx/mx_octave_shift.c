@@ -91,6 +91,8 @@ MxOctaveShift *mx_octave_shift_parse(xmlNodePtr el) {
 xmlNodePtr mx_octave_shift_serialize(const MxOctaveShift *m, xmlNodePtr parent, const char *tag) {
     xmlNodePtr el = parent ? xmlNewChild(parent, NULL, BAD_CAST tag, NULL)
                            : xmlNewNode(NULL, BAD_CAST tag);
+    if (!el)
+        abort(); /* OOM policy: abort, matching the runtime's allocators */
     if (m->has_type) {
         xmlSetProp(el, BAD_CAST "type", BAD_CAST mx_up_down_stop_continue_to_string(m->type));
     }

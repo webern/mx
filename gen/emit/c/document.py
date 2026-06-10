@@ -94,6 +94,17 @@ def document_files(plates: Plates, stem: str, rt: str):
         "",
         f"int {p}document_to_xdoc(const {doc_type} *d, xmlDocPtr *out) {{",
         "    *out = NULL;",
+        '    xmlDocPtr doc = xmlNewDoc(BAD_CAST "1.0");',
+        "    if (!doc)",
+        "        abort(); /* OOM policy: abort, matching the runtime's allocators */",
+        "    /* Serialize under a scratch parent attached to the document so",
+        "       reserved-prefix attributes (xml:lang, xml:space) resolve through",
+        "       the document's implicit xml namespace. Building detached would",
+        "       make libxml2 fabricate an xmlns:xml declaration on the element",
+        "       that carries them, which the input never had. */",
+        '    xmlNodePtr scratch = xmlNewDocNode(doc, NULL, BAD_CAST "scratch", NULL);',
+        "    if (!scratch)",
+        "        abort();",
         "    xmlNodePtr root = NULL;",
     ]
     first = True
@@ -103,15 +114,18 @@ def document_files(plates: Plates, stem: str, rt: str):
         serialize = fn_name(plates, plate.name, "serialize")
         body += [
             f"    {kw} (d->{plate.name.snake})",
-            f"        root = {serialize}(d->{plate.name.snake}, NULL, {c_string(ref.wire)});",
+            f"        root = {serialize}(d->{plate.name.snake}, scratch, {c_string(ref.wire)});",
         ]
     body += [
         "    if (!root) {",
         f'        {p}error_set("document has no root");',
+        "        xmlFreeNode(scratch);",
+        "        xmlFreeDoc(doc);",
         "        return -1;",
         "    }",
-        '    xmlDocPtr doc = xmlNewDoc(BAD_CAST "1.0");',
+        "    xmlUnlinkNode(root);",
         "    xmlDocSetRootElement(doc, root);",
+        "    xmlFreeNode(scratch);",
         "    for (size_t i = 0; i < d->namespaces_count; i++)",
         "        xmlNewNs(root, BAD_CAST d->namespaces[i].href,",
         "                 BAD_CAST d->namespaces[i].prefix);",

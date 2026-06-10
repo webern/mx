@@ -88,6 +88,8 @@ MxHammerOnPullOff *mx_hammer_on_pull_off_parse(xmlNodePtr el) {
 xmlNodePtr mx_hammer_on_pull_off_serialize(const MxHammerOnPullOff *m, xmlNodePtr parent, const char *tag) {
     xmlNodePtr el = parent ? xmlNewChild(parent, NULL, BAD_CAST tag, NULL)
                            : xmlNewNode(NULL, BAD_CAST tag);
+    if (!el)
+        abort(); /* OOM policy: abort, matching the runtime's allocators */
     xmlAddChild(el, xmlNewText(BAD_CAST m->value));
     if (m->has_type) {
         xmlSetProp(el, BAD_CAST "type", BAD_CAST mx_start_stop_to_string(m->type));

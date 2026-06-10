@@ -82,6 +82,8 @@ MxBreathMark *mx_breath_mark_parse(xmlNodePtr el) {
 xmlNodePtr mx_breath_mark_serialize(const MxBreathMark *m, xmlNodePtr parent, const char *tag) {
     xmlNodePtr el = parent ? xmlNewChild(parent, NULL, BAD_CAST tag, NULL)
                            : xmlNewNode(NULL, BAD_CAST tag);
+    if (!el)
+        abort(); /* OOM policy: abort, matching the runtime's allocators */
     xmlAddChild(el, xmlNewText(BAD_CAST mx_breath_mark_value_to_string(m->value)));
     if (m->has_default_x) {
         char *s = mx_tenths_to_string(m->default_x);

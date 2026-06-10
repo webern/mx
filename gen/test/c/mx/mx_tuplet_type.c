@@ -67,6 +67,8 @@ MxTupletType *mx_tuplet_type_parse(xmlNodePtr el) {
 xmlNodePtr mx_tuplet_type_serialize(const MxTupletType *m, xmlNodePtr parent, const char *tag) {
     xmlNodePtr el = parent ? xmlNewChild(parent, NULL, BAD_CAST tag, NULL)
                            : xmlNewNode(NULL, BAD_CAST tag);
+    if (!el)
+        abort(); /* OOM policy: abort, matching the runtime's allocators */
     xmlAddChild(el, xmlNewText(BAD_CAST mx_note_type_value_to_string(m->value)));
     if (m->has_font_family) {
         xmlSetProp(el, BAD_CAST "font-family", BAD_CAST m->font_family);

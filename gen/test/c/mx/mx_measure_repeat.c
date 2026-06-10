@@ -58,6 +58,8 @@ MxMeasureRepeat *mx_measure_repeat_parse(xmlNodePtr el) {
 xmlNodePtr mx_measure_repeat_serialize(const MxMeasureRepeat *m, xmlNodePtr parent, const char *tag) {
     xmlNodePtr el = parent ? xmlNewChild(parent, NULL, BAD_CAST tag, NULL)
                            : xmlNewNode(NULL, BAD_CAST tag);
+    if (!el)
+        abort(); /* OOM policy: abort, matching the runtime's allocators */
     {
         char *s = mx_positive_integer_or_empty_to_string(m->value);
         xmlAddChild(el, xmlNewText(BAD_CAST s));

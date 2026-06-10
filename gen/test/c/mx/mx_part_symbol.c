@@ -73,6 +73,8 @@ MxPartSymbol *mx_part_symbol_parse(xmlNodePtr el) {
 xmlNodePtr mx_part_symbol_serialize(const MxPartSymbol *m, xmlNodePtr parent, const char *tag) {
     xmlNodePtr el = parent ? xmlNewChild(parent, NULL, BAD_CAST tag, NULL)
                            : xmlNewNode(NULL, BAD_CAST tag);
+    if (!el)
+        abort(); /* OOM policy: abort, matching the runtime's allocators */
     xmlAddChild(el, xmlNewText(BAD_CAST mx_group_symbol_value_to_string(m->value)));
     if (m->has_top_staff) {
         char *s = mx_staff_number_to_string(m->top_staff);

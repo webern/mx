@@ -85,6 +85,8 @@ MxSystemLayout *mx_system_layout_parse(xmlNodePtr el) {
 xmlNodePtr mx_system_layout_serialize(const MxSystemLayout *m, xmlNodePtr parent, const char *tag) {
     xmlNodePtr el = parent ? xmlNewChild(parent, NULL, BAD_CAST tag, NULL)
                            : xmlNewNode(NULL, BAD_CAST tag);
+    if (!el)
+        abort(); /* OOM policy: abort, matching the runtime's allocators */
     for (size_t i = 0; i < m->children_count; i++) {
         const MxSystemLayoutChild *ch = &m->children[i];
         if (ch->system_margins) {

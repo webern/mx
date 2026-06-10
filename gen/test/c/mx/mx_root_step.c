@@ -82,6 +82,8 @@ MxRootStep *mx_root_step_parse(xmlNodePtr el) {
 xmlNodePtr mx_root_step_serialize(const MxRootStep *m, xmlNodePtr parent, const char *tag) {
     xmlNodePtr el = parent ? xmlNewChild(parent, NULL, BAD_CAST tag, NULL)
                            : xmlNewNode(NULL, BAD_CAST tag);
+    if (!el)
+        abort(); /* OOM policy: abort, matching the runtime's allocators */
     xmlAddChild(el, xmlNewText(BAD_CAST mx_step_to_string(m->value)));
     if (m->has_text) {
         xmlSetProp(el, BAD_CAST "text", BAD_CAST m->text);

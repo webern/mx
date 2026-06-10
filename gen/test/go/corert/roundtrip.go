@@ -196,11 +196,13 @@ func compareElements(expected, actual *etree.Element, path []string) string {
 		return fmt.Sprintf("attribute count mismatch at %s", nodePath(path))
 	}
 	for i := range eAttrs {
-		if eAttrs[i].Key != aAttrs[i].Key || !IsEquivalent(eAttrs[i].Value, aAttrs[i].Value) {
+		// Compare qualified names: a defect that drops a prefix
+		// (xlink:href -> href) must fail, not slide by on the local name.
+		if eAttrs[i].FullKey() != aAttrs[i].FullKey() || !IsEquivalent(eAttrs[i].Value, aAttrs[i].Value) {
 			return fmt.Sprintf("attribute mismatch at %s[@%s]: expected '%s=%s', actual '%s=%s'",
-				nodePath(path), eAttrs[i].Key,
-				eAttrs[i].Key, eAttrs[i].Value,
-				aAttrs[i].Key, aAttrs[i].Value)
+				nodePath(path), eAttrs[i].FullKey(),
+				eAttrs[i].FullKey(), eAttrs[i].Value,
+				aAttrs[i].FullKey(), aAttrs[i].Value)
 		}
 	}
 

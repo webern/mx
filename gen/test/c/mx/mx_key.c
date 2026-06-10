@@ -96,10 +96,7 @@ MxKey *mx_key_parse(xmlNodePtr el) {
         } else if (strcmp(tag, "mode") == 0) {
             xmlChar *text = xmlNodeGetContent(c);
             const char *s = text ? (const char *)text : "";
-            ch->mode = malloc(sizeof(*ch->mode));
-            if (!ch->mode)
-                abort();
-            *ch->mode = mx_mode_parse(s);
+            ch->mode = mx_mode_parse(s);
             xmlFree(text);
         } else if (strcmp(tag, "key-step") == 0) {
             xmlChar *text = xmlNodeGetContent(c);
@@ -143,6 +140,8 @@ MxKey *mx_key_parse(xmlNodePtr el) {
 xmlNodePtr mx_key_serialize(const MxKey *m, xmlNodePtr parent, const char *tag) {
     xmlNodePtr el = parent ? xmlNewChild(parent, NULL, BAD_CAST tag, NULL)
                            : xmlNewNode(NULL, BAD_CAST tag);
+    if (!el)
+        abort(); /* OOM policy: abort, matching the runtime's allocators */
     if (m->has_number) {
         char *s = mx_staff_number_to_string(m->number);
         xmlSetProp(el, BAD_CAST "number", BAD_CAST s);
@@ -200,7 +199,7 @@ xmlNodePtr mx_key_serialize(const MxKey *m, xmlNodePtr parent, const char *tag) 
             xmlNewTextChild(el, NULL, BAD_CAST "fifths", BAD_CAST s);
             free(s);
         } else if (ch->mode) {
-            xmlNewTextChild(el, NULL, BAD_CAST "mode", BAD_CAST (*ch->mode));
+            xmlNewTextChild(el, NULL, BAD_CAST "mode", BAD_CAST ch->mode);
         } else if (ch->key_step) {
             xmlNewTextChild(el, NULL, BAD_CAST "key-step", BAD_CAST mx_step_to_string((*ch->key_step)));
         } else if (ch->key_alter) {
@@ -232,10 +231,7 @@ void mx_key_free(MxKey *m) {
         if (ch->cancel)
             mx_cancel_free(ch->cancel);
         free(ch->fifths);
-        if (ch->mode) {
-            free((*ch->mode));
-            free(ch->mode);
-        }
+        free(ch->mode);
         free(ch->key_step);
         free(ch->key_alter);
         if (ch->key_accidental)

@@ -36,7 +36,7 @@
 typedef struct {
     MxCancel *cancel;
     MxFifths *fifths;
-    MxMode *mode;
+    MxMode  mode;
     MxStep *key_step;
     MxSemitones *key_alter;
     MxKeyAccidental *key_accidental;

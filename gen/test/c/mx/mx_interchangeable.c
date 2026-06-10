@@ -81,6 +81,8 @@ MxInterchangeable *mx_interchangeable_parse(xmlNodePtr el) {
 xmlNodePtr mx_interchangeable_serialize(const MxInterchangeable *m, xmlNodePtr parent, const char *tag) {
     xmlNodePtr el = parent ? xmlNewChild(parent, NULL, BAD_CAST tag, NULL)
                            : xmlNewNode(NULL, BAD_CAST tag);
+    if (!el)
+        abort(); /* OOM policy: abort, matching the runtime's allocators */
     if (m->has_symbol) {
         xmlSetProp(el, BAD_CAST "symbol", BAD_CAST mx_time_symbol_to_string(m->symbol));
     }

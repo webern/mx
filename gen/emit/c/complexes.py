@@ -38,12 +38,14 @@ from gen.plates.model import (
 def _child_field(plates: Plates, member: Member) -> tuple[str, bool]:
     """(field declaration type, value-is-the-pointer). Children discriminate
     by non-NULL, so every field is a pointer: complex types and boxed values
-    point at their structs; string-family values ARE their char* pointer."""
-    api = value_api(plates, member.type_ref) if member.type_ref.category != "complex" else None
+    point at their structs; char*-family values (raw string primitives AND
+    string-plate typedefs) ARE their pointer and are stored unboxed."""
     if member.type_ref.category == "complex":
         return f"{member.type_ref.ident} *", False
-    if api.c_type.endswith("*"):
-        return api.c_type, True  # char* family: the pointer is the value
+    api = value_api(plates, member.type_ref)
+    if api.is_pointer_value:
+        sep = "" if api.c_type.endswith("*") else " "
+        return f"{api.c_type}{sep}", True
     return f"{api.c_type} *", False
 
 
@@ -227,6 +229,8 @@ def complex_files(plates: Plates, plate: ComplexPlate, includes: list[str], rt: 
         f"xmlNodePtr {serialize}(const {ident} *m, xmlNodePtr parent, const char *tag) {{",
         "    xmlNodePtr el = parent ? xmlNewChild(parent, NULL, BAD_CAST tag, NULL)",
         "                           : xmlNewNode(NULL, BAD_CAST tag);",
+    "    if (!el)",
+    "        abort(); /* OOM policy: abort, matching the runtime's allocators */",
     ]
     if value is not None:
         api = value_api(plates, value.type_ref)

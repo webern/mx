@@ -58,6 +58,8 @@ MxSupports *mx_supports_parse(xmlNodePtr el) {
 xmlNodePtr mx_supports_serialize(const MxSupports *m, xmlNodePtr parent, const char *tag) {
     xmlNodePtr el = parent ? xmlNewChild(parent, NULL, BAD_CAST tag, NULL)
                            : xmlNewNode(NULL, BAD_CAST tag);
+    if (!el)
+        abort(); /* OOM policy: abort, matching the runtime's allocators */
     if (m->has_type) {
         xmlSetProp(el, BAD_CAST "type", BAD_CAST mx_yes_no_to_string(m->type));
     }

@@ -22,7 +22,7 @@
    set is undefined: serialization writes the first non-NULL field
    in schema order and nothing when all are NULL. */
 typedef struct {
-    MxYyyyMmDd *encoding_date;
+    MxYyyyMmDd  encoding_date;
     MxTypedText *encoder;
     char *software;
     char *encoding_description;

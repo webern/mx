@@ -118,6 +118,8 @@ MxFormattedText *mx_formatted_text_parse(xmlNodePtr el) {
 xmlNodePtr mx_formatted_text_serialize(const MxFormattedText *m, xmlNodePtr parent, const char *tag) {
     xmlNodePtr el = parent ? xmlNewChild(parent, NULL, BAD_CAST tag, NULL)
                            : xmlNewNode(NULL, BAD_CAST tag);
+    if (!el)
+        abort(); /* OOM policy: abort, matching the runtime's allocators */
     xmlAddChild(el, xmlNewText(BAD_CAST m->value));
     if (m->has_xml_lang) {
         xmlSetProp(el, BAD_CAST "xml:lang", BAD_CAST m->xml_lang);

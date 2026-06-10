@@ -115,6 +115,8 @@ MxFormattedSymbolID *mx_formatted_symbol_id_parse(xmlNodePtr el) {
 xmlNodePtr mx_formatted_symbol_id_serialize(const MxFormattedSymbolID *m, xmlNodePtr parent, const char *tag) {
     xmlNodePtr el = parent ? xmlNewChild(parent, NULL, BAD_CAST tag, NULL)
                            : xmlNewNode(NULL, BAD_CAST tag);
+    if (!el)
+        abort(); /* OOM policy: abort, matching the runtime's allocators */
     xmlAddChild(el, xmlNewText(BAD_CAST m->value));
     if (m->has_justify) {
         xmlSetProp(el, BAD_CAST "justify", BAD_CAST mx_left_center_right_to_string(m->justify));

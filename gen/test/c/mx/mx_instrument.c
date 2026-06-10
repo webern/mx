@@ -49,6 +49,8 @@ MxInstrument *mx_instrument_parse(xmlNodePtr el) {
 xmlNodePtr mx_instrument_serialize(const MxInstrument *m, xmlNodePtr parent, const char *tag) {
     xmlNodePtr el = parent ? xmlNewChild(parent, NULL, BAD_CAST tag, NULL)
                            : xmlNewNode(NULL, BAD_CAST tag);
+    if (!el)
+        abort(); /* OOM policy: abort, matching the runtime's allocators */
     if (m->has_id) {
         xmlSetProp(el, BAD_CAST "id", BAD_CAST m->id);
     }

@@ -109,6 +109,8 @@ MxDirection *mx_direction_parse(xmlNodePtr el) {
 xmlNodePtr mx_direction_serialize(const MxDirection *m, xmlNodePtr parent, const char *tag) {
     xmlNodePtr el = parent ? xmlNewChild(parent, NULL, BAD_CAST tag, NULL)
                            : xmlNewNode(NULL, BAD_CAST tag);
+    if (!el)
+        abort(); /* OOM policy: abort, matching the runtime's allocators */
     if (m->has_placement) {
         xmlSetProp(el, BAD_CAST "placement", BAD_CAST mx_above_below_to_string(m->placement));
     }

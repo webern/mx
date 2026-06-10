@@ -46,10 +46,7 @@ MxEncoding *mx_encoding_parse(xmlNodePtr el) {
         if (strcmp(tag, "encoding-date") == 0) {
             xmlChar *text = xmlNodeGetContent(c);
             const char *s = text ? (const char *)text : "";
-            ch->encoding_date = malloc(sizeof(*ch->encoding_date));
-            if (!ch->encoding_date)
-                abort();
-            *ch->encoding_date = mx_yyyy_mm_dd_parse(s);
+            ch->encoding_date = mx_yyyy_mm_dd_parse(s);
             xmlFree(text);
         } else if (strcmp(tag, "encoder") == 0) {
             ch->encoder = mx_typed_text_parse(c);
@@ -87,10 +84,12 @@ MxEncoding *mx_encoding_parse(xmlNodePtr el) {
 xmlNodePtr mx_encoding_serialize(const MxEncoding *m, xmlNodePtr parent, const char *tag) {
     xmlNodePtr el = parent ? xmlNewChild(parent, NULL, BAD_CAST tag, NULL)
                            : xmlNewNode(NULL, BAD_CAST tag);
+    if (!el)
+        abort(); /* OOM policy: abort, matching the runtime's allocators */
     for (size_t i = 0; i < m->children_count; i++) {
         const MxEncodingChild *ch = &m->children[i];
         if (ch->encoding_date) {
-            xmlNewTextChild(el, NULL, BAD_CAST "encoding-date", BAD_CAST (*ch->encoding_date));
+            xmlNewTextChild(el, NULL, BAD_CAST "encoding-date", BAD_CAST ch->encoding_date);
         } else if (ch->encoder) {
             mx_typed_text_serialize(ch->encoder, el, "encoder");
         } else if (ch->software) {
@@ -109,10 +108,7 @@ void mx_encoding_free(MxEncoding *m) {
         return;
     for (size_t i = 0; i < m->children_count; i++) {
         MxEncodingChild *ch = &m->children[i];
-        if (ch->encoding_date) {
-            free((*ch->encoding_date));
-            free(ch->encoding_date);
-        }
+        free(ch->encoding_date);
         if (ch->encoder)
             mx_typed_text_free(ch->encoder);
         free(ch->software);

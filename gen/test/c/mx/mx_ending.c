@@ -97,6 +97,8 @@ MxEnding *mx_ending_parse(xmlNodePtr el) {
 xmlNodePtr mx_ending_serialize(const MxEnding *m, xmlNodePtr parent, const char *tag) {
     xmlNodePtr el = parent ? xmlNewChild(parent, NULL, BAD_CAST tag, NULL)
                            : xmlNewNode(NULL, BAD_CAST tag);
+    if (!el)
+        abort(); /* OOM policy: abort, matching the runtime's allocators */
     xmlAddChild(el, xmlNewText(BAD_CAST m->value));
     if (m->has_number) {
         xmlSetProp(el, BAD_CAST "number", BAD_CAST m->number);

@@ -130,10 +130,7 @@ def _attr_loop(plates: Plates, members: list[Member]) -> list[str]:
     ]
     for m in _attr_members(members):
         lines += [f"\t\tcase {go_string(m.name.wire)}:"]
-        if m.type_ref.category == "primitive" and _PRIM[m.type_ref.wire][0] == "string":
-            lines += ["\t\t\tv := a.Value"]
-        else:
-            lines += [f"\t\t\tv := {_parse_expr(m, 'a.Value')}"]
+        lines += [f"\t\t\tv := {_parse_expr(m, 'a.Value')}"]
         lines += [f"\t\t\tm.{m.ident} = &v"]
     lines += [
         "\t\tdefault:",
@@ -171,10 +168,7 @@ def _child_parse_loop(plates: Plates, owner: ComplexPlate) -> list[str]:
                 f"\t\t\tm.Children = append(m.Children, {ident}Child{{{m.ident}: v}})",
             ]
         else:
-            if m.type_ref.category == "primitive" and _PRIM[m.type_ref.wire][0] == "string":
-                lines += ["\t\t\tv := c.Text()"]
-            else:
-                lines += [f"\t\t\tv := {_parse_expr(m, 'c.Text()')}"]
+            lines += [f"\t\t\tv := {_parse_expr(m, 'c.Text()')}"]
             lines += [
                 f"\t\t\tm.Children = append(m.Children, {ident}Child{{{m.ident}: &v}})",
             ]
@@ -231,10 +225,7 @@ def _class_body(plates: Plates, plate: ComplexPlate) -> list[str]:
     lines += [f"\tm := &{ident}{{}}"]
     lines += _attr_loop(plates, plate.members)
     if value is not None:
-        if value.type_ref.category == "primitive" and _PRIM[value.type_ref.wire][0] == "string":
-            lines += [f"\tm.{value.ident} = el.Text()"]
-        else:
-            lines += [f"\tm.{value.ident} = {_parse_expr(value, 'el.Text()')}"]
+        lines += [f"\tm.{value.ident} = {_parse_expr(value, 'el.Text()')}"]
     if has_children:
         lines += _child_parse_loop(plates, plate)
     else:

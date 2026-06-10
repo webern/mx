@@ -31,6 +31,8 @@ class CValue:
     to_string: str  # the wire spelling of a value
     to_string_owned: bool  # the to_string result must be freed
     free: str | None  # statement template releasing a value's OWN memory
+    is_pointer_value: bool = False  # the value IS a pointer (char* family):
+    # a child field stores it directly and discriminates on it, no boxing
 
 
 _PRIM_FAMILY = {
@@ -55,7 +57,8 @@ def value_api(plates: Plates, ref: PlateRef) -> CValue:
         if family == "integer":
             return CValue("long", f"{p}parse_int({{0}})",
                           f"{p}format_int({{0}})", True, None)
-        return CValue("char *", f"{p}strdup({{0}})", "{0}", False, "free({0});")
+        return CValue("char *", f"{p}strdup({{0}})", "{0}", False, "free({0});",
+                      is_pointer_value=True)
 
     plate = plates.plate(ref.wire)
     parse = fn_name(plates, plate.name, "parse") + "({0})"
@@ -66,7 +69,8 @@ def value_api(plates: Plates, ref: PlateRef) -> CValue:
         return CValue(ref.ident, parse, to_string, True, None)
     if plate.kind == "string":
         # The typedef is char*: the value is its own spelling and owns itself.
-        return CValue(ref.ident, parse, "{0}", False, "free({0});")
+        return CValue(ref.ident, parse, "{0}", False, "free({0});",
+                      is_pointer_value=True)
     if plate.kind == "union":
         free = fn_name(plates, plate.name, "free") + "(&{0});"
         return CValue(ref.ident, parse, to_string, True, free)

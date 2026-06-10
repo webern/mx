@@ -51,17 +51,31 @@ MxDocument *mx_document_from_xdoc(xmlDocPtr doc) {
 
 int mx_document_to_xdoc(const MxDocument *d, xmlDocPtr *out) {
     *out = NULL;
+    xmlDocPtr doc = xmlNewDoc(BAD_CAST "1.0");
+    if (!doc)
+        abort(); /* OOM policy: abort, matching the runtime's allocators */
+    /* Serialize under a scratch parent attached to the document so
+       reserved-prefix attributes (xml:lang, xml:space) resolve through
+       the document's implicit xml namespace. Building detached would
+       make libxml2 fabricate an xmlns:xml declaration on the element
+       that carries them, which the input never had. */
+    xmlNodePtr scratch = xmlNewDocNode(doc, NULL, BAD_CAST "scratch", NULL);
+    if (!scratch)
+        abort();
     xmlNodePtr root = NULL;
     if (d->score_partwise)
-        root = mx_score_partwise_serialize(d->score_partwise, NULL, "score-partwise");
+        root = mx_score_partwise_serialize(d->score_partwise, scratch, "score-partwise");
     else if (d->score_timewise)
-        root = mx_score_timewise_serialize(d->score_timewise, NULL, "score-timewise");
+        root = mx_score_timewise_serialize(d->score_timewise, scratch, "score-timewise");
     if (!root) {
         mx_error_set("document has no root");
+        xmlFreeNode(scratch);
+        xmlFreeDoc(doc);
         return -1;
     }
-    xmlDocPtr doc = xmlNewDoc(BAD_CAST "1.0");
+    xmlUnlinkNode(root);
     xmlDocSetRootElement(doc, root);
+    xmlFreeNode(scratch);
     for (size_t i = 0; i < d->namespaces_count; i++)
         xmlNewNs(root, BAD_CAST d->namespaces[i].href,
                  BAD_CAST d->namespaces[i].prefix);

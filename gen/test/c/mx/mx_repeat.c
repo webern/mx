@@ -55,6 +55,8 @@ MxRepeat *mx_repeat_parse(xmlNodePtr el) {
 xmlNodePtr mx_repeat_serialize(const MxRepeat *m, xmlNodePtr parent, const char *tag) {
     xmlNodePtr el = parent ? xmlNewChild(parent, NULL, BAD_CAST tag, NULL)
                            : xmlNewNode(NULL, BAD_CAST tag);
+    if (!el)
+        abort(); /* OOM policy: abort, matching the runtime's allocators */
     if (m->has_direction) {
         xmlSetProp(el, BAD_CAST "direction", BAD_CAST mx_backward_forward_to_string(m->direction));
     }

@@ -82,6 +82,8 @@ MxPlacementText *mx_placement_text_parse(xmlNodePtr el) {
 xmlNodePtr mx_placement_text_serialize(const MxPlacementText *m, xmlNodePtr parent, const char *tag) {
     xmlNodePtr el = parent ? xmlNewChild(parent, NULL, BAD_CAST tag, NULL)
                            : xmlNewNode(NULL, BAD_CAST tag);
+    if (!el)
+        abort(); /* OOM policy: abort, matching the runtime's allocators */
     xmlAddChild(el, xmlNewText(BAD_CAST m->value));
     if (m->has_default_x) {
         char *s = mx_tenths_to_string(m->default_x);

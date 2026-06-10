@@ -76,6 +76,8 @@ MxNotehead *mx_notehead_parse(xmlNodePtr el) {
 xmlNodePtr mx_notehead_serialize(const MxNotehead *m, xmlNodePtr parent, const char *tag) {
     xmlNodePtr el = parent ? xmlNewChild(parent, NULL, BAD_CAST tag, NULL)
                            : xmlNewNode(NULL, BAD_CAST tag);
+    if (!el)
+        abort(); /* OOM policy: abort, matching the runtime's allocators */
     xmlAddChild(el, xmlNewText(BAD_CAST mx_notehead_value_to_string(m->value)));
     if (m->has_filled) {
         xmlSetProp(el, BAD_CAST "filled", BAD_CAST mx_yes_no_to_string(m->filled));

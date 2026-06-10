@@ -55,6 +55,8 @@ MxHoleClosed *mx_hole_closed_parse(xmlNodePtr el) {
 xmlNodePtr mx_hole_closed_serialize(const MxHoleClosed *m, xmlNodePtr parent, const char *tag) {
     xmlNodePtr el = parent ? xmlNewChild(parent, NULL, BAD_CAST tag, NULL)
                            : xmlNewNode(NULL, BAD_CAST tag);
+    if (!el)
+        abort(); /* OOM policy: abort, matching the runtime's allocators */
     xmlAddChild(el, xmlNewText(BAD_CAST mx_hole_closed_value_to_string(m->value)));
     if (m->has_location) {
         xmlSetProp(el, BAD_CAST "location", BAD_CAST mx_hole_closed_location_to_string(m->location));
