@@ -307,6 +307,78 @@ class Projection(unittest.TestCase):
         )
 
 
+class ClampPolicy(unittest.TestCase):
+    """The leniency policy is data on the plates (one decision, two backend
+    spellings): facet bounds plus primitive-implied bounds, tightest wins,
+    exclusive bounds clamping to the nearest representable in-range value."""
+
+    def _steps(self, base, **bounds):
+        from gen.plates.build import clamp_steps
+        from gen.plates.model import NumberBounds
+
+        return [
+            (s.op, s.bound, s.replacement)
+            for s in clamp_steps(base, NumberBounds(**bounds))
+        ]
+
+    def test_inclusive_bounds(self):
+        self.assertEqual(
+            self._steps("integer", min_inclusive="1", max_inclusive="16"),
+            [("<", "1", "1"), (">", "16", "16")],
+        )
+
+    def test_exclusive_decimal_clamps_past_epsilon(self):
+        self.assertEqual(
+            self._steps("decimal", min_exclusive="0"),
+            [("<=", "0.0", "1e-06")],
+        )
+
+    def test_exclusive_integer_clamps_to_next(self):
+        self.assertEqual(
+            self._steps("integer", min_exclusive="0", max_exclusive="10"),
+            [("<=", "0", "1"), (">=", "10", "9")],
+        )
+
+    def test_exclusive_beats_inclusive_at_same_value(self):
+        self.assertEqual(
+            self._steps("decimal", min_inclusive="0", min_exclusive="0"),
+            [("<=", "0.0", "1e-06")],
+        )
+        self.assertEqual(
+            self._steps("decimal", max_inclusive="5", max_exclusive="5"),
+            [(">=", "5.0", "4.999999")],
+        )
+
+    def test_implied_minimum_merges_with_facets(self):
+        # positive_integer implies >= 1 even with a looser explicit min.
+        self.assertEqual(
+            self._steps("positive_integer", min_inclusive="0"),
+            [("<", "1", "1")],
+        )
+        self.assertEqual(self._steps("non_negative_integer"), [("<", "0", "0")])
+        self.assertEqual(self._steps("decimal"), [])
+
+    def test_union_primitive_member_carries_implied_clamp(self):
+        m = tiny_ir()
+        m.value_types.append(
+            ir.UnionType(
+                "positive-or-empty",
+                [
+                    ir.UnionMember(ir.Ref("positive_integer", "primitive")),
+                    ir.UnionMember(literals=[""]),
+                ],
+            )
+        )
+        plates = build_plates(m, Config())
+        union = plates.plate("positive-or-empty")
+        member = union.members[0]
+        self.assertEqual(
+            [(s.op, s.bound, s.replacement) for s in member.clamp],
+            [("<", "1", "1")],
+        )
+        self.assertIsNotNone(member.tag)  # discriminator constant is final
+
+
 class RealTargets(unittest.TestCase):
     """The shipped configs must project cleanly, deterministically, and with
     the spot-checkable facts the emitters will lean on."""

@@ -27,16 +27,24 @@ def run_checks(plates: Plates) -> list[str]:
 
 
 def _variant_pairs(plate) -> list[tuple[str, str]]:
-    """(ident, claimant description) for every constant a value plate emits."""
+    """(ident, claimant description) for every constant a value plate emits:
+    enum variants, union literal variants, and union member tags (the
+    discriminator constants) alike."""
     if isinstance(plate, EnumPlate):
         return [(v.ident, f"{plate.name.wire}.{v.wire!r}") for v in plate.variants]
     if isinstance(plate, UnionPlate):
-        return [
+        pairs = [
             (v.ident, f"{plate.name.wire}.{v.wire!r}")
             for m in plate.members
             if m.literals
             for v in m.literals
         ]
+        pairs += [
+            (m.tag.ident, f"{plate.name.wire} member {m.ref.wire!r}")
+            for m in plate.members
+            if m.tag is not None
+        ]
+        return pairs
     return []
 
 

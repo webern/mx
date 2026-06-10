@@ -10,6 +10,8 @@ static const char *const mx_yes_no_values[] = {
 };
 
 bool mx_yes_no_try_parse(const char *s, MxYesNo *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_yes_no_values) / sizeof(mx_yes_no_values[0]); i++) {
         if (strcmp(s, mx_yes_no_values[i]) == 0) {
             *out = (MxYesNo)i;

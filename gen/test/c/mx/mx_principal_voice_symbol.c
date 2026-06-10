@@ -12,6 +12,8 @@ static const char *const mx_principal_voice_symbol_values[] = {
 };
 
 bool mx_principal_voice_symbol_try_parse(const char *s, MxPrincipalVoiceSymbol *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_principal_voice_symbol_values) / sizeof(mx_principal_voice_symbol_values[0]); i++) {
         if (strcmp(s, mx_principal_voice_symbol_values[i]) == 0) {
             *out = (MxPrincipalVoiceSymbol)i;

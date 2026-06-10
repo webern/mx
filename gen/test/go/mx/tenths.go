@@ -12,7 +12,7 @@ package mx
 // staff-size element.
 type Tenths float64
 
-// TryParseTenths parses s strictly, then clamps into the declared range.
+// TryParseTenths parses s as a lexically well-formed value.
 func TryParseTenths(s string) (Tenths, bool) {
 	v, ok := tryParseDecimal(s)
 	if !ok {
@@ -21,7 +21,7 @@ func TryParseTenths(s string) (Tenths, bool) {
 	return Tenths(v), true
 }
 
-// ParseTenths is lenient: unparseable input becomes 0, then clamps.
+// ParseTenths is lenient: unparseable input becomes 0.
 func ParseTenths(s string) Tenths {
 	v := parseDecimal(s)
 	return Tenths(v)

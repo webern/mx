@@ -7,15 +7,17 @@
 #include <string.h>
 
 bool mx_number_or_normal_try_parse(const char *s, MxNumberOrNormal *out) {
+    if (!s)
+        s = "";
     MxNumberOrNormal v;
     memset(&v, 0, sizeof(v));
     if (mx_try_parse_decimal(s, &v.decimal)) {
-        v.kind = MX_NUMBER_OR_NORMAL_KIND_DECIMAL;
+        v.kind = MX_NUMBER_OR_NORMAL_DECIMAL;
         *out = v;
         return true;
     }
     if (strcmp(s, "normal") == 0) {
-        v.kind = MX_NUMBER_OR_NORMAL_KIND_NORMAL;
+        v.kind = MX_NUMBER_OR_NORMAL_NORMAL;
         *out = v;
         return true;
     }
@@ -28,14 +30,14 @@ MxNumberOrNormal mx_number_or_normal_parse(const char *s) {
     if (mx_number_or_normal_try_parse(s, &v))
         return v;
     memset(&v, 0, sizeof(v));
-    v.kind = MX_NUMBER_OR_NORMAL_KIND_DECIMAL;
+    v.kind = MX_NUMBER_OR_NORMAL_DECIMAL;
     v.decimal = mx_parse_decimal(s);
     return v;
 }
 
 char *mx_number_or_normal_to_string(MxNumberOrNormal v) {
     switch (v.kind) {
-    case MX_NUMBER_OR_NORMAL_KIND_NORMAL:
+    case MX_NUMBER_OR_NORMAL_NORMAL:
         return mx_strdup("normal");
     default:
         return mx_format_decimal(v.decimal);

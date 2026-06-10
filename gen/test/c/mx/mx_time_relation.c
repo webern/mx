@@ -14,6 +14,8 @@ static const char *const mx_time_relation_values[] = {
 };
 
 bool mx_time_relation_try_parse(const char *s, MxTimeRelation *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_time_relation_values) / sizeof(mx_time_relation_values[0]); i++) {
         if (strcmp(s, mx_time_relation_values[i]) == 0) {
             *out = (MxTimeRelation)i;

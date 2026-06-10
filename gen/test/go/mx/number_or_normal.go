@@ -12,17 +12,17 @@ type NumberOrNormal struct {
 type NumberOrNormalKind int
 
 const (
-	NumberOrNormalKindDecimal NumberOrNormalKind = iota
-	NumberOrNormalKindNormal
+	NumberOrNormalDecimal NumberOrNormalKind = iota
+	NumberOrNormalNormal
 )
 
 // TryParseNumberOrNormal tries each union member in schema order.
 func TryParseNumberOrNormal(s string) (NumberOrNormal, bool) {
 	if v, ok := tryParseDecimal(s); ok {
-		return NumberOrNormal{Kind: NumberOrNormalKindDecimal, Decimal: v}, true
+		return NumberOrNormal{Kind: NumberOrNormalDecimal, Decimal: v}, true
 	}
 	if s == "normal" {
-		return NumberOrNormal{Kind: NumberOrNormalKindNormal}, true
+		return NumberOrNormal{Kind: NumberOrNormalNormal}, true
 	}
 	return NumberOrNormal{}, false
 }
@@ -33,13 +33,13 @@ func ParseNumberOrNormal(s string) NumberOrNormal {
 	if v, ok := TryParseNumberOrNormal(s); ok {
 		return v
 	}
-	return NumberOrNormal{Kind: NumberOrNormalKindDecimal, Decimal: parseDecimal(s)}
+	return NumberOrNormal{Kind: NumberOrNormalDecimal, Decimal: parseDecimal(s)}
 }
 
 // String returns the wire spelling of whichever member is held.
 func (v NumberOrNormal) String() string {
 	switch v.Kind {
-	case NumberOrNormalKindNormal:
+	case NumberOrNormalNormal:
 		return "normal"
 	}
 	return formatDecimal(v.Decimal)

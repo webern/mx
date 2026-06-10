@@ -23,11 +23,22 @@ from gen.emit.go.values import value_file
 from gen.plates.model import Plates
 
 
+# File stems this backend reserves for its support files; a schema type
+# landing on one would silently overwrite it in the manifest.
+_RESERVED_STEMS = ("runtime", "document")
+
+
 def render(plates: Plates) -> dict[str, str]:
     files: dict[str, str] = {
         "runtime.go": runtime_file(plates),
         "document.go": document_file(plates),
     }
+    for plate in list(plates.value_types) + list(plates.complex_types):
+        if plate.file in _RESERVED_STEMS:
+            raise ValueError(
+                f"type '{plate.name.wire}' projects to the reserved file stem "
+                f"'{plate.file}'; rename it in config.toml"
+            )
     for plate in plates.value_types:
         files[plate.file + ".go"] = value_file(plates, plate)
     for plate in plates.complex_types:
@@ -46,6 +57,7 @@ def _gofmt(files: dict[str, str]) -> dict[str, str]:
     with tempfile.TemporaryDirectory() as scratch:
         root = Path(scratch)
         for rel, content in files.items():
+            (root / rel).parent.mkdir(parents=True, exist_ok=True)
             (root / rel).write_text(content, encoding="utf-8")
         subprocess.run(["gofmt", "-w", scratch], check=True)
         return {rel: (root / rel).read_text(encoding="utf-8") for rel in files}

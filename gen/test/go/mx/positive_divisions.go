@@ -5,7 +5,7 @@ package mx
 // The positive-divisions type restricts divisions values to positive numbers.
 type PositiveDivisions float64
 
-// TryParsePositiveDivisions parses s strictly, then clamps into the declared range.
+// TryParsePositiveDivisions parses s as a lexically well-formed value, then clamps into the declared range.
 func TryParsePositiveDivisions(s string) (PositiveDivisions, bool) {
 	v, ok := tryParseDecimal(s)
 	if !ok {
@@ -14,7 +14,7 @@ func TryParsePositiveDivisions(s string) (PositiveDivisions, bool) {
 	return clampPositiveDivisions(v), true
 }
 
-// ParsePositiveDivisions is lenient: unparseable input becomes 0, then clamps.
+// ParsePositiveDivisions is lenient: unparseable input becomes 0, then clamps into the declared range.
 func ParsePositiveDivisions(s string) PositiveDivisions {
 	v := parseDecimal(s)
 	return clampPositiveDivisions(v)

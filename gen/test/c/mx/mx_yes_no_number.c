@@ -7,15 +7,17 @@
 #include <string.h>
 
 bool mx_yes_no_number_try_parse(const char *s, MxYesNoNumber *out) {
+    if (!s)
+        s = "";
     MxYesNoNumber v;
     memset(&v, 0, sizeof(v));
     if (mx_yes_no_try_parse(s, &v.yes_no)) {
-        v.kind = MX_YES_NO_NUMBER_KIND_YES_NO;
+        v.kind = MX_YES_NO_NUMBER_YES_NO;
         *out = v;
         return true;
     }
     if (mx_try_parse_decimal(s, &v.decimal)) {
-        v.kind = MX_YES_NO_NUMBER_KIND_DECIMAL;
+        v.kind = MX_YES_NO_NUMBER_DECIMAL;
         *out = v;
         return true;
     }
@@ -28,14 +30,14 @@ MxYesNoNumber mx_yes_no_number_parse(const char *s) {
     if (mx_yes_no_number_try_parse(s, &v))
         return v;
     memset(&v, 0, sizeof(v));
-    v.kind = MX_YES_NO_NUMBER_KIND_YES_NO;
+    v.kind = MX_YES_NO_NUMBER_YES_NO;
     v.yes_no = mx_yes_no_parse(s);
     return v;
 }
 
 char *mx_yes_no_number_to_string(MxYesNoNumber v) {
     switch (v.kind) {
-    case MX_YES_NO_NUMBER_KIND_DECIMAL:
+    case MX_YES_NO_NUMBER_DECIMAL:
         return mx_format_decimal(v.decimal);
     default:
         return mx_strdup(mx_yes_no_to_string(v.yes_no));

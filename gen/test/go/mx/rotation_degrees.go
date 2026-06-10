@@ -6,7 +6,7 @@ package mx
 // from -180 to 180.
 type RotationDegrees float64
 
-// TryParseRotationDegrees parses s strictly, then clamps into the declared range.
+// TryParseRotationDegrees parses s as a lexically well-formed value, then clamps into the declared range.
 func TryParseRotationDegrees(s string) (RotationDegrees, bool) {
 	v, ok := tryParseDecimal(s)
 	if !ok {
@@ -15,7 +15,7 @@ func TryParseRotationDegrees(s string) (RotationDegrees, bool) {
 	return clampRotationDegrees(v), true
 }
 
-// ParseRotationDegrees is lenient: unparseable input becomes 0, then clamps.
+// ParseRotationDegrees is lenient: unparseable input becomes 0, then clamps into the declared range.
 func ParseRotationDegrees(s string) RotationDegrees {
 	v := parseDecimal(s)
 	return clampRotationDegrees(v)

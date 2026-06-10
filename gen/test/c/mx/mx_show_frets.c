@@ -10,6 +10,8 @@ static const char *const mx_show_frets_values[] = {
 };
 
 bool mx_show_frets_try_parse(const char *s, MxShowFrets *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_show_frets_values) / sizeof(mx_show_frets_values[0]); i++) {
         if (strcmp(s, mx_show_frets_values[i]) == 0) {
             *out = (MxShowFrets)i;

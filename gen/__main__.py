@@ -173,15 +173,19 @@ def _plates(args: list[str]) -> int:
 
 
 def _emit(config_path: str) -> int:
+    from gen.config import ConfigError
     from gen.emit import EmitError, emit
     from gen.plates import PlatesError, build_for_config
 
     try:
         plates, cfg = build_for_config(config_path)
         result = emit(plates, cfg)
-    except (PlatesError, EmitError) as e:
-        message = "\n".join(e.errors) if isinstance(e, PlatesError) else str(e)
-        print(f"error: {message}", file=sys.stderr)
+    except PlatesError as e:
+        for line in e.errors:
+            print(f"error: {line}", file=sys.stderr)
+        return 1
+    except (EmitError, ConfigError, FileNotFoundError, RuntimeError, ValueError) as e:
+        print(f"error: {e}", file=sys.stderr)
         return 1
     print(result.summary())
     return 0

@@ -12,17 +12,17 @@ type YesNoNumber struct {
 type YesNoNumberKind int
 
 const (
-	YesNoNumberKindYesNo YesNoNumberKind = iota
-	YesNoNumberKindDecimal
+	YesNoNumberYesNo YesNoNumberKind = iota
+	YesNoNumberDecimal
 )
 
 // TryParseYesNoNumber tries each union member in schema order.
 func TryParseYesNoNumber(s string) (YesNoNumber, bool) {
 	if v, ok := TryParseYesNo(s); ok {
-		return YesNoNumber{Kind: YesNoNumberKindYesNo, YesNo: v}, true
+		return YesNoNumber{Kind: YesNoNumberYesNo, YesNo: v}, true
 	}
 	if v, ok := tryParseDecimal(s); ok {
-		return YesNoNumber{Kind: YesNoNumberKindDecimal, Decimal: v}, true
+		return YesNoNumber{Kind: YesNoNumberDecimal, Decimal: v}, true
 	}
 	return YesNoNumber{}, false
 }
@@ -33,13 +33,13 @@ func ParseYesNoNumber(s string) YesNoNumber {
 	if v, ok := TryParseYesNoNumber(s); ok {
 		return v
 	}
-	return YesNoNumber{Kind: YesNoNumberKindYesNo, YesNo: ParseYesNo(s)}
+	return YesNoNumber{Kind: YesNoNumberYesNo, YesNo: ParseYesNo(s)}
 }
 
 // String returns the wire spelling of whichever member is held.
 func (v YesNoNumber) String() string {
 	switch v.Kind {
-	case YesNoNumberKindDecimal:
+	case YesNoNumberDecimal:
 		return formatDecimal(v.Decimal)
 	}
 	return v.YesNo.String()

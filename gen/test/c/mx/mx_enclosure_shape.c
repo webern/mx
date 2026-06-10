@@ -22,6 +22,8 @@ static const char *const mx_enclosure_shape_values[] = {
 };
 
 bool mx_enclosure_shape_try_parse(const char *s, MxEnclosureShape *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_enclosure_shape_values) / sizeof(mx_enclosure_shape_values[0]); i++) {
         if (strcmp(s, mx_enclosure_shape_values[i]) == 0) {
             *out = (MxEnclosureShape)i;

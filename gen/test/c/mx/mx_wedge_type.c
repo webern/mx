@@ -12,6 +12,8 @@ static const char *const mx_wedge_type_values[] = {
 };
 
 bool mx_wedge_type_try_parse(const char *s, MxWedgeType *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_wedge_type_values) / sizeof(mx_wedge_type_values[0]); i++) {
         if (strcmp(s, mx_wedge_type_values[i]) == 0) {
             *out = (MxWedgeType)i;

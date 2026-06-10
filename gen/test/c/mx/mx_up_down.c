@@ -10,6 +10,8 @@ static const char *const mx_up_down_values[] = {
 };
 
 bool mx_up_down_try_parse(const char *s, MxUpDown *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_up_down_values) / sizeof(mx_up_down_values[0]); i++) {
         if (strcmp(s, mx_up_down_values[i]) == 0) {
             *out = (MxUpDown)i;

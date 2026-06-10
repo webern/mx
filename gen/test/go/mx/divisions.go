@@ -7,7 +7,7 @@ package mx
 // and to avoid roundoff errors.
 type Divisions float64
 
-// TryParseDivisions parses s strictly, then clamps into the declared range.
+// TryParseDivisions parses s as a lexically well-formed value.
 func TryParseDivisions(s string) (Divisions, bool) {
 	v, ok := tryParseDecimal(s)
 	if !ok {
@@ -16,7 +16,7 @@ func TryParseDivisions(s string) (Divisions, bool) {
 	return Divisions(v), true
 }
 
-// ParseDivisions is lenient: unparseable input becomes 0, then clamps.
+// ParseDivisions is lenient: unparseable input becomes 0.
 func ParseDivisions(s string) Divisions {
 	v := parseDecimal(s)
 	return Divisions(v)

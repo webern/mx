@@ -7,7 +7,7 @@ package mx
 // the circle of fifths (hence the type name).
 type Fifths int
 
-// TryParseFifths parses s strictly, then clamps into the declared range.
+// TryParseFifths parses s as a lexically well-formed value.
 func TryParseFifths(s string) (Fifths, bool) {
 	v, ok := tryParseInt(s)
 	if !ok {
@@ -16,7 +16,7 @@ func TryParseFifths(s string) (Fifths, bool) {
 	return Fifths(v), true
 }
 
-// ParseFifths is lenient: unparseable input becomes 0, then clamps.
+// ParseFifths is lenient: unparseable input becomes 0.
 func ParseFifths(s string) Fifths {
 	v := parseInt(s)
 	return Fifths(v)

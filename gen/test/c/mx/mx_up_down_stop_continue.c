@@ -12,6 +12,8 @@ static const char *const mx_up_down_stop_continue_values[] = {
 };
 
 bool mx_up_down_stop_continue_try_parse(const char *s, MxUpDownStopContinue *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_up_down_stop_continue_values) / sizeof(mx_up_down_stop_continue_values[0]); i++) {
         if (strcmp(s, mx_up_down_stop_continue_values[i]) == 0) {
             *out = (MxUpDownStopContinue)i;

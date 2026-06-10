@@ -6,7 +6,7 @@ package mx
 // provide a default scaling from tenths to physical units.
 type Millimeters float64
 
-// TryParseMillimeters parses s strictly, then clamps into the declared range.
+// TryParseMillimeters parses s as a lexically well-formed value.
 func TryParseMillimeters(s string) (Millimeters, bool) {
 	v, ok := tryParseDecimal(s)
 	if !ok {
@@ -15,7 +15,7 @@ func TryParseMillimeters(s string) (Millimeters, bool) {
 	return Millimeters(v), true
 }
 
-// ParseMillimeters is lenient: unparseable input becomes 0, then clamps.
+// ParseMillimeters is lenient: unparseable input becomes 0.
 func ParseMillimeters(s string) Millimeters {
 	v := parseDecimal(s)
 	return Millimeters(v)

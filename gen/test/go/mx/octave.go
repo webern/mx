@@ -5,7 +5,7 @@ package mx
 // Octaves are represented by the numbers 0 to 9, where 4 indicates the octave started by middle C.
 type Octave int
 
-// TryParseOctave parses s strictly, then clamps into the declared range.
+// TryParseOctave parses s as a lexically well-formed value, then clamps into the declared range.
 func TryParseOctave(s string) (Octave, bool) {
 	v, ok := tryParseInt(s)
 	if !ok {
@@ -14,7 +14,7 @@ func TryParseOctave(s string) (Octave, bool) {
 	return clampOctave(v), true
 }
 
-// ParseOctave is lenient: unparseable input becomes 0, then clamps.
+// ParseOctave is lenient: unparseable input becomes 0, then clamps into the declared range.
 func ParseOctave(s string) Octave {
 	v := parseInt(s)
 	return clampOctave(v)

@@ -7,15 +7,17 @@
 #include <string.h>
 
 bool mx_font_size_try_parse(const char *s, MxFontSize *out) {
+    if (!s)
+        s = "";
     MxFontSize v;
     memset(&v, 0, sizeof(v));
     if (mx_try_parse_decimal(s, &v.decimal)) {
-        v.kind = MX_FONT_SIZE_KIND_DECIMAL;
+        v.kind = MX_FONT_SIZE_DECIMAL;
         *out = v;
         return true;
     }
     if (mx_css_font_size_try_parse(s, &v.css_font_size)) {
-        v.kind = MX_FONT_SIZE_KIND_CSS_FONT_SIZE;
+        v.kind = MX_FONT_SIZE_CSS_FONT_SIZE;
         *out = v;
         return true;
     }
@@ -28,14 +30,14 @@ MxFontSize mx_font_size_parse(const char *s) {
     if (mx_font_size_try_parse(s, &v))
         return v;
     memset(&v, 0, sizeof(v));
-    v.kind = MX_FONT_SIZE_KIND_DECIMAL;
+    v.kind = MX_FONT_SIZE_DECIMAL;
     v.decimal = mx_parse_decimal(s);
     return v;
 }
 
 char *mx_font_size_to_string(MxFontSize v) {
     switch (v.kind) {
-    case MX_FONT_SIZE_KIND_CSS_FONT_SIZE:
+    case MX_FONT_SIZE_CSS_FONT_SIZE:
         return mx_strdup(mx_css_font_size_to_string(v.css_font_size));
     default:
         return mx_format_decimal(v.decimal);

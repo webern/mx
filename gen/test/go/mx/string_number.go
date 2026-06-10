@@ -6,7 +6,7 @@ package mx
 // being the highest pitched full-length string.
 type StringNumber int
 
-// TryParseStringNumber parses s strictly, then clamps into the declared range.
+// TryParseStringNumber parses s as a lexically well-formed value, then clamps into the declared range.
 func TryParseStringNumber(s string) (StringNumber, bool) {
 	v, ok := tryParseInt(s)
 	if !ok {
@@ -15,7 +15,7 @@ func TryParseStringNumber(s string) (StringNumber, bool) {
 	return clampStringNumber(v), true
 }
 
-// ParseStringNumber is lenient: unparseable input becomes 0, then clamps.
+// ParseStringNumber is lenient: unparseable input becomes 0, then clamps into the declared range.
 func ParseStringNumber(s string) StringNumber {
 	v := parseInt(s)
 	return clampStringNumber(v)

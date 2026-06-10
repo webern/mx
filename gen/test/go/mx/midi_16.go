@@ -5,7 +5,7 @@ package mx
 // The midi-16 type is used to express MIDI 1.0 values that range from 1 to 16.
 type MIDI16 int
 
-// TryParseMIDI16 parses s strictly, then clamps into the declared range.
+// TryParseMIDI16 parses s as a lexically well-formed value, then clamps into the declared range.
 func TryParseMIDI16(s string) (MIDI16, bool) {
 	v, ok := tryParseInt(s)
 	if !ok {
@@ -14,7 +14,7 @@ func TryParseMIDI16(s string) (MIDI16, bool) {
 	return clampMIDI16(v), true
 }
 
-// ParseMIDI16 is lenient: unparseable input becomes 0, then clamps.
+// ParseMIDI16 is lenient: unparseable input becomes 0, then clamps into the declared range.
 func ParseMIDI16(s string) MIDI16 {
 	v := parseInt(s)
 	return clampMIDI16(v)

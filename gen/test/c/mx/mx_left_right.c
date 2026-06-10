@@ -10,6 +10,8 @@ static const char *const mx_left_right_values[] = {
 };
 
 bool mx_left_right_try_parse(const char *s, MxLeftRight *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_left_right_values) / sizeof(mx_left_right_values[0]); i++) {
         if (strcmp(s, mx_left_right_values[i]) == 0) {
             *out = (MxLeftRight)i;

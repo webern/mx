@@ -7,7 +7,7 @@ package mx
 // overlapping beams such as grace notes within regular notes, or beams used in different voices.
 type BeamLevel int
 
-// TryParseBeamLevel parses s strictly, then clamps into the declared range.
+// TryParseBeamLevel parses s as a lexically well-formed value, then clamps into the declared range.
 func TryParseBeamLevel(s string) (BeamLevel, bool) {
 	v, ok := tryParseInt(s)
 	if !ok {
@@ -16,7 +16,7 @@ func TryParseBeamLevel(s string) (BeamLevel, bool) {
 	return clampBeamLevel(v), true
 }
 
-// ParseBeamLevel is lenient: unparseable input becomes 0, then clamps.
+// ParseBeamLevel is lenient: unparseable input becomes 0, then clamps into the declared range.
 func ParseBeamLevel(s string) BeamLevel {
 	v := parseInt(s)
 	return clampBeamLevel(v)

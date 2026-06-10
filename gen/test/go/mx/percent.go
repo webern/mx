@@ -5,7 +5,7 @@ package mx
 // The percent type specifies a percentage from 0 to 100.
 type Percent float64
 
-// TryParsePercent parses s strictly, then clamps into the declared range.
+// TryParsePercent parses s as a lexically well-formed value, then clamps into the declared range.
 func TryParsePercent(s string) (Percent, bool) {
 	v, ok := tryParseDecimal(s)
 	if !ok {
@@ -14,7 +14,7 @@ func TryParsePercent(s string) (Percent, bool) {
 	return clampPercent(v), true
 }
 
-// ParsePercent is lenient: unparseable input becomes 0, then clamps.
+// ParsePercent is lenient: unparseable input becomes 0, then clamps into the declared range.
 func ParsePercent(s string) Percent {
 	v := parseDecimal(s)
 	return clampPercent(v)

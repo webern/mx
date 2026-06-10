@@ -25,6 +25,7 @@ from gen.names import DEFAULT_ACRONYMS, JOINERS, NameFactory, sanitize_identifie
 from gen.plates import languages
 from gen.plates.check import run_checks
 from gen.plates.model import (
+    ClampStep,
     ComplexPlate,
     EnumPlate,
     FileSpec,
@@ -40,6 +41,66 @@ from gen.plates.model import (
     UnionPlateMember,
     Variant,
 )
+
+
+# Primitive-implied lower bounds the schema leaves unstated; part of the
+# uniform clamp policy (see model.ClampStep and data/README.md).
+_IMPLIED_MIN = {"positive_integer": 1, "non_negative_integer": 0}
+
+# The epsilon an exclusive DECIMAL bound clamps past (an exclusive integer
+# bound clamps to the next integer). Matches the corpus duration fixup.
+_EPSILON = 1e-6
+
+
+def _number_family(base: str) -> str:
+    return "decimal" if base == "decimal" else "integer"
+
+
+def _spell(value: float, family: str) -> str:
+    """A numeric literal valid in every current target language."""
+    if family == "integer":
+        return str(int(value))
+    return repr(float(value))
+
+
+def clamp_steps(base: str, bounds: NumberBounds) -> list[ClampStep]:
+    """Resolve facets plus primitive-implied bounds into the ordered clamp
+    rules a wrapper applies after parsing. The tightest lower bound wins (an
+    exclusive bound at v is tighter than an inclusive one at the same v)."""
+    family = _number_family(base)
+    steps: list[ClampStep] = []
+
+    lows: list[tuple[float, bool]] = []  # (value, exclusive)
+    if bounds.min_inclusive is not None:
+        lows.append((float(bounds.min_inclusive), False))
+    if bounds.min_exclusive is not None:
+        lows.append((float(bounds.min_exclusive), True))
+    if base in _IMPLIED_MIN:
+        lows.append((float(_IMPLIED_MIN[base]), False))
+    if lows:
+        value, exclusive = max(lows)
+        if exclusive:
+            past = value + (1 if family == "integer" else _EPSILON)
+            steps.append(ClampStep("<=", _spell(value, family), _spell(past, family)))
+        else:
+            bound = _spell(value, family)
+            steps.append(ClampStep("<", bound, bound))
+
+    highs: list[tuple[float, bool]] = []
+    if bounds.max_inclusive is not None:
+        highs.append((float(bounds.max_inclusive), False))
+    if bounds.max_exclusive is not None:
+        highs.append((float(bounds.max_exclusive), True))
+    if highs:
+        value, exclusive = min((v, not e) for v, e in highs)
+        exclusive = not exclusive
+        if exclusive:
+            past = value - (1 if family == "integer" else _EPSILON)
+            steps.append(ClampStep(">=", _spell(value, family), _spell(past, family)))
+        else:
+            bound = _spell(value, family)
+            steps.append(ClampStep(">", bound, bound))
+    return steps
 
 
 class PlatesError(Exception):
@@ -218,13 +279,16 @@ class _Builder:
                 doc=v.doc,
             )
         if isinstance(v, ir.NumberType):
+            bounds = NumberBounds(
+                v.min_inclusive, v.max_inclusive, v.min_exclusive, v.max_exclusive
+            )
             return NumberPlate(
                 name=name,
                 ident=ident,
                 base=v.base,
-                bounds=NumberBounds(
-                    v.min_inclusive, v.max_inclusive, v.min_exclusive, v.max_exclusive
-                ),
+                bounds=bounds,
+                family=_number_family(v.base),
+                clamp=clamp_steps(v.base, bounds),
                 target_type=self.type_map.get(v.base, v.base),
                 doc=v.doc,
             )
@@ -244,13 +308,25 @@ class _Builder:
         for m in v.members:
             if m.ref is not None:
                 member_name = self.type_names.get(m.ref.name) or self.factory.make(m.ref.name)
+                clamp = []
+                if m.ref.category == "primitive" and m.ref.name in _IMPLIED_MIN:
+                    # The primitive's implied bounds apply inside a union just
+                    # as they would on a named number type.
+                    clamp = clamp_steps(m.ref.name, NumberBounds())
                 members.append(
-                    UnionPlateMember(ref=self._plate_ref(m.ref), name=member_name)
+                    UnionPlateMember(
+                        ref=self._plate_ref(m.ref),
+                        name=member_name,
+                        # The member's discriminator constant: scoped, renamed,
+                        # and collision-gated exactly like an enum variant.
+                        tag=self._variant(v.name, m.ref.name),
+                        clamp=clamp,
+                    )
                 )
             else:
                 # An inline literal set projects like a tiny anonymous enum;
                 # its variants are addressable for renames under the union's
-                # own type name.
+                # own type name and double as the discriminator constants.
                 members.append(
                     UnionPlateMember(
                         literals=[self._variant(v.name, lit) for lit in m.literals or []]
@@ -464,10 +540,12 @@ class _Builder:
                         f"rename.enum-value.{enum}.{value!r}: enum has no such value"
                     )
             elif isinstance(vt, ir.UnionType):
-                literals = {lit for m in vt.members for lit in (m.literals or [])}
-                if value not in literals:
+                addressable = {lit for m in vt.members for lit in (m.literals or [])}
+                addressable |= {m.ref.name for m in vt.members if m.ref is not None}
+                if value not in addressable:
                     errors.append(
-                        f"rename.enum-value.{enum}.{value!r}: union has no such literal"
+                        f"rename.enum-value.{enum}.{value!r}: union has no such "
+                        f"literal or member"
                     )
             else:
                 errors.append(f"rename.enum-value.{enum}: no such enum type")

@@ -73,9 +73,12 @@ def write_files(out_dir: Path, files: dict[str, str]) -> EmitResult:
     for rel in sorted(files):
         target = out_dir / rel
         content = files[rel]
-        if target.exists() and target.read_text(encoding="utf-8") == content:
-            result.unchanged.append(rel)
-            continue
+        try:
+            if target.exists() and target.read_text(encoding="utf-8") == content:
+                result.unchanged.append(rel)
+                continue
+        except (UnicodeDecodeError, OSError):
+            pass  # whatever is there, it is not our content: overwrite it
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(content, encoding="utf-8")
         result.written.append(rel)

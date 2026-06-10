@@ -6,7 +6,7 @@ package mx
 // top to bottom, with 1 being the top staff on a part.
 type StaffNumber int
 
-// TryParseStaffNumber parses s strictly, then clamps into the declared range.
+// TryParseStaffNumber parses s as a lexically well-formed value, then clamps into the declared range.
 func TryParseStaffNumber(s string) (StaffNumber, bool) {
 	v, ok := tryParseInt(s)
 	if !ok {
@@ -15,7 +15,7 @@ func TryParseStaffNumber(s string) (StaffNumber, bool) {
 	return clampStaffNumber(v), true
 }
 
-// ParseStaffNumber is lenient: unparseable input becomes 0, then clamps.
+// ParseStaffNumber is lenient: unparseable input becomes 0, then clamps into the declared range.
 func ParseStaffNumber(s string) StaffNumber {
 	v := parseInt(s)
 	return clampStaffNumber(v)

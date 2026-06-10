@@ -11,6 +11,8 @@ static const char *const mx_cancel_location_values[] = {
 };
 
 bool mx_cancel_location_try_parse(const char *s, MxCancelLocation *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_cancel_location_values) / sizeof(mx_cancel_location_values[0]); i++) {
         if (strcmp(s, mx_cancel_location_values[i]) == 0) {
             *out = (MxCancelLocation)i;

@@ -10,6 +10,8 @@ static const char *const mx_start_stop_values[] = {
 };
 
 bool mx_start_stop_try_parse(const char *s, MxStartStop *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_start_stop_values) / sizeof(mx_start_stop_values[0]); i++) {
         if (strcmp(s, mx_start_stop_values[i]) == 0) {
             *out = (MxStartStop)i;

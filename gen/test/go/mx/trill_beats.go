@@ -6,7 +6,7 @@ package mx
 // is a decimal value with a minimum value of 2.
 type TrillBeats float64
 
-// TryParseTrillBeats parses s strictly, then clamps into the declared range.
+// TryParseTrillBeats parses s as a lexically well-formed value, then clamps into the declared range.
 func TryParseTrillBeats(s string) (TrillBeats, bool) {
 	v, ok := tryParseDecimal(s)
 	if !ok {
@@ -15,7 +15,7 @@ func TryParseTrillBeats(s string) (TrillBeats, bool) {
 	return clampTrillBeats(v), true
 }
 
-// ParseTrillBeats is lenient: unparseable input becomes 0, then clamps.
+// ParseTrillBeats is lenient: unparseable input becomes 0, then clamps into the declared range.
 func ParseTrillBeats(s string) TrillBeats {
 	v := parseDecimal(s)
 	return clampTrillBeats(v)

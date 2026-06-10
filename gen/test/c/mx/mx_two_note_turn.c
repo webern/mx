@@ -11,6 +11,8 @@ static const char *const mx_two_note_turn_values[] = {
 };
 
 bool mx_two_note_turn_try_parse(const char *s, MxTwoNoteTurn *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_two_note_turn_values) / sizeof(mx_two_note_turn_values[0]); i++) {
         if (strcmp(s, mx_two_note_turn_values[i]) == 0) {
             *out = (MxTwoNoteTurn)i;

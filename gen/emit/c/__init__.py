@@ -24,6 +24,13 @@ from gen.plates.model import Plates
 
 def render(plates: Plates) -> dict[str, str]:
     rt = runtime_stem(plates)
+    reserved = (rt, "sources")
+    for plate in list(plates.value_types) + list(plates.complex_types):
+        if plate.file in reserved:
+            raise ValueError(
+                f"type '{plate.name.wire}' projects to the reserved file stem "
+                f"'{plate.file}'; rename it in config.toml"
+            )
     includes_of = {
         spec.file: spec.includes for spec in (plates.files or [])
     }

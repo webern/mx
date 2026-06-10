@@ -107,6 +107,22 @@ class NumberBounds:
 
 
 @dataclass
+class ClampStep:
+    """One resolved clamping rule: `if v <op> <bound> then v = <replacement>`.
+    This is the corpus leniency POLICY (the thing the .fixup.xml sidecars
+    encode), decided once in the projection: facet bounds and the
+    primitive-implied lower bounds are merged, the tightest wins, and an
+    exclusive bound's replacement is the nearest representable in-range value
+    (next integer, or bound +/- 1e-6 for decimals). The literals are spelled
+    neutrally (valid in every current target language); templates print them
+    verbatim."""
+
+    op: str  # "<" | "<=" | ">" | ">="
+    bound: str
+    replacement: str
+
+
+@dataclass
 class EnumPlate:
     name: Name
     ident: str
@@ -123,7 +139,9 @@ class NumberPlate:
     name: Name
     ident: str
     base: str  # IR primitive: decimal/integer/positive_integer/non_negative_integer
-    bounds: NumberBounds = field(default_factory=NumberBounds)
+    bounds: NumberBounds = field(default_factory=NumberBounds)  # neutral core: raw facets
+    family: str = ""  # "decimal" | "integer": which parse/format family applies
+    clamp: list[ClampStep] = field(default_factory=list)  # resolved policy (see ClampStep)
     target_type: str = ""  # type_map[base]: what the wrapper wraps
     doc: str | None = None
     file: str | None = None
@@ -153,12 +171,18 @@ class UnionPlateMember:
     type, or an inline literal set projected like a tiny anonymous enum (each
     literal carries its wire form and a variant identifier). A ref member also
     carries `name`, the referenced type's name bundle, so a template can spell
-    the member's tag/field without inventing a name (a primitive member like
-    `positive_integer` has no plate to look it up on)."""
+    the member's field without inventing a name (a primitive member like
+    `positive_integer` has no plate to look it up on), and `tag`, the final
+    discriminator-constant identifier for this member, scoped exactly like an
+    enum variant and covered by the same collision gate. A primitive numeric
+    member carries its `clamp` policy (the primitive-implied bounds), so the
+    union enforces the same leniency as a named number type would."""
 
     ref: PlateRef | None = None
     name: Name | None = None
+    tag: Variant | None = None
     literals: list[Variant] | None = None
+    clamp: list[ClampStep] = field(default_factory=list)
 
 
 @dataclass

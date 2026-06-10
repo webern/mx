@@ -9,7 +9,7 @@ package mx
 // number-level value is optional, the value is 1 by default.
 type NumberLevel int
 
-// TryParseNumberLevel parses s strictly, then clamps into the declared range.
+// TryParseNumberLevel parses s as a lexically well-formed value, then clamps into the declared range.
 func TryParseNumberLevel(s string) (NumberLevel, bool) {
 	v, ok := tryParseInt(s)
 	if !ok {
@@ -18,7 +18,7 @@ func TryParseNumberLevel(s string) (NumberLevel, bool) {
 	return clampNumberLevel(v), true
 }
 
-// ParseNumberLevel is lenient: unparseable input becomes 0, then clamps.
+// ParseNumberLevel is lenient: unparseable input becomes 0, then clamps into the declared range.
 func ParseNumberLevel(s string) NumberLevel {
 	v := parseInt(s)
 	return clampNumberLevel(v)

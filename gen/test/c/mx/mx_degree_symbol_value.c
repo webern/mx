@@ -13,6 +13,8 @@ static const char *const mx_degree_symbol_value_values[] = {
 };
 
 bool mx_degree_symbol_value_try_parse(const char *s, MxDegreeSymbolValue *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_degree_symbol_value_values) / sizeof(mx_degree_symbol_value_values[0]); i++) {
         if (strcmp(s, mx_degree_symbol_value_values[i]) == 0) {
             *out = (MxDegreeSymbolValue)i;

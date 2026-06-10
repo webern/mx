@@ -7,7 +7,7 @@ package mx
 // sharp) are used for microtones.
 type Semitones float64
 
-// TryParseSemitones parses s strictly, then clamps into the declared range.
+// TryParseSemitones parses s as a lexically well-formed value.
 func TryParseSemitones(s string) (Semitones, bool) {
 	v, ok := tryParseDecimal(s)
 	if !ok {
@@ -16,7 +16,7 @@ func TryParseSemitones(s string) (Semitones, bool) {
 	return Semitones(v), true
 }
 
-// ParseSemitones is lenient: unparseable input becomes 0, then clamps.
+// ParseSemitones is lenient: unparseable input becomes 0.
 func ParseSemitones(s string) Semitones {
 	v := parseDecimal(s)
 	return Semitones(v)

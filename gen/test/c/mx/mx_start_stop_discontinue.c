@@ -11,6 +11,8 @@ static const char *const mx_start_stop_discontinue_values[] = {
 };
 
 bool mx_start_stop_discontinue_try_parse(const char *s, MxStartStopDiscontinue *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_start_stop_discontinue_values) / sizeof(mx_start_stop_discontinue_values[0]); i++) {
         if (strcmp(s, mx_start_stop_discontinue_values[i]) == 0) {
             *out = (MxStartStopDiscontinue)i;

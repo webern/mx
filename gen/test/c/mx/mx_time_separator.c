@@ -13,6 +13,8 @@ static const char *const mx_time_separator_values[] = {
 };
 
 bool mx_time_separator_try_parse(const char *s, MxTimeSeparator *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_time_separator_values) / sizeof(mx_time_separator_values[0]); i++) {
         if (strcmp(s, mx_time_separator_values[i]) == 0) {
             *out = (MxTimeSeparator)i;

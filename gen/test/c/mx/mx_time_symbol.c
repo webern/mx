@@ -14,6 +14,8 @@ static const char *const mx_time_symbol_values[] = {
 };
 
 bool mx_time_symbol_try_parse(const char *s, MxTimeSymbol *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_time_symbol_values) / sizeof(mx_time_symbol_values[0]); i++) {
         if (strcmp(s, mx_time_symbol_values[i]) == 0) {
             *out = (MxTimeSymbol)i;

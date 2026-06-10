@@ -11,6 +11,8 @@ static const char *const mx_staff_divide_symbol_values[] = {
 };
 
 bool mx_staff_divide_symbol_try_parse(const char *s, MxStaffDivideSymbol *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_staff_divide_symbol_values) / sizeof(mx_staff_divide_symbol_values[0]); i++) {
         if (strcmp(s, mx_staff_divide_symbol_values[i]) == 0) {
             *out = (MxStaffDivideSymbol)i;

@@ -10,6 +10,8 @@ static const char *const mx_top_bottom_values[] = {
 };
 
 bool mx_top_bottom_try_parse(const char *s, MxTopBottom *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_top_bottom_values) / sizeof(mx_top_bottom_values[0]); i++) {
         if (strcmp(s, mx_top_bottom_values[i]) == 0) {
             *out = (MxTopBottom)i;

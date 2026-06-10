@@ -12,6 +12,8 @@ static const char *const mx_text_direction_values[] = {
 };
 
 bool mx_text_direction_try_parse(const char *s, MxTextDirection *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_text_direction_values) / sizeof(mx_text_direction_values[0]); i++) {
         if (strcmp(s, mx_text_direction_values[i]) == 0) {
             *out = (MxTextDirection)i;

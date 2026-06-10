@@ -13,6 +13,8 @@ static const char *const mx_beam_value_values[] = {
 };
 
 bool mx_beam_value_try_parse(const char *s, MxBeamValue *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_beam_value_values) / sizeof(mx_beam_value_values[0]); i++) {
         if (strcmp(s, mx_beam_value_values[i]) == 0) {
             *out = (MxBeamValue)i;

@@ -19,6 +19,8 @@ static const char *const mx_pitched_value_values[] = {
 };
 
 bool mx_pitched_value_try_parse(const char *s, MxPitchedValue *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_pitched_value_values) / sizeof(mx_pitched_value_values[0]); i++) {
         if (strcmp(s, mx_pitched_value_values[i]) == 0) {
             *out = (MxPitchedValue)i;

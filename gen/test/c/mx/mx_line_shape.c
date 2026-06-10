@@ -10,6 +10,8 @@ static const char *const mx_line_shape_values[] = {
 };
 
 bool mx_line_shape_try_parse(const char *s, MxLineShape *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_line_shape_values) / sizeof(mx_line_shape_values[0]); i++) {
         if (strcmp(s, mx_line_shape_values[i]) == 0) {
             *out = (MxLineShape)i;

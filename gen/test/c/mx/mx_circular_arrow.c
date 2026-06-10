@@ -10,6 +10,8 @@ static const char *const mx_circular_arrow_values[] = {
 };
 
 bool mx_circular_arrow_try_parse(const char *s, MxCircularArrow *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_circular_arrow_values) / sizeof(mx_circular_arrow_values[0]); i++) {
         if (strcmp(s, mx_circular_arrow_values[i]) == 0) {
             *out = (MxCircularArrow)i;

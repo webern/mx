@@ -10,6 +10,8 @@ static const char *const mx_backward_forward_values[] = {
 };
 
 bool mx_backward_forward_try_parse(const char *s, MxBackwardForward *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_backward_forward_values) / sizeof(mx_backward_forward_values[0]); i++) {
         if (strcmp(s, mx_backward_forward_values[i]) == 0) {
             *out = (MxBackwardForward)i;

@@ -10,6 +10,8 @@ static const char *const mx_on_off_values[] = {
 };
 
 bool mx_on_off_try_parse(const char *s, MxOnOff *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_on_off_values) / sizeof(mx_on_off_values[0]); i++) {
         if (strcmp(s, mx_on_off_values[i]) == 0) {
             *out = (MxOnOff)i;

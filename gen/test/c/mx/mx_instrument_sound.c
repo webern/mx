@@ -7,14 +7,16 @@
 #include <string.h>
 
 bool mx_instrument_sound_try_parse(const char *s, MxInstrumentSound *out) {
+    if (!s)
+        s = "";
     MxInstrumentSound v;
     memset(&v, 0, sizeof(v));
     if (mx_sound_id_try_parse(s, &v.sound_id)) {
-        v.kind = MX_INSTRUMENT_SOUND_KIND_SOUND_ID;
+        v.kind = MX_INSTRUMENT_SOUND_SOUND_ID;
         *out = v;
         return true;
     }
-    v.kind = MX_INSTRUMENT_SOUND_KIND_STRING;
+    v.kind = MX_INSTRUMENT_SOUND_STRING;
     v.string = mx_strdup(s);
     *out = v;
     return true;
@@ -25,14 +27,14 @@ MxInstrumentSound mx_instrument_sound_parse(const char *s) {
     if (mx_instrument_sound_try_parse(s, &v))
         return v;
     memset(&v, 0, sizeof(v));
-    v.kind = MX_INSTRUMENT_SOUND_KIND_SOUND_ID;
+    v.kind = MX_INSTRUMENT_SOUND_SOUND_ID;
     v.sound_id = mx_sound_id_parse(s);
     return v;
 }
 
 char *mx_instrument_sound_to_string(MxInstrumentSound v) {
     switch (v.kind) {
-    case MX_INSTRUMENT_SOUND_KIND_STRING:
+    case MX_INSTRUMENT_SOUND_STRING:
         return mx_strdup(v.string);
     default:
         return mx_strdup(mx_sound_id_to_string(v.sound_id));
@@ -42,7 +44,7 @@ char *mx_instrument_sound_to_string(MxInstrumentSound v) {
 void mx_instrument_sound_free(MxInstrumentSound *v) {
     if (!v)
         return;
-    if (v->kind == MX_INSTRUMENT_SOUND_KIND_STRING) {
+    if (v->kind == MX_INSTRUMENT_SOUND_STRING) {
         free(v->string);
         v->string = NULL;
     }

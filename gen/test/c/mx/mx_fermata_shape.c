@@ -17,6 +17,8 @@ static const char *const mx_fermata_shape_values[] = {
 };
 
 bool mx_fermata_shape_try_parse(const char *s, MxFermataShape *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_fermata_shape_values) / sizeof(mx_fermata_shape_values[0]); i++) {
         if (strcmp(s, mx_fermata_shape_values[i]) == 0) {
             *out = (MxFermataShape)i;

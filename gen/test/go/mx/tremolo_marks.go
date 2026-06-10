@@ -6,7 +6,7 @@ package mx
 // added.
 type TremoloMarks int
 
-// TryParseTremoloMarks parses s strictly, then clamps into the declared range.
+// TryParseTremoloMarks parses s as a lexically well-formed value, then clamps into the declared range.
 func TryParseTremoloMarks(s string) (TremoloMarks, bool) {
 	v, ok := tryParseInt(s)
 	if !ok {
@@ -15,7 +15,7 @@ func TryParseTremoloMarks(s string) (TremoloMarks, bool) {
 	return clampTremoloMarks(v), true
 }
 
-// ParseTremoloMarks is lenient: unparseable input becomes 0, then clamps.
+// ParseTremoloMarks is lenient: unparseable input becomes 0, then clamps into the declared range.
 func ParseTremoloMarks(s string) TremoloMarks {
 	v := parseInt(s)
 	return clampTremoloMarks(v)

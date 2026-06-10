@@ -41,6 +41,8 @@ static const char *const mx_kind_value_values[] = {
 };
 
 bool mx_kind_value_try_parse(const char *s, MxKindValue *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_kind_value_values) / sizeof(mx_kind_value_values[0]); i++) {
         if (strcmp(s, mx_kind_value_values[i]) == 0) {
             *out = (MxKindValue)i;

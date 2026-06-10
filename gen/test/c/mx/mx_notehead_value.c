@@ -36,6 +36,8 @@ static const char *const mx_notehead_value_values[] = {
 };
 
 bool mx_notehead_value_try_parse(const char *s, MxNoteheadValue *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_notehead_value_values) / sizeof(mx_notehead_value_values[0]); i++) {
         if (strcmp(s, mx_notehead_value_values[i]) == 0) {
             *out = (MxNoteheadValue)i;

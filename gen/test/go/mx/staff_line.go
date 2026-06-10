@@ -7,7 +7,7 @@ package mx
 // outside the staff, such as a C clef positioned in the middle of a grand staff.
 type StaffLine int
 
-// TryParseStaffLine parses s strictly, then clamps into the declared range.
+// TryParseStaffLine parses s as a lexically well-formed value.
 func TryParseStaffLine(s string) (StaffLine, bool) {
 	v, ok := tryParseInt(s)
 	if !ok {
@@ -16,7 +16,7 @@ func TryParseStaffLine(s string) (StaffLine, bool) {
 	return StaffLine(v), true
 }
 
-// ParseStaffLine is lenient: unparseable input becomes 0, then clamps.
+// ParseStaffLine is lenient: unparseable input becomes 0.
 func ParseStaffLine(s string) StaffLine {
 	v := parseInt(s)
 	return StaffLine(v)

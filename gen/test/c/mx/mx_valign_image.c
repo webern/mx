@@ -11,6 +11,8 @@ static const char *const mx_valign_image_values[] = {
 };
 
 bool mx_valign_image_try_parse(const char *s, MxValignImage *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_valign_image_values) / sizeof(mx_valign_image_values[0]); i++) {
         if (strcmp(s, mx_valign_image_values[i]) == 0) {
             *out = (MxValignImage)i;

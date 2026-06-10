@@ -12,17 +12,17 @@ type FontSize struct {
 type FontSizeKind int
 
 const (
-	FontSizeKindDecimal FontSizeKind = iota
-	FontSizeKindCSSFontSize
+	FontSizeDecimal FontSizeKind = iota
+	FontSizeCSSFontSize
 )
 
 // TryParseFontSize tries each union member in schema order.
 func TryParseFontSize(s string) (FontSize, bool) {
 	if v, ok := tryParseDecimal(s); ok {
-		return FontSize{Kind: FontSizeKindDecimal, Decimal: v}, true
+		return FontSize{Kind: FontSizeDecimal, Decimal: v}, true
 	}
 	if v, ok := TryParseCSSFontSize(s); ok {
-		return FontSize{Kind: FontSizeKindCSSFontSize, CSSFontSize: v}, true
+		return FontSize{Kind: FontSizeCSSFontSize, CSSFontSize: v}, true
 	}
 	return FontSize{}, false
 }
@@ -33,13 +33,13 @@ func ParseFontSize(s string) FontSize {
 	if v, ok := TryParseFontSize(s); ok {
 		return v
 	}
-	return FontSize{Kind: FontSizeKindDecimal, Decimal: parseDecimal(s)}
+	return FontSize{Kind: FontSizeDecimal, Decimal: parseDecimal(s)}
 }
 
 // String returns the wire spelling of whichever member is held.
 func (v FontSize) String() string {
 	switch v.Kind {
-	case FontSizeKindCSSFontSize:
+	case FontSizeCSSFontSize:
 		return v.CSSFontSize.String()
 	}
 	return formatDecimal(v.Decimal)

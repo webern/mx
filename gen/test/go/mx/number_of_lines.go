@@ -5,7 +5,7 @@ package mx
 // The number-of-lines type is used to specify the number of lines in text decoration attributes.
 type NumberOfLines int
 
-// TryParseNumberOfLines parses s strictly, then clamps into the declared range.
+// TryParseNumberOfLines parses s as a lexically well-formed value, then clamps into the declared range.
 func TryParseNumberOfLines(s string) (NumberOfLines, bool) {
 	v, ok := tryParseInt(s)
 	if !ok {
@@ -14,7 +14,7 @@ func TryParseNumberOfLines(s string) (NumberOfLines, bool) {
 	return clampNumberOfLines(v), true
 }
 
-// ParseNumberOfLines is lenient: unparseable input becomes 0, then clamps.
+// ParseNumberOfLines is lenient: unparseable input becomes 0, then clamps into the declared range.
 func ParseNumberOfLines(s string) NumberOfLines {
 	v := parseInt(s)
 	return clampNumberOfLines(v)

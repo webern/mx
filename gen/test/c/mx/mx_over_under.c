@@ -10,6 +10,8 @@ static const char *const mx_over_under_values[] = {
 };
 
 bool mx_over_under_try_parse(const char *s, MxOverUnder *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_over_under_values) / sizeof(mx_over_under_values[0]); i++) {
         if (strcmp(s, mx_over_under_values[i]) == 0) {
             *out = (MxOverUnder)i;

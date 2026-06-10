@@ -7,15 +7,19 @@
 #include <string.h>
 
 bool mx_positive_integer_or_empty_try_parse(const char *s, MxPositiveIntegerOrEmpty *out) {
+    if (!s)
+        s = "";
     MxPositiveIntegerOrEmpty v;
     memset(&v, 0, sizeof(v));
     if (mx_try_parse_int(s, &v.positive_integer)) {
-        v.kind = MX_POSITIVE_INTEGER_OR_EMPTY_KIND_POSITIVE_INTEGER;
+        if (v.positive_integer < 1)
+            v.positive_integer = 1;
+        v.kind = MX_POSITIVE_INTEGER_OR_EMPTY_POSITIVE_INTEGER;
         *out = v;
         return true;
     }
     if (strcmp(s, "") == 0) {
-        v.kind = MX_POSITIVE_INTEGER_OR_EMPTY_KIND_EMPTY;
+        v.kind = MX_POSITIVE_INTEGER_OR_EMPTY_EMPTY;
         *out = v;
         return true;
     }
@@ -28,14 +32,16 @@ MxPositiveIntegerOrEmpty mx_positive_integer_or_empty_parse(const char *s) {
     if (mx_positive_integer_or_empty_try_parse(s, &v))
         return v;
     memset(&v, 0, sizeof(v));
-    v.kind = MX_POSITIVE_INTEGER_OR_EMPTY_KIND_POSITIVE_INTEGER;
+    v.kind = MX_POSITIVE_INTEGER_OR_EMPTY_POSITIVE_INTEGER;
     v.positive_integer = mx_parse_int(s);
+    if (v.positive_integer < 1)
+        v.positive_integer = 1;
     return v;
 }
 
 char *mx_positive_integer_or_empty_to_string(MxPositiveIntegerOrEmpty v) {
     switch (v.kind) {
-    case MX_POSITIVE_INTEGER_OR_EMPTY_KIND_EMPTY:
+    case MX_POSITIVE_INTEGER_OR_EMPTY_EMPTY:
         return mx_strdup("");
     default:
         return mx_format_int(v.positive_integer);

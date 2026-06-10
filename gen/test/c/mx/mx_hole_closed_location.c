@@ -12,6 +12,8 @@ static const char *const mx_hole_closed_location_values[] = {
 };
 
 bool mx_hole_closed_location_try_parse(const char *s, MxHoleClosedLocation *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_hole_closed_location_values) / sizeof(mx_hole_closed_location_values[0]); i++) {
         if (strcmp(s, mx_hole_closed_location_values[i]) == 0) {
             *out = (MxHoleClosedLocation)i;

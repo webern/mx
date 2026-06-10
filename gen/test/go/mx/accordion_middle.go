@@ -7,7 +7,7 @@ package mx
 // present.
 type AccordionMiddle int
 
-// TryParseAccordionMiddle parses s strictly, then clamps into the declared range.
+// TryParseAccordionMiddle parses s as a lexically well-formed value, then clamps into the declared range.
 func TryParseAccordionMiddle(s string) (AccordionMiddle, bool) {
 	v, ok := tryParseInt(s)
 	if !ok {
@@ -16,7 +16,7 @@ func TryParseAccordionMiddle(s string) (AccordionMiddle, bool) {
 	return clampAccordionMiddle(v), true
 }
 
-// ParseAccordionMiddle is lenient: unparseable input becomes 0, then clamps.
+// ParseAccordionMiddle is lenient: unparseable input becomes 0, then clamps into the declared range.
 func ParseAccordionMiddle(s string) AccordionMiddle {
 	v := parseInt(s)
 	return clampAccordionMiddle(v)

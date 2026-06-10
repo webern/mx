@@ -32,6 +32,7 @@ char *mx_format_int(long v);
 char *mx_strdup(const char *s);"""
 
 _IMPL_BODY = """\
+#include <errno.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -66,8 +67,9 @@ bool mx_try_parse_int(const char *s, long *out) {
     if (!s || !*s)
         return false;
     char *end = NULL;
+    errno = 0;
     long v = strtol(s, &end, 10);
-    if (end == s)
+    if (errno == ERANGE || end == s)
         return false;
     while (*end == ' ' || *end == '\\t' || *end == '\\n' || *end == '\\r')
         end++;
@@ -88,8 +90,11 @@ long mx_parse_int(const char *s) {
 }
 
 char *mx_format_decimal(double v) {
-    char buf[64];
-    snprintf(buf, sizeof(buf), "%.9f", v);
+    /* Worst-case %.9f for a double: 309 integer digits + sign + dot + 9. */
+    char buf[336];
+    int n = snprintf(buf, sizeof(buf), "%.9f", v);
+    if (n < 0 || n >= (int)sizeof(buf))
+        return mx_strdup("0"); /* unreachable for finite doubles; never emit garbage */
     /* Trim trailing zeros, then a trailing dot; canonicalize "-0" to "0". */
     size_t len = strlen(buf);
     while (len > 0 && buf[len - 1] == '0')
@@ -114,6 +119,8 @@ char *mx_strdup(const char *s) {
         s = "";
     size_t n = strlen(s) + 1;
     char *out = malloc(n);
+    if (!out)
+        abort(); /* the generator's runtime has no error channel for OOM */
     memcpy(out, s, n);
     return out;
 }"""

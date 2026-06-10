@@ -15,6 +15,8 @@ static const char *const mx_arrow_style_values[] = {
 };
 
 bool mx_arrow_style_try_parse(const char *s, MxArrowStyle *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_arrow_style_values) / sizeof(mx_arrow_style_values[0]); i++) {
         if (strcmp(s, mx_arrow_style_values[i]) == 0) {
             *out = (MxArrowStyle)i;

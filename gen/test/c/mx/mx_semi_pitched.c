@@ -14,6 +14,8 @@ static const char *const mx_semi_pitched_values[] = {
 };
 
 bool mx_semi_pitched_try_parse(const char *s, MxSemiPitched *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_semi_pitched_values) / sizeof(mx_semi_pitched_values[0]); i++) {
         if (strcmp(s, mx_semi_pitched_values[i]) == 0) {
             *out = (MxSemiPitched)i;

@@ -5,7 +5,7 @@ package mx
 // The non-negative-decimal type specifies a non-negative decimal value.
 type NonNegativeDecimal float64
 
-// TryParseNonNegativeDecimal parses s strictly, then clamps into the declared range.
+// TryParseNonNegativeDecimal parses s as a lexically well-formed value, then clamps into the declared range.
 func TryParseNonNegativeDecimal(s string) (NonNegativeDecimal, bool) {
 	v, ok := tryParseDecimal(s)
 	if !ok {
@@ -14,7 +14,7 @@ func TryParseNonNegativeDecimal(s string) (NonNegativeDecimal, bool) {
 	return clampNonNegativeDecimal(v), true
 }
 
-// ParseNonNegativeDecimal is lenient: unparseable input becomes 0, then clamps.
+// ParseNonNegativeDecimal is lenient: unparseable input becomes 0, then clamps into the declared range.
 func ParseNonNegativeDecimal(s string) NonNegativeDecimal {
 	v := parseDecimal(s)
 	return clampNonNegativeDecimal(v)

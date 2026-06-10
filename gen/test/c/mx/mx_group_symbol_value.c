@@ -13,6 +13,8 @@ static const char *const mx_group_symbol_value_values[] = {
 };
 
 bool mx_group_symbol_value_try_parse(const char *s, MxGroupSymbolValue *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_group_symbol_value_values) / sizeof(mx_group_symbol_value_values[0]); i++) {
         if (strcmp(s, mx_group_symbol_value_values[i]) == 0) {
             *out = (MxGroupSymbolValue)i;

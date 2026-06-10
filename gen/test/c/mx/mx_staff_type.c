@@ -13,6 +13,8 @@ static const char *const mx_staff_type_values[] = {
 };
 
 bool mx_staff_type_try_parse(const char *s, MxStaffType *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_staff_type_values) / sizeof(mx_staff_type_values[0]); i++) {
         if (strcmp(s, mx_staff_type_values[i]) == 0) {
             *out = (MxStaffType)i;

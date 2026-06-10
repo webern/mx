@@ -13,6 +13,8 @@ static const char *const mx_winged_values[] = {
 };
 
 bool mx_winged_try_parse(const char *s, MxWinged *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_winged_values) / sizeof(mx_winged_values[0]); i++) {
         if (strcmp(s, mx_winged_values[i]) == 0) {
             *out = (MxWinged)i;

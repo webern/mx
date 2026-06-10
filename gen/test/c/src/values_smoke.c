@@ -64,13 +64,31 @@ int main(void) {
                  "0.000001");
     expect_owned("number implied positive-integer min",
                  mx_string_number_to_string(mx_string_number_parse("")), "1");
+    expect_owned("negative decimal formats",
+                 mx_tenths_to_string(mx_tenths_parse("-2.50")), "-2.5");
+    expect_owned("negative zero canonicalizes",
+                 mx_tenths_to_string(mx_tenths_parse("-0.0")), "0");
+
+    MxAboveBelow strict;
+    if (mx_above_below_try_parse("nope", &strict)) {
+        printf("FAIL try_parse accepted an unknown literal\n");
+        failures++;
+    }
+    MxTenths strict_n;
+    if (mx_tenths_try_parse("12abc", &strict_n)) {
+        printf("FAIL try_parse accepted a malformed number\n");
+        failures++;
+    }
+    MxPositiveIntegerOrEmpty pz = mx_positive_integer_or_empty_parse("0");
+    expect_owned("union primitive member clamps implied min",
+                 mx_positive_integer_or_empty_to_string(pz), "1");
 
     MxColor color = mx_color_parse("#FF0000");
     expect("string passthrough", color, "#FF0000");
     free(color);
 
     MxFontSize fs = mx_font_size_parse("small");
-    if (fs.kind != MX_FONT_SIZE_KIND_CSS_FONT_SIZE) {
+    if (fs.kind != MX_FONT_SIZE_CSS_FONT_SIZE) {
         printf("FAIL union kind: got %d, want css-font-size\n", (int)fs.kind);
         failures++;
     }
@@ -89,7 +107,7 @@ int main(void) {
                  mx_positive_integer_or_empty_to_string(p5), "5");
 
     MxInstrumentSound is = mx_instrument_sound_parse("brass.alphorn");
-    if (is.kind != MX_INSTRUMENT_SOUND_KIND_SOUND_ID) {
+    if (is.kind != MX_INSTRUMENT_SOUND_SOUND_ID) {
         printf("FAIL open enum known id kind\n");
         failures++;
     }
@@ -97,7 +115,7 @@ int main(void) {
                  "brass.alphorn");
     mx_instrument_sound_free(&is);
     MxInstrumentSound is2 = mx_instrument_sound_parse("synth.custom-thing");
-    if (is2.kind != MX_INSTRUMENT_SOUND_KIND_STRING) {
+    if (is2.kind != MX_INSTRUMENT_SOUND_STRING) {
         printf("FAIL open enum fallback kind\n");
         failures++;
     }

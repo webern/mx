@@ -15,6 +15,8 @@ static const char *const mx_css_font_size_values[] = {
 };
 
 bool mx_css_font_size_try_parse(const char *s, MxCSSFontSize *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_css_font_size_values) / sizeof(mx_css_font_size_values[0]); i++) {
         if (strcmp(s, mx_css_font_size_values[i]) == 0) {
             *out = (MxCSSFontSize)i;

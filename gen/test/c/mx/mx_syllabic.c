@@ -12,6 +12,8 @@ static const char *const mx_syllabic_values[] = {
 };
 
 bool mx_syllabic_try_parse(const char *s, MxSyllabic *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_syllabic_values) / sizeof(mx_syllabic_values[0]); i++) {
         if (strcmp(s, mx_syllabic_values[i]) == 0) {
             *out = (MxSyllabic)i;

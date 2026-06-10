@@ -23,6 +23,8 @@ static const char *const mx_mute_values[] = {
 };
 
 bool mx_mute_try_parse(const char *s, MxMute *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_mute_values) / sizeof(mx_mute_values[0]); i++) {
         if (strcmp(s, mx_mute_values[i]) == 0) {
             *out = (MxMute)i;

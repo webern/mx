@@ -11,17 +11,20 @@ type PositiveIntegerOrEmpty struct {
 type PositiveIntegerOrEmptyKind int
 
 const (
-	PositiveIntegerOrEmptyKindPositiveInteger PositiveIntegerOrEmptyKind = iota
-	PositiveIntegerOrEmptyKindEmpty
+	PositiveIntegerOrEmptyPositiveInteger PositiveIntegerOrEmptyKind = iota
+	PositiveIntegerOrEmptyEmpty
 )
 
 // TryParsePositiveIntegerOrEmpty tries each union member in schema order.
 func TryParsePositiveIntegerOrEmpty(s string) (PositiveIntegerOrEmpty, bool) {
 	if v, ok := tryParseInt(s); ok {
-		return PositiveIntegerOrEmpty{Kind: PositiveIntegerOrEmptyKindPositiveInteger, PositiveInteger: v}, true
+		if v < 1 {
+			v = 1
+		}
+		return PositiveIntegerOrEmpty{Kind: PositiveIntegerOrEmptyPositiveInteger, PositiveInteger: v}, true
 	}
 	if s == "" {
-		return PositiveIntegerOrEmpty{Kind: PositiveIntegerOrEmptyKindEmpty}, true
+		return PositiveIntegerOrEmpty{Kind: PositiveIntegerOrEmptyEmpty}, true
 	}
 	return PositiveIntegerOrEmpty{}, false
 }
@@ -32,13 +35,17 @@ func ParsePositiveIntegerOrEmpty(s string) PositiveIntegerOrEmpty {
 	if v, ok := TryParsePositiveIntegerOrEmpty(s); ok {
 		return v
 	}
-	return PositiveIntegerOrEmpty{Kind: PositiveIntegerOrEmptyKindPositiveInteger, PositiveInteger: parseInt(s)}
+	v := parseInt(s)
+	if v < 1 {
+		v = 1
+	}
+	return PositiveIntegerOrEmpty{Kind: PositiveIntegerOrEmptyPositiveInteger, PositiveInteger: v}
 }
 
 // String returns the wire spelling of whichever member is held.
 func (v PositiveIntegerOrEmpty) String() string {
 	switch v.Kind {
-	case PositiveIntegerOrEmptyKindEmpty:
+	case PositiveIntegerOrEmptyEmpty:
 		return ""
 	}
 	return formatInt(v.PositiveInteger)

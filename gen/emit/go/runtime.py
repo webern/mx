@@ -51,8 +51,12 @@ func parseInt(s string) int {
 }
 
 // formatDecimal prints the shortest decimal that round-trips the value,
-// without exponent notation (8.5 -> "8.5", 4 -> "4").
+// without exponent notation (8.5 -> "8.5", 4 -> "4"). Negative zero
+// canonicalizes to "0" (matching the C runtime and the corert normalizer).
 func formatDecimal(v float64) string {
+	if v == 0 {
+		return "0"
+	}
 	return strconv.FormatFloat(v, 'f', -1, 64)
 }
 

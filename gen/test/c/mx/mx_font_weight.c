@@ -10,6 +10,8 @@ static const char *const mx_font_weight_values[] = {
 };
 
 bool mx_font_weight_try_parse(const char *s, MxFontWeight *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_font_weight_values) / sizeof(mx_font_weight_values[0]); i++) {
         if (strcmp(s, mx_font_weight_values[i]) == 0) {
             *out = (MxFontWeight)i;

@@ -10,6 +10,8 @@ static const char *const mx_upright_inverted_values[] = {
 };
 
 bool mx_upright_inverted_try_parse(const char *s, MxUprightInverted *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_upright_inverted_values) / sizeof(mx_upright_inverted_values[0]); i++) {
         if (strcmp(s, mx_upright_inverted_values[i]) == 0) {
             *out = (MxUprightInverted)i;

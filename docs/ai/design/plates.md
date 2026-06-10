@@ -715,3 +715,24 @@ Revised after the first implementation review (one code review, one architecture
 - **`UnionPlateMember.name` added.** A union member referencing a primitive (`decimal`) has no
   plate to take a field name from; the member carries its own name bundle so templates invent
   nothing.
+
+Revised after the second review round (the emit stage and its first two backends):
+
+- **The clamp policy is data on the plates.** `NumberPlate.clamp` carries resolved
+  `ClampStep`s -- facet bounds merged with the primitive-implied lower bounds
+  (`positive_integer` >= 1, `non_negative_integer` >= 0), tightest bound winning, exclusive bounds
+  clamping to the nearest representable in-range value (next integer; bound +/- 1e-6 for decimals)
+  -- plus `family` (decimal vs integer). Both backends had hand-mirrored copies of this logic
+  ("one policy, two spellings" enforced only by a comment); the policy now lives once, is dumpable,
+  and is tested in `test_plates`. The same steps apply to primitive numeric union members
+  (`UnionPlateMember.clamp`), closing the hole where `positive-integer-or-empty` accepted 0.
+- **Union discriminator constants are projected, not template-composed.** `UnionPlateMember.tag`
+  is a `Variant` scoped exactly like an enum variant (renameable via
+  `rename.enum-value.<union>.<member-wire>`), and union literal variants double as their own
+  tags; the flat-namespace collision gate covers them all. The `Kind` infix the templates used to
+  compose is gone (`FontSizeDecimal`, `MX_INSTRUMENT_SOUND_SOUND_ID`).
+- **`TryParse`'s contract is pinned:** lexically strict (the input must be a well-formed value of
+  the type's family; an enum literal must match exactly), then numbers clamp. Generated doc
+  comments mention clamping only when clamp steps exist.
+- **An open string union member must be last** (it matches anything); both backends fail loud if
+  a schema ever orders one earlier rather than silently emitting unreachable members.

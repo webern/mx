@@ -34,6 +34,9 @@ func TestValueSmoke(t *testing.T) {
 		{"union literal member", mx.ParseNumberOrNormal("normal").String(), "normal"},
 		{"union empty literal member", mx.ParsePositiveIntegerOrEmpty("").String(), ""},
 		{"union integer member", mx.ParsePositiveIntegerOrEmpty("5").String(), "5"},
+		{"union primitive member clamps implied min", mx.ParsePositiveIntegerOrEmpty("0").String(), "1"},
+		{"negative decimal formats", mx.ParseTenths("-2.50").String(), "-2.5"},
+		{"negative zero canonicalizes", mx.ParseTenths("-0.0").String(), "0"},
 	}
 	for _, c := range cases {
 		if c.got != c.want {
@@ -44,7 +47,7 @@ func TestValueSmoke(t *testing.T) {
 	if v, ok := mx.TryParseAboveBelow("nope"); ok {
 		t.Errorf("TryParse accepted an unknown literal: %v", v)
 	}
-	if fs := mx.ParseFontSize("small"); fs.Kind != mx.FontSizeKindCSSFontSize {
+	if fs := mx.ParseFontSize("small"); fs.Kind != mx.FontSizeCSSFontSize {
 		t.Errorf("union kind: got %v, want CSSFontSize", fs.Kind)
 	}
 }

@@ -4,17 +4,18 @@ One template per shape, mirroring the Go backend's surface in C idiom. Each
 type renders as a header/impl pair (the documented one-FileId-to-two-files
 mapping for C):
 
-    bool  mx_<t>_try_parse(const char *s, MxT *out)   strict membership
+    bool  mx_<t>_try_parse(const char *s, MxT *out)   lexically strict (a
+          well-formed value of the type's family; numbers then clamp)
     MxT   mx_<t>_parse(const char *s)                 lenient (fixup policies)
     to_string                                         the wire spelling:
         enums return static storage (const char *, do not free);
         numbers and unions return malloc'd strings the caller frees;
         string types ARE char* values (parse returns a malloc'd copy).
 
-Leniency policies match the Go backend: unknown enum literal -> first
-variant; unparseable number -> 0; every number clamps into its declared
-range with primitive-implied lower bounds and exclusive bounds clamping to
-the nearest representable value (decimal: +/- 1e-6).
+The leniency policy itself (clamp bounds, implied minimums, exclusive-bound
+epsilon) is DATA on the plates (NumberPlate.clamp / UnionPlateMember.clamp,
+documented in data/README.md); this module only spells it in C. Generated
+parse entry points are NULL-safe: NULL means "".
 """
 
 from __future__ import annotations
@@ -40,9 +41,6 @@ _PRIM = {
     "nmtoken": ("char *", None, None),
     "date": ("char *", None, None),
 }
-
-_IMPLIED_MIN = {"positive_integer": 1, "non_negative_integer": 0}
-
 
 def value_files(plates: Plates, plate, includes: list[str], rt: str) -> tuple[str, str]:
     """Render one value plate into its (header, impl) pair. `includes` is the
@@ -95,6 +93,8 @@ def _enum(plates: Plates, plate: EnumPlate, rt: str):
     body += ["};", ""]
     body += [
         f"bool {try_parse}(const char *s, {ident} *out) {{",
+        "    if (!s)",
+        '        s = "";',
         f"    for (size_t i = 0; i < sizeof({values}) / sizeof({values}[0]); i++) {{",
         f"        if (strcmp(s, {values}[i]) == 0) {{",
         f"            *out = ({ident})i;",
@@ -128,62 +128,6 @@ def _enum(plates: Plates, plate: EnumPlate, rt: str):
 # --------------------------------------------------------------------------- #
 
 
-def _c_int(literal: str) -> str:
-    return str(int(float(literal)))
-
-
-def _c_float(literal: str) -> str:
-    return repr(float(literal))
-
-
-def _clamp_steps(plate: NumberPlate) -> list[tuple[str, str, str]]:
-    """(comparison op, bound literal, replacement literal) per active bound,
-    mirroring the Go backend's policy exactly."""
-    is_int = plate.target_type != "double"
-    b = plate.bounds
-    steps: list[tuple[str, str, str]] = []
-
-    lows: list[tuple[float, bool, str]] = []
-    if b.min_inclusive is not None:
-        lows.append((float(b.min_inclusive), False, b.min_inclusive))
-    if b.min_exclusive is not None:
-        lows.append((float(b.min_exclusive), True, b.min_exclusive))
-    implied = _IMPLIED_MIN.get(plate.base)
-    if implied is not None:
-        lows.append((float(implied), False, str(implied)))
-    if lows:
-        value, exclusive, literal = max(lows, key=lambda t: (t[0], t[1]))
-        if is_int:
-            bound = _c_int(literal)
-            steps.append(("<=" if exclusive else "<",
-                          bound,
-                          str(int(float(literal)) + 1) if exclusive else bound))
-        else:
-            bound = _c_float(literal)
-            steps.append(("<=" if exclusive else "<",
-                          bound,
-                          repr(float(literal) + 1e-6) if exclusive else bound))
-
-    highs: list[tuple[float, bool, str]] = []
-    if b.max_inclusive is not None:
-        highs.append((float(b.max_inclusive), False, b.max_inclusive))
-    if b.max_exclusive is not None:
-        highs.append((float(b.max_exclusive), True, b.max_exclusive))
-    if highs:
-        value, exclusive, literal = min(highs, key=lambda t: (t[0], -t[1]))
-        if is_int:
-            bound = _c_int(literal)
-            steps.append((">=" if exclusive else ">",
-                          bound,
-                          str(int(float(literal)) - 1) if exclusive else bound))
-        else:
-            bound = _c_float(literal)
-            steps.append((">=" if exclusive else ">",
-                          bound,
-                          repr(float(literal) - 1e-6) if exclusive else bound))
-    return steps
-
-
 def _number(plates: Plates, plate: NumberPlate, rt: str):
     ident = plate.ident
     wrap = plates.target.doc_style.wrap
@@ -193,17 +137,18 @@ def _number(plates: Plates, plate: NumberPlate, rt: str):
     parse = _fn(plates, plate, "parse")
     to_string = _fn(plates, plate, "to_string")
     clamp = _fn(plates, plate, "clamp")
-    steps = _clamp_steps(plate)
+    steps = plate.clamp
     runtime_try = prefix + try_helper
     runtime_fmt = prefix + fmt_helper
-    runtime_parse = prefix + ("parse_decimal" if c_type == "double" else "parse_int")
+    runtime_parse = prefix + ("parse_decimal" if plate.family == "decimal" else "parse_int")
+    clamps = ", then clamps into the declared range" if steps else ""
 
     decl = doc_comment(plate.doc, wrap)
     decl += [f"typedef {c_type} {ident};", ""]
     decl += [
-        "/* Strict parse, then clamps into the declared range. */",
+        f"/* Lexically strict parse{clamps}. */",
         f"bool {try_parse}(const char *s, {ident} *out);",
-        "/* Lenient: unparseable input becomes 0, then clamps. */",
+        f"/* Lenient: unparseable input becomes 0{clamps}. */",
         f"{ident} {parse}(const char *s);",
         "/* Malloc'd; caller frees. */",
         f"char *{to_string}({ident} v);",
@@ -212,8 +157,8 @@ def _number(plates: Plates, plate: NumberPlate, rt: str):
     body = []
     if steps:
         body += [f"static {ident} {clamp}({c_type} v) {{"]
-        for op, bound, repl in steps:
-            body += [f"    if (v {op} {bound})", f"        v = {repl};"]
+        for step in steps:
+            body += [f"    if (v {step.op} {step.bound})", f"        v = {step.replacement};"]
         body += [f"    return ({ident})v;", "}", ""]
         convert = f"{clamp}(v)"
     else:
@@ -282,18 +227,16 @@ def _string(plates: Plates, plate: StringPlate, rt: str):
 
 
 def _union_cases(plates: Plates, plate: UnionPlate):
-    """Flatten union members into kind cases, mirroring the Go backend:
-    (kind const, field name or None, C type, try spelling or None for
-    any-string, lenient-parse spelling, to-string spelling, owns-memory)."""
+    """Flatten union members into kind cases, mirroring the Go backend. The
+    kind constants come final from the plates (member tags and literal
+    variants share the enum-variant scoping and collision gate)."""
     fconv = plates.target.field_convention
-    prefix = plates.target.prefix.upper() + "_" if plates.target.prefix else ""
-    kind_base = f"{prefix}{plate.name.screaming}_KIND_"
     fn_pre = fn_prefix(plates)
     cases = []
     for m in plate.members:
         if m.ref is not None:
             field = m.name.cased[fconv]
-            kind = kind_base + m.name.screaming
+            kind = m.tag.ident
             if m.ref.category == "value":
                 member_fns = lambda verb, n=m.name: fn_name(plates, n, verb)
                 target_plate = plates.plate(m.ref.wire)
@@ -328,11 +271,12 @@ def _union_cases(plates: Plates, plate: UnionPlate):
                         "parse": f"{fn_pre}{('parse_decimal' if c_type == 'double' else 'parse_int')}(s)",
                         "to_string": f"{fn_pre}{fmt_helper}(v.{field})",
                         "owns": False,
+                        "clamp": m.clamp,
                     })
         else:
             for variant in m.literals or []:
                 cases.append({
-                    "kind": kind_base + variant.name.screaming,
+                    "kind": variant.ident,
                     "field": None, "c_type": None,
                     "try": f"strcmp(s, {c_string(variant.wire)}) == 0",
                     "parse": None,
@@ -374,12 +318,20 @@ def _union(plates: Plates, plate: UnionPlate, includes: list[str], rt: str):
 
     body = [
         f"bool {try_parse}(const char *s, {ident} *out) {{",
+        "    if (!s)",
+        '        s = "";',
         f"    {ident} v;",
         "    memset(&v, 0, sizeof(v));",
     ]
     open_ended = False
-    for c in cases:
+    for i, c in enumerate(cases):
         if c["try"] is None:  # open string member: always matches
+            # It must be last, or the members after it could never be reached.
+            if i != len(cases) - 1:
+                raise ValueError(
+                    f"{plate.ident}: union member after an open string member "
+                    f"is unreachable"
+                )
             body += [
                 f"    v.kind = {c['kind']};",
                 f"    v.{c['field']} = {c['parse']};",
@@ -388,22 +340,18 @@ def _union(plates: Plates, plate: UnionPlate, includes: list[str], rt: str):
             ]
             open_ended = True
             break
-        if c["field"] is None:
+        body += [f"    if ({c['try']}) {{"]
+        for step in c.get("clamp", []):
             body += [
-                f"    if ({c['try']}) {{",
-                f"        v.kind = {c['kind']};",
-                "        *out = v;",
-                "        return true;",
-                "    }",
+                f"        if (v.{c['field']} {step.op} {step.bound})",
+                f"            v.{c['field']} = {step.replacement};",
             ]
-        else:
-            body += [
-                f"    if ({c['try']}) {{",
-                f"        v.kind = {c['kind']};",
-                "        *out = v;",
-                "        return true;",
-                "    }",
-            ]
+        body += [
+            f"        v.kind = {c['kind']};",
+            "        *out = v;",
+            "        return true;",
+            "    }",
+        ]
     if not open_ended:
         body += ["    *out = v;", "    return false;"]
     body += ["}", ""]
@@ -419,6 +367,11 @@ def _union(plates: Plates, plate: UnionPlate, includes: list[str], rt: str):
     ]
     if first["field"] is not None:
         body += [f"    v.{first['field']} = {first['parse']};"]
+        for step in first.get("clamp", []):
+            body += [
+                f"    if (v.{first['field']} {step.op} {step.bound})",
+                f"        v.{first['field']} = {step.replacement};",
+            ]
     body += ["    return v;", "}", ""]
 
     body += [f"char *{to_string}({ident} v) {{", "    switch (v.kind) {"]

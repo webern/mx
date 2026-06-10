@@ -11,6 +11,8 @@ static const char *const mx_trill_step_values[] = {
 };
 
 bool mx_trill_step_try_parse(const char *s, MxTrillStep *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_trill_step_values) / sizeof(mx_trill_step_values[0]); i++) {
         if (strcmp(s, mx_trill_step_values[i]) == 0) {
             *out = (MxTrillStep)i;

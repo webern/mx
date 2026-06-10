@@ -4,16 +4,17 @@ One template per shape, per the design: enum-class, numeric-wrapper,
 string-wrapper, tagged-variant. Every type exposes the same surface so the
 complex-type templates can call them uniformly:
 
-    TryParse<T>(s string) (T, bool)   strict: does s belong to the type
+    TryParse<T>(s string) (T, bool)   lexically strict: the input must be a
+                                      well-formed value of the type's family
+                                      (numbers then clamp into range; an
+                                      enum literal must match exactly)
     Parse<T>(s string) T              lenient: malformed input degrades
-                                      deterministically (see policies below)
+                                      deterministically
     (T) String() string               the wire spelling
 
-Leniency policies (the corpus fixup conventions in data/README.md encode
-these): an unknown enum literal falls back to the first variant; an
-unparseable number becomes 0; every number is clamped into its declared
-range, where an exclusive decimal bound clamps to bound +/- 1e-6 and an
-exclusive integer bound to the next integer.
+The leniency policy itself (clamp bounds, implied minimums, exclusive-bound
+epsilon) is DATA on the plates (NumberPlate.clamp / UnionPlateMember.clamp,
+documented in data/README.md); this module only spells it in Go.
 """
 
 from __future__ import annotations
@@ -54,10 +55,6 @@ _PRIM_FORMAT = {
     "positive_integer": "formatInt({0})",
     "non_negative_integer": "formatInt({0})",
 }
-
-# Primitive-implied lower bounds the schema leaves unstated.
-_IMPLIED_MIN = {"positive_integer": 1, "non_negative_integer": 0}
-
 
 def value_file(plates: Plates, plate) -> str:
     if isinstance(plate, EnumPlate):
@@ -131,64 +128,6 @@ def _enum_body(plates: Plates, plate: EnumPlate) -> list[str]:
 # --------------------------------------------------------------------------- #
 
 
-def _go_int(literal: str) -> str:
-    return str(int(float(literal)))
-
-
-def _go_float(literal: str) -> str:
-    return repr(float(literal))
-
-
-def _clamp_steps(plate: NumberPlate) -> list[tuple[str, str, str]]:
-    """(comparison op, bound literal, replacement literal) per active bound.
-    Exclusive bounds clamp to the nearest representable in-range value."""
-    is_int = plate.target_type != "float64"
-    b = plate.bounds
-    steps: list[tuple[str, str, str]] = []
-
-    lows: list[tuple[float, bool, str]] = []  # (value, exclusive, literal)
-    if b.min_inclusive is not None:
-        lows.append((float(b.min_inclusive), False, b.min_inclusive))
-    if b.min_exclusive is not None:
-        lows.append((float(b.min_exclusive), True, b.min_exclusive))
-    implied = _IMPLIED_MIN.get(plate.base)
-    if implied is not None:
-        lows.append((float(implied), False, str(implied)))
-    if lows:
-        # The tightest lower bound wins (an exclusive bound at v is tighter
-        # than an inclusive one at the same v).
-        value, exclusive, literal = max(lows, key=lambda t: (t[0], t[1]))
-        if is_int:
-            bound = _go_int(literal)
-            steps.append(("<=" if exclusive else "<",
-                          bound,
-                          str(int(float(literal)) + 1) if exclusive else bound))
-        else:
-            bound = _go_float(literal)
-            steps.append(("<=" if exclusive else "<",
-                          bound,
-                          repr(float(literal) + 1e-6) if exclusive else bound))
-
-    highs: list[tuple[float, bool, str]] = []
-    if b.max_inclusive is not None:
-        highs.append((float(b.max_inclusive), False, b.max_inclusive))
-    if b.max_exclusive is not None:
-        highs.append((float(b.max_exclusive), True, b.max_exclusive))
-    if highs:
-        value, exclusive, literal = min(highs, key=lambda t: (t[0], -t[1]))
-        if is_int:
-            bound = _go_int(literal)
-            steps.append((">=" if exclusive else ">",
-                          bound,
-                          str(int(float(literal)) - 1) if exclusive else bound))
-        else:
-            bound = _go_float(literal)
-            steps.append((">=" if exclusive else ">",
-                          bound,
-                          repr(float(literal) - 1e-6) if exclusive else bound))
-    return steps
-
-
 def _number_body(plates: Plates, plate: NumberPlate) -> list[str]:
     ident = plate.ident
     wrap = plates.target.doc_style.wrap
@@ -196,18 +135,20 @@ def _number_body(plates: Plates, plate: NumberPlate) -> list[str]:
     try_fn = _PRIM_TRY[plate.base]
     parse_fn = _PRIM_PARSE[plate.base]
     fmt = _PRIM_FORMAT[plate.base].format(f"{go_type}(v)")
-    steps = _clamp_steps(plate)
+    steps = plate.clamp
 
     lines = doc_comment(plate.doc, wrap)
     lines += [f"type {ident} {go_type}", ""]
 
     if steps:
         convert = f"clamp{ident}(v)"
+        clamps = ", then clamps into the declared range"
     else:
         convert = f"{ident}(v)"
+        clamps = ""
 
     lines += [
-        f"// TryParse{ident} parses s strictly, then clamps into the declared range.",
+        f"// TryParse{ident} parses s as a lexically well-formed value{clamps}.",
         f"func TryParse{ident}(s string) ({ident}, bool) {{",
         f"\tv, ok := {try_fn}(s)",
         "\tif !ok {",
@@ -216,7 +157,7 @@ def _number_body(plates: Plates, plate: NumberPlate) -> list[str]:
         f"\treturn {convert}, true",
         "}",
         "",
-        f"// Parse{ident} is lenient: unparseable input becomes 0, then clamps.",
+        f"// Parse{ident} is lenient: unparseable input becomes 0{clamps}.",
         f"func Parse{ident}(s string) {ident} {{",
         f"\tv := {parse_fn}(s)",
         f"\treturn {convert}",
@@ -225,8 +166,8 @@ def _number_body(plates: Plates, plate: NumberPlate) -> list[str]:
     ]
     if steps:
         lines += [f"func clamp{ident}(v {go_type}) {ident} {{"]
-        for op, bound, repl in steps:
-            lines += [f"\tif v {op} {bound} {{", f"\t\tv = {repl}", "\t}"]
+        for step in steps:
+            lines += [f"\tif v {step.op} {step.bound} {{", f"\t\tv = {step.replacement}", "\t}"]
         lines += [f"\treturn {ident}(v)", "}", ""]
     lines += [
         "// String returns the wire spelling.",
@@ -280,20 +221,22 @@ def _string_body(plates: Plates, plate: StringPlate) -> list[str]:
 
 def _member_cases(plates: Plates, plate: UnionPlate):
     """Flatten union members into kind cases: one per ref member, one per
-    literal. Each case: (kind const, payload field or None, payload Go type,
-    strict-try spelling, lenient-parse spelling, to-string spelling)."""
-    ident = plate.ident
+    literal. The kind constants come final from the plates (member tags and
+    literal variants share the enum-variant scoping and collision gate).
+    Each case: (kind const, payload field or None, payload Go type,
+    strict-try spelling or None for an open string member, lenient-parse
+    spelling, to-string spelling, clamp steps)."""
     cases = []
     for m in plate.members:
         if m.ref is not None:
             field = member_field(plates, m.name)
-            kind = f"{ident}Kind{field}"
+            kind = m.tag.ident
             if m.ref.category == "value":
                 cases.append(
                     (kind, field, m.ref.ident,
                      f"TryParse{m.ref.ident}(s)",
                      f"Parse{m.ref.ident}(s)",
-                     f"v.{field}.String()")
+                     f"v.{field}.String()", [])
                 )
             else:  # primitive
                 try_fn = _PRIM_TRY.get(m.ref.wire)
@@ -301,16 +244,25 @@ def _member_cases(plates: Plates, plate: UnionPlate):
                     (kind, field, m.ref.ident,
                      f"{try_fn}(s)" if try_fn else None,  # None: any string matches
                      f"{_PRIM_PARSE[m.ref.wire]}(s)" if m.ref.wire in _PRIM_PARSE else "s",
-                     _PRIM_FORMAT.get(m.ref.wire, "{0}").format(f"v.{field}"))
+                     _PRIM_FORMAT.get(m.ref.wire, "{0}").format(f"v.{field}"),
+                     m.clamp)
                 )
         else:
             for variant in m.literals or []:
-                kind = f"{ident}Kind{variant.name.cased[plates.target.variant_convention]}"
                 cases.append(
-                    (kind, None, None, f"s == {go_string(variant.wire)}", None,
-                     go_string(variant.wire))
+                    (variant.ident, None, None, f"s == {go_string(variant.wire)}", None,
+                     go_string(variant.wire), [])
                 )
     return cases
+
+
+def _clamp_lines(steps, indent: str) -> list[str]:
+    lines = []
+    for step in steps:
+        lines += [f"{indent}if v {step.op} {step.bound} {{",
+                  f"{indent}\tv = {step.replacement}",
+                  f"{indent}}}"]
+    return lines
 
 
 def _union_body(plates: Plates, plate: UnionPlate) -> list[str]:
@@ -334,27 +286,37 @@ def _union_body(plates: Plates, plate: UnionPlate) -> list[str]:
         f"// TryParse{ident} tries each union member in schema order.",
         f"func TryParse{ident}(s string) ({ident}, bool) {{",
     ]
-    for kind, field, _go_type, try_expr, _parse, _str in cases:
+    open_ended = False
+    for i, (kind, field, _go_type, try_expr, _parse, _str, clamp) in enumerate(cases):
+        if field is not None and try_expr is None:
+            # An open string member matches anything: it must be last, or the
+            # members after it could never be reached.
+            if i != len(cases) - 1:
+                raise ValueError(
+                    f"{plate.ident}: union member after an open string member "
+                    f"is unreachable"
+                )
+            lines += [f"\treturn {ident}{{Kind: {kind}, {field}: s}}, true"]
+            open_ended = True
+            break
         if field is None:
             lines += [
                 f"\tif {try_expr} {{",
                 f"\t\treturn {ident}{{Kind: {kind}}}, true",
                 "\t}",
             ]
-        elif try_expr is None:
-            lines += [f"\treturn {ident}{{Kind: {kind}, {field}: s}}, true"]
         else:
+            lines += [f"\tif v, ok := {try_expr}; ok {{"]
+            lines += _clamp_lines(clamp, "\t\t")
             lines += [
-                f"\tif v, ok := {try_expr}; ok {{",
                 f"\t\treturn {ident}{{Kind: {kind}, {field}: v}}, true",
                 "\t}",
             ]
-    open_ended = any(f is not None and t is None for _, f, _g, t, _p, _s in cases)
     if not open_ended:
         lines += [f"\treturn {ident}{{}}, false"]
     lines += ["}", ""]
 
-    first_kind, first_field, _gt, _try, first_parse, _s = cases[0]
+    first_kind, first_field, _gt, _try, first_parse, _s, first_clamp = cases[0]
     lines += [
         f"// Parse{ident} is lenient: when no member matches, the first member",
         "// absorbs the input under its own leniency rules.",
@@ -365,6 +327,10 @@ def _union_body(plates: Plates, plate: UnionPlate) -> list[str]:
     ]
     if first_field is None:
         lines += [f"\treturn {ident}{{Kind: {first_kind}}}"]
+    elif first_clamp:
+        lines += [f"\tv := {first_parse}"]
+        lines += _clamp_lines(first_clamp, "\t")
+        lines += [f"\treturn {ident}{{Kind: {first_kind}, {first_field}: v}}"]
     else:
         lines += [f"\treturn {ident}{{Kind: {first_kind}, {first_field}: {first_parse}}}"]
     lines += ["}", ""]
@@ -374,7 +340,7 @@ def _union_body(plates: Plates, plate: UnionPlate) -> list[str]:
         f"func (v {ident}) String() string {{",
         "\tswitch v.Kind {",
     ]
-    for kind, _field, _gt, _try, _parse, to_str in cases[1:]:
+    for kind, _field, _gt, _try, _parse, to_str, _clamp in cases[1:]:
         lines += [f"\tcase {kind}:", f"\t\treturn {to_str}"]
     lines += ["\t}", f"\treturn {cases[0][5]}", "}"]
     return lines

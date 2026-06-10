@@ -11,6 +11,8 @@ static const char *const mx_fan_values[] = {
 };
 
 bool mx_fan_try_parse(const char *s, MxFan *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_fan_values) / sizeof(mx_fan_values[0]); i++) {
         if (strcmp(s, mx_fan_values[i]) == 0) {
             *out = (MxFan)i;

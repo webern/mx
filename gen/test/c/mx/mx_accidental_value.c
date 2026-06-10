@@ -49,6 +49,8 @@ static const char *const mx_accidental_value_values[] = {
 };
 
 bool mx_accidental_value_try_parse(const char *s, MxAccidentalValue *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_accidental_value_values) / sizeof(mx_accidental_value_values[0]); i++) {
         if (strcmp(s, mx_accidental_value_values[i]) == 0) {
             *out = (MxAccidentalValue)i;

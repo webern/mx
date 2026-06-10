@@ -9,7 +9,7 @@ PREFIX_TYPE_VARIANT). Identifiers and casings arrive resolved on the plates.
 from __future__ import annotations
 
 from gen.emit.writer import banner
-from gen.plates.model import Name, Plates, Variant
+from gen.plates.model import Name, Plates
 
 _ESCAPES = {
     "\\": "\\\\",
@@ -67,17 +67,10 @@ def fn_name(plates: Plates, type_name: Name, verb: str) -> str:
     return f"{fn_prefix(plates)}{type_name.snake}_{verb}"
 
 
-def variant_const(plates: Plates, type_name: Name, variant: Variant) -> str:
-    """C enum constants share one global namespace, so they are composed as
-    PREFIX_TYPE_VARIANT in the variant convention (screaming). Composition
-    keeps digit-led variants legal (MX_NOTE_TYPE_VALUE_1024TH), so the
-    standalone sanitized `ident` is not used here."""
-    casing = variant.name.cased[plates.target.variant_convention]
-    return f"{const_prefix(plates)}{type_name.screaming}_{casing}"
-
-
 def guard(stem: str) -> str:
-    return stem.upper() + "_H"
+    # The _INCLUDED suffix keeps guards out of the constant namespace the
+    # plates' collision gate certifies (MX_STEP_H could be a real variant).
+    return stem.upper() + "_H_INCLUDED"
 
 
 def header_file(plates: Plates, stem: str, body: list[str], includes: list[str]) -> str:

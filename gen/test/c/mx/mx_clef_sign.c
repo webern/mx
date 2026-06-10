@@ -15,6 +15,8 @@ static const char *const mx_clef_sign_values[] = {
 };
 
 bool mx_clef_sign_try_parse(const char *s, MxClefSign *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_clef_sign_values) / sizeof(mx_clef_sign_values[0]); i++) {
         if (strcmp(s, mx_clef_sign_values[i]) == 0) {
             *out = (MxClefSign)i;

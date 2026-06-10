@@ -14,6 +14,8 @@ static const char *const mx_caesura_value_values[] = {
 };
 
 bool mx_caesura_value_try_parse(const char *s, MxCaesuraValue *out) {
+    if (!s)
+        s = "";
     for (size_t i = 0; i < sizeof(mx_caesura_value_values) / sizeof(mx_caesura_value_values[0]); i++) {
         if (strcmp(s, mx_caesura_value_values[i]) == 0) {
             *out = (MxCaesuraValue)i;
