@@ -4,18 +4,24 @@
     <type>element</type>
     <name>accordion-middle</name>
     <value></value>
-    <replacement-value>0</replacement-value>
+    <replacement-value>1</replacement-value>
   </replace>
   <replace>
     <type>element</type>
     <name>accordion-middle</name>
     <value>test</value>
-    <replacement-value>0</replacement-value>
+    <replacement-value>1</replacement-value>
   </replace>
   <replace>
     <type>element</type>
     <name>accordion-middle</name>
     <value>5</value>
     <replacement-value>3</replacement-value>
+  </replace>
+  <replace>
+    <type>element</type>
+    <name>accordion-middle</name>
+    <value>0</value>
+    <replacement-value>1</replacement-value>
   </replace>
 </fixups>

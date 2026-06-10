@@ -46,6 +46,9 @@ func TestCoreRoundtrip(t *testing.T) {
 		name := corert.ToTestName(absPath, dataRoot)
 		t.Run(name, func(t *testing.T) {
 			result := corert.RunCoreRoundtrip(absPath)
+			if result.Skipped {
+				t.Skip(result.Message)
+			}
 			if !result.OK {
 				if result.ExpectedXML != "" || result.ActualXML != "" {
 					corert.WriteFailureFiles(root, name, result.ExpectedXML, result.ActualXML)

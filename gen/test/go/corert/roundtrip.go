@@ -1,44 +1,146 @@
 package corert
 
 import (
+	"bytes"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
+	"unicode/utf16"
+	"unicode/utf8"
 
 	"github.com/beevik/etree"
-	"github.com/webern/mx/gen/test/go/stub"
+	"github.com/webern/mx/gen/test/go/mx"
 )
+
+// The MusicXML version the generated model supports (the schema pinned in
+// this target's config.toml). Documents declaring a NEWER version may use
+// elements the model has no types for; MusicXML is backward compatible, so
+// older documents are fine.
+const maxSupportedVersion = "3.1"
 
 type Result struct {
 	OK          bool
+	Skipped     bool
 	Message     string
 	ExpectedXML string
 	ActualXML   string
 }
 
+// declaredVersionExceeds reports whether the document's root version
+// attribute declares a version newer than max. An absent attribute means
+// MusicXML 1.0.
+func declaredVersionExceeds(doc *etree.Document, max string) bool {
+	root := doc.Root()
+	if root == nil {
+		return false
+	}
+	version := "1.0"
+	if a := root.SelectAttr("version"); a != nil && a.Value != "" {
+		version = a.Value
+	}
+	parse := func(v string) (int, int) {
+		parts := strings.SplitN(v, ".", 3)
+		major, _ := strconv.Atoi(parts[0])
+		minor := 0
+		if len(parts) > 1 {
+			minor, _ = strconv.Atoi(parts[1])
+		}
+		return major, minor
+	}
+	maj, min := parse(version)
+	maxMaj, maxMin := parse(max)
+	return maj > maxMaj || (maj == maxMaj && min > maxMin)
+}
+
+// charsetReader handles the non-UTF-8 encodings the corpus contains.
+// ISO-8859-1 is a one-byte-per-rune encoding, so its conversion is total.
+// UTF-16 documents were already transcoded whole (see loadDocument), so a
+// declared utf-16 passes through as the UTF-8 it now is. Anything else
+// passes through to the decoder's UTF-8 validation. (pugixml and libxml2
+// auto-detect these encodings natively; Go's encoding/xml does not.)
+func charsetReader(charset string, input io.Reader) (io.Reader, error) {
+	switch strings.ToLower(charset) {
+	case "iso-8859-1", "latin1":
+		raw, err := io.ReadAll(input)
+		if err != nil {
+			return nil, err
+		}
+		var out []byte
+		for _, b := range raw {
+			out = utf8.AppendRune(out, rune(b))
+		}
+		return bytes.NewReader(out), nil
+	}
+	return input, nil
+}
+
+// transcodeUTF16 converts a byte-order-marked UTF-16 document to UTF-8;
+// anything without a BOM is returned untouched.
+func transcodeUTF16(raw []byte) []byte {
+	if len(raw) < 2 {
+		return raw
+	}
+	little := raw[0] == 0xFF && raw[1] == 0xFE
+	big := raw[0] == 0xFE && raw[1] == 0xFF
+	if !little && !big {
+		return raw
+	}
+	raw = raw[2:]
+	units := make([]uint16, 0, len(raw)/2)
+	for i := 0; i+1 < len(raw); i += 2 {
+		if little {
+			units = append(units, uint16(raw[i])|uint16(raw[i+1])<<8)
+		} else {
+			units = append(units, uint16(raw[i])<<8|uint16(raw[i+1]))
+		}
+	}
+	return []byte(string(utf16.Decode(units)))
+}
+
+func loadDocument(absPath string) (*etree.Document, error) {
+	raw, err := os.ReadFile(absPath)
+	if err != nil {
+		return nil, err
+	}
+	doc := etree.NewDocument()
+	doc.ReadSettings.CharsetReader = charsetReader
+	if err := doc.ReadFromBytes(transcodeUTF16(raw)); err != nil {
+		return nil, err
+	}
+	return doc, nil
+}
+
 func RunCoreRoundtrip(absInputPath string) Result {
-	inputDoc := etree.NewDocument()
-	if err := inputDoc.ReadFromFile(absInputPath); err != nil {
+	inputDoc, err := loadDocument(absInputPath)
+	if err != nil {
 		return Result{Message: fmt.Sprintf("load input: %v", err)}
+	}
+
+	if declaredVersionExceeds(inputDoc, maxSupportedVersion) {
+		return Result{Skipped: true, Message: fmt.Sprintf(
+			"declares MusicXML > %s; this target generates from the %s schema",
+			maxSupportedVersion, maxSupportedVersion)}
 	}
 
 	setRootMusicXMLVersion(inputDoc)
 
-	model, err := stub.FromXDoc(inputDoc)
+	model, err := mx.FromXDoc(inputDoc)
 	if err != nil {
 		return Result{Message: fmt.Sprintf("FromXDoc: %v", err)}
 	}
 
-	actualDoc, err := stub.ToXDoc(model)
+	actualDoc, err := mx.ToXDoc(model)
 	if err != nil {
 		return Result{Message: fmt.Sprintf("ToXDoc: %v", err)}
 	}
 
 	Normalize(actualDoc)
 
-	expectedDoc := etree.NewDocument()
-	if err := expectedDoc.ReadFromFile(absInputPath); err != nil {
+	expectedDoc, err := loadDocument(absInputPath)
+	if err != nil {
 		return Result{Message: fmt.Sprintf("load expected: %v", err)}
 	}
 	setRootMusicXMLVersion(expectedDoc)

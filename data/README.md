@@ -32,3 +32,12 @@ test by altering values it finds after loading the test file.
   </replace>
 </fixups>
 ```
+
+The sidecars encode one uniform leniency policy, shared by every generated target:
+
+- an unknown enum literal falls back to the enum's first variant (`display-step` `=` -> `A`);
+- an unparseable number becomes 0, with decimal-looking integers truncating toward zero;
+- every number then clamps into its declared range, including the primitive-implied lower bounds
+  (`xs:positiveInteger` >= 1, `xs:nonNegativeInteger` >= 0), so `midi-channel` `0` -> `1` and
+  `accordion-middle` `` -> `1`;
+- an exclusive decimal bound clamps to the bound +/- 1e-6 (`duration` `0` -> `0.000001`).

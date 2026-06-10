@@ -28,8 +28,33 @@ func Normalize(doc *etree.Document) {
 	setXMLDeclaration(doc)
 	setDoctypeFromRoot(doc)
 	setRootMusicXMLVersion(doc)
+	stripInterElementWhitespace(doc.Root())
 	stripZerosFromDecimalFields(doc.Root())
 	sortAttributes(doc.Root())
+}
+
+// stripInterElementWhitespace removes whitespace-only character data from
+// every element: pretty-printing indentation in containers, including
+// containers whose optional children are all absent (an empty <measure>
+// holds only its own indentation). MusicXML has no mixed content, and the
+// rule applies to expected and actual alike, so leaf values with real
+// content are never touched and the comparison stays symmetric.
+func stripInterElementWhitespace(el *etree.Element) {
+	if el == nil {
+		return
+	}
+	var remove []etree.Token
+	for _, tok := range el.Child {
+		if cd, ok := tok.(*etree.CharData); ok && strings.TrimSpace(cd.Data) == "" {
+			remove = append(remove, tok)
+		}
+	}
+	for _, tok := range remove {
+		el.RemoveChild(tok)
+	}
+	for _, child := range el.ChildElements() {
+		stripInterElementWhitespace(child)
+	}
 }
 
 func setXMLDeclaration(doc *etree.Document) {

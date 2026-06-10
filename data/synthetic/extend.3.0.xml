@@ -29,7 +29,7 @@
           <text>x</text>
           <elision>x</elision>
           <text>x</text>
-          <extend type="start" default-x="1" default-y="1" relative-x="1" relative-y="1" font-family="x" font-style="normal" font-size="1" font-weight="normal" color="#FF000000" />
+          <extend type="start" default-x="1" default-y="1" relative-x="1" relative-y="1" color="#FF000000" />
           <footnote>x</footnote>
           <level>x</level>
         </lyric>

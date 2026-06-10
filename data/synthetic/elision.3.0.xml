@@ -27,7 +27,7 @@
         <staff>1</staff>
         <lyric>
           <text>x</text>
-          <elision font-family="x" font-style="normal" font-size="1" font-weight="normal" color="#FF000000" underline="1" overline="1" line-through="1" rotation="1" letter-spacing="1" xml:lang="en" dir="ltr">x</elision>
+          <elision font-family="x" font-style="normal" font-size="1" font-weight="normal" color="#FF000000">x</elision>
           <text>x</text>
           <footnote>x</footnote>
           <level>x</level>

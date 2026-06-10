@@ -5,10 +5,8 @@ stems, and structure all arrive resolved on the plates; this package owns
 only Go grammar (declarations, parse/serialize bodies, comment syntax) and
 the runtime support file.
 
-Currently rendered: the four value shapes (the leaf node types) plus the
-runtime. Complex types and the document entry points are later phases; until
-they land, the emitted package is a compilable library of value types and
-the corert harness keeps using its stub.
+Rendered: the four value shapes, the four complex shapes, the document
+entry points (FromXDoc/ToXDoc), and the runtime support file.
 """
 
 from __future__ import annotations
@@ -18,15 +16,22 @@ import subprocess
 import tempfile
 from pathlib import Path
 
+from gen.emit.go.complexes import complex_file
+from gen.emit.go.document import document_file
 from gen.emit.go.runtime import runtime_file
 from gen.emit.go.values import value_file
 from gen.plates.model import Plates
 
 
 def render(plates: Plates) -> dict[str, str]:
-    files: dict[str, str] = {"runtime.go": runtime_file(plates)}
+    files: dict[str, str] = {
+        "runtime.go": runtime_file(plates),
+        "document.go": document_file(plates),
+    }
     for plate in plates.value_types:
         files[plate.file + ".go"] = value_file(plates, plate)
+    for plate in plates.complex_types:
+        files[plate.file + ".go"] = complex_file(plates, plate)
     return _gofmt(files)
 
 
