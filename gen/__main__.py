@@ -3,10 +3,12 @@
 Usage:
   python3 -m gen <config.toml>              generate code for a target (not yet implemented)
   python3 -m gen analyze [xsd]              parse the XSD and print a structural analysis
-  python3 -m gen ir [--type N] [--resolve] [xsd]
+  python3 -m gen ir [--type N] [--resolve] [--config C] [xsd]
                                             lower the XSD to the IR and print it as JSON;
                                             --resolve prints the collapsed (group-spliced,
-                                            attribute-flattened) view of complex types
+                                            attribute-flattened) view of complex types;
+                                            --config applies a target's companion patches
+                                            (e.g. the sounds.xml fold) before dumping
 
 Reads a MusicXML 4.0 XSD specification and generates typed document
 serialization/deserialization code for the target described in the given
@@ -40,6 +42,7 @@ def _ir(args: list[str]) -> int:
 
     type_name = None
     resolve = False
+    config_path = None
     rest = []
     i = 0
     while i < len(args):
@@ -49,15 +52,39 @@ def _ir(args: list[str]) -> int:
         elif args[i] == "--resolve":
             resolve = True
             i += 1
+        elif args[i] == "--config" and i + 1 < len(args):
+            config_path = args[i + 1]
+            i += 2
         else:
             rest.append(args[i])
             i += 1
 
-    xsd = Path(rest[0]) if rest else DEFAULT_XSD
+    cfg = None
+    if config_path is not None:
+        from gen.config import load as load_config
+
+        cfg = load_config(config_path)
+
+    # XSD precedence: an explicit positional argument wins, else the target
+    # config's pinned version, else the 4.0 default.
+    if rest:
+        xsd = Path(rest[0])
+    elif cfg is not None and cfg.xsd is not None:
+        xsd = cfg.xsd
+    else:
+        xsd = DEFAULT_XSD
     if not xsd.exists():
         print(f"error: XSD not found: {xsd}", file=sys.stderr)
         return 1
     ir = build_ir(parse(xsd), source=xsd.stem)
+
+    # A target config can fold companion data into the IR before it is consumed:
+    # today, the sounds.xml patch (instrument-sound -> open sound enum).
+    if cfg is not None and cfg.sounds_xml is not None:
+        from gen.ir.sounds import patch_sounds, read_sound_ids
+
+        patch_sounds(ir, read_sound_ids(cfg.sounds_xml))
+
     resolver = Resolver.from_ir(ir) if resolve else None
 
     if type_name:

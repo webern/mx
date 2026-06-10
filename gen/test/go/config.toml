@@ -1,6 +1,14 @@
 # Go generator target configuration.
-# The generator reads this to know where and how to emit Go code.
+# A test target that keeps the generator honest about extensibility: MusicXML
+# 3.1, and deliberately WITHOUT the sounds.xml companion -- the counterpart to
+# the C target (same 3.1 schema, sounds on), so the two differ only by the fold.
+
+[input]
+# MusicXML XSD this target generates from, relative to this config file.
+xsd = "../../../docs/musicxml-3.1-8bbe8e5.xsd"
 
 [output]
 # Directory for generated source files, relative to this config file.
 dir = "mx"
+
+# No [sounds] section: instrument-sound stays a plain string for this target.

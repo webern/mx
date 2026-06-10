@@ -1,6 +1,18 @@
 # C generator target configuration.
-# The generator reads this to know where and how to emit C code.
+# A test target that keeps the generator honest about extensibility: MusicXML
+# 3.1, WITH the sounds.xml companion -- the counterpart to the Go target (same
+# 3.1 schema, sounds off), so the two differ only by the fold.
+
+[input]
+# MusicXML XSD this target generates from, relative to this config file.
+xsd = "../../../docs/musicxml-3.1-8bbe8e5.xsd"
 
 [output]
 # Directory for generated source files, relative to this config file.
 dir = "mx"
+
+[sounds]
+# Companion sounds file (vendored under docs/, version-matched to the XSD).
+# Folds the standard instrument-sound identifiers into the IR as a sound-id
+# enum unioned with an open string. Comment out to disable.
+xml = "../../../docs/sounds-3.1-8bbe8e5.xml"

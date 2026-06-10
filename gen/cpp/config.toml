@@ -1,6 +1,17 @@
 # C++ generator target configuration.
-# The generator reads this to know where and how to emit C++ code.
+# The generator reads this to know which schema to read and where/how to emit.
+# C++ is the primary target: MusicXML 4.0, with the sounds.xml companion.
+
+[input]
+# MusicXML XSD this target generates from, relative to this config file.
+xsd = "../../docs/musicxml-4.0-ed15c23.xsd"
 
 [output]
 # Directory for generated source files, relative to this config file.
 dir = "../../src/private/mx/core"
+
+[sounds]
+# Companion sounds file (vendored under docs/, version-matched to the XSD).
+# Folds the standard instrument-sound identifiers into the IR as a sound-id
+# enum unioned with an open string. Comment out to disable.
+xml = "../../docs/sounds-4.0-ed15c23.xml"

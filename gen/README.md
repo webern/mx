@@ -54,17 +54,38 @@ gen/
   drift). It is computed on demand by the resolution layer (`ir/resolve.py`), so the
   splicing-and-deduping reasoning lives once and every emitter shares it rather than re-deriving it.
 
+### Companion data (sounds.xml)
+
+The one documented exception to "the IR is a pure function of the XSD." The schema types the
+`instrument-sound` element as a bare `xs:string`; the ~900 standard timbre identifiers it expects
+(`brass.alphorn`, ...) live only in `sounds.xml`, a separately versioned MusicXML file, not the
+schema. `ir/sounds.py` reads that file and folds it into the IR: it adds a `sound-id` enum over the
+identifiers and an `instrument-sound` union of that enum with an open string, then retypes the
+element from `string` to the union. Known values become typed; any other string stays valid, because
+the schema leaves the content open. This needs no new IR shape -- it is an ordinary enum plus an
+ordinary union, the same shape as `font-size` (the `css-font-size` enum unioned with `decimal`).
+
+The patch runs only when a target's `config.toml` names a sounds file under `[sounds] xml` (vendored
+in `docs/`, version-matched to the XSD), so it is opt-in per target and the base IR stays pure.
+`python3 -m gen ir --config <config.toml>` shows the patched view. It is config-gated, but not a
+type-shaping knob: it selects an *input*, not how a type is emitted.
+
 ## Usage
 
 ```
-python3 -m gen analyze [xsd]                     # structural analysis report (text)
-python3 -m gen ir [--type NAME] [--resolve] [xsd] # lower to IR, print as JSON (whole IR, or one type)
-python3 -m gen <config.toml>                     # emit code for a target (not yet implemented)
+python3 -m gen analyze [xsd]                              # structural analysis report (text)
+python3 -m gen ir [--type NAME] [--resolve] [--config C] [xsd]  # lower to IR, print as JSON
+python3 -m gen <config.toml>                              # emit code for a target (not yet implemented)
 ```
 
 `--resolve` prints the *collapsed* view of complex types (attribute groups flattened, model-group
 refs spliced into the content, derived types carrying their full base-chain attribute set) -- the
 form an emitter consumes. Without it, `ir` prints the IR verbatim, with the named structure intact.
+
+`--config C` lowers the IR exactly as that target's emitter will consume it: it reads the schema the
+config pins (`[input] xsd`) and applies the companion patches the config enables (the sounds.xml
+fold, see Companion data). An explicit positional `xsd` still overrides the config's. Without
+`--config`, `ir` shows the pure-XSD IR of the default (or positional) schema.
 
 `xsd` defaults to `docs/musicxml-4.0-ed15c23.xsd`. Examples:
 
@@ -73,7 +94,7 @@ python3 -m gen ir --type note                          # one type
 python3 -m gen ir --type note --resolve                # one type, collapsed for an emitter
 python3 -m gen ir > build/ir/musicxml-4.0.ir.json      # whole IR (build/ is gitignored)
 jq '.complex_types[] | select(.name=="note")' build/ir/musicxml-4.0.ir.json
-python3 -m gen analyze docs/musicxml-3.1.xsd           # analyze a different version
+python3 -m gen analyze docs/musicxml-3.1-8bbe8e5.xsd    # analyze a different version
 ```
 
 ## Glossary

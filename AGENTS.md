@@ -62,7 +62,8 @@ housekeeping). Docker-gated targets auto-build and run via mx-sdk.
 The corert test is the primary correctness gate. It exercises the generated parser by round-tripping
 every eligible XML file in `data/` through the typed model and comparing the output to a normalized
 form of the input. The corpus is pinned to version `3.0` throughout (input and expected) even though
-the generator targets the 4.0 schema, so comparison runs against a stable baseline.
+the generators target newer schemas (C++ 4.0, Go and C 3.1), so comparison runs against a stable
+baseline.
 
 ### Flow (same in all three languages)
 
@@ -132,12 +133,25 @@ for the architecture, IR glossary, the resolution layer, and a structural analys
 
 Commands:
 - `python3 -m gen analyze [xsd]` - print a structural analysis of the XSD.
-- `python3 -m gen ir [--type NAME] [--resolve] [xsd]` - lower the XSD to the IR and print it as JSON;
-  `--resolve` prints the collapsed (group-spliced, attribute-flattened) view of complex types.
+- `python3 -m gen ir [--type NAME] [--resolve] [--config C] [xsd]` - lower the XSD to the IR and
+  print it as JSON; `--resolve` prints the collapsed (group-spliced, attribute-flattened) view of
+  complex types; `--config` applies a target config's companion patches (the sounds.xml fold) first.
 - `python3 -m gen <config.toml>` - emit code for the target in the config (not yet implemented).
 
-Each target has a `config.toml` specifying the output directory (relative to the config file) and,
-eventually, language-specific settings.
+Each target has a `config.toml` specifying the MusicXML XSD it generates from (`[input] xsd`), the
+output directory (`[output] dir`, relative to the config file), an optional `[sounds] xml` companion
+file (see below), and, eventually, language-specific settings. Each path is relative to the config
+file. The three targets deliberately span the matrix: C++ is 4.0 with sounds, C is 3.1 with sounds,
+and Go is 3.1 without sounds (the C/Go pair differ only by the companion fold).
+
+### Companion data
+
+`instrument-sound` is `xs:string` in the XSD; the standard sound identifiers live only in the
+separately versioned `sounds.xml` (vendored as `docs/sounds-<version>.xml`). When a target's
+`config.toml` sets `[sounds] xml`, `gen/ir/sounds.py` folds them into the IR as a `sound-id` enum
+unioned with an open string (element `instrument-sound` retyped from `string` to that union). This is
+the only place the IR depends on an input beyond the XSD; it is opt-in per target, so the base IR
+stays a pure function of the schema.
 
 **Status.** The parse, IR, and analysis stages exist. The emit stage and its templates are not yet
 implemented, so `python3 -m gen <config.toml>` still exits with an error.
@@ -146,18 +160,21 @@ implemented, so `python3 -m gen <config.toml>` still exits with an error.
 
 ### C++ (primary, `gen/cpp/`)
 
-The existing codebase. Generated code lands in `src/private/mx/core/`. The ezxml layer
-(`src/private/mx/ezxml/`) provides the XML DOM that the generated code builds on.
+MusicXML 4.0 with the sounds companion. The existing codebase. Generated code lands in
+`src/private/mx/core/`. The ezxml layer (`src/private/mx/ezxml/`) provides the XML DOM that the
+generated code builds on.
 
 ### Go (test target, `gen/test/go/`)
 
-Uses `github.com/beevik/etree` (vendored) for DOM-style XML. The generated code will land in
-`gen/test/go/mx/`. Test runner uses Go's `testing` package with subtests.
+MusicXML 3.1 *without* the sounds companion. Uses `github.com/beevik/etree` (vendored) for DOM-style
+XML. The generated code will land in `gen/test/go/mx/`. Test runner uses Go's `testing` package with
+subtests.
 
 ### C (test target, `gen/test/c/`)
 
-Uses libxml2 (apt package in Docker). The generated code will land in `gen/test/c/mx/`. Test runner
-is a simple `main()` that prints pass/fail per file and a summary.
+MusicXML 3.1 *with* the sounds companion -- same schema as Go, so the two outputs differ only by the
+fold. Uses libxml2 (apt package in Docker). The generated code will land in `gen/test/c/mx/`. Test
+runner is a simple `main()` that prints pass/fail per file and a summary.
 
 ## Key files to understand
 
