@@ -26,12 +26,34 @@ static int is_equivalent(const char *a, const char *b) {
     return 0;
 }
 
+/* The element's DIRECT text content only (not the subtree concatenation
+   xmlNodeGetContent computes): subtree text would re-compare every leaf at
+   every ancestor, and a numerically-equivalent leaf reformat ("1.0" -> "1")
+   would fail the ancestors' exact comparison. */
 static char *node_text(xmlNodePtr node) {
-    xmlChar *c = xmlNodeGetContent(node);
-    if (!c) return strdup("");
-    char *s = strdup((const char *)c);
-    xmlFree(c);
+    size_t len = 0;
+    for (xmlNodePtr c = node->children; c; c = c->next)
+        if (c->type == XML_TEXT_NODE || c->type == XML_CDATA_SECTION_NODE)
+            len += c->content ? strlen((const char *)c->content) : 0;
+    char *s = malloc(len + 1);
+    if (!s) abort();
+    s[0] = '\0';
+    for (xmlNodePtr c = node->children; c; c = c->next)
+        if (c->type == XML_TEXT_NODE || c->type == XML_CDATA_SECTION_NODE)
+            if (c->content)
+                strcat(s, (const char *)c->content);
     return s;
+}
+
+/* The attribute's qualified name: a parsed document carries xlink:href as
+   (ns prefix "xlink", name "href") while a serialized one may carry the
+   literal name "xlink:href"; both must compare equal. */
+static void attr_qname(xmlAttrPtr a, char *buf, size_t cap) {
+    if (a->ns && a->ns->prefix)
+        snprintf(buf, cap, "%s:%s", (const char *)a->ns->prefix,
+                 (const char *)a->name);
+    else
+        snprintf(buf, cap, "%s", (const char *)a->name);
 }
 
 static CompareResult do_compare(xmlNodePtr expected, xmlNodePtr actual,
@@ -78,14 +100,17 @@ static CompareResult do_compare(xmlNodePtr expected, xmlNodePtr actual,
     xmlAttrPtr ea = expected->properties;
     xmlAttrPtr aa = actual->properties;
     while (ea && aa) {
-        xmlChar *ev = xmlGetProp(expected, ea->name);
-        xmlChar *av = xmlGetProp(actual, aa->name);
-        int name_eq = strcmp((const char *)ea->name, (const char *)aa->name) == 0;
+        char ename[128], aname[128];
+        attr_qname(ea, ename, sizeof(ename));
+        attr_qname(aa, aname, sizeof(aname));
+        xmlChar *ev = xmlNodeListGetString(expected->doc, ea->children, 1);
+        xmlChar *av = xmlNodeListGetString(actual->doc, aa->children, 1);
+        int name_eq = strcmp(ename, aname) == 0;
         int val_eq = is_equivalent((const char *)ev, (const char *)av);
         if (!name_eq || !val_eq) {
             r.failed = 1;
             snprintf(r.detail, sizeof(r.detail),
-                     "attribute mismatch at %s[@%s]", path, ea->name);
+                     "attribute mismatch at %s[@%s]", path, ename);
             xmlFree(ev);
             xmlFree(av);
             return r;

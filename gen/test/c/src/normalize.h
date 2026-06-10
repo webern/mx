@@ -5,4 +5,7 @@
 
 void normalize(xmlDocPtr doc);
 
+/* Pin the root version attribute to the corert baseline ("3.0"). */
+void set_root_version(xmlNodePtr root);
+
 #endif

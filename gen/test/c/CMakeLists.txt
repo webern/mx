@@ -15,7 +15,8 @@ endif()
 # manifest is emitted alongside the sources so the build never globs).
 include(mx/sources.cmake)
 add_library(mx-c STATIC ${MX_GENERATED_SOURCES})
-target_include_directories(mx-c PUBLIC mx)
+target_include_directories(mx-c PUBLIC mx ${LIBXML2_INCLUDE_DIRS})
+target_link_libraries(mx-c ${LIBXML2_LIBRARIES})
 
 add_executable(corert-c
     src/main.c
@@ -23,8 +24,7 @@ add_executable(corert-c
     src/fixer.c
     src/normalize.c
     src/compare.c
-    src/roundtrip.c
-    src/stub.c)
+    src/roundtrip.c)
 
 target_include_directories(corert-c PRIVATE ${LIBXML2_INCLUDE_DIRS} src)
 target_link_libraries(corert-c mx-c ${LIBXML2_LIBRARIES})

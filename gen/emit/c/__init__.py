@@ -10,12 +10,14 @@ Alongside the sources, the backend emits `sources.cmake`, the generated
 manifest the test target's CMakeLists includes, so the build never globs
 and never goes stale.
 
-Currently rendered: the four value shapes (the leaf node types) plus the
-runtime. Complex types and the document entry points are later phases.
+Rendered: the four value shapes, the four complex shapes, the document
+entry points, and the runtime support files.
 """
 
 from __future__ import annotations
 
+from gen.emit.c.complexes import complex_files
+from gen.emit.c.document import document_files, document_stem
 from gen.emit.c.runtime import runtime_header, runtime_impl, runtime_stem
 from gen.emit.c.values import value_files
 from gen.emit.writer import banner
@@ -24,7 +26,8 @@ from gen.plates.model import Plates
 
 def render(plates: Plates) -> dict[str, str]:
     rt = runtime_stem(plates)
-    reserved = (rt, "sources")
+    doc_stem = document_stem(plates)
+    reserved = (rt, doc_stem, "sources")
     for plate in list(plates.value_types) + list(plates.complex_types):
         if plate.file in reserved:
             raise ValueError(
@@ -43,6 +46,13 @@ def render(plates: Plates) -> dict[str, str]:
         header, impl = value_files(plates, plate, includes_of.get(plate.file, []), rt)
         files[plate.file + ".h"] = header
         files[plate.file + ".c"] = impl
+    for plate in plates.complex_types:
+        header, impl = complex_files(plates, plate, includes_of.get(plate.file, []), rt)
+        files[plate.file + ".h"] = header
+        files[plate.file + ".c"] = impl
+    header, impl = document_files(plates, doc_stem, rt)
+    files[doc_stem + ".h"] = header
+    files[doc_stem + ".c"] = impl
 
     files["sources.cmake"] = _sources_cmake(plates, files)
     return files

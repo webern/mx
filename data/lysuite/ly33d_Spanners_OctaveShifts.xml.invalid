@@ -1,0 +1,2 @@
+Not well-formed XML: the file begins with stray bytes ("Octave.cc") before the
+XML declaration. Strict parsers (libxml2) are entitled to reject it.

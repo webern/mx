@@ -23,4 +23,9 @@ char *mx_format_int(long v);
 /* strdup that maps NULL to "". Malloc'd; caller frees. */
 char *mx_strdup(const char *s);
 
+/* The parse-failure message channel: parse functions returning NULL set it;
+   the caller reads it before the next parse. Static storage. */
+void mx_error_set(const char *fmt, ...);
+const char *mx_error(void);
+
 #endif /* MX_RUNTIME_H_INCLUDED */

@@ -3,6 +3,7 @@
 
 typedef struct {
     int ok;
+    int skipped; /* document declares a newer MusicXML than this target */
     char message[1024];
 } RoundtripResult;
 

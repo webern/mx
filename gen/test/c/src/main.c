@@ -25,11 +25,13 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    int pass = 0, fail = 0;
+    int pass = 0, fail = 0, skip = 0;
     for (int i = 0; i < files.count; i++) {
         char *name = to_test_name(files.paths[i], data_root);
         RoundtripResult result = run_core_roundtrip(files.paths[i]);
-        if (result.ok) {
+        if (result.skipped) {
+            skip++;
+        } else if (result.ok) {
             pass++;
         } else {
             fail++;
@@ -38,7 +40,8 @@ int main(int argc, char **argv) {
         free(name);
     }
 
-    printf("\n%d tests: %d passed, %d failed\n", pass + fail, pass, fail);
+    printf("\n%d tests: %d passed, %d failed, %d skipped\n",
+           pass + fail + skip, pass, fail, skip);
     file_list_free(&files);
     xmlCleanupParser();
     return fail > 0 ? 1 : 0;

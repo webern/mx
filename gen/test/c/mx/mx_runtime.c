@@ -4,6 +4,7 @@
 
 #include <errno.h>
 #include <math.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -93,4 +94,17 @@ char *mx_strdup(const char *s) {
         abort(); /* the generator's runtime has no error channel for OOM */
     memcpy(out, s, n);
     return out;
+}
+
+static char mx_error_buf[512];
+
+void mx_error_set(const char *fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+    vsnprintf(mx_error_buf, sizeof(mx_error_buf), fmt, args);
+    va_end(args);
+}
+
+const char *mx_error(void) {
+    return mx_error_buf;
 }

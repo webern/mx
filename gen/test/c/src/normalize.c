@@ -77,10 +77,21 @@ static void strip_decimal_zeros(xmlNodePtr node) {
         strip_decimal_zeros(child);
 }
 
+static void sort_qname(xmlAttrPtr a, char *buf, size_t cap) {
+    if (a->ns && a->ns->prefix)
+        snprintf(buf, cap, "%s:%s", (const char *)a->ns->prefix,
+                 (const char *)a->name);
+    else
+        snprintf(buf, cap, "%s", (const char *)a->name);
+}
+
 static int attr_cmp(const void *a, const void *b) {
     const xmlAttrPtr *aa = a;
     const xmlAttrPtr *bb = b;
-    return strcmp((const char *)(*aa)->name, (const char *)(*bb)->name);
+    char an[128], bn[128];
+    sort_qname(*aa, an, sizeof(an));
+    sort_qname(*bb, bn, sizeof(bn));
+    return strcmp(an, bn);
 }
 
 static void sort_attributes(xmlNodePtr node) {
@@ -110,16 +121,52 @@ static void sort_attributes(xmlNodePtr node) {
         sort_attributes(child);
 }
 
-static void set_root_version(xmlNodePtr root) {
+void set_root_version(xmlNodePtr root) {
     if (!root) return;
     xmlSetProp(root, (const xmlChar *)"version",
                (const xmlChar *)MUSICXML_VERSION);
+}
+
+/* Remove whitespace-only text nodes from every element: pretty-printing
+   indentation in containers, including containers whose optional children
+   are all absent. MusicXML has no mixed content, and the rule applies to
+   expected and actual alike, so leaf values with real content are never
+   touched and the comparison stays symmetric. */
+static int is_blank_text(xmlNodePtr node) {
+    if (node->type != XML_TEXT_NODE && node->type != XML_CDATA_SECTION_NODE)
+        return 0;
+    xmlChar *content = xmlNodeGetContent(node);
+    int blank = 1;
+    for (const xmlChar *p = content; p && *p; p++) {
+        if (*p != ' ' && *p != '\t' && *p != '\n' && *p != '\r') {
+            blank = 0;
+            break;
+        }
+    }
+    xmlFree(content);
+    return blank;
+}
+
+static void strip_inter_element_whitespace(xmlNodePtr node) {
+    if (!node || node->type != XML_ELEMENT_NODE) return;
+    xmlNodePtr child = node->children;
+    while (child) {
+        xmlNodePtr next = child->next;
+        if (is_blank_text(child)) {
+            xmlUnlinkNode(child);
+            xmlFreeNode(child);
+        } else if (child->type == XML_ELEMENT_NODE) {
+            strip_inter_element_whitespace(child);
+        }
+        child = next;
+    }
 }
 
 void normalize(xmlDocPtr doc) {
     if (!doc) return;
     xmlNodePtr root = xmlDocGetRootElement(doc);
     set_root_version(root);
+    strip_inter_element_whitespace(root);
     strip_decimal_zeros(root);
     sort_attributes(root);
 }

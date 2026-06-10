@@ -2,136 +2,340 @@
 
 set(MX_GENERATED_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/mx_above_below.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_accidental.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_accidental_mark.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_accidental_text.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_accidental_value.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_accord.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_accordion_middle.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_accordion_registration.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_appearance.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_arpeggiate.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_arrow.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_arrow_direction.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_arrow_style.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_articulations.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_attributes.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_backup.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_backward_forward.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_bar_style.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_bar_style_color.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_barline.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_barre.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_bass.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_bass_alter.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_bass_step.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_beam.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_beam_level.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_beam_value.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_beat_repeat.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_beat_unit_tied.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_beater.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_beater_value.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_bend.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_bookmark.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_bracket.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_breath_mark.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_breath_mark_value.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_caesura.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_caesura_value.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_cancel.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_cancel_location.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_circular_arrow.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_clef.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_clef_sign.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_coda.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_color.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_comma_separated_text.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_credit.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_css_font_size.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_dashes.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_defaults.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_degree.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_degree_alter.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_degree_symbol_value.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_degree_type.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_degree_type_value.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_degree_value.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_direction.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_direction_type.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_directive.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_distance.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_distance_type.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_divisions.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_document.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_dynamics.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_effect.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_elision.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_empty.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_empty_font.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_empty_line.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_empty_placement.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_empty_placement_smufl.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_empty_print_object_style_align.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_empty_print_style_align_id.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_empty_trill_sound.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_enclosure_shape.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_encoding.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_ending.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_ending_number.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_extend.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_fan.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_feature.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_fermata.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_fermata_shape.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_fifths.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_figure.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_figured_bass.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_fingering.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_first_fret.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_font_size.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_font_style.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_font_weight.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_formatted_symbol_id.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_formatted_text.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_formatted_text_id.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_forward.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_frame.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_frame_note.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_fret.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_glass.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_glass_value.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_glissando.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_glyph.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_glyph_type.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_grace.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_group_barline.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_group_barline_value.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_group_name.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_group_symbol.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_group_symbol_value.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_grouping.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_hammer_on_pull_off.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_handbell.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_handbell_value.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_harmon_closed.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_harmon_closed_location.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_harmon_closed_value.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_harmon_mute.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_harmonic.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_harmony.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_harmony_type.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_harp_pedals.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_heel_toe.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_hole.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_hole_closed.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_hole_closed_location.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_hole_closed_value.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_horizontal_turn.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_identification.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_image.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_instrument.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_instrument_sound.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_interchangeable.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_inversion.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_key.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_key_accidental.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_key_octave.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_kind.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_kind_value.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_left_center_right.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_left_right.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_level.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_line_end.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_line_length.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_line_shape.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_line_type.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_line_width.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_line_width_type.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_link.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_lyric.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_lyric_font.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_lyric_language.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_margin_type.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_measure_layout.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_measure_numbering.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_measure_numbering_value.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_measure_repeat.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_measure_style.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_measure_text.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_membrane.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_metal.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_metronome.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_metronome_beam.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_metronome_note.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_metronome_tied.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_metronome_tuplet.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_midi_128.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_midi_16.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_midi_16384.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_midi_device.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_midi_instrument.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_millimeters.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_miscellaneous.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_miscellaneous_field.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_mode.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_mordent.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_multiple_rest.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_mute.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_name_display.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_non_arpeggiate.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_non_negative_decimal.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_notations.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_note.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_note_size.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_note_size_type.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_note_type.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_note_type_value.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_notehead.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_notehead_text.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_notehead_value.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_number_level.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_number_of_lines.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_number_or_normal.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_octave.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_octave_shift.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_offset.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_on_off.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_opus.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_ornaments.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_other_appearance.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_other_direction.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_other_notation.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_other_placement_text.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_other_play.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_other_text.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_over_under.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_page_layout.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_page_margins.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_part_group.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_part_list.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_part_name.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_part_symbol.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_partwise_measure.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_partwise_part.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_pedal.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_pedal_tuning.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_pedal_type.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_per_minute.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_percent.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_percussion.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_pitch.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_pitched.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_pitched_value.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_placement_text.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_play.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_positive_divisions.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_positive_integer_or_empty.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_principal_voice.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_principal_voice_symbol.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_print.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_repeat.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_rest.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_right_left_middle.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_root.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_root_alter.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_root_step.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_rotation_degrees.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_runtime.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_scaling.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_scordatura.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_score_instrument.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_score_part.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_score_partwise.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_score_timewise.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_segno.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_semi_pitched.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_semitones.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_show_frets.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_show_tuplet.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_slash.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_slide.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_slur.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_smufl_accidental_glyph_name.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_smufl_coda_glyph_name.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_smufl_glyph_name.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_smufl_lyrics_glyph_name.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_smufl_pictogram_glyph_name.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_smufl_segno_glyph_name.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_sound.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_sound_id.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_staff_details.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_staff_divide.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_staff_divide_symbol.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_staff_layout.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_staff_line.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_staff_number.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_staff_tuning.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_staff_type.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_start_note.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_start_stop.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_start_stop_continue.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_start_stop_discontinue.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_start_stop_single.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_stem.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_stem_value.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_step.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_stick.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_stick_location.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_stick_material.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_stick_type.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_string.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_string_mute.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_string_number.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_strong_accent.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_style_text.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_supports.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_syllabic.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_symbol_size.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_system_dividers.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_system_layout.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_system_margins.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_tap.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_tap_hand.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_technical.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_tenths.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_text_direction.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_text_element_data.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_tie.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_tied.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_tied_type.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_time.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_time_modification.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_time_only.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_time_relation.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_time_separator.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_time_symbol.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_timewise_measure.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_timewise_part.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_tip_direction.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_top_bottom.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_transpose.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_tremolo.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_tremolo_marks.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_tremolo_type.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_trill_beats.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_trill_step.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_tuplet.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_tuplet_dot.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_tuplet_number.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_tuplet_portion.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_tuplet_type.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_two_note_turn.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_typed_text.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_unpitched.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_up_down.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_up_down_stop_continue.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_upright_inverted.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_valign.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_valign_image.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_virtual_instrument.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_wavy_line.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_wedge.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_wedge_type.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_winged.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_wood.c
+    ${CMAKE_CURRENT_LIST_DIR}/mx_work.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_yes_no.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_yes_no_number.c
     ${CMAKE_CURRENT_LIST_DIR}/mx_yyyy_mm_dd.c
