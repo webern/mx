@@ -24,16 +24,53 @@ from gen.emit.writer import banner
 from gen.plates.model import Plates
 
 
-def render(plates: Plates) -> dict[str, str]:
-    rt = runtime_stem(plates)
-    doc_stem = document_stem(plates)
-    reserved = (rt, doc_stem, "sources")
+def _guard_identifiers(plates: Plates, reserved_stems: tuple[str, ...]) -> None:
+    """The plates' collision gate certifies projected identifiers; this
+    backend also COMPOSES a few (the per-type Child struct, the has_/children
+    fields, its support types). A schema name landing on one of those must
+    fail loud here, not as a confusing compile error in generated code."""
+    from gen.plates.model import element_members
+
+    prefix = plates.target.prefix
+    reserved_idents = {f"{prefix}Document", f"{prefix}Namespace"}
+    type_idents = {p.ident for p in list(plates.value_types) + list(plates.complex_types)}
     for plate in list(plates.value_types) + list(plates.complex_types):
-        if plate.file in reserved:
+        if plate.file in reserved_stems:
             raise ValueError(
                 f"type '{plate.name.wire}' projects to the reserved file stem "
                 f"'{plate.file}'; rename it in config.toml"
             )
+        if plate.ident in reserved_idents:
+            raise ValueError(
+                f"type '{plate.name.wire}' projects to '{plate.ident}', which this "
+                f"backend reserves; rename it in config.toml"
+            )
+    for plate in plates.complex_types:
+        members = plate.members_view()
+        elements = element_members(members)
+        if elements and f"{plate.ident}Child" in type_idents:
+            raise ValueError(
+                f"type '{plate.ident}Child' collides with '{plate.name.wire}'s "
+                f"child struct; rename one in config.toml"
+            )
+        idents = {m.ident for m in members}
+        if elements and idents & {"children", "children_count"}:
+            raise ValueError(
+                f"'{plate.name.wire}' has a member projecting to a reserved "
+                f"children field; rename it in config.toml"
+            )
+        for m in members:
+            if m.kind == "attribute" and f"has_{m.ident}" in idents:
+                raise ValueError(
+                    f"'{plate.name.wire}': member 'has_{m.ident}' collides with "
+                    f"the presence flag of attribute '{m.name.wire}'; rename one"
+                )
+
+
+def render(plates: Plates) -> dict[str, str]:
+    rt = runtime_stem(plates)
+    doc_stem = document_stem(plates)
+    _guard_identifiers(plates, (rt, doc_stem, "sources"))
     includes_of = {
         spec.file: spec.includes for spec in (plates.files or [])
     }

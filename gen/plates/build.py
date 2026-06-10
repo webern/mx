@@ -17,6 +17,8 @@ Three phases, each failing loud:
 
 from __future__ import annotations
 
+import re
+
 from gen.config import Config
 from gen.ir import model as ir
 from gen.ir.build import PRIMITIVES
@@ -158,8 +160,10 @@ class _Builder:
         if errors:
             raise PlatesError(errors)
 
+        version = re.search(r"musicxml-(\d+\.\d+)", self.m.source)
         plates = Plates(
             source=self.m.source,
+            schema_version=version.group(1) if version else "",
             target=self._target_info(),
             value_types=[self._value_plate(v) for v in self.m.value_types],
             complex_types=[self._complex_plate(c) for c in self.m.complex_types],

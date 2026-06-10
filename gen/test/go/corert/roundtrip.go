@@ -15,11 +15,12 @@ import (
 	"github.com/webern/mx/gen/test/go/mx"
 )
 
-// The MusicXML version the generated model supports (the schema pinned in
-// this target's config.toml). Documents declaring a NEWER version may use
-// elements the model has no types for; MusicXML is backward compatible, so
-// older documents are fine.
-const maxSupportedVersion = "3.1"
+// The MusicXML version the generated model supports comes from the model
+// itself (the generator emits it from the schema the config pins), so
+// retargeting the schema cannot leave the gate stale. Documents declaring a
+// NEWER version may use elements the model has no types for; MusicXML is
+// backward compatible, so older documents are fine.
+const maxSupportedVersion = mx.SupportedMusicXMLVersion
 
 type Result struct {
 	OK          bool

@@ -269,10 +269,33 @@ class ComplexPlate:
                 return m
         raise KeyError(f"{self.name.wire}: no member {wire!r} (kind={kind})")
 
+    def members_view(self) -> list[Member]:
+        """The member list this plate's strategy renders: the merged
+        base-chain view when flattening a derived type, own members
+        otherwise. Backends render this; they never re-derive it."""
+        if self.strategy == "flatten" and self.all_members is not None:
+            return self.all_members
+        return self.members
+
 
 # --------------------------------------------------------------------------- #
 # The whole projected target
 # --------------------------------------------------------------------------- #
+
+
+def attribute_members(members: list[Member]) -> list[Member]:
+    """The shape queries backends partition a member list with. They live
+    here, beside the data, so every backend asks the same question the same
+    way instead of filtering inline."""
+    return [m for m in members if m.kind == "attribute"]
+
+
+def element_members(members: list[Member]) -> list[Member]:
+    return [m for m in members if m.kind == "element"]
+
+
+def value_member(members: list[Member]) -> Member | None:
+    return next((m for m in members if m.kind == "value"), None)
 
 
 @dataclass
@@ -295,6 +318,7 @@ class Plates:
 
     source: str  # provenance: the XSD stem the IR was lowered from
     target: TargetInfo
+    schema_version: str = ""  # the MusicXML version in the source stem ("3.1")
     value_types: list[ValuePlate] = field(default_factory=list)
     complex_types: list[ComplexPlate] = field(default_factory=list)
     roots: list[PlateRef] = field(default_factory=list)
@@ -312,3 +336,15 @@ class Plates:
 
     def has_plate(self, wire: str) -> bool:
         return wire in self._index
+
+    def children_owner(self, plate: ComplexPlate) -> ComplexPlate | None:
+        """For an inheriting target: the base-chain plate whose child struct
+        holds this type's children -- the nearest ancestor (or self) with
+        element members. Schema reasoning, so it lives here, not in a
+        template."""
+        cur: ComplexPlate | None = plate
+        while cur is not None:
+            if element_members(cur.members):
+                return cur
+            cur = self.plate(cur.base.wire) if cur.base is not None else None
+        return None

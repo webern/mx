@@ -11,6 +11,13 @@ from __future__ import annotations
 from gen.emit.go.common import file_frame
 from gen.plates.model import Plates
 
+_VERSION = '''\
+// SupportedMusicXMLVersion is the MusicXML version of the schema this
+// package was generated from. Documents declaring a newer version may use
+// types this model cannot represent; harnesses gate on it.
+const SupportedMusicXMLVersion = "{0}"
+'''
+
 _BODY = '''\
 // tryParseDecimal parses s strictly as a decimal number.
 func tryParseDecimal(s string) (float64, bool) {
@@ -66,4 +73,5 @@ func formatInt(v int) string {
 
 
 def runtime_file(plates: Plates) -> str:
-    return file_frame(plates, _BODY.split("\n"), imports=["math", "strconv", "strings"])
+    body = _VERSION.format(plates.schema_version).split("\n") + _BODY.split("\n")
+    return file_frame(plates, body, imports=["math", "strconv", "strings"])

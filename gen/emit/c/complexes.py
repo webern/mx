@@ -25,26 +25,14 @@ from __future__ import annotations
 
 from gen.emit.c.api import CValue, value_api
 from gen.emit.c.common import c_string, doc_comment, fn_name, fn_prefix, header_file, impl_file
-from gen.plates.model import ComplexPlate, Member, Plates
-
-
-def _attr_members(members: list[Member]) -> list[Member]:
-    return [m for m in members if m.kind == "attribute"]
-
-
-def _element_members(members: list[Member]) -> list[Member]:
-    return [m for m in members if m.kind == "element"]
-
-
-def _value_member(members: list[Member]) -> Member | None:
-    return next((m for m in members if m.kind == "value"), None)
-
-
-def _members_view(plate: ComplexPlate) -> list[Member]:
-    """C flattens derived types: the merged base-chain view when present."""
-    if plate.strategy == "flatten" and plate.all_members is not None:
-        return plate.all_members
-    return plate.members
+from gen.plates.model import (
+    ComplexPlate,
+    Member,
+    Plates,
+    attribute_members as _attr_members,
+    element_members as _element_members,
+    value_member as _value_member,
+)
 
 
 def _child_field(plates: Plates, member: Member) -> tuple[str, bool]:
@@ -60,7 +48,7 @@ def _child_field(plates: Plates, member: Member) -> tuple[str, bool]:
 
 
 def complex_files(plates: Plates, plate: ComplexPlate, includes: list[str], rt: str):
-    members = _members_view(plate)
+    members = plate.members_view()
     attrs = _attr_members(members)
     elements = _element_members(members)
     value = _value_member(members)
@@ -78,7 +66,9 @@ def complex_files(plates: Plates, plate: ComplexPlate, includes: list[str], rt: 
         decl += [
             f"/* One child element of {ident}: exactly one field is non-NULL,",
             "   and that pointer says which element this is. Document order is",
-            "   the array order on the owning struct. */",
+            "   the array order on the owning struct. Zero or multiple fields",
+            "   set is undefined: serialization writes the first non-NULL field",
+            "   in schema order and nothing when all are NULL. */",
             "typedef struct {",
         ]
         for m in elements:

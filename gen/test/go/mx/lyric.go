@@ -36,7 +36,9 @@ type Lyric struct {
 // LyricChild is one child element of Lyric: exactly one field
 // is non-nil, and that pointer says which element this is. (No kind
 // discriminator: schema element names like harmony's <kind> would
-// collide with a synthetic field.)
+// collide with a synthetic field.) Constructing a child with zero or
+// multiple fields set is undefined: serialization writes the first
+// non-nil field in schema order and nothing when all are nil.
 type LyricChild struct {
 	Syllabic     *Syllabic
 	Text         *TextElementData

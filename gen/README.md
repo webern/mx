@@ -9,8 +9,8 @@ build system, Docker toolchain, and corert test, see [`../AGENTS.md`](../AGENTS.
 ### Pipeline
 
 ```
-XSD file  --parse-->  XSD model  --lower-->  IR  --project-->  Plates  --emit-->  C++ / Go / C
-          (gen.xsd)               (gen.ir)              (gen.plates, designed)   (templates, not yet built)
+XSD file  --parse-->  XSD model  --lower-->  IR  --project-->  Plates  --emit-->  Go / C (/ C++)
+          (gen.xsd)               (gen.ir)               (gen.plates)            (gen.emit)
 ```
 
 1. Parse (`gen/xsd/`) reads the XSD into a model mirroring it 1:1, still speaking XSD: restriction
@@ -24,8 +24,9 @@ XSD file  --parse-->  XSD model  --lower-->  IR  --project-->  Plates  --emit-->
    **Plates**. Designed in [`../docs/ai/design/plates.md`](../docs/ai/design/plates.md).
 4. Emit (`gen/emit/`) renders each plate through a per-language backend ("dumb renderers": walk
    the plate, print text, no naming logic; see `gen/emit/__init__.py` for the backend contract).
-   The Go backend currently renders the four value shapes; complex types and the C backend are
-   landing bottom-up.
+   The Go and C backends are complete (all value and complex shapes plus the document entry
+   points); both corert suites round-trip the corpus green. The C++ backend is not yet
+   implemented.
 
 ### Layout
 
@@ -49,6 +50,10 @@ gen/
     languages.py     per-language defaults (type maps, reserved words, doc styles)
     build.py         the projection: IR + config -> Plates
     check.py         post-projection collision detection
+  emit/
+    writer.py        deterministic output (write-if-changed, marker-gated pruning)
+    go/              Go backend: values, complexes, document, runtime, gofmt pass
+    c/               C backend: api (calling convention), values, complexes, document, runtime
   cpp/, test/go/, test/c/    per-target config and corert test harnesses
 ```
 
@@ -91,7 +96,7 @@ type-shaping knob: it selects an *input*, not how a type is emitted.
 python3 -m gen analyze [xsd]                              # structural analysis report (text)
 python3 -m gen ir [--type NAME] [--resolve] [--config C] [xsd]  # lower to IR, print as JSON
 python3 -m gen plates --config C [--type NAME] [--check]  # project the IR onto a target, print as JSON
-python3 -m gen <config.toml>                              # emit code for a target (not yet implemented)
+python3 -m gen <config.toml>                              # emit code for the target the config describes
 ```
 
 `--resolve` prints the *collapsed* view of complex types (attribute groups flattened, model-group

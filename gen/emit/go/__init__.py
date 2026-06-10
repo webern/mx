@@ -27,18 +27,49 @@ from gen.plates.model import Plates
 # landing on one would silently overwrite it in the manifest.
 _RESERVED_STEMS = ("runtime", "document")
 
+# Type identifiers this backend declares itself (document.go).
+_RESERVED_IDENTS = ("Document", "ExtraAttr")
 
-def render(plates: Plates) -> dict[str, str]:
-    files: dict[str, str] = {
-        "runtime.go": runtime_file(plates),
-        "document.go": document_file(plates),
-    }
+
+def _guard_identifiers(plates: Plates) -> None:
+    """The plates' collision gate certifies projected identifiers; this
+    backend also COMPOSES a few (the per-type Child struct, the Children
+    field, its support types). A schema name landing on one of those must
+    fail loud here, not as a confusing compile error in generated code."""
+    from gen.plates.model import element_members
+
+    type_idents = {p.ident for p in list(plates.value_types) + list(plates.complex_types)}
     for plate in list(plates.value_types) + list(plates.complex_types):
         if plate.file in _RESERVED_STEMS:
             raise ValueError(
                 f"type '{plate.name.wire}' projects to the reserved file stem "
                 f"'{plate.file}'; rename it in config.toml"
             )
+        if plate.ident in _RESERVED_IDENTS:
+            raise ValueError(
+                f"type '{plate.name.wire}' projects to '{plate.ident}', which this "
+                f"backend reserves; rename it in config.toml"
+            )
+    for plate in plates.complex_types:
+        elements = element_members(plate.members)
+        if elements and f"{plate.ident}Child" in type_idents:
+            raise ValueError(
+                f"type '{plate.ident}Child' collides with '{plate.name.wire}'s "
+                f"child struct; rename one in config.toml"
+            )
+        if elements and any(m.ident == "Children" for m in plate.members):
+            raise ValueError(
+                f"'{plate.name.wire}' has a member projecting to 'Children', "
+                f"which this backend reserves; rename it in config.toml"
+            )
+
+
+def render(plates: Plates) -> dict[str, str]:
+    _guard_identifiers(plates)
+    files: dict[str, str] = {
+        "runtime.go": runtime_file(plates),
+        "document.go": document_file(plates),
+    }
     for plate in plates.value_types:
         files[plate.file + ".go"] = value_file(plates, plate)
     for plate in plates.complex_types:

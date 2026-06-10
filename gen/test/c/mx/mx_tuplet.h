@@ -32,7 +32,9 @@
  */
 /* One child element of MxTuplet: exactly one field is non-NULL,
    and that pointer says which element this is. Document order is
-   the array order on the owning struct. */
+   the array order on the owning struct. Zero or multiple fields
+   set is undefined: serialization writes the first non-NULL field
+   in schema order and nothing when all are NULL. */
 typedef struct {
     MxTupletPortion *tuplet_actual;
     MxTupletPortion *tuplet_normal;

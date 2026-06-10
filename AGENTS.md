@@ -26,7 +26,7 @@ mx/
     mxtest/file/        <- PathRoot.h (CMake-generated, gitignored)
     cpul/               <- vendored Catch2 test runner
   gen/                  <- code generator system (see gen/README.md)
-    __main__.py         <- CLI: analyze | ir | <config.toml>
+    __main__.py         <- CLI: analyze | ir | plates | <config.toml>
     README.md           <- architecture, IR glossary, XSD analysis
     xsd/                <- XSD parser + structural analysis
     ir/                 <- resolved intermediate representation (IR)
@@ -36,11 +36,12 @@ mx/
       go.mod, go.sum    <- Go module (etree dependency, vendored)
       vendor/           <- vendored Go deps
       corert/           <- test package (discover, fixer, normalize, roundtrip, test)
-      stub/             <- placeholder parser stubs (always return error)
+      mx/               <- the GENERATED Go model (committed; do not edit)
     test/c/             <- C corert test target
       config.toml       <- C target configuration
       CMakeLists.txt    <- CMake project using libxml2
-      src/              <- C source (main, discover, fixer, normalize, compare, roundtrip, stub)
+      src/              <- C source (main, discover, fixer, normalize, compare, roundtrip)
+      mx/               <- the GENERATED C model (committed; do not edit)
 ```
 
 ## Build system
@@ -85,9 +86,11 @@ baseline.
 
 ### Current state
 
-All three test targets (C++, Go, C) discover ~829 files and produce 100% failures because the
-generated parser stubs always return "not implemented". This is the expected state until the
-generator emits code.
+The Go and C suites are GREEN: 776 files pass, 0 fail, and 52 skip (they declare MusicXML 4.0;
+those targets generate from the 3.1 schema, and while MusicXML is backward compatible, a newer
+document may use types an older model cannot represent -- the harnesses gate on the root's
+declared version). The C++ target still has no generated `mx/core`, so corert C++ does not
+compile yet; that is the remaining expected gap.
 
 ### Data directory conventions
 
@@ -114,8 +117,20 @@ Applied to both expected and actual documents before comparison:
 1. Set XML declaration: `<?xml version="1.0" encoding="UTF-8" standalone="no"?>`.
 2. Set DOCTYPE based on root element name (`score-timewise` vs `score-partwise`).
 3. Set root `version` attribute to `"3.0"`.
-4. Strip trailing zeros from decimal fields (the list lives in `DecimalFields.h`).
-5. Sort attributes alphabetically (must be last).
+4. Strip whitespace-only text nodes from every element (pretty-printing indentation is not
+   content; MusicXML has no mixed content, and the rule is applied to both sides, so it stays
+   symmetric).
+5. Strip trailing zeros from decimal fields (the list lives in `DecimalFields.h`).
+6. Sort attributes alphabetically by QUALIFIED name (`xlink:href`, not `href`; must be last).
+
+Comparison details that took debugging to get right (the C++ harness will need the same when its
+generated core lands): compare each element's DIRECT text only, never the subtree concatenation
+(a numerically-equivalent leaf reformat would otherwise fail at every ancestor); compare
+attributes by qualified name with entity-resolved values (a parsed `xlink:href` is (ns, href)
+while a serialized one may be the literal name); the Go loader transcodes UTF-16 and ISO-8859-1
+to UTF-8 (libxml2 and pugixml auto-detect these; Go's encoding/xml does not). Documents whose
+root declares a version newer than the target's generated `SupportedMusicXMLVersion` /
+`MX_SUPPORTED_MUSICXML_VERSION` constant are skipped, not failed.
 
 ### Numeric equivalence
 
@@ -126,8 +141,8 @@ their values instead of their string representations. Float comparison uses epsi
 
 The generator (`gen/`) is a Python program structured as a pipeline: parse the MusicXML XSD into a
 model (`gen/xsd/`), lower that into a resolved intermediate representation (`gen/ir/`), project the
-IR onto a target as the Plates (`gen/plates/`, designed but not yet implemented), then emit code
-from the plates via per-language templates. The IR data model preserves the schema's named structure
+IR onto a target as the Plates (`gen/plates/`), then emit code from the plates via per-language
+backends (`gen/emit/`). The IR data model preserves the schema's named structure
 (model groups, attribute groups, inheritance edges); `gen/ir/resolve.py` collapses it on demand into
 the flattened view an emitter consumes (attribute groups expanded, group refs spliced into content),
 so that splicing-and-deduping reasoning lives once rather than once per language. See `gen/README.md`
@@ -164,10 +179,10 @@ the only place the IR depends on an input beyond the XSD; it is opt-in per targe
 stays a pure function of the schema.
 
 **Status.** The parse, IR, analysis, Plates, and emit stages exist (`python3 -m gen plates
---config C [--check]` dumps or gates the projection; `python3 -m gen <config.toml>` emits).
-Backends are landing bottom-up: the Go backend renders the four value shapes (the leaf types)
-into `gen/test/go/mx/`; complex types, the document entry points, and the C backend are next.
-Generated output is committed.
+--config C [--check]` dumps or gates the projection; `python3 -m gen <config.toml>` emits). The
+Go and C backends are complete -- all value and complex shapes plus the document entry points --
+and both corert suites are green. Generated output is committed (`gen/test/go/mx/`,
+`gen/test/c/mx/`). The C++ backend is not yet implemented.
 
 ## Language targets
 
@@ -180,14 +195,15 @@ generated code builds on.
 ### Go (test target, `gen/test/go/`)
 
 MusicXML 3.1 *without* the sounds companion. Uses `github.com/beevik/etree` (vendored) for DOM-style
-XML. The generated code will land in `gen/test/go/mx/`. Test runner uses Go's `testing` package with
-subtests.
+XML. The generated code lives in `gen/test/go/mx/` (committed). Test runner uses Go's `testing`
+package with subtests; documents declaring a newer MusicXML than 3.1 are skipped.
 
 ### C (test target, `gen/test/c/`)
 
 MusicXML 3.1 *with* the sounds companion -- same schema as Go, so the two outputs differ only by the
-fold. Uses libxml2 (apt package in Docker). The generated code will land in `gen/test/c/mx/`. Test
-runner is a simple `main()` that prints pass/fail per file and a summary.
+fold. Uses libxml2 (apt package in Docker). The generated code lives in `gen/test/c/mx/`
+(committed), built as the `mx-c` static library plus a `values-smoke` test binary. Test runner is a
+simple `main()` that prints pass/fail/skip per file and a summary.
 
 ## Key files to understand
 

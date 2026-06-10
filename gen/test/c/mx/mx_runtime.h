@@ -5,6 +5,11 @@
 
 #include <stdbool.h>
 
+/* The MusicXML version of the schema this model was generated from.
+   Documents declaring a newer version may use types this model cannot
+   represent; harnesses gate on it. */
+#define MX_SUPPORTED_MUSICXML_VERSION "3.1"
+
 /* Shared parse/format helpers for the generated MusicXML types. Lenient
    parses never fail: unparseable input becomes 0 (range clamping is the
    typed wrappers' job). Formatting returns malloc'd strings the caller

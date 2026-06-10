@@ -12,26 +12,24 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* The MusicXML version the generated model supports (the schema pinned in
-   this target's config.toml). Documents declaring a NEWER version may use
-   elements the model has no types for; MusicXML is backward compatible, so
-   older documents are fine. */
-#define MAX_SUPPORTED_MAJOR 3
-#define MAX_SUPPORTED_MINOR 1
-
-/* Reports whether the root's version attribute declares a version newer
-   than the supported one. An absent attribute means MusicXML 1.0. */
+/* The MusicXML version the generated model supports comes from the model
+   itself (MX_SUPPORTED_MUSICXML_VERSION in mx_runtime.h, emitted from the
+   schema the config pins), so retargeting the schema cannot leave this gate
+   stale. Documents declaring a NEWER version may use elements the model has
+   no types for; MusicXML is backward compatible, so older documents are
+   fine. An absent version attribute means MusicXML 1.0. */
 static int declared_version_exceeds(xmlDocPtr doc) {
     xmlNodePtr root = xmlDocGetRootElement(doc);
     if (!root)
         return 0;
+    int max_major = 0, max_minor = 0;
+    sscanf(MX_SUPPORTED_MUSICXML_VERSION, "%d.%d", &max_major, &max_minor);
     xmlChar *version = xmlGetProp(root, (const xmlChar *)"version");
     int major = 1, minor = 0;
     if (version && version[0])
         sscanf((const char *)version, "%d.%d", &major, &minor);
     xmlFree(version);
-    return major > MAX_SUPPORTED_MAJOR ||
-           (major == MAX_SUPPORTED_MAJOR && minor > MAX_SUPPORTED_MINOR);
+    return major > max_major || (major == max_major && minor > max_minor);
 }
 
 RoundtripResult run_core_roundtrip(const char *abs_input_path) {
@@ -46,10 +44,9 @@ RoundtripResult run_core_roundtrip(const char *abs_input_path) {
 
     if (declared_version_exceeds(input_doc)) {
         snprintf(r.message, sizeof(r.message),
-                 "declares MusicXML > %d.%d; this target generates from the "
-                 "%d.%d schema",
-                 MAX_SUPPORTED_MAJOR, MAX_SUPPORTED_MINOR,
-                 MAX_SUPPORTED_MAJOR, MAX_SUPPORTED_MINOR);
+                 "declares MusicXML > %s; this target generates from the "
+                 "%s schema",
+                 MX_SUPPORTED_MUSICXML_VERSION, MX_SUPPORTED_MUSICXML_VERSION);
         r.skipped = 1;
         xmlFreeDoc(input_doc);
         return r;

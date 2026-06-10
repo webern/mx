@@ -13,7 +13,9 @@
  */
 /* One child element of MxMeasureLayout: exactly one field is non-NULL,
    and that pointer says which element this is. Document order is
-   the array order on the owning struct. */
+   the array order on the owning struct. Zero or multiple fields
+   set is undefined: serialization writes the first non-NULL field
+   in schema order and nothing when all are NULL. */
 typedef struct {
     MxTenths *measure_distance;
 } MxMeasureLayoutChild;

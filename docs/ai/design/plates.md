@@ -477,7 +477,7 @@ re-derives the shape. The eight shapes and their default strategies:
 | value: string       | `string-wrapper`               | wrapper over the target string type, optional pattern   |
 | value: union        | `tagged-variant`               | a small tagged variant over the member types            |
 | complex: value      | `value-class`                  | class with a `value` field (typed by `value_type`) + attrs |
-| complex: composite  | `composite-class`              | class, one member per child element + attrs, order kept |
+| complex: composite  | `composite-class`              | class with attrs + ordered children (see section 11, round 3) |
 | complex: empty      | `flag` or `attrs-class`        | bool if `presence_only`, else an attributes-only class  |
 | complex: derived    | `inherit` or `flatten`         | base-class inheritance, or a flattened copy (8.4)       |
 
@@ -543,8 +543,10 @@ Both are exposed, because emitters need different views:
 - `ComplexPlate.content` is the resolved sequence/choice tree (from `Resolver.content`, groups
   spliced), for a target that cares about order and choice structure (a schema emitter).
 - `ComplexPlate.members` is the flat, deduped, cardinality-tagged member list (attributes from
-  `Resolver.attributes`/`all_attributes` + elements from `Resolver.elements`), for a code target
-  that emits one field per member.
+  `Resolver.attributes`/`all_attributes` + elements from `Resolver.flat_elements`), for a code
+  target's field list. Note that "one field per child element member" turned out to be
+  insufficient for round-trip fidelity -- see the ordered-children decision in section 11,
+  round 3: code targets emit attributes as fields and child elements as ONE ordered collection.
 
 ### 8.8 File / layout partitioning (optional)
 
@@ -736,3 +738,42 @@ Revised after the second review round (the emit stage and its first two backends
   comments mention clamping only when clamp steps exist.
 - **An open string union member must be last** (it matches anything); both backends fail loud if
   a schema ever orders one earlier rather than silently emitting unreachable members.
+
+Revised after the third review round (the complex-type templates; both corert suites green):
+
+- **Ordered children, not one-field-per-member.** This document's original composite sketch (a
+  class with one member per child element, section 8.1/8.7) cannot round-trip MusicXML: a
+  measure's music-data interleaves note/backup/direction in document order, and metronome's
+  beat-unit legally appears twice in one instance -- per-member fields lose the interleaving.
+  The Go and C backends therefore emit attributes as presence-tracked fields (a pointer in Go;
+  `bool has_x` + value in C -- required attributes included, because the corert contract is
+  "write back exactly what was parsed" and corpus files do omit required attributes) and child
+  elements as ONE ordered collection of per-type Child structs whose typed pointers discriminate
+  by non-nil/non-NULL. No kind discriminator: harmony has a child element literally named `kind`,
+  so any synthetic field can collide in those languages. **The C++ backend should not copy this
+  encoding**: with real sum types the collision argument evaporates
+  (`std::vector<std::variant<...>>` or generated choice classes give document order and
+  exactly-one by construction), and a hybrid -- plain fields for pure-sequence composites,
+  ordered variants only for choice-bearing content -- is still generate-by-shape, derivable from
+  `content`.
+- **The generated packages are order-faithful typed DOMs, not validating bindings.** Parsing is
+  strict about NAMES (an unknown attribute or element is an error; the version gate keeps newer
+  documents out, so an unknown name is a generator gap, not data) and lenient about STRUCTURE and
+  VALUES (`pitch` accepts its children in any order or multiplicity; values degrade per the clamp
+  policy). `Member.cardinality` and `ComplexPlate.content` are therefore unread by these two
+  backends -- they stay on the plates for the C++ backend and the JSON Schema forcing function,
+  which want the structural facts.
+- **Version gating is generated, not hand-kept.** `Plates.schema_version` (parsed from the source
+  stem) is emitted into each runtime (`SupportedMusicXMLVersion`,
+  `MX_SUPPORTED_MUSICXML_VERSION`) and the corert harnesses read it, so retargeting a schema
+  cannot leave a stale gate.
+- **Shape queries live beside the data.** `attribute_members`/`element_members`/`value_member`,
+  `ComplexPlate.members_view()` (the strategy-resolved member list), and
+  `Plates.children_owner()` (the base-chain plate whose child struct holds an inheriting type's
+  children) moved out of the templates into `gen/plates/model.py`, so a third backend consumes
+  decisions instead of copying them.
+- **Backend-composed identifiers are guarded.** A few names are still composed in templates (the
+  per-type `Child` struct, the children/presence fields, the document support types). Each
+  backend fails loud at render time if a projected identifier lands on one, so the collision
+  story stays airtight even where the gate cannot see; serializing a child with zero or multiple
+  fields set is documented as undefined (first non-nil wins; all-nil writes nothing).

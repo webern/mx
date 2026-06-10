@@ -159,7 +159,17 @@ def runtime_stem(plates: Plates) -> str:
 
 
 def runtime_header(plates: Plates, stem: str) -> str:
-    return header_file(plates, stem, _substitute(_HEADER_BODY, plates), ["<stdbool.h>"])
+    prefix = plates.target.prefix.upper() + "_" if plates.target.prefix else ""
+    version = [
+        "/* The MusicXML version of the schema this model was generated from.",
+        "   Documents declaring a newer version may use types this model cannot",
+        "   represent; harnesses gate on it. */",
+        f'#define {prefix}SUPPORTED_MUSICXML_VERSION "{plates.schema_version}"',
+        "",
+    ]
+    return header_file(
+        plates, stem, version + _substitute(_HEADER_BODY, plates), ["<stdbool.h>"]
+    )
 
 
 def runtime_impl(plates: Plates, stem: str) -> str:

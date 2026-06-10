@@ -8,6 +8,11 @@ import (
 	"strings"
 )
 
+// SupportedMusicXMLVersion is the MusicXML version of the schema this
+// package was generated from. Documents declaring a newer version may use
+// types this model cannot represent; harnesses gate on it.
+const SupportedMusicXMLVersion = "3.1"
+
 // tryParseDecimal parses s strictly as a decimal number.
 func tryParseDecimal(s string) (float64, bool) {
 	v, err := strconv.ParseFloat(strings.TrimSpace(s), 64)

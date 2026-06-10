@@ -40,7 +40,9 @@ type Clef struct {
 // ClefChild is one child element of Clef: exactly one field
 // is non-nil, and that pointer says which element this is. (No kind
 // discriminator: schema element names like harmony's <kind> would
-// collide with a synthetic field.)
+// collide with a synthetic field.) Constructing a child with zero or
+// multiple fields set is undefined: serialization writes the first
+// non-nil field in schema order and nothing when all are nil.
 type ClefChild struct {
 	Sign             *ClefSign
 	Line             *StaffLine

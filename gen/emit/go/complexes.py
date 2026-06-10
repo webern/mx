@@ -29,7 +29,14 @@ facts, chosen for round-trip fidelity):
 from __future__ import annotations
 
 from gen.emit.go.common import doc_comment, file_frame, go_string
-from gen.plates.model import ComplexPlate, Member, Plates
+from gen.plates.model import (
+    ComplexPlate,
+    Member,
+    Plates,
+    attribute_members as _attr_members,
+    element_members as _element_members,
+    value_member as _value_member,
+)
 
 # IR primitive -> (Go type, parse expr template, to-string expr template).
 _PRIM = {
@@ -77,18 +84,6 @@ def complex_file(plates: Plates, plate: ComplexPlate) -> str:
 # --------------------------------------------------------------------------- #
 
 
-def _attr_members(members: list[Member]) -> list[Member]:
-    return [m for m in members if m.kind == "attribute"]
-
-
-def _element_members(members: list[Member]) -> list[Member]:
-    return [m for m in members if m.kind == "element"]
-
-
-def _value_member(members: list[Member]) -> Member | None:
-    return next((m for m in members if m.kind == "value"), None)
-
-
 def _struct_lines(plates: Plates, plate: ComplexPlate, members: list[Member],
                   embed: str | None, children_of: str | None) -> list[str]:
     wrap = plates.target.doc_style.wrap
@@ -114,7 +109,9 @@ def _child_struct_lines(plates: Plates, plate: ComplexPlate) -> list[str]:
         f"// {ident}Child is one child element of {ident}: exactly one field",
         "// is non-nil, and that pointer says which element this is. (No kind",
         "// discriminator: schema element names like harmony's <kind> would",
-        "// collide with a synthetic field.)",
+        "// collide with a synthetic field.) Constructing a child with zero or",
+        "// multiple fields set is undefined: serialization writes the first",
+        "// non-nil field in schema order and nothing when all are nil.",
         f"type {ident}Child struct {{",
     ]
     for m in elements:
@@ -265,21 +262,10 @@ def _class_body(plates: Plates, plate: ComplexPlate) -> list[str]:
 # --------------------------------------------------------------------------- #
 
 
-def _children_owner(plates: Plates, plate: ComplexPlate) -> ComplexPlate | None:
-    """The base-chain plate whose Child struct holds this type's children:
-    the nearest ancestor (or self) with element members."""
-    cur = plate
-    while cur is not None:
-        if _element_members(cur.members):
-            return cur
-        cur = plates.plate(cur.base.wire) if cur.base is not None else None
-    return None
-
-
 def _inherit_body(plates: Plates, plate: ComplexPlate) -> list[str]:
     ident = plate.ident
     members = plate.all_members or plate.members
-    owner = _children_owner(plates, plate)
+    owner = plates.children_owner(plate)
 
     lines = _struct_lines(
         plates, plate, plate.members,  # own attrs only: the base is embedded
