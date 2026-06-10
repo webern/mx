@@ -73,6 +73,7 @@ class TargetInfo:
     doc_style: DocStyle
     reserved: list[str]  # language defaults + [reserved] words, sorted
     partition: str  # "per-type" | "single"
+    file_prefix: str = ""  # [layout] file-prefix; backends name support files with it
 
 
 # --------------------------------------------------------------------------- #

@@ -397,6 +397,13 @@ class RealTargets(unittest.TestCase):
             for spec in plates.files:
                 self.assertNotIn(spec.file, spec.includes)
 
+    def test_primitive_refs_never_become_includes(self):
+        # instrument-sound (C target, sounds folded) is sound-id | string;
+        # the open `string` member is a PRIMITIVE, but a complex type named
+        # `string` also exists. The include graph must not conflate them.
+        spec = next(f for f in self.c.files if f.types == ["instrument-sound"])
+        self.assertEqual(spec.includes, ["mx_sound_id"])
+
     def test_derived_plates_expose_both_views(self):
         derived = [p for p in self.c.complex_types if p.shape == "derived"]
         self.assertTrue(derived)

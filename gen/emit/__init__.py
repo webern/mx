@@ -29,6 +29,7 @@ from gen.plates.model import Plates
 # projected (`gen plates`) without every backend being importable.
 BACKENDS: dict[str, str] = {
     "go": "gen.emit.go",
+    "c": "gen.emit.c",
 }
 
 

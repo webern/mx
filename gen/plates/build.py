@@ -126,6 +126,7 @@ class _Builder:
             doc_style=doc_style,
             reserved=sorted(self.reserved),
             partition=self.cfg.layout.partition,
+            file_prefix=self.cfg.layout.file_prefix,
         )
 
     # ----- names and references ---------------------------------------------- #
@@ -386,14 +387,25 @@ class _Builder:
 
     def _type_deps(self, plate) -> set[str]:
         """Wire names of the types a plate's emitted code references: member
-        and value types, union members, and the base edge. Primitives are not
-        plates and are excluded by the caller's stem lookup."""
+        and value types, union members, and the base edge. Primitive refs are
+        excluded by CATEGORY, not by stem lookup: a primitive's name can
+        coincide with a type's wire name (the `string` primitive vs the
+        `string` complex type), and matching by name would fabricate a
+        dependency edge."""
         deps: set[str] = set()
         if isinstance(plate, UnionPlate):
-            deps.update(m.ref.wire for m in plate.members if m.ref is not None)
+            deps.update(
+                m.ref.wire
+                for m in plate.members
+                if m.ref is not None and m.ref.category != "primitive"
+            )
         if isinstance(plate, ComplexPlate):
             for member_list in (plate.members, plate.all_members or []):
-                deps.update(m.type_ref.wire for m in member_list)
+                deps.update(
+                    m.type_ref.wire
+                    for m in member_list
+                    if m.type_ref.category != "primitive"
+                )
             if plate.base is not None:
                 deps.add(plate.base.wire)
         return deps
