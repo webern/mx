@@ -16,6 +16,7 @@ mx/
   Dockerfile            <- mx-sdk toolchain image (Ubuntu 24.04, GCC 14, Go, libxml2, Python 3)
   CMakeLists.txt        <- C++ project: ezxml library + corert test harness
   data/                 <- MusicXML test corpus (~1,347 files, see data/README.md)
+  docs/ai/design/       <- design docs (plates.md: the Plates, the template-facing layer)
   src/private/          <- C++ source
     mx/ezxml/           <- vendored pugixml-backed XML layer
     mx/core/            <- generated C++ typed model
@@ -123,13 +124,19 @@ their values instead of their string representations. Float comparison uses epsi
 
 ## Generator architecture
 
-The generator (`gen/`) is a Python program structured as a three-stage pipeline: parse the MusicXML
-XSD into a model (`gen/xsd/`), lower that into a resolved intermediate representation (`gen/ir/`),
-then emit target code from the IR. The IR data model preserves the schema's named structure (model
-groups, attribute groups, inheritance edges); `gen/ir/resolve.py` collapses it on demand into the
-flattened view an emitter consumes (attribute groups expanded, group refs spliced into content), so
-that splicing-and-deduping reasoning lives once rather than once per language. See `gen/README.md`
+The generator (`gen/`) is a Python program structured as a pipeline: parse the MusicXML XSD into a
+model (`gen/xsd/`), lower that into a resolved intermediate representation (`gen/ir/`), project the
+IR onto a target as the Plates (`gen/plates/`, designed but not yet implemented), then emit code
+from the plates via per-language templates. The IR data model preserves the schema's named structure
+(model groups, attribute groups, inheritance edges); `gen/ir/resolve.py` collapses it on demand into
+the flattened view an emitter consumes (attribute groups expanded, group refs spliced into content),
+so that splicing-and-deduping reasoning lives once rather than once per language. See `gen/README.md`
 for the architecture, IR glossary, the resolution layer, and a structural analysis of the schema.
+
+Vocabulary: a **plate** is the per-type metadata object handed to a template -- one per emitted
+type, carrying the target's identifier casings, type mappings, emit strategy, and file assignment.
+The **Plates** is the full collection projected for one target; it is where config.toml meets the
+IR, so templates stay dumb renderers. Specified in `docs/ai/design/plates.md`.
 
 Commands:
 - `python3 -m gen analyze [xsd]` - print a structural analysis of the XSD.
@@ -153,7 +160,8 @@ unioned with an open string (element `instrument-sound` retyped from `string` to
 the only place the IR depends on an input beyond the XSD; it is opt-in per target, so the base IR
 stays a pure function of the schema.
 
-**Status.** The parse, IR, and analysis stages exist. The emit stage and its templates are not yet
+**Status.** The parse, IR, and analysis stages exist. The Plates stage is designed
+(`docs/ai/design/plates.md`) but not yet implemented; the emit stage and its templates are not yet
 implemented, so `python3 -m gen <config.toml>` still exits with an error.
 
 ## Language targets
