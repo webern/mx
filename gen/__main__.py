@@ -15,6 +15,9 @@ Usage:
                                             --check validates renames and detects
                                             identifier collisions, exiting non-zero on
                                             any failure (a CI gate, like analyze)
+  python3 -m gen render --config C --type N
+                                            render one type through the target's
+                                            templates to stdout (template debugging)
 
 Reads a MusicXML 4.0 XSD specification and generates typed document
 serialization/deserialization code for the target described in the given
@@ -174,20 +177,91 @@ def _plates(args: list[str]) -> int:
 
 def _emit(config_path: str) -> int:
     from gen.config import ConfigError
-    from gen.emit import EmitError, emit
     from gen.plates import PlatesError, build_for_config
+    from gen.press.engine import PressError
+    from gen.press.render import RenderError, render_target
 
     try:
         plates, cfg = build_for_config(config_path)
-        result = emit(plates, cfg)
+        if cfg.render is not None:
+            result = render_target(plates, cfg)
+        else:
+            # Transitional: targets not yet ported to templates use the
+            # legacy per-language backends. Dies with the last port.
+            from gen.emit import emit
+
+            result = emit(plates, cfg)
     except PlatesError as e:
         for line in e.errors:
             print(f"error: {line}", file=sys.stderr)
         return 1
-    except (EmitError, ConfigError, FileNotFoundError, RuntimeError, ValueError) as e:
+    except (
+        ConfigError,
+        FileNotFoundError,
+        PressError,
+        RenderError,
+        RuntimeError,
+        ValueError,
+    ) as e:
         print(f"error: {e}", file=sys.stderr)
         return 1
     print(result.summary())
+    return 0
+
+
+def _render_debug(args: list[str]) -> int:
+    from gen.plates import PlatesError, build_for_config
+    from gen.press.engine import PressError
+    from gen.press.render import RenderError, render_files
+
+    config_path = None
+    type_name = None
+    i = 0
+    while i < len(args):
+        if args[i] == "--config" and i + 1 < len(args):
+            config_path = args[i + 1]
+            i += 2
+        elif args[i] == "--type" and i + 1 < len(args):
+            type_name = args[i + 1]
+            i += 2
+        else:
+            print(f"error: unexpected argument: {args[i]}", file=sys.stderr)
+            return 2
+    if config_path is None or type_name is None:
+        print("error: render requires --config <config.toml> --type <name>",
+              file=sys.stderr)
+        return 2
+    try:
+        plates, cfg = build_for_config(config_path)
+        if cfg.render is None:
+            print(f"error: config has no [render] manifest: {cfg.path}",
+                  file=sys.stderr)
+            return 1
+        if not plates.has_plate(type_name):
+            print(f"error: type not found in plates: {type_name}", file=sys.stderr)
+            return 1
+        plate = plates.plate(type_name)
+        files = render_files(plates, cfg)
+        from gen.press.render import _expand
+
+        shown = 0
+        for entry in cfg.render.types:
+            if plate.strategy in entry.strategies:
+                path = _expand(entry.output, plate)
+                print(f"==== {path} (from {entry.template})")
+                print(files[path], end="")
+                shown += 1
+        if not shown:
+            print(f"error: no manifest entry renders strategy "
+                  f"'{plate.strategy}'", file=sys.stderr)
+            return 1
+    except PlatesError as e:
+        for line in e.errors:
+            print(f"error: {line}", file=sys.stderr)
+        return 1
+    except (PressError, RenderError, FileNotFoundError, ValueError) as e:
+        print(f"error: {e}", file=sys.stderr)
+        return 1
     return 0
 
 
@@ -201,6 +275,8 @@ def main(argv: list[str]) -> int:
         return _ir(argv[1:])
     if argv[0] == "plates":
         return _plates(argv[1:])
+    if argv[0] == "render":
+        return _render_debug(argv[1:])
     if argv[0].endswith(".toml"):
         return _emit(argv[0])
     print(f"error: unknown command: {argv[0]}", file=sys.stderr)

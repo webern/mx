@@ -99,6 +99,28 @@ class LayoutSection:
 
 
 @dataclass
+class RenderEntry:
+    """One manifest row: render `template` for every plate whose strategy is
+    in `strategies` (a once-per-target row has none), writing to the `output`
+    pattern (casing placeholders like {snake} come from the plate's name)."""
+
+    template: str
+    output: str
+    strategies: tuple[str, ...] = ()
+
+
+@dataclass
+class RenderSection:
+    """The render manifest: which templates produce which files. Its presence
+    selects the press pipeline."""
+
+    dir: Path  # the target's templates directory, resolved
+    format: tuple[str, ...] = ()  # optional post-render command; {dir} expands
+    types: list[RenderEntry] = field(default_factory=list)
+    once: list[RenderEntry] = field(default_factory=list)
+
+
+@dataclass
 class DocsSection:
     # Width of the wrapped doc TEXT, excluding comment syntax (templates add
     # their own prefixes). 97 + a 3-character prefix is the 100-column house
@@ -120,6 +142,7 @@ class Config:
     layout: LayoutSection = field(default_factory=LayoutSection)
     docs: DocsSection = field(default_factory=DocsSection)
     renames: Renames = field(default_factory=Renames)
+    render: RenderSection | None = None  # presence selects the press pipeline
 
 
 def load(config_path) -> Config:
@@ -134,7 +157,7 @@ def load(config_path) -> Config:
     _check_keys(
         data,
         {"input", "output", "sounds", "target", "naming", "reserved", "types",
-         "layout", "docs", "rename", "vars"},
+         "layout", "docs", "rename", "vars", "render"},
         "top level",
     )
     _check_keys(data.get("input", {}), {"xsd"}, "input")
@@ -182,6 +205,7 @@ def load(config_path) -> Config:
         layout=_layout(data.get("layout", {})),
         docs=_docs(data.get("docs", {})),
         renames=_renames(data.get("rename", {})),
+        render=_render(data["render"], base) if "render" in data else None,
     )
 
 
@@ -291,6 +315,42 @@ def _layout(t: dict) -> LayoutSection:
         raise ConfigError(
             f"[layout] partition = {section.partition!r}: expected per-type, single, or grouped"
         )
+    return section
+
+
+def _render_entry(t: dict, where: str, once: bool) -> RenderEntry:
+    allowed = {"template", "output"} | (set() if once else {"strategies"})
+    _check_keys(t, allowed, where)
+    for key in ("template", "output"):
+        if not isinstance(t.get(key), str) or not t[key]:
+            raise ConfigError(f"[{where}] requires a non-empty '{key}' string")
+    strategies = ()
+    if not once:
+        strategies = tuple(_string_list(t.get("strategies", []), f"{where}.strategies"))
+        if not strategies:
+            raise ConfigError(f"[{where}] requires a non-empty 'strategies' list")
+    return RenderEntry(template=t["template"], output=t["output"], strategies=strategies)
+
+
+def _render(t: dict, base: Path) -> RenderSection:
+    _check_keys(t, {"dir", "format", "type", "once"}, "render")
+    if not isinstance(t.get("dir"), str) or not t["dir"]:
+        raise ConfigError("[render] requires a 'dir' (the templates directory)")
+    directory = (base / t["dir"]).resolve()
+    if not directory.is_dir():
+        raise FileNotFoundError(f"templates directory not found: {directory}")
+    section = RenderSection(
+        dir=directory,
+        format=tuple(_string_list(t["format"], "render.format")) if "format" in t else (),
+        types=[
+            _render_entry(e, "render.type", once=False) for e in t.get("type", [])
+        ],
+        once=[
+            _render_entry(e, "render.once", once=True) for e in t.get("once", [])
+        ],
+    )
+    if not section.types and not section.once:
+        raise ConfigError("[render] declares no template entries")
     return section
 
 
