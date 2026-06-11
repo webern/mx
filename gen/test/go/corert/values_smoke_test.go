@@ -87,6 +87,23 @@ func TestValueSmoke(t *testing.T) {
 	if got := mx.ParseColor("#GG0000").String(); got != "#GG0000" {
 		t.Errorf("lenient parse must keep the value verbatim, got %q", got)
 	}
+
+	// yyyy-mm-dd has bespoke handling (a `types` render-manifest row):
+	// storage stays the wire string, components parse as ints on demand.
+	date := mx.ParseYyyyMmDd("2011-08-08")
+	if date.Yyyy() != 2011 || date.Mm() != 8 || date.Dd() != 8 {
+		t.Errorf("date components: got %d-%d-%d, want 2011-8-8",
+			date.Yyyy(), date.Mm(), date.Dd())
+	}
+	if got := date.String(); got != "2011-08-08" {
+		t.Errorf("bespoke date must keep the wire spelling, got %q", got)
+	}
+	if bce := mx.ParseYyyyMmDd("-0500-01-02"); bce.Yyyy() != -500 || bce.Mm() != 1 || bce.Dd() != 2 {
+		t.Errorf("BCE date components: got %d, %d, %d", bce.Yyyy(), bce.Mm(), bce.Dd())
+	}
+	if junk := mx.ParseYyyyMmDd("not a date"); junk.Yyyy() != 0 || junk.Mm() != 0 || junk.Dd() != 0 {
+		t.Errorf("unparseable date components must be 0")
+	}
 }
 
 func second[T any](_ T, ok bool) bool { return ok }

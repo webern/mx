@@ -99,6 +99,15 @@ strategies = ["inherit"]
 template   = "inherit.go.tmpl"
 output     = "{snake}.go"
 
+# Bespoke handling: a `types` row claims specific types by wire name and
+# overrides the strategy rows for them. yyyy-mm-dd gets typed date-component
+# accessors (Yyyy/Mm/Dd -> int) the stock string template has no business
+# growing.
+[[render.type]]
+types    = ["yyyy-mm-dd"]
+template = "yyyy_mm_dd.go.tmpl"
+output   = "{snake}.go"
+
 [[render.once]]
 template = "runtime.go.tmpl"
 output   = "runtime.go"

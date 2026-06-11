@@ -57,6 +57,7 @@ def render_files(plates: Plates, config: Config) -> dict[str, str]:
 
     all_plates = list(plates.value_types) + list(plates.complex_types)
     _check_coverage(manifest.types, all_plates)
+    overridden = _check_type_rows(manifest.types, all_plates)
 
     # Expand every output path first: collisions are manifest bugs and must
     # be reported before any rendering, and once-templates receive the
@@ -64,7 +65,16 @@ def render_files(plates: Plates, config: Config) -> dict[str, str]:
     outputs: list[tuple[str, RenderEntry, object]] = []  # (path, entry, plate|None)
     for entry in manifest.types:
         for plate in all_plates:
-            if plate.strategy in entry.strategies:
+            if entry.types:
+                selected = plate.name.wire in entry.types
+            else:
+                # Type rows override: a bespoke type never falls through to
+                # its strategy's stock template.
+                selected = (
+                    plate.strategy in entry.strategies
+                    and plate.name.wire not in overridden
+                )
+            if selected:
                 outputs.append((_expand(entry.output, plate), entry, plate))
     for entry in manifest.once:
         outputs.append((entry.output, entry, None))
@@ -130,6 +140,22 @@ def _check_strategies(entries: list[RenderEntry]) -> None:
                 f"[render.type] {entry.template}: unknown strategies "
                 f"{sorted(unknown)} (known: {', '.join(sorted(_STRATEGIES))})"
             )
+
+
+def _check_type_rows(entries: list[RenderEntry], all_plates: list) -> set[str]:
+    """Validate the bespoke rows and return the wire names they claim. A
+    name no plate carries is a stale manifest entry and fails loud."""
+    known = {p.name.wire for p in all_plates}
+    claimed: set[str] = set()
+    for entry in entries:
+        unknown = set(entry.types) - known
+        if unknown:
+            raise RenderError(
+                f"[render.type] {entry.template}: 'types' names no plate: "
+                f"{sorted(unknown)}"
+            )
+        claimed.update(entry.types)
+    return claimed
 
 
 def _check_coverage(entries: list[RenderEntry], all_plates: list) -> None:

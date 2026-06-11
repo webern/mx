@@ -165,6 +165,71 @@ class ManifestRendering(unittest.TestCase):
         result = render_target(self.plates, config)
         self.assertEqual(len(result.written), 3)
 
+    def test_type_row_overrides_strategy_row(self):
+        # Bespoke handling: a `types` row claims a plate by wire name and the
+        # strategy rows no longer render it -- custom code for one type is a
+        # config-and-template change, never a generator change.
+        holder = _target_dir(
+            {
+                "enum.tmpl": _BANNER + "stock {{ident}}",
+                "complex.tmpl": _BANNER + "class {{ident}}",
+                "bespoke.tmpl": _BANNER + "bespoke {{ident}}",
+            }
+        )
+        self.addCleanup(holder.cleanup)
+        config = self._config(
+            holder,
+            types=[
+                RenderEntry("enum.tmpl", "{snake}.txt", ("enum-class",)),
+                RenderEntry("complex.tmpl", "{snake}.txt", ("composite-class",)),
+                RenderEntry("bespoke.tmpl", "{snake}.txt", types=("up-down",)),
+            ],
+        )
+        files = render_files(self.plates, config)
+        self.assertIn("bespoke UpDown", files["up_down.txt"])
+        self.assertNotIn("stock", files["up_down.txt"])
+        self.assertIn("class Note", files["note.txt"])
+
+    def test_config_row_requires_exactly_one_selector(self):
+        from gen import config as cfg
+
+        with self.assertRaises(cfg.ConfigError):
+            cfg._render_entry(
+                {"template": "x.tmpl", "output": "x.txt"}, "render.type", once=False
+            )
+        with self.assertRaises(cfg.ConfigError):
+            cfg._render_entry(
+                {
+                    "template": "x.tmpl",
+                    "output": "x.txt",
+                    "strategies": ["enum-class"],
+                    "types": ["color"],
+                },
+                "render.type",
+                once=False,
+            )
+
+    def test_type_row_unknown_wire_name_fails_loud(self):
+        holder = _target_dir(
+            {
+                "enum.tmpl": _BANNER,
+                "complex.tmpl": _BANNER,
+                "bespoke.tmpl": _BANNER,
+            }
+        )
+        self.addCleanup(holder.cleanup)
+        config = self._config(
+            holder,
+            types=[
+                RenderEntry("enum.tmpl", "{snake}.txt", ("enum-class",)),
+                RenderEntry("complex.tmpl", "{snake}.txt", ("composite-class",)),
+                RenderEntry("bespoke.tmpl", "{snake}.txt", types=("no-such-type",)),
+            ],
+        )
+        with self.assertRaises(RenderError) as caught:
+            render_files(self.plates, config)
+        self.assertIn("no-such-type", str(caught.exception))
+
     def test_unmatched_strategy_fails_loud(self):
         holder = _target_dir({"enum.tmpl": _BANNER})
         self.addCleanup(holder.cleanup)

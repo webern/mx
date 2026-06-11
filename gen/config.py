@@ -91,13 +91,19 @@ class ReservedSection:
 
 @dataclass
 class RenderEntry:
-    """One manifest row: render `template` for every plate whose strategy is
-    in `strategies` (a once-per-target row has none), writing to the `output`
-    pattern (casing placeholders like {snake} come from the plate's name)."""
+    """One manifest row: render `template` for every plate the row selects,
+    writing to the `output` pattern (casing placeholders like {snake} come
+    from the plate's name). A row selects either by `strategies` (the normal
+    shape-driven case) or by `types` -- exact wire names, for bespoke
+    handling of individual types. Type rows OVERRIDE strategy rows: a plate
+    named by any type row is rendered only by its type rows, so custom code
+    for one element or attribute is a config-and-template change, never a
+    generator change. A once-per-target row has neither."""
 
     template: str
     output: str
     strategies: tuple[str, ...] = ()
+    types: tuple[str, ...] = ()
 
 
 @dataclass
@@ -289,17 +295,23 @@ def _types(t: dict) -> dict[str, str]:
 
 
 def _render_entry(t: dict, where: str, once: bool) -> RenderEntry:
-    allowed = {"template", "output"} | (set() if once else {"strategies"})
+    allowed = {"template", "output"} | (set() if once else {"strategies", "types"})
     _check_keys(t, allowed, where)
     for key in ("template", "output"):
         if not isinstance(t.get(key), str) or not t[key]:
             raise ConfigError(f"[{where}] requires a non-empty '{key}' string")
-    strategies = ()
+    strategies: tuple[str, ...] = ()
+    types: tuple[str, ...] = ()
     if not once:
         strategies = tuple(_string_list(t.get("strategies", []), f"{where}.strategies"))
-        if not strategies:
-            raise ConfigError(f"[{where}] requires a non-empty 'strategies' list")
-    return RenderEntry(template=t["template"], output=t["output"], strategies=strategies)
+        types = tuple(_string_list(t.get("types", []), f"{where}.types"))
+        if bool(strategies) == bool(types):
+            raise ConfigError(
+                f"[{where}] requires exactly one of 'strategies' or 'types'"
+            )
+    return RenderEntry(
+        template=t["template"], output=t["output"], strategies=strategies, types=types
+    )
 
 
 def _render(t: dict, base: Path) -> RenderSection:
