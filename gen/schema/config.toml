@@ -1,0 +1,35 @@
+# JSON Schema generator target configuration.
+#
+# THE PROOF OF THE CARDINAL RULE: this target was added without touching a
+# single Python file. It is a config and one template -- the neutral target
+# the plates design used as its forcing function (plates.md section 9),
+# consuming only the neutral core: wire names, enum literals, resolved
+# structure, bounds, patterns, docs. No [types] map (primitives pass
+# through), no [reserved] words, no symbol prefix: the binding machinery is
+# inert here, exactly as designed.
+#
+# Representation notes: each complex type is modeled as an object over its
+# merged flat member view (attribute and child-element wire names as
+# properties; vector children as arrays). Choice exclusivity and sequence
+# order are not encoded -- the resolved content tree is on the plates when
+# a future revision of the template wants to model oneOf nesting, and
+# adding it is template work, not generator work.
+
+[input]
+xsd = "../../docs/musicxml-4.0-ed15c23.xsd"
+
+[output]
+dir = "out"
+
+[sounds]
+xml = "../../docs/sounds-4.0-ed15c23.xml"
+
+[naming]
+extends = "../naming.base.toml"  # schema-forced renames shared by all targets
+
+[render]
+dir = "templates"
+
+[[render.once]]
+template = "musicxml.schema.json.tmpl"
+output   = "musicxml.schema.json"

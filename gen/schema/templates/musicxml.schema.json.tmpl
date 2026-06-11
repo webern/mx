@@ -1,0 +1,68 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$comment": "{{generated_banner}}",
+    "title": "MusicXML {{schema_version}}",
+    "oneOf": [
+{{#roots}}
+        { "$ref": "#/$defs/{{wire}}" }{{^is_last}},{{/is_last}}
+{{/roots}}
+    ],
+    "$defs": {
+{{#value_types}}
+        {{name.wire_q}}: {
+{{#doc}}
+            "description": {{doc_q}},
+{{/doc}}
+{{#is_enum}}
+            "enum": [{{#variants}}{{wire_q}}{{^is_last}}, {{/is_last}}{{/variants}}]
+{{/is_enum}}
+{{#is_number}}
+            "type": "number"{{#bounds.min_inclusive}},
+            "minimum": {{bounds.min_inclusive}}{{/bounds.min_inclusive}}{{#bounds.max_inclusive}},
+            "maximum": {{bounds.max_inclusive}}{{/bounds.max_inclusive}}{{#bounds.min_exclusive}},
+            "exclusiveMinimum": {{bounds.min_exclusive}}{{/bounds.min_exclusive}}{{#bounds.max_exclusive}},
+            "exclusiveMaximum": {{bounds.max_exclusive}}{{/bounds.max_exclusive}}
+{{/is_number}}
+{{#is_string}}
+            "type": "string"{{#has_patterns}},
+            "pattern": {{#patterns}}{{#is_first}}{{value_q}}{{/is_first}}{{/patterns}}{{/has_patterns}}
+{{/is_string}}
+{{#is_union}}
+            "anyOf": [
+{{#cases}}
+{{#is_literal}}
+                { "enum": [{{wire_q}}] }{{^is_last}},{{/is_last}}
+{{/is_literal}}
+{{#ref}}
+{{#is_value}}
+                { "$ref": "#/$defs/{{wire}}" }{{/is_value}}{{#is_primitive_decimal}}
+                { "type": "number" }{{/is_primitive_decimal}}{{#is_primitive_integer}}
+                { "type": "integer" }{{/is_primitive_integer}}{{#is_primitive_string}}
+                { "type": "string" }{{/is_primitive_string}}{{/ref}}{{^is_literal}}{{^is_last}},{{/is_last}}{{/is_literal}}
+{{/cases}}
+            ]
+{{/is_union}}
+        },
+{{/value_types}}
+{{#complex_types}}
+        {{name.wire_q}}: {
+{{#doc}}
+            "description": {{doc_q}},
+{{/doc}}
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+{{#merged_attributes}}
+                {{name.wire_q}}: {{#type_ref.is_value}}{ "$ref": "#/$defs/{{type_ref.wire}}" }{{/type_ref.is_value}}{{#type_ref.is_primitive_decimal}}{ "type": "number" }{{/type_ref.is_primitive_decimal}}{{#type_ref.is_primitive_integer}}{ "type": "integer" }{{/type_ref.is_primitive_integer}}{{#type_ref.is_primitive_string}}{ "type": "string" }{{/type_ref.is_primitive_string}}{{^is_last}},{{/is_last}}{{#is_last}}{{#type.merged_value}},{{/type.merged_value}}{{^type.merged_value}}{{#type.has_merged_elements}},{{/type.has_merged_elements}}{{/type.merged_value}}{{/is_last}}
+{{/merged_attributes}}
+{{#merged_value}}
+                "$value": {{#type_ref.is_value}}{ "$ref": "#/$defs/{{type_ref.wire}}" }{{/type_ref.is_value}}{{#type_ref.is_primitive_decimal}}{ "type": "number" }{{/type_ref.is_primitive_decimal}}{{#type_ref.is_primitive_integer}}{ "type": "integer" }{{/type_ref.is_primitive_integer}}{{#type_ref.is_primitive_string}}{ "type": "string" }{{/type_ref.is_primitive_string}}{{#type.has_merged_elements}},{{/type.has_merged_elements}}
+{{/merged_value}}
+{{#merged_elements}}
+                {{name.wire_q}}: {{#is_vector}}{ "type": "array", "items": {{/is_vector}}{{#type_ref.is_primitive_decimal}}{ "type": "number" }{{/type_ref.is_primitive_decimal}}{{#type_ref.is_primitive_integer}}{ "type": "integer" }{{/type_ref.is_primitive_integer}}{{#type_ref.is_primitive_string}}{ "type": "string" }{{/type_ref.is_primitive_string}}{{^type_ref.is_primitive_decimal}}{{^type_ref.is_primitive_integer}}{{^type_ref.is_primitive_string}}{ "$ref": "#/$defs/{{type_ref.wire}}" }{{/type_ref.is_primitive_string}}{{/type_ref.is_primitive_integer}}{{/type_ref.is_primitive_decimal}}{{#is_vector}} }{{/is_vector}}{{^is_last}},{{/is_last}}
+{{/merged_elements}}
+            }
+        }{{^is_last}},{{/is_last}}
+{{/complex_types}}
+    }
+}

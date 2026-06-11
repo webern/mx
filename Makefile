@@ -45,7 +45,7 @@ FIND_CPP := find src \
 
 .DEFAULT_GOAL := help
 .PHONY: help sdk fmt check ezxml core-dev test-core-dev test-gen \
-        gen gen-cpp gen-go gen-c \
+        gen gen-cpp gen-go gen-c gen-schema \
         build-go build-c test-go test-c \
         clean clean-docker check-docker docker-volume
 
@@ -59,10 +59,11 @@ help:
 	@echo '  make test-gen       Run the generator (parser + IR) Python tests.'
 	@echo ''
 	@echo '  Generator (via mx-sdk):'
-	@echo '  make gen            Run the generator for all targets (cpp/go/c).'
-	@echo '  make gen-cpp        Run the generator for the C++ target.'
+	@echo '  make gen            Run the generator for all renderable targets (go/c/schema).'
+	@echo '  make gen-cpp        Run the generator for the C++ target (no templates yet).'
 	@echo '  make gen-go         Run the generator for the Go target.'
 	@echo '  make gen-c          Run the generator for the C target.'
+	@echo '  make gen-schema     Run the generator for the JSON Schema target.'
 	@echo ''
 	@echo '  Go test target (via mx-sdk):'
 	@echo '  make build-go       Build Go corert tests.'
@@ -127,7 +128,7 @@ check:
 	@$(FIND_CPP) | xargs -r clang-format --dry-run --Werror
 	@echo "fmt-check passed."
 
-gen: gen-cpp gen-go gen-c
+gen: gen-go gen-c gen-schema
 
 gen-cpp:
 	python3 -m gen gen/cpp/config.toml
@@ -137,6 +138,9 @@ gen-go:
 
 gen-c:
 	python3 -m gen gen/test/c/config.toml
+
+gen-schema:
+	python3 -m gen gen/schema/config.toml
 
 build-go:
 	cd gen/test/go && MX_REPO_ROOT=/workspace go test -c -o build/corert-test ./corert/
@@ -185,6 +189,9 @@ gen-go: $(DOCKER_STAMP) docker-volume
 
 gen-c: $(DOCKER_STAMP) docker-volume
 	$(DOCKER_RUN) make gen-c
+
+gen-schema: $(DOCKER_STAMP) docker-volume
+	$(DOCKER_RUN) make gen-schema
 
 build-go: $(DOCKER_STAMP) docker-volume
 	$(DOCKER_RUN) make build-go
