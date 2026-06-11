@@ -24,7 +24,6 @@ def run_checks(plates: Plates) -> list[str]:
     _check_members(plates, errors)
     _check_template_reserved(plates, errors)
     _check_union_member_order(plates, errors)
-    _check_file_stems(plates, errors)
     return errors
 
 
@@ -169,23 +168,3 @@ def _check_members(plates: Plates, errors: list[str]) -> None:
                     f"{sorted(set(wires))} all project to '{ident}'"
                 )
 
-
-def _check_file_stems(plates: Plates, errors: list[str]) -> None:
-    """File stems are compared case-insensitively: `Note` and `note` are
-    distinct identifiers but the same file on macOS/Windows filesystems."""
-    if not plates.files:
-        return
-    pairs = [(spec.file.lower(), spec.file) for spec in plates.files]
-    by_lower: dict[str, set[str]] = {}
-    for lower, stem in pairs:
-        by_lower.setdefault(lower, set()).add(stem)
-    seen: dict[str, list[str]] = {}
-    for spec in plates.files:
-        seen.setdefault(spec.file.lower(), []).extend(spec.types)
-    for lower, stems in by_lower.items():
-        types = seen[lower]
-        if len(types) > 1:
-            errors.append(
-                f"file stem collision (case-insensitive): types {sorted(types)} "
-                f"all land in '{sorted(stems)[0]}'"
-            )

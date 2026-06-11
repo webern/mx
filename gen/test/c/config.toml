@@ -21,9 +21,8 @@ dir = "mx"
 xml = "../../../docs/sounds-3.1-8bbe8e5.xml"
 
 [target]
-language    = "c"
-prefix      = "Mx"   # C has no namespaces; every type is prefixed
-inheritance = false  # and no inheritance; derived types flatten the base chain
+symbol-prefix = "Mx"  # C has no namespaces; every type is prefixed
+inheritance   = false # and no inheritance; derived types flatten the base chain
 # C constants share one global namespace, so enum/union constants compose the
 # prefix and type name (MX_NOTE_TYPE_VALUE_1024TH).
 variant-scope = "composed"
@@ -59,10 +58,6 @@ words = [
 # the Child/Kind type-name compositions. The collision gate enforces these.
 members = ["children", "children_count"]
 type-suffixes = ["Child", "Kind"]
-
-[layout]
-partition   = "per-type"
-file-prefix = "mx_"  # generated files: mx_<type>.h / mx_<type>.c
 
 # ---- the render manifest: which templates produce which files ----------- #
 # The presence of [render] selects the press pipeline; everything C-shaped

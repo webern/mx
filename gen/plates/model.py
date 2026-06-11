@@ -15,8 +15,8 @@ Each plate is internally partitioned into two field groups:
     resolved target types, strategy tags, file assignment).
 
 A code target reads both groups. A neutral target (e.g. a JSON Schema
-emitter) reads only the neutral core and configures `[layout] partition =
-"single"`, paying nothing for the binding it ignores.
+emitter) reads only the neutral core and renders once-per-target templates,
+paying nothing for the binding it ignores.
 
 The Plates are materialized (built once per target, dumpable via
 gen.ir.dump.to_jsonable) rather than computed on demand: collision detection
@@ -64,19 +64,14 @@ class TargetInfo:
     reference to any language. Anything language-flavored belongs in `vars`,
     which passes through to templates verbatim and is never interpreted."""
 
-    language: str  # transitional: selects a legacy backend; dies with them
-    namespace: str  # transitional prescribed key; becomes a var with the ports
-    prefix: str  # symbol prefix, prepended to type idents and composed constants
+    symbol_prefix: str  # prepended to type idents and composed constants
     type_convention: str
     field_convention: str
     variant_convention: str
-    file_convention: str
     inheritance: bool  # derived strategy: True -> inherit, False -> flatten
     variant_scope: str  # "bare" | "composed" (see Variant)
     doc_wrap: int  # width doc text is wrapped to (doc_lines), excluding comment syntax
-    reserved: list[str]  # the target's reserved words, sorted
-    partition: str  # "per-type" | "single"
-    file_prefix: str = ""  # [layout] file-prefix; backends name support files with it
+    reserved: list[str] = field(default_factory=list)  # the target's reserved words, sorted
     reserved_members: list[str] = field(default_factory=list)  # template-reserved member idents
     reserved_type_suffixes: list[str] = field(default_factory=list)  # template compositions
     vars: dict[str, str] = field(default_factory=dict)  # freeform, for templates
@@ -136,7 +131,6 @@ class EnumPlate:
     doc: str | None = None
     doc_lines: list[str] = field(default_factory=list)  # doc wrapped at doc_wrap
     deps: list[PlateRef] = field(default_factory=list)  # non-primitive types referenced
-    file: str | None = None
     kind: str = "enum"
     strategy: str = "enum-class"
 
@@ -153,7 +147,6 @@ class NumberPlate:
     doc: str | None = None
     doc_lines: list[str] = field(default_factory=list)
     deps: list[PlateRef] = field(default_factory=list)
-    file: str | None = None
     kind: str = "number"
     strategy: str = "numeric-wrapper"
 
@@ -171,7 +164,6 @@ class StringPlate:
     doc: str | None = None
     doc_lines: list[str] = field(default_factory=list)
     deps: list[PlateRef] = field(default_factory=list)
-    file: str | None = None
     kind: str = "string"
     strategy: str = "string-wrapper"
 
@@ -207,7 +199,6 @@ class UnionPlate:
     doc: str | None = None
     doc_lines: list[str] = field(default_factory=list)
     deps: list[PlateRef] = field(default_factory=list)
-    file: str | None = None
     kind: str = "union"
     strategy: str = "tagged-variant"
 
@@ -275,7 +266,6 @@ class ComplexPlate:
     doc: str | None = None
     doc_lines: list[str] = field(default_factory=list)
     deps: list[PlateRef] = field(default_factory=list)
-    file: str | None = None
     kind: str = "complex"
 
     def member(self, wire: str, kind: str | None = None) -> Member:
@@ -317,18 +307,6 @@ def value_member(members: list[Member]) -> Member | None:
 
 
 @dataclass
-class FileSpec:
-    """One output file when partitioning: its stem (extension is the
-    template's business), the wire names of the types assigned to it (in emit
-    order), and the stems it must include/import (dependencies' files,
-    deduped, self-excluded, sorted)."""
-
-    file: str
-    types: list[str] = field(default_factory=list)
-    includes: list[str] = field(default_factory=list)
-
-
-@dataclass
 class Plates:
     """The complete projection of one target: every plate, in the IR's
     deps-first order (value types never reference complex types, so
@@ -340,7 +318,6 @@ class Plates:
     value_types: list[ValuePlate] = field(default_factory=list)
     complex_types: list[ComplexPlate] = field(default_factory=list)
     roots: list[PlateRef] = field(default_factory=list)
-    files: list[FileSpec] | None = None  # None when partition == "single"
 
     def __post_init__(self):
         # Random-access index for templates; a plain attribute (not a

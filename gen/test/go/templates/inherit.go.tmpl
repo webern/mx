@@ -34,6 +34,10 @@ func parse{{ident}}(el *etree.Element) (*{{ident}}, error) {
 		}
 	}
 	for _, c := range el.ChildElements() {
+{{^has_merged_elements}}
+		return nil, fmt.Errorf("unknown element <%s> in <%s>", c.Tag, el.Tag)
+{{/has_merged_elements}}
+{{#has_merged_elements}}
 		switch c.Tag {
 {{#merged_elements}}
 		case {{name.wire_q}}:
@@ -42,16 +46,17 @@ func parse{{ident}}(el *etree.Element) (*{{ident}}, error) {
 			if err != nil {
 				return nil, err
 			}
-			m.Children = append(m.Children, {{type.base.ident}}Child{{{ident}}: v})
+			m.Children = append(m.Children, {{type.base.ident}}Child{ {{ident}}: v})
 {{/type_ref.is_complex}}
 {{^type_ref.is_complex}}
 			v := {{#type_ref.is_value}}Parse{{type_ref.ident}}(c.Text()){{/type_ref.is_value}}{{#type_ref.is_primitive_decimal}}parseDecimal(c.Text()){{/type_ref.is_primitive_decimal}}{{#type_ref.is_primitive_integer}}parseInt(c.Text()){{/type_ref.is_primitive_integer}}{{#type_ref.is_primitive_string}}c.Text(){{/type_ref.is_primitive_string}}
-			m.Children = append(m.Children, {{type.base.ident}}Child{{{ident}}: &v})
+			m.Children = append(m.Children, {{type.base.ident}}Child{ {{ident}}: &v})
 {{/type_ref.is_complex}}
 {{/merged_elements}}
 		default:
 			return nil, fmt.Errorf("unknown element <%s> in <%s>", c.Tag, el.Tag)
 		}
+{{/has_merged_elements}}
 	}
 	return m, nil
 }

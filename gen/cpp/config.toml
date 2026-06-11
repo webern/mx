@@ -21,10 +21,12 @@ dir = "../../src/private/mx/core"
 xml = "../../docs/sounds-4.0-ed15c23.xml"
 
 [target]
-language  = "cpp"
-namespace = "mx::core"
 # enum class scopes its constants inside the type, so they stay bare.
 variant-scope = "bare"
+
+[vars]
+# Freeform, passed verbatim to this target's templates (when they exist).
+namespace = "mx::core"
 
 [naming]
 extends = "../naming.base.toml"  # schema-forced renames shared by all targets
@@ -61,5 +63,3 @@ words = [
     "while", "xor", "xor_eq",
 ]
 
-[layout]
-partition = "per-type"

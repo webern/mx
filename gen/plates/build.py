@@ -29,7 +29,6 @@ from gen.plates.model import (
     ClampStep,
     ComplexPlate,
     EnumPlate,
-    FileSpec,
     Member,
     Name,
     NumberBounds,
@@ -183,7 +182,7 @@ class _Builder:
             name = self._type_name(type_wire)
             self.type_names[type_wire] = name
             self.type_idents[type_wire] = self._sanitize(
-                config.target.prefix + name.cased[naming.type_convention]
+                config.target.symbol_prefix + name.cased[naming.type_convention]
             )
 
     # ----- entry ------------------------------------------------------------ #
@@ -202,25 +201,19 @@ class _Builder:
             complex_types=[self._complex_plate(c) for c in self.m.complex_types],
             roots=[self._plate_ref(ir.Ref(r.type, "complex")) for r in self.m.roots],
         )
-        plates.files = self._assign_files(plates)
         return plates
 
     def _target_info(self) -> TargetInfo:
         t, n = self.cfg.target, self.cfg.naming
         return TargetInfo(
-            language=t.language,
-            namespace=t.namespace,
-            prefix=t.prefix,
+            symbol_prefix=t.symbol_prefix,
             type_convention=n.type_convention,
             field_convention=n.field_convention,
             variant_convention=n.variant_convention,
-            file_convention=n.file_convention,
             inheritance=t.inheritance,
             variant_scope=self.variant_scope,
             doc_wrap=self.cfg.docs.wrap,
             reserved=sorted(self.reserved),
-            partition=self.cfg.layout.partition,
-            file_prefix=self.cfg.layout.file_prefix,
             reserved_members=sorted(self.cfg.reserved.members),
             reserved_type_suffixes=sorted(self.cfg.reserved.type_suffixes),
             vars=dict(self.cfg.vars),
@@ -276,8 +269,8 @@ class _Builder:
             joiner = JOINERS.get(conv, "_")
             if joiner:
                 parts = []
-                if self.cfg.target.prefix:
-                    prefix_name = self.factory.make(self.cfg.target.prefix)
+                if self.cfg.target.symbol_prefix:
+                    prefix_name = self.factory.make(self.cfg.target.symbol_prefix)
                     parts.append(prefix_name.cased[conv])
                 parts.append(self.type_names[scope_wire].cased[conv])
                 parts.append(name.cased[conv])
@@ -514,58 +507,6 @@ class _Builder:
         if isinstance(vt, ir.EnumType) and literal in vt.values:
             return self._variant(vt.name, literal).ident
         return None
-
-    # ----- file assignment ------------------------------------------------------ #
-
-    def _assign_files(self, plates: Plates) -> list[FileSpec] | None:
-        partition = self.cfg.layout.partition
-        if partition == "single":
-            return None
-        if partition == "grouped":
-            raise PlatesError(
-                ["[layout] partition = 'grouped' is not yet implemented; "
-                 "use 'per-type' or 'single'"]
-            )
-
-        all_plates = list(plates.value_types) + list(plates.complex_types)
-        stem_of = {
-            p.name.wire: self.cfg.layout.file_prefix
-            + p.name.cased[self.cfg.naming.file_convention]
-            for p in all_plates
-        }
-        specs: list[FileSpec] = []
-        for p in all_plates:
-            p.file = stem_of[p.name.wire]
-            deps = sorted(
-                {stem_of[d] for d in self._type_deps(p) if d in stem_of} - {p.file}
-            )
-            specs.append(FileSpec(file=p.file, types=[p.name.wire], includes=deps))
-        return specs
-
-    def _type_deps(self, plate) -> set[str]:
-        """Wire names of the types a plate's emitted code references: member
-        and value types, union members, and the base edge. Primitive refs are
-        excluded by CATEGORY, not by stem lookup: a primitive's name can
-        coincide with a type's wire name (the `string` primitive vs the
-        `string` complex type), and matching by name would fabricate a
-        dependency edge."""
-        deps: set[str] = set()
-        if isinstance(plate, UnionPlate):
-            deps.update(
-                m.ref.wire
-                for m in plate.members
-                if m.ref is not None and m.ref.category != "primitive"
-            )
-        if isinstance(plate, ComplexPlate):
-            for member_list in (plate.members, plate.all_members or []):
-                deps.update(
-                    m.type_ref.wire
-                    for m in member_list
-                    if m.type_ref.category != "primitive"
-                )
-            if plate.base is not None:
-                deps.add(plate.base.wire)
-        return deps
 
     # ----- config-against-IR validation ----------------------------------------- #
 

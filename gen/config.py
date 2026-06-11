@@ -66,9 +66,7 @@ class Renames:
 
 @dataclass
 class TargetSection:
-    language: str = "neutral"  # transitional: selects a legacy backend; dies with them
-    namespace: str = ""
-    prefix: str = ""
+    symbol_prefix: str = ""  # prepended to type idents and composed constants
     inheritance: bool = True  # derived types: inherit (True) or flatten
     variant_scope: str = "bare"  # constant scoping: "bare" | "composed"
 
@@ -79,7 +77,6 @@ class NamingSection:
     type_convention: str = "pascal"
     field_convention: str = "snake"
     variant_convention: str = "pascal"
-    file_convention: str = "snake"
     field_prefix: str = ""
     pluralize_vectors: bool = False
 
@@ -90,12 +87,6 @@ class ReservedSection:
     members: tuple[str, ...] = ()  # member idents the target's templates reserve
     type_suffixes: tuple[str, ...] = ()  # compositions templates append to type idents
     invalid_prefix: str = "_"
-
-
-@dataclass
-class LayoutSection:
-    partition: str = "single"  # "per-type" | "single" ("grouped" reserved)
-    file_prefix: str = ""
 
 
 @dataclass
@@ -139,7 +130,6 @@ class Config:
     naming: NamingSection = field(default_factory=NamingSection)
     reserved: ReservedSection = field(default_factory=ReservedSection)
     types: dict[str, str] = field(default_factory=dict)  # primitive overrides
-    layout: LayoutSection = field(default_factory=LayoutSection)
     docs: DocsSection = field(default_factory=DocsSection)
     renames: Renames = field(default_factory=Renames)
     render: RenderSection | None = None  # presence selects the press pipeline
@@ -157,7 +147,7 @@ def load(config_path) -> Config:
     _check_keys(
         data,
         {"input", "output", "sounds", "target", "naming", "reserved", "types",
-         "layout", "docs", "rename", "vars", "render"},
+         "docs", "rename", "vars", "render"},
         "top level",
     )
     _check_keys(data.get("input", {}), {"xsd"}, "input")
@@ -202,7 +192,6 @@ def load(config_path) -> Config:
         naming=_naming(data.get("naming", {})),
         reserved=_reserved(data.get("reserved", {})),
         types=_types(data.get("types", {})),
-        layout=_layout(data.get("layout", {})),
         docs=_docs(data.get("docs", {})),
         renames=_renames(data.get("rename", {})),
         render=_render(data["render"], base) if "render" in data else None,
@@ -222,13 +211,9 @@ def _check_keys(table: dict, allowed: set[str], where: str) -> None:
 
 
 def _target(t: dict) -> TargetSection:
-    _check_keys(
-        t, {"language", "namespace", "prefix", "inheritance", "variant-scope"}, "target"
-    )
+    _check_keys(t, {"symbol-prefix", "inheritance", "variant-scope"}, "target")
     section = TargetSection(
-        language=t.get("language", "neutral"),
-        namespace=t.get("namespace", ""),
-        prefix=t.get("prefix", ""),
+        symbol_prefix=t.get("symbol-prefix", ""),
         inheritance=bool(t.get("inheritance", True)),
         variant_scope=t.get("variant-scope", "bare"),
     )
@@ -262,8 +247,7 @@ def _naming(t: dict) -> NamingSection:
         t,
         {
             "extends", "acronyms", "type-convention", "field-convention",
-            "variant-convention", "file-convention", "field-prefix",
-            "pluralize-vectors",
+            "variant-convention", "field-prefix", "pluralize-vectors",
         },
         "naming",
     )
@@ -272,11 +256,10 @@ def _naming(t: dict) -> NamingSection:
         type_convention=t.get("type-convention", "pascal"),
         field_convention=t.get("field-convention", "snake"),
         variant_convention=t.get("variant-convention", "pascal"),
-        file_convention=t.get("file-convention", "snake"),
         field_prefix=t.get("field-prefix", ""),
         pluralize_vectors=bool(t.get("pluralize-vectors", False)),
     )
-    for key in ("type_convention", "field_convention", "variant_convention", "file_convention"):
+    for key in ("type_convention", "field_convention", "variant_convention"):
         value = getattr(section, key)
         if value not in CONVENTIONS:
             raise ConfigError(
@@ -303,19 +286,6 @@ def _types(t: dict) -> dict[str, str]:
         if not isinstance(v, str):
             raise ConfigError(f"[types] {k} must be a string target type")
     return dict(t)
-
-
-def _layout(t: dict) -> LayoutSection:
-    _check_keys(t, {"partition", "file-prefix"}, "layout")
-    section = LayoutSection(
-        partition=t.get("partition", "single"),
-        file_prefix=t.get("file-prefix", ""),
-    )
-    if section.partition not in ("per-type", "single", "grouped"):
-        raise ConfigError(
-            f"[layout] partition = {section.partition!r}: expected per-type, single, or grouped"
-        )
-    return section
 
 
 def _render_entry(t: dict, where: str, once: bool) -> RenderEntry:

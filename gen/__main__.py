@@ -157,10 +157,9 @@ def _plates(args: list[str]) -> int:
     if check:
         # Rename validation and collision detection already ran in the build;
         # reaching here means the projection is clean.
-        n_files = len(plates.files) if plates.files is not None else 0
         print(
             f"plates ok: {len(plates.value_types)} value types, "
-            f"{len(plates.complex_types)} complex types, {n_files} files"
+            f"{len(plates.complex_types)} complex types"
         )
         return 0
 
@@ -183,14 +182,7 @@ def _emit(config_path: str) -> int:
 
     try:
         plates, cfg = build_for_config(config_path)
-        if cfg.render is not None:
-            result = render_target(plates, cfg)
-        else:
-            # Transitional: targets not yet ported to templates use the
-            # legacy per-language backends. Dies with the last port.
-            from gen.emit import emit
-
-            result = emit(plates, cfg)
+        result = render_target(plates, cfg)
     except PlatesError as e:
         for line in e.errors:
             print(f"error: {line}", file=sys.stderr)

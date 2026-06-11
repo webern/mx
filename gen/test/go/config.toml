@@ -17,8 +17,6 @@ dir = "mx"
 # No [sounds] section: instrument-sound stays a plain string for this target.
 
 [target]
-language = "go"
-namespace = "mx"  # the Go package name
 # Go constants are package-scoped, so enum/union constants compose the type
 # name into one flat namespace (NoteTypeValue1024th).
 variant-scope = "composed"
@@ -60,10 +58,6 @@ words = [
 # the Child/Kind type-name compositions. The collision gate enforces these.
 members = ["Children"]
 type-suffixes = ["Child", "Kind"]
-
-[layout]
-# One generated .go file per type; same-package files need no import graph.
-partition = "per-type"
 
 # ---- the render manifest: which templates produce which files ----------- #
 # The presence of [render] selects the press pipeline; everything Go-shaped

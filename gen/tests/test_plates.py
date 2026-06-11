@@ -263,21 +263,11 @@ class Projection(unittest.TestCase):
     def test_composed_scope_with_prefix_screams(self):
         config = Config()
         config.target.variant_scope = "composed"
-        config.target.prefix = "Mx"
+        config.target.symbol_prefix = "Mx"
         config.naming.variant_convention = "screaming"
         plates = build_plates(tiny_ir(), config)
         enum = plates.plate("up-down")
         self.assertEqual(enum.variants[0].ident, "MX_UP_DOWN_UP")
-
-    def test_file_stem_collision_checked_case_insensitively(self):
-        config = Config()
-        config.layout.partition = "per-type"
-        # Pin pitch's snake (the file convention) to differ from note's only
-        # by case: distinct identifiers, same file on macOS/Windows.
-        config.renames.types["pitch"] = RenameEntry(cased={"snake": "Note"})
-        with self.assertRaises(PlatesError) as caught:
-            build_plates(tiny_ir(), config)
-        self.assertIn("file stem collision", "\n".join(caught.exception.errors))
 
     def test_unknown_types_key_fails_loud(self):
         config = Config(types={"decmial": "double"})
@@ -396,12 +386,10 @@ class RealTargets(unittest.TestCase):
     def test_go_idents_are_exported_pascal(self):
         plate = self.go.plate("midi-instrument")
         self.assertEqual(plate.ident, "MIDIInstrument")
-        self.assertEqual(plate.file, "midi_instrument")
 
     def test_c_idents_carry_prefix(self):
         plate = self.c.plate("midi-instrument")
         self.assertEqual(plate.ident, "MxMIDIInstrument")
-        self.assertEqual(plate.file, "mx_midi_instrument")
 
     def test_shared_base_resolves_barline_collision(self):
         for plates in (self.go, self.c, self.cpp):
@@ -462,19 +450,21 @@ class RealTargets(unittest.TestCase):
         kinds = [(m.ref.category if m.ref else "literals") for m in union.members]
         self.assertEqual(kinds, ["value", "primitive"])  # enum + open string
 
-    def test_files_unique_and_self_excluded(self):
+    def test_deps_are_sorted_unique_and_non_primitive(self):
         for plates in (self.go, self.c, self.cpp):
-            stems = [f.file for f in plates.files]
-            self.assertEqual(len(stems), len(set(stems)))
-            for spec in plates.files:
-                self.assertNotIn(spec.file, spec.includes)
+            for plate in list(plates.value_types) + list(plates.complex_types):
+                wires = [d.wire for d in plate.deps]
+                self.assertEqual(wires, sorted(set(wires)))
+                self.assertNotIn(plate.name.wire, wires)
+                for d in plate.deps:
+                    self.assertNotEqual(d.category, "primitive")
 
-    def test_primitive_refs_never_become_includes(self):
+    def test_primitive_refs_never_become_deps(self):
         # instrument-sound (C target, sounds folded) is sound-id | string;
         # the open `string` member is a PRIMITIVE, but a complex type named
-        # `string` also exists. The include graph must not conflate them.
-        spec = next(f for f in self.c.files if f.types == ["instrument-sound"])
-        self.assertEqual(spec.includes, ["mx_sound_id"])
+        # `string` also exists. The dependency list must not conflate them.
+        union = self.c.plate("instrument-sound")
+        self.assertEqual([d.wire for d in union.deps], ["sound-id"])
 
     def test_derived_plates_expose_both_views(self):
         derived = [p for p in self.c.complex_types if p.shape == "derived"]
@@ -550,8 +540,6 @@ class ConfigParsing(unittest.TestCase):
             self._load("[input]\nxsd_file = 'x.xsd'\n")
 
     def test_unsupported_values_fail(self):
-        with self.assertRaises(ConfigError):
-            self._load("[layout]\npartition = 'sharded'\n")
         with self.assertRaises(ConfigError):
             self._load("[naming]\ntype-convention = 'dot'\n")
 

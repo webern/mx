@@ -56,6 +56,10 @@ func parse{{ident}}(el *etree.Element) (*{{ident}}, error) {
 	m.{{ident}} = {{#type_ref.is_value}}Parse{{type_ref.ident}}(el.Text()){{/type_ref.is_value}}{{#type_ref.is_primitive_decimal}}parseDecimal(el.Text()){{/type_ref.is_primitive_decimal}}{{#type_ref.is_primitive_integer}}parseInt(el.Text()){{/type_ref.is_primitive_integer}}{{#type_ref.is_primitive_string}}el.Text(){{/type_ref.is_primitive_string}}
 {{/value}}
 	for _, c := range el.ChildElements() {
+{{^has_elements}}
+		return nil, fmt.Errorf("unknown element <%s> in <%s>", c.Tag, el.Tag)
+{{/has_elements}}
+{{#has_elements}}
 		switch c.Tag {
 {{#elements}}
 		case {{name.wire_q}}:
@@ -64,16 +68,17 @@ func parse{{ident}}(el *etree.Element) (*{{ident}}, error) {
 			if err != nil {
 				return nil, err
 			}
-			m.Children = append(m.Children, {{type.ident}}Child{{{ident}}: v})
+			m.Children = append(m.Children, {{type.ident}}Child{ {{ident}}: v})
 {{/type_ref.is_complex}}
 {{^type_ref.is_complex}}
 			v := {{#type_ref.is_value}}Parse{{type_ref.ident}}(c.Text()){{/type_ref.is_value}}{{#type_ref.is_primitive_decimal}}parseDecimal(c.Text()){{/type_ref.is_primitive_decimal}}{{#type_ref.is_primitive_integer}}parseInt(c.Text()){{/type_ref.is_primitive_integer}}{{#type_ref.is_primitive_string}}c.Text(){{/type_ref.is_primitive_string}}
-			m.Children = append(m.Children, {{type.ident}}Child{{{ident}}: &v})
+			m.Children = append(m.Children, {{type.ident}}Child{ {{ident}}: &v})
 {{/type_ref.is_complex}}
 {{/elements}}
 		default:
 			return nil, fmt.Errorf("unknown element <%s> in <%s>", c.Tag, el.Tag)
 		}
+{{/has_elements}}
 	}
 	return m, nil
 }
