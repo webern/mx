@@ -646,6 +646,12 @@ dumb).
 - **Configurable per-enum invalid-identifier prefix.** A single global `invalid-prefix` is assumed;
   some targets might want it per enum (e.g. note-type values prefixed `N`).
 
+**Supersession note:** the emit-stage portions of this document (templates as a concept, file
+partitioning via `[layout]`, `FileSpec`) are superseded by
+[`generator-agnosticism.md`](generator-agnosticism.md): templates are now per-target Mustache
+files rendered by `gen/press/` per each target's `[render]` manifest, and output paths are
+manifest output patterns. Sections 1-8 (the projection itself) remain accurate.
+
 ## 11. Implementation notes
 
 The implementation (`gen/plates/`: `model.py`, `names.py`, `languages.py`, `build.py`, `check.py`;

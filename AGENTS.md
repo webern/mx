@@ -6,9 +6,11 @@ are secondary targets that keep the generator architecture honest about extensib
 
 **CARDINAL RULE: the generator is language agnostic.** Adding a new language target must not
 require edits to the generator's Python files; all language knowledge lives in the target's own
-directory as data and templates. The current code VIOLATES this rule (per-language backends under
-`gen/emit/`, language tables in `gen/plates/languages.py`); the redesign that fixes it is
-specified in `docs/ai/design/generator-agnosticism.md` and is the next body of work.
+directory as `config.toml` data and Mustache templates. The rule HOLDS and is enforced
+structurally by `gen/tests/test_agnosticism.py` (the generator's Python is a closed set; no
+module is named after a language; targets contain no Python). Design and decision record:
+`docs/ai/design/generator-agnosticism.md`. The proof: the JSON Schema target (`gen/schema/`)
+was added without touching a single `.py` file.
 
 Ignore git history prior to `b01288`. Reading anything before that commit will only confuse you and
 degrade your performance.
@@ -33,19 +35,24 @@ mx/
     mxtest/file/        <- PathRoot.h (CMake-generated, gitignored)
     cpul/               <- vendored Catch2 test runner
   gen/                  <- code generator system (see gen/README.md)
-    __main__.py         <- CLI: analyze | ir | plates | <config.toml>
+    __main__.py         <- CLI: analyze | ir | plates | render | <config.toml>
     README.md           <- architecture, IR glossary, XSD analysis
     xsd/                <- XSD parser + structural analysis
     ir/                 <- resolved intermediate representation (IR)
-    cpp/config.toml     <- C++ target configuration
+    plates/             <- the per-target projection (casings, idents, policy data)
+    press/              <- the Mustache engine, context builder, manifest renderer, writer
+    cpp/config.toml     <- C++ target configuration (no templates yet)
+    schema/             <- JSON Schema target: config.toml + templates/ + out/ (committed)
     test/go/            <- Go corert test target
-      config.toml       <- Go target configuration
+      config.toml       <- Go target configuration incl. the [render] manifest
+      templates/        <- the Go templates (all Go knowledge lives here + config.toml)
       go.mod, go.sum    <- Go module (etree dependency, vendored)
       vendor/           <- vendored Go deps
       corert/           <- test package (discover, fixer, normalize, roundtrip, test)
       mx/               <- the GENERATED Go model (committed; do not edit)
     test/c/             <- C corert test target
-      config.toml       <- C target configuration
+      config.toml       <- C target configuration incl. the [render] manifest
+      templates/        <- the C templates (all C knowledge lives here + config.toml)
       CMakeLists.txt    <- CMake project using libxml2
       src/              <- C source (main, discover, fixer, normalize, compare, roundtrip)
       mx/               <- the GENERATED C model (committed; do not edit)
@@ -148,8 +155,9 @@ their values instead of their string representations. Float comparison uses epsi
 
 The generator (`gen/`) is a Python program structured as a pipeline: parse the MusicXML XSD into a
 model (`gen/xsd/`), lower that into a resolved intermediate representation (`gen/ir/`), project the
-IR onto a target as the Plates (`gen/plates/`), then emit code from the plates via per-language
-backends (`gen/emit/`). The IR data model preserves the schema's named structure
+IR onto a target as the Plates (`gen/plates/`), then render the target's own Mustache templates
+through the press (`gen/press/`) per its `[render]` manifest. The generator has no concept of any
+language; a target IS a directory of config and templates. The IR data model preserves the schema's named structure
 (model groups, attribute groups, inheritance edges); `gen/ir/resolve.py` collapses it on demand into
 the flattened view an emitter consumes (attribute groups expanded, group refs spliced into content),
 so that splicing-and-deduping reasoning lives once rather than once per language. See `gen/README.md`
@@ -168,7 +176,10 @@ Commands:
 - `python3 -m gen plates --config C [--type NAME] [--check]` - project the IR onto the target the
   config describes and print the Plates as JSON; `--check` validates renames and detects identifier
   collisions (a CI gate, like analyze).
-- `python3 -m gen <config.toml>` - emit code for the target in the config (not yet implemented).
+- `python3 -m gen render --config C --type NAME` - render one type through the target's templates
+  to stdout (template debugging).
+- `python3 -m gen <config.toml>` - emit the target: project the plates, render the [render]
+  manifest's templates, run the optional format hook, write with marker-gated pruning.
 
 Each target has a `config.toml` specifying the MusicXML XSD it generates from (`[input] xsd`), the
 output directory (`[output] dir`, relative to the config file), an optional `[sounds] xml` companion
@@ -185,11 +196,11 @@ unioned with an open string (element `instrument-sound` retyped from `string` to
 the only place the IR depends on an input beyond the XSD; it is opt-in per target, so the base IR
 stays a pure function of the schema.
 
-**Status.** The parse, IR, analysis, Plates, and emit stages exist (`python3 -m gen plates
---config C [--check]` dumps or gates the projection; `python3 -m gen <config.toml>` emits). The
-Go and C backends are complete -- all value and complex shapes plus the document entry points --
-and both corert suites are green. Generated output is committed (`gen/test/go/mx/`,
-`gen/test/c/mx/`). The C++ backend is not yet implemented.
+**Status.** The parse, IR, analysis, Plates, and press stages exist; the generator is fully
+language agnostic. The Go, C, and JSON Schema targets render from their own templates and both
+corert suites are green. Generated output is committed (`gen/test/go/mx/`, `gen/test/c/mx/`,
+`gen/schema/out/`). The C++ target has config but no templates yet; writing them is template
+work, not Python work.
 
 ## Language targets
 

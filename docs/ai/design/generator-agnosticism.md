@@ -1,9 +1,10 @@
 # Generator agnosticism: removing language knowledge from the generator
 
-Status: design. This document specifies the redesign that removes all target-language knowledge
-from the generator's Python code. It supersedes the emit-stage portions of
-[`plates.md`](plates.md) (the Plates layer itself -- sections 1-8 there -- survives intact; what
-changes is what a "template" is and where language facts live).
+Status: implemented (see section 11 for the deltas between this design and the code). This
+document specifies the redesign that removed all target-language knowledge from the generator's
+Python code. It supersedes the emit-stage portions of [`plates.md`](plates.md) (the Plates layer
+itself -- sections 1-8 there -- survives intact; what changed is what a "template" is and where
+language facts live).
 
 ## 1. The cardinal rule
 
@@ -364,3 +365,32 @@ the entire point.
   syntax nor restores the spec's lambdas, and the spec test suite pins it there. The review
   question for any proposed press or context-builder feature: "does this let a template make a
   decision the plates should own?" If yes, the answer is no.
+
+## 11. Implementation notes
+
+Implemented in six pushed phases, each green, exactly per section 8. The deltas and outcomes:
+
+- **The parity gates held.** C: 674/677 files byte-identical; the three deviations were the OLD
+  output's bugs (a doubled space from the legacy child-field spacing, an `&(*ptr)` spelling). Go:
+  336/336 byte-identical. Each backend was deleted only after its gate passed, verified beyond
+  bytes by both corert suites, the smoke binaries, and full-suite valgrind.
+- **The proof landed as designed**: `gen/schema/` (config + one template, 373 `$defs`) was added
+  with zero Python edits, and `gen/tests/test_agnosticism.py` enforces the closed set
+  structurally. The schema template models complex types over the flat member view (choice
+  nesting deferred -- to future template work, which is the point).
+- **The context builder grew three mechanical conveniences** beyond section 5: `has_<list>`
+  companions (non-iterating emptiness tests), a flattened union `cases` view (loop metadata at
+  the granularity union kind constants actually have), and earlier-field-wins discriminant
+  expansion (PlateRef's `category` and `kind` vocabularies overlap consistently). Dotted
+  resolution through a present-but-None value is falsey, extending deviation 1's logic.
+- **Plates additions**: `UnionPlate.open_ended`, and the open-string-member ordering rule moved
+  from backend Python into the collision gate (union parse semantics, not language).
+- **`[vars]` is barely needed in practice**: a target's templates hardcode their own spellings
+  (the Go package clause, the C `mx_` prefix are template text). Only cpp carries a var so far.
+  The mechanism stays: it is the answer to "where does a language-flavored value go".
+- **One Mustache wrinkle**: an interpolation directly after `{` forms `{{{`. Templates write a
+  space (`Child{ {{ident}}`); for Go, gofmt removes it, preserving byte parity.
+- **The transitional `[target] language`, `namespace`, `prefix`, and `[layout]` keys are gone**;
+  `symbol-prefix` is the surviving projection-contract key, and output paths live entirely in
+  manifest output patterns (whose expansion carries the case-insensitive collision gate that
+  replaced file-stem checking).

@@ -22,11 +22,14 @@ XSD file  --parse-->  XSD model  --lower-->  IR  --project-->  Plates  --emit-->
    casings, renames, primitive type mappings, emit strategies, file layout -- is made here, once,
    producing one **plate** per emitted type. The collection projected for a target is the
    **Plates**. Designed in [`../docs/ai/design/plates.md`](../docs/ai/design/plates.md).
-4. Emit (`gen/emit/`) renders each plate through a per-language backend ("dumb renderers": walk
-   the plate, print text, no naming logic; see `gen/emit/__init__.py` for the backend contract).
-   The Go and C backends are complete (all value and complex shapes plus the document entry
-   points); both corert suites round-trip the corpus green. The C++ backend is not yet
-   implemented.
+4. Render (`gen/press/`): the target's own Mustache templates, declared in its `[render]`
+   manifest, are pressed against contexts built from the plates. The CARDINAL RULE: the
+   generator is language agnostic -- adding a target touches no Python (enforced by
+   `gen/tests/test_agnosticism.py`). A target is a directory: `config.toml` + `templates/`.
+   The engine is spec-tested Mustache with three deviations (strict missing keys, no HTML
+   escaping, no lambdas); dispatch is by manifest (one template per shape) and by the context
+   builder's mechanical enrichments (discriminant flags, `_q` quoted companions, loop metadata,
+   member splits). Go, C, and JSON Schema render this way today; C++ awaits its templates.
 
 ### Layout
 
@@ -47,14 +50,14 @@ gen/
     dump.py          IR to JSON
   plates/
     model.py         the plate dataclasses (neutral core + target binding)
-    languages.py     per-language defaults (type maps, reserved words, doc styles)
     build.py         the projection: IR + config -> Plates
     check.py         post-projection collision detection
-  emit/
+  press/
+    engine.py        the Mustache engine (official spec suite + 3 deviations)
+    context.py       plates -> render contexts (flags, _q companions, loop metadata)
+    render.py        [render] manifest expansion, format hook, orchestration
     writer.py        deterministic output (write-if-changed, marker-gated pruning)
-    go/              Go backend: values, complexes, document, runtime, gofmt pass
-    c/               C backend: api (calling convention), values, complexes, document, runtime
-  cpp/, test/go/, test/c/    per-target config and corert test harnesses
+  schema/, cpp/, test/go/, test/c/    targets: config.toml + templates/ (+ harnesses)
 ```
 
 ### Design principles
@@ -96,7 +99,8 @@ type-shaping knob: it selects an *input*, not how a type is emitted.
 python3 -m gen analyze [xsd]                              # structural analysis report (text)
 python3 -m gen ir [--type NAME] [--resolve] [--config C] [xsd]  # lower to IR, print as JSON
 python3 -m gen plates --config C [--type NAME] [--check]  # project the IR onto a target, print as JSON
-python3 -m gen <config.toml>                              # emit code for the target the config describes
+python3 -m gen render --config C --type NAME              # render one type to stdout (template debugging)
+python3 -m gen <config.toml>                              # emit the target (render its [render] manifest)
 ```
 
 `--resolve` prints the *collapsed* view of complex types (attribute groups flattened, model-group
