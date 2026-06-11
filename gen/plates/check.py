@@ -22,8 +22,44 @@ def run_checks(plates: Plates) -> list[str]:
         _check_type_idents(plates, errors)
         _check_variants_per_type(plates, errors)
     _check_members(plates, errors)
+    _check_template_reserved(plates, errors)
     _check_file_stems(plates, errors)
     return errors
+
+
+def _check_template_reserved(plates: Plates, errors: list[str]) -> None:
+    """Names the target's TEMPLATES synthesize cannot be gated structurally,
+    so the target declares them: [reserved] members (member identifiers its
+    templates claim on every struct) and [reserved] type-suffixes
+    (compositions appended to type identifiers, like a Child struct). A
+    schema name landing on either must fail here, not as a confusing compile
+    error in committed output."""
+    reserved_members = set(plates.target.reserved_members)
+    if reserved_members:
+        for p in plates.complex_types:
+            for member_list in (p.members, p.all_members or []):
+                for m in member_list:
+                    if m.ident in reserved_members:
+                        errors.append(
+                            f"member identifier '{m.ident}' in '{p.name.wire}' is "
+                            f"reserved by the target's templates ([reserved] members); "
+                            f"rename it"
+                        )
+    suffixes = plates.target.reserved_type_suffixes
+    if suffixes:
+        idents = {
+            p.ident: p.name.wire
+            for p in list(plates.value_types) + list(plates.complex_types)
+        }
+        for ident, wire in idents.items():
+            for suffix in suffixes:
+                composed = ident + suffix
+                if composed in idents:
+                    errors.append(
+                        f"type identifier collision: '{idents[composed]}' is named "
+                        f"'{composed}', which the target's templates compose from "
+                        f"'{wire}' + reserved suffix '{suffix}'"
+                    )
 
 
 def _variant_pairs(plate) -> list[tuple[str, str]]:

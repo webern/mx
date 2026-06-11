@@ -69,13 +69,12 @@ def _fn(plates: Plates, plate, verb: str) -> str:
 
 def _enum(plates: Plates, plate: EnumPlate, rt: str):
     ident = plate.ident
-    wrap = plates.target.doc_style.wrap
     try_parse = _fn(plates, plate, "try_parse")
     parse = _fn(plates, plate, "parse")
     to_string = _fn(plates, plate, "to_string")
     values = fn_name(plates, plate.name, "values")
 
-    decl = doc_comment(plate.doc, wrap)
+    decl = doc_comment(plate.doc_lines)
     decl += ["typedef enum {"]
     decl += [f"    {v.ident} = {i}," for i, v in enumerate(plate.variants[:-1])]
     decl += [f"    {plate.variants[-1].ident} = {len(plate.variants) - 1}"]
@@ -130,7 +129,6 @@ def _enum(plates: Plates, plate: EnumPlate, rt: str):
 
 def _number(plates: Plates, plate: NumberPlate, rt: str):
     ident = plate.ident
-    wrap = plates.target.doc_style.wrap
     c_type, try_helper, fmt_helper = _PRIM[plate.base]
     prefix = fn_prefix(plates)
     try_parse = _fn(plates, plate, "try_parse")
@@ -143,7 +141,7 @@ def _number(plates: Plates, plate: NumberPlate, rt: str):
     runtime_parse = prefix + ("parse_decimal" if plate.family == "decimal" else "parse_int")
     clamps = ", then clamps into the declared range" if steps else ""
 
-    decl = doc_comment(plate.doc, wrap)
+    decl = doc_comment(plate.doc_lines)
     decl += [f"typedef {c_type} {ident};", ""]
     decl += [
         f"/* Lexically strict parse{clamps}. */",
@@ -196,14 +194,12 @@ def _number(plates: Plates, plate: NumberPlate, rt: str):
 
 def _string(plates: Plates, plate: StringPlate, rt: str):
     ident = plate.ident
-    wrap = plates.target.doc_style.wrap
     parse = _fn(plates, plate, "parse")
     prefix = fn_prefix(plates)
 
-    doc = plate.doc or ""
+    decl = doc_comment(plate.doc_lines)
     if plate.patterns:
-        doc = (doc + " Pattern (not enforced): " + " | ".join(plate.patterns)).strip()
-    decl = doc_comment(doc, wrap)
+        decl += ["/* Pattern (not enforced): " + " | ".join(plate.patterns) + " */"]
     decl += [
         f"typedef char *{ident};",
         "",
@@ -288,14 +284,13 @@ def _union_cases(plates: Plates, plate: UnionPlate):
 
 def _union(plates: Plates, plate: UnionPlate, includes: list[str], rt: str):
     ident = plate.ident
-    wrap = plates.target.doc_style.wrap
     try_parse = _fn(plates, plate, "try_parse")
     parse = _fn(plates, plate, "parse")
     to_string = _fn(plates, plate, "to_string")
     free = _fn(plates, plate, "free")
     cases = _union_cases(plates, plate)
 
-    decl = doc_comment(plate.doc, wrap)
+    decl = doc_comment(plate.doc_lines)
     decl += ["typedef enum {"]
     decl += [f"    {c['kind']} = {i}," for i, c in enumerate(cases[:-1])]
     decl += [f"    {cases[-1]['kind']} = {len(cases) - 1}"]

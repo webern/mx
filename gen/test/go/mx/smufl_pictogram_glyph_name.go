@@ -4,7 +4,8 @@ package mx
 
 // The smufl-pictogram-glyph-name type is used to reference a specific Standard Music Font Layout
 // (SMuFL) percussion pictogram character. The value is a SMuFL canonical glyph name that starts
-// with pict. Pattern (not enforced): pict\c+
+// with pict.
+// Pattern (not enforced): pict\c+
 type SMUFLPictogramGlyphName string
 
 // TryParseSMUFLPictogramGlyphName accepts any string: the wire form is the value.

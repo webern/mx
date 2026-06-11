@@ -18,7 +18,7 @@ from pathlib import Path
 from gen import emit
 from gen.config import Config
 from gen.emit.writer import banner, is_generated, write_files
-from gen.plates.model import DocStyle, Plates, TargetInfo
+from gen.plates.model import Plates, TargetInfo
 
 
 def _mark(text: str) -> str:
@@ -77,7 +77,7 @@ class Dispatch(unittest.TestCase):
                 file_convention="snake",
                 inheritance=True,
                 variant_scope="bare",
-                doc_style=DocStyle(style="//"),
+                doc_wrap=97,
                 reserved=[],
                 partition="single",
             ),

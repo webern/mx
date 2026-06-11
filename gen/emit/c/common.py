@@ -33,24 +33,14 @@ def c_string(s: str) -> str:
     return "".join(out)
 
 
-def doc_comment(text: str | None, wrap: int) -> list[str]:
-    """Wrap schema documentation into a block comment. Comment-closing
-    sequences in the text are defused."""
-    if not text:
+def doc_comment(doc_lines: list[str]) -> list[str]:
+    """Schema documentation arrives pre-wrapped on the plate (doc_lines, at
+    the [docs] wrap text width); the block-comment syntax is applied here.
+    Comment-closing sequences in the text are defused."""
+    if not doc_lines:
         return []
-    words = text.replace("*/", "*\\/").split()
-    if not words:
-        return []
-    lines = ["/*"]
-    current = " *"
-    for word in words:
-        if len(current) + 1 + len(word) > wrap and current != " *":
-            lines.append(current)
-            current = " *"
-        current += " " + word
-    lines.append(current)
-    lines.append(" */")
-    return lines
+    body = [f" * {line}".replace("*/", "*\\/") for line in doc_lines]
+    return ["/*"] + body + [" */"]
 
 
 def fn_prefix(plates: Plates) -> str:

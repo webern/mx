@@ -5,8 +5,9 @@
 
 /*
  * Calendar dates are represented yyyy-mm-dd format, following ISO 8601. This is a W3C XML Schema
- * date type, but without the optional timezone data. Pattern (not enforced): [^:Z]*
+ * date type, but without the optional timezone data.
  */
+/* Pattern (not enforced): [^:Z]* */
 typedef char *MxYyyyMmDd;
 
 /* Malloc'd copy of the wire string; the value IS its spelling. */

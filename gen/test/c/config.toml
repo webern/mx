@@ -2,6 +2,9 @@
 # A test target that keeps the generator honest about extensibility: MusicXML
 # 3.1, WITH the sounds.xml companion -- the counterpart to the Go target (same
 # 3.1 schema, sounds off), so the two differ only by the fold.
+#
+# The generator is language agnostic (the cardinal rule): everything C-shaped
+# about this target lives here and in its templates, never in generator code.
 
 [input]
 # MusicXML XSD this target generates from, relative to this config file.
@@ -21,11 +24,41 @@ xml = "../../../docs/sounds-3.1-8bbe8e5.xml"
 language    = "c"
 prefix      = "Mx"   # C has no namespaces; every type is prefixed
 inheritance = false  # and no inheritance; derived types flatten the base chain
+# C constants share one global namespace, so enum/union constants compose the
+# prefix and type name (MX_NOTE_TYPE_VALUE_1024TH).
+variant-scope = "composed"
 
 [naming]
 extends = "../../naming.base.toml"  # schema-forced renames shared by all targets
 field-convention   = "snake"
 variant-convention = "screaming"
+
+[types]
+# IR primitive -> C spelling.
+string               = "char *"
+token                = "char *"
+nmtoken              = "char *"
+date                 = "char *"
+decimal              = "double"
+integer              = "long"
+positive_integer     = "long"
+non_negative_integer = "long"
+
+[reserved]
+# C keywords a generated identifier must not be; <stdbool.h> is assumed by
+# generated code, so its macros are reserved too.
+words = [
+    "auto", "break", "case", "char", "const", "continue", "default", "do",
+    "double", "else", "enum", "extern", "float", "for", "goto", "if",
+    "inline", "int", "long", "register", "restrict", "return", "short",
+    "signed", "sizeof", "static", "struct", "switch", "typedef", "union",
+    "unsigned", "void", "volatile", "while",
+    "bool", "true", "false",
+]
+# Names this target's templates synthesize: the ordered-children fields, and
+# the Child/Kind type-name compositions. The collision gate enforces these.
+members = ["children", "children_count"]
+type-suffixes = ["Child", "Kind"]
 
 [layout]
 partition   = "per-type"

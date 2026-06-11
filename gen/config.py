@@ -66,10 +66,11 @@ class Renames:
 
 @dataclass
 class TargetSection:
-    language: str = "neutral"
+    language: str = "neutral"  # transitional: selects a legacy backend; dies with them
     namespace: str = ""
     prefix: str = ""
     inheritance: bool = True  # derived types: inherit (True) or flatten
+    variant_scope: str = "bare"  # constant scoping: "bare" | "composed"
 
 
 @dataclass
@@ -85,7 +86,9 @@ class NamingSection:
 
 @dataclass
 class ReservedSection:
-    words: tuple[str, ...] = ()  # extends the language defaults
+    words: tuple[str, ...] = ()  # the target's WHOLE reserved-word list
+    members: tuple[str, ...] = ()  # member idents the target's templates reserve
+    type_suffixes: tuple[str, ...] = ()  # compositions templates append to type idents
     invalid_prefix: str = "_"
 
 
@@ -97,8 +100,10 @@ class LayoutSection:
 
 @dataclass
 class DocsSection:
-    style: str | None = None  # None -> the language default
-    wrap: int = 100
+    # Width of the wrapped doc TEXT, excluding comment syntax (templates add
+    # their own prefixes). 97 + a 3-character prefix is the 100-column house
+    # style.
+    wrap: int = 97
 
 
 @dataclass
@@ -108,6 +113,7 @@ class Config:
     output_dir: Path | None = None  # where generated code lands, resolved
     sounds_xml: Path | None = None  # companion sounds file to fold in, or None
     target: TargetSection = field(default_factory=TargetSection)
+    vars: dict[str, str] = field(default_factory=dict)  # freeform, for templates
     naming: NamingSection = field(default_factory=NamingSection)
     reserved: ReservedSection = field(default_factory=ReservedSection)
     types: dict[str, str] = field(default_factory=dict)  # primitive overrides
@@ -128,7 +134,7 @@ def load(config_path) -> Config:
     _check_keys(
         data,
         {"input", "output", "sounds", "target", "naming", "reserved", "types",
-         "layout", "docs", "rename"},
+         "layout", "docs", "rename", "vars"},
         "top level",
     )
     _check_keys(data.get("input", {}), {"xsd"}, "input")
@@ -169,6 +175,7 @@ def load(config_path) -> Config:
         output_dir=output_dir,
         sounds_xml=sounds_xml,
         target=_target(data.get("target", {})),
+        vars=_vars(data.get("vars", {})),
         naming=_naming(data.get("naming", {})),
         reserved=_reserved(data.get("reserved", {})),
         types=_types(data.get("types", {})),
@@ -191,13 +198,31 @@ def _check_keys(table: dict, allowed: set[str], where: str) -> None:
 
 
 def _target(t: dict) -> TargetSection:
-    _check_keys(t, {"language", "namespace", "prefix", "inheritance"}, "target")
-    return TargetSection(
+    _check_keys(
+        t, {"language", "namespace", "prefix", "inheritance", "variant-scope"}, "target"
+    )
+    section = TargetSection(
         language=t.get("language", "neutral"),
         namespace=t.get("namespace", ""),
         prefix=t.get("prefix", ""),
         inheritance=bool(t.get("inheritance", True)),
+        variant_scope=t.get("variant-scope", "bare"),
     )
+    if section.variant_scope not in ("bare", "composed"):
+        raise ConfigError(
+            f"[target] variant-scope = {section.variant_scope!r}: expected bare or composed"
+        )
+    return section
+
+
+def _vars(t: dict) -> dict[str, str]:
+    """Freeform key-values passed verbatim to templates ({{target.vars.x}}).
+    The generator never interprets them; this is where anything that cannot
+    be defined without naming a language belongs."""
+    for k, v in t.items():
+        if not isinstance(v, str):
+            raise ConfigError(f"[vars] {k} must be a string")
+    return dict(t)
 
 
 def _string_list(value, where: str) -> tuple[str, ...]:
@@ -238,9 +263,13 @@ def _naming(t: dict) -> NamingSection:
 
 
 def _reserved(t: dict) -> ReservedSection:
-    _check_keys(t, {"words", "invalid-prefix"}, "reserved")
+    _check_keys(t, {"words", "members", "type-suffixes", "invalid-prefix"}, "reserved")
     return ReservedSection(
         words=_string_list(t["words"], "reserved.words") if "words" in t else (),
+        members=_string_list(t["members"], "reserved.members") if "members" in t else (),
+        type_suffixes=_string_list(t["type-suffixes"], "reserved.type-suffixes")
+        if "type-suffixes" in t
+        else (),
         invalid_prefix=t.get("invalid-prefix", "_"),
     )
 
@@ -266,8 +295,8 @@ def _layout(t: dict) -> LayoutSection:
 
 
 def _docs(t: dict) -> DocsSection:
-    _check_keys(t, {"style", "wrap"}, "docs")
-    return DocsSection(style=t.get("style"), wrap=int(t.get("wrap", 100)))
+    _check_keys(t, {"wrap"}, "docs")
+    return DocsSection(wrap=int(t.get("wrap", 97)))
 
 
 # --------------------------------------------------------------------------- #

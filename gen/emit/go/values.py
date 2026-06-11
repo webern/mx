@@ -77,11 +77,10 @@ def value_file(plates: Plates, plate) -> str:
 
 def _enum_body(plates: Plates, plate: EnumPlate) -> list[str]:
     ident = plate.ident
-    wrap = plates.target.doc_style.wrap
     table = unexported(plate.name)
     consts = [v.ident for v in plate.variants]  # final, composed by the plates
 
-    lines = doc_comment(plate.doc, wrap)
+    lines = doc_comment(plate.doc_lines)
     lines += [f"type {ident} int", ""]
     lines += ["const ("]
     lines += [f"\t{consts[0]} {ident} = iota"]
@@ -130,14 +129,13 @@ def _enum_body(plates: Plates, plate: EnumPlate) -> list[str]:
 
 def _number_body(plates: Plates, plate: NumberPlate) -> list[str]:
     ident = plate.ident
-    wrap = plates.target.doc_style.wrap
     go_type = plate.target_type
     try_fn = _PRIM_TRY[plate.base]
     parse_fn = _PRIM_PARSE[plate.base]
     fmt = _PRIM_FORMAT[plate.base].format(f"{go_type}(v)")
     steps = plate.clamp
 
-    lines = doc_comment(plate.doc, wrap)
+    lines = doc_comment(plate.doc_lines)
     lines += [f"type {ident} {go_type}", ""]
 
     if steps:
@@ -185,15 +183,11 @@ def _number_body(plates: Plates, plate: NumberPlate) -> list[str]:
 
 def _string_body(plates: Plates, plate: StringPlate) -> list[str]:
     ident = plate.ident
-    wrap = plates.target.doc_style.wrap
-    doc = plate.doc or ""
+    lines = doc_comment(plate.doc_lines)
     if plate.patterns:
         # Patterns are documented, not enforced: round-trip fidelity wants the
         # input back out, valid or not.
-        note = "Pattern (not enforced): " + " | ".join(plate.patterns)
-        doc = f"{doc} {note}".strip()
-
-    lines = doc_comment(doc, wrap)
+        lines += ["// Pattern (not enforced): " + " | ".join(plate.patterns)]
     lines += [
         f"type {ident} string",
         "",
@@ -267,10 +261,9 @@ def _clamp_lines(steps, indent: str) -> list[str]:
 
 def _union_body(plates: Plates, plate: UnionPlate) -> list[str]:
     ident = plate.ident
-    wrap = plates.target.doc_style.wrap
     cases = _member_cases(plates, plate)
 
-    lines = doc_comment(plate.doc, wrap)
+    lines = doc_comment(plate.doc_lines)
     lines += [f"type {ident} struct {{", f"\tKind {ident}Kind"]
     for kind, field, go_type, *_ in cases:
         if field is not None:

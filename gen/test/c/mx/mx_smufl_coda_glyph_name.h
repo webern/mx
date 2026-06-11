@@ -5,9 +5,9 @@
 
 /*
  * The smufl-coda-glyph-name type is used to reference a specific Standard Music Font Layout (SMuFL)
- * coda character. The value is a SMuFL canonical glyph name that starts with coda. Pattern (not
- * enforced): coda\c*
+ * coda character. The value is a SMuFL canonical glyph name that starts with coda.
  */
+/* Pattern (not enforced): coda\c* */
 typedef char *MxSMUFLCodaGlyphName;
 
 /* Malloc'd copy of the wire string; the value IS its spelling. */

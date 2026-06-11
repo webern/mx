@@ -1,6 +1,10 @@
 # C++ generator target configuration.
 # The generator reads this to know which schema to read and where/how to emit.
 # C++ is the primary target: MusicXML 4.0, with the sounds.xml companion.
+#
+# The generator is language agnostic (the cardinal rule): everything C++-shaped
+# about this target lives here and in its templates (when they are written),
+# never in generator code.
 
 [input]
 # MusicXML XSD this target generates from, relative to this config file.
@@ -19,15 +23,43 @@ xml = "../../docs/sounds-4.0-ed15c23.xml"
 [target]
 language  = "cpp"
 namespace = "mx::core"
+# enum class scopes its constants inside the type, so they stay bare.
+variant-scope = "bare"
 
 [naming]
 extends = "../naming.base.toml"  # schema-forced renames shared by all targets
 
 [types]
-# mx::core wraps xs:decimal in its own Decimal class; that is this target's
-# decision, not a C++ language fact, so it lives here rather than in the
-# language defaults.
-decimal = "Decimal"
+# IR primitive -> C++ spelling. Decimal is mx::core's own wrapper class: a
+# target decision, which is exactly why it lives here.
+string               = "std::string"
+token                = "std::string"
+nmtoken              = "std::string"
+date                 = "std::string"
+decimal              = "Decimal"
+integer              = "int"
+positive_integer     = "int"
+non_negative_integer = "int"
+
+[reserved]
+# C++ keywords (including alternative tokens) a generated identifier must not be.
+words = [
+    "alignas", "alignof", "and", "and_eq", "asm", "auto", "bitand",
+    "bitor", "bool", "break", "case", "catch", "char", "char8_t",
+    "char16_t", "char32_t", "class", "compl", "concept", "const",
+    "consteval", "constexpr", "constinit", "const_cast", "continue",
+    "co_await", "co_return", "co_yield", "decltype", "default", "delete",
+    "do", "double", "dynamic_cast", "else", "enum", "explicit", "export",
+    "extern", "false", "float", "for", "friend", "goto", "if", "inline",
+    "int", "long", "mutable", "namespace", "new", "noexcept", "not",
+    "not_eq", "nullptr", "operator", "or", "or_eq", "private",
+    "protected", "public", "register", "reinterpret_cast", "requires",
+    "return", "short", "signed", "sizeof", "static", "static_assert",
+    "static_cast", "struct", "switch", "template", "this", "thread_local",
+    "throw", "true", "try", "typedef", "typeid", "typename", "union",
+    "unsigned", "using", "virtual", "void", "volatile", "wchar_t",
+    "while", "xor", "xor_eq",
+]
 
 [layout]
 partition = "per-type"

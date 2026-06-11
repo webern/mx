@@ -7,8 +7,9 @@
  * The time-only type is used to indicate that a particular playback-related element only applies
  * particular times through a repeated section. The value is a comma-separated list of positive
  * integers arranged in ascending order, indicating which times through the repeated section that
- * the element applies. Pattern (not enforced): [1-9][0-9]*(, ?[1-9][0-9]*)*
+ * the element applies.
  */
+/* Pattern (not enforced): [1-9][0-9]*(, ?[1-9][0-9]*)* */
 typedef char *MxTimeOnly;
 
 /* Malloc'd copy of the wire string; the value IS its spelling. */

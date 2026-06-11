@@ -5,8 +5,9 @@
 
 /*
  * The comma-separated-text type is used to specify a comma-separated list of text elements, as is
- * used by the font-family attribute. Pattern (not enforced): [^,]+(, ?[^,]+)*
+ * used by the font-family attribute.
  */
+/* Pattern (not enforced): [^,]+(, ?[^,]+)* */
 typedef char *MxCommaSeparatedText;
 
 /* Malloc'd copy of the wire string; the value IS its spelling. */

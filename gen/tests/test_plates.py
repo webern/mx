@@ -242,7 +242,7 @@ class Projection(unittest.TestCase):
 
     def test_composed_scope_builds_flat_namespace_constants(self):
         config = Config()
-        config.target.language = "go"
+        config.target.variant_scope = "composed"
         config.naming.field_convention = "pascal"
         config.naming.variant_convention = "pascal"
         plates = build_plates(tiny_ir(), config)
@@ -262,7 +262,7 @@ class Projection(unittest.TestCase):
 
     def test_composed_scope_with_prefix_screams(self):
         config = Config()
-        config.target.language = "c"
+        config.target.variant_scope = "composed"
         config.target.prefix = "Mx"
         config.naming.variant_convention = "screaming"
         plates = build_plates(tiny_ir(), config)

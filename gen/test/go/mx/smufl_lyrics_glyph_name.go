@@ -4,7 +4,8 @@ package mx
 
 // The smufl-lyrics-glyph-name type is used to reference a specific Standard Music Font Layout
 // (SMuFL) lyrics elision character. The value is a SMuFL canonical glyph name that starts with
-// lyrics. Pattern (not enforced): lyrics\c+
+// lyrics.
+// Pattern (not enforced): lyrics\c+
 type SMUFLLyricsGlyphName string
 
 // TryParseSMUFLLyricsGlyphName accepts any string: the wire form is the value.

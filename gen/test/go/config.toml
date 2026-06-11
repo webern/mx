@@ -2,6 +2,9 @@
 # A test target that keeps the generator honest about extensibility: MusicXML
 # 3.1, and deliberately WITHOUT the sounds.xml companion -- the counterpart to
 # the C target (same 3.1 schema, sounds on), so the two differ only by the fold.
+#
+# The generator is language agnostic (the cardinal rule): everything Go-shaped
+# about this target lives here and in its templates, never in generator code.
 
 [input]
 # MusicXML XSD this target generates from, relative to this config file.
@@ -14,14 +17,49 @@ dir = "mx"
 # No [sounds] section: instrument-sound stays a plain string for this target.
 
 [target]
-language  = "go"
+language = "go"
 namespace = "mx"  # the Go package name
+# Go constants are package-scoped, so enum/union constants compose the type
+# name into one flat namespace (NoteTypeValue1024th).
+variant-scope = "composed"
 
 [naming]
 extends = "../../naming.base.toml"  # schema-forced renames shared by all targets
 # Exported Go identifiers: types, fields, and enum constants are all Pascal.
 field-convention   = "pascal"
 variant-convention = "pascal"
+
+[types]
+# IR primitive -> Go spelling.
+string               = "string"
+token                = "string"
+nmtoken              = "string"
+date                 = "string"
+decimal              = "float64"
+integer              = "int"
+positive_integer     = "int"
+non_negative_integer = "int"
+
+[reserved]
+# Go keywords and predeclared identifiers a generated identifier must not be.
+words = [
+    # keywords
+    "break", "case", "chan", "const", "continue", "default", "defer",
+    "else", "fallthrough", "for", "func", "go", "goto", "if", "import",
+    "interface", "map", "package", "range", "return", "select", "struct",
+    "switch", "type", "var",
+    # predeclared identifiers
+    "any", "append", "bool", "byte", "cap", "clear", "close", "comparable",
+    "complex", "complex64", "complex128", "copy", "delete", "error",
+    "false", "float32", "float64", "imag", "int", "int8", "int16", "int32",
+    "int64", "iota", "len", "make", "max", "min", "new", "nil", "panic",
+    "print", "println", "real", "recover", "rune", "string", "true",
+    "uint", "uint8", "uint16", "uint32", "uint64", "uintptr",
+]
+# Names this target's templates synthesize: the ordered-children field, and
+# the Child/Kind type-name compositions. The collision gate enforces these.
+members = ["Children"]
+type-suffixes = ["Child", "Kind"]
 
 [layout]
 # One generated .go file per type; same-package files need no import graph.

@@ -41,39 +41,45 @@ class PlateRef:
     the referenced plate's type identifier, or the mapped target type when the
     category is `primitive`. For primitives, `wire` carries the IR's canonical
     primitive name (e.g. `non_negative_integer`), not an XSD spelling: builtins
-    never appear on the wire themselves."""
+    never appear on the wire themselves.
+
+    `name` and `kind` are denormalized from the referenced plate so templates
+    never perform lookups: `name` is the referenced type's name bundle (for a
+    primitive, its tokenized canonical name), and `kind` is the referenced
+    plate's kind (enum/number/string/union/complex) or, for primitives, the
+    family-qualified `primitive-decimal` / `primitive-integer` /
+    `primitive-string`."""
 
     wire: str
     category: str  # "complex" | "value" | "primitive"
     ident: str
-
-
-@dataclass
-class DocStyle:
-    """How the target writes doc comments. The plate keeps raw doc text (so a
-    neutral target can use it verbatim); the template applies the syntax."""
-
-    style: str  # e.g. "//", "///", "/* */"; "" for targets without comments
-    wrap: int = 100
+    name: Name | None = None
+    kind: str = ""
 
 
 @dataclass
 class TargetInfo:
-    """The per-target facts that are global to the projection, not per-type."""
+    """The per-target facts that are global to the projection, not per-type.
+    Every field here is part of the projection contract: definable without
+    reference to any language. Anything language-flavored belongs in `vars`,
+    which passes through to templates verbatim and is never interpreted."""
 
-    language: str
-    namespace: str  # C++ namespace / Go package; empty when prefix is used
-    prefix: str  # global symbol prefix for languages without namespaces
+    language: str  # transitional: selects a legacy backend; dies with them
+    namespace: str  # transitional prescribed key; becomes a var with the ports
+    prefix: str  # symbol prefix, prepended to type idents and composed constants
     type_convention: str
     field_convention: str
     variant_convention: str
     file_convention: str
     inheritance: bool  # derived strategy: True -> inherit, False -> flatten
     variant_scope: str  # "bare" | "composed" (see Variant)
-    doc_style: DocStyle
-    reserved: list[str]  # language defaults + [reserved] words, sorted
+    doc_wrap: int  # width doc text is wrapped to (doc_lines), excluding comment syntax
+    reserved: list[str]  # the target's reserved words, sorted
     partition: str  # "per-type" | "single"
     file_prefix: str = ""  # [layout] file-prefix; backends name support files with it
+    reserved_members: list[str] = field(default_factory=list)  # template-reserved member idents
+    reserved_type_suffixes: list[str] = field(default_factory=list)  # template compositions
+    vars: dict[str, str] = field(default_factory=dict)  # freeform, for templates
 
 
 # --------------------------------------------------------------------------- #
@@ -86,10 +92,9 @@ class Variant:
     """One enum value. `wire` is retained for serialization; `ident` is the
     FINAL emitted constant identifier -- templates print it verbatim, and the
     collision gate certifies it. Its shape follows the target's variant scope
-    (a language fact seeded in gen.plates.languages): `bare` for languages
-    whose enum constants live inside the type (C++ `enum class` -> `_1024th`),
-    `composed` for languages where they share one flat namespace (Go
-    `NoteTypeValue1024th`, C `MX_NOTE_TYPE_VALUE_1024TH`)."""
+    ([target] variant-scope): `bare` when the target's constants live inside
+    the type (`_1024th`), `composed` when they share one flat namespace
+    (`NoteTypeValue1024th`, `MX_NOTE_TYPE_VALUE_1024TH`)."""
 
     wire: str
     name: Name
@@ -129,6 +134,8 @@ class EnumPlate:
     base: str  # IR primitive the tokens are drawn from
     variants: list[Variant]
     doc: str | None = None
+    doc_lines: list[str] = field(default_factory=list)  # doc wrapped at doc_wrap
+    deps: list[PlateRef] = field(default_factory=list)  # non-primitive types referenced
     file: str | None = None
     kind: str = "enum"
     strategy: str = "enum-class"
@@ -144,6 +151,8 @@ class NumberPlate:
     clamp: list[ClampStep] = field(default_factory=list)  # resolved policy (see ClampStep)
     target_type: str = ""  # type_map[base]: what the wrapper wraps
     doc: str | None = None
+    doc_lines: list[str] = field(default_factory=list)
+    deps: list[PlateRef] = field(default_factory=list)
     file: str | None = None
     kind: str = "number"
     strategy: str = "numeric-wrapper"
@@ -160,6 +169,8 @@ class StringPlate:
     length: str | None = None
     target_type: str = ""  # type_map[base]
     doc: str | None = None
+    doc_lines: list[str] = field(default_factory=list)
+    deps: list[PlateRef] = field(default_factory=list)
     file: str | None = None
     kind: str = "string"
     strategy: str = "string-wrapper"
@@ -191,6 +202,8 @@ class UnionPlate:
     ident: str
     members: list[UnionPlateMember] = field(default_factory=list)
     doc: str | None = None
+    doc_lines: list[str] = field(default_factory=list)
+    deps: list[PlateRef] = field(default_factory=list)
     file: str | None = None
     kind: str = "union"
     strategy: str = "tagged-variant"
@@ -257,6 +270,8 @@ class ComplexPlate:
     all_members: list[Member] | None = None
     presence_only: bool = False
     doc: str | None = None
+    doc_lines: list[str] = field(default_factory=list)
+    deps: list[PlateRef] = field(default_factory=list)
     file: str | None = None
     kind: str = "complex"
 

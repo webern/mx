@@ -21,23 +21,10 @@ def go_string(s: str) -> str:
     return json.dumps(s, ensure_ascii=True)
 
 
-def doc_comment(text: str | None, wrap: int, prefix: str = "") -> list[str]:
-    """Wrap schema documentation into // comment lines. The text arrives raw
-    on the plate (neutral core); the comment syntax is applied here."""
-    if not text:
-        return []
-    words = text.split()
-    if not words:
-        return []
-    lines: list[str] = []
-    current = f"{prefix}//"
-    for word in words:
-        if len(current) + 1 + len(word) > wrap and current != f"{prefix}//":
-            lines.append(current)
-            current = f"{prefix}//"
-        current += " " + word
-    lines.append(current)
-    return lines
+def doc_comment(doc_lines: list[str]) -> list[str]:
+    """Schema documentation arrives pre-wrapped on the plate (doc_lines, at
+    the [docs] wrap text width); the comment syntax is applied here."""
+    return [f"// {line}" for line in doc_lines]
 
 
 def file_frame(plates: Plates, body: list[str], imports: list[str] | None = None) -> str:

@@ -86,8 +86,7 @@ def complex_file(plates: Plates, plate: ComplexPlate) -> str:
 
 def _struct_lines(plates: Plates, plate: ComplexPlate, members: list[Member],
                   embed: str | None, children_of: str | None) -> list[str]:
-    wrap = plates.target.doc_style.wrap
-    lines = doc_comment(plate.doc, wrap)
+    lines = doc_comment(plate.doc_lines)
     lines += [f"type {plate.ident} struct {{"]
     if embed:
         lines += [f"\t{embed}"]

@@ -6,8 +6,8 @@
 /*
  * The smufl-segno-glyph-name type is used to reference a specific Standard Music Font Layout
  * (SMuFL) segno character. The value is a SMuFL canonical glyph name that starts with segno.
- * Pattern (not enforced): segno\c*
  */
+/* Pattern (not enforced): segno\c* */
 typedef char *MxSMUFLSegnoGlyphName;
 
 /* Malloc'd copy of the wire string; the value IS its spelling. */

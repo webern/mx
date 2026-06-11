@@ -6,8 +6,8 @@
 /*
  * The smufl-accidental-glyph-name type is used to reference a specific Standard Music Font Layout
  * (SMuFL) accidental character. The value is a SMuFL canonical glyph name that starts with acc.
- * Pattern (not enforced): acc\c+
  */
+/* Pattern (not enforced): acc\c+ */
 typedef char *MxSMUFLAccidentalGlyphName;
 
 /* Malloc'd copy of the wire string; the value IS its spelling. */

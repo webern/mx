@@ -7,7 +7,8 @@ package mx
 // An alpha value of 00 is totally transparent; FF is totally opaque. If RGB is used, the A value is
 // assumed to be FF. For instance, the RGB value "#800080" represents purple. An ARGB value of
 // "#40800080" would be a transparent purple. As in SVG 1.1, colors are defined in terms of the sRGB
-// color space (IEC 61966). Pattern (not enforced): #[\dA-F]{6}([\dA-F][\dA-F])?
+// color space (IEC 61966).
+// Pattern (not enforced): #[\dA-F]{6}([\dA-F][\dA-F])?
 type Color string
 
 // TryParseColor accepts any string: the wire form is the value.

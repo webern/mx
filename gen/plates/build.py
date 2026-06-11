@@ -24,7 +24,6 @@ from gen.ir import model as ir
 from gen.ir.build import PRIMITIVES
 from gen.ir.resolve import Resolver
 from gen.names import DEFAULT_ACRONYMS, JOINERS, NameFactory, sanitize_identifier
-from gen.plates import languages
 from gen.plates.check import run_checks
 from gen.plates.model import (
     ClampStep,
@@ -52,6 +51,41 @@ _IMPLIED_MIN = {"positive_integer": 1, "non_negative_integer": 0}
 # The epsilon an exclusive DECIMAL bound clamps past (an exclusive integer
 # bound clamps to the next integer). Matches the corpus duration fixup.
 _EPSILON = 1e-6
+
+# The numeric IR primitives ((see gen.ir.build.PRIMITIVES for the full set).
+_PRIM_NUMERIC = {"decimal", "integer", "positive_integer", "non_negative_integer"}
+
+
+def wrap_doc(doc: str | None, width: int) -> list[str]:
+    """Greedy word-wrap of raw doc text at `width` (the wrapped TEXT width;
+    templates add their own comment syntax). The break points reproduce the
+    house comment style: a 3-character prefix plus width 97 is column 100."""
+    if not doc:
+        return []
+    words = doc.split()
+    lines: list[str] = []
+    current = ""
+    for word in words:
+        if current and len(current) + 1 + len(word) > width:
+            lines.append(current)
+            current = word
+        else:
+            current = f"{current} {word}" if current else word
+    if current:
+        lines.append(current)
+    return lines
+
+
+def _dep_refs(refs) -> list:
+    """The unique non-primitive references a plate's emitted code depends on,
+    sorted by wire name -- the data templates compose include/import lines
+    from. Primitive refs are excluded by CATEGORY (a primitive's name can
+    coincide with a type's wire name)."""
+    unique = {}
+    for ref in refs:
+        if ref.category != "primitive":
+            unique.setdefault(ref.wire, ref)
+    return [unique[wire] for wire in sorted(unique)]
 
 
 def _number_family(base: str) -> str:
@@ -134,13 +168,12 @@ class _Builder:
         self.factory = NameFactory(
             naming.acronyms if naming.acronyms is not None else DEFAULT_ACRONYMS
         )
-        self.reserved = frozenset(languages.reserved_for(config.target.language)) | set(
-            config.reserved.words
-        )
+        # All of this is config data: the generator has no per-language
+        # defaults (the cardinal rule -- see generator-agnosticism.md).
+        self.reserved = frozenset(config.reserved.words)
         self.invalid_prefix = config.reserved.invalid_prefix
-        self.type_map = languages.type_map_for(config.target.language)
-        self.type_map.update(config.types)
-        self.variant_scope = languages.variant_scope_for(config.target.language)
+        self.type_map = dict(config.types)
+        self.variant_scope = config.target.variant_scope
 
         # Every type's Name and final identifier, computed up front so any
         # reference can be resolved to its target spelling in one lookup.
@@ -174,10 +207,6 @@ class _Builder:
 
     def _target_info(self) -> TargetInfo:
         t, n = self.cfg.target, self.cfg.naming
-        doc_style = languages.doc_style_for(t.language)
-        if self.cfg.docs.style is not None:
-            doc_style.style = self.cfg.docs.style
-        doc_style.wrap = self.cfg.docs.wrap
         return TargetInfo(
             language=t.language,
             namespace=t.namespace,
@@ -188,10 +217,13 @@ class _Builder:
             file_convention=n.file_convention,
             inheritance=t.inheritance,
             variant_scope=self.variant_scope,
-            doc_style=doc_style,
+            doc_wrap=self.cfg.docs.wrap,
             reserved=sorted(self.reserved),
             partition=self.cfg.layout.partition,
             file_prefix=self.cfg.layout.file_prefix,
+            reserved_members=sorted(self.cfg.reserved.members),
+            reserved_type_suffixes=sorted(self.cfg.reserved.type_suffixes),
+            vars=dict(self.cfg.vars),
         )
 
     # ----- names and references ---------------------------------------------- #
@@ -263,13 +295,34 @@ class _Builder:
         return self._sanitize(raw)
 
     def _plate_ref(self, ref: ir.Ref) -> PlateRef:
+        """Resolve a reference with the referenced type's name bundle and kind
+        denormalized onto it, so templates never perform lookups."""
         if ref.category == "primitive":
-            ident = self.type_map.get(ref.name, ref.name)
+            return PlateRef(
+                wire=ref.name,
+                category="primitive",
+                ident=self.type_map.get(ref.name, ref.name),
+                name=self.factory.make(ref.name),
+                kind="primitive-" + _number_family(ref.name)
+                if ref.name in _PRIM_NUMERIC
+                else "primitive-string",
+            )
+        if ref.category == "value":
+            kind = self.values_by_name[ref.name].kind
         else:
-            ident = self.type_idents[ref.name]
-        return PlateRef(wire=ref.name, category=ref.category, ident=ident)
+            kind = "complex"
+        return PlateRef(
+            wire=ref.name,
+            category=ref.category,
+            ident=self.type_idents[ref.name],
+            name=self.type_names[ref.name],
+            kind=kind,
+        )
 
     # ----- value plates -------------------------------------------------------- #
+
+    def _doc_lines(self, doc: str | None) -> list[str]:
+        return wrap_doc(doc, self.cfg.docs.wrap)
 
     def _value_plate(self, v: ir.ValueType):
         name = self.type_names[v.name]
@@ -281,6 +334,7 @@ class _Builder:
                 base=v.base,
                 variants=[self._variant(v.name, value) for value in v.values],
                 doc=v.doc,
+                doc_lines=self._doc_lines(v.doc),
             )
         if isinstance(v, ir.NumberType):
             bounds = NumberBounds(
@@ -295,6 +349,7 @@ class _Builder:
                 clamp=clamp_steps(v.base, bounds),
                 target_type=self.type_map.get(v.base, v.base),
                 doc=v.doc,
+                doc_lines=self._doc_lines(v.doc),
             )
         if isinstance(v, ir.StringType):
             return StringPlate(
@@ -307,6 +362,7 @@ class _Builder:
                 length=v.length,
                 target_type=self.type_map.get(v.base, v.base),
                 doc=v.doc,
+                doc_lines=self._doc_lines(v.doc),
             )
         members = []
         for m in v.members:
@@ -336,7 +392,17 @@ class _Builder:
                         literals=[self._variant(v.name, lit) for lit in m.literals or []]
                     )
                 )
-        return UnionPlate(name=name, ident=ident, members=members, doc=v.doc)
+        plate = UnionPlate(
+            name=name,
+            ident=ident,
+            members=members,
+            doc=v.doc,
+            doc_lines=self._doc_lines(v.doc),
+        )
+        plate.deps = _dep_refs(
+            m.ref for m in plate.members if m.ref is not None
+        )
+        return plate
 
     # ----- complex plates ------------------------------------------------------ #
 
@@ -355,7 +421,7 @@ class _Builder:
             # merged chain even for inheriting targets.
             all_members = self._members(ct, flatten=True)
 
-        return ComplexPlate(
+        plate = ComplexPlate(
             name=self.type_names[ct.name],
             ident=self.type_idents[ct.name],
             shape=ct.kind,
@@ -366,7 +432,14 @@ class _Builder:
             all_members=all_members,
             presence_only=ct.presence_only,
             doc=ct.doc,
+            doc_lines=self._doc_lines(ct.doc),
         )
+        refs = [m.type_ref for m in plate.members]
+        refs += [m.type_ref for m in (plate.all_members or [])]
+        if plate.base is not None:
+            refs.append(plate.base)
+        plate.deps = _dep_refs(refs)
+        return plate
 
     def _members(self, ct: ir.ComplexType, flatten: bool) -> list[Member]:
         """The flat field list: attributes first, then the text value body,

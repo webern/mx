@@ -59,11 +59,10 @@ def complex_files(plates: Plates, plate: ComplexPlate, includes: list[str], rt: 
     parse = fn_name(plates, plate.name, "parse")
     serialize = fn_name(plates, plate.name, "serialize")
     free_fn = fn_name(plates, plate.name, "free")
-    wrap = plates.target.doc_style.wrap
 
     # ----- header ---------------------------------------------------------- #
 
-    decl = doc_comment(plate.doc, wrap)
+    decl = doc_comment(plate.doc_lines)
     if elements:
         decl += [
             f"/* One child element of {ident}: exactly one field is non-NULL,",
