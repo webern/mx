@@ -2,18 +2,31 @@
 
 package mx
 
+import "regexp"
+
+// patternEndingNumber is the schema's pattern facet, anchored, in the plates'
+// portable spelling.
+var patternEndingNumber = regexp.MustCompile("^(?:([ ]*)|([1-9][0-9]*(, ?[1-9][0-9]*)*))$")
+
 // The ending-number type is used to specify either a comma-separated list of positive integers
 // without leading zeros, or a string of zero or more spaces. It is used for the number attribute of
 // the ending element. The zero or more spaces version is used when software knows that an ending is
 // present, but cannot determine the type of the ending.
-// Pattern (not enforced): ([ ]*)|([1-9][0-9]*(, ?[1-9][0-9]*)*)
+// Pattern: ([ ]*)|([1-9][0-9]*(, ?[1-9][0-9]*)*)
 type EndingNumber string
 
-// TryParseEndingNumber accepts any string: the wire form is the value.
+// TryParseEndingNumber accepts s only when it matches the schema's pattern
+// facet; the raw value is returned either way.
 func TryParseEndingNumber(s string) (EndingNumber, bool) {
+	if !patternEndingNumber.MatchString(s) {
+		return EndingNumber(s), false
+	}
 	return EndingNumber(s), true
 }
 
+// ParseEndingNumber is lenient: the value is kept verbatim even when it
+// violates the pattern -- no canonical replacement exists, unlike numeric
+// clamping, and round-trip fidelity wins.
 func ParseEndingNumber(s string) EndingNumber {
 	return EndingNumber(s)
 }

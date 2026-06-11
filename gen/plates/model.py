@@ -156,7 +156,15 @@ class StringPlate:
     name: Name
     ident: str
     base: str  # IR primitive: string/token/nmtoken/date
-    patterns: list[str] = field(default_factory=list)
+    patterns: list[str] = field(default_factory=list)  # neutral core: raw XSD facets
+    # The pattern facets as ONE anchored regex in the portable dialect
+    # (literals, character classes, quantifiers, alternation, grouping --
+    # parses identically in RE2, PCRE, ECMAScript, Python). XSD's implicit
+    # whole-value anchoring is made explicit and its \i/\c name-class
+    # escapes are expanded; see build.portable_pattern. None when the type
+    # has no pattern facet. A target that enforces patterns compiles this;
+    # one that does not simply never mentions it.
+    pattern: str | None = None
     min_length: str | None = None
     max_length: str | None = None
     length: str | None = None

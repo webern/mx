@@ -2,16 +2,29 @@
 
 package mx
 
+import "regexp"
+
+// patternSMUFLCodaGlyphName is the schema's pattern facet, anchored, in the plates'
+// portable spelling.
+var patternSMUFLCodaGlyphName = regexp.MustCompile("^(?:coda[-.0-9:A-Z_a-z]*)$")
+
 // The smufl-coda-glyph-name type is used to reference a specific Standard Music Font Layout (SMuFL)
 // coda character. The value is a SMuFL canonical glyph name that starts with coda.
-// Pattern (not enforced): coda\c*
+// Pattern: coda\c*
 type SMUFLCodaGlyphName string
 
-// TryParseSMUFLCodaGlyphName accepts any string: the wire form is the value.
+// TryParseSMUFLCodaGlyphName accepts s only when it matches the schema's pattern
+// facet; the raw value is returned either way.
 func TryParseSMUFLCodaGlyphName(s string) (SMUFLCodaGlyphName, bool) {
+	if !patternSMUFLCodaGlyphName.MatchString(s) {
+		return SMUFLCodaGlyphName(s), false
+	}
 	return SMUFLCodaGlyphName(s), true
 }
 
+// ParseSMUFLCodaGlyphName is lenient: the value is kept verbatim even when it
+// violates the pattern -- no canonical replacement exists, unlike numeric
+// clamping, and round-trip fidelity wins.
 func ParseSMUFLCodaGlyphName(s string) SMUFLCodaGlyphName {
 	return SMUFLCodaGlyphName(s)
 }

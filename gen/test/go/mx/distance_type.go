@@ -12,6 +12,7 @@ func TryParseDistanceType(s string) (DistanceType, bool) {
 	return DistanceType(s), true
 }
 
+// ParseDistanceType is lenient: the value is kept verbatim.
 func ParseDistanceType(s string) DistanceType {
 	return DistanceType(s)
 }

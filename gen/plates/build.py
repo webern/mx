@@ -75,6 +75,78 @@ def wrap_doc(doc: str | None, width: int) -> list[str]:
     return lines
 
 
+# ASCII subsets of the XML name-character classes XSD's \i and \c denote.
+# The full classes add non-ASCII ranges whose spelling is engine-specific
+# (\x{...} vs \uXXXX); every identifier vocabulary a MusicXML pattern
+# describes (SMuFL canonical glyph names) is ASCII, and the strict parse is
+# the only consumer, so the approximation can only under-accept.
+_XSD_NAME_START = "[:A-Z_a-z]"
+_XSD_NAME_CHAR = "[-.0-9:A-Z_a-z]"
+
+
+def _translate_pattern(pattern: str) -> str:
+    """One XSD pattern, re-spelled in the portable dialect. Constructs with
+    no portable spelling (class subtraction, \\C/\\I complements, \\p
+    properties) fail loud: a new schema construct is a decision, not a
+    silent pass-through."""
+    out: list[str] = []
+    in_class = False
+    i, n = 0, len(pattern)
+    while i < n:
+        ch = pattern[i]
+        if ch == "\\":
+            if i + 1 >= n:
+                raise ValueError(f"trailing backslash in pattern {pattern!r}")
+            esc = pattern[i + 1]
+            if esc in "ci":
+                if in_class:
+                    raise ValueError(
+                        f"\\{esc} inside a character class has no portable "
+                        f"expansion: {pattern!r}"
+                    )
+                out.append(_XSD_NAME_CHAR if esc == "c" else _XSD_NAME_START)
+            elif esc in "CIpP":
+                raise ValueError(
+                    f"\\{esc} has no portable spelling: {pattern!r}"
+                )
+            else:
+                out.append(ch + esc)
+            i += 2
+            continue
+        if in_class:
+            if ch == "[":
+                raise ValueError(
+                    f"character class subtraction is not portable: {pattern!r}"
+                )
+            if ch == "]":
+                in_class = False
+        elif ch == "[":
+            in_class = True
+        elif ch in "^$":
+            # XSD has no anchors; ^ and $ are ordinary characters there and
+            # must be escaped to stay ordinary in the portable form.
+            out.append("\\")
+        out.append(ch)
+        i += 1
+    return "".join(out)
+
+
+def portable_pattern(patterns: list[str]) -> str | None:
+    """The type's pattern facets as one anchored portable regex, or None.
+
+    XSD patterns match the whole value (implicit anchoring), so the portable
+    form is explicitly anchored. Multiple pattern facets on one restriction
+    step are alternatives (XSD OR semantics); MusicXML never re-restricts an
+    already-patterned type, so the IR's accumulated list is always a single
+    step and the facets OR-join."""
+    if not patterns:
+        return None
+    translated = [f"(?:{_translate_pattern(p)})" for p in patterns]
+    if len(translated) == 1:
+        return f"^{translated[0]}$"
+    return "^(?:" + "|".join(translated) + ")$"
+
+
 def _dep_refs(refs) -> list:
     """The unique non-primitive references a plate's emitted code depends on,
     sorted by wire name -- the data templates compose include/import lines
@@ -350,6 +422,7 @@ class _Builder:
                 ident=ident,
                 base=v.base,
                 patterns=list(v.patterns),
+                pattern=portable_pattern(list(v.patterns)),
                 min_length=v.min_length,
                 max_length=v.max_length,
                 length=v.length,

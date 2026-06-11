@@ -21,6 +21,7 @@ func TryParseGlyphType(s string) (GlyphType, bool) {
 	return GlyphType(s), true
 }
 
+// ParseGlyphType is lenient: the value is kept verbatim.
 func ParseGlyphType(s string) GlyphType {
 	return GlyphType(s)
 }

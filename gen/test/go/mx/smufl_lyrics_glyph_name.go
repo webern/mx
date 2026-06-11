@@ -2,17 +2,30 @@
 
 package mx
 
+import "regexp"
+
+// patternSMUFLLyricsGlyphName is the schema's pattern facet, anchored, in the plates'
+// portable spelling.
+var patternSMUFLLyricsGlyphName = regexp.MustCompile("^(?:lyrics[-.0-9:A-Z_a-z]+)$")
+
 // The smufl-lyrics-glyph-name type is used to reference a specific Standard Music Font Layout
 // (SMuFL) lyrics elision character. The value is a SMuFL canonical glyph name that starts with
 // lyrics.
-// Pattern (not enforced): lyrics\c+
+// Pattern: lyrics\c+
 type SMUFLLyricsGlyphName string
 
-// TryParseSMUFLLyricsGlyphName accepts any string: the wire form is the value.
+// TryParseSMUFLLyricsGlyphName accepts s only when it matches the schema's pattern
+// facet; the raw value is returned either way.
 func TryParseSMUFLLyricsGlyphName(s string) (SMUFLLyricsGlyphName, bool) {
+	if !patternSMUFLLyricsGlyphName.MatchString(s) {
+		return SMUFLLyricsGlyphName(s), false
+	}
 	return SMUFLLyricsGlyphName(s), true
 }
 
+// ParseSMUFLLyricsGlyphName is lenient: the value is kept verbatim even when it
+// violates the pattern -- no canonical replacement exists, unlike numeric
+// clamping, and round-trip fidelity wins.
 func ParseSMUFLLyricsGlyphName(s string) SMUFLLyricsGlyphName {
 	return SMUFLLyricsGlyphName(s)
 }

@@ -2,16 +2,29 @@
 
 package mx
 
+import "regexp"
+
+// patternSMUFLAccidentalGlyphName is the schema's pattern facet, anchored, in the plates'
+// portable spelling.
+var patternSMUFLAccidentalGlyphName = regexp.MustCompile("^(?:acc[-.0-9:A-Z_a-z]+)$")
+
 // The smufl-accidental-glyph-name type is used to reference a specific Standard Music Font Layout
 // (SMuFL) accidental character. The value is a SMuFL canonical glyph name that starts with acc.
-// Pattern (not enforced): acc\c+
+// Pattern: acc\c+
 type SMUFLAccidentalGlyphName string
 
-// TryParseSMUFLAccidentalGlyphName accepts any string: the wire form is the value.
+// TryParseSMUFLAccidentalGlyphName accepts s only when it matches the schema's pattern
+// facet; the raw value is returned either way.
 func TryParseSMUFLAccidentalGlyphName(s string) (SMUFLAccidentalGlyphName, bool) {
+	if !patternSMUFLAccidentalGlyphName.MatchString(s) {
+		return SMUFLAccidentalGlyphName(s), false
+	}
 	return SMUFLAccidentalGlyphName(s), true
 }
 
+// ParseSMUFLAccidentalGlyphName is lenient: the value is kept verbatim even when it
+// violates the pattern -- no canonical replacement exists, unlike numeric
+// clamping, and round-trip fidelity wins.
 func ParseSMUFLAccidentalGlyphName(s string) SMUFLAccidentalGlyphName {
 	return SMUFLAccidentalGlyphName(s)
 }

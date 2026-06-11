@@ -27,6 +27,7 @@ from gen.ir.build import build_ir
 from gen.ir.dump import to_json
 from gen.names import NameFactory, sanitize_identifier, tokenize
 from gen.plates import PlatesError, build_for_config, build_plates
+from gen.plates.build import portable_pattern
 from gen.xsd import parse
 
 REPO = Path(__file__).resolve().parents[2]
@@ -617,6 +618,74 @@ class ConfigParsing(unittest.TestCase):
                 "[rename.attribute.barline]\nsegno = 'segno-sound'\n",
                 "[rename.attribute]\nbarline = 'bar-line'\n",
             )
+
+
+class PortablePattern(unittest.TestCase):
+    """portable_pattern: XSD pattern facets re-spelled as one anchored regex
+    in the portable dialect (gen.plates.build)."""
+
+    def test_no_facets_is_none(self):
+        self.assertIsNone(portable_pattern([]))
+
+    def test_single_pattern_is_anchored(self):
+        self.assertEqual(
+            portable_pattern(["[^,]+(, ?[^,]+)*"]),
+            "^(?:[^,]+(, ?[^,]+)*)$",
+        )
+
+    def test_name_char_escape_expands(self):
+        out = portable_pattern(["acc\\c+"])
+        self.assertEqual(out, "^(?:acc[-.0-9:A-Z_a-z]+)$")
+
+    def test_name_start_escape_expands(self):
+        out = portable_pattern(["\\i\\c*"])
+        self.assertEqual(out, "^(?:[:A-Z_a-z][-.0-9:A-Z_a-z]*)$")
+
+    def test_multiple_facets_or_join(self):
+        # XSD: several pattern facets on one restriction step are
+        # alternatives (4.0's smufl-accidental-glyph-name has two).
+        out = portable_pattern(["acc\\c+", "(wiggle\\c+)"])
+        self.assertTrue(out.startswith("^(?:(?:") and out.endswith(")$"))
+        self.assertIn(")|(?:", out)
+
+    def test_caret_and_dollar_are_xsd_literals(self):
+        # XSD has no anchors; a bare ^ or $ must stay an ordinary character.
+        self.assertEqual(portable_pattern(["a$b"]), "^(?:a\\$b)$")
+        self.assertEqual(portable_pattern(["[^,]"]), "^(?:[^,])$")
+
+    def test_ordinary_escapes_pass_through(self):
+        self.assertEqual(
+            portable_pattern(["#[\\dA-F]{6}([\\dA-F][\\dA-F])?"]),
+            "^(?:#[\\dA-F]{6}([\\dA-F][\\dA-F])?)$",
+        )
+
+    def test_nonportable_constructs_fail_loud(self):
+        for bad in ("[a-z-[aeiou]]", "\\C+", "\\I", "\\p{L}", "tail\\"):
+            with self.assertRaises(ValueError, msg=bad):
+                portable_pattern([bad])
+
+    def test_every_shipped_schema_pattern_translates_and_compiles(self):
+        # The translator must cover every pattern in the 3.1 and 4.0
+        # schemas, and the portable form must be a valid Python regex too
+        # (Python's re is the strictest of the engines the dialect targets).
+        import re as regex
+
+        for config in (GO_CONFIG, CPP_CONFIG):
+            plates, _ = build_for(config)
+            for p in plates.value_types:
+                if getattr(p, "patterns", None):
+                    self.assertIsNotNone(p.pattern, p.name.wire)
+                    regex.compile(p.pattern)
+
+    def test_color_pattern_semantics(self):
+        import re as regex
+
+        plates, _ = build_for(GO_CONFIG)
+        compiled = regex.compile(plates.plate("color").pattern)
+        self.assertIsNotNone(compiled.match("#FF0000"))
+        self.assertIsNotNone(compiled.match("#40800080"))
+        self.assertIsNone(compiled.match("#GG0000"))
+        self.assertIsNone(compiled.match("#FF0000 "))  # anchoring
 
 
 if __name__ == "__main__":

@@ -2,17 +2,30 @@
 
 package mx
 
+import "regexp"
+
+// patternSMUFLPictogramGlyphName is the schema's pattern facet, anchored, in the plates'
+// portable spelling.
+var patternSMUFLPictogramGlyphName = regexp.MustCompile("^(?:pict[-.0-9:A-Z_a-z]+)$")
+
 // The smufl-pictogram-glyph-name type is used to reference a specific Standard Music Font Layout
 // (SMuFL) percussion pictogram character. The value is a SMuFL canonical glyph name that starts
 // with pict.
-// Pattern (not enforced): pict\c+
+// Pattern: pict\c+
 type SMUFLPictogramGlyphName string
 
-// TryParseSMUFLPictogramGlyphName accepts any string: the wire form is the value.
+// TryParseSMUFLPictogramGlyphName accepts s only when it matches the schema's pattern
+// facet; the raw value is returned either way.
 func TryParseSMUFLPictogramGlyphName(s string) (SMUFLPictogramGlyphName, bool) {
+	if !patternSMUFLPictogramGlyphName.MatchString(s) {
+		return SMUFLPictogramGlyphName(s), false
+	}
 	return SMUFLPictogramGlyphName(s), true
 }
 
+// ParseSMUFLPictogramGlyphName is lenient: the value is kept verbatim even when it
+// violates the pattern -- no canonical replacement exists, unlike numeric
+// clamping, and round-trip fidelity wins.
 func ParseSMUFLPictogramGlyphName(s string) SMUFLPictogramGlyphName {
 	return SMUFLPictogramGlyphName(s)
 }

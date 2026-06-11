@@ -2,16 +2,29 @@
 
 package mx
 
+import "regexp"
+
+// patternSMUFLSegnoGlyphName is the schema's pattern facet, anchored, in the plates'
+// portable spelling.
+var patternSMUFLSegnoGlyphName = regexp.MustCompile("^(?:segno[-.0-9:A-Z_a-z]*)$")
+
 // The smufl-segno-glyph-name type is used to reference a specific Standard Music Font Layout
 // (SMuFL) segno character. The value is a SMuFL canonical glyph name that starts with segno.
-// Pattern (not enforced): segno\c*
+// Pattern: segno\c*
 type SMUFLSegnoGlyphName string
 
-// TryParseSMUFLSegnoGlyphName accepts any string: the wire form is the value.
+// TryParseSMUFLSegnoGlyphName accepts s only when it matches the schema's pattern
+// facet; the raw value is returned either way.
 func TryParseSMUFLSegnoGlyphName(s string) (SMUFLSegnoGlyphName, bool) {
+	if !patternSMUFLSegnoGlyphName.MatchString(s) {
+		return SMUFLSegnoGlyphName(s), false
+	}
 	return SMUFLSegnoGlyphName(s), true
 }
 
+// ParseSMUFLSegnoGlyphName is lenient: the value is kept verbatim even when it
+// violates the pattern -- no canonical replacement exists, unlike numeric
+// clamping, and round-trip fidelity wins.
 func ParseSMUFLSegnoGlyphName(s string) SMUFLSegnoGlyphName {
 	return SMUFLSegnoGlyphName(s)
 }

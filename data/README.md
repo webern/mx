@@ -60,4 +60,8 @@ The sidecars encode one uniform leniency policy, shared by every generated targe
 - every number then clamps into its declared range, including the primitive-implied lower bounds
   (`xs:positiveInteger` >= 1, `xs:nonNegativeInteger` >= 0), so `midi-channel` `0` -> `1` and
   `accordion-middle` `` -> `1`;
-- an exclusive decimal bound clamps to the bound +/- 1e-6 (`duration` `0` -> `0.000001`).
+- an exclusive decimal bound clamps to the bound +/- 1e-6 (`duration` `0` -> `0.000001`);
+- string facets (pattern, length) are enforced by the strict parse only (`TryParseX` reports
+  false): the lenient parse the deserializer uses keeps the value verbatim, because unlike a
+  numeric bound there is no canonical replacement for a failed pattern, and round-trip fidelity
+  wins. No fixup sidecar therefore ever encodes a string substitution.

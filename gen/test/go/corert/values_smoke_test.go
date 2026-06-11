@@ -50,4 +50,43 @@ func TestValueSmoke(t *testing.T) {
 	if fs := mx.ParseFontSize("small"); fs.Kind != mx.FontSizeCSSFontSize {
 		t.Errorf("union kind: got %v, want CSSFontSize", fs.Kind)
 	}
+
+	// The schema's string facets are enforced by the strict parse: patterns
+	// (anchored, ARGB color, XSD \c name-class expansion for SMuFL names)
+	// and minimum lengths. The lenient parse keeps any value verbatim.
+	patternCases := []struct {
+		name string
+		ok   bool
+	}{
+		{"color RGB", true},
+		{"color ARGB", true},
+		{"color bad hex", false},
+		{"color unanchored tail", false},
+		{"smufl accidental", true},
+		{"smufl wrong prefix", false},
+		{"comma-separated text", true},
+		{"comma-separated empty item", false},
+		{"measure-text min length", false},
+	}
+	patternResults := []bool{
+		second(mx.TryParseColor("#FF0000")),
+		second(mx.TryParseColor("#40800080")),
+		second(mx.TryParseColor("#GG0000")),
+		second(mx.TryParseColor("#FF0000 ")),
+		second(mx.TryParseSMUFLAccidentalGlyphName("accSagittal5v7KleismaUp")),
+		second(mx.TryParseSMUFLAccidentalGlyphName("noteheadBlack")),
+		second(mx.TryParseCommaSeparatedText("Times, Helvetica")),
+		second(mx.TryParseCommaSeparatedText("Times,,Helvetica")),
+		second(mx.TryParseMeasureText("")),
+	}
+	for i, c := range patternCases {
+		if patternResults[i] != c.ok {
+			t.Errorf("%s: TryParse ok = %v, want %v", c.name, patternResults[i], c.ok)
+		}
+	}
+	if got := mx.ParseColor("#GG0000").String(); got != "#GG0000" {
+		t.Errorf("lenient parse must keep the value verbatim, got %q", got)
+	}
 }
+
+func second[T any](_ T, ok bool) bool { return ok }

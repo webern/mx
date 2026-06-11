@@ -11,6 +11,7 @@ func TryParseMode(s string) (Mode, bool) {
 	return Mode(s), true
 }
 
+// ParseMode is lenient: the value is kept verbatim.
 func ParseMode(s string) Mode {
 	return Mode(s)
 }

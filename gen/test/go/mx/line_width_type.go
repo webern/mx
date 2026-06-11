@@ -14,6 +14,7 @@ func TryParseLineWidthType(s string) (LineWidthType, bool) {
 	return LineWidthType(s), true
 }
 
+// ParseLineWidthType is lenient: the value is kept verbatim.
 func ParseLineWidthType(s string) LineWidthType {
 	return LineWidthType(s)
 }

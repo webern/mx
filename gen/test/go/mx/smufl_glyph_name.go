@@ -12,6 +12,7 @@ func TryParseSMUFLGlyphName(s string) (SMUFLGlyphName, bool) {
 	return SMUFLGlyphName(s), true
 }
 
+// ParseSMUFLGlyphName is lenient: the value is kept verbatim.
 func ParseSMUFLGlyphName(s string) SMUFLGlyphName {
 	return SMUFLGlyphName(s)
 }

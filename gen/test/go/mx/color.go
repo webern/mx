@@ -2,20 +2,33 @@
 
 package mx
 
+import "regexp"
+
+// patternColor is the schema's pattern facet, anchored, in the plates'
+// portable spelling.
+var patternColor = regexp.MustCompile("^(?:#[\\dA-F]{6}([\\dA-F][\\dA-F])?)$")
+
 // The color type indicates the color of an element. Color may be represented as hexadecimal RGB
 // triples, as in HTML, or as hexadecimal ARGB tuples, with the A indicating alpha of transparency.
 // An alpha value of 00 is totally transparent; FF is totally opaque. If RGB is used, the A value is
 // assumed to be FF. For instance, the RGB value "#800080" represents purple. An ARGB value of
 // "#40800080" would be a transparent purple. As in SVG 1.1, colors are defined in terms of the sRGB
 // color space (IEC 61966).
-// Pattern (not enforced): #[\dA-F]{6}([\dA-F][\dA-F])?
+// Pattern: #[\dA-F]{6}([\dA-F][\dA-F])?
 type Color string
 
-// TryParseColor accepts any string: the wire form is the value.
+// TryParseColor accepts s only when it matches the schema's pattern
+// facet; the raw value is returned either way.
 func TryParseColor(s string) (Color, bool) {
+	if !patternColor.MatchString(s) {
+		return Color(s), false
+	}
 	return Color(s), true
 }
 
+// ParseColor is lenient: the value is kept verbatim even when it
+// violates the pattern -- no canonical replacement exists, unlike numeric
+// clamping, and round-trip fidelity wins.
 func ParseColor(s string) Color {
 	return Color(s)
 }

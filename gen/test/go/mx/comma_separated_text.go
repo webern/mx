@@ -2,16 +2,29 @@
 
 package mx
 
+import "regexp"
+
+// patternCommaSeparatedText is the schema's pattern facet, anchored, in the plates'
+// portable spelling.
+var patternCommaSeparatedText = regexp.MustCompile("^(?:[^,]+(, ?[^,]+)*)$")
+
 // The comma-separated-text type is used to specify a comma-separated list of text elements, as is
 // used by the font-family attribute.
-// Pattern (not enforced): [^,]+(, ?[^,]+)*
+// Pattern: [^,]+(, ?[^,]+)*
 type CommaSeparatedText string
 
-// TryParseCommaSeparatedText accepts any string: the wire form is the value.
+// TryParseCommaSeparatedText accepts s only when it matches the schema's pattern
+// facet; the raw value is returned either way.
 func TryParseCommaSeparatedText(s string) (CommaSeparatedText, bool) {
+	if !patternCommaSeparatedText.MatchString(s) {
+		return CommaSeparatedText(s), false
+	}
 	return CommaSeparatedText(s), true
 }
 
+// ParseCommaSeparatedText is lenient: the value is kept verbatim even when it
+// violates the pattern -- no canonical replacement exists, unlike numeric
+// clamping, and round-trip fidelity wins.
 func ParseCommaSeparatedText(s string) CommaSeparatedText {
 	return CommaSeparatedText(s)
 }

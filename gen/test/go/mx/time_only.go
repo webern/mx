@@ -2,18 +2,31 @@
 
 package mx
 
+import "regexp"
+
+// patternTimeOnly is the schema's pattern facet, anchored, in the plates'
+// portable spelling.
+var patternTimeOnly = regexp.MustCompile("^(?:[1-9][0-9]*(, ?[1-9][0-9]*)*)$")
+
 // The time-only type is used to indicate that a particular playback-related element only applies
 // particular times through a repeated section. The value is a comma-separated list of positive
 // integers arranged in ascending order, indicating which times through the repeated section that
 // the element applies.
-// Pattern (not enforced): [1-9][0-9]*(, ?[1-9][0-9]*)*
+// Pattern: [1-9][0-9]*(, ?[1-9][0-9]*)*
 type TimeOnly string
 
-// TryParseTimeOnly accepts any string: the wire form is the value.
+// TryParseTimeOnly accepts s only when it matches the schema's pattern
+// facet; the raw value is returned either way.
 func TryParseTimeOnly(s string) (TimeOnly, bool) {
+	if !patternTimeOnly.MatchString(s) {
+		return TimeOnly(s), false
+	}
 	return TimeOnly(s), true
 }
 
+// ParseTimeOnly is lenient: the value is kept verbatim even when it
+// violates the pattern -- no canonical replacement exists, unlike numeric
+// clamping, and round-trip fidelity wins.
 func ParseTimeOnly(s string) TimeOnly {
 	return TimeOnly(s)
 }

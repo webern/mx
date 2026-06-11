@@ -2,16 +2,29 @@
 
 package mx
 
+import "regexp"
+
+// patternYyyyMmDd is the schema's pattern facet, anchored, in the plates'
+// portable spelling.
+var patternYyyyMmDd = regexp.MustCompile("^(?:[^:Z]*)$")
+
 // Calendar dates are represented yyyy-mm-dd format, following ISO 8601. This is a W3C XML Schema
 // date type, but without the optional timezone data.
-// Pattern (not enforced): [^:Z]*
+// Pattern: [^:Z]*
 type YyyyMmDd string
 
-// TryParseYyyyMmDd accepts any string: the wire form is the value.
+// TryParseYyyyMmDd accepts s only when it matches the schema's pattern
+// facet; the raw value is returned either way.
 func TryParseYyyyMmDd(s string) (YyyyMmDd, bool) {
+	if !patternYyyyMmDd.MatchString(s) {
+		return YyyyMmDd(s), false
+	}
 	return YyyyMmDd(s), true
 }
 
+// ParseYyyyMmDd is lenient: the value is kept verbatim even when it
+// violates the pattern -- no canonical replacement exists, unlike numeric
+// clamping, and round-trip fidelity wins.
 func ParseYyyyMmDd(s string) YyyyMmDd {
 	return YyyyMmDd(s)
 }

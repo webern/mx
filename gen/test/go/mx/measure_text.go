@@ -2,16 +2,25 @@
 
 package mx
 
+import "unicode/utf8"
+
 // The measure-text type is used for the text attribute of measure elements. It has at least one
 // character. The implicit attribute of the measure element should be set to "yes" rather than
 // setting the text attribute to an empty string.
 type MeasureText string
 
-// TryParseMeasureText accepts any string: the wire form is the value.
+// TryParseMeasureText accepts s only when it is at least 1
+// character(s) long; the raw value is returned either way.
 func TryParseMeasureText(s string) (MeasureText, bool) {
+	if utf8.RuneCountInString(s) < 1 {
+		return MeasureText(s), false
+	}
 	return MeasureText(s), true
 }
 
+// ParseMeasureText is lenient: the value is kept verbatim even when it
+// violates the length facet -- no canonical replacement exists, and
+// round-trip fidelity wins.
 func ParseMeasureText(s string) MeasureText {
 	return MeasureText(s)
 }
