@@ -42,27 +42,27 @@ implementation answered "a Python module per language." Every subsequent fix imp
 
 ## 3. The redesign in one paragraph
 
-A target becomes a **pack**: a directory containing `config.toml` and a `templates/` directory,
-and nothing else the generator needs. Everything `languages.py` held becomes required config data.
+A target becomes self-describing: a directory containing `config.toml` and a `templates/`
+directory, and nothing else the generator needs. Everything `languages.py` held becomes required config data.
 Everything `gen/emit/<lang>/` held becomes template files in a deliberately minimal, logic-less
 template language, rendered by one generic engine (the **press**, completing the plates metaphor:
 plates carry every decision; the press inks and prints them). A render **manifest** in the config
 declares which template renders which plate shapes into which output paths, so file layout --
 including C's header/impl pairs -- is pack data, not Python. The generator's Python is then a
 closed set: parse, lower, project, render, write. The proof obligation is concrete: port Go and C
-to packs with byte-identical generated output, delete `gen/emit/go`, `gen/emit/c`, and
+to targets with byte-identical generated output, delete `gen/emit/go`, `gen/emit/c`, and
 `languages.py`, then add a third target (the JSON Schema emitter that has been this project's
-forcing function since the plates design) as a pure pack, and let CI assert that change touched no
-Python.
+forcing function since the plates design) as a pure target directory, and let CI assert that
+change touched no Python.
 
 ```
-gen/test/c/                     <- a target pack
+gen/test/c/                     <- a target: config + templates, nothing else the generator needs
   config.toml                   <- inputs, projection settings, vars, render manifest
   templates/
     enum.h.tmpl  enum.c.tmpl    <- one template per shape (the original design principle,
     composite.h.tmpl ...           now literally one FILE per shape)
     runtime.h.tmpl ...          <- support files: a template with no tags is a static file
-    member-parse.tmpl ...       <- partials shared by this pack's templates
+    member-parse.tmpl ...       <- partials shared by this target's templates
   src/                          <- the hand-written corert harness (target code, not generator)
   mx/                           <- generated output (committed)
 ```
@@ -86,11 +86,11 @@ neutral:
   language in Python. Becomes explicit config.
 - `[target] inheritance = true | false`: selects the derived strategy. Already neutral.
 - `[types]`: the primitive -> spelling map, today defaulted per language. Becomes **required** for
-  any pack whose templates emit typed code (a pack that omits it gets primitive names passed
+  any pack whose templates emit typed code (a target that omits it gets primitive names passed
   through, which is what a neutral target wants).
-- `[reserved] words`: today extends per-language defaults. Becomes the **whole** list; packs own
-  their keyword lists. Two small additions let packs protect their template-synthesized names
-  generically: `members = [...]` (member identifiers the pack's templates reserve, e.g. Go's
+- `[reserved] words`: today extends per-language defaults. Becomes the **whole** list; targets own
+  their keyword lists. Two small additions let targets protect their template-synthesized names
+  generically: `members = [...]` (member identifiers the target's templates reserve, e.g. Go's
   `Children`) and `type-suffixes = [...]` (compositions like `Child` that the templates append to
   type identifiers), both fed to the existing collision gate.
 - `[docs] wrap`: the plates pre-wrap doc text into lines (`doc_lines`); comment *syntax* moves
@@ -98,8 +98,8 @@ neutral:
 
 **Everything else is freeform.** A `[vars]` table of string key-values passes through to templates
 verbatim (`{{target.vars.namespace}}`, `{{target.vars.package}}`, `{{target.vars.anything}}`).
-`namespace` stops being generator schema; it becomes a variable that the Go pack's templates
-happen to consume as a package name and the C++ pack's as a namespace. `target.foo = "bar"` is
+`namespace` stops being generator schema; it becomes a variable that the Go target's templates
+happen to consume as a targetage name and the C++ target's as a namespace. `target.foo = "bar"` is
 exactly as legal as either. The litmus test for any future key: *if you cannot define it without
 naming a language, it is a var, not a key.*
 
@@ -123,7 +123,7 @@ The implemented subset, derived by walking every construct the current Python ba
   `{{target.vars.prefix}}`.
 - **Sections**: `{{#members}}...{{/members}}` iterates lists (the cursor becomes the context) and
   gates on truthiness for scalars/objects; `{{^x}}...{{/x}}` inverts.
-- **Partials**: `{{> member-parse}}`, resolved within the pack's `templates/` directory, with
+- **Partials**: `{{> member-parse}}`, resolved within the target's `templates/` directory, with
   spec-conformant call-site indentation (essential for readable generated code) and recursion
   permitted with a depth limit (a schema-shaped target walking `content` trees needs it).
 - **Whitespace discipline**: the spec's standalone-line rules, so templates can be indented
@@ -133,7 +133,7 @@ Three deliberate deviations from spec semantics, each because code generation is
 
 1. **Missing keys are a render error**, with `template:line` in the message. The spec mandates
    silent empty output -- the worst possible failure mode for a generator (a typo'd `{{indent}}`
-   emits nothing, and a pack with no compiler behind it, like JSON Schema, never finds out). This
+   emits nothing, and a target with no compiler behind it, like JSON Schema, never finds out). This
    project's ethos is fail-loud; the engine follows it.
 2. **No HTML escaping**: `{{x}}` interpolates verbatim (the spec's `{{{x}}}` everywhere would be
    noise; there is no HTML here to protect).
@@ -217,7 +217,7 @@ output     = "mx_{snake}.c"
 
 [[render.type]]
 strategies = ["composite-class", "value-class", "flag", "attrs-class", "flatten"]
-template   = "complex.h.tmpl"      # or one entry per strategy; the pack chooses its granularity
+template   = "complex.h.tmpl"      # or one entry per strategy; the target chooses its granularity
 output     = "mx_{snake}.h"
 
 # Once entries: rendered once per target, against the whole Plates context.
@@ -234,8 +234,8 @@ This mechanism absorbs, generically, several things that were Python:
 
 - **C's header/impl pairs**: two entries per strategy. The "one FileId, two files" wart in
   `plates.md` dissolves -- file multiplicity is just manifest rows.
-- **Partitioning**: per-type entries *are* `per-type` partition; a pack with only `once` entries
-  *is* `single` partition (the JSON Schema pack: one entry, one template, one output). `[layout]`
+- **Partitioning**: per-type entries *are* `per-type` partition; a target with only `once` entries
+  *is* `single` partition (the JSON Schema target: one entry, one template, one output). `[layout]`
   dies.
 - **File naming**: `output` patterns with casing placeholders (`{snake}`, `{pascal}`, ...) replace
   `file-prefix`/`file-convention` and plate file stems. The generator expands every pattern for
@@ -245,11 +245,11 @@ This mechanism absorbs, generically, several things that were Python:
 - **Support files**: the runtime sources stop being Python string constants and become templates
   (mostly static text; `{{plates.schema_version}}` and `{{target.vars.fn_prefix}}` are the only
   tags the current runtimes need). The completeness check every manifest gets for free: every
-  plate must be matched by at least one entry, or none if the pack declares it renders only a
+  plate must be matched by at least one entry, or none if the target declares it renders only a
   subset (a `strategies = []` is an error; an explicitly empty manifest is one too).
 - **Formatting**: the gofmt pass becomes an optional, generic post-render hook --
   `[render] format = ["gofmt", "-w", "{dir}"]` -- run against the scratch render directory before
-  the writer's write-if-changed diff, preserving idempotence. The command is pack data; the
+  the writer's write-if-changed diff, preserving idempotence. The command is target data; the
   generator knows only "run this, fail loud if it fails or is absent."
 
 The writer (`gen/emit/writer.py`) is already neutral and survives unchanged: marker-gated pruning,
@@ -262,7 +262,7 @@ The closed set, each definable without naming any language: `gen/xsd` (schema pa
 `gen/plates` (projection driven entirely by IR + config; `languages.py` deleted), `gen/press`
 (template engine + context builder + manifest expansion), the writer, and the CLI. The litmus test
 for every future line of generator Python: *could this be wrong for a language we have not heard
-of?* If yes, it belongs in a pack.
+of?* If yes, it belongs in a target's directory.
 
 Explicitly **outside** the rule's scope: the corert harnesses (`gen/test/go/corert/`,
 `gen/test/c/src/`), smoke tests, CMakeLists, go.mod. These are hand-written programs that *consume*
@@ -284,26 +284,26 @@ byte-identical generation before the Python it replaces is deleted.
    `variant-scope` explicit; `[vars]` introduced; `doc_lines` on plates; `PlateRef.name`/`kind`
    and plate `deps` added. Generated output must not change (these are data motions). Delete
    `languages.py`.
-3. **Port the C pack.** Translate `gen/emit/c/*.py` into `gen/test/c/templates/` + manifest.
+3. **Port the C target.** Translate `gen/emit/c/*.py` into `gen/test/c/templates/` + manifest.
    Byte-parity gate, corert green, valgrind clean. Delete `gen/emit/c/`.
-4. **Port the Go pack.** Same, with the format hook carrying gofmt. Byte-parity gate, corert
+4. **Port the Go target.** Same, with the format hook carrying gofmt. Byte-parity gate, corert
    green. Delete `gen/emit/go/`, the `BACKENDS` registry, and `[target] language`.
-5. **Prove the rule.** Add the JSON Schema pack (`gen/schema/`: config.toml + one template) -- the
+5. **Prove the rule.** Add the JSON Schema target (`gen/schema/`: config.toml + one template) -- the
    neutral target the plates design used as its forcing function, now actually built. Its
    round-trip check: validate a corpus sample against the emitted schema. Add the CI assertion
-   that the pack's commit touches no `*.py`, and a structural test that `gen/` imports cleanly
+   that the target's commit touches no `*.py`, and a structural test that `gen/` imports cleanly
    with no module or table naming a language.
-6. **Docs.** Update `plates.md` section 11 (supersession note), `gen/README.md` (pack anatomy,
+6. **Docs.** Update `plates.md` section 11 (supersession note), `gen/README.md` (target anatomy,
    press spec), `AGENTS.md` (the cardinal rule, stated as such).
 
-Then, and only then, the C++ target begins -- as a pack, written without touching Python, which is
+Then, and only then, the C++ target begins -- as a target directory, written without touching Python, which is
 the entire point.
 
 ## 9. Alternatives considered and rejected
 
-- **Per-target Python plugins** (each pack ships a `backend.py` the generator loads dynamically).
+- **Per-target Python plugins** (each target ships a `backend.py` the generator loads dynamically).
   Satisfies the letter of the rule -- no edits to the generator's files -- and would be the
-  cheapest migration (move the existing modules into the packs). Rejected on the spirit: the
+  cheapest migration (move the existing modules into the targets). Rejected on the spirit: the
   language knowledge would still be Python programs, just relocated; the C++ backend would again
   be two thousand lines of imperative emission; and nothing would force decisions into the plates,
   because a plugin can compute anything. The review's instruction was that the bespoke backends
@@ -312,7 +312,7 @@ the entire point.
   diagnostics, configurable strictness -- and expressive is the problem: filters, macros,
   arbitrary expressions, and `set` would let the Go backend be reconstituted *inside* template
   files, hiding naming logic where no structural gate can see it; only review discipline would
-  stand between the packs and that, and this redesign exists because structure beats discipline.
+  stand between the targets and that, and this redesign exists because structure beats discipline.
   It also adds a pip/vendored dependency tree to a deliberately dependency-free Python side.
 - **An existing Mustache library** (chevron, pystache) -- the serious alternative, since it shares
   the language's logic-less constitution and would spare us the parser. Weighed and declined, as a
@@ -347,16 +347,16 @@ the entire point.
   byte-exact; resist "improving" generated output mid-port. Cleanups come after deletion, as
   ordinary template edits.
 - **Synthetic-name gating.** `[reserved] members` / `type-suffixes` (section 4) covers the known
-  cases (Go's `Children` field, `Child` struct suffix). The residual risk -- a pack composing an
-  identifier shape the gate cannot model -- is bounded by the compiler catching it in committed
+  cases (Go's `Children` field, `Child` struct suffix). The residual risk -- a target's templates
+  composing an identifier shape the gate cannot model -- is bounded by the compiler catching it in committed
   output.
-- **Cross-pack template sharing.** Go and C templates will rhyme (the same walk, two grammars).
-  No sharing mechanism in v1: a pack is self-contained, and duplication across packs is the
-  acceptable cost of packs being independently ownable. Revisit only if a third *code* pack makes
-  the rhyme painful -- and note the C++ pack is likely to diverge more than it rhymes (sum types,
+- **Cross-target template sharing.** Go and C templates will rhyme (the same walk, two grammars).
+  No sharing mechanism in v1: a target is self-contained, and duplication across targets is the
+  acceptable cost of targets being independently ownable. Revisit only if a third *code* target
+  makes the rhyme painful -- and note the C++ target is likely to diverge more than it rhymes (sum types,
   references, exceptions).
 - **The inherit-chain guard.** The Go backend's loud rejection of derivation chains with children
-  in multiple members was backend Python; as a pack, that knowledge has no generic home. Position:
+  in multiple members was backend Python; once the backends are templates, that knowledge has no generic home. Position:
   drop it. The plates dump makes chain shapes visible, no MusicXML schema has the shape, and the
   committed-output compile is the backstop. If it ever bites, the neutral fact ("N chain members
   carry element members") can become plate data a template renders into a `#error`.

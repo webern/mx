@@ -23,7 +23,7 @@ mx/
   CMakeLists.txt        <- C++ project: ezxml library + corert test harness
   data/                 <- MusicXML test corpus (~1,347 files, see data/README.md)
   docs/ai/design/       <- design docs (plates.md: the Plates; generator-agnosticism.md:
-                           the cardinal rule and the pack/press redesign)
+                           the cardinal rule and the targets/press redesign)
   src/private/          <- C++ source
     mx/ezxml/           <- vendored pugixml-backed XML layer
     mx/core/            <- generated C++ typed model
