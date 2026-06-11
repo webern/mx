@@ -388,6 +388,10 @@ class Press:
         for segment in rest:
             if value is _MISS:
                 return _MISS
+            if value is None:
+                # Present-but-None is empty/falsey (the strict-mode deviation
+                # applies to ABSENT keys); descending through it stays None.
+                return None
             if isinstance(value, Mapping) and segment in value:
                 value = value[segment]
             else:

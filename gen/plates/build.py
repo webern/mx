@@ -396,6 +396,10 @@ class _Builder:
             name=name,
             ident=ident,
             members=members,
+            open_ended=any(
+                m.ref is not None and m.ref.kind in ("primitive-string", "string")
+                for m in members
+            ),
             doc=v.doc,
             doc_lines=self._doc_lines(v.doc),
         )

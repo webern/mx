@@ -1,0 +1,34 @@
+/* {{generated_banner}} */
+
+#include "mx_{{name.snake}}.h"
+
+#include "mx_runtime.h"
+
+{{#has_clamp}}
+static {{ident}} mx_{{name.snake}}_clamp({{target_type}} v) {
+{{#clamp}}
+    if (v {{op}} {{bound}})
+        v = {{replacement}};
+{{/clamp}}
+    return ({{ident}})v;
+}
+
+{{/has_clamp}}
+bool mx_{{name.snake}}_try_parse(const char *s, {{ident}} *out) {
+    {{target_type}} v;
+    if (!mx_try_parse_{{#is_decimal}}decimal{{/is_decimal}}{{#is_integer}}int{{/is_integer}}(s, &v)) {
+        *out = ({{ident}})0;
+        return false;
+    }
+    *out = {{#has_clamp}}mx_{{name.snake}}_clamp(v){{/has_clamp}}{{^has_clamp}}({{ident}})v{{/has_clamp}};
+    return true;
+}
+
+{{ident}} mx_{{name.snake}}_parse(const char *s) {
+    {{target_type}} v = mx_parse_{{#is_decimal}}decimal{{/is_decimal}}{{#is_integer}}int{{/is_integer}}(s);
+    return {{#has_clamp}}mx_{{name.snake}}_clamp(v){{/has_clamp}}{{^has_clamp}}({{ident}})v{{/has_clamp}};
+}
+
+char *mx_{{name.snake}}_to_string({{ident}} v) {
+    return mx_format_{{#is_decimal}}decimal{{/is_decimal}}{{#is_integer}}int{{/is_integer}}(({{target_type}})v);
+}

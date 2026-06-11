@@ -23,8 +23,29 @@ def run_checks(plates: Plates) -> list[str]:
         _check_variants_per_type(plates, errors)
     _check_members(plates, errors)
     _check_template_reserved(plates, errors)
+    _check_union_member_order(plates, errors)
     _check_file_stems(plates, errors)
     return errors
+
+
+def _check_union_member_order(plates: Plates, errors: list[str]) -> None:
+    """An open string member matches ANY input, so every union parser that
+    tries members in schema order can never reach the members after it. A
+    fact about union semantics, not about any language, so it gates here
+    rather than in each target's templates."""
+    for p in plates.value_types:
+        if not isinstance(p, UnionPlate):
+            continue
+        for i, m in enumerate(p.members):
+            open_member = m.ref is not None and m.ref.kind in (
+                "primitive-string", "string"
+            )
+            if open_member and i != len(p.members) - 1:
+                errors.append(
+                    f"union '{p.name.wire}': member '{m.ref.wire}' matches any "
+                    f"string, so the members after it are unreachable; it must "
+                    f"be last"
+                )
 
 
 def _check_template_reserved(plates: Plates, errors: list[str]) -> None:

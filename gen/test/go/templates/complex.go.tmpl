@@ -1,0 +1,122 @@
+// {{generated_banner}}
+
+package mx
+
+import (
+	"fmt"
+	"github.com/beevik/etree"
+)
+
+{{#doc_lines}}
+// {{value}}
+{{/doc_lines}}
+type {{ident}} struct {
+{{#attributes}}
+	{{ident}} *{{type_ref.ident}} // attribute {{name.wire_q}}
+{{/attributes}}
+{{#value}}
+	{{ident}} {{type_ref.ident}} // text content
+{{/value}}
+{{#has_elements}}
+	Children []{{type.ident}}Child // child elements in document order
+{{/has_elements}}
+}
+
+{{#has_elements}}
+// {{ident}}Child is one child element of {{ident}}: exactly one field
+// is non-nil, and that pointer says which element this is. (No kind
+// discriminator: schema element names like harmony's <kind> would
+// collide with a synthetic field.) Constructing a child with zero or
+// multiple fields set is undefined: serialization writes the first
+// non-nil field in schema order and nothing when all are nil.
+type {{ident}}Child struct {
+{{#elements}}
+	{{ident}} *{{type_ref.ident}}
+{{/elements}}
+}
+
+{{/has_elements}}
+func parse{{ident}}(el *etree.Element) (*{{ident}}, error) {
+	m := &{{ident}}{}
+	for _, a := range el.Attr {
+		if a.Space == "xmlns" || (a.Space == "" && a.Key == "xmlns") {
+			continue
+		}
+		switch a.FullKey() {
+{{#attributes}}
+		case {{name.wire_q}}:
+			v := {{#type_ref.is_value}}Parse{{type_ref.ident}}(a.Value){{/type_ref.is_value}}{{#type_ref.is_primitive_decimal}}parseDecimal(a.Value){{/type_ref.is_primitive_decimal}}{{#type_ref.is_primitive_integer}}parseInt(a.Value){{/type_ref.is_primitive_integer}}{{#type_ref.is_primitive_string}}a.Value{{/type_ref.is_primitive_string}}
+			m.{{ident}} = &v
+{{/attributes}}
+		default:
+			return nil, fmt.Errorf("unknown attribute %q on <%s>", a.FullKey(), el.Tag)
+		}
+	}
+{{#value}}
+	m.{{ident}} = {{#type_ref.is_value}}Parse{{type_ref.ident}}(el.Text()){{/type_ref.is_value}}{{#type_ref.is_primitive_decimal}}parseDecimal(el.Text()){{/type_ref.is_primitive_decimal}}{{#type_ref.is_primitive_integer}}parseInt(el.Text()){{/type_ref.is_primitive_integer}}{{#type_ref.is_primitive_string}}el.Text(){{/type_ref.is_primitive_string}}
+{{/value}}
+	for _, c := range el.ChildElements() {
+		switch c.Tag {
+{{#elements}}
+		case {{name.wire_q}}:
+{{#type_ref.is_complex}}
+			v, err := parse{{type_ref.ident}}(c)
+			if err != nil {
+				return nil, err
+			}
+			m.Children = append(m.Children, {{type.ident}}Child{{{ident}}: v})
+{{/type_ref.is_complex}}
+{{^type_ref.is_complex}}
+			v := {{#type_ref.is_value}}Parse{{type_ref.ident}}(c.Text()){{/type_ref.is_value}}{{#type_ref.is_primitive_decimal}}parseDecimal(c.Text()){{/type_ref.is_primitive_decimal}}{{#type_ref.is_primitive_integer}}parseInt(c.Text()){{/type_ref.is_primitive_integer}}{{#type_ref.is_primitive_string}}c.Text(){{/type_ref.is_primitive_string}}
+			m.Children = append(m.Children, {{type.ident}}Child{{{ident}}: &v})
+{{/type_ref.is_complex}}
+{{/elements}}
+		default:
+			return nil, fmt.Errorf("unknown element <%s> in <%s>", c.Tag, el.Tag)
+		}
+	}
+	return m, nil
+}
+
+func serialize{{ident}}(m *{{ident}}, parent *etree.Element, tag string) {
+{{#has_attributes}}
+	el := parent.CreateElement(tag)
+{{/has_attributes}}
+{{^has_attributes}}
+{{#value}}
+	el := parent.CreateElement(tag)
+{{/value}}
+{{^value}}
+{{#has_elements}}
+	el := parent.CreateElement(tag)
+{{/has_elements}}
+{{^has_elements}}
+	_ = m
+	parent.CreateElement(tag)
+{{/has_elements}}
+{{/value}}
+{{/has_attributes}}
+{{#value}}
+	el.SetText({{#type_ref.is_value}}m.{{ident}}.String(){{/type_ref.is_value}}{{#type_ref.is_primitive_decimal}}formatDecimal(m.{{ident}}){{/type_ref.is_primitive_decimal}}{{#type_ref.is_primitive_integer}}formatInt(m.{{ident}}){{/type_ref.is_primitive_integer}}{{#type_ref.is_primitive_string}}m.{{ident}}{{/type_ref.is_primitive_string}})
+{{/value}}
+{{#attributes}}
+	if m.{{ident}} != nil {
+		el.CreateAttr({{name.wire_q}}, {{#type_ref.is_value}}(*m.{{ident}}).String(){{/type_ref.is_value}}{{#type_ref.is_primitive_decimal}}formatDecimal((*m.{{ident}})){{/type_ref.is_primitive_decimal}}{{#type_ref.is_primitive_integer}}formatInt((*m.{{ident}})){{/type_ref.is_primitive_integer}}{{#type_ref.is_primitive_string}}(*m.{{ident}}){{/type_ref.is_primitive_string}})
+	}
+{{/attributes}}
+{{#has_elements}}
+	for _, ch := range m.Children {
+		switch {
+{{#elements}}
+		case ch.{{ident}} != nil:
+{{#type_ref.is_complex}}
+			serialize{{type_ref.ident}}(ch.{{ident}}, el, {{name.wire_q}})
+{{/type_ref.is_complex}}
+{{^type_ref.is_complex}}
+			el.CreateElement({{name.wire_q}}).SetText({{#type_ref.is_value}}(*ch.{{ident}}).String(){{/type_ref.is_value}}{{#type_ref.is_primitive_decimal}}formatDecimal((*ch.{{ident}})){{/type_ref.is_primitive_decimal}}{{#type_ref.is_primitive_integer}}formatInt((*ch.{{ident}})){{/type_ref.is_primitive_integer}}{{#type_ref.is_primitive_string}}(*ch.{{ident}}){{/type_ref.is_primitive_string}})
+{{/type_ref.is_complex}}
+{{/elements}}
+		}
+	}
+{{/has_elements}}
+}

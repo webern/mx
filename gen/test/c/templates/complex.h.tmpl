@@ -1,0 +1,70 @@
+/* {{generated_banner}} */
+
+#ifndef MX_{{name.screaming}}_H_INCLUDED
+#define MX_{{name.screaming}}_H_INCLUDED
+
+#include <libxml/tree.h>
+#include <stdbool.h>
+#include <stddef.h>
+{{#deps}}
+#include "mx_{{name.snake}}.h"
+{{/deps}}
+
+{{#has_doc_lines}}
+/*
+{{#doc_lines}}
+ * {{value}}
+{{/doc_lines}}
+ */
+{{/has_doc_lines}}
+{{#has_merged_elements}}
+/* One child element of {{ident}}: exactly one field is non-NULL,
+   and that pointer says which element this is. Document order is
+   the array order on the owning struct. Zero or multiple fields
+   set is undefined: serialization writes the first non-NULL field
+   in schema order and nothing when all are NULL. */
+typedef struct {
+{{#merged_elements}}
+{{^type_ref.is_string}}
+{{^type_ref.is_primitive_string}}
+    {{type_ref.ident}} *{{ident}};
+{{/type_ref.is_primitive_string}}
+{{/type_ref.is_string}}
+{{#type_ref.is_string}}
+    {{type_ref.ident}} {{ident}};
+{{/type_ref.is_string}}
+{{#type_ref.is_primitive_string}}
+    {{type_ref.ident}}{{ident}};
+{{/type_ref.is_primitive_string}}
+{{/merged_elements}}
+} {{ident}}Child;
+
+{{/has_merged_elements}}
+typedef struct {
+{{#merged_attributes}}
+    bool has_{{ident}};
+    {{type_ref.ident}}{{^type_ref.is_primitive_string}} {{/type_ref.is_primitive_string}}{{ident}}; /* attribute {{name.wire}} */
+{{/merged_attributes}}
+{{#merged_value}}
+    {{type_ref.ident}}{{^type_ref.is_primitive_string}} {{/type_ref.is_primitive_string}}{{ident}}; /* text content */
+{{/merged_value}}
+{{#has_merged_elements}}
+    {{ident}}Child *children; /* child elements in document order */
+    size_t children_count;
+{{/has_merged_elements}}
+{{^has_merged_attributes}}
+{{^merged_value}}
+{{^has_merged_elements}}
+    char unused; /* presence is the only information */
+{{/has_merged_elements}}
+{{/merged_value}}
+{{/has_merged_attributes}}
+} {{ident}};
+
+/* NULL on error; the message is in mx_error(). */
+{{ident}} *mx_{{name.snake}}_parse(xmlNodePtr el);
+/* Appends under parent, or creates a free node when parent is NULL. */
+xmlNodePtr mx_{{name.snake}}_serialize(const {{ident}} *m, xmlNodePtr parent, const char *tag);
+void mx_{{name.snake}}_free({{ident}} *m);
+
+#endif /* MX_{{name.screaming}}_H_INCLUDED */

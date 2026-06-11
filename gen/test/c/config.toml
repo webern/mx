@@ -63,3 +63,80 @@ type-suffixes = ["Child", "Kind"]
 [layout]
 partition   = "per-type"
 file-prefix = "mx_"  # generated files: mx_<type>.h / mx_<type>.c
+
+# ---- the render manifest: which templates produce which files ----------- #
+# The presence of [render] selects the press pipeline; everything C-shaped
+# lives in templates/ and here, never in generator code.
+
+[render]
+dir = "templates"
+
+[[render.type]]
+strategies = ["enum-class"]
+template   = "enum.h.tmpl"
+output     = "mx_{snake}.h"
+
+[[render.type]]
+strategies = ["enum-class"]
+template   = "enum.c.tmpl"
+output     = "mx_{snake}.c"
+
+[[render.type]]
+strategies = ["numeric-wrapper"]
+template   = "number.h.tmpl"
+output     = "mx_{snake}.h"
+
+[[render.type]]
+strategies = ["numeric-wrapper"]
+template   = "number.c.tmpl"
+output     = "mx_{snake}.c"
+
+[[render.type]]
+strategies = ["string-wrapper"]
+template   = "string.h.tmpl"
+output     = "mx_{snake}.h"
+
+[[render.type]]
+strategies = ["string-wrapper"]
+template   = "string.c.tmpl"
+output     = "mx_{snake}.c"
+
+[[render.type]]
+strategies = ["tagged-variant"]
+template   = "union.h.tmpl"
+output     = "mx_{snake}.h"
+
+[[render.type]]
+strategies = ["tagged-variant"]
+template   = "union.c.tmpl"
+output     = "mx_{snake}.c"
+
+[[render.type]]
+strategies = ["value-class", "composite-class", "flag", "attrs-class", "flatten"]
+template   = "complex.h.tmpl"
+output     = "mx_{snake}.h"
+
+[[render.type]]
+strategies = ["value-class", "composite-class", "flag", "attrs-class", "flatten"]
+template   = "complex.c.tmpl"
+output     = "mx_{snake}.c"
+
+[[render.once]]
+template = "runtime.h.tmpl"
+output   = "mx_runtime.h"
+
+[[render.once]]
+template = "runtime.c.tmpl"
+output   = "mx_runtime.c"
+
+[[render.once]]
+template = "document.h.tmpl"
+output   = "mx_document.h"
+
+[[render.once]]
+template = "document.c.tmpl"
+output   = "mx_document.c"
+
+[[render.once]]
+template = "sources.cmake.tmpl"
+output   = "sources.cmake"

@@ -1,0 +1,24 @@
+/* {{generated_banner}} */
+
+#ifndef MX_{{name.screaming}}_H_INCLUDED
+#define MX_{{name.screaming}}_H_INCLUDED
+
+#include <stdbool.h>
+
+{{#has_doc_lines}}
+/*
+{{#doc_lines}}
+ * {{value}}
+{{/doc_lines}}
+ */
+{{/has_doc_lines}}
+typedef {{target_type}} {{ident}};
+
+/* Lexically strict parse{{#has_clamp}}, then clamps into the declared range{{/has_clamp}}. */
+bool mx_{{name.snake}}_try_parse(const char *s, {{ident}} *out);
+/* Lenient: unparseable input becomes 0{{#has_clamp}}, then clamps into the declared range{{/has_clamp}}. */
+{{ident}} mx_{{name.snake}}_parse(const char *s);
+/* Malloc'd; caller frees. */
+char *mx_{{name.snake}}_to_string({{ident}} v);
+
+#endif /* MX_{{name.screaming}}_H_INCLUDED */

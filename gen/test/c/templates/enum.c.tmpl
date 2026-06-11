@@ -1,0 +1,36 @@
+/* {{generated_banner}} */
+
+#include "mx_{{name.snake}}.h"
+
+#include <string.h>
+
+static const char *const mx_{{name.snake}}_values[] = {
+{{#variants}}
+    {{wire_q}},
+{{/variants}}
+};
+
+bool mx_{{name.snake}}_try_parse(const char *s, {{ident}} *out) {
+    if (!s)
+        s = "";
+    for (size_t i = 0; i < sizeof(mx_{{name.snake}}_values) / sizeof(mx_{{name.snake}}_values[0]); i++) {
+        if (strcmp(s, mx_{{name.snake}}_values[i]) == 0) {
+            *out = ({{ident}})i;
+            return true;
+        }
+    }
+    *out = ({{ident}})0;
+    return false;
+}
+
+{{ident}} mx_{{name.snake}}_parse(const char *s) {
+    {{ident}} v;
+    mx_{{name.snake}}_try_parse(s, &v);
+    return v;
+}
+
+const char *mx_{{name.snake}}_to_string({{ident}} v) {
+    if ((size_t)v >= sizeof(mx_{{name.snake}}_values) / sizeof(mx_{{name.snake}}_values[0]))
+        return mx_{{name.snake}}_values[0];
+    return mx_{{name.snake}}_values[v];
+}

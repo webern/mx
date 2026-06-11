@@ -1,0 +1,36 @@
+/* {{generated_banner}} */
+
+#ifndef MX_RUNTIME_H_INCLUDED
+#define MX_RUNTIME_H_INCLUDED
+
+#include <stdbool.h>
+
+/* The MusicXML version of the schema this model was generated from.
+   Documents declaring a newer version may use types this model cannot
+   represent; harnesses gate on it. */
+#define MX_SUPPORTED_MUSICXML_VERSION "{{schema_version}}"
+
+/* Shared parse/format helpers for the generated MusicXML types. Lenient
+   parses never fail: unparseable input becomes 0 (range clamping is the
+   typed wrappers' job). Formatting returns malloc'd strings the caller
+   frees. */
+
+bool mx_try_parse_decimal(const char *s, double *out);
+double mx_parse_decimal(const char *s);
+bool mx_try_parse_int(const char *s, long *out);
+long mx_parse_int(const char *s);
+
+/* Shortest decimal spelling without exponent notation (8.5 -> "8.5",
+   4 -> "4", 1e-6 -> "0.000001"). Malloc'd; caller frees. */
+char *mx_format_decimal(double v);
+char *mx_format_int(long v);
+
+/* strdup that maps NULL to "". Malloc'd; caller frees. */
+char *mx_strdup(const char *s);
+
+/* The parse-failure message channel: parse functions returning NULL set it;
+   the caller reads it before the next parse. Static storage. */
+void mx_error_set(const char *fmt, ...);
+const char *mx_error(void);
+
+#endif /* MX_RUNTIME_H_INCLUDED */

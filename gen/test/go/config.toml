@@ -64,3 +64,51 @@ type-suffixes = ["Child", "Kind"]
 [layout]
 # One generated .go file per type; same-package files need no import graph.
 partition = "per-type"
+
+# ---- the render manifest: which templates produce which files ----------- #
+# The presence of [render] selects the press pipeline; everything Go-shaped
+# lives in templates/ and here, never in generator code. gofmt owns the
+# final formatting (tabwriter alignment), exactly as Go codegen convention
+# expects.
+
+[render]
+dir = "templates"
+format = ["gofmt", "-w", "{dir}"]
+
+[[render.type]]
+strategies = ["enum-class"]
+template   = "enum.go.tmpl"
+output     = "{snake}.go"
+
+[[render.type]]
+strategies = ["numeric-wrapper"]
+template   = "number.go.tmpl"
+output     = "{snake}.go"
+
+[[render.type]]
+strategies = ["string-wrapper"]
+template   = "string.go.tmpl"
+output     = "{snake}.go"
+
+[[render.type]]
+strategies = ["tagged-variant"]
+template   = "union.go.tmpl"
+output     = "{snake}.go"
+
+[[render.type]]
+strategies = ["value-class", "composite-class", "flag", "attrs-class"]
+template   = "complex.go.tmpl"
+output     = "{snake}.go"
+
+[[render.type]]
+strategies = ["inherit"]
+template   = "inherit.go.tmpl"
+output     = "{snake}.go"
+
+[[render.once]]
+template = "runtime.go.tmpl"
+output   = "runtime.go"
+
+[[render.once]]
+template = "document.go.tmpl"
+output   = "document.go"

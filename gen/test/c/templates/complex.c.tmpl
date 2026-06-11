@@ -1,0 +1,308 @@
+/* {{generated_banner}} */
+
+#include "mx_{{name.snake}}.h"
+
+#include "mx_runtime.h"
+#include <stdlib.h>
+#include <string.h>
+
+{{ident}} *mx_{{name.snake}}_parse(xmlNodePtr el) {
+    {{ident}} *m = calloc(1, sizeof(*m));
+    if (!m)
+        abort();
+    for (xmlAttrPtr a = el->properties; a; a = a->next) {
+        char aname[128];
+        if (a->ns && a->ns->prefix)
+            snprintf(aname, sizeof(aname), "%s:%s",
+                     (const char *)a->ns->prefix, (const char *)a->name);
+        else
+            snprintf(aname, sizeof(aname), "%s", (const char *)a->name);
+        xmlChar *avalue = xmlNodeListGetString(el->doc, a->children, 1);
+        const char *s = avalue ? (const char *)avalue : "";
+        (void)s;
+{{#merged_attributes}}
+        {{#is_first}}if{{/is_first}}{{^is_first}}} else if{{/is_first}} (strcmp(aname, {{name.wire_q}}) == 0) {
+            m->has_{{ident}} = true;
+            m->{{ident}} = {{#type_ref.is_value}}mx_{{type_ref.name.snake}}_parse(s){{/type_ref.is_value}}{{#type_ref.is_primitive_decimal}}mx_parse_decimal(s){{/type_ref.is_primitive_decimal}}{{#type_ref.is_primitive_integer}}mx_parse_int(s){{/type_ref.is_primitive_integer}}{{#type_ref.is_primitive_string}}mx_strdup(s){{/type_ref.is_primitive_string}};
+{{/merged_attributes}}
+{{#has_merged_attributes}}
+        } else {
+{{/has_merged_attributes}}
+{{^has_merged_attributes}}
+        {
+{{/has_merged_attributes}}
+            mx_error_set("unknown attribute \"%s\" on <%s>", aname,
+                         (const char *)el->name);
+            xmlFree(avalue);
+            mx_{{name.snake}}_free(m);
+            return NULL;
+        }
+        xmlFree(avalue);
+    }
+{{#merged_value}}
+    {
+        xmlChar *text = xmlNodeGetContent(el);
+        const char *s = text ? (const char *)text : "";
+        m->{{ident}} = {{#type_ref.is_value}}mx_{{type_ref.name.snake}}_parse(s){{/type_ref.is_value}}{{#type_ref.is_primitive_decimal}}mx_parse_decimal(s){{/type_ref.is_primitive_decimal}}{{#type_ref.is_primitive_integer}}mx_parse_int(s){{/type_ref.is_primitive_integer}}{{#type_ref.is_primitive_string}}mx_strdup(s){{/type_ref.is_primitive_string}};
+        xmlFree(text);
+    }
+{{/merged_value}}
+{{#has_merged_elements}}
+    size_t n = 0;
+    for (xmlNodePtr c = el->children; c; c = c->next)
+        if (c->type == XML_ELEMENT_NODE)
+            n++;
+    if (n) {
+        m->children = calloc(n, sizeof(*m->children));
+        if (!m->children)
+            abort();
+    }
+{{/has_merged_elements}}
+    for (xmlNodePtr c = el->children; c; c = c->next) {
+        if (c->type != XML_ELEMENT_NODE)
+            continue;
+        const char *tag = (const char *)c->name;
+{{#has_merged_elements}}
+        {{type.ident}}Child *ch = &m->children[m->children_count];
+{{/has_merged_elements}}
+{{#merged_elements}}
+        {{#is_first}}if{{/is_first}}{{^is_first}}} else if{{/is_first}} (strcmp(tag, {{name.wire_q}}) == 0) {
+{{#type_ref.is_complex}}
+            ch->{{ident}} = mx_{{type_ref.name.snake}}_parse(c);
+            if (!ch->{{ident}}) {
+                mx_{{type.name.snake}}_free(m);
+                return NULL;
+            }
+{{/type_ref.is_complex}}
+{{^type_ref.is_complex}}
+            xmlChar *text = xmlNodeGetContent(c);
+            const char *s = text ? (const char *)text : "";
+{{#type_ref.is_string}}
+            ch->{{ident}} = mx_{{type_ref.name.snake}}_parse(s);
+{{/type_ref.is_string}}
+{{#type_ref.is_primitive_string}}
+            ch->{{ident}} = mx_strdup(s);
+{{/type_ref.is_primitive_string}}
+{{^type_ref.is_string}}
+{{^type_ref.is_primitive_string}}
+            ch->{{ident}} = malloc(sizeof(*ch->{{ident}}));
+            if (!ch->{{ident}})
+                abort();
+            *ch->{{ident}} = {{#type_ref.is_value}}mx_{{type_ref.name.snake}}_parse(s){{/type_ref.is_value}}{{#type_ref.is_primitive_decimal}}mx_parse_decimal(s){{/type_ref.is_primitive_decimal}}{{#type_ref.is_primitive_integer}}mx_parse_int(s){{/type_ref.is_primitive_integer}};
+{{/type_ref.is_primitive_string}}
+{{/type_ref.is_string}}
+            xmlFree(text);
+{{/type_ref.is_complex}}
+{{/merged_elements}}
+{{#has_merged_elements}}
+        } else {
+{{/has_merged_elements}}
+{{^has_merged_elements}}
+        {
+{{/has_merged_elements}}
+            mx_error_set("unknown element <%s> in <%s>", tag,
+                         (const char *)el->name);
+            mx_{{name.snake}}_free(m);
+            return NULL;
+        }
+{{#has_merged_elements}}
+        m->children_count++;
+{{/has_merged_elements}}
+    }
+    return m;
+}
+
+xmlNodePtr mx_{{name.snake}}_serialize(const {{ident}} *m, xmlNodePtr parent, const char *tag) {
+    xmlNodePtr el = parent ? xmlNewChild(parent, NULL, BAD_CAST tag, NULL)
+                           : xmlNewNode(NULL, BAD_CAST tag);
+    if (!el)
+        abort(); /* OOM policy: abort, matching the runtime's allocators */
+{{#merged_value}}
+{{#type_ref.is_enum}}
+    xmlAddChild(el, xmlNewText(BAD_CAST mx_{{type_ref.name.snake}}_to_string(m->{{ident}})));
+{{/type_ref.is_enum}}
+{{#type_ref.is_string}}
+    xmlAddChild(el, xmlNewText(BAD_CAST m->{{ident}}));
+{{/type_ref.is_string}}
+{{#type_ref.is_primitive_string}}
+    xmlAddChild(el, xmlNewText(BAD_CAST m->{{ident}}));
+{{/type_ref.is_primitive_string}}
+{{#type_ref.is_number}}
+    {
+        char *s = mx_{{type_ref.name.snake}}_to_string(m->{{ident}});
+        xmlAddChild(el, xmlNewText(BAD_CAST s));
+        free(s);
+    }
+{{/type_ref.is_number}}
+{{#type_ref.is_union}}
+    {
+        char *s = mx_{{type_ref.name.snake}}_to_string(m->{{ident}});
+        xmlAddChild(el, xmlNewText(BAD_CAST s));
+        free(s);
+    }
+{{/type_ref.is_union}}
+{{#type_ref.is_primitive_decimal}}
+    {
+        char *s = mx_format_decimal(m->{{ident}});
+        xmlAddChild(el, xmlNewText(BAD_CAST s));
+        free(s);
+    }
+{{/type_ref.is_primitive_decimal}}
+{{#type_ref.is_primitive_integer}}
+    {
+        char *s = mx_format_int(m->{{ident}});
+        xmlAddChild(el, xmlNewText(BAD_CAST s));
+        free(s);
+    }
+{{/type_ref.is_primitive_integer}}
+{{/merged_value}}
+{{#merged_attributes}}
+    if (m->has_{{ident}}) {
+{{#type_ref.is_enum}}
+        xmlSetProp(el, BAD_CAST {{name.wire_q}}, BAD_CAST mx_{{type_ref.name.snake}}_to_string(m->{{ident}}));
+{{/type_ref.is_enum}}
+{{#type_ref.is_string}}
+        xmlSetProp(el, BAD_CAST {{name.wire_q}}, BAD_CAST m->{{ident}});
+{{/type_ref.is_string}}
+{{#type_ref.is_primitive_string}}
+        xmlSetProp(el, BAD_CAST {{name.wire_q}}, BAD_CAST m->{{ident}});
+{{/type_ref.is_primitive_string}}
+{{#type_ref.is_number}}
+        char *s = mx_{{type_ref.name.snake}}_to_string(m->{{ident}});
+        xmlSetProp(el, BAD_CAST {{name.wire_q}}, BAD_CAST s);
+        free(s);
+{{/type_ref.is_number}}
+{{#type_ref.is_union}}
+        char *s = mx_{{type_ref.name.snake}}_to_string(m->{{ident}});
+        xmlSetProp(el, BAD_CAST {{name.wire_q}}, BAD_CAST s);
+        free(s);
+{{/type_ref.is_union}}
+{{#type_ref.is_primitive_decimal}}
+        char *s = mx_format_decimal(m->{{ident}});
+        xmlSetProp(el, BAD_CAST {{name.wire_q}}, BAD_CAST s);
+        free(s);
+{{/type_ref.is_primitive_decimal}}
+{{#type_ref.is_primitive_integer}}
+        char *s = mx_format_int(m->{{ident}});
+        xmlSetProp(el, BAD_CAST {{name.wire_q}}, BAD_CAST s);
+        free(s);
+{{/type_ref.is_primitive_integer}}
+    }
+{{/merged_attributes}}
+{{#has_merged_elements}}
+    for (size_t i = 0; i < m->children_count; i++) {
+        const {{type.ident}}Child *ch = &m->children[i];
+{{#merged_elements}}
+        {{#is_first}}if{{/is_first}}{{^is_first}}} else if{{/is_first}} (ch->{{ident}}) {
+{{#type_ref.is_complex}}
+            mx_{{type_ref.name.snake}}_serialize(ch->{{ident}}, el, {{name.wire_q}});
+{{/type_ref.is_complex}}
+{{#type_ref.is_enum}}
+            xmlNewTextChild(el, NULL, BAD_CAST {{name.wire_q}}, BAD_CAST mx_{{type_ref.name.snake}}_to_string((*ch->{{ident}})));
+{{/type_ref.is_enum}}
+{{#type_ref.is_string}}
+            xmlNewTextChild(el, NULL, BAD_CAST {{name.wire_q}}, BAD_CAST ch->{{ident}});
+{{/type_ref.is_string}}
+{{#type_ref.is_primitive_string}}
+            xmlNewTextChild(el, NULL, BAD_CAST {{name.wire_q}}, BAD_CAST ch->{{ident}});
+{{/type_ref.is_primitive_string}}
+{{#type_ref.is_number}}
+            char *s = mx_{{type_ref.name.snake}}_to_string((*ch->{{ident}}));
+            xmlNewTextChild(el, NULL, BAD_CAST {{name.wire_q}}, BAD_CAST s);
+            free(s);
+{{/type_ref.is_number}}
+{{#type_ref.is_union}}
+            char *s = mx_{{type_ref.name.snake}}_to_string((*ch->{{ident}}));
+            xmlNewTextChild(el, NULL, BAD_CAST {{name.wire_q}}, BAD_CAST s);
+            free(s);
+{{/type_ref.is_union}}
+{{#type_ref.is_primitive_decimal}}
+            char *s = mx_format_decimal((*ch->{{ident}}));
+            xmlNewTextChild(el, NULL, BAD_CAST {{name.wire_q}}, BAD_CAST s);
+            free(s);
+{{/type_ref.is_primitive_decimal}}
+{{#type_ref.is_primitive_integer}}
+            char *s = mx_format_int((*ch->{{ident}}));
+            xmlNewTextChild(el, NULL, BAD_CAST {{name.wire_q}}, BAD_CAST s);
+            free(s);
+{{/type_ref.is_primitive_integer}}
+{{/merged_elements}}
+        }
+    }
+{{/has_merged_elements}}
+{{^has_merged_attributes}}
+{{^merged_value}}
+{{^has_merged_elements}}
+    (void)m;
+{{/has_merged_elements}}
+{{/merged_value}}
+{{/has_merged_attributes}}
+    return el;
+}
+
+void mx_{{name.snake}}_free({{ident}} *m) {
+    if (!m)
+        return;
+{{#merged_attributes}}
+{{#type_ref.is_string}}
+    if (m->has_{{ident}})
+        free(m->{{ident}});
+{{/type_ref.is_string}}
+{{#type_ref.is_primitive_string}}
+    if (m->has_{{ident}})
+        free(m->{{ident}});
+{{/type_ref.is_primitive_string}}
+{{#type_ref.is_union}}
+    if (m->has_{{ident}})
+        mx_{{type_ref.name.snake}}_free(&m->{{ident}});
+{{/type_ref.is_union}}
+{{/merged_attributes}}
+{{#merged_value}}
+{{#type_ref.is_string}}
+    free(m->{{ident}});
+{{/type_ref.is_string}}
+{{#type_ref.is_primitive_string}}
+    free(m->{{ident}});
+{{/type_ref.is_primitive_string}}
+{{#type_ref.is_union}}
+    mx_{{type_ref.name.snake}}_free(&m->{{ident}});
+{{/type_ref.is_union}}
+{{/merged_value}}
+{{#has_merged_elements}}
+    for (size_t i = 0; i < m->children_count; i++) {
+        {{type.ident}}Child *ch = &m->children[i];
+{{#merged_elements}}
+{{#type_ref.is_complex}}
+        if (ch->{{ident}})
+            mx_{{type_ref.name.snake}}_free(ch->{{ident}});
+{{/type_ref.is_complex}}
+{{#type_ref.is_union}}
+        if (ch->{{ident}}) {
+            mx_{{type_ref.name.snake}}_free(ch->{{ident}});
+            free(ch->{{ident}});
+        }
+{{/type_ref.is_union}}
+{{#type_ref.is_enum}}
+        free(ch->{{ident}});
+{{/type_ref.is_enum}}
+{{#type_ref.is_number}}
+        free(ch->{{ident}});
+{{/type_ref.is_number}}
+{{#type_ref.is_string}}
+        free(ch->{{ident}});
+{{/type_ref.is_string}}
+{{#type_ref.is_primitive_decimal}}
+        free(ch->{{ident}});
+{{/type_ref.is_primitive_decimal}}
+{{#type_ref.is_primitive_integer}}
+        free(ch->{{ident}});
+{{/type_ref.is_primitive_integer}}
+{{#type_ref.is_primitive_string}}
+        free(ch->{{ident}});
+{{/type_ref.is_primitive_string}}
+{{/merged_elements}}
+    }
+    free(m->children);
+{{/has_merged_elements}}
+    free(m);
+}

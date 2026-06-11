@@ -1,0 +1,25 @@
+// {{generated_banner}}
+
+package mx
+
+{{#doc_lines}}
+// {{value}}
+{{/doc_lines}}
+{{#has_patterns}}
+// Pattern (not enforced): {{#patterns}}{{^is_first}} | {{/is_first}}{{value}}{{/patterns}}
+{{/has_patterns}}
+type {{ident}} string
+
+// TryParse{{ident}} accepts any string: the wire form is the value.
+func TryParse{{ident}}(s string) ({{ident}}, bool) {
+	return {{ident}}(s), true
+}
+
+func Parse{{ident}}(s string) {{ident}} {
+	return {{ident}}(s)
+}
+
+// String returns the wire spelling.
+func (v {{ident}}) String() string {
+	return string(v)
+}

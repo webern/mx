@@ -1,0 +1,187 @@
+// {{generated_banner}}
+
+package mx
+
+{{#doc_lines}}
+// {{value}}
+{{/doc_lines}}
+type {{ident}} struct {
+	Kind {{ident}}Kind
+{{#cases}}
+{{^is_literal}}
+	{{name.pascal}} {{ref.ident}}
+{{/is_literal}}
+{{/cases}}
+}
+
+type {{ident}}Kind int
+
+const (
+{{#cases}}
+	{{tag_ident}}{{#is_first}} {{type.ident}}Kind = iota{{/is_first}}
+{{/cases}}
+)
+
+// TryParse{{ident}} tries each union member in schema order.
+func TryParse{{ident}}(s string) ({{ident}}, bool) {
+{{#cases}}
+{{#is_literal}}
+	if s == {{wire_q}} {
+		return {{type.ident}}{Kind: {{tag_ident}}}, true
+	}
+{{/is_literal}}
+{{#is_enum}}
+	if v, ok := TryParse{{ref.ident}}(s); ok {
+		return {{type.ident}}{Kind: {{tag_ident}}, {{name.pascal}}: v}, true
+	}
+{{/is_enum}}
+{{#is_number}}
+	if v, ok := TryParse{{ref.ident}}(s); ok {
+		return {{type.ident}}{Kind: {{tag_ident}}, {{name.pascal}}: v}, true
+	}
+{{/is_number}}
+{{#is_union}}
+	if v, ok := TryParse{{ref.ident}}(s); ok {
+		return {{type.ident}}{Kind: {{tag_ident}}, {{name.pascal}}: v}, true
+	}
+{{/is_union}}
+{{#is_primitive_decimal}}
+	if v, ok := tryParseDecimal(s); ok {
+{{#clamp}}
+		if v {{op}} {{bound}} {
+			v = {{replacement}}
+		}
+{{/clamp}}
+		return {{type.ident}}{Kind: {{tag_ident}}, {{name.pascal}}: v}, true
+	}
+{{/is_primitive_decimal}}
+{{#is_primitive_integer}}
+	if v, ok := tryParseInt(s); ok {
+{{#clamp}}
+		if v {{op}} {{bound}} {
+			v = {{replacement}}
+		}
+{{/clamp}}
+		return {{type.ident}}{Kind: {{tag_ident}}, {{name.pascal}}: v}, true
+	}
+{{/is_primitive_integer}}
+{{#is_primitive_string}}
+	return {{type.ident}}{Kind: {{tag_ident}}, {{name.pascal}}: s}, true
+{{/is_primitive_string}}
+{{#is_string}}
+	return {{type.ident}}{Kind: {{tag_ident}}, {{name.pascal}}: {{ref.ident}}(s)}, true
+{{/is_string}}
+{{/cases}}
+{{^open_ended}}
+	return {{ident}}{}, false
+{{/open_ended}}
+}
+
+// Parse{{ident}} is lenient: when no member matches, the first member
+// absorbs the input under its own leniency rules.
+func Parse{{ident}}(s string) {{ident}} {
+	if v, ok := TryParse{{ident}}(s); ok {
+		return v
+	}
+{{#cases}}
+{{#is_first}}
+{{#is_literal}}
+	return {{type.ident}}{Kind: {{tag_ident}}}
+{{/is_literal}}
+{{#is_enum}}
+	return {{type.ident}}{Kind: {{tag_ident}}, {{name.pascal}}: Parse{{ref.ident}}(s)}
+{{/is_enum}}
+{{#is_number}}
+	return {{type.ident}}{Kind: {{tag_ident}}, {{name.pascal}}: Parse{{ref.ident}}(s)}
+{{/is_number}}
+{{#is_union}}
+	return {{type.ident}}{Kind: {{tag_ident}}, {{name.pascal}}: Parse{{ref.ident}}(s)}
+{{/is_union}}
+{{#is_primitive_decimal}}
+{{^has_clamp}}
+	return {{type.ident}}{Kind: {{tag_ident}}, {{name.pascal}}: parseDecimal(s)}
+{{/has_clamp}}
+{{#has_clamp}}
+	v := parseDecimal(s)
+{{#clamp}}
+	if v {{op}} {{bound}} {
+		v = {{replacement}}
+	}
+{{/clamp}}
+	return {{type.ident}}{Kind: {{tag_ident}}, {{name.pascal}}: v}
+{{/has_clamp}}
+{{/is_primitive_decimal}}
+{{#is_primitive_integer}}
+{{^has_clamp}}
+	return {{type.ident}}{Kind: {{tag_ident}}, {{name.pascal}}: parseInt(s)}
+{{/has_clamp}}
+{{#has_clamp}}
+	v := parseInt(s)
+{{#clamp}}
+	if v {{op}} {{bound}} {
+		v = {{replacement}}
+	}
+{{/clamp}}
+	return {{type.ident}}{Kind: {{tag_ident}}, {{name.pascal}}: v}
+{{/has_clamp}}
+{{/is_primitive_integer}}
+{{/is_first}}
+{{/cases}}
+}
+
+// String returns the wire spelling of whichever member is held.
+func (v {{ident}}) String() string {
+	switch v.Kind {
+{{#cases}}
+{{^is_first}}
+	case {{tag_ident}}:
+{{#is_literal}}
+		return {{wire_q}}
+{{/is_literal}}
+{{#is_enum}}
+		return v.{{name.pascal}}.String()
+{{/is_enum}}
+{{#is_number}}
+		return v.{{name.pascal}}.String()
+{{/is_number}}
+{{#is_union}}
+		return v.{{name.pascal}}.String()
+{{/is_union}}
+{{#is_primitive_decimal}}
+		return formatDecimal(v.{{name.pascal}})
+{{/is_primitive_decimal}}
+{{#is_primitive_integer}}
+		return formatInt(v.{{name.pascal}})
+{{/is_primitive_integer}}
+{{#is_primitive_string}}
+		return v.{{name.pascal}}
+{{/is_primitive_string}}
+{{#is_string}}
+		return string(v.{{name.pascal}})
+{{/is_string}}
+{{/is_first}}
+{{/cases}}
+	}
+{{#cases}}
+{{#is_first}}
+{{#is_literal}}
+	return {{wire_q}}
+{{/is_literal}}
+{{#is_enum}}
+	return v.{{name.pascal}}.String()
+{{/is_enum}}
+{{#is_number}}
+	return v.{{name.pascal}}.String()
+{{/is_number}}
+{{#is_union}}
+	return v.{{name.pascal}}.String()
+{{/is_union}}
+{{#is_primitive_decimal}}
+	return formatDecimal(v.{{name.pascal}})
+{{/is_primitive_decimal}}
+{{#is_primitive_integer}}
+	return formatInt(v.{{name.pascal}})
+{{/is_primitive_integer}}
+{{/is_first}}
+{{/cases}}
+}

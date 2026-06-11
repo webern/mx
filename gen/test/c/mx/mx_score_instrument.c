@@ -136,13 +136,13 @@ void mx_score_instrument_free(MxScoreInstrument *m) {
         free(ch->instrument_name);
         free(ch->instrument_abbreviation);
         if (ch->instrument_sound) {
-            mx_instrument_sound_free(&(*ch->instrument_sound));
+            mx_instrument_sound_free(ch->instrument_sound);
             free(ch->instrument_sound);
         }
         if (ch->solo)
             mx_empty_free(ch->solo);
         if (ch->ensemble) {
-            mx_positive_integer_or_empty_free(&(*ch->ensemble));
+            mx_positive_integer_or_empty_free(ch->ensemble);
             free(ch->ensemble);
         }
         if (ch->virtual_instrument)

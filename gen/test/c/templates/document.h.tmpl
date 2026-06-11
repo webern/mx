@@ -1,0 +1,33 @@
+/* {{generated_banner}} */
+
+#ifndef MX_DOCUMENT_H_INCLUDED
+#define MX_DOCUMENT_H_INCLUDED
+
+#include <libxml/tree.h>
+#include <stddef.h>
+{{#roots}}
+#include "mx_{{name.snake}}.h"
+{{/roots}}
+
+/* A namespace declaration preserved from the document root. */
+typedef struct {
+    char *prefix; /* NULL for the default namespace */
+    char *href;
+} MxNamespace;
+
+/* A parsed MusicXML document: exactly one root is set. */
+typedef struct {
+{{#roots}}
+    {{ident}} *{{name.snake}};
+{{/roots}}
+    MxNamespace *namespaces;
+    size_t namespaces_count;
+} MxDocument;
+
+/* NULL on error; the message is in mx_error(). */
+MxDocument *mx_document_from_xdoc(xmlDocPtr doc);
+/* 0 on success; the caller owns *out. */
+int mx_document_to_xdoc(const MxDocument *d, xmlDocPtr *out);
+void mx_document_free(MxDocument *d);
+
+#endif /* MX_DOCUMENT_H_INCLUDED */

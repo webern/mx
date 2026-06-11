@@ -31,6 +31,7 @@ from gen.names import Name
 from gen.plates.model import (
     ComplexPlate,
     Plates,
+    UnionPlate,
     attribute_members,
     element_members,
     value_member,
@@ -55,6 +56,7 @@ _DISCRIMINANTS: dict[str, tuple[str, ...]] = {
     "shape": ("value", "composite", "empty", "derived"),
     "node": ("element", "sequence", "choice", "group"),
     "variant_scope": ("bare", "composed"),
+    "family": ("decimal", "integer"),
 }
 
 
@@ -91,7 +93,17 @@ def _convert(obj):
                             f"its vocabulary {vocab}"
                         )
                     for v in vocab:
-                        out[_flag(v)] = v == value
+                        # Vocabularies overlap across fields of one object
+                        # (PlateRef has category "value" and kind "enum";
+                        # the kind vocabulary also contains "value").
+                        # Earlier fields win: category's is_value/is_complex
+                        # must not be clobbered by the kind expansion, and
+                        # the two always agree where they overlap.
+                        out.setdefault(_flag(v), v == value)
+            elif isinstance(value, (list, tuple)):
+                # Iterating a section already gates emptiness; has_<field>
+                # serves the non-iterating tests (wrap-once framing).
+                out["has_" + name] = bool(value)
         return out
     if isinstance(obj, (list, tuple)):
         return _listify([_convert(item) for item in obj])
@@ -134,6 +146,47 @@ def plate_context(plates: Plates, plate) -> dict:
     scopes (a member loop, a variant loop) can still reach plate fields that
     their own frame shadows."""
     ctx = _convert(plate)
+    if isinstance(plate, UnionPlate):
+        # The flattened case view: one entry per ref member and per literal,
+        # in schema order, each carrying its discriminator constant as
+        # `tag_ident` -- so loop metadata (ordinals, commas, first-member
+        # handling) works on the granularity the kind enum actually has.
+        kind_flags = [_flag(v) for v in _DISCRIMINANTS["kind"]]
+        cases = []
+        for m in plate.members:
+            if m.ref is not None:
+                ref = _convert(m.ref)
+                case = {
+                    "is_literal": False,
+                    "tag_ident": m.tag.ident,
+                    "ref": ref,
+                    "name": _convert(m.name),
+                    "clamp": _convert(m.clamp),
+                    "has_clamp": bool(m.clamp),
+                    "wire": None,
+                    "wire_q": None,
+                }
+                # The referenced kind's flags, flattened onto the case so
+                # templates branch without reaching through `ref`.
+                for flag in kind_flags:
+                    case[flag] = ref[flag]
+                cases.append(case)
+            else:
+                for variant in m.literals or []:
+                    case = {
+                        "is_literal": True,
+                        "tag_ident": variant.ident,
+                        "ref": None,
+                        "name": None,
+                        "clamp": [],
+                        "has_clamp": False,
+                        "wire": variant.wire,
+                        "wire_q": quoted(variant.wire),
+                    }
+                    for flag in kind_flags:
+                        case[flag] = False
+                    cases.append(case)
+        ctx["cases"] = _listify(cases)
     if isinstance(plate, ComplexPlate):
         ctx["attributes"] = _listify(
             [_convert(m) for m in attribute_members(plate.members)]
@@ -152,6 +205,8 @@ def plate_context(plates: Plates, plate) -> dict:
         )
         merged_value = value_member(merged)
         ctx["merged_value"] = _convert(merged_value) if merged_value is not None else None
+        for key in ("attributes", "elements", "merged_attributes", "merged_elements"):
+            ctx["has_" + key] = bool(ctx[key])
     ctx.update(_common(plates))
     ctx["type"] = ctx
     return ctx

@@ -1,0 +1,21 @@
+/* {{generated_banner}} */
+
+#ifndef MX_{{name.screaming}}_H_INCLUDED
+#define MX_{{name.screaming}}_H_INCLUDED
+
+{{#has_doc_lines}}
+/*
+{{#doc_lines}}
+ * {{value}}
+{{/doc_lines}}
+ */
+{{/has_doc_lines}}
+{{#has_patterns}}
+/* Pattern (not enforced): {{#patterns}}{{^is_first}} | {{/is_first}}{{value}}{{/patterns}} */
+{{/has_patterns}}
+typedef char *{{ident}};
+
+/* Malloc'd copy of the wire string; the value IS its spelling. */
+{{ident}} mx_{{name.snake}}_parse(const char *s);
+
+#endif /* MX_{{name.screaming}}_H_INCLUDED */

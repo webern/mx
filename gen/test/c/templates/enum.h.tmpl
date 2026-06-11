@@ -1,0 +1,27 @@
+/* {{generated_banner}} */
+
+#ifndef MX_{{name.screaming}}_H_INCLUDED
+#define MX_{{name.screaming}}_H_INCLUDED
+
+#include <stdbool.h>
+
+{{#has_doc_lines}}
+/*
+{{#doc_lines}}
+ * {{value}}
+{{/doc_lines}}
+ */
+{{/has_doc_lines}}
+typedef enum {
+{{#variants}}
+    {{ident}} = {{index0}}{{^is_last}},{{/is_last}}
+{{/variants}}
+} {{ident}};
+
+bool mx_{{name.snake}}_try_parse(const char *s, {{ident}} *out);
+/* Lenient: unknown input falls back to the first variant. */
+{{ident}} mx_{{name.snake}}_parse(const char *s);
+/* Returns the wire literal (static storage; do not free). */
+const char *mx_{{name.snake}}_to_string({{ident}} v);
+
+#endif /* MX_{{name.screaming}}_H_INCLUDED */

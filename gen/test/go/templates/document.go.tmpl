@@ -1,0 +1,67 @@
+// {{generated_banner}}
+
+package mx
+
+import (
+	"fmt"
+	"github.com/beevik/etree"
+)
+
+// ExtraAttr preserves an attribute outside the schema (namespace
+// declarations on the document root).
+type ExtraAttr struct {
+	Key   string
+	Value string
+}
+
+// Document is a parsed MusicXML document: exactly one root is set.
+type Document struct {
+{{#roots}}
+	{{ident}} *{{ident}}
+{{/roots}}
+	RootNamespaces []ExtraAttr
+}
+
+// FromXDoc parses an etree document into the typed MusicXML model.
+func FromXDoc(doc *etree.Document) (*Document, error) {
+	root := doc.Root()
+	if root == nil {
+		return nil, fmt.Errorf("document has no root element")
+	}
+	d := &Document{}
+	for _, a := range root.Attr {
+		if a.Space == "xmlns" || (a.Space == "" && a.Key == "xmlns") {
+			d.RootNamespaces = append(d.RootNamespaces, ExtraAttr{a.FullKey(), a.Value})
+		}
+	}
+	switch root.Tag {
+{{#roots}}
+	case {{wire_q}}:
+		v, err := parse{{ident}}(root)
+		if err != nil {
+			return nil, err
+		}
+		d.{{ident}} = v
+{{/roots}}
+	default:
+		return nil, fmt.Errorf("unknown root element <%s>", root.Tag)
+	}
+	return d, nil
+}
+
+// ToXDoc serializes the typed model back to an etree document.
+func ToXDoc(d *Document) (*etree.Document, error) {
+	doc := etree.NewDocument()
+	switch {
+{{#roots}}
+	case d.{{ident}} != nil:
+		serialize{{ident}}(d.{{ident}}, &doc.Element, {{wire_q}})
+{{/roots}}
+	default:
+		return nil, fmt.Errorf("document has no root")
+	}
+	for _, a := range d.RootNamespaces {
+		doc.Root().CreateAttr(a.Key, a.Value)
+	}
+	return doc, nil
+}

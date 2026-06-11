@@ -1,0 +1,41 @@
+/* {{generated_banner}} */
+
+#ifndef MX_{{name.screaming}}_H_INCLUDED
+#define MX_{{name.screaming}}_H_INCLUDED
+
+#include <stdbool.h>
+{{#deps}}
+#include "mx_{{name.snake}}.h"
+{{/deps}}
+
+{{#has_doc_lines}}
+/*
+{{#doc_lines}}
+ * {{value}}
+{{/doc_lines}}
+ */
+{{/has_doc_lines}}
+typedef enum {
+{{#cases}}
+    {{tag_ident}} = {{index0}}{{^is_last}},{{/is_last}}
+{{/cases}}
+} {{ident}}Kind;
+
+typedef struct {
+    {{ident}}Kind kind;
+{{#cases}}
+{{^is_literal}}
+    {{ref.ident}}{{^is_primitive_string}} {{/is_primitive_string}}{{name.snake}};
+{{/is_literal}}
+{{/cases}}
+} {{ident}};
+
+/* Tries each union member in schema order. */
+bool mx_{{name.snake}}_try_parse(const char *s, {{ident}} *out);
+/* Lenient: an unmatched input is absorbed by the first member. */
+{{ident}} mx_{{name.snake}}_parse(const char *s);
+/* The wire spelling of whichever member is held. Malloc'd. */
+char *mx_{{name.snake}}_to_string({{ident}} v);
+void mx_{{name.snake}}_free({{ident}} *v);
+
+#endif /* MX_{{name.screaming}}_H_INCLUDED */

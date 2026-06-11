@@ -1,0 +1,110 @@
+/* {{generated_banner}} */
+
+#include "mx_runtime.h"
+
+#include <errno.h>
+#include <math.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+bool mx_try_parse_decimal(const char *s, double *out) {
+    *out = 0;
+    if (!s || !*s)
+        return false;
+    char *end = NULL;
+    double v = strtod(s, &end);
+    if (end == s)
+        return false;
+    while (*end == ' ' || *end == '\t' || *end == '\n' || *end == '\r')
+        end++;
+    if (*end != '\0')
+        return false;
+    if (isnan(v) || isinf(v))
+        return false;
+    *out = v;
+    return true;
+}
+
+double mx_parse_decimal(const char *s) {
+    double v = 0;
+    mx_try_parse_decimal(s, &v);
+    return v;
+}
+
+bool mx_try_parse_int(const char *s, long *out) {
+    *out = 0;
+    if (!s || !*s)
+        return false;
+    char *end = NULL;
+    errno = 0;
+    long v = strtol(s, &end, 10);
+    if (errno == ERANGE || end == s)
+        return false;
+    while (*end == ' ' || *end == '\t' || *end == '\n' || *end == '\r')
+        end++;
+    if (*end != '\0')
+        return false;
+    *out = v;
+    return true;
+}
+
+long mx_parse_int(const char *s) {
+    long v = 0;
+    if (mx_try_parse_int(s, &v))
+        return v;
+    double d = 0;
+    if (mx_try_parse_decimal(s, &d))
+        return (long)d; /* decimal-looking input truncates toward zero */
+    return 0;
+}
+
+char *mx_format_decimal(double v) {
+    /* Worst-case %.9f for a double: 309 integer digits + sign + dot + 9. */
+    char buf[336];
+    int n = snprintf(buf, sizeof(buf), "%.9f", v);
+    if (n < 0 || n >= (int)sizeof(buf))
+        return mx_strdup("0"); /* unreachable for finite doubles; never emit garbage */
+    /* Trim trailing zeros, then a trailing dot; canonicalize "-0" to "0". */
+    size_t len = strlen(buf);
+    while (len > 0 && buf[len - 1] == '0')
+        buf[--len] = '\0';
+    if (len > 0 && buf[len - 1] == '.')
+        buf[--len] = '\0';
+    if (strcmp(buf, "-0") == 0) {
+        buf[0] = '0';
+        buf[1] = '\0';
+    }
+    return mx_strdup(buf);
+}
+
+char *mx_format_int(long v) {
+    char buf[32];
+    snprintf(buf, sizeof(buf), "%ld", v);
+    return mx_strdup(buf);
+}
+
+char *mx_strdup(const char *s) {
+    if (!s)
+        s = "";
+    size_t n = strlen(s) + 1;
+    char *out = malloc(n);
+    if (!out)
+        abort(); /* the generator's runtime has no error channel for OOM */
+    memcpy(out, s, n);
+    return out;
+}
+
+static char mx_error_buf[512];
+
+void mx_error_set(const char *fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+    vsnprintf(mx_error_buf, sizeof(mx_error_buf), fmt, args);
+    va_end(args);
+}
+
+const char *mx_error(void) {
+    return mx_error_buf;
+}

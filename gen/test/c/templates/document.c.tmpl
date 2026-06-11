@@ -1,0 +1,94 @@
+/* {{generated_banner}} */
+
+#include "mx_document.h"
+
+#include "mx_runtime.h"
+#include <stdlib.h>
+#include <string.h>
+
+MxDocument *mx_document_from_xdoc(xmlDocPtr doc) {
+    xmlNodePtr root = xmlDocGetRootElement(doc);
+    if (!root) {
+        mx_error_set("document has no root element");
+        return NULL;
+    }
+    MxDocument *d = calloc(1, sizeof(*d));
+    if (!d)
+        abort();
+    size_t nscount = 0;
+    for (xmlNsPtr ns = root->nsDef; ns; ns = ns->next)
+        nscount++;
+    if (nscount) {
+        d->namespaces = calloc(nscount, sizeof(*d->namespaces));
+        if (!d->namespaces)
+            abort();
+        for (xmlNsPtr ns = root->nsDef; ns; ns = ns->next) {
+            MxNamespace *slot = &d->namespaces[d->namespaces_count++];
+            slot->prefix = ns->prefix ? mx_strdup((const char *)ns->prefix) : NULL;
+            slot->href = mx_strdup((const char *)ns->href);
+        }
+    }
+    const char *tag = (const char *)root->name;
+{{#roots}}
+    {{#is_first}}if{{/is_first}}{{^is_first}}} else if{{/is_first}} (strcmp(tag, {{wire_q}}) == 0) {
+        d->{{name.snake}} = mx_{{name.snake}}_parse(root);
+        if (!d->{{name.snake}}) {
+            mx_document_free(d);
+            return NULL;
+        }
+{{/roots}}
+    } else {
+        mx_error_set("unknown root element <%s>", tag);
+        mx_document_free(d);
+        return NULL;
+    }
+    return d;
+}
+
+int mx_document_to_xdoc(const MxDocument *d, xmlDocPtr *out) {
+    *out = NULL;
+    xmlDocPtr doc = xmlNewDoc(BAD_CAST "1.0");
+    if (!doc)
+        abort(); /* OOM policy: abort, matching the runtime's allocators */
+    /* Serialize under a scratch parent attached to the document so
+       reserved-prefix attributes (xml:lang, xml:space) resolve through
+       the document's implicit xml namespace. Building detached would
+       make libxml2 fabricate an xmlns:xml declaration on the element
+       that carries them, which the input never had. */
+    xmlNodePtr scratch = xmlNewDocNode(doc, NULL, BAD_CAST "scratch", NULL);
+    if (!scratch)
+        abort();
+    xmlNodePtr root = NULL;
+{{#roots}}
+    {{#is_first}}if{{/is_first}}{{^is_first}}else if{{/is_first}} (d->{{name.snake}})
+        root = mx_{{name.snake}}_serialize(d->{{name.snake}}, scratch, {{wire_q}});
+{{/roots}}
+    if (!root) {
+        mx_error_set("document has no root");
+        xmlFreeNode(scratch);
+        xmlFreeDoc(doc);
+        return -1;
+    }
+    xmlUnlinkNode(root);
+    xmlDocSetRootElement(doc, root);
+    xmlFreeNode(scratch);
+    for (size_t i = 0; i < d->namespaces_count; i++)
+        xmlNewNs(root, BAD_CAST d->namespaces[i].href,
+                 BAD_CAST d->namespaces[i].prefix);
+    *out = doc;
+    return 0;
+}
+
+void mx_document_free(MxDocument *d) {
+    if (!d)
+        return;
+{{#roots}}
+    mx_{{name.snake}}_free(d->{{name.snake}});
+{{/roots}}
+    for (size_t i = 0; i < d->namespaces_count; i++) {
+        free(d->namespaces[i].prefix);
+        free(d->namespaces[i].href);
+    }
+    free(d->namespaces);
+    free(d);
+}

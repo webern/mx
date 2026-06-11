@@ -1,0 +1,197 @@
+/* {{generated_banner}} */
+
+#include "mx_{{name.snake}}.h"
+
+#include "mx_runtime.h"
+#include <stdlib.h>
+#include <string.h>
+
+bool mx_{{name.snake}}_try_parse(const char *s, {{ident}} *out) {
+    if (!s)
+        s = "";
+    {{ident}} v;
+    memset(&v, 0, sizeof(v));
+{{#cases}}
+{{#is_literal}}
+    if (strcmp(s, {{wire_q}}) == 0) {
+        v.kind = {{tag_ident}};
+        *out = v;
+        return true;
+    }
+{{/is_literal}}
+{{#is_enum}}
+    if (mx_{{ref.name.snake}}_try_parse(s, &v.{{name.snake}})) {
+        v.kind = {{tag_ident}};
+        *out = v;
+        return true;
+    }
+{{/is_enum}}
+{{#is_number}}
+    if (mx_{{ref.name.snake}}_try_parse(s, &v.{{name.snake}})) {
+        v.kind = {{tag_ident}};
+        *out = v;
+        return true;
+    }
+{{/is_number}}
+{{#is_union}}
+    if (mx_{{ref.name.snake}}_try_parse(s, &v.{{name.snake}})) {
+        v.kind = {{tag_ident}};
+        *out = v;
+        return true;
+    }
+{{/is_union}}
+{{#is_primitive_decimal}}
+    if (mx_try_parse_decimal(s, &v.{{name.snake}})) {
+{{#clamp}}
+        if (v.{{name.snake}} {{op}} {{bound}})
+            v.{{name.snake}} = {{replacement}};
+{{/clamp}}
+        v.kind = {{tag_ident}};
+        *out = v;
+        return true;
+    }
+{{/is_primitive_decimal}}
+{{#is_primitive_integer}}
+    if (mx_try_parse_int(s, &v.{{name.snake}})) {
+{{#clamp}}
+        if (v.{{name.snake}} {{op}} {{bound}})
+            v.{{name.snake}} = {{replacement}};
+{{/clamp}}
+        v.kind = {{tag_ident}};
+        *out = v;
+        return true;
+    }
+{{/is_primitive_integer}}
+{{#is_primitive_string}}
+    v.kind = {{tag_ident}};
+    v.{{name.snake}} = mx_strdup(s);
+    *out = v;
+    return true;
+{{/is_primitive_string}}
+{{#is_string}}
+    v.kind = {{tag_ident}};
+    v.{{name.snake}} = mx_strdup(s);
+    *out = v;
+    return true;
+{{/is_string}}
+{{/cases}}
+{{^open_ended}}
+    *out = v;
+    return false;
+{{/open_ended}}
+}
+
+{{ident}} mx_{{name.snake}}_parse(const char *s) {
+    {{ident}} v;
+    if (mx_{{name.snake}}_try_parse(s, &v))
+        return v;
+    memset(&v, 0, sizeof(v));
+{{#cases}}
+{{#is_first}}
+{{#is_literal}}
+    v.kind = {{tag_ident}};
+{{/is_literal}}
+{{#is_enum}}
+    v.kind = {{tag_ident}};
+    v.{{name.snake}} = mx_{{ref.name.snake}}_parse(s);
+{{/is_enum}}
+{{#is_number}}
+    v.kind = {{tag_ident}};
+    v.{{name.snake}} = mx_{{ref.name.snake}}_parse(s);
+{{/is_number}}
+{{#is_union}}
+    v.kind = {{tag_ident}};
+    v.{{name.snake}} = mx_{{ref.name.snake}}_parse(s);
+{{/is_union}}
+{{#is_primitive_decimal}}
+    v.kind = {{tag_ident}};
+    v.{{name.snake}} = mx_parse_decimal(s);
+{{/is_primitive_decimal}}
+{{#is_primitive_integer}}
+    v.kind = {{tag_ident}};
+    v.{{name.snake}} = mx_parse_int(s);
+{{/is_primitive_integer}}
+{{#clamp}}
+    if (v.{{name.snake}} {{op}} {{bound}})
+        v.{{name.snake}} = {{replacement}};
+{{/clamp}}
+{{/is_first}}
+{{/cases}}
+    return v;
+}
+
+char *mx_{{name.snake}}_to_string({{ident}} v) {
+    switch (v.kind) {
+{{#cases}}
+{{^is_first}}
+    case {{tag_ident}}:
+{{#is_literal}}
+        return mx_strdup({{wire_q}});
+{{/is_literal}}
+{{#is_enum}}
+        return mx_strdup(mx_{{ref.name.snake}}_to_string(v.{{name.snake}}));
+{{/is_enum}}
+{{#is_number}}
+        return mx_{{ref.name.snake}}_to_string(v.{{name.snake}});
+{{/is_number}}
+{{#is_union}}
+        return mx_{{ref.name.snake}}_to_string(v.{{name.snake}});
+{{/is_union}}
+{{#is_primitive_decimal}}
+        return mx_format_decimal(v.{{name.snake}});
+{{/is_primitive_decimal}}
+{{#is_primitive_integer}}
+        return mx_format_int(v.{{name.snake}});
+{{/is_primitive_integer}}
+{{#is_primitive_string}}
+        return mx_strdup(v.{{name.snake}});
+{{/is_primitive_string}}
+{{#is_string}}
+        return mx_strdup(v.{{name.snake}});
+{{/is_string}}
+{{/is_first}}
+{{/cases}}
+    default:
+{{#cases}}
+{{#is_first}}
+{{#is_literal}}
+        return mx_strdup({{wire_q}});
+{{/is_literal}}
+{{#is_enum}}
+        return mx_strdup(mx_{{ref.name.snake}}_to_string(v.{{name.snake}}));
+{{/is_enum}}
+{{#is_number}}
+        return mx_{{ref.name.snake}}_to_string(v.{{name.snake}});
+{{/is_number}}
+{{#is_union}}
+        return mx_{{ref.name.snake}}_to_string(v.{{name.snake}});
+{{/is_union}}
+{{#is_primitive_decimal}}
+        return mx_format_decimal(v.{{name.snake}});
+{{/is_primitive_decimal}}
+{{#is_primitive_integer}}
+        return mx_format_int(v.{{name.snake}});
+{{/is_primitive_integer}}
+{{/is_first}}
+{{/cases}}
+    }
+}
+
+void mx_{{name.snake}}_free({{ident}} *v) {
+    if (!v)
+        return;
+{{#cases}}
+{{#is_primitive_string}}
+    if (v->kind == {{tag_ident}}) {
+        free(v->{{name.snake}});
+        v->{{name.snake}} = NULL;
+    }
+{{/is_primitive_string}}
+{{#is_string}}
+    if (v->kind == {{tag_ident}}) {
+        free(v->{{name.snake}});
+        v->{{name.snake}} = NULL;
+    }
+{{/is_string}}
+{{/cases}}
+}

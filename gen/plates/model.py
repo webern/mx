@@ -201,6 +201,9 @@ class UnionPlate:
     name: Name
     ident: str
     members: list[UnionPlateMember] = field(default_factory=list)
+    # True when a member accepts ANY string (a string-family member, last by
+    # the union-order gate): in-order parsers never fall through.
+    open_ended: bool = False
     doc: str | None = None
     doc_lines: list[str] = field(default_factory=list)
     deps: list[PlateRef] = field(default_factory=list)
