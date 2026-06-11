@@ -4,6 +4,12 @@ A code generator that reads the MusicXML 4.0 XSD specification and emits typed d
 serialization/deserialization libraries in multiple languages. C++ is the primary target; Go and C
 are secondary targets that keep the generator architecture honest about extensibility.
 
+**CARDINAL RULE: the generator is language agnostic.** Adding a new language target must not
+require edits to the generator's Python files; all language knowledge lives in the target's own
+directory as data and templates. The current code VIOLATES this rule (per-language backends under
+`gen/emit/`, language tables in `gen/plates/languages.py`); the redesign that fixes it is
+specified in `docs/ai/design/generator-agnosticism.md` and is the next body of work.
+
 Ignore git history prior to `b01288`. Reading anything before that commit will only confuse you and
 degrade your performance.
 
@@ -16,7 +22,8 @@ mx/
   Dockerfile            <- mx-sdk toolchain image (Ubuntu 24.04, GCC 14, Go, libxml2, Python 3)
   CMakeLists.txt        <- C++ project: ezxml library + corert test harness
   data/                 <- MusicXML test corpus (~1,347 files, see data/README.md)
-  docs/ai/design/       <- design docs (plates.md: the Plates, the template-facing layer)
+  docs/ai/design/       <- design docs (plates.md: the Plates; generator-agnosticism.md:
+                           the cardinal rule and the pack/press redesign)
   src/private/          <- C++ source
     mx/ezxml/           <- vendored pugixml-backed XML layer
     mx/core/            <- generated C++ typed model
