@@ -116,6 +116,20 @@ strategies = ["value-class", "composite-class", "flag", "attrs-class", "flatten"
 template   = "complex.c.tmpl"
 output     = "mx_{snake}.c"
 
+# Bespoke handling: `types` rows claim specific types by wire name and
+# override the strategy rows for them. comma-separated-text keeps the stock
+# char* wire API and adds an items accessor that splits the list into a
+# malloc'd array of char*.
+[[render.type]]
+types    = ["comma-separated-text"]
+template = "comma_separated_text.h.tmpl"
+output   = "mx_{snake}.h"
+
+[[render.type]]
+types    = ["comma-separated-text"]
+template = "comma_separated_text.c.tmpl"
+output   = "mx_{snake}.c"
+
 [[render.once]]
 template = "runtime.h.tmpl"
 output   = "mx_runtime.h"

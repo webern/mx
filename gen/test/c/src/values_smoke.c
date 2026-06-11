@@ -8,6 +8,7 @@
 #include "mx_beam_value.h"
 #include "mx_breath_mark_value.h"
 #include "mx_color.h"
+#include "mx_comma_separated_text.h"
 #include "mx_font_size.h"
 #include "mx_instrument_sound.h"
 #include "mx_midi_16.h"
@@ -122,6 +123,35 @@ int main(void) {
     expect_owned("open enum open string", mx_instrument_sound_to_string(is2),
                  "synth.custom-thing");
     mx_instrument_sound_free(&is2);
+
+    /* comma-separated-text has bespoke handling (a `types` render-manifest
+       row): storage stays the wire string, the items accessor splits the
+       list on demand. */
+    MxCommaSeparatedText csv =
+        mx_comma_separated_text_parse("Times, Helvetica,sans-serif");
+    expect("bespoke csv keeps the wire spelling", csv,
+           "Times, Helvetica,sans-serif");
+    size_t csv_count = 0;
+    char **csv_items = mx_comma_separated_text_items(csv, &csv_count);
+    if (csv_count != 3 || csv_items[3] != NULL) {
+        printf("FAIL bespoke csv item count: got %zu\n", csv_count);
+        failures++;
+    } else {
+        expect("bespoke csv item 0", csv_items[0], "Times");
+        expect("bespoke csv item 1 (\", \" separator)", csv_items[1],
+               "Helvetica");
+        expect("bespoke csv item 2 (\",\" separator)", csv_items[2],
+               "sans-serif");
+    }
+    mx_comma_separated_text_items_free(csv_items);
+    free(csv);
+    size_t empty_count = 99;
+    char **empty_items = mx_comma_separated_text_items(NULL, &empty_count);
+    if (empty_count != 0 || empty_items[0] != NULL) {
+        printf("FAIL bespoke csv empty: got %zu items\n", empty_count);
+        failures++;
+    }
+    mx_comma_separated_text_items_free(empty_items);
 
     if (failures == 0) {
         printf("values smoke: all checks passed\n");
