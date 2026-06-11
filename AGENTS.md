@@ -1,7 +1,7 @@
 # mx
 
-A code generator that reads the MusicXML 4.0 XSD specification and emits typed document
-serialization/deserialization libraries in multiple languages. C++ is the primary target; Go and C
+A code generator that reads a MusicXML XSD specification (each target's `config.toml` pins which
+version) and emits typed document serialization/deserialization libraries in multiple languages. C++ is the primary target; Go and C
 are secondary targets that keep the generator architecture honest about extensibility.
 
 **CARDINAL RULE: the generator is language agnostic.** Adding a new language target must not
@@ -77,9 +77,11 @@ housekeeping). Docker-gated targets auto-build and run via mx-sdk.
 
 The corert test is the primary correctness gate. It exercises the generated parser by round-tripping
 every eligible XML file in `data/` through the typed model and comparing the output to a normalized
-form of the input. The corpus is pinned to version `3.0` throughout (input and expected) even though
-the generators target newer schemas (C++ 4.0, Go and C 3.1), so comparison runs against a stable
-baseline.
+form of the input. Both sides of a comparison get their root `version` attribute pinned to one
+baseline so the attribute itself never produces a mismatch; the baseline is a constant in each
+harness's normalize module (`musicXMLVersion` in `gen/test/go/corert/normalize.go`,
+`MUSICXML_VERSION` in `gen/test/c/src/normalize.c` -- currently `3.0`), a harness choice, not a
+property of the corpus or the architecture.
 
 ### Flow (same in all three languages)
 
@@ -88,7 +90,7 @@ baseline.
    sibling marker.
 2. For each file:
    a. Load the XML into a DOM.
-   b. Set the root `version` attribute to `"3.0"`.
+   b. Set the root `version` attribute to the harness baseline (see above).
    c. **Parse** into the typed model via `fromXDoc` (the generated code).
    d. **Serialize** back to XML via `toXDoc`.
    e. **Normalize** the actual output (see Normalization pipeline below).
@@ -100,7 +102,7 @@ baseline.
 
 ### Current state
 
-The Go and C suites are GREEN: 776 files pass, 0 fail, and 52 skip (they declare MusicXML 4.0;
+The Go and C suites are GREEN: 777 files pass, 0 fail, and 52 skip (they declare MusicXML 4.0;
 those targets generate from the 3.1 schema, and while MusicXML is backward compatible, a newer
 document may use types an older model cannot represent -- the harnesses gate on the root's
 declared version). The C++ target still has no generated `mx/core`, so corert C++ does not
@@ -130,7 +132,7 @@ Applied to both expected and actual documents before comparison:
 
 1. Set XML declaration: `<?xml version="1.0" encoding="UTF-8" standalone="no"?>`.
 2. Set DOCTYPE based on root element name (`score-timewise` vs `score-partwise`).
-3. Set root `version` attribute to `"3.0"`.
+3. Set the root `version` attribute to the harness baseline version.
 4. Strip whitespace-only text nodes from every element (pretty-printing indentation is not
    content; MusicXML has no mixed content, and the rule is applied to both sides, so it stays
    symmetric).
