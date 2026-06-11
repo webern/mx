@@ -48,7 +48,7 @@ Everything `gen/emit/<lang>/` held becomes template files in a deliberately mini
 template language, rendered by one generic engine (the **press**, completing the plates metaphor:
 plates carry every decision; the press inks and prints them). A render **manifest** in the config
 declares which template renders which plate shapes into which output paths, so file layout --
-including C's header/impl pairs -- is pack data, not Python. The generator's Python is then a
+including C's header/impl pairs -- is target data, not Python. The generator's Python is then a
 closed set: parse, lower, project, render, write. The proof obligation is concrete: port Go and C
 to targets with byte-identical generated output, delete `gen/emit/go`, `gen/emit/c`, and
 `languages.py`, then add a third target (the JSON Schema emitter that has been this project's
@@ -86,7 +86,7 @@ neutral:
   language in Python. Becomes explicit config.
 - `[target] inheritance = true | false`: selects the derived strategy. Already neutral.
 - `[types]`: the primitive -> spelling map, today defaulted per language. Becomes **required** for
-  any pack whose templates emit typed code (a target that omits it gets primitive names passed
+  any target whose templates emit typed code (a target that omits it gets primitive names passed
   through, which is what a neutral target wants).
 - `[reserved] words`: today extends per-language defaults. Becomes the **whole** list; targets own
   their keyword lists. Two small additions let targets protect their template-synthesized names
@@ -192,11 +192,11 @@ Worked example -- today's `gen/emit/c/complexes.py` attribute loop, as template 
             ...
 ```
 
-Everything language-shaped (C's `strcmp`, `->`, `has_` prefixes, the error idiom) is pack content;
+Everything language-shaped (C's `strcmp`, `->`, `has_` prefixes, the error idiom) is target content;
 everything decided (idents, wire names, which members are attributes) is plate data. The press
 contributes iteration and the `@first` chain mechanics, nothing more.
 
-## 6. The render manifest: file layout as pack data
+## 6. The render manifest: file layout as target data
 
 `config.toml` declares what gets rendered where. Two entry kinds:
 
