@@ -107,35 +107,46 @@ naming a language, it is a var, not a key.*
 (partition, file-prefix, file-convention -- subsumed by the manifest, section 6), and
 `languages.py` with all its tables.
 
-## 5. The press: a deliberately minimal template engine
+## 5. The press: a Mustache engine with three documented deviations
 
-`gen/press/` renders template files against a context built from the plates. It is stdlib-only
-(~300-400 lines plus tests) and mustache-class on purpose. The constraint is the feature: **if a
-template cannot express something, the plates must carry it** -- the engine's poverty is what
-keeps decisions in the projection, where they are dumpable, diffable, and collision-gated.
+`gen/press/` renders template files against a context built from the plates. **The template
+language is Mustache** -- the interpolation/sections/inverted-sections/partials core of the
+published spec, nothing invented -- so the load-bearing commitment is to a frozen, logic-less
+*language*, and the engine behind it is swappable (section 9 records why we implement it ourselves
+and the trigger for reversing that). Mustache's poverty is the feature: **if a template cannot
+express something, the plates must carry it** -- which keeps decisions in the projection, where
+they are dumpable, diffable, and collision-gated.
 
-The complete feature set, derived by walking every construct the current Python backends emit:
+The implemented subset, derived by walking every construct the current Python backends emit:
 
 - **Variables**: `{{ident}}`, dotted paths `{{name.snake}}`, `{{type_ref.ident}}`,
-  `{{target.vars.prefix}}`. Missing keys are a render error (fail loud), not empty output.
+  `{{target.vars.prefix}}`.
 - **Sections**: `{{#members}}...{{/members}}` iterates lists (the cursor becomes the context) and
-  gates on truthiness for scalars/objects; `{{^x}}...{{/x}}` inverts. Loop metadata `{{@first}}`,
-  `{{@last}}`, `{{@index}}` is provided by the engine (it is presentation mechanics, not data) --
-  this is what expresses `if`/`else if` chains and separator joins.
-- **Partials**: `{{> member-parse}}`, resolved within the pack's `templates/` directory, recursion
+  gates on truthiness for scalars/objects; `{{^x}}...{{/x}}` inverts.
+- **Partials**: `{{> member-parse}}`, resolved within the pack's `templates/` directory, with
+  spec-conformant call-site indentation (essential for readable generated code) and recursion
   permitted with a depth limit (a schema-shaped target walking `content` trees needs it).
-- **One modifier**: `{{wire:q}}` renders a double-quoted, backslash-escaped string literal using
-  the JSON escape repertoire with non-ASCII as `\uXXXX` -- a subset valid verbatim in C, C++, Go,
-  Java, JavaScript, and Rust literals. This is the design's one acknowledged compromise: string
-  quoting is presentation that genuinely varies by language family, and encoding one universal
-  family in the engine beats either per-pack escape tables in config or hand-escaping in
-  templates. A future target outside that family is the trigger to revisit (section 10).
-- **Whitespace discipline**: standalone section/partial lines collapse (the mustache standalone
-  rule), so templates can be indented readably without leaking blank lines.
+- **Whitespace discipline**: the spec's standalone-line rules, so templates can be indented
+  readably without leaking blank lines.
 
-And, as a constitution, what the engine will **never** grow: expressions, comparisons,
-arithmetic, filters, string manipulation, casing functions, variable assignment, or template
-inheritance. In particular there is no equality test; dispatch happens two other ways:
+Three deliberate deviations from spec semantics, each because code generation is not HTML:
+
+1. **Missing keys are a render error**, with `template:line` in the message. The spec mandates
+   silent empty output -- the worst possible failure mode for a generator (a typo'd `{{indent}}`
+   emits nothing, and a pack with no compiler behind it, like JSON Schema, never finds out). This
+   project's ethos is fail-loud; the engine follows it.
+2. **No HTML escaping**: `{{x}}` interpolates verbatim (the spec's `{{{x}}}` everywhere would be
+   noise; there is no HTML here to protect).
+3. **No lambdas** (the spec's one escape hatch into logic). Closed.
+
+Conformance to everything else is *tested*: the press runs against the official Mustache spec test
+suite (the published YAML cases for interpolation, sections, inverted sections, and partials),
+asserting agreement everywhere except the three deviations above -- the spec authors' edge-case
+coverage, especially the fiddly whitespace rules, without their code.
+
+Everything the engine does **not** do -- expressions, comparisons, arithmetic, filters, string
+manipulation, casing, assignment -- stays not done; that is Mustache's constitution, not ours to
+amend. In particular there is no equality test; dispatch happens three other ways:
 
 1. **By manifest**: each template entry declares which plate strategies it renders (section 6),
    so per-shape dispatch never appears inside a template -- restoring "one template per shape" as
@@ -145,6 +156,15 @@ inheritance. In particular there is no equality test; dispatch happens two other
    "vector"` yields `is_vector`; `category: "primitive"` yields `is_primitive` -- and exposes the
    member list pre-split (`attributes`, `elements`, `value`) using the filters the plates already
    define. Templates branch with plain sections: `{{#type_ref.is_complex}}...{{/type_ref.is_complex}}`.
+3. **By injected context, not engine extensions**: loop metadata arrives as fields the context
+   builder adds to every list item (`is_first`, `is_last`, `index0`) -- this is what expresses
+   `if`/`else if` chains and separator joins -- and every wire-string leaf gets a quoted companion
+   (`wire` -> `wire_q`): a double-quoted, backslash-escaped literal using the JSON repertoire with
+   non-ASCII as `\uXXXX`, a subset valid verbatim in C, C++, Go, Java, JavaScript, and Rust.
+   Keeping both OUT of the engine keeps the template syntax pure Mustache (so the engine stays
+   swappable) and keeps the one acknowledged compromise -- that quoted-literal escaping encodes a
+   language *family* -- in the neutral context layer, where a future non-C-family target would
+   extend it (section 10).
 
 Two small, neutral additions to the plates feed this (the only model changes the redesign needs):
 
@@ -163,7 +183,7 @@ Worked example -- today's `gen/emit/c/complexes.py` attribute loop, as template 
     for (xmlAttrPtr a = el->properties; a; a = a->next) {
         {{> attr-name}}
 {{#attributes}}
-        {{#@first}}if{{/@first}}{{^@first}}}} else if{{/@first}} (strcmp(aname, {{name.wire:q}}) == 0) {
+        {{#is_first}}if{{/is_first}}{{^is_first}}}} else if{{/is_first}} (strcmp(aname, {{name.wire_q}}) == 0) {
             m->has_{{ident}} = true;
             m->{{ident}} = {{> attr-parse-expr}};
 {{/attributes}}
@@ -255,9 +275,11 @@ Each phase lands green (all suites pass) and pushed; phases 3-4 carry a hard par
 regenerate and `git diff --exit-code` over the committed `mx/` output -- the port is proven by
 byte-identical generation before the Python it replaces is deleted.
 
-1. **The press.** Engine + context builder + manifest expansion + format hook, with unit tests
-   (spec-level: sections, inversion, partial recursion, `:q`, standalone whitespace, loop
-   metadata, fail-loud on missing keys). No target changes.
+1. **The press.** Engine + context builder + manifest expansion + format hook. Tests: the
+   official Mustache spec suite for the implemented subset (minus the three documented
+   deviations), plus unit tests for the deviations themselves (fail-loud missing keys, identity
+   interpolation, no lambdas) and for the context builder's injections (discriminant expansion,
+   loop metadata, `_q` companions). No target changes.
 2. **Config absorbs `languages.py`.** `[types]`/`[reserved]` become explicit in all three configs;
    `variant-scope` explicit; `[vars]` introduced; `doc_lines` on plates; `PlateRef.name`/`kind`
    and plate `deps` added. Generated output must not change (these are data motions). Delete
@@ -286,10 +308,25 @@ the entire point.
   be two thousand lines of imperative emission; and nothing would force decisions into the plates,
   because a plugin can compute anything. The review's instruction was that the bespoke backends
   "should not exist," not that they should move.
-- **Jinja2** (or any full template engine, vendored or as a dependency). Mature and expressive --
-  and expressive is the problem: filters, macros, arbitrary expressions, and `set` would let the
-  Go backend be reconstituted *inside* template files, hiding naming logic where no gate can see
-  it. It also breaks the generator's stdlib-only property. The press's poverty is load-bearing.
+- **Jinja2** (or any expressive template engine, vendored or as a dependency). Mature, excellent
+  diagnostics, configurable strictness -- and expressive is the problem: filters, macros,
+  arbitrary expressions, and `set` would let the Go backend be reconstituted *inside* template
+  files, hiding naming logic where no structural gate can see it; only review discipline would
+  stand between the packs and that, and this redesign exists because structure beats discipline.
+  It also adds a pip/vendored dependency tree to a deliberately dependency-free Python side.
+- **An existing Mustache library** (chevron, pystache) -- the serious alternative, since it shares
+  the language's logic-less constitution and would spare us the parser. Weighed and declined, as a
+  close call, on four counts: (1) the spec mandates *silent empty output for missing keys*, which
+  is disqualifying for a generator and not configurable in chevron (pystache has a strict option
+  but is effectively unmaintained; both last released years ago); (2) spec HTML-escaping and weak
+  error locations mean we would patch a vendored copy in three places and own the result anyway --
+  owning ~400 written-and-spec-tested lines beats owning ~500 vendored lines plus patches by a
+  thin margin; (3) the repo's Python side has a deliberate no-dependencies precedent (the
+  hand-written XSD parser, tomllib); (4) conformance risk -- the real argument FOR a library -- is
+  neutralized by running the official Mustache spec test suite against the press (section 5).
+  Because template syntax is pure Mustache, this decision is cheaply reversible: **if during phase
+  1 the press exceeds ~600 lines or cannot pass the spec suite, the pre-committed fallback is to
+  vendor chevron and patch strictness/escaping/diagnostics** -- with zero template changes.
 - **AST-based emitters** (build a language-neutral syntax tree, print per language). A second
   language-shaped abstraction to design, with the per-language printers landing right back in
   Python. Wrong direction entirely.
@@ -302,9 +339,10 @@ the entire point.
 - **Template debuggability.** Generated-code bugs become template bugs; the press must report
   `template:line` in every error, and a `python3 -m gen render --config C --type note` debugging
   command (render one plate through its matching templates to stdout) should land with phase 1.
-- **The `:q` escape compromise** (section 5). One escape family in the engine. Revisit trigger: a
-  target whose string literals are not C-family (YAML? Python with different conventions would
-  still parse `\uXXXX`, but e.g. a target needing single quotes would not).
+- **The quoted-literal compromise** (section 5). The `_q` companions encode one escape family
+  (C/C++/Go/Java/JS/Rust-compatible) in the neutral context layer. Revisit trigger: a target whose
+  string literals are outside that family (e.g. single-quote-only syntaxes); the extension point
+  is the context builder, not the engine.
 - **Parity discipline.** The ports in phases 3-4 will be tedious precisely because parity is
   byte-exact; resist "improving" generated output mid-port. Cleanups come after deletion, as
   ordinary template edits.
@@ -322,6 +360,7 @@ the entire point.
   drop it. The plates dump makes chain shapes visible, no MusicXML schema has the shape, and the
   committed-output compile is the backstop. If it ever bites, the neutral fact ("N chain members
   carry element members") can become plate data a template renders into a `#error`.
-- **Engine creep.** The constitution in section 5 is the contract. The review question for any
-  proposed press feature: "does this let a template make a decision the plates should own?" If
-  yes, the answer is no.
+- **Engine creep.** The contract is "the template language is Mustache": the press neither adds
+  syntax nor restores the spec's lambdas, and the spec test suite pins it there. The review
+  question for any proposed press or context-builder feature: "does this let a template make a
+  decision the plates should own?" If yes, the answer is no.
