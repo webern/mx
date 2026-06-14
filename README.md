@@ -47,9 +47,9 @@ and `MX_COVERAGE` (gcov instrumentation). The useful workflows are exposed as Ma
 |-----------------------------|--------------------------------------------------------------------|
 | `make lib`                  | build the `mx` static library (`mx::api` + `mx::impl`)            |
 | `make dev`                  | build `mx` + all test and example binaries                        |
-| `make test`                 | run the `mxtest` suite (api/impl/file/control)                    |
+| `make test`                 | run api examples, then the `mxtest` suite (api/impl/file/control) |
 | `make test-api-roundtrip`   | corpus api roundtrip in regression mode (CI gate)                 |
-| `make examples-run`         | build and run all three api example programs                      |
+| `make run-examples`         | build and run all three api example programs                      |
 | `make core-dev`             | build `mx_core` and the corert/unit/validate test binaries        |
 | `make test-core-dev`        | run the core roundtrip suite over the `data/` corpus              |
 | `make test-cpp-unit`        | run the `mx::core` unit tests (values, shapes, rejection suite)   |

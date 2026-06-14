@@ -129,14 +129,11 @@ jobs:
       - name: Build mx library
         run: make lib
 
-      - name: Run mxtest suite (api/impl/file/control)
+      - name: Run examples + mxtest suite (api/impl/file/control)
         run: make test
 
       - name: Run corpus api roundtrip (regression mode)
         run: make test-api-roundtrip
-
-      - name: Build and run examples
-        run: make examples-run
 
   linux-core:
     name: Linux (mx::core gates)
@@ -341,14 +338,11 @@ jobs:
       - name: Build mx library (api/impl)
         run: make lib
 
-      - name: Run mxtest suite (api/impl)
+      - name: Run examples + mxtest suite (api/impl)
         run: make test
 
       - name: Run corpus api roundtrip (regression mode)
         run: make test-api-roundtrip
-
-      - name: Build and run examples
-        run: make examples-run
 
   swift-local:
     name: macOS (Swift package, local checkout)

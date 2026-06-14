@@ -69,7 +69,7 @@ FIND_CPP := find src \
         gen-quality gen-lint \
         gen gen-cpp gen-go gen-c gen-schema \
         build-go build-c test-go test-c \
-        lib dev test examples-run test-api-roundtrip discover-api-roundtrip coverage-api \
+        lib dev test run-examples test-api-roundtrip discover-api-roundtrip coverage-api \
         clean clean-docker check-docker docker-volume
 
 help:
@@ -79,8 +79,8 @@ help:
 	@echo '  mx::api/mx::impl:'
 	@echo '  make lib                Build the mx static library (MX_API=ON).'
 	@echo '  make dev                Build mx + mxtest + examples + api-roundtrip binary.'
-	@echo '  make test               Run the mxtest suite (api/impl/file/control).'
-	@echo '  make examples-run       Build and run all three api example programs.'
+	@echo '  make test               Run examples + mxtest suite (api/impl/file/control).'
+	@echo '  make run-examples       Build and run all three api example programs.'
 	@echo '  make test-api-roundtrip Run the corpus api roundtrip in regression mode (CI gate).'
 	@echo '  make discover-api-roundtrip  Run discovery mode over the full corpus (manual only).'
 	@echo '  make coverage-api            Instrumented api/impl/utility build + gcovr report.'
@@ -151,14 +151,14 @@ lib:
 dev: lib
 	$(CMAKE) --build $(BUILD_ROOT)/api --parallel $(JOBS)
 
-test: dev
+test: run-examples
 	$(BUILD_ROOT)/api/mxtest $(ARGS)
 
-examples-run: dev
+run-examples: dev
 	$(BUILD_ROOT)/api/mxread
 	$(BUILD_ROOT)/api/mxwrite $(BUILD_ROOT)/api/example.musicxml
 	$(BUILD_ROOT)/api/mxhide
-	@echo 'examples-run: all three examples ran successfully.'
+	@echo 'run-examples: all three examples ran successfully.'
 
 # Corpus api roundtrip -- regression mode (CI gate): every file in the
 # pinned baseline must pass; exit non-zero if any fails.
@@ -384,8 +384,8 @@ dev: $(DOCKER_STAMP) docker-volume
 test: $(DOCKER_STAMP) docker-volume
 	$(DOCKER_RUN) make test BUILD_TYPE=$(BUILD_TYPE) ARGS='$(ARGS)'
 
-examples-run: $(DOCKER_STAMP) docker-volume
-	$(DOCKER_RUN) make examples-run BUILD_TYPE=$(BUILD_TYPE)
+run-examples: $(DOCKER_STAMP) docker-volume
+	$(DOCKER_RUN) make run-examples BUILD_TYPE=$(BUILD_TYPE)
 
 test-api-roundtrip: $(DOCKER_STAMP) docker-volume
 	$(DOCKER_RUN) make test-api-roundtrip BUILD_TYPE=$(BUILD_TYPE)
