@@ -3,6 +3,7 @@
 // Distributed under the MIT License
 
 #include "mx/api/DocumentManager.h"
+#include "mx/core/Attribution.h"
 #include "mx/core/Error.h"
 #include "mx/core/generated/Document.h"
 #include "mx/impl/ScoreConversions.h"
@@ -256,7 +257,7 @@ Result<void> DocumentManager::writeToFile(int documentId, const std::string &fil
         }
 
         pugi::xml_document xdoc;
-        core::serialize(withWriteVersion(*it->second), xdoc);
+        core::serializeWithAttribution(withWriteVersion(*it->second), xdoc);
         if (!xdoc.save_file(filePath.c_str(), "  "))
         {
             return ApiError{ResultCode::ioError, filePath, "writeToFile: could not write the file"};
@@ -286,7 +287,7 @@ Result<void> DocumentManager::writeToStream(int documentId, std::ostream &stream
         }
 
         pugi::xml_document xdoc;
-        core::serialize(withWriteVersion(*it->second), xdoc);
+        core::serializeWithAttribution(withWriteVersion(*it->second), xdoc);
         xdoc.save(stream, "  ");
         return Result<void>{};
     }

@@ -45,6 +45,8 @@ target_include_directories(pugixml PUBLIC ${PRIVATE_DIR})
 # own directory, so generator-owned code is recognizable at a glance) and
 # arrive via sources.cmake (emitted by `python3 -m gen gen/cpp/config.toml`).
 set(MX_CORE_RUNTIME_SOURCES
+    ${PRIVATE_DIR}/mx/core/Attribution.cpp
+    ${PRIVATE_DIR}/mx/core/Attribution.h
     ${PRIVATE_DIR}/mx/core/Decimal.cpp
     ${PRIVATE_DIR}/mx/core/Decimal.h
     ${PRIVATE_DIR}/mx/core/Error.h

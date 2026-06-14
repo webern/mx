@@ -3,6 +3,7 @@
 // Distributed under the MIT License
 
 #include "mx/impl/EncodingFunctions.h"
+#include "mx/core/Attribution.h"
 #include "mx/core/generated/EncodingChoice.h"
 #include "mx/core/generated/Identification.h"
 #include "mx/core/generated/Miscellaneous.h"
@@ -148,7 +149,12 @@ api::EncodingData createEncoding(const core::Encoding &inEncoding)
             break;
         }
         case core::EncodingChoice::Kind::software: {
-            outEncoding.software.emplace_back(ec.asSoftware());
+            // Drop mx's own provenance stamp: it is mx attribution, not user
+            // content, and the writer re-adds the current one on every write.
+            if (!std::string_view{ec.asSoftware()}.starts_with(core::kMxSoftwareMarker))
+            {
+                outEncoding.software.emplace_back(ec.asSoftware());
+            }
             break;
         }
         case core::EncodingChoice::Kind::supports: {

@@ -20,6 +20,7 @@
 //       Exit 0 always. Use to grow the pinned list.
 
 #include "mx/api/DocumentManager.h"
+#include "mx/core/Attribution.h"
 #include "mxtest/corert/Compare.h"
 #include "mxtest/corert/Fixer.h"
 #include "pugixml/pugixml.hpp"
@@ -48,6 +49,27 @@ bool isExcludedPath(const std::filesystem::path &p)
         }
     }
     return false;
+}
+
+// Remove mx's provenance <software> from the written output. Every api write
+// stamps it, but the original input never has it, so the fidelity comparison
+// must ignore it (the stamp's own correctness is covered by AttributionTest).
+void stripMxAttribution(pugi::xml_node node)
+{
+    for (pugi::xml_node child = node.first_child(); child;)
+    {
+        const pugi::xml_node next = child.next_sibling();
+        if (std::string_view{child.name()} == "software" &&
+            std::string_view{child.text().get()}.starts_with(mx::core::kMxSoftwareMarker))
+        {
+            node.remove_child(child);
+        }
+        else
+        {
+            stripMxAttribution(child);
+        }
+        child = next;
+    }
 }
 
 bool isFixupSidecar(const std::filesystem::path &p)
@@ -189,6 +211,9 @@ RoundtripResult runRoundtrip(const std::string &absolutePath)
         r.detail = "failed to reload expected input";
         return r;
     }
+
+    // Drop mx's provenance stamp from the written output before comparing.
+    stripMxAttribution(actualDoc.document_element());
 
     // Normalize both and apply fixups to expected
     mxtest::corert::normalizeForComparison(expectedDoc);
