@@ -349,3 +349,24 @@ jobs:
 
       - name: Build and run examples
         run: make examples-run
+
+  swift-local:
+    name: macOS (Swift package, local checkout)
+    runs-on: macos-latest
+
+    # The local-checkout consumption mode (MX_LOCAL_CHECKOUT) builds `Mx` as a
+    # source library straight from this checkout -- the path komp takes when it
+    # depends on a sibling mx via `.package(path:)`. Building it here proves mx
+    # compiles as a Swift package under AppleClang/SPM on every PR. The binary
+    # xcframework release arm is follow-up work.
+    env:
+      MX_LOCAL_CHECKOUT: "1"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Swift toolchain
+        run: swift --version
+
+      - name: Build the Mx Swift package (local-checkout source mode)
+        run: swift build --product Mx

@@ -17,3 +17,7 @@ __pycache__/
 # Gen test build artifacts
 gen/test/c/build/
 gen/test/go/build/
+
+# Swift package build artifacts
+.build/
+Package.resolved
