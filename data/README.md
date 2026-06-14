@@ -65,3 +65,28 @@ The sidecars encode one uniform leniency policy, shared by every generated targe
   false): the lenient parse the deserializer uses keeps the value verbatim, because unlike a
   numeric bound there is no canonical replacement for a failed pattern, and round-trip fidelity
   wins. No fixup sidecar therefore ever encodes a string substitution.
+
+## Normalization pipeline
+
+Before `corert` compares an expected document against the one `mx` re-serialized, it normalizes
+both so the comparison is canonical-against-canonical. The pipeline lives in
+`src/private/mxtest/corert/Compare.cpp` and `src/private/mxtest/import/Normalize.cpp`:
+
+1. Pin the root `version` attribute to the harness baseline (`3.0`).
+2. Strip whitespace-only text nodes from every element. Pretty-printing indentation is not content
+   (MusicXML has no mixed content), and the rule is applied to both sides, so it stays symmetric.
+3. Strip trailing zeros from decimal fields: `mx` serializes the shortest round-trip form, so a
+   trailing-zero decimal like `40.00000` in a source file would otherwise mismatch. The field list
+   lives in `DecimalFields.h`.
+4. Sort each element's attributes alphabetically by qualified name (`xlink:href`, not `href`); it
+   runs last.
+
+Comparison rules that took debugging to get right:
+
+- Compare each element's direct text only, never the subtree concatenation: a
+  numerically-equivalent leaf reformat would otherwise fail at every ancestor, not only the leaf.
+- Compare attributes by qualified name, so a defect that drops a prefix (`xlink:href` -> `href`)
+  fails instead of sliding by on the local name.
+- A document whose root declares a MusicXML version newer than the model's
+  `SupportedMusicXMLVersion` is skipped, not failed: it may use elements the generated model has no
+  types for.
