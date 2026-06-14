@@ -45,4 +45,14 @@ ENV MX_RUNNING_IN_DOCKER=1 \
     CCACHE_DIR=/workspace/build/.ccache \
     CCACHE_MAXSIZE=2G
 
+# The container runs as the caller's uid:gid (DOCKER_USER), which has no passwd
+# entry, so HOME defaults to "/". Go would then place GOPATH at /go and GOCACHE
+# at /.cache/go-build -- both unwritable -- and `make test-go` dies with
+# "could not create module cache: mkdir /go: permission denied". Pin the Go
+# caches under the writable build volume, exactly as CCACHE_DIR above. The Go
+# module is vendored, so no network fetch is needed.
+ENV GOPATH=/workspace/build/go \
+    GOCACHE=/workspace/build/go/cache \
+    GOMODCACHE=/workspace/build/go/pkg/mod
+
 WORKDIR /workspace
