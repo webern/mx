@@ -51,7 +51,7 @@ class NoteWriter
     void setNotehead() const;
     void setStemDirection() const;
     void setMiscData() const;
-    bool findNormalNameAndDots(mx::api::DurationName &ioName, int &ioDots, long double inTickLength) const;
+    bool findNormalNameAndDots(mx::api::DurationName &ioName, int &ioDots, double inTickLength) const;
 };
 } // namespace impl
 } // namespace mx

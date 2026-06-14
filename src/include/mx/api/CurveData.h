@@ -65,10 +65,10 @@ struct CurvePoints
     PositionData positionData;
 
     bool isBezierXSpecified;
-    long double bezierX;
+    double bezierX;
 
     bool isBezierYSpecified;
-    long double bezierY;
+    double bezierY;
 
     bool isBezierOffsetSpecified;
     int bezierOffset;
@@ -112,11 +112,11 @@ struct CurveContinue
     int numberLevel;
     CurvePoints curvePoints;
     bool isBezierX2Specified;
-    long double bezierX2;
+    double bezierX2;
     bool isBezierY2Specified;
-    long double bezierY2;
+    double bezierY2;
     bool isBezierOffset2Specified;
-    long double bezierOffset2;
+    double bezierOffset2;
 
     CurveContinue(CurveType inCurveType)
         : curveType{inCurveType}, numberLevel{-1}, curvePoints{}, isBezierX2Specified{false}, bezierX2{0.0},

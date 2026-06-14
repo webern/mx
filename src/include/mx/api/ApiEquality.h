@@ -58,7 +58,7 @@ template <typename T> inline bool areEqual(const T &lhs, const T &rhs)
     return lhs == rhs;
 }
 
-template <> inline bool areEqual<long double>(const long double &lhs, const long double &rhs)
+template <> inline bool areEqual<double>(const double &lhs, const double &rhs)
 {
     return areSame(lhs, rhs);
 }

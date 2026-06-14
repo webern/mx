@@ -51,13 +51,13 @@
 // Value getter for a clamped-decimal wrapper field (e.g. Tenths).
 #define MX_OPTIONAL_GET_DECIMAL_FUNC(fieldName, fieldNameCapitalized, defaultReturnValue)                              \
                                                                                                                        \
-    template <class T> long double check##fieldNameCapitalized(const T *const el)                                      \
+    template <class T> double check##fieldNameCapitalized(const T *const el)                                           \
     {                                                                                                                  \
         if constexpr (requires { el->fieldName()->value().value(); })                                                  \
         {                                                                                                              \
             if (el->fieldName().has_value())                                                                           \
             {                                                                                                          \
-                return static_cast<long double>(el->fieldName()->value().value());                                     \
+                return static_cast<double>(el->fieldName()->value().value());                                          \
             }                                                                                                          \
         }                                                                                                              \
         return defaultReturnValue;                                                                                     \

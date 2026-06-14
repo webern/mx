@@ -490,8 +490,8 @@ void ScoreReader::scanForPageInfo() const
                 if (pageLayout.group().has_value())
                 {
                     outPageData.pageLayoutData.size =
-                        api::SizeData{static_cast<long double>(pageLayout.group()->pageHeight().value().value()),
-                                      static_cast<long double>(pageLayout.group()->pageWidth().value().value())};
+                        api::SizeData{static_cast<double>(pageLayout.group()->pageHeight().value().value()),
+                                      static_cast<double>(pageLayout.group()->pageWidth().value().value())};
                 }
                 for (const auto &pageMargins : pageLayout.pageMargins())
                 {
@@ -509,10 +509,10 @@ void ScoreReader::scanForPageInfo() const
                         t = *pageMargins.type();
                     }
                     const auto &allMargins = pageMargins.allMargins();
-                    const long double left = allMargins.leftRightMargins().leftMargin().value().value();
-                    const long double right = allMargins.leftRightMargins().rightMargin().value().value();
-                    const long double top = allMargins.topMargin().value().value();
-                    const long double bottom = allMargins.bottomMargin().value().value();
+                    const double left = allMargins.leftRightMargins().leftMargin().value().value();
+                    const double right = allMargins.leftRightMargins().rightMargin().value().value();
+                    const double top = allMargins.topMargin().value().value();
+                    const double bottom = allMargins.bottomMargin().value().value();
                     const api::MarginsData margins{left, right, top, bottom};
                     const bool writeOdd =
                         t.tag() == core::MarginType::Tag::both || t.tag() == core::MarginType::Tag::odd;

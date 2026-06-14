@@ -79,11 +79,11 @@ template <typename ATTRIBUTES_TYPE> api::FontWeight getFontWeight(const ATTRIBUT
 }
 
 template <typename ATTRIBUTES_TYPE>
-api::FontSizeType getFontSize(const ATTRIBUTES_TYPE &inAttributes, long double &outPointSize, api::CssSize &outCssSize)
+api::FontSizeType getFontSize(const ATTRIBUTES_TYPE &inAttributes, double &outPointSize, api::CssSize &outCssSize)
 {
     if (!checkHasFontSize<ATTRIBUTES_TYPE>(&inAttributes))
     {
-        outPointSize = -1.0L;
+        outPointSize = -1.0;
         outCssSize = api::CssSize::unspecified;
         return api::FontSizeType::unspecified;
     }
@@ -93,7 +93,7 @@ api::FontSizeType getFontSize(const ATTRIBUTES_TYPE &inAttributes, long double &
 
     if (coreFontSize.isCSSFontSize())
     {
-        outPointSize = -1.0L;
+        outPointSize = -1.0;
         outCssSize = converter.convert(coreFontSize.asCSSFontSize());
         return api::FontSizeType::css;
     }

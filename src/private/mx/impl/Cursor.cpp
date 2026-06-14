@@ -39,25 +39,25 @@ void Cursor::reset()
 
 int Cursor::convertDurationToGlobalTickScale(const core::PositiveDivisions &duration) const
 {
-    return convertDurationToGlobalTickScale(static_cast<long double>(duration.value().value()));
+    return convertDurationToGlobalTickScale(static_cast<double>(duration.value().value()));
 }
 
-int Cursor::convertDurationToGlobalTickScale(long double durationValue) const
+int Cursor::convertDurationToGlobalTickScale(double durationValue) const
 {
     if (this->ticksPerQuarter == this->getGlobalTicksPerQuarter())
     {
-        return static_cast<int>(std::ceil(durationValue - 0.5L));
+        return static_cast<int>(std::ceil(durationValue - 0.5));
     }
 
-    const long double currentTicksPerQuarter = static_cast<long double>(this->ticksPerQuarter);
-    const long double globalTicksPerQuarter = static_cast<long double>(this->getGlobalTicksPerQuarter());
-    const long double convertedVal = durationValue * (globalTicksPerQuarter / currentTicksPerQuarter);
-    return static_cast<int>(std::ceil(convertedVal - 0.5L));
+    const double currentTicksPerQuarter = static_cast<double>(this->ticksPerQuarter);
+    const double globalTicksPerQuarter = static_cast<double>(this->getGlobalTicksPerQuarter());
+    const double convertedVal = durationValue * (globalTicksPerQuarter / currentTicksPerQuarter);
+    return static_cast<int>(std::ceil(convertedVal - 0.5));
 }
 
 int Cursor::convertDurationToGlobalTickScale(int durationValue) const
 {
-    return convertDurationToGlobalTickScale(static_cast<long double>(durationValue));
+    return convertDurationToGlobalTickScale(static_cast<double>(durationValue));
 }
 } // namespace impl
 } // namespace mx

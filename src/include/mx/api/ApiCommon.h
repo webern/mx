@@ -12,7 +12,7 @@ namespace mx
 {
 namespace api
 {
-using Double = long double;
+using Double = double;
 using OptionalDouble = std::optional<Double>;
 constexpr const Double MX_API_EQUALITY_EPSILON = 0.00000001;
 

@@ -13,16 +13,16 @@ namespace mx
 namespace impl
 {
 MX_OPTIONAL_HAS_FUNC(defaultX, DefaultX);
-MX_OPTIONAL_GET_DECIMAL_FUNC(defaultX, DefaultX, 1.0L);
+MX_OPTIONAL_GET_DECIMAL_FUNC(defaultX, DefaultX, 1.0);
 
 MX_OPTIONAL_HAS_FUNC(defaultY, DefaultY);
-MX_OPTIONAL_GET_DECIMAL_FUNC(defaultY, DefaultY, 1.0L);
+MX_OPTIONAL_GET_DECIMAL_FUNC(defaultY, DefaultY, 1.0);
 
 MX_OPTIONAL_HAS_FUNC(relativeX, RelativeX);
-MX_OPTIONAL_GET_DECIMAL_FUNC(relativeX, RelativeX, 1.0L);
+MX_OPTIONAL_GET_DECIMAL_FUNC(relativeX, RelativeX, 1.0);
 
 MX_OPTIONAL_HAS_FUNC(relativeY, RelativeY);
-MX_OPTIONAL_GET_DECIMAL_FUNC(relativeY, RelativeY, 1.0L);
+MX_OPTIONAL_GET_DECIMAL_FUNC(relativeY, RelativeY, 1.0);
 
 MX_OPTIONAL_HAS_FUNC(halign, Halign);
 MX_OPTIONAL_GET_VALUE_FUNC(halign, Halign, core::LeftCenterRight, core::LeftCenterRight::left());

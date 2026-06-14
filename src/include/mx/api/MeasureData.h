@@ -84,7 +84,7 @@ class MeasureData
     Bool nonControlling;
 
     // a width value less than 0 means 'unspecified'
-    long double width;
+    double width;
     std::vector<KeyData> keys;
     std::vector<BarlineData> barlines;
 

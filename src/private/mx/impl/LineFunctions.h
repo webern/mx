@@ -23,13 +23,13 @@ MX_OPTIONAL_HAS_FUNC(lineStop, LineStop);
 MX_OPTIONAL_GET_VALUE_FUNC(lineStop, LineStop, core::LineEnd, core::LineEnd::none());
 
 MX_OPTIONAL_HAS_FUNC(dashLength, DashLength);
-MX_OPTIONAL_GET_DECIMAL_FUNC(dashLength, DashLength, 0.0L);
+MX_OPTIONAL_GET_DECIMAL_FUNC(dashLength, DashLength, 0.0);
 
 MX_OPTIONAL_HAS_FUNC(spaceLength, SpaceLength);
-MX_OPTIONAL_GET_DECIMAL_FUNC(spaceLength, SpaceLength, 0.0L);
+MX_OPTIONAL_GET_DECIMAL_FUNC(spaceLength, SpaceLength, 0.0);
 
 MX_OPTIONAL_HAS_FUNC(endLength, StopLength);
-MX_OPTIONAL_GET_DECIMAL_FUNC(endLength, StopLength, 0.0L);
+MX_OPTIONAL_GET_DECIMAL_FUNC(endLength, StopLength, 0.0);
 
 template <typename ATTRIBUTES_TYPE> api::LineData getLineData(const ATTRIBUTES_TYPE &inAttributes)
 {

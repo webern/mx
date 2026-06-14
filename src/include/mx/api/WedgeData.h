@@ -25,7 +25,7 @@ struct WedgeStart
     int numberLevel;
     WedgeType wedgeType;
     bool isSpreadSpecified;
-    long double spread;
+    double spread;
     LineData lineData;
     PositionData positionData;
     ColorData colorData;
@@ -42,7 +42,7 @@ struct WedgeStop
     int numberLevel;
     PositionData positionData;
     bool isSpreadSpecified;
-    long double spread;
+    double spread;
 
     WedgeStop() : numberLevel{-1}, positionData{}, isSpreadSpecified{false}, spread{0.0}
     {

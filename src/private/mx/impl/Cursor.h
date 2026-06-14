@@ -44,7 +44,7 @@ class Cursor
     void reset();
 
     int convertDurationToGlobalTickScale(const core::PositiveDivisions &duration) const;
-    int convertDurationToGlobalTickScale(long double durationValue) const;
+    int convertDurationToGlobalTickScale(double durationValue) const;
     int convertDurationToGlobalTickScale(int duration) const;
 
   private:

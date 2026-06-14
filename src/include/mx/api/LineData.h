@@ -34,11 +34,11 @@ struct LineData
     LineType lineType;
     LineHook lineHook;
     bool isStopLengthSpecified;
-    long double endLength;
+    double endLength;
     bool isDashLengthSpecified;
-    long double dashLength;
+    double dashLength;
     bool isSpaceLengthSpecified;
-    long double spaceLength;
+    double spaceLength;
 
     inline bool isSpecified() const
     {

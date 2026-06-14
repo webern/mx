@@ -171,7 +171,7 @@ std::pair<api::MeasureData, std::optional<api::TransposeData>> MeasureReader::ge
 
     if (myPartwiseMeasure.width().has_value())
     {
-        myOutMeasureData.width = static_cast<long double>(myPartwiseMeasure.width()->value().value());
+        myOutMeasureData.width = static_cast<double>(myPartwiseMeasure.width()->value().value());
     }
 
     if (myPartwiseMeasure.implicit().has_value())

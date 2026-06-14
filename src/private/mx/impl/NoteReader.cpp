@@ -139,7 +139,7 @@ std::string getLyricDisplayText(const core::LyricTextGroup &inGroup)
 NoteReader::NoteReader(const core::Note &mxNote)
     : myNote(mxNote), myNoteChoice(myNote.choice()), myFullNoteGroup(findFullNoteGroup(myNoteChoice)),
       myIsNormal(false), myIsGrace(false), myIsCue(false), myIsRest(false), myIsChord(false), myIsMeasureRest(false),
-      myIsUnpitched(false), myIsPitch(false), myIsDisplayStepOctaveSpecified(false), myDurationValue(0.0L),
+      myIsUnpitched(false), myIsPitch(false), myIsDisplayStepOctaveSpecified(false), myDurationValue(0.0),
       myStep(core::Step::c()), myAlter(0), myCents(0.0), myOctave(4), myStaffNumber(0), myVoiceNumber(0),
       myNoteheadValue(core::NoteheadValue::normal()), myDurationType(core::NoteTypeValue::maxima()),
       myIsDurationTypeSpecified(false), myNumDots(0), myBeams(), myTimeModificationActualNotes(-1),

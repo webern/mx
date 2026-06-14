@@ -96,13 +96,13 @@ class PositionData
   public:
     // decimal values are in 'tenths'
 
-    long double defaultX;
+    double defaultX;
     bool isDefaultXSpecified;
-    long double defaultY;
+    double defaultY;
     bool isDefaultYSpecified;
-    long double relativeX;
+    double relativeX;
     bool isRelativeXSpecified;
-    long double relativeY;
+    double relativeY;
     bool isRelativeYSpecified;
     Placement placement;
     VerticalAlignment verticalAlignment;

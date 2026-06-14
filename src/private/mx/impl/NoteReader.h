@@ -87,7 +87,7 @@ class NoteReader
         return myIsDisplayStepOctaveSpecified;
     }
 
-    inline long double getDurationValue() const
+    inline double getDurationValue() const
     {
         return myDurationValue;
     }
@@ -235,7 +235,7 @@ class NoteReader
     bool myIsUnpitched;
     bool myIsPitch;
     bool myIsDisplayStepOctaveSpecified;
-    long double myDurationValue;
+    double myDurationValue;
     core::Step myStep;
     int myAlter;
     double myCents;

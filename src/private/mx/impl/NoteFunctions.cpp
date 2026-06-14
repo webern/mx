@@ -147,8 +147,8 @@ api::NoteData NoteFunctions::parseNote() const
 // TODO - make this work even if notes are dotted and if they are tupleted
 api::DurationName NoteFunctions::deriveNoteTypeFromDurationValue(const NoteReader &reader) const
 {
-    const long double durationValue = reader.getDurationValue();
-    const long double ticksPerQuarter = static_cast<long double>(myCursor.getGlobalTicksPerQuarter());
+    const double durationValue = reader.getDurationValue();
+    const double ticksPerQuarter = static_cast<double>(myCursor.getGlobalTicksPerQuarter());
 
     if (api::areSame(durationValue, api::DUR_QUARTERS_VALUE_QUARTER * ticksPerQuarter))
     {

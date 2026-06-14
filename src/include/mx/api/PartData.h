@@ -43,15 +43,15 @@ struct MidiData
     int unpitched;
 
     // percent, valid range 0.0 to 100.0
-    long double volume;
+    double volume;
     bool isVolumeSpecified;
 
     // rotation degrees, valid range -180.0 to +180.0
-    long double pan;
+    double pan;
     bool isPanSpecified;
 
     // rotation degrees, valid range -180.0 to +180.0
-    long double elevation;
+    double elevation;
     bool isElevationSpecified;
 
     MidiData()

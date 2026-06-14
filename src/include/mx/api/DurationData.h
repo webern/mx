@@ -32,25 +32,25 @@ enum class DurationName
     dur1024th
 };
 
-constexpr long double DUR_QUARTERS_VALUE_MAXIMA = 32.0L;
-constexpr long double DUR_QUARTERS_VALUE_LONGA = 16.0L;
-constexpr long double DUR_QUARTERS_VALUE_BREVE = 8.0L;
-constexpr long double DUR_QUARTERS_VALUE_WHOLE = 4.0L;
-constexpr long double DUR_QUARTERS_VALUE_HALF = 2.0L;
-constexpr long double DUR_QUARTERS_VALUE_QUARTER = 1.0L;
-constexpr long double DUR_QUARTERS_VALUE_EIGHTH = 1.0L / 2.0L;
-constexpr long double DUR_QUARTERS_VALUE_16TH = 1.0L / 4.0L;
-constexpr long double DUR_QUARTERS_VALUE_32ND = 1.0L / 8.0L;
-constexpr long double DUR_QUARTERS_VALUE_64TH = 1.0L / 16.0L;
-constexpr long double DUR_QUARTERS_VALUE_128TH = 1.0L / 32.0L;
-constexpr long double DUR_QUARTERS_VALUE_256TH = 1.0L / 64.0L;
-constexpr long double DUR_QUARTERS_VALUE_512TH = 1.0L / 128.0L;
-constexpr long double DUR_QUARTERS_VALUE_1024TH = 1.0L / 256.0L;
+constexpr double DUR_QUARTERS_VALUE_MAXIMA = 32.0;
+constexpr double DUR_QUARTERS_VALUE_LONGA = 16.0;
+constexpr double DUR_QUARTERS_VALUE_BREVE = 8.0;
+constexpr double DUR_QUARTERS_VALUE_WHOLE = 4.0;
+constexpr double DUR_QUARTERS_VALUE_HALF = 2.0;
+constexpr double DUR_QUARTERS_VALUE_QUARTER = 1.0;
+constexpr double DUR_QUARTERS_VALUE_EIGHTH = 1.0 / 2.0;
+constexpr double DUR_QUARTERS_VALUE_16TH = 1.0 / 4.0;
+constexpr double DUR_QUARTERS_VALUE_32ND = 1.0 / 8.0;
+constexpr double DUR_QUARTERS_VALUE_64TH = 1.0 / 16.0;
+constexpr double DUR_QUARTERS_VALUE_128TH = 1.0 / 32.0;
+constexpr double DUR_QUARTERS_VALUE_256TH = 1.0 / 64.0;
+constexpr double DUR_QUARTERS_VALUE_512TH = 1.0 / 128.0;
+constexpr double DUR_QUARTERS_VALUE_1024TH = 1.0 / 256.0;
 
-inline long double applyDots(long double inUnDottedValue, int inNumDots)
+inline double applyDots(double inUnDottedValue, int inNumDots)
 {
-    long double outValue = inUnDottedValue;
-    long double valueToAdd = inUnDottedValue / 0.5;
+    double outValue = inUnDottedValue;
+    double valueToAdd = inUnDottedValue / 0.5;
 
     for (int i = 0; i < inNumDots; ++i)
     {

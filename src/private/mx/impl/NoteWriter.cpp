@@ -168,8 +168,8 @@ core::Note NoteWriter::getNote(bool isStartOfChord) const
             if (tickTimeDistance > 0 && tupletStart.normalNumber != 0 && tupletStart.actualNumber != 0)
             {
                 // calculate the tuplet normal type and dots based on the distance between start and stop and the ratio
-                const long double normalLength =
-                    static_cast<long double>(tickTimeDistance) / static_cast<long double>(tupletStart.normalNumber);
+                const double normalLength =
+                    static_cast<double>(tickTimeDistance) / static_cast<double>(tupletStart.normalNumber);
 
                 mx::api::DurationName normalName = mx::api::DurationName::unspecified;
                 int normalDots = 0;
@@ -461,12 +461,12 @@ void NoteWriter::setMiscData() const
     myOutNote.setEditorialVoice(std::move(editorialVoice));
 }
 
-bool NoteWriter::findNormalNameAndDots(mx::api::DurationName &ioName, int &ioDots, long double inTickLength) const
+bool NoteWriter::findNormalNameAndDots(mx::api::DurationName &ioName, int &ioDots, double inTickLength) const
 {
-    const auto equals = [&](long double a, long double b) { return std::abs(a - b) < 0.0001; };
+    const auto equals = [&](double a, double b) { return std::abs(a - b) < 0.0001; };
 
-    const auto isMatch = [&](long double durQuarters, int numDots, mx::api::DurationName name) {
-        if (equals(mx::api::applyDots(durQuarters * static_cast<long double>(myCursor.ticksPerQuarter), numDots),
+    const auto isMatch = [&](double durQuarters, int numDots, mx::api::DurationName name) {
+        if (equals(mx::api::applyDots(durQuarters * static_cast<double>(myCursor.ticksPerQuarter), numDots),
                    inTickLength))
         {
             ioName = name;

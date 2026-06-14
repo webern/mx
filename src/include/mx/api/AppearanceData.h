@@ -48,7 +48,7 @@ class AppearanceData
   public:
     AppearanceType appearanceType;
     std::string appearanceSubType;
-    long double value;
+    double value;
 };
 
 MXAPI_EQUALS_BEGIN(AppearanceData)

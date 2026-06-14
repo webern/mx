@@ -428,7 +428,7 @@ void DirectionReader::parseWedge(const core::DirectionType &directionType)
     const auto &wedge = directionType.choice().asWedge();
     const auto wedgeType = myConverter.convert(wedge.type());
     const bool isSpreadSpecified = wedge.spread().has_value();
-    const long double spread = isSpreadSpecified ? static_cast<long double>(wedge.spread()->value().value()) : 0.0L;
+    const double spread = isSpreadSpecified ? static_cast<double>(wedge.spread()->value().value()) : 0.0;
     auto positionData = getPositionData(wedge);
     auto lineData = getLineData(wedge);
     auto colorData = getColor(wedge);
@@ -569,17 +569,17 @@ void DirectionReader::parseBracket(const core::DirectionType &directionType)
         if (bracket.endLength().has_value())
         {
             lineData.isStopLengthSpecified = true;
-            lineData.endLength = static_cast<long double>(bracket.endLength()->value().value());
+            lineData.endLength = static_cast<double>(bracket.endLength()->value().value());
         }
         if (bracket.dashLength().has_value())
         {
             lineData.isDashLengthSpecified = true;
-            lineData.dashLength = static_cast<long double>(bracket.dashLength()->value().value());
+            lineData.dashLength = static_cast<double>(bracket.dashLength()->value().value());
         }
         if (bracket.spaceLength().has_value())
         {
             lineData.isSpaceLengthSpecified = true;
-            lineData.spaceLength = static_cast<long double>(bracket.spaceLength()->value().value());
+            lineData.spaceLength = static_cast<double>(bracket.spaceLength()->value().value());
         }
         return lineData;
     };

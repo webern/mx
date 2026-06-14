@@ -56,7 +56,7 @@ struct FontData
     // is in use. if css, then use the fontSizeCss
     // field, if point then use fontSizePoint
     FontSizeType sizeType;
-    long double sizePoint;
+    double sizePoint;
     CssSize sizeCss;
 
     FontStyle style;
@@ -69,7 +69,7 @@ struct FontData
     int lineThrough;
 
     FontData()
-        : sizeType{FontSizeType::unspecified}, sizePoint{-1.0L}, sizeCss{CssSize::unspecified},
+        : sizeType{FontSizeType::unspecified}, sizePoint{-1.0}, sizeCss{CssSize::unspecified},
           style{FontStyle::unspecified}, weight{FontWeight::unspecified}, fontFamily{}, underline{0}, overline{0},
           lineThrough{0}
     {
