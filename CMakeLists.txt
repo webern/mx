@@ -60,7 +60,31 @@ set(MX_CORE_RUNTIME_SOURCES
     ${PRIVATE_DIR}/mx/core/Xml.h)
 set(MX_CORE_GENERATED_SOURCES "")
 include(${PRIVATE_DIR}/mx/core/generated/sources.cmake OPTIONAL)
-add_library(mx_core STATIC ${MX_CORE_RUNTIME_SOURCES} ${MX_CORE_GENERATED_SOURCES})
+
+# mx::core::gitSha, captured at BUILD time. A configure-time capture would go
+# stale the moment HEAD moved, because an IDE rebuild (Xcode/Ninja/Make) never
+# re-runs CMake. So the capture is a build step baked into the project: it
+# re-checks git every build and rewrites the TU only when the value changed.
+# See cmake/GitSha.cmake. mx_core depends on the target so the file exists
+# before it compiles; GENERATED lets CMake accept a path that the first
+# configure has not produced yet.
+find_package(Git QUIET)
+set(MX_GIT_SHA_CPP "${CMAKE_BINARY_DIR}/generated/GitSha.cpp")
+add_custom_target(mx_git_sha ALL
+    BYPRODUCTS "${MX_GIT_SHA_CPP}"
+    COMMAND "${CMAKE_COMMAND}"
+        -DGIT_EXECUTABLE=${GIT_EXECUTABLE}
+        -DMX_GIT_SHA_SRC_DIR=${CMAKE_CURRENT_SOURCE_DIR}
+        -DMX_GIT_SHA_TEMPLATE=${PRIVATE_DIR}/mx/core/Version.cpp.in
+        -DMX_GIT_SHA_OUT=${MX_GIT_SHA_CPP}
+        -P "${CMAKE_CURRENT_SOURCE_DIR}/cmake/GitSha.cmake"
+    COMMENT "Capturing git SHA"
+    VERBATIM)
+set_source_files_properties("${MX_GIT_SHA_CPP}" PROPERTIES GENERATED TRUE)
+
+add_library(mx_core STATIC
+    ${MX_CORE_RUNTIME_SOURCES} ${MX_CORE_GENERATED_SOURCES} ${MX_GIT_SHA_CPP})
+add_dependencies(mx_core mx_git_sha)
 target_include_directories(mx_core PUBLIC ${PRIVATE_DIR})
 target_link_libraries(mx_core PUBLIC pugixml)
 target_compile_features(mx_core PUBLIC cxx_std_20)

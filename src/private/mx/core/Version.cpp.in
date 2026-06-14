@@ -1,0 +1,15 @@
+// MusicXML Class Library
+// Copyright (c) by Matthew James Briggs
+// Distributed under the MIT License
+
+// Generated at build time from this template by cmake/GitSha.cmake.
+// Do not edit and do not commit the output; it lives under the build tree.
+
+#include "mx/core/Version.h"
+
+namespace mx::core
+{
+
+const char *const gitSha = "@MX_GIT_SHA@";
+
+} // namespace mx::core
