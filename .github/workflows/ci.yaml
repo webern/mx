@@ -354,13 +354,10 @@ jobs:
     name: macOS (Swift package, local checkout)
     runs-on: macos-latest
 
-    # The local-checkout consumption mode (MX_LOCAL_CHECKOUT) builds `Mx` as a
-    # source library straight from this checkout -- the path komp takes when it
-    # depends on a sibling mx via `.package(path:)`. Building it here proves mx
-    # compiles as a Swift package under AppleClang/SPM on every PR. The binary
-    # xcframework release arm is follow-up work.
-    env:
-      MX_LOCAL_CHECKOUT: "1"
+    # By default mx builds `Mx` as a source library straight from this checkout --
+    # the path komp takes when it depends on a sibling mx via `.package(path:)`.
+    # Building it here proves mx compiles as a Swift package under AppleClang/SPM on
+    # every PR. The binary xcframework release arm (MX_BINARY_RELEASE) is follow-up work.
 
     steps:
       - uses: actions/checkout@v4
