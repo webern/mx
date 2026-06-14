@@ -138,7 +138,7 @@ class Config:
     types: dict[str, str] = field(default_factory=dict)  # primitive overrides
     docs: DocsSection = field(default_factory=DocsSection)
     renames: Renames = field(default_factory=Renames)
-    # The import-policy repair table (mx-core-plan.md §2.4): a required
+    # The import-policy repair table: a required
     # attribute MISSING from a document gets this default injected by the
     # parser; a missing required attribute with no entry is a parse error.
     # Keyed (complex type wire, attribute wire) -> wire literal.

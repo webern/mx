@@ -14,7 +14,7 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
 option(MX_CORE_DEV "Build the core roundtrip (corert) test binary against the regenerated mx/core." OFF)
 
-option(MX_API "Build the mx::api/mx::impl product library and its tests (Phase 2)." ON)
+option(MX_API "Build the mx::api/mx::impl product library and its tests." ON)
 
 option(MX_COVERAGE "Instrument the build for gcov coverage (GCC/Clang only)." OFF)
 
@@ -65,9 +65,9 @@ target_include_directories(mx_core PUBLIC ${PRIVATE_DIR})
 target_link_libraries(mx_core PUBLIC pugixml)
 target_compile_features(mx_core PUBLIC cxx_std_20)
 
-# mx_core unit tests (Gate 4 construction-safety: clamping, factories,
-# structural value shapes; W2 adds the grammar-shape tests). Only built once
-# the generator has emitted (the tests exercise generated types).
+# mx_core unit tests (clamping, factories, structural value shapes,
+# grammar-shape tests). Only built once the generator has emitted (the
+# tests exercise generated types).
 if(MX_CORE_GENERATED_SOURCES)
     file(GLOB_RECURSE SRC_MXTEST_CORE ${PRIVATE_DIR}/mxtest/core/*.cpp ${PRIVATE_DIR}/mxtest/core/*.h)
     file(GLOB_RECURSE SRC_CPUL_CORE ${PRIVATE_DIR}/cpul/*.cpp ${PRIVATE_DIR}/cpul/*.h)
@@ -105,7 +105,7 @@ if(MX_CORE_DEV)
     target_include_directories(mxtest-core-dev PRIVATE ${PRIVATE_DIR})
     target_link_libraries(mxtest-core-dev mx_core ${CMAKE_THREAD_LIBS_INIT})
 
-    # mxtest-validate: the permanent Gate-2 tool (mx-core-plan.md §5.2).
+    # mxtest-validate: parses corpus files and serializes them for xmllint validation.
     # Parses every eligible corpus file, serializes the OUTPUT to
     # build/validate-out/, plus the default-constructed Document; `make
     # validate-cpp` then xmllint-validates every output against the 4.0 XSD.
@@ -123,90 +123,10 @@ if(MX_CORE_DEV)
 
 endif()
 
-# Phase-2 step-0 baseline tooling (mx-impl-port-plan.md §8): the judge that
-# scores old-master api-roundtrip captures with the same normalize/compare
-# machinery corert uses. The capture driver next to it compiles only against
-# old master (71fc402) and is committed as a record; both are excluded from
-# the MX_API globs below.
-option(MX_BASELINE_JUDGE "Build the Phase-2 step-0 baseline judge tool." OFF)
-if(MX_BASELINE_JUDGE)
-    add_executable(mxtest-baseline-judge
-        ${PRIVATE_DIR}/mxtest/api/baseline/JudgeMain.cpp
-        ${PRIVATE_DIR}/mxtest/corert/Compare.cpp
-        ${PRIVATE_DIR}/mxtest/corert/Compare.h
-        ${PRIVATE_DIR}/mxtest/corert/Fixer.cpp
-        ${PRIVATE_DIR}/mxtest/corert/Fixer.h
-        ${PRIVATE_DIR}/mxtest/import/Normalize.cpp
-        ${PRIVATE_DIR}/mxtest/import/Normalize.h
-        ${PRIVATE_DIR}/mxtest/import/DecimalFields.h)
-    target_include_directories(mxtest-baseline-judge PRIVATE ${PRIVATE_DIR})
-    target_link_libraries(mxtest-baseline-judge pugixml)
-endif()
-
-# Phase-2 step-2/3 scratch target (mx-impl-port-plan.md §9): compiles the
-# already-ported api/impl translation units as a static archive (an archive
-# needs no symbol resolution, so the port can be validated TU by TU before
-# all 77 files exist). Grows during the step-3 wave; retired when MX_API
-# builds the real `mx` library.
-option(MX_IMPL_SLICE "Compile the ported mx::impl slice (Phase-2 scratch target)." OFF)
-if(MX_IMPL_SLICE)
-    add_library(mx_impl_slice STATIC
-        ${PRIVATE_DIR}/mx/api/DocumentManager.cpp
-        ${PRIVATE_DIR}/mx/api/EncodingData.cpp
-        ${PRIVATE_DIR}/mx/api/MarkData.cpp
-        ${PRIVATE_DIR}/mx/api/ScoreData.cpp
-        ${PRIVATE_DIR}/mx/api/SoundID.cpp
-        ${PRIVATE_DIR}/mx/impl/Converter.cpp
-        ${PRIVATE_DIR}/mx/impl/Cursor.cpp
-        ${PRIVATE_DIR}/mx/impl/EncodingFunctions.cpp
-        ${PRIVATE_DIR}/mx/impl/LyricType.cpp
-        ${PRIVATE_DIR}/mx/impl/MetronomeReader.cpp
-        ${PRIVATE_DIR}/mx/impl/NoteReader.cpp
-        ${PRIVATE_DIR}/mx/impl/NoteWriter.cpp
-        ${PRIVATE_DIR}/mx/impl/ScoreConversions.cpp
-        ${PRIVATE_DIR}/mx/impl/AccidentalMarkFunctions.cpp
-        ${PRIVATE_DIR}/mx/impl/ArticulationsFunctions.cpp
-        ${PRIVATE_DIR}/mx/impl/OrnamentsFunctions.cpp
-        ${PRIVATE_DIR}/mx/impl/TechnicalFunctions.cpp
-        ${PRIVATE_DIR}/mx/impl/ArpeggiateFunctions.cpp
-        ${PRIVATE_DIR}/mx/impl/FermataFunctions.cpp
-        ${PRIVATE_DIR}/mx/impl/LayoutFunctions.cpp
-        ${PRIVATE_DIR}/mx/impl/NonArpeggiateFunctions.cpp
-        ${PRIVATE_DIR}/mx/impl/PageTextFunctions.cpp
-        ${PRIVATE_DIR}/mx/impl/SlideFunctions.cpp
-        ${PRIVATE_DIR}/mx/impl/StaffFunctions.cpp
-        ${PRIVATE_DIR}/mx/impl/TimeReader.cpp
-        ${PRIVATE_DIR}/mx/impl/DynamicsReader.cpp
-        ${PRIVATE_DIR}/mx/impl/DynamicsWriter.cpp
-        ${PRIVATE_DIR}/mx/impl/TupletReader.cpp
-        ${PRIVATE_DIR}/mx/impl/NoteFunctions.cpp
-        ${PRIVATE_DIR}/mx/impl/NotationsWriter.cpp
-        ${PRIVATE_DIR}/mx/impl/PropertiesWriter.cpp
-        ${PRIVATE_DIR}/mx/impl/DirectionReader.cpp
-        ${PRIVATE_DIR}/mx/impl/DirectionWriter.cpp
-        ${PRIVATE_DIR}/mx/impl/MeasureReader.cpp
-        ${PRIVATE_DIR}/mx/impl/MeasureWriter.cpp
-        ${PRIVATE_DIR}/mx/impl/PartReader.cpp
-        ${PRIVATE_DIR}/mx/impl/PartWriter.cpp
-        ${PRIVATE_DIR}/mx/impl/ScoreReader.cpp
-        ${PRIVATE_DIR}/mx/impl/ScoreWriter.cpp)
-    target_include_directories(mx_impl_slice PRIVATE ${PRIVATE_DIR})
-    target_include_directories(mx_impl_slice PUBLIC $<BUILD_INTERFACE:${PUBLIC_DIR}>)
-    target_link_libraries(mx_impl_slice PUBLIC mx_core)
-endif()
 
 if(MX_API)
 
-    # =========================================================================
-    # Phase 2 (the mx::impl port): the mx::api/mx::impl product library and
-    # its preserved test suites. These sources are restored from the
-    # pre-newgen tree and are NOT expected to compile until mx::impl is
-    # reimplemented against the new mx::core and DocumentManager is rewritten
-    # on pugixml/mx::core::parse (newgen-integration-plan.md §8). Default OFF;
-    # this block exists so the port has a build home from day one.
-    # =========================================================================
-
-    message(STATUS "${PROJECT_NAME}: MX_API=ON: Phase-2 mx::api/mx::impl build")
+    message(STATUS "${PROJECT_NAME}: MX_API=ON: building mx::api/mx::impl")
 
     # PathRoot.h hands the api-test file walker the repo root at configure time.
     file(WRITE ${PRIVATE_DIR}/mxtest/file/PathRoot.h
@@ -227,12 +147,9 @@ if(MX_API)
     target_include_directories(mx PUBLIC $<BUILD_INTERFACE:${PUBLIC_DIR}>)
     target_link_libraries(mx PUBLIC mx_core)
 
-    # The preserved api/impl suites (the Phase-2 acceptance gate) plus the
-    # harness infrastructure they depend on (file, control, and the old api
-    # import harness slated for a pugixml rewrite).
+    # The api/impl suites plus the harness infrastructure they depend on
+    # (file, control, and the api import harness).
     file(GLOB_RECURSE SRC_MXTEST_API ${PRIVATE_DIR}/mxtest/api/*.cpp ${PRIVATE_DIR}/mxtest/api/*.h)
-    # mxtest/api/baseline/ holds the step-0 capture/judge tooling, not suite code.
-    list(FILTER SRC_MXTEST_API EXCLUDE REGEX "/mxtest/api/baseline/")
     # CorpusRoundtripMain.cpp has its own main(); it is a separate binary.
     list(FILTER SRC_MXTEST_API EXCLUDE REGEX "/mxtest/api/CorpusRoundtripMain\\.cpp")
     file(GLOB_RECURSE SRC_MXTEST_CONTROL ${PRIVATE_DIR}/mxtest/control/*.cpp ${PRIVATE_DIR}/mxtest/control/*.h)
@@ -260,7 +177,7 @@ if(MX_API)
     target_link_libraries(mxwrite mx ${CMAKE_THREAD_LIBS_INIT})
     target_link_libraries(mxhide mx ${CMAKE_THREAD_LIBS_INIT})
 
-    # Corpus api roundtrip harness (mx-impl-port-plan.md §8).
+    # Corpus api roundtrip harness.
     # Regression mode (CI): mxtest-api-roundtrip regression <dataRoot> <baselineFile>
     # Discovery mode (manual): mxtest-api-roundtrip discovery <dataRoot>
     add_executable(mxtest-api-roundtrip

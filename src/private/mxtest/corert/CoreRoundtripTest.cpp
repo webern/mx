@@ -14,8 +14,8 @@
 namespace
 {
 
-// Skip accounting for the pinned-counts gate (mx-core-plan.md §5.1): the
-// 4.0 corpus has nothing newer than 4.0, so any skip is count drift.
+// Skip accounting: the 4.0 corpus has nothing newer than 4.0, so any skip
+// is count drift.
 int g_skippedCount = 0;
 
 // Run the core roundtrip flow for one input and report through Catch2.
@@ -127,11 +127,10 @@ const CoreRoundtripRegistrar g_coreRoundtripRegistrar;
 
 } // namespace
 
-// Gate 1's pinned counts (mx-core-plan.md §5.1): 829 eligible files, none
-// skipped. Count drift is a failure even with zero individual fails, so a
-// corpus or version-gate change is a conscious decision, not silent decay.
-// Registered last (registration is discovery order; "zz" keeps it last
-// alphabetically for shuffled runs too).
+// Pinned counts: 829 eligible files, none skipped. Count drift is a failure
+// even with zero individual fails, so a corpus or version-gate change is a
+// conscious decision, not silent decay. Registered last (registration is
+// discovery order; "zz" keeps it last alphabetically for shuffled runs too).
 TEST_CASE("zz-corert-pinned-counts", "[core-roundtrip]")
 {
     CHECK(mxtest::corert::discoverInputFiles().size() == 829);

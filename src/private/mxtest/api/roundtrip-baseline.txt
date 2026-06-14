@@ -1,20 +1,19 @@
-# The pinned corpus api-roundtrip pass-list (mx-impl-port-plan.md §8).
+# The pinned corpus api-roundtrip pass-list.
 #
-# Step-0 baseline, captured 2026-06-12 from old master 71fc402: the old
-# library's honest api roundtrip (createFromFile -> getData ->
-# createFromScore -> writeToFile) was run over every eligible corpus file
-# (829 discovered; same discovery rules as corert) and each output judged
-# against its input with the NEW normalize-and-compare machinery
-# (mxtest/corert/Compare + Fixer). See src/private/mxtest/api/baseline/.
+# Captured 2026-06-12 from old master 71fc402: the old library's honest api
+# roundtrip (createFromFile -> getData -> createFromScore -> writeToFile) was
+# run over every eligible corpus file (829 discovered; same discovery rules as
+# corert) and each output judged against its input with the normalize-and-compare
+# machinery (mxtest/corert/Compare + Fixer).
 #
 # Results: 794 produced output, 19 LOADFAIL, 8 GETDATAFAIL, 8 CREATEFAIL;
 # of the 794, exactly 1 survived the strict DOM comparison -- mx::api is a
 # deliberate subset of MusicXML, and the old api reorders <encoding>
 # children, drops <part-group>, <credit>, most of <defaults>, etc., so
-# nearly every real-world file loses fidelity by design. The pre-port
-# baseline is therefore this list. Growth comes from discovery mode as
-# deliberate commits (never automatic); regression mode requires every
-# file below to pass -- zero tolerance.
+# nearly every real-world file loses fidelity by design. This is therefore
+# the starting list. Growth comes from discovery mode as deliberate commits
+# (never automatic); regression mode requires every file below to pass --
+# zero tolerance.
 #
 # Format: one data/-relative path per line; # starts a comment.
 ksuite/k016a_Miscellaneous_Fields.xml

@@ -174,7 +174,7 @@ class StringPlate:
     # projected like enum variants (renameable, collision-gated) plus
     # whether a non-empty suffix is required. Empty for any other pattern
     # shape; see build.prefix_facets. A structural target stores the suffix
-    # and emits the prefix from the serializer (mx-core-plan.md §2.2).
+    # and emits the prefix from the serializer.
     prefixes: list[Variant] = field(default_factory=list)
     multi_prefix: bool = False
     suffix_required: bool = False

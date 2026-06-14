@@ -689,7 +689,7 @@ class PortablePattern(unittest.TestCase):
 
 
 class ContentProjection(unittest.TestCase):
-    """The grammar-preserving content projection (mx-core-plan.md §2.9):
+    """The grammar-preserving content projection:
     fields, group/choice plates, synthesized hoisting, and its invisibility
     to targets that consume only the flat member view."""
 

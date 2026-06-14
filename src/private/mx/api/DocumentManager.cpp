@@ -28,7 +28,7 @@ namespace
 {
 
 // mx::api owns its error vocabulary; the core parse codes are mirrored
-// one-to-one (mx-impl-port-plan.md §3).
+// one-to-one.
 ResultCode mirror(core::ErrorCode code)
 {
     switch (code)
@@ -74,8 +74,7 @@ std::string fileExtension(const std::string &filePath)
     return filePath.substr(dotPos + 1);
 }
 
-// The write side always emits version="4.0", unconditionally
-// (mx-impl-port-plan.md §4): mx writes MusicXML 4.0 documents; echoing a
+// The write side always emits version="4.0" unconditionally: echoing a
 // declared "3.0" (or ScoreData::musicXmlVersion) from a 4.0 model was a
 // fiction. Enforced here at the write boundary on a copy, so the stored
 // document (and the getDocument escape hatch) keeps what was parsed.
@@ -230,7 +229,7 @@ Result<int> DocumentManager::createFromScore(const ScoreData &score)
     catch (const impl::WriteRefusal &refusal)
     {
         // Refuse, don't drop: the ScoreData describes something the core
-        // model will not represent (mx-impl-port-plan.md §3).
+        // model will not represent.
         return refusal.error();
     }
     catch (const std::exception &e)
@@ -312,10 +311,9 @@ Result<ScoreData> DocumentManager::getData(int documentId) const
             return ApiError{ResultCode::badDocumentId, "", "getData: bad document id"};
         }
 
-        // The old mutate-and-restore dance (convert the stored document to
-        // partwise, read, convert back) dies: convert into a local partwise
-        // copy and read that; the stored document is untouched
-        // (mx-impl-port-plan.md §5).
+        // Convert into a local partwise copy and read that; the stored
+        // document is untouched. The old mutate-and-restore dance (convert
+        // the stored document to partwise, read, convert back) is gone.
         if (it->second->isScoreTimewise())
         {
             const core::ScorePartwise scorePartwise = impl::timewisePartwise(it->second->asScoreTimewise());

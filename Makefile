@@ -9,9 +9,6 @@
 # a dev machine runs natively with the host toolchain instead (used by the
 # macOS CI job, which has no Docker). Requires CMake >= 3.13.
 #
-# The restored mx::api/mx::impl product stack is parked behind the CMake
-# option MX_API=OFF until the Phase-2 port (newgen-integration-plan.md §8);
-# no Makefile target builds it yet, so no advertised target is broken.
 # ============================================================================
 
 CMAKE      ?= cmake
@@ -79,7 +76,7 @@ help:
 	@echo 'mx targets (see AGENTS.md). All run via the mx-sdk Docker toolchain;'
 	@echo 'set MX_RUNNING_IN_DOCKER=1 to run natively on the host instead.'
 	@echo ''
-	@echo '  mx::api/mx::impl (Phase 2):'
+	@echo '  mx::api/mx::impl:'
 	@echo '  make lib                Build the mx static library (MX_API=ON).'
 	@echo '  make dev                Build mx + mxtest + examples + api-roundtrip binary.'
 	@echo '  make test               Run the mxtest suite (api/impl/file/control).'
@@ -92,8 +89,8 @@ help:
 	@echo '  make core-dev           Build mx_core and the corert/unit/validate binaries.'
 	@echo "  make test-core-dev      Run the core roundtrip suite. Filter: ARGS='[core-roundtrip] lysuite/*'"
 	@echo '  make test-cpp-unit      Run the mx::core unit tests (values, shapes, rejection suite).'
-	@echo '  make validate-cpp       Gate 2: serialize every corpus file and xmllint-validate the OUTPUT.'
-	@echo '  make probe-cpp          Gate 4: must-NOT-compile probes (invalid construction).'
+	@echo '  make validate-cpp       Serialize every corpus file and xmllint-validate the output.'
+	@echo '  make probe-cpp          Compile-time negative probes (invalid construction must not compile).'
 	@echo '  make check-core-dev     fmt-check + warning-free core-dev build.'
 	@echo '  make coverage-core-dev  Instrumented build, corert + unit suites, gcovr -> $(COV_DIR)/.'
 	@echo ''
@@ -215,10 +212,9 @@ test-core-dev: core-dev
 test-cpp-unit: core-dev
 	$(BUILD_ROOT)/core-dev/mxtest-core $(ARGS)
 
-# Gate 2 (docs/ai/design/mx-core-plan.md §5.2), a permanent gate: every
-# parsed corpus document is serialized and the OUTPUT is validated against
-# the MusicXML 4.0 XSD -- the mechanical proof that import leniency (value
-# clamping) still emits only schema-valid XML.
+# Serialize every parsed corpus document and xmllint-validate the output
+# against the MusicXML 4.0 XSD -- mechanical proof that import leniency
+# (value clamping) still emits only schema-valid XML.
 validate-cpp: core-dev
 	rm -rf $(BUILD_ROOT)/validate-out
 	$(BUILD_ROOT)/core-dev/mxtest-validate $(BUILD_ROOT)/validate-out
@@ -229,9 +225,9 @@ validate-cpp: core-dev
 		--schema $(CURDIR)/docs/musicxml-4.0-ed15c23.xsd *.xml 2>/dev/null \
 		&& echo 'validate-cpp: all outputs are schema-valid.'
 
-# Gate 4's compile-time probes (mx-core-plan.md §5.4): PROBE=0 must
-# compile (the control); every numbered probe is an invalid-construction
-# attempt that must NOT compile.
+# Compile-time negative probes: PROBE=0 must compile (the control);
+# every numbered probe is an invalid-construction attempt that must NOT
+# compile.
 PROBE_COUNT := 7
 probe-cpp:
 	@$(CXX) -std=c++20 -fsyntax-only -I src/private -DPROBE=0 \

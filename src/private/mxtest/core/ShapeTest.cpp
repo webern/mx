@@ -2,11 +2,11 @@
 // Copyright (c) by Matthew James Briggs
 // Distributed under the MIT License
 
-// Gate-4 shape tests for the generated complex types (mx-core-plan.md §4
-// W2): sequence order unrepresentable, variant exclusivity, maxOccurs
-// rejection, default-construction validity, and the strict-structure parse
-// boundary (wrong order / unknown names / missing required content reject
-// with the right ErrorCode).
+// Shape tests for the generated complex types: sequence order
+// unrepresentable, variant exclusivity, maxOccurs rejection,
+// default-construction validity, and the strict-structure parse boundary
+// (wrong order / unknown names / missing required content reject with the
+// right ErrorCode).
 
 #include "cpul/cpulTestHarness.h"
 

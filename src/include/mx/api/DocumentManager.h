@@ -20,8 +20,8 @@ using DocumentPtr = std::shared_ptr<Document>;
 
 namespace api
 {
-// The mx::api error channel (mx-impl-port-plan.md §3): no exceptions escape
-// this boundary; failures speak Result/ApiError, and any exception from
+// The mx::api error channel: no exceptions escape this boundary; failures
+// speak Result/ApiError, and any exception from
 // below becomes ResultCode::internalError.
 class DocumentManager
 {

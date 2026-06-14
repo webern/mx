@@ -2,12 +2,12 @@
 // Copyright (c) by Matthew James Briggs
 // Distributed under the MIT License
 
-// Gate 2 (mx-core-plan.md §5.2): every parsed corpus document is serialized
-// and the OUTPUT is xmllint-validated against the 4.0 XSD -- the mechanical
-// proof that the clamp policy emits only valid XML, end to end. This tool
-// does the parse+serialize half: it writes each round-tripped document
-// (plus the default-constructed Document, Gate 4) to the given output
-// directory; `make validate-cpp` runs xmllint over the results.
+// Every parsed corpus document is serialized and the output is xmllint-
+// validated against the 4.0 XSD -- the mechanical proof that the clamp
+// policy emits only valid XML, end to end. This tool does the
+// parse+serialize half: it writes each round-tripped document (plus the
+// default-constructed Document) to the given output directory; `make
+// validate-cpp` runs xmllint over the results.
 
 #include "mx/core/generated/DefaultsProbe.h"
 #include "mx/core/generated/Document.h"
@@ -29,7 +29,7 @@ int main(int argc, char **argv)
     const std::filesystem::path outDir{argv[1]};
     std::filesystem::create_directories(outDir);
 
-    // Gate 4's mechanical default-construction probes first: every type's
+    // Mechanical default-construction probes first: every type's
     // natural zero must survive its own strict parser...
     mx::core::roundTripDefaults();
     // ...and the default Document must be schema-valid (xmllint checks it

@@ -92,7 +92,7 @@ core::Note NoteWriter::getNote(bool isStartOfChord) const
         const auto added = myOutNote.addBeam(std::move(mxBeam));
         if (!added)
         {
-            // Refuse, don't drop (mx-impl-port-plan.md §3): the core caps
+            // Refuse, don't drop: the core caps
             // beams at 8; silently discarding the ninth would lose data.
             throw WriteRefusal{api::ApiError{api::ResultCode::tooManyElements, added.error().path,
                                              "NoteWriter: " + added.error().message}};

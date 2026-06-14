@@ -2,11 +2,10 @@
 // Copyright (c) by Matthew James Briggs
 // Distributed under the MIT License
 
-// Gate-3 rejection suite (mx-core-plan.md §5.3): hand-authored invalid
-// documents must refuse to parse, each asserting the right ErrorCode and a
-// meaningful path. Plus the Document round-trip surface: version gating,
-// root dispatch, root-namespace preservation, and the Gate-4 mechanical
-// default probes.
+// Rejection tests: hand-authored invalid documents must refuse to parse,
+// each asserting the right ErrorCode and a meaningful path. Plus the
+// Document round-trip surface: version gating, root dispatch,
+// root-namespace preservation, and mechanical default-construction probes.
 
 #include "cpul/cpulTestHarness.h"
 
@@ -165,7 +164,7 @@ TEST(RootNamespacePreserved, Document)
 
 TEST(DefaultsRoundTripEveryType, Document)
 {
-    // Gate 4's mechanical probe: every generated type's natural zero must
+    // Mechanical probe: every generated type's natural zero must
     // survive its own strict parser. Throws (and fails the case) if not.
     roundTripDefaults();
     CHECK(true);

@@ -21,11 +21,10 @@ namespace mx
 {
 namespace api
 {
-// Frozen for source compatibility; read-side informational only
-// (mx-impl-port-plan.md §4). The reader sets ThreePointZero iff the parsed
-// document's declared version string is exactly "3.0". This field no longer
-// influences output: mx writes MusicXML 4.0 documents, and the written root
-// version attribute is always "4.0".
+// Frozen for source compatibility; read-side informational only. The reader
+// sets ThreePointZero iff the parsed document's declared version string is
+// exactly "3.0". This field no longer influences output: mx writes MusicXML
+// 4.0 documents, and the written root version attribute is always "4.0".
 enum class MusicXmlVersion
 {
     unspecified,

@@ -2,10 +2,10 @@
 // Copyright (c) by Matthew James Briggs
 // Distributed under the MIT License
 
-// Gate-4 construction-safety tests for representative generated value types
-// (mx-core-plan.md §5.4): clamping on construct and set, named-factory
-// enums, structural bespoke shapes, and union dispatch. The compile-time
-// must-NOT-compile probes live in mxtest/probe (script-driven).
+// Construction-safety tests for representative generated value types:
+// clamping on construct and set, named-factory enums, structural bespoke
+// shapes, and union dispatch. The compile-time must-NOT-compile probes live
+// in mxtest/probe (script-driven).
 
 #include "cpul/cpulTestHarness.h"
 

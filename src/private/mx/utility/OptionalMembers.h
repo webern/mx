@@ -5,7 +5,7 @@
 #pragma once
 
 // Generic access to optional attributes that may or may not exist on a given
-// core element class (mx-impl-port-plan.md §6).
+// core element class.
 //
 // The old core exposed attributes as public data members
 // (`attr.hasDefaultX` + `attr.defaultX`) and this header SFINAE-detected

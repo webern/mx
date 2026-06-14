@@ -14,8 +14,8 @@ namespace mx
 namespace impl
 {
 
-// Internal to the impl layer (mx-impl-port-plan.md §3, createFromScore):
-// when a ScoreData describes something the new core won't represent (e.g. a
+// Internal to the impl layer (createFromScore): when a ScoreData describes
+// something the new core won't represent (e.g. a
 // ninth beam against the bounded addBeam), the writer refuses rather than
 // silently dropping user data. Writers throw this; DocumentManager catches
 // it at the api boundary and returns the carried ApiError. Never escapes

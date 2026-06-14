@@ -12,11 +12,10 @@ namespace mx
 namespace impl
 {
 
-// The timewise <-> partwise pivot, ported from the old core's
-// ScoreConversions (71fc402) per mx-impl-port-plan.md §5: a regroup of
-// parts-of-measures <-> measures-of-parts plus header. Its only consumer is
-// DocumentManager. Under value semantics the old shallow copies become real
-// copies -- strictly safer, behavior-identical for this use.
+// The timewise <-> partwise pivot: a regroup of parts-of-measures
+// <-> measures-of-parts plus header. Its only consumer is DocumentManager.
+// Under value semantics the old shallow copies become real copies --
+// strictly safer, behavior-identical for this use.
 
 // Converts a 'score-partwise' to 'score-timewise'.
 core::ScoreTimewise partwiseTimewise(const core::ScorePartwise &inScore);

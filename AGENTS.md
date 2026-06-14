@@ -27,13 +27,13 @@ mx/
     mx/examples/        <- api example programs
     mxtest/core/        <- mx::core unit tests (small)
     mxtest/corert/      <- C++ core roundtrip test (deserializes and serializes the test corpus)
-    mxtest/import/      <- TODO: not sure
-    mxtest/probe/       <- TODO: not sure
-    mxtest/validate/    <- TODO: not sure
+    mxtest/import/      <- normalization support (Normalize.cpp/h + DecimalFields.h) shared by corert and api tests
+    mxtest/probe/       <- compile-time negative probes: constructs that MUST NOT compile (`make probe-cpp`)
+    mxtest/validate/    <- xmllint validation driver: parses+serializes corpus, outputs for `make validate-cpp`
     mxtest/api/         <- tests for the mx::api layer
     mxtest/impl/        <- tests for the mx::impl layer
-    mxtest/file/        <- file helpers for the mx::api tests (TODO: verify)
-    mxtest/control/     <- TODO: not sure: dead code?
+    mxtest/file/        <- file-walking test infrastructure for the mx::api tests (MxFile, MxFileTest, etc.)
+    mxtest/control/     <- compile-control flags (CompileControl.h: enables/disables test suite compilation)
     cpul/               <- vendored Catch2 test runner
   gen/                  <- code generator system (see gen/README.md)
     test/go/            <- A toy Go implementation of MusicXML XSD for gen validation
@@ -87,7 +87,7 @@ serialization/deserialization libraries. See:
 - `gen/README.md`: human summary
 
 What you need to know right now is that `gen/cpp` is where our MusicXML types are coming from. Run
-{{TODO: put the right Makefile command here}} to regenerate the C++ types.
+`make gen-cpp` to regenerate the C++ types.
 
 ## Quality gates
 
@@ -101,5 +101,15 @@ locally.
 
 ## Key files to understand
 
-TODO: top ten files in the C++ codebase that an agent will very often need to read. Let's list them
-here and what they are.
+| File | What it is |
+|------|------------|
+| `src/include/mx/api/DocumentManager.h` | The public API entry point: createFromFile, createFromScore, getData, writeToFile |
+| `src/include/mx/api/ScoreData.h` | The primary api data model (ScoreData, PartData, MeasureData, ...) |
+| `src/private/mx/api/DocumentManager.cpp` | API implementation: error channel, parse/serialize orchestration |
+| `src/private/mx/impl/ScoreReader.cpp` | Translates mx::core -> mx::api ScoreData |
+| `src/private/mx/impl/ScoreWriter.cpp` | Translates mx::api ScoreData -> mx::core |
+| `src/private/mx/impl/NoteReader.cpp` | Core -> api note translation (one of the largest impl files) |
+| `src/private/mx/impl/NoteWriter.cpp` | Api -> core note translation |
+| `src/private/mx/core/generated/Document.h` | The core document model (parse, serialize, Document class) |
+| `src/private/mxtest/corert/CoreRoundtripImpl.cpp` | The corert test runner (discover, parse, serialize, compare) |
+| `src/private/mxtest/corert/Compare.cpp` | DOM normalization and comparison engine used by corert and api tests |

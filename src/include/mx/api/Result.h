@@ -15,8 +15,8 @@ namespace mx
 namespace api
 {
 
-// The mx::api error vocabulary (mx-impl-port-plan.md §3). mx::api owns its
-// own codes: the core-boundary failures are mirrored (public headers never
+// The mx::api error vocabulary. mx::api owns its own codes: the core-boundary
+// failures are mirrored (public headers never
 // include private mx::core headers), and the api adds the codes core has no
 // business knowing. No exceptions escape the DocumentManager boundary.
 enum class ResultCode

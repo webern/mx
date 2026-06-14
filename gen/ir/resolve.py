@@ -216,7 +216,7 @@ class Resolver:
     # or a repeated/optional anonymous sequence. Trivial single-element
     # groups are spliced inline (they add no structure, only an occurrence
     # wrapper); structural groups stay referenced so targets can emit them
-    # as shared types (mx-core-plan.md §2.9). All of this is neutral schema
+    # as shared types. All of this is neutral schema
     # reasoning -- nothing here knows what any target does with the view.
 
     @staticmethod

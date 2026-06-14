@@ -13,11 +13,10 @@ This project is a C++ library for working with MusicXML.
 
 ## Status
 
-The `mx::core` typed model has been replaced by a generated implementation: a language-agnostic
-code generator (`gen/`) reads the MusicXML 4.0 XSD and emits `mx::core` (see the
-[Code Generation](#code-generation) section). The simplified `mx::api` layer and its `mx::impl`
-implementation are fully ported to the new generated core (`docs/ai/design/mx-impl-port-plan.md`,
-Phase 2 complete) and build by default.
+The `mx::core` typed model is generated: a language-agnostic code generator (`gen/`) reads the
+MusicXML 4.0 XSD and emits `mx::core` (see the [Code Generation](#code-generation) section). The
+simplified `mx::api` layer and its `mx::impl` implementation are fully ported to the generated core
+and build by default.
 
 # Build
 

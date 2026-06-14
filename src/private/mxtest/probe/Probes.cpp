@@ -2,8 +2,8 @@
 // Copyright (c) by Matthew James Briggs
 // Distributed under the MIT License
 
-// Gate-4 compile-time probes (mx-core-plan.md §5.4): each PROBE number
-// selects one construct that MUST NOT compile -- the unrepresentability
+// Compile-time negative probes: each PROBE number selects one construct
+// that MUST NOT compile -- the unrepresentability
 // half of valid-by-construction, verified by `make probe-cpp`, which
 // asserts that compilation fails for every PROBE > 0 and succeeds for the
 // PROBE=0 control (proving the probe failures are not include/setup rot).

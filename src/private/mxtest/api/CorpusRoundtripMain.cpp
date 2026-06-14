@@ -2,7 +2,7 @@
 // Copyright (c) by Matthew James Briggs
 // Distributed under the MIT License
 
-// Corpus api roundtrip harness (mx-impl-port-plan.md §8).
+// Corpus api roundtrip harness.
 //
 // Runs the full api pipeline (createFromFile → getData → createFromScore →
 // writeToStream) over corpus files and compares each output to its input with
