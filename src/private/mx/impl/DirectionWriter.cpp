@@ -8,6 +8,7 @@
 #include "mx/core/generated/BassStep.h"
 #include "mx/core/generated/BeatUnitGroup.h"
 #include "mx/core/generated/Bracket.h"
+#include "mx/core/generated/Coda.h"
 #include "mx/core/generated/Dashes.h"
 #include "mx/core/generated/Degree.h"
 #include "mx/core/generated/DegreeAlter.h"
@@ -43,6 +44,7 @@
 #include "mx/core/generated/PerMinute.h"
 #include "mx/core/generated/Root.h"
 #include "mx/core/generated/RootStep.h"
+#include "mx/core/generated/Segno.h"
 #include "mx/core/generated/Semitones.h"
 #include "mx/core/generated/StartStop.h"
 #include "mx/core/generated/StartStopContinue.h"
@@ -389,6 +391,30 @@ std::vector<core::MusicDataChoice> DirectionWriter::getDirectionLikeThings()
             dt.setChoice(core::DirectionTypeChoice::choice(choiceSet));
             addDirectionType(std::move(dt), direction);
         }
+    }
+
+    for (const auto &segno : myDirectionData.segnos)
+    {
+        MX_UNUSED(segno);
+        core::DirectionType dt{};
+        dt.setChoice(core::DirectionTypeChoice::segno(core::OneOrMore<core::Segno>{core::Segno{}}));
+        addDirectionType(std::move(dt), direction);
+    }
+
+    for (const auto &coda : myDirectionData.codas)
+    {
+        MX_UNUSED(coda);
+        core::DirectionType dt{};
+        dt.setChoice(core::DirectionTypeChoice::coda(core::OneOrMore<core::Coda>{core::Coda{}}));
+        addDirectionType(std::move(dt), direction);
+    }
+
+    for (const auto &rehearsal : myDirectionData.rehearsals)
+    {
+        MX_UNUSED(rehearsal);
+        core::DirectionType dt{};
+        dt.setChoice(core::DirectionTypeChoice::rehearsal(core::OneOrMore<core::FormattedTextID>{core::FormattedTextID{}}));
+        addDirectionType(std::move(dt), direction);
     }
 
     if (myIsFirstDirectionTypeAdded)
