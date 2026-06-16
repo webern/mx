@@ -62,6 +62,7 @@ const Converter::EnumMap<core::NoteheadValue, api::Notehead> Converter::notehead
     {core::NoteheadValue::re(), api::Notehead::re},
     {core::NoteheadValue::mi(), api::Notehead::mi},
     {core::NoteheadValue::fa(), api::Notehead::fa},
+    {core::NoteheadValue::faUp(), api::Notehead::faUp},
     {core::NoteheadValue::la(), api::Notehead::la},
     {core::NoteheadValue::so(), api::Notehead::so},
     {core::NoteheadValue::ti(), api::Notehead::ti},
