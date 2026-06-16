@@ -797,6 +797,7 @@ enum class SoundID
     windReedClarinetContraAlto,
     windReedClarinetContrabass,
     windReedClarinetEflat,
+    windReedClarinetPiccolo,
     windReedClarinetPiccoloAflat,
     windReedClarinetteDamour,
     windReedContrabass,

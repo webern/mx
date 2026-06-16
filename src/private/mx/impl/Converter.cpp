@@ -1134,6 +1134,7 @@ const Converter::EnumMap<core::SoundID, api::SoundID> Converter::instrumentMap =
     {core::SoundID::windReedClarinetContraAlto(), api::SoundID::windReedClarinetContraAlto},
     {core::SoundID::windReedClarinetContrabass(), api::SoundID::windReedClarinetContrabass},
     {core::SoundID::windReedClarinetEflat(), api::SoundID::windReedClarinetEflat},
+    {core::SoundID::windReedClarinetPiccolo(), api::SoundID::windReedClarinetPiccolo},
     {core::SoundID::windReedClarinetPiccoloAflat(), api::SoundID::windReedClarinetPiccoloAflat},
     {core::SoundID::windReedClarinetteDamour(), api::SoundID::windReedClarinetteDamour},
     {core::SoundID::windReedContrabass(), api::SoundID::windReedContrabass},
