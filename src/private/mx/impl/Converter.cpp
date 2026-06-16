@@ -300,6 +300,13 @@ const Converter::EnumMap<core::TechnicalChoice::Kind, api::MarkType> Converter::
     {core::TechnicalChoice::Kind::hole, api::MarkType::hole},
     {core::TechnicalChoice::Kind::arrow, api::MarkType::arrow},
     {core::TechnicalChoice::Kind::handbell, api::MarkType::handbell},
+    {core::TechnicalChoice::Kind::brassBend, api::MarkType::brassBend},
+    {core::TechnicalChoice::Kind::flip, api::MarkType::flip},
+    {core::TechnicalChoice::Kind::smear, api::MarkType::smear},
+    {core::TechnicalChoice::Kind::open, api::MarkType::open},
+    {core::TechnicalChoice::Kind::halfMuted, api::MarkType::halfMuted},
+    {core::TechnicalChoice::Kind::harmonMute, api::MarkType::harmonMute},
+    {core::TechnicalChoice::Kind::golpe, api::MarkType::golpe},
     {core::TechnicalChoice::Kind::otherTechnical, api::MarkType::otherTechnical},
 };
 

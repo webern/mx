@@ -125,4 +125,63 @@ TEST(OrnamentInvertedVerticalTurn, MarkRoundTrip)
 
 T_END;
 
+// #196 - technical marks brass-bend, flip, smear, open, half-muted,
+// harmon-mute, golpe (MusicXML 3.1-4.0) had no api::MarkType members and
+// technicalMarkMap dropped them to unspecified. These carry no payload.
+TEST(TechnicalBrassBend, MarkRoundTrip)
+{
+    const auto marks = roundTripMark(MarkType::brassBend);
+    CHECK(hasMark(marks, MarkType::brassBend));
+}
+
+T_END;
+
+TEST(TechnicalFlip, MarkRoundTrip)
+{
+    const auto marks = roundTripMark(MarkType::flip);
+    CHECK(hasMark(marks, MarkType::flip));
+}
+
+T_END;
+
+TEST(TechnicalSmear, MarkRoundTrip)
+{
+    const auto marks = roundTripMark(MarkType::smear);
+    CHECK(hasMark(marks, MarkType::smear));
+}
+
+T_END;
+
+TEST(TechnicalOpen, MarkRoundTrip)
+{
+    const auto marks = roundTripMark(MarkType::open);
+    CHECK(hasMark(marks, MarkType::open));
+}
+
+T_END;
+
+TEST(TechnicalHalfMuted, MarkRoundTrip)
+{
+    const auto marks = roundTripMark(MarkType::halfMuted);
+    CHECK(hasMark(marks, MarkType::halfMuted));
+}
+
+T_END;
+
+TEST(TechnicalHarmonMute, MarkRoundTrip)
+{
+    const auto marks = roundTripMark(MarkType::harmonMute);
+    CHECK(hasMark(marks, MarkType::harmonMute));
+}
+
+T_END;
+
+TEST(TechnicalGolpe, MarkRoundTrip)
+{
+    const auto marks = roundTripMark(MarkType::golpe);
+    CHECK(hasMark(marks, MarkType::golpe));
+}
+
+T_END;
+
 #endif

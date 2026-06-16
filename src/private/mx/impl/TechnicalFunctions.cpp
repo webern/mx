@@ -242,6 +242,41 @@ bool TechnicalFunctions::parseTechicalMark(const core::TechnicalChoice &techical
         outMarkData.name = handbellToSmuflName(handbell.value());
         return true;
     }
+    case core::TechnicalChoice::Kind::brassBend: {
+        parseMarkDataAttributes(techicalChoice.asBrassBend(), outMarkData);
+        outMarkData.name = "brass-bend";
+        return true;
+    }
+    case core::TechnicalChoice::Kind::flip: {
+        parseMarkDataAttributes(techicalChoice.asFlip(), outMarkData);
+        outMarkData.name = "flip";
+        return true;
+    }
+    case core::TechnicalChoice::Kind::smear: {
+        parseMarkDataAttributes(techicalChoice.asSmear(), outMarkData);
+        outMarkData.name = "smear";
+        return true;
+    }
+    case core::TechnicalChoice::Kind::open: {
+        parseMarkDataAttributes(techicalChoice.asOpen(), outMarkData);
+        outMarkData.name = "open";
+        return true;
+    }
+    case core::TechnicalChoice::Kind::halfMuted: {
+        parseMarkDataAttributes(techicalChoice.asHalfMuted(), outMarkData);
+        outMarkData.name = "half-muted";
+        return true;
+    }
+    case core::TechnicalChoice::Kind::harmonMute: {
+        parseMarkDataAttributes(techicalChoice.asHarmonMute(), outMarkData);
+        outMarkData.name = "harmon-mute";
+        return true;
+    }
+    case core::TechnicalChoice::Kind::golpe: {
+        parseMarkDataAttributes(techicalChoice.asGolpe(), outMarkData);
+        outMarkData.name = "golpe";
+        return true;
+    }
     case core::TechnicalChoice::Kind::otherTechnical: {
         const auto &oa = techicalChoice.asOtherTechnical();
         parseMarkDataAttributes(oa, outMarkData);

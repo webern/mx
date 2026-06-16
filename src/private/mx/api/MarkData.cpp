@@ -149,7 +149,10 @@ bool isMarkTechnical(MarkType markType)
            (markType == MarkType::stopped) || (markType == MarkType::snapPizzicato) || (markType == MarkType::fret) ||
            (markType == MarkType::string_) || (markType == MarkType::heel) || (markType == MarkType::toe) ||
            (markType == MarkType::fingernails) || (markType == MarkType::hole) || (markType == MarkType::arrow) ||
-           (markType == MarkType::handbell) || (markType == MarkType::otherTechnical);
+           (markType == MarkType::handbell) || (markType == MarkType::brassBend) || (markType == MarkType::flip) ||
+           (markType == MarkType::smear) || (markType == MarkType::open) || (markType == MarkType::halfMuted) ||
+           (markType == MarkType::harmonMute) || (markType == MarkType::golpe) ||
+           (markType == MarkType::otherTechnical);
 }
 
 bool isMarkTremolo(MarkType markType)

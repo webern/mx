@@ -149,6 +149,13 @@ enum class MarkType
     hole,
     arrow,
     handbell,
+    brassBend,
+    flip,
+    smear,
+    open,
+    halfMuted,
+    harmonMute,
+    golpe,
     otherTechnical,
     unknownTechnical,
 
