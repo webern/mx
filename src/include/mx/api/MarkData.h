@@ -73,6 +73,8 @@ enum class MarkType
     invertedTurn,
     delayedInvertedTurn,
     verticalTurn,
+    invertedVerticalTurn,
+    haydn,
     shake,
     wavyLine,
     mordent,

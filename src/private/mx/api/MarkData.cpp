@@ -112,7 +112,8 @@ bool isMarkOrnament(MarkType markType)
 {
     return (markType == MarkType::trillMark) || (markType == MarkType::turn) || (markType == MarkType::delayedTurn) ||
            (markType == MarkType::invertedTurn) || (markType == MarkType::delayedInvertedTurn) ||
-           (markType == MarkType::verticalTurn) || (markType == MarkType::shake) || (markType == MarkType::wavyLine) ||
+           (markType == MarkType::verticalTurn) || (markType == MarkType::invertedVerticalTurn) ||
+           (markType == MarkType::haydn) || (markType == MarkType::shake) || (markType == MarkType::wavyLine) ||
            (markType == MarkType::mordent) || (markType == MarkType::invertedMordent) ||
            (markType == MarkType::schleifer) || (markType == MarkType::tremoloSingleOne) ||
            (markType == MarkType::tremoloSingleTwo) || (markType == MarkType::tremoloSingleThree) ||

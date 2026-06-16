@@ -107,4 +107,22 @@ TEST(SoftAccent, MarkRoundTrip)
 
 T_END;
 
+// #195 - ornaments haydn and inverted-vertical-turn (MusicXML 3.1) had no
+// api::MarkType members and ornamentsMap dropped them to unspecified.
+TEST(OrnamentHaydn, MarkRoundTrip)
+{
+    const auto marks = roundTripMark(MarkType::haydn);
+    CHECK(hasMark(marks, MarkType::haydn));
+}
+
+T_END;
+
+TEST(OrnamentInvertedVerticalTurn, MarkRoundTrip)
+{
+    const auto marks = roundTripMark(MarkType::invertedVerticalTurn);
+    CHECK(hasMark(marks, MarkType::invertedVerticalTurn));
+}
+
+T_END;
+
 #endif
