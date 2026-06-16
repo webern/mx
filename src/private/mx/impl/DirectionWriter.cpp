@@ -21,6 +21,8 @@
 #include "mx/core/generated/Divisions.h"
 #include "mx/core/generated/Dynamics.h"
 #include "mx/core/generated/Empty.h"
+#include "mx/core/generated/Figure.h"
+#include "mx/core/generated/FiguredBass.h"
 #include "mx/core/generated/FirstFret.h"
 #include "mx/core/generated/FormattedTextID.h"
 #include "mx/core/generated/Frame.h"
@@ -47,6 +49,7 @@
 #include "mx/core/generated/Pedal.h"
 #include "mx/core/generated/PedalType.h"
 #include "mx/core/generated/PerMinute.h"
+#include "mx/core/generated/PositiveDivisions.h"
 #include "mx/core/generated/Root.h"
 #include "mx/core/generated/RootStep.h"
 #include "mx/core/generated/Semitones.h"
@@ -406,6 +409,9 @@ std::vector<core::MusicDataChoice> DirectionWriter::getDirectionLikeThings()
     auto harmonyMdcs = createHarmonyElements(offset);
     addMusicDataChoices(harmonyMdcs, output);
 
+    auto figuredBassMdcs = createFiguredBassElements();
+    addMusicDataChoices(figuredBassMdcs, output);
+
     // clear state
     myPlacements.clear();
     myIsFirstDirectionTypeAdded = false;
@@ -728,6 +734,70 @@ std::vector<core::MusicDataChoice> DirectionWriter::createHarmonyElements(int in
     if (!chords.empty())
     {
         output.push_back(core::MusicDataChoice::harmony(harmony));
+    }
+
+    return output;
+}
+
+std::vector<core::MusicDataChoice> DirectionWriter::createFiguredBassElements()
+{
+    std::vector<core::MusicDataChoice> output;
+
+    for (const auto &figuredBassData : myDirectionData.figuredBasses)
+    {
+        core::FiguredBass figuredBass{};
+
+        bool isFirstFigure = true;
+
+        for (const auto &figureData : figuredBassData.figures)
+        {
+            core::Figure figure{};
+
+            if (!figureData.prefix.empty())
+            {
+                core::StyleText prefix{};
+                prefix.setValue(figureData.prefix);
+                figure.setPrefix(prefix);
+            }
+
+            if (!figureData.figureNumber.empty())
+            {
+                core::StyleText figureNumber{};
+                figureNumber.setValue(figureData.figureNumber);
+                figure.setFigureNumber(figureNumber);
+            }
+
+            if (!figureData.suffix.empty())
+            {
+                core::StyleText suffix{};
+                suffix.setValue(figureData.suffix);
+                figure.setSuffix(suffix);
+            }
+
+            if (isFirstFigure)
+            {
+                isFirstFigure = false;
+                figuredBass.setFigure(core::OneOrMore<core::Figure>{figure});
+            }
+            else
+            {
+                figuredBass.addFigure(figure);
+            }
+        }
+
+        if (figuredBassData.parentheses != api::Bool::unspecified)
+        {
+            figuredBass.setParentheses(figuredBassData.parentheses == api::Bool::yes ? core::YesNo::yes()
+                                                                                     : core::YesNo::no());
+        }
+
+        if (figuredBassData.durationTimeTicks >= 0)
+        {
+            figuredBass.setDuration(
+                core::PositiveDivisions{core::Decimal{static_cast<double>(figuredBassData.durationTimeTicks)}});
+        }
+
+        output.push_back(core::MusicDataChoice::figuredBass(figuredBass));
     }
 
     return output;

@@ -180,7 +180,7 @@ so these boxes are status markers, not clickable; the live checklist is the pare
 | [x] | `<credit>` gaps (credit-image, no-words credits, multiple credit-type) | 2(2) | #187 |
 | [ ] | read and write `<sound>` | 2(3) | #188 |
 | [x] | defaults fonts (`word-font`, `lyric-font`, `music-font`) | 2(4) | #189 |
-| [ ] | round-trip `<figured-bass>` | 2(5) | #190 |
+| [x] | round-trip `<figured-bass>` | 2(5) | #190 |
 | [x] | harmony `inversion`, `function`, `numeral` | 2(6) | #191 |
 | [x] | write `midi-name` on output | 3 | #192 |
 

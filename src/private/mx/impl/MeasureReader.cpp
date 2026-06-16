@@ -65,50 +65,26 @@ namespace impl
 {
 namespace
 {
-std::string figureToText(const core::Figure &figure)
+api::FigureData parseFigure(const core::Figure &figure)
 {
-    std::string text;
+    api::FigureData figureData;
 
     if (figure.prefix().has_value())
     {
-        text += figure.prefix()->value();
+        figureData.prefix = figure.prefix()->value();
     }
 
     if (figure.figureNumber().has_value())
     {
-        text += figure.figureNumber()->value();
+        figureData.figureNumber = figure.figureNumber()->value();
     }
 
     if (figure.suffix().has_value())
     {
-        text += figure.suffix()->value();
+        figureData.suffix = figure.suffix()->value();
     }
 
-    return text;
-}
-
-std::string figuredBassToText(const core::FiguredBass &figuredBass)
-{
-    std::string text;
-
-    for (const auto &figure : figuredBass.figure())
-    {
-        const auto figureText = figureToText(figure);
-
-        if (figureText.empty())
-        {
-            continue;
-        }
-
-        if (!text.empty())
-        {
-            text += "\n";
-        }
-
-        text += figureText;
-    }
-
-    return text;
+    return figureData;
 }
 
 int getFiguredBassStaffIndex(const MeasureCursor &cursor, const api::MeasureData &measure,
@@ -579,11 +555,27 @@ void MeasureReader::parseHarmony(const core::Harmony &inHarmony) const
 
 void MeasureReader::parseFiguredBass(const core::FiguredBass &inMxFiguredBass, const core::Note *nextNotePtr) const
 {
-    auto text = figuredBassToText(inMxFiguredBass);
-
-    if (text.empty())
+    if (myOutMeasureData.staves.empty())
     {
         return;
+    }
+
+    api::FiguredBassData figuredBass;
+
+    for (const auto &figure : inMxFiguredBass.figure())
+    {
+        figuredBass.figures.emplace_back(parseFigure(figure));
+    }
+
+    if (inMxFiguredBass.parentheses().has_value())
+    {
+        figuredBass.parentheses =
+            inMxFiguredBass.parentheses()->tag() == core::YesNo::Tag::yes ? api::Bool::yes : api::Bool::no;
+    }
+
+    if (inMxFiguredBass.duration().has_value())
+    {
+        figuredBass.durationTimeTicks = myCurrentCursor.convertDurationToGlobalTickScale(*inMxFiguredBass.duration());
     }
 
     auto direction = api::DirectionData{};
@@ -596,14 +588,7 @@ void MeasureReader::parseFiguredBass(const core::FiguredBass &inMxFiguredBass, c
         direction.voice = NoteReader{*nextNotePtr}.getVoiceNumber();
     }
 
-    auto words = api::WordsData{};
-    words.text = std::move(text);
-    direction.words.emplace_back(std::move(words));
-
-    if (myOutMeasureData.staves.empty())
-    {
-        return;
-    }
+    direction.figuredBasses.emplace_back(std::move(figuredBass));
 
     const auto staffIndex = getFiguredBassStaffIndex(myCurrentCursor, myOutMeasureData, nextNotePtr);
     myOutMeasureData.staves.at(static_cast<size_t>(staffIndex)).directions.emplace_back(std::move(direction));
