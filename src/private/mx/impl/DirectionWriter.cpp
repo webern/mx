@@ -30,12 +30,18 @@
 #include "mx/core/generated/HarmonyAlter.h"
 #include "mx/core/generated/HarmonyChordGroup.h"
 #include "mx/core/generated/HarmonyChordGroupChoice.h"
+#include "mx/core/generated/Inversion.h"
 #include "mx/core/generated/Kind.h"
 #include "mx/core/generated/Metronome.h"
 #include "mx/core/generated/MetronomeChoice.h"
 #include "mx/core/generated/MetronomeChoiceGroup.h"
 #include "mx/core/generated/MetronomeChoiceGroupChoice.h"
 #include "mx/core/generated/MusicDataChoice.h"
+#include "mx/core/generated/Numeral.h"
+#include "mx/core/generated/NumeralKey.h"
+#include "mx/core/generated/NumeralMode.h"
+#include "mx/core/generated/NumeralRoot.h"
+#include "mx/core/generated/NumeralValue.h"
 #include "mx/core/generated/OctaveShift.h"
 #include "mx/core/generated/Offset.h"
 #include "mx/core/generated/Pedal.h"
@@ -48,6 +54,7 @@
 #include "mx/core/generated/StartStopContinue.h"
 #include "mx/core/generated/String.h"
 #include "mx/core/generated/StringNumber.h"
+#include "mx/core/generated/StyleText.h"
 #include "mx/core/generated/Wedge.h"
 #include "mx/core/generated/WedgeType.h"
 #include "mx/core/generated/YesNo.h"
@@ -458,21 +465,86 @@ std::vector<core::MusicDataChoice> DirectionWriter::createHarmonyElements(int in
         }
 
         core::HarmonyChordGroup grp{};
-        auto step = chordIter->root == api::Step::unspecified ? api::Step::c : chordIter->root;
 
-        core::Root root{};
-        core::RootStep rootStep{};
-        rootStep.setValue(myConverter.convert(step));
-        root.setRootStep(rootStep);
-
-        if (chordIter->rootAlter != 0)
+        switch (chordIter->harmonyChordSource)
         {
-            core::HarmonyAlter rootAlter{};
-            rootAlter.setValue(core::Semitones{core::Decimal{static_cast<double>(chordIter->rootAlter)}});
-            root.setRootAlter(rootAlter);
-        }
+        case api::HarmonyChordSource::numeral: {
+            core::Numeral numeral{};
+            core::NumeralRoot numeralRoot{};
+            numeralRoot.setValue(core::NumeralValue{chordIter->numeralRoot});
 
-        grp.setChoice(core::HarmonyChordGroupChoice::root(root));
+            if (!chordIter->numeralRootText.empty())
+            {
+                numeralRoot.setText(chordIter->numeralRootText);
+            }
+
+            numeral.setNumeralRoot(numeralRoot);
+
+            if (chordIter->hasNumeralAlter)
+            {
+                core::HarmonyAlter numeralAlter{};
+                numeralAlter.setValue(core::Semitones{core::Decimal{static_cast<double>(chordIter->numeralAlter)}});
+                numeral.setNumeralAlter(numeralAlter);
+            }
+
+            if (chordIter->hasNumeralKey)
+            {
+                core::NumeralKey numeralKey{};
+                numeralKey.setNumeralFifths(core::Fifths{chordIter->numeralKeyFifths});
+
+                switch (chordIter->numeralMode)
+                {
+                case api::NumeralMode::minor:
+                    numeralKey.setNumeralMode(core::NumeralMode::minor());
+                    break;
+                case api::NumeralMode::naturalMinor:
+                    numeralKey.setNumeralMode(core::NumeralMode::naturalMinor());
+                    break;
+                case api::NumeralMode::melodicMinor:
+                    numeralKey.setNumeralMode(core::NumeralMode::melodicMinor());
+                    break;
+                case api::NumeralMode::harmonicMinor:
+                    numeralKey.setNumeralMode(core::NumeralMode::harmonicMinor());
+                    break;
+                case api::NumeralMode::major:
+                case api::NumeralMode::unspecified:
+                default:
+                    numeralKey.setNumeralMode(core::NumeralMode::major());
+                    break;
+                }
+
+                numeral.setNumeralKey(numeralKey);
+            }
+
+            grp.setChoice(core::HarmonyChordGroupChoice::numeral(numeral));
+            break;
+        }
+        case api::HarmonyChordSource::function: {
+            core::StyleText function{};
+            function.setValue(chordIter->functionText);
+            grp.setChoice(core::HarmonyChordGroupChoice::function(function));
+            break;
+        }
+        case api::HarmonyChordSource::root:
+        default: {
+            auto step = chordIter->root == api::Step::unspecified ? api::Step::c : chordIter->root;
+
+            core::Root root{};
+            core::RootStep rootStep{};
+            rootStep.setValue(myConverter.convert(step));
+            root.setRootStep(rootStep);
+
+            if (chordIter->rootAlter != 0)
+            {
+                core::HarmonyAlter rootAlter{};
+                rootAlter.setValue(core::Semitones{core::Decimal{static_cast<double>(chordIter->rootAlter)}});
+                root.setRootAlter(rootAlter);
+            }
+
+            grp.setChoice(core::HarmonyChordGroupChoice::root(root));
+            break;
+        }
+        }
 
         if (chordIter->bass != api::Step::unspecified)
         {
@@ -489,6 +561,13 @@ std::vector<core::MusicDataChoice> DirectionWriter::createHarmonyElements(int in
             }
 
             grp.setBass(bass);
+        }
+
+        if (chordIter->hasInversion)
+        {
+            core::Inversion inversion{};
+            inversion.setValue(chordIter->inversion);
+            grp.setInversion(inversion);
         }
 
         const auto k = myConverter.convert(chordIter->chordKind);

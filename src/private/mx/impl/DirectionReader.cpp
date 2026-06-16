@@ -30,9 +30,15 @@
 #include "mx/core/generated/HarmonyChordGroupChoice.h"
 #include "mx/core/generated/HarpPedals.h"
 #include "mx/core/generated/Image.h"
+#include "mx/core/generated/Inversion.h"
 #include "mx/core/generated/Kind.h"
 #include "mx/core/generated/KindValue.h"
 #include "mx/core/generated/Metronome.h"
+#include "mx/core/generated/Numeral.h"
+#include "mx/core/generated/NumeralKey.h"
+#include "mx/core/generated/NumeralMode.h"
+#include "mx/core/generated/NumeralRoot.h"
+#include "mx/core/generated/NumeralValue.h"
 #include "mx/core/generated/OctaveShift.h"
 #include "mx/core/generated/Offset.h"
 #include "mx/core/generated/OtherDirection.h"
@@ -49,6 +55,7 @@
 #include "mx/core/generated/Step.h"
 #include "mx/core/generated/String.h"
 #include "mx/core/generated/StringMute.h"
+#include "mx/core/generated/StyleText.h"
 #include "mx/core/generated/UpDownStopContinue.h"
 #include "mx/core/generated/Wedge.h"
 #include "mx/core/generated/WedgeType.h"
@@ -157,10 +164,7 @@ void DirectionReader::parseValues()
     {
         for (const auto &hcg : myHarmony->harmonyChord())
         {
-            if (hcg.choice().isRoot())
-            {
-                parseHarmony(*myHarmony, hcg);
-            }
+            parseHarmony(*myHarmony, hcg);
         }
     }
 }
@@ -795,12 +799,69 @@ void DirectionReader::parseOtherDirection(const core::DirectionType &directionTy
 void DirectionReader::parseHarmony(const core::Harmony &inHarmony, const core::HarmonyChordGroup &inGrp)
 {
     mx::api::ChordData chord;
-    const auto &root = inGrp.choice().asRoot();
-    chord.root = myConverter.convert(root.rootStep().value());
+    const auto &choice = inGrp.choice();
 
-    if (root.rootAlter().has_value())
+    switch (choice.kind())
     {
-        chord.rootAlter = mx::utility::roundTo<double, int>(root.rootAlter()->value().value().value());
+    case core::HarmonyChordGroupChoice::Kind::root: {
+        chord.harmonyChordSource = api::HarmonyChordSource::root;
+        const auto &root = choice.asRoot();
+        chord.root = myConverter.convert(root.rootStep().value());
+
+        if (root.rootAlter().has_value())
+        {
+            chord.rootAlter = mx::utility::roundTo<double, int>(root.rootAlter()->value().value().value());
+        }
+        break;
+    }
+    case core::HarmonyChordGroupChoice::Kind::numeral: {
+        chord.harmonyChordSource = api::HarmonyChordSource::numeral;
+        const auto &numeral = choice.asNumeral();
+        chord.numeralRoot = numeral.numeralRoot().value().value();
+
+        if (numeral.numeralRoot().text().has_value())
+        {
+            chord.numeralRootText = *numeral.numeralRoot().text();
+        }
+
+        if (numeral.numeralAlter().has_value())
+        {
+            chord.hasNumeralAlter = true;
+            chord.numeralAlter = mx::utility::roundTo<double, int>(numeral.numeralAlter()->value().value().value());
+        }
+
+        if (numeral.numeralKey().has_value())
+        {
+            chord.hasNumeralKey = true;
+            const auto &numeralKey = *numeral.numeralKey();
+            chord.numeralKeyFifths = numeralKey.numeralFifths().value();
+
+            switch (numeralKey.numeralMode().tag())
+            {
+            case core::NumeralMode::Tag::major:
+                chord.numeralMode = api::NumeralMode::major;
+                break;
+            case core::NumeralMode::Tag::minor:
+                chord.numeralMode = api::NumeralMode::minor;
+                break;
+            case core::NumeralMode::Tag::naturalMinor:
+                chord.numeralMode = api::NumeralMode::naturalMinor;
+                break;
+            case core::NumeralMode::Tag::melodicMinor:
+                chord.numeralMode = api::NumeralMode::melodicMinor;
+                break;
+            case core::NumeralMode::Tag::harmonicMinor:
+                chord.numeralMode = api::NumeralMode::harmonicMinor;
+                break;
+            }
+        }
+        break;
+    }
+    case core::HarmonyChordGroupChoice::Kind::function: {
+        chord.harmonyChordSource = api::HarmonyChordSource::function;
+        chord.functionText = choice.asFunction().value();
+        break;
+    }
     }
 
     const auto &kind = inGrp.kind();
@@ -833,6 +894,12 @@ void DirectionReader::parseHarmony(const core::Harmony &inHarmony, const core::H
         {
             chord.bassAlter = mx::utility::roundTo<double, int>(bass.bassAlter()->value().value().value());
         }
+    }
+
+    if (inGrp.inversion().has_value())
+    {
+        chord.hasInversion = true;
+        chord.inversion = inGrp.inversion()->value();
     }
 
     const auto &degrees = inGrp.degree();

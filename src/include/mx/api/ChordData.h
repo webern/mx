@@ -191,19 +191,67 @@ MXAPI_EQUALS_MEMBER(notes)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(FrameData);
 
+// A harmony-chord identifies its pitch source one of three mutually exclusive ways (the MusicXML
+// harmony-chord choice): a 'root' (pop-style chord symbol, the default), a 'numeral' (Roman numeral
+// / Nashville number for functional harmony, MusicXML 4.0), or the deprecated 'function' string.
+enum class HarmonyChordSource
+{
+    root,
+    numeral,
+    function
+};
+
+// The mode used to interpret a numeral when it differs from the key signature
+// (the MusicXML numeral-mode element).
+enum class NumeralMode
+{
+    unspecified,
+    major,
+    minor,
+    naturalMinor,
+    melodicMinor,
+    harmonicMinor
+};
+
 class ChordData
 {
   public:
     ChordData();
 
   public:
+    // Which of the mutually exclusive harmony-chord alternatives is in use. Defaults to 'root',
+    // which preserves the historical behavior; 'root', 'rootAlter', 'numeral*', and 'functionText'
+    // are interpreted according to this value.
+    HarmonyChordSource harmonyChordSource;
+
     Step root;
     int rootAlter;
+
+    // The deprecated MusicXML <function> element: Roman numeral text such as "V". Used only when
+    // harmonyChordSource == function.
+    std::string functionText;
+
+    // The MusicXML 4.0 <numeral>. Used only when harmonyChordSource == numeral.
+    // numeralRoot is a scale degree 1-7; numeralRootText is its optional display text (e.g. "V").
+    int numeralRoot;
+    std::string numeralRootText;
+    // The numeral-alter (chromatic alteration of the numeral root), in semitones.
+    int numeralAlter;
+    bool hasNumeralAlter;
+    // The optional <numeral-key> (key local to the numeral): numeral-fifths plus numeral-mode.
+    bool hasNumeralKey;
+    int numeralKeyFifths;
+    NumeralMode numeralMode;
+
     ChordKind chordKind;
     std::string text;
     Bool useSymbols;
     Step bass;
     int bassAlter;
+    // The MusicXML <inversion> (0 = root position, 1 = first inversion, ...). Present only when
+    // hasInversion is true.
+    int inversion;
+    bool hasInversion;
     std::vector<Extension> extensions;
     std::vector<MiscData> miscData;
     bool hasFrameData;
@@ -212,13 +260,24 @@ class ChordData
 };
 
 MXAPI_EQUALS_BEGIN(ChordData)
+MXAPI_EQUALS_MEMBER(harmonyChordSource)
 MXAPI_EQUALS_MEMBER(root)
 MXAPI_EQUALS_MEMBER(rootAlter)
+MXAPI_EQUALS_MEMBER(functionText)
+MXAPI_EQUALS_MEMBER(numeralRoot)
+MXAPI_EQUALS_MEMBER(numeralRootText)
+MXAPI_EQUALS_MEMBER(numeralAlter)
+MXAPI_EQUALS_MEMBER(hasNumeralAlter)
+MXAPI_EQUALS_MEMBER(hasNumeralKey)
+MXAPI_EQUALS_MEMBER(numeralKeyFifths)
+MXAPI_EQUALS_MEMBER(numeralMode)
 MXAPI_EQUALS_MEMBER(chordKind)
 MXAPI_EQUALS_MEMBER(text)
 MXAPI_EQUALS_MEMBER(useSymbols)
 MXAPI_EQUALS_MEMBER(bass)
 MXAPI_EQUALS_MEMBER(bassAlter)
+MXAPI_EQUALS_MEMBER(inversion)
+MXAPI_EQUALS_MEMBER(hasInversion)
 MXAPI_EQUALS_MEMBER(extensions)
 MXAPI_EQUALS_MEMBER(miscData)
 MXAPI_EQUALS_MEMBER(hasFrameData)

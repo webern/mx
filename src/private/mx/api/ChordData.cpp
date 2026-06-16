@@ -29,8 +29,11 @@ FrameData::FrameData() : stringCount{6}, fretCount{4}, firstFret{1}, isFirstFret
 }
 
 ChordData::ChordData()
-    : root{Step::c}, rootAlter{0}, chordKind{ChordKind::unspecified}, text{}, useSymbols{Bool::unspecified},
-      bass{Step::unspecified}, bassAlter{0}, extensions{}, miscData{}, hasFrameData{false}, frameData{}, positionData{}
+    : harmonyChordSource{HarmonyChordSource::root}, root{Step::c}, rootAlter{0}, functionText{}, numeralRoot{0},
+      numeralRootText{}, numeralAlter{0}, hasNumeralAlter{false}, hasNumeralKey{false}, numeralKeyFifths{0},
+      numeralMode{NumeralMode::unspecified}, chordKind{ChordKind::unspecified}, text{}, useSymbols{Bool::unspecified},
+      bass{Step::unspecified}, bassAlter{0}, inversion{0}, hasInversion{false}, extensions{}, miscData{},
+      hasFrameData{false}, frameData{}, positionData{}
 {
 }
 
