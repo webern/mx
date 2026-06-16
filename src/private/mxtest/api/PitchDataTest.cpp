@@ -245,6 +245,30 @@ TEST(SharpSharp, PitchData)
 
 T_END;
 
+TEST(MicrotonalArrowAndDoubleVariants, PitchData)
+{
+    // #182 - microtonal accidental variants double-sharp-down/up,
+    // flat-flat-down/up, arrow-down/up were missing from accidentalMap and the
+    // api::Accidental enum, so they read back as Accidental::none (data loss).
+    const Accidental variants[] = {
+        Accidental::doubleSharpDown, Accidental::doubleSharpUp, Accidental::flatFlatDown,
+        Accidental::flatFlatUp,      Accidental::arrowDown,     Accidental::arrowUp,
+    };
+
+    for (const auto acc : variants)
+    {
+        auto input = Input{};
+        input.step = Step::c;
+        input.alter = 0;
+        input.cents = 0.0;
+        input.accidental = acc;
+        const auto output = pitchDataTest(input);
+        CHECK(acc == output.accidental);
+    }
+}
+
+T_END;
+
 TEST(CrazyEdgeCase1, PitchData)
 {
     auto input = Input{};
