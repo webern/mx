@@ -7,6 +7,9 @@ the spec (approximated by `data/synthetic/`), the wild corpus (`data/` minus syn
 Corpus this run: 829 files (440 wild, 389 synthetic); 442 elements (326 used in the wild, 116
 synthetic-only). `mx::api` audit: 318 features recorded (188 full, 63 partial, 67 none).
 
+Tracking status and issue/PR numbers for every item are in the Tracker table at the bottom of this
+doc. The parent tracker issue is #159 (with live checkboxes and sub-issues).
+
 ## How to read the severity
 
 - BUG = silent data loss: a value `mx::core` (and the spec) can hold that `mx::api` maps to a
@@ -153,3 +156,32 @@ Lower-use gaps worth noting but not urgent: `staff-details` sub-elements beyond 
   marked "suspected" in the notes.
 - Wild-vs-synthetic: every missing enum value was grepped across `data/` (wild and synthetic
   separately) to set the "Wild?" column.
+
+## Tracker
+
+Status and issue/PR number for every item above. GitHub renders `[ ]` literally inside a table cell,
+so these boxes are status markers, not clickable; the live checklist is the parent tracker, #159.
+
+| Status | Item | Audit section | Issue / PR |
+|--------|------|---------------|------------|
+| [x] | `AccidentalValue::sharpSharp` | 1a | #178 |
+| [x] | `NoteheadValue::faUp` | 1a | #177 |
+| [x] | `SoundID::windReedClarinetPiccolo` | 1a | #179 |
+| [ ] | dynamics `n`, `pf`, `sfzp` | 1b(1) | #193 |
+| [ ] | articulation `soft-accent` | 1b(2) | #194 |
+| [ ] | ornaments `haydn`, `inverted-vertical-turn` | 1b(3) | #195 |
+| [ ] | technical marks `brass-bend`/`flip`/`smear`/`open`/`half-muted`/`harmon-mute`/`golpe` | 1b(4) | #196 |
+| [ ] | fermata 4.0 shapes | 1b(5) | #181 |
+| [ ] | microtonal accidental arrow/double variants | 1b(6) | #182 |
+| [ ] | notehead `circled` and `other` | 1b(7) | #183 |
+| [ ] | instrument-sound 4.0 sound ids | 1b(8) | #184 |
+| [ ] | technical marks with payloads (`fingering`, `pluck`, `bend`, ...) | 1c | #185 |
+| [ ] | read `<print>` per-measure layout | 2(1) | #186 |
+| [ ] | `<credit>` gaps (credit-image, no-words credits, multiple credit-type) | 2(2) | #187 |
+| [ ] | read and write `<sound>` | 2(3) | #188 |
+| [ ] | defaults fonts (`word-font`, `lyric-font`, `music-font`) | 2(4) | #189 |
+| [ ] | round-trip `<figured-bass>` | 2(5) | #190 |
+| [ ] | harmony `inversion`, `function`, `numeral` | 2(6) | #191 |
+| [ ] | write `midi-name` on output | 3 | #192 |
+
+Parent tracker: #159. The section-2 lower-use gaps are intentionally not tracked yet.
