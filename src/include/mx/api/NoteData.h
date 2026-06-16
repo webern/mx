@@ -51,7 +51,9 @@ enum class Notehead
     faUp,
     so,
     la,
-    ti
+    ti,
+    circled, // MusicXML 4.0
+    other    // MusicXML's 'other' notehead value
 };
 
 enum class Beam

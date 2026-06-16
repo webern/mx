@@ -1216,4 +1216,90 @@ TEST(noteheadFaUpRoundtrip, NoteData)
 
 T_END;
 
+// #183 - notehead circled (MusicXML 4.0) and the 'other' catch-all were
+// missing from noteheadMap, so they read back as Notehead::none (data loss).
+TEST(noteheadCircledRoundtrip, NoteData)
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    score.ticksPerQuarter = 96;
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto &staff = measure.staves.back();
+    auto &voice = staff.voices[0];
+
+    NoteData note;
+    note.durationData.durationName = DurationName::quarter;
+    note.durationData.durationTimeTicks = 96;
+    note.notehead = Notehead::circled;
+    voice.notes.push_back(note);
+
+    auto &mgr = DocumentManager::getInstance();
+    const auto r1 = mgr.createFromScore(score);
+    REQUIRE(r1.ok());
+    auto docId = r1.value();
+    std::stringstream ss;
+    mgr.writeToStream(docId, ss);
+    mgr.destroyDocument(docId);
+    const std::string xml = ss.str();
+
+    std::istringstream iss{xml};
+    const auto r2 = mgr.createFromStream(iss);
+    REQUIRE(r2.ok());
+    docId = r2.value();
+    const auto rd = mgr.getData(docId);
+    REQUIRE(rd.ok());
+    const auto outScore = rd.value();
+    mgr.destroyDocument(docId);
+
+    const auto &outNote = outScore.parts.back().measures.back().staves.back().voices.at(0).notes.back();
+    CHECK(outNote.notehead == Notehead::circled);
+}
+
+T_END;
+
+TEST(noteheadOtherRoundtrip, NoteData)
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    score.ticksPerQuarter = 96;
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto &staff = measure.staves.back();
+    auto &voice = staff.voices[0];
+
+    NoteData note;
+    note.durationData.durationName = DurationName::quarter;
+    note.durationData.durationTimeTicks = 96;
+    note.notehead = Notehead::other;
+    voice.notes.push_back(note);
+
+    auto &mgr = DocumentManager::getInstance();
+    const auto r1 = mgr.createFromScore(score);
+    REQUIRE(r1.ok());
+    auto docId = r1.value();
+    std::stringstream ss;
+    mgr.writeToStream(docId, ss);
+    mgr.destroyDocument(docId);
+    const std::string xml = ss.str();
+
+    std::istringstream iss{xml};
+    const auto r2 = mgr.createFromStream(iss);
+    REQUIRE(r2.ok());
+    docId = r2.value();
+    const auto rd = mgr.getData(docId);
+    REQUIRE(rd.ok());
+    const auto outScore = rd.value();
+    mgr.destroyDocument(docId);
+
+    const auto &outNote = outScore.parts.back().measures.back().staves.back().voices.at(0).notes.back();
+    CHECK(outNote.notehead == Notehead::other);
+}
+
+T_END;
+
 #endif

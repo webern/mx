@@ -66,6 +66,8 @@ const Converter::EnumMap<core::NoteheadValue, api::Notehead> Converter::notehead
     {core::NoteheadValue::la(), api::Notehead::la},
     {core::NoteheadValue::so(), api::Notehead::so},
     {core::NoteheadValue::ti(), api::Notehead::ti},
+    {core::NoteheadValue::circled(), api::Notehead::circled},
+    {core::NoteheadValue::other(), api::Notehead::other},
 };
 
 const Converter::EnumMap<core::BeamValue, api::Beam> Converter::beamMap = {
