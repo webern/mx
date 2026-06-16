@@ -11,6 +11,7 @@
 #include "mx/api/OttavaData.h"
 #include "mx/api/RehearsalData.h"
 #include "mx/api/SegnoData.h"
+#include "mx/api/SoundData.h"
 #include "mx/api/TempoData.h"
 #include "mx/api/WedgeData.h"
 #include "mx/api/WordsData.h"
@@ -93,7 +94,12 @@ struct DirectionData
     // only relevant for Directions placed on staff zero, it is otherwise ignored.
     bool isStaffValueSpecified;
 
-    // TODO - sound element
+    // The <sound> element carried by this direction. It is only meaningful when
+    // isSoundDataSpecified is true. A direction whose only content is a sound round-trips as a
+    // standalone <sound> within the measure; a direction with other content writes the sound as a
+    // child of the <direction> element.
+    bool isSoundDataSpecified;
+    SoundData soundData;
 
     std::vector<TempoData> tempos;
     std::vector<MarkData> marks;
@@ -115,9 +121,10 @@ struct DirectionData
     std::vector<DirectionComponent> orderedComponents;
 
     DirectionData()
-        : tickTimePosition{0}, placement{Placement::unspecified}, voice{-1}, isStaffValueSpecified{true}, marks{},
-          wedgeStarts{}, wedgeStops{}, ottavaStarts{}, ottavaStops{}, bracketStarts{}, bracketStops{}, dashesStarts{},
-          dashesStops{}, pedalStarts{}, pedalStops{}, words{}, chords{}, segnos{}
+        : tickTimePosition{0}, placement{Placement::unspecified}, voice{-1}, isStaffValueSpecified{true},
+          isSoundDataSpecified{false}, soundData{}, marks{}, wedgeStarts{}, wedgeStops{}, ottavaStarts{}, ottavaStops{},
+          bracketStarts{}, bracketStops{}, dashesStarts{}, dashesStops{}, pedalStarts{}, pedalStops{}, words{},
+          chords{}, segnos{}
     {
     }
 };
@@ -131,7 +138,7 @@ inline bool isDirectionDataEmpty(const DirectionData &directionData)
            directionData.pedalStarts.size() == 0 && directionData.pedalStops.size() == 0 &&
            directionData.tempos.size() == 0 && directionData.ottavaStarts.size() == 0 &&
            directionData.ottavaStops.size() == 0 && directionData.words.size() == 0 &&
-           directionData.segnos.size() == 0 && directionData.codas.size() == 0 &&
+           directionData.segnos.size() == 0 && directionData.codas.size() == 0 && !directionData.isSoundDataSpecified &&
            directionData.orderedComponents.size() == 0;
 }
 
@@ -140,6 +147,8 @@ MXAPI_EQUALS_MEMBER(tickTimePosition)
 MXAPI_EQUALS_MEMBER(placement)
 MXAPI_EQUALS_MEMBER(voice)
 MXAPI_EQUALS_MEMBER(isStaffValueSpecified)
+MXAPI_EQUALS_MEMBER(isSoundDataSpecified)
+MXAPI_EQUALS_MEMBER(soundData)
 MXAPI_EQUALS_MEMBER(tempos)
 MXAPI_EQUALS_MEMBER(marks)
 MXAPI_EQUALS_MEMBER(wedgeStarts)

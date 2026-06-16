@@ -44,6 +44,7 @@
 #include "mx/core/generated/RootStep.h"
 #include "mx/core/generated/Scordatura.h"
 #include "mx/core/generated/Segno.h"
+#include "mx/core/generated/Sound.h"
 #include "mx/core/generated/StartStop.h"
 #include "mx/core/generated/StartStopContinue.h"
 #include "mx/core/generated/Step.h"
@@ -57,6 +58,7 @@
 #include "mx/impl/MarkDataFunctions.h"
 #include "mx/impl/MetronomeReader.h"
 #include "mx/impl/PrintFunctions.h"
+#include "mx/impl/SoundFunctions.h"
 #include "mx/impl/SpannerFunctions.h"
 #include "mx/utility/Round.h"
 #include "mx/utility/Unused.h"
@@ -151,6 +153,16 @@ void DirectionReader::parseValues()
         for (const auto &dt : myDirection->directionType())
         {
             parseDirectionType(dt);
+        }
+
+        if (myDirection->sound().has_value())
+        {
+            auto soundData = readSoundData(*myDirection->sound());
+            if (soundData.isSpecified())
+            {
+                myOutDirectionData.isSoundDataSpecified = true;
+                myOutDirectionData.soundData = std::move(soundData);
+            }
         }
     }
     else if (myHarmony)

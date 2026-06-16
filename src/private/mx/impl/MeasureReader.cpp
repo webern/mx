@@ -53,6 +53,7 @@
 #include "mx/impl/DirectionReader.h"
 #include "mx/impl/NoteFunctions.h"
 #include "mx/impl/NoteReader.h"
+#include "mx/impl/SoundFunctions.h"
 #include "mx/impl/TimeReader.h"
 #include "mx/utility/Throw.h"
 #include "mx/utility/Unused.h"
@@ -622,8 +623,27 @@ void MeasureReader::parsePrint(const core::Print &inMxPrint) const
 
 void MeasureReader::parseSound(const core::Sound &inMxSound) const
 {
-    MX_UNUSED(inMxSound);
-    // std::cout << "sound is not supported" << std::endl;
+    auto soundData = readSoundData(inMxSound);
+
+    if (!soundData.isSpecified())
+    {
+        return;
+    }
+
+    if (myOutMeasureData.staves.empty())
+    {
+        return;
+    }
+
+    // A standalone <sound> has no <staff>; place it on staff 0 with isStaffValueSpecified = false
+    // and no other direction content, so it round-trips as a standalone <sound> element.
+    auto directionData = api::DirectionData{};
+    directionData.tickTimePosition = myCurrentCursor.tickTimePosition;
+    directionData.isStaffValueSpecified = false;
+    directionData.isSoundDataSpecified = true;
+    directionData.soundData = std::move(soundData);
+
+    myOutMeasureData.staves.at(0).directions.emplace_back(std::move(directionData));
 }
 
 void MeasureReader::parseBarline(const core::Barline &inMxBarline) const
