@@ -80,6 +80,7 @@ const Converter::EnumMap<core::AccidentalValue, api::Accidental> Converter::acci
     {core::AccidentalValue::natural(), api::Accidental::natural},
     {core::AccidentalValue::flat(), api::Accidental::flat},
     {core::AccidentalValue::doubleSharp(), api::Accidental::doubleSharp},
+    {core::AccidentalValue::sharpSharp(), api::Accidental::sharpSharp},
     {core::AccidentalValue::flatFlat(), api::Accidental::flatFlat},
     {core::AccidentalValue::naturalSharp(), api::Accidental::naturalSharp},
     {core::AccidentalValue::naturalFlat(), api::Accidental::naturalFlat},

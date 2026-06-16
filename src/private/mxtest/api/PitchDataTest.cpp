@@ -222,6 +222,29 @@ TEST(AlmostDoubleFlat, PitchData)
 
 T_END;
 
+TEST(SharpSharp, PitchData)
+{
+    // Regression: accidentalMap was missing sharpSharp, so it round-tripped as Accidental::none.
+    auto input = Input{};
+    input.step = Step::c;
+    input.alter = 2;
+    input.cents = 0.0;
+    input.accidental = Accidental::sharpSharp;
+    const std::string expectedAlterString = "2";
+    const int expectedAlter = 2;
+    const double expectedCents = 0.0;
+    const Accidental expectedAccidental = Accidental::sharpSharp;
+    const auto output = pitchDataTest(input);
+
+    CHECK_EQUAL(expectedAlterString, output.alterString);
+    CHECK_EQUAL(expectedAlterString, output.secondAlterString);
+    CHECK_EQUAL(expectedAlter, output.alter);
+    CHECK_DOUBLES_EQUAL(expectedCents, output.cents, MX_API_EQUALITY_EPSILON);
+    CHECK(expectedAccidental == output.accidental);
+}
+
+T_END;
+
 TEST(CrazyEdgeCase1, PitchData)
 {
     auto input = Input{};
