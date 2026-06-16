@@ -8,30 +8,16 @@ argument-hint: "[new] <name> [prompt]"
 disable-model-invocation: false
 user-invocable: true
 allowed-tools:  >
-  Agent,
   Bash(*),
-  Cron*,
-  Edit(*),
+  Edit,
   EnterWorktree,
   ExitWorktree,
-  ListMcpResourcesTool,
-  LSP,
-  mcp__*,
-  Monitor,
-  PushNotification,
-  Read(*),
-  ReadMcpResourceTool,
-  RemoteTrigger,
-  Schedule*,
-  SendMessage,
+  Read,
   Skill,
-  Task*,
-  TeamCreate,
-  TeamDelete,
-  ToolSearch,
+  Task,
   WebFetch,
   WebSearch,
-  Write(*)
+  Write
 ---
 # /project
 
