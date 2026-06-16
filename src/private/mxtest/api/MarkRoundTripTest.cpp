@@ -97,4 +97,14 @@ TEST(DynamicsSfzp, MarkRoundTrip)
 
 T_END;
 
+// #194 - articulation soft-accent (MusicXML 3.1) had no api::MarkType member
+// and articulationsMap dropped it to unspecified on read.
+TEST(SoftAccent, MarkRoundTrip)
+{
+    const auto marks = roundTripMark(MarkType::softAccent);
+    CHECK(hasMark(marks, MarkType::softAccent));
+}
+
+T_END;
+
 #endif

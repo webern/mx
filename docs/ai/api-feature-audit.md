@@ -168,7 +168,7 @@ so these boxes are status markers, not clickable; the live checklist is the pare
 | [x] | `NoteheadValue::faUp` | 1a | #177 |
 | [x] | `SoundID::windReedClarinetPiccolo` | 1a | #179 |
 | [x] | dynamics `n`, `pf`, `sfzp` | 1b(1) | #193 |
-| [ ] | articulation `soft-accent` | 1b(2) | #194 |
+| [x] | articulation `soft-accent` | 1b(2) | #194 |
 | [ ] | ornaments `haydn`, `inverted-vertical-turn` | 1b(3) | #195 |
 | [ ] | technical marks `brass-bend`/`flip`/`smear`/`open`/`half-muted`/`harmon-mute`/`golpe` | 1b(4) | #196 |
 | [ ] | fermata 4.0 shapes | 1b(5) | #181 |

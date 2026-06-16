@@ -166,6 +166,7 @@ const Converter::EnumMap<core::ArticulationsChoice::Kind, api::MarkType> Convert
     {core::ArticulationsChoice::Kind::caesura, api::MarkType::caesura},
     {core::ArticulationsChoice::Kind::stress, api::MarkType::stress},
     {core::ArticulationsChoice::Kind::unstress, api::MarkType::unstress},
+    {core::ArticulationsChoice::Kind::softAccent, api::MarkType::softAccent},
     {core::ArticulationsChoice::Kind::otherArticulation, api::MarkType::otherArticulation},
 };
 
@@ -1438,7 +1439,8 @@ bool Converter::isArticulation(api::MarkType value) const
            value == api::MarkType::staccatissimo || value == api::MarkType::spiccato || value == api::MarkType::scoop ||
            value == api::MarkType::plop || value == api::MarkType::doit || value == api::MarkType::falloff ||
            value == api::MarkType::breathMark || value == api::MarkType::caesura || value == api::MarkType::stress ||
-           value == api::MarkType::unstress || value == api::MarkType::otherArticulation;
+           value == api::MarkType::unstress || value == api::MarkType::softAccent ||
+           value == api::MarkType::otherArticulation;
 }
 
 core::DynamicsChoice::Kind Converter::convertDynamic(api::MarkType value) const

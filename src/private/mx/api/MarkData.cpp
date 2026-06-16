@@ -104,7 +104,8 @@ bool isMarkArticulation(MarkType markType)
            (markType == MarkType::staccatissimo) || (markType == MarkType::spiccato) || (markType == MarkType::scoop) ||
            (markType == MarkType::plop) || (markType == MarkType::doit) || (markType == MarkType::falloff) ||
            (markType == MarkType::breathMark) || (markType == MarkType::caesura) || (markType == MarkType::stress) ||
-           (markType == MarkType::unstress) || (markType == MarkType::otherArticulation);
+           (markType == MarkType::unstress) || (markType == MarkType::softAccent) ||
+           (markType == MarkType::otherArticulation);
 }
 
 bool isMarkOrnament(MarkType markType)

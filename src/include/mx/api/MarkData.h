@@ -33,6 +33,7 @@ enum class MarkType
     caesura,
     stress,
     unstress,
+    softAccent,
     otherArticulation,
 
     // dynamics
