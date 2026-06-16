@@ -23,6 +23,7 @@
 #include "mx/core/generated/ScoreHeaderGroup.h"
 #include "mx/core/generated/ScorePart.h"
 #include "mx/core/generated/ScorePartwise.h"
+#include "mx/core/generated/StaffLayout.h"
 #include "mx/core/generated/SystemLayout.h"
 #include "mx/core/generated/SystemMargins.h"
 #include "mx/core/generated/TypedText.h"
@@ -440,6 +441,19 @@ void ScoreReader::scanForSystemInfo() const
                     systemData.layout.topSystemDistance = systemLayout.topSystemDistance()->value().value();
                 }
             }
+
+            // Per-measure <staff-layout> staff-distance. (We model a single
+            // staff-distance, matching how the defaults staff-layout is
+            // mapped; the first staff-layout's distance is used.)
+            for (const auto &staffLayout : layoutGroup.staffLayout())
+            {
+                if (staffLayout.staffDistance().has_value())
+                {
+                    systemData.layout.staffDistance = staffLayout.staffDistance()->value().value();
+                    break;
+                }
+            }
+
             if (systemData.isUsed())
             {
                 auto &layout = myOutScoreData.layout[measureIndex];

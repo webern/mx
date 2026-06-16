@@ -176,7 +176,7 @@ so these boxes are status markers, not clickable; the live checklist is the pare
 | [ ] | notehead `circled` and `other` | 1b(7) | #183 |
 | [ ] | instrument-sound 4.0 sound ids | 1b(8) | #184 |
 | [ ] | technical marks with payloads (`fingering`, `pluck`, `bend`, ...) | 1c | #185 |
-| [ ] | read `<print>` per-measure layout | 2(1) | #186 |
+| [x] | read `<print>` per-measure layout | 2(1) | #186 |
 | [x] | `<credit>` gaps (credit-image, no-words credits, multiple credit-type) | 2(2) | #187 |
 | [ ] | read and write `<sound>` | 2(3) | #188 |
 | [x] | defaults fonts (`word-font`, `lyric-font`, `music-font`) | 2(4) | #189 |

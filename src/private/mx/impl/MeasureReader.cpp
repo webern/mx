@@ -611,8 +611,13 @@ void MeasureReader::parseFiguredBass(const core::FiguredBass &inMxFiguredBass, c
 
 void MeasureReader::parsePrint(const core::Print &inMxPrint) const
 {
+    // Per-measure <print> layout is read at the score level, keyed by
+    // measure index, in ScoreReader::scanForSystemInfo and
+    // ScoreReader::scanForPageInfo (which capture new-system, new-page,
+    // page-number, system-layout, staff-layout, and page-layout). The
+    // per-measure music-data hook has no api home of its own, so nothing
+    // is captured here.
     MX_UNUSED(inMxPrint);
-    // std::cout << "print is not supported" << std::endl;
 }
 
 void MeasureReader::parseSound(const core::Sound &inMxSound) const

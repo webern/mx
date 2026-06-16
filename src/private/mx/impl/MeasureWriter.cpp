@@ -24,6 +24,7 @@
 #include "mx/core/generated/Print.h"
 #include "mx/core/generated/Repeat.h"
 #include "mx/core/generated/RightLeftMiddle.h"
+#include "mx/core/generated/StaffLayout.h"
 #include "mx/core/generated/SystemLayout.h"
 #include "mx/core/generated/SystemMargins.h"
 #include "mx/core/generated/Tenths.h"
@@ -226,6 +227,15 @@ void MeasureWriter::writeSystemInfo()
         if (needsSystemLayout)
         {
             outLayoutGroup.setSystemLayout(outSystemLayout);
+            outPrint.setLayout(outLayoutGroup);
+        }
+
+        if (inSystemLayout.staffDistance)
+        {
+            core::StaffLayout outStaffLayout{};
+            outStaffLayout.setStaffDistance(
+                core::Tenths{core::Decimal{static_cast<double>(inSystemLayout.staffDistance.value())}});
+            outLayoutGroup.addStaffLayout(outStaffLayout);
             outPrint.setLayout(outLayoutGroup);
         }
     }
