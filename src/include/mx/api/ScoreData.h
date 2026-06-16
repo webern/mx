@@ -9,6 +9,7 @@
 #include "mx/api/EncodingData.h"
 #include "mx/api/LayoutData.h"
 #include "mx/api/PageData.h"
+#include "mx/api/PageImageData.h"
 #include "mx/api/PageTextData.h"
 #include "mx/api/PartData.h"
 #include "mx/api/PartGroupData.h"
@@ -53,6 +54,10 @@ class ScoreData
     EncodingData encoding;
     std::vector<PageTextData> pageTextItems;
 
+    /// `<credit-image>` items. Each corresponds to a `<credit>` whose
+    /// content is an image rather than text.
+    std::vector<PageImageData> pageImageItems;
+
     /// Specifies the scaling factor (`tenths` and `millimeters`), the default page sizes and margins, and the
     /// default system spacing and margins. Corresponds to the `<defaults>` MusicXML element. (Note this field
     /// used to be named `layout` and was renamed to `defaults` in v0.5.0.)
@@ -93,6 +98,7 @@ MXAPI_EQUALS_MEMBER(publisher)
 MXAPI_EQUALS_MEMBER(copyright)
 MXAPI_EQUALS_MEMBER(encoding)
 MXAPI_EQUALS_MEMBER(pageTextItems)
+MXAPI_EQUALS_MEMBER(pageImageItems)
 MXAPI_EQUALS_MEMBER(defaults)
 MXAPI_EQUALS_MEMBER(parts)
 MXAPI_EQUALS_MEMBER(partGroups)

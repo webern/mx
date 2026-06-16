@@ -249,7 +249,7 @@ api::ScoreData ScoreReader::getScoreData() const
         myOutScoreData.defaults = createDefaults(myHeaderGroup);
     }
 
-    createPageTextItems(myHeaderGroup, myOutScoreData.pageTextItems);
+    createCredits(myHeaderGroup, myOutScoreData);
 
     auto partMap = reconcileParts(myScorePartwise);
     int divisionsValue = -1;

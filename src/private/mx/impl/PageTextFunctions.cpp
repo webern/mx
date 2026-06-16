@@ -3,12 +3,16 @@
 // Distributed under the MIT License
 
 #include "mx/impl/PageTextFunctions.h"
+#include "mx/api/ScoreData.h"
+#include "mx/core/Decimal.h"
 #include "mx/core/generated/Credit.h"
 #include "mx/core/generated/CreditChoice.h"
 #include "mx/core/generated/CreditChoiceGroup.h"
 #include "mx/core/generated/CreditChoiceGroupChoice.h"
 #include "mx/core/generated/FormattedTextID.h"
+#include "mx/core/generated/Image.h"
 #include "mx/core/generated/ScoreHeaderGroup.h"
+#include "mx/core/generated/Tenths.h"
 #include "mx/impl/FontFunctions.h"
 #include "mx/impl/PositionFunctions.h"
 
@@ -16,23 +20,86 @@ namespace mx
 {
 namespace impl
 {
-void createPageTextItems(const std::vector<api::PageTextData> &inPageTextItems, core::ScoreHeaderGroup &outHeader)
+namespace
 {
-    for (const auto &p : inPageTextItems)
+api::PageImageData getImageData(const core::Image &image, int pageNumber)
+{
+    api::PageImageData out{};
+    out.source = image.source();
+    out.type = image.type();
+    out.pageNumber = pageNumber;
+
+    if (image.height().has_value())
     {
-        core::FormattedTextID words;
-        words.setValue(p.text);
-        impl::setAttributesFromFontData(p.fontData, words);
-        impl::setAttributesFromPositionData(p.positionData, words);
+        out.height = image.height()->value().value();
+    }
 
-        core::CreditChoiceGroupChoice groupChoice = core::CreditChoiceGroupChoice::creditWords(words);
-        core::CreditChoiceGroup group;
-        group.setChoice(groupChoice);
+    if (image.width().has_value())
+    {
+        out.width = image.width()->value().value();
+    }
 
+    out.positionData = getPositionData(image);
+    // The <credit-image> valign uses the credit-image-specific
+    // ValignImage vocabulary, which PositionData does not model. Avoid
+    // recording a misleading vertical-alignment value.
+    out.positionData.verticalAlignment = api::VerticalAlignment::unspecified;
+    return out;
+}
+
+core::Image makeCoreImage(const api::PageImageData &in)
+{
+    core::Image image{};
+    image.setSource(in.source);
+    image.setType(in.type);
+
+    if (in.height >= 0.0)
+    {
+        image.setHeight(core::Tenths{core::Decimal{in.height}});
+    }
+
+    if (in.width >= 0.0)
+    {
+        image.setWidth(core::Tenths{core::Decimal{in.width}});
+    }
+
+    setAttributesFromPositionData(in.positionData, image);
+    return image;
+}
+} // namespace
+
+void createCredits(const api::ScoreData &inScoreData, core::ScoreHeaderGroup &outHeader)
+{
+    for (const auto &p : inScoreData.pageTextItems)
+    {
         core::Credit credit;
-        credit.setChoice(core::CreditChoice::group(group));
 
-        if (!p.description.empty())
+        // The <credit> content model requires a credit-words/credit-symbol
+        // (or credit-image). Always emit a <credit-words> here; an empty
+        // string preserves a metadata-only credit (one that carried only
+        // credit-type) without dropping it.
+        {
+            core::FormattedTextID words;
+            words.setValue(p.text);
+            impl::setAttributesFromFontData(p.fontData, words);
+            impl::setAttributesFromPositionData(p.positionData, words);
+
+            core::CreditChoiceGroupChoice groupChoice = core::CreditChoiceGroupChoice::creditWords(words);
+            core::CreditChoiceGroup group;
+            group.setChoice(groupChoice);
+            credit.setChoice(core::CreditChoice::group(group));
+        }
+
+        // Emit every credit-type. Prefer the full list; fall back to the
+        // legacy single `description` for callers that only set that.
+        if (!p.creditTypes.empty())
+        {
+            for (const auto &ct : p.creditTypes)
+            {
+                credit.addCreditType(ct);
+            }
+        }
+        else if (!p.description.empty())
         {
             credit.addCreditType(p.description);
         }
@@ -44,41 +111,59 @@ void createPageTextItems(const std::vector<api::PageTextData> &inPageTextItems, 
 
         outHeader.addCredit(credit);
     }
+
+    for (const auto &img : inScoreData.pageImageItems)
+    {
+        core::Credit credit;
+        credit.setChoice(core::CreditChoice::creditImage(makeCoreImage(img)));
+
+        if (img.pageNumber > 0)
+        {
+            credit.setPage(img.pageNumber);
+        }
+
+        outHeader.addCredit(credit);
+    }
 }
 
-void createPageTextItems(const core::ScoreHeaderGroup &inHeader, std::vector<api::PageTextData> &outPageTextItems)
+void createCredits(const core::ScoreHeaderGroup &inHeader, api::ScoreData &outScoreData)
 {
     for (const auto &c : inHeader.credit())
     {
-        if (!c.choice().isGroup())
+        const int pageNumber = c.page().has_value() ? *c.page() : 0;
+
+        if (c.choice().isCreditImage())
         {
+            outScoreData.pageImageItems.push_back(getImageData(c.choice().asCreditImage(), pageNumber));
             continue;
         }
+
+        // Otherwise this is a credit group. Capture its text (if it begins
+        // with <credit-words>) and its credit-type(s). A credit with no
+        // <credit-words> still survives as a metadata-only PageTextData.
+        api::PageTextData pageText{};
+        pageText.pageNumber = pageNumber;
 
         const auto &group = c.choice().asGroup();
-        if (!group.choice().isCreditWords())
+        if (group.choice().isCreditWords())
         {
-            continue;
+            const auto &words = group.choice().asCreditWords();
+            pageText.text = words.value();
+            pageText.positionData = impl::getPositionData(words);
+            pageText.fontData = impl::getFontData(words);
         }
 
-        api::PageTextData pageText{};
-
-        if (c.page().has_value())
+        for (const auto &ct : c.creditType())
         {
-            pageText.pageNumber = *c.page();
+            pageText.creditTypes.emplace_back(ct);
         }
 
-        const auto &words = group.choice().asCreditWords();
-        pageText.text = words.value();
-        pageText.positionData = impl::getPositionData(words);
-        pageText.fontData = impl::getFontData(words);
-
-        if (!c.creditType().empty())
+        if (!pageText.creditTypes.empty())
         {
-            pageText.description = c.creditType().front();
+            pageText.description = pageText.creditTypes.front();
         }
 
-        outPageTextItems.push_back(pageText);
+        outScoreData.pageTextItems.push_back(std::move(pageText));
     }
 }
 } // namespace impl
