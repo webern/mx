@@ -6,9 +6,11 @@
 
 #include "mx/api/ApiCommon.h"
 #include "mx/api/AppearanceData.h"
+#include "mx/api/FontData.h"
 #include "mx/api/PageLayoutData.h"
 #include "mx/api/SystemLayoutData.h"
 
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -16,6 +18,23 @@ namespace mx
 {
 namespace api
 {
+/// Corresponds to a `<lyric-font>` default. It is a `FontData` plus the
+/// optional `number` and `name` attributes that identify which lyric
+/// line/verse the font applies to.
+struct LyricFontData
+{
+    std::string number;
+    std::string name;
+    FontData font;
+};
+
+MXAPI_EQUALS_BEGIN(LyricFontData)
+MXAPI_EQUALS_MEMBER(number)
+MXAPI_EQUALS_MEMBER(name)
+MXAPI_EQUALS_MEMBER(font)
+MXAPI_EQUALS_END;
+MXAPI_NOT_EQUALS_AND_VECTORS(LyricFontData);
+
 /// Corresponds to the `<defaults>` element which is part of the
 /// `ScoreHeaderGroup`. Sets the global defaults for the score such as
 /// page size, system spacing, and the all-important `<tenths>` and
@@ -103,6 +122,17 @@ class DefaultsData
 
     std::vector<AppearanceData> appearance;
 
+    /// The `<music-font>` default. Engaged when the score declares a default
+    /// font for musical symbols.
+    std::optional<FontData> musicFont;
+
+    /// The `<word-font>` default. Engaged when the score declares a default
+    /// font for text directions and words.
+    std::optional<FontData> wordFont;
+
+    /// The `<lyric-font>` defaults (one per lyric line/verse).
+    std::vector<LyricFontData> lyricFonts;
+
     // TODO - this appears not to be used anywhere, please do not use
     /// Measure numbering setting, at the global level, will be stated
     /// in first measure's <print> tag. This can can be overridden by a
@@ -110,8 +140,8 @@ class DefaultsData
     MeasureNumbering measureNumbering;
 
     DefaultsData()
-        : scalingMillimeters{-1.0}, scalingTenths{-1.0}, pageLayout{}, systemLayout{}, appearance{},
-          measureNumbering{MeasureNumbering::unspecified}
+        : scalingMillimeters{-1.0}, scalingTenths{-1.0}, pageLayout{}, systemLayout{}, appearance{}, musicFont{},
+          wordFont{}, lyricFonts{}, measureNumbering{MeasureNumbering::unspecified}
     {
     }
 };
@@ -120,6 +150,13 @@ MXAPI_EQUALS_BEGIN(DefaultsData)
 MXAPI_EQUALS_MEMBER(pageLayout)
 MXAPI_EQUALS_MEMBER(systemLayout)
 MXAPI_EQUALS_MEMBER(appearance)
+MXAPI_EQUALS_MEMBER(musicFont)
+MXAPI_EQUALS_MEMBER(wordFont)
+if (!areVectorsEqual(lhs.lyricFonts, rhs.lyricFonts))
+{
+    MX_SHOW_UNEQUAL("DefaultsData", "lyricFonts");
+    return false;
+}
 MXAPI_EQUALS_MEMBER(measureNumbering)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(DefaultsData);

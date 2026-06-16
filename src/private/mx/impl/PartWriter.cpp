@@ -165,6 +165,12 @@ core::ScorePart PartWriter::getScorePart() const
         midiGroup.setMIDIDevice(midiDevice);
     }
 
+    if (myPartData.instrumentData.midiData.name.size() > 0)
+    {
+        addMidiElement = true;
+        midiInstrument.setMIDIName(myPartData.instrumentData.midiData.name);
+    }
+
     if (myPartData.instrumentData.midiData.bank >= 0)
     {
         addMidiElement = true;

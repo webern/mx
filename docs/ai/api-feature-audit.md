@@ -182,6 +182,6 @@ so these boxes are status markers, not clickable; the live checklist is the pare
 | [ ] | defaults fonts (`word-font`, `lyric-font`, `music-font`) | 2(4) | #189 |
 | [ ] | round-trip `<figured-bass>` | 2(5) | #190 |
 | [ ] | harmony `inversion`, `function`, `numeral` | 2(6) | #191 |
-| [ ] | write `midi-name` on output | 3 | #192 |
+| [x] | write `midi-name` on output | 3 | #192 |
 
 Parent tracker: #159. The section-2 lower-use gaps are intentionally not tracked yet.
