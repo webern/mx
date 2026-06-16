@@ -59,6 +59,9 @@ enum class MarkType
     sfz,
     sffz,
     fz,
+    n,
+    pf,
+    sfzp,
     otherDynamics,
     unknownDynamics,
 

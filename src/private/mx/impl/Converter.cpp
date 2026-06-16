@@ -193,6 +193,9 @@ const Converter::EnumMap<core::DynamicsChoice::Kind, api::MarkType> Converter::d
     {core::DynamicsChoice::Kind::sfz, api::MarkType::sfz},
     {core::DynamicsChoice::Kind::sffz, api::MarkType::sffz},
     {core::DynamicsChoice::Kind::fz, api::MarkType::fz},
+    {core::DynamicsChoice::Kind::n, api::MarkType::n},
+    {core::DynamicsChoice::Kind::pf, api::MarkType::pf},
+    {core::DynamicsChoice::Kind::sfzp, api::MarkType::sfzp},
     {core::DynamicsChoice::Kind::otherDynamics, api::MarkType::otherDynamics},
 };
 

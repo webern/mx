@@ -65,6 +65,12 @@ std::string dynamicsKindToString(core::DynamicsChoice::Kind kind)
         return "sffz";
     case core::DynamicsChoice::Kind::fz:
         return "fz";
+    case core::DynamicsChoice::Kind::n:
+        return "n";
+    case core::DynamicsChoice::Kind::pf:
+        return "pf";
+    case core::DynamicsChoice::Kind::sfzp:
+        return "sfzp";
     default:
         return "other-dynamics";
     }
@@ -81,6 +87,7 @@ bool isMarkDynamic(MarkType markType)
            (markType == MarkType::sf) || (markType == MarkType::sfp) || (markType == MarkType::sfpp) ||
            (markType == MarkType::fp) || (markType == MarkType::rf) || (markType == MarkType::rfz) ||
            (markType == MarkType::sfz) || (markType == MarkType::sffz) || (markType == MarkType::fz) ||
+           (markType == MarkType::n) || (markType == MarkType::pf) || (markType == MarkType::sfzp) ||
            (markType == MarkType::otherDynamics);
 }
 
