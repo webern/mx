@@ -18,6 +18,7 @@ void addScaling(const api::DefaultsData &inDefaults, core::ScoreHeaderGroup &out
 void addPageLayout(const api::PageLayoutData &inPageLayout, core::ScoreHeaderGroup &outScoreHeaderGroup);
 void addSystemMargins(const api::DefaultsData &inDefaults, core::ScoreHeaderGroup &outScoreHeaderGroup);
 void addAppearance(const api::DefaultsData &inDefaults, core::ScoreHeaderGroup &outScoreHeaderGroup);
+void addDefaultsFonts(const api::DefaultsData &inDefaults, core::ScoreHeaderGroup &outScoreHeaderGroup);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // core::ScoreHeaderGroup -> api::DefaultsData
@@ -27,5 +28,6 @@ void addPageMargins(const core::ScoreHeaderGroup &inScoreHeaderGroup, api::Defau
 void addSystemMargins(const core::ScoreHeaderGroup &inScoreHeaderGroup, api::DefaultsData &outDefaults);
 void addStaffLayout(const core::ScoreHeaderGroup &inScoreHeaderGroup, api::DefaultsData &outDefaults);
 void addAppearance(const core::ScoreHeaderGroup &inScoreHeaderGroup, api::DefaultsData &outDefaults);
+void addDefaultsFonts(const core::ScoreHeaderGroup &inScoreHeaderGroup, api::DefaultsData &outDefaults);
 } // namespace impl
 } // namespace mx

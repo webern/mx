@@ -5,15 +5,18 @@
 #include "mx/impl/LayoutFunctions.h"
 #include "mx/api/ScoreData.h"
 #include "mx/core/Decimal.h"
+#include "mx/core/NameToken.h"
 #include "mx/core/generated/AllMarginsGroup.h"
 #include "mx/core/generated/Appearance.h"
 #include "mx/core/generated/Defaults.h"
 #include "mx/core/generated/Distance.h"
 #include "mx/core/generated/DistanceType.h"
+#include "mx/core/generated/EmptyFont.h"
 #include "mx/core/generated/LayoutGroup.h"
 #include "mx/core/generated/LeftRightMarginsGroup.h"
 #include "mx/core/generated/LineWidth.h"
 #include "mx/core/generated/LineWidthType.h"
+#include "mx/core/generated/LyricFont.h"
 #include "mx/core/generated/Millimeters.h"
 #include "mx/core/generated/NoteSize.h"
 #include "mx/core/generated/NoteSizeType.h"
@@ -26,6 +29,7 @@
 #include "mx/core/generated/SystemLayout.h"
 #include "mx/core/generated/SystemMargins.h"
 #include "mx/core/generated/Tenths.h"
+#include "mx/impl/FontFunctions.h"
 
 namespace mx
 {
@@ -107,6 +111,53 @@ void addDefaultsData(const api::DefaultsData &inDefaults, core::ScoreHeaderGroup
     addPageLayout(inDefaults.pageLayout, outScoreHeaderGroup);
     addSystemMargins(inDefaults, outScoreHeaderGroup);
     addAppearance(inDefaults, outScoreHeaderGroup);
+    addDefaultsFonts(inDefaults, outScoreHeaderGroup);
+}
+
+void addDefaultsFonts(const api::DefaultsData &inDefaults, core::ScoreHeaderGroup &outScoreHeaderGroup)
+{
+    if (!inDefaults.musicFont.has_value() && !inDefaults.wordFont.has_value() && inDefaults.lyricFonts.empty())
+    {
+        return;
+    }
+
+    auto defaults = outScoreHeaderGroup.defaults().value_or(core::Defaults{});
+
+    if (inDefaults.musicFont.has_value())
+    {
+        core::EmptyFont musicFont{};
+        setAttributesFromFontData(*inDefaults.musicFont, musicFont);
+        defaults.setMusicFont(musicFont);
+    }
+
+    if (inDefaults.wordFont.has_value())
+    {
+        core::EmptyFont wordFont{};
+        setAttributesFromFontData(*inDefaults.wordFont, wordFont);
+        defaults.setWordFont(wordFont);
+    }
+
+    if (!inDefaults.lyricFonts.empty())
+    {
+        std::vector<core::LyricFont> lyricFonts;
+        for (const auto &lf : inDefaults.lyricFonts)
+        {
+            core::LyricFont coreLyricFont{};
+            if (!lf.number.empty())
+            {
+                coreLyricFont.setNumber(core::NameToken{lf.number});
+            }
+            if (!lf.name.empty())
+            {
+                coreLyricFont.setName(lf.name);
+            }
+            setAttributesFromFontData(lf.font, coreLyricFont);
+            lyricFonts.emplace_back(std::move(coreLyricFont));
+        }
+        defaults.setLyricFont(std::move(lyricFonts));
+    }
+
+    outScoreHeaderGroup.setDefaults(defaults);
 }
 
 void addScaling(const api::DefaultsData &inDefaults, core::ScoreHeaderGroup &outScoreHeaderGroup)
@@ -246,7 +297,47 @@ api::DefaultsData createDefaults(const core::ScoreHeaderGroup &inScoreHeaderGrou
     addSystemMargins(inScoreHeaderGroup, defaults);
     addStaffLayout(inScoreHeaderGroup, defaults);
     addAppearance(inScoreHeaderGroup, defaults);
+    addDefaultsFonts(inScoreHeaderGroup, defaults);
     return defaults;
+}
+
+void addDefaultsFonts(const core::ScoreHeaderGroup &inScoreHeaderGroup, api::DefaultsData &outDefaults)
+{
+    outDefaults.musicFont = std::nullopt;
+    outDefaults.wordFont = std::nullopt;
+    outDefaults.lyricFonts.clear();
+
+    if (!inScoreHeaderGroup.defaults().has_value())
+    {
+        return;
+    }
+
+    const auto &defaults = *inScoreHeaderGroup.defaults();
+
+    if (defaults.musicFont().has_value())
+    {
+        outDefaults.musicFont = getFontData(*defaults.musicFont());
+    }
+
+    if (defaults.wordFont().has_value())
+    {
+        outDefaults.wordFont = getFontData(*defaults.wordFont());
+    }
+
+    for (const auto &lf : defaults.lyricFont())
+    {
+        api::LyricFontData data{};
+        if (lf.number().has_value())
+        {
+            data.number = lf.number()->value();
+        }
+        if (lf.name().has_value())
+        {
+            data.name = *lf.name();
+        }
+        data.font = getFontData(lf);
+        outDefaults.lyricFonts.emplace_back(std::move(data));
+    }
 }
 
 void addScaling(const core::ScoreHeaderGroup &inScoreHeaderGroup, api::DefaultsData &outDefaults)
