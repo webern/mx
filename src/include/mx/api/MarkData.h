@@ -137,8 +137,8 @@ enum class MarkType
     harmonic,
     openString,
     thumbPosition,
-    // fingering,
-    // pluck,
+    fingering, ///< carries text (e.g. "1", "2-3") in MarkData::name plus optional substitution/alternate flags
+    pluck,     ///< carries text (e.g. "p", "i", "m", "a") in MarkData::name
     doubleTongue,
     tripleTongue,
     stopped,
@@ -244,6 +244,11 @@ struct MarkData
     bool hasMordentApproach;
     Placement mordentDeparture;
     bool hasMordentDeparture;
+    // Fingering payload attributes (MusicXML <fingering> 'substitution' and
+    // 'alternate'). Only meaningful when markType == MarkType::fingering. The
+    // fingering text itself (e.g. "1", "2-3") is carried in 'name'.
+    Bool fingeringSubstitution;
+    Bool fingeringAlternate;
 
     MarkData();
     MarkData(MarkType inMarkType);
@@ -262,6 +267,8 @@ MXAPI_EQUALS_MEMBER(mordentApproach)
 MXAPI_EQUALS_MEMBER(hasMordentApproach)
 MXAPI_EQUALS_MEMBER(mordentDeparture)
 MXAPI_EQUALS_MEMBER(hasMordentDeparture)
+MXAPI_EQUALS_MEMBER(fingeringSubstitution)
+MXAPI_EQUALS_MEMBER(fingeringAlternate)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(MarkData);
 } // namespace api

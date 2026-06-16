@@ -7,11 +7,13 @@
 #include "mx/core/generated/ArrowChoice.h"
 #include "mx/core/generated/ArrowChoiceGroup.h"
 #include "mx/core/generated/ArrowDirection.h"
+#include "mx/core/generated/Fingering.h"
 #include "mx/core/generated/Handbell.h"
 #include "mx/core/generated/HandbellValue.h"
 #include "mx/core/generated/Hole.h"
 #include "mx/core/generated/HoleClosed.h"
 #include "mx/core/generated/HoleClosedValue.h"
+#include "mx/core/generated/PlacementText.h"
 #include "mx/core/generated/Technical.h"
 #include "mx/core/generated/TechnicalChoice.h"
 #include "mx/impl/Converter.h"
@@ -162,11 +164,25 @@ bool TechnicalFunctions::parseTechicalMark(const core::TechnicalChoice &techical
         outMarkData.name = "thumb-position";
         return true;
     }
-    case core::TechnicalChoice::Kind::fingering:
-        return false;
+    case core::TechnicalChoice::Kind::fingering: {
+        const auto &fingering = techicalChoice.asFingering();
+        parseMarkDataAttributes(fingering, outMarkData);
+        outMarkData.name = fingering.value();
+        Converter converter;
+        if (fingering.substitution().has_value())
+        {
+            outMarkData.fingeringSubstitution = converter.convert(fingering.substitution().value());
+        }
+        if (fingering.alternate().has_value())
+        {
+            outMarkData.fingeringAlternate = converter.convert(fingering.alternate().value());
+        }
+        return true;
+    }
     case core::TechnicalChoice::Kind::pluck: {
-        parseMarkDataAttributes(techicalChoice.asPluck(), outMarkData);
-        outMarkData.name = "pluck";
+        const auto &pluck = techicalChoice.asPluck();
+        parseMarkDataAttributes(pluck, outMarkData);
+        outMarkData.name = pluck.value();
         return true;
     }
     case core::TechnicalChoice::Kind::doubleTongue: {

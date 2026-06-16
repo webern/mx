@@ -16,6 +16,7 @@
 #include "mx/core/generated/EmptyTrillSound.h"
 #include "mx/core/generated/Fermata.h"
 #include "mx/core/generated/FermataShape.h"
+#include "mx/core/generated/Fingering.h"
 #include "mx/core/generated/Fret.h"
 #include "mx/core/generated/Handbell.h"
 #include "mx/core/generated/HandbellValue.h"
@@ -32,6 +33,7 @@
 #include "mx/core/generated/OrnamentsGroup.h"
 #include "mx/core/generated/OrnamentsGroupChoice.h"
 #include "mx/core/generated/OtherPlacementText.h"
+#include "mx/core/generated/PlacementText.h"
 #include "mx/core/generated/ShowTuplet.h"
 #include "mx/core/generated/Slur.h"
 #include "mx/core/generated/String.h"
@@ -715,6 +717,28 @@ void NotationsWriter::addTechnical(const api::MarkData &mark, core::Technical &o
         core::String s;
         s.setValue(core::StringNumber::parse(mark.name));
         outTechnical.addChoice(core::TechnicalChoice::string(s));
+        break;
+    }
+    case core::TechnicalChoice::Kind::fingering: {
+        core::Fingering fingering;
+        setAttributesFromPositionData(mark.positionData, fingering);
+        fingering.setValue(mark.name);
+        if (mark.fingeringSubstitution != api::Bool::unspecified)
+        {
+            fingering.setSubstitution(myConverter.convert(mark.fingeringSubstitution));
+        }
+        if (mark.fingeringAlternate != api::Bool::unspecified)
+        {
+            fingering.setAlternate(myConverter.convert(mark.fingeringAlternate));
+        }
+        outTechnical.addChoice(core::TechnicalChoice::fingering(fingering));
+        break;
+    }
+    case core::TechnicalChoice::Kind::pluck: {
+        core::PlacementText pt;
+        setAttributesFromPositionData(mark.positionData, pt);
+        pt.setValue(mark.name);
+        outTechnical.addChoice(core::TechnicalChoice::pluck(pt));
         break;
     }
     case core::TechnicalChoice::Kind::heel: {

@@ -312,6 +312,81 @@ TEST(technical, NoteData)
 
 T_END;
 
+// Issue #185: technical marks with text payloads. <fingering> carries text
+// (e.g. "1", "2-3") plus substitution/alternate attributes; <pluck> carries
+// text (e.g. "p", "i", "m", "a"). Both must survive an XML round trip.
+TEST(technical_fingering_pluck_roundtrip, NoteData)
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto &staff = measure.staves.back();
+    auto &voice = staff.voices[0];
+    voice.notes.emplace_back();
+    auto &note = voice.notes.back();
+
+    // a plain fingering "1"
+    note.noteAttachmentData.marks.emplace_back(Placement::above, MarkType::fingering);
+    note.noteAttachmentData.marks.back().name = "1";
+
+    // a fingering "2-3" with substitution=yes and alternate=no
+    note.noteAttachmentData.marks.emplace_back(Placement::below, MarkType::fingering);
+    note.noteAttachmentData.marks.back().name = "2-3";
+    note.noteAttachmentData.marks.back().fingeringSubstitution = Bool::yes;
+    note.noteAttachmentData.marks.back().fingeringAlternate = Bool::no;
+
+    // a pluck "p"
+    note.noteAttachmentData.marks.emplace_back(Placement::above, MarkType::pluck);
+    note.noteAttachmentData.marks.back().name = "p";
+
+    auto &mgr = DocumentManager::getInstance();
+    const auto r1 = mgr.createFromScore(score);
+    REQUIRE(r1.ok());
+    auto docId = r1.value();
+    std::stringstream ss;
+    mgr.writeToStream(docId, ss);
+    mgr.destroyDocument(docId);
+    std::istringstream iss{ss.str()};
+    const auto r2 = mgr.createFromStream(iss);
+    REQUIRE(r2.ok());
+    docId = r2.value();
+    const auto rd = mgr.getData(docId);
+    REQUIRE(rd.ok());
+    const auto oscore = rd.value();
+    mgr.destroyDocument(docId);
+
+    const auto &omarks =
+        oscore.parts.back().measures.back().staves.back().voices.at(0).notes.back().noteAttachmentData.marks;
+    REQUIRE(omarks.size() == 3);
+
+    auto oIter = omarks.cbegin();
+    auto md = *oIter;
+    CHECK(md.markType == MarkType::fingering);
+    CHECK_EQUAL("1", md.name);
+    CHECK(md.positionData.placement == Placement::above);
+    CHECK(md.fingeringSubstitution == Bool::unspecified);
+    CHECK(md.fingeringAlternate == Bool::unspecified);
+
+    ++oIter;
+    md = *oIter;
+    CHECK(md.markType == MarkType::fingering);
+    CHECK_EQUAL("2-3", md.name);
+    CHECK(md.positionData.placement == Placement::below);
+    CHECK(md.fingeringSubstitution == Bool::yes);
+    CHECK(md.fingeringAlternate == Bool::no);
+
+    ++oIter;
+    md = *oIter;
+    CHECK(md.markType == MarkType::pluck);
+    CHECK_EQUAL("p", md.name);
+    CHECK(md.positionData.placement == Placement::above);
+}
+
+T_END;
+
 TEST(technical_import_file, NoteData)
 {
     auto &mgr = DocumentManager::getInstance();

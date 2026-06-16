@@ -150,12 +150,12 @@ bool isMarkTechnical(MarkType markType)
            (markType == MarkType::openString) || (markType == MarkType::thumbPosition) ||
            (markType == MarkType::doubleTongue) || (markType == MarkType::tripleTongue) ||
            (markType == MarkType::stopped) || (markType == MarkType::snapPizzicato) || (markType == MarkType::fret) ||
-           (markType == MarkType::string_) || (markType == MarkType::heel) || (markType == MarkType::toe) ||
-           (markType == MarkType::fingernails) || (markType == MarkType::hole) || (markType == MarkType::arrow) ||
-           (markType == MarkType::handbell) || (markType == MarkType::brassBend) || (markType == MarkType::flip) ||
-           (markType == MarkType::smear) || (markType == MarkType::open) || (markType == MarkType::halfMuted) ||
-           (markType == MarkType::harmonMute) || (markType == MarkType::golpe) ||
-           (markType == MarkType::otherTechnical);
+           (markType == MarkType::string_) || (markType == MarkType::fingering) || (markType == MarkType::pluck) ||
+           (markType == MarkType::heel) || (markType == MarkType::toe) || (markType == MarkType::fingernails) ||
+           (markType == MarkType::hole) || (markType == MarkType::arrow) || (markType == MarkType::handbell) ||
+           (markType == MarkType::brassBend) || (markType == MarkType::flip) || (markType == MarkType::smear) ||
+           (markType == MarkType::open) || (markType == MarkType::halfMuted) || (markType == MarkType::harmonMute) ||
+           (markType == MarkType::golpe) || (markType == MarkType::otherTechnical);
 }
 
 bool isMarkTremolo(MarkType markType)
@@ -226,14 +226,16 @@ int numTremoloSlashes(MarkType markType)
 MarkData::MarkData()
     : markType(MarkType::unspecified), name{}, tickTimePosition{0}, printData{}, positionData{}, mordentLong{Bool::no},
       hasMordentLong{false}, mordentApproach{Placement::unspecified}, hasMordentApproach{false},
-      mordentDeparture{Placement::unspecified}, hasMordentDeparture{false}
+      mordentDeparture{Placement::unspecified}, hasMordentDeparture{false}, fingeringSubstitution{Bool::unspecified},
+      fingeringAlternate{Bool::unspecified}
 {
 }
 
 MarkData::MarkData(MarkType inMarkType)
     : markType(inMarkType), name{}, tickTimePosition{0}, printData{}, positionData{}, mordentLong{Bool::no},
       hasMordentLong{false}, mordentApproach{Placement::unspecified}, hasMordentApproach{false},
-      mordentDeparture{Placement::unspecified}, hasMordentDeparture{false}
+      mordentDeparture{Placement::unspecified}, hasMordentDeparture{false}, fingeringSubstitution{Bool::unspecified},
+      fingeringAlternate{Bool::unspecified}
 {
     impl::Converter converter;
     if (isMarkDynamic(markType))
@@ -253,7 +255,8 @@ MarkData::MarkData(MarkType inMarkType)
 MarkData::MarkData(Placement inPlacement, MarkType inMarkType)
     : markType(inMarkType), name{}, tickTimePosition{0}, printData{}, positionData{}, mordentLong{Bool::no},
       hasMordentLong{false}, mordentApproach{Placement::unspecified}, hasMordentApproach{false},
-      mordentDeparture{Placement::unspecified}, hasMordentDeparture{false}
+      mordentDeparture{Placement::unspecified}, hasMordentDeparture{false}, fingeringSubstitution{Bool::unspecified},
+      fingeringAlternate{Bool::unspecified}
 {
     positionData.placement = inPlacement;
     impl::Converter converter;
