@@ -125,10 +125,13 @@ bool isMarkFermata(MarkType markType)
 {
     return (markType == MarkType::fermata) || (markType == MarkType::fermataNormal) ||
            (markType == MarkType::fermataAngled) || (markType == MarkType::fermataSquare) ||
-           (markType == MarkType::fermataUpright) || (markType == MarkType::fermataNormalUpright) ||
-           (markType == MarkType::fermataAngledUpright) || (markType == MarkType::fermataSquareUpright) ||
-           (markType == MarkType::fermataInverted) || (markType == MarkType::fermataNormalInverted) ||
-           (markType == MarkType::fermataAngledInverted) || (markType == MarkType::fermataSquareInverted);
+           (markType == MarkType::fermataDoubleAngled) || (markType == MarkType::fermataDoubleSquare) ||
+           (markType == MarkType::fermataDoubleDot) || (markType == MarkType::fermataHalfCurve) ||
+           (markType == MarkType::fermataCurlew) || (markType == MarkType::fermataUpright) ||
+           (markType == MarkType::fermataNormalUpright) || (markType == MarkType::fermataAngledUpright) ||
+           (markType == MarkType::fermataSquareUpright) || (markType == MarkType::fermataInverted) ||
+           (markType == MarkType::fermataNormalInverted) || (markType == MarkType::fermataAngledInverted) ||
+           (markType == MarkType::fermataSquareInverted);
 }
 
 bool isMarkNonArpeggiate(MarkType markType)

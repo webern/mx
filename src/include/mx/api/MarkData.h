@@ -160,10 +160,15 @@ enum class MarkType
     unknownTechnical,
 
     // fermata
-    fermata,       // <fermata/>
-    fermataNormal, // <fermata>normal</fermata>
-    fermataAngled, // <fermata>angled</fermata>
-    fermataSquare, // <fermata>square</fermata>
+    fermata,             // <fermata/>
+    fermataNormal,       // <fermata>normal</fermata>
+    fermataAngled,       // <fermata>angled</fermata>
+    fermataSquare,       // <fermata>square</fermata>
+    fermataDoubleAngled, // <fermata>double-angled</fermata> (MusicXML 4.0)
+    fermataDoubleSquare, // <fermata>double-square</fermata> (MusicXML 4.0)
+    fermataDoubleDot,    // <fermata>double-dot</fermata> (MusicXML 4.0)
+    fermataHalfCurve,    // <fermata>half-curve</fermata> (MusicXML 4.0)
+    fermataCurlew,       // <fermata>curlew</fermata> (MusicXML 4.0)
 
     // sadly, in MusicXML we do not have an 'above' 'below' attribute for the fermata.
     // instead it has an attribute 'type' that is either 'upright' or 'inverted'.

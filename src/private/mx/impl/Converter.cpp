@@ -372,6 +372,11 @@ const Converter::EnumMap<core::FermataShape, api::MarkType> Converter::fermataMa
     {core::FermataShape::normal(), api::MarkType::fermataNormal},
     {core::FermataShape::angled(), api::MarkType::fermataAngled},
     {core::FermataShape::square(), api::MarkType::fermataSquare},
+    {core::FermataShape::doubleAngled(), api::MarkType::fermataDoubleAngled},
+    {core::FermataShape::doubleSquare(), api::MarkType::fermataDoubleSquare},
+    {core::FermataShape::doubleDot(), api::MarkType::fermataDoubleDot},
+    {core::FermataShape::halfCurve(), api::MarkType::fermataHalfCurve},
+    {core::FermataShape::curlew(), api::MarkType::fermataCurlew},
     {core::FermataShape::empty(), api::MarkType::fermata},
 };
 

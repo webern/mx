@@ -84,6 +84,26 @@ api::MarkData FermataFunctions::parseFermata() const
             markType = api::MarkType::fermataSquareInverted;
         }
     }
+    else if (shape == core::FermataShape::doubleAngled())
+    {
+        markType = api::MarkType::fermataDoubleAngled;
+    }
+    else if (shape == core::FermataShape::doubleSquare())
+    {
+        markType = api::MarkType::fermataDoubleSquare;
+    }
+    else if (shape == core::FermataShape::doubleDot())
+    {
+        markType = api::MarkType::fermataDoubleDot;
+    }
+    else if (shape == core::FermataShape::halfCurve())
+    {
+        markType = api::MarkType::fermataHalfCurve;
+    }
+    else if (shape == core::FermataShape::curlew())
+    {
+        markType = api::MarkType::fermataCurlew;
+    }
 
     api::MarkData markData{markType};
     impl::parseMarkDataAttributes(myFermata, markData);

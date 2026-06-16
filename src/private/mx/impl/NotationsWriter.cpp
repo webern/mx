@@ -261,6 +261,26 @@ core::Notations NotationsWriter::getNotations() const
             {
                 fermata.setValue(core::FermataShape::square());
             }
+            else if (mark.markType == api::MarkType::fermataDoubleAngled)
+            {
+                fermata.setValue(core::FermataShape::doubleAngled());
+            }
+            else if (mark.markType == api::MarkType::fermataDoubleSquare)
+            {
+                fermata.setValue(core::FermataShape::doubleSquare());
+            }
+            else if (mark.markType == api::MarkType::fermataDoubleDot)
+            {
+                fermata.setValue(core::FermataShape::doubleDot());
+            }
+            else if (mark.markType == api::MarkType::fermataHalfCurve)
+            {
+                fermata.setValue(core::FermataShape::halfCurve());
+            }
+            else if (mark.markType == api::MarkType::fermataCurlew)
+            {
+                fermata.setValue(core::FermataShape::curlew());
+            }
             else if (mark.markType == api::MarkType::fermataUpright)
             {
                 fermata.setValue(core::FermataShape::empty());

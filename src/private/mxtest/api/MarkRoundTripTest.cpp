@@ -184,4 +184,47 @@ TEST(TechnicalGolpe, MarkRoundTrip)
 
 T_END;
 
+// #181 - fermata 4.0 shapes double-angled, double-square, double-dot,
+// half-curve, curlew had no api::MarkType members and fermataMap dropped them
+// to unspecified.
+TEST(FermataDoubleAngled, MarkRoundTrip)
+{
+    const auto marks = roundTripMark(MarkType::fermataDoubleAngled);
+    CHECK(hasMark(marks, MarkType::fermataDoubleAngled));
+}
+
+T_END;
+
+TEST(FermataDoubleSquare, MarkRoundTrip)
+{
+    const auto marks = roundTripMark(MarkType::fermataDoubleSquare);
+    CHECK(hasMark(marks, MarkType::fermataDoubleSquare));
+}
+
+T_END;
+
+TEST(FermataDoubleDot, MarkRoundTrip)
+{
+    const auto marks = roundTripMark(MarkType::fermataDoubleDot);
+    CHECK(hasMark(marks, MarkType::fermataDoubleDot));
+}
+
+T_END;
+
+TEST(FermataHalfCurve, MarkRoundTrip)
+{
+    const auto marks = roundTripMark(MarkType::fermataHalfCurve);
+    CHECK(hasMark(marks, MarkType::fermataHalfCurve));
+}
+
+T_END;
+
+TEST(FermataCurlew, MarkRoundTrip)
+{
+    const auto marks = roundTripMark(MarkType::fermataCurlew);
+    CHECK(hasMark(marks, MarkType::fermataCurlew));
+}
+
+T_END;
+
 #endif

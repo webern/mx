@@ -171,7 +171,7 @@ so these boxes are status markers, not clickable; the live checklist is the pare
 | [x] | articulation `soft-accent` | 1b(2) | #194 |
 | [x] | ornaments `haydn`, `inverted-vertical-turn` | 1b(3) | #195 |
 | [x] | technical marks `brass-bend`/`flip`/`smear`/`open`/`half-muted`/`harmon-mute`/`golpe` | 1b(4) | #196 |
-| [ ] | fermata 4.0 shapes | 1b(5) | #181 |
+| [x] | fermata 4.0 shapes | 1b(5) | #181 |
 | [ ] | microtonal accidental arrow/double variants | 1b(6) | #182 |
 | [ ] | notehead `circled` and `other` | 1b(7) | #183 |
 | [ ] | instrument-sound 4.0 sound ids | 1b(8) | #184 |
