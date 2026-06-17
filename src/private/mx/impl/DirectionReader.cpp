@@ -345,7 +345,22 @@ void DirectionReader::parseSegno(const core::DirectionType &directionType)
     {
         api::SegnoData outSegno;
         outSegno.positionData = getPositionData(segno);
-        outSegno.colorData = getColor(segno);
+        outSegno.fontData = getFontData(segno);
+        outSegno.isColorSpecified = segno.color().has_value();
+        if (outSegno.isColorSpecified)
+        {
+            outSegno.colorData = getColor(segno);
+        }
+        if (segno.smufl().has_value())
+        {
+            outSegno.isSmuflSpecified = true;
+            outSegno.smufl = segno.smufl()->toString();
+        }
+        if (segno.id().has_value())
+        {
+            outSegno.isIdSpecified = true;
+            outSegno.id = segno.id()->value();
+        }
         myOutDirectionData.segnos.emplace_back(std::move(outSegno));
         appendOrderedComponent(api::DirectionComponentKind::segno,
                                static_cast<int>(myOutDirectionData.segnos.size()) - 1);
@@ -416,7 +431,22 @@ void DirectionReader::parseCoda(const core::DirectionType &directionType)
     {
         api::CodaData outCoda;
         outCoda.positionData = getPositionData(coda);
-        outCoda.colorData = getColor(coda);
+        outCoda.fontData = getFontData(coda);
+        outCoda.isColorSpecified = coda.color().has_value();
+        if (outCoda.isColorSpecified)
+        {
+            outCoda.colorData = getColor(coda);
+        }
+        if (coda.smufl().has_value())
+        {
+            outCoda.isSmuflSpecified = true;
+            outCoda.smufl = coda.smufl()->toString();
+        }
+        if (coda.id().has_value())
+        {
+            outCoda.isIdSpecified = true;
+            outCoda.id = coda.id()->value();
+        }
         myOutDirectionData.codas.emplace_back(std::move(outCoda));
         appendOrderedComponent(api::DirectionComponentKind::coda,
                                static_cast<int>(myOutDirectionData.codas.size()) - 1);
