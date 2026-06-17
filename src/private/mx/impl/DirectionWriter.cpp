@@ -8,6 +8,7 @@
 #include "mx/core/generated/BassStep.h"
 #include "mx/core/generated/BeatUnitGroup.h"
 #include "mx/core/generated/Bracket.h"
+#include "mx/core/generated/Coda.h"
 #include "mx/core/generated/Dashes.h"
 #include "mx/core/generated/Degree.h"
 #include "mx/core/generated/DegreeAlter.h"
@@ -52,7 +53,9 @@
 #include "mx/core/generated/PositiveDivisions.h"
 #include "mx/core/generated/Root.h"
 #include "mx/core/generated/RootStep.h"
+#include "mx/core/generated/Segno.h"
 #include "mx/core/generated/Semitones.h"
+#include "mx/core/generated/Sound.h"
 #include "mx/core/generated/StartStop.h"
 #include "mx/core/generated/StartStopContinue.h"
 #include "mx/core/generated/String.h"
@@ -66,6 +69,7 @@
 #include "mx/impl/LineFunctions.h"
 #include "mx/impl/MarkDataFunctions.h"
 #include "mx/impl/PrintFunctions.h"
+#include "mx/impl/SoundFunctions.h"
 #include "mx/impl/SpannerFunctions.h"
 #include "mx/utility/Throw.h"
 #include "mx/utility/Unused.h"
@@ -401,9 +405,77 @@ std::vector<core::MusicDataChoice> DirectionWriter::getDirectionLikeThings()
         }
     }
 
+    for (const auto &item : myDirectionData.segnos)
+    {
+        core::Segno segno{};
+        setAttributesFromPositionData(item.positionData, segno);
+        setAttributesFromFontData(item.fontData, segno);
+        if (item.isColorSpecified)
+        {
+            setAttributesFromColorData(item.colorData, segno);
+        }
+        if (item.isSmuflSpecified)
+        {
+            segno.setSmufl(core::SmuflSegnoGlyphName::parse(item.smufl));
+        }
+        if (item.isIdSpecified)
+        {
+            segno.setID(core::Token{item.id});
+        }
+        core::DirectionType dt{};
+        dt.setChoice(core::DirectionTypeChoice::segno(core::OneOrMore<core::Segno>{std::move(segno)}));
+        addDirectionType(std::move(dt), direction);
+    }
+
+    for (const auto &item : myDirectionData.codas)
+    {
+        core::Coda coda{};
+        setAttributesFromPositionData(item.positionData, coda);
+        setAttributesFromFontData(item.fontData, coda);
+        if (item.isColorSpecified)
+        {
+            setAttributesFromColorData(item.colorData, coda);
+        }
+        if (item.isSmuflSpecified)
+        {
+            coda.setSmufl(core::SmuflCodaGlyphName::parse(item.smufl));
+        }
+        if (item.isIdSpecified)
+        {
+            coda.setID(core::Token{item.id});
+        }
+        core::DirectionType dt{};
+        dt.setChoice(core::DirectionTypeChoice::coda(core::OneOrMore<core::Coda>{std::move(coda)}));
+        addDirectionType(std::move(dt), direction);
+    }
+
     if (myIsFirstDirectionTypeAdded)
     {
+        // The direction has other content; attach the <sound> as a child of the <direction>.
+        if (myDirectionData.isSoundDataSpecified && myDirectionData.soundData.isSpecified())
+        {
+            core::Sound sound{};
+            writeSoundData(myDirectionData.soundData, sound);
+            direction.setSound(std::move(sound));
+        }
+
         output.push_back(core::MusicDataChoice::direction(direction));
+    }
+    else if (myDirectionData.isSoundDataSpecified && myDirectionData.soundData.isSpecified())
+    {
+        // The direction has no other content; emit a standalone <sound> element.
+        core::Sound sound{};
+        writeSoundData(myDirectionData.soundData, sound);
+
+        if (offset != 0)
+        {
+            core::Offset coreOffset{};
+            coreOffset.setValue(core::Divisions{core::Decimal{static_cast<double>(offset)}});
+            coreOffset.setSound(core::YesNo::yes());
+            sound.setOffset(coreOffset);
+        }
+
+        output.push_back(core::MusicDataChoice::sound(std::move(sound)));
     }
 
     auto harmonyMdcs = createHarmonyElements(offset);

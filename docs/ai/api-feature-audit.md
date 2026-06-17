@@ -175,10 +175,10 @@ so these boxes are status markers, not clickable; the live checklist is the pare
 | [x] | microtonal accidental arrow/double variants | 1b(6) | #182 |
 | [x] | notehead `circled` and `other` | 1b(7) | #183 |
 | [x] | instrument-sound 4.0 sound ids | 1b(8) | #184 |
-| [ ] | technical marks with payloads (`fingering`, `pluck`, `bend`, ...) | 1c | #185 |
+| [x] | technical marks with payloads (`fingering`, `pluck`, `bend`, ...) | 1c | #185 |
 | [x] | read `<print>` per-measure layout | 2(1) | #186 |
 | [x] | `<credit>` gaps (credit-image, no-words credits, multiple credit-type) | 2(2) | #187 |
-| [ ] | read and write `<sound>` | 2(3) | #188 |
+| [x] | read and write `<sound>` | 2(3) | #188 |
 | [x] | defaults fonts (`word-font`, `lyric-font`, `music-font`) | 2(4) | #189 |
 | [x] | round-trip `<figured-bass>` | 2(5) | #190 |
 | [x] | harmony `inversion`, `function`, `numeral` | 2(6) | #191 |

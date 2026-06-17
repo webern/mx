@@ -293,9 +293,8 @@ const Converter::EnumMap<core::TechnicalChoice::Kind, api::MarkType> Converter::
     {core::TechnicalChoice::Kind::harmonic, api::MarkType::harmonic},
     {core::TechnicalChoice::Kind::openString, api::MarkType::openString},
     {core::TechnicalChoice::Kind::thumbPosition, api::MarkType::thumbPosition},
-    // { core::TechnicalChoice::Kind::fingering,
-    // api::MarkType::unspecified }, {
-    // core::TechnicalChoice::Kind::pluck, api::MarkType::unspecified },
+    {core::TechnicalChoice::Kind::fingering, api::MarkType::fingering},
+    {core::TechnicalChoice::Kind::pluck, api::MarkType::pluck},
     {core::TechnicalChoice::Kind::doubleTongue, api::MarkType::doubleTongue},
     {core::TechnicalChoice::Kind::tripleTongue, api::MarkType::tripleTongue},
     {core::TechnicalChoice::Kind::stopped, api::MarkType::stopped},
