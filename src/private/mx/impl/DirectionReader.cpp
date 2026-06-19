@@ -895,6 +895,10 @@ void DirectionReader::parseHarmony(const core::Harmony &inHarmony, const core::H
             case core::NumeralMode::Tag::harmonicMinor:
                 chord.numeralMode = api::NumeralMode::harmonicMinor;
                 break;
+            default:
+                // A core numeral mode we do not model yet: leave numeralMode unspecified rather
+                // than guess. No -Wswitch guard exists to flag a newly added core tag.
+                break;
             }
         }
         break;
@@ -904,6 +908,11 @@ void DirectionReader::parseHarmony(const core::Harmony &inHarmony, const core::H
         chord.functionText = choice.asFunction().value();
         break;
     }
+    default:
+        // A core harmony-chord kind we do not model yet: leave harmonyChordSource at its default
+        // (root) with no pitch data rather than silently misreading. No -Wswitch guard exists to
+        // flag a newly added core kind.
+        break;
     }
 
     const auto &kind = inGrp.kind();
