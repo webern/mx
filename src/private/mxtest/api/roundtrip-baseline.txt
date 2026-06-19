@@ -15,5 +15,10 @@
 # (never automatic); regression mode requires every file below to pass --
 # zero tolerance.
 #
+# Captured 2026-06-19: discovery re-run over the full corpus (829 discovered,
+# same discovery rules as corert). Results: 1 PASS, 812 FAIL, 0 SKIP,
+# 0 LOADFAIL, 8 GETDATAFAIL, 8 CREATEFAIL. No new files passed; pinned total
+# remains 1.
+#
 # Format: one data/-relative path per line; # starts a comment.
 ksuite/k016a_Miscellaneous_Fields.xml
