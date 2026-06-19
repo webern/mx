@@ -202,7 +202,9 @@ enum class HarmonyChordSource
 };
 
 // The mode used to interpret a numeral when it differs from the key signature
-// (the MusicXML numeral-mode element).
+// (the MusicXML numeral-mode element). MusicXML requires a numeral-mode inside every numeral-key,
+// so 'unspecified' is only meaningful when there is no numeral-key; combined with hasNumeralKey it
+// is written out as 'major' (see DirectionWriter and the numeralMode field below).
 enum class NumeralMode
 {
     unspecified,
@@ -239,6 +241,9 @@ class ChordData
     int numeralAlter;
     bool hasNumeralAlter;
     // The optional <numeral-key> (key local to the numeral): numeral-fifths plus numeral-mode.
+    // When hasNumeralKey is true, numeralMode must name a concrete mode: numeral-mode is required by
+    // MusicXML inside numeral-key, so leaving it 'unspecified' is a contradiction that the writer
+    // resolves by emitting 'major'.
     bool hasNumeralKey;
     int numeralKeyFifths;
     NumeralMode numeralMode;

@@ -587,6 +587,9 @@ std::vector<core::MusicDataChoice> DirectionWriter::createHarmonyElements(int in
                 case api::NumeralMode::major:
                 case api::NumeralMode::unspecified:
                 default:
+                    // numeral-mode is required inside numeral-key, so it cannot be omitted. An
+                    // 'unspecified' mode here means the caller set hasNumeralKey without a concrete
+                    // mode (a contradiction); fall back to major rather than drop the numeral-key.
                     numeralKey.setNumeralMode(core::NumeralMode::major());
                     break;
                 }
