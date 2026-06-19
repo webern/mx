@@ -7,6 +7,7 @@
 
 #include "cpul/cpulTestHarness.h"
 #include "mx/api/OttavaData.h"
+#include "mx/api/RehearsalData.h"
 #include "mx/core/generated/Direction.h"
 #include "mx/core/generated/DirectionType.h"
 #include "mx/core/generated/MusicDataChoice.h"
@@ -113,6 +114,55 @@ TEST(segnoAndCodaRoundTrip, DirectionWriter)
     REQUIRE(roundTripped.codas.size() == 1);
     CHECK(segno == roundTripped.segnos.front());
     CHECK(coda == roundTripped.codas.front());
+}
+
+T_END
+
+// Build a RehearsalData carrying the full attribute set (text, position, color, font, enclosure),
+// write it with DirectionWriter, read it back with DirectionReader, and confirm every field
+// survives the api -> core -> api round trip.
+TEST(rehearsalRoundTrip, DirectionWriter)
+{
+    api::RehearsalData rehearsal;
+    rehearsal.text = "A";
+    rehearsal.positionData.isDefaultXSpecified = true;
+    rehearsal.positionData.defaultX = 10.0;
+    rehearsal.positionData.isDefaultYSpecified = true;
+    rehearsal.positionData.defaultY = 20.0;
+    rehearsal.positionData.isRelativeXSpecified = true;
+    rehearsal.positionData.relativeX = 3.0;
+    rehearsal.positionData.isRelativeYSpecified = true;
+    rehearsal.positionData.relativeY = 4.0;
+    rehearsal.positionData.horizontalAlignmnet = api::HorizontalAlignment::left;
+    rehearsal.positionData.verticalAlignment = api::VerticalAlignment::top;
+    rehearsal.fontData.fontFamily = {"Maestro"};
+    rehearsal.fontData.style = api::FontStyle::italic;
+    rehearsal.fontData.weight = api::FontWeight::bold;
+    rehearsal.fontData.sizeType = api::FontSizeType::point;
+    rehearsal.fontData.sizePoint = 14.0;
+    rehearsal.isColorSpecified = true;
+    rehearsal.colorData.red = 255;
+    rehearsal.colorData.green = 0;
+    rehearsal.colorData.blue = 0;
+    rehearsal.colorData.isAlphaSpecified = true;
+    rehearsal.colorData.alpha = 255;
+    rehearsal.enclosure = api::RehearsalEnclosure::square;
+
+    api::DirectionData directionData;
+    directionData.rehearsals.push_back(rehearsal);
+
+    Cursor cursor{1, 100};
+    DirectionWriter writer{directionData, cursor};
+    const auto mdcSet = writer.getDirectionLikeThings();
+    REQUIRE(mdcSet.size() >= 1);
+    CHECK(mdcSet.front().isDirection());
+    const auto &direction = mdcSet.front().asDirection();
+
+    DirectionReader reader{direction, cursor};
+    const auto roundTripped = reader.getDirectionData();
+
+    REQUIRE(roundTripped.rehearsals.size() == 1);
+    CHECK(rehearsal == roundTripped.rehearsals.front());
 }
 
 T_END

@@ -7,9 +7,11 @@
 
 #include "cpul/cpulTestHarness.h"
 #include "mx/api/DocumentManager.h"
+#include "mx/api/RehearsalData.h"
 #include "mx/api/ScoreData.h"
 #include "mxtest/api/RoundTrip.h"
 #include "mxtest/api/TestHelpers.h"
+#include "mxtest/file/Path.h"
 
 using namespace std;
 using namespace mx::api;
@@ -190,6 +192,83 @@ TEST(OutOfOrderTorture, DirectionData)
         ++rdirection;
         CHECK_EQUAL(tempTickSorter.at(2), rdirection->tickTimePosition);
     }
+}
+
+T_END;
+
+// Parse the synthetic rehearsal file and confirm that mx::api reads the text and enclosure.
+// This pins the core -> api read path and would fail if parseRehearsal regresses.
+TEST(RehearsalSyntheticFileRead, DirectionData)
+{
+    const std::string path = mxtest::getResourcesDirectoryPath() + "synthetic/rehearsal.3.1.xml";
+    auto &docMgr = DocumentManager::getInstance();
+    const auto docIdResult = docMgr.createFromFile(path);
+    REQUIRE(docIdResult.ok());
+    const int docId = docIdResult.value();
+    const auto scoreResult = docMgr.getData(docId);
+    docMgr.destroyDocument(docId);
+    REQUIRE(scoreResult.ok());
+    const auto &score = scoreResult.value();
+    REQUIRE(score.parts.size() == 1);
+    REQUIRE(score.parts.front().measures.size() == 1);
+    REQUIRE(score.parts.front().measures.front().staves.size() == 1);
+    const auto &directions = score.parts.front().measures.front().staves.front().directions;
+    REQUIRE(directions.size() == 1);
+    REQUIRE(directions.front().rehearsals.size() == 1);
+    const auto &rehearsal = directions.front().rehearsals.front();
+    CHECK_EQUAL("x", rehearsal.text);
+    CHECK(RehearsalEnclosure::rectangle == rehearsal.enclosure);
+}
+
+T_END;
+
+// Verify that rehearsal marks survive a full MusicXML serialization/deserialization round trip.
+// This catches the bug where DirectionWriter had no rehearsal write path and rehearsals were
+// silently dropped on output.
+TEST(RehearsalRoundTripXml, DirectionData)
+{
+    ScoreData oscore;
+    oscore.ticksPerQuarter = 10;
+    oscore.parts.emplace_back();
+    auto &opart = oscore.parts.back();
+    opart.measures.emplace_back();
+    auto &omeasure = opart.measures.back();
+    omeasure.staves.emplace_back();
+    auto &ostaff = omeasure.staves.back();
+    auto &ovoice = ostaff.voices[0];
+
+    NoteData onote{};
+    onote.tickTimePosition = 0;
+    onote.durationData.durationTimeTicks = 10;
+    onote.durationData.durationName = DurationName::quarter;
+    ovoice.notes.push_back(onote);
+
+    RehearsalData rehearsal;
+    rehearsal.text = "B";
+    rehearsal.enclosure = RehearsalEnclosure::rectangle;
+    rehearsal.fontData.fontFamily = {"Times New Roman"};
+    rehearsal.fontData.style = FontStyle::normal;
+    rehearsal.fontData.weight = FontWeight::bold;
+    rehearsal.fontData.sizeType = FontSizeType::point;
+    rehearsal.fontData.sizePoint = 12.0;
+    rehearsal.positionData.isDefaultXSpecified = true;
+    rehearsal.positionData.defaultX = 5.0;
+
+    DirectionData directionData;
+    directionData.tickTimePosition = 0;
+    directionData.rehearsals.push_back(rehearsal);
+    ostaff.directions.push_back(directionData);
+
+    const auto rscore = mxtest::roundTrip(oscore);
+    REQUIRE(rscore.parts.size() == 1);
+    REQUIRE(rscore.parts.front().measures.size() == 1);
+    REQUIRE(rscore.parts.front().measures.front().staves.size() == 1);
+    const auto &rdirections = rscore.parts.front().measures.front().staves.front().directions;
+    REQUIRE(rdirections.size() == 1);
+    REQUIRE(rdirections.front().rehearsals.size() == 1);
+    CHECK_EQUAL("B", rdirections.front().rehearsals.front().text);
+    CHECK(RehearsalEnclosure::rectangle == rdirections.front().rehearsals.front().enclosure);
+    CHECK(FontWeight::bold == rdirections.front().rehearsals.front().fontData.weight);
 }
 
 T_END;

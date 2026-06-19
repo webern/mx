@@ -314,7 +314,12 @@ void DirectionReader::parseRehearsal(const core::DirectionType &directionType)
         api::RehearsalData outRehearsal;
         outRehearsal.text = rehearsal.value();
         outRehearsal.positionData = getPositionData(rehearsal);
-        outRehearsal.colorData = getColor(rehearsal);
+        outRehearsal.fontData = getFontData(rehearsal);
+        outRehearsal.isColorSpecified = rehearsal.color().has_value();
+        if (outRehearsal.isColorSpecified)
+        {
+            outRehearsal.colorData = getColor(rehearsal);
+        }
         if (rehearsal.enclosure().has_value())
         {
             switch (rehearsal.enclosure()->tag())

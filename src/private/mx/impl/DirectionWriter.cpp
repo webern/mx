@@ -449,6 +449,49 @@ std::vector<core::MusicDataChoice> DirectionWriter::getDirectionLikeThings()
         addDirectionType(std::move(dt), direction);
     }
 
+    for (const auto &item : myDirectionData.rehearsals)
+    {
+        core::FormattedTextID rehearsal{};
+        rehearsal.setValue(item.text);
+        setAttributesFromPositionData(item.positionData, rehearsal);
+        setAttributesFromFontData(item.fontData, rehearsal);
+        if (item.isColorSpecified)
+        {
+            setAttributesFromColorData(item.colorData, rehearsal);
+        }
+        switch (item.enclosure)
+        {
+        case api::RehearsalEnclosure::rectangle:
+            rehearsal.setEnclosure(core::EnclosureShape::rectangle());
+            break;
+        case api::RehearsalEnclosure::square:
+            rehearsal.setEnclosure(core::EnclosureShape::square());
+            break;
+        case api::RehearsalEnclosure::oval:
+            rehearsal.setEnclosure(core::EnclosureShape::oval());
+            break;
+        case api::RehearsalEnclosure::circle:
+            rehearsal.setEnclosure(core::EnclosureShape::circle());
+            break;
+        case api::RehearsalEnclosure::bracket:
+            rehearsal.setEnclosure(core::EnclosureShape::bracket());
+            break;
+        case api::RehearsalEnclosure::triangle:
+            rehearsal.setEnclosure(core::EnclosureShape::triangle());
+            break;
+        case api::RehearsalEnclosure::diamond:
+            rehearsal.setEnclosure(core::EnclosureShape::diamond());
+            break;
+        case api::RehearsalEnclosure::none:
+            rehearsal.setEnclosure(core::EnclosureShape::none());
+            break;
+        }
+        core::DirectionType dt{};
+        dt.setChoice(
+            core::DirectionTypeChoice::rehearsal(core::OneOrMore<core::FormattedTextID>{std::move(rehearsal)}));
+        addDirectionType(std::move(dt), direction);
+    }
+
     if (myIsFirstDirectionTypeAdded)
     {
         // The direction has other content; attach the <sound> as a child of the <direction>.
