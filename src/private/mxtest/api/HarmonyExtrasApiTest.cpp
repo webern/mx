@@ -15,9 +15,9 @@ using namespace mxtest;
 
 namespace
 {
-// Builds a single-part, single-measure score whose first staff carries one harmony direction.
-// The caller mutates the returned chord (via the out-param) before round-tripping.
-ScoreData makeScoreWithChord(ChordData &outChord)
+// Builds a single-part, single-measure score whose first staff carries one harmony direction with a
+// single default chord. Tests mutate that chord in place via chordOf() before round-tripping.
+ScoreData makeScoreWithChord()
 {
     ScoreData score;
     score.ticksPerQuarter = 4;
@@ -34,8 +34,12 @@ ScoreData makeScoreWithChord(ChordData &outChord)
     direction.tickTimePosition = 0;
     direction.isStaffValueSpecified = true;
     direction.chords.emplace_back();
-    outChord = ChordData{};
     return score;
+}
+
+ChordData &chordOf(ScoreData &score)
+{
+    return score.parts.front().measures.front().staves.front().directions.front().chords.front();
 }
 
 const ChordData &firstChord(const ScoreData &score)
@@ -46,13 +50,12 @@ const ChordData &firstChord(const ScoreData &score)
 
 TEST(harmonyInversionRoundTrip, HarmonyExtrasApi)
 {
-    ChordData chord{};
-    auto score = makeScoreWithChord(chord);
+    auto score = makeScoreWithChord();
+    auto &chord = chordOf(score);
     chord.root = Step::c;
     chord.chordKind = ChordKind::major;
     chord.hasInversion = true;
     chord.inversion = 2;
-    score.parts.front().measures.front().staves.front().directions.front().chords.front() = chord;
 
     const auto out = mxtest::roundTrip(score);
     const auto &outChord = firstChord(out);
@@ -66,12 +69,11 @@ T_END;
 
 TEST(harmonyFunctionRoundTrip, HarmonyExtrasApi)
 {
-    ChordData chord{};
-    auto score = makeScoreWithChord(chord);
+    auto score = makeScoreWithChord();
+    auto &chord = chordOf(score);
     chord.harmonyChordSource = HarmonyChordSource::function;
     chord.functionText = "V";
     chord.chordKind = ChordKind::major;
-    score.parts.front().measures.front().staves.front().directions.front().chords.front() = chord;
 
     const auto out = mxtest::roundTrip(score);
     const auto &outChord = firstChord(out);
@@ -83,8 +85,8 @@ T_END;
 
 TEST(harmonyNumeralRoundTrip, HarmonyExtrasApi)
 {
-    ChordData chord{};
-    auto score = makeScoreWithChord(chord);
+    auto score = makeScoreWithChord();
+    auto &chord = chordOf(score);
     chord.harmonyChordSource = HarmonyChordSource::numeral;
     chord.numeralRoot = 5;
     chord.numeralRootText = "V";
@@ -94,7 +96,6 @@ TEST(harmonyNumeralRoundTrip, HarmonyExtrasApi)
     chord.numeralKeyFifths = -3;
     chord.numeralMode = NumeralMode::minor;
     chord.chordKind = ChordKind::major;
-    score.parts.front().measures.front().staves.front().directions.front().chords.front() = chord;
 
     const auto out = mxtest::roundTrip(score);
     const auto &outChord = firstChord(out);
