@@ -14,6 +14,7 @@ namespace api
 {
 enum class RehearsalEnclosure
 {
+    unspecified,
     rectangle,
     square,
     oval,
@@ -36,7 +37,7 @@ class RehearsalData
 
     RehearsalData()
         : text{}, positionData{}, isColorSpecified{false}, colorData{}, fontData{},
-          enclosure{RehearsalEnclosure::rectangle}
+          enclosure{RehearsalEnclosure::unspecified}
     {
     }
 };

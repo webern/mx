@@ -461,6 +461,8 @@ std::vector<core::MusicDataChoice> DirectionWriter::getDirectionLikeThings()
         }
         switch (item.enclosure)
         {
+        case api::RehearsalEnclosure::unspecified:
+            break;
         case api::RehearsalEnclosure::rectangle:
             rehearsal.setEnclosure(core::EnclosureShape::rectangle());
             break;
