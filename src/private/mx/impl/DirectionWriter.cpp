@@ -817,6 +817,14 @@ std::vector<core::MusicDataChoice> DirectionWriter::createFiguredBassElements()
 
     for (const auto &figuredBassData : myDirectionData.figuredBasses)
     {
+        // The core figure list is never-empty (OneOrMore), so a figured-bass with zero figures
+        // would still serialize one fabricated empty <figure/>. Skip it: an empty figures list
+        // means "no figured-bass", and round-tripping must not invent content.
+        if (figuredBassData.figures.empty())
+        {
+            continue;
+        }
+
         core::FiguredBass figuredBass{};
 
         bool isFirstFigure = true;

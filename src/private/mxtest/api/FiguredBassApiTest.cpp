@@ -111,4 +111,19 @@ TEST(figuredBassParenthesesAndDurationRoundTrip, FiguredBassApi)
 
 T_END;
 
+TEST(figuredBassEmptyFiguresOmitted, FiguredBassApi)
+{
+    // A FiguredBassData carrying no figures must not produce a <figured-bass> on output. The core
+    // figure list is never-empty (OneOrMore), so emitting one anyway would fabricate a stray empty
+    // <figure/> that reads back as a one-figure figured-bass -- a round-trip that invents content.
+    FiguredBassData fb{};
+
+    const auto score = makeScoreWithFiguredBass(fb);
+    const auto out = mxtest::roundTrip(score);
+
+    CHECK(firstFiguredBass(out) == nullptr);
+}
+
+T_END;
+
 #endif
