@@ -1,32 +1,50 @@
-"""Classify api round-trip failures by root cause.
+"""Classify api round-trip failures by *measured* divergence, and rank a worklist.
 
 Reads the dump directory produced by ``make dump-api-roundtrip`` (Phase 1,
 issue #210): pairs of ``<flat>.expected.xml`` / ``<flat>.actual.xml`` plus a
-``<flat>.status`` sidecar for pipeline errors. Cross-references
-``data/api.features.xml`` and the per-file ``*.features.xml`` sidecars, assigns
-each non-passing file one primary root-cause category plus any secondaries, and
-writes a machine-readable JSON report (consumed by Phase 3 ranking) with a
-human-readable summary on stdout.
+``<flat>.status`` sidecar for crashes. Diffs each pair structurally, records the
+set of divergences that keep the file from round-tripping, and writes a
+machine-readable JSON report (consumed by Phase 3 ranking, #212) with a
+human-readable worklist on stdout.
 
-The diff is **multiset-based**, not a positional walk. ``mx::api`` drops and
-reorders subtrees by design, so the dominant signal is a *deletion*; a naive
-index-by-index walk desynchronizes after the first drop and only its first
-divergence is trustworthy. The multiset difference
-``Counter(expected) - Counter(actual)`` enumerates **every** dropped element
-class in O(n), fully reorder-invariant. See
-``docs/ai/design/api-roundtrip-classifier.md`` for the full rationale.
+What this is *not*: it does not consult ``data/api.features.xml`` or any other
+record of what someone believed ``mx::api`` "supports". Whether a drop was
+intended is a present-day human decision (issue #214), not a property the
+classifier asserts. The classifier reports only what the round-trip actually did
+to each file, so the worklist is grounded in measured behavior.
 
-Categories:
+## How a file is diffed
 
-    A  already-passing  expected/actual identical (defensive; not normally dumped)
-    B  drop-only        every missing element class has support="none"
-    C  reorder-only     same tag multiset, but a parent's child order differs
-    D  enum-bug         text/attr value is a known missing enum member
-    E  missing-attribute  a partial feature's attribute was dropped
-    F  pipeline-error   LOADFAIL / GETDATAFAIL / CREATEFAIL (no actual produced)
-    G  supported-drop   a dropped element class is marked support="full"/"partial"
-                        (an impl round-trip bug or an api.features.xml overstatement)
-    unknown            a FAIL that matched none of the above
+The comparison is strict full-DOM (same rule as the api round-trip gate). A file
+PASSes only when nothing diverges. Every divergence is reduced to a *signature*,
+and a file's **distance** to passing is the count of *unique* signatures it has
+(``<foo>`` dropped a thousand times is one ``drop:foo`` signature, distance 1):
+
+    drop:<tag>          a tag present in expected, missing from actual
+    add:<tag>           a spurious tag the api invented (present only in actual)
+    reorder:<parent>    a parent whose child multiset matches but order differs
+    value:<tag>         a paired element whose text value differs
+    value:<tag>@<attr>  a paired element whose attribute *value* differs
+    attr:<tag>@<attr>   a paired element with an attribute present on one side only
+
+Drops/adds come from a multiset difference (``Counter(expected) - Counter(actual)``)
+which is O(n) and reorder-invariant, so it enumerates *every* dropped class, not
+just the first (a positional walk desyncs after the first drop). value/attr/reorder
+come from an alignment walk (``difflib.SequenceMatcher`` over child-tag sequences)
+that pairs surviving elements across drops. See
+``docs/ai/design/api-roundtrip-classifier.md``.
+
+## Statuses and the worklist
+
+    PASS   expected == actual (defensive; not normally dumped)
+    CRASH  no actual produced -- LOADFAIL / GETDATAFAIL / CREATEFAIL
+    FAIL   produced output that diverged
+
+A FAIL with no ``reorder:`` signature is a **candidate**: reorders are expected
+``mx::api`` behavior to be absorbed in test normalization later (#214), so the
+first-pass worklist targets files that need only feature additions. The worklist
+ranks each signature by how many candidate files it is the *sole* blocker of
+(fixing it flips those files green now), then by total candidate files it blocks.
 """
 
 from __future__ import annotations
@@ -36,80 +54,23 @@ import json
 import sys
 import xml.etree.ElementTree as ET
 from collections import Counter
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-
-from . import FEATURES_SUFFIX, featuresfile
 
 # Filename suffixes written by the dump harness (#210).
 _EXPECTED_SUFFIX = ".expected.xml"
 _ACTUAL_SUFFIX = ".actual.xml"
 _STATUS_SUFFIX = ".status"
 
-# Pipeline-error status codes (no actual document was produced).
-_PIPELINE_STATUSES = frozenset({"LOADFAIL", "GETDATAFAIL", "CREATEFAIL"})
+# Crash status codes (no actual document was produced).
+_CRASH_STATUSES = frozenset({"LOADFAIL", "GETDATAFAIL", "CREATEFAIL"})
 
-# Human-readable category labels for the stdout summary.
-_CATEGORY_LABELS = {
-    "A": "already passing",
-    "B": "drop-only divergence",
-    "C": "reorder-only divergence",
-    "D": "enum bug",
-    "E": "missing attribute/element",
-    "F": "pipeline error",
-    "G": "supported-element drop",
-    "unknown": "unknown",
-}
+# Signature type -> human label, in worklist display order.
+_SIGNATURE_TYPES = ("drop", "add", "value", "attr", "reorder")
 
-# Categories that are actionable feature gaps (ranked in the worklist).
-_ACTIONABLE = frozenset({"B", "D", "E", "G"})
-
-
-# --------------------------------------------------------------------------- #
-# api.features.xml support index
-# --------------------------------------------------------------------------- #
-
-
-@dataclass
-class ApiFeature:
-    """One ``<feature>`` from ``data/api.features.xml`` with support detail."""
-
-    name: str
-    support: str  # "full" / "partial" / "none" / "" (unknown)
-    attributes: dict[str, str] = field(default_factory=dict)  # attr name -> support
-    enum_missing: set[str] = field(default_factory=set)  # normalized missing members
-
-
-def _normalize_enum(value: str | None) -> str:
-    """Bridge XML kebab-case values and api/core camelCase enum symbols.
-
-    ``sharp-sharp`` (XML text) and ``sharpSharp`` (enum member) both normalize to
-    ``sharpsharp`` so they compare equal.
-    """
-    if not value:
-        return ""
-    return value.strip().lower().replace("-", "").replace("_", "")
-
-
-def load_api_features(path: Path) -> dict[str, ApiFeature]:
-    """Parse ``api.features.xml`` into a name -> ApiFeature map."""
-    features: dict[str, ApiFeature] = {}
-    root = ET.parse(path).getroot()
-    for feature in root.findall("./features/feature"):
-        name = feature.get("name", "")
-        if not name:
-            continue
-        feat = ApiFeature(name=name, support=feature.get("support", ""))
-        for attr in feature.findall("./attributes/attribute"):
-            aname = attr.get("name", "")
-            if aname:
-                feat.attributes[aname] = attr.get("support", "")
-        for enum in feature.findall("./enums/enum"):
-            for missing in enum.findall("./missing"):
-                feat.enum_missing.add(_normalize_enum(missing.text))
-        features[name] = feat
-    return features
+# How many distance buckets of near-miss files to surface.
+_NEAR_MISS_MAX_DISTANCE = 3
 
 
 # --------------------------------------------------------------------------- #
@@ -155,7 +116,7 @@ def parse_dump_dir(dump_dir: Path) -> list[DumpEntry]:
 
 
 # --------------------------------------------------------------------------- #
-# XML helpers and the positional first-divergence walk
+# XML helpers
 # --------------------------------------------------------------------------- #
 
 
@@ -167,7 +128,7 @@ def _local(tag: str) -> str:
 
 
 def tag_multiset(root: ET.Element) -> Counter:
-    """Count every element's local tag name in the tree (the multiset primitive)."""
+    """Count every element's local tag name in the tree (the drop/add primitive)."""
     return Counter(_local(el.tag) for el in root.iter())
 
 
@@ -181,78 +142,99 @@ def _values_equiv(left: str, right: str) -> bool:
         return False
 
 
-@dataclass
-class Divergence:
-    """The first positional divergence, retained for continuity (not completeness)."""
+def _first_paths(root: ET.Element) -> dict[str, str]:
+    """Map each local tag to one example root-to-node path (first occurrence)."""
+    paths: dict[str, str] = {}
 
-    mismatch_type: str  # element-name / text / attribute / attribute-count / child-count
-    path: str
-    element: str  # leaf local name at the divergence
-    expected_value: str | None = None
-    actual_value: str | None = None
-    attr_name: str | None = None
-    missing_attrs: list[str] = field(default_factory=list)
-    parent_expected_children: list[str] = field(default_factory=list)
-    parent_actual_children: list[str] = field(default_factory=list)
+    def walk(el: ET.Element, path: str) -> None:
+        for child in el:
+            if not isinstance(child.tag, str):
+                continue
+            tag = _local(child.tag)
+            here = f"{path}/{tag}"
+            paths.setdefault(tag, here)
+            walk(child, here)
+
+    root_tag = _local(root.tag)
+    paths.setdefault(root_tag, f"/{root_tag}")
+    walk(root, f"/{root_tag}")
+    return paths
 
 
-def first_divergence(exp: ET.Element, act: ET.Element, path: str) -> Divergence | None:
-    """Find the first positional divergence, mirroring ``compareElements``.
+# --------------------------------------------------------------------------- #
+# Divergence collection
+# --------------------------------------------------------------------------- #
 
-    ``path`` includes ``exp`` itself. Tags of ``exp``/``act`` are assumed equal
-    (the caller pairs them); the root pair is the only entry point.
+
+def _add_signature(sigs: dict[str, str], sig: str, path: str | None) -> None:
+    """Record a signature, keeping the first example path seen for it."""
+    if sig not in sigs:
+        sigs[sig] = path or ""
+
+
+def _diff_walk(exp: ET.Element, act: ET.Element, path: str, sigs: dict[str, str]) -> None:
+    """Collect value/attr/reorder signatures over the aligned, surviving structure.
+
+    ``exp``/``act`` are a matched pair (same tag). Children are aligned by tag
+    sequence so the walk survives drops without desyncing; only tag-equal pairs
+    are recursed, so value/attr comparisons are never made across mismatched tags.
+    Drops and adds are handled separately by the global multiset, not here.
     """
+    tag = _local(exp.tag)
+
     et = (exp.text or "").strip()
     at = (act.text or "").strip()
     if not _values_equiv(et, at):
-        return Divergence("text", path, _local(exp.tag), expected_value=et, actual_value=at)
+        _add_signature(sigs, f"value:{tag}", path)
 
     ea = {_local(k): v for k, v in exp.attrib.items()}
     aa = {_local(k): v for k, v in act.attrib.items()}
-    for aname in sorted(set(ea) & set(aa)):
-        if not _values_equiv(ea[aname], aa[aname]):
-            return Divergence(
-                "attribute", path, _local(exp.tag),
-                expected_value=ea[aname], actual_value=aa[aname], attr_name=aname,
-            )
-    missing_attrs = sorted(set(ea) - set(aa))
-    extra_attrs = sorted(set(aa) - set(ea))
-    if missing_attrs or extra_attrs:
-        return Divergence(
-            "attribute-count", path, _local(exp.tag),
-            attr_name=missing_attrs[0] if missing_attrs else None,
-            missing_attrs=missing_attrs,
-        )
+    for name in sorted(set(ea) & set(aa)):
+        if not _values_equiv(ea[name], aa[name]):
+            _add_signature(sigs, f"value:{tag}@{name}", path)
+    for name in sorted(set(ea) ^ set(aa)):
+        _add_signature(sigs, f"attr:{tag}@{name}", path)
 
     ec = [c for c in exp if isinstance(c.tag, str)]
     ac = [c for c in act if isinstance(c.tag, str)]
-    exp_children = [_local(c.tag) for c in ec]
-    act_children = [_local(c.tag) for c in ac]
-    for i in range(min(len(ec), len(ac))):
-        if exp_children[i] != act_children[i]:
-            return Divergence(
-                "element-name", f"{path}/{exp_children[i]}", exp_children[i],
-                parent_expected_children=exp_children, parent_actual_children=act_children,
-            )
-        deeper = first_divergence(ec[i], ac[i], f"{path}/{exp_children[i]}")
-        if deeper is not None:
-            return deeper
-    if len(ec) != len(ac):
-        return Divergence(
-            "child-count", path, _local(exp.tag),
-            parent_expected_children=exp_children, parent_actual_children=act_children,
-        )
-    return None
+    exp_tags = [_local(c.tag) for c in ec]
+    act_tags = [_local(c.tag) for c in ac]
+
+    if exp_tags != act_tags and Counter(exp_tags) == Counter(act_tags):
+        _add_signature(sigs, f"reorder:{tag}", path)
+
+    matcher = difflib.SequenceMatcher(a=exp_tags, b=act_tags, autojunk=False)
+    for op, i1, i2, j1, j2 in matcher.get_opcodes():
+        if op == "equal":
+            for k in range(i2 - i1):
+                child = ec[i1 + k]
+                _diff_walk(child, ac[j1 + k], f"{path}/{_local(child.tag)}", sigs)
 
 
-def _is_permutation(a: list[str], b: list[str]) -> bool:
-    """True if the two child-tag sequences are a pure reorder (same multiset)."""
-    if Counter(a) != Counter(b) or a == b:
-        return False
-    # Confirm via difflib opcodes: a permutation has no shared-multiset 'replace'
-    # that adds/removes a tag (handled by the Counter check above); this just
-    # asserts the sequences genuinely differ in order.
-    return any(tag != "equal" for tag, *_ in difflib.SequenceMatcher(a=a, b=b).get_opcodes())
+def collect_signatures(exp_root: ET.Element, act_root: ET.Element) -> dict[str, str]:
+    """Return every divergence signature (-> example path) for one expected/actual pair."""
+    sigs: dict[str, str] = {}
+
+    # Drops/adds: complete, reorder-invariant inventory via the tag multiset.
+    missing = tag_multiset(exp_root) - tag_multiset(act_root)
+    added = tag_multiset(act_root) - tag_multiset(exp_root)
+    if missing:
+        exp_paths = _first_paths(exp_root)
+        for tag in missing:
+            _add_signature(sigs, f"drop:{tag}", exp_paths.get(tag))
+    if added:
+        act_paths = _first_paths(act_root)
+        for tag in added:
+            _add_signature(sigs, f"add:{tag}", act_paths.get(tag))
+
+    # value/attr/reorder over the aligned surviving structure.
+    _diff_walk(exp_root, act_root, f"/{_local(exp_root.tag)}", sigs)
+    return sigs
+
+
+def _signature_type(sig: str) -> str:
+    """The type prefix of a signature (``drop:foo`` -> ``drop``)."""
+    return sig.split(":", 1)[0]
 
 
 # --------------------------------------------------------------------------- #
@@ -265,163 +247,55 @@ def _blank_record(rel: str) -> dict:
     return {
         "file": rel,
         "status": None,
-        "primary_category": None,
-        "secondary_categories": [],
-        "first_divergence_element": None,
-        "first_divergence_path": None,
-        "mismatch_type": None,
-        "missing_elements": [],
-        "missing_element_counts": {},
-        "distinct_missing_count": 0,
-        "added_elements": [],
-        "is_single_blocker": False,
-        "total_missing_instances": 0,
-        "blocking_features": [],
-        "pipeline_error_kind": None,
+        "crash_kind": None,
+        "signatures": [],
+        "sample_paths": {},
+        "signature_counts": {},
+        "distance": 0,
+        "has_reorder": False,
+        "is_candidate": False,
     }
 
 
-def classify_entry(
-    entry: DumpEntry,
-    api_features: dict[str, ApiFeature],
-    data_root: Path,
-    warn,
-) -> dict:
+def classify_entry(entry: DumpEntry, warn) -> dict:
     """Classify one dump entry into a per-file JSON record."""
     rec = _blank_record(entry.rel)
 
-    # Pipeline error: only an expected file (and maybe a .status sidecar).
+    # Crash: only an expected file (and maybe a .status sidecar).
     if entry.actual is None:
-        kind = entry.status_code if entry.status_code in _PIPELINE_STATUSES else None
-        rec["status"] = kind or "PIPELINE_ERROR"
-        rec["primary_category"] = "F"
-        rec["pipeline_error_kind"] = kind
+        kind = entry.status_code if entry.status_code in _CRASH_STATUSES else None
+        rec["status"] = "CRASH"
+        rec["crash_kind"] = kind
         return rec
 
     if entry.expected is None:
         warn(f"{entry.rel}: actual present but no expected; skipping")
         rec["status"] = "FAIL"
-        rec["primary_category"] = "unknown"
         return rec
 
-    rec["status"] = "FAIL"
     try:
         exp_root = ET.parse(entry.expected).getroot()
         act_root = ET.parse(entry.actual).getroot()
     except ET.ParseError as exc:
-        warn(f"{entry.rel}: XML parse error ({exc}); marking unknown")
-        rec["primary_category"] = "unknown"
+        warn(f"{entry.rel}: XML parse error ({exc}); marking FAIL with no signatures")
+        rec["status"] = "FAIL"
         return rec
 
-    # Layer 1: multiset tag diff -- the complete, reorder-invariant inventory.
-    missing = tag_multiset(exp_root) - tag_multiset(act_root)
-    added = tag_multiset(act_root) - tag_multiset(exp_root)
-    rec["missing_elements"] = sorted(missing)
-    rec["missing_element_counts"] = {k: missing[k] for k in sorted(missing)}
-    rec["distinct_missing_count"] = len(missing)
-    rec["added_elements"] = sorted(added)
-    rec["total_missing_instances"] = sum(missing.values())
-    rec["is_single_blocker"] = len(missing) == 1
-
-    # First positional divergence (continuity only; the harness reports the same).
-    div = first_divergence(exp_root, act_root, f"/{_local(exp_root.tag)}")
-    if div is not None:
-        rec["mismatch_type"] = div.mismatch_type
-        rec["first_divergence_element"] = div.element
-        rec["first_divergence_path"] = div.path
-
-    # No divergence and nothing dropped/added -> the file actually round-trips.
-    if div is None and not missing and not added:
+    sigs = collect_signatures(exp_root, act_root)
+    if not sigs:
         rec["status"] = "PASS"
-        rec["primary_category"] = "A"
         return rec
 
-    def support_of(tag: str) -> str | None:
-        feat = api_features.get(tag)
-        return feat.support if feat else None
-
-    cats: list[str] = []
-
-    # B -- drop-only: provable across the whole file via the multiset.
-    if missing and not added and all(support_of(t) == "none" for t in missing):
-        cats.append("B")
-
-    # C -- reorder-only: same global multiset, a parent's child order differs.
-    if (
-        not missing
-        and not added
-        and div is not None
-        and div.mismatch_type in ("element-name", "child-count")
-        and _is_permutation(div.parent_expected_children, div.parent_actual_children)
-    ):
-        cats.append("C")
-
-    # D -- enum bug: a value mismatch that is a known missing enum member.
-    if div is not None and div.mismatch_type in ("text", "attribute"):
-        feat = api_features.get(div.element)
-        if (
-            feat is not None
-            and feat.support == "partial"
-            and feat.enum_missing
-            and _normalize_enum(div.expected_value) in feat.enum_missing
-        ):
-            cats.append("D")
-
-    # E -- missing attribute: a partial feature's modeled attribute was dropped.
-    if div is not None and div.mismatch_type in ("attribute", "attribute-count"):
-        feat = api_features.get(div.element)
-        if (
-            feat is not None
-            and feat.support == "partial"
-            and div.attr_name is not None
-            and div.attr_name in feat.attributes
-        ):
-            cats.append("E")
-
-    # G -- a dropped element class the audit marks support="full"/"partial".
-    # Either a genuine impl round-trip bug or an api.features.xml overstatement;
-    # both need human triage (issue #219). Without this the file falls through to
-    # "unknown", since B requires *every* dropped class to be support="none".
-    supported_missing = sorted(t for t in missing if support_of(t) in ("full", "partial"))
-    if supported_missing:
-        cats.append("G")
-
-    # Primary = first match in priority order; the rest are secondary. G is last
-    # so a precise enum/attribute finding still wins when one applies; otherwise
-    # a dropped supported element is surfaced instead of hidden in "unknown".
-    primary = next((c for c in ("B", "C", "D", "E", "G") if c in cats), None)
-    if primary is None:
-        warn(f"{entry.rel}: unclassified FAIL (missing={rec['missing_elements']}, "
-             f"mismatch={rec['mismatch_type']})")
-        rec["primary_category"] = "unknown"
-    else:
-        rec["primary_category"] = primary
-        rec["secondary_categories"] = [c for c in cats if c != primary]
-
-    # Blocking features: what, if fully supported, would unblock this file.
-    if primary == "B":
-        rec["blocking_features"] = sorted(missing)
-    elif primary == "G":
-        rec["blocking_features"] = supported_missing
-    elif primary in ("D", "E") and div is not None and div.element:
-        rec["blocking_features"] = [div.element]
-
-    # Cross-reference the per-file sidecar: a missing or unreadable sidecar is a
-    # warning, never an abort. When present, sanity-check that the divergence
-    # element really is part of the file's surface (catches namespace/local-name
-    # drift between the dump XML and the audited surface).
-    sidecar = (data_root / entry.rel).with_suffix("")
-    sidecar = sidecar.with_name(sidecar.name + FEATURES_SUFFIX)
-    if not sidecar.exists():
-        warn(f"{entry.rel}: no feature sidecar at {sidecar}; cross-reference skipped")
-    else:
-        try:
-            surface = featuresfile.read(sidecar)
-            if div is not None and div.element and div.element not in surface.elements:
-                warn(f"{entry.rel}: divergence element '{div.element}' not in file surface")
-        except ET.ParseError as exc:
-            warn(f"{entry.rel}: unreadable feature sidecar ({exc}); cross-reference skipped")
-
+    signatures = sorted(sigs)
+    rec["status"] = "FAIL"
+    rec["signatures"] = signatures
+    rec["sample_paths"] = {s: sigs[s] for s in signatures if sigs[s]}
+    rec["signature_counts"] = dict(
+        sorted(Counter(_signature_type(s) for s in signatures).items())
+    )
+    rec["distance"] = len(signatures)
+    rec["has_reorder"] = any(_signature_type(s) == "reorder" for s in signatures)
+    rec["is_candidate"] = not rec["has_reorder"]
     return rec
 
 
@@ -430,85 +304,120 @@ def classify_entry(
 # --------------------------------------------------------------------------- #
 
 
-def _rank_blocking_features(records: list[dict]) -> list[tuple[str, int, int]]:
-    """Rank actionable (B/D/E) blocking features by files unblocked.
+def build_worklist(candidates: list[dict]) -> list[dict]:
+    """Rank signatures by candidate files unblocked, sole-blocker first.
 
-    Returns (feature, files_unblocked, single_blocker_count) sorted descending by
-    files unblocked, then by single-blocker count, then name.
+    ``files_blocked`` is the number of candidate files carrying the signature;
+    ``sole_blocker`` is the number whose *only* divergence is that signature
+    (distance 1) -- fixing it flips those files green immediately.
     """
-    files = Counter()
-    single = Counter()
-    for rec in records:
-        if rec["primary_category"] not in _ACTIONABLE:
-            continue
-        blockers = rec["blocking_features"]
-        for feat in set(blockers):
-            files[feat] += 1
-        if rec["is_single_blocker"] and len(blockers) == 1:
-            single[blockers[0]] += 1
-    ranked = [(f, files[f], single[f]) for f in files]
-    ranked.sort(key=lambda t: (-t[1], -t[2], t[0]))
-    return ranked
+    files: Counter = Counter()
+    sole: Counter = Counter()
+    for rec in candidates:
+        for sig in rec["signatures"]:
+            files[sig] += 1
+        if rec["distance"] == 1:
+            sole[rec["signatures"][0]] += 1
+    rows = [
+        {
+            "signature": sig,
+            "type": _signature_type(sig),
+            "files_blocked": files[sig],
+            "sole_blocker": sole[sig],
+        }
+        for sig in files
+    ]
+    rows.sort(key=lambda r: (-r["sole_blocker"], -r["files_blocked"], r["signature"]))
+    return rows
 
 
-def build_report(
-    dump_dir: Path, data_root: Path, api_features_path: Path, warn
-) -> dict:
+def _near_misses(candidates: list[dict]) -> dict[str, list[dict]]:
+    """Group candidate files by distance (1..N) so small fix-sets are visible."""
+    out: dict[str, list[dict]] = {}
+    for dist in range(1, _NEAR_MISS_MAX_DISTANCE + 1):
+        bucket = [
+            {"file": r["file"], "signatures": r["signatures"]}
+            for r in candidates
+            if r["distance"] == dist
+        ]
+        bucket.sort(key=lambda d: d["file"])
+        out[str(dist)] = bucket
+    return out
+
+
+def build_report(dump_dir: Path, warn) -> dict:
     """Run classification over the dump directory and return the JSON report."""
-    api_features = load_api_features(api_features_path)
     entries = parse_dump_dir(dump_dir)
-    records = [classify_entry(e, api_features, data_root, warn) for e in entries]
+    records = [classify_entry(e, warn) for e in entries]
 
-    by_category: Counter = Counter(r["primary_category"] for r in records)
+    candidates = [r for r in records if r["status"] == "FAIL" and r["is_candidate"]]
+    by_status: Counter = Counter(r["status"] for r in records)
+    distance_hist = Counter(r["distance"] for r in candidates)
+
     return {
         "dump_dir": str(dump_dir.resolve()),
-        "data_root": str(data_root.resolve()),
         "generated": datetime.now(timezone.utc).isoformat(),
         "summary": {
             "total": len(records),
-            "by_category": dict(sorted(by_category.items())),
+            "by_status": dict(sorted(by_status.items())),
+            "candidates": len(candidates),
+            "reorder_blocked": sum(
+                1 for r in records if r["status"] == "FAIL" and r["has_reorder"]
+            ),
+            "distance_histogram": {str(k): distance_hist[k] for k in sorted(distance_hist)},
         },
+        "worklist": build_worklist(candidates),
+        "near_misses": _near_misses(candidates),
         "files": records,
     }
 
 
 def print_summary(report: dict, out_path: Path) -> None:
-    """Print the human-readable summary to stdout."""
-    records = report["files"]
-    counts = report["summary"]["by_category"]
-    total = report["summary"]["total"]
-    print(f"Classified {total} files from {report['dump_dir']}\n")
+    """Print the human-readable worklist to stdout."""
+    summary = report["summary"]
+    print(f"Classified {summary['total']} files from {report['dump_dir']}\n")
 
-    for cat in ("A", "B", "C", "D", "E", "F", "G", "unknown"):
-        n = counts.get(cat, 0)
-        if n == 0 and cat == "A":
-            continue
-        marker = "?" if cat == "unknown" else cat
-        print(f"  {marker}  {_CATEGORY_LABELS[cat]:<28}{n:>4}")
+    for status in ("PASS", "FAIL", "CRASH"):
+        n = summary["by_status"].get(status, 0)
+        print(f"  {status:<8}{n:>5}")
+    print(
+        f"\n  candidates (FAIL, no reorder): {summary['candidates']}"
+        f"   |   reorder-blocked: {summary['reorder_blocked']}"
+    )
 
-    ranked = _rank_blocking_features(records)
-    if ranked:
-        print("\nTop blocking features (ranked by files unblocked; B+D+E+G):")
-        for feat, files, single in ranked[:15]:
-            print(f"  {feat:<24}{files:>4} files   ({single} single-blocker)")
+    hist = summary["distance_histogram"]
+    if hist:
+        print("\nDistance to passing (candidate files; #unique fixes needed):")
+        for dist, n in hist.items():
+            print(f"  {dist:>3} fix(es){n:>6} files")
+
+    worklist = report["worklist"]
+    if worklist:
+        print("\nWorklist (signatures ranked by candidate files unblocked):")
+        print(f"  {'signature':<28}{'sole':>6}{'total':>7}")
+        for row in worklist[:20]:
+            print(
+                f"  {row['signature']:<28}{row['sole_blocker']:>6}{row['files_blocked']:>7}"
+            )
 
     print(f"\nOutput: {out_path}")
 
 
 def run(dump_dir: Path, data_root: Path, out_path: Path) -> int:
-    """Entry point for the ``classify`` subcommand."""
+    """Entry point for the ``classify`` subcommand.
+
+    ``data_root`` is accepted for CLI compatibility but unused: classification is
+    derived entirely from the dump pair, never from an external support index.
+    """
+    del data_root
     if not dump_dir.is_dir():
         print(f"classify: dump dir not found: {dump_dir}", file=sys.stderr)
-        return 2
-    api_features_path = data_root / "api.features.xml"
-    if not api_features_path.exists():
-        print(f"classify: api.features.xml not found: {api_features_path}", file=sys.stderr)
         return 2
 
     def warn(msg: str) -> None:
         print(f"classify: warning: {msg}", file=sys.stderr)
 
-    report = build_report(dump_dir, data_root, api_features_path, warn)
+    report = build_report(dump_dir, warn)
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

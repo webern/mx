@@ -6,8 +6,8 @@ Usage:
   python3 -m audit corpus            (re)build data/corpus.xml from the corpus
   python3 -m audit all [--force]     run `files` then `corpus`
   python3 -m audit classify <dump_dir> [--data DIR] [--out FILE]
-                                     classify api round-trip failures by root
-                                     cause from a dump directory (see #211)
+                                     diff api round-trip dumps and rank a worklist
+                                     (see #211/#212; --data is unused)
 
 See audit/README.md. The audited set mirrors the corert round-trip suite.
 """
@@ -67,7 +67,7 @@ def main(argv: list[str]) -> int:
     p_all.add_argument("--force", action="store_true", help="overwrite existing sidecars")
 
     p_classify = sub.add_parser(
-        "classify", help="classify api round-trip failures from a dump directory"
+        "classify", help="diff api round-trip dumps and rank a worklist"
     )
     p_classify.add_argument("dump_dir", help="directory of *.expected.xml/*.actual.xml dumps")
     p_classify.add_argument(

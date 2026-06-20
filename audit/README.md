@@ -41,21 +41,28 @@ common case (a new corpus file was added) only writes the new sidecar. Use
 
 ```
 make dump-api-roundtrip          # C++: write normalized expected/actual XML pairs
-make classify-api-roundtrip      # Python: classify those failures by root cause
+make classify-api-roundtrip      # Python: diff each pair, rank a worklist
 
 python3 -m audit classify <dump_dir> [--data DIR] [--out FILE]
 ```
 
 `classify` reads the dump directory produced by `make dump-api-roundtrip`
-(`build/api/roundtrip-dump/`), diffs each expected/actual pair as an order-free
-element **multiset** (`Counter(expected) - Counter(actual)`), cross-references
-`data/api.features.xml`, and assigns each non-passing file a root-cause category
-(drop-only, reorder-only, enum bug, missing attribute, pipeline error). It writes
-`build/api/classified.json` and prints a worklist of the features blocking the
-most files. The two steps are kept separate: dumping is slow (runs the C++
-pipeline over the whole corpus), classifying is fast (pure Python), so the
-classification logic can be iterated without re-dumping. See
-`docs/ai/design/api-roundtrip-classifier.md`.
+(`build/api/roundtrip-dump/`) and diffs each expected/actual pair structurally.
+Drops/adds come from an order-free element **multiset**
+(`Counter(expected) - Counter(actual)`); value/attribute/reorder differences come
+from an alignment walk over the surviving structure. Each difference becomes a
+**signature** (`drop:<tag>`, `add:<tag>`, `value:<tag>`, `attr:<tag>@<name>`,
+`reorder:<parent>`), and a file's **distance** to passing is its count of unique
+signatures. It writes `build/api/classified.json` and prints a worklist ranking
+each signature by how many candidate files it is the sole blocker of.
+
+Classification is purely **measured**: it does not consult `data/api.features.xml`
+or any record of what `mx::api` was believed to "support" -- whether a drop is
+intended is a present-day human call (#214), not something the classifier
+asserts. `--data` is accepted for compatibility but unused. The two steps are
+kept separate: dumping is slow (runs the C++ pipeline over the whole corpus),
+classifying is fast (pure Python), so classification can be iterated without
+re-dumping. See `docs/ai/design/api-roundtrip-classifier.md`.
 
 ## Tests
 

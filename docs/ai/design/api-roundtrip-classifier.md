@@ -6,6 +6,39 @@ and why. It supersedes the original "walk both trees in parallel until the first
 mismatch" sketch in the #211 issue body, which has a structural defect described
 below.
 
+## Update (#212): measurement-only classification
+
+The classifier was reworked to be grounded **only** in what the round-trip
+measurably did to each file. The earlier version cross-referenced
+`data/api.features.xml` to label drops as "by-design" (category B) vs. bug
+(category G) and to recognize enum/attribute gaps (D/E). That `support` field is
+hand-authored opinion — a *prediction* of round-trip behavior, not a measurement
+— and it can be wrong (part-group was marked `full` yet dropped data; see #224).
+Keying classification on a fallible prediction made the worklist untrustworthy.
+
+What changed:
+
+- **No `api.features.xml`.** The support cross-reference (old Layer 3 and the
+  B/D/E/G category logic) is removed. Whether a drop is intended is a present-day
+  human decision (#214), not a property the classifier asserts.
+- **Categories → signatures.** Every difference is reduced to a signature:
+  `drop:<tag>`, `add:<tag>`, `value:<tag>`, `value:<tag>@<attr>`,
+  `attr:<tag>@<attr>`, `reorder:<parent>`. A file's **distance** to passing is
+  its count of *unique* signatures (a tag dropped a thousand times is one
+  `drop:` signature, distance 1).
+- **Statuses** are just `PASS` / `FAIL` / `CRASH` (the three pipeline codes fold
+  into `CRASH`).
+- **Candidates and the worklist.** A FAIL with no `reorder:` signature is a
+  *candidate* (reorders are expected `mx::api` behavior, to be absorbed in test
+  normalization later, #214). The worklist ranks each signature by the number of
+  candidate files it is the *sole* blocker of (fixing it flips them green now),
+  then by total candidate files blocked.
+
+Layers 1 (multiset for drops/adds) and 4 (alignment, now also used for
+value/attr, not just reorder) below are unchanged and still describe the engine.
+Layer 3, "Category G", and the old JSON schema are retained only as historical
+rationale; the current schema is at the end of this section.
+
 ## The defect in the naive design
 
 Both `compareElements` (`src/private/mxtest/corert/Compare.cpp`) and the original
@@ -99,9 +132,11 @@ a second multiset keyed by `parent/tag` (or the full root-to-node path). The
 headline `distinct_missing_count` stays on bare tags; path qualification is used
 when mapping a drop back to an `api.features.xml` feature.
 
-### Layer 3 — cross-reference `api.features.xml`
+### Layer 3 — cross-reference `api.features.xml` *(REMOVED in #212; historical)*
 
-For each missing tag, look up `support` in `api.features.xml`:
+This layer was removed: classification no longer consults `api.features.xml`. The
+text below is retained only to explain what the categories used to mean. For each
+missing tag, the old version looked up `support` in `api.features.xml`:
 
 - **Category B (drop-only)** becomes *provable across the whole file*: it holds iff
   **every** tag in `missing` has `support="none"`. The naive walk could never
@@ -111,14 +146,19 @@ For each missing tag, look up `support` in `api.features.xml`:
   or a partial-drop — surfaced explicitly instead of being hidden behind whatever
   the first divergence happened to be.
 
-### Layer 4 — sequence alignment per parent (category C only)
+### Layer 4 — sequence alignment per parent (reorder + paired value/attr)
 
-Reorder-only (category C) is the case where a parent's child *multiset* is equal
-between expected and actual but the child *sequence* differs. Detect with
-`difflib.SequenceMatcher` opcodes over the two child-tag sequences: a pure
-permutation (no net insert/delete) confirms reorder-only. Stdlib, zero dependency.
-This is the one place per-parent alignment earns its keep; it is **not** used for
-the deletion inventory (Layer 1 already has that).
+`difflib.SequenceMatcher` over the two child-tag sequences earns its keep twice:
+
+- **Reorder** (`reorder:<parent>`): a parent whose child *multiset* is equal but
+  whose child *sequence* differs is a pure permutation.
+- **Paired value/attr** (`value:`/`attr:`): recursing only the matcher's `equal`
+  blocks pairs surviving elements across drops without desyncing, so text and
+  attribute differences are compared between genuinely corresponding nodes (never
+  across mismatched tags). This is how value/attr diffs survive a sibling drop.
+
+It is **not** used for the deletion inventory (Layer 1's multiset already has
+that). Stdlib, zero dependency.
 
 ### Layer 5 — edit-distance scalar (secondary)
 
@@ -147,23 +187,26 @@ This belongs to Phase 3 (#212) ranking, but the per-file fields it needs
 (`distinct_missing_count`, `missing_elements`, single-blocker flag) are emitted
 here in Phase 2.
 
-## JSON schema additions
+## JSON schema (current, #212)
 
-The #211 schema gains these per-file fields (existing fields unchanged; all
-present on every entry, `null`/`[]`/`{}` when not applicable):
+Each file gets one record; every field is present on every entry:
 
 ```jsonc
-"missing_elements": ["credit", "defaults"],   // sorted distinct dropped tags
-"missing_element_counts": {"credit": 3, "defaults": 1},
-"distinct_missing_count": 2,                    // headline ranking metric
-"added_elements": [],                          // spurious tags in actual (bug)
-"is_single_blocker": false,                    // distinct_missing_count == 1
-"total_missing_instances": 4                   // sum of counts; severity scalar
+"file": "wild/foo.xml",
+"status": "FAIL",                 // PASS | FAIL | CRASH
+"crash_kind": null,              // LOADFAIL | GETDATAFAIL | CREATEFAIL | null
+"signatures": ["drop:credit", "value:step"],   // sorted unique signatures
+"sample_paths": {"drop:credit": "/score-partwise/part/measure/credit"},
+"signature_counts": {"drop": 1, "value": 1},   // by signature type
+"distance": 2,                    // len(signatures); the headline metric
+"has_reorder": false,            // any reorder: signature
+"is_candidate": true             // FAIL and not has_reorder
 ```
 
-`first_divergence_element` / `first_divergence_path` / `mismatch_type` are retained
-for continuity with the harness detail string, but are explicitly **not** relied on
-for completeness — they describe only the first positional divergence.
+The report's top level adds `summary` (status counts, `candidates`,
+`reorder_blocked`, `distance_histogram`), `worklist` (signatures ranked by
+`sole_blocker` then `files_blocked`), and `near_misses` (candidate files bucketed
+by distance 1..3).
 
 ### Pipeline errors and the `.status` sidecar
 
@@ -171,32 +214,22 @@ A flat dump filename (`a__b.xml.expected.xml`) cannot, on its own, distinguish t
 three pipeline-error statuses (`LOADFAIL` / `GETDATAFAIL` / `CREATEFAIL`): all
 three produce only an `.expected.xml` (the api pipeline never reached a written
 document). So the dump step (#210) writes a tiny `<flat>.status` sidecar next to
-the expected file recording the exact code. The classifier reads it to populate
-`pipeline_error_kind` and `status`; when the sidecar is absent it falls back to a
-generic `status = "PIPELINE_ERROR"` with `pipeline_error_kind = null`. The
-presence/absence of `.actual.xml` remains the FAIL-vs-pipeline-error signal; the
-`.status` sidecar only refines *which* pipeline error. The sidecar lives in the
-gitignored dump dir and is never checked in.
+the expected file recording the exact code. The classifier reads it into
+`crash_kind` (with `status = "CRASH"`); when the sidecar is absent, `status` is
+still `"CRASH"` and `crash_kind` is `null`. The presence/absence of `.actual.xml`
+remains the FAIL-vs-CRASH signal; the `.status` sidecar only refines *which*
+crash. The sidecar lives in the gitignored dump dir and is never checked in.
 
-### Category G — `support="full"`/`"partial"` drops
+### Category G — `support="full"`/`"partial"` drops *(REMOVED in #212)*
 
-A dropped element whose `api.features.xml` support is `full` or `partial` does
-**not** satisfy category B (drop-only) — B requires *every* missing class to be
-`support="none"`. A class that is supposed to round-trip but vanished is either a
-genuine impl round-trip bug or an `api.features.xml` overstatement; both are
-actionable and need human triage (issue #219). These files are assigned
-**category G**, with the dropped supported classes as their `blocking_features`,
-rather than being buried in `unknown`. G is evaluated last (after B/C/D/E), so a
-precise enum (D) or attribute (E) finding still wins when the first divergence
-matches one; otherwise the supported drop is surfaced. The multiset makes this
-provable across the whole file rather than hiding it behind whatever the first
-positional divergence happened to be.
-
-`part-group` was the motivating case: marked `support="full"` yet the single
-most-dropped element, which turned out to be partly an audit overstatement
-(corrected to `partial`) and partly malformed synthetic input (unmatched
-start/stop, fixed in the corpus). Surfacing such drops as G instead of `unknown`
-is what makes that triage discoverable.
+Category G (and the B/D/E categories) existed only because classification used to
+read `api.features.xml`. With that cross-reference gone, every dropped tag is just
+a `drop:<tag>` signature regardless of any prior belief about whether it was
+"supported"; the supported-vs-by-design judgment is a present-day human call
+(#214), not the classifier's. `part-group` (marked `support="full"` yet dropped;
+#224) was the case that proved the `support` field could not be trusted as a
+classification input — which is what motivated removing it. The drop is still
+reported, now as `drop:part-group`, ranked purely by how many files it blocks.
 
 ## Dependency decision
 
