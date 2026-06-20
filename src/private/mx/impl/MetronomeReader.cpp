@@ -8,10 +8,10 @@
 #include "mx/core/generated/MetronomeChoice.h"
 #include "mx/core/generated/MetronomeChoiceGroup.h"
 #include "mx/core/generated/MetronomeChoiceGroupChoice.h"
+#include "mx/core/generated/MetronomeChoiceGroupChoiceGroup.h"
 #include "mx/core/generated/PerMinute.h"
 #include "mx/impl/Converter.h"
 #include "mx/utility/StringToInt.h"
-#include "mx/utility/Throw.h"
 
 namespace mx
 {
@@ -74,7 +74,11 @@ void MetronomeReader::parseBeatUnitPer() const
 
 void MetronomeReader::parseNoteRelationNote() const
 {
-    MX_THROW("wtf is this");
+    // The metronome-note form -- <metronome-note> ... <metronome-relation> ...
+    // <metronome-note> -- has no representation in api::TempoData yet. Leave the
+    // tempo 'unspecified' rather than crashing the whole api pipeline; the writer
+    // skips unspecified tempos. Previously this threw and produced no output at
+    // all (GETDATAFAIL). See issue #218.
 }
 
 void MetronomeReader::parseBeatsPerMinute() const
@@ -101,6 +105,22 @@ void MetronomeReader::parseBeatsPerMinute() const
 
 void MetronomeReader::parseMetronomeModulation() const
 {
+    // Metric modulation: <beat-unit>..</beat-unit> = <beat-unit>..</beat-unit>.
+    // The left beat-unit lives directly on the group; the right beat-unit is the
+    // 'group' alternative of the metronome choice. Previously this was an empty
+    // stub that left the tempo 'unspecified', which then crashed the writer
+    // (CREATEFAIL). See issue #218.
+    myOutTempoData.tempoType = api::TempoType::metricModulation;
+    const auto &beatUnitPer = myBeatUnitPerOrNoteRelationNoteChoice.asGroup();
+    Converter converter;
+
+    const auto &leftBeatUnit = beatUnitPer.beatUnit();
+    myOutTempoData.metricModulation.leftDurationName = converter.convert(leftBeatUnit.beatUnit());
+    myOutTempoData.metricModulation.leftDots = static_cast<int>(leftBeatUnit.beatUnitDot().size());
+
+    const auto &rightBeatUnit = beatUnitPer.choice().asGroup().beatUnit();
+    myOutTempoData.metricModulation.rightDurationName = converter.convert(rightBeatUnit.beatUnit());
+    myOutTempoData.metricModulation.rightDots = static_cast<int>(rightBeatUnit.beatUnitDot().size());
 }
 } // namespace impl
 } // namespace mx

@@ -39,6 +39,7 @@
 #include "mx/core/generated/MetronomeChoice.h"
 #include "mx/core/generated/MetronomeChoiceGroup.h"
 #include "mx/core/generated/MetronomeChoiceGroupChoice.h"
+#include "mx/core/generated/MetronomeChoiceGroupChoiceGroup.h"
 #include "mx/core/generated/MusicDataChoice.h"
 #include "mx/core/generated/Numeral.h"
 #include "mx/core/generated/NumeralKey.h"
@@ -71,7 +72,6 @@
 #include "mx/impl/PrintFunctions.h"
 #include "mx/impl/SoundFunctions.h"
 #include "mx/impl/SpannerFunctions.h"
-#include "mx/utility/Throw.h"
 #include "mx/utility/Unused.h"
 
 namespace mx
@@ -331,35 +331,55 @@ std::vector<core::MusicDataChoice> DirectionWriter::getDirectionLikeThings()
         addDirectionType(std::move(dt), direction);
     }
 
-    for (const auto &tempo : myDirectionData.tempos)
-    {
-        if (tempo.tempoType != api::TempoType::beatsPerMinute)
-        {
-            MX_THROW("Only api::TempoType::beatsPerMinute is supported, others are not implemented");
-        }
-
+    const auto makeBeatUnitGroup = [&](api::DurationName durationName, int dots) {
         core::BeatUnitGroup beatUnitGroup{};
-        Converter converter;
-        beatUnitGroup.setBeatUnit(converter.convert(tempo.beatsPerMinute.durationName));
-
-        for (int d = 0; d < tempo.beatsPerMinute.dots; ++d)
+        beatUnitGroup.setBeatUnit(myConverter.convert(durationName));
+        for (int d = 0; d < dots; ++d)
         {
             beatUnitGroup.addBeatUnitDot(core::Empty{});
         }
+        return beatUnitGroup;
+    };
 
-        core::PerMinute pm{};
-        pm.setValue(std::to_string(tempo.beatsPerMinute.beatsPerMinute));
-
-        core::MetronomeChoiceGroupChoice mgChoice = core::MetronomeChoiceGroupChoice::perMinute(pm);
-
-        core::MetronomeChoiceGroup mcg{};
-        mcg.setBeatUnit(beatUnitGroup);
-        mcg.setChoice(mgChoice);
-
-        core::MetronomeChoice metChoice = core::MetronomeChoice::group(mcg);
-
+    for (const auto &tempo : myDirectionData.tempos)
+    {
         core::Metronome metronome{};
-        metronome.setChoice(metChoice);
+
+        if (tempo.tempoType == api::TempoType::beatsPerMinute)
+        {
+            // beat-unit (+dots) followed by a numeric per-minute.
+            core::PerMinute pm{};
+            pm.setValue(std::to_string(tempo.beatsPerMinute.beatsPerMinute));
+
+            core::MetronomeChoiceGroup mcg{};
+            mcg.setBeatUnit(makeBeatUnitGroup(tempo.beatsPerMinute.durationName, tempo.beatsPerMinute.dots));
+            mcg.setChoice(core::MetronomeChoiceGroupChoice::perMinute(pm));
+            metronome.setChoice(core::MetronomeChoice::group(mcg));
+        }
+        else if (tempo.tempoType == api::TempoType::metricModulation)
+        {
+            // Metric modulation: two beat-units, e.g. <beat-unit>quarter</beat-unit>
+            // = <beat-unit>half</beat-unit>. The second beat-unit is the 'group'
+            // alternative of the choice.
+            const auto &mm = tempo.metricModulation;
+            core::MetronomeChoiceGroupChoiceGroup rightBeatUnitHolder{};
+            rightBeatUnitHolder.setBeatUnit(makeBeatUnitGroup(mm.rightDurationName, mm.rightDots));
+
+            core::MetronomeChoiceGroup mcg{};
+            mcg.setBeatUnit(makeBeatUnitGroup(mm.leftDurationName, mm.leftDots));
+            mcg.setChoice(core::MetronomeChoiceGroupChoice::group(rightBeatUnitHolder));
+            metronome.setChoice(core::MetronomeChoice::group(mcg));
+        }
+        else
+        {
+            // tempoText (a non-numeric <per-minute> whose beat-unit was not
+            // preserved by the api) and 'unspecified' (e.g. the metronome-note
+            // form, which the api does not model) have no faithful <metronome>
+            // representation. Skip rather than crash or fabricate wrong structure.
+            // Previously the writer threw here, producing no output (CREATEFAIL).
+            // See issue #218.
+            continue;
+        }
 
         core::DirectionType dt{};
         dt.setChoice(core::DirectionTypeChoice::metronome(metronome));
