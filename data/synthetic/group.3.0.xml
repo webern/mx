@@ -9,7 +9,7 @@
       <part-name>x</part-name>
       <group>1</group>
     </score-part>
-    <part-group type="start">
+    <part-group type="stop">
       <footnote>x</footnote>
       <level>x</level>
     </part-group>

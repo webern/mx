@@ -8,7 +8,7 @@
     <score-part id="id1">
       <part-name>x</part-name>
     </score-part>
-    <part-group type="start">
+    <part-group type="stop">
       <footnote>x</footnote>
       <level>x</level>
     </part-group>

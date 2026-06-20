@@ -15,7 +15,7 @@
         </virtual-instrument>
       </score-instrument>
     </score-part>
-    <part-group type="start">
+    <part-group type="stop">
       <footnote>x</footnote>
       <level>x</level>
     </part-group>

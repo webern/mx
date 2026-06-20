@@ -11,7 +11,7 @@
         <player-name>1</player-name>
       </player>
     </score-part>
-    <part-group type="start">
+    <part-group type="stop">
       <footnote>x</footnote>
       <level>x</level>
     </part-group>

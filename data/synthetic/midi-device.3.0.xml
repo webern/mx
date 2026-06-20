@@ -9,7 +9,7 @@
       <part-name>x</part-name>
       <midi-device port="1" id="id2">x</midi-device>
     </score-part>
-    <part-group type="start">
+    <part-group type="stop">
       <footnote>x</footnote>
       <level>x</level>
     </part-group>

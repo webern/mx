@@ -9,7 +9,7 @@
       <part-link xlink:href="http://example.com" xlink:type="simple" xlink:role="http://example.com/role" xlink:title="x" xlink:show="new" xlink:actuate="onRequest" />
       <part-name>x</part-name>
     </score-part>
-    <part-group type="start">
+    <part-group type="stop">
       <footnote>x</footnote>
       <level>x</level>
     </part-group>
