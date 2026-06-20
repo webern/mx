@@ -165,6 +165,29 @@ present on every entry, `null`/`[]`/`{}` when not applicable):
 for continuity with the harness detail string, but are explicitly **not** relied on
 for completeness — they describe only the first positional divergence.
 
+### Pipeline errors and the `.status` sidecar
+
+A flat dump filename (`a__b.xml.expected.xml`) cannot, on its own, distinguish the
+three pipeline-error statuses (`LOADFAIL` / `GETDATAFAIL` / `CREATEFAIL`): all
+three produce only an `.expected.xml` (the api pipeline never reached a written
+document). So the dump step (#210) writes a tiny `<flat>.status` sidecar next to
+the expected file recording the exact code. The classifier reads it to populate
+`pipeline_error_kind` and `status`; when the sidecar is absent it falls back to a
+generic `status = "PIPELINE_ERROR"` with `pipeline_error_kind = null`. The
+presence/absence of `.actual.xml` remains the FAIL-vs-pipeline-error signal; the
+`.status` sidecar only refines *which* pipeline error. The sidecar lives in the
+gitignored dump dir and is never checked in.
+
+### A note on `support="full"`/`"partial"` drops
+
+A dropped element whose `api.features.xml` support is `full` or `partial` does
+**not** satisfy category B (drop-only) — B requires *every* missing class to be
+`support="none"`. Such a file falls through to `unknown` and is logged, because a
+class that is supposed to round-trip but vanished is a genuine correctness bug or
+a partial-drop, not an expected feature gap. This is the intended behavior: the
+multiset makes the distinction provable across the whole file rather than hiding
+it behind whatever the first positional divergence happened to be.
+
 ## Dependency decision
 
 Stdlib only: `xml.etree.ElementTree` + `collections.Counter` + `difflib`. Rationale:

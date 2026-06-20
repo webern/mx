@@ -65,12 +65,13 @@ FIND_CPP := find src \
 
 .DEFAULT_GOAL := help
 .PHONY: help sdk fmt check core-dev check-core-dev test-core-dev test-cpp-unit \
-        validate-cpp probe-cpp coverage-core-dev test-gen gen-check \
+        validate-cpp probe-cpp coverage-core-dev test-gen test-audit gen-check \
         gen-quality gen-lint \
         gen gen-cpp gen-go gen-c gen-schema \
         audit audit-force \
         build-go build-c test-go test-c \
-        lib dev test run-examples test-api-roundtrip discover-api-roundtrip coverage-api \
+        lib dev test run-examples test-api-roundtrip discover-api-roundtrip \
+        dump-api-roundtrip classify-api-roundtrip coverage-api \
         clean clean-docker check-docker docker-volume
 
 help:
@@ -84,6 +85,8 @@ help:
 	@echo '  make run-examples       Build and run all three api example programs.'
 	@echo '  make test-api-roundtrip Run the corpus api roundtrip in regression mode (CI gate).'
 	@echo '  make discover-api-roundtrip  Run discovery mode over the full corpus (manual only).'
+	@echo '  make dump-api-roundtrip      Dump normalized expected/actual XML for failures.'
+	@echo '  make classify-api-roundtrip  Classify dumped failures by root cause (Python).'
 	@echo '  make coverage-api            Instrumented api/impl/utility build + gcovr report.'
 	@echo ''
 	@echo '  C++ core:'
@@ -97,6 +100,7 @@ help:
 	@echo ''
 	@echo '  Generator:'
 	@echo '  make test-gen       Run the generator (parser + IR + plates + press) Python tests.'
+	@echo '  make test-audit     Run the audit tool Python tests (incl. failure classifier).'
 	@echo '  make gen-check      plates --check for every target (renames, collisions).'
 	@echo '  make gen            Run the generator for every target (cpp/go/c/schema).'
 	@echo '  make gen-cpp        Run the generator for the C++ target (src/private/mx/core/generated).'
@@ -176,6 +180,24 @@ test-api-roundtrip: dev
 # Never a CI gate; use to grow the pinned list (manual commits only).
 discover-api-roundtrip: dev
 	$(BUILD_ROOT)/api/mxtest-api-roundtrip discovery $(CURDIR)/data
+
+# Dump normalized expected/actual XML for every failing api round-trip.
+# Output goes to build/api/roundtrip-dump/ (build dir, already gitignored).
+# Feeds the classifier: make dump-api-roundtrip && make classify-api-roundtrip
+dump-api-roundtrip: dev
+	mkdir -p $(BUILD_ROOT)/api/roundtrip-dump
+	$(BUILD_ROOT)/api/mxtest-api-roundtrip discovery $(CURDIR)/data \
+		--dump $(CURDIR)/$(BUILD_ROOT)/api/roundtrip-dump
+
+# Classify api round-trip failures by root cause.
+# Reads the dump produced by dump-api-roundtrip; writes build/api/classified.json.
+# Fast (pure Python); kept separate from the slow dump step so classification
+# logic can be re-run without re-dumping. Pass DUMP_DIR=path to override.
+DUMP_DIR ?= $(BUILD_ROOT)/api/roundtrip-dump
+classify-api-roundtrip:
+	python3 -m audit classify $(DUMP_DIR) \
+		--data $(CURDIR)/data \
+		--out $(BUILD_ROOT)/api/classified.json
 
 # Instrumented api coverage: build mx+mxtest with --coverage, run all
 # suites, produce gcovr report for src/private/mx/{api,impl,utility}/.
@@ -299,6 +321,10 @@ coverage-core-dev:
 test-gen:
 	python3 -m unittest discover -s gen/tests -t . $(ARGS)
 
+# Audit tool Python tests (feature-audit + the round-trip failure classifier).
+test-audit:
+	python3 -m unittest discover -s audit/tests -t . $(ARGS)
+
 # plates --check for every target: validates renames and detects identifier
 # collisions (a CI gate, like test-gen).
 gen-check:
@@ -406,6 +432,12 @@ test-api-roundtrip: $(DOCKER_STAMP) docker-volume
 discover-api-roundtrip: $(DOCKER_STAMP) docker-volume
 	$(DOCKER_RUN) make discover-api-roundtrip BUILD_TYPE=$(BUILD_TYPE)
 
+dump-api-roundtrip: $(DOCKER_STAMP) docker-volume
+	$(DOCKER_RUN) make dump-api-roundtrip BUILD_TYPE=$(BUILD_TYPE)
+
+classify-api-roundtrip: $(DOCKER_STAMP) docker-volume
+	$(DOCKER_RUN) make classify-api-roundtrip BUILD_TYPE=$(BUILD_TYPE)
+
 coverage-api: $(DOCKER_STAMP) docker-volume
 	@rm -rf $(COV_DIR)/api
 	$(DOCKER_RUN) make coverage-api BUILD_TYPE=$(BUILD_TYPE) ARGS='$(ARGS)'
@@ -436,6 +468,9 @@ coverage-core-dev: $(DOCKER_STAMP) docker-volume
 
 test-gen: $(DOCKER_STAMP)
 	$(DOCKER_RUN) make test-gen ARGS='$(ARGS)'
+
+test-audit: $(DOCKER_STAMP)
+	$(DOCKER_RUN) make test-audit ARGS='$(ARGS)'
 
 gen-check: $(DOCKER_STAMP)
 	$(DOCKER_RUN) make gen-check

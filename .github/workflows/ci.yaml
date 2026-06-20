@@ -58,6 +58,9 @@ jobs:
       - name: Generator tests
         run: make test-gen
 
+      - name: Audit tests
+        run: make test-audit
+
       - name: plates --check (all targets)
         run: make gen-check
 

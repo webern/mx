@@ -30,6 +30,7 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <optional>
 #include <sstream>
 #include <string>
 #include <string_view>
@@ -266,6 +267,114 @@ std::string statusString(RoundtripResult::Status s)
     return "UNKNOWN";
 }
 
+// Flatten a corpus-relative path to a single filename component by replacing
+// every directory separator with "__". `lysuite/Saltarello.xml` becomes
+// `lysuite__Saltarello.xml`. The classifier (audit/classify.py) reverses this.
+std::string toFlatName(const std::string &rel)
+{
+    std::string out;
+    out.reserve(rel.size() + 8);
+    for (const char c : rel)
+    {
+        if (c == '/' || c == '\\')
+            out += "__";
+        else
+            out += c;
+    }
+    return out;
+}
+
+// Write the fully-normalized expected (and, when available, actual) documents
+// for one non-PASS file into `dumpDir` for offline diff analysis. This re-runs
+// just enough of the pipeline to reproduce the documents `compareElements()`
+// saw; `runRoundtrip()` is intentionally left untouched (it reports pass/fail
+// and never needs to surface the documents). The duplicated pipeline work is
+// acceptable: --dump is a developer tool, not a hot path.
+//
+// FAIL files yield both `<flat>.expected.xml` and `<flat>.actual.xml`.
+// LOADFAIL/GETDATAFAIL/CREATEFAIL files have no actual document; they yield the
+// expected file plus a `<flat>.status` sidecar recording the exact status code
+// (the flat filename alone cannot distinguish the three pipeline-error kinds).
+void dumpDocuments(const std::string &absolutePath, const std::string &relPath, const std::string &dumpDir,
+                   RoundtripResult::Status status)
+{
+    namespace fs = std::filesystem;
+    const std::string flat = toFlatName(relPath);
+    const std::string expectedPath = (fs::path(dumpDir) / (flat + ".expected.xml")).string();
+    const std::string actualPath = (fs::path(dumpDir) / (flat + ".actual.xml")).string();
+
+    // Expected side: load the original input, normalize, then apply fixups --
+    // the same order runRoundtrip() uses for the expected document.
+    pugi::xml_document expectedDoc;
+    if (!expectedDoc.load_file(absolutePath.c_str(), pugi::parse_default | pugi::parse_doctype))
+    {
+        std::cerr << "dump: cannot load expected for " << relPath << "\n";
+        return;
+    }
+    mxtest::corert::normalizeForComparison(expectedDoc);
+    mxtest::corert::Fixer fixer(absolutePath);
+    fixer.applyToExpected(expectedDoc);
+    if (!expectedDoc.save_file(expectedPath.c_str()))
+        std::cerr << "dump: failed to write " << expectedPath << "\n";
+
+    // Pipeline errors produced no actual document. Record the status so the
+    // classifier can report the precise kind, then stop.
+    if (status == RoundtripResult::Status::loadFail || status == RoundtripResult::Status::getDataFail ||
+        status == RoundtripResult::Status::createFail)
+    {
+        const std::string statusPath = (fs::path(dumpDir) / (flat + ".status")).string();
+        std::ofstream statusFile(statusPath);
+        statusFile << statusString(status) << "\n";
+        std::cerr << "dump: no actual for " << relPath << " (" << statusString(status) << ")\n";
+        return;
+    }
+
+    // Actual side: re-run the api pipeline (load -> getData -> createFromScore
+    // -> writeToStream), strip the provenance stamp, normalize. Mirrors
+    // runRoundtrip() lines for the actual document.
+    auto &mgr = mx::api::DocumentManager::getInstance();
+    const auto idResult = mgr.createFromFile(absolutePath);
+    if (!idResult.ok())
+    {
+        std::cerr << "dump: no actual for " << relPath << " (createFromFile failed)\n";
+        return;
+    }
+    const int docId = idResult.value();
+    const auto scoreResult = mgr.getData(docId);
+    mgr.destroyDocument(docId);
+    if (!scoreResult.ok())
+    {
+        std::cerr << "dump: no actual for " << relPath << " (getData failed)\n";
+        return;
+    }
+    const auto id2Result = mgr.createFromScore(scoreResult.value());
+    if (!id2Result.ok())
+    {
+        std::cerr << "dump: no actual for " << relPath << " (createFromScore failed)\n";
+        return;
+    }
+    const int docId2 = id2Result.value();
+    std::ostringstream ss;
+    const auto writeResult = mgr.writeToStream(docId2, ss);
+    mgr.destroyDocument(docId2);
+    if (!writeResult.ok())
+    {
+        std::cerr << "dump: no actual for " << relPath << " (writeToStream failed)\n";
+        return;
+    }
+
+    pugi::xml_document actualDoc;
+    if (!actualDoc.load_string(ss.str().c_str(), pugi::parse_default | pugi::parse_doctype))
+    {
+        std::cerr << "dump: no actual for " << relPath << " (output did not parse)\n";
+        return;
+    }
+    stripMxAttribution(actualDoc.document_element());
+    mxtest::corert::normalizeForComparison(actualDoc);
+    if (!actualDoc.save_file(actualPath.c_str()))
+        std::cerr << "dump: failed to write " << actualPath << "\n";
+}
+
 } // namespace
 
 int main(int argc, char *argv[])
@@ -274,7 +383,7 @@ int main(int argc, char *argv[])
     {
         std::cerr << "usage:\n"
                   << "  " << argv[0] << " regression <dataRoot> <baselineFile>\n"
-                  << "  " << argv[0] << " discovery  <dataRoot>\n";
+                  << "  " << argv[0] << " discovery  <dataRoot> [--dump <dir>]\n";
         return 2;
     }
 
@@ -318,14 +427,61 @@ int main(int argc, char *argv[])
     }
     else if (mode == "discovery")
     {
-        const auto files = discoverFiles(dataRoot);
+        // discovery <dataRoot> [--dump <dir>]  (flag may precede or follow the root)
+        std::string discDataRoot;
+        std::optional<std::string> dumpDir;
+        for (int i = 2; i < argc; ++i)
+        {
+            const std::string a = argv[i];
+            if (a == "--dump")
+            {
+                if (i + 1 >= argc)
+                {
+                    std::cerr << "--dump requires a directory" << std::endl;
+                    return 2;
+                }
+                dumpDir = argv[++i];
+            }
+            else if (discDataRoot.empty())
+            {
+                discDataRoot = a;
+            }
+            else
+            {
+                std::cerr << "unexpected argument: " << a << std::endl;
+                return 2;
+            }
+        }
+        if (discDataRoot.empty())
+        {
+            std::cerr << "discovery mode requires <dataRoot>" << std::endl;
+            return 2;
+        }
+        if (dumpDir)
+        {
+            std::error_code ec;
+            std::filesystem::create_directories(*dumpDir, ec);
+            if (ec)
+            {
+                std::cerr << "cannot create dump dir: " << *dumpDir << ": " << ec.message() << std::endl;
+                return 2;
+            }
+        }
+
+        const auto files = discoverFiles(discDataRoot);
         int pass = 0, fail = 0, skip = 0, loadFail = 0, getDataFail = 0, createFail = 0;
         for (const auto &absPath : files)
         {
             namespace fs = std::filesystem;
-            const std::string rel = fs::relative(fs::path(absPath), fs::path(dataRoot)).generic_string();
+            const std::string rel = fs::relative(fs::path(absPath), fs::path(discDataRoot)).generic_string();
             const auto r = runRoundtrip(absPath);
             std::cout << statusString(r.status) << "\t" << rel << "\t" << r.detail << "\n";
+
+            // Dump normalized expected/actual for every non-PASS, non-SKIP file.
+            if (dumpDir && r.status != RoundtripResult::Status::pass && r.status != RoundtripResult::Status::skip)
+            {
+                dumpDocuments(absPath, rel, *dumpDir, r.status);
+            }
             switch (r.status)
             {
             case RoundtripResult::Status::pass:
