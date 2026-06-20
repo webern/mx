@@ -160,7 +160,7 @@ Then give a prioritized "what it needs" list. Be honest about caveats: the compa
 full-DOM, and if the pinned baseline (`roundtrip-baseline.txt`) is ungrown, almost the whole corpus
 shows as failing — these are the raw landscape, not a regression.
 
-## Hand-off
+## Hand-off Fixes (if requested)
 
 - To fix a dropped/under-supported element or a crash: use the `add-mx-api-feature` skill.
 - To correct or extend support levels in `data/api.features.xml`: use the `api-feature-audit` skill.
