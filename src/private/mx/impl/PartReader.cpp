@@ -29,6 +29,7 @@
 #include "mx/impl/Converter.h"
 #include "mx/impl/MeasureReader.h"
 #include "mx/impl/NameDisplayFunctions.h"
+#include "mx/impl/PositionFunctions.h"
 #include "mx/impl/PrintFunctions.h"
 #include "mx/utility/Throw.h"
 #include "mx/utility/Unused.h"
@@ -39,6 +40,42 @@ namespace mx
 {
 namespace impl
 {
+namespace
+{
+// True when a <part-name>/<part-abbreviation> carries any of the formatting
+// attributes that MusicXML 2.0 deprecated in favor of the *-display elements.
+bool nameHasDeprecatedFormatting(const core::PartName &n)
+{
+    return n.fontFamily().has_value() || n.fontStyle().has_value() || n.fontSize().has_value() ||
+           n.fontWeight().has_value() || n.color().has_value() || n.defaultX().has_value() ||
+           n.defaultY().has_value() || n.relativeX().has_value() || n.relativeY().has_value() ||
+           n.justify().has_value();
+}
+
+// Reads a name/abbreviation's display text and formatting into the api's single
+// display model, following the deprecation rules documented in api/PartData.h:
+// a present *-display element is canonical and wins; otherwise any deprecated
+// formatting on the name element itself is migrated into the display model so it
+// is re-emitted at the modern location.
+void readNameDisplay(const core::PartName &nameElement, const std::optional<core::NameDisplay> &display,
+                     std::string &outText, api::PrintData &outPrintData, api::PositionData &outPositionData)
+{
+    if (display.has_value())
+    {
+        outText = extractDisplayText(*display);
+        extractDisplayFormatting(*display, outPrintData, outPositionData);
+    }
+    else if (nameHasDeprecatedFormatting(nameElement))
+    {
+        outText = nameElement.value();
+        outPrintData = getPrintData(nameElement);
+        // print-object belongs to the name element, not the display run.
+        outPrintData.printObject = api::Bool::unspecified;
+        outPositionData = getPositionData(nameElement);
+    }
+}
+} // namespace
+
 PartReader::PartReader(const core::ScorePart &inScorePart, const core::PartwisePart &inPartwisePartRef,
                        int globalTicksPerMeasure, const core::ScorePartwise &inScore, int inDivisionsValue)
     : myPartwisePart{inPartwisePartRef}, myScorePart{inScorePart}, myNumStaves{-1},
@@ -164,21 +201,26 @@ int PartReader::calculateNumStaves() const
 void PartReader::parseScorePart() const
 {
     myOutPartData.uniqueId = myScorePart.id().value();
-    myOutPartData.name = myScorePart.partName().value();
 
-    if (myScorePart.partNameDisplay().has_value())
-    {
-        myOutPartData.displayName = extractDisplayText(*myScorePart.partNameDisplay());
-    }
+    const auto &corePartName = myScorePart.partName();
+    myOutPartData.name = corePartName.value();
+    myOutPartData.namePrintObject = getPrintObject(corePartName);
+    readNameDisplay(corePartName, myScorePart.partNameDisplay(), myOutPartData.displayName,
+                    myOutPartData.displayNamePrintData, myOutPartData.displayNamePositionData);
 
     if (myScorePart.partAbbreviation().has_value())
     {
-        myOutPartData.abbreviation = myScorePart.partAbbreviation()->value();
+        const auto &coreAbbreviation = *myScorePart.partAbbreviation();
+        myOutPartData.abbreviation = coreAbbreviation.value();
+        myOutPartData.abbreviationPrintObject = getPrintObject(coreAbbreviation);
+        readNameDisplay(coreAbbreviation, myScorePart.partAbbreviationDisplay(), myOutPartData.displayAbbreviation,
+                        myOutPartData.displayAbbreviationPrintData, myOutPartData.displayAbbreviationPositionData);
     }
-
-    if (myScorePart.partAbbreviationDisplay().has_value())
+    else if (myScorePart.partAbbreviationDisplay().has_value())
     {
         myOutPartData.displayAbbreviation = extractDisplayText(*myScorePart.partAbbreviationDisplay());
+        extractDisplayFormatting(*myScorePart.partAbbreviationDisplay(), myOutPartData.displayAbbreviationPrintData,
+                                 myOutPartData.displayAbbreviationPositionData);
     }
 
     if (!myScorePart.scoreInstrument().empty())

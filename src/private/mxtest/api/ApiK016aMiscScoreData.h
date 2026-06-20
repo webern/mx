@@ -20,6 +20,7 @@ inline mx::api::ScoreData apiK016aMiscScoreData()
     scoreData.parts.emplace_back(PartData{});
     auto &part = scoreData.parts.back();
     part.name = "hello world";
+    part.namePrintObject = Bool::no; // the source has <part-name print-object="no">
     part.uniqueId = "ID";
     part.measures.emplace_back(MeasureData{});
     auto &measure = part.measures.back();

@@ -42,6 +42,21 @@ namespace mx
 {
 namespace impl
 {
+namespace
+{
+// Writes the print-object attribute onto a <part-name>/<part-abbreviation> only
+// when the api specifies it; api::Bool::unspecified leaves the attribute off so
+// the element defaults to shown.
+void applyPrintObject(api::Bool printObject, core::PartName &out)
+{
+    if (printObject != api::Bool::unspecified)
+    {
+        Converter converter;
+        out.setPrintObject(converter.convert(printObject));
+    }
+}
+} // namespace
+
 PartWriter::PartWriter(const api::PartData &inPartData, int inPartIndex, int inTicksPerQuarter,
                        const ScoreWriter &inScoreWriter)
     : myPartData{inPartData}, myPartIndex{inPartIndex}, myTicksPerQuarter{inTicksPerQuarter}, myMutex{},
@@ -54,27 +69,33 @@ core::ScorePart PartWriter::getScorePart() const
     core::ScorePart scorePart{};
     scorePart.setID(core::Token{myPartData.uniqueId});
 
+    // <part-name> is required, so always write it. print-object is round-
+    // tripped from the model (not force-hidden); deprecated formatting is never
+    // written here -- it goes to <part-name-display> below. See api/PartData.h.
     core::PartName partName{};
     partName.setValue(myPartData.name);
-    partName.setPrintObject(core::YesNo::no());
+    applyPrintObject(myPartData.namePrintObject, partName);
     scorePart.setPartName(partName);
 
     if (myPartData.abbreviation.size() > 0)
     {
         core::PartName abbrev{};
         abbrev.setValue(myPartData.abbreviation);
-        abbrev.setPrintObject(core::YesNo::no());
+        applyPrintObject(myPartData.abbreviationPrintObject, abbrev);
         scorePart.setPartAbbreviation(abbrev);
     }
 
     if (myPartData.displayName.size() > 0)
     {
-        scorePart.setPartNameDisplay(makeNameDisplay(myPartData.displayName));
+        scorePart.setPartNameDisplay(makeNameDisplay(myPartData.displayName, myPartData.displayNamePrintData,
+                                                     myPartData.displayNamePositionData));
     }
 
     if (myPartData.displayAbbreviation.size() > 0)
     {
-        scorePart.setPartAbbreviationDisplay(makeNameDisplay(myPartData.displayAbbreviation));
+        scorePart.setPartAbbreviationDisplay(makeNameDisplay(myPartData.displayAbbreviation,
+                                                             myPartData.displayAbbreviationPrintData,
+                                                             myPartData.displayAbbreviationPositionData));
     }
 
     core::ScoreInstrument scoreInstrument{};

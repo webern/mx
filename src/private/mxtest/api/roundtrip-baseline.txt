@@ -24,3 +24,38 @@ ksuite/k016a_Miscellaneous_Fields.xml
 lysuite/ly33c_Spanners_Slurs.xml
 lysuite/ly33g_Slur_ChordedNotes.xml
 lysuite/ly52b_Breaks.xml
+
+# Unblocked by #227: mx no longer force-writes print-object="no" on every
+# <part-name>/<part-abbreviation>. print-object is now round-tripped faithfully
+# from the api model (tri-state yes/no/unspecified), and deprecated name
+# formatting is migrated to the *-display elements. Visible part names -- and
+# the many files whose only divergence was the spurious print-object="no" --
+# now round-trip.
+ksuite/k007a_Notations_Dynamics.xml
+ksuite/k007c_Directions_Dynamics.xml
+lysuite/ly01b_Pitches_Intervals.xml
+lysuite/ly01d_Pitches_Microtones.xml
+lysuite/ly03a_Rhythm_Durations.xml
+lysuite/ly03b_Rhythm_Backup.xml
+lysuite/ly11c_TimeSignatures_CompoundSimple.xml
+lysuite/ly11g_TimeSignatures_SingleNumber.xml
+lysuite/ly12b_Clefs_NoKeyOrClef.xml
+lysuite/ly13a_KeySignatures.xml
+lysuite/ly13d_KeySignatures_Microtones.xml
+lysuite/ly21a_Chord_Basic.xml
+lysuite/ly21b_Chords_TwoNotes.xml
+lysuite/ly21c_Chords_ThreeNotesDuration.xml
+lysuite/ly21e_Chords_PickupMeasures.xml
+lysuite/ly24f_GraceNote_Slur.xml
+lysuite/ly41a_MultiParts_Partorder.xml
+lysuite/ly41b_MultiParts_MoreThan10.xml
+lysuite/ly41i_PartNameDisplay_Override.xml
+lysuite/ly43a_PianoStaff.xml
+lysuite/ly43b_MultiStaff_DifferentKeys.xml
+lysuite/ly45b_RepeatWithAlternatives.xml
+lysuite/ly45g_Repeats_NotEnded.xml
+lysuite/ly46d_PickupMeasure_ImplicitMeasures.xml
+lysuite/ly46f_IncompleteMeasures.xml
+lysuite/ly71a_Chordnames.xml
+lysuite/ly72a_TransposingInstruments.xml
+lysuite/ly72b_TransposingInstruments_Full.xml

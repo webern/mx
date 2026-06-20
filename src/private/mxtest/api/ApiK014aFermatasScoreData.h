@@ -20,6 +20,7 @@ inline mx::api::ScoreData apiK014aFermatasScoreData()
     auto &part = score.parts.front();
     part.uniqueId = "P1";
     part.name = "MusicXML Part";
+    part.namePrintObject = Bool::no; // the source has <part-name print-object="no">
 
     // 1
     part.measures.emplace_back(MeasureData{});
