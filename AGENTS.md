@@ -122,3 +122,28 @@ locally.
 | `src/private/mx/core/generated/Document.h` | The core document model (parse, serialize, Document class) |
 | `src/private/mxtest/corert/CoreRoundtripImpl.cpp` | The corert test runner (discover, parse, serialize, compare) |
 | `src/private/mxtest/corert/Compare.cpp` | DOM normalization and comparison engine used by corert and api tests |
+
+## Git Authorship
+
+The git commit Author and Committer fields are for the user's information, not yours. No Co-Authored-By either.
+
+Correct:
+
+```text
+Author: The User <the.user@gmail.com>
+Date:   Sat Jun 20 10:31:06 2026 +0000
+
+    Blah
+```
+
+Incorrect:
+
+```text
+Author: Claude <noreply@anthropic.com>
+Date:   Sat Jun 20 10:31:06 2026 +0000
+
+    Blah
+
+    Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+    Claude-Session: https://claude.ai/code/session_01S42a2LXrZb5GUk9cY7Hdru
+```
