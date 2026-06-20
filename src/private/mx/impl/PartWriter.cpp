@@ -33,6 +33,7 @@
 #include "mx/impl/Converter.h"
 #include "mx/impl/MeasureCursor.h"
 #include "mx/impl/MeasureWriter.h"
+#include "mx/impl/NameDisplayFunctions.h"
 #include "mx/impl/ScoreWriter.h"
 
 #include <sstream>
@@ -68,20 +69,12 @@ core::ScorePart PartWriter::getScorePart() const
 
     if (myPartData.displayName.size() > 0)
     {
-        core::NameDisplay nameDisplay{};
-        core::FormattedText ft{};
-        ft.setValue(myPartData.displayName);
-        nameDisplay.addChoice(core::NameDisplayChoice::displayText(ft));
-        scorePart.setPartNameDisplay(nameDisplay);
+        scorePart.setPartNameDisplay(makeNameDisplay(myPartData.displayName));
     }
 
     if (myPartData.displayAbbreviation.size() > 0)
     {
-        core::NameDisplay nameDisplay{};
-        core::FormattedText ft{};
-        ft.setValue(myPartData.displayAbbreviation);
-        nameDisplay.addChoice(core::NameDisplayChoice::displayText(ft));
-        scorePart.setPartAbbreviationDisplay(nameDisplay);
+        scorePart.setPartAbbreviationDisplay(makeNameDisplay(myPartData.displayAbbreviation));
     }
 
     core::ScoreInstrument scoreInstrument{};

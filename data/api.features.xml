@@ -752,8 +752,12 @@
     <feature name="part-clef" support="none">
       <notes>for-part / part-clef (4.0) not modeled.</notes>
     </feature>
-    <feature name="part-group" support="full">
-      <notes>api::PartGroupData; ScoreReader/ScoreWriter.</notes>
+    <feature name="part-group" support="partial">
+      <attributes>
+        <attribute name="type" support="yes"/>
+        <attribute name="number" support="yes"/>
+      </attributes>
+      <notes>api::PartGroupData via ScoreReader::startPartGroup/ScoreWriter::makePartGroupStart. Round-trips type, number, group-name, group-abbreviation, group-symbol (-&gt;bracketType), group-barline (-&gt;api::GroupBarline), and group-name-display/group-abbreviation-display as best-effort plain text (-&gt;displayName/displayAbbreviation). Partial because group-time and editorial (footnote/level) are not modeled, and formatting attributes on group-name/group-symbol/group-barline/display names (color, default-x, font-*, etc.) are dropped (value only). A part-group start with no matching stop is dropped by design: api::PartGroupData models a complete start..stop span, and an unmatched start is semantically invalid (a constraint beyond XSD).</notes>
     </feature>
     <feature name="part-list" support="full">
       <notes>Drives ScoreData.parts ordering; ScoreReader/ScoreWriter.</notes>

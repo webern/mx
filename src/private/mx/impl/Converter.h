@@ -22,6 +22,7 @@
 #include "mx/core/generated/FermataShape.h"
 #include "mx/core/generated/FontStyle.h"
 #include "mx/core/generated/FontWeight.h"
+#include "mx/core/generated/GroupBarlineValue.h"
 #include "mx/core/generated/GroupSymbolValue.h"
 #include "mx/core/generated/KindValue.h"
 #include "mx/core/generated/LeftCenterRight.h"
@@ -142,6 +143,9 @@ class Converter
     core::GroupSymbolValue convert(api::BracketType value) const;
     api::BracketType convert(core::GroupSymbolValue value) const;
 
+    core::GroupBarlineValue convert(api::GroupBarline value) const;
+    api::GroupBarline convert(core::GroupBarlineValue value) const;
+
     core::FermataShape convertFermata(api::MarkType value) const;
     api::MarkType convertFermata(core::FermataShape value) const;
 
@@ -184,6 +188,7 @@ class Converter
     const static EnumMap<core::StartStopDiscontinue, api::EndingType> endingMap;
     const static EnumMap<core::LineEnd, api::LineHook> lineStopMap;
     const static EnumMap<core::GroupSymbolValue, api::BracketType> bracketMap;
+    const static EnumMap<core::GroupBarlineValue, api::GroupBarline> groupBarlineMap;
     const static EnumMap<core::FermataShape, api::MarkType> fermataMap;
     const static EnumMap<core::SoundID, api::SoundID> instrumentMap;
     const static EnumMap<core::KindValue, api::ChordKind> kindMap;

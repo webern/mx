@@ -33,6 +33,7 @@
 #include "mx/impl/EncodingFunctions.h"
 #include "mx/impl/LayoutFunctions.h"
 #include "mx/impl/LcmGcd.h"
+#include "mx/impl/NameDisplayFunctions.h"
 #include "mx/impl/PageTextFunctions.h"
 #include "mx/impl/PartReader.h"
 #include "mx/impl/TimeReader.h"
@@ -294,9 +295,19 @@ void ScoreReader::startPartGroup(int partIndex, const core::PartGroup &inPartGro
         grpData.name = inPartGroup.groupName()->value();
     }
 
+    if (inPartGroup.groupNameDisplay().has_value())
+    {
+        grpData.displayName = extractDisplayText(*inPartGroup.groupNameDisplay());
+    }
+
     if (inPartGroup.groupAbbreviation().has_value())
     {
         grpData.abbreviation = inPartGroup.groupAbbreviation()->value();
+    }
+
+    if (inPartGroup.groupAbbreviationDisplay().has_value())
+    {
+        grpData.displayAbbreviation = extractDisplayText(*inPartGroup.groupAbbreviationDisplay());
     }
 
     if (inPartGroup.groupSymbol().has_value())
@@ -305,11 +316,16 @@ void ScoreReader::startPartGroup(int partIndex, const core::PartGroup &inPartGro
         grpData.bracketType = c.convert(inPartGroup.groupSymbol()->value());
     }
 
+    if (inPartGroup.groupBarline().has_value())
+    {
+        Converter c;
+        grpData.groupBarline = c.convert(inPartGroup.groupBarline()->value());
+    }
+
     grpData.firstPartIndex = partIndex;
 
-    // TODO - group name display
-    // TODO - group abbreviation display
-    // TODO - barline, etc
+    // TODO - group time
+    // TODO - editorial (footnote/level)
 
     myPartGroupStack.push_front(grpData);
 }

@@ -28,6 +28,7 @@
 #include "mx/core/generated/VirtualInstrumentDataGroupChoice.h"
 #include "mx/impl/Converter.h"
 #include "mx/impl/MeasureReader.h"
+#include "mx/impl/NameDisplayFunctions.h"
 #include "mx/impl/PrintFunctions.h"
 #include "mx/utility/Throw.h"
 #include "mx/utility/Unused.h"
@@ -189,30 +190,6 @@ void PartReader::parseScorePart() const
     {
         parseMidiDeviceInstrumentGroup(myScorePart.midiGroup().front());
     }
-}
-
-std::string PartReader::extractDisplayText(const core::NameDisplay &nameDisplay) const
-{
-    std::stringstream ss;
-    for (const auto &c : nameDisplay.choice())
-    {
-        if (c.isDisplayText())
-        {
-            ss << c.asDisplayText().value();
-        }
-        else if (c.isAccidentalText())
-        {
-            if (c.asAccidentalText().value().tag() == core::AccidentalValue::Tag::flat)
-            {
-                ss << "b"; // TODO - support accidental text correctly
-            }
-            else if (c.asAccidentalText().value().tag() == core::AccidentalValue::Tag::sharp)
-            {
-                ss << "#";
-            }
-        }
-    }
-    return ss.str();
 }
 
 void PartReader::parseScoreInstrument(const core::ScoreInstrument &scoreInstrument) const

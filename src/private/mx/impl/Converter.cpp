@@ -370,6 +370,12 @@ const Converter::EnumMap<core::GroupSymbolValue, api::BracketType> Converter::br
     {core::GroupSymbolValue::square(), api::BracketType::square},
 };
 
+const Converter::EnumMap<core::GroupBarlineValue, api::GroupBarline> Converter::groupBarlineMap = {
+    {core::GroupBarlineValue::yes(), api::GroupBarline::yes},
+    {core::GroupBarlineValue::no(), api::GroupBarline::no},
+    {core::GroupBarlineValue::mensurstrich(), api::GroupBarline::mensurstrich},
+};
+
 const Converter::EnumMap<core::RightLeftMiddle, api::HorizontalAlignment> Converter::barlinePlacementMap = {
     {core::RightLeftMiddle::right(), api::HorizontalAlignment::right},
     {core::RightLeftMiddle::left(), api::HorizontalAlignment::left},
@@ -1606,6 +1612,16 @@ core::GroupSymbolValue Converter::convert(api::BracketType value) const
 api::BracketType Converter::convert(core::GroupSymbolValue value) const
 {
     return findApiItem(bracketMap, api::BracketType::unspecified, value);
+}
+
+core::GroupBarlineValue Converter::convert(api::GroupBarline value) const
+{
+    return findCoreItem(groupBarlineMap, core::GroupBarlineValue::yes(), value);
+}
+
+api::GroupBarline Converter::convert(core::GroupBarlineValue value) const
+{
+    return findApiItem(groupBarlineMap, api::GroupBarline::unspecified, value);
 }
 
 core::FermataShape Converter::convertFermata(api::MarkType value) const

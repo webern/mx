@@ -21,7 +21,6 @@ class ScoreInstrument;
 class VirtualInstrument;
 class ScorePartMIDIGroup;
 class MIDIInstrument;
-class NameDisplay;
 } // namespace core
 
 namespace impl
@@ -52,7 +51,6 @@ class PartReader
 
     int calculateNumStaves() const;
     void parseScorePart() const;
-    std::string extractDisplayText(const core::NameDisplay &nameDisplay) const;
     void parseScoreInstrument(const core::ScoreInstrument &scoreInstrument) const;
     void parseVirtualInstrument(const core::VirtualInstrument &virtualInstrument) const;
     void parseMidiDeviceInstrumentGroup(const core::ScorePartMIDIGroup &grp) const;

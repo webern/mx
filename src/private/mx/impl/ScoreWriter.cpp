@@ -8,6 +8,7 @@
 #include "mx/core/generated/GroupName.h"
 #include "mx/core/generated/GroupSymbol.h"
 #include "mx/core/generated/Identification.h"
+#include "mx/core/generated/NameDisplay.h"
 #include "mx/core/generated/PartGroup.h"
 #include "mx/core/generated/PartList.h"
 #include "mx/core/generated/PartListChoice.h"
@@ -20,6 +21,7 @@
 #include "mx/impl/Converter.h"
 #include "mx/impl/EncodingFunctions.h"
 #include "mx/impl/LayoutFunctions.h"
+#include "mx/impl/NameDisplayFunctions.h"
 #include "mx/impl/PageTextFunctions.h"
 #include "mx/impl/PartReader.h"
 #include "mx/impl/PartWriter.h"
@@ -293,6 +295,23 @@ core::PartGroup ScoreWriter::makePartGroupStart(const api::PartGroupData &apiGrp
         mxGrp.setGroupName(groupName);
     }
 
+    if (apiGrp.displayName.size() > 0)
+    {
+        mxGrp.setGroupNameDisplay(makeNameDisplay(apiGrp.displayName));
+    }
+
+    if (apiGrp.abbreviation.size() > 0)
+    {
+        core::GroupName groupAbbreviation{};
+        groupAbbreviation.setValue(apiGrp.abbreviation);
+        mxGrp.setGroupAbbreviation(groupAbbreviation);
+    }
+
+    if (apiGrp.displayAbbreviation.size() > 0)
+    {
+        mxGrp.setGroupAbbreviationDisplay(makeNameDisplay(apiGrp.displayAbbreviation));
+    }
+
     Converter converter;
     if (apiGrp.bracketType != api::BracketType::unspecified)
     {
@@ -302,11 +321,14 @@ core::PartGroup ScoreWriter::makePartGroupStart(const api::PartGroupData &apiGrp
         mxGrp.setGroupSymbol(groupSymbol);
     }
 
-    // TODO - make group barline configurable
-
-    core::GroupBarline groupBarline{};
-    groupBarline.setValue(core::GroupBarlineValue::yes());
-    mxGrp.setGroupBarline(groupBarline);
+    // group-barline is only written when the source modeled one; the api no
+    // longer fabricates a constant "yes" (see issue #219).
+    if (apiGrp.groupBarline != api::GroupBarline::unspecified)
+    {
+        core::GroupBarline groupBarline{};
+        groupBarline.setValue(converter.convert(apiGrp.groupBarline));
+        mxGrp.setGroupBarline(groupBarline);
+    }
 
     return mxGrp;
 }

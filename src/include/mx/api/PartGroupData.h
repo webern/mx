@@ -21,6 +21,17 @@ enum class BracketType
     square
 };
 
+// Whether the group should have common barlines, mirroring the MusicXML
+// <group-barline> element. `unspecified` means the source carried no
+// <group-barline> (and none is written back).
+enum class GroupBarline
+{
+    unspecified,
+    yes,
+    no,
+    mensurstrich
+};
+
 // The part-group element indicates groupings of parts in the score, usually indicated
 // by braces and brackets. Braces that are used for multi-staff parts should be defined
 // in the attributes element for that part. The part-group start element appears before
@@ -46,7 +57,7 @@ class PartGroupData
     std::string abbreviation;
     std::string displayAbbreviation;
     BracketType bracketType;
-    // TODO - group barline
+    GroupBarline groupBarline;
     // TODO - group time
     // TODO - group editorial
 
@@ -55,7 +66,9 @@ class PartGroupData
     // -1 indicates the absence of a number attribute
     int number;
 
-    PartGroupData() : firstPartIndex{-1}, lastPartIndex{-1}, name{}, number{-1}
+    PartGroupData()
+        : firstPartIndex{-1}, lastPartIndex{-1}, name{}, bracketType{BracketType::unspecified},
+          groupBarline{GroupBarline::unspecified}, number{-1}
     {
     }
 };
@@ -67,6 +80,8 @@ MXAPI_EQUALS_MEMBER(name)
 MXAPI_EQUALS_MEMBER(displayName)
 MXAPI_EQUALS_MEMBER(abbreviation)
 MXAPI_EQUALS_MEMBER(displayAbbreviation)
+MXAPI_EQUALS_MEMBER(bracketType)
+MXAPI_EQUALS_MEMBER(groupBarline)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(PartGroupData);
 } // namespace api
