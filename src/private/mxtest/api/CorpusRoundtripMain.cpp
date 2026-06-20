@@ -53,25 +53,64 @@ bool isExcludedPath(const std::filesystem::path &p)
     return false;
 }
 
-// Remove mx's provenance <software> from the written output. Every api write
-// stamps it, but the original input never has it, so the fidelity comparison
-// must ignore it (the stamp's own correctness is covered by AttributionTest).
-void stripMxAttribution(pugi::xml_node node)
+// mx stamps its provenance <software> into <identification>/<encoding> on every
+// api write (core::withStamp via serializeWithAttribution) -- an intended feature.
+// Rather than strip it from the output, the round-trip *expects* it: add the same
+// stamp to the original (expected) document so both carry it. The comparison then
+// asserts the stamp is present and in its schema-correct slot -- a write that drops
+// it or misplaces it now fails. Mirrors withStamp: create <identification>/
+// <encoding> in schema position if absent, drop any prior mx stamp, then append the
+// current one as encoding's last child.
+void addMxAttribution(pugi::xml_node scoreRoot)
 {
-    for (pugi::xml_node child = node.first_child(); child;)
+    pugi::xml_node identification = scoreRoot.child("identification");
+    if (!identification)
     {
-        const pugi::xml_node next = child.next_sibling();
-        if (std::string_view{child.name()} == "software" &&
-            std::string_view{child.text().get()}.starts_with(mx::core::kMxSoftwareMarker))
+        // identification follows work/movement-*, precedes defaults/credit/part-list.
+        pugi::xml_node before;
+        for (pugi::xml_node c = scoreRoot.first_child(); c; c = c.next_sibling())
         {
-            node.remove_child(child);
+            const std::string_view n{c.name()};
+            if (n == "defaults" || n == "credit" || n == "part-list")
+            {
+                before = c;
+                break;
+            }
         }
-        else
-        {
-            stripMxAttribution(child);
-        }
-        child = next;
+        identification =
+            before ? scoreRoot.insert_child_before("identification", before) : scoreRoot.append_child("identification");
     }
+
+    pugi::xml_node encoding = identification.child("encoding");
+    if (!encoding)
+    {
+        // encoding follows creator/rights, precedes source/relation/miscellaneous.
+        pugi::xml_node before;
+        for (pugi::xml_node c = identification.first_child(); c; c = c.next_sibling())
+        {
+            const std::string_view n{c.name()};
+            if (n == "source" || n == "relation" || n == "miscellaneous")
+            {
+                before = c;
+                break;
+            }
+        }
+        encoding =
+            before ? identification.insert_child_before("encoding", before) : identification.append_child("encoding");
+    }
+
+    for (pugi::xml_node sw = encoding.child("software"); sw;)
+    {
+        const pugi::xml_node next = sw.next_sibling("software");
+        if (std::string_view{sw.text().get()}.starts_with(mx::core::kMxSoftwareMarker))
+        {
+            encoding.remove_child(sw);
+        }
+        sw = next;
+    }
+    encoding.append_child("software")
+        .append_child(pugi::node_pcdata)
+        .set_value(mx::core::mxSoftwareAttribution().c_str());
 }
 
 bool hasSuffix(const std::string &name, std::string_view suffix)
@@ -225,8 +264,11 @@ RoundtripResult runRoundtrip(const std::string &absolutePath)
         return r;
     }
 
-    // Drop mx's provenance stamp from the written output before comparing.
-    stripMxAttribution(actualDoc.document_element());
+    // Every api write stamps mx's provenance into <identification>/<encoding>
+    // (an intended feature). Expect it rather than strip it: add the same stamp to
+    // the expected (original) document so both carry it. A write that drops the
+    // stamp, or emits it in the wrong place, now fails the comparison.
+    addMxAttribution(expectedDoc.document_element());
 
     // Normalize both and apply fixups to expected
     mxtest::corert::normalizeForComparison(expectedDoc);
@@ -303,7 +345,8 @@ void dumpDocuments(const std::string &absolutePath, const std::string &relPath, 
     const std::string expectedPath = (fs::path(dumpDir) / (flat + ".expected.xml")).string();
     const std::string actualPath = (fs::path(dumpDir) / (flat + ".actual.xml")).string();
 
-    // Expected side: load the original input, normalize, then apply fixups --
+    // Expected side: load the original input, add the mx stamp (every api write
+    // emits it, so the comparison expects it), normalize, then apply fixups --
     // the same order runRoundtrip() uses for the expected document.
     pugi::xml_document expectedDoc;
     if (!expectedDoc.load_file(absolutePath.c_str(), pugi::parse_default | pugi::parse_doctype))
@@ -311,6 +354,7 @@ void dumpDocuments(const std::string &absolutePath, const std::string &relPath, 
         std::cerr << "dump: cannot load expected for " << relPath << "\n";
         return;
     }
+    addMxAttribution(expectedDoc.document_element());
     mxtest::corert::normalizeForComparison(expectedDoc);
     mxtest::corert::Fixer fixer(absolutePath);
     fixer.applyToExpected(expectedDoc);
@@ -330,8 +374,8 @@ void dumpDocuments(const std::string &absolutePath, const std::string &relPath, 
     }
 
     // Actual side: re-run the api pipeline (load -> getData -> createFromScore
-    // -> writeToStream), strip the provenance stamp, normalize. Mirrors
-    // runRoundtrip() lines for the actual document.
+    // -> writeToStream), then normalize. The provenance stamp is kept (the
+    // expected side has it added to match). Mirrors runRoundtrip().
     auto &mgr = mx::api::DocumentManager::getInstance();
     const auto idResult = mgr.createFromFile(absolutePath);
     if (!idResult.ok())
@@ -369,7 +413,6 @@ void dumpDocuments(const std::string &absolutePath, const std::string &relPath, 
         std::cerr << "dump: no actual for " << relPath << " (output did not parse)\n";
         return;
     }
-    stripMxAttribution(actualDoc.document_element());
     mxtest::corert::normalizeForComparison(actualDoc);
     if (!actualDoc.save_file(actualPath.c_str()))
         std::cerr << "dump: failed to write " << actualPath << "\n";

@@ -17,3 +17,10 @@
 #
 # Format: one data/-relative path per line; # starts a comment.
 ksuite/k016a_Miscellaneous_Fields.xml
+
+# Unblocked by #226: the api emits an mx provenance <identification>/<encoding>
+# stamp the source lacked; the round-trip now expects the stamp instead of
+# leaving an empty shell behind.
+lysuite/ly33c_Spanners_Slurs.xml
+lysuite/ly33g_Slur_ChordedNotes.xml
+lysuite/ly52b_Breaks.xml
