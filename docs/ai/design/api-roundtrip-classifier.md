@@ -178,15 +178,25 @@ presence/absence of `.actual.xml` remains the FAIL-vs-pipeline-error signal; the
 `.status` sidecar only refines *which* pipeline error. The sidecar lives in the
 gitignored dump dir and is never checked in.
 
-### A note on `support="full"`/`"partial"` drops
+### Category G — `support="full"`/`"partial"` drops
 
 A dropped element whose `api.features.xml` support is `full` or `partial` does
 **not** satisfy category B (drop-only) — B requires *every* missing class to be
-`support="none"`. Such a file falls through to `unknown` and is logged, because a
-class that is supposed to round-trip but vanished is a genuine correctness bug or
-a partial-drop, not an expected feature gap. This is the intended behavior: the
-multiset makes the distinction provable across the whole file rather than hiding
-it behind whatever the first positional divergence happened to be.
+`support="none"`. A class that is supposed to round-trip but vanished is either a
+genuine impl round-trip bug or an `api.features.xml` overstatement; both are
+actionable and need human triage (issue #219). These files are assigned
+**category G**, with the dropped supported classes as their `blocking_features`,
+rather than being buried in `unknown`. G is evaluated last (after B/C/D/E), so a
+precise enum (D) or attribute (E) finding still wins when the first divergence
+matches one; otherwise the supported drop is surfaced. The multiset makes this
+provable across the whole file rather than hiding it behind whatever the first
+positional divergence happened to be.
+
+`part-group` was the motivating case: marked `support="full"` yet the single
+most-dropped element, which turned out to be partly an audit overstatement
+(corrected to `partial`) and partly malformed synthetic input (unmatched
+start/stop, fixed in the corpus). Surfacing such drops as G instead of `unknown`
+is what makes that triage discoverable.
 
 ## Dependency decision
 

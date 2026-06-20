@@ -24,6 +24,8 @@ Categories:
     D  enum-bug         text/attr value is a known missing enum member
     E  missing-attribute  a partial feature's attribute was dropped
     F  pipeline-error   LOADFAIL / GETDATAFAIL / CREATEFAIL (no actual produced)
+    G  supported-drop   a dropped element class is marked support="full"/"partial"
+                        (an impl round-trip bug or an api.features.xml overstatement)
     unknown            a FAIL that matched none of the above
 """
 
@@ -56,11 +58,12 @@ _CATEGORY_LABELS = {
     "D": "enum bug",
     "E": "missing attribute/element",
     "F": "pipeline error",
+    "G": "supported-element drop",
     "unknown": "unknown",
 }
 
 # Categories that are actionable feature gaps (ranked in the worklist).
-_ACTIONABLE = frozenset({"B", "D", "E"})
+_ACTIONABLE = frozenset({"B", "D", "E", "G"})
 
 
 # --------------------------------------------------------------------------- #
@@ -375,8 +378,18 @@ def classify_entry(
         ):
             cats.append("E")
 
-    # Primary = first match in priority order; the rest are secondary.
-    primary = next((c for c in ("B", "C", "D", "E") if c in cats), None)
+    # G -- a dropped element class the audit marks support="full"/"partial".
+    # Either a genuine impl round-trip bug or an api.features.xml overstatement;
+    # both need human triage (issue #219). Without this the file falls through to
+    # "unknown", since B requires *every* dropped class to be support="none".
+    supported_missing = sorted(t for t in missing if support_of(t) in ("full", "partial"))
+    if supported_missing:
+        cats.append("G")
+
+    # Primary = first match in priority order; the rest are secondary. G is last
+    # so a precise enum/attribute finding still wins when one applies; otherwise
+    # a dropped supported element is surfaced instead of hidden in "unknown".
+    primary = next((c for c in ("B", "C", "D", "E", "G") if c in cats), None)
     if primary is None:
         warn(f"{entry.rel}: unclassified FAIL (missing={rec['missing_elements']}, "
              f"mismatch={rec['mismatch_type']})")
@@ -388,6 +401,8 @@ def classify_entry(
     # Blocking features: what, if fully supported, would unblock this file.
     if primary == "B":
         rec["blocking_features"] = sorted(missing)
+    elif primary == "G":
+        rec["blocking_features"] = supported_missing
     elif primary in ("D", "E") and div is not None and div.element:
         rec["blocking_features"] = [div.element]
 
@@ -464,7 +479,7 @@ def print_summary(report: dict, out_path: Path) -> None:
     total = report["summary"]["total"]
     print(f"Classified {total} files from {report['dump_dir']}\n")
 
-    for cat in ("A", "B", "C", "D", "E", "F", "unknown"):
+    for cat in ("A", "B", "C", "D", "E", "F", "G", "unknown"):
         n = counts.get(cat, 0)
         if n == 0 and cat == "A":
             continue
@@ -473,7 +488,7 @@ def print_summary(report: dict, out_path: Path) -> None:
 
     ranked = _rank_blocking_features(records)
     if ranked:
-        print("\nTop blocking features (ranked by files unblocked; B+D+E):")
+        print("\nTop blocking features (ranked by files unblocked; B+D+E+G):")
         for feat, files, single in ranked[:15]:
             print(f"  {feat:<24}{files:>4} files   ({single} single-blocker)")
 

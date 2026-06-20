@@ -144,6 +144,35 @@ class ClassifierTest(unittest.TestCase):
         self.assertEqual(rec["primary_category"], "E")
         self.assertEqual(rec["mismatch_type"], "attribute-count")
 
+    def test_supported_element_drop(self) -> None:
+        # backup is support="full" but vanishes. That is not category B (which
+        # needs *every* drop to be support="none"), so it must surface as G
+        # rather than fall through to "unknown".
+        self._pair(
+            "wild/supdrop.xml",
+            _wrap("<backup>1</backup><note><pitch><step>C</step></pitch></note>"),
+            _wrap("<note><pitch><step>C</step></pitch></note>"),
+        )
+        rec = self._classify()["wild/supdrop.xml"]
+        self.assertEqual(rec["primary_category"], "G")
+        self.assertEqual(rec["missing_elements"], ["backup"])
+        self.assertEqual(rec["blocking_features"], ["backup"])
+        self.assertTrue(rec["is_single_blocker"])
+
+    def test_mixed_supported_and_none_drop_is_g(self) -> None:
+        # A supported drop (backup=full) mixed with an unsupported drop
+        # (credit=none) is G, not B -- and only the supported tag is a blocker.
+        self._pair(
+            "wild/mixed.xml",
+            _wrap("<backup>1</backup><credit>c</credit><note/>"),
+            _wrap("<note/>"),
+        )
+        rec = self._classify()["wild/mixed.xml"]
+        self.assertEqual(rec["primary_category"], "G")
+        self.assertEqual(rec["missing_elements"], ["backup", "credit"])
+        self.assertEqual(rec["blocking_features"], ["backup"])
+        self.assertEqual(rec["secondary_categories"], [])
+
     def test_pipeline_error_with_status(self) -> None:
         self._pair("wild/load.xml", _wrap("<note/>"), None)
         self._status("wild/load.xml", "LOADFAIL")
