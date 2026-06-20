@@ -218,6 +218,30 @@ class ClassifierTest(unittest.TestCase):
         self.assertEqual([f["file"] for f in nm["2"]], ["wild/two.xml"])
         self.assertEqual(nm["3"], [])
 
+    def test_batch_plan_greedy_cover(self) -> None:
+        # Greedy picks credit first (clears the one distance-1 file), then
+        # defaults (clears the two that need both), then other.
+        cands = [
+            {"signatures": ["drop:credit", "drop:defaults"]},
+            {"signatures": ["drop:credit", "drop:defaults"]},
+            {"signatures": ["drop:credit"]},
+            {"signatures": ["drop:credit", "drop:other"]},
+        ]
+        plan = classify.build_batch_plan(cands)
+        self.assertEqual(
+            [(r["fix"], r["cumulative_files"], r["added_files"]) for r in plan],
+            [("drop:credit", 1, 1), ("drop:defaults", 3, 2), ("drop:other", 4, 1)],
+        )
+
+    def test_batch_plan_in_report_excludes_reorder(self) -> None:
+        self._pair("wild/one.xml", _wrap("<credit/><note/>"), _wrap("<note/>"))
+        self._pair("wild/r.xml",
+                   _wrap("<note>1</note><backup>2</backup>"),
+                   _wrap("<backup>2</backup><note>1</note>"))
+        self._classify()
+        plan = self.report["batch_plan"]
+        self.assertEqual([r["fix"] for r in plan], ["drop:credit"])
+
     def test_summary_status_counts(self) -> None:
         self._pair("wild/ok.xml", _wrap("<note/>"), _wrap("<note/>"))
         self._pair("wild/fail.xml", _wrap("<credit/><note/>"), _wrap("<note/>"))

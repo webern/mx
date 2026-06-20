@@ -331,6 +331,41 @@ def build_worklist(candidates: list[dict]) -> list[dict]:
     return rows
 
 
+def build_batch_plan(candidates: list[dict], max_steps: int = 15) -> list[dict]:
+    """Greedy set-cover: the fix sequence that lands the most files the soonest.
+
+    The signature-level worklist ranks fixes independently, but most candidate
+    files need *several* fixes before they pass. This answers the #212 question
+    directly -- "minimal changes -> most files" -- by greedily choosing, at each
+    step, the signature that maximizes the number of candidate files whose
+    *entire* remaining signature set is then cleared. Each row's
+    ``cumulative_files`` is how many candidate files fully pass once every fix up
+    to and including that row is made.
+    """
+    sigsets = [set(r["signatures"]) for r in candidates]
+    all_sigs = {s for ss in sigsets for s in ss}
+    fixed: set[str] = set()
+    plan: list[dict] = []
+    prev = 0
+    for _ in range(max_steps):
+        best_sig, best_total = None, prev
+        for sig in sorted(all_sigs - fixed):  # sorted: deterministic tie-break
+            trial = fixed | {sig}
+            total = sum(1 for ss in sigsets if ss <= trial)
+            if total > best_total:
+                best_total, best_sig = total, sig
+        if best_sig is None:  # no remaining fix lands another file
+            break
+        fixed.add(best_sig)
+        plan.append({
+            "fix": best_sig,
+            "added_files": best_total - prev,
+            "cumulative_files": best_total,
+        })
+        prev = best_total
+    return plan
+
+
 def _near_misses(candidates: list[dict]) -> dict[str, list[dict]]:
     """Group candidate files by distance (1..N) so small fix-sets are visible."""
     out: dict[str, list[dict]] = {}
@@ -367,6 +402,7 @@ def build_report(dump_dir: Path, warn) -> dict:
             "distance_histogram": {str(k): distance_hist[k] for k in sorted(distance_hist)},
         },
         "worklist": build_worklist(candidates),
+        "batch_plan": build_batch_plan(candidates),
         "near_misses": _near_misses(candidates),
         "files": records,
     }
@@ -398,6 +434,15 @@ def print_summary(report: dict, out_path: Path) -> None:
         for row in worklist[:20]:
             print(
                 f"  {row['signature']:<28}{row['sole_blocker']:>6}{row['files_blocked']:>7}"
+            )
+
+    plan = report["batch_plan"]
+    if plan:
+        print("\nBatch plan (greedy: fewest fixes -> most candidate files passing):")
+        for i, row in enumerate(plan, 1):
+            print(
+                f"  {i:>2}. +{row['fix']:<28}"
+                f"{row['cumulative_files']:>5} pass  (+{row['added_files']})"
             )
 
     print(f"\nOutput: {out_path}")
