@@ -467,5 +467,11 @@ void MxFileRepository::initializeNameSubdirectoryMap()
 
     // mxl
     myNameSubdirectoryMap.emplace("Dichterliebe01.mxl", "mxl");
+
+    // synthetic (audit-generated single-feature fixtures)
+    myNameSubdirectoryMap.emplace("segno.3.0.xml", "synthetic");
+    myNameSubdirectoryMap.emplace("segno.3.1.xml", "synthetic");
+    myNameSubdirectoryMap.emplace("coda.3.0.xml", "synthetic");
+    myNameSubdirectoryMap.emplace("coda.3.1.xml", "synthetic");
 }
 } // namespace mxtest
