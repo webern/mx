@@ -6,9 +6,6 @@
   <audited-version>4.0</audited-version>
   <features>
     <feature>
-      <name>footnote</name>
-    </feature>
-    <feature>
       <name>grace</name>
     </feature>
     <feature>
@@ -16,9 +13,6 @@
       <attributes>
         <attribute>id</attribute>
       </attributes>
-    </feature>
-    <feature>
-      <name>level</name>
     </feature>
     <feature>
       <name>measure</name>

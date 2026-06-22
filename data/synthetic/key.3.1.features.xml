@@ -12,9 +12,6 @@
       <name>fifths</name>
     </feature>
     <feature>
-      <name>footnote</name>
-    </feature>
-    <feature>
       <name>key</name>
       <attributes>
         <attribute>color</attribute>
@@ -30,9 +27,6 @@
         <attribute>relative-x</attribute>
         <attribute>relative-y</attribute>
       </attributes>
-    </feature>
-    <feature>
-      <name>level</name>
     </feature>
     <feature>
       <name>measure</name>

@@ -6,9 +6,6 @@
   <audited-version>4.0</audited-version>
   <features>
     <feature>
-      <name>footnote</name>
-    </feature>
-    <feature>
       <name>harmony</name>
     </feature>
     <feature>
@@ -28,9 +25,6 @@
     </feature>
     <feature>
       <name>kind</name>
-    </feature>
-    <feature>
-      <name>level</name>
     </feature>
     <feature>
       <name>measure</name>

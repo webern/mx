@@ -6,9 +6,6 @@
   <audited-version>3.0</audited-version>
   <features>
     <feature>
-      <name>footnote</name>
-    </feature>
-    <feature>
       <name>grace</name>
       <attributes>
         <attribute>make-time</attribute>
@@ -16,9 +13,6 @@
         <attribute>steal-time-following</attribute>
         <attribute>steal-time-previous</attribute>
       </attributes>
-    </feature>
-    <feature>
-      <name>level</name>
     </feature>
     <feature>
       <name>measure</name>

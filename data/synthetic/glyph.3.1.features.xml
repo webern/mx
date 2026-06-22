@@ -12,9 +12,6 @@
       <name>defaults</name>
     </feature>
     <feature>
-      <name>footnote</name>
-    </feature>
-    <feature>
       <name>glyph</name>
       <attributes>
         <attribute>type</attribute>
@@ -22,9 +19,6 @@
     </feature>
     <feature>
       <name>grace</name>
-    </feature>
-    <feature>
-      <name>level</name>
     </feature>
     <feature>
       <name>measure</name>

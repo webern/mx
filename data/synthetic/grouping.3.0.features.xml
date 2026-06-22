@@ -6,18 +6,12 @@
   <audited-version>3.0</audited-version>
   <features>
     <feature>
-      <name>footnote</name>
-    </feature>
-    <feature>
       <name>grouping</name>
       <attributes>
         <attribute>member-of</attribute>
         <attribute>number</attribute>
         <attribute>type</attribute>
       </attributes>
-    </feature>
-    <feature>
-      <name>level</name>
     </feature>
     <feature>
       <name>measure</name>

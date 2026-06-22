@@ -13,9 +13,6 @@
       </attributes>
     </feature>
     <feature>
-      <name>footnote</name>
-    </feature>
-    <feature>
       <name>frame</name>
     </feature>
     <feature>
@@ -35,9 +32,6 @@
     </feature>
     <feature>
       <name>kind</name>
-    </feature>
-    <feature>
-      <name>level</name>
     </feature>
     <feature>
       <name>measure</name>

@@ -12,16 +12,10 @@
       <name>direction-type</name>
     </feature>
     <feature>
-      <name>footnote</name>
-    </feature>
-    <feature>
       <name>instrument-change</name>
       <attributes>
         <attribute>id</attribute>
       </attributes>
-    </feature>
-    <feature>
-      <name>level</name>
     </feature>
     <feature>
       <name>measure</name>

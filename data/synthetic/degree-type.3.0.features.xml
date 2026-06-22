@@ -30,16 +30,10 @@
       <name>degree-value</name>
     </feature>
     <feature>
-      <name>footnote</name>
-    </feature>
-    <feature>
       <name>harmony</name>
     </feature>
     <feature>
       <name>kind</name>
-    </feature>
-    <feature>
-      <name>level</name>
     </feature>
     <feature>
       <name>measure</name>

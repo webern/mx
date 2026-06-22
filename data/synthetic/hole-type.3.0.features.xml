@@ -6,9 +6,6 @@
   <audited-version>3.0</audited-version>
   <features>
     <feature>
-      <name>footnote</name>
-    </feature>
-    <feature>
       <name>grace</name>
     </feature>
     <feature>
@@ -19,9 +16,6 @@
     </feature>
     <feature>
       <name>hole-type</name>
-    </feature>
-    <feature>
-      <name>level</name>
     </feature>
     <feature>
       <name>measure</name>

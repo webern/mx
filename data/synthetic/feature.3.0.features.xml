@@ -12,16 +12,10 @@
       </attributes>
     </feature>
     <feature>
-      <name>footnote</name>
-    </feature>
-    <feature>
       <name>grouping</name>
       <attributes>
         <attribute>type</attribute>
       </attributes>
-    </feature>
-    <feature>
-      <name>level</name>
     </feature>
     <feature>
       <name>measure</name>

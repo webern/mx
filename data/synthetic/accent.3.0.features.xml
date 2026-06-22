@@ -24,13 +24,7 @@
       <name>articulations</name>
     </feature>
     <feature>
-      <name>footnote</name>
-    </feature>
-    <feature>
       <name>grace</name>
-    </feature>
-    <feature>
-      <name>level</name>
     </feature>
     <feature>
       <name>measure</name>

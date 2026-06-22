@@ -2,15 +2,11 @@
 <score-partwise version="3.1">
   <part-list>
     <part-group type="start">
-      <footnote>x</footnote>
-      <level>x</level>
     </part-group>
     <score-part id="id1">
       <part-name>x</part-name>
     </score-part>
     <part-group type="stop">
-      <footnote>x</footnote>
-      <level>x</level>
     </part-group>
   </part-list>
   <part id="id1">
@@ -28,8 +24,6 @@
             <fret>1</fret>
           </frame-note>
         </frame>
-        <footnote>x</footnote>
-        <level>x</level>
         <staff>1</staff>
       </harmony>
     </measure>

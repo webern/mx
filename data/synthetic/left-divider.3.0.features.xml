@@ -9,9 +9,6 @@
       <name>defaults</name>
     </feature>
     <feature>
-      <name>footnote</name>
-    </feature>
-    <feature>
       <name>grace</name>
     </feature>
     <feature>
@@ -30,9 +27,6 @@
         <attribute>relative-y</attribute>
         <attribute>valign</attribute>
       </attributes>
-    </feature>
-    <feature>
-      <name>level</name>
     </feature>
     <feature>
       <name>measure</name>

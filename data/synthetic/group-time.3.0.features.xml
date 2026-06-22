@@ -6,16 +6,10 @@
   <audited-version>3.0</audited-version>
   <features>
     <feature>
-      <name>footnote</name>
-    </feature>
-    <feature>
       <name>grace</name>
     </feature>
     <feature>
       <name>group-time</name>
-    </feature>
-    <feature>
-      <name>level</name>
     </feature>
     <feature>
       <name>measure</name>

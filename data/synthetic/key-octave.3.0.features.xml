@@ -12,9 +12,6 @@
       <name>fifths</name>
     </feature>
     <feature>
-      <name>footnote</name>
-    </feature>
-    <feature>
       <name>key</name>
     </feature>
     <feature>
@@ -23,9 +20,6 @@
         <attribute>cancel</attribute>
         <attribute>number</attribute>
       </attributes>
-    </feature>
-    <feature>
-      <name>level</name>
     </feature>
     <feature>
       <name>measure</name>

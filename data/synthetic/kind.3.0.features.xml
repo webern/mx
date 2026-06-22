@@ -6,9 +6,6 @@
   <audited-version>3.0</audited-version>
   <features>
     <feature>
-      <name>footnote</name>
-    </feature>
-    <feature>
       <name>harmony</name>
     </feature>
     <feature>
@@ -31,9 +28,6 @@
         <attribute>use-symbols</attribute>
         <attribute>valign</attribute>
       </attributes>
-    </feature>
-    <feature>
-      <name>level</name>
     </feature>
     <feature>
       <name>measure</name>

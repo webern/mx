@@ -12,17 +12,11 @@
       <name>chromatic</name>
     </feature>
     <feature>
-      <name>footnote</name>
-    </feature>
-    <feature>
       <name>for-part</name>
       <attributes>
         <attribute>id</attribute>
         <attribute>number</attribute>
       </attributes>
-    </feature>
-    <feature>
-      <name>level</name>
     </feature>
     <feature>
       <name>measure</name>

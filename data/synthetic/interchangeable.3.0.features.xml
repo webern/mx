@@ -15,17 +15,11 @@
       <name>beats</name>
     </feature>
     <feature>
-      <name>footnote</name>
-    </feature>
-    <feature>
       <name>interchangeable</name>
       <attributes>
         <attribute>separator</attribute>
         <attribute>symbol</attribute>
       </attributes>
-    </feature>
-    <feature>
-      <name>level</name>
     </feature>
     <feature>
       <name>measure</name>

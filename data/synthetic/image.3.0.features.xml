@@ -12,9 +12,6 @@
       <name>direction-type</name>
     </feature>
     <feature>
-      <name>footnote</name>
-    </feature>
-    <feature>
       <name>image</name>
       <attributes>
         <attribute>default-x</attribute>
@@ -26,9 +23,6 @@
         <attribute>type</attribute>
         <attribute>valign</attribute>
       </attributes>
-    </feature>
-    <feature>
-      <name>level</name>
     </feature>
     <feature>
       <name>measure</name>

@@ -6,9 +6,6 @@
   <audited-version>3.0</audited-version>
   <features>
     <feature>
-      <name>footnote</name>
-    </feature>
-    <feature>
       <name>grace</name>
     </feature>
     <feature>
@@ -27,9 +24,6 @@
         <attribute>relative-y</attribute>
         <attribute>type</attribute>
       </attributes>
-    </feature>
-    <feature>
-      <name>level</name>
     </feature>
     <feature>
       <name>measure</name>

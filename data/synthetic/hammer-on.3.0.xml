@@ -2,15 +2,11 @@
 <score-partwise version="3.0">
   <part-list>
     <part-group type="start">
-      <footnote>x</footnote>
-      <level>x</level>
     </part-group>
     <score-part id="id1">
       <part-name>x</part-name>
     </score-part>
     <part-group type="stop">
-      <footnote>x</footnote>
-      <level>x</level>
     </part-group>
   </part-list>
   <part id="id1">
@@ -21,13 +17,9 @@
           <step>A</step>
           <octave>1</octave>
         </pitch>
-        <footnote>x</footnote>
-        <level>x</level>
         <voice>1</voice>
         <staff>1</staff>
         <notations>
-          <footnote>x</footnote>
-          <level>x</level>
           <technical>
             <hammer-on default-x="1" default-y="1" relative-x="1" relative-y="1" font-family="x" font-style="normal" font-size="1" font-weight="normal" color="#FF000000" placement="above" type="start" number="1">x</hammer-on>
           </technical>

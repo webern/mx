@@ -18,12 +18,6 @@
       </attributes>
     </feature>
     <feature>
-      <name>footnote</name>
-    </feature>
-    <feature>
-      <name>level</name>
-    </feature>
-    <feature>
       <name>measure</name>
       <attributes>
         <attribute>number</attribute>
