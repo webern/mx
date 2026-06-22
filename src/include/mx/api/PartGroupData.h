@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include "mx/api/EditorialData.h"
+
 #include <string>
 #include <vector>
 
@@ -59,7 +61,10 @@ class PartGroupData
     BracketType bracketType;
     GroupBarline groupBarline;
     // TODO - group time
-    // TODO - group editorial
+
+    // Editorial (<footnote>/<level>) carried on the part-group *start*. MusicXML ignores child
+    // values at the group stop, so stop-group editorial is intentionally not modeled.
+    EditorialData editorial;
 
     // The number attribute is used to distinguish overlapping
     // and nested part-groups, not the sequence of groups.
@@ -82,6 +87,7 @@ MXAPI_EQUALS_MEMBER(abbreviation)
 MXAPI_EQUALS_MEMBER(displayAbbreviation)
 MXAPI_EQUALS_MEMBER(bracketType)
 MXAPI_EQUALS_MEMBER(groupBarline)
+MXAPI_EQUALS_MEMBER(editorial)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(PartGroupData);
 } // namespace api

@@ -62,6 +62,7 @@
 #include "mx/core/generated/WedgeType.h"
 #include "mx/core/generated/YesNo.h"
 #include "mx/impl/DynamicsReader.h"
+#include "mx/impl/EditorialFunctions.h"
 #include "mx/impl/MarkDataFunctions.h"
 #include "mx/impl/MetronomeReader.h"
 #include "mx/impl/PrintFunctions.h"
@@ -171,6 +172,8 @@ void DirectionReader::parseValues()
                 myOutDirectionData.soundData = std::move(soundData);
             }
         }
+
+        myOutDirectionData.editorial = getEditorialData(myDirection->editorialVoiceDirection());
     }
     else if (myHarmony)
     {

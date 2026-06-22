@@ -19,6 +19,7 @@
 #include "mx/core/generated/TypedText.h"
 #include "mx/core/generated/Work.h"
 #include "mx/impl/Converter.h"
+#include "mx/impl/EditorialFunctions.h"
 #include "mx/impl/EncodingFunctions.h"
 #include "mx/impl/LayoutFunctions.h"
 #include "mx/impl/NameDisplayFunctions.h"
@@ -328,6 +329,13 @@ core::PartGroup ScoreWriter::makePartGroupStart(const api::PartGroupData &apiGrp
         core::GroupBarline groupBarline{};
         groupBarline.setValue(converter.convert(apiGrp.groupBarline));
         mxGrp.setGroupBarline(groupBarline);
+    }
+
+    if (apiGrp.editorial.isFootnoteSpecified || apiGrp.editorial.isLevelSpecified)
+    {
+        core::EditorialGroup editorial{};
+        setEditorial(apiGrp.editorial, editorial);
+        mxGrp.setEditorial(std::move(editorial));
     }
 
     return mxGrp;

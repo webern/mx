@@ -35,8 +35,10 @@
 #include "mx/core/generated/RightLeftMiddle.h"
 #include "mx/core/generated/SoundID.h"
 #include "mx/core/generated/StartStopDiscontinue.h"
+#include "mx/core/generated/StartStopSingle.h"
 #include "mx/core/generated/StemValue.h"
 #include "mx/core/generated/Step.h"
+#include "mx/core/generated/SymbolSize.h"
 #include "mx/core/generated/TechnicalChoice.h"
 #include "mx/core/generated/Transpose.h"
 #include "mx/core/generated/Valign.h"
@@ -85,6 +87,12 @@ class Converter
 
     core::YesNo convert(api::Bool value) const;
     api::Bool convert(core::YesNo value) const;
+
+    core::StartStopSingle convert(api::StartStopSingle value) const;
+    api::StartStopSingle convert(core::StartStopSingle value) const;
+
+    core::SymbolSize convert(api::SymbolSize value) const;
+    api::SymbolSize convert(core::SymbolSize value) const;
 
     core::Valign convert(api::VerticalAlignment value) const;
     api::VerticalAlignment convert(core::Valign value) const;
@@ -169,6 +177,8 @@ class Converter
     const static EnumMap<core::ClefSign, api::ClefSymbol> clefMap;
     const static EnumMap<core::AboveBelow, api::Placement> placementMap;
     const static EnumMap<core::YesNo, api::Bool> boolMap;
+    const static EnumMap<core::StartStopSingle, api::StartStopSingle> startStopSingleMap;
+    const static EnumMap<core::SymbolSize, api::SymbolSize> symbolSizeMap;
     const static EnumMap<core::Valign, api::VerticalAlignment> valignMap;
     const static EnumMap<core::LeftCenterRight, api::HorizontalAlignment> halignMap;
     const static EnumMap<core::CSSFontSize, api::CssSize> cssMap;

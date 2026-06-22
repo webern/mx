@@ -66,6 +66,7 @@
 #include "mx/core/generated/WedgeType.h"
 #include "mx/core/generated/YesNo.h"
 #include "mx/impl/DynamicsWriter.h"
+#include "mx/impl/EditorialFunctions.h"
 #include "mx/impl/FontFunctions.h"
 #include "mx/impl/LineFunctions.h"
 #include "mx/impl/MarkDataFunctions.h"
@@ -110,6 +111,13 @@ std::vector<core::MusicDataChoice> DirectionWriter::getDirectionLikeThings()
         coreOffset.setValue(core::Divisions{core::Decimal{static_cast<double>(offset)}});
         coreOffset.setSound(core::YesNo::yes());
         direction.setOffset(coreOffset);
+    }
+
+    if (myDirectionData.editorial.isFootnoteSpecified || myDirectionData.editorial.isLevelSpecified)
+    {
+        core::EditorialVoiceDirectionGroup editorial{};
+        setEditorial(myDirectionData.editorial, editorial);
+        direction.setEditorialVoiceDirection(std::move(editorial));
     }
 
     for (auto mark : myDirectionData.marks)

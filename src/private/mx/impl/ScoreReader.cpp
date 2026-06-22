@@ -30,6 +30,7 @@
 #include "mx/core/generated/Work.h"
 #include "mx/core/generated/YesNo.h"
 #include "mx/impl/Converter.h"
+#include "mx/impl/EditorialFunctions.h"
 #include "mx/impl/EncodingFunctions.h"
 #include "mx/impl/LayoutFunctions.h"
 #include "mx/impl/LcmGcd.h"
@@ -322,10 +323,11 @@ void ScoreReader::startPartGroup(int partIndex, const core::PartGroup &inPartGro
         grpData.groupBarline = c.convert(inPartGroup.groupBarline()->value());
     }
 
+    grpData.editorial = getEditorialData(inPartGroup.editorial());
+
     grpData.firstPartIndex = partIndex;
 
     // TODO - group time
-    // TODO - editorial (footnote/level)
 
     myPartGroupStack.push_front(grpData);
 }

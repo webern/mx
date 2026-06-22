@@ -137,6 +137,19 @@ const Converter::EnumMap<core::YesNo, api::Bool> Converter::boolMap = {
     {core::YesNo::no(), api::Bool::no},
 };
 
+const Converter::EnumMap<core::StartStopSingle, api::StartStopSingle> Converter::startStopSingleMap = {
+    {core::StartStopSingle::start(), api::StartStopSingle::start},
+    {core::StartStopSingle::stop(), api::StartStopSingle::stop},
+    {core::StartStopSingle::single(), api::StartStopSingle::single},
+};
+
+const Converter::EnumMap<core::SymbolSize, api::SymbolSize> Converter::symbolSizeMap = {
+    {core::SymbolSize::full(), api::SymbolSize::full},
+    {core::SymbolSize::cue(), api::SymbolSize::cue},
+    {core::SymbolSize::graceCue(), api::SymbolSize::graceCue},
+    {core::SymbolSize::large(), api::SymbolSize::large},
+};
+
 const Converter::EnumMap<core::Valign, api::VerticalAlignment> Converter::valignMap = {
     {core::Valign::baseline(), api::VerticalAlignment::baseline},
     {core::Valign::bottom(), api::VerticalAlignment::bottom},
@@ -1410,6 +1423,26 @@ api::Bool Converter::convert(core::YesNo value) const
 core::YesNo Converter::convert(api::Bool value) const
 {
     return findCoreItem(boolMap, core::YesNo::no(), value);
+}
+
+core::StartStopSingle Converter::convert(api::StartStopSingle value) const
+{
+    return findCoreItem(startStopSingleMap, core::StartStopSingle::single(), value);
+}
+
+api::StartStopSingle Converter::convert(core::StartStopSingle value) const
+{
+    return findApiItem(startStopSingleMap, api::StartStopSingle::unspecified, value);
+}
+
+core::SymbolSize Converter::convert(api::SymbolSize value) const
+{
+    return findCoreItem(symbolSizeMap, core::SymbolSize::full(), value);
+}
+
+api::SymbolSize Converter::convert(core::SymbolSize value) const
+{
+    return findApiItem(symbolSizeMap, api::SymbolSize::unspecified, value);
 }
 
 api::VerticalAlignment Converter::convert(core::Valign value) const

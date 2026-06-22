@@ -7,6 +7,7 @@
 #include "mx/api/ApiCommon.h"
 #include "mx/api/ChordData.h"
 #include "mx/api/CodaData.h"
+#include "mx/api/EditorialData.h"
 #include "mx/api/FiguredBassData.h"
 #include "mx/api/MarkData.h"
 #include "mx/api/OttavaData.h"
@@ -102,6 +103,10 @@ struct DirectionData
     bool isSoundDataSpecified;
     SoundData soundData;
 
+    // Editorial (<footnote>/<level>) carried on the <direction>. The editorial-voice <voice> is
+    // already represented by the `voice` member above.
+    EditorialData editorial;
+
     std::vector<TempoData> tempos;
     std::vector<MarkData> marks;
     std::vector<WedgeStart> wedgeStarts;
@@ -142,6 +147,7 @@ inline bool isDirectionDataEmpty(const DirectionData &directionData)
            directionData.ottavaStops.size() == 0 && directionData.words.size() == 0 &&
            directionData.segnos.size() == 0 && directionData.codas.size() == 0 &&
            directionData.figuredBasses.size() == 0 && !directionData.isSoundDataSpecified &&
+           !directionData.editorial.isFootnoteSpecified && !directionData.editorial.isLevelSpecified &&
            directionData.orderedComponents.size() == 0;
 }
 
@@ -152,6 +158,7 @@ MXAPI_EQUALS_MEMBER(voice)
 MXAPI_EQUALS_MEMBER(isStaffValueSpecified)
 MXAPI_EQUALS_MEMBER(isSoundDataSpecified)
 MXAPI_EQUALS_MEMBER(soundData)
+MXAPI_EQUALS_MEMBER(editorial)
 MXAPI_EQUALS_MEMBER(tempos)
 MXAPI_EQUALS_MEMBER(marks)
 MXAPI_EQUALS_MEMBER(wedgeStarts)
