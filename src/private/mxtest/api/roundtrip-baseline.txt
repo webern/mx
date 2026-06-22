@@ -65,3 +65,11 @@ lysuite/ly72b_TransposingInstruments_Full.xml
 # round-trips losslessly.
 custom/segno_coda_roundtrip.3.0.xml
 custom/segno_coda_roundtrip.3.1.xml
+
+# The audit's synthetic single-feature segno/coda fixtures. Each is a minimal score
+# with one part-group, a direction carrying the segno/coda plus a <voice> and <staff>,
+# and a single note; all round-trip losslessly.
+synthetic/segno.3.0.xml
+synthetic/segno.3.1.xml
+synthetic/coda.3.0.xml
+synthetic/coda.3.1.xml

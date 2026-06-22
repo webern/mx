@@ -2486,7 +2486,7 @@
         <file version="3.0">synthetic/work-title.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="duration" total-files="446" wild-files="437" synthetic-files="9" min-synthetic-version="3.0">
+    <element name="duration" total-files="450" wild-files="437" synthetic-files="13" min-synthetic-version="3.0">
       <wild-files count="437">
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
@@ -2502,8 +2502,10 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 425 more -->
       </wild-files>
-      <synthetic-files count="9" min-version="3.0">
+      <synthetic-files count="13" min-version="3.0">
         <file version="3.0">synthetic/cancel.location.3.0.xml</file>
+        <file version="3.0">synthetic/coda.3.0.xml</file>
+        <file version="3.1">synthetic/coda.3.1.xml</file>
         <file version="3.0">synthetic/figure-number.3.0.xml</file>
         <file version="3.0">synthetic/figured-bass.3.0.xml</file>
         <file version="3.1">synthetic/figured-bass.3.1.xml</file>
@@ -2511,10 +2513,12 @@
         <file version="3.0">synthetic/key-accidental.3.0.xml</file>
         <file version="3.1">synthetic/key-accidental.smufl.3.1.xml</file>
         <file version="3.0">synthetic/prefix.3.0.xml</file>
+        <file version="3.0">synthetic/segno.3.0.xml</file>
+        <file version="3.1">synthetic/segno.3.1.xml</file>
         <file version="3.0">synthetic/suffix.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="attributes" total-files="471" wild-files="435" synthetic-files="36" min-synthetic-version="3.0">
+    <element name="attributes" total-files="475" wild-files="435" synthetic-files="40" min-synthetic-version="3.0">
       <wild-files count="435">
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
@@ -2530,13 +2534,15 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 423 more -->
       </wild-files>
-      <synthetic-files count="36" min-version="3.0">
+      <synthetic-files count="40" min-version="3.0">
         <file version="3.0">synthetic/beat-repeat.3.0.xml</file>
         <file version="3.0">synthetic/beat-type.3.0.xml</file>
         <file version="3.0">synthetic/beats.3.0.xml</file>
         <file version="3.0">synthetic/cancel.location.3.0.xml</file>
         <file version="3.0">synthetic/clef.3.0.xml</file>
         <file version="3.1">synthetic/clef.3.1.xml</file>
+        <file version="3.0">synthetic/coda.3.0.xml</file>
+        <file version="3.1">synthetic/coda.3.1.xml</file>
         <file version="3.0">synthetic/directive.3.0.xml</file>
         <file version="3.0">synthetic/double.3.0.xml</file>
         <file version="4.0">synthetic/double.4.0.xml</file>
@@ -2556,6 +2562,8 @@
         <file version="4.0">synthetic/part-clef.4.0.xml</file>
         <file version="3.0">synthetic/part-symbol.3.0.xml</file>
         <file version="4.0">synthetic/part-transpose.4.0.xml</file>
+        <file version="3.0">synthetic/segno.3.0.xml</file>
+        <file version="3.1">synthetic/segno.3.1.xml</file>
         <file version="3.0">synthetic/senza-misura.3.0.xml</file>
         <file version="3.0">synthetic/slash-dot.3.0.xml</file>
         <file version="3.0">synthetic/slash-type.3.0.xml</file>
@@ -2569,7 +2577,7 @@
         <file version="3.1">synthetic/transpose.3.1.xml</file>
       </synthetic-files>
     </element>
-    <element name="divisions" total-files="438" wild-files="435" synthetic-files="3" min-synthetic-version="3.0">
+    <element name="divisions" total-files="442" wild-files="435" synthetic-files="7" min-synthetic-version="3.0">
       <wild-files count="435">
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
@@ -2585,13 +2593,17 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 423 more -->
       </wild-files>
-      <synthetic-files count="3" min-version="3.0">
+      <synthetic-files count="7" min-version="3.0">
         <file version="3.0">synthetic/cancel.location.3.0.xml</file>
+        <file version="3.0">synthetic/coda.3.0.xml</file>
+        <file version="3.1">synthetic/coda.3.1.xml</file>
         <file version="3.0">synthetic/key-accidental.3.0.xml</file>
         <file version="3.1">synthetic/key-accidental.smufl.3.1.xml</file>
+        <file version="3.0">synthetic/segno.3.0.xml</file>
+        <file version="3.1">synthetic/segno.3.1.xml</file>
       </synthetic-files>
     </element>
-    <element name="note" total-files="653" wild-files="435" synthetic-files="218" min-synthetic-version="3.0">
+    <element name="note" total-files="657" wild-files="435" synthetic-files="222" min-synthetic-version="3.0">
       <attributes>
         <attribute name="default-x" wild-files="145" synthetic-files="2"/>
         <attribute name="default-y" wild-files="58" synthetic-files="2"/>
@@ -2630,7 +2642,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 423 more -->
       </wild-files>
-      <synthetic-files count="218" min-version="3.0">
+      <synthetic-files count="222" min-version="3.0">
         <file version="3.0">synthetic/accent.3.0.xml</file>
         <file version="3.0">synthetic/accidental-mark.3.0.xml</file>
         <file version="3.1">synthetic/accidental-mark.3.1.xml</file>
@@ -2657,6 +2669,8 @@
         <file version="3.0">synthetic/caesura.3.0.xml</file>
         <file version="3.0">synthetic/cancel.location.3.0.xml</file>
         <file version="3.0">synthetic/circular-arrow.3.0.xml</file>
+        <file version="3.0">synthetic/coda.3.0.xml</file>
+        <file version="3.1">synthetic/coda.3.1.xml</file>
         <file version="4.0">synthetic/concert-score.4.0.xml</file>
         <file version="3.0">synthetic/creator.3.0.xml</file>
         <file version="3.0">synthetic/credit-image.3.0.xml</file>
@@ -2795,6 +2809,8 @@
         <file version="3.0">synthetic/schleifer.3.0.xml</file>
         <file version="3.0">synthetic/scoop.3.0.xml</file>
         <file version="3.1">synthetic/scoop.3.1.xml</file>
+        <file version="3.0">synthetic/segno.3.0.xml</file>
+        <file version="3.1">synthetic/segno.3.1.xml</file>
         <file version="3.0">synthetic/semi-pitched.3.0.xml</file>
         <file version="3.1">synthetic/sfzp.3.1.xml</file>
         <file version="3.0">synthetic/shake.3.0.xml</file>
@@ -2851,7 +2867,7 @@
         <file version="3.0">synthetic/work-title.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="type" total-files="417" wild-files="414" synthetic-files="3" min-synthetic-version="3.0">
+    <element name="type" total-files="421" wild-files="414" synthetic-files="7" min-synthetic-version="3.0">
       <attributes>
         <attribute name="size" wild-files="8" synthetic-files="0"/>
       </attributes>
@@ -2870,10 +2886,14 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 402 more -->
       </wild-files>
-      <synthetic-files count="3" min-version="3.0">
+      <synthetic-files count="7" min-version="3.0">
         <file version="3.0">synthetic/cancel.location.3.0.xml</file>
+        <file version="3.0">synthetic/coda.3.0.xml</file>
+        <file version="3.1">synthetic/coda.3.1.xml</file>
         <file version="3.0">synthetic/key-accidental.3.0.xml</file>
         <file version="3.1">synthetic/key-accidental.smufl.3.1.xml</file>
+        <file version="3.0">synthetic/segno.3.0.xml</file>
+        <file version="3.1">synthetic/segno.3.1.xml</file>
       </synthetic-files>
     </element>
     <element name="clef" total-files="417" wild-files="412" synthetic-files="5" min-synthetic-version="3.0">
@@ -3067,7 +3087,7 @@
         <file version="3.1">synthetic/time.3.1.xml</file>
       </synthetic-files>
     </element>
-    <element name="octave" total-files="624" wild-files="406" synthetic-files="218" min-synthetic-version="3.0">
+    <element name="octave" total-files="628" wild-files="406" synthetic-files="222" min-synthetic-version="3.0">
       <wild-files count="406">
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
@@ -3083,7 +3103,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 394 more -->
       </wild-files>
-      <synthetic-files count="218" min-version="3.0">
+      <synthetic-files count="222" min-version="3.0">
         <file version="3.0">synthetic/accent.3.0.xml</file>
         <file version="3.0">synthetic/accidental-mark.3.0.xml</file>
         <file version="3.1">synthetic/accidental-mark.3.1.xml</file>
@@ -3110,6 +3130,8 @@
         <file version="3.0">synthetic/caesura.3.0.xml</file>
         <file version="3.0">synthetic/cancel.location.3.0.xml</file>
         <file version="3.0">synthetic/circular-arrow.3.0.xml</file>
+        <file version="3.0">synthetic/coda.3.0.xml</file>
+        <file version="3.1">synthetic/coda.3.1.xml</file>
         <file version="4.0">synthetic/concert-score.4.0.xml</file>
         <file version="3.0">synthetic/creator.3.0.xml</file>
         <file version="3.0">synthetic/credit-image.3.0.xml</file>
@@ -3248,6 +3270,8 @@
         <file version="3.0">synthetic/schleifer.3.0.xml</file>
         <file version="3.0">synthetic/scoop.3.0.xml</file>
         <file version="3.1">synthetic/scoop.3.1.xml</file>
+        <file version="3.0">synthetic/segno.3.0.xml</file>
+        <file version="3.1">synthetic/segno.3.1.xml</file>
         <file version="3.0">synthetic/semi-pitched.3.0.xml</file>
         <file version="3.1">synthetic/sfzp.3.1.xml</file>
         <file version="3.0">synthetic/shake.3.0.xml</file>
@@ -3304,7 +3328,7 @@
         <file version="3.0">synthetic/work-title.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="pitch" total-files="624" wild-files="406" synthetic-files="218" min-synthetic-version="3.0">
+    <element name="pitch" total-files="628" wild-files="406" synthetic-files="222" min-synthetic-version="3.0">
       <wild-files count="406">
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
@@ -3320,7 +3344,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 394 more -->
       </wild-files>
-      <synthetic-files count="218" min-version="3.0">
+      <synthetic-files count="222" min-version="3.0">
         <file version="3.0">synthetic/accent.3.0.xml</file>
         <file version="3.0">synthetic/accidental-mark.3.0.xml</file>
         <file version="3.1">synthetic/accidental-mark.3.1.xml</file>
@@ -3347,6 +3371,8 @@
         <file version="3.0">synthetic/caesura.3.0.xml</file>
         <file version="3.0">synthetic/cancel.location.3.0.xml</file>
         <file version="3.0">synthetic/circular-arrow.3.0.xml</file>
+        <file version="3.0">synthetic/coda.3.0.xml</file>
+        <file version="3.1">synthetic/coda.3.1.xml</file>
         <file version="4.0">synthetic/concert-score.4.0.xml</file>
         <file version="3.0">synthetic/creator.3.0.xml</file>
         <file version="3.0">synthetic/credit-image.3.0.xml</file>
@@ -3485,6 +3511,8 @@
         <file version="3.0">synthetic/schleifer.3.0.xml</file>
         <file version="3.0">synthetic/scoop.3.0.xml</file>
         <file version="3.1">synthetic/scoop.3.1.xml</file>
+        <file version="3.0">synthetic/segno.3.0.xml</file>
+        <file version="3.1">synthetic/segno.3.1.xml</file>
         <file version="3.0">synthetic/semi-pitched.3.0.xml</file>
         <file version="3.1">synthetic/sfzp.3.1.xml</file>
         <file version="3.0">synthetic/shake.3.0.xml</file>
@@ -3541,7 +3569,7 @@
         <file version="3.0">synthetic/work-title.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="step" total-files="624" wild-files="406" synthetic-files="218" min-synthetic-version="3.0">
+    <element name="step" total-files="628" wild-files="406" synthetic-files="222" min-synthetic-version="3.0">
       <wild-files count="406">
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
@@ -3557,7 +3585,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 394 more -->
       </wild-files>
-      <synthetic-files count="218" min-version="3.0">
+      <synthetic-files count="222" min-version="3.0">
         <file version="3.0">synthetic/accent.3.0.xml</file>
         <file version="3.0">synthetic/accidental-mark.3.0.xml</file>
         <file version="3.1">synthetic/accidental-mark.3.1.xml</file>
@@ -3584,6 +3612,8 @@
         <file version="3.0">synthetic/caesura.3.0.xml</file>
         <file version="3.0">synthetic/cancel.location.3.0.xml</file>
         <file version="3.0">synthetic/circular-arrow.3.0.xml</file>
+        <file version="3.0">synthetic/coda.3.0.xml</file>
+        <file version="3.1">synthetic/coda.3.1.xml</file>
         <file version="4.0">synthetic/concert-score.4.0.xml</file>
         <file version="3.0">synthetic/creator.3.0.xml</file>
         <file version="3.0">synthetic/credit-image.3.0.xml</file>
@@ -3722,6 +3752,8 @@
         <file version="3.0">synthetic/schleifer.3.0.xml</file>
         <file version="3.0">synthetic/scoop.3.0.xml</file>
         <file version="3.1">synthetic/scoop.3.1.xml</file>
+        <file version="3.0">synthetic/segno.3.0.xml</file>
+        <file version="3.1">synthetic/segno.3.1.xml</file>
         <file version="3.0">synthetic/semi-pitched.3.0.xml</file>
         <file version="3.1">synthetic/sfzp.3.1.xml</file>
         <file version="3.0">synthetic/shake.3.0.xml</file>
@@ -12572,7 +12604,7 @@
         <file version="3.1">synthetic/flip.3.1.xml</file>
       </synthetic-files>
     </element>
-    <element name="footnote" total-files="386" wild-files="0" synthetic-files="386" min-synthetic-version="3.0">
+    <element name="footnote" total-files="382" wild-files="0" synthetic-files="382" min-synthetic-version="3.0">
       <attributes>
         <attribute name="color" wild-files="0" synthetic-files="1"/>
         <attribute name="default-x" wild-files="0" synthetic-files="1"/>
@@ -12599,7 +12631,7 @@
       </attributes>
       <wild-files count="0">
       </wild-files>
-      <synthetic-files count="386" min-version="3.0">
+      <synthetic-files count="382" min-version="3.0">
         <file version="3.0">synthetic/accent.3.0.xml</file>
         <file version="3.0">synthetic/accidental-mark.3.0.xml</file>
         <file version="3.1">synthetic/accidental-mark.3.1.xml</file>
@@ -12644,8 +12676,6 @@
         <file version="3.0">synthetic/circular-arrow.3.0.xml</file>
         <file version="3.0">synthetic/clef.3.0.xml</file>
         <file version="3.1">synthetic/clef.3.1.xml</file>
-        <file version="3.0">synthetic/coda.3.0.xml</file>
-        <file version="3.1">synthetic/coda.3.1.xml</file>
         <file version="4.0">synthetic/concert-score.4.0.xml</file>
         <file version="3.0">synthetic/creator.3.0.xml</file>
         <file version="3.0">synthetic/credit-image.3.0.xml</file>
@@ -12894,8 +12924,6 @@
         <file version="3.1">synthetic/scoop.3.1.xml</file>
         <file version="3.1">synthetic/scordatura.3.1.xml</file>
         <file version="4.0">synthetic/second.4.0.xml</file>
-        <file version="3.0">synthetic/segno.3.0.xml</file>
-        <file version="3.1">synthetic/segno.3.1.xml</file>
         <file version="3.0">synthetic/semi-pitched.3.0.xml</file>
         <file version="3.0">synthetic/senza-misura.3.0.xml</file>
         <file version="3.1">synthetic/sfzp.3.1.xml</file>
@@ -13264,7 +13292,7 @@
         <file version="3.0">synthetic/laughing.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="level" total-files="386" wild-files="0" synthetic-files="386" min-synthetic-version="3.0">
+    <element name="level" total-files="382" wild-files="0" synthetic-files="382" min-synthetic-version="3.0">
       <attributes>
         <attribute name="bracket" wild-files="0" synthetic-files="2"/>
         <attribute name="parentheses" wild-files="0" synthetic-files="2"/>
@@ -13274,7 +13302,7 @@
       </attributes>
       <wild-files count="0">
       </wild-files>
-      <synthetic-files count="386" min-version="3.0">
+      <synthetic-files count="382" min-version="3.0">
         <file version="3.0">synthetic/accent.3.0.xml</file>
         <file version="3.0">synthetic/accidental-mark.3.0.xml</file>
         <file version="3.1">synthetic/accidental-mark.3.1.xml</file>
@@ -13319,8 +13347,6 @@
         <file version="3.0">synthetic/circular-arrow.3.0.xml</file>
         <file version="3.0">synthetic/clef.3.0.xml</file>
         <file version="3.1">synthetic/clef.3.1.xml</file>
-        <file version="3.0">synthetic/coda.3.0.xml</file>
-        <file version="3.1">synthetic/coda.3.1.xml</file>
         <file version="4.0">synthetic/concert-score.4.0.xml</file>
         <file version="3.0">synthetic/creator.3.0.xml</file>
         <file version="3.0">synthetic/credit-image.3.0.xml</file>
@@ -13569,8 +13595,6 @@
         <file version="3.1">synthetic/scoop.3.1.xml</file>
         <file version="3.1">synthetic/scordatura.3.1.xml</file>
         <file version="4.0">synthetic/second.4.0.xml</file>
-        <file version="3.0">synthetic/segno.3.0.xml</file>
-        <file version="3.1">synthetic/segno.3.1.xml</file>
         <file version="3.0">synthetic/semi-pitched.3.0.xml</file>
         <file version="3.0">synthetic/senza-misura.3.0.xml</file>
         <file version="3.1">synthetic/sfzp.3.1.xml</file>

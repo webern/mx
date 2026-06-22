@@ -6,6 +6,9 @@
   <audited-version>3.0</audited-version>
   <features>
     <feature>
+      <name>attributes</name>
+    </feature>
+    <feature>
       <name>coda</name>
       <attributes>
         <attribute>color</attribute>
@@ -28,16 +31,22 @@
       <name>direction-type</name>
     </feature>
     <feature>
-      <name>footnote</name>
+      <name>divisions</name>
     </feature>
     <feature>
-      <name>level</name>
+      <name>duration</name>
     </feature>
     <feature>
       <name>measure</name>
       <attributes>
         <attribute>number</attribute>
       </attributes>
+    </feature>
+    <feature>
+      <name>note</name>
+    </feature>
+    <feature>
+      <name>octave</name>
     </feature>
     <feature>
       <name>part</name>
@@ -58,6 +67,9 @@
       <name>part-name</name>
     </feature>
     <feature>
+      <name>pitch</name>
+    </feature>
+    <feature>
       <name>score-part</name>
       <attributes>
         <attribute>id</attribute>
@@ -71,6 +83,12 @@
     </feature>
     <feature>
       <name>staff</name>
+    </feature>
+    <feature>
+      <name>step</name>
+    </feature>
+    <feature>
+      <name>type</name>
     </feature>
     <feature>
       <name>voice</name>
