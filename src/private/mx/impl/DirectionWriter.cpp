@@ -21,6 +21,7 @@
 #include "mx/core/generated/DirectionTypeChoiceChoice.h"
 #include "mx/core/generated/Divisions.h"
 #include "mx/core/generated/Dynamics.h"
+#include "mx/core/generated/EditorialVoiceDirectionGroup.h"
 #include "mx/core/generated/Empty.h"
 #include "mx/core/generated/Figure.h"
 #include "mx/core/generated/FiguredBass.h"
@@ -110,6 +111,17 @@ std::vector<core::MusicDataChoice> DirectionWriter::getDirectionLikeThings()
         coreOffset.setValue(core::Divisions{core::Decimal{static_cast<double>(offset)}});
         coreOffset.setSound(core::YesNo::yes());
         direction.setOffset(coreOffset);
+    }
+
+    // Assign the direction to a voice via the editorial-voice <voice>. Only emitted when this
+    // direction also writes direction-type content (guarded by myIsFirstDirectionTypeAdded below),
+    // so a voice carried in from a figured-bass or harmony element never produces an empty
+    // <direction>.
+    if (myDirectionData.voice >= 0)
+    {
+        core::EditorialVoiceDirectionGroup editorialVoice{};
+        editorialVoice.setVoice(std::to_string(myDirectionData.voice));
+        direction.setEditorialVoiceDirection(std::move(editorialVoice));
     }
 
     for (auto mark : myDirectionData.marks)

@@ -68,6 +68,7 @@
 #include "mx/impl/SoundFunctions.h"
 #include "mx/impl/SpannerFunctions.h"
 #include "mx/utility/Round.h"
+#include "mx/utility/StringToInt.h"
 #include "mx/utility/Unused.h"
 
 namespace mx
@@ -169,6 +170,17 @@ void DirectionReader::parseValues()
             {
                 myOutDirectionData.isSoundDataSpecified = true;
                 myOutDirectionData.soundData = std::move(soundData);
+            }
+        }
+
+        // The <direction>'s editorial-voice <voice> assigns the direction to a voice. A value of
+        // -1 on DirectionData::voice means none was present.
+        if (myDirection->editorialVoiceDirection().voice().has_value())
+        {
+            int parsedVoice = -1;
+            if (utility::stringToInt(myDirection->editorialVoiceDirection().voice()->c_str(), parsedVoice))
+            {
+                myOutDirectionData.voice = parsedVoice;
             }
         }
     }
