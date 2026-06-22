@@ -12,13 +12,13 @@
       </attributes>
       <direction>
         <direction-type>
-          <segno default-x="1" default-y="1" relative-x="1" relative-y="1" font-family="x" font-style="normal" font-size="1" font-weight="normal" color="#FF000000" halign="left" valign="top" />
+          <segno default-x="1.1" default-y="2.2" relative-x="3.3" relative-y="4.4" font-family="x" font-style="italic" font-size="5.5" font-weight="bold" color="#12345678" halign="center" valign="middle" />
         </direction-type>
         <staff>1</staff>
       </direction>
       <direction>
         <direction-type>
-          <coda default-x="1" default-y="1" relative-x="1" relative-y="1" font-family="x" font-style="normal" font-size="1" font-weight="normal" color="#FF000000" halign="left" valign="top" />
+          <coda default-x="6.6" default-y="7.7" relative-x="8.8" relative-y="9.9" font-family="y" font-style="italic" font-size="11.1" font-weight="bold" color="#9ABCDEF0" halign="right" valign="bottom" />
         </direction-type>
         <staff>1</staff>
       </direction>
