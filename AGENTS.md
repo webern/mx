@@ -100,10 +100,10 @@ What you need to know right now is that `gen/cpp` is where our MusicXML types ar
 
 ## Quality gates
 
-Run `make fmt` for a stable version of clang format.
-Run `make check` to see if you will pass in CI
-Run `make test-core-dev` to run the `corert` tests, especially if you are working in `mx/core`.
-Run `make test` to run all the tests. (Slow and heavy on the local machine)
+Run `make fmt` to format. `make check` is the clang-format gate **only** — it builds and tests nothing.
+Run `make test-core-dev` for corert (especially `mx/core` work); `make test` for everything (slow).
+Adding/removing a `data/` file: bump the pinned count in `CoreRoundtripTest.cpp`, run `make audit` (regenerates `corpus.xml` + `*.features.xml`), confirm round-trip via `make test-core-dev`.
+`ApiLoadSmokeTest` proves a file imports without crashing, not that the data is correct; the read→write→read gate (`make test-api-roundtrip` / `roundtrip-baseline.txt`) is the correctness check — pin a fixture there to defend a feature.
 
 Look at what will run in CI `.github/workflows/ci.yaml` and anticipate issues there when coding
 locally.
