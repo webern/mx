@@ -12,9 +12,10 @@
 
 namespace mxtest
 {
-// Smoke test: proves each registered file imports (createFromFile -> getData
-// yields a part), NOT that the data is correct -- dropped or mistranslated
-// elements still pass. Fidelity is the round-trip gate (roundtrip-baseline.txt).
+// Smoke test: proves each registered file imports and produces at least one part
+// (createFromFile -> getData succeeds with a non-empty ScoreData::parts), NOT that the
+// data is correct -- dropped or mistranslated elements still pass. Fidelity is the
+// round-trip gate (roundtrip-baseline.txt).
 class ApiLoadSmokeTest : public mxtest::MxFileTest
 {
   public:
