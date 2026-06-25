@@ -10,8 +10,8 @@ namespace mx
 namespace api
 {
 ClefData::ClefData()
-    : symbol{DEFAULT_CLEF_SYMBOL}, line{DEFAULT_CLEF_LINE}, isLineSpecified{true}, octaveChange{DEFAULT_CLEF_OCTAVE_CHANGE},
-      tickTimePosition{0}, location{ClefLocation::unspecified}
+    : symbol{DEFAULT_CLEF_SYMBOL}, line{DEFAULT_CLEF_LINE}, isLineSpecified{true},
+      octaveChange{DEFAULT_CLEF_OCTAVE_CHANGE}, tickTimePosition{0}, location{ClefLocation::unspecified}
 {
 }
 
