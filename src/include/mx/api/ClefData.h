@@ -41,6 +41,9 @@ class ClefData
     // int staffIndex;
     ClefSymbol symbol;
     int line;
+    // When true (the default), the writer emits <line>. Set to false when the source
+    // had no <line> element so the round-trip does not inject an implied default (#228).
+    bool isLineSpecified;
     int octaveChange;
     int tickTimePosition;
     ClefLocation location;
@@ -69,6 +72,7 @@ MXAPI_EQUALS_BEGIN(ClefData)
 // MXAPI_EQUALS_MEMBER( staffIndex )
 MXAPI_EQUALS_MEMBER(symbol)
 MXAPI_EQUALS_MEMBER(line)
+MXAPI_EQUALS_MEMBER(isLineSpecified)
 MXAPI_EQUALS_MEMBER(octaveChange)
 MXAPI_EQUALS_MEMBER(tickTimePosition)
 MXAPI_EQUALS_MEMBER(location)

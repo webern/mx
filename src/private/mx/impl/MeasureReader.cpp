@@ -759,9 +759,11 @@ void MeasureReader::importClef(const core::Clef &inClef) const
     if (inClef.clef().line().has_value())
     {
         clefData.line = inClef.clef().line()->value();
+        clefData.isLineSpecified = true;
     }
     else
     {
+        clefData.isLineSpecified = false;
         switch (clefData.symbol)
         {
         case api::ClefSymbol::g:

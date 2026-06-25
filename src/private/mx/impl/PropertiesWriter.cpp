@@ -210,7 +210,7 @@ void PropertiesWriter::writeClef(int staffIndex, const api::ClefData &inClefData
     core::ClefGroup cg{};
     cg.setSign(converter.convert(inClefData.symbol));
 
-    if (inClefData.line >= 0)
+    if (inClefData.isLineSpecified)
     {
         cg.setLine(core::StaffLinePosition{inClefData.line});
     }

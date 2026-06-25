@@ -81,3 +81,8 @@ lysuite/ly41d_StaffGroups_Nested.xml
 lysuite/ly41f_StaffGroups_Overlapping.xml
 lysuite/ly45d_Repeats_Nested_Alternatives.xml
 lysuite/ly45e_Repeats_Nested_Alternatives.xml
+
+# Unblocked by #228 (add:line): the writer no longer injects a spurious <line>
+# element in <clef> when the source omitted it. ClefData::isLineSpecified tracks
+# presence; PropertiesWriter emits <line> only when the flag is set.
+lysuite/ly12a_Clefs.xml
