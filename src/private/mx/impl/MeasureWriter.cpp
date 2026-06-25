@@ -377,6 +377,7 @@ void MeasureWriter::writeStaves()
 
 void MeasureWriter::writeVoices(const api::StaffData &inStaff)
 {
+    const int numVoices = static_cast<int>(inStaff.voices.size());
     auto clefIter = inStaff.clefs.cbegin();
     const auto clefEnd = inStaff.clefs.cend();
     while (clefIter != clefEnd && clefIter->tickTimePosition == 0)
@@ -453,7 +454,7 @@ void MeasureWriter::writeVoices(const api::StaffData &inStaff)
 
             NoteWriter writer{
                 apiNote,  myHistory.getCursor(), myScoreWriter, myPreviousCursor.isChordActive, voice.second.notes,
-                noteIndex};
+                noteIndex, numVoices};
             myOutMeasure.addMusicData(core::MusicDataChoice::note(writer.getNote(isStartOfChord)));
             myHistory.log("addNote cursorTime " + std::to_string(myHistory.getCursor().tickTimePosition) +
                           ", noteTime " + std::to_string(apiNote.tickTimePosition));

@@ -86,3 +86,10 @@ lysuite/ly45e_Repeats_Nested_Alternatives.xml
 # element in <clef> when the source omitted it. ClefData::isLineSpecified tracks
 # presence; PropertiesWriter emits <line> only when the flag is set.
 lysuite/ly12a_Clefs.xml
+
+# Unblocked by #228 (add:voice): the writer no longer injects a spurious <voice>
+# element for notes whose source omitted it. NoteData::userRequestedVoiceNumber
+# (already -1 when absent) gates NoteWriter::setStaffAndVoice() voice emission.
+mjbsuite/ChordDirectionPlacement.xml
+mjbsuite/hello_timewise.xml
+synthetic/key-accidental.3.0.xml

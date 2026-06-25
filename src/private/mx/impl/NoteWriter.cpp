@@ -33,10 +33,11 @@ namespace impl
 {
 NoteWriter::NoteWriter(const api::NoteData &inNoteData, const MeasureCursor &inCursor, const ScoreWriter &inScoreWriter,
                        bool isPreviousNoteAChordMember, const std::vector<mx::api::NoteData> &inSiblingNotes,
-                       int inNoteIndex)
+                       int inNoteIndex, int inNumVoices)
     : myNoteData{inNoteData}, myCursor{inCursor}, myScoreWriter{inScoreWriter}, myConverter{},
       myIsPreviousNoteAChordMember{isPreviousNoteAChordMember}, mySiblingNotes{inSiblingNotes},
-      myNoteIndex{inNoteIndex}, myOutNote{}, myOutFullNoteGroup{}, myOutTies{}, myOutTieNotationsChoices{}
+      myNoteIndex{inNoteIndex}, myNumVoices{inNumVoices}, myOutNote{}, myOutFullNoteGroup{}, myOutTies{},
+      myOutTieNotationsChoices{}
 {
 }
 
@@ -375,13 +376,15 @@ void NoteWriter::setStaffAndVoice() const
         myOutNote.setStaff(myCursor.staffIndex + 1);
     }
 
-    if (myCursor.voiceIndex >= 0)
+    const bool sourceHadVoice = myNoteData.userRequestedVoiceNumber != -1;
+    const bool isNonDefaultVoice = myCursor.voiceIndex > 0;
+    const bool isMultiVoiceStaff = myNumVoices > 1;
+    if (myCursor.voiceIndex >= 0 && (sourceHadVoice || isNonDefaultVoice || isMultiVoiceStaff))
     {
         auto editorialVoice = myOutNote.editorialVoice();
         editorialVoice.setVoice(std::to_string(myCursor.voiceIndex + 1));
         myOutNote.setEditorialVoice(std::move(editorialVoice));
     }
-    // TODO - only show voice number if it is needed i.e. only show if != 0 or voiceCount > 1
 }
 
 void NoteWriter::setDurationNameAndDots() const
