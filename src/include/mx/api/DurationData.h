@@ -66,8 +66,13 @@ struct DurationData
     DurationData();
 
     DurationName durationName; // i.e. quarter, eighth etc
-    int durationDots;          // dots
-    int durationTimeTicks;     // length of the note denominated in ticksPerQuarter
+    // When true (the default), the writer emits <type>. Set to false when the source
+    // had no <type> element so the round-trip does not inject an implied default (#228).
+    // When authoring, leave true and set durationName to control the display type;
+    // durationName and durationTimeTicks are independent (type is graphical, duration is sound).
+    bool isDurationNameSpecified;
+    int durationDots;      // dots
+    int durationTimeTicks; // length of the note denominated in ticksPerQuarter
     bool isTied; // affects sound only. is the note combined sound-wise with the following note of the same pitch
     int timeModificationActualNotes;              // i.e. for a triplet this would be 3
     int timeModificationNormalNotes;              // i.e. for a triplet this would be 2
@@ -78,6 +83,7 @@ struct DurationData
 
 MXAPI_EQUALS_BEGIN(DurationData)
 MXAPI_EQUALS_MEMBER(durationName)
+MXAPI_EQUALS_MEMBER(isDurationNameSpecified)
 MXAPI_EQUALS_MEMBER(durationDots)
 MXAPI_EQUALS_MEMBER(durationTimeTicks)
 MXAPI_EQUALS_MEMBER(isTied)

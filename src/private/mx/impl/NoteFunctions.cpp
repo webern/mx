@@ -92,10 +92,12 @@ api::NoteData NoteFunctions::parseNote() const
     if (reader.getIsDurationTypeSpecified())
     {
         myOutNoteData.durationData.durationName = converter.convert(reader.getDurationType());
+        myOutNoteData.durationData.isDurationNameSpecified = true;
     }
     else
     {
         myOutNoteData.durationData.durationName = deriveNoteTypeFromDurationValue(reader);
+        myOutNoteData.durationData.isDurationNameSpecified = false;
     }
 
     myOutNoteData.durationData.durationDots = reader.getNumDots();

@@ -73,3 +73,11 @@ synthetic/segno.3.0.xml
 synthetic/segno.3.1.xml
 synthetic/coda.3.0.xml
 synthetic/coda.3.1.xml
+
+# Unblocked by #228: the writer no longer injects a spurious <type> element for
+# notes whose source omitted it. DurationData::isDurationNameSpecified tracks
+# presence; the writer emits <type> only when the flag is set.
+lysuite/ly41d_StaffGroups_Nested.xml
+lysuite/ly41f_StaffGroups_Overlapping.xml
+lysuite/ly45d_Repeats_Nested_Alternatives.xml
+lysuite/ly45e_Repeats_Nested_Alternatives.xml

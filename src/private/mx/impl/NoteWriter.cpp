@@ -386,7 +386,8 @@ void NoteWriter::setStaffAndVoice() const
 
 void NoteWriter::setDurationNameAndDots() const
 {
-    if (!myNoteData.isRest || !myNoteData.isMeasureRest)
+    const bool isMeasureRest = myNoteData.isRest && myNoteData.isMeasureRest;
+    if (myNoteData.durationData.isDurationNameSpecified && !isMeasureRest)
     {
         core::NoteType noteType;
         noteType.setValue(myConverter.convert(myNoteData.durationData.durationName));
