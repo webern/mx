@@ -35,6 +35,17 @@ void createEncoding(const api::EncodingData &inEncoding, core::ScoreHeaderGroup 
         encoding.addChoice(core::EncodingChoice::encoder(std::move(encoder)));
     }
 
+    // Emit <software> before <encoding-date>: this is the order the common
+    // authoring tools (MuseScore, Finale, Sibelius) write, so it minimizes
+    // <encoding> child reordering on round-trip. MusicXML's encoding choice has
+    // no required order, so any order is schema-valid.
+    for (const auto &s : inEncoding.software)
+    {
+        hasIdentification = true;
+        hasEncoding = true;
+        encoding.addChoice(core::EncodingChoice::software(s));
+    }
+
     core::YyyyMmDd tryDate{inEncoding.encodingDate.year, inEncoding.encodingDate.month, inEncoding.encodingDate.day};
     const bool isYearValid = inEncoding.encodingDate.year == tryDate.year();
     const bool isMonthValid = inEncoding.encodingDate.month == tryDate.month();
@@ -51,13 +62,6 @@ void createEncoding(const api::EncodingData &inEncoding, core::ScoreHeaderGroup 
         hasIdentification = true;
         hasEncoding = true;
         encoding.addChoice(core::EncodingChoice::encodingDescription(inEncoding.encodingDescription));
-    }
-
-    for (const auto &s : inEncoding.software)
-    {
-        hasIdentification = true;
-        hasEncoding = true;
-        encoding.addChoice(core::EncodingChoice::software(s));
     }
 
     for (const auto &s : inEncoding.supportedItems)

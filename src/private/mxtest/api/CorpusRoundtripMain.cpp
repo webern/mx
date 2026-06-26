@@ -114,8 +114,8 @@ void addMxAttribution(pugi::xml_node scoreRoot)
 }
 
 // mx::api flattens <encoding> into typed buckets (api::EncodingData) and re-emits
-// its children in a fixed canonical order on write -- encoder, encoding-date,
-// encoding-description, software, supports (see createEncoding in
+// its children in a fixed canonical order on write -- encoder, software,
+// encoding-date, encoding-description, supports (see createEncoding in
 // EncodingFunctions.cpp). A source whose <encoding> lists those children in any
 // other order therefore round-trips with an identical child multiset but a
 // different order (issue #220). That ordering is a deliberate property of the
@@ -139,11 +139,11 @@ void canonicalizeEncodingChildOrder(pugi::xml_node scoreRoot)
     const auto rank = [](std::string_view name) -> int {
         if (name == "encoder")
             return 0;
-        if (name == "encoding-date")
-            return 1;
-        if (name == "encoding-description")
-            return 2;
         if (name == "software")
+            return 1;
+        if (name == "encoding-date")
+            return 2;
+        if (name == "encoding-description")
             return 3;
         if (name == "supports")
             return 4;
