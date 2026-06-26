@@ -113,6 +113,56 @@ void addMxAttribution(pugi::xml_node scoreRoot)
         .set_value(mx::core::mxSoftwareAttribution().c_str());
 }
 
+// mx::api flattens <encoding> into typed buckets (api::EncodingData) and re-emits
+// its children in a fixed canonical order on write -- encoder, encoding-date,
+// encoding-description, software, supports (see createEncoding in
+// EncodingFunctions.cpp). A source whose <encoding> lists those children in any
+// other order therefore round-trips with an identical child multiset but a
+// different order (issue #220). That ordering is a deliberate property of the
+// simplified api, not a fidelity loss, so the comparison treats <encoding> child
+// order as insignificant: stable-sort both documents' <encoding> children into the
+// api's canonical order before comparing. Genuine drops/adds/value changes still
+// surface; only pure reordering is normalized away. The stable sort keeps the
+// relative order within a child kind -- multiple <software>/<supports>, and mx's
+// own trailing stamp <software> -- which the api does preserve, so the user
+// software and the stamp stay aligned on both sides (otherwise the reorder
+// misaligns them into a spurious <software> value mismatch).
+//
+// Must run after normalizeForComparison(): that strips inter-element whitespace, so
+// <encoding>'s direct children are pure elements here.
+void canonicalizeEncodingChildOrder(pugi::xml_node scoreRoot)
+{
+    pugi::xml_node encoding = scoreRoot.child("identification").child("encoding");
+    if (!encoding)
+        return;
+
+    const auto rank = [](std::string_view name) -> int {
+        if (name == "encoder")
+            return 0;
+        if (name == "encoding-date")
+            return 1;
+        if (name == "encoding-description")
+            return 2;
+        if (name == "software")
+            return 3;
+        if (name == "supports")
+            return 4;
+        return 5; // unknown children sort last, preserving their relative order
+    };
+
+    std::vector<pugi::xml_node> children;
+    for (pugi::xml_node c = encoding.first_child(); c; c = c.next_sibling())
+        children.push_back(c);
+
+    std::stable_sort(children.begin(), children.end(),
+                     [&](const pugi::xml_node &a, const pugi::xml_node &b) { return rank(a.name()) < rank(b.name()); });
+
+    // append_move pulls each node to the end; visiting the sorted vector in order
+    // leaves encoding's children in exactly that order.
+    for (const auto &c : children)
+        encoding.append_move(c);
+}
+
 bool hasSuffix(const std::string &name, std::string_view suffix)
 {
     return name.size() >= suffix.size() && name.compare(name.size() - suffix.size(), suffix.size(), suffix) == 0;
@@ -276,6 +326,11 @@ RoundtripResult runRoundtrip(const std::string &absolutePath)
     mxtest::corert::Fixer fixer(absolutePath);
     fixer.applyToExpected(expectedDoc);
 
+    // The api re-emits <encoding> children in canonical order; treat that order as
+    // insignificant by canonicalizing both sides before comparing (#220).
+    canonicalizeEncodingChildOrder(expectedDoc.document_element());
+    canonicalizeEncodingChildOrder(actualDoc.document_element());
+
     // Compare
     const auto fail = mxtest::corert::compareElements(expectedDoc.document_element(), actualDoc.document_element());
     if (fail.isFailure)
@@ -358,6 +413,7 @@ void dumpDocuments(const std::string &absolutePath, const std::string &relPath, 
     mxtest::corert::normalizeForComparison(expectedDoc);
     mxtest::corert::Fixer fixer(absolutePath);
     fixer.applyToExpected(expectedDoc);
+    canonicalizeEncodingChildOrder(expectedDoc.document_element());
     if (!expectedDoc.save_file(expectedPath.c_str()))
         std::cerr << "dump: failed to write " << expectedPath << "\n";
 
@@ -414,6 +470,7 @@ void dumpDocuments(const std::string &absolutePath, const std::string &relPath, 
         return;
     }
     mxtest::corert::normalizeForComparison(actualDoc);
+    canonicalizeEncodingChildOrder(actualDoc.document_element());
     if (!actualDoc.save_file(actualPath.c_str()))
         std::cerr << "dump: failed to write " << actualPath << "\n";
 }

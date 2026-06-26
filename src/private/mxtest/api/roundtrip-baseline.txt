@@ -93,3 +93,59 @@ lysuite/ly12a_Clefs.xml
 mjbsuite/ChordDirectionPlacement.xml
 mjbsuite/hello_timewise.xml
 synthetic/key-accidental.3.0.xml
+
+# Unblocked by #220: the api flattens <encoding> into typed buckets (EncodingData)
+# and re-emits its children in a fixed canonical order (encoder, encoding-date,
+# encoding-description, software, supports). Real-world files list them in other
+# orders, so the round-trip diverged only by <encoding> child order -- a deliberate
+# property of the simplified api, not a fidelity loss. The harness now canonicalizes
+# <encoding> child order on both sides before comparing (which also realigns the
+# user <software> against mx's trailing stamp, fixing the secondary value mismatch).
+ksuite/k009b_Slur_Attributes.xml
+musuite/testAccidentals1.xml
+musuite/testBarStyles.xml
+musuite/testChordNoVoice_ref.xml
+musuite/testClefs1.xml
+musuite/testCompleteMeasureRests.xml
+musuite/testDCalCoda.xml
+musuite/testDCalFine.xml
+musuite/testDalSegno.xml
+musuite/testDynamics1.xml
+musuite/testDynamics2.xml
+musuite/testDynamics3.xml
+musuite/testDynamics3_ref.xml
+musuite/testEmptyMeasure.xml
+musuite/testFiguredBass1.xml
+musuite/testHello.xml
+musuite/testImplicitMeasure1.xml
+musuite/testKeysig1.xml
+musuite/testLineBreaks.xml
+musuite/testManualBreaks.xml
+musuite/testMeasureLength.xml
+musuite/testMultiMeasureRest1_ref.xml
+musuite/testMultiMeasureRest2_ref.xml
+musuite/testMultiMeasureRest3_ref.xml
+musuite/testMultipleNotations_ref.xml
+musuite/testNonUniqueThings.xml
+musuite/testNonUniqueThings_ref.xml
+musuite/testNotesRests1.xml
+musuite/testNotesRests2.xml
+musuite/testPartsSpecialCases_ref.xml
+musuite/testRestsNoType.xml
+musuite/testRestsNoType_ref.xml
+musuite/testSlurs.xml
+musuite/testStaffTwoKeySigs.xml
+musuite/testStringVoiceName_ref.xml
+musuite/testSystemBrackets1.xml
+musuite/testSystemBrackets2.xml
+musuite/testTimesig1.xml
+musuite/testTimesig3.xml
+musuite/testUnusualDurations.xml
+musuite/testVoiceMapper1_ref.xml
+musuite/testVoiceMapper2.xml
+musuite/testVoiceMapper2_ref.xml
+musuite/testVoiceMapper3.xml
+musuite/testVoiceMapper3_ref.xml
+musuite/testVoicePiano1.xml
+musuite/testVolta1.xml
+musuite/testWords1.xml
