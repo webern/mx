@@ -8,6 +8,7 @@
 #include "cpul/cpulTestHarness.h"
 #include "mx/api/DefaultsData.h"
 #include "mx/api/DocumentManager.h"
+#include "mx/core/Attribution.h"
 #include "mx/core/generated/Document.h"
 #include "mx/core/generated/MarginType.h"
 #include "mx/core/generated/PageLayout.h"
@@ -394,6 +395,49 @@ TEST(RoundTrip_SupportedItems_isSupported, DocumentManager)
     REQUIRE(outputScore.encoding.supportedItems.size() >= 2);
     CHECK_EQUAL(testValue0, outputScore.encoding.supportedItems.at(0).isSupported);
     CHECK_EQUAL(testValue1, outputScore.encoding.supportedItems.at(1).isSupported);
+}
+
+T_END
+
+// --- writeMxVersion: suppressing mx's provenance stamp ----------------------
+// mx stamps its own <software> (text begins with kMxSoftwareMarker) into
+// <encoding> on every api write. EncodingData::writeMxVersion defaults true --
+// even for files parsed without the stamp -- but the caller may set it false to
+// suppress mx's node while still emitting the user's own <software>.
+
+// Serialize a ScoreData to a string via the api write path (no reload).
+inline std::string writeScoreToString(const ScoreData &input)
+{
+    auto &docMngr = DocumentManager::getInstance();
+    const auto createResult = docMngr.createFromScore(input);
+    REQUIRE(createResult.ok());
+    const int writeId = createResult.value();
+    std::ostringstream oss;
+    const auto writeResult = docMngr.writeToStream(writeId, oss);
+    REQUIRE(writeResult.ok());
+    docMngr.destroyDocument(writeId);
+    return oss.str();
+}
+
+TEST(writeMxVersion_defaultsTrueAndStamps, DocumentManager)
+{
+    // Parsed from a real file that never carried mx's stamp; the flag still
+    // defaults true, so the written output gains the stamp.
+    ScoreData score = getScore();
+    CHECK(score.encoding.writeMxVersion);
+    const std::string xml = writeScoreToString(score);
+    CHECK(xml.find(std::string{mx::core::kMxSoftwareMarker}) != std::string::npos);
+}
+
+T_END
+
+TEST(writeMxVersion_offSuppressesStamp, DocumentManager)
+{
+    // Turn the stamp off after parsing: the written output must not contain it.
+    ScoreData score = getScore();
+    score.encoding.writeMxVersion = false;
+    const std::string xml = writeScoreToString(score);
+    CHECK(xml.find(std::string{mx::core::kMxSoftwareMarker}) == std::string::npos);
 }
 
 T_END

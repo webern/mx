@@ -23,7 +23,17 @@ namespace mx
 {
 namespace api
 {
-using DocumentMap = std::map<int, mx::core::DocumentPtr>;
+// A stored document plus the api write directives that the core model cannot
+// carry. writeMxVersion governs whether writeTo*() stamps mx's provenance
+// <software> (see EncodingData::writeMxVersion); it defaults true, including for
+// parsed documents (whose source never had the stamp).
+struct StoredDocument
+{
+    mx::core::DocumentPtr document;
+    bool writeMxVersion = true;
+};
+
+using DocumentMap = std::map<int, StoredDocument>;
 
 namespace
 {
@@ -160,7 +170,7 @@ Result<int> DocumentManager::createFromFile(const std::string &filePath)
         auto mxdoc = std::make_shared<core::Document>(std::move(parsed).value());
 
         LOCK_DOCUMENT_MANAGER
-        myImpl->myMap[myImpl->myCurrentId] = std::move(mxdoc);
+        myImpl->myMap[myImpl->myCurrentId] = StoredDocument{std::move(mxdoc), true};
         return myImpl->myCurrentId++;
     }
     catch (const std::exception &e)
@@ -193,7 +203,7 @@ Result<int> DocumentManager::createFromStream(std::istream &stream)
         auto mxdoc = std::make_shared<core::Document>(std::move(parsed).value());
 
         LOCK_DOCUMENT_MANAGER
-        myImpl->myMap[myImpl->myCurrentId] = std::move(mxdoc);
+        myImpl->myMap[myImpl->myCurrentId] = StoredDocument{std::move(mxdoc), true};
         return myImpl->myCurrentId++;
     }
     catch (const std::exception &e)
@@ -224,7 +234,7 @@ Result<int> DocumentManager::createFromScore(const ScoreData &score)
         }
 
         LOCK_DOCUMENT_MANAGER
-        myImpl->myMap[myImpl->myCurrentId] = std::move(mxdoc);
+        myImpl->myMap[myImpl->myCurrentId] = StoredDocument{std::move(mxdoc), score.encoding.writeMxVersion};
         return myImpl->myCurrentId++;
     }
     catch (const impl::WriteRefusal &refusal)
@@ -256,7 +266,15 @@ Result<void> DocumentManager::writeToFile(int documentId, const std::string &fil
         }
 
         pugi::xml_document xdoc;
-        core::serializeWithAttribution(withWriteVersion(*it->second), xdoc);
+        const core::Document toWrite = withWriteVersion(*it->second.document);
+        if (it->second.writeMxVersion)
+        {
+            core::serializeWithAttribution(toWrite, xdoc);
+        }
+        else
+        {
+            core::serialize(toWrite, xdoc);
+        }
         if (!xdoc.save_file(filePath.c_str(), "  "))
         {
             return ApiError{ResultCode::ioError, filePath, "writeToFile: could not write the file"};
@@ -286,7 +304,15 @@ Result<void> DocumentManager::writeToStream(int documentId, std::ostream &stream
         }
 
         pugi::xml_document xdoc;
-        core::serializeWithAttribution(withWriteVersion(*it->second), xdoc);
+        const core::Document toWrite = withWriteVersion(*it->second.document);
+        if (it->second.writeMxVersion)
+        {
+            core::serializeWithAttribution(toWrite, xdoc);
+        }
+        else
+        {
+            core::serialize(toWrite, xdoc);
+        }
         xdoc.save(stream, "  ");
         return Result<void>{};
     }
@@ -315,16 +341,16 @@ Result<ScoreData> DocumentManager::getData(int documentId) const
         // Convert into a local partwise copy and read that; the stored
         // document is untouched. The old mutate-and-restore dance (convert
         // the stored document to partwise, read, convert back) is gone.
-        if (it->second->isScoreTimewise())
+        if (it->second.document->isScoreTimewise())
         {
-            const core::ScorePartwise scorePartwise = impl::timewisePartwise(it->second->asScoreTimewise());
+            const core::ScorePartwise scorePartwise = impl::timewisePartwise(it->second.document->asScoreTimewise());
             impl::ScoreReader reader{scorePartwise};
             auto score = reader.getScoreData();
             score.musicXmlType = "timewise";
             return score;
         }
 
-        impl::ScoreReader reader{it->second->asScorePartwise()};
+        impl::ScoreReader reader{it->second.document->asScorePartwise()};
         return reader.getScoreData();
     }
     catch (const std::exception &e)
@@ -360,7 +386,7 @@ mx::core::DocumentPtr DocumentManager::getDocument(int documentId) const
         return mx::core::DocumentPtr{};
     }
 
-    return it->second;
+    return it->second.document;
 }
 
 int DocumentManager::getUniqueId()

@@ -60,6 +60,11 @@ class EncodingData
     std::vector<std::string> software;
     std::vector<SupportedItem> supportedItems;
     std::vector<MiscellaneousField> miscelaneousFields;
+
+    // When true (the default, including for files parsed without it), mx writes its
+    // own provenance <software> node into <encoding> on every api write. Set false
+    // to suppress that stamp; the user's own <software> entries are still written.
+    bool writeMxVersion = true;
 };
 
 MXAPI_EQUALS_BEGIN(SupportedItem)
@@ -90,6 +95,7 @@ MXAPI_EQUALS_MEMBER(encodingDescription)
 MXAPI_EQUALS_MEMBER(software)
 MXAPI_EQUALS_MEMBER(supportedItems)
 MXAPI_EQUALS_MEMBER(miscelaneousFields)
+MXAPI_EQUALS_MEMBER(writeMxVersion)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(EncodingData);
 } // namespace api
