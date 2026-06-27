@@ -7,21 +7,16 @@
 namespace {{vars.namespace}}
 {
 
-namespace
-{
-
 constexpr std::string_view kWiggle = "wiggle";
 constexpr std::string_view kGuitar = "guitar";
 constexpr std::string_view kVibratoStroke = "VibratoStroke";
 
 // The ASCII subset of XML name characters the schema's \c denotes.
-bool isNameChar(char c) noexcept
+bool isNameChar{{ident}}(char c) noexcept
 {
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '-' ||
            c == '.' || c == ':' || c == '_';
 }
-
-} // namespace
 
 {{ident}}::{{ident}}()
 {
@@ -55,7 +50,7 @@ void {{ident}}::repair()
     cleaned.reserve(m_part.size());
     for (const char c : m_part)
     {
-        if (isNameChar(c))
+        if (isNameChar{{ident}}(c))
         {
             cleaned.push_back(c);
         }
@@ -86,7 +81,7 @@ bool {{ident}}::tryParse(std::string_view text, {{ident}} &out)
     const auto allNameChars = [](std::string_view s) {
         for (const char c : s)
         {
-            if (!isNameChar(c))
+            if (!isNameChar{{ident}}(c))
             {
                 return false;
             }

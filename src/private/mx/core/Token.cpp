@@ -9,23 +9,18 @@
 namespace mx::core
 {
 
-namespace
-{
-
 // The ASCII subset of the XML NCName character classes (the schema's
 // vocabularies are ASCII; the strict parse is the only consumer, so the
 // approximation can only under-accept).
-bool isNameStart(char c) noexcept
+bool tokenIsNameStart(char c) noexcept
 {
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
 }
 
-bool isNameChar(char c) noexcept
+bool tokenIsNameChar(char c) noexcept
 {
-    return isNameStart(c) || (c >= '0' && c <= '9') || c == '-' || c == '.';
+    return tokenIsNameStart(c) || (c >= '0' && c <= '9') || c == '-' || c == '.';
 }
-
-} // namespace
 
 Token::Token()
 {
@@ -49,14 +44,14 @@ void Token::repair()
     cleaned.reserve(m_value.size());
     for (const char c : m_value)
     {
-        if (isNameChar(c))
+        if (tokenIsNameChar(c))
         {
             cleaned.push_back(c);
         }
     }
     // An NCName cannot begin with a digit, '-', or '.'.
     std::size_t start = 0;
-    while (start < cleaned.size() && !isNameStart(cleaned[start]))
+    while (start < cleaned.size() && !tokenIsNameStart(cleaned[start]))
     {
         ++start;
     }
@@ -70,13 +65,13 @@ void Token::repair()
 
 bool Token::tryParse(std::string_view text, Token &out)
 {
-    if (text.empty() || !isNameStart(text.front()))
+    if (text.empty() || !tokenIsNameStart(text.front()))
     {
         return false;
     }
     for (const char c : text)
     {
-        if (!isNameChar(c))
+        if (!tokenIsNameChar(c))
         {
             return false;
         }

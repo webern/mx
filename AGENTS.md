@@ -98,6 +98,30 @@ serialization/deserialization libraries. See:
 What you need to know right now is that `gen/cpp` is where our MusicXML types are coming from. Run
 `make gen-cpp` to regenerate the C++ types.
 
+## C++ coding rules
+
+Do not use anonymous namespaces (`namespace { }`) anywhere in the codebase. All symbols must be in
+a named namespace. Anonymous namespaces give internal linkage, which is correct for a normal
+one-TU-per-file build but causes redefinition errors in unity builds (where multiple `.cpp` files
+are compiled as a single translation unit). Use a named helper function or per-type name instead:
+
+- For file-local helper functions: name them after the type or file, e.g. `tokenIsNameChar`,
+  `clampedTenths`.
+- For file-local constants (arrays, string_views): use a per-type prefix, e.g. `kYesNoWire`,
+  `kSmuflAccidentalGlyphNamePrefix`.
+- In code generator templates (`gen/cpp/templates/`): use `{{ident}}` to make names unique, e.g.
+  `k{{ident}}Wire`, `isNameChar{{ident}}`.
+
+Unity builds can be tested with CMake's built-in support — no changes to `CMakeLists.txt` are
+needed by contributors. To verify, configure with:
+
+```
+cmake -S . -B build/unity -DCMAKE_UNITY_BUILD=ON -DCMAKE_UNITY_BUILD_BATCH_SIZE=0
+cmake --build build/unity --target mx
+```
+
+`BATCH_SIZE=0` puts all files in a target into one translation unit, which is the strictest test.
+
 ## Quality gates
 
 Run `make fmt` to format. `make check` is the clang-format gate **only** — it builds and tests nothing.

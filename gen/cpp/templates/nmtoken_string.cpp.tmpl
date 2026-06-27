@@ -7,17 +7,12 @@
 namespace {{vars.namespace}}
 {
 
-namespace
-{
-
 // The ASCII subset of XML name characters (matches the schema's \c).
-bool isNameChar(char c) noexcept
+bool isNameChar{{ident}}(char c) noexcept
 {
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '-' ||
            c == '.' || c == ':' || c == '_';
 }
-
-} // namespace
 
 {{ident}}::{{ident}}()
 {
@@ -41,7 +36,7 @@ void {{ident}}::repair()
     cleaned.reserve(m_value.size());
     for (const char c : m_value)
     {
-        if (isNameChar(c))
+        if (isNameChar{{ident}}(c))
         {
             cleaned.push_back(c);
         }
@@ -61,7 +56,7 @@ bool {{ident}}::tryParse(std::string_view text, {{ident}} &out)
     }
     for (const char c : text)
     {
-        if (!isNameChar(c))
+        if (!isNameChar{{ident}}(c))
         {
             return false;
         }

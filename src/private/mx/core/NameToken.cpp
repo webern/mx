@@ -9,16 +9,11 @@
 namespace mx::core
 {
 
-namespace
-{
-
-bool isNameChar(char c) noexcept
+bool nameTokenIsNameChar(char c) noexcept
 {
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '-' || c == '.' ||
            c == ':' || c == '_';
 }
-
-} // namespace
 
 NameToken::NameToken()
 {
@@ -42,7 +37,7 @@ void NameToken::repair()
     cleaned.reserve(m_value.size());
     for (const char c : m_value)
     {
-        if (isNameChar(c))
+        if (nameTokenIsNameChar(c))
         {
             cleaned.push_back(c);
         }
@@ -62,7 +57,7 @@ bool NameToken::tryParse(std::string_view text, NameToken &out)
     }
     for (const char c : text)
     {
-        if (!isNameChar(c))
+        if (!nameTokenIsNameChar(c))
         {
             return false;
         }
