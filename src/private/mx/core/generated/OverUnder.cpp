@@ -8,15 +8,10 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kOverUnderWire[] = {
     "over",
     "under",
 };
-
-} // namespace
 
 OverUnder OverUnder::over() noexcept
 {
@@ -30,14 +25,14 @@ OverUnder OverUnder::under() noexcept
 
 std::string_view OverUnder::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kOverUnderWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool OverUnder::tryParse(std::string_view text, OverUnder &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kOverUnderWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kOverUnderWire[i] == text)
         {
             out = OverUnder{static_cast<Tag>(i)};
             return true;

@@ -8,15 +8,10 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kAboveBelowWire[] = {
     "above",
     "below",
 };
-
-} // namespace
 
 AboveBelow AboveBelow::above() noexcept
 {
@@ -30,14 +25,14 @@ AboveBelow AboveBelow::below() noexcept
 
 std::string_view AboveBelow::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kAboveBelowWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool AboveBelow::tryParse(std::string_view text, AboveBelow &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kAboveBelowWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kAboveBelowWire[i] == text)
         {
             out = AboveBelow{static_cast<Tag>(i)};
             return true;

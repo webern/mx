@@ -8,16 +8,11 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kHarmonyArrangementWire[] = {
     "vertical",
     "horizontal",
     "diagonal",
 };
-
-} // namespace
 
 HarmonyArrangement HarmonyArrangement::vertical() noexcept
 {
@@ -36,14 +31,14 @@ HarmonyArrangement HarmonyArrangement::diagonal() noexcept
 
 std::string_view HarmonyArrangement::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kHarmonyArrangementWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool HarmonyArrangement::tryParse(std::string_view text, HarmonyArrangement &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kHarmonyArrangementWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kHarmonyArrangementWire[i] == text)
         {
             out = HarmonyArrangement{static_cast<Tag>(i)};
             return true;

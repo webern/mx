@@ -8,16 +8,11 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kStaffDivideSymbolWire[] = {
     "down",
     "up",
     "up-down",
 };
-
-} // namespace
 
 StaffDivideSymbol StaffDivideSymbol::down() noexcept
 {
@@ -36,14 +31,14 @@ StaffDivideSymbol StaffDivideSymbol::upDown() noexcept
 
 std::string_view StaffDivideSymbol::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kStaffDivideSymbolWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool StaffDivideSymbol::tryParse(std::string_view text, StaffDivideSymbol &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kStaffDivideSymbolWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kStaffDivideSymbolWire[i] == text)
         {
             out = StaffDivideSymbol{static_cast<Tag>(i)};
             return true;

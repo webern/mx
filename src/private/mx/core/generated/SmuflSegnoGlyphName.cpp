@@ -9,21 +9,16 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kPrefix[] = {
+constexpr std::string_view kSmuflSegnoGlyphNamePrefix[] = {
     "segno",
 };
 
 // The ASCII subset of XML name characters the schema's \c denotes.
-bool isNameChar(char c) noexcept
+bool isNameCharSmuflSegnoGlyphName(char c) noexcept
 {
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '-' || c == '.' ||
            c == ':' || c == '_';
 }
-
-} // namespace
 
 SmuflSegnoGlyphName::SmuflSegnoGlyphName()
 {
@@ -47,7 +42,7 @@ void SmuflSegnoGlyphName::repair()
     cleaned.reserve(m_suffix.size());
     for (const char c : m_suffix)
     {
-        if (isNameChar(c))
+        if (isNameCharSmuflSegnoGlyphName(c))
         {
             cleaned.push_back(c);
         }
@@ -57,16 +52,16 @@ void SmuflSegnoGlyphName::repair()
 
 std::string SmuflSegnoGlyphName::toString() const
 {
-    std::string out{kPrefix[0]};
+    std::string out{kSmuflSegnoGlyphNamePrefix[0]};
     out += m_suffix;
     return out;
 }
 
 bool SmuflSegnoGlyphName::tryParse(std::string_view text, SmuflSegnoGlyphName &out)
 {
-    for (std::size_t i = 0; i < std::size(kPrefix); ++i)
+    for (std::size_t i = 0; i < std::size(kSmuflSegnoGlyphNamePrefix); ++i)
     {
-        const std::string_view prefix = kPrefix[i];
+        const std::string_view prefix = kSmuflSegnoGlyphNamePrefix[i];
         if (text.size() < prefix.size() || text.substr(0, prefix.size()) != prefix)
         {
             continue;
@@ -75,7 +70,7 @@ bool SmuflSegnoGlyphName::tryParse(std::string_view text, SmuflSegnoGlyphName &o
         bool valid = true;
         for (const char c : suffix)
         {
-            if (!isNameChar(c))
+            if (!isNameCharSmuflSegnoGlyphName(c))
             {
                 valid = false;
                 break;

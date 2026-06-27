@@ -7,10 +7,7 @@
 namespace mx::core
 {
 
-namespace
-{
-
-std::string repaired(std::string v)
+std::string repairedMeasureText(std::string v)
 {
     // Deterministic repair to the schema's minLength (plan §2.2.2): pad
     // with '-' so a too-short value is unrepresentable.
@@ -21,19 +18,17 @@ std::string repaired(std::string v)
     return v;
 }
 
-} // namespace
-
-MeasureText::MeasureText() : m_value{repaired(std::string{})}
+MeasureText::MeasureText() : m_value{repairedMeasureText(std::string{})}
 {
 }
 
-MeasureText::MeasureText(std::string value) : m_value{repaired(std::move(value))}
+MeasureText::MeasureText(std::string value) : m_value{repairedMeasureText(std::move(value))}
 {
 }
 
 void MeasureText::setValue(std::string value)
 {
-    m_value = repaired(std::move(value));
+    m_value = repairedMeasureText(std::move(value));
 }
 
 bool MeasureText::tryParse(std::string_view text, MeasureText &out)

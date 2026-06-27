@@ -8,15 +8,10 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kBackwardForwardWire[] = {
     "backward",
     "forward",
 };
-
-} // namespace
 
 BackwardForward BackwardForward::backward() noexcept
 {
@@ -30,14 +25,14 @@ BackwardForward BackwardForward::forward() noexcept
 
 std::string_view BackwardForward::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kBackwardForwardWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool BackwardForward::tryParse(std::string_view text, BackwardForward &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kBackwardForwardWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kBackwardForwardWire[i] == text)
         {
             out = BackwardForward{static_cast<Tag>(i)};
             return true;

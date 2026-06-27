@@ -8,17 +8,12 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kTiedTypeWire[] = {
     "start",
     "stop",
     "continue",
     "let-ring",
 };
-
-} // namespace
 
 TiedType TiedType::start() noexcept
 {
@@ -42,14 +37,14 @@ TiedType TiedType::letRing() noexcept
 
 std::string_view TiedType::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kTiedTypeWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool TiedType::tryParse(std::string_view text, TiedType &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kTiedTypeWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kTiedTypeWire[i] == text)
         {
             out = TiedType{static_cast<Tag>(i)};
             return true;

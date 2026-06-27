@@ -8,15 +8,10 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kYesNoWire[] = {
     "yes",
     "no",
 };
-
-} // namespace
 
 YesNo YesNo::yes() noexcept
 {
@@ -30,14 +25,14 @@ YesNo YesNo::no() noexcept
 
 std::string_view YesNo::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kYesNoWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool YesNo::tryParse(std::string_view text, YesNo &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kYesNoWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kYesNoWire[i] == text)
         {
             out = YesNo{static_cast<Tag>(i)};
             return true;

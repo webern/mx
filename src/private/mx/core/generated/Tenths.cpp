@@ -9,27 +9,22 @@
 namespace mx::core
 {
 
-namespace
-{
-
-Decimal clamped(Decimal v)
+Decimal clampedTenths(Decimal v)
 {
     return v;
 }
 
-} // namespace
-
-Tenths::Tenths() : m_value{clamped(Decimal{})}
+Tenths::Tenths() : m_value{clampedTenths(Decimal{})}
 {
 }
 
-Tenths::Tenths(Decimal value) : m_value{clamped(std::move(value))}
+Tenths::Tenths(Decimal value) : m_value{clampedTenths(std::move(value))}
 {
 }
 
 void Tenths::setValue(Decimal value)
 {
-    m_value = clamped(std::move(value));
+    m_value = clampedTenths(std::move(value));
 }
 
 std::string Tenths::toString() const

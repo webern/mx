@@ -8,17 +8,12 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kStemValueWire[] = {
     "down",
     "up",
     "double",
     "none",
 };
-
-} // namespace
 
 StemValue StemValue::down() noexcept
 {
@@ -42,14 +37,14 @@ StemValue StemValue::none() noexcept
 
 std::string_view StemValue::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kStemValueWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool StemValue::tryParse(std::string_view text, StemValue &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kStemValueWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kStemValueWire[i] == text)
         {
             out = StemValue{static_cast<Tag>(i)};
             return true;

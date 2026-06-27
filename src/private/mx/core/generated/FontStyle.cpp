@@ -8,15 +8,10 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kFontStyleWire[] = {
     "normal",
     "italic",
 };
-
-} // namespace
 
 FontStyle FontStyle::normal() noexcept
 {
@@ -30,14 +25,14 @@ FontStyle FontStyle::italic() noexcept
 
 std::string_view FontStyle::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kFontStyleWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool FontStyle::tryParse(std::string_view text, FontStyle &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kFontStyleWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kFontStyleWire[i] == text)
         {
             out = FontStyle{static_cast<Tag>(i)};
             return true;

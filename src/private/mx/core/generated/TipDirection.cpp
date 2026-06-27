@@ -8,14 +8,9 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kTipDirectionWire[] = {
     "up", "down", "left", "right", "northwest", "northeast", "southeast", "southwest",
 };
-
-} // namespace
 
 TipDirection TipDirection::up() noexcept
 {
@@ -59,14 +54,14 @@ TipDirection TipDirection::southwest() noexcept
 
 std::string_view TipDirection::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kTipDirectionWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool TipDirection::tryParse(std::string_view text, TipDirection &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kTipDirectionWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kTipDirectionWire[i] == text)
         {
             out = TipDirection{static_cast<Tag>(i)};
             return true;

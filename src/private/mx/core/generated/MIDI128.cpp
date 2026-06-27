@@ -9,10 +9,7 @@
 namespace mx::core
 {
 
-namespace
-{
-
-int clamped(int v)
+int clampedMIDI128(int v)
 {
     if (v < 1)
     {
@@ -25,19 +22,17 @@ int clamped(int v)
     return v;
 }
 
-} // namespace
-
-MIDI128::MIDI128() : m_value{clamped(int{})}
+MIDI128::MIDI128() : m_value{clampedMIDI128(int{})}
 {
 }
 
-MIDI128::MIDI128(int value) : m_value{clamped(std::move(value))}
+MIDI128::MIDI128(int value) : m_value{clampedMIDI128(std::move(value))}
 {
 }
 
 void MIDI128::setValue(int value)
 {
-    m_value = clamped(std::move(value));
+    m_value = clampedMIDI128(std::move(value));
 }
 
 std::string MIDI128::toString() const

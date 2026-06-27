@@ -7,23 +7,18 @@
 namespace mx::core
 {
 
-namespace
-{
-
-std::string repaired(std::string v)
+std::string repairedDistanceType(std::string v)
 {
     return v;
 }
 
-} // namespace
-
-DistanceType::DistanceType(std::string value) : m_value{repaired(std::move(value))}
+DistanceType::DistanceType(std::string value) : m_value{repairedDistanceType(std::move(value))}
 {
 }
 
 void DistanceType::setValue(std::string value)
 {
-    m_value = repaired(std::move(value));
+    m_value = repairedDistanceType(std::move(value));
 }
 
 bool DistanceType::tryParse(std::string_view text, DistanceType &out)

@@ -9,10 +9,7 @@
 namespace mx::core
 {
 
-namespace
-{
-
-int clamped(int v)
+int clampedStaffNumber(int v)
 {
     if (v < 1)
     {
@@ -21,19 +18,17 @@ int clamped(int v)
     return v;
 }
 
-} // namespace
-
-StaffNumber::StaffNumber() : m_value{clamped(int{})}
+StaffNumber::StaffNumber() : m_value{clampedStaffNumber(int{})}
 {
 }
 
-StaffNumber::StaffNumber(int value) : m_value{clamped(std::move(value))}
+StaffNumber::StaffNumber(int value) : m_value{clampedStaffNumber(std::move(value))}
 {
 }
 
 void StaffNumber::setValue(int value)
 {
-    m_value = clamped(std::move(value));
+    m_value = clampedStaffNumber(std::move(value));
 }
 
 std::string StaffNumber::toString() const

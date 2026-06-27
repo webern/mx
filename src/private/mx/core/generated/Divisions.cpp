@@ -9,27 +9,22 @@
 namespace mx::core
 {
 
-namespace
-{
-
-Decimal clamped(Decimal v)
+Decimal clampedDivisions(Decimal v)
 {
     return v;
 }
 
-} // namespace
-
-Divisions::Divisions() : m_value{clamped(Decimal{})}
+Divisions::Divisions() : m_value{clampedDivisions(Decimal{})}
 {
 }
 
-Divisions::Divisions(Decimal value) : m_value{clamped(std::move(value))}
+Divisions::Divisions(Decimal value) : m_value{clampedDivisions(std::move(value))}
 {
 }
 
 void Divisions::setValue(Decimal value)
 {
-    m_value = clamped(std::move(value));
+    m_value = clampedDivisions(std::move(value));
 }
 
 std::string Divisions::toString() const

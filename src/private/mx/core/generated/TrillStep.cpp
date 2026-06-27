@@ -8,16 +8,11 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kTrillStepWire[] = {
     "whole",
     "half",
     "unison",
 };
-
-} // namespace
 
 TrillStep TrillStep::whole() noexcept
 {
@@ -36,14 +31,14 @@ TrillStep TrillStep::unison() noexcept
 
 std::string_view TrillStep::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kTrillStepWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool TrillStep::tryParse(std::string_view text, TrillStep &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kTrillStepWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kTrillStepWire[i] == text)
         {
             out = TrillStep{static_cast<Tag>(i)};
             return true;

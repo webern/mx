@@ -8,16 +8,11 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kGlassValueWire[] = {
     "glass harmonica",
     "glass harp",
     "wind chimes",
 };
-
-} // namespace
 
 GlassValue GlassValue::glassHarmonica() noexcept
 {
@@ -36,14 +31,14 @@ GlassValue GlassValue::windChimes() noexcept
 
 std::string_view GlassValue::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kGlassValueWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool GlassValue::tryParse(std::string_view text, GlassValue &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kGlassValueWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kGlassValueWire[i] == text)
         {
             out = GlassValue{static_cast<Tag>(i)};
             return true;

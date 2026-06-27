@@ -8,10 +8,7 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kAccidentalValueWire[] = {
     "sharp",
     "natural",
     "flat",
@@ -54,8 +51,6 @@ constexpr std::string_view kWire[] = {
     "koron",
     "other",
 };
-
-} // namespace
 
 AccidentalValue AccidentalValue::sharp() noexcept
 {
@@ -264,14 +259,14 @@ AccidentalValue AccidentalValue::other() noexcept
 
 std::string_view AccidentalValue::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kAccidentalValueWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool AccidentalValue::tryParse(std::string_view text, AccidentalValue &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kAccidentalValueWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kAccidentalValueWire[i] == text)
         {
             out = AccidentalValue{static_cast<Tag>(i)};
             return true;

@@ -9,21 +9,16 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kPrefix[] = {
+constexpr std::string_view kSmuflLyricsGlyphNamePrefix[] = {
     "lyrics",
 };
 
 // The ASCII subset of XML name characters the schema's \c denotes.
-bool isNameChar(char c) noexcept
+bool isNameCharSmuflLyricsGlyphName(char c) noexcept
 {
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '-' || c == '.' ||
            c == ':' || c == '_';
 }
-
-} // namespace
 
 SmuflLyricsGlyphName::SmuflLyricsGlyphName()
 {
@@ -47,7 +42,7 @@ void SmuflLyricsGlyphName::repair()
     cleaned.reserve(m_suffix.size());
     for (const char c : m_suffix)
     {
-        if (isNameChar(c))
+        if (isNameCharSmuflLyricsGlyphName(c))
         {
             cleaned.push_back(c);
         }
@@ -61,16 +56,16 @@ void SmuflLyricsGlyphName::repair()
 
 std::string SmuflLyricsGlyphName::toString() const
 {
-    std::string out{kPrefix[0]};
+    std::string out{kSmuflLyricsGlyphNamePrefix[0]};
     out += m_suffix;
     return out;
 }
 
 bool SmuflLyricsGlyphName::tryParse(std::string_view text, SmuflLyricsGlyphName &out)
 {
-    for (std::size_t i = 0; i < std::size(kPrefix); ++i)
+    for (std::size_t i = 0; i < std::size(kSmuflLyricsGlyphNamePrefix); ++i)
     {
-        const std::string_view prefix = kPrefix[i];
+        const std::string_view prefix = kSmuflLyricsGlyphNamePrefix[i];
         if (text.size() < prefix.size() || text.substr(0, prefix.size()) != prefix)
         {
             continue;
@@ -83,7 +78,7 @@ bool SmuflLyricsGlyphName::tryParse(std::string_view text, SmuflLyricsGlyphName 
         bool valid = true;
         for (const char c : suffix)
         {
-            if (!isNameChar(c))
+            if (!isNameCharSmuflLyricsGlyphName(c))
             {
                 valid = false;
                 break;

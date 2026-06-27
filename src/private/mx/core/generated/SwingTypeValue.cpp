@@ -8,15 +8,10 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kSwingTypeValueWire[] = {
     "16th",
     "eighth",
 };
-
-} // namespace
 
 SwingTypeValue SwingTypeValue::_16th() noexcept
 {
@@ -30,14 +25,14 @@ SwingTypeValue SwingTypeValue::eighth() noexcept
 
 std::string_view SwingTypeValue::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kSwingTypeValueWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool SwingTypeValue::tryParse(std::string_view text, SwingTypeValue &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kSwingTypeValueWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kSwingTypeValueWire[i] == text)
         {
             out = SwingTypeValue{static_cast<Tag>(i)};
             return true;

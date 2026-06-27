@@ -8,16 +8,11 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kLineLengthWire[] = {
     "short",
     "medium",
     "long",
 };
-
-} // namespace
 
 LineLength LineLength::short_() noexcept
 {
@@ -36,14 +31,14 @@ LineLength LineLength::long_() noexcept
 
 std::string_view LineLength::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kLineLengthWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool LineLength::tryParse(std::string_view text, LineLength &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kLineLengthWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kLineLengthWire[i] == text)
         {
             out = LineLength{static_cast<Tag>(i)};
             return true;

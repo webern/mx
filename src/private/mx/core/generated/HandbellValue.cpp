@@ -8,10 +8,7 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kHandbellValueWire[] = {
     "belltree",
     "damp",
     "echo",
@@ -25,8 +22,6 @@ constexpr std::string_view kWire[] = {
     "pluck lift",
     "swing",
 };
-
-} // namespace
 
 HandbellValue HandbellValue::belltree() noexcept
 {
@@ -90,14 +85,14 @@ HandbellValue HandbellValue::swing() noexcept
 
 std::string_view HandbellValue::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kHandbellValueWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool HandbellValue::tryParse(std::string_view text, HandbellValue &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kHandbellValueWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kHandbellValueWire[i] == text)
         {
             out = HandbellValue{static_cast<Tag>(i)};
             return true;

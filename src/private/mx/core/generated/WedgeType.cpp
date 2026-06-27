@@ -8,17 +8,12 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kWedgeTypeWire[] = {
     "crescendo",
     "diminuendo",
     "stop",
     "continue",
 };
-
-} // namespace
 
 WedgeType WedgeType::crescendo() noexcept
 {
@@ -42,14 +37,14 @@ WedgeType WedgeType::continue_() noexcept
 
 std::string_view WedgeType::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kWedgeTypeWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool WedgeType::tryParse(std::string_view text, WedgeType &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kWedgeTypeWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kWedgeTypeWire[i] == text)
         {
             out = WedgeType{static_cast<Tag>(i)};
             return true;

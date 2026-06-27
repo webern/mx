@@ -8,16 +8,11 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kFanWire[] = {
     "accel",
     "rit",
     "none",
 };
-
-} // namespace
 
 Fan Fan::accel() noexcept
 {
@@ -36,14 +31,14 @@ Fan Fan::none() noexcept
 
 std::string_view Fan::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kFanWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool Fan::tryParse(std::string_view text, Fan &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kFanWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kFanWire[i] == text)
         {
             out = Fan{static_cast<Tag>(i)};
             return true;

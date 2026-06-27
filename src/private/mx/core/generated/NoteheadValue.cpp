@@ -8,10 +8,7 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kNoteheadValueWire[] = {
     "slash",
     "triangle",
     "diamond",
@@ -41,8 +38,6 @@ constexpr std::string_view kWire[] = {
     "ti",
     "other",
 };
-
-} // namespace
 
 NoteheadValue NoteheadValue::slash() noexcept
 {
@@ -186,14 +181,14 @@ NoteheadValue NoteheadValue::other() noexcept
 
 std::string_view NoteheadValue::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kNoteheadValueWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool NoteheadValue::tryParse(std::string_view text, NoteheadValue &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kNoteheadValueWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kNoteheadValueWire[i] == text)
         {
             out = NoteheadValue{static_cast<Tag>(i)};
             return true;

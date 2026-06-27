@@ -8,15 +8,10 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kTapHandWire[] = {
     "left",
     "right",
 };
-
-} // namespace
 
 TapHand TapHand::left() noexcept
 {
@@ -30,14 +25,14 @@ TapHand TapHand::right() noexcept
 
 std::string_view TapHand::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kTapHandWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool TapHand::tryParse(std::string_view text, TapHand &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kTapHandWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kTapHandWire[i] == text)
         {
             out = TapHand{static_cast<Tag>(i)};
             return true;

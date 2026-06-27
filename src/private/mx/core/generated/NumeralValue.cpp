@@ -9,10 +9,7 @@
 namespace mx::core
 {
 
-namespace
-{
-
-int clamped(int v)
+int clampedNumeralValue(int v)
 {
     if (v < 1)
     {
@@ -25,19 +22,17 @@ int clamped(int v)
     return v;
 }
 
-} // namespace
-
-NumeralValue::NumeralValue() : m_value{clamped(int{})}
+NumeralValue::NumeralValue() : m_value{clampedNumeralValue(int{})}
 {
 }
 
-NumeralValue::NumeralValue(int value) : m_value{clamped(std::move(value))}
+NumeralValue::NumeralValue(int value) : m_value{clampedNumeralValue(std::move(value))}
 {
 }
 
 void NumeralValue::setValue(int value)
 {
-    m_value = clamped(std::move(value));
+    m_value = clampedNumeralValue(std::move(value));
 }
 
 std::string NumeralValue::toString() const

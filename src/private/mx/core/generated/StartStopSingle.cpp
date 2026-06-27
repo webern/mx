@@ -8,16 +8,11 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kStartStopSingleWire[] = {
     "start",
     "stop",
     "single",
 };
-
-} // namespace
 
 StartStopSingle StartStopSingle::start() noexcept
 {
@@ -36,14 +31,14 @@ StartStopSingle StartStopSingle::single() noexcept
 
 std::string_view StartStopSingle::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kStartStopSingleWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool StartStopSingle::tryParse(std::string_view text, StartStopSingle &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kStartStopSingleWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kStartStopSingleWire[i] == text)
         {
             out = StartStopSingle{static_cast<Tag>(i)};
             return true;

@@ -8,14 +8,9 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kNumeralModeWire[] = {
     "major", "minor", "natural minor", "melodic minor", "harmonic minor",
 };
-
-} // namespace
 
 NumeralMode NumeralMode::major() noexcept
 {
@@ -44,14 +39,14 @@ NumeralMode NumeralMode::harmonicMinor() noexcept
 
 std::string_view NumeralMode::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kNumeralModeWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool NumeralMode::tryParse(std::string_view text, NumeralMode &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kNumeralModeWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kNumeralModeWire[i] == text)
         {
             out = NumeralMode{static_cast<Tag>(i)};
             return true;

@@ -8,16 +8,11 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kMeasureNumberingValueWire[] = {
     "none",
     "measure",
     "system",
 };
-
-} // namespace
 
 MeasureNumberingValue MeasureNumberingValue::none() noexcept
 {
@@ -36,14 +31,14 @@ MeasureNumberingValue MeasureNumberingValue::system() noexcept
 
 std::string_view MeasureNumberingValue::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kMeasureNumberingValueWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool MeasureNumberingValue::tryParse(std::string_view text, MeasureNumberingValue &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kMeasureNumberingValueWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kMeasureNumberingValueWire[i] == text)
         {
             out = MeasureNumberingValue{static_cast<Tag>(i)};
             return true;

@@ -8,14 +8,9 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kStaffTypeWire[] = {
     "ossia", "editorial", "cue", "alternate", "regular",
 };
-
-} // namespace
 
 StaffType StaffType::ossia() noexcept
 {
@@ -44,14 +39,14 @@ StaffType StaffType::regular() noexcept
 
 std::string_view StaffType::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kStaffTypeWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool StaffType::tryParse(std::string_view text, StaffType &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kStaffTypeWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kStaffTypeWire[i] == text)
         {
             out = StaffType{static_cast<Tag>(i)};
             return true;

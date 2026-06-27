@@ -8,14 +8,9 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kTimeSymbolWire[] = {
     "common", "cut", "single-number", "note", "dotted-note", "normal",
 };
-
-} // namespace
 
 TimeSymbol TimeSymbol::common() noexcept
 {
@@ -49,14 +44,14 @@ TimeSymbol TimeSymbol::normal() noexcept
 
 std::string_view TimeSymbol::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kTimeSymbolWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool TimeSymbol::tryParse(std::string_view text, TimeSymbol &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kTimeSymbolWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kTimeSymbolWire[i] == text)
         {
             out = TimeSymbol{static_cast<Tag>(i)};
             return true;

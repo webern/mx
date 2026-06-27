@@ -8,17 +8,12 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kTremoloTypeWire[] = {
     "start",
     "stop",
     "single",
     "unmeasured",
 };
-
-} // namespace
 
 TremoloType TremoloType::start() noexcept
 {
@@ -42,14 +37,14 @@ TremoloType TremoloType::unmeasured() noexcept
 
 std::string_view TremoloType::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kTremoloTypeWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool TremoloType::tryParse(std::string_view text, TremoloType &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kTremoloTypeWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kTremoloTypeWire[i] == text)
         {
             out = TremoloType{static_cast<Tag>(i)};
             return true;

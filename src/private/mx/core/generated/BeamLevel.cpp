@@ -9,10 +9,7 @@
 namespace mx::core
 {
 
-namespace
-{
-
-int clamped(int v)
+int clampedBeamLevel(int v)
 {
     if (v < 1)
     {
@@ -25,19 +22,17 @@ int clamped(int v)
     return v;
 }
 
-} // namespace
-
-BeamLevel::BeamLevel() : m_value{clamped(int{})}
+BeamLevel::BeamLevel() : m_value{clampedBeamLevel(int{})}
 {
 }
 
-BeamLevel::BeamLevel(int value) : m_value{clamped(std::move(value))}
+BeamLevel::BeamLevel(int value) : m_value{clampedBeamLevel(std::move(value))}
 {
 }
 
 void BeamLevel::setValue(int value)
 {
-    m_value = clamped(std::move(value));
+    m_value = clampedBeamLevel(std::move(value));
 }
 
 std::string BeamLevel::toString() const

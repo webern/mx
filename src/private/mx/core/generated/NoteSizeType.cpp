@@ -8,17 +8,12 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kNoteSizeTypeWire[] = {
     "cue",
     "grace",
     "grace-cue",
     "large",
 };
-
-} // namespace
 
 NoteSizeType NoteSizeType::cue() noexcept
 {
@@ -42,14 +37,14 @@ NoteSizeType NoteSizeType::large() noexcept
 
 std::string_view NoteSizeType::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kNoteSizeTypeWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool NoteSizeType::tryParse(std::string_view text, NoteSizeType &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kNoteSizeTypeWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kNoteSizeTypeWire[i] == text)
         {
             out = NoteSizeType{static_cast<Tag>(i)};
             return true;

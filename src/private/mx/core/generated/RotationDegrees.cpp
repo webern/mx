@@ -9,10 +9,7 @@
 namespace mx::core
 {
 
-namespace
-{
-
-Decimal clamped(Decimal v)
+Decimal clampedRotationDegrees(Decimal v)
 {
     if (v.value() < -180.0)
     {
@@ -25,19 +22,17 @@ Decimal clamped(Decimal v)
     return v;
 }
 
-} // namespace
-
-RotationDegrees::RotationDegrees() : m_value{clamped(Decimal{})}
+RotationDegrees::RotationDegrees() : m_value{clampedRotationDegrees(Decimal{})}
 {
 }
 
-RotationDegrees::RotationDegrees(Decimal value) : m_value{clamped(std::move(value))}
+RotationDegrees::RotationDegrees(Decimal value) : m_value{clampedRotationDegrees(std::move(value))}
 {
 }
 
 void RotationDegrees::setValue(Decimal value)
 {
-    m_value = clamped(std::move(value));
+    m_value = clampedRotationDegrees(std::move(value));
 }
 
 std::string RotationDegrees::toString() const

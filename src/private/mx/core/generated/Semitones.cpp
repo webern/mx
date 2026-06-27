@@ -9,27 +9,22 @@
 namespace mx::core
 {
 
-namespace
-{
-
-Decimal clamped(Decimal v)
+Decimal clampedSemitones(Decimal v)
 {
     return v;
 }
 
-} // namespace
-
-Semitones::Semitones() : m_value{clamped(Decimal{})}
+Semitones::Semitones() : m_value{clampedSemitones(Decimal{})}
 {
 }
 
-Semitones::Semitones(Decimal value) : m_value{clamped(std::move(value))}
+Semitones::Semitones(Decimal value) : m_value{clampedSemitones(std::move(value))}
 {
 }
 
 void Semitones::setValue(Decimal value)
 {
-    m_value = clamped(std::move(value));
+    m_value = clampedSemitones(std::move(value));
 }
 
 std::string Semitones::toString() const

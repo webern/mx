@@ -8,16 +8,11 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kMembraneValueWire[] = {
     "bass drum",   "bass drum on side",    "bongos",          "Chinese tomtom", "conga drum", "cuica",
     "goblet drum", "Indo-American tomtom", "Japanese tomtom", "military drum",  "snare drum", "snare drum snares off",
     "tabla",       "tambourine",           "tenor drum",      "timbales",       "tomtom",
 };
-
-} // namespace
 
 MembraneValue MembraneValue::bassDrum() noexcept
 {
@@ -106,14 +101,14 @@ MembraneValue MembraneValue::tomtom() noexcept
 
 std::string_view MembraneValue::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kMembraneValueWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool MembraneValue::tryParse(std::string_view text, MembraneValue &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kMembraneValueWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kMembraneValueWire[i] == text)
         {
             out = MembraneValue{static_cast<Tag>(i)};
             return true;

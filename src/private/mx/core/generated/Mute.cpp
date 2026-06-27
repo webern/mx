@@ -8,15 +8,10 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kMuteWire[] = {
     "on",  "off",      "straight", "cup",       "harmon-no-stem", "harmon-stem", "bucket", "plunger",
     "hat", "solotone", "practice", "stop-mute", "stop-hand",      "echo",        "palm",
 };
-
-} // namespace
 
 Mute Mute::on() noexcept
 {
@@ -95,14 +90,14 @@ Mute Mute::palm() noexcept
 
 std::string_view Mute::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kMuteWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool Mute::tryParse(std::string_view text, Mute &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kMuteWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kMuteWire[i] == text)
         {
             out = Mute{static_cast<Tag>(i)};
             return true;

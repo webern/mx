@@ -8,17 +8,12 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kSymbolSizeWire[] = {
     "full",
     "cue",
     "grace-cue",
     "large",
 };
-
-} // namespace
 
 SymbolSize SymbolSize::full() noexcept
 {
@@ -42,14 +37,14 @@ SymbolSize SymbolSize::large() noexcept
 
 std::string_view SymbolSize::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kSymbolSizeWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool SymbolSize::tryParse(std::string_view text, SymbolSize &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kSymbolSizeWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kSymbolSizeWire[i] == text)
         {
             out = SymbolSize{static_cast<Tag>(i)};
             return true;

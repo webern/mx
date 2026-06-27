@@ -8,17 +8,12 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kLineTypeWire[] = {
     "solid",
     "dashed",
     "dotted",
     "wavy",
 };
-
-} // namespace
 
 LineType LineType::solid() noexcept
 {
@@ -42,14 +37,14 @@ LineType LineType::wavy() noexcept
 
 std::string_view LineType::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kLineTypeWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool LineType::tryParse(std::string_view text, LineType &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kLineTypeWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kLineTypeWire[i] == text)
         {
             out = LineType{static_cast<Tag>(i)};
             return true;

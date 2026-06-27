@@ -9,10 +9,7 @@
 namespace mx::core
 {
 
-namespace
-{
-
-int clamped(int v)
+int clampedStaffLine(int v)
 {
     if (v < 1)
     {
@@ -21,19 +18,17 @@ int clamped(int v)
     return v;
 }
 
-} // namespace
-
-StaffLine::StaffLine() : m_value{clamped(int{})}
+StaffLine::StaffLine() : m_value{clampedStaffLine(int{})}
 {
 }
 
-StaffLine::StaffLine(int value) : m_value{clamped(std::move(value))}
+StaffLine::StaffLine(int value) : m_value{clampedStaffLine(std::move(value))}
 {
 }
 
 void StaffLine::setValue(int value)
 {
-    m_value = clamped(std::move(value));
+    m_value = clampedStaffLine(std::move(value));
 }
 
 std::string StaffLine::toString() const

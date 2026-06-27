@@ -8,15 +8,10 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kBarStyleWire[] = {
     "regular",     "dotted",      "dashed", "heavy", "light-light", "light-heavy",
     "heavy-light", "heavy-heavy", "tick",   "short", "none",
 };
-
-} // namespace
 
 BarStyle BarStyle::regular() noexcept
 {
@@ -75,14 +70,14 @@ BarStyle BarStyle::none() noexcept
 
 std::string_view BarStyle::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kBarStyleWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool BarStyle::tryParse(std::string_view text, BarStyle &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kBarStyleWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kBarStyleWire[i] == text)
         {
             out = BarStyle{static_cast<Tag>(i)};
             return true;

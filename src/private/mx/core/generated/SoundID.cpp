@@ -8,10 +8,7 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kSoundIDWire[] = {
     "brass.alphorn",
     "brass.alto-horn",
     "brass.baritone-horn",
@@ -907,8 +904,6 @@ constexpr std::string_view kWire[] = {
     "wood.tonetang",
     "wood.wood-block",
 };
-
-} // namespace
 
 SoundID SoundID::brassAlphorn() noexcept
 {
@@ -5382,14 +5377,14 @@ SoundID SoundID::woodWoodBlock() noexcept
 
 std::string_view SoundID::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kSoundIDWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool SoundID::tryParse(std::string_view text, SoundID &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kSoundIDWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kSoundIDWire[i] == text)
         {
             out = SoundID{static_cast<Tag>(i)};
             return true;

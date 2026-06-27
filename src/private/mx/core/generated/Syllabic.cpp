@@ -8,17 +8,12 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kSyllabicWire[] = {
     "single",
     "begin",
     "end",
     "middle",
 };
-
-} // namespace
 
 Syllabic Syllabic::single() noexcept
 {
@@ -42,14 +37,14 @@ Syllabic Syllabic::middle() noexcept
 
 std::string_view Syllabic::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kSyllabicWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool Syllabic::tryParse(std::string_view text, Syllabic &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kSyllabicWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kSyllabicWire[i] == text)
         {
             out = Syllabic{static_cast<Tag>(i)};
             return true;

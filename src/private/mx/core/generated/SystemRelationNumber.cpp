@@ -8,14 +8,9 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kSystemRelationNumberWire[] = {
     "only-top", "only-bottom", "also-top", "also-bottom", "none",
 };
-
-} // namespace
 
 SystemRelationNumber SystemRelationNumber::onlyTop() noexcept
 {
@@ -44,14 +39,14 @@ SystemRelationNumber SystemRelationNumber::none() noexcept
 
 std::string_view SystemRelationNumber::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kSystemRelationNumberWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool SystemRelationNumber::tryParse(std::string_view text, SystemRelationNumber &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kSystemRelationNumberWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kSystemRelationNumberWire[i] == text)
         {
             out = SystemRelationNumber{static_cast<Tag>(i)};
             return true;

@@ -8,15 +8,10 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kOnOffWire[] = {
     "on",
     "off",
 };
-
-} // namespace
 
 OnOff OnOff::on() noexcept
 {
@@ -30,14 +25,14 @@ OnOff OnOff::off() noexcept
 
 std::string_view OnOff::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kOnOffWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool OnOff::tryParse(std::string_view text, OnOff &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kOnOffWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kOnOffWire[i] == text)
         {
             out = OnOff{static_cast<Tag>(i)};
             return true;

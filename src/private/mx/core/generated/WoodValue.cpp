@@ -8,18 +8,13 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kWoodValueWire[] = {
     "bamboo scraper",   "board clapper",   "cabasa",       "castanets", "castanets with handle",
     "claves",           "football rattle", "guiro",        "log drum",  "maraca",
     "maracas",          "quijada",         "rainstick",    "ratchet",   "reco-reco",
     "sandpaper blocks", "slit drum",       "temple block", "vibraslap", "whip",
     "wood block",
 };
-
-} // namespace
 
 WoodValue WoodValue::bambooScraper() noexcept
 {
@@ -128,14 +123,14 @@ WoodValue WoodValue::woodBlock() noexcept
 
 std::string_view WoodValue::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kWoodValueWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool WoodValue::tryParse(std::string_view text, WoodValue &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kWoodValueWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kWoodValueWire[i] == text)
         {
             out = WoodValue{static_cast<Tag>(i)};
             return true;

@@ -8,14 +8,9 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kDegreeSymbolValueWire[] = {
     "major", "minor", "augmented", "diminished", "half-diminished",
 };
-
-} // namespace
 
 DegreeSymbolValue DegreeSymbolValue::major() noexcept
 {
@@ -44,14 +39,14 @@ DegreeSymbolValue DegreeSymbolValue::halfDiminished() noexcept
 
 std::string_view DegreeSymbolValue::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kDegreeSymbolValueWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool DegreeSymbolValue::tryParse(std::string_view text, DegreeSymbolValue &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kDegreeSymbolValueWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kDegreeSymbolValueWire[i] == text)
         {
             out = DegreeSymbolValue{static_cast<Tag>(i)};
             return true;

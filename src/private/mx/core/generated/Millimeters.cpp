@@ -9,27 +9,22 @@
 namespace mx::core
 {
 
-namespace
-{
-
-Decimal clamped(Decimal v)
+Decimal clampedMillimeters(Decimal v)
 {
     return v;
 }
 
-} // namespace
-
-Millimeters::Millimeters() : m_value{clamped(Decimal{})}
+Millimeters::Millimeters() : m_value{clampedMillimeters(Decimal{})}
 {
 }
 
-Millimeters::Millimeters(Decimal value) : m_value{clamped(std::move(value))}
+Millimeters::Millimeters(Decimal value) : m_value{clampedMillimeters(std::move(value))}
 {
 }
 
 void Millimeters::setValue(Decimal value)
 {
-    m_value = clamped(std::move(value));
+    m_value = clampedMillimeters(std::move(value));
 }
 
 std::string Millimeters::toString() const

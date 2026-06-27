@@ -8,17 +8,12 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kPrincipalVoiceSymbolWire[] = {
     "Hauptstimme",
     "Nebenstimme",
     "plain",
     "none",
 };
-
-} // namespace
 
 PrincipalVoiceSymbol PrincipalVoiceSymbol::hauptstimme() noexcept
 {
@@ -42,14 +37,14 @@ PrincipalVoiceSymbol PrincipalVoiceSymbol::none() noexcept
 
 std::string_view PrincipalVoiceSymbol::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kPrincipalVoiceSymbolWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool PrincipalVoiceSymbol::tryParse(std::string_view text, PrincipalVoiceSymbol &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kPrincipalVoiceSymbolWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kPrincipalVoiceSymbolWire[i] == text)
         {
             out = PrincipalVoiceSymbol{static_cast<Tag>(i)};
             return true;

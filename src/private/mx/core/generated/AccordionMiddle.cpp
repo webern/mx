@@ -9,10 +9,7 @@
 namespace mx::core
 {
 
-namespace
-{
-
-int clamped(int v)
+int clampedAccordionMiddle(int v)
 {
     if (v < 1)
     {
@@ -25,19 +22,17 @@ int clamped(int v)
     return v;
 }
 
-} // namespace
-
-AccordionMiddle::AccordionMiddle() : m_value{clamped(int{})}
+AccordionMiddle::AccordionMiddle() : m_value{clampedAccordionMiddle(int{})}
 {
 }
 
-AccordionMiddle::AccordionMiddle(int value) : m_value{clamped(std::move(value))}
+AccordionMiddle::AccordionMiddle(int value) : m_value{clampedAccordionMiddle(std::move(value))}
 {
 }
 
 void AccordionMiddle::setValue(int value)
 {
-    m_value = clamped(std::move(value));
+    m_value = clampedAccordionMiddle(std::move(value));
 }
 
 std::string AccordionMiddle::toString() const

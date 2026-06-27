@@ -8,14 +8,9 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kLineEndWire[] = {
     "up", "down", "both", "arrow", "none",
 };
-
-} // namespace
 
 LineEnd LineEnd::up() noexcept
 {
@@ -44,14 +39,14 @@ LineEnd LineEnd::none() noexcept
 
 std::string_view LineEnd::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kLineEndWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool LineEnd::tryParse(std::string_view text, LineEnd &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kLineEndWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kLineEndWire[i] == text)
         {
             out = LineEnd{static_cast<Tag>(i)};
             return true;

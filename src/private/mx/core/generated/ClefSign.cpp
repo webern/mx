@@ -8,14 +8,9 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kClefSignWire[] = {
     "G", "F", "C", "percussion", "TAB", "jianpu", "none",
 };
-
-} // namespace
 
 ClefSign ClefSign::g() noexcept
 {
@@ -54,14 +49,14 @@ ClefSign ClefSign::none() noexcept
 
 std::string_view ClefSign::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kClefSignWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool ClefSign::tryParse(std::string_view text, ClefSign &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kClefSignWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kClefSignWire[i] == text)
         {
             out = ClefSign{static_cast<Tag>(i)};
             return true;

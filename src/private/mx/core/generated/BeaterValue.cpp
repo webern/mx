@@ -8,10 +8,7 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kBeaterValueWire[] = {
     "bow",
     "chime hammer",
     "coin",
@@ -33,8 +30,6 @@ constexpr std::string_view kWire[] = {
     "triangle beater plain",
     "wire brush",
 };
-
-} // namespace
 
 BeaterValue BeaterValue::bow() noexcept
 {
@@ -138,14 +133,14 @@ BeaterValue BeaterValue::wireBrush() noexcept
 
 std::string_view BeaterValue::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kBeaterValueWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool BeaterValue::tryParse(std::string_view text, BeaterValue &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kBeaterValueWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kBeaterValueWire[i] == text)
         {
             out = BeaterValue{static_cast<Tag>(i)};
             return true;

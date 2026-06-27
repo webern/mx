@@ -9,27 +9,22 @@
 namespace mx::core
 {
 
-namespace
-{
-
-int clamped(int v)
+int clampedFifths(int v)
 {
     return v;
 }
 
-} // namespace
-
-Fifths::Fifths() : m_value{clamped(int{})}
+Fifths::Fifths() : m_value{clampedFifths(int{})}
 {
 }
 
-Fifths::Fifths(int value) : m_value{clamped(std::move(value))}
+Fifths::Fifths(int value) : m_value{clampedFifths(std::move(value))}
 {
 }
 
 void Fifths::setValue(int value)
 {
-    m_value = clamped(std::move(value));
+    m_value = clampedFifths(std::move(value));
 }
 
 std::string Fifths::toString() const

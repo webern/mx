@@ -8,16 +8,11 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kGroupBarlineValueWire[] = {
     "yes",
     "no",
     "Mensurstrich",
 };
-
-} // namespace
 
 GroupBarlineValue GroupBarlineValue::yes() noexcept
 {
@@ -36,14 +31,14 @@ GroupBarlineValue GroupBarlineValue::mensurstrich() noexcept
 
 std::string_view GroupBarlineValue::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kGroupBarlineValueWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool GroupBarlineValue::tryParse(std::string_view text, GroupBarlineValue &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kGroupBarlineValueWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kGroupBarlineValueWire[i] == text)
         {
             out = GroupBarlineValue{static_cast<Tag>(i)};
             return true;

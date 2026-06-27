@@ -9,10 +9,7 @@
 namespace mx::core
 {
 
-namespace
-{
-
-int clamped(int v)
+int clampedNumberOfLines(int v)
 {
     if (v < 0)
     {
@@ -25,19 +22,17 @@ int clamped(int v)
     return v;
 }
 
-} // namespace
-
-NumberOfLines::NumberOfLines() : m_value{clamped(int{})}
+NumberOfLines::NumberOfLines() : m_value{clampedNumberOfLines(int{})}
 {
 }
 
-NumberOfLines::NumberOfLines(int value) : m_value{clamped(std::move(value))}
+NumberOfLines::NumberOfLines(int value) : m_value{clampedNumberOfLines(std::move(value))}
 {
 }
 
 void NumberOfLines::setValue(int value)
 {
-    m_value = clamped(std::move(value));
+    m_value = clampedNumberOfLines(std::move(value));
 }
 
 std::string NumberOfLines::toString() const

@@ -8,16 +8,11 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kStartStopContinueWire[] = {
     "start",
     "stop",
     "continue",
 };
-
-} // namespace
 
 StartStopContinue StartStopContinue::start() noexcept
 {
@@ -36,14 +31,14 @@ StartStopContinue StartStopContinue::continue_() noexcept
 
 std::string_view StartStopContinue::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kStartStopContinueWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool StartStopContinue::tryParse(std::string_view text, StartStopContinue &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kStartStopContinueWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kStartStopContinueWire[i] == text)
         {
             out = StartStopContinue{static_cast<Tag>(i)};
             return true;

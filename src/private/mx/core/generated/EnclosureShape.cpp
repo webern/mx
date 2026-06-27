@@ -8,15 +8,10 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kEnclosureShapeWire[] = {
     "rectangle", "square",  "oval",     "circle",  "bracket", "inverted-bracket", "triangle", "diamond",
     "pentagon",  "hexagon", "heptagon", "octagon", "nonagon", "decagon",          "none",
 };
-
-} // namespace
 
 EnclosureShape EnclosureShape::rectangle() noexcept
 {
@@ -95,14 +90,14 @@ EnclosureShape EnclosureShape::none() noexcept
 
 std::string_view EnclosureShape::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kEnclosureShapeWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool EnclosureShape::tryParse(std::string_view text, EnclosureShape &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kEnclosureShapeWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kEnclosureShapeWire[i] == text)
         {
             out = EnclosureShape{static_cast<Tag>(i)};
             return true;

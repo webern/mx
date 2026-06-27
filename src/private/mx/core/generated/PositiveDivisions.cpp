@@ -9,10 +9,7 @@
 namespace mx::core
 {
 
-namespace
-{
-
-Decimal clamped(Decimal v)
+Decimal clampedPositiveDivisions(Decimal v)
 {
     if (v.value() <= 0.0)
     {
@@ -21,19 +18,17 @@ Decimal clamped(Decimal v)
     return v;
 }
 
-} // namespace
-
-PositiveDivisions::PositiveDivisions() : m_value{clamped(Decimal{})}
+PositiveDivisions::PositiveDivisions() : m_value{clampedPositiveDivisions(Decimal{})}
 {
 }
 
-PositiveDivisions::PositiveDivisions(Decimal value) : m_value{clamped(std::move(value))}
+PositiveDivisions::PositiveDivisions(Decimal value) : m_value{clampedPositiveDivisions(std::move(value))}
 {
 }
 
 void PositiveDivisions::setValue(Decimal value)
 {
-    m_value = clamped(std::move(value));
+    m_value = clampedPositiveDivisions(std::move(value));
 }
 
 std::string PositiveDivisions::toString() const

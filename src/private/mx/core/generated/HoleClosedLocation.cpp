@@ -8,17 +8,12 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kHoleClosedLocationWire[] = {
     "right",
     "bottom",
     "left",
     "top",
 };
-
-} // namespace
 
 HoleClosedLocation HoleClosedLocation::right() noexcept
 {
@@ -42,14 +37,14 @@ HoleClosedLocation HoleClosedLocation::top() noexcept
 
 std::string_view HoleClosedLocation::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kHoleClosedLocationWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool HoleClosedLocation::tryParse(std::string_view text, HoleClosedLocation &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kHoleClosedLocationWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kHoleClosedLocationWire[i] == text)
         {
             out = HoleClosedLocation{static_cast<Tag>(i)};
             return true;

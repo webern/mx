@@ -8,16 +8,11 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kArrowDirectionWire[] = {
     "left",      "up",        "right",      "down",    "northwest",           "northeast",
     "southeast", "southwest", "left right", "up down", "northwest southeast", "northeast southwest",
     "other",
 };
-
-} // namespace
 
 ArrowDirection ArrowDirection::left() noexcept
 {
@@ -86,14 +81,14 @@ ArrowDirection ArrowDirection::other() noexcept
 
 std::string_view ArrowDirection::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kArrowDirectionWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool ArrowDirection::tryParse(std::string_view text, ArrowDirection &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kArrowDirectionWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kArrowDirectionWire[i] == text)
         {
             out = ArrowDirection{static_cast<Tag>(i)};
             return true;

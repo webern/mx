@@ -8,15 +8,10 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kTopBottomWire[] = {
     "top",
     "bottom",
 };
-
-} // namespace
 
 TopBottom TopBottom::top() noexcept
 {
@@ -30,14 +25,14 @@ TopBottom TopBottom::bottom() noexcept
 
 std::string_view TopBottom::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kTopBottomWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool TopBottom::tryParse(std::string_view text, TopBottom &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kTopBottomWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kTopBottomWire[i] == text)
         {
             out = TopBottom{static_cast<Tag>(i)};
             return true;

@@ -8,16 +8,11 @@
 namespace mx::core
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view kShowTupletWire[] = {
     "actual",
     "both",
     "none",
 };
-
-} // namespace
 
 ShowTuplet ShowTuplet::actual() noexcept
 {
@@ -36,14 +31,14 @@ ShowTuplet ShowTuplet::none() noexcept
 
 std::string_view ShowTuplet::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return kShowTupletWire[static_cast<std::size_t>(m_tag)];
 }
 
 bool ShowTuplet::tryParse(std::string_view text, ShowTuplet &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(kShowTupletWire); ++i)
     {
-        if (kWire[i] == text)
+        if (kShowTupletWire[i] == text)
         {
             out = ShowTuplet{static_cast<Tag>(i)};
             return true;
