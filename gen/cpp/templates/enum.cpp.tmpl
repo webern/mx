@@ -8,16 +8,11 @@
 namespace {{vars.namespace}}
 {
 
-namespace
-{
-
-constexpr std::string_view kWire[] = {
+constexpr std::string_view k{{ident}}Wire[] = {
 {{#variants}}
     {{name.wire_q}},
 {{/variants}}
 };
-
-} // namespace
 
 {{#variants}}
 {{type.ident}} {{type.ident}}::{{ident}}() noexcept
@@ -28,14 +23,14 @@ constexpr std::string_view kWire[] = {
 {{/variants}}
 std::string_view {{ident}}::toString() const noexcept
 {
-    return kWire[static_cast<std::size_t>(m_tag)];
+    return k{{ident}}Wire[static_cast<std::size_t>(m_tag)];
 }
 
 bool {{ident}}::tryParse(std::string_view text, {{ident}} &out) noexcept
 {
-    for (std::size_t i = 0; i < std::size(kWire); ++i)
+    for (std::size_t i = 0; i < std::size(k{{ident}}Wire); ++i)
     {
-        if (kWire[i] == text)
+        if (k{{ident}}Wire[i] == text)
         {
             out = {{ident}}{static_cast<Tag>(i)};
             return true;

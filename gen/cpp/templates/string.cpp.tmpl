@@ -7,10 +7,7 @@
 namespace {{vars.namespace}}
 {
 
-namespace
-{
-
-std::string repaired(std::string v)
+std::string repaired{{ident}}(std::string v)
 {
 {{#min_length}}
     // Deterministic repair to the schema's minLength (plan §2.2.2): pad
@@ -23,21 +20,19 @@ std::string repaired(std::string v)
     return v;
 }
 
-} // namespace
-
 {{#min_length}}
-{{ident}}::{{ident}}() : m_value{repaired(std::string{})}
+{{ident}}::{{ident}}() : m_value{repaired{{ident}}(std::string{})}
 {
 }
 
 {{/min_length}}
-{{ident}}::{{ident}}(std::string value) : m_value{repaired(std::move(value))}
+{{ident}}::{{ident}}(std::string value) : m_value{repaired{{ident}}(std::move(value))}
 {
 }
 
 void {{ident}}::setValue(std::string value)
 {
-    m_value = repaired(std::move(value));
+    m_value = repaired{{ident}}(std::move(value));
 }
 
 bool {{ident}}::tryParse(std::string_view text, {{ident}} &out)

@@ -9,10 +9,7 @@
 namespace {{vars.namespace}}
 {
 
-namespace
-{
-
-{{target_type}} clamped({{target_type}} v)
+{{target_type}} clamped{{ident}}({{target_type}} v)
 {
 {{#clamp}}
 {{#type.is_decimal}}
@@ -31,19 +28,17 @@ namespace
     return v;
 }
 
-} // namespace
-
-{{ident}}::{{ident}}() : m_value{clamped({{target_type}}{})}
+{{ident}}::{{ident}}() : m_value{clamped{{ident}}({{target_type}}{})}
 {
 }
 
-{{ident}}::{{ident}}({{target_type}} value) : m_value{clamped(std::move(value))}
+{{ident}}::{{ident}}({{target_type}} value) : m_value{clamped{{ident}}(std::move(value))}
 {
 }
 
 void {{ident}}::setValue({{target_type}} value)
 {
-    m_value = clamped(std::move(value));
+    m_value = clamped{{ident}}(std::move(value));
 }
 
 std::string {{ident}}::toString() const
