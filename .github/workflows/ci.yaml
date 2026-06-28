@@ -3,7 +3,7 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [master]
+    branches: [main]
 
 # Cancel an in-flight run when a newer push supersedes it. The group is keyed
 # on the ref, so a new push to a PR cancels that PR's prior run without
@@ -18,10 +18,11 @@ jobs:
     name: Linux (generator gates)
     runs-on: ubuntu-latest
 
-    # pull-requests: write lets the gen-quality score comment post on PRs.
+    # Read-only token: this job builds untrusted fork PR code, so it never
+    # requests write. The gen-quality comment is posted by the pr-comment.yaml
+    # companion workflow (workflow_run) from the base-repo context instead.
     permissions:
       contents: read
-      pull-requests: write
 
     steps:
       - uses: actions/checkout@v4
@@ -91,19 +92,28 @@ jobs:
             cat data/testOutput/gen-quality/report.md 2>/dev/null || echo '(no report produced)'
           } >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Post gen-quality PR comment
+      # Fork PRs run with a read-only token, so this job can't post the comment
+      # itself. Stage the body + PR number as an artifact; pr-comment.yaml posts
+      # it after CI completes. always() so a gate failure still reports why.
+      - name: Stage gen-quality PR comment
         if: always() && github.event_name == 'pull_request'
-        env:
-          GH_TOKEN: ${{ github.token }}
         run: |
+          mkdir -p pr-comment
           {
             echo '### gen-quality `gen/`'
             echo ''
             cat data/testOutput/gen-quality/report.md 2>/dev/null || echo '(no report produced)'
             echo ''
             echo 'Commit `${{ github.sha }}`.'
-          } > gen-quality-comment.md
-          gh pr comment "${{ github.event.pull_request.number }}" --body-file gen-quality-comment.md
+          } > pr-comment/body.md
+          echo '${{ github.event.pull_request.number }}' > pr-comment/number
+
+      - name: Upload gen-quality PR comment
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-comment-gen
+          path: pr-comment/
 
   linux-api:
     name: Linux (mx::api/mx::impl)
@@ -202,10 +212,11 @@ jobs:
     name: Linux (coverage-core-dev)
     runs-on: ubuntu-latest
 
-    # pull-requests: write lets the coverage comment post on PRs.
+    # Read-only token: posting the coverage comment is delegated to the
+    # pr-comment.yaml companion workflow so fork PRs get a comment too (their
+    # GITHUB_TOKEN is capped to read-only here).
     permissions:
       contents: read
-      pull-requests: write
 
     steps:
       - uses: actions/checkout@v4
@@ -289,9 +300,13 @@ jobs:
           path: data/testOutput/coverage/api/index.html
           compression-level: 0
 
-      - name: Compose PR comment
+      # Stage the body + PR number as an artifact; pr-comment.yaml posts it
+      # after CI completes (this job's fork-PR token is read-only). It posts a
+      # fresh comment each run, so the PR keeps a per-push coverage history.
+      - name: Stage PR comment
         if: github.event_name == 'pull_request'
         run: |
+          mkdir -p pr-comment
           {
             echo '### Coverage report'
             echo ''
@@ -300,15 +315,15 @@ jobs:
             echo '[Core HTML report](${{ steps.upload.outputs.artifact-url }}) | [API HTML report](${{ steps.upload-api.outputs.artifact-url }})'
             echo ''
             echo 'Commit `${{ github.sha }}`.'
-          } > comment.md
+          } > pr-comment/body.md
+          echo '${{ github.event.pull_request.number }}' > pr-comment/number
 
-      # gh pr comment posts a fresh comment each run, so the PR keeps a
-      # per-push coverage history instead of overwriting one sticky comment.
-      - name: Post PR comment
+      - name: Upload PR comment
         if: github.event_name == 'pull_request'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh pr comment "${{ github.event.pull_request.number }}" --body-file comment.md
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-comment-coverage
+          path: pr-comment/
 
   macos:
     name: macOS (mx::core, AppleClang)

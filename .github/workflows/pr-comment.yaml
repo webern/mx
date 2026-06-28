@@ -1,0 +1,60 @@
+name: PR Comment
+
+# Companion to ci.yaml. A PR from a fork runs CI with a GITHUB_TOKEN that
+# GitHub caps to read-only (the same job builds the fork's untrusted code), so
+# the gh-pr-comment steps there cannot post. Those jobs instead stage each
+# comment body + PR number as a `pr-comment-*` artifact.
+#
+# This workflow triggers when CI finishes. workflow_run always runs from the
+# default branch in the base-repo context, where the token genuinely has
+# pull-requests: write even for fork PRs -- and the untrusted PR code never
+# runs here. It downloads the staged artifacts and posts the comments.
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  post-comments:
+    name: Post PR comments
+    runs-on: ubuntu-latest
+    # Only PR runs stage comment artifacts; a cancelled run (e.g. superseded by
+    # a newer push) has nothing to post.
+    if: >-
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion != 'cancelled'
+
+    steps:
+      # run-id + github-token fetch artifacts from the triggering CI run (a
+      # different run than this one). continue-on-error so a run that staged no
+      # comment artifacts doesn't red-X this workflow.
+      - name: Download comment artifacts
+        id: download
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+          pattern: pr-comment-*
+          path: pr-comments
+
+      - name: Post comments
+        if: steps.download.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          shopt -s nullglob
+          posted=0
+          for dir in pr-comments/pr-comment-*; do
+            [ -f "$dir/number" ] && [ -f "$dir/body.md" ] || continue
+            number="$(cat "$dir/number")"
+            [ -n "$number" ] || continue
+            gh pr comment "$number" --repo "$REPO" --body-file "$dir/body.md"
+            posted=$((posted + 1))
+          done
+          echo "Posted $posted PR comment(s)."
