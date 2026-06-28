@@ -80,8 +80,7 @@ namespace mx
 namespace impl
 {
 
-static void applyBracketLineData(const api::LineData &lineData, core::Bracket &bracket,
-                                  const Converter &converter)
+static void applyBracketLineData(const api::LineData &lineData, core::Bracket &bracket, const Converter &converter)
 {
     bracket.setLineEnd(lineData.lineHook == api::LineHook::unspecified ? core::LineEnd::none()
                                                                        : converter.convert(lineData.lineHook));
@@ -579,8 +578,7 @@ void DirectionWriter::emitRehearsal(const api::RehearsalData &item, core::Direct
         break;
     }
     core::DirectionType dt{};
-    dt.setChoice(
-        core::DirectionTypeChoice::rehearsal(core::OneOrMore<core::FormattedTextID>{std::move(rehearsal)}));
+    dt.setChoice(core::DirectionTypeChoice::rehearsal(core::OneOrMore<core::FormattedTextID>{std::move(rehearsal)}));
     addDirectionType(std::move(dt), direction);
 }
 
