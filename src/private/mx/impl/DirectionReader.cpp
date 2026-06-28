@@ -416,7 +416,11 @@ void DirectionReader::parseWords(const core::DirectionType &directionType)
         api::WordsData outWords;
         outWords.text = wordEl.value();
         outWords.positionData = getPositionData(wordEl);
-        outWords.colorData = getColor(wordEl);
+        outWords.isColorSpecified = wordEl.color().has_value();
+        if (outWords.isColorSpecified)
+        {
+            outWords.colorData = getColor(wordEl);
+        }
         outWords.fontData = getFontData(wordEl);
         if (wordEl.enclosure().has_value())
         {
