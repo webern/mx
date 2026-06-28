@@ -79,6 +79,31 @@ namespace mx
 {
 namespace impl
 {
+
+static void applyBracketLineData(const api::LineData &lineData, core::Bracket &bracket,
+                                  const Converter &converter)
+{
+    bracket.setLineEnd(lineData.lineHook == api::LineHook::unspecified ? core::LineEnd::none()
+                                                                       : converter.convert(lineData.lineHook));
+
+    if (lineData.lineType != api::LineType::unspecified)
+    {
+        bracket.setLineType(converter.convert(lineData.lineType));
+    }
+    if (lineData.isStopLengthSpecified)
+    {
+        bracket.setEndLength(core::Tenths{core::Decimal{static_cast<double>(lineData.endLength)}});
+    }
+    if (lineData.isDashLengthSpecified)
+    {
+        bracket.setDashLength(core::Tenths{core::Decimal{static_cast<double>(lineData.dashLength)}});
+    }
+    if (lineData.isSpaceLengthSpecified)
+    {
+        bracket.setSpaceLength(core::Tenths{core::Decimal{static_cast<double>(lineData.spaceLength)}});
+    }
+}
+
 DirectionWriter::DirectionWriter(const api::DirectionData &inDirectionData, const Cursor &inCursor)
     : myDirectionData{inDirectionData}, myCursor{inCursor}, myConverter{}, myPlacements{},
       myIsFirstDirectionTypeAdded{false}
@@ -124,406 +149,13 @@ std::vector<core::MusicDataChoice> DirectionWriter::getDirectionLikeThings()
         direction.setEditorialVoiceDirection(std::move(editorialVoice));
     }
 
-    for (auto mark : myDirectionData.marks)
+    if (myDirectionData.orderedComponents.empty())
     {
-        mark.tickTimePosition = myDirectionData.tickTimePosition;
-
-        // TODO - skip marks that aren't of the correct type (i.e. direction marks)
-        // if !isDirection( mark ) continue;
-        if (isMarkDynamic(mark.markType))
-        {
-            DynamicsWriter dynamicsWriter{mark, myCursor};
-            core::OneOrMore<core::Dynamics> dynamicsSet{dynamicsWriter.getDynamics()};
-            core::DirectionType dt{};
-            dt.setChoice(core::DirectionTypeChoice::dynamics(dynamicsSet));
-            addDirectionType(std::move(dt), direction);
-        }
-
-        if (isMarkPedal(mark.markType))
-        {
-            core::Pedal pedal{};
-
-            if (mark.positionData.placement != api::Placement::unspecified)
-            {
-                Converter c;
-                direction.setPlacement(c.convert(mark.positionData.placement));
-            }
-
-            if (mark.markType == api::MarkType::pedal)
-            {
-                pedal.setType(core::PedalType::start());
-            }
-            else if (mark.markType == api::MarkType::damp)
-            {
-                pedal.setType(core::PedalType::stop());
-            }
-
-            pedal.setLine(core::YesNo::no());
-            pedal.setSign(core::YesNo::yes());
-            setAttributesFromPositionData(mark.positionData, pedal);
-            core::DirectionType dt{};
-            dt.setChoice(core::DirectionTypeChoice::pedal(pedal));
-            addDirectionType(std::move(dt), direction);
-        }
+        emitFixedOrder(direction);
     }
-
-    for (const auto &pedalStart : myDirectionData.pedalStarts)
+    else
     {
-        core::Pedal pedal{};
-        pedal.setType(core::PedalType::start());
-        pedal.setLine(core::YesNo::yes());
-        pedal.setSign(core::YesNo::yes());
-        setAttributesFromPositionData(pedalStart.positionData, pedal);
-        core::DirectionType dt{};
-        dt.setChoice(core::DirectionTypeChoice::pedal(pedal));
-        addDirectionType(std::move(dt), direction);
-    }
-
-    for (const auto &pedalStop : myDirectionData.pedalStops)
-    {
-        core::Pedal pedal{};
-        pedal.setType(core::PedalType::stop());
-        pedal.setLine(core::YesNo::yes());
-        pedal.setSign(core::YesNo::yes());
-        setAttributesFromPositionData(pedalStop.positionData, pedal);
-        core::DirectionType dt{};
-        dt.setChoice(core::DirectionTypeChoice::pedal(pedal));
-        addDirectionType(std::move(dt), direction);
-    }
-
-    for (const auto &wedgeStop : myDirectionData.wedgeStops)
-    {
-        core::Wedge wedge{};
-        wedge.setType(core::WedgeType::stop());
-
-        if (wedgeStop.isSpreadSpecified)
-        {
-            wedge.setSpread(core::Tenths{core::Decimal{static_cast<double>(wedgeStop.spread)}});
-        }
-        setAttributesFromPositionData(wedgeStop.positionData, wedge);
-        core::DirectionType dt{};
-        dt.setChoice(core::DirectionTypeChoice::wedge(wedge));
-        addDirectionType(std::move(dt), direction);
-    }
-
-    for (const auto &wedgeStart : myDirectionData.wedgeStarts)
-    {
-        core::Wedge wedge{};
-
-        if (wedgeStart.wedgeType != api::WedgeType::unspecified)
-        {
-            wedge.setType(myConverter.convert(wedgeStart.wedgeType));
-        }
-
-        if (wedgeStart.isSpreadSpecified)
-        {
-            wedge.setSpread(core::Tenths{core::Decimal{static_cast<double>(wedgeStart.spread)}});
-        }
-
-        setAttributesFromPositionData(wedgeStart.positionData, wedge);
-        setAttributesFromLineData(wedgeStart.lineData, wedge);
-        setAttributesFromColorData(wedgeStart.colorData, wedge);
-        core::DirectionType dt{};
-        dt.setChoice(core::DirectionTypeChoice::wedge(wedge));
-        addDirectionType(std::move(dt), direction);
-    }
-
-    for (const auto &ottavaStop : myDirectionData.ottavaStops)
-    {
-        core::OctaveShift os{};
-        os.setType(core::UpDownStopContinue::stop());
-        MX_UNUSED(ottavaStop);
-        core::DirectionType dt{};
-        dt.setChoice(core::DirectionTypeChoice::octaveShift(os));
-        addDirectionType(std::move(dt), direction);
-    }
-
-    for (const auto &ottavaStart : myDirectionData.ottavaStarts)
-    {
-        core::OctaveShift os{};
-        impl::setAttributesFromLineData(ottavaStart.spannerStart.lineData, os);
-
-        switch (ottavaStart.ottavaType)
-        {
-        case api::OttavaType::o15ma: {
-            os.setType(core::UpDownStopContinue::up());
-            os.setSize(15);
-            break;
-        }
-        case api::OttavaType::o15mb: {
-            os.setType(core::UpDownStopContinue::down());
-            os.setSize(15);
-            break;
-        }
-        case api::OttavaType::o8va: {
-            os.setType(core::UpDownStopContinue::up());
-            os.setSize(8);
-            break;
-        }
-        case api::OttavaType::o8vb: {
-            os.setType(core::UpDownStopContinue::down());
-            os.setSize(8);
-            break;
-        }
-        default:
-            break;
-        }
-
-        core::DirectionType dt{};
-        dt.setChoice(core::DirectionTypeChoice::octaveShift(os));
-        addDirectionType(std::move(dt), direction);
-    }
-
-    const auto setBracketLineData = [&](const api::LineData &lineData, core::Bracket &bracket) {
-        bracket.setLineEnd(lineData.lineHook == api::LineHook::unspecified ? core::LineEnd::none()
-                                                                           : myConverter.convert(lineData.lineHook));
-
-        if (lineData.lineType != api::LineType::unspecified)
-        {
-            bracket.setLineType(myConverter.convert(lineData.lineType));
-        }
-        if (lineData.isStopLengthSpecified)
-        {
-            bracket.setEndLength(core::Tenths{core::Decimal{static_cast<double>(lineData.endLength)}});
-        }
-        if (lineData.isDashLengthSpecified)
-        {
-            bracket.setDashLength(core::Tenths{core::Decimal{static_cast<double>(lineData.dashLength)}});
-        }
-        if (lineData.isSpaceLengthSpecified)
-        {
-            bracket.setSpaceLength(core::Tenths{core::Decimal{static_cast<double>(lineData.spaceLength)}});
-        }
-    };
-
-    for (const auto &item : myDirectionData.bracketStarts)
-    {
-        core::Bracket bracket{};
-        setAttributesFromSpannerStart(item, bracket);
-        bracket.setType(core::StartStopContinue::start());
-        setAttributesFromPositionData(item.positionData, bracket);
-        setAttributesFromPrintData(item.printData, bracket);
-        setBracketLineData(item.lineData, bracket);
-        core::DirectionType dt{};
-        dt.setChoice(core::DirectionTypeChoice::bracket(bracket));
-        addDirectionType(std::move(dt), direction);
-    }
-
-    for (const auto &item : myDirectionData.bracketStops)
-    {
-        core::Bracket bracket{};
-        setAttributesFromSpannerStop(item, bracket);
-        bracket.setType(core::StartStopContinue::stop());
-        setBracketLineData(item.lineData, bracket);
-        core::DirectionType dt{};
-        dt.setChoice(core::DirectionTypeChoice::bracket(bracket));
-        addDirectionType(std::move(dt), direction);
-    }
-
-    for (const auto &item : myDirectionData.dashesStarts)
-    {
-        core::Dashes dashes{};
-        setAttributesFromSpannerStart(item, dashes);
-        dashes.setType(core::StartStopContinue::start());
-        setAttributesFromPositionData(item.positionData, dashes);
-        setAttributesFromPrintData(item.printData, dashes);
-        setAttributesFromLineData(item.lineData, dashes);
-        core::DirectionType dt{};
-        dt.setChoice(core::DirectionTypeChoice::dashes(dashes));
-        addDirectionType(std::move(dt), direction);
-    }
-
-    for (const auto &item : myDirectionData.dashesStops)
-    {
-        core::Dashes dashes{};
-        setAttributesFromSpannerStop(item, dashes);
-        dashes.setType(core::StartStopContinue::stop());
-        core::DirectionType dt{};
-        dt.setChoice(core::DirectionTypeChoice::dashes(dashes));
-        addDirectionType(std::move(dt), direction);
-    }
-
-    const auto makeBeatUnitGroup = [&](api::DurationName durationName, int dots) {
-        core::BeatUnitGroup beatUnitGroup{};
-        beatUnitGroup.setBeatUnit(myConverter.convert(durationName));
-        for (int d = 0; d < dots; ++d)
-        {
-            beatUnitGroup.addBeatUnitDot(core::Empty{});
-        }
-        return beatUnitGroup;
-    };
-
-    for (const auto &tempo : myDirectionData.tempos)
-    {
-        core::Metronome metronome{};
-
-        if (tempo.tempoType == api::TempoType::beatsPerMinute)
-        {
-            // beat-unit (+dots) followed by a numeric per-minute.
-            core::PerMinute pm{};
-            pm.setValue(std::to_string(tempo.beatsPerMinute.beatsPerMinute));
-
-            core::MetronomeChoiceGroup mcg{};
-            mcg.setBeatUnit(makeBeatUnitGroup(tempo.beatsPerMinute.durationName, tempo.beatsPerMinute.dots));
-            mcg.setChoice(core::MetronomeChoiceGroupChoice::perMinute(pm));
-            metronome.setChoice(core::MetronomeChoice::group(mcg));
-        }
-        else if (tempo.tempoType == api::TempoType::metricModulation)
-        {
-            // Metric modulation: two beat-units, e.g. <beat-unit>quarter</beat-unit>
-            // = <beat-unit>half</beat-unit>. The second beat-unit is the 'group'
-            // alternative of the choice.
-            const auto &mm = tempo.metricModulation;
-            core::MetronomeChoiceGroupChoiceGroup rightBeatUnitHolder{};
-            rightBeatUnitHolder.setBeatUnit(makeBeatUnitGroup(mm.rightDurationName, mm.rightDots));
-
-            core::MetronomeChoiceGroup mcg{};
-            mcg.setBeatUnit(makeBeatUnitGroup(mm.leftDurationName, mm.leftDots));
-            mcg.setChoice(core::MetronomeChoiceGroupChoice::group(rightBeatUnitHolder));
-            metronome.setChoice(core::MetronomeChoice::group(mcg));
-        }
-        else
-        {
-            // tempoText (a non-numeric <per-minute> whose beat-unit was not
-            // preserved by the api) and 'unspecified' (e.g. the metronome-note
-            // form, which the api does not model) have no faithful <metronome>
-            // representation. Skip rather than crash or fabricate wrong structure.
-            // Previously the writer threw here, producing no output (CREATEFAIL).
-            // See issue #218.
-            continue;
-        }
-
-        core::DirectionType dt{};
-        dt.setChoice(core::DirectionTypeChoice::metronome(metronome));
-        addDirectionType(std::move(dt), direction);
-    }
-
-    if (myDirectionData.words.size() > 0)
-    {
-        bool isFirstWordsAdded = false;
-        core::OneOrMore<core::DirectionTypeChoiceChoice> choiceSet{core::DirectionTypeChoiceChoice{}};
-
-        for (const auto &wordsData : myDirectionData.words)
-        {
-            core::FormattedTextID outWords{};
-            outWords.setValue(wordsData.text);
-            setAttributesFromPositionData(wordsData.positionData, outWords);
-            setAttributesFromFontData(wordsData.fontData, outWords);
-
-            if (wordsData.isColorSpecified)
-            {
-                // TODO - oops color is missing from words
-                setAttributesFromColorData(wordsData.colorData, outWords);
-            }
-
-            auto choiceItem = core::DirectionTypeChoiceChoice::words(outWords);
-
-            if (!isFirstWordsAdded)
-            {
-                isFirstWordsAdded = true;
-                choiceSet = core::OneOrMore<core::DirectionTypeChoiceChoice>{choiceItem};
-            }
-            else
-            {
-                choiceSet.add(choiceItem);
-            }
-        }
-
-        if (isFirstWordsAdded)
-        {
-            core::DirectionType dt{};
-            dt.setChoice(core::DirectionTypeChoice::choice(choiceSet));
-            addDirectionType(std::move(dt), direction);
-        }
-    }
-
-    for (const auto &item : myDirectionData.segnos)
-    {
-        core::Segno segno{};
-        setAttributesFromPositionData(item.positionData, segno);
-        setAttributesFromFontData(item.fontData, segno);
-        if (item.isColorSpecified)
-        {
-            setAttributesFromColorData(item.colorData, segno);
-        }
-        if (item.isSmuflSpecified)
-        {
-            segno.setSmufl(core::SmuflSegnoGlyphName::parse(item.smufl));
-        }
-        if (item.isIdSpecified)
-        {
-            segno.setID(core::Token{item.id});
-        }
-        core::DirectionType dt{};
-        dt.setChoice(core::DirectionTypeChoice::segno(core::OneOrMore<core::Segno>{std::move(segno)}));
-        addDirectionType(std::move(dt), direction);
-    }
-
-    for (const auto &item : myDirectionData.codas)
-    {
-        core::Coda coda{};
-        setAttributesFromPositionData(item.positionData, coda);
-        setAttributesFromFontData(item.fontData, coda);
-        if (item.isColorSpecified)
-        {
-            setAttributesFromColorData(item.colorData, coda);
-        }
-        if (item.isSmuflSpecified)
-        {
-            coda.setSmufl(core::SmuflCodaGlyphName::parse(item.smufl));
-        }
-        if (item.isIdSpecified)
-        {
-            coda.setID(core::Token{item.id});
-        }
-        core::DirectionType dt{};
-        dt.setChoice(core::DirectionTypeChoice::coda(core::OneOrMore<core::Coda>{std::move(coda)}));
-        addDirectionType(std::move(dt), direction);
-    }
-
-    for (const auto &item : myDirectionData.rehearsals)
-    {
-        core::FormattedTextID rehearsal{};
-        rehearsal.setValue(item.text);
-        setAttributesFromPositionData(item.positionData, rehearsal);
-        setAttributesFromFontData(item.fontData, rehearsal);
-        if (item.isColorSpecified)
-        {
-            setAttributesFromColorData(item.colorData, rehearsal);
-        }
-        switch (item.enclosure)
-        {
-        case api::RehearsalEnclosure::unspecified:
-            break;
-        case api::RehearsalEnclosure::rectangle:
-            rehearsal.setEnclosure(core::EnclosureShape::rectangle());
-            break;
-        case api::RehearsalEnclosure::square:
-            rehearsal.setEnclosure(core::EnclosureShape::square());
-            break;
-        case api::RehearsalEnclosure::oval:
-            rehearsal.setEnclosure(core::EnclosureShape::oval());
-            break;
-        case api::RehearsalEnclosure::circle:
-            rehearsal.setEnclosure(core::EnclosureShape::circle());
-            break;
-        case api::RehearsalEnclosure::bracket:
-            rehearsal.setEnclosure(core::EnclosureShape::bracket());
-            break;
-        case api::RehearsalEnclosure::triangle:
-            rehearsal.setEnclosure(core::EnclosureShape::triangle());
-            break;
-        case api::RehearsalEnclosure::diamond:
-            rehearsal.setEnclosure(core::EnclosureShape::diamond());
-            break;
-        case api::RehearsalEnclosure::none:
-            rehearsal.setEnclosure(core::EnclosureShape::none());
-            break;
-        }
-        core::DirectionType dt{};
-        dt.setChoice(
-            core::DirectionTypeChoice::rehearsal(core::OneOrMore<core::FormattedTextID>{std::move(rehearsal)}));
-        addDirectionType(std::move(dt), direction);
+        emitOrderedComponents(direction);
     }
 
     if (myIsFirstDirectionTypeAdded)
@@ -565,6 +197,604 @@ std::vector<core::MusicDataChoice> DirectionWriter::getDirectionLikeThings()
     myPlacements.clear();
     myIsFirstDirectionTypeAdded = false;
     return output;
+}
+
+void DirectionWriter::emitMark(api::MarkData mark, core::Direction &direction)
+{
+    mark.tickTimePosition = myDirectionData.tickTimePosition;
+
+    // TODO - skip marks that aren't of the correct type (i.e. direction marks)
+    // if !isDirection( mark ) continue;
+    if (isMarkDynamic(mark.markType))
+    {
+        DynamicsWriter dynamicsWriter{mark, myCursor};
+        core::OneOrMore<core::Dynamics> dynamicsSet{dynamicsWriter.getDynamics()};
+        core::DirectionType dt{};
+        dt.setChoice(core::DirectionTypeChoice::dynamics(dynamicsSet));
+        addDirectionType(std::move(dt), direction);
+    }
+
+    if (isMarkPedal(mark.markType))
+    {
+        core::Pedal pedal{};
+
+        if (mark.positionData.placement != api::Placement::unspecified)
+        {
+            Converter c;
+            direction.setPlacement(c.convert(mark.positionData.placement));
+        }
+
+        if (mark.markType == api::MarkType::pedal)
+        {
+            pedal.setType(core::PedalType::start());
+        }
+        else if (mark.markType == api::MarkType::damp)
+        {
+            pedal.setType(core::PedalType::stop());
+        }
+
+        pedal.setLine(core::YesNo::no());
+        pedal.setSign(core::YesNo::yes());
+        setAttributesFromPositionData(mark.positionData, pedal);
+        core::DirectionType dt{};
+        dt.setChoice(core::DirectionTypeChoice::pedal(pedal));
+        addDirectionType(std::move(dt), direction);
+    }
+}
+
+void DirectionWriter::emitPedalStart(const api::SpannerStart &pedalStart, core::Direction &direction)
+{
+    core::Pedal pedal{};
+    pedal.setType(core::PedalType::start());
+    pedal.setLine(core::YesNo::yes());
+    pedal.setSign(core::YesNo::yes());
+    setAttributesFromPositionData(pedalStart.positionData, pedal);
+    core::DirectionType dt{};
+    dt.setChoice(core::DirectionTypeChoice::pedal(pedal));
+    addDirectionType(std::move(dt), direction);
+}
+
+void DirectionWriter::emitPedalStop(const api::SpannerStop &pedalStop, core::Direction &direction)
+{
+    core::Pedal pedal{};
+    pedal.setType(core::PedalType::stop());
+    pedal.setLine(core::YesNo::yes());
+    pedal.setSign(core::YesNo::yes());
+    setAttributesFromPositionData(pedalStop.positionData, pedal);
+    core::DirectionType dt{};
+    dt.setChoice(core::DirectionTypeChoice::pedal(pedal));
+    addDirectionType(std::move(dt), direction);
+}
+
+void DirectionWriter::emitWedgeStop(const api::WedgeStop &wedgeStop, core::Direction &direction)
+{
+    core::Wedge wedge{};
+    wedge.setType(core::WedgeType::stop());
+
+    if (wedgeStop.isSpreadSpecified)
+    {
+        wedge.setSpread(core::Tenths{core::Decimal{static_cast<double>(wedgeStop.spread)}});
+    }
+    setAttributesFromPositionData(wedgeStop.positionData, wedge);
+    core::DirectionType dt{};
+    dt.setChoice(core::DirectionTypeChoice::wedge(wedge));
+    addDirectionType(std::move(dt), direction);
+}
+
+void DirectionWriter::emitWedgeStart(const api::WedgeStart &wedgeStart, core::Direction &direction)
+{
+    core::Wedge wedge{};
+
+    if (wedgeStart.wedgeType != api::WedgeType::unspecified)
+    {
+        wedge.setType(myConverter.convert(wedgeStart.wedgeType));
+    }
+
+    if (wedgeStart.isSpreadSpecified)
+    {
+        wedge.setSpread(core::Tenths{core::Decimal{static_cast<double>(wedgeStart.spread)}});
+    }
+
+    setAttributesFromPositionData(wedgeStart.positionData, wedge);
+    setAttributesFromLineData(wedgeStart.lineData, wedge);
+    setAttributesFromColorData(wedgeStart.colorData, wedge);
+    core::DirectionType dt{};
+    dt.setChoice(core::DirectionTypeChoice::wedge(wedge));
+    addDirectionType(std::move(dt), direction);
+}
+
+void DirectionWriter::emitOttavaStop(const api::SpannerStop &ottavaStop, core::Direction &direction)
+{
+    core::OctaveShift os{};
+    os.setType(core::UpDownStopContinue::stop());
+    MX_UNUSED(ottavaStop);
+    core::DirectionType dt{};
+    dt.setChoice(core::DirectionTypeChoice::octaveShift(os));
+    addDirectionType(std::move(dt), direction);
+}
+
+void DirectionWriter::emitOttavaStart(const api::OttavaStart &ottavaStart, core::Direction &direction)
+{
+    core::OctaveShift os{};
+    impl::setAttributesFromLineData(ottavaStart.spannerStart.lineData, os);
+
+    switch (ottavaStart.ottavaType)
+    {
+    case api::OttavaType::o15ma: {
+        os.setType(core::UpDownStopContinue::up());
+        os.setSize(15);
+        break;
+    }
+    case api::OttavaType::o15mb: {
+        os.setType(core::UpDownStopContinue::down());
+        os.setSize(15);
+        break;
+    }
+    case api::OttavaType::o8va: {
+        os.setType(core::UpDownStopContinue::up());
+        os.setSize(8);
+        break;
+    }
+    case api::OttavaType::o8vb: {
+        os.setType(core::UpDownStopContinue::down());
+        os.setSize(8);
+        break;
+    }
+    default:
+        break;
+    }
+
+    core::DirectionType dt{};
+    dt.setChoice(core::DirectionTypeChoice::octaveShift(os));
+    addDirectionType(std::move(dt), direction);
+}
+
+void DirectionWriter::emitBracketStart(const api::SpannerStart &item, core::Direction &direction)
+{
+    core::Bracket bracket{};
+    setAttributesFromSpannerStart(item, bracket);
+    bracket.setType(core::StartStopContinue::start());
+    setAttributesFromPositionData(item.positionData, bracket);
+    setAttributesFromPrintData(item.printData, bracket);
+    applyBracketLineData(item.lineData, bracket, myConverter);
+    core::DirectionType dt{};
+    dt.setChoice(core::DirectionTypeChoice::bracket(bracket));
+    addDirectionType(std::move(dt), direction);
+}
+
+void DirectionWriter::emitBracketStop(const api::SpannerStop &item, core::Direction &direction)
+{
+    core::Bracket bracket{};
+    setAttributesFromSpannerStop(item, bracket);
+    bracket.setType(core::StartStopContinue::stop());
+    applyBracketLineData(item.lineData, bracket, myConverter);
+    core::DirectionType dt{};
+    dt.setChoice(core::DirectionTypeChoice::bracket(bracket));
+    addDirectionType(std::move(dt), direction);
+}
+
+void DirectionWriter::emitDashesStart(const api::SpannerStart &item, core::Direction &direction)
+{
+    core::Dashes dashes{};
+    setAttributesFromSpannerStart(item, dashes);
+    dashes.setType(core::StartStopContinue::start());
+    setAttributesFromPositionData(item.positionData, dashes);
+    setAttributesFromPrintData(item.printData, dashes);
+    setAttributesFromLineData(item.lineData, dashes);
+    core::DirectionType dt{};
+    dt.setChoice(core::DirectionTypeChoice::dashes(dashes));
+    addDirectionType(std::move(dt), direction);
+}
+
+void DirectionWriter::emitDashesStop(const api::SpannerStop &item, core::Direction &direction)
+{
+    core::Dashes dashes{};
+    setAttributesFromSpannerStop(item, dashes);
+    dashes.setType(core::StartStopContinue::stop());
+    core::DirectionType dt{};
+    dt.setChoice(core::DirectionTypeChoice::dashes(dashes));
+    addDirectionType(std::move(dt), direction);
+}
+
+void DirectionWriter::emitTempo(const api::TempoData &tempo, core::Direction &direction)
+{
+    const auto makeBeatUnitGroup = [&](api::DurationName durationName, int dots) {
+        core::BeatUnitGroup beatUnitGroup{};
+        beatUnitGroup.setBeatUnit(myConverter.convert(durationName));
+        for (int d = 0; d < dots; ++d)
+        {
+            beatUnitGroup.addBeatUnitDot(core::Empty{});
+        }
+        return beatUnitGroup;
+    };
+
+    core::Metronome metronome{};
+
+    if (tempo.tempoType == api::TempoType::beatsPerMinute)
+    {
+        // beat-unit (+dots) followed by a numeric per-minute.
+        core::PerMinute pm{};
+        pm.setValue(std::to_string(tempo.beatsPerMinute.beatsPerMinute));
+
+        core::MetronomeChoiceGroup mcg{};
+        mcg.setBeatUnit(makeBeatUnitGroup(tempo.beatsPerMinute.durationName, tempo.beatsPerMinute.dots));
+        mcg.setChoice(core::MetronomeChoiceGroupChoice::perMinute(pm));
+        metronome.setChoice(core::MetronomeChoice::group(mcg));
+    }
+    else if (tempo.tempoType == api::TempoType::metricModulation)
+    {
+        // Metric modulation: two beat-units, e.g. <beat-unit>quarter</beat-unit>
+        // = <beat-unit>half</beat-unit>. The second beat-unit is the 'group'
+        // alternative of the choice.
+        const auto &mm = tempo.metricModulation;
+        core::MetronomeChoiceGroupChoiceGroup rightBeatUnitHolder{};
+        rightBeatUnitHolder.setBeatUnit(makeBeatUnitGroup(mm.rightDurationName, mm.rightDots));
+
+        core::MetronomeChoiceGroup mcg{};
+        mcg.setBeatUnit(makeBeatUnitGroup(mm.leftDurationName, mm.leftDots));
+        mcg.setChoice(core::MetronomeChoiceGroupChoice::group(rightBeatUnitHolder));
+        metronome.setChoice(core::MetronomeChoice::group(mcg));
+    }
+    else
+    {
+        // tempoText (a non-numeric <per-minute> whose beat-unit was not
+        // preserved by the api) and 'unspecified' (e.g. the metronome-note
+        // form, which the api does not model) have no faithful <metronome>
+        // representation. Skip rather than crash or fabricate wrong structure.
+        // Previously the writer threw here, producing no output (CREATEFAIL).
+        // See issue #218.
+        return;
+    }
+
+    core::DirectionType dt{};
+    dt.setChoice(core::DirectionTypeChoice::metronome(metronome));
+    addDirectionType(std::move(dt), direction);
+}
+
+void DirectionWriter::emitWords(const std::vector<api::WordsData> &wordsVec, core::Direction &direction)
+{
+    if (wordsVec.empty())
+    {
+        return;
+    }
+
+    bool isFirstWordsAdded = false;
+    core::OneOrMore<core::DirectionTypeChoiceChoice> choiceSet{core::DirectionTypeChoiceChoice{}};
+
+    for (const auto &wordsData : wordsVec)
+    {
+        core::FormattedTextID outWords{};
+        outWords.setValue(wordsData.text);
+        setAttributesFromPositionData(wordsData.positionData, outWords);
+        setAttributesFromFontData(wordsData.fontData, outWords);
+
+        if (wordsData.isColorSpecified)
+        {
+            // TODO - oops color is missing from words
+            setAttributesFromColorData(wordsData.colorData, outWords);
+        }
+
+        auto choiceItem = core::DirectionTypeChoiceChoice::words(outWords);
+
+        if (!isFirstWordsAdded)
+        {
+            isFirstWordsAdded = true;
+            choiceSet = core::OneOrMore<core::DirectionTypeChoiceChoice>{choiceItem};
+        }
+        else
+        {
+            choiceSet.add(choiceItem);
+        }
+    }
+
+    if (isFirstWordsAdded)
+    {
+        core::DirectionType dt{};
+        dt.setChoice(core::DirectionTypeChoice::choice(choiceSet));
+        addDirectionType(std::move(dt), direction);
+    }
+}
+
+void DirectionWriter::emitSegno(const api::SegnoData &item, core::Direction &direction)
+{
+    core::Segno segno{};
+    setAttributesFromPositionData(item.positionData, segno);
+    setAttributesFromFontData(item.fontData, segno);
+    if (item.isColorSpecified)
+    {
+        setAttributesFromColorData(item.colorData, segno);
+    }
+    if (item.isSmuflSpecified)
+    {
+        segno.setSmufl(core::SmuflSegnoGlyphName::parse(item.smufl));
+    }
+    if (item.isIdSpecified)
+    {
+        segno.setID(core::Token{item.id});
+    }
+    core::DirectionType dt{};
+    dt.setChoice(core::DirectionTypeChoice::segno(core::OneOrMore<core::Segno>{std::move(segno)}));
+    addDirectionType(std::move(dt), direction);
+}
+
+void DirectionWriter::emitCoda(const api::CodaData &item, core::Direction &direction)
+{
+    core::Coda coda{};
+    setAttributesFromPositionData(item.positionData, coda);
+    setAttributesFromFontData(item.fontData, coda);
+    if (item.isColorSpecified)
+    {
+        setAttributesFromColorData(item.colorData, coda);
+    }
+    if (item.isSmuflSpecified)
+    {
+        coda.setSmufl(core::SmuflCodaGlyphName::parse(item.smufl));
+    }
+    if (item.isIdSpecified)
+    {
+        coda.setID(core::Token{item.id});
+    }
+    core::DirectionType dt{};
+    dt.setChoice(core::DirectionTypeChoice::coda(core::OneOrMore<core::Coda>{std::move(coda)}));
+    addDirectionType(std::move(dt), direction);
+}
+
+void DirectionWriter::emitRehearsal(const api::RehearsalData &item, core::Direction &direction)
+{
+    core::FormattedTextID rehearsal{};
+    rehearsal.setValue(item.text);
+    setAttributesFromPositionData(item.positionData, rehearsal);
+    setAttributesFromFontData(item.fontData, rehearsal);
+    if (item.isColorSpecified)
+    {
+        setAttributesFromColorData(item.colorData, rehearsal);
+    }
+    switch (item.enclosure)
+    {
+    case api::RehearsalEnclosure::unspecified:
+        break;
+    case api::RehearsalEnclosure::rectangle:
+        rehearsal.setEnclosure(core::EnclosureShape::rectangle());
+        break;
+    case api::RehearsalEnclosure::square:
+        rehearsal.setEnclosure(core::EnclosureShape::square());
+        break;
+    case api::RehearsalEnclosure::oval:
+        rehearsal.setEnclosure(core::EnclosureShape::oval());
+        break;
+    case api::RehearsalEnclosure::circle:
+        rehearsal.setEnclosure(core::EnclosureShape::circle());
+        break;
+    case api::RehearsalEnclosure::bracket:
+        rehearsal.setEnclosure(core::EnclosureShape::bracket());
+        break;
+    case api::RehearsalEnclosure::triangle:
+        rehearsal.setEnclosure(core::EnclosureShape::triangle());
+        break;
+    case api::RehearsalEnclosure::diamond:
+        rehearsal.setEnclosure(core::EnclosureShape::diamond());
+        break;
+    case api::RehearsalEnclosure::none:
+        rehearsal.setEnclosure(core::EnclosureShape::none());
+        break;
+    }
+    core::DirectionType dt{};
+    dt.setChoice(
+        core::DirectionTypeChoice::rehearsal(core::OneOrMore<core::FormattedTextID>{std::move(rehearsal)}));
+    addDirectionType(std::move(dt), direction);
+}
+
+void DirectionWriter::emitFixedOrder(core::Direction &direction)
+{
+    for (const auto &mark : myDirectionData.marks)
+    {
+        emitMark(mark, direction);
+    }
+
+    for (const auto &item : myDirectionData.pedalStarts)
+    {
+        emitPedalStart(item, direction);
+    }
+
+    for (const auto &item : myDirectionData.pedalStops)
+    {
+        emitPedalStop(item, direction);
+    }
+
+    for (const auto &item : myDirectionData.wedgeStops)
+    {
+        emitWedgeStop(item, direction);
+    }
+
+    for (const auto &item : myDirectionData.wedgeStarts)
+    {
+        emitWedgeStart(item, direction);
+    }
+
+    for (const auto &item : myDirectionData.ottavaStops)
+    {
+        emitOttavaStop(item, direction);
+    }
+
+    for (const auto &item : myDirectionData.ottavaStarts)
+    {
+        emitOttavaStart(item, direction);
+    }
+
+    for (const auto &item : myDirectionData.bracketStarts)
+    {
+        emitBracketStart(item, direction);
+    }
+
+    for (const auto &item : myDirectionData.bracketStops)
+    {
+        emitBracketStop(item, direction);
+    }
+
+    for (const auto &item : myDirectionData.dashesStarts)
+    {
+        emitDashesStart(item, direction);
+    }
+
+    for (const auto &item : myDirectionData.dashesStops)
+    {
+        emitDashesStop(item, direction);
+    }
+
+    for (const auto &item : myDirectionData.tempos)
+    {
+        emitTempo(item, direction);
+    }
+
+    emitWords(myDirectionData.words, direction);
+
+    for (const auto &item : myDirectionData.segnos)
+    {
+        emitSegno(item, direction);
+    }
+
+    for (const auto &item : myDirectionData.codas)
+    {
+        emitCoda(item, direction);
+    }
+
+    for (const auto &item : myDirectionData.rehearsals)
+    {
+        emitRehearsal(item, direction);
+    }
+}
+
+void DirectionWriter::emitOrderedComponents(core::Direction &direction)
+{
+    bool wordsEmitted = false;
+
+    for (const auto &component : myDirectionData.orderedComponents)
+    {
+        const int i = component.index;
+
+        switch (component.kind)
+        {
+        case api::DirectionComponentKind::mark:
+            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.marks.size())
+            {
+                emitMark(myDirectionData.marks.at(i), direction);
+            }
+            break;
+
+        case api::DirectionComponentKind::pedalStart:
+            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.pedalStarts.size())
+            {
+                emitPedalStart(myDirectionData.pedalStarts.at(i), direction);
+            }
+            break;
+
+        case api::DirectionComponentKind::pedalStop:
+            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.pedalStops.size())
+            {
+                emitPedalStop(myDirectionData.pedalStops.at(i), direction);
+            }
+            break;
+
+        case api::DirectionComponentKind::wedgeStop:
+            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.wedgeStops.size())
+            {
+                emitWedgeStop(myDirectionData.wedgeStops.at(i), direction);
+            }
+            break;
+
+        case api::DirectionComponentKind::wedgeStart:
+            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.wedgeStarts.size())
+            {
+                emitWedgeStart(myDirectionData.wedgeStarts.at(i), direction);
+            }
+            break;
+
+        case api::DirectionComponentKind::ottavaStop:
+            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.ottavaStops.size())
+            {
+                emitOttavaStop(myDirectionData.ottavaStops.at(i), direction);
+            }
+            break;
+
+        case api::DirectionComponentKind::ottavaStart:
+            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.ottavaStarts.size())
+            {
+                emitOttavaStart(myDirectionData.ottavaStarts.at(i), direction);
+            }
+            break;
+
+        case api::DirectionComponentKind::bracketStart:
+            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.bracketStarts.size())
+            {
+                emitBracketStart(myDirectionData.bracketStarts.at(i), direction);
+            }
+            break;
+
+        case api::DirectionComponentKind::bracketStop:
+            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.bracketStops.size())
+            {
+                emitBracketStop(myDirectionData.bracketStops.at(i), direction);
+            }
+            break;
+
+        case api::DirectionComponentKind::dashesStart:
+            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.dashesStarts.size())
+            {
+                emitDashesStart(myDirectionData.dashesStarts.at(i), direction);
+            }
+            break;
+
+        case api::DirectionComponentKind::dashesStop:
+            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.dashesStops.size())
+            {
+                emitDashesStop(myDirectionData.dashesStops.at(i), direction);
+            }
+            break;
+
+        case api::DirectionComponentKind::tempo:
+            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.tempos.size())
+            {
+                emitTempo(myDirectionData.tempos.at(i), direction);
+            }
+            break;
+
+        case api::DirectionComponentKind::words:
+            // TODO: all words are bundled into a single <direction-type> regardless of
+            // their position in orderedComponents. This loses fidelity when words are
+            // interleaved with other kinds in the source XML.
+            if (!wordsEmitted)
+            {
+                emitWords(myDirectionData.words, direction);
+                wordsEmitted = true;
+            }
+            break;
+
+        case api::DirectionComponentKind::segno:
+            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.segnos.size())
+            {
+                emitSegno(myDirectionData.segnos.at(i), direction);
+            }
+            break;
+
+        case api::DirectionComponentKind::coda:
+            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.codas.size())
+            {
+                emitCoda(myDirectionData.codas.at(i), direction);
+            }
+            break;
+
+        case api::DirectionComponentKind::rehearsal:
+            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.rehearsals.size())
+            {
+                emitRehearsal(myDirectionData.rehearsals.at(i), direction);
+            }
+            break;
+
+        case api::DirectionComponentKind::chord:
+            // Chords are emitted via createHarmonyElements, not as direction-types.
+            break;
+        }
+    }
 }
 
 void DirectionWriter::addDirectionType(core::DirectionType directionType, core::Direction &ioDirection)

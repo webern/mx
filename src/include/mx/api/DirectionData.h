@@ -120,6 +120,11 @@ struct DirectionData
     std::vector<SegnoData> segnos;
     std::vector<CodaData> codas;
     std::vector<RehearsalData> rehearsals;
+    // Preserves the original order of direction-type children from parsed XML
+    // for round-trip fidelity. Do NOT populate this when constructing
+    // DirectionData programmatically. If empty, the writer uses a default
+    // emission order. If populated incorrectly (bad indices, mismatched
+    // counts), items may be silently skipped or output may be garbled.
     std::vector<DirectionComponent> orderedComponents;
 
     DirectionData()
