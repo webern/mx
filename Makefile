@@ -39,8 +39,9 @@ DOCKER_CACHE := --cache-from type=gha --cache-to type=gha,mode=max
 endif
 
 # Docker SDK image + build volume. Incremental state persists across runs.
+# Volume name includes a path hash so parallel worktrees get isolated caches.
 DOCKER_IMAGE  := mx-sdk
-DOCKER_VOLUME := mx-build
+DOCKER_VOLUME ?= mx-build-$(shell printf '%s' '$(CURDIR)' | md5sum 2>/dev/null | cut -c1-8 || printf '%s' '$(CURDIR)' | md5 -q | cut -c1-8)
 DOCKER_STAMP  := $(BUILD_ROOT)/.docker-image-stamp
 
 # Prevent root-owned files on Linux.

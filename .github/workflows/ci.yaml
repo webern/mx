@@ -13,6 +13,13 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
+# Pin the Docker build-volume name so CI's bind-backed "mx-build" volume
+# (created per-job below) is the one the Makefile actually mounts. Without
+# this the Makefile computes a CURDIR-hashed name (for worktree isolation)
+# that doesn't match the pre-created volume.
+env:
+  DOCKER_VOLUME: mx-build
+
 jobs:
   linux-gen:
     name: Linux (generator gates)
