@@ -53,7 +53,7 @@ jobs:
           for dir in pr-comments/pr-comment-*; do
             [ -f "$dir/number" ] && [ -f "$dir/body.md" ] || continue
             number="$(cat "$dir/number")"
-            [ -n "$number" ] || continue
+            [[ "$number" =~ ^[0-9]+$ ]] || continue
             gh pr comment "$number" --repo "$REPO" --body-file "$dir/body.md"
             posted=$((posted + 1))
           done
