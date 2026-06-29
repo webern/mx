@@ -186,6 +186,7 @@ discover-api-roundtrip: dev
 # Output goes to build/api/roundtrip-dump/ (build dir, already gitignored).
 # Feeds the classifier: make dump-api-roundtrip && make classify-api-roundtrip
 dump-api-roundtrip: dev
+	rm -rf $(BUILD_ROOT)/api/roundtrip-dump
 	mkdir -p $(BUILD_ROOT)/api/roundtrip-dump
 	$(BUILD_ROOT)/api/mxtest-api-roundtrip discovery $(CURDIR)/data \
 		--dump $(CURDIR)/$(BUILD_ROOT)/api/roundtrip-dump
@@ -435,6 +436,7 @@ discover-api-roundtrip: $(DOCKER_STAMP) docker-volume
 
 dump-api-roundtrip: $(DOCKER_STAMP) docker-volume
 	$(DOCKER_RUN) make dump-api-roundtrip BUILD_TYPE=$(BUILD_TYPE)
+	@rm -rf $(BUILD_ROOT)/api/roundtrip-dump
 	@mkdir -p $(BUILD_ROOT)/api/roundtrip-dump
 	$(DOCKER) run --rm -v $(DOCKER_VOLUME):/vol:ro -v $(CURDIR)/$(BUILD_ROOT)/api/roundtrip-dump:/out \
 		alpine sh -c 'cp -a /vol/api/roundtrip-dump/. /out/'
