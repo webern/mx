@@ -17,31 +17,18 @@
       </attributes>
       <enums>
         <enum core-type="AccidentalValue" api-type="Accidental" status="missing-members">
-          <missing>sharpSharp</missing>
-          <missing>doubleSharpDown</missing>
-          <missing>doubleSharpUp</missing>
-          <missing>flatFlatDown</missing>
-          <missing>flatFlatUp</missing>
-          <missing>arrowDown</missing>
-          <missing>arrowUp</missing>
           <missing>other</missing>
         </enum>
       </enums>
-      <notes>api::Accidental via accidentalMap; see enum (sharpSharp/arrow variants dropped).</notes>
+      <notes>api::Accidental via accidentalMap; all members mapped except AccidentalValue::other (no api::Accidental::other member).</notes>
     </feature>
     <feature name="accidental-mark" support="partial">
       <enums>
         <enum core-type="AccidentalValue" api-type="MarkType" status="missing-members">
-          <missing>doubleSharpDown</missing>
-          <missing>doubleSharpUp</missing>
-          <missing>flatFlatDown</missing>
-          <missing>flatFlatUp</missing>
-          <missing>arrowDown</missing>
-          <missing>arrowUp</missing>
           <missing>other</missing>
         </enum>
       </enums>
-      <notes>api::MarkType accidentalMark*; see enum (arrow/double variants dropped).</notes>
+      <notes>api::MarkType accidentalMark*; all members mapped except AccidentalValue::other (no api::MarkType::accidentalMarkOther member).</notes>
     </feature>
     <feature name="accidental-text" support="partial">
       <notes>Accidental as text (key/ornament context) (suspected).</notes>
@@ -79,13 +66,8 @@
     <feature name="arrow-direction" support="partial">
       <notes>Part of arrow (suspected).</notes>
     </feature>
-    <feature name="articulations" support="partial">
-      <enums>
-        <enum core-type="ArticulationsChoice::Kind" api-type="MarkType" status="missing-members">
-          <missing>softAccent</missing>
-        </enum>
-      </enums>
-      <notes>All articulation marks -&gt; api::MarkType (MarkData); see enum (soft-accent dropped).</notes>
+    <feature name="articulations" support="full">
+      <notes>All articulation marks -&gt; api::MarkType (MarkData) via articulationsMap; enum complete (softAccent now mapped).</notes>
     </feature>
     <feature name="artificial" support="none">
       <notes>Harmonic artificial sub-flag not modeled.</notes>
@@ -284,7 +266,7 @@
     <feature name="duration" support="full">
       <notes>Tick duration; DurationData.</notes>
     </feature>
-    <feature name="dynamics" support="partial">
+    <feature name="dynamics" support="full">
       <attributes>
         <attribute name="placement" support="yes"/>
         <attribute name="default-x" support="yes"/>
@@ -297,14 +279,7 @@
         <attribute name="font-style" support="yes"/>
         <attribute name="font-weight" support="yes"/>
       </attributes>
-      <enums>
-        <enum core-type="DynamicsChoice::Kind" api-type="MarkType" status="missing-members">
-          <missing>n</missing>
-          <missing>pf</missing>
-          <missing>sfzp</missing>
-        </enum>
-      </enums>
-      <notes>Dynamics -&gt; api::MarkType (DynamicsReader/Writer); see enum (n/pf/sfzp dropped).</notes>
+      <notes>Dynamics -&gt; api::MarkType (DynamicsReader/Writer); dynamicsMap complete including n/pf/sfzp.</notes>
     </feature>
     <feature name="elision" support="partial">
       <notes>Lyric elision (suspected partial).</notes>
@@ -333,20 +308,29 @@
     <feature name="eyeglasses" support="none">
       <notes>Not modeled.</notes>
     </feature>
+    <feature name="f" support="full">
+      <notes>Child element of &lt;dynamics&gt;; maps to MarkType.f via dynamicsMap.</notes>
+    </feature>
     <feature name="falloff" support="full">
       <notes>MarkType.falloff.</notes>
     </feature>
-    <feature name="fermata" support="partial">
-      <enums>
-        <enum core-type="FermataShape" api-type="MarkType" status="missing-members">
-          <missing>doubleAngled</missing>
-          <missing>doubleSquare</missing>
-          <missing>doubleDot</missing>
-          <missing>halfCurve</missing>
-          <missing>curlew</missing>
-        </enum>
-      </enums>
-      <notes>api::MarkType fermata*; see enum (4.0 shapes dropped).</notes>
+    <feature name="fermata" support="full">
+      <notes>api::MarkType fermata*; fermataMap complete (all shapes including 4.0 doubleAngled/curlew).</notes>
+    </feature>
+    <feature name="ff" support="full">
+      <notes>Child element of &lt;dynamics&gt;; maps to MarkType.ff via dynamicsMap.</notes>
+    </feature>
+    <feature name="fff" support="full">
+      <notes>Child element of &lt;dynamics&gt;; maps to MarkType.fff via dynamicsMap.</notes>
+    </feature>
+    <feature name="ffff" support="full">
+      <notes>Child element of &lt;dynamics&gt;; maps to MarkType.ffff via dynamicsMap.</notes>
+    </feature>
+    <feature name="fffff" support="full">
+      <notes>Child element of &lt;dynamics&gt;; maps to MarkType.fffff via dynamicsMap.</notes>
+    </feature>
+    <feature name="ffffff" support="full">
+      <notes>Child element of &lt;dynamics&gt;; maps to MarkType.ffffff via dynamicsMap.</notes>
     </feature>
     <feature name="fifths" support="full">
       <notes>KeyData.fifths.</notes>
@@ -372,6 +356,9 @@
     <feature name="forward" support="full">
       <notes>Timing only; consumed by MeasureReader cursor.</notes>
     </feature>
+    <feature name="fp" support="full">
+      <notes>Child element of &lt;dynamics&gt;; maps to MarkType.fp via dynamicsMap.</notes>
+    </feature>
     <feature name="frame" support="full">
       <notes>api::FrameData (ChordData.frameData); DirectionReader.cpp:942-989.</notes>
     </feature>
@@ -389,6 +376,9 @@
     </feature>
     <feature name="function" support="none">
       <notes>Harmony &lt;function&gt; not modeled.</notes>
+    </feature>
+    <feature name="fz" support="full">
+      <notes>Child element of &lt;dynamics&gt;; maps to MarkType.fz via dynamicsMap.</notes>
     </feature>
     <feature name="glissando" support="partial">
       <notes>Spanner; basic glissando (suspected partial).</notes>
@@ -440,8 +430,8 @@
     <feature name="harp-pedals" support="none">
       <notes>direction-type harp-pedals not modeled.</notes>
     </feature>
-    <feature name="haydn" support="none">
-      <notes>3.1; no MarkType member (see ornaments enum).</notes>
+    <feature name="haydn" support="full">
+      <notes>MarkType.haydn; OrnamentsGroupChoice::Kind::haydn mapped in ornamentsMap.</notes>
     </feature>
     <feature name="heel" support="full">
       <notes>MarkType.heel.</notes>
@@ -467,20 +457,8 @@
     <feature name="instrument-name" support="full">
       <notes>InstrumentData.name.</notes>
     </feature>
-    <feature name="instrument-sound" support="partial">
-      <enums>
-        <enum core-type="SoundID" api-type="SoundID" status="missing-members">
-          <missing>windReedClarinetPiccolo</missing>
-          <missing>drumTabor</missing>
-          <missing>drumTamborim</missing>
-          <missing>pitchedPercussionHandchimes</missing>
-          <missing>pluckCavaquinho</missing>
-          <missing>windFlutesWhistleTinC</missing>
-          <missing>windReedClarinetD</missing>
-          <missing>windReedClarinetG</missing>
-        </enum>
-      </enums>
-      <notes>InstrumentData.soundID via instrumentMap; see enum (8 SoundID values dropped).</notes>
+    <feature name="instrument-sound" support="full">
+      <notes>InstrumentData.soundID via instrumentMap; all SoundID values mapped.</notes>
     </feature>
     <feature name="instruments" support="none">
       <notes>Part &lt;instruments&gt; count not modeled.</notes>
@@ -497,8 +475,8 @@
     <feature name="inverted-turn" support="full">
       <notes>MarkType.invertedTurn.</notes>
     </feature>
-    <feature name="inverted-vertical-turn" support="none">
-      <notes>3.1; no MarkType member (see ornaments enum).</notes>
+    <feature name="inverted-vertical-turn" support="full">
+      <notes>MarkType.invertedVerticalTurn; OrnamentsGroupChoice::Kind::invertedVerticalTurn mapped in ornamentsMap.</notes>
     </feature>
     <feature name="key" support="full">
       <attributes>
@@ -587,6 +565,9 @@
     <feature name="metronome-relation" support="none">
       <notes>Not modeled.</notes>
     </feature>
+    <feature name="mf" support="full">
+      <notes>Child element of &lt;dynamics&gt;; maps to MarkType.mf via dynamicsMap.</notes>
+    </feature>
     <feature name="midi-bank" support="full">
       <notes>MidiData.bank.</notes>
     </feature>
@@ -626,11 +607,17 @@
     <feature name="movement-title" support="full">
       <notes>ScoreData.movementTitle; ScoreReader.cpp:162-164.</notes>
     </feature>
+    <feature name="mp" support="full">
+      <notes>Child element of &lt;dynamics&gt;; maps to MarkType.mp via dynamicsMap.</notes>
+    </feature>
     <feature name="multiple-rest" support="full">
       <notes>api MeasureData multi-measure rest (suspected full).</notes>
     </feature>
     <feature name="music-font" support="none">
       <notes>Defaults &lt;music-font&gt; not modeled; dropped on read/write.</notes>
+    </feature>
+    <feature name="n" support="full">
+      <notes>Child element of &lt;dynamics&gt;; maps to MarkType.n via dynamicsMap.</notes>
     </feature>
     <feature name="natural" support="partial">
       <notes>Harmonic natural sub-flag (suspected).</notes>
@@ -665,14 +652,7 @@
         <attribute name="filled" support="partial"/>
         <attribute name="parentheses" support="partial"/>
       </attributes>
-      <enums>
-        <enum core-type="NoteheadValue" api-type="Notehead" status="missing-members">
-          <missing>faUp</missing>
-          <missing>circled</missing>
-          <missing>other</missing>
-        </enum>
-      </enums>
-      <notes>api::Notehead via noteheadMap; see enum (faUp/circled/other dropped).</notes>
+      <notes>api::Notehead via noteheadMap; enum complete (all NoteheadValue members mapped). Partial: filled/parentheses attribute support limited.</notes>
     </feature>
     <feature name="notehead-text" support="none">
       <notes>&lt;notehead-text&gt; not modeled.</notes>
@@ -698,14 +678,8 @@
     <feature name="opus" support="none">
       <notes>&lt;opus&gt; link not modeled.</notes>
     </feature>
-    <feature name="ornaments" support="partial">
-      <enums>
-        <enum core-type="OrnamentsGroupChoice::Kind" api-type="MarkType" status="missing-members">
-          <missing>invertedVerticalTurn</missing>
-          <missing>haydn</missing>
-        </enum>
-      </enums>
-      <notes>All ornaments -&gt; api::MarkType; see enum (haydn/inverted-vertical-turn dropped).</notes>
+    <feature name="ornaments" support="full">
+      <notes>All ornaments -&gt; api::MarkType via ornamentsMap; enum complete (all OrnamentsGroupChoice::Kind members mapped).</notes>
     </feature>
     <feature name="other-appearance" support="none">
       <notes>Not modeled.</notes>
@@ -716,6 +690,9 @@
     <feature name="other-direction" support="none">
       <notes>&lt;other-direction&gt; not modeled.</notes>
     </feature>
+    <feature name="other-dynamics" support="full">
+      <notes>Child element of &lt;dynamics&gt;; maps to MarkType.otherDynamics via dynamicsMap.</notes>
+    </feature>
     <feature name="other-notation" support="none">
       <notes>&lt;other-notation&gt; not modeled.</notes>
     </feature>
@@ -724,6 +701,9 @@
     </feature>
     <feature name="other-technical" support="full">
       <notes>MarkType.otherTechnical (text payload).</notes>
+    </feature>
+    <feature name="p" support="full">
+      <notes>Child element of &lt;dynamics&gt;; maps to MarkType.p via dynamicsMap.</notes>
     </feature>
     <feature name="page-height" support="full">
       <notes>PageLayoutData.size.height (SizeData).</notes>
@@ -768,8 +748,8 @@
     <feature name="part-name-display" support="partial">
       <notes>Display variant; basic text only (suspected).</notes>
     </feature>
-    <feature name="part-symbol" support="none">
-      <notes>&lt;part-symbol&gt; not modeled.</notes>
+    <feature name="part-symbol" support="full">
+      <notes>Value, top-staff, bottom-staff round-tripped via PartSymbolData.</notes>
     </feature>
     <feature name="pedal" support="partial">
       <notes>MarkType.pedal/damp; line-pedal detail limited.</notes>
@@ -780,6 +760,9 @@
     <feature name="percussion" support="none">
       <notes>direction-type percussion (and all stick/beater/glass/metal/wood/membrane/timpani children) not modeled.</notes>
     </feature>
+    <feature name="pf" support="full">
+      <notes>Child element of &lt;dynamics&gt;; maps to MarkType.pf via dynamicsMap.</notes>
+    </feature>
     <feature name="pitch" support="full">
       <notes>api::PitchData; NoteReader/NoteWriter.</notes>
     </feature>
@@ -788,6 +771,21 @@
     </feature>
     <feature name="pluck" support="none">
       <notes>No MarkType member; carries text (see technical enum).</notes>
+    </feature>
+    <feature name="pp" support="full">
+      <notes>Child element of &lt;dynamics&gt;; maps to MarkType.pp via dynamicsMap.</notes>
+    </feature>
+    <feature name="ppp" support="full">
+      <notes>Child element of &lt;dynamics&gt;; maps to MarkType.ppp via dynamicsMap.</notes>
+    </feature>
+    <feature name="pppp" support="full">
+      <notes>Child element of &lt;dynamics&gt;; maps to MarkType.pppp via dynamicsMap.</notes>
+    </feature>
+    <feature name="ppppp" support="full">
+      <notes>Child element of &lt;dynamics&gt;; maps to MarkType.ppppp via dynamicsMap.</notes>
+    </feature>
+    <feature name="pppppp" support="full">
+      <notes>Child element of &lt;dynamics&gt;; maps to MarkType.pppppp via dynamicsMap.</notes>
     </feature>
     <feature name="pre-bend" support="none">
       <notes>Part of bend; not modeled.</notes>
@@ -824,6 +822,12 @@
     </feature>
     <feature name="rest" support="full">
       <notes>NoteData.isRest + rest display step/octave.</notes>
+    </feature>
+    <feature name="rf" support="full">
+      <notes>Child element of &lt;dynamics&gt;; maps to MarkType.rf via dynamicsMap.</notes>
+    </feature>
+    <feature name="rfz" support="full">
+      <notes>Child element of &lt;dynamics&gt;; maps to MarkType.rfz via dynamicsMap.</notes>
     </feature>
     <feature name="right-margin" support="full">
       <notes>MarginsData.right.</notes>
@@ -870,6 +874,24 @@
     <feature name="senza-misura" support="partial">
       <notes>TimeSignatureData senza-misura flag (suspected).</notes>
     </feature>
+    <feature name="sf" support="full">
+      <notes>Child element of &lt;dynamics&gt;; maps to MarkType.sf via dynamicsMap.</notes>
+    </feature>
+    <feature name="sffz" support="full">
+      <notes>Child element of &lt;dynamics&gt;; maps to MarkType.sffz via dynamicsMap.</notes>
+    </feature>
+    <feature name="sfp" support="full">
+      <notes>Child element of &lt;dynamics&gt;; maps to MarkType.sfp via dynamicsMap.</notes>
+    </feature>
+    <feature name="sfpp" support="full">
+      <notes>Child element of &lt;dynamics&gt;; maps to MarkType.sfpp via dynamicsMap.</notes>
+    </feature>
+    <feature name="sfz" support="full">
+      <notes>Child element of &lt;dynamics&gt;; maps to MarkType.sfz via dynamicsMap.</notes>
+    </feature>
+    <feature name="sfzp" support="full">
+      <notes>Child element of &lt;dynamics&gt;; maps to MarkType.sfzp via dynamicsMap.</notes>
+    </feature>
     <feature name="shake" support="full">
       <notes>MarkType.shake.</notes>
     </feature>
@@ -899,8 +921,8 @@
     <feature name="snap-pizzicato" support="full">
       <notes>MarkType.snapPizzicato.</notes>
     </feature>
-    <feature name="soft-accent" support="none">
-      <notes>MusicXML 3.1; no MarkType member (see articulations enum).</notes>
+    <feature name="soft-accent" support="full">
+      <notes>MarkType.softAccent; ArticulationsChoice::Kind::softAccent mapped in articulationsMap.</notes>
     </feature>
     <feature name="software" support="full">
       <notes>EncodingData.software; EncodingFunctions.cpp (mx marker dropped on read).</notes>
@@ -1002,22 +1024,12 @@
     <feature name="technical" support="partial">
       <enums>
         <enum core-type="TechnicalChoice::Kind" api-type="MarkType" status="missing-members">
-          <missing>brassBend</missing>
-          <missing>flip</missing>
-          <missing>smear</missing>
-          <missing>open</missing>
-          <missing>halfMuted</missing>
-          <missing>harmonMute</missing>
-          <missing>golpe</missing>
-          <missing>fingering</missing>
-          <missing>pluck</missing>
           <missing>hammerOn</missing>
           <missing>pullOff</missing>
-          <missing>bend</missing>
           <missing>tap</missing>
         </enum>
       </enums>
-      <notes>Technical marks -&gt; api::MarkType; see enum (bend/fingering/pluck/etc. and brass-bend/flip/smear/open/half-muted/harmon-mute/golpe dropped).</notes>
+      <notes>Technical marks -&gt; api::MarkType via technicalMarkMap; most members mapped including brassBend/flip/smear/open/halfMuted/harmonMute/golpe/fingering/pluck. hammerOn/pullOff carry start-stop+text (complex); tap carries text; all three are commented-out in technicalMarkMap. bend is its own unsupported element.</notes>
     </feature>
     <feature name="tenths" support="full">
       <notes>Part of scaling; DefaultsData.scalingTenths.</notes>

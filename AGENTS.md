@@ -15,6 +15,7 @@ mx/
   CMakeLists.txt        <- C++ project
   data/                 <- MusicXML test corpus (large, see data/README.md)
   docs/ai/design/       <- design docs
+  docs/musicxml-4.0-ed15c23.xsd <- the current musicxml.xsd schema
   src/                  <- C++ sourcecode root
   src/include/mx/api/   <- the public mx::api headers; mx's public interface
   src/private/          <- C++ source

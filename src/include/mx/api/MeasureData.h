@@ -8,6 +8,7 @@
 #include "mx/api/ClefData.h"
 #include "mx/api/DirectionData.h"
 #include "mx/api/KeyData.h"
+#include "mx/api/PartSymbolData.h"
 #include "mx/api/StaffData.h"
 #include "mx/api/TempoData.h"
 #include "mx/api/TimeSignatureData.h"
@@ -87,6 +88,7 @@ class MeasureData
     double width;
     std::vector<KeyData> keys;
     std::vector<BarlineData> barlines;
+    std::optional<PartSymbolData> partSymbol;
 
     MeasureData()
         : staves{}, timeSignature{}, number{}, measureNumbering{MeasureNumbering::unspecified}, multiMeasureRest{-1},
@@ -106,6 +108,7 @@ MXAPI_EQUALS_MEMBER(nonControlling)
 MXAPI_EQUALS_MEMBER(width)
 MXAPI_EQUALS_MEMBER(keys)
 MXAPI_EQUALS_MEMBER(barlines)
+MXAPI_EQUALS_MEMBER(partSymbol)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(MeasureData);
 } // namespace api

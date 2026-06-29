@@ -17,6 +17,7 @@
 #include "mx/core/generated/Mode.h"
 #include "mx/core/generated/MusicDataChoice.h"
 #include "mx/core/generated/NonTraditionalKeyGroup.h"
+#include "mx/core/generated/PartSymbol.h"
 #include "mx/core/generated/PartwiseMeasure.h"
 #include "mx/core/generated/PositiveDivisions.h"
 #include "mx/core/generated/Semitones.h"
@@ -222,6 +223,23 @@ void PropertiesWriter::writeClef(int staffIndex, const api::ClefData &inClefData
 
     mxClef.setClef(cg);
     myAttributes.addClef(mxClef);
+    myHasContent = true;
+}
+
+void PropertiesWriter::writePartSymbol(const api::PartSymbolData &inPartSymbolData)
+{
+    Converter converter;
+    core::PartSymbol ps;
+    ps.setValue(converter.convert(inPartSymbolData.value));
+    if (inPartSymbolData.topStaff >= 1)
+    {
+        ps.setTopStaff(core::StaffNumber{inPartSymbolData.topStaff});
+    }
+    if (inPartSymbolData.bottomStaff >= 1)
+    {
+        ps.setBottomStaff(core::StaffNumber{inPartSymbolData.bottomStaff});
+    }
+    myAttributes.setPartSymbol(ps);
     myHasContent = true;
 }
 

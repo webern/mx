@@ -510,6 +510,22 @@ std::optional<api::TransposeData> MeasureReader::parseAttributes(const core::Att
     importStaffDetails(inMxAttributes);
     importClefs(inMxAttributes.clef());
 
+    if (inMxAttributes.partSymbol().has_value())
+    {
+        const auto &ps = *inMxAttributes.partSymbol();
+        api::PartSymbolData psData;
+        psData.value = myConverter.convert(ps.value());
+        if (ps.topStaff().has_value())
+        {
+            psData.topStaff = ps.topStaff()->value();
+        }
+        if (ps.bottomStaff().has_value())
+        {
+            psData.bottomStaff = ps.bottomStaff()->value();
+        }
+        myOutMeasureData.partSymbol = psData;
+    }
+
     if (inMxAttributes.choice().isTranspose() && !inMxAttributes.choice().asTranspose().empty())
     {
         // TODO support transpositions at places other than the start of the score

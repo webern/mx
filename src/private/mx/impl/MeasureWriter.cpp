@@ -116,6 +116,11 @@ void MeasureWriter::writeMeasureGlobals()
         }
     }
 
+    if (myMeasureData.partSymbol.has_value())
+    {
+        myPropertiesWriter->writePartSymbol(*myMeasureData.partSymbol);
+    }
+
     if (!myMeasureData.timeSignature.isImplicit)
     {
         myPropertiesWriter->writeTime(myMeasureData.timeSignature);

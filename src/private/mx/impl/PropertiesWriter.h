@@ -6,6 +6,7 @@
 
 #include "mx/api/ClefData.h"
 #include "mx/api/KeyData.h"
+#include "mx/api/PartSymbolData.h"
 #include "mx/api/TimeSignatureData.h"
 #include "mx/api/TransposeData.h"
 #include "mx/core/generated/Attributes.h"
@@ -52,6 +53,7 @@ class PropertiesWriter
     void writeNumStaves(int value);
     void writeStaffDetails(int staffIndex, int staffLines);
     void writeClef(int staffIndex, const api::ClefData &inClefData);
+    void writePartSymbol(const api::PartSymbolData &inPartSymbolData);
     void writeTranspose(const api::TransposeData &inTransposeData);
 
   private:
