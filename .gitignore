@@ -1,4 +1,5 @@
 build/
+build-*/
 cmake-build-*
 src/private/mxtest/file/PathRoot.h
 *.DS_Store
