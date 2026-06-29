@@ -809,10 +809,12 @@ void MeasureReader::importClef(const core::Clef &inClef) const
     if (inClef.clef().clefOctaveChange().has_value())
     {
         clefData.octaveChange = *inClef.clef().clefOctaveChange();
+        clefData.isOctaveChangeSpecified = true;
     }
     else
     {
         clefData.octaveChange = 0;
+        clefData.isOctaveChangeSpecified = false;
     }
 
     if (inClef.printObject().has_value())

@@ -216,7 +216,7 @@ void PropertiesWriter::writeClef(int staffIndex, const api::ClefData &inClefData
         cg.setLine(core::StaffLinePosition{inClefData.line});
     }
 
-    if (inClefData.octaveChange != 0)
+    if (inClefData.isOctaveChangeSpecified)
     {
         cg.setClefOctaveChange(inClefData.octaveChange);
     }

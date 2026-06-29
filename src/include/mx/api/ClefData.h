@@ -45,6 +45,7 @@ class ClefData
     // had no <line> element so the round-trip does not inject an implied default (#228).
     bool isLineSpecified;
     int octaveChange;
+    bool isOctaveChangeSpecified;
     int tickTimePosition;
     ClefLocation location;
     // Visibility of the clef via the MusicXML print-object attribute.
@@ -77,6 +78,7 @@ MXAPI_EQUALS_MEMBER(symbol)
 MXAPI_EQUALS_MEMBER(line)
 MXAPI_EQUALS_MEMBER(isLineSpecified)
 MXAPI_EQUALS_MEMBER(octaveChange)
+MXAPI_EQUALS_MEMBER(isOctaveChangeSpecified)
 MXAPI_EQUALS_MEMBER(tickTimePosition)
 MXAPI_EQUALS_MEMBER(location)
 MXAPI_EQUALS_MEMBER(printObject)
