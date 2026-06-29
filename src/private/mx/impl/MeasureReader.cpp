@@ -822,14 +822,20 @@ void MeasureReader::importClef(const core::Clef &inClef) const
         clefData.printObject = converter.convert(*inClef.printObject());
     }
 
-    int celfStaffIndex = -1;
-    if (inClef.number().has_value())
+    const bool sourceHasNumber = inClef.number().has_value();
+    int celfStaffIndex = sourceHasNumber ? inClef.number()->value() - 1 : 0;
+
+    // Auto rule (see ClefData::writeStaffNumber): include the number unless this is a single-staff
+    // part carrying the implied 1 (staff index 0). Record an explicit override only when the source
+    // diverges from that rule, so the common case stays unspecified.
+    const bool autoIncludes = !(myCurrentCursor.getNumStaves() == 1 && celfStaffIndex == 0);
+    if (sourceHasNumber && !autoIncludes)
     {
-        celfStaffIndex = inClef.number()->value() - 1;
+        clefData.writeStaffNumber = api::Bool::yes;
     }
-    else
+    else if (!sourceHasNumber && autoIncludes)
     {
-        celfStaffIndex = 0;
+        clefData.writeStaffNumber = api::Bool::no;
     }
 
     if (myCurrentCursor.tickTimePosition == 0)

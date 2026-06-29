@@ -224,6 +224,14 @@ class MeasureWriter
         return myHistory.getCursor();
     }
 
+    // A clef carries a staff number only in a multi-staff part; for a single-staff part the
+    // number is omitted (1 is assumed). Centralizes the rule so measure-start and mid-measure
+    // clef writes agree and single-staff parts do not emit a spurious number="1".
+    inline int clefStaffIndex(int staffIndex) const
+    {
+        return cursor().getNumStaves() > 1 ? staffIndex : -1;
+    }
+
     template <typename T> std::vector<T> findItemsAtTimePosition(const std::vector<T> &inItems, int inTickTimePosition)
     {
         std::vector<T> outVector;

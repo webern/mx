@@ -202,9 +202,21 @@ void PropertiesWriter::writeClef(int staffIndex, const api::ClefData &inClefData
 {
     core::Clef mxClef{};
 
-    if (staffIndex >= 0)
+    // staffIndex < 0 means a single-staff part (the caller's clefStaffIndex() collapses it), so the
+    // auto rule omits the implied 1; staffIndex >= 0 is a multi-staff part, so the auto rule emits
+    // staffIndex + 1. writeStaffNumber forces the decision either way (round-trip fidelity).
+    bool includeNumber = staffIndex >= 0;
+    if (inClefData.writeStaffNumber == api::Bool::yes)
     {
-        mxClef.setNumber(core::StaffNumber{staffIndex + 1});
+        includeNumber = true;
+    }
+    else if (inClefData.writeStaffNumber == api::Bool::no)
+    {
+        includeNumber = false;
+    }
+    if (includeNumber)
+    {
+        mxClef.setNumber(core::StaffNumber{staffIndex >= 0 ? staffIndex + 1 : 1});
     }
 
     Converter converter;

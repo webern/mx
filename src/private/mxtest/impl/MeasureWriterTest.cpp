@@ -178,10 +178,50 @@ TEST(PropertiesButNoNotes, MeasureWriter)
     CHECK_DOUBLES_EQUAL(101.0, props.divisions()->value().value(), 0.01);
 
     CHECK_EQUAL(1, props.clef().size());
-    CHECK(props.clef().back().number().has_value());
-    CHECK(1 == props.clef().back().number()->value());
+    // Single-staff part (numStaves == 1): the clef carries no number; 1 is assumed. The
+    // mid-measure write path previously emitted a spurious number="1" (#230).
+    CHECK(!props.clef().back().number().has_value());
 
     CHECK(++mdcIter == mdcEnd);
+}
+
+T_END
+
+TEST(MultiStaffClefKeepsNumber, MeasureWriter)
+{
+    // Counterpart to PropertiesButNoNotes: in a multi-staff part the clef number is required
+    // to disambiguate the staff, so it must be emitted (here staff 0 -> number 1).
+    mxtest::TestParameters params;
+    params.ticksPerQuarter = 101;
+    params.measureIndex = 0;
+    params.partIndex = 0;
+    params.numStaves = 2;
+    mxtest::TestItems t = mxtest::setupTestItems(params);
+    t.measureData->barlines.emplace_back(api::BarlineData{});
+    auto &barline = t.measureData->barlines.front();
+    barline.barlineType = api::BarlineType::heavyLight;
+    auto &staff = t.measureData->staves.at(0);
+    staff.clefs.emplace_back(api::ClefData{});
+    auto &clef = staff.clefs.back();
+    clef.symbol = api::ClefSymbol::percussion;
+    clef.line = 2;
+    clef.tickTimePosition = 101;
+
+    const auto partwiseMeasure = t.measureWriter->getPartwiseMeasure();
+    auto musicData = partwiseMeasure.musicData();
+    auto mdcIter = musicData.begin();
+    auto mdcEnd = musicData.end();
+
+    CHECK(mdcIter != mdcEnd);
+    CHECK(mdcIter->isBarline());
+
+    CHECK(++mdcIter != mdcEnd);
+    CHECK(mdcIter->isAttributes());
+    const auto &props = mdcIter->asAttributes();
+
+    CHECK_EQUAL(1, props.clef().size());
+    CHECK(props.clef().back().number().has_value());
+    CHECK(1 == props.clef().back().number()->value());
 }
 
 T_END

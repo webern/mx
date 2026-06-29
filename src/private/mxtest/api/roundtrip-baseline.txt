@@ -155,3 +155,32 @@ musuite/testWords1.xml
 # and NoteWriter dropped valid zero values on round-trip.
 custom/transposition.musicxml
 ksuite/k002a_Fermatas.xml
+
+# Unblocked by #230 (clef @number round-trip). The writer emitted a spurious
+# number="1" on mid-measure clef changes in single-staff parts (the staffIndex
+# was passed straight through instead of being suppressed for single-staff, as
+# the measure-start path already did), and did not preserve a source-specified
+# number. Source clefs here carry no number, so 1 is assumed and must be omitted.
+ksuite/k006a_Clefs_sign_G_ln_2_oct_0_Treble.xml
+ksuite/k006b_Clefs_sign_F_ln_4_oct_0_Bass.xml
+ksuite/k006c_Clefs_sign_C_ln_3_oct_0_Viola.xml
+ksuite/k006d_Clefs_sign_C_ln_4_oct_0_Tenor.xml
+ksuite/k006e_Clefs_sign_C_ln_5_oct_0_Baritone.xml
+ksuite/k006f_Clefs_sign_C_ln_1_oct_0_Soprano.xml
+ksuite/k006g_Clefs_sign_C_ln_2_oct_0_Mezzo_Soprano.xml
+ksuite/k006h_Clefs_sign_G_ln_1_oct_0_French.xml
+ksuite/k006i_Clefs_sign_F_ln_3_oct_0_Varbaritone.xml
+ksuite/k006j_Clefs_sign_F_ln_5_oct_0_Subbass.xml
+ksuite/k006k_Clefs_sign_G_ln_2_oct_neg2_G_15MB.xml
+ksuite/k006l_Clefs_sign_G_ln_2_oct_neg1_G_8VB.xml
+ksuite/k006m_Clefs_sign_G_ln_2_oct_1_G_8VA.xml
+ksuite/k006n_Clefs_sign_G_ln_2_oct_2_G_15MA.xml
+ksuite/k006o_Clefs_sign_F_ln_4_oct_neg2_F_15MB.xml
+ksuite/k006p_Clefs_sign_F_ln_4_oct_neg1_F_8VB.xml
+ksuite/k006q_Clefs_sign_F_ln_4_oct_1_F_8VA.xml
+ksuite/k006r_Clefs_sign_F_ln_4_oct_2_F_15MA.xml
+ksuite/k006s_Clefs_sign_percussion_ln_3_oct_0_Percussion.xml
+ksuite/k006t_Clefs_sign_TAB_ln_3_oct_0_Tab.xml
+ksuite/k006u_Clefs_sign_jianpu_ln_3_oct_0_Jianpu.xml
+ksuite/k006v_Clefs_sign_none_ln_3_oct_0_None.xml
+lysuite/ly46c_Midmeasure_Clef.xml

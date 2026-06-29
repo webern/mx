@@ -144,12 +144,7 @@ void MeasureWriter::writeMeasureGlobals()
         auto clefEnd = staff.clefs.cend();
         while (clefIter != clefEnd && clefIter->tickTimePosition == 0)
         {
-            int desiredStaffIndex = -1;
-            if (myHistory.getCursor().getNumStaves() > 1)
-            {
-                desiredStaffIndex = localStaffCounter;
-            }
-            myPropertiesWriter->writeClef(desiredStaffIndex, *clefIter);
+            myPropertiesWriter->writeClef(clefStaffIndex(localStaffCounter), *clefIter);
             ++clefIter;
         }
         ++localStaffCounter;
@@ -443,7 +438,7 @@ void MeasureWriter::writeVoices(const api::StaffData &inStaff)
 
             while (clefIter != clefEnd && clefIter->tickTimePosition <= myHistory.getCursor().tickTimePosition)
             {
-                myPropertiesWriter->writeClef(myHistory.getCursor().staffIndex, *clefIter);
+                myPropertiesWriter->writeClef(clefStaffIndex(myHistory.getCursor().staffIndex), *clefIter);
                 ++clefIter;
             }
 
@@ -493,7 +488,7 @@ void MeasureWriter::writeVoices(const api::StaffData &inStaff)
         {
             MX_ASSERT(clefIter != inStaff.clefs.cend());
             api::ClefData clef = *clefIter;
-            myPropertiesWriter->writeClef(myHistory.getCursor().staffIndex, clef);
+            myPropertiesWriter->writeClef(clefStaffIndex(myHistory.getCursor().staffIndex), clef);
         }
 
         if (myMeasureKeysIter != myMeasureKeysEnd)

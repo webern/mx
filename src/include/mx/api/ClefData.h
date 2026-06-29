@@ -38,7 +38,12 @@ class ClefData
   public:
     ClefData();
 
-    // int staffIndex;
+    // Most users can ignore this; leave it unspecified. It only controls whether the clef's
+    // optional number attribute is written. unspecified (the default) applies the right rule
+    // automatically: omit the number on a single-staff part (where 1 is implied) and include it
+    // otherwise. yes/no force the attribute on or off. It exists for round-trip fidelity - reading
+    // a file sets yes/no only when the source diverged from the automatic rule.
+    Bool writeStaffNumber;
     ClefSymbol symbol;
     int line;
     // When true (the default), the writer emits <line>. Set to false when the source
@@ -73,7 +78,7 @@ class ClefData
 };
 
 MXAPI_EQUALS_BEGIN(ClefData)
-// MXAPI_EQUALS_MEMBER( staffIndex )
+MXAPI_EQUALS_MEMBER(writeStaffNumber)
 MXAPI_EQUALS_MEMBER(symbol)
 MXAPI_EQUALS_MEMBER(line)
 MXAPI_EQUALS_MEMBER(isLineSpecified)
