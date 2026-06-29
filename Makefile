@@ -435,9 +435,15 @@ discover-api-roundtrip: $(DOCKER_STAMP) docker-volume
 
 dump-api-roundtrip: $(DOCKER_STAMP) docker-volume
 	$(DOCKER_RUN) make dump-api-roundtrip BUILD_TYPE=$(BUILD_TYPE)
+	@mkdir -p $(BUILD_ROOT)/api/roundtrip-dump
+	$(DOCKER) run --rm -v $(DOCKER_VOLUME):/vol:ro -v $(CURDIR)/$(BUILD_ROOT)/api/roundtrip-dump:/out \
+		alpine sh -c 'cp -a /vol/api/roundtrip-dump/. /out/'
 
 classify-api-roundtrip: $(DOCKER_STAMP) docker-volume
 	$(DOCKER_RUN) make classify-api-roundtrip BUILD_TYPE=$(BUILD_TYPE)
+	@mkdir -p $(BUILD_ROOT)/api
+	$(DOCKER) run --rm -v $(DOCKER_VOLUME):/vol:ro -v $(CURDIR)/$(BUILD_ROOT)/api:/out \
+		alpine cp /vol/api/classified.json /out/classified.json
 
 coverage-api: $(DOCKER_STAMP) docker-volume
 	@rm -rf $(COV_DIR)/api
