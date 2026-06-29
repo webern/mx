@@ -103,6 +103,7 @@ class NoteData
     PitchData pitchData; // step, alter, octave, accidental, etc
     int userRequestedVoiceNumber;
     Stem stem;
+    PositionData stemPositionData;
 
     // the time location of the note, within the measure, denominated in ticksPerQuarter which
     // is defined in ScoreData. in each measure, the note with tickTimePosition 0 is located at
@@ -143,6 +144,7 @@ MXAPI_EQUALS_MEMBER(noteType)
 MXAPI_EQUALS_MEMBER(pitchData)
 MXAPI_EQUALS_MEMBER(userRequestedVoiceNumber)
 MXAPI_EQUALS_MEMBER(stem)
+MXAPI_EQUALS_MEMBER(stemPositionData)
 MXAPI_EQUALS_MEMBER(tickTimePosition)
 MXAPI_EQUALS_MEMBER(durationData)
 MXAPI_EQUALS_MEMBER(beams)

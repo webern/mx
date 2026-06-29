@@ -422,6 +422,7 @@ void NoteWriter::setStemDirection() const
 
     core::Stem stem;
     stem.setValue(myConverter.convert(myNoteData.stem));
+    impl::setAttributesFromPositionData(myNoteData.stemPositionData, stem);
     myOutNote.setStem(std::move(stem));
 }
 

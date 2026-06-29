@@ -149,3 +149,9 @@ musuite/testVoiceMapper3_ref.xml
 musuite/testVoicePiano1.xml
 musuite/testVolta1.xml
 musuite/testWords1.xml
+
+# Unblocked by #263 (clef-octave-change zero), #264 (diatonic zero), #265 (stem
+# default-y zero): the zero-as-unset guard bugs in PropertiesWriter, Converter,
+# and NoteWriter dropped valid zero values on round-trip.
+custom/transposition.musicxml
+ksuite/k002a_Fermatas.xml

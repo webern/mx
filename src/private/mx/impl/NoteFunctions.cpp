@@ -135,6 +135,7 @@ api::NoteData NoteFunctions::parseNote() const
     if (reader.getIsStemSpecified())
     {
         myOutNoteData.stem = converter.convert(reader.getStem());
+        myOutNoteData.stemPositionData = impl::getPositionData(*myNote.stem());
     }
     myOutNoteData.isTieStart = reader.getIsTieStart();
     myOutNoteData.isTieStop = reader.getIsTieStop();
