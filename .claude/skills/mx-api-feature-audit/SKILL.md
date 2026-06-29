@@ -1,5 +1,5 @@
 ---
-name: api-feature-audit
+name: mx-api-feature-audit
 description: >
   Use this skill to audit which MusicXML features the `mx::api` public layer supports, compared to
   the test corpus and the MusicXML specification. It finds (1) enum bugs -- values present in

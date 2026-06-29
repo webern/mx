@@ -1,5 +1,5 @@
 ---
-name: explain-api-roundtrip
+name: mx-api-classify-roundtrip-failures
 description: >
   Use this skill to explain, in plain language, what is wrong with the `mx::api` round-trip and what
   it needs next. It drives the failure classifier (dump -> classify) over the corpus, then reads

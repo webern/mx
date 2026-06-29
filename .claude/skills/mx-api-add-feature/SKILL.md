@@ -1,5 +1,5 @@
 ---
-name: add-mx-api-feature
+name: mx-api-add-feature
 description: >
   Use this skill when the user wants to add a MusicXML feature to the `mx::api` layer. This skill
   provides a step-by-step guide to add something to mx::api and wire it up through mx::impl. It may
