@@ -1708,18 +1708,12 @@ mx::core::Transpose Converter::convertToTranspose(const mx::api::TransposeData &
         group.setChromatic(mx::core::Semitones{mx::core::Decimal{static_cast<double>(chromatic)}});
     }
 
-    if (inTransposeData.diatonic != 0)
+    auto harmonic = inTransposeData.diatonic;
+    if (octave != 0)
     {
-        auto harmonic = inTransposeData.diatonic;
-        if (octave != 0)
-        {
-            harmonic += octave * -7;
-        }
-        if (harmonic != 0)
-        {
-            group.setDiatonic(harmonic);
-        }
+        harmonic += octave * -7;
     }
+    group.setDiatonic(harmonic);
 
     transpose.setTranspose(std::move(group));
     return transpose;

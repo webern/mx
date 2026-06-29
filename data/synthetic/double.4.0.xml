@@ -13,6 +13,7 @@
     <measure number="x">
       <attributes>
         <transpose>
+          <diatonic>1</diatonic>
           <chromatic>1</chromatic>
           <double above="yes" />
         </transpose>

@@ -489,7 +489,7 @@ TEST(Conversion01, Transposition)
     const auto original = mx::api::TransposeData{transposeDataChromatic, transposeDataDiatonic};
     const auto converted = mx::impl::Converter::convertToTranspose(original);
     CHECK_EQUAL(expectedChromatic, static_cast<int>(converted.transpose().chromatic().value().value()));
-    CHECK(converted.transpose().diatonic().has_value() == (expectedDiatonic != 0));
+    CHECK(converted.transpose().diatonic().has_value());
     CHECK_EQUAL(expectedDiatonic, converted.transpose().diatonic().value_or(0));
     CHECK(converted.transpose().octaveChange().has_value() == (expectedOctave != 0));
     CHECK_EQUAL(expectedOctave, converted.transpose().octaveChange().value_or(0));
@@ -509,7 +509,7 @@ TEST(Conversion02, Transposition)
     const auto original = mx::api::TransposeData{transposeDataChromatic, transposeDataDiatonic};
     const auto converted = mx::impl::Converter::convertToTranspose(original);
     CHECK_EQUAL(expectedChromatic, static_cast<int>(converted.transpose().chromatic().value().value()));
-    CHECK(converted.transpose().diatonic().has_value() == (expectedDiatonic != 0));
+    CHECK(converted.transpose().diatonic().has_value());
     CHECK_EQUAL(expectedDiatonic, converted.transpose().diatonic().value_or(0));
     CHECK(converted.transpose().octaveChange().has_value() == (expectedOctave != 0));
     CHECK_EQUAL(expectedOctave, converted.transpose().octaveChange().value_or(0));
@@ -529,7 +529,7 @@ TEST(Conversion03, Transposition)
     const auto original = mx::api::TransposeData{transposeDataChromatic, transposeDataDiatonic};
     const auto converted = mx::impl::Converter::convertToTranspose(original);
     CHECK_EQUAL(expectedChromatic, static_cast<int>(converted.transpose().chromatic().value().value()));
-    CHECK(converted.transpose().diatonic().has_value() == (expectedDiatonic != 0));
+    CHECK(converted.transpose().diatonic().has_value());
     CHECK_EQUAL(expectedDiatonic, converted.transpose().diatonic().value_or(0));
     CHECK(converted.transpose().octaveChange().has_value() == (expectedOctave != 0));
     CHECK_EQUAL(expectedOctave, converted.transpose().octaveChange().value_or(0));
@@ -549,7 +549,7 @@ TEST(Conversion04, Transposition)
     const auto original = mx::api::TransposeData{transposeDataChromatic, transposeDataDiatonic};
     const auto converted = mx::impl::Converter::convertToTranspose(original);
     CHECK_EQUAL(expectedChromatic, static_cast<int>(converted.transpose().chromatic().value().value()));
-    CHECK(converted.transpose().diatonic().has_value() == (expectedDiatonic != 0));
+    CHECK(converted.transpose().diatonic().has_value());
     CHECK_EQUAL(expectedDiatonic, converted.transpose().diatonic().value_or(0));
     CHECK(converted.transpose().octaveChange().has_value() == (expectedOctave != 0));
     CHECK_EQUAL(expectedOctave, converted.transpose().octaveChange().value_or(0));
