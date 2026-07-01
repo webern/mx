@@ -5,6 +5,7 @@
 #pragma once
 
 #include "mx/api/CurveData.h"
+#include "mx/api/NoteData.h"
 #include "mx/core/generated/Slur.h"
 #include "mx/core/generated/Tied.h"
 #include "mx/impl/LineFunctions.h"
@@ -282,17 +283,72 @@ void writeAttributesFromCurveStop(const api::CurveStop inCurve, ATTRIBUTES_TYPE 
     }
 }
 
+// Emits a lone <tied type="let-ring"> from an api::TieLetRing, carrying its
+// shared visual attributes (position, orientation, color). The caller decides
+// whether to emit at all (i.e. checks isSpecified).
+inline void writeAttributesFromTieLetRing(const api::TieLetRing &inTie, core::Tied &outTied)
+{
+    outTied.setType(core::TiedType::letRing());
+    impl::setAttributesFromPositionData(inTie.positionData, outTied);
+
+    if (inTie.isColorSpecified)
+    {
+        setAttributesFromColorData(inTie.colorData, outTied);
+    }
+
+    if (inTie.curveOrientation != api::CurveOrientation::unspecified)
+    {
+        outTied.setOrientation(inTie.curveOrientation == api::CurveOrientation::overhand ? core::OverUnder::over()
+                                                                                         : core::OverUnder::under());
+    }
+}
+
+// Parses a lone <tied type="let-ring"> into an api::TieLetRing. A let-ring
+// tie has no start/stop pairing, so it is captured on its own rather than in
+// the curve vectors. The visual attributes it shares with any tied element
+// (position, orientation, color) are carried across.
+inline api::TieLetRing parseTieLetRing(const core::Tied &inTied)
+{
+    api::TieLetRing c;
+    c.isSpecified = true;
+    c.positionData = impl::getPositionData(inTied);
+    c.isColorSpecified = checkHasColor(&inTied);
+
+    if (c.isColorSpecified)
+    {
+        c.colorData = impl::getColor(inTied);
+    }
+
+    if (inTied.orientation().has_value())
+    {
+        c.curveOrientation = *inTied.orientation() == core::OverUnder::over() ? api::CurveOrientation::overhand
+                                                                              : api::CurveOrientation::underhand;
+    }
+    return c;
+}
+
 // takes either an mx::core::Tied or an mx::core::Slur
 // populates the outNoteData.curveStart, cureContinuations
 // or curveStop vector with the result
 template <typename SLUR_OR_TIE_ELEMENT_TYPE>
 void parseCurve(const SLUR_OR_TIE_ELEMENT_TYPE &slurOrTie, api::NoteData &outNoteData)
 {
-    // Slur's type is StartStopContinue; Tied's is TiedType (whose let-ring
-    // alternative the old core could not represent; it falls through all
-    // branches and is ignored here).
+    // Slur's type is StartStopContinue; Tied's is TiedType, which also has a
+    // let-ring alternative. A let-ring value only occurs on <tied>, so the
+    // if constexpr below keeps this branch out of the slur instantiation (whose
+    // type has no letRing) and routes the lone <tied type="let-ring"> into
+    // NoteData::tieLetRing instead of the start/continue/stop curve vectors.
     const auto outputType = slurOrTie.type();
     using CurveTypeAttribute = std::decay_t<decltype(outputType)>;
+
+    if constexpr (std::is_same_v<std::decay_t<SLUR_OR_TIE_ELEMENT_TYPE>, core::Tied>)
+    {
+        if (core::TiedType::letRing() == outputType)
+        {
+            outNoteData.tieLetRing = parseTieLetRing(slurOrTie);
+            return;
+        }
+    }
 
     if (CurveTypeAttribute::start() == outputType)
     {

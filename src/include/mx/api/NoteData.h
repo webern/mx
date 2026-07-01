@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "mx/api/CurveData.h"
 #include "mx/api/DurationData.h"
 #include "mx/api/LyricData.h"
 #include "mx/api/NoteAttachmentData.h"
@@ -75,6 +76,43 @@ enum class Stem
     both
 };
 
+// A laissez-vibrer tie, also called a "let-ring" or "lv" tie. Unlike a normal
+// tie, which is a start/stop pair joining two notes of the same pitch, an lv
+// tie applies to a single note and has no matching stop: it instructs the
+// renderer to let the note ring undamped. In MusicXML this is a lone
+// <tied type="let-ring"> notation (there is no sound-level <tie> counterpart,
+// since the <tie> element's type is only start or stop). Because it is
+// structurally unlike a start/stop tie, it is modeled with its own struct
+// rather than by overloading NoteData's isTieStart / isTieStop.
+struct TieLetRing
+{
+    // Whether this note carries an lv (let-ring) tie. When false the remaining
+    // fields are unused. A default-constructed, all-fields-default TieLetRing
+    // with isSpecified true corresponds to a bare <tied type="let-ring"/>.
+    bool isSpecified;
+
+    // Optional visual attributes carried by the <tied type="let-ring"> element.
+    PositionData positionData; // default-x/y, relative-x/y, placement
+    CurveOrientation curveOrientation;
+    bool isColorSpecified;
+    ColorData colorData;
+
+    TieLetRing()
+        : isSpecified{false}, positionData{}, curveOrientation{CurveOrientation::unspecified}, isColorSpecified{false},
+          colorData{}
+    {
+    }
+};
+
+MXAPI_EQUALS_BEGIN(TieLetRing)
+MXAPI_EQUALS_MEMBER(isSpecified)
+MXAPI_EQUALS_MEMBER(positionData)
+MXAPI_EQUALS_MEMBER(curveOrientation)
+MXAPI_EQUALS_MEMBER(isColorSpecified)
+MXAPI_EQUALS_MEMBER(colorData)
+MXAPI_EQUALS_END;
+MXAPI_NOT_EQUALS_AND_VECTORS(TieLetRing);
+
 class NoteData
 {
   public:
@@ -97,6 +135,10 @@ class NoteData
     // items are needed to draw the ties visibly
     bool isTieStart;
     bool isTieStop;
+
+    // A laissez-vibrer / let-ring tie on this note (a lone <tied type="let-ring">
+    // with no matching stop). Independent of isTieStart / isTieStop. See TieLetRing.
+    TieLetRing tieLetRing;
 
     NoteType noteType; // normal, cue, grace
     Notehead notehead;
@@ -140,6 +182,7 @@ MXAPI_EQUALS_MEMBER(isDisplayStepOctaveSpecified)
 MXAPI_EQUALS_MEMBER(isChord)
 MXAPI_EQUALS_MEMBER(isTieStart)
 MXAPI_EQUALS_MEMBER(isTieStop)
+MXAPI_EQUALS_MEMBER(tieLetRing)
 MXAPI_EQUALS_MEMBER(noteType)
 MXAPI_EQUALS_MEMBER(pitchData)
 MXAPI_EQUALS_MEMBER(userRequestedVoiceNumber)
