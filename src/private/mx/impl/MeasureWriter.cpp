@@ -742,6 +742,11 @@ void MeasureWriter::writeBarlines(int tickTimePosition)
                 repeatElement.setDirection(mx::core::BackwardForward::backward());
             }
 
+            if (myBarlinesIter->repeatTimes > 0)
+            {
+                repeatElement.setTimes(myBarlinesIter->repeatTimes);
+            }
+
             barlineElement.setRepeat(repeatElement);
         }
 

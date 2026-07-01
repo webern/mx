@@ -144,6 +144,43 @@ TEST(leftBarlineFirstNoteRequiresForward, MeasureWriter)
 
 T_END
 
+TEST(rightBarlineRepeatTimes, MeasureWriter)
+{
+    // A backward repeat carrying a times count must round-trip that count (#271).
+    mxtest::TestParameters params;
+    params.ticksPerQuarter = 101;
+    params.measureIndex = 0;
+    params.partIndex = 0;
+    params.numStaves = 1;
+    mxtest::TestItems t = mxtest::setupTestItems(params);
+    t.measureData->barlines.emplace_back(api::BarlineData{});
+    auto &barline = t.measureData->barlines.front();
+    barline.barlineType = api::BarlineType::lightHeavy;
+    barline.location = api::HorizontalAlignment::right;
+    barline.tickTimePosition = api::TICK_TIME_INFINITY;
+    barline.repeat = true;
+    barline.repeatTimes = 5;
+
+    const auto partwiseMeasure = t.measureWriter->getPartwiseMeasure();
+    auto musicData = partwiseMeasure.musicData();
+
+    const core::Barline *outBarline = nullptr;
+    for (const auto &mdc : musicData)
+    {
+        if (mdc.isBarline())
+        {
+            outBarline = &mdc.asBarline();
+        }
+    }
+
+    CHECK(outBarline != nullptr);
+    CHECK(outBarline->repeat().has_value());
+    CHECK(outBarline->repeat()->times().has_value());
+    CHECK_EQUAL(5, *outBarline->repeat()->times());
+}
+
+T_END
+
 TEST(PropertiesButNoNotes, MeasureWriter)
 {
     mxtest::TestParameters params;

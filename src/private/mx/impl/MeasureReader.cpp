@@ -655,6 +655,7 @@ void MeasureReader::parseBarline(const core::Barline &inMxBarline) const
     auto endingType = api::EndingType::none;
     auto endingNumber = 0;
     auto repeat = false;
+    auto repeatTimes = 0;
 
     if (inMxBarline.location().has_value())
     {
@@ -705,6 +706,7 @@ void MeasureReader::parseBarline(const core::Barline &inMxBarline) const
     if (inMxBarline.repeat().has_value())
     {
         repeat = true;
+        repeatTimes = inMxBarline.repeat()->times().value_or(0);
     }
 
     barline.barlineType = style;
@@ -712,6 +714,7 @@ void MeasureReader::parseBarline(const core::Barline &inMxBarline) const
     barline.endingType = endingType;
     barline.endingNumber = endingNumber;
     barline.repeat = repeat;
+    barline.repeatTimes = repeatTimes;
     myOutMeasureData.barlines.emplace_back(std::move(barline));
 }
 

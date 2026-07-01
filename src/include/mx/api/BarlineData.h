@@ -45,11 +45,14 @@ class BarlineData
     EndingType endingType;
     int endingNumber;
     bool repeat;
+    // Number of times a backward repeat is played (the repeat's `times` attribute). 0 = not
+    // specified, mirroring endingNumber above.
+    int repeatTimes;
     HorizontalAlignment location;
 
     BarlineData()
         : tickTimePosition{0}, barlineType{BarlineType::normal}, endingType{EndingType::none}, endingNumber{0},
-          repeat{false}, location{HorizontalAlignment::unspecified}
+          repeat{false}, repeatTimes{0}, location{HorizontalAlignment::unspecified}
     {
     }
 };
@@ -60,6 +63,7 @@ MXAPI_EQUALS_MEMBER(barlineType)
 MXAPI_EQUALS_MEMBER(endingType)
 MXAPI_EQUALS_MEMBER(endingNumber)
 MXAPI_EQUALS_MEMBER(repeat)
+MXAPI_EQUALS_MEMBER(repeatTimes)
 MXAPI_EQUALS_MEMBER(location)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(BarlineData);

@@ -184,3 +184,10 @@ ksuite/k006t_Clefs_sign_TAB_ln_3_oct_0_Tab.xml
 ksuite/k006u_Clefs_sign_jianpu_ln_3_oct_0_Jianpu.xml
 ksuite/k006v_Clefs_sign_none_ln_3_oct_0_None.xml
 lysuite/ly46c_Midmeasure_Clef.xml
+
+# Unblocked by #271 (repeat @times round-trip). The reader recorded only a bool
+# for a repeat and dropped the times count; the writer never emitted it. Added
+# BarlineData::repeatTimes (0 = unspecified, mirroring endingNumber) so a backward
+# repeat's times attribute survives the round-trip.
+lysuite/ly45a_SimpleRepeat.xml
+lysuite/ly45c_RepeatMultipleTimes.xml
