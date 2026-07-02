@@ -147,6 +147,16 @@ core::Notations NotationsWriter::getNotations() const
         }
     }
 
+    // A laissez-vibrer / let-ring tie is a lone <tied type="let-ring"> with no
+    // start/stop pairing, so it is emitted from its own field rather than the
+    // curve vectors above.
+    if (myNoteData.tieLetRing.has_value())
+    {
+        core::Tied tied;
+        writeAttributesFromTieLetRing(*myNoteData.tieLetRing, tied);
+        outNotations.addChoice(core::NotationsChoice::tied(tied));
+    }
+
     for (const auto &tupletStop : myNoteData.noteAttachmentData.tupletStops)
     {
         core::Tuplet tuplet;

@@ -6,8 +6,10 @@
 #ifdef MX_COMPILE_IMPL_TESTS
 
 #include "cpul/cpulTestHarness.h"
+#include "mx/api/NoteData.h"
 #include "mx/core/generated/Slur.h"
 #include "mx/core/generated/Tied.h"
+#include "mx/core/generated/TiedType.h"
 #include "mx/impl/CurveFunctions.h"
 
 using namespace mx;
@@ -1015,6 +1017,277 @@ TEST(writeAttributesFromCurveStop_relativeY, CurveFunctions)
     impl::writeAttributesFromCurveStop(c, attr);
     CHECK(attr.relativeY().has_value());
     CHECK_DOUBLES_EQUAL(6.0, attr.relativeY()->value().value(), 0.01);
+}
+
+T_END
+
+/////////////////////////////////////////////////////////////////////////////////
+// laissez-vibrer / let-ring ties (a lone <tied type="let-ring">)
+
+namespace
+{
+api::TieLetRing seedLetRing()
+{
+    api::TieLetRing c;
+    c.positionData.isDefaultXSpecified = true;
+    c.positionData.defaultX = 3.0;
+    c.positionData.isDefaultYSpecified = true;
+    c.positionData.defaultY = 4.0;
+    c.positionData.isRelativeXSpecified = true;
+    c.positionData.relativeX = 5.0;
+    c.positionData.isRelativeYSpecified = true;
+    c.positionData.relativeY = 6.0;
+    c.positionData.placement = api::Placement::below;
+    c.isColorSpecified = true;
+    c.colorData.red = 8;
+    c.colorData.green = 9;
+    c.colorData.blue = 10;
+    c.colorData.isAlphaSpecified = false;
+    c.curveOrientation = api::CurveOrientation::overhand;
+    return c;
+}
+} // namespace
+
+TEST(parseTieLetRing_positionData_x, CurveFunctions)
+{
+    using namespace mx::impl;
+    using namespace mx;
+    auto e = seed<core::Tied>();
+    e.setType(core::TiedType::letRing());
+    auto c = impl::parseTieLetRing(e);
+    CHECK(c.positionData.isDefaultXSpecified);
+    CHECK_DOUBLES_EQUAL(3.0, c.positionData.defaultX, 0.01);
+}
+
+T_END
+
+TEST(parseTieLetRing_positionData_y, CurveFunctions)
+{
+    using namespace mx::impl;
+    using namespace mx;
+    auto e = seed<core::Tied>();
+    e.setType(core::TiedType::letRing());
+    auto c = impl::parseTieLetRing(e);
+    CHECK(c.positionData.isDefaultYSpecified);
+    CHECK_DOUBLES_EQUAL(4.0, c.positionData.defaultY, 0.01);
+}
+
+T_END
+
+TEST(parseTieLetRing_positionData_rx, CurveFunctions)
+{
+    using namespace mx::impl;
+    using namespace mx;
+    auto e = seed<core::Tied>();
+    e.setType(core::TiedType::letRing());
+    auto c = impl::parseTieLetRing(e);
+    CHECK(c.positionData.isRelativeXSpecified);
+    CHECK_DOUBLES_EQUAL(5.0, c.positionData.relativeX, 0.01);
+}
+
+T_END
+
+TEST(parseTieLetRing_positionData_ry, CurveFunctions)
+{
+    using namespace mx::impl;
+    using namespace mx;
+    auto e = seed<core::Tied>();
+    e.setType(core::TiedType::letRing());
+    auto c = impl::parseTieLetRing(e);
+    CHECK(c.positionData.isRelativeYSpecified);
+    CHECK_DOUBLES_EQUAL(6.0, c.positionData.relativeY, 0.01);
+}
+
+T_END
+
+TEST(parseTieLetRing_placement, CurveFunctions)
+{
+    using namespace mx::impl;
+    using namespace mx;
+    auto e = seed<core::Tied>();
+    e.setType(core::TiedType::letRing());
+    auto c = impl::parseTieLetRing(e);
+    CHECK(api::Placement::below == c.positionData.placement);
+}
+
+T_END
+
+TEST(parseTieLetRing_color, CurveFunctions)
+{
+    using namespace mx::impl;
+    using namespace mx;
+    auto e = seed<core::Tied>();
+    e.setType(core::TiedType::letRing());
+    auto c = impl::parseTieLetRing(e);
+    CHECK(c.isColorSpecified);
+    CHECK_EQUAL(8, static_cast<int>(c.colorData.red));
+    CHECK_EQUAL(9, static_cast<int>(c.colorData.green));
+    CHECK_EQUAL(10, static_cast<int>(c.colorData.blue));
+}
+
+T_END
+
+TEST(parseTieLetRing_orientation, CurveFunctions)
+{
+    using namespace mx::impl;
+    using namespace mx;
+    auto e = seed<core::Tied>();
+    e.setType(core::TiedType::letRing());
+    auto c = impl::parseTieLetRing(e);
+    CHECK(api::CurveOrientation::overhand == c.curveOrientation);
+}
+
+T_END
+
+// parseCurve must route a let-ring <tied> into NoteData::tieLetRing and leave
+// the start/continue/stop curve vectors untouched.
+TEST(parseCurve_letRing_routesToTieLetRing, CurveFunctions)
+{
+    using namespace mx::impl;
+    using namespace mx;
+    auto e = seed<core::Tied>();
+    e.setType(core::TiedType::letRing());
+    api::NoteData nd;
+    impl::parseCurve(e, nd);
+    CHECK(nd.tieLetRing.has_value());
+    CHECK_EQUAL(0, static_cast<int>(nd.noteAttachmentData.curveStarts.size()));
+    CHECK_EQUAL(0, static_cast<int>(nd.noteAttachmentData.curveStops.size()));
+    CHECK_EQUAL(0, static_cast<int>(nd.noteAttachmentData.curveContinuations.size()));
+}
+
+T_END
+
+// A regular tie start must still route into the curve vectors and must not be
+// mistaken for a let-ring tie.
+TEST(parseCurve_start_doesNotSetTieLetRing, CurveFunctions)
+{
+    using namespace mx::impl;
+    using namespace mx;
+    auto e = seed<core::Tied>(); // TiedType defaults to start
+    api::NoteData nd;
+    impl::parseCurve(e, nd);
+    CHECK(!nd.tieLetRing.has_value());
+    CHECK_EQUAL(1, static_cast<int>(nd.noteAttachmentData.curveStarts.size()));
+}
+
+T_END
+
+TEST(writeAttributesFromTieLetRing_type, CurveFunctions)
+{
+    using namespace mx::impl;
+    using namespace mx;
+    core::Tied attr;
+    auto c = seedLetRing();
+    impl::writeAttributesFromTieLetRing(c, attr);
+    CHECK(core::TiedType::letRing() == attr.type());
+}
+
+T_END
+
+TEST(writeAttributesFromTieLetRing_defaultX, CurveFunctions)
+{
+    using namespace mx::impl;
+    using namespace mx;
+    core::Tied attr;
+    auto c = seedLetRing();
+    impl::writeAttributesFromTieLetRing(c, attr);
+    CHECK(attr.defaultX().has_value());
+    CHECK_DOUBLES_EQUAL(3.0, attr.defaultX()->value().value(), 0.01);
+}
+
+T_END
+
+TEST(writeAttributesFromTieLetRing_defaultY, CurveFunctions)
+{
+    using namespace mx::impl;
+    using namespace mx;
+    core::Tied attr;
+    auto c = seedLetRing();
+    impl::writeAttributesFromTieLetRing(c, attr);
+    CHECK(attr.defaultY().has_value());
+    CHECK_DOUBLES_EQUAL(4.0, attr.defaultY()->value().value(), 0.01);
+}
+
+T_END
+
+TEST(writeAttributesFromTieLetRing_relativeX, CurveFunctions)
+{
+    using namespace mx::impl;
+    using namespace mx;
+    core::Tied attr;
+    auto c = seedLetRing();
+    impl::writeAttributesFromTieLetRing(c, attr);
+    CHECK(attr.relativeX().has_value());
+    CHECK_DOUBLES_EQUAL(5.0, attr.relativeX()->value().value(), 0.01);
+}
+
+T_END
+
+TEST(writeAttributesFromTieLetRing_relativeY, CurveFunctions)
+{
+    using namespace mx::impl;
+    using namespace mx;
+    core::Tied attr;
+    auto c = seedLetRing();
+    impl::writeAttributesFromTieLetRing(c, attr);
+    CHECK(attr.relativeY().has_value());
+    CHECK_DOUBLES_EQUAL(6.0, attr.relativeY()->value().value(), 0.01);
+}
+
+T_END
+
+TEST(writeAttributesFromTieLetRing_placement, CurveFunctions)
+{
+    using namespace mx::impl;
+    using namespace mx;
+    core::Tied attr;
+    auto c = seedLetRing();
+    impl::writeAttributesFromTieLetRing(c, attr);
+    CHECK(attr.placement().has_value());
+    CHECK(core::AboveBelow::below() == *attr.placement());
+}
+
+T_END
+
+TEST(writeAttributesFromTieLetRing_color, CurveFunctions)
+{
+    using namespace mx::impl;
+    using namespace mx;
+    core::Tied attr;
+    auto c = seedLetRing();
+    impl::writeAttributesFromTieLetRing(c, attr);
+    CHECK(attr.color().has_value());
+    CHECK_EQUAL(8, static_cast<int>(attr.color()->red()));
+    CHECK_EQUAL(9, static_cast<int>(attr.color()->green()));
+    CHECK_EQUAL(10, static_cast<int>(attr.color()->blue()));
+}
+
+T_END
+
+TEST(writeAttributesFromTieLetRing_orientation, CurveFunctions)
+{
+    using namespace mx::impl;
+    using namespace mx;
+    core::Tied attr;
+    auto c = seedLetRing();
+    impl::writeAttributesFromTieLetRing(c, attr);
+    CHECK(attr.orientation().has_value());
+    CHECK(core::OverUnder::over() == *attr.orientation());
+}
+
+T_END
+
+// Round-trip: write a seeded TieLetRing to a core::Tied, then read it back and
+// confirm the api values survive.
+TEST(tieLetRing_roundTrip, CurveFunctions)
+{
+    using namespace mx::impl;
+    using namespace mx;
+    const auto original = seedLetRing();
+    core::Tied attr;
+    impl::writeAttributesFromTieLetRing(original, attr);
+    const auto roundTripped = impl::parseTieLetRing(attr);
+    CHECK(original == roundTripped);
 }
 
 T_END
