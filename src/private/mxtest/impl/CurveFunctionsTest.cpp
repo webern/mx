@@ -1029,7 +1029,6 @@ namespace
 api::TieLetRing seedLetRing()
 {
     api::TieLetRing c;
-    c.isSpecified = true;
     c.positionData.isDefaultXSpecified = true;
     c.positionData.defaultX = 3.0;
     c.positionData.isDefaultYSpecified = true;
@@ -1048,18 +1047,6 @@ api::TieLetRing seedLetRing()
     return c;
 }
 } // namespace
-
-TEST(parseTieLetRing_isSpecified, CurveFunctions)
-{
-    using namespace mx::impl;
-    using namespace mx;
-    auto e = seed<core::Tied>();
-    e.setType(core::TiedType::letRing());
-    auto c = impl::parseTieLetRing(e);
-    CHECK(c.isSpecified);
-}
-
-T_END
 
 TEST(parseTieLetRing_positionData_x, CurveFunctions)
 {
@@ -1162,7 +1149,7 @@ TEST(parseCurve_letRing_routesToTieLetRing, CurveFunctions)
     e.setType(core::TiedType::letRing());
     api::NoteData nd;
     impl::parseCurve(e, nd);
-    CHECK(nd.tieLetRing.isSpecified);
+    CHECK(nd.tieLetRing.has_value());
     CHECK_EQUAL(0, static_cast<int>(nd.noteAttachmentData.curveStarts.size()));
     CHECK_EQUAL(0, static_cast<int>(nd.noteAttachmentData.curveStops.size()));
     CHECK_EQUAL(0, static_cast<int>(nd.noteAttachmentData.curveContinuations.size()));
@@ -1179,7 +1166,7 @@ TEST(parseCurve_start_doesNotSetTieLetRing, CurveFunctions)
     auto e = seed<core::Tied>(); // TiedType defaults to start
     api::NoteData nd;
     impl::parseCurve(e, nd);
-    CHECK(!nd.tieLetRing.isSpecified);
+    CHECK(!nd.tieLetRing.has_value());
     CHECK_EQUAL(1, static_cast<int>(nd.noteAttachmentData.curveStarts.size()));
 }
 

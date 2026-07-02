@@ -12,6 +12,7 @@
 #include "mx/api/PositionData.h"
 #include "mx/api/PrintData.h"
 
+#include <optional>
 #include <vector>
 
 namespace mx
@@ -86,26 +87,19 @@ enum class Stem
 // rather than by overloading NoteData's isTieStart / isTieStop.
 struct TieLetRing
 {
-    // Whether this note carries an lv (let-ring) tie. When false the remaining
-    // fields are unused. A default-constructed, all-fields-default TieLetRing
-    // with isSpecified true corresponds to a bare <tied type="let-ring"/>.
-    bool isSpecified;
-
-    // Optional visual attributes carried by the <tied type="let-ring"> element.
+    // Visual attributes carried by the <tied type="let-ring"> element.
     PositionData positionData; // default-x/y, relative-x/y, placement
     CurveOrientation curveOrientation;
     bool isColorSpecified;
     ColorData colorData;
 
     TieLetRing()
-        : isSpecified{false}, positionData{}, curveOrientation{CurveOrientation::unspecified}, isColorSpecified{false},
-          colorData{}
+        : positionData{}, curveOrientation{CurveOrientation::unspecified}, isColorSpecified{false}, colorData{}
     {
     }
 };
 
 MXAPI_EQUALS_BEGIN(TieLetRing)
-MXAPI_EQUALS_MEMBER(isSpecified)
 MXAPI_EQUALS_MEMBER(positionData)
 MXAPI_EQUALS_MEMBER(curveOrientation)
 MXAPI_EQUALS_MEMBER(isColorSpecified)
@@ -138,7 +132,7 @@ class NoteData
 
     // A laissez-vibrer / let-ring tie on this note (a lone <tied type="let-ring">
     // with no matching stop). Independent of isTieStart / isTieStop. See TieLetRing.
-    TieLetRing tieLetRing;
+    std::optional<TieLetRing> tieLetRing;
 
     NoteType noteType; // normal, cue, grace
     Notehead notehead;

@@ -284,8 +284,7 @@ void writeAttributesFromCurveStop(const api::CurveStop inCurve, ATTRIBUTES_TYPE 
 }
 
 // Emits a lone <tied type="let-ring"> from an api::TieLetRing, carrying its
-// shared visual attributes (position, orientation, color). The caller decides
-// whether to emit at all (i.e. checks isSpecified).
+// shared visual attributes (position, orientation, color).
 inline void writeAttributesFromTieLetRing(const api::TieLetRing &inTie, core::Tied &outTied)
 {
     outTied.setType(core::TiedType::letRing());
@@ -310,7 +309,6 @@ inline void writeAttributesFromTieLetRing(const api::TieLetRing &inTie, core::Ti
 inline api::TieLetRing parseTieLetRing(const core::Tied &inTied)
 {
     api::TieLetRing c;
-    c.isSpecified = true;
     c.positionData = impl::getPositionData(inTied);
     c.isColorSpecified = checkHasColor(&inTied);
 
