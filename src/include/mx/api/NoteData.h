@@ -93,8 +93,7 @@ struct TieLetRing
     bool isColorSpecified;
     ColorData colorData;
 
-    TieLetRing()
-        : positionData{}, curveOrientation{CurveOrientation::unspecified}, isColorSpecified{false}, colorData{}
+    TieLetRing() : positionData{}, curveOrientation{CurveOrientation::unspecified}, isColorSpecified{false}, colorData{}
     {
     }
 };
