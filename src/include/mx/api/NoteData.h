@@ -77,14 +77,9 @@ enum class Stem
     both
 };
 
-// A laissez-vibrer tie, also called a "let-ring" or "lv" tie. Unlike a normal
-// tie, which is a start/stop pair joining two notes of the same pitch, an lv
-// tie applies to a single note and has no matching stop: it instructs the
-// renderer to let the note ring undamped. In MusicXML this is a lone
-// <tied type="let-ring"> notation (there is no sound-level <tie> counterpart,
-// since the <tie> element's type is only start or stop). Because it is
-// structurally unlike a start/stop tie, it is modeled with its own struct
-// rather than by overloading NoteData's isTieStart / isTieStop.
+// A lone <tied type="let-ring">: no matching stop, and no sound-level <tie>
+// counterpart (whose type is start/stop only). Modeled as its own struct
+// rather than folding into NoteData's isTieStart / isTieStop.
 struct TieLetRing
 {
     // Visual attributes carried by the <tied type="let-ring"> element.
