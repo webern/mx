@@ -3,24 +3,31 @@
 // Distributed under the MIT License
 
 #include "mx/impl/NoteWriter.h"
+#include "mx/core/NameToken.h"
 #include "mx/core/generated/Accidental.h"
 #include "mx/core/generated/BeamLevel.h"
 #include "mx/core/generated/CueNoteGroup.h"
 #include "mx/core/generated/DisplayStepOctaveGroup.h"
+#include "mx/core/generated/Extend.h"
 #include "mx/core/generated/FormattedText.h"
 #include "mx/core/generated/FullNoteGroupChoice.h"
 #include "mx/core/generated/GraceNormalNoteGroup.h"
 #include "mx/core/generated/GraceNoteChoice.h"
 #include "mx/core/generated/GraceNoteGroup.h"
+#include "mx/core/generated/LyricChoice.h"
+#include "mx/core/generated/LyricTextGroup.h"
 #include "mx/core/generated/NormalNoteGroup.h"
 #include "mx/core/generated/Pitch.h"
 #include "mx/core/generated/Rest.h"
+#include "mx/core/generated/Syllabic.h"
+#include "mx/core/generated/TextElementData.h"
 #include "mx/core/generated/Tied.h"
 #include "mx/core/generated/TimeModification.h"
 #include "mx/core/generated/TimeModificationGroup.h"
 #include "mx/core/generated/Unpitched.h"
 #include "mx/impl/NotationsWriter.h"
 #include "mx/impl/PositionFunctions.h"
+#include "mx/impl/PrintFunctions.h"
 #include "mx/impl/ScoreWriter.h"
 #include "mx/impl/WriteRefusal.h"
 #include "mx/utility/Throw.h"
@@ -31,6 +38,23 @@ namespace mx
 {
 namespace impl
 {
+core::Syllabic convertLyricSyllabicForNoteWriter(api::LyricSyllabic value)
+{
+    switch (value)
+    {
+    case api::LyricSyllabic::single:
+        return core::Syllabic::single();
+    case api::LyricSyllabic::begin:
+        return core::Syllabic::begin();
+    case api::LyricSyllabic::end:
+        return core::Syllabic::end();
+    case api::LyricSyllabic::middle:
+        return core::Syllabic::middle();
+    }
+
+    return core::Syllabic::single();
+}
+
 NoteWriter::NoteWriter(const api::NoteData &inNoteData, const MeasureCursor &inCursor, const ScoreWriter &inScoreWriter,
                        bool isPreviousNoteAChordMember, const std::vector<mx::api::NoteData> &inSiblingNotes,
                        int inNoteIndex, int inNumVoices)
@@ -210,6 +234,8 @@ core::Note NoteWriter::getNote(bool isStartOfChord) const
         // TODO - decide what happens if the user entered specific tuplet type in the
         // duration data, possibly remove those fields from duration data.
     }
+
+    setLyrics();
 
     return myOutNote;
 }
@@ -424,6 +450,61 @@ void NoteWriter::setStemDirection() const
     stem.setValue(myConverter.convert(myNoteData.stem));
     impl::setAttributesFromPositionData(myNoteData.stemPositionData, stem);
     myOutNote.setStem(std::move(stem));
+}
+
+void NoteWriter::setLyrics() const
+{
+    for (const auto &lyricData : myNoteData.lyrics)
+    {
+        core::Lyric lyric;
+        if (!lyricData.verseNumber.empty())
+        {
+            lyric.setNumber(core::NameToken{lyricData.verseNumber});
+        }
+
+        if (!lyricData.verseName.empty())
+        {
+            lyric.setName(lyricData.verseName);
+        }
+
+        impl::setAttributesFromPositionData(lyricData.positionData, lyric);
+        if (lyricData.positionData.horizontalAlignmnet != api::HorizontalAlignment::unspecified)
+        {
+            lyric.setJustify(myConverter.convert(lyricData.positionData.horizontalAlignmnet));
+        }
+
+        if (lyricData.printData.printObject != api::Bool::unspecified)
+        {
+            lyric.setPrintObject(myConverter.convert(lyricData.printData.printObject));
+        }
+        if (lyricData.printData.isColorSpecified)
+        {
+            setAttributesFromColorData(lyricData.printData.color, lyric);
+        }
+
+        if (lyricData.text.empty() && lyricData.hasExtend)
+        {
+            lyric.setChoice(core::LyricChoice::extend(core::Extend{}));
+        }
+        else
+        {
+            core::TextElementData text;
+            text.setValue(lyricData.text);
+            setAttributesFromFontData(lyricData.printData.fontData, text);
+
+            core::LyricTextGroup textGroup;
+            textGroup.setSyllabic(convertLyricSyllabicForNoteWriter(lyricData.syllabic));
+            textGroup.setText(std::move(text));
+            if (lyricData.hasExtend)
+            {
+                textGroup.setExtend(core::Extend{});
+            }
+
+            lyric.setChoice(core::LyricChoice::lyricTextGroup(std::move(textGroup)));
+        }
+
+        myOutNote.addLyric(std::move(lyric));
+    }
 }
 
 void NoteWriter::setMiscData() const

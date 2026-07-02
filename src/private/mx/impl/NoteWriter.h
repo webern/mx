@@ -52,6 +52,7 @@ class NoteWriter
     void setDurationNameAndDots() const;
     void setNotehead() const;
     void setStemDirection() const;
+    void setLyrics() const;
     void setMiscData() const;
     bool findNormalNameAndDots(mx::api::DurationName &ioName, int &ioDots, double inTickLength) const;
 };
