@@ -28,10 +28,7 @@ Delegation chain on read: `ScoreReader::getScoreData` -> a `PartReader::getPartD
 `ScoreWriter::getScorePartwise` -> `PartWriter::writeMeasures` -> `MeasureWriter::getPartwiseMeasure`,
 emitting `core::MusicDataChoice` items and delegating to `NoteWriter` and `DirectionWriter`.
 
-> The failure mode to avoid is adding only the read half. `<segno>` is read
-> (`DirectionReader::parseSegno` fills `DirectionData.segnos`) but never written (`DirectionWriter`
-> has no segno case), so a segno read from a file is silently dropped on write. The read half alone
-> is not "done."
+> Adding only the read half means data is silently dropped on write; always implement both.
 
 ## How a measure is walked
 
@@ -41,7 +38,8 @@ Read: `MeasureReader::getMeasureData` iterates `musicData()`, a sequence of type
 `core::MusicDataChoice`. `parseMusicDataChoice` is an if/else on `mdc.isNote()` / `isBackup()` /
 `isForward()` / `isDirection()` / `isAttributes()` / `isHarmony()` / `isBarline()`, dispatching to
 `parseNote`, `parseBackup`, `parseForward`, `parseDirection`, `parseAttributes`, `parseBarline`, etc.
-`parsePrint` / `parseSound` / `parseGrouping` / `parseLink` / `parseBookmark` are deliberate no-ops.
+`parseGrouping` / `parseLink` / `parseBookmark` are deliberate no-ops; `parseSound` reads sound
+data; print is handled at score level.
 The loop peeks one item ahead to detect whether the next note carries a `<chord>` tag, which the time
 logic needs.
 
@@ -91,17 +89,6 @@ difference emits a synthesized `core::Backup`, a positive one a `core::Forward`.
 direction whose stored time differs from the cursor gets a `core::Offset` instead of a backup/forward
 (`DirectionWriter`).
 
-## Worked example: a dynamic (mark on a note)
-
-Read: `NoteFunctions::parseNotations` switches on `core::NotationsChoice::Kind`; the `dynamics` case
-constructs a `DynamicsReader` and calls `parseDynamics(...marks)`, which maps the core kind to an
-`api::MarkType` via `Converter::convertDynamic`, sets `markData.tickTimePosition`, and appends to the
-marks vector.
-
-Write: `NoteWriter::getNote` constructs a `NotationsWriter` that emits the marks back into a
-`core::Notations`; the dynamic itself is rebuilt by `DynamicsWriter::getDynamics`, the symmetric
-inverse. `Converter` supplies the enum mapping for both directions.
-
 ## Instructions
 
 Assume step 2 already added the api field(s)/enum(s). For each step, find the existing element most
@@ -121,7 +108,7 @@ like yours and copy its pattern - do not invent structure.
    item), `DirectionReader::parseSegno` (direction child), or the `dynamics` case in
    `NoteFunctions::parseNotations` (note mark).
 
-3. Add the symmetric write - the step most often skipped (see the segno note above). Rebuild the core
+3. Add the symmetric write - the step most often skipped. Rebuild the core
    element from the api field. Copy `MeasureWriter::writeBarlines`, or a loop in
    `DirectionWriter::getDirectionLikeThings` (e.g. the wedge loop) that does
    `core::DirectionType dt; dt.setChoice(...); addDirectionType(std::move(dt), direction);`. For a note
@@ -161,10 +148,8 @@ like yours and copy its pattern - do not invent structure.
    `NotationsWriter`. Update `PartReader::calculateNumStaves` if your element carries a staff number
    that could imply more staves than otherwise detected.
 
-10. Verify symmetry with a roundtrip. Once both halves compile, run the step-1 api roundtrip test and
-    `make test`. The roundtrip deserializes then reserializes; a missing write, wrong tick position, or
-    dropped attribute makes the output DOM differ from the input and the test fail. A passing roundtrip
-    is the definition of symmetric and done.
+10. Verify symmetry with the step-1 roundtrip test (SKILL.md Step 4 owns the test/fmt/check runs); a
+    missing write, wrong tick position, or dropped attribute makes the output DOM differ and it fails.
 
-11. Keep it lean and ASCII. Match the surrounding code style; run `make fmt` and `make check`. Add only
-    the api surface the feature actually needs - every field added here must be both read and written.
+11. Keep it lean and ASCII; match the surrounding code style. Add only the api surface the feature
+    actually needs - every field added here must be both read and written.

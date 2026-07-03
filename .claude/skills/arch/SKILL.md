@@ -1,5 +1,5 @@
 ---
-name: architect
+name: arch
 description: Prime the model with senior architect principles during design or coding. Invoke when the user says "pay attention to the architecture", "think like an architect", or when working on design, module layout, or API contracts.
 ---
 # Architect Mode
@@ -17,13 +17,11 @@ should provide enough flexibility to generate just about any code from the Music
 
 ### C++ Goals
 
-The `mx/core` layer should...
-
-Cardinal requirements:
+The `mx/core` layer's cardinal requirements:
 - Spec correctness: it should be impossible to use the C++ code to construct a document that is not
   valid to the Music XML 4.0 spec.
-- Modern, safe C++. Use C++20. No bare pointers, no bare free or malloc. Smart pointers. S Meyers
-  Effective Modern C+
+- Modern, safe C++. Use C++20. No bare pointers, no bare free or malloc. Smart pointers. Scott
+  Meyers, Effective Modern C++
 
 C++ code optimization priorities
 1. Compile time

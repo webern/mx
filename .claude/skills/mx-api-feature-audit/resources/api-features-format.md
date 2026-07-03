@@ -9,7 +9,7 @@ suites skip it automatically (same rule as the corpus sidecars).
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Audit of mx::api feature support. Produced by the api-feature-audit skill. -->
+<!-- Audit of mx::api feature support. Produced by the mx-api-feature-audit skill. -->
 <feature-audit>
   <audited>mx::api</audited>
   <audited-version>4.0</audited-version>   <!-- the max MusicXML version mx::core supports -->
@@ -21,7 +21,7 @@ suites skip it automatically (same rule as the corpus sidecars).
         <attribute name="font-size" support="no"/>
       </attributes>
       <enums>
-        <!-- A BUG: core has members the api enum cannot represent. -->
+        <!-- Illustrative BUG: core has members the api enum cannot represent. -->
         <enum core-type="DynamicsChoice::Kind" api-type="MarkType" status="missing-members">
           <missing>n</missing>
           <missing>pf</missing>
@@ -43,7 +43,7 @@ suites skip it automatically (same rule as the corpus sidecars).
 - `<feature support="full|partial|none">` -- `full`: element and its commonly-used attributes are
   exposed and round-trip; `partial`: element is exposed but some attributes/enum members are not;
   `none`: not modeled at all.
-- `<attribute support="yes|no">` -- whether that attribute is carried through `mx::api`. List the
+- `<attribute support="yes|partial|no">` -- whether that attribute is carried through `mx::api`. List the
   attributes that appear in `data/corpus.xml` for the element (at least the ones with non-zero
   `wild-files`); you do not have to list spec attributes no corpus file uses.
 - `<enum core-type="..." api-type="..." status="ok|missing-members">` -- the result of the Step 2

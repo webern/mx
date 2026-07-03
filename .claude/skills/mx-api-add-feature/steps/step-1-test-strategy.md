@@ -2,14 +2,13 @@
 
 Decide how the new `mx::api` feature will be tested before you write data-model or impl code. The
 end state of this step is concrete red/green tests in the repo that exercise the feature through the
-api. This file explains the testing machinery, then gives an ordered procedure.
+api.
 
 ## Background
 
-`mx::api` is a deliberate subset of MusicXML. Most real corpus files lose fidelity on an api
-round-trip by design (the api drops or reorders `part-group`, `credit`, most of `defaults`,
-`footnote`/`level`, etc.). Keep that reality in mind: it is why corpus-level testing rarely grows
-and why unit tests carry most of the weight.
+`mx::api` is a deliberate subset of MusicXML. Some features are still dropped by design (e.g.
+`footnote`/`level`); `part-group`, `credit`, and `defaults` are now modeled. Keep that reality in
+mind: it is why corpus-level testing rarely grows and why unit tests carry most of the weight.
 
 There are two kinds of api tests.
 
@@ -69,32 +68,30 @@ side, and run a strict DOM compare (`mxtest/corert/Compare`). Zero tolerance on 
   gate. Run with `make test-api-roundtrip`. CI runs it in `.github/workflows/ci.yaml` (the
   `linux-api` job step "Run corpus api roundtrip (regression mode)" and again in the docker job).
 - `discovery <dataRoot>`: walks the whole corpus (excludes `expected/`, `testOutput/`,
-  `generalxml/`, `smufl/`, `*.fixup.xml`, and any file with a sibling `*.invalid` marker), prints
-  one tab-separated line per file
+  `generalxml/`, `smufl/`, `*.fixup.xml`, `*.features.xml`, `corpus.xml`, `api.features.xml`, and
+  any file with a sibling `*.invalid` marker), prints one tab-separated line per file
   `PASS|FAIL|SKIP|LOADFAIL|GETDATAFAIL|CREATEFAIL <tab> relpath <tab> detail`, and always exits 0.
   Run with `make discover-api-roundtrip`. Never a gate.
 
-`roundtrip-baseline.txt` currently pins exactly one file (`ksuite/k016a_Miscellaneous_Fields.xml`).
-Read its header comment: of 829 discovered files, only one survives the strict DOM compare, because
-the api is a subset. The baseline grows only by deliberate manual commits, never automatically.
+`roundtrip-baseline.txt` is a growing pinned list (~140 files across
+ksuite/lysuite/musuite/mjbsuite/custom/synthetic; see the file's header). It grows only by
+deliberate manual commits, never automatically.
 
 ### 3. Synthetic corpus
 
 `data/synthetic/` holds `~390` files (see `data/README.md`) named `<element>.<musicxml-version>.xml`
 (version = the schema the construct first appears in; root `version` stays `3.0`). Each isolates one
-element/attribute set for symbol coverage. But they are dense: every file wraps the construct in
-`part-group` + `footnote` + `level` scaffolding that the api drops, so a synthetic file almost
-always fails the api round-trip by design and is not a drop-in baseline candidate. Treat synthetic
-files as references for valid MusicXML shape, and as `fromXml(...)` *input* fixtures in a unit test
-(load the file's XML, assert the api surfaced the field) -- not as new `roundtrip-baseline.txt`
-entries unless the file genuinely survives the strict compare.
+element/attribute set for symbol coverage. Many synthetic files still fail the strict compare due
+to unrelated subset gaps; several (segno/coda/key-accidental) are already in the baseline; check
+with discovery mode before assuming either way. Treat synthetic files as references for valid
+MusicXML shape, and as `fromXml(...)` *input* fixtures in a unit test (load the file's XML, assert
+the api surfaced the field) -- not as new `roundtrip-baseline.txt` entries unless the file
+genuinely survives the strict compare.
 
 ## Build note
 
-`make test-api-roundtrip` and `make discover-api-roundtrip` both depend on the `dev` target, which
-builds `mxtest-api-roundtrip`. `make test` builds and runs `mxtest` (the unit tests) plus examples.
-The procedure below runs these as it goes: discovery before you implement (step 2), then `make test`
-and the quality gates afterward (steps 8-10).
+`make test-api-roundtrip` and `make discover-api-roundtrip` depend on the `dev` target (builds
+`mxtest-api-roundtrip`); `make test` builds and runs `mxtest` (the unit tests) plus examples.
 
 ## Procedure
 
@@ -135,8 +132,8 @@ Do these in order. The discovery snapshot must be captured before you implement.
 
 7. Implement the feature (skill steps 2-3: data model in `mx::api`, wiring in `mx::impl`).
 
-8. Make the unit test pass (green): `make test` (runs `mxtest`). Iterate until your new `TEST(...)`
-   cases pass. Run `make fmt` and `make check` so CI gates stay green.
+8. Make the unit test pass (green); iterate until your new `TEST(...)` cases pass (SKILL.md Step 4
+   owns the test/fmt/check commands).
 
 9. Re-run discovery and diff: `make discover-api-roundtrip > /tmp/api-discovery-after.txt`, then
    `diff /tmp/api-discovery-before.txt /tmp/api-discovery-after.txt`. Look for files that moved to
@@ -146,10 +143,9 @@ Do these in order. The discovery snapshot must be captured before you implement.
 
 10. Grow the baseline only if vetted: for each newly-PASSing, attributable file, add its
     `data/`-relative path to `src/private/mxtest/api/roundtrip-baseline.txt` with a short comment
-    explaining why it now passes. Then `make test-api-roundtrip` to confirm the full pinned list
-    (zero tolerance) still passes. Commit this deliberately.
+    explaining why it now passes. Commit this deliberately.
 
 11. If discovery yielded nothing (common), do not force a baseline entry. The unit test(s) from
     steps 4-5 (plus any synthetic fixture) are the feature's regression coverage. Confirm the end
     state: at least one red-turned-green `TEST(...)` in `src/private/mxtest/api/` that exercises the
-    new field through the api, passing under `make test`.
+    new field through the api.

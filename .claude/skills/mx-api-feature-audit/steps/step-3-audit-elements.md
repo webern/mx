@@ -15,8 +15,8 @@ For each element you audit:
 1. Is the element modeled in `mx::api`? The public data model is `src/include/mx/api/*Data.h`
    (`ScoreData`, `PartData`, `MeasureData`, `NoteData`, `DirectionData`, ...). Search there for a
    field or type that carries the element. Then confirm the translation exists in
-   `src/private/mx/impl/` (a `*Reader` populates it from core, a `*Writer` emits it). Element with a
-   field AND a reader/writer => exposed.
+   `src/private/mx/impl/`: read AND write must both exist (a `*Reader` populates it from core, a
+   `*Writer` emits it); one side only = `partial`.
 2. Which of its attributes survive? For the element's `<attribute>` entries in `data/corpus.xml`
    (focus on non-zero `wild-files`), check whether `mx::api` carries each one. Common position/font/
    color attributes are often handled by shared helpers (`PositionData`, `FontData`, `ColorData`,
@@ -29,12 +29,8 @@ Classify the element `support` as `full` / `partial` / `none` per the format voc
 
 ## Verify, do not guess
 
-A field named like the element is not proof. Confirm both directions:
-
-- read: a `*Reader` in `mx::impl` sets the api field from the core value.
-- write: a `*Writer` emits it back. If only one side exists, it is `partial` and worth a note.
-
-When unsure whether an attribute round-trips, find a wild file that uses it (via the element's
+A field named like the element is not proof. When unsure whether an attribute round-trips, find a
+wild file that uses it (via the element's
 `<wild-files>` pointers in `corpus.xml`, or the per-file sidecars) and trace it, or note the
 uncertainty rather than asserting support.
 

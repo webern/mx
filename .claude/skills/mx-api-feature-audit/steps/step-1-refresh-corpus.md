@@ -43,9 +43,5 @@ Those are real but rare in practice -- low priority to add unless specifically r
 
 Useful greps over `data/corpus.xml` before you dive in:
 
-- The most-used wild elements: they are simply the first `<element>` entries in the file.
 - Elements with `wild-files="0"` (synthetic-only): spec features unused in the wild.
 - A specific element: search for `name="<element>"` to read its attribute usage and example files.
-
-Carry the corpus picture into Step 2 and Step 3: a bug or gap in a high-`wild-files` feature matters
-far more than one in a synthetic-only feature.

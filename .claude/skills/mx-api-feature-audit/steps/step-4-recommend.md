@@ -35,7 +35,7 @@ Recommend in this exact order -- it reflects severity, not convenience:
 
 ## Hand off to implementation
 
-Do not implement here. The `add-mx-api-feature` skill is the implementation path -- enum bug fixes
+Do not implement here. The `mx-api-add-feature` skill is the implementation path -- enum bug fixes
 and small attribute gaps both fit its `mx::api` + `mx::impl` two-sided flow (core almost always
 already has the value). Point the reader to it and, if asked, kick off the top-priority item there.
 

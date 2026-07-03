@@ -61,24 +61,16 @@ Then always run:
 make classify-api-roundtrip
 ```
 
-Read the stdout summary it prints — status counts, the distance histogram, and the ranked worklist.
-That worklist *is* the headline answer to "what should we fix next."
+Read the stdout summary it prints -- status counts, the distance histogram, the ranked worklist,
+and the greedy batch plan. That worklist *is* the headline answer to "what should we fix next."
 
 ### Step 2 — mine `build/api/classified.json`
 
 These read-only analyses expand on the stdout summary. Adjust the path if `--out` was overridden.
 
-The worklist — signatures ranked by candidate files unblocked (`sole_blocker` = files this fix flips
-green on its own; `files_blocked` = candidate files that include it):
-
-```
-python3 - <<'PY'
-import json
-d = json.load(open("build/api/classified.json"))
-for row in d["worklist"][:25]:
-    print(f"{row['sole_blocker']:>4} sole  {row['files_blocked']:>5} total  {row['signature']}")
-PY
-```
+The worklist (already in the stdout summary) ranks signatures by candidate files unblocked
+(`sole_blocker` = files this fix flips green on its own; `files_blocked` = candidate files that
+include it).
 
 Instant wins — candidate files one fix away from passing (distance 1):
 
@@ -91,19 +83,8 @@ for f in d["near_misses"]["1"]:
 PY
 ```
 
-Small fix-sets — files that pass once a handful of features land (distance 2–3); the union of their
-signatures is a high-yield batch:
-
-```
-python3 - <<'PY'
-import json
-from collections import Counter
-d = json.load(open("build/api/classified.json"))
-for dist in ("2", "3"):
-    sigs = Counter(s for f in d["near_misses"][dist] for s in f["signatures"])
-    print(f"distance {dist}: {len(d['near_misses'][dist])} files; signatures {sigs.most_common(10)}")
-PY
-```
+Small fix-sets -- the greedy set-cover batch plan is already computed in `d["batch_plan"]` (rows
+have `fix`/`added_files`/`cumulative_files`; also printed in the stdout summary).
 
 Crash cluster (highest severity — no output at all) — group by kind to find the common root:
 
@@ -162,5 +143,5 @@ landscape, not a regression.
 
 ## Hand-off Fixes (if requested)
 
-- To fix a dropped/under-supported element or a crash: use the `add-mx-api-feature` skill.
+- To fix a dropped/under-supported element or a crash: use the `mx-api-add-feature` skill.
 - The findings belong under the tracking issue #208; file specifics with the `open-mx-issue` skill.

@@ -15,20 +15,14 @@ user-invocable: true
 
 The `mx::api` namespace is the public interface of the `mx` library: a deliberate *subset* of
 MusicXML expressed in a simple object model that is easier to work with than the MusicXML DOM.
-Because it is a subset, a frequent user request is "add X".
 
 ## Architecture: three layers
 
 A feature flows through three layers. Know which one you are touching:
 
-- `mx::core` (`src/private/mx/core/generated/`) -- the strongly-typed MusicXML XSD model,
-  *generated* from the schema by `gen/`. The element/attribute you are adding almost always ALREADY
-  EXISTS here, fully parseable. Do NOT regenerate core or edit `gen/` for a normal feature.
-- `mx::impl` (`src/private/mx/impl/`) -- the translation layer. `*Reader` classes turn core into
-  api; `*Writer` classes turn api into core. See Step 3.
-- `mx::api` (`src/include/mx/api/`) -- the public data model (`ScoreData`, `PartData`,
-  `MeasureData`, `NoteData`, `DirectionData`, ...). This is the surface you expose the feature on.
-  See Step 2.
+- `mx::core` -- generated XSD model; almost always already has your element. Do NOT edit `gen/`.
+- `mx::impl` -- translation layer: `*Reader` core -> api, `*Writer` api -> core. See Step 3.
+- `mx::api` (`src/include/mx/api/`) -- the public data model you expose the feature on. See Step 2.
 
 So a typical feature is two-sided work in `mx::api` + `mx::impl` only; `mx::core` already has it.
 
@@ -72,4 +66,4 @@ Run `make test` for the unit suites and `make test-api-roundtrip` for the corpus
 
 ## (optional) Step 5: Open a PR
 
-If the user asks you to open a PR, see ./resources/pr-template.md
+If the user asks for a PR, use the `open-mx-pr` skill.
