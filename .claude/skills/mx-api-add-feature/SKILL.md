@@ -69,4 +69,4 @@ Run `make test` for the unit suites and `make test-api-roundtrip` for the corpus
 
 ## (optional) Step 5: Open a PR
 
-If the user asks for a PR, use the `open-mx-pr` skill.
+If the user asks for a PR, use the `mx-open-pr` skill.

@@ -1,5 +1,5 @@
 ---
-name: grill-me
+name: mx-grill-me
 description: >
   Interview the user relentlessly about a plan or design until reaching
   shared understanding, resolving each branch of the decision tree. Use
@@ -21,5 +21,5 @@ the codebase instead.
 
 For each question, provide your recommended answer.
 
-Use the /questions skill to avoid sending more than one question at
+Use the /mx-questions skill to avoid sending more than one question at
 once.

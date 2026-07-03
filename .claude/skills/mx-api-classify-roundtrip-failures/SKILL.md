@@ -144,4 +144,4 @@ landscape, not a regression.
 ## Hand-off Fixes (if requested)
 
 - To fix a dropped/under-supported element or a crash: use the `mx-api-add-feature` skill.
-- The findings belong under the tracking issue #208; file specifics with the `open-mx-issue` skill.
+- The findings belong under the tracking issue #208; file specifics with the `mx-open-issue` skill.

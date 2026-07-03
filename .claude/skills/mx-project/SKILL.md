@@ -1,5 +1,5 @@
 ---
-name: project
+name: mx-project
 description: >
   Create or continue multi-session projects that persist state across agent context windows.
   Use when starting a new project, picking up where the last session left off, or when the user

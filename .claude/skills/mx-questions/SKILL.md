@@ -1,11 +1,11 @@
 ---
-name: questions
+name: mx-questions
 description: >
   Ask the user clarifying questions one at a time to refine a plan or
-  task. Invoke with `/questions` or automatically when more information
+  task. Invoke with `/mx-questions` or automatically when more information
   is needed.
 ---
-# /questions
+# /mx-questions
 
 ## Non-negotiable: plain chat only
 
@@ -37,8 +37,8 @@ answers get lost.
 
 ## Usage
 
-- `/questions`
-- `/questions <optional-prompt>` — e.g., `/questions about the design of the flubber async module`
+- `/mx-questions`
+- `/mx-questions <optional-prompt>` — e.g., `/mx-questions about the design of the flubber async module`
 
 ## Flow
 

@@ -1,5 +1,5 @@
 ---
-name: arch
+name: mx-architecture
 description: Prime the model with senior architect principles during design or coding. Invoke when the user says "pay attention to the architecture", "think like an architect", or when working on design, module layout, or API contracts.
 ---
 # Architect Mode

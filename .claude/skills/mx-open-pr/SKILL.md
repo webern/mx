@@ -1,7 +1,7 @@
 ---
-name: open-mx-pr
+name: mx-open-pr
 description: >
-  Use this skill when the user says open a PR, create a pull request, or make a PR.
+  Use this skill when the user says open a PR, create a pull request, make a PR, or submit this work as a PR.
 argument-hint: "<prompt>"
 disable-model-invocation: false
 user-invocable: true
@@ -17,7 +17,7 @@ allowed-tools:  >
   WebSearch,
   Write
 ---
-# /open-mx-pr
+# /mx-open-pr
 
 Use `<prompt>` and your context to understand what the PR is about. Check to see if there is
 documentation on the issue available in `docs/ai/api-feature-audit.md` (which might be the case if

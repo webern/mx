@@ -13,6 +13,7 @@ targets). Everything runs in the `mx-sdk` Docker image unless `MX_RUNNING_IN_DOC
 ```
 mx/
   AGENTS.md             <- you are here
+  .claude/skills/       <- agent skills; every skill name starts with mx-
   Makefile              <- top-level build driver
   Dockerfile            <- mx-sdk image with toolchains and dev tools
   CMakeLists.txt        <- C++ project

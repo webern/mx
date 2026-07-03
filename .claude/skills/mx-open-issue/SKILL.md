@@ -1,7 +1,7 @@
 ---
-name: open-mx-issue
+name: mx-open-issue
 description: >
-  Use this skill when the user says open an issue, create an issue, or file a new issue.
+  Use this skill when the user says open an issue, create an issue, file a new issue, or report a bug.
 argument-hint: "<prompt>"
 disable-model-invocation: false
 user-invocable: true
@@ -17,7 +17,7 @@ allowed-tools:  >
   WebSearch,
   Write
 ---
-# /open-mx-issue
+# /mx-open-issue
 
 Use `<prompt>` to understand what the issue is about. Check to see if there is documentation on the
 issue available in `docs/ai/api-feature-audit.md` (which might be the case if it was previously
