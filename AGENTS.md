@@ -127,9 +127,18 @@ than the strongly-typed `mx::core` model. No core type may appear in a public ap
   (`MXAPI_DOUBLES_EQUALS_MEMBER` for doubles) in the type's equality block — a missed line
   silently drops the field from equality and round-trip checks.
 
-Shaping a new feature's data model? Read `docs/ai/design/api-design-principles.md` first —
-mx::api re-shapes MusicXML (stateless, hierarchical, one-fact-one-field); never mirror the
-element's raw shape.
+### Design principles (digest)
+
+Never mirror a MusicXML element's raw shape; counter its defect. Full text with examples and
+per-rule tests: `docs/ai/design/api-design-principles.md`.
+
+1. Store absolute values, not running state (ticks, not divisions/backup/forward).
+2. Membership by containment, not label fields (measure -> staves -> voices -> notes).
+3. One fact, one field; the writer emits both encodings (tie/tied).
+4. No neighbor-dependent meaning (`isChord` is true on every chord member).
+5. Denormalize effective state onto what it governs (each measure carries its time signature).
+6. Common case a plain value; quarantine the rare case (`alter` int + `cents` double).
+7. Fidelity knobs default to "automatic" and must be ignorable when authoring.
 
 ## Quality gates
 
