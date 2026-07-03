@@ -15,19 +15,18 @@ corpus uses, to compare against `mx::api` support:
 
 Both are checked in and both have a `.xml` extension but are NOT MusicXML scores, so every
 corpus-walking test suite skips them (the `corert` C++/Go/C round-trip discoverers and the api
-corpus walker; see `audit/README.md`). The `api-feature-audit` skill consumes them and writes its
-own `api.features.xml` (also skipped).
+corpus walker; see `audit/README.md`). The `mx-api-feature-audit` skill consumes them and writes
+its own `api.features.xml` (also skipped).
 
 ## `.invalid` marker convention
 
 A file `foo.xml` (or `foo.musicxml`) that is **not** valid MusicXML must be accompanied by a sibling
 marker file `foo.xml.invalid` whose contents describe, in prose, why the file is invalid. The
-purpose is to use the file is to mark for test suites which files are not expected to be parseable
-by `mx`.
+marker tells the test suites that the file is not expected to be parseable by `mx`.
 
 ## `.fixup.xml` sidecar convention
 
-A file `foo.xml` that is schema-invalid parseable due to `mx` leniency will have a sidecar file,
+A file `foo.xml` that is schema-invalid but parseable due to `mx` leniency will have a sidecar file,
 `foo.fixup.xml`, which describes how the file will be parsed. The core roundtrip suite (`corert`)
 loads it via `Fixer` (`src/private/mxtest/corert/Fixer.h`) and uses it to prepare the "expected"
 test by altering values it finds after loading the test file.

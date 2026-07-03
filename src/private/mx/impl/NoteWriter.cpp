@@ -125,6 +125,8 @@ core::Note NoteWriter::getNote(bool isStartOfChord) const
         ++beamIndex;
     }
 
+    // 1/1 is NoteReader's "no time modification" sentinel -- writing it back would fabricate
+    // a <time-modification> on every plain note, so it is skipped here.
     if (myNoteData.durationData.timeModificationNormalNotes > 0 &&
         myNoteData.durationData.timeModificationActualNotes > 0 &&
         (myNoteData.durationData.timeModificationNormalNotes > 1 ||
@@ -152,6 +154,10 @@ core::Note NoteWriter::getNote(bool isStartOfChord) const
             }
         }
 
+        // TODO: <normal-type> is recomputed from sibling TupletStart/TupletStop geometry;
+        // DurationData.timeModificationNormalType is never consulted as a fallback. Tuplets
+        // expressed only via <time-modification> (no <tuplet> notations -- legal MusicXML)
+        // hit this no-op throw in release builds and silently lose <normal-type>. Issue candidate.
         if (!isTupletStartFound)
         {
             MX_DEBUG_THROW("tupletStart was not found");
@@ -521,6 +527,8 @@ void NoteWriter::setMiscData() const
     bool isFirst = true;
     for (auto s : myNoteData.miscData)
     {
+        // Comma is the item separator in the miscellaneous-field wire encoding, so commas
+        // inside user misc-data are irreversibly replaced with underscores.
         std::string::size_type position = 0;
         while ((position = s.find(comma, position)) != std::string::npos)
         {

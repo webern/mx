@@ -17,7 +17,7 @@ python3 -m gen <config.toml>                               # full emit: render t
 
 - `--resolve` prints the collapsed IR view (attribute groups flattened, group refs spliced).
 - `--config C` applies that target's companion patches before lowering.
-- `--check` on `plates` validates renames and detects identifier collisions; exits non-zero -- a CI gate.
+- `--check` on `plates` validates renames and detects identifier collisions; exits non-zero on failure -- a CI gate.
 - Full emit shortcuts: `make gen-cpp` (C++ only), `make gen` (all targets).
 
 ## Quality gates
@@ -32,9 +32,10 @@ make gen-lint     # pylint (config: .pylintrc)
 ```
 
 After changing a target's `config.toml` or `templates/`, also run that target's corert suite
-(`make test-cpp`, `make test-go`, `make test-c`).
+(`make test-core-dev`, `make test-go`, `make test-c`).
 
-If generated output changes, commit the new generated files alongside the Python change.
+If generated output changes, commit the regenerated files in the same commit as the change
+that produced them (`make test-gen` fails CI on drift).
 
 ## Cardinal rules
 
@@ -60,7 +61,7 @@ collisions -- all exit non-zero with a clear `template:line` message.
 ## Workflows
 
 **Modifying IR or Plates** -- change `gen/ir/` or `gen/plates/`. Run `make test-gen` and
-`make gen-check`. Commit updated output as a separate hunk or commit from the Python change.
+`make gen-check`.
 
 **Modifying a target** -- edit only that target's `config.toml` and `templates/`. Regenerate,
 run the target's corert, commit the updated output.

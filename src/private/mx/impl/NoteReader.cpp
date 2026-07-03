@@ -117,9 +117,13 @@ std::string getElisionDisplayText(const core::LyricSyllableGroup &inGroup)
         }
     }
 
+    // UTF-8 for U+203F (undertie), the conventional elision joiner, substituted when
+    // <elision> has no text of its own.
     return "\xE2\x80\xBF";
 }
 
+// Flattens elided syllables into one string: mx::api models a lyric as a single text, so
+// <elision> structure is intentionally collapsed and cannot be round-tripped.
 std::string getLyricDisplayText(const core::LyricTextGroup &inGroup)
 {
     std::string result;
@@ -368,6 +372,8 @@ void NoteReader::setTimeModification()
 {
     if (!myNote.timeModification().has_value())
     {
+        // 1/1 is the api's "no time modification" sentinel; NoteWriter skips writing 1/1, so
+        // a literal <time-modification>1/1 in a source file will not round-trip.
         myTimeModificationActualNotes = 1;
         myTimeModificationNormalNotes = 1;
         return;
@@ -503,6 +509,8 @@ void NoteReader::setLyric()
 
         case core::LyricChoice::Kind::laughing:
         case core::LyricChoice::Kind::humming: {
+            // laughing/humming lyrics are not modeled in mx::api; the whole <lyric> is
+            // intentionally dropped (not just the choice element).
             break;
         }
         }

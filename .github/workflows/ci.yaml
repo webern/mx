@@ -179,7 +179,7 @@ jobs:
           key: ccache-${{ runner.os }}-core-${{ github.sha }}
           restore-keys: ccache-${{ runner.os }}-core-
 
-      # corert is pinned at 829/0/0 by an in-suite counts case.
+      # corert file counts are pinned by an in-suite counts case (see CoreRoundtripTest.cpp).
       - name: Core roundtrip suite
         run: make test-core-dev
 

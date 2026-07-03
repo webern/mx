@@ -46,7 +46,7 @@ and `MX_COVERAGE` (gcov instrumentation). The useful workflows are exposed as Ma
 | Target                      | What it does                                                       |
 |-----------------------------|--------------------------------------------------------------------|
 | `make lib`                  | build the `mx` static library (`mx::api` + `mx::impl`)            |
-| `make dev`                  | build `mx` + all test and example binaries                        |
+| `make dev`                  | build `mx` + mxtest + example + api-roundtrip binaries            |
 | `make test`                 | run api examples, then the `mxtest` suite (api/impl/file/control) |
 | `make test-api-roundtrip`   | corpus api roundtrip in regression mode (CI gate)                 |
 | `make run-examples`         | build and run all three api example programs                      |
@@ -58,7 +58,7 @@ and `MX_COVERAGE` (gcov instrumentation). The useful workflows are exposed as Ma
 
 `make clean` removes the build tree. Knobs: `JOBS` (parallelism, auto-detected), `BUILD_TYPE`
 (default `Debug`), and `ARGS` (forwarded to test binaries, e.g.
-`make test-core-dev ARGS='lysuite/*'`).
+`make test-core-dev ARGS='[core-roundtrip] lysuite/*'`).
 
 ### Build Tenets
 
@@ -148,9 +148,9 @@ int main () {
     part.measures.push_back(measure);
     score.parts.push_back(part);
     auto& mgr = DocumentManager::getInstance();
-    const auto id = mgr.createFromScore(score);
-    mgr.writeToStream(id, std::cout);
-    mgr.destroyDocument(id);
+    const auto idResult = mgr.createFromScore(score);
+    mgr.writeToStream(idResult.value(), std::cout);
+    mgr.destroyDocument(idResult.value());
 }
 EOF
 
@@ -454,8 +454,8 @@ subset of MusicXML using only `mx::api`, without delving into `mx::core`.
 ```C++
 using namespace mx::api;    // an easier interface for reading and writing MusicXML
 using namespace mx::core;   // a direct representation of a musicxml document in C++ classes
-using namespace mx::impl    // the logic that translates between mx::api and mx::core
-using namespace mx::utility // a typical catch-all for generic stuff like logging macros
+using namespace mx::impl;   // the logic that translates between mx::api and mx::core
+using namespace mx::utility; // a typical catch-all for generic stuff like logging macros
 ```
 
 ##### `mx::api`

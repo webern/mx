@@ -90,6 +90,9 @@ class DumpEntry:
 
 def _flat_to_rel(flat: str) -> str:
     """Reverse the dump harness's path flattening: ``a__b.xml`` -> ``a/b.xml``."""
+    # TODO: "__" also occurs inside real corpus filenames (musetrainer/...__Chopin.xml), so
+    # this reversal mis-splits them; the flattener needs an unambiguous separator or an
+    # index file. Issue candidate.
     return flat.replace("__", "/")
 
 

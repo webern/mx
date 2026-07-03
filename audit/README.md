@@ -17,7 +17,7 @@ A *feature* is an element plus the set of attribute names that appear on it.
    `data/synthetic/` files (which are built to cover the spec symbol by symbol,
    so they approximate "what is in the specification").
 
-The same `<feature-audit>` document shape is what the `api-feature-audit` skill
+The same `<feature-audit>` document shape is what the `mx-api-feature-audit` skill
 emits for `mx::api` (as `data/api.features.xml`), so the three views -- spec
 (synthetic), corpus (wild), and api -- are directly comparable.
 
@@ -85,4 +85,5 @@ and files with an `*.invalid` marker -- plus the tool's own outputs.
 | `extract.py`     | parse one file -> element/attribute surface |
 | `featuresfile.py`| read/write the per-file `<feature-audit>` format |
 | `summary.py`     | aggregate into `data/corpus.xml` |
+| `classify.py`    | diff expected/actual round-trip dump pairs, rank the worklist |
 | `__main__.py`    | CLI |

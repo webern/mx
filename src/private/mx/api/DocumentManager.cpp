@@ -117,6 +117,8 @@ class DocumentManager::Impl
     DocumentMap myMap;
     int myCurrentUniqueId;
 
+    // myCurrentUniqueId is seeded high so synthesized ids ("ID1000000"...) are unlikely to
+    // collide with ids already present in parsed documents (see PartWriter).
     Impl() : myMutex{}, myCurrentId{0}, myMap{}, myCurrentUniqueId{1000000}
     {
     }

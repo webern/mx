@@ -8,7 +8,8 @@ either proposal, **this document wins**. Where it is silent, the proposals remai
 material for rendered-shape sketches (the gpt-5.0 doc for API philosophy, the opus-4.7 doc for
 plates mechanics, file layout, and dispatch technique).
 
-The reader is assumed to know `plates.md`, `generator-agnosticism.md`, and `gen/README.md`.
+The reader is assumed to know `plates.md`, `generator-agnosticism.md` (both since folded into
+`gen/DESIGN.md`), and `gen/README.md`.
 Nothing here amends the generator architecture: C++ is a target directory (`gen/cpp/config.toml`
 plus `gen/cpp/templates/`), and the cardinal rule holds — no language knowledge enters the
 generator's Python. One exception is explicitly scoped in §2.9: projecting the content tree and
