@@ -19,8 +19,6 @@ into one turn — not as a numbered list, not as "and also," not as a parentheti
 user answers one question at a time; batching forces them to scroll back and juggle context, and
 answers get lost.
 
-This rule holds even when several questions feel related or obvious. One turn, one question.
-
 **Wrong:**
 
 > A few things to clarify:

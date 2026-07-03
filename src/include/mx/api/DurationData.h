@@ -73,6 +73,8 @@ struct DurationData
     bool isDurationNameSpecified;
     int durationDots;      // dots
     int durationTimeTicks; // length of the note denominated in ticksPerQuarter
+    // TODO: dead field -- nothing in mx::impl reads or writes it; the tie model lives on
+    // NoteData::isTieStart/isTieStop. Issue candidate: remove (breaking change).
     bool isTied; // affects sound only. is the note combined sound-wise with the following note of the same pitch
     int timeModificationActualNotes;              // i.e. for a triplet this would be 3
     int timeModificationNormalNotes;              // i.e. for a triplet this would be 2

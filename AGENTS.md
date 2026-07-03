@@ -127,6 +127,10 @@ than the strongly-typed `mx::core` model. No core type may appear in a public ap
   (`MXAPI_DOUBLES_EQUALS_MEMBER` for doubles) in the type's equality block — a missed line
   silently drops the field from equality and round-trip checks.
 
+Shaping a new feature's data model? Read `docs/ai/design/api-design-principles.md` first —
+mx::api re-shapes MusicXML (stateless, hierarchical, one-fact-one-field); never mirror the
+element's raw shape.
+
 ## Quality gates
 
 Run `make fmt` to format. `make check` is the clang-format gate **only** — it builds and tests nothing.

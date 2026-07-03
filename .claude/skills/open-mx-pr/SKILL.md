@@ -36,8 +36,8 @@ When writing the PR, the title should be lowercase and start with one keyword, e
 
 Look at the labels on GitHub, choose the ones that match the pr best.
 
-Write an pr body. Keep it tight and human-readable, but with enough information to understand what
-needs to be done.
+Write a PR body. Keep it tight and human-readable, but with enough information to understand what
+was done and why.
 
 Determine from the original prompt whether the user wanted you to YOLO and open or whether the user
 wanted to see a draft first.
@@ -45,11 +45,9 @@ wanted to see a draft first.
 When ready, create the pr and note the pr number. Make sure the PR body contains references to
 issues closed and issues/PRs related (if any).
 
-Do NOT attribute yourself in the PR. No "Written by Claud" or "Codex" or whatever. Nope. Do not
-take credit for this. Instead you may add the `ai` label as a flag that a coding agent created the
-issue.
+No self-attribution in the PR body; add the `ai` label instead.
 
-Do not use excessive bold and italics in the issue body. Go easy on the keywords since they will add
+Do not use excessive bold and italics in the PR body. Go easy on the keywords since they will add
 a lot of backtick formatting as well.
 
 Template/sample:

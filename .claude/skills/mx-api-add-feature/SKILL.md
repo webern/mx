@@ -43,6 +43,9 @@ needs and nothing extra. Before writing any code:
 3. Decide the minimal api surface and which existing aggregate the feature belongs in (for example,
    a direction-like marking joins the measure's directions; a note-attached marking joins
    `NoteData`). Step 2 covers these patterns.
+4. Check the feature against `docs/ai/design/api-design-principles.md`: which MusicXML defect
+   (stateful / flat / duplicated / id-linked / order-dependent) does the element carry, and which
+   principle applies? Never mirror the element's raw shape.
 
 ## Step 1: Test Strategy
 

@@ -51,16 +51,11 @@ hand-written default constructor initializer list (`MeasureData`, `DirectionData
 `LineData`, `MidiData`). Members are grouped loosely by topic with a short comment above non-obvious
 fields.
 
-Optionality is expressed several ways; pick the one already used by neighbors:
-
-- a sentinel enum value: `placement{Placement::unspecified}`, `barlineType{BarlineType::normal}`
-- a magic numeric value: `width{-1.0}` ("less than 0 means unspecified"), `voice{-1}`,
-  `staffLines = -1`, `MidiData` uses `-1` for each absent int
-- a paired `bool ...IsSpecified` / `has...` flag: `isStaffValueSpecified`, `isDashLengthSpecified`,
-  `MarkData::hasMordentLong`, `SegnoData::isColorSpecified`,
-  `NoteData::isDisplayStepOctaveSpecified`
-- `std::optional<...>` (via `OptionalDouble` in `ApiCommon.h`) - present but rare; prefer the
-  flag/sentinel patterns the surrounding type already uses
+Optionality (see "mx::api conventions" in AGENTS.md): new absent-able fields use
+`std::optional<T>` (precedent: `NoteData::tieLetRing`, `PartData::transposition`); absent-able
+enums get an `unspecified` first enumerator instead (incl. the ternary `Bool`). You will see
+legacy patterns in existing types -- `-1` sentinels, paired `bool is...Specified` / `has...`
+flags -- leave them alone (issue #249); do not use them for new fields.
 
 See `src/include/mx/api/BarlineData.h` for a representative shape.
 
@@ -127,10 +122,9 @@ than introducing a new top-level vector. Know these aggregates:
    member initializer per field, OR a default constructor with a full member-initializer list. Every
    member must have a defined default. Follow the style of the file you are editing.
 
-4. Choose the optionality convention used by neighboring fields: sentinel enum value, a magic
-   numeric sentinel (`-1`, `-1.0`), or a paired `bool is...Specified` / `has...` flag. Do not mix a
-   new convention into a type that already uses another. Reach for `std::optional` only if that type
-   already does.
+4. For an absent-able field use `std::optional<T>`; for an absent-able enum use an `unspecified`
+   first enumerator. Never add new `-1` sentinels or `is...Specified` flags, even in types that
+   already have them.
 
 5. If a new positioned-in-a-measure type is being added (a sibling of `NoteData`, `DirectionData`,
    `BarlineData`, `MarkData`), give it `int tickTimePosition` defaulting to `0`. If it is a child of
