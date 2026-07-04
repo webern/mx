@@ -16,3 +16,5 @@ simpler model (see `docs/ai/design/api-design-principles.md`). Review for:
 - New data must not mirror MusicXML's raw shape when the element is stateful, flat,
   duplicated, or id-linked; check the change against the principles doc.
 - A new positioned-in-a-measure type needs `int tickTimePosition`; durations are in ticks.
+- Comments should be helpful to humans and coding agents. Crisp, not verbose, explain how the
+  code works, especially anything surprising.

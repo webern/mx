@@ -11,5 +11,4 @@ Repo-wide C++ rules (see AGENTS.md):
 - Formatting is enforced by clang-format (`make fmt` / `make check`); do not comment on layout
   the formatter controls.
 - Keep source ASCII.
-- Comments should state constraints and reasons the code cannot express; flag comments that
-  merely restate the code.
+- Comments should state constraints and effects hard to ascertain from the code.

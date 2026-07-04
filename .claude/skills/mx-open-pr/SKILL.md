@@ -53,6 +53,10 @@ a lot of backtick formatting as well.
 Template/sample:
 
 ```markdown
+## Human Summary
+
+TODO: human writes here
+
 ## Summary
 
 `accidentalMap` in `Converter.cpp` was missing the entry for `sharpSharp`. Added a single item to the map so that the
