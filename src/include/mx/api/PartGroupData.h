@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include "mx/api/ApiCommon.h"
+
 #include <string>
 #include <vector>
 
@@ -63,12 +65,13 @@ class PartGroupData
 
     // The number attribute is used to distinguish overlapping
     // and nested part-groups, not the sequence of groups.
-    // -1 indicates the absence of a number attribute
+    // NUMBER_LEVEL_UNSPECIFIED indicates the absence of a number attribute
     int number;
 
     PartGroupData()
-        : firstPartIndex{-1}, lastPartIndex{-1}, name{}, bracketType{BracketType::unspecified},
-          groupBarline{GroupBarline::unspecified}, number{-1}
+        : firstPartIndex{INDEX_UNSPECIFIED}, lastPartIndex{INDEX_UNSPECIFIED}, name{},
+          bracketType{BracketType::unspecified}, groupBarline{GroupBarline::unspecified},
+          number{NUMBER_LEVEL_UNSPECIFIED}
     {
     }
 };

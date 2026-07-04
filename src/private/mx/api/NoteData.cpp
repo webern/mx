@@ -11,8 +11,8 @@ namespace api
 NoteData::NoteData()
     : isRest{false}, isMeasureRest{false}, isUnpitched{false}, isDisplayStepOctaveSpecified{false}, isChord{false},
       isTieStart{false}, isTieStop{false}, tieLetRing{}, noteType{NoteType::normal}, notehead{Notehead::normal},
-      pitchData{}, userRequestedVoiceNumber{-1}, stem{Stem::unspecified}, tickTimePosition{0}, durationData{}, beams{},
-      positionData{}, printData{}, noteAttachmentData{}, lyrics{}
+      pitchData{}, userRequestedVoiceNumber{VALUE_UNSPECIFIED}, stem{Stem::unspecified}, tickTimePosition{0},
+      durationData{}, beams{}, positionData{}, printData{}, noteAttachmentData{}, lyrics{}
 {
 }
 } // namespace api

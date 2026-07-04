@@ -100,8 +100,9 @@ struct CurveStart
     ColorData colorData;
 
     CurveStart(CurveType inCurveType)
-        : curveType{inCurveType}, numberLevel{-1}, curvePoints{}, curveOrientation{CurveOrientation::unspecified},
-          placement{Placement::unspecified}, lineData{}, isColorSpecified{false}, colorData{}
+        : curveType{inCurveType}, numberLevel{NUMBER_LEVEL_UNSPECIFIED}, curvePoints{},
+          curveOrientation{CurveOrientation::unspecified}, placement{Placement::unspecified}, lineData{},
+          isColorSpecified{false}, colorData{}
     {
     }
 };
@@ -119,8 +120,8 @@ struct CurveContinue
     double bezierOffset2;
 
     CurveContinue(CurveType inCurveType)
-        : curveType{inCurveType}, numberLevel{-1}, curvePoints{}, isBezierX2Specified{false}, bezierX2{0.0},
-          isBezierY2Specified{false}, bezierY2{0.0}, isBezierOffset2Specified{false}, bezierOffset2{0.0}
+        : curveType{inCurveType}, numberLevel{NUMBER_LEVEL_UNSPECIFIED}, curvePoints{}, isBezierX2Specified{false},
+          bezierX2{0.0}, isBezierY2Specified{false}, bezierY2{0.0}, isBezierOffset2Specified{false}, bezierOffset2{0.0}
     {
     }
 };
@@ -131,7 +132,7 @@ struct CurveStop
     int numberLevel;
     CurvePoints curvePoints;
 
-    CurveStop(CurveType inCurveType) : curveType{inCurveType}, numberLevel{-1}, curvePoints{}
+    CurveStop(CurveType inCurveType) : curveType{inCurveType}, numberLevel{NUMBER_LEVEL_UNSPECIFIED}, curvePoints{}
     {
     }
 };

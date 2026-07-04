@@ -3,6 +3,7 @@
 // Distributed under the MIT License
 
 #pragma once
+#include "mx/api/ApiCommon.h"
 #include "mx/api/DurationData.h"
 #include "mx/api/PositionData.h"
 #include "mx/api/PrintData.h"
@@ -25,7 +26,8 @@ struct BeatsPerMinute
     int dots;
     int beatsPerMinute;
 
-    BeatsPerMinute() : durationName{DurationName::unspecified}, dots{-1}, beatsPerMinute{-1}
+    BeatsPerMinute()
+        : durationName{DurationName::unspecified}, dots{VALUE_UNSPECIFIED}, beatsPerMinute{VALUE_UNSPECIFIED}
     {
     }
 };
@@ -39,8 +41,8 @@ struct MetricModulation
     BeatsPerMinute playbackBeatsPerMinute;
 
     MetricModulation()
-        : leftDurationName{DurationName::unspecified}, leftDots{-1}, rightDurationName{DurationName::unspecified},
-          rightDots{-1}, playbackBeatsPerMinute{}
+        : leftDurationName{DurationName::unspecified}, leftDots{VALUE_UNSPECIFIED},
+          rightDurationName{DurationName::unspecified}, rightDots{VALUE_UNSPECIFIED}, playbackBeatsPerMinute{}
     {
     }
 };

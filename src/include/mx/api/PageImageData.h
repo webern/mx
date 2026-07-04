@@ -44,7 +44,8 @@ class PageImageData
     /// modeled here.)
     PositionData positionData;
 
-    PageImageData() : source{}, type{}, height{-1.0}, width{-1.0}, pageNumber{0}, positionData{}
+    PageImageData()
+        : source{}, type{}, height{DOUBLE_UNSPECIFIED}, width{DOUBLE_UNSPECIFIED}, pageNumber{0}, positionData{}
     {
     }
 };

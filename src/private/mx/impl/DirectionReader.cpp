@@ -174,10 +174,10 @@ void DirectionReader::parseValues()
         }
 
         // The <direction>'s editorial-voice <voice> assigns the direction to a voice. A value of
-        // -1 on DirectionData::voice means none was present.
+        // VALUE_UNSPECIFIED on DirectionData::voice means none was present.
         if (myDirection->editorialVoiceDirection().voice().has_value())
         {
-            int parsedVoice = -1;
+            int parsedVoice = api::VALUE_UNSPECIFIED;
             if (utility::stringToInt(myDirection->editorialVoiceDirection().voice()->c_str(), parsedVoice))
             {
                 myOutDirectionData.voice = parsedVoice;

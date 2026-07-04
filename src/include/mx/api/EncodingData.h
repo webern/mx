@@ -44,7 +44,7 @@ class EncodingDate
     int month;
     int day;
 
-    EncodingDate() : year(-1), month(-1), day(-1)
+    EncodingDate() : year(VALUE_UNSPECIFIED), month(VALUE_UNSPECIFIED), day(VALUE_UNSPECIFIED)
     {
     }
 

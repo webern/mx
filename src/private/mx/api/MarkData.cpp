@@ -220,7 +220,7 @@ int numTremoloSlashes(MarkType markType)
         return 5;
     }
 
-    return -1;
+    return VALUE_UNSPECIFIED;
 }
 
 MarkData::MarkData()

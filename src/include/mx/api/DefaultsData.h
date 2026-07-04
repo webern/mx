@@ -140,8 +140,8 @@ class DefaultsData
     MeasureNumbering measureNumbering;
 
     DefaultsData()
-        : scalingMillimeters{-1.0}, scalingTenths{-1.0}, pageLayout{}, systemLayout{}, appearance{}, musicFont{},
-          wordFont{}, lyricFonts{}, measureNumbering{MeasureNumbering::unspecified}
+        : scalingMillimeters{DOUBLE_UNSPECIFIED}, scalingTenths{DOUBLE_UNSPECIFIED}, pageLayout{}, systemLayout{},
+          appearance{}, musicFont{}, wordFont{}, lyricFonts{}, measureNumbering{MeasureNumbering::unspecified}
     {
     }
 };

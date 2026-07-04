@@ -371,7 +371,7 @@ int PartReader::findPartIndex(const std::string &inPartId) const
             ++index;
         }
     }
-    return -1;
+    return api::INDEX_UNSPECIFIED;
 }
 } // namespace impl
 } // namespace mx

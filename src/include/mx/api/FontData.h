@@ -69,7 +69,7 @@ struct FontData
     int lineThrough;
 
     FontData()
-        : sizeType{FontSizeType::unspecified}, sizePoint{-1.0}, sizeCss{CssSize::unspecified},
+        : sizeType{FontSizeType::unspecified}, sizePoint{DOUBLE_UNSPECIFIED}, sizeCss{CssSize::unspecified},
           style{FontStyle::unspecified}, weight{FontWeight::unspecified}, fontFamily{}, underline{0}, overline{0},
           lineThrough{0}
     {

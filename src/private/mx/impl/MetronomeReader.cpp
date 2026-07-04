@@ -90,7 +90,7 @@ void MetronomeReader::parseBeatsPerMinute() const
     myOutTempoData.beatsPerMinute.durationName = converter.convert(grp.beatUnit());
     myOutTempoData.beatsPerMinute.dots = static_cast<int>(grp.beatUnitDot().size());
     const auto bpmStr = beatUnitPer.choice().asPerMinute().value();
-    int bpm = -1;
+    int bpm = api::VALUE_UNSPECIFIED;
     bool isNumeric = utility::stringToInt(bpmStr, bpm);
     if (!isNumeric)
     {
