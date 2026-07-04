@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "mx/api/ApiCommon.h"
 #include "mx/api/ClefData.h"
 #include "mx/api/DirectionData.h"
 #include "mx/api/KeyData.h"
@@ -18,15 +19,15 @@ namespace api
 class StaffData
 {
   public:
-    int staffLines = -1;
+    int staffLines = VALUE_UNSPECIFIED;
 
     // Specifies the staff space size relative the the global staff space size
-    double staffSize = -1.0;
+    double staffSize = DOUBLE_UNSPECIFIED;
 
     // Specifies the scaling of the notation. The MusicXml spec calls out the case
     // of percussion staves with wider spaced lines as an example where this differs
     // from staffSize. For example it might be staffSize=150, staffScaling = 100.
-    double staffScaling = -1.0;
+    double staffScaling = DOUBLE_UNSPECIFIED;
 
     std::vector<ClefData> clefs;
 

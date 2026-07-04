@@ -408,7 +408,7 @@ void NoteWriter::setStaffAndVoice() const
         myOutNote.setStaff(myCursor.staffIndex + 1);
     }
 
-    const bool sourceHadVoice = myNoteData.userRequestedVoiceNumber != -1;
+    const bool sourceHadVoice = myNoteData.userRequestedVoiceNumber != api::VALUE_UNSPECIFIED;
     const bool isNonDefaultVoice = myCursor.voiceIndex > 0;
     const bool isMultiVoiceStaff = myNumVoices > 1;
     if (myCursor.voiceIndex >= 0 && (sourceHadVoice || isNonDefaultVoice || isMultiVoiceStaff))

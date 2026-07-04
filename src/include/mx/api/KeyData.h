@@ -3,6 +3,7 @@
 // Distributed under the MIT License
 
 #pragma once
+#include "mx/api/ApiCommon.h"
 #include "mx/api/KeyComponent.h"
 
 namespace mx
@@ -66,7 +67,7 @@ struct KeyData
     // Supports changing the key somewhere other than at the start of a measure.
     int tickTimePosition;
 
-    // this value is optional. -1 means unspecified. when value is
+    // this value is optional. INDEX_UNSPECIFIED means unspecified. when value is
     // unspecified it means that the key signature applies to all staves
     // within the part
     int staffIndex;
@@ -77,7 +78,9 @@ struct KeyData
     // alterations. When custom is non-empty, then fifths and mode are ignored.
     std::vector<KeyComponent> nonTraditional;
 
-    KeyData() : fifths{0}, cancel{0}, mode{KeyMode::unspecified}, tickTimePosition{0}, staffIndex{-1}, nonTraditional{}
+    KeyData()
+        : fifths{0}, cancel{0}, mode{KeyMode::unspecified}, tickTimePosition{0}, staffIndex{INDEX_UNSPECIFIED},
+          nonTraditional{}
     {
     }
 };

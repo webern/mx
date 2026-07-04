@@ -83,7 +83,7 @@ api::FontSizeType getFontSize(const ATTRIBUTES_TYPE &inAttributes, double &outPo
 {
     if (!checkHasFontSize<ATTRIBUTES_TYPE>(&inAttributes))
     {
-        outPointSize = -1.0;
+        outPointSize = api::DOUBLE_UNSPECIFIED;
         outCssSize = api::CssSize::unspecified;
         return api::FontSizeType::unspecified;
     }
@@ -93,7 +93,7 @@ api::FontSizeType getFontSize(const ATTRIBUTES_TYPE &inAttributes, double &outPo
 
     if (coreFontSize.isCSSFontSize())
     {
-        outPointSize = -1.0;
+        outPointSize = api::DOUBLE_UNSPECIFIED;
         outCssSize = converter.convert(coreFontSize.asCSSFontSize());
         return api::FontSizeType::css;
     }

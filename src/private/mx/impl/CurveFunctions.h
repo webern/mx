@@ -91,7 +91,7 @@ api::CurveStart parseCurveStart(const SLUR_OR_TIE_ELEMENT_TYPE &inSlurOrTie)
     }
     else
     {
-        c.numberLevel = -1;
+        c.numberLevel = api::NUMBER_LEVEL_UNSPECIFIED;
     }
 
     c.curvePoints = parseCurvePoints(inAttributes);
@@ -124,7 +124,7 @@ api::CurveContinue parseCurveContinue(const SLUR_OR_TIE_ELEMENT_TYPE &inSlurOrTi
     }
     else
     {
-        c.numberLevel = -1;
+        c.numberLevel = api::NUMBER_LEVEL_UNSPECIFIED;
     }
 
     if (inAttributes.bezierX2().has_value())
@@ -161,7 +161,7 @@ template <typename SLUR_OR_TIE_ELEMENT_TYPE> api::CurveStop parseCurveStop(const
     }
     else
     {
-        c.numberLevel = -1;
+        c.numberLevel = api::NUMBER_LEVEL_UNSPECIFIED;
     }
 
     c.curvePoints = parseCurvePoints(inAttributes);

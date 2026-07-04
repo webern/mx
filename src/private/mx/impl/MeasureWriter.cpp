@@ -132,7 +132,7 @@ void MeasureWriter::writeMeasureGlobals()
     {
         if (staff.staffLines >= 0 || staff.staffSize >= 0.0)
         {
-            int desiredStaffIndex = -1;
+            int desiredStaffIndex = api::INDEX_UNSPECIFIED;
             if (myHistory.getCursor().getNumStaves() > 1)
             {
                 desiredStaffIndex = localStaffCounter;
@@ -432,7 +432,7 @@ void MeasureWriter::writeVoices(const api::StaffData &inStaff)
             {
                 if (myMeasureKeysIter->tickTimePosition <= myHistory.getCursor().tickTimePosition)
                 {
-                    myPropertiesWriter->writeKey(-1, *myMeasureKeysIter);
+                    myPropertiesWriter->writeKey(api::INDEX_UNSPECIFIED, *myMeasureKeysIter);
                     ++myMeasureKeysIter;
                 }
             }
@@ -496,7 +496,7 @@ void MeasureWriter::writeVoices(const api::StaffData &inStaff)
         {
             if (myMeasureKeysIter->tickTimePosition)
             {
-                myPropertiesWriter->writeKey(-1, *myMeasureKeysIter);
+                myPropertiesWriter->writeKey(api::INDEX_UNSPECIFIED, *myMeasureKeysIter);
                 ++myMeasureKeysIter;
             }
         }

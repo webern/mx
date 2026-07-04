@@ -350,8 +350,8 @@ void addScaling(const core::ScoreHeaderGroup &inScoreHeaderGroup, api::DefaultsD
     }
     else
     {
-        outDefaults.scalingMillimeters = -1.0;
-        outDefaults.scalingTenths = -1.0;
+        outDefaults.scalingMillimeters = api::DOUBLE_UNSPECIFIED;
+        outDefaults.scalingTenths = api::DOUBLE_UNSPECIFIED;
     }
 }
 

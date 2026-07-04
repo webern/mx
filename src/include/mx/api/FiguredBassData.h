@@ -48,7 +48,7 @@ class FiguredBassData
     // The optional <duration>, in ticks. A value less than 0 means 'unspecified' (no duration child).
     int durationTimeTicks;
 
-    FiguredBassData() : figures{}, parentheses{Bool::unspecified}, durationTimeTicks{-1}
+    FiguredBassData() : figures{}, parentheses{Bool::unspecified}, durationTimeTicks{VALUE_UNSPECIFIED}
     {
     }
 };
