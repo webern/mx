@@ -52,6 +52,8 @@ class PropertiesWriter
     void writeTime(const api::TimeSignatureData &value);
     void writeNumStaves(int value);
     void writeStaffDetails(int staffIndex, int staffLines);
+    void writeStaffDetails(int staffIndex, int staffLines, double staffSize);
+    void writeStaffDetails(int staffIndex, int staffLines, double staffSize, double staffScaling);
     void writeClef(int staffIndex, const api::ClefData &inClefData);
     void writePartSymbol(const api::PartSymbolData &inPartSymbolData);
     void writeTranspose(const api::TransposeData &inTransposeData);

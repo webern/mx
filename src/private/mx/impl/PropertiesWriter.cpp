@@ -183,6 +183,16 @@ void PropertiesWriter::writeNumStaves(int value)
 
 void PropertiesWriter::writeStaffDetails(int staffIndex, int staffLines)
 {
+    writeStaffDetails(staffIndex, staffLines, -1.0, -1.0);
+}
+
+void PropertiesWriter::writeStaffDetails(int staffIndex, int staffLines, double staffSize)
+{
+    writeStaffDetails(staffIndex, staffLines, staffSize, -1.0);
+}
+
+void PropertiesWriter::writeStaffDetails(int staffIndex, int staffLines, double staffSize, double staffScaling)
+{
     core::StaffDetails staffDetails{};
 
     if (staffIndex >= 0)
@@ -190,9 +200,23 @@ void PropertiesWriter::writeStaffDetails(int staffIndex, int staffLines)
         staffDetails.setNumber(core::StaffNumber{staffIndex + 1});
     }
 
-    core::StaffDetailsGroup sdg{};
-    sdg.setStaffLines(staffLines);
-    staffDetails.setGroup(sdg);
+    if (staffLines >= 0)
+    {
+        core::StaffDetailsGroup sdg{};
+        sdg.setStaffLines(staffLines);
+        staffDetails.setGroup(sdg);
+    }
+
+    if (staffSize >= 0.0)
+    {
+        core::StaffSize size{};
+        size.setValue(core::NonNegativeDecimal{core::Decimal{staffSize}});
+        if (staffScaling >= 0.0)
+        {
+            size.setScaling(core::NonNegativeDecimal{core::Decimal{staffScaling}});
+        }
+        staffDetails.setStaffSize(size);
+    }
 
     myAttributes.addStaffDetails(staffDetails);
     myHasContent = true;

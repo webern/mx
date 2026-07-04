@@ -130,14 +130,15 @@ void MeasureWriter::writeMeasureGlobals()
 
     for (const auto &staff : myMeasureData.staves)
     {
-        if (staff.staffLines >= 0)
+        if (staff.staffLines >= 0 || staff.staffSize >= 0.0)
         {
             int desiredStaffIndex = -1;
             if (myHistory.getCursor().getNumStaves() > 1)
             {
                 desiredStaffIndex = localStaffCounter;
             }
-            myPropertiesWriter->writeStaffDetails(desiredStaffIndex, staff.staffLines);
+            myPropertiesWriter->writeStaffDetails(desiredStaffIndex, staff.staffLines, staff.staffSize,
+                                                  staff.staffScaling);
         }
 
         auto clefIter = staff.clefs.cbegin();

@@ -293,4 +293,104 @@ TEST(staffDetailsWritesStaffLines, MeasureWriter)
 
 T_END
 
+TEST(staffDetailsWritesStaffSize, MeasureWriter)
+{
+    mxtest::TestParameters params;
+    params.ticksPerQuarter = 101;
+    params.measureIndex = 0;
+    params.partIndex = 0;
+    params.numStaves = 1;
+    mxtest::TestItems t = mxtest::setupTestItems(params);
+    auto &staff = t.measureData->staves.at(0);
+    staff.staffSize = 80.5;
+
+    const auto partwiseMeasure = t.measureWriter->getPartwiseMeasure();
+    auto musicData = partwiseMeasure.musicData();
+    auto mdcIter = musicData.begin();
+    const auto mdcEnd = musicData.end();
+
+    CHECK(mdcIter != mdcEnd);
+    CHECK(mdcIter->isAttributes());
+
+    const auto &props = mdcIter->asAttributes();
+    CHECK_EQUAL(1, props.staffDetails().size());
+
+    const auto &details = props.staffDetails().front();
+    CHECK(!details.group().has_value());
+    CHECK(details.staffSize().has_value());
+    CHECK(80.5 == details.staffSize()->value().value().value());
+    CHECK(!details.staffSize()->scaling().has_value());
+    CHECK(!details.number().has_value());
+}
+
+T_END
+
+TEST(staffDetailsWritesStaffSizeScaling, MeasureWriter)
+{
+    mxtest::TestParameters params;
+    params.ticksPerQuarter = 101;
+    params.measureIndex = 0;
+    params.partIndex = 0;
+    params.numStaves = 1;
+    mxtest::TestItems t = mxtest::setupTestItems(params);
+    auto &staff = t.measureData->staves.at(0);
+    staff.staffSize = 80.5;
+    staff.staffScaling = 75.5;
+
+    const auto partwiseMeasure = t.measureWriter->getPartwiseMeasure();
+    auto musicData = partwiseMeasure.musicData();
+    auto mdcIter = musicData.begin();
+    const auto mdcEnd = musicData.end();
+
+    CHECK(mdcIter != mdcEnd);
+    CHECK(mdcIter->isAttributes());
+
+    const auto &props = mdcIter->asAttributes();
+    CHECK_EQUAL(1, props.staffDetails().size());
+
+    const auto &details = props.staffDetails().front();
+    CHECK(!details.group().has_value());
+    CHECK(details.staffSize().has_value());
+    CHECK(80.5 == details.staffSize()->value().value().value());
+    CHECK(details.staffSize()->scaling().has_value());
+    CHECK(75.5 == details.staffSize()->scaling()->value().value());
+    CHECK(!details.number().has_value());
+}
+
+T_END
+
+TEST(staffDetailsWritesStaffLinesAndStaffSize, MeasureWriter)
+{
+    mxtest::TestParameters params;
+    params.ticksPerQuarter = 101;
+    params.measureIndex = 0;
+    params.partIndex = 0;
+    params.numStaves = 1;
+    mxtest::TestItems t = mxtest::setupTestItems(params);
+    auto &staff = t.measureData->staves.at(0);
+    staff.staffLines = 1;
+    staff.staffSize = 80.5;
+
+    const auto partwiseMeasure = t.measureWriter->getPartwiseMeasure();
+    auto musicData = partwiseMeasure.musicData();
+    auto mdcIter = musicData.begin();
+    const auto mdcEnd = musicData.end();
+
+    CHECK(mdcIter != mdcEnd);
+    CHECK(mdcIter->isAttributes());
+
+    const auto &props = mdcIter->asAttributes();
+    CHECK_EQUAL(1, props.staffDetails().size());
+
+    const auto &details = props.staffDetails().front();
+    CHECK(details.group().has_value());
+    CHECK_EQUAL(1, details.group()->staffLines());
+    CHECK(details.staffSize().has_value());
+    CHECK(80.5 == details.staffSize()->value().value().value());
+    CHECK(!details.staffSize()->scaling().has_value());
+    CHECK(!details.number().has_value());
+}
+
+T_END
+
 #endif

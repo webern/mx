@@ -19,6 +19,15 @@ class StaffData
 {
   public:
     int staffLines = -1;
+
+    // Specifies the staff space size relative the the global staff space size
+    double staffSize = -1.0;
+
+    // Specifies the scaling of the notation. The MusicXml spec calls out the case
+    // of percussion staves with wider spaced lines as an example where this differs
+    // from staffSize. For example it might be staffSize=150, staffScaling = 100.
+    double staffScaling = -1.0;
+
     std::vector<ClefData> clefs;
 
     // for the use case where key signatures
@@ -55,6 +64,8 @@ inline bool voicesAreEqual(const std::map<int, VoiceData> &l, const std::map<int
 
 MXAPI_EQUALS_BEGIN(StaffData)
 MXAPI_EQUALS_MEMBER(staffLines)
+MXAPI_DOUBLES_EQUALS_MEMBER(staffSize)
+MXAPI_DOUBLES_EQUALS_MEMBER(staffScaling)
 MXAPI_EQUALS_MEMBER(clefs)
 MXAPI_EQUALS_MEMBER(keys)
 MXAPI_EQUALS_MEMBER(directions)

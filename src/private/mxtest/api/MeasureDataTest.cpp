@@ -176,4 +176,90 @@ TEST(staffLinesRoundTrip, MeasureData)
 
 T_END;
 
+TEST(staffSizeRoundTrip, MeasureData)
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto &staff = measure.staves.back();
+    staff.staffSize = 80.5;
+    staff.voices[0].notes.emplace_back();
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("<staff-details>") != std::string::npos);
+    CHECK(xml.find("<staff-size>80.5</staff-size>") != std::string::npos);
+    CHECK(xml.find("<staff-lines>") == std::string::npos);
+
+    const auto outScore = mxtest::fromXml(xml);
+    CHECK_EQUAL(1, outScore.parts.size());
+    CHECK_EQUAL(1, outScore.parts.front().measures.size());
+    CHECK_EQUAL(1, outScore.parts.front().measures.front().staves.size());
+    CHECK(80.5 == outScore.parts.front().measures.front().staves.front().staffSize);
+    CHECK(-1.0 == outScore.parts.front().measures.front().staves.front().staffScaling);
+    CHECK_EQUAL(-1, outScore.parts.front().measures.front().staves.front().staffLines);
+}
+
+T_END;
+
+TEST(staffSizeScalingRoundTrip, MeasureData)
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto &staff = measure.staves.back();
+    staff.staffSize = 80.5;
+    staff.staffScaling = 75.5;
+    staff.voices[0].notes.emplace_back();
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("<staff-details>") != std::string::npos);
+    CHECK(xml.find("<staff-size scaling=\"75.5\">80.5</staff-size>") != std::string::npos);
+    CHECK(xml.find("<staff-lines>") == std::string::npos);
+
+    const auto outScore = mxtest::fromXml(xml);
+    CHECK_EQUAL(1, outScore.parts.size());
+    CHECK_EQUAL(1, outScore.parts.front().measures.size());
+    CHECK_EQUAL(1, outScore.parts.front().measures.front().staves.size());
+    CHECK(80.5 == outScore.parts.front().measures.front().staves.front().staffSize);
+    CHECK(75.5 == outScore.parts.front().measures.front().staves.front().staffScaling);
+    CHECK_EQUAL(-1, outScore.parts.front().measures.front().staves.front().staffLines);
+}
+
+T_END;
+
+TEST(staffLinesAndStaffSizeRoundTrip, MeasureData)
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto &staff = measure.staves.back();
+    staff.staffLines = 1;
+    staff.staffSize = 80.5;
+    staff.voices[0].notes.emplace_back();
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("<staff-details>") != std::string::npos);
+    CHECK(xml.find("<staff-lines>1</staff-lines>") != std::string::npos);
+    CHECK(xml.find("<staff-size>80.5</staff-size>") != std::string::npos);
+
+    const auto outScore = mxtest::fromXml(xml);
+    CHECK_EQUAL(1, outScore.parts.size());
+    CHECK_EQUAL(1, outScore.parts.front().measures.size());
+    CHECK_EQUAL(1, outScore.parts.front().measures.front().staves.size());
+    CHECK_EQUAL(1, outScore.parts.front().measures.front().staves.front().staffLines);
+    CHECK(80.5 == outScore.parts.front().measures.front().staves.front().staffSize);
+    CHECK(-1.0 == outScore.parts.front().measures.front().staves.front().staffScaling);
+}
+
+T_END;
+
 #endif
