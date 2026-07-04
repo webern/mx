@@ -20,9 +20,14 @@ concurrency:
 env:
   DOCKER_VOLUME: mx-build
 
+# Every Linux job runs its make targets inside the pinned mx-sdk Docker
+# toolchain; only the two macOS jobs build natively.
 jobs:
+  # Python-side gates for the gen/ generator and audit tool, plus the repo's
+  # only clang-format gate. Also runs plates --check for every target. No C++
+  # is compiled or tested here.
   linux-gen:
-    name: Linux (generator gates)
+    name: "gen: unit/audit tests + regen drift + quality/lint + fmt-check (Linux)"
     runs-on: ubuntu-latest
 
     # Read-only token: this job builds untrusted fork PR code, so it never
@@ -60,13 +65,13 @@ jobs:
           key: ccache-${{ runner.os }}-gen-${{ github.sha }}
           restore-keys: ccache-${{ runner.os }}-gen-
 
-      - name: fmt-check
+      - name: fmt-check (clang-format, all C++ under src/)
         run: make check
 
-      - name: Generator tests
+      - name: gen unit tests (parser/IR/plates/press)
         run: make test-gen
 
-      - name: Audit tests
+      - name: audit tool unit tests (incl. failure classifier)
         run: make test-audit
 
       - name: plates --check (all targets)
@@ -122,8 +127,10 @@ jobs:
           name: pr-comment-gen
           path: pr-comment/
 
+  # The mx::api/mx::impl product surface. Core-layer suites (corert, unit,
+  # xmllint, probes) run in linux-core, not here.
   linux-api:
-    name: Linux (mx::api/mx::impl)
+    name: "api: mxtest suite + examples + corpus round-trip (Linux)"
     runs-on: ubuntu-latest
 
     steps:
@@ -149,14 +156,16 @@ jobs:
       - name: Build mx library
         run: make lib
 
-      - name: Run examples + mxtest suite (api/impl/file/control)
+      - name: mxtest suite (api/impl/file/control) + examples
         run: make test
 
-      - name: Run corpus api roundtrip (regression mode)
+      - name: api corpus round-trip (regression mode)
         run: make test-api-roundtrip
 
+  # The strongly-typed mx::core layer. Note: check-core-dev (warning-free
+  # build gate) is a local-only gate; CI does not run it.
   linux-core:
-    name: Linux (mx::core gates)
+    name: "core: corert round-trip + unit + xmllint + compile probes (Linux)"
     runs-on: ubuntu-latest
 
     steps:
@@ -179,21 +188,22 @@ jobs:
           key: ccache-${{ runner.os }}-core-${{ github.sha }}
           restore-keys: ccache-${{ runner.os }}-core-
 
-      # corert is pinned at 829/0/0 by an in-suite counts case.
-      - name: Core roundtrip suite
+      # corert file counts are pinned by an in-suite counts case (see CoreRoundtripTest.cpp).
+      - name: corert round-trip suite
         run: make test-core-dev
 
-      - name: Core unit tests
+      - name: mx::core unit tests
         run: make test-cpp-unit
 
-      - name: validate-cpp (serialize + xmllint)
+      - name: validate-cpp (serialize corpus + xmllint vs XSD)
         run: make validate-cpp
 
       - name: probe-cpp (must-not-compile probes)
         run: make probe-cpp
 
+  # corert round-trip suites for the generator's emitted Go and C targets.
   linux-targets:
-    name: Linux (Go + C targets)
+    name: "corert: Go + C generated targets (Linux)"
     runs-on: ubuntu-latest
 
     steps:
@@ -215,8 +225,11 @@ jobs:
       - name: C corert suite
         run: make test-c
 
+  # Re-runs the core (corert + unit) and api (mxtest + round-trip) suites in
+  # instrumented builds to produce gcovr reports. Coverage % is advisory (no
+  # floor), but a test failure still fails the job.
   coverage:
-    name: Linux (coverage-core-dev)
+    name: "coverage: core + api gcovr reports, advisory (Linux)"
     runs-on: ubuntu-latest
 
     # Read-only token: posting the coverage comment is delegated to the
@@ -229,9 +242,7 @@ jobs:
       - uses: actions/checkout@v4
 
       # Same container-driver + runtime-token setup as linux-gen so the
-      # coverage stage reuses the warm toolchain layer cache. Coverage runs in
-      # the pinned container via `make coverage-core-dev`; it is advisory (no
-      # gate) and runs in parallel with the other jobs.
+      # coverage stage reuses the warm toolchain layer cache.
       - uses: docker/setup-buildx-action@v3
       - uses: crazy-max/ghaction-github-runtime@v3
 
@@ -251,10 +262,10 @@ jobs:
           key: ccache-${{ runner.os }}-coverage-${{ github.sha }}
           restore-keys: ccache-${{ runner.os }}-coverage-
 
-      - name: Build + run with coverage (core)
+      - name: coverage-core-dev (corert + unit, instrumented)
         run: make coverage-core-dev
 
-      - name: Build + run with coverage (api/impl/utility)
+      - name: coverage-api (mxtest + round-trip, instrumented)
         run: make coverage-api
 
       # Turn gcovr's 3-line summary (data/testOutput/coverage/summary.txt, e.g.
@@ -332,14 +343,16 @@ jobs:
           name: pr-comment-coverage
           path: pr-comment/
 
+  # Skips validate-cpp (xmllint) and probe-cpp; those run Linux-only in
+  # linux-core. No gen/audit gates here either.
   macos:
-    name: macOS (mx::core, AppleClang)
+    name: "core + api: corert + unit + mxtest + round-trip (macOS/AppleClang)"
     runs-on: macos-latest
 
     # No Docker on the macOS runners: MX_RUNNING_IN_DOCKER=1 flips the
     # Makefile to its direct-invocation branch so the build runs natively
-    # with AppleClang. This is the only job off the pinned toolchain, by
-    # design: it exists to find (and keep finding) AppleClang fallout.
+    # with AppleClang. This is the only C++ job off the pinned toolchain,
+    # by design: it exists to find (and keep finding) AppleClang fallout.
     env:
       MX_RUNNING_IN_DOCKER: 1
 
@@ -354,29 +367,30 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-core-dev-
 
-      - name: Core roundtrip suite
+      - name: corert round-trip suite
         run: make test-core-dev
 
-      - name: Core unit tests
+      - name: mx::core unit tests
         run: make test-cpp-unit
 
       - name: Build mx library (api/impl)
         run: make lib
 
-      - name: Run examples + mxtest suite (api/impl)
+      - name: mxtest suite (api/impl/file/control) + examples
         run: make test
 
-      - name: Run corpus api roundtrip (regression mode)
+      - name: api corpus round-trip (regression mode)
         run: make test-api-roundtrip
 
   swift-local:
-    name: macOS (Swift package, local checkout)
+    name: "swift: Mx package build only (macOS/SPM)"
     runs-on: macos-latest
 
     # By default mx builds `Mx` as a source library straight from this checkout --
     # the path komp takes when it depends on a sibling mx via `.package(path:)`.
     # Building it here proves mx compiles as a Swift package under AppleClang/SPM on
-    # every PR. The binary xcframework release arm (MX_BINARY_RELEASE) is follow-up work.
+    # every PR; it runs no test suites. The binary xcframework release arm
+    # (MX_BINARY_RELEASE) is follow-up work.
 
     steps:
       - uses: actions/checkout@v4

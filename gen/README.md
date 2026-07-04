@@ -22,16 +22,9 @@ there. Adding a new language touches no generator Python.
 
 ## Running it
 
-```
-python3 -m gen analyze [xsd]                               # structural analysis report
-python3 -m gen ir [--type NAME] [--resolve] [--config C]   # IR as JSON
-python3 -m gen plates --config C [--type NAME] [--check]   # Plates as JSON; --check gates CI
-python3 -m gen render --config C --type NAME               # render one type to stdout
-python3 -m gen <config.toml>                               # emit the target (full run)
-```
-
-Full runs: `make gen-cpp` (C++ target), `make gen` (all targets). Generated output is
-committed; `make test-gen` regenerates and asserts `git diff --exit-code`.
+Commands, gates, and workflows: see `gen/AGENTS.md`. Full runs: `make gen-cpp` (C++ target),
+`make gen` (all targets). Generated output is committed; `make test-gen` regenerates and
+asserts `git diff --exit-code`.
 
 ## For agents
 

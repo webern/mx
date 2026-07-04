@@ -24,6 +24,8 @@ inline bool areSame(Double left, Double right)
 constexpr int DEFAULT_TICKS_PER_QUARTER = 3 * 4 * 5 * 7;
 constexpr int TICK_TIME_INFINITY = std::numeric_limits<int>::max();
 
+// Intentional ternary: absent-able bools use Bool::unspecified, not std::optional<bool>.
+// See "mx::api conventions" in AGENTS.md.
 enum class Bool
 {
     unspecified,

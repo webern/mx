@@ -52,8 +52,8 @@ grep -n "const Converter::EnumMap" src/private/mx/impl/Converter.cpp
 ```
 
 Each line names the `core::X` and `api::Y` pair. Work through all of them. The worked example from
-the SKILL overview -- `dynamicsMap` (`Converter.cpp:170`) missing `n`/`pf`/`sfzp` from
-`core::DynamicsChoice::Kind` -- is exactly this procedure applied to one table.
+the SKILL overview -- `accidentalMap` missing `other` from `core::AccidentalValue` -- is exactly
+this procedure applied to one table.
 
 ## Enums not behind an EnumMap
 

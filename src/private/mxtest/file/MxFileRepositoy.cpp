@@ -37,6 +37,9 @@ const std::string MxFileRepository::getFullPath(const std::string &fileName)
 const std::string MxFileRepository::getNameWithoutExtension(const std::string &fileName)
 {
     const auto lastDot = fileName.find_last_of('.');
+    // TODO: off-by-one -- substr(0, lastDot) is the name without extension; this drops the
+    // final character ("freezing.xml" -> "freezin") and relies on npos-1 wraparound when
+    // there is no dot. Only affects test-output filenames today (FreezingRoundTrip.cpp).
     return fileName.substr(0, lastDot - 1);
 }
 

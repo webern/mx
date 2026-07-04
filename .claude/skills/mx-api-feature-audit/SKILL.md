@@ -37,23 +37,16 @@ view 3 and the comparison.
 
 ## Two kinds of finding
 
-Keep these strictly separate -- they have different severity:
-
 - BUG (silent data loss): a value exists in a `mx::core` enum but the parallel `mx::api` enum lacks
   it, so the `mx::impl` reader maps it to a fallback (`unspecified`/`otherX`) and the original value
-  is lost on round-trip. This is almost always introduced when a newer MusicXML version adds an enum
-  member to `mx::core` (generated from the XSD) and the hand-written `mx::api` enum is not updated to
-  match. See Step 2.
+  is lost on round-trip. See Step 2.
 - GAP (unsupported feature): an element or attribute that `mx::api` simply does not model. This is
   by design for obscure features, but a gap in a *heavily-used wild* feature is a candidate to add.
   See Step 3.
 
-A worked BUG example you can confirm today: `core::DynamicsChoice::Kind`
-(`src/private/mx/core/generated/DynamicsChoice.h`) contains `n`, `pf`, and `sfzp` (added in MusicXML
-3.1), but `api::MarkType` (`src/include/mx/api/MarkData.h`) stops at `fz`, and the `dynamicsMap` at
-`src/private/mx/impl/Converter.cpp:170` has no entries for them -- so `findApiItem` returns
-`api::MarkType::unspecified` and those dynamics are dropped. That is the exact failure mode Step 2
-hunts for.
+A worked BUG example you can confirm today: `core::AccidentalValue::other` has no `api::Accidental`
+member (recorded in `data/api.features.xml` as status="missing-members"). That is the exact failure
+mode Step 2 hunts for.
 
 ## Procedure
 
@@ -68,5 +61,5 @@ Run the steps in order. Each writes its output to a known location so the next c
 The `data/api.features.xml` output format (a superset of the per-file `<feature-audit>` shape) is
 specified in `./resources/api-features-format.md`.
 
-Read `AGENTS.md` (repo root) for the layer map, and the `add-mx-api-feature` skill for how to
+Read `AGENTS.md` (repo root) for the layer map, and the `mx-api-add-feature` skill for how to
 actually implement anything this audit recommends.

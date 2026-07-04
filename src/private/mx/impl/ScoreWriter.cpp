@@ -48,6 +48,9 @@ core::ScorePartwise ScoreWriter::getScorePartwise() const
     }
     break;
 
+    // ThreePointZero also represents parsed "4.0" documents (see ScoreReader). The "3.0"
+    // written here only reaches the getDocument escape hatch -- writeTo*() overrides the
+    // version to "4.0" via DocumentManager's withWriteVersion.
     case api::MusicXmlVersion::ThreePointZero: {
         myOutScorePartwise.setVersion(std::string{"3.0"});
     }

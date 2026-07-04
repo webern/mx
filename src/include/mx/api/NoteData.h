@@ -118,9 +118,8 @@ class NoteData
     // tag, but subsequent chord notes do have the tag).
     bool isChord;
 
-    // This is separate from the tie curves themselves. This
-    // states that the note should be tied but noteAttachment.curve
-    // items are needed to draw the ties visibly
+    // One field, two encodings: on write these emit both <tie> (sound) and
+    // <tied> (notation), so the two can never contradict each other.
     bool isTieStart;
     bool isTieStop;
 

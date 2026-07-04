@@ -378,7 +378,7 @@ gen-schema:
 	python3 -m gen gen/schema/config.toml
 
 # Feature audit: inventory which MusicXML features the corpus uses, for comparing
-# against mx::api support. See audit/README.md and the api-feature-audit skill.
+# against mx::api support. See audit/README.md and the mx-api-feature-audit skill.
 audit:
 	python3 -m audit all
 

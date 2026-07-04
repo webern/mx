@@ -116,6 +116,11 @@ api::NoteData NoteFunctions::parseNote() const
 
     const core::NoteTypeValue timeModType = reader.getTimeModificationNormalType();
     const int timeModTypeDots = reader.getTimeModificationNormalTypeDots();
+    // TODO: should this be ||? Either conjunct alone proves <normal-type> was present (the
+    // reader defaults normalType to the note's own type with 0 dots when absent), so && drops
+    // an explicit undotted <normal-type>, and a dotted one equal to the note's own type, as
+    // "unspecified". Also, the two assignments above are dead stores -- both branches below
+    // overwrite them. Issue candidate.
     bool isTimeModTypeSpecified = (timeModTypeDots > 0) && (timeModType != reader.getDurationType());
 
     if (isTimeModTypeSpecified)

@@ -1,17 +1,16 @@
 ---
-name: grill-me
+name: mx-grill-me
 description: >
   Interview the user relentlessly about a plan or design until reaching
   shared understanding, resolving each branch of the decision tree. Use
   when user wants to stress-test a plan, get grilled on their design, or
   mentions "grill me".
-argument-hint: "<prompt>"   
+argument-hint: "<prompt>"
 disable-model-invocation: false
 user-invocable: true
 ---
 
-Never use the `AskUserQuestion` tool. Never render a numbered option picker. Ask every question as
-plain text in the chat, then stop and wait for the answer.
+Never use the `AskUserQuestion` tool; ask every question as plain text and wait for the answer.
 
 Interview me relentlessly about every aspect of this plan until
 we reach a shared understanding. Walk down each branch of the design
@@ -22,5 +21,5 @@ the codebase instead.
 
 For each question, provide your recommended answer.
 
-Use the /questions skill to avoid sending more than one question at
+Use the /mx-questions skill to avoid sending more than one question at
 once.

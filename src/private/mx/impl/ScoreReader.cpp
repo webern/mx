@@ -199,6 +199,9 @@ api::ScoreData ScoreReader::getScoreData() const
                 myOutScoreData.lyricist = i.value();
             }
 
+            // TODO: arranger/publisher overwrite lyricist (ScoreData has no fields for them),
+            // and ScoreWriter re-emits the value as type="lyricist" -- lossy and mislabeled.
+            // Issue: add arranger/publisher fields to ScoreData.
             if (typeStr == "arranger")
             {
                 myOutScoreData.lyricist = i.value();
@@ -349,6 +352,9 @@ void ScoreReader::stopPartGroup(int partIndex, const core::PartGroup &inPartGrou
         grpData = popMostRecentGroupFromStack();
     }
 
+    // A part-group stop arrives before the *next* score-part in the part-list walk, so the
+    // group's last member is the previously indexed part; partIndex==0 guards a malformed
+    // stop-before-any-part.
     grpData.lastPartIndex = partIndex > 0 ? partIndex - 1 : partIndex;
 
     myOutScoreData.partGroups.emplace_back(std::move(grpData));
@@ -592,6 +598,8 @@ int ScoreReader::findMaxDivisionsPerQuarter() const
                 }
 
                 const auto tempDiv = attrs.divisions()->value().value();
+                // <divisions> is a decimal in MusicXML but api ticksPerQuarter is an int:
+                // round to nearest, halves down (ceil(x - 0.5)).
                 const int tempDivInt = static_cast<int>(std::ceil(tempDiv - 0.5));
                 if (tempDivInt > 0)
                 {

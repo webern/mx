@@ -5,14 +5,19 @@
 `mx` is a MusicXML C++ library. The product surface is `mx::api`, a simplified and narrowed
 interface of MusicXML backed by the strongly-typed `mx::core` model.
 
+Quickstart: `make test-core-dev` (fast corert gate) - `make fmt` (format) - `make help` (all
+targets). Everything runs in the `mx-sdk` Docker image unless `MX_RUNNING_IN_DOCKER=1`.
+
 ## Repository layout
 
 ```
 mx/
   AGENTS.md             <- you are here
+  .claude/skills/       <- agent skills; every skill name starts with mx-
   Makefile              <- top-level build driver
   Dockerfile            <- mx-sdk image with toolchains and dev tools
   CMakeLists.txt        <- C++ project
+  Package.swift         <- Swift Package Manager wrapper (built by the swift-local CI job)
   data/                 <- MusicXML test corpus (large, see data/README.md)
   docs/ai/design/       <- design docs
   docs/musicxml-4.0-ed15c23.xsd <- the current musicxml.xsd schema
@@ -37,6 +42,8 @@ mx/
     mxtest/control/     <- compile-control flags (CompileControl.h: enables/disables test suite compilation)
     cpul/               <- vendored Catch2 test runner
   gen/                  <- code generator system (see gen/README.md)
+    cpp/                <- C++ target (the product): config.toml + templates
+    schema/             <- JSON Schema target
     test/go/            <- A toy Go implementation of MusicXML XSD for gen validation
     test/c/             <- A toy C implementation of MusicXML XSD for gen validation
   audit/                <- MusicXML feature-audit tool (see audit/README.md); `make audit`
@@ -44,46 +51,28 @@ mx/
 
 ## Feature audit (`audit/`)
 
-`python3 -m audit` (run via `make audit`) inventories which MusicXML features the corpus uses, so we
-can compare against what `mx::api` exposes. It writes a `*.features.xml` sidecar next to each corpus
-file and a `data/corpus.xml` aggregate (all checked in; the round-trip suites skip them). The
-`api-feature-audit` skill uses these to find enum bugs and feature gaps in `mx::api`. See
-`audit/README.md` and `data/README.md`.
+`make audit` inventories corpus feature usage (`*.features.xml` sidecars + `data/corpus.xml`,
+checked in; the test suites skip them). See `audit/README.md`; the `mx-api-feature-audit` skill
+consumes the output.
 
 ## Build system
 
-### Docker (mx-sdk)
-
-Docker is used for tool reproducibility. The `Makefile` has sections that are invoked on the host
-and others that are invoked inside the container. The `MX_RUNNING_IN_DOCKER` env var drives this
-distinction.
-
-In general, we should strive to make build processes reproducable on developer machines and in CI by
-leveraging the `mx-sdk` image and extending it with new tools as they are needed.
-
-### Makefile targets
-
-The `Makefile` serves as the entrypoint of build processes. It calls `cmake` which produces deeper,
-generated makefiles in the build directory. You should lean heavily on our top-level `Makefile` and
-suggest improvements when it doesn't have what you need.
-
-Run `make help` for the target list.
+The `Makefile` is the entrypoint for all build processes; it drives `cmake` and runs everything
+inside the `mx-sdk` Docker image unless `MX_RUNNING_IN_DOCKER=1` (see the README's Build section).
+Lean on it and suggest improvements when it doesn't have what you need. Run `make help` for the
+target list. Extend the `mx-sdk` image when new tools are needed.
 
 ## The corert (core roundtrip) test
 
-Runs with `make test-core-dev`.
-
-This test suite deserializes and reserializes the test corupus with `mx::core`. It can be compiled
-without compiling the `mx::impl` and `mx::api` layes. This provides a mechanism for innovating on
-the generated code and templates found in `gen/cpp` without fixing the `mx::impl` layer on every
-change to `mx::core`. i.e. you can defer integrating `mx::core` changes with `mx::impl` (and by
-extension `mx::api`) until you are ready.
+Runs with `make test-core-dev`. Deserializes and reserializes the test corpus with `mx::core`. It
+compiles without `mx::impl`/`mx::api`, so you can iterate on `gen/cpp` and the generated core and
+defer fixing the `mx::impl` integration until you are ready.
 
 ### Flow (same in all three languages)
 
-1. **Discover** eligible `.xml`/`.musicxml` files under `data/`, (excluding certain directories, and
-   marker files. See `data/README.md)
-   - unparseable files have a sibling file ending with `.invalid` and are skipped.
+1. **Discover** eligible `.xml`/`.musicxml` files under `data/` (excluding certain directories and
+   marker files; see `data/README.md`). Files with a sibling `.invalid` marker are skipped as
+   unparseable.
 2. For each file: Load the XML into a DOM, make certain expected alterations, parse it with
    `mx::core`, serialize it back to XML, normalize the output, and compare the two DOMs.
 3. Report pass/fail per file.
@@ -101,8 +90,8 @@ What you need to know right now is that `gen/cpp` is where our MusicXML types ar
 
 ## C++ coding rules
 
-Do not use anonymous namespaces (`namespace { }`) anywhere in the codebase. All symbols must be in
-a named namespace. Anonymous namespaces give internal linkage, which is correct for a normal
+Do not add new anonymous namespaces (`namespace { }`); many existing files still have them and
+they are being retired as touched. Anonymous namespaces give internal linkage, which is correct for a normal
 one-TU-per-file build but causes redefinition errors in unity builds (where multiple `.cpp` files
 are compiled as a single translation unit). Use a named helper function or per-type name instead:
 
@@ -123,10 +112,41 @@ cmake --build build/unity --target mx
 
 `BATCH_SIZE=0` puts all files in a target into one translation unit, which is the strictest test.
 
+## mx::api conventions (presence/absence)
+
+`mx::api` is the public product surface: plain-old-data structs that make MusicXML easier to use
+than the strongly-typed `mx::core` model. No core type may appear in a public api header.
+
+- New fields that can be absent: use `std::optional<T>` (values and sub-structs alike).
+  Precedent: `NoteData::tieLetRing`, `PartData::transposition`, `MeasureData::partSymbol`.
+- Exception, enums: an absent-able enum gets an `unspecified` enumerator as its first value and
+  default — never `std::optional<SomeEnum>`. This includes the ternary
+  `Bool { unspecified, yes, no }` in `ApiCommon.h`; use it, never `std::optional<bool>`.
+- Do not mass-migrate existing `bool is...Specified` / `has...` flags or `-1` sentinels; they are
+  legacy (issue #249). Migrations are separate, deliberate breaking changes.
+- Every new field needs a default value and a matching `MXAPI_EQUALS_MEMBER(field)` line
+  (`MXAPI_DOUBLES_EQUALS_MEMBER` for doubles) in the type's equality block — a missed line
+  silently drops the field from equality and round-trip checks.
+
+### Design principles (digest)
+
+Never mirror a MusicXML element's raw shape; counter its defect. Full text with examples and
+per-rule tests: `docs/ai/design/api-design-principles.md`.
+
+1. Store absolute values, not running state (ticks, not divisions/backup/forward).
+2. Membership by containment, not label fields (measure -> staves -> voices -> notes).
+3. One fact, one field; the writer emits both encodings (tie/tied).
+4. No neighbor-dependent meaning (`isChord` is true on every chord member).
+5. Denormalize effective state onto what it governs (each measure carries its time signature).
+6. Common case a plain value; quarantine the rare case (`alter` int + `cents` double).
+7. Fidelity knobs default to "automatic" and must be ignorable when authoring.
+
 ## Quality gates
 
 Run `make fmt` to format. `make check` is the clang-format gate **only** — it builds and tests nothing.
-Run `make test-core-dev` for corert (especially `mx/core` work); `make test` for everything (slow).
+Run `make test-core-dev` for corert (especially `mx/core` work) and `make check-core-dev` (fmt-check
++ warning-free build) before pushing core work. `make test` runs the api/impl suite + examples;
+corert, `make test-api-roundtrip`, and the gen/audit gates run separately (see `make help` / CI).
 Adding/removing a `data/` file: bump the pinned count in `CoreRoundtripTest.cpp`, run `make audit` (regenerates `corpus.xml` + `*.features.xml`), confirm round-trip via `make test-core-dev`.
 `ApiLoadSmokeTest` proves a file imports without crashing, not that the data is correct; the read→write→read gate (`make test-api-roundtrip` / `roundtrip-baseline.txt`) is the correctness check — pin a fixture there to defend a feature.
 

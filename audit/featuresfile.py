@@ -1,7 +1,7 @@
 """Read and write the ``<feature-audit>`` document format.
 
 This is the per-file sidecar shape (one ``<feature-audit>`` per corpus file) and
-the same shape the ``api-feature-audit`` skill emits for ``mx::api``. Elements and
+the same shape the ``mx-api-feature-audit`` skill emits for ``mx::api``. Elements and
 attributes are sorted so the output is stable and diff-friendly.
 
     <feature-audit>

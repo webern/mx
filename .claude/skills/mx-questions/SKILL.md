@@ -1,11 +1,11 @@
 ---
-name: questions
+name: mx-questions
 description: >
   Ask the user clarifying questions one at a time to refine a plan or
-  task. Invoke with `/questions` or automatically when more information
+  task. Invoke with `/mx-questions` or automatically when more information
   is needed.
 ---
-# /questions
+# /mx-questions
 
 ## Non-negotiable: plain chat only
 
@@ -18,8 +18,6 @@ Ask exactly **one question**, then stop and wait for the answer. Do not bundle m
 into one turn — not as a numbered list, not as "and also," not as a parenthetical follow-up. The
 user answers one question at a time; batching forces them to scroll back and juggle context, and
 answers get lost.
-
-This rule holds even when several questions feel related or obvious. One turn, one question.
 
 **Wrong:**
 
@@ -39,8 +37,8 @@ This rule holds even when several questions feel related or obvious. One turn, o
 
 ## Usage
 
-- `/questions`
-- `/questions <optional-prompt>` — e.g., `/questions about the design of the flubber async module`
+- `/mx-questions`
+- `/mx-questions <optional-prompt>` — e.g., `/mx-questions about the design of the flubber async module`
 
 ## Flow
 

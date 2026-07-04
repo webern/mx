@@ -1,7 +1,7 @@
 ---
-name: open-mx-pr
+name: mx-open-pr
 description: >
-  Use this skill when the user says open a PR, create a pull request, or make a PR.
+  Use this skill when the user says open a PR, create a pull request, make a PR, or submit this work as a PR.
 argument-hint: "<prompt>"
 disable-model-invocation: false
 user-invocable: true
@@ -17,7 +17,7 @@ allowed-tools:  >
   WebSearch,
   Write
 ---
-# /open-mx-pr
+# /mx-open-pr
 
 Use `<prompt>` and your context to understand what the PR is about. Check to see if there is
 documentation on the issue available in `docs/ai/api-feature-audit.md` (which might be the case if
@@ -36,8 +36,8 @@ When writing the PR, the title should be lowercase and start with one keyword, e
 
 Look at the labels on GitHub, choose the ones that match the pr best.
 
-Write an pr body. Keep it tight and human-readable, but with enough information to understand what
-needs to be done.
+Write a PR body. Keep it tight and human-readable, but with enough information to understand what
+was done and why.
 
 Determine from the original prompt whether the user wanted you to YOLO and open or whether the user
 wanted to see a draft first.
@@ -45,16 +45,18 @@ wanted to see a draft first.
 When ready, create the pr and note the pr number. Make sure the PR body contains references to
 issues closed and issues/PRs related (if any).
 
-Do NOT attribute yourself in the PR. No "Written by Claud" or "Codex" or whatever. Nope. Do not
-take credit for this. Instead you may add the `ai` label as a flag that a coding agent created the
-issue.
+No self-attribution in the PR body; add the `ai` label instead.
 
-Do not use excessive bold and italics in the issue body. Go easy on the keywords since they will add
+Do not use excessive bold and italics in the PR body. Go easy on the keywords since they will add
 a lot of backtick formatting as well.
 
 Template/sample:
 
 ```markdown
+## Human Summary
+
+TODO: human writes here
+
 ## Summary
 
 `accidentalMap` in `Converter.cpp` was missing the entry for `sharpSharp`. Added a single item to the map so that the
