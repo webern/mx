@@ -11,6 +11,7 @@
 #include "mx/core/generated/Extend.h"
 #include "mx/core/generated/FormattedText.h"
 #include "mx/core/generated/FullNoteGroupChoice.h"
+#include "mx/core/generated/GraceCueNoteGroup.h"
 #include "mx/core/generated/GraceNormalNoteGroup.h"
 #include "mx/core/generated/GraceNoteChoice.h"
 #include "mx/core/generated/GraceNoteGroup.h"
@@ -264,12 +265,10 @@ void NoteWriter::setNoteChoiceAndFullNoteGroup(bool isStartOfChord) const
 {
     myOutFullNoteGroup.setChord(myCursor.isChordActive && myIsPreviousNoteAChordMember && !isStartOfChord);
 
-    switch (myNoteData.noteType)
+    // The schema has no <tie> on cue and grace-cue notes, so ties on them are
+    // silently dropped. Normal and grace-normal notes carry their ties.
+    if (!myNoteData.isCue)
     {
-    case api::NoteType::cue: {
-        break;
-    }
-    case api::NoteType::grace: {
         if (myNoteData.isTieStop)
         {
             addTie(false);
@@ -279,24 +278,6 @@ void NoteWriter::setNoteChoiceAndFullNoteGroup(bool isStartOfChord) const
         {
             addTie(true);
         }
-
-        break;
-    }
-    case api::NoteType::normal: {
-        if (myNoteData.isTieStop)
-        {
-            addTie(false);
-        }
-
-        if (myNoteData.isTieStart)
-        {
-            addTie(true);
-        }
-
-        break;
-    }
-    default:
-        break;
     }
 }
 
@@ -308,34 +289,43 @@ void NoteWriter::assembleNoteChoice() const
     const auto duration =
         core::PositiveDivisions{core::Decimal{static_cast<double>(myNoteData.durationData.durationTimeTicks)}};
 
-    switch (myNoteData.noteType)
+    if (myNoteData.isGrace)
     {
-    case api::NoteType::cue: {
+        // Grace notes have no wire <duration>; durationTimeTicks is ignored.
+        core::GraceNoteGroup choiceObj;
+        if (myNoteData.isCue)
+        {
+            // <grace/> + <cue/>: the grace-cue group carries no <tie>.
+            core::GraceCueNoteGroup inner;
+            inner.setFullNote(myOutFullNoteGroup);
+            choiceObj.setGraceNoteChoice(core::GraceNoteChoice::graceCueNoteGroup(std::move(inner)));
+        }
+        else
+        {
+            core::GraceNormalNoteGroup inner;
+            inner.setFullNote(myOutFullNoteGroup);
+            for (const auto &tie : myOutTies)
+            {
+                const auto added = inner.addTie(tie);
+                if (!added)
+                {
+                    throw WriteRefusal{api::ApiError{api::ResultCode::tooManyElements, added.error().path,
+                                                     "NoteWriter: " + added.error().message}};
+                }
+            }
+            choiceObj.setGraceNoteChoice(core::GraceNoteChoice::graceNormalNoteGroup(std::move(inner)));
+        }
+        myOutNote.setChoice(core::NoteChoice::graceNoteGroup(std::move(choiceObj)));
+    }
+    else if (myNoteData.isCue)
+    {
         core::CueNoteGroup choiceObj;
         choiceObj.setFullNote(myOutFullNoteGroup);
         choiceObj.setDuration(duration);
         myOutNote.setChoice(core::NoteChoice::cueNoteGroup(std::move(choiceObj)));
-        break;
     }
-    case api::NoteType::grace: {
-        core::GraceNormalNoteGroup inner;
-        inner.setFullNote(myOutFullNoteGroup);
-        for (const auto &tie : myOutTies)
-        {
-            const auto added = inner.addTie(tie);
-            if (!added)
-            {
-                throw WriteRefusal{api::ApiError{api::ResultCode::tooManyElements, added.error().path,
-                                                 "NoteWriter: " + added.error().message}};
-            }
-        }
-        core::GraceNoteGroup choiceObj;
-        choiceObj.setGraceNoteChoice(core::GraceNoteChoice::graceNormalNoteGroup(std::move(inner)));
-        myOutNote.setChoice(core::NoteChoice::graceNoteGroup(std::move(choiceObj)));
-        break;
-    }
-    case api::NoteType::normal:
-    default: {
+    else
+    {
         core::NormalNoteGroup choiceObj;
         choiceObj.setFullNote(myOutFullNoteGroup);
         choiceObj.setDuration(duration);
@@ -349,8 +339,6 @@ void NoteWriter::assembleNoteChoice() const
             }
         }
         myOutNote.setChoice(core::NoteChoice::normalNoteGroup(std::move(choiceObj)));
-        break;
-    }
     }
 }
 

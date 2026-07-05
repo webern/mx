@@ -204,3 +204,9 @@ lysuite/ly52a_PageLayout.xml
 # KeyData::cancelLocation (CancelLocation::unspecified when absent) so the
 # attribute survives the round-trip.
 synthetic/cancel.location.3.0.xml
+
+# Grace-cue support (#288): NoteData models grace/cue as two independent bools,
+# so a <grace/><cue/> note maps to core's GraceCueNoteGroup on both read and
+# write. This synthetic fixture pins all four combinations (normal, cue, grace,
+# grace-cue) through the strict round-trip.
+synthetic/grace-cue.4.0.xml

@@ -19,13 +19,6 @@ namespace mx
 {
 namespace api
 {
-enum class NoteType
-{
-    normal,
-    grace,
-    cue
-};
-
 enum class Notehead
 {
     slash,
@@ -127,7 +120,14 @@ class NoteData
     // with no matching stop). Independent of isTieStart / isTieStop. See TieLetRing.
     std::optional<TieLetRing> tieLetRing;
 
-    NoteType noteType; // normal, cue, grace
+    // MusicXML's four <note> flavors -- normal, grace, cue, and grace-cue --
+    // are the four combinations of these two independent flags. Schema facts:
+    // a grace note carries no <duration> on the wire (durationTimeTicks reads
+    // as 0 and is ignored on write), and cue notes -- including grace-cue
+    // notes -- cannot carry <tie> (ties on them are silently dropped on write).
+    bool isGrace;
+    bool isCue;
+
     Notehead notehead;
     PitchData pitchData; // step, alter, octave, accidental, etc
     int userRequestedVoiceNumber;
@@ -170,7 +170,8 @@ MXAPI_EQUALS_MEMBER(isChord)
 MXAPI_EQUALS_MEMBER(isTieStart)
 MXAPI_EQUALS_MEMBER(isTieStop)
 MXAPI_EQUALS_MEMBER(tieLetRing)
-MXAPI_EQUALS_MEMBER(noteType)
+MXAPI_EQUALS_MEMBER(isGrace)
+MXAPI_EQUALS_MEMBER(isCue)
 MXAPI_EQUALS_MEMBER(pitchData)
 MXAPI_EQUALS_MEMBER(userRequestedVoiceNumber)
 MXAPI_EQUALS_MEMBER(stem)

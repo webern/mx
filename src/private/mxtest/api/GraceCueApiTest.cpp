@@ -1,0 +1,272 @@
+// MusicXML Class Library
+// Copyright (c) by Matthew James Briggs
+// Distributed under the MIT License
+
+#include "mxtest/control/CompileControl.h"
+#ifdef MX_COMPILE_API_TESTS
+
+#include "cpul/cpulTestHarness.h"
+#include "mx/api/DocumentManager.h"
+#include "mxtest/api/RoundTrip.h"
+#include "mxtest/api/TestHelpers.h"
+
+using namespace std;
+using namespace mx::api;
+using namespace mxtest;
+
+// The four combinations of NoteData::isGrace / isCue map to MusicXML's four
+// <note> flavors: normal, <cue/>, <grace/>, and <grace/><cue/>. Issue #288.
+TEST(allFourCombinationsSurviveRoundTrip, GraceCue)
+{
+    ScoreData score;
+    score.ticksPerQuarter = 4;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto &staff = measure.staves.back();
+    auto &voice = staff.voices[0];
+
+    // a normal quarter note
+    voice.notes.emplace_back();
+    voice.notes.back().tickTimePosition = 0;
+    voice.notes.back().durationData.durationName = DurationName::quarter;
+    voice.notes.back().durationData.durationTimeTicks = 4;
+
+    // a cue quarter note
+    voice.notes.emplace_back();
+    voice.notes.back().isCue = true;
+    voice.notes.back().tickTimePosition = 4;
+    voice.notes.back().durationData.durationName = DurationName::quarter;
+    voice.notes.back().durationData.durationTimeTicks = 4;
+
+    // a grace note (no wire duration)
+    voice.notes.emplace_back();
+    voice.notes.back().isGrace = true;
+    voice.notes.back().tickTimePosition = 8;
+    voice.notes.back().durationData.durationName = DurationName::eighth;
+    voice.notes.back().durationData.durationTimeTicks = 0;
+
+    // a grace note inside a cue passage (no wire duration)
+    voice.notes.emplace_back();
+    voice.notes.back().isGrace = true;
+    voice.notes.back().isCue = true;
+    voice.notes.back().tickTimePosition = 8;
+    voice.notes.back().durationData.durationName = DurationName::eighth;
+    voice.notes.back().durationData.durationTimeTicks = 0;
+
+    // a final normal quarter note that the grace notes attach to
+    voice.notes.emplace_back();
+    voice.notes.back().tickTimePosition = 8;
+    voice.notes.back().durationData.durationName = DurationName::quarter;
+    voice.notes.back().durationData.durationTimeTicks = 4;
+
+    const auto out = roundTrip(score);
+    const auto &outNotes = out.parts.back().measures.back().staves.back().voices.at(0).notes;
+    REQUIRE(outNotes.size() == 5);
+
+    CHECK(!outNotes.at(0).isGrace);
+    CHECK(!outNotes.at(0).isCue);
+
+    CHECK(!outNotes.at(1).isGrace);
+    CHECK(outNotes.at(1).isCue);
+
+    CHECK(outNotes.at(2).isGrace);
+    CHECK(!outNotes.at(2).isCue);
+
+    CHECK(outNotes.at(3).isGrace);
+    CHECK(outNotes.at(3).isCue);
+
+    CHECK(!outNotes.at(4).isGrace);
+    CHECK(!outNotes.at(4).isCue);
+}
+
+T_END;
+
+TEST(readAllFourCombinations, GraceCue)
+{
+    const std::string xml = R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<score-partwise version="3.0">
+  <part-list>
+    <score-part id="P1">
+      <part-name>x</part-name>
+    </score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes>
+        <divisions>1</divisions>
+      </attributes>
+      <note>
+        <pitch><step>C</step><octave>4</octave></pitch>
+        <duration>1</duration>
+        <type>quarter</type>
+      </note>
+      <note>
+        <cue/>
+        <pitch><step>D</step><octave>4</octave></pitch>
+        <duration>1</duration>
+        <type>quarter</type>
+      </note>
+      <note>
+        <grace/>
+        <pitch><step>E</step><octave>4</octave></pitch>
+        <type>eighth</type>
+      </note>
+      <note>
+        <grace/>
+        <cue/>
+        <pitch><step>F</step><octave>4</octave></pitch>
+        <type>eighth</type>
+      </note>
+      <note>
+        <pitch><step>G</step><octave>4</octave></pitch>
+        <duration>2</duration>
+        <type>half</type>
+      </note>
+    </measure>
+  </part>
+</score-partwise>
+)";
+
+    const auto score = fromXml(xml);
+    const auto &notes = score.parts.back().measures.back().staves.back().voices.at(0).notes;
+    REQUIRE(notes.size() == 5);
+
+    CHECK(!notes.at(0).isGrace);
+    CHECK(!notes.at(0).isCue);
+
+    CHECK(!notes.at(1).isGrace);
+    CHECK(notes.at(1).isCue);
+
+    CHECK(notes.at(2).isGrace);
+    CHECK(!notes.at(2).isCue);
+    CHECK_EQUAL(0, notes.at(2).durationData.durationTimeTicks);
+
+    CHECK(notes.at(3).isGrace);
+    CHECK(notes.at(3).isCue);
+    CHECK_EQUAL(0, notes.at(3).durationData.durationTimeTicks);
+
+    CHECK(!notes.at(4).isGrace);
+    CHECK(!notes.at(4).isCue);
+}
+
+T_END;
+
+TEST(writeGraceCueElements, GraceCue)
+{
+    ScoreData score;
+    score.ticksPerQuarter = 4;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto &staff = measure.staves.back();
+    auto &voice = staff.voices[0];
+
+    voice.notes.emplace_back();
+    voice.notes.back().isGrace = true;
+    voice.notes.back().isCue = true;
+    voice.notes.back().durationData.durationName = DurationName::eighth;
+    voice.notes.back().durationData.durationTimeTicks = 0;
+
+    voice.notes.emplace_back();
+    voice.notes.back().durationData.durationName = DurationName::quarter;
+    voice.notes.back().durationData.durationTimeTicks = 4;
+
+    const auto xml = toXml(score);
+
+    // the grace-cue note emits both empty elements and no <duration>
+    const auto gracePos = xml.find("<grace");
+    const auto cuePos = xml.find("<cue");
+    CHECK(gracePos != std::string::npos);
+    CHECK(cuePos != std::string::npos);
+    CHECK(gracePos < cuePos);
+
+    // exactly one <duration> in the measure: the normal note's
+    const auto firstDuration = xml.find("<duration>");
+    REQUIRE(firstDuration != std::string::npos);
+    CHECK(xml.find("<duration>", firstDuration + 1) == std::string::npos);
+}
+
+T_END;
+
+TEST(cueNoteTiesAreDropped, GraceCue)
+{
+    ScoreData score;
+    score.ticksPerQuarter = 4;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto &staff = measure.staves.back();
+    auto &voice = staff.voices[0];
+
+    // a cue note and a grace-cue note, both (illegally) marked as tie starts;
+    // the schema has no <tie> for them, so the writer silently drops the ties
+    voice.notes.emplace_back();
+    voice.notes.back().isCue = true;
+    voice.notes.back().isTieStart = true;
+    voice.notes.back().durationData.durationName = DurationName::quarter;
+    voice.notes.back().durationData.durationTimeTicks = 4;
+
+    voice.notes.emplace_back();
+    voice.notes.back().isGrace = true;
+    voice.notes.back().isCue = true;
+    voice.notes.back().isTieStart = true;
+    voice.notes.back().tickTimePosition = 4;
+    voice.notes.back().durationData.durationName = DurationName::eighth;
+    voice.notes.back().durationData.durationTimeTicks = 0;
+
+    const auto xml = toXml(score);
+    CHECK(xml.find("<tie ") == std::string::npos);
+    CHECK(xml.find("<tied ") == std::string::npos);
+
+    const auto out = roundTrip(score);
+    const auto &outNotes = out.parts.back().measures.back().staves.back().voices.at(0).notes;
+    REQUIRE(outNotes.size() == 2);
+    CHECK(!outNotes.at(0).isTieStart);
+    CHECK(!outNotes.at(1).isTieStart);
+}
+
+T_END;
+
+// grace-normal notes keep their ties (only cue and grace-cue drop them)
+TEST(graceNormalNoteTiesAreKept, GraceCue)
+{
+    ScoreData score;
+    score.ticksPerQuarter = 4;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto &staff = measure.staves.back();
+    auto &voice = staff.voices[0];
+
+    voice.notes.emplace_back();
+    voice.notes.back().isGrace = true;
+    voice.notes.back().isTieStart = true;
+    voice.notes.back().durationData.durationName = DurationName::eighth;
+    voice.notes.back().durationData.durationTimeTicks = 0;
+
+    voice.notes.emplace_back();
+    voice.notes.back().isTieStop = true;
+    voice.notes.back().durationData.durationName = DurationName::quarter;
+    voice.notes.back().durationData.durationTimeTicks = 4;
+
+    const auto out = roundTrip(score);
+    const auto &outNotes = out.parts.back().measures.back().staves.back().voices.at(0).notes;
+    REQUIRE(outNotes.size() == 2);
+    CHECK(outNotes.at(0).isGrace);
+    CHECK(!outNotes.at(0).isCue);
+    CHECK(outNotes.at(0).isTieStart);
+    CHECK(outNotes.at(1).isTieStop);
+}
+
+T_END;
+
+#endif

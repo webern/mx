@@ -212,6 +212,12 @@ void NoteReader::setNormalGraceCueItems()
         {
             setTie(noteGuts.graceNoteChoice().asGraceNormalNoteGroup().tie());
         }
+        else
+        {
+            // <grace/> + <cue/>: a grace note inside a cue passage. The
+            // grace-cue group carries no <tie> in the schema.
+            myIsCue = true;
+        }
         break;
     }
     case core::NoteChoice::Kind::cueNoteGroup: {
