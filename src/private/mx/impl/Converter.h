@@ -6,6 +6,7 @@
 
 #include "mx/api/BarlineData.h"
 #include "mx/api/ClefData.h"
+#include "mx/api/KeyData.h"
 #include "mx/api/MarkData.h"
 #include "mx/api/NoteData.h"
 #include "mx/api/PositionData.h"
@@ -17,6 +18,7 @@
 #include "mx/core/generated/BarStyle.h"
 #include "mx/core/generated/BeamValue.h"
 #include "mx/core/generated/CSSFontSize.h"
+#include "mx/core/generated/CancelLocation.h"
 #include "mx/core/generated/ClefSign.h"
 #include "mx/core/generated/DynamicsChoice.h"
 #include "mx/core/generated/FermataShape.h"
@@ -155,6 +157,9 @@ class Converter
     core::KindValue convert(api::ChordKind value) const;
     api::ChordKind convert(core::KindValue value) const;
 
+    core::CancelLocation convert(api::CancelLocation value) const;
+    api::CancelLocation convert(core::CancelLocation value) const;
+
     static double convertToAlter(int semitones, double cents);
     static std::pair<int, double> convertToSemitonesAndCents(double alter);
 
@@ -192,6 +197,7 @@ class Converter
     const static EnumMap<core::FermataShape, api::MarkType> fermataMap;
     const static EnumMap<core::SoundID, api::SoundID> instrumentMap;
     const static EnumMap<core::KindValue, api::ChordKind> kindMap;
+    const static EnumMap<core::CancelLocation, api::CancelLocation> cancelLocationMap;
 
   private:
     template <typename CORE_TYPE, typename API_TYPE>

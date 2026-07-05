@@ -17,6 +17,19 @@ enum class KeyMode
     minor
 };
 
+// CancelLocation represents the cancel element's optional location attribute. From MusicXML
+// Specification: The cancel-location type is used to indicate where a key signature
+// cancellation appears relative to a new key signature: to the left, to the right, or before
+// the barline and to the left. It is left by default. For mid-measure key elements, a
+// cancel-location of before-barline should be treated like a cancel-location of left.
+enum class CancelLocation
+{
+    unspecified, // a location value was not provided
+    left,
+    right,
+    beforeBarline
+};
+
 // KeyData represents a key signature. It can be in one of two configurations. Either you specify
 // 'fifths' and 'mode', or you can create a custom key signature by adding items to the customKey
 // vector. If anything is found in the customKey vector, then fifths and mode will be ignored.
@@ -60,6 +73,10 @@ struct KeyData
     // appears relative to the new key signature.
     int cancel;
 
+    // The cancel element's optional location attribute. It is ignored unless cancel is non-zero
+    // (i.e. unless a cancel element is present).
+    CancelLocation cancelLocation;
+
     // Mode specifies whether the key is major or minor. It is optional.
     KeyMode mode;
 
@@ -77,7 +94,9 @@ struct KeyData
     // alterations. When custom is non-empty, then fifths and mode are ignored.
     std::vector<KeyComponent> nonTraditional;
 
-    KeyData() : fifths{0}, cancel{0}, mode{KeyMode::unspecified}, tickTimePosition{0}, staffIndex{-1}, nonTraditional{}
+    KeyData()
+        : fifths{0}, cancel{0}, cancelLocation{CancelLocation::unspecified}, mode{KeyMode::unspecified},
+          tickTimePosition{0}, staffIndex{-1}, nonTraditional{}
     {
     }
 };
@@ -85,6 +104,7 @@ struct KeyData
 MXAPI_EQUALS_BEGIN(KeyData)
 MXAPI_EQUALS_MEMBER(fifths)
 MXAPI_EQUALS_MEMBER(cancel)
+MXAPI_EQUALS_MEMBER(cancelLocation)
 MXAPI_EQUALS_MEMBER(mode)
 MXAPI_EQUALS_MEMBER(tickTimePosition)
 MXAPI_EQUALS_MEMBER(staffIndex)

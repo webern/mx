@@ -191,3 +191,9 @@ lysuite/ly46c_Midmeasure_Clef.xml
 # repeat's times attribute survives the round-trip.
 lysuite/ly45a_SimpleRepeat.xml
 lysuite/ly45c_RepeatMultipleTimes.xml
+
+# Unblocked by #272 (key cancel location round-trip). The reader dropped the
+# cancel element's location attribute and the writer never emitted it. Added
+# KeyData::cancelLocation (CancelLocation::unspecified when absent) so the
+# attribute survives the round-trip.
+synthetic/cancel.location.3.0.xml

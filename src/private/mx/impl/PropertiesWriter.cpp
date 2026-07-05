@@ -123,6 +123,11 @@ void PropertiesWriter::writeTraditionalKey(const api::KeyData &inKeyData, core::
     {
         core::Cancel cancel{};
         cancel.setValue(core::Fifths{inKeyData.cancel});
+        if (inKeyData.cancelLocation != api::CancelLocation::unspecified)
+        {
+            Converter converter;
+            cancel.setLocation(converter.convert(inKeyData.cancelLocation));
+        }
         tkg.setCancel(cancel);
     }
 
