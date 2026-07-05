@@ -52,20 +52,8 @@ api::NoteData NoteFunctions::parseNote() const
     myOutNoteData.isDisplayStepOctaveSpecified = reader.getIsDisplayStepOctaveSpecified();
     myOutNoteData.isChord = reader.getIsChord();
 
-    if (reader.getIsCue())
-    {
-        myOutNoteData.noteType = api::NoteType::cue;
-    }
-
-    if (reader.getIsGrace())
-    {
-        myOutNoteData.noteType = api::NoteType::grace;
-    }
-
-    if (reader.getIsNormal())
-    {
-        myOutNoteData.noteType = api::NoteType::normal;
-    }
+    myOutNoteData.isGrace = reader.getIsGrace();
+    myOutNoteData.isCue = reader.getIsCue();
 
     auto converter = Converter{};
     myOutNoteData.pitchData.step = converter.convert(reader.getStep());

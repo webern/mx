@@ -13,7 +13,7 @@ types) instead of re-exporting core. A core type must never appear in a public a
 all in `src/include/mx/api/`:
 
 - `Step`, `Accidental` in `PitchData.h`
-- `NoteType`, `Notehead`, `Beam`, `Stem` in `NoteData.h`
+- `Notehead`, `Beam`, `Stem` in `NoteData.h`
 - `DurationName` in `DurationData.h`
 - `BarlineType`, `EndingType` in `BarlineData.h`
 - `LineType`, `LineHook` in `LineData.h`

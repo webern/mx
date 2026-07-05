@@ -191,3 +191,9 @@ lysuite/ly46c_Midmeasure_Clef.xml
 # repeat's times attribute survives the round-trip.
 lysuite/ly45a_SimpleRepeat.xml
 lysuite/ly45c_RepeatMultipleTimes.xml
+
+# Grace-cue support (#288): NoteData models grace/cue as two independent bools,
+# so a <grace/><cue/> note maps to core's GraceCueNoteGroup on both read and
+# write. This synthetic fixture pins all four combinations (normal, cue, grace,
+# grace-cue) through the strict round-trip.
+synthetic/grace-cue.4.0.xml
