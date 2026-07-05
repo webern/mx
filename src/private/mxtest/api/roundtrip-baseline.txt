@@ -191,3 +191,10 @@ lysuite/ly46c_Midmeasure_Clef.xml
 # repeat's times attribute survives the round-trip.
 lysuite/ly45a_SimpleRepeat.xml
 lysuite/ly45c_RepeatMultipleTimes.xml
+
+# Unblocked by #273 (credit-words justify round-trip). PageTextData had no
+# field for the justify attribute, so the reader dropped it and the writer
+# never emitted it. Added PageTextData::justify (HorizontalAlignment,
+# unspecified = absent) wired through PageTextFunctions; this file's only
+# remaining divergence was the dropped attribute.
+lysuite/ly52a_PageLayout.xml

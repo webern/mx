@@ -34,6 +34,12 @@ class PageTextData
     // `creditTypes` is non-empty, this represents a metadata-only credit
     // (a `<credit>` with no `<credit-words>`).
     std::vector<std::string> creditTypes;
+
+    // The `justify` attribute of `<credit-words>`. `unspecified` means the
+    // attribute is absent. Distinct from the `halign` attribute, which is
+    // carried in `positionData.horizontalAlignmnet`; MusicXML defines both
+    // attributes on `<credit-words>`.
+    HorizontalAlignment justify = HorizontalAlignment::unspecified;
 };
 
 MXAPI_EQUALS_BEGIN(PageTextData)
@@ -47,6 +53,7 @@ if (!areVectorsEqual(lhs.creditTypes, rhs.creditTypes))
     MX_SHOW_UNEQUAL("PageTextData", "creditTypes");
     return false;
 }
+MXAPI_EQUALS_MEMBER(justify)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(PageTextData);
 } // namespace api

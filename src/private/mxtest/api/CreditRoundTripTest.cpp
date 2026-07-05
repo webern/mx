@@ -8,6 +8,7 @@
 #include "cpul/cpulTestHarness.h"
 #include "mx/api/DocumentManager.h"
 #include "mxtest/api/RoundTrip.h"
+#include "mxtest/api/TestHelpers.h"
 
 using namespace std;
 using namespace mx::api;
@@ -109,6 +110,43 @@ TEST(creditRoundTrip, creditImage)
     CHECK_EQUAL(50.0, got.positionData.defaultX);
     CHECK(got.positionData.isDefaultYSpecified);
     CHECK_EQUAL(60.0, got.positionData.defaultY);
+}
+
+TEST(creditRoundTrip, justifySurvives)
+{
+    auto in = makeMinimalScore();
+    PageTextData credit{};
+    credit.text = "Layout options";
+    credit.pageNumber = 1;
+    credit.justify = HorizontalAlignment::center;
+    in.pageTextItems.push_back(credit);
+
+    const auto xml = mxtest::toXml(in);
+    CHECK(xml.find("justify=\"center\"") != std::string::npos);
+
+    const auto out = mxtest::roundTrip(in);
+
+    REQUIRE(out.pageTextItems.size() == 1);
+    const auto &got = out.pageTextItems.at(0);
+    CHECK_EQUAL("Layout options", got.text);
+    CHECK(HorizontalAlignment::center == got.justify);
+}
+
+TEST(creditRoundTrip, justifyAbsentStaysAbsent)
+{
+    auto in = makeMinimalScore();
+    PageTextData credit{};
+    credit.text = "no justify here";
+    credit.pageNumber = 1;
+    in.pageTextItems.push_back(credit);
+
+    const auto xml = mxtest::toXml(in);
+    CHECK(xml.find("justify=") == std::string::npos);
+
+    const auto out = mxtest::roundTrip(in);
+
+    REQUIRE(out.pageTextItems.size() == 1);
+    CHECK(HorizontalAlignment::unspecified == out.pageTextItems.at(0).justify);
 }
 
 #endif
