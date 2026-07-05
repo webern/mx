@@ -484,6 +484,10 @@ std::optional<api::TransposeData> MeasureReader::parseAttributes(const core::Att
         if (traditionalKey.cancel().has_value())
         {
             keyData.cancel = traditionalKey.cancel()->value().value();
+            if (traditionalKey.cancel()->location().has_value())
+            {
+                keyData.cancelLocation = myConverter.convert(*traditionalKey.cancel()->location());
+            }
         }
 
         if (traditionalKey.mode().has_value())
