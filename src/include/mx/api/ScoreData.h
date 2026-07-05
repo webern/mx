@@ -32,6 +32,16 @@ enum class MusicXmlVersion
     ThreePointZero,
 };
 
+// ScoreData is the root of the api's data model. Notes live several levels
+// down a containment hierarchy: ScoreData::parts (PartData) ->
+// PartData::measures (MeasureData) -> MeasureData::staves (StaffData) ->
+// StaffData::voices (VoiceData, keyed by voice number) -> VoiceData::notes
+// (NoteData). NoteData::tickTimePosition locates a note within its measure
+// only (see the comment on that field in NoteData.h); getting a note's
+// absolute position in the part requires summing prior measures' lengths
+// yourself. For a worked example of walking this hierarchy and computing
+// absolute tick positions, see
+// src/private/mx/examples/IterateNotesAndTiming.cpp in the mx repo.
 class ScoreData
 {
   public:

@@ -202,9 +202,11 @@ if(MX_API)
     add_executable(mxread ${PRIVATE_DIR}/mx/examples/Read.cpp)
     add_executable(mxwrite ${PRIVATE_DIR}/mx/examples/Write.cpp)
     add_executable(mxhide ${PRIVATE_DIR}/mx/examples/Hide.cpp)
+    add_executable(mxiteratenotesandtiming ${PRIVATE_DIR}/mx/examples/IterateNotesAndTiming.cpp)
     target_link_libraries(mxread mx ${CMAKE_THREAD_LIBS_INIT})
     target_link_libraries(mxwrite mx ${CMAKE_THREAD_LIBS_INIT})
     target_link_libraries(mxhide mx ${CMAKE_THREAD_LIBS_INIT})
+    target_link_libraries(mxiteratenotesandtiming mx ${CMAKE_THREAD_LIBS_INIT})
 
     # Corpus api roundtrip harness.
     # Regression mode (CI): mxtest-api-roundtrip regression <dataRoot> <baselineFile>
