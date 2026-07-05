@@ -5,6 +5,7 @@
 #include "mx/impl/LayoutFunctions.h"
 #include "mx/api/ScoreData.h"
 #include "mx/core/Decimal.h"
+#include "mx/core/Lexical.h"
 #include "mx/core/NameToken.h"
 #include "mx/core/generated/AllMarginsGroup.h"
 #include "mx/core/generated/Appearance.h"
@@ -280,7 +281,7 @@ void addAppearance(const api::DefaultsData &inDefaults, core::ScoreHeaderGroup &
         {
             core::OtherAppearance oa;
             oa.setType(appearanceData.appearanceSubType);
-            oa.setValue(std::to_string(appearanceData.value));
+            oa.setValue(core::formatDouble(appearanceData.value));
             appearance.addOtherAppearance(oa);
         }
     }
@@ -350,8 +351,8 @@ void addScaling(const core::ScoreHeaderGroup &inScoreHeaderGroup, api::DefaultsD
     }
     else
     {
-        outDefaults.scalingMillimeters = -1.0;
-        outDefaults.scalingTenths = -1.0;
+        outDefaults.scalingMillimeters = api::DOUBLE_UNSPECIFIED;
+        outDefaults.scalingTenths = api::DOUBLE_UNSPECIFIED;
     }
 }
 

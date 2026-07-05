@@ -31,8 +31,8 @@ struct WedgeStart
     ColorData colorData;
 
     WedgeStart()
-        : numberLevel{-1}, wedgeType{WedgeType::unspecified}, isSpreadSpecified{false}, spread{0.0}, lineData{},
-          positionData{}, colorData{}
+        : numberLevel{NUMBER_LEVEL_UNSPECIFIED}, wedgeType{WedgeType::unspecified}, isSpreadSpecified{false},
+          spread{0.0}, lineData{}, positionData{}, colorData{}
     {
     }
 };
@@ -44,7 +44,7 @@ struct WedgeStop
     bool isSpreadSpecified;
     double spread;
 
-    WedgeStop() : numberLevel{-1}, positionData{}, isSpreadSpecified{false}, spread{0.0}
+    WedgeStop() : numberLevel{NUMBER_LEVEL_UNSPECIFIED}, positionData{}, isSpreadSpecified{false}, spread{0.0}
     {
     }
 };

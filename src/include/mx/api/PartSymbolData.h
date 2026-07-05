@@ -18,11 +18,11 @@ class PartSymbolData
     BracketType value;
 
     // 1-based staff numbers indicating which staves the symbol spans.
-    // -1 means unspecified (the symbol covers all staves in the part).
+    // INDEX_UNSPECIFIED means unspecified (the symbol covers all staves in the part).
     int topStaff;
     int bottomStaff;
 
-    PartSymbolData() : value{BracketType::unspecified}, topStaff{-1}, bottomStaff{-1}
+    PartSymbolData() : value{BracketType::unspecified}, topStaff{INDEX_UNSPECIFIED}, bottomStaff{INDEX_UNSPECIFIED}
     {
     }
 };

@@ -10,6 +10,7 @@
 #include "cpul/cpulTestHarness.h"
 #include "mx/api/DocumentManager.h"
 #include "mx/core/generated/Attributes.h"
+#include "mx/core/generated/Cancel.h"
 #include "mx/core/generated/Document.h"
 #include "mx/core/generated/Key.h"
 #include "mx/core/generated/KeyChoice.h"
@@ -19,6 +20,7 @@
 #include "mx/core/generated/PartwisePart.h"
 #include "mx/core/generated/ScorePartwise.h"
 #include "mx/core/generated/TraditionalKeyGroup.h"
+#include "mxtest/api/TestHelpers.h"
 
 using namespace std;
 using namespace mx::api;
@@ -423,6 +425,159 @@ TEST(IsInitialized, KeyComponent)
     CHECK(k.alter == 0);
     CHECK(k.cents == 0.0);
     CHECK(k.accidental == Accidental{});
+}
+
+TEST(CancelLocationBeforeBarline, KeyData)
+{
+    // https://github.com/webern/mx/issues/272
+    KeyData key;
+    key.fifths = 0;
+    key.cancel = 2;
+    key.cancelLocation = CancelLocation::beforeBarline;
+
+    const auto original = putKeyInScore(key);
+    auto &docMgr = DocumentManager::getInstance();
+    const auto originalIdResult = docMgr.createFromScore(original);
+    REQUIRE(originalIdResult.ok());
+    const int originalId = originalIdResult.value();
+    const mx::core::DocumentPtr corePtr = docMgr.getDocument(originalId);
+
+    const auto &coreKey = getFirstCoreKey(corePtr);
+    const auto &coreKeyChoice = coreKey.choice();
+    CHECK(coreKeyChoice.isTraditionalKey());
+    const auto &coreTraditionalKey = coreKeyChoice.asTraditionalKey();
+
+    // check that the cancel and its location were written
+    REQUIRE(coreTraditionalKey.cancel().has_value());
+    CHECK_EQUAL(2, coreTraditionalKey.cancel()->value().value());
+    CHECK(coreTraditionalKey.cancel()->location().has_value())
+    if (coreTraditionalKey.cancel()->location().has_value())
+    {
+        CHECK(core::CancelLocation::Tag::beforeBarline == coreTraditionalKey.cancel()->location()->tag());
+    }
+
+    // serialize and deserialize
+    std::stringstream xml;
+    docMgr.writeToStream(originalId, xml);
+    docMgr.destroyDocument(originalId);
+    CHECK(xml.str().find("location=\"before-barline\"") != std::string::npos);
+    std::istringstream iss{xml.str()};
+    const auto deserializedIdResult = docMgr.createFromStream(iss);
+    REQUIRE(deserializedIdResult.ok());
+    const int deserializedId = deserializedIdResult.value();
+    const auto deserializedScoreResult = docMgr.getData(deserializedId);
+    docMgr.destroyDocument(deserializedId);
+    REQUIRE(deserializedScoreResult.ok());
+    const auto &deserializedScore = deserializedScoreResult.value();
+    const auto &deserializedKeys = deserializedScore.parts.at(0).measures.at(0).keys;
+    CHECK_EQUAL(1, deserializedKeys.size())
+    const auto deserializedKey = deserializedKeys.at(0);
+
+    CHECK_EQUAL(key.cancel, deserializedKey.cancel);
+    CHECK_EQUAL(CancelLocation::beforeBarline, deserializedKey.cancelLocation);
+}
+
+TEST(CancelLocationUnspecified, KeyData)
+{
+    // when cancelLocation is unspecified, no location attribute is written
+    KeyData key;
+    key.fifths = 0;
+    key.cancel = -3;
+
+    const auto original = putKeyInScore(key);
+    auto &docMgr = DocumentManager::getInstance();
+    const auto originalIdResult = docMgr.createFromScore(original);
+    REQUIRE(originalIdResult.ok());
+    const int originalId = originalIdResult.value();
+    const mx::core::DocumentPtr corePtr = docMgr.getDocument(originalId);
+
+    const auto &coreKey = getFirstCoreKey(corePtr);
+    const auto &coreKeyChoice = coreKey.choice();
+    CHECK(coreKeyChoice.isTraditionalKey());
+    const auto &coreTraditionalKey = coreKeyChoice.asTraditionalKey();
+
+    REQUIRE(coreTraditionalKey.cancel().has_value());
+    CHECK(!coreTraditionalKey.cancel()->location().has_value())
+
+    // serialize and deserialize
+    std::stringstream xml;
+    docMgr.writeToStream(originalId, xml);
+    docMgr.destroyDocument(originalId);
+    CHECK(xml.str().find("location=") == std::string::npos);
+    std::istringstream iss{xml.str()};
+    const auto deserializedIdResult = docMgr.createFromStream(iss);
+    REQUIRE(deserializedIdResult.ok());
+    const int deserializedId = deserializedIdResult.value();
+    const auto deserializedScoreResult = docMgr.getData(deserializedId);
+    docMgr.destroyDocument(deserializedId);
+    REQUIRE(deserializedScoreResult.ok());
+    const auto &deserializedScore = deserializedScoreResult.value();
+    const auto &deserializedKeys = deserializedScore.parts.at(0).measures.at(0).keys;
+    CHECK_EQUAL(1, deserializedKeys.size())
+    const auto deserializedKey = deserializedKeys.at(0);
+
+    CHECK_EQUAL(key.cancel, deserializedKey.cancel);
+    CHECK_EQUAL(CancelLocation::unspecified, deserializedKey.cancelLocation);
+}
+
+TEST(CancelLocationFromXml, KeyData)
+{
+    // mirrors data/synthetic/cancel.location.3.0.xml, but with location="right"
+    const std::string xml = R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<score-partwise version="3.0">
+  <part-list>
+    <score-part id="P1">
+      <part-name>P</part-name>
+    </score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes>
+        <divisions>1</divisions>
+        <key>
+          <cancel location="right">2</cancel>
+          <fifths>0</fifths>
+          <mode>major</mode>
+        </key>
+      </attributes>
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>1</duration>
+        <type>quarter</type>
+      </note>
+    </measure>
+  </part>
+</score-partwise>
+)";
+    const auto score = mxtest::fromXml(xml);
+    REQUIRE(!score.parts.empty());
+    REQUIRE(!score.parts.at(0).measures.empty());
+    const auto &keys = score.parts.at(0).measures.at(0).keys;
+    REQUIRE(!keys.empty());
+    CHECK_EQUAL(2, keys.at(0).cancel);
+    CHECK_EQUAL(CancelLocation::right, keys.at(0).cancelLocation);
+}
+
+TEST(KeyDataEquality_change_cancelLocation, KeyData)
+{
+    KeyData key1;
+    key1.fifths = 4;
+    key1.cancel = -1;
+    key1.cancelLocation = CancelLocation::left;
+    key1.mode = KeyMode::major;
+    key1.staffIndex = 0;
+    key1.tickTimePosition = 13;
+    auto key2 = key1;
+    CHECK(key1 == key2);
+    CHECK(!(key1 != key2));
+
+    // change one thing
+    key1.cancelLocation = CancelLocation::right;
+    CHECK(key1 != key2);
+    CHECK(!(key1 == key2));
 }
 
 #endif

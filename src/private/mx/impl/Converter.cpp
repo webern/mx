@@ -1332,6 +1332,12 @@ const Converter::EnumMap<core::KindValue, api::ChordKind> Converter::kindMap = {
     {core::KindValue::none(), api::ChordKind::none},
 };
 
+const Converter::EnumMap<core::CancelLocation, api::CancelLocation> Converter::cancelLocationMap = {
+    {core::CancelLocation::left(), api::CancelLocation::left},
+    {core::CancelLocation::right(), api::CancelLocation::right},
+    {core::CancelLocation::beforeBarline(), api::CancelLocation::beforeBarline},
+};
+
 api::Step Converter::convert(core::Step inStep) const
 {
     return findApiItem(stepMap, api::Step::c, inStep);
@@ -1652,6 +1658,16 @@ core::KindValue Converter::convert(api::ChordKind value) const
 api::ChordKind Converter::convert(core::KindValue value) const
 {
     return findApiItem(kindMap, api::ChordKind::unspecified, value);
+}
+
+core::CancelLocation Converter::convert(api::CancelLocation value) const
+{
+    return findCoreItem(cancelLocationMap, core::CancelLocation::left(), value);
+}
+
+api::CancelLocation Converter::convert(core::CancelLocation value) const
+{
+    return findApiItem(cancelLocationMap, api::CancelLocation::unspecified, value);
 }
 
 double Converter::convertToAlter(int semitones, double cents)

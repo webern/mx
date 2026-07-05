@@ -10,6 +10,7 @@
 #include "cpul/cpulTestHarness.h"
 
 #include "mx/core/Decimal.h"
+#include "mx/core/Lexical.h"
 #include "mx/core/NameToken.h"
 #include "mx/core/Token.h"
 #include "mx/core/generated/AboveBelow.h"
@@ -89,6 +90,37 @@ TEST(DecimalClampAndTextFace, Values)
     // An in-range parse keeps its exact spelling.
     CHECK_EQUAL(std::string{"1.50"}, PositiveDivisions::parse("1.50").toString());
     CHECK_EQUAL(std::string{"-180"}, RotationDegrees::parse("-700").toString());
+}
+
+TEST(FormatDoubleBoundedShortestRoundTrip, Values)
+{
+    // Issue #248: the numeric face is the shortest fixed-notation round-trip
+    // capped at 8 fractional digits, so client arithmetic noise a few ULPs
+    // from a clean value is not amplified to 16-17 significant digits.
+    CHECK_EQUAL(std::string{"6.096"}, formatDouble(6.095999999999998));
+    CHECK_EQUAL(std::string{"6.096"}, Decimal{6.095999999999998}.toString());
+    // Clean literals are unchanged.
+    CHECK_EQUAL(std::string{"7.2319"}, formatDouble(7.2319));
+    CHECK_EQUAL(std::string{"0.5"}, formatDouble(0.5));
+    CHECK_EQUAL(std::string{"40"}, formatDouble(40.0));
+    CHECK_EQUAL(std::string{"6.096"}, formatDouble(6.096));
+    // A value needing more than 8 places is rounded at 8.
+    CHECK_EQUAL(std::string{"0.33333333"}, formatDouble(1.0 / 3.0));
+    // Capped spellings trim trailing zeros (and any orphaned point).
+    CHECK_EQUAL(std::string{"0.12"}, formatDouble(0.1200000000001));
+    // Magnitudes that round to zero at 8 places emit "0".
+    CHECK_EQUAL(std::string{"0"}, formatDouble(0.0000000001));
+    CHECK_EQUAL(std::string{"0"}, formatDouble(0.0000000024));
+    // Negative zero normalizes, whether authored or produced by rounding.
+    CHECK_EQUAL(std::string{"0"}, formatDouble(-0.0));
+    CHECK_EQUAL(std::string{"0"}, formatDouble(-0.0000000001));
+}
+
+TEST(DecimalParsedTextFaceVerbatim, Values)
+{
+    // The 8-digit cap applies to the numeric face only: a Decimal parsed
+    // from text re-emits its exact input spelling.
+    CHECK_EQUAL(std::string{"6.0959999999999983"}, Decimal::parse("6.0959999999999983").toString());
 }
 
 TEST(ColorStructural, Values)

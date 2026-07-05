@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "mx/api/ApiCommon.h"
 #include "mx/api/LineData.h"
 #include "mx/api/PositionData.h"
 #include "mx/api/PrintData.h"
@@ -23,7 +24,7 @@ struct SpannerStart
     PrintData printData;
     LineData lineData;
 
-    SpannerStart() : numberLevel{-1}, tickTimePosition{0}, positionData{}, printData{}, lineData{}
+    SpannerStart() : numberLevel{NUMBER_LEVEL_UNSPECIFIED}, tickTimePosition{0}, positionData{}, printData{}, lineData{}
     {
     }
 };
@@ -35,7 +36,7 @@ struct SpannerStop
     PositionData positionData;
     LineData lineData;
 
-    SpannerStop() : numberLevel{-1}, tickTimePosition{0}, positionData{}, lineData{}
+    SpannerStop() : numberLevel{NUMBER_LEVEL_UNSPECIFIED}, tickTimePosition{0}, positionData{}, lineData{}
     {
     }
 };

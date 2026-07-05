@@ -402,7 +402,7 @@ api::PartGroupData ScoreReader::popMostRecentGroupFromStack() const
 
 int ScoreReader::parsePartGroupNumber(const core::PartGroup &inPartGroup) const
 {
-    int num = -1;
+    int num = api::NUMBER_LEVEL_UNSPECIFIED;
 
     if (inPartGroup.number().has_value())
     {

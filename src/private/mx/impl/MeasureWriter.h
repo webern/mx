@@ -229,7 +229,7 @@ class MeasureWriter
     // clef writes agree and single-staff parts do not emit a spurious number="1".
     inline int clefStaffIndex(int staffIndex) const
     {
-        return cursor().getNumStaves() > 1 ? staffIndex : -1;
+        return cursor().getNumStaves() > 1 ? staffIndex : api::INDEX_UNSPECIFIED;
     }
 
     template <typename T> std::vector<T> findItemsAtTimePosition(const std::vector<T> &inItems, int inTickTimePosition)

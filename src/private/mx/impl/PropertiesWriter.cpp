@@ -123,6 +123,11 @@ void PropertiesWriter::writeTraditionalKey(const api::KeyData &inKeyData, core::
     {
         core::Cancel cancel{};
         cancel.setValue(core::Fifths{inKeyData.cancel});
+        if (inKeyData.cancelLocation != api::CancelLocation::unspecified)
+        {
+            Converter converter;
+            cancel.setLocation(converter.convert(inKeyData.cancelLocation));
+        }
         tkg.setCancel(cancel);
     }
 
@@ -183,12 +188,12 @@ void PropertiesWriter::writeNumStaves(int value)
 
 void PropertiesWriter::writeStaffDetails(int staffIndex, int staffLines)
 {
-    writeStaffDetails(staffIndex, staffLines, -1.0, -1.0);
+    writeStaffDetails(staffIndex, staffLines, api::DOUBLE_UNSPECIFIED, api::DOUBLE_UNSPECIFIED);
 }
 
 void PropertiesWriter::writeStaffDetails(int staffIndex, int staffLines, double staffSize)
 {
-    writeStaffDetails(staffIndex, staffLines, staffSize, -1.0);
+    writeStaffDetails(staffIndex, staffLines, staffSize, api::DOUBLE_UNSPECIFIED);
 }
 
 void PropertiesWriter::writeStaffDetails(int staffIndex, int staffLines, double staffSize, double staffScaling)

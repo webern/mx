@@ -14,12 +14,12 @@ namespace mx
 namespace impl
 {
 MX_OPTIONAL_HAS_FUNC(number, Number);
-MX_OPTIONAL_GET_INT_FUNC(number, Number, -1);
+MX_OPTIONAL_GET_INT_FUNC(number, Number, api::NUMBER_LEVEL_UNSPECIFIED);
 
 template <typename ATTRIBUTES_TYPE> api::SpannerStart getSpannerStart(const ATTRIBUTES_TYPE &inAttributes)
 {
     api::SpannerStart start;
-    start.numberLevel = -1;
+    start.numberLevel = api::NUMBER_LEVEL_UNSPECIFIED;
     if (checkHasNumber(&inAttributes))
     {
         start.numberLevel = checkNumber(&inAttributes);
@@ -33,7 +33,7 @@ template <typename ATTRIBUTES_TYPE> api::SpannerStart getSpannerStart(const ATTR
 template <typename ATTRIBUTES_TYPE> api::SpannerStop getSpannerStop(const ATTRIBUTES_TYPE &inAttributes)
 {
     api::SpannerStop stop;
-    stop.numberLevel = -1;
+    stop.numberLevel = api::NUMBER_LEVEL_UNSPECIFIED;
     if (checkHasNumber(&inAttributes))
     {
         stop.numberLevel = checkNumber(&inAttributes);

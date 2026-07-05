@@ -3,6 +3,7 @@
 // Distributed under the MIT License
 
 #pragma once
+#include "mx/api/ApiCommon.h"
 #include "mx/api/KeyComponent.h"
 
 namespace mx
@@ -15,6 +16,19 @@ enum class KeyMode
     unsupported, // a mode value was provided but is not supported
     major,
     minor
+};
+
+// CancelLocation represents the cancel element's optional location attribute. From MusicXML
+// Specification: The cancel-location type is used to indicate where a key signature
+// cancellation appears relative to a new key signature: to the left, to the right, or before
+// the barline and to the left. It is left by default. For mid-measure key elements, a
+// cancel-location of before-barline should be treated like a cancel-location of left.
+enum class CancelLocation
+{
+    unspecified, // a location value was not provided
+    left,
+    right,
+    beforeBarline
 };
 
 // KeyData represents a key signature. It can be in one of two configurations. Either you specify
@@ -60,13 +74,17 @@ struct KeyData
     // appears relative to the new key signature.
     int cancel;
 
+    // The cancel element's optional location attribute. It is ignored unless cancel is non-zero
+    // (i.e. unless a cancel element is present).
+    CancelLocation cancelLocation;
+
     // Mode specifies whether the key is major or minor. It is optional.
     KeyMode mode;
 
     // Supports changing the key somewhere other than at the start of a measure.
     int tickTimePosition;
 
-    // this value is optional. -1 means unspecified. when value is
+    // this value is optional. INDEX_UNSPECIFIED means unspecified. when value is
     // unspecified it means that the key signature applies to all staves
     // within the part
     int staffIndex;
@@ -77,7 +95,9 @@ struct KeyData
     // alterations. When custom is non-empty, then fifths and mode are ignored.
     std::vector<KeyComponent> nonTraditional;
 
-    KeyData() : fifths{0}, cancel{0}, mode{KeyMode::unspecified}, tickTimePosition{0}, staffIndex{-1}, nonTraditional{}
+    KeyData()
+        : fifths{0}, cancel{0}, cancelLocation{CancelLocation::unspecified}, mode{KeyMode::unspecified},
+          tickTimePosition{0}, staffIndex{INDEX_UNSPECIFIED}, nonTraditional{}
     {
     }
 };
@@ -85,6 +105,7 @@ struct KeyData
 MXAPI_EQUALS_BEGIN(KeyData)
 MXAPI_EQUALS_MEMBER(fifths)
 MXAPI_EQUALS_MEMBER(cancel)
+MXAPI_EQUALS_MEMBER(cancelLocation)
 MXAPI_EQUALS_MEMBER(mode)
 MXAPI_EQUALS_MEMBER(tickTimePosition)
 MXAPI_EQUALS_MEMBER(staffIndex)

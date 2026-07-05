@@ -198,3 +198,9 @@ lysuite/ly45c_RepeatMultipleTimes.xml
 # unspecified = absent) wired through PageTextFunctions; this file's only
 # remaining divergence was the dropped attribute.
 lysuite/ly52a_PageLayout.xml
+
+# Unblocked by #272 (key cancel location round-trip). The reader dropped the
+# cancel element's location attribute and the writer never emitted it. Added
+# KeyData::cancelLocation (CancelLocation::unspecified when absent) so the
+# attribute survives the round-trip.
+synthetic/cancel.location.3.0.xml

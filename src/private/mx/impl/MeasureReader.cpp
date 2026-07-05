@@ -476,7 +476,7 @@ std::optional<api::TransposeData> MeasureReader::parseAttributes(const core::Att
             keyData.staffIndex = key.number()->value() - 1;
             if (keyData.staffIndex > myCurrentCursor.getNumStaves() - 1)
             {
-                keyData.staffIndex = -1;
+                keyData.staffIndex = api::INDEX_UNSPECIFIED;
             }
         }
 
@@ -484,6 +484,10 @@ std::optional<api::TransposeData> MeasureReader::parseAttributes(const core::Att
         if (traditionalKey.cancel().has_value())
         {
             keyData.cancel = traditionalKey.cancel()->value().value();
+            if (traditionalKey.cancel()->location().has_value())
+            {
+                keyData.cancelLocation = myConverter.convert(*traditionalKey.cancel()->location());
+            }
         }
 
         if (traditionalKey.mode().has_value())
@@ -987,7 +991,7 @@ int MeasureReader::getUserRequestedVoiceNumber(const api::VoiceData &voiceData) 
 {
     if (voiceData.notes.empty())
     {
-        return -1;
+        return api::VALUE_UNSPECIFIED;
     }
 
     return voiceData.notes.front().userRequestedVoiceNumber;
