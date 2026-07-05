@@ -2,8 +2,8 @@
 // Copyright (c) by Matthew James Briggs
 // Distributed under the MIT License
 
-// This example answers a recurring question: "I have a ScoreData, how do I get
-// at the notes and their timing?" It shows:
+// This example answers the question: "I have a ScoreData, how do I get at the
+// notes and their timing?" It shows:
 //
 //   1. The containment hierarchy you walk to reach notes: ScoreData -> PartData
 //      -> MeasureData -> StaffData -> VoiceData -> NoteData. See the comment
