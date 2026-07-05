@@ -110,7 +110,8 @@ int getFiguredBassStaffIndex(const MeasureCursor &cursor, const api::MeasureData
 MeasureReader::MeasureReader(const core::PartwiseMeasure &inPartwiseMeasureRef, const MeasureCursor &cursor,
                              const MeasureCursor &previousMeasureCursor)
     : myMutex{}, myPartwiseMeasure{inPartwiseMeasureRef}, myConverter{}, myOutMeasureData{}, myCurrentCursor{cursor},
-      myPreviousMeasureCursor{previousMeasureCursor}, myHistory{}
+      myPreviousMeasureCursor{previousMeasureCursor}, myHistory{}, myCrossStaffHomes{},
+      myPreviousNoteBucketStaffIndex{-1}
 {
     HistoryRecord initialCursorRecord;
     initialCursorRecord.amount = 0;
@@ -160,6 +161,10 @@ std::pair<api::MeasureData, std::optional<api::TransposeData>> MeasureReader::ge
     addStavesToOutMeasure();
     parseTimeSignature();
 
+    myCrossStaffHomes.clear();
+    myPreviousNoteBucketStaffIndex = -1;
+    scanForCrossStaffBeamGroups();
+
     const auto mdcSpan = myPartwiseMeasure.musicData();
     auto iter = mdcSpan.begin();
     const auto endIter = mdcSpan.end();
@@ -167,6 +172,7 @@ std::pair<api::MeasureData, std::optional<api::TransposeData>> MeasureReader::ge
     for (; iter != endIter; ++iter)
     {
         const auto &mdc = *iter;
+        const auto mdcIndex = static_cast<size_t>(iter - mdcSpan.begin());
 
         // incredibly, we need to know if the note following this one has a 'chord' tag
         // otherwise we don't know whether or not the current note if part of a chord,
@@ -185,7 +191,7 @@ std::pair<api::MeasureData, std::optional<api::TransposeData>> MeasureReader::ge
             nextNotePtr = &peekAheadAtNextNoteIter->asNote();
         }
 
-        auto maybeTranspose = parseMusicDataChoice(mdc, nextNotePtr);
+        auto maybeTranspose = parseMusicDataChoice(mdc, nextNotePtr, mdcIndex);
         if (myCurrentCursor.isFirstMeasureInPart && maybeTranspose.has_value())
         {
             transpose = maybeTranspose;
@@ -233,7 +239,8 @@ void MeasureReader::parseTimeSignature() const
 
 // see .h file for explanation of the return value
 std::optional<api::TransposeData> MeasureReader::parseMusicDataChoice(const core::MusicDataChoice &mdc,
-                                                                      const core::Note *nextNotePtr) const
+                                                                      const core::Note *nextNotePtr,
+                                                                      size_t inMdcIndex) const
 {
     // if we are parsing the first measure of the part, then we need to return transpose information
     std::optional<api::TransposeData> transpose;
@@ -241,7 +248,7 @@ std::optional<api::TransposeData> MeasureReader::parseMusicDataChoice(const core
     if (mdc.isNote())
     {
         myCurrentCursor.isBackupInProgress = false;
-        parseNote(mdc.asNote(), nextNotePtr);
+        parseNote(mdc.asNote(), nextNotePtr, inMdcIndex);
     }
     else if (mdc.isBackup())
     {
@@ -317,7 +324,7 @@ std::optional<api::TransposeData> MeasureReader::parseMusicDataChoice(const core
     return transpose;
 }
 
-void MeasureReader::parseNote(const core::Note &inMxNote, const core::Note *nextNotePtr) const
+void MeasureReader::parseNote(const core::Note &inMxNote, const core::Note *nextNotePtr, size_t inMdcIndex) const
 {
     bool isNextNotePartOfAChord = false;
 
@@ -339,7 +346,37 @@ void MeasureReader::parseNote(const core::Note &inMxNote, const core::Note *next
         noteDataStaffIndex = 0;
     }
 
-    myCurrentCursor.staffIndex = noteDataStaffIndex;
+    // cross-staff notation (issue #289): a note whose beam group or chord spans staves is
+    // filed into the unit's home staff so the unit stays adjacent in one voice, and the
+    // divergent <staff> value is preserved in NoteData::crossStaffIndex
+    int bucketStaffIndex = noteDataStaffIndex;
+
+    if (noteReader.getIsChord() && myPreviousNoteBucketStaffIndex >= 0)
+    {
+        bucketStaffIndex = myPreviousNoteBucketStaffIndex;
+    }
+    else
+    {
+        const auto crossStaffHome = myCrossStaffHomes.find(inMdcIndex);
+        if (crossStaffHome != myCrossStaffHomes.cend())
+        {
+            bucketStaffIndex = crossStaffHome->second;
+        }
+    }
+
+    const bool isBucketSane =
+        bucketStaffIndex >= 0 && static_cast<size_t>(bucketStaffIndex) < myOutMeasureData.staves.size();
+
+    if (!isBucketSane)
+    {
+        bucketStaffIndex = noteDataStaffIndex;
+    }
+    else if (bucketStaffIndex != noteDataStaffIndex)
+    {
+        noteData.crossStaffIndex = noteDataStaffIndex;
+    }
+
+    myCurrentCursor.staffIndex = bucketStaffIndex;
 
     bool isThisNotePartOfAChord = noteData.isChord || isNextNotePartOfAChord;
     noteData.isChord = isThisNotePartOfAChord;
@@ -349,9 +386,140 @@ void MeasureReader::parseNote(const core::Note &inMxNote, const core::Note *next
         advanceTickTimePosition(noteData.durationData.durationTimeTicks, "note");
     }
 
-    MX_ASSERT(noteDataStaffIndex >= 0);
-    MX_ASSERT(static_cast<size_t>(noteDataStaffIndex) < myOutMeasureData.staves.size());
+    MX_ASSERT(bucketStaffIndex >= 0);
+    MX_ASSERT(static_cast<size_t>(bucketStaffIndex) < myOutMeasureData.staves.size());
+    myPreviousNoteBucketStaffIndex = bucketStaffIndex;
     insertNoteData(std::move(noteData), myCurrentCursor.staffIndex, myCurrentCursor.voiceIndex);
+}
+
+void MeasureReader::scanForCrossStaffBeamGroups() const
+{
+    if (myCurrentCursor.getNumStaves() < 2)
+    {
+        return;
+    }
+
+    // an open level-1 beam group in one voice: the musicData indices of its non-chord,
+    // non-grace member notes and the set of staves those members name
+    struct OpenGroup
+    {
+        std::vector<size_t> memberIndices;
+        std::set<int> staves;
+        int beginStaffIndex = 0;
+    };
+
+    std::map<int, OpenGroup> openGroups; // key: backup-delimited voice ordinal
+    std::map<int, int> stickyHomes;      // voice ordinal -> the voice's current home staff
+    int voiceOrdinal = 0;
+    bool isBackupInProgress = false;
+
+    // a properly closed group that names more than one staff is a cross-staff group; its
+    // home is the staff the voice was on when the group began (or, when the group is the
+    // voice's first sighting, the staff of the group's first note)
+    const auto closeGroup = [this, &stickyHomes](int inVoiceOrdinal, const OpenGroup &inGroup) {
+        if (inGroup.staves.size() > 1)
+        {
+            const auto sticky = stickyHomes.find(inVoiceOrdinal);
+            const int home = sticky == stickyHomes.cend() ? inGroup.beginStaffIndex : sticky->second;
+            for (const auto memberIndex : inGroup.memberIndices)
+            {
+                myCrossStaffHomes[memberIndex] = home;
+            }
+            stickyHomes[inVoiceOrdinal] = home;
+        }
+        else if (!inGroup.staves.empty())
+        {
+            stickyHomes[inVoiceOrdinal] = *inGroup.staves.cbegin();
+        }
+    };
+
+    const auto mdcSpan = myPartwiseMeasure.musicData();
+
+    for (size_t mdcIndex = 0; mdcIndex < mdcSpan.size(); ++mdcIndex)
+    {
+        const auto &mdc = mdcSpan[mdcIndex];
+
+        if (mdc.isBackup())
+        {
+            // mirror parseBackup's voice-ordinal rule
+            if (!isBackupInProgress)
+            {
+                ++voiceOrdinal;
+            }
+            isBackupInProgress = true;
+            continue;
+        }
+
+        if (mdc.isListening())
+        {
+            // mirror parseMusicDataChoice, which skips listening without touching the
+            // backup-in-progress flag
+            continue;
+        }
+
+        if (!mdc.isNote())
+        {
+            isBackupInProgress = false;
+            if (mdc.isForward())
+            {
+                // a beam group cannot contain a time gap
+                openGroups.erase(voiceOrdinal);
+            }
+            continue;
+        }
+
+        isBackupInProgress = false;
+        const NoteReader reader{mdc.asNote()};
+
+        if (reader.getIsGrace() || reader.getIsChord())
+        {
+            // grace notes beam among themselves; <chord> members follow the bucket of the
+            // note they chord with (decided in parseNote), not the beam group scan
+            continue;
+        }
+
+        int wireStaffIndex = reader.getStaffNumber() - 1;
+
+        if (wireStaffIndex < 0)
+        {
+            wireStaffIndex = 0;
+        }
+
+        const auto &coreBeams = reader.getBeams();
+        const auto beamOne = coreBeams.empty() ? api::Beam::unspecified : myConverter.convert(coreBeams.front());
+
+        if (beamOne == api::Beam::begin)
+        {
+            OpenGroup group;
+            group.beginStaffIndex = wireStaffIndex;
+            group.memberIndices.push_back(mdcIndex);
+            group.staves.insert(wireStaffIndex);
+            openGroups[voiceOrdinal] = std::move(group);
+            continue;
+        }
+
+        const auto openGroupIter = openGroups.find(voiceOrdinal);
+        const bool continuesGroup =
+            (beamOne == api::Beam::extend || beamOne == api::Beam::end) && openGroupIter != openGroups.cend();
+
+        if (continuesGroup)
+        {
+            openGroupIter->second.memberIndices.push_back(mdcIndex);
+            openGroupIter->second.staves.insert(wireStaffIndex);
+
+            if (beamOne == api::Beam::end)
+            {
+                closeGroup(voiceOrdinal, openGroupIter->second);
+                openGroups.erase(openGroupIter);
+            }
+            continue;
+        }
+
+        // an unbeamed note (or an orphan or hooked level-1 beam value) interrupts any open
+        // group and moves the voice's home to its own staff
+        openGroups.erase(voiceOrdinal);
+        stickyHomes[voiceOrdinal] = wireStaffIndex;
+    }
 }
 
 void MeasureReader::parseBackup(const core::Backup &inMxBackup) const
@@ -362,6 +530,9 @@ void MeasureReader::parseBackup(const core::Backup &inMxBackup) const
     }
 
     myCurrentCursor.isBackupInProgress = true;
+
+    // a chord cannot straddle a timeline jump
+    myPreviousNoteBucketStaffIndex = -1;
     const int backupAmount = myCurrentCursor.convertDurationToGlobalTickScale(inMxBackup.duration());
     advanceTickTimePosition(-1 * backupAmount, "backup");
 
@@ -374,6 +545,8 @@ void MeasureReader::parseBackup(const core::Backup &inMxBackup) const
 
 void MeasureReader::parseForward(const core::Forward &inMxForward) const
 {
+    // a chord cannot straddle a timeline jump
+    myPreviousNoteBucketStaffIndex = -1;
     const int forwardAmount = myCurrentCursor.convertDurationToGlobalTickScale(inMxForward.duration());
     advanceTickTimePosition(forwardAmount, "forward");
 }

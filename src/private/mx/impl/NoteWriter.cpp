@@ -391,7 +391,15 @@ void NoteWriter::setFullNoteTypeChoice() const
 
 void NoteWriter::setStaffAndVoice() const
 {
-    if (myCursor.getNumStaves() > 1 && myCursor.staffIndex >= 0)
+    const bool isCrossStaff = myNoteData.crossStaffIndex.has_value() && *myNoteData.crossStaffIndex >= 0;
+
+    if (isCrossStaff)
+    {
+        // cross-staff note: the containing staff governs voice membership and stream
+        // position, but the displayed staff comes from the override (NoteData.h)
+        myOutNote.setStaff(*myNoteData.crossStaffIndex + 1);
+    }
+    else if (myCursor.getNumStaves() > 1 && myCursor.staffIndex >= 0)
     {
         myOutNote.setStaff(myCursor.staffIndex + 1);
     }
