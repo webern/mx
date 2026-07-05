@@ -13,6 +13,7 @@
 #include "mx/core/generated/Image.h"
 #include "mx/core/generated/ScoreHeaderGroup.h"
 #include "mx/core/generated/Tenths.h"
+#include "mx/impl/Converter.h"
 #include "mx/impl/FontFunctions.h"
 #include "mx/impl/PositionFunctions.h"
 
@@ -84,6 +85,12 @@ void createCredits(const api::ScoreData &inScoreData, core::ScoreHeaderGroup &ou
             impl::setAttributesFromFontData(p.fontData, words);
             impl::setAttributesFromPositionData(p.positionData, words);
 
+            if (p.justify != api::HorizontalAlignment::unspecified)
+            {
+                const Converter converter;
+                words.setJustify(converter.convert(p.justify));
+            }
+
             core::CreditChoiceGroupChoice groupChoice = core::CreditChoiceGroupChoice::creditWords(words);
             core::CreditChoiceGroup group;
             group.setChoice(groupChoice);
@@ -151,6 +158,12 @@ void createCredits(const core::ScoreHeaderGroup &inHeader, api::ScoreData &outSc
             pageText.text = words.value();
             pageText.positionData = impl::getPositionData(words);
             pageText.fontData = impl::getFontData(words);
+
+            if (words.justify().has_value())
+            {
+                const Converter converter;
+                pageText.justify = converter.convert(*words.justify());
+            }
         }
 
         for (const auto &ct : c.creditType())
