@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "mx/api/ApiCommon.h"
 #include "mx/api/BarlineData.h"
 #include "mx/api/ClefData.h"
 #include "mx/api/DirectionData.h"
@@ -91,8 +92,9 @@ class MeasureData
     std::optional<PartSymbolData> partSymbol;
 
     MeasureData()
-        : staves{}, timeSignature{}, number{}, measureNumbering{MeasureNumbering::unspecified}, multiMeasureRest{-1},
-          implicit{Bool::unspecified}, nonControlling{Bool::unspecified}, width{-1.0}
+        : staves{}, timeSignature{}, number{}, measureNumbering{MeasureNumbering::unspecified},
+          multiMeasureRest{VALUE_UNSPECIFIED}, implicit{Bool::unspecified}, nonControlling{Bool::unspecified},
+          width{DOUBLE_UNSPECIFIED}
     {
     }
 };

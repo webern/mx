@@ -84,7 +84,7 @@ struct DirectionData
     // direction includes a default-x attribute, the offset value will be ignored when determining
     // the appearance of that element.
 
-    // voice value of -1 means unspecified
+    // a voice value of VALUE_UNSPECIFIED means unspecified
     int voice;
 
     // Direction elements are placed inside the StaffData object in mx api.  This would mean that
@@ -128,7 +128,7 @@ struct DirectionData
     std::vector<DirectionComponent> orderedComponents;
 
     DirectionData()
-        : tickTimePosition{0}, placement{Placement::unspecified}, voice{-1}, isStaffValueSpecified{true},
+        : tickTimePosition{0}, placement{Placement::unspecified}, voice{VALUE_UNSPECIFIED}, isStaffValueSpecified{true},
           isSoundDataSpecified{false}, soundData{}, marks{}, wedgeStarts{}, wedgeStops{}, ottavaStarts{}, ottavaStops{},
           bracketStarts{}, bracketStops{}, dashesStarts{}, dashesStops{}, pedalStarts{}, pedalStops{}, words{},
           chords{}, segnos{}

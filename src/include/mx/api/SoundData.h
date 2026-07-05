@@ -53,8 +53,8 @@ struct SoundData
     std::string fine;
 
     SoundData()
-        : tempo{-1.0}, dynamics{-1.0}, dacapo{Bool::unspecified}, forwardRepeat{Bool::unspecified},
-          pizzicato{Bool::unspecified}, segno{}, dalsegno{}, coda{}, tocoda{}, fine{}
+        : tempo{DOUBLE_UNSPECIFIED}, dynamics{DOUBLE_UNSPECIFIED}, dacapo{Bool::unspecified},
+          forwardRepeat{Bool::unspecified}, pizzicato{Bool::unspecified}, segno{}, dalsegno{}, coda{}, tocoda{}, fine{}
     {
     }
 

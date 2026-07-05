@@ -22,7 +22,7 @@ class TupletStart
 {
   public:
     // used to id when nested
-    // -1 means unspecified
+    // NUMBER_LEVEL_UNSPECIFIED means unspecified
     int numberLevel;
 
     PositionData positionData;
@@ -47,9 +47,11 @@ class TupletStart
     Bool bracket;
 
     TupletStart()
-        : numberLevel{-1}, positionData{}, actualNumber{-1}, actualDurationName{api::DurationName::unspecified},
-          actualDots{-1}, normalNumber{-1}, normalDurationName{api::DurationName::unspecified}, normalDots{-1},
-          showActualNumber{Bool::unspecified}, showNormalNumber{Bool::unspecified}, bracket{Bool::unspecified}
+        : numberLevel{NUMBER_LEVEL_UNSPECIFIED}, positionData{}, actualNumber{VALUE_UNSPECIFIED},
+          actualDurationName{api::DurationName::unspecified}, actualDots{VALUE_UNSPECIFIED},
+          normalNumber{VALUE_UNSPECIFIED}, normalDurationName{api::DurationName::unspecified},
+          normalDots{VALUE_UNSPECIFIED}, showActualNumber{Bool::unspecified}, showNormalNumber{Bool::unspecified},
+          bracket{Bool::unspecified}
     {
     }
 };
@@ -58,12 +60,12 @@ class TupletStop
 {
   public:
     // used to id when nested
-    // -1 means unspecified
+    // NUMBER_LEVEL_UNSPECIFIED means unspecified
     int numberLevel;
 
     PositionData positionData;
 
-    TupletStop() : numberLevel{-1}, positionData{}
+    TupletStop() : numberLevel{NUMBER_LEVEL_UNSPECIFIED}, positionData{}
     {
     }
 };

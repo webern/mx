@@ -301,7 +301,7 @@ void NoteReader::setStaffNumber()
 
 void NoteReader::setVoiceNumber()
 {
-    myVoiceNumber = -1;
+    myVoiceNumber = api::VALUE_UNSPECIFIED;
 
     if (!myNote.editorialVoice().voice().has_value())
     {

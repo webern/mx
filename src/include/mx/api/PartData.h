@@ -31,16 +31,16 @@ struct MidiData
     std::string device;
     std::string name;
 
-    // -1 indicates absence of value
+    // VALUE_UNSPECIFIED indicates absence of value
     int bank;
 
-    // -1 indicates absence of value
+    // VALUE_UNSPECIFIED indicates absence of value
     int channel;
 
-    // -1 indicates absence of value
+    // VALUE_UNSPECIFIED indicates absence of value
     int program;
 
-    // -1 indicates absence of value
+    // VALUE_UNSPECIFIED indicates absence of value
     int unpitched;
 
     // percent, valid range 0.0 to 100.0
@@ -56,9 +56,9 @@ struct MidiData
     bool isElevationSpecified;
 
     MidiData()
-        : virtualLibrary{}, virtualName{}, device{}, name{}, bank{-1}, channel{-1}, program{-1}, unpitched{-1},
-          volume{0.0}, isVolumeSpecified{false}, pan{0.0}, isPanSpecified{false}, elevation{0.0},
-          isElevationSpecified{false}
+        : virtualLibrary{}, virtualName{}, device{}, name{}, bank{VALUE_UNSPECIFIED}, channel{VALUE_UNSPECIFIED},
+          program{VALUE_UNSPECIFIED}, unpitched{VALUE_UNSPECIFIED}, volume{0.0}, isVolumeSpecified{false}, pan{0.0},
+          isPanSpecified{false}, elevation{0.0}, isElevationSpecified{false}
     {
     }
 };
