@@ -38,8 +38,11 @@ std::string formatInt(int value);
 /// 1.0 had no version attribute; absence means oldest).
 bool musicXmlVersionExceeds(std::string_view declared, std::string_view supported);
 
-/// Shortest fixed-notation decimal that round-trips the double (xs:decimal
-/// forbids exponent notation).
+/// Shortest fixed-notation decimal that round-trips the double, capped at 8
+/// fractional digits (xs:decimal forbids exponent notation). When no spelling
+/// within 8 digits round-trips exactly, the value is rounded to 8 places,
+/// trailing zeros trimmed, and -0 normalized to 0; the introduced error is at
+/// most 5e-9, below MX_API_EQUALITY_EPSILON (1e-8).
 std::string formatDouble(double value);
 
 } // namespace mx::core
