@@ -144,42 +144,80 @@ bool musicXmlVersionExceeds(std::string_view declared, std::string_view supporte
 
 std::string formatDouble(double value)
 {
-    // Shortest fixed-notation string that round-trips; never exponent notation
-    // (xs:decimal forbids it). std::to_chars(double) is unavailable on
-    // AppleClang's libc++ below macOS 13.3 / iOS 16.3, and mx targets older, so
-    // reproduce its contract with snprintf: grow the fractional precision until
-    // the printed text parses back to exactly the input. snprintf and strtod
-    // share the active locale's decimal point, so the round-trip check is
-    // locale-agnostic; only the returned spelling is normalized back to '.'.
-    // Large magnitudes round-trip at low precision (their ULP exceeds 1), so the
-    // 340-digit cap is only ever approached by sub-unit values whose fixed form
-    // stays well inside the buffer; MusicXML decimals never reach it.
+    // Bounded shortest fixed-notation string: the shortest spelling that
+    // round-trips the exact double, capped at 8 fractional digits; never
+    // exponent notation (xs:decimal forbids it). std::to_chars(double) is
+    // unavailable on AppleClang's libc++ below macOS 13.3 / iOS 16.3, and mx
+    // targets older, so reproduce the shortest-round-trip contract with
+    // snprintf: grow the fractional precision until the printed text parses
+    // back to exactly the input. snprintf and strtod share the active locale's
+    // decimal point, so the round-trip check is locale-agnostic; only the
+    // returned spelling is normalized back to '.'.
+    //
+    // The 8-digit cap (issue #248) stops client arithmetic noise (a double a
+    // few ULPs from a clean value) from being amplified to 16-17 significant
+    // digits: when no precision within 8 round-trips, the value is rounded to
+    // 8 places and trailing zeros trimmed. The introduced error is at most
+    // 5e-9, below MX_API_EQUALITY_EPSILON (1e-8), so api round-trip equality
+    // is unaffected. Large magnitudes round-trip at precision 0 (their exact
+    // decimal expansion is an integer-digit string), so %.8f of any double
+    // stays well inside the buffer.
     const char decimalPoint = *std::localeconv()->decimal_point;
     char buf[400];
-    for (int precision = 0; precision <= 340; ++precision)
+    int n = 0;
+    bool exact = false;
+    for (int precision = 0; precision <= 8 && !exact; ++precision)
     {
-        const int n = std::snprintf(buf, sizeof(buf), "%.*f", precision, value);
+        n = std::snprintf(buf, sizeof(buf), "%.*f", precision, value);
         if (n <= 0 || static_cast<std::size_t>(n) >= sizeof(buf))
         {
+            n = 0;
             continue;
         }
         if (std::strtod(buf, nullptr) == value)
         {
-            std::string result(buf, static_cast<std::size_t>(n));
-            if (decimalPoint != '.')
-            {
-                for (char &c : result)
-                {
-                    if (c == decimalPoint)
-                    {
-                        c = '.';
-                    }
-                }
-            }
-            return result;
+            exact = true;
         }
     }
-    return "0";
+    if (!exact)
+    {
+        n = std::snprintf(buf, sizeof(buf), "%.8f", value);
+        if (n <= 0 || static_cast<std::size_t>(n) >= sizeof(buf))
+        {
+            return "0";
+        }
+    }
+    std::string result(buf, static_cast<std::size_t>(n));
+    if (decimalPoint != '.')
+    {
+        for (char &c : result)
+        {
+            if (c == decimalPoint)
+            {
+                c = '.';
+            }
+        }
+    }
+    // The capped spelling can carry trailing zeros ("0.12000000"); the exact
+    // search cannot (a shorter precision would have round-tripped first), but
+    // trimming is spelling-safe either way.
+    if (result.find('.') != std::string::npos)
+    {
+        while (!result.empty() && result.back() == '0')
+        {
+            result.pop_back();
+        }
+        if (!result.empty() && result.back() == '.')
+        {
+            result.pop_back();
+        }
+    }
+    // Rounding a tiny negative to 8 places (or printing -0.0) leaves "-0".
+    if (result == "-0")
+    {
+        result = "0";
+    }
+    return result;
 }
 
 } // namespace mx::core

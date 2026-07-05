@@ -192,6 +192,19 @@ lysuite/ly46c_Midmeasure_Clef.xml
 lysuite/ly45a_SimpleRepeat.xml
 lysuite/ly45c_RepeatMultipleTimes.xml
 
+# Unblocked by #273 (credit-words justify round-trip). PageTextData had no
+# field for the justify attribute, so the reader dropped it and the writer
+# never emitted it. Added PageTextData::justify (HorizontalAlignment,
+# unspecified = absent) wired through PageTextFunctions; this file's only
+# remaining divergence was the dropped attribute.
+lysuite/ly52a_PageLayout.xml
+
+# Unblocked by #272 (key cancel location round-trip). The reader dropped the
+# cancel element's location attribute and the writer never emitted it. Added
+# KeyData::cancelLocation (CancelLocation::unspecified when absent) so the
+# attribute survives the round-trip.
+synthetic/cancel.location.3.0.xml
+
 # Grace-cue support (#288): NoteData models grace/cue as two independent bools,
 # so a <grace/><cue/> note maps to core's GraceCueNoteGroup on both read and
 # write. This synthetic fixture pins all four combinations (normal, cue, grace,
