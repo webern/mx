@@ -16,8 +16,11 @@ namespace mx::core
 /// text face for round-trip fidelity (plan §2.6). A Decimal parsed from text
 /// remembers the exact input spelling and serializes it back verbatim; a
 /// Decimal constructed or mutated numerically serializes the shortest
-/// fixed-notation string that round-trips the value. Comparison is numeric:
-/// the text face is presentation, not identity.
+/// fixed-notation string that round-trips the value, capped at 8 fractional
+/// digits (issue #248: the cap keeps client arithmetic noise from being
+/// amplified to 16-17 significant digits; max introduced error 5e-9, below
+/// MX_API_EQUALITY_EPSILON = 1e-8). Comparison is numeric: the text face is
+/// presentation, not identity.
 class Decimal
 {
   public:
