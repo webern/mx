@@ -126,6 +126,9 @@ class NoteData
     // as 0 and is ignored on write), and cue notes -- including grace-cue
     // notes -- cannot carry <tie> (ties on them are silently dropped on write).
     bool isGrace;
+    // <grace>'s slash attribute. Only meaningful when isGrace is true.
+    Bool graceSlash;
+
     bool isCue;
 
     Notehead notehead;
@@ -172,6 +175,7 @@ MXAPI_EQUALS_MEMBER(isTieStop)
 MXAPI_EQUALS_MEMBER(tieLetRing)
 MXAPI_EQUALS_MEMBER(isGrace)
 MXAPI_EQUALS_MEMBER(isCue)
+MXAPI_EQUALS_MEMBER(graceSlash)
 MXAPI_EQUALS_MEMBER(pitchData)
 MXAPI_EQUALS_MEMBER(userRequestedVoiceNumber)
 MXAPI_EQUALS_MEMBER(stem)

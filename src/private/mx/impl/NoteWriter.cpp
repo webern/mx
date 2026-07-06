@@ -299,6 +299,12 @@ void NoteWriter::assembleNoteChoice() const
     {
         // Grace notes have no wire <duration>; durationTimeTicks is ignored.
         core::GraceNoteGroup choiceObj;
+        if (myNoteData.graceSlash != api::Bool::unspecified)
+        {
+            core::Grace grace;
+            grace.setSlash(myConverter.convert(myNoteData.graceSlash));
+            choiceObj.setGrace(std::move(grace));
+        }
         if (myNoteData.isCue)
         {
             // <grace/> + <cue/>: the grace-cue group carries no <tie>.
