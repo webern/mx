@@ -210,3 +210,23 @@ synthetic/cancel.location.3.0.xml
 # write. This synthetic fixture pins all four combinations (normal, cue, grace,
 # grace-cue) through the strict round-trip.
 synthetic/grace-cue.4.0.xml
+
+# Catch-up: already passing since lyric support (#290 "Write lyricdata") landed,
+# but never pinned. No code change here -- discovery mode confirms these
+# round-trip losslessly today; this commit only grows the pass-list to match.
+lysuite/ly01c_Pitches_NoVoiceElement.xml
+lysuite/ly46a_Barlines.xml
+lysuite/ly61a_Lyrics.xml
+lysuite/ly61b_MultipleLyrics.xml
+lysuite/ly61c_Lyrics_Pianostaff.xml
+lysuite/ly61e_Lyrics_Chords.xml
+lysuite/ly61g_Lyrics_NameNumber.xml
+lysuite/ly61h_Lyrics_BeamsMelismata.xml
+lysuite/ly61k_Lyrics_SpannersExtenders.xml
+lysuite/ly99b_Lyrics_BeamsMelismata_IgnoreBeams.xml
+musuite/testLyricsVoice2a.xml
+musuite/testLyricsVoice2b.xml
+musuite/testLyricsVoice2b_ref.xml
+musuite/testNoteAttributes3.xml
+musuite/testNumberedLyrics.xml
+musuite/testNumberedLyrics_ref.xml
