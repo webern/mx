@@ -619,7 +619,9 @@ void MeasureWriter::advanceCursorIfNeeded(const api::NoteData &currentNote, cons
     if (isAdvanceNeeded(currentNote, inIter, inEnd))
     {
         const auto curTime = std::max(myHistory.getCursor().tickTimePosition, 0);
-        const auto duration = std::max(currentNote.durationData.durationTimeTicks, 0);
+        // a grace note carries no <duration> on the wire, so it must not advance the
+        // cursor even if the api struct's durationTimeTicks was left at its default (#312)
+        const auto duration = currentNote.isGrace ? 0 : std::max(currentNote.durationData.durationTimeTicks, 0);
         const auto newTime = curTime + duration;
         myHistory.setTime(newTime, "advance cursor");
         myPreviousCursor = myHistory.getCursor();
