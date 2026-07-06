@@ -19,7 +19,9 @@ enum class MarkType
 
     // articulations
     accent,
-    strongAccent, // marcato
+    strongAccent, // marcato, direction unspecified
+    strongAccentUp,
+    strongAccentDown,
     staccato,
     tenuto,
     detachedLegato, // tenuto with dot

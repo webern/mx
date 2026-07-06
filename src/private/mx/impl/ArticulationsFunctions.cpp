@@ -45,8 +45,14 @@ void ArticulationsFunctions::parseArticulation(const core::ArticulationsChoice &
         break;
     }
     case core::ArticulationsChoice::Kind::strongAccent: {
-        parseMarkDataAttributes(inArticulation.asStrongAccent(), outMark);
+        const auto &strongAccent = inArticulation.asStrongAccent();
+        parseMarkDataAttributes(strongAccent, outMark);
         outMark.name = "strong-accent";
+        if (strongAccent.type().has_value())
+        {
+            outMark.markType = strongAccent.type()->tag() == core::UpDown::Tag::up ? api::MarkType::strongAccentUp
+                                                                                   : api::MarkType::strongAccentDown;
+        }
         break;
     }
     case core::ArticulationsChoice::Kind::staccato: {

@@ -264,3 +264,9 @@ musuite/testLines2_ref.xml
 # WedgeStart gains isColorSpecified (matching the other four), so an unspecified
 # wedge color is no longer force-written.
 musuite/testWedge1.xml
+
+# Unblocked by MarkType::strongAccentUp/strongAccentDown: <strong-accent>'s type
+# (up/down) attribute was parsed by nothing and written by nothing.
+# Mirrors the existing arpeggiate/arpeggiateUp/arpeggiateDown precedent
+# (a direction folded into distinct MarkType values rather than a new field).
+musuite/testNoteAttributes1.xml

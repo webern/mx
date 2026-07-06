@@ -105,7 +105,6 @@ class Converter
 
     core::ArticulationsChoice::Kind convertArticulation(api::MarkType value) const;
     api::MarkType convertArticulation(core::ArticulationsChoice::Kind value) const;
-    bool isArticulation(api::MarkType value) const;
 
     core::DynamicsChoice::Kind convertDynamic(api::MarkType value) const;
     api::MarkType convertDynamic(core::DynamicsChoice::Kind value) const;

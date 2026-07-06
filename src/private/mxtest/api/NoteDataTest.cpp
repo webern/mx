@@ -1418,4 +1418,66 @@ TEST(printObjectNo, NoteData)
 
 T_END;
 
+TEST(strongAccentDirection, NoteData)
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto &staff = measure.staves.back();
+    auto &voice = staff.voices[0];
+
+    NoteData upNote;
+    upNote.tickTimePosition = 0;
+    upNote.durationData.durationTimeTicks = score.ticksPerQuarter;
+    upNote.durationData.durationName = DurationName::quarter;
+    upNote.noteAttachmentData.marks.emplace_back(MarkType::strongAccentUp);
+    voice.notes.push_back(upNote);
+
+    NoteData downNote;
+    downNote.tickTimePosition = score.ticksPerQuarter;
+    downNote.durationData.durationTimeTicks = score.ticksPerQuarter;
+    downNote.durationData.durationName = DurationName::quarter;
+    downNote.noteAttachmentData.marks.emplace_back(MarkType::strongAccentDown);
+    voice.notes.push_back(downNote);
+
+    NoteData plainNote;
+    plainNote.tickTimePosition = score.ticksPerQuarter * 2;
+    plainNote.durationData.durationTimeTicks = score.ticksPerQuarter;
+    plainNote.durationData.durationName = DurationName::quarter;
+    plainNote.noteAttachmentData.marks.emplace_back(MarkType::strongAccent);
+    voice.notes.push_back(plainNote);
+
+    auto &mgr = DocumentManager::getInstance();
+    const auto r1 = mgr.createFromScore(score);
+    REQUIRE(r1.ok());
+    auto docId = r1.value();
+    std::stringstream ss;
+    mgr.writeToStream(docId, ss);
+    mgr.destroyDocument(docId);
+    const std::string xml = ss.str();
+    CHECK(xml.find(R"(<strong-accent type="up" />)") != std::string::npos);
+    CHECK(xml.find(R"(<strong-accent type="down" />)") != std::string::npos);
+    CHECK(xml.find("<strong-accent />") != std::string::npos);
+
+    std::istringstream iss{xml};
+    const auto r2 = mgr.createFromStream(iss);
+    REQUIRE(r2.ok());
+    docId = r2.value();
+    const auto rd = mgr.getData(docId);
+    REQUIRE(rd.ok());
+    const auto outScore = rd.value();
+    mgr.destroyDocument(docId);
+
+    const auto &outNotes = outScore.parts.back().measures.back().staves.back().voices.at(0).notes;
+    REQUIRE(outNotes.size() == static_cast<size_t>(3));
+    CHECK(outNotes.at(0).noteAttachmentData.marks.at(0).markType == MarkType::strongAccentUp);
+    CHECK(outNotes.at(1).noteAttachmentData.marks.at(0).markType == MarkType::strongAccentDown);
+    CHECK(outNotes.at(2).noteAttachmentData.marks.at(0).markType == MarkType::strongAccent);
+}
+
+T_END;
+
 #endif

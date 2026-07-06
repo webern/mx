@@ -161,6 +161,8 @@ const Converter::EnumMap<core::CSSFontSize, api::CssSize> Converter::cssMap = {
 const Converter::EnumMap<core::ArticulationsChoice::Kind, api::MarkType> Converter::articulationsMap = {
     {core::ArticulationsChoice::Kind::accent, api::MarkType::accent},
     {core::ArticulationsChoice::Kind::strongAccent, api::MarkType::strongAccent},
+    {core::ArticulationsChoice::Kind::strongAccent, api::MarkType::strongAccentUp},
+    {core::ArticulationsChoice::Kind::strongAccent, api::MarkType::strongAccentDown},
     {core::ArticulationsChoice::Kind::staccato, api::MarkType::staccato},
     {core::ArticulationsChoice::Kind::tenuto, api::MarkType::tenuto},
     {core::ArticulationsChoice::Kind::detachedLegato, api::MarkType::detachedLegato},
@@ -1476,17 +1478,6 @@ core::ArticulationsChoice::Kind Converter::convertArticulation(api::MarkType val
 api::MarkType Converter::convertArticulation(core::ArticulationsChoice::Kind value) const
 {
     return findApiItem(articulationsMap, api::MarkType::unspecified, value);
-}
-
-bool Converter::isArticulation(api::MarkType value) const
-{
-    return value == api::MarkType::accent || value == api::MarkType::strongAccent || value == api::MarkType::staccato ||
-           value == api::MarkType::tenuto || value == api::MarkType::detachedLegato ||
-           value == api::MarkType::staccatissimo || value == api::MarkType::spiccato || value == api::MarkType::scoop ||
-           value == api::MarkType::plop || value == api::MarkType::doit || value == api::MarkType::falloff ||
-           value == api::MarkType::breathMark || value == api::MarkType::caesura || value == api::MarkType::stress ||
-           value == api::MarkType::unstress || value == api::MarkType::softAccent ||
-           value == api::MarkType::otherArticulation;
 }
 
 core::DynamicsChoice::Kind Converter::convertDynamic(api::MarkType value) const
