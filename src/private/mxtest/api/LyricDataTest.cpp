@@ -130,4 +130,37 @@ TEST(lyricsRoundTripThroughApi, LyricData)
 
 T_END;
 
+TEST(unspecifiedSyllabicIsOmitted, LyricData)
+{
+    ScoreData score;
+    score.ticksPerQuarter = 4;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto &staff = measure.staves.back();
+    auto &voice = staff.voices[0];
+    voice.notes.emplace_back();
+    auto &note = voice.notes.back();
+    note.durationData.durationTimeTicks = 4;
+    note.durationData.durationName = DurationName::quarter;
+    note.durationData.isDurationNameSpecified = true;
+
+    LyricData lyric;
+    lyric.text = "plain";
+    CHECK(lyric.syllabic == LyricSyllabic::unspecified);
+    note.lyrics.emplace_back(lyric);
+
+    const auto xml = mxtest::toXml(score);
+    auto xmlNote = mxtest::api::lyric_data_test::firstNote(xml);
+    CHECK(xmlNote.child("lyric").child("syllabic").empty());
+
+    const auto out = mxtest::fromXml(xml);
+    const auto &outNote = out.parts.at(0).measures.at(0).staves.at(0).voices.at(0).notes.at(0);
+    CHECK(outNote.lyrics.at(0).syllabic == LyricSyllabic::unspecified);
+}
+
+T_END;
+
 #endif

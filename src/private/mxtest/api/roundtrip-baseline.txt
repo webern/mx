@@ -239,3 +239,13 @@ musuite/testEmptyMeasure_ref.xml
 musuite/testEmptyVoice1_ref.xml
 musuite/testMeasureLength_ref.xml
 musuite/testUnusualDurations_ref.xml
+
+# Unblocked by LyricSyllabic::unspecified: <syllabic> is optional in MusicXML
+# (a plain, non-hyphenated lyric word omits it), but LyricData::syllabic had no
+# absent state, so the writer force-wrote <syllabic>single</syllabic> onto every
+# lyric whose source omitted it. LyricSyllabic gains unspecified (default);
+# NoteReader now maps a missing <syllabic> to it and NoteWriter omits the
+# element when it is set.
+lysuite/ly22c_Noteheads_Chords.xml
+lysuite/ly61i_Lyrics_Chords.xml
+lysuite/ly71f_AllChordTypes.xml
