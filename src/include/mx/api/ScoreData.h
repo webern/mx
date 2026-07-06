@@ -63,12 +63,7 @@ class ScoreData
     std::string publisher;
     std::string copyright;
 
-    // The <rights> type attribute for `copyright` above. unset -> the source's <rights>
-    // had no type attribute (omitted on write); set -> written back verbatim, defaulting
-    // to "copyright" when authoring a new copyright string from scratch. On read, only a
-    // <rights> typed "copyright" (or untyped) populates `copyright`/`copyrightType` at
-    // all -- other rights types are out of scope for this field, matching `composer`/
-    // `lyricist` above, which likewise only recognize one fixed creator type each.
+    // The <rights> type attribute for `copyright` (above).
     std::optional<std::string> copyrightType;
     EncodingData encoding;
     std::vector<PageTextData> pageTextItems;
