@@ -23,12 +23,34 @@ env:
 # Every Linux job runs its make targets inside the pinned mx-sdk Docker
 # toolchain; only the two macOS jobs build natively.
 jobs:
+  # Cheap up-front diff check so the gen-quality gate (score.json/report.md,
+  # ratcheted floor) only runs -- and only spends a PR comment -- when gen/
+  # actually changed. A gen/ change that's md-only (README/AGENTS/DESIGN docs)
+  # doesn't move the score, so it's excluded too. Other linux-gen steps
+  # (fmt-check, test-gen, gen-check, regen drift) are unaffected: they're
+  # cheap and apply to the whole repo, not just gen/.
+  changes:
+    name: "Detect gen/ changes"
+    runs-on: ubuntu-latest
+    outputs:
+      gen: ${{ steps.filter.outputs.gen }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            gen:
+              - 'gen/**'
+              - '!gen/**/*.md'
+
   # Python-side gates for the gen/ generator and audit tool, plus the repo's
   # only clang-format gate. Also runs plates --check for every target. No C++
   # is compiled or tested here.
   linux-gen:
     name: "gen: unit/audit tests + regen drift + quality/lint + fmt-check (Linux)"
     runs-on: ubuntu-latest
+    needs: changes
 
     # Read-only token: this job builds untrusted fork PR code, so it never
     # requests write. The gen-quality comment is posted by the pr-comment.yaml
@@ -85,18 +107,24 @@ jobs:
       - name: Generated output drift check
         run: git diff --exit-code
 
-      # Static-analysis gates on the gen/ generator. Each fails the build below
-      # its floor (GEN_QUALITY_FLOOR / GEN_LINT_FLOOR in the Makefile).
+      # Static-analysis gates on the gen/ generator. gen-quality only runs when
+      # gen/ actually changed (see the `changes` job); gen-lint stays unguarded
+      # since it's cheap and has no report/comment plumbing riding on it. Each
+      # fails the build below its floor (GEN_QUALITY_FLOOR / GEN_LINT_FLOOR in
+      # the Makefile).
       - name: gen-quality gate
+        if: needs.changes.outputs.gen == 'true'
         run: make gen-quality
 
       - name: gen-lint gate
         run: make gen-lint
 
-      # Surface the score in the run summary and (on PRs) as a per-push comment.
-      # always() so a gate failure still reports why.
+      # Surface the score in the run summary when the gate actually ran.
+      # always() so a gate failure still reports why; skipped runs (gen/
+      # unchanged) leave this section out entirely rather than printing a
+      # misleading "(no report produced)".
       - name: gen-quality report
-        if: always()
+        if: always() && needs.changes.outputs.gen == 'true'
         run: |
           {
             echo '### gen-quality `gen/`'
@@ -107,14 +135,21 @@ jobs:
       # Fork PRs run with a read-only token, so this job can't post the comment
       # itself. Stage the body + PR number as an artifact; pr-comment.yaml posts
       # it after CI completes. always() so a gate failure still reports why.
+      # Guarded on the report file existing (not just needs.changes.outputs.gen)
+      # so the comment-sending job gets no artifact -- and gracefully posts
+      # nothing -- whenever gen-quality didn't run or crashed before writing it.
       - name: Stage gen-quality PR comment
         if: always() && github.event_name == 'pull_request'
         run: |
+          if [ ! -f data/testOutput/gen-quality/report.md ]; then
+            echo 'No gen-quality report to stage (check skipped or produced nothing).'
+            exit 0
+          fi
           mkdir -p pr-comment
           {
             echo '### gen-quality `gen/`'
             echo ''
-            cat data/testOutput/gen-quality/report.md 2>/dev/null || echo '(no report produced)'
+            cat data/testOutput/gen-quality/report.md
             echo ''
             echo 'Commit `${{ github.sha }}`.'
           } > pr-comment/body.md
@@ -126,6 +161,7 @@ jobs:
         with:
           name: pr-comment-gen
           path: pr-comment/
+          if-no-files-found: ignore
 
   # The mx::api/mx::impl product surface. Core-layer suites (corert, unit,
   # xmllint, probes) run in linux-core, not here.
