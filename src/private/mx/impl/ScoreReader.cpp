@@ -221,12 +221,14 @@ api::ScoreData ScoreReader::getScoreData() const
             if (hasType && typeStr == "copyright" && !isCopyrightFound)
             {
                 myOutScoreData.copyright = r.value();
+                myOutScoreData.copyrightType = typeStr;
                 isCopyrightFound = true;
             }
 
             if (!isCopyrightFound && !hasType)
             {
                 myOutScoreData.copyright = r.value();
+                myOutScoreData.copyrightType = std::nullopt;
             }
         }
         api::EncodingData encodingData;

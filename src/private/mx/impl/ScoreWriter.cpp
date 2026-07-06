@@ -112,7 +112,7 @@ core::ScorePartwise ScoreWriter::getScorePartwise() const
     if (!myScoreData.copyright.empty())
     {
         core::TypedText copyright{};
-        copyright.setType(std::string{"copyright"});
+        copyright.setType(myScoreData.copyrightType);
         copyright.setValue(myScoreData.copyright);
         identification.addRights(copyright);
         hasIdentification = true;

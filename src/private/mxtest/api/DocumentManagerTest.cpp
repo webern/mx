@@ -154,6 +154,63 @@ TEST(copyright, DocumentManager)
 
 T_END
 
+TEST(RoundTrip_copyrightType_defaultIsCopyright, DocumentManager)
+{
+    auto input = ScoreData{};
+    input.copyright = "Public Domain";
+    std::stringstream ss;
+    auto &docMngr = DocumentManager::getInstance();
+    const auto createResult = docMngr.createFromScore(input);
+    REQUIRE(createResult.ok());
+    docMngr.writeToStream(createResult.value(), ss);
+    docMngr.destroyDocument(createResult.value());
+    CHECK(ss.str().find(R"(<rights type="copyright">Public Domain</rights>)") != std::string::npos);
+
+    const auto output = roundTripScore(input);
+    REQUIRE(output.copyrightType.has_value());
+    CHECK_EQUAL(std::string{"copyright"}, *output.copyrightType);
+}
+
+T_END
+
+// The reader only recognizes a <rights> typed "copyright" (or untyped) as the
+// source of ScoreData::copyright; any other type value is out of scope for
+// this simplified field, so only the write side is asserted here.
+TEST(WriteHonorsExplicitCopyrightType, DocumentManager)
+{
+    auto input = ScoreData{};
+    input.copyright = "All rights reserved";
+    input.copyrightType = std::string{"mechanical"};
+    std::stringstream ss;
+    auto &docMngr = DocumentManager::getInstance();
+    const auto createResult = docMngr.createFromScore(input);
+    REQUIRE(createResult.ok());
+    docMngr.writeToStream(createResult.value(), ss);
+    docMngr.destroyDocument(createResult.value());
+    CHECK(ss.str().find(R"(<rights type="mechanical">All rights reserved</rights>)") != std::string::npos);
+}
+
+T_END
+
+TEST(RoundTrip_copyrightType_unsetOmitsAttribute, DocumentManager)
+{
+    auto input = ScoreData{};
+    input.copyright = "Public Domain";
+    input.copyrightType = std::nullopt;
+    std::stringstream ss;
+    auto &docMngr = DocumentManager::getInstance();
+    const auto createResult = docMngr.createFromScore(input);
+    REQUIRE(createResult.ok());
+    docMngr.writeToStream(createResult.value(), ss);
+    docMngr.destroyDocument(createResult.value());
+    CHECK(ss.str().find(R"(<rights>Public Domain</rights>)") != std::string::npos);
+
+    const auto output = roundTripScore(input);
+    CHECK(!output.copyrightType.has_value());
+}
+
+T_END
+
 TEST(scalingMillimeters, DocumentManager)
 {
     auto score = getScore();
