@@ -73,7 +73,6 @@
 #include "mx/impl/PrintFunctions.h"
 #include "mx/impl/SoundFunctions.h"
 #include "mx/impl/SpannerFunctions.h"
-#include "mx/utility/Unused.h"
 
 namespace mx
 {
@@ -305,11 +304,12 @@ void DirectionWriter::emitWedgeStart(const api::WedgeStart &wedgeStart, core::Di
     addDirectionType(std::move(dt), direction);
 }
 
-void DirectionWriter::emitOttavaStop(const api::SpannerStop &ottavaStop, core::Direction &direction)
+void DirectionWriter::emitOttavaStop(const api::OttavaStop &ottavaStop, core::Direction &direction)
 {
     core::OctaveShift os{};
+    setAttributesFromSpannerStop(ottavaStop.spannerStop, os);
     os.setType(core::UpDownStopContinue::stop());
-    MX_UNUSED(ottavaStop);
+    os.setSize(ottavaStop.size);
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::octaveShift(os));
     addDirectionType(std::move(dt), direction);

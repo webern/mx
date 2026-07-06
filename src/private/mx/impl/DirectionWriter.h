@@ -35,7 +35,7 @@ class DirectionWriter
     void emitPedalStop(const api::SpannerStop &pedalStop, core::Direction &direction);
     void emitWedgeStop(const api::WedgeStop &wedgeStop, core::Direction &direction);
     void emitWedgeStart(const api::WedgeStart &wedgeStart, core::Direction &direction);
-    void emitOttavaStop(const api::SpannerStop &ottavaStop, core::Direction &direction);
+    void emitOttavaStop(const api::OttavaStop &ottavaStop, core::Direction &direction);
     void emitOttavaStart(const api::OttavaStart &ottavaStart, core::Direction &direction);
     void emitBracketStart(const api::SpannerStart &item, core::Direction &direction);
     void emitBracketStop(const api::SpannerStop &item, core::Direction &direction);

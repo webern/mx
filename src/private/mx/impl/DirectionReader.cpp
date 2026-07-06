@@ -762,8 +762,10 @@ void DirectionReader::parseOctaveShift(const core::DirectionType &directionType)
     bool isStop = octaveShift.type().tag() == core::UpDownStopContinue::Tag::stop;
     if (isStop)
     {
-        auto stop = impl::getSpannerStop(octaveShift);
-        stop.tickTimePosition = myCursor.tickTimePosition;
+        api::OttavaStop stop;
+        stop.spannerStop = impl::getSpannerStop(octaveShift);
+        stop.spannerStop.tickTimePosition = myCursor.tickTimePosition;
+        stop.size = octaveShift.size();
         myOutDirectionData.ottavaStops.emplace_back(std::move(stop));
         appendOrderedComponent(api::DirectionComponentKind::ottavaStop,
                                static_cast<int>(myOutDirectionData.ottavaStops.size()) - 1);

@@ -105,8 +105,10 @@ TEST(ottavaStop, DirectionReader)
     auto directionData = reader.getDirectionData();
     CHECK_EQUAL(1, directionData.ottavaStops.size());
     const auto &ottavaStop = directionData.ottavaStops.front();
-    CHECK_EQUAL(tickTimePosition, ottavaStop.tickTimePosition);
-    CHECK_EQUAL(-1, ottavaStop.numberLevel);
+    CHECK_EQUAL(tickTimePosition, ottavaStop.spannerStop.tickTimePosition);
+    CHECK_EQUAL(-1, ottavaStop.spannerStop.numberLevel);
+    CHECK(ottavaStop.size.has_value());
+    CHECK_EQUAL(15, *ottavaStop.size);
 }
 
 T_END

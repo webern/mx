@@ -33,12 +33,32 @@ class OttavaStart
     }
 };
 
-// SpannerStop is used for OttavaStops
+class OttavaStop
+{
+  public:
+    SpannerStop spannerStop;
+
+    // MusicXML's octave-shift allows a size attribute ("8" or "15") on the stop, not just the
+    // start. Most writers omit it there since it is implied by the corresponding start, but some
+    // importers (e.g. MuseScore) expect it to be present. Absent by default; set it to have the
+    // writer emit it explicitly.
+    std::optional<int> size;
+
+    OttavaStop() : spannerStop{}, size{std::nullopt}
+    {
+    }
+};
 
 MXAPI_EQUALS_BEGIN(OttavaStart)
 MXAPI_EQUALS_MEMBER(spannerStart)
 MXAPI_EQUALS_MEMBER(ottavaType)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(OttavaStart);
+
+MXAPI_EQUALS_BEGIN(OttavaStop)
+MXAPI_EQUALS_MEMBER(spannerStop)
+MXAPI_EQUALS_MEMBER(size)
+MXAPI_EQUALS_END;
+MXAPI_NOT_EQUALS_AND_VECTORS(OttavaStop);
 } // namespace api
 } // namespace mx

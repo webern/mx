@@ -26,9 +26,10 @@ TEST(ottavaStartStop, DirectionWriter)
     cursor.isFirstMeasureInPart = false;
     api::DirectionData directionData;
 
-    directionData.ottavaStops.emplace_back(api::SpannerStop{});
+    directionData.ottavaStops.emplace_back(api::OttavaStop{});
     auto &stop = directionData.ottavaStops.back();
-    stop.numberLevel = 2;
+    stop.spannerStop.numberLevel = 2;
+    stop.size = 15;
 
     directionData.ottavaStarts.emplace_back(api::OttavaStart{});
     auto &start = directionData.ottavaStarts.back();
@@ -43,6 +44,14 @@ TEST(ottavaStartStop, DirectionWriter)
     const auto &directionTypes = direction.directionType();
 
     CHECK_EQUAL(2, directionTypes.size());
+
+    DirectionReader reader{direction, cursor};
+    const auto roundTripped = reader.getDirectionData();
+    REQUIRE(roundTripped.ottavaStops.size() == 1);
+    const auto &roundTrippedStop = roundTripped.ottavaStops.front();
+    CHECK_EQUAL(2, roundTrippedStop.spannerStop.numberLevel);
+    CHECK(roundTrippedStop.size.has_value());
+    CHECK_EQUAL(15, *roundTrippedStop.size);
 }
 
 T_END
