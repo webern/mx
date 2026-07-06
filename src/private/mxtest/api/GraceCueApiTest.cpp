@@ -336,4 +336,48 @@ TEST(graceSlashUnspecifiedOmitsAttribute, GraceCue)
 
 T_END;
 
+// Issue #312: two consecutive grace notes sharing a tick, followed by the normal note they
+// attach to, must not collapse on round trip.
+TEST(consecutiveGraceNotesAtSameTickSurviveRoundTrip, GraceCue)
+{
+    ScoreData score;
+    score.ticksPerQuarter = 4;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto &staff = measure.staves.back();
+    auto &voice = staff.voices[0];
+
+    voice.notes.emplace_back();
+    voice.notes.back().isGrace = true;
+    voice.notes.back().tickTimePosition = 0;
+    voice.notes.back().durationData.durationName = DurationName::eighth;
+
+    voice.notes.emplace_back();
+    voice.notes.back().isGrace = true;
+    voice.notes.back().tickTimePosition = 0;
+    voice.notes.back().durationData.durationName = DurationName::eighth;
+
+    voice.notes.emplace_back();
+    voice.notes.back().tickTimePosition = 0;
+    voice.notes.back().durationData.durationName = DurationName::quarter;
+    voice.notes.back().durationData.durationTimeTicks = 4;
+
+    const auto xml = mxtest::toXml(score);
+
+    // no cursor-correcting <backup> should be needed: grace notes carry no wire duration
+    CHECK(xml.find("<backup>") == std::string::npos);
+
+    const auto out = roundTrip(score);
+    const auto &outNotes = out.parts.back().measures.back().staves.back().voices.at(0).notes;
+    REQUIRE(outNotes.size() == 3);
+    CHECK(outNotes.at(0).isGrace);
+    CHECK(outNotes.at(1).isGrace);
+    CHECK(!outNotes.at(2).isGrace);
+}
+
+T_END;
+
 #endif
