@@ -112,6 +112,22 @@ core::Note NoteWriter::getNote(bool isStartOfChord) const
     {
         core::Accidental accidental;
         accidental.setValue(myConverter.convert(myNoteData.pitchData.accidental));
+        if (myNoteData.pitchData.isAccidentalParenthetical)
+        {
+            accidental.setParentheses(core::YesNo::yes());
+        }
+        if (myNoteData.pitchData.isAccidentalCautionary)
+        {
+            accidental.setCautionary(core::YesNo::yes());
+        }
+        if (myNoteData.pitchData.isAccidentalEditorial)
+        {
+            accidental.setEditorial(core::YesNo::yes());
+        }
+        if (myNoteData.pitchData.isAccidentalBracketed)
+        {
+            accidental.setBracket(core::YesNo::yes());
+        }
         myOutNote.setAccidental(std::move(accidental));
     }
 

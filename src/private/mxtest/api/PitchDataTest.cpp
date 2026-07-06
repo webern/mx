@@ -343,4 +343,56 @@ TEST(ConstructorTest, PitchData)
 
 T_END;
 
+// The four <accidental> presence attributes (parentheses, cautionary, editorial, bracket)
+// were read into PitchData but never written back.
+TEST(AccidentalPresenceAttributesRoundTrip, PitchData)
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto &staff = measure.staves.back();
+    auto &voice = staff.voices[0];
+    voice.notes.emplace_back();
+    auto &note = voice.notes.back();
+    note.durationData.durationTimeTicks = score.ticksPerQuarter;
+    note.durationData.durationName = DurationName::quarter;
+    note.pitchData.step = Step::f;
+    note.pitchData.accidental = Accidental::sharp;
+    note.pitchData.isAccidentalParenthetical = true;
+    note.pitchData.isAccidentalCautionary = true;
+    note.pitchData.isAccidentalEditorial = true;
+    note.pitchData.isAccidentalBracketed = true;
+
+    auto &mgr = DocumentManager::getInstance();
+    const auto r1 = mgr.createFromScore(score);
+    REQUIRE(r1.ok());
+    const int docId = r1.value();
+    std::stringstream ss;
+    mgr.writeToStream(docId, ss);
+    mgr.destroyDocument(docId);
+    const std::string xml = ss.str();
+    CHECK(xml.find(R"(parentheses="yes")") != std::string::npos);
+    CHECK(xml.find(R"(cautionary="yes")") != std::string::npos);
+    CHECK(xml.find(R"(editorial="yes")") != std::string::npos);
+    CHECK(xml.find(R"(bracket="yes")") != std::string::npos);
+
+    std::istringstream iss{xml};
+    const auto r2 = mgr.createFromStream(iss);
+    REQUIRE(r2.ok());
+    const int docId2 = r2.value();
+    const auto rd = mgr.getData(docId2);
+    REQUIRE(rd.ok());
+    mgr.destroyDocument(docId2);
+    const auto &outNote = rd.value().parts.back().measures.back().staves.back().voices.at(0).notes.back();
+    CHECK(outNote.pitchData.isAccidentalParenthetical);
+    CHECK(outNote.pitchData.isAccidentalCautionary);
+    CHECK(outNote.pitchData.isAccidentalEditorial);
+    CHECK(outNote.pitchData.isAccidentalBracketed);
+}
+
+T_END;
+
 #endif
