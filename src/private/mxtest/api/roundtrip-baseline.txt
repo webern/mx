@@ -257,3 +257,10 @@ lysuite/ly71f_AllChordTypes.xml
 lysuite/ly90a_Compressed_MusicXML.xml
 musuite/testLines2.xml
 musuite/testLines2_ref.xml
+
+# Unblocked by WedgeStart::isColorSpecified: unlike Rehearsal/Segno/Words/Coda
+# (which all guard color on presence), the wedge reader/writer path always
+# read/wrote a color, defaulting to white when the source's <wedge> had none.
+# WedgeStart gains isColorSpecified (matching the other four), so an unspecified
+# wedge color is no longer force-written.
+musuite/testWedge1.xml

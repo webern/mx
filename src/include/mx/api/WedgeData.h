@@ -28,11 +28,12 @@ struct WedgeStart
     double spread;
     LineData lineData;
     PositionData positionData;
+    bool isColorSpecified;
     ColorData colorData;
 
     WedgeStart()
         : numberLevel{NUMBER_LEVEL_UNSPECIFIED}, wedgeType{WedgeType::unspecified}, isSpreadSpecified{false},
-          spread{0.0}, lineData{}, positionData{}, colorData{}
+          spread{0.0}, lineData{}, positionData{}, isColorSpecified{false}, colorData{}
     {
     }
 };
@@ -56,6 +57,7 @@ MXAPI_EQUALS_MEMBER(isSpreadSpecified)
 MXAPI_EQUALS_MEMBER(spread)
 MXAPI_EQUALS_MEMBER(lineData)
 MXAPI_EQUALS_MEMBER(positionData)
+MXAPI_EQUALS_MEMBER(isColorSpecified)
 MXAPI_EQUALS_MEMBER(colorData)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(WedgeStart);

@@ -314,4 +314,45 @@ TEST(RehearsalUnspecifiedEnclosureNoPhantomAttribute, DirectionData)
 
 T_END;
 
+// Verify that a wedge with no color set (isColorSpecified == false) does not emit a color
+// attribute in the serialized XML, and that the field round-trips as unspecified.
+TEST(WedgeUnspecifiedColorNoPhantomAttribute, DirectionData)
+{
+    ScoreData oscore;
+    oscore.ticksPerQuarter = 10;
+    oscore.parts.emplace_back();
+    auto &opart = oscore.parts.back();
+    opart.measures.emplace_back();
+    auto &omeasure = opart.measures.back();
+    omeasure.staves.emplace_back();
+    auto &ostaff = omeasure.staves.back();
+    auto &ovoice = ostaff.voices[0];
+
+    NoteData onote{};
+    onote.tickTimePosition = 0;
+    onote.durationData.durationTimeTicks = 10;
+    onote.durationData.durationName = DurationName::quarter;
+    ovoice.notes.push_back(onote);
+
+    WedgeStart wedge;
+    wedge.wedgeType = WedgeType::crescendo;
+    // isColorSpecified left at default (false) -- must not appear in XML or round-trip as white
+
+    DirectionData directionData;
+    directionData.tickTimePosition = 0;
+    directionData.wedgeStarts.push_back(wedge);
+    ostaff.directions.push_back(directionData);
+
+    const auto xml = mxtest::toXml(oscore);
+    CHECK(xml.find("color") == std::string::npos);
+
+    const auto rscore = mxtest::roundTrip(oscore);
+    REQUIRE(rscore.parts.front().measures.front().staves.front().directions.size() == 1);
+    REQUIRE(rscore.parts.front().measures.front().staves.front().directions.front().wedgeStarts.size() == 1);
+    CHECK(
+        !rscore.parts.front().measures.front().staves.front().directions.front().wedgeStarts.front().isColorSpecified);
+}
+
+T_END;
+
 #endif

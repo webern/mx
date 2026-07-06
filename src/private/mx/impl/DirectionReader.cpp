@@ -498,7 +498,8 @@ void DirectionReader::parseWedge(const core::DirectionType &directionType)
     const double spread = isSpreadSpecified ? static_cast<double>(wedge.spread()->value().value()) : 0.0;
     auto positionData = getPositionData(wedge);
     auto lineData = getLineData(wedge);
-    auto colorData = getColor(wedge);
+    const bool isColorSpecified = wedge.color().has_value();
+    const auto colorData = isColorSpecified ? getColor(wedge) : api::ColorData{};
 
     if (wedge.type().tag() == core::WedgeType::Tag::stop)
     {
@@ -533,6 +534,7 @@ void DirectionReader::parseWedge(const core::DirectionType &directionType)
         start.wedgeType = wedgeType;
         start.positionData = positionData;
         start.lineData = lineData;
+        start.isColorSpecified = isColorSpecified;
         start.colorData = colorData;
         myOutDirectionData.wedgeStarts.emplace_back(std::move(start));
         appendOrderedComponent(api::DirectionComponentKind::wedgeStart,

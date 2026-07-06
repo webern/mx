@@ -61,10 +61,11 @@ class ScoreData
     std::string lyricist;
     std::string arranger;
     std::string publisher;
-    std::string copyright;
 
+    std::string copyright;
     // The <rights> type attribute for `copyright` (above).
     std::optional<std::string> copyrightType;
+
     EncodingData encoding;
     std::vector<PageTextData> pageTextItems;
 
