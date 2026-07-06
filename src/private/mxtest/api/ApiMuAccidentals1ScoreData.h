@@ -37,9 +37,9 @@ inline mx::api::ScoreData apiMuAccidentals1ScoreData()
 
     part.measures.emplace_back(MeasureData{});
     auto measure = &part.measures.back();
-    measure->timeSignature.beats = "3";
-    measure->timeSignature.beatType = "4";
-    measure->timeSignature.isImplicit = false;
+    measure->timeSignatures.front().components.front().beats = "3";
+    measure->timeSignatures.front().components.front().beatType = "4";
+    measure->timeSignatures.front().isImplicit = false;
     measure->staves.emplace_back(StaffData{});
     measure->keys.emplace_back(KeyData{});
     auto &key = measure->keys.back();
@@ -86,9 +86,9 @@ inline mx::api::ScoreData apiMuAccidentals1ScoreData()
 
     part.measures.emplace_back(MeasureData{});
     measure = &part.measures.back();
-    measure->timeSignature.beats = "3";
-    measure->timeSignature.beatType = "4";
-    measure->timeSignature.isImplicit = true;
+    measure->timeSignatures.front().components.front().beats = "3";
+    measure->timeSignatures.front().components.front().beatType = "4";
+    measure->timeSignatures.front().isImplicit = true;
     measure->staves.emplace_back(StaffData{});
     staff = &measure->staves.back();
 

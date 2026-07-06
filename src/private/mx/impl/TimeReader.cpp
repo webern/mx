@@ -20,7 +20,7 @@ namespace impl
 {
 
 TimeReader::TimeReader(std::span<const core::MusicDataChoice> inMusicDataChoices)
-    : myMusicDataChoiceSet{inMusicDataChoices}, myTime{nullptr}, myIsTimeFound{false}, myTimeSignatureData{}
+    : myMusicDataChoiceSet{inMusicDataChoices}, myIsTimeFound{false}, myTimeSignatures{}
 {
     myIsTimeFound = initialize();
 }
@@ -30,9 +30,9 @@ bool TimeReader::getIsTimeFound() const
     return myIsTimeFound;
 }
 
-mx::api::TimeSignatureData TimeReader::getTimeSignatureData() const
+std::vector<mx::api::TimeSignatureData> TimeReader::getTimeSignatures() const
 {
-    return myTimeSignatureData;
+    return myTimeSignatures;
 }
 
 bool TimeReader::initialize()
@@ -44,23 +44,51 @@ bool TimeReader::initialize()
             const auto &props = mdc.asAttributes();
             if (props.time().size() > 0)
             {
-                myTime = &props.time().front();
-                return parseTime();
+                bool anyParsed = false;
+                for (const auto &time : props.time())
+                {
+                    if (parseTime(time))
+                    {
+                        anyParsed = true;
+                    }
+                }
+                return anyParsed;
             }
         }
     }
     return false;
 }
 
-bool TimeReader::parseTime()
+bool TimeReader::parseTime(const core::Time &time)
 {
-    const auto &timeChoice = myTime->choice();
+    const auto &timeChoice = time.choice();
 
     if (timeChoice.kind() == core::TimeChoice::Kind::group)
     {
         const auto sigGroupSet = timeChoice.asGroup().timeSignature();
         MX_ASSERT(sigGroupSet.size() > 0);
-        return parseTimeSignatureGroup(sigGroupSet.front());
+
+        // all TimeSignatureGroup entries in this <time> element share the same symbol/display/
+        // staffIndex (those live on the <time> element itself); each contributes one component
+        // to a single TimeSignatureData, so a composite time signature round-trips as one
+        // TimeSignatureData with multiple components.
+        api::TimeSignatureData timeSignatureData;
+        bool isFirst = true;
+        for (const auto &sigGroup : sigGroupSet)
+        {
+            if (isFirst)
+            {
+                parseTimeSignatureGroup(time, sigGroup, timeSignatureData);
+                isFirst = false;
+            }
+            else
+            {
+                timeSignatureData.components.push_back(
+                    api::TimeSignatureComponent{sigGroup.beats(), sigGroup.beatType()});
+            }
+        }
+        myTimeSignatures.push_back(std::move(timeSignatureData));
+        return true;
     }
     else
     {
@@ -69,47 +97,56 @@ bool TimeReader::parseTime()
     }
 }
 
-bool TimeReader::parseTimeSignatureGroup(const core::TimeSignatureGroup &timeSig)
+bool TimeReader::parseTimeSignatureGroup(const core::Time &time, const core::TimeSignatureGroup &timeSig,
+                                         mx::api::TimeSignatureData &outData)
 {
-    myTimeSignatureData.beats = timeSig.beats();
-    myTimeSignatureData.beatType = timeSig.beatType();
+    outData.setSimple(timeSig.beats(), timeSig.beatType());
 
-    if (myTime->symbol().has_value())
+    if (time.symbol().has_value())
     {
-        if (*myTime->symbol() == core::TimeSymbol::common())
+        if (*time.symbol() == core::TimeSymbol::common())
         {
-            myTimeSignatureData.symbol = api::TimeSignatureSymbol::common;
+            outData.symbol = api::TimeSignatureSymbol::common;
         }
-        else if (*myTime->symbol() == core::TimeSymbol::cut())
+        else if (*time.symbol() == core::TimeSymbol::cut())
         {
-            myTimeSignatureData.symbol = api::TimeSignatureSymbol::cut;
+            outData.symbol = api::TimeSignatureSymbol::cut;
         }
-        else if (*myTime->symbol() == core::TimeSymbol::singleNumber())
+        else if (*time.symbol() == core::TimeSymbol::singleNumber())
         {
-            myTimeSignatureData.symbol = api::TimeSignatureSymbol::singleNumber;
+            outData.symbol = api::TimeSignatureSymbol::singleNumber;
         }
     }
     else
     {
-        myTimeSignatureData.symbol = api::TimeSignatureSymbol::unspecified;
+        outData.symbol = api::TimeSignatureSymbol::unspecified;
     }
 
-    myTimeSignatureData.display = api::Bool::unspecified;
-    if (myTime->printObject().has_value())
+    outData.display = api::Bool::unspecified;
+    if (time.printObject().has_value())
     {
-        bool isPrint = *myTime->printObject() == core::YesNo::yes();
+        bool isPrint = *time.printObject() == core::YesNo::yes();
 
         if (isPrint)
         {
-            myTimeSignatureData.display = api::Bool::yes;
+            outData.display = api::Bool::yes;
         }
         else
         {
-            myTimeSignatureData.display = api::Bool::no;
+            outData.display = api::Bool::no;
         }
     }
 
-    myTimeSignatureData.isImplicit = false;
+    if (time.number().has_value())
+    {
+        outData.staffIndex = time.number()->value() - 1;
+    }
+    else
+    {
+        outData.staffIndex = api::INDEX_UNSPECIFIED;
+    }
+
+    outData.isImplicit = false;
 
     return true;
 }

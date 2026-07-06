@@ -209,8 +209,8 @@ TEST(KompChordBug_PIVOTAL_147058063, ChordApi)
     bassClef.tickTimePosition = 0;
     originalStaffPtr->clefs.push_back(bassClef);
 
-    originalMeasure.timeSignature = TimeSignatureData{};
-    originalMeasure.timeSignature.isImplicit = false;
+    originalMeasure.timeSignatures = {TimeSignatureData{}};
+    originalMeasure.timeSignatures.front().isImplicit = false;
 
     originalStaffPtr = &(*originalMeasure.staves.begin());
     NoteData note{};

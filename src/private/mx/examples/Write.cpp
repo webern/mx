@@ -39,9 +39,8 @@ int main(int argc, const char *argv[])
     // add a measure
     part.measures.emplace_back(MeasureData{});
     auto &measure = part.measures.back();
-    measure.timeSignature.beats = "4";
-    measure.timeSignature.beatType = "4";
-    measure.timeSignature.isImplicit = false;
+    measure.timeSignatures.front().setSimple("4", "4");
+    measure.timeSignatures.front().isImplicit = false;
 
     // add a staff
     measure.staves.emplace_back(StaffData{});

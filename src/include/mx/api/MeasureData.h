@@ -31,7 +31,11 @@ class MeasureData
     // this is the notes and other music data
     std::vector<StaffData> staves;
 
-    TimeSignatureData timeSignature;
+    // resolved, carried-forward time signature(s) in effect for this measure. Normally a single
+    // entry with staffIndex == INDEX_UNSPECIFIED (applies to all staves). When staff-scoped time
+    // signatures are used, there is one entry per staff. Mirrors the isImplicit carry-forward
+    // semantics of the old singular field.
+    std::vector<TimeSignatureData> timeSignatures;
 
     // an empty measureNumber indicates a normal
     // measure number (i.e. the measure's
@@ -100,7 +104,7 @@ class MeasureData
     std::vector<TransposeData> transpositions;
 
     MeasureData()
-        : staves{}, timeSignature{}, number{}, measureNumbering{MeasureNumbering::unspecified},
+        : staves{}, timeSignatures{TimeSignatureData{}}, number{}, measureNumbering{MeasureNumbering::unspecified},
           multiMeasureRest{VALUE_UNSPECIFIED}, implicit{Bool::unspecified}, nonControlling{Bool::unspecified},
           width{DOUBLE_UNSPECIFIED}
     {
@@ -109,7 +113,7 @@ class MeasureData
 
 MXAPI_EQUALS_BEGIN(MeasureData)
 MXAPI_EQUALS_MEMBER(staves)
-MXAPI_EQUALS_MEMBER(timeSignature)
+MXAPI_EQUALS_MEMBER(timeSignatures)
 MXAPI_EQUALS_MEMBER(number)
 MXAPI_EQUALS_MEMBER(measureNumbering)
 MXAPI_EQUALS_MEMBER(multiMeasureRest)

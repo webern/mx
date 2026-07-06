@@ -216,24 +216,82 @@ impl::MeasureCursor MeasureReader::getCursor() const
 void MeasureReader::parseTimeSignature() const
 {
     TimeReader timeReader{myPartwiseMeasure.musicData()};
-    api::TimeSignatureData timeSignature;
 
-    if (timeReader.getIsTimeFound())
+    std::vector<api::TimeSignatureData> carriedForward;
+    if (myCurrentCursor.measureIndex > 0)
     {
-        timeSignature = timeReader.getTimeSignatureData();
-        timeSignature.isImplicit = false;
+        carriedForward = myPreviousMeasureCursor.timeSignatures;
     }
-    else // no time signature was found
+
+    std::vector<api::TimeSignatureData> effective;
+
+    if (!timeReader.getIsTimeFound())
     {
-        if (myCurrentCursor.measureIndex > 0)
+        // no <time> this measure -> copy carried-forward list verbatim, force implicit. at
+        // measure 0 there is nothing to carry forward yet, so fall back to a single default
+        // (matches the pre-vector behavior of a default-constructed TimeSignatureData).
+        effective = carriedForward;
+        if (effective.empty())
         {
-            timeSignature = myPreviousMeasureCursor.timeSignature;
+            effective.push_back(api::TimeSignatureData{});
         }
-        timeSignature.isImplicit = true;
+        for (auto &ts : effective)
+        {
+            ts.isImplicit = true;
+        }
+    }
+    else
+    {
+        auto parsed = timeReader.getTimeSignatures();
+        bool anyUnscoped = false;
+        for (auto &ts : parsed)
+        {
+            ts.isImplicit = false;
+            if (ts.staffIndex != api::INDEX_UNSPECIFIED && ts.staffIndex > myCurrentCursor.getNumStaves() - 1)
+            {
+                ts.staffIndex = api::INDEX_UNSPECIFIED;
+            }
+            if (ts.staffIndex == api::INDEX_UNSPECIFIED)
+            {
+                anyUnscoped = true;
+            }
+        }
+
+        if (anyUnscoped)
+        {
+            // one or more unscoped entries -> the new effective list replaces everything
+            effective = std::move(parsed);
+        }
+        else
+        {
+            // all entries are staff-scoped -> merge into the carried-forward list by staffIndex
+            effective = carriedForward;
+            for (auto &e : effective)
+            {
+                e.isImplicit = true;
+            }
+            for (const auto &p : parsed)
+            {
+                bool replaced = false;
+                for (auto &e : effective)
+                {
+                    if (e.staffIndex == p.staffIndex)
+                    {
+                        e = p;
+                        replaced = true;
+                        break;
+                    }
+                }
+                if (!replaced)
+                {
+                    effective.push_back(p);
+                }
+            }
+        }
     }
 
-    myOutMeasureData.timeSignature = timeSignature;
-    myCurrentCursor.timeSignature = timeSignature;
+    myOutMeasureData.timeSignatures = effective;
+    myCurrentCursor.timeSignatures = effective;
     advanceTickTimePosition(0, "parseTimeSignature");
 }
 

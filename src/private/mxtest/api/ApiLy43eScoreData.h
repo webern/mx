@@ -28,8 +28,8 @@ inline mx::api::ScoreData apiLy43eScoreData()
     measureP->keys.emplace_back(KeyData{});
     auto keyP = &measureP->keys.back();
     keyP->mode = KeyMode::major;
-    measureP->timeSignature.isImplicit = false;
-    measureP->timeSignature.symbol = TimeSignatureSymbol::common;
+    measureP->timeSignatures.front().isImplicit = false;
+    measureP->timeSignatures.front().symbol = TimeSignatureSymbol::common;
     measureP->staves.emplace_back(StaffData{});
     measureP->staves.emplace_back(StaffData{});
     auto staff1P = &measureP->staves.at(0);
@@ -180,8 +180,8 @@ inline mx::api::ScoreData apiLy43eScoreData()
     // measure 2 - setup
     part.measures.emplace_back(MeasureData{});
     measureP = &part.measures.back();
-    measureP->timeSignature.isImplicit = true;
-    measureP->timeSignature.symbol = TimeSignatureSymbol::common;
+    measureP->timeSignatures.front().isImplicit = true;
+    measureP->timeSignatures.front().symbol = TimeSignatureSymbol::common;
     measureP->keys.emplace_back(KeyData{});
     keyP = &measureP->keys.back();
     keyP->fifths = 2;
@@ -291,8 +291,8 @@ inline mx::api::ScoreData apiLy43eScoreData()
     // measure 3 - setup
     part.measures.emplace_back(MeasureData{});
     measureP = &part.measures.back();
-    measureP->timeSignature.isImplicit = true;
-    measureP->timeSignature.symbol = TimeSignatureSymbol::common;
+    measureP->timeSignatures.front().isImplicit = true;
+    measureP->timeSignatures.front().symbol = TimeSignatureSymbol::common;
     measureP->staves.emplace_back(StaffData{});
     measureP->staves.emplace_back(StaffData{});
     staff1P = &measureP->staves.at(0);
@@ -397,8 +397,8 @@ inline mx::api::ScoreData apiLy43eScoreData()
     // measure 4 - setup
     part.measures.emplace_back(MeasureData{});
     measureP = &part.measures.back();
-    measureP->timeSignature.isImplicit = true;
-    measureP->timeSignature.symbol = TimeSignatureSymbol::common;
+    measureP->timeSignatures.front().isImplicit = true;
+    measureP->timeSignatures.front().symbol = TimeSignatureSymbol::common;
     measureP->staves.emplace_back(StaffData{});
     measureP->staves.emplace_back(StaffData{});
     staff1P = &measureP->staves.at(0);
@@ -409,8 +409,8 @@ inline mx::api::ScoreData apiLy43eScoreData()
     staff1P = &measureP->staves.at(0);
     staff1P->voices[voice].notes.emplace_back(NoteData{});
     noteP = &staff1P->voices[voice].notes.back();
-    measureP->timeSignature.isImplicit = true;
-    measureP->timeSignature.symbol = TimeSignatureSymbol::common;
+    measureP->timeSignatures.front().isImplicit = true;
+    measureP->timeSignatures.front().symbol = TimeSignatureSymbol::common;
     noteP->userRequestedVoiceNumber = voice + 1;
     noteP->tickTimePosition = 0;
     noteP->pitchData.step = Step::c;

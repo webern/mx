@@ -19,7 +19,7 @@ namespace impl
 class Cursor
 {
   public:
-    api::TimeSignatureData timeSignature;
+    std::vector<api::TimeSignatureData> timeSignatures;
     int ticksPerQuarter;
     int tickTimePosition;
     int voiceIndex;

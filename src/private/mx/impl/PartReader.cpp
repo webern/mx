@@ -124,7 +124,7 @@ api::PartData PartReader::getPartData()
         {
             myOutPartData.transposition = transpositionData;
         }
-        myCurrentCursor.timeSignature = measureData.timeSignature;
+        myCurrentCursor.timeSignatures = measureData.timeSignatures;
         myCurrentCursor.ticksPerQuarter = reader.getCursor().ticksPerQuarter;
         myOutPartData.measures.emplace_back(std::move(measureData));
         ++myCurrentCursor.measureIndex;

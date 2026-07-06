@@ -49,7 +49,7 @@ class PropertiesWriter
     void writeKey(int staffIndex, const api::KeyData &inKeyData);
     static void writeTraditionalKey(const api::KeyData &inKeyData, core::Key &ioKey);
     static void writeNonTraditionalKey(const api::KeyData &inKeyData, core::Key &ioKey);
-    void writeTime(const api::TimeSignatureData &value);
+    void writeTime(int staffIndex, const api::TimeSignatureData &value);
     void writeNumStaves(int value);
     void writeStaffDetails(int staffIndex, int staffLines);
     void writeStaffDetails(int staffIndex, int staffLines, double staffSize);

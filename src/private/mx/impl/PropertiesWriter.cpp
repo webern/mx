@@ -140,16 +140,30 @@ void PropertiesWriter::writeTraditionalKey(const api::KeyData &inKeyData, core::
     ioKey.setChoice(core::KeyChoice::traditionalKey(tkg));
 }
 
-void PropertiesWriter::writeTime(const api::TimeSignatureData &value)
+void PropertiesWriter::writeTime(int staffIndex, const api::TimeSignatureData &value)
 {
     core::Time time{};
 
-    core::TimeSignatureGroup tsg{};
-    tsg.setBeats(value.beats);
-    tsg.setBeatType(value.beatType);
+    if (staffIndex >= 0)
+    {
+        time.setNumber(core::StaffNumber{staffIndex + 1});
+    }
+
+    std::vector<core::TimeSignatureGroup> groups;
+    groups.reserve(value.components.size());
+    for (const auto &component : value.components)
+    {
+        core::TimeSignatureGroup tsg{};
+        tsg.setBeats(component.beats);
+        tsg.setBeatType(component.beatType);
+        groups.push_back(std::move(tsg));
+    }
+
+    core::OneOrMore<core::TimeSignatureGroup> timeSigGroups{};
+    timeSigGroups.setItems(std::move(groups));
 
     core::TimeChoiceGroup tcg{};
-    tcg.setTimeSignature(core::OneOrMore<core::TimeSignatureGroup>{tsg});
+    tcg.setTimeSignature(std::move(timeSigGroups));
 
     time.setChoice(core::TimeChoice::group(tcg));
 

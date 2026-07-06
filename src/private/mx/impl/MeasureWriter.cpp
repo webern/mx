@@ -129,9 +129,12 @@ void MeasureWriter::writeMeasureGlobals()
         myPropertiesWriter->writePartSymbol(*myMeasureData.partSymbol);
     }
 
-    if (!myMeasureData.timeSignature.isImplicit)
+    for (const auto &timeSignature : myMeasureData.timeSignatures)
     {
-        myPropertiesWriter->writeTime(myMeasureData.timeSignature);
+        if (!timeSignature.isImplicit)
+        {
+            myPropertiesWriter->writeTime(timeSignature.staffIndex, timeSignature);
+        }
     }
 
     int localStaffCounter = 0;

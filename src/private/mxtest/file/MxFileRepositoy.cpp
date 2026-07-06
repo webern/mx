@@ -469,6 +469,7 @@ void MxFileRepository::initializeNameSubdirectoryMap()
     myNameSubdirectoryMap.emplace("transposition.musicxml", "custom");
     myNameSubdirectoryMap.emplace("segno_coda_roundtrip.3.0.xml", "custom");
     myNameSubdirectoryMap.emplace("segno_coda_roundtrip.3.1.xml", "custom");
+    myNameSubdirectoryMap.emplace("timesigs_composite-ref.musicxml", "rpatters1");
 
     // mxl
     myNameSubdirectoryMap.emplace("Dichterliebe01.mxl", "mxl");
