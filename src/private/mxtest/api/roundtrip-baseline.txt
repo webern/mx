@@ -230,3 +230,12 @@ musuite/testLyricsVoice2b_ref.xml
 musuite/testNoteAttributes3.xml
 musuite/testNumberedLyrics.xml
 musuite/testNumberedLyrics_ref.xml
+
+# Unblocked by note-level print-object round-trip: NoteData::printData.printObject
+# (already declared, wired on read via NoteFunctions::getPrintData) was never
+# applied on write. NoteWriter now emits print-object on <note> when specified,
+# matching the existing ClefData/ChordData::printObject precedent.
+musuite/testEmptyMeasure_ref.xml
+musuite/testEmptyVoice1_ref.xml
+musuite/testMeasureLength_ref.xml
+musuite/testUnusualDurations_ref.xml

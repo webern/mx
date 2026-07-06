@@ -83,6 +83,10 @@ core::Note NoteWriter::getNote(bool isStartOfChord) const
     setMiscData();
     NotationsWriter notationsWriter{myNoteData, myCursor, myScoreWriter};
     impl::setAttributesFromPositionData(myNoteData.positionData, myOutNote);
+    if (myNoteData.printData.printObject != api::Bool::unspecified)
+    {
+        myOutNote.setPrintObject(myConverter.convert(myNoteData.printData.printObject));
+    }
 
     // The tie <notations> come first (as in the old writer, where they were
     // created during setNoteChoiceAndFullNoteGroup).
