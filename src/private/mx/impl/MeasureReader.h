@@ -8,6 +8,7 @@
 #include "mx/impl/Converter.h"
 #include "mx/impl/MeasureCursor.h"
 
+#include <map>
 #include <mutex>
 
 namespace mx
@@ -66,6 +67,16 @@ class MeasureReader
 
     mutable std::vector<HistoryRecord> myHistory;
 
+    // cross-staff bookkeeping (issue #289): for each note that belongs to a level-1 beam
+    // group spanning more than one <staff> value, the staff bucket that should contain it,
+    // keyed by the note's index in the measure's musicData sequence; built by
+    // scanForCrossStaffBeamGroups before the parse loop runs
+    mutable std::map<size_t, int> myCrossStaffHomes;
+
+    // the staff bucket that received the previous note; <chord> members follow it so a
+    // chord cannot be split across staff buckets; -1 means "no previous note"
+    mutable int myPreviousNoteBucketStaffIndex;
+
   private:
     void addStavesToOutMeasure() const;
     void parseTimeSignature() const;
@@ -76,9 +87,10 @@ class MeasureReader
     /// this function (as far as I can tell), the transpose info is returned up the call
     /// stack if measure index is zero and time index is zero.
     std::optional<api::TransposeData> parseMusicDataChoice(const core::MusicDataChoice &mdc,
-                                                           const core::Note *nextNotePtr) const;
+                                                           const core::Note *nextNotePtr, size_t inMdcIndex) const;
 
-    void parseNote(const core::Note &inMxNote, const core::Note *nextNotePtr) const;
+    void parseNote(const core::Note &inMxNote, const core::Note *nextNotePtr, size_t inMdcIndex) const;
+    void scanForCrossStaffBeamGroups() const;
     void parseBackup(const core::Backup &inMxBackup) const;
     void parseForward(const core::Forward &inMxForward) const;
     void parseDirection(const core::Direction &inDirection) const;

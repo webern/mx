@@ -76,7 +76,6 @@ api::NoteData NoteFunctions::parseNote() const
     }
 
     myOutNoteData.pitchData.octave = reader.getOctave();
-    // myOutNoteData.staffIndex = reader.getStaffNumber() - 1;
     myOutNoteData.userRequestedVoiceNumber = reader.getVoiceNumber();
 
     myOutNoteData.notehead = converter.convert(reader.getNoteheadValue());

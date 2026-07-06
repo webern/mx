@@ -134,6 +134,17 @@ class NoteData
     Notehead notehead;
     PitchData pitchData; // step, alter, octave, accidental, etc
     int userRequestedVoiceNumber;
+
+    // The zero-based index of the staff on which this note is displayed, for the rare case
+    // that it differs from the staff that contains the note (cross-staff notation, e.g. a
+    // beamed piano run or a chord that dips onto the other staff). The note stays in its
+    // home staff's voice - containment still governs voice membership, timing, and beam
+    // adjacency - and the writer emits this value in the note's <staff> element instead of
+    // the containing staff's number. Leave it empty for normal notes; only set it to the
+    // index of another existing staff in the same part. The reader sets it only for notes
+    // whose <staff> diverges from their beam group's or chord's home staff.
+    std::optional<int> crossStaffIndex;
+
     Stem stem;
     PositionData stemPositionData;
 
@@ -178,6 +189,7 @@ MXAPI_EQUALS_MEMBER(isCue)
 MXAPI_EQUALS_MEMBER(graceSlash)
 MXAPI_EQUALS_MEMBER(pitchData)
 MXAPI_EQUALS_MEMBER(userRequestedVoiceNumber)
+MXAPI_EQUALS_MEMBER(crossStaffIndex)
 MXAPI_EQUALS_MEMBER(stem)
 MXAPI_EQUALS_MEMBER(stemPositionData)
 MXAPI_EQUALS_MEMBER(tickTimePosition)

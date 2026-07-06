@@ -211,6 +211,14 @@ synthetic/cancel.location.3.0.xml
 # grace-cue) through the strict round-trip.
 synthetic/grace-cue.4.0.xml
 
+# Unblocked by #304 (cross-staff notes). A beamed run or chord that dips onto the
+# other staff used to be split across staff buckets, so the writer reordered the
+# notes and broke beam adjacency. The reader now files such a group into its
+# voice's home staff and preserves the divergent <staff> values in
+# NoteData::crossStaffIndex; the writer emits the override, keeping the stream
+# order and every <staff> value byte-faithful.
+lysuite/ly43d_MultiStaff_StaffChange.xml
+
 # Catch-up: already passing since lyric support (#290 "Write lyricdata") landed,
 # but never pinned. No code change here -- discovery mode confirms these
 # round-trip losslessly today; this commit only grows the pass-list to match.
