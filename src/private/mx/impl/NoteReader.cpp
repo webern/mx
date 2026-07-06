@@ -150,8 +150,8 @@ NoteReader::NoteReader(const core::Note &mxNote)
       myTimeModificationNormalNotes(-1), myTimeModificationNormalType(core::NoteTypeValue::maxima()),
       myTimeModificationNormalTypeDots(0), myHasAccidental(false), myAccidental(core::AccidentalValue::natural()),
       myIsAccidentalParenthetical(false), myIsAccidentalCautionary{false}, myIsAccidentalEditorial{false},
-      myIsAccidentalBracketed{false}, myIsStemSpecified{false}, myStem{}, myIsTieStart{false}, myIsTieStop{false},
-      myHasLyric{false}
+      myIsAccidentalBracketed{false}, myIsStemSpecified{false}, myStem{}, myIsGraceSlashSpecified{false},
+      myGraceSlash{}, myIsTieStart{false}, myIsTieStop{false}, myHasLyric{false}
 {
     setNormalGraceCueItems();
     setRestPitchUnpitchedItems();
@@ -208,6 +208,11 @@ void NoteReader::setNormalGraceCueItems()
         myIsGrace = true;
         const auto &noteGuts = myNoteChoice.asGraceNoteGroup();
         myDurationValue = 0;
+        if (noteGuts.grace().slash().has_value())
+        {
+            myIsGraceSlashSpecified = true;
+            myGraceSlash = *noteGuts.grace().slash();
+        }
         if (noteGuts.graceNoteChoice().isGraceNormalNoteGroup())
         {
             setTie(noteGuts.graceNoteChoice().asGraceNormalNoteGroup().tie());

@@ -56,6 +56,10 @@ api::NoteData NoteFunctions::parseNote() const
     myOutNoteData.isCue = reader.getIsCue();
 
     auto converter = Converter{};
+    if (reader.getIsGraceSlashSpecified())
+    {
+        myOutNoteData.graceSlash = converter.convert(reader.getGraceSlash());
+    }
     myOutNoteData.pitchData.step = converter.convert(reader.getStep());
     myOutNoteData.pitchData.alter = reader.getAlter();
     myOutNoteData.pitchData.cents = reader.getCents();

@@ -270,3 +270,9 @@ musuite/testWedge1.xml
 # Mirrors the existing arpeggiate/arpeggiateUp/arpeggiateDown precedent
 # (a direction folded into distinct MarkType values rather than a new field).
 musuite/testNoteAttributes1.xml
+
+# Unblocked by NoteData::graceSlash: <grace>'s slash attribute (slashed grace
+# notes, e.g. acciaccatura) was parsed by nothing and written by nothing.
+# NoteReader now reads it into a tri-state Bool field; NoteWriter emits
+# <grace slash="..."/> only when specified.
+musuite/testGrace1.xml

@@ -207,6 +207,16 @@ class NoteReader
         return myStem;
     }
 
+    inline bool getIsGraceSlashSpecified() const
+    {
+        return myIsGraceSlashSpecified;
+    }
+
+    inline core::YesNo getGraceSlash() const
+    {
+        return myGraceSlash;
+    }
+
     bool getIsTieStart() const
     {
         return myIsTieStart;
@@ -259,6 +269,8 @@ class NoteReader
     bool myIsAccidentalBracketed;
     bool myIsStemSpecified;
     core::StemValue myStem;
+    bool myIsGraceSlashSpecified;
+    core::YesNo myGraceSlash;
     bool myIsTieStart;
     bool myIsTieStop;
     bool myHasLyric;

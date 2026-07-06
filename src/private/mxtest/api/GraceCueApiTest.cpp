@@ -269,4 +269,71 @@ TEST(graceNormalNoteTiesAreKept, GraceCue)
 
 T_END;
 
+// <grace>'s slash attribute (slashed grace notes, e.g. acciaccatura).
+TEST(graceSlashRoundTrip, GraceCue)
+{
+    ScoreData score;
+    score.ticksPerQuarter = 4;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto &staff = measure.staves.back();
+    auto &voice = staff.voices[0];
+
+    voice.notes.emplace_back();
+    voice.notes.back().isGrace = true;
+    voice.notes.back().graceSlash = Bool::yes;
+    voice.notes.back().durationData.durationName = DurationName::eighth;
+    voice.notes.back().durationData.durationTimeTicks = 0;
+
+    voice.notes.emplace_back();
+    voice.notes.back().durationData.durationName = DurationName::quarter;
+    voice.notes.back().durationData.durationTimeTicks = 4;
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find(R"(<grace slash="yes" />)") != std::string::npos);
+
+    const auto out = roundTrip(score);
+    const auto &outNotes = out.parts.back().measures.back().staves.back().voices.at(0).notes;
+    REQUIRE(outNotes.size() == 2);
+    CHECK(outNotes.at(0).graceSlash == Bool::yes);
+}
+
+T_END;
+
+// An unspecified graceSlash (the default) must not emit the attribute at all.
+TEST(graceSlashUnspecifiedOmitsAttribute, GraceCue)
+{
+    ScoreData score;
+    score.ticksPerQuarter = 4;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto &staff = measure.staves.back();
+    auto &voice = staff.voices[0];
+
+    voice.notes.emplace_back();
+    voice.notes.back().isGrace = true;
+    voice.notes.back().durationData.durationName = DurationName::eighth;
+    voice.notes.back().durationData.durationTimeTicks = 0;
+
+    voice.notes.emplace_back();
+    voice.notes.back().durationData.durationName = DurationName::quarter;
+    voice.notes.back().durationData.durationTimeTicks = 4;
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("slash") == std::string::npos);
+
+    const auto out = roundTrip(score);
+    const auto &outNotes = out.parts.back().measures.back().staves.back().voices.at(0).notes;
+    REQUIRE(outNotes.size() == 2);
+    CHECK(outNotes.at(0).graceSlash == Bool::unspecified);
+}
+
+T_END;
+
 #endif
