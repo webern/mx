@@ -18,7 +18,7 @@
 using namespace mx;
 using namespace mx::impl;
 
-TEST(ottavaStart15mb, DirectionReader)
+TEST(ottavaStart15ma, DirectionReader)
 {
     const int tickTimePosition = 150;
     core::Direction dir{};
@@ -35,7 +35,7 @@ TEST(ottavaStart15mb, DirectionReader)
     CHECK_EQUAL(1, directionData.ottavaStarts.size());
     const auto &ottavaStart = directionData.ottavaStarts.front();
     CHECK_EQUAL(tickTimePosition, ottavaStart.spannerStart.tickTimePosition);
-    CHECK(api::OttavaType::o15mb == ottavaStart.ottavaType);
+    CHECK(api::OttavaType::o15ma == ottavaStart.ottavaType);
 }
 
 T_END
@@ -44,7 +44,7 @@ TEST(ottavaStart8vaAnd8vb, DirectionReader)
 {
     const int tickTimePosition = 199;
 
-    // add an 8va start
+    // add an 8vb start
     core::OctaveShift oct1{};
     oct1.setType(core::UpDownStopContinue::up());
     oct1.setSize(8);
@@ -57,7 +57,7 @@ TEST(ottavaStart8vaAnd8vb, DirectionReader)
     core::DirectionType dirType2{};
     dirType2.setChoice(core::DirectionTypeChoice::octaveShift(oct2));
 
-    // add an 8vb but rely on the default 'size'
+    // add an 8va but rely on the default 'size'
     core::OctaveShift oct3{};
     oct3.setType(core::UpDownStopContinue::down());
     oct3.setNumber(core::NumberLevel{3});
@@ -78,12 +78,12 @@ TEST(ottavaStart8vaAnd8vb, DirectionReader)
     auto ottavaStart = directionData.ottavaStarts.front();
 
     CHECK_EQUAL(tickTimePosition, ottavaStart.spannerStart.tickTimePosition);
-    CHECK(api::OttavaType::o8va == ottavaStart.ottavaType);
+    CHECK(api::OttavaType::o8vb == ottavaStart.ottavaType);
     CHECK_EQUAL(-1, ottavaStart.spannerStart.numberLevel);
 
     ottavaStart = directionData.ottavaStarts.at(1);
     CHECK_EQUAL(tickTimePosition, ottavaStart.spannerStart.tickTimePosition);
-    CHECK(api::OttavaType::o8vb == ottavaStart.ottavaType);
+    CHECK(api::OttavaType::o8va == ottavaStart.ottavaType);
     CHECK_EQUAL(3, ottavaStart.spannerStart.numberLevel);
 }
 
@@ -105,8 +105,10 @@ TEST(ottavaStop, DirectionReader)
     auto directionData = reader.getDirectionData();
     CHECK_EQUAL(1, directionData.ottavaStops.size());
     const auto &ottavaStop = directionData.ottavaStops.front();
-    CHECK_EQUAL(tickTimePosition, ottavaStop.tickTimePosition);
-    CHECK_EQUAL(-1, ottavaStop.numberLevel);
+    CHECK_EQUAL(tickTimePosition, ottavaStop.spannerStop.tickTimePosition);
+    CHECK_EQUAL(-1, ottavaStop.spannerStop.numberLevel);
+    CHECK(ottavaStop.size.has_value());
+    CHECK_EQUAL(15, *ottavaStop.size);
 }
 
 T_END

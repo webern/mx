@@ -107,7 +107,7 @@ struct DirectionData
     std::vector<WedgeStart> wedgeStarts;
     std::vector<WedgeStop> wedgeStops;
     std::vector<OttavaStart> ottavaStarts;
-    std::vector<SpannerStop> ottavaStops;
+    std::vector<OttavaStop> ottavaStops;
     std::vector<SpannerStart> bracketStarts;
     std::vector<SpannerStop> bracketStops;
     std::vector<SpannerStart> dashesStarts;

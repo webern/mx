@@ -762,8 +762,10 @@ void DirectionReader::parseOctaveShift(const core::DirectionType &directionType)
     bool isStop = octaveShift.type().tag() == core::UpDownStopContinue::Tag::stop;
     if (isStop)
     {
-        auto stop = impl::getSpannerStop(octaveShift);
-        stop.tickTimePosition = myCursor.tickTimePosition;
+        api::OttavaStop stop;
+        stop.spannerStop = impl::getSpannerStop(octaveShift);
+        stop.spannerStop.tickTimePosition = myCursor.tickTimePosition;
+        stop.size = octaveShift.size();
         myOutDirectionData.ottavaStops.emplace_back(std::move(stop));
         appendOrderedComponent(api::DirectionComponentKind::ottavaStop,
                                static_cast<int>(myOutDirectionData.ottavaStops.size()) - 1);
@@ -778,21 +780,26 @@ void DirectionReader::parseOctaveShift(const core::DirectionType &directionType)
         amount = *octaveShift.size();
     }
 
+    // Per the MusicXML spec, octave-shift's type attribute describes the direction the
+    // *written* notes are shifted from the true (sounding) pitch: an 8va, which sounds an
+    // octave above what is written, is encoded as type="down" (notes are written below true
+    // pitch). So type="down" maps to the "up" ottava variants (o8va/o15ma) and type="up" maps
+    // to the "down" variants (o8vb/o15mb).
     bool isUp = octaveShift.type().tag() == core::UpDownStopContinue::Tag::up;
 
-    if (isUp && amount > 8)
+    if (!isUp && amount > 8)
     {
         ottavaType = api::OttavaType::o15ma;
     }
-    else if (isUp)
+    else if (!isUp)
     {
         ottavaType = api::OttavaType::o8va;
     }
-    else if (!isUp && amount > 8)
+    else if (isUp && amount > 8)
     {
         ottavaType = api::OttavaType::o15mb;
     }
-    else if (!isUp)
+    else if (isUp)
     {
         ottavaType = api::OttavaType::o8vb;
     }
