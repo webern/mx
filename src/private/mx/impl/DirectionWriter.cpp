@@ -296,7 +296,10 @@ void DirectionWriter::emitWedgeStart(const api::WedgeStart &wedgeStart, core::Di
 
     setAttributesFromPositionData(wedgeStart.positionData, wedge);
     setAttributesFromLineData(wedgeStart.lineData, wedge);
-    setAttributesFromColorData(wedgeStart.colorData, wedge);
+    if (wedgeStart.isColorSpecified)
+    {
+        setAttributesFromColorData(wedgeStart.colorData, wedge);
+    }
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::wedge(wedge));
     addDirectionType(std::move(dt), direction);
