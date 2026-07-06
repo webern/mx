@@ -211,10 +211,49 @@ synthetic/cancel.location.3.0.xml
 # grace-cue) through the strict round-trip.
 synthetic/grace-cue.4.0.xml
 
-# Unblocked by #289 (cross-staff notes). A beamed run or chord that dips onto the
+# Unblocked by #304 (cross-staff notes). A beamed run or chord that dips onto the
 # other staff used to be split across staff buckets, so the writer reordered the
 # notes and broke beam adjacency. The reader now files such a group into its
 # voice's home staff and preserves the divergent <staff> values in
 # NoteData::crossStaffIndex; the writer emits the override, keeping the stream
 # order and every <staff> value byte-faithful.
 lysuite/ly43d_MultiStaff_StaffChange.xml
+
+# Catch-up: already passing since lyric support (#290 "Write lyricdata") landed,
+# but never pinned. No code change here -- discovery mode confirms these
+# round-trip losslessly today; this commit only grows the pass-list to match.
+lysuite/ly01c_Pitches_NoVoiceElement.xml
+lysuite/ly46a_Barlines.xml
+lysuite/ly61a_Lyrics.xml
+lysuite/ly61b_MultipleLyrics.xml
+lysuite/ly61c_Lyrics_Pianostaff.xml
+lysuite/ly61e_Lyrics_Chords.xml
+lysuite/ly61g_Lyrics_NameNumber.xml
+lysuite/ly61h_Lyrics_BeamsMelismata.xml
+lysuite/ly61k_Lyrics_SpannersExtenders.xml
+lysuite/ly99b_Lyrics_BeamsMelismata_IgnoreBeams.xml
+musuite/testLyricsVoice2a.xml
+musuite/testLyricsVoice2b.xml
+musuite/testLyricsVoice2b_ref.xml
+musuite/testNoteAttributes3.xml
+musuite/testNumberedLyrics.xml
+musuite/testNumberedLyrics_ref.xml
+
+# Unblocked by note-level print-object round-trip: NoteData::printData.printObject
+# (already declared, wired on read via NoteFunctions::getPrintData) was never
+# applied on write. NoteWriter now emits print-object on <note> when specified,
+# matching the existing ClefData/ChordData::printObject precedent.
+musuite/testEmptyMeasure_ref.xml
+musuite/testEmptyVoice1_ref.xml
+musuite/testMeasureLength_ref.xml
+musuite/testUnusualDurations_ref.xml
+
+# Unblocked by LyricSyllabic::unspecified: <syllabic> is optional in MusicXML
+# (a plain, non-hyphenated lyric word omits it), but LyricData::syllabic had no
+# absent state, so the writer force-wrote <syllabic>single</syllabic> onto every
+# lyric whose source omitted it. LyricSyllabic gains unspecified (default);
+# NoteReader now maps a missing <syllabic> to it and NoteWriter omits the
+# element when it is set.
+lysuite/ly22c_Noteheads_Chords.xml
+lysuite/ly61i_Lyrics_Chords.xml
+lysuite/ly71f_AllChordTypes.xml

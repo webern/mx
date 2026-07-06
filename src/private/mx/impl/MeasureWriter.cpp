@@ -47,7 +47,8 @@ MeasureWriter::MeasureWriter(const api::MeasureData &inMeasureData, const Measur
     : myMeasureData{inMeasureData}, myOutMeasure{}, myPreviousCursor{inCursor}, myScoreWriter{inScoreWriter},
       myPropertiesWriter{nullptr}, myConverter{}, myBarlinesIter{inMeasureData.barlines.cbegin()},
       myBarlinesEnd{inMeasureData.barlines.cend()}, myMeasureKeysIter{inMeasureData.keys.cbegin()},
-      myMeasureKeysEnd{inMeasureData.keys.cend()}, myHistory{inCursor}
+      myMeasureKeysEnd{inMeasureData.keys.cend()}, myMeasureTransposeIter{inMeasureData.transpositions.cbegin()},
+      myMeasureTransposeEnd{inMeasureData.transpositions.cend()}, myHistory{inCursor}
 {
 }
 
@@ -61,6 +62,7 @@ core::PartwiseMeasure MeasureWriter::getPartwiseMeasure()
     myBarlinesIter = myMeasureData.barlines.cbegin();
     myBarlinesEnd = myMeasureData.barlines.cend();
     myMeasureKeysIter = myMeasureData.keys.cbegin();
+    myMeasureTransposeIter = myMeasureData.transpositions.cbegin();
 
     writeMeasureGlobals();
     writeStaves();
@@ -161,15 +163,23 @@ void MeasureWriter::writeMeasureGlobals()
         ++myMeasureKeysIter;
     }
 
+    while (myMeasureTransposeIter != myMeasureTransposeEnd && myMeasureTransposeIter->tickTimePosition == 0)
+    {
+        myPropertiesWriter->writeTranspose(myMeasureTransposeIter->staffIndex, *myMeasureTransposeIter);
+        ++myMeasureTransposeIter;
+    }
+
     // The transpose element goes into the measures, but for convenience we have added it to
     // the mx::api::PartData struct since the most typical use case is to add it as part of
-    // an instrument/part definition.
-    if (cursor().measureIndex == 0 && cursor().tickTimePosition == 0)
+    // an instrument/part definition. This fallback only runs when this measure has no explicit
+    // transpositions of its own, so old hand-authored ScoreData using only the old field keeps
+    // working.
+    if (myMeasureData.transpositions.empty() && cursor().measureIndex == 0 && cursor().tickTimePosition == 0)
     {
         const auto &part = this->myScoreWriter.getPart(cursor().partIndex);
         if (part.transposition && part.transposition->isUsed())
         {
-            myPropertiesWriter->writeTranspose(part.transposition.value());
+            myPropertiesWriter->writeTranspose(api::INDEX_UNSPECIFIED, part.transposition.value());
         }
     }
 }
@@ -437,6 +447,13 @@ void MeasureWriter::writeVoices(const api::StaffData &inStaff)
                 }
             }
 
+            while (myMeasureTransposeIter != myMeasureTransposeEnd &&
+                   myMeasureTransposeIter->tickTimePosition <= myHistory.getCursor().tickTimePosition)
+            {
+                myPropertiesWriter->writeTranspose(myMeasureTransposeIter->staffIndex, *myMeasureTransposeIter);
+                ++myMeasureTransposeIter;
+            }
+
             while (clefIter != clefEnd && clefIter->tickTimePosition <= myHistory.getCursor().tickTimePosition)
             {
                 myPropertiesWriter->writeClef(clefStaffIndex(myHistory.getCursor().staffIndex), *clefIter);
@@ -482,8 +499,9 @@ void MeasureWriter::writeVoices(const api::StaffData &inStaff)
     bool areClefsRemaining = clefIter != clefEnd;
     bool areMeasureKeysRemaining = myMeasureKeysIter != myMeasureKeysEnd;
     bool areStaffKeysRemaining = staffKeyIter != staffKeyEnd;
+    bool areMeasureTransposesRemaining = myMeasureTransposeIter != myMeasureTransposeEnd;
 
-    if (areClefsRemaining || areMeasureKeysRemaining || areStaffKeysRemaining)
+    if (areClefsRemaining || areMeasureKeysRemaining || areStaffKeysRemaining || areMeasureTransposesRemaining)
     {
         for (; clefIter != inStaff.clefs.cend(); ++clefIter)
         {
@@ -504,6 +522,11 @@ void MeasureWriter::writeVoices(const api::StaffData &inStaff)
         for (; staffKeyIter != staffKeyEnd; ++staffKeyIter)
         {
             myPropertiesWriter->writeKey(myHistory.getCursor().staffIndex, *staffKeyIter);
+        }
+
+        for (; myMeasureTransposeIter != myMeasureTransposeEnd; ++myMeasureTransposeIter)
+        {
+            myPropertiesWriter->writeTranspose(myMeasureTransposeIter->staffIndex, *myMeasureTransposeIter);
         }
         myPropertiesWriter->flushBuffer();
     }

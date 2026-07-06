@@ -12,8 +12,11 @@ namespace mx
 {
 namespace api
 {
+// unspecified -> <syllabic> is omitted (a plain, non-hyphenated lyric word).
+// single/begin/end/middle -> <syllabic> is written verbatim.
 enum class LyricSyllabic
 {
+    unspecified,
     single,
     begin,
     end,
@@ -24,7 +27,7 @@ class LyricData
 {
   public:
     LyricData()
-        : text{}, verseNumber{}, verseName{}, syllabic{LyricSyllabic::single}, hasExtend{false}, positionData{},
+        : text{}, verseNumber{}, verseName{}, syllabic{LyricSyllabic::unspecified}, hasExtend{false}, positionData{},
           printData{}
     {
     }

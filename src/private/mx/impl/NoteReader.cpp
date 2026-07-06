@@ -490,16 +490,11 @@ void NoteReader::setLyric()
         case core::LyricChoice::Kind::lyricTextGroup: {
             const auto &textGroup = textChoice.asLyricTextGroup();
 
-            core::Syllabic syllabic = core::Syllabic::single();
-            if (textGroup.syllabic().has_value())
-            {
-                syllabic = *textGroup.syllabic();
-            }
-
             lyricData.text = getLyricDisplayText(textGroup);
             lyricData.printData = getLyricPrintData(lyric, &textGroup.text());
 
-            lyricData.syllabic = convertLyricSyllabic(syllabic);
+            lyricData.syllabic = textGroup.syllabic().has_value() ? convertLyricSyllabic(*textGroup.syllabic())
+                                                                  : api::LyricSyllabic::unspecified;
             lyricData.hasExtend = textGroup.extend().has_value();
             myLyrics.emplace_back(lyricData);
             myHasLyric = true;

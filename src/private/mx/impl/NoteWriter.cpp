@@ -43,6 +43,8 @@ core::Syllabic convertLyricSyllabicForNoteWriter(api::LyricSyllabic value)
 {
     switch (value)
     {
+    case api::LyricSyllabic::unspecified:
+        break;
     case api::LyricSyllabic::single:
         return core::Syllabic::single();
     case api::LyricSyllabic::begin:
@@ -83,6 +85,10 @@ core::Note NoteWriter::getNote(bool isStartOfChord) const
     setMiscData();
     NotationsWriter notationsWriter{myNoteData, myCursor, myScoreWriter};
     impl::setAttributesFromPositionData(myNoteData.positionData, myOutNote);
+    if (myNoteData.printData.printObject != api::Bool::unspecified)
+    {
+        myOutNote.setPrintObject(myConverter.convert(myNoteData.printData.printObject));
+    }
 
     // The tie <notations> come first (as in the old writer, where they were
     // created during setNoteChoiceAndFullNoteGroup).
@@ -495,7 +501,10 @@ void NoteWriter::setLyrics() const
             setAttributesFromFontData(lyricData.printData.fontData, text);
 
             core::LyricTextGroup textGroup;
-            textGroup.setSyllabic(convertLyricSyllabicForNoteWriter(lyricData.syllabic));
+            if (lyricData.syllabic != api::LyricSyllabic::unspecified)
+            {
+                textGroup.setSyllabic(convertLyricSyllabicForNoteWriter(lyricData.syllabic));
+            }
             textGroup.setText(std::move(text));
             if (lyricData.hasExtend)
             {
