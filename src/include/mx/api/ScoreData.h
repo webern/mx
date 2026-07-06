@@ -16,6 +16,7 @@
 #include "mx/api/SystemData.h"
 
 #include <map>
+#include <optional>
 #include <vector>
 
 namespace mx
@@ -61,6 +62,9 @@ class ScoreData
     std::string arranger;
     std::string publisher;
     std::string copyright;
+
+    // The <rights> type attribute for `copyright` (above).
+    std::optional<std::string> copyrightType;
     EncodingData encoding;
     std::vector<PageTextData> pageTextItems;
 
@@ -106,6 +110,7 @@ MXAPI_EQUALS_MEMBER(lyricist)
 MXAPI_EQUALS_MEMBER(arranger)
 MXAPI_EQUALS_MEMBER(publisher)
 MXAPI_EQUALS_MEMBER(copyright)
+MXAPI_EQUALS_MEMBER(copyrightType)
 MXAPI_EQUALS_MEMBER(encoding)
 MXAPI_EQUALS_MEMBER(pageTextItems)
 MXAPI_EQUALS_MEMBER(pageImageItems)

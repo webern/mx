@@ -249,3 +249,11 @@ musuite/testUnusualDurations_ref.xml
 lysuite/ly22c_Noteheads_Chords.xml
 lysuite/ly61i_Lyrics_Chords.xml
 lysuite/ly71f_AllChordTypes.xml
+
+# Unblocked by ScoreData::copyrightType: the writer force-wrote type="copyright"
+# onto every <rights> regardless of whether the source declared a type at all.
+# copyrightType (optional<string>, default "copyright" so authoring from scratch
+# is unchanged) now round-trips the source's actual type presence/value.
+lysuite/ly90a_Compressed_MusicXML.xml
+musuite/testLines2.xml
+musuite/testLines2_ref.xml
