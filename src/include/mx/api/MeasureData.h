@@ -13,6 +13,7 @@
 #include "mx/api/StaffData.h"
 #include "mx/api/TempoData.h"
 #include "mx/api/TimeSignatureData.h"
+#include "mx/api/TransposeData.h"
 
 #include <map>
 #include <string>
@@ -91,6 +92,13 @@ class MeasureData
     std::vector<BarlineData> barlines;
     std::optional<PartSymbolData> partSymbol;
 
+    // Transposition changes found in this measure's <attributes> (any tick position). Unlike
+    // 'keys', this is not carried forward: it is only populated when this measure actually
+    // contains one or more <transpose> elements. The very first transpose at measure 0/tick 0 is
+    // additionally (and independently) surfaced via PartData::transposition, unchanged from
+    // before this field existed.
+    std::vector<TransposeData> transpositions;
+
     MeasureData()
         : staves{}, timeSignature{}, number{}, measureNumbering{MeasureNumbering::unspecified},
           multiMeasureRest{VALUE_UNSPECIFIED}, implicit{Bool::unspecified}, nonControlling{Bool::unspecified},
@@ -111,6 +119,7 @@ MXAPI_EQUALS_MEMBER(width)
 MXAPI_EQUALS_MEMBER(keys)
 MXAPI_EQUALS_MEMBER(barlines)
 MXAPI_EQUALS_MEMBER(partSymbol)
+MXAPI_EQUALS_MEMBER(transpositions)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(MeasureData);
 } // namespace api

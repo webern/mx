@@ -63,6 +63,13 @@ class TransposeData
     /// The number of diatonic steps in the interval
     int diatonic;
 
+    /// this value is optional. INDEX_UNSPECIFIED means unspecified. when value is
+    /// unspecified it means that the transposition applies to all staves within the part
+    int staffIndex = INDEX_UNSPECIFIED;
+
+    /// Supports a transposition change somewhere other than at the start of a measure.
+    int tickTimePosition = 0;
+
     /// If both chromatic and diatonic are zero, then TransposeData is unused (i.e. it need
     /// not be encoded in the MusicXML output).
     inline bool isUsed() const
@@ -74,6 +81,8 @@ class TransposeData
 MXAPI_EQUALS_BEGIN(TransposeData)
 MXAPI_EQUALS_MEMBER(chromatic)
 MXAPI_EQUALS_MEMBER(diatonic)
+MXAPI_EQUALS_MEMBER(staffIndex)
+MXAPI_EQUALS_MEMBER(tickTimePosition)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(TransposeData);
 } // namespace api

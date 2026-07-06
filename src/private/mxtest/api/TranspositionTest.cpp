@@ -14,6 +14,7 @@
 #include "mx/core/generated/Transpose.h"
 #include "mx/core/generated/TransposeGroup.h"
 #include "mx/impl/Converter.h"
+#include "mxtest/api/TestHelpers.h"
 #include "mxtest/file/MxFileRepository.h"
 
 #include <sstream>
@@ -790,6 +791,115 @@ TEST(Tests10, Transposition)
     CHECK(result.parts.back().transposition->isUsed());
     CHECK_EQUAL(chromatic, result.parts.back().transposition->chromatic);
     CHECK_EQUAL(diatonic, result.parts.back().transposition->diatonic);
+}
+
+TEST(TransposeDataEquality_change_staffIndex, TransposeData)
+{
+    mx::api::TransposeData t1{-2, -1};
+    t1.staffIndex = 0;
+    t1.tickTimePosition = 13;
+    auto t2 = t1;
+    CHECK(t1 == t2);
+    CHECK(!(t1 != t2));
+
+    t1.staffIndex += 1;
+    CHECK(t1 != t2);
+    CHECK(!(t1 == t2));
+}
+
+TEST(TransposeDataEquality_change_tickTimePosition, TransposeData)
+{
+    mx::api::TransposeData t1{-2, -1};
+    t1.staffIndex = 0;
+    t1.tickTimePosition = 13;
+    auto t2 = t1;
+    CHECK(t1 == t2);
+
+    t1.tickTimePosition += 1;
+    CHECK(t1 != t2);
+    CHECK(!(t1 == t2));
+}
+
+TEST(midPieceTranspositionAppearsOnMeasure, TransposeMeasure)
+{
+    auto score = mxtest::makeScore(2);
+    auto &part = score.parts.back();
+    part.transposition = mx::api::TransposeData{-2, -1};
+    part.measures.at(0).staves.emplace_back(mx::api::StaffData{});
+    part.measures.at(1).staves.emplace_back(mx::api::StaffData{});
+
+    mx::api::TransposeData midPieceChange{2, 1};
+    midPieceChange.tickTimePosition = 0;
+    part.measures.at(1).transpositions.push_back(midPieceChange);
+
+    const auto result = mxtest::roundtrip(score);
+    REQUIRE(result.parts.size() == 1);
+    const auto &resultPart = result.parts.front();
+
+    // the part-level transposition (measure 0/tick 0) is unaffected
+    REQUIRE(resultPart.transposition.has_value());
+    CHECK_EQUAL(-2, resultPart.transposition->chromatic);
+    CHECK_EQUAL(-1, resultPart.transposition->diatonic);
+
+    // and the mid-piece change shows up on the measure that carries it. the measure 0 / tick 0
+    // <transpose> written from the part-level fallback is also, independently, surfaced on
+    // measure 0's own transpositions list (per the #269 design: any <transpose> found anywhere
+    // is recorded onto the measure that contains it, in addition to the backward-compatible
+    // PartData::transposition selection above).
+    REQUIRE(resultPart.measures.size() == 2);
+    REQUIRE(resultPart.measures.at(0).transpositions.size() == 1);
+    CHECK_EQUAL(-2, resultPart.measures.at(0).transpositions.front().chromatic);
+    CHECK_EQUAL(-1, resultPart.measures.at(0).transpositions.front().diatonic);
+    REQUIRE(resultPart.measures.at(1).transpositions.size() == 1);
+    CHECK_EQUAL(2, resultPart.measures.at(1).transpositions.front().chromatic);
+    CHECK_EQUAL(1, resultPart.measures.at(1).transpositions.front().diatonic);
+}
+
+TEST(staffScopedTranspositionRoundTrip, TransposeMeasure)
+{
+    auto score = mxtest::makeScore(1);
+    auto &part = score.parts.back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back(mx::api::StaffData{});
+    measure.staves.emplace_back(mx::api::StaffData{});
+
+    mx::api::TransposeData staff0Transpose{-2, -1};
+    staff0Transpose.staffIndex = 0;
+    mx::api::TransposeData staff1Transpose{-9, -5};
+    staff1Transpose.staffIndex = 1;
+
+    measure.transpositions.push_back(staff0Transpose);
+    measure.transpositions.push_back(staff1Transpose);
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("number=\"1\"") != std::string::npos);
+    CHECK(xml.find("number=\"2\"") != std::string::npos);
+
+    const auto result = mxtest::roundtrip(score);
+    REQUIRE(result.parts.size() == 1);
+    REQUIRE(result.parts.front().measures.size() == 1);
+    const auto &resultTranspositions = result.parts.front().measures.front().transpositions;
+    REQUIRE(resultTranspositions.size() == 2);
+
+    bool foundStaff0 = false;
+    bool foundStaff1 = false;
+    for (const auto &t : resultTranspositions)
+    {
+        if (t.staffIndex == 0)
+        {
+            foundStaff0 = true;
+            CHECK_EQUAL(-2, t.chromatic);
+            CHECK_EQUAL(-1, t.diatonic);
+        }
+        else if (t.staffIndex == 1)
+        {
+            foundStaff1 = true;
+            CHECK_EQUAL(-9, t.chromatic);
+            CHECK_EQUAL(-5, t.diatonic);
+        }
+    }
+    CHECK(foundStaff0);
+    CHECK(foundStaff1);
 }
 
 TEST(Tests11, Transposition)
