@@ -323,22 +323,22 @@ void DirectionWriter::emitOttavaStart(const api::OttavaStart &ottavaStart, core:
     switch (ottavaStart.ottavaType)
     {
     case api::OttavaType::o15ma: {
-        os.setType(core::UpDownStopContinue::up());
+        os.setType(core::UpDownStopContinue::down());
         os.setSize(15);
         break;
     }
     case api::OttavaType::o15mb: {
-        os.setType(core::UpDownStopContinue::down());
+        os.setType(core::UpDownStopContinue::up());
         os.setSize(15);
         break;
     }
     case api::OttavaType::o8va: {
-        os.setType(core::UpDownStopContinue::up());
+        os.setType(core::UpDownStopContinue::down());
         os.setSize(8);
         break;
     }
     case api::OttavaType::o8vb: {
-        os.setType(core::UpDownStopContinue::down());
+        os.setType(core::UpDownStopContinue::up());
         os.setSize(8);
         break;
     }

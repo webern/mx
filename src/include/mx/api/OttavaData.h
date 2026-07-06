@@ -9,13 +9,17 @@ namespace mx
 {
 namespace api
 {
+// Names follow common notation usage (an "8va" line raises the sounding pitch an octave above
+// what is written). Per the MusicXML spec, the underlying octave-shift/@type attribute instead
+// describes the direction the *written* notes are shifted from the true pitch, which is the
+// opposite sense: o8va/o15ma write type="down" and o8vb/o15mb write type="up".
 enum class OttavaType
 {
     unspecified,
-    o8va,  // octave up
-    o8vb,  // octave down
-    o15ma, // 2 octaves up
-    o15mb  // 2 octaves down
+    o8va,  // octave up (writes octave-shift type="down")
+    o8vb,  // octave down (writes octave-shift type="up")
+    o15ma, // 2 octaves up (writes octave-shift type="down")
+    o15mb  // 2 octaves down (writes octave-shift type="up")
 };
 
 class OttavaStart
