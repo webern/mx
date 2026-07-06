@@ -399,7 +399,7 @@ core::NotationsChoice NotationsWriter::makeTechnicalNotationsChoice() const
 
 void NotationsWriter::addArticulation(const api::MarkData &mark, core::Articulations &outArticulations) const
 {
-    if (!myConverter.isArticulation(mark.markType) && !api::isMarkCustom(mark.markType))
+    if (!api::isMarkArticulation(mark.markType) && !api::isMarkCustom(mark.markType))
     {
         return;
     }
@@ -417,6 +417,14 @@ void NotationsWriter::addArticulation(const api::MarkData &mark, core::Articulat
     case core::ArticulationsChoice::Kind::strongAccent: {
         core::StrongAccent sa;
         setAttributesFromPositionData(mark.positionData, sa);
+        if (mark.markType == api::MarkType::strongAccentUp)
+        {
+            sa.setType(core::UpDown::up());
+        }
+        else if (mark.markType == api::MarkType::strongAccentDown)
+        {
+            sa.setType(core::UpDown::down());
+        }
         outArticulations.addChoice(core::ArticulationsChoice::strongAccent(sa));
         break;
     }

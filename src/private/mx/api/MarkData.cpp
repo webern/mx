@@ -99,13 +99,14 @@ bool isMarkArpeggiate(MarkType markType)
 
 bool isMarkArticulation(MarkType markType)
 {
-    return (markType == MarkType::accent) || (markType == MarkType::strongAccent) || (markType == MarkType::staccato) ||
-           (markType == MarkType::tenuto) || (markType == MarkType::detachedLegato) ||
-           (markType == MarkType::staccatissimo) || (markType == MarkType::spiccato) || (markType == MarkType::scoop) ||
-           (markType == MarkType::plop) || (markType == MarkType::doit) || (markType == MarkType::falloff) ||
-           (markType == MarkType::breathMark) || (markType == MarkType::caesura) || (markType == MarkType::stress) ||
-           (markType == MarkType::unstress) || (markType == MarkType::softAccent) ||
-           (markType == MarkType::otherArticulation);
+    return (markType == MarkType::accent) || (markType == MarkType::strongAccent) ||
+           (markType == MarkType::strongAccentUp) || (markType == MarkType::strongAccentDown) ||
+           (markType == MarkType::staccato) || (markType == MarkType::tenuto) ||
+           (markType == MarkType::detachedLegato) || (markType == MarkType::staccatissimo) ||
+           (markType == MarkType::spiccato) || (markType == MarkType::scoop) || (markType == MarkType::plop) ||
+           (markType == MarkType::doit) || (markType == MarkType::falloff) || (markType == MarkType::breathMark) ||
+           (markType == MarkType::caesura) || (markType == MarkType::stress) || (markType == MarkType::unstress) ||
+           (markType == MarkType::softAccent) || (markType == MarkType::otherArticulation);
 }
 
 bool isMarkOrnament(MarkType markType)
