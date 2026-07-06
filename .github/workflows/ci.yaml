@@ -23,12 +23,34 @@ env:
 # Every Linux job runs its make targets inside the pinned mx-sdk Docker
 # toolchain; only the two macOS jobs build natively.
 jobs:
+  # Cheap up-front diff check so the gen-quality gate (score.json/report.md,
+  # ratcheted floor) only runs -- and only spends a PR comment -- when gen/
+  # actually changed. A gen/ change that's md-only (README/AGENTS/DESIGN docs)
+  # doesn't move the score, so it's excluded too. Other linux-gen steps
+  # (fmt-check, test-gen, gen-check, regen drift) are unaffected: they're
+  # cheap and apply to the whole repo, not just gen/.
+  changes:
+    name: "Detect gen/ changes"
+    runs-on: ubuntu-latest
+    outputs:
+      gen: ${{ steps.filter.outputs.gen }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            gen:
+              - 'gen/**'
+              - '!gen/**/*.md'
+
   # Python-side gates for the gen/ generator and audit tool, plus the repo's
   # only clang-format gate. Also runs plates --check for every target. No C++
   # is compiled or tested here.
   linux-gen:
     name: "gen: unit/audit tests + regen drift + quality/lint + fmt-check (Linux)"
     runs-on: ubuntu-latest
+    needs: changes
 
     # Read-only token: this job builds untrusted fork PR code, so it never
     # requests write. The gen-quality comment is posted by the pr-comment.yaml
@@ -85,18 +107,24 @@ jobs:
       - name: Generated output drift check
         run: git diff --exit-code
 
-      # Static-analysis gates on the gen/ generator. Each fails the build below
-      # its floor (GEN_QUALITY_FLOOR / GEN_LINT_FLOOR in the Makefile).
+      # Static-analysis gates on the gen/ generator. gen-quality only runs when
+      # gen/ actually changed (see the `changes` job); gen-lint stays unguarded
+      # since it's cheap and has no report/comment plumbing riding on it. Each
+      # fails the build below its floor (GEN_QUALITY_FLOOR / GEN_LINT_FLOOR in
+      # the Makefile).
       - name: gen-quality gate
+        if: needs.changes.outputs.gen == 'true'
         run: make gen-quality
 
       - name: gen-lint gate
         run: make gen-lint
 
-      # Surface the score in the run summary and (on PRs) as a per-push comment.
-      # always() so a gate failure still reports why.
+      # Surface the score in the run summary when the gate actually ran.
+      # always() so a gate failure still reports why; skipped runs (gen/
+      # unchanged) leave this section out entirely rather than printing a
+      # misleading "(no report produced)".
       - name: gen-quality report
-        if: always()
+        if: always() && needs.changes.outputs.gen == 'true'
         run: |
           {
             echo '### gen-quality `gen/`'
@@ -107,14 +135,21 @@ jobs:
       # Fork PRs run with a read-only token, so this job can't post the comment
       # itself. Stage the body + PR number as an artifact; pr-comment.yaml posts
       # it after CI completes. always() so a gate failure still reports why.
+      # Guarded on the report file existing (not just needs.changes.outputs.gen)
+      # so the comment-sending job gets no artifact -- and gracefully posts
+      # nothing -- whenever gen-quality didn't run or crashed before writing it.
       - name: Stage gen-quality PR comment
         if: always() && github.event_name == 'pull_request'
         run: |
+          if [ ! -f data/testOutput/gen-quality/report.md ]; then
+            echo 'No gen-quality report to stage (check skipped or produced nothing).'
+            exit 0
+          fi
           mkdir -p pr-comment
           {
             echo '### gen-quality `gen/`'
             echo ''
-            cat data/testOutput/gen-quality/report.md 2>/dev/null || echo '(no report produced)'
+            cat data/testOutput/gen-quality/report.md
             echo ''
             echo 'Commit `${{ github.sha }}`.'
           } > pr-comment/body.md
@@ -126,6 +161,7 @@ jobs:
         with:
           name: pr-comment-gen
           path: pr-comment/
+          if-no-files-found: ignore
 
   # The mx::api/mx::impl product surface. Core-layer suites (corert, unit,
   # xmllint, probes) run in linux-core, not here.
@@ -227,16 +263,20 @@ jobs:
 
   # Re-runs the core (corert + unit) and api (mxtest + round-trip) suites in
   # instrumented builds to produce gcovr reports. Coverage % is advisory (no
-  # floor), but a test failure still fails the job.
-  coverage:
-    name: "coverage: core + api gcovr reports, advisory (Linux)"
+  # floor), but a test failure still fails the job. Split into two jobs so the
+  # two instrumented builds run in parallel instead of as serial steps in one
+  # job; coverage-report merges their outputs into a single job summary +
+  # PR comment once both finish.
+  coverage-core:
+    name: "coverage: core gcovr report, advisory (Linux)"
     runs-on: ubuntu-latest
 
-    # Read-only token: posting the coverage comment is delegated to the
-    # pr-comment.yaml companion workflow so fork PRs get a comment too (their
-    # GITHUB_TOKEN is capped to read-only here).
     permissions:
       contents: read
+
+    outputs:
+      table: ${{ steps.table.outputs.table }}
+      artifact-url: ${{ steps.upload.outputs.artifact-url }}
 
     steps:
       - uses: actions/checkout@v4
@@ -259,19 +299,18 @@ jobs:
         uses: actions/cache@v4
         with:
           path: build/docker/.ccache
-          key: ccache-${{ runner.os }}-coverage-${{ github.sha }}
-          restore-keys: ccache-${{ runner.os }}-coverage-
+          key: ccache-${{ runner.os }}-coverage-core-${{ github.sha }}
+          restore-keys: ccache-${{ runner.os }}-coverage-core-
 
       - name: coverage-core-dev (corert + unit, instrumented)
         run: make coverage-core-dev
 
-      - name: coverage-api (mxtest + round-trip, instrumented)
-        run: make coverage-api
-
       # Turn gcovr's 3-line summary (data/testOutput/coverage/summary.txt, e.g.
-      # "lines: 52.1% (17624 out of 33846)") into a Markdown table reused by
-      # both the job summary and the PR comment.
+      # "lines: 52.1% (17624 out of 33846)") into a Markdown table for the job
+      # summary, and pass it to coverage-report as a job output for the
+      # merged PR comment.
       - name: Build coverage table
+        id: table
         if: always()
         run: |
           make_table() {
@@ -290,12 +329,13 @@ jobs:
             echo '### Core-dev coverage `src/private/mx/core/`'
             echo ''
             make_table data/testOutput/coverage/summary.txt
-            echo ''
-            echo '### API coverage `src/private/mx/{api,impl,utility}/`'
-            echo ''
-            make_table data/testOutput/coverage/api/summary.txt 2>/dev/null || echo '(api coverage not produced)'
           } > table.md
           cat table.md >> "$GITHUB_STEP_SUMMARY"
+          {
+            echo 'table<<COVERAGE_TABLE_EOF'
+            cat table.md
+            echo 'COVERAGE_TABLE_EOF'
+          } >> "$GITHUB_OUTPUT"
 
       # Single self-contained page, stored (compression-level 0). GitHub still
       # delivers artifacts as a .zip -- there is no raw-file download -- so the
@@ -309,8 +349,70 @@ jobs:
           path: data/testOutput/coverage/index.html
           compression-level: 0
 
+  coverage-api:
+    name: "coverage: api gcovr report, advisory (Linux)"
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    outputs:
+      table: ${{ steps.table.outputs.table }}
+      artifact-url: ${{ steps.upload.outputs.artifact-url }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+      - uses: crazy-max/ghaction-github-runtime@v3
+
+      - name: Create bind-backed build volume
+        run: |
+          mkdir -p build/docker
+          docker volume create --driver local \
+            --opt type=none --opt o=bind \
+            --opt device="$GITHUB_WORKSPACE/build/docker" mx-build
+
+      - name: Cache ccache
+        uses: actions/cache@v4
+        with:
+          path: build/docker/.ccache
+          key: ccache-${{ runner.os }}-coverage-api-${{ github.sha }}
+          restore-keys: ccache-${{ runner.os }}-coverage-api-
+
+      - name: coverage-api (mxtest + round-trip, instrumented)
+        run: make coverage-api
+
+      - name: Build coverage table
+        id: table
+        if: always()
+        run: |
+          make_table() {
+            local file="$1"
+            echo '| Metric | Coverage | Covered / Total |'
+            echo '|---|---:|---:|'
+            awk '/^(lines|functions|branches):/ {
+              m=$1; sub(":","",m);
+              c=$3; sub("[(]","",c);
+              t=$6; sub("[)]","",t);
+              M=toupper(substr(m,1,1)) substr(m,2);
+              printf "| %s | %s | %s / %s |\n", M, $2, c, t
+            }' "$file"
+          }
+          {
+            echo '### API coverage `src/private/mx/{api,impl,utility}/`'
+            echo ''
+            make_table data/testOutput/coverage/api/summary.txt 2>/dev/null || echo '(api coverage not produced)'
+          } > table.md
+          cat table.md >> "$GITHUB_STEP_SUMMARY"
+          {
+            echo 'table<<COVERAGE_TABLE_EOF'
+            cat table.md
+            echo 'COVERAGE_TABLE_EOF'
+          } >> "$GITHUB_OUTPUT"
+
       - name: Upload api HTML report
-        id: upload-api
+        id: upload
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -318,26 +420,42 @@ jobs:
           path: data/testOutput/coverage/api/index.html
           compression-level: 0
 
+  # Merges the two coverage jobs' tables into one PR comment. always() so it
+  # still posts (with whatever tables it has) if one side failed; gated to
+  # pull_request since push events have no PR to comment on.
+  coverage-report:
+    name: "coverage: PR comment (core + api)"
+    runs-on: ubuntu-latest
+    needs: [coverage-core, coverage-api]
+    if: always() && github.event_name == 'pull_request'
+
+    # Read-only token: posting the coverage comment is delegated to the
+    # pr-comment.yaml companion workflow so fork PRs get a comment too (their
+    # GITHUB_TOKEN is capped to read-only here).
+    permissions:
+      contents: read
+
+    steps:
       # Stage the body + PR number as an artifact; pr-comment.yaml posts it
       # after CI completes (this job's fork-PR token is read-only). It posts a
       # fresh comment each run, so the PR keeps a per-push coverage history.
       - name: Stage PR comment
-        if: github.event_name == 'pull_request'
         run: |
           mkdir -p pr-comment
           {
             echo '### Coverage report'
             echo ''
-            cat table.md
+            echo '${{ needs.coverage-core.outputs.table }}'
             echo ''
-            echo '[Core HTML report](${{ steps.upload.outputs.artifact-url }}) | [API HTML report](${{ steps.upload-api.outputs.artifact-url }})'
+            echo '${{ needs.coverage-api.outputs.table }}'
+            echo ''
+            echo '[Core HTML report](${{ needs.coverage-core.outputs.artifact-url }}) | [API HTML report](${{ needs.coverage-api.outputs.artifact-url }})'
             echo ''
             echo 'Commit `${{ github.sha }}`.'
           } > pr-comment/body.md
           echo '${{ github.event.pull_request.number }}' > pr-comment/number
 
       - name: Upload PR comment
-        if: github.event_name == 'pull_request'
         uses: actions/upload-artifact@v4
         with:
           name: pr-comment-coverage
