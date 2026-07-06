@@ -45,7 +45,7 @@ template <typename T> T seed()
 api::CurveStart seedStart(api::CurveType t)
 {
     api::CurveStart c{t};
-    c.numberLevel = 2;
+    c.number = api::SpannerNumber::makeLevel(2);
     c.curvePoints.isBezierOffsetSpecified = true;
     c.curvePoints.bezierOffset = 1.0;
     c.curvePoints.isBezierXSpecified = true;
@@ -78,7 +78,7 @@ api::CurveStart seedStart(api::CurveType t)
 api::CurveContinue seedContinue(api::CurveType t)
 {
     api::CurveContinue c{t};
-    c.numberLevel = 2;
+    c.number = api::SpannerNumber::makeLevel(2);
     c.curvePoints.isBezierOffsetSpecified = true;
     c.curvePoints.bezierOffset = 1.0;
     c.curvePoints.isBezierXSpecified = true;
@@ -106,7 +106,7 @@ api::CurveContinue seedContinue(api::CurveType t)
 api::CurveStop seedStop(api::CurveType t)
 {
     api::CurveStop c{t};
-    c.numberLevel = 2;
+    c.number = api::SpannerNumber::makeLevel(2);
     c.curvePoints.isBezierOffsetSpecified = true;
     c.curvePoints.bezierOffset = 1.0;
     c.curvePoints.isBezierXSpecified = true;
@@ -137,13 +137,13 @@ TEST(parseCurveStart_curveType, CurveFunctions)
 
 T_END
 
-TEST(parseCurveStart_numberLevel, CurveFunctions)
+TEST(parseCurveStart_number, CurveFunctions)
 {
     using namespace mx::impl;
     using namespace mx;
     auto e = seed<core::Tied>();
     auto c = impl::parseCurveStart(e);
-    CHECK_EQUAL(2, c.numberLevel);
+    CHECK(api::SpannerNumber::makeLevel(2) == c.number);
 }
 
 T_END
@@ -311,13 +311,13 @@ TEST(parseCurveContinue_curveType, CurveFunctions)
 
 T_END
 
-TEST(parseCurveContinue_numberLevel, CurveFunctions)
+TEST(parseCurveContinue_number, CurveFunctions)
 {
     using namespace mx::impl;
     using namespace mx;
     auto e = seed<core::Tied>();
     auto c = impl::parseCurveContinue(e);
-    CHECK_EQUAL(2, c.numberLevel);
+    CHECK(api::SpannerNumber::makeLevel(2) == c.number);
 }
 
 T_END
@@ -455,13 +455,13 @@ TEST(parseCurveStop_curveType, CurveFunctions)
 
 T_END
 
-TEST(parseCurveStop_numberLevel, CurveFunctions)
+TEST(parseCurveStop_number, CurveFunctions)
 {
     using namespace mx::impl;
     using namespace mx;
     auto e = seed<core::Tied>();
     auto c = impl::parseCurveStop(e);
-    CHECK_EQUAL(2, c.numberLevel);
+    CHECK(api::SpannerNumber::makeLevel(2) == c.number);
 }
 
 T_END
@@ -558,7 +558,7 @@ TEST(writeAttributesFromCurveStart_type, CurveFunctions)
     using namespace mx;
     core::Slur attr;
     auto c = seedStart(api::CurveType::slur);
-    impl::writeAttributesFromCurveStart(c, attr);
+    impl::writeAttributesFromCurveStart(c, attr, 2);
     CHECK(core::StartStopContinue::start() == attr.type());
 }
 
@@ -570,7 +570,7 @@ TEST(writeAttributesFromCurveStart_number, CurveFunctions)
     using namespace mx;
     core::Slur attr;
     auto c = seedStart(api::CurveType::slur);
-    impl::writeAttributesFromCurveStart(c, attr);
+    impl::writeAttributesFromCurveStart(c, attr, 2);
     CHECK_EQUAL(2, attr.number()->value());
 }
 
@@ -582,7 +582,7 @@ TEST(writeAttributesFromCurveStart_bezierOffset, CurveFunctions)
     using namespace mx;
     core::Slur attr;
     auto c = seedStart(api::CurveType::slur);
-    impl::writeAttributesFromCurveStart(c, attr);
+    impl::writeAttributesFromCurveStart(c, attr, 2);
     CHECK(attr.bezierOffset().has_value());
     CHECK_DOUBLES_EQUAL(1.0, attr.bezierOffset()->value().value(), 0.01);
 }
@@ -595,7 +595,7 @@ TEST(writeAttributesFromCurveStart_bezierX, CurveFunctions)
     using namespace mx;
     core::Slur attr;
     auto c = seedStart(api::CurveType::slur);
-    impl::writeAttributesFromCurveStart(c, attr);
+    impl::writeAttributesFromCurveStart(c, attr, 2);
     CHECK(attr.bezierX().has_value());
     CHECK_DOUBLES_EQUAL(13.0, attr.bezierX()->value().value(), 0.01);
 }
@@ -608,7 +608,7 @@ TEST(writeAttributesFromCurveStart_bezierY, CurveFunctions)
     using namespace mx;
     core::Slur attr;
     auto c = seedStart(api::CurveType::slur);
-    impl::writeAttributesFromCurveStart(c, attr);
+    impl::writeAttributesFromCurveStart(c, attr, 2);
     CHECK(attr.bezierY().has_value());
     CHECK_DOUBLES_EQUAL(14.0, attr.bezierY()->value().value(), 0.01);
 }
@@ -621,7 +621,7 @@ TEST(writeAttributesFromCurveStart_defaultX, CurveFunctions)
     using namespace mx;
     core::Slur attr;
     auto c = seedStart(api::CurveType::slur);
-    impl::writeAttributesFromCurveStart(c, attr);
+    impl::writeAttributesFromCurveStart(c, attr, 2);
     CHECK(attr.defaultX().has_value());
     CHECK_DOUBLES_EQUAL(3.0, attr.defaultX()->value().value(), 0.01);
 }
@@ -634,7 +634,7 @@ TEST(writeAttributesFromCurveStart_defaultY, CurveFunctions)
     using namespace mx;
     core::Slur attr;
     auto c = seedStart(api::CurveType::slur);
-    impl::writeAttributesFromCurveStart(c, attr);
+    impl::writeAttributesFromCurveStart(c, attr, 2);
     CHECK(attr.defaultY().has_value());
     CHECK_DOUBLES_EQUAL(4.0, attr.defaultY()->value().value(), 0.01);
 }
@@ -647,7 +647,7 @@ TEST(writeAttributesFromCurveStart_relativeX, CurveFunctions)
     using namespace mx;
     core::Slur attr;
     auto c = seedStart(api::CurveType::slur);
-    impl::writeAttributesFromCurveStart(c, attr);
+    impl::writeAttributesFromCurveStart(c, attr, 2);
     CHECK(attr.relativeX().has_value());
     CHECK_DOUBLES_EQUAL(5.0, attr.relativeX()->value().value(), 0.01);
 }
@@ -660,7 +660,7 @@ TEST(writeAttributesFromCurveStart_relativeY, CurveFunctions)
     using namespace mx;
     core::Slur attr;
     auto c = seedStart(api::CurveType::slur);
-    impl::writeAttributesFromCurveStart(c, attr);
+    impl::writeAttributesFromCurveStart(c, attr, 2);
     CHECK(attr.relativeY().has_value());
     CHECK_DOUBLES_EQUAL(6.0, attr.relativeY()->value().value(), 0.01);
 }
@@ -673,7 +673,7 @@ TEST(writeAttributesFromCurveStart_color, CurveFunctions)
     using namespace mx;
     core::Slur attr;
     auto c = seedStart(api::CurveType::slur);
-    impl::writeAttributesFromCurveStart(c, attr);
+    impl::writeAttributesFromCurveStart(c, attr, 2);
     CHECK(attr.color().has_value());
     CHECK_EQUAL(8, static_cast<int>(attr.color()->red()));
     CHECK_EQUAL(9, static_cast<int>(attr.color()->green()));
@@ -689,7 +689,7 @@ TEST(writeAttributesFromCurveStart_lineType, CurveFunctions)
     using namespace mx;
     core::Slur attr;
     auto c = seedStart(api::CurveType::slur);
-    impl::writeAttributesFromCurveStart(c, attr);
+    impl::writeAttributesFromCurveStart(c, attr, 2);
     CHECK(attr.lineType().has_value());
     CHECK(core::LineType::wavy() == *attr.lineType());
 }
@@ -702,7 +702,7 @@ TEST(writeAttributesFromCurveStart_dashLength, CurveFunctions)
     using namespace mx;
     core::Slur attr;
     auto c = seedStart(api::CurveType::slur);
-    impl::writeAttributesFromCurveStart(c, attr);
+    impl::writeAttributesFromCurveStart(c, attr, 2);
     CHECK(attr.dashLength().has_value());
     CHECK_DOUBLES_EQUAL(11.0, attr.dashLength()->value().value(), 0.01);
 }
@@ -715,7 +715,7 @@ TEST(writeAttributesFromCurveStart_spaceLength, CurveFunctions)
     using namespace mx;
     core::Slur attr;
     auto c = seedStart(api::CurveType::slur);
-    impl::writeAttributesFromCurveStart(c, attr);
+    impl::writeAttributesFromCurveStart(c, attr, 2);
     CHECK(attr.spaceLength().has_value());
     CHECK_DOUBLES_EQUAL(12.0, attr.spaceLength()->value().value(), 0.01);
 }
@@ -728,7 +728,7 @@ TEST(writeAttributesFromCurveStart_placement, CurveFunctions)
     using namespace mx;
     core::Slur attr;
     auto c = seedStart(api::CurveType::slur);
-    impl::writeAttributesFromCurveStart(c, attr);
+    impl::writeAttributesFromCurveStart(c, attr, 2);
     CHECK(attr.placement().has_value());
     CHECK(core::AboveBelow::below() == *attr.placement());
 }
@@ -741,7 +741,7 @@ TEST(writeAttributesFromCurveStart_orientation, CurveFunctions)
     using namespace mx;
     core::Slur attr;
     auto c = seedStart(api::CurveType::slur);
-    impl::writeAttributesFromCurveStart(c, attr);
+    impl::writeAttributesFromCurveStart(c, attr, 2);
     CHECK(attr.orientation().has_value());
     CHECK(core::OverUnder::over() == *attr.orientation());
 }
@@ -756,7 +756,7 @@ TEST(writeAttributesFromCurveContinue_type, CurveFunctions)
     using namespace mx;
     core::Slur attr;
     auto c = seedContinue(api::CurveType::slur);
-    impl::writeAttributesFromCurveContinue(c, attr);
+    impl::writeAttributesFromCurveContinue(c, attr, 2);
     CHECK(core::StartStopContinue::continue_() == attr.type());
 }
 
@@ -768,7 +768,7 @@ TEST(writeAttributesFromCurveContinue_number, CurveFunctions)
     using namespace mx;
     core::Slur attr;
     auto c = seedContinue(api::CurveType::slur);
-    impl::writeAttributesFromCurveContinue(c, attr);
+    impl::writeAttributesFromCurveContinue(c, attr, 2);
     CHECK_EQUAL(2, attr.number()->value());
 }
 
@@ -780,7 +780,7 @@ TEST(writeAttributesFromCurveContinue_bezierOffset, CurveFunctions)
     using namespace mx;
     core::Slur attr;
     auto c = seedContinue(api::CurveType::slur);
-    impl::writeAttributesFromCurveContinue(c, attr);
+    impl::writeAttributesFromCurveContinue(c, attr, 2);
     CHECK(attr.bezierOffset().has_value());
     CHECK_DOUBLES_EQUAL(1.0, attr.bezierOffset()->value().value(), 0.01);
 }
@@ -793,7 +793,7 @@ TEST(writeAttributesFromCurveContinue_bezierX, CurveFunctions)
     using namespace mx;
     core::Slur attr;
     auto c = seedContinue(api::CurveType::slur);
-    impl::writeAttributesFromCurveContinue(c, attr);
+    impl::writeAttributesFromCurveContinue(c, attr, 2);
     CHECK(attr.bezierX().has_value());
     CHECK_DOUBLES_EQUAL(13.0, attr.bezierX()->value().value(), 0.01);
 }
@@ -806,7 +806,7 @@ TEST(writeAttributesFromCurveContinue_bezierY, CurveFunctions)
     using namespace mx;
     core::Slur attr;
     auto c = seedContinue(api::CurveType::slur);
-    impl::writeAttributesFromCurveContinue(c, attr);
+    impl::writeAttributesFromCurveContinue(c, attr, 2);
     CHECK(attr.bezierY().has_value());
     CHECK_DOUBLES_EQUAL(14.0, attr.bezierY()->value().value(), 0.01);
 }
@@ -819,7 +819,7 @@ TEST(writeAttributesFromCurveContinue_defaultX, CurveFunctions)
     using namespace mx;
     core::Slur attr;
     auto c = seedContinue(api::CurveType::slur);
-    impl::writeAttributesFromCurveContinue(c, attr);
+    impl::writeAttributesFromCurveContinue(c, attr, 2);
     CHECK(attr.defaultX().has_value());
     CHECK_DOUBLES_EQUAL(3.0, attr.defaultX()->value().value(), 0.01);
 }
@@ -832,7 +832,7 @@ TEST(writeAttributesFromCurveContinue_defaultY, CurveFunctions)
     using namespace mx;
     core::Slur attr;
     auto c = seedContinue(api::CurveType::slur);
-    impl::writeAttributesFromCurveContinue(c, attr);
+    impl::writeAttributesFromCurveContinue(c, attr, 2);
     CHECK(attr.defaultY().has_value());
     CHECK_DOUBLES_EQUAL(4.0, attr.defaultY()->value().value(), 0.01);
 }
@@ -845,7 +845,7 @@ TEST(writeAttributesFromCurveContinue_relativeX, CurveFunctions)
     using namespace mx;
     core::Slur attr;
     auto c = seedContinue(api::CurveType::slur);
-    impl::writeAttributesFromCurveContinue(c, attr);
+    impl::writeAttributesFromCurveContinue(c, attr, 2);
     CHECK(attr.relativeX().has_value());
     CHECK_DOUBLES_EQUAL(5.0, attr.relativeX()->value().value(), 0.01);
 }
@@ -858,7 +858,7 @@ TEST(writeAttributesFromCurveContinue_relativeY, CurveFunctions)
     using namespace mx;
     core::Slur attr;
     auto c = seedContinue(api::CurveType::slur);
-    impl::writeAttributesFromCurveContinue(c, attr);
+    impl::writeAttributesFromCurveContinue(c, attr, 2);
     CHECK(attr.relativeY().has_value());
     CHECK_DOUBLES_EQUAL(6.0, attr.relativeY()->value().value(), 0.01);
 }
@@ -871,7 +871,7 @@ TEST(writeAttributesFromCurveContinue_bezierX2, CurveFunctions)
     using namespace mx;
     core::Slur attr;
     auto c = seedContinue(api::CurveType::slur);
-    impl::writeAttributesFromCurveContinue(c, attr);
+    impl::writeAttributesFromCurveContinue(c, attr, 2);
     CHECK(attr.bezierX2().has_value());
     CHECK_DOUBLES_EQUAL(100.0, attr.bezierX2()->value().value(), 0.01);
 }
@@ -884,7 +884,7 @@ TEST(writeAttributesFromCurveContinue_bezierY2, CurveFunctions)
     using namespace mx;
     core::Slur attr;
     auto c = seedContinue(api::CurveType::slur);
-    impl::writeAttributesFromCurveContinue(c, attr);
+    impl::writeAttributesFromCurveContinue(c, attr, 2);
     CHECK(attr.bezierY2().has_value());
     CHECK_DOUBLES_EQUAL(101.0, attr.bezierY2()->value().value(), 0.01);
 }
@@ -897,7 +897,7 @@ TEST(writeAttributesFromCurveContinue_bezierOffset2, CurveFunctions)
     using namespace mx;
     core::Slur attr;
     auto c = seedContinue(api::CurveType::slur);
-    impl::writeAttributesFromCurveContinue(c, attr);
+    impl::writeAttributesFromCurveContinue(c, attr, 2);
     CHECK(attr.bezierOffset2().has_value());
     CHECK_DOUBLES_EQUAL(102.0, attr.bezierOffset2()->value().value(), 0.01);
 }
@@ -912,7 +912,7 @@ TEST(writeAttributesFromCurveStop_type, CurveFunctions)
     using namespace mx;
     core::Slur attr;
     auto c = seedStop(api::CurveType::slur);
-    impl::writeAttributesFromCurveStop(c, attr);
+    impl::writeAttributesFromCurveStop(c, attr, 2);
     CHECK(core::StartStopContinue::stop() == attr.type());
 }
 
@@ -924,7 +924,7 @@ TEST(writeAttributesFromCurveStop_number, CurveFunctions)
     using namespace mx;
     core::Slur attr;
     auto c = seedStop(api::CurveType::slur);
-    impl::writeAttributesFromCurveStop(c, attr);
+    impl::writeAttributesFromCurveStop(c, attr, 2);
     CHECK_EQUAL(2, attr.number()->value());
 }
 
@@ -936,7 +936,7 @@ TEST(writeAttributesFromCurveStop_bezierOffset, CurveFunctions)
     using namespace mx;
     core::Slur attr;
     auto c = seedStop(api::CurveType::slur);
-    impl::writeAttributesFromCurveStop(c, attr);
+    impl::writeAttributesFromCurveStop(c, attr, 2);
     CHECK(attr.bezierOffset().has_value());
     CHECK_DOUBLES_EQUAL(1.0, attr.bezierOffset()->value().value(), 0.01);
 }
@@ -949,7 +949,7 @@ TEST(writeAttributesFromCurveStop_bezierX, CurveFunctions)
     using namespace mx;
     core::Slur attr;
     auto c = seedStop(api::CurveType::slur);
-    impl::writeAttributesFromCurveStop(c, attr);
+    impl::writeAttributesFromCurveStop(c, attr, 2);
     CHECK(attr.bezierX().has_value());
     CHECK_DOUBLES_EQUAL(13.0, attr.bezierX()->value().value(), 0.01);
 }
@@ -962,7 +962,7 @@ TEST(writeAttributesFromCurveStop_bezierY, CurveFunctions)
     using namespace mx;
     core::Slur attr;
     auto c = seedStop(api::CurveType::slur);
-    impl::writeAttributesFromCurveStop(c, attr);
+    impl::writeAttributesFromCurveStop(c, attr, 2);
     CHECK(attr.bezierY().has_value());
     CHECK_DOUBLES_EQUAL(14.0, attr.bezierY()->value().value(), 0.01);
 }
@@ -975,7 +975,7 @@ TEST(writeAttributesFromCurveStop_defaultX, CurveFunctions)
     using namespace mx;
     core::Slur attr;
     auto c = seedStop(api::CurveType::slur);
-    impl::writeAttributesFromCurveStop(c, attr);
+    impl::writeAttributesFromCurveStop(c, attr, 2);
     CHECK(attr.defaultX().has_value());
     CHECK_DOUBLES_EQUAL(3.0, attr.defaultX()->value().value(), 0.01);
 }
@@ -988,7 +988,7 @@ TEST(writeAttributesFromCurveStop_defaultY, CurveFunctions)
     using namespace mx;
     core::Slur attr;
     auto c = seedStop(api::CurveType::slur);
-    impl::writeAttributesFromCurveStop(c, attr);
+    impl::writeAttributesFromCurveStop(c, attr, 2);
     CHECK(attr.defaultY().has_value());
     CHECK_DOUBLES_EQUAL(4.0, attr.defaultY()->value().value(), 0.01);
 }
@@ -1001,7 +1001,7 @@ TEST(writeAttributesFromCurveStop_relativeX, CurveFunctions)
     using namespace mx;
     core::Slur attr;
     auto c = seedStop(api::CurveType::slur);
-    impl::writeAttributesFromCurveStop(c, attr);
+    impl::writeAttributesFromCurveStop(c, attr, 2);
     CHECK(attr.relativeX().has_value());
     CHECK_DOUBLES_EQUAL(5.0, attr.relativeX()->value().value(), 0.01);
 }
@@ -1014,7 +1014,7 @@ TEST(writeAttributesFromCurveStop_relativeY, CurveFunctions)
     using namespace mx;
     core::Slur attr;
     auto c = seedStop(api::CurveType::slur);
-    impl::writeAttributesFromCurveStop(c, attr);
+    impl::writeAttributesFromCurveStop(c, attr, 2);
     CHECK(attr.relativeY().has_value());
     CHECK_DOUBLES_EQUAL(6.0, attr.relativeY()->value().value(), 0.01);
 }

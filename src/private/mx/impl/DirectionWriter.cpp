@@ -102,9 +102,10 @@ static void applyBracketLineData(const api::LineData &lineData, core::Bracket &b
     }
 }
 
-DirectionWriter::DirectionWriter(const api::DirectionData &inDirectionData, const Cursor &inCursor)
-    : myDirectionData{inDirectionData}, myCursor{inCursor}, myConverter{}, myPlacements{},
-      myIsFirstDirectionTypeAdded{false}
+DirectionWriter::DirectionWriter(const api::DirectionData &inDirectionData, const Cursor &inCursor,
+                                 const SpannerNumberResolver &inNumberResolver)
+    : myDirectionData{inDirectionData}, myCursor{inCursor}, myNumberResolver{inNumberResolver}, myConverter{},
+      myPlacements{}, myIsFirstDirectionTypeAdded{false}
 {
 }
 
@@ -269,6 +270,12 @@ void DirectionWriter::emitWedgeStop(const api::WedgeStop &wedgeStop, core::Direc
     core::Wedge wedge{};
     wedge.setType(core::WedgeType::stop());
 
+    const auto number = myNumberResolver.emittedNumber(wedgeStop.number, &wedgeStop);
+    if (number.has_value())
+    {
+        wedge.setNumber(core::NumberLevel{*number});
+    }
+
     if (wedgeStop.isSpreadSpecified)
     {
         wedge.setSpread(core::Tenths{core::Decimal{static_cast<double>(wedgeStop.spread)}});
@@ -286,6 +293,12 @@ void DirectionWriter::emitWedgeStart(const api::WedgeStart &wedgeStart, core::Di
     if (wedgeStart.wedgeType != api::WedgeType::unspecified)
     {
         wedge.setType(myConverter.convert(wedgeStart.wedgeType));
+    }
+
+    const auto number = myNumberResolver.emittedNumber(wedgeStart.number, &wedgeStart);
+    if (number.has_value())
+    {
+        wedge.setNumber(core::NumberLevel{*number});
     }
 
     if (wedgeStart.isSpreadSpecified)
@@ -307,7 +320,8 @@ void DirectionWriter::emitWedgeStart(const api::WedgeStart &wedgeStart, core::Di
 void DirectionWriter::emitOttavaStop(const api::OttavaStop &ottavaStop, core::Direction &direction)
 {
     core::OctaveShift os{};
-    setAttributesFromSpannerStop(ottavaStop.spannerStop, os);
+    setAttributesFromSpannerStop(ottavaStop.spannerStop, os,
+                                 myNumberResolver.emittedNumber(ottavaStop.spannerStop.number, &ottavaStop.spannerStop));
     os.setType(core::UpDownStopContinue::stop());
     os.setSize(ottavaStop.size);
     core::DirectionType dt{};
@@ -319,6 +333,12 @@ void DirectionWriter::emitOttavaStart(const api::OttavaStart &ottavaStart, core:
 {
     core::OctaveShift os{};
     impl::setAttributesFromLineData(ottavaStart.spannerStart.lineData, os);
+
+    const auto number = myNumberResolver.emittedNumber(ottavaStart.spannerStart.number, &ottavaStart.spannerStart);
+    if (number.has_value())
+    {
+        os.setNumber(core::NumberLevel{*number});
+    }
 
     switch (ottavaStart.ottavaType)
     {
@@ -354,7 +374,7 @@ void DirectionWriter::emitOttavaStart(const api::OttavaStart &ottavaStart, core:
 void DirectionWriter::emitBracketStart(const api::SpannerStart &item, core::Direction &direction)
 {
     core::Bracket bracket{};
-    setAttributesFromSpannerStart(item, bracket);
+    setAttributesFromSpannerStart(item, bracket, myNumberResolver.emittedNumber(item.number, &item));
     bracket.setType(core::StartStopContinue::start());
     setAttributesFromPositionData(item.positionData, bracket);
     setAttributesFromPrintData(item.printData, bracket);
@@ -367,7 +387,7 @@ void DirectionWriter::emitBracketStart(const api::SpannerStart &item, core::Dire
 void DirectionWriter::emitBracketStop(const api::SpannerStop &item, core::Direction &direction)
 {
     core::Bracket bracket{};
-    setAttributesFromSpannerStop(item, bracket);
+    setAttributesFromSpannerStop(item, bracket, myNumberResolver.emittedNumber(item.number, &item));
     bracket.setType(core::StartStopContinue::stop());
     applyBracketLineData(item.lineData, bracket, myConverter);
     core::DirectionType dt{};
@@ -378,7 +398,7 @@ void DirectionWriter::emitBracketStop(const api::SpannerStop &item, core::Direct
 void DirectionWriter::emitDashesStart(const api::SpannerStart &item, core::Direction &direction)
 {
     core::Dashes dashes{};
-    setAttributesFromSpannerStart(item, dashes);
+    setAttributesFromSpannerStart(item, dashes, myNumberResolver.emittedNumber(item.number, &item));
     dashes.setType(core::StartStopContinue::start());
     setAttributesFromPositionData(item.positionData, dashes);
     setAttributesFromPrintData(item.printData, dashes);
@@ -391,7 +411,7 @@ void DirectionWriter::emitDashesStart(const api::SpannerStart &item, core::Direc
 void DirectionWriter::emitDashesStop(const api::SpannerStop &item, core::Direction &direction)
 {
     core::Dashes dashes{};
-    setAttributesFromSpannerStop(item, dashes);
+    setAttributesFromSpannerStop(item, dashes, myNumberResolver.emittedNumber(item.number, &item));
     dashes.setType(core::StartStopContinue::stop());
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::dashes(dashes));

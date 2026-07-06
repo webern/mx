@@ -31,9 +31,17 @@ namespace mx
 {
 namespace impl
 {
-ScoreWriter::ScoreWriter(const api::ScoreData &inScoreData) : myScoreData{inScoreData}, myMutex{}, myOutScorePartwise{}
+ScoreWriter::ScoreWriter(const api::ScoreData &inScoreData)
+    : myScoreData{inScoreData}, mySpannerNumberResolver{}, myMutex{}, myOutScorePartwise{}
 {
     myScoreData.sort();
+
+    // Resolve after sort() so the resolved spanner object addresses are the
+    // ones the measure/note writers will visit.
+    for (const auto &part : myScoreData.parts)
+    {
+        mySpannerNumberResolver.resolvePart(part);
+    }
 }
 
 core::ScorePartwise ScoreWriter::getScorePartwise() const

@@ -506,7 +506,7 @@ void DirectionReader::parseWedge(const core::DirectionType &directionType)
         api::WedgeStop stop;
         if (wedge.number().has_value())
         {
-            stop.numberLevel = wedge.number()->value();
+            stop.number = api::SpannerNumber::makeLevel(wedge.number()->value());
         }
         if (isSpreadSpecified)
         {
@@ -524,7 +524,7 @@ void DirectionReader::parseWedge(const core::DirectionType &directionType)
         api::WedgeStart start;
         if (wedge.number().has_value())
         {
-            start.numberLevel = wedge.number()->value();
+            start.number = api::SpannerNumber::makeLevel(wedge.number()->value());
         }
         if (isSpreadSpecified)
         {
@@ -667,7 +667,10 @@ void DirectionReader::parseBracket(const core::DirectionType &directionType)
     {
         api::SpannerStart start;
         start.tickTimePosition = myCursor.tickTimePosition;
-        start.numberLevel = impl::checkNumber(&bracket);
+        if (impl::checkHasNumber(&bracket))
+        {
+            start.number = api::SpannerNumber::makeLevel(impl::checkNumber(&bracket));
+        }
         start.positionData = this->parsePositionData(bracket);
         start.lineData = makeBracketLineData();
         start.printData = impl::getPrintData(bracket);

@@ -320,3 +320,9 @@ lysuite/ly11h_TimeSignatures_SenzaMisura.xml
 # trims just those unrelated gaps so the composite time-signature round-trip
 # itself is pinned.
 rpatters1/timesigs_composite-ref-modified.musicxml
+
+# The issue #297 spanner-number scenario (unified SpannerNumber + writer-side
+# assignment): two slurs that do not overlap in musical time but do overlap in
+# the serialized stream once voice 1 is written ahead of voice 2, plus a wedge.
+# Pins explicit slur/wedge numbers surviving read -> write -> read verbatim.
+custom/slurs_overbars.musicxml

@@ -79,12 +79,12 @@ TEST(ottavaStart8vaAnd8vb, DirectionReader)
 
     CHECK_EQUAL(tickTimePosition, ottavaStart.spannerStart.tickTimePosition);
     CHECK(api::OttavaType::o8vb == ottavaStart.ottavaType);
-    CHECK_EQUAL(-1, ottavaStart.spannerStart.numberLevel);
+    CHECK(ottavaStart.spannerStart.number.isUnspecified());
 
     ottavaStart = directionData.ottavaStarts.at(1);
     CHECK_EQUAL(tickTimePosition, ottavaStart.spannerStart.tickTimePosition);
     CHECK(api::OttavaType::o8va == ottavaStart.ottavaType);
-    CHECK_EQUAL(3, ottavaStart.spannerStart.numberLevel);
+    CHECK(api::SpannerNumber::makeLevel(3) == ottavaStart.spannerStart.number);
 }
 
 T_END
@@ -106,7 +106,7 @@ TEST(ottavaStop, DirectionReader)
     CHECK_EQUAL(1, directionData.ottavaStops.size());
     const auto &ottavaStop = directionData.ottavaStops.front();
     CHECK_EQUAL(tickTimePosition, ottavaStop.spannerStop.tickTimePosition);
-    CHECK_EQUAL(-1, ottavaStop.spannerStop.numberLevel);
+    CHECK(ottavaStop.spannerStop.number.isUnspecified());
     CHECK(ottavaStop.size.has_value());
     CHECK_EQUAL(15, *ottavaStop.size);
 }
