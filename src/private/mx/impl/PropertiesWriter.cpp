@@ -289,9 +289,15 @@ void PropertiesWriter::writePartSymbol(const api::PartSymbolData &inPartSymbolDa
     myHasContent = true;
 }
 
-void PropertiesWriter::writeTranspose(const api::TransposeData &inTransposeData)
+void PropertiesWriter::writeTranspose(int staffIndex, const api::TransposeData &inTransposeData)
 {
     auto xpose = Converter::convertToTranspose(inTransposeData);
+
+    if (staffIndex >= 0)
+    {
+        xpose.setNumber(core::StaffNumber{staffIndex + 1});
+    }
+
     auto vec =
         myAttributes.choice().isTranspose() ? myAttributes.choice().asTranspose() : std::vector<core::Transpose>{};
     vec.push_back(std::move(xpose));

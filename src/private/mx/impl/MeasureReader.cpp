@@ -532,11 +532,33 @@ std::optional<api::TransposeData> MeasureReader::parseAttributes(const core::Att
 
     if (inMxAttributes.choice().isTranspose() && !inMxAttributes.choice().asTranspose().empty())
     {
-        // TODO support transpositions at places other than the start of the score
+        const auto &transposeVec = inMxAttributes.choice().asTranspose();
+
+        // The very first transpose at measure 0/tick 0 is (still, unconditionally) treated as a
+        // property of the part rather than the measure. This selection logic is unchanged.
         if (myCurrentCursor.measureIndex == 0 && myCurrentCursor.tickTimePosition == 0)
         {
-            const auto &coreTranspose = inMxAttributes.choice().asTranspose().front();
+            const auto &coreTranspose = transposeVec.front();
             transpose = Converter::convertToTransposeData(coreTranspose);
+        }
+
+        // Additionally and independently, every <transpose> element found anywhere is recorded
+        // onto the measure's transpositions list.
+        for (const auto &coreTranspose : transposeVec)
+        {
+            auto transposeData = Converter::convertToTransposeData(coreTranspose);
+
+            if (coreTranspose.number().has_value())
+            {
+                transposeData.staffIndex = coreTranspose.number()->value() - 1;
+                if (transposeData.staffIndex > myCurrentCursor.getNumStaves() - 1)
+                {
+                    transposeData.staffIndex = api::INDEX_UNSPECIFIED;
+                }
+            }
+
+            transposeData.tickTimePosition = myCurrentCursor.tickTimePosition;
+            myOutMeasureData.transpositions.emplace_back(std::move(transposeData));
         }
     }
     return transpose;

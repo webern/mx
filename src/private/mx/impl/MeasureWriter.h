@@ -199,6 +199,8 @@ class MeasureWriter
     std::vector<api::BarlineData>::const_iterator myBarlinesEnd;
     std::vector<api::KeyData>::const_iterator myMeasureKeysIter;
     const std::vector<api::KeyData>::const_iterator myMeasureKeysEnd;
+    std::vector<api::TransposeData>::const_iterator myMeasureTransposeIter;
+    const std::vector<api::TransposeData>::const_iterator myMeasureTransposeEnd;
     History myHistory;
 
   private:
