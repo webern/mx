@@ -56,7 +56,7 @@ class PropertiesWriter
     void writeStaffDetails(int staffIndex, int staffLines, double staffSize, double staffScaling);
     void writeClef(int staffIndex, const api::ClefData &inClefData);
     void writePartSymbol(const api::PartSymbolData &inPartSymbolData);
-    void writeTranspose(const api::TransposeData &inTransposeData);
+    void writeTranspose(int staffIndex, const api::TransposeData &inTransposeData);
 
   private:
     void allocate();
