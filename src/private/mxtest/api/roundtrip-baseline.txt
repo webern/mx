@@ -276,3 +276,12 @@ musuite/testNoteAttributes1.xml
 # NoteReader now reads it into a tri-state Bool field; NoteWriter emits
 # <grace slash="..."/> only when specified.
 musuite/testGrace1.xml
+
+# Unblocked by NoteWriter writing the four <accidental> presence attributes
+# (parentheses, cautionary, editorial, bracket): PitchData already modeled
+# all four (read-only, via NoteReader), but NoteWriter only ever wrote the
+# accidental's value, dropping all four attributes on round-trip.
+lysuite/ly01a_Pitches_Pitches.xml
+lysuite/ly01e_Pitches_ParenthesizedAccidentals.xml
+lysuite/ly01f_Pitches_ParenthesizedMicrotoneAccidentals.xml
+musuite/testAccidentals2.xml
