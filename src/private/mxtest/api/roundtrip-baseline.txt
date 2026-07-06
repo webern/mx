@@ -298,3 +298,13 @@ musuite/testAccidentals2.xml
 # MeasureWriter: the field and its Converter existed but neither side ever
 # called it, so <measure-numbering> was silently dropped on round-trip.
 ksuite/k015a_System_Layout.xml
+
+# Unblocked by the TimeSignatureData redesign: <time> now models every spec
+# shape (composite/additive multi-pair meters, senza-misura, interchangeable,
+# per-staff number=, separator, note/dotted-note symbols) instead of reading
+# only the first beats/beat-type pair of the first <time> and dropping the
+# rest on round-trip.
+lysuite/ly11d_TimeSignatures_CompoundMultiple.xml
+lysuite/ly11e_TimeSignatures_CompoundMixed.xml
+lysuite/ly11f_TimeSignatures_SymbolMeaning.xml
+lysuite/ly11h_TimeSignatures_SenzaMisura.xml

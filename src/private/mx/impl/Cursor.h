@@ -5,7 +5,9 @@
 #pragma once
 
 #include "mx/api/MeasureData.h"
-#include "mx/api/TimeSignatureData.h"
+#include "mx/api/TimeChoice.h"
+
+#include <map>
 
 namespace mx
 {
@@ -19,7 +21,12 @@ namespace impl
 class Cursor
 {
   public:
-    api::TimeSignatureData timeSignature;
+    api::TimeChoice timeSignature;
+
+    // carried per-staff <time number="N"> overrides, keyed by staff index; persists measure-to-measure
+    // like the singular timeSignature above
+    std::map<int, api::TimeChoice> staffTimeSignatures;
+
     int ticksPerQuarter;
     int tickTimePosition;
     int voiceIndex;

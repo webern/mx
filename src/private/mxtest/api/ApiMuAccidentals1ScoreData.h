@@ -37,8 +37,8 @@ inline mx::api::ScoreData apiMuAccidentals1ScoreData()
 
     part.measures.emplace_back(MeasureData{});
     auto measure = &part.measures.back();
-    measure->timeSignature.beats = "3";
-    measure->timeSignature.beatType = "4";
+    measure->timeSignature =
+        TimeChoice::simple(TimeSignatureData{TimeSignatureSymbol::unspecified, TimeFraction{"3", "4"}});
     measure->timeSignature.isImplicit = false;
     measure->staves.emplace_back(StaffData{});
     measure->keys.emplace_back(KeyData{});
@@ -86,8 +86,8 @@ inline mx::api::ScoreData apiMuAccidentals1ScoreData()
 
     part.measures.emplace_back(MeasureData{});
     measure = &part.measures.back();
-    measure->timeSignature.beats = "3";
-    measure->timeSignature.beatType = "4";
+    measure->timeSignature =
+        TimeChoice::simple(TimeSignatureData{TimeSignatureSymbol::unspecified, TimeFraction{"3", "4"}});
     measure->timeSignature.isImplicit = true;
     measure->staves.emplace_back(StaffData{});
     staff = &measure->staves.back();

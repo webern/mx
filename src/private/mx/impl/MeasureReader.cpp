@@ -58,6 +58,9 @@
 #include "mx/utility/Throw.h"
 #include "mx/utility/Unused.h"
 
+#include <algorithm>
+#include <iterator>
+#include <map>
 #include <set>
 
 namespace mx
@@ -215,25 +218,53 @@ impl::MeasureCursor MeasureReader::getCursor() const
 
 void MeasureReader::parseTimeSignature() const
 {
-    TimeReader timeReader{myPartwiseMeasure.musicData()};
-    api::TimeSignatureData timeSignature;
+    // start from the carried-forward state; anything this measure does not restate stays implicit
+    api::TimeChoice timeSignature;
+    std::map<int, api::TimeChoice> staffTimeSignatures;
 
-    if (timeReader.getIsTimeFound())
+    if (myCurrentCursor.measureIndex > 0)
     {
-        timeSignature = timeReader.getTimeSignatureData();
-        timeSignature.isImplicit = false;
+        timeSignature = myPreviousMeasureCursor.timeSignature;
+        staffTimeSignatures = myPreviousMeasureCursor.staffTimeSignatures;
     }
-    else // no time signature was found
+
+    timeSignature.isImplicit = true;
+    for (auto &entry : staffTimeSignatures)
     {
-        if (myCurrentCursor.measureIndex > 0)
+        entry.second.isImplicit = true;
+    }
+
+    TimeReader timeReader{myPartwiseMeasure.musicData()};
+    for (const auto &found : timeReader.getTimeSignatures()) // isImplicit == false on each
+    {
+        int staffIndex = found.staffIndex;
+
+        // clamp an out-of-range staff number to "all staves", mirroring the keys pattern
+        if (staffIndex != api::INDEX_UNSPECIFIED && staffIndex > myCurrentCursor.getNumStaves() - 1)
         {
-            timeSignature = myPreviousMeasureCursor.timeSignature;
+            staffIndex = api::INDEX_UNSPECIFIED;
         }
-        timeSignature.isImplicit = true;
+
+        if (staffIndex == api::INDEX_UNSPECIFIED)
+        {
+            // a restated unscoped time governs all staves: it supersedes carried-forward per-staff
+            // overrides (but not overrides stated explicitly in this same measure)
+            timeSignature = found.timeChoice;
+            for (auto it = staffTimeSignatures.begin(); it != staffTimeSignatures.end();)
+            {
+                it = it->second.isImplicit ? staffTimeSignatures.erase(it) : std::next(it);
+            }
+        }
+        else
+        {
+            staffTimeSignatures[staffIndex] = found.timeChoice;
+        }
     }
 
     myOutMeasureData.timeSignature = timeSignature;
-    myCurrentCursor.timeSignature = timeSignature;
+    myOutMeasureData.staffTimeSignatures = staffTimeSignatures;
+    myCurrentCursor.timeSignature = std::move(timeSignature);
+    myCurrentCursor.staffTimeSignatures = std::move(staffTimeSignatures);
     advanceTickTimePosition(0, "parseTimeSignature");
 }
 

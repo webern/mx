@@ -11,6 +11,7 @@
 #include "mx/core/generated/Clef.h"
 #include "mx/core/generated/ClefGroup.h"
 #include "mx/core/generated/Fifths.h"
+#include "mx/core/generated/Interchangeable.h"
 #include "mx/core/generated/Key.h"
 #include "mx/core/generated/KeyAccidental.h"
 #include "mx/core/generated/KeyChoice.h"
@@ -28,6 +29,8 @@
 #include "mx/core/generated/Time.h"
 #include "mx/core/generated/TimeChoice.h"
 #include "mx/core/generated/TimeChoiceGroup.h"
+#include "mx/core/generated/TimeRelation.h"
+#include "mx/core/generated/TimeSeparator.h"
 #include "mx/core/generated/TimeSignatureGroup.h"
 #include "mx/core/generated/TimeSymbol.h"
 #include "mx/core/generated/TraditionalKeyGroup.h"
@@ -140,40 +143,110 @@ void PropertiesWriter::writeTraditionalKey(const api::KeyData &inKeyData, core::
     ioKey.setChoice(core::KeyChoice::traditionalKey(tkg));
 }
 
-void PropertiesWriter::writeTime(const api::TimeSignatureData &value)
+// converts a list of api fractions (a primary or interchangeable meter) to a core OneOrMore;
+// an (invalid) empty meter falls back to a single 4/4 pair
+static core::OneOrMore<core::TimeSignatureGroup> propertiesWriterTimeSignatureGroups(
+    const std::vector<api::TimeFraction> &inFractions)
 {
+    std::vector<core::TimeSignatureGroup> groups;
+    for (const auto &fraction : inFractions)
+    {
+        core::TimeSignatureGroup tsg{};
+        tsg.setBeats(fraction.beats);
+        tsg.setBeatType(fraction.beatType);
+        groups.push_back(std::move(tsg));
+    }
+    if (groups.empty())
+    {
+        core::TimeSignatureGroup tsg{};
+        tsg.setBeats("4");
+        tsg.setBeatType("4");
+        groups.push_back(std::move(tsg));
+    }
+    core::OneOrMore<core::TimeSignatureGroup> result{};
+    result.setItems(std::move(groups));
+    return result;
+}
+
+// builds the metered (group) TimeChoice from an api MeteredTimeSignature, and sets the meter's own
+// symbol/separator on the <time> element
+static void propertiesWriterSetMetered(core::Time &ioTime, const api::MeteredTimeSignature &inMetered,
+                                       const Converter &converter)
+{
+    core::TimeChoiceGroup tcg{};
+    tcg.setTimeSignature(propertiesWriterTimeSignatureGroups(inMetered.fractions));
+
+    if (inMetered.interchangeable.has_value())
+    {
+        const auto &alternate = *inMetered.interchangeable;
+        core::Interchangeable interchangeable{};
+        interchangeable.setTimeSignature(propertiesWriterTimeSignatureGroups(alternate.fractions));
+        if (alternate.relation != api::TimeRelation::unspecified)
+        {
+            interchangeable.setTimeRelation(converter.convert(alternate.relation));
+        }
+        if (alternate.symbol != api::ComplexTimeSymbol::unspecified)
+        {
+            interchangeable.setSymbol(converter.convert(alternate.symbol));
+        }
+        if (alternate.separator != api::TimeSeparator::unspecified)
+        {
+            interchangeable.setSeparator(converter.convert(alternate.separator));
+        }
+        tcg.setInterchangeable(std::move(interchangeable));
+    }
+
+    ioTime.setChoice(core::TimeChoice::group(std::move(tcg)));
+
+    if (inMetered.symbol != api::ComplexTimeSymbol::unspecified)
+    {
+        ioTime.setSymbol(converter.convert(inMetered.symbol));
+    }
+    if (inMetered.separator != api::TimeSeparator::unspecified)
+    {
+        ioTime.setSeparator(converter.convert(inMetered.separator));
+    }
+}
+
+void PropertiesWriter::writeTime(const api::TimeChoice &value, int staffIndex)
+{
+    Converter converter;
     core::Time time{};
 
-    core::TimeSignatureGroup tsg{};
-    tsg.setBeats(value.beats);
-    tsg.setBeatType(value.beatType);
-
-    core::TimeChoiceGroup tcg{};
-    tcg.setTimeSignature(core::OneOrMore<core::TimeSignatureGroup>{tsg});
-
-    time.setChoice(core::TimeChoice::group(tcg));
-
-    const auto symbol = value.symbol;
-    if (symbol != api::TimeSignatureSymbol::unspecified)
+    if (value.isSimple())
     {
-        if (symbol == api::TimeSignatureSymbol::common)
+        const auto &simple = value.asSimple();
+        core::TimeChoiceGroup tcg{};
+        std::vector<api::TimeFraction> fractions{simple.fraction};
+        tcg.setTimeSignature(propertiesWriterTimeSignatureGroups(fractions));
+        time.setChoice(core::TimeChoice::group(std::move(tcg)));
+        if (simple.symbol != api::TimeSignatureSymbol::unspecified)
         {
-            time.setSymbol(core::TimeSymbol::common());
+            time.setSymbol(converter.convert(simple.symbol));
         }
-        else if (symbol == api::TimeSignatureSymbol::cut)
+    }
+    else
+    {
+        const auto &complex = value.asComplex();
+        if (complex.isSenzaMisura())
         {
-            time.setSymbol(core::TimeSymbol::cut());
+            // the symbol attribute is not used with senza-misura
+            time.setChoice(core::TimeChoice::senzaMisura(complex.asSenzaMisura()));
         }
-        else if (symbol == api::TimeSignatureSymbol::singleNumber)
+        else
         {
-            time.setSymbol(core::TimeSymbol::singleNumber());
+            propertiesWriterSetMetered(time, complex.asMetered(), converter);
         }
     }
 
-    Converter converter;
     if (value.display != api::Bool::unspecified)
     {
         time.setPrintObject(converter.convert(value.display));
+    }
+
+    if (staffIndex != api::INDEX_UNSPECIFIED)
+    {
+        time.setNumber(core::StaffNumber{staffIndex + 1});
     }
 
     myAttributes.addTime(time);

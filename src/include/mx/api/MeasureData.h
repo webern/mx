@@ -12,7 +12,7 @@
 #include "mx/api/PartSymbolData.h"
 #include "mx/api/StaffData.h"
 #include "mx/api/TempoData.h"
-#include "mx/api/TimeSignatureData.h"
+#include "mx/api/TimeChoice.h"
 #include "mx/api/TransposeData.h"
 
 #include <map>
@@ -31,7 +31,15 @@ class MeasureData
     // this is the notes and other music data
     std::vector<StaffData> staves;
 
-    TimeSignatureData timeSignature;
+    // The measure's time signature (applies to all staves). A TimeChoice: simple for the ordinary
+    // N/D case, complex for anything unusual.
+    TimeChoice timeSignature;
+
+    // Only use this if you need different time signatures on different staves. Normally empty; keyed
+    // by staff index, one entry per staff-scoped <time number="N"> override. Effective-time-signature
+    // rule: for a given staff, an entry here whose key matches wins; otherwise fall back to the
+    // singular timeSignature above.
+    std::map<int, TimeChoice> staffTimeSignatures;
 
     // an empty measureNumber indicates a normal
     // measure number (i.e. the measure's
@@ -110,6 +118,7 @@ class MeasureData
 MXAPI_EQUALS_BEGIN(MeasureData)
 MXAPI_EQUALS_MEMBER(staves)
 MXAPI_EQUALS_MEMBER(timeSignature)
+MXAPI_EQUALS_MEMBER(staffTimeSignatures)
 MXAPI_EQUALS_MEMBER(number)
 MXAPI_EQUALS_MEMBER(measureNumbering)
 MXAPI_EQUALS_MEMBER(multiMeasureRest)

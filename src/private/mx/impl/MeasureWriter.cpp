@@ -131,7 +131,15 @@ void MeasureWriter::writeMeasureGlobals()
 
     if (!myMeasureData.timeSignature.isImplicit)
     {
-        myPropertiesWriter->writeTime(myMeasureData.timeSignature);
+        myPropertiesWriter->writeTime(myMeasureData.timeSignature, api::INDEX_UNSPECIFIED);
+    }
+
+    for (const auto &[staffIndex, staffTimeSignature] : myMeasureData.staffTimeSignatures)
+    {
+        if (!staffTimeSignature.isImplicit)
+        {
+            myPropertiesWriter->writeTime(staffTimeSignature, staffIndex);
+        }
     }
 
     int localStaffCounter = 0;
