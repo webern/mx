@@ -113,6 +113,14 @@ class NoteData
 
     // One field, two encodings: on write these emit both <tie> (sound) and
     // <tied> (notation), so the two can never contradict each other.
+    //
+    // The two are independent, so both may be true on the same note: this is exactly how
+    // MusicXML represents "a tie leading into or out of a repeated section or coda" (spec
+    // wording) -- e.g. the last note of a first ending, which closes the tie arriving from
+    // the note before it (isTieStop) and opens a new one continued into the corresponding
+    // note of the second ending (isTieStart). No separate "continuation tie" concept is
+    // needed; see TieLetRing just below for the one tie shape that genuinely doesn't fit
+    // this start/stop pairing.
     bool isTieStart;
     bool isTieStop;
 

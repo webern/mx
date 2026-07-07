@@ -1480,4 +1480,61 @@ TEST(strongAccentDirection, NoteData)
 
 T_END;
 
+// #291: a tie leading into or out of a repeated section (e.g. the last note of a first
+// ending tied to the corresponding note of a second ending) is not a distinct api concept --
+// per the MusicXML spec (core::TiedType's doc comment) it is simply a note whose isTieStop
+// (closing the tie arriving from before) and isTieStart (opening the tie continued into the
+// next pass) are both set. NoteData::isTieStart/isTieStop are independent bools, so this
+// already works with no new type; this test proves the full note -> both <tie>/<tied> pairs
+// -> both bools round trip.
+TEST(tieStopAndStartOnSameNote, NoteData)
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto &voice = measure.staves.back().voices[0];
+
+    // end of a first ending: closes the tie from the previous note, opens one continued
+    // into the second ending's first note
+    NoteData middleNote;
+    middleNote.tickTimePosition = 0;
+    middleNote.durationData.durationTimeTicks = score.ticksPerQuarter;
+    middleNote.durationData.durationName = DurationName::quarter;
+    middleNote.isTieStop = true;
+    middleNote.isTieStart = true;
+    voice.notes.push_back(middleNote);
+
+    auto &mgr = DocumentManager::getInstance();
+    const auto r1 = mgr.createFromScore(score);
+    REQUIRE(r1.ok());
+    auto docId = r1.value();
+    std::stringstream ss;
+    mgr.writeToStream(docId, ss);
+    mgr.destroyDocument(docId);
+    const std::string xml = ss.str();
+    CHECK(xml.find(R"(<tie type="stop" />)") != std::string::npos);
+    CHECK(xml.find(R"(<tie type="start" />)") != std::string::npos);
+    CHECK(xml.find(R"(<tied type="stop" />)") != std::string::npos);
+    CHECK(xml.find(R"(<tied type="start" />)") != std::string::npos);
+
+    std::istringstream iss{xml};
+    const auto r2 = mgr.createFromStream(iss);
+    REQUIRE(r2.ok());
+    docId = r2.value();
+    const auto rd = mgr.getData(docId);
+    REQUIRE(rd.ok());
+    const auto outScore = rd.value();
+    mgr.destroyDocument(docId);
+
+    const auto &outNotes = outScore.parts.back().measures.back().staves.back().voices.at(0).notes;
+    REQUIRE(outNotes.size() == static_cast<size_t>(1));
+    CHECK(outNotes.at(0).isTieStop);
+    CHECK(outNotes.at(0).isTieStart);
+}
+
+T_END;
+
 #endif
