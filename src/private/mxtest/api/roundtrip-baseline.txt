@@ -293,3 +293,8 @@ lysuite/ly01a_Pitches_Pitches.xml
 lysuite/ly01e_Pitches_ParenthesizedAccidentals.xml
 lysuite/ly01f_Pitches_ParenthesizedMicrotoneAccidentals.xml
 musuite/testAccidentals2.xml
+
+# Unblocked by wiring MeasureData::measureNumbering through MeasureReader/
+# MeasureWriter: the field and its Converter existed but neither side ever
+# called it, so <measure-numbering> was silently dropped on round-trip.
+ksuite/k015a_System_Layout.xml
