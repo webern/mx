@@ -682,6 +682,9 @@ void DirectionReader::parsePedal(const core::DirectionType &directionType)
 {
     const auto &pedal = directionType.choice().asPedal();
 
+    // sostenuto/change/continue/discontinue/resume are unmodeled (#324) -- pedalStarts/
+    // pedalStops only model the damper start/stop pair. A <pedal type="change"/> (etc.) is
+    // dropped here rather than misrepresented as a plain start or stop.
     if (pedal.type().tag() != core::PedalType::Tag::start && pedal.type().tag() != core::PedalType::Tag::stop)
     {
         return;
@@ -813,6 +816,15 @@ void DirectionReader::parseOctaveShift(const core::DirectionType &directionType)
                            static_cast<int>(myOutDirectionData.ottavaStarts.size()) - 1);
 }
 
+// The eleven stubs below (harp-pedals, damp, damp-all, eyeglasses, string-mute, scordatura,
+// image, principal-voice, accordion-registration, percussion, other-direction) are genuinely
+// unmodeled direction-type choices, tracked at #324, not a bug in the surrounding dispatch.
+// When a <direction> contains only one of these, the resulting DirectionData carries no
+// content and is correctly left unwritten -- MusicXML requires at least one direction-type
+// child, so there is no schema-valid way to keep the <direction> (and its <voice>/<staff>)
+// without modeling what it actually says. That is why round-trip discovery reports those
+// files as dropping <direction>/<direction-type>/<voice>/<staff> together: it is one gap
+// (the unmodeled content), not four.
 void DirectionReader::parseHarpPedals(const core::DirectionType &directionType)
 {
     MX_UNUSED(directionType);
