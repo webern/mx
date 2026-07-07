@@ -207,6 +207,7 @@ class MeasureWriter
     void writeMeasureGlobals();
     void writeSystemInfo();
     void writePageInfo(const api::PageData &inNewPageData);
+    void writeMeasureNumbering();
     void writeStaves();
     void writeVoices(const api::StaffData &inStaff);
     void writeForwardOrBackupIfNeeded(const api::NoteData &currentNote);

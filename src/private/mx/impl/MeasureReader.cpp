@@ -815,10 +815,13 @@ void MeasureReader::parsePrint(const core::Print &inMxPrint) const
     // Per-measure <print> layout is read at the score level, keyed by
     // measure index, in ScoreReader::scanForSystemInfo and
     // ScoreReader::scanForPageInfo (which capture new-system, new-page,
-    // page-number, system-layout, staff-layout, and page-layout). The
-    // per-measure music-data hook has no api home of its own, so nothing
-    // is captured here.
-    MX_UNUSED(inMxPrint);
+    // page-number, system-layout, staff-layout, and page-layout).
+    // measure-numbering is measure-scoped api state (MeasureData::measureNumbering,
+    // not carried forward like time/key), so it is captured directly here instead.
+    if (inMxPrint.measureNumbering().has_value())
+    {
+        myOutMeasureData.measureNumbering = myConverter.convertMeasureNumbering(inMxPrint.measureNumbering()->value());
+    }
 }
 
 void MeasureReader::parseSound(const core::Sound &inMxSound) const

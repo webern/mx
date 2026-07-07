@@ -262,4 +262,45 @@ TEST(staffLinesAndStaffSizeRoundTrip, MeasureData)
 
 T_END;
 
+TEST(measureNumberingRoundTrip, MeasureData)
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.measureNumbering = MeasureNumbering::system;
+    measure.staves.emplace_back();
+    measure.staves.back().voices[0].notes.emplace_back();
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("<measure-numbering>system</measure-numbering>") != std::string::npos);
+
+    const auto outScore = mxtest::fromXml(xml);
+    CHECK_EQUAL(1, outScore.parts.size());
+    CHECK_EQUAL(1, outScore.parts.front().measures.size());
+    CHECK(MeasureNumbering::system == outScore.parts.front().measures.front().measureNumbering);
+}
+
+T_END;
+
+TEST(measureNumberingUnspecifiedOmitsElement, MeasureData)
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    measure.staves.back().voices[0].notes.emplace_back();
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("<measure-numbering>") == std::string::npos);
+
+    const auto outScore = mxtest::fromXml(xml);
+    CHECK(MeasureNumbering::unspecified == outScore.parts.front().measures.front().measureNumbering);
+}
+
+T_END;
+
 #endif

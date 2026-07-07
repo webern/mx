@@ -15,6 +15,7 @@
 #include "mx/core/generated/LayoutGroup.h"
 #include "mx/core/generated/LeftRightMarginsGroup.h"
 #include "mx/core/generated/MarginType.h"
+#include "mx/core/generated/MeasureNumbering.h"
 #include "mx/core/generated/MusicDataChoice.h"
 #include "mx/core/generated/PageLayout.h"
 #include "mx/core/generated/PageLayoutGroup.h"
@@ -106,6 +107,11 @@ void MeasureWriter::writeMeasureGlobals()
     if (pageData)
     {
         writePageInfo(*pageData);
+    }
+
+    if (myMeasureData.measureNumbering != api::MeasureNumbering::unspecified)
+    {
+        writeMeasureNumbering();
     }
 
     if (myHistory.getCursor().isFirstMeasureInPart)
@@ -365,6 +371,51 @@ void MeasureWriter::writePageInfo(const api::PageData &inPageData)
             {
                 newData.push_back(mdc);
             }
+            ++i;
+        }
+        myOutMeasure.setMusicData(std::move(newData));
+    }
+    else
+    {
+        myOutMeasure.addMusicData(core::MusicDataChoice::print(outPrint));
+    }
+}
+
+void MeasureWriter::writeMeasureNumbering()
+{
+    // Same find-or-create <print> merge pattern as writePageInfo(): measure-numbering shares
+    // the <print> element with any system/page layout already written for this measure.
+    const auto existingData = myOutMeasure.musicData();
+    int printIndex = -1;
+    int idx = 0;
+    for (const auto &mdc : existingData)
+    {
+        if (mdc.isPrint())
+        {
+            printIndex = idx;
+            break;
+        }
+        ++idx;
+    }
+
+    core::Print outPrint{};
+    if (printIndex >= 0)
+    {
+        outPrint = existingData[printIndex].asPrint();
+    }
+
+    core::MeasureNumbering outMeasureNumbering{};
+    outMeasureNumbering.setValue(myConverter.convertMeasureNumbering(myMeasureData.measureNumbering));
+    outPrint.setMeasureNumbering(std::move(outMeasureNumbering));
+
+    if (printIndex >= 0)
+    {
+        std::vector<core::MusicDataChoice> newData;
+        newData.reserve(existingData.size());
+        int i = 0;
+        for (const auto &mdc : existingData)
+        {
+            newData.push_back(i == printIndex ? core::MusicDataChoice::print(outPrint) : mdc);
             ++i;
         }
         myOutMeasure.setMusicData(std::move(newData));
