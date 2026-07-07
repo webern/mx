@@ -135,6 +135,12 @@ class NoteData
     PitchData pitchData; // step, alter, octave, accidental, etc
     int userRequestedVoiceNumber;
 
+    // Whether the source note carried an explicit <staff> element. mx::api normally only
+    // writes <staff> when the part has more than one staff (where it is structurally
+    // required); this preserves a source's redundant-but-legal <staff> on a single-staff
+    // part instead of silently dropping it. Mirrors DirectionData::isStaffValueSpecified.
+    bool isStaffValueSpecified;
+
     // The zero-based index of the staff on which this note is displayed, for the rare case
     // that it differs from the staff that contains the note (cross-staff notation, e.g. a
     // beamed piano run or a chord that dips onto the other staff). The note stays in its
@@ -189,6 +195,7 @@ MXAPI_EQUALS_MEMBER(isCue)
 MXAPI_EQUALS_MEMBER(graceSlash)
 MXAPI_EQUALS_MEMBER(pitchData)
 MXAPI_EQUALS_MEMBER(userRequestedVoiceNumber)
+MXAPI_EQUALS_MEMBER(isStaffValueSpecified)
 MXAPI_EQUALS_MEMBER(crossStaffIndex)
 MXAPI_EQUALS_MEMBER(stem)
 MXAPI_EQUALS_MEMBER(stemPositionData)

@@ -320,3 +320,8 @@ lysuite/ly11h_TimeSignatures_SenzaMisura.xml
 # trims just those unrelated gaps so the composite time-signature round-trip
 # itself is pinned.
 rpatters1/timesigs_composite-ref-modified.musicxml
+
+# Unblocked by NoteData::isStaffValueSpecified: NoteWriter only wrote <staff>
+# for multi-staff parts, dropping a source's explicit (but structurally
+# redundant) <staff> on a single-staff part.
+lysuite/ly24c_GraceNote_MeasureEnd.xml

@@ -427,7 +427,7 @@ void NoteWriter::setStaffAndVoice() const
         // position, but the displayed staff comes from the override (NoteData.h)
         myOutNote.setStaff(*myNoteData.crossStaffIndex + 1);
     }
-    else if (myCursor.getNumStaves() > 1 && myCursor.staffIndex >= 0)
+    else if (myCursor.staffIndex >= 0 && (myCursor.getNumStaves() > 1 || myNoteData.isStaffValueSpecified))
     {
         myOutNote.setStaff(myCursor.staffIndex + 1);
     }

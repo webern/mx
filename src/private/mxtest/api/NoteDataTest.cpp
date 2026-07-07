@@ -12,6 +12,7 @@
 #include "mx/core/generated/Document.h"
 #include "mx/core/generated/MusicDataChoice.h"
 #include "mxtest/api/RoundTrip.h"
+#include "mxtest/api/TestHelpers.h"
 #include "mxtest/file/Path.h"
 
 using namespace std;
@@ -1476,6 +1477,65 @@ TEST(strongAccentDirection, NoteData)
     CHECK(outNotes.at(0).noteAttachmentData.marks.at(0).markType == MarkType::strongAccentUp);
     CHECK(outNotes.at(1).noteAttachmentData.marks.at(0).markType == MarkType::strongAccentDown);
     CHECK(outNotes.at(2).noteAttachmentData.marks.at(0).markType == MarkType::strongAccent);
+}
+
+T_END;
+
+TEST(explicitStaffOnSingleStaffPartRoundTrips, NoteData)
+{
+    const std::string xml = R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<score-partwise version="3.0">
+  <part-list>
+    <score-part id="P1">
+      <part-name>x</part-name>
+    </score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes>
+        <divisions>1</divisions>
+      </attributes>
+      <note>
+        <pitch><step>C</step><octave>4</octave></pitch>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+        <staff>1</staff>
+      </note>
+    </measure>
+  </part>
+</score-partwise>
+)";
+
+    const auto score = fromXml(xml);
+    const auto &notes = score.parts.back().measures.back().staves.back().voices.at(0).notes;
+    REQUIRE(notes.size() == 1);
+    CHECK(notes.at(0).isStaffValueSpecified);
+
+    const auto outXml = toXml(score);
+    CHECK(outXml.find("<staff>1</staff>") != std::string::npos);
+}
+
+T_END;
+
+TEST(implicitStaffOnSingleStaffPartOmitsElement, NoteData)
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto &voice = measure.staves.back().voices[0];
+
+    NoteData note;
+    note.tickTimePosition = 0;
+    note.durationData.durationTimeTicks = score.ticksPerQuarter;
+    note.durationData.durationName = DurationName::quarter;
+    voice.notes.push_back(note);
+
+    const auto xml = toXml(score);
+    CHECK(xml.find("<staff>") == std::string::npos);
 }
 
 T_END;

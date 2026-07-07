@@ -117,6 +117,11 @@ class NoteReader
         return myStaffNumber;
     }
 
+    inline bool getIsStaffSpecified() const
+    {
+        return myIsStaffSpecified;
+    }
+
     inline int getVoiceNumber() const
     {
         return myVoiceNumber;
@@ -251,6 +256,7 @@ class NoteReader
     double myCents;
     int myOctave;
     int myStaffNumber;
+    bool myIsStaffSpecified;
     int myVoiceNumber;
     core::NoteheadValue myNoteheadValue;
     core::NoteTypeValue myDurationType;
