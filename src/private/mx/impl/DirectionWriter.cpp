@@ -320,8 +320,9 @@ void DirectionWriter::emitWedgeStart(const api::WedgeStart &wedgeStart, core::Di
 void DirectionWriter::emitOttavaStop(const api::OttavaStop &ottavaStop, core::Direction &direction)
 {
     core::OctaveShift os{};
-    setAttributesFromSpannerStop(ottavaStop.spannerStop, os,
-                                 myNumberResolver.emittedNumber(ottavaStop.spannerStop.number, &ottavaStop.spannerStop));
+    setAttributesFromSpannerStop(
+        ottavaStop.spannerStop, os,
+        myNumberResolver.emittedNumber(ottavaStop.spannerStop.number, &ottavaStop.spannerStop));
     os.setType(core::UpDownStopContinue::stop());
     os.setSize(ottavaStop.size);
     core::DirectionType dt{};

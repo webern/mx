@@ -135,7 +135,7 @@ class SpannerNumberEventCollector
         }
         for (const auto &item : inDirection.ottavaStops)
         {
-            add(SpannerNumberClass::octaveShift, inStaffIndex, &item, item.number, false, true);
+            add(SpannerNumberClass::octaveShift, inStaffIndex, &item.spannerStop, item.spannerStop.number, false, true);
         }
         for (const auto &item : inDirection.ottavaStarts)
         {
@@ -194,7 +194,8 @@ class SpannerNumberEventCollector
                 if (index < inDirection.ottavaStops.size())
                 {
                     const auto &item = inDirection.ottavaStops.at(index);
-                    add(SpannerNumberClass::octaveShift, inStaffIndex, &item, item.number, false, true);
+                    add(SpannerNumberClass::octaveShift, inStaffIndex, &item.spannerStop, item.spannerStop.number,
+                        false, true);
                 }
                 break;
 
