@@ -545,6 +545,11 @@ void MeasureReader::parseBackup(const core::Backup &inMxBackup) const
 
 void MeasureReader::parseForward(const core::Forward &inMxForward) const
 {
+    // <forward>/<backup> are pure wire cursor mechanics with no api home (design principle:
+    // store absolute tick positions, not running state), so their own optional <voice>/<staff>
+    // children are deliberately not read here either. The writer regenerates whatever
+    // <forward>/<backup> the tick math requires; it never has one to carry a voice/staff value
+    // forward from, so a source's <forward>/<backup> voice/staff is expected to not round-trip.
     // a chord cannot straddle a timeline jump
     myPreviousNoteBucketStaffIndex = -1;
     const int forwardAmount = myCurrentCursor.convertDurationToGlobalTickScale(inMxForward.duration());
