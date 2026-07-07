@@ -71,4 +71,31 @@ TEST(printLayoutRoundTrip, perMeasureStaffDistance)
     CHECK_EQUAL(120.0, sysOut.layout.systemDistance.value());
 }
 
+// A <staff-layout number="N"> is scoped to one staff of a multi-staff part; the writer
+// only ever emitted an unscoped <staff-layout> (matching SystemLayoutData::staffDistance),
+// and the reader dropped the number attribute on the one it read back, silently
+// misattributing the distance to staff 1. Verify a staff-scoped distance survives via
+// SystemLayoutData::staffDistances.
+TEST(printLayoutRoundTrip, staffScopedStaffDistance)
+{
+    auto in = makeScoreWithMeasures(1);
+    auto &staff0 = in.parts.front().measures.front().staves.front();
+    StaffData staff1 = staff0;
+    in.parts.front().measures.front().staves.push_back(staff1);
+
+    SystemData sys{};
+    sys.layout.staffDistances.emplace_back(1, 65.0);
+    in.layout.emplace(0, LayoutData{sys, PageData{}});
+
+    const auto out = mxtest::roundTrip(in);
+
+    const auto it = out.layout.find(0);
+    REQUIRE(it != out.layout.end());
+    const auto &sysOut = it->second.system;
+    CHECK(!static_cast<bool>(sysOut.layout.staffDistance));
+    REQUIRE(1 == sysOut.layout.staffDistances.size());
+    CHECK_EQUAL(1, sysOut.layout.staffDistances.front().staffIndex);
+    CHECK_EQUAL(65.0, sysOut.layout.staffDistances.front().staffDistance);
+}
+
 #endif
