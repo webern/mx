@@ -163,6 +163,53 @@ void canonicalizeEncodingChildOrder(pugi::xml_node scoreRoot)
         encoding.append_move(c);
 }
 
+// api::PageMarginsData::same() (PageMarginsData.h) collapses a <page-margins type="odd">/
+// <page-margins type="even"> pair with identical values into one type="both" element on
+// write -- documented on the class itself as deliberate, not a fidelity loss (many real-world
+// files declare symmetric odd/even margins separately anyway). Collapse the expected side the
+// same way before comparing so only a genuine drop or value mismatch surfaces.
+//
+// Must run after normalizeForComparison(): that strips inter-element whitespace and trailing
+// zeros, so the two elements' children compare as plain text.
+void collapseEqualPageMargins(pugi::xml_node el)
+{
+    if (std::string_view{el.name()} == "page-layout")
+    {
+        std::vector<pugi::xml_node> margins;
+        for (pugi::xml_node c = el.child("page-margins"); c; c = c.next_sibling("page-margins"))
+            margins.push_back(c);
+
+        if (margins.size() == 2)
+        {
+            const std::string_view t0 = margins[0].attribute("type").value();
+            const std::string_view t1 = margins[1].attribute("type").value();
+            const bool isOddEvenPair = (t0 == "odd" && t1 == "even") || (t0 == "even" && t1 == "odd");
+
+            const auto marginsEqual = [](pugi::xml_node a, pugi::xml_node b) {
+                static const char *const kFields[] = {"left-margin", "right-margin", "top-margin", "bottom-margin"};
+                for (const char *field : kFields)
+                {
+                    if (std::string_view{a.child(field).text().get()} != std::string_view{b.child(field).text().get()})
+                        return false;
+                }
+                return true;
+            };
+
+            if (isOddEvenPair && marginsEqual(margins[0], margins[1]))
+            {
+                margins[0].attribute("type").set_value("both");
+                el.remove_child(margins[1]);
+            }
+        }
+    }
+
+    for (pugi::xml_node c = el.first_child(); c; c = c.next_sibling())
+    {
+        if (c.type() == pugi::node_element)
+            collapseEqualPageMargins(c);
+    }
+}
+
 bool hasSuffix(const std::string &name, std::string_view suffix)
 {
     return name.size() >= suffix.size() && name.compare(name.size() - suffix.size(), suffix.size(), suffix) == 0;
@@ -331,6 +378,10 @@ RoundtripResult runRoundtrip(const std::string &absolutePath)
     canonicalizeEncodingChildOrder(expectedDoc.document_element());
     canonicalizeEncodingChildOrder(actualDoc.document_element());
 
+    // The api collapses an equal-valued odd/even <page-margins> pair to type="both" on write
+    // (#277); pre-collapse the expected side to match.
+    collapseEqualPageMargins(expectedDoc.document_element());
+
     // Compare
     const auto fail = mxtest::corert::compareElements(expectedDoc.document_element(), actualDoc.document_element());
     if (fail.isFailure)
@@ -414,6 +465,7 @@ void dumpDocuments(const std::string &absolutePath, const std::string &relPath, 
     mxtest::corert::Fixer fixer(absolutePath);
     fixer.applyToExpected(expectedDoc);
     canonicalizeEncodingChildOrder(expectedDoc.document_element());
+    collapseEqualPageMargins(expectedDoc.document_element());
     if (!expectedDoc.save_file(expectedPath.c_str()))
         std::cerr << "dump: failed to write " << expectedPath << "\n";
 
