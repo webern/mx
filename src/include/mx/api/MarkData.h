@@ -7,6 +7,7 @@
 #include "mx/api/PositionData.h"
 #include "mx/api/PrintData.h"
 
+#include <optional>
 #include <string>
 
 namespace mx
@@ -87,6 +88,8 @@ enum class MarkType
     tremoloSingleThree, ///< A tremolo on a single note (a glyph, not a spanner) with 3 slashes
     tremoloSingleFour,  ///< A tremolo on a single note (a glyph, not a spanner) with 4 slashes
     tremoloSingleFive,  ///< A tremolo on a single note (a glyph, not a spanner) with 5 slashes
+    tremoloStart,       ///< The first note of a measured (two-note) tremolo; slash count is MarkData::tremoloMarks
+    tremoloStop,        ///< The second note of a measured (two-note) tremolo; slash count is MarkData::tremoloMarks
     otherOrnament,      ///< MusicXML's 'other-ornament' value
     unknownOrnament,    ///< Error state
 
@@ -252,6 +255,12 @@ struct MarkData
     Bool fingeringSubstitution;
     Bool fingeringAlternate;
 
+    // The tremolo mark count (MusicXML <tremolo> text value, 0-8 slashes). Only meaningful
+    // when markType is tremoloStart or tremoloStop; absent means "not specified" (the writer
+    // falls back to a default). The tremoloSingle* mark types encode their slash count in the
+    // enumerator itself and leave this absent.
+    std::optional<int> tremoloMarks;
+
     MarkData();
     MarkData(MarkType inMarkType);
     MarkData(Placement inPlacement, MarkType inMarkType);
@@ -271,6 +280,7 @@ MXAPI_EQUALS_MEMBER(mordentDeparture)
 MXAPI_EQUALS_MEMBER(hasMordentDeparture)
 MXAPI_EQUALS_MEMBER(fingeringSubstitution)
 MXAPI_EQUALS_MEMBER(fingeringAlternate)
+MXAPI_EQUALS_MEMBER(tremoloMarks)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(MarkData);
 } // namespace api

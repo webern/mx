@@ -619,9 +619,18 @@ void NotationsWriter::addOrnament(const api::MarkData &mark, core::Ornaments &ou
     }
     case core::OrnamentsGroupChoice::Kind::tremolo: {
         core::Tremolo tremolo;
-        tremolo.setType(core::TremoloType::single());
         setAttributesFromPositionData(mark.positionData, tremolo);
-        tremolo.setValue(core::TremoloMarks{api::numTremoloSlashes(mark.markType)});
+        if (mark.markType == api::MarkType::tremoloStart || mark.markType == api::MarkType::tremoloStop)
+        {
+            tremolo.setType(mark.markType == api::MarkType::tremoloStart ? core::TremoloType::start()
+                                                                         : core::TremoloType::stop());
+            tremolo.setValue(core::TremoloMarks{mark.tremoloMarks.value_or(3)});
+        }
+        else
+        {
+            tremolo.setType(core::TremoloType::single());
+            tremolo.setValue(core::TremoloMarks{api::numTremoloSlashes(mark.markType)});
+        }
         group.setChoice(core::OrnamentsGroupChoice::tremolo(tremolo));
         break;
     }

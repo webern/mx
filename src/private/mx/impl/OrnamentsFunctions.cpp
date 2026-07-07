@@ -160,9 +160,21 @@ void OrnamentsFunctions::parseOrnament(const core::OrnamentsGroupChoice &choiceO
     }
     case core::OrnamentsGroupChoice::Kind::tremolo: {
         const auto &tremolo = choiceObj.asTremolo();
-        const bool isSingle = !tremolo.type().has_value() || *tremolo.type() == core::TremoloType::single();
-        if (!isSingle)
+        const auto type = tremolo.type().value_or(core::TremoloType::single()).tag();
+
+        if (type == core::TremoloType::Tag::start || type == core::TremoloType::Tag::stop)
         {
+            outMark.name = "tremolo";
+            parseMarkDataAttributes(tremolo, outMark);
+            outMark.markType =
+                (type == core::TremoloType::Tag::start) ? api::MarkType::tremoloStart : api::MarkType::tremoloStop;
+            outMark.tremoloMarks = tremolo.value().value();
+            break;
+        }
+
+        if (type != core::TremoloType::Tag::single)
+        {
+            // unmeasured tremolo -- not yet representable
             outMark.name = "this tremolo is not a mark";
             outMark.markType = api::MarkType::unknownOrnament;
             return;
