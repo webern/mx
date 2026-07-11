@@ -308,3 +308,9 @@ lysuite/ly11d_TimeSignatures_CompoundMultiple.xml
 lysuite/ly11e_TimeSignatures_CompoundMixed.xml
 lysuite/ly11f_TimeSignatures_SymbolMeaning.xml
 lysuite/ly11h_TimeSignatures_SenzaMisura.xml
+
+# rpatters1's #268 repro: a single <time> with three composite/additive
+# beats/beat-type pairs (1+2.5 over 2+4, 3+2 over 16, 1.5+5 over 8+16).
+# Added to the repo ahead of the TimeSignatureData redesign as the fixture
+# that motivated it; now round-trips losslessly.
+rpatters1/timesigs_composite-ref.musicxml
