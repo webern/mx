@@ -4,7 +4,6 @@
 
 #include "mx/api/ComplexTimeSignature.h"
 
-#include <cassert>
 #include <utility>
 
 namespace mx
@@ -39,16 +38,22 @@ bool ComplexTimeSignature::isSenzaMisura() const
     return std::holds_alternative<std::string>(myValue);
 }
 
-const MeteredTimeSignature &ComplexTimeSignature::asMetered() const
+const MeteredTimeSignature ComplexTimeSignature::metered() const
 {
-    assert(isMetered());
-    return *std::get_if<MeteredTimeSignature>(&myValue);
+    if (const auto *value = std::get_if<MeteredTimeSignature>(&myValue))
+    {
+        return *value;
+    }
+    return MeteredTimeSignature{};
 }
 
-const std::string &ComplexTimeSignature::asSenzaMisura() const
+const std::string ComplexTimeSignature::senzaMisura() const
 {
-    assert(isSenzaMisura());
-    return *std::get_if<std::string>(&myValue);
+    if (const auto *value = std::get_if<std::string>(&myValue))
+    {
+        return *value;
+    }
+    return std::string{};
 }
 
 bool ComplexTimeSignature::operator==(const ComplexTimeSignature &other) const

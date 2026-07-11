@@ -36,7 +36,7 @@ namespace api
 //   measure.timeSignature = TimeChoice(TimeSignatureData{TimeSignatureSymbol::unspecified, TimeFraction{"3", "4"}});
 //   if (measure.timeSignature.isSimple())
 //   {
-//       const TimeSignatureData &data = measure.timeSignature.asSimple();
+//       const TimeSignatureData data = measure.timeSignature.simple();
 //       assert(data.fraction.beats == "3" && data.fraction.beatType == "4");
 //   }
 //
@@ -71,11 +71,17 @@ class TimeChoice
     bool isSimple() const;
     bool isComplex() const;
 
-    // Precondition: isSimple().
-    const TimeSignatureData &asSimple() const;
+    // Returns a copy of the internally held TimeSignatureData.
+    //
+    // Precondition: isSimple(). If !isSimple(), a default constructed TimeSignatureData is
+    // returned.
+    const TimeSignatureData simple() const;
 
-    // Precondition: isComplex().
-    const ComplexTimeSignature &asComplex() const;
+    // Returns a copy of the internally held ComplexTimeSignature.
+    //
+    // Precondition: isComplex(). If !isComplex(), a default constructed ComplexTimeSignature is
+    // returned.
+    const ComplexTimeSignature complex() const;
 
     bool operator==(const TimeChoice &other) const;
 

@@ -75,16 +75,16 @@ TEST(implicitCarryover, TimeSignatureApi)
 
     CHECK(!t.isImplicit);
     REQUIRE(t.isSimple());
-    CHECK_EQUAL("3", t.asSimple().fraction.beats);
-    CHECK_EQUAL("4", t.asSimple().fraction.beatType);
-    CHECK(t.asSimple().symbol == TimeSignatureSymbol::unspecified);
+    CHECK_EQUAL("3", t.simple().fraction.beats);
+    CHECK_EQUAL("4", t.simple().fraction.beatType);
+    CHECK(t.simple().symbol == TimeSignatureSymbol::unspecified);
 
     ++measureIter;
     t = measureIter->timeSignature;
     CHECK(t.isImplicit);
     REQUIRE(t.isSimple());
-    CHECK_EQUAL("3", t.asSimple().fraction.beats);
-    CHECK_EQUAL("4", t.asSimple().fraction.beatType);
+    CHECK_EQUAL("3", t.simple().fraction.beats);
+    CHECK_EQUAL("4", t.simple().fraction.beatType);
 }
 
 T_END
@@ -95,9 +95,9 @@ TEST(defaultIsSimpleImplicitFourFour, TimeSignatureApi)
     CHECK(t.isImplicit);
     REQUIRE(t.isSimple());
     CHECK(t.kind() == TimeChoice::Kind::simple);
-    CHECK_EQUAL("4", t.asSimple().fraction.beats);
-    CHECK_EQUAL("4", t.asSimple().fraction.beatType);
-    CHECK(t.asSimple().symbol == TimeSignatureSymbol::unspecified);
+    CHECK_EQUAL("4", t.simple().fraction.beats);
+    CHECK_EQUAL("4", t.simple().fraction.beatType);
+    CHECK(t.simple().symbol == TimeSignatureSymbol::unspecified);
     CHECK(t.display == Bool::unspecified);
 }
 
@@ -110,14 +110,14 @@ TEST(autoCollapseSimpleEquivalent, TimeSignatureApi)
     plain.fractions = {{"3", "4"}};
     auto collapsed = TimeChoice(ComplexTimeSignature(plain));
     REQUIRE(collapsed.isSimple());
-    CHECK_EQUAL("3", collapsed.asSimple().fraction.beats);
+    CHECK_EQUAL("3", collapsed.simple().fraction.beats);
 
     // common/cut collapse too, mapping to the narrow simple symbol
     MeteredTimeSignature common;
     common.symbol = ComplexTimeSymbol::common;
     auto collapsedCommon = TimeChoice(ComplexTimeSignature(common));
     REQUIRE(collapsedCommon.isSimple());
-    CHECK(collapsedCommon.asSimple().symbol == TimeSignatureSymbol::common);
+    CHECK(collapsedCommon.simple().symbol == TimeSignatureSymbol::common);
 }
 
 T_END
@@ -223,8 +223,8 @@ TEST(roundTripComposite, TimeSignatureApi)
     const auto &actual = reloaded.parts.at(0).measures.at(0).timeSignature;
     CHECK(!actual.isImplicit);
     REQUIRE(actual.isComplex());
-    REQUIRE(actual.asComplex().isMetered());
-    const auto &fractions = actual.asComplex().asMetered().fractions;
+    REQUIRE(actual.complex().isMetered());
+    const auto &fractions = actual.complex().metered().fractions;
     REQUIRE(2 == fractions.size());
     CHECK_EQUAL("2", fractions.at(0).beats);
     CHECK_EQUAL("4", fractions.at(0).beatType);
@@ -244,8 +244,8 @@ TEST(roundTripSenzaMisuraWithGlyph, TimeSignatureApi)
     const auto &actual = reloaded.parts.at(0).measures.at(0).timeSignature;
     CHECK(!actual.isImplicit);
     REQUIRE(actual.isComplex());
-    REQUIRE(actual.asComplex().isSenzaMisura());
-    CHECK_EQUAL("X", actual.asComplex().asSenzaMisura());
+    REQUIRE(actual.complex().isSenzaMisura());
+    CHECK_EQUAL("X", actual.complex().senzaMisura());
 }
 
 T_END
@@ -260,8 +260,8 @@ TEST(roundTripSenzaMisuraWithoutGlyph, TimeSignatureApi)
     const auto &actual = reloaded.parts.at(0).measures.at(0).timeSignature;
     CHECK(!actual.isImplicit);
     REQUIRE(actual.isComplex());
-    REQUIRE(actual.asComplex().isSenzaMisura());
-    CHECK_EQUAL("", actual.asComplex().asSenzaMisura());
+    REQUIRE(actual.complex().isSenzaMisura());
+    CHECK_EQUAL("", actual.complex().senzaMisura());
 }
 
 T_END
@@ -283,8 +283,8 @@ TEST(roundTripInterchangeable, TimeSignatureApi)
     REQUIRE(!reloaded.parts.empty());
     const auto &actual = reloaded.parts.at(0).measures.at(0).timeSignature;
     REQUIRE(actual.isComplex());
-    REQUIRE(actual.asComplex().isMetered());
-    const auto &actualMetered = actual.asComplex().asMetered();
+    REQUIRE(actual.complex().isMetered());
+    const auto &actualMetered = actual.complex().metered();
     CHECK_EQUAL("3", actualMetered.fractions.at(0).beats);
     REQUIRE(actualMetered.interchangeable.has_value());
     CHECK(*actualMetered.interchangeable == alt);
@@ -305,9 +305,9 @@ TEST(roundTripWidenedSymbolAndSeparator, TimeSignatureApi)
     REQUIRE(!reloaded.parts.empty());
     const auto &actual = reloaded.parts.at(0).measures.at(0).timeSignature;
     REQUIRE(actual.isComplex());
-    REQUIRE(actual.asComplex().isMetered());
-    CHECK(actual.asComplex().asMetered().symbol == ComplexTimeSymbol::note);
-    CHECK(actual.asComplex().asMetered().separator == TimeSeparator::diagonal);
+    REQUIRE(actual.complex().isMetered());
+    CHECK(actual.complex().metered().symbol == ComplexTimeSymbol::note);
+    CHECK(actual.complex().metered().separator == TimeSeparator::diagonal);
 }
 
 T_END
@@ -336,14 +336,14 @@ TEST(roundTripPerStaff, TimeSignatureApi)
 
     const auto &firstMeasure = reloaded.parts.at(0).measures.at(0);
     CHECK(!firstMeasure.timeSignature.isImplicit);
-    CHECK_EQUAL("4", firstMeasure.timeSignature.asSimple().fraction.beats);
+    CHECK_EQUAL("4", firstMeasure.timeSignature.simple().fraction.beats);
     REQUIRE(1 == firstMeasure.staffTimeSignatures.size());
     REQUIRE(firstMeasure.staffTimeSignatures.count(1) == 1);
     const auto &actualStaffTime = firstMeasure.staffTimeSignatures.at(1);
     CHECK(!actualStaffTime.isImplicit);
     REQUIRE(actualStaffTime.isSimple());
-    CHECK_EQUAL("3", actualStaffTime.asSimple().fraction.beats);
-    CHECK_EQUAL("8", actualStaffTime.asSimple().fraction.beatType);
+    CHECK_EQUAL("3", actualStaffTime.simple().fraction.beats);
+    CHECK_EQUAL("8", actualStaffTime.simple().fraction.beatType);
 
     // the override carries forward, implicitly, into the next measure
     const auto &carried = reloaded.parts.at(0).measures.at(1);
@@ -351,7 +351,7 @@ TEST(roundTripPerStaff, TimeSignatureApi)
     REQUIRE(1 == carried.staffTimeSignatures.size());
     REQUIRE(carried.staffTimeSignatures.count(1) == 1);
     CHECK(carried.staffTimeSignatures.at(1).isImplicit);
-    CHECK_EQUAL("3", carried.staffTimeSignatures.at(1).asSimple().fraction.beats);
+    CHECK_EQUAL("3", carried.staffTimeSignatures.at(1).simple().fraction.beats);
 }
 
 T_END

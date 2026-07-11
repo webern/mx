@@ -136,11 +136,17 @@ class ComplexTimeSignature
     bool isMetered() const;
     bool isSenzaMisura() const;
 
-    // Precondition: isMetered()
-    const MeteredTimeSignature &asMetered() const;
+    // Returns a copy of the internally held MeteredTimeSignature.
+    //
+    // Precondition: isMetered(). If !isMetered(), a default constructed MeteredTimeSignature is
+    // returned.
+    const MeteredTimeSignature metered() const;
 
-    // Precondition: isSenzaMisura(). The returned string is the display glyph (may be empty).
-    const std::string &asSenzaMisura() const;
+    // Returns a copy of the senza-misura glyph (which could be an empty string).
+    //
+    // Precondition: isSenzaMisura(). If !isSenzaMisura(), a default constructed (empty) string is
+    // returned.
+    const std::string senzaMisura() const;
 
     bool operator==(const ComplexTimeSignature &other) const;
 

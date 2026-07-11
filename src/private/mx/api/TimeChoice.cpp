@@ -4,7 +4,6 @@
 
 #include "mx/api/TimeChoice.h"
 
-#include <cassert>
 #include <optional>
 #include <utility>
 
@@ -43,7 +42,7 @@ static std::optional<TimeSignatureData> timeChoiceAsSimpleEquivalent(const Compl
     {
         return std::nullopt;
     }
-    const auto &metered = value.asMetered();
+    const auto &metered = value.metered();
     if (metered.fractions.size() != 1 || metered.interchangeable.has_value() ||
         metered.separator != TimeSeparator::unspecified)
     {
@@ -92,16 +91,22 @@ bool TimeChoice::isComplex() const
     return std::holds_alternative<ComplexTimeSignature>(myValue);
 }
 
-const TimeSignatureData &TimeChoice::asSimple() const
+const TimeSignatureData TimeChoice::simple() const
 {
-    assert(isSimple());
-    return *std::get_if<TimeSignatureData>(&myValue);
+    if (const auto *value = std::get_if<TimeSignatureData>(&myValue))
+    {
+        return *value;
+    }
+    return TimeSignatureData{};
 }
 
-const ComplexTimeSignature &TimeChoice::asComplex() const
+const ComplexTimeSignature TimeChoice::complex() const
 {
-    assert(isComplex());
-    return *std::get_if<ComplexTimeSignature>(&myValue);
+    if (const auto *value = std::get_if<ComplexTimeSignature>(&myValue))
+    {
+        return *value;
+    }
+    return ComplexTimeSignature{};
 }
 
 bool TimeChoice::operator==(const TimeChoice &other) const

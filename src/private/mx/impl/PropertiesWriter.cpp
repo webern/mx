@@ -215,7 +215,7 @@ void PropertiesWriter::writeTime(const api::TimeChoice &value, int staffIndex)
 
     if (value.isSimple())
     {
-        const auto &simple = value.asSimple();
+        const auto &simple = value.simple();
         core::TimeChoiceGroup tcg{};
         std::vector<api::TimeFraction> fractions{simple.fraction};
         tcg.setTimeSignature(propertiesWriterTimeSignatureGroups(fractions));
@@ -227,15 +227,15 @@ void PropertiesWriter::writeTime(const api::TimeChoice &value, int staffIndex)
     }
     else
     {
-        const auto &complex = value.asComplex();
+        const auto &complex = value.complex();
         if (complex.isSenzaMisura())
         {
             // the symbol attribute is not used with senza-misura
-            time.setChoice(core::TimeChoice::senzaMisura(complex.asSenzaMisura()));
+            time.setChoice(core::TimeChoice::senzaMisura(complex.senzaMisura()));
         }
         else
         {
-            propertiesWriterSetMetered(time, complex.asMetered(), converter);
+            propertiesWriterSetMetered(time, complex.metered(), converter);
         }
     }
 
