@@ -6,12 +6,9 @@
 
 #include "mx/api/ApiCommon.h"
 #include "mx/api/BarlineData.h"
-#include "mx/api/ClefData.h"
-#include "mx/api/DirectionData.h"
 #include "mx/api/KeyData.h"
 #include "mx/api/PartSymbolData.h"
 #include "mx/api/StaffData.h"
-#include "mx/api/TempoData.h"
 #include "mx/api/TimeChoice.h"
 #include "mx/api/TransposeData.h"
 
@@ -22,7 +19,7 @@ namespace mx
 {
 namespace api
 {
-/// This typedef help readability in a few places such as the layout map in ScoreData.
+// This typedef helps readability in a few places such as the layout map in ScoreData.
 using MeasureIndex = int;
 
 class MeasureData
@@ -31,67 +28,46 @@ class MeasureData
     // this is the notes and other music data
     std::vector<StaffData> staves;
 
-    // The measure's time signature (applies to all staves). A TimeChoice: simple for the ordinary
-    // N/D case, complex for anything unusual.
+    // The measure's time signature (applies to all staves).
+    //
+    // Breaking change: this used to be TimeSignatureData but was changed to TimeChoice
     TimeChoice timeSignature;
 
-    // Only use this if you need different time signatures on different staves. Normally empty; keyed
-    // by staff index, one entry per staff-scoped <time number="N"> override. Effective-time-signature
-    // rule: for a given staff, an entry here whose key matches wins; otherwise fall back to the
-    // singular timeSignature above.
+    // Only use this if you need different time signatures on different staves. Normally empty;
+    // keyed by staff index, one entry per staff-scoped <time number="N"> override.
+    // Effective-time- signature rule: for a given staff, an entry here whose key matches wins;
+    // otherwise fall back to the singular timeSignature above.
     std::map<int, TimeChoice> staffTimeSignatures;
 
-    // an empty measureNumber indicates a normal
-    // measure number (i.e. the measure's
-    // index + 1).  only read or write to
-    // this field when handling overridden
-    // measure numbers
+    // an empty measureNumber indicates a normal measure number (i.e. the measure's index + 1). only
+    // read or write to this field when handling overridden measure numbers
     //
     // MusicXML Documentation:
-    // In partwise files, the number attribute
-    // should be the same for measures in
-    // different parts that share the same left
-    // barline. While the number attribute is
-    // often numeric, it does not have to be.
-    // Non-numeric values are typically used
-    // together with the implicit or non-
-    // controlling attributes being set to "yes".
-    // For a pickup measure, the number attribute
-    // is typically set to "0" and the implicit
-    // attribute is typically set to "yes".
-    // Further details about measure numbering
-    // can be defined using the measure-numbering
-    // element.
+    // In partwise files, the number attribute should be the same for measures in different parts
+    // that share the same left barline. While the number attribute is often numeric, it does not
+    // have to be. Non-numeric values are typically used together with the implicit or
+    // non-controlling attributes being set to "yes".For a pickup measure, the number attribute is
+    // typically set to "0" and the implicit attribute is typically set to "yes".Further details
+    // about measure numbering can be defined using the measure-numbering element.
     std::string number;
 
-    // The measure-numbering-value type
-    // describes how measure numbers are
-    // displayed on this part: no numbers,
-    // numbers every measure, or numbers
-    // every system.
-    //
+    // The measure-numbering-value type describes how measure numbers are displayed on this part:
+    // no numbers, numbers every measure, or numbers every system.
     MeasureNumbering measureNumbering;
 
-    // a number greater than zero indicates that
-    // this measure is the beginning of a mult-
-    // measure rest that will last for the
-    // indicated number of measures. following
-    // measures will be affected by this.
+    // a number greater than zero indicates that this measure is the beginning of a mult-measure
+    // rest that will last for the indicated number of measures. following measures will be affected
+    // by this.
     int multiMeasureRest;
 
-    // The implicit attribute is set to "yes" for
-    // measures where the measure number should
-    // never appear, such as pickup measures and
-    // the last half of mid-measure repeats. The
-    // value is "no" if not specified.
+    // The implicit attribute is set to "yes" for measures where the measure number should never
+    // appear, such as pickup measures and the last half of mid-measure repeats. The value is "no"
+    // if not specified.
     Bool implicit;
 
-    // The non-controlling attribute is intended for
-    // use in multimetric music like the Don Giovanni
-    // minuet. If set to "yes", the left barline in
-    // this measure does not coincide with the left
-    // barline of measures in other parts. The value
-    // is "no" if not specified.
+    // The non-controlling attribute is intended for use in multimetric music like the Don Giovanni
+    // minuet. If set to "yes", the left barline in this measure does not coincide with the left
+    // barline of measures in other parts. The value is "no" if not specified.
     Bool nonControlling;
 
     // a width value less than 0 means 'unspecified'
