@@ -76,10 +76,10 @@ MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(InterchangeableTimeSignature);
 
 // A metered (as opposed to senza-misura) complex time signature: a primary meter of one or more
-// fractions, plus its decorations. A single fraction with no symbol, no separator, and no
-// interchangeable is simple-equivalent and the TimeChoice constructor collapses it back to the simple case;
-// so a MeteredTimeSignature that survives as complex always carries at least one of: more than one
-// fraction, an unusual symbol, a separator, or an interchangeable alternate.
+// fractions, plus its decorations.
+//
+// Note: A single fraction with no symbol, no separator, and no interchangeable is simple-equivalent
+// and the TimeChoice constructor collapses it back to the simple case;
 struct MeteredTimeSignature
 {
     // The primary meter's fractions. One = a single meter (decorated); more than one = composite
@@ -99,15 +99,17 @@ MXAPI_EQUALS_MEMBER(interchangeable)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(MeteredTimeSignature);
 
-// Everything unusual about a time signature, kept out of the way of the simple case. It is itself a
-// choice: either a metered signature (composite meters, unusual symbols, separators, interchangeable
-// dual meters) or senza-misura (unmetered music). The two are mutually exclusive in MusicXML, which
-// this choice makes structurally true: a senza-misura signature cannot carry a symbol or an
-// interchangeable, and a metered one cannot be senza-misura.
+// Models the full MusicXML time element, except for the most simple cases which are modeled by
+// TimeSignatureData.
 //
-// Reached only through TimeChoice::asComplex(). Constructing one whose metered value is
-// simple-equivalent yields a *simple* TimeChoice instead (auto-collapse), so a plain N/D can never
-// hide in here.
+// Included:
+// - composite meters
+// - symbols
+// - separator selection
+// - interchangeable meters
+// - senza-misura
+//
+// Include a ComplexTimeSignature in your score using TimeChoice{complex};
 class ComplexTimeSignature
 {
   public:
@@ -117,20 +119,24 @@ class ComplexTimeSignature
         senzaMisura
     };
 
-    // Defaults to a metered 4/4 (this default is never simple-equivalent-collapsed on its own; that
-    // happens only when handed to the TimeChoice constructor).
+    // Defaults to a metered 4/4.
+    //
+    // Note: if supplied to a TimeChoice, this would collapse to a simple time signature.
     ComplexTimeSignature();
 
-    static ComplexTimeSignature metered(MeteredTimeSignature value);
+    // Construct a metered time signature.
+    ComplexTimeSignature(MeteredTimeSignature value);
 
-    // The string is the senza-misura display glyph (often empty, sometimes "X").
-    static ComplexTimeSignature senzaMisura(std::string glyph = {});
+    // Construct a senza-misura time signature.
+    //
+    // glyph is free text; MusicXML defines no valid/invalid values beyond xs:string (e.g. "X").
+    ComplexTimeSignature(std::string glyph);
 
     Kind kind() const;
     bool isMetered() const;
     bool isSenzaMisura() const;
 
-    // Precondition: isMetered().
+    // Precondition: isMetered()
     const MeteredTimeSignature &asMetered() const;
 
     // Precondition: isSenzaMisura(). The returned string is the display glyph (may be empty).

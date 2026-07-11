@@ -108,14 +108,14 @@ TEST(autoCollapseSimpleEquivalent, TimeSignatureApi)
     // a plain single-fraction meter with no decorations collapses to simple
     MeteredTimeSignature plain;
     plain.fractions = {{"3", "4"}};
-    auto collapsed = TimeChoice(ComplexTimeSignature::metered(plain));
+    auto collapsed = TimeChoice(ComplexTimeSignature(plain));
     REQUIRE(collapsed.isSimple());
     CHECK_EQUAL("3", collapsed.asSimple().fraction.beats);
 
     // common/cut collapse too, mapping to the narrow simple symbol
     MeteredTimeSignature common;
     common.symbol = ComplexTimeSymbol::common;
-    auto collapsedCommon = TimeChoice(ComplexTimeSignature::metered(common));
+    auto collapsedCommon = TimeChoice(ComplexTimeSignature(common));
     REQUIRE(collapsedCommon.isSimple());
     CHECK(collapsedCommon.asSimple().symbol == TimeSignatureSymbol::common);
 }
@@ -127,19 +127,19 @@ TEST(complexStaysComplex, TimeSignatureApi)
     // more than one fraction -> genuinely composite, stays complex
     MeteredTimeSignature composite;
     composite.fractions = {{"2", "4"}, {"3", "8"}};
-    CHECK(TimeChoice(ComplexTimeSignature::metered(composite)).isComplex());
+    CHECK(TimeChoice(ComplexTimeSignature(composite)).isComplex());
 
     // an unusual symbol (no simple equivalent) keeps it complex
     MeteredTimeSignature single;
     single.fractions = {{"3", "4"}};
     single.symbol = ComplexTimeSymbol::singleNumber;
-    CHECK(TimeChoice(ComplexTimeSignature::metered(single)).isComplex());
+    CHECK(TimeChoice(ComplexTimeSignature(single)).isComplex());
 
     // a separator keeps it complex
     MeteredTimeSignature separated;
     separated.fractions = {{"3", "4"}};
     separated.separator = TimeSeparator::diagonal;
-    CHECK(TimeChoice(ComplexTimeSignature::metered(separated)).isComplex());
+    CHECK(TimeChoice(ComplexTimeSignature(separated)).isComplex());
 
     // an interchangeable alternate keeps it complex
     MeteredTimeSignature dual;
@@ -147,10 +147,10 @@ TEST(complexStaysComplex, TimeSignatureApi)
     InterchangeableTimeSignature alt;
     alt.fractions = {{"6", "8"}};
     dual.interchangeable = alt;
-    CHECK(TimeChoice(ComplexTimeSignature::metered(dual)).isComplex());
+    CHECK(TimeChoice(ComplexTimeSignature(dual)).isComplex());
 
     // senza-misura is always complex
-    CHECK(TimeChoice(ComplexTimeSignature::senzaMisura("X")).isComplex());
+    CHECK(TimeChoice(ComplexTimeSignature("X")).isComplex());
 }
 
 T_END
@@ -176,15 +176,15 @@ TEST(equality, TimeSignatureApi)
     // simple vs complex never compare equal
     MeteredTimeSignature composite;
     composite.fractions = {{"2", "4"}, {"3", "8"}};
-    a = TimeChoice(ComplexTimeSignature::metered(composite));
+    a = TimeChoice(ComplexTimeSignature(composite));
     CHECK(a != b);
 
     // nested composite second-fraction difference
     MeteredTimeSignature other;
     other.fractions = {{"2", "4"}, {"3", "16"}};
-    b = TimeChoice(ComplexTimeSignature::metered(other));
+    b = TimeChoice(ComplexTimeSignature(other));
     CHECK(a != b);
-    b = TimeChoice(ComplexTimeSignature::metered(composite));
+    b = TimeChoice(ComplexTimeSignature(composite));
     CHECK(a == b);
 
     // interchangeable relation-only difference
@@ -194,18 +194,18 @@ TEST(equality, TimeSignatureApi)
     altA.fractions = {{"6", "8"}};
     altA.relation = TimeRelation::parentheses;
     dualA.interchangeable = altA;
-    a = TimeChoice(ComplexTimeSignature::metered(dualA));
+    a = TimeChoice(ComplexTimeSignature(dualA));
 
     MeteredTimeSignature dualB = dualA;
     dualB.interchangeable->relation = TimeRelation::bracket;
-    b = TimeChoice(ComplexTimeSignature::metered(dualB));
+    b = TimeChoice(ComplexTimeSignature(dualB));
     CHECK(a != b);
 
     // senza-misura glyph difference
-    a = TimeChoice(ComplexTimeSignature::senzaMisura("X"));
-    b = TimeChoice(ComplexTimeSignature::senzaMisura(""));
+    a = TimeChoice(ComplexTimeSignature("X"));
+    b = TimeChoice(ComplexTimeSignature(""));
     CHECK(a != b);
-    b = TimeChoice(ComplexTimeSignature::senzaMisura("X"));
+    b = TimeChoice(ComplexTimeSignature("X"));
     CHECK(a == b);
 }
 
@@ -215,7 +215,7 @@ TEST(roundTripComposite, TimeSignatureApi)
 {
     MeteredTimeSignature composite;
     composite.fractions = {{"2", "4"}, {"3", "8"}};
-    auto t = TimeChoice(ComplexTimeSignature::metered(composite));
+    auto t = TimeChoice(ComplexTimeSignature(composite));
     t.isImplicit = false;
 
     const auto reloaded = timeSignatureApiTestRoundTrip(timeSignatureApiTestScore(t));
@@ -236,7 +236,7 @@ T_END
 
 TEST(roundTripSenzaMisuraWithGlyph, TimeSignatureApi)
 {
-    auto t = TimeChoice(ComplexTimeSignature::senzaMisura("X"));
+    auto t = TimeChoice(ComplexTimeSignature("X"));
     t.isImplicit = false;
 
     const auto reloaded = timeSignatureApiTestRoundTrip(timeSignatureApiTestScore(t));
@@ -252,7 +252,7 @@ T_END
 
 TEST(roundTripSenzaMisuraWithoutGlyph, TimeSignatureApi)
 {
-    auto t = TimeChoice(ComplexTimeSignature::senzaMisura());
+    auto t = TimeChoice(ComplexTimeSignature(std::string{}));
     t.isImplicit = false;
 
     const auto reloaded = timeSignatureApiTestRoundTrip(timeSignatureApiTestScore(t));
@@ -276,7 +276,7 @@ TEST(roundTripInterchangeable, TimeSignatureApi)
     alt.symbol = ComplexTimeSymbol::cut;
     alt.separator = TimeSeparator::horizontal;
     metered.interchangeable = alt;
-    auto t = TimeChoice(ComplexTimeSignature::metered(metered));
+    auto t = TimeChoice(ComplexTimeSignature(metered));
     t.isImplicit = false;
 
     const auto reloaded = timeSignatureApiTestRoundTrip(timeSignatureApiTestScore(t));
@@ -298,7 +298,7 @@ TEST(roundTripWidenedSymbolAndSeparator, TimeSignatureApi)
     metered.fractions = {{"3", "4"}};
     metered.symbol = ComplexTimeSymbol::note;
     metered.separator = TimeSeparator::diagonal;
-    auto t = TimeChoice(ComplexTimeSignature::metered(metered));
+    auto t = TimeChoice(ComplexTimeSignature(metered));
     t.isImplicit = false;
 
     const auto reloaded = timeSignatureApiTestRoundTrip(timeSignatureApiTestScore(t));

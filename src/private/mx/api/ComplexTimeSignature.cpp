@@ -16,18 +16,12 @@ ComplexTimeSignature::ComplexTimeSignature() : myValue{MeteredTimeSignature{}}
 {
 }
 
-ComplexTimeSignature ComplexTimeSignature::metered(MeteredTimeSignature value)
+ComplexTimeSignature::ComplexTimeSignature(MeteredTimeSignature value) : myValue{std::move(value)}
 {
-    ComplexTimeSignature result;
-    result.myValue = std::move(value);
-    return result;
 }
 
-ComplexTimeSignature ComplexTimeSignature::senzaMisura(std::string glyph)
+ComplexTimeSignature::ComplexTimeSignature(std::string glyph) : myValue{std::move(glyph)}
 {
-    ComplexTimeSignature result;
-    result.myValue = std::move(glyph);
-    return result;
 }
 
 ComplexTimeSignature::Kind ComplexTimeSignature::kind() const
