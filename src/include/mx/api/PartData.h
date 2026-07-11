@@ -148,10 +148,16 @@ class PartData
     PrintData displayAbbreviationPrintData;
     PositionData displayAbbreviationPositionData;
 
-    // Names of this <score-part>'s repeatable <group> elements (e.g. "score"), used by some
-    // notation software to assign a part to a MIDI/score grouping. Unrelated to PartGroupData,
-    // which models the visual staff-bracket grouping declared before/after <score-part> in
-    // <part-list>.
+    // Names of this <score-part>'s repeatable <group> elements. MusicXML documentation:
+    // "The group element allows the use of different versions of the part for different
+    // purposes. Typical values include score, parts, sound, and data." In practice this is
+    // an implementation detail of some notation software (e.g. Finale), which uses it to
+    // tag which exported/extracted version of a part a <score-part> entry represents.
+    //
+    // This is NOT the "real"/visual part grouping mechanism -- braces and brackets tying
+    // staves together on the page are PartGroupData (see ScoreData::partGroups), a
+    // completely different element (<part-group>, declared in <part-list> around a run of
+    // <score-part> entries, not inside one).
     std::vector<std::string> groups;
 
     InstrumentData instrumentData;
