@@ -54,8 +54,7 @@ inline ScoreData makeVoiceReorderingScore(const SpannerNumber &inA, const Spanne
     part.measures.emplace_back();
     {
         auto &measure = part.measures.back();
-        measure.timeSignature.beats = "4";
-        measure.timeSignature.beatType = "4";
+        measure.timeSignature = TimeChoice(TimeSignatureData{"4", "4"});
         measure.timeSignature.isImplicit = false;
         measure.staves.emplace_back();
         auto &staff = measure.staves.back();
@@ -89,8 +88,7 @@ inline ScoreData makeVoiceReorderingScore(const SpannerNumber &inA, const Spanne
     part.measures.emplace_back();
     {
         auto &measure = part.measures.back();
-        measure.timeSignature.beats = "4";
-        measure.timeSignature.beatType = "4";
+        measure.timeSignature = TimeChoice(TimeSignatureData{"4", "4"});
         measure.timeSignature.isImplicit = true;
         measure.staves.emplace_back();
         auto &staff = measure.staves.back();
