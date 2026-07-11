@@ -15,21 +15,32 @@ namespace mx
 namespace api
 {
 
-// A measure's (or a staff's) time signature. It switches between the simple case -- the ordinary
-// N/D you want 99% of the time -- and the complex case, which quarantines everything unusual
-// (composite meters, senza-misura, interchangeable, unusual display symbols). Read the kind, then
-// reach for asSimple() or asComplex().
+// A variant class that switches between a simple (e.g. 3/4 or C) and a complex (e.g. 5/8+3/8) time
+// signature.
 //
-// The whole-<time> attributes that apply regardless of shape live here, not on either leaf:
-// isImplicit (was the signature restated in this measure or carried forward) and display
-// (print-object show/hide).
+// Justification: The simple time signature use case is much more common than the complex one, and
+// MusicXML's time signature model is quite difficult to understand and use properly. In order to
+// simplify the process for the most common use cases, this class offers access to a simple
+// TimeSignatureData struct for simple mode and a ComplexTimeSignature class for complex mode.
 //
-// Invariant: a simple-equivalent signature is always held as simple. TimeChoice::complex collapses a
-// complex value whose meter is really just a plain fraction (one fraction, no interchangeable, no
-// separator, and a symbol the simple case can express) down to simple, so there is exactly one
-// canonical representation and the simple case can never hide inside the complex one.
+// The <time> attributes that apply regardless of shape live here. isImplicit is an `mx::api`
+// invention because, unlike MusicXML, we store a time signature at the beginning of each measure.
+// If it is simply being carried over from the previous measure, then isImplicit is true.
 //
-// Defaults to a simple, implicit 4/4.
+// The display field correlates to <time print-object="yes/no"> and can be absent with unspecified.
+//
+// If a ComplexTimeSignature is used to construct something that can be represented as a simple time
+// signature, then the TimeChoice class will collapse it to a simple time signature.
+//
+// Example (the common case):
+//   measure.timeSignature = TimeChoice(TimeSignatureData{TimeSignatureSymbol::unspecified, TimeFraction{"3", "4"}});
+//   if (measure.timeSignature.isSimple())
+//   {
+//       const TimeSignatureData &data = measure.timeSignature.asSimple();
+//       assert(data.fraction.beats == "3" && data.fraction.beatType == "4");
+//   }
+//
+// Defaults to 4/4.
 class TimeChoice
 {
   public:
@@ -49,12 +60,12 @@ class TimeChoice
     // Defaults to a simple, implicit 4/4.
     TimeChoice();
 
-    static TimeChoice simple(TimeSignatureData value);
+    TimeChoice(TimeSignatureData value);
 
     // Builds a complex time signature, unless the value is simple-equivalent, in which case the
     // result is a *simple* TimeChoice (auto-collapse). isImplicit/display are left at their defaults;
-    // set them on the returned value.
-    static TimeChoice complex(ComplexTimeSignature value);
+    // set them after construction.
+    TimeChoice(ComplexTimeSignature value);
 
     Kind kind() const;
     bool isSimple() const;

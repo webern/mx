@@ -58,7 +58,7 @@ TimeReaderResult TimeReader::createTimeChoice(const core::Time &inTime)
     if (choice.kind() == core::TimeChoice::Kind::senzaMisura)
     {
         // the string content is the display glyph (often empty); a senza-misura carries no symbol
-        timeChoice = api::TimeChoice::complex(api::ComplexTimeSignature::senzaMisura(choice.asSenzaMisura()));
+        timeChoice = api::TimeChoice(api::ComplexTimeSignature::senzaMisura(choice.asSenzaMisura()));
     }
     else
     {
@@ -96,7 +96,7 @@ TimeReaderResult TimeReader::createTimeChoice(const core::Time &inTime)
         }
 
         // complex() collapses back to simple when the meter is really just a plain fraction
-        timeChoice = api::TimeChoice::complex(api::ComplexTimeSignature::metered(std::move(metered)));
+        timeChoice = api::TimeChoice(api::ComplexTimeSignature::metered(std::move(metered)));
     }
 
     timeChoice.isImplicit = false;

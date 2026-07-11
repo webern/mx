@@ -77,7 +77,7 @@ MXAPI_NOT_EQUALS_AND_VECTORS(InterchangeableTimeSignature);
 
 // A metered (as opposed to senza-misura) complex time signature: a primary meter of one or more
 // fractions, plus its decorations. A single fraction with no symbol, no separator, and no
-// interchangeable is simple-equivalent and TimeChoice::complex collapses it back to the simple case;
+// interchangeable is simple-equivalent and the TimeChoice constructor collapses it back to the simple case;
 // so a MeteredTimeSignature that survives as complex always carries at least one of: more than one
 // fraction, an unusual symbol, a separator, or an interchangeable alternate.
 struct MeteredTimeSignature
@@ -118,7 +118,7 @@ class ComplexTimeSignature
     };
 
     // Defaults to a metered 4/4 (this default is never simple-equivalent-collapsed on its own; that
-    // happens only when handed to TimeChoice::complex).
+    // happens only when handed to the TimeChoice constructor).
     ComplexTimeSignature();
 
     static ComplexTimeSignature metered(MeteredTimeSignature value);

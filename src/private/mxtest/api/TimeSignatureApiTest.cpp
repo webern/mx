@@ -108,14 +108,14 @@ TEST(autoCollapseSimpleEquivalent, TimeSignatureApi)
     // a plain single-fraction meter with no decorations collapses to simple
     MeteredTimeSignature plain;
     plain.fractions = {{"3", "4"}};
-    auto collapsed = TimeChoice::complex(ComplexTimeSignature::metered(plain));
+    auto collapsed = TimeChoice(ComplexTimeSignature::metered(plain));
     REQUIRE(collapsed.isSimple());
     CHECK_EQUAL("3", collapsed.asSimple().fraction.beats);
 
     // common/cut collapse too, mapping to the narrow simple symbol
     MeteredTimeSignature common;
     common.symbol = ComplexTimeSymbol::common;
-    auto collapsedCommon = TimeChoice::complex(ComplexTimeSignature::metered(common));
+    auto collapsedCommon = TimeChoice(ComplexTimeSignature::metered(common));
     REQUIRE(collapsedCommon.isSimple());
     CHECK(collapsedCommon.asSimple().symbol == TimeSignatureSymbol::common);
 }
@@ -127,19 +127,19 @@ TEST(complexStaysComplex, TimeSignatureApi)
     // more than one fraction -> genuinely composite, stays complex
     MeteredTimeSignature composite;
     composite.fractions = {{"2", "4"}, {"3", "8"}};
-    CHECK(TimeChoice::complex(ComplexTimeSignature::metered(composite)).isComplex());
+    CHECK(TimeChoice(ComplexTimeSignature::metered(composite)).isComplex());
 
     // an unusual symbol (no simple equivalent) keeps it complex
     MeteredTimeSignature single;
     single.fractions = {{"3", "4"}};
     single.symbol = ComplexTimeSymbol::singleNumber;
-    CHECK(TimeChoice::complex(ComplexTimeSignature::metered(single)).isComplex());
+    CHECK(TimeChoice(ComplexTimeSignature::metered(single)).isComplex());
 
     // a separator keeps it complex
     MeteredTimeSignature separated;
     separated.fractions = {{"3", "4"}};
     separated.separator = TimeSeparator::diagonal;
-    CHECK(TimeChoice::complex(ComplexTimeSignature::metered(separated)).isComplex());
+    CHECK(TimeChoice(ComplexTimeSignature::metered(separated)).isComplex());
 
     // an interchangeable alternate keeps it complex
     MeteredTimeSignature dual;
@@ -147,10 +147,10 @@ TEST(complexStaysComplex, TimeSignatureApi)
     InterchangeableTimeSignature alt;
     alt.fractions = {{"6", "8"}};
     dual.interchangeable = alt;
-    CHECK(TimeChoice::complex(ComplexTimeSignature::metered(dual)).isComplex());
+    CHECK(TimeChoice(ComplexTimeSignature::metered(dual)).isComplex());
 
     // senza-misura is always complex
-    CHECK(TimeChoice::complex(ComplexTimeSignature::senzaMisura("X")).isComplex());
+    CHECK(TimeChoice(ComplexTimeSignature::senzaMisura("X")).isComplex());
 }
 
 T_END
@@ -168,23 +168,23 @@ TEST(equality, TimeSignatureApi)
     CHECK(a == b);
 
     // simple fraction difference
-    a = TimeChoice::simple(TimeSignatureData{TimeSignatureSymbol::unspecified, {"3", "4"}});
+    a = TimeChoice(TimeSignatureData{TimeSignatureSymbol::unspecified, {"3", "4"}});
     CHECK(a != b);
-    b = TimeChoice::simple(TimeSignatureData{TimeSignatureSymbol::unspecified, {"3", "4"}});
+    b = TimeChoice(TimeSignatureData{TimeSignatureSymbol::unspecified, {"3", "4"}});
     CHECK(a == b);
 
     // simple vs complex never compare equal
     MeteredTimeSignature composite;
     composite.fractions = {{"2", "4"}, {"3", "8"}};
-    a = TimeChoice::complex(ComplexTimeSignature::metered(composite));
+    a = TimeChoice(ComplexTimeSignature::metered(composite));
     CHECK(a != b);
 
     // nested composite second-fraction difference
     MeteredTimeSignature other;
     other.fractions = {{"2", "4"}, {"3", "16"}};
-    b = TimeChoice::complex(ComplexTimeSignature::metered(other));
+    b = TimeChoice(ComplexTimeSignature::metered(other));
     CHECK(a != b);
-    b = TimeChoice::complex(ComplexTimeSignature::metered(composite));
+    b = TimeChoice(ComplexTimeSignature::metered(composite));
     CHECK(a == b);
 
     // interchangeable relation-only difference
@@ -194,18 +194,18 @@ TEST(equality, TimeSignatureApi)
     altA.fractions = {{"6", "8"}};
     altA.relation = TimeRelation::parentheses;
     dualA.interchangeable = altA;
-    a = TimeChoice::complex(ComplexTimeSignature::metered(dualA));
+    a = TimeChoice(ComplexTimeSignature::metered(dualA));
 
     MeteredTimeSignature dualB = dualA;
     dualB.interchangeable->relation = TimeRelation::bracket;
-    b = TimeChoice::complex(ComplexTimeSignature::metered(dualB));
+    b = TimeChoice(ComplexTimeSignature::metered(dualB));
     CHECK(a != b);
 
     // senza-misura glyph difference
-    a = TimeChoice::complex(ComplexTimeSignature::senzaMisura("X"));
-    b = TimeChoice::complex(ComplexTimeSignature::senzaMisura(""));
+    a = TimeChoice(ComplexTimeSignature::senzaMisura("X"));
+    b = TimeChoice(ComplexTimeSignature::senzaMisura(""));
     CHECK(a != b);
-    b = TimeChoice::complex(ComplexTimeSignature::senzaMisura("X"));
+    b = TimeChoice(ComplexTimeSignature::senzaMisura("X"));
     CHECK(a == b);
 }
 
@@ -215,7 +215,7 @@ TEST(roundTripComposite, TimeSignatureApi)
 {
     MeteredTimeSignature composite;
     composite.fractions = {{"2", "4"}, {"3", "8"}};
-    auto t = TimeChoice::complex(ComplexTimeSignature::metered(composite));
+    auto t = TimeChoice(ComplexTimeSignature::metered(composite));
     t.isImplicit = false;
 
     const auto reloaded = timeSignatureApiTestRoundTrip(timeSignatureApiTestScore(t));
@@ -236,7 +236,7 @@ T_END
 
 TEST(roundTripSenzaMisuraWithGlyph, TimeSignatureApi)
 {
-    auto t = TimeChoice::complex(ComplexTimeSignature::senzaMisura("X"));
+    auto t = TimeChoice(ComplexTimeSignature::senzaMisura("X"));
     t.isImplicit = false;
 
     const auto reloaded = timeSignatureApiTestRoundTrip(timeSignatureApiTestScore(t));
@@ -252,7 +252,7 @@ T_END
 
 TEST(roundTripSenzaMisuraWithoutGlyph, TimeSignatureApi)
 {
-    auto t = TimeChoice::complex(ComplexTimeSignature::senzaMisura());
+    auto t = TimeChoice(ComplexTimeSignature::senzaMisura());
     t.isImplicit = false;
 
     const auto reloaded = timeSignatureApiTestRoundTrip(timeSignatureApiTestScore(t));
@@ -276,7 +276,7 @@ TEST(roundTripInterchangeable, TimeSignatureApi)
     alt.symbol = ComplexTimeSymbol::cut;
     alt.separator = TimeSeparator::horizontal;
     metered.interchangeable = alt;
-    auto t = TimeChoice::complex(ComplexTimeSignature::metered(metered));
+    auto t = TimeChoice(ComplexTimeSignature::metered(metered));
     t.isImplicit = false;
 
     const auto reloaded = timeSignatureApiTestRoundTrip(timeSignatureApiTestScore(t));
@@ -298,7 +298,7 @@ TEST(roundTripWidenedSymbolAndSeparator, TimeSignatureApi)
     metered.fractions = {{"3", "4"}};
     metered.symbol = ComplexTimeSymbol::note;
     metered.separator = TimeSeparator::diagonal;
-    auto t = TimeChoice::complex(ComplexTimeSignature::metered(metered));
+    auto t = TimeChoice(ComplexTimeSignature::metered(metered));
     t.isImplicit = false;
 
     const auto reloaded = timeSignatureApiTestRoundTrip(timeSignatureApiTestScore(t));
@@ -315,12 +315,12 @@ T_END
 TEST(roundTripPerStaff, TimeSignatureApi)
 {
     // staff 0 (unscoped default) in 4/4; staff 1 overridden to 3/8
-    auto shared = TimeChoice::simple(TimeSignatureData{});
+    auto shared = TimeChoice(TimeSignatureData{});
     shared.isImplicit = false;
 
     auto score = timeSignatureApiTestScore(shared, 1); // two staves
 
-    auto staffTime = TimeChoice::simple(TimeSignatureData{TimeSignatureSymbol::unspecified, {"3", "8"}});
+    auto staffTime = TimeChoice(TimeSignatureData{TimeSignatureSymbol::unspecified, {"3", "8"}});
     staffTime.isImplicit = false;
     score.parts.at(0).measures.at(0).staffTimeSignatures[1] = staffTime;
 

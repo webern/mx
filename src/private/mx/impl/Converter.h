@@ -167,7 +167,7 @@ class Converter
     core::TimeSymbol convert(api::TimeSignatureSymbol value) const;
 
     // Complex (full) symbol: the whole MusicXML time-symbol vocabulary. The reader always builds a
-    // ComplexTimeSymbol (TimeChoice::complex collapses to simple when possible), so core->api goes
+    // ComplexTimeSymbol (the TimeChoice constructor collapses to simple when possible), so core->api goes
     // through this one.
     core::TimeSymbol convert(api::ComplexTimeSymbol value) const;
     api::ComplexTimeSymbol convert(core::TimeSymbol value) const;

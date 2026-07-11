@@ -29,7 +29,7 @@ inline mx::api::ScoreData apiK009bSlurAttributesScoreData()
     // 1
     part.measures.emplace_back(MeasureData{});
     auto measure = &part.measures.back();
-    measure->timeSignature = TimeChoice::simple(TimeSignatureData{});
+    measure->timeSignature = TimeChoice(TimeSignatureData{});
     measure->timeSignature.isImplicit = false;
     measure->staves.emplace_back(StaffData{});
     auto staff = &measure->staves.back();

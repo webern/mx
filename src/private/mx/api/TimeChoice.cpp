@@ -61,22 +61,20 @@ TimeChoice::TimeChoice() : myValue{TimeSignatureData{}}
 {
 }
 
-TimeChoice TimeChoice::simple(TimeSignatureData value)
+TimeChoice::TimeChoice(TimeSignatureData value) : myValue{std::move(value)}
 {
-    TimeChoice result;
-    result.myValue = std::move(value);
-    return result;
 }
 
-TimeChoice TimeChoice::complex(ComplexTimeSignature value)
+TimeChoice::TimeChoice(ComplexTimeSignature value)
 {
     if (const auto simpleEquivalent = timeChoiceAsSimpleEquivalent(value); simpleEquivalent.has_value())
     {
-        return simple(*simpleEquivalent);
+        myValue = *simpleEquivalent;
     }
-    TimeChoice result;
-    result.myValue = std::move(value);
-    return result;
+    else
+    {
+        myValue = std::move(value);
+    }
 }
 
 TimeChoice::Kind TimeChoice::kind() const
