@@ -57,7 +57,6 @@
   <part-list>
     <score-part id="P1">
       <part-name print-object="no">MusicXML Part</part-name>
-      <group>score</group>
       <score-instrument id="P1-I1">
         <instrument-name>SmartMusic SoftSynth 1</instrument-name>
       </score-instrument>
