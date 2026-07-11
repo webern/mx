@@ -7,6 +7,7 @@
 #include "mx/api/ApiCommon.h"
 
 #include <string>
+#include <utility>
 
 namespace mx
 {
@@ -51,12 +52,18 @@ MXAPI_NOT_EQUALS_AND_VECTORS(TimeFraction);
 // Defaults to 4/4 with no symbol.
 struct TimeSignatureData
 {
-    // TODO: implement these constructors and use the shortest expressions you can with them in tests.
-    // TODO: note these are psuedocode because I have been writing Rust
-    TimeSignatureData{beats: std::string, beatType: std::string};
-    TimeSignatureData{beats: std:string, beatType: std::string, symbol: TimeSignatureSymbol};
-    TimeSignatureData{fraction: TimeFraction}
-    TimeSignatureData{fraction: TimeFraction, symbol: TimeSignatureSymbol};
+    TimeSignatureData() = default;
+
+    explicit TimeSignatureData(std::string beats, std::string beatType,
+                               TimeSignatureSymbol symbol = TimeSignatureSymbol::unspecified)
+        : symbol{symbol}, fraction{TimeFraction{std::move(beats), std::move(beatType)}}
+    {
+    }
+
+    explicit TimeSignatureData(TimeFraction fraction, TimeSignatureSymbol symbol = TimeSignatureSymbol::unspecified)
+        : symbol{symbol}, fraction{std::move(fraction)}
+    {
+    }
 
     TimeSignatureSymbol symbol{TimeSignatureSymbol::unspecified};
     TimeFraction fraction{"4", "4"};

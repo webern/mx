@@ -168,9 +168,9 @@ TEST(equality, TimeSignatureApi)
     CHECK(a == b);
 
     // simple fraction difference
-    a = TimeChoice(TimeSignatureData{TimeSignatureSymbol::unspecified, {"3", "4"}});
+    a = TimeChoice(TimeSignatureData{"3", "4"});
     CHECK(a != b);
-    b = TimeChoice(TimeSignatureData{TimeSignatureSymbol::unspecified, {"3", "4"}});
+    b = TimeChoice(TimeSignatureData{"3", "4"});
     CHECK(a == b);
 
     // simple vs complex never compare equal
@@ -320,7 +320,7 @@ TEST(roundTripPerStaff, TimeSignatureApi)
 
     auto score = timeSignatureApiTestScore(shared, 1); // two staves
 
-    auto staffTime = TimeChoice(TimeSignatureData{TimeSignatureSymbol::unspecified, {"3", "8"}});
+    auto staffTime = TimeChoice(TimeSignatureData{"3", "8"});
     staffTime.isImplicit = false;
     score.parts.at(0).measures.at(0).staffTimeSignatures[1] = staffTime;
 

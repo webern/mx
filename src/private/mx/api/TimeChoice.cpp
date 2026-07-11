@@ -53,7 +53,7 @@ static std::optional<TimeSignatureData> timeChoiceAsSimpleEquivalent(const Compl
     {
         return std::nullopt;
     }
-    return TimeSignatureData{*simpleSymbol, metered.fractions.front()};
+    return TimeSignatureData{metered.fractions.front(), *simpleSymbol};
 }
 
 TimeChoice::TimeChoice() : myValue{TimeSignatureData{}}

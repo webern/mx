@@ -33,7 +33,7 @@ namespace api
 // signature, then the TimeChoice class will collapse it to a simple time signature.
 //
 // Example (the common case):
-//   measure.timeSignature = TimeChoice(TimeSignatureData{TimeSignatureSymbol::unspecified, TimeFraction{"3", "4"}});
+//   measure.timeSignature = TimeChoice(TimeSignatureData{"3", "4"});
 //   if (measure.timeSignature.isSimple())
 //   {
 //       const TimeSignatureData data = measure.timeSignature.simple();
