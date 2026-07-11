@@ -43,16 +43,21 @@ MXAPI_EQUALS_MEMBER(beatType)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(TimeFraction);
 
-// The simple time signature: the ordinary N/D that you reach for 99% of the time, optionally shown
-// with the common or cut glyph. Everything unusual (composite meters, senza-misura, interchangeable
-// dual meters, and the single-number/note/dotted-note display modes) is quarantined in
-// ComplexTimeSignature. Access a measure's time signature through TimeChoice (TimeChoice.h), which
-// switches between this simple case and the complex one and holds the whole-<time> attributes
-// (isImplicit, display).
+// The simple time signature: the ordinary numerator over denominator that you see most often.
+// Common and cut time are also supported by setting the symbol. (Note it is possible to set the
+// symbol even when the underlying beats and beatType don't match. For example C with 3/4 is not
+// prohibited by the spec or by mx::api.
 //
 // Defaults to 4/4 with no symbol.
 struct TimeSignatureData
 {
+    // TODO: implement these constructors and use the shortest expressions you can with them in tests.
+    // TODO: note these are psuedocode because I have been writing Rust
+    TimeSignatureData{beats: std::string, beatType: std::string};
+    TimeSignatureData{beats: std:string, beatType: std::string, symbol: TimeSignatureSymbol};
+    TimeSignatureData{fraction: TimeFraction}
+    TimeSignatureData{fraction: TimeFraction, symbol: TimeSignatureSymbol};
+
     TimeSignatureSymbol symbol{TimeSignatureSymbol::unspecified};
     TimeFraction fraction{"4", "4"};
 };
