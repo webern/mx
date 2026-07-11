@@ -93,7 +93,11 @@ both so the comparison is canonical-against-canonical. The pipeline lives in
 3. Strip trailing zeros from decimal fields: `mx` serializes the shortest round-trip form, so a
    trailing-zero decimal like `40.00000` in a source file would otherwise mismatch. The field list
    lives in `DecimalFields.h`.
-4. Sort each element's attributes alphabetically by qualified name (`xlink:href`, not `href`); it
+4. Re-space comma-separated-text fields (e.g. `font-family`) to `"item, item"`: the type allows
+   `"x,y"` or `"x, y"` on the wire and a parsed-but-unmutated value keeps its exact spelling on
+   write, but `mx`'s api round trip always re-serializes as `"x, y"`. The field list lives in
+   `CommaSeparatedFields.h`.
+5. Sort each element's attributes alphabetically by qualified name (`xlink:href`, not `href`); it
    runs last.
 
 Comparison rules that took debugging to get right:

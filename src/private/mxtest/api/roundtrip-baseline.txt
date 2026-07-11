@@ -320,9 +320,9 @@ rpatters1/timesigs_composite-ref-modified.musicxml
 
 # The original of the file above, now unblocked by PartData::groups
 # (<score-part>/<group>), MeasureData's measureNumbering multiple-rest-*/
-# system-relation attributes, and SoundData::swing (<sound>/<swing>).
-# One byte-level edit was kept: <music-font font-family="Maestro,engraved">
-# was respaced to "Maestro, engraved" (data/rpatters1/timesigs_composite-ref.musicxml)
-# to match mx's normalized comma-separated font-family list -- the two are
-# semantically identical, so the fixture was updated rather than the writer.
+# system-relation attributes, and SoundData::swing (<sound>/<swing>). Its
+# <music-font font-family="Maestro,engraved"> is comma-only (no space), which
+# the corert normalization now re-spaces to "Maestro, engraved" on both sides
+# of the comparison (see data/README.md's Normalization pipeline); the
+# fixture itself is untouched.
 rpatters1/timesigs_composite-ref.musicxml
