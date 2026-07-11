@@ -313,8 +313,10 @@ lysuite/ly11h_TimeSignatures_SenzaMisura.xml
 # beats/beat-type pairs (1+2.5 over 2+4, 3+2 over 16, 1.5+5 over 8+16).
 # Added to the repo ahead of the TimeSignatureData redesign as the fixture
 # that motivated it. The original (kept byte-exact, not pinned here) also
-# carries a Finale <score-part>/<group>, unspaced music-font comma list, and
-# <measure-numbering> multiple-rest-* attributes that mx::api doesn't model --
-# unrelated pre-existing gaps. timesigs_composite-ref-modified.musicxml trims
-# just those so the composite time-signature round-trip itself is pinned.
+# carries a Finale <score-part>/<group>, unspaced music-font comma list,
+# <measure-numbering> multiple-rest-* attributes, and a <sound>/<swing> --
+# all things mx::api doesn't model (SoundData.h documents <swing> as
+# intentionally out of scope). timesigs_composite-ref-modified.musicxml
+# trims just those unrelated gaps so the composite time-signature round-trip
+# itself is pinned.
 rpatters1/timesigs_composite-ref-modified.musicxml

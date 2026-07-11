@@ -101,11 +101,7 @@
           <line>2</line>
         </clef>
       </attributes>
-      <sound tempo="96">
-        <swing>
-          <straight/>
-        </swing>
-      </sound>
+      <sound tempo="96"/>
       <note>
         <rest measure="yes"/>
         <duration>33</duration>
