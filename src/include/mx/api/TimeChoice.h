@@ -73,14 +73,14 @@ class TimeChoice
 
     // Returns a copy of the internally held TimeSignatureData.
     //
-    // Precondition: isSimple(). If !isSimple(), a default constructed TimeSignatureData is
-    // returned.
+    // Check isSimple() first. If this is not a simple time signature, a default constructed
+    // TimeSignatureData is returned.
     const TimeSignatureData simple() const;
 
     // Returns a copy of the internally held ComplexTimeSignature.
     //
-    // Precondition: isComplex(). If !isComplex(), a default constructed ComplexTimeSignature is
-    // returned.
+    // Check isComplex() first. If this is not a complex time signature, a default constructed
+    // ComplexTimeSignature is returned.
     const ComplexTimeSignature complex() const;
 
     bool operator==(const TimeChoice &other) const;
