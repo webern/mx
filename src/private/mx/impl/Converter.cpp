@@ -1340,6 +1340,41 @@ const Converter::EnumMap<core::CancelLocation, api::CancelLocation> Converter::c
     {core::CancelLocation::beforeBarline(), api::CancelLocation::beforeBarline},
 };
 
+// core normal() folds into api unspecified: absent and "normal" are the same display.
+// The simple (narrow) symbol vocabulary: common/cut only. core normal() folds into api unspecified.
+const Converter::EnumMap<core::TimeSymbol, api::TimeSignatureSymbol> Converter::simpleTimeSymbolMap = {
+    {core::TimeSymbol::common(), api::TimeSignatureSymbol::common},
+    {core::TimeSymbol::cut(), api::TimeSignatureSymbol::cut},
+    {core::TimeSymbol::normal(), api::TimeSignatureSymbol::unspecified},
+};
+
+// The complex (full) symbol vocabulary. core normal() folds into api unspecified.
+const Converter::EnumMap<core::TimeSymbol, api::ComplexTimeSymbol> Converter::complexTimeSymbolMap = {
+    {core::TimeSymbol::common(), api::ComplexTimeSymbol::common},
+    {core::TimeSymbol::cut(), api::ComplexTimeSymbol::cut},
+    {core::TimeSymbol::singleNumber(), api::ComplexTimeSymbol::singleNumber},
+    {core::TimeSymbol::note(), api::ComplexTimeSymbol::note},
+    {core::TimeSymbol::dottedNote(), api::ComplexTimeSymbol::dottedNote},
+    {core::TimeSymbol::normal(), api::ComplexTimeSymbol::unspecified},
+};
+
+const Converter::EnumMap<core::TimeSeparator, api::TimeSeparator> Converter::timeSeparatorMap = {
+    {core::TimeSeparator::none(), api::TimeSeparator::none},
+    {core::TimeSeparator::horizontal(), api::TimeSeparator::horizontal},
+    {core::TimeSeparator::diagonal(), api::TimeSeparator::diagonal},
+    {core::TimeSeparator::vertical(), api::TimeSeparator::vertical},
+    {core::TimeSeparator::adjacent(), api::TimeSeparator::adjacent},
+};
+
+const Converter::EnumMap<core::TimeRelation, api::TimeRelation> Converter::timeRelationMap = {
+    {core::TimeRelation::parentheses(), api::TimeRelation::parentheses},
+    {core::TimeRelation::bracket(), api::TimeRelation::bracket},
+    {core::TimeRelation::equals(), api::TimeRelation::equals},
+    {core::TimeRelation::slash(), api::TimeRelation::slash},
+    {core::TimeRelation::space(), api::TimeRelation::space},
+    {core::TimeRelation::hyphen(), api::TimeRelation::hyphen},
+};
+
 api::Step Converter::convert(core::Step inStep) const
 {
     return findApiItem(stepMap, api::Step::c, inStep);
@@ -1659,6 +1694,41 @@ core::CancelLocation Converter::convert(api::CancelLocation value) const
 api::CancelLocation Converter::convert(core::CancelLocation value) const
 {
     return findApiItem(cancelLocationMap, api::CancelLocation::unspecified, value);
+}
+
+core::TimeSymbol Converter::convert(api::TimeSignatureSymbol value) const
+{
+    return findCoreItem(simpleTimeSymbolMap, core::TimeSymbol::normal(), value);
+}
+
+core::TimeSymbol Converter::convert(api::ComplexTimeSymbol value) const
+{
+    return findCoreItem(complexTimeSymbolMap, core::TimeSymbol::normal(), value);
+}
+
+api::ComplexTimeSymbol Converter::convert(core::TimeSymbol value) const
+{
+    return findApiItem(complexTimeSymbolMap, api::ComplexTimeSymbol::unspecified, value);
+}
+
+core::TimeSeparator Converter::convert(api::TimeSeparator value) const
+{
+    return findCoreItem(timeSeparatorMap, core::TimeSeparator::none(), value);
+}
+
+api::TimeSeparator Converter::convert(core::TimeSeparator value) const
+{
+    return findApiItem(timeSeparatorMap, api::TimeSeparator::unspecified, value);
+}
+
+core::TimeRelation Converter::convert(api::TimeRelation value) const
+{
+    return findCoreItem(timeRelationMap, core::TimeRelation::parentheses(), value);
+}
+
+api::TimeRelation Converter::convert(core::TimeRelation value) const
+{
+    return findApiItem(timeRelationMap, api::TimeRelation::unspecified, value);
 }
 
 double Converter::convertToAlter(int semitones, double cents)

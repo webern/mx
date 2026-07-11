@@ -1,6 +1,7 @@
 build/
 build-*/
 cmake-build-*
+.cache/
 src/private/mxtest/file/PathRoot.h
 *.DS_Store
 compile_commands.json

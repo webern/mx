@@ -3,115 +3,115 @@
 // Distributed under the MIT License
 
 #include "mx/impl/TimeReader.h"
+#include "mx/api/ComplexTimeSignature.h"
 #include "mx/core/generated/Attributes.h"
+#include "mx/core/generated/Interchangeable.h"
 #include "mx/core/generated/Time.h"
 #include "mx/core/generated/TimeChoice.h"
 #include "mx/core/generated/TimeChoiceGroup.h"
 #include "mx/core/generated/TimeSignatureGroup.h"
-#include "mx/utility/Throw.h"
+#include "mx/impl/Converter.h"
 
-#include <cmath>
-#include <set>
-#include <string>
+#include <utility>
+#include <vector>
 
 namespace mx
 {
 namespace impl
 {
 
-TimeReader::TimeReader(std::span<const core::MusicDataChoice> inMusicDataChoices)
-    : myMusicDataChoiceSet{inMusicDataChoices}, myTime{nullptr}, myIsTimeFound{false}, myTimeSignatureData{}
+static std::vector<api::TimeFraction> timeReaderFractions(std::span<const core::TimeSignatureGroup> inGroups)
 {
-    myIsTimeFound = initialize();
+    std::vector<api::TimeFraction> fractions;
+    for (const auto &pair : inGroups)
+    {
+        fractions.push_back(api::TimeFraction{pair.beats(), pair.beatType()});
+    }
+    return fractions;
 }
 
-bool TimeReader::getIsTimeFound() const
+TimeReader::TimeReader(std::span<const core::MusicDataChoice> inMusicDataChoices) : myTimeSignatures{}
 {
-    return myIsTimeFound;
-}
-
-mx::api::TimeSignatureData TimeReader::getTimeSignatureData() const
-{
-    return myTimeSignatureData;
-}
-
-bool TimeReader::initialize()
-{
-    for (const auto &mdc : myMusicDataChoiceSet)
+    for (const auto &mdc : inMusicDataChoices)
     {
         if (mdc.kind() == core::MusicDataChoice::Kind::attributes)
         {
-            const auto &props = mdc.asAttributes();
-            if (props.time().size() > 0)
+            for (const auto &time : mdc.asAttributes().time())
             {
-                myTime = &props.time().front();
-                return parseTime();
+                myTimeSignatures.push_back(createTimeChoice(time));
             }
         }
     }
-    return false;
 }
 
-bool TimeReader::parseTime()
+const std::vector<TimeReaderResult> &TimeReader::getTimeSignatures() const
 {
-    const auto &timeChoice = myTime->choice();
+    return myTimeSignatures;
+}
 
-    if (timeChoice.kind() == core::TimeChoice::Kind::group)
+TimeReaderResult TimeReader::createTimeChoice(const core::Time &inTime)
+{
+    Converter converter;
+    api::TimeChoice timeChoice;
+
+    const auto &choice = inTime.choice();
+    if (choice.kind() == core::TimeChoice::Kind::senzaMisura)
     {
-        const auto sigGroupSet = timeChoice.asGroup().timeSignature();
-        MX_ASSERT(sigGroupSet.size() > 0);
-        return parseTimeSignatureGroup(sigGroupSet.front());
+        // the string content is the display glyph (often empty); a senza-misura carries no symbol
+        timeChoice = api::TimeChoice(api::ComplexTimeSignature(choice.asSenzaMisura()));
     }
     else
     {
-        return false;
-        // MX_THROW( "TODO - other time signature stuff" );
+        const auto &group = choice.asGroup();
+        api::MeteredTimeSignature metered;
+        metered.fractions = timeReaderFractions(group.timeSignature());
+
+        if (inTime.symbol().has_value())
+        {
+            metered.symbol = converter.convert(*inTime.symbol());
+        }
+        if (inTime.separator().has_value())
+        {
+            metered.separator = converter.convert(*inTime.separator());
+        }
+
+        if (group.interchangeable().has_value())
+        {
+            const auto &core = *group.interchangeable();
+            api::InterchangeableTimeSignature alternate;
+            alternate.fractions = timeReaderFractions(core.timeSignature());
+            if (core.timeRelation().has_value())
+            {
+                alternate.relation = converter.convert(*core.timeRelation());
+            }
+            if (core.symbol().has_value())
+            {
+                alternate.symbol = converter.convert(*core.symbol());
+            }
+            if (core.separator().has_value())
+            {
+                alternate.separator = converter.convert(*core.separator());
+            }
+            metered.interchangeable = std::move(alternate);
+        }
+
+        // complex() collapses back to simple when the meter is really just a plain fraction
+        timeChoice = api::TimeChoice(api::ComplexTimeSignature(std::move(metered)));
     }
-}
 
-bool TimeReader::parseTimeSignatureGroup(const core::TimeSignatureGroup &timeSig)
-{
-    myTimeSignatureData.beats = timeSig.beats();
-    myTimeSignatureData.beatType = timeSig.beatType();
-
-    if (myTime->symbol().has_value())
+    timeChoice.isImplicit = false;
+    if (inTime.printObject().has_value())
     {
-        if (*myTime->symbol() == core::TimeSymbol::common())
-        {
-            myTimeSignatureData.symbol = api::TimeSignatureSymbol::common;
-        }
-        else if (*myTime->symbol() == core::TimeSymbol::cut())
-        {
-            myTimeSignatureData.symbol = api::TimeSignatureSymbol::cut;
-        }
-        else if (*myTime->symbol() == core::TimeSymbol::singleNumber())
-        {
-            myTimeSignatureData.symbol = api::TimeSignatureSymbol::singleNumber;
-        }
+        timeChoice.display = converter.convert(*inTime.printObject());
     }
-    else
+
+    int staffIndex = api::INDEX_UNSPECIFIED;
+    if (inTime.number().has_value())
     {
-        myTimeSignatureData.symbol = api::TimeSignatureSymbol::unspecified;
+        staffIndex = static_cast<int>(inTime.number()->value()) - 1;
     }
 
-    myTimeSignatureData.display = api::Bool::unspecified;
-    if (myTime->printObject().has_value())
-    {
-        bool isPrint = *myTime->printObject() == core::YesNo::yes();
-
-        if (isPrint)
-        {
-            myTimeSignatureData.display = api::Bool::yes;
-        }
-        else
-        {
-            myTimeSignatureData.display = api::Bool::no;
-        }
-    }
-
-    myTimeSignatureData.isImplicit = false;
-
-    return true;
+    return TimeReaderResult{std::move(timeChoice), staffIndex};
 }
 } // namespace impl
 } // namespace mx

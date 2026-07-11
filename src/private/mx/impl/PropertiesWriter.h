@@ -7,7 +7,7 @@
 #include "mx/api/ClefData.h"
 #include "mx/api/KeyData.h"
 #include "mx/api/PartSymbolData.h"
-#include "mx/api/TimeSignatureData.h"
+#include "mx/api/TimeChoice.h"
 #include "mx/api/TransposeData.h"
 #include "mx/core/generated/Attributes.h"
 #include "mx/core/generated/Key.h"
@@ -49,7 +49,9 @@ class PropertiesWriter
     void writeKey(int staffIndex, const api::KeyData &inKeyData);
     static void writeTraditionalKey(const api::KeyData &inKeyData, core::Key &ioKey);
     static void writeNonTraditionalKey(const api::KeyData &inKeyData, core::Key &ioKey);
-    void writeTime(const api::TimeSignatureData &value);
+    // staffIndex is INDEX_UNSPECIFIED for the unscoped <time>, else the zero-based staff index of a
+    // <time number="N"> override.
+    void writeTime(const api::TimeChoice &value, int staffIndex);
     void writeNumStaves(int value);
     void writeStaffDetails(int staffIndex, int staffLines);
     void writeStaffDetails(int staffIndex, int staffLines, double staffSize);

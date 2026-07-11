@@ -40,6 +40,9 @@
 #include "mx/core/generated/StemValue.h"
 #include "mx/core/generated/Step.h"
 #include "mx/core/generated/TechnicalChoice.h"
+#include "mx/core/generated/TimeRelation.h"
+#include "mx/core/generated/TimeSeparator.h"
+#include "mx/core/generated/TimeSymbol.h"
 #include "mx/core/generated/Transpose.h"
 #include "mx/core/generated/Valign.h"
 #include "mx/core/generated/WedgeType.h"
@@ -159,6 +162,24 @@ class Converter
     core::CancelLocation convert(api::CancelLocation value) const;
     api::CancelLocation convert(core::CancelLocation value) const;
 
+    // Simple (narrow) symbol: common/cut only. unspecified maps to core normal(); callers skip the
+    // attribute entirely for unspecified (absent and normal mean the same thing on the wire).
+    core::TimeSymbol convert(api::TimeSignatureSymbol value) const;
+
+    // Complex (full) symbol: the whole MusicXML time-symbol vocabulary. The reader always builds a
+    // ComplexTimeSymbol (the TimeChoice constructor collapses to simple when possible), so core->api goes
+    // through this one.
+    core::TimeSymbol convert(api::ComplexTimeSymbol value) const;
+    api::ComplexTimeSymbol convert(core::TimeSymbol value) const;
+
+    // api::TimeSeparator::unspecified means "write no attribute"; callers skip it.
+    core::TimeSeparator convert(api::TimeSeparator value) const;
+    api::TimeSeparator convert(core::TimeSeparator value) const;
+
+    // api::TimeRelation::unspecified means "write no element"; callers skip it.
+    core::TimeRelation convert(api::TimeRelation value) const;
+    api::TimeRelation convert(core::TimeRelation value) const;
+
     static double convertToAlter(int semitones, double cents);
     static std::pair<int, double> convertToSemitonesAndCents(double alter);
 
@@ -197,6 +218,10 @@ class Converter
     const static EnumMap<core::SoundID, api::SoundID> instrumentMap;
     const static EnumMap<core::KindValue, api::ChordKind> kindMap;
     const static EnumMap<core::CancelLocation, api::CancelLocation> cancelLocationMap;
+    const static EnumMap<core::TimeSymbol, api::TimeSignatureSymbol> simpleTimeSymbolMap;
+    const static EnumMap<core::TimeSymbol, api::ComplexTimeSymbol> complexTimeSymbolMap;
+    const static EnumMap<core::TimeSeparator, api::TimeSeparator> timeSeparatorMap;
+    const static EnumMap<core::TimeRelation, api::TimeRelation> timeRelationMap;
 
   private:
     template <typename CORE_TYPE, typename API_TYPE>

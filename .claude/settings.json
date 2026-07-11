@@ -1,15 +1,4 @@
 {
-    "permissions": {
-        "allow": [
-            "Agent",
-            "Edit",
-            "WebSearch",
-            "WebFetch",
-            "Write",
-            "Read",
-            "Bash"
-        ]
-    },
     "hooks":
     {
         "SessionStart":

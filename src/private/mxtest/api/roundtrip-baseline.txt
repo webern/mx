@@ -298,3 +298,25 @@ musuite/testAccidentals2.xml
 # MeasureWriter: the field and its Converter existed but neither side ever
 # called it, so <measure-numbering> was silently dropped on round-trip.
 ksuite/k015a_System_Layout.xml
+
+# Unblocked by the TimeSignatureData redesign: <time> now models every spec
+# shape (composite/additive multi-pair meters, senza-misura, interchangeable,
+# per-staff number=, separator, note/dotted-note symbols) instead of reading
+# only the first beats/beat-type pair of the first <time> and dropping the
+# rest on round-trip.
+lysuite/ly11d_TimeSignatures_CompoundMultiple.xml
+lysuite/ly11e_TimeSignatures_CompoundMixed.xml
+lysuite/ly11f_TimeSignatures_SymbolMeaning.xml
+lysuite/ly11h_TimeSignatures_SenzaMisura.xml
+
+# rpatters1's #268 repro: a single <time> with three composite/additive
+# beats/beat-type pairs (1+2.5 over 2+4, 3+2 over 16, 1.5+5 over 8+16).
+# Added to the repo ahead of the TimeSignatureData redesign as the fixture
+# that motivated it. The original (kept byte-exact, not pinned here) also
+# carries a Finale <score-part>/<group>, unspaced music-font comma list,
+# <measure-numbering> multiple-rest-* attributes, and a <sound>/<swing> --
+# all things mx::api doesn't model (SoundData.h documents <swing> as
+# intentionally out of scope). timesigs_composite-ref-modified.musicxml
+# trims just those unrelated gaps so the composite time-signature round-trip
+# itself is pinned.
+rpatters1/timesigs_composite-ref-modified.musicxml

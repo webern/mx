@@ -60,8 +60,7 @@ inline mx::api::ScoreData apiK015aLayoutScoreData()
     part.measures.emplace_back(MeasureData{});
     auto measure = &part.measures.back();
     measure->width = 0.0;
-    measure->timeSignature.beats = "4";
-    measure->timeSignature.beatType = "4";
+    measure->timeSignature = TimeChoice(TimeSignatureData{});
     measure->timeSignature.isImplicit = false;
     measure->staves.emplace_back(StaffData{});
     auto staff = &measure->staves.back();

@@ -54,8 +54,8 @@ inline void addFirstMeasureWithNote(mx::api::MarkType markType, mx::api::PartDat
     using namespace mx::api;
     outPartData.measures.emplace_back(MeasureData{});
     auto measureP = &outPartData.measures.front();
+    measureP->timeSignature = TimeChoice(TimeSignatureData{});
     measureP->timeSignature.isImplicit = false;
-    measureP->timeSignature.symbol = TimeSignatureSymbol::unspecified;
     measureP->staves.emplace_back(StaffData{});
     auto staffP = &measureP->staves.at(0);
     staffP->clefs.emplace_back(ClefData{});
