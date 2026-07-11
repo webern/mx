@@ -148,6 +148,12 @@ class PartData
     PrintData displayAbbreviationPrintData;
     PositionData displayAbbreviationPositionData;
 
+    // Names of this <score-part>'s repeatable <group> elements (e.g. "score"), used by some
+    // notation software to assign a part to a MIDI/score grouping. Unrelated to PartGroupData,
+    // which models the visual staff-bracket grouping declared before/after <score-part> in
+    // <part-list>.
+    std::vector<std::string> groups;
+
     InstrumentData instrumentData;
 
     /// The initial transposition for the part. If the music entered into the part is not in
@@ -254,6 +260,7 @@ MXAPI_EQUALS_MEMBER(displayNamePositionData)
 MXAPI_EQUALS_MEMBER(displayAbbreviation)
 MXAPI_EQUALS_MEMBER(displayAbbreviationPrintData)
 MXAPI_EQUALS_MEMBER(displayAbbreviationPositionData)
+MXAPI_EQUALS_MEMBER(groups)
 MXAPI_EQUALS_MEMBER(instrumentData)
 MXAPI_EQUALS_MEMBER(transposition)
 MXAPI_EQUALS_MEMBER(measures)

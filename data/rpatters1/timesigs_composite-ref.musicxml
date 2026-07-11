@@ -51,7 +51,7 @@
       <distance type="hyphen">60</distance>
       <distance type="beam">7.5</distance>
     </appearance>
-    <music-font font-family="Maestro,engraved" font-size="20.5"/>
+    <music-font font-family="Maestro, engraved" font-size="20.5"/>
     <word-font font-family="Times New Roman" font-size="10.25"/>
   </defaults>
   <part-list>

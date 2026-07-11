@@ -4,17 +4,20 @@
 
 #include "mx/impl/SoundFunctions.h"
 #include "mx/core/Decimal.h"
+#include "mx/core/generated/Empty.h"
 #include "mx/core/generated/NonNegativeDecimal.h"
 #include "mx/core/generated/Sound.h"
+#include "mx/core/generated/Swing.h"
+#include "mx/core/generated/SwingChoice.h"
+#include "mx/core/generated/SwingChoiceGroup.h"
+#include "mx/core/generated/SwingTypeValue.h"
 #include "mx/core/generated/YesNo.h"
 
 namespace mx
 {
 namespace impl
 {
-namespace
-{
-api::Bool toApiBool(const std::optional<core::YesNo> &value)
+api::Bool soundFunctionsToApiBool(const std::optional<core::YesNo> &value)
 {
     if (!value.has_value())
     {
@@ -23,7 +26,75 @@ api::Bool toApiBool(const std::optional<core::YesNo> &value)
 
     return value->tag() == core::YesNo::Tag::yes ? api::Bool::yes : api::Bool::no;
 }
-} // namespace
+
+api::SwingNoteType soundFunctionsToApiSwingNoteType(const core::SwingTypeValue &value)
+{
+    return value.tag() == core::SwingTypeValue::Tag::eighth ? api::SwingNoteType::eighth : api::SwingNoteType::dur16th;
+}
+
+core::SwingTypeValue soundFunctionsToCoreSwingTypeValue(api::SwingNoteType value)
+{
+    return value == api::SwingNoteType::dur16th ? core::SwingTypeValue::_16th() : core::SwingTypeValue::eighth();
+}
+
+api::SwingData soundFunctionsToApiSwingData(const core::Swing &inSwing)
+{
+    api::SwingData out{};
+
+    if (inSwing.choice().isStraight())
+    {
+        out.isStraight = true;
+    }
+    else
+    {
+        out.isStraight = false;
+        const auto &group = inSwing.choice().asGroup();
+        out.ratioFirst = group.first();
+        out.ratioSecond = group.second();
+
+        if (group.swingType().has_value())
+        {
+            out.noteType = soundFunctionsToApiSwingNoteType(*group.swingType());
+        }
+    }
+
+    if (inSwing.swingStyle().has_value())
+    {
+        out.style = *inSwing.swingStyle();
+    }
+
+    return out;
+}
+
+core::Swing soundFunctionsToCoreSwing(const api::SwingData &inSwingData)
+{
+    core::Swing outSwing{};
+
+    if (inSwingData.isStraight)
+    {
+        outSwing.setChoice(core::SwingChoice::straight(core::Empty{}));
+    }
+    else
+    {
+        core::SwingChoiceGroup group{};
+        group.setFirst(inSwingData.ratioFirst);
+        group.setSecond(inSwingData.ratioSecond);
+
+        if (inSwingData.noteType != api::SwingNoteType::unspecified)
+        {
+            group.setSwingType(soundFunctionsToCoreSwingTypeValue(inSwingData.noteType));
+        }
+
+        outSwing.setChoice(core::SwingChoice::group(group));
+    }
+
+    if (!inSwingData.style.empty())
+    {
+        outSwing.setSwingStyle(inSwingData.style);
+    }
+
+    return outSwing;
+}
 
 api::SoundData readSoundData(const core::Sound &inSound)
 {
@@ -39,9 +110,9 @@ api::SoundData readSoundData(const core::Sound &inSound)
         out.dynamics = inSound.dynamics()->value().value();
     }
 
-    out.dacapo = toApiBool(inSound.dacapo());
-    out.forwardRepeat = toApiBool(inSound.forwardRepeat());
-    out.pizzicato = toApiBool(inSound.pizzicato());
+    out.dacapo = soundFunctionsToApiBool(inSound.dacapo());
+    out.forwardRepeat = soundFunctionsToApiBool(inSound.forwardRepeat());
+    out.pizzicato = soundFunctionsToApiBool(inSound.pizzicato());
 
     if (inSound.segno().has_value())
     {
@@ -66,6 +137,11 @@ api::SoundData readSoundData(const core::Sound &inSound)
     if (inSound.fine().has_value())
     {
         out.fine = *inSound.fine();
+    }
+
+    if (inSound.swing().has_value())
+    {
+        out.swing = soundFunctionsToApiSwingData(*inSound.swing());
     }
 
     return out;
@@ -121,6 +197,11 @@ void writeSoundData(const api::SoundData &inSoundData, core::Sound &outSound)
     if (!inSoundData.fine.empty())
     {
         outSound.setFine(inSoundData.fine);
+    }
+
+    if (inSoundData.swing.has_value())
+    {
+        outSound.setSwing(soundFunctionsToCoreSwing(*inSoundData.swing));
     }
 }
 } // namespace impl

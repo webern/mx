@@ -98,6 +98,11 @@ core::ScorePart PartWriter::getScorePart() const
                                                              myPartData.displayAbbreviationPositionData));
     }
 
+    for (const auto &group : myPartData.groups)
+    {
+        scorePart.addGroup(group);
+    }
+
     core::ScoreInstrument scoreInstrument{};
     bool addScoreInstrument = false;
     scoreInstrument.setID(core::Token{myPartData.instrumentData.uniqueId});

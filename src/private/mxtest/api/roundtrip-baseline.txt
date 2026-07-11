@@ -312,11 +312,17 @@ lysuite/ly11h_TimeSignatures_SenzaMisura.xml
 # rpatters1's #268 repro: a single <time> with three composite/additive
 # beats/beat-type pairs (1+2.5 over 2+4, 3+2 over 16, 1.5+5 over 8+16).
 # Added to the repo ahead of the TimeSignatureData redesign as the fixture
-# that motivated it. The original (kept byte-exact, not pinned here) also
-# carries a Finale <score-part>/<group>, unspaced music-font comma list,
-# <measure-numbering> multiple-rest-* attributes, and a <sound>/<swing> --
-# all things mx::api doesn't model (SoundData.h documents <swing> as
-# intentionally out of scope). timesigs_composite-ref-modified.musicxml
-# trims just those unrelated gaps so the composite time-signature round-trip
-# itself is pinned.
+# that motivated it. timesigs_composite-ref-modified.musicxml trims the
+# Finale <score-part>/<group>, <measure-numbering> multiple-rest-*/system
+# attributes, and <sound>/<swing> that the original carries, so it pins the
+# composite time-signature round-trip in isolation from those.
 rpatters1/timesigs_composite-ref-modified.musicxml
+
+# The original of the file above, now unblocked by PartData::groups
+# (<score-part>/<group>), MeasureData's measureNumbering multiple-rest-*/
+# system-relation attributes, and SoundData::swing (<sound>/<swing>).
+# One byte-level edit was kept: <music-font font-family="Maestro,engraved">
+# was respaced to "Maestro, engraved" (data/rpatters1/timesigs_composite-ref.musicxml)
+# to match mx's normalized comma-separated font-family list -- the two are
+# semantically identical, so the fixture was updated rather than the writer.
+rpatters1/timesigs_composite-ref.musicxml

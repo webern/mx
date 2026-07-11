@@ -39,6 +39,7 @@
 #include "mx/core/generated/StartStopDiscontinue.h"
 #include "mx/core/generated/StemValue.h"
 #include "mx/core/generated/Step.h"
+#include "mx/core/generated/SystemRelationNumber.h"
 #include "mx/core/generated/TechnicalChoice.h"
 #include "mx/core/generated/TimeRelation.h"
 #include "mx/core/generated/TimeSeparator.h"
@@ -124,6 +125,9 @@ class Converter
     core::MeasureNumberingValue convertMeasureNumbering(api::MeasureNumbering value) const;
     api::MeasureNumbering convertMeasureNumbering(core::MeasureNumberingValue value) const;
 
+    core::SystemRelationNumber convertSystemRelation(api::SystemRelation value) const;
+    api::SystemRelation convertSystemRelation(core::SystemRelationNumber value) const;
+
     core::StemValue convert(api::Stem value) const;
     api::Stem convert(core::StemValue value) const;
 
@@ -205,6 +209,7 @@ class Converter
     const static EnumMap<core::AccidentalValue, api::MarkType> accidentalMarkMap;
     const static EnumMap<core::TechnicalChoice::Kind, api::MarkType> technicalMarkMap;
     const static EnumMap<core::MeasureNumberingValue, api::MeasureNumbering> measureNumberingMap;
+    const static EnumMap<core::SystemRelationNumber, api::SystemRelation> systemRelationMap;
     const static EnumMap<core::StemValue, api::Stem> stemMap;
     const static EnumMap<core::LineType, api::LineType> lineType;
     const static EnumMap<core::WedgeType, api::WedgeType> wedgeMap;

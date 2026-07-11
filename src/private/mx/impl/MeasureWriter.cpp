@@ -414,6 +414,23 @@ void MeasureWriter::writeMeasureNumbering()
 
     core::MeasureNumbering outMeasureNumbering{};
     outMeasureNumbering.setValue(myConverter.convertMeasureNumbering(myMeasureData.measureNumbering));
+
+    if (myMeasureData.measureNumberingMultipleRestAlways != api::Bool::unspecified)
+    {
+        outMeasureNumbering.setMultipleRestAlways(
+            myConverter.convert(myMeasureData.measureNumberingMultipleRestAlways));
+    }
+
+    if (myMeasureData.measureNumberingMultipleRestRange != api::Bool::unspecified)
+    {
+        outMeasureNumbering.setMultipleRestRange(myConverter.convert(myMeasureData.measureNumberingMultipleRestRange));
+    }
+
+    if (myMeasureData.measureNumberingSystemRelation != api::SystemRelation::unspecified)
+    {
+        outMeasureNumbering.setSystem(myConverter.convertSystemRelation(myMeasureData.measureNumberingSystemRelation));
+    }
+
     outPrint.setMeasureNumbering(std::move(outMeasureNumbering));
 
     if (printIndex >= 0)
