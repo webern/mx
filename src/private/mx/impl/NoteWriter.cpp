@@ -427,9 +427,25 @@ void NoteWriter::setStaffAndVoice() const
         // position, but the displayed staff comes from the override (NoteData.h)
         myOutNote.setStaff(*myNoteData.crossStaffIndex + 1);
     }
-    else if (myCursor.staffIndex >= 0 && (myCursor.getNumStaves() > 1 || myNoteData.isStaffValueSpecified))
+    else if (myCursor.staffIndex >= 0)
     {
-        myOutNote.setStaff(myCursor.staffIndex + 1);
+        // Auto rule: <staff> is structurally required on a multi-staff part and implied (1) on a
+        // single-staff part. writeStaffNumber forces the decision either way (round-trip
+        // fidelity), except that no cannot suppress <staff> off the first staff - MusicXML would
+        // read the omission as staff 1.
+        bool includeStaff = myCursor.getNumStaves() > 1;
+        if (myNoteData.writeStaffNumber == api::Bool::yes)
+        {
+            includeStaff = true;
+        }
+        else if (myNoteData.writeStaffNumber == api::Bool::no && myCursor.staffIndex == 0)
+        {
+            includeStaff = false;
+        }
+        if (includeStaff)
+        {
+            myOutNote.setStaff(myCursor.staffIndex + 1);
+        }
     }
 
     const bool sourceHadVoice = myNoteData.userRequestedVoiceNumber != api::VALUE_UNSPECIFIED;

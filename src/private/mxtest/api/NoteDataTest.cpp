@@ -1587,10 +1587,84 @@ TEST(explicitStaffOnSingleStaffPartRoundTrips, NoteData)
     const auto score = fromXml(xml);
     const auto &notes = score.parts.back().measures.back().staves.back().voices.at(0).notes;
     REQUIRE(notes.size() == 1);
-    CHECK(notes.at(0).isStaffValueSpecified);
+    CHECK(notes.at(0).writeStaffNumber == Bool::yes);
 
     const auto outXml = toXml(score);
     CHECK(outXml.find("<staff>1</staff>") != std::string::npos);
+}
+
+T_END;
+
+TEST(omittedStaffOnMultiStaffPartRoundTrips, NoteData)
+{
+    const std::string xml = R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<score-partwise version="3.0">
+  <part-list>
+    <score-part id="P1">
+      <part-name>x</part-name>
+    </score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes>
+        <divisions>1</divisions>
+        <staves>2</staves>
+      </attributes>
+      <note>
+        <pitch><step>C</step><octave>5</octave></pitch>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <backup><duration>1</duration></backup>
+      <note>
+        <pitch><step>C</step><octave>3</octave></pitch>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+        <staff>2</staff>
+      </note>
+    </measure>
+  </part>
+</score-partwise>
+)";
+
+    const auto score = fromXml(xml);
+    const auto &staves = score.parts.back().measures.back().staves;
+    REQUIRE(staves.size() == 2);
+    const auto &firstStaffNotes = staves.at(0).voices.at(0).notes;
+    const auto &secondStaffNotes = staves.at(1).voices.at(0).notes;
+    REQUIRE(firstStaffNotes.size() == 1);
+    REQUIRE(secondStaffNotes.size() == 1);
+    CHECK(firstStaffNotes.at(0).writeStaffNumber == Bool::no);
+    CHECK(secondStaffNotes.at(0).writeStaffNumber == Bool::unspecified);
+
+    const auto outXml = toXml(score);
+    CHECK(outXml.find("<staff>1</staff>") == std::string::npos);
+    CHECK(outXml.find("<staff>2</staff>") != std::string::npos);
+}
+
+T_END;
+
+TEST(writeStaffNumberNoIsIgnoredOffFirstStaff, NoteData)
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    measure.staves.emplace_back();
+
+    NoteData note;
+    note.tickTimePosition = 0;
+    note.durationData.durationTimeTicks = score.ticksPerQuarter;
+    note.durationData.durationName = DurationName::quarter;
+    note.writeStaffNumber = Bool::no;
+    measure.staves.at(1).voices[0].notes.push_back(note);
+
+    const auto xml = toXml(score);
+    CHECK(xml.find("<staff>2</staff>") != std::string::npos);
 }
 
 T_END;

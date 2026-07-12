@@ -135,11 +135,14 @@ class NoteData
     PitchData pitchData; // step, alter, octave, accidental, etc
     int userRequestedVoiceNumber;
 
-    // Whether the source note carried an explicit <staff> element. mx::api normally only
-    // writes <staff> when the part has more than one staff (where it is structurally
-    // required); this preserves a source's redundant-but-legal <staff> on a single-staff
-    // part instead of silently dropping it. Mirrors DirectionData::isStaffValueSpecified.
-    bool isStaffValueSpecified;
+    // Most users can ignore this; leave it unspecified. It only controls whether the note's
+    // optional <staff> element is written. unspecified (the default) applies the right rule
+    // automatically: omit <staff> on a single-staff part (where 1 is implied) and include it
+    // otherwise. yes/no force the element on or off, except that no is ignored for a note that
+    // is not on the first staff (omitting <staff> there would move the note to staff 1). It
+    // exists for round-trip fidelity - reading a file sets yes/no only when the source diverged
+    // from the automatic rule. Same convention as ClefData::writeStaffNumber.
+    Bool writeStaffNumber;
 
     // The zero-based index of the staff on which this note is displayed, for the rare case
     // that it differs from the staff that contains the note (cross-staff notation, e.g. a
@@ -195,7 +198,7 @@ MXAPI_EQUALS_MEMBER(isCue)
 MXAPI_EQUALS_MEMBER(graceSlash)
 MXAPI_EQUALS_MEMBER(pitchData)
 MXAPI_EQUALS_MEMBER(userRequestedVoiceNumber)
-MXAPI_EQUALS_MEMBER(isStaffValueSpecified)
+MXAPI_EQUALS_MEMBER(writeStaffNumber)
 MXAPI_EQUALS_MEMBER(crossStaffIndex)
 MXAPI_EQUALS_MEMBER(stem)
 MXAPI_EQUALS_MEMBER(stemPositionData)

@@ -318,7 +318,7 @@ lysuite/ly11h_TimeSignatures_SenzaMisura.xml
 # composite time-signature round-trip in isolation from those.
 rpatters1/timesigs_composite-ref-modified.musicxml
 
-# Unblocked by NoteData::isStaffValueSpecified: NoteWriter only wrote <staff>
+# Unblocked by NoteData::writeStaffNumber: NoteWriter only wrote <staff>
 # for multi-staff parts, dropping a source's explicit (but structurally
 # redundant) <staff> on a single-staff part.
 lysuite/ly24c_GraceNote_MeasureEnd.xml

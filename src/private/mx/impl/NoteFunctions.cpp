@@ -77,7 +77,19 @@ api::NoteData NoteFunctions::parseNote() const
 
     myOutNoteData.pitchData.octave = reader.getOctave();
     myOutNoteData.userRequestedVoiceNumber = reader.getVoiceNumber();
-    myOutNoteData.isStaffValueSpecified = reader.getIsStaffSpecified();
+
+    // Auto rule (see NoteData::writeStaffNumber): <staff> is included on a multi-staff part and
+    // omitted on a single-staff part. Record an override only when the source diverges from that
+    // rule, so the common case stays unspecified.
+    const bool staffAutoIncludes = myCursor.getNumStaves() > 1;
+    if (reader.getIsStaffSpecified() && !staffAutoIncludes)
+    {
+        myOutNoteData.writeStaffNumber = api::Bool::yes;
+    }
+    else if (!reader.getIsStaffSpecified() && staffAutoIncludes)
+    {
+        myOutNoteData.writeStaffNumber = api::Bool::no;
+    }
 
     myOutNoteData.notehead = converter.convert(reader.getNoteheadValue());
 
