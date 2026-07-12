@@ -4,9 +4,11 @@
 
 #pragma once
 
+#include "mx/api/MarkDataChoice.h"
 #include "mx/api/PositionData.h"
 #include "mx/api/PrintData.h"
 
+#include <optional>
 #include <string>
 
 namespace mx
@@ -87,6 +89,8 @@ enum class MarkType
     tremoloSingleThree, ///< A tremolo on a single note (a glyph, not a spanner) with 3 slashes
     tremoloSingleFour,  ///< A tremolo on a single note (a glyph, not a spanner) with 4 slashes
     tremoloSingleFive,  ///< A tremolo on a single note (a glyph, not a spanner) with 5 slashes
+    tremoloStart,       ///< The first note of a measured (two-note) tremolo; slash count is in MarkData::choice
+    tremoloStop,        ///< The second note of a measured (two-note) tremolo; slash count is in MarkData::choice
     otherOrnament,      ///< MusicXML's 'other-ornament' value
     unknownOrnament,    ///< Error state
 
@@ -235,22 +239,39 @@ int numTremoloSlashes(MarkType);
 
 struct MarkData
 {
+    // Fields common to (nearly) every mark, regardless of markType.
     MarkType markType;
     std::string name;
     int tickTimePosition;
     PrintData printData;
     PositionData positionData;
+
+    // Fields below apply only to specific mark types, kept as direct fields for backward
+    // compatibility (see AGENTS.md "mx::api conventions" / issue #249; these are not migrated to
+    // 'choice'). Do not follow this shape for new mark-specific data -- add a new MarkDataChoice
+    // alternative instead (see 'choice' below).
+
+    // Mordent payload attributes (MusicXML <mordent> 'long', 'approach', 'departure'). Only
+    // meaningful when markType == MarkType::mordent or MarkType::invertedMordent.
     Bool mordentLong;
     bool hasMordentLong;
     Placement mordentApproach;
     bool hasMordentApproach;
     Placement mordentDeparture;
     bool hasMordentDeparture;
+
     // Fingering payload attributes (MusicXML <fingering> 'substitution' and
     // 'alternate'). Only meaningful when markType == MarkType::fingering. The
     // fingering text itself (e.g. "1", "2-3") is carried in 'name'.
     Bool fingeringSubstitution;
     Bool fingeringAlternate;
+
+    // Payload for mark types whose data does not fit the common fields above. Its Kind SHOULD
+    // correspond to markType (e.g. MarkDataChoice::Kind::tremolo pairs with
+    // MarkType::tremoloStart/tremoloStop), but this is a convention that MarkData does not
+    // enforce. New mark-specific data belongs here, as a new MarkDataChoice alternative -- see
+    // MarkDataChoice.h.
+    MarkDataChoice choice;
 
     MarkData();
     MarkData(MarkType inMarkType);
@@ -271,6 +292,7 @@ MXAPI_EQUALS_MEMBER(mordentDeparture)
 MXAPI_EQUALS_MEMBER(hasMordentDeparture)
 MXAPI_EQUALS_MEMBER(fingeringSubstitution)
 MXAPI_EQUALS_MEMBER(fingeringAlternate)
+MXAPI_EQUALS_MEMBER(choice)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(MarkData);
 } // namespace api
