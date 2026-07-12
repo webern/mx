@@ -168,7 +168,7 @@ void OrnamentsFunctions::parseOrnament(const core::OrnamentsGroupChoice &choiceO
             parseMarkDataAttributes(tremolo, outMark);
             outMark.markType =
                 (type == core::TremoloType::Tag::start) ? api::MarkType::tremoloStart : api::MarkType::tremoloStop;
-            outMark.tremoloMarks = tremolo.value().value();
+            outMark.choice = api::TremoloMarkData{tremolo.value().value()};
             break;
         }
 

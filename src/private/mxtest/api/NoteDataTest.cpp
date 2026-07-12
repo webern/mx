@@ -633,7 +633,7 @@ TEST(measuredTremolo, NoteData)
     firstNote.durationData.durationTimeTicks = 1;
     firstNote.tickTimePosition = 0;
     MarkData startMark{MarkType::tremoloStart};
-    startMark.tremoloMarks = 3;
+    startMark.choice = TremoloMarkData{3};
     firstNote.noteAttachmentData.marks.emplace_back(startMark);
 
     voice.notes.emplace_back();
@@ -642,7 +642,7 @@ TEST(measuredTremolo, NoteData)
     secondNote.durationData.durationTimeTicks = 1;
     secondNote.tickTimePosition = 1;
     MarkData stopMark{MarkType::tremoloStop};
-    stopMark.tremoloMarks = 3;
+    stopMark.choice = TremoloMarkData{3};
     secondNote.noteAttachmentData.marks.emplace_back(stopMark);
 
     const auto out = mxtest::roundTrip(score);
@@ -653,14 +653,16 @@ TEST(measuredTremolo, NoteData)
     const auto &oFirstMarks = ovoice.notes.at(0).noteAttachmentData.marks;
     REQUIRE(1 == oFirstMarks.size());
     CHECK(MarkType::tremoloStart == oFirstMarks.at(0).markType);
-    REQUIRE(oFirstMarks.at(0).tremoloMarks.has_value());
-    CHECK_EQUAL(3, *oFirstMarks.at(0).tremoloMarks);
+    REQUIRE(oFirstMarks.at(0).choice.isTremolo());
+    REQUIRE(oFirstMarks.at(0).choice.tremolo().tremoloMarks.has_value());
+    CHECK_EQUAL(3, *oFirstMarks.at(0).choice.tremolo().tremoloMarks);
 
     const auto &oSecondMarks = ovoice.notes.at(1).noteAttachmentData.marks;
     REQUIRE(1 == oSecondMarks.size());
     CHECK(MarkType::tremoloStop == oSecondMarks.at(0).markType);
-    REQUIRE(oSecondMarks.at(0).tremoloMarks.has_value());
-    CHECK_EQUAL(3, *oSecondMarks.at(0).tremoloMarks);
+    REQUIRE(oSecondMarks.at(0).choice.isTremolo());
+    REQUIRE(oSecondMarks.at(0).choice.tremolo().tremoloMarks.has_value());
+    CHECK_EQUAL(3, *oSecondMarks.at(0).choice.tremolo().tremoloMarks);
 }
 
 T_END;
@@ -683,8 +685,9 @@ TEST(measuredTremoloFromSyntheticFile, NoteData)
         score.parts.back().measures.back().staves.back().voices.at(0).notes.back().noteAttachmentData.marks;
     REQUIRE(1 == marks.size());
     CHECK(MarkType::tremoloStart == marks.at(0).markType);
-    REQUIRE(marks.at(0).tremoloMarks.has_value());
-    CHECK_EQUAL(1, *marks.at(0).tremoloMarks);
+    REQUIRE(marks.at(0).choice.isTremolo());
+    REQUIRE(marks.at(0).choice.tremolo().tremoloMarks.has_value());
+    CHECK_EQUAL(1, *marks.at(0).choice.tremolo().tremoloMarks);
 }
 
 T_END;

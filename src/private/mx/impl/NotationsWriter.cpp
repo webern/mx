@@ -624,7 +624,7 @@ void NotationsWriter::addOrnament(const api::MarkData &mark, core::Ornaments &ou
         {
             tremolo.setType(mark.markType == api::MarkType::tremoloStart ? core::TremoloType::start()
                                                                          : core::TremoloType::stop());
-            tremolo.setValue(core::TremoloMarks{mark.tremoloMarks.value_or(3)});
+            tremolo.setValue(core::TremoloMarks{mark.choice.tremolo().tremoloMarks.value_or(3)});
         }
         else
         {
