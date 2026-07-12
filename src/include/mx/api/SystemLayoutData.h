@@ -16,15 +16,17 @@ namespace mx
 {
 namespace api
 {
-/// A <staff-layout> scoped to one staff of a multi-staff part (MusicXML's number attribute):
-/// the space between the bottom line of the previous staff and the top line of this one.
-/// staffIndex is zero-based; a source with an explicit number attribute always populates
-/// SystemLayoutData::staffDistances with one of these rather than the unscoped
-/// SystemLayoutData::staffDistance, so the number round-trips faithfully.
+/// The vertical space above one specific staff of a multi-staff part (MusicXML's
+/// <staff-layout number="N">). Use this only when a staff needs its own spacing, e.g. extra room
+/// above an organ's pedal staff; the ordinary single spacing value is
+/// SystemLayoutData::staffDistance.
 class StaffDistanceData
 {
   public:
+    /// Which staff of the part this spacing applies to, zero-based from the top staff.
     int staffIndex;
+
+    /// The space between the bottom line of the previous staff and the top line of this staff, in tenths.
     double staffDistance;
 
     explicit inline StaffDistanceData(int inStaffIndex = INDEX_UNSPECIFIED, double inStaffDistance = DOUBLE_UNSPECIFIED)
@@ -52,13 +54,13 @@ class SystemLayoutData
     /// Distance from the top margin of the page to the top line of the first staff on the page, in tenths.
     OptionalDouble topSystemDistance;
 
-    /// the space between staves within the same system, in tenths. Only populated when the source's
-    /// <staff-layout> had no number attribute (the common single-staff-distance case); a source with
-    /// an explicit number populates staffDistances instead. See StaffDistanceData.
+    /// The space between staves within the same system, in tenths. Applies to every staff of a part
+    /// that does not have its own entry in staffDistances.
     OptionalDouble staffDistance;
 
-    /// Per-staff overrides of staffDistance for parts with more than one staff-scoped <staff-layout>
-    /// (e.g. an organ's third staff needing its own spacing). Normally empty.
+    /// Per-staff spacing for multi-staff parts. Normally empty; only add an entry when one staff
+    /// needs spacing different from staffDistance. For a given staff, an entry here wins; otherwise
+    /// staffDistance applies.
     std::vector<StaffDistanceData> staffDistances;
 
     /// Returns true if any of the members have values.
