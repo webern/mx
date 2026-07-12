@@ -93,7 +93,8 @@ than introducing a new top-level vector. Know these aggregates:
 - `MarkData` / `MarkType` (`MarkData.h`) is itself an aggregate: every articulation, dynamic,
   ornament, technical, accidental-mark, and fermata is one `MarkType` value on one `MarkData`
   struct, not separate types. A new note-attached glyph is usually a new `MarkType` value, not a new
-  struct.
+  struct. A payload that applies only to some `MarkType`s goes in `MarkDataChoice`
+  (`MarkDataChoice.h`) as a new alternative, never as another loose `MarkData` field.
 - `NoteAttachmentData` (`NoteAttachmentData.h`) gathers everything attached to a note: `marks`,
   `curveStarts`/`curveContinuations`/`curveStops` (slurs/ties), `tupletStarts`/`tupletStops`. It
   hangs off `NoteData::noteAttachmentData`.
@@ -109,8 +110,9 @@ than introducing a new top-level vector. Know these aggregates:
    note glyph -> a new `MarkType` value in `MarkData.h`. A note-attached spanner -> a vector on
    `NoteAttachmentData`. A direction-type element -> a vector on `DirectionData` (plus a
    `DirectionComponentKind` value). A per-measure thing -> a member on `MeasureData`. A per-staff
-   thing -> `StaffData`. Score-wide -> `ScoreData`. Only introduce a brand-new top-level type if no
-   existing aggregate fits.
+   thing -> `StaffData`. Score-wide -> `ScoreData`. A true either/or with per-alternative
+   payloads -> a choice class (`TimeChoice.h`, `MarkDataChoice.h`; see the `mx-api-doctrine`
+   skill). Only introduce a brand-new top-level type if no existing aggregate fits.
 
 2. If the feature has a fixed MusicXML token set, define a parallel `enum class` in the relevant
    `*.h` (or `ApiCommon.h` if it is broadly shared). Mirror the MusicXML values; do NOT reference
@@ -149,6 +151,8 @@ than introducing a new top-level vector. Know these aggregates:
 9. Comment non-obvious fields with a short `//` note above the member, the way `MeasureData` and
    `NoteData` document their fields, including the meaning of any sentinel value (e.g. "a width
    value less than 0 means 'unspecified'"). Prefer ASCII; use `->` and `-` not arrows or em-dashes.
+   Write for a user authoring or reading notation -- semantics and MusicXML meaning, never the
+   round-trip harness's perspective (the `mx-api-doctrine` skill's comment rules apply).
 
 10. Do not write any core/api conversion here. Defining the api enum/struct is the whole of step 2;
     the parallel `mx::core` enum, the `Converter::EnumMap` bridge entry in `Converter.h`/`.cpp`, and

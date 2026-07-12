@@ -3,7 +3,7 @@ applyTo: "src/include/mx/api/**"
 ---
 
 These are the public `mx::api` headers: plain-old-data structs that re-shape MusicXML into a
-simpler model (see `docs/ai/design/api-design-principles.md`). Review for:
+simpler model (doctrine: `.claude/skills/mx-api-doctrine/SKILL.md`). Review for:
 
 - No `mx::core` type may appear in a public header.
 - New absent-able fields must be `std::optional<T>`. New absent-able enums must instead have an
@@ -16,5 +16,11 @@ simpler model (see `docs/ai/design/api-design-principles.md`). Review for:
 - New data must not mirror MusicXML's raw shape when the element is stateful, flat,
   duplicated, or id-linked; check the change against the principles doc.
 - A new positioned-in-a-measure type needs `int tickTimePosition`; durations are in ticks.
-- Comments should be helpful to humans and coding agents. Crisp, not verbose, explain how the
-  code works, especially anything surprising.
+- No UB or exceptions reachable through the public interface; a failed precondition must never
+  throw. Flag new `Result` usage outside `DocumentManager`, unchecked `std::get`, or accessors
+  that return references guarded only by a precondition.
+- Kind-specific payloads use the choice-class pattern (`TimeChoice.h`, `MarkDataChoice.h`), not
+  loose fields that apply only to some kinds.
+- Comments must serve a user authoring or reading notation: crisp, semantics-first, explaining
+  how MusicXML encodes the feature. Flag round-trip framing ("the source", "preserved") except
+  on true fidelity knobs, notes about what is not modeled, and separator/banner comments.

@@ -128,18 +128,11 @@ than the strongly-typed `mx::core` model. No core type may appear in a public ap
   (`MXAPI_DOUBLES_EQUALS_MEMBER` for doubles) in the type's equality block — a missed line
   silently drops the field from equality and round-trip checks.
 
-### Design principles (digest)
+### Design doctrine
 
-Never mirror a MusicXML element's raw shape; counter its defect. Full text with examples and
-per-rule tests: `docs/ai/design/api-design-principles.md`.
-
-1. Store absolute values, not running state (ticks, not divisions/backup/forward).
-2. Membership by containment, not label fields (measure -> staves -> voices -> notes).
-3. One fact, one field; the writer emits both encodings (tie/tied).
-4. No neighbor-dependent meaning (`isChord` is true on every chord member).
-5. Denormalize effective state onto what it governs (each measure carries its time signature).
-6. Common case a plain value; quarantine the rare case (`alter` int + `cents` double).
-7. Fidelity knobs default to "automatic" and must be ignorable when authoring.
+Before designing or changing anything in `mx::api`, read the `mx-api-doctrine` skill
+(`.claude/skills/mx-api-doctrine/SKILL.md`): the seven design principles, the failure model
+(no UB, no exceptions, `Result` quarantined), choice types, and comment rules.
 
 ## Quality gates
 
