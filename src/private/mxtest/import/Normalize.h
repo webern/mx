@@ -25,6 +25,14 @@ void stripInterElementWhitespace(pugi::xml_document &doc);
 // (element text and attribute values alike).
 void stripZerosFromDecimalFields(pugi::xml_document &doc);
 
+// Re-space comma-separated-text fields (e.g. font-family) to "item, item":
+// the MusicXML comma-separated-text type allows "x,y" or "x, y" on the wire
+// and preserves whatever spelling it was parsed with, but mx's api round trip
+// always re-serializes as "x, y". Normalizing both sides to the same spacing
+// keeps the comparison about content, not incidental whitespace. The field
+// list lives in CommaSeparatedFields.h.
+void normalizeCommaSeparatedFields(pugi::xml_document &doc);
+
 // Sort every element's attributes alphabetically by QUALIFIED name. Must
 // run last.
 void sortAttributes(pugi::xml_document &doc);

@@ -312,16 +312,28 @@ lysuite/ly11h_TimeSignatures_SenzaMisura.xml
 # rpatters1's #268 repro: a single <time> with three composite/additive
 # beats/beat-type pairs (1+2.5 over 2+4, 3+2 over 16, 1.5+5 over 8+16).
 # Added to the repo ahead of the TimeSignatureData redesign as the fixture
-# that motivated it. The original (kept byte-exact, not pinned here) also
-# carries a Finale <score-part>/<group>, unspaced music-font comma list,
-# <measure-numbering> multiple-rest-* attributes, and a <sound>/<swing> --
-# all things mx::api doesn't model (SoundData.h documents <swing> as
-# intentionally out of scope). timesigs_composite-ref-modified.musicxml
-# trims just those unrelated gaps so the composite time-signature round-trip
-# itself is pinned.
+# that motivated it. timesigs_composite-ref-modified.musicxml trims the
+# Finale <score-part>/<group>, <measure-numbering> multiple-rest-*/system
+# attributes, and <sound>/<swing> that the original carries, so it pins the
+# composite time-signature round-trip in isolation from those.
 rpatters1/timesigs_composite-ref-modified.musicxml
 
 # Unblocked by NoteData::isStaffValueSpecified: NoteWriter only wrote <staff>
 # for multi-staff parts, dropping a source's explicit (but structurally
 # redundant) <staff> on a single-staff part.
 lysuite/ly24c_GraceNote_MeasureEnd.xml
+
+# The original of the file above, now unblocked by PartData::groups
+# (<score-part>/<group>), MeasureData's measureNumbering multiple-rest-*/
+# system-relation attributes, and SoundData::swing (<sound>/<swing>). Its
+# <music-font font-family="Maestro,engraved"> is comma-only (no space), which
+# the corert normalization now re-spaces to "Maestro, engraved" on both sides
+# of the comparison (see data/README.md's Normalization pipeline); the
+# fixture itself is untouched.
+rpatters1/timesigs_composite-ref.musicxml
+
+# The issue #297 spanner-number scenario (unified SpannerNumber + writer-side
+# assignment): two slurs that do not overlap in musical time but do overlap in
+# the serialized stream once voice 1 is written ahead of voice 2, plus a wedge.
+# Pins explicit slur/wedge numbers surviving read -> write -> read verbatim.
+rpatters1/slurs_overbars.musicxml

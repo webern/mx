@@ -284,6 +284,35 @@ TEST(measureNumberingRoundTrip, MeasureData)
 
 T_END;
 
+TEST(measureNumberingAttributesRoundTrip, MeasureData)
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.measureNumbering = MeasureNumbering::system;
+    measure.measureNumberingMultipleRestAlways = Bool::yes;
+    measure.measureNumberingMultipleRestRange = Bool::no;
+    measure.measureNumberingSystemRelation = SystemRelation::onlyTop;
+    measure.staves.emplace_back();
+    measure.staves.back().voices[0].notes.emplace_back();
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("multiple-rest-always=\"yes\"") != std::string::npos);
+    CHECK(xml.find("multiple-rest-range=\"no\"") != std::string::npos);
+    CHECK(xml.find("system=\"only-top\"") != std::string::npos);
+
+    const auto outScore = mxtest::fromXml(xml);
+    const auto &outMeasure = outScore.parts.front().measures.front();
+    CHECK(MeasureNumbering::system == outMeasure.measureNumbering);
+    CHECK(Bool::yes == outMeasure.measureNumberingMultipleRestAlways);
+    CHECK(Bool::no == outMeasure.measureNumberingMultipleRestRange);
+    CHECK(SystemRelation::onlyTop == outMeasure.measureNumberingSystemRelation);
+}
+
+T_END;
+
 TEST(measureNumberingUnspecifiedOmitsElement, MeasureData)
 {
     ScoreData score;

@@ -28,7 +28,7 @@ constexpr int TICK_TIME_INFINITY = std::numeric_limits<int>::max();
 // "unspecified" or "absent". Do not use these for new fields; new absent-able fields use
 // std::optional instead (see "mx::api conventions" in AGENTS.md and issue #249).
 constexpr int INDEX_UNSPECIFIED = -1;        // staff/part indices and numbers, e.g. KeyData::staffIndex
-constexpr int NUMBER_LEVEL_UNSPECIFIED = -1; // MusicXML 'number' attributes, e.g. SpannerStart::numberLevel
+constexpr int NUMBER_LEVEL_UNSPECIFIED = -1; // MusicXML 'number' attributes, e.g. TupletStart::numberLevel
 constexpr int VALUE_UNSPECIFIED = -1;        // other absent-able ints, e.g. DirectionData::voice
 constexpr Double DOUBLE_UNSPECIFIED = -1.0;  // absent-able doubles, e.g. StaffData::staffSize
 
@@ -69,6 +69,19 @@ enum class MeasureNumbering
     none,
     measure,
     system
+};
+
+// The <measure-numbering system="..."> attribute: whether this part's measure numbers are also,
+// or only, associated with the system (as opposed to just this part). unspecified means the
+// attribute is absent.
+enum class SystemRelation
+{
+    unspecified,
+    none,
+    onlyTop,
+    onlyBottom,
+    alsoTop,
+    alsoBottom
 };
 } // namespace api
 } // namespace mx

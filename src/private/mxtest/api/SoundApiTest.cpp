@@ -170,4 +170,51 @@ TEST(directionChildSoundRoundTrips, SoundApi)
 
 T_END;
 
+TEST(standaloneSoundSwingStraightRoundTrips, SoundApi)
+{
+    SoundData sound;
+    sound.tempo = 96.0;
+    sound.swing = SwingData{};
+
+    const auto score = makeScoreWithSound(sound);
+    const auto xml = toXml(score);
+    CHECK(xml.find("<swing>") != std::string::npos);
+    CHECK(xml.find("<straight") != std::string::npos);
+
+    const auto out = roundTrip(score);
+    const auto *direction = findSoundDirection(out);
+    REQUIRE(direction != nullptr);
+    REQUIRE(direction->soundData.swing.has_value());
+    CHECK(direction->soundData.swing->isStraight);
+}
+
+T_END;
+
+TEST(standaloneSoundSwingRatioRoundTrips, SoundApi)
+{
+    SoundData sound;
+    SwingData swing;
+    swing.isStraight = false;
+    swing.ratioFirst = 2;
+    swing.ratioSecond = 1;
+    swing.noteType = SwingNoteType::eighth;
+    swing.style = "Swing";
+    sound.swing = swing;
+
+    const auto score = makeScoreWithSound(sound);
+    const auto out = roundTrip(score);
+
+    const auto *direction = findSoundDirection(out);
+    REQUIRE(direction != nullptr);
+    REQUIRE(direction->soundData.swing.has_value());
+    const auto &rt = *direction->soundData.swing;
+    CHECK(!rt.isStraight);
+    CHECK_EQUAL(2, rt.ratioFirst);
+    CHECK_EQUAL(1, rt.ratioSecond);
+    CHECK(SwingNoteType::eighth == rt.noteType);
+    CHECK_EQUAL("Swing", rt.style);
+}
+
+T_END;
+
 #endif

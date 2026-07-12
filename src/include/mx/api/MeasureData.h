@@ -55,6 +55,16 @@ class MeasureData
     // no numbers, numbers every measure, or numbers every system.
     MeasureNumbering measureNumbering;
 
+    // Rare <measure-numbering> attributes, meaningful only when measureNumbering !=
+    // unspecified. multipleRestAlways forces the number to show even when a multi-measure rest
+    // starts mid-system; multipleRestRange shows the first-last range instead of just the first
+    // measure's number.
+    Bool measureNumberingMultipleRestAlways;
+    Bool measureNumberingMultipleRestRange;
+
+    // The <measure-numbering system="..."> attribute; see SystemRelation.
+    SystemRelation measureNumberingSystemRelation;
+
     // a number greater than zero indicates that this measure is the beginning of a mult-measure
     // rest that will last for the indicated number of measures. following measures will be affected
     // by this.
@@ -85,8 +95,9 @@ class MeasureData
 
     MeasureData()
         : staves{}, timeSignature{}, number{}, measureNumbering{MeasureNumbering::unspecified},
-          multiMeasureRest{VALUE_UNSPECIFIED}, implicit{Bool::unspecified}, nonControlling{Bool::unspecified},
-          width{DOUBLE_UNSPECIFIED}
+          measureNumberingMultipleRestAlways{Bool::unspecified}, measureNumberingMultipleRestRange{Bool::unspecified},
+          measureNumberingSystemRelation{SystemRelation::unspecified}, multiMeasureRest{VALUE_UNSPECIFIED},
+          implicit{Bool::unspecified}, nonControlling{Bool::unspecified}, width{DOUBLE_UNSPECIFIED}
     {
     }
 };
@@ -97,6 +108,9 @@ MXAPI_EQUALS_MEMBER(timeSignature)
 MXAPI_EQUALS_MEMBER(staffTimeSignatures)
 MXAPI_EQUALS_MEMBER(number)
 MXAPI_EQUALS_MEMBER(measureNumbering)
+MXAPI_EQUALS_MEMBER(measureNumberingMultipleRestAlways)
+MXAPI_EQUALS_MEMBER(measureNumberingMultipleRestRange)
+MXAPI_EQUALS_MEMBER(measureNumberingSystemRelation)
 MXAPI_EQUALS_MEMBER(multiMeasureRest)
 MXAPI_EQUALS_MEMBER(implicit)
 MXAPI_EQUALS_MEMBER(nonControlling)

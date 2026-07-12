@@ -4,9 +4,11 @@
 
 #include "mxtest/import/Normalize.h"
 
+#include "mxtest/import/CommaSeparatedFields.h"
 #include "mxtest/import/DecimalFields.h"
 
 #include <algorithm>
+#include <cctype>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -84,6 +86,63 @@ void stripZerosRecursive(pugi::xml_node el)
     }
 }
 
+// Splits a comma-separated-text value on ',', trims surrounding whitespace
+// from each item, and rejoins with ", " -- the spelling mx's api round trip
+// always produces.
+std::string respaceCommaSeparatedList(const std::string &value)
+{
+    std::string out;
+    size_t start = 0;
+    while (true)
+    {
+        const size_t comma = value.find(',', start);
+        const size_t end = comma == std::string::npos ? value.size() : comma;
+        size_t itemBegin = start;
+        size_t itemEnd = end;
+        while (itemBegin < itemEnd && std::isspace(static_cast<unsigned char>(value[itemBegin])))
+        {
+            ++itemBegin;
+        }
+        while (itemEnd > itemBegin && std::isspace(static_cast<unsigned char>(value[itemEnd - 1])))
+        {
+            --itemEnd;
+        }
+        if (!out.empty())
+        {
+            out += ", ";
+        }
+        out += value.substr(itemBegin, itemEnd - itemBegin);
+        if (comma == std::string::npos)
+        {
+            break;
+        }
+        start = comma + 1;
+    }
+    return out;
+}
+
+void normalizeCommaSeparatedFieldsRecursive(pugi::xml_node el)
+{
+    for (pugi::xml_attribute a : el.attributes())
+    {
+        if (commaSeparatedFields.count(a.name()))
+        {
+            const std::string value = a.value();
+            if (!value.empty())
+            {
+                a.set_value(respaceCommaSeparatedList(value).c_str());
+            }
+        }
+    }
+    for (pugi::xml_node c = el.first_child(); c; c = c.next_sibling())
+    {
+        if (c.type() == pugi::node_element)
+        {
+            normalizeCommaSeparatedFieldsRecursive(c);
+        }
+    }
+}
+
 void sortAttributesRecursive(pugi::xml_node el)
 {
     std::vector<std::pair<std::string, std::string>> attrs;
@@ -142,6 +201,14 @@ void stripZerosFromDecimalFields(pugi::xml_document &doc)
     if (doc.document_element())
     {
         stripZerosRecursive(doc.document_element());
+    }
+}
+
+void normalizeCommaSeparatedFields(pugi::xml_document &doc)
+{
+    if (doc.document_element())
+    {
+        normalizeCommaSeparatedFieldsRecursive(doc.document_element());
     }
 }
 

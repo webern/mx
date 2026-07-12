@@ -119,6 +119,7 @@ bool isMarkOrnament(MarkType markType)
            (markType == MarkType::schleifer) || (markType == MarkType::tremoloSingleOne) ||
            (markType == MarkType::tremoloSingleTwo) || (markType == MarkType::tremoloSingleThree) ||
            (markType == MarkType::tremoloSingleFour) || (markType == MarkType::tremoloSingleFive) ||
+           (markType == MarkType::tremoloStart) || (markType == MarkType::tremoloStop) ||
            (markType == MarkType::otherOrnament) || (markType == MarkType::unknownOrnament);
 }
 
@@ -163,7 +164,8 @@ bool isMarkTremolo(MarkType markType)
 {
     return (markType == MarkType::tremoloSingleOne) || (markType == MarkType::tremoloSingleTwo) ||
            (markType == MarkType::tremoloSingleThree) || (markType == MarkType::tremoloSingleFour) ||
-           (markType == MarkType::tremoloSingleFive);
+           (markType == MarkType::tremoloSingleFive) || (markType == MarkType::tremoloStart) ||
+           (markType == MarkType::tremoloStop);
 }
 
 bool isMarkCustom(MarkType markType)
@@ -228,7 +230,7 @@ MarkData::MarkData()
     : markType(MarkType::unspecified), name{}, tickTimePosition{0}, printData{}, positionData{}, mordentLong{Bool::no},
       hasMordentLong{false}, mordentApproach{Placement::unspecified}, hasMordentApproach{false},
       mordentDeparture{Placement::unspecified}, hasMordentDeparture{false}, fingeringSubstitution{Bool::unspecified},
-      fingeringAlternate{Bool::unspecified}
+      fingeringAlternate{Bool::unspecified}, choice{}
 {
 }
 
@@ -236,7 +238,7 @@ MarkData::MarkData(MarkType inMarkType)
     : markType(inMarkType), name{}, tickTimePosition{0}, printData{}, positionData{}, mordentLong{Bool::no},
       hasMordentLong{false}, mordentApproach{Placement::unspecified}, hasMordentApproach{false},
       mordentDeparture{Placement::unspecified}, hasMordentDeparture{false}, fingeringSubstitution{Bool::unspecified},
-      fingeringAlternate{Bool::unspecified}
+      fingeringAlternate{Bool::unspecified}, choice{}
 {
     impl::Converter converter;
     if (isMarkDynamic(markType))
@@ -257,7 +259,7 @@ MarkData::MarkData(Placement inPlacement, MarkType inMarkType)
     : markType(inMarkType), name{}, tickTimePosition{0}, printData{}, positionData{}, mordentLong{Bool::no},
       hasMordentLong{false}, mordentApproach{Placement::unspecified}, hasMordentApproach{false},
       mordentDeparture{Placement::unspecified}, hasMordentDeparture{false}, fingeringSubstitution{Bool::unspecified},
-      fingeringAlternate{Bool::unspecified}
+      fingeringAlternate{Bool::unspecified}, choice{}
 {
     positionData.placement = inPlacement;
     impl::Converter converter;

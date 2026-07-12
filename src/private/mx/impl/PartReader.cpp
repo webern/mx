@@ -224,6 +224,11 @@ void PartReader::parseScorePart() const
                                  myOutPartData.displayAbbreviationPositionData);
     }
 
+    for (const auto &group : myScorePart.group())
+    {
+        myOutPartData.groups.push_back(group);
+    }
+
     if (!myScorePart.scoreInstrument().empty())
     {
         parseScoreInstrument(myScorePart.scoreInstrument().front());

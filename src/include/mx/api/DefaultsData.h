@@ -133,15 +133,9 @@ class DefaultsData
     /// The `<lyric-font>` defaults (one per lyric line/verse).
     std::vector<LyricFontData> lyricFonts;
 
-    // TODO - this appears not to be used anywhere, please do not use
-    /// Measure numbering setting, at the global level, will be stated
-    /// in first measure's <print> tag. This can can be overridden by a
-    /// value in the Measure.
-    MeasureNumbering measureNumbering;
-
     DefaultsData()
         : scalingMillimeters{DOUBLE_UNSPECIFIED}, scalingTenths{DOUBLE_UNSPECIFIED}, pageLayout{}, systemLayout{},
-          appearance{}, musicFont{}, wordFont{}, lyricFonts{}, measureNumbering{MeasureNumbering::unspecified}
+          appearance{}, musicFont{}, wordFont{}, lyricFonts{}
     {
     }
 };
@@ -157,7 +151,6 @@ if (!areVectorsEqual(lhs.lyricFonts, rhs.lyricFonts))
     MX_SHOW_UNEQUAL("DefaultsData", "lyricFonts");
     return false;
 }
-MXAPI_EQUALS_MEMBER(measureNumbering)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(DefaultsData);
 } // namespace api

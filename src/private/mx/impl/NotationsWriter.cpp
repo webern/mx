@@ -56,6 +56,7 @@
 #include "mx/impl/DynamicsWriter.h"
 #include "mx/impl/MarkDataFunctions.h"
 #include "mx/impl/PositionFunctions.h"
+#include "mx/impl/ScoreWriter.h"
 
 #include <string>
 
@@ -87,8 +88,8 @@ void setMordentSpecificAttributes(const api::MarkData &mark, core::Mordent &mord
 } // namespace
 
 NotationsWriter::NotationsWriter(const api::NoteData &inNoteData, const MeasureCursor &inCursor,
-                                 const ScoreWriter & /*inScoreWriter*/)
-    : myNoteData{inNoteData}, myCursor{inCursor}, myConverter{}
+                                 const ScoreWriter &inScoreWriter)
+    : myNoteData{inNoteData}, myCursor{inCursor}, myScoreWriter{inScoreWriter}, myConverter{}
 {
 }
 
@@ -99,50 +100,67 @@ core::Notations NotationsWriter::getNotations() const
     core::Ornaments ornaments;
     core::Technical technicals;
 
+    const auto &numberResolver = myScoreWriter.getSpannerNumberResolver();
+
     for (const auto &curve : myNoteData.noteAttachmentData.curveStops)
     {
+        if (curve.curveType != api::CurveType::tie && curve.curveType != api::CurveType::slur)
+        {
+            continue;
+        }
+        const auto resolvedNumber = numberResolver.emittedNumber(curve.number, &curve);
         if (curve.curveType == api::CurveType::tie)
         {
             core::Tied tied;
-            writeAttributesFromCurveStop(curve, tied);
+            writeAttributesFromCurveStop(curve, tied, resolvedNumber);
             outNotations.addChoice(core::NotationsChoice::tied(tied));
         }
         else if (curve.curveType == api::CurveType::slur)
         {
             core::Slur slur;
-            writeAttributesFromCurveStop(curve, slur);
+            writeAttributesFromCurveStop(curve, slur, resolvedNumber);
             outNotations.addChoice(core::NotationsChoice::slur(slur));
         }
     }
 
     for (const auto &curve : myNoteData.noteAttachmentData.curveContinuations)
     {
+        if (curve.curveType != api::CurveType::tie && curve.curveType != api::CurveType::slur)
+        {
+            continue;
+        }
+        const auto resolvedNumber = numberResolver.emittedNumber(curve.number, &curve);
         if (curve.curveType == api::CurveType::tie)
         {
             core::Tied tied;
-            writeAttributesFromCurveContinue(curve, tied);
+            writeAttributesFromCurveContinue(curve, tied, resolvedNumber);
             outNotations.addChoice(core::NotationsChoice::tied(tied));
         }
         else if (curve.curveType == api::CurveType::slur)
         {
             core::Slur slur;
-            writeAttributesFromCurveContinue(curve, slur);
+            writeAttributesFromCurveContinue(curve, slur, resolvedNumber);
             outNotations.addChoice(core::NotationsChoice::slur(slur));
         }
     }
 
     for (const auto &curve : myNoteData.noteAttachmentData.curveStarts)
     {
+        if (curve.curveType != api::CurveType::tie && curve.curveType != api::CurveType::slur)
+        {
+            continue;
+        }
+        const auto resolvedNumber = numberResolver.emittedNumber(curve.number, &curve);
         if (curve.curveType == api::CurveType::tie)
         {
             core::Tied tied;
-            writeAttributesFromCurveStart(curve, tied);
+            writeAttributesFromCurveStart(curve, tied, resolvedNumber);
             outNotations.addChoice(core::NotationsChoice::tied(tied));
         }
         else if (curve.curveType == api::CurveType::slur)
         {
             core::Slur slur;
-            writeAttributesFromCurveStart(curve, slur);
+            writeAttributesFromCurveStart(curve, slur, resolvedNumber);
             outNotations.addChoice(core::NotationsChoice::slur(slur));
         }
     }
@@ -619,9 +637,18 @@ void NotationsWriter::addOrnament(const api::MarkData &mark, core::Ornaments &ou
     }
     case core::OrnamentsGroupChoice::Kind::tremolo: {
         core::Tremolo tremolo;
-        tremolo.setType(core::TremoloType::single());
         setAttributesFromPositionData(mark.positionData, tremolo);
-        tremolo.setValue(core::TremoloMarks{api::numTremoloSlashes(mark.markType)});
+        if (mark.markType == api::MarkType::tremoloStart || mark.markType == api::MarkType::tremoloStop)
+        {
+            tremolo.setType(mark.markType == api::MarkType::tremoloStart ? core::TremoloType::start()
+                                                                         : core::TremoloType::stop());
+            tremolo.setValue(core::TremoloMarks{mark.choice.tremolo().tremoloMarks.value_or(3)});
+        }
+        else
+        {
+            tremolo.setType(core::TremoloType::single());
+            tremolo.setValue(core::TremoloMarks{api::numTremoloSlashes(mark.markType)});
+        }
         group.setChoice(core::OrnamentsGroupChoice::tremolo(tremolo));
         break;
     }

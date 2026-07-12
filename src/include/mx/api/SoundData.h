@@ -6,17 +6,50 @@
 
 #include "mx/api/ApiCommon.h"
 
+#include <optional>
 #include <string>
 
 namespace mx
 {
 namespace api
 {
+// The swing-type-value type: which note type (eighth or 16th) a SwingData ratio applies to.
+// unspecified means the source did not state it, which MusicXML treats as "eighth".
+enum class SwingNoteType
+{
+    unspecified,
+    eighth,
+    dur16th
+};
+
+// MusicXML Documentation: The swing element specifies whether or not to use swing playback, where
+// consecutive on-beat/off-beat eighth or 16th notes are played with unequal nominal durations.
+struct SwingData
+{
+    // true: <straight/>, no swing, consecutive notes have equal durations. false: a swing ratio
+    // is in effect, described by ratioFirst/ratioSecond/noteType below.
+    bool isStraight;
+
+    // The swing ratio's two terms (e.g. 2 and 1 for a 2:1 ratio). Only meaningful when
+    // isStraight is false.
+    int ratioFirst;
+    int ratioSecond;
+
+    // Which note type the ratio applies to. Only meaningful when isStraight is false.
+    SwingNoteType noteType;
+
+    // A free-text description of the swing style (e.g. "Swing"). Empty means unspecified.
+    std::string style;
+
+    SwingData() : isStraight{true}, ratioFirst{0}, ratioSecond{0}, noteType{SwingNoteType::unspecified}, style{}
+    {
+    }
+};
+
 // MusicXML Documentation: The sound element contains general playback parameters. They can stand
 // alone within a part/measure, or be a component element within a direction.
 //
-// mx::api models the commonly-used scalar attributes of <sound>. The nested child elements
-// (<midi-instrument>, <midi-device>, <play>, <swing>, <offset>) are intentionally not modeled.
+// mx::api models the commonly-used scalar attributes of <sound>, plus <swing>.
 //
 // A SoundData is carried on DirectionData. When a DirectionData holds a SoundData but no other
 // direction content, it round-trips as a standalone <sound> element within the measure. When a
@@ -52,9 +85,12 @@ struct SoundData
     std::string tocoda;
     std::string fine;
 
+    std::optional<SwingData> swing;
+
     SoundData()
         : tempo{DOUBLE_UNSPECIFIED}, dynamics{DOUBLE_UNSPECIFIED}, dacapo{Bool::unspecified},
-          forwardRepeat{Bool::unspecified}, pizzicato{Bool::unspecified}, segno{}, dalsegno{}, coda{}, tocoda{}, fine{}
+          forwardRepeat{Bool::unspecified}, pizzicato{Bool::unspecified}, segno{}, dalsegno{}, coda{}, tocoda{}, fine{},
+          swing{}
     {
     }
 
@@ -62,9 +98,18 @@ struct SoundData
     {
         return tempo >= 0.0 || dynamics >= 0.0 || dacapo != Bool::unspecified || forwardRepeat != Bool::unspecified ||
                pizzicato != Bool::unspecified || !segno.empty() || !dalsegno.empty() || !coda.empty() ||
-               !tocoda.empty() || !fine.empty();
+               !tocoda.empty() || !fine.empty() || swing.has_value();
     }
 };
+
+MXAPI_EQUALS_BEGIN(SwingData)
+MXAPI_EQUALS_MEMBER(isStraight)
+MXAPI_EQUALS_MEMBER(ratioFirst)
+MXAPI_EQUALS_MEMBER(ratioSecond)
+MXAPI_EQUALS_MEMBER(noteType)
+MXAPI_EQUALS_MEMBER(style)
+MXAPI_EQUALS_END;
+MXAPI_NOT_EQUALS_AND_VECTORS(SwingData);
 
 MXAPI_EQUALS_BEGIN(SoundData)
 MXAPI_DOUBLES_EQUALS_MEMBER(tempo)
@@ -77,6 +122,7 @@ MXAPI_EQUALS_MEMBER(dalsegno)
 MXAPI_EQUALS_MEMBER(coda)
 MXAPI_EQUALS_MEMBER(tocoda)
 MXAPI_EQUALS_MEMBER(fine)
+MXAPI_EQUALS_MEMBER(swing)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(SoundData);
 } // namespace api

@@ -616,6 +616,83 @@ TEST(tremolos, NoteData)
 
 T_END;
 
+TEST(measuredTremolo, NoteData)
+{
+    ScoreData score;
+    score.ticksPerQuarter = 1;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto &staff = measure.staves.back();
+    auto &voice = staff.voices[0];
+
+    voice.notes.emplace_back();
+    auto &firstNote = voice.notes.back();
+    firstNote.durationData.durationName = DurationName::quarter;
+    firstNote.durationData.durationTimeTicks = 1;
+    firstNote.tickTimePosition = 0;
+    MarkData startMark{MarkType::tremoloStart};
+    startMark.choice = TremoloMarkData{3};
+    firstNote.noteAttachmentData.marks.emplace_back(startMark);
+
+    voice.notes.emplace_back();
+    auto &secondNote = voice.notes.back();
+    secondNote.durationData.durationName = DurationName::quarter;
+    secondNote.durationData.durationTimeTicks = 1;
+    secondNote.tickTimePosition = 1;
+    MarkData stopMark{MarkType::tremoloStop};
+    stopMark.choice = TremoloMarkData{3};
+    secondNote.noteAttachmentData.marks.emplace_back(stopMark);
+
+    const auto out = mxtest::roundTrip(score);
+
+    const auto &ovoice = out.parts.back().measures.back().staves.back().voices.at(0);
+    REQUIRE(2 == ovoice.notes.size());
+
+    const auto &oFirstMarks = ovoice.notes.at(0).noteAttachmentData.marks;
+    REQUIRE(1 == oFirstMarks.size());
+    CHECK(MarkType::tremoloStart == oFirstMarks.at(0).markType);
+    REQUIRE(oFirstMarks.at(0).choice.isTremolo());
+    REQUIRE(oFirstMarks.at(0).choice.tremolo().tremoloMarks.has_value());
+    CHECK_EQUAL(3, *oFirstMarks.at(0).choice.tremolo().tremoloMarks);
+
+    const auto &oSecondMarks = ovoice.notes.at(1).noteAttachmentData.marks;
+    REQUIRE(1 == oSecondMarks.size());
+    CHECK(MarkType::tremoloStop == oSecondMarks.at(0).markType);
+    REQUIRE(oSecondMarks.at(0).choice.isTremolo());
+    REQUIRE(oSecondMarks.at(0).choice.tremolo().tremoloMarks.has_value());
+    CHECK_EQUAL(3, *oSecondMarks.at(0).choice.tremolo().tremoloMarks);
+}
+
+T_END;
+
+// Parse the synthetic tremolo file (a <tremolo type="start"> with one slash) and confirm mx::api
+// surfaces it as a tremoloStart mark. This pins the core -> api read path for measured tremolos.
+TEST(measuredTremoloFromSyntheticFile, NoteData)
+{
+    const std::string path = mxtest::getResourcesDirectoryPath() + "synthetic/tremolo.3.0.xml";
+    auto &docMgr = DocumentManager::getInstance();
+    const auto docIdResult = docMgr.createFromFile(path);
+    REQUIRE(docIdResult.ok());
+    const int docId = docIdResult.value();
+    const auto scoreResult = docMgr.getData(docId);
+    docMgr.destroyDocument(docId);
+    REQUIRE(scoreResult.ok());
+    const auto &score = scoreResult.value();
+
+    const auto &marks =
+        score.parts.back().measures.back().staves.back().voices.at(0).notes.back().noteAttachmentData.marks;
+    REQUIRE(1 == marks.size());
+    CHECK(MarkType::tremoloStart == marks.at(0).markType);
+    REQUIRE(marks.at(0).choice.isTremolo());
+    REQUIRE(marks.at(0).choice.tremolo().tremoloMarks.has_value());
+    CHECK_EQUAL(1, *marks.at(0).choice.tremolo().tremoloMarks);
+}
+
+T_END;
+
 TEST(miscFields, NoteData)
 {
     ScoreData score;
@@ -678,7 +755,7 @@ TEST(miscFields, NoteData)
 T_END;
 
 // SlurTieNumberLevel tests: build a score with a note that has a tie/slur using
-// mx::api directly, round-trip it, then check that numberLevel == -1 (absent).
+// mx::api directly, round-trip it, then check that the number is unspecified (absent).
 
 TEST(SlurTieNumberLevelA, NoteData)
 {
@@ -716,7 +793,7 @@ TEST(SlurTieNumberLevelA, NoteData)
 
     const auto &noteData = scoreData.parts.at(0).measures.at(0).staves.at(0).voices.at(0).notes.front();
     const auto &cs = noteData.noteAttachmentData.curveStarts.front();
-    CHECK_EQUAL(-1, cs.numberLevel);
+    CHECK(cs.number.isUnspecified());
     CHECK(cs.curveType == mx::api::CurveType::tie);
 }
 
@@ -758,7 +835,7 @@ TEST(SlurTieNumberLevelB, NoteData)
 
     const auto &noteData = scoreData.parts.at(0).measures.at(0).staves.at(0).voices.at(0).notes.front();
     const auto &cc = noteData.noteAttachmentData.curveContinuations.front();
-    CHECK_EQUAL(-1, cc.numberLevel);
+    CHECK(cc.number.isUnspecified());
     CHECK(cc.curveType == mx::api::CurveType::tie);
 }
 
@@ -800,7 +877,7 @@ TEST(SlurTieNumberLevelC, NoteData)
 
     const auto &noteData = scoreData.parts.at(0).measures.at(0).staves.at(0).voices.at(0).notes.front();
     const auto &cs = noteData.noteAttachmentData.curveStops.front();
-    CHECK_EQUAL(-1, cs.numberLevel);
+    CHECK(cs.number.isUnspecified());
     CHECK(cs.curveType == mx::api::CurveType::tie);
 }
 
