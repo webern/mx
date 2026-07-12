@@ -419,3 +419,9 @@ musuite/testNoteAttributes2_ref.xml
 # attribute now round-trips.
 lysuite/ly31c_MetronomeMarks.xml
 musuite/testTempo1.xml
+
+# Unblocked by the grace-chord boundary fix: a grace-note chord and the chord
+# it ornaments share a tick position; the grace/non-grace transition now ends
+# the chord instead of absorbing the main chord's first note.
+lysuite/ly24b_ChordAsGraceNote.xml
+musuite/testGrace2.xml

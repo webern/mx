@@ -8,12 +8,20 @@
 #include "cpul/cpulTestHarness.h"
 #include "mx/core/generated/Attributes.h"
 #include "mx/core/generated/Clef.h"
+#include "mx/core/generated/FullNoteGroup.h"
+#include "mx/core/generated/GraceNormalNoteGroup.h"
+#include "mx/core/generated/GraceNoteChoice.h"
+#include "mx/core/generated/GraceNoteGroup.h"
 #include "mx/core/generated/MusicDataChoice.h"
+#include "mx/core/generated/NormalNoteGroup.h"
+#include "mx/core/generated/Note.h"
+#include "mx/core/generated/NoteChoice.h"
 #include "mx/core/generated/StaffDetails.h"
 #include "mx/impl/MeasureWriter.h"
 #include "mx/impl/ScoreWriter.h"
 
 #include <memory>
+#include <vector>
 
 using namespace mx;
 using namespace mx::impl;
@@ -269,6 +277,66 @@ TEST(ZeroTicksPerQuarterKeepsOtherProperties, MeasureWriter)
     CHECK_EQUAL(1, props.clef().size());
 
     CHECK(++mdcIter == mdcEnd);
+}
+
+T_END
+
+TEST(GraceChordThenChordAtSameTick, MeasureWriter)
+{
+    // Grace notes occupy no ticks, so a grace-note chord shares its tick position with the
+    // chord it ornaments. The first note of the main chord must still start a new chord (no
+    // <chord/> tag), not be absorbed into the grace chord (#345).
+    mxtest::TestParameters params;
+    params.ticksPerQuarter = 4;
+    params.measureIndex = 0;
+    params.partIndex = 0;
+    params.numStaves = 1;
+    mxtest::TestItems t = mxtest::setupTestItems(params);
+    auto &staff = t.measureData->staves.at(0);
+    auto &voice = staff.voices[0];
+
+    auto makeNote = [](int step, bool isGrace) {
+        api::NoteData note{};
+        note.isChord = true;
+        note.isGrace = isGrace;
+        note.tickTimePosition = 0;
+        note.pitchData.step = static_cast<api::Step>(step);
+        note.pitchData.octave = 4;
+        note.durationData.durationName = api::DurationName::quarter;
+        note.durationData.durationTimeTicks = isGrace ? 0 : 4;
+        return note;
+    };
+
+    voice.notes.push_back(makeNote(0, true));
+    voice.notes.push_back(makeNote(2, true));
+    voice.notes.push_back(makeNote(4, false));
+    voice.notes.push_back(makeNote(6, false));
+
+    const auto partwiseMeasure = t.measureWriter->getPartwiseMeasure();
+    std::vector<bool> chordTags;
+    for (const auto &mdc : partwiseMeasure.musicData())
+    {
+        if (!mdc.isNote())
+        {
+            continue;
+        }
+        const auto &choice = mdc.asNote().choice();
+        if (choice.isGraceNoteGroup())
+        {
+            chordTags.push_back(
+                choice.asGraceNoteGroup().graceNoteChoice().asGraceNormalNoteGroup().fullNote().chord());
+        }
+        else if (choice.isNormalNoteGroup())
+        {
+            chordTags.push_back(choice.asNormalNoteGroup().fullNote().chord());
+        }
+    }
+
+    CHECK_EQUAL(4, static_cast<int>(chordTags.size()));
+    CHECK(!chordTags.at(0)); // first grace note starts the grace chord
+    CHECK(chordTags.at(1));  // second grace note carries <chord/>
+    CHECK(!chordTags.at(2)); // first main-chord note must NOT carry <chord/>
+    CHECK(chordTags.at(3));  // second main-chord note carries <chord/>
 }
 
 T_END
