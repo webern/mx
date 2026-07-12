@@ -177,10 +177,22 @@ core::ScorePart PartWriter::getScorePart() const
     core::MIDIInstrument midiInstrument{};
     midiInstrument.setID(core::Token{myPartData.instrumentData.uniqueId});
 
-    if (myPartData.instrumentData.midiData.device.size() > 0)
+    const auto &apiMidiData = myPartData.instrumentData.midiData;
+    if (apiMidiData.device.size() > 0 || apiMidiData.devicePort.has_value() || apiMidiData.deviceId.has_value())
     {
         addMidiElement = true;
-        midiDevice.setValue(myPartData.instrumentData.midiData.device);
+        midiDevice.setValue(apiMidiData.device);
+
+        if (apiMidiData.devicePort.has_value())
+        {
+            midiDevice.setPort(core::MIDI16{*apiMidiData.devicePort});
+        }
+
+        if (apiMidiData.deviceId.has_value())
+        {
+            midiDevice.setID(core::Token{*apiMidiData.deviceId});
+        }
+
         midiGroup.setMIDIDevice(midiDevice);
     }
 

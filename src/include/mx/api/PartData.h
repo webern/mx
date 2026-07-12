@@ -29,6 +29,15 @@ struct MidiData
     std::string virtualLibrary;
     std::string virtualName;
     std::string device;
+
+    // The midi-device port attribute: a number from 1 to 16 for the unofficial MIDI 1.0
+    // port (cable) meta event.
+    std::optional<int> devicePort;
+
+    // The midi-device element's id attribute, which refers to the score-instrument the
+    // device assignment belongs to.
+    std::optional<std::string> deviceId;
+
     std::string name;
 
     // VALUE_UNSPECIFIED indicates absence of value
@@ -56,9 +65,9 @@ struct MidiData
     bool isElevationSpecified;
 
     MidiData()
-        : virtualLibrary{}, virtualName{}, device{}, name{}, bank{VALUE_UNSPECIFIED}, channel{VALUE_UNSPECIFIED},
-          program{VALUE_UNSPECIFIED}, unpitched{VALUE_UNSPECIFIED}, volume{0.0}, isVolumeSpecified{false}, pan{0.0},
-          isPanSpecified{false}, elevation{0.0}, isElevationSpecified{false}
+        : virtualLibrary{}, virtualName{}, device{}, devicePort{}, deviceId{}, name{}, bank{VALUE_UNSPECIFIED},
+          channel{VALUE_UNSPECIFIED}, program{VALUE_UNSPECIFIED}, unpitched{VALUE_UNSPECIFIED}, volume{0.0},
+          isVolumeSpecified{false}, pan{0.0}, isPanSpecified{false}, elevation{0.0}, isElevationSpecified{false}
     {
     }
 };
@@ -230,6 +239,8 @@ MXAPI_EQUALS_BEGIN(MidiData)
 MXAPI_EQUALS_MEMBER(virtualLibrary)
 MXAPI_EQUALS_MEMBER(virtualName)
 MXAPI_EQUALS_MEMBER(device)
+MXAPI_EQUALS_MEMBER(devicePort)
+MXAPI_EQUALS_MEMBER(deviceId)
 MXAPI_EQUALS_MEMBER(name)
 MXAPI_EQUALS_MEMBER(bank)
 MXAPI_EQUALS_MEMBER(channel)

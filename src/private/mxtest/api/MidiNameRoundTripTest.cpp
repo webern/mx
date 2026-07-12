@@ -53,4 +53,21 @@ TEST(midiNameRoundTrip, survivesWriteAndRead)
     CHECK_EQUAL(expected, out.parts.at(0).instrumentData.midiData.name);
 }
 
+TEST(midiDeviceRoundTrip, portAndIdSurviveWriteAndRead)
+{
+    // A midi-device carrying only attributes (empty text) must still round-trip, e.g.
+    // <midi-device id="P1-I1" port="1"></midi-device>.
+    auto in = makeScoreWithMidiName("Flute Player One");
+    in.parts.at(0).instrumentData.midiData.devicePort = 1;
+    in.parts.at(0).instrumentData.midiData.deviceId = "P1-I1";
+
+    const auto out = mxtest::roundTrip(in);
+    REQUIRE(out.parts.size() == 1);
+    const auto &midiData = out.parts.at(0).instrumentData.midiData;
+    REQUIRE(midiData.devicePort.has_value());
+    CHECK_EQUAL(1, *midiData.devicePort);
+    REQUIRE(midiData.deviceId.has_value());
+    CHECK_EQUAL(std::string{"P1-I1"}, *midiData.deviceId);
+}
+
 #endif
