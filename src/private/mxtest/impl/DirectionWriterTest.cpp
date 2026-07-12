@@ -72,7 +72,7 @@ TEST(segnoAndCodaRoundTrip, DirectionWriter)
     segno.positionData.relativeX = 3.0;
     segno.positionData.isRelativeYSpecified = true;
     segno.positionData.relativeY = 4.0;
-    segno.positionData.horizontalAlignmnet = api::HorizontalAlignment::left;
+    segno.positionData.horizontalAlignment = api::HorizontalAlignment::left;
     segno.positionData.verticalAlignment = api::VerticalAlignment::top;
     segno.fontData.fontFamily = {"Maestro"};
     segno.fontData.style = api::FontStyle::italic;
@@ -93,7 +93,7 @@ TEST(segnoAndCodaRoundTrip, DirectionWriter)
     api::CodaData coda;
     coda.positionData.isDefaultXSpecified = true;
     coda.positionData.defaultX = 5.0;
-    coda.positionData.horizontalAlignmnet = api::HorizontalAlignment::center;
+    coda.positionData.horizontalAlignment = api::HorizontalAlignment::center;
     coda.positionData.verticalAlignment = api::VerticalAlignment::middle;
     coda.fontData.fontFamily = {"Maestro"};
     coda.fontData.style = api::FontStyle::normal;
@@ -145,7 +145,7 @@ TEST(rehearsalRoundTrip, DirectionWriter)
     rehearsal.positionData.relativeX = 3.0;
     rehearsal.positionData.isRelativeYSpecified = true;
     rehearsal.positionData.relativeY = 4.0;
-    rehearsal.positionData.horizontalAlignmnet = api::HorizontalAlignment::left;
+    rehearsal.positionData.horizontalAlignment = api::HorizontalAlignment::left;
     rehearsal.positionData.verticalAlignment = api::VerticalAlignment::top;
     rehearsal.fontData.fontFamily = {"Maestro"};
     rehearsal.fontData.style = api::FontStyle::italic;

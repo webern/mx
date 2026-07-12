@@ -500,7 +500,13 @@ void addAppearance(const core::ScoreHeaderGroup &inScoreHeaderGroup, api::Defaul
         api::AppearanceData data{};
         data.appearanceType = api::AppearanceType::OtherAppearance;
         data.appearanceSubType = oa.type();
-        data.value = 0.0;
+        // <other-appearance> content is free text in MusicXML but numeric in practice;
+        // a non-numeric value reads as 0.0.
+        core::Decimal parsedOtherAppearanceValue{};
+        if (core::Decimal::tryParse(oa.value(), parsedOtherAppearanceValue))
+        {
+            data.value = parsedOtherAppearanceValue.value();
+        }
         outDefaults.appearance.emplace_back(std::move(data));
     }
 }
