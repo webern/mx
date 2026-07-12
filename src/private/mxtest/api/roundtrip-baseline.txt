@@ -323,6 +323,19 @@ rpatters1/timesigs_composite-ref-modified.musicxml
 # redundant) <staff> on a single-staff part.
 lysuite/ly24c_GraceNote_MeasureEnd.xml
 
+# Also unblocked by NoteData::writeStaffNumber, in the other direction: a
+# two-staff part whose last note legally omits <staff> (implied 1). The
+# writer used to inject <staff>1</staff> there; the reader now records
+# writeStaffNumber = no and the omission round-trips.
+lysuite/ly02e_Rests_NoType.xml
+
+# Found already passing when discovery was re-run for the writeStaffNumber
+# work; unlocked by earlier merged changes and never pinned. Pinned here to
+# defend them.
+custom/systems-and-pages.xml
+ksuite/k008a_Beaming.xml
+ksuite/k014a_Fermatas.xml
+
 # The original of the file above, now unblocked by PartData::groups
 # (<score-part>/<group>), MeasureData's measureNumbering multiple-rest-*/
 # system-relation attributes, and SoundData::swing (<sound>/<swing>). Its
