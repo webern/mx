@@ -469,6 +469,11 @@ void DirectionWriter::emitTempo(const api::TempoData &tempo, core::Direction &di
         return;
     }
 
+    if (tempo.isParenthetical != api::Bool::unspecified)
+    {
+        metronome.setParentheses(myConverter.convert(tempo.isParenthetical));
+    }
+
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::metronome(metronome));
     addDirectionType(std::move(dt), direction);
