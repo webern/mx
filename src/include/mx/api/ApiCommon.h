@@ -58,6 +58,9 @@ inline bool isSpecified(Bool b)
     return b != Bool::unspecified;
 }
 
+// TODO: move spanner number to its own file SpannerNumber.h instead of having it here. Also give
+// it a cpp file and move function bodies to the cpp file.
+
 // A spanner's number identity, shared by curves (slur/tied), wedges, and the
 // generic spanner start/stop structs. Exactly one of three states; a
 // contradictory state (both an explicit level and an identity) is
@@ -89,6 +92,7 @@ class SpannerNumber
     // Default is unspecified.
     SpannerNumber() = default;
 
+    // TODO: use constructors instead of `makeBlah` factory functions
     // Factory: an explicit MusicXML number. `level` must be in [1, 16]; passing a
     // value outside that range is a programming error.
     static SpannerNumber makeLevel(int level)
@@ -120,6 +124,7 @@ class SpannerNumber
     }
 
     inline Kind kind() const
+    // TODO: move function bodies to the cpp file
     {
         return myKind;
     }
@@ -142,6 +147,10 @@ class SpannerNumber
     // Precondition: isExplicit(). Returns the literal number 1..16.
     inline int level() const
     {
+        // TODO: Absolutely not. No throwing exceptions.
+        // TODO: see the TimeChoice object and follow its pattern since this SpannerNumber object
+        // looks a bit like a choice object. For level we could return the -1 sentinel if it has
+        // been misused (i.e. Kind is not explicitLevel)
         if (myKind != Kind::explicitLevel)
         {
             throw std::logic_error{"mx::api::SpannerNumber::level: not an explicit level"};
@@ -150,6 +159,7 @@ class SpannerNumber
     }
 
     // Precondition: isIdentity(). Returns the (non-empty) id.
+    // TODO: no exceptions, return a copy of the string and when misused return an empty string
     inline const std::string &identity() const
     {
         if (myKind != Kind::identity)
@@ -188,6 +198,8 @@ class SpannerNumber
     std::string myIdentity;
 };
 
+// TODO: this feels like it's in a weird place. Is this part of the spanner interface? Does it
+// belong in ApiCommon or somewhere else?
 enum class Placement
 {
     unspecified,
@@ -195,6 +207,8 @@ enum class Placement
     below
 };
 
+// TODO: this feels like it's in a weird place. Is this part of the spanner interface? Does it
+// belong in ApiCommon or somewhere else?
 enum class MeasureNumbering
 {
     unspecified,
