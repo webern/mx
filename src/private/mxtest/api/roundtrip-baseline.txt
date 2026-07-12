@@ -350,3 +350,51 @@ rpatters1/timesigs_composite-ref.musicxml
 # the serialized stream once voice 1 is written ahead of voice 2, plus a wedge.
 # Pins explicit slur/wedge numbers surviving read -> write -> read verbatim.
 rpatters1/slurs_overbars.musicxml
+
+# Unblocked by the spurious-divisions fix: a score whose source declares no
+# <divisions> anywhere (and has no durations) reads as ticksPerQuarter = 0,
+# and the writer used to invent <attributes><divisions>0.000001</divisions>
+# for the first measure of every part (LCM of an empty set = 0, clamped to a
+# bogus positive by core::PositiveDivisions). The writer now omits <divisions>
+# when the score has no time resolution.
+lysuite/ly51b_Header_Quotes.xml
+mjbsuite/HasMusicXmlVersionFalse.xml
+mjbsuite/HasMusicXmlVersionTrue.xml
+synthetic/beat-type.3.0.xml
+synthetic/beats.3.0.xml
+synthetic/bracket.3.0.xml
+synthetic/dashes.3.0.xml
+synthetic/encoding-description.3.0.xml
+synthetic/first.4.0.xml
+synthetic/group.3.0.xml
+synthetic/instrument-abbreviation.3.0.xml
+synthetic/instrument-name.3.0.xml
+synthetic/instrument-sound-enum.3.0.xml
+synthetic/interchangeable.3.0.xml
+synthetic/lyric-font.3.0.xml
+synthetic/miscellaneous-field.3.0.xml
+synthetic/movement-number.3.0.xml
+synthetic/movement-title.3.0.xml
+synthetic/music-font.3.0.xml
+synthetic/n.3.1.xml
+synthetic/numeral-fifths.4.0.xml
+synthetic/numeral-mode.4.0.xml
+synthetic/numeral.4.0.xml
+synthetic/other-dynamics.3.0.xml
+synthetic/pf.3.1.xml
+synthetic/second.4.0.xml
+synthetic/senza-misura.3.0.xml
+synthetic/sfzp.3.1.xml
+synthetic/software.3.0.xml
+synthetic/staff-size.4.0.xml
+synthetic/straight.4.0.xml
+synthetic/swing-style.4.0.xml
+synthetic/swing-type.4.0.xml
+synthetic/swing.4.0.xml
+synthetic/time-relation.3.0.xml
+synthetic/virtual-library.3.0.xml
+synthetic/virtual-name.3.0.xml
+synthetic/voice.3.0.xml
+synthetic/word-font.3.0.xml
+synthetic/work-number.3.0.xml
+synthetic/work-title.3.0.xml

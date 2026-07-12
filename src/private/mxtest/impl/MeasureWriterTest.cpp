@@ -224,6 +224,55 @@ TEST(PropertiesButNoNotes, MeasureWriter)
 
 T_END
 
+TEST(ZeroTicksPerQuarterWritesNoDivisions, MeasureWriter)
+{
+    // A score with no time resolution (ticksPerQuarter == 0, e.g. a source that declared no
+    // <divisions> and has no durations) must not have a bogus <divisions> invented for it.
+    mxtest::TestParameters params;
+    params.ticksPerQuarter = 0;
+    params.measureIndex = 0;
+    params.partIndex = 0;
+    params.numStaves = 1;
+    mxtest::TestItems t = mxtest::setupTestItems(params);
+
+    const auto partwiseMeasure = t.measureWriter->getPartwiseMeasure();
+    CHECK(partwiseMeasure.musicData().empty());
+}
+
+T_END
+
+TEST(ZeroTicksPerQuarterKeepsOtherProperties, MeasureWriter)
+{
+    // With ticksPerQuarter == 0 the <attributes> element is still written when it has real
+    // content (here a clef); only the <divisions> child is suppressed.
+    mxtest::TestParameters params;
+    params.ticksPerQuarter = 0;
+    params.measureIndex = 0;
+    params.partIndex = 0;
+    params.numStaves = 1;
+    mxtest::TestItems t = mxtest::setupTestItems(params);
+    auto &staff = t.measureData->staves.at(0);
+    staff.clefs.emplace_back(api::ClefData{});
+    auto &clef = staff.clefs.back();
+    clef.symbol = api::ClefSymbol::g;
+    clef.line = 2;
+
+    const auto partwiseMeasure = t.measureWriter->getPartwiseMeasure();
+    auto musicData = partwiseMeasure.musicData();
+    auto mdcIter = musicData.begin();
+    auto mdcEnd = musicData.end();
+
+    CHECK(mdcIter != mdcEnd);
+    CHECK(mdcIter->isAttributes());
+    const auto &props = mdcIter->asAttributes();
+    CHECK(!props.divisions().has_value());
+    CHECK_EQUAL(1, props.clef().size());
+
+    CHECK(++mdcIter == mdcEnd);
+}
+
+T_END
+
 TEST(MultiStaffClefKeepsNumber, MeasureWriter)
 {
     // Counterpart to PropertiesButNoNotes: in a multi-staff part the clef number is required
