@@ -4,6 +4,7 @@
 
 #include "mx/impl/ArticulationsFunctions.h"
 #include "mx/core/generated/ArticulationsChoice.h"
+#include "mx/core/generated/CaesuraValue.h"
 #include "mx/impl/Converter.h"
 #include "mx/impl/MarkDataFunctions.h"
 #include "mx/impl/PositionFunctions.h"
@@ -108,6 +109,27 @@ void ArticulationsFunctions::parseArticulation(const core::ArticulationsChoice &
     case core::ArticulationsChoice::Kind::caesura: {
         parseMarkDataAttributes(inArticulation.asCaesura(), outMark);
         outMark.name = "caesura";
+        switch (inArticulation.asCaesura().value().tag())
+        {
+        case core::CaesuraValue::Tag::empty:
+            outMark.markType = api::MarkType::caesura;
+            break;
+        case core::CaesuraValue::Tag::normal:
+            outMark.markType = api::MarkType::caesuraNormal;
+            break;
+        case core::CaesuraValue::Tag::thick:
+            outMark.markType = api::MarkType::caesuraThick;
+            break;
+        case core::CaesuraValue::Tag::short_:
+            outMark.markType = api::MarkType::caesuraShort;
+            break;
+        case core::CaesuraValue::Tag::curved:
+            outMark.markType = api::MarkType::caesuraCurved;
+            break;
+        case core::CaesuraValue::Tag::single:
+            outMark.markType = api::MarkType::caesuraSingle;
+            break;
+        }
         break;
     }
     case core::ArticulationsChoice::Kind::stress: {
