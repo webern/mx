@@ -19,7 +19,7 @@ namespace
 // Round-trips a single note-attached mark of the given MarkType through the
 // full serialize -> deserialize path and returns the marks read back from the
 // first note. Used by the enum data-loss regression tests below.
-std::vector<MarkData> roundTripMark(MarkType inMarkType)
+std::vector<MarkData> roundTripMarkData(const MarkData &inMarkData)
 {
     ScoreData score;
     score.parts.emplace_back();
@@ -31,7 +31,7 @@ std::vector<MarkData> roundTripMark(MarkType inMarkType)
     auto &voice = staff.voices[0];
     voice.notes.emplace_back();
     auto &note = voice.notes.back();
-    note.noteAttachmentData.marks.emplace_back(Placement::unspecified, inMarkType);
+    note.noteAttachmentData.marks.push_back(inMarkData);
 
     auto &mgr = DocumentManager::getInstance();
     const auto r1 = mgr.createFromScore(score);
@@ -56,6 +56,11 @@ std::vector<MarkData> roundTripMark(MarkType inMarkType)
 
     const auto &onote = oscore.parts.back().measures.back().staves.back().voices.at(0).notes.back();
     return onote.noteAttachmentData.marks;
+}
+
+std::vector<MarkData> roundTripMark(MarkType inMarkType)
+{
+    return roundTripMarkData(MarkData{Placement::unspecified, inMarkType});
 }
 
 bool hasMark(const std::vector<MarkData> &marks, MarkType inMarkType)
@@ -223,6 +228,42 @@ TEST(FermataCurlew, MarkRoundTrip)
 {
     const auto marks = roundTripMark(MarkType::fermataCurlew);
     CHECK(hasMark(marks, MarkType::fermataCurlew));
+}
+
+T_END;
+
+TEST(ArpeggiateAttributes, MarkRoundTrip)
+{
+    MarkData mark{Placement::unspecified, MarkType::arpeggiateUp};
+    ArpeggiateMarkData payload{};
+    payload.number = 2;
+    payload.unbroken = Bool::yes;
+    payload.id = "arp-1";
+    mark.choice = payload;
+
+    const auto marks = roundTripMarkData(mark);
+    REQUIRE(marks.size() == 1);
+    CHECK(marks.front().markType == MarkType::arpeggiateUp);
+    REQUIRE(marks.front().choice.isArpeggiate());
+    CHECK(payload == marks.front().choice.arpeggiate());
+}
+
+T_END;
+
+TEST(NonArpeggiateAttributes, MarkRoundTrip)
+{
+    MarkData mark{Placement::unspecified, MarkType::nonArpeggiate};
+    NonArpeggiateMarkData payload{};
+    payload.placement = NonArpeggiatePlacement::bottom;
+    payload.number = 1;
+    payload.id = "nonarp-1";
+    mark.choice = payload;
+
+    const auto marks = roundTripMarkData(mark);
+    REQUIRE(marks.size() == 1);
+    CHECK(marks.front().markType == MarkType::nonArpeggiate);
+    REQUIRE(marks.front().choice.isNonArpeggiate());
+    CHECK(payload == marks.front().choice.nonArpeggiate());
 }
 
 T_END;

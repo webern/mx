@@ -398,3 +398,12 @@ synthetic/voice.3.0.xml
 synthetic/word-font.3.0.xml
 synthetic/work-number.3.0.xml
 synthetic/work-title.3.0.xml
+
+# Unblocked by the arpeggiate/non-arpeggiate attribute payloads
+# (ArpeggiateMarkData / NonArpeggiateMarkData in MarkDataChoice): number,
+# unbroken, id, and the non-arpeggiate top/bottom type now round-trip.
+synthetic/arpeggiate.3.0.xml
+synthetic/arpeggiate.3.1.xml
+synthetic/arpeggiate.4.0.xml
+synthetic/non-arpeggiate.3.0.xml
+synthetic/non-arpeggiate.3.1.xml

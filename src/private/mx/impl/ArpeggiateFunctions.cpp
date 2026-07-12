@@ -4,6 +4,7 @@
 
 #include "mx/impl/ArpeggiateFunctions.h"
 #include "mx/core/generated/Arpeggiate.h"
+#include "mx/impl/Converter.h"
 #include "mx/impl/MarkDataFunctions.h"
 
 namespace mx
@@ -35,6 +36,22 @@ api::MarkData ArpeggiateFunctions::parseArpeggiate() const
     api::MarkData markData{markType};
     impl::parseMarkDataAttributes(myArpeggiate, markData);
     markData.tickTimePosition = myCursor.tickTimePosition;
+
+    api::ArpeggiateMarkData arpeggiateData{};
+    if (myArpeggiate.number().has_value())
+    {
+        arpeggiateData.number = myArpeggiate.number()->value();
+    }
+    if (myArpeggiate.unbroken().has_value())
+    {
+        Converter converter;
+        arpeggiateData.unbroken = converter.convert(*myArpeggiate.unbroken());
+    }
+    if (myArpeggiate.id().has_value())
+    {
+        arpeggiateData.id = myArpeggiate.id()->value();
+    }
+    markData.choice = arpeggiateData;
 
     return markData;
 }
