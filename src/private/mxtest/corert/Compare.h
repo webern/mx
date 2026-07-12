@@ -26,7 +26,8 @@ struct CompareFailure
 // The shared normalize-for-comparison pipeline (applied identically to the
 // expected and actual documents): pin the root version attribute to the
 // harness baseline, strip whitespace-only text nodes, strip trailing zeros
-// from decimal fields, sort attributes (must be last).
+// from decimal fields, re-space comma-separated-text fields, sort attributes
+// (must be last).
 void normalizeForComparison(pugi::xml_document &doc);
 
 // Depth-first compare: element names, DIRECT text content only (never the

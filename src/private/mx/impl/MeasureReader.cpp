@@ -856,7 +856,26 @@ void MeasureReader::parsePrint(const core::Print &inMxPrint) const
     // not carried forward like time/key), so it is captured directly here instead.
     if (inMxPrint.measureNumbering().has_value())
     {
-        myOutMeasureData.measureNumbering = myConverter.convertMeasureNumbering(inMxPrint.measureNumbering()->value());
+        const auto &measureNumbering = *inMxPrint.measureNumbering();
+        myOutMeasureData.measureNumbering = myConverter.convertMeasureNumbering(measureNumbering.value());
+
+        if (measureNumbering.multipleRestAlways().has_value())
+        {
+            myOutMeasureData.measureNumberingMultipleRestAlways =
+                myConverter.convert(*measureNumbering.multipleRestAlways());
+        }
+
+        if (measureNumbering.multipleRestRange().has_value())
+        {
+            myOutMeasureData.measureNumberingMultipleRestRange =
+                myConverter.convert(*measureNumbering.multipleRestRange());
+        }
+
+        if (measureNumbering.system().has_value())
+        {
+            myOutMeasureData.measureNumberingSystemRelation =
+                myConverter.convertSystemRelation(*measureNumbering.system());
+        }
     }
 }
 

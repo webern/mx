@@ -70,6 +70,19 @@ enum class MeasureNumbering
     measure,
     system
 };
+
+// The <measure-numbering system="..."> attribute: whether this part's measure numbers are also,
+// or only, associated with the system (as opposed to just this part). unspecified means the
+// attribute is absent.
+enum class SystemRelation
+{
+    unspecified,
+    none,
+    onlyTop,
+    onlyBottom,
+    alsoTop,
+    alsoBottom
+};
 } // namespace api
 } // namespace mx
 

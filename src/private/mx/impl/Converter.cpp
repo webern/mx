@@ -287,6 +287,14 @@ const Converter::EnumMap<core::MeasureNumberingValue, api::MeasureNumbering> Con
     {core::MeasureNumberingValue::system(), api::MeasureNumbering::system},
 };
 
+const Converter::EnumMap<core::SystemRelationNumber, api::SystemRelation> Converter::systemRelationMap = {
+    {core::SystemRelationNumber::none(), api::SystemRelation::none},
+    {core::SystemRelationNumber::onlyTop(), api::SystemRelation::onlyTop},
+    {core::SystemRelationNumber::onlyBottom(), api::SystemRelation::onlyBottom},
+    {core::SystemRelationNumber::alsoTop(), api::SystemRelation::alsoTop},
+    {core::SystemRelationNumber::alsoBottom(), api::SystemRelation::alsoBottom},
+};
+
 const Converter::EnumMap<core::TechnicalChoice::Kind, api::MarkType> Converter::technicalMarkMap = {
     // { core::TechnicalChoice::Kind::technical,
     // api::MarkType::unspecified },
@@ -1569,6 +1577,16 @@ core::MeasureNumberingValue Converter::convertMeasureNumbering(api::MeasureNumbe
 api::MeasureNumbering Converter::convertMeasureNumbering(core::MeasureNumberingValue value) const
 {
     return findApiItem(measureNumberingMap, api::MeasureNumbering::unspecified, value);
+}
+
+core::SystemRelationNumber Converter::convertSystemRelation(api::SystemRelation value) const
+{
+    return findCoreItem(systemRelationMap, core::SystemRelationNumber::none(), value);
+}
+
+api::SystemRelation Converter::convertSystemRelation(core::SystemRelationNumber value) const
+{
+    return findApiItem(systemRelationMap, api::SystemRelation::unspecified, value);
 }
 
 core::StemValue Converter::convert(api::Stem value) const
