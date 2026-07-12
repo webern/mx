@@ -84,7 +84,7 @@ TEST(printLayoutRoundTrip, staffScopedStaffDistance)
     in.parts.front().measures.front().staves.push_back(staff1);
 
     SystemData sys{};
-    sys.layout.staffDistances.emplace_back(1, 65.0);
+    sys.layout.staffDistances[1] = 65.0;
     in.layout.emplace(0, LayoutData{sys, PageData{}});
 
     const auto out = mxtest::roundTrip(in);
@@ -93,9 +93,10 @@ TEST(printLayoutRoundTrip, staffScopedStaffDistance)
     REQUIRE(it != out.layout.end());
     const auto &sysOut = it->second.system;
     CHECK(!static_cast<bool>(sysOut.layout.staffDistance));
-    REQUIRE(1 == sysOut.layout.staffDistances.size());
-    CHECK_EQUAL(1, sysOut.layout.staffDistances.front().staffIndex);
-    CHECK_EQUAL(65.0, sysOut.layout.staffDistances.front().staffDistance);
+    CHECK_EQUAL(1, static_cast<int>(sysOut.layout.staffDistances.size()));
+    const auto sdIt = sysOut.layout.staffDistances.find(1);
+    REQUIRE(sdIt != sysOut.layout.staffDistances.end());
+    CHECK_EQUAL(65.0, sdIt->second);
 }
 
 #endif

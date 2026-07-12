@@ -265,11 +265,11 @@ void MeasureWriter::writeSystemInfo()
             outPrint.setLayout(outLayoutGroup);
         }
 
-        for (const auto &staffDistance : inSystemLayout.staffDistances)
+        for (const auto &[staffIndex, staffDistance] : inSystemLayout.staffDistances)
         {
             core::StaffLayout outStaffLayout{};
-            outStaffLayout.setNumber(core::StaffNumber{staffDistance.staffIndex + 1});
-            outStaffLayout.setStaffDistance(core::Tenths{core::Decimal{staffDistance.staffDistance}});
+            outStaffLayout.setNumber(core::StaffNumber{staffIndex + 1});
+            outStaffLayout.setStaffDistance(core::Tenths{core::Decimal{staffDistance}});
             outLayoutGroup.addStaffLayout(outStaffLayout);
             outPrint.setLayout(outLayoutGroup);
         }

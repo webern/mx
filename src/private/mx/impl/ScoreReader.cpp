@@ -467,7 +467,7 @@ void ScoreReader::scanForSystemInfo() const
             }
 
             // Per-measure <staff-layout> staff-distance. A source with an explicit number
-            // attribute is staff-scoped (api::StaffDistanceData); one with no number applies
+            // attribute is staff-scoped (a staffDistances map entry); one with no number applies
             // to staff 1 by schema default and is captured as the plain unscoped value.
             for (const auto &staffLayout : layoutGroup.staffLayout())
             {
@@ -478,7 +478,7 @@ void ScoreReader::scanForSystemInfo() const
                 const double distance = staffLayout.staffDistance()->value().value();
                 if (staffLayout.number().has_value())
                 {
-                    systemData.layout.staffDistances.emplace_back(staffLayout.number()->value() - 1, distance);
+                    systemData.layout.staffDistances[staffLayout.number()->value() - 1] = distance;
                 }
                 else
                 {

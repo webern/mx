@@ -9,6 +9,7 @@
 #include "mx/api/LeftRight.h"
 #include "mx/api/PageLayoutData.h"
 
+#include <map>
 #include <string>
 #include <vector>
 
@@ -16,31 +17,6 @@ namespace mx
 {
 namespace api
 {
-/// The vertical space above one specific staff of a multi-staff part (MusicXML's
-/// <staff-layout number="N">). Use this only when a staff needs its own spacing, e.g. extra room
-/// above an organ's pedal staff; the ordinary single spacing value is
-/// SystemLayoutData::staffDistance.
-class StaffDistanceData
-{
-  public:
-    /// Which staff of the part this spacing applies to, zero-based from the top staff.
-    int staffIndex;
-
-    /// The space between the bottom line of the previous staff and the top line of this staff, in tenths.
-    double staffDistance;
-
-    explicit inline StaffDistanceData(int inStaffIndex = INDEX_UNSPECIFIED, double inStaffDistance = DOUBLE_UNSPECIFIED)
-        : staffIndex(inStaffIndex), staffDistance(inStaffDistance)
-    {
-    }
-};
-
-MXAPI_EQUALS_BEGIN(StaffDistanceData)
-MXAPI_EQUALS_MEMBER(staffIndex)
-MXAPI_DOUBLES_EQUALS_MEMBER(staffDistance)
-MXAPI_EQUALS_END;
-MXAPI_NOT_EQUALS_AND_VECTORS(StaffDistanceData);
-
 /// Margins and spacing for staff systems.
 class SystemLayoutData
 {
@@ -58,10 +34,12 @@ class SystemLayoutData
     /// that does not have its own entry in staffDistances.
     OptionalDouble staffDistance;
 
-    /// Per-staff spacing for multi-staff parts. Normally empty; only add an entry when one staff
-    /// needs spacing different from staffDistance. For a given staff, an entry here wins; otherwise
+    /// Per-staff spacing for multi-staff parts, keyed by zero-based staff index: the space between
+    /// the bottom line of the previous staff and the top line of the keyed staff, in tenths.
+    /// Normally empty; only add an entry when one staff needs its own spacing, e.g. extra room
+    /// above an organ's pedal staff. For a given staff, an entry here wins; otherwise
     /// staffDistance applies.
-    std::vector<StaffDistanceData> staffDistances;
+    std::map<int, double> staffDistances;
 
     /// Returns true if any of the members have values.
     inline bool isUsed() const

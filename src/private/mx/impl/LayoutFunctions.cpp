@@ -236,11 +236,11 @@ void addSystemMargins(const api::DefaultsData &inDefaults, core::ScoreHeaderGrou
         needsDefaults = true;
     }
 
-    for (const auto &staffDistance : inDefaults.systemLayout.staffDistances)
+    for (const auto &[staffIndex, staffDistance] : inDefaults.systemLayout.staffDistances)
     {
         core::StaffLayout staffLayout;
-        staffLayout.setNumber(core::StaffNumber{staffDistance.staffIndex + 1});
-        staffLayout.setStaffDistance(toTenths(staffDistance.staffDistance));
+        staffLayout.setNumber(core::StaffNumber{staffIndex + 1});
+        staffLayout.setStaffDistance(toTenths(staffDistance));
         layout.addStaffLayout(staffLayout);
         needsDefaults = true;
     }
@@ -436,8 +436,8 @@ void addStaffLayout(const core::ScoreHeaderGroup &inScoreHeaderGroup, api::Defau
         return;
     }
 
-    // A source with an explicit number attribute is staff-scoped (api::StaffDistanceData); one
-    // with no number applies to staff 1 by schema default and is captured as the plain
+    // A source with an explicit number attribute is staff-scoped (a staffDistances map entry);
+    // one with no number applies to staff 1 by schema default and is captured as the plain
     // unscoped value. Mirrors ScoreReader::scanForSystemInfo's per-measure handling.
     for (const auto &staffLayout : inScoreHeaderGroup.defaults()->layout().staffLayout())
     {
@@ -448,7 +448,7 @@ void addStaffLayout(const core::ScoreHeaderGroup &inScoreHeaderGroup, api::Defau
         const double distance = staffLayout.staffDistance()->value().value();
         if (staffLayout.number().has_value())
         {
-            outDefaults.systemLayout.staffDistances.emplace_back(staffLayout.number()->value() - 1, distance);
+            outDefaults.systemLayout.staffDistances[staffLayout.number()->value() - 1] = distance;
         }
         else
         {
