@@ -497,6 +497,7 @@ void MeasureWriter::writeVoices(const api::StaffData &inStaff)
         bool isFirstNote = true;
         int currentChordTickPosition = -1;
         int previousChordTickPosition = -2;
+        bool previousChordNoteWasGrace = false;
         myHistory.setVoiceIndex(voice.first);
         auto noteIter = voice.second.notes.cbegin();
         auto noteEnd = voice.second.notes.cend();
@@ -526,8 +527,16 @@ void MeasureWriter::writeVoices(const api::StaffData &inStaff)
                 {
                     isStartOfChord = true;
                 }
+                else if (noteIter->isGrace != previousChordNoteWasGrace)
+                {
+                    // Grace notes occupy no ticks, so a grace-note chord and the chord it
+                    // ornaments share a tick position; the grace/non-grace transition is the
+                    // chord boundary.
+                    isStartOfChord = true;
+                }
 
                 previousChordTickPosition = currentChordTickPosition;
+                previousChordNoteWasGrace = noteIter->isGrace;
             }
 
             if (myMeasureKeysIter != myMeasureKeysEnd)
