@@ -79,6 +79,12 @@ class ScoreData
     DefaultsData defaults;
     std::vector<PartData> parts;
     std::vector<PartGroupData> partGroups;
+
+    /// The score's time resolution: how many `tickTimePosition`/duration ticks make up one
+    /// quarter note. Corresponds to the `<divisions>` MusicXML element. Choose a value with
+    /// enough factors for the durations you need (the default accommodates tuplets through
+    /// septuplets). Zero means the score has no time resolution at all — no durations exist
+    /// anywhere — and no `<divisions>` is written.
     int ticksPerQuarter;
 
     /// Specifies page breaks, system breaks, and changes to system and page layout. Global/default page and

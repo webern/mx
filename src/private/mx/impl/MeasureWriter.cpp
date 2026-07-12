@@ -117,7 +117,13 @@ void MeasureWriter::writeMeasureGlobals()
 
     if (myHistory.getCursor().isFirstMeasureInPart)
     {
-        myPropertiesWriter->writeDivisions(myHistory.getCursor().getGlobalTicksPerQuarter());
+        // A score with no time resolution (ticksPerQuarter <= 0: the source declared no
+        // <divisions> and contains no durations) must not have one invented for it; writing
+        // 0 here would be clamped to a bogus positive value by core::PositiveDivisions.
+        if (myHistory.getCursor().getGlobalTicksPerQuarter() > 0)
+        {
+            myPropertiesWriter->writeDivisions(myHistory.getCursor().getGlobalTicksPerQuarter());
+        }
 
         if (myMeasureData.staves.size() > 1)
         {
