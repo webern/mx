@@ -201,4 +201,33 @@ TEST(roundTripMetricModulation, MetronomeApi)
 
 T_END
 
+TEST(roundTripParentheses, MetronomeApi)
+{
+    // <metronome parentheses="yes"> must round-trip via TempoData::isParenthetical.
+    ScoreData score;
+    score.ticksPerQuarter = 100;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto &staff = measure.staves.back();
+    staff.directions.emplace_back();
+    auto &direction = staff.directions.back();
+    direction.tempos.emplace_back();
+    auto &tempo = direction.tempos.back();
+    tempo.tempoType = TempoType::beatsPerMinute;
+    tempo.isParenthetical = Bool::yes;
+    tempo.beatsPerMinute.durationName = DurationName::quarter;
+    tempo.beatsPerMinute.beatsPerMinute = 100;
+
+    auto actualScoreData = roundTrip(score);
+
+    const auto &actualTempo =
+        actualScoreData.parts.back().measures.back().staves.back().directions.back().tempos.back();
+    CHECK(actualTempo.isParenthetical == Bool::yes);
+}
+
+T_END
+
 #endif

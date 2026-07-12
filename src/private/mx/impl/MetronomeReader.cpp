@@ -30,6 +30,12 @@ api::TempoData MetronomeReader::getTempoData() const
     myOutTempoData = api::TempoData{};
     // the old core's beatUnitPer is the new core's group; the old core's
     // noteRelationNote (metronome-note based) is group2
+    if (myMetronome.parentheses().has_value())
+    {
+        Converter converter;
+        myOutTempoData.isParenthetical = converter.convert(*myMetronome.parentheses());
+    }
+
     using FirstChoice = core::MetronomeChoice::Kind;
     const auto firstChoice = myBeatUnitPerOrNoteRelationNoteChoice.kind();
 

@@ -414,3 +414,8 @@ synthetic/non-arpeggiate.3.1.xml
 ksuite/k001a_Articulations.xml
 musuite/testNoteAttributes2.xml
 musuite/testNoteAttributes2_ref.xml
+
+# Unblocked by wiring TempoData::isParenthetical: the metronome parentheses
+# attribute now round-trips.
+lysuite/ly31c_MetronomeMarks.xml
+musuite/testTempo1.xml
