@@ -7,6 +7,7 @@
 #include "mx/api/ApiCommon.h"
 
 #include <optional>
+#include <string>
 #include <variant>
 
 namespace mx
@@ -28,6 +29,60 @@ MXAPI_EQUALS_MEMBER(tremoloMarks)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(TremoloMarkData);
 
+// Payload for the arpeggiate mark types (MarkType::arpeggiate / arpeggiateUp / arpeggiateDown).
+// The up/down direction of the arpeggio's wavy line is encoded in the MarkType itself.
+struct ArpeggiateMarkData
+{
+    // Distinguishes overlapping arpeggios: notes sharing a number belong to one arpeggio (e.g.
+    // an arpeggio spanning both staves of a keyboard part) while different numbers arpeggiate
+    // independently. Corresponds to the `number` attribute.
+    std::optional<int> number;
+
+    // yes: the arpeggio is drawn as one unbroken line across staves instead of one line per
+    // staff. Corresponds to the `unbroken` attribute (MusicXML 4.0).
+    Bool unbroken = Bool::unspecified;
+
+    // The element's `id` attribute (MusicXML 3.1).
+    std::optional<std::string> id;
+};
+
+MXAPI_EQUALS_BEGIN(ArpeggiateMarkData)
+MXAPI_EQUALS_MEMBER(number)
+MXAPI_EQUALS_MEMBER(unbroken)
+MXAPI_EQUALS_MEMBER(id)
+MXAPI_EQUALS_END;
+MXAPI_NOT_EQUALS_AND_VECTORS(ArpeggiateMarkData);
+
+// Which end of a non-arpeggiate bracket a note carries: the bracket's top or bottom.
+enum class NonArpeggiatePlacement
+{
+    top,
+    bottom,
+};
+
+// Payload for MarkType::nonArpeggiate: a bracket indicating that a chord is NOT to be
+// arpeggiated. MusicXML marks only the top and bottom notes of the chord, each carrying a
+// <non-arpeggiate> element that states which end of the bracket it is.
+struct NonArpeggiateMarkData
+{
+    // Which end of the bracket this note carries. Corresponds to the required `type` attribute.
+    NonArpeggiatePlacement placement = NonArpeggiatePlacement::top;
+
+    // Distinguishes overlapping brackets, like ArpeggiateMarkData::number. Corresponds to the
+    // `number` attribute.
+    std::optional<int> number;
+
+    // The element's `id` attribute (MusicXML 3.1).
+    std::optional<std::string> id;
+};
+
+MXAPI_EQUALS_BEGIN(NonArpeggiateMarkData)
+MXAPI_EQUALS_MEMBER(placement)
+MXAPI_EQUALS_MEMBER(number)
+MXAPI_EQUALS_MEMBER(id)
+MXAPI_EQUALS_END;
+MXAPI_NOT_EQUALS_AND_VECTORS(NonArpeggiateMarkData);
+
 // A variant class that carries data for MarkType values whose payload does not fit MarkData's
 // common fields.
 //
@@ -48,16 +103,24 @@ class MarkDataChoice
     enum class Kind
     {
         none,
-        tremolo
+        tremolo,
+        arpeggiate,
+        nonArpeggiate
     };
 
     MarkDataChoice();
 
     MarkDataChoice(TremoloMarkData value);
 
+    MarkDataChoice(ArpeggiateMarkData value);
+
+    MarkDataChoice(NonArpeggiateMarkData value);
+
     Kind kind() const;
     bool isNone() const;
     bool isTremolo() const;
+    bool isArpeggiate() const;
+    bool isNonArpeggiate() const;
 
     // Returns a copy of the internally held TremoloMarkData.
     //
@@ -65,10 +128,22 @@ class MarkDataChoice
     // TremoloMarkData is returned.
     const TremoloMarkData tremolo() const;
 
+    // Returns a copy of the internally held ArpeggiateMarkData.
+    //
+    // Check isArpeggiate() first. If this is not an arpeggiate payload, a default constructed
+    // ArpeggiateMarkData is returned.
+    const ArpeggiateMarkData arpeggiate() const;
+
+    // Returns a copy of the internally held NonArpeggiateMarkData.
+    //
+    // Check isNonArpeggiate() first. If this is not a non-arpeggiate payload, a default
+    // constructed NonArpeggiateMarkData is returned.
+    const NonArpeggiateMarkData nonArpeggiate() const;
+
     bool operator==(const MarkDataChoice &other) const;
 
   private:
-    std::variant<std::monostate, TremoloMarkData> myValue;
+    std::variant<std::monostate, TremoloMarkData, ArpeggiateMarkData, NonArpeggiateMarkData> myValue;
 };
 
 MXAPI_NOT_EQUALS_AND_VECTORS(MarkDataChoice);

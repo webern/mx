@@ -3,6 +3,7 @@
 // Distributed under the MIT License
 
 #include "mx/impl/NotationsWriter.h"
+#include "mx/core/Token.h"
 #include "mx/core/generated/Arpeggiate.h"
 #include "mx/core/generated/ArrowChoice.h"
 #include "mx/core/generated/ArrowChoiceGroup.h"
@@ -30,6 +31,7 @@
 #include "mx/core/generated/Mordent.h"
 #include "mx/core/generated/NonArpeggiate.h"
 #include "mx/core/generated/NotationsChoice.h"
+#include "mx/core/generated/NumberLevel.h"
 #include "mx/core/generated/OrnamentsGroup.h"
 #include "mx/core/generated/OrnamentsGroupChoice.h"
 #include "mx/core/generated/OtherPlacementText.h"
@@ -41,6 +43,7 @@
 #include "mx/core/generated/StrongAccent.h"
 #include "mx/core/generated/TechnicalChoice.h"
 #include "mx/core/generated/Tied.h"
+#include "mx/core/generated/TopBottom.h"
 #include "mx/core/generated/Tremolo.h"
 #include "mx/core/generated/TremoloMarks.h"
 #include "mx/core/generated/TremoloType.h"
@@ -52,6 +55,7 @@
 #include "mx/core/generated/UpDown.h"
 #include "mx/core/generated/UprightInverted.h"
 #include "mx/core/generated/WavyLine.h"
+#include "mx/impl/Converter.h"
 #include "mx/impl/CurveFunctions.h"
 #include "mx/impl/DynamicsWriter.h"
 #include "mx/impl/MarkDataFunctions.h"
@@ -358,6 +362,20 @@ core::Notations NotationsWriter::getNotations() const
         {
             core::NonArpeggiate nonArpeggiate;
             impl::setAttributesFromMarkData(mark, nonArpeggiate);
+
+            const auto nonArpeggiateData = mark.choice.nonArpeggiate();
+            nonArpeggiate.setType(nonArpeggiateData.placement == api::NonArpeggiatePlacement::bottom
+                                      ? core::TopBottom::bottom()
+                                      : core::TopBottom::top());
+            if (nonArpeggiateData.number.has_value())
+            {
+                nonArpeggiate.setNumber(core::NumberLevel{*nonArpeggiateData.number});
+            }
+            if (nonArpeggiateData.id.has_value())
+            {
+                nonArpeggiate.setID(core::Token{*nonArpeggiateData.id});
+            }
+
             outNotations.addChoice(core::NotationsChoice::nonArpeggiate(nonArpeggiate));
         }
         else if (isMarkArpeggiate(mark.markType))
@@ -376,6 +394,21 @@ core::Notations NotationsWriter::getNotations() const
             else if (mark.markType == api::MarkType::arpeggiateDown)
             {
                 arpeggiate.setDirection(core::UpDown::down());
+            }
+
+            const auto arpeggiateData = mark.choice.arpeggiate();
+            if (arpeggiateData.number.has_value())
+            {
+                arpeggiate.setNumber(core::NumberLevel{*arpeggiateData.number});
+            }
+            if (arpeggiateData.unbroken != api::Bool::unspecified)
+            {
+                Converter converter;
+                arpeggiate.setUnbroken(converter.convert(arpeggiateData.unbroken));
+            }
+            if (arpeggiateData.id.has_value())
+            {
+                arpeggiate.setID(core::Token{*arpeggiateData.id});
             }
 
             outNotations.addChoice(core::NotationsChoice::arpeggiate(arpeggiate));

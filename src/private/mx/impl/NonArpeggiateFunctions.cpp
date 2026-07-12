@@ -21,6 +21,21 @@ api::MarkData NonArpeggiateFunctions::parseNonArpeggiate() const
     api::MarkData markData{api::MarkType::nonArpeggiate};
     impl::parseMarkDataAttributes(myNonArpeggiate, markData);
     markData.tickTimePosition = myCursor.tickTimePosition;
+
+    api::NonArpeggiateMarkData nonArpeggiateData{};
+    nonArpeggiateData.placement = myNonArpeggiate.type().tag() == core::TopBottom::Tag::bottom
+                                      ? api::NonArpeggiatePlacement::bottom
+                                      : api::NonArpeggiatePlacement::top;
+    if (myNonArpeggiate.number().has_value())
+    {
+        nonArpeggiateData.number = myNonArpeggiate.number()->value();
+    }
+    if (myNonArpeggiate.id().has_value())
+    {
+        nonArpeggiateData.id = myNonArpeggiate.id()->value();
+    }
+    markData.choice = nonArpeggiateData;
+
     return markData;
 }
 } // namespace impl

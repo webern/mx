@@ -19,9 +19,29 @@ MarkDataChoice::MarkDataChoice(TremoloMarkData value) : myValue{std::move(value)
 {
 }
 
+MarkDataChoice::MarkDataChoice(ArpeggiateMarkData value) : myValue{std::move(value)}
+{
+}
+
+MarkDataChoice::MarkDataChoice(NonArpeggiateMarkData value) : myValue{std::move(value)}
+{
+}
+
 MarkDataChoice::Kind MarkDataChoice::kind() const
 {
-    return std::holds_alternative<TremoloMarkData>(myValue) ? Kind::tremolo : Kind::none;
+    if (std::holds_alternative<TremoloMarkData>(myValue))
+    {
+        return Kind::tremolo;
+    }
+    if (std::holds_alternative<ArpeggiateMarkData>(myValue))
+    {
+        return Kind::arpeggiate;
+    }
+    if (std::holds_alternative<NonArpeggiateMarkData>(myValue))
+    {
+        return Kind::nonArpeggiate;
+    }
+    return Kind::none;
 }
 
 bool MarkDataChoice::isNone() const
@@ -41,6 +61,34 @@ const TremoloMarkData MarkDataChoice::tremolo() const
         return *value;
     }
     return TremoloMarkData{};
+}
+
+bool MarkDataChoice::isArpeggiate() const
+{
+    return std::holds_alternative<ArpeggiateMarkData>(myValue);
+}
+
+const ArpeggiateMarkData MarkDataChoice::arpeggiate() const
+{
+    if (const auto *value = std::get_if<ArpeggiateMarkData>(&myValue))
+    {
+        return *value;
+    }
+    return ArpeggiateMarkData{};
+}
+
+bool MarkDataChoice::isNonArpeggiate() const
+{
+    return std::holds_alternative<NonArpeggiateMarkData>(myValue);
+}
+
+const NonArpeggiateMarkData MarkDataChoice::nonArpeggiate() const
+{
+    if (const auto *value = std::get_if<NonArpeggiateMarkData>(&myValue))
+    {
+        return *value;
+    }
+    return NonArpeggiateMarkData{};
 }
 
 bool MarkDataChoice::operator==(const MarkDataChoice &other) const
