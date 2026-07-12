@@ -97,4 +97,22 @@ TEST(defaultsFontsRoundTrip, lyricFonts)
     CHECK(lf2 == out.defaults.lyricFonts.at(1));
 }
 
+TEST(defaultsAppearanceRoundTrip, otherAppearanceValue)
+{
+    // The <other-appearance> content is free text in MusicXML but numeric in practice; the
+    // reader used to discard it and always report 0.0 (#101).
+    auto in = makeMinimalScore();
+
+    AppearanceData oa{};
+    oa.appearanceType = AppearanceType::OtherAppearance;
+    oa.appearanceSubType = "misc-glyph-scale";
+    oa.value = 1.25;
+    in.defaults.appearance.push_back(oa);
+
+    const auto out = mxtest::roundTrip(in);
+
+    REQUIRE(out.defaults.appearance.size() == 1);
+    CHECK(oa == out.defaults.appearance.front());
+}
+
 #endif
