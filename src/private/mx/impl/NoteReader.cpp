@@ -80,7 +80,7 @@ api::PositionData getLyricPositionData(const core::Lyric &inLyric)
 
     if (inLyric.justify().has_value())
     {
-        outPositionData.horizontalAlignmnet = converter.convert(*inLyric.justify());
+        outPositionData.horizontalAlignment = converter.convert(*inLyric.justify());
     }
 
     return outPositionData;
