@@ -49,9 +49,7 @@ struct SwingData
 // MusicXML Documentation: The sound element contains general playback parameters. They can stand
 // alone within a part/measure, or be a component element within a direction.
 //
-// mx::api models the commonly-used scalar attributes of <sound>, plus <swing>. The remaining
-// nested child elements (<midi-instrument>, <midi-device>, <play>, <offset>) are intentionally
-// not modeled.
+// mx::api models the commonly-used scalar attributes of <sound>, plus <swing>.
 //
 // A SoundData is carried on DirectionData. When a DirectionData holds a SoundData but no other
 // direction content, it round-trips as a standalone <sound> element within the measure. When a
