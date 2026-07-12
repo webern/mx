@@ -28,11 +28,8 @@ namespace api
 //                     writer assigns the MusicXML number from serialization
 //                     order. The reader never produces this state.
 //
-// Follows the TimeChoice pattern: misuse never throws. A level outside [1, 16]
-// or an empty id collapses to unspecified at construction, and calling
-// level()/identity() for the wrong kind returns a harmless default (the
-// NUMBER_LEVEL_UNSPECIFIED sentinel, or an empty string) instead of throwing.
-// Check kind() (or isExplicit()/isIdentity()) before reading a payload.
+// Follows the mx::api "choice" pattern which uses a Kind enum to tell you which type of
+// SpannerNumber is held.
 class SpannerNumber
 {
   public:
