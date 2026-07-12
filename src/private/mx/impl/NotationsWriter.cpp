@@ -11,6 +11,7 @@
 #include "mx/core/generated/ArticulationsChoice.h"
 #include "mx/core/generated/BreathMark.h"
 #include "mx/core/generated/Caesura.h"
+#include "mx/core/generated/CaesuraValue.h"
 #include "mx/core/generated/EmptyLine.h"
 #include "mx/core/generated/EmptyPlacement.h"
 #include "mx/core/generated/EmptyPlacementSmufl.h"
@@ -542,6 +543,30 @@ void NotationsWriter::addArticulation(const api::MarkData &mark, core::Articulat
     case core::ArticulationsChoice::Kind::caesura: {
         core::Caesura c;
         setAttributesFromPositionData(mark.positionData, c);
+        // MarkType::caesura is the common empty form <caesura/>; the variants carry an
+        // explicit text value.
+        auto caesuraValue = core::CaesuraValue::empty();
+        if (mark.markType == api::MarkType::caesuraNormal)
+        {
+            caesuraValue = core::CaesuraValue::normal();
+        }
+        else if (mark.markType == api::MarkType::caesuraThick)
+        {
+            caesuraValue = core::CaesuraValue::thick();
+        }
+        else if (mark.markType == api::MarkType::caesuraShort)
+        {
+            caesuraValue = core::CaesuraValue::short_();
+        }
+        else if (mark.markType == api::MarkType::caesuraCurved)
+        {
+            caesuraValue = core::CaesuraValue::curved();
+        }
+        else if (mark.markType == api::MarkType::caesuraSingle)
+        {
+            caesuraValue = core::CaesuraValue::single();
+        }
+        c.setValue(caesuraValue);
         outArticulations.addChoice(core::ArticulationsChoice::caesura(c));
         break;
     }

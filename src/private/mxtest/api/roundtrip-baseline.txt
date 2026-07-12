@@ -407,3 +407,10 @@ synthetic/arpeggiate.3.1.xml
 synthetic/arpeggiate.4.0.xml
 synthetic/non-arpeggiate.3.0.xml
 synthetic/non-arpeggiate.3.1.xml
+
+# Unblocked by the caesura value fix: MarkType::caesura now round-trips the
+# common empty element form, and the caesuraNormal/Thick/Short/Curved/Single
+# variants carry an explicit text value.
+ksuite/k001a_Articulations.xml
+musuite/testNoteAttributes2.xml
+musuite/testNoteAttributes2_ref.xml

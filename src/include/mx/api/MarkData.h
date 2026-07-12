@@ -34,7 +34,12 @@ enum class MarkType
     doit,
     falloff,
     breathMark,
-    caesura,
+    caesura, // an empty <caesura/>, the common form; renders the same as caesuraNormal
+    caesuraNormal,
+    caesuraThick,
+    caesuraShort,
+    caesuraCurved,
+    caesuraSingle,
     stress,
     unstress,
     softAccent,

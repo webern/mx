@@ -268,4 +268,24 @@ TEST(NonArpeggiateAttributes, MarkRoundTrip)
 
 T_END;
 
+TEST(CaesuraEmpty, MarkRoundTrip)
+{
+    // The common empty form <caesura/> must not acquire a "normal" text value on write.
+    const auto marks = roundTripMark(MarkType::caesura);
+    CHECK(hasMark(marks, MarkType::caesura));
+}
+
+T_END;
+
+TEST(CaesuraVariants, MarkRoundTrip)
+{
+    CHECK(hasMark(roundTripMark(MarkType::caesuraNormal), MarkType::caesuraNormal));
+    CHECK(hasMark(roundTripMark(MarkType::caesuraThick), MarkType::caesuraThick));
+    CHECK(hasMark(roundTripMark(MarkType::caesuraShort), MarkType::caesuraShort));
+    CHECK(hasMark(roundTripMark(MarkType::caesuraCurved), MarkType::caesuraCurved));
+    CHECK(hasMark(roundTripMark(MarkType::caesuraSingle), MarkType::caesuraSingle));
+}
+
+T_END;
+
 #endif
