@@ -110,14 +110,15 @@ if(MX_CORE_DEV)
     # corert: round-trips each data/ file through mx::core (pugixml-backed)
     # and compares against a normalized, fixup-adjusted form of the input.
     # Fixer applies .fixup.xml sidecars; cpul is the Catch test runner
-    # (main); the import/ helpers normalize whitespace, decimals, and
-    # attribute order.
+    # (main); the import/ helpers normalize whitespace, decimals,
+    # comma-separated-text spacing, and attribute order.
     file(GLOB_RECURSE SRC_CORERT ${PRIVATE_DIR}/mxtest/corert/*.cpp ${PRIVATE_DIR}/mxtest/corert/*.h)
     file(GLOB_RECURSE SRC_CPUL   ${PRIVATE_DIR}/cpul/*.cpp ${PRIVATE_DIR}/cpul/*.h)
     set(SRC_CORERT_HELPERS
         ${PRIVATE_DIR}/mxtest/import/Normalize.cpp
         ${PRIVATE_DIR}/mxtest/import/Normalize.h
-        ${PRIVATE_DIR}/mxtest/import/DecimalFields.h)
+        ${PRIVATE_DIR}/mxtest/import/DecimalFields.h
+        ${PRIVATE_DIR}/mxtest/import/CommaSeparatedFields.h)
 
     # PathRoot.h hands the corert file walker the repo root at configure time.
     file(WRITE ${PRIVATE_DIR}/mxtest/file/PathRoot.h
@@ -219,7 +220,8 @@ if(MX_API)
         ${PRIVATE_DIR}/mxtest/corert/Fixer.h
         ${PRIVATE_DIR}/mxtest/import/Normalize.cpp
         ${PRIVATE_DIR}/mxtest/import/Normalize.h
-        ${PRIVATE_DIR}/mxtest/import/DecimalFields.h)
+        ${PRIVATE_DIR}/mxtest/import/DecimalFields.h
+        ${PRIVATE_DIR}/mxtest/import/CommaSeparatedFields.h)
     target_include_directories(mxtest-api-roundtrip PRIVATE ${PRIVATE_DIR})
     target_link_libraries(mxtest-api-roundtrip mx ${CMAKE_THREAD_LIBS_INIT})
 
