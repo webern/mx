@@ -8,6 +8,7 @@
 #include "mx/api/LineData.h"
 #include "mx/api/PositionData.h"
 #include "mx/api/PrintData.h"
+#include "mx/api/SpannerNumber.h"
 
 #include <string>
 

@@ -21,7 +21,6 @@
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
         <file>custom/segno_coda_roundtrip.3.1.xml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -30,6 +29,7 @@
         <file>foundsuite/An Chloe.xml</file>
         <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
+        <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 433 more -->
       </wild-files>
       <synthetic-files count="390" min-version="3.0">
@@ -433,7 +433,6 @@
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
         <file>custom/segno_coda_roundtrip.3.1.xml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -442,6 +441,7 @@
         <file>foundsuite/An Chloe.xml</file>
         <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
+        <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 433 more -->
       </wild-files>
       <synthetic-files count="390" min-version="3.0">
@@ -842,7 +842,6 @@
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
         <file>custom/segno_coda_roundtrip.3.1.xml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -851,6 +850,7 @@
         <file>foundsuite/An Chloe.xml</file>
         <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
+        <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 433 more -->
       </wild-files>
       <synthetic-files count="390" min-version="3.0">
@@ -1264,7 +1264,6 @@
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
         <file>custom/segno_coda_roundtrip.3.1.xml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -1273,6 +1272,7 @@
         <file>foundsuite/An Chloe.xml</file>
         <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
+        <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 433 more -->
       </wild-files>
       <synthetic-files count="390" min-version="3.0">
@@ -1676,7 +1676,6 @@
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
         <file>custom/segno_coda_roundtrip.3.1.xml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -1685,6 +1684,7 @@
         <file>foundsuite/An Chloe.xml</file>
         <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
+        <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 433 more -->
       </wild-files>
       <synthetic-files count="390" min-version="3.0">
@@ -2088,7 +2088,6 @@
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
         <file>custom/segno_coda_roundtrip.3.1.xml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -2097,6 +2096,7 @@
         <file>foundsuite/An Chloe.xml</file>
         <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
+        <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 430 more -->
       </wild-files>
       <synthetic-files count="390" min-version="3.0">
@@ -2497,7 +2497,6 @@
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
         <file>custom/segno_coda_roundtrip.3.1.xml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -2506,6 +2505,7 @@
         <file>foundsuite/An Chloe.xml</file>
         <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
+        <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 428 more -->
       </wild-files>
       <synthetic-files count="14" min-version="3.0">
@@ -2530,7 +2530,6 @@
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
         <file>custom/segno_coda_roundtrip.3.1.xml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -2539,6 +2538,7 @@
         <file>foundsuite/An Chloe.xml</file>
         <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
+        <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 426 more -->
       </wild-files>
       <synthetic-files count="41" min-version="3.0">
@@ -2590,7 +2590,6 @@
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
         <file>custom/segno_coda_roundtrip.3.1.xml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -2599,6 +2598,7 @@
         <file>foundsuite/An Chloe.xml</file>
         <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
+        <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 426 more -->
       </wild-files>
       <synthetic-files count="8" min-version="3.0">
@@ -2640,7 +2640,6 @@
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
         <file>custom/segno_coda_roundtrip.3.1.xml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -2649,6 +2648,7 @@
         <file>foundsuite/An Chloe.xml</file>
         <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
+        <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 426 more -->
       </wild-files>
       <synthetic-files count="223" min-version="3.0">
@@ -2897,7 +2897,6 @@
       </attributes>
       <wild-files count="415">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -2908,6 +2907,7 @@
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
         <file>foundsuite/Invention 1.xml</file>
         <file>foundsuite/Invention 2.xml</file>
+        <file>foundsuite/Invention 3.xml</file>
         <!-- 403 more -->
       </wild-files>
       <synthetic-files count="5" min-version="3.0">
@@ -2921,7 +2921,6 @@
     <element name="line" total-files="418" wild-files="415" synthetic-files="3" min-synthetic-version="3.0">
       <wild-files count="415">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -2932,6 +2931,7 @@
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
         <file>foundsuite/Invention 1.xml</file>
         <file>foundsuite/Invention 2.xml</file>
+        <file>foundsuite/Invention 3.xml</file>
         <!-- 403 more -->
       </wild-files>
       <synthetic-files count="3" min-version="3.0">
@@ -2943,7 +2943,6 @@
     <element name="sign" total-files="421" wild-files="415" synthetic-files="6" min-synthetic-version="3.0">
       <wild-files count="415">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -2954,6 +2953,7 @@
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
         <file>foundsuite/Invention 1.xml</file>
         <file>foundsuite/Invention 2.xml</file>
+        <file>foundsuite/Invention 3.xml</file>
         <!-- 403 more -->
       </wild-files>
       <synthetic-files count="6" min-version="3.0">
@@ -2973,7 +2973,6 @@
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
         <file>custom/segno_coda_roundtrip.3.1.xml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -2982,6 +2981,7 @@
         <file>foundsuite/An Chloe.xml</file>
         <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
+        <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 403 more -->
       </wild-files>
       <synthetic-files count="8" min-version="3.0">
@@ -3016,7 +3016,6 @@
       </attributes>
       <wild-files count="414">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -3027,6 +3026,7 @@
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <file>foundsuite/Invention 1.xml</file>
+        <file>foundsuite/Invention 2.xml</file>
         <!-- 402 more -->
       </wild-files>
       <synthetic-files count="10" min-version="3.0">
@@ -3045,7 +3045,6 @@
     <element name="beat-type" total-files="422" wild-files="413" synthetic-files="9" min-synthetic-version="3.0">
       <wild-files count="413">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -3056,6 +3055,7 @@
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <file>foundsuite/Invention 1.xml</file>
+        <file>foundsuite/Invention 2.xml</file>
         <!-- 401 more -->
       </wild-files>
       <synthetic-files count="9" min-version="3.0">
@@ -3073,7 +3073,6 @@
     <element name="beats" total-files="422" wild-files="413" synthetic-files="9" min-synthetic-version="3.0">
       <wild-files count="413">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -3084,6 +3083,7 @@
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <file>foundsuite/Invention 1.xml</file>
+        <file>foundsuite/Invention 2.xml</file>
         <!-- 401 more -->
       </wild-files>
       <synthetic-files count="9" min-version="3.0">
@@ -3103,7 +3103,6 @@
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
         <file>custom/segno_coda_roundtrip.3.1.xml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -3112,6 +3111,7 @@
         <file>foundsuite/An Chloe.xml</file>
         <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
+        <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 396 more -->
       </wild-files>
       <synthetic-files count="307" min-version="3.0">
@@ -3429,7 +3429,6 @@
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
         <file>custom/segno_coda_roundtrip.3.1.xml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -3438,6 +3437,7 @@
         <file>foundsuite/An Chloe.xml</file>
         <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
+        <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 395 more -->
       </wild-files>
       <synthetic-files count="223" min-version="3.0">
@@ -3671,7 +3671,6 @@
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
         <file>custom/segno_coda_roundtrip.3.1.xml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -3680,6 +3679,7 @@
         <file>foundsuite/An Chloe.xml</file>
         <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
+        <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 395 more -->
       </wild-files>
       <synthetic-files count="223" min-version="3.0">
@@ -3913,7 +3913,6 @@
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
         <file>custom/segno_coda_roundtrip.3.1.xml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -3922,6 +3921,7 @@
         <file>foundsuite/An Chloe.xml</file>
         <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
+        <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 395 more -->
       </wild-files>
       <synthetic-files count="223" min-version="3.0">
@@ -4153,7 +4153,6 @@
     <element name="identification" total-files="412" wild-files="404" synthetic-files="8" min-synthetic-version="3.0">
       <wild-files count="404">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -4164,6 +4163,7 @@
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <file>foundsuite/Invention 1.xml</file>
+        <file>foundsuite/Invention 2.xml</file>
         <!-- 392 more -->
       </wild-files>
       <synthetic-files count="8" min-version="3.0">
@@ -4194,7 +4194,6 @@
       </attributes>
       <wild-files count="376">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -4205,6 +4204,7 @@
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <file>foundsuite/Invention 1.xml</file>
+        <file>foundsuite/Invention 2.xml</file>
         <!-- 364 more -->
       </wild-files>
       <synthetic-files count="6" min-version="3.0">
@@ -4219,7 +4219,6 @@
     <element name="fifths" total-files="378" wild-files="374" synthetic-files="4" min-synthetic-version="3.0">
       <wild-files count="374">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -4230,6 +4229,7 @@
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <file>foundsuite/Invention 1.xml</file>
+        <file>foundsuite/Invention 2.xml</file>
         <!-- 362 more -->
       </wild-files>
       <synthetic-files count="4" min-version="3.0">
@@ -4265,7 +4265,6 @@
       </attributes>
       <wild-files count="311">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -4276,6 +4275,7 @@
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <file>foundsuite/Invention 1.xml</file>
+        <file>foundsuite/Invention 2.xml</file>
         <!-- 299 more -->
       </wild-files>
       <synthetic-files count="1" min-version="3.0">
@@ -4292,7 +4292,6 @@
       </attributes>
       <wild-files count="311">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -4303,6 +4302,7 @@
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <file>foundsuite/Invention 1.xml</file>
+        <file>foundsuite/Invention 2.xml</file>
         <!-- 299 more -->
       </wild-files>
       <synthetic-files count="6" min-version="3.0">
@@ -4317,7 +4317,6 @@
     <element name="encoding" total-files="286" wild-files="283" synthetic-files="3" min-synthetic-version="3.0">
       <wild-files count="283">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -4328,6 +4327,7 @@
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <file>foundsuite/Invention 1.xml</file>
+        <file>foundsuite/Invention 2.xml</file>
         <!-- 271 more -->
       </wild-files>
       <synthetic-files count="3" min-version="3.0">
@@ -4339,7 +4339,6 @@
     <element name="software" total-files="283" wild-files="282" synthetic-files="1" min-synthetic-version="3.0">
       <wild-files count="282">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -4350,6 +4349,7 @@
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <file>foundsuite/Invention 1.xml</file>
+        <file>foundsuite/Invention 2.xml</file>
         <!-- 270 more -->
       </wild-files>
       <synthetic-files count="1" min-version="3.0">
@@ -4359,7 +4359,6 @@
     <element name="instrument-name" total-files="278" wild-files="272" synthetic-files="6" min-synthetic-version="3.0">
       <wild-files count="272">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -4370,6 +4369,7 @@
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <file>foundsuite/Invention 1.xml</file>
+        <file>foundsuite/Invention 2.xml</file>
         <!-- 260 more -->
       </wild-files>
       <synthetic-files count="6" min-version="3.0">
@@ -4387,7 +4387,6 @@
       </attributes>
       <wild-files count="272">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -4398,6 +4397,7 @@
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <file>foundsuite/Invention 1.xml</file>
+        <file>foundsuite/Invention 2.xml</file>
         <!-- 260 more -->
       </wild-files>
       <synthetic-files count="6" min-version="3.0">
@@ -4412,7 +4412,6 @@
     <element name="encoding-date" total-files="271" wild-files="271" synthetic-files="0">
       <wild-files count="271">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
         <file>foundsuite/ARBEAU Belle qui tiens ma vie.xml</file>
@@ -4423,6 +4422,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <file>foundsuite/Invention 1.xml</file>
         <file>foundsuite/Invention 2.xml</file>
+        <file>foundsuite/Invention 3.xml</file>
         <!-- 259 more -->
       </wild-files>
       <synthetic-files count="0">
@@ -4434,7 +4434,6 @@
       </attributes>
       <wild-files count="266">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -4445,6 +4444,7 @@
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <file>foundsuite/Invention 1.xml</file>
+        <file>foundsuite/Invention 2.xml</file>
         <!-- 254 more -->
       </wild-files>
       <synthetic-files count="2" min-version="3.0">
@@ -4455,7 +4455,6 @@
     <element name="midi-channel" total-files="264" wild-files="264" synthetic-files="0">
       <wild-files count="264">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -4466,6 +4465,7 @@
         <file>foundsuite/Invention 1.xml</file>
         <file>foundsuite/Invention 2.xml</file>
         <file>foundsuite/Invention 3.xml</file>
+        <file>foundsuite/Invention_10.xml</file>
         <!-- 252 more -->
       </wild-files>
       <synthetic-files count="0">
@@ -4474,7 +4474,6 @@
     <element name="midi-program" total-files="264" wild-files="264" synthetic-files="0">
       <wild-files count="264">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -4485,6 +4484,7 @@
         <file>foundsuite/Invention 1.xml</file>
         <file>foundsuite/Invention 2.xml</file>
         <file>foundsuite/Invention 3.xml</file>
+        <file>foundsuite/Invention_10.xml</file>
         <!-- 252 more -->
       </wild-files>
       <synthetic-files count="0">
@@ -4493,7 +4493,6 @@
     <element name="pan" total-files="238" wild-files="238" synthetic-files="0">
       <wild-files count="238">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -4504,6 +4503,7 @@
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <file>foundsuite/Invention 1.xml</file>
+        <file>foundsuite/Invention 2.xml</file>
         <!-- 226 more -->
       </wild-files>
       <synthetic-files count="0">
@@ -4512,7 +4512,6 @@
     <element name="volume" total-files="238" wild-files="238" synthetic-files="0">
       <wild-files count="238">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -4523,6 +4522,7 @@
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <file>foundsuite/Invention 1.xml</file>
+        <file>foundsuite/Invention 2.xml</file>
         <!-- 226 more -->
       </wild-files>
       <synthetic-files count="0">
@@ -4538,7 +4538,6 @@
       </attributes>
       <wild-files count="227">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
         <file>foundsuite/ARBEAU Belle qui tiens ma vie.xml</file>
@@ -4549,6 +4548,7 @@
         <file>foundsuite/Invention 2.xml</file>
         <file>foundsuite/Invention 3.xml</file>
         <file>foundsuite/Invention_10.xml</file>
+        <file>foundsuite/Invention_11.xml</file>
         <!-- 215 more -->
       </wild-files>
       <synthetic-files count="1" min-version="3.0">
@@ -4560,7 +4560,6 @@
         <attribute name="measure" wild-files="78" synthetic-files="0"/>
       </attributes>
       <wild-files count="225">
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -4572,6 +4571,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <file>foundsuite/Invention 1.xml</file>
         <file>foundsuite/Invention 2.xml</file>
+        <file>foundsuite/Invention 3.xml</file>
         <!-- 213 more -->
       </wild-files>
       <synthetic-files count="0">
@@ -4584,7 +4584,6 @@
       </attributes>
       <wild-files count="215">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
         <file>foundsuite/ARBEAU Belle qui tiens ma vie.xml</file>
         <file>foundsuite/Adagio and Fugue in C minor, K.546.xml</file>
@@ -4595,6 +4594,7 @@
         <file>foundsuite/Invention 1.xml</file>
         <file>foundsuite/Invention 2.xml</file>
         <file>foundsuite/Invention 3.xml</file>
+        <file>foundsuite/Invention_10.xml</file>
         <!-- 203 more -->
       </wild-files>
       <synthetic-files count="119" min-version="3.0">
@@ -4770,7 +4770,6 @@
         <attribute name="repeater" wild-files="0" synthetic-files="2"/>
       </attributes>
       <wild-files count="179">
-        <file>custom/slurs_overbars.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
         <file>foundsuite/ARBEAU Belle qui tiens ma vie.xml</file>
         <file>foundsuite/Adagio and Fugue in C minor, K.546.xml</file>
@@ -4782,6 +4781,7 @@
         <file>foundsuite/Invention 2.xml</file>
         <file>foundsuite/Invention 3.xml</file>
         <file>foundsuite/Invention_10.xml</file>
+        <file>foundsuite/Invention_11.xml</file>
         <!-- 167 more -->
       </wild-files>
       <synthetic-files count="2" min-version="3.0">
@@ -4791,7 +4791,6 @@
     </element>
     <element name="alter" total-files="178" wild-files="178" synthetic-files="0">
       <wild-files count="178">
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
         <file>foundsuite/ARBEAU Belle qui tiens ma vie.xml</file>
@@ -4803,6 +4802,7 @@
         <file>foundsuite/Invention 1.xml</file>
         <file>foundsuite/Invention 2.xml</file>
         <file>foundsuite/Invention 3.xml</file>
+        <file>foundsuite/Invention_10.xml</file>
         <!-- 166 more -->
       </wild-files>
       <synthetic-files count="0">
@@ -4819,7 +4819,6 @@
       </attributes>
       <wild-files count="168">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
         <file>foundsuite/ARBEAU Belle qui tiens ma vie.xml</file>
@@ -4830,6 +4829,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <file>foundsuite/Invention 1.xml</file>
         <file>foundsuite/Invention 2.xml</file>
+        <file>foundsuite/Invention 3.xml</file>
         <!-- 156 more -->
       </wild-files>
       <synthetic-files count="6" min-version="3.0">
@@ -4878,7 +4878,6 @@
         <attribute name="relative-y" wild-files="0" synthetic-files="1"/>
       </attributes>
       <wild-files count="165">
-        <file>custom/slurs_overbars.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
         <file>foundsuite/Adagio and Fugue in C minor, K.546.xml</file>
         <file>foundsuite/An Chloe.xml</file>
@@ -4890,6 +4889,7 @@
         <file>foundsuite/Invention 3.xml</file>
         <file>foundsuite/Invention_10.xml</file>
         <file>foundsuite/Invention_11.xml</file>
+        <file>foundsuite/Invention_12.xml</file>
         <!-- 153 more -->
       </wild-files>
       <synthetic-files count="1" min-version="3.0">
@@ -4906,7 +4906,6 @@
       <wild-files count="161">
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
         <file>custom/segno_coda_roundtrip.3.1.xml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
         <file>foundsuite/Adagio and Fugue in C minor, K.546.xml</file>
         <file>foundsuite/An Chloe.xml</file>
@@ -4916,6 +4915,7 @@
         <file>foundsuite/Invention 1.xml</file>
         <file>foundsuite/Moments Musicaux Op16 No4.xml</file>
         <file>foundsuite/PepAiraSco.xml</file>
+        <file>foundsuite/PezR44Sco.xml</file>
         <!-- 149 more -->
       </wild-files>
       <synthetic-files count="91" min-version="3.0">
@@ -5019,7 +5019,6 @@
       <wild-files count="161">
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
         <file>custom/segno_coda_roundtrip.3.1.xml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
         <file>foundsuite/Adagio and Fugue in C minor, K.546.xml</file>
         <file>foundsuite/An Chloe.xml</file>
@@ -5029,6 +5028,7 @@
         <file>foundsuite/Invention 1.xml</file>
         <file>foundsuite/Moments Musicaux Op16 No4.xml</file>
         <file>foundsuite/PepAiraSco.xml</file>
+        <file>foundsuite/PezR44Sco.xml</file>
         <!-- 149 more -->
       </wild-files>
       <synthetic-files count="91" min-version="3.0">
@@ -5128,7 +5128,6 @@
     <element name="defaults" total-files="168" wild-files="159" synthetic-files="9" min-synthetic-version="3.0">
       <wild-files count="159">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -5139,6 +5138,7 @@
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <file>foundsuite/Invention 1.xml</file>
+        <file>foundsuite/Invention 2.xml</file>
         <!-- 147 more -->
       </wild-files>
       <synthetic-files count="9" min-version="3.0">
@@ -5156,7 +5156,6 @@
     <element name="millimeters" total-files="159" wild-files="159" synthetic-files="0">
       <wild-files count="159">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -5167,6 +5166,7 @@
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <file>foundsuite/Invention 1.xml</file>
+        <file>foundsuite/Invention 2.xml</file>
         <!-- 147 more -->
       </wild-files>
       <synthetic-files count="0">
@@ -5175,7 +5175,6 @@
     <element name="scaling" total-files="159" wild-files="159" synthetic-files="0">
       <wild-files count="159">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -5186,6 +5185,7 @@
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <file>foundsuite/Invention 1.xml</file>
+        <file>foundsuite/Invention 2.xml</file>
         <!-- 147 more -->
       </wild-files>
       <synthetic-files count="0">
@@ -5194,7 +5194,6 @@
     <element name="tenths" total-files="159" wild-files="159" synthetic-files="0">
       <wild-files count="159">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -5205,6 +5204,7 @@
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <file>foundsuite/Invention 1.xml</file>
+        <file>foundsuite/Invention 2.xml</file>
         <!-- 147 more -->
       </wild-files>
       <synthetic-files count="0">
@@ -5213,7 +5213,6 @@
     <element name="left-margin" total-files="157" wild-files="157" synthetic-files="0">
       <wild-files count="157">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -5224,6 +5223,7 @@
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <file>foundsuite/Invention 1.xml</file>
+        <file>foundsuite/Invention 2.xml</file>
         <!-- 145 more -->
       </wild-files>
       <synthetic-files count="0">
@@ -5232,7 +5232,6 @@
     <element name="page-height" total-files="157" wild-files="157" synthetic-files="0">
       <wild-files count="157">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -5243,6 +5242,7 @@
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <file>foundsuite/Invention 1.xml</file>
+        <file>foundsuite/Invention 2.xml</file>
         <!-- 145 more -->
       </wild-files>
       <synthetic-files count="0">
@@ -5251,7 +5251,6 @@
     <element name="page-layout" total-files="157" wild-files="157" synthetic-files="0">
       <wild-files count="157">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -5262,6 +5261,7 @@
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <file>foundsuite/Invention 1.xml</file>
+        <file>foundsuite/Invention 2.xml</file>
         <!-- 145 more -->
       </wild-files>
       <synthetic-files count="0">
@@ -5270,7 +5270,6 @@
     <element name="page-width" total-files="157" wild-files="157" synthetic-files="0">
       <wild-files count="157">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -5281,6 +5280,7 @@
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <file>foundsuite/Invention 1.xml</file>
+        <file>foundsuite/Invention 2.xml</file>
         <!-- 145 more -->
       </wild-files>
       <synthetic-files count="0">
@@ -5289,7 +5289,6 @@
     <element name="right-margin" total-files="157" wild-files="157" synthetic-files="0">
       <wild-files count="157">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
@@ -5300,6 +5299,7 @@
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <file>foundsuite/Invention 1.xml</file>
+        <file>foundsuite/Invention 2.xml</file>
         <!-- 145 more -->
       </wild-files>
       <synthetic-files count="0">
@@ -5308,125 +5308,6 @@
     <element name="system-layout" total-files="159" wild-files="157" synthetic-files="2" min-synthetic-version="3.0">
       <wild-files count="157">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
-        <file>custom/systems-and-pages.xml</file>
-        <file>foundsuite/12 Horn Duets.xml</file>
-        <file>foundsuite/ARBEAU Belle qui tiens ma vie.xml</file>
-        <file>foundsuite/Adagio and Fugue in C minor, K.546.xml</file>
-        <file>foundsuite/An Chloe.xml</file>
-        <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
-        <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
-        <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
-        <file>foundsuite/Invention 1.xml</file>
-        <file>foundsuite/Invention 2.xml</file>
-        <!-- 145 more -->
-      </wild-files>
-      <synthetic-files count="2" min-version="3.0">
-        <file version="3.0">synthetic/left-divider.3.0.xml</file>
-        <file version="3.0">synthetic/right-divider.3.0.xml</file>
-      </synthetic-files>
-    </element>
-    <element name="bottom-margin" total-files="156" wild-files="156" synthetic-files="0">
-      <wild-files count="156">
-        <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
-        <file>custom/systems-and-pages.xml</file>
-        <file>custom/transposition.musicxml</file>
-        <file>foundsuite/12 Horn Duets.xml</file>
-        <file>foundsuite/ARBEAU Belle qui tiens ma vie.xml</file>
-        <file>foundsuite/Adagio and Fugue in C minor, K.546.xml</file>
-        <file>foundsuite/An Chloe.xml</file>
-        <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
-        <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
-        <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
-        <file>foundsuite/Invention 1.xml</file>
-        <!-- 144 more -->
-      </wild-files>
-      <synthetic-files count="0">
-      </synthetic-files>
-    </element>
-    <element name="page-margins" total-files="156" wild-files="156" synthetic-files="0">
-      <attributes>
-        <attribute name="type" wild-files="156" synthetic-files="0"/>
-      </attributes>
-      <wild-files count="156">
-        <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
-        <file>custom/systems-and-pages.xml</file>
-        <file>custom/transposition.musicxml</file>
-        <file>foundsuite/12 Horn Duets.xml</file>
-        <file>foundsuite/ARBEAU Belle qui tiens ma vie.xml</file>
-        <file>foundsuite/Adagio and Fugue in C minor, K.546.xml</file>
-        <file>foundsuite/An Chloe.xml</file>
-        <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
-        <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
-        <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
-        <file>foundsuite/Invention 1.xml</file>
-        <!-- 144 more -->
-      </wild-files>
-      <synthetic-files count="0">
-      </synthetic-files>
-    </element>
-    <element name="system-margins" total-files="156" wild-files="156" synthetic-files="0">
-      <wild-files count="156">
-        <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
-        <file>custom/systems-and-pages.xml</file>
-        <file>foundsuite/12 Horn Duets.xml</file>
-        <file>foundsuite/ARBEAU Belle qui tiens ma vie.xml</file>
-        <file>foundsuite/Adagio and Fugue in C minor, K.546.xml</file>
-        <file>foundsuite/An Chloe.xml</file>
-        <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
-        <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
-        <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
-        <file>foundsuite/Invention 1.xml</file>
-        <file>foundsuite/Invention 2.xml</file>
-        <!-- 144 more -->
-      </wild-files>
-      <synthetic-files count="0">
-      </synthetic-files>
-    </element>
-    <element name="top-margin" total-files="156" wild-files="156" synthetic-files="0">
-      <wild-files count="156">
-        <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
-        <file>custom/systems-and-pages.xml</file>
-        <file>custom/transposition.musicxml</file>
-        <file>foundsuite/12 Horn Duets.xml</file>
-        <file>foundsuite/ARBEAU Belle qui tiens ma vie.xml</file>
-        <file>foundsuite/Adagio and Fugue in C minor, K.546.xml</file>
-        <file>foundsuite/An Chloe.xml</file>
-        <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
-        <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
-        <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
-        <file>foundsuite/Invention 1.xml</file>
-        <!-- 144 more -->
-      </wild-files>
-      <synthetic-files count="0">
-      </synthetic-files>
-    </element>
-    <element name="top-system-distance" total-files="156" wild-files="156" synthetic-files="0">
-      <wild-files count="156">
-        <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
-        <file>custom/systems-and-pages.xml</file>
-        <file>foundsuite/12 Horn Duets.xml</file>
-        <file>foundsuite/ARBEAU Belle qui tiens ma vie.xml</file>
-        <file>foundsuite/Adagio and Fugue in C minor, K.546.xml</file>
-        <file>foundsuite/An Chloe.xml</file>
-        <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
-        <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
-        <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
-        <file>foundsuite/Invention 1.xml</file>
-        <file>foundsuite/Invention 2.xml</file>
-        <!-- 144 more -->
-      </wild-files>
-      <synthetic-files count="0">
-      </synthetic-files>
-    </element>
-    <element name="system-distance" total-files="152" wild-files="152" synthetic-files="0">
-      <wild-files count="152">
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
         <file>foundsuite/ARBEAU Belle qui tiens ma vie.xml</file>
@@ -5438,6 +5319,125 @@
         <file>foundsuite/Invention 1.xml</file>
         <file>foundsuite/Invention 2.xml</file>
         <file>foundsuite/Invention 3.xml</file>
+        <!-- 145 more -->
+      </wild-files>
+      <synthetic-files count="2" min-version="3.0">
+        <file version="3.0">synthetic/left-divider.3.0.xml</file>
+        <file version="3.0">synthetic/right-divider.3.0.xml</file>
+      </synthetic-files>
+    </element>
+    <element name="bottom-margin" total-files="156" wild-files="156" synthetic-files="0">
+      <wild-files count="156">
+        <file>custom/musescore-slur-start-stop.musicxml</file>
+        <file>custom/systems-and-pages.xml</file>
+        <file>custom/transposition.musicxml</file>
+        <file>foundsuite/12 Horn Duets.xml</file>
+        <file>foundsuite/ARBEAU Belle qui tiens ma vie.xml</file>
+        <file>foundsuite/Adagio and Fugue in C minor, K.546.xml</file>
+        <file>foundsuite/An Chloe.xml</file>
+        <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
+        <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
+        <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
+        <file>foundsuite/Invention 1.xml</file>
+        <file>foundsuite/Invention 2.xml</file>
+        <!-- 144 more -->
+      </wild-files>
+      <synthetic-files count="0">
+      </synthetic-files>
+    </element>
+    <element name="page-margins" total-files="156" wild-files="156" synthetic-files="0">
+      <attributes>
+        <attribute name="type" wild-files="156" synthetic-files="0"/>
+      </attributes>
+      <wild-files count="156">
+        <file>custom/musescore-slur-start-stop.musicxml</file>
+        <file>custom/systems-and-pages.xml</file>
+        <file>custom/transposition.musicxml</file>
+        <file>foundsuite/12 Horn Duets.xml</file>
+        <file>foundsuite/ARBEAU Belle qui tiens ma vie.xml</file>
+        <file>foundsuite/Adagio and Fugue in C minor, K.546.xml</file>
+        <file>foundsuite/An Chloe.xml</file>
+        <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
+        <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
+        <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
+        <file>foundsuite/Invention 1.xml</file>
+        <file>foundsuite/Invention 2.xml</file>
+        <!-- 144 more -->
+      </wild-files>
+      <synthetic-files count="0">
+      </synthetic-files>
+    </element>
+    <element name="system-margins" total-files="156" wild-files="156" synthetic-files="0">
+      <wild-files count="156">
+        <file>custom/musescore-slur-start-stop.musicxml</file>
+        <file>custom/systems-and-pages.xml</file>
+        <file>foundsuite/12 Horn Duets.xml</file>
+        <file>foundsuite/ARBEAU Belle qui tiens ma vie.xml</file>
+        <file>foundsuite/Adagio and Fugue in C minor, K.546.xml</file>
+        <file>foundsuite/An Chloe.xml</file>
+        <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
+        <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
+        <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
+        <file>foundsuite/Invention 1.xml</file>
+        <file>foundsuite/Invention 2.xml</file>
+        <file>foundsuite/Invention 3.xml</file>
+        <!-- 144 more -->
+      </wild-files>
+      <synthetic-files count="0">
+      </synthetic-files>
+    </element>
+    <element name="top-margin" total-files="156" wild-files="156" synthetic-files="0">
+      <wild-files count="156">
+        <file>custom/musescore-slur-start-stop.musicxml</file>
+        <file>custom/systems-and-pages.xml</file>
+        <file>custom/transposition.musicxml</file>
+        <file>foundsuite/12 Horn Duets.xml</file>
+        <file>foundsuite/ARBEAU Belle qui tiens ma vie.xml</file>
+        <file>foundsuite/Adagio and Fugue in C minor, K.546.xml</file>
+        <file>foundsuite/An Chloe.xml</file>
+        <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
+        <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
+        <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
+        <file>foundsuite/Invention 1.xml</file>
+        <file>foundsuite/Invention 2.xml</file>
+        <!-- 144 more -->
+      </wild-files>
+      <synthetic-files count="0">
+      </synthetic-files>
+    </element>
+    <element name="top-system-distance" total-files="156" wild-files="156" synthetic-files="0">
+      <wild-files count="156">
+        <file>custom/musescore-slur-start-stop.musicxml</file>
+        <file>custom/systems-and-pages.xml</file>
+        <file>foundsuite/12 Horn Duets.xml</file>
+        <file>foundsuite/ARBEAU Belle qui tiens ma vie.xml</file>
+        <file>foundsuite/Adagio and Fugue in C minor, K.546.xml</file>
+        <file>foundsuite/An Chloe.xml</file>
+        <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
+        <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
+        <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
+        <file>foundsuite/Invention 1.xml</file>
+        <file>foundsuite/Invention 2.xml</file>
+        <file>foundsuite/Invention 3.xml</file>
+        <!-- 144 more -->
+      </wild-files>
+      <synthetic-files count="0">
+      </synthetic-files>
+    </element>
+    <element name="system-distance" total-files="152" wild-files="152" synthetic-files="0">
+      <wild-files count="152">
+        <file>custom/systems-and-pages.xml</file>
+        <file>foundsuite/12 Horn Duets.xml</file>
+        <file>foundsuite/ARBEAU Belle qui tiens ma vie.xml</file>
+        <file>foundsuite/Adagio and Fugue in C minor, K.546.xml</file>
+        <file>foundsuite/An Chloe.xml</file>
+        <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
+        <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
+        <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
+        <file>foundsuite/Invention 1.xml</file>
+        <file>foundsuite/Invention 2.xml</file>
+        <file>foundsuite/Invention 3.xml</file>
+        <file>foundsuite/Invention_10.xml</file>
         <!-- 140 more -->
       </wild-files>
       <synthetic-files count="0">
@@ -5462,7 +5462,6 @@
         <attribute name="smufl" wild-files="0" synthetic-files="1"/>
       </attributes>
       <wild-files count="149">
-        <file>custom/slurs_overbars.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
         <file>foundsuite/ARBEAU Belle qui tiens ma vie.xml</file>
         <file>foundsuite/Adagio and Fugue in C minor, K.546.xml</file>
@@ -5474,6 +5473,7 @@
         <file>foundsuite/Invention 2.xml</file>
         <file>foundsuite/Invention 3.xml</file>
         <file>foundsuite/Invention_10.xml</file>
+        <file>foundsuite/Invention_11.xml</file>
         <!-- 137 more -->
       </wild-files>
       <synthetic-files count="2" min-version="3.0">
@@ -5546,7 +5546,6 @@
         <attribute name="time-only" wild-files="0" synthetic-files="2"/>
       </attributes>
       <wild-files count="144">
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>foundsuite/Adagio and Fugue in C minor, K.546.xml</file>
         <file>foundsuite/An Chloe.xml</file>
@@ -5558,6 +5557,7 @@
         <file>foundsuite/O_Holy_Night-Adam-1871.xml</file>
         <file>foundsuite/O_Holy_Night-Adam-1974.xml</file>
         <file>foundsuite/O_Holy_Night.xml</file>
+        <file>foundsuite/PepAiraSco.xml</file>
         <!-- 132 more -->
       </wild-files>
       <synthetic-files count="9" min-version="3.0">
@@ -5693,7 +5693,6 @@
       </attributes>
       <wild-files count="138">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>custom/transposition.musicxml</file>
         <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
@@ -5704,6 +5703,7 @@
         <file>foundsuite/Invention_10.xml</file>
         <file>foundsuite/Invention_11.xml</file>
         <file>foundsuite/Invention_12.xml</file>
+        <file>foundsuite/Invention_13.xml</file>
         <!-- 126 more -->
       </wild-files>
       <synthetic-files count="0">
@@ -5711,7 +5711,6 @@
     </element>
     <element name="backup" total-files="136" wild-files="136" synthetic-files="0">
       <wild-files count="136">
-        <file>custom/slurs_overbars.musicxml</file>
         <file>foundsuite/ARBEAU Belle qui tiens ma vie.xml</file>
         <file>foundsuite/An Chloe.xml</file>
         <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
@@ -5723,6 +5722,7 @@
         <file>foundsuite/Invention_10.xml</file>
         <file>foundsuite/Invention_11.xml</file>
         <file>foundsuite/Invention_12.xml</file>
+        <file>foundsuite/Invention_13.xml</file>
         <!-- 124 more -->
       </wild-files>
       <synthetic-files count="0">
@@ -5751,7 +5751,6 @@
         <attribute name="space-length" wild-files="0" synthetic-files="2"/>
       </attributes>
       <wild-files count="134">
-        <file>custom/slurs_overbars.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
         <file>foundsuite/Adagio and Fugue in C minor, K.546.xml</file>
         <file>foundsuite/An Chloe.xml</file>
@@ -5763,6 +5762,7 @@
         <file>foundsuite/Invention 3.xml</file>
         <file>foundsuite/Invention_10.xml</file>
         <file>foundsuite/Invention_11.xml</file>
+        <file>foundsuite/Invention_12.xml</file>
         <!-- 122 more -->
       </wild-files>
       <synthetic-files count="4" min-version="3.0">
@@ -5805,7 +5805,6 @@
       </attributes>
       <wild-files count="132">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
@@ -5816,6 +5815,7 @@
         <file>foundsuite/Invention_11.xml</file>
         <file>foundsuite/Invention_12.xml</file>
         <file>foundsuite/Invention_13.xml</file>
+        <file>foundsuite/Invention_14.xml</file>
         <!-- 120 more -->
       </wild-files>
       <synthetic-files count="1" min-version="3.0">
@@ -6411,7 +6411,6 @@
         <attribute name="font-weight" wild-files="0" synthetic-files="1"/>
       </attributes>
       <wild-files count="94">
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
@@ -6423,6 +6422,7 @@
         <file>kiritan_singing/kiritan_singing_02.xml</file>
         <file>kiritan_singing/kiritan_singing_03.xml</file>
         <file>kiritan_singing/kiritan_singing_04.xml</file>
+        <file>kiritan_singing/kiritan_singing_05.xml</file>
         <!-- 82 more -->
       </wild-files>
       <synthetic-files count="1" min-version="3.0">
@@ -6431,7 +6431,6 @@
     </element>
     <element name="appearance" total-files="95" wild-files="93" synthetic-files="2" min-synthetic-version="3.0">
       <wild-files count="93">
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
@@ -6443,6 +6442,7 @@
         <file>kiritan_singing/kiritan_singing_02.xml</file>
         <file>kiritan_singing/kiritan_singing_03.xml</file>
         <file>kiritan_singing/kiritan_singing_04.xml</file>
+        <file>kiritan_singing/kiritan_singing_05.xml</file>
         <!-- 81 more -->
       </wild-files>
       <synthetic-files count="2" min-version="3.0">
@@ -6455,7 +6455,6 @@
         <attribute name="type" wild-files="93" synthetic-files="0"/>
       </attributes>
       <wild-files count="93">
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
@@ -6467,6 +6466,7 @@
         <file>kiritan_singing/kiritan_singing_02.xml</file>
         <file>kiritan_singing/kiritan_singing_03.xml</file>
         <file>kiritan_singing/kiritan_singing_04.xml</file>
+        <file>kiritan_singing/kiritan_singing_05.xml</file>
         <!-- 81 more -->
       </wild-files>
       <synthetic-files count="0">
@@ -6477,7 +6477,6 @@
         <attribute name="type" wild-files="93" synthetic-files="0"/>
       </attributes>
       <wild-files count="93">
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
@@ -6489,6 +6488,7 @@
         <file>kiritan_singing/kiritan_singing_02.xml</file>
         <file>kiritan_singing/kiritan_singing_03.xml</file>
         <file>kiritan_singing/kiritan_singing_04.xml</file>
+        <file>kiritan_singing/kiritan_singing_05.xml</file>
         <!-- 81 more -->
       </wild-files>
       <synthetic-files count="0">
@@ -6602,7 +6602,6 @@
         <attribute name="type" wild-files="88" synthetic-files="0"/>
       </attributes>
       <wild-files count="88">
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>foundsuite/PepAiraSco.xml</file>
         <file>foundsuite/RonCLunSco.xml</file>
@@ -6614,6 +6613,7 @@
         <file>kiritan_singing/kiritan_singing_06.xml</file>
         <file>kiritan_singing/kiritan_singing_07.xml</file>
         <file>kiritan_singing/kiritan_singing_08.xml</file>
+        <file>kiritan_singing/kiritan_singing_09.xml</file>
         <!-- 76 more -->
       </wild-files>
       <synthetic-files count="0">
@@ -6722,7 +6722,6 @@
       </attributes>
       <wild-files count="81">
         <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/slurs_overbars.musicxml</file>
         <file>foundsuite/12 Horn Duets.xml</file>
         <file>foundsuite/ARBEAU Belle qui tiens ma vie.xml</file>
         <file>foundsuite/An Chloe.xml</file>
@@ -6733,6 +6732,7 @@
         <file>foundsuite/O_Holy_Night-Adam-1871.xml</file>
         <file>foundsuite/O_Holy_Night-Adam-1974.xml</file>
         <file>foundsuite/O_Holy_Night.xml</file>
+        <file>foundsuite/PepAiraSco.xml</file>
         <!-- 69 more -->
       </wild-files>
       <synthetic-files count="2" min-version="3.0">
@@ -6859,7 +6859,6 @@
         <attribute name="id" wild-files="0" synthetic-files="1"/>
       </attributes>
       <wild-files count="74">
-        <file>custom/slurs_overbars.musicxml</file>
         <file>foundsuite/Adagio and Fugue in C minor, K.546.xml</file>
         <file>foundsuite/An Chloe.xml</file>
         <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
@@ -6871,6 +6870,7 @@
         <file>foundsuite/RonCLunSco.xml</file>
         <file>foundsuite/SCHUBERT An die Sonne.xml</file>
         <file>foundsuite/Yeah.xml</file>
+        <file>ksuite/k007a_Notations_Dynamics.xml</file>
         <!-- 62 more -->
       </wild-files>
       <synthetic-files count="6" min-version="3.0">
@@ -7115,7 +7115,6 @@
         <attribute name="space-length" wild-files="0" synthetic-files="2"/>
       </attributes>
       <wild-files count="50">
-        <file>custom/slurs_overbars.musicxml</file>
         <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
@@ -7127,6 +7126,7 @@
         <file>lysuite/ly31a_Directions.xml</file>
         <file>lysuite/ly33a_Spanners.xml</file>
         <file>lysuite/ly43e_Multistaff_ClefDynamics.xml</file>
+        <file>mjbsuite/FreezingSmall.xml</file>
         <!-- 38 more -->
       </wild-files>
       <synthetic-files count="2" min-version="3.0">
@@ -7231,7 +7231,6 @@
     </element>
     <element name="display-octave" total-files="45" wild-files="45" synthetic-files="0">
       <wild-files count="45">
-        <file>custom/slurs_overbars.musicxml</file>
         <file>foundsuite/Moments Musicaux Op16 No4.xml</file>
         <file>foundsuite/O_Holy_Night.xml</file>
         <file>foundsuite/PepAiraSco.xml</file>
@@ -7243,6 +7242,7 @@
         <file>lysuite/ly02b_Rests_PitchedRests.xml</file>
         <file>lysuite/ly22d_Parenthesized_Noteheads.xml</file>
         <file>lysuite/ly41c_StaffGroups.xml</file>
+        <file>lysuite/ly42a_MultiVoice_TwoVoicesOnStaff_Lyrics.xml</file>
         <!-- 33 more -->
       </wild-files>
       <synthetic-files count="0">
@@ -7250,7 +7250,6 @@
     </element>
     <element name="display-step" total-files="45" wild-files="45" synthetic-files="0">
       <wild-files count="45">
-        <file>custom/slurs_overbars.musicxml</file>
         <file>foundsuite/Moments Musicaux Op16 No4.xml</file>
         <file>foundsuite/O_Holy_Night.xml</file>
         <file>foundsuite/PepAiraSco.xml</file>
@@ -7262,6 +7261,7 @@
         <file>lysuite/ly02b_Rests_PitchedRests.xml</file>
         <file>lysuite/ly22d_Parenthesized_Noteheads.xml</file>
         <file>lysuite/ly41c_StaffGroups.xml</file>
+        <file>lysuite/ly42a_MultiVoice_TwoVoicesOnStaff_Lyrics.xml</file>
         <!-- 33 more -->
       </wild-files>
       <synthetic-files count="0">
@@ -7581,7 +7581,6 @@
     </element>
     <element name="mf" total-files="36" wild-files="36" synthetic-files="0">
       <wild-files count="36">
-        <file>custom/slurs_overbars.musicxml</file>
         <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <file>foundsuite/Invention 1.xml</file>
@@ -7593,6 +7592,7 @@
         <file>ksuite/k007a_Notations_Dynamics.xml</file>
         <file>ksuite/k007c_Directions_Dynamics.xml</file>
         <file>ksuite/temp.xml</file>
+        <file>lysuite/ly31a_Directions.xml</file>
         <!-- 24 more -->
       </wild-files>
       <synthetic-files count="0">
@@ -9564,13 +9564,13 @@
     </element>
     <element name="midi-bank" total-files="9" wild-files="9" synthetic-files="0">
       <wild-files count="9">
-        <file>custom/slurs_overbars.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
         <file>ksuite/k011a_Tuplets.xml</file>
         <file>ksuite/k012a_Tempo_Markings.xml</file>
         <file>mjbsuite/FreezingSmall.xml</file>
         <file>mjbsuite/freezing.old.xml</file>
         <file>mjbsuite/freezing.xml</file>
+        <file>rpatters1/slurs_overbars.musicxml</file>
         <file>rpatters1/timesigs_composite-ref-modified.musicxml</file>
         <file>rpatters1/timesigs_composite-ref.musicxml</file>
       </wild-files>

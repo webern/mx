@@ -8,6 +8,7 @@
 #include "mx/api/ColorData.h"
 #include "mx/api/LineData.h"
 #include "mx/api/PositionData.h"
+#include "mx/api/SpannerNumber.h"
 
 namespace mx
 {

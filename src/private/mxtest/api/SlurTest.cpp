@@ -33,9 +33,9 @@ TEST(startStop, Slurs)
     auto voice = staff.voices.at(0);
     auto note = voice.notes.at(3);
     auto stop = note.noteAttachmentData.curveStops.at(0);
-    CHECK(SpannerNumber::makeLevel(1) == stop.number);
+    CHECK(SpannerNumber(1) == stop.number);
     auto start = note.noteAttachmentData.curveStarts.at(0);
-    CHECK(SpannerNumber::makeLevel(1) == start.number);
+    CHECK(SpannerNumber(1) == start.number);
 
     // Write to XML and assert that stop happens before start
     const auto xml = toXml(scoreData);

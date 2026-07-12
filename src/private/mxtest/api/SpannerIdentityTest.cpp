@@ -129,8 +129,7 @@ inline ScoreData makeVoiceReorderingScore(const SpannerNumber &inA, const Spanne
 TEST(identityAssignsNumbersFromSerializationOrder, SpannerIdentity)
 {
     using namespace spannerIdentityTest;
-    const auto score = makeVoiceReorderingScore(SpannerNumber::makeIdentity("a"), SpannerNumber::makeIdentity("b"),
-                                                SpannerNumber::makeIdentity("c"));
+    const auto score = makeVoiceReorderingScore(SpannerNumber("a"), SpannerNumber("b"), SpannerNumber("c"));
 
     const auto xml = toXml(score);
     REQUIRE(!xml.empty());
@@ -145,22 +144,22 @@ TEST(identityAssignsNumbersFromSerializationOrder, SpannerIdentity)
 
     // b
     REQUIRE(m1Voice2.notes.at(0).noteAttachmentData.curveStarts.size() == 1);
-    CHECK(SpannerNumber::makeLevel(1) == m1Voice2.notes.at(0).noteAttachmentData.curveStarts.at(0).number);
+    CHECK(SpannerNumber(1) == m1Voice2.notes.at(0).noteAttachmentData.curveStarts.at(0).number);
     REQUIRE(m1Voice2.notes.at(1).noteAttachmentData.curveStops.size() == 1);
-    CHECK(SpannerNumber::makeLevel(1) == m1Voice2.notes.at(1).noteAttachmentData.curveStops.at(0).number);
+    CHECK(SpannerNumber(1) == m1Voice2.notes.at(1).noteAttachmentData.curveStops.at(0).number);
 
     // a: reuses 1 because b released it earlier in the stream
     REQUIRE(m1Voice2.notes.at(2).noteAttachmentData.curveStarts.size() == 1);
-    CHECK(SpannerNumber::makeLevel(1) == m1Voice2.notes.at(2).noteAttachmentData.curveStarts.at(0).number);
+    CHECK(SpannerNumber(1) == m1Voice2.notes.at(2).noteAttachmentData.curveStarts.at(0).number);
     REQUIRE(m2Voice2.notes.at(0).noteAttachmentData.curveStops.size() == 1);
-    CHECK(SpannerNumber::makeLevel(1) == m2Voice2.notes.at(0).noteAttachmentData.curveStops.at(0).number);
+    CHECK(SpannerNumber(1) == m2Voice2.notes.at(0).noteAttachmentData.curveStops.at(0).number);
 
     // c: overlaps a in the stream (voice 1 of measure 2 is serialized before
     // voice 2 carries a's stop) so it must not share a's number
     REQUIRE(m2Voice1.notes.at(1).noteAttachmentData.curveStarts.size() == 1);
-    CHECK(SpannerNumber::makeLevel(2) == m2Voice1.notes.at(1).noteAttachmentData.curveStarts.at(0).number);
+    CHECK(SpannerNumber(2) == m2Voice1.notes.at(1).noteAttachmentData.curveStarts.at(0).number);
     REQUIRE(m2Voice1.notes.at(2).noteAttachmentData.curveStops.size() == 1);
-    CHECK(SpannerNumber::makeLevel(2) == m2Voice1.notes.at(2).noteAttachmentData.curveStops.at(0).number);
+    CHECK(SpannerNumber(2) == m2Voice1.notes.at(2).noteAttachmentData.curveStops.at(0).number);
 }
 
 T_END
@@ -170,8 +169,7 @@ T_END
 TEST(explicitAndIdentityShareThePool, SpannerIdentity)
 {
     using namespace spannerIdentityTest;
-    const auto score = makeVoiceReorderingScore(SpannerNumber::makeIdentity("a"), SpannerNumber::makeIdentity("b"),
-                                                SpannerNumber::makeLevel(1));
+    const auto score = makeVoiceReorderingScore(SpannerNumber("a"), SpannerNumber("b"), SpannerNumber(1));
 
     const auto xml = toXml(score);
     REQUIRE(!xml.empty());
@@ -184,16 +182,16 @@ TEST(explicitAndIdentityShareThePool, SpannerIdentity)
     const auto &m2Voice2 = measure2.staves.at(0).voices.at(1);
 
     // c is explicit and emitted verbatim
-    CHECK(SpannerNumber::makeLevel(1) == m2Voice1.notes.at(1).noteAttachmentData.curveStarts.at(0).number);
-    CHECK(SpannerNumber::makeLevel(1) == m2Voice1.notes.at(2).noteAttachmentData.curveStops.at(0).number);
+    CHECK(SpannerNumber(1) == m2Voice1.notes.at(1).noteAttachmentData.curveStarts.at(0).number);
+    CHECK(SpannerNumber(1) == m2Voice1.notes.at(2).noteAttachmentData.curveStops.at(0).number);
 
     // a's stream extent covers c's reservation of 1, so a takes 2
-    CHECK(SpannerNumber::makeLevel(2) == m1Voice2.notes.at(2).noteAttachmentData.curveStarts.at(0).number);
-    CHECK(SpannerNumber::makeLevel(2) == m2Voice2.notes.at(0).noteAttachmentData.curveStops.at(0).number);
+    CHECK(SpannerNumber(2) == m1Voice2.notes.at(2).noteAttachmentData.curveStarts.at(0).number);
+    CHECK(SpannerNumber(2) == m2Voice2.notes.at(0).noteAttachmentData.curveStops.at(0).number);
 
     // b does not overlap the reservation and still gets 1
-    CHECK(SpannerNumber::makeLevel(1) == m1Voice2.notes.at(0).noteAttachmentData.curveStarts.at(0).number);
-    CHECK(SpannerNumber::makeLevel(1) == m1Voice2.notes.at(1).noteAttachmentData.curveStops.at(0).number);
+    CHECK(SpannerNumber(1) == m1Voice2.notes.at(0).noteAttachmentData.curveStarts.at(0).number);
+    CHECK(SpannerNumber(1) == m1Voice2.notes.at(1).noteAttachmentData.curveStops.at(0).number);
 }
 
 T_END
@@ -217,16 +215,16 @@ TEST(slurAndTiePoolsAreIndependent, SpannerIdentity)
     voice.notes.push_back(makeQuarter(ticksPerQuarter, Step::c, 4));
 
     CurveStart slurStart{CurveType::slur};
-    slurStart.number = SpannerNumber::makeIdentity("s");
+    slurStart.number = SpannerNumber("s");
     CurveStart tieStart{CurveType::tie};
-    tieStart.number = SpannerNumber::makeIdentity("t");
+    tieStart.number = SpannerNumber("t");
     voice.notes.at(0).noteAttachmentData.curveStarts.push_back(slurStart);
     voice.notes.at(0).noteAttachmentData.curveStarts.push_back(tieStart);
 
     CurveStop slurStop{CurveType::slur};
-    slurStop.number = SpannerNumber::makeIdentity("s");
+    slurStop.number = SpannerNumber("s");
     CurveStop tieStop{CurveType::tie};
-    tieStop.number = SpannerNumber::makeIdentity("t");
+    tieStop.number = SpannerNumber("t");
     voice.notes.at(1).noteAttachmentData.curveStops.push_back(slurStop);
     voice.notes.at(1).noteAttachmentData.curveStops.push_back(tieStop);
 
@@ -238,12 +236,12 @@ TEST(slurAndTiePoolsAreIndependent, SpannerIdentity)
     REQUIRE(notes.at(0).noteAttachmentData.curveStarts.size() == 2);
     for (const auto &start : notes.at(0).noteAttachmentData.curveStarts)
     {
-        CHECK(SpannerNumber::makeLevel(1) == start.number);
+        CHECK(SpannerNumber(1) == start.number);
     }
     REQUIRE(notes.at(1).noteAttachmentData.curveStops.size() == 2);
     for (const auto &stop : notes.at(1).noteAttachmentData.curveStops)
     {
-        CHECK(SpannerNumber::makeLevel(1) == stop.number);
+        CHECK(SpannerNumber(1) == stop.number);
     }
 }
 
@@ -273,14 +271,14 @@ TEST(wedgeNumbersRoundTrip, SpannerIdentity)
     startDirection.tickTimePosition = 0;
     WedgeStart wedgeStart;
     wedgeStart.wedgeType = WedgeType::crescendo;
-    wedgeStart.number = SpannerNumber::makeLevel(3);
+    wedgeStart.number = SpannerNumber(3);
     startDirection.wedgeStarts.push_back(wedgeStart);
     staff.directions.push_back(startDirection);
 
     DirectionData stopDirection;
     stopDirection.tickTimePosition = 2 * ticksPerQuarter;
     WedgeStop wedgeStop;
-    wedgeStop.number = SpannerNumber::makeLevel(3);
+    wedgeStop.number = SpannerNumber(3);
     stopDirection.wedgeStops.push_back(wedgeStop);
     staff.directions.push_back(stopDirection);
 
@@ -296,12 +294,12 @@ TEST(wedgeNumbersRoundTrip, SpannerIdentity)
         for (const auto &start : direction.wedgeStarts)
         {
             foundStart = true;
-            CHECK(SpannerNumber::makeLevel(3) == start.number);
+            CHECK(SpannerNumber(3) == start.number);
         }
         for (const auto &stop : direction.wedgeStops)
         {
             foundStop = true;
-            CHECK(SpannerNumber::makeLevel(3) == stop.number);
+            CHECK(SpannerNumber(3) == stop.number);
         }
     }
     CHECK(foundStart);

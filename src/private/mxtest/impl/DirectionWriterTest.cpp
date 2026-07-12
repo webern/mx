@@ -29,7 +29,7 @@ TEST(ottavaStartStop, DirectionWriter)
 
     directionData.ottavaStops.emplace_back(api::OttavaStop{});
     auto &stop = directionData.ottavaStops.back();
-    stop.spannerStop.number = api::SpannerNumber::makeLevel(2);
+    stop.spannerStop.number = api::SpannerNumber(2);
     stop.size = 15;
 
     directionData.ottavaStarts.emplace_back(api::OttavaStart{});
@@ -51,7 +51,7 @@ TEST(ottavaStartStop, DirectionWriter)
     const auto roundTripped = reader.getDirectionData();
     REQUIRE(roundTripped.ottavaStops.size() == 1);
     const auto &roundTrippedStop = roundTripped.ottavaStops.front();
-    CHECK(api::SpannerNumber::makeLevel(2) == roundTrippedStop.spannerStop.number);
+    CHECK(api::SpannerNumber(2) == roundTrippedStop.spannerStop.number);
     CHECK(roundTrippedStop.size.has_value());
     CHECK_EQUAL(15, *roundTrippedStop.size);
 }

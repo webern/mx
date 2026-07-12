@@ -6,9 +6,7 @@
 #ifdef MX_COMPILE_API_TESTS
 
 #include "cpul/cpulTestHarness.h"
-#include "mx/api/ApiCommon.h"
-
-#include <stdexcept>
+#include "mx/api/SpannerNumber.h"
 
 using namespace mx::api;
 
@@ -23,24 +21,24 @@ TEST(defaultIsUnspecified, SpannerNumber)
 
 T_END
 
-TEST(makeLevelRoundTrip, SpannerNumber)
+TEST(levelRoundTrip, SpannerNumber)
 {
-    const auto lowest = SpannerNumber::makeLevel(1);
+    const SpannerNumber lowest{1};
     CHECK(SpannerNumber::Kind::explicitLevel == lowest.kind());
     CHECK(lowest.isExplicit());
     CHECK(!lowest.isUnspecified());
     CHECK(!lowest.isIdentity());
     CHECK_EQUAL(1, lowest.level());
 
-    const auto highest = SpannerNumber::makeLevel(16);
+    const SpannerNumber highest{16};
     CHECK_EQUAL(16, highest.level());
 }
 
 T_END
 
-TEST(makeIdentityRoundTrip, SpannerNumber)
+TEST(identityRoundTrip, SpannerNumber)
 {
-    const auto number = SpannerNumber::makeIdentity("the-id");
+    const SpannerNumber number{std::string{"the-id"}};
     CHECK(SpannerNumber::Kind::identity == number.kind());
     CHECK(number.isIdentity());
     CHECK(!number.isUnspecified());
@@ -50,33 +48,39 @@ TEST(makeIdentityRoundTrip, SpannerNumber)
 
 T_END
 
-TEST(makeLevelRangePrecondition, SpannerNumber)
+// Out-of-range levels and empty ids are not programming errors here: they
+// collapse to unspecified, the same way an unrepresentable ComplexTimeSignature
+// collapses in TimeChoice. Nothing throws.
+TEST(outOfRangeLevelCollapsesToUnspecified, SpannerNumber)
 {
-    CHECK_THROWS_AS(SpannerNumber::makeLevel(0), std::logic_error);
-    CHECK_THROWS_AS(SpannerNumber::makeLevel(17), std::logic_error);
-    CHECK_THROWS_AS(SpannerNumber::makeLevel(-1), std::logic_error);
+    CHECK(SpannerNumber{0}.isUnspecified());
+    CHECK(SpannerNumber{17}.isUnspecified());
+    CHECK(SpannerNumber{-1}.isUnspecified());
 }
 
 T_END
 
-TEST(makeIdentityEmptyPrecondition, SpannerNumber)
+TEST(emptyIdentityCollapsesToUnspecified, SpannerNumber)
 {
-    CHECK_THROWS_AS(SpannerNumber::makeIdentity(""), std::logic_error);
+    CHECK(SpannerNumber{std::string{}}.isUnspecified());
 }
 
 T_END
 
-TEST(wrongKindAccessors, SpannerNumber)
+// Calling an accessor for the wrong kind returns a harmless default instead of
+// throwing: -1 (NUMBER_LEVEL_UNSPECIFIED) for level(), an empty string for
+// identity().
+TEST(wrongKindAccessorsReturnDefaults, SpannerNumber)
 {
     const SpannerNumber unspecified;
-    CHECK_THROWS_AS(unspecified.level(), std::logic_error);
-    CHECK_THROWS_AS(unspecified.identity(), std::logic_error);
+    CHECK_EQUAL(NUMBER_LEVEL_UNSPECIFIED, unspecified.level());
+    CHECK_EQUAL(std::string{}, unspecified.identity());
 
-    const auto level = SpannerNumber::makeLevel(3);
-    CHECK_THROWS_AS(level.identity(), std::logic_error);
+    const SpannerNumber level{3};
+    CHECK_EQUAL(std::string{}, level.identity());
 
-    const auto identity = SpannerNumber::makeIdentity("x");
-    CHECK_THROWS_AS(identity.level(), std::logic_error);
+    const SpannerNumber identity{std::string{"x"}};
+    CHECK_EQUAL(NUMBER_LEVEL_UNSPECIFIED, identity.level());
 }
 
 T_END
@@ -85,12 +89,12 @@ TEST(equality, SpannerNumber)
 {
     const SpannerNumber unspecifiedA;
     const SpannerNumber unspecifiedB;
-    const auto level2 = SpannerNumber::makeLevel(2);
-    const auto level2Again = SpannerNumber::makeLevel(2);
-    const auto level3 = SpannerNumber::makeLevel(3);
-    const auto identityA = SpannerNumber::makeIdentity("a");
-    const auto identityAAgain = SpannerNumber::makeIdentity("a");
-    const auto identityB = SpannerNumber::makeIdentity("b");
+    const SpannerNumber level2{2};
+    const SpannerNumber level2Again{2};
+    const SpannerNumber level3{3};
+    const SpannerNumber identityA{std::string{"a"}};
+    const SpannerNumber identityAAgain{std::string{"a"}};
+    const SpannerNumber identityB{std::string{"b"}};
 
     // same kind
     CHECK(unspecifiedA == unspecifiedB);

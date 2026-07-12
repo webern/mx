@@ -84,7 +84,7 @@ TEST(ottavaStart8vaAnd8vb, DirectionReader)
     ottavaStart = directionData.ottavaStarts.at(1);
     CHECK_EQUAL(tickTimePosition, ottavaStart.spannerStart.tickTimePosition);
     CHECK(api::OttavaType::o8va == ottavaStart.ottavaType);
-    CHECK(api::SpannerNumber::makeLevel(3) == ottavaStart.spannerStart.number);
+    CHECK(api::SpannerNumber(3) == ottavaStart.spannerStart.number);
 }
 
 T_END

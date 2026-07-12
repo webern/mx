@@ -8,6 +8,7 @@
 #include "mx/api/ColorData.h"
 #include "mx/api/LineData.h"
 #include "mx/api/PositionData.h"
+#include "mx/api/SpannerNumber.h"
 
 // MusicXML Documentation for Bezier Attributes Group
 // The bezier attribute group is used to indicate the curvature of slurs

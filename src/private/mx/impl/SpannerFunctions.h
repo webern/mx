@@ -24,7 +24,7 @@ template <typename ATTRIBUTES_TYPE> api::SpannerStart getSpannerStart(const ATTR
     api::SpannerStart start;
     if (checkHasNumber(&inAttributes))
     {
-        start.number = api::SpannerNumber::makeLevel(checkNumber(&inAttributes));
+        start.number = api::SpannerNumber(checkNumber(&inAttributes));
     }
     start.positionData = getPositionData(inAttributes);
     start.printData = getPrintData(inAttributes);
@@ -37,7 +37,7 @@ template <typename ATTRIBUTES_TYPE> api::SpannerStop getSpannerStop(const ATTRIB
     api::SpannerStop stop;
     if (checkHasNumber(&inAttributes))
     {
-        stop.number = api::SpannerNumber::makeLevel(checkNumber(&inAttributes));
+        stop.number = api::SpannerNumber(checkNumber(&inAttributes));
     }
     stop.positionData = getPositionData(inAttributes);
     stop.lineData = getLineData(inAttributes);

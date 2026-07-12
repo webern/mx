@@ -48,7 +48,7 @@ inline mx::api::ScoreData apiK009bSlurAttributesScoreData()
     note->pitchData.accidental = Accidental::none;
     note->noteAttachmentData.curveStarts.emplace_back(CurveType::slur);
     auto &slurStart = note->noteAttachmentData.curveStarts.back();
-    slurStart.number = SpannerNumber::makeLevel(1);
+    slurStart.number = SpannerNumber(1);
     slurStart.curvePoints.isBezierXSpecified = true;
     slurStart.curvePoints.bezierX = 1.0;
     slurStart.curvePoints.isBezierYSpecified = true;
@@ -76,7 +76,7 @@ inline mx::api::ScoreData apiK009bSlurAttributesScoreData()
     note->pitchData.accidental = Accidental::none;
     note->noteAttachmentData.curveContinuations.emplace_back(CurveType::slur);
     auto &continue1 = note->noteAttachmentData.curveContinuations.back();
-    continue1.number = SpannerNumber::makeLevel(1);
+    continue1.number = SpannerNumber(1);
     continue1.isBezierX2Specified = true;
     continue1.bezierX2 = 5.0;
     continue1.isBezierY2Specified = true;
@@ -98,7 +98,7 @@ inline mx::api::ScoreData apiK009bSlurAttributesScoreData()
     note->pitchData.accidental = Accidental::none;
     note->noteAttachmentData.curveContinuations.emplace_back(CurveType::slur);
     auto &continue2 = note->noteAttachmentData.curveContinuations.back();
-    continue2.number = SpannerNumber::makeLevel(1);
+    continue2.number = SpannerNumber(1);
     continue2.curvePoints.isBezierXSpecified = true;
     continue2.curvePoints.bezierX = 9.0;
     continue2.curvePoints.isBezierYSpecified = true;
@@ -120,7 +120,7 @@ inline mx::api::ScoreData apiK009bSlurAttributesScoreData()
     note->pitchData.accidental = Accidental::none;
     note->noteAttachmentData.curveStops.emplace_back(CurveType::slur);
     auto &end = note->noteAttachmentData.curveStops.back();
-    end.number = SpannerNumber::makeLevel(1);
+    end.number = SpannerNumber(1);
     end.curvePoints.isBezierXSpecified = true;
     end.curvePoints.bezierX = 53.0;
     end.curvePoints.isBezierYSpecified = true;

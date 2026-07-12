@@ -45,7 +45,7 @@ template <typename T> T seed()
 api::CurveStart seedStart(api::CurveType t)
 {
     api::CurveStart c{t};
-    c.number = api::SpannerNumber::makeLevel(2);
+    c.number = api::SpannerNumber(2);
     c.curvePoints.isBezierOffsetSpecified = true;
     c.curvePoints.bezierOffset = 1.0;
     c.curvePoints.isBezierXSpecified = true;
@@ -78,7 +78,7 @@ api::CurveStart seedStart(api::CurveType t)
 api::CurveContinue seedContinue(api::CurveType t)
 {
     api::CurveContinue c{t};
-    c.number = api::SpannerNumber::makeLevel(2);
+    c.number = api::SpannerNumber(2);
     c.curvePoints.isBezierOffsetSpecified = true;
     c.curvePoints.bezierOffset = 1.0;
     c.curvePoints.isBezierXSpecified = true;
@@ -106,7 +106,7 @@ api::CurveContinue seedContinue(api::CurveType t)
 api::CurveStop seedStop(api::CurveType t)
 {
     api::CurveStop c{t};
-    c.number = api::SpannerNumber::makeLevel(2);
+    c.number = api::SpannerNumber(2);
     c.curvePoints.isBezierOffsetSpecified = true;
     c.curvePoints.bezierOffset = 1.0;
     c.curvePoints.isBezierXSpecified = true;
@@ -143,7 +143,7 @@ TEST(parseCurveStart_number, CurveFunctions)
     using namespace mx;
     auto e = seed<core::Tied>();
     auto c = impl::parseCurveStart(e);
-    CHECK(api::SpannerNumber::makeLevel(2) == c.number);
+    CHECK(api::SpannerNumber(2) == c.number);
 }
 
 T_END
@@ -317,7 +317,7 @@ TEST(parseCurveContinue_number, CurveFunctions)
     using namespace mx;
     auto e = seed<core::Tied>();
     auto c = impl::parseCurveContinue(e);
-    CHECK(api::SpannerNumber::makeLevel(2) == c.number);
+    CHECK(api::SpannerNumber(2) == c.number);
 }
 
 T_END
@@ -461,7 +461,7 @@ TEST(parseCurveStop_number, CurveFunctions)
     using namespace mx;
     auto e = seed<core::Tied>();
     auto c = impl::parseCurveStop(e);
-    CHECK(api::SpannerNumber::makeLevel(2) == c.number);
+    CHECK(api::SpannerNumber(2) == c.number);
 }
 
 T_END

@@ -325,4 +325,4 @@ rpatters1/timesigs_composite-ref-modified.musicxml
 # assignment): two slurs that do not overlap in musical time but do overlap in
 # the serialized stream once voice 1 is written ahead of voice 2, plus a wedge.
 # Pins explicit slur/wedge numbers surviving read -> write -> read verbatim.
-custom/slurs_overbars.musicxml
+rpatters1/slurs_overbars.musicxml
