@@ -26,7 +26,7 @@ read them through the api.
 - Never write from the harness's viewpoint. "The source", "preserved on round-trip", "populated
   by the reader" are wrong unless the field truly records non-semantic source fidelity (a
   principle-7 knob) -- then say so plainly ("Do NOT populate this when authoring").
-- Do not document what is not modeled. Absence of a feature is rarely a decision; listing what
+- Do not document what is not modeled; listing what
   isn't there is noise.
 - No separator/banner comments.
 
