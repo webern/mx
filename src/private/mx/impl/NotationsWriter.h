@@ -27,6 +27,7 @@ class NotationsWriter
   private:
     const api::NoteData &myNoteData;
     const MeasureCursor &myCursor;
+    const ScoreWriter &myScoreWriter;
     const Converter myConverter;
 
   private:

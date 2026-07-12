@@ -326,3 +326,9 @@ rpatters1/timesigs_composite-ref-modified.musicxml
 # of the comparison (see data/README.md's Normalization pipeline); the
 # fixture itself is untouched.
 rpatters1/timesigs_composite-ref.musicxml
+
+# The issue #297 spanner-number scenario (unified SpannerNumber + writer-side
+# assignment): two slurs that do not overlap in musical time but do overlap in
+# the serialized stream once voice 1 is written ahead of voice 2, plus a wedge.
+# Pins explicit slur/wedge numbers surviving read -> write -> read verbatim.
+rpatters1/slurs_overbars.musicxml

@@ -14,6 +14,7 @@
 #include "mx/impl/SpannerFunctions.h"
 
 #include <cmath>
+#include <optional>
 #include <type_traits>
 
 namespace mx
@@ -87,11 +88,7 @@ api::CurveStart parseCurveStart(const SLUR_OR_TIE_ELEMENT_TYPE &inSlurOrTie)
 
     if (inAttributes.number().has_value())
     {
-        c.numberLevel = impl::checkNumber(&inAttributes);
-    }
-    else
-    {
-        c.numberLevel = api::NUMBER_LEVEL_UNSPECIFIED;
+        c.number = api::SpannerNumber(impl::checkNumber(&inAttributes));
     }
 
     c.curvePoints = parseCurvePoints(inAttributes);
@@ -120,11 +117,7 @@ api::CurveContinue parseCurveContinue(const SLUR_OR_TIE_ELEMENT_TYPE &inSlurOrTi
 
     if (inAttributes.number().has_value())
     {
-        c.numberLevel = impl::checkNumber(&inAttributes);
-    }
-    else
-    {
-        c.numberLevel = api::NUMBER_LEVEL_UNSPECIFIED;
+        c.number = api::SpannerNumber(impl::checkNumber(&inAttributes));
     }
 
     if (inAttributes.bezierX2().has_value())
@@ -157,19 +150,20 @@ template <typename SLUR_OR_TIE_ELEMENT_TYPE> api::CurveStop parseCurveStop(const
 
     if (inAttributes.number().has_value())
     {
-        c.numberLevel = impl::checkNumber(&inAttributes);
-    }
-    else
-    {
-        c.numberLevel = api::NUMBER_LEVEL_UNSPECIFIED;
+        c.number = api::SpannerNumber(impl::checkNumber(&inAttributes));
     }
 
     c.curvePoints = parseCurvePoints(inAttributes);
     return c;
 }
 
+// The number each writer helper emits is the one the SpannerNumberResolver
+// pass resolved for the object (verbatim for an explicit level, assigned from
+// serialization order for an identity, absent for unspecified) -- the helpers
+// never look at the SpannerNumber directly.
 template <typename ATTRIBUTES_TYPE>
-void writeAttributesFromCurveStart(const api::CurveStart inCurve, ATTRIBUTES_TYPE &outAttributes)
+void writeAttributesFromCurveStart(const api::CurveStart inCurve, ATTRIBUTES_TYPE &outAttributes,
+                                   const std::optional<int> &inResolvedNumber)
 {
     using CurveTypeAttribute = std::decay_t<decltype(outAttributes.type())>;
     outAttributes.setType(CurveTypeAttribute::start());
@@ -181,9 +175,9 @@ void writeAttributesFromCurveStart(const api::CurveStart inCurve, ATTRIBUTES_TYP
         setAttributesFromColorData(inCurve.colorData, outAttributes);
     }
 
-    if (inCurve.numberLevel > 0)
+    if (inResolvedNumber.has_value())
     {
-        outAttributes.setNumber(core::NumberLevel{inCurve.numberLevel});
+        outAttributes.setNumber(core::NumberLevel{*inResolvedNumber});
     }
 
     if (inCurve.curvePoints.isBezierOffsetSpecified)
@@ -211,15 +205,16 @@ void writeAttributesFromCurveStart(const api::CurveStart inCurve, ATTRIBUTES_TYP
 }
 
 template <typename ATTRIBUTES_TYPE>
-void writeAttributesFromCurveContinue(const api::CurveContinue inCurve, ATTRIBUTES_TYPE &outAttributes)
+void writeAttributesFromCurveContinue(const api::CurveContinue inCurve, ATTRIBUTES_TYPE &outAttributes,
+                                      const std::optional<int> &inResolvedNumber)
 {
     using CurveTypeAttribute = std::decay_t<decltype(outAttributes.type())>;
     outAttributes.setType(CurveTypeAttribute::continue_());
     impl::setAttributesFromPositionData(inCurve.curvePoints.positionData, outAttributes);
 
-    if (inCurve.numberLevel > 0)
+    if (inResolvedNumber.has_value())
     {
-        outAttributes.setNumber(core::NumberLevel{inCurve.numberLevel});
+        outAttributes.setNumber(core::NumberLevel{*inResolvedNumber});
     }
 
     if (inCurve.curvePoints.isBezierOffsetSpecified)
@@ -255,15 +250,16 @@ void writeAttributesFromCurveContinue(const api::CurveContinue inCurve, ATTRIBUT
 }
 
 template <typename ATTRIBUTES_TYPE>
-void writeAttributesFromCurveStop(const api::CurveStop inCurve, ATTRIBUTES_TYPE &outAttributes)
+void writeAttributesFromCurveStop(const api::CurveStop inCurve, ATTRIBUTES_TYPE &outAttributes,
+                                  const std::optional<int> &inResolvedNumber)
 {
     using CurveTypeAttribute = std::decay_t<decltype(outAttributes.type())>;
     outAttributes.setType(CurveTypeAttribute::stop());
     impl::setAttributesFromPositionData(inCurve.curvePoints.positionData, outAttributes);
 
-    if (inCurve.numberLevel > 0)
+    if (inResolvedNumber.has_value())
     {
-        outAttributes.setNumber(core::NumberLevel{inCurve.numberLevel});
+        outAttributes.setNumber(core::NumberLevel{*inResolvedNumber});
     }
 
     if (inCurve.curvePoints.isBezierOffsetSpecified)

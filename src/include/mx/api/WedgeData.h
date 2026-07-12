@@ -8,6 +8,7 @@
 #include "mx/api/ColorData.h"
 #include "mx/api/LineData.h"
 #include "mx/api/PositionData.h"
+#include "mx/api/SpannerNumber.h"
 
 namespace mx
 {
@@ -22,7 +23,7 @@ enum class WedgeType
 
 struct WedgeStart
 {
-    int numberLevel;
+    SpannerNumber number;
     WedgeType wedgeType;
     bool isSpreadSpecified;
     double spread;
@@ -32,26 +33,26 @@ struct WedgeStart
     ColorData colorData;
 
     WedgeStart()
-        : numberLevel{NUMBER_LEVEL_UNSPECIFIED}, wedgeType{WedgeType::unspecified}, isSpreadSpecified{false},
-          spread{0.0}, lineData{}, positionData{}, isColorSpecified{false}, colorData{}
+        : number{}, wedgeType{WedgeType::unspecified}, isSpreadSpecified{false}, spread{0.0}, lineData{},
+          positionData{}, isColorSpecified{false}, colorData{}
     {
     }
 };
 
 struct WedgeStop
 {
-    int numberLevel;
+    SpannerNumber number;
     PositionData positionData;
     bool isSpreadSpecified;
     double spread;
 
-    WedgeStop() : numberLevel{NUMBER_LEVEL_UNSPECIFIED}, positionData{}, isSpreadSpecified{false}, spread{0.0}
+    WedgeStop() : number{}, positionData{}, isSpreadSpecified{false}, spread{0.0}
     {
     }
 };
 
 MXAPI_EQUALS_BEGIN(WedgeStart)
-MXAPI_EQUALS_MEMBER(numberLevel)
+MXAPI_EQUALS_MEMBER(number)
 MXAPI_EQUALS_MEMBER(wedgeType)
 MXAPI_EQUALS_MEMBER(isSpreadSpecified)
 MXAPI_EQUALS_MEMBER(spread)
@@ -63,7 +64,7 @@ MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(WedgeStart);
 
 MXAPI_EQUALS_BEGIN(WedgeStop)
-MXAPI_EQUALS_MEMBER(numberLevel)
+MXAPI_EQUALS_MEMBER(number)
 MXAPI_EQUALS_MEMBER(positionData)
 MXAPI_EQUALS_MEMBER(isSpreadSpecified)
 MXAPI_EQUALS_MEMBER(spread)

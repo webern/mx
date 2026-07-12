@@ -779,7 +779,7 @@ void MeasureWriter::writeDirection(const api::DirectionData &inDirectionData)
         myPropertiesWriter->flushBuffer();
     }
 
-    DirectionWriter directionWriter{inDirectionData, myHistory.getCursor()};
+    DirectionWriter directionWriter{inDirectionData, myHistory.getCursor(), myScoreWriter.getSpannerNumberResolver()};
     auto mdcSet = directionWriter.getDirectionLikeThings();
     for (const auto &mdc : mdcSet)
     {

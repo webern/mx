@@ -754,7 +754,7 @@ TEST(miscFields, NoteData)
 T_END;
 
 // SlurTieNumberLevel tests: build a score with a note that has a tie/slur using
-// mx::api directly, round-trip it, then check that numberLevel == -1 (absent).
+// mx::api directly, round-trip it, then check that the number is unspecified (absent).
 
 TEST(SlurTieNumberLevelA, NoteData)
 {
@@ -792,7 +792,7 @@ TEST(SlurTieNumberLevelA, NoteData)
 
     const auto &noteData = scoreData.parts.at(0).measures.at(0).staves.at(0).voices.at(0).notes.front();
     const auto &cs = noteData.noteAttachmentData.curveStarts.front();
-    CHECK_EQUAL(-1, cs.numberLevel);
+    CHECK(cs.number.isUnspecified());
     CHECK(cs.curveType == mx::api::CurveType::tie);
 }
 
@@ -834,7 +834,7 @@ TEST(SlurTieNumberLevelB, NoteData)
 
     const auto &noteData = scoreData.parts.at(0).measures.at(0).staves.at(0).voices.at(0).notes.front();
     const auto &cc = noteData.noteAttachmentData.curveContinuations.front();
-    CHECK_EQUAL(-1, cc.numberLevel);
+    CHECK(cc.number.isUnspecified());
     CHECK(cc.curveType == mx::api::CurveType::tie);
 }
 
@@ -876,7 +876,7 @@ TEST(SlurTieNumberLevelC, NoteData)
 
     const auto &noteData = scoreData.parts.at(0).measures.at(0).staves.at(0).voices.at(0).notes.front();
     const auto &cs = noteData.noteAttachmentData.curveStops.front();
-    CHECK_EQUAL(-1, cs.numberLevel);
+    CHECK(cs.number.isUnspecified());
     CHECK(cs.curveType == mx::api::CurveType::tie);
 }
 

@@ -14,6 +14,7 @@
 #include "mx/core/generated/OctaveShift.h"
 #include "mx/impl/DirectionReader.h"
 #include "mx/impl/DirectionWriter.h"
+#include "mx/impl/SpannerNumberResolver.h"
 
 #include <memory>
 
@@ -28,7 +29,7 @@ TEST(ottavaStartStop, DirectionWriter)
 
     directionData.ottavaStops.emplace_back(api::OttavaStop{});
     auto &stop = directionData.ottavaStops.back();
-    stop.spannerStop.numberLevel = 2;
+    stop.spannerStop.number = api::SpannerNumber(2);
     stop.size = 15;
 
     directionData.ottavaStarts.emplace_back(api::OttavaStart{});
@@ -37,7 +38,8 @@ TEST(ottavaStartStop, DirectionWriter)
     start.spannerStart.positionData.isDefaultXSpecified = true;
     start.spannerStart.positionData.defaultX = 100.0;
 
-    DirectionWriter writer{directionData, cursor};
+    SpannerNumberResolver numberResolver;
+    DirectionWriter writer{directionData, cursor, numberResolver};
     const auto mdcSet = writer.getDirectionLikeThings();
     CHECK(mdcSet.front().isDirection());
     const auto &direction = mdcSet.front().asDirection();
@@ -49,7 +51,7 @@ TEST(ottavaStartStop, DirectionWriter)
     const auto roundTripped = reader.getDirectionData();
     REQUIRE(roundTripped.ottavaStops.size() == 1);
     const auto &roundTrippedStop = roundTripped.ottavaStops.front();
-    CHECK_EQUAL(2, roundTrippedStop.spannerStop.numberLevel);
+    CHECK(api::SpannerNumber(2) == roundTrippedStop.spannerStop.number);
     CHECK(roundTrippedStop.size.has_value());
     CHECK_EQUAL(15, *roundTrippedStop.size);
 }
@@ -110,7 +112,8 @@ TEST(segnoAndCodaRoundTrip, DirectionWriter)
     directionData.codas.push_back(coda);
 
     Cursor cursor{1, 100};
-    DirectionWriter writer{directionData, cursor};
+    SpannerNumberResolver numberResolver;
+    DirectionWriter writer{directionData, cursor, numberResolver};
     const auto mdcSet = writer.getDirectionLikeThings();
     REQUIRE(mdcSet.size() >= 1);
     CHECK(mdcSet.front().isDirection());
@@ -161,7 +164,8 @@ TEST(rehearsalRoundTrip, DirectionWriter)
     directionData.rehearsals.push_back(rehearsal);
 
     Cursor cursor{1, 100};
-    DirectionWriter writer{directionData, cursor};
+    SpannerNumberResolver numberResolver;
+    DirectionWriter writer{directionData, cursor, numberResolver};
     const auto mdcSet = writer.getDirectionLikeThings();
     REQUIRE(mdcSet.size() >= 1);
     CHECK(mdcSet.front().isDirection());

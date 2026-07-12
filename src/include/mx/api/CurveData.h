@@ -8,6 +8,7 @@
 #include "mx/api/ColorData.h"
 #include "mx/api/LineData.h"
 #include "mx/api/PositionData.h"
+#include "mx/api/SpannerNumber.h"
 
 // MusicXML Documentation for Bezier Attributes Group
 // The bezier attribute group is used to indicate the curvature of slurs
@@ -91,7 +92,7 @@ struct CurvePoints
 struct CurveStart
 {
     CurveType curveType;
-    int numberLevel;
+    SpannerNumber number;
     CurvePoints curvePoints;
     CurveOrientation curveOrientation;
     Placement placement;
@@ -100,9 +101,8 @@ struct CurveStart
     ColorData colorData;
 
     CurveStart(CurveType inCurveType)
-        : curveType{inCurveType}, numberLevel{NUMBER_LEVEL_UNSPECIFIED}, curvePoints{},
-          curveOrientation{CurveOrientation::unspecified}, placement{Placement::unspecified}, lineData{},
-          isColorSpecified{false}, colorData{}
+        : curveType{inCurveType}, number{}, curvePoints{}, curveOrientation{CurveOrientation::unspecified},
+          placement{Placement::unspecified}, lineData{}, isColorSpecified{false}, colorData{}
     {
     }
 };
@@ -110,7 +110,7 @@ struct CurveStart
 struct CurveContinue
 {
     CurveType curveType;
-    int numberLevel;
+    SpannerNumber number;
     CurvePoints curvePoints;
     bool isBezierX2Specified;
     double bezierX2;
@@ -120,8 +120,8 @@ struct CurveContinue
     double bezierOffset2;
 
     CurveContinue(CurveType inCurveType)
-        : curveType{inCurveType}, numberLevel{NUMBER_LEVEL_UNSPECIFIED}, curvePoints{}, isBezierX2Specified{false},
-          bezierX2{0.0}, isBezierY2Specified{false}, bezierY2{0.0}, isBezierOffset2Specified{false}, bezierOffset2{0.0}
+        : curveType{inCurveType}, number{}, curvePoints{}, isBezierX2Specified{false}, bezierX2{0.0},
+          isBezierY2Specified{false}, bezierY2{0.0}, isBezierOffset2Specified{false}, bezierOffset2{0.0}
     {
     }
 };
@@ -129,10 +129,10 @@ struct CurveContinue
 struct CurveStop
 {
     CurveType curveType;
-    int numberLevel;
+    SpannerNumber number;
     CurvePoints curvePoints;
 
-    CurveStop(CurveType inCurveType) : curveType{inCurveType}, numberLevel{NUMBER_LEVEL_UNSPECIFIED}, curvePoints{}
+    CurveStop(CurveType inCurveType) : curveType{inCurveType}, number{}, curvePoints{}
     {
     }
 };
@@ -150,7 +150,7 @@ MXAPI_NOT_EQUALS_AND_VECTORS(CurvePoints);
 
 MXAPI_EQUALS_BEGIN(CurveStart)
 MXAPI_EQUALS_MEMBER(curveType)
-MXAPI_EQUALS_MEMBER(numberLevel)
+MXAPI_EQUALS_MEMBER(number)
 MXAPI_EQUALS_MEMBER(curvePoints)
 MXAPI_EQUALS_MEMBER(curveOrientation)
 MXAPI_EQUALS_MEMBER(placement)
@@ -162,7 +162,7 @@ MXAPI_NOT_EQUALS_AND_VECTORS(CurveStart);
 
 MXAPI_EQUALS_BEGIN(CurveContinue)
 MXAPI_EQUALS_MEMBER(curveType)
-MXAPI_EQUALS_MEMBER(numberLevel)
+MXAPI_EQUALS_MEMBER(number)
 MXAPI_EQUALS_MEMBER(curvePoints)
 MXAPI_EQUALS_MEMBER(isBezierX2Specified)
 MXAPI_EQUALS_MEMBER(bezierX2)
@@ -175,7 +175,7 @@ MXAPI_NOT_EQUALS_AND_VECTORS(CurveContinue);
 
 MXAPI_EQUALS_BEGIN(CurveStop)
 MXAPI_EQUALS_MEMBER(curveType)
-MXAPI_EQUALS_MEMBER(numberLevel)
+MXAPI_EQUALS_MEMBER(number)
 MXAPI_EQUALS_MEMBER(curvePoints)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(CurveStop);

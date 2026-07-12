@@ -9,6 +9,7 @@
 #include "mx/core/generated/MusicDataChoice.h"
 #include "mx/impl/Converter.h"
 #include "mx/impl/Cursor.h"
+#include "mx/impl/SpannerNumberResolver.h"
 
 #include <set>
 #include <vector>
@@ -20,7 +21,11 @@ namespace impl
 class DirectionWriter
 {
   public:
-    DirectionWriter(const api::DirectionData &inDirectionData, const Cursor &inCursor);
+    // inNumberResolver supplies the resolved 'number' for each wedge, octave
+    // shift, bracket, and dashes start/stop (see SpannerNumberResolver); it
+    // must outlive this writer.
+    DirectionWriter(const api::DirectionData &inDirectionData, const Cursor &inCursor,
+                    const SpannerNumberResolver &inNumberResolver);
     std::vector<core::MusicDataChoice> getDirectionLikeThings();
 
   private:
@@ -52,6 +57,7 @@ class DirectionWriter
   private:
     const api::DirectionData &myDirectionData;
     const Cursor myCursor;
+    const SpannerNumberResolver &myNumberResolver;
     const Converter myConverter;
     bool myIsFirstDirectionTypeAdded;
     std::set<api::Placement> myPlacements;
