@@ -65,11 +65,11 @@ template <typename ATTRIBUTES_TYPE> api::PositionData getPositionData(const ATTR
 
     if (checkHasHalign<ATTRIBUTES_TYPE>(&inAttributes))
     {
-        outPositionData.horizontalAlignmnet = converter.convert(checkHalign<ATTRIBUTES_TYPE>(&inAttributes));
+        outPositionData.horizontalAlignment = converter.convert(checkHalign<ATTRIBUTES_TYPE>(&inAttributes));
     }
     else
     {
-        outPositionData.horizontalAlignmnet = api::HorizontalAlignment::unspecified;
+        outPositionData.horizontalAlignment = api::HorizontalAlignment::unspecified;
     }
 
     if (checkHasValign<ATTRIBUTES_TYPE>(&inAttributes))
@@ -163,14 +163,14 @@ void setAttributesFromPositionData(const api::PositionData &positionData, ATTRIB
 
     Converter converter;
 
-    if (positionData.horizontalAlignmnet == api::HorizontalAlignment::unspecified)
+    if (positionData.horizontalAlignment == api::HorizontalAlignment::unspecified)
     {
         lookForAndSetHasHalign(false, &outAttributes);
     }
     else
     {
         lookForAndSetHasHalign(true, &outAttributes);
-        lookForAndSetHalign(converter.convert(positionData.horizontalAlignmnet), &outAttributes);
+        lookForAndSetHalign(converter.convert(positionData.horizontalAlignment), &outAttributes);
     }
 
     if (positionData.verticalAlignment == api::VerticalAlignment::unspecified)

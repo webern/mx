@@ -514,9 +514,9 @@ void NoteWriter::setLyrics() const
         }
 
         impl::setAttributesFromPositionData(lyricData.positionData, lyric);
-        if (lyricData.positionData.horizontalAlignmnet != api::HorizontalAlignment::unspecified)
+        if (lyricData.positionData.horizontalAlignment != api::HorizontalAlignment::unspecified)
         {
-            lyric.setJustify(myConverter.convert(lyricData.positionData.horizontalAlignmnet));
+            lyric.setJustify(myConverter.convert(lyricData.positionData.horizontalAlignment));
         }
 
         if (lyricData.printData.printObject != api::Bool::unspecified)

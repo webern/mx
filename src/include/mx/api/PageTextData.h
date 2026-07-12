@@ -37,7 +37,7 @@ class PageTextData
 
     // The `justify` attribute of `<credit-words>`. `unspecified` means the
     // attribute is absent. Distinct from the `halign` attribute, which is
-    // carried in `positionData.horizontalAlignmnet`; MusicXML defines both
+    // carried in `positionData.horizontalAlignment`; MusicXML defines both
     // attributes on `<credit-words>`.
     HorizontalAlignment justify = HorizontalAlignment::unspecified;
 };
