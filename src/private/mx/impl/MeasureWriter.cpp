@@ -26,6 +26,7 @@
 #include "mx/core/generated/Repeat.h"
 #include "mx/core/generated/RightLeftMiddle.h"
 #include "mx/core/generated/StaffLayout.h"
+#include "mx/core/generated/StaffNumber.h"
 #include "mx/core/generated/SystemLayout.h"
 #include "mx/core/generated/SystemMargins.h"
 #include "mx/core/generated/Tenths.h"
@@ -260,6 +261,15 @@ void MeasureWriter::writeSystemInfo()
             core::StaffLayout outStaffLayout{};
             outStaffLayout.setStaffDistance(
                 core::Tenths{core::Decimal{static_cast<double>(inSystemLayout.staffDistance.value())}});
+            outLayoutGroup.addStaffLayout(outStaffLayout);
+            outPrint.setLayout(outLayoutGroup);
+        }
+
+        for (const auto &[staffIndex, staffDistance] : inSystemLayout.staffDistances)
+        {
+            core::StaffLayout outStaffLayout{};
+            outStaffLayout.setNumber(core::StaffNumber{staffIndex + 1});
+            outStaffLayout.setStaffDistance(core::Tenths{core::Decimal{staffDistance}});
             outLayoutGroup.addStaffLayout(outStaffLayout);
             outPrint.setLayout(outLayoutGroup);
         }
