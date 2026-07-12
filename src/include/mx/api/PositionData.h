@@ -106,12 +106,12 @@ class PositionData
     bool isRelativeYSpecified;
     Placement placement;
     VerticalAlignment verticalAlignment;
-    HorizontalAlignment horizontalAlignmnet;
+    HorizontalAlignment horizontalAlignment;
 
     PositionData()
         : defaultX(0.0), isDefaultXSpecified(false), defaultY(0.0), isDefaultYSpecified(false), relativeX(0.0),
           isRelativeXSpecified(false), relativeY(0.0), isRelativeYSpecified(false), placement(Placement::unspecified),
-          verticalAlignment(VerticalAlignment::unspecified), horizontalAlignmnet(HorizontalAlignment::unspecified)
+          verticalAlignment(VerticalAlignment::unspecified), horizontalAlignment(HorizontalAlignment::unspecified)
     {
     }
 };
@@ -127,7 +127,7 @@ MXAPI_DOUBLES_EQUALS_MEMBER(relativeY)
 MXAPI_EQUALS_MEMBER(isRelativeYSpecified)
 MXAPI_EQUALS_MEMBER(placement)
 MXAPI_EQUALS_MEMBER(verticalAlignment)
-MXAPI_EQUALS_MEMBER(horizontalAlignmnet)
+MXAPI_EQUALS_MEMBER(horizontalAlignment)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(PositionData);
 } // namespace api

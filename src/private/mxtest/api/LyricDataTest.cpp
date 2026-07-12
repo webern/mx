@@ -44,7 +44,7 @@ mx::api::ScoreData makeScoreWithLyrics()
     first.syllabic = LyricSyllabic::begin;
     first.hasExtend = true;
     first.positionData.placement = Placement::below;
-    first.positionData.horizontalAlignmnet = HorizontalAlignment::center;
+    first.positionData.horizontalAlignment = HorizontalAlignment::center;
     first.positionData.isDefaultYSpecified = true;
     first.positionData.defaultY = -40.0;
     first.printData.printObject = Bool::yes;
@@ -114,7 +114,7 @@ TEST(lyricsRoundTripThroughApi, LyricData)
     CHECK(note.lyrics.at(0).syllabic == LyricSyllabic::begin);
     CHECK(note.lyrics.at(0).hasExtend);
     CHECK(note.lyrics.at(0).positionData.placement == Placement::below);
-    CHECK(note.lyrics.at(0).positionData.horizontalAlignmnet == HorizontalAlignment::center);
+    CHECK(note.lyrics.at(0).positionData.horizontalAlignment == HorizontalAlignment::center);
     CHECK(note.lyrics.at(0).printData.printObject == Bool::yes);
     CHECK(note.lyrics.at(0).printData.isColorSpecified);
     CHECK_EQUAL(1, static_cast<int>(note.lyrics.at(0).printData.color.red));
