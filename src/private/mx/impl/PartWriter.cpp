@@ -178,7 +178,7 @@ core::ScorePart PartWriter::getScorePart() const
     midiInstrument.setID(core::Token{myPartData.instrumentData.uniqueId});
 
     const auto &apiMidiData = myPartData.instrumentData.midiData;
-    if (apiMidiData.device.size() > 0 || apiMidiData.devicePort.has_value() || apiMidiData.deviceId.has_value())
+    if (apiMidiData.device.size() > 0 || apiMidiData.devicePort.has_value())
     {
         addMidiElement = true;
         midiDevice.setValue(apiMidiData.device);
@@ -188,9 +188,12 @@ core::ScorePart PartWriter::getScorePart() const
             midiDevice.setPort(core::MIDI16{*apiMidiData.devicePort});
         }
 
-        if (apiMidiData.deviceId.has_value())
+        // The midi-device attaches to this part's instrument, the same instrument the
+        // midi-instrument below is written for. Emit that link only when the source stated it;
+        // for a single-instrument part it is otherwise implied.
+        if (apiMidiData.writeDeviceId == api::Bool::yes && myPartData.instrumentData.uniqueId.size() > 0)
         {
-            midiDevice.setID(core::Token{*apiMidiData.deviceId});
+            midiDevice.setID(core::Token{myPartData.instrumentData.uniqueId});
         }
 
         midiGroup.setMIDIDevice(midiDevice);

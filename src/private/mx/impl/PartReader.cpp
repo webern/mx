@@ -307,7 +307,7 @@ void PartReader::parseMidiDeviceInstrumentGroup(const core::ScorePartMIDIGroup &
 
         if (grp.midiDevice()->id().has_value())
         {
-            myOutPartData.instrumentData.midiData.deviceId = grp.midiDevice()->id()->value();
+            myOutPartData.instrumentData.midiData.writeDeviceId = api::Bool::yes;
         }
     }
 

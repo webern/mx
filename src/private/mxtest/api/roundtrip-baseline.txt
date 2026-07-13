@@ -426,9 +426,9 @@ musuite/testTempo1.xml
 lysuite/ly24b_ChordAsGraceNote.xml
 musuite/testGrace2.xml
 
-# Unblocked by MidiData::devicePort/deviceId: the midi-device port and id
-# attributes now round-trip, and an attribute-only (empty-text) midi-device
-# is no longer dropped.
+# Unblocked by MidiData::devicePort: the midi-device port attribute now round-trips
+# (its id is written automatically from the part's instrument), and an attribute-only
+# (empty-text) midi-device is no longer dropped.
 custom/musescore-slur-start-stop.musicxml
 musuite/testChord.xml
 musuite/testPiano.xml
