@@ -9,7 +9,6 @@
 #include <cstddef>
 #include <limits>
 #include <map>
-#include <set>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -36,7 +35,6 @@ enum class SpannerNumberClass
 struct SpannerNumberEvent
 {
     int position;
-    int staffIndex;
     const void *object;
     const api::SpannerNumber *number;
     bool opens;  // a start
@@ -57,40 +55,40 @@ inline bool spannerNumberIntervalsOverlap(const SpannerNumberInterval &inLeft, c
 }
 
 // Collects spanner events in the exact order MeasureWriter serializes them.
-// The position counter is global; only events within the same class (and
-// staff pool) are ever compared, so cross-class interleaving is irrelevant,
-// but within a class the order matches what a streaming reader sees.
+// The position counter is global; only events within the same class are ever
+// compared, so cross-class interleaving is irrelevant, but within a class the
+// order matches what a streaming reader sees.
 class SpannerNumberEventCollector
 {
   public:
-    void addNote(int inStaffIndex, const api::NoteData &inNote)
+    void addNote(const api::NoteData &inNote)
     {
         // NotationsWriter emits curve stops, then continues, then starts, and
         // skips curves whose type is neither tie nor slur.
         const auto &attachments = inNote.noteAttachmentData;
         for (const auto &stop : attachments.curveStops)
         {
-            addCurve(inStaffIndex, stop.curveType, &stop, stop.number, false, true);
+            addCurve(stop.curveType, &stop, stop.number, false, true);
         }
         for (const auto &curveContinue : attachments.curveContinuations)
         {
-            addCurve(inStaffIndex, curveContinue.curveType, &curveContinue, curveContinue.number, false, false);
+            addCurve(curveContinue.curveType, &curveContinue, curveContinue.number, false, false);
         }
         for (const auto &start : attachments.curveStarts)
         {
-            addCurve(inStaffIndex, start.curveType, &start, start.number, true, false);
+            addCurve(start.curveType, &start, start.number, true, false);
         }
     }
 
-    void addDirection(int inStaffIndex, const api::DirectionData &inDirection)
+    void addDirection(const api::DirectionData &inDirection)
     {
         if (inDirection.orderedComponents.empty())
         {
-            addDirectionFixedOrder(inStaffIndex, inDirection);
+            addDirectionFixedOrder(inDirection);
         }
         else
         {
-            addDirectionOrderedComponents(inStaffIndex, inDirection);
+            addDirectionOrderedComponents(inDirection);
         }
     }
 
@@ -100,68 +98,66 @@ class SpannerNumberEventCollector
     }
 
   private:
-    void add(SpannerNumberClass inClass, int inStaffIndex, const void *inObject, const api::SpannerNumber &inNumber,
-             bool inOpens, bool inCloses)
+    void add(SpannerNumberClass inClass, const void *inObject, const api::SpannerNumber &inNumber, bool inOpens,
+             bool inCloses)
     {
-        myEvents[inClass].push_back(
-            SpannerNumberEvent{myPosition, inStaffIndex, inObject, &inNumber, inOpens, inCloses});
+        myEvents[inClass].push_back(SpannerNumberEvent{myPosition, inObject, &inNumber, inOpens, inCloses});
         ++myPosition;
     }
 
-    void addCurve(int inStaffIndex, api::CurveType inCurveType, const void *inObject,
-                  const api::SpannerNumber &inNumber, bool inOpens, bool inCloses)
+    void addCurve(api::CurveType inCurveType, const void *inObject, const api::SpannerNumber &inNumber, bool inOpens,
+                  bool inCloses)
     {
         if (inCurveType == api::CurveType::slur)
         {
-            add(SpannerNumberClass::slur, inStaffIndex, inObject, inNumber, inOpens, inCloses);
+            add(SpannerNumberClass::slur, inObject, inNumber, inOpens, inCloses);
         }
         else if (inCurveType == api::CurveType::tie)
         {
-            add(SpannerNumberClass::tie, inStaffIndex, inObject, inNumber, inOpens, inCloses);
+            add(SpannerNumberClass::tie, inObject, inNumber, inOpens, inCloses);
         }
     }
 
     // Mirrors DirectionWriter::emitFixedOrder. Pedals are skipped: <pedal> has
     // no number attribute.
-    void addDirectionFixedOrder(int inStaffIndex, const api::DirectionData &inDirection)
+    void addDirectionFixedOrder(const api::DirectionData &inDirection)
     {
         for (const auto &item : inDirection.wedgeStops)
         {
-            add(SpannerNumberClass::wedge, inStaffIndex, &item, item.number, false, true);
+            add(SpannerNumberClass::wedge, &item, item.number, false, true);
         }
         for (const auto &item : inDirection.wedgeStarts)
         {
-            add(SpannerNumberClass::wedge, inStaffIndex, &item, item.number, true, false);
+            add(SpannerNumberClass::wedge, &item, item.number, true, false);
         }
         for (const auto &item : inDirection.ottavaStops)
         {
-            add(SpannerNumberClass::octaveShift, inStaffIndex, &item.spannerStop, item.spannerStop.number, false, true);
+            add(SpannerNumberClass::octaveShift, &item.spannerStop, item.spannerStop.number, false, true);
         }
         for (const auto &item : inDirection.ottavaStarts)
         {
-            add(SpannerNumberClass::octaveShift, inStaffIndex, &item.spannerStart, item.spannerStart.number, true,
-                false);
+            add(SpannerNumberClass::octaveShift, &item.spannerStart, item.spannerStart.number, true, false);
         }
         for (const auto &item : inDirection.bracketStarts)
         {
-            add(SpannerNumberClass::bracket, inStaffIndex, &item, item.number, true, false);
+            add(SpannerNumberClass::bracket, &item, item.number, true, false);
         }
         for (const auto &item : inDirection.bracketStops)
         {
-            add(SpannerNumberClass::bracket, inStaffIndex, &item, item.number, false, true);
+            add(SpannerNumberClass::bracket, &item, item.number, false, true);
         }
         for (const auto &item : inDirection.dashesStarts)
         {
-            add(SpannerNumberClass::dashes, inStaffIndex, &item, item.number, true, false);
+            add(SpannerNumberClass::dashes, &item, item.number, true, false);
         }
         for (const auto &item : inDirection.dashesStops)
         {
-            add(SpannerNumberClass::dashes, inStaffIndex, &item, item.number, false, true);
+            add(SpannerNumberClass::dashes, &item, item.number, false, true);
         }
     }
 
     // Mirrors DirectionWriter::emitOrderedComponents (same bounds checks).
-    void addDirectionOrderedComponents(int inStaffIndex, const api::DirectionData &inDirection)
+    void addDirectionOrderedComponents(const api::DirectionData &inDirection)
     {
         for (const auto &component : inDirection.orderedComponents)
         {
@@ -178,7 +174,7 @@ class SpannerNumberEventCollector
                 if (index < inDirection.wedgeStops.size())
                 {
                     const auto &item = inDirection.wedgeStops.at(index);
-                    add(SpannerNumberClass::wedge, inStaffIndex, &item, item.number, false, true);
+                    add(SpannerNumberClass::wedge, &item, item.number, false, true);
                 }
                 break;
 
@@ -186,7 +182,7 @@ class SpannerNumberEventCollector
                 if (index < inDirection.wedgeStarts.size())
                 {
                     const auto &item = inDirection.wedgeStarts.at(index);
-                    add(SpannerNumberClass::wedge, inStaffIndex, &item, item.number, true, false);
+                    add(SpannerNumberClass::wedge, &item, item.number, true, false);
                 }
                 break;
 
@@ -194,8 +190,7 @@ class SpannerNumberEventCollector
                 if (index < inDirection.ottavaStops.size())
                 {
                     const auto &item = inDirection.ottavaStops.at(index);
-                    add(SpannerNumberClass::octaveShift, inStaffIndex, &item.spannerStop, item.spannerStop.number,
-                        false, true);
+                    add(SpannerNumberClass::octaveShift, &item.spannerStop, item.spannerStop.number, false, true);
                 }
                 break;
 
@@ -203,8 +198,7 @@ class SpannerNumberEventCollector
                 if (index < inDirection.ottavaStarts.size())
                 {
                     const auto &item = inDirection.ottavaStarts.at(index);
-                    add(SpannerNumberClass::octaveShift, inStaffIndex, &item.spannerStart, item.spannerStart.number,
-                        true, false);
+                    add(SpannerNumberClass::octaveShift, &item.spannerStart, item.spannerStart.number, true, false);
                 }
                 break;
 
@@ -212,7 +206,7 @@ class SpannerNumberEventCollector
                 if (index < inDirection.bracketStarts.size())
                 {
                     const auto &item = inDirection.bracketStarts.at(index);
-                    add(SpannerNumberClass::bracket, inStaffIndex, &item, item.number, true, false);
+                    add(SpannerNumberClass::bracket, &item, item.number, true, false);
                 }
                 break;
 
@@ -220,7 +214,7 @@ class SpannerNumberEventCollector
                 if (index < inDirection.bracketStops.size())
                 {
                     const auto &item = inDirection.bracketStops.at(index);
-                    add(SpannerNumberClass::bracket, inStaffIndex, &item, item.number, false, true);
+                    add(SpannerNumberClass::bracket, &item, item.number, false, true);
                 }
                 break;
 
@@ -228,7 +222,7 @@ class SpannerNumberEventCollector
                 if (index < inDirection.dashesStarts.size())
                 {
                     const auto &item = inDirection.dashesStarts.at(index);
-                    add(SpannerNumberClass::dashes, inStaffIndex, &item, item.number, true, false);
+                    add(SpannerNumberClass::dashes, &item, item.number, true, false);
                 }
                 break;
 
@@ -236,7 +230,7 @@ class SpannerNumberEventCollector
                 if (index < inDirection.dashesStops.size())
                 {
                     const auto &item = inDirection.dashesStops.at(index);
-                    add(SpannerNumberClass::dashes, inStaffIndex, &item, item.number, false, true);
+                    add(SpannerNumberClass::dashes, &item, item.number, false, true);
                 }
                 break;
 
@@ -253,26 +247,20 @@ class SpannerNumberEventCollector
 // Assigns numbers within one spanner class. Explicit levels reserve their
 // number for the serialized extent of their start/stop pair; identity groups
 // then take the lowest number whose reservations and prior assignments do not
-// overlap the group's own extent, per staff pool.
+// overlap the group's own extent. The pool is scoped to the part: MusicXML's
+// number-level documentation judges concurrency in document order within the
+// part, so spanners on different staves of the part still conflict when their
+// serialized extents overlap.
 static void spannerNumberAssignClass(const std::vector<SpannerNumberEvent> &inEvents,
                                      std::unordered_map<const void *, int> &ioResolved)
 {
     constexpr int kSpannerNumberMax = 16;
 
-    // occupied[staffIndex][number] -> intervals during which that number is taken
-    std::map<int, std::map<int, std::vector<SpannerNumberInterval>>> occupied;
-
-    const auto reserve = [&occupied](int inNumber, const SpannerNumberInterval &inInterval, int inStaffA,
-                                     int inStaffB) {
-        occupied[inStaffA][inNumber].push_back(inInterval);
-        if (inStaffB != inStaffA)
-        {
-            occupied[inStaffB][inNumber].push_back(inInterval);
-        }
-    };
+    // occupied[number] -> intervals during which that number is taken
+    std::map<int, std::vector<SpannerNumberInterval>> occupied;
 
     // Match explicit start/stop pairs by level in stream order and reserve
-    // their intervals. A pair that spans staves reserves in both pools.
+    // their intervals.
     std::map<int, std::vector<const SpannerNumberEvent *>> openExplicit;
     for (const auto &event : inEvents)
     {
@@ -292,15 +280,13 @@ static void spannerNumberAssignClass(const std::vector<SpannerNumberEvent> &inEv
             {
                 const auto *start = stack.back();
                 stack.pop_back();
-                reserve(level, SpannerNumberInterval{start->position, event.position}, start->staffIndex,
-                        event.staffIndex);
+                occupied[level].push_back(SpannerNumberInterval{start->position, event.position});
             }
             else
             {
                 // a stop with no visible start (authoring error); reserve its
                 // own position so at least the stop itself cannot collide
-                reserve(level, SpannerNumberInterval{event.position, event.position}, event.staffIndex,
-                        event.staffIndex);
+                occupied[level].push_back(SpannerNumberInterval{event.position, event.position});
             }
         }
         else
@@ -308,7 +294,7 @@ static void spannerNumberAssignClass(const std::vector<SpannerNumberEvent> &inEv
             // a continue between its start and stop is already covered by the
             // pair's interval; this point reservation only matters when the
             // continue dangles
-            reserve(level, SpannerNumberInterval{event.position, event.position}, event.staffIndex, event.staffIndex);
+            occupied[level].push_back(SpannerNumberInterval{event.position, event.position});
         }
     }
     for (const auto &levelAndStack : openExplicit)
@@ -316,8 +302,8 @@ static void spannerNumberAssignClass(const std::vector<SpannerNumberEvent> &inEv
         for (const auto *start : levelAndStack.second)
         {
             // a start with no stop stays open to the end of the part
-            reserve(levelAndStack.first, SpannerNumberInterval{start->position, std::numeric_limits<int>::max()},
-                    start->staffIndex, start->staffIndex);
+            occupied[levelAndStack.first].push_back(
+                SpannerNumberInterval{start->position, std::numeric_limits<int>::max()});
         }
     }
 
@@ -327,7 +313,6 @@ static void spannerNumberAssignClass(const std::vector<SpannerNumberEvent> &inEv
     {
         SpannerNumberInterval interval;
         std::vector<const void *> objects;
-        std::set<int> staves;
     };
 
     std::vector<SpannerNumberGroup> groups;
@@ -341,13 +326,12 @@ static void spannerNumberAssignClass(const std::vector<SpannerNumberEvent> &inEv
         const auto found = groupIndexByIdentity.emplace(event.number->identity(), groups.size());
         if (found.second)
         {
-            groups.push_back(SpannerNumberGroup{SpannerNumberInterval{event.position, event.position}, {}, {}});
+            groups.push_back(SpannerNumberGroup{SpannerNumberInterval{event.position, event.position}, {}});
         }
         auto &group = groups.at(found.first->second);
         group.interval.first = std::min(group.interval.first, event.position);
         group.interval.last = std::max(group.interval.last, event.position);
         group.objects.push_back(event.object);
-        group.staves.insert(event.staffIndex);
     }
 
     for (const auto &group : groups)
@@ -356,18 +340,9 @@ static void spannerNumberAssignClass(const std::vector<SpannerNumberEvent> &inEv
         for (int candidate = 1; candidate <= kSpannerNumberMax && chosen == 0; ++candidate)
         {
             bool isFree = true;
-            for (const int staffIndex : group.staves)
+            const auto numberIter = occupied.find(candidate);
+            if (numberIter != occupied.cend())
             {
-                const auto staffIter = occupied.find(staffIndex);
-                if (staffIter == occupied.cend())
-                {
-                    continue;
-                }
-                const auto numberIter = staffIter->second.find(candidate);
-                if (numberIter == staffIter->second.cend())
-                {
-                    continue;
-                }
                 for (const auto &interval : numberIter->second)
                 {
                     if (spannerNumberIntervalsOverlap(interval, group.interval))
@@ -375,10 +350,6 @@ static void spannerNumberAssignClass(const std::vector<SpannerNumberEvent> &inEv
                         isFree = false;
                         break;
                     }
-                }
-                if (!isFree)
-                {
-                    break;
                 }
             }
             if (isFree)
@@ -391,10 +362,7 @@ static void spannerNumberAssignClass(const std::vector<SpannerNumberEvent> &inEv
             MX_THROW("more than 16 spanners of one type are open at the same point in the serialized "
                      "stream; MusicXML number attributes only range from 1 to 16");
         }
-        for (const int staffIndex : group.staves)
-        {
-            occupied[staffIndex][chosen].push_back(group.interval);
-        }
+        occupied[chosen].push_back(group.interval);
         for (const void *object : group.objects)
         {
             ioResolved[object] = chosen;
@@ -408,21 +376,19 @@ void SpannerNumberResolver::resolvePart(const api::PartData &inPart)
 
     for (const auto &measure : inPart.measures)
     {
-        int staffIndex = 0;
         for (const auto &staff : measure.staves)
         {
             for (const auto &voicePair : staff.voices)
             {
                 for (const auto &note : voicePair.second.notes)
                 {
-                    collector.addNote(staffIndex, note);
+                    collector.addNote(note);
                 }
             }
             for (const auto &direction : staff.directions)
             {
-                collector.addDirection(staffIndex, direction);
+                collector.addDirection(direction);
             }
-            ++staffIndex;
         }
     }
 
