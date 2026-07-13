@@ -164,6 +164,128 @@ TEST(identityAssignsNumbersFromSerializationOrder, SpannerIdentity)
 
 T_END
 
+namespace spannerIdentityTest
+{
+// A two-staff part (one piano-style part) with one slur per staff. When
+// inSlursCrossTheBarline is true each slur starts in measure 1 and stops in
+// measure 2, so the two slurs overlap in document order; otherwise both slurs
+// start and stop within measure 1 of their own staff and do not.
+inline ScoreData makeTwoStaffSlurScore(bool inSlursCrossTheBarline)
+{
+    ScoreData score;
+    score.ticksPerQuarter = ticksPerQuarter;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+
+    for (int measureIndex = 0; measureIndex < 2; ++measureIndex)
+    {
+        part.measures.emplace_back();
+        auto &measure = part.measures.back();
+        measure.timeSignature = TimeChoice(TimeSignatureData{"4", "4"});
+        measure.timeSignature.isImplicit = measureIndex > 0;
+        measure.staves.emplace_back();
+        measure.staves.emplace_back();
+        for (int staffIndex = 0; staffIndex < 2; ++staffIndex)
+        {
+            auto &voice = measure.staves.at(static_cast<std::size_t>(staffIndex)).voices[0];
+            const Step step = staffIndex == 0 ? Step::g : Step::c;
+            const int octave = staffIndex == 0 ? 5 : 3;
+            for (int i = 0; i < 4; ++i)
+            {
+                voice.notes.push_back(makeQuarter(i * ticksPerQuarter, step, octave));
+            }
+        }
+    }
+
+    const auto attachSlur = [&part, inSlursCrossTheBarline](std::size_t staffIndex, const char *identity) {
+        CurveStart start{CurveType::slur};
+        start.number = SpannerNumber{identity};
+        part.measures.at(0).staves.at(staffIndex).voices[0].notes.at(0).noteAttachmentData.curveStarts.push_back(start);
+
+        CurveStop stop{CurveType::slur};
+        stop.number = SpannerNumber{identity};
+        auto &stopMeasure = inSlursCrossTheBarline ? part.measures.at(1) : part.measures.at(0);
+        const std::size_t stopNoteIndex = inSlursCrossTheBarline ? 0 : 3;
+        stopMeasure.staves.at(staffIndex)
+            .voices[0]
+            .notes.at(stopNoteIndex)
+            .noteAttachmentData.curveStops.push_back(stop);
+    };
+    attachSlur(0, "top");
+    attachSlur(1, "bottom");
+
+    return score;
+}
+} // namespace spannerIdentityTest
+
+// The number-level pool is scoped to the part, not the staff. Two slurs on
+// different staves of the same part that overlap in document order (both span
+// the barline, so the top staff's slur is still open when measure 1's bottom
+// staff serializes) must take different numbers.
+TEST(overlappingSlursOnDifferentStavesGetDistinctNumbers, SpannerIdentity)
+{
+    using namespace spannerIdentityTest;
+    const auto score = makeTwoStaffSlurScore(true);
+
+    const auto xml = toXml(score);
+    REQUIRE(!xml.empty());
+    const auto roundTripped = fromXml(xml);
+
+    REQUIRE(roundTripped.parts.size() == 1);
+    const auto &measure1 = roundTripped.parts.at(0).measures.at(0);
+    const auto &measure2 = roundTripped.parts.at(0).measures.at(1);
+
+    const auto &topStart = measure1.staves.at(0).voices.at(0).notes.at(0).noteAttachmentData.curveStarts;
+    const auto &bottomStart = measure1.staves.at(1).voices.at(0).notes.at(0).noteAttachmentData.curveStarts;
+    const auto &topStop = measure2.staves.at(0).voices.at(0).notes.at(0).noteAttachmentData.curveStops;
+    const auto &bottomStop = measure2.staves.at(1).voices.at(0).notes.at(0).noteAttachmentData.curveStops;
+
+    REQUIRE(topStart.size() == 1);
+    REQUIRE(bottomStart.size() == 1);
+    REQUIRE(topStop.size() == 1);
+    REQUIRE(bottomStop.size() == 1);
+
+    CHECK(SpannerNumber(1) == topStart.at(0).number);
+    CHECK(SpannerNumber(1) == topStop.at(0).number);
+    CHECK(SpannerNumber(2) == bottomStart.at(0).number);
+    CHECK(SpannerNumber(2) == bottomStop.at(0).number);
+}
+
+T_END
+
+// The spec-blessed reuse case: slurs on different staves that stay within one
+// measure never overlap in document order (each staff's notes serialize as a
+// contiguous run), so both may take number 1.
+TEST(sameMeasureSlursOnDifferentStavesReuseTheNumber, SpannerIdentity)
+{
+    using namespace spannerIdentityTest;
+    const auto score = makeTwoStaffSlurScore(false);
+
+    const auto xml = toXml(score);
+    REQUIRE(!xml.empty());
+    const auto roundTripped = fromXml(xml);
+
+    REQUIRE(roundTripped.parts.size() == 1);
+    const auto &measure1 = roundTripped.parts.at(0).measures.at(0);
+
+    const auto &topStart = measure1.staves.at(0).voices.at(0).notes.at(0).noteAttachmentData.curveStarts;
+    const auto &bottomStart = measure1.staves.at(1).voices.at(0).notes.at(0).noteAttachmentData.curveStarts;
+    const auto &topStop = measure1.staves.at(0).voices.at(0).notes.at(3).noteAttachmentData.curveStops;
+    const auto &bottomStop = measure1.staves.at(1).voices.at(0).notes.at(3).noteAttachmentData.curveStops;
+
+    REQUIRE(topStart.size() == 1);
+    REQUIRE(bottomStart.size() == 1);
+    REQUIRE(topStop.size() == 1);
+    REQUIRE(bottomStop.size() == 1);
+
+    CHECK(SpannerNumber(1) == topStart.at(0).number);
+    CHECK(SpannerNumber(1) == topStop.at(0).number);
+    CHECK(SpannerNumber(1) == bottomStart.at(0).number);
+    CHECK(SpannerNumber(1) == bottomStop.at(0).number);
+}
+
+T_END
+
 // An explicit spanner reserves its number while it is open in the stream: an
 // identity spanner whose extent covers the explicit one must skip that number.
 TEST(explicitAndIdentityShareThePool, SpannerIdentity)
