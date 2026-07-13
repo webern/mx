@@ -53,4 +53,33 @@ TEST(midiNameRoundTrip, survivesWriteAndRead)
     CHECK_EQUAL(expected, out.parts.at(0).instrumentData.midiData.name);
 }
 
+TEST(midiDeviceRoundTrip, portSurvivesWriteAndRead)
+{
+    // A midi-device carrying only attributes (empty text) must still round-trip, e.g.
+    // <midi-device port="1"></midi-device>. writeDeviceId defaults to unspecified, so no id is
+    // emitted here; only the port is exercised.
+    auto in = makeScoreWithMidiName("Flute Player One");
+    in.parts.at(0).instrumentData.midiData.devicePort = 1;
+
+    const auto out = mxtest::roundTrip(in);
+    REQUIRE(out.parts.size() == 1);
+    const auto &midiData = out.parts.at(0).instrumentData.midiData;
+    REQUIRE(midiData.devicePort.has_value());
+    CHECK_EQUAL(1, *midiData.devicePort);
+}
+
+TEST(midiDeviceRoundTrip, writeDeviceIdSurvivesWriteAndRead)
+{
+    // When a source spells out the device-to-instrument link, mx re-emits it as
+    // <midi-device id="P1-I1" ...>, taking the id from the part's instrument (uniqueId "P1-I1"
+    // here), so the flag survives the round-trip.
+    auto in = makeScoreWithMidiName("Flute Player One");
+    in.parts.at(0).instrumentData.midiData.devicePort = 1;
+    in.parts.at(0).instrumentData.midiData.writeDeviceId = Bool::yes;
+
+    const auto out = mxtest::roundTrip(in);
+    REQUIRE(out.parts.size() == 1);
+    CHECK(out.parts.at(0).instrumentData.midiData.writeDeviceId == Bool::yes);
+}
+
 #endif

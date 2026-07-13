@@ -28,7 +28,27 @@ struct MidiData
 {
     std::string virtualLibrary;
     std::string virtualName;
+
+    // The name of the playback device or sound bank for this instrument — for example the name of a
+    // MIDI output device, or a sound or bank label. This is often left empty.
     std::string device;
+
+    // An optional port (or cable) number, from 1 to 16, that says which output the device uses. It
+    // has no value when the file doesn't specify one, and most files leave it unset — you only need
+    // it when you are aiming at a particular MIDI port. You don't have to attach the device to this
+    // part's instrument yourself; the library keeps them together automatically when the music is
+    // written out.
+    std::optional<int> devicePort;
+
+    // Most users can ignore this; leave it unspecified. It only controls whether the saved file
+    // spells out the little link that ties this part's playback device to its instrument. unspecified
+    // (the default) does the sensible thing on its own: it leaves that link out, because each part
+    // here has a single instrument and so the link isn't needed. yes/no force it to be written or left
+    // out. You never have to set this when you are creating music — when the library reads a file that
+    // did spell the link out, it sets this for you, so that saving the file brings it back the same way
+    // it came in.
+    Bool writeDeviceId;
+
     std::string name;
 
     // VALUE_UNSPECIFIED indicates absence of value
@@ -56,13 +76,34 @@ struct MidiData
     bool isElevationSpecified;
 
     MidiData()
-        : virtualLibrary{}, virtualName{}, device{}, name{}, bank{VALUE_UNSPECIFIED}, channel{VALUE_UNSPECIFIED},
-          program{VALUE_UNSPECIFIED}, unpitched{VALUE_UNSPECIFIED}, volume{0.0}, isVolumeSpecified{false}, pan{0.0},
-          isPanSpecified{false}, elevation{0.0}, isElevationSpecified{false}
+        : virtualLibrary{}, virtualName{}, device{}, devicePort{}, writeDeviceId{Bool::unspecified}, name{},
+          bank{VALUE_UNSPECIFIED}, channel{VALUE_UNSPECIFIED}, program{VALUE_UNSPECIFIED}, unpitched{VALUE_UNSPECIFIED},
+          volume{0.0}, isVolumeSpecified{false}, pan{0.0}, isPanSpecified{false}, elevation{0.0},
+          isElevationSpecified{false}
     {
     }
 };
 
+// Describes the instrument that a part is played on. In this library every part has exactly one
+// instrument, and the name and playback settings you set here (the playback settings live in
+// midiData) apply to the whole part, from the first measure to the last.
+//
+// MusicXML itself allows a single part to carry more than one instrument. The most common case is
+// a drum kit or percussion part, where the bass drum, snare, ride cymbal, and so on are each
+// treated as a separate instrument. You also see it when a part layers or doubles two sounds that
+// play together — two sampled instruments sounding at once, or a single "Clarinet 1 & 2" line that
+// really holds two separate instruments.
+//
+// For now this library brings in only the first instrument of such a part. Any additional
+// instruments in the file are not available here and are not written back out. We're sorry for the
+// limitation: we looked for a way to offer several instruments per part without making the ordinary
+// single-instrument case — which covers the vast majority of music — harder to understand and use,
+// and we didn't find one we were happy with, so it stays one instrument per part for the time
+// being.
+//
+// One more thing worth knowing: MusicXML also lets a piece switch a part's instrument, or change
+// its playback settings, partway through the music. This library does not offer those mid-piece
+// changes. Whatever you set here is in effect for the entire part, start to finish.
 struct InstrumentData
 {
     std::string uniqueId;
@@ -230,6 +271,8 @@ MXAPI_EQUALS_BEGIN(MidiData)
 MXAPI_EQUALS_MEMBER(virtualLibrary)
 MXAPI_EQUALS_MEMBER(virtualName)
 MXAPI_EQUALS_MEMBER(device)
+MXAPI_EQUALS_MEMBER(devicePort)
+MXAPI_EQUALS_MEMBER(writeDeviceId)
 MXAPI_EQUALS_MEMBER(name)
 MXAPI_EQUALS_MEMBER(bank)
 MXAPI_EQUALS_MEMBER(channel)
