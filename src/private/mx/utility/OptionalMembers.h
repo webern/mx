@@ -101,22 +101,22 @@
                                                                                                                        \
     template <class T> bool lookForAndSetHas##fieldNameCapitalized(bool has, T *const el)                              \
     {                                                                                                                  \
-        if constexpr (requires { el->setterName(std::nullopt); })                                                      \
+        if constexpr (requires { el->fieldName(); })                                                                   \
         {                                                                                                              \
-            if (!has)                                                                                                  \
+            if constexpr (requires { el->setterName(std::nullopt); })                                                  \
             {                                                                                                          \
-                el->setterName(std::nullopt);                                                                          \
+                if (!has)                                                                                              \
+                {                                                                                                      \
+                    el->setterName(std::nullopt);                                                                      \
+                }                                                                                                      \
+                else if (!el->fieldName().has_value())                                                                 \
+                {                                                                                                      \
+                    el->setterName(typename std::decay_t<decltype(el->fieldName())>::value_type{});                    \
+                }                                                                                                      \
+                return has;                                                                                            \
             }                                                                                                          \
-            else if (!el->fieldName().has_value())                                                                     \
-            {                                                                                                          \
-                el->setterName(typename std::decay_t<decltype(el->fieldName())>::value_type{});                        \
-            }                                                                                                          \
-            return has;                                                                                                \
         }                                                                                                              \
-        else                                                                                                           \
-        {                                                                                                              \
-            return false;                                                                                              \
-        }                                                                                                              \
+        return false;                                                                                                  \
     }
 
 // Value setter for a clamped-decimal wrapper field.
@@ -124,15 +124,18 @@
                                                                                                                        \
     template <class T, class VALUE_TYPE> void lookForAndSet##fieldNameCapitalized(VALUE_TYPE value, T *const el)       \
     {                                                                                                                  \
-        if constexpr (requires {                                                                                       \
-                          el->setterName(typename std::decay_t<decltype(el->fieldName())>::value_type{                 \
-                              mx::core::Decimal{static_cast<double>(value)}});                                         \
-                      })                                                                                               \
+        if constexpr (requires { el->fieldName(); })                                                                   \
         {                                                                                                              \
-            if (el->fieldName().has_value())                                                                           \
+            if constexpr (requires {                                                                                   \
+                              el->setterName(typename std::decay_t<decltype(el->fieldName())>::value_type{             \
+                                  mx::core::Decimal{static_cast<double>(value)}});                                     \
+                          })                                                                                           \
             {                                                                                                          \
-                el->setterName(typename std::decay_t<decltype(el->fieldName())>::value_type{                           \
-                    mx::core::Decimal{static_cast<double>(value)}});                                                   \
+                if (el->fieldName().has_value())                                                                       \
+                {                                                                                                      \
+                    el->setterName(typename std::decay_t<decltype(el->fieldName())>::value_type{                       \
+                        mx::core::Decimal{static_cast<double>(value)}});                                               \
+                }                                                                                                      \
             }                                                                                                          \
         }                                                                                                              \
     }
@@ -142,13 +145,16 @@
                                                                                                                        \
     template <class T> void lookForAndSet##fieldNameCapitalized(int value, T *const el)                                \
     {                                                                                                                  \
-        if constexpr (requires {                                                                                       \
-                          el->setterName(typename std::decay_t<decltype(el->fieldName())>::value_type{value});         \
-                      })                                                                                               \
+        if constexpr (requires { el->fieldName(); })                                                                   \
         {                                                                                                              \
-            if (el->fieldName().has_value())                                                                           \
+            if constexpr (requires {                                                                                   \
+                              el->setterName(typename std::decay_t<decltype(el->fieldName())>::value_type{value});     \
+                          })                                                                                           \
             {                                                                                                          \
-                el->setterName(typename std::decay_t<decltype(el->fieldName())>::value_type{value});                   \
+                if (el->fieldName().has_value())                                                                       \
+                {                                                                                                      \
+                    el->setterName(typename std::decay_t<decltype(el->fieldName())>::value_type{value});               \
+                }                                                                                                      \
             }                                                                                                          \
         }                                                                                                              \
     }
@@ -158,11 +164,14 @@
                                                                                                                        \
     template <class T, class VALUE_TYPE> void lookForAndSet##fieldNameCapitalized(VALUE_TYPE value, T *const el)       \
     {                                                                                                                  \
-        if constexpr (requires { el->setterName(std::move(value)); })                                                  \
+        if constexpr (requires { el->fieldName(); })                                                                   \
         {                                                                                                              \
-            if (el->fieldName().has_value())                                                                           \
+            if constexpr (requires { el->setterName(std::move(value)); })                                              \
             {                                                                                                          \
-                el->setterName(std::move(value));                                                                      \
+                if (el->fieldName().has_value())                                                                       \
+                {                                                                                                      \
+                    el->setterName(std::move(value));                                                                  \
+                }                                                                                                      \
             }                                                                                                          \
         }                                                                                                              \
     }
