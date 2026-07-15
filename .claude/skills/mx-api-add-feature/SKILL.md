@@ -63,9 +63,9 @@ write paths symmetric. See ./steps/step-3-mx-impl.md
 
 ## Step 4: Run tests
 
-Run `make test` for the unit suites and `make test-api-roundtrip` for the corpus roundtrip gate
-(Step 1 explains both, along with `make discover-api-roundtrip`). Verify everything passes. Then run
-`make fmt` and `make check` so the CI quality gates will pass.
+Run `make api-test` for the unit suites and `make api-roundtrip` for the corpus roundtrip gate
+(Step 1 explains both, along with `make api-roundtrip-discover`). Verify everything passes. Then run
+`make fmt` and `make fmt-check` so the CI quality gates will pass.
 
 ## (optional) Step 5: Open a PR
 

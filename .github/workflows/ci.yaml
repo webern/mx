@@ -20,15 +20,19 @@ concurrency:
 env:
   DOCKER_VOLUME: mx-build
 
+# Coverage is intentionally absent here -- the instrumented core/api builds are
+# expensive and run only on demand from .github/workflows/coverage.yaml (the
+# "Run workflow" button or a `/coverage` PR comment).
+#
 # Every Linux job runs its make targets inside the pinned mx-sdk Docker
-# toolchain; only the two macOS jobs build natively.
+# toolchain; the macOS and Windows jobs build natively to catch AppleClang and
+# MSVC portability fallout.
 jobs:
-  # Cheap up-front diff check so the gen-quality gate (score.json/report.md,
-  # ratcheted floor) only runs -- and only spends a PR comment -- when gen/
-  # actually changed. A gen/ change that's md-only (README/AGENTS/DESIGN docs)
-  # doesn't move the score, so it's excluded too. Other linux-gen steps
-  # (fmt-check, test-gen, gen-check, regen drift) are unaffected: they're
-  # cheap and apply to the whole repo, not just gen/.
+  # Cheap up-front diff check so the gen job (generator/audit tests, Go/C
+  # corert, the ratcheted quality/lint gates, and the gen-quality PR comment)
+  # only runs -- and only spends a PR comment -- when gen/ actually changed. A
+  # gen/ change that's md-only (README/AGENTS/DESIGN docs) doesn't move any of
+  # that, so it's excluded too.
   changes:
     name: "Detect gen/ changes"
     runs-on: ubuntu-latest
@@ -44,19 +48,13 @@ jobs:
               - 'gen/**'
               - '!gen/**/*.md'
 
-  # Python-side gates for the gen/ generator and audit tool, plus the repo's
-  # only clang-format gate. Also runs plates --check for every target. No C++
-  # is compiled or tested here.
-  linux-gen:
-    name: "gen: unit/audit tests + regen drift + quality/lint + fmt-check (Linux)"
+  # The deep gate: every C++ suite -- the mx::core substrate (corert + unit)
+  # and the mx::api product surface (mxtest + examples + corpus round-trip) --
+  # built once through the pinned mx-sdk toolchain. This is the one place the
+  # core suites run, so it is the authoritative C++ correctness check.
+  test-linux:
+    name: "test: all C++ suites (Linux)"
     runs-on: ubuntu-latest
-    needs: changes
-
-    # Read-only token: this job builds untrusted fork PR code, so it never
-    # requests write. The gen-quality comment is posted by the pr-comment.yaml
-    # companion workflow (workflow_run) from the base-repo context instead.
-    permissions:
-      contents: read
 
     steps:
       - uses: actions/checkout@v4
@@ -64,8 +62,7 @@ jobs:
       # Container-driver builder (needed to export the gha layer cache) plus
       # the runtime-token export so the Makefile auto-detects
       # ACTIONS_RUNTIME_TOKEN and pushes/pulls the Docker layer cache. Keeps
-      # the toolchain-install layer warm across runs. The same `make check`
-      # runs locally with no cache (token absent -> plain build).
+      # the toolchain-install layer warm across runs.
       - uses: docker/setup-buildx-action@v3
       - uses: crazy-max/ghaction-github-runtime@v3
 
@@ -84,20 +81,134 @@ jobs:
         uses: actions/cache@v4
         with:
           path: build/docker/.ccache
-          key: ccache-${{ runner.os }}-gen-${{ github.sha }}
-          restore-keys: ccache-${{ runner.os }}-gen-
+          key: ccache-${{ runner.os }}-test-${{ github.sha }}
+          restore-keys: ccache-${{ runner.os }}-test-
+
+      # corert file counts are pinned by an in-suite counts case (see CoreRoundtripTest.cpp).
+      - name: All C++ suites (core roundtrip + unit, api mxtest + examples + roundtrip)
+        run: make test-all
+
+  # The api product surface, built natively with AppleClang. macOS is a
+  # portability check on the product tier only (the core suites run on Linux in
+  # test-linux); this is the only C++ job off the pinned toolchain, by design,
+  # to keep finding AppleClang fallout.
+  test-macos:
+    name: "test: api suite (macOS/AppleClang)"
+    runs-on: macos-latest
+
+    # No Docker on the macOS runners: MX_RUNNING_IN_DOCKER=1 flips the
+    # Makefile to its direct-invocation branch so the build runs natively.
+    env:
+      MX_RUNNING_IN_DOCKER: 1
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache build
+        uses: actions/cache@v4
+        with:
+          path: build/
+          key: ${{ runner.os }}-api-${{ hashFiles('CMakeLists.txt', 'src/**') }}
+          restore-keys: |
+            ${{ runner.os }}-api-
+
+      - name: api suite (mxtest + examples)
+        run: make api-test
+
+      - name: api corpus round-trip (regression mode)
+        run: make api-roundtrip
+
+  # The api product surface, built natively with the real MSVC toolchain to
+  # keep finding Windows portability fallout. Windows has no make/Unix tools
+  # and the Makefile hardcodes single-config binary paths, so this job drives
+  # CMake directly (multi-config Visual Studio generator, Debug). It is a
+  # required check and is expected to fail until the code is MSVC-clean; fixing
+  # that fallout is follow-up work, this job exists so it runs on every PR.
+  test-windows:
+    name: "test: api suite (Windows/MSVC)"
+    runs-on: windows-latest
+
+    # Git Bash so multi-command run steps stop on first failure (set -e) and
+    # forward-slash paths + .exe invocation work uniformly. CMake still selects
+    # the default Visual Studio generator and drives MSBuild/MSVC itself.
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure (MSVC multi-config, MX_API)
+        run: cmake -S . -B build/api -DMX_API=on
+
+      - name: Build (Debug)
+        run: >-
+          cmake --build build/api --config Debug
+          --target mx mxtest mxtest-api-roundtrip mxread mxwrite mxhide
+          --parallel
+
+      - name: api examples
+        run: |
+          build/api/Debug/mxread.exe
+          build/api/Debug/mxwrite.exe build/api/Debug/example.musicxml
+          build/api/Debug/mxhide.exe
+
+      - name: mxtest suite (api/impl/file/control)
+        run: build/api/Debug/mxtest.exe
+
+      - name: api corpus round-trip (regression mode)
+        run: >-
+          build/api/Debug/mxtest-api-roundtrip.exe regression
+          data src/private/mxtest/api/roundtrip-baseline.txt
+
+  # Proves mx compiles as a Swift package under AppleClang/SPM on every PR --
+  # the path komp takes when it depends on a sibling mx via `.package(path:)`.
+  # Runs no test suites; the binary xcframework release arm is follow-up work.
+  swift:
+    name: "swift: Mx package build (macOS/SPM)"
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Swift toolchain
+        run: swift --version
+
+      - name: Build the Mx Swift package (local-checkout source mode)
+        run: swift build --product Mx
+
+  # Repo-wide, compiles no C++: the clang-format gate plus a generated-output
+  # drift check (regenerate every target, then fail on any tracked-file diff).
+  # Always runs -- both apply to the whole repo, not just gen/.
+  quality:
+    name: "quality: fmt-check + generated-output drift (Linux)"
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+      - uses: crazy-max/ghaction-github-runtime@v3
+
+      - name: Create bind-backed build volume
+        run: |
+          mkdir -p build/docker
+          docker volume create --driver local \
+            --opt type=none --opt o=bind \
+            --opt device="$GITHUB_WORKSPACE/build/docker" mx-build
+
+      - name: Cache ccache
+        uses: actions/cache@v4
+        with:
+          path: build/docker/.ccache
+          key: ccache-${{ runner.os }}-quality-${{ github.sha }}
+          restore-keys: ccache-${{ runner.os }}-quality-
 
       - name: fmt-check (clang-format, all C++ under src/)
-        run: make check
-
-      - name: gen unit tests (parser/IR/plates/press)
-        run: make test-gen
-
-      - name: audit tool unit tests (incl. failure classifier)
-        run: make test-audit
-
-      - name: plates --check (all targets)
-        run: make gen-check
+        run: make fmt-check
 
       # The committed generated output must match the generator: regenerate
       # every target, then any tracked-file drift fails the build.
@@ -107,24 +218,66 @@ jobs:
       - name: Generated output drift check
         run: git diff --exit-code
 
-      # Static-analysis gates on the gen/ generator. gen-quality only runs when
-      # gen/ actually changed (see the `changes` job); gen-lint stays unguarded
-      # since it's cheap and has no report/comment plumbing riding on it. Each
-      # fails the build below its floor (GEN_QUALITY_FLOOR / GEN_LINT_FLOOR in
-      # the Makefile).
+  # Generator + audit gates, gated on gen/ changes (see the `changes` job): the
+  # generator/audit Python tests, the Go and C corert suites (they exercise the
+  # generator's emitted targets), and the ratcheted quality/lint gates. Also
+  # stages the gen-quality report as a PR comment, posted by pr-comment.yaml.
+  gen:
+    name: "gen: generator + audit tests, Go/C corert, quality/lint (Linux)"
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.gen == 'true'
+
+    # Read-only token: this job builds untrusted fork PR code, so it never
+    # requests write. The gen-quality comment is posted by the pr-comment.yaml
+    # companion workflow (workflow_run) from the base-repo context instead.
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+      - uses: crazy-max/ghaction-github-runtime@v3
+
+      - name: Create bind-backed build volume
+        run: |
+          mkdir -p build/docker
+          docker volume create --driver local \
+            --opt type=none --opt o=bind \
+            --opt device="$GITHUB_WORKSPACE/build/docker" mx-build
+
+      - name: Cache ccache
+        uses: actions/cache@v4
+        with:
+          path: build/docker/.ccache
+          key: ccache-${{ runner.os }}-gen-${{ github.sha }}
+          restore-keys: ccache-${{ runner.os }}-gen-
+
+      - name: gen unit tests (parser/IR/plates/press)
+        run: make gen-test
+
+      - name: audit tool unit tests (incl. failure classifier)
+        run: make audit-test
+
+      - name: Go corert suite
+        run: make test-go
+
+      - name: C corert suite
+        run: make test-c
+
+      # Static-analysis gates on the gen/ generator. Each fails the build below
+      # its floor (GEN_QUALITY_FLOOR / GEN_LINT_FLOOR in the Makefile).
       - name: gen-quality gate
-        if: needs.changes.outputs.gen == 'true'
         run: make gen-quality
 
       - name: gen-lint gate
         run: make gen-lint
 
-      # Surface the score in the run summary when the gate actually ran.
-      # always() so a gate failure still reports why; skipped runs (gen/
-      # unchanged) leave this section out entirely rather than printing a
-      # misleading "(no report produced)".
+      # Surface the score in the run summary. always() so a gate failure still
+      # reports why.
       - name: gen-quality report
-        if: always() && needs.changes.outputs.gen == 'true'
+        if: always()
         run: |
           {
             echo '### gen-quality `gen/`'
@@ -135,14 +288,14 @@ jobs:
       # Fork PRs run with a read-only token, so this job can't post the comment
       # itself. Stage the body + PR number as an artifact; pr-comment.yaml posts
       # it after CI completes. always() so a gate failure still reports why.
-      # Guarded on the report file existing (not just needs.changes.outputs.gen)
-      # so the comment-sending job gets no artifact -- and gracefully posts
-      # nothing -- whenever gen-quality didn't run or crashed before writing it.
+      # Guarded on the report file existing so the comment-sending job gets no
+      # artifact -- and gracefully posts nothing -- if gen-quality crashed
+      # before writing it.
       - name: Stage gen-quality PR comment
         if: always() && github.event_name == 'pull_request'
         run: |
           if [ ! -f data/testOutput/gen-quality/report.md ]; then
-            echo 'No gen-quality report to stage (check skipped or produced nothing).'
+            echo 'No gen-quality report to stage (gate produced nothing).'
             exit 0
           fi
           mkdir -p pr-comment
@@ -162,359 +315,3 @@ jobs:
           name: pr-comment-gen
           path: pr-comment/
           if-no-files-found: ignore
-
-  # The mx::api/mx::impl product surface. Core-layer suites (corert, unit,
-  # xmllint, probes) run in linux-core, not here.
-  linux-api:
-    name: "api: mxtest suite + examples + corpus round-trip (Linux)"
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: docker/setup-buildx-action@v3
-      - uses: crazy-max/ghaction-github-runtime@v3
-
-      - name: Create bind-backed build volume
-        run: |
-          mkdir -p build/docker
-          docker volume create --driver local \
-            --opt type=none --opt o=bind \
-            --opt device="$GITHUB_WORKSPACE/build/docker" mx-build
-
-      - name: Cache ccache
-        uses: actions/cache@v4
-        with:
-          path: build/docker/.ccache
-          key: ccache-${{ runner.os }}-api-${{ github.sha }}
-          restore-keys: ccache-${{ runner.os }}-api-
-
-      - name: Build mx library
-        run: make lib
-
-      - name: mxtest suite (api/impl/file/control) + examples
-        run: make test
-
-      - name: api corpus round-trip (regression mode)
-        run: make test-api-roundtrip
-
-  # The strongly-typed mx::core layer. Note: check-core-dev (warning-free
-  # build gate) is a local-only gate; CI does not run it.
-  linux-core:
-    name: "core: corert round-trip + unit + xmllint + compile probes (Linux)"
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: docker/setup-buildx-action@v3
-      - uses: crazy-max/ghaction-github-runtime@v3
-
-      - name: Create bind-backed build volume
-        run: |
-          mkdir -p build/docker
-          docker volume create --driver local \
-            --opt type=none --opt o=bind \
-            --opt device="$GITHUB_WORKSPACE/build/docker" mx-build
-
-      - name: Cache ccache
-        uses: actions/cache@v4
-        with:
-          path: build/docker/.ccache
-          key: ccache-${{ runner.os }}-core-${{ github.sha }}
-          restore-keys: ccache-${{ runner.os }}-core-
-
-      # corert file counts are pinned by an in-suite counts case (see CoreRoundtripTest.cpp).
-      - name: corert round-trip suite
-        run: make test-core-dev
-
-      - name: mx::core unit tests
-        run: make test-cpp-unit
-
-      - name: validate-cpp (serialize corpus + xmllint vs XSD)
-        run: make validate-cpp
-
-      - name: probe-cpp (must-not-compile probes)
-        run: make probe-cpp
-
-  # corert round-trip suites for the generator's emitted Go and C targets.
-  linux-targets:
-    name: "corert: Go + C generated targets (Linux)"
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: docker/setup-buildx-action@v3
-      - uses: crazy-max/ghaction-github-runtime@v3
-
-      - name: Create bind-backed build volume
-        run: |
-          mkdir -p build/docker
-          docker volume create --driver local \
-            --opt type=none --opt o=bind \
-            --opt device="$GITHUB_WORKSPACE/build/docker" mx-build
-
-      - name: Go corert suite
-        run: make test-go
-
-      - name: C corert suite
-        run: make test-c
-
-  # Re-runs the core (corert + unit) and api (mxtest + round-trip) suites in
-  # instrumented builds to produce gcovr reports. Coverage % is advisory (no
-  # floor), but a test failure still fails the job. Split into two jobs so the
-  # two instrumented builds run in parallel instead of as serial steps in one
-  # job; coverage-report merges their outputs into a single job summary +
-  # PR comment once both finish.
-  coverage-core:
-    name: "coverage: core gcovr report, advisory (Linux)"
-    runs-on: ubuntu-latest
-
-    permissions:
-      contents: read
-
-    outputs:
-      table: ${{ steps.table.outputs.table }}
-      artifact-url: ${{ steps.upload.outputs.artifact-url }}
-
-    steps:
-      - uses: actions/checkout@v4
-
-      # Same container-driver + runtime-token setup as linux-gen so the
-      # coverage stage reuses the warm toolchain layer cache.
-      - uses: docker/setup-buildx-action@v3
-      - uses: crazy-max/ghaction-github-runtime@v3
-
-      # Bind-back mx-build so its ccache dir is cacheable, as in linux-gen. A
-      # distinct key prefix keeps this job's save from racing the others.
-      - name: Create bind-backed build volume
-        run: |
-          mkdir -p build/docker
-          docker volume create --driver local \
-            --opt type=none --opt o=bind \
-            --opt device="$GITHUB_WORKSPACE/build/docker" mx-build
-
-      - name: Cache ccache
-        uses: actions/cache@v4
-        with:
-          path: build/docker/.ccache
-          key: ccache-${{ runner.os }}-coverage-core-${{ github.sha }}
-          restore-keys: ccache-${{ runner.os }}-coverage-core-
-
-      - name: coverage-core-dev (corert + unit, instrumented)
-        run: make coverage-core-dev
-
-      # Turn gcovr's 3-line summary (data/testOutput/coverage/summary.txt, e.g.
-      # "lines: 52.1% (17624 out of 33846)") into a Markdown table for the job
-      # summary, and pass it to coverage-report as a job output for the
-      # merged PR comment.
-      - name: Build coverage table
-        id: table
-        if: always()
-        run: |
-          make_table() {
-            local file="$1"
-            echo '| Metric | Coverage | Covered / Total |'
-            echo '|---|---:|---:|'
-            awk '/^(lines|functions|branches):/ {
-              m=$1; sub(":","",m);
-              c=$3; sub("[(]","",c);
-              t=$6; sub("[)]","",t);
-              M=toupper(substr(m,1,1)) substr(m,2);
-              printf "| %s | %s | %s / %s |\n", M, $2, c, t
-            }' "$file"
-          }
-          {
-            echo '### Core-dev coverage `src/private/mx/core/`'
-            echo ''
-            make_table data/testOutput/coverage/summary.txt
-          } > table.md
-          cat table.md >> "$GITHUB_STEP_SUMMARY"
-          {
-            echo 'table<<COVERAGE_TABLE_EOF'
-            cat table.md
-            echo 'COVERAGE_TABLE_EOF'
-          } >> "$GITHUB_OUTPUT"
-
-      # Single self-contained page, stored (compression-level 0). GitHub still
-      # delivers artifacts as a .zip -- there is no raw-file download -- so the
-      # zip just holds one index.html to unzip and open.
-      - name: Upload core HTML report
-        id: upload
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-core-dev
-          path: data/testOutput/coverage/index.html
-          compression-level: 0
-
-  coverage-api:
-    name: "coverage: api gcovr report, advisory (Linux)"
-    runs-on: ubuntu-latest
-
-    permissions:
-      contents: read
-
-    outputs:
-      table: ${{ steps.table.outputs.table }}
-      artifact-url: ${{ steps.upload.outputs.artifact-url }}
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: docker/setup-buildx-action@v3
-      - uses: crazy-max/ghaction-github-runtime@v3
-
-      - name: Create bind-backed build volume
-        run: |
-          mkdir -p build/docker
-          docker volume create --driver local \
-            --opt type=none --opt o=bind \
-            --opt device="$GITHUB_WORKSPACE/build/docker" mx-build
-
-      - name: Cache ccache
-        uses: actions/cache@v4
-        with:
-          path: build/docker/.ccache
-          key: ccache-${{ runner.os }}-coverage-api-${{ github.sha }}
-          restore-keys: ccache-${{ runner.os }}-coverage-api-
-
-      - name: coverage-api (mxtest + round-trip, instrumented)
-        run: make coverage-api
-
-      - name: Build coverage table
-        id: table
-        if: always()
-        run: |
-          make_table() {
-            local file="$1"
-            echo '| Metric | Coverage | Covered / Total |'
-            echo '|---|---:|---:|'
-            awk '/^(lines|functions|branches):/ {
-              m=$1; sub(":","",m);
-              c=$3; sub("[(]","",c);
-              t=$6; sub("[)]","",t);
-              M=toupper(substr(m,1,1)) substr(m,2);
-              printf "| %s | %s | %s / %s |\n", M, $2, c, t
-            }' "$file"
-          }
-          {
-            echo '### API coverage `src/private/mx/{api,impl,utility}/`'
-            echo ''
-            make_table data/testOutput/coverage/api/summary.txt 2>/dev/null || echo '(api coverage not produced)'
-          } > table.md
-          cat table.md >> "$GITHUB_STEP_SUMMARY"
-          {
-            echo 'table<<COVERAGE_TABLE_EOF'
-            cat table.md
-            echo 'COVERAGE_TABLE_EOF'
-          } >> "$GITHUB_OUTPUT"
-
-      - name: Upload api HTML report
-        id: upload
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-api
-          path: data/testOutput/coverage/api/index.html
-          compression-level: 0
-
-  # Merges the two coverage jobs' tables into one PR comment. always() so it
-  # still posts (with whatever tables it has) if one side failed; gated to
-  # pull_request since push events have no PR to comment on.
-  coverage-report:
-    name: "coverage: PR comment (core + api)"
-    runs-on: ubuntu-latest
-    needs: [coverage-core, coverage-api]
-    if: always() && github.event_name == 'pull_request'
-
-    # Read-only token: posting the coverage comment is delegated to the
-    # pr-comment.yaml companion workflow so fork PRs get a comment too (their
-    # GITHUB_TOKEN is capped to read-only here).
-    permissions:
-      contents: read
-
-    steps:
-      # Stage the body + PR number as an artifact; pr-comment.yaml posts it
-      # after CI completes (this job's fork-PR token is read-only). It posts a
-      # fresh comment each run, so the PR keeps a per-push coverage history.
-      - name: Stage PR comment
-        run: |
-          mkdir -p pr-comment
-          {
-            echo '### Coverage report'
-            echo ''
-            echo '${{ needs.coverage-core.outputs.table }}'
-            echo ''
-            echo '${{ needs.coverage-api.outputs.table }}'
-            echo ''
-            echo '[Core HTML report](${{ needs.coverage-core.outputs.artifact-url }}) | [API HTML report](${{ needs.coverage-api.outputs.artifact-url }})'
-            echo ''
-            echo 'Commit `${{ github.sha }}`.'
-          } > pr-comment/body.md
-          echo '${{ github.event.pull_request.number }}' > pr-comment/number
-
-      - name: Upload PR comment
-        uses: actions/upload-artifact@v4
-        with:
-          name: pr-comment-coverage
-          path: pr-comment/
-
-  # Skips validate-cpp (xmllint) and probe-cpp; those run Linux-only in
-  # linux-core. No gen/audit gates here either.
-  macos:
-    name: "core + api: corert + unit + mxtest + round-trip (macOS/AppleClang)"
-    runs-on: macos-latest
-
-    # No Docker on the macOS runners: MX_RUNNING_IN_DOCKER=1 flips the
-    # Makefile to its direct-invocation branch so the build runs natively
-    # with AppleClang. This is the only C++ job off the pinned toolchain,
-    # by design: it exists to find (and keep finding) AppleClang fallout.
-    env:
-      MX_RUNNING_IN_DOCKER: 1
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Cache build
-        uses: actions/cache@v4
-        with:
-          path: build/
-          key: ${{ runner.os }}-core-dev-${{ hashFiles('CMakeLists.txt', 'src/**') }}
-          restore-keys: |
-            ${{ runner.os }}-core-dev-
-
-      - name: corert round-trip suite
-        run: make test-core-dev
-
-      - name: mx::core unit tests
-        run: make test-cpp-unit
-
-      - name: Build mx library (api/impl)
-        run: make lib
-
-      - name: mxtest suite (api/impl/file/control) + examples
-        run: make test
-
-      - name: api corpus round-trip (regression mode)
-        run: make test-api-roundtrip
-
-  swift-local:
-    name: "swift: Mx package build only (macOS/SPM)"
-    runs-on: macos-latest
-
-    # By default mx builds `Mx` as a source library straight from this checkout --
-    # the path komp takes when it depends on a sibling mx via `.package(path:)`.
-    # Building it here proves mx compiles as a Swift package under AppleClang/SPM on
-    # every PR; it runs no test suites. The binary xcframework release arm
-    # (MX_BINARY_RELEASE) is follow-up work.
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Swift toolchain
-        run: swift --version
-
-      - name: Build the Mx Swift package (local-checkout source mode)
-        run: swift build --product Mx

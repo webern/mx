@@ -4,8 +4,7 @@
 
 // Construction-safety tests for representative generated value types:
 // clamping on construct and set, named-factory enums, structural bespoke
-// shapes, and union dispatch. The compile-time must-NOT-compile probes live
-// in mxtest/probe (script-driven).
+// shapes, and union dispatch.
 
 #include "cpul/cpulTestHarness.h"
 

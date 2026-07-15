@@ -1,6 +1,6 @@
 """Classify api round-trip failures by *measured* divergence, and rank a worklist.
 
-Reads the dump directory produced by ``make dump-api-roundtrip`` (Phase 1,
+Reads the dump directory produced by ``make api-roundtrip-dump`` (Phase 1,
 issue #210): pairs of ``<flat>.expected.xml`` / ``<flat>.actual.xml`` plus a
 ``<flat>.status`` sidecar for crashes. Diffs each pair structurally, records the
 set of divergences that keep the file from round-tripping, and writes a

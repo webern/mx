@@ -17,6 +17,6 @@ C++ (`gen/cpp`, the product), Go, C, JSON Schema. Review against its cardinal ru
 - Fail loud: new error paths must exit non-zero with a `template:line` style message, never
   emit best-effort output.
 - Generated output is committed: a generator change without its regenerated output (or vice
-  versa) fails `make test-gen` drift checking.
+  versa) fails the CI drift check (`make gen` then `git diff --exit-code`).
 - Template identifiers must be unity-build safe: use `{{ident}}`-suffixed names for
   file-local symbols.

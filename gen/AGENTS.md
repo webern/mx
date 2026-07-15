@@ -17,7 +17,7 @@ python3 -m gen <config.toml>                               # full emit: render t
 
 - `--resolve` prints the collapsed IR view (attribute groups flattened, group refs spliced).
 - `--config C` applies that target's companion patches before lowering.
-- `--check` on `plates` validates renames and detects identifier collisions; exits non-zero on failure -- a CI gate.
+- `--check` on `plates` validates renames and detects identifier collisions; exits non-zero on failure. The same checks run during full generation (`build_plates`), so `make gen` + the CI drift check enforce them -- `--check` is a fast standalone way to run just them.
 - Full emit shortcuts: `make gen-cpp` (C++ only), `make gen` (all targets).
 
 ## Quality gates
@@ -25,17 +25,16 @@ python3 -m gen <config.toml>                               # full emit: render t
 Run all of these after any generator change:
 
 ```
-make test-gen     # unit tests + test_agnosticism.py + regen + git diff --exit-code
-make gen-check    # plates --check for all targets (rename validation, collision detection)
+make gen-test     # unit tests + test_agnosticism.py + regen + git diff --exit-code
 make gen-quality  # design-quality scorer (floor enforced; see quality.py)
 make gen-lint     # pylint (config: .pylintrc)
 ```
 
 After changing a target's `config.toml` or `templates/`, also run that target's corert suite
-(`make test-core-dev`, `make test-go`, `make test-c`).
+(`make core-roundtrip-test`, `make test-go`, `make test-c`).
 
 If generated output changes, commit the regenerated files in the same commit as the change
-that produced them (`make test-gen` fails CI on drift).
+that produced them (the CI drift check -- `make gen` then `git diff --exit-code` -- fails on drift).
 
 ## Cardinal rules
 
@@ -60,14 +59,14 @@ collisions -- all exit non-zero with a clear `template:line` message.
 
 ## Workflows
 
-**Modifying IR or Plates** -- change `gen/ir/` or `gen/plates/`. Run `make test-gen` and
-`make gen-check`.
+**Modifying IR or Plates** -- change `gen/ir/` or `gen/plates/`. Run `make gen-test` (its regen +
+drift check runs the rename/collision validation as part of generation).
 
 **Modifying a target** -- edit only that target's `config.toml` and `templates/`. Regenerate,
 run the target's corert, commit the updated output.
 
 **Adding a target** -- create a new directory with `config.toml` and `templates/`. Run
-`make test-gen` to confirm `test_agnosticism.py` passes.
+`make gen-test` to confirm `test_agnosticism.py` passes.
 
 **Renaming a schema type or element** -- use `[rename.type]`, `[rename.element]`, or
 `[rename.attribute]` in the target's `config.toml`. Keys are validated against the IR; a typo or

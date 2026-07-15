@@ -5,7 +5,7 @@
 `mx` is a MusicXML C++ library. The product surface is `mx::api`, a simplified and narrowed
 interface of MusicXML backed by the strongly-typed `mx::core` model.
 
-Quickstart: `make test-core-dev` (fast corert gate) - `make fmt` (format) - `make help` (all
+Quickstart: `make core-roundtrip-test` (fast corert gate) - `make fmt` (format) - `make help` (all
 targets). Everything runs in the `mx-sdk` Docker image unless `MX_RUNNING_IN_DOCKER=1`.
 
 ## Repository layout
@@ -17,7 +17,7 @@ mx/
   Makefile              <- top-level build driver
   Dockerfile            <- mx-sdk image with toolchains and dev tools
   CMakeLists.txt        <- C++ project
-  Package.swift         <- Swift Package Manager wrapper (built by the swift-local CI job)
+  Package.swift         <- Swift Package Manager wrapper (built by the swift CI job)
   data/                 <- MusicXML test corpus (large, see data/README.md)
   docs/ai/design/       <- design docs
   docs/musicxml-4.0-ed15c23.xsd <- the current musicxml.xsd schema
@@ -34,8 +34,6 @@ mx/
     mxtest/core/        <- mx::core unit tests (small)
     mxtest/corert/      <- C++ core roundtrip test (deserializes and serializes the test corpus)
     mxtest/import/      <- normalization support (Normalize.cpp/h + DecimalFields.h) shared by corert and api tests
-    mxtest/probe/       <- compile-time negative probes: constructs that MUST NOT compile (`make probe-cpp`)
-    mxtest/validate/    <- xmllint validation driver: parses+serializes corpus, outputs for `make validate-cpp`
     mxtest/api/         <- tests for the mx::api layer
     mxtest/impl/        <- tests for the mx::impl layer
     mxtest/file/        <- file-walking test infrastructure for the mx::api tests (MxFile, MxFileTest, etc.)
@@ -64,7 +62,7 @@ target list. Extend the `mx-sdk` image when new tools are needed.
 
 ## The corert (core roundtrip) test
 
-Runs with `make test-core-dev`. Deserializes and reserializes the test corpus with `mx::core`. It
+Runs with `make core-roundtrip-test`. Deserializes and reserializes the test corpus with `mx::core`. It
 compiles without `mx::impl`/`mx::api`, so you can iterate on `gen/cpp` and the generated core and
 defer fixing the `mx::impl` integration until you are ready.
 
@@ -136,15 +134,17 @@ Before designing or changing anything in `mx::api`, read the `mx-api-doctrine` s
 
 ## Quality gates
 
-Run `make fmt` to format. `make check` is the clang-format gate **only** — it builds and tests nothing.
-Run `make test-core-dev` for corert (especially `mx/core` work) and `make check-core-dev` (fmt-check
-+ warning-free build) before pushing core work. `make test` runs the api/impl suite + examples;
-corert, `make test-api-roundtrip`, and the gen/audit gates run separately (see `make help` / CI).
-Adding/removing a `data/` file: bump the pinned count in `CoreRoundtripTest.cpp`, run `make audit` (regenerates `corpus.xml` + `*.features.xml`), confirm round-trip via `make test-core-dev`.
-`ApiLoadSmokeTest` proves a file imports without crashing, not that the data is correct; the read→write→read gate (`make test-api-roundtrip` / `roundtrip-baseline.txt`) is the correctness check — pin a fixture there to defend a feature.
+Run `make fmt` to format. `make fmt-check` is the clang-format gate **only** — it builds and tests nothing.
+Run `make core-roundtrip-test` for corert (especially `mx/core` work) before pushing core work.
+`make api-test` runs the api/impl suite + examples; `make api-roundtrip` and the gen/audit gates run
+separately. `make test-all` runs every C++ suite at once (core roundtrip + unit + api-test +
+api-roundtrip) — the deep gate CI runs on Linux (see `make help` / CI).
+Adding/removing a `data/` file: bump the pinned count in `CoreRoundtripTest.cpp`, run `make audit` (regenerates `corpus.xml` + `*.features.xml`), confirm round-trip via `make core-roundtrip-test`.
+`ApiLoadSmokeTest` proves a file imports without crashing, not that the data is correct; the read→write→read gate (`make api-roundtrip` / `roundtrip-baseline.txt`) is the correctness check — pin a fixture there to defend a feature.
 
 Look at what will run in CI `.github/workflows/ci.yaml` and anticipate issues there when coding
-locally.
+locally. Code coverage is not part of the normal CI run; trigger it on demand with a `/coverage`
+comment on a PR or the Coverage workflow's "Run workflow" button (`.github/workflows/coverage.yaml`).
 
 ## Key files to understand
 

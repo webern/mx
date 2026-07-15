@@ -23,8 +23,8 @@ there. Adding a new language touches no generator Python.
 ## Running it
 
 Commands, gates, and workflows: see `gen/AGENTS.md`. Full runs: `make gen-cpp` (C++ target),
-`make gen` (all targets). Generated output is committed; `make test-gen` regenerates and
-asserts `git diff --exit-code`.
+`make gen` (all targets). Generated output is committed; the CI drift check regenerates
+(`make gen`) and asserts `git diff --exit-code`.
 
 ## For agents
 

@@ -1,0 +1,182 @@
+name: Coverage
+
+# Manual-only coverage. The instrumented core + api builds are expensive, so
+# they never run on push or PR open -- only when explicitly asked for:
+#   * the Actions "Run workflow" button (workflow_dispatch), or
+#   * a `/coverage` comment on a PR by a repo owner/member/collaborator.
+# Both paths build core AND api coverage. The comment path posts the report
+# back to the PR: unlike ci.yaml, an issue_comment run executes in the
+# base-repo context with a write token, so it can comment directly -- no
+# pr-comment.yaml delegation needed.
+#
+# NOTE: issue_comment triggers only fire for the workflow file on the default
+# branch, so `/coverage` starts working once this file is merged to main.
+on:
+  workflow_dispatch:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: coverage-${{ github.event.issue.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  DOCKER_VOLUME: mx-build
+
+jobs:
+  coverage:
+    name: "coverage: core + api gcovr reports"
+    runs-on: ubuntu-latest
+
+    # Run on the manual button, or on a `/coverage` comment made on a PR (not a
+    # plain issue) by someone with a write-ish association. Anything else -- a
+    # comment on an issue, a different command, a drive-by commenter -- is
+    # ignored.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.issue.pull_request &&
+       startsWith(github.event.comment.body, '/coverage') &&
+       contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.comment.author_association))
+
+    steps:
+      # Acknowledge the command so the requester knows it was accepted.
+      - name: Acknowledge command
+        if: github.event_name == 'issue_comment'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Cosmetic ack only -- never fail the run if the reaction can't post.
+            try {
+              await github.rest.reactions.createForIssueComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: context.payload.comment.id,
+                content: 'eyes',
+              });
+            } catch (e) {
+              core.info(`Could not add reaction: ${e.message}`);
+            }
+
+      # workflow_dispatch checks out the triggering ref directly. The comment
+      # path carries no PR ref in the event, so resolve the PR head SHA first.
+      - name: Resolve PR head
+        id: pr
+        if: github.event_name == 'issue_comment'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+            });
+            core.setOutput('sha', pr.data.head.sha);
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.pr.outputs.sha || github.sha }}
+
+      # Same container-driver + runtime-token + bind-backed volume + ccache
+      # setup as ci.yaml's Linux jobs so the instrumented builds reuse the warm
+      # toolchain layer cache.
+      - uses: docker/setup-buildx-action@v3
+      - uses: crazy-max/ghaction-github-runtime@v3
+
+      - name: Create bind-backed build volume
+        run: |
+          mkdir -p build/docker
+          docker volume create --driver local \
+            --opt type=none --opt o=bind \
+            --opt device="$GITHUB_WORKSPACE/build/docker" mx-build
+
+      - name: Cache ccache
+        uses: actions/cache@v4
+        with:
+          path: build/docker/.ccache
+          key: ccache-${{ runner.os }}-coverage-${{ github.sha }}
+          restore-keys: ccache-${{ runner.os }}-coverage-
+
+      - name: core coverage (corert + unit, instrumented)
+        run: make core-coverage
+
+      - name: api coverage (mxtest + round-trip, instrumented)
+        run: make api-coverage
+
+      # Turn gcovr's 3-line summaries (data/testOutput/coverage[/api]/summary.txt,
+      # e.g. "lines: 52.1% (17624 out of 33846)") into Markdown tables for the
+      # job summary and the PR comment.
+      - name: Build coverage tables
+        id: tables
+        if: always()
+        run: |
+          make_table() {
+            local file="$1"
+            echo '| Metric | Coverage | Covered / Total |'
+            echo '|---|---:|---:|'
+            awk '/^(lines|functions|branches):/ {
+              m=$1; sub(":","",m);
+              c=$3; sub("[(]","",c);
+              t=$6; sub("[)]","",t);
+              M=toupper(substr(m,1,1)) substr(m,2);
+              printf "| %s | %s | %s / %s |\n", M, $2, c, t
+            }' "$file"
+          }
+          {
+            echo '### Core-dev coverage `src/private/mx/core/`'
+            echo ''
+            make_table data/testOutput/coverage/summary.txt 2>/dev/null || echo '(core coverage not produced)'
+            echo ''
+            echo '### API coverage `src/private/mx/{api,impl,utility}/`'
+            echo ''
+            make_table data/testOutput/coverage/api/summary.txt 2>/dev/null || echo '(api coverage not produced)'
+          } > tables.md
+          cat tables.md >> "$GITHUB_STEP_SUMMARY"
+
+      # Single self-contained page each, stored (compression-level 0). GitHub
+      # delivers artifacts as a .zip -- there is no raw-file download -- so each
+      # zip just holds one index.html to unzip and open.
+      - name: Upload core HTML report
+        id: upload-core
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-core-dev
+          path: data/testOutput/coverage/index.html
+          compression-level: 0
+
+      - name: Upload api HTML report
+        id: upload-api
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-api
+          path: data/testOutput/coverage/api/index.html
+          compression-level: 0
+
+      # Post the report to the PR. issue_comment runs in the base-repo context
+      # with a write token, so this comments directly. always() so a test
+      # failure mid-build still reports whatever coverage was produced.
+      - name: Post coverage comment
+        if: always() && github.event_name == 'issue_comment'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.issue.number }}
+          SHA: ${{ steps.pr.outputs.sha }}
+          CORE_URL: ${{ steps.upload-core.outputs.artifact-url }}
+          API_URL: ${{ steps.upload-api.outputs.artifact-url }}
+        run: |
+          {
+            echo '### Coverage report'
+            echo ''
+            cat tables.md
+            echo ''
+            echo "[Core HTML report]($CORE_URL) | [API HTML report]($API_URL)"
+            echo ''
+            echo "Commit \`$SHA\`."
+          } > comment.md
+          gh pr comment "$PR" --repo "$REPO" --body-file comment.md

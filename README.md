@@ -28,7 +28,7 @@ Building and running the core roundtrip suite should be as simple as:
 ```
 git clone https://github.com/webern/mx.git mx
 cd mx
-make test-core-dev
+make core-roundtrip-test
 ```
 
 Run `make` (or `make help`) to list every target.
@@ -45,20 +45,21 @@ and `MX_COVERAGE` (gcov instrumentation). The useful workflows are exposed as Ma
 
 | Target                      | What it does                                                       |
 |-----------------------------|--------------------------------------------------------------------|
-| `make lib`                  | build the `mx` static library (`mx::api` + `mx::impl`)            |
-| `make dev`                  | build `mx` + mxtest + example + api-roundtrip binaries            |
-| `make test`                 | run api examples, then the `mxtest` suite (api/impl/file/control) |
-| `make test-api-roundtrip`   | corpus api roundtrip in regression mode (CI gate)                 |
-| `make run-examples`         | build and run all three api example programs                      |
-| `make core-dev`             | build `mx_core` and the corert/unit/validate test binaries        |
-| `make test-core-dev`        | run the core roundtrip suite over the `data/` corpus              |
-| `make test-cpp-unit`        | run the `mx::core` unit tests (values, shapes, rejection suite)   |
-| `make validate-cpp`         | serialize every corpus file and `xmllint`-validate the output     |
-| `make probe-cpp`            | compile-time probes: invalid constructions must NOT compile       |
+| `make test-all`             | every C++ suite: core roundtrip + unit + api-test + api-roundtrip |
+| `make api-lib`              | build the `mx` static library (`mx::api` + `mx::impl`)            |
+| `make api-build`            | build `mx` + mxtest + example + api-roundtrip binaries            |
+| `make api-test`             | run api examples, then the `mxtest` suite (api/impl/file/control) |
+| `make api-roundtrip`        | corpus api roundtrip in regression mode (CI gate)                 |
+| `make api-examples`         | build and run all three api example programs                      |
+| `make core-build`           | build `mx_core` and the corert + unit test binaries               |
+| `make core-roundtrip-test`  | run the core roundtrip suite over the `data/` corpus              |
+| `make core-unit`            | run the `mx::core` unit tests (values, shapes, rejection suite)   |
+| `make core-coverage`        | instrumented core build + gcovr report (manual; also `/coverage`) |
+| `make api-coverage`         | instrumented api build + gcovr report (manual; also `/coverage`)  |
 
 `make clean` removes the build tree. Knobs: `JOBS` (parallelism, auto-detected), `BUILD_TYPE`
 (default `Debug`), and `ARGS` (forwarded to test binaries, e.g.
-`make test-core-dev ARGS='[core-roundtrip] lysuite/*'`).
+`make core-roundtrip-test ARGS='[core-roundtrip] lysuite/*'`).
 
 ### Build Tenets
 
@@ -82,9 +83,9 @@ value to a valid one. For example, in test files I have discovered many cases wh
 So in this case, `mx` will load the file and replace -1.11 with 0. Unfortunately this is silent for
 now, but we may surface a message system to let the caller know that this has happened.
 
-The `make validate-cpp` gate is the permanent mechanical proof of this tenet: every parsed corpus
-document is serialized and the *output* is validated against the MusicXML 4.0 XSD, so clamp
-leniency on import can only ever emit schema-valid XML.
+This clamp-on-import behavior is exercised by the core roundtrip suite (`make core-roundtrip-test`),
+which parses and reserializes every eligible corpus file and compares the result against a
+normalized form of the input.
 
 ### Using `mx` in a Cmake Project
 
