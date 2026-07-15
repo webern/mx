@@ -71,6 +71,9 @@ non_negative_integer = "int"
 
 [reserved]
 # C++ keywords (including alternative tokens) a generated identifier must not be.
+# "small" is also here though it is not a keyword: the Windows SDK's rpcndr.h
+# (pulled in transitively by windows.h) #defines it to `char`, which mangles
+# any generated `small` identifier before the compiler ever sees it (#354).
 words = [
     "alignas", "alignof", "and", "and_eq", "asm", "auto", "bitand",
     "bitor", "bool", "break", "case", "catch", "char", "char8_t",
@@ -87,6 +90,7 @@ words = [
     "throw", "true", "try", "typedef", "typeid", "typename", "union",
     "unsigned", "using", "virtual", "void", "volatile", "wchar_t",
     "while", "xor", "xor_eq",
+    "small",
 ]
 
 # Semantic names for the synthesized content types the §2.9 projection

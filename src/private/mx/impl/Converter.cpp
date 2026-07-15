@@ -152,7 +152,7 @@ const Converter::EnumMap<core::LeftCenterRight, api::HorizontalAlignment> Conver
 
 const Converter::EnumMap<core::CSSFontSize, api::CssSize> Converter::cssMap = {
     {core::CSSFontSize::xxSmall(), api::CssSize::xxSmall}, {core::CSSFontSize::xSmall(), api::CssSize::xSmall},
-    {core::CSSFontSize::small(), api::CssSize::small},     {core::CSSFontSize::medium(), api::CssSize::medium},
+    {core::CSSFontSize::small_(), api::CssSize::small_},   {core::CSSFontSize::medium(), api::CssSize::medium},
     {core::CSSFontSize::large(), api::CssSize::large},     {core::CSSFontSize::xLarge(), api::CssSize::xLarge},
     {core::CSSFontSize::xxLarge(), api::CssSize::xxLarge},
 };

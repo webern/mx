@@ -18,7 +18,7 @@ class CSSFontSize final
     {
         xxSmall,
         xSmall,
-        small,
+        small_,
         medium,
         large,
         xLarge,
@@ -30,7 +30,7 @@ class CSSFontSize final
 
     static CSSFontSize xxSmall() noexcept;
     static CSSFontSize xSmall() noexcept;
-    static CSSFontSize small() noexcept;
+    static CSSFontSize small_() noexcept;
     static CSSFontSize medium() noexcept;
     static CSSFontSize large() noexcept;
     static CSSFontSize xLarge() noexcept;
