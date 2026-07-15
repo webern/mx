@@ -45,7 +45,7 @@ jobs:
       # Acknowledge the command so the requester knows it was accepted.
       - name: Acknowledge command
         if: github.event_name == 'issue_comment'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             // Cosmetic ack only -- never fail the run if the reaction can't post.
@@ -65,7 +65,7 @@ jobs:
       - name: Resolve PR head
         id: pr
         if: github.event_name == 'issue_comment'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const pr = await github.rest.pulls.get({
@@ -75,7 +75,7 @@ jobs:
             });
             core.setOutput('sha', pr.data.head.sha);
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: ${{ steps.pr.outputs.sha || github.sha }}
 

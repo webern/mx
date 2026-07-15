@@ -25,8 +25,9 @@ env:
 # "Run workflow" button or a `/coverage` PR comment).
 #
 # Every Linux job runs its make targets inside the pinned mx-sdk Docker
-# toolchain; the macOS and Windows jobs build natively to catch AppleClang and
-# MSVC portability fallout.
+# toolchain (ccache baked into the image); the macOS and Windows jobs build
+# natively to catch AppleClang and MSVC fallout, kept incremental across runs by
+# a content-addressed compiler cache -- ccache on macOS, sccache on Windows.
 jobs:
   # Cheap up-front diff check so the gen job (generator/audit tests, Go/C
   # corert, the ratcheted quality/lint gates, and the gen-quality PR comment)
@@ -39,7 +40,7 @@ jobs:
     outputs:
       gen: ${{ steps.filter.outputs.gen }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: dorny/paths-filter@v3
         id: filter
         with:
@@ -64,7 +65,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       # Container-driver builder (needed to export the gha layer cache) plus
       # the runtime-token export so the Makefile auto-detects
@@ -99,24 +100,31 @@ jobs:
   # portability check on the product tier only (the core suites run on Linux in
   # test-linux); this is the only C++ job off the pinned toolchain, by design,
   # to keep finding AppleClang fallout.
+  #
+  # Incremental across runs via ccache (content-addressed, like the mx-sdk image
+  # bakes in for Linux). This replaces an earlier build/-dir cache keyed on
+  # hashFiles('src/**') -- that key was busted by every source change, so it gave
+  # nothing on exactly the PRs that recompile.
   test-macos:
     runs-on: macos-latest
 
-    # No Docker on the macOS runners: MX_RUNNING_IN_DOCKER=1 flips the
-    # Makefile to its direct-invocation branch so the build runs natively.
+    # No Docker on the macOS runners: MX_RUNNING_IN_DOCKER=1 flips the Makefile
+    # to its direct-invocation branch so the build runs natively. CMake reads the
+    # *_COMPILER_LAUNCHER env vars as launcher defaults (the Makefile passes no -D
+    # launcher flag), the same mechanism the mx-sdk image uses for Linux.
     env:
       MX_RUNNING_IN_DOCKER: 1
+      CMAKE_C_COMPILER_LAUNCHER: ccache
+      CMAKE_CXX_COMPILER_LAUNCHER: ccache
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - name: Cache build
-        uses: actions/cache@v4
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@v1.2.18
         with:
-          path: build/
-          key: ${{ runner.os }}-api-${{ hashFiles('CMakeLists.txt', 'src/**') }}
-          restore-keys: |
-            ${{ runner.os }}-api-
+          key: ${{ runner.os }}-api
+          max-size: 500M
 
       - name: api suite (mxtest + examples)
         run: make api-test
@@ -124,56 +132,95 @@ jobs:
       - name: api corpus round-trip (regression mode)
         run: make api-roundtrip
 
-  # The api product surface, built natively with the real MSVC toolchain to
-  # keep finding Windows portability fallout. Windows has no make/Unix tools
-  # and the Makefile hardcodes single-config binary paths, so this job drives
-  # CMake directly (multi-config Visual Studio generator, Debug). It is a
-  # required check and is expected to fail until the code is MSVC-clean; fixing
-  # that fallout is follow-up work, this job exists so it runs on every PR.
+  # The api product surface, built natively with the real MSVC toolchain to keep
+  # finding Windows portability fallout. Windows has no make/Unix tools, so this
+  # job drives CMake directly.
+  #
+  # Generator is Ninja, not the Visual Studio generator: the VS generator ignores
+  # CMAKE_<LANG>_COMPILER_LAUNCHER, so sccache (the MSVC-capable compiler cache)
+  # can't hook in under it. Ninja honors the launcher and is faster besides.
+  # ilammy/msvc-dev-cmd puts cl.exe + the VS-bundled ninja on PATH via vcvars.
+  # Debug info is forced to Embedded (/Z7, not the default /Zi): sccache can't
+  # cache the shared-PDB writes /Zi makes, so /Z7 is what lets the object cache
+  # actually hit. Ninja is single-config, so binaries land in build/api/ (no
+  # Debug/ subdir).
   test-windows:
     runs-on: windows-latest
 
     # Git Bash so multi-command run steps stop on first failure (set -e) and
-    # forward-slash paths + .exe invocation work uniformly. CMake still selects
-    # the default Visual Studio generator and drives MSBuild/MSVC itself.
+    # forward-slash paths + .exe invocation work uniformly.
     defaults:
       run:
         shell: bash
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - name: Configure (MSVC multi-config, MX_API)
-        run: cmake -S . -B build/api -DMX_API=on
+      # Puts cl.exe, link.exe, and the VS-bundled ninja on PATH -- exported to
+      # $GITHUB_ENV, so the later bash steps inherit the MSVC environment.
+      - uses: ilammy/msvc-dev-cmd@v1
 
-      - name: Build (Debug)
+      - name: sccache
+        uses: hendrikmuhs/ccache-action@v1.2.18
+        with:
+          variant: sccache
+          key: ${{ runner.os }}-msvc
+          max-size: 1G
+
+      - name: Configure (MSVC, Ninja, MX_API)
         run: >-
-          cmake --build build/api --config Debug
+          cmake -S . -B build/api -G Ninja
+          -DCMAKE_BUILD_TYPE=Debug
+          -DMX_API=on
+          -DCMAKE_C_COMPILER=cl
+          -DCMAKE_CXX_COMPILER=cl
+          -DCMAKE_C_COMPILER_LAUNCHER=sccache
+          -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
+          -DCMAKE_POLICY_DEFAULT_CMP0141=NEW
+          -DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT=Embedded
+
+      - name: Build
+        run: >-
+          cmake --build build/api
           --target mx mxtest mxtest-api-roundtrip mxread mxwrite mxhide
           --parallel
 
       - name: api examples
         run: |
-          build/api/Debug/mxread.exe
-          build/api/Debug/mxwrite.exe build/api/Debug/example.musicxml
-          build/api/Debug/mxhide.exe
+          build/api/mxread.exe
+          build/api/mxwrite.exe build/api/example.musicxml
+          build/api/mxhide.exe
 
       - name: mxtest suite (api/impl/file/control)
-        run: build/api/Debug/mxtest.exe
+        run: build/api/mxtest.exe
 
       - name: api corpus round-trip (regression mode)
         run: >-
-          build/api/Debug/mxtest-api-roundtrip.exe regression
+          build/api/mxtest-api-roundtrip.exe regression
           data src/private/mxtest/api/roundtrip-baseline.txt
 
   # Proves mx compiles as a Swift package under AppleClang/SPM on every PR --
   # the path komp takes when it depends on a sibling mx via `.package(path:)`.
   # Runs no test suites; the binary xcframework release arm is follow-up work.
+  #
+  # SwiftPM has no compiler-launcher hook, so incremental builds come from caching
+  # its .build tree: llbuild tracks inputs by content signature, so a restored
+  # tree rebuilds only what changed. The per-commit key suffix makes each run save
+  # an updated tree while restore-keys pulls the newest prior one.
   swift:
     runs-on: macos-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
+
+      - name: Cache SwiftPM build
+        uses: actions/cache@v4
+        with:
+          path: .build
+          key: ${{ runner.os }}-spm-${{ hashFiles('Package.swift', 'Package.resolved') }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-spm-${{ hashFiles('Package.swift', 'Package.resolved') }}-
+            ${{ runner.os }}-spm-
 
       - name: Swift toolchain
         run: swift --version
@@ -191,7 +238,7 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: docker/setup-buildx-action@v3
       - uses: crazy-max/ghaction-github-runtime@v3
@@ -237,7 +284,7 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: docker/setup-buildx-action@v3
       - uses: crazy-max/ghaction-github-runtime@v3
