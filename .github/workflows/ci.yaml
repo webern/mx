@@ -43,6 +43,13 @@ jobs:
       - uses: dorny/paths-filter@v3
         id: filter
         with:
+          # predicate-quantifier 'every' requires a changed file to match ALL
+          # patterns to count -- i.e. be under gen/ AND not markdown. Without
+          # it the patterns are OR'd, and the `!gen/**/*.md` rule then matches
+          # every non-gen-markdown path in the repo, so the filter fired on
+          # essentially every PR (the gen job ran even for pure Makefile/C++
+          # changes). See picomatch negation semantics.
+          predicate-quantifier: 'every'
           filters: |
             gen:
               - 'gen/**'
