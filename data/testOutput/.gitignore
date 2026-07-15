@@ -3,7 +3,7 @@
 *.txt
 *.xml
 
-# gcovr report tree from `make coverage-core-dev` (.html not matched above)
+# gcovr report tree from `make core-coverage` / `make api-coverage` (.html not matched above)
 coverage/
 
 # report tree from `make gen-quality` (.json/.md not matched above)

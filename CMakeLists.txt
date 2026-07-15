@@ -3,7 +3,7 @@ project(mx CXX)
 
 # The mx::core C++ typed model: pugixml + the generated src/private/mx/core
 # (emitted by `python3 -m gen gen/cpp/config.toml`, committed) + its
-# hand-written runtime, plus the corert/unit/validate test binaries.
+# hand-written runtime, plus the corert/unit test binaries.
 # See AGENTS.md and docs/ai/design/mx-core-plan.md.
 
 set(CMAKE_CXX_STANDARD 20)
@@ -134,22 +134,6 @@ if(MX_CORE_DEV)
         ${SRC_CORERT} ${SRC_CORERT_HELPERS} ${SRC_CPUL})
     target_include_directories(mxtest-core-dev PRIVATE ${PRIVATE_DIR})
     target_link_libraries(mxtest-core-dev mx_core ${CMAKE_THREAD_LIBS_INIT})
-
-    # mxtest-validate: parses corpus files and serializes them for xmllint validation.
-    # Parses every eligible corpus file, serializes the OUTPUT to
-    # build/validate-out/, plus the default-constructed Document; `make
-    # validate-cpp` then xmllint-validates every output against the 4.0 XSD.
-    add_executable(mxtest-validate
-        ${PRIVATE_DIR}/mxtest/validate/main.cpp
-        ${PRIVATE_DIR}/mxtest/corert/Compare.cpp
-        ${PRIVATE_DIR}/mxtest/corert/Compare.h
-        ${PRIVATE_DIR}/mxtest/corert/CoreRoundtripImpl.cpp
-        ${PRIVATE_DIR}/mxtest/corert/CoreRoundtripImpl.h
-        ${PRIVATE_DIR}/mxtest/corert/Fixer.cpp
-        ${PRIVATE_DIR}/mxtest/corert/Fixer.h
-        ${SRC_CORERT_HELPERS})
-    target_include_directories(mxtest-validate PRIVATE ${PRIVATE_DIR})
-    target_link_libraries(mxtest-validate mx_core)
 
 endif()
 

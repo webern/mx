@@ -40,13 +40,13 @@ common case (a new corpus file was added) only writes the new sidecar. Use
 ## Classifying api round-trip failures
 
 ```
-make dump-api-roundtrip          # C++: write normalized expected/actual XML pairs
-make classify-api-roundtrip      # Python: diff each pair, rank a worklist
+make api-roundtrip-dump          # C++: write normalized expected/actual XML pairs
+make api-roundtrip-classify      # Python: diff each pair, rank a worklist
 
 python3 -m audit classify <dump_dir> [--data DIR] [--out FILE]
 ```
 
-`classify` reads the dump directory produced by `make dump-api-roundtrip`
+`classify` reads the dump directory produced by `make api-roundtrip-dump`
 (`build/api/roundtrip-dump/`) and diffs each expected/actual pair structurally.
 Drops/adds come from an order-free element **multiset**
 (`Counter(expected) - Counter(actual)`); value/attribute/reorder differences come
@@ -67,7 +67,7 @@ re-dumping. See `docs/ai/design/api-roundtrip-classifier.md`.
 ## Tests
 
 ```
-make test-audit                  # python3 -m unittest discover -s audit/tests -t .
+make audit-test                  # python3 -m unittest discover -s audit/tests -t .
 ```
 
 ## Audited set

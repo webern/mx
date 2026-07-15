@@ -16,7 +16,7 @@ There are two kinds of api tests.
 
 - Location: `src/private/mxtest/api/` (e.g. `NoteDataTest.cpp`, `DirectionDataTest.cpp`,
   `MeasureDataTest.cpp`, `PitchDataTest.cpp`, `MetronomeApiTest.cpp`).
-- They compile into the `mxtest` binary and run via `make test`.
+- They compile into the `mxtest` binary and run via `make api-test`.
 - Every file is gated by `#include "mxtest/control/CompileControl.h"` then
   `#ifdef MX_COMPILE_API_TESTS ... #endif`. That flag is defined in
   `src/private/mxtest/control/CompileControl.h` (currently always on). Wrap any new test file the
@@ -65,13 +65,13 @@ side, and run a strict DOM compare (`mxtest/corert/Compare`). Zero tolerance on 
 
 - `regression <dataRoot> <baselineFile>`: runs only the files listed in
   `src/private/mxtest/api/roundtrip-baseline.txt`. Non-zero exit on any failure. This is the CI
-  gate. Run with `make test-api-roundtrip`. CI runs it in `.github/workflows/ci.yaml` (the
-  `linux-api` job step "Run corpus api roundtrip (regression mode)" and again in the docker job).
+  gate. Run with `make api-roundtrip`. CI runs it in `.github/workflows/ci.yaml` (the `test-linux`
+  job via `make test-all`, and again natively on macOS/Windows).
 - `discovery <dataRoot>`: walks the whole corpus (excludes `expected/`, `testOutput/`,
   `generalxml/`, `smufl/`, `*.fixup.xml`, `*.features.xml`, `corpus.xml`, `api.features.xml`, and
   any file with a sibling `*.invalid` marker), prints one tab-separated line per file
   `PASS|FAIL|SKIP|LOADFAIL|GETDATAFAIL|CREATEFAIL <tab> relpath <tab> detail`, and always exits 0.
-  Run with `make discover-api-roundtrip`. Never a gate.
+  Run with `make api-roundtrip-discover`. Never a gate.
 
 `roundtrip-baseline.txt` is a growing pinned list (~140 files across
 ksuite/lysuite/musuite/mjbsuite/custom/synthetic; see the file's header). It grows only by
@@ -90,8 +90,8 @@ genuinely survives the strict compare.
 
 ## Build note
 
-`make test-api-roundtrip` and `make discover-api-roundtrip` depend on the `dev` target (builds
-`mxtest-api-roundtrip`); `make test` builds and runs `mxtest` (the unit tests) plus examples.
+`make api-roundtrip` and `make api-roundtrip-discover` depend on the `api-build` target (builds
+`mxtest-api-roundtrip`); `make api-test` builds and runs `mxtest` (the unit tests) plus examples.
 
 ## Procedure
 
@@ -103,7 +103,7 @@ Do these in order. The discovery snapshot must be captured before you implement.
    MusicXML shape and attribute set.
 
 2. Capture the pre-implementation discovery baseline:
-   `make discover-api-roundtrip > /tmp/api-discovery-before.txt`. This is your reference for which
+   `make api-roundtrip-discover > /tmp/api-discovery-before.txt`. This is your reference for which
    corpus files fail and WHY (the `detail` column). Keep it.
 
 3. Grep that snapshot for files whose failure looks attributable to the missing feature -- e.g.
@@ -135,7 +135,7 @@ Do these in order. The discovery snapshot must be captured before you implement.
 8. Make the unit test pass (green); iterate until your new `TEST(...)` cases pass (SKILL.md Step 4
    owns the test/fmt/check commands).
 
-9. Re-run discovery and diff: `make discover-api-roundtrip > /tmp/api-discovery-after.txt`, then
+9. Re-run discovery and diff: `make api-roundtrip-discover > /tmp/api-discovery-after.txt`, then
    `diff /tmp/api-discovery-before.txt /tmp/api-discovery-after.txt`. Look for files that moved to
    `PASS` (or whose `FAIL` detail changed). For each newly-PASSing file, confirm the pass is
    actually attributable to your feature (re-read the file; check the old `detail` named your

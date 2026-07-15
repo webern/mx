@@ -52,13 +52,13 @@ to be absorbed in test normalization later (#214).
 If `build/api/roundtrip-dump/` is empty or stale (api/impl changed since it was written), run:
 
 ```
-make dump-api-roundtrip
+make api-roundtrip-dump
 ```
 
 Then always run:
 
 ```
-make classify-api-roundtrip
+make api-roundtrip-classify
 ```
 
 Read the stdout summary it prints -- status counts, the distance histogram, the ranked worklist,
