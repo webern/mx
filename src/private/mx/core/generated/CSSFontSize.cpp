@@ -22,9 +22,9 @@ CSSFontSize CSSFontSize::xSmall() noexcept
     return CSSFontSize{Tag::xSmall};
 }
 
-CSSFontSize CSSFontSize::small() noexcept
+CSSFontSize CSSFontSize::small_() noexcept
 {
-    return CSSFontSize{Tag::small};
+    return CSSFontSize{Tag::small_};
 }
 
 CSSFontSize CSSFontSize::medium() noexcept

@@ -28,7 +28,9 @@ enum class CssSize
     unspecified,
     xxSmall,
     xSmall,
-    small,
+    // Named small_, not small: the Windows SDK's rpcndr.h (pulled in
+    // transitively by windows.h) #defines `small` to `char` (#354).
+    small_,
     medium,
     large,
     xLarge,
