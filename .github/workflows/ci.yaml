@@ -60,7 +60,7 @@ jobs:
   # built once through the pinned mx-sdk toolchain. This is the one place the
   # core suites run, so it is the authoritative C++ correctness check.
   test-linux:
-    name: "test: all C++ suites (Linux)"
+    name: "linux: test-all"
     runs-on: ubuntu-latest
 
     steps:
@@ -100,7 +100,6 @@ jobs:
   # test-linux); this is the only C++ job off the pinned toolchain, by design,
   # to keep finding AppleClang fallout.
   test-macos:
-    name: "test: api suite (macOS/AppleClang)"
     runs-on: macos-latest
 
     # No Docker on the macOS runners: MX_RUNNING_IN_DOCKER=1 flips the
@@ -132,7 +131,6 @@ jobs:
   # required check and is expected to fail until the code is MSVC-clean; fixing
   # that fallout is follow-up work, this job exists so it runs on every PR.
   test-windows:
-    name: "test: api suite (Windows/MSVC)"
     runs-on: windows-latest
 
     # Git Bash so multi-command run steps stop on first failure (set -e) and
@@ -172,7 +170,6 @@ jobs:
   # the path komp takes when it depends on a sibling mx via `.package(path:)`.
   # Runs no test suites; the binary xcframework release arm is follow-up work.
   swift:
-    name: "swift: Mx package build (macOS/SPM)"
     runs-on: macos-latest
 
     steps:
@@ -188,7 +185,6 @@ jobs:
   # drift check (regenerate every target, then fail on any tracked-file diff).
   # Always runs -- both apply to the whole repo, not just gen/.
   quality:
-    name: "quality: fmt-check + generated-output drift (Linux)"
     runs-on: ubuntu-latest
 
     permissions:
@@ -230,7 +226,6 @@ jobs:
   # generator's emitted targets), and the ratcheted quality/lint gates. Also
   # stages the gen-quality report as a PR comment, posted by pr-comment.yaml.
   gen:
-    name: "gen: generator + audit tests, Go/C corert, quality/lint (Linux)"
     runs-on: ubuntu-latest
     needs: changes
     if: needs.changes.outputs.gen == 'true'

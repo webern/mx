@@ -29,7 +29,6 @@ env:
 
 jobs:
   coverage:
-    name: "coverage: core + api gcovr reports"
     runs-on: ubuntu-latest
 
     # Run on the manual button, or on a `/coverage` comment made on a PR (not a
