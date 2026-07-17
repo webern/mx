@@ -4,6 +4,7 @@
 
 #include "mx/impl/DirectionWriter.h"
 #include "mx/api/BarlineData.h"
+#include "mx/core/generated/Accord.h"
 #include "mx/core/generated/AccordionMiddle.h"
 #include "mx/core/generated/AccordionRegistration.h"
 #include "mx/core/generated/Bass.h"
@@ -37,6 +38,7 @@
 #include "mx/core/generated/HarmonyAlter.h"
 #include "mx/core/generated/HarmonyChordGroup.h"
 #include "mx/core/generated/HarmonyChordGroupChoice.h"
+#include "mx/core/generated/HarpPedals.h"
 #include "mx/core/generated/Image.h"
 #include "mx/core/generated/Inversion.h"
 #include "mx/core/generated/Kind.h"
@@ -51,11 +53,13 @@
 #include "mx/core/generated/NumeralMode.h"
 #include "mx/core/generated/NumeralRoot.h"
 #include "mx/core/generated/NumeralValue.h"
+#include "mx/core/generated/Octave.h"
 #include "mx/core/generated/OctaveShift.h"
 #include "mx/core/generated/Offset.h"
 #include "mx/core/generated/OnOff.h"
 #include "mx/core/generated/OtherDirection.h"
 #include "mx/core/generated/Pedal.h"
+#include "mx/core/generated/PedalTuning.h"
 #include "mx/core/generated/PedalType.h"
 #include "mx/core/generated/PerMinute.h"
 #include "mx/core/generated/PositiveDivisions.h"
@@ -63,6 +67,7 @@
 #include "mx/core/generated/PrincipalVoiceSymbol.h"
 #include "mx/core/generated/Root.h"
 #include "mx/core/generated/RootStep.h"
+#include "mx/core/generated/Scordatura.h"
 #include "mx/core/generated/Segno.h"
 #include "mx/core/generated/Semitones.h"
 #include "mx/core/generated/SmuflGlyphName.h"
@@ -75,6 +80,7 @@
 #include "mx/core/generated/StringMute.h"
 #include "mx/core/generated/StringNumber.h"
 #include "mx/core/generated/StyleText.h"
+#include "mx/core/generated/TuningGroup.h"
 #include "mx/core/generated/ValignImage.h"
 #include "mx/core/generated/Wedge.h"
 #include "mx/core/generated/WedgeType.h"
@@ -845,6 +851,92 @@ void DirectionWriter::emitAccordionRegistration(const api::AccordionRegistration
     addDirectionType(std::move(dt), direction);
 }
 
+void DirectionWriter::emitHarpPedals(const api::HarpPedalsData &item, core::Direction &direction)
+{
+    // MusicXML requires at least one pedal-tuning; a diagram with none cannot be expressed
+    // and is not written.
+    if (item.pedalTunings.empty())
+    {
+        return;
+    }
+    core::HarpPedals harpPedals{};
+    bool isFirstTuningAdded = false;
+    for (const auto &tuning : item.pedalTunings)
+    {
+        core::PedalTuning pedalTuning{};
+        pedalTuning.setPedalStep(myConverter.convert(tuning.step));
+        pedalTuning.setPedalAlter(
+            core::Semitones{core::Decimal{Converter::convertToAlter(tuning.alter, tuning.cents)}});
+        if (!isFirstTuningAdded)
+        {
+            harpPedals.setPedalTuning(core::OneOrMore<core::PedalTuning>{std::move(pedalTuning)});
+            isFirstTuningAdded = true;
+        }
+        else
+        {
+            harpPedals.addPedalTuning(std::move(pedalTuning));
+        }
+    }
+    setAttributesFromPositionData(item.positionData, harpPedals);
+    setAttributesFromFontData(item.fontData, harpPedals);
+    if (item.color.has_value())
+    {
+        setAttributesFromColorData(*item.color, harpPedals);
+    }
+    if (item.id.has_value())
+    {
+        harpPedals.setID(core::Token{*item.id});
+    }
+    core::DirectionType dt{};
+    dt.setChoice(core::DirectionTypeChoice::harpPedals(std::move(harpPedals)));
+    addDirectionType(std::move(dt), direction);
+}
+
+void DirectionWriter::emitScordatura(const api::ScordaturaData &item, core::Direction &direction)
+{
+    // MusicXML requires at least one accord; a scordatura with none cannot be expressed and
+    // is not written.
+    if (item.accords.empty())
+    {
+        return;
+    }
+    core::Scordatura scordatura{};
+    bool isFirstAccordAdded = false;
+    for (const auto &accordData : item.accords)
+    {
+        core::Accord accord{};
+        if (accordData.stringNumber.has_value())
+        {
+            accord.setString(core::StringNumber{*accordData.stringNumber});
+        }
+        core::TuningGroup tuning{};
+        tuning.setTuningStep(myConverter.convert(accordData.tuningStep));
+        if (accordData.tuningAlter != 0 || accordData.tuningCents != 0.0)
+        {
+            tuning.setTuningAlter(core::Semitones{
+                core::Decimal{Converter::convertToAlter(accordData.tuningAlter, accordData.tuningCents)}});
+        }
+        tuning.setTuningOctave(core::Octave{accordData.tuningOctave});
+        accord.setTuning(std::move(tuning));
+        if (!isFirstAccordAdded)
+        {
+            scordatura.setAccord(core::OneOrMore<core::Accord>{std::move(accord)});
+            isFirstAccordAdded = true;
+        }
+        else
+        {
+            scordatura.addAccord(std::move(accord));
+        }
+    }
+    if (item.id.has_value())
+    {
+        scordatura.setID(core::Token{*item.id});
+    }
+    core::DirectionType dt{};
+    dt.setChoice(core::DirectionTypeChoice::scordatura(std::move(scordatura)));
+    addDirectionType(std::move(dt), direction);
+}
+
 void DirectionWriter::emitFixedOrder(core::Direction &direction)
 {
     for (const auto &mark : myDirectionData.marks)
@@ -967,6 +1059,16 @@ void DirectionWriter::emitFixedOrder(core::Direction &direction)
     for (const auto &item : myDirectionData.accordionRegistrations)
     {
         emitAccordionRegistration(item, direction);
+    }
+
+    for (const auto &item : myDirectionData.harpPedals)
+    {
+        emitHarpPedals(item, direction);
+    }
+
+    for (const auto &item : myDirectionData.scordaturas)
+    {
+        emitScordatura(item, direction);
     }
 }
 
@@ -1156,6 +1258,20 @@ void DirectionWriter::emitOrderedComponents(core::Direction &direction)
             if (i >= 0 && static_cast<size_t>(i) < myDirectionData.accordionRegistrations.size())
             {
                 emitAccordionRegistration(myDirectionData.accordionRegistrations.at(i), direction);
+            }
+            break;
+
+        case api::DirectionComponentKind::harpPedals:
+            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.harpPedals.size())
+            {
+                emitHarpPedals(myDirectionData.harpPedals.at(i), direction);
+            }
+            break;
+
+        case api::DirectionComponentKind::scordatura:
+            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.scordaturas.size())
+            {
+                emitScordatura(myDirectionData.scordaturas.at(i), direction);
             }
             break;
 

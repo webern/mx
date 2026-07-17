@@ -456,3 +456,8 @@ synthetic/other-direction.3.0.xml
 synthetic/other-direction.3.1.xml
 synthetic/principal-voice.3.0.xml
 synthetic/principal-voice.3.1.xml
+
+# Unblocked by modeling harp-pedals and scordatura (#324).
+synthetic/harp-pedals.3.0.xml
+synthetic/harp-pedals.3.1.xml
+synthetic/scordatura.3.1.xml

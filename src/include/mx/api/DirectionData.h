@@ -11,12 +11,14 @@
 #include "mx/api/DampData.h"
 #include "mx/api/EyeglassesData.h"
 #include "mx/api/FiguredBassData.h"
+#include "mx/api/HarpPedalsData.h"
 #include "mx/api/ImageData.h"
 #include "mx/api/MarkData.h"
 #include "mx/api/OtherDirectionData.h"
 #include "mx/api/OttavaData.h"
 #include "mx/api/PrincipalVoiceData.h"
 #include "mx/api/RehearsalData.h"
+#include "mx/api/ScordaturaData.h"
 #include "mx/api/SegnoData.h"
 #include "mx/api/SoundData.h"
 #include "mx/api/StaffDivideData.h"
@@ -56,7 +58,9 @@ enum class DirectionComponentKind
     principalVoice,
     otherDirection,
     image,
-    accordionRegistration
+    accordionRegistration,
+    harpPedals,
+    scordatura
 };
 
 struct DirectionComponent
@@ -146,6 +150,8 @@ struct DirectionData
     std::vector<OtherDirectionData> otherDirections;
     std::vector<ImageData> images;
     std::vector<AccordionRegistrationData> accordionRegistrations;
+    std::vector<HarpPedalsData> harpPedals;
+    std::vector<ScordaturaData> scordaturas;
     // Preserves the original order of direction-type children from parsed XML
     // for round-trip fidelity. Do NOT populate this when constructing
     // DirectionData programmatically. If empty, the writer uses a default
@@ -177,6 +183,7 @@ inline bool isDirectionDataEmpty(const DirectionData &directionData)
            directionData.stringMutes.size() == 0 && directionData.staffDivides.size() == 0 &&
            directionData.principalVoices.size() == 0 && directionData.otherDirections.size() == 0 &&
            directionData.images.size() == 0 && directionData.accordionRegistrations.size() == 0 &&
+           directionData.harpPedals.size() == 0 && directionData.scordaturas.size() == 0 &&
            directionData.figuredBasses.size() == 0 && !directionData.isSoundDataSpecified &&
            directionData.orderedComponents.size() == 0;
 }
@@ -215,6 +222,8 @@ MXAPI_EQUALS_MEMBER(principalVoices)
 MXAPI_EQUALS_MEMBER(otherDirections)
 MXAPI_EQUALS_MEMBER(images)
 MXAPI_EQUALS_MEMBER(accordionRegistrations)
+MXAPI_EQUALS_MEMBER(harpPedals)
+MXAPI_EQUALS_MEMBER(scordaturas)
 MXAPI_EQUALS_MEMBER(orderedComponents)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(DirectionData);

@@ -215,6 +215,77 @@ TEST(AccordionRegistrationEmpty, DirectionMarksRoundTrip)
 
 T_END;
 
+TEST(HarpPedals, DirectionMarksRoundTrip)
+{
+    DirectionData direction;
+    HarpPedalsData harpPedals;
+    harpPedals.pedalTunings.emplace_back(Step::d, 0);
+    harpPedals.pedalTunings.emplace_back(Step::c, -1);
+    harpPedals.pedalTunings.emplace_back(Step::b, 1);
+    direction.harpPedals.push_back(harpPedals);
+    const auto directions = roundTripDirectionData(direction);
+    REQUIRE(directions.size() == 1);
+    REQUIRE(directions.front().harpPedals.size() == 1);
+    const auto &out = directions.front().harpPedals.front();
+    REQUIRE(out.pedalTunings.size() == 3);
+    CHECK(out.pedalTunings.at(0).step == Step::d);
+    CHECK_EQUAL(0, out.pedalTunings.at(0).alter);
+    CHECK(out.pedalTunings.at(1).step == Step::c);
+    CHECK_EQUAL(-1, out.pedalTunings.at(1).alter);
+    CHECK(out.pedalTunings.at(2).step == Step::b);
+    CHECK_EQUAL(1, out.pedalTunings.at(2).alter);
+}
+
+T_END;
+
+TEST(Scordatura, DirectionMarksRoundTrip)
+{
+    DirectionData direction;
+    ScordaturaData scordatura;
+    AccordData accord;
+    accord.stringNumber = 6;
+    accord.tuningStep = Step::d;
+    accord.tuningOctave = 2;
+    scordatura.accords.push_back(accord);
+    direction.scordaturas.push_back(scordatura);
+    const auto directions = roundTripDirectionData(direction);
+    REQUIRE(directions.size() == 1);
+    REQUIRE(directions.front().scordaturas.size() == 1);
+    const auto &out = directions.front().scordaturas.front();
+    REQUIRE(out.accords.size() == 1);
+    REQUIRE(out.accords.front().stringNumber.has_value());
+    CHECK_EQUAL(6, *out.accords.front().stringNumber);
+    CHECK(out.accords.front().tuningStep == Step::d);
+    CHECK_EQUAL(0, out.accords.front().tuningAlter);
+    CHECK_EQUAL(2, out.accords.front().tuningOctave);
+}
+
+T_END;
+
+TEST(ScordaturaNoStringNumbers, DirectionMarksRoundTrip)
+{
+    // When stringNumber is absent the accords run through the strings in order.
+    DirectionData direction;
+    ScordaturaData scordatura;
+    AccordData accord;
+    accord.tuningStep = Step::a;
+    accord.tuningAlter = -1;
+    accord.tuningOctave = 3;
+    scordatura.accords.push_back(accord);
+    direction.scordaturas.push_back(scordatura);
+    const auto directions = roundTripDirectionData(direction);
+    REQUIRE(directions.size() == 1);
+    REQUIRE(directions.front().scordaturas.size() == 1);
+    const auto &out = directions.front().scordaturas.front();
+    REQUIRE(out.accords.size() == 1);
+    CHECK(!out.accords.front().stringNumber.has_value());
+    CHECK(out.accords.front().tuningStep == Step::a);
+    CHECK_EQUAL(-1, out.accords.front().tuningAlter);
+    CHECK_EQUAL(3, out.accords.front().tuningOctave);
+}
+
+T_END;
+
 TEST(DampFormatting, DirectionMarksRoundTrip)
 {
     DirectionData direction;
