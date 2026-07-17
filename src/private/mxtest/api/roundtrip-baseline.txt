@@ -444,3 +444,15 @@ synthetic/eyeglasses.3.1.xml
 synthetic/staff-divide.3.1.xml
 synthetic/string-mute.3.0.xml
 synthetic/string-mute.3.1.xml
+
+# Unblocked by modeling principal-voice, other-direction, image, and
+# accordion-registration (#324).
+lysuite/ly75a_AccordionRegistrations.xml
+synthetic/accordion-registration.3.0.xml
+synthetic/accordion-registration.3.1.xml
+synthetic/image.3.0.xml
+synthetic/image.3.1.xml
+synthetic/other-direction.3.0.xml
+synthetic/other-direction.3.1.xml
+synthetic/principal-voice.3.0.xml
+synthetic/principal-voice.3.1.xml

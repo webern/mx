@@ -48,6 +48,7 @@
 #include "mx/core/generated/PedalType.h"
 #include "mx/core/generated/Percussion.h"
 #include "mx/core/generated/PrincipalVoice.h"
+#include "mx/core/generated/PrincipalVoiceSymbol.h"
 #include "mx/core/generated/Root.h"
 #include "mx/core/generated/RootStep.h"
 #include "mx/core/generated/Scordatura.h"
@@ -62,6 +63,7 @@
 #include "mx/core/generated/StringMute.h"
 #include "mx/core/generated/StyleText.h"
 #include "mx/core/generated/UpDownStopContinue.h"
+#include "mx/core/generated/ValignImage.h"
 #include "mx/core/generated/Wedge.h"
 #include "mx/core/generated/WedgeType.h"
 #include "mx/core/generated/YesNo.h"
@@ -823,15 +825,14 @@ void DirectionReader::parseOctaveShift(const core::DirectionType &directionType)
                            static_cast<int>(myOutDirectionData.ottavaStarts.size()) - 1);
 }
 
-// The stubs below (harp-pedals, scordatura, image, principal-voice, accordion-registration,
-// percussion, other-direction) are genuinely unmodeled direction-type choices, tracked at
-// #324, not a bug in the surrounding dispatch. When a <direction> contains only one of these,
-// the resulting DirectionData carries no content and is correctly left unwritten -- MusicXML
-// requires at least one direction-type child, so there is no schema-valid way to keep the
-// <direction> (and its <voice>/<staff>) without modeling what it actually says. That is why
-// round-trip discovery reports those files as dropping
-// <direction>/<direction-type>/<voice>/<staff> together: it is one gap (the unmodeled
-// content), not four.
+// The stubs below (harp-pedals, scordatura, percussion) are genuinely unmodeled
+// direction-type choices, tracked at #324, not a bug in the surrounding dispatch. When a
+// <direction> contains only one of these, the resulting DirectionData carries no content and
+// is correctly left unwritten -- MusicXML requires at least one direction-type child, so
+// there is no schema-valid way to keep the <direction> (and its <voice>/<staff>) without
+// modeling what it actually says. That is why round-trip discovery reports those files as
+// dropping <direction>/<direction-type>/<voice>/<staff> together: it is one gap (the
+// unmodeled content), not four.
 void DirectionReader::parseHarpPedals(const core::DirectionType &directionType)
 {
     MX_UNUSED(directionType);
@@ -953,17 +954,111 @@ void DirectionReader::parseScordatura(const core::DirectionType &directionType)
 
 void DirectionReader::parseImage(const core::DirectionType &directionType)
 {
-    MX_UNUSED(directionType);
+    const auto &image = directionType.choice().asImage();
+    api::ImageData outImage;
+    outImage.source = image.source();
+    outImage.type = image.type();
+    if (image.height().has_value())
+    {
+        outImage.height = static_cast<double>(image.height()->value().value());
+    }
+    if (image.width().has_value())
+    {
+        outImage.width = static_cast<double>(image.width()->value().value());
+    }
+    outImage.positionData = getPositionData(image);
+    // <image>'s valign is the valign-image type (no baseline), which the generic position
+    // helper cannot read; take it from the element directly.
+    if (image.valign().has_value())
+    {
+        switch (image.valign()->tag())
+        {
+        case core::ValignImage::Tag::top:
+            outImage.positionData.verticalAlignment = api::VerticalAlignment::top;
+            break;
+        case core::ValignImage::Tag::middle:
+            outImage.positionData.verticalAlignment = api::VerticalAlignment::middle;
+            break;
+        case core::ValignImage::Tag::bottom:
+            outImage.positionData.verticalAlignment = api::VerticalAlignment::bottom;
+            break;
+        default:
+            break;
+        }
+    }
+    else
+    {
+        outImage.positionData.verticalAlignment = api::VerticalAlignment::unspecified;
+    }
+    if (image.id().has_value())
+    {
+        outImage.id = image.id()->value();
+    }
+    myOutDirectionData.images.emplace_back(std::move(outImage));
+    appendOrderedComponent(api::DirectionComponentKind::image, static_cast<int>(myOutDirectionData.images.size()) - 1);
 }
 
 void DirectionReader::parsePrincipalVoice(const core::DirectionType &directionType)
 {
-    MX_UNUSED(directionType);
+    const auto &principalVoice = directionType.choice().asPrincipalVoice();
+    api::PrincipalVoiceData outPrincipalVoice;
+    outPrincipalVoice.type = principalVoice.type().tag() == core::StartStop::Tag::stop ? api::PrincipalVoiceType::stop
+                                                                                       : api::PrincipalVoiceType::start;
+    switch (principalVoice.symbol().tag())
+    {
+    case core::PrincipalVoiceSymbol::Tag::nebenstimme:
+        outPrincipalVoice.symbol = api::PrincipalVoiceSymbol::nebenstimme;
+        break;
+    case core::PrincipalVoiceSymbol::Tag::plain:
+        outPrincipalVoice.symbol = api::PrincipalVoiceSymbol::plain;
+        break;
+    case core::PrincipalVoiceSymbol::Tag::none:
+        outPrincipalVoice.symbol = api::PrincipalVoiceSymbol::none;
+        break;
+    case core::PrincipalVoiceSymbol::Tag::hauptstimme:
+    default:
+        outPrincipalVoice.symbol = api::PrincipalVoiceSymbol::hauptstimme;
+        break;
+    }
+    outPrincipalVoice.text = principalVoice.value();
+    outPrincipalVoice.positionData = getPositionData(principalVoice);
+    outPrincipalVoice.fontData = getFontData(principalVoice);
+    if (principalVoice.color().has_value())
+    {
+        outPrincipalVoice.color = getColor(principalVoice);
+    }
+    if (principalVoice.id().has_value())
+    {
+        outPrincipalVoice.id = principalVoice.id()->value();
+    }
+    myOutDirectionData.principalVoices.emplace_back(std::move(outPrincipalVoice));
+    appendOrderedComponent(api::DirectionComponentKind::principalVoice,
+                           static_cast<int>(myOutDirectionData.principalVoices.size()) - 1);
 }
 
 void DirectionReader::parseAccordionRegistration(const core::DirectionType &directionType)
 {
-    MX_UNUSED(directionType);
+    const auto &accordion = directionType.choice().asAccordionRegistration();
+    api::AccordionRegistrationData outAccordion;
+    outAccordion.high = accordion.accordionHigh();
+    if (accordion.accordionMiddle().has_value())
+    {
+        outAccordion.middle = accordion.accordionMiddle()->value();
+    }
+    outAccordion.low = accordion.accordionLow();
+    outAccordion.positionData = getPositionData(accordion);
+    outAccordion.fontData = getFontData(accordion);
+    if (accordion.color().has_value())
+    {
+        outAccordion.color = getColor(accordion);
+    }
+    if (accordion.id().has_value())
+    {
+        outAccordion.id = accordion.id()->value();
+    }
+    myOutDirectionData.accordionRegistrations.emplace_back(std::move(outAccordion));
+    appendOrderedComponent(api::DirectionComponentKind::accordionRegistration,
+                           static_cast<int>(myOutDirectionData.accordionRegistrations.size()) - 1);
 }
 
 void DirectionReader::parsePercussion(const core::DirectionType &directionType)
@@ -973,7 +1068,27 @@ void DirectionReader::parsePercussion(const core::DirectionType &directionType)
 
 void DirectionReader::parseOtherDirection(const core::DirectionType &directionType)
 {
-    MX_UNUSED(directionType);
+    const auto &otherDirection = directionType.choice().asOtherDirection();
+    api::OtherDirectionData outOtherDirection;
+    outOtherDirection.text = otherDirection.value();
+    outOtherDirection.printObject = getPrintObject(otherDirection);
+    if (otherDirection.smufl().has_value())
+    {
+        outOtherDirection.smufl = otherDirection.smufl()->toString();
+    }
+    outOtherDirection.positionData = getPositionData(otherDirection);
+    outOtherDirection.fontData = getFontData(otherDirection);
+    if (otherDirection.color().has_value())
+    {
+        outOtherDirection.color = getColor(otherDirection);
+    }
+    if (otherDirection.id().has_value())
+    {
+        outOtherDirection.id = otherDirection.id()->value();
+    }
+    myOutDirectionData.otherDirections.emplace_back(std::move(outOtherDirection));
+    appendOrderedComponent(api::DirectionComponentKind::otherDirection,
+                           static_cast<int>(myOutDirectionData.otherDirections.size()) - 1);
 }
 
 void DirectionReader::parseHarmony(const core::Harmony &inHarmony, const core::HarmonyChordGroup &inGrp)

@@ -4,6 +4,8 @@
 
 #include "mx/impl/DirectionWriter.h"
 #include "mx/api/BarlineData.h"
+#include "mx/core/generated/AccordionMiddle.h"
+#include "mx/core/generated/AccordionRegistration.h"
 #include "mx/core/generated/Bass.h"
 #include "mx/core/generated/BassStep.h"
 #include "mx/core/generated/BeatUnitGroup.h"
@@ -35,6 +37,7 @@
 #include "mx/core/generated/HarmonyAlter.h"
 #include "mx/core/generated/HarmonyChordGroup.h"
 #include "mx/core/generated/HarmonyChordGroupChoice.h"
+#include "mx/core/generated/Image.h"
 #include "mx/core/generated/Inversion.h"
 #include "mx/core/generated/Kind.h"
 #include "mx/core/generated/Metronome.h"
@@ -51,14 +54,18 @@
 #include "mx/core/generated/OctaveShift.h"
 #include "mx/core/generated/Offset.h"
 #include "mx/core/generated/OnOff.h"
+#include "mx/core/generated/OtherDirection.h"
 #include "mx/core/generated/Pedal.h"
 #include "mx/core/generated/PedalType.h"
 #include "mx/core/generated/PerMinute.h"
 #include "mx/core/generated/PositiveDivisions.h"
+#include "mx/core/generated/PrincipalVoice.h"
+#include "mx/core/generated/PrincipalVoiceSymbol.h"
 #include "mx/core/generated/Root.h"
 #include "mx/core/generated/RootStep.h"
 #include "mx/core/generated/Segno.h"
 #include "mx/core/generated/Semitones.h"
+#include "mx/core/generated/SmuflGlyphName.h"
 #include "mx/core/generated/Sound.h"
 #include "mx/core/generated/StaffDivide.h"
 #include "mx/core/generated/StaffDivideSymbol.h"
@@ -68,6 +75,7 @@
 #include "mx/core/generated/StringMute.h"
 #include "mx/core/generated/StringNumber.h"
 #include "mx/core/generated/StyleText.h"
+#include "mx/core/generated/ValignImage.h"
 #include "mx/core/generated/Wedge.h"
 #include "mx/core/generated/WedgeType.h"
 #include "mx/core/generated/YesNo.h"
@@ -708,6 +716,135 @@ void DirectionWriter::emitStaffDivide(const api::StaffDivideData &item, core::Di
     addDirectionType(std::move(dt), direction);
 }
 
+void DirectionWriter::emitPrincipalVoice(const api::PrincipalVoiceData &item, core::Direction &direction)
+{
+    core::PrincipalVoice principalVoice{};
+    principalVoice.setType(item.type == api::PrincipalVoiceType::stop ? core::StartStop::stop()
+                                                                      : core::StartStop::start());
+    switch (item.symbol)
+    {
+    case api::PrincipalVoiceSymbol::nebenstimme:
+        principalVoice.setSymbol(core::PrincipalVoiceSymbol::nebenstimme());
+        break;
+    case api::PrincipalVoiceSymbol::plain:
+        principalVoice.setSymbol(core::PrincipalVoiceSymbol::plain());
+        break;
+    case api::PrincipalVoiceSymbol::none:
+        principalVoice.setSymbol(core::PrincipalVoiceSymbol::none());
+        break;
+    case api::PrincipalVoiceSymbol::hauptstimme:
+        principalVoice.setSymbol(core::PrincipalVoiceSymbol::hauptstimme());
+        break;
+    }
+    principalVoice.setValue(item.text);
+    setAttributesFromPositionData(item.positionData, principalVoice);
+    setAttributesFromFontData(item.fontData, principalVoice);
+    if (item.color.has_value())
+    {
+        setAttributesFromColorData(*item.color, principalVoice);
+    }
+    if (item.id.has_value())
+    {
+        principalVoice.setID(core::Token{*item.id});
+    }
+    core::DirectionType dt{};
+    dt.setChoice(core::DirectionTypeChoice::principalVoice(std::move(principalVoice)));
+    addDirectionType(std::move(dt), direction);
+}
+
+void DirectionWriter::emitOtherDirection(const api::OtherDirectionData &item, core::Direction &direction)
+{
+    core::OtherDirection otherDirection{};
+    otherDirection.setValue(item.text);
+    if (item.printObject != api::Bool::unspecified)
+    {
+        otherDirection.setPrintObject(myConverter.convert(item.printObject));
+    }
+    if (item.smufl.has_value())
+    {
+        otherDirection.setSmufl(core::SmuflGlyphName{*item.smufl});
+    }
+    setAttributesFromPositionData(item.positionData, otherDirection);
+    setAttributesFromFontData(item.fontData, otherDirection);
+    if (item.color.has_value())
+    {
+        setAttributesFromColorData(*item.color, otherDirection);
+    }
+    if (item.id.has_value())
+    {
+        otherDirection.setID(core::Token{*item.id});
+    }
+    core::DirectionType dt{};
+    dt.setChoice(core::DirectionTypeChoice::otherDirection(std::move(otherDirection)));
+    addDirectionType(std::move(dt), direction);
+}
+
+void DirectionWriter::emitImage(const api::ImageData &item, core::Direction &direction)
+{
+    core::Image image{};
+    image.setSource(item.source);
+    image.setType(item.type);
+    if (item.height.has_value())
+    {
+        image.setHeight(core::Tenths{core::Decimal{*item.height}});
+    }
+    if (item.width.has_value())
+    {
+        image.setWidth(core::Tenths{core::Decimal{*item.width}});
+    }
+    setAttributesFromPositionData(item.positionData, image);
+    // <image>'s valign is the valign-image type (no baseline), which the generic position
+    // helper cannot write; set it on the element directly. A baseline value cannot be
+    // expressed on an image and is not written.
+    switch (item.positionData.verticalAlignment)
+    {
+    case api::VerticalAlignment::top:
+        image.setValign(core::ValignImage::top());
+        break;
+    case api::VerticalAlignment::middle:
+        image.setValign(core::ValignImage::middle());
+        break;
+    case api::VerticalAlignment::bottom:
+        image.setValign(core::ValignImage::bottom());
+        break;
+    case api::VerticalAlignment::baseline:
+    case api::VerticalAlignment::unspecified:
+    default:
+        break;
+    }
+    if (item.id.has_value())
+    {
+        image.setID(core::Token{*item.id});
+    }
+    core::DirectionType dt{};
+    dt.setChoice(core::DirectionTypeChoice::image(std::move(image)));
+    addDirectionType(std::move(dt), direction);
+}
+
+void DirectionWriter::emitAccordionRegistration(const api::AccordionRegistrationData &item, core::Direction &direction)
+{
+    core::AccordionRegistration accordion{};
+    accordion.setAccordionHigh(item.high);
+    if (item.middle.has_value())
+    {
+        accordion.setAccordionMiddle(core::AccordionMiddle{*item.middle});
+    }
+    accordion.setAccordionLow(item.low);
+    setAttributesFromPositionData(item.positionData, accordion);
+    setAttributesFromFontData(item.fontData, accordion);
+    if (item.color.has_value())
+    {
+        setAttributesFromColorData(*item.color, accordion);
+    }
+    if (item.id.has_value())
+    {
+        accordion.setID(core::Token{*item.id});
+    }
+    core::DirectionType dt{};
+    dt.setChoice(core::DirectionTypeChoice::accordionRegistration(std::move(accordion)));
+    addDirectionType(std::move(dt), direction);
+}
+
 void DirectionWriter::emitFixedOrder(core::Direction &direction)
 {
     for (const auto &mark : myDirectionData.marks)
@@ -810,6 +947,26 @@ void DirectionWriter::emitFixedOrder(core::Direction &direction)
     for (const auto &item : myDirectionData.staffDivides)
     {
         emitStaffDivide(item, direction);
+    }
+
+    for (const auto &item : myDirectionData.principalVoices)
+    {
+        emitPrincipalVoice(item, direction);
+    }
+
+    for (const auto &item : myDirectionData.otherDirections)
+    {
+        emitOtherDirection(item, direction);
+    }
+
+    for (const auto &item : myDirectionData.images)
+    {
+        emitImage(item, direction);
+    }
+
+    for (const auto &item : myDirectionData.accordionRegistrations)
+    {
+        emitAccordionRegistration(item, direction);
     }
 }
 
@@ -971,6 +1128,34 @@ void DirectionWriter::emitOrderedComponents(core::Direction &direction)
             if (i >= 0 && static_cast<size_t>(i) < myDirectionData.staffDivides.size())
             {
                 emitStaffDivide(myDirectionData.staffDivides.at(i), direction);
+            }
+            break;
+
+        case api::DirectionComponentKind::principalVoice:
+            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.principalVoices.size())
+            {
+                emitPrincipalVoice(myDirectionData.principalVoices.at(i), direction);
+            }
+            break;
+
+        case api::DirectionComponentKind::otherDirection:
+            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.otherDirections.size())
+            {
+                emitOtherDirection(myDirectionData.otherDirections.at(i), direction);
+            }
+            break;
+
+        case api::DirectionComponentKind::image:
+            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.images.size())
+            {
+                emitImage(myDirectionData.images.at(i), direction);
+            }
+            break;
+
+        case api::DirectionComponentKind::accordionRegistration:
+            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.accordionRegistrations.size())
+            {
+                emitAccordionRegistration(myDirectionData.accordionRegistrations.at(i), direction);
             }
             break;
 

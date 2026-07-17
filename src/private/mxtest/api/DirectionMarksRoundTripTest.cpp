@@ -115,6 +115,106 @@ TEST(StaffDivide, DirectionMarksRoundTrip)
 
 T_END;
 
+TEST(PrincipalVoice, DirectionMarksRoundTrip)
+{
+    DirectionData direction;
+    PrincipalVoiceData principalVoice;
+    principalVoice.type = PrincipalVoiceType::start;
+    principalVoice.symbol = PrincipalVoiceSymbol::nebenstimme;
+    principalVoice.text = "N";
+    direction.principalVoices.push_back(principalVoice);
+    const auto directions = roundTripDirectionData(direction);
+    REQUIRE(directions.size() == 1);
+    REQUIRE(directions.front().principalVoices.size() == 1);
+    const auto &out = directions.front().principalVoices.front();
+    CHECK(out.type == PrincipalVoiceType::start);
+    CHECK(out.symbol == PrincipalVoiceSymbol::nebenstimme);
+    CHECK_EQUAL("N", out.text);
+}
+
+T_END;
+
+TEST(OtherDirection, DirectionMarksRoundTrip)
+{
+    DirectionData direction;
+    OtherDirectionData otherDirection;
+    otherDirection.text = "con sordino misterioso";
+    otherDirection.printObject = Bool::no;
+    otherDirection.smufl = "luteFingeringRHThumb";
+    direction.otherDirections.push_back(otherDirection);
+    const auto directions = roundTripDirectionData(direction);
+    REQUIRE(directions.size() == 1);
+    REQUIRE(directions.front().otherDirections.size() == 1);
+    const auto &out = directions.front().otherDirections.front();
+    CHECK_EQUAL("con sordino misterioso", out.text);
+    CHECK(out.printObject == Bool::no);
+    REQUIRE(out.smufl.has_value());
+    CHECK_EQUAL("luteFingeringRHThumb", *out.smufl);
+}
+
+T_END;
+
+TEST(Image, DirectionMarksRoundTrip)
+{
+    DirectionData direction;
+    ImageData image;
+    image.source = "logo.png";
+    image.type = "image/png";
+    image.height = 40.0;
+    image.width = 80.0;
+    image.positionData.verticalAlignment = VerticalAlignment::middle;
+    direction.images.push_back(image);
+    const auto directions = roundTripDirectionData(direction);
+    REQUIRE(directions.size() == 1);
+    REQUIRE(directions.front().images.size() == 1);
+    const auto &out = directions.front().images.front();
+    CHECK_EQUAL("logo.png", out.source);
+    CHECK_EQUAL("image/png", out.type);
+    REQUIRE(out.height.has_value());
+    CHECK_DOUBLES_EQUAL(40.0, *out.height, 0.0001);
+    REQUIRE(out.width.has_value());
+    CHECK_DOUBLES_EQUAL(80.0, *out.width, 0.0001);
+    CHECK(out.positionData.verticalAlignment == VerticalAlignment::middle);
+}
+
+T_END;
+
+TEST(AccordionRegistration, DirectionMarksRoundTrip)
+{
+    DirectionData direction;
+    AccordionRegistrationData accordion;
+    accordion.high = true;
+    accordion.middle = 2;
+    accordion.low = true;
+    direction.accordionRegistrations.push_back(accordion);
+    const auto directions = roundTripDirectionData(direction);
+    REQUIRE(directions.size() == 1);
+    REQUIRE(directions.front().accordionRegistrations.size() == 1);
+    const auto &out = directions.front().accordionRegistrations.front();
+    CHECK(out.high);
+    REQUIRE(out.middle.has_value());
+    CHECK_EQUAL(2, *out.middle);
+    CHECK(out.low);
+}
+
+T_END;
+
+TEST(AccordionRegistrationEmpty, DirectionMarksRoundTrip)
+{
+    // A registration with nothing engaged is legal and draws the empty diagram.
+    DirectionData direction;
+    direction.accordionRegistrations.emplace_back();
+    const auto directions = roundTripDirectionData(direction);
+    REQUIRE(directions.size() == 1);
+    REQUIRE(directions.front().accordionRegistrations.size() == 1);
+    const auto &out = directions.front().accordionRegistrations.front();
+    CHECK(!out.high);
+    CHECK(!out.middle.has_value());
+    CHECK(!out.low);
+}
+
+T_END;
+
 TEST(DampFormatting, DirectionMarksRoundTrip)
 {
     DirectionData direction;
