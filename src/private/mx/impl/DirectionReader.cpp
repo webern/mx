@@ -20,6 +20,7 @@
 #include "mx/core/generated/DirectionType.h"
 #include "mx/core/generated/DirectionTypeChoice.h"
 #include "mx/core/generated/Dynamics.h"
+#include "mx/core/generated/EmptyPrintStyleAlignID.h"
 #include "mx/core/generated/Fingering.h"
 #include "mx/core/generated/FirstFret.h"
 #include "mx/core/generated/Frame.h"
@@ -41,6 +42,7 @@
 #include "mx/core/generated/NumeralValue.h"
 #include "mx/core/generated/OctaveShift.h"
 #include "mx/core/generated/Offset.h"
+#include "mx/core/generated/OnOff.h"
 #include "mx/core/generated/OtherDirection.h"
 #include "mx/core/generated/Pedal.h"
 #include "mx/core/generated/PedalType.h"
@@ -51,6 +53,8 @@
 #include "mx/core/generated/Scordatura.h"
 #include "mx/core/generated/Segno.h"
 #include "mx/core/generated/Sound.h"
+#include "mx/core/generated/StaffDivide.h"
+#include "mx/core/generated/StaffDivideSymbol.h"
 #include "mx/core/generated/StartStop.h"
 #include "mx/core/generated/StartStopContinue.h"
 #include "mx/core/generated/Step.h"
@@ -305,7 +309,7 @@ void DirectionReader::parseDirectionType(const core::DirectionType &directionTyp
         break;
     }
     case K::staffDivide: {
-        /* unhandled - new in MusicXML 4.0 */
+        parseStaffDivide(directionType);
         break;
     }
     case K::otherDirection: {
@@ -819,15 +823,15 @@ void DirectionReader::parseOctaveShift(const core::DirectionType &directionType)
                            static_cast<int>(myOutDirectionData.ottavaStarts.size()) - 1);
 }
 
-// The eleven stubs below (harp-pedals, damp, damp-all, eyeglasses, string-mute, scordatura,
-// image, principal-voice, accordion-registration, percussion, other-direction) are genuinely
-// unmodeled direction-type choices, tracked at #324, not a bug in the surrounding dispatch.
-// When a <direction> contains only one of these, the resulting DirectionData carries no
-// content and is correctly left unwritten -- MusicXML requires at least one direction-type
-// child, so there is no schema-valid way to keep the <direction> (and its <voice>/<staff>)
-// without modeling what it actually says. That is why round-trip discovery reports those
-// files as dropping <direction>/<direction-type>/<voice>/<staff> together: it is one gap
-// (the unmodeled content), not four.
+// The stubs below (harp-pedals, scordatura, image, principal-voice, accordion-registration,
+// percussion, other-direction) are genuinely unmodeled direction-type choices, tracked at
+// #324, not a bug in the surrounding dispatch. When a <direction> contains only one of these,
+// the resulting DirectionData carries no content and is correctly left unwritten -- MusicXML
+// requires at least one direction-type child, so there is no schema-valid way to keep the
+// <direction> (and its <voice>/<staff>) without modeling what it actually says. That is why
+// round-trip discovery reports those files as dropping
+// <direction>/<direction-type>/<voice>/<staff> together: it is one gap (the unmodeled
+// content), not four.
 void DirectionReader::parseHarpPedals(const core::DirectionType &directionType)
 {
     MX_UNUSED(directionType);
@@ -835,22 +839,111 @@ void DirectionReader::parseHarpPedals(const core::DirectionType &directionType)
 
 void DirectionReader::parseDamp(const core::DirectionType &directionType)
 {
-    MX_UNUSED(directionType);
+    const auto &damp = directionType.choice().asDamp();
+    api::DampData outDamp;
+    outDamp.positionData = getPositionData(damp);
+    outDamp.fontData = getFontData(damp);
+    if (damp.color().has_value())
+    {
+        outDamp.color = getColor(damp);
+    }
+    if (damp.id().has_value())
+    {
+        outDamp.id = damp.id()->value();
+    }
+    myOutDirectionData.damps.emplace_back(std::move(outDamp));
+    appendOrderedComponent(api::DirectionComponentKind::damp, static_cast<int>(myOutDirectionData.damps.size()) - 1);
 }
 
 void DirectionReader::parseDampAll(const core::DirectionType &directionType)
 {
-    MX_UNUSED(directionType);
+    const auto &dampAll = directionType.choice().asDampAll();
+    api::DampAllData outDampAll;
+    outDampAll.positionData = getPositionData(dampAll);
+    outDampAll.fontData = getFontData(dampAll);
+    if (dampAll.color().has_value())
+    {
+        outDampAll.color = getColor(dampAll);
+    }
+    if (dampAll.id().has_value())
+    {
+        outDampAll.id = dampAll.id()->value();
+    }
+    myOutDirectionData.dampAlls.emplace_back(std::move(outDampAll));
+    appendOrderedComponent(api::DirectionComponentKind::dampAll,
+                           static_cast<int>(myOutDirectionData.dampAlls.size()) - 1);
 }
 
 void DirectionReader::parseEyeglasses(const core::DirectionType &directionType)
 {
-    MX_UNUSED(directionType);
+    const auto &eyeglasses = directionType.choice().asEyeglasses();
+    api::EyeglassesData outEyeglasses;
+    outEyeglasses.positionData = getPositionData(eyeglasses);
+    outEyeglasses.fontData = getFontData(eyeglasses);
+    if (eyeglasses.color().has_value())
+    {
+        outEyeglasses.color = getColor(eyeglasses);
+    }
+    if (eyeglasses.id().has_value())
+    {
+        outEyeglasses.id = eyeglasses.id()->value();
+    }
+    myOutDirectionData.eyeglasses.emplace_back(std::move(outEyeglasses));
+    appendOrderedComponent(api::DirectionComponentKind::eyeglasses,
+                           static_cast<int>(myOutDirectionData.eyeglasses.size()) - 1);
 }
 
 void DirectionReader::parseStringMute(const core::DirectionType &directionType)
 {
-    MX_UNUSED(directionType);
+    const auto &stringMute = directionType.choice().asStringMute();
+    api::StringMuteData outStringMute;
+    outStringMute.type =
+        stringMute.type().tag() == core::OnOff::Tag::off ? api::StringMuteType::off : api::StringMuteType::on;
+    outStringMute.positionData = getPositionData(stringMute);
+    outStringMute.fontData = getFontData(stringMute);
+    if (stringMute.color().has_value())
+    {
+        outStringMute.color = getColor(stringMute);
+    }
+    if (stringMute.id().has_value())
+    {
+        outStringMute.id = stringMute.id()->value();
+    }
+    myOutDirectionData.stringMutes.emplace_back(std::move(outStringMute));
+    appendOrderedComponent(api::DirectionComponentKind::stringMute,
+                           static_cast<int>(myOutDirectionData.stringMutes.size()) - 1);
+}
+
+void DirectionReader::parseStaffDivide(const core::DirectionType &directionType)
+{
+    const auto &staffDivide = directionType.choice().asStaffDivide();
+    api::StaffDivideData outStaffDivide;
+    switch (staffDivide.type().tag())
+    {
+    case core::StaffDivideSymbol::Tag::up:
+        outStaffDivide.type = api::StaffDivideType::up;
+        break;
+    case core::StaffDivideSymbol::Tag::upDown:
+        outStaffDivide.type = api::StaffDivideType::upDown;
+        break;
+    case core::StaffDivideSymbol::Tag::down:
+    default:
+        outStaffDivide.type = api::StaffDivideType::down;
+        break;
+    }
+    outStaffDivide.positionData = getPositionData(staffDivide);
+    outStaffDivide.fontData = getFontData(staffDivide);
+    if (staffDivide.color().has_value())
+    {
+        outStaffDivide.color = getColor(staffDivide);
+    }
+    if (staffDivide.id().has_value())
+    {
+        outStaffDivide.id = staffDivide.id()->value();
+    }
+    myOutDirectionData.staffDivides.emplace_back(std::move(outStaffDivide));
+    appendOrderedComponent(api::DirectionComponentKind::staffDivide,
+                           static_cast<int>(myOutDirectionData.staffDivides.size()) - 1);
 }
 
 void DirectionReader::parseScordatura(const core::DirectionType &directionType)

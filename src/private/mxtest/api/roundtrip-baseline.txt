@@ -432,3 +432,15 @@ musuite/testGrace2.xml
 custom/musescore-slur-start-stop.musicxml
 musuite/testChord.xml
 musuite/testPiano.xml
+
+# Unblocked by modeling the attribute-only direction types (#324): damp,
+# damp-all, eyeglasses, string-mute, and staff-divide now round-trip.
+synthetic/damp-all.3.0.xml
+synthetic/damp-all.3.1.xml
+synthetic/damp.3.0.xml
+synthetic/damp.3.1.xml
+synthetic/eyeglasses.3.0.xml
+synthetic/eyeglasses.3.1.xml
+synthetic/staff-divide.3.1.xml
+synthetic/string-mute.3.0.xml
+synthetic/string-mute.3.1.xml
