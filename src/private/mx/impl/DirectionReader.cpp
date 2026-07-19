@@ -9,6 +9,7 @@
 #include "mx/core/generated/Barre.h"
 #include "mx/core/generated/Bass.h"
 #include "mx/core/generated/BassStep.h"
+#include "mx/core/generated/Beater.h"
 #include "mx/core/generated/Bracket.h"
 #include "mx/core/generated/Coda.h"
 #include "mx/core/generated/Dashes.h"
@@ -21,12 +22,14 @@
 #include "mx/core/generated/DirectionType.h"
 #include "mx/core/generated/DirectionTypeChoice.h"
 #include "mx/core/generated/Dynamics.h"
+#include "mx/core/generated/Effect.h"
 #include "mx/core/generated/EmptyPrintStyleAlignID.h"
 #include "mx/core/generated/Fingering.h"
 #include "mx/core/generated/FirstFret.h"
 #include "mx/core/generated/Frame.h"
 #include "mx/core/generated/FrameNote.h"
 #include "mx/core/generated/Fret.h"
+#include "mx/core/generated/Glass.h"
 #include "mx/core/generated/HarmonyAlter.h"
 #include "mx/core/generated/HarmonyChordGroup.h"
 #include "mx/core/generated/HarmonyChordGroupChoice.h"
@@ -35,6 +38,8 @@
 #include "mx/core/generated/Inversion.h"
 #include "mx/core/generated/Kind.h"
 #include "mx/core/generated/KindValue.h"
+#include "mx/core/generated/Membrane.h"
+#include "mx/core/generated/Metal.h"
 #include "mx/core/generated/Metronome.h"
 #include "mx/core/generated/Numeral.h"
 #include "mx/core/generated/NumeralKey.h"
@@ -46,10 +51,13 @@
 #include "mx/core/generated/Offset.h"
 #include "mx/core/generated/OnOff.h"
 #include "mx/core/generated/OtherDirection.h"
+#include "mx/core/generated/OtherText.h"
 #include "mx/core/generated/Pedal.h"
 #include "mx/core/generated/PedalTuning.h"
 #include "mx/core/generated/PedalType.h"
 #include "mx/core/generated/Percussion.h"
+#include "mx/core/generated/PercussionChoice.h"
+#include "mx/core/generated/Pitched.h"
 #include "mx/core/generated/PrincipalVoice.h"
 #include "mx/core/generated/PrincipalVoiceSymbol.h"
 #include "mx/core/generated/Root.h"
@@ -63,10 +71,12 @@
 #include "mx/core/generated/StartStop.h"
 #include "mx/core/generated/StartStopContinue.h"
 #include "mx/core/generated/Step.h"
+#include "mx/core/generated/Stick.h"
 #include "mx/core/generated/String.h"
 #include "mx/core/generated/StringMute.h"
 #include "mx/core/generated/StringNumber.h"
 #include "mx/core/generated/StyleText.h"
+#include "mx/core/generated/Timpani.h"
 #include "mx/core/generated/TuningGroup.h"
 #include "mx/core/generated/UpDownStopContinue.h"
 #include "mx/core/generated/ValignImage.h"
@@ -1109,14 +1119,141 @@ void DirectionReader::parseAccordionRegistration(const core::DirectionType &dire
                            static_cast<int>(myOutDirectionData.accordionRegistrations.size()) - 1);
 }
 
-// The percussion stub below is the last genuinely unmodeled direction-type choice, tracked at
-// #324, not a bug in the surrounding dispatch. When a <direction> contains only percussion
-// content, the resulting DirectionData carries no content and is correctly left unwritten --
-// MusicXML requires at least one direction-type child, so there is no schema-valid way to
-// keep the <direction> (and its <voice>/<staff>) without modeling what it actually says.
+api::PercussionDataChoice DirectionReader::getPercussionChoice(const core::PercussionChoice &choice) const
+{
+    using K = core::PercussionChoice::Kind;
+    switch (choice.kind())
+    {
+    case K::glass: {
+        api::GlassPercussion glass;
+        glass.value = myConverter.convert(choice.asGlass().value());
+        if (choice.asGlass().smufl().has_value())
+        {
+            glass.smufl = choice.asGlass().smufl()->toString();
+        }
+        return api::PercussionDataChoice{glass};
+    }
+    case K::metal: {
+        api::MetalPercussion metal;
+        metal.value = myConverter.convert(choice.asMetal().value());
+        if (choice.asMetal().smufl().has_value())
+        {
+            metal.smufl = choice.asMetal().smufl()->toString();
+        }
+        return api::PercussionDataChoice{metal};
+    }
+    case K::wood: {
+        api::WoodPercussion wood;
+        wood.value = myConverter.convert(choice.asWood().value());
+        if (choice.asWood().smufl().has_value())
+        {
+            wood.smufl = choice.asWood().smufl()->toString();
+        }
+        return api::PercussionDataChoice{wood};
+    }
+    case K::pitched: {
+        api::PitchedPercussion pitched;
+        pitched.value = myConverter.convert(choice.asPitched().value());
+        if (choice.asPitched().smufl().has_value())
+        {
+            pitched.smufl = choice.asPitched().smufl()->toString();
+        }
+        return api::PercussionDataChoice{pitched};
+    }
+    case K::membrane: {
+        api::MembranePercussion membrane;
+        membrane.value = myConverter.convert(choice.asMembrane().value());
+        if (choice.asMembrane().smufl().has_value())
+        {
+            membrane.smufl = choice.asMembrane().smufl()->toString();
+        }
+        return api::PercussionDataChoice{membrane};
+    }
+    case K::effect: {
+        api::EffectPercussion effect;
+        effect.value = myConverter.convert(choice.asEffect().value());
+        if (choice.asEffect().smufl().has_value())
+        {
+            effect.smufl = choice.asEffect().smufl()->toString();
+        }
+        return api::PercussionDataChoice{effect};
+    }
+    case K::timpani: {
+        api::TimpaniPercussion timpani;
+        if (choice.asTimpani().smufl().has_value())
+        {
+            timpani.smufl = choice.asTimpani().smufl()->toString();
+        }
+        return api::PercussionDataChoice{timpani};
+    }
+    case K::beater: {
+        api::BeaterPercussion beater;
+        beater.value = myConverter.convert(choice.asBeater().value());
+        if (choice.asBeater().tip().has_value())
+        {
+            beater.tip = myConverter.convert(*choice.asBeater().tip());
+        }
+        return api::PercussionDataChoice{beater};
+    }
+    case K::stick: {
+        api::StickPercussion stick;
+        stick.stickType = myConverter.convert(choice.asStick().stickType());
+        stick.stickMaterial = myConverter.convert(choice.asStick().stickMaterial());
+        if (choice.asStick().tip().has_value())
+        {
+            stick.tip = myConverter.convert(*choice.asStick().tip());
+        }
+        if (choice.asStick().parentheses().has_value())
+        {
+            stick.parentheses = myConverter.convert(*choice.asStick().parentheses());
+        }
+        if (choice.asStick().dashedCircle().has_value())
+        {
+            stick.dashedCircle = myConverter.convert(*choice.asStick().dashedCircle());
+        }
+        return api::PercussionDataChoice{stick};
+    }
+    case K::stickLocation: {
+        return api::PercussionDataChoice{myConverter.convert(choice.asStickLocation())};
+    }
+    case K::otherPercussion:
+    default: {
+        api::OtherPercussion other;
+        other.text = choice.asOtherPercussion().value();
+        if (choice.asOtherPercussion().smufl().has_value())
+        {
+            other.smufl = choice.asOtherPercussion().smufl()->toString();
+        }
+        return api::PercussionDataChoice{other};
+    }
+    }
+}
+
 void DirectionReader::parsePercussion(const core::DirectionType &directionType)
 {
-    MX_UNUSED(directionType);
+    const auto &percussionSet = directionType.choice().asPercussion();
+    for (const auto &percussion : percussionSet.items())
+    {
+        api::PercussionData outPercussion;
+        outPercussion.choice = getPercussionChoice(percussion.choice());
+        if (percussion.enclosure().has_value())
+        {
+            outPercussion.enclosure = myConverter.convert(*percussion.enclosure());
+        }
+        outPercussion.positionData = getPositionData(percussion);
+        outPercussion.fontData = getFontData(percussion);
+        if (percussion.color().has_value())
+        {
+            outPercussion.color = getColor(percussion);
+        }
+        if (percussion.id().has_value())
+        {
+            outPercussion.id = percussion.id()->value();
+        }
+        myOutDirectionData.percussions.emplace_back(std::move(outPercussion));
+        appendOrderedComponent(api::DirectionComponentKind::percussion,
+                               static_cast<int>(myOutDirectionData.percussions.size()) - 1);
+    }
 }
 
 void DirectionReader::parseOtherDirection(const core::DirectionType &directionType)

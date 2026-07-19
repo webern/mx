@@ -8,6 +8,7 @@
 #include "mx/api/DirectionData.h"
 #include "mx/core/generated/EmptyPrintStyleAlignID.h"
 #include "mx/core/generated/MusicDataChoice.h"
+#include "mx/core/generated/PercussionChoice.h"
 #include "mx/impl/Converter.h"
 #include "mx/impl/Cursor.h"
 #include "mx/impl/SpannerNumberResolver.h"
@@ -67,6 +68,8 @@ class DirectionWriter
     void emitAccordionRegistration(const api::AccordionRegistrationData &item, core::Direction &direction);
     void emitHarpPedals(const api::HarpPedalsData &item, core::Direction &direction);
     void emitScordatura(const api::ScordaturaData &item, core::Direction &direction);
+    core::PercussionChoice createPercussionChoice(const api::PercussionDataChoice &choice);
+    void emitPercussion(const api::PercussionData &item, core::Direction &direction);
     void emitFixedOrder(core::Direction &direction);
     void emitOrderedComponents(core::Direction &direction);
 

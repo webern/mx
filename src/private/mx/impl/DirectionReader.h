@@ -10,6 +10,7 @@
 #include "mx/core/generated/Dynamics.h"
 #include "mx/core/generated/Harmony.h"
 #include "mx/core/generated/HarmonyChordGroup.h"
+#include "mx/core/generated/PercussionChoice.h"
 #include "mx/impl/Converter.h"
 #include "mx/impl/Cursor.h"
 #include "mx/impl/PositionFunctions.h"
@@ -67,6 +68,7 @@ class DirectionReader
     void parseImage(const core::DirectionType &directionType);
     void parsePrincipalVoice(const core::DirectionType &directionType);
     void parseAccordionRegistration(const core::DirectionType &directionType);
+    api::PercussionDataChoice getPercussionChoice(const core::PercussionChoice &choice) const;
     void parsePercussion(const core::DirectionType &directionType);
     void parseOtherDirection(const core::DirectionType &directionType);
     void parseHarmony(const core::Harmony &inHarmony, const core::HarmonyChordGroup &inGrp);

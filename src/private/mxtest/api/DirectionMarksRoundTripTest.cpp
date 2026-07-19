@@ -286,6 +286,151 @@ TEST(ScordaturaNoStringNumbers, DirectionMarksRoundTrip)
 
 T_END;
 
+TEST(PercussionGlass, DirectionMarksRoundTrip)
+{
+    DirectionData direction;
+    PercussionData percussion;
+    GlassPercussion glass;
+    glass.value = GlassInstrument::windChimes;
+    percussion.choice = PercussionDataChoice{glass};
+    percussion.enclosure = PercussionEnclosure::rectangle;
+    direction.percussions.push_back(percussion);
+    const auto directions = roundTripDirectionData(direction);
+    REQUIRE(directions.size() == 1);
+    REQUIRE(directions.front().percussions.size() == 1);
+    const auto &out = directions.front().percussions.front();
+    REQUIRE(out.choice.isGlass());
+    CHECK(out.choice.glass().value == GlassInstrument::windChimes);
+    CHECK(out.enclosure == PercussionEnclosure::rectangle);
+}
+
+T_END;
+
+TEST(PercussionBeaterTip, DirectionMarksRoundTrip)
+{
+    DirectionData direction;
+    PercussionData percussion;
+    BeaterPercussion beater;
+    beater.value = BeaterValue::wireBrush;
+    beater.tip = TipDirection::northeast;
+    percussion.choice = PercussionDataChoice{beater};
+    direction.percussions.push_back(percussion);
+    const auto directions = roundTripDirectionData(direction);
+    REQUIRE(directions.size() == 1);
+    REQUIRE(directions.front().percussions.size() == 1);
+    const auto &out = directions.front().percussions.front();
+    REQUIRE(out.choice.isBeater());
+    CHECK(out.choice.beater().value == BeaterValue::wireBrush);
+    CHECK(out.choice.beater().tip == TipDirection::northeast);
+}
+
+T_END;
+
+TEST(PercussionStick, DirectionMarksRoundTrip)
+{
+    DirectionData direction;
+    PercussionData percussion;
+    StickPercussion stick;
+    stick.stickType = StickType::timpani;
+    stick.stickMaterial = StickMaterial::hard;
+    stick.tip = TipDirection::down;
+    stick.parentheses = Bool::yes;
+    percussion.choice = PercussionDataChoice{stick};
+    direction.percussions.push_back(percussion);
+    const auto directions = roundTripDirectionData(direction);
+    REQUIRE(directions.size() == 1);
+    REQUIRE(directions.front().percussions.size() == 1);
+    const auto &out = directions.front().percussions.front();
+    REQUIRE(out.choice.isStick());
+    CHECK(out.choice.stick().stickType == StickType::timpani);
+    CHECK(out.choice.stick().stickMaterial == StickMaterial::hard);
+    CHECK(out.choice.stick().tip == TipDirection::down);
+    CHECK(out.choice.stick().parentheses == Bool::yes);
+}
+
+T_END;
+
+TEST(PercussionTimpaniSmufl, DirectionMarksRoundTrip)
+{
+    DirectionData direction;
+    PercussionData percussion;
+    TimpaniPercussion timpani;
+    timpani.smufl = "pictGong";
+    percussion.choice = PercussionDataChoice{timpani};
+    direction.percussions.push_back(percussion);
+    const auto directions = roundTripDirectionData(direction);
+    REQUIRE(directions.size() == 1);
+    REQUIRE(directions.front().percussions.size() == 1);
+    const auto &out = directions.front().percussions.front();
+    REQUIRE(out.choice.isTimpani());
+    REQUIRE(out.choice.timpani().smufl.has_value());
+    CHECK_EQUAL("pictGong", *out.choice.timpani().smufl);
+}
+
+T_END;
+
+TEST(PercussionStickLocationAndOther, DirectionMarksRoundTrip)
+{
+    DirectionData direction;
+    PercussionData stickLocationPercussion;
+    stickLocationPercussion.choice = PercussionDataChoice{StickLocation::cymbalEdge};
+    direction.percussions.push_back(stickLocationPercussion);
+    PercussionData otherPercussionData;
+    OtherPercussion other;
+    other.text = "ocean drum";
+    otherPercussionData.choice = PercussionDataChoice{other};
+    direction.percussions.push_back(otherPercussionData);
+    const auto directions = roundTripDirectionData(direction);
+    REQUIRE(directions.size() == 1);
+    REQUIRE(directions.front().percussions.size() == 2);
+    REQUIRE(directions.front().percussions.at(0).choice.isStickLocation());
+    CHECK(directions.front().percussions.at(0).choice.stickLocation() == StickLocation::cymbalEdge);
+    REQUIRE(directions.front().percussions.at(1).choice.isOtherPercussion());
+    CHECK_EQUAL("ocean drum", directions.front().percussions.at(1).choice.otherPercussion().text);
+}
+
+T_END;
+
+TEST(PercussionMembraneMetalWoodPitchedEffect, DirectionMarksRoundTrip)
+{
+    DirectionData direction;
+    PercussionData membraneData;
+    MembranePercussion membrane;
+    membrane.value = MembraneInstrument::congaDrum;
+    membraneData.choice = PercussionDataChoice{membrane};
+    direction.percussions.push_back(membraneData);
+    PercussionData metalData;
+    MetalPercussion metal;
+    metal.value = MetalInstrument::tamTamWithBeater;
+    metalData.choice = PercussionDataChoice{metal};
+    direction.percussions.push_back(metalData);
+    PercussionData woodData;
+    WoodPercussion wood;
+    wood.value = WoodInstrument::templeBlock;
+    woodData.choice = PercussionDataChoice{wood};
+    direction.percussions.push_back(woodData);
+    PercussionData pitchedData;
+    PitchedPercussion pitched;
+    pitched.value = PitchedInstrument::steelDrums;
+    pitchedData.choice = PercussionDataChoice{pitched};
+    direction.percussions.push_back(pitchedData);
+    PercussionData effectData;
+    EffectPercussion effect;
+    effect.value = EffectInstrument::windMachine;
+    effectData.choice = PercussionDataChoice{effect};
+    direction.percussions.push_back(effectData);
+    const auto directions = roundTripDirectionData(direction);
+    REQUIRE(directions.size() == 1);
+    REQUIRE(directions.front().percussions.size() == 5);
+    CHECK(directions.front().percussions.at(0).choice.membrane().value == MembraneInstrument::congaDrum);
+    CHECK(directions.front().percussions.at(1).choice.metal().value == MetalInstrument::tamTamWithBeater);
+    CHECK(directions.front().percussions.at(2).choice.wood().value == WoodInstrument::templeBlock);
+    CHECK(directions.front().percussions.at(3).choice.pitched().value == PitchedInstrument::steelDrums);
+    CHECK(directions.front().percussions.at(4).choice.effect().value == EffectInstrument::windMachine);
+}
+
+T_END;
+
 TEST(DampFormatting, DirectionMarksRoundTrip)
 {
     DirectionData direction;

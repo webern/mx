@@ -9,6 +9,7 @@
 #include "mx/api/KeyData.h"
 #include "mx/api/MarkData.h"
 #include "mx/api/NoteData.h"
+#include "mx/api/PercussionData.h"
 #include "mx/api/PositionData.h"
 #include "mx/api/ScoreData.h"
 #include "mx/api/SoundID.h"
@@ -17,13 +18,17 @@
 #include "mx/core/generated/ArticulationsChoice.h"
 #include "mx/core/generated/BarStyle.h"
 #include "mx/core/generated/BeamValue.h"
+#include "mx/core/generated/BeaterValue.h"
 #include "mx/core/generated/CSSFontSize.h"
 #include "mx/core/generated/CancelLocation.h"
 #include "mx/core/generated/ClefSign.h"
 #include "mx/core/generated/DynamicsChoice.h"
+#include "mx/core/generated/EffectValue.h"
+#include "mx/core/generated/EnclosureShape.h"
 #include "mx/core/generated/FermataShape.h"
 #include "mx/core/generated/FontStyle.h"
 #include "mx/core/generated/FontWeight.h"
+#include "mx/core/generated/GlassValue.h"
 #include "mx/core/generated/GroupBarlineValue.h"
 #include "mx/core/generated/GroupSymbolValue.h"
 #include "mx/core/generated/KindValue.h"
@@ -31,22 +36,30 @@
 #include "mx/core/generated/LineEnd.h"
 #include "mx/core/generated/LineType.h"
 #include "mx/core/generated/MeasureNumberingValue.h"
+#include "mx/core/generated/MembraneValue.h"
+#include "mx/core/generated/MetalValue.h"
 #include "mx/core/generated/NoteTypeValue.h"
 #include "mx/core/generated/NoteheadValue.h"
 #include "mx/core/generated/OrnamentsGroupChoice.h"
+#include "mx/core/generated/PitchedValue.h"
 #include "mx/core/generated/RightLeftMiddle.h"
 #include "mx/core/generated/SoundID.h"
 #include "mx/core/generated/StartStopDiscontinue.h"
 #include "mx/core/generated/StemValue.h"
 #include "mx/core/generated/Step.h"
+#include "mx/core/generated/StickLocation.h"
+#include "mx/core/generated/StickMaterial.h"
+#include "mx/core/generated/StickType.h"
 #include "mx/core/generated/SystemRelationNumber.h"
 #include "mx/core/generated/TechnicalChoice.h"
 #include "mx/core/generated/TimeRelation.h"
 #include "mx/core/generated/TimeSeparator.h"
 #include "mx/core/generated/TimeSymbol.h"
+#include "mx/core/generated/TipDirection.h"
 #include "mx/core/generated/Transpose.h"
 #include "mx/core/generated/Valign.h"
 #include "mx/core/generated/WedgeType.h"
+#include "mx/core/generated/WoodValue.h"
 #include "mx/core/generated/YesNo.h"
 
 #include <algorithm>
@@ -184,6 +197,31 @@ class Converter
     core::TimeRelation convert(api::TimeRelation value) const;
     api::TimeRelation convert(core::TimeRelation value) const;
 
+    api::GlassInstrument convert(core::GlassValue value) const;
+    core::GlassValue convert(api::GlassInstrument value) const;
+    api::MetalInstrument convert(core::MetalValue value) const;
+    core::MetalValue convert(api::MetalInstrument value) const;
+    api::WoodInstrument convert(core::WoodValue value) const;
+    core::WoodValue convert(api::WoodInstrument value) const;
+    api::PitchedInstrument convert(core::PitchedValue value) const;
+    core::PitchedValue convert(api::PitchedInstrument value) const;
+    api::MembraneInstrument convert(core::MembraneValue value) const;
+    core::MembraneValue convert(api::MembraneInstrument value) const;
+    api::EffectInstrument convert(core::EffectValue value) const;
+    core::EffectValue convert(api::EffectInstrument value) const;
+    api::BeaterValue convert(core::BeaterValue value) const;
+    core::BeaterValue convert(api::BeaterValue value) const;
+    api::StickType convert(core::StickType value) const;
+    core::StickType convert(api::StickType value) const;
+    api::StickMaterial convert(core::StickMaterial value) const;
+    core::StickMaterial convert(api::StickMaterial value) const;
+    api::StickLocation convert(core::StickLocation value) const;
+    core::StickLocation convert(api::StickLocation value) const;
+    api::TipDirection convert(core::TipDirection value) const;
+    core::TipDirection convert(api::TipDirection value) const;
+    api::PercussionEnclosure convert(core::EnclosureShape value) const;
+    core::EnclosureShape convert(api::PercussionEnclosure value) const;
+
     static double convertToAlter(int semitones, double cents);
     static std::pair<int, double> convertToSemitonesAndCents(double alter);
 
@@ -227,6 +265,18 @@ class Converter
     const static EnumMap<core::TimeSymbol, api::ComplexTimeSymbol> complexTimeSymbolMap;
     const static EnumMap<core::TimeSeparator, api::TimeSeparator> timeSeparatorMap;
     const static EnumMap<core::TimeRelation, api::TimeRelation> timeRelationMap;
+    const static EnumMap<core::GlassValue, api::GlassInstrument> glassMap;
+    const static EnumMap<core::MetalValue, api::MetalInstrument> metalMap;
+    const static EnumMap<core::WoodValue, api::WoodInstrument> woodMap;
+    const static EnumMap<core::PitchedValue, api::PitchedInstrument> pitchedMap;
+    const static EnumMap<core::MembraneValue, api::MembraneInstrument> membraneMap;
+    const static EnumMap<core::EffectValue, api::EffectInstrument> effectMap;
+    const static EnumMap<core::BeaterValue, api::BeaterValue> beaterMap;
+    const static EnumMap<core::StickType, api::StickType> stickTypeMap;
+    const static EnumMap<core::StickMaterial, api::StickMaterial> stickMaterialMap;
+    const static EnumMap<core::StickLocation, api::StickLocation> stickLocationMap;
+    const static EnumMap<core::TipDirection, api::TipDirection> tipDirectionMap;
+    const static EnumMap<core::EnclosureShape, api::PercussionEnclosure> percussionEnclosureMap;
 
   private:
     template <typename CORE_TYPE, typename API_TYPE>
