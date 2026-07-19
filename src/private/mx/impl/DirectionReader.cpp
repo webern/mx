@@ -703,17 +703,32 @@ void DirectionReader::parseBracket(const core::DirectionType &directionType)
     }
 }
 
+api::PedalLineKind pedalKindForTag(core::PedalType::Tag tag)
+{
+    switch (tag)
+    {
+    case core::PedalType::Tag::start:
+        return api::PedalLineKind::start;
+    case core::PedalType::Tag::stop:
+        return api::PedalLineKind::stop;
+    case core::PedalType::Tag::sostenuto:
+        return api::PedalLineKind::sostenuto;
+    case core::PedalType::Tag::change:
+        return api::PedalLineKind::change;
+    case core::PedalType::Tag::continue_:
+        return api::PedalLineKind::continueLine;
+    case core::PedalType::Tag::discontinue:
+        return api::PedalLineKind::discontinue;
+    case core::PedalType::Tag::resume:
+        return api::PedalLineKind::resume;
+    }
+    return api::PedalLineKind::unspecified;
+}
+
 void DirectionReader::parsePedal(const core::DirectionType &directionType)
 {
     const auto &pedal = directionType.choice().asPedal();
-
-    // sostenuto/change/continue/discontinue/resume are unmodeled (#324) -- pedalStarts/
-    // pedalStops only model the damper start/stop pair. A <pedal type="change"/> (etc.) is
-    // dropped here rather than misrepresented as a plain start or stop.
-    if (pedal.type().tag() != core::PedalType::Tag::start && pedal.type().tag() != core::PedalType::Tag::stop)
-    {
-        return;
-    }
+    const auto tag = pedal.type().tag();
 
     const auto placement =
         (myDirection && myDirection->placement().has_value())
@@ -723,40 +738,30 @@ void DirectionReader::parsePedal(const core::DirectionType &directionType)
 
     myOutDirectionData.placement = placement;
 
-    if (pedal.line().has_value() && pedal.line()->tag() == core::YesNo::Tag::yes)
+    // A pedal line (line="yes"). sostenuto/change/continue/discontinue/resume are inherently
+    // line-formatting types (the spec only defines them with line="yes"), so they are treated as
+    // line pedals even when the line attribute is omitted. start/stop with line != "yes" are the
+    // sign form (Ped./* marks) and fall through to the MarkData path below.
+    const bool isLine = (pedal.line().has_value() && pedal.line()->tag() == core::YesNo::Tag::yes) ||
+                        tag == core::PedalType::Tag::sostenuto || tag == core::PedalType::Tag::change ||
+                        tag == core::PedalType::Tag::continue_ || tag == core::PedalType::Tag::discontinue ||
+                        tag == core::PedalType::Tag::resume;
+
+    if (isLine)
     {
-        if (pedal.type().tag() == core::PedalType::Tag::start)
-        {
-            api::SpannerStart start;
-            start.tickTimePosition = myOutDirectionData.tickTimePosition;
-            start.positionData = getPositionData(pedal);
-            start.positionData.placement = placement;
-            start.lineData.lineType = api::LineType::solid;
-            start.lineData.lineHook = api::LineHook::none;
-            myOutDirectionData.pedalStarts.emplace_back(std::move(start));
-            appendOrderedComponent(api::DirectionComponentKind::pedalStart,
-                                   static_cast<int>(myOutDirectionData.pedalStarts.size()) - 1);
-        }
-        else if (pedal.type().tag() == core::PedalType::Tag::stop)
-        {
-            api::SpannerStop stop;
-            stop.tickTimePosition = myOutDirectionData.tickTimePosition;
-            stop.positionData = getPositionData(pedal);
-            stop.positionData.placement = placement;
-            stop.lineData.lineType = api::LineType::solid;
-            stop.lineData.lineHook = api::LineHook::down;
-            stop.lineData.isStopLengthSpecified = true;
-            stop.lineData.endLength = 10.0;
-            myOutDirectionData.pedalStops.emplace_back(std::move(stop));
-            appendOrderedComponent(api::DirectionComponentKind::pedalStop,
-                                   static_cast<int>(myOutDirectionData.pedalStops.size()) - 1);
-        }
+        api::PedalLineData pedalData{pedalKindForTag(tag)};
+        pedalData.tickTimePosition = myOutDirectionData.tickTimePosition;
+        pedalData.positionData = getPositionData(pedal);
+        pedalData.positionData.placement = placement;
+        myOutDirectionData.pedals.emplace_back(std::move(pedalData));
+        appendOrderedComponent(api::DirectionComponentKind::pedal,
+                               static_cast<int>(myOutDirectionData.pedals.size()) - 1);
         return;
     }
 
     auto pedalType = api::MarkType::pedal;
 
-    if (pedal.type().tag() == core::PedalType::Tag::stop)
+    if (tag == core::PedalType::Tag::stop)
     {
         pedalType = api::MarkType::damp;
     }

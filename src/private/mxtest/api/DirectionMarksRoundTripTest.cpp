@@ -238,6 +238,44 @@ TEST(HarpPedals, DirectionMarksRoundTrip)
 
 T_END;
 
+TEST(PedalAllKinds, DirectionMarksRoundTrip)
+{
+    // Every pedal-line type must survive a round-trip; before #324 only start/stop did and the
+    // rest (sostenuto/change/continueLine/discontinue/resume) were silently dropped.
+    const PedalLineKind kinds[] = {
+        PedalLineKind::start,        PedalLineKind::stop,        PedalLineKind::sostenuto, PedalLineKind::change,
+        PedalLineKind::continueLine, PedalLineKind::discontinue, PedalLineKind::resume,
+    };
+
+    for (const auto kind : kinds)
+    {
+        DirectionData direction;
+        direction.pedals.emplace_back(kind);
+        const auto directions = roundTripDirectionData(direction);
+        REQUIRE(directions.size() == 1);
+        REQUIRE(directions.front().pedals.size() == 1);
+        CHECK(directions.front().pedals.front().kind == kind);
+    }
+}
+
+T_END;
+
+TEST(PedalPlacement, DirectionMarksRoundTrip)
+{
+    DirectionData direction;
+    direction.placement = Placement::below;
+    PedalLineData pedal{PedalLineKind::start};
+    pedal.positionData.placement = Placement::below;
+    direction.pedals.push_back(pedal);
+    const auto directions = roundTripDirectionData(direction);
+    REQUIRE(directions.size() == 1);
+    REQUIRE(directions.front().pedals.size() == 1);
+    CHECK(directions.front().pedals.front().kind == PedalLineKind::start);
+    CHECK(directions.front().placement == Placement::below);
+}
+
+T_END;
+
 TEST(Scordatura, DirectionMarksRoundTrip)
 {
     DirectionData direction;

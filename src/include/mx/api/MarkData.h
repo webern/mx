@@ -207,8 +207,8 @@ enum class MarkType
     fermataSquareInverted, // <fermata type="inverted">square</fermata>
     unknownFermata,        // bad state, unknown type, error
 
-    pedal, // the typical piano pedal mark
-    damp,  // the typical piano end-pedal mark
+    pedal, // the typical piano pedal mark. for pedal marks with lines, see PedalLineData
+    damp,  // the typical piano end-pedal mark. for pedal marks with lines, see PedalLineData
 
     // arpeggiate
     arpeggiate,

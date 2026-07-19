@@ -282,25 +282,42 @@ void DirectionWriter::emitMark(api::MarkData mark, core::Direction &direction)
     }
 }
 
-void DirectionWriter::emitPedalStart(const api::SpannerStart &pedalStart, core::Direction &direction)
+core::PedalType corePedalType(api::PedalLineKind kind)
 {
-    core::Pedal pedal{};
-    pedal.setType(core::PedalType::start());
-    pedal.setLine(core::YesNo::yes());
-    pedal.setSign(core::YesNo::yes());
-    setAttributesFromPositionData(pedalStart.positionData, pedal);
-    core::DirectionType dt{};
-    dt.setChoice(core::DirectionTypeChoice::pedal(pedal));
-    addDirectionType(std::move(dt), direction);
+    switch (kind)
+    {
+    case api::PedalLineKind::start:
+        return core::PedalType::start();
+    case api::PedalLineKind::stop:
+        return core::PedalType::stop();
+    case api::PedalLineKind::sostenuto:
+        return core::PedalType::sostenuto();
+    case api::PedalLineKind::change:
+        return core::PedalType::change();
+    case api::PedalLineKind::continueLine:
+        return core::PedalType::continue_();
+    case api::PedalLineKind::discontinue:
+        return core::PedalType::discontinue();
+    case api::PedalLineKind::resume:
+        return core::PedalType::resume();
+    case api::PedalLineKind::unspecified:
+        break;
+    }
+    return core::PedalType::start();
 }
 
-void DirectionWriter::emitPedalStop(const api::SpannerStop &pedalStop, core::Direction &direction)
+void DirectionWriter::emitPedal(const api::PedalLineData &item, core::Direction &direction)
 {
+    // An unspecified kind describes no pedal event; emit nothing rather than a guessed default.
+    if (item.kind == api::PedalLineKind::unspecified)
+    {
+        return;
+    }
+
     core::Pedal pedal{};
-    pedal.setType(core::PedalType::stop());
+    pedal.setType(corePedalType(item.kind));
     pedal.setLine(core::YesNo::yes());
-    pedal.setSign(core::YesNo::yes());
-    setAttributesFromPositionData(pedalStop.positionData, pedal);
+    setAttributesFromPositionData(item.positionData, pedal);
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::pedal(pedal));
     addDirectionType(std::move(dt), direction);
@@ -1241,14 +1258,9 @@ void DirectionWriter::emitFixedOrder(core::Direction &direction)
         emitMark(mark, direction);
     }
 
-    for (const auto &item : myDirectionData.pedalStarts)
+    for (const auto &item : myDirectionData.pedals)
     {
-        emitPedalStart(item, direction);
-    }
-
-    for (const auto &item : myDirectionData.pedalStops)
-    {
-        emitPedalStop(item, direction);
+        emitPedal(item, direction);
     }
 
     for (const auto &item : myDirectionData.wedgeStops)
@@ -1391,17 +1403,10 @@ void DirectionWriter::emitOrderedComponents(core::Direction &direction)
             }
             break;
 
-        case api::DirectionComponentKind::pedalStart:
-            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.pedalStarts.size())
+        case api::DirectionComponentKind::pedal:
+            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.pedals.size())
             {
-                emitPedalStart(myDirectionData.pedalStarts.at(i), direction);
-            }
-            break;
-
-        case api::DirectionComponentKind::pedalStop:
-            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.pedalStops.size())
-            {
-                emitPedalStop(myDirectionData.pedalStops.at(i), direction);
+                emitPedal(myDirectionData.pedals.at(i), direction);
             }
             break;
 
