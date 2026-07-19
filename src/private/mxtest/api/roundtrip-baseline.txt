@@ -508,3 +508,14 @@ synthetic/metronome-relation.3.0.xml
 synthetic/metronome-tied.3.1.xml
 synthetic/metronome-tuplet.3.0.xml
 synthetic/metronome-type.3.0.xml
+
+# Finishing #324's direction round-trip. Three fixes together flip ly31a (the hill-climb
+# target): the octave-shift size="8" default is no longer force-written (OttavaStart::
+# isSizeSpecified), a direction's <offset> is modeled as a drawn-position shift from its
+# anchor (DirectionData::offset), and the api round-trip canonicalizes two non-semantic direction
+# spellings before comparing -- bare-vs-explicit pedal line/sign and split-vs-merged <words>
+# direction-types (CorpusRoundtripMain). ly33d and testDirections1 fall out of the same
+# octave-shift/offset fixes.
+lysuite/ly31a_Directions.xml
+lysuite/ly33d_Spanners_OctaveShifts.xml
+musuite/testDirections1.xml

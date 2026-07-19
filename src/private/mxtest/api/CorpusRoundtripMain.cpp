@@ -24,6 +24,7 @@
 #include "mx/core/Attribution.h"
 #include "mxtest/corert/Compare.h"
 #include "mxtest/corert/Fixer.h"
+#include "mxtest/import/Normalize.h"
 #include "pugixml.hpp"
 
 #include <algorithm>
@@ -210,6 +211,121 @@ void collapseEqualPageMargins(pugi::xml_node el)
     }
 }
 
+// mx writes every pedal mark in an explicit canonical form. A pedal line -- the change/continue/
+// discontinue/resume/sostenuto types, or start/stop carrying line="yes" -- is written as
+// line="yes"; a sign pedal (start/stop without line="yes") is written line="no" sign="yes". A
+// source may instead use the bare shorthand (<pedal type="start"/>), which leans on those same
+// spec defaults. The bare-vs-explicit spelling is not notation-semantic, so rewrite each <pedal>
+// to mx's explicit form on both documents; a genuine line-vs-sign disagreement still fails,
+// because the target form is derived from each element's own type/line values, not forced flat.
+void canonicalizePedalDefaults(pugi::xml_node el)
+{
+    if (std::string_view{el.name()} == "pedal")
+    {
+        const std::string_view type = el.attribute("type").value();
+        const std::string_view line = el.attribute("line").value();
+        const bool isSignType = (type == "start" || type == "stop");
+        const bool isLinePedal = !isSignType || line == "yes";
+
+        if (!el.attribute("line"))
+        {
+            el.append_attribute("line");
+        }
+
+        if (isLinePedal)
+        {
+            el.attribute("line").set_value("yes");
+        }
+        else
+        {
+            el.attribute("line").set_value("no");
+            if (!el.attribute("sign"))
+            {
+                el.append_attribute("sign");
+            }
+            el.attribute("sign").set_value("yes");
+        }
+    }
+
+    for (pugi::xml_node c = el.first_child(); c; c = c.next_sibling())
+    {
+        if (c.type() == pugi::node_element)
+        {
+            canonicalizePedalDefaults(c);
+        }
+    }
+}
+
+// True when a <direction-type> holds only <words> element children (at least one).
+bool isWordsOnlyDirectionType(pugi::xml_node directionType)
+{
+    bool hasWords = false;
+    for (pugi::xml_node c = directionType.first_child(); c; c = c.next_sibling())
+    {
+        if (c.type() != pugi::node_element)
+        {
+            continue;
+        }
+        if (std::string_view{c.name()} != "words")
+        {
+            return false;
+        }
+        hasWords = true;
+    }
+    return hasWords;
+}
+
+// mx flattens all of a direction's <words> into one <direction-type> on write, whereas a source
+// may split consecutive <words> across separate <direction-type> siblings. With each <words>
+// stating its own formatting, that boxing is not notation-semantic (the spec's font carry-over
+// only bites when attributes are omitted to be inherited), so merge consecutive words-only
+// <direction-type> siblings into one -- matching mx's canonical output. Runs on both documents.
+void mergeConsecutiveWordsDirectionTypes(pugi::xml_node el)
+{
+    if (std::string_view{el.name()} == "direction")
+    {
+        for (pugi::xml_node dt = el.child("direction-type"); dt;)
+        {
+            pugi::xml_node next = dt.next_sibling();
+            if (std::string_view{dt.name()} == "direction-type" && isWordsOnlyDirectionType(dt))
+            {
+                while (next && std::string_view{next.name()} == "direction-type" && isWordsOnlyDirectionType(next))
+                {
+                    pugi::xml_node following = next.next_sibling();
+                    for (pugi::xml_node w = next.first_child(); w;)
+                    {
+                        pugi::xml_node wNext = w.next_sibling();
+                        dt.append_move(w);
+                        w = wNext;
+                    }
+                    el.remove_child(next);
+                    next = following;
+                }
+            }
+            dt = next;
+        }
+    }
+
+    for (pugi::xml_node c = el.first_child(); c; c = c.next_sibling())
+    {
+        if (c.type() == pugi::node_element)
+        {
+            mergeConsecutiveWordsDirectionTypes(c);
+        }
+    }
+}
+
+// Runtime canonicalization of non-semantic direction spellings, applied to both the expected and
+// the actual document just before comparison (the corpus input files are never edited). Adding
+// pedal attributes can leave them out of order, so re-sort attributes afterward -- sortAttributes
+// must run last (see Normalize.h).
+void canonicalizeDirectionSpellings(pugi::xml_document &doc)
+{
+    canonicalizePedalDefaults(doc.document_element());
+    mergeConsecutiveWordsDirectionTypes(doc.document_element());
+    mxtest::sortAttributes(doc);
+}
+
 bool hasSuffix(const std::string &name, std::string_view suffix)
 {
     return name.size() >= suffix.size() && name.compare(name.size() - suffix.size(), suffix.size(), suffix) == 0;
@@ -382,6 +498,11 @@ RoundtripResult runRoundtrip(const std::string &absolutePath)
     // (#277); pre-collapse the expected side to match.
     collapseEqualPageMargins(expectedDoc.document_element());
 
+    // Canonicalize non-semantic direction spellings (bare-vs-explicit pedal defaults, split-vs-
+    // merged <words> direction-types) on both sides so only genuine differences surface.
+    canonicalizeDirectionSpellings(expectedDoc);
+    canonicalizeDirectionSpellings(actualDoc);
+
     // Compare
     const auto fail = mxtest::corert::compareElements(expectedDoc.document_element(), actualDoc.document_element());
     if (fail.isFailure)
@@ -466,6 +587,7 @@ void dumpDocuments(const std::string &absolutePath, const std::string &relPath, 
     fixer.applyToExpected(expectedDoc);
     canonicalizeEncodingChildOrder(expectedDoc.document_element());
     collapseEqualPageMargins(expectedDoc.document_element());
+    canonicalizeDirectionSpellings(expectedDoc);
     if (!expectedDoc.save_file(expectedPath.c_str()))
         std::cerr << "dump: failed to write " << expectedPath << "\n";
 
@@ -523,6 +645,7 @@ void dumpDocuments(const std::string &absolutePath, const std::string &relPath, 
     }
     mxtest::corert::normalizeForComparison(actualDoc);
     canonicalizeEncodingChildOrder(actualDoc.document_element());
+    canonicalizeDirectionSpellings(actualDoc);
     if (!actualDoc.save_file(actualPath.c_str()))
         std::cerr << "dump: failed to write " << actualPath << "\n";
 }
