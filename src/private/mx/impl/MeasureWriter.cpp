@@ -30,6 +30,7 @@
 #include "mx/core/generated/SystemLayout.h"
 #include "mx/core/generated/SystemMargins.h"
 #include "mx/core/generated/Tenths.h"
+#include "mx/core/generated/Winged.h"
 #include "mx/core/generated/YesNo.h"
 #include "mx/impl/Converter.h"
 #include "mx/impl/DirectionWriter.h"
@@ -860,7 +861,12 @@ void MeasureWriter::writeBarlines(int tickTimePosition)
         {
             core::Repeat repeatElement{};
 
-            if (myBarlinesIter->location == api::HorizontalAlignment::left || myBarlinesIter->tickTimePosition == 0)
+            if (myBarlinesIter->repeatDirection != api::RepeatDirection::unspecified)
+            {
+                repeatElement.setDirection(myConverter.convert(myBarlinesIter->repeatDirection));
+            }
+            else if (myBarlinesIter->location == api::HorizontalAlignment::left ||
+                     myBarlinesIter->tickTimePosition == 0)
             {
                 repeatElement.setDirection(mx::core::BackwardForward::forward());
             }
@@ -872,6 +878,16 @@ void MeasureWriter::writeBarlines(int tickTimePosition)
             if (myBarlinesIter->repeatTimes > 0)
             {
                 repeatElement.setTimes(myBarlinesIter->repeatTimes);
+            }
+
+            if (myBarlinesIter->repeatAfterJump != api::Bool::unspecified)
+            {
+                repeatElement.setAfterJump(myConverter.convert(myBarlinesIter->repeatAfterJump));
+            }
+
+            if (myBarlinesIter->repeatWinged != api::RepeatWinged::unspecified)
+            {
+                repeatElement.setWinged(myConverter.convert(myBarlinesIter->repeatWinged));
             }
 
             barlineElement.setRepeat(repeatElement);

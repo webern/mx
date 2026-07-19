@@ -16,6 +16,7 @@
 #include "mx/core/generated/AboveBelow.h"
 #include "mx/core/generated/AccidentalValue.h"
 #include "mx/core/generated/ArticulationsChoice.h"
+#include "mx/core/generated/BackwardForward.h"
 #include "mx/core/generated/BarStyle.h"
 #include "mx/core/generated/BeamValue.h"
 #include "mx/core/generated/BeaterValue.h"
@@ -59,6 +60,7 @@
 #include "mx/core/generated/Transpose.h"
 #include "mx/core/generated/Valign.h"
 #include "mx/core/generated/WedgeType.h"
+#include "mx/core/generated/Winged.h"
 #include "mx/core/generated/WoodValue.h"
 #include "mx/core/generated/YesNo.h"
 
@@ -154,6 +156,12 @@ class Converter
     api::BarlineType convert(core::BarStyle value) const;
 
     core::StartStopDiscontinue convert(api::EndingType value) const;
+
+    core::BackwardForward convert(api::RepeatDirection value) const;
+    api::RepeatDirection convert(core::BackwardForward value) const;
+
+    core::Winged convert(api::RepeatWinged value) const;
+    api::RepeatWinged convert(core::Winged value) const;
 
     core::RightLeftMiddle convertBarlinePlacement(api::HorizontalAlignment value) const;
     api::HorizontalAlignment convertBarlinePlacement(core::RightLeftMiddle value) const;
@@ -254,6 +262,8 @@ class Converter
     const static EnumMap<core::BarStyle, api::BarlineType> barlineMap;
     const static EnumMap<core::RightLeftMiddle, api::HorizontalAlignment> barlinePlacementMap;
     const static EnumMap<core::StartStopDiscontinue, api::EndingType> endingMap;
+    const static EnumMap<core::BackwardForward, api::RepeatDirection> repeatDirectionMap;
+    const static EnumMap<core::Winged, api::RepeatWinged> wingedMap;
     const static EnumMap<core::LineEnd, api::LineHook> lineStopMap;
     const static EnumMap<core::GroupSymbolValue, api::BracketType> bracketMap;
     const static EnumMap<core::GroupBarlineValue, api::GroupBarline> groupBarlineMap;
