@@ -4,6 +4,7 @@
 
 #include "mx/impl/DirectionReader.h"
 #include "mx/api/WedgeData.h"
+#include "mx/core/generated/Accord.h"
 #include "mx/core/generated/AccordionRegistration.h"
 #include "mx/core/generated/Barre.h"
 #include "mx/core/generated/Bass.h"
@@ -40,11 +41,13 @@
 #include "mx/core/generated/NumeralMode.h"
 #include "mx/core/generated/NumeralRoot.h"
 #include "mx/core/generated/NumeralValue.h"
+#include "mx/core/generated/Octave.h"
 #include "mx/core/generated/OctaveShift.h"
 #include "mx/core/generated/Offset.h"
 #include "mx/core/generated/OnOff.h"
 #include "mx/core/generated/OtherDirection.h"
 #include "mx/core/generated/Pedal.h"
+#include "mx/core/generated/PedalTuning.h"
 #include "mx/core/generated/PedalType.h"
 #include "mx/core/generated/Percussion.h"
 #include "mx/core/generated/PrincipalVoice.h"
@@ -53,6 +56,7 @@
 #include "mx/core/generated/RootStep.h"
 #include "mx/core/generated/Scordatura.h"
 #include "mx/core/generated/Segno.h"
+#include "mx/core/generated/Semitones.h"
 #include "mx/core/generated/Sound.h"
 #include "mx/core/generated/StaffDivide.h"
 #include "mx/core/generated/StaffDivideSymbol.h"
@@ -61,7 +65,9 @@
 #include "mx/core/generated/Step.h"
 #include "mx/core/generated/String.h"
 #include "mx/core/generated/StringMute.h"
+#include "mx/core/generated/StringNumber.h"
 #include "mx/core/generated/StyleText.h"
+#include "mx/core/generated/TuningGroup.h"
 #include "mx/core/generated/UpDownStopContinue.h"
 #include "mx/core/generated/ValignImage.h"
 #include "mx/core/generated/Wedge.h"
@@ -825,17 +831,33 @@ void DirectionReader::parseOctaveShift(const core::DirectionType &directionType)
                            static_cast<int>(myOutDirectionData.ottavaStarts.size()) - 1);
 }
 
-// The stubs below (harp-pedals, scordatura, percussion) are genuinely unmodeled
-// direction-type choices, tracked at #324, not a bug in the surrounding dispatch. When a
-// <direction> contains only one of these, the resulting DirectionData carries no content and
-// is correctly left unwritten -- MusicXML requires at least one direction-type child, so
-// there is no schema-valid way to keep the <direction> (and its <voice>/<staff>) without
-// modeling what it actually says. That is why round-trip discovery reports those files as
-// dropping <direction>/<direction-type>/<voice>/<staff> together: it is one gap (the
-// unmodeled content), not four.
 void DirectionReader::parseHarpPedals(const core::DirectionType &directionType)
 {
-    MX_UNUSED(directionType);
+    const auto &harpPedals = directionType.choice().asHarpPedals();
+    api::HarpPedalsData outHarpPedals;
+    for (const auto &pedalTuning : harpPedals.pedalTuning())
+    {
+        api::HarpPedalTuning outTuning;
+        outTuning.step = myConverter.convert(pedalTuning.pedalStep());
+        const auto semitonesAndCents =
+            Converter::convertToSemitonesAndCents(static_cast<double>(pedalTuning.pedalAlter().value().value()));
+        outTuning.alter = semitonesAndCents.first;
+        outTuning.cents = semitonesAndCents.second;
+        outHarpPedals.pedalTunings.emplace_back(outTuning);
+    }
+    outHarpPedals.positionData = getPositionData(harpPedals);
+    outHarpPedals.fontData = getFontData(harpPedals);
+    if (harpPedals.color().has_value())
+    {
+        outHarpPedals.color = getColor(harpPedals);
+    }
+    if (harpPedals.id().has_value())
+    {
+        outHarpPedals.id = harpPedals.id()->value();
+    }
+    myOutDirectionData.harpPedals.emplace_back(std::move(outHarpPedals));
+    appendOrderedComponent(api::DirectionComponentKind::harpPedals,
+                           static_cast<int>(myOutDirectionData.harpPedals.size()) - 1);
 }
 
 void DirectionReader::parseDamp(const core::DirectionType &directionType)
@@ -949,7 +971,33 @@ void DirectionReader::parseStaffDivide(const core::DirectionType &directionType)
 
 void DirectionReader::parseScordatura(const core::DirectionType &directionType)
 {
-    MX_UNUSED(directionType);
+    const auto &scordatura = directionType.choice().asScordatura();
+    api::ScordaturaData outScordatura;
+    for (const auto &accord : scordatura.accord())
+    {
+        api::AccordData outAccord;
+        if (accord.string().has_value())
+        {
+            outAccord.stringNumber = accord.string()->value();
+        }
+        outAccord.tuningStep = myConverter.convert(accord.tuning().tuningStep());
+        if (accord.tuning().tuningAlter().has_value())
+        {
+            const auto semitonesAndCents = Converter::convertToSemitonesAndCents(
+                static_cast<double>(accord.tuning().tuningAlter()->value().value()));
+            outAccord.tuningAlter = semitonesAndCents.first;
+            outAccord.tuningCents = semitonesAndCents.second;
+        }
+        outAccord.tuningOctave = accord.tuning().tuningOctave().value();
+        outScordatura.accords.emplace_back(outAccord);
+    }
+    if (scordatura.id().has_value())
+    {
+        outScordatura.id = scordatura.id()->value();
+    }
+    myOutDirectionData.scordaturas.emplace_back(std::move(outScordatura));
+    appendOrderedComponent(api::DirectionComponentKind::scordatura,
+                           static_cast<int>(myOutDirectionData.scordaturas.size()) - 1);
 }
 
 void DirectionReader::parseImage(const core::DirectionType &directionType)
@@ -1061,6 +1109,11 @@ void DirectionReader::parseAccordionRegistration(const core::DirectionType &dire
                            static_cast<int>(myOutDirectionData.accordionRegistrations.size()) - 1);
 }
 
+// The percussion stub below is the last genuinely unmodeled direction-type choice, tracked at
+// #324, not a bug in the surrounding dispatch. When a <direction> contains only percussion
+// content, the resulting DirectionData carries no content and is correctly left unwritten --
+// MusicXML requires at least one direction-type child, so there is no schema-valid way to
+// keep the <direction> (and its <voice>/<staff>) without modeling what it actually says.
 void DirectionReader::parsePercussion(const core::DirectionType &directionType)
 {
     MX_UNUSED(directionType);

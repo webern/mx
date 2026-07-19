@@ -65,6 +65,8 @@ class DirectionWriter
     void emitOtherDirection(const api::OtherDirectionData &item, core::Direction &direction);
     void emitImage(const api::ImageData &item, core::Direction &direction);
     void emitAccordionRegistration(const api::AccordionRegistrationData &item, core::Direction &direction);
+    void emitHarpPedals(const api::HarpPedalsData &item, core::Direction &direction);
+    void emitScordatura(const api::ScordaturaData &item, core::Direction &direction);
     void emitFixedOrder(core::Direction &direction);
     void emitOrderedComponents(core::Direction &direction);
 
