@@ -16,6 +16,7 @@
 #include "mx/api/MarkData.h"
 #include "mx/api/OtherDirectionData.h"
 #include "mx/api/OttavaData.h"
+#include "mx/api/PedalData.h"
 #include "mx/api/PercussionData.h"
 #include "mx/api/PrincipalVoiceData.h"
 #include "mx/api/RehearsalData.h"
@@ -44,8 +45,7 @@ enum class DirectionComponentKind
     bracketStop,
     dashesStart,
     dashesStop,
-    pedalStart,
-    pedalStop,
+    pedal,
     words,
     chord,
     segno,
@@ -135,8 +135,7 @@ struct DirectionData
     std::vector<SpannerStop> bracketStops;
     std::vector<SpannerStart> dashesStarts;
     std::vector<SpannerStop> dashesStops;
-    std::vector<SpannerStart> pedalStarts;
-    std::vector<SpannerStop> pedalStops;
+    std::vector<PedalData> pedals;
     std::vector<WordsData> words;
     std::vector<ChordData> chords;
     std::vector<FiguredBassData> figuredBasses;
@@ -165,8 +164,7 @@ struct DirectionData
     DirectionData()
         : tickTimePosition{0}, placement{Placement::unspecified}, voice{VALUE_UNSPECIFIED}, isStaffValueSpecified{true},
           isSoundDataSpecified{false}, soundData{}, marks{}, wedgeStarts{}, wedgeStops{}, ottavaStarts{}, ottavaStops{},
-          bracketStarts{}, bracketStops{}, dashesStarts{}, dashesStops{}, pedalStarts{}, pedalStops{}, words{},
-          chords{}, segnos{}
+          bracketStarts{}, bracketStops{}, dashesStarts{}, dashesStops{}, pedals{}, words{}, chords{}, segnos{}
     {
     }
 };
@@ -177,10 +175,9 @@ inline bool isDirectionDataEmpty(const DirectionData &directionData)
            directionData.wedgeStarts.size() == 0 && directionData.wedgeStops.size() == 0 &&
            directionData.bracketStarts.size() == 0 && directionData.bracketStops.size() == 0 &&
            directionData.dashesStarts.size() == 0 && directionData.dashesStops.size() == 0 &&
-           directionData.pedalStarts.size() == 0 && directionData.pedalStops.size() == 0 &&
-           directionData.tempos.size() == 0 && directionData.ottavaStarts.size() == 0 &&
-           directionData.ottavaStops.size() == 0 && directionData.words.size() == 0 &&
-           directionData.segnos.size() == 0 && directionData.codas.size() == 0 &&
+           directionData.pedals.size() == 0 && directionData.tempos.size() == 0 &&
+           directionData.ottavaStarts.size() == 0 && directionData.ottavaStops.size() == 0 &&
+           directionData.words.size() == 0 && directionData.segnos.size() == 0 && directionData.codas.size() == 0 &&
            directionData.rehearsals.size() == 0 && directionData.damps.size() == 0 &&
            directionData.dampAlls.size() == 0 && directionData.eyeglasses.size() == 0 &&
            directionData.stringMutes.size() == 0 && directionData.staffDivides.size() == 0 &&
@@ -208,8 +205,7 @@ MXAPI_EQUALS_MEMBER(bracketStarts)
 MXAPI_EQUALS_MEMBER(bracketStops)
 MXAPI_EQUALS_MEMBER(dashesStarts)
 MXAPI_EQUALS_MEMBER(dashesStops)
-MXAPI_EQUALS_MEMBER(pedalStarts)
-MXAPI_EQUALS_MEMBER(pedalStops)
+MXAPI_EQUALS_MEMBER(pedals)
 MXAPI_EQUALS_MEMBER(words)
 MXAPI_EQUALS_MEMBER(chords)
 MXAPI_EQUALS_MEMBER(figuredBasses)

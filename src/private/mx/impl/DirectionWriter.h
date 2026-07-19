@@ -38,8 +38,7 @@ class DirectionWriter
                              std::vector<core::MusicDataChoice> &ioOutputSet);
 
     void emitMark(api::MarkData mark, core::Direction &direction);
-    void emitPedalStart(const api::SpannerStart &pedalStart, core::Direction &direction);
-    void emitPedalStop(const api::SpannerStop &pedalStop, core::Direction &direction);
+    void emitPedal(const api::PedalData &pedal, core::Direction &direction);
     void emitWedgeStop(const api::WedgeStop &wedgeStop, core::Direction &direction);
     void emitWedgeStart(const api::WedgeStart &wedgeStart, core::Direction &direction);
     void emitOttavaStop(const api::OttavaStop &ottavaStop, core::Direction &direction);
