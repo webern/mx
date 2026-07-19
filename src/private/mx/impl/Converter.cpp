@@ -1388,6 +1388,204 @@ const Converter::EnumMap<core::TimeRelation, api::TimeRelation> Converter::timeR
     {core::TimeRelation::hyphen(), api::TimeRelation::hyphen},
 };
 
+const Converter::EnumMap<core::GlassValue, api::GlassInstrument> Converter::glassMap = {
+    {core::GlassValue::glassHarmonica(), api::GlassInstrument::glassHarmonica},
+    {core::GlassValue::glassHarp(), api::GlassInstrument::glassHarp},
+    {core::GlassValue::windChimes(), api::GlassInstrument::windChimes},
+};
+
+const Converter::EnumMap<core::MetalValue, api::MetalInstrument> Converter::metalMap = {
+    {core::MetalValue::agogo(), api::MetalInstrument::agogo},
+    {core::MetalValue::almglocken(), api::MetalInstrument::almglocken},
+    {core::MetalValue::bell(), api::MetalInstrument::bell},
+    {core::MetalValue::bellPlate(), api::MetalInstrument::bellPlate},
+    {core::MetalValue::bellTree(), api::MetalInstrument::bellTree},
+    {core::MetalValue::brakeDrum(), api::MetalInstrument::brakeDrum},
+    {core::MetalValue::cencerro(), api::MetalInstrument::cencerro},
+    {core::MetalValue::chainRattle(), api::MetalInstrument::chainRattle},
+    {core::MetalValue::chineseCymbal(), api::MetalInstrument::chineseCymbal},
+    {core::MetalValue::cowbell(), api::MetalInstrument::cowbell},
+    {core::MetalValue::crashCymbals(), api::MetalInstrument::crashCymbals},
+    {core::MetalValue::crotale(), api::MetalInstrument::crotale},
+    {core::MetalValue::cymbalTongs(), api::MetalInstrument::cymbalTongs},
+    {core::MetalValue::domedGong(), api::MetalInstrument::domedGong},
+    {core::MetalValue::fingerCymbals(), api::MetalInstrument::fingerCymbals},
+    {core::MetalValue::flexatone(), api::MetalInstrument::flexatone},
+    {core::MetalValue::gong(), api::MetalInstrument::gong},
+    {core::MetalValue::hiHat(), api::MetalInstrument::hiHat},
+    {core::MetalValue::highHatCymbals(), api::MetalInstrument::highHatCymbals},
+    {core::MetalValue::handbell(), api::MetalInstrument::handbell},
+    {core::MetalValue::jawHarp(), api::MetalInstrument::jawHarp},
+    {core::MetalValue::jingleBells(), api::MetalInstrument::jingleBells},
+    {core::MetalValue::musicalSaw(), api::MetalInstrument::musicalSaw},
+    {core::MetalValue::shellBells(), api::MetalInstrument::shellBells},
+    {core::MetalValue::sistrum(), api::MetalInstrument::sistrum},
+    {core::MetalValue::sizzleCymbal(), api::MetalInstrument::sizzleCymbal},
+    {core::MetalValue::sleighBells(), api::MetalInstrument::sleighBells},
+    {core::MetalValue::suspendedCymbal(), api::MetalInstrument::suspendedCymbal},
+    {core::MetalValue::tamTam(), api::MetalInstrument::tamTam},
+    {core::MetalValue::tamTamWithBeater(), api::MetalInstrument::tamTamWithBeater},
+    {core::MetalValue::triangle(), api::MetalInstrument::triangle},
+    {core::MetalValue::vietnameseHat(), api::MetalInstrument::vietnameseHat},
+};
+
+const Converter::EnumMap<core::WoodValue, api::WoodInstrument> Converter::woodMap = {
+    {core::WoodValue::bambooScraper(), api::WoodInstrument::bambooScraper},
+    {core::WoodValue::boardClapper(), api::WoodInstrument::boardClapper},
+    {core::WoodValue::cabasa(), api::WoodInstrument::cabasa},
+    {core::WoodValue::castanets(), api::WoodInstrument::castanets},
+    {core::WoodValue::castanetsWithHandle(), api::WoodInstrument::castanetsWithHandle},
+    {core::WoodValue::claves(), api::WoodInstrument::claves},
+    {core::WoodValue::footballRattle(), api::WoodInstrument::footballRattle},
+    {core::WoodValue::guiro(), api::WoodInstrument::guiro},
+    {core::WoodValue::logDrum(), api::WoodInstrument::logDrum},
+    {core::WoodValue::maraca(), api::WoodInstrument::maraca},
+    {core::WoodValue::maracas(), api::WoodInstrument::maracas},
+    {core::WoodValue::quijada(), api::WoodInstrument::quijada},
+    {core::WoodValue::rainstick(), api::WoodInstrument::rainstick},
+    {core::WoodValue::ratchet(), api::WoodInstrument::ratchet},
+    {core::WoodValue::recoReco(), api::WoodInstrument::recoReco},
+    {core::WoodValue::sandpaperBlocks(), api::WoodInstrument::sandpaperBlocks},
+    {core::WoodValue::slitDrum(), api::WoodInstrument::slitDrum},
+    {core::WoodValue::templeBlock(), api::WoodInstrument::templeBlock},
+    {core::WoodValue::vibraslap(), api::WoodInstrument::vibraslap},
+    {core::WoodValue::whip(), api::WoodInstrument::whip},
+    {core::WoodValue::woodBlock(), api::WoodInstrument::woodBlock},
+};
+
+const Converter::EnumMap<core::PitchedValue, api::PitchedInstrument> Converter::pitchedMap = {
+    {core::PitchedValue::celesta(), api::PitchedInstrument::celesta},
+    {core::PitchedValue::chimes(), api::PitchedInstrument::chimes},
+    {core::PitchedValue::glockenspiel(), api::PitchedInstrument::glockenspiel},
+    {core::PitchedValue::lithophone(), api::PitchedInstrument::lithophone},
+    {core::PitchedValue::mallet(), api::PitchedInstrument::mallet},
+    {core::PitchedValue::marimba(), api::PitchedInstrument::marimba},
+    {core::PitchedValue::steelDrums(), api::PitchedInstrument::steelDrums},
+    {core::PitchedValue::tubaphone(), api::PitchedInstrument::tubaphone},
+    {core::PitchedValue::tubularChimes(), api::PitchedInstrument::tubularChimes},
+    {core::PitchedValue::vibraphone(), api::PitchedInstrument::vibraphone},
+    {core::PitchedValue::xylophone(), api::PitchedInstrument::xylophone},
+};
+
+const Converter::EnumMap<core::MembraneValue, api::MembraneInstrument> Converter::membraneMap = {
+    {core::MembraneValue::bassDrum(), api::MembraneInstrument::bassDrum},
+    {core::MembraneValue::bassDrumOnSide(), api::MembraneInstrument::bassDrumOnSide},
+    {core::MembraneValue::bongos(), api::MembraneInstrument::bongos},
+    {core::MembraneValue::chineseTomtom(), api::MembraneInstrument::chineseTomtom},
+    {core::MembraneValue::congaDrum(), api::MembraneInstrument::congaDrum},
+    {core::MembraneValue::cuica(), api::MembraneInstrument::cuica},
+    {core::MembraneValue::gobletDrum(), api::MembraneInstrument::gobletDrum},
+    {core::MembraneValue::indoAmericanTomtom(), api::MembraneInstrument::indoAmericanTomtom},
+    {core::MembraneValue::japaneseTomtom(), api::MembraneInstrument::japaneseTomtom},
+    {core::MembraneValue::militaryDrum(), api::MembraneInstrument::militaryDrum},
+    {core::MembraneValue::snareDrum(), api::MembraneInstrument::snareDrum},
+    {core::MembraneValue::snareDrumSnaresOff(), api::MembraneInstrument::snareDrumSnaresOff},
+    {core::MembraneValue::tabla(), api::MembraneInstrument::tabla},
+    {core::MembraneValue::tambourine(), api::MembraneInstrument::tambourine},
+    {core::MembraneValue::tenorDrum(), api::MembraneInstrument::tenorDrum},
+    {core::MembraneValue::timbales(), api::MembraneInstrument::timbales},
+    {core::MembraneValue::tomtom(), api::MembraneInstrument::tomtom},
+};
+
+const Converter::EnumMap<core::EffectValue, api::EffectInstrument> Converter::effectMap = {
+    {core::EffectValue::anvil(), api::EffectInstrument::anvil},
+    {core::EffectValue::autoHorn(), api::EffectInstrument::autoHorn},
+    {core::EffectValue::birdWhistle(), api::EffectInstrument::birdWhistle},
+    {core::EffectValue::cannon(), api::EffectInstrument::cannon},
+    {core::EffectValue::duckCall(), api::EffectInstrument::duckCall},
+    {core::EffectValue::gunShot(), api::EffectInstrument::gunShot},
+    {core::EffectValue::klaxonHorn(), api::EffectInstrument::klaxonHorn},
+    {core::EffectValue::lionsRoar(), api::EffectInstrument::lionsRoar},
+    {core::EffectValue::lotusFlute(), api::EffectInstrument::lotusFlute},
+    {core::EffectValue::megaphone(), api::EffectInstrument::megaphone},
+    {core::EffectValue::policeWhistle(), api::EffectInstrument::policeWhistle},
+    {core::EffectValue::siren(), api::EffectInstrument::siren},
+    {core::EffectValue::slideWhistle(), api::EffectInstrument::slideWhistle},
+    {core::EffectValue::thunderSheet(), api::EffectInstrument::thunderSheet},
+    {core::EffectValue::windMachine(), api::EffectInstrument::windMachine},
+    {core::EffectValue::windWhistle(), api::EffectInstrument::windWhistle},
+};
+
+const Converter::EnumMap<core::BeaterValue, api::BeaterValue> Converter::beaterMap = {
+    {core::BeaterValue::bow(), api::BeaterValue::bow},
+    {core::BeaterValue::chimeHammer(), api::BeaterValue::chimeHammer},
+    {core::BeaterValue::coin(), api::BeaterValue::coin},
+    {core::BeaterValue::drumStick(), api::BeaterValue::drumStick},
+    {core::BeaterValue::finger(), api::BeaterValue::finger},
+    {core::BeaterValue::fingernail(), api::BeaterValue::fingernail},
+    {core::BeaterValue::fist(), api::BeaterValue::fist},
+    {core::BeaterValue::guiroScraper(), api::BeaterValue::guiroScraper},
+    {core::BeaterValue::hammer(), api::BeaterValue::hammer},
+    {core::BeaterValue::hand(), api::BeaterValue::hand},
+    {core::BeaterValue::jazzStick(), api::BeaterValue::jazzStick},
+    {core::BeaterValue::knittingNeedle(), api::BeaterValue::knittingNeedle},
+    {core::BeaterValue::metalHammer(), api::BeaterValue::metalHammer},
+    {core::BeaterValue::slideBrushOnGong(), api::BeaterValue::slideBrushOnGong},
+    {core::BeaterValue::snareStick(), api::BeaterValue::snareStick},
+    {core::BeaterValue::spoonMallet(), api::BeaterValue::spoonMallet},
+    {core::BeaterValue::superball(), api::BeaterValue::superball},
+    {core::BeaterValue::triangleBeater(), api::BeaterValue::triangleBeater},
+    {core::BeaterValue::triangleBeaterPlain(), api::BeaterValue::triangleBeaterPlain},
+    {core::BeaterValue::wireBrush(), api::BeaterValue::wireBrush},
+};
+
+const Converter::EnumMap<core::StickType, api::StickType> Converter::stickTypeMap = {
+    {core::StickType::bassDrum(), api::StickType::bassDrum},
+    {core::StickType::doubleBassDrum(), api::StickType::doubleBassDrum},
+    {core::StickType::glockenspiel(), api::StickType::glockenspiel},
+    {core::StickType::gum(), api::StickType::gum},
+    {core::StickType::hammer(), api::StickType::hammer},
+    {core::StickType::superball(), api::StickType::superball},
+    {core::StickType::timpani(), api::StickType::timpani},
+    {core::StickType::wound(), api::StickType::wound},
+    {core::StickType::xylophone(), api::StickType::xylophone},
+    {core::StickType::yarn(), api::StickType::yarn},
+};
+
+const Converter::EnumMap<core::StickMaterial, api::StickMaterial> Converter::stickMaterialMap = {
+    {core::StickMaterial::soft(), api::StickMaterial::soft},
+    {core::StickMaterial::medium(), api::StickMaterial::medium},
+    {core::StickMaterial::hard(), api::StickMaterial::hard},
+    {core::StickMaterial::shaded(), api::StickMaterial::shaded},
+    {core::StickMaterial::x(), api::StickMaterial::x},
+};
+
+const Converter::EnumMap<core::StickLocation, api::StickLocation> Converter::stickLocationMap = {
+    {core::StickLocation::center(), api::StickLocation::center},
+    {core::StickLocation::rim(), api::StickLocation::rim},
+    {core::StickLocation::cymbalBell(), api::StickLocation::cymbalBell},
+    {core::StickLocation::cymbalEdge(), api::StickLocation::cymbalEdge},
+};
+
+const Converter::EnumMap<core::TipDirection, api::TipDirection> Converter::tipDirectionMap = {
+    {core::TipDirection::up(), api::TipDirection::up},
+    {core::TipDirection::down(), api::TipDirection::down},
+    {core::TipDirection::left(), api::TipDirection::left},
+    {core::TipDirection::right(), api::TipDirection::right},
+    {core::TipDirection::northwest(), api::TipDirection::northwest},
+    {core::TipDirection::northeast(), api::TipDirection::northeast},
+    {core::TipDirection::southeast(), api::TipDirection::southeast},
+    {core::TipDirection::southwest(), api::TipDirection::southwest},
+};
+
+const Converter::EnumMap<core::EnclosureShape, api::PercussionEnclosure> Converter::percussionEnclosureMap = {
+    {core::EnclosureShape::rectangle(), api::PercussionEnclosure::rectangle},
+    {core::EnclosureShape::square(), api::PercussionEnclosure::square},
+    {core::EnclosureShape::oval(), api::PercussionEnclosure::oval},
+    {core::EnclosureShape::circle(), api::PercussionEnclosure::circle},
+    {core::EnclosureShape::bracket(), api::PercussionEnclosure::bracket},
+    {core::EnclosureShape::invertedBracket(), api::PercussionEnclosure::invertedBracket},
+    {core::EnclosureShape::triangle(), api::PercussionEnclosure::triangle},
+    {core::EnclosureShape::diamond(), api::PercussionEnclosure::diamond},
+    {core::EnclosureShape::pentagon(), api::PercussionEnclosure::pentagon},
+    {core::EnclosureShape::hexagon(), api::PercussionEnclosure::hexagon},
+    {core::EnclosureShape::heptagon(), api::PercussionEnclosure::heptagon},
+    {core::EnclosureShape::octagon(), api::PercussionEnclosure::octagon},
+    {core::EnclosureShape::nonagon(), api::PercussionEnclosure::nonagon},
+    {core::EnclosureShape::decagon(), api::PercussionEnclosure::decagon},
+    {core::EnclosureShape::none(), api::PercussionEnclosure::none},
+};
+
 api::Step Converter::convert(core::Step inStep) const
 {
     return findApiItem(stepMap, api::Step::c, inStep);
@@ -1752,6 +1950,126 @@ core::TimeRelation Converter::convert(api::TimeRelation value) const
 api::TimeRelation Converter::convert(core::TimeRelation value) const
 {
     return findApiItem(timeRelationMap, api::TimeRelation::unspecified, value);
+}
+
+api::GlassInstrument Converter::convert(core::GlassValue value) const
+{
+    return findApiItem(glassMap, api::GlassInstrument::glassHarmonica, value);
+}
+
+core::GlassValue Converter::convert(api::GlassInstrument value) const
+{
+    return findCoreItem(glassMap, core::GlassValue::glassHarmonica(), value);
+}
+
+api::MetalInstrument Converter::convert(core::MetalValue value) const
+{
+    return findApiItem(metalMap, api::MetalInstrument::agogo, value);
+}
+
+core::MetalValue Converter::convert(api::MetalInstrument value) const
+{
+    return findCoreItem(metalMap, core::MetalValue::agogo(), value);
+}
+
+api::WoodInstrument Converter::convert(core::WoodValue value) const
+{
+    return findApiItem(woodMap, api::WoodInstrument::bambooScraper, value);
+}
+
+core::WoodValue Converter::convert(api::WoodInstrument value) const
+{
+    return findCoreItem(woodMap, core::WoodValue::bambooScraper(), value);
+}
+
+api::PitchedInstrument Converter::convert(core::PitchedValue value) const
+{
+    return findApiItem(pitchedMap, api::PitchedInstrument::celesta, value);
+}
+
+core::PitchedValue Converter::convert(api::PitchedInstrument value) const
+{
+    return findCoreItem(pitchedMap, core::PitchedValue::celesta(), value);
+}
+
+api::MembraneInstrument Converter::convert(core::MembraneValue value) const
+{
+    return findApiItem(membraneMap, api::MembraneInstrument::bassDrum, value);
+}
+
+core::MembraneValue Converter::convert(api::MembraneInstrument value) const
+{
+    return findCoreItem(membraneMap, core::MembraneValue::bassDrum(), value);
+}
+
+api::EffectInstrument Converter::convert(core::EffectValue value) const
+{
+    return findApiItem(effectMap, api::EffectInstrument::anvil, value);
+}
+
+core::EffectValue Converter::convert(api::EffectInstrument value) const
+{
+    return findCoreItem(effectMap, core::EffectValue::anvil(), value);
+}
+
+api::BeaterValue Converter::convert(core::BeaterValue value) const
+{
+    return findApiItem(beaterMap, api::BeaterValue::bow, value);
+}
+
+core::BeaterValue Converter::convert(api::BeaterValue value) const
+{
+    return findCoreItem(beaterMap, core::BeaterValue::bow(), value);
+}
+
+api::StickType Converter::convert(core::StickType value) const
+{
+    return findApiItem(stickTypeMap, api::StickType::bassDrum, value);
+}
+
+core::StickType Converter::convert(api::StickType value) const
+{
+    return findCoreItem(stickTypeMap, core::StickType::bassDrum(), value);
+}
+
+api::StickMaterial Converter::convert(core::StickMaterial value) const
+{
+    return findApiItem(stickMaterialMap, api::StickMaterial::soft, value);
+}
+
+core::StickMaterial Converter::convert(api::StickMaterial value) const
+{
+    return findCoreItem(stickMaterialMap, core::StickMaterial::soft(), value);
+}
+
+api::StickLocation Converter::convert(core::StickLocation value) const
+{
+    return findApiItem(stickLocationMap, api::StickLocation::center, value);
+}
+
+core::StickLocation Converter::convert(api::StickLocation value) const
+{
+    return findCoreItem(stickLocationMap, core::StickLocation::center(), value);
+}
+
+api::TipDirection Converter::convert(core::TipDirection value) const
+{
+    return findApiItem(tipDirectionMap, api::TipDirection::unspecified, value);
+}
+
+core::TipDirection Converter::convert(api::TipDirection value) const
+{
+    return findCoreItem(tipDirectionMap, core::TipDirection::up(), value);
+}
+
+api::PercussionEnclosure Converter::convert(core::EnclosureShape value) const
+{
+    return findApiItem(percussionEnclosureMap, api::PercussionEnclosure::unspecified, value);
+}
+
+core::EnclosureShape Converter::convert(api::PercussionEnclosure value) const
+{
+    return findCoreItem(percussionEnclosureMap, core::EnclosureShape::none(), value);
 }
 
 double Converter::convertToAlter(int semitones, double cents)

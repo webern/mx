@@ -10,6 +10,7 @@
 #include "mx/core/generated/Bass.h"
 #include "mx/core/generated/BassStep.h"
 #include "mx/core/generated/BeatUnitGroup.h"
+#include "mx/core/generated/Beater.h"
 #include "mx/core/generated/Bracket.h"
 #include "mx/core/generated/Coda.h"
 #include "mx/core/generated/Dashes.h"
@@ -25,6 +26,7 @@
 #include "mx/core/generated/Divisions.h"
 #include "mx/core/generated/Dynamics.h"
 #include "mx/core/generated/EditorialVoiceDirectionGroup.h"
+#include "mx/core/generated/Effect.h"
 #include "mx/core/generated/Empty.h"
 #include "mx/core/generated/EmptyPrintStyleAlignID.h"
 #include "mx/core/generated/Figure.h"
@@ -34,6 +36,7 @@
 #include "mx/core/generated/Frame.h"
 #include "mx/core/generated/FrameNote.h"
 #include "mx/core/generated/Fret.h"
+#include "mx/core/generated/Glass.h"
 #include "mx/core/generated/Harmony.h"
 #include "mx/core/generated/HarmonyAlter.h"
 #include "mx/core/generated/HarmonyChordGroup.h"
@@ -42,6 +45,8 @@
 #include "mx/core/generated/Image.h"
 #include "mx/core/generated/Inversion.h"
 #include "mx/core/generated/Kind.h"
+#include "mx/core/generated/Membrane.h"
+#include "mx/core/generated/Metal.h"
 #include "mx/core/generated/Metronome.h"
 #include "mx/core/generated/MetronomeChoice.h"
 #include "mx/core/generated/MetronomeChoiceGroup.h"
@@ -58,10 +63,14 @@
 #include "mx/core/generated/Offset.h"
 #include "mx/core/generated/OnOff.h"
 #include "mx/core/generated/OtherDirection.h"
+#include "mx/core/generated/OtherText.h"
 #include "mx/core/generated/Pedal.h"
 #include "mx/core/generated/PedalTuning.h"
 #include "mx/core/generated/PedalType.h"
 #include "mx/core/generated/PerMinute.h"
+#include "mx/core/generated/Percussion.h"
+#include "mx/core/generated/PercussionChoice.h"
+#include "mx/core/generated/Pitched.h"
 #include "mx/core/generated/PositiveDivisions.h"
 #include "mx/core/generated/PrincipalVoice.h"
 #include "mx/core/generated/PrincipalVoiceSymbol.h"
@@ -71,15 +80,18 @@
 #include "mx/core/generated/Segno.h"
 #include "mx/core/generated/Semitones.h"
 #include "mx/core/generated/SmuflGlyphName.h"
+#include "mx/core/generated/SmuflPictogramGlyphName.h"
 #include "mx/core/generated/Sound.h"
 #include "mx/core/generated/StaffDivide.h"
 #include "mx/core/generated/StaffDivideSymbol.h"
 #include "mx/core/generated/StartStop.h"
 #include "mx/core/generated/StartStopContinue.h"
+#include "mx/core/generated/Stick.h"
 #include "mx/core/generated/String.h"
 #include "mx/core/generated/StringMute.h"
 #include "mx/core/generated/StringNumber.h"
 #include "mx/core/generated/StyleText.h"
+#include "mx/core/generated/Timpani.h"
 #include "mx/core/generated/TuningGroup.h"
 #include "mx/core/generated/ValignImage.h"
 #include "mx/core/generated/Wedge.h"
@@ -937,6 +949,139 @@ void DirectionWriter::emitScordatura(const api::ScordaturaData &item, core::Dire
     addDirectionType(std::move(dt), direction);
 }
 
+core::PercussionChoice DirectionWriter::createPercussionChoice(const api::PercussionDataChoice &choice)
+{
+    using Kind = api::PercussionDataChoice::Kind;
+    switch (choice.kind())
+    {
+    case Kind::metal: {
+        core::Metal metal{};
+        metal.setValue(myConverter.convert(choice.metal().value));
+        if (choice.metal().smufl.has_value())
+        {
+            metal.setSmufl(core::SmuflPictogramGlyphName::parse(*choice.metal().smufl));
+        }
+        return core::PercussionChoice::metal(std::move(metal));
+    }
+    case Kind::wood: {
+        core::Wood wood{};
+        wood.setValue(myConverter.convert(choice.wood().value));
+        if (choice.wood().smufl.has_value())
+        {
+            wood.setSmufl(core::SmuflPictogramGlyphName::parse(*choice.wood().smufl));
+        }
+        return core::PercussionChoice::wood(std::move(wood));
+    }
+    case Kind::pitched: {
+        core::Pitched pitched{};
+        pitched.setValue(myConverter.convert(choice.pitched().value));
+        if (choice.pitched().smufl.has_value())
+        {
+            pitched.setSmufl(core::SmuflPictogramGlyphName::parse(*choice.pitched().smufl));
+        }
+        return core::PercussionChoice::pitched(std::move(pitched));
+    }
+    case Kind::membrane: {
+        core::Membrane membrane{};
+        membrane.setValue(myConverter.convert(choice.membrane().value));
+        if (choice.membrane().smufl.has_value())
+        {
+            membrane.setSmufl(core::SmuflPictogramGlyphName::parse(*choice.membrane().smufl));
+        }
+        return core::PercussionChoice::membrane(std::move(membrane));
+    }
+    case Kind::effect: {
+        core::Effect effect{};
+        effect.setValue(myConverter.convert(choice.effect().value));
+        if (choice.effect().smufl.has_value())
+        {
+            effect.setSmufl(core::SmuflPictogramGlyphName::parse(*choice.effect().smufl));
+        }
+        return core::PercussionChoice::effect(std::move(effect));
+    }
+    case Kind::timpani: {
+        core::Timpani timpani{};
+        if (choice.timpani().smufl.has_value())
+        {
+            timpani.setSmufl(core::SmuflPictogramGlyphName::parse(*choice.timpani().smufl));
+        }
+        return core::PercussionChoice::timpani(std::move(timpani));
+    }
+    case Kind::beater: {
+        core::Beater beater{};
+        beater.setValue(myConverter.convert(choice.beater().value));
+        if (choice.beater().tip != api::TipDirection::unspecified)
+        {
+            beater.setTip(myConverter.convert(choice.beater().tip));
+        }
+        return core::PercussionChoice::beater(std::move(beater));
+    }
+    case Kind::stick: {
+        core::Stick stick{};
+        stick.setStickType(myConverter.convert(choice.stick().stickType));
+        stick.setStickMaterial(myConverter.convert(choice.stick().stickMaterial));
+        if (choice.stick().tip != api::TipDirection::unspecified)
+        {
+            stick.setTip(myConverter.convert(choice.stick().tip));
+        }
+        if (choice.stick().parentheses != api::Bool::unspecified)
+        {
+            stick.setParentheses(myConverter.convert(choice.stick().parentheses));
+        }
+        if (choice.stick().dashedCircle != api::Bool::unspecified)
+        {
+            stick.setDashedCircle(myConverter.convert(choice.stick().dashedCircle));
+        }
+        return core::PercussionChoice::stick(std::move(stick));
+    }
+    case Kind::stickLocation: {
+        return core::PercussionChoice::stickLocation(myConverter.convert(choice.stickLocation()));
+    }
+    case Kind::otherPercussion: {
+        core::OtherText other{};
+        other.setValue(choice.otherPercussion().text);
+        if (choice.otherPercussion().smufl.has_value())
+        {
+            other.setSmufl(core::SmuflGlyphName{*choice.otherPercussion().smufl});
+        }
+        return core::PercussionChoice::otherPercussion(std::move(other));
+    }
+    case Kind::glass:
+    default: {
+        core::Glass glass{};
+        glass.setValue(myConverter.convert(choice.glass().value));
+        if (choice.glass().smufl.has_value())
+        {
+            glass.setSmufl(core::SmuflPictogramGlyphName::parse(*choice.glass().smufl));
+        }
+        return core::PercussionChoice::glass(std::move(glass));
+    }
+    }
+}
+
+void DirectionWriter::emitPercussion(const api::PercussionData &item, core::Direction &direction)
+{
+    core::Percussion percussion{};
+    percussion.setChoice(createPercussionChoice(item.choice));
+    if (item.enclosure != api::PercussionEnclosure::unspecified)
+    {
+        percussion.setEnclosure(myConverter.convert(item.enclosure));
+    }
+    setAttributesFromPositionData(item.positionData, percussion);
+    setAttributesFromFontData(item.fontData, percussion);
+    if (item.color.has_value())
+    {
+        setAttributesFromColorData(*item.color, percussion);
+    }
+    if (item.id.has_value())
+    {
+        percussion.setID(core::Token{*item.id});
+    }
+    core::DirectionType dt{};
+    dt.setChoice(core::DirectionTypeChoice::percussion(core::OneOrMore<core::Percussion>{std::move(percussion)}));
+    addDirectionType(std::move(dt), direction);
+}
+
 void DirectionWriter::emitFixedOrder(core::Direction &direction)
 {
     for (const auto &mark : myDirectionData.marks)
@@ -1069,6 +1214,11 @@ void DirectionWriter::emitFixedOrder(core::Direction &direction)
     for (const auto &item : myDirectionData.scordaturas)
     {
         emitScordatura(item, direction);
+    }
+
+    for (const auto &item : myDirectionData.percussions)
+    {
+        emitPercussion(item, direction);
     }
 }
 
@@ -1272,6 +1422,13 @@ void DirectionWriter::emitOrderedComponents(core::Direction &direction)
             if (i >= 0 && static_cast<size_t>(i) < myDirectionData.scordaturas.size())
             {
                 emitScordatura(myDirectionData.scordaturas.at(i), direction);
+            }
+            break;
+
+        case api::DirectionComponentKind::percussion:
+            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.percussions.size())
+            {
+                emitPercussion(myDirectionData.percussions.at(i), direction);
             }
             break;
 

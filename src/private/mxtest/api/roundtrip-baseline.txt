@@ -461,3 +461,31 @@ synthetic/principal-voice.3.1.xml
 synthetic/harp-pedals.3.0.xml
 synthetic/harp-pedals.3.1.xml
 synthetic/scordatura.3.1.xml
+
+# Unblocked by modeling the percussion direction family (#324): the full set
+# of pictogram alternatives (glass, metal, wood, pitched, membrane, effect,
+# timpani, beater, stick, stick-location, other-percussion).
+synthetic/beater.3.0.xml
+synthetic/effect.3.0.xml
+synthetic/effect.4.0.xml
+synthetic/glass.3.0.xml
+synthetic/glass.3.1.xml
+synthetic/membrane.3.0.xml
+synthetic/membrane.4.0.xml
+synthetic/metal.3.0.xml
+synthetic/metal.4.0.xml
+synthetic/other-percussion.3.0.xml
+synthetic/other-percussion.3.1.xml
+synthetic/percussion.3.0.xml
+synthetic/percussion.3.1.xml
+synthetic/pitched.3.0.xml
+synthetic/pitched.3.1.xml
+synthetic/stick-location.3.0.xml
+synthetic/stick-material.3.0.xml
+synthetic/stick-type.3.0.xml
+synthetic/stick.3.0.xml
+synthetic/stick.3.1.xml
+synthetic/timpani.3.0.xml
+synthetic/timpani.4.0.xml
+synthetic/wood.3.0.xml
+synthetic/wood.4.0.xml
