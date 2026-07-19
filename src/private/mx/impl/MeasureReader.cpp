@@ -38,6 +38,7 @@
 #include "mx/core/generated/PartwiseMeasure.h"
 #include "mx/core/generated/PositiveDivisions.h"
 #include "mx/core/generated/Print.h"
+#include "mx/core/generated/Repeat.h"
 #include "mx/core/generated/RightLeftMiddle.h"
 #include "mx/core/generated/Semitones.h"
 #include "mx/core/generated/Sound.h"
@@ -913,6 +914,9 @@ void MeasureReader::parseBarline(const core::Barline &inMxBarline) const
     auto endingNumber = 0;
     auto repeat = false;
     auto repeatTimes = 0;
+    auto repeatDirection = api::RepeatDirection::unspecified;
+    auto repeatAfterJump = api::Bool::unspecified;
+    auto repeatWinged = api::RepeatWinged::unspecified;
 
     if (inMxBarline.location().has_value())
     {
@@ -962,8 +966,20 @@ void MeasureReader::parseBarline(const core::Barline &inMxBarline) const
 
     if (inMxBarline.repeat().has_value())
     {
+        const auto &mxRepeat = *inMxBarline.repeat();
         repeat = true;
-        repeatTimes = inMxBarline.repeat()->times().value_or(0);
+        repeatTimes = mxRepeat.times().value_or(0);
+        repeatDirection = myConverter.convert(mxRepeat.direction());
+
+        if (mxRepeat.afterJump().has_value())
+        {
+            repeatAfterJump = myConverter.convert(*mxRepeat.afterJump());
+        }
+
+        if (mxRepeat.winged().has_value())
+        {
+            repeatWinged = myConverter.convert(*mxRepeat.winged());
+        }
     }
 
     barline.barlineType = style;
@@ -972,6 +988,9 @@ void MeasureReader::parseBarline(const core::Barline &inMxBarline) const
     barline.endingNumber = endingNumber;
     barline.repeat = repeat;
     barline.repeatTimes = repeatTimes;
+    barline.repeatDirection = repeatDirection;
+    barline.repeatAfterJump = repeatAfterJump;
+    barline.repeatWinged = repeatWinged;
     myOutMeasureData.barlines.emplace_back(std::move(barline));
 }
 

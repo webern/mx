@@ -402,6 +402,19 @@ const Converter::EnumMap<core::StartStopDiscontinue, api::EndingType> Converter:
     {core::StartStopDiscontinue::stop(), api::EndingType::stop},
     {core::StartStopDiscontinue::discontinue(), api::EndingType::discontinue}};
 
+const Converter::EnumMap<core::BackwardForward, api::RepeatDirection> Converter::repeatDirectionMap = {
+    {core::BackwardForward::forward(), api::RepeatDirection::forward},
+    {core::BackwardForward::backward(), api::RepeatDirection::backward},
+};
+
+const Converter::EnumMap<core::Winged, api::RepeatWinged> Converter::wingedMap = {
+    {core::Winged::none(), api::RepeatWinged::none},
+    {core::Winged::straight(), api::RepeatWinged::straight},
+    {core::Winged::curved(), api::RepeatWinged::curved},
+    {core::Winged::doubleStraight(), api::RepeatWinged::doubleStraight},
+    {core::Winged::doubleCurved(), api::RepeatWinged::doubleCurved},
+};
+
 const Converter::EnumMap<core::FermataShape, api::MarkType> Converter::fermataMap = {
     {core::FermataShape::normal(), api::MarkType::fermataNormal},
     {core::FermataShape::angled(), api::MarkType::fermataAngled},
@@ -1830,6 +1843,26 @@ core::BarStyle Converter::convert(api::BarlineType value) const
 core::StartStopDiscontinue Converter::convert(api::EndingType value) const
 {
     return findCoreItem(endingMap, core::StartStopDiscontinue::start(), value);
+}
+
+core::BackwardForward Converter::convert(api::RepeatDirection value) const
+{
+    return findCoreItem(repeatDirectionMap, core::BackwardForward::backward(), value);
+}
+
+api::RepeatDirection Converter::convert(core::BackwardForward value) const
+{
+    return findApiItem(repeatDirectionMap, api::RepeatDirection::unspecified, value);
+}
+
+core::Winged Converter::convert(api::RepeatWinged value) const
+{
+    return findCoreItem(wingedMap, core::Winged::none(), value);
+}
+
+api::RepeatWinged Converter::convert(core::Winged value) const
+{
+    return findApiItem(wingedMap, api::RepeatWinged::unspecified, value);
 }
 
 api::BarlineType Converter::convert(core::BarStyle value) const
