@@ -28,7 +28,14 @@ class OttavaStart
     SpannerStart spannerStart;
     OttavaType ottavaType;
 
-    OttavaStart() : spannerStart{}, ottavaType{OttavaType::unspecified}
+    // Octave-shift size fidelity knob. The size value (8 or 15) follows from ottavaType, so a
+    // 15ma/15mb line always writes size="15" while an 8va/8vb line omits the redundant, spec-
+    // default size="8". When true, the writer also emits that redundant size="8"; the reader sets
+    // it when the source spelled the attribute out. Leave false (the default) when authoring. It
+    // has no effect on a 15ma/15mb line, whose load-bearing size is always written.
+    bool writeDefaultSize;
+
+    OttavaStart() : spannerStart{}, ottavaType{OttavaType::unspecified}, writeDefaultSize{false}
     {
     }
 };
@@ -52,6 +59,7 @@ class OttavaStop
 MXAPI_EQUALS_BEGIN(OttavaStart)
 MXAPI_EQUALS_MEMBER(spannerStart)
 MXAPI_EQUALS_MEMBER(ottavaType)
+MXAPI_EQUALS_MEMBER(writeDefaultSize)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(OttavaStart);
 
