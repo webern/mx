@@ -32,7 +32,7 @@ class OttavaStart
     // 15ma/15mb line always writes size="15" while an 8va/8vb line omits the redundant, spec-
     // default size="8". When true, the writer also emits that redundant size="8"; the reader sets
     // it when the source spelled the attribute out. Leave false (the default) when authoring. It
-    // has no effect on a 15ma/15mb line, whose load-bearing size is always written.
+    // has no effect on a 15ma/15mb line, whose size is always written.
     bool writeDefaultSize;
 
     OttavaStart() : spannerStart{}, ottavaType{OttavaType::unspecified}, writeDefaultSize{false}
