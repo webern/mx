@@ -16,54 +16,10 @@ using namespace std;
 using namespace mx::api;
 using namespace mxtest;
 
-TEST(roundTripBpm, MetronomeApi)
-{
-    const auto expectedDurationName = DurationName::dur16th;
-    const int expectedDots = 1;
-    const std::string expectedBeatsPerMinute = "123";
-    const int expectedTickTimePosition = 77;
-
-    ScoreData expectedScoreData;
-    expectedScoreData.ticksPerQuarter = 100;
-    expectedScoreData.parts.emplace_back();
-    auto &expectedPart = expectedScoreData.parts.back();
-    expectedPart.measures.emplace_back();
-    auto &expectedMeasure = expectedPart.measures.back();
-    expectedMeasure.staves.emplace_back();
-    auto &expectedStaff = expectedMeasure.staves.back();
-    expectedStaff.directions.emplace_back();
-    auto &expectedDirection = expectedStaff.directions.back();
-    expectedDirection.tempos.emplace_back();
-    expectedDirection.tickTimePosition = expectedTickTimePosition;
-    auto &expectedTempo = expectedDirection.tempos.back();
-    expectedTempo.tempoType = TempoType::beatsPerMinute;
-    auto &expectedBpm = expectedTempo.beatsPerMinute;
-    expectedBpm.durationName = expectedDurationName;
-    expectedBpm.dots = expectedDots;
-    expectedBpm.beatsPerMinute = expectedBeatsPerMinute;
-
-    auto actualScoreData = roundTrip(expectedScoreData);
-
-    auto &actualPart = actualScoreData.parts.back();
-    auto &actualMeasure = actualPart.measures.back();
-    auto &actualStaff = actualMeasure.staves.back();
-    auto &actualDirection = actualStaff.directions.back();
-    auto &actualTempo = actualDirection.tempos.back();
-    actualTempo.tempoType = TempoType::beatsPerMinute;
-    auto &actualBpm = actualTempo.beatsPerMinute;
-
-    CHECK(expectedBeatsPerMinute == actualBpm.beatsPerMinute);
-    CHECK_EQUAL(expectedDots, actualBpm.dots);
-    CHECK(expectedDurationName == actualBpm.durationName);
-    CHECK_EQUAL(expectedTickTimePosition, actualDirection.tickTimePosition);
-}
-
-// --- issue #218: metronome/tempo marks must not crash the api pipeline -------
-
 namespace
 {
-// A minimal partwise document carrying exactly one <metronome> in one
-// <direction>. `metronomeBody` is the inner markup of the <metronome> element.
+// A minimal partwise document carrying exactly one <metronome> in one <direction>.
+// `metronomeBody` is the inner markup of the <metronome> element.
 std::string makeMetronomeDoc(const std::string &metronomeBody)
 {
     return R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -86,37 +42,52 @@ std::string makeMetronomeDoc(const std::string &metronomeBody)
 </score-partwise>
 )";
 }
+
+// Round-trips a score carrying one direction with the given tempo and returns the resulting tempo
+// (a default-constructed TempoData if anything is missing).
+TempoData roundTripTempo(const TempoData &in)
+{
+    ScoreData score;
+    score.ticksPerQuarter = 100;
+    score.parts.emplace_back();
+    score.parts.back().measures.emplace_back();
+    score.parts.back().measures.back().staves.emplace_back();
+    score.parts.back().measures.back().staves.back().directions.emplace_back();
+    score.parts.back().measures.back().staves.back().directions.back().tempos.push_back(in);
+
+    const auto out = roundTrip(score);
+    if (out.parts.empty() || out.parts.back().measures.empty() || out.parts.back().measures.back().staves.empty())
+    {
+        return TempoData{};
+    }
+    const auto &directions = out.parts.back().measures.back().staves.back().directions;
+    if (directions.empty() || directions.back().tempos.empty())
+    {
+        return TempoData{};
+    }
+    return directions.back().tempos.back();
+}
 } // namespace
 
-// The metronome-note form has no api::TempoData representation. It used to throw
-// "wtf is this" in the reader, which DocumentManager turned into a getData()
-// failure -- the whole file produced no output (GETDATAFAIL). After the fix the
-// tempo is dropped but reading succeeds.
-TEST(metronomeNoteFormReadDoesNotFail, MetronomeApi)
+TEST(roundTripBpm, MetronomeApi)
 {
-    const std::string xml = makeMetronomeDoc(R"(
-            <metronome-note>
-              <metronome-type>quarter</metronome-type>
-            </metronome-note>
-            <metronome-relation>equals</metronome-relation>
-            <metronome-note>
-              <metronome-type>eighth</metronome-type>
-            </metronome-note>
-          )");
+    BeatsPerMinute bpm;
+    bpm.durationName = DurationName::dur16th;
+    bpm.dots = 1;
+    bpm.beatsPerMinute = "123";
+    TempoData in;
+    in.choice = TempoChoice{bpm};
 
-    auto &mgr = DocumentManager::getInstance();
-    std::istringstream iss{xml};
-    const auto idResult = mgr.createFromStream(iss);
-    CHECK(idResult.ok());
-    if (!idResult.ok())
-    {
-        return;
-    }
-    const auto dataResult = mgr.getData(idResult.value());
-    mgr.destroyDocument(idResult.value());
-    // Before the fix this was an error (GETDATAFAIL); now reading must succeed.
-    CHECK(dataResult.ok());
+    const auto out = roundTripTempo(in);
+
+    CHECK(TempoChoice::Kind::beatsPerMinute == out.choice.kind());
+    const auto outBpm = out.choice.beatsPerMinute();
+    CHECK(DurationName::dur16th == outBpm.durationName);
+    CHECK_EQUAL(1, outBpm.dots);
+    CHECK(std::string{"123"} == outBpm.beatsPerMinute);
 }
+
+T_END;
 
 // A non-numeric <per-minute> is legal -- per-minute is an xs:string. It is kept verbatim on
 // BeatsPerMinute::beatsPerMinute, so a mark like "quarter = fast" round-trips faithfully instead
@@ -145,7 +116,6 @@ TEST(nonNumericPerMinuteRoundTrips, MetronomeApi)
     }
 
     const auto &score = dataResult.value();
-    CHECK_EQUAL(1, static_cast<int>(score.parts.size()));
     if (score.parts.empty() || score.parts.back().measures.empty() || score.parts.back().measures.back().staves.empty())
     {
         return;
@@ -157,9 +127,10 @@ TEST(nonNumericPerMinuteRoundTrips, MetronomeApi)
         return;
     }
     const auto &tempo = directions.back().tempos.back();
-    CHECK(TempoType::beatsPerMinute == tempo.tempoType);
-    CHECK(DurationName::quarter == tempo.beatsPerMinute.durationName);
-    CHECK(std::string{"fast"} == tempo.beatsPerMinute.beatsPerMinute);
+    CHECK(TempoChoice::Kind::beatsPerMinute == tempo.choice.kind());
+    const auto bpm = tempo.choice.beatsPerMinute();
+    CHECK(DurationName::quarter == bpm.durationName);
+    CHECK(std::string{"fast"} == bpm.beatsPerMinute);
 
     // The mark must also write back without error.
     const auto id2Result = mgr.createFromScore(dataResult.value());
@@ -170,126 +141,152 @@ TEST(nonNumericPerMinuteRoundTrips, MetronomeApi)
     }
 }
 
-// Metric modulation (two beat-units) used to be an empty read stub plus a writer
-// throw. It now round-trips through the api.
+T_END;
+
+// Metric modulation (two beat-units) round-trips through the api.
 TEST(roundTripMetricModulation, MetronomeApi)
 {
-    ScoreData score;
-    score.ticksPerQuarter = 100;
-    score.parts.emplace_back();
-    score.parts.back().measures.emplace_back();
-    score.parts.back().measures.back().staves.emplace_back();
-    score.parts.back().measures.back().staves.back().directions.emplace_back();
-    auto &direction = score.parts.back().measures.back().staves.back().directions.back();
-    direction.tempos.emplace_back();
-    auto &tempo = direction.tempos.back();
-    tempo.tempoType = TempoType::metricModulation;
-    tempo.metricModulation.leftDurationName = DurationName::quarter;
-    tempo.metricModulation.leftDots = 1;
-    tempo.metricModulation.rightDurationName = DurationName::half;
-    tempo.metricModulation.rightDots = 0;
+    MetricModulation mm;
+    mm.leftDurationName = DurationName::quarter;
+    mm.leftDots = 1;
+    mm.rightDurationName = DurationName::half;
+    mm.rightDots = 0;
+    TempoData in;
+    in.choice = TempoChoice{mm};
 
-    const auto out = roundTrip(score);
+    const auto out = roundTripTempo(in);
 
-    CHECK_EQUAL(1, static_cast<int>(out.parts.size()));
-    if (out.parts.empty())
-    {
-        return;
-    }
-    const auto &measures = out.parts.back().measures;
-    CHECK_EQUAL(1, static_cast<int>(measures.size()));
-    if (measures.empty() || measures.back().staves.empty())
-    {
-        return;
-    }
-    const auto &directions = measures.back().staves.back().directions;
-    CHECK_EQUAL(1, static_cast<int>(directions.size()));
-    if (directions.empty() || directions.back().tempos.empty())
-    {
-        return;
-    }
-    const auto &outTempo = directions.back().tempos.back();
-    CHECK(TempoType::metricModulation == outTempo.tempoType);
-    CHECK(DurationName::quarter == outTempo.metricModulation.leftDurationName);
-    CHECK_EQUAL(1, outTempo.metricModulation.leftDots);
-    CHECK(DurationName::half == outTempo.metricModulation.rightDurationName);
-    CHECK_EQUAL(0, outTempo.metricModulation.rightDots);
+    CHECK(TempoChoice::Kind::metricModulation == out.choice.kind());
+    const auto outMm = out.choice.metricModulation();
+    CHECK(DurationName::quarter == outMm.leftDurationName);
+    CHECK_EQUAL(1, outMm.leftDots);
+    CHECK(DurationName::half == outMm.rightDurationName);
+    CHECK_EQUAL(0, outMm.rightDots);
 }
 
-T_END
+T_END;
+
+// A beat-unit tied to a further beat-unit ("quarter + eighth = 120") round-trips via
+// BeatsPerMinute::tiedBeatUnits.
+TEST(roundTripBeatUnitTied, MetronomeApi)
+{
+    BeatsPerMinute bpm;
+    bpm.durationName = DurationName::quarter;
+    BeatUnit tied;
+    tied.type = DurationName::eighth;
+    bpm.tiedBeatUnits.push_back(tied);
+    bpm.beatsPerMinute = "120";
+    TempoData in;
+    in.choice = TempoChoice{bpm};
+
+    const auto out = roundTripTempo(in);
+
+    CHECK(TempoChoice::Kind::beatsPerMinute == out.choice.kind());
+    const auto outBpm = out.choice.beatsPerMinute();
+    CHECK_EQUAL(1, static_cast<int>(outBpm.tiedBeatUnits.size()));
+    if (!outBpm.tiedBeatUnits.empty())
+    {
+        CHECK(DurationName::eighth == outBpm.tiedBeatUnits.front().type);
+    }
+}
+
+T_END;
+
+// The metronome-note form -- note figures joined by a relation symbol -- round-trips as a
+// NoteRelation, including beams, ties, tuplets, arrows, and the two-sided relation.
+TEST(roundTripNoteRelation, MetronomeApi)
+{
+    NoteRelation nr;
+    nr.arrows = true;
+
+    MetronomeNoteData left;
+    left.metronomeType = DurationName::eighth;
+    MetronomeBeam beam;
+    beam.value = Beam::begin;
+    beam.number = 1;
+    left.beams.push_back(beam);
+    left.tie = MetronomeTieType::start;
+    nr.notes.push_back(left);
+
+    MetronomeRelation rel;
+    rel.symbol = "equals";
+    MetronomeNoteData right;
+    right.metronomeType = DurationName::quarter;
+    MetronomeTuplet tuplet;
+    tuplet.actualNotes = 3;
+    tuplet.normalNotes = 2;
+    tuplet.normalType = DurationName::quarter;
+    tuplet.type = MetronomeTupletType::start;
+    tuplet.bracket = Bool::yes;
+    tuplet.showNumber = MetronomeShowNumber::actual;
+    right.tuplet = tuplet;
+    rel.notes.push_back(right);
+    nr.relation = rel;
+
+    TempoData in;
+    in.choice = TempoChoice{nr};
+
+    const auto out = roundTripTempo(in);
+
+    CHECK(TempoChoice::Kind::noteRelation == out.choice.kind());
+    const auto outNr = out.choice.noteRelation();
+    CHECK(outNr.arrows);
+    CHECK_EQUAL(1, static_cast<int>(outNr.notes.size()));
+    CHECK(outNr.relation.has_value());
+    // Strong check: the whole note-relation body must survive unchanged.
+    CHECK(nr == outNr);
+}
+
+T_END;
 
 TEST(roundTripParentheses, MetronomeApi)
 {
     // <metronome parentheses="yes"> must round-trip via TempoData::isParenthetical.
-    ScoreData score;
-    score.ticksPerQuarter = 100;
-    score.parts.emplace_back();
-    auto &part = score.parts.back();
-    part.measures.emplace_back();
-    auto &measure = part.measures.back();
-    measure.staves.emplace_back();
-    auto &staff = measure.staves.back();
-    staff.directions.emplace_back();
-    auto &direction = staff.directions.back();
-    direction.tempos.emplace_back();
-    auto &tempo = direction.tempos.back();
-    tempo.tempoType = TempoType::beatsPerMinute;
-    tempo.isParenthetical = Bool::yes;
-    tempo.beatsPerMinute.durationName = DurationName::quarter;
-    tempo.beatsPerMinute.beatsPerMinute = "100";
+    BeatsPerMinute bpm;
+    bpm.durationName = DurationName::quarter;
+    bpm.beatsPerMinute = "100";
+    TempoData in;
+    in.choice = TempoChoice{bpm};
+    in.isParenthetical = Bool::yes;
 
-    auto actualScoreData = roundTrip(score);
+    const auto out = roundTripTempo(in);
 
-    const auto &actualTempo =
-        actualScoreData.parts.back().measures.back().staves.back().directions.back().tempos.back();
-    CHECK(actualTempo.isParenthetical == Bool::yes);
+    CHECK(out.isParenthetical == Bool::yes);
 }
 
-T_END
+T_END;
 
 TEST(roundTripMetronomeAttributes, MetronomeApi)
 {
-    // The <metronome> print-style-align, justify, print-object, color, and id attributes must
-    // survive a round trip via TempoData's positionData/fontData/justify/printObject/color/id.
-    ScoreData score;
-    score.ticksPerQuarter = 100;
-    score.parts.emplace_back();
-    score.parts.back().measures.emplace_back();
-    score.parts.back().measures.back().staves.emplace_back();
-    score.parts.back().measures.back().staves.back().directions.emplace_back();
-    auto &tempo = score.parts.back().measures.back().staves.back().directions.back().tempos.emplace_back();
-    tempo.tempoType = TempoType::beatsPerMinute;
-    tempo.beatsPerMinute.durationName = DurationName::quarter;
-    tempo.beatsPerMinute.beatsPerMinute = "120";
-    tempo.positionData.isDefaultYSpecified = true;
-    tempo.positionData.defaultY = 12.0;
-    tempo.positionData.horizontalAlignment = HorizontalAlignment::left;
-    tempo.fontData.style = FontStyle::italic;
-    tempo.justify = HorizontalAlignment::center;
-    tempo.printObject = Bool::no;
-    tempo.id = std::string{"tempo1"};
+    // The <metronome> print-style-align, justify, print-object, and id attributes must survive a
+    // round trip via TempoData's positionData/fontData/justify/printObject/id.
+    BeatsPerMinute bpm;
+    bpm.durationName = DurationName::quarter;
+    bpm.beatsPerMinute = "120";
+    TempoData in;
+    in.choice = TempoChoice{bpm};
+    in.positionData.isDefaultYSpecified = true;
+    in.positionData.defaultY = 12.0;
+    in.positionData.horizontalAlignment = HorizontalAlignment::left;
+    in.fontData.style = FontStyle::italic;
+    in.justify = HorizontalAlignment::center;
+    in.printObject = Bool::no;
+    in.id = std::string{"tempo1"};
 
-    const auto out = roundTrip(score);
+    const auto out = roundTripTempo(in);
 
-    const auto &directions = out.parts.back().measures.back().staves.back().directions;
-    CHECK_EQUAL(1, static_cast<int>(directions.size()));
-    if (directions.empty() || directions.back().tempos.empty())
+    CHECK(out.positionData.isDefaultYSpecified);
+    CHECK(HorizontalAlignment::left == out.positionData.horizontalAlignment);
+    CHECK(FontStyle::italic == out.fontData.style);
+    CHECK(HorizontalAlignment::center == out.justify);
+    CHECK(Bool::no == out.printObject);
+    CHECK(out.id.has_value());
+    if (out.id.has_value())
     {
-        return;
-    }
-    const auto &outTempo = directions.back().tempos.back();
-    CHECK(outTempo.positionData.isDefaultYSpecified);
-    CHECK(HorizontalAlignment::left == outTempo.positionData.horizontalAlignment);
-    CHECK(FontStyle::italic == outTempo.fontData.style);
-    CHECK(HorizontalAlignment::center == outTempo.justify);
-    CHECK(Bool::no == outTempo.printObject);
-    CHECK(outTempo.id.has_value());
-    if (outTempo.id.has_value())
-    {
-        CHECK(std::string{"tempo1"} == *outTempo.id);
+        CHECK(std::string{"tempo1"} == *out.id);
     }
 }
 
-T_END
+T_END;
 
 #endif

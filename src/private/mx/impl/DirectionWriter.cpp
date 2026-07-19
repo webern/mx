@@ -9,7 +9,9 @@
 #include "mx/core/generated/AccordionRegistration.h"
 #include "mx/core/generated/Bass.h"
 #include "mx/core/generated/BassStep.h"
+#include "mx/core/generated/BeamLevel.h"
 #include "mx/core/generated/BeatUnitGroup.h"
+#include "mx/core/generated/BeatUnitTied.h"
 #include "mx/core/generated/Beater.h"
 #include "mx/core/generated/Bracket.h"
 #include "mx/core/generated/Coda.h"
@@ -48,10 +50,16 @@
 #include "mx/core/generated/Membrane.h"
 #include "mx/core/generated/Metal.h"
 #include "mx/core/generated/Metronome.h"
+#include "mx/core/generated/MetronomeBeam.h"
 #include "mx/core/generated/MetronomeChoice.h"
 #include "mx/core/generated/MetronomeChoiceGroup.h"
+#include "mx/core/generated/MetronomeChoiceGroup2.h"
+#include "mx/core/generated/MetronomeChoiceGroup2Group.h"
 #include "mx/core/generated/MetronomeChoiceGroupChoice.h"
 #include "mx/core/generated/MetronomeChoiceGroupChoiceGroup.h"
+#include "mx/core/generated/MetronomeNote.h"
+#include "mx/core/generated/MetronomeTied.h"
+#include "mx/core/generated/MetronomeTuplet.h"
 #include "mx/core/generated/MusicDataChoice.h"
 #include "mx/core/generated/Numeral.h"
 #include "mx/core/generated/NumeralKey.h"
@@ -79,6 +87,7 @@
 #include "mx/core/generated/Scordatura.h"
 #include "mx/core/generated/Segno.h"
 #include "mx/core/generated/Semitones.h"
+#include "mx/core/generated/ShowTuplet.h"
 #include "mx/core/generated/SmuflGlyphName.h"
 #include "mx/core/generated/SmuflPictogramGlyphName.h"
 #include "mx/core/generated/Sound.h"
@@ -91,6 +100,7 @@
 #include "mx/core/generated/StringMute.h"
 #include "mx/core/generated/StringNumber.h"
 #include "mx/core/generated/StyleText.h"
+#include "mx/core/generated/TimeModificationGroup.h"
 #include "mx/core/generated/Timpani.h"
 #include "mx/core/generated/TuningGroup.h"
 #include "mx/core/generated/ValignImage.h"
@@ -450,63 +460,176 @@ void DirectionWriter::emitDashesStop(const api::SpannerStop &item, core::Directi
     addDirectionType(std::move(dt), direction);
 }
 
+namespace
+{
+core::BeatUnitGroup makeBeatUnitGroup(const Converter &converter, api::DurationName durationName, int dots)
+{
+    core::BeatUnitGroup beatUnitGroup{};
+    beatUnitGroup.setBeatUnit(converter.convert(durationName));
+    for (int d = 0; d < dots; ++d)
+    {
+        beatUnitGroup.addBeatUnitDot(core::Empty{});
+    }
+    return beatUnitGroup;
+}
+
+core::BeatUnitTied makeBeatUnitTied(const Converter &converter, const api::BeatUnit &beatUnit)
+{
+    core::BeatUnitTied tied{};
+    tied.setBeatUnit(makeBeatUnitGroup(converter, beatUnit.type, beatUnit.dots));
+    return tied;
+}
+
+core::MetronomeNote makeMetronomeNote(const Converter &converter, const api::MetronomeNoteData &note)
+{
+    core::MetronomeNote out{};
+    out.setMetronomeType(converter.convert(note.metronomeType));
+    for (int d = 0; d < note.dots; ++d)
+    {
+        out.addMetronomeDot(core::Empty{});
+    }
+    for (const auto &beam : note.beams)
+    {
+        core::MetronomeBeam coreBeam{};
+        coreBeam.setValue(converter.convert(beam.value));
+        if (beam.number.has_value())
+        {
+            coreBeam.setNumber(core::BeamLevel{*beam.number});
+        }
+        out.addMetronomeBeam(coreBeam);
+    }
+    if (note.tie.has_value())
+    {
+        core::MetronomeTied tied{};
+        tied.setType(*note.tie == api::MetronomeTieType::start ? core::StartStop::start() : core::StartStop::stop());
+        out.setMetronomeTied(tied);
+    }
+    if (note.tuplet.has_value())
+    {
+        const auto &tuplet = *note.tuplet;
+        core::MetronomeTuplet coreTuplet{};
+        coreTuplet.setActualNotes(tuplet.actualNotes);
+        coreTuplet.setNormalNotes(tuplet.normalNotes);
+        if (tuplet.normalType != api::DurationName::unspecified)
+        {
+            core::TimeModificationGroup group{};
+            group.setNormalType(converter.convert(tuplet.normalType));
+            for (int d = 0; d < tuplet.normalDots; ++d)
+            {
+                group.addNormalDot(core::Empty{});
+            }
+            coreTuplet.setGroup(group);
+        }
+        coreTuplet.setType(tuplet.type == api::MetronomeTupletType::start ? core::StartStop::start()
+                                                                          : core::StartStop::stop());
+        if (tuplet.bracket != api::Bool::unspecified)
+        {
+            coreTuplet.setBracket(converter.convert(tuplet.bracket));
+        }
+        switch (tuplet.showNumber)
+        {
+        case api::MetronomeShowNumber::actual:
+            coreTuplet.setShowNumber(core::ShowTuplet::actual());
+            break;
+        case api::MetronomeShowNumber::both:
+            coreTuplet.setShowNumber(core::ShowTuplet::both());
+            break;
+        case api::MetronomeShowNumber::none:
+            coreTuplet.setShowNumber(core::ShowTuplet::none());
+            break;
+        case api::MetronomeShowNumber::unspecified:
+            break;
+        }
+        out.setMetronomeTuplet(coreTuplet);
+    }
+    return out;
+}
+
+core::OneOrMore<core::MetronomeNote> makeMetronomeNotes(const Converter &converter,
+                                                        const std::vector<api::MetronomeNoteData> &notes)
+{
+    core::OneOrMore<core::MetronomeNote> out{makeMetronomeNote(converter, notes.front())};
+    for (std::size_t i = 1; i < notes.size(); ++i)
+    {
+        out.add(makeMetronomeNote(converter, notes.at(i)));
+    }
+    return out;
+}
+} // namespace
+
 void DirectionWriter::emitTempo(const api::TempoData &tempo, core::Direction &direction)
 {
-    // Content-guard: a tempo with no beat-unit -- an unfilled/default TempoData, or the
-    // metronome-note form this api does not yet model -- has nothing to write. Skip it rather
-    // than emit an empty <metronome>. Nothing throws; the direction simply carries no tempo.
-    const bool hasBeatUnit = tempo.beatsPerMinute.durationName != api::DurationName::unspecified;
-    const bool hasModulation = tempo.metricModulation.leftDurationName != api::DurationName::unspecified;
-    if (tempo.tempoType == api::TempoType::beatsPerMinute && !hasBeatUnit)
-    {
-        return;
-    }
-    if (tempo.tempoType == api::TempoType::metricModulation && !hasModulation)
-    {
-        return;
-    }
-    if (tempo.tempoType != api::TempoType::beatsPerMinute && tempo.tempoType != api::TempoType::metricModulation)
-    {
-        return;
-    }
-
-    const auto makeBeatUnitGroup = [&](api::DurationName durationName, int dots) {
-        core::BeatUnitGroup beatUnitGroup{};
-        beatUnitGroup.setBeatUnit(myConverter.convert(durationName));
-        for (int d = 0; d < dots; ++d)
-        {
-            beatUnitGroup.addBeatUnitDot(core::Empty{});
-        }
-        return beatUnitGroup;
-    };
-
+    const auto kind = tempo.choice.kind();
     core::Metronome metronome{};
 
-    if (tempo.tempoType == api::TempoType::beatsPerMinute)
+    if (kind == api::TempoChoice::Kind::beatsPerMinute)
     {
-        // beat-unit (+dots) followed by a per-minute string, kept verbatim from the source
-        // (per-minute is xs:string: "120", "ca. 76", a range, ...).
+        // beat-unit (+dots, +tied continuations) followed by a per-minute string, kept verbatim
+        // from the source (per-minute is xs:string: "120", "ca. 76", a range, ...).
+        const auto bpm = tempo.choice.beatsPerMinute();
+        // Content-guard: a default/empty tempo has no beat-unit; skip rather than emit an empty
+        // <metronome>. Nothing throws; the direction simply carries no tempo.
+        if (bpm.durationName == api::DurationName::unspecified)
+        {
+            return;
+        }
         core::PerMinute pm{};
-        pm.setValue(tempo.beatsPerMinute.beatsPerMinute);
+        pm.setValue(bpm.beatsPerMinute);
 
         core::MetronomeChoiceGroup mcg{};
-        mcg.setBeatUnit(makeBeatUnitGroup(tempo.beatsPerMinute.durationName, tempo.beatsPerMinute.dots));
+        mcg.setBeatUnit(makeBeatUnitGroup(myConverter, bpm.durationName, bpm.dots));
+        for (const auto &tied : bpm.tiedBeatUnits)
+        {
+            mcg.addBeatUnitTied(makeBeatUnitTied(myConverter, tied));
+        }
         mcg.setChoice(core::MetronomeChoiceGroupChoice::perMinute(pm));
+        metronome.setChoice(core::MetronomeChoice::group(mcg));
+    }
+    else if (kind == api::TempoChoice::Kind::metricModulation)
+    {
+        // Metric modulation: two beat-units, e.g. <beat-unit>quarter</beat-unit>
+        // = <beat-unit>half</beat-unit>. The second beat-unit is the 'group' alternative.
+        const auto mm = tempo.choice.metricModulation();
+        if (mm.leftDurationName == api::DurationName::unspecified)
+        {
+            return;
+        }
+        core::MetronomeChoiceGroupChoiceGroup rightBeatUnitHolder{};
+        rightBeatUnitHolder.setBeatUnit(makeBeatUnitGroup(myConverter, mm.rightDurationName, mm.rightDots));
+        for (const auto &tied : mm.rightTiedBeatUnits)
+        {
+            rightBeatUnitHolder.addBeatUnitTied(makeBeatUnitTied(myConverter, tied));
+        }
+
+        core::MetronomeChoiceGroup mcg{};
+        mcg.setBeatUnit(makeBeatUnitGroup(myConverter, mm.leftDurationName, mm.leftDots));
+        for (const auto &tied : mm.leftTiedBeatUnits)
+        {
+            mcg.addBeatUnitTied(makeBeatUnitTied(myConverter, tied));
+        }
+        mcg.setChoice(core::MetronomeChoiceGroupChoice::group(rightBeatUnitHolder));
         metronome.setChoice(core::MetronomeChoice::group(mcg));
     }
     else
     {
-        // Metric modulation: two beat-units, e.g. <beat-unit>quarter</beat-unit>
-        // = <beat-unit>half</beat-unit>. The second beat-unit is the 'group'
-        // alternative of the choice.
-        const auto &mm = tempo.metricModulation;
-        core::MetronomeChoiceGroupChoiceGroup rightBeatUnitHolder{};
-        rightBeatUnitHolder.setBeatUnit(makeBeatUnitGroup(mm.rightDurationName, mm.rightDots));
-
-        core::MetronomeChoiceGroup mcg{};
-        mcg.setBeatUnit(makeBeatUnitGroup(mm.leftDurationName, mm.leftDots));
-        mcg.setChoice(core::MetronomeChoiceGroupChoice::group(rightBeatUnitHolder));
-        metronome.setChoice(core::MetronomeChoice::group(mcg));
+        // Note-relation form: one or more metronome-note figures, optionally followed by a
+        // relation symbol and a second group of figures.
+        const auto noteRelation = tempo.choice.noteRelation();
+        if (noteRelation.notes.empty())
+        {
+            return;
+        }
+        core::MetronomeChoiceGroup2 group2{};
+        group2.setMetronomeArrows(noteRelation.arrows);
+        group2.setMetronomeNote(makeMetronomeNotes(myConverter, noteRelation.notes));
+        if (noteRelation.relation.has_value() && !noteRelation.relation->notes.empty())
+        {
+            core::MetronomeChoiceGroup2Group relationGroup{};
+            relationGroup.setMetronomeRelation(noteRelation.relation->symbol);
+            relationGroup.setMetronomeNote(makeMetronomeNotes(myConverter, noteRelation.relation->notes));
+            group2.setGroup(relationGroup);
+        }
+        metronome.setChoice(core::MetronomeChoice::group2(group2));
     }
 
     // print-style-align (default-x/y, relative-x/y, font, color, halign, valign) + justify +
