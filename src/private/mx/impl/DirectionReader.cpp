@@ -703,26 +703,26 @@ void DirectionReader::parseBracket(const core::DirectionType &directionType)
     }
 }
 
-api::PedalKind pedalKindForTag(core::PedalType::Tag tag)
+api::PedalLineKind pedalKindForTag(core::PedalType::Tag tag)
 {
     switch (tag)
     {
     case core::PedalType::Tag::start:
-        return api::PedalKind::start;
+        return api::PedalLineKind::start;
     case core::PedalType::Tag::stop:
-        return api::PedalKind::stop;
+        return api::PedalLineKind::stop;
     case core::PedalType::Tag::sostenuto:
-        return api::PedalKind::sostenuto;
+        return api::PedalLineKind::sostenuto;
     case core::PedalType::Tag::change:
-        return api::PedalKind::change;
+        return api::PedalLineKind::change;
     case core::PedalType::Tag::continue_:
-        return api::PedalKind::continueLine;
+        return api::PedalLineKind::continueLine;
     case core::PedalType::Tag::discontinue:
-        return api::PedalKind::discontinue;
+        return api::PedalLineKind::discontinue;
     case core::PedalType::Tag::resume:
-        return api::PedalKind::resume;
+        return api::PedalLineKind::resume;
     }
-    return api::PedalKind::unspecified;
+    return api::PedalLineKind::unspecified;
 }
 
 void DirectionReader::parsePedal(const core::DirectionType &directionType)
@@ -749,7 +749,7 @@ void DirectionReader::parsePedal(const core::DirectionType &directionType)
 
     if (isLine)
     {
-        api::PedalData pedalData{pedalKindForTag(tag)};
+        api::PedalLineData pedalData{pedalKindForTag(tag)};
         pedalData.tickTimePosition = myOutDirectionData.tickTimePosition;
         pedalData.positionData = getPositionData(pedal);
         pedalData.positionData.placement = placement;

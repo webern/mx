@@ -16,7 +16,7 @@
 #include "mx/api/MarkData.h"
 #include "mx/api/OtherDirectionData.h"
 #include "mx/api/OttavaData.h"
-#include "mx/api/PedalData.h"
+#include "mx/api/PedalLineData.h"
 #include "mx/api/PercussionData.h"
 #include "mx/api/PrincipalVoiceData.h"
 #include "mx/api/RehearsalData.h"
@@ -135,7 +135,7 @@ struct DirectionData
     std::vector<SpannerStop> bracketStops;
     std::vector<SpannerStart> dashesStarts;
     std::vector<SpannerStop> dashesStops;
-    std::vector<PedalData> pedals;
+    std::vector<PedalLineData> pedals;
     std::vector<WordsData> words;
     std::vector<ChordData> chords;
     std::vector<FiguredBassData> figuredBasses;

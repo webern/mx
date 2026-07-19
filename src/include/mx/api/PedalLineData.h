@@ -29,7 +29,7 @@ namespace api
 // mx::api models only pedal lines here (MusicXML pedal/@line="yes"). The alternative sign form
 // (Ped. and * marks, pedal/@line="no") is expressed through MarkData as MarkType::pedal and
 // MarkType::damp instead.
-enum class PedalKind
+enum class PedalLineKind
 {
     unspecified,
     start,
@@ -44,26 +44,26 @@ enum class PedalKind
 // One event in a piano-pedal line (see PedalKind). Put a sequence of these in
 // DirectionData::pedals to describe an entire pedaling; each event stands on its own and is
 // placed at its own tickTimePosition.
-struct PedalData
+struct PedalLineData
 {
-    PedalKind kind;
+    PedalLineKind kind;
     int tickTimePosition;
     PositionData positionData;
 
-    PedalData() : kind{PedalKind::unspecified}, tickTimePosition{0}, positionData{}
+    PedalLineData() : kind{PedalLineKind::unspecified}, tickTimePosition{0}, positionData{}
     {
     }
 
-    PedalData(PedalKind inKind) : kind{inKind}, tickTimePosition{0}, positionData{}
+    PedalLineData(PedalLineKind inKind) : kind{inKind}, tickTimePosition{0}, positionData{}
     {
     }
 };
 
-MXAPI_EQUALS_BEGIN(PedalData)
+MXAPI_EQUALS_BEGIN(PedalLineData)
 MXAPI_EQUALS_MEMBER(kind)
 MXAPI_EQUALS_MEMBER(tickTimePosition)
 MXAPI_EQUALS_MEMBER(positionData)
 MXAPI_EQUALS_END;
-MXAPI_NOT_EQUALS_AND_VECTORS(PedalData);
+MXAPI_NOT_EQUALS_AND_VECTORS(PedalLineData);
 } // namespace api
 } // namespace mx

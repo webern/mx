@@ -282,34 +282,34 @@ void DirectionWriter::emitMark(api::MarkData mark, core::Direction &direction)
     }
 }
 
-core::PedalType corePedalType(api::PedalKind kind)
+core::PedalType corePedalType(api::PedalLineKind kind)
 {
     switch (kind)
     {
-    case api::PedalKind::start:
+    case api::PedalLineKind::start:
         return core::PedalType::start();
-    case api::PedalKind::stop:
+    case api::PedalLineKind::stop:
         return core::PedalType::stop();
-    case api::PedalKind::sostenuto:
+    case api::PedalLineKind::sostenuto:
         return core::PedalType::sostenuto();
-    case api::PedalKind::change:
+    case api::PedalLineKind::change:
         return core::PedalType::change();
-    case api::PedalKind::continueLine:
+    case api::PedalLineKind::continueLine:
         return core::PedalType::continue_();
-    case api::PedalKind::discontinue:
+    case api::PedalLineKind::discontinue:
         return core::PedalType::discontinue();
-    case api::PedalKind::resume:
+    case api::PedalLineKind::resume:
         return core::PedalType::resume();
-    case api::PedalKind::unspecified:
+    case api::PedalLineKind::unspecified:
         break;
     }
     return core::PedalType::start();
 }
 
-void DirectionWriter::emitPedal(const api::PedalData &item, core::Direction &direction)
+void DirectionWriter::emitPedal(const api::PedalLineData &item, core::Direction &direction)
 {
     // An unspecified kind describes no pedal event; emit nothing rather than a guessed default.
-    if (item.kind == api::PedalKind::unspecified)
+    if (item.kind == api::PedalLineKind::unspecified)
     {
         return;
     }
