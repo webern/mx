@@ -452,6 +452,24 @@ void DirectionWriter::emitDashesStop(const api::SpannerStop &item, core::Directi
 
 void DirectionWriter::emitTempo(const api::TempoData &tempo, core::Direction &direction)
 {
+    // Content-guard: a tempo with no beat-unit -- an unfilled/default TempoData, or the
+    // metronome-note form this api does not yet model -- has nothing to write. Skip it rather
+    // than emit an empty <metronome>. Nothing throws; the direction simply carries no tempo.
+    const bool hasBeatUnit = tempo.beatsPerMinute.durationName != api::DurationName::unspecified;
+    const bool hasModulation = tempo.metricModulation.leftDurationName != api::DurationName::unspecified;
+    if (tempo.tempoType == api::TempoType::beatsPerMinute && !hasBeatUnit)
+    {
+        return;
+    }
+    if (tempo.tempoType == api::TempoType::metricModulation && !hasModulation)
+    {
+        return;
+    }
+    if (tempo.tempoType != api::TempoType::beatsPerMinute && tempo.tempoType != api::TempoType::metricModulation)
+    {
+        return;
+    }
+
     const auto makeBeatUnitGroup = [&](api::DurationName durationName, int dots) {
         core::BeatUnitGroup beatUnitGroup{};
         beatUnitGroup.setBeatUnit(myConverter.convert(durationName));
@@ -466,16 +484,17 @@ void DirectionWriter::emitTempo(const api::TempoData &tempo, core::Direction &di
 
     if (tempo.tempoType == api::TempoType::beatsPerMinute)
     {
-        // beat-unit (+dots) followed by a numeric per-minute.
+        // beat-unit (+dots) followed by a per-minute string, kept verbatim from the source
+        // (per-minute is xs:string: "120", "ca. 76", a range, ...).
         core::PerMinute pm{};
-        pm.setValue(std::to_string(tempo.beatsPerMinute.beatsPerMinute));
+        pm.setValue(tempo.beatsPerMinute.beatsPerMinute);
 
         core::MetronomeChoiceGroup mcg{};
         mcg.setBeatUnit(makeBeatUnitGroup(tempo.beatsPerMinute.durationName, tempo.beatsPerMinute.dots));
         mcg.setChoice(core::MetronomeChoiceGroupChoice::perMinute(pm));
         metronome.setChoice(core::MetronomeChoice::group(mcg));
     }
-    else if (tempo.tempoType == api::TempoType::metricModulation)
+    else
     {
         // Metric modulation: two beat-units, e.g. <beat-unit>quarter</beat-unit>
         // = <beat-unit>half</beat-unit>. The second beat-unit is the 'group'
@@ -489,17 +508,27 @@ void DirectionWriter::emitTempo(const api::TempoData &tempo, core::Direction &di
         mcg.setChoice(core::MetronomeChoiceGroupChoice::group(rightBeatUnitHolder));
         metronome.setChoice(core::MetronomeChoice::group(mcg));
     }
-    else
-    {
-        // tempoText (a non-numeric <per-minute> whose beat-unit was not
-        // preserved by the api) and 'unspecified' (e.g. the metronome-note
-        // form, which the api does not model) have no faithful <metronome>
-        // representation. Skip rather than crash or fabricate wrong structure.
-        // Previously the writer threw here, producing no output (CREATEFAIL).
-        // See issue #218.
-        return;
-    }
 
+    // print-style-align (default-x/y, relative-x/y, font, color, halign, valign) + justify +
+    // print-object + parentheses + id.
+    setAttributesFromPositionData(tempo.positionData, metronome);
+    setAttributesFromFontData(tempo.fontData, metronome);
+    if (tempo.color.has_value())
+    {
+        setAttributesFromColorData(*tempo.color, metronome);
+    }
+    if (tempo.id.has_value())
+    {
+        metronome.setID(core::Token{*tempo.id});
+    }
+    if (tempo.justify != api::HorizontalAlignment::unspecified)
+    {
+        metronome.setJustify(myConverter.convert(tempo.justify));
+    }
+    if (tempo.printObject != api::Bool::unspecified)
+    {
+        metronome.setPrintObject(myConverter.convert(tempo.printObject));
+    }
     if (tempo.isParenthetical != api::Bool::unspecified)
     {
         metronome.setParentheses(myConverter.convert(tempo.isParenthetical));
