@@ -6,6 +6,7 @@
 
 #include "mx/api/ApiCommon.h"
 #include "mx/api/DirectionData.h"
+#include "mx/core/generated/EmptyPrintStyleAlignID.h"
 #include "mx/core/generated/MusicDataChoice.h"
 #include "mx/impl/Converter.h"
 #include "mx/impl/Cursor.h"
@@ -51,6 +52,15 @@ class DirectionWriter
     void emitSegno(const api::SegnoData &item, core::Direction &direction);
     void emitCoda(const api::CodaData &item, core::Direction &direction);
     void emitRehearsal(const api::RehearsalData &item, core::Direction &direction);
+    core::EmptyPrintStyleAlignID createEmptyPrintStyleAlign(const api::PositionData &positionData,
+                                                            const api::FontData &fontData,
+                                                            const std::optional<api::ColorData> &color,
+                                                            const std::optional<std::string> &id);
+    void emitDamp(const api::DampData &item, core::Direction &direction);
+    void emitDampAll(const api::DampAllData &item, core::Direction &direction);
+    void emitEyeglasses(const api::EyeglassesData &item, core::Direction &direction);
+    void emitStringMute(const api::StringMuteData &item, core::Direction &direction);
+    void emitStaffDivide(const api::StaffDivideData &item, core::Direction &direction);
     void emitFixedOrder(core::Direction &direction);
     void emitOrderedComponents(core::Direction &direction);
 

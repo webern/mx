@@ -23,6 +23,7 @@
 #include "mx/core/generated/Dynamics.h"
 #include "mx/core/generated/EditorialVoiceDirectionGroup.h"
 #include "mx/core/generated/Empty.h"
+#include "mx/core/generated/EmptyPrintStyleAlignID.h"
 #include "mx/core/generated/Figure.h"
 #include "mx/core/generated/FiguredBass.h"
 #include "mx/core/generated/FirstFret.h"
@@ -49,6 +50,7 @@
 #include "mx/core/generated/NumeralValue.h"
 #include "mx/core/generated/OctaveShift.h"
 #include "mx/core/generated/Offset.h"
+#include "mx/core/generated/OnOff.h"
 #include "mx/core/generated/Pedal.h"
 #include "mx/core/generated/PedalType.h"
 #include "mx/core/generated/PerMinute.h"
@@ -58,9 +60,12 @@
 #include "mx/core/generated/Segno.h"
 #include "mx/core/generated/Semitones.h"
 #include "mx/core/generated/Sound.h"
+#include "mx/core/generated/StaffDivide.h"
+#include "mx/core/generated/StaffDivideSymbol.h"
 #include "mx/core/generated/StartStop.h"
 #include "mx/core/generated/StartStopContinue.h"
 #include "mx/core/generated/String.h"
+#include "mx/core/generated/StringMute.h"
 #include "mx/core/generated/StringNumber.h"
 #include "mx/core/generated/StyleText.h"
 #include "mx/core/generated/Wedge.h"
@@ -611,6 +616,98 @@ void DirectionWriter::emitRehearsal(const api::RehearsalData &item, core::Direct
     addDirectionType(std::move(dt), direction);
 }
 
+core::EmptyPrintStyleAlignID DirectionWriter::createEmptyPrintStyleAlign(const api::PositionData &positionData,
+                                                                         const api::FontData &fontData,
+                                                                         const std::optional<api::ColorData> &color,
+                                                                         const std::optional<std::string> &id)
+{
+    core::EmptyPrintStyleAlignID element{};
+    setAttributesFromPositionData(positionData, element);
+    setAttributesFromFontData(fontData, element);
+    if (color.has_value())
+    {
+        setAttributesFromColorData(*color, element);
+    }
+    if (id.has_value())
+    {
+        element.setID(core::Token{*id});
+    }
+    return element;
+}
+
+void DirectionWriter::emitDamp(const api::DampData &item, core::Direction &direction)
+{
+    core::DirectionType dt{};
+    dt.setChoice(core::DirectionTypeChoice::damp(
+        createEmptyPrintStyleAlign(item.positionData, item.fontData, item.color, item.id)));
+    addDirectionType(std::move(dt), direction);
+}
+
+void DirectionWriter::emitDampAll(const api::DampAllData &item, core::Direction &direction)
+{
+    core::DirectionType dt{};
+    dt.setChoice(core::DirectionTypeChoice::dampAll(
+        createEmptyPrintStyleAlign(item.positionData, item.fontData, item.color, item.id)));
+    addDirectionType(std::move(dt), direction);
+}
+
+void DirectionWriter::emitEyeglasses(const api::EyeglassesData &item, core::Direction &direction)
+{
+    core::DirectionType dt{};
+    dt.setChoice(core::DirectionTypeChoice::eyeglasses(
+        createEmptyPrintStyleAlign(item.positionData, item.fontData, item.color, item.id)));
+    addDirectionType(std::move(dt), direction);
+}
+
+void DirectionWriter::emitStringMute(const api::StringMuteData &item, core::Direction &direction)
+{
+    core::StringMute stringMute{};
+    stringMute.setType(item.type == api::StringMuteType::off ? core::OnOff::off() : core::OnOff::on());
+    setAttributesFromPositionData(item.positionData, stringMute);
+    setAttributesFromFontData(item.fontData, stringMute);
+    if (item.color.has_value())
+    {
+        setAttributesFromColorData(*item.color, stringMute);
+    }
+    if (item.id.has_value())
+    {
+        stringMute.setID(core::Token{*item.id});
+    }
+    core::DirectionType dt{};
+    dt.setChoice(core::DirectionTypeChoice::stringMute(std::move(stringMute)));
+    addDirectionType(std::move(dt), direction);
+}
+
+void DirectionWriter::emitStaffDivide(const api::StaffDivideData &item, core::Direction &direction)
+{
+    core::StaffDivide staffDivide{};
+    switch (item.type)
+    {
+    case api::StaffDivideType::up:
+        staffDivide.setType(core::StaffDivideSymbol::up());
+        break;
+    case api::StaffDivideType::upDown:
+        staffDivide.setType(core::StaffDivideSymbol::upDown());
+        break;
+    case api::StaffDivideType::down:
+        staffDivide.setType(core::StaffDivideSymbol::down());
+        break;
+    }
+    setAttributesFromPositionData(item.positionData, staffDivide);
+    setAttributesFromFontData(item.fontData, staffDivide);
+    if (item.color.has_value())
+    {
+        setAttributesFromColorData(*item.color, staffDivide);
+    }
+    if (item.id.has_value())
+    {
+        staffDivide.setID(core::Token{*item.id});
+    }
+    core::DirectionType dt{};
+    dt.setChoice(core::DirectionTypeChoice::staffDivide(std::move(staffDivide)));
+    addDirectionType(std::move(dt), direction);
+}
+
 void DirectionWriter::emitFixedOrder(core::Direction &direction)
 {
     for (const auto &mark : myDirectionData.marks)
@@ -688,6 +785,31 @@ void DirectionWriter::emitFixedOrder(core::Direction &direction)
     for (const auto &item : myDirectionData.rehearsals)
     {
         emitRehearsal(item, direction);
+    }
+
+    for (const auto &item : myDirectionData.damps)
+    {
+        emitDamp(item, direction);
+    }
+
+    for (const auto &item : myDirectionData.dampAlls)
+    {
+        emitDampAll(item, direction);
+    }
+
+    for (const auto &item : myDirectionData.eyeglasses)
+    {
+        emitEyeglasses(item, direction);
+    }
+
+    for (const auto &item : myDirectionData.stringMutes)
+    {
+        emitStringMute(item, direction);
+    }
+
+    for (const auto &item : myDirectionData.staffDivides)
+    {
+        emitStaffDivide(item, direction);
     }
 }
 
@@ -814,6 +936,41 @@ void DirectionWriter::emitOrderedComponents(core::Direction &direction)
             if (i >= 0 && static_cast<size_t>(i) < myDirectionData.rehearsals.size())
             {
                 emitRehearsal(myDirectionData.rehearsals.at(i), direction);
+            }
+            break;
+
+        case api::DirectionComponentKind::damp:
+            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.damps.size())
+            {
+                emitDamp(myDirectionData.damps.at(i), direction);
+            }
+            break;
+
+        case api::DirectionComponentKind::dampAll:
+            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.dampAlls.size())
+            {
+                emitDampAll(myDirectionData.dampAlls.at(i), direction);
+            }
+            break;
+
+        case api::DirectionComponentKind::eyeglasses:
+            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.eyeglasses.size())
+            {
+                emitEyeglasses(myDirectionData.eyeglasses.at(i), direction);
+            }
+            break;
+
+        case api::DirectionComponentKind::stringMute:
+            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.stringMutes.size())
+            {
+                emitStringMute(myDirectionData.stringMutes.at(i), direction);
+            }
+            break;
+
+        case api::DirectionComponentKind::staffDivide:
+            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.staffDivides.size())
+            {
+                emitStaffDivide(myDirectionData.staffDivides.at(i), direction);
             }
             break;
 

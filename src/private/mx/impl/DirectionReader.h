@@ -62,6 +62,7 @@ class DirectionReader
     void parseDampAll(const core::DirectionType &directionType);
     void parseEyeglasses(const core::DirectionType &directionType);
     void parseStringMute(const core::DirectionType &directionType);
+    void parseStaffDivide(const core::DirectionType &directionType);
     void parseScordatura(const core::DirectionType &directionType);
     void parseImage(const core::DirectionType &directionType);
     void parsePrincipalVoice(const core::DirectionType &directionType);
