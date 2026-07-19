@@ -840,6 +840,8 @@ void DirectionReader::parseOctaveShift(const core::DirectionType &directionType)
     api::OttavaStart start;
     start.spannerStart = impl::getSpannerStart(octaveShift);
     start.ottavaType = ottavaType;
+    const bool isEightLine = ottavaType == api::OttavaType::o8va || ottavaType == api::OttavaType::o8vb;
+    start.writeDefaultSize = isEightLine && octaveShift.size().has_value();
     start.spannerStart.tickTimePosition = myCursor.tickTimePosition;
     myOutDirectionData.ottavaStarts.emplace_back(std::move(start));
     appendOrderedComponent(api::DirectionComponentKind::ottavaStart,
