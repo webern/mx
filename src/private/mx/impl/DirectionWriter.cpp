@@ -169,8 +169,24 @@ std::vector<core::MusicDataChoice> DirectionWriter::getDirectionLikeThings()
 
     int offset = 0;
 
-    if (myDirectionData.tickTimePosition != myCursor.tickTimePosition)
+    if (myDirectionData.offset.has_value())
     {
+        // The source carried an explicit <offset>: a drawn-position nudge measured from the
+        // direction's anchor (tickTimePosition). Re-emit it verbatim, with no sound attribute -- an
+        // <offset> moves only where the direction is drawn, so playback stays at the anchor.
+        offset = *myDirectionData.offset;
+        if (offset != 0)
+        {
+            core::Offset coreOffset{};
+            coreOffset.setValue(core::Divisions{core::Decimal{static_cast<double>(offset)}});
+            direction.setOffset(coreOffset);
+        }
+    }
+    else if (myDirectionData.tickTimePosition != myCursor.tickTimePosition)
+    {
+        // No modeled offset, but the direction is anchored off the cursor tick: synthesize an
+        // <offset> so the serialized location matches tickTimePosition, and carry playback with it
+        // (sound="yes") since here the offset stands in for the note-stream position itself.
         offset = myDirectionData.tickTimePosition - myCursor.tickTimePosition;
         core::Offset coreOffset{};
         coreOffset.setValue(core::Divisions{core::Decimal{static_cast<double>(offset)}});

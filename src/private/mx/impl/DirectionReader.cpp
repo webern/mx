@@ -110,7 +110,7 @@ DirectionReader::DirectionReader(const core::Harmony &inHarmony, Cursor inCursor
 api::DirectionData DirectionReader::getDirectionData()
 {
     myOutDirectionData = initializeData();
-    updateTimeForOffset();
+    parseOffset();
     parsePlacement();
     parseValues();
 
@@ -136,15 +136,18 @@ mx::api::DirectionData DirectionReader::initializeData()
     return result;
 }
 
-void DirectionReader::updateTimeForOffset()
+void DirectionReader::parseOffset()
 {
+    // tickTimePosition is left at the anchor (the current musical location); the <offset> is a
+    // drawn-position nudge recorded verbatim, not folded into the tick. The writer re-emits it and
+    // MeasureWriter still places the direction by its anchor, so an offset that happens to land on
+    // a note tick stays distinguishable from a plain direction there.
     if (myDirection)
     {
         if (myDirection->offset().has_value())
         {
             const auto rawVal = myDirection->offset()->value().value().value();
-            const auto offset = static_cast<int>(std::ceil(rawVal - 0.5));
-            myOutDirectionData.tickTimePosition += offset;
+            myOutDirectionData.offset = static_cast<int>(std::ceil(rawVal - 0.5));
         }
     }
     else if (myHarmony)
@@ -152,8 +155,7 @@ void DirectionReader::updateTimeForOffset()
         if (myHarmony->offset().has_value())
         {
             const auto rawVal = myHarmony->offset()->value().value().value();
-            const auto offset = static_cast<int>(std::ceil(rawVal - 0.5));
-            myOutDirectionData.tickTimePosition += offset;
+            myOutDirectionData.offset = static_cast<int>(std::ceil(rawVal - 0.5));
         }
     }
 }

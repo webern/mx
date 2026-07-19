@@ -29,6 +29,8 @@
 #include "mx/api/WedgeData.h"
 #include "mx/api/WordsData.h"
 
+#include <optional>
+
 namespace mx
 {
 namespace api
@@ -97,15 +99,17 @@ struct DirectionData
     int tickTimePosition;
     Placement placement;
 
-    // mx::api will place the DirectionData element in the correct place by using an offset element.
+    // The source's <offset>, in divisions, or absent when it had none. An <offset> nudges only
+    // where the direction is *drawn*, shifting it away from the note it is anchored to; it does not
+    // move that anchor. tickTimePosition holds the anchor -- the musical location the direction
+    // belongs to -- so the drawn position is tickTimePosition + offset. This is a round-trip
+    // fidelity knob: leave it absent when authoring and set tickTimePosition to where the direction
+    // belongs; the reader fills it in only to preserve an <offset> already present in the source.
     // MusicXML Documentation: An offset is represented in terms of divisions, and indicates where
     // the direction will appear relative to the current musical location. This affects the visual
-    // appearance of the direction. If the sound attribute is "yes", then the offset affects
-    // playback too. If the sound attribute is "no", then any sound associated with the direction
-    // takes effect at the current location. The sound attribute is "no" by default for
-    // compatibility with earlier versions of the MusicXML format. If an element within a
-    // direction includes a default-x attribute, the offset value will be ignored when determining
-    // the appearance of that element.
+    // appearance of the direction. If an element within a direction includes a default-x
+    // attribute, the offset value will be ignored when determining the appearance of that element.
+    std::optional<int> offset;
 
     // a voice value of VALUE_UNSPECIFIED means unspecified
     int voice;
@@ -191,6 +195,7 @@ inline bool isDirectionDataEmpty(const DirectionData &directionData)
 MXAPI_EQUALS_BEGIN(DirectionData)
 MXAPI_EQUALS_MEMBER(tickTimePosition)
 MXAPI_EQUALS_MEMBER(placement)
+MXAPI_EQUALS_MEMBER(offset)
 MXAPI_EQUALS_MEMBER(voice)
 MXAPI_EQUALS_MEMBER(isStaffValueSpecified)
 MXAPI_EQUALS_MEMBER(isSoundDataSpecified)

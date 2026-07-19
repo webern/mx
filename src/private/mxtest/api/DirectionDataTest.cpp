@@ -84,13 +84,20 @@ TEST(OutOfOrderDoesntThrow, DirectionData)
     const auto &rstaff = rmeasure.staves.back();
     const auto &rdirections = rstaff.directions;
 
+    // tickTimePosition is the anchor and offset is the drawn-position shift, so the direction's
+    // effective (drawn) location is their sum. A mark authored between note ticks anchors to the
+    // preceding note and carries the remainder as an offset.
+    const auto effectiveTick = [](const DirectionData &d) {
+        return d.tickTimePosition + (d.offset.has_value() ? *d.offset : 0);
+    };
+
     CHECK_EQUAL(3, rdirections.size());
     auto rdirection = rdirections.cbegin();
-    CHECK_EQUAL(8, rdirection->tickTimePosition);
+    CHECK_EQUAL(8, effectiveTick(*rdirection));
     ++rdirection;
-    CHECK_EQUAL(9, rdirection->tickTimePosition);
+    CHECK_EQUAL(9, effectiveTick(*rdirection));
     ++rdirection;
-    CHECK_EQUAL(10, rdirection->tickTimePosition);
+    CHECK_EQUAL(10, effectiveTick(*rdirection));
 }
 
 T_END;
@@ -184,13 +191,19 @@ TEST(OutOfOrderTorture, DirectionData)
             expectedShift = (-1 * tick0);
         }
 
+        // tickTimePosition is the anchor and offset is the drawn-position shift; their sum is the
+        // effective (drawn) location, which is what was authored on each mark.
+        const auto effectiveTick = [](const DirectionData &d) {
+            return d.tickTimePosition + (d.offset.has_value() ? *d.offset : 0);
+        };
+
         CHECK_EQUAL(3, rdirections.size());
         auto rdirection = rdirections.cbegin();
-        CHECK_EQUAL(tempTickSorter.at(0), rdirection->tickTimePosition);
+        CHECK_EQUAL(tempTickSorter.at(0), effectiveTick(*rdirection));
         ++rdirection;
-        CHECK_EQUAL(tempTickSorter.at(1), rdirection->tickTimePosition);
+        CHECK_EQUAL(tempTickSorter.at(1), effectiveTick(*rdirection));
         ++rdirection;
-        CHECK_EQUAL(tempTickSorter.at(2), rdirection->tickTimePosition);
+        CHECK_EQUAL(tempTickSorter.at(2), effectiveTick(*rdirection));
     }
 }
 
