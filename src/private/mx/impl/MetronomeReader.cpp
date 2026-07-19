@@ -11,7 +11,9 @@
 #include "mx/core/generated/MetronomeChoiceGroupChoiceGroup.h"
 #include "mx/core/generated/PerMinute.h"
 #include "mx/impl/Converter.h"
-#include "mx/utility/StringToInt.h"
+#include "mx/impl/FontFunctions.h"
+#include "mx/impl/PositionFunctions.h"
+#include "mx/impl/PrintFunctions.h"
 
 namespace mx
 {
@@ -28,14 +30,32 @@ api::TempoData MetronomeReader::getTempoData() const
 {
     std::lock_guard<std::mutex> lock{myMutex};
     myOutTempoData = api::TempoData{};
-    // the old core's beatUnitPer is the new core's group; the old core's
-    // noteRelationNote (metronome-note based) is group2
+
+    Converter converter;
+
+    // print-style-align + print-object + justify + parentheses + id attributes.
+    myOutTempoData.positionData = getPositionData(myMetronome);
+    myOutTempoData.fontData = getFontData(myMetronome);
+    if (myMetronome.color().has_value())
+    {
+        myOutTempoData.color = getColor(myMetronome);
+    }
+    if (myMetronome.id().has_value())
+    {
+        myOutTempoData.id = myMetronome.id()->value();
+    }
+    if (myMetronome.justify().has_value())
+    {
+        myOutTempoData.justify = converter.convert(*myMetronome.justify());
+    }
+    myOutTempoData.printObject = getPrintObject(myMetronome);
     if (myMetronome.parentheses().has_value())
     {
-        Converter converter;
         myOutTempoData.isParenthetical = converter.convert(*myMetronome.parentheses());
     }
 
+    // the old core's beatUnitPer is the new core's group; the old core's
+    // noteRelationNote (metronome-note based) is group2
     using FirstChoice = core::MetronomeChoice::Kind;
     const auto firstChoice = myBeatUnitPerOrNoteRelationNoteChoice.kind();
 
@@ -95,18 +115,8 @@ void MetronomeReader::parseBeatsPerMinute() const
     Converter converter;
     myOutTempoData.beatsPerMinute.durationName = converter.convert(grp.beatUnit());
     myOutTempoData.beatsPerMinute.dots = static_cast<int>(grp.beatUnitDot().size());
-    const auto bpmStr = beatUnitPer.choice().asPerMinute().value();
-    int bpm = api::VALUE_UNSPECIFIED;
-    bool isNumeric = utility::stringToInt(bpmStr, bpm);
-    if (!isNumeric)
-    {
-        myOutTempoData.tempoType = api::TempoType::tempoText;
-        myOutTempoData.tempoText.tempoText = bpmStr;
-    }
-    else
-    {
-        myOutTempoData.beatsPerMinute.beatsPerMinute = bpm;
-    }
+    // per-minute is xs:string in MusicXML ("120", "ca. 76", a range, ...); keep it verbatim.
+    myOutTempoData.beatsPerMinute.beatsPerMinute = beatUnitPer.choice().asPerMinute().value();
 }
 
 void MetronomeReader::parseMetronomeModulation() const

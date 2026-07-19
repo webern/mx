@@ -20,7 +20,7 @@ TEST(roundTripBpm, MetronomeApi)
 {
     const auto expectedDurationName = DurationName::dur16th;
     const int expectedDots = 1;
-    const int expectedBeatsPerMinute = 123;
+    const std::string expectedBeatsPerMinute = "123";
     const int expectedTickTimePosition = 77;
 
     ScoreData expectedScoreData;
@@ -52,7 +52,7 @@ TEST(roundTripBpm, MetronomeApi)
     actualTempo.tempoType = TempoType::beatsPerMinute;
     auto &actualBpm = actualTempo.beatsPerMinute;
 
-    CHECK_EQUAL(expectedBeatsPerMinute, actualBpm.beatsPerMinute);
+    CHECK(expectedBeatsPerMinute == actualBpm.beatsPerMinute);
     CHECK_EQUAL(expectedDots, actualBpm.dots);
     CHECK(expectedDurationName == actualBpm.durationName);
     CHECK_EQUAL(expectedTickTimePosition, actualDirection.tickTimePosition);
@@ -118,11 +118,10 @@ TEST(metronomeNoteFormReadDoesNotFail, MetronomeApi)
     CHECK(dataResult.ok());
 }
 
-// A non-numeric <per-minute> is legal -- per-minute is an xs:string. The reader
-// represents it as tempoText, and the writer used to throw on any non-bpm tempo,
-// failing createFromScore (CREATEFAIL). After the fix the tempo is skipped and
-// createFromScore succeeds.
-TEST(nonNumericPerMinuteWriteDoesNotFail, MetronomeApi)
+// A non-numeric <per-minute> is legal -- per-minute is an xs:string. It is kept verbatim on
+// BeatsPerMinute::beatsPerMinute, so a mark like "quarter = fast" round-trips faithfully instead
+// of being dropped (which is what the old tempoText fallback did).
+TEST(nonNumericPerMinuteRoundTrips, MetronomeApi)
 {
     const std::string xml = makeMetronomeDoc(R"(
             <beat-unit>quarter</beat-unit>
@@ -144,8 +143,26 @@ TEST(nonNumericPerMinuteWriteDoesNotFail, MetronomeApi)
     {
         return;
     }
+
+    const auto &score = dataResult.value();
+    CHECK_EQUAL(1, static_cast<int>(score.parts.size()));
+    if (score.parts.empty() || score.parts.back().measures.empty() || score.parts.back().measures.back().staves.empty())
+    {
+        return;
+    }
+    const auto &directions = score.parts.back().measures.back().staves.back().directions;
+    CHECK_EQUAL(1, static_cast<int>(directions.size()));
+    if (directions.empty() || directions.back().tempos.empty())
+    {
+        return;
+    }
+    const auto &tempo = directions.back().tempos.back();
+    CHECK(TempoType::beatsPerMinute == tempo.tempoType);
+    CHECK(DurationName::quarter == tempo.beatsPerMinute.durationName);
+    CHECK(std::string{"fast"} == tempo.beatsPerMinute.beatsPerMinute);
+
+    // The mark must also write back without error.
     const auto id2Result = mgr.createFromScore(dataResult.value());
-    // Before the fix createFromScore threw (CREATEFAIL); now it must succeed.
     CHECK(id2Result.ok());
     if (id2Result.ok())
     {
@@ -219,13 +236,58 @@ TEST(roundTripParentheses, MetronomeApi)
     tempo.tempoType = TempoType::beatsPerMinute;
     tempo.isParenthetical = Bool::yes;
     tempo.beatsPerMinute.durationName = DurationName::quarter;
-    tempo.beatsPerMinute.beatsPerMinute = 100;
+    tempo.beatsPerMinute.beatsPerMinute = "100";
 
     auto actualScoreData = roundTrip(score);
 
     const auto &actualTempo =
         actualScoreData.parts.back().measures.back().staves.back().directions.back().tempos.back();
     CHECK(actualTempo.isParenthetical == Bool::yes);
+}
+
+T_END
+
+TEST(roundTripMetronomeAttributes, MetronomeApi)
+{
+    // The <metronome> print-style-align, justify, print-object, color, and id attributes must
+    // survive a round trip via TempoData's positionData/fontData/justify/printObject/color/id.
+    ScoreData score;
+    score.ticksPerQuarter = 100;
+    score.parts.emplace_back();
+    score.parts.back().measures.emplace_back();
+    score.parts.back().measures.back().staves.emplace_back();
+    score.parts.back().measures.back().staves.back().directions.emplace_back();
+    auto &tempo = score.parts.back().measures.back().staves.back().directions.back().tempos.emplace_back();
+    tempo.tempoType = TempoType::beatsPerMinute;
+    tempo.beatsPerMinute.durationName = DurationName::quarter;
+    tempo.beatsPerMinute.beatsPerMinute = "120";
+    tempo.positionData.isDefaultYSpecified = true;
+    tempo.positionData.defaultY = 12.0;
+    tempo.positionData.horizontalAlignment = HorizontalAlignment::left;
+    tempo.fontData.style = FontStyle::italic;
+    tempo.justify = HorizontalAlignment::center;
+    tempo.printObject = Bool::no;
+    tempo.id = std::string{"tempo1"};
+
+    const auto out = roundTrip(score);
+
+    const auto &directions = out.parts.back().measures.back().staves.back().directions;
+    CHECK_EQUAL(1, static_cast<int>(directions.size()));
+    if (directions.empty() || directions.back().tempos.empty())
+    {
+        return;
+    }
+    const auto &outTempo = directions.back().tempos.back();
+    CHECK(outTempo.positionData.isDefaultYSpecified);
+    CHECK(HorizontalAlignment::left == outTempo.positionData.horizontalAlignment);
+    CHECK(FontStyle::italic == outTempo.fontData.style);
+    CHECK(HorizontalAlignment::center == outTempo.justify);
+    CHECK(Bool::no == outTempo.printObject);
+    CHECK(outTempo.id.has_value());
+    if (outTempo.id.has_value())
+    {
+        CHECK(std::string{"tempo1"} == *outTempo.id);
+    }
 }
 
 T_END

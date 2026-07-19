@@ -489,3 +489,9 @@ synthetic/timpani.3.0.xml
 synthetic/timpani.4.0.xml
 synthetic/wood.3.0.xml
 synthetic/wood.4.0.xml
+
+# Metronome print-style-align attributes, justify, print-object, id, and
+# non-numeric per-minute text now round-trip (first metronome slice of #324).
+synthetic/metronome.3.0.xml
+synthetic/metronome.3.1.xml
+synthetic/metronome.4.0.xml
