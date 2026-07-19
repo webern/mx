@@ -3,13 +3,24 @@
 // Distributed under the MIT License
 
 #include "mx/impl/MetronomeReader.h"
+#include "mx/core/generated/BeamLevel.h"
 #include "mx/core/generated/BeatUnitGroup.h"
+#include "mx/core/generated/BeatUnitTied.h"
 #include "mx/core/generated/Metronome.h"
+#include "mx/core/generated/MetronomeBeam.h"
 #include "mx/core/generated/MetronomeChoice.h"
 #include "mx/core/generated/MetronomeChoiceGroup.h"
+#include "mx/core/generated/MetronomeChoiceGroup2.h"
+#include "mx/core/generated/MetronomeChoiceGroup2Group.h"
 #include "mx/core/generated/MetronomeChoiceGroupChoice.h"
 #include "mx/core/generated/MetronomeChoiceGroupChoiceGroup.h"
+#include "mx/core/generated/MetronomeNote.h"
+#include "mx/core/generated/MetronomeTied.h"
+#include "mx/core/generated/MetronomeTuplet.h"
 #include "mx/core/generated/PerMinute.h"
+#include "mx/core/generated/ShowTuplet.h"
+#include "mx/core/generated/StartStop.h"
+#include "mx/core/generated/TimeModificationGroup.h"
 #include "mx/impl/Converter.h"
 #include "mx/impl/FontFunctions.h"
 #include "mx/impl/PositionFunctions.h"
@@ -19,6 +30,93 @@ namespace mx
 {
 namespace impl
 {
+namespace
+{
+api::BeatUnit readBeatUnitGroup(const Converter &converter, const core::BeatUnitGroup &group)
+{
+    api::BeatUnit beatUnit;
+    beatUnit.type = converter.convert(group.beatUnit());
+    beatUnit.dots = static_cast<int>(group.beatUnitDot().size());
+    return beatUnit;
+}
+
+// Reads the beat-unit (type + dots) and any tied continuation beat-units from a holder that
+// exposes beatUnit() and beatUnitTied() -- the left group and the right (metric-modulation) group
+// share this shape.
+template <typename BeatUnitHolder>
+void readBeatUnitWithTies(const Converter &converter, const BeatUnitHolder &holder, api::DurationName &outName,
+                          int &outDots, std::vector<api::BeatUnit> &outTied)
+{
+    outName = converter.convert(holder.beatUnit().beatUnit());
+    outDots = static_cast<int>(holder.beatUnit().beatUnitDot().size());
+    for (const auto &tied : holder.beatUnitTied())
+    {
+        outTied.push_back(readBeatUnitGroup(converter, tied.beatUnit()));
+    }
+}
+
+api::MetronomeNoteData readMetronomeNote(const Converter &converter, const core::MetronomeNote &note)
+{
+    api::MetronomeNoteData out;
+    out.metronomeType = converter.convert(note.metronomeType());
+    out.dots = static_cast<int>(note.metronomeDot().size());
+
+    for (const auto &beam : note.metronomeBeam())
+    {
+        api::MetronomeBeam apiBeam;
+        apiBeam.value = converter.convert(beam.value());
+        if (beam.number().has_value())
+        {
+            apiBeam.number = beam.number()->value();
+        }
+        out.beams.push_back(apiBeam);
+    }
+
+    if (note.metronomeTied().has_value())
+    {
+        out.tie = note.metronomeTied()->type().tag() == core::StartStop::Tag::start ? api::MetronomeTieType::start
+                                                                                    : api::MetronomeTieType::stop;
+    }
+
+    if (note.metronomeTuplet().has_value())
+    {
+        const auto &tuplet = *note.metronomeTuplet();
+        api::MetronomeTuplet apiTuplet;
+        apiTuplet.actualNotes = tuplet.actualNotes();
+        apiTuplet.normalNotes = tuplet.normalNotes();
+        if (tuplet.group().has_value())
+        {
+            apiTuplet.normalType = converter.convert(tuplet.group()->normalType());
+            apiTuplet.normalDots = static_cast<int>(tuplet.group()->normalDot().size());
+        }
+        apiTuplet.type = tuplet.type().tag() == core::StartStop::Tag::start ? api::MetronomeTupletType::start
+                                                                            : api::MetronomeTupletType::stop;
+        if (tuplet.bracket().has_value())
+        {
+            apiTuplet.bracket = converter.convert(*tuplet.bracket());
+        }
+        if (tuplet.showNumber().has_value())
+        {
+            switch (tuplet.showNumber()->tag())
+            {
+            case core::ShowTuplet::Tag::actual:
+                apiTuplet.showNumber = api::MetronomeShowNumber::actual;
+                break;
+            case core::ShowTuplet::Tag::both:
+                apiTuplet.showNumber = api::MetronomeShowNumber::both;
+                break;
+            case core::ShowTuplet::Tag::none:
+                apiTuplet.showNumber = api::MetronomeShowNumber::none;
+                break;
+            }
+        }
+        out.tuplet = apiTuplet;
+    }
+
+    return out;
+}
+} // namespace
+
 MetronomeReader::MetronomeReader(MetronomeReaderParameters &&params)
     : myMutex{}, myOutTempoData{}, myMetronome{params.metronome},
       myPreviousTempoData{std::move(params.previousTempoData)}, myCursor{std::move(params.cursor)},
@@ -54,8 +152,8 @@ api::TempoData MetronomeReader::getTempoData() const
         myOutTempoData.isParenthetical = converter.convert(*myMetronome.parentheses());
     }
 
-    // the old core's beatUnitPer is the new core's group; the old core's
-    // noteRelationNote (metronome-note based) is group2
+    // The 'group' alternative is the beat-unit form (note = number, or note = note); 'group2' is
+    // the metronome-note form (a metric relationship drawn with note figures).
     using FirstChoice = core::MetronomeChoice::Kind;
     const auto firstChoice = myBeatUnitPerOrNoteRelationNoteChoice.kind();
 
@@ -100,43 +198,58 @@ void MetronomeReader::parseBeatUnitPer() const
 
 void MetronomeReader::parseNoteRelationNote() const
 {
-    // The metronome-note form -- <metronome-note> ... <metronome-relation> ...
-    // <metronome-note> -- has no representation in api::TempoData yet. Leave the
-    // tempo 'unspecified' rather than crashing the whole api pipeline; the writer
-    // skips unspecified tempos. Previously this threw and produced no output at
-    // all (GETDATAFAIL). See issue #218.
+    // The metronome-note form: one or more metronome-note figures, optionally followed by a
+    // metronome-relation symbol and a second group of figures. See NoteRelation.
+    const auto &group2 = myBeatUnitPerOrNoteRelationNoteChoice.asGroup2();
+    Converter converter;
+
+    api::NoteRelation noteRelation;
+    noteRelation.arrows = group2.metronomeArrows();
+    for (const auto &note : group2.metronomeNote())
+    {
+        noteRelation.notes.push_back(readMetronomeNote(converter, note));
+    }
+
+    if (group2.group().has_value())
+    {
+        api::MetronomeRelation relation;
+        relation.symbol = group2.group()->metronomeRelation();
+        for (const auto &note : group2.group()->metronomeNote())
+        {
+            relation.notes.push_back(readMetronomeNote(converter, note));
+        }
+        noteRelation.relation = std::move(relation);
+    }
+
+    myOutTempoData.choice = api::TempoChoice{std::move(noteRelation)};
 }
 
 void MetronomeReader::parseBeatsPerMinute() const
 {
-    myOutTempoData.tempoType = api::TempoType::beatsPerMinute;
     const auto &beatUnitPer = myBeatUnitPerOrNoteRelationNoteChoice.asGroup();
-    const auto &grp = beatUnitPer.beatUnit();
     Converter converter;
-    myOutTempoData.beatsPerMinute.durationName = converter.convert(grp.beatUnit());
-    myOutTempoData.beatsPerMinute.dots = static_cast<int>(grp.beatUnitDot().size());
+
+    api::BeatsPerMinute bpm;
+    readBeatUnitWithTies(converter, beatUnitPer, bpm.durationName, bpm.dots, bpm.tiedBeatUnits);
     // per-minute is xs:string in MusicXML ("120", "ca. 76", a range, ...); keep it verbatim.
-    myOutTempoData.beatsPerMinute.beatsPerMinute = beatUnitPer.choice().asPerMinute().value();
+    bpm.beatsPerMinute = beatUnitPer.choice().asPerMinute().value();
+
+    myOutTempoData.choice = api::TempoChoice{std::move(bpm)};
 }
 
 void MetronomeReader::parseMetronomeModulation() const
 {
-    // Metric modulation: <beat-unit>..</beat-unit> = <beat-unit>..</beat-unit>.
-    // The left beat-unit lives directly on the group; the right beat-unit is the
-    // 'group' alternative of the metronome choice. Previously this was an empty
-    // stub that left the tempo 'unspecified', which then crashed the writer
-    // (CREATEFAIL). See issue #218.
-    myOutTempoData.tempoType = api::TempoType::metricModulation;
+    // Metric modulation: <beat-unit>..</beat-unit> = <beat-unit>..</beat-unit>. The left beat-unit
+    // lives directly on the group; the right beat-unit is the 'group' alternative of the choice.
     const auto &beatUnitPer = myBeatUnitPerOrNoteRelationNoteChoice.asGroup();
     Converter converter;
 
-    const auto &leftBeatUnit = beatUnitPer.beatUnit();
-    myOutTempoData.metricModulation.leftDurationName = converter.convert(leftBeatUnit.beatUnit());
-    myOutTempoData.metricModulation.leftDots = static_cast<int>(leftBeatUnit.beatUnitDot().size());
+    api::MetricModulation mm;
+    readBeatUnitWithTies(converter, beatUnitPer, mm.leftDurationName, mm.leftDots, mm.leftTiedBeatUnits);
+    const auto &rightGroup = beatUnitPer.choice().asGroup();
+    readBeatUnitWithTies(converter, rightGroup, mm.rightDurationName, mm.rightDots, mm.rightTiedBeatUnits);
 
-    const auto &rightBeatUnit = beatUnitPer.choice().asGroup().beatUnit();
-    myOutTempoData.metricModulation.rightDurationName = converter.convert(rightBeatUnit.beatUnit());
-    myOutTempoData.metricModulation.rightDots = static_cast<int>(rightBeatUnit.beatUnitDot().size());
+    myOutTempoData.choice = api::TempoChoice{std::move(mm)};
 }
 } // namespace impl
 } // namespace mx
