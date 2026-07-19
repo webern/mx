@@ -61,6 +61,10 @@ class DirectionWriter
     void emitEyeglasses(const api::EyeglassesData &item, core::Direction &direction);
     void emitStringMute(const api::StringMuteData &item, core::Direction &direction);
     void emitStaffDivide(const api::StaffDivideData &item, core::Direction &direction);
+    void emitPrincipalVoice(const api::PrincipalVoiceData &item, core::Direction &direction);
+    void emitOtherDirection(const api::OtherDirectionData &item, core::Direction &direction);
+    void emitImage(const api::ImageData &item, core::Direction &direction);
+    void emitAccordionRegistration(const api::AccordionRegistrationData &item, core::Direction &direction);
     void emitFixedOrder(core::Direction &direction);
     void emitOrderedComponents(core::Direction &direction);
 
