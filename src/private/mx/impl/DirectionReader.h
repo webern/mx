@@ -38,7 +38,7 @@ class DirectionReader
 
   private:
     mx::api::DirectionData initializeData();
-    void updateTimeForOffset();
+    void parseOffset();
     void parsePlacement();
     void parseValues();
     void fixTimes();
