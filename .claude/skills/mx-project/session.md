@@ -15,13 +15,14 @@ A project in session mode has:
 
 ## Additional Files
 
-Session mode adds three files to the project directory, alongside `AGENTS.md` and `.prompt`:
+Session mode adds a `session/` subdirectory (holding `plan.md` and `state.md`) plus a `log.md`,
+alongside `AGENTS.md` and `.prompt`:
 
-### `plan.md`
+### `session/plan.md`
 
 The overarching plan of milestones driving toward the goal.
 
-### `state.md`
+### `session/state.md`
 
 So the next agent knows exactly where things stand: which milestone/part of the project is active,
 what was done in the previous session, the goal/instructions for the next session, and any
@@ -47,16 +48,18 @@ goes in `log.md` (a short "alternatives considered" section in the design doc is
 
 ## Entering Session Mode on a Project That Hasn't Used It Yet
 
-If `plan.md`, `state.md`, or `log.md` don't exist yet, create them before doing anything else:
-- `plan.md`: `# <name> Plan` heading; draft milestones based on discussion with the user.
-- `state.md`: "Project created. No sessions yet."
+If `session/plan.md`, `session/state.md`, or `log.md` don't exist yet, create them before doing
+anything else:
+- `session/plan.md`: `# <name> Plan` heading; draft milestones based on discussion with the user.
+- `session/state.md`: "Project created. No sessions yet."
 - `log.md`: a timestamped creation entry.
 
 ## Session Flow
 
-1. Read `AGENTS.md`, then `plan.md`, then `state.md`. Gather additional context as needed.
-2. If `state.md` is clear enough about what to do this session, proceed. Otherwise check with the
-   user.
+1. Read `AGENTS.md`, then `session/plan.md`, then `session/state.md`. Gather additional context as
+   needed.
+2. If `session/state.md` is clear enough about what to do this session, proceed. Otherwise check
+   with the user.
 3. Do the work. Log decisions and pivots to `log.md` as they happen — don't defer to session end.
 4. At session end, run the Session End Checklist below.
 
@@ -65,23 +68,24 @@ If `plan.md`, `state.md`, or `log.md` don't exist yet, create them before doing 
 Complete every item before ending the session:
 
 1. Append a timestamped entry to `log.md` summarizing what was done and decided.
-2. Overwrite `state.md` with: what was done this session, what the next session should do, and any
-   gotchas the next agent needs.
+2. Overwrite `session/state.md` with: what was done this session, what the next session should do,
+   and any gotchas the next agent needs.
 3. Update `AGENTS.md` if file paths or structural context changed.
-4. Update `plan.md` if milestones shifted.
-5. **USER GATE:** Show the user the updated `state.md` and the suggested next-session prompt. Do
-   not end until the user confirms.
+4. Update `session/plan.md` if milestones shifted.
+5. **USER GATE:** Show the user the updated `session/state.md` and the suggested next-session
+   prompt. Do not end until the user confirms.
 6. Print the next-session invocation: `/project session <name> <prompt>`
 
 ## Do Not
 
-- Do not skip reading `AGENTS.md` and `state.md` at session start, even if the user provides
-  context verbally. The files are authoritative.
+- Do not skip reading `AGENTS.md` and `session/state.md` at session start, even if the user
+  provides context verbally. The files are authoritative.
 - Do not put historical design evolution in design docs. Design docs describe current state only.
   History goes in `log.md`.
 - Do not defer `log.md` writes to session end. Log decisions and pivots as they happen during the
   session.
 - Do not skip the Session End Checklist. If the session is ending for any reason (user says stop,
   context is filling, work is done), trigger the checklist immediately.
-- Do not place context and tracking files (plan.md, state.md, log.md, design docs) outside the
-  `docs/ai/projects/<name>/` directory. Work products belong wherever they naturally live.
+- Do not place context and tracking files (`session/plan.md`, `session/state.md`, `log.md`, design
+  docs) outside the `docs/ai/projects/<name>/` directory. Work products belong wherever they
+  naturally live.

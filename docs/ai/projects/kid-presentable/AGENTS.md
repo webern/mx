@@ -23,8 +23,8 @@ The project is named after Moe Szyslak's "kid presentable" line.
 
 - `design.md` — the polyglot design recommendation (the session 1 deliverable; current state of
   the design, kept in sync as it evolves).
-- Standard project files: `plan.md` (milestones), `state.md` (session handoff), `log.md`
-  (append-only history), `.prompt` (user-owned, never read).
+- `log.md` — append-only history. `.prompt` — user-owned, never read.
+- `session/plan.md`, `session/state.md` — milestones and session handoff (session mode only).
 
 ## Instructions
 
