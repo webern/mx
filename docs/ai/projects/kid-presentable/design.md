@@ -1,7 +1,8 @@
 # kid-presentable: the mx::api polyglot design
 
-Status: proposed (2026-07-17). A realistic architecture for exposing `mx::api` to languages
-other than C++.
+Status: **first spike, rejected** (2026-07-20; drafted 2026-07-17). Kept for reference. The
+goal has broadened — see `AGENTS.md` — and this document's C++-engine-centric framing no longer
+matches it. See `log.md` for the reasoning.
 
 ## TL;DR
 

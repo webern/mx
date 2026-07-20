@@ -24,3 +24,17 @@ JSON Schema, the C++ codec, a C++ drift gate, and idiomatic per-language mirrors
 C++ headers stay hand-written, locked to the model by the gate, optionally flipped to generated
 later. Rejected: embind/SWIG direct binding, per-field handle C API, protobuf/flatbuffers,
 WIT-as-backbone (revisit when mature), per-language regeneration from XSD, Rust rewrite.
+
+## 2026-07-20 20:28
+
+Goal conversation with the user reshaped the project; design.md demoted to "first spike,
+rejected" (kept for reference). The broadened goal: (1) polyglot mx::api — real, supported
+libraries in multiple languages with C++ first-class indefinitely (the spike's framing of
+"expose the C++ engine" presumed too much about how that happens); (2) a new music notation
+language, an alternative to MusicXML, sitting above mx::api as a client of it. Key corrections
+from the user: mx::api is not the seed of the new language — it is deliberately bound to
+MusicXML and the language must be free of that; MusicXML transfers reliably lose fidelity and
+the spec is too loose to prevent it; importers/exporters for real applications (LilyPond,
+MuseScore) are needed both as features and as the research method for discovering the
+language's model. Session plan/state files were deleted and roadmap/sequence framing retired:
+this is an open-ended ideation phase, potentially months long.
