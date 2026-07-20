@@ -38,3 +38,18 @@ the spec is too loose to prevent it; importers/exporters for real applications (
 MuseScore) are needed both as features and as the research method for discovering the
 language's model. Session plan/state files were deleted and roadmap/sequence framing retired:
 this is an open-ended ideation phase, potentially months long.
+
+## 2026-07-20 21:51
+
+Ran a deep-research pass (multi-agent: 20 sources fetched, 97 claims extracted, top 25
+adversarially verified) surveying IDL and specification languages for three generation
+surfaces: api-layer plain-data types, impl-layer translation logic, and XML DOM binding. Wrote
+spec-and-idl.md as a facts-only reference (no recommendations) covering serialization IDLs
+(protobuf, FlatBuffers, Cap'n Proto, Thrift, Avro, ASN.1, Bond), service IDLs (Smithy,
+TypeSpec), FFI IDLs (UniFFI, Djinni, WIT, SWIG/diplomat/typeshare), per-language XSD data
+binders (CodeSynthesis, gSOAP, JAXB, XMLBeans, xsd-parser, xsdata, xgen), JSON-schema codegen
+(quicktype et al), and transformation/BX languages (XSLT, QVT-R, ATL, TGG, lenses). Notable:
+"Allium" turned out to be JUXT's LLM-native behavioral spec language, not a data IDL; no
+surveyed system covers all three surfaces; bidirectional transformation (the impl-shaped
+problem) remains OMG-standard-with-thin-tooling (QVT-R) plus research lenses. Indexed the doc
+in AGENTS.md.

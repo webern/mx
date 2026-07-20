@@ -27,6 +27,8 @@ Origin: rpatters1's emscripten question (ambition 1). The project is named after
 
 - `design.md` — first spike (micro C ABI + Score JSON + house IDL, C++-engine-centric).
   **Rejected**; kept for reference.
+- `spec-and-idl.md` — facts-only reference survey of IDLs and specification languages relevant
+  to generating the api layer, the impl-layer translation logic, and XML DOM binding.
 - `log.md` — append-only history. `.prompt` — user-owned, never read.
 
 ## Instructions
