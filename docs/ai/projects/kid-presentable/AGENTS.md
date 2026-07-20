@@ -21,10 +21,9 @@ The project is named after Moe Szyslak's "kid presentable" line.
 
 ## Index
 
-- `design.md` — the polyglot design recommendation (the session 1 deliverable; current state of
-  the design, kept in sync as it evolves).
+- `design.md` — the polyglot design recommendation (current state of the design, kept in sync
+  as it evolves).
 - `log.md` — append-only history. `.prompt` — user-owned, never read.
-- `session/plan.md`, `session/state.md` — milestones and session handoff (session mode only).
 
 ## Instructions
 
@@ -34,4 +33,4 @@ The project is named after Moe Szyslak's "kid presentable" line.
   weighed against extending that machinery rather than importing a foreign toolchain wholesale.
 - Design docs describe current state only; history and rejected alternatives go in `log.md`
   (a short "alternatives considered" section in the design doc is fine).
-- This is a design/recommendation project until the user promotes a milestone to implementation.
+- This is a design/recommendation project until the user promotes it to implementation.

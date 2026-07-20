@@ -1,7 +1,7 @@
 # kid-presentable: the mx::api polyglot design
 
-Status: proposed (session 1, 2026-07-17). This is the M1 deliverable: a realistic architecture
-for exposing `mx::api` to languages other than C++.
+Status: proposed (2026-07-17). A realistic architecture for exposing `mx::api` to languages
+other than C++.
 
 ## TL;DR
 
@@ -186,7 +186,7 @@ modeled types and defaults (compile-time member checks plus a default-constructe
 walk — the `MXAPI_EQUALS` blocks already enumerate every equality-bearing field, and the same
 CI gate that catches a missed `MXAPI_EQUALS_MEMBER` line catches a missed model entry). Add a
 field to `NoteData` without updating the model and CI fails, exactly like today's gen drift
-check. Later — as a separate, deliberate milestone — the headers can flip to generated output
+check. Later — as a separate, deliberate step — the headers can flip to generated output
 with zero semantic change, because the gate has kept them isomorphic all along.
 
 Bootstrapping the model is mechanical, not archaeological: the headers are regular
@@ -254,13 +254,13 @@ shell (~100 lines: load library/wasm, marshal bytes, raise errors) around genera
 - **Doc-comment duplication** between headers and model until the flip. Accepted; the drift
   gate checks shapes, not prose, and prose divergence is a review concern, not a correctness one.
 
-## Milestones (mirrors plan.md)
+## Suggested sequence
 
-1. **M1 (this document):** design recommendation.
-2. **M2:** hand-written vertical slice — `mxc.h` + a partial Score JSON codec (score header,
-   parts, measures, notes) + an emscripten build + a ten-line JS demo. Proves the boundary and
+1. This document: design recommendation.
+2. Hand-written vertical slice — `mxc.h` + a partial Score JSON codec (score header, parts,
+   measures, notes) + an emscripten build + a ten-line JS demo. Proves the boundary and
    answers the emscripten question concretely.
-3. **M3:** the api model + gen targets (`schema`, `cpp-codec`, `cpp-gate`, `ts`), corpus-backed
-   codec gate in CI, replacing the M2 hand-written codec.
-4. **M4:** ship `@webern/mx` (npm, wasm) as the first real binding; Swift mirror next, riding
-   the existing SPM package.
+3. The api model + gen targets (`schema`, `cpp-codec`, `cpp-gate`, `ts`), corpus-backed codec
+   gate in CI, replacing the hand-written codec.
+4. Ship `@webern/mx` (npm, wasm) as the first real binding; Swift mirror next, riding the
+   existing SPM package.
