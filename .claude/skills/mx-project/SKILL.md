@@ -4,7 +4,7 @@ description: >
   Create or continue multi-session projects that persist state across agent context windows.
   Use when starting a new project, picking up where the last session left off, or when the user
   says "project", "continue the project", or "start a new project".
-argument-hint: "[new] <name> [prompt]"
+argument-hint: "[new] <name> [session] [prompt]"
 disable-model-invocation: false
 user-invocable: true
 allowed-tools:  >
@@ -21,144 +21,60 @@ allowed-tools:  >
 ---
 # /project
 
-A project is a longer-running piece of work that is larger than a single Agent context can
-comprehend. Agents will conduct a piece of work for the usable life of their context, then they
-will be replaced with new Agents to continue the work. Each agent session should be designed to do a
-reasonably sized piece of work, then update the project context to prepare the next agent to
-continue the work.
+A project is a longer-running piece of work that outlives a single agent context. Its state lives
+in `docs/ai/projects/{{name}}/`.
 
-## Terminology
+## Directory
 
-A project has:
-- sessions: pieces of work that can be conducted within a single agent session.
-- milestones: a piece of work that can be completed by many agent sessions.
-- goal: the high-level goal of the project.
-- plan: the plan for reaching the goal through milestones.
-- current-state: what has been done immediately in the previous session, and what is expected to be
-  done in the next session.
-- project-log: the log of what agents have done in each session.
+- `docs/ai/projects/{{name}}/AGENTS.md` is the entrypoint. Treat it exactly like a normal AGENTS.md
+  file for that directory — read it first, follow what it says.
+- `docs/ai/projects/{{name}}/.prompt`: user-owned prompt scratch file. Never read it. If asked to
+  write the next prompt, prepend it followed by a `---` separator.
+- The directory is for context and coordination only. Work products (code, design docs, etc.) live
+  wherever they naturally belong in the repo; projects may add subdirectories/files beyond
+  `AGENTS.md` and `.prompt` — document bespoke additions in `AGENTS.md`'s Index section.
 
-## Directory Structure
+## Default mode
 
-The project directory is at `docs/ai/projects`. A specific project is at
-`docs/ai/projects/{{name}}`. Your entrypoint into a project is `docs/ai/projects/{{name}}/index.md`.
-Always start there.
+This is the default whenever the invocation does not contain the keyword **session**. Keep it
+light:
 
-The project directory is for context and coordination only. The actual work of the project may
-involve creating or modifying files anywhere in the repository or filesystem - the project directory
-is not a sandbox.
+1. Read `AGENTS.md` (create it if this is a new project — see below).
+2. Do the work the user asked for.
+3. Update `AGENTS.md` only if something durable actually changed (goal, structure, instructions).
 
-Projects may add subdirectories and files beyond the standard set below. The `index.md` Index section
-should document any bespoke additions so the next agent can find them.
+No milestones, no log, no state handoff, no end-of-session checklist in this mode.
 
-Each new project starts with the following files inside `docs/ai/projects/{{name}}`:
-- `.prompt`: user-owned prompt scratch file. Never read it. If asked to write the next prompt,
-  prepend it followed by a `---` separator.
-- `index.md`: Entry point to the project directory. Treat it like an AGENTS.md file that appends
-  your instruction set beyond this skills instructions.
-- `log.md`: append to this frequently to retain a record of what has been done, decisions made,
-  pivots, etc.
-- `plan.md`: the overarching plan of milestones that will drive us toward the goal.
-- `state.md`: what we did last, what program we are following currently, what the next agent should
-  do.
+### New project
 
-Create these 4 files when starting a new project.
+`/project new <name> [prompt]`:
 
-## The Standard Files
+1. Create `docs/ai/projects/<name>/AGENTS.md` with frontmatter (`created: YYYY-MM-DD`) and three
+   sections: `## Goal`, `## Index`, `## Instructions` (see below).
+2. Create an empty `docs/ai/projects/<name>/.prompt`.
+3. Ask the user to describe the goal; write it into `## Goal`.
 
-### `index.md`
+### `AGENTS.md` sections
 
-Starts with YAML frontmatter for remembering facts like, project start date, pull request numbers,
-URLs, etc.
+- `## Goal`: the point of the project, brief (under 200 words).
+- `## Index`: guide to bespoke files/subdirectories beyond the standard set (`AGENTS.md`,
+  `.prompt`). Mechanical and descriptive, not a narrative.
+- `## Instructions`: specific instructions for agents working on the project.
 
-Contains the following sections:
-- `## Goal`: the whole point of the project. What are we trying to accomplish overall. Brief, should
-  be less than 200 words.
-- `## Index`: guide to the files and directory structure of the project (only those details that are
-  bespoke and different from the general structure defined by this skill). Mechanical and
-  descriptive only, not a narrative.
-- `## Instructions`: specific AI instructions for the coding agents to follow when working on the
-  project.
+Keep it clean, crisp, and accurate as the project evolves.
 
-As your session creates new files or changes contextual nuances, make sure the `index.md` remains an
-accurate and useful landing place for the next agent. Keep it clean, crisp and accurate.
+## Session mode
 
-### `log.md`
-
-Dead simple, append-only log.
-
-- Starts with a heading: `# {{name}} Log`
-- Each entry has a `## YYYY-MM-DD HH:MM` header (24-hour, machine timezone; get the current date
-  and time with `date '+%Y-%m-%d %H:%M'`)
-- Entries are plain prose, no bold formatting, concise but complete, remove unnecessary words
-- Always append to the bottom (chronological order)
-- Record: what was done, what was decided (and why), what was discovered, what changed direction
-- Do not duplicate the agenda (what needs to be done) or the design (current state of the design),
-  just the latest facts
-
-### `state.md`
-
-This is your file to use so that the next agent knows exactly where we are in the project, what we
-did in the current session, and what we expect the next agent to do in the subsequent session. Key
-information needed in the document:
-- which milestone or part of the project are we working on
-- what was done in the previous session
-- what the goal and instructions are for the next session
-- gotchas or memories from recent sessions that the next agent needs to watch out for
-
-## A Note on Design Docs
-
-A plan may have one or more design docs. A design doc is a static snapshot of the current state of
-design. Design docs should be kept in sync as the design changes through sessions.
-
-## Invocation
-
-### `/project new <name> [prompt]`
-
-1. Create `docs/ai/projects/<name>/` with the 4 standard files:
-   - `index.md` with frontmatter (`created: YYYY-MM-DD`) and empty Goal, Index, Instructions
-     sections.
-   - `plan.md` with a `# <name> Plan` heading.
-   - `state.md` with initial content: "Project created. No sessions yet."
-   - `log.md` with a timestamped creation entry.
-2. Verify all 4 files exist with `ls docs/ai/projects/<name>/`.
-3. Ask the user to describe the goal. Write it into `index.md ## Goal`.
-4. Draft initial milestones into `plan.md` based on the goal discussion.
-
-### `/project <name> [prompt]`
-
-Continue an existing project. Follow the Session Flow below.
-
-## Session Flow
-
-1. Read `index.md`, `plan.md`, then `state.md`. Gather additional context as needed.
-2. If `state.md` is clear enough about what to do this session, proceed. Otherwise check with the
-   user.
-3. Do the work.
-4. At session end, follow the Session End Checklist below.
-
-## Session End Checklist
-
-Complete every item before ending the session:
-
-1. Append a timestamped entry to `log.md` summarizing what was done and decided.
-2. Overwrite `state.md` with: what was done this session, what the next session should do, and any
-   gotchas the next agent needs.
-3. Update `index.md` if file paths or structural context changed.
-4. Update `plan.md` if milestones shifted.
-5. **USER GATE:** Show the user the updated `state.md` and the suggested next-session prompt. Do not
-   end until the user confirms.
-6. Print the next-session invocation: `/project <name> <prompt>`
+Trigger: the user's invocation includes the word **session** (e.g. `/project session <name>`,
+"start a session on <name>", "continue the session"). Before doing anything else, read `session.md`
+in this skill's directory and follow it instead of Default mode. Session mode layers milestones,
+`plan.md`, `state.md`, `log.md`, and a session-end checklist on top of the same `AGENTS.md`
+entrypoint — it does not replace it.
 
 ## Do Not
 
-- Do not skip reading `index.md` and `state.md` at session start, even if the user provides context
-  verbally. The files are authoritative.
-- Do not put historical design evolution in design docs. Design docs describe current state only.
-  History goes in `log.md`.
-- Do not defer `log.md` writes to session end. Log decisions and pivots as they happen during the
-  session.
-- Do not skip the Session End Checklist. If the session is ending for any reason (user says stop,
-  context is filling, work is done), trigger the checklist immediately.
-- Do not place context and tracking files (index.md, plan.md, state.md, log.md, design docs) outside
-  the `docs/ai/projects/<name>/` directory. Work products belong wherever they naturally live.
+- Do not create `plan.md`, `state.md`, or `log.md` unless session mode is active.
+- Do not run a session-end checklist, gate on user confirmation, or demand a next-session prompt
+  outside session mode.
+- Do not place context/tracking files outside `docs/ai/projects/<name>/`. Work products belong
+  wherever they naturally live.
