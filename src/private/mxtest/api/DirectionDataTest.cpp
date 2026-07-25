@@ -60,22 +60,19 @@ TEST(OutOfOrderDoesntThrow, DirectionData)
     int tickTime = 10;
     mark.tickTimePosition = tickTime;
     directionData.tickTimePosition = tickTime;
-    directionData.marks.clear();
-    directionData.marks.push_back(mark);
+    directionData.directionTypes.assign(1, DirectionChoice{mark});
     ostaff.directions.push_back(directionData);
 
     tickTime = 9;
     mark.tickTimePosition = tickTime;
     directionData.tickTimePosition = tickTime;
-    directionData.marks.clear();
-    directionData.marks.push_back(mark);
+    directionData.directionTypes.assign(1, DirectionChoice{mark});
     ostaff.directions.push_back(directionData);
 
     tickTime = 8;
     mark.tickTimePosition = tickTime;
     directionData.tickTimePosition = tickTime;
-    directionData.marks.clear();
-    directionData.marks.push_back(mark);
+    directionData.directionTypes.assign(1, DirectionChoice{mark});
     ostaff.directions.push_back(directionData);
 
     const auto rscore = mxtest::roundTrip(oscore);
@@ -159,20 +156,17 @@ TEST(OutOfOrderTorture, DirectionData)
 
         mark.tickTimePosition = dur0tick;
         directionData.tickTimePosition = dur0tick;
-        directionData.marks.clear();
-        directionData.marks.push_back(mark);
+        directionData.directionTypes.assign(1, DirectionChoice{mark});
         ostaff.directions.push_back(directionData);
 
         mark.tickTimePosition = dur1tick;
         directionData.tickTimePosition = dur1tick;
-        directionData.marks.clear();
-        directionData.marks.push_back(mark);
+        directionData.directionTypes.assign(1, DirectionChoice{mark});
         ostaff.directions.push_back(directionData);
 
         mark.tickTimePosition = dur2tick;
         directionData.tickTimePosition = dur2tick;
-        directionData.marks.clear();
-        directionData.marks.push_back(mark);
+        directionData.directionTypes.assign(1, DirectionChoice{mark});
         ostaff.directions.push_back(directionData);
 
         const auto rscore = mxtest::roundTrip(oscore);
@@ -227,8 +221,9 @@ TEST(RehearsalSyntheticFileRead, DirectionData)
     REQUIRE(score.parts.front().measures.front().staves.size() == 1);
     const auto &directions = score.parts.front().measures.front().staves.front().directions;
     REQUIRE(directions.size() == 1);
-    REQUIRE(directions.front().rehearsals.size() == 1);
-    const auto &rehearsal = directions.front().rehearsals.front();
+    REQUIRE(directions.front().directionTypes.size() == 1);
+    REQUIRE(directions.front().directionTypes.front().isRehearsal());
+    const auto rehearsal = directions.front().directionTypes.front().rehearsal();
     CHECK_EQUAL("x", rehearsal.text);
     CHECK(RehearsalEnclosure::rectangle == rehearsal.enclosure);
 }
@@ -269,7 +264,7 @@ TEST(RehearsalRoundTripXml, DirectionData)
 
     DirectionData directionData;
     directionData.tickTimePosition = 0;
-    directionData.rehearsals.push_back(rehearsal);
+    directionData.directionTypes.emplace_back(DirectionChoice{rehearsal});
     ostaff.directions.push_back(directionData);
 
     const auto rscore = mxtest::roundTrip(oscore);
@@ -278,10 +273,12 @@ TEST(RehearsalRoundTripXml, DirectionData)
     REQUIRE(rscore.parts.front().measures.front().staves.size() == 1);
     const auto &rdirections = rscore.parts.front().measures.front().staves.front().directions;
     REQUIRE(rdirections.size() == 1);
-    REQUIRE(rdirections.front().rehearsals.size() == 1);
-    CHECK_EQUAL("B", rdirections.front().rehearsals.front().text);
-    CHECK(RehearsalEnclosure::rectangle == rdirections.front().rehearsals.front().enclosure);
-    CHECK(FontWeight::bold == rdirections.front().rehearsals.front().fontData.weight);
+    REQUIRE(rdirections.front().directionTypes.size() == 1);
+    REQUIRE(rdirections.front().directionTypes.front().isRehearsal());
+    const auto outRehearsal = rdirections.front().directionTypes.front().rehearsal();
+    CHECK_EQUAL("B", outRehearsal.text);
+    CHECK(RehearsalEnclosure::rectangle == outRehearsal.enclosure);
+    CHECK(FontWeight::bold == outRehearsal.fontData.weight);
 }
 
 T_END;
@@ -312,17 +309,18 @@ TEST(RehearsalUnspecifiedEnclosureNoPhantomAttribute, DirectionData)
 
     DirectionData directionData;
     directionData.tickTimePosition = 0;
-    directionData.rehearsals.push_back(rehearsal);
+    directionData.directionTypes.emplace_back(DirectionChoice{rehearsal});
     ostaff.directions.push_back(directionData);
 
     const auto xml = mxtest::toXml(oscore);
     CHECK(xml.find("enclosure") == std::string::npos);
 
     const auto rscore = mxtest::roundTrip(oscore);
-    REQUIRE(rscore.parts.front().measures.front().staves.front().directions.size() == 1);
-    REQUIRE(rscore.parts.front().measures.front().staves.front().directions.front().rehearsals.size() == 1);
-    CHECK(RehearsalEnclosure::unspecified ==
-          rscore.parts.front().measures.front().staves.front().directions.front().rehearsals.front().enclosure);
+    const auto &rdirections = rscore.parts.front().measures.front().staves.front().directions;
+    REQUIRE(rdirections.size() == 1);
+    REQUIRE(rdirections.front().directionTypes.size() == 1);
+    REQUIRE(rdirections.front().directionTypes.front().isRehearsal());
+    CHECK(RehearsalEnclosure::unspecified == rdirections.front().directionTypes.front().rehearsal().enclosure);
 }
 
 T_END;
@@ -353,17 +351,18 @@ TEST(WedgeUnspecifiedColorNoPhantomAttribute, DirectionData)
 
     DirectionData directionData;
     directionData.tickTimePosition = 0;
-    directionData.wedgeStarts.push_back(wedge);
+    directionData.directionTypes.emplace_back(DirectionChoice{wedge});
     ostaff.directions.push_back(directionData);
 
     const auto xml = mxtest::toXml(oscore);
     CHECK(xml.find("color") == std::string::npos);
 
     const auto rscore = mxtest::roundTrip(oscore);
-    REQUIRE(rscore.parts.front().measures.front().staves.front().directions.size() == 1);
-    REQUIRE(rscore.parts.front().measures.front().staves.front().directions.front().wedgeStarts.size() == 1);
-    CHECK(
-        !rscore.parts.front().measures.front().staves.front().directions.front().wedgeStarts.front().isColorSpecified);
+    const auto &rdirections = rscore.parts.front().measures.front().staves.front().directions;
+    REQUIRE(rdirections.size() == 1);
+    REQUIRE(rdirections.front().directionTypes.size() == 1);
+    REQUIRE(rdirections.front().directionTypes.front().isWedgeStart());
+    CHECK(!rdirections.front().directionTypes.front().wedgeStart().isColorSpecified);
 }
 
 T_END;

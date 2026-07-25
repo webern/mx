@@ -519,3 +519,10 @@ synthetic/metronome-type.3.0.xml
 lysuite/ly31a_Directions.xml
 lysuite/ly33d_Spanners_OctaveShifts.xml
 musuite/testDirections1.xml
+
+# Issue #294: DirectionData models its content as one ordered DirectionChoice per
+# <direction-type>, and a (words|symbol)+ run is a single wordsRun choice, so interleaved
+# words and SMuFL symbols keep their order and nothing is dropped. The synthetic file mixes
+# words-then-dynamics directions with a words/symbol/words run ("gliss. " + arrowBlackUp
+# + " al niente").
+synthetic/words-symbol.4.0.xml

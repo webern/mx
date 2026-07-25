@@ -130,8 +130,8 @@ expressible?
 
 When byte-level round-trip needs a source quirk recorded, add a field whose default applies the
 sensible rule; only the reader sets it. Canonical: `ClefData::writeStaffNumber`,
-`DurationData::isDurationNameSpecified`, `DirectionData::orderedComponents` ("Do NOT populate"
-when authoring). Test: can an author produce correct MusicXML while never touching the knob?
+`DurationData::isDurationNameSpecified`, `DirectionData::offset` (leave absent when authoring;
+the reader fills it in). Test: can an author produce correct MusicXML while never touching the knob?
 Never let authoring correctness depend on one. Where fidelity and simplification truly conflict,
 prefer documented normalization (part-name formatting; output is always MusicXML 4.0) over
 complicating the model.

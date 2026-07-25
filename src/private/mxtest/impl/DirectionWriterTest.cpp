@@ -27,16 +27,16 @@ TEST(ottavaStartStop, DirectionWriter)
     cursor.isFirstMeasureInPart = false;
     api::DirectionData directionData;
 
-    directionData.ottavaStops.emplace_back(api::OttavaStop{});
-    auto &stop = directionData.ottavaStops.back();
+    api::OttavaStop stop{};
     stop.spannerStop.number = api::SpannerNumber(2);
     stop.size = 15;
+    directionData.directionTypes.emplace_back(api::DirectionChoice{stop});
 
-    directionData.ottavaStarts.emplace_back(api::OttavaStart{});
-    auto &start = directionData.ottavaStarts.back();
+    api::OttavaStart start{};
     start.ottavaType = api::OttavaType::o15mb;
     start.spannerStart.positionData.isDefaultXSpecified = true;
     start.spannerStart.positionData.defaultX = 100.0;
+    directionData.directionTypes.emplace_back(api::DirectionChoice{start});
 
     SpannerNumberResolver numberResolver;
     DirectionWriter writer{directionData, cursor, numberResolver};
@@ -49,8 +49,9 @@ TEST(ottavaStartStop, DirectionWriter)
 
     DirectionReader reader{direction, cursor};
     const auto roundTripped = reader.getDirectionData();
-    REQUIRE(roundTripped.ottavaStops.size() == 1);
-    const auto &roundTrippedStop = roundTripped.ottavaStops.front();
+    REQUIRE(roundTripped.directionTypes.size() == 2);
+    REQUIRE(roundTripped.directionTypes.front().isOttavaStop());
+    const auto roundTrippedStop = roundTripped.directionTypes.front().ottavaStop();
     CHECK(api::SpannerNumber(2) == roundTrippedStop.spannerStop.number);
     CHECK(roundTrippedStop.size.has_value());
     CHECK_EQUAL(15, *roundTrippedStop.size);
@@ -108,8 +109,8 @@ TEST(segnoAndCodaRoundTrip, DirectionWriter)
     coda.id = "id7";
 
     api::DirectionData directionData;
-    directionData.segnos.push_back(segno);
-    directionData.codas.push_back(coda);
+    directionData.directionTypes.emplace_back(api::DirectionChoice{segno});
+    directionData.directionTypes.emplace_back(api::DirectionChoice{coda});
 
     Cursor cursor{1, 100};
     SpannerNumberResolver numberResolver;
@@ -122,10 +123,11 @@ TEST(segnoAndCodaRoundTrip, DirectionWriter)
     DirectionReader reader{direction, cursor};
     const auto roundTripped = reader.getDirectionData();
 
-    REQUIRE(roundTripped.segnos.size() == 1);
-    REQUIRE(roundTripped.codas.size() == 1);
-    CHECK(segno == roundTripped.segnos.front());
-    CHECK(coda == roundTripped.codas.front());
+    REQUIRE(roundTripped.directionTypes.size() == 2);
+    REQUIRE(roundTripped.directionTypes.front().isSegno());
+    REQUIRE(roundTripped.directionTypes.back().isCoda());
+    CHECK(segno == roundTripped.directionTypes.front().segno());
+    CHECK(coda == roundTripped.directionTypes.back().coda());
 }
 
 T_END
@@ -161,7 +163,7 @@ TEST(rehearsalRoundTrip, DirectionWriter)
     rehearsal.enclosure = api::RehearsalEnclosure::square;
 
     api::DirectionData directionData;
-    directionData.rehearsals.push_back(rehearsal);
+    directionData.directionTypes.emplace_back(api::DirectionChoice{rehearsal});
 
     Cursor cursor{1, 100};
     SpannerNumberResolver numberResolver;
@@ -174,8 +176,9 @@ TEST(rehearsalRoundTrip, DirectionWriter)
     DirectionReader reader{direction, cursor};
     const auto roundTripped = reader.getDirectionData();
 
-    REQUIRE(roundTripped.rehearsals.size() == 1);
-    CHECK(rehearsal == roundTripped.rehearsals.front());
+    REQUIRE(roundTripped.directionTypes.size() == 1);
+    REQUIRE(roundTripped.directionTypes.front().isRehearsal());
+    CHECK(rehearsal == roundTripped.directionTypes.front().rehearsal());
 }
 
 T_END

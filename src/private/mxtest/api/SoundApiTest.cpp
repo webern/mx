@@ -154,7 +154,7 @@ TEST(directionChildSoundRoundTrips, SoundApi)
     DirectionData direction;
     WordsData words;
     words.text = "Allegro";
-    direction.words.emplace_back(std::move(words));
+    direction.directionTypes.emplace_back(DirectionChoice{std::vector<WordsChoice>{WordsChoice{std::move(words)}}});
     direction.isSoundDataSpecified = true;
     direction.soundData.tempo = 144.0;
     staff.directions.emplace_back(std::move(direction));
@@ -163,8 +163,11 @@ TEST(directionChildSoundRoundTrips, SoundApi)
 
     const auto *outDirection = findSoundDirection(out);
     REQUIRE(outDirection != nullptr);
-    REQUIRE(outDirection->words.size() == 1u);
-    CHECK_EQUAL("Allegro", outDirection->words.front().text);
+    REQUIRE(outDirection->directionTypes.size() == 1u);
+    REQUIRE(outDirection->directionTypes.front().isWordsRun());
+    const auto outRun = outDirection->directionTypes.front().wordsRun();
+    REQUIRE(outRun.size() == 1u);
+    CHECK_EQUAL("Allegro", outRun.front().words().text);
     CHECK_DOUBLES_EQUAL(144.0, outDirection->soundData.tempo, MX_API_EQUALITY_EPSILON);
 }
 

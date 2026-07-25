@@ -4,30 +4,11 @@
 
 #pragma once
 
-#include "mx/api/AccordionRegistrationData.h"
 #include "mx/api/ApiCommon.h"
 #include "mx/api/ChordData.h"
-#include "mx/api/CodaData.h"
-#include "mx/api/DampData.h"
-#include "mx/api/EyeglassesData.h"
+#include "mx/api/DirectionChoice.h"
 #include "mx/api/FiguredBassData.h"
-#include "mx/api/HarpPedalsData.h"
-#include "mx/api/ImageData.h"
-#include "mx/api/MarkData.h"
-#include "mx/api/OtherDirectionData.h"
-#include "mx/api/OttavaData.h"
-#include "mx/api/PedalLineData.h"
-#include "mx/api/PercussionData.h"
-#include "mx/api/PrincipalVoiceData.h"
-#include "mx/api/RehearsalData.h"
-#include "mx/api/ScordaturaData.h"
-#include "mx/api/SegnoData.h"
 #include "mx/api/SoundData.h"
-#include "mx/api/StaffDivideData.h"
-#include "mx/api/StringMuteData.h"
-#include "mx/api/TempoData.h"
-#include "mx/api/WedgeData.h"
-#include "mx/api/WordsData.h"
 
 #include <optional>
 
@@ -35,58 +16,6 @@ namespace mx
 {
 namespace api
 {
-enum class DirectionComponentKind
-{
-    tempo,
-    mark,
-    wedgeStart,
-    wedgeStop,
-    ottavaStart,
-    ottavaStop,
-    bracketStart,
-    bracketStop,
-    dashesStart,
-    dashesStop,
-    pedal,
-    words,
-    chord,
-    segno,
-    coda,
-    rehearsal,
-    damp,
-    dampAll,
-    eyeglasses,
-    stringMute,
-    staffDivide,
-    principalVoice,
-    otherDirection,
-    image,
-    accordionRegistration,
-    harpPedals,
-    scordatura,
-    percussion
-};
-
-struct DirectionComponent
-{
-    DirectionComponentKind kind;
-    int index;
-
-    DirectionComponent() : kind{DirectionComponentKind::tempo}, index{0}
-    {
-    }
-
-    DirectionComponent(DirectionComponentKind inKind, int inIndex) : kind{inKind}, index{inIndex}
-    {
-    }
-};
-
-MXAPI_EQUALS_BEGIN(DirectionComponent)
-MXAPI_EQUALS_MEMBER(kind)
-MXAPI_EQUALS_MEMBER(index)
-MXAPI_EQUALS_END;
-MXAPI_NOT_EQUALS_AND_VECTORS(DirectionComponent);
-
 // MusicXML Documentation: A direction is a musical indication that is not attached to a specific
 // note. Two or more may be combined to indicate starts and stops of wedges, dashes, etc.
 //
@@ -129,67 +58,32 @@ struct DirectionData
     bool isSoundDataSpecified;
     SoundData soundData;
 
-    std::vector<TempoData> tempos;
-    std::vector<MarkData> marks;
-    std::vector<WedgeStart> wedgeStarts;
-    std::vector<WedgeStop> wedgeStops;
-    std::vector<OttavaStart> ottavaStarts;
-    std::vector<OttavaStop> ottavaStops;
-    std::vector<SpannerStart> bracketStarts;
-    std::vector<SpannerStop> bracketStops;
-    std::vector<SpannerStart> dashesStarts;
-    std::vector<SpannerStop> dashesStops;
-    std::vector<PedalLineData> pedals;
-    std::vector<WordsData> words;
+    // The direction's content: one DirectionChoice per <direction-type>, in document order.
+    // Order is meaningful -- consecutive direction-types read as one visual sequence, so the
+    // words "più" followed by a forte dynamic are two entries in that order.
+    std::vector<DirectionChoice> directionTypes;
+
+    // Harmony chord symbols anchored at this direction's musical position. A chord symbol is not
+    // direction-type content; it serializes as its own <harmony> element alongside the
+    // <direction>.
     std::vector<ChordData> chords;
+
+    // Figured-bass figures anchored at this direction's musical position. Like chords, these
+    // serialize as their own <figured-bass> elements, not as direction-type content.
     std::vector<FiguredBassData> figuredBasses;
-    std::vector<SegnoData> segnos;
-    std::vector<CodaData> codas;
-    std::vector<RehearsalData> rehearsals;
-    std::vector<DampData> damps;
-    std::vector<DampAllData> dampAlls;
-    std::vector<EyeglassesData> eyeglasses;
-    std::vector<StringMuteData> stringMutes;
-    std::vector<StaffDivideData> staffDivides;
-    std::vector<PrincipalVoiceData> principalVoices;
-    std::vector<OtherDirectionData> otherDirections;
-    std::vector<ImageData> images;
-    std::vector<AccordionRegistrationData> accordionRegistrations;
-    std::vector<HarpPedalsData> harpPedals;
-    std::vector<ScordaturaData> scordaturas;
-    std::vector<PercussionData> percussions;
-    // Preserves the original order of direction-type children from parsed XML
-    // for round-trip fidelity. Do NOT populate this when constructing
-    // DirectionData programmatically. If empty, the writer uses a default
-    // emission order. If populated incorrectly (bad indices, mismatched
-    // counts), items may be silently skipped or output may be garbled.
-    std::vector<DirectionComponent> orderedComponents;
 
     DirectionData()
-        : tickTimePosition{0}, placement{Placement::unspecified}, voice{VALUE_UNSPECIFIED}, isStaffValueSpecified{true},
-          isSoundDataSpecified{false}, soundData{}, marks{}, wedgeStarts{}, wedgeStops{}, ottavaStarts{}, ottavaStops{},
-          bracketStarts{}, bracketStops{}, dashesStarts{}, dashesStops{}, pedals{}, words{}, chords{}, segnos{}
+        : tickTimePosition{0}, placement{Placement::unspecified}, offset{}, voice{VALUE_UNSPECIFIED},
+          isStaffValueSpecified{true}, isSoundDataSpecified{false}, soundData{}, directionTypes{}, chords{},
+          figuredBasses{}
     {
     }
 };
 
 inline bool isDirectionDataEmpty(const DirectionData &directionData)
 {
-    return directionData.tempos.size() == 0 && directionData.marks.size() == 0 &&
-           directionData.wedgeStarts.size() == 0 && directionData.wedgeStops.size() == 0 &&
-           directionData.bracketStarts.size() == 0 && directionData.bracketStops.size() == 0 &&
-           directionData.dashesStarts.size() == 0 && directionData.dashesStops.size() == 0 &&
-           directionData.pedals.size() == 0 && directionData.tempos.size() == 0 &&
-           directionData.ottavaStarts.size() == 0 && directionData.ottavaStops.size() == 0 &&
-           directionData.words.size() == 0 && directionData.segnos.size() == 0 && directionData.codas.size() == 0 &&
-           directionData.rehearsals.size() == 0 && directionData.damps.size() == 0 &&
-           directionData.dampAlls.size() == 0 && directionData.eyeglasses.size() == 0 &&
-           directionData.stringMutes.size() == 0 && directionData.staffDivides.size() == 0 &&
-           directionData.principalVoices.size() == 0 && directionData.otherDirections.size() == 0 &&
-           directionData.images.size() == 0 && directionData.accordionRegistrations.size() == 0 &&
-           directionData.harpPedals.size() == 0 && directionData.scordaturas.size() == 0 &&
-           directionData.percussions.size() == 0 && directionData.figuredBasses.size() == 0 &&
-           !directionData.isSoundDataSpecified && directionData.orderedComponents.size() == 0;
+    return directionData.directionTypes.empty() && directionData.chords.empty() &&
+           directionData.figuredBasses.empty() && !directionData.isSoundDataSpecified;
 }
 
 MXAPI_EQUALS_BEGIN(DirectionData)
@@ -200,36 +94,9 @@ MXAPI_EQUALS_MEMBER(voice)
 MXAPI_EQUALS_MEMBER(isStaffValueSpecified)
 MXAPI_EQUALS_MEMBER(isSoundDataSpecified)
 MXAPI_EQUALS_MEMBER(soundData)
-MXAPI_EQUALS_MEMBER(tempos)
-MXAPI_EQUALS_MEMBER(marks)
-MXAPI_EQUALS_MEMBER(wedgeStarts)
-MXAPI_EQUALS_MEMBER(wedgeStops)
-MXAPI_EQUALS_MEMBER(ottavaStarts)
-MXAPI_EQUALS_MEMBER(ottavaStops)
-MXAPI_EQUALS_MEMBER(bracketStarts)
-MXAPI_EQUALS_MEMBER(bracketStops)
-MXAPI_EQUALS_MEMBER(dashesStarts)
-MXAPI_EQUALS_MEMBER(dashesStops)
-MXAPI_EQUALS_MEMBER(pedals)
-MXAPI_EQUALS_MEMBER(words)
+MXAPI_EQUALS_MEMBER(directionTypes)
 MXAPI_EQUALS_MEMBER(chords)
 MXAPI_EQUALS_MEMBER(figuredBasses)
-MXAPI_EQUALS_MEMBER(segnos)
-MXAPI_EQUALS_MEMBER(codas)
-MXAPI_EQUALS_MEMBER(rehearsals)
-MXAPI_EQUALS_MEMBER(damps)
-MXAPI_EQUALS_MEMBER(dampAlls)
-MXAPI_EQUALS_MEMBER(eyeglasses)
-MXAPI_EQUALS_MEMBER(stringMutes)
-MXAPI_EQUALS_MEMBER(staffDivides)
-MXAPI_EQUALS_MEMBER(principalVoices)
-MXAPI_EQUALS_MEMBER(otherDirections)
-MXAPI_EQUALS_MEMBER(images)
-MXAPI_EQUALS_MEMBER(accordionRegistrations)
-MXAPI_EQUALS_MEMBER(harpPedals)
-MXAPI_EQUALS_MEMBER(scordaturas)
-MXAPI_EQUALS_MEMBER(percussions)
-MXAPI_EQUALS_MEMBER(orderedComponents)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(DirectionData);
 } // namespace api

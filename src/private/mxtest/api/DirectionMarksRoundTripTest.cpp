@@ -13,12 +13,10 @@
 using namespace std;
 using namespace mx::api;
 
-namespace
-{
 // Round-trips a DirectionData through the full serialize -> deserialize path and
 // returns the directions read back from the first staff. Used by the direction-type
 // data-loss regression tests below (#324).
-std::vector<DirectionData> roundTripDirectionData(const DirectionData &inDirectionData)
+static std::vector<DirectionData> roundTripDirectionData(const DirectionData &inDirectionData)
 {
     ScoreData score;
     score.parts.emplace_back();
@@ -52,15 +50,15 @@ std::vector<DirectionData> roundTripDirectionData(const DirectionData &inDirecti
 
     return oscore.parts.back().measures.back().staves.back().directions;
 }
-} // namespace
 
 TEST(Damp, DirectionMarksRoundTrip)
 {
     DirectionData direction;
-    direction.damps.emplace_back();
+    direction.directionTypes.emplace_back(DirectionChoice{DampData{}});
     const auto directions = roundTripDirectionData(direction);
     REQUIRE(directions.size() == 1);
-    CHECK_EQUAL(1, static_cast<int>(directions.front().damps.size()));
+    REQUIRE(directions.front().directionTypes.size() == 1);
+    CHECK(directions.front().directionTypes.front().isDamp());
 }
 
 T_END;
@@ -68,10 +66,11 @@ T_END;
 TEST(DampAll, DirectionMarksRoundTrip)
 {
     DirectionData direction;
-    direction.dampAlls.emplace_back();
+    direction.directionTypes.emplace_back(DirectionChoice{DampAllData{}});
     const auto directions = roundTripDirectionData(direction);
     REQUIRE(directions.size() == 1);
-    CHECK_EQUAL(1, static_cast<int>(directions.front().dampAlls.size()));
+    REQUIRE(directions.front().directionTypes.size() == 1);
+    CHECK(directions.front().directionTypes.front().isDampAll());
 }
 
 T_END;
@@ -79,10 +78,11 @@ T_END;
 TEST(Eyeglasses, DirectionMarksRoundTrip)
 {
     DirectionData direction;
-    direction.eyeglasses.emplace_back();
+    direction.directionTypes.emplace_back(DirectionChoice{EyeglassesData{}});
     const auto directions = roundTripDirectionData(direction);
     REQUIRE(directions.size() == 1);
-    CHECK_EQUAL(1, static_cast<int>(directions.front().eyeglasses.size()));
+    REQUIRE(directions.front().directionTypes.size() == 1);
+    CHECK(directions.front().directionTypes.front().isEyeglasses());
 }
 
 T_END;
@@ -92,11 +92,12 @@ TEST(StringMute, DirectionMarksRoundTrip)
     DirectionData direction;
     StringMuteData stringMute;
     stringMute.type = StringMuteType::off;
-    direction.stringMutes.push_back(stringMute);
+    direction.directionTypes.emplace_back(DirectionChoice{stringMute});
     const auto directions = roundTripDirectionData(direction);
     REQUIRE(directions.size() == 1);
-    REQUIRE(directions.front().stringMutes.size() == 1);
-    CHECK(directions.front().stringMutes.front().type == StringMuteType::off);
+    REQUIRE(directions.front().directionTypes.size() == 1);
+    REQUIRE(directions.front().directionTypes.front().isStringMute());
+    CHECK(directions.front().directionTypes.front().stringMute().type == StringMuteType::off);
 }
 
 T_END;
@@ -106,11 +107,12 @@ TEST(StaffDivide, DirectionMarksRoundTrip)
     DirectionData direction;
     StaffDivideData staffDivide;
     staffDivide.type = StaffDivideType::upDown;
-    direction.staffDivides.push_back(staffDivide);
+    direction.directionTypes.emplace_back(DirectionChoice{staffDivide});
     const auto directions = roundTripDirectionData(direction);
     REQUIRE(directions.size() == 1);
-    REQUIRE(directions.front().staffDivides.size() == 1);
-    CHECK(directions.front().staffDivides.front().type == StaffDivideType::upDown);
+    REQUIRE(directions.front().directionTypes.size() == 1);
+    REQUIRE(directions.front().directionTypes.front().isStaffDivide());
+    CHECK(directions.front().directionTypes.front().staffDivide().type == StaffDivideType::upDown);
 }
 
 T_END;
@@ -122,11 +124,12 @@ TEST(PrincipalVoice, DirectionMarksRoundTrip)
     principalVoice.type = PrincipalVoiceType::start;
     principalVoice.symbol = PrincipalVoiceSymbol::nebenstimme;
     principalVoice.text = "N";
-    direction.principalVoices.push_back(principalVoice);
+    direction.directionTypes.emplace_back(DirectionChoice{principalVoice});
     const auto directions = roundTripDirectionData(direction);
     REQUIRE(directions.size() == 1);
-    REQUIRE(directions.front().principalVoices.size() == 1);
-    const auto &out = directions.front().principalVoices.front();
+    REQUIRE(directions.front().directionTypes.size() == 1);
+    REQUIRE(directions.front().directionTypes.front().isPrincipalVoice());
+    const auto out = directions.front().directionTypes.front().principalVoice();
     CHECK(out.type == PrincipalVoiceType::start);
     CHECK(out.symbol == PrincipalVoiceSymbol::nebenstimme);
     CHECK_EQUAL("N", out.text);
@@ -141,11 +144,12 @@ TEST(OtherDirection, DirectionMarksRoundTrip)
     otherDirection.text = "con sordino misterioso";
     otherDirection.printObject = Bool::no;
     otherDirection.smufl = "luteFingeringRHThumb";
-    direction.otherDirections.push_back(otherDirection);
+    direction.directionTypes.emplace_back(DirectionChoice{otherDirection});
     const auto directions = roundTripDirectionData(direction);
     REQUIRE(directions.size() == 1);
-    REQUIRE(directions.front().otherDirections.size() == 1);
-    const auto &out = directions.front().otherDirections.front();
+    REQUIRE(directions.front().directionTypes.size() == 1);
+    REQUIRE(directions.front().directionTypes.front().isOtherDirection());
+    const auto out = directions.front().directionTypes.front().otherDirection();
     CHECK_EQUAL("con sordino misterioso", out.text);
     CHECK(out.printObject == Bool::no);
     REQUIRE(out.smufl.has_value());
@@ -163,11 +167,12 @@ TEST(Image, DirectionMarksRoundTrip)
     image.height = 40.0;
     image.width = 80.0;
     image.positionData.verticalAlignment = VerticalAlignment::middle;
-    direction.images.push_back(image);
+    direction.directionTypes.emplace_back(DirectionChoice{image});
     const auto directions = roundTripDirectionData(direction);
     REQUIRE(directions.size() == 1);
-    REQUIRE(directions.front().images.size() == 1);
-    const auto &out = directions.front().images.front();
+    REQUIRE(directions.front().directionTypes.size() == 1);
+    REQUIRE(directions.front().directionTypes.front().isImage());
+    const auto out = directions.front().directionTypes.front().image();
     CHECK_EQUAL("logo.png", out.source);
     CHECK_EQUAL("image/png", out.type);
     REQUIRE(out.height.has_value());
@@ -186,11 +191,12 @@ TEST(AccordionRegistration, DirectionMarksRoundTrip)
     accordion.high = true;
     accordion.middle = 2;
     accordion.low = true;
-    direction.accordionRegistrations.push_back(accordion);
+    direction.directionTypes.emplace_back(DirectionChoice{accordion});
     const auto directions = roundTripDirectionData(direction);
     REQUIRE(directions.size() == 1);
-    REQUIRE(directions.front().accordionRegistrations.size() == 1);
-    const auto &out = directions.front().accordionRegistrations.front();
+    REQUIRE(directions.front().directionTypes.size() == 1);
+    REQUIRE(directions.front().directionTypes.front().isAccordionRegistration());
+    const auto out = directions.front().directionTypes.front().accordionRegistration();
     CHECK(out.high);
     REQUIRE(out.middle.has_value());
     CHECK_EQUAL(2, *out.middle);
@@ -203,11 +209,12 @@ TEST(AccordionRegistrationEmpty, DirectionMarksRoundTrip)
 {
     // A registration with nothing engaged is legal and draws the empty diagram.
     DirectionData direction;
-    direction.accordionRegistrations.emplace_back();
+    direction.directionTypes.emplace_back(DirectionChoice{AccordionRegistrationData{}});
     const auto directions = roundTripDirectionData(direction);
     REQUIRE(directions.size() == 1);
-    REQUIRE(directions.front().accordionRegistrations.size() == 1);
-    const auto &out = directions.front().accordionRegistrations.front();
+    REQUIRE(directions.front().directionTypes.size() == 1);
+    REQUIRE(directions.front().directionTypes.front().isAccordionRegistration());
+    const auto out = directions.front().directionTypes.front().accordionRegistration();
     CHECK(!out.high);
     CHECK(!out.middle.has_value());
     CHECK(!out.low);
@@ -222,11 +229,12 @@ TEST(HarpPedals, DirectionMarksRoundTrip)
     harpPedals.pedalTunings.emplace_back(Step::d, 0);
     harpPedals.pedalTunings.emplace_back(Step::c, -1);
     harpPedals.pedalTunings.emplace_back(Step::b, 1);
-    direction.harpPedals.push_back(harpPedals);
+    direction.directionTypes.emplace_back(DirectionChoice{harpPedals});
     const auto directions = roundTripDirectionData(direction);
     REQUIRE(directions.size() == 1);
-    REQUIRE(directions.front().harpPedals.size() == 1);
-    const auto &out = directions.front().harpPedals.front();
+    REQUIRE(directions.front().directionTypes.size() == 1);
+    REQUIRE(directions.front().directionTypes.front().isHarpPedals());
+    const auto out = directions.front().directionTypes.front().harpPedals();
     REQUIRE(out.pedalTunings.size() == 3);
     CHECK(out.pedalTunings.at(0).step == Step::d);
     CHECK_EQUAL(0, out.pedalTunings.at(0).alter);
@@ -250,11 +258,12 @@ TEST(PedalAllKinds, DirectionMarksRoundTrip)
     for (const auto kind : kinds)
     {
         DirectionData direction;
-        direction.pedals.emplace_back(kind);
+        direction.directionTypes.emplace_back(DirectionChoice{PedalLineData{kind}});
         const auto directions = roundTripDirectionData(direction);
         REQUIRE(directions.size() == 1);
-        REQUIRE(directions.front().pedals.size() == 1);
-        CHECK(directions.front().pedals.front().kind == kind);
+        REQUIRE(directions.front().directionTypes.size() == 1);
+        REQUIRE(directions.front().directionTypes.front().isPedal());
+        CHECK(directions.front().directionTypes.front().pedal().kind == kind);
     }
 }
 
@@ -266,11 +275,12 @@ TEST(PedalPlacement, DirectionMarksRoundTrip)
     direction.placement = Placement::below;
     PedalLineData pedal{PedalLineKind::start};
     pedal.positionData.placement = Placement::below;
-    direction.pedals.push_back(pedal);
+    direction.directionTypes.emplace_back(DirectionChoice{pedal});
     const auto directions = roundTripDirectionData(direction);
     REQUIRE(directions.size() == 1);
-    REQUIRE(directions.front().pedals.size() == 1);
-    CHECK(directions.front().pedals.front().kind == PedalLineKind::start);
+    REQUIRE(directions.front().directionTypes.size() == 1);
+    REQUIRE(directions.front().directionTypes.front().isPedal());
+    CHECK(directions.front().directionTypes.front().pedal().kind == PedalLineKind::start);
     CHECK(directions.front().placement == Placement::below);
 }
 
@@ -285,11 +295,12 @@ TEST(Scordatura, DirectionMarksRoundTrip)
     accord.tuningStep = Step::d;
     accord.tuningOctave = 2;
     scordatura.accords.push_back(accord);
-    direction.scordaturas.push_back(scordatura);
+    direction.directionTypes.emplace_back(DirectionChoice{scordatura});
     const auto directions = roundTripDirectionData(direction);
     REQUIRE(directions.size() == 1);
-    REQUIRE(directions.front().scordaturas.size() == 1);
-    const auto &out = directions.front().scordaturas.front();
+    REQUIRE(directions.front().directionTypes.size() == 1);
+    REQUIRE(directions.front().directionTypes.front().isScordatura());
+    const auto out = directions.front().directionTypes.front().scordatura();
     REQUIRE(out.accords.size() == 1);
     REQUIRE(out.accords.front().stringNumber.has_value());
     CHECK_EQUAL(6, *out.accords.front().stringNumber);
@@ -310,11 +321,12 @@ TEST(ScordaturaNoStringNumbers, DirectionMarksRoundTrip)
     accord.tuningAlter = -1;
     accord.tuningOctave = 3;
     scordatura.accords.push_back(accord);
-    direction.scordaturas.push_back(scordatura);
+    direction.directionTypes.emplace_back(DirectionChoice{scordatura});
     const auto directions = roundTripDirectionData(direction);
     REQUIRE(directions.size() == 1);
-    REQUIRE(directions.front().scordaturas.size() == 1);
-    const auto &out = directions.front().scordaturas.front();
+    REQUIRE(directions.front().directionTypes.size() == 1);
+    REQUIRE(directions.front().directionTypes.front().isScordatura());
+    const auto out = directions.front().directionTypes.front().scordatura();
     REQUIRE(out.accords.size() == 1);
     CHECK(!out.accords.front().stringNumber.has_value());
     CHECK(out.accords.front().tuningStep == Step::a);
@@ -332,11 +344,12 @@ TEST(PercussionGlass, DirectionMarksRoundTrip)
     glass.value = GlassInstrument::windChimes;
     percussion.choice = PercussionDataChoice{glass};
     percussion.enclosure = PercussionEnclosure::rectangle;
-    direction.percussions.push_back(percussion);
+    direction.directionTypes.emplace_back(DirectionChoice{percussion});
     const auto directions = roundTripDirectionData(direction);
     REQUIRE(directions.size() == 1);
-    REQUIRE(directions.front().percussions.size() == 1);
-    const auto &out = directions.front().percussions.front();
+    REQUIRE(directions.front().directionTypes.size() == 1);
+    REQUIRE(directions.front().directionTypes.front().isPercussion());
+    const auto out = directions.front().directionTypes.front().percussion();
     REQUIRE(out.choice.isGlass());
     CHECK(out.choice.glass().value == GlassInstrument::windChimes);
     CHECK(out.enclosure == PercussionEnclosure::rectangle);
@@ -352,11 +365,12 @@ TEST(PercussionBeaterTip, DirectionMarksRoundTrip)
     beater.value = BeaterValue::wireBrush;
     beater.tip = TipDirection::northeast;
     percussion.choice = PercussionDataChoice{beater};
-    direction.percussions.push_back(percussion);
+    direction.directionTypes.emplace_back(DirectionChoice{percussion});
     const auto directions = roundTripDirectionData(direction);
     REQUIRE(directions.size() == 1);
-    REQUIRE(directions.front().percussions.size() == 1);
-    const auto &out = directions.front().percussions.front();
+    REQUIRE(directions.front().directionTypes.size() == 1);
+    REQUIRE(directions.front().directionTypes.front().isPercussion());
+    const auto out = directions.front().directionTypes.front().percussion();
     REQUIRE(out.choice.isBeater());
     CHECK(out.choice.beater().value == BeaterValue::wireBrush);
     CHECK(out.choice.beater().tip == TipDirection::northeast);
@@ -374,11 +388,12 @@ TEST(PercussionStick, DirectionMarksRoundTrip)
     stick.tip = TipDirection::down;
     stick.parentheses = Bool::yes;
     percussion.choice = PercussionDataChoice{stick};
-    direction.percussions.push_back(percussion);
+    direction.directionTypes.emplace_back(DirectionChoice{percussion});
     const auto directions = roundTripDirectionData(direction);
     REQUIRE(directions.size() == 1);
-    REQUIRE(directions.front().percussions.size() == 1);
-    const auto &out = directions.front().percussions.front();
+    REQUIRE(directions.front().directionTypes.size() == 1);
+    REQUIRE(directions.front().directionTypes.front().isPercussion());
+    const auto out = directions.front().directionTypes.front().percussion();
     REQUIRE(out.choice.isStick());
     CHECK(out.choice.stick().stickType == StickType::timpani);
     CHECK(out.choice.stick().stickMaterial == StickMaterial::hard);
@@ -395,11 +410,12 @@ TEST(PercussionTimpaniSmufl, DirectionMarksRoundTrip)
     TimpaniPercussion timpani;
     timpani.smufl = "pictGong";
     percussion.choice = PercussionDataChoice{timpani};
-    direction.percussions.push_back(percussion);
+    direction.directionTypes.emplace_back(DirectionChoice{percussion});
     const auto directions = roundTripDirectionData(direction);
     REQUIRE(directions.size() == 1);
-    REQUIRE(directions.front().percussions.size() == 1);
-    const auto &out = directions.front().percussions.front();
+    REQUIRE(directions.front().directionTypes.size() == 1);
+    REQUIRE(directions.front().directionTypes.front().isPercussion());
+    const auto out = directions.front().directionTypes.front().percussion();
     REQUIRE(out.choice.isTimpani());
     REQUIRE(out.choice.timpani().smufl.has_value());
     CHECK_EQUAL("pictGong", *out.choice.timpani().smufl);
@@ -412,19 +428,21 @@ TEST(PercussionStickLocationAndOther, DirectionMarksRoundTrip)
     DirectionData direction;
     PercussionData stickLocationPercussion;
     stickLocationPercussion.choice = PercussionDataChoice{StickLocation::cymbalEdge};
-    direction.percussions.push_back(stickLocationPercussion);
+    direction.directionTypes.emplace_back(DirectionChoice{stickLocationPercussion});
     PercussionData otherPercussionData;
     OtherPercussion other;
     other.text = "ocean drum";
     otherPercussionData.choice = PercussionDataChoice{other};
-    direction.percussions.push_back(otherPercussionData);
+    direction.directionTypes.emplace_back(DirectionChoice{otherPercussionData});
     const auto directions = roundTripDirectionData(direction);
     REQUIRE(directions.size() == 1);
-    REQUIRE(directions.front().percussions.size() == 2);
-    REQUIRE(directions.front().percussions.at(0).choice.isStickLocation());
-    CHECK(directions.front().percussions.at(0).choice.stickLocation() == StickLocation::cymbalEdge);
-    REQUIRE(directions.front().percussions.at(1).choice.isOtherPercussion());
-    CHECK_EQUAL("ocean drum", directions.front().percussions.at(1).choice.otherPercussion().text);
+    REQUIRE(directions.front().directionTypes.size() == 2);
+    REQUIRE(directions.front().directionTypes.at(0).isPercussion());
+    REQUIRE(directions.front().directionTypes.at(0).percussion().choice.isStickLocation());
+    CHECK(directions.front().directionTypes.at(0).percussion().choice.stickLocation() == StickLocation::cymbalEdge);
+    REQUIRE(directions.front().directionTypes.at(1).isPercussion());
+    REQUIRE(directions.front().directionTypes.at(1).percussion().choice.isOtherPercussion());
+    CHECK_EQUAL("ocean drum", directions.front().directionTypes.at(1).percussion().choice.otherPercussion().text);
 }
 
 T_END;
@@ -436,35 +454,36 @@ TEST(PercussionMembraneMetalWoodPitchedEffect, DirectionMarksRoundTrip)
     MembranePercussion membrane;
     membrane.value = MembraneInstrument::congaDrum;
     membraneData.choice = PercussionDataChoice{membrane};
-    direction.percussions.push_back(membraneData);
+    direction.directionTypes.emplace_back(DirectionChoice{membraneData});
     PercussionData metalData;
     MetalPercussion metal;
     metal.value = MetalInstrument::tamTamWithBeater;
     metalData.choice = PercussionDataChoice{metal};
-    direction.percussions.push_back(metalData);
+    direction.directionTypes.emplace_back(DirectionChoice{metalData});
     PercussionData woodData;
     WoodPercussion wood;
     wood.value = WoodInstrument::templeBlock;
     woodData.choice = PercussionDataChoice{wood};
-    direction.percussions.push_back(woodData);
+    direction.directionTypes.emplace_back(DirectionChoice{woodData});
     PercussionData pitchedData;
     PitchedPercussion pitched;
     pitched.value = PitchedInstrument::steelDrums;
     pitchedData.choice = PercussionDataChoice{pitched};
-    direction.percussions.push_back(pitchedData);
+    direction.directionTypes.emplace_back(DirectionChoice{pitchedData});
     PercussionData effectData;
     EffectPercussion effect;
     effect.value = EffectInstrument::windMachine;
     effectData.choice = PercussionDataChoice{effect};
-    direction.percussions.push_back(effectData);
+    direction.directionTypes.emplace_back(DirectionChoice{effectData});
     const auto directions = roundTripDirectionData(direction);
     REQUIRE(directions.size() == 1);
-    REQUIRE(directions.front().percussions.size() == 5);
-    CHECK(directions.front().percussions.at(0).choice.membrane().value == MembraneInstrument::congaDrum);
-    CHECK(directions.front().percussions.at(1).choice.metal().value == MetalInstrument::tamTamWithBeater);
-    CHECK(directions.front().percussions.at(2).choice.wood().value == WoodInstrument::templeBlock);
-    CHECK(directions.front().percussions.at(3).choice.pitched().value == PitchedInstrument::steelDrums);
-    CHECK(directions.front().percussions.at(4).choice.effect().value == EffectInstrument::windMachine);
+    REQUIRE(directions.front().directionTypes.size() == 5);
+    const auto &out = directions.front().directionTypes;
+    CHECK(out.at(0).percussion().choice.membrane().value == MembraneInstrument::congaDrum);
+    CHECK(out.at(1).percussion().choice.metal().value == MetalInstrument::tamTamWithBeater);
+    CHECK(out.at(2).percussion().choice.wood().value == WoodInstrument::templeBlock);
+    CHECK(out.at(3).percussion().choice.pitched().value == PitchedInstrument::steelDrums);
+    CHECK(out.at(4).percussion().choice.effect().value == EffectInstrument::windMachine);
 }
 
 T_END;
@@ -476,15 +495,109 @@ TEST(DampFormatting, DirectionMarksRoundTrip)
     damp.positionData.isDefaultXSpecified = true;
     damp.positionData.defaultX = 5.0;
     damp.id = "damp-1";
-    direction.damps.push_back(damp);
+    direction.directionTypes.emplace_back(DirectionChoice{damp});
     const auto directions = roundTripDirectionData(direction);
     REQUIRE(directions.size() == 1);
-    REQUIRE(directions.front().damps.size() == 1);
-    const auto &outDamp = directions.front().damps.front();
+    REQUIRE(directions.front().directionTypes.size() == 1);
+    REQUIRE(directions.front().directionTypes.front().isDamp());
+    const auto outDamp = directions.front().directionTypes.front().damp();
     CHECK(outDamp.positionData.isDefaultXSpecified);
     CHECK_DOUBLES_EQUAL(5.0, outDamp.positionData.defaultX, 0.0001);
     REQUIRE(outDamp.id.has_value());
     CHECK_EQUAL("damp-1", *outDamp.id);
+}
+
+T_END;
+
+// Issue #294: a <direction-type> holding an ordered mix of <words> and <symbol> elements must
+// survive the api round trip with the interleaving intact -- e.g. "gliss." followed by an
+// arrowBlackUp glyph followed by "al niente".
+TEST(WordsSymbolInterleaved, DirectionMarksRoundTrip)
+{
+    DirectionData direction;
+    direction.placement = Placement::below;
+
+    std::vector<WordsChoice> run;
+    WordsData before;
+    before.text = "gliss. ";
+    run.emplace_back(before);
+    SymbolData glyph;
+    glyph.smufl = "arrowBlackUp";
+    run.emplace_back(glyph);
+    WordsData after;
+    after.text = " al niente";
+    run.emplace_back(after);
+    direction.directionTypes.emplace_back(DirectionChoice{run});
+
+    MarkData dynamic{MarkType::ff};
+    direction.directionTypes.emplace_back(DirectionChoice{dynamic});
+
+    const auto directions = roundTripDirectionData(direction);
+    REQUIRE(directions.size() == 1);
+    REQUIRE(directions.front().directionTypes.size() == 2);
+
+    REQUIRE(directions.front().directionTypes.front().isWordsRun());
+    const auto outRun = directions.front().directionTypes.front().wordsRun();
+    REQUIRE(outRun.size() == 3);
+    REQUIRE(outRun.at(0).isWords());
+    CHECK_EQUAL("gliss. ", outRun.at(0).words().text);
+    REQUIRE(outRun.at(1).isSymbol());
+    CHECK_EQUAL("arrowBlackUp", outRun.at(1).symbol().smufl);
+    REQUIRE(outRun.at(2).isWords());
+    CHECK_EQUAL(" al niente", outRun.at(2).words().text);
+
+    REQUIRE(directions.front().directionTypes.back().isMark());
+    CHECK(directions.front().directionTypes.back().mark().markType == MarkType::ff);
+}
+
+T_END;
+
+// Issue #294: two words-only direction-types stay separate (they are not merged into one), and a
+// words direction-type followed by a dynamics direction-type keeps its order.
+TEST(WordsBeforeDynamicsOrderPreserved, DirectionMarksRoundTrip)
+{
+    DirectionData direction;
+    direction.placement = Placement::below;
+
+    WordsData piu;
+    piu.text = "più";
+    direction.directionTypes.emplace_back(DirectionChoice{std::vector<WordsChoice>{WordsChoice{piu}}});
+    direction.directionTypes.emplace_back(DirectionChoice{MarkData{MarkType::f}});
+    WordsData troppo;
+    troppo.text = "ma non troppo";
+    direction.directionTypes.emplace_back(DirectionChoice{std::vector<WordsChoice>{WordsChoice{troppo}}});
+
+    const auto directions = roundTripDirectionData(direction);
+    REQUIRE(directions.size() == 1);
+    REQUIRE(directions.front().directionTypes.size() == 3);
+    REQUIRE(directions.front().directionTypes.at(0).isWordsRun());
+    REQUIRE(directions.front().directionTypes.at(0).wordsRun().size() == 1);
+    CHECK_EQUAL("più", directions.front().directionTypes.at(0).wordsRun().front().words().text);
+    REQUIRE(directions.front().directionTypes.at(1).isMark());
+    CHECK(directions.front().directionTypes.at(1).mark().markType == MarkType::f);
+    REQUIRE(directions.front().directionTypes.at(2).isWordsRun());
+    REQUIRE(directions.front().directionTypes.at(2).wordsRun().size() == 1);
+    CHECK_EQUAL("ma non troppo", directions.front().directionTypes.at(2).wordsRun().front().words().text);
+}
+
+T_END;
+
+// Words with an enclosure attribute round-trip; an unspecified enclosure emits no attribute.
+TEST(WordsEnclosure, DirectionMarksRoundTrip)
+{
+    DirectionData direction;
+    WordsData words;
+    words.text = "boxed";
+    words.enclosure = RehearsalEnclosure::rectangle;
+    direction.directionTypes.emplace_back(DirectionChoice{std::vector<WordsChoice>{WordsChoice{words}}});
+    const auto directions = roundTripDirectionData(direction);
+    REQUIRE(directions.size() == 1);
+    REQUIRE(directions.front().directionTypes.size() == 1);
+    REQUIRE(directions.front().directionTypes.front().isWordsRun());
+    const auto outRun = directions.front().directionTypes.front().wordsRun();
+    REQUIRE(outRun.size() == 1);
+    REQUIRE(outRun.front().isWords());
+    CHECK(outRun.front().words().enclosure == RehearsalEnclosure::rectangle);
 }
 
 T_END;

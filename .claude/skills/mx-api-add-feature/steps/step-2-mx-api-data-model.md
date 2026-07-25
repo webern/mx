@@ -82,14 +82,14 @@ The api collapses many distinct MusicXML elements into a few aggregate container
 a separate top-level type per element. A new feature almost always slots into one of these rather
 than introducing a new top-level vector. Know these aggregates:
 
-- `DirectionData` (`DirectionData.h`) is the big one. A single direction holds parallel vectors for
-  `tempos`, `marks`, `wedgeStarts`/`wedgeStops`, `ottavaStarts`/`ottavaStops`,
-  `bracketStarts`/`bracketStops`, `dashesStarts`/`dashesStops`, `pedalStarts`/`pedalStops`, `words`,
-  `chords`, `segnos`, `codas`, `rehearsals`, etc., plus an `orderedComponents` vector of
-  `DirectionComponent{ DirectionComponentKind kind; int index; }` that records render order across
-  those vectors. Adding a new direction-type element means adding a vector here, a
-  `DirectionComponentKind` enumerator, and (usually) keeping `isDirectionDataEmpty` and the
-  `operator==` block in sync.
+- `DirectionData` (`DirectionData.h`) is the big one. A direction's content is one ordered
+  `std::vector<DirectionChoice> directionTypes` (`DirectionChoice.h`): one choice per
+  `<direction-type>`, in document order (tempo | mark | wedgeStart | ... | wordsRun | ...).
+  A `(words|symbol)+` run is a single `wordsRun` alternative holding `std::vector<WordsChoice>`
+  (`WordsChoice.h`: WordsData | SymbolData). Harmony `chords` and `figuredBasses` stay as
+  separate vectors (they serialize as sibling elements, not direction-types). Adding a new
+  direction-type element means adding a `DirectionChoice` alternative (Kind enumerator,
+  constructor or factory, accessor, is-query) and wiring `DirectionReader`/`DirectionWriter`.
 - `MarkData` / `MarkType` (`MarkData.h`) is itself an aggregate: every articulation, dynamic,
   ornament, technical, accidental-mark, and fermata is one `MarkType` value on one `MarkData`
   struct, not separate types. A new note-attached glyph is usually a new `MarkType` value, not a new
@@ -108,8 +108,8 @@ than introducing a new top-level vector. Know these aggregates:
 
 1. Find the smallest enclosing aggregate that should own the feature, then add the field there. A
    note glyph -> a new `MarkType` value in `MarkData.h`. A note-attached spanner -> a vector on
-   `NoteAttachmentData`. A direction-type element -> a vector on `DirectionData` (plus a
-   `DirectionComponentKind` value). A per-measure thing -> a member on `MeasureData`. A per-staff
+   `NoteAttachmentData`. A direction-type element -> a new `DirectionChoice` alternative. A
+   per-measure thing -> a member on `MeasureData`. A per-staff
    thing -> `StaffData`. Score-wide -> `ScoreData`. A true either/or with per-alternative
    payloads -> a choice class (`TimeChoice.h`, `MarkDataChoice.h`; see the `mx-api-doctrine`
    skill). Only introduce a brand-new top-level type if no existing aggregate fits.
@@ -139,10 +139,11 @@ than introducing a new top-level vector. Know these aggregates:
    `MXAPI_DOUBLES_EQUALS_MEMBER` for `double` members. Missing a line silently drops the field from
    equality.
 
-7. When adding to `DirectionData`: add the parallel `std::vector<...>` member, add a
-   `DirectionComponentKind` enumerator, update `isDirectionDataEmpty(...)`, and add the matching
-   `MXAPI_EQUALS_MEMBER`. Keep the constructor initializer list and the member list mutually
-   consistent.
+7. When adding a direction-type: add the alternative to `DirectionChoice` (Storage entry in Kind
+   order, Kind enumerator, constructor -- or a static factory when the payload type is shared
+   with another alternative -- accessor, and is-query), and wire the reader and writer switches.
+   `isDirectionDataEmpty` and `DirectionData`'s equality block need no change; `directionTypes`
+   already covers every alternative.
 
 8. Add the `#include "mx/api/YourNewData.h"` to any header that now uses the type (the aggregate
    header), and keep includes minimal - include what you use. New headers start with the standard

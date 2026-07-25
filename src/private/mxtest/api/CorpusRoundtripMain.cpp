@@ -256,65 +256,6 @@ void canonicalizePedalDefaults(pugi::xml_node el)
     }
 }
 
-// True when a <direction-type> holds only <words> element children (at least one).
-bool isWordsOnlyDirectionType(pugi::xml_node directionType)
-{
-    bool hasWords = false;
-    for (pugi::xml_node c = directionType.first_child(); c; c = c.next_sibling())
-    {
-        if (c.type() != pugi::node_element)
-        {
-            continue;
-        }
-        if (std::string_view{c.name()} != "words")
-        {
-            return false;
-        }
-        hasWords = true;
-    }
-    return hasWords;
-}
-
-// mx flattens all of a direction's <words> into one <direction-type> on write, whereas a source
-// may split consecutive <words> across separate <direction-type> siblings. With each <words>
-// stating its own formatting, that boxing is not notation-semantic (the spec's font carry-over
-// only bites when attributes are omitted to be inherited), so merge consecutive words-only
-// <direction-type> siblings into one -- matching mx's canonical output. Runs on both documents.
-void mergeConsecutiveWordsDirectionTypes(pugi::xml_node el)
-{
-    if (std::string_view{el.name()} == "direction")
-    {
-        for (pugi::xml_node dt = el.child("direction-type"); dt;)
-        {
-            pugi::xml_node next = dt.next_sibling();
-            if (std::string_view{dt.name()} == "direction-type" && isWordsOnlyDirectionType(dt))
-            {
-                while (next && std::string_view{next.name()} == "direction-type" && isWordsOnlyDirectionType(next))
-                {
-                    pugi::xml_node following = next.next_sibling();
-                    for (pugi::xml_node w = next.first_child(); w;)
-                    {
-                        pugi::xml_node wNext = w.next_sibling();
-                        dt.append_move(w);
-                        w = wNext;
-                    }
-                    el.remove_child(next);
-                    next = following;
-                }
-            }
-            dt = next;
-        }
-    }
-
-    for (pugi::xml_node c = el.first_child(); c; c = c.next_sibling())
-    {
-        if (c.type() == pugi::node_element)
-        {
-            mergeConsecutiveWordsDirectionTypes(c);
-        }
-    }
-}
-
 // Runtime canonicalization of non-semantic direction spellings, applied to both the expected and
 // the actual document just before comparison (the corpus input files are never edited). Adding
 // pedal attributes can leave them out of order, so re-sort attributes afterward -- sortAttributes
@@ -322,7 +263,6 @@ void mergeConsecutiveWordsDirectionTypes(pugi::xml_node el)
 void canonicalizeDirectionSpellings(pugi::xml_document &doc)
 {
     canonicalizePedalDefaults(doc.document_element());
-    mergeConsecutiveWordsDirectionTypes(doc.document_element());
     mxtest::sortAttributes(doc);
 }
 
@@ -498,8 +438,10 @@ RoundtripResult runRoundtrip(const std::string &absolutePath)
     // (#277); pre-collapse the expected side to match.
     collapseEqualPageMargins(expectedDoc.document_element());
 
-    // Canonicalize non-semantic direction spellings (bare-vs-explicit pedal defaults, split-vs-
-    // merged <words> direction-types) on both sides so only genuine differences surface.
+    // Canonicalize non-semantic direction spellings (bare-vs-explicit pedal defaults) on both
+    // sides so only genuine differences surface. Words direction-type boxing needs no
+    // canonicalization: the api models each <direction-type> run as its own wordsRun, so the
+    // writer reproduces the source's boxing exactly.
     canonicalizeDirectionSpellings(expectedDoc);
     canonicalizeDirectionSpellings(actualDoc);
 

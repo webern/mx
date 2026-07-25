@@ -28,16 +28,16 @@ inline void addNoteToMeasure(mx::api::MarkType markType, mx::api::MeasureData *m
 
     staffP->directions.emplace_back(DirectionData{});
     auto &direction = staffP->directions.back();
-    direction.marks.emplace_back(MarkData{});
-    auto &mark = direction.marks.back();
 
+    MarkData mark{};
     mark.markType = markType;
     mx::impl::Converter converter;
     const auto d = converter.convertDynamic(markType);
     mark.name = mx::impl::dynamicsKindToName(d);
+    mark.positionData.placement = Placement::below;
     direction.tickTimePosition = noteP->tickTimePosition;
     direction.isStaffValueSpecified = false;
-    mark.positionData.placement = Placement::below;
+    direction.directionTypes.emplace_back(DirectionChoice{mark});
 }
 
 inline void addMeasureWithNote(mx::api::MarkType markType, mx::api::PartData &outPartData)
@@ -105,9 +105,10 @@ inline mx::api::ScoreData apiK007cScoreData()
     addMeasureWithNote(MarkType::otherDynamics, part);
 
     auto &lastMeasure = part.measures.back();
-    auto &lastDynamic = lastMeasure.staves.back().directions.back().marks.back();
-    const std::string name = "dynamicNiente";
-    lastDynamic.name = name;
+    auto &lastDirection = lastMeasure.staves.back().directions.back();
+    auto lastDynamic = lastDirection.directionTypes.back().mark();
+    lastDynamic.name = "dynamicNiente";
+    lastDirection.directionTypes.back() = DirectionChoice{lastDynamic};
 
     return score;
 }

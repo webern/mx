@@ -42,11 +42,11 @@ inline mx::api::ScoreData apiLy43eScoreData()
     staff1P->directions.emplace_back(DirectionData{});
     auto directionP = &staff1P->directions.back();
     directionP->placement = Placement::below;
-    directionP->marks.emplace_back(MarkData{});
-    auto directionMarkP = &directionP->marks.back();
-    directionMarkP->markType = MarkType::ffff;
-    directionMarkP->name = "ffff";
-    directionMarkP->tickTimePosition = 0;
+    MarkData directionMark{};
+    directionMark.markType = MarkType::ffff;
+    directionMark.name = "ffff";
+    directionMark.tickTimePosition = 0;
+    directionP->directionTypes.emplace_back(DirectionChoice{directionMark});
 
     // measure 1 - music
     int voice = 0;
@@ -101,11 +101,11 @@ inline mx::api::ScoreData apiLy43eScoreData()
     //        directionP->offset = 1;
     directionP->placement = Placement::below;
     directionP->isStaffValueSpecified = true;
-    directionP->marks.emplace_back(MarkData{});
-    directionMarkP = &directionP->marks.back();
-    directionMarkP->tickTimePosition = directionP->tickTimePosition;
-    directionMarkP->markType = MarkType::p;
-    directionMarkP->name = "p";
+    directionMark = MarkData{};
+    directionMark.tickTimePosition = directionP->tickTimePosition;
+    directionMark.markType = MarkType::p;
+    directionMark.name = "p";
+    directionP->directionTypes.emplace_back(DirectionChoice{directionMark});
 
     voice = 1;
     staff2P->voices[voice].notes.emplace_back(NoteData{});
@@ -126,11 +126,11 @@ inline mx::api::ScoreData apiLy43eScoreData()
     //        directionP->offset = 0;
     directionP->placement = Placement::below;
     directionP->isStaffValueSpecified = true;
-    directionP->wedgeStarts.emplace_back(WedgeStart{});
-    auto wedgeStartP = &directionP->wedgeStarts.back();
-    wedgeStartP->wedgeType = WedgeType::crescendo;
-    wedgeStartP->isSpreadSpecified = true;
-    wedgeStartP->spread = 0.0;
+    WedgeStart wedgeStart{};
+    wedgeStart.wedgeType = WedgeType::crescendo;
+    wedgeStart.isSpreadSpecified = true;
+    wedgeStart.spread = 0.0;
+    directionP->directionTypes.emplace_back(DirectionChoice{wedgeStart});
 
     staff2P->voices[voice].notes.emplace_back(NoteData{});
     noteP = &staff2P->voices[voice].notes.back();
@@ -150,10 +150,10 @@ inline mx::api::ScoreData apiLy43eScoreData()
     //        directionP->offset = 0;
     directionP->placement = Placement::unspecified;
     directionP->isStaffValueSpecified = true;
-    directionP->wedgeStops.emplace_back(WedgeStop{});
-    auto wedgeStopP = &directionP->wedgeStops.back();
-    wedgeStopP->isSpreadSpecified = true;
-    wedgeStopP->spread = 15.0;
+    WedgeStop wedgeStop{};
+    wedgeStop.isSpreadSpecified = true;
+    wedgeStop.spread = 15.0;
+    directionP->directionTypes.emplace_back(DirectionChoice{wedgeStop});
 
     staff2P->voices[voice].notes.emplace_back(NoteData{});
     noteP = &staff2P->voices[voice].notes.back();
