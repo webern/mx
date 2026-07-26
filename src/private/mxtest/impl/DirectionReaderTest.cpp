@@ -32,8 +32,9 @@ TEST(ottavaStart15ma, DirectionReader)
     cursor.tickTimePosition = tickTimePosition;
     DirectionReader reader{dir, cursor};
     auto directionData = reader.getDirectionData();
-    CHECK_EQUAL(1, directionData.ottavaStarts.size());
-    const auto &ottavaStart = directionData.ottavaStarts.front();
+    CHECK_EQUAL(1, directionData.directionTypes.size());
+    CHECK(directionData.directionTypes.front().isOttavaStart());
+    const auto ottavaStart = directionData.directionTypes.front().ottavaStart();
     CHECK_EQUAL(tickTimePosition, ottavaStart.spannerStart.tickTimePosition);
     CHECK(api::OttavaType::o15ma == ottavaStart.ottavaType);
 }
@@ -74,14 +75,16 @@ TEST(ottavaStart8vaAnd8vb, DirectionReader)
     DirectionReader reader{dir, cursor};
     auto directionData = reader.getDirectionData();
 
-    CHECK_EQUAL(2, directionData.ottavaStarts.size());
-    auto ottavaStart = directionData.ottavaStarts.front();
+    CHECK_EQUAL(2, directionData.directionTypes.size());
+    CHECK(directionData.directionTypes.front().isOttavaStart());
+    auto ottavaStart = directionData.directionTypes.front().ottavaStart();
 
     CHECK_EQUAL(tickTimePosition, ottavaStart.spannerStart.tickTimePosition);
     CHECK(api::OttavaType::o8vb == ottavaStart.ottavaType);
     CHECK(ottavaStart.spannerStart.number.isUnspecified());
 
-    ottavaStart = directionData.ottavaStarts.at(1);
+    CHECK(directionData.directionTypes.at(1).isOttavaStart());
+    ottavaStart = directionData.directionTypes.at(1).ottavaStart();
     CHECK_EQUAL(tickTimePosition, ottavaStart.spannerStart.tickTimePosition);
     CHECK(api::OttavaType::o8va == ottavaStart.ottavaType);
     CHECK(api::SpannerNumber(3) == ottavaStart.spannerStart.number);
@@ -103,8 +106,9 @@ TEST(ottavaStop, DirectionReader)
     cursor.tickTimePosition = tickTimePosition;
     DirectionReader reader{dir, cursor};
     auto directionData = reader.getDirectionData();
-    CHECK_EQUAL(1, directionData.ottavaStops.size());
-    const auto &ottavaStop = directionData.ottavaStops.front();
+    CHECK_EQUAL(1, directionData.directionTypes.size());
+    CHECK(directionData.directionTypes.front().isOttavaStop());
+    const auto ottavaStop = directionData.directionTypes.front().ottavaStop();
     CHECK_EQUAL(tickTimePosition, ottavaStop.spannerStop.tickTimePosition);
     CHECK(ottavaStop.spannerStop.number.isUnspecified());
     CHECK(ottavaStop.size.has_value());

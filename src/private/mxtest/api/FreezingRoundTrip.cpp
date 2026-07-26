@@ -240,10 +240,9 @@ TEST(roundTripViolaDynamicWrongTime, Freezing)
     const auto originalDirectionsEnd = std::cend(originalDirections);
 
     const auto findDirectionLambda = [&](const DirectionData &inDirection) {
-        if (inDirection.marks.size() == 1)
+        if (inDirection.directionTypes.size() == 1 && inDirection.directionTypes.front().isMark())
         {
-            const auto &mark = inDirection.marks.front();
-            if (mark.markType == MarkType::pp)
+            if (inDirection.directionTypes.front().mark().markType == MarkType::pp)
             {
                 return true;
             }

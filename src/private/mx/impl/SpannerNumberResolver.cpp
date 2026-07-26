@@ -31,12 +31,14 @@ enum class SpannerNumberClass
     dashes
 };
 
-// One start/continue/stop occurrence at its position in the serialized stream.
+// One start/continue/stop occurrence at its position in the serialized stream. The number is
+// held by value: direction spanners are read out of DirectionChoice by copy, so a pointer into
+// the api data is not available for them.
 struct SpannerNumberEvent
 {
     int position;
     const void *object;
-    const api::SpannerNumber *number;
+    api::SpannerNumber number;
     bool opens;  // a start
     bool closes; // a stop
 };
@@ -80,15 +82,51 @@ class SpannerNumberEventCollector
         }
     }
 
+    // Mirrors DirectionWriter::emitDirectionTypes: one pass over the ordered direction-type
+    // content, registering each spanner event with the address of its DirectionChoice -- the
+    // same identity the writer presents when it asks for the emitted number. Pedals are
+    // skipped: <pedal> has no number attribute.
     void addDirection(const api::DirectionData &inDirection)
     {
-        if (inDirection.orderedComponents.empty())
+        for (const auto &choice : inDirection.directionTypes)
         {
-            addDirectionFixedOrder(inDirection);
-        }
-        else
-        {
-            addDirectionOrderedComponents(inDirection);
+            switch (choice.kind())
+            {
+            case api::DirectionChoice::Kind::wedgeStart:
+                add(SpannerNumberClass::wedge, &choice, choice.wedgeStart().number, true, false);
+                break;
+
+            case api::DirectionChoice::Kind::wedgeStop:
+                add(SpannerNumberClass::wedge, &choice, choice.wedgeStop().number, false, true);
+                break;
+
+            case api::DirectionChoice::Kind::ottavaStart:
+                add(SpannerNumberClass::octaveShift, &choice, choice.ottavaStart().spannerStart.number, true, false);
+                break;
+
+            case api::DirectionChoice::Kind::ottavaStop:
+                add(SpannerNumberClass::octaveShift, &choice, choice.ottavaStop().spannerStop.number, false, true);
+                break;
+
+            case api::DirectionChoice::Kind::bracketStart:
+                add(SpannerNumberClass::bracket, &choice, choice.bracketStart().number, true, false);
+                break;
+
+            case api::DirectionChoice::Kind::bracketStop:
+                add(SpannerNumberClass::bracket, &choice, choice.bracketStop().number, false, true);
+                break;
+
+            case api::DirectionChoice::Kind::dashesStart:
+                add(SpannerNumberClass::dashes, &choice, choice.dashesStart().number, true, false);
+                break;
+
+            case api::DirectionChoice::Kind::dashesStop:
+                add(SpannerNumberClass::dashes, &choice, choice.dashesStop().number, false, true);
+                break;
+
+            default:
+                break;
+            }
         }
     }
 
@@ -101,7 +139,7 @@ class SpannerNumberEventCollector
     void add(SpannerNumberClass inClass, const void *inObject, const api::SpannerNumber &inNumber, bool inOpens,
              bool inCloses)
     {
-        myEvents[inClass].push_back(SpannerNumberEvent{myPosition, inObject, &inNumber, inOpens, inCloses});
+        myEvents[inClass].push_back(SpannerNumberEvent{myPosition, inObject, inNumber, inOpens, inCloses});
         ++myPosition;
     }
 
@@ -115,128 +153,6 @@ class SpannerNumberEventCollector
         else if (inCurveType == api::CurveType::tie)
         {
             add(SpannerNumberClass::tie, inObject, inNumber, inOpens, inCloses);
-        }
-    }
-
-    // Mirrors DirectionWriter::emitFixedOrder. Pedals are skipped: <pedal> has
-    // no number attribute.
-    void addDirectionFixedOrder(const api::DirectionData &inDirection)
-    {
-        for (const auto &item : inDirection.wedgeStops)
-        {
-            add(SpannerNumberClass::wedge, &item, item.number, false, true);
-        }
-        for (const auto &item : inDirection.wedgeStarts)
-        {
-            add(SpannerNumberClass::wedge, &item, item.number, true, false);
-        }
-        for (const auto &item : inDirection.ottavaStops)
-        {
-            add(SpannerNumberClass::octaveShift, &item.spannerStop, item.spannerStop.number, false, true);
-        }
-        for (const auto &item : inDirection.ottavaStarts)
-        {
-            add(SpannerNumberClass::octaveShift, &item.spannerStart, item.spannerStart.number, true, false);
-        }
-        for (const auto &item : inDirection.bracketStarts)
-        {
-            add(SpannerNumberClass::bracket, &item, item.number, true, false);
-        }
-        for (const auto &item : inDirection.bracketStops)
-        {
-            add(SpannerNumberClass::bracket, &item, item.number, false, true);
-        }
-        for (const auto &item : inDirection.dashesStarts)
-        {
-            add(SpannerNumberClass::dashes, &item, item.number, true, false);
-        }
-        for (const auto &item : inDirection.dashesStops)
-        {
-            add(SpannerNumberClass::dashes, &item, item.number, false, true);
-        }
-    }
-
-    // Mirrors DirectionWriter::emitOrderedComponents (same bounds checks).
-    void addDirectionOrderedComponents(const api::DirectionData &inDirection)
-    {
-        for (const auto &component : inDirection.orderedComponents)
-        {
-            const int i = component.index;
-            if (i < 0)
-            {
-                continue;
-            }
-            const auto index = static_cast<std::size_t>(i);
-
-            switch (component.kind)
-            {
-            case api::DirectionComponentKind::wedgeStop:
-                if (index < inDirection.wedgeStops.size())
-                {
-                    const auto &item = inDirection.wedgeStops.at(index);
-                    add(SpannerNumberClass::wedge, &item, item.number, false, true);
-                }
-                break;
-
-            case api::DirectionComponentKind::wedgeStart:
-                if (index < inDirection.wedgeStarts.size())
-                {
-                    const auto &item = inDirection.wedgeStarts.at(index);
-                    add(SpannerNumberClass::wedge, &item, item.number, true, false);
-                }
-                break;
-
-            case api::DirectionComponentKind::ottavaStop:
-                if (index < inDirection.ottavaStops.size())
-                {
-                    const auto &item = inDirection.ottavaStops.at(index);
-                    add(SpannerNumberClass::octaveShift, &item.spannerStop, item.spannerStop.number, false, true);
-                }
-                break;
-
-            case api::DirectionComponentKind::ottavaStart:
-                if (index < inDirection.ottavaStarts.size())
-                {
-                    const auto &item = inDirection.ottavaStarts.at(index);
-                    add(SpannerNumberClass::octaveShift, &item.spannerStart, item.spannerStart.number, true, false);
-                }
-                break;
-
-            case api::DirectionComponentKind::bracketStart:
-                if (index < inDirection.bracketStarts.size())
-                {
-                    const auto &item = inDirection.bracketStarts.at(index);
-                    add(SpannerNumberClass::bracket, &item, item.number, true, false);
-                }
-                break;
-
-            case api::DirectionComponentKind::bracketStop:
-                if (index < inDirection.bracketStops.size())
-                {
-                    const auto &item = inDirection.bracketStops.at(index);
-                    add(SpannerNumberClass::bracket, &item, item.number, false, true);
-                }
-                break;
-
-            case api::DirectionComponentKind::dashesStart:
-                if (index < inDirection.dashesStarts.size())
-                {
-                    const auto &item = inDirection.dashesStarts.at(index);
-                    add(SpannerNumberClass::dashes, &item, item.number, true, false);
-                }
-                break;
-
-            case api::DirectionComponentKind::dashesStop:
-                if (index < inDirection.dashesStops.size())
-                {
-                    const auto &item = inDirection.dashesStops.at(index);
-                    add(SpannerNumberClass::dashes, &item, item.number, false, true);
-                }
-                break;
-
-            default:
-                break;
-            }
         }
     }
 
@@ -264,11 +180,11 @@ static void spannerNumberAssignClass(const std::vector<SpannerNumberEvent> &inEv
     std::map<int, std::vector<const SpannerNumberEvent *>> openExplicit;
     for (const auto &event : inEvents)
     {
-        if (!event.number->isExplicit())
+        if (!event.number.isExplicit())
         {
             continue;
         }
-        const int level = event.number->level();
+        const int level = event.number.level();
         if (event.opens)
         {
             openExplicit[level].push_back(&event);
@@ -319,11 +235,11 @@ static void spannerNumberAssignClass(const std::vector<SpannerNumberEvent> &inEv
     std::map<std::string, std::size_t> groupIndexByIdentity;
     for (const auto &event : inEvents)
     {
-        if (!event.number->isIdentity())
+        if (!event.number.isIdentity())
         {
             continue;
         }
-        const auto found = groupIndexByIdentity.emplace(event.number->identity(), groups.size());
+        const auto found = groupIndexByIdentity.emplace(event.number.identity(), groups.size());
         if (found.second)
         {
             groups.push_back(SpannerNumberGroup{SpannerNumberInterval{event.position, event.position}, {}});

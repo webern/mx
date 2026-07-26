@@ -4,13 +4,13 @@
      usage (descending). Do not edit by hand; regenerate with the tool. -->
 <corpus-features>
   <summary>
-    <files total="835" wild="445" synthetic="390"/>
+    <files total="836" wild="445" synthetic="391"/>
     <elements total="442" used-in-wild="329" synthetic-only="113"/>
   </summary>
   <elements>
-    <element name="measure" total-files="835" wild-files="445" synthetic-files="390" min-synthetic-version="3.0">
+    <element name="measure" total-files="836" wild-files="445" synthetic-files="391" min-synthetic-version="3.0">
       <attributes>
-        <attribute name="number" wild-files="445" synthetic-files="390"/>
+        <attribute name="number" wild-files="445" synthetic-files="391"/>
         <attribute name="width" wild-files="155" synthetic-files="2"/>
         <attribute name="implicit" wild-files="24" synthetic-files="2"/>
         <attribute name="id" wild-files="0" synthetic-files="1"/>
@@ -32,7 +32,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 433 more -->
       </wild-files>
-      <synthetic-files count="390" min-version="3.0">
+      <synthetic-files count="391" min-version="3.0">
         <file version="3.0">synthetic/accent.3.0.xml</file>
         <file version="3.0">synthetic/accidental-mark.3.0.xml</file>
         <file version="3.1">synthetic/accidental-mark.3.1.xml</file>
@@ -419,15 +419,16 @@
         <file version="3.0">synthetic/wood.3.0.xml</file>
         <file version="4.0">synthetic/wood.4.0.xml</file>
         <file version="3.0">synthetic/word-font.3.0.xml</file>
+        <file version="4.0">synthetic/words-symbol.4.0.xml</file>
         <file version="3.0">synthetic/words.3.0.xml</file>
         <file version="3.1">synthetic/words.3.1.xml</file>
         <file version="3.0">synthetic/work-number.3.0.xml</file>
         <file version="3.0">synthetic/work-title.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="part" total-files="835" wild-files="445" synthetic-files="390" min-synthetic-version="3.0">
+    <element name="part" total-files="836" wild-files="445" synthetic-files="391" min-synthetic-version="3.0">
       <attributes>
-        <attribute name="id" wild-files="445" synthetic-files="390"/>
+        <attribute name="id" wild-files="445" synthetic-files="391"/>
       </attributes>
       <wild-files count="445">
         <file>custom/musescore-slur-start-stop.musicxml</file>
@@ -444,7 +445,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 433 more -->
       </wild-files>
-      <synthetic-files count="390" min-version="3.0">
+      <synthetic-files count="391" min-version="3.0">
         <file version="3.0">synthetic/accent.3.0.xml</file>
         <file version="3.0">synthetic/accidental-mark.3.0.xml</file>
         <file version="3.1">synthetic/accidental-mark.3.1.xml</file>
@@ -831,13 +832,14 @@
         <file version="3.0">synthetic/wood.3.0.xml</file>
         <file version="4.0">synthetic/wood.4.0.xml</file>
         <file version="3.0">synthetic/word-font.3.0.xml</file>
+        <file version="4.0">synthetic/words-symbol.4.0.xml</file>
         <file version="3.0">synthetic/words.3.0.xml</file>
         <file version="3.1">synthetic/words.3.1.xml</file>
         <file version="3.0">synthetic/work-number.3.0.xml</file>
         <file version="3.0">synthetic/work-title.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="part-list" total-files="835" wild-files="445" synthetic-files="390" min-synthetic-version="3.0">
+    <element name="part-list" total-files="836" wild-files="445" synthetic-files="391" min-synthetic-version="3.0">
       <wild-files count="445">
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
@@ -853,7 +855,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 433 more -->
       </wild-files>
-      <synthetic-files count="390" min-version="3.0">
+      <synthetic-files count="391" min-version="3.0">
         <file version="3.0">synthetic/accent.3.0.xml</file>
         <file version="3.0">synthetic/accidental-mark.3.0.xml</file>
         <file version="3.1">synthetic/accidental-mark.3.1.xml</file>
@@ -1240,13 +1242,14 @@
         <file version="3.0">synthetic/wood.3.0.xml</file>
         <file version="4.0">synthetic/wood.4.0.xml</file>
         <file version="3.0">synthetic/word-font.3.0.xml</file>
+        <file version="4.0">synthetic/words-symbol.4.0.xml</file>
         <file version="3.0">synthetic/words.3.0.xml</file>
         <file version="3.1">synthetic/words.3.1.xml</file>
         <file version="3.0">synthetic/work-number.3.0.xml</file>
         <file version="3.0">synthetic/work-title.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="part-name" total-files="835" wild-files="445" synthetic-files="390" min-synthetic-version="3.0">
+    <element name="part-name" total-files="836" wild-files="445" synthetic-files="391" min-synthetic-version="3.0">
       <attributes>
         <attribute name="print-object" wild-files="39" synthetic-files="1"/>
         <attribute name="color" wild-files="1" synthetic-files="1"/>
@@ -1275,7 +1278,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 433 more -->
       </wild-files>
-      <synthetic-files count="390" min-version="3.0">
+      <synthetic-files count="391" min-version="3.0">
         <file version="3.0">synthetic/accent.3.0.xml</file>
         <file version="3.0">synthetic/accidental-mark.3.0.xml</file>
         <file version="3.1">synthetic/accidental-mark.3.1.xml</file>
@@ -1662,15 +1665,16 @@
         <file version="3.0">synthetic/wood.3.0.xml</file>
         <file version="4.0">synthetic/wood.4.0.xml</file>
         <file version="3.0">synthetic/word-font.3.0.xml</file>
+        <file version="4.0">synthetic/words-symbol.4.0.xml</file>
         <file version="3.0">synthetic/words.3.0.xml</file>
         <file version="3.1">synthetic/words.3.1.xml</file>
         <file version="3.0">synthetic/work-number.3.0.xml</file>
         <file version="3.0">synthetic/work-title.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="score-part" total-files="835" wild-files="445" synthetic-files="390" min-synthetic-version="3.0">
+    <element name="score-part" total-files="836" wild-files="445" synthetic-files="391" min-synthetic-version="3.0">
       <attributes>
-        <attribute name="id" wild-files="445" synthetic-files="390"/>
+        <attribute name="id" wild-files="445" synthetic-files="391"/>
       </attributes>
       <wild-files count="445">
         <file>custom/musescore-slur-start-stop.musicxml</file>
@@ -1687,7 +1691,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 433 more -->
       </wild-files>
-      <synthetic-files count="390" min-version="3.0">
+      <synthetic-files count="391" min-version="3.0">
         <file version="3.0">synthetic/accent.3.0.xml</file>
         <file version="3.0">synthetic/accidental-mark.3.0.xml</file>
         <file version="3.1">synthetic/accidental-mark.3.1.xml</file>
@@ -2074,15 +2078,16 @@
         <file version="3.0">synthetic/wood.3.0.xml</file>
         <file version="4.0">synthetic/wood.4.0.xml</file>
         <file version="3.0">synthetic/word-font.3.0.xml</file>
+        <file version="4.0">synthetic/words-symbol.4.0.xml</file>
         <file version="3.0">synthetic/words.3.0.xml</file>
         <file version="3.1">synthetic/words.3.1.xml</file>
         <file version="3.0">synthetic/work-number.3.0.xml</file>
         <file version="3.0">synthetic/work-title.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="score-partwise" total-files="832" wild-files="442" synthetic-files="390" min-synthetic-version="3.0">
+    <element name="score-partwise" total-files="833" wild-files="442" synthetic-files="391" min-synthetic-version="3.0">
       <attributes>
-        <attribute name="version" wild-files="168" synthetic-files="390"/>
+        <attribute name="version" wild-files="168" synthetic-files="391"/>
       </attributes>
       <wild-files count="442">
         <file>custom/musescore-slur-start-stop.musicxml</file>
@@ -2099,7 +2104,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 430 more -->
       </wild-files>
-      <synthetic-files count="390" min-version="3.0">
+      <synthetic-files count="391" min-version="3.0">
         <file version="3.0">synthetic/accent.3.0.xml</file>
         <file version="3.0">synthetic/accidental-mark.3.0.xml</file>
         <file version="3.1">synthetic/accidental-mark.3.1.xml</file>
@@ -2486,13 +2491,14 @@
         <file version="3.0">synthetic/wood.3.0.xml</file>
         <file version="4.0">synthetic/wood.4.0.xml</file>
         <file version="3.0">synthetic/word-font.3.0.xml</file>
+        <file version="4.0">synthetic/words-symbol.4.0.xml</file>
         <file version="3.0">synthetic/words.3.0.xml</file>
         <file version="3.1">synthetic/words.3.1.xml</file>
         <file version="3.0">synthetic/work-number.3.0.xml</file>
         <file version="3.0">synthetic/work-title.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="duration" total-files="454" wild-files="440" synthetic-files="14" min-synthetic-version="3.0">
+    <element name="duration" total-files="455" wild-files="440" synthetic-files="15" min-synthetic-version="3.0">
       <wild-files count="440">
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
@@ -2508,7 +2514,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 428 more -->
       </wild-files>
-      <synthetic-files count="14" min-version="3.0">
+      <synthetic-files count="15" min-version="3.0">
         <file version="3.0">synthetic/cancel.location.3.0.xml</file>
         <file version="3.0">synthetic/coda.3.0.xml</file>
         <file version="3.1">synthetic/coda.3.1.xml</file>
@@ -2523,9 +2529,10 @@
         <file version="3.0">synthetic/segno.3.0.xml</file>
         <file version="3.1">synthetic/segno.3.1.xml</file>
         <file version="3.0">synthetic/suffix.3.0.xml</file>
+        <file version="4.0">synthetic/words-symbol.4.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="attributes" total-files="479" wild-files="438" synthetic-files="41" min-synthetic-version="3.0">
+    <element name="attributes" total-files="480" wild-files="438" synthetic-files="42" min-synthetic-version="3.0">
       <wild-files count="438">
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
@@ -2541,7 +2548,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 426 more -->
       </wild-files>
-      <synthetic-files count="41" min-version="3.0">
+      <synthetic-files count="42" min-version="3.0">
         <file version="3.0">synthetic/beat-repeat.3.0.xml</file>
         <file version="3.0">synthetic/beat-type.3.0.xml</file>
         <file version="3.0">synthetic/beats.3.0.xml</file>
@@ -2583,9 +2590,10 @@
         <file version="3.1">synthetic/time.3.1.xml</file>
         <file version="3.0">synthetic/transpose.3.0.xml</file>
         <file version="3.1">synthetic/transpose.3.1.xml</file>
+        <file version="4.0">synthetic/words-symbol.4.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="divisions" total-files="446" wild-files="438" synthetic-files="8" min-synthetic-version="3.0">
+    <element name="divisions" total-files="447" wild-files="438" synthetic-files="9" min-synthetic-version="3.0">
       <wild-files count="438">
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
@@ -2601,7 +2609,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 426 more -->
       </wild-files>
-      <synthetic-files count="8" min-version="3.0">
+      <synthetic-files count="9" min-version="3.0">
         <file version="3.0">synthetic/cancel.location.3.0.xml</file>
         <file version="3.0">synthetic/coda.3.0.xml</file>
         <file version="3.1">synthetic/coda.3.1.xml</file>
@@ -2610,9 +2618,10 @@
         <file version="3.1">synthetic/key-accidental.smufl.3.1.xml</file>
         <file version="3.0">synthetic/segno.3.0.xml</file>
         <file version="3.1">synthetic/segno.3.1.xml</file>
+        <file version="4.0">synthetic/words-symbol.4.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="note" total-files="661" wild-files="438" synthetic-files="223" min-synthetic-version="3.0">
+    <element name="note" total-files="662" wild-files="438" synthetic-files="224" min-synthetic-version="3.0">
       <attributes>
         <attribute name="default-x" wild-files="146" synthetic-files="2"/>
         <attribute name="default-y" wild-files="58" synthetic-files="2"/>
@@ -2651,7 +2660,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 426 more -->
       </wild-files>
-      <synthetic-files count="223" min-version="3.0">
+      <synthetic-files count="224" min-version="3.0">
         <file version="3.0">synthetic/accent.3.0.xml</file>
         <file version="3.0">synthetic/accidental-mark.3.0.xml</file>
         <file version="3.1">synthetic/accidental-mark.3.1.xml</file>
@@ -2873,11 +2882,12 @@
         <file version="4.0">synthetic/wavy-line.4.0.xml</file>
         <file version="3.0">synthetic/with-bar.3.0.xml</file>
         <file version="3.0">synthetic/word-font.3.0.xml</file>
+        <file version="4.0">synthetic/words-symbol.4.0.xml</file>
         <file version="3.0">synthetic/work-number.3.0.xml</file>
         <file version="3.0">synthetic/work-title.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="clef" total-files="420" wild-files="415" synthetic-files="5" min-synthetic-version="3.0">
+    <element name="clef" total-files="421" wild-files="415" synthetic-files="6" min-synthetic-version="3.0">
       <attributes>
         <attribute name="number" wild-files="114" synthetic-files="2"/>
         <attribute name="color" wild-files="2" synthetic-files="2"/>
@@ -2910,62 +2920,65 @@
         <file>foundsuite/Invention 3.xml</file>
         <!-- 403 more -->
       </wild-files>
-      <synthetic-files count="5" min-version="3.0">
-        <file version="3.0">synthetic/cancel.location.3.0.xml</file>
-        <file version="3.0">synthetic/clef.3.0.xml</file>
-        <file version="3.1">synthetic/clef.3.1.xml</file>
-        <file version="3.0">synthetic/key-accidental.3.0.xml</file>
-        <file version="3.1">synthetic/key-accidental.smufl.3.1.xml</file>
-      </synthetic-files>
-    </element>
-    <element name="line" total-files="418" wild-files="415" synthetic-files="3" min-synthetic-version="3.0">
-      <wild-files count="415">
-        <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/systems-and-pages.xml</file>
-        <file>custom/transposition.musicxml</file>
-        <file>foundsuite/12 Horn Duets.xml</file>
-        <file>foundsuite/ARBEAU Belle qui tiens ma vie.xml</file>
-        <file>foundsuite/Adagio and Fugue in C minor, K.546.xml</file>
-        <file>foundsuite/An Chloe.xml</file>
-        <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
-        <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
-        <file>foundsuite/Invention 1.xml</file>
-        <file>foundsuite/Invention 2.xml</file>
-        <file>foundsuite/Invention 3.xml</file>
-        <!-- 403 more -->
-      </wild-files>
-      <synthetic-files count="3" min-version="3.0">
-        <file version="3.0">synthetic/cancel.location.3.0.xml</file>
-        <file version="3.0">synthetic/key-accidental.3.0.xml</file>
-        <file version="3.1">synthetic/key-accidental.smufl.3.1.xml</file>
-      </synthetic-files>
-    </element>
-    <element name="sign" total-files="421" wild-files="415" synthetic-files="6" min-synthetic-version="3.0">
-      <wild-files count="415">
-        <file>custom/musescore-slur-start-stop.musicxml</file>
-        <file>custom/systems-and-pages.xml</file>
-        <file>custom/transposition.musicxml</file>
-        <file>foundsuite/12 Horn Duets.xml</file>
-        <file>foundsuite/ARBEAU Belle qui tiens ma vie.xml</file>
-        <file>foundsuite/Adagio and Fugue in C minor, K.546.xml</file>
-        <file>foundsuite/An Chloe.xml</file>
-        <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
-        <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
-        <file>foundsuite/Invention 1.xml</file>
-        <file>foundsuite/Invention 2.xml</file>
-        <file>foundsuite/Invention 3.xml</file>
-        <!-- 403 more -->
-      </wild-files>
       <synthetic-files count="6" min-version="3.0">
         <file version="3.0">synthetic/cancel.location.3.0.xml</file>
         <file version="3.0">synthetic/clef.3.0.xml</file>
         <file version="3.1">synthetic/clef.3.1.xml</file>
         <file version="3.0">synthetic/key-accidental.3.0.xml</file>
         <file version="3.1">synthetic/key-accidental.smufl.3.1.xml</file>
-        <file version="4.0">synthetic/part-clef.4.0.xml</file>
+        <file version="4.0">synthetic/words-symbol.4.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="type" total-files="423" wild-files="415" synthetic-files="8" min-synthetic-version="3.0">
+    <element name="line" total-files="419" wild-files="415" synthetic-files="4" min-synthetic-version="3.0">
+      <wild-files count="415">
+        <file>custom/musescore-slur-start-stop.musicxml</file>
+        <file>custom/systems-and-pages.xml</file>
+        <file>custom/transposition.musicxml</file>
+        <file>foundsuite/12 Horn Duets.xml</file>
+        <file>foundsuite/ARBEAU Belle qui tiens ma vie.xml</file>
+        <file>foundsuite/Adagio and Fugue in C minor, K.546.xml</file>
+        <file>foundsuite/An Chloe.xml</file>
+        <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
+        <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
+        <file>foundsuite/Invention 1.xml</file>
+        <file>foundsuite/Invention 2.xml</file>
+        <file>foundsuite/Invention 3.xml</file>
+        <!-- 403 more -->
+      </wild-files>
+      <synthetic-files count="4" min-version="3.0">
+        <file version="3.0">synthetic/cancel.location.3.0.xml</file>
+        <file version="3.0">synthetic/key-accidental.3.0.xml</file>
+        <file version="3.1">synthetic/key-accidental.smufl.3.1.xml</file>
+        <file version="4.0">synthetic/words-symbol.4.0.xml</file>
+      </synthetic-files>
+    </element>
+    <element name="sign" total-files="422" wild-files="415" synthetic-files="7" min-synthetic-version="3.0">
+      <wild-files count="415">
+        <file>custom/musescore-slur-start-stop.musicxml</file>
+        <file>custom/systems-and-pages.xml</file>
+        <file>custom/transposition.musicxml</file>
+        <file>foundsuite/12 Horn Duets.xml</file>
+        <file>foundsuite/ARBEAU Belle qui tiens ma vie.xml</file>
+        <file>foundsuite/Adagio and Fugue in C minor, K.546.xml</file>
+        <file>foundsuite/An Chloe.xml</file>
+        <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
+        <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
+        <file>foundsuite/Invention 1.xml</file>
+        <file>foundsuite/Invention 2.xml</file>
+        <file>foundsuite/Invention 3.xml</file>
+        <!-- 403 more -->
+      </wild-files>
+      <synthetic-files count="7" min-version="3.0">
+        <file version="3.0">synthetic/cancel.location.3.0.xml</file>
+        <file version="3.0">synthetic/clef.3.0.xml</file>
+        <file version="3.1">synthetic/clef.3.1.xml</file>
+        <file version="3.0">synthetic/key-accidental.3.0.xml</file>
+        <file version="3.1">synthetic/key-accidental.smufl.3.1.xml</file>
+        <file version="4.0">synthetic/part-clef.4.0.xml</file>
+        <file version="4.0">synthetic/words-symbol.4.0.xml</file>
+      </synthetic-files>
+    </element>
+    <element name="type" total-files="424" wild-files="415" synthetic-files="9" min-synthetic-version="3.0">
       <attributes>
         <attribute name="size" wild-files="8" synthetic-files="0"/>
       </attributes>
@@ -2984,7 +2997,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 403 more -->
       </wild-files>
-      <synthetic-files count="8" min-version="3.0">
+      <synthetic-files count="9" min-version="3.0">
         <file version="3.0">synthetic/cancel.location.3.0.xml</file>
         <file version="3.0">synthetic/coda.3.0.xml</file>
         <file version="3.1">synthetic/coda.3.1.xml</file>
@@ -2993,9 +3006,10 @@
         <file version="3.1">synthetic/key-accidental.smufl.3.1.xml</file>
         <file version="3.0">synthetic/segno.3.0.xml</file>
         <file version="3.1">synthetic/segno.3.1.xml</file>
+        <file version="4.0">synthetic/words-symbol.4.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="time" total-files="424" wild-files="414" synthetic-files="10" min-synthetic-version="3.0">
+    <element name="time" total-files="425" wild-files="414" synthetic-files="11" min-synthetic-version="3.0">
       <attributes>
         <attribute name="symbol" wild-files="110" synthetic-files="2"/>
         <attribute name="print-object" wild-files="3" synthetic-files="2"/>
@@ -3029,7 +3043,7 @@
         <file>foundsuite/Invention 2.xml</file>
         <!-- 402 more -->
       </wild-files>
-      <synthetic-files count="10" min-version="3.0">
+      <synthetic-files count="11" min-version="3.0">
         <file version="3.0">synthetic/beat-type.3.0.xml</file>
         <file version="3.0">synthetic/beats.3.0.xml</file>
         <file version="3.0">synthetic/cancel.location.3.0.xml</file>
@@ -3040,9 +3054,10 @@
         <file version="3.0">synthetic/time-relation.3.0.xml</file>
         <file version="3.0">synthetic/time.3.0.xml</file>
         <file version="3.1">synthetic/time.3.1.xml</file>
+        <file version="4.0">synthetic/words-symbol.4.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="beat-type" total-files="422" wild-files="413" synthetic-files="9" min-synthetic-version="3.0">
+    <element name="beat-type" total-files="423" wild-files="413" synthetic-files="10" min-synthetic-version="3.0">
       <wild-files count="413">
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
@@ -3058,7 +3073,7 @@
         <file>foundsuite/Invention 2.xml</file>
         <!-- 401 more -->
       </wild-files>
-      <synthetic-files count="9" min-version="3.0">
+      <synthetic-files count="10" min-version="3.0">
         <file version="3.0">synthetic/beat-type.3.0.xml</file>
         <file version="3.0">synthetic/beats.3.0.xml</file>
         <file version="3.0">synthetic/cancel.location.3.0.xml</file>
@@ -3068,9 +3083,10 @@
         <file version="3.0">synthetic/time-relation.3.0.xml</file>
         <file version="3.0">synthetic/time.3.0.xml</file>
         <file version="3.1">synthetic/time.3.1.xml</file>
+        <file version="4.0">synthetic/words-symbol.4.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="beats" total-files="422" wild-files="413" synthetic-files="9" min-synthetic-version="3.0">
+    <element name="beats" total-files="423" wild-files="413" synthetic-files="10" min-synthetic-version="3.0">
       <wild-files count="413">
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/systems-and-pages.xml</file>
@@ -3086,7 +3102,7 @@
         <file>foundsuite/Invention 2.xml</file>
         <!-- 401 more -->
       </wild-files>
-      <synthetic-files count="9" min-version="3.0">
+      <synthetic-files count="10" min-version="3.0">
         <file version="3.0">synthetic/beat-type.3.0.xml</file>
         <file version="3.0">synthetic/beats.3.0.xml</file>
         <file version="3.0">synthetic/cancel.location.3.0.xml</file>
@@ -3096,6 +3112,7 @@
         <file version="3.0">synthetic/time-relation.3.0.xml</file>
         <file version="3.0">synthetic/time.3.0.xml</file>
         <file version="3.1">synthetic/time.3.1.xml</file>
+        <file version="4.0">synthetic/words-symbol.4.0.xml</file>
       </synthetic-files>
     </element>
     <element name="voice" total-files="715" wild-files="408" synthetic-files="307" min-synthetic-version="3.0">
@@ -3424,7 +3441,7 @@
         <file version="3.0">synthetic/work-title.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="octave" total-files="630" wild-files="407" synthetic-files="223" min-synthetic-version="3.0">
+    <element name="octave" total-files="631" wild-files="407" synthetic-files="224" min-synthetic-version="3.0">
       <wild-files count="407">
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
@@ -3440,7 +3457,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 395 more -->
       </wild-files>
-      <synthetic-files count="223" min-version="3.0">
+      <synthetic-files count="224" min-version="3.0">
         <file version="3.0">synthetic/accent.3.0.xml</file>
         <file version="3.0">synthetic/accidental-mark.3.0.xml</file>
         <file version="3.1">synthetic/accidental-mark.3.1.xml</file>
@@ -3662,11 +3679,12 @@
         <file version="4.0">synthetic/wavy-line.4.0.xml</file>
         <file version="3.0">synthetic/with-bar.3.0.xml</file>
         <file version="3.0">synthetic/word-font.3.0.xml</file>
+        <file version="4.0">synthetic/words-symbol.4.0.xml</file>
         <file version="3.0">synthetic/work-number.3.0.xml</file>
         <file version="3.0">synthetic/work-title.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="pitch" total-files="630" wild-files="407" synthetic-files="223" min-synthetic-version="3.0">
+    <element name="pitch" total-files="631" wild-files="407" synthetic-files="224" min-synthetic-version="3.0">
       <wild-files count="407">
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
@@ -3682,7 +3700,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 395 more -->
       </wild-files>
-      <synthetic-files count="223" min-version="3.0">
+      <synthetic-files count="224" min-version="3.0">
         <file version="3.0">synthetic/accent.3.0.xml</file>
         <file version="3.0">synthetic/accidental-mark.3.0.xml</file>
         <file version="3.1">synthetic/accidental-mark.3.1.xml</file>
@@ -3904,11 +3922,12 @@
         <file version="4.0">synthetic/wavy-line.4.0.xml</file>
         <file version="3.0">synthetic/with-bar.3.0.xml</file>
         <file version="3.0">synthetic/word-font.3.0.xml</file>
+        <file version="4.0">synthetic/words-symbol.4.0.xml</file>
         <file version="3.0">synthetic/work-number.3.0.xml</file>
         <file version="3.0">synthetic/work-title.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="step" total-files="630" wild-files="407" synthetic-files="223" min-synthetic-version="3.0">
+    <element name="step" total-files="631" wild-files="407" synthetic-files="224" min-synthetic-version="3.0">
       <wild-files count="407">
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
@@ -3924,7 +3943,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 395 more -->
       </wild-files>
-      <synthetic-files count="223" min-version="3.0">
+      <synthetic-files count="224" min-version="3.0">
         <file version="3.0">synthetic/accent.3.0.xml</file>
         <file version="3.0">synthetic/accidental-mark.3.0.xml</file>
         <file version="3.1">synthetic/accidental-mark.3.1.xml</file>
@@ -4146,6 +4165,7 @@
         <file version="4.0">synthetic/wavy-line.4.0.xml</file>
         <file version="3.0">synthetic/with-bar.3.0.xml</file>
         <file version="3.0">synthetic/word-font.3.0.xml</file>
+        <file version="4.0">synthetic/words-symbol.4.0.xml</file>
         <file version="3.0">synthetic/work-number.3.0.xml</file>
         <file version="3.0">synthetic/work-title.3.0.xml</file>
       </synthetic-files>
@@ -4896,9 +4916,9 @@
         <file version="3.0">synthetic/dot.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="direction" total-files="252" wild-files="161" synthetic-files="91" min-synthetic-version="3.0">
+    <element name="direction" total-files="253" wild-files="161" synthetic-files="92" min-synthetic-version="3.0">
       <attributes>
-        <attribute name="placement" wild-files="150" synthetic-files="2"/>
+        <attribute name="placement" wild-files="150" synthetic-files="3"/>
         <attribute name="directive" wild-files="27" synthetic-files="2"/>
         <attribute name="id" wild-files="0" synthetic-files="2"/>
         <attribute name="system" wild-files="0" synthetic-files="1"/>
@@ -4918,7 +4938,7 @@
         <file>foundsuite/PezR44Sco.xml</file>
         <!-- 149 more -->
       </wild-files>
-      <synthetic-files count="91" min-version="3.0">
+      <synthetic-files count="92" min-version="3.0">
         <file version="3.0">synthetic/accordion-registration.3.0.xml</file>
         <file version="3.1">synthetic/accordion-registration.3.1.xml</file>
         <file version="3.1">synthetic/beat-unit-tied.3.1.xml</file>
@@ -5008,11 +5028,12 @@
         <file version="3.1">synthetic/wedge.3.1.xml</file>
         <file version="3.0">synthetic/wood.3.0.xml</file>
         <file version="4.0">synthetic/wood.4.0.xml</file>
+        <file version="4.0">synthetic/words-symbol.4.0.xml</file>
         <file version="3.0">synthetic/words.3.0.xml</file>
         <file version="3.1">synthetic/words.3.1.xml</file>
       </synthetic-files>
     </element>
-    <element name="direction-type" total-files="252" wild-files="161" synthetic-files="91" min-synthetic-version="3.0">
+    <element name="direction-type" total-files="253" wild-files="161" synthetic-files="92" min-synthetic-version="3.0">
       <attributes>
         <attribute name="id" wild-files="0" synthetic-files="1"/>
       </attributes>
@@ -5031,7 +5052,7 @@
         <file>foundsuite/PezR44Sco.xml</file>
         <!-- 149 more -->
       </wild-files>
-      <synthetic-files count="91" min-version="3.0">
+      <synthetic-files count="92" min-version="3.0">
         <file version="3.0">synthetic/accordion-registration.3.0.xml</file>
         <file version="3.1">synthetic/accordion-registration.3.1.xml</file>
         <file version="3.1">synthetic/beat-unit-tied.3.1.xml</file>
@@ -5121,6 +5142,7 @@
         <file version="3.1">synthetic/wedge.3.1.xml</file>
         <file version="3.0">synthetic/wood.3.0.xml</file>
         <file version="4.0">synthetic/wood.4.0.xml</file>
+        <file version="4.0">synthetic/words-symbol.4.0.xml</file>
         <file version="3.0">synthetic/words.3.0.xml</file>
         <file version="3.1">synthetic/words.3.1.xml</file>
       </synthetic-files>
@@ -6760,7 +6782,7 @@
         <file version="3.0">synthetic/credit-type.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="words" total-files="79" wild-files="77" synthetic-files="2" min-synthetic-version="3.0">
+    <element name="words" total-files="80" wild-files="77" synthetic-files="3" min-synthetic-version="3.0">
       <attributes>
         <attribute name="font-weight" wild-files="44" synthetic-files="2"/>
         <attribute name="font-size" wild-files="41" synthetic-files="2"/>
@@ -6801,7 +6823,8 @@
         <file>foundsuite/Schubert_der_Mueller.xml</file>
         <!-- 65 more -->
       </wild-files>
-      <synthetic-files count="2" min-version="3.0">
+      <synthetic-files count="3" min-version="3.0">
+        <file version="4.0">synthetic/words-symbol.4.0.xml</file>
         <file version="3.0">synthetic/words.3.0.xml</file>
         <file version="3.1">synthetic/words.3.1.xml</file>
       </synthetic-files>
@@ -6838,7 +6861,7 @@
         <file version="3.0">synthetic/staccato.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="dynamics" total-files="80" wild-files="74" synthetic-files="6" min-synthetic-version="3.0">
+    <element name="dynamics" total-files="81" wild-files="74" synthetic-files="7" min-synthetic-version="3.0">
       <attributes>
         <attribute name="default-y" wild-files="29" synthetic-files="1"/>
         <attribute name="halign" wild-files="24" synthetic-files="1"/>
@@ -6873,16 +6896,17 @@
         <file>ksuite/k007a_Notations_Dynamics.xml</file>
         <!-- 62 more -->
       </wild-files>
-      <synthetic-files count="6" min-version="3.0">
+      <synthetic-files count="7" min-version="3.0">
         <file version="3.1">synthetic/dynamics.3.1.xml</file>
         <file version="3.1">synthetic/n.3.1.xml</file>
         <file version="3.0">synthetic/other-dynamics.3.0.xml</file>
         <file version="3.1">synthetic/other-dynamics.3.1.xml</file>
         <file version="3.1">synthetic/pf.3.1.xml</file>
         <file version="3.1">synthetic/sfzp.3.1.xml</file>
+        <file version="4.0">synthetic/words-symbol.4.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="p" total-files="60" wild-files="59" synthetic-files="1" min-synthetic-version="3.1">
+    <element name="p" total-files="61" wild-files="59" synthetic-files="2" min-synthetic-version="3.1">
       <wild-files count="59">
         <file>foundsuite/Adagio and Fugue in C minor, K.546.xml</file>
         <file>foundsuite/An Chloe.xml</file>
@@ -6898,8 +6922,9 @@
         <file>ksuite/k007a_Notations_Dynamics.xml</file>
         <!-- 47 more -->
       </wild-files>
-      <synthetic-files count="1" min-version="3.1">
+      <synthetic-files count="2" min-version="3.1">
         <file version="3.1">synthetic/dynamics.3.1.xml</file>
+        <file version="4.0">synthetic/words-symbol.4.0.xml</file>
       </synthetic-files>
     </element>
     <element name="breath-mark" total-files="58" wild-files="57" synthetic-files="1" min-synthetic-version="3.0">
@@ -7210,7 +7235,7 @@
         <file version="4.0">synthetic/wavy-line.4.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="f" total-files="46" wild-files="46" synthetic-files="0">
+    <element name="f" total-files="47" wild-files="46" synthetic-files="1" min-synthetic-version="4.0">
       <wild-files count="46">
         <file>foundsuite/Adagio and Fugue in C minor, K.546.xml</file>
         <file>foundsuite/An Chloe.xml</file>
@@ -7226,7 +7251,8 @@
         <file>ksuite/k007c_Directions_Dynamics.xml</file>
         <!-- 34 more -->
       </wild-files>
-      <synthetic-files count="0">
+      <synthetic-files count="1" min-version="4.0">
+        <file version="4.0">synthetic/words-symbol.4.0.xml</file>
       </synthetic-files>
     </element>
     <element name="display-octave" total-files="45" wild-files="45" synthetic-files="0">
@@ -7579,7 +7605,7 @@
       <synthetic-files count="0">
       </synthetic-files>
     </element>
-    <element name="mf" total-files="36" wild-files="36" synthetic-files="0">
+    <element name="mf" total-files="37" wild-files="36" synthetic-files="1" min-synthetic-version="4.0">
       <wild-files count="36">
         <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
@@ -7595,7 +7621,8 @@
         <file>lysuite/ly31a_Directions.xml</file>
         <!-- 24 more -->
       </wild-files>
-      <synthetic-files count="0">
+      <synthetic-files count="1" min-version="4.0">
+        <file version="4.0">synthetic/words-symbol.4.0.xml</file>
       </synthetic-files>
     </element>
     <element name="repeat" total-files="33" wild-files="32" synthetic-files="1" min-synthetic-version="4.0">
@@ -8121,7 +8148,7 @@
         <file version="3.0">synthetic/source.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="ff" total-files="24" wild-files="24" synthetic-files="0">
+    <element name="ff" total-files="25" wild-files="24" synthetic-files="1" min-synthetic-version="4.0">
       <wild-files count="24">
         <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
         <file>foundsuite/Black Note Study Op 10 no 5.xml</file>
@@ -8137,7 +8164,8 @@
         <file>musetrainer/Chopin_-_Nocturne_Op._9_No._1.xml</file>
         <!-- 12 more -->
       </wild-files>
-      <synthetic-files count="0">
+      <synthetic-files count="1" min-version="4.0">
+        <file version="4.0">synthetic/words-symbol.4.0.xml</file>
       </synthetic-files>
     </element>
     <element name="staff-details" total-files="27" wild-files="24" synthetic-files="3" min-synthetic-version="3.0">
@@ -13747,7 +13775,7 @@
         <file version="4.0">synthetic/swing-type.4.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="symbol" total-files="1" wild-files="0" synthetic-files="1" min-synthetic-version="3.1">
+    <element name="symbol" total-files="2" wild-files="0" synthetic-files="2" min-synthetic-version="3.1">
       <attributes>
         <attribute name="color" wild-files="0" synthetic-files="1"/>
         <attribute name="default-x" wild-files="0" synthetic-files="1"/>
@@ -13773,8 +13801,9 @@
       </attributes>
       <wild-files count="0">
       </wild-files>
-      <synthetic-files count="1" min-version="3.1">
+      <synthetic-files count="2" min-version="3.1">
         <file version="3.1">synthetic/symbol.3.1.xml</file>
+        <file version="4.0">synthetic/words-symbol.4.0.xml</file>
       </synthetic-files>
     </element>
     <element name="sync" total-files="2" wild-files="0" synthetic-files="2" min-synthetic-version="4.0">

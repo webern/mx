@@ -205,14 +205,7 @@ std::vector<core::MusicDataChoice> DirectionWriter::getDirectionLikeThings()
         direction.setEditorialVoiceDirection(std::move(editorialVoice));
     }
 
-    if (myDirectionData.orderedComponents.empty())
-    {
-        emitFixedOrder(direction);
-    }
-    else
-    {
-        emitOrderedComponents(direction);
-    }
+    emitDirectionTypes(direction);
 
     if (myIsFirstDirectionTypeAdded)
     {
@@ -339,12 +332,12 @@ void DirectionWriter::emitPedal(const api::PedalLineData &item, core::Direction 
     addDirectionType(std::move(dt), direction);
 }
 
-void DirectionWriter::emitWedgeStop(const api::WedgeStop &wedgeStop, core::Direction &direction)
+void DirectionWriter::emitWedgeStop(const api::WedgeStop &wedgeStop, const void *inIdentity, core::Direction &direction)
 {
     core::Wedge wedge{};
     wedge.setType(core::WedgeType::stop());
 
-    const auto number = myNumberResolver.emittedNumber(wedgeStop.number, &wedgeStop);
+    const auto number = myNumberResolver.emittedNumber(wedgeStop.number, inIdentity);
     if (number.has_value())
     {
         wedge.setNumber(core::NumberLevel{*number});
@@ -360,7 +353,8 @@ void DirectionWriter::emitWedgeStop(const api::WedgeStop &wedgeStop, core::Direc
     addDirectionType(std::move(dt), direction);
 }
 
-void DirectionWriter::emitWedgeStart(const api::WedgeStart &wedgeStart, core::Direction &direction)
+void DirectionWriter::emitWedgeStart(const api::WedgeStart &wedgeStart, const void *inIdentity,
+                                     core::Direction &direction)
 {
     core::Wedge wedge{};
 
@@ -369,7 +363,7 @@ void DirectionWriter::emitWedgeStart(const api::WedgeStart &wedgeStart, core::Di
         wedge.setType(myConverter.convert(wedgeStart.wedgeType));
     }
 
-    const auto number = myNumberResolver.emittedNumber(wedgeStart.number, &wedgeStart);
+    const auto number = myNumberResolver.emittedNumber(wedgeStart.number, inIdentity);
     if (number.has_value())
     {
         wedge.setNumber(core::NumberLevel{*number});
@@ -391,12 +385,12 @@ void DirectionWriter::emitWedgeStart(const api::WedgeStart &wedgeStart, core::Di
     addDirectionType(std::move(dt), direction);
 }
 
-void DirectionWriter::emitOttavaStop(const api::OttavaStop &ottavaStop, core::Direction &direction)
+void DirectionWriter::emitOttavaStop(const api::OttavaStop &ottavaStop, const void *inIdentity,
+                                     core::Direction &direction)
 {
     core::OctaveShift os{};
-    setAttributesFromSpannerStop(
-        ottavaStop.spannerStop, os,
-        myNumberResolver.emittedNumber(ottavaStop.spannerStop.number, &ottavaStop.spannerStop));
+    setAttributesFromSpannerStop(ottavaStop.spannerStop, os,
+                                 myNumberResolver.emittedNumber(ottavaStop.spannerStop.number, inIdentity));
     os.setType(core::UpDownStopContinue::stop());
     os.setSize(ottavaStop.size);
     core::DirectionType dt{};
@@ -404,12 +398,13 @@ void DirectionWriter::emitOttavaStop(const api::OttavaStop &ottavaStop, core::Di
     addDirectionType(std::move(dt), direction);
 }
 
-void DirectionWriter::emitOttavaStart(const api::OttavaStart &ottavaStart, core::Direction &direction)
+void DirectionWriter::emitOttavaStart(const api::OttavaStart &ottavaStart, const void *inIdentity,
+                                      core::Direction &direction)
 {
     core::OctaveShift os{};
     impl::setAttributesFromLineData(ottavaStart.spannerStart.lineData, os);
 
-    const auto number = myNumberResolver.emittedNumber(ottavaStart.spannerStart.number, &ottavaStart.spannerStart);
+    const auto number = myNumberResolver.emittedNumber(ottavaStart.spannerStart.number, inIdentity);
     if (number.has_value())
     {
         os.setNumber(core::NumberLevel{*number});
@@ -456,10 +451,11 @@ void DirectionWriter::emitOttavaStart(const api::OttavaStart &ottavaStart, core:
     addDirectionType(std::move(dt), direction);
 }
 
-void DirectionWriter::emitBracketStart(const api::SpannerStart &item, core::Direction &direction)
+void DirectionWriter::emitBracketStart(const api::SpannerStart &item, const void *inIdentity,
+                                       core::Direction &direction)
 {
     core::Bracket bracket{};
-    setAttributesFromSpannerStart(item, bracket, myNumberResolver.emittedNumber(item.number, &item));
+    setAttributesFromSpannerStart(item, bracket, myNumberResolver.emittedNumber(item.number, inIdentity));
     bracket.setType(core::StartStopContinue::start());
     setAttributesFromPositionData(item.positionData, bracket);
     setAttributesFromPrintData(item.printData, bracket);
@@ -469,10 +465,10 @@ void DirectionWriter::emitBracketStart(const api::SpannerStart &item, core::Dire
     addDirectionType(std::move(dt), direction);
 }
 
-void DirectionWriter::emitBracketStop(const api::SpannerStop &item, core::Direction &direction)
+void DirectionWriter::emitBracketStop(const api::SpannerStop &item, const void *inIdentity, core::Direction &direction)
 {
     core::Bracket bracket{};
-    setAttributesFromSpannerStop(item, bracket, myNumberResolver.emittedNumber(item.number, &item));
+    setAttributesFromSpannerStop(item, bracket, myNumberResolver.emittedNumber(item.number, inIdentity));
     bracket.setType(core::StartStopContinue::stop());
     applyBracketLineData(item.lineData, bracket, myConverter);
     core::DirectionType dt{};
@@ -480,10 +476,10 @@ void DirectionWriter::emitBracketStop(const api::SpannerStop &item, core::Direct
     addDirectionType(std::move(dt), direction);
 }
 
-void DirectionWriter::emitDashesStart(const api::SpannerStart &item, core::Direction &direction)
+void DirectionWriter::emitDashesStart(const api::SpannerStart &item, const void *inIdentity, core::Direction &direction)
 {
     core::Dashes dashes{};
-    setAttributesFromSpannerStart(item, dashes, myNumberResolver.emittedNumber(item.number, &item));
+    setAttributesFromSpannerStart(item, dashes, myNumberResolver.emittedNumber(item.number, inIdentity));
     dashes.setType(core::StartStopContinue::start());
     setAttributesFromPositionData(item.positionData, dashes);
     setAttributesFromPrintData(item.printData, dashes);
@@ -493,19 +489,17 @@ void DirectionWriter::emitDashesStart(const api::SpannerStart &item, core::Direc
     addDirectionType(std::move(dt), direction);
 }
 
-void DirectionWriter::emitDashesStop(const api::SpannerStop &item, core::Direction &direction)
+void DirectionWriter::emitDashesStop(const api::SpannerStop &item, const void *inIdentity, core::Direction &direction)
 {
     core::Dashes dashes{};
-    setAttributesFromSpannerStop(item, dashes, myNumberResolver.emittedNumber(item.number, &item));
+    setAttributesFromSpannerStop(item, dashes, myNumberResolver.emittedNumber(item.number, inIdentity));
     dashes.setType(core::StartStopContinue::stop());
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::dashes(dashes));
     addDirectionType(std::move(dt), direction);
 }
 
-namespace
-{
-core::BeatUnitGroup makeBeatUnitGroup(const Converter &converter, api::DurationName durationName, int dots)
+static core::BeatUnitGroup makeBeatUnitGroup(const Converter &converter, api::DurationName durationName, int dots)
 {
     core::BeatUnitGroup beatUnitGroup{};
     beatUnitGroup.setBeatUnit(converter.convert(durationName));
@@ -516,14 +510,14 @@ core::BeatUnitGroup makeBeatUnitGroup(const Converter &converter, api::DurationN
     return beatUnitGroup;
 }
 
-core::BeatUnitTied makeBeatUnitTied(const Converter &converter, const api::BeatUnit &beatUnit)
+static core::BeatUnitTied makeBeatUnitTied(const Converter &converter, const api::BeatUnit &beatUnit)
 {
     core::BeatUnitTied tied{};
     tied.setBeatUnit(makeBeatUnitGroup(converter, beatUnit.type, beatUnit.dots));
     return tied;
 }
 
-core::MetronomeNote makeMetronomeNote(const Converter &converter, const api::MetronomeNoteData &note)
+static core::MetronomeNote makeMetronomeNote(const Converter &converter, const api::MetronomeNoteData &note)
 {
     core::MetronomeNote out{};
     out.setMetronomeType(converter.convert(note.metronomeType));
@@ -588,8 +582,8 @@ core::MetronomeNote makeMetronomeNote(const Converter &converter, const api::Met
     return out;
 }
 
-core::OneOrMore<core::MetronomeNote> makeMetronomeNotes(const Converter &converter,
-                                                        const std::vector<api::MetronomeNoteData> &notes)
+static core::OneOrMore<core::MetronomeNote> makeMetronomeNotes(const Converter &converter,
+                                                               const std::vector<api::MetronomeNoteData> &notes)
 {
     core::OneOrMore<core::MetronomeNote> out{makeMetronomeNote(converter, notes.front())};
     for (std::size_t i = 1; i < notes.size(); ++i)
@@ -598,7 +592,6 @@ core::OneOrMore<core::MetronomeNote> makeMetronomeNotes(const Converter &convert
     }
     return out;
 }
-} // namespace
 
 void DirectionWriter::emitTempo(const api::TempoData &tempo, core::Direction &direction)
 {
@@ -705,48 +698,93 @@ void DirectionWriter::emitTempo(const api::TempoData &tempo, core::Direction &di
     addDirectionType(std::move(dt), direction);
 }
 
-void DirectionWriter::emitWords(const std::vector<api::WordsData> &wordsVec, core::Direction &direction)
+// Maps the api enclosure enum shared by rehearsals, words, and symbols to the core
+// enclosure-shape attribute; nullopt (for unspecified) emits no attribute.
+static std::optional<core::EnclosureShape> directionWriterEnclosure(api::RehearsalEnclosure enclosure)
 {
-    if (wordsVec.empty())
+    switch (enclosure)
+    {
+    case api::RehearsalEnclosure::rectangle:
+        return core::EnclosureShape::rectangle();
+    case api::RehearsalEnclosure::square:
+        return core::EnclosureShape::square();
+    case api::RehearsalEnclosure::oval:
+        return core::EnclosureShape::oval();
+    case api::RehearsalEnclosure::circle:
+        return core::EnclosureShape::circle();
+    case api::RehearsalEnclosure::bracket:
+        return core::EnclosureShape::bracket();
+    case api::RehearsalEnclosure::triangle:
+        return core::EnclosureShape::triangle();
+    case api::RehearsalEnclosure::diamond:
+        return core::EnclosureShape::diamond();
+    case api::RehearsalEnclosure::none:
+        return core::EnclosureShape::none();
+    case api::RehearsalEnclosure::unspecified:
+    default:
+        return std::nullopt;
+    }
+}
+
+void DirectionWriter::emitWordsRun(const std::vector<api::WordsChoice> &inRun, core::Direction &direction)
+{
+    // An empty run cannot be expressed (the schema requires at least one words or symbol) and is
+    // not written.
+    if (inRun.empty())
     {
         return;
     }
 
-    bool isFirstWordsAdded = false;
+    bool isFirstItemAdded = false;
     core::OneOrMore<core::DirectionTypeChoiceChoice> choiceSet{core::DirectionTypeChoiceChoice{}};
 
-    for (const auto &wordsData : wordsVec)
+    for (const auto &item : inRun)
     {
-        core::FormattedTextID outWords{};
-        outWords.setValue(wordsData.text);
-        setAttributesFromPositionData(wordsData.positionData, outWords);
-        setAttributesFromFontData(wordsData.fontData, outWords);
+        core::DirectionTypeChoiceChoice choiceItem{};
 
-        if (wordsData.isColorSpecified)
+        if (item.isSymbol())
         {
-            // TODO - oops color is missing from words
-            setAttributesFromColorData(wordsData.colorData, outWords);
-        }
-
-        auto choiceItem = core::DirectionTypeChoiceChoice::words(outWords);
-
-        if (!isFirstWordsAdded)
-        {
-            isFirstWordsAdded = true;
-            choiceSet = core::OneOrMore<core::DirectionTypeChoiceChoice>{choiceItem};
+            const auto symbolData = item.symbol();
+            core::FormattedSymbolID outSymbol{};
+            outSymbol.setValue(core::SmuflGlyphName{symbolData.smufl});
+            setAttributesFromPositionData(symbolData.positionData, outSymbol);
+            setAttributesFromFontData(symbolData.fontData, outSymbol);
+            if (symbolData.color.has_value())
+            {
+                setAttributesFromColorData(*symbolData.color, outSymbol);
+            }
+            outSymbol.setEnclosure(directionWriterEnclosure(symbolData.enclosure));
+            choiceItem = core::DirectionTypeChoiceChoice::symbol(std::move(outSymbol));
         }
         else
         {
-            choiceSet.add(choiceItem);
+            const auto wordsData = item.words();
+            core::FormattedTextID outWords{};
+            outWords.setValue(wordsData.text);
+            setAttributesFromPositionData(wordsData.positionData, outWords);
+            setAttributesFromFontData(wordsData.fontData, outWords);
+            if (wordsData.isColorSpecified)
+            {
+                setAttributesFromColorData(wordsData.colorData, outWords);
+            }
+            outWords.setEnclosure(directionWriterEnclosure(wordsData.enclosure));
+            choiceItem = core::DirectionTypeChoiceChoice::words(std::move(outWords));
+        }
+
+        if (!isFirstItemAdded)
+        {
+            isFirstItemAdded = true;
+            choiceSet = core::OneOrMore<core::DirectionTypeChoiceChoice>{std::move(choiceItem)};
+        }
+        else
+        {
+            choiceSet.add(std::move(choiceItem));
         }
     }
 
-    if (isFirstWordsAdded)
-    {
-        core::DirectionType dt{};
-        dt.setChoice(core::DirectionTypeChoice::choice(choiceSet));
-        addDirectionType(std::move(dt), direction);
-    }
+    core::DirectionType dt{};
+    dt.setChoice(core::DirectionTypeChoice::choice(choiceSet));
+    addDirectionType(std::move(dt), direction);
 }
 
 void DirectionWriter::emitSegno(const api::SegnoData &item, core::Direction &direction)
@@ -803,35 +841,7 @@ void DirectionWriter::emitRehearsal(const api::RehearsalData &item, core::Direct
     {
         setAttributesFromColorData(item.colorData, rehearsal);
     }
-    switch (item.enclosure)
-    {
-    case api::RehearsalEnclosure::unspecified:
-        break;
-    case api::RehearsalEnclosure::rectangle:
-        rehearsal.setEnclosure(core::EnclosureShape::rectangle());
-        break;
-    case api::RehearsalEnclosure::square:
-        rehearsal.setEnclosure(core::EnclosureShape::square());
-        break;
-    case api::RehearsalEnclosure::oval:
-        rehearsal.setEnclosure(core::EnclosureShape::oval());
-        break;
-    case api::RehearsalEnclosure::circle:
-        rehearsal.setEnclosure(core::EnclosureShape::circle());
-        break;
-    case api::RehearsalEnclosure::bracket:
-        rehearsal.setEnclosure(core::EnclosureShape::bracket());
-        break;
-    case api::RehearsalEnclosure::triangle:
-        rehearsal.setEnclosure(core::EnclosureShape::triangle());
-        break;
-    case api::RehearsalEnclosure::diamond:
-        rehearsal.setEnclosure(core::EnclosureShape::diamond());
-        break;
-    case api::RehearsalEnclosure::none:
-        rehearsal.setEnclosure(core::EnclosureShape::none());
-        break;
-    }
+    rehearsal.setEnclosure(directionWriterEnclosure(item.enclosure));
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::rehearsal(core::OneOrMore<core::FormattedTextID>{std::move(rehearsal)}));
     addDirectionType(std::move(dt), direction);
@@ -1277,346 +1287,118 @@ void DirectionWriter::emitPercussion(const api::PercussionData &item, core::Dire
     addDirectionType(std::move(dt), direction);
 }
 
-void DirectionWriter::emitFixedOrder(core::Direction &direction)
+void DirectionWriter::emitDirectionTypes(core::Direction &direction)
 {
-    for (const auto &mark : myDirectionData.marks)
+    for (const auto &choice : myDirectionData.directionTypes)
     {
-        emitMark(mark, direction);
-    }
-
-    for (const auto &item : myDirectionData.pedals)
-    {
-        emitPedal(item, direction);
-    }
-
-    for (const auto &item : myDirectionData.wedgeStops)
-    {
-        emitWedgeStop(item, direction);
-    }
-
-    for (const auto &item : myDirectionData.wedgeStarts)
-    {
-        emitWedgeStart(item, direction);
-    }
-
-    for (const auto &item : myDirectionData.ottavaStops)
-    {
-        emitOttavaStop(item, direction);
-    }
-
-    for (const auto &item : myDirectionData.ottavaStarts)
-    {
-        emitOttavaStart(item, direction);
-    }
-
-    for (const auto &item : myDirectionData.bracketStarts)
-    {
-        emitBracketStart(item, direction);
-    }
-
-    for (const auto &item : myDirectionData.bracketStops)
-    {
-        emitBracketStop(item, direction);
-    }
-
-    for (const auto &item : myDirectionData.dashesStarts)
-    {
-        emitDashesStart(item, direction);
-    }
-
-    for (const auto &item : myDirectionData.dashesStops)
-    {
-        emitDashesStop(item, direction);
-    }
-
-    for (const auto &item : myDirectionData.tempos)
-    {
-        emitTempo(item, direction);
-    }
-
-    emitWords(myDirectionData.words, direction);
-
-    for (const auto &item : myDirectionData.segnos)
-    {
-        emitSegno(item, direction);
-    }
-
-    for (const auto &item : myDirectionData.codas)
-    {
-        emitCoda(item, direction);
-    }
-
-    for (const auto &item : myDirectionData.rehearsals)
-    {
-        emitRehearsal(item, direction);
-    }
-
-    for (const auto &item : myDirectionData.damps)
-    {
-        emitDamp(item, direction);
-    }
-
-    for (const auto &item : myDirectionData.dampAlls)
-    {
-        emitDampAll(item, direction);
-    }
-
-    for (const auto &item : myDirectionData.eyeglasses)
-    {
-        emitEyeglasses(item, direction);
-    }
-
-    for (const auto &item : myDirectionData.stringMutes)
-    {
-        emitStringMute(item, direction);
-    }
-
-    for (const auto &item : myDirectionData.staffDivides)
-    {
-        emitStaffDivide(item, direction);
-    }
-
-    for (const auto &item : myDirectionData.principalVoices)
-    {
-        emitPrincipalVoice(item, direction);
-    }
-
-    for (const auto &item : myDirectionData.otherDirections)
-    {
-        emitOtherDirection(item, direction);
-    }
-
-    for (const auto &item : myDirectionData.images)
-    {
-        emitImage(item, direction);
-    }
-
-    for (const auto &item : myDirectionData.accordionRegistrations)
-    {
-        emitAccordionRegistration(item, direction);
-    }
-
-    for (const auto &item : myDirectionData.harpPedals)
-    {
-        emitHarpPedals(item, direction);
-    }
-
-    for (const auto &item : myDirectionData.scordaturas)
-    {
-        emitScordatura(item, direction);
-    }
-
-    for (const auto &item : myDirectionData.percussions)
-    {
-        emitPercussion(item, direction);
-    }
-}
-
-void DirectionWriter::emitOrderedComponents(core::Direction &direction)
-{
-    bool wordsEmitted = false;
-
-    for (const auto &component : myDirectionData.orderedComponents)
-    {
-        const int i = component.index;
-
-        switch (component.kind)
+        switch (choice.kind())
         {
-        case api::DirectionComponentKind::mark:
-            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.marks.size())
-            {
-                emitMark(myDirectionData.marks.at(i), direction);
-            }
+        case api::DirectionChoice::Kind::tempo:
+            emitTempo(choice.tempo(), direction);
             break;
 
-        case api::DirectionComponentKind::pedal:
-            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.pedals.size())
-            {
-                emitPedal(myDirectionData.pedals.at(i), direction);
-            }
+        case api::DirectionChoice::Kind::mark:
+            emitMark(choice.mark(), direction);
             break;
 
-        case api::DirectionComponentKind::wedgeStop:
-            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.wedgeStops.size())
-            {
-                emitWedgeStop(myDirectionData.wedgeStops.at(i), direction);
-            }
+        case api::DirectionChoice::Kind::wedgeStart:
+            emitWedgeStart(choice.wedgeStart(), &choice, direction);
             break;
 
-        case api::DirectionComponentKind::wedgeStart:
-            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.wedgeStarts.size())
-            {
-                emitWedgeStart(myDirectionData.wedgeStarts.at(i), direction);
-            }
+        case api::DirectionChoice::Kind::wedgeStop:
+            emitWedgeStop(choice.wedgeStop(), &choice, direction);
             break;
 
-        case api::DirectionComponentKind::ottavaStop:
-            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.ottavaStops.size())
-            {
-                emitOttavaStop(myDirectionData.ottavaStops.at(i), direction);
-            }
+        case api::DirectionChoice::Kind::ottavaStart:
+            emitOttavaStart(choice.ottavaStart(), &choice, direction);
             break;
 
-        case api::DirectionComponentKind::ottavaStart:
-            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.ottavaStarts.size())
-            {
-                emitOttavaStart(myDirectionData.ottavaStarts.at(i), direction);
-            }
+        case api::DirectionChoice::Kind::ottavaStop:
+            emitOttavaStop(choice.ottavaStop(), &choice, direction);
             break;
 
-        case api::DirectionComponentKind::bracketStart:
-            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.bracketStarts.size())
-            {
-                emitBracketStart(myDirectionData.bracketStarts.at(i), direction);
-            }
+        case api::DirectionChoice::Kind::bracketStart:
+            emitBracketStart(choice.bracketStart(), &choice, direction);
             break;
 
-        case api::DirectionComponentKind::bracketStop:
-            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.bracketStops.size())
-            {
-                emitBracketStop(myDirectionData.bracketStops.at(i), direction);
-            }
+        case api::DirectionChoice::Kind::bracketStop:
+            emitBracketStop(choice.bracketStop(), &choice, direction);
             break;
 
-        case api::DirectionComponentKind::dashesStart:
-            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.dashesStarts.size())
-            {
-                emitDashesStart(myDirectionData.dashesStarts.at(i), direction);
-            }
+        case api::DirectionChoice::Kind::dashesStart:
+            emitDashesStart(choice.dashesStart(), &choice, direction);
             break;
 
-        case api::DirectionComponentKind::dashesStop:
-            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.dashesStops.size())
-            {
-                emitDashesStop(myDirectionData.dashesStops.at(i), direction);
-            }
+        case api::DirectionChoice::Kind::dashesStop:
+            emitDashesStop(choice.dashesStop(), &choice, direction);
             break;
 
-        case api::DirectionComponentKind::tempo:
-            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.tempos.size())
-            {
-                emitTempo(myDirectionData.tempos.at(i), direction);
-            }
+        case api::DirectionChoice::Kind::pedal:
+            emitPedal(choice.pedal(), direction);
             break;
 
-        case api::DirectionComponentKind::words:
-            // TODO: all words are bundled into a single <direction-type> regardless of
-            // their position in orderedComponents. This loses fidelity when words are
-            // interleaved with other kinds in the source XML.
-            if (!wordsEmitted)
-            {
-                emitWords(myDirectionData.words, direction);
-                wordsEmitted = true;
-            }
+        case api::DirectionChoice::Kind::wordsRun:
+            emitWordsRun(choice.wordsRun(), direction);
             break;
 
-        case api::DirectionComponentKind::segno:
-            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.segnos.size())
-            {
-                emitSegno(myDirectionData.segnos.at(i), direction);
-            }
+        case api::DirectionChoice::Kind::segno:
+            emitSegno(choice.segno(), direction);
             break;
 
-        case api::DirectionComponentKind::coda:
-            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.codas.size())
-            {
-                emitCoda(myDirectionData.codas.at(i), direction);
-            }
+        case api::DirectionChoice::Kind::coda:
+            emitCoda(choice.coda(), direction);
             break;
 
-        case api::DirectionComponentKind::rehearsal:
-            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.rehearsals.size())
-            {
-                emitRehearsal(myDirectionData.rehearsals.at(i), direction);
-            }
+        case api::DirectionChoice::Kind::rehearsal:
+            emitRehearsal(choice.rehearsal(), direction);
             break;
 
-        case api::DirectionComponentKind::damp:
-            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.damps.size())
-            {
-                emitDamp(myDirectionData.damps.at(i), direction);
-            }
+        case api::DirectionChoice::Kind::damp:
+            emitDamp(choice.damp(), direction);
             break;
 
-        case api::DirectionComponentKind::dampAll:
-            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.dampAlls.size())
-            {
-                emitDampAll(myDirectionData.dampAlls.at(i), direction);
-            }
+        case api::DirectionChoice::Kind::dampAll:
+            emitDampAll(choice.dampAll(), direction);
             break;
 
-        case api::DirectionComponentKind::eyeglasses:
-            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.eyeglasses.size())
-            {
-                emitEyeglasses(myDirectionData.eyeglasses.at(i), direction);
-            }
+        case api::DirectionChoice::Kind::eyeglasses:
+            emitEyeglasses(choice.eyeglasses(), direction);
             break;
 
-        case api::DirectionComponentKind::stringMute:
-            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.stringMutes.size())
-            {
-                emitStringMute(myDirectionData.stringMutes.at(i), direction);
-            }
+        case api::DirectionChoice::Kind::stringMute:
+            emitStringMute(choice.stringMute(), direction);
             break;
 
-        case api::DirectionComponentKind::staffDivide:
-            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.staffDivides.size())
-            {
-                emitStaffDivide(myDirectionData.staffDivides.at(i), direction);
-            }
+        case api::DirectionChoice::Kind::staffDivide:
+            emitStaffDivide(choice.staffDivide(), direction);
             break;
 
-        case api::DirectionComponentKind::principalVoice:
-            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.principalVoices.size())
-            {
-                emitPrincipalVoice(myDirectionData.principalVoices.at(i), direction);
-            }
+        case api::DirectionChoice::Kind::principalVoice:
+            emitPrincipalVoice(choice.principalVoice(), direction);
             break;
 
-        case api::DirectionComponentKind::otherDirection:
-            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.otherDirections.size())
-            {
-                emitOtherDirection(myDirectionData.otherDirections.at(i), direction);
-            }
+        case api::DirectionChoice::Kind::otherDirection:
+            emitOtherDirection(choice.otherDirection(), direction);
             break;
 
-        case api::DirectionComponentKind::image:
-            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.images.size())
-            {
-                emitImage(myDirectionData.images.at(i), direction);
-            }
+        case api::DirectionChoice::Kind::image:
+            emitImage(choice.image(), direction);
             break;
 
-        case api::DirectionComponentKind::accordionRegistration:
-            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.accordionRegistrations.size())
-            {
-                emitAccordionRegistration(myDirectionData.accordionRegistrations.at(i), direction);
-            }
+        case api::DirectionChoice::Kind::accordionRegistration:
+            emitAccordionRegistration(choice.accordionRegistration(), direction);
             break;
 
-        case api::DirectionComponentKind::harpPedals:
-            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.harpPedals.size())
-            {
-                emitHarpPedals(myDirectionData.harpPedals.at(i), direction);
-            }
+        case api::DirectionChoice::Kind::harpPedals:
+            emitHarpPedals(choice.harpPedals(), direction);
             break;
 
-        case api::DirectionComponentKind::scordatura:
-            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.scordaturas.size())
-            {
-                emitScordatura(myDirectionData.scordaturas.at(i), direction);
-            }
+        case api::DirectionChoice::Kind::scordatura:
+            emitScordatura(choice.scordatura(), direction);
             break;
 
-        case api::DirectionComponentKind::percussion:
-            if (i >= 0 && static_cast<size_t>(i) < myDirectionData.percussions.size())
-            {
-                emitPercussion(myDirectionData.percussions.at(i), direction);
-            }
-            break;
-
-        case api::DirectionComponentKind::chord:
-            // Chords are emitted via createHarmonyElements, not as direction-types.
+        case api::DirectionChoice::Kind::percussion:
+            emitPercussion(choice.percussion(), direction);
             break;
         }
     }

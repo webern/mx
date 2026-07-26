@@ -495,18 +495,20 @@ TEST(words, NoteData)
     words.positionData.isDefaultXSpecified = true;
     words.positionData.defaultX = 1.1;
     words.text = "Hello";
-    direction.words.push_back(words);
+    direction.directionTypes.emplace_back(DirectionChoice{std::vector<WordsChoice>{WordsChoice{words}}});
     directions.push_back(direction);
 
     direction = DirectionData{};
+    std::vector<WordsChoice> run;
     words = WordsData{};
     words.fontData.style = FontStyle::italic;
     words.text = "One";
-    direction.words.push_back(words);
+    run.emplace_back(words);
     words = WordsData{};
     words.isColorSpecified = true;
     words.text = "Two";
-    direction.words.push_back(words);
+    run.emplace_back(words);
+    direction.directionTypes.emplace_back(DirectionChoice{run});
     directions.push_back(direction);
 
     // round trip it through xml
@@ -533,17 +535,22 @@ TEST(words, NoteData)
     const auto &odirections = ostaff.directions;
     CHECK_EQUAL(2, odirections.size());
     const auto &firstDirection = odirections.front();
-    const auto &firstWordVec = firstDirection.words;
+    REQUIRE(firstDirection.directionTypes.size() == 1);
+    REQUIRE(firstDirection.directionTypes.front().isWordsRun());
+    const auto firstWordVec = firstDirection.directionTypes.front().wordsRun();
     CHECK_EQUAL(1, firstWordVec.size());
-    const auto &firstWords = firstWordVec.front();
+    const auto firstWords = firstWordVec.front().words();
     CHECK_EQUAL("Hello", firstWords.text);
     CHECK(firstWords.positionData.isDefaultXSpecified);
     CHECK_DOUBLES_EQUAL(1.1, firstWords.positionData.defaultX, 0.0001);
 
     const auto &secondDirection = odirections.at(1);
-    CHECK_EQUAL(2, secondDirection.words.size());
-    const auto &wordsOne = secondDirection.words.at(0);
-    const auto &wordsTwo = secondDirection.words.at(1);
+    REQUIRE(secondDirection.directionTypes.size() == 1);
+    REQUIRE(secondDirection.directionTypes.front().isWordsRun());
+    const auto secondRun = secondDirection.directionTypes.front().wordsRun();
+    CHECK_EQUAL(2, secondRun.size());
+    const auto wordsOne = secondRun.at(0).words();
+    const auto wordsTwo = secondRun.at(1).words();
 
     CHECK_EQUAL("One", wordsOne.text);
     CHECK(wordsOne.fontData.style == mx::api::FontStyle::italic);
@@ -961,7 +968,7 @@ TEST(pedalStart, NoteData)
 
     staff.directions.emplace_back();
     auto &direction = staff.directions.back();
-    direction.marks.emplace_back(Placement::below, MarkType::pedal);
+    direction.directionTypes.emplace_back(DirectionChoice{MarkData{Placement::below, MarkType::pedal}});
     direction.tickTimePosition = 7;
 
     // round trip it through xml
@@ -987,7 +994,9 @@ TEST(pedalStart, NoteData)
     auto &ostaff = omeasure.staves.back();
     auto &odirections = ostaff.directions;
     auto &odirection = odirections.back();
-    auto &omark = odirection.marks.back();
+    REQUIRE(odirection.directionTypes.size() == 1);
+    REQUIRE(odirection.directionTypes.back().isMark());
+    const auto omark = odirection.directionTypes.back().mark();
 
     CHECK(omark.markType == MarkType::pedal);
     CHECK_EQUAL(odirection.tickTimePosition, odirection.tickTimePosition);
@@ -1009,7 +1018,7 @@ TEST(pedalStop, NoteData)
 
     staff.directions.emplace_back();
     auto &direction = staff.directions.back();
-    direction.marks.emplace_back(Placement::below, MarkType::damp);
+    direction.directionTypes.emplace_back(DirectionChoice{MarkData{Placement::below, MarkType::damp}});
     direction.tickTimePosition = 70342;
 
     // round trip it through xml
@@ -1035,7 +1044,9 @@ TEST(pedalStop, NoteData)
     auto &ostaff = omeasure.staves.back();
     auto &odirections = ostaff.directions;
     auto &odirection = odirections.back();
-    auto &omark = odirection.marks.back();
+    REQUIRE(odirection.directionTypes.size() == 1);
+    REQUIRE(odirection.directionTypes.back().isMark());
+    const auto omark = odirection.directionTypes.back().mark();
 
     CHECK(omark.markType == MarkType::damp);
     CHECK_EQUAL(odirection.tickTimePosition, odirection.tickTimePosition);
@@ -1077,23 +1088,27 @@ TEST(directionOrder, NoteData)
     direction.tickTimePosition = 0;
     MarkData mark{Placement::below, MarkType::damp};
     mark.tickTimePosition = direction.tickTimePosition;
-    direction.marks.push_back(mark);
+    direction.directionTypes.assign(1, DirectionChoice{mark});
     staff.directions.push_back(direction);
 
     direction.tickTimePosition = 120;
-    direction.marks.back().tickTimePosition = direction.tickTimePosition;
+    mark.tickTimePosition = direction.tickTimePosition;
+    direction.directionTypes.assign(1, DirectionChoice{mark});
     staff.directions.push_back(direction);
 
     direction.tickTimePosition = 240;
-    direction.marks.back().tickTimePosition = direction.tickTimePosition;
+    mark.tickTimePosition = direction.tickTimePosition;
+    direction.directionTypes.assign(1, DirectionChoice{mark});
     staff.directions.push_back(direction);
 
     direction.tickTimePosition = 360;
-    direction.marks.back().tickTimePosition = direction.tickTimePosition;
+    mark.tickTimePosition = direction.tickTimePosition;
+    direction.directionTypes.assign(1, DirectionChoice{mark});
     staff.directions.push_back(direction);
 
     direction.tickTimePosition = 480;
-    direction.marks.back().tickTimePosition = direction.tickTimePosition;
+    mark.tickTimePosition = direction.tickTimePosition;
+    direction.directionTypes.assign(1, DirectionChoice{mark});
     staff.directions.push_back(direction);
 
     // round trip it through xml
@@ -1203,52 +1218,55 @@ TEST(directionOrderRoundTrip, NoteData)
     MarkData mark{direction.placement, MarkType::damp};
     direction.tickTimePosition = 0;
     mark.tickTimePosition = direction.tickTimePosition;
-    direction.marks.push_back(mark);
-    direction.orderedComponents.emplace_back(DirectionComponentKind::mark, 0);
+    direction.directionTypes.assign(1, DirectionChoice{mark});
     staff.directions.push_back(direction);
 
     placement = Placement::unspecified;
     direction.placement = placement;
-    direction.marks.back().positionData.placement = placement;
-    direction.marks.back().positionData.isDefaultXSpecified = false;
-    direction.marks.back().positionData.defaultX = 0.0;
-    direction.marks.back().positionData.isDefaultYSpecified = true;
-    direction.marks.back().positionData.defaultY = 1.1;
+    mark.positionData.placement = placement;
+    mark.positionData.isDefaultXSpecified = false;
+    mark.positionData.defaultX = 0.0;
+    mark.positionData.isDefaultYSpecified = true;
+    mark.positionData.defaultY = 1.1;
     direction.tickTimePosition = 120;
-    direction.marks.back().tickTimePosition = direction.tickTimePosition;
+    mark.tickTimePosition = direction.tickTimePosition;
+    direction.directionTypes.assign(1, DirectionChoice{mark});
     staff.directions.push_back(direction);
 
     placement = Placement::unspecified;
     direction.placement = placement;
-    direction.marks.back().positionData.placement = placement;
-    direction.marks.back().positionData.isDefaultXSpecified = true;
-    direction.marks.back().positionData.defaultX = 2.2;
-    direction.marks.back().positionData.isDefaultYSpecified = false;
-    direction.marks.back().positionData.defaultY = 0.0;
+    mark.positionData.placement = placement;
+    mark.positionData.isDefaultXSpecified = true;
+    mark.positionData.defaultX = 2.2;
+    mark.positionData.isDefaultYSpecified = false;
+    mark.positionData.defaultY = 0.0;
     direction.tickTimePosition = 240;
-    direction.marks.back().tickTimePosition = direction.tickTimePosition;
+    mark.tickTimePosition = direction.tickTimePosition;
+    direction.directionTypes.assign(1, DirectionChoice{mark});
     staff.directions.push_back(direction);
 
     placement = Placement::unspecified;
     direction.placement = placement;
-    direction.marks.back().positionData.placement = placement;
-    direction.marks.back().positionData.isDefaultXSpecified = true;
-    direction.marks.back().positionData.defaultX = 3.3;
-    direction.marks.back().positionData.isDefaultYSpecified = true;
-    direction.marks.back().positionData.defaultY = 3.3;
+    mark.positionData.placement = placement;
+    mark.positionData.isDefaultXSpecified = true;
+    mark.positionData.defaultX = 3.3;
+    mark.positionData.isDefaultYSpecified = true;
+    mark.positionData.defaultY = 3.3;
     direction.tickTimePosition = 360;
-    direction.marks.back().tickTimePosition = direction.tickTimePosition;
+    mark.tickTimePosition = direction.tickTimePosition;
+    direction.directionTypes.assign(1, DirectionChoice{mark});
     staff.directions.push_back(direction);
 
     placement = Placement::unspecified;
     direction.placement = placement;
-    direction.marks.back().positionData.isDefaultXSpecified = false;
-    direction.marks.back().positionData.defaultX = 0.0;
-    direction.marks.back().positionData.isDefaultYSpecified = false;
-    direction.marks.back().positionData.defaultY = 0.0;
-    direction.marks.back().positionData.placement = placement;
+    mark.positionData.isDefaultXSpecified = false;
+    mark.positionData.defaultX = 0.0;
+    mark.positionData.isDefaultYSpecified = false;
+    mark.positionData.defaultY = 0.0;
+    mark.positionData.placement = placement;
     direction.tickTimePosition = 480;
-    direction.marks.back().tickTimePosition = direction.tickTimePosition;
+    mark.tickTimePosition = direction.tickTimePosition;
+    direction.directionTypes.assign(1, DirectionChoice{mark});
     staff.directions.push_back(direction);
 
     // round trip it through xml

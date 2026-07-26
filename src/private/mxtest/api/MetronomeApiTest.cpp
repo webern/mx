@@ -53,7 +53,7 @@ TempoData roundTripTempo(const TempoData &in)
     score.parts.back().measures.emplace_back();
     score.parts.back().measures.back().staves.emplace_back();
     score.parts.back().measures.back().staves.back().directions.emplace_back();
-    score.parts.back().measures.back().staves.back().directions.back().tempos.push_back(in);
+    score.parts.back().measures.back().staves.back().directions.back().directionTypes.emplace_back(DirectionChoice{in});
 
     const auto out = roundTrip(score);
     if (out.parts.empty() || out.parts.back().measures.empty() || out.parts.back().measures.back().staves.empty())
@@ -61,11 +61,12 @@ TempoData roundTripTempo(const TempoData &in)
         return TempoData{};
     }
     const auto &directions = out.parts.back().measures.back().staves.back().directions;
-    if (directions.empty() || directions.back().tempos.empty())
+    if (directions.empty() || directions.back().directionTypes.empty() ||
+        !directions.back().directionTypes.back().isTempo())
     {
         return TempoData{};
     }
-    return directions.back().tempos.back();
+    return directions.back().directionTypes.back().tempo();
 }
 } // namespace
 
@@ -122,11 +123,12 @@ TEST(nonNumericPerMinuteRoundTrips, MetronomeApi)
     }
     const auto &directions = score.parts.back().measures.back().staves.back().directions;
     CHECK_EQUAL(1, static_cast<int>(directions.size()));
-    if (directions.empty() || directions.back().tempos.empty())
+    if (directions.empty() || directions.back().directionTypes.empty() ||
+        !directions.back().directionTypes.back().isTempo())
     {
         return;
     }
-    const auto &tempo = directions.back().tempos.back();
+    const auto tempo = directions.back().directionTypes.back().tempo();
     CHECK(TempoChoice::Kind::beatsPerMinute == tempo.choice.kind());
     const auto bpm = tempo.choice.beatsPerMinute();
     CHECK(DurationName::quarter == bpm.durationName);

@@ -394,14 +394,14 @@ TEST(wedgeNumbersRoundTrip, SpannerIdentity)
     WedgeStart wedgeStart;
     wedgeStart.wedgeType = WedgeType::crescendo;
     wedgeStart.number = SpannerNumber(3);
-    startDirection.wedgeStarts.push_back(wedgeStart);
+    startDirection.directionTypes.emplace_back(DirectionChoice{wedgeStart});
     staff.directions.push_back(startDirection);
 
     DirectionData stopDirection;
     stopDirection.tickTimePosition = 2 * ticksPerQuarter;
     WedgeStop wedgeStop;
     wedgeStop.number = SpannerNumber(3);
-    stopDirection.wedgeStops.push_back(wedgeStop);
+    stopDirection.directionTypes.emplace_back(DirectionChoice{wedgeStop});
     staff.directions.push_back(stopDirection);
 
     const auto xml = toXml(score);
@@ -413,15 +413,18 @@ TEST(wedgeNumbersRoundTrip, SpannerIdentity)
     bool foundStop = false;
     for (const auto &direction : directions)
     {
-        for (const auto &start : direction.wedgeStarts)
+        for (const auto &directionType : direction.directionTypes)
         {
-            foundStart = true;
-            CHECK(SpannerNumber(3) == start.number);
-        }
-        for (const auto &stop : direction.wedgeStops)
-        {
-            foundStop = true;
-            CHECK(SpannerNumber(3) == stop.number);
+            if (directionType.isWedgeStart())
+            {
+                foundStart = true;
+                CHECK(SpannerNumber(3) == directionType.wedgeStart().number);
+            }
+            else if (directionType.isWedgeStop())
+            {
+                foundStop = true;
+                CHECK(SpannerNumber(3) == directionType.wedgeStop().number);
+            }
         }
     }
     CHECK(foundStart);
