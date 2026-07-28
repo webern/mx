@@ -15,7 +15,10 @@
 #include "mx/core/generated/Key.h"
 #include "mx/core/generated/KeyAccidental.h"
 #include "mx/core/generated/KeyChoice.h"
+#include "mx/core/generated/MeasureStyle.h"
+#include "mx/core/generated/MeasureStyleChoice.h"
 #include "mx/core/generated/Mode.h"
+#include "mx/core/generated/MultipleRest.h"
 #include "mx/core/generated/MusicDataChoice.h"
 #include "mx/core/generated/NonTraditionalKeyGroup.h"
 #include "mx/core/generated/PartSymbol.h"
@@ -69,6 +72,17 @@ bool PropertiesWriter::isPropertiesEmpty()
 void PropertiesWriter::writeDivisions(int value)
 {
     myAttributes.setDivisions(core::PositiveDivisions{core::Decimal{static_cast<double>(value)}});
+    myHasContent = true;
+}
+
+void PropertiesWriter::writeMultipleRest(int measureCount)
+{
+    core::MultipleRest multipleRest{};
+    multipleRest.setValue(measureCount);
+
+    core::MeasureStyle measureStyle{};
+    measureStyle.setChoice(core::MeasureStyleChoice::multipleRest(std::move(multipleRest)));
+    myAttributes.addMeasureStyle(std::move(measureStyle));
     myHasContent = true;
 }
 

@@ -526,3 +526,14 @@ musuite/testDirections1.xml
 # words-then-dynamics directions with a words/symbol/words run ("gliss. " + arrowBlackUp
 # + " al niente").
 synthetic/words-symbol.4.0.xml
+
+# Unblocked by writing MeasureData::multiMeasureRest as
+# <attributes><measure-style><multiple-rest>. The reader already populated the
+# field, but the writer dropped it.
+lysuite/ly02a_Rests_Durations.xml
+lysuite/ly02c_Rests_MultiMeasureRests.xml
+lysuite/ly02d_Rests_Multimeasure_TimeSignatures.xml
+lysuite/ly03d_Rhythm_DottedDurations_Factors.xml
+musuite/testMultiMeasureRest1.xml
+musuite/testMultiMeasureRest2.xml
+musuite/testMultiMeasureRest3.xml
