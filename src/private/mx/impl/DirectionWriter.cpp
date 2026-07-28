@@ -402,6 +402,8 @@ void DirectionWriter::emitOttavaStart(const api::OttavaStart &ottavaStart, const
                                       core::Direction &direction)
 {
     core::OctaveShift os{};
+    impl::setAttributesFromPositionData(ottavaStart.spannerStart.positionData, os);
+    impl::setAttributesFromPrintData(ottavaStart.spannerStart.printData, os);
     impl::setAttributesFromLineData(ottavaStart.spannerStart.lineData, os);
 
     const auto number = myNumberResolver.emittedNumber(ottavaStart.spannerStart.number, inIdentity);
