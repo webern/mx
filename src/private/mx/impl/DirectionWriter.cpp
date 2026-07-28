@@ -426,6 +426,16 @@ void DirectionWriter::emitOttavaStart(const api::OttavaStart &ottavaStart, const
         sizeValue = 15;
         break;
     }
+    case api::OttavaType::o22ma: {
+        os.setType(core::UpDownStopContinue::down());
+        sizeValue = 22;
+        break;
+    }
+    case api::OttavaType::o22mb: {
+        os.setType(core::UpDownStopContinue::up());
+        sizeValue = 22;
+        break;
+    }
     case api::OttavaType::o8va: {
         os.setType(core::UpDownStopContinue::down());
         sizeValue = 8;
@@ -440,9 +450,9 @@ void DirectionWriter::emitOttavaStart(const api::OttavaStart &ottavaStart, const
         break;
     }
 
-    // size follows from ottavaType; a 15ma/15mb line's size encodes the two-octave shift, so it is
-    // always written, while the redundant default size="8" is emitted only when writeDefaultSize is
-    // set (the source spelled it out).
+    // size follows from ottavaType; non-8va lines need an explicit size to encode their shift, while
+    // the redundant default size="8" is emitted only when writeDefaultSize is set (the source spelled
+    // it out).
     if (sizeValue != 8 || ottavaStart.writeDefaultSize)
     {
         os.setSize(sizeValue);

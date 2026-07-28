@@ -19,7 +19,9 @@ enum class OttavaType
     o8va,  // octave up (writes octave-shift type="down")
     o8vb,  // octave down (writes octave-shift type="up")
     o15ma, // 2 octaves up (writes octave-shift type="down")
-    o15mb  // 2 octaves down (writes octave-shift type="up")
+    o15mb, // 2 octaves down (writes octave-shift type="up")
+    o22ma, // 3 octaves up (writes octave-shift type="down")
+    o22mb  // 3 octaves down (writes octave-shift type="up")
 };
 
 class OttavaStart
@@ -28,11 +30,11 @@ class OttavaStart
     SpannerStart spannerStart;
     OttavaType ottavaType;
 
-    // Octave-shift size fidelity knob. The size value (8 or 15) follows from ottavaType, so a
-    // 15ma/15mb line always writes size="15" while an 8va/8vb line omits the redundant, spec-
-    // default size="8". When true, the writer also emits that redundant size="8"; the reader sets
-    // it when the source spelled the attribute out. Leave false (the default) when authoring. It
-    // has no effect on a 15ma/15mb line, whose size is always written.
+    // Octave-shift size fidelity knob. The size value (8, 15, or 22) follows from ottavaType, so
+    // 15ma/15mb and 22ma/22mb lines always write their size while an 8va/8vb line omits the
+    // redundant, spec-default size="8". When true, the writer also emits that redundant size="8";
+    // the reader sets it when the source spelled the attribute out. Leave false (the default) when
+    // authoring. It has no effect on a 15ma/15mb or 22ma/22mb line, whose size is always written.
     bool writeDefaultSize;
 
     OttavaStart() : spannerStart{}, ottavaType{OttavaType::unspecified}, writeDefaultSize{false}
@@ -45,7 +47,7 @@ class OttavaStop
   public:
     SpannerStop spannerStop;
 
-    // MusicXML's octave-shift allows a size attribute ("8" or "15") on the stop, not just the
+    // MusicXML's octave-shift allows a size attribute ("8", "15", or "22") on the stop, not just the
     // start. Most writers omit it there since it is implied by the corresponding start, but some
     // importers (e.g. MuseScore) expect it to be present. Absent by default; set it to have the
     // writer emit it explicitly.

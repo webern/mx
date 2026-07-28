@@ -7,6 +7,7 @@
 
 #include "cpul/cpulTestHarness.h"
 #include "mx/api/DocumentManager.h"
+#include "mx/api/OttavaData.h"
 #include "mx/api/RehearsalData.h"
 #include "mx/api/ScoreData.h"
 #include "mxtest/api/RoundTrip.h"
@@ -95,6 +96,43 @@ TEST(OutOfOrderDoesntThrow, DirectionData)
     CHECK_EQUAL(9, effectiveTick(*rdirection));
     ++rdirection;
     CHECK_EQUAL(10, effectiveTick(*rdirection));
+}
+
+T_END;
+
+TEST(Ottava22RoundTripXml, DirectionData)
+{
+    ScoreData score;
+    score.ticksPerQuarter = 10;
+    score.parts.emplace_back();
+    auto &measure = score.parts.back().measures.emplace_back();
+    auto &staff = measure.staves.emplace_back();
+    auto &note = staff.voices[0].notes.emplace_back();
+    note.durationData.durationTimeTicks = 10;
+    note.durationData.durationName = DurationName::quarter;
+
+    OttavaStart up;
+    up.ottavaType = OttavaType::o22ma;
+    OttavaStart down;
+    down.ottavaType = OttavaType::o22mb;
+
+    DirectionData direction;
+    direction.directionTypes.emplace_back(DirectionChoice{up});
+    direction.directionTypes.emplace_back(DirectionChoice{down});
+    staff.directions.emplace_back(direction);
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("<octave-shift type=\"down\" size=\"22\"") != std::string::npos);
+    CHECK(xml.find("<octave-shift type=\"up\" size=\"22\"") != std::string::npos);
+
+    const auto roundTripped = mxtest::roundTrip(score);
+    const auto &directionTypes =
+        roundTripped.parts.front().measures.front().staves.front().directions.front().directionTypes;
+    REQUIRE(directionTypes.size() == 2);
+    REQUIRE(directionTypes.front().isOttavaStart());
+    REQUIRE(directionTypes.back().isOttavaStart());
+    CHECK(OttavaType::o22ma == directionTypes.front().ottavaStart().ottavaType);
+    CHECK(OttavaType::o22mb == directionTypes.back().ottavaStart().ottavaType);
 }
 
 T_END;

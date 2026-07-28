@@ -76,6 +76,41 @@ TEST(ottavaStartStop, DirectionWriter)
 
 T_END
 
+TEST(ottava22maAnd22mb, DirectionWriter)
+{
+    api::DirectionData directionData;
+
+    api::OttavaStart up{};
+    up.ottavaType = api::OttavaType::o22ma;
+    directionData.directionTypes.emplace_back(api::DirectionChoice{up});
+
+    api::OttavaStart down{};
+    down.ottavaType = api::OttavaType::o22mb;
+    directionData.directionTypes.emplace_back(api::DirectionChoice{down});
+
+    Cursor cursor{1, 100};
+    SpannerNumberResolver numberResolver;
+    DirectionWriter writer{directionData, cursor, numberResolver};
+    const auto mdcSet = writer.getDirectionLikeThings();
+
+    REQUIRE(mdcSet.size() == 1);
+    REQUIRE(mdcSet.front().isDirection());
+    const auto &directionTypes = mdcSet.front().asDirection().directionType();
+    REQUIRE(directionTypes.size() == 2);
+
+    const auto &upCore = directionTypes.front().choice().asOctaveShift();
+    REQUIRE(upCore.size().has_value());
+    CHECK_EQUAL(22, *upCore.size());
+    CHECK(upCore.type().tag() == core::UpDownStopContinue::Tag::down);
+
+    const auto &downCore = directionTypes.back().choice().asOctaveShift();
+    REQUIRE(downCore.size().has_value());
+    CHECK_EQUAL(22, *downCore.size());
+    CHECK(downCore.type().tag() == core::UpDownStopContinue::Tag::up);
+}
+
+T_END
+
 // Build a segno and a coda carrying the full empty-print-object-style-align attribute set plus
 // smufl and id, write them with DirectionWriter, read them back with DirectionReader, and confirm
 // every field survives the api -> core -> api trip.
