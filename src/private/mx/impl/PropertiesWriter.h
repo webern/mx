@@ -59,6 +59,7 @@ class PropertiesWriter
     void writeClef(int staffIndex, const api::ClefData &inClefData);
     void writePartSymbol(const api::PartSymbolData &inPartSymbolData);
     void writeTranspose(int staffIndex, const api::TransposeData &inTransposeData);
+    void writeMultipleRest(int measureCount, api::Bool useSymbols);
 
   private:
     void allocate();

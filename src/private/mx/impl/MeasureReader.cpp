@@ -640,6 +640,12 @@ std::optional<api::TransposeData> MeasureReader::parseAttributes(const core::Att
         {
             const auto &mr = measureStyle.choice().asMultipleRest();
             myOutMeasureData.multiMeasureRest = mr.value();
+            myOutMeasureData.multiMeasureRestUseSymbols = api::Bool::unspecified;
+            if (mr.useSymbols().has_value())
+            {
+                myOutMeasureData.multiMeasureRestUseSymbols =
+                    mr.useSymbols()->tag() == core::YesNo::Tag::yes ? api::Bool::yes : api::Bool::no;
+            }
         }
     }
 

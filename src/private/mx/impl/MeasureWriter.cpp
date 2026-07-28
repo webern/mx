@@ -137,6 +137,11 @@ void MeasureWriter::writeMeasureGlobals()
         myPropertiesWriter->writePartSymbol(*myMeasureData.partSymbol);
     }
 
+    if (myMeasureData.multiMeasureRest > 0)
+    {
+        myPropertiesWriter->writeMultipleRest(myMeasureData.multiMeasureRest, myMeasureData.multiMeasureRestUseSymbols);
+    }
+
     if (!myMeasureData.timeSignature.isImplicit)
     {
         myPropertiesWriter->writeTime(myMeasureData.timeSignature, api::INDEX_UNSPECIFIED);

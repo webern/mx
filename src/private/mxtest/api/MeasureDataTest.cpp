@@ -332,4 +332,45 @@ TEST(measureNumberingUnspecifiedOmitsElement, MeasureData)
 
 T_END;
 
+TEST(multiMeasureRestRoundTrip, MeasureData)
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.multiMeasureRest = 4;
+    measure.multiMeasureRestUseSymbols = Bool::yes;
+    measure.staves.emplace_back();
+    measure.staves.back().voices[0].notes.emplace_back();
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("<measure-style>") != std::string::npos);
+    CHECK(xml.find("<multiple-rest use-symbols=\"yes\">4</multiple-rest>") != std::string::npos);
+
+    const auto outScore = mxtest::fromXml(xml);
+    CHECK_EQUAL(4, outScore.parts.front().measures.front().multiMeasureRest);
+    CHECK(Bool::yes == outScore.parts.front().measures.front().multiMeasureRestUseSymbols);
+}
+
+T_END;
+
+TEST(nonPositiveMultiMeasureRestOmitsElement, MeasureData)
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.multiMeasureRest = 0;
+    measure.multiMeasureRestUseSymbols = Bool::yes;
+    measure.staves.emplace_back();
+    measure.staves.back().voices[0].notes.emplace_back();
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("<multiple-rest>") == std::string::npos);
+}
+
+T_END;
+
 #endif
