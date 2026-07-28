@@ -70,6 +70,10 @@ class MeasureData
     // by this.
     int multiMeasureRest;
 
+    // When yes, use 1-, 2-, and 4-measure rest symbols instead of a single multimeasure-rest shape.
+    // Meaningful only when multiMeasureRest is greater than zero.
+    Bool multiMeasureRestUseSymbols;
+
     // The implicit attribute is set to "yes" for measures where the measure number should never
     // appear, such as pickup measures and the last half of mid-measure repeats. The value is "no"
     // if not specified.
@@ -97,7 +101,8 @@ class MeasureData
         : staves{}, timeSignature{}, number{}, measureNumbering{MeasureNumbering::unspecified},
           measureNumberingMultipleRestAlways{Bool::unspecified}, measureNumberingMultipleRestRange{Bool::unspecified},
           measureNumberingSystemRelation{SystemRelation::unspecified}, multiMeasureRest{VALUE_UNSPECIFIED},
-          implicit{Bool::unspecified}, nonControlling{Bool::unspecified}, width{DOUBLE_UNSPECIFIED}
+          multiMeasureRestUseSymbols{Bool::unspecified}, implicit{Bool::unspecified}, nonControlling{Bool::unspecified},
+          width{DOUBLE_UNSPECIFIED}
     {
     }
 };
@@ -112,6 +117,7 @@ MXAPI_EQUALS_MEMBER(measureNumberingMultipleRestAlways)
 MXAPI_EQUALS_MEMBER(measureNumberingMultipleRestRange)
 MXAPI_EQUALS_MEMBER(measureNumberingSystemRelation)
 MXAPI_EQUALS_MEMBER(multiMeasureRest)
+MXAPI_EQUALS_MEMBER(multiMeasureRestUseSymbols)
 MXAPI_EQUALS_MEMBER(implicit)
 MXAPI_EQUALS_MEMBER(nonControlling)
 MXAPI_EQUALS_MEMBER(width)

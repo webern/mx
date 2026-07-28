@@ -38,6 +38,7 @@
 #include "mx/core/generated/TimeSymbol.h"
 #include "mx/core/generated/TraditionalKeyGroup.h"
 #include "mx/core/generated/Transpose.h"
+#include "mx/core/generated/YesNo.h"
 #include "mx/impl/Converter.h"
 
 namespace mx
@@ -75,10 +76,14 @@ void PropertiesWriter::writeDivisions(int value)
     myHasContent = true;
 }
 
-void PropertiesWriter::writeMultipleRest(int measureCount)
+void PropertiesWriter::writeMultipleRest(int measureCount, api::Bool useSymbols)
 {
     core::MultipleRest multipleRest{};
     multipleRest.setValue(measureCount);
+    if (useSymbols != api::Bool::unspecified)
+    {
+        multipleRest.setUseSymbols(useSymbols == api::Bool::yes ? core::YesNo::yes() : core::YesNo::no());
+    }
 
     core::MeasureStyle measureStyle{};
     measureStyle.setChoice(core::MeasureStyleChoice::multipleRest(std::move(multipleRest)));

@@ -139,7 +139,7 @@ void MeasureWriter::writeMeasureGlobals()
 
     if (myMeasureData.multiMeasureRest > 0)
     {
-        myPropertiesWriter->writeMultipleRest(myMeasureData.multiMeasureRest);
+        myPropertiesWriter->writeMultipleRest(myMeasureData.multiMeasureRest, myMeasureData.multiMeasureRestUseSymbols);
     }
 
     if (!myMeasureData.timeSignature.isImplicit)
