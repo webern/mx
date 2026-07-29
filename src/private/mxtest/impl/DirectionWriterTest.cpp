@@ -36,6 +36,21 @@ TEST(ottavaStartStop, DirectionWriter)
     start.ottavaType = api::OttavaType::o15mb;
     start.spannerStart.positionData.isDefaultXSpecified = true;
     start.spannerStart.positionData.defaultX = 100.0;
+    start.spannerStart.positionData.isDefaultYSpecified = true;
+    start.spannerStart.positionData.defaultY = 20.0;
+    start.spannerStart.positionData.isRelativeXSpecified = true;
+    start.spannerStart.positionData.relativeX = 3.0;
+    start.spannerStart.positionData.isRelativeYSpecified = true;
+    start.spannerStart.positionData.relativeY = 4.0;
+    start.spannerStart.printData.fontData.fontFamily = {"Maestro"};
+    start.spannerStart.printData.fontData.style = api::FontStyle::italic;
+    start.spannerStart.printData.fontData.weight = api::FontWeight::bold;
+    start.spannerStart.printData.fontData.sizeType = api::FontSizeType::point;
+    start.spannerStart.printData.fontData.sizePoint = 18.0;
+    start.spannerStart.printData.isColorSpecified = true;
+    start.spannerStart.printData.color.red = 12;
+    start.spannerStart.printData.color.green = 34;
+    start.spannerStart.printData.color.blue = 56;
     directionData.directionTypes.emplace_back(api::DirectionChoice{start});
 
     SpannerNumberResolver numberResolver;
@@ -55,6 +70,43 @@ TEST(ottavaStartStop, DirectionWriter)
     CHECK(api::SpannerNumber(2) == roundTrippedStop.spannerStop.number);
     CHECK(roundTrippedStop.size.has_value());
     CHECK_EQUAL(15, *roundTrippedStop.size);
+    REQUIRE(roundTripped.directionTypes.back().isOttavaStart());
+    CHECK(start == roundTripped.directionTypes.back().ottavaStart());
+}
+
+T_END
+
+TEST(ottava22maAnd22mb, DirectionWriter)
+{
+    api::DirectionData directionData;
+
+    api::OttavaStart up{};
+    up.ottavaType = api::OttavaType::o22ma;
+    directionData.directionTypes.emplace_back(api::DirectionChoice{up});
+
+    api::OttavaStart down{};
+    down.ottavaType = api::OttavaType::o22mb;
+    directionData.directionTypes.emplace_back(api::DirectionChoice{down});
+
+    Cursor cursor{1, 100};
+    SpannerNumberResolver numberResolver;
+    DirectionWriter writer{directionData, cursor, numberResolver};
+    const auto mdcSet = writer.getDirectionLikeThings();
+
+    REQUIRE(mdcSet.size() == 1);
+    REQUIRE(mdcSet.front().isDirection());
+    const auto &directionTypes = mdcSet.front().asDirection().directionType();
+    REQUIRE(directionTypes.size() == 2);
+
+    const auto &upCore = directionTypes.front().choice().asOctaveShift();
+    REQUIRE(upCore.size().has_value());
+    CHECK_EQUAL(22, *upCore.size());
+    CHECK(upCore.type().tag() == core::UpDownStopContinue::Tag::down);
+
+    const auto &downCore = directionTypes.back().choice().asOctaveShift();
+    REQUIRE(downCore.size().has_value());
+    CHECK_EQUAL(22, *downCore.size());
+    CHECK(downCore.type().tag() == core::UpDownStopContinue::Tag::up);
 }
 
 T_END

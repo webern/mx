@@ -41,6 +41,37 @@ TEST(ottavaStart15ma, DirectionReader)
 
 T_END
 
+TEST(ottavaStart22maAnd22mb, DirectionReader)
+{
+    core::OctaveShift up{};
+    up.setType(core::UpDownStopContinue::down());
+    up.setSize(22);
+    core::DirectionType upType{};
+    upType.setChoice(core::DirectionTypeChoice::octaveShift(up));
+
+    core::OctaveShift down{};
+    down.setType(core::UpDownStopContinue::up());
+    down.setSize(22);
+    core::DirectionType downType{};
+    downType.setChoice(core::DirectionTypeChoice::octaveShift(down));
+
+    core::Direction direction{};
+    direction.setDirectionType(core::OneOrMore<core::DirectionType>{upType});
+    direction.addDirectionType(downType);
+
+    Cursor cursor{1, 100};
+    DirectionReader reader{direction, cursor};
+    const auto directionData = reader.getDirectionData();
+
+    REQUIRE(directionData.directionTypes.size() == 2);
+    REQUIRE(directionData.directionTypes.front().isOttavaStart());
+    REQUIRE(directionData.directionTypes.back().isOttavaStart());
+    CHECK(api::OttavaType::o22ma == directionData.directionTypes.front().ottavaStart().ottavaType);
+    CHECK(api::OttavaType::o22mb == directionData.directionTypes.back().ottavaStart().ottavaType);
+}
+
+T_END
+
 TEST(ottavaStart8vaAnd8vb, DirectionReader)
 {
     const int tickTimePosition = 199;

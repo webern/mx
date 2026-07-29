@@ -731,17 +731,25 @@ void DirectionReader::parseOctaveShift(const core::DirectionType &directionType)
     // Per the MusicXML spec, octave-shift's type attribute describes the direction the
     // *written* notes are shifted from the true (sounding) pitch: an 8va, which sounds an
     // octave above what is written, is encoded as type="down" (notes are written below true
-    // pitch). So type="down" maps to the "up" ottava variants (o8va/o15ma) and type="up" maps
-    // to the "down" variants (o8vb/o15mb).
+    // pitch). So type="down" maps to the "up" ottava variants (o8va/o15ma/o22ma) and type="up" maps
+    // to the "down" variants (o8vb/o15mb/o22mb).
     bool isUp = octaveShift.type().tag() == core::UpDownStopContinue::Tag::up;
 
-    if (!isUp && amount > 8)
+    if (!isUp && amount == 22)
+    {
+        ottavaType = api::OttavaType::o22ma;
+    }
+    else if (!isUp && amount > 8)
     {
         ottavaType = api::OttavaType::o15ma;
     }
     else if (!isUp)
     {
         ottavaType = api::OttavaType::o8va;
+    }
+    else if (isUp && amount == 22)
+    {
+        ottavaType = api::OttavaType::o22mb;
     }
     else if (isUp && amount > 8)
     {
