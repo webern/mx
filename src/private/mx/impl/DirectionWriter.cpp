@@ -1682,6 +1682,13 @@ std::vector<core::MusicDataChoice> DirectionWriter::createHarmonyElements(int in
             degree.setDegreeType(degreeType);
             degree.setDegreeValue(degreeValue);
             degree.setDegreeAlter(degreeAlter);
+
+            if (extension.printObject != api::Bool::unspecified)
+            {
+                const bool isYes = extension.printObject == api::Bool::yes;
+                degree.setPrintObject(isYes ? core::YesNo::yes() : core::YesNo::no());
+            }
+
             grp.addDegree(degree);
         }
 
