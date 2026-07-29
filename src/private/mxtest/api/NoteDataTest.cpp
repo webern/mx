@@ -1582,7 +1582,8 @@ TEST(noteheadAttributesDefaultToAbsent, NoteData)
     const std::string xml = mxtest::toXml(score);
     CHECK(xml.find("<notehead") == std::string::npos);
 
-    const auto &outNote = firstNoteheadNote(mxtest::fromXml(xml));
+    const auto outScore = mxtest::fromXml(xml);
+    const auto &outNote = firstNoteheadNote(outScore);
     CHECK(Bool::unspecified == outNote.noteheadFilled);
     CHECK(!outNote.noteheadSmufl.has_value());
 }
