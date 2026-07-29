@@ -111,4 +111,38 @@ TEST(harmonyNumeralRoundTrip, HarmonyExtrasApi)
 
 T_END;
 
+// <harmony> carries the same system attribute as <direction>; a harmony-only direction writes it
+// and reads it back.
+TEST(harmonySystemRelationRoundTrip, HarmonyExtrasApi)
+{
+    auto score = makeScoreWithChord();
+    auto &chord = chordOf(score);
+    chord.root = Step::c;
+    chord.chordKind = ChordKind::major;
+    auto &direction = score.parts.front().measures.front().staves.front().directions.front();
+    direction.systemRelation = SystemRelation::alsoTop;
+
+    const auto out = mxtest::roundTrip(score);
+    const auto &outDirection = out.parts.front().measures.front().staves.front().directions.front();
+    CHECK(SystemRelation::alsoTop == outDirection.systemRelation);
+    CHECK(Step::c == firstChord(out).root);
+}
+
+T_END;
+
+// A harmony-only direction left at the default writes no system attribute.
+TEST(harmonySystemRelationUnspecified, HarmonyExtrasApi)
+{
+    auto score = makeScoreWithChord();
+    auto &chord = chordOf(score);
+    chord.root = Step::c;
+    chord.chordKind = ChordKind::major;
+
+    const auto out = mxtest::roundTrip(score);
+    const auto &outDirection = out.parts.front().measures.front().staves.front().directions.front();
+    CHECK(SystemRelation::unspecified == outDirection.systemRelation);
+}
+
+T_END;
+
 #endif

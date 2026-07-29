@@ -8,7 +8,6 @@
 #include "mx/api/ColorData.h"
 #include "mx/api/FontData.h"
 #include "mx/api/PositionData.h"
-#include "mx/api/RehearsalData.h"
 
 #include <optional>
 #include <string>
@@ -32,11 +31,19 @@ class SymbolData
     FontData fontData;
     std::optional<ColorData> color;
 
-    // A shape drawn around the symbol. RehearsalEnclosure::unspecified draws no enclosure;
-    // RehearsalEnclosure::none states explicitly that there is none.
-    RehearsalEnclosure enclosure;
+    // A shape drawn around the symbol. Enclosure::unspecified draws no enclosure; Enclosure::none
+    // states explicitly that there is none.
+    Enclosure enclosure;
 
-    SymbolData() : smufl{}, positionData{}, fontData{}, color{}, enclosure{RehearsalEnclosure::unspecified}
+    // The `justify` attribute of `<symbol>`. `unspecified` means the attribute is absent. Distinct
+    // from the `halign` attribute, which is carried in `positionData.horizontalAlignment` and says
+    // which edge of the glyph the position refers to; MusicXML defines both on `<symbol>`, whose
+    // symbol-formatting attributes mirror the text-formatting ones on `<words>`.
+    HorizontalAlignment justify;
+
+    SymbolData()
+        : smufl{}, positionData{}, fontData{}, color{}, enclosure{Enclosure::unspecified},
+          justify{HorizontalAlignment::unspecified}
     {
     }
 };
@@ -47,6 +54,7 @@ MXAPI_EQUALS_MEMBER(positionData)
 MXAPI_EQUALS_MEMBER(fontData)
 MXAPI_EQUALS_MEMBER(color)
 MXAPI_EQUALS_MEMBER(enclosure)
+MXAPI_EQUALS_MEMBER(justify)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(SymbolData);
 } // namespace api

@@ -112,6 +112,7 @@ api::DirectionData DirectionReader::getDirectionData()
     myOutDirectionData = initializeData();
     parseOffset();
     parsePlacement();
+    parseSystemRelation();
     parseValues();
     return returnData();
 }
@@ -175,6 +176,24 @@ void DirectionReader::parsePlacement()
     }
 }
 
+void DirectionReader::parseSystemRelation()
+{
+    if (myDirection)
+    {
+        if (myDirection->system().has_value())
+        {
+            myOutDirectionData.systemRelation = myConverter.convertDirectionSystemRelation(*myDirection->system());
+        }
+    }
+    else if (myHarmony)
+    {
+        if (myHarmony->system().has_value())
+        {
+            myOutDirectionData.systemRelation = myConverter.convertDirectionSystemRelation(*myHarmony->system());
+        }
+    }
+}
+
 void DirectionReader::parseValues()
 {
     if (myDirection)
@@ -219,33 +238,6 @@ mx::api::DirectionData DirectionReader::returnData()
     api::DirectionData temp{std::move(myOutDirectionData)};
     myOutDirectionData = api::DirectionData{};
     return temp;
-}
-
-// Maps a core enclosure-shape attribute to the api enum shared by rehearsals, words, and
-// symbols.
-api::RehearsalEnclosure directionReaderEnclosure(core::EnclosureShape::Tag tag)
-{
-    switch (tag)
-    {
-    case core::EnclosureShape::Tag::rectangle:
-        return api::RehearsalEnclosure::rectangle;
-    case core::EnclosureShape::Tag::square:
-        return api::RehearsalEnclosure::square;
-    case core::EnclosureShape::Tag::oval:
-        return api::RehearsalEnclosure::oval;
-    case core::EnclosureShape::Tag::circle:
-        return api::RehearsalEnclosure::circle;
-    case core::EnclosureShape::Tag::bracket:
-        return api::RehearsalEnclosure::bracket;
-    case core::EnclosureShape::Tag::triangle:
-        return api::RehearsalEnclosure::triangle;
-    case core::EnclosureShape::Tag::diamond:
-        return api::RehearsalEnclosure::diamond;
-    case core::EnclosureShape::Tag::none:
-        return api::RehearsalEnclosure::none;
-    default:
-        return api::RehearsalEnclosure::unspecified;
-    }
 }
 
 void DirectionReader::parseDirectionType(const core::DirectionType &directionType)
@@ -369,7 +361,11 @@ void DirectionReader::parseRehearsal(const core::DirectionType &directionType)
         }
         if (rehearsal.enclosure().has_value())
         {
-            outRehearsal.enclosure = directionReaderEnclosure(rehearsal.enclosure()->tag());
+            outRehearsal.enclosure = myConverter.convert(*rehearsal.enclosure());
+        }
+        if (rehearsal.justify().has_value())
+        {
+            outRehearsal.justify = myConverter.convert(*rehearsal.justify());
         }
         myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice{std::move(outRehearsal)});
     }
@@ -426,7 +422,11 @@ void DirectionReader::parseWordsRun(const core::DirectionType &directionType)
             }
             if (symbolEl.enclosure().has_value())
             {
-                outSymbol.enclosure = directionReaderEnclosure(symbolEl.enclosure()->tag());
+                outSymbol.enclosure = myConverter.convert(*symbolEl.enclosure());
+            }
+            if (symbolEl.justify().has_value())
+            {
+                outSymbol.justify = myConverter.convert(*symbolEl.justify());
             }
             run.emplace_back(std::move(outSymbol));
             continue;
@@ -443,7 +443,11 @@ void DirectionReader::parseWordsRun(const core::DirectionType &directionType)
         outWords.fontData = getFontData(wordEl);
         if (wordEl.enclosure().has_value())
         {
-            outWords.enclosure = directionReaderEnclosure(wordEl.enclosure()->tag());
+            outWords.enclosure = myConverter.convert(*wordEl.enclosure());
+        }
+        if (wordEl.justify().has_value())
+        {
+            outWords.justify = myConverter.convert(*wordEl.justify());
         }
         run.emplace_back(std::move(outWords));
     }

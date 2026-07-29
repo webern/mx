@@ -51,6 +51,7 @@
 #include "mx/core/generated/StickLocation.h"
 #include "mx/core/generated/StickMaterial.h"
 #include "mx/core/generated/StickType.h"
+#include "mx/core/generated/SystemRelation.h"
 #include "mx/core/generated/SystemRelationNumber.h"
 #include "mx/core/generated/TechnicalChoice.h"
 #include "mx/core/generated/TimeRelation.h"
@@ -65,6 +66,7 @@
 #include "mx/core/generated/YesNo.h"
 
 #include <algorithm>
+#include <optional>
 #include <utility>
 #include <vector>
 
@@ -142,6 +144,12 @@ class Converter
 
     core::SystemRelationNumber convertSystemRelation(api::SystemRelation value) const;
     api::SystemRelation convertSystemRelation(core::SystemRelationNumber value) const;
+
+    // <direction system="..."> uses a narrower vocabulary than <measure-numbering system="...">:
+    // only-top, also-top and none. api::SystemRelation::onlyBottom and ::alsoBottom have no
+    // direction equivalent and, like unspecified, yield nullopt so the caller writes no attribute.
+    std::optional<core::SystemRelation> convertDirectionSystemRelation(api::SystemRelation value) const;
+    api::SystemRelation convertDirectionSystemRelation(core::SystemRelation value) const;
 
     core::StemValue convert(api::Stem value) const;
     api::Stem convert(core::StemValue value) const;
@@ -227,8 +235,8 @@ class Converter
     core::StickLocation convert(api::StickLocation value) const;
     api::TipDirection convert(core::TipDirection value) const;
     core::TipDirection convert(api::TipDirection value) const;
-    api::PercussionEnclosure convert(core::EnclosureShape value) const;
-    core::EnclosureShape convert(api::PercussionEnclosure value) const;
+    api::Enclosure convert(core::EnclosureShape value) const;
+    core::EnclosureShape convert(api::Enclosure value) const;
 
     static double convertToAlter(int semitones, double cents);
     static std::pair<int, double> convertToSemitonesAndCents(double alter);
@@ -256,6 +264,7 @@ class Converter
     const static EnumMap<core::TechnicalChoice::Kind, api::MarkType> technicalMarkMap;
     const static EnumMap<core::MeasureNumberingValue, api::MeasureNumbering> measureNumberingMap;
     const static EnumMap<core::SystemRelationNumber, api::SystemRelation> systemRelationMap;
+    const static EnumMap<core::SystemRelation, api::SystemRelation> directionSystemRelationMap;
     const static EnumMap<core::StemValue, api::Stem> stemMap;
     const static EnumMap<core::LineType, api::LineType> lineType;
     const static EnumMap<core::WedgeType, api::WedgeType> wedgeMap;
@@ -286,7 +295,7 @@ class Converter
     const static EnumMap<core::StickMaterial, api::StickMaterial> stickMaterialMap;
     const static EnumMap<core::StickLocation, api::StickLocation> stickLocationMap;
     const static EnumMap<core::TipDirection, api::TipDirection> tipDirectionMap;
-    const static EnumMap<core::EnclosureShape, api::PercussionEnclosure> percussionEnclosureMap;
+    const static EnumMap<core::EnclosureShape, api::Enclosure> enclosureMap;
 
   private:
     template <typename CORE_TYPE, typename API_TYPE>

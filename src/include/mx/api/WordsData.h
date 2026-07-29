@@ -8,7 +8,6 @@
 #include "mx/api/ColorData.h"
 #include "mx/api/FontData.h"
 #include "mx/api/PositionData.h"
-#include "mx/api/RehearsalData.h"
 
 namespace mx
 {
@@ -26,13 +25,19 @@ class WordsData
     bool isColorSpecified;
     ColorData colorData;
 
-    // A shape drawn around the text. RehearsalEnclosure::unspecified draws no enclosure;
-    // RehearsalEnclosure::none states explicitly that there is none.
-    RehearsalEnclosure enclosure;
+    // A shape drawn around the text. Enclosure::unspecified draws no enclosure; Enclosure::none
+    // states explicitly that there is none.
+    Enclosure enclosure;
+
+    // The `justify` attribute of `<words>`: how the text lines up within itself when it spans
+    // more than one line. `unspecified` means the attribute is absent. Distinct from the `halign`
+    // attribute, which is carried in `positionData.horizontalAlignment` and aligns the whole text
+    // block against its anchor point; MusicXML defines both attributes on `<words>`.
+    HorizontalAlignment justify;
 
     WordsData()
-        : text{}, positionData{}, fontData{}, isColorSpecified{false}, colorData{},
-          enclosure{RehearsalEnclosure::unspecified}
+        : text{}, positionData{}, fontData{}, isColorSpecified{false}, colorData{}, enclosure{Enclosure::unspecified},
+          justify{HorizontalAlignment::unspecified}
     {
     }
 };
@@ -44,6 +49,7 @@ MXAPI_EQUALS_MEMBER(fontData)
 MXAPI_EQUALS_MEMBER(isColorSpecified)
 MXAPI_EQUALS_MEMBER(colorData)
 MXAPI_EQUALS_MEMBER(enclosure)
+MXAPI_EQUALS_MEMBER(justify)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(WordsData);
 } // namespace api
