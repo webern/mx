@@ -251,6 +251,13 @@ class ChordData
     ChordKind chordKind;
     std::string text;
     Bool useSymbols;
+    // How the chord's degree alterations (the 'extensions' below) are laid out next to the chord
+    // symbol. stackDegrees stacks them vertically instead of running them left to right;
+    // parenthesesDegrees wraps all of them in parentheses, e.g. C7(#9b13). These are the MusicXML
+    // stack-degrees and parentheses-degrees attributes; unspecified leaves the choice to the
+    // notation software rendering the score.
+    Bool stackDegrees;
+    Bool parenthesesDegrees;
     Step bass;
     int bassAlter;
     // The MusicXML <inversion> (0 = root position, 1 = first inversion, ...). Present only when
@@ -279,6 +286,8 @@ MXAPI_EQUALS_MEMBER(numeralMode)
 MXAPI_EQUALS_MEMBER(chordKind)
 MXAPI_EQUALS_MEMBER(text)
 MXAPI_EQUALS_MEMBER(useSymbols)
+MXAPI_EQUALS_MEMBER(stackDegrees)
+MXAPI_EQUALS_MEMBER(parenthesesDegrees)
 MXAPI_EQUALS_MEMBER(bass)
 MXAPI_EQUALS_MEMBER(bassAlter)
 MXAPI_EQUALS_MEMBER(inversion)

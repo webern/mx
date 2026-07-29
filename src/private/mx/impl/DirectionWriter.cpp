@@ -1591,6 +1591,18 @@ std::vector<core::MusicDataChoice> DirectionWriter::createHarmonyElements(int in
             kind.setUseSymbols(chordIter->useSymbols == api::Bool::yes ? core::YesNo::yes() : core::YesNo::no());
         }
 
+        if (chordIter->stackDegrees != api::Bool::unspecified)
+        {
+            const bool isYes = chordIter->stackDegrees == api::Bool::yes;
+            kind.setStackDegrees(isYes ? core::YesNo::yes() : core::YesNo::no());
+        }
+
+        if (chordIter->parenthesesDegrees != api::Bool::unspecified)
+        {
+            const bool isYes = chordIter->parenthesesDegrees == api::Bool::yes;
+            kind.setParenthesesDegrees(isYes ? core::YesNo::yes() : core::YesNo::no());
+        }
+
         grp.setKind(kind);
 
         for (const auto &extension : chordIter->extensions)
