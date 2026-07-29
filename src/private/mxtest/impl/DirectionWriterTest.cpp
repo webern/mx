@@ -212,7 +212,7 @@ TEST(rehearsalRoundTrip, DirectionWriter)
     rehearsal.colorData.blue = 0;
     rehearsal.colorData.isAlphaSpecified = true;
     rehearsal.colorData.alpha = 255;
-    rehearsal.enclosure = api::RehearsalEnclosure::square;
+    rehearsal.enclosure = api::Enclosure::square;
 
     api::DirectionData directionData;
     directionData.directionTypes.emplace_back(api::DirectionChoice{rehearsal});

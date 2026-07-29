@@ -162,6 +162,10 @@ std::vector<core::MusicDataChoice> DirectionWriter::getDirectionLikeThings()
         direction.setPlacement(myConverter.convert(myDirectionData.placement));
     }
 
+    // nullopt for unspecified, and for the bottom-of-system values that only measure numbering has.
+    // <harmony> carries the same attribute; createHarmonyElements writes it there too.
+    direction.setSystem(myConverter.convertDirectionSystemRelation(myDirectionData.systemRelation));
+
     if (myDirectionData.isStaffValueSpecified || myCursor.staffIndex != 0)
     {
         direction.setStaff(myCursor.staffIndex + 1);
@@ -710,34 +714,6 @@ void DirectionWriter::emitTempo(const api::TempoData &tempo, core::Direction &di
     addDirectionType(std::move(dt), direction);
 }
 
-// Maps the api enclosure enum shared by rehearsals, words, and symbols to the core
-// enclosure-shape attribute; nullopt (for unspecified) emits no attribute.
-static std::optional<core::EnclosureShape> directionWriterEnclosure(api::RehearsalEnclosure enclosure)
-{
-    switch (enclosure)
-    {
-    case api::RehearsalEnclosure::rectangle:
-        return core::EnclosureShape::rectangle();
-    case api::RehearsalEnclosure::square:
-        return core::EnclosureShape::square();
-    case api::RehearsalEnclosure::oval:
-        return core::EnclosureShape::oval();
-    case api::RehearsalEnclosure::circle:
-        return core::EnclosureShape::circle();
-    case api::RehearsalEnclosure::bracket:
-        return core::EnclosureShape::bracket();
-    case api::RehearsalEnclosure::triangle:
-        return core::EnclosureShape::triangle();
-    case api::RehearsalEnclosure::diamond:
-        return core::EnclosureShape::diamond();
-    case api::RehearsalEnclosure::none:
-        return core::EnclosureShape::none();
-    case api::RehearsalEnclosure::unspecified:
-    default:
-        return std::nullopt;
-    }
-}
-
 void DirectionWriter::emitWordsRun(const std::vector<api::WordsChoice> &inRun, core::Direction &direction)
 {
     // An empty run cannot be expressed (the schema requires at least one words or symbol) and is
@@ -765,7 +741,14 @@ void DirectionWriter::emitWordsRun(const std::vector<api::WordsChoice> &inRun, c
             {
                 setAttributesFromColorData(*symbolData.color, outSymbol);
             }
-            outSymbol.setEnclosure(directionWriterEnclosure(symbolData.enclosure));
+            if (symbolData.enclosure != api::Enclosure::unspecified)
+            {
+                outSymbol.setEnclosure(myConverter.convert(symbolData.enclosure));
+            }
+            if (symbolData.justify != api::HorizontalAlignment::unspecified)
+            {
+                outSymbol.setJustify(myConverter.convert(symbolData.justify));
+            }
             choiceItem = core::DirectionTypeChoiceChoice::symbol(std::move(outSymbol));
         }
         else
@@ -779,7 +762,14 @@ void DirectionWriter::emitWordsRun(const std::vector<api::WordsChoice> &inRun, c
             {
                 setAttributesFromColorData(wordsData.colorData, outWords);
             }
-            outWords.setEnclosure(directionWriterEnclosure(wordsData.enclosure));
+            if (wordsData.enclosure != api::Enclosure::unspecified)
+            {
+                outWords.setEnclosure(myConverter.convert(wordsData.enclosure));
+            }
+            if (wordsData.justify != api::HorizontalAlignment::unspecified)
+            {
+                outWords.setJustify(myConverter.convert(wordsData.justify));
+            }
             choiceItem = core::DirectionTypeChoiceChoice::words(std::move(outWords));
         }
 
@@ -853,7 +843,14 @@ void DirectionWriter::emitRehearsal(const api::RehearsalData &item, core::Direct
     {
         setAttributesFromColorData(item.colorData, rehearsal);
     }
-    rehearsal.setEnclosure(directionWriterEnclosure(item.enclosure));
+    if (item.enclosure != api::Enclosure::unspecified)
+    {
+        rehearsal.setEnclosure(myConverter.convert(item.enclosure));
+    }
+    if (item.justify != api::HorizontalAlignment::unspecified)
+    {
+        rehearsal.setJustify(myConverter.convert(item.justify));
+    }
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::rehearsal(core::OneOrMore<core::FormattedTextID>{std::move(rehearsal)}));
     addDirectionType(std::move(dt), direction);
@@ -1280,7 +1277,7 @@ void DirectionWriter::emitPercussion(const api::PercussionData &item, core::Dire
 {
     core::Percussion percussion{};
     percussion.setChoice(createPercussionChoice(item.choice));
-    if (item.enclosure != api::PercussionEnclosure::unspecified)
+    if (item.enclosure != api::Enclosure::unspecified)
     {
         percussion.setEnclosure(myConverter.convert(item.enclosure));
     }
@@ -1451,6 +1448,8 @@ std::vector<core::MusicDataChoice> DirectionWriter::createHarmonyElements(int in
     {
         harmony.setStaff(myCursor.staffIndex + 1);
     }
+
+    harmony.setSystem(myConverter.convertDirectionSystemRelation(myDirectionData.systemRelation));
 
     const auto &chords = myDirectionData.chords;
 

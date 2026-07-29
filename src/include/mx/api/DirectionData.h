@@ -28,6 +28,14 @@ struct DirectionData
     int tickTimePosition;
     Placement placement;
 
+    // The system attribute of <direction> and <harmony>: content that belongs to the whole system
+    // rather than to this part alone, such as a tempo mark drawn once above the top staff. onlyTop
+    // draws it only on the top part of the system, alsoTop on both this part and the top part, and
+    // none states explicitly that it belongs to this part alone. One value covers the direction
+    // types and the chords held here; both elements are written with it. SystemRelation::onlyBottom
+    // and ::alsoBottom exist only for measure numbering; either one here writes no attribute.
+    SystemRelation systemRelation;
+
     // The source's <offset>, in divisions, or absent when it had none. An <offset> nudges only
     // where the direction is *drawn*, shifting it away from the note it is anchored to; it does not
     // move that anchor. tickTimePosition holds the anchor -- the musical location the direction
@@ -73,9 +81,9 @@ struct DirectionData
     std::vector<FiguredBassData> figuredBasses;
 
     DirectionData()
-        : tickTimePosition{0}, placement{Placement::unspecified}, offset{}, voice{VALUE_UNSPECIFIED},
-          isStaffValueSpecified{true}, isSoundDataSpecified{false}, soundData{}, directionTypes{}, chords{},
-          figuredBasses{}
+        : tickTimePosition{0}, placement{Placement::unspecified}, systemRelation{SystemRelation::unspecified}, offset{},
+          voice{VALUE_UNSPECIFIED}, isStaffValueSpecified{true}, isSoundDataSpecified{false}, soundData{},
+          directionTypes{}, chords{}, figuredBasses{}
     {
     }
 };
@@ -89,6 +97,7 @@ inline bool isDirectionDataEmpty(const DirectionData &directionData)
 MXAPI_EQUALS_BEGIN(DirectionData)
 MXAPI_EQUALS_MEMBER(tickTimePosition)
 MXAPI_EQUALS_MEMBER(placement)
+MXAPI_EQUALS_MEMBER(systemRelation)
 MXAPI_EQUALS_MEMBER(offset)
 MXAPI_EQUALS_MEMBER(voice)
 MXAPI_EQUALS_MEMBER(isStaffValueSpecified)

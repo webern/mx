@@ -71,9 +71,11 @@ enum class MeasureNumbering
     system
 };
 
-// The <measure-numbering system="..."> attribute: whether this part's measure numbers are also,
-// or only, associated with the system (as opposed to just this part). unspecified means the
-// attribute is absent.
+// Whether an item is associated with the system rather than only with the part it appears in --
+// the system attribute of <measure-numbering> (MeasureData) and of <direction> and <harmony>
+// (DirectionData). only... means the item is drawn on the top or bottom part of the system instead
+// of this part; also... means it is drawn on both. unspecified means the attribute is absent.
+// onlyBottom and alsoBottom are measure-numbering only; MusicXML has no bottom-of-system direction.
 enum class SystemRelation
 {
     unspecified,
@@ -82,6 +84,31 @@ enum class SystemRelation
     onlyBottom,
     alsoTop,
     alsoBottom
+};
+
+// The shape drawn around a piece of text or a symbol -- MusicXML's enclosure attribute, carried by
+// RehearsalData, WordsData, SymbolData and PercussionData. unspecified means the attribute is
+// absent, which draws no enclosure; none states explicitly that there is none. A bracket is a
+// rectangle with the bottom line missing, as is common in jazz notation, and an invertedBracket is
+// one with the top line missing.
+enum class Enclosure
+{
+    unspecified,
+    rectangle,
+    square,
+    oval,
+    circle,
+    bracket,
+    invertedBracket,
+    triangle,
+    diamond,
+    pentagon,
+    hexagon,
+    heptagon,
+    octagon,
+    nonagon,
+    decagon,
+    none
 };
 } // namespace api
 } // namespace mx
