@@ -332,6 +332,112 @@ TEST(measureNumberingUnspecifiedOmitsElement, MeasureData)
 
 T_END;
 
+TEST(measureNumberingStaffRoundTrip, MeasureData)
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.measureNumbering = MeasureNumbering::system;
+    measure.measureNumberingStaffIndex = 1;
+    measure.staves.emplace_back();
+    measure.staves.back().voices[0].notes.emplace_back();
+    measure.staves.emplace_back();
+    measure.staves.back().voices[0].notes.emplace_back();
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("staff=\"2\"") != std::string::npos);
+
+    const auto outScore = mxtest::fromXml(xml);
+    const auto &outMeasure = outScore.parts.front().measures.front();
+    REQUIRE(outMeasure.measureNumberingStaffIndex.has_value());
+    CHECK_EQUAL(1, *outMeasure.measureNumberingStaffIndex);
+}
+
+T_END;
+
+TEST(measureNumberingStaffAbsentOmitsAttribute, MeasureData)
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.measureNumbering = MeasureNumbering::system;
+    measure.staves.emplace_back();
+    measure.staves.back().voices[0].notes.emplace_back();
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("<measure-numbering staff=") == std::string::npos);
+
+    const auto outScore = mxtest::fromXml(xml);
+    CHECK(!outScore.parts.front().measures.front().measureNumberingStaffIndex.has_value());
+}
+
+T_END;
+
+TEST(displayedNumberRoundTrip, MeasureData)
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.number = "7";
+    measure.displayedNumber = "12a";
+    measure.staves.emplace_back();
+    measure.staves.back().voices[0].notes.emplace_back();
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("number=\"7\"") != std::string::npos);
+    CHECK(xml.find("text=\"12a\"") != std::string::npos);
+
+    const auto outScore = mxtest::fromXml(xml);
+    const auto &outMeasure = outScore.parts.front().measures.front();
+    CHECK_EQUAL("7", outMeasure.number);
+    REQUIRE(outMeasure.displayedNumber.has_value());
+    CHECK_EQUAL("12a", *outMeasure.displayedNumber);
+}
+
+T_END;
+
+TEST(displayedNumberAbsentOmitsAttribute, MeasureData)
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    measure.staves.back().voices[0].notes.emplace_back();
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("text=") == std::string::npos);
+
+    const auto outScore = mxtest::fromXml(xml);
+    CHECK(!outScore.parts.front().measures.front().displayedNumber.has_value());
+}
+
+T_END;
+
+TEST(emptyDisplayedNumberOmitsAttribute, MeasureData)
+{
+    ScoreData score;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.displayedNumber = "";
+    measure.staves.emplace_back();
+    measure.staves.back().voices[0].notes.emplace_back();
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("text=") == std::string::npos);
+}
+
+T_END;
+
 TEST(multiMeasureRestRoundTrip, MeasureData)
 {
     ScoreData score;
