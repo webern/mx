@@ -111,8 +111,11 @@ class NoteData
     // tag, but subsequent chord notes do have the tag).
     bool isChord;
 
-    // One field, two encodings: on write these emit both <tie> (sound) and
-    // <tied> (notation), so the two can never contradict each other.
+    // One field, two encodings: MusicXML states a tie twice, once for sound
+    // (<tie>) and once for notation (<tied>), so setting one of these emits
+    // both and the two can never contradict each other. On a cue or grace-cue
+    // note only the notation is emitted -- those notes are silent, and the
+    // schema gives them no <tie> -- so the tie is visible but not played.
     bool isTieStart;
     bool isTieStop;
 
@@ -124,7 +127,8 @@ class NoteData
     // are the four combinations of these two independent flags. Schema facts:
     // a grace note carries no <duration> on the wire (durationTimeTicks reads
     // as 0 and is ignored on write), and cue notes -- including grace-cue
-    // notes -- cannot carry <tie> (ties on them are silently dropped on write).
+    // notes -- cannot carry <tie>, so a tie on one is notation only (see
+    // isTieStart / isTieStop).
     bool isGrace;
     // <grace>'s slash attribute. Only meaningful when isGrace is true.
     Bool graceSlash;

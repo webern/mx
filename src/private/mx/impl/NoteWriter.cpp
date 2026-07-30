@@ -33,6 +33,7 @@
 #include "mx/impl/WriteRefusal.h"
 #include "mx/utility/Throw.h"
 
+#include <algorithm>
 #include <cmath>
 
 namespace mx
@@ -269,37 +270,60 @@ core::Note NoteWriter::getNote(bool isStartOfChord) const
     return myOutNote;
 }
 
-// Records a tie (for the note choice) and the matching tied notation. Old
-// behavior preserved: a single <notations> element collects the tied
-// choices, stop before start when both are present.
+// True when the note's curve vectors already carry a tie curve in the given
+// direction. Those curves are written by NotationsWriter with their full
+// attributes, so the bare <tied> synthesized here would be a duplicate.
+bool NoteWriter::hasTieCurve(bool isStart) const
+{
+    if (isStart)
+    {
+        const auto &curves = myNoteData.noteAttachmentData.curveStarts;
+        return std::any_of(curves.cbegin(), curves.cend(),
+                           [](const api::CurveStart &curve) { return curve.curveType == api::CurveType::tie; });
+    }
+
+    const auto &curves = myNoteData.noteAttachmentData.curveStops;
+    return std::any_of(curves.cbegin(), curves.cend(),
+                       [](const api::CurveStop &curve) { return curve.curveType == api::CurveType::tie; });
+}
+
+// Records a tie in both of MusicXML's encodings: the sound-level <tie> (for the
+// note choice) and the matching <tied> notation. A single <notations> element
+// collects the tied choices, stop before start when both are present.
 void NoteWriter::addTie(bool isStart) const
 {
-    core::Tie tie;
-    tie.setType(isStart ? core::StartStop::start() : core::StartStop::stop());
-    myOutTies.push_back(std::move(tie));
+    // <tie> lives inside the note choice, and the schema gives it a slot in only
+    // two of the four note flavors: normal and grace-normal. Cue and grace-cue
+    // notes are silent, so a sound-level tie is meaningless on them.
+    if (!myNoteData.isCue)
+    {
+        core::Tie tie;
+        tie.setType(isStart ? core::StartStop::start() : core::StartStop::stop());
+        myOutTies.push_back(std::move(tie));
+    }
 
-    core::Tied tied;
-    tied.setType(isStart ? core::TiedType::start() : core::TiedType::stop());
-    myOutTieNotationsChoices.push_back(core::NotationsChoice::tied(std::move(tied)));
+    // <tied> is a notation and <notations> sits outside the note choice, so it
+    // is legal on all four flavors -- cue and grace-cue notes included.
+    if (!hasTieCurve(isStart))
+    {
+        core::Tied tied;
+        tied.setType(isStart ? core::TiedType::start() : core::TiedType::stop());
+        myOutTieNotationsChoices.push_back(core::NotationsChoice::tied(std::move(tied)));
+    }
 }
 
 void NoteWriter::setNoteChoiceAndFullNoteGroup(bool isStartOfChord) const
 {
     myOutFullNoteGroup.setChord(myCursor.isChordActive && myIsPreviousNoteAChordMember && !isStartOfChord);
 
-    // The schema has no <tie> on cue and grace-cue notes, so ties on them are
-    // silently dropped. Normal and grace-normal notes carry their ties.
-    if (!myNoteData.isCue)
+    if (myNoteData.isTieStop)
     {
-        if (myNoteData.isTieStop)
-        {
-            addTie(false);
-        }
+        addTie(false);
+    }
 
-        if (myNoteData.isTieStart)
-        {
-            addTie(true);
-        }
+    if (myNoteData.isTieStart)
+    {
+        addTie(true);
     }
 }
 
@@ -323,7 +347,8 @@ void NoteWriter::assembleNoteChoice() const
         }
         if (myNoteData.isCue)
         {
-            // <grace/> + <cue/>: the grace-cue group carries no <tie>.
+            // <grace/> + <cue/>: the grace-cue group has no <tie> slot, so
+            // myOutTies is empty here; the tie survives as a <tied> notation.
             core::GraceCueNoteGroup inner;
             inner.setFullNote(myOutFullNoteGroup);
             choiceObj.setGraceNoteChoice(core::GraceNoteChoice::graceCueNoteGroup(std::move(inner)));

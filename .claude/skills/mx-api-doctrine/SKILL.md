@@ -40,8 +40,9 @@ Responses to wrong api usage, in order of preference:
 1. Unrepresentable: shape the type so the wrong state cannot be expressed (choice types below;
    merged fields, principle 3).
 2. Defined fallback: document a harmless result and return it. A wrong-kind choice accessor
-   returns a default-constructed copy; the writer emits nothing for a meaningless combination
-   (cue-note ties are silently dropped). No signal to the caller.
+   returns a default-constructed copy; the writer drops the half of an encoding that is
+   meaningless for the note it is on (a tie on a silent cue note is written as `<tied>`
+   notation only, never as a sound-level `<tie>`). No signal to the caller.
 3. `Result<T>` (`Result.h`): the error channel of last resort. It exists for the
    `DocumentManager` I/O boundary, where failure is real (unreadable file, unparseable XML). Do
    not spread it into the data model.
