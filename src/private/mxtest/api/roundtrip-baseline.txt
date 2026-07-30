@@ -539,7 +539,10 @@ musuite/testMultiMeasureRest2.xml
 musuite/testMultiMeasureRest3.xml
 synthetic/multiple-rest.3.0.xml
 
-# Already passing, never pinned.
+# Passed on macOS but not on Linux until ScoreData::sort() was made stable. It is
+# 14 chords, and every member of a chord shares one tick, so an unstable sort let
+# the standard library choose which one came first -- and MusicXML spells a chord
+# by omitting <chord> from its first note.
 lysuite/ly32d_Arpeggio.xml
 
 # MusicXML states a tie twice: <tie> for sound and <tied> for notation. Two fixes

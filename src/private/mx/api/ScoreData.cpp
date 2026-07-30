@@ -4,6 +4,8 @@
 
 #include "mx/api/ScoreData.h"
 
+#include <algorithm>
+
 namespace mx
 {
 namespace api
@@ -45,6 +47,11 @@ int ScoreData::getNumStavesPerSystem() const
     return numStaves;
 }
 
+// Sorts by tick position only, so items sharing a tick keep the order they were
+// given. That order is meaningful and must not be disturbed: the members of a
+// chord all sit at one tick, and MusicXML encodes a chord by omitting <chord>
+// from its first note. A plain std::sort is unstable, so the chord's spelling
+// would depend on the standard library implementation.
 void ScoreData::sort()
 {
     for (auto &part : parts)
@@ -54,25 +61,25 @@ void ScoreData::sort()
             for (auto &staff : measure.staves)
             {
 
-                const auto clefCompare = [&](ClefData &inLeft, ClefData &inRight) {
+                const auto clefCompare = [](const ClefData &inLeft, const ClefData &inRight) {
                     return inLeft.tickTimePosition < inRight.tickTimePosition;
                 };
 
-                std::sort(std::begin(staff.clefs), std::end(staff.clefs), clefCompare);
+                std::stable_sort(std::begin(staff.clefs), std::end(staff.clefs), clefCompare);
 
-                const auto directionCompare = [&](DirectionData &inLeft, DirectionData &inRight) {
+                const auto directionCompare = [](const DirectionData &inLeft, const DirectionData &inRight) {
                     return inLeft.tickTimePosition < inRight.tickTimePosition;
                 };
 
-                std::sort(std::begin(staff.directions), std::end(staff.directions), directionCompare);
+                std::stable_sort(std::begin(staff.directions), std::end(staff.directions), directionCompare);
 
                 for (auto &voice : staff.voices)
                 {
-                    const auto noteCompare = [&](NoteData &inLeft, NoteData &inRight) {
+                    const auto noteCompare = [](const NoteData &inLeft, const NoteData &inRight) {
                         return inLeft.tickTimePosition < inRight.tickTimePosition;
                     };
 
-                    std::sort(std::begin(voice.second.notes), std::end(voice.second.notes), noteCompare);
+                    std::stable_sort(std::begin(voice.second.notes), std::end(voice.second.notes), noteCompare);
                 }
             }
         }
