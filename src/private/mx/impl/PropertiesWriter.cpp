@@ -153,10 +153,13 @@ void PropertiesWriter::writeTraditionalKey(const api::KeyData &inKeyData, core::
         tkg.setCancel(cancel);
     }
 
-    if (inKeyData.mode == api::KeyMode::major || inKeyData.mode == api::KeyMode::minor)
+    // an unspecified or unsupported mode converts to an empty core::Mode, which has no spelling to
+    // write; every other KeyMode, including none, writes its <mode> element
+    const Converter modeConverter;
+    const auto mode = modeConverter.convert(inKeyData.mode);
+    if (!mode.value().empty())
     {
-        const auto modeStr = (inKeyData.mode == api::KeyMode::major) ? "major" : "minor";
-        tkg.setMode(core::Mode{modeStr});
+        tkg.setMode(mode);
     }
 
     ioKey.setChoice(core::KeyChoice::traditionalKey(tkg));

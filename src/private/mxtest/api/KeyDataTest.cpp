@@ -61,6 +61,59 @@ const mx::core::Key &getFirstCoreKey(const mx::core::DocumentPtr &corePtr)
     REQUIRE(!keys.empty());
     return keys.front();
 }
+
+/// Helper: build a single-key score with the given fifths and mode, serialize it, and return the XML.
+std::string keyModeXml(int fifths, KeyMode mode)
+{
+    KeyData key;
+    key.fifths = fifths;
+    key.mode = mode;
+    return mxtest::toXml(putKeyInScore(key));
+}
+
+/// Helper: wrap a key element's children in a minimal score-partwise document.
+std::string keyXmlDocument(const std::string &inKeyChildren)
+{
+    return R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<score-partwise version="4.0">
+  <part-list>
+    <score-part id="P1">
+      <part-name>P</part-name>
+    </score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes>
+        <divisions>1</divisions>
+        <key>
+)" + inKeyChildren +
+           R"(
+        </key>
+      </attributes>
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>1</duration>
+        <type>quarter</type>
+      </note>
+    </measure>
+  </part>
+</score-partwise>
+)";
+}
+
+/// Helper: parse a document whose key holds the given children, and return the first KeyData.
+KeyData keyFromXml(const std::string &inKeyChildren)
+{
+    const auto score = mxtest::fromXml(keyXmlDocument(inKeyChildren));
+    REQUIRE(!score.parts.empty());
+    REQUIRE(!score.parts.at(0).measures.empty());
+    const auto &keys = score.parts.at(0).measures.at(0).keys;
+    REQUIRE(!keys.empty());
+    return keys.at(0);
+}
 } // namespace
 
 TEST(EMajor, KeyData)
@@ -559,6 +612,152 @@ TEST(CancelLocationFromXml, KeyData)
     REQUIRE(!keys.empty());
     CHECK_EQUAL(2, keys.at(0).cancel);
     CHECK_EQUAL(CancelLocation::right, keys.at(0).cancelLocation);
+}
+
+TEST(ModeSerializationAllValues, KeyData)
+{
+    // every mode with a MusicXML spelling writes that exact spelling
+    CHECK(keyModeXml(0, KeyMode::major).find("<mode>major</mode>") != std::string::npos);
+    CHECK(keyModeXml(0, KeyMode::minor).find("<mode>minor</mode>") != std::string::npos);
+    CHECK(keyModeXml(0, KeyMode::dorian).find("<mode>dorian</mode>") != std::string::npos);
+    CHECK(keyModeXml(0, KeyMode::phrygian).find("<mode>phrygian</mode>") != std::string::npos);
+    CHECK(keyModeXml(0, KeyMode::lydian).find("<mode>lydian</mode>") != std::string::npos);
+    CHECK(keyModeXml(0, KeyMode::mixolydian).find("<mode>mixolydian</mode>") != std::string::npos);
+    CHECK(keyModeXml(0, KeyMode::aeolian).find("<mode>aeolian</mode>") != std::string::npos);
+    CHECK(keyModeXml(0, KeyMode::ionian).find("<mode>ionian</mode>") != std::string::npos);
+    CHECK(keyModeXml(0, KeyMode::locrian).find("<mode>locrian</mode>") != std::string::npos);
+    CHECK(keyModeXml(0, KeyMode::none).find("<mode>none</mode>") != std::string::npos);
+
+    // unspecified and unsupported have no spelling, so no <mode> element is written
+    CHECK(keyModeXml(0, KeyMode::unspecified).find("<mode>") == std::string::npos);
+    CHECK(keyModeXml(0, KeyMode::unsupported).find("<mode>") == std::string::npos);
+}
+
+TEST(ModeDeserializationAllValues, KeyData)
+{
+    CHECK_EQUAL(KeyMode::major, keyFromXml("<fifths>0</fifths><mode>major</mode>").mode);
+    CHECK_EQUAL(KeyMode::minor, keyFromXml("<fifths>0</fifths><mode>minor</mode>").mode);
+    CHECK_EQUAL(KeyMode::dorian, keyFromXml("<fifths>0</fifths><mode>dorian</mode>").mode);
+    CHECK_EQUAL(KeyMode::phrygian, keyFromXml("<fifths>0</fifths><mode>phrygian</mode>").mode);
+    CHECK_EQUAL(KeyMode::lydian, keyFromXml("<fifths>0</fifths><mode>lydian</mode>").mode);
+    CHECK_EQUAL(KeyMode::mixolydian, keyFromXml("<fifths>0</fifths><mode>mixolydian</mode>").mode);
+    CHECK_EQUAL(KeyMode::aeolian, keyFromXml("<fifths>0</fifths><mode>aeolian</mode>").mode);
+    CHECK_EQUAL(KeyMode::ionian, keyFromXml("<fifths>0</fifths><mode>ionian</mode>").mode);
+    CHECK_EQUAL(KeyMode::locrian, keyFromXml("<fifths>0</fifths><mode>locrian</mode>").mode);
+    CHECK_EQUAL(KeyMode::none, keyFromXml("<fifths>0</fifths><mode>none</mode>").mode);
+}
+
+TEST(ModeAbsentIsUnspecified, KeyData)
+{
+    // <mode> is optional; when it is absent the key states no mode
+    const auto key = keyFromXml("<fifths>-3</fifths>");
+    CHECK_EQUAL(KeyMode::unspecified, key.mode);
+    CHECK_EQUAL(-3, key.fifths);
+}
+
+TEST(ModeOutsideVocabularyIsUnsupported, KeyData)
+{
+    // <mode> is an open vocabulary in MusicXML; a value we do not model reads as unsupported
+    CHECK_EQUAL(KeyMode::unsupported, keyFromXml("<fifths>0</fifths><mode>banana</mode>").mode);
+}
+
+TEST(ModeNoneRoundTrip, KeyData)
+{
+    // a keyless signature: zero fifths with <mode>none</mode>
+    KeyData key;
+    key.fifths = 0;
+    key.mode = KeyMode::none;
+
+    const auto xml = mxtest::toXml(putKeyInScore(key));
+    CHECK(xml.find("<fifths>0</fifths>") != std::string::npos);
+    CHECK(xml.find("<mode>none</mode>") != std::string::npos);
+
+    const auto score = mxtest::fromXml(xml);
+    REQUIRE(!score.parts.empty());
+    REQUIRE(!score.parts.at(0).measures.empty());
+    const auto &keys = score.parts.at(0).measures.at(0).keys;
+    REQUIRE(!keys.empty());
+    const auto &deserializedKey = keys.at(0);
+    CHECK_EQUAL(0, deserializedKey.fifths);
+    CHECK_EQUAL(KeyMode::none, deserializedKey.mode);
+    CHECK(deserializedKey.nonTraditional.empty());
+    CHECK_EQUAL(key, deserializedKey);
+}
+
+TEST(ModeRoundTripAllValues, KeyData)
+{
+    // every mode with a spelling survives a write/read round trip, and fifths is untouched by it
+    const std::vector<KeyMode> modes{KeyMode::major,      KeyMode::minor,   KeyMode::dorian, KeyMode::phrygian,
+                                     KeyMode::lydian,     KeyMode::aeolian, KeyMode::ionian, KeyMode::locrian,
+                                     KeyMode::mixolydian, KeyMode::none};
+    for (const auto mode : modes)
+    {
+        KeyData key;
+        key.fifths = 2;
+        key.mode = mode;
+        const auto score = mxtest::fromXml(mxtest::toXml(putKeyInScore(key)));
+        REQUIRE(!score.parts.empty());
+        REQUIRE(!score.parts.at(0).measures.empty());
+        const auto &keys = score.parts.at(0).measures.at(0).keys;
+        REQUIRE(!keys.empty());
+        CHECK_EQUAL(mode, keys.at(0).mode);
+        CHECK_EQUAL(2, keys.at(0).fifths);
+    }
+}
+
+TEST(ZeroFifthsModesAreDistinct, KeyData)
+{
+    // zero fifths does not imply any particular mode: C major, A minor, keyless, and mode-less are
+    // four different key signatures
+    KeyData cMajor;
+    cMajor.fifths = 0;
+    cMajor.mode = KeyMode::major;
+
+    KeyData aMinor = cMajor;
+    aMinor.mode = KeyMode::minor;
+
+    KeyData keyless = cMajor;
+    keyless.mode = KeyMode::none;
+
+    KeyData modeless = cMajor;
+    modeless.mode = KeyMode::unspecified;
+
+    CHECK(cMajor != aMinor);
+    CHECK(cMajor != keyless);
+    CHECK(cMajor != modeless);
+    CHECK(aMinor != keyless);
+    CHECK(aMinor != modeless);
+    CHECK(keyless != modeless);
+
+    // and the distinction survives serialization
+    CHECK(keyModeXml(0, KeyMode::major).find("<mode>major</mode>") != std::string::npos);
+    CHECK(keyModeXml(0, KeyMode::minor).find("<mode>minor</mode>") != std::string::npos);
+    CHECK(keyModeXml(0, KeyMode::none).find("<mode>none</mode>") != std::string::npos);
+    CHECK(keyModeXml(0, KeyMode::unspecified).find("<mode>") == std::string::npos);
+}
+
+TEST(ModeNoneIsNotNonTraditional, KeyData)
+{
+    // KeyMode::none is a mode value, not a nontraditional key; it writes a traditional key
+    KeyData key;
+    key.fifths = 0;
+    key.mode = KeyMode::none;
+
+    const auto original = putKeyInScore(key);
+    auto &docMgr = DocumentManager::getInstance();
+    const auto originalIdResult = docMgr.createFromScore(original);
+    REQUIRE(originalIdResult.ok());
+    const int originalId = originalIdResult.value();
+    const mx::core::DocumentPtr corePtr = docMgr.getDocument(originalId);
+
+    const auto &coreKey = getFirstCoreKey(corePtr);
+    CHECK(coreKey.choice().isTraditionalKey());
+    const auto &coreTraditionalKey = coreKey.choice().asTraditionalKey();
+    CHECK_EQUAL(0, coreTraditionalKey.fifths().value());
+    REQUIRE(coreTraditionalKey.mode().has_value());
+    CHECK_EQUAL(std::string{"none"}, coreTraditionalKey.mode()->value());
+
+    docMgr.destroyDocument(originalId);
 }
 
 TEST(KeyDataEquality_change_cancelLocation, KeyData)

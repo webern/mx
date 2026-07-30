@@ -708,20 +708,7 @@ std::optional<api::TransposeData> MeasureReader::parseAttributes(const core::Att
 
         if (traditionalKey.mode().has_value())
         {
-            // TODO - support all modes, not just major/minor
-            const auto coreMode = traditionalKey.mode()->value();
-            if (coreMode == "major")
-            {
-                keyData.mode = api::KeyMode::major;
-            }
-            else if (coreMode == "minor")
-            {
-                keyData.mode = api::KeyMode::minor;
-            }
-            else
-            {
-                keyData.mode = api::KeyMode::unsupported;
-            }
+            keyData.mode = myConverter.convert(*traditionalKey.mode());
         }
         keyData.tickTimePosition = myCurrentCursor.tickTimePosition;
 

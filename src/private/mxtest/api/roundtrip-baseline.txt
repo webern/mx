@@ -41,6 +41,7 @@ lysuite/ly11c_TimeSignatures_CompoundSimple.xml
 lysuite/ly11g_TimeSignatures_SingleNumber.xml
 lysuite/ly12b_Clefs_NoKeyOrClef.xml
 lysuite/ly13a_KeySignatures.xml
+lysuite/ly13b_KeySignatures_ChurchModes.xml
 lysuite/ly13d_KeySignatures_Microtones.xml
 lysuite/ly21a_Chord_Basic.xml
 lysuite/ly21b_Chords_TwoNotes.xml

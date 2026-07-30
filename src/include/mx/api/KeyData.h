@@ -10,12 +10,31 @@ namespace mx
 {
 namespace api
 {
+// KeyMode is the mode of a traditional key signature, the MusicXML <mode> element. Together with
+// fifths it tells you which key the signature spells: zero fifths with major is C major, with minor
+// it is A minor, with dorian it is D dorian. The mode does not change the accidentals that are
+// drawn; fifths alone determines those.
+//
+// `none` is the mode of music that has no tonal center. It is how a keyless staff is written:
+// zero fifths with <mode>none</mode>. It is a mode value like any other, and it says nothing about
+// how the signature is drawn.
+//
+// MusicXML's <mode> element is optional, so `unspecified` (a key signature that does not state a
+// mode) is distinct from `none` (a key signature that states there is no mode).
 enum class KeyMode
 {
-    unspecified, // a mode value was not provided
-    unsupported, // a mode value was provided but is not supported
+    unspecified, // no mode is stated
+    unsupported, // a mode was stated, but it is outside the standard vocabulary below
     major,
-    minor
+    minor,
+    dorian,
+    phrygian,
+    lydian,
+    mixolydian,
+    aeolian,
+    ionian,
+    locrian,
+    none
 };
 
 // CancelLocation represents the cancel element's optional location attribute. From MusicXML
@@ -44,6 +63,11 @@ enum class CancelLocation
 // KeyData key;
 // key.fifths = -2; // (i.e. 2 flats)
 // key.mode = KeyMode::minor; // (optional)
+//
+// Example, a keyless signature (no tonal center):
+// KeyData key;
+// key.fifths = 0; // (i.e. no sharps or flats)
+// key.mode = KeyMode::none;
 //
 // If you want to create a custom time signature, you can do so like this. Here we are creating a
 // key where C's are sharp and D's are one-quarter-tone sharp. See KeyComponent for details.
@@ -78,7 +102,9 @@ struct KeyData
     // (i.e. unless a cancel element is present).
     CancelLocation cancelLocation;
 
-    // Mode specifies whether the key is major or minor. It is optional.
+    // The mode of the key signature (major, minor, dorian, none, and so on). It is optional: the
+    // default, KeyMode::unspecified, states no mode and writes no <mode> element. KeyMode::none
+    // is a stated mode, and it writes <mode>none</mode>.
     KeyMode mode;
 
     // Supports changing the key somewhere other than at the start of a measure.
