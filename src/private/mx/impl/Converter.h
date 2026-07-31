@@ -39,6 +39,7 @@
 #include "mx/core/generated/MeasureNumberingValue.h"
 #include "mx/core/generated/MembraneValue.h"
 #include "mx/core/generated/MetalValue.h"
+#include "mx/core/generated/Mode.h"
 #include "mx/core/generated/NoteTypeValue.h"
 #include "mx/core/generated/NoteheadValue.h"
 #include "mx/core/generated/OrnamentsGroupChoice.h"
@@ -195,6 +196,13 @@ class Converter
     core::CancelLocation convert(api::CancelLocation value) const;
     api::CancelLocation convert(core::CancelLocation value) const;
 
+    // <mode> is an open vocabulary, so a core Mode holds an arbitrary string. api::KeyMode::unspecified
+    // and api::KeyMode::unsupported have no wire spelling and convert to an empty core::Mode; callers
+    // write no <mode> element for an empty Mode. A core Mode outside the standard vocabulary (including
+    // the empty one) converts to api::KeyMode::unsupported.
+    core::Mode convert(api::KeyMode value) const;
+    api::KeyMode convert(const core::Mode &value) const;
+
     // Simple (narrow) symbol: common/cut only. unspecified maps to core normal(); callers skip the
     // attribute entirely for unspecified (absent and normal mean the same thing on the wire).
     core::TimeSymbol convert(api::TimeSignatureSymbol value) const;
@@ -280,6 +288,7 @@ class Converter
     const static EnumMap<core::SoundID, api::SoundID> instrumentMap;
     const static EnumMap<core::KindValue, api::ChordKind> kindMap;
     const static EnumMap<core::CancelLocation, api::CancelLocation> cancelLocationMap;
+    const static EnumMap<core::Mode, api::KeyMode> keyModeMap;
     const static EnumMap<core::TimeSymbol, api::TimeSignatureSymbol> simpleTimeSymbolMap;
     const static EnumMap<core::TimeSymbol, api::ComplexTimeSymbol> complexTimeSymbolMap;
     const static EnumMap<core::TimeSeparator, api::TimeSeparator> timeSeparatorMap;

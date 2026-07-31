@@ -1372,6 +1372,16 @@ const Converter::EnumMap<core::CancelLocation, api::CancelLocation> Converter::c
     {core::CancelLocation::beforeBarline(), api::CancelLocation::beforeBarline},
 };
 
+// The standard <mode> vocabulary. api::KeyMode::unspecified and api::KeyMode::unsupported are absent
+// because they have no wire spelling.
+const Converter::EnumMap<core::Mode, api::KeyMode> Converter::keyModeMap = {
+    {core::Mode{"major"}, api::KeyMode::major},     {core::Mode{"minor"}, api::KeyMode::minor},
+    {core::Mode{"dorian"}, api::KeyMode::dorian},   {core::Mode{"phrygian"}, api::KeyMode::phrygian},
+    {core::Mode{"lydian"}, api::KeyMode::lydian},   {core::Mode{"mixolydian"}, api::KeyMode::mixolydian},
+    {core::Mode{"aeolian"}, api::KeyMode::aeolian}, {core::Mode{"ionian"}, api::KeyMode::ionian},
+    {core::Mode{"locrian"}, api::KeyMode::locrian}, {core::Mode{"none"}, api::KeyMode::none},
+};
+
 // core normal() folds into api unspecified: absent and "normal" are the same display.
 // The simple (narrow) symbol vocabulary: common/cut only. core normal() folds into api unspecified.
 const Converter::EnumMap<core::TimeSymbol, api::TimeSignatureSymbol> Converter::simpleTimeSymbolMap = {
@@ -1972,6 +1982,16 @@ core::CancelLocation Converter::convert(api::CancelLocation value) const
 api::CancelLocation Converter::convert(core::CancelLocation value) const
 {
     return findApiItem(cancelLocationMap, api::CancelLocation::unspecified, value);
+}
+
+core::Mode Converter::convert(api::KeyMode value) const
+{
+    return findCoreItem(keyModeMap, core::Mode{}, value);
+}
+
+api::KeyMode Converter::convert(const core::Mode &value) const
+{
+    return findApiItem(keyModeMap, api::KeyMode::unsupported, value);
 }
 
 core::TimeSymbol Converter::convert(api::TimeSignatureSymbol value) const
