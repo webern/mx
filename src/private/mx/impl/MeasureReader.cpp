@@ -1125,6 +1125,11 @@ void MeasureReader::importClef(const core::Clef &inClef) const
         clefData.isOctaveChangeSpecified = false;
     }
 
+    if (inClef.additional().has_value())
+    {
+        clefData.additional = converter.convert(*inClef.additional());
+    }
+
     if (inClef.printObject().has_value())
     {
         clefData.printObject = converter.convert(*inClef.printObject());
