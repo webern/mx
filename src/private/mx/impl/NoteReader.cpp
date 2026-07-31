@@ -148,20 +148,21 @@ NoteReader::NoteReader(const core::Note &mxNote)
       myIsNormal(false), myIsGrace(false), myIsCue(false), myIsRest(false), myIsChord(false), myIsMeasureRest(false),
       myIsUnpitched(false), myIsPitch(false), myIsDisplayStepOctaveSpecified(false), myDurationValue(0.0),
       myStep(core::Step::c()), myAlter(0), myCents(0.0), myOctave(4), myStaffNumber(0), myIsStaffSpecified(false),
-      myVoiceNumber(0), myNoteheadValue(core::NoteheadValue::normal()), myDurationType(core::NoteTypeValue::maxima()),
-      myIsDurationTypeSpecified(false), myNumDots(0), myBeams(), myTimeModificationActualNotes(-1),
-      myTimeModificationNormalNotes(-1), myTimeModificationNormalType(core::NoteTypeValue::maxima()),
-      myTimeModificationNormalTypeDots(0), myHasAccidental(false), myAccidental(core::AccidentalValue::natural()),
-      myIsAccidentalParenthetical(false), myIsAccidentalCautionary{false}, myIsAccidentalEditorial{false},
-      myIsAccidentalBracketed{false}, myIsStemSpecified{false}, myStem{}, myIsGraceSlashSpecified{false},
-      myGraceSlash{}, myIsTieStart{false}, myIsTieStop{false}, myHasLyric{false}
+      myVoiceNumber(0), myNoteheadValue(core::NoteheadValue::normal()), myNoteheadFilled{}, myNoteheadSmufl{},
+      myDurationType(core::NoteTypeValue::maxima()), myIsDurationTypeSpecified(false), myNumDots(0), myBeams(),
+      myTimeModificationActualNotes(-1), myTimeModificationNormalNotes(-1),
+      myTimeModificationNormalType(core::NoteTypeValue::maxima()), myTimeModificationNormalTypeDots(0),
+      myHasAccidental(false), myAccidental(core::AccidentalValue::natural()), myIsAccidentalParenthetical(false),
+      myIsAccidentalCautionary{false}, myIsAccidentalEditorial{false}, myIsAccidentalBracketed{false},
+      myIsStemSpecified{false}, myStem{}, myIsGraceSlashSpecified{false}, myGraceSlash{}, myIsTieStart{false},
+      myIsTieStop{false}, myHasLyric{false}
 {
     setNormalGraceCueItems();
     setRestPitchUnpitchedItems();
     setChord();
     setStaffNumber();
     setVoiceNumber();
-    setNoteheadValue();
+    setNoteheadItems();
     setDurationType();
     setNumDots();
     setBeams();
@@ -330,11 +331,20 @@ void NoteReader::setVoiceNumber()
     utility::stringToInt(myNote.editorialVoice().voice()->c_str(), myVoiceNumber);
 }
 
-void NoteReader::setNoteheadValue()
+void NoteReader::setNoteheadItems()
 {
-    if (myNote.notehead().has_value())
+    if (!myNote.notehead().has_value())
     {
-        myNoteheadValue = myNote.notehead()->value();
+        return;
+    }
+
+    const auto &notehead = *myNote.notehead();
+    myNoteheadValue = notehead.value();
+    myNoteheadFilled = notehead.filled();
+
+    if (notehead.smufl().has_value())
+    {
+        myNoteheadSmufl = notehead.smufl()->toString();
     }
 }
 

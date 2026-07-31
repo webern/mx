@@ -12,7 +12,7 @@ namespace api
 ClefData::ClefData()
     : writeStaffNumber{Bool::unspecified}, symbol{DEFAULT_CLEF_SYMBOL}, line{DEFAULT_CLEF_LINE}, isLineSpecified{true},
       octaveChange{DEFAULT_CLEF_OCTAVE_CHANGE}, isOctaveChangeSpecified{true}, tickTimePosition{0},
-      location{ClefLocation::unspecified}, printObject{Bool::unspecified}
+      location{ClefLocation::unspecified}, additional{Bool::unspecified}, printObject{Bool::unspecified}
 {
 }
 

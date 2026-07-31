@@ -1471,6 +1471,150 @@ TEST(noteheadOtherRoundtrip, NoteData)
     CHECK(outNote.notehead == Notehead::other);
 }
 
+T_END;
+
+// A one-note score whose single quarter note is ready for notehead fields to be set on it.
+ScoreData makeNoteheadScore()
+{
+    ScoreData score;
+    score.ticksPerQuarter = 96;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto &staff = measure.staves.back();
+    auto &voice = staff.voices[0];
+
+    NoteData note;
+    note.durationData.durationName = DurationName::quarter;
+    note.durationData.durationTimeTicks = 96;
+    voice.notes.push_back(note);
+
+    return score;
+}
+
+const NoteData &firstNoteheadNote(const ScoreData &score)
+{
+    return score.parts.front().measures.front().staves.front().voices.begin()->second.notes.front();
+}
+
+// filled="no" on an otherwise normal notehead: the <notehead> element has to be written even
+// though the notehead value itself is the default.
+TEST(noteheadFilledRoundtrip, NoteData)
+{
+    auto score = makeNoteheadScore();
+    score.parts.back().measures.back().staves.back().voices.at(0).notes.back().noteheadFilled = Bool::no;
+
+    const std::string xml = mxtest::toXml(score);
+    CHECK(xml.find(R"(<notehead filled="no">normal</notehead>)") != std::string::npos);
+
+    const auto outScore = mxtest::fromXml(xml);
+    CHECK(Bool::no == firstNoteheadNote(outScore).noteheadFilled);
+    CHECK(Notehead::normal == firstNoteheadNote(outScore).notehead);
+}
+
+T_END;
+
+// filled="yes" alongside a non-default notehead value.
+TEST(noteheadFilledYesWithShapeRoundtrip, NoteData)
+{
+    auto score = makeNoteheadScore();
+    auto &note = score.parts.back().measures.back().staves.back().voices.at(0).notes.back();
+    note.notehead = Notehead::diamond;
+    note.noteheadFilled = Bool::yes;
+
+    const std::string xml = mxtest::toXml(score);
+    CHECK(xml.find(R"(<notehead filled="yes">diamond</notehead>)") != std::string::npos);
+
+    const auto outScore = mxtest::fromXml(xml);
+    CHECK(Bool::yes == firstNoteheadNote(outScore).noteheadFilled);
+    CHECK(Notehead::diamond == firstNoteheadNote(outScore).notehead);
+}
+
+T_END;
+
+// The smufl attribute names a glyph that MusicXML has no notehead value for; it pairs with the
+// 'other' notehead value.
+TEST(noteheadSmuflRoundtrip, NoteData)
+{
+    auto score = makeNoteheadScore();
+    auto &note = score.parts.back().measures.back().staves.back().voices.at(0).notes.back();
+    note.notehead = Notehead::other;
+    note.noteheadSmufl = "noteheadSlashHorizontalEnds";
+
+    const std::string xml = mxtest::toXml(score);
+    CHECK(xml.find(R"(smufl="noteheadSlashHorizontalEnds")") != std::string::npos);
+
+    const auto outScore = mxtest::fromXml(xml);
+    const auto &outNote = firstNoteheadNote(outScore);
+    CHECK(Notehead::other == outNote.notehead);
+    REQUIRE(outNote.noteheadSmufl.has_value());
+    CHECK_EQUAL("noteheadSlashHorizontalEnds", *outNote.noteheadSmufl);
+}
+
+T_END;
+
+// Both attributes at once, refining a notehead value that MusicXML names only broadly.
+TEST(noteheadFilledAndSmuflRoundtrip, NoteData)
+{
+    auto score = makeNoteheadScore();
+    auto &note = score.parts.back().measures.back().staves.back().voices.at(0).notes.back();
+    note.notehead = Notehead::cluster;
+    note.noteheadFilled = Bool::yes;
+    note.noteheadSmufl = "noteheadClusterSquareBlack";
+
+    const auto outScore = mxtest::fromXml(mxtest::toXml(score));
+    const auto &outNote = firstNoteheadNote(outScore);
+    CHECK(Notehead::cluster == outNote.notehead);
+    CHECK(Bool::yes == outNote.noteheadFilled);
+    REQUIRE(outNote.noteheadSmufl.has_value());
+    CHECK_EQUAL("noteheadClusterSquareBlack", *outNote.noteheadSmufl);
+}
+
+T_END;
+
+// A note that sets neither field writes no <notehead> element at all.
+TEST(noteheadAttributesDefaultToAbsent, NoteData)
+{
+    const auto score = makeNoteheadScore();
+
+    const std::string xml = mxtest::toXml(score);
+    CHECK(xml.find("<notehead") == std::string::npos);
+
+    const auto outScore = mxtest::fromXml(xml);
+    const auto &outNote = firstNoteheadNote(outScore);
+    CHECK(Bool::unspecified == outNote.noteheadFilled);
+    CHECK(!outNote.noteheadSmufl.has_value());
+}
+
+T_END;
+
+// Parse the synthetic notehead file and confirm mx::api surfaces both attributes. This pins the
+// core -> api read path independently of what the writer emits.
+TEST(noteheadSyntheticFileRead, NoteData)
+{
+    const std::string path = mxtest::getResourcesDirectoryPath() + "synthetic/notehead.3.1.xml";
+    auto &docMgr = DocumentManager::getInstance();
+    const auto docIdResult = docMgr.createFromFile(path);
+    REQUIRE(docIdResult.ok());
+    const int docId = docIdResult.value();
+    const auto scoreResult = docMgr.getData(docId);
+    docMgr.destroyDocument(docId);
+    REQUIRE(scoreResult.ok());
+    const auto &score = scoreResult.value();
+    REQUIRE(score.parts.size() == 1);
+    REQUIRE(score.parts.front().measures.size() == 1);
+
+    const auto &outNote = firstNoteheadNote(score);
+    CHECK(Notehead::slash == outNote.notehead);
+    CHECK(Bool::yes == outNote.noteheadFilled);
+    REQUIRE(outNote.noteheadSmufl.has_value());
+    CHECK_EQUAL("noteheadBlack", *outNote.noteheadSmufl);
+}
+
+T_END;
+
 TEST(printObjectNo, NoteData)
 {
     ScoreData score;

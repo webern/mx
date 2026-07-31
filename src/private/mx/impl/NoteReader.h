@@ -7,7 +7,9 @@
 #include "mx/api/LyricData.h"
 #include "mx/core/generated/Note.h"
 
+#include <optional>
 #include <span>
+#include <string>
 #include <vector>
 
 namespace mx
@@ -130,6 +132,16 @@ class NoteReader
     inline core::NoteheadValue getNoteheadValue() const
     {
         return myNoteheadValue;
+    }
+
+    inline const std::optional<core::YesNo> &getNoteheadFilled() const
+    {
+        return myNoteheadFilled;
+    }
+
+    inline const std::optional<std::string> &getNoteheadSmufl() const
+    {
+        return myNoteheadSmufl;
     }
 
     inline core::NoteTypeValue getDurationType() const
@@ -259,6 +271,8 @@ class NoteReader
     bool myIsStaffSpecified;
     int myVoiceNumber;
     core::NoteheadValue myNoteheadValue;
+    std::optional<core::YesNo> myNoteheadFilled;
+    std::optional<std::string> myNoteheadSmufl;
     core::NoteTypeValue myDurationType;
     bool myIsDurationTypeSpecified;
     int myNumDots;
@@ -289,7 +303,7 @@ class NoteReader
     void setChord();
     void setStaffNumber();
     void setVoiceNumber();
-    void setNoteheadValue();
+    void setNoteheadItems();
     void setDurationType();
     void setNumDots();
     void setBeams();

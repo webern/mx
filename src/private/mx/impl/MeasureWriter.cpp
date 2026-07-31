@@ -16,6 +16,7 @@
 #include "mx/core/generated/LeftRightMarginsGroup.h"
 #include "mx/core/generated/MarginType.h"
 #include "mx/core/generated/MeasureNumbering.h"
+#include "mx/core/generated/MeasureText.h"
 #include "mx/core/generated/MusicDataChoice.h"
 #include "mx/core/generated/PageLayout.h"
 #include "mx/core/generated/PageLayoutGroup.h"
@@ -86,6 +87,12 @@ void MeasureWriter::writeMeasureGlobals()
     else
     {
         myOutMeasure.setNumber(std::to_string(myHistory.getCursor().measureIndex + 1));
+    }
+
+    // <measure text=""> is not legal MusicXML; an empty displayedNumber means "no override".
+    if (myMeasureData.displayedNumber.has_value() && !myMeasureData.displayedNumber->empty())
+    {
+        myOutMeasure.setText(core::MeasureText{*myMeasureData.displayedNumber});
     }
 
     if (myMeasureData.width >= 0.0)
@@ -451,6 +458,12 @@ void MeasureWriter::writeMeasureNumbering()
     if (myMeasureData.measureNumberingSystemRelation != api::SystemRelation::unspecified)
     {
         outMeasureNumbering.setSystem(myConverter.convertSystemRelation(myMeasureData.measureNumberingSystemRelation));
+    }
+
+    if (myMeasureData.measureNumberingStaffIndex.has_value())
+    {
+        // the api index is zero-based; core staff numbers are one-based.
+        outMeasureNumbering.setStaff(core::StaffNumber{*myMeasureData.measureNumberingStaffIndex + 1});
     }
 
     outPrint.setMeasureNumbering(std::move(outMeasureNumbering));
