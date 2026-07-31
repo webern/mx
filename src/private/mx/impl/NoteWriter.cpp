@@ -20,6 +20,7 @@
 #include "mx/core/generated/NormalNoteGroup.h"
 #include "mx/core/generated/Pitch.h"
 #include "mx/core/generated/Rest.h"
+#include "mx/core/generated/SmuflGlyphName.h"
 #include "mx/core/generated/Syllabic.h"
 #include "mx/core/generated/TextElementData.h"
 #include "mx/core/generated/Tied.h"
@@ -477,12 +478,31 @@ void NoteWriter::setDurationNameAndDots() const
 
 void NoteWriter::setNotehead() const
 {
-    if (myNoteData.notehead != mx::api::Notehead::normal)
+    const bool isFilledSpecified = myNoteData.noteheadFilled != api::Bool::unspecified;
+    // An empty glyph name names no glyph, so it is treated the same as no smufl at all.
+    const bool isSmuflSpecified = myNoteData.noteheadSmufl.has_value() && !myNoteData.noteheadSmufl->empty();
+
+    // <notehead> stays out of the file for a plain notehead, but filled or smufl still needs
+    // the element even when the value itself is 'normal'.
+    if (myNoteData.notehead == api::Notehead::normal && !isFilledSpecified && !isSmuflSpecified)
     {
-        core::Notehead notehead;
-        notehead.setValue(myConverter.convert(myNoteData.notehead));
-        myOutNote.setNotehead(std::move(notehead));
+        return;
     }
+
+    core::Notehead notehead;
+    notehead.setValue(myConverter.convert(myNoteData.notehead));
+
+    if (isFilledSpecified)
+    {
+        notehead.setFilled(myConverter.convert(myNoteData.noteheadFilled));
+    }
+
+    if (isSmuflSpecified)
+    {
+        notehead.setSmufl(core::SmuflGlyphName{*myNoteData.noteheadSmufl});
+    }
+
+    myOutNote.setNotehead(std::move(notehead));
 }
 
 void NoteWriter::setStemDirection() const

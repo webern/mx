@@ -354,6 +354,22 @@ void PropertiesWriter::writeClef(int staffIndex, const api::ClefData &inClefData
         cg.setClefOctaveChange(inClefData.octaveChange);
     }
 
+    if (inClefData.additional != api::Bool::unspecified)
+    {
+        mxClef.setAdditional(converter.convert(inClefData.additional));
+    }
+
+    // after-barline states which side of the barline a start-of-measure clef prints on. MusicXML
+    // ignores it on mid-measure clefs, so those emit nothing.
+    if (inClefData.location == api::ClefLocation::afterBarline)
+    {
+        mxClef.setAfterBarline(core::YesNo::yes());
+    }
+    else if (inClefData.location == api::ClefLocation::beforeBarline)
+    {
+        mxClef.setAfterBarline(core::YesNo::no());
+    }
+
     if (inClefData.printObject != api::Bool::unspecified)
     {
         mxClef.setPrintObject(converter.convert(inClefData.printObject));

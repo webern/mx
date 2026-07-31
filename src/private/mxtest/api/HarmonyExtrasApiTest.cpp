@@ -8,6 +8,8 @@
 #include "cpul/cpulTestHarness.h"
 #include "mx/api/ScoreData.h"
 #include "mxtest/api/RoundTrip.h"
+#include "mxtest/api/TestHelpers.h"
+#include "mxtest/file/MxFileRepository.h"
 
 using namespace std;
 using namespace mx::api;
@@ -47,6 +49,143 @@ const ChordData &firstChord(const ScoreData &score)
     return score.parts.front().measures.front().staves.front().directions.front().chords.front();
 }
 } // namespace
+
+TEST(harmonyDegreeLayoutRoundTrip, HarmonyExtrasApi)
+{
+    auto score = makeScoreWithChord();
+    auto &chord = chordOf(score);
+    chord.root = Step::c;
+    chord.chordKind = ChordKind::dominantNinth;
+    chord.stackDegrees = Bool::yes;
+    chord.parenthesesDegrees = Bool::no;
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("stack-degrees=\"yes\"") != std::string::npos);
+    CHECK(xml.find("parentheses-degrees=\"no\"") != std::string::npos);
+
+    const auto out = mxtest::roundTrip(score);
+    const auto &outChord = firstChord(out);
+    CHECK(Bool::yes == outChord.stackDegrees);
+    CHECK(Bool::no == outChord.parenthesesDegrees);
+}
+
+T_END;
+
+TEST(harmonyDegreeLayoutUnspecifiedIsNotWritten, HarmonyExtrasApi)
+{
+    auto score = makeScoreWithChord();
+    auto &chord = chordOf(score);
+    chord.root = Step::c;
+    chord.chordKind = ChordKind::major;
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("stack-degrees") == std::string::npos);
+    CHECK(xml.find("parentheses-degrees") == std::string::npos);
+
+    const auto out = mxtest::roundTrip(score);
+    const auto &outChord = firstChord(out);
+    CHECK(Bool::unspecified == outChord.stackDegrees);
+    CHECK(Bool::unspecified == outChord.parenthesesDegrees);
+}
+
+T_END;
+
+TEST(harmonyDegreeLayoutFromFile, HarmonyExtrasApi)
+{
+    const auto score = mxtest::MxFileRepository::loadFile("kind.3.0.xml");
+    const auto &outChord = firstChord(score);
+    CHECK(Bool::yes == outChord.stackDegrees);
+    CHECK(Bool::yes == outChord.parenthesesDegrees);
+}
+
+T_END;
+
+// A degree the <kind> text already spells out is marked print-object="no" so it is not printed
+// twice. Finale exports exactly this: <kind text="7sus4">suspended-fourth</kind> plus a hidden
+// seventh.
+TEST(harmonyDegreePrintObjectRoundTrip, HarmonyExtrasApi)
+{
+    auto score = makeScoreWithChord();
+    auto &chord = chordOf(score);
+    chord.root = Step::c;
+    chord.chordKind = ChordKind::suspendedFourth;
+    chord.text = "7sus4";
+    Extension seventh;
+    seventh.extensionType = ExtensionType::add;
+    seventh.extensionNumber = ExtensionNumber::seventh;
+    seventh.extensionAlter = ExtensionAlter::none;
+    seventh.printObject = Bool::no;
+    chord.extensions.push_back(seventh);
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("<degree print-object=\"no\">") != std::string::npos);
+
+    const auto out = mxtest::roundTrip(score);
+    const auto &outChord = firstChord(out);
+    REQUIRE(outChord.extensions.size() == 1);
+    CHECK(Bool::no == outChord.extensions.front().printObject);
+    CHECK(ExtensionNumber::seventh == outChord.extensions.front().extensionNumber);
+}
+
+T_END;
+
+TEST(harmonyDegreePrintObjectUnspecifiedIsNotWritten, HarmonyExtrasApi)
+{
+    auto score = makeScoreWithChord();
+    auto &chord = chordOf(score);
+    chord.root = Step::c;
+    chord.chordKind = ChordKind::major;
+    Extension ninth;
+    ninth.extensionType = ExtensionType::add;
+    ninth.extensionNumber = ExtensionNumber::ninth;
+    ninth.extensionAlter = ExtensionAlter::sharp;
+    chord.extensions.push_back(ninth);
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("print-object") == std::string::npos);
+
+    const auto out = mxtest::roundTrip(score);
+    const auto &outChord = firstChord(out);
+    REQUIRE(outChord.extensions.size() == 1);
+    CHECK(Bool::unspecified == outChord.extensions.front().printObject);
+}
+
+T_END;
+
+// The read path against a real Finale export: three chord symbols in this file hide a degree the
+// kind text already spells out.
+TEST(harmonyDegreePrintObjectFromFinaleExport, HarmonyExtrasApi)
+{
+    const auto score = mxtest::MxFileRepository::loadFile("BrookeWestSample.xml");
+    int hiddenDegreeCount = 0;
+
+    for (const auto &part : score.parts)
+    {
+        for (const auto &measure : part.measures)
+        {
+            for (const auto &staff : measure.staves)
+            {
+                for (const auto &direction : staff.directions)
+                {
+                    for (const auto &chord : direction.chords)
+                    {
+                        for (const auto &extension : chord.extensions)
+                        {
+                            if (extension.printObject == Bool::no)
+                            {
+                                ++hiddenDegreeCount;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    CHECK_EQUAL(3, hiddenDegreeCount);
+}
+
+T_END;
 
 TEST(harmonyInversionRoundTrip, HarmonyExtrasApi)
 {
