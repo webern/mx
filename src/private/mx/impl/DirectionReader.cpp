@@ -1285,6 +1285,18 @@ void DirectionReader::parseHarmony(const core::Harmony &inHarmony, const core::H
         }
     }
 
+    if (kind.stackDegrees().has_value())
+    {
+        const bool isYes = kind.stackDegrees()->tag() == mx::core::YesNo::Tag::yes;
+        chord.stackDegrees = isYes ? api::Bool::yes : api::Bool::no;
+    }
+
+    if (kind.parenthesesDegrees().has_value())
+    {
+        const bool isYes = kind.parenthesesDegrees()->tag() == mx::core::YesNo::Tag::yes;
+        chord.parenthesesDegrees = isYes ? api::Bool::yes : api::Bool::no;
+    }
+
     if (inGrp.bass().has_value())
     {
         const auto &bass = *inGrp.bass();
