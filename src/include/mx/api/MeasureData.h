@@ -13,6 +13,7 @@
 #include "mx/api/TransposeData.h"
 
 #include <map>
+#include <optional>
 #include <string>
 
 namespace mx
@@ -51,6 +52,15 @@ class MeasureData
     // about measure numbering can be defined using the measure-numbering element.
     std::string number;
 
+    // The measure number as it should appear on the page, when that differs from the 'number'
+    // above. 'number' identifies the measure (and aligns it with the same measure in other parts),
+    // while this is purely what the engraver prints. Set it when the printed numbering does not
+    // follow the identifying numbering -- a second ending that restarts at 8, an editor's numbering
+    // like "12a", or a rehearsal-driven relabeling. Leave it absent and the printed number is the
+    // 'number' value. An empty string is not written; use implicit = Bool::yes to suppress the
+    // number entirely, which is also what makes engravers ignore this field.
+    std::optional<std::string> displayedNumber;
+
     // The measure-numbering-value type describes how measure numbers are displayed on this part:
     // no numbers, numbers every measure, or numbers every system.
     MeasureNumbering measureNumbering;
@@ -64,6 +74,10 @@ class MeasureData
 
     // The <measure-numbering system="..."> attribute; see SystemRelation.
     SystemRelation measureNumberingSystemRelation;
+
+    // Which staff of the part the measure number is vertically positioned against, zero-based from
+    // the top staff. Meaningful only when measureNumbering != unspecified. Absent means the top staff.
+    std::optional<int> measureNumberingStaffIndex;
 
     // a number greater than zero indicates that this measure is the beginning of a mult-measure
     // rest that will last for the indicated number of measures. following measures will be affected
@@ -112,10 +126,12 @@ MXAPI_EQUALS_MEMBER(staves)
 MXAPI_EQUALS_MEMBER(timeSignature)
 MXAPI_EQUALS_MEMBER(staffTimeSignatures)
 MXAPI_EQUALS_MEMBER(number)
+MXAPI_EQUALS_MEMBER(displayedNumber)
 MXAPI_EQUALS_MEMBER(measureNumbering)
 MXAPI_EQUALS_MEMBER(measureNumberingMultipleRestAlways)
 MXAPI_EQUALS_MEMBER(measureNumberingMultipleRestRange)
 MXAPI_EQUALS_MEMBER(measureNumberingSystemRelation)
+MXAPI_EQUALS_MEMBER(measureNumberingStaffIndex)
 MXAPI_EQUALS_MEMBER(multiMeasureRest)
 MXAPI_EQUALS_MEMBER(multiMeasureRestUseSymbols)
 MXAPI_EQUALS_MEMBER(implicit)

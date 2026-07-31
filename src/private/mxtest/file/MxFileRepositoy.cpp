@@ -478,5 +478,6 @@ void MxFileRepository::initializeNameSubdirectoryMap()
     myNameSubdirectoryMap.emplace("segno.3.1.xml", "synthetic");
     myNameSubdirectoryMap.emplace("coda.3.0.xml", "synthetic");
     myNameSubdirectoryMap.emplace("coda.3.1.xml", "synthetic");
+    myNameSubdirectoryMap.emplace("kind.3.0.xml", "synthetic");
 }
 } // namespace mxtest

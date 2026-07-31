@@ -151,6 +151,11 @@ std::pair<api::MeasureData, std::optional<api::TransposeData>> MeasureReader::ge
         myOutMeasureData.number = "";
     }
 
+    if (myPartwiseMeasure.text().has_value())
+    {
+        myOutMeasureData.displayedNumber = myPartwiseMeasure.text()->value();
+    }
+
     if (myPartwiseMeasure.width().has_value())
     {
         myOutMeasureData.width = static_cast<double>(myPartwiseMeasure.width()->value().value());
@@ -870,6 +875,12 @@ void MeasureReader::parsePrint(const core::Print &inMxPrint) const
             myOutMeasureData.measureNumberingSystemRelation =
                 myConverter.convertSystemRelation(*measureNumbering.system());
         }
+
+        if (measureNumbering.staff().has_value())
+        {
+            // core staff numbers are one-based; the api index is zero-based.
+            myOutMeasureData.measureNumberingStaffIndex = measureNumbering.staff()->value() - 1;
+        }
     }
 }
 
@@ -1099,6 +1110,11 @@ void MeasureReader::importClef(const core::Clef &inClef) const
     {
         clefData.octaveChange = 0;
         clefData.isOctaveChangeSpecified = false;
+    }
+
+    if (inClef.additional().has_value())
+    {
+        clefData.additional = converter.convert(*inClef.additional());
     }
 
     if (inClef.printObject().has_value())

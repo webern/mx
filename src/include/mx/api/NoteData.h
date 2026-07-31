@@ -13,6 +13,7 @@
 #include "mx/api/PrintData.h"
 
 #include <optional>
+#include <string>
 #include <vector>
 
 namespace mx
@@ -132,6 +133,22 @@ class NoteData
     bool isCue;
 
     Notehead notehead;
+
+    // The <notehead> element's filled attribute: whether the notehead shape is drawn solid or
+    // hollow. Leave it unspecified to get MusicXML's default, which follows the note's duration
+    // (hollow for a half note and longer, solid for shorter). Set yes or no to override that,
+    // for example a solid whole note in a rhythm-notation part.
+    Bool noteheadFilled;
+
+    // The <notehead> element's smufl attribute: the canonical SMuFL glyph name to draw for this
+    // notehead, for example "noteheadSlashHorizontalEnds". It names a glyph directly, so a
+    // notation program can draw a notehead that MusicXML has no value for -- pair it with
+    // Notehead::other -- or narrow one that MusicXML names only broadly, such as
+    // Notehead::cluster. Note-name noteheads (the SMuFL ranges U+E150-U+E1AF and U+EEE0-U+EEFF)
+    // are not written this way; MusicXML spells those out in <notehead-text>. An empty string
+    // names no glyph and is written the same as leaving this empty.
+    std::optional<std::string> noteheadSmufl;
+
     PitchData pitchData; // step, alter, octave, accidental, etc
     int userRequestedVoiceNumber;
 
@@ -196,6 +213,9 @@ MXAPI_EQUALS_MEMBER(tieLetRing)
 MXAPI_EQUALS_MEMBER(isGrace)
 MXAPI_EQUALS_MEMBER(isCue)
 MXAPI_EQUALS_MEMBER(graceSlash)
+MXAPI_EQUALS_MEMBER(notehead)
+MXAPI_EQUALS_MEMBER(noteheadFilled)
+MXAPI_EQUALS_MEMBER(noteheadSmufl)
 MXAPI_EQUALS_MEMBER(pitchData)
 MXAPI_EQUALS_MEMBER(userRequestedVoiceNumber)
 MXAPI_EQUALS_MEMBER(writeStaffNumber)
