@@ -157,7 +157,6 @@ const Converter::EnumMap<core::CSSFontSize, api::CssSize> Converter::cssMap = {
     {core::CSSFontSize::xxLarge(), api::CssSize::xxLarge},
 };
 
-// TODO - SMUFLKILL
 const Converter::EnumMap<core::ArticulationsChoice::Kind, api::MarkType> Converter::articulationsMap = {
     {core::ArticulationsChoice::Kind::accent, api::MarkType::accent},
     {core::ArticulationsChoice::Kind::strongAccent, api::MarkType::strongAccent},
@@ -213,6 +212,41 @@ const Converter::EnumMap<core::DynamicsChoice::Kind, api::MarkType> Converter::d
     {core::DynamicsChoice::Kind::pf, api::MarkType::pf},
     {core::DynamicsChoice::Kind::sfzp, api::MarkType::sfzp},
     {core::DynamicsChoice::Kind::otherDynamics, api::MarkType::otherDynamics},
+};
+
+const Converter::EnumMap<core::DynamicsChoice::Kind, api::StandardDynamic> Converter::standardDynamicsMap = {
+    {core::DynamicsChoice::Kind::p, api::StandardDynamic::p},
+    {core::DynamicsChoice::Kind::pp, api::StandardDynamic::pp},
+    {core::DynamicsChoice::Kind::ppp, api::StandardDynamic::ppp},
+    {core::DynamicsChoice::Kind::pppp, api::StandardDynamic::pppp},
+    {core::DynamicsChoice::Kind::ppppp, api::StandardDynamic::ppppp},
+    {core::DynamicsChoice::Kind::pppppp, api::StandardDynamic::pppppp},
+    {core::DynamicsChoice::Kind::f, api::StandardDynamic::f},
+    {core::DynamicsChoice::Kind::ff, api::StandardDynamic::ff},
+    {core::DynamicsChoice::Kind::fff, api::StandardDynamic::fff},
+    {core::DynamicsChoice::Kind::ffff, api::StandardDynamic::ffff},
+    {core::DynamicsChoice::Kind::fffff, api::StandardDynamic::fffff},
+    {core::DynamicsChoice::Kind::ffffff, api::StandardDynamic::ffffff},
+    {core::DynamicsChoice::Kind::mp, api::StandardDynamic::mp},
+    {core::DynamicsChoice::Kind::mf, api::StandardDynamic::mf},
+    {core::DynamicsChoice::Kind::sf, api::StandardDynamic::sf},
+    {core::DynamicsChoice::Kind::sfp, api::StandardDynamic::sfp},
+    {core::DynamicsChoice::Kind::sfpp, api::StandardDynamic::sfpp},
+    {core::DynamicsChoice::Kind::fp, api::StandardDynamic::fp},
+    {core::DynamicsChoice::Kind::rf, api::StandardDynamic::rf},
+    {core::DynamicsChoice::Kind::rfz, api::StandardDynamic::rfz},
+    {core::DynamicsChoice::Kind::sfz, api::StandardDynamic::sfz},
+    {core::DynamicsChoice::Kind::sffz, api::StandardDynamic::sffz},
+    {core::DynamicsChoice::Kind::fz, api::StandardDynamic::fz},
+    {core::DynamicsChoice::Kind::n, api::StandardDynamic::n},
+    {core::DynamicsChoice::Kind::pf, api::StandardDynamic::pf},
+    {core::DynamicsChoice::Kind::sfzp, api::StandardDynamic::sfzp},
+};
+
+const Converter::EnumMap<core::StartStopSingle, api::OtherNotationType> Converter::otherNotationTypeMap = {
+    {core::StartStopSingle::start(), api::OtherNotationType::start},
+    {core::StartStopSingle::stop(), api::OtherNotationType::stop},
+    {core::StartStopSingle::single(), api::OtherNotationType::single},
 };
 
 const Converter::EnumMap<core::OrnamentsGroupChoice::Kind, api::MarkType> Converter::ornamentsMap = {
@@ -1763,6 +1797,26 @@ core::DynamicsChoice::Kind Converter::convertDynamic(api::MarkType value) const
 api::MarkType Converter::convertDynamic(core::DynamicsChoice::Kind value) const
 {
     return findApiItem(dynamicsMap, api::MarkType::unspecified, value);
+}
+
+core::DynamicsChoice::Kind Converter::convert(api::StandardDynamic value) const
+{
+    return findCoreItem(standardDynamicsMap, core::DynamicsChoice::Kind::p, value);
+}
+
+api::StandardDynamic Converter::convertStandardDynamic(core::DynamicsChoice::Kind value) const
+{
+    return findApiItem(standardDynamicsMap, api::StandardDynamic::p, value);
+}
+
+core::StartStopSingle Converter::convert(api::OtherNotationType value) const
+{
+    return findCoreItem(otherNotationTypeMap, core::StartStopSingle::single(), value);
+}
+
+api::OtherNotationType Converter::convert(core::StartStopSingle value) const
+{
+    return findApiItem(otherNotationTypeMap, api::OtherNotationType::single, value);
 }
 
 core::OrnamentsGroupChoice::Kind Converter::convertOrnament(api::MarkType value) const

@@ -392,6 +392,15 @@ Open questions for the Phase-3 design session:
    both text and attribute), or attribute-only (clean migration, Komp updates in lockstep)?
 4. Fate of `customAccentTenuto`/`getMarkTypeFromCustomString` and the `SMUFLKILL` TODOs.
 
+Resolution:
+
+- Exact glyph names live in mark-specific `MarkDataChoice` payloads, not as another common
+  `MarkData` field.
+- A compound dynamic owns its ordered standard and `other-dynamics` components; neighboring marks
+  are never interpreted as one dynamic.
+- Text and `smufl` may coexist. mx does not promote legacy text to a SMuFL name automatically.
+- The `customAccentTenuto` compatibility path remains unchanged and can be retired separately.
+
 ## Appendix A: port checklist
 
 ### A.1 `src/private/mx/api/` (4 of 13 .cpp touch core/ezxml)

@@ -151,6 +151,12 @@ void ArticulationsFunctions::parseArticulation(const core::ArticulationsChoice &
         const auto &oa = inArticulation.asOtherArticulation();
         parseMarkDataAttributes(oa, outMark);
         outMark.name = oa.value();
+        api::OtherMarkData payload;
+        if (oa.smufl().has_value())
+        {
+            payload.smufl = oa.smufl()->toString();
+        }
+        outMark.choice = std::move(payload);
 
         const auto possibleCustomMarkType = mx::api::getMarkTypeFromCustomString(outMark.name);
         if (possibleCustomMarkType != mx::api::MarkType::customErrorUnknown)

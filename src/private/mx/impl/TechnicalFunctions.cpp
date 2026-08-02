@@ -19,9 +19,12 @@
 #include "mx/impl/Converter.h"
 #include "mx/impl/MarkDataFunctions.h"
 
-namespace
+namespace mx
 {
-std::string holeToSmuflName(const mx::core::Hole &hole)
+namespace impl
+{
+
+std::string technicalFunctionsHoleToSmuflName(const mx::core::Hole &hole)
 {
     const auto closedValue = hole.holeClosed().value();
     switch (closedValue.tag())
@@ -36,7 +39,7 @@ std::string holeToSmuflName(const mx::core::Hole &hole)
     }
 }
 
-std::string arrowToSmuflName(const mx::core::Arrow &arrow)
+std::string technicalFunctionsArrowToSmuflName(const mx::core::Arrow &arrow)
 {
     using Tag = mx::core::ArrowDirection::Tag;
     if (arrow.choice().kind() != mx::core::ArrowChoice::Kind::group)
@@ -68,7 +71,7 @@ std::string arrowToSmuflName(const mx::core::Arrow &arrow)
     }
 }
 
-std::string handbellToSmuflName(const mx::core::HandbellValue &value)
+std::string technicalFunctionsHandbellToSmuflName(const mx::core::HandbellValue &value)
 {
     using Tag = mx::core::HandbellValue::Tag;
     switch (value.tag())
@@ -99,12 +102,7 @@ std::string handbellToSmuflName(const mx::core::HandbellValue &value)
         return "handbellsGyro";
     }
 }
-} // namespace
 
-namespace mx
-{
-namespace impl
-{
 TechnicalFunctions::TechnicalFunctions(std::span<const core::TechnicalChoice> inTechincalChoiceSet, Cursor inCursor)
     : myTechincalChoiceSet{inTechincalChoiceSet}, myCursor{inCursor}
 {
@@ -243,19 +241,19 @@ bool TechnicalFunctions::parseTechicalMark(const core::TechnicalChoice &techical
     case core::TechnicalChoice::Kind::hole: {
         const auto &hole = techicalChoice.asHole();
         parseMarkDataAttributes(hole, outMarkData);
-        outMarkData.name = holeToSmuflName(hole);
+        outMarkData.name = technicalFunctionsHoleToSmuflName(hole);
         return true;
     }
     case core::TechnicalChoice::Kind::arrow: {
         const auto &arrow = techicalChoice.asArrow();
         parseMarkDataAttributes(arrow, outMarkData);
-        outMarkData.name = arrowToSmuflName(arrow);
+        outMarkData.name = technicalFunctionsArrowToSmuflName(arrow);
         return true;
     }
     case core::TechnicalChoice::Kind::handbell: {
         const auto &handbell = techicalChoice.asHandbell();
         parseMarkDataAttributes(handbell, outMarkData);
-        outMarkData.name = handbellToSmuflName(handbell.value());
+        outMarkData.name = technicalFunctionsHandbellToSmuflName(handbell.value());
         return true;
     }
     case core::TechnicalChoice::Kind::brassBend: {
@@ -297,6 +295,12 @@ bool TechnicalFunctions::parseTechicalMark(const core::TechnicalChoice &techical
         const auto &oa = techicalChoice.asOtherTechnical();
         parseMarkDataAttributes(oa, outMarkData);
         outMarkData.name = oa.value();
+        api::OtherMarkData payload;
+        if (oa.smufl().has_value())
+        {
+            payload.smufl = oa.smufl()->toString();
+        }
+        outMarkData.choice = std::move(payload);
         return true;
     }
     default:

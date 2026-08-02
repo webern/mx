@@ -47,6 +47,7 @@
 #include "mx/core/generated/RightLeftMiddle.h"
 #include "mx/core/generated/SoundID.h"
 #include "mx/core/generated/StartStopDiscontinue.h"
+#include "mx/core/generated/StartStopSingle.h"
 #include "mx/core/generated/StemValue.h"
 #include "mx/core/generated/Step.h"
 #include "mx/core/generated/StickLocation.h"
@@ -130,6 +131,11 @@ class Converter
 
     core::DynamicsChoice::Kind convertDynamic(api::MarkType value) const;
     api::MarkType convertDynamic(core::DynamicsChoice::Kind value) const;
+    core::DynamicsChoice::Kind convert(api::StandardDynamic value) const;
+    api::StandardDynamic convertStandardDynamic(core::DynamicsChoice::Kind value) const;
+
+    core::StartStopSingle convert(api::OtherNotationType value) const;
+    api::OtherNotationType convert(core::StartStopSingle value) const;
 
     core::OrnamentsGroupChoice::Kind convertOrnament(api::MarkType value) const;
     api::MarkType convertOrnament(core::OrnamentsGroupChoice::Kind value) const;
@@ -267,6 +273,8 @@ class Converter
     const static EnumMap<core::FontWeight, api::FontWeight> fontWeightMap;
     const static EnumMap<core::ArticulationsChoice::Kind, api::MarkType> articulationsMap;
     const static EnumMap<core::DynamicsChoice::Kind, api::MarkType> dynamicsMap;
+    const static EnumMap<core::DynamicsChoice::Kind, api::StandardDynamic> standardDynamicsMap;
+    const static EnumMap<core::StartStopSingle, api::OtherNotationType> otherNotationTypeMap;
     const static EnumMap<core::OrnamentsGroupChoice::Kind, api::MarkType> ornamentsMap;
     const static EnumMap<core::AccidentalValue, api::MarkType> accidentalMarkMap;
     const static EnumMap<core::TechnicalChoice::Kind, api::MarkType> technicalMarkMap;

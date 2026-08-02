@@ -73,6 +73,7 @@ enum class MarkType
     pf,
     sfzp,
     otherDynamics,
+    compoundDynamics, ///< A single dynamic mark assembled from ordered components in MarkData::choice
     unknownDynamics,
 
     // ornaments
@@ -218,6 +219,9 @@ enum class MarkType
     // nonArpeggiate
     nonArpeggiate,
 
+    // general notation extension
+    otherNotation,
+
     // these are cust additions that will be written to, and read from, the
     // other-articulations (or other-*) elements.
     customErrorUnknown, // used to represent an error when parsing from a string
@@ -236,6 +240,7 @@ bool isMarkDynamic(MarkType);
 bool isMarkFermata(MarkType);
 bool isMarkArpeggiate(MarkType);
 bool isMarkNonArpeggiate(MarkType);
+bool isMarkOtherNotation(MarkType);
 
 bool isMarkCustom(MarkType);
 std::string getCustomMarkName(MarkType);

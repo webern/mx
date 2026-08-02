@@ -91,9 +91,16 @@ MX_OPTIONAL_SET_VALUE_FUNC(color, setColor, Color);
 
 template <typename ATTRIBUTES_TYPE> void setPrintObject(const api::Bool &inPrintObject, ATTRIBUTES_TYPE &outAttributes)
 {
-    if (!lookForAndSetHasPrintObject(inPrintObject != api::Bool::unspecified, &outAttributes))
+    if (inPrintObject == api::Bool::unspecified)
     {
-        lookForAndSetPrintObject(inPrintObject, &outAttributes);
+        lookForAndSetHasPrintObject(false, &outAttributes);
+        return;
+    }
+
+    if (lookForAndSetHasPrintObject(true, &outAttributes))
+    {
+        Converter converter;
+        lookForAndSetPrintObject(converter.convert(inPrintObject), &outAttributes);
     }
 }
 
@@ -109,6 +116,8 @@ void setAttributesFromColorData(const api::ColorData &inColorData, ATTRIBUTES_TY
 template <typename ATTRIBUTES_TYPE>
 void setAttributesFromPrintData(const api::PrintData &inPrintData, ATTRIBUTES_TYPE &outAttributes)
 {
+    setPrintObject(inPrintData.printObject, outAttributes);
+
     if (inPrintData.isColorSpecified)
     {
         lookForAndSetHasColor(true, &outAttributes);

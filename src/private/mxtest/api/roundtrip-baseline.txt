@@ -409,6 +409,19 @@ synthetic/arpeggiate.4.0.xml
 synthetic/non-arpeggiate.3.0.xml
 synthetic/non-arpeggiate.3.1.xml
 
+# Unblocked by exposing SMuFL payloads for other-* marks and the complete
+# other-notation payload. The 3.0 fixtures exercise text and print attributes;
+# the 3.1 fixtures additionally exercise the smufl attribute.
+synthetic/other-articulation.3.0.xml
+synthetic/other-articulation.3.1.xml
+synthetic/other-dynamics.3.1.xml
+synthetic/other-notation.3.0.xml
+synthetic/other-notation.3.1.xml
+synthetic/other-ornament.3.0.xml
+synthetic/other-ornament.3.1.xml
+synthetic/other-technical.3.0.xml
+synthetic/other-technical.3.1.xml
+
 # Unblocked by the caesura value fix: MarkType::caesura now round-trips the
 # common empty element form, and the caesuraNormal/Thick/Short/Curved/Single
 # variants carry an explicit text value.

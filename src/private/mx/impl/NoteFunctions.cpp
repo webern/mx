@@ -297,7 +297,29 @@ void NoteFunctions::parseNotations() const
                 break;
             }
             case core::NotationsChoice::Kind::otherNotation: {
-                // TODO - import otherNotation
+                const auto &other = notationsChoice.asOtherNotation();
+                api::MarkData mark{api::MarkType::otherNotation};
+                mark.tickTimePosition = myCursor.tickTimePosition;
+                mark.name = other.value();
+                parseMarkDataAttributes(other, mark);
+
+                api::OtherNotationMarkData payload;
+                Converter converter;
+                payload.type = converter.convert(other.type());
+                if (other.number().has_value())
+                {
+                    payload.number = other.number()->value();
+                }
+                if (other.smufl().has_value())
+                {
+                    payload.smufl = other.smufl()->toString();
+                }
+                if (other.id().has_value())
+                {
+                    payload.id = other.id()->value();
+                }
+                mark.choice = std::move(payload);
+                myOutNoteData.noteAttachmentData.marks.emplace_back(std::move(mark));
                 break;
             }
             default:

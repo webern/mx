@@ -16,9 +16,7 @@ namespace mx
 {
 namespace impl
 {
-namespace
-{
-void parseMordentSpecificAttributes(const core::Mordent &m, api::MarkData &outMark)
+void ornamentsFunctionsParseMordentSpecificAttributes(const core::Mordent &m, api::MarkData &outMark)
 {
     Converter converter;
 
@@ -40,7 +38,6 @@ void parseMordentSpecificAttributes(const core::Mordent &m, api::MarkData &outMa
         outMark.mordentDeparture = converter.convert(*m.departure());
     }
 }
-} // namespace
 
 OrnamentsFunctions::OrnamentsFunctions(const core::Ornaments &inOrnaments, impl::Cursor inCursor)
     : myOrnaments{inOrnaments}, myCursor{inCursor}
@@ -64,12 +61,6 @@ void OrnamentsFunctions::parseOrnamentsSet(std::vector<api::MarkData> &outMarks)
         markData.markType = markType;
         parseOrnament(choiceObj, markData);
         markData.tickTimePosition = myCursor.tickTimePosition;
-
-        if ((markData.markType == api::MarkType::otherOrnament) ||
-            (markData.markType == api::MarkType::unknownOrnament))
-        {
-            // TODO - SMUFLKILL - use the name to see if we have a custom enum value
-        }
 
         if (markData.markType != api::MarkType::unknownOrnament)
         {
@@ -143,14 +134,14 @@ void OrnamentsFunctions::parseOrnament(const core::OrnamentsGroupChoice &choiceO
         outMark.name = "mordent";
         const auto &m = choiceObj.asMordent();
         parseMarkDataAttributes(m, outMark);
-        parseMordentSpecificAttributes(m, outMark);
+        ornamentsFunctionsParseMordentSpecificAttributes(m, outMark);
         break;
     }
     case core::OrnamentsGroupChoice::Kind::invertedMordent: {
         outMark.name = "inverted-mordent";
         const auto &m = choiceObj.asInvertedMordent();
         parseMarkDataAttributes(m, outMark);
-        parseMordentSpecificAttributes(m, outMark);
+        ornamentsFunctionsParseMordentSpecificAttributes(m, outMark);
         break;
     }
     case core::OrnamentsGroupChoice::Kind::schleifer: {
@@ -220,6 +211,12 @@ void OrnamentsFunctions::parseOrnament(const core::OrnamentsGroupChoice &choiceO
         const auto &oa = choiceObj.asOtherOrnament();
         parseMarkDataAttributes(oa, outMark);
         const auto &value = oa.value();
+        api::OtherMarkData payload;
+        if (oa.smufl().has_value())
+        {
+            payload.smufl = oa.smufl()->toString();
+        }
+        outMark.choice = std::move(payload);
 
         if (value.empty())
         {

@@ -7,6 +7,7 @@
 #include "mx/core/generated/DynamicsChoice.h"
 #include "mx/core/generated/Empty.h"
 #include "mx/core/generated/OtherText.h"
+#include "mx/core/generated/SmuflGlyphName.h"
 #include "mx/impl/MarkDataFunctions.h"
 #include "mx/utility/Throw.h"
 
@@ -15,7 +16,8 @@ namespace mx
 namespace impl
 {
 
-static core::DynamicsChoice makeDynamicsChoice(core::DynamicsChoice::Kind kind, const std::string &otherName)
+core::DynamicsChoice dynamicsWriterMakeChoice(core::DynamicsChoice::Kind kind, const std::string &otherName,
+                                              const std::optional<std::string> &smufl)
 {
     using K = core::DynamicsChoice::Kind;
     core::Empty empty{};
@@ -76,6 +78,10 @@ static core::DynamicsChoice makeDynamicsChoice(core::DynamicsChoice::Kind kind, 
     case K::otherDynamics: {
         core::OtherText ot;
         ot.setValue(otherName);
+        if (smufl.has_value())
+        {
+            ot.setSmufl(core::SmuflGlyphName{*smufl});
+        }
         return core::DynamicsChoice::otherDynamics(ot);
     }
     default:
@@ -98,12 +104,31 @@ DynamicsWriter::DynamicsWriter(const api::MarkData &inMark, impl::Cursor inCurso
 
 core::Dynamics DynamicsWriter::getDynamics() const
 {
-    const auto kind = myConverter.convertDynamic(myMarkData.markType);
-    const bool isOther = kind == core::DynamicsChoice::Kind::otherDynamics;
-    const auto &otherName = isOther ? myMarkData.name : std::string{};
-
     core::Dynamics dyn;
-    dyn.addChoice(makeDynamicsChoice(kind, otherName));
+    if (myMarkData.markType == api::MarkType::compoundDynamics)
+    {
+        for (const auto &component : myMarkData.choice.compoundDynamics().components)
+        {
+            if (component.isOther())
+            {
+                const auto other = component.other();
+                dyn.addChoice(
+                    dynamicsWriterMakeChoice(core::DynamicsChoice::Kind::otherDynamics, other.text, other.smufl));
+            }
+            else
+            {
+                dyn.addChoice(dynamicsWriterMakeChoice(myConverter.convert(component.standard()), {}, {}));
+            }
+        }
+    }
+    else
+    {
+        const auto kind = myConverter.convertDynamic(myMarkData.markType);
+        const bool isOther = kind == core::DynamicsChoice::Kind::otherDynamics;
+        const auto &otherName = isOther ? myMarkData.name : std::string{};
+        const auto smufl = isOther ? myMarkData.choice.otherMark().smufl : std::optional<std::string>{};
+        dyn.addChoice(dynamicsWriterMakeChoice(kind, otherName, smufl));
+    }
     impl::setAttributesFromMarkData(myMarkData, dyn);
     return dyn;
 }

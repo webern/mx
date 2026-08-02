@@ -11,11 +11,9 @@ namespace mx
 {
 namespace api
 {
-namespace
-{
 // The wire literal of a dynamics alternative (the old core's
 // toString(DynamicsEnum); the new variant Kind carries no string).
-std::string dynamicsKindToString(core::DynamicsChoice::Kind kind)
+std::string markDataDynamicsKindToString(core::DynamicsChoice::Kind kind)
 {
     switch (kind)
     {
@@ -75,7 +73,6 @@ std::string dynamicsKindToString(core::DynamicsChoice::Kind kind)
         return "other-dynamics";
     }
 }
-} // namespace
 
 bool isMarkDynamic(MarkType markType)
 {
@@ -88,7 +85,7 @@ bool isMarkDynamic(MarkType markType)
            (markType == MarkType::fp) || (markType == MarkType::rf) || (markType == MarkType::rfz) ||
            (markType == MarkType::sfz) || (markType == MarkType::sffz) || (markType == MarkType::fz) ||
            (markType == MarkType::n) || (markType == MarkType::pf) || (markType == MarkType::sfzp) ||
-           (markType == MarkType::otherDynamics);
+           (markType == MarkType::otherDynamics) || (markType == MarkType::compoundDynamics);
 }
 
 bool isMarkArpeggiate(MarkType markType)
@@ -142,6 +139,11 @@ bool isMarkFermata(MarkType markType)
 bool isMarkNonArpeggiate(MarkType markType)
 {
     return (markType == MarkType::nonArpeggiate);
+}
+
+bool isMarkOtherNotation(MarkType markType)
+{
+    return markType == MarkType::otherNotation;
 }
 
 bool isMarkPedal(MarkType markType)
@@ -244,9 +246,9 @@ MarkData::MarkData(MarkType inMarkType)
       fingeringAlternate{Bool::unspecified}, choice{}
 {
     impl::Converter converter;
-    if (isMarkDynamic(markType))
+    if (isMarkDynamic(markType) && markType != MarkType::compoundDynamics)
     {
-        name = dynamicsKindToString(converter.convertDynamic(markType));
+        name = markDataDynamicsKindToString(converter.convertDynamic(markType));
     }
     else if (isMarkArticulation(markType))
     {
@@ -266,9 +268,9 @@ MarkData::MarkData(Placement inPlacement, MarkType inMarkType)
 {
     positionData.placement = inPlacement;
     impl::Converter converter;
-    if (isMarkDynamic(markType))
+    if (isMarkDynamic(markType) && markType != MarkType::compoundDynamics)
     {
-        name = dynamicsKindToString(converter.convertDynamic(markType));
+        name = markDataDynamicsKindToString(converter.convertDynamic(markType));
     }
     else if (isMarkArticulation(markType))
     {
