@@ -588,6 +588,12 @@ TEST(tremolos, NoteData)
     marks.emplace_back(mark);
     mark = MarkData{MarkType::tremoloSingleFive};
     marks.emplace_back(mark);
+    mark = MarkData{MarkType::tremoloSingleSix};
+    marks.emplace_back(mark);
+    mark = MarkData{MarkType::tremoloSingleSeven};
+    marks.emplace_back(mark);
+    mark = MarkData{MarkType::tremoloSingleEight};
+    marks.emplace_back(mark);
 
     // round trip it through xml
     auto &mgr = DocumentManager::getInstance();
@@ -614,7 +620,10 @@ TEST(tremolos, NoteData)
     const auto &onote = ovoice.notes.back();
     const auto &omarks = onote.noteAttachmentData.marks;
 
-    for (int i = 1; i <= 5; ++i)
+    // MusicXML's tremolo-marks type allows 1 through 8 slashes.
+    REQUIRE(8 == omarks.size());
+
+    for (int i = 1; i <= 8; ++i)
     {
         const auto &markData = omarks.at(static_cast<size_t>(i - 1));
         CHECK_EQUAL(i, numTremoloSlashes(markData.markType));
@@ -696,6 +705,70 @@ TEST(measuredTremoloFromSyntheticFile, NoteData)
     REQUIRE(marks.at(0).choice.isTremolo());
     REQUIRE(marks.at(0).choice.tremolo().tremoloMarks.has_value());
     CHECK_EQUAL(1, *marks.at(0).choice.tremolo().tremoloMarks);
+}
+
+T_END;
+
+TEST(unmeasuredTremolo, NoteData)
+{
+    ScoreData score;
+    score.ticksPerQuarter = 1;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto &staff = measure.staves.back();
+    auto &voice = staff.voices[0];
+
+    voice.notes.emplace_back();
+    auto &note = voice.notes.back();
+    note.durationData.durationName = DurationName::quarter;
+    note.durationData.durationTimeTicks = 1;
+    note.tickTimePosition = 0;
+    MarkData mark{MarkType::tremoloUnmeasured};
+    TremoloMarkData tremoloData;
+    tremoloData.smufl = "pendereckiTremolo";
+    mark.choice = tremoloData;
+    note.noteAttachmentData.marks.emplace_back(mark);
+
+    const auto out = mxtest::roundTrip(score);
+
+    const auto &omarks =
+        out.parts.back().measures.back().staves.back().voices.at(0).notes.back().noteAttachmentData.marks;
+    REQUIRE(1 == omarks.size());
+    CHECK(MarkType::tremoloUnmeasured == omarks.at(0).markType);
+    REQUIRE(omarks.at(0).choice.isTremolo());
+    CHECK(!omarks.at(0).choice.tremolo().tremoloMarks.has_value());
+    REQUIRE(omarks.at(0).choice.tremolo().smufl.has_value());
+    CHECK_EQUAL("pendereckiTremolo", *omarks.at(0).choice.tremolo().smufl);
+}
+
+T_END;
+
+// Parse the synthetic unmeasured-tremolo file and confirm mx::api surfaces it as a
+// tremoloUnmeasured mark carrying the file's smufl glyph name. This pins the core -> api read path
+// for unmeasured tremolos, which were previously dropped.
+TEST(unmeasuredTremoloFromSyntheticFile, NoteData)
+{
+    const std::string path = mxtest::getResourcesDirectoryPath() + "synthetic/tremolo.unmeasured.3.1.xml";
+    auto &docMgr = DocumentManager::getInstance();
+    const auto docIdResult = docMgr.createFromFile(path);
+    REQUIRE(docIdResult.ok());
+    const int docId = docIdResult.value();
+    const auto scoreResult = docMgr.getData(docId);
+    docMgr.destroyDocument(docId);
+    REQUIRE(scoreResult.ok());
+    const auto &score = scoreResult.value();
+
+    const auto &marks =
+        score.parts.back().measures.back().staves.back().voices.at(0).notes.back().noteAttachmentData.marks;
+    REQUIRE(1 == marks.size());
+    CHECK(MarkType::tremoloUnmeasured == marks.at(0).markType);
+    REQUIRE(marks.at(0).choice.isTremolo());
+    CHECK(!marks.at(0).choice.tremolo().tremoloMarks.has_value());
+    REQUIRE(marks.at(0).choice.tremolo().smufl.has_value());
+    CHECK_EQUAL("pendereckiTremolo", *marks.at(0).choice.tremolo().smufl);
 }
 
 T_END;

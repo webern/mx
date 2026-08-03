@@ -15,17 +15,32 @@ namespace mx
 namespace api
 {
 
-// Payload for MarkType::tremoloStart / MarkType::tremoloStop: the measured-tremolo slash count
-// (MusicXML <tremolo> text value, 0-8). Absent means "not specified" (the writer falls back to a
-// default). The tremoloSingle* mark types encode their slash count in the enumerator itself and do
-// not use this payload.
+// Payload for the tremolo mark types. Which kind of tremolo a mark is -- a one-note tremolo, one
+// end of a two-note (measured) tremolo, or an unmeasured tremolo -- is stated by the MarkType; this
+// payload carries what the MarkType cannot say.
 struct TremoloMarkData
 {
+    // How many slashes are drawn through the stem of a two-note tremolo, 0 to 8. Set this on the
+    // MarkType::tremoloStart and MarkType::tremoloStop marks that bracket the pair, using the same
+    // count on both. Leave it absent to accept a three-slash default.
+    //
+    // A one-note tremolo states its slash count in the MarkType itself
+    // (MarkType::tremoloSingleOne through MarkType::tremoloSingleFive), and an unmeasured tremolo
+    // has no slash count, so neither uses this field.
     std::optional<int> tremoloMarks;
+
+    // The canonical SMuFL glyph name to draw for an unmeasured tremolo (MarkType::tremoloUnmeasured),
+    // from SMuFL's Tremolos range -- for example "pendereckiTremolo" or "unmeasuredTremolo". Leave
+    // it absent to accept SMuFL's "buzzRoll", the glyph MusicXML assumes when no name is given.
+    //
+    // MusicXML allows this on a one-note or two-note tremolo too, but defines no meaning for it
+    // there, and most applications ignore it.
+    std::optional<std::string> smufl;
 };
 
 MXAPI_EQUALS_BEGIN(TremoloMarkData)
 MXAPI_EQUALS_MEMBER(tremoloMarks)
+MXAPI_EQUALS_MEMBER(smufl)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(TremoloMarkData);
 
@@ -93,8 +108,8 @@ MXAPI_NOT_EQUALS_AND_VECTORS(NonArpeggiateMarkData);
 // unclear which fields apply to which mark. New mark-specific payloads belong here, as a new
 // alternative, rather than as a new direct field on MarkData.
 //
-// The choice's Kind SHOULD correspond to MarkData::markType (e.g. Kind::tremolo pairs with
-// MarkType::tremoloStart/tremoloStop), but this is a convention that this class does not enforce.
+// The choice's Kind SHOULD correspond to MarkData::markType (e.g. Kind::tremolo pairs with the
+// MarkType::tremolo* values), but this is a convention that this class does not enforce.
 //
 // Defaults to none (no mark-specific payload).
 class MarkDataChoice

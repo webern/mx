@@ -538,3 +538,9 @@ lysuite/ly03d_Rhythm_DottedDurations_Factors.xml
 musuite/testMultiMeasureRest1.xml
 musuite/testMultiMeasureRest2.xml
 musuite/testMultiMeasureRest3.xml
+
+# Unmeasured tremolos: MarkType::tremoloUnmeasured plus TremoloMarkData::smufl. The reader
+# previously discarded <tremolo type="unmeasured"> as "not a mark" and neither direction touched
+# the smufl attribute. The sibling tremolo.3.0/3.1 fixtures still fail, on the unrelated fact that
+# MarkData carries no font or color data.
+synthetic/tremolo.unmeasured.3.1.xml
