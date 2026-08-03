@@ -24,6 +24,8 @@
 #include "mx/core/generated/HandbellValue.h"
 #include "mx/core/generated/HarmonMute.h"
 #include "mx/core/generated/Harmonic.h"
+#include "mx/core/generated/HarmonicChoice.h"
+#include "mx/core/generated/HarmonicChoice2.h"
 #include "mx/core/generated/HeelToe.h"
 #include "mx/core/generated/Hole.h"
 #include "mx/core/generated/HoleClosed.h"
@@ -802,7 +804,36 @@ void NotationsWriter::addTechnical(const api::MarkData &mark, core::Technical &o
     }
     case core::TechnicalChoice::Kind::harmonic: {
         core::Harmonic h;
-        setAttributesFromPositionData(mark.positionData, h);
+        impl::setAttributesFromMarkData(mark, h);
+        const auto harmonicData = mark.choice.isHarmonic() ? mark.choice.harmonic() : api::HarmonicMarkData{};
+
+        switch (harmonicData.kind)
+        {
+        case api::HarmonicKind::natural:
+            h.setChoice(core::HarmonicChoice::natural(core::Empty{}));
+            break;
+        case api::HarmonicKind::artificial:
+            h.setChoice(core::HarmonicChoice::artificial(core::Empty{}));
+            break;
+        case api::HarmonicKind::unspecified:
+            break;
+        }
+
+        switch (harmonicData.pitch)
+        {
+        case api::HarmonicPitch::basePitch:
+            h.setChoice2(core::HarmonicChoice2::basePitch(core::Empty{}));
+            break;
+        case api::HarmonicPitch::touchingPitch:
+            h.setChoice2(core::HarmonicChoice2::touchingPitch(core::Empty{}));
+            break;
+        case api::HarmonicPitch::soundingPitch:
+            h.setChoice2(core::HarmonicChoice2::soundingPitch(core::Empty{}));
+            break;
+        case api::HarmonicPitch::unspecified:
+            break;
+        }
+
         outTechnical.addChoice(core::TechnicalChoice::harmonic(h));
         break;
     }
