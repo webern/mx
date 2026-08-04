@@ -5,13 +5,13 @@
 #pragma once
 
 #include "mx/api/ScoreData.h"
-#include "mx/impl/Converter.h"
-#include "mx/impl/DynamicsReader.h"
+
+#include <utility>
 
 namespace
 {
 
-inline void addNoteToMeasure(mx::api::MarkType markType, mx::api::MeasureData *measureP)
+inline void addNoteToMeasure(mx::api::MarkData dynamic, mx::api::MeasureData *measureP)
 {
     using namespace mx::api;
     auto staffP = &measureP->staves.at(0);
@@ -26,26 +26,21 @@ inline void addNoteToMeasure(mx::api::MarkType markType, mx::api::MeasureData *m
     noteP->pitchData.accidental = Accidental::none;
     noteP->durationData.durationName = DurationName::whole;
     noteP->durationData.durationTimeTicks = 8;
-    noteP->noteAttachmentData.marks.emplace_back(MarkData{});
-    auto &markData = noteP->noteAttachmentData.marks.back();
-    markData.markType = markType;
-    mx::impl::Converter converter;
-    const auto d = converter.convertDynamic(markType);
-    markData.name = mx::impl::dynamicsKindToName(d);
+    auto &markData = noteP->noteAttachmentData.marks.emplace_back(std::move(dynamic));
     markData.tickTimePosition = noteP->tickTimePosition;
     markData.positionData.placement = Placement::below;
 }
 
-inline void addMeasureWithNote(mx::api::MarkType markType, mx::api::PartData &outPartData)
+inline void addMeasureWithNote(mx::api::MarkData dynamic, mx::api::PartData &outPartData)
 {
     using namespace mx::api;
     outPartData.measures.emplace_back(MeasureData{});
     auto measureP = &outPartData.measures.back();
     measureP->staves.emplace_back(StaffData{});
-    addNoteToMeasure(markType, measureP);
+    addNoteToMeasure(std::move(dynamic), measureP);
 }
 
-inline void addFirstMeasureWithNote(mx::api::MarkType markType, mx::api::PartData &outPartData)
+inline void addFirstMeasureWithNote(mx::api::MarkData dynamic, mx::api::PartData &outPartData)
 {
     using namespace mx::api;
     outPartData.measures.emplace_back(MeasureData{});
@@ -58,7 +53,7 @@ inline void addFirstMeasureWithNote(mx::api::MarkType markType, mx::api::PartDat
     auto clefP = &staffP->clefs.back();
     clefP->symbol = ClefSymbol::g;
     clefP->line = 2;
-    addNoteToMeasure(markType, measureP);
+    addNoteToMeasure(std::move(dynamic), measureP);
 }
 } // namespace
 
@@ -75,35 +70,30 @@ inline mx::api::ScoreData apiK007aScoreData()
     part.uniqueId = "P1";
     part.name = "Dynamics";
 
-    addFirstMeasureWithNote(MarkType::p, part);
-    addMeasureWithNote(MarkType::pp, part);
-    addMeasureWithNote(MarkType::ppp, part);
-    addMeasureWithNote(MarkType::pppp, part);
-    addMeasureWithNote(MarkType::ppppp, part);
-    addMeasureWithNote(MarkType::pppppp, part);
-    addMeasureWithNote(MarkType::f, part);
-    addMeasureWithNote(MarkType::ff, part);
-    addMeasureWithNote(MarkType::fff, part);
-    addMeasureWithNote(MarkType::ffff, part);
-    addMeasureWithNote(MarkType::fffff, part);
-    addMeasureWithNote(MarkType::ffffff, part);
-    addMeasureWithNote(MarkType::mp, part);
-    addMeasureWithNote(MarkType::mf, part);
-    addMeasureWithNote(MarkType::sf, part);
-    addMeasureWithNote(MarkType::sfp, part);
-    addMeasureWithNote(MarkType::sfpp, part);
-    addMeasureWithNote(MarkType::fp, part);
-    addMeasureWithNote(MarkType::rf, part);
-    addMeasureWithNote(MarkType::rfz, part);
-    addMeasureWithNote(MarkType::sfz, part);
-    addMeasureWithNote(MarkType::sffz, part);
-    addMeasureWithNote(MarkType::fz, part);
-    addMeasureWithNote(MarkType::otherDynamics, part);
-
-    auto &lastMeasure = part.measures.back();
-    auto &lastDynamic = lastMeasure.staves.back().voices[0].notes.back().noteAttachmentData.marks.back();
-    const std::string name = "dynamicNiente";
-    lastDynamic.name = name;
+    addFirstMeasureWithNote(StandardDynamic::p, part);
+    addMeasureWithNote(StandardDynamic::pp, part);
+    addMeasureWithNote(StandardDynamic::ppp, part);
+    addMeasureWithNote(StandardDynamic::pppp, part);
+    addMeasureWithNote(StandardDynamic::ppppp, part);
+    addMeasureWithNote(StandardDynamic::pppppp, part);
+    addMeasureWithNote(StandardDynamic::f, part);
+    addMeasureWithNote(StandardDynamic::ff, part);
+    addMeasureWithNote(StandardDynamic::fff, part);
+    addMeasureWithNote(StandardDynamic::ffff, part);
+    addMeasureWithNote(StandardDynamic::fffff, part);
+    addMeasureWithNote(StandardDynamic::ffffff, part);
+    addMeasureWithNote(StandardDynamic::mp, part);
+    addMeasureWithNote(StandardDynamic::mf, part);
+    addMeasureWithNote(StandardDynamic::sf, part);
+    addMeasureWithNote(StandardDynamic::sfp, part);
+    addMeasureWithNote(StandardDynamic::sfpp, part);
+    addMeasureWithNote(StandardDynamic::fp, part);
+    addMeasureWithNote(StandardDynamic::rf, part);
+    addMeasureWithNote(StandardDynamic::rfz, part);
+    addMeasureWithNote(StandardDynamic::sfz, part);
+    addMeasureWithNote(StandardDynamic::sffz, part);
+    addMeasureWithNote(StandardDynamic::fz, part);
+    addMeasureWithNote(CompoundDynamicsData{{OtherDynamicsData{"dynamicNiente"}}}, part);
 
     return score;
 }

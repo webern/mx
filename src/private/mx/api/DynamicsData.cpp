@@ -11,6 +11,66 @@ namespace mx
 namespace api
 {
 
+std::string toString(StandardDynamic value)
+{
+    switch (value)
+    {
+    case StandardDynamic::p:
+        return "p";
+    case StandardDynamic::pp:
+        return "pp";
+    case StandardDynamic::ppp:
+        return "ppp";
+    case StandardDynamic::pppp:
+        return "pppp";
+    case StandardDynamic::ppppp:
+        return "ppppp";
+    case StandardDynamic::pppppp:
+        return "pppppp";
+    case StandardDynamic::f:
+        return "f";
+    case StandardDynamic::ff:
+        return "ff";
+    case StandardDynamic::fff:
+        return "fff";
+    case StandardDynamic::ffff:
+        return "ffff";
+    case StandardDynamic::fffff:
+        return "fffff";
+    case StandardDynamic::ffffff:
+        return "ffffff";
+    case StandardDynamic::mp:
+        return "mp";
+    case StandardDynamic::mf:
+        return "mf";
+    case StandardDynamic::sf:
+        return "sf";
+    case StandardDynamic::sfp:
+        return "sfp";
+    case StandardDynamic::sfpp:
+        return "sfpp";
+    case StandardDynamic::fp:
+        return "fp";
+    case StandardDynamic::rf:
+        return "rf";
+    case StandardDynamic::rfz:
+        return "rfz";
+    case StandardDynamic::sfz:
+        return "sfz";
+    case StandardDynamic::sffz:
+        return "sffz";
+    case StandardDynamic::fz:
+        return "fz";
+    case StandardDynamic::n:
+        return "n";
+    case StandardDynamic::pf:
+        return "pf";
+    case StandardDynamic::sfzp:
+        return "sfzp";
+    }
+    return "p";
+}
+
 DynamicsComponent::DynamicsComponent() : myValue{StandardDynamic::p}
 {
 }
@@ -59,6 +119,21 @@ OtherDynamicsData DynamicsComponent::other() const
 bool DynamicsComponent::operator==(const DynamicsComponent &other) const
 {
     return myValue == other.myValue;
+}
+
+std::string toString(const DynamicsComponent &value)
+{
+    return value.isOther() ? value.other().text : toString(value.standard());
+}
+
+std::string toString(const CompoundDynamicsData &value)
+{
+    std::string result;
+    for (const auto &component : value.components)
+    {
+        result += toString(component);
+    }
+    return result;
 }
 
 } // namespace api

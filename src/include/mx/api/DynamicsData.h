@@ -47,6 +47,9 @@ enum class StandardDynamic
     sfzp
 };
 
+// The letters of the symbol, e.g. "ff" -- also the name of the MusicXML element that carries it.
+std::string toString(StandardDynamic value);
+
 // A component of a dynamic mark that has no dedicated MusicXML dynamic element. text is the
 // visible fallback; smufl, when present, names the exact glyph to draw.
 struct OtherDynamicsData
@@ -94,6 +97,10 @@ class DynamicsComponent
 
 MXAPI_NOT_EQUALS_AND_VECTORS(DynamicsComponent);
 
+// The component's letters: the symbol for a standard component, the fallback text for one that has
+// no dedicated MusicXML element.
+std::string toString(const DynamicsComponent &value);
+
 // A dynamic mark assembled from multiple symbols in order, such as ff followed by z for ffz.
 // MusicXML writes these as children of one <dynamics> element.
 struct CompoundDynamicsData
@@ -105,6 +112,9 @@ MXAPI_EQUALS_BEGIN(CompoundDynamicsData)
 MXAPI_EQUALS_MEMBER(components)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(CompoundDynamicsData);
+
+// The letters of the whole mark, its components run together -- "ffz" for ff followed by z.
+std::string toString(const CompoundDynamicsData &value);
 
 } // namespace api
 } // namespace mx

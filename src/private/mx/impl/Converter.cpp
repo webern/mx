@@ -184,36 +184,6 @@ const Converter::EnumMap<core::ArticulationsChoice::Kind, api::MarkType> Convert
     {core::ArticulationsChoice::Kind::otherArticulation, api::MarkType::otherArticulation},
 };
 
-const Converter::EnumMap<core::DynamicsChoice::Kind, api::MarkType> Converter::dynamicsMap = {
-    {core::DynamicsChoice::Kind::p, api::MarkType::p},
-    {core::DynamicsChoice::Kind::pp, api::MarkType::pp},
-    {core::DynamicsChoice::Kind::ppp, api::MarkType::ppp},
-    {core::DynamicsChoice::Kind::pppp, api::MarkType::pppp},
-    {core::DynamicsChoice::Kind::ppppp, api::MarkType::ppppp},
-    {core::DynamicsChoice::Kind::pppppp, api::MarkType::pppppp},
-    {core::DynamicsChoice::Kind::f, api::MarkType::f},
-    {core::DynamicsChoice::Kind::ff, api::MarkType::ff},
-    {core::DynamicsChoice::Kind::fff, api::MarkType::fff},
-    {core::DynamicsChoice::Kind::ffff, api::MarkType::ffff},
-    {core::DynamicsChoice::Kind::fffff, api::MarkType::fffff},
-    {core::DynamicsChoice::Kind::ffffff, api::MarkType::ffffff},
-    {core::DynamicsChoice::Kind::mp, api::MarkType::mp},
-    {core::DynamicsChoice::Kind::mf, api::MarkType::mf},
-    {core::DynamicsChoice::Kind::sf, api::MarkType::sf},
-    {core::DynamicsChoice::Kind::sfp, api::MarkType::sfp},
-    {core::DynamicsChoice::Kind::sfpp, api::MarkType::sfpp},
-    {core::DynamicsChoice::Kind::fp, api::MarkType::fp},
-    {core::DynamicsChoice::Kind::rf, api::MarkType::rf},
-    {core::DynamicsChoice::Kind::rfz, api::MarkType::rfz},
-    {core::DynamicsChoice::Kind::sfz, api::MarkType::sfz},
-    {core::DynamicsChoice::Kind::sffz, api::MarkType::sffz},
-    {core::DynamicsChoice::Kind::fz, api::MarkType::fz},
-    {core::DynamicsChoice::Kind::n, api::MarkType::n},
-    {core::DynamicsChoice::Kind::pf, api::MarkType::pf},
-    {core::DynamicsChoice::Kind::sfzp, api::MarkType::sfzp},
-    {core::DynamicsChoice::Kind::otherDynamics, api::MarkType::otherDynamics},
-};
-
 const Converter::EnumMap<core::DynamicsChoice::Kind, api::StandardDynamic> Converter::standardDynamicsMap = {
     {core::DynamicsChoice::Kind::p, api::StandardDynamic::p},
     {core::DynamicsChoice::Kind::pp, api::StandardDynamic::pp},
@@ -1787,16 +1757,6 @@ core::ArticulationsChoice::Kind Converter::convertArticulation(api::MarkType val
 api::MarkType Converter::convertArticulation(core::ArticulationsChoice::Kind value) const
 {
     return findApiItem(articulationsMap, api::MarkType::unspecified, value);
-}
-
-core::DynamicsChoice::Kind Converter::convertDynamic(api::MarkType value) const
-{
-    return findCoreItem(dynamicsMap, core::DynamicsChoice::Kind::otherDynamics, value);
-}
-
-api::MarkType Converter::convertDynamic(core::DynamicsChoice::Kind value) const
-{
-    return findApiItem(dynamicsMap, api::MarkType::unspecified, value);
 }
 
 core::DynamicsChoice::Kind Converter::convert(api::StandardDynamic value) const

@@ -46,7 +46,9 @@ TEST(smuflOtherMarksRoundTrip, OtherMarksApi)
     addOtherMark(MarkType::otherArticulation, "articulation fallback", "articAccentAbove");
     addOtherMark(MarkType::otherTechnical, "technique fallback", "brassMuteClosed");
     addOtherMark(MarkType::otherOrnament, "ornament fallback", "ornamentTurnSlash");
-    addOtherMark(MarkType::otherDynamics, "", "dynamicZ");
+
+    // An other-dynamics has no dedicated element, so it is a compound of one component.
+    marks.emplace_back(CompoundDynamicsData{{OtherDynamicsData{"", std::string{"dynamicZ"}}}});
 
     const auto xml = mxtest::toXml(score);
     CHECK(xml.find("smufl=\"articAccentAbove\"") != std::string::npos);
@@ -66,10 +68,15 @@ TEST(smuflOtherMarksRoundTrip, OtherMarksApi)
     CHECK(smuflFor(MarkType::otherArticulation) == std::optional<std::string>{"articAccentAbove"});
     CHECK(smuflFor(MarkType::otherOrnament) == std::optional<std::string>{"ornamentTurnSlash"});
     CHECK(smuflFor(MarkType::otherTechnical) == std::optional<std::string>{"brassMuteClosed"});
-    CHECK(smuflFor(MarkType::otherDynamics) == std::optional<std::string>{"dynamicZ"});
+
     const auto dynamic = std::find_if(outMarks.begin(), outMarks.end(),
-                                      [](const auto &item) { return item.markType == MarkType::otherDynamics; });
+                                      [](const auto &item) { return item.markType == MarkType::dynamics; });
     REQUIRE(dynamic != outMarks.end());
+    REQUIRE(dynamic->choice.isCompoundDynamics());
+    const auto components = dynamic->choice.compoundDynamics().components;
+    REQUIRE(components.size() == 1);
+    CHECK(components.front().other().smufl == std::optional<std::string>{"dynamicZ"});
+    CHECK(components.front().other().text.empty());
     CHECK(dynamic->name.empty());
 }
 
@@ -80,6 +87,7 @@ TEST(markChoiceWrongKindFallbacks, OtherMarksApi)
     const MarkDataChoice choice;
     CHECK(!choice.otherMark().smufl.has_value());
     CHECK(choice.compoundDynamics().components.empty());
+    CHECK(choice.dynamic() == StandardDynamic::p);
     CHECK(choice.otherNotation().type == OtherNotationType::single);
 
     const DynamicsComponent standard{StandardDynamic::ff};
@@ -90,15 +98,91 @@ TEST(markChoiceWrongKindFallbacks, OtherMarksApi)
 
 T_END;
 
+// A lone standard symbol is one mark however it was built, so it is always stored as
+// Kind::dynamic. A lone other-dynamics has no dedicated element and stays a compound of one.
+TEST(singleStandardDynamicCollapses, OtherMarksApi)
+{
+    const MarkDataChoice fromCompound{CompoundDynamicsData{{StandardDynamic::ff}}};
+    CHECK(fromCompound.kind() == MarkDataChoice::Kind::dynamic);
+    CHECK(fromCompound.dynamic() == StandardDynamic::ff);
+    CHECK(fromCompound == MarkDataChoice{StandardDynamic::ff});
+
+    const MarkDataChoice loneOther{CompoundDynamicsData{{OtherDynamicsData{"z", std::string{"dynamicZ"}}}}};
+    CHECK(loneOther.kind() == MarkDataChoice::Kind::compoundDynamics);
+    REQUIRE(loneOther.compoundDynamics().components.size() == 1);
+
+    const MarkDataChoice twoStandard{CompoundDynamicsData{{StandardDynamic::ff, StandardDynamic::p}}};
+    CHECK(twoStandard.kind() == MarkDataChoice::Kind::compoundDynamics);
+
+    const MarkData mark{StandardDynamic::ff};
+    CHECK(mark.markType == MarkType::dynamics);
+    CHECK(mark.choice.dynamic() == StandardDynamic::ff);
+}
+
+T_END;
+
+// name spells out the whole mark, the way articulations and fermatas name themselves. The writer
+// ignores it -- the symbols that get written are the ones in choice.
+TEST(dynamicNameSpellsTheMark, OtherMarksApi)
+{
+    CHECK_EQUAL("ff", toString(StandardDynamic::ff));
+    CHECK_EQUAL("sfzp", toString(StandardDynamic::sfzp));
+    CHECK_EQUAL("ff", MarkData{StandardDynamic::ff}.name);
+    CHECK_EQUAL("z", toString(DynamicsComponent{OtherDynamicsData{"z", std::string{"dynamicZ"}}}));
+    CHECK_EQUAL("ffz",
+                toString(CompoundDynamicsData{{StandardDynamic::ff, OtherDynamicsData{"z", std::string{"dynamicZ"}}}}));
+
+    auto score = otherMarksScoreWithNote();
+    otherMarksNote(score).noteAttachmentData.marks.emplace_back(StandardDynamic::ffff);
+
+    const auto out = mxtest::roundTrip(score);
+    const auto &outMarks =
+        out.parts.back().measures.back().staves.back().voices.at(0).notes.back().noteAttachmentData.marks;
+    REQUIRE(outMarks.size() == 1);
+    CHECK(outMarks.front().choice.dynamic() == StandardDynamic::ffff);
+    CHECK_EQUAL("ffff", outMarks.front().name);
+
+    // A lone other-dynamics echoes its text, as it did before the symbol moved into choice.
+    auto otherScore = otherMarksScoreWithNote();
+    otherMarksNote(otherScore)
+        .noteAttachmentData.marks.emplace_back(CompoundDynamicsData{{OtherDynamicsData{"z", std::string{"dynamicZ"}}}});
+    const auto otherOut = mxtest::roundTrip(otherScore);
+    const auto &otherOutMarks =
+        otherOut.parts.back().measures.back().staves.back().voices.at(0).notes.back().noteAttachmentData.marks;
+    REQUIRE(otherOutMarks.size() == 1);
+    CHECK_EQUAL("z", otherOutMarks.front().name);
+    REQUIRE(otherOutMarks.front().choice.isCompoundDynamics());
+    CHECK_EQUAL("z", otherOutMarks.front().choice.compoundDynamics().components.front().other().text);
+
+    // The CompoundDynamicsData constructor spells the mark out the same way the reader does, and a
+    // lone standard symbol reaches the same mark as the StandardDynamic constructor.
+    const MarkData built{CompoundDynamicsData{{StandardDynamic::ff, OtherDynamicsData{"z", std::string{"dynamicZ"}}}}};
+    CHECK(built.markType == MarkType::dynamics);
+    CHECK_EQUAL("ffz", built.name);
+    CHECK(built.choice.isCompoundDynamics());
+    CHECK(MarkData{CompoundDynamicsData{{StandardDynamic::ff}}} == MarkData{StandardDynamic::ff});
+
+    // A compound spells out every component in order.
+    auto compoundScore = otherMarksScoreWithNote();
+    otherMarksNote(compoundScore)
+        .noteAttachmentData.marks.emplace_back(
+            CompoundDynamicsData{{StandardDynamic::ff, OtherDynamicsData{"z", std::string{"dynamicZ"}}}});
+    const auto compoundOut = mxtest::roundTrip(compoundScore);
+    const auto &compoundMarks =
+        compoundOut.parts.back().measures.back().staves.back().voices.at(0).notes.back().noteAttachmentData.marks;
+    REQUIRE(compoundMarks.size() == 1);
+    CHECK_EQUAL("ffz", compoundMarks.front().name);
+}
+
+T_END;
+
 TEST(compoundDynamicsRoundTrip, OtherMarksApi)
 {
     auto score = otherMarksScoreWithNote();
-    auto &mark = otherMarksNote(score).noteAttachmentData.marks.emplace_back(MarkType::compoundDynamics);
-
     CompoundDynamicsData compound;
     compound.components.emplace_back(StandardDynamic::ff);
     compound.components.emplace_back(OtherDynamicsData{"z", std::string{"dynamicZ"}});
-    mark.choice = std::move(compound);
+    otherMarksNote(score).noteAttachmentData.marks.emplace_back(std::move(compound));
 
     const auto xml = mxtest::toXml(score);
     const auto dynamicsPosition = xml.find("<dynamics");
@@ -113,7 +197,8 @@ TEST(compoundDynamicsRoundTrip, OtherMarksApi)
     const auto &outMarks =
         out.parts.back().measures.back().staves.back().voices.at(0).notes.back().noteAttachmentData.marks;
     REQUIRE(outMarks.size() == 1);
-    CHECK(outMarks.front().markType == MarkType::compoundDynamics);
+    CHECK(outMarks.front().markType == MarkType::dynamics);
+    REQUIRE(outMarks.front().choice.isCompoundDynamics());
     const auto outCompound = outMarks.front().choice.compoundDynamics();
     REQUIRE(outCompound.components.size() == 2);
     CHECK(outCompound.components.at(0).standard() == StandardDynamic::ff);

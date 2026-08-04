@@ -3,7 +3,6 @@
 // Distributed under the MIT License
 
 #include "mx/api/MarkData.h"
-#include "mx/core/generated/DynamicsChoice.h"
 #include "mx/core/generated/FermataShape.h"
 #include "mx/impl/Converter.h"
 
@@ -11,81 +10,9 @@ namespace mx
 {
 namespace api
 {
-// The wire literal of a dynamics alternative (the old core's
-// toString(DynamicsEnum); the new variant Kind carries no string).
-std::string markDataDynamicsKindToString(core::DynamicsChoice::Kind kind)
-{
-    switch (kind)
-    {
-    case core::DynamicsChoice::Kind::p:
-        return "p";
-    case core::DynamicsChoice::Kind::pp:
-        return "pp";
-    case core::DynamicsChoice::Kind::ppp:
-        return "ppp";
-    case core::DynamicsChoice::Kind::pppp:
-        return "pppp";
-    case core::DynamicsChoice::Kind::ppppp:
-        return "ppppp";
-    case core::DynamicsChoice::Kind::pppppp:
-        return "pppppp";
-    case core::DynamicsChoice::Kind::f:
-        return "f";
-    case core::DynamicsChoice::Kind::ff:
-        return "ff";
-    case core::DynamicsChoice::Kind::fff:
-        return "fff";
-    case core::DynamicsChoice::Kind::ffff:
-        return "ffff";
-    case core::DynamicsChoice::Kind::fffff:
-        return "fffff";
-    case core::DynamicsChoice::Kind::ffffff:
-        return "ffffff";
-    case core::DynamicsChoice::Kind::mp:
-        return "mp";
-    case core::DynamicsChoice::Kind::mf:
-        return "mf";
-    case core::DynamicsChoice::Kind::sf:
-        return "sf";
-    case core::DynamicsChoice::Kind::sfp:
-        return "sfp";
-    case core::DynamicsChoice::Kind::sfpp:
-        return "sfpp";
-    case core::DynamicsChoice::Kind::fp:
-        return "fp";
-    case core::DynamicsChoice::Kind::rf:
-        return "rf";
-    case core::DynamicsChoice::Kind::rfz:
-        return "rfz";
-    case core::DynamicsChoice::Kind::sfz:
-        return "sfz";
-    case core::DynamicsChoice::Kind::sffz:
-        return "sffz";
-    case core::DynamicsChoice::Kind::fz:
-        return "fz";
-    case core::DynamicsChoice::Kind::n:
-        return "n";
-    case core::DynamicsChoice::Kind::pf:
-        return "pf";
-    case core::DynamicsChoice::Kind::sfzp:
-        return "sfzp";
-    default:
-        return "other-dynamics";
-    }
-}
-
 bool isMarkDynamic(MarkType markType)
 {
-    return (markType == MarkType::p) || (markType == MarkType::p) || (markType == MarkType::pp) ||
-           (markType == MarkType::ppp) || (markType == MarkType::pppp) || (markType == MarkType::ppppp) ||
-           (markType == MarkType::pppppp) || (markType == MarkType::f) || (markType == MarkType::ff) ||
-           (markType == MarkType::fff) || (markType == MarkType::ffff) || (markType == MarkType::fffff) ||
-           (markType == MarkType::ffffff) || (markType == MarkType::mp) || (markType == MarkType::mf) ||
-           (markType == MarkType::sf) || (markType == MarkType::sfp) || (markType == MarkType::sfpp) ||
-           (markType == MarkType::fp) || (markType == MarkType::rf) || (markType == MarkType::rfz) ||
-           (markType == MarkType::sfz) || (markType == MarkType::sffz) || (markType == MarkType::fz) ||
-           (markType == MarkType::n) || (markType == MarkType::pf) || (markType == MarkType::sfzp) ||
-           (markType == MarkType::otherDynamics) || (markType == MarkType::compoundDynamics);
+    return markType == MarkType::dynamics;
 }
 
 bool isMarkArpeggiate(MarkType markType)
@@ -246,11 +173,7 @@ MarkData::MarkData(MarkType inMarkType)
       fingeringAlternate{Bool::unspecified}, choice{}
 {
     impl::Converter converter;
-    if (isMarkDynamic(markType) && markType != MarkType::compoundDynamics)
-    {
-        name = markDataDynamicsKindToString(converter.convertDynamic(markType));
-    }
-    else if (isMarkArticulation(markType))
+    if (isMarkArticulation(markType))
     {
         name = "articulation";
     }
@@ -268,11 +191,7 @@ MarkData::MarkData(Placement inPlacement, MarkType inMarkType)
 {
     positionData.placement = inPlacement;
     impl::Converter converter;
-    if (isMarkDynamic(markType) && markType != MarkType::compoundDynamics)
-    {
-        name = markDataDynamicsKindToString(converter.convertDynamic(markType));
-    }
-    else if (isMarkArticulation(markType))
+    if (isMarkArticulation(markType))
     {
         name = "articulation";
     }
@@ -280,6 +199,22 @@ MarkData::MarkData(Placement inPlacement, MarkType inMarkType)
     {
         name = std::string{converter.convertFermata(markType).toString()};
     }
+}
+
+MarkData::MarkData(StandardDynamic inDynamic)
+    : markType(MarkType::dynamics), name{toString(inDynamic)}, tickTimePosition{0}, printData{}, positionData{},
+      mordentLong{Bool::no}, hasMordentLong{false}, mordentApproach{Placement::unspecified}, hasMordentApproach{false},
+      mordentDeparture{Placement::unspecified}, hasMordentDeparture{false}, fingeringSubstitution{Bool::unspecified},
+      fingeringAlternate{Bool::unspecified}, choice{inDynamic}
+{
+}
+
+MarkData::MarkData(CompoundDynamicsData inDynamics)
+    : markType(MarkType::dynamics), name{toString(inDynamics)}, tickTimePosition{0}, printData{}, positionData{},
+      mordentLong{Bool::no}, hasMordentLong{false}, mordentApproach{Placement::unspecified}, hasMordentApproach{false},
+      mordentDeparture{Placement::unspecified}, hasMordentDeparture{false}, fingeringSubstitution{Bool::unspecified},
+      fingeringAlternate{Bool::unspecified}, choice{std::move(inDynamics)}
+{
 }
 } // namespace api
 } // namespace mx

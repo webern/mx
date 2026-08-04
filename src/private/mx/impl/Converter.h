@@ -129,8 +129,6 @@ class Converter
     core::ArticulationsChoice::Kind convertArticulation(api::MarkType value) const;
     api::MarkType convertArticulation(core::ArticulationsChoice::Kind value) const;
 
-    core::DynamicsChoice::Kind convertDynamic(api::MarkType value) const;
-    api::MarkType convertDynamic(core::DynamicsChoice::Kind value) const;
     core::DynamicsChoice::Kind convert(api::StandardDynamic value) const;
     api::StandardDynamic convertStandardDynamic(core::DynamicsChoice::Kind value) const;
 
@@ -272,7 +270,6 @@ class Converter
     const static EnumMap<core::FontStyle, api::FontStyle> fontStyleMap;
     const static EnumMap<core::FontWeight, api::FontWeight> fontWeightMap;
     const static EnumMap<core::ArticulationsChoice::Kind, api::MarkType> articulationsMap;
-    const static EnumMap<core::DynamicsChoice::Kind, api::MarkType> dynamicsMap;
     const static EnumMap<core::DynamicsChoice::Kind, api::StandardDynamic> standardDynamicsMap;
     const static EnumMap<core::StartStopSingle, api::OtherNotationType> otherNotationTypeMap;
     const static EnumMap<core::OrnamentsGroupChoice::Kind, api::MarkType> ornamentsMap;

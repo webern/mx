@@ -146,6 +146,7 @@ class MarkDataChoice
         arpeggiate,
         nonArpeggiate,
         otherMark,
+        dynamic,
         compoundDynamics,
         otherNotation
     };
@@ -160,6 +161,11 @@ class MarkDataChoice
 
     MarkDataChoice(OtherMarkData value);
 
+    MarkDataChoice(StandardDynamic value);
+
+    // Builds a compound dynamic, unless the value is a single standard symbol, in which case the
+    // result is a Kind::dynamic choice (auto-collapse). A lone other-dynamics symbol does not
+    // collapse -- it has no dedicated MusicXML element, so it stays a compound of one.
     MarkDataChoice(CompoundDynamicsData value);
 
     MarkDataChoice(OtherNotationMarkData value);
@@ -170,6 +176,7 @@ class MarkDataChoice
     bool isArpeggiate() const;
     bool isNonArpeggiate() const;
     bool isOtherMark() const;
+    bool isDynamic() const;
     bool isCompoundDynamics() const;
     bool isOtherNotation() const;
 
@@ -194,6 +201,9 @@ class MarkDataChoice
     // Returns a copy of the internally held OtherMarkData, or a default value for another kind.
     const OtherMarkData otherMark() const;
 
+    // Returns the standard dynamic symbol, or p for another kind.
+    StandardDynamic dynamic() const;
+
     // Returns a copy of the internally held CompoundDynamicsData, or a default value for another kind.
     const CompoundDynamicsData compoundDynamics() const;
 
@@ -204,7 +214,7 @@ class MarkDataChoice
 
   private:
     std::variant<std::monostate, TremoloMarkData, ArpeggiateMarkData, NonArpeggiateMarkData, OtherMarkData,
-                 CompoundDynamicsData, OtherNotationMarkData>
+                 StandardDynamic, CompoundDynamicsData, OtherNotationMarkData>
         myValue;
 };
 

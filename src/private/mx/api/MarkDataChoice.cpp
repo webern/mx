@@ -31,8 +31,23 @@ MarkDataChoice::MarkDataChoice(OtherMarkData value) : myValue{std::move(value)}
 {
 }
 
-MarkDataChoice::MarkDataChoice(CompoundDynamicsData value) : myValue{std::move(value)}
+MarkDataChoice::MarkDataChoice(StandardDynamic value) : myValue{value}
 {
+}
+
+// A single standard symbol is the same mark whether it was built as a compound or not, so it is
+// always stored as Kind::dynamic. That keeps one representation per mark: code reading a plain ff
+// never has to look inside a compound for it.
+MarkDataChoice::MarkDataChoice(CompoundDynamicsData value)
+{
+    if (value.components.size() == 1 && value.components.front().isStandard())
+    {
+        myValue = value.components.front().standard();
+    }
+    else
+    {
+        myValue = std::move(value);
+    }
 }
 
 MarkDataChoice::MarkDataChoice(OtherNotationMarkData value) : myValue{std::move(value)}
@@ -56,6 +71,10 @@ MarkDataChoice::Kind MarkDataChoice::kind() const
     if (std::holds_alternative<OtherMarkData>(myValue))
     {
         return Kind::otherMark;
+    }
+    if (std::holds_alternative<StandardDynamic>(myValue))
+    {
+        return Kind::dynamic;
     }
     if (std::holds_alternative<CompoundDynamicsData>(myValue))
     {
@@ -127,6 +146,20 @@ const OtherMarkData MarkDataChoice::otherMark() const
         return *value;
     }
     return OtherMarkData{};
+}
+
+bool MarkDataChoice::isDynamic() const
+{
+    return std::holds_alternative<StandardDynamic>(myValue);
+}
+
+StandardDynamic MarkDataChoice::dynamic() const
+{
+    if (const auto *value = std::get_if<StandardDynamic>(&myValue))
+    {
+        return *value;
+    }
+    return StandardDynamic::p;
 }
 
 bool MarkDataChoice::isCompoundDynamics() const

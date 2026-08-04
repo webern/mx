@@ -105,7 +105,11 @@ DynamicsWriter::DynamicsWriter(const api::MarkData &inMark, impl::Cursor inCurso
 core::Dynamics DynamicsWriter::getDynamics() const
 {
     core::Dynamics dyn;
-    if (myMarkData.markType == api::MarkType::compoundDynamics)
+    if (myMarkData.choice.isDynamic())
+    {
+        dyn.addChoice(dynamicsWriterMakeChoice(myConverter.convert(myMarkData.choice.dynamic()), {}, {}));
+    }
+    else
     {
         for (const auto &component : myMarkData.choice.compoundDynamics().components)
         {
@@ -120,14 +124,6 @@ core::Dynamics DynamicsWriter::getDynamics() const
                 dyn.addChoice(dynamicsWriterMakeChoice(myConverter.convert(component.standard()), {}, {}));
             }
         }
-    }
-    else
-    {
-        const auto kind = myConverter.convertDynamic(myMarkData.markType);
-        const bool isOther = kind == core::DynamicsChoice::Kind::otherDynamics;
-        const auto &otherName = isOther ? myMarkData.name : std::string{};
-        const auto smufl = isOther ? myMarkData.choice.otherMark().smufl : std::optional<std::string>{};
-        dyn.addChoice(dynamicsWriterMakeChoice(kind, otherName, smufl));
     }
     impl::setAttributesFromMarkData(myMarkData, dyn);
     return dyn;

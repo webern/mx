@@ -42,9 +42,7 @@ inline mx::api::ScoreData apiLy43eScoreData()
     staff1P->directions.emplace_back(DirectionData{});
     auto directionP = &staff1P->directions.back();
     directionP->placement = Placement::below;
-    MarkData directionMark{};
-    directionMark.markType = MarkType::ffff;
-    directionMark.name = "ffff";
+    MarkData directionMark{StandardDynamic::ffff};
     directionMark.tickTimePosition = 0;
     directionP->directionTypes.emplace_back(DirectionChoice{directionMark});
 
@@ -101,10 +99,8 @@ inline mx::api::ScoreData apiLy43eScoreData()
     //        directionP->offset = 1;
     directionP->placement = Placement::below;
     directionP->isStaffValueSpecified = true;
-    directionMark = MarkData{};
+    directionMark = MarkData{StandardDynamic::p};
     directionMark.tickTimePosition = directionP->tickTimePosition;
-    directionMark.markType = MarkType::p;
-    directionMark.name = "p";
     directionP->directionTypes.emplace_back(DirectionChoice{directionMark});
 
     voice = 1;

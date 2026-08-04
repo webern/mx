@@ -27,58 +27,32 @@ void DynamicsReader::parseDynamics(std::vector<api::MarkData> &outMarks) const
     }
 
     Converter converter;
-    auto markData = api::MarkData{};
-    markData.tickTimePosition = myCursor.tickTimePosition;
-    markData.positionData = impl::getPositionData(myDynamic);
-    markData.printData = impl::getPrintData(myDynamic);
-
-    if (choices.size() == 1)
+    api::CompoundDynamicsData compound;
+    compound.components.reserve(choices.size());
+    for (const auto &choice : choices)
     {
-        const auto &choice = choices.front();
-        const auto kind = choice.kind();
-        markData.markType = converter.convertDynamic(kind);
-
-        if (kind == core::DynamicsChoice::Kind::otherDynamics)
+        if (choice.kind() == core::DynamicsChoice::Kind::otherDynamics)
         {
             const auto &other = choice.asOtherDynamics();
-            markData.name = other.value();
-            api::OtherMarkData payload;
+            api::OtherDynamicsData component;
+            component.text = other.value();
             if (other.smufl().has_value())
             {
-                payload.smufl = other.smufl()->toString();
+                component.smufl = other.smufl()->toString();
             }
-            markData.choice = std::move(payload);
+            compound.components.emplace_back(std::move(component));
         }
         else
         {
-            markData.name = dynamicsKindToName(kind);
+            compound.components.emplace_back(converter.convertStandardDynamic(choice.kind()));
         }
     }
-    else
-    {
-        markData.markType = api::MarkType::compoundDynamics;
-        api::CompoundDynamicsData compound;
-        compound.components.reserve(choices.size());
-        for (const auto &choice : choices)
-        {
-            if (choice.kind() == core::DynamicsChoice::Kind::otherDynamics)
-            {
-                const auto &other = choice.asOtherDynamics();
-                api::OtherDynamicsData component;
-                component.text = other.value();
-                if (other.smufl().has_value())
-                {
-                    component.smufl = other.smufl()->toString();
-                }
-                compound.components.emplace_back(std::move(component));
-            }
-            else
-            {
-                compound.components.emplace_back(converter.convertStandardDynamic(choice.kind()));
-            }
-        }
-        markData.choice = std::move(compound);
-    }
+
+    // The constructor spells the mark into name and collapses a lone standard symbol.
+    auto markData = api::MarkData{std::move(compound)};
+    markData.tickTimePosition = myCursor.tickTimePosition;
+    markData.positionData = impl::getPositionData(myDynamic);
+    markData.printData = impl::getPrintData(myDynamic);
 
     outMarks.emplace_back(std::move(markData));
 }

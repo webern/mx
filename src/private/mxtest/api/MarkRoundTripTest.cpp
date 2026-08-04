@@ -63,6 +63,23 @@ std::vector<MarkData> roundTripMark(MarkType inMarkType)
     return roundTripMarkData(MarkData{Placement::unspecified, inMarkType});
 }
 
+std::vector<MarkData> roundTripDynamic(StandardDynamic inDynamic)
+{
+    return roundTripMarkData(MarkData{inDynamic});
+}
+
+bool hasDynamic(const std::vector<MarkData> &marks, StandardDynamic inDynamic)
+{
+    for (const auto &m : marks)
+    {
+        if (m.markType == MarkType::dynamics && m.choice.isDynamic() && m.choice.dynamic() == inDynamic)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool hasMark(const std::vector<MarkData> &marks, MarkType inMarkType)
 {
     for (const auto &m : marks)
@@ -77,27 +94,27 @@ bool hasMark(const std::vector<MarkData> &marks, MarkType inMarkType)
 } // namespace
 
 // #193 - dynamics n, pf, sfzp were silently dropped (fell back to unspecified)
-// because the api enum lacked the members and dynamicsMap lacked the rows.
+// because the api enum lacked the members and standardDynamicsMap lacked the rows.
 TEST(DynamicsN, MarkRoundTrip)
 {
-    const auto marks = roundTripMark(MarkType::n);
-    CHECK(hasMark(marks, MarkType::n));
+    const auto marks = roundTripDynamic(StandardDynamic::n);
+    CHECK(hasDynamic(marks, StandardDynamic::n));
 }
 
 T_END;
 
 TEST(DynamicsPf, MarkRoundTrip)
 {
-    const auto marks = roundTripMark(MarkType::pf);
-    CHECK(hasMark(marks, MarkType::pf));
+    const auto marks = roundTripDynamic(StandardDynamic::pf);
+    CHECK(hasDynamic(marks, StandardDynamic::pf));
 }
 
 T_END;
 
 TEST(DynamicsSfzp, MarkRoundTrip)
 {
-    const auto marks = roundTripMark(MarkType::sfzp);
-    CHECK(hasMark(marks, MarkType::sfzp));
+    const auto marks = roundTripDynamic(StandardDynamic::sfzp);
+    CHECK(hasDynamic(marks, StandardDynamic::sfzp));
 }
 
 T_END;
