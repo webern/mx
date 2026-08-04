@@ -44,6 +44,7 @@ class NoteWriter
     mutable std::vector<core::NotationsChoice> myOutTieNotationsChoices;
 
   private:
+    bool hasTieCurve(bool isStart) const;
     void addTie(bool isStart) const;
     void setNoteChoiceAndFullNoteGroup(bool isStartOfChord) const;
     void assembleNoteChoice() const;

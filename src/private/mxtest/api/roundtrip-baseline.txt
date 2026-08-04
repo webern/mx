@@ -538,3 +538,73 @@ lysuite/ly03d_Rhythm_DottedDurations_Factors.xml
 musuite/testMultiMeasureRest1.xml
 musuite/testMultiMeasureRest2.xml
 musuite/testMultiMeasureRest3.xml
+synthetic/multiple-rest.3.0.xml
+
+# Passed on macOS but not on Linux until ScoreData::sort() was made stable. It is
+# 14 chords, and every member of a chord shares one tick, so an unstable sort let
+# the standard library choose which one came first -- and MusicXML spells a chord
+# by omitting <chord> from its first note.
+lysuite/ly32d_Arpeggio.xml
+
+# MusicXML states a tie twice: <tie> for sound and <tied> for notation. Two fixes
+# here. (1) The <tied> that NoteWriter synthesizes from isTieStart/isTieStop is now
+# suppressed when the note's curve vectors already carry a tie curve, which
+# NotationsWriter writes with its full attributes -- previously every note whose
+# source had both elements emitted <tied> twice. (2) Cue and grace-cue notes get no
+# <tie> slot in the schema (they are silent), but <notations> sits outside the note
+# choice, so <tied> is legal on them; the writer now emits it and the reader reads
+# isTieStart/isTieStop back from it for those two flavors.
+kiritan_singing/kiritan_singing_01.xml
+kiritan_singing/kiritan_singing_02.xml
+kiritan_singing/kiritan_singing_03.xml
+kiritan_singing/kiritan_singing_04.xml
+kiritan_singing/kiritan_singing_05.xml
+kiritan_singing/kiritan_singing_06.xml
+kiritan_singing/kiritan_singing_07.xml
+kiritan_singing/kiritan_singing_08.xml
+kiritan_singing/kiritan_singing_09.xml
+kiritan_singing/kiritan_singing_10.xml
+kiritan_singing/kiritan_singing_11.xml
+kiritan_singing/kiritan_singing_12.xml
+kiritan_singing/kiritan_singing_13.xml
+kiritan_singing/kiritan_singing_14.xml
+kiritan_singing/kiritan_singing_16.xml
+kiritan_singing/kiritan_singing_17.xml
+kiritan_singing/kiritan_singing_18.xml
+kiritan_singing/kiritan_singing_19.xml
+kiritan_singing/kiritan_singing_20.xml
+kiritan_singing/kiritan_singing_21.xml
+kiritan_singing/kiritan_singing_22.xml
+kiritan_singing/kiritan_singing_23.xml
+kiritan_singing/kiritan_singing_25.xml
+kiritan_singing/kiritan_singing_26.xml
+kiritan_singing/kiritan_singing_27.xml
+kiritan_singing/kiritan_singing_28.xml
+kiritan_singing/kiritan_singing_29.xml
+kiritan_singing/kiritan_singing_30.xml
+kiritan_singing/kiritan_singing_31.xml
+kiritan_singing/kiritan_singing_32.xml
+kiritan_singing/kiritan_singing_33.xml
+kiritan_singing/kiritan_singing_34.xml
+kiritan_singing/kiritan_singing_35.xml
+kiritan_singing/kiritan_singing_36.xml
+kiritan_singing/kiritan_singing_37.xml
+kiritan_singing/kiritan_singing_38.xml
+kiritan_singing/kiritan_singing_39.xml
+kiritan_singing/kiritan_singing_40.xml
+kiritan_singing/kiritan_singing_41.xml
+kiritan_singing/kiritan_singing_42.xml
+kiritan_singing/kiritan_singing_43.xml
+kiritan_singing/kiritan_singing_44.xml
+kiritan_singing/kiritan_singing_45.xml
+kiritan_singing/kiritan_singing_46.xml
+kiritan_singing/kiritan_singing_47.xml
+kiritan_singing/kiritan_singing_48.xml
+kiritan_singing/kiritan_singing_49.xml
+kiritan_singing/kiritan_singing_50.xml
+lysuite/ly11a_TimeSignatures.xml
+lysuite/ly24a_GraceNotes.xml
+lysuite/ly33i_Ties_NotEnded.xml
+lysuite/ly61d_Lyrics_Melisma.xml
+lysuite/ly61f_Lyrics_GracedNotes.xml
+synthetic/tied.cue.4.0.xml

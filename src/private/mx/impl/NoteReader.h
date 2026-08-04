@@ -311,6 +311,7 @@ class NoteReader
     void setAccidental();
     void setStem();
     void setTie(std::span<const core::Tie> tieSet);
+    void setTieFromNotations();
     void setLyric();
 };
 } // namespace impl
