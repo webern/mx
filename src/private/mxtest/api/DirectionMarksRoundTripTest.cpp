@@ -343,7 +343,7 @@ TEST(PercussionGlass, DirectionMarksRoundTrip)
     GlassPercussion glass;
     glass.value = GlassInstrument::windChimes;
     percussion.choice = PercussionDataChoice{glass};
-    percussion.enclosure = PercussionEnclosure::rectangle;
+    percussion.enclosure = Enclosure::rectangle;
     direction.directionTypes.emplace_back(DirectionChoice{percussion});
     const auto directions = roundTripDirectionData(direction);
     REQUIRE(directions.size() == 1);
@@ -352,7 +352,7 @@ TEST(PercussionGlass, DirectionMarksRoundTrip)
     const auto out = directions.front().directionTypes.front().percussion();
     REQUIRE(out.choice.isGlass());
     CHECK(out.choice.glass().value == GlassInstrument::windChimes);
-    CHECK(out.enclosure == PercussionEnclosure::rectangle);
+    CHECK(out.enclosure == Enclosure::rectangle);
 }
 
 T_END;
@@ -588,7 +588,7 @@ TEST(WordsEnclosure, DirectionMarksRoundTrip)
     DirectionData direction;
     WordsData words;
     words.text = "boxed";
-    words.enclosure = RehearsalEnclosure::rectangle;
+    words.enclosure = Enclosure::rectangle;
     direction.directionTypes.emplace_back(DirectionChoice{std::vector<WordsChoice>{WordsChoice{words}}});
     const auto directions = roundTripDirectionData(direction);
     REQUIRE(directions.size() == 1);
@@ -597,7 +597,161 @@ TEST(WordsEnclosure, DirectionMarksRoundTrip)
     const auto outRun = directions.front().directionTypes.front().wordsRun();
     REQUIRE(outRun.size() == 1);
     REQUIRE(outRun.front().isWords());
-    CHECK(outRun.front().words().enclosure == RehearsalEnclosure::rectangle);
+    CHECK(outRun.front().words().enclosure == Enclosure::rectangle);
+}
+
+T_END;
+
+// Every shape in the enclosure vocabulary reaches the wire and comes back. Keep this list complete:
+// a value the conversion switches do not map is silently dropped, which is what it guards against.
+TEST(WordsEnclosureAllShapes, DirectionMarksRoundTrip)
+{
+    const std::vector<Enclosure> shapes{
+        Enclosure::rectangle,       Enclosure::square,   Enclosure::oval,    Enclosure::circle,   Enclosure::bracket,
+        Enclosure::invertedBracket, Enclosure::triangle, Enclosure::diamond, Enclosure::pentagon, Enclosure::hexagon,
+        Enclosure::heptagon,        Enclosure::octagon,  Enclosure::nonagon, Enclosure::decagon,  Enclosure::none};
+    for (const auto shape : shapes)
+    {
+        DirectionData direction;
+        WordsData words;
+        words.text = "boxed";
+        words.enclosure = shape;
+        direction.directionTypes.emplace_back(DirectionChoice{std::vector<WordsChoice>{WordsChoice{words}}});
+        const auto directions = roundTripDirectionData(direction);
+        REQUIRE(directions.size() == 1);
+        REQUIRE(directions.front().directionTypes.size() == 1);
+        REQUIRE(directions.front().directionTypes.front().isWordsRun());
+        const auto outRun = directions.front().directionTypes.front().wordsRun();
+        REQUIRE(outRun.size() == 1);
+        REQUIRE(outRun.front().isWords());
+        CHECK(outRun.front().words().enclosure == shape);
+    }
+}
+
+T_END;
+
+// The justify attribute of <words> round-trips, and is independent of halign.
+TEST(WordsJustify, DirectionMarksRoundTrip)
+{
+    DirectionData direction;
+    WordsData words;
+    words.text = "a tempo";
+    words.justify = HorizontalAlignment::center;
+    words.positionData.horizontalAlignment = HorizontalAlignment::right;
+    direction.directionTypes.emplace_back(DirectionChoice{std::vector<WordsChoice>{WordsChoice{words}}});
+    const auto directions = roundTripDirectionData(direction);
+    REQUIRE(directions.size() == 1);
+    REQUIRE(directions.front().directionTypes.size() == 1);
+    REQUIRE(directions.front().directionTypes.front().isWordsRun());
+    const auto outRun = directions.front().directionTypes.front().wordsRun();
+    REQUIRE(outRun.size() == 1);
+    REQUIRE(outRun.front().isWords());
+    CHECK(outRun.front().words().justify == HorizontalAlignment::center);
+    CHECK(outRun.front().words().positionData.horizontalAlignment == HorizontalAlignment::right);
+}
+
+T_END;
+
+// <symbol> carries justify and enclosure just as <words> does; both survive within a run.
+TEST(SymbolJustify, DirectionMarksRoundTrip)
+{
+    DirectionData direction;
+    SymbolData symbol;
+    symbol.smufl = "arrowBlackUp";
+    symbol.justify = HorizontalAlignment::right;
+    symbol.enclosure = Enclosure::hexagon;
+    symbol.positionData.horizontalAlignment = HorizontalAlignment::left;
+    direction.directionTypes.emplace_back(DirectionChoice{std::vector<WordsChoice>{WordsChoice{symbol}}});
+    const auto directions = roundTripDirectionData(direction);
+    REQUIRE(directions.size() == 1);
+    REQUIRE(directions.front().directionTypes.size() == 1);
+    REQUIRE(directions.front().directionTypes.front().isWordsRun());
+    const auto outRun = directions.front().directionTypes.front().wordsRun();
+    REQUIRE(outRun.size() == 1);
+    REQUIRE(outRun.front().isSymbol());
+    const auto outSymbol = outRun.front().symbol();
+    CHECK_EQUAL("arrowBlackUp", outSymbol.smufl);
+    CHECK(outSymbol.justify == HorizontalAlignment::right);
+    CHECK(outSymbol.enclosure == Enclosure::hexagon);
+    CHECK(outSymbol.positionData.horizontalAlignment == HorizontalAlignment::left);
+}
+
+T_END;
+
+// An unspecified justify emits no attribute and reads back as unspecified, for words and symbols.
+TEST(SymbolJustifyUnspecified, DirectionMarksRoundTrip)
+{
+    DirectionData direction;
+    SymbolData symbol;
+    symbol.smufl = "arrowBlackUp";
+    direction.directionTypes.emplace_back(DirectionChoice{std::vector<WordsChoice>{WordsChoice{symbol}}});
+    const auto directions = roundTripDirectionData(direction);
+    REQUIRE(directions.size() == 1);
+    REQUIRE(directions.front().directionTypes.size() == 1);
+    REQUIRE(directions.front().directionTypes.front().isWordsRun());
+    const auto outRun = directions.front().directionTypes.front().wordsRun();
+    REQUIRE(outRun.size() == 1);
+    REQUIRE(outRun.front().isSymbol());
+    CHECK(outRun.front().symbol().justify == HorizontalAlignment::unspecified);
+}
+
+T_END;
+
+// An unspecified justify emits no attribute and reads back as unspecified.
+TEST(WordsJustifyUnspecified, DirectionMarksRoundTrip)
+{
+    DirectionData direction;
+    WordsData words;
+    words.text = "a tempo";
+    direction.directionTypes.emplace_back(DirectionChoice{std::vector<WordsChoice>{WordsChoice{words}}});
+    const auto directions = roundTripDirectionData(direction);
+    REQUIRE(directions.size() == 1);
+    REQUIRE(directions.front().directionTypes.size() == 1);
+    REQUIRE(directions.front().directionTypes.front().isWordsRun());
+    const auto outRun = directions.front().directionTypes.front().wordsRun();
+    REQUIRE(outRun.size() == 1);
+    REQUIRE(outRun.front().isWords());
+    CHECK(outRun.front().words().justify == HorizontalAlignment::unspecified);
+}
+
+T_END;
+
+// The <direction system="..."> attribute round-trips for each value the direction vocabulary has.
+TEST(DirectionSystemRelation, DirectionMarksRoundTrip)
+{
+    const std::vector<SystemRelation> values{SystemRelation::onlyTop, SystemRelation::alsoTop, SystemRelation::none};
+    for (const auto value : values)
+    {
+        DirectionData direction;
+        direction.systemRelation = value;
+        WordsData words;
+        words.text = "Allegro";
+        direction.directionTypes.emplace_back(DirectionChoice{std::vector<WordsChoice>{WordsChoice{words}}});
+        const auto directions = roundTripDirectionData(direction);
+        REQUIRE(directions.size() == 1);
+        CHECK(directions.front().systemRelation == value);
+    }
+}
+
+T_END;
+
+// A direction left at the default writes no system attribute; the measure-numbering-only bottom
+// values have no direction equivalent and are dropped rather than written as something else.
+TEST(DirectionSystemRelationUnwritable, DirectionMarksRoundTrip)
+{
+    const std::vector<SystemRelation> values{SystemRelation::unspecified, SystemRelation::onlyBottom,
+                                             SystemRelation::alsoBottom};
+    for (const auto value : values)
+    {
+        DirectionData direction;
+        direction.systemRelation = value;
+        WordsData words;
+        words.text = "Allegro";
+        direction.directionTypes.emplace_back(DirectionChoice{std::vector<WordsChoice>{WordsChoice{words}}});
+        const auto directions = roundTripDirectionData(direction);
+        REQUIRE(directions.size() == 1);
+        CHECK(directions.front().systemRelation == SystemRelation::unspecified);
+    }
 }
 
 T_END;

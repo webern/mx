@@ -193,7 +193,9 @@ TEST(writeGraceCueElements, GraceCue)
 
 T_END;
 
-TEST(cueNoteTiesAreDropped, GraceCue)
+// cue and grace-cue notes are silent and the schema gives them no <tie>, so a
+// tie on one is notation only: the <tied> is written, the <tie> is not
+TEST(cueNoteTiesAreNotationOnly, GraceCue)
 {
     ScoreData score;
     score.ticksPerQuarter = 4;
@@ -205,8 +207,6 @@ TEST(cueNoteTiesAreDropped, GraceCue)
     auto &staff = measure.staves.back();
     auto &voice = staff.voices[0];
 
-    // a cue note and a grace-cue note, both (illegally) marked as tie starts;
-    // the schema has no <tie> for them, so the writer silently drops the ties
     voice.notes.emplace_back();
     voice.notes.back().isCue = true;
     voice.notes.back().isTieStart = true;
@@ -216,20 +216,53 @@ TEST(cueNoteTiesAreDropped, GraceCue)
     voice.notes.emplace_back();
     voice.notes.back().isGrace = true;
     voice.notes.back().isCue = true;
-    voice.notes.back().isTieStart = true;
+    voice.notes.back().isTieStop = true;
     voice.notes.back().tickTimePosition = 4;
     voice.notes.back().durationData.durationName = DurationName::eighth;
     voice.notes.back().durationData.durationTimeTicks = 0;
 
     const auto xml = toXml(score);
     CHECK(xml.find("<tie ") == std::string::npos);
-    CHECK(xml.find("<tied ") == std::string::npos);
+    CHECK(xml.find("<tied type=\"start\"") != std::string::npos);
+    CHECK(xml.find("<tied type=\"stop\"") != std::string::npos);
 
     const auto out = roundTrip(score);
     const auto &outNotes = out.parts.back().measures.back().staves.back().voices.at(0).notes;
     REQUIRE(outNotes.size() == 2);
-    CHECK(!outNotes.at(0).isTieStart);
-    CHECK(!outNotes.at(1).isTieStart);
+    CHECK(outNotes.at(0).isCue);
+    CHECK(outNotes.at(0).isTieStart);
+    CHECK(outNotes.at(1).isCue);
+    CHECK(outNotes.at(1).isGrace);
+    CHECK(outNotes.at(1).isTieStop);
+}
+
+T_END;
+
+// the <tied> notation is written exactly once, whether it comes from the
+// isTieStart / isTieStop flags or from an attribute-bearing tie curve
+TEST(tiedNotationIsNotDuplicated, GraceCue)
+{
+    ScoreData score;
+    score.ticksPerQuarter = 4;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto &staff = measure.staves.back();
+    auto &voice = staff.voices[0];
+
+    voice.notes.emplace_back();
+    voice.notes.back().isTieStart = true;
+    voice.notes.back().durationData.durationName = DurationName::quarter;
+    voice.notes.back().durationData.durationTimeTicks = 4;
+    voice.notes.back().noteAttachmentData.curveStarts.emplace_back(CurveType::tie);
+
+    const auto xml = toXml(score);
+    const auto first = xml.find("<tied ");
+    REQUIRE(first != std::string::npos);
+    CHECK(xml.find("<tied ", first + 1) == std::string::npos);
+    CHECK(xml.find("<tie ") != std::string::npos);
 }
 
 T_END;

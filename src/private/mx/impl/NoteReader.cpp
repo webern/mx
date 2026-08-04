@@ -8,8 +8,11 @@
 #include "mx/core/generated/LyricChoice.h"
 #include "mx/core/generated/LyricSyllableGroup.h"
 #include "mx/core/generated/LyricTextGroup.h"
+#include "mx/core/generated/Notations.h"
+#include "mx/core/generated/NotationsChoice.h"
 #include "mx/core/generated/Syllabic.h"
 #include "mx/core/generated/TextElementData.h"
+#include "mx/core/generated/Tied.h"
 #include "mx/impl/FontFunctions.h"
 #include "mx/impl/PositionFunctions.h"
 #include "mx/impl/PrintFunctions.h"
@@ -221,8 +224,10 @@ void NoteReader::setNormalGraceCueItems()
         else
         {
             // <grace/> + <cue/>: a grace note inside a cue passage. The
-            // grace-cue group carries no <tie> in the schema.
+            // grace-cue group has no <tie> slot in the schema, so the tie can
+            // only be stated as a <tied> notation.
             myIsCue = true;
+            setTieFromNotations();
         }
         break;
     }
@@ -230,6 +235,8 @@ void NoteReader::setNormalGraceCueItems()
         myIsCue = true;
         const auto &noteGuts = myNoteChoice.asCueNoteGroup();
         myDurationValue = noteGuts.duration().value().value();
+        // A cue note is silent and has no <tie> slot either; same as grace-cue.
+        setTieFromNotations();
         break;
     }
     default:
@@ -474,6 +481,35 @@ void NoteReader::setTie(std::span<const core::Tie> tieSet)
         else if (tie.type() == core::StartStop::stop())
         {
             myIsTieStop = true;
+        }
+    }
+}
+
+// Cue and grace-cue notes have no <tie> slot in the schema, so their tie can
+// only be stated as a <tied> notation. Reads the start/stop flags from there.
+// (A lone <tied type="let-ring"> is a different thing and is read elsewhere,
+// into NoteData::tieLetRing.)
+void NoteReader::setTieFromNotations()
+{
+    for (const auto &notations : myNote.notations())
+    {
+        for (const auto &notationsChoice : notations.choice())
+        {
+            if (notationsChoice.kind() != core::NotationsChoice::Kind::tied)
+            {
+                continue;
+            }
+
+            const auto type = notationsChoice.asTied().type();
+
+            if (type == core::TiedType::start())
+            {
+                myIsTieStart = true;
+            }
+            else if (type == core::TiedType::stop())
+            {
+                myIsTieStop = true;
+            }
         }
     }
 }

@@ -263,7 +263,7 @@ TEST(RehearsalSyntheticFileRead, DirectionData)
     REQUIRE(directions.front().directionTypes.front().isRehearsal());
     const auto rehearsal = directions.front().directionTypes.front().rehearsal();
     CHECK_EQUAL("x", rehearsal.text);
-    CHECK(RehearsalEnclosure::rectangle == rehearsal.enclosure);
+    CHECK(Enclosure::rectangle == rehearsal.enclosure);
 }
 
 T_END;
@@ -291,7 +291,7 @@ TEST(RehearsalRoundTripXml, DirectionData)
 
     RehearsalData rehearsal;
     rehearsal.text = "B";
-    rehearsal.enclosure = RehearsalEnclosure::rectangle;
+    rehearsal.enclosure = Enclosure::rectangle;
     rehearsal.fontData.fontFamily = {"Times New Roman"};
     rehearsal.fontData.style = FontStyle::normal;
     rehearsal.fontData.weight = FontWeight::bold;
@@ -315,13 +315,13 @@ TEST(RehearsalRoundTripXml, DirectionData)
     REQUIRE(rdirections.front().directionTypes.front().isRehearsal());
     const auto outRehearsal = rdirections.front().directionTypes.front().rehearsal();
     CHECK_EQUAL("B", outRehearsal.text);
-    CHECK(RehearsalEnclosure::rectangle == outRehearsal.enclosure);
+    CHECK(Enclosure::rectangle == outRehearsal.enclosure);
     CHECK(FontWeight::bold == outRehearsal.fontData.weight);
 }
 
 T_END;
 
-// Verify that a rehearsal with no enclosure set (RehearsalEnclosure::unspecified) does not emit
+// Verify that a rehearsal with no enclosure set (Enclosure::unspecified) does not emit
 // an enclosure attribute in the serialized XML, and that the field round-trips as unspecified.
 TEST(RehearsalUnspecifiedEnclosureNoPhantomAttribute, DirectionData)
 {
@@ -358,7 +358,88 @@ TEST(RehearsalUnspecifiedEnclosureNoPhantomAttribute, DirectionData)
     REQUIRE(rdirections.size() == 1);
     REQUIRE(rdirections.front().directionTypes.size() == 1);
     REQUIRE(rdirections.front().directionTypes.front().isRehearsal());
-    CHECK(RehearsalEnclosure::unspecified == rdirections.front().directionTypes.front().rehearsal().enclosure);
+    CHECK(Enclosure::unspecified == rdirections.front().directionTypes.front().rehearsal().enclosure);
+}
+
+T_END;
+
+// A rehearsal mark's justify attribute round-trips and stays independent of halign, which lives in
+// positionData. An unspecified justify emits no attribute.
+TEST(RehearsalJustify, DirectionData)
+{
+    ScoreData oscore;
+    oscore.ticksPerQuarter = 10;
+    oscore.parts.emplace_back();
+    auto &opart = oscore.parts.back();
+    opart.measures.emplace_back();
+    auto &omeasure = opart.measures.back();
+    omeasure.staves.emplace_back();
+    auto &ostaff = omeasure.staves.back();
+    auto &ovoice = ostaff.voices[0];
+
+    NoteData onote{};
+    onote.tickTimePosition = 0;
+    onote.durationData.durationTimeTicks = 10;
+    onote.durationData.durationName = DurationName::quarter;
+    ovoice.notes.push_back(onote);
+
+    RehearsalData rehearsal;
+    rehearsal.text = "D";
+    rehearsal.justify = HorizontalAlignment::center;
+    rehearsal.positionData.horizontalAlignment = HorizontalAlignment::right;
+
+    DirectionData directionData;
+    directionData.tickTimePosition = 0;
+    directionData.directionTypes.emplace_back(DirectionChoice{rehearsal});
+    ostaff.directions.push_back(directionData);
+
+    const auto rscore = mxtest::roundTrip(oscore);
+    const auto &rdirections = rscore.parts.front().measures.front().staves.front().directions;
+    REQUIRE(rdirections.size() == 1);
+    REQUIRE(rdirections.front().directionTypes.size() == 1);
+    REQUIRE(rdirections.front().directionTypes.front().isRehearsal());
+    const auto outRehearsal = rdirections.front().directionTypes.front().rehearsal();
+    CHECK(HorizontalAlignment::center == outRehearsal.justify);
+    CHECK(HorizontalAlignment::right == outRehearsal.positionData.horizontalAlignment);
+}
+
+T_END;
+
+TEST(RehearsalUnspecifiedJustifyNoPhantomAttribute, DirectionData)
+{
+    ScoreData oscore;
+    oscore.ticksPerQuarter = 10;
+    oscore.parts.emplace_back();
+    auto &opart = oscore.parts.back();
+    opart.measures.emplace_back();
+    auto &omeasure = opart.measures.back();
+    omeasure.staves.emplace_back();
+    auto &ostaff = omeasure.staves.back();
+    auto &ovoice = ostaff.voices[0];
+
+    NoteData onote{};
+    onote.tickTimePosition = 0;
+    onote.durationData.durationTimeTicks = 10;
+    onote.durationData.durationName = DurationName::quarter;
+    ovoice.notes.push_back(onote);
+
+    RehearsalData rehearsal;
+    rehearsal.text = "E";
+
+    DirectionData directionData;
+    directionData.tickTimePosition = 0;
+    directionData.directionTypes.emplace_back(DirectionChoice{rehearsal});
+    ostaff.directions.push_back(directionData);
+
+    const auto xml = mxtest::toXml(oscore);
+    CHECK(xml.find("justify") == std::string::npos);
+
+    const auto rscore = mxtest::roundTrip(oscore);
+    const auto &rdirections = rscore.parts.front().measures.front().staves.front().directions;
+    REQUIRE(rdirections.size() == 1);
+    REQUIRE(rdirections.front().directionTypes.size() == 1);
+    REQUIRE(rdirections.front().directionTypes.front().isRehearsal());
+    CHECK(HorizontalAlignment::unspecified == rdirections.front().directionTypes.front().rehearsal().justify);
 }
 
 T_END;

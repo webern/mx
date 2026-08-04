@@ -464,27 +464,6 @@ class PercussionDataChoice
 
 MXAPI_NOT_EQUALS_AND_VECTORS(PercussionDataChoice);
 
-// How a percussion pictogram is enclosed, MusicXML's enclosure attribute on <percussion>.
-enum class PercussionEnclosure
-{
-    unspecified,
-    rectangle,
-    square,
-    oval,
-    circle,
-    bracket,
-    invertedBracket,
-    triangle,
-    diamond,
-    pentagon,
-    hexagon,
-    heptagon,
-    octagon,
-    nonagon,
-    decagon,
-    none
-};
-
 // A percussion pictogram, MusicXML's <percussion> element: a symbol for an unpitched instrument
 // or the implement striking it, used in percussion parts and legends. Several PercussionData in
 // one direction read as a group (for example a membrane pictogram followed by a beater).
@@ -495,13 +474,17 @@ class PercussionData
 {
   public:
     PercussionDataChoice choice;
-    PercussionEnclosure enclosure;
+
+    // A shape drawn around the pictogram. Enclosure::unspecified draws no enclosure;
+    // Enclosure::none states explicitly that there is none.
+    Enclosure enclosure;
+
     PositionData positionData;
     FontData fontData;
     std::optional<ColorData> color;
     std::optional<std::string> id;
 
-    PercussionData() : choice{}, enclosure{PercussionEnclosure::unspecified}, positionData{}, fontData{}, color{}, id{}
+    PercussionData() : choice{}, enclosure{Enclosure::unspecified}, positionData{}, fontData{}, color{}, id{}
     {
     }
 };

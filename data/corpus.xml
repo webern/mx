@@ -386,6 +386,7 @@
         <file version="3.0">synthetic/tie.3.0.xml</file>
         <file version="3.0">synthetic/tied.3.0.xml</file>
         <file version="3.1">synthetic/tied.3.1.xml</file>
+        <file version="4.0">synthetic/tied.cue.4.0.xml</file>
         <file version="3.0">synthetic/time-relation.3.0.xml</file>
         <file version="3.0">synthetic/time.3.0.xml</file>
         <file version="3.1">synthetic/time.3.1.xml</file>
@@ -800,6 +801,7 @@
         <file version="3.0">synthetic/tie.3.0.xml</file>
         <file version="3.0">synthetic/tied.3.0.xml</file>
         <file version="3.1">synthetic/tied.3.1.xml</file>
+        <file version="4.0">synthetic/tied.cue.4.0.xml</file>
         <file version="3.0">synthetic/time-relation.3.0.xml</file>
         <file version="3.0">synthetic/time.3.0.xml</file>
         <file version="3.1">synthetic/time.3.1.xml</file>
@@ -1211,6 +1213,7 @@
         <file version="3.0">synthetic/tie.3.0.xml</file>
         <file version="3.0">synthetic/tied.3.0.xml</file>
         <file version="3.1">synthetic/tied.3.1.xml</file>
+        <file version="4.0">synthetic/tied.cue.4.0.xml</file>
         <file version="3.0">synthetic/time-relation.3.0.xml</file>
         <file version="3.0">synthetic/time.3.0.xml</file>
         <file version="3.1">synthetic/time.3.1.xml</file>
@@ -1635,6 +1638,7 @@
         <file version="3.0">synthetic/tie.3.0.xml</file>
         <file version="3.0">synthetic/tied.3.0.xml</file>
         <file version="3.1">synthetic/tied.3.1.xml</file>
+        <file version="4.0">synthetic/tied.cue.4.0.xml</file>
         <file version="3.0">synthetic/time-relation.3.0.xml</file>
         <file version="3.0">synthetic/time.3.0.xml</file>
         <file version="3.1">synthetic/time.3.1.xml</file>
@@ -2049,6 +2053,7 @@
         <file version="3.0">synthetic/tie.3.0.xml</file>
         <file version="3.0">synthetic/tied.3.0.xml</file>
         <file version="3.1">synthetic/tied.3.1.xml</file>
+        <file version="4.0">synthetic/tied.cue.4.0.xml</file>
         <file version="3.0">synthetic/time-relation.3.0.xml</file>
         <file version="3.0">synthetic/time.3.0.xml</file>
         <file version="3.1">synthetic/time.3.1.xml</file>
@@ -2463,6 +2468,7 @@
         <file version="3.0">synthetic/tie.3.0.xml</file>
         <file version="3.0">synthetic/tied.3.0.xml</file>
         <file version="3.1">synthetic/tied.3.1.xml</file>
+        <file version="4.0">synthetic/tied.cue.4.0.xml</file>
         <file version="3.0">synthetic/time-relation.3.0.xml</file>
         <file version="3.0">synthetic/time.3.0.xml</file>
         <file version="3.1">synthetic/time.3.1.xml</file>
@@ -2504,7 +2510,7 @@
         <file version="3.0">synthetic/work-title.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="duration" total-files="455" wild-files="440" synthetic-files="15" min-synthetic-version="3.0">
+    <element name="duration" total-files="456" wild-files="440" synthetic-files="16" min-synthetic-version="3.0">
       <wild-files count="440">
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
@@ -2520,7 +2526,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 428 more -->
       </wild-files>
-      <synthetic-files count="15" min-version="3.0">
+      <synthetic-files count="16" min-version="3.0">
         <file version="3.0">synthetic/cancel.location.3.0.xml</file>
         <file version="3.0">synthetic/coda.3.0.xml</file>
         <file version="3.1">synthetic/coda.3.1.xml</file>
@@ -2535,10 +2541,11 @@
         <file version="3.0">synthetic/segno.3.0.xml</file>
         <file version="3.1">synthetic/segno.3.1.xml</file>
         <file version="3.0">synthetic/suffix.3.0.xml</file>
+        <file version="4.0">synthetic/tied.cue.4.0.xml</file>
         <file version="4.0">synthetic/words-symbol.4.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="attributes" total-files="480" wild-files="438" synthetic-files="42" min-synthetic-version="3.0">
+    <element name="attributes" total-files="481" wild-files="438" synthetic-files="43" min-synthetic-version="3.0">
       <wild-files count="438">
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
@@ -2554,7 +2561,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 426 more -->
       </wild-files>
-      <synthetic-files count="42" min-version="3.0">
+      <synthetic-files count="43" min-version="3.0">
         <file version="3.0">synthetic/beat-repeat.3.0.xml</file>
         <file version="3.0">synthetic/beat-type.3.0.xml</file>
         <file version="3.0">synthetic/beats.3.0.xml</file>
@@ -2591,6 +2598,7 @@
         <file version="3.0">synthetic/slash.3.0.xml</file>
         <file version="4.0">synthetic/staff-size.4.0.xml</file>
         <file version="3.0">synthetic/staff-type.3.0.xml</file>
+        <file version="4.0">synthetic/tied.cue.4.0.xml</file>
         <file version="3.0">synthetic/time-relation.3.0.xml</file>
         <file version="3.0">synthetic/time.3.0.xml</file>
         <file version="3.1">synthetic/time.3.1.xml</file>
@@ -2599,7 +2607,7 @@
         <file version="4.0">synthetic/words-symbol.4.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="divisions" total-files="447" wild-files="438" synthetic-files="9" min-synthetic-version="3.0">
+    <element name="divisions" total-files="448" wild-files="438" synthetic-files="10" min-synthetic-version="3.0">
       <wild-files count="438">
         <file>custom/musescore-slur-start-stop.musicxml</file>
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
@@ -2615,7 +2623,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 426 more -->
       </wild-files>
-      <synthetic-files count="9" min-version="3.0">
+      <synthetic-files count="10" min-version="3.0">
         <file version="3.0">synthetic/cancel.location.3.0.xml</file>
         <file version="3.0">synthetic/coda.3.0.xml</file>
         <file version="3.1">synthetic/coda.3.1.xml</file>
@@ -2624,6 +2632,7 @@
         <file version="3.1">synthetic/key-accidental.smufl.3.1.xml</file>
         <file version="3.0">synthetic/segno.3.0.xml</file>
         <file version="3.1">synthetic/segno.3.1.xml</file>
+        <file version="4.0">synthetic/tied.cue.4.0.xml</file>
         <file version="4.0">synthetic/words-symbol.4.0.xml</file>
       </synthetic-files>
     </element>
@@ -2866,6 +2875,7 @@
         <file version="3.0">synthetic/tie.3.0.xml</file>
         <file version="3.0">synthetic/tied.3.0.xml</file>
         <file version="3.1">synthetic/tied.3.1.xml</file>
+        <file version="4.0">synthetic/tied.cue.4.0.xml</file>
         <file version="3.0">synthetic/toe.3.0.xml</file>
         <file version="3.0">synthetic/tremolo.3.0.xml</file>
         <file version="3.1">synthetic/tremolo.3.1.xml</file>
@@ -2985,7 +2995,7 @@
         <file version="4.0">synthetic/words-symbol.4.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="type" total-files="424" wild-files="415" synthetic-files="9" min-synthetic-version="3.0">
+    <element name="type" total-files="425" wild-files="415" synthetic-files="10" min-synthetic-version="3.0">
       <attributes>
         <attribute name="size" wild-files="8" synthetic-files="0"/>
       </attributes>
@@ -3004,7 +3014,7 @@
         <file>foundsuite/Deutscher Tanz D.820.1.xml</file>
         <!-- 403 more -->
       </wild-files>
-      <synthetic-files count="9" min-version="3.0">
+      <synthetic-files count="10" min-version="3.0">
         <file version="3.0">synthetic/cancel.location.3.0.xml</file>
         <file version="3.0">synthetic/coda.3.0.xml</file>
         <file version="3.1">synthetic/coda.3.1.xml</file>
@@ -3013,6 +3023,7 @@
         <file version="3.1">synthetic/key-accidental.smufl.3.1.xml</file>
         <file version="3.0">synthetic/segno.3.0.xml</file>
         <file version="3.1">synthetic/segno.3.1.xml</file>
+        <file version="4.0">synthetic/tied.cue.4.0.xml</file>
         <file version="4.0">synthetic/words-symbol.4.0.xml</file>
       </synthetic-files>
     </element>
@@ -3414,6 +3425,7 @@
         <file version="3.0">synthetic/tie.3.0.xml</file>
         <file version="3.0">synthetic/tied.3.0.xml</file>
         <file version="3.1">synthetic/tied.3.1.xml</file>
+        <file version="4.0">synthetic/tied.cue.4.0.xml</file>
         <file version="3.0">synthetic/timpani.3.0.xml</file>
         <file version="4.0">synthetic/timpani.4.0.xml</file>
         <file version="3.0">synthetic/toe.3.0.xml</file>
@@ -3665,6 +3677,7 @@
         <file version="3.0">synthetic/tie.3.0.xml</file>
         <file version="3.0">synthetic/tied.3.0.xml</file>
         <file version="3.1">synthetic/tied.3.1.xml</file>
+        <file version="4.0">synthetic/tied.cue.4.0.xml</file>
         <file version="3.0">synthetic/toe.3.0.xml</file>
         <file version="3.0">synthetic/tremolo.3.0.xml</file>
         <file version="3.1">synthetic/tremolo.3.1.xml</file>
@@ -3909,6 +3922,7 @@
         <file version="3.0">synthetic/tie.3.0.xml</file>
         <file version="3.0">synthetic/tied.3.0.xml</file>
         <file version="3.1">synthetic/tied.3.1.xml</file>
+        <file version="4.0">synthetic/tied.cue.4.0.xml</file>
         <file version="3.0">synthetic/toe.3.0.xml</file>
         <file version="3.0">synthetic/tremolo.3.0.xml</file>
         <file version="3.1">synthetic/tremolo.3.1.xml</file>
@@ -4153,6 +4167,7 @@
         <file version="3.0">synthetic/tie.3.0.xml</file>
         <file version="3.0">synthetic/tied.3.0.xml</file>
         <file version="3.1">synthetic/tied.3.1.xml</file>
+        <file version="4.0">synthetic/tied.cue.4.0.xml</file>
         <file version="3.0">synthetic/toe.3.0.xml</file>
         <file version="3.0">synthetic/tremolo.3.0.xml</file>
         <file version="3.1">synthetic/tremolo.3.1.xml</file>
@@ -4731,6 +4746,7 @@
         <file version="3.0">synthetic/thumb-position.3.0.xml</file>
         <file version="3.0">synthetic/tied.3.0.xml</file>
         <file version="3.1">synthetic/tied.3.1.xml</file>
+        <file version="4.0">synthetic/tied.cue.4.0.xml</file>
         <file version="3.0">synthetic/toe.3.0.xml</file>
         <file version="3.0">synthetic/tremolo.3.0.xml</file>
         <file version="3.1">synthetic/tremolo.3.1.xml</file>
@@ -5762,9 +5778,9 @@
       <synthetic-files count="0">
       </synthetic-files>
     </element>
-    <element name="tied" total-files="138" wild-files="134" synthetic-files="4" min-synthetic-version="3.0">
+    <element name="tied" total-files="139" wild-files="134" synthetic-files="5" min-synthetic-version="3.0">
       <attributes>
-        <attribute name="type" wild-files="134" synthetic-files="4"/>
+        <attribute name="type" wild-files="134" synthetic-files="5"/>
         <attribute name="orientation" wild-files="12" synthetic-files="2"/>
         <attribute name="number" wild-files="4" synthetic-files="2"/>
         <attribute name="relative-y" wild-files="2" synthetic-files="2"/>
@@ -5799,16 +5815,17 @@
         <file>foundsuite/Invention_12.xml</file>
         <!-- 122 more -->
       </wild-files>
-      <synthetic-files count="4" min-version="3.0">
+      <synthetic-files count="5" min-version="3.0">
         <file version="3.0">synthetic/notations.3.0.xml</file>
         <file version="3.1">synthetic/notations.3.1.xml</file>
         <file version="3.0">synthetic/tied.3.0.xml</file>
         <file version="3.1">synthetic/tied.3.1.xml</file>
+        <file version="4.0">synthetic/tied.cue.4.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="tie" total-files="134" wild-files="133" synthetic-files="1" min-synthetic-version="3.0">
+    <element name="tie" total-files="135" wild-files="133" synthetic-files="2" min-synthetic-version="3.0">
       <attributes>
-        <attribute name="type" wild-files="133" synthetic-files="1"/>
+        <attribute name="type" wild-files="133" synthetic-files="2"/>
         <attribute name="time-only" wild-files="0" synthetic-files="1"/>
       </attributes>
       <wild-files count="133">
@@ -5826,8 +5843,9 @@
         <file>foundsuite/Invention_12.xml</file>
         <!-- 121 more -->
       </wild-files>
-      <synthetic-files count="1" min-version="3.0">
+      <synthetic-files count="2" min-version="3.0">
         <file version="3.0">synthetic/tie.3.0.xml</file>
+        <file version="4.0">synthetic/tied.cue.4.0.xml</file>
       </synthetic-files>
     </element>
     <element name="word-font" total-files="133" wild-files="132" synthetic-files="1" min-synthetic-version="3.0">
@@ -7541,6 +7559,7 @@
         <file version="3.0">synthetic/tie.3.0.xml</file>
         <file version="3.0">synthetic/tied.3.0.xml</file>
         <file version="3.1">synthetic/tied.3.1.xml</file>
+        <file version="4.0">synthetic/tied.cue.4.0.xml</file>
         <file version="3.0">synthetic/toe.3.0.xml</file>
         <file version="3.0">synthetic/tremolo.3.0.xml</file>
         <file version="3.1">synthetic/tremolo.3.1.xml</file>
@@ -10606,15 +10625,16 @@
         <file version="3.1">synthetic/coda.3.1.xml</file>
       </synthetic-files>
     </element>
-    <element name="cue" total-files="5" wild-files="4" synthetic-files="1" min-synthetic-version="4.0">
+    <element name="cue" total-files="6" wild-files="4" synthetic-files="2" min-synthetic-version="4.0">
       <wild-files count="4">
         <file>mjbsuite/krz_v40.xml</file>
         <file>recsuite/ActorPreludeSample.xml</file>
         <file>recsuite/MahlFaGe4Sample.xml</file>
         <file>recsuite/Telemann.xml</file>
       </wild-files>
-      <synthetic-files count="1" min-version="4.0">
+      <synthetic-files count="2" min-version="4.0">
         <file version="4.0">synthetic/grace-cue.4.0.xml</file>
+        <file version="4.0">synthetic/tied.cue.4.0.xml</file>
       </synthetic-files>
     </element>
     <element name="encoding-description" total-files="5" wild-files="4" synthetic-files="1" min-synthetic-version="3.0">

@@ -300,6 +300,12 @@ const Converter::EnumMap<core::SystemRelationNumber, api::SystemRelation> Conver
     {core::SystemRelationNumber::alsoBottom(), api::SystemRelation::alsoBottom},
 };
 
+const Converter::EnumMap<core::SystemRelation, api::SystemRelation> Converter::directionSystemRelationMap = {
+    {core::SystemRelation::none(), api::SystemRelation::none},
+    {core::SystemRelation::onlyTop(), api::SystemRelation::onlyTop},
+    {core::SystemRelation::alsoTop(), api::SystemRelation::alsoTop},
+};
+
 const Converter::EnumMap<core::TechnicalChoice::Kind, api::MarkType> Converter::technicalMarkMap = {
     // { core::TechnicalChoice::Kind::technical,
     // api::MarkType::unspecified },
@@ -1591,22 +1597,22 @@ const Converter::EnumMap<core::TipDirection, api::TipDirection> Converter::tipDi
     {core::TipDirection::southwest(), api::TipDirection::southwest},
 };
 
-const Converter::EnumMap<core::EnclosureShape, api::PercussionEnclosure> Converter::percussionEnclosureMap = {
-    {core::EnclosureShape::rectangle(), api::PercussionEnclosure::rectangle},
-    {core::EnclosureShape::square(), api::PercussionEnclosure::square},
-    {core::EnclosureShape::oval(), api::PercussionEnclosure::oval},
-    {core::EnclosureShape::circle(), api::PercussionEnclosure::circle},
-    {core::EnclosureShape::bracket(), api::PercussionEnclosure::bracket},
-    {core::EnclosureShape::invertedBracket(), api::PercussionEnclosure::invertedBracket},
-    {core::EnclosureShape::triangle(), api::PercussionEnclosure::triangle},
-    {core::EnclosureShape::diamond(), api::PercussionEnclosure::diamond},
-    {core::EnclosureShape::pentagon(), api::PercussionEnclosure::pentagon},
-    {core::EnclosureShape::hexagon(), api::PercussionEnclosure::hexagon},
-    {core::EnclosureShape::heptagon(), api::PercussionEnclosure::heptagon},
-    {core::EnclosureShape::octagon(), api::PercussionEnclosure::octagon},
-    {core::EnclosureShape::nonagon(), api::PercussionEnclosure::nonagon},
-    {core::EnclosureShape::decagon(), api::PercussionEnclosure::decagon},
-    {core::EnclosureShape::none(), api::PercussionEnclosure::none},
+const Converter::EnumMap<core::EnclosureShape, api::Enclosure> Converter::enclosureMap = {
+    {core::EnclosureShape::rectangle(), api::Enclosure::rectangle},
+    {core::EnclosureShape::square(), api::Enclosure::square},
+    {core::EnclosureShape::oval(), api::Enclosure::oval},
+    {core::EnclosureShape::circle(), api::Enclosure::circle},
+    {core::EnclosureShape::bracket(), api::Enclosure::bracket},
+    {core::EnclosureShape::invertedBracket(), api::Enclosure::invertedBracket},
+    {core::EnclosureShape::triangle(), api::Enclosure::triangle},
+    {core::EnclosureShape::diamond(), api::Enclosure::diamond},
+    {core::EnclosureShape::pentagon(), api::Enclosure::pentagon},
+    {core::EnclosureShape::hexagon(), api::Enclosure::hexagon},
+    {core::EnclosureShape::heptagon(), api::Enclosure::heptagon},
+    {core::EnclosureShape::octagon(), api::Enclosure::octagon},
+    {core::EnclosureShape::nonagon(), api::Enclosure::nonagon},
+    {core::EnclosureShape::decagon(), api::Enclosure::decagon},
+    {core::EnclosureShape::none(), api::Enclosure::none},
 };
 
 api::Step Converter::convert(core::Step inStep) const
@@ -1813,6 +1819,24 @@ core::SystemRelationNumber Converter::convertSystemRelation(api::SystemRelation 
 api::SystemRelation Converter::convertSystemRelation(core::SystemRelationNumber value) const
 {
     return findApiItem(systemRelationMap, api::SystemRelation::unspecified, value);
+}
+
+std::optional<core::SystemRelation> Converter::convertDirectionSystemRelation(api::SystemRelation value) const
+{
+    const auto compare = [&value](const std::pair<core::SystemRelation, api::SystemRelation> &v) {
+        return v.second == value;
+    };
+    const auto it = std::find_if(directionSystemRelationMap.cbegin(), directionSystemRelationMap.cend(), compare);
+    if (it == directionSystemRelationMap.cend())
+    {
+        return std::nullopt;
+    }
+    return it->first;
+}
+
+api::SystemRelation Converter::convertDirectionSystemRelation(core::SystemRelation value) const
+{
+    return findApiItem(directionSystemRelationMap, api::SystemRelation::unspecified, value);
 }
 
 core::StemValue Converter::convert(api::Stem value) const
@@ -2115,14 +2139,14 @@ core::TipDirection Converter::convert(api::TipDirection value) const
     return findCoreItem(tipDirectionMap, core::TipDirection::up(), value);
 }
 
-api::PercussionEnclosure Converter::convert(core::EnclosureShape value) const
+api::Enclosure Converter::convert(core::EnclosureShape value) const
 {
-    return findApiItem(percussionEnclosureMap, api::PercussionEnclosure::unspecified, value);
+    return findApiItem(enclosureMap, api::Enclosure::unspecified, value);
 }
 
-core::EnclosureShape Converter::convert(api::PercussionEnclosure value) const
+core::EnclosureShape Converter::convert(api::Enclosure value) const
 {
-    return findCoreItem(percussionEnclosureMap, core::EnclosureShape::none(), value);
+    return findCoreItem(enclosureMap, core::EnclosureShape::none(), value);
 }
 
 double Converter::convertToAlter(int semitones, double cents)
