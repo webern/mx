@@ -161,52 +161,72 @@ void OrnamentsFunctions::parseOrnament(const core::OrnamentsGroupChoice &choiceO
     case core::OrnamentsGroupChoice::Kind::tremolo: {
         const auto &tremolo = choiceObj.asTremolo();
         const auto type = tremolo.type().value_or(core::TremoloType::single()).tag();
+        outMark.name = "tremolo";
+        parseMarkDataAttributes(tremolo, outMark);
+
+        api::TremoloMarkData tremoloData;
+
+        if (tremolo.smufl().has_value())
+        {
+            tremoloData.smufl = tremolo.smufl()->value();
+        }
 
         if (type == core::TremoloType::Tag::start || type == core::TremoloType::Tag::stop)
         {
-            outMark.name = "tremolo";
-            parseMarkDataAttributes(tremolo, outMark);
             outMark.markType =
                 (type == core::TremoloType::Tag::start) ? api::MarkType::tremoloStart : api::MarkType::tremoloStop;
-            outMark.choice = api::TremoloMarkData{tremolo.value().value()};
+            tremoloData.tremoloMarks = tremolo.value().value();
+            outMark.choice = tremoloData;
             break;
         }
 
-        if (type != core::TremoloType::Tag::single)
+        if (type == core::TremoloType::Tag::unmeasured)
         {
-            // unmeasured tremolo -- not yet representable
-            outMark.name = "this tremolo is not a mark";
-            outMark.markType = api::MarkType::unknownOrnament;
-            return;
+            // An unmeasured tremolo has no slash count; MusicXML fixes its element text at 0.
+            outMark.markType = api::MarkType::tremoloUnmeasured;
+            outMark.choice = tremoloData;
+            break;
         }
 
-        outMark.name = "tremolo";
-        parseMarkDataAttributes(tremolo, outMark);
-        const auto numSlashes = tremolo.value().value();
-
-        if (numSlashes == 0)
+        if (tremoloData.smufl.has_value())
         {
-            outMark.markType = api::MarkType::tremoloSingleThree;
+            outMark.choice = tremoloData;
         }
-        else if (numSlashes == 1)
+
+        switch (tremolo.value().value())
         {
+        case 1:
             outMark.markType = api::MarkType::tremoloSingleOne;
-        }
-        else if (numSlashes == 2)
-        {
+            break;
+        case 2:
             outMark.markType = api::MarkType::tremoloSingleTwo;
-        }
-        else if (numSlashes == 3)
-        {
-            outMark.markType = api::MarkType::tremoloSingleThree;
-        }
-        else if (numSlashes == 4)
-        {
+            break;
+        case 4:
             outMark.markType = api::MarkType::tremoloSingleFour;
-        }
-        else if (numSlashes == 5)
-        {
+            break;
+        case 5:
             outMark.markType = api::MarkType::tremoloSingleFive;
+            break;
+        case 6:
+            outMark.markType = api::MarkType::tremoloSingleSix;
+            break;
+        case 7:
+            outMark.markType = api::MarkType::tremoloSingleSeven;
+            break;
+        case 8:
+            outMark.markType = api::MarkType::tremoloSingleEight;
+            break;
+        default:
+            // Three slashes, the customary one-note tremolo. Reached by a count of 0, which is a
+            // legal but degenerate single-type tremolo that would draw nothing -- an unmeasured
+            // tremolo is also written with a count of 0, but says so with type="unmeasured" and is
+            // handled above.
+            //
+            // TODO: the remap is silent and lossy -- a count of 0 reads back as 3 and is written
+            // out that way. mx has no warning channel, so there is nowhere to report it. Log the
+            // downgrade here if a logging framework is ever added.
+            outMark.markType = api::MarkType::tremoloSingleThree;
+            break;
         }
 
         break;

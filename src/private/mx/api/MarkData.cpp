@@ -122,7 +122,9 @@ bool isMarkOrnament(MarkType markType)
            (markType == MarkType::schleifer) || (markType == MarkType::tremoloSingleOne) ||
            (markType == MarkType::tremoloSingleTwo) || (markType == MarkType::tremoloSingleThree) ||
            (markType == MarkType::tremoloSingleFour) || (markType == MarkType::tremoloSingleFive) ||
-           (markType == MarkType::tremoloStart) || (markType == MarkType::tremoloStop) ||
+           (markType == MarkType::tremoloSingleSix) || (markType == MarkType::tremoloSingleSeven) ||
+           (markType == MarkType::tremoloSingleEight) || (markType == MarkType::tremoloStart) ||
+           (markType == MarkType::tremoloStop) || (markType == MarkType::tremoloUnmeasured) ||
            (markType == MarkType::otherOrnament) || (markType == MarkType::unknownOrnament);
 }
 
@@ -167,8 +169,10 @@ bool isMarkTremolo(MarkType markType)
 {
     return (markType == MarkType::tremoloSingleOne) || (markType == MarkType::tremoloSingleTwo) ||
            (markType == MarkType::tremoloSingleThree) || (markType == MarkType::tremoloSingleFour) ||
-           (markType == MarkType::tremoloSingleFive) || (markType == MarkType::tremoloStart) ||
-           (markType == MarkType::tremoloStop);
+           (markType == MarkType::tremoloSingleFive) || (markType == MarkType::tremoloSingleSix) ||
+           (markType == MarkType::tremoloSingleSeven) || (markType == MarkType::tremoloSingleEight) ||
+           (markType == MarkType::tremoloStart) || (markType == MarkType::tremoloStop) ||
+           (markType == MarkType::tremoloUnmeasured);
 }
 
 bool isMarkCustom(MarkType markType)
@@ -201,29 +205,26 @@ MarkType getMarkTypeFromCustomString(const std::string &inString)
 
 int numTremoloSlashes(MarkType markType)
 {
-    if (markType == MarkType::tremoloSingleOne)
+    switch (markType)
     {
+    case MarkType::tremoloSingleOne:
         return 1;
-    }
-
-    if (markType == MarkType::tremoloSingleTwo)
-    {
+    case MarkType::tremoloSingleTwo:
         return 2;
-    }
-
-    if (markType == MarkType::tremoloSingleThree)
-    {
+    case MarkType::tremoloSingleThree:
         return 3;
-    }
-
-    if (markType == MarkType::tremoloSingleFour)
-    {
+    case MarkType::tremoloSingleFour:
         return 4;
-    }
-
-    if (markType == MarkType::tremoloSingleFive)
-    {
+    case MarkType::tremoloSingleFive:
         return 5;
+    case MarkType::tremoloSingleSix:
+        return 6;
+    case MarkType::tremoloSingleSeven:
+        return 7;
+    case MarkType::tremoloSingleEight:
+        return 8;
+    default:
+        break;
     }
 
     return VALUE_UNSPECIFIED;

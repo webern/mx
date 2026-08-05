@@ -127,12 +127,12 @@ const CoreRoundtripRegistrar g_coreRoundtripRegistrar;
 
 } // namespace
 
-// Pinned counts: 837 eligible files, none skipped. Count drift is a failure
+// Pinned counts: 838 eligible files, none skipped. Count drift is a failure
 // even with zero individual fails, so a corpus or version-gate change is a
 // conscious decision, not silent decay. Registered last (registration is
 // discovery order; "zz" keeps it last alphabetically for shuffled runs too).
 TEST_CASE("zz-corert-pinned-counts", "[core-roundtrip]")
 {
-    CHECK(mxtest::corert::discoverInputFiles().size() == 837);
+    CHECK(mxtest::corert::discoverInputFiles().size() == 838);
     CHECK(g_skippedCount == 0);
 }

@@ -540,6 +540,12 @@ musuite/testMultiMeasureRest2.xml
 musuite/testMultiMeasureRest3.xml
 synthetic/multiple-rest.3.0.xml
 
+# Unmeasured tremolos: MarkType::tremoloUnmeasured plus TremoloMarkData::smufl. The reader
+# previously discarded <tremolo type="unmeasured"> as "not a mark" and neither direction touched
+# the smufl attribute. The sibling tremolo.3.0/3.1 fixtures still fail, on the unrelated fact that
+# MarkData carries no font or color data.
+synthetic/tremolo.unmeasured.3.1.xml
+
 # Passed on macOS but not on Linux until ScoreData::sort() was made stable. It is
 # 14 chords, and every member of a chord shares one tick, so an unstable sort let
 # the standard library choose which one came first -- and MusicXML spells a chord

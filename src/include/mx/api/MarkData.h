@@ -89,13 +89,21 @@ enum class MarkType
     mordent,
     invertedMordent,
     schleifer,
-    tremoloSingleOne,   ///< A tremolo on a single note (a glyph, not a spanner) with 1 slash
-    tremoloSingleTwo,   ///< A tremolo on a single note (a glyph, not a spanner) with 2 slashes
-    tremoloSingleThree, ///< A tremolo on a single note (a glyph, not a spanner) with 3 slashes
-    tremoloSingleFour,  ///< A tremolo on a single note (a glyph, not a spanner) with 4 slashes
-    tremoloSingleFive,  ///< A tremolo on a single note (a glyph, not a spanner) with 5 slashes
+    // One-note tremolos: slashes struck through the stem of a single note, not a spanner across
+    // two. MusicXML allows 1 through 8 of them. SMuFL provides a precomposed glyph for only the
+    // first five (tremolo1 through tremolo5); because those are combining marks, a renderer builds
+    // the higher counts by stacking them.
+    tremoloSingleOne,   ///< A one-note tremolo with 1 slash
+    tremoloSingleTwo,   ///< A one-note tremolo with 2 slashes
+    tremoloSingleThree, ///< A one-note tremolo with 3 slashes, the customary number
+    tremoloSingleFour,  ///< A one-note tremolo with 4 slashes
+    tremoloSingleFive,  ///< A one-note tremolo with 5 slashes
+    tremoloSingleSix,   ///< A one-note tremolo with 6 slashes
+    tremoloSingleSeven, ///< A one-note tremolo with 7 slashes
+    tremoloSingleEight, ///< A one-note tremolo with 8 slashes
     tremoloStart,       ///< The first note of a measured (two-note) tremolo; slash count is in MarkData::choice
     tremoloStop,        ///< The second note of a measured (two-note) tremolo; slash count is in MarkData::choice
+    tremoloUnmeasured,  ///< An unmeasured tremolo (buzz roll); its glyph is named in MarkData::choice
     otherOrnament,      ///< MusicXML's 'other-ornament' value
     unknownOrnament,    ///< Error state
 
@@ -272,10 +280,9 @@ struct MarkData
     Bool fingeringAlternate;
 
     // Payload for mark types whose data does not fit the common fields above. Its Kind SHOULD
-    // correspond to markType (e.g. MarkDataChoice::Kind::tremolo pairs with
-    // MarkType::tremoloStart/tremoloStop), but this is a convention that MarkData does not
-    // enforce. New mark-specific data belongs here, as a new MarkDataChoice alternative -- see
-    // MarkDataChoice.h.
+    // correspond to markType (e.g. MarkDataChoice::Kind::tremolo pairs with the MarkType::tremolo*
+    // values), but this is a convention that MarkData does not enforce. New mark-specific data
+    // belongs here, as a new MarkDataChoice alternative -- see MarkDataChoice.h.
     MarkDataChoice choice;
 
     MarkData();
