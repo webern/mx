@@ -5,6 +5,7 @@
 #pragma once
 
 #include "mx/api/ApiCommon.h"
+#include "mx/api/DynamicsData.h"
 
 #include <optional>
 #include <string>
@@ -98,6 +99,44 @@ MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(NonArpeggiateMarkData);
 
+// The exact glyph used by an other-articulation, other-dynamics, other-ornament, or
+// other-technical mark. The mark's visible fallback text remains in MarkData::name.
+struct OtherMarkData
+{
+    std::optional<std::string> smufl;
+};
+
+MXAPI_EQUALS_BEGIN(OtherMarkData)
+MXAPI_EQUALS_MEMBER(smufl)
+MXAPI_EQUALS_END;
+MXAPI_NOT_EQUALS_AND_VECTORS(OtherMarkData);
+
+// Whether an other-notation is a standalone symbol or one end of a multi-note notation.
+enum class OtherNotationType
+{
+    start,
+    stop,
+    single
+};
+
+// Payload for MusicXML's general other-notation extension. The visible fallback text, position,
+// and print appearance use MarkData's common fields.
+struct OtherNotationMarkData
+{
+    OtherNotationType type = OtherNotationType::single;
+    std::optional<int> number;
+    std::optional<std::string> smufl;
+    std::optional<std::string> id;
+};
+
+MXAPI_EQUALS_BEGIN(OtherNotationMarkData)
+MXAPI_EQUALS_MEMBER(type)
+MXAPI_EQUALS_MEMBER(number)
+MXAPI_EQUALS_MEMBER(smufl)
+MXAPI_EQUALS_MEMBER(id)
+MXAPI_EQUALS_END;
+MXAPI_NOT_EQUALS_AND_VECTORS(OtherNotationMarkData);
+
 // A variant class that carries data for MarkType values whose payload does not fit MarkData's
 // common fields.
 //
@@ -120,7 +159,11 @@ class MarkDataChoice
         none,
         tremolo,
         arpeggiate,
-        nonArpeggiate
+        nonArpeggiate,
+        otherMark,
+        dynamic,
+        compoundDynamics,
+        otherNotation
     };
 
     MarkDataChoice();
@@ -131,11 +174,26 @@ class MarkDataChoice
 
     MarkDataChoice(NonArpeggiateMarkData value);
 
+    MarkDataChoice(OtherMarkData value);
+
+    MarkDataChoice(StandardDynamic value);
+
+    // Builds a compound dynamic, unless the value is a single standard symbol, in which case the
+    // result is a Kind::dynamic choice (auto-collapse). A lone other-dynamics symbol does not
+    // collapse -- it has no dedicated MusicXML element, so it stays a compound of one.
+    MarkDataChoice(CompoundDynamicsData value);
+
+    MarkDataChoice(OtherNotationMarkData value);
+
     Kind kind() const;
     bool isNone() const;
     bool isTremolo() const;
     bool isArpeggiate() const;
     bool isNonArpeggiate() const;
+    bool isOtherMark() const;
+    bool isDynamic() const;
+    bool isCompoundDynamics() const;
+    bool isOtherNotation() const;
 
     // Returns a copy of the internally held TremoloMarkData.
     //
@@ -155,10 +213,24 @@ class MarkDataChoice
     // constructed NonArpeggiateMarkData is returned.
     const NonArpeggiateMarkData nonArpeggiate() const;
 
+    // Returns a copy of the internally held OtherMarkData, or a default value for another kind.
+    const OtherMarkData otherMark() const;
+
+    // Returns the standard dynamic symbol, or p for another kind.
+    StandardDynamic dynamic() const;
+
+    // Returns a copy of the internally held CompoundDynamicsData, or a default value for another kind.
+    const CompoundDynamicsData compoundDynamics() const;
+
+    // Returns a copy of the internally held OtherNotationMarkData, or a default value for another kind.
+    const OtherNotationMarkData otherNotation() const;
+
     bool operator==(const MarkDataChoice &other) const;
 
   private:
-    std::variant<std::monostate, TremoloMarkData, ArpeggiateMarkData, NonArpeggiateMarkData> myValue;
+    std::variant<std::monostate, TremoloMarkData, ArpeggiateMarkData, NonArpeggiateMarkData, OtherMarkData,
+                 StandardDynamic, CompoundDynamicsData, OtherNotationMarkData>
+        myValue;
 };
 
 MXAPI_NOT_EQUALS_AND_VECTORS(MarkDataChoice);

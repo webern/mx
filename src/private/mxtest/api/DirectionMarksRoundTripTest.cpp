@@ -529,7 +529,7 @@ TEST(WordsSymbolInterleaved, DirectionMarksRoundTrip)
     run.emplace_back(after);
     direction.directionTypes.emplace_back(DirectionChoice{run});
 
-    MarkData dynamic{MarkType::ff};
+    MarkData dynamic{StandardDynamic::ff};
     direction.directionTypes.emplace_back(DirectionChoice{dynamic});
 
     const auto directions = roundTripDirectionData(direction);
@@ -547,7 +547,7 @@ TEST(WordsSymbolInterleaved, DirectionMarksRoundTrip)
     CHECK_EQUAL(" al niente", outRun.at(2).words().text);
 
     REQUIRE(directions.front().directionTypes.back().isMark());
-    CHECK(directions.front().directionTypes.back().mark().markType == MarkType::ff);
+    CHECK(directions.front().directionTypes.back().mark().choice.dynamic() == StandardDynamic::ff);
 }
 
 T_END;
@@ -562,7 +562,7 @@ TEST(WordsBeforeDynamicsOrderPreserved, DirectionMarksRoundTrip)
     WordsData piu;
     piu.text = "più";
     direction.directionTypes.emplace_back(DirectionChoice{std::vector<WordsChoice>{WordsChoice{piu}}});
-    direction.directionTypes.emplace_back(DirectionChoice{MarkData{MarkType::f}});
+    direction.directionTypes.emplace_back(DirectionChoice{MarkData{StandardDynamic::f}});
     WordsData troppo;
     troppo.text = "ma non troppo";
     direction.directionTypes.emplace_back(DirectionChoice{std::vector<WordsChoice>{WordsChoice{troppo}}});
@@ -574,7 +574,7 @@ TEST(WordsBeforeDynamicsOrderPreserved, DirectionMarksRoundTrip)
     REQUIRE(directions.front().directionTypes.at(0).wordsRun().size() == 1);
     CHECK_EQUAL("più", directions.front().directionTypes.at(0).wordsRun().front().words().text);
     REQUIRE(directions.front().directionTypes.at(1).isMark());
-    CHECK(directions.front().directionTypes.at(1).mark().markType == MarkType::f);
+    CHECK(directions.front().directionTypes.at(1).mark().choice.dynamic() == StandardDynamic::f);
     REQUIRE(directions.front().directionTypes.at(2).isWordsRun());
     REQUIRE(directions.front().directionTypes.at(2).wordsRun().size() == 1);
     CHECK_EQUAL("ma non troppo", directions.front().directionTypes.at(2).wordsRun().front().words().text);

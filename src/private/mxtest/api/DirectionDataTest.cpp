@@ -56,7 +56,7 @@ TEST(OutOfOrderDoesntThrow, DirectionData)
     ovoice.notes.push_back(onote);
 
     DirectionData directionData{};
-    MarkData mark{MarkType::f};
+    MarkData mark{StandardDynamic::f};
 
     int tickTime = 10;
     mark.tickTimePosition = tickTime;
@@ -190,7 +190,7 @@ TEST(OutOfOrderTorture, DirectionData)
         ovoice.notes.push_back(onote);
 
         DirectionData directionData{};
-        MarkData mark{MarkType::f};
+        MarkData mark{StandardDynamic::f};
 
         mark.tickTimePosition = dur0tick;
         directionData.tickTimePosition = dur0tick;

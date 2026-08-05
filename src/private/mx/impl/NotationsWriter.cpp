@@ -70,9 +70,7 @@ namespace mx
 {
 namespace impl
 {
-namespace
-{
-void setMordentSpecificAttributes(const api::MarkData &mark, core::Mordent &mordent)
+void notationsWriterSetMordentSpecificAttributes(const api::MarkData &mark, core::Mordent &mordent)
 {
     Converter converter;
 
@@ -91,7 +89,6 @@ void setMordentSpecificAttributes(const api::MarkData &mark, core::Mordent &mord
         mordent.setDeparture(converter.convert(mark.mordentDeparture));
     }
 }
-} // namespace
 
 NotationsWriter::NotationsWriter(const api::NoteData &inNoteData, const MeasureCursor &inCursor,
                                  const ScoreWriter &inScoreWriter)
@@ -415,6 +412,29 @@ core::Notations NotationsWriter::getNotations() const
 
             outNotations.addChoice(core::NotationsChoice::arpeggiate(arpeggiate));
         }
+        else if (isMarkOtherNotation(mark.markType))
+        {
+            core::OtherNotation other;
+            impl::setAttributesFromMarkData(mark, other);
+            other.setValue(mark.name);
+
+            const auto payload = mark.choice.otherNotation();
+            other.setType(myConverter.convert(payload.type));
+            if (payload.number.has_value())
+            {
+                other.setNumber(core::NumberLevel{*payload.number});
+            }
+            if (payload.smufl.has_value())
+            {
+                other.setSmufl(core::SmuflGlyphName{*payload.smufl});
+            }
+            if (payload.id.has_value())
+            {
+                other.setID(core::Token{*payload.id});
+            }
+
+            outNotations.addChoice(core::NotationsChoice::otherNotation(other));
+        }
     }
 
     if (!articulations.choice().empty())
@@ -592,6 +612,7 @@ void NotationsWriter::addArticulation(const api::MarkData &mark, core::Articulat
     case core::ArticulationsChoice::Kind::otherArticulation: {
         core::OtherPlacementText opt;
         setAttributesFromPositionData(mark.positionData, opt);
+        setAttributesFromPrintData(mark.printData, opt);
         if (api::isMarkCustom(mark.markType))
         {
             opt.setValue(api::getCustomMarkName(mark.markType));
@@ -599,6 +620,10 @@ void NotationsWriter::addArticulation(const api::MarkData &mark, core::Articulat
         else
         {
             opt.setValue(mark.name);
+        }
+        if (mark.choice.otherMark().smufl.has_value())
+        {
+            opt.setSmufl(core::SmuflGlyphName{*mark.choice.otherMark().smufl});
         }
         outArticulations.addChoice(core::ArticulationsChoice::otherArticulation(opt));
         break;
@@ -677,14 +702,14 @@ void NotationsWriter::addOrnament(const api::MarkData &mark, core::Ornaments &ou
     case core::OrnamentsGroupChoice::Kind::mordent: {
         core::Mordent m;
         setAttributesFromPositionData(mark.positionData, m);
-        setMordentSpecificAttributes(mark, m);
+        notationsWriterSetMordentSpecificAttributes(mark, m);
         group.setChoice(core::OrnamentsGroupChoice::mordent(m));
         break;
     }
     case core::OrnamentsGroupChoice::Kind::invertedMordent: {
         core::Mordent m;
         setAttributesFromPositionData(mark.positionData, m);
-        setMordentSpecificAttributes(mark, m);
+        notationsWriterSetMordentSpecificAttributes(mark, m);
         group.setChoice(core::OrnamentsGroupChoice::invertedMordent(m));
         break;
     }
@@ -733,11 +758,15 @@ void NotationsWriter::addOrnament(const api::MarkData &mark, core::Ornaments &ou
     case core::OrnamentsGroupChoice::Kind::otherOrnament: {
         core::OtherPlacementText opt;
         setAttributesFromPositionData(mark.positionData, opt);
+        setAttributesFromPrintData(mark.printData, opt);
         if (!mark.name.empty())
         {
             opt.setValue(mark.name);
         }
-        // TODO - SMUFLKILL - handle custom enum values?
+        if (mark.choice.otherMark().smufl.has_value())
+        {
+            opt.setSmufl(core::SmuflGlyphName{*mark.choice.otherMark().smufl});
+        }
         group.setChoice(core::OrnamentsGroupChoice::otherOrnament(opt));
         break;
     }
@@ -986,9 +1015,14 @@ void NotationsWriter::addTechnical(const api::MarkData &mark, core::Technical &o
     case core::TechnicalChoice::Kind::otherTechnical: {
         core::OtherPlacementText opt;
         setAttributesFromPositionData(mark.positionData, opt);
+        setAttributesFromPrintData(mark.printData, opt);
         if (!mark.name.empty())
         {
             opt.setValue(mark.name);
+        }
+        if (mark.choice.otherMark().smufl.has_value())
+        {
+            opt.setSmufl(core::SmuflGlyphName{*mark.choice.otherMark().smufl});
         }
         outTechnical.addChoice(core::TechnicalChoice::otherTechnical(opt));
         break;

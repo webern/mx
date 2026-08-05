@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "mx/api/DynamicsData.h"
 #include "mx/api/MarkDataChoice.h"
 #include "mx/api/PositionData.h"
 #include "mx/api/PrintData.h"
@@ -46,34 +47,8 @@ enum class MarkType
     otherArticulation,
 
     // dynamics
-    p,
-    pp,
-    ppp,
-    pppp,
-    ppppp,
-    pppppp,
-    f,
-    ff,
-    fff,
-    ffff,
-    fffff,
-    ffffff,
-    mp,
-    mf,
-    sf,
-    sfp,
-    sfpp,
-    fp,
-    rf,
-    rfz,
-    sfz,
-    sffz,
-    fz,
-    n,
-    pf,
-    sfzp,
-    otherDynamics,
-    unknownDynamics,
+    dynamics, ///< The symbol itself is in MarkData::choice -- a StandardDynamic such as ff, or a
+              ///< CompoundDynamicsData for marks like ffz that MusicXML spells with several symbols
 
     // ornaments
     trillMark,
@@ -226,6 +201,9 @@ enum class MarkType
     // nonArpeggiate
     nonArpeggiate,
 
+    // general notation extension
+    otherNotation,
+
     // these are cust additions that will be written to, and read from, the
     // other-articulations (or other-*) elements.
     customErrorUnknown, // used to represent an error when parsing from a string
@@ -244,6 +222,7 @@ bool isMarkDynamic(MarkType);
 bool isMarkFermata(MarkType);
 bool isMarkArpeggiate(MarkType);
 bool isMarkNonArpeggiate(MarkType);
+bool isMarkOtherNotation(MarkType);
 
 bool isMarkCustom(MarkType);
 std::string getCustomMarkName(MarkType);
@@ -254,6 +233,13 @@ struct MarkData
 {
     // Fields common to (nearly) every mark, regardless of markType.
     MarkType markType;
+
+    // The mark's text. For marks whose text is the data -- fingering, pluck, fret, string, and the
+    // other-* marks -- this is what gets written. For marks that name themselves -- articulations,
+    // fermatas, dynamics -- it spells the mark out ("ff", "ffz") and the writer ignores it,
+    // emitting whatever markType and choice say. A self-naming mark fills this in when it is
+    // constructed, so if you replace choice afterwards, re-derive it: toString() in DynamicsData.h
+    // spells a dynamic.
     std::string name;
     int tickTimePosition;
     PrintData printData;
@@ -288,6 +274,15 @@ struct MarkData
     MarkData();
     MarkData(MarkType inMarkType);
     MarkData(Placement inPlacement, MarkType inMarkType);
+
+    // Builds a dynamic mark: markType is MarkType::dynamics, choice holds the symbol, and name is
+    // its letters.
+    MarkData(StandardDynamic inDynamic);
+
+    // Builds a dynamic mark spelled with several symbols, such as ff followed by z for ffz. name
+    // becomes the letters of the whole mark. A lone standard symbol collapses to the same mark the
+    // StandardDynamic constructor builds.
+    MarkData(CompoundDynamicsData inDynamics);
 };
 
 MXAPI_EQUALS_BEGIN(MarkData)

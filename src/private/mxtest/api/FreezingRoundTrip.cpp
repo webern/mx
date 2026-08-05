@@ -242,7 +242,7 @@ TEST(roundTripViolaDynamicWrongTime, Freezing)
     const auto findDirectionLambda = [&](const DirectionData &inDirection) {
         if (inDirection.directionTypes.size() == 1 && inDirection.directionTypes.front().isMark())
         {
-            if (inDirection.directionTypes.front().mark().markType == MarkType::pp)
+            if (inDirection.directionTypes.front().mark().choice.dynamic() == StandardDynamic::pp)
             {
                 return true;
             }
