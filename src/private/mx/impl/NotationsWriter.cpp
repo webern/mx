@@ -722,17 +722,30 @@ void NotationsWriter::addOrnament(const api::MarkData &mark, core::Ornaments &ou
     case core::OrnamentsGroupChoice::Kind::tremolo: {
         core::Tremolo tremolo;
         setAttributesFromPositionData(mark.positionData, tremolo);
+        const auto tremoloData = mark.choice.isTremolo() ? mark.choice.tremolo() : api::TremoloMarkData{};
+
         if (mark.markType == api::MarkType::tremoloStart || mark.markType == api::MarkType::tremoloStop)
         {
             tremolo.setType(mark.markType == api::MarkType::tremoloStart ? core::TremoloType::start()
                                                                          : core::TremoloType::stop());
-            tremolo.setValue(core::TremoloMarks{mark.choice.tremolo().tremoloMarks.value_or(3)});
+            tremolo.setValue(core::TremoloMarks{tremoloData.tremoloMarks.value_or(3)});
+        }
+        else if (mark.markType == api::MarkType::tremoloUnmeasured)
+        {
+            tremolo.setType(core::TremoloType::unmeasured());
+            tremolo.setValue(core::TremoloMarks{0});
         }
         else
         {
             tremolo.setType(core::TremoloType::single());
             tremolo.setValue(core::TremoloMarks{api::numTremoloSlashes(mark.markType)});
         }
+
+        if (tremoloData.smufl.has_value() && !tremoloData.smufl->empty())
+        {
+            tremolo.setSmufl(core::SmuflGlyphName{*tremoloData.smufl});
+        }
+
         group.setChoice(core::OrnamentsGroupChoice::tremolo(tremolo));
         break;
     }

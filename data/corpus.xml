@@ -397,6 +397,7 @@
         <file version="3.1">synthetic/transpose.3.1.xml</file>
         <file version="3.0">synthetic/tremolo.3.0.xml</file>
         <file version="3.1">synthetic/tremolo.3.1.xml</file>
+        <file version="3.1">synthetic/tremolo.unmeasured.3.1.xml</file>
         <file version="3.0">synthetic/trill-mark.3.0.xml</file>
         <file version="3.0">synthetic/triple-tongue.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-dot.3.0.xml</file>
@@ -811,6 +812,7 @@
         <file version="3.1">synthetic/transpose.3.1.xml</file>
         <file version="3.0">synthetic/tremolo.3.0.xml</file>
         <file version="3.1">synthetic/tremolo.3.1.xml</file>
+        <file version="3.1">synthetic/tremolo.unmeasured.3.1.xml</file>
         <file version="3.0">synthetic/trill-mark.3.0.xml</file>
         <file version="3.0">synthetic/triple-tongue.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-dot.3.0.xml</file>
@@ -1222,6 +1224,7 @@
         <file version="3.1">synthetic/transpose.3.1.xml</file>
         <file version="3.0">synthetic/tremolo.3.0.xml</file>
         <file version="3.1">synthetic/tremolo.3.1.xml</file>
+        <file version="3.1">synthetic/tremolo.unmeasured.3.1.xml</file>
         <file version="3.0">synthetic/trill-mark.3.0.xml</file>
         <file version="3.0">synthetic/triple-tongue.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-dot.3.0.xml</file>
@@ -1646,6 +1649,7 @@
         <file version="3.1">synthetic/transpose.3.1.xml</file>
         <file version="3.0">synthetic/tremolo.3.0.xml</file>
         <file version="3.1">synthetic/tremolo.3.1.xml</file>
+        <file version="3.1">synthetic/tremolo.unmeasured.3.1.xml</file>
         <file version="3.0">synthetic/trill-mark.3.0.xml</file>
         <file version="3.0">synthetic/triple-tongue.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-dot.3.0.xml</file>
@@ -2060,6 +2064,7 @@
         <file version="3.1">synthetic/transpose.3.1.xml</file>
         <file version="3.0">synthetic/tremolo.3.0.xml</file>
         <file version="3.1">synthetic/tremolo.3.1.xml</file>
+        <file version="3.1">synthetic/tremolo.unmeasured.3.1.xml</file>
         <file version="3.0">synthetic/trill-mark.3.0.xml</file>
         <file version="3.0">synthetic/triple-tongue.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-dot.3.0.xml</file>
@@ -2474,6 +2479,7 @@
         <file version="3.1">synthetic/transpose.3.1.xml</file>
         <file version="3.0">synthetic/tremolo.3.0.xml</file>
         <file version="3.1">synthetic/tremolo.3.1.xml</file>
+        <file version="3.1">synthetic/tremolo.unmeasured.3.1.xml</file>
         <file version="3.0">synthetic/trill-mark.3.0.xml</file>
         <file version="3.0">synthetic/triple-tongue.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-dot.3.0.xml</file>
@@ -2873,6 +2879,7 @@
         <file version="3.0">synthetic/toe.3.0.xml</file>
         <file version="3.0">synthetic/tremolo.3.0.xml</file>
         <file version="3.1">synthetic/tremolo.3.1.xml</file>
+        <file version="3.1">synthetic/tremolo.unmeasured.3.1.xml</file>
         <file version="3.0">synthetic/trill-mark.3.0.xml</file>
         <file version="3.0">synthetic/triple-tongue.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-dot.3.0.xml</file>
@@ -3424,6 +3431,7 @@
         <file version="3.0">synthetic/toe.3.0.xml</file>
         <file version="3.0">synthetic/tremolo.3.0.xml</file>
         <file version="3.1">synthetic/tremolo.3.1.xml</file>
+        <file version="3.1">synthetic/tremolo.unmeasured.3.1.xml</file>
         <file version="3.0">synthetic/trill-mark.3.0.xml</file>
         <file version="3.0">synthetic/triple-tongue.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-dot.3.0.xml</file>
@@ -3673,6 +3681,7 @@
         <file version="3.0">synthetic/toe.3.0.xml</file>
         <file version="3.0">synthetic/tremolo.3.0.xml</file>
         <file version="3.1">synthetic/tremolo.3.1.xml</file>
+        <file version="3.1">synthetic/tremolo.unmeasured.3.1.xml</file>
         <file version="3.0">synthetic/trill-mark.3.0.xml</file>
         <file version="3.0">synthetic/triple-tongue.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-dot.3.0.xml</file>
@@ -3917,6 +3926,7 @@
         <file version="3.0">synthetic/toe.3.0.xml</file>
         <file version="3.0">synthetic/tremolo.3.0.xml</file>
         <file version="3.1">synthetic/tremolo.3.1.xml</file>
+        <file version="3.1">synthetic/tremolo.unmeasured.3.1.xml</file>
         <file version="3.0">synthetic/trill-mark.3.0.xml</file>
         <file version="3.0">synthetic/triple-tongue.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-dot.3.0.xml</file>
@@ -4161,6 +4171,7 @@
         <file version="3.0">synthetic/toe.3.0.xml</file>
         <file version="3.0">synthetic/tremolo.3.0.xml</file>
         <file version="3.1">synthetic/tremolo.3.1.xml</file>
+        <file version="3.1">synthetic/tremolo.unmeasured.3.1.xml</file>
         <file version="3.0">synthetic/trill-mark.3.0.xml</file>
         <file version="3.0">synthetic/triple-tongue.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-dot.3.0.xml</file>
@@ -4739,6 +4750,7 @@
         <file version="3.0">synthetic/toe.3.0.xml</file>
         <file version="3.0">synthetic/tremolo.3.0.xml</file>
         <file version="3.1">synthetic/tremolo.3.1.xml</file>
+        <file version="3.1">synthetic/tremolo.unmeasured.3.1.xml</file>
         <file version="3.0">synthetic/trill-mark.3.0.xml</file>
         <file version="3.0">synthetic/triple-tongue.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-dot.3.0.xml</file>
@@ -5862,7 +5874,7 @@
         <file version="3.0">synthetic/word-font.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="staff" total-files="455" wild-files="123" synthetic-files="332" min-synthetic-version="3.0">
+    <element name="staff" total-files="456" wild-files="123" synthetic-files="333" min-synthetic-version="3.0">
       <wild-files count="123">
         <file>custom/segno_coda_roundtrip.3.0.xml</file>
         <file>custom/segno_coda_roundtrip.3.1.xml</file>
@@ -5878,7 +5890,7 @@
         <file>foundsuite/Invention_12.xml</file>
         <!-- 111 more -->
       </wild-files>
-      <synthetic-files count="332" min-version="3.0">
+      <synthetic-files count="333" min-version="3.0">
         <file version="3.0">synthetic/accent.3.0.xml</file>
         <file version="3.0">synthetic/accidental-mark.3.0.xml</file>
         <file version="3.1">synthetic/accidental-mark.3.1.xml</file>
@@ -6184,6 +6196,7 @@
         <file version="3.0">synthetic/toe.3.0.xml</file>
         <file version="3.0">synthetic/tremolo.3.0.xml</file>
         <file version="3.1">synthetic/tremolo.3.1.xml</file>
+        <file version="3.1">synthetic/tremolo.unmeasured.3.1.xml</file>
         <file version="3.0">synthetic/trill-mark.3.0.xml</file>
         <file version="3.0">synthetic/triple-tongue.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-dot.3.0.xml</file>
@@ -7210,7 +7223,7 @@
         <file version="3.1">synthetic/fermata.3.1.xml</file>
       </synthetic-files>
     </element>
-    <element name="ornaments" total-files="68" wild-files="47" synthetic-files="21" min-synthetic-version="3.0">
+    <element name="ornaments" total-files="69" wild-files="47" synthetic-files="22" min-synthetic-version="3.0">
       <attributes>
         <attribute name="id" wild-files="0" synthetic-files="1"/>
       </attributes>
@@ -7229,7 +7242,7 @@
         <file>foundsuite/Invention_4.xml</file>
         <!-- 35 more -->
       </wild-files>
-      <synthetic-files count="21" min-version="3.0">
+      <synthetic-files count="22" min-version="3.0">
         <file version="3.0">synthetic/accidental-mark.3.0.xml</file>
         <file version="3.1">synthetic/accidental-mark.3.1.xml</file>
         <file version="3.0">synthetic/delayed-inverted-turn.3.0.xml</file>
@@ -7246,6 +7259,7 @@
         <file version="3.0">synthetic/shake.3.0.xml</file>
         <file version="3.0">synthetic/tremolo.3.0.xml</file>
         <file version="3.1">synthetic/tremolo.3.1.xml</file>
+        <file version="3.1">synthetic/tremolo.unmeasured.3.1.xml</file>
         <file version="3.0">synthetic/trill-mark.3.0.xml</file>
         <file version="3.0">synthetic/turn.3.0.xml</file>
         <file version="3.0">synthetic/vertical-turn.3.0.xml</file>
@@ -7549,6 +7563,7 @@
         <file version="3.0">synthetic/toe.3.0.xml</file>
         <file version="3.0">synthetic/tremolo.3.0.xml</file>
         <file version="3.1">synthetic/tremolo.3.1.xml</file>
+        <file version="3.1">synthetic/tremolo.unmeasured.3.1.xml</file>
         <file version="3.0">synthetic/trill-mark.3.0.xml</file>
         <file version="3.0">synthetic/triple-tongue.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-dot.3.0.xml</file>
@@ -7711,10 +7726,10 @@
       <synthetic-files count="0">
       </synthetic-files>
     </element>
-    <element name="part-group" total-files="415" wild-files="29" synthetic-files="386" min-synthetic-version="3.0">
+    <element name="part-group" total-files="416" wild-files="29" synthetic-files="387" min-synthetic-version="3.0">
       <attributes>
         <attribute name="number" wild-files="29" synthetic-files="0"/>
-        <attribute name="type" wild-files="29" synthetic-files="386"/>
+        <attribute name="type" wild-files="29" synthetic-files="387"/>
       </attributes>
       <wild-files count="29">
         <file>custom/transposition.musicxml</file>
@@ -7731,7 +7746,7 @@
         <file>lysuite/ly14a_StaffDetails_LineChanges.xml</file>
         <!-- 17 more -->
       </wild-files>
-      <synthetic-files count="386" min-version="3.0">
+      <synthetic-files count="387" min-version="3.0">
         <file version="3.0">synthetic/accent.3.0.xml</file>
         <file version="3.0">synthetic/accidental-mark.3.0.xml</file>
         <file version="3.1">synthetic/accidental-mark.3.1.xml</file>
@@ -8091,6 +8106,7 @@
         <file version="3.1">synthetic/transpose.3.1.xml</file>
         <file version="3.0">synthetic/tremolo.3.0.xml</file>
         <file version="3.1">synthetic/tremolo.3.1.xml</file>
+        <file version="3.1">synthetic/tremolo.unmeasured.3.1.xml</file>
         <file version="3.0">synthetic/trill-mark.3.0.xml</file>
         <file version="3.0">synthetic/triple-tongue.3.0.xml</file>
         <file version="3.0">synthetic/tuplet-dot.3.0.xml</file>
@@ -9358,20 +9374,20 @@
         <file version="3.0">synthetic/staccatissimo.3.0.xml</file>
       </synthetic-files>
     </element>
-    <element name="tremolo" total-files="14" wild-files="12" synthetic-files="2" min-synthetic-version="3.0">
+    <element name="tremolo" total-files="15" wild-files="12" synthetic-files="3" min-synthetic-version="3.0">
       <attributes>
-        <attribute name="type" wild-files="9" synthetic-files="2"/>
-        <attribute name="default-x" wild-files="6" synthetic-files="2"/>
-        <attribute name="default-y" wild-files="6" synthetic-files="2"/>
+        <attribute name="type" wild-files="9" synthetic-files="3"/>
+        <attribute name="default-x" wild-files="6" synthetic-files="3"/>
+        <attribute name="default-y" wild-files="6" synthetic-files="3"/>
         <attribute name="color" wild-files="0" synthetic-files="2"/>
         <attribute name="font-family" wild-files="0" synthetic-files="2"/>
         <attribute name="font-size" wild-files="0" synthetic-files="2"/>
         <attribute name="font-style" wild-files="0" synthetic-files="2"/>
         <attribute name="font-weight" wild-files="0" synthetic-files="2"/>
-        <attribute name="placement" wild-files="0" synthetic-files="2"/>
-        <attribute name="relative-x" wild-files="0" synthetic-files="2"/>
-        <attribute name="relative-y" wild-files="0" synthetic-files="2"/>
-        <attribute name="smufl" wild-files="0" synthetic-files="1"/>
+        <attribute name="placement" wild-files="0" synthetic-files="3"/>
+        <attribute name="relative-x" wild-files="0" synthetic-files="3"/>
+        <attribute name="relative-y" wild-files="0" synthetic-files="3"/>
+        <attribute name="smufl" wild-files="0" synthetic-files="2"/>
       </attributes>
       <wild-files count="12">
         <file>foundsuite/Berlioz_Le_Corsaire.xml</file>
@@ -9387,9 +9403,10 @@
         <file>musuite/testTremolo.xml</file>
         <file>recsuite/ActorPreludeSample.xml</file>
       </wild-files>
-      <synthetic-files count="2" min-version="3.0">
+      <synthetic-files count="3" min-version="3.0">
         <file version="3.0">synthetic/tremolo.3.0.xml</file>
         <file version="3.1">synthetic/tremolo.3.1.xml</file>
+        <file version="3.1">synthetic/tremolo.unmeasured.3.1.xml</file>
       </synthetic-files>
     </element>
     <element name="fret" total-files="16" wild-files="11" synthetic-files="5" min-synthetic-version="3.0">
