@@ -285,6 +285,79 @@ TEST(NonArpeggiateAttributes, MarkRoundTrip)
 
 T_END;
 
+TEST(HarmonicArtificialPair, MarkRoundTrip)
+{
+    // The two notes of an artificial harmonic each state what they are: the stopped note carries
+    // the base pitch, the diamond-notehead note the touching pitch.
+    MarkData stopped{Placement::unspecified, MarkType::harmonic};
+    HarmonicMarkData stoppedPayload{};
+    stoppedPayload.kind = HarmonicKind::artificial;
+    stoppedPayload.pitch = HarmonicPitch::basePitch;
+    stopped.choice = stoppedPayload;
+
+    const auto stoppedMarks = roundTripMarkData(stopped);
+    REQUIRE(stoppedMarks.size() == 1);
+    CHECK(stoppedMarks.front().markType == MarkType::harmonic);
+    REQUIRE(stoppedMarks.front().choice.isHarmonic());
+    CHECK(stoppedPayload == stoppedMarks.front().choice.harmonic());
+
+    MarkData touched{Placement::unspecified, MarkType::harmonic};
+    HarmonicMarkData touchedPayload{};
+    touchedPayload.kind = HarmonicKind::artificial;
+    touchedPayload.pitch = HarmonicPitch::touchingPitch;
+    touched.choice = touchedPayload;
+
+    const auto touchedMarks = roundTripMarkData(touched);
+    REQUIRE(touchedMarks.size() == 1);
+    REQUIRE(touchedMarks.front().choice.isHarmonic());
+    CHECK(touchedPayload == touchedMarks.front().choice.harmonic());
+}
+
+T_END;
+
+TEST(HarmonicKindAndPitchCombinations, MarkRoundTrip)
+{
+    const HarmonicKind kinds[] = {HarmonicKind::unspecified, HarmonicKind::natural, HarmonicKind::artificial};
+    const HarmonicPitch pitches[] = {HarmonicPitch::unspecified, HarmonicPitch::basePitch, HarmonicPitch::touchingPitch,
+                                     HarmonicPitch::soundingPitch};
+
+    for (const auto kind : kinds)
+    {
+        for (const auto pitch : pitches)
+        {
+            if (kind == HarmonicKind::unspecified && pitch == HarmonicPitch::unspecified)
+            {
+                continue; // covered by HarmonicDefaultsToNoPayload below
+            }
+
+            MarkData mark{Placement::unspecified, MarkType::harmonic};
+            HarmonicMarkData payload{};
+            payload.kind = kind;
+            payload.pitch = pitch;
+            mark.choice = payload;
+
+            const auto marks = roundTripMarkData(mark);
+            REQUIRE(marks.size() == 1);
+            REQUIRE(marks.front().choice.isHarmonic());
+            CHECK(payload == marks.front().choice.harmonic());
+        }
+    }
+}
+
+T_END;
+
+TEST(HarmonicDefaultsToNoPayload, MarkRoundTrip)
+{
+    // An undecorated <harmonic/> must not acquire a natural/artificial or pitch value, and must
+    // still round-trip for callers written before the payload existed.
+    const auto marks = roundTripMark(MarkType::harmonic);
+    REQUIRE(marks.size() == 1);
+    CHECK(marks.front().markType == MarkType::harmonic);
+    CHECK(marks.front().choice.isNone());
+}
+
+T_END;
+
 TEST(CaesuraEmpty, MarkRoundTrip)
 {
     // The common empty form <caesura/> must not acquire a "normal" text value on write.

@@ -10,6 +10,9 @@
 #include "mx/core/generated/Fingering.h"
 #include "mx/core/generated/Handbell.h"
 #include "mx/core/generated/HandbellValue.h"
+#include "mx/core/generated/Harmonic.h"
+#include "mx/core/generated/HarmonicChoice.h"
+#include "mx/core/generated/HarmonicChoice2.h"
 #include "mx/core/generated/Hole.h"
 #include "mx/core/generated/HoleClosed.h"
 #include "mx/core/generated/HoleClosedValue.h"
@@ -103,6 +106,42 @@ std::string technicalFunctionsHandbellToSmuflName(const mx::core::HandbellValue 
     }
 }
 
+api::HarmonicMarkData harmonicMarkDataFromCore(const core::Harmonic &inHarmonic)
+{
+    api::HarmonicMarkData outData{};
+
+    if (inHarmonic.choice().has_value())
+    {
+        switch (inHarmonic.choice()->kind())
+        {
+        case core::HarmonicChoice::Kind::natural:
+            outData.kind = api::HarmonicKind::natural;
+            break;
+        case core::HarmonicChoice::Kind::artificial:
+            outData.kind = api::HarmonicKind::artificial;
+            break;
+        }
+    }
+
+    if (inHarmonic.choice2().has_value())
+    {
+        switch (inHarmonic.choice2()->kind())
+        {
+        case core::HarmonicChoice2::Kind::basePitch:
+            outData.pitch = api::HarmonicPitch::basePitch;
+            break;
+        case core::HarmonicChoice2::Kind::touchingPitch:
+            outData.pitch = api::HarmonicPitch::touchingPitch;
+            break;
+        case core::HarmonicChoice2::Kind::soundingPitch:
+            outData.pitch = api::HarmonicPitch::soundingPitch;
+            break;
+        }
+    }
+
+    return outData;
+}
+
 TechnicalFunctions::TechnicalFunctions(std::span<const core::TechnicalChoice> inTechincalChoiceSet, Cursor inCursor)
     : myTechincalChoiceSet{inTechincalChoiceSet}, myCursor{inCursor}
 {
@@ -148,8 +187,15 @@ bool TechnicalFunctions::parseTechicalMark(const core::TechnicalChoice &techical
         return true;
     }
     case core::TechnicalChoice::Kind::harmonic: {
-        parseMarkDataAttributes(techicalChoice.asHarmonic(), outMarkData);
+        const auto &harmonic = techicalChoice.asHarmonic();
+        parseMarkDataAttributes(harmonic, outMarkData);
         outMarkData.name = "harmonic";
+        const auto harmonicData = harmonicMarkDataFromCore(harmonic);
+        if (harmonicData.kind != api::HarmonicKind::unspecified ||
+            harmonicData.pitch != api::HarmonicPitch::unspecified)
+        {
+            outMarkData.choice = api::MarkDataChoice{harmonicData};
+        }
         return true;
     }
     case core::TechnicalChoice::Kind::openString: {

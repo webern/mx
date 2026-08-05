@@ -54,6 +54,10 @@ MarkDataChoice::MarkDataChoice(OtherNotationMarkData value) : myValue{std::move(
 {
 }
 
+MarkDataChoice::MarkDataChoice(HarmonicMarkData value) : myValue{std::move(value)}
+{
+}
+
 MarkDataChoice::Kind MarkDataChoice::kind() const
 {
     if (std::holds_alternative<TremoloMarkData>(myValue))
@@ -83,6 +87,10 @@ MarkDataChoice::Kind MarkDataChoice::kind() const
     if (std::holds_alternative<OtherNotationMarkData>(myValue))
     {
         return Kind::otherNotation;
+    }
+    if (std::holds_alternative<HarmonicMarkData>(myValue))
+    {
+        return Kind::harmonic;
     }
     return Kind::none;
 }
@@ -188,6 +196,20 @@ const OtherNotationMarkData MarkDataChoice::otherNotation() const
         return *value;
     }
     return OtherNotationMarkData{};
+}
+
+bool MarkDataChoice::isHarmonic() const
+{
+    return std::holds_alternative<HarmonicMarkData>(myValue);
+}
+
+const HarmonicMarkData MarkDataChoice::harmonic() const
+{
+    if (const auto *value = std::get_if<HarmonicMarkData>(&myValue))
+    {
+        return *value;
+    }
+    return HarmonicMarkData{};
 }
 
 bool MarkDataChoice::operator==(const MarkDataChoice &other) const

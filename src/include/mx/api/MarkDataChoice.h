@@ -137,6 +137,63 @@ MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(OtherNotationMarkData);
 
+// How a harmonic is produced on a string instrument.
+enum class HarmonicKind
+{
+    // Leave the production method unstated, drawing only the circular harmonic symbol.
+    unspecified,
+
+    // The string sounds open and is touched lightly at a node, so the harmonic's pitch is fixed by
+    // where the node falls on the open string.
+    natural,
+
+    // The string is stopped at one pitch and touched lightly a fixed interval above it -- usually a
+    // fourth, sometimes a major third or a fifth. The stopped note is written as an ordinary
+    // notehead and the touched note as a diamond (see NoteData::notehead).
+    artificial,
+};
+
+// Which of a harmonic's three pitches the note's written notehead states.
+enum class HarmonicPitch
+{
+    // Leave it unstated. Notation that writes only one note for the harmonic, or that relies on
+    // notehead shape alone to say which pitch is meant, does not need this.
+    unspecified,
+
+    // The stopped pitch: where the finger presses the string. The lower note of an artificial
+    // harmonic pair.
+    basePitch,
+
+    // The lightly touched pitch. The upper, diamond-notehead note of an artificial harmonic pair,
+    // and the node touched on an open string for a natural harmonic.
+    touchingPitch,
+
+    // The pitch that actually sounds. Written when the notation states the sounding result
+    // explicitly, often as a small or parenthesized note above the pair.
+    soundingPitch,
+};
+
+// Payload for MarkType::harmonic: the <harmonic> symbol placed on a string-instrument note.
+//
+// A note in an artificial harmonic pair carries HarmonicKind::artificial along with the
+// HarmonicPitch its notehead states -- basePitch on the stopped note, touchingPitch on the diamond
+// note -- so each note says what it is on its own. Leaving both fields unspecified draws the plain
+// circular harmonic symbol, which is what a natural harmonic most often needs.
+struct HarmonicMarkData
+{
+    // Whether the harmonic is natural or artificial.
+    HarmonicKind kind = HarmonicKind::unspecified;
+
+    // Which pitch this note's notehead states.
+    HarmonicPitch pitch = HarmonicPitch::unspecified;
+};
+
+MXAPI_EQUALS_BEGIN(HarmonicMarkData)
+MXAPI_EQUALS_MEMBER(kind)
+MXAPI_EQUALS_MEMBER(pitch)
+MXAPI_EQUALS_END;
+MXAPI_NOT_EQUALS_AND_VECTORS(HarmonicMarkData);
+
 // A variant class that carries data for MarkType values whose payload does not fit MarkData's
 // common fields.
 //
@@ -163,7 +220,8 @@ class MarkDataChoice
         otherMark,
         dynamic,
         compoundDynamics,
-        otherNotation
+        otherNotation,
+        harmonic
     };
 
     MarkDataChoice();
@@ -185,6 +243,8 @@ class MarkDataChoice
 
     MarkDataChoice(OtherNotationMarkData value);
 
+    MarkDataChoice(HarmonicMarkData value);
+
     Kind kind() const;
     bool isNone() const;
     bool isTremolo() const;
@@ -194,6 +254,7 @@ class MarkDataChoice
     bool isDynamic() const;
     bool isCompoundDynamics() const;
     bool isOtherNotation() const;
+    bool isHarmonic() const;
 
     // Returns a copy of the internally held TremoloMarkData.
     //
@@ -225,11 +286,17 @@ class MarkDataChoice
     // Returns a copy of the internally held OtherNotationMarkData, or a default value for another kind.
     const OtherNotationMarkData otherNotation() const;
 
+    // Returns a copy of the internally held HarmonicMarkData.
+    //
+    // Check isHarmonic() first. If this is not a harmonic payload, a default constructed
+    // HarmonicMarkData is returned.
+    const HarmonicMarkData harmonic() const;
+
     bool operator==(const MarkDataChoice &other) const;
 
   private:
     std::variant<std::monostate, TremoloMarkData, ArpeggiateMarkData, NonArpeggiateMarkData, OtherMarkData,
-                 StandardDynamic, CompoundDynamicsData, OtherNotationMarkData>
+                 StandardDynamic, CompoundDynamicsData, OtherNotationMarkData, HarmonicMarkData>
         myValue;
 };
 

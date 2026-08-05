@@ -627,3 +627,9 @@ lysuite/ly33i_Ties_NotEnded.xml
 lysuite/ly61d_Lyrics_Melisma.xml
 lysuite/ly61f_Lyrics_GracedNotes.xml
 synthetic/tied.cue.4.0.xml
+
+# Artificial/natural harmonic detail: HarmonicMarkData in MarkDataChoice carries the
+# <harmonic> element's (natural|artificial) and (base-pitch|touching-pitch|sounding-pitch)
+# children, which both directions previously dropped. The writer also now emits the
+# harmonic's print-object attribute.
+synthetic/harmonic.3.0.xml
