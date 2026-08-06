@@ -847,16 +847,21 @@ void MeasureWriter::writeBarlines(int tickTimePosition)
             barlineElement.setBarStyle(bsc);
         }
 
-        if (myBarlinesIter->endingType != api::EndingType::none)
+        if (myBarlinesIter->ending.has_value())
         {
+            const auto &endingData = *myBarlinesIter->ending;
             core::Ending ending{};
-            ending.setType(myConverter.convert(myBarlinesIter->endingType));
+            ending.setType(myConverter.convert(endingData.type));
 
-            if (myBarlinesIter->endingNumber > 0)
+            // number is a required attribute; an empty list serializes as number="", which is
+            // MusicXML's blank ending.
+            ending.setNumber(core::EndingNumber{endingData.numbers});
+
+            // The text is written only when the author supplied one. Left empty, the ending
+            // displays its numbers.
+            if (!endingData.text.empty())
             {
-                core::EndingNumber en{};
-                en.addValue(myBarlinesIter->endingNumber);
-                ending.setNumber(en);
+                ending.setValue(endingData.text);
             }
 
             barlineElement.setEnding(ending);

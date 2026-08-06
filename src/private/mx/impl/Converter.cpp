@@ -1893,6 +1893,11 @@ core::StartStopDiscontinue Converter::convert(api::EndingType value) const
     return findCoreItem(endingMap, core::StartStopDiscontinue::start(), value);
 }
 
+api::EndingType Converter::convert(core::StartStopDiscontinue value) const
+{
+    return findApiItem(endingMap, api::EndingType::start, value);
+}
+
 core::BackwardForward Converter::convert(api::RepeatDirection value) const
 {
     return findCoreItem(repeatDirectionMap, core::BackwardForward::backward(), value);

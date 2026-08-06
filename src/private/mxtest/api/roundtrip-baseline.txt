@@ -188,8 +188,8 @@ lysuite/ly46c_Midmeasure_Clef.xml
 
 # Unblocked by #271 (repeat @times round-trip). The reader recorded only a bool
 # for a repeat and dropped the times count; the writer never emitted it. Added
-# BarlineData::repeatTimes (0 = unspecified, mirroring endingNumber) so a backward
-# repeat's times attribute survives the round-trip.
+# BarlineData::repeatTimes (0 = unspecified) so a backward repeat's times
+# attribute survives the round-trip.
 lysuite/ly45a_SimpleRepeat.xml
 lysuite/ly45c_RepeatMultipleTimes.xml
 
@@ -633,3 +633,9 @@ synthetic/tied.cue.4.0.xml
 # children, which both directions previously dropped. The writer also now emits the
 # harmonic's print-object attribute.
 synthetic/harmonic.3.0.xml
+
+# Unblocked by #387 (ending numbers and display text). BarlineData carried a single
+# int endingNumber, so the reader kept only the first value of the ending's number
+# attribute: this file's number="1, 2, 3" came back as number="1". BarlineData::ending
+# is now an optional EndingData holding the whole number list plus the display text.
+lysuite/ly45f_Repeats_InvalidEndings.xml

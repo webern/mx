@@ -169,6 +169,7 @@ class Converter
     api::BarlineType convert(core::BarStyle value) const;
 
     core::StartStopDiscontinue convert(api::EndingType value) const;
+    api::EndingType convert(core::StartStopDiscontinue value) const;
 
     core::BackwardForward convert(api::RepeatDirection value) const;
     api::RepeatDirection convert(core::BackwardForward value) const;
