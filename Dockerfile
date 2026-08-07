@@ -19,6 +19,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libxml2-dev \
         libxml2-utils \
         pkg-config \
+        git \
+        ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
 # Python quality tooling for `make gen-quality` / `make gen-lint`. Isolated in a
@@ -34,6 +36,30 @@ RUN python3 -m venv /opt/quality-venv \
 
 # Unversioned name so the Makefile invokes the formatter without the suffix.
 RUN ln -sf /usr/bin/clang-format-18 /usr/local/bin/clang-format
+
+# emsdk: the Emscripten toolchain, used to build mx to WebAssembly (issue #386;
+# see CMakeLists.txt's EMSCRIPTEN block). Pinned to a specific release, not
+# "latest", for the same reproducibility reason every other tool in this image
+# is version-pinned. emsdk writes its config (.emscripten) inside $EMSDK by
+# default (has since 1.39.x) rather than $HOME, so it needs no help from us
+# there -- but its system-library cache defaults to living under $EMSDK too,
+# which the container's caller-uid:gid user (no passwd entry, root-owned
+# /opt/emsdk) can't write to at runtime; EM_CACHE below redirects that.
+# node's bundled bin dir has a version number baked into its path; symlink a
+# stable name so PATH below doesn't have to guess it.
+ARG EMSDK_VERSION=6.0.6
+RUN git clone --depth 1 --branch ${EMSDK_VERSION} https://github.com/emscripten-core/emsdk.git /opt/emsdk \
+    && /opt/emsdk/emsdk install ${EMSDK_VERSION} \
+    && /opt/emsdk/emsdk activate ${EMSDK_VERSION} \
+    && ln -s "$(find /opt/emsdk/node -maxdepth 2 -type d -name bin)" /opt/emsdk/node/current-bin
+
+# EM_CACHE (the compiled libc/libc++/compiler-rt system-library cache) is
+# redirected to the build volume for the same reason CCACHE_DIR is below: it
+# would otherwise try to write under the root-owned /opt/emsdk at runtime.
+ENV EMSDK=/opt/emsdk \
+    EM_CONFIG=/opt/emsdk/.emscripten \
+    EM_CACHE=/workspace/build/.emcache \
+    PATH="/opt/emsdk:/opt/emsdk/upstream/emscripten:/opt/emsdk/node/current-bin:${PATH}"
 
 # MX_RUNNING_IN_DOCKER flips the Makefile to its in-container branch. Build with
 # the pinned GCC; ccache state lives under the mounted build volume.

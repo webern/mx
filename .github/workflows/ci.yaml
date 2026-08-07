@@ -96,6 +96,42 @@ jobs:
       - name: All C++ suites (core roundtrip + unit, api mxtest + examples + roundtrip)
         run: make test-all
 
+  # mx::api cross-compiled to WebAssembly via the pinned mx-sdk emsdk install
+  # (issue #386): a consumer (denigma, github.com/rpatters1/denigma) compiles mx
+  # client-side for browser use, and this is the one place that path is proven
+  # rather than discovered as a regression downstream. Builds through the
+  # mx-sdk toolchain like test-linux/quality/gen; runs mxread/mxwrite/mxhide
+  # under Node so the check exercises mx::api, not just a compile.
+  test-wasm:
+    name: "wasm: mx::api under Emscripten"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: docker/setup-buildx-action@v3
+      - uses: crazy-max/ghaction-github-runtime@v3
+
+      - name: Create bind-backed build volume
+        run: |
+          mkdir -p build/docker
+          docker volume create --driver local \
+            --opt type=none --opt o=bind \
+            --opt device="$GITHUB_WORKSPACE/build/docker" mx-build
+
+      # Emscripten's compiled system-library cache (libc/libc++/compiler-rt),
+      # not source ccache -- see EM_CACHE in the Dockerfile. Populating it from
+      # scratch is the slow part of a wasm build.
+      - name: Cache EM_CACHE
+        uses: actions/cache@v4
+        with:
+          path: build/docker/.emcache
+          key: emcache-${{ runner.os }}-wasm-${{ github.sha }}
+          restore-keys: emcache-${{ runner.os }}-wasm-
+
+      - name: mx::api under Node (wasm)
+        run: make wasm-test
+
   # The api product surface, built natively with AppleClang. macOS is a
   # portability check on the product tier only (the core suites run on Linux in
   # test-linux); this is the only C++ job off the pinned toolchain, by design,

@@ -141,6 +141,8 @@ separately. `make test-all` runs every C++ suite at once (core roundtrip + unit 
 api-roundtrip) — the deep gate CI runs on Linux (see `make help` / CI).
 Adding/removing a `data/` file: bump the pinned count in `CoreRoundtripTest.cpp`, run `make audit` (regenerates `corpus.xml` + `*.features.xml`), confirm round-trip via `make core-roundtrip-test`.
 `ApiLoadSmokeTest` proves a file imports without crashing, not that the data is correct; the read→write→read gate (`make api-roundtrip` / `roundtrip-baseline.txt`) is the correctness check — pin a fixture there to defend a feature.
+`make wasm-test` builds `mx::api` for Emscripten and runs the examples under Node — CI's check that mx
+still compiles and works client-side in a browser (a consumer, denigma, depends on this; issue #386).
 
 Look at what will run in CI `.github/workflows/ci.yaml` and anticipate issues there when coding
 locally. Code coverage is not part of the normal CI run; trigger it on demand with a `/coverage`
