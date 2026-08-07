@@ -206,7 +206,7 @@ class PartData
     /// The initial transposition for the part. If the music entered into the part is not in
     /// concert pitch, then this field is used to specify the transposition that is in-
     /// effect. Note, MusicXML encodes transposition in the measure data, not in the part
-    /// data. Here we offer a convient way to set the transposition in the first measure of
+    /// data. Here we offer a convenient way to set the transposition in the first measure of
     /// the part. Subsequent transposition changes are not currently supported by mx::api.
     std::optional<TransposeData> transposition;
 

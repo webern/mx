@@ -28,16 +28,16 @@ class TechnicalFunctions
 {
 
   public:
-    TechnicalFunctions(std::span<const core::TechnicalChoice> inTechincalChoiceSet, Cursor inCursor);
+    TechnicalFunctions(std::span<const core::TechnicalChoice> inTechnicalChoiceSet, Cursor inCursor);
 
     void parseTechnicalMarks(std::vector<api::MarkData> &outMarks) const;
 
   private:
-    std::span<const core::TechnicalChoice> myTechincalChoiceSet;
+    std::span<const core::TechnicalChoice> myTechnicalChoiceSet;
     const Cursor myCursor;
 
   private:
-    bool parseTechicalMark(const core::TechnicalChoice &techicalChoice, api::MarkData &outMarkData) const;
+    bool parseTechnicalMark(const core::TechnicalChoice &technicalChoice, api::MarkData &outMarkData) const;
 };
 } // namespace impl
 } // namespace mx

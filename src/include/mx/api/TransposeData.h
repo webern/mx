@@ -35,7 +35,7 @@ namespace api
 /// |---------------------|--------------------|----------|---------|
 /// | Glockenspiel        | Up two Octaves     | 24       | 14      |
 /// | Piccolo             | Up an Octave       | 12       | 7       |
-/// | Clarient in Bb      | Down a Major Second| -2       | -1      |
+/// | Clarinet in Bb      | Down a Major Second| -2       | -1      |
 /// | French Horn in F    | Down a Fifth       | -7       | -4      |
 /// | Alto Saxophone in Eb| Down a Major Sixth | -9       | -5      |
 /// | Bass Clarinet in Bb | Down a Major Ninth | -14      | -8      |

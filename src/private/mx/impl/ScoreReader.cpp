@@ -247,7 +247,7 @@ api::ScoreData ScoreReader::getScoreData() const
             {
                 std::string key;
                 key = m.name();
-                encodingData.miscelaneousFields.emplace_back(m.name(), m.value());
+                encodingData.miscellaneousFields.emplace_back(m.name(), m.value());
             }
         }
 

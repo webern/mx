@@ -142,14 +142,14 @@ api::HarmonicMarkData harmonicMarkDataFromCore(const core::Harmonic &inHarmonic)
     return outData;
 }
 
-TechnicalFunctions::TechnicalFunctions(std::span<const core::TechnicalChoice> inTechincalChoiceSet, Cursor inCursor)
-    : myTechincalChoiceSet{inTechincalChoiceSet}, myCursor{inCursor}
+TechnicalFunctions::TechnicalFunctions(std::span<const core::TechnicalChoice> inTechnicalChoiceSet, Cursor inCursor)
+    : myTechnicalChoiceSet{inTechnicalChoiceSet}, myCursor{inCursor}
 {
 }
 
 void TechnicalFunctions::parseTechnicalMarks(std::vector<api::MarkData> &outMarks) const
 {
-    for (const auto &techChoice : myTechincalChoiceSet)
+    for (const auto &techChoice : myTechnicalChoiceSet)
     {
         const auto choiceKind = techChoice.kind();
         Converter converter;
@@ -162,7 +162,7 @@ void TechnicalFunctions::parseTechnicalMarks(std::vector<api::MarkData> &outMark
         api::MarkData markData;
         markData.markType = markType;
         markData.tickTimePosition = myCursor.tickTimePosition;
-        bool isSuccess = parseTechicalMark(techChoice, markData);
+        bool isSuccess = parseTechnicalMark(techChoice, markData);
 
         if (isSuccess)
         {
@@ -171,23 +171,23 @@ void TechnicalFunctions::parseTechnicalMarks(std::vector<api::MarkData> &outMark
     }
 }
 
-bool TechnicalFunctions::parseTechicalMark(const core::TechnicalChoice &techicalChoice,
-                                           api::MarkData &outMarkData) const
+bool TechnicalFunctions::parseTechnicalMark(const core::TechnicalChoice &technicalChoice,
+                                            api::MarkData &outMarkData) const
 {
-    switch (techicalChoice.kind())
+    switch (technicalChoice.kind())
     {
     case core::TechnicalChoice::Kind::upBow: {
-        parseMarkDataAttributes(techicalChoice.asUpBow(), outMarkData);
+        parseMarkDataAttributes(technicalChoice.asUpBow(), outMarkData);
         outMarkData.name = "up-bow";
         return true;
     }
     case core::TechnicalChoice::Kind::downBow: {
-        parseMarkDataAttributes(techicalChoice.asDownBow(), outMarkData);
+        parseMarkDataAttributes(technicalChoice.asDownBow(), outMarkData);
         outMarkData.name = "down-bow";
         return true;
     }
     case core::TechnicalChoice::Kind::harmonic: {
-        const auto &harmonic = techicalChoice.asHarmonic();
+        const auto &harmonic = technicalChoice.asHarmonic();
         parseMarkDataAttributes(harmonic, outMarkData);
         outMarkData.name = "harmonic";
         const auto harmonicData = harmonicMarkDataFromCore(harmonic);
@@ -199,17 +199,17 @@ bool TechnicalFunctions::parseTechicalMark(const core::TechnicalChoice &techical
         return true;
     }
     case core::TechnicalChoice::Kind::openString: {
-        parseMarkDataAttributes(techicalChoice.asOpenString(), outMarkData);
+        parseMarkDataAttributes(technicalChoice.asOpenString(), outMarkData);
         outMarkData.name = "open-string";
         return true;
     }
     case core::TechnicalChoice::Kind::thumbPosition: {
-        parseMarkDataAttributes(techicalChoice.asThumbPosition(), outMarkData);
+        parseMarkDataAttributes(technicalChoice.asThumbPosition(), outMarkData);
         outMarkData.name = "thumb-position";
         return true;
     }
     case core::TechnicalChoice::Kind::fingering: {
-        const auto &fingering = techicalChoice.asFingering();
+        const auto &fingering = technicalChoice.asFingering();
         parseMarkDataAttributes(fingering, outMarkData);
         outMarkData.name = fingering.value();
         Converter converter;
@@ -224,39 +224,39 @@ bool TechnicalFunctions::parseTechicalMark(const core::TechnicalChoice &techical
         return true;
     }
     case core::TechnicalChoice::Kind::pluck: {
-        const auto &pluck = techicalChoice.asPluck();
+        const auto &pluck = technicalChoice.asPluck();
         parseMarkDataAttributes(pluck, outMarkData);
         outMarkData.name = pluck.value();
         return true;
     }
     case core::TechnicalChoice::Kind::doubleTongue: {
-        parseMarkDataAttributes(techicalChoice.asDoubleTongue(), outMarkData);
+        parseMarkDataAttributes(technicalChoice.asDoubleTongue(), outMarkData);
         outMarkData.name = "double-tongue";
         return true;
     }
     case core::TechnicalChoice::Kind::tripleTongue: {
-        parseMarkDataAttributes(techicalChoice.asTripleTongue(), outMarkData);
+        parseMarkDataAttributes(technicalChoice.asTripleTongue(), outMarkData);
         outMarkData.name = "triple-tongue";
         return true;
     }
     case core::TechnicalChoice::Kind::stopped: {
-        parseMarkDataAttributes(techicalChoice.asStopped(), outMarkData);
+        parseMarkDataAttributes(technicalChoice.asStopped(), outMarkData);
         outMarkData.name = "stopped";
         return true;
     }
     case core::TechnicalChoice::Kind::snapPizzicato: {
-        parseMarkDataAttributes(techicalChoice.asSnapPizzicato(), outMarkData);
+        parseMarkDataAttributes(technicalChoice.asSnapPizzicato(), outMarkData);
         outMarkData.name = "snap-pizzicato";
         return true;
     }
     case core::TechnicalChoice::Kind::fret: {
-        const auto &fret = techicalChoice.asFret();
+        const auto &fret = technicalChoice.asFret();
         parseMarkDataAttributes(fret, outMarkData);
         outMarkData.name = std::to_string(fret.value());
         return true;
     }
     case core::TechnicalChoice::Kind::string: {
-        const auto &s = techicalChoice.asString();
+        const auto &s = technicalChoice.asString();
         parseMarkDataAttributes(s, outMarkData);
         outMarkData.name = std::to_string(s.value().value());
         return true;
@@ -270,75 +270,75 @@ bool TechnicalFunctions::parseTechicalMark(const core::TechnicalChoice &techical
     case core::TechnicalChoice::Kind::tap:
         return false;
     case core::TechnicalChoice::Kind::heel: {
-        parseMarkDataAttributes(techicalChoice.asHeel(), outMarkData);
+        parseMarkDataAttributes(technicalChoice.asHeel(), outMarkData);
         outMarkData.name = "heel";
         return true;
     }
     case core::TechnicalChoice::Kind::toe: {
-        parseMarkDataAttributes(techicalChoice.asToe(), outMarkData);
+        parseMarkDataAttributes(technicalChoice.asToe(), outMarkData);
         outMarkData.name = "toe";
         return true;
     }
     case core::TechnicalChoice::Kind::fingernails: {
-        parseMarkDataAttributes(techicalChoice.asFingernails(), outMarkData);
+        parseMarkDataAttributes(technicalChoice.asFingernails(), outMarkData);
         outMarkData.name = "fingernails";
         return true;
     }
     case core::TechnicalChoice::Kind::hole: {
-        const auto &hole = techicalChoice.asHole();
+        const auto &hole = technicalChoice.asHole();
         parseMarkDataAttributes(hole, outMarkData);
         outMarkData.name = technicalFunctionsHoleToSmuflName(hole);
         return true;
     }
     case core::TechnicalChoice::Kind::arrow: {
-        const auto &arrow = techicalChoice.asArrow();
+        const auto &arrow = technicalChoice.asArrow();
         parseMarkDataAttributes(arrow, outMarkData);
         outMarkData.name = technicalFunctionsArrowToSmuflName(arrow);
         return true;
     }
     case core::TechnicalChoice::Kind::handbell: {
-        const auto &handbell = techicalChoice.asHandbell();
+        const auto &handbell = technicalChoice.asHandbell();
         parseMarkDataAttributes(handbell, outMarkData);
         outMarkData.name = technicalFunctionsHandbellToSmuflName(handbell.value());
         return true;
     }
     case core::TechnicalChoice::Kind::brassBend: {
-        parseMarkDataAttributes(techicalChoice.asBrassBend(), outMarkData);
+        parseMarkDataAttributes(technicalChoice.asBrassBend(), outMarkData);
         outMarkData.name = "brass-bend";
         return true;
     }
     case core::TechnicalChoice::Kind::flip: {
-        parseMarkDataAttributes(techicalChoice.asFlip(), outMarkData);
+        parseMarkDataAttributes(technicalChoice.asFlip(), outMarkData);
         outMarkData.name = "flip";
         return true;
     }
     case core::TechnicalChoice::Kind::smear: {
-        parseMarkDataAttributes(techicalChoice.asSmear(), outMarkData);
+        parseMarkDataAttributes(technicalChoice.asSmear(), outMarkData);
         outMarkData.name = "smear";
         return true;
     }
     case core::TechnicalChoice::Kind::open: {
-        parseMarkDataAttributes(techicalChoice.asOpen(), outMarkData);
+        parseMarkDataAttributes(technicalChoice.asOpen(), outMarkData);
         outMarkData.name = "open";
         return true;
     }
     case core::TechnicalChoice::Kind::halfMuted: {
-        parseMarkDataAttributes(techicalChoice.asHalfMuted(), outMarkData);
+        parseMarkDataAttributes(technicalChoice.asHalfMuted(), outMarkData);
         outMarkData.name = "half-muted";
         return true;
     }
     case core::TechnicalChoice::Kind::harmonMute: {
-        parseMarkDataAttributes(techicalChoice.asHarmonMute(), outMarkData);
+        parseMarkDataAttributes(technicalChoice.asHarmonMute(), outMarkData);
         outMarkData.name = "harmon-mute";
         return true;
     }
     case core::TechnicalChoice::Kind::golpe: {
-        parseMarkDataAttributes(techicalChoice.asGolpe(), outMarkData);
+        parseMarkDataAttributes(technicalChoice.asGolpe(), outMarkData);
         outMarkData.name = "golpe";
         return true;
     }
     case core::TechnicalChoice::Kind::otherTechnical: {
-        const auto &oa = techicalChoice.asOtherTechnical();
+        const auto &oa = technicalChoice.asOtherTechnical();
         parseMarkDataAttributes(oa, outMarkData);
         outMarkData.name = oa.value();
         api::OtherMarkData payload;

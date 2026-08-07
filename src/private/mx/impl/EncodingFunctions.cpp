@@ -91,7 +91,7 @@ void createEncoding(const api::EncodingData &inEncoding, core::ScoreHeaderGroup 
 
     bool hasMiscellaneous = identification.miscellaneous().has_value();
     core::Miscellaneous miscellaneous = identification.miscellaneous().value_or(core::Miscellaneous{});
-    for (const auto &m : inEncoding.miscelaneousFields)
+    for (const auto &m : inEncoding.miscellaneousFields)
     {
         hasIdentification = true;
         hasEncoding = true;

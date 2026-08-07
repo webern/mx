@@ -14,7 +14,7 @@ inline mx::api::ScoreData apiLy43eScoreData()
     ScoreData score;
     score.parts.emplace_back(PartData{});
     score.ticksPerQuarter = 8;
-    score.encoding.miscelaneousFields.emplace_back(
+    score.encoding.miscellaneousFields.emplace_back(
         "description", "A piano staff with dynamics and \n          clef changes, where each element (ffff, wedge and "
                        "clef changes) \n          applies only to one voice or one staff, respectively.");
 

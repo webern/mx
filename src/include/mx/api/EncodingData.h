@@ -59,7 +59,7 @@ class EncodingData
     std::string encodingDescription;
     std::vector<std::string> software;
     std::vector<SupportedItem> supportedItems;
-    std::vector<MiscellaneousField> miscelaneousFields;
+    std::vector<MiscellaneousField> miscellaneousFields;
 
     // mx stamps its own provenance <software> node (the mx URL plus the build's git
     // SHA) into <encoding> on every api write. The intent is to aid in diagnosing and
@@ -102,7 +102,7 @@ MXAPI_EQUALS_MEMBER(encoder)
 MXAPI_EQUALS_MEMBER(encodingDescription)
 MXAPI_EQUALS_MEMBER(software)
 MXAPI_EQUALS_MEMBER(supportedItems)
-MXAPI_EQUALS_MEMBER(miscelaneousFields)
+MXAPI_EQUALS_MEMBER(miscellaneousFields)
 MXAPI_EQUALS_MEMBER(writeMxVersion)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(EncodingData);

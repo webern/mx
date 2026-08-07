@@ -52,7 +52,7 @@ struct DirectionData
     int voice;
 
     // Direction elements are placed inside the StaffData object in mx api.  This would mean that
-    // they are alyways assigned to a staff, however MusicXML makes the staff element optional.
+    // they are always assigned to a staff, however MusicXML makes the staff element optional.
     // in the case that we want a direction element to have no <staff> element then me must place
     // the direction on staffIndex = 0 and set isStaffValueSpecified. otherwise the we will
     // assume that the <staff> element is present with a value of staffIndex + 1. This bool is
