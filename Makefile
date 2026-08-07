@@ -241,10 +241,8 @@ api-coverage:
 		$(BUILD_ROOT)/cov-api | tee $(COV_DIR)/api/summary.txt
 	@echo "=== api-coverage written to $(COV_DIR)/api/ ==="
 
-# wasm: mx::api built for Emscripten (see CMakeLists.txt's EMSCRIPTEN block for
-# the exceptions flag this relies on). Compiler launcher blanked, same as the
-# coverage targets above -- ccache wrapping emcc's Python driver is untested
-# and not worth the risk for a job that isn't anyone's hot inner loop.
+# wasm: mx::api built for Emscripten. Compiler launcher blanked, same as the
+# coverage targets above -- ccache wrapping emcc's Python driver is untested.
 wasm-lib:
 	emcmake $(CMAKE) -S . -B $(BUILD_ROOT)/wasm \
 		-DCMAKE_BUILD_TYPE=$(BUILD_TYPE) \
@@ -256,14 +254,8 @@ wasm-lib:
 wasm-build: wasm-lib
 	emmake $(CMAKE) --build $(BUILD_ROOT)/wasm --target mxread mxwrite mxhide --parallel $(JOBS)
 
-# Proves mx::api actually works under wasm, not just that it compiles:
-# mxread/mxwrite/mxhide (src/private/mx/examples/) round-trip real ScoreData
-# through DocumentManager, the same programs api-examples runs natively.
-# Emscripten's CMake toolchain names the outputs *.js; node runs them and
-# each one's C++ main() return code becomes node's exit code. mxwrite's
-# writeToFile lands in Emscripten's default in-memory MEMFS, not on the real
-# filesystem -- the output path won't actually appear under build/wasm/, only
-# the write call (and its return code) is being exercised here.
+# Runs mxread/mxwrite/mxhide under Node so this exercises mx::api, not just a
+# compile. mxwrite's output lands in Emscripten's in-memory MEMFS, not disk.
 wasm-test: wasm-build
 	node $(BUILD_ROOT)/wasm/mxread.js
 	node $(BUILD_ROOT)/wasm/mxwrite.js $(BUILD_ROOT)/wasm/example.musicxml

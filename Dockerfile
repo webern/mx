@@ -38,16 +38,7 @@ RUN python3 -m venv /opt/quality-venv \
 # Unversioned name so the Makefile invokes the formatter without the suffix.
 RUN ln -sf /usr/bin/clang-format-18 /usr/local/bin/clang-format
 
-# emsdk: the Emscripten toolchain, used to build mx to WebAssembly (issue #386;
-# see CMakeLists.txt's EMSCRIPTEN block). Pinned to a specific release, not
-# "latest", for the same reproducibility reason every other tool in this image
-# is version-pinned. emsdk writes its config (.emscripten) inside $EMSDK by
-# default (has since 1.39.x) rather than $HOME, so it needs no help from us
-# there -- but its system-library cache defaults to living under $EMSDK too,
-# which the container's caller-uid:gid user (no passwd entry, root-owned
-# /opt/emsdk) can't write to at runtime; EM_CACHE below redirects that.
-# node's bundled bin dir has a version number baked into its path; symlink a
-# stable name so PATH below doesn't have to guess it.
+# emsdk: pinned Emscripten toolchain for building mx to WebAssembly (#386).
 ARG EMSDK_VERSION=6.0.6
 RUN git clone --depth 1 --branch ${EMSDK_VERSION} https://github.com/emscripten-core/emsdk.git /opt/emsdk \
     && /opt/emsdk/emsdk install ${EMSDK_VERSION} \
@@ -55,18 +46,12 @@ RUN git clone --depth 1 --branch ${EMSDK_VERSION} https://github.com/emscripten-
     && ln -s "$(find /opt/emsdk/node -maxdepth 2 -type d -name bin)" /opt/emsdk/node/current-bin \
     && rm -rf /opt/emsdk/downloads
 
-# EM_CACHE (the compiled libc/libc++/compiler-rt system-library cache) is
-# redirected to the build volume for the same reason CCACHE_DIR is below: it
-# would otherwise try to write under the root-owned /opt/emsdk at runtime.
-# PATH appends emsdk's dirs rather than prepending them: upstream/emscripten
-# (Emscripten's own tree) contains a subdirectory literally named `cmake`
-# (its CMake toolchain-file module), and execve() on a directory returns
-# EACCES ("Permission denied") -- prepended, it silently shadowed the real
-# /usr/bin/cmake for every job, not just the wasm one.
+# EM_CACHE: like CCACHE_DIR, avoids writing under root-owned /opt/emsdk at runtime.
+# PATH is appended, not prepended -- emsdk's own dirs shadow real tools by name (node, cmake).
 ENV EMSDK=/opt/emsdk \
     EM_CONFIG=/opt/emsdk/.emscripten \
     EM_CACHE=/workspace/build/.emcache \
-    PATH="${PATH}:/opt/emsdk:/opt/emsdk/upstream/emscripten:/opt/emsdk/node/current-bin"
+    PATH="${PATH}:/opt/emsdk/node/current-bin:/opt/emsdk/upstream/emscripten"
 
 # MX_RUNNING_IN_DOCKER flips the Makefile to its in-container branch. Build with
 # the pinned GCC; ccache state lives under the mounted build volume.
