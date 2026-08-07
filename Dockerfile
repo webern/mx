@@ -21,6 +21,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         pkg-config \
         git \
         ca-certificates \
+        xz-utils \
     && rm -rf /var/lib/apt/lists/*
 
 # Python quality tooling for `make gen-quality` / `make gen-lint`. Isolated in a

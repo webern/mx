@@ -102,8 +102,8 @@ jobs:
   # rather than discovered as a regression downstream. Builds through the
   # mx-sdk toolchain like test-linux/quality/gen; runs mxread/mxwrite/mxhide
   # under Node so the check exercises mx::api, not just a compile.
-  test-wasm:
-    name: "wasm: mx::api under Emscripten"
+  emscripten:
+    name: emscripten
     runs-on: ubuntu-latest
 
     steps:
