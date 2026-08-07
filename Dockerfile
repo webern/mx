@@ -52,15 +52,21 @@ ARG EMSDK_VERSION=6.0.6
 RUN git clone --depth 1 --branch ${EMSDK_VERSION} https://github.com/emscripten-core/emsdk.git /opt/emsdk \
     && /opt/emsdk/emsdk install ${EMSDK_VERSION} \
     && /opt/emsdk/emsdk activate ${EMSDK_VERSION} \
-    && ln -s "$(find /opt/emsdk/node -maxdepth 2 -type d -name bin)" /opt/emsdk/node/current-bin
+    && ln -s "$(find /opt/emsdk/node -maxdepth 2 -type d -name bin)" /opt/emsdk/node/current-bin \
+    && rm -rf /opt/emsdk/downloads
 
 # EM_CACHE (the compiled libc/libc++/compiler-rt system-library cache) is
 # redirected to the build volume for the same reason CCACHE_DIR is below: it
 # would otherwise try to write under the root-owned /opt/emsdk at runtime.
+# PATH appends emsdk's dirs rather than prepending them: upstream/emscripten
+# (Emscripten's own tree) contains a subdirectory literally named `cmake`
+# (its CMake toolchain-file module), and execve() on a directory returns
+# EACCES ("Permission denied") -- prepended, it silently shadowed the real
+# /usr/bin/cmake for every job, not just the wasm one.
 ENV EMSDK=/opt/emsdk \
     EM_CONFIG=/opt/emsdk/.emscripten \
     EM_CACHE=/workspace/build/.emcache \
-    PATH="/opt/emsdk:/opt/emsdk/upstream/emscripten:/opt/emsdk/node/current-bin:${PATH}"
+    PATH="${PATH}:/opt/emsdk:/opt/emsdk/upstream/emscripten:/opt/emsdk/node/current-bin"
 
 # MX_RUNNING_IN_DOCKER flips the Makefile to its in-container branch. Build with
 # the pinned GCC; ccache state lives under the mounted build volume.
