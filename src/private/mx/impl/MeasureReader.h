@@ -119,7 +119,7 @@ class MeasureReader
     void takeUserRequestedVoiceNumbers(api::StaffData &staff) const;
     void collapseVoicesAutomatically(api::StaffData &staff) const;
     bool isUserRequestedVoiceNumberConsistent(const api::VoiceData &voiceData) const;
-    bool isUserRequestedVoiceNumberConsistentAccrossAllVoices(const api::StaffData &staff) const;
+    bool isUserRequestedVoiceNumberConsistentAcrossAllVoices(const api::StaffData &staff) const;
     int getUserRequestedVoiceNumber(const api::VoiceData &voiceData) const;
     void advanceTickTimePosition(int amount, std::string reason) const;
 };

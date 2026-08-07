@@ -1172,7 +1172,7 @@ void MeasureReader::consolidateVoicesForAllStaves() const
 {
     for (auto &staff : myOutMeasureData.staves)
     {
-        if (isUserRequestedVoiceNumberConsistentAccrossAllVoices(staff))
+        if (isUserRequestedVoiceNumberConsistentAcrossAllVoices(staff))
         {
             takeUserRequestedVoiceNumbers(staff);
         }
@@ -1231,7 +1231,7 @@ bool MeasureReader::isUserRequestedVoiceNumberConsistent(const api::VoiceData &v
     return true;
 }
 
-bool MeasureReader::isUserRequestedVoiceNumberConsistentAccrossAllVoices(const api::StaffData &staff) const
+bool MeasureReader::isUserRequestedVoiceNumberConsistentAcrossAllVoices(const api::StaffData &staff) const
 {
     std::set<int> userRequestedVoiceNumbers;
     for (const auto &voicePair : staff.voices)
