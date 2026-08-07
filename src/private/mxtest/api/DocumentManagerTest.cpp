@@ -261,12 +261,74 @@ ROUND_TRIP_TEST_SCALAR(std::string, movementTitle, movementTitle, "value", 0);
 ROUND_TRIP_TEST_SCALAR(std::string, movementNumber, movementNumber, "value", 0);
 ROUND_TRIP_TEST_SCALAR(std::string, composer, composer, "value", 0);
 ROUND_TRIP_TEST_SCALAR(std::string, lyricist, lyricist, "value", 0);
+ROUND_TRIP_TEST_SCALAR(std::string, arranger, arranger, "value", 0);
+ROUND_TRIP_TEST_SCALAR(std::string, publisher, publisher, "value", 0);
 ROUND_TRIP_TEST_SCALAR(std::string, copyright, copyright, "value", 0);
 ROUND_TRIP_TEST_SCALAR(std::string, encoding.encoder, encoder, "value", 0);
 ROUND_TRIP_TEST_SCALAR(std::string, encoding.encodingDescription, encodingDescription, "value", 0);
 ROUND_TRIP_TEST_SCALAR(int, encoding.encodingDate.year, year, 2016, 0);
 ROUND_TRIP_TEST_SCALAR(int, encoding.encodingDate.month, month, 9, 0);
 ROUND_TRIP_TEST_SCALAR(int, encoding.encodingDate.day, day, 12, 0);
+
+// The four <creator> types mx::api models are independent slots. The arranger used to be read
+// into ScoreData::lyricist and rewritten as type="lyricist", so a file carrying both lost the
+// lyricist; the publisher was dropped on the way out entirely.
+
+TEST(RoundTrip_AllCreatorTypes, DocumentManager)
+{
+    auto input = ScoreData{};
+    input.composer = "MetaComposer";
+    input.lyricist = "MetaLyricist";
+    input.arranger = "MetaArranger";
+    input.publisher = "MetaPublisher";
+
+    auto &docMngr = DocumentManager::getInstance();
+    const auto createResult = docMngr.createFromScore(input);
+    REQUIRE(createResult.ok());
+    const int writeId = createResult.value();
+    std::ostringstream oss;
+    const auto writeResult = docMngr.writeToStream(writeId, oss);
+    REQUIRE(writeResult.ok());
+    docMngr.destroyDocument(writeId);
+
+    const auto xml = oss.str();
+    CHECK(xml.find("<creator type=\"composer\">MetaComposer</creator>") != std::string::npos);
+    CHECK(xml.find("<creator type=\"lyricist\">MetaLyricist</creator>") != std::string::npos);
+    CHECK(xml.find("<creator type=\"arranger\">MetaArranger</creator>") != std::string::npos);
+    CHECK(xml.find("<creator type=\"publisher\">MetaPublisher</creator>") != std::string::npos);
+
+    const auto output = roundTripScore(input);
+    CHECK_EQUAL("MetaComposer", output.composer);
+    CHECK_EQUAL("MetaLyricist", output.lyricist);
+    CHECK_EQUAL("MetaArranger", output.arranger);
+    CHECK_EQUAL("MetaPublisher", output.publisher);
+}
+
+T_END
+
+// Reading the same shape from a real file: musuite/testMetaData.xml carries an arranger, a
+// composer and a lyricist, plus creator types mx::api does not model, which must not disturb
+// the ones it does.
+
+TEST(ReadAllCreatorTypes, DocumentManager)
+{
+    auto &docMngr = DocumentManager::getInstance();
+    const auto createResult = docMngr.createFromFile(std::string{mxtest::getResourcesDirectoryPath()} +
+                                                     std::string{"/musuite/testMetaData.xml"});
+    REQUIRE(createResult.ok());
+    const int documentId = createResult.value();
+    const auto dataResult = docMngr.getData(documentId);
+    REQUIRE(dataResult.ok());
+    const auto score = dataResult.value();
+    docMngr.destroyDocument(documentId);
+
+    CHECK_EQUAL("MetaComposer", score.composer);
+    CHECK_EQUAL("MetaLyricist", score.lyricist);
+    CHECK_EQUAL("MetaArranger", score.arranger);
+    CHECK_EQUAL("", score.publisher);
+}
+
+T_END
 
 // --- Page margin coalescing -------------------------------------------------
 // Equal odd/even margins collapse to a single <page-margins type="both">;

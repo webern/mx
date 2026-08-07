@@ -171,12 +171,14 @@ api::ScoreData ScoreReader::getScoreData() const
         myOutScoreData.movementNumber = *myHeaderGroup.movementNumber();
     }
 
-    bool isComposerFound = false;
-    bool isCopyrightFound = false;
-
     if (myHeaderGroup.identification().has_value())
     {
         const auto &ident = *myHeaderGroup.identification();
+
+        bool isComposerFound = false;
+        bool isArrangerFound = false;
+        bool isPublisherFound = false;
+        bool isCopyrightFound = false;
 
         for (const auto &i : ident.creator())
         {
@@ -199,17 +201,18 @@ api::ScoreData ScoreReader::getScoreData() const
                 myOutScoreData.lyricist = i.value();
             }
 
-            // TODO: arranger/publisher overwrite lyricist (ScoreData has no fields for them),
-            // and ScoreWriter re-emits the value as type="lyricist" -- lossy and mislabeled.
-            // Issue: add arranger/publisher fields to ScoreData.
-            if (typeStr == "arranger")
+            // ScoreData has one slot each for arranger and publisher, but MusicXML permits any
+            // number of <creator> elements of a given type. Keep the first of each.
+            if (typeStr == "arranger" && !isArrangerFound)
             {
-                myOutScoreData.lyricist = i.value();
+                myOutScoreData.arranger = i.value();
+                isArrangerFound = true;
             }
 
-            if (typeStr == "publisher")
+            if (typeStr == "publisher" && !isPublisherFound)
             {
-                myOutScoreData.lyricist = i.value();
+                myOutScoreData.publisher = i.value();
+                isPublisherFound = true;
             }
         }
 

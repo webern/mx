@@ -40,8 +40,9 @@ namespace impl
 //
 // Identity ids are scoped per part and per spanner class: events in the same
 // part sharing a class and id are one logical spanner, even across staves.
-// Pedal starts/stops carry SpannerNumber but the <pedal> element has no
-// number attribute, so pedals are ignored here.
+// Pedal starts/stops carry SpannerNumber, but mx::api does not model the
+// <pedal> number attribute (added in MusicXML 3.1), so pedals are ignored
+// here and no number is ever emitted for one.
 //
 // If more than 16 spanners of one class are open at once in a part (which no
 // real score approaches), resolution fails loudly with an exception rather

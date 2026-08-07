@@ -91,6 +91,12 @@ void createCredits(const api::ScoreData &inScoreData, core::ScoreHeaderGroup &ou
                 words.setJustify(converter.convert(p.justify));
             }
 
+            if (p.enclosure != api::Enclosure::unspecified)
+            {
+                const Converter converter;
+                words.setEnclosure(converter.convert(p.enclosure));
+            }
+
             core::CreditChoiceGroupChoice groupChoice = core::CreditChoiceGroupChoice::creditWords(words);
             core::CreditChoiceGroup group;
             group.setChoice(groupChoice);
@@ -163,6 +169,12 @@ void createCredits(const core::ScoreHeaderGroup &inHeader, api::ScoreData &outSc
             {
                 const Converter converter;
                 pageText.justify = converter.convert(*words.justify());
+            }
+
+            if (words.enclosure().has_value())
+            {
+                const Converter converter;
+                pageText.enclosure = converter.convert(*words.enclosure());
             }
         }
 

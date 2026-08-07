@@ -40,6 +40,10 @@ class PageTextData
     // carried in `positionData.horizontalAlignment`; MusicXML defines both
     // attributes on `<credit-words>`.
     HorizontalAlignment justify = HorizontalAlignment::unspecified;
+
+    // A shape drawn around the text. Enclosure::unspecified draws no enclosure; Enclosure::none
+    // states explicitly that there is none.
+    Enclosure enclosure = Enclosure::unspecified;
 };
 
 MXAPI_EQUALS_BEGIN(PageTextData)
@@ -54,6 +58,7 @@ if (!areVectorsEqual(lhs.creditTypes, rhs.creditTypes))
     return false;
 }
 MXAPI_EQUALS_MEMBER(justify)
+MXAPI_EQUALS_MEMBER(enclosure)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(PageTextData);
 } // namespace api
