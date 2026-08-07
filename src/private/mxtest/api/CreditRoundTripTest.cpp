@@ -149,4 +149,59 @@ TEST(creditRoundTrip, justifyAbsentStaysAbsent)
     CHECK(HorizontalAlignment::unspecified == out.pageTextItems.at(0).justify);
 }
 
+TEST(creditRoundTrip, enclosureSurvives)
+{
+    auto in = makeMinimalScore();
+    PageTextData credit{};
+    credit.text = "Framed title";
+    credit.pageNumber = 1;
+    credit.enclosure = Enclosure::rectangle;
+    in.pageTextItems.push_back(credit);
+
+    const auto xml = mxtest::toXml(in);
+    CHECK(xml.find("enclosure=\"rectangle\"") != std::string::npos);
+
+    const auto out = mxtest::roundTrip(in);
+
+    REQUIRE(out.pageTextItems.size() == 1);
+    const auto &got = out.pageTextItems.at(0);
+    CHECK_EQUAL("Framed title", got.text);
+    CHECK(Enclosure::rectangle == got.enclosure);
+}
+
+TEST(creditRoundTrip, enclosureNoneIsExplicit)
+{
+    auto in = makeMinimalScore();
+    PageTextData credit{};
+    credit.text = "Deliberately unframed";
+    credit.pageNumber = 1;
+    credit.enclosure = Enclosure::none;
+    in.pageTextItems.push_back(credit);
+
+    const auto xml = mxtest::toXml(in);
+    CHECK(xml.find("enclosure=\"none\"") != std::string::npos);
+
+    const auto out = mxtest::roundTrip(in);
+
+    REQUIRE(out.pageTextItems.size() == 1);
+    CHECK(Enclosure::none == out.pageTextItems.at(0).enclosure);
+}
+
+TEST(creditRoundTrip, enclosureAbsentStaysAbsent)
+{
+    auto in = makeMinimalScore();
+    PageTextData credit{};
+    credit.text = "no enclosure here";
+    credit.pageNumber = 1;
+    in.pageTextItems.push_back(credit);
+
+    const auto xml = mxtest::toXml(in);
+    CHECK(xml.find("enclosure=") == std::string::npos);
+
+    const auto out = mxtest::roundTrip(in);
+
+    REQUIRE(out.pageTextItems.size() == 1);
+    CHECK(Enclosure::unspecified == out.pageTextItems.at(0).enclosure);
+}
+
 #endif

@@ -117,6 +117,24 @@ core::ScorePartwise ScoreWriter::getScorePartwise() const
         hasIdentification = true;
     }
 
+    if (!myScoreData.arranger.empty())
+    {
+        core::TypedText arranger{};
+        arranger.setType(std::string{"arranger"});
+        arranger.setValue(myScoreData.arranger);
+        identification.addCreator(arranger);
+        hasIdentification = true;
+    }
+
+    if (!myScoreData.publisher.empty())
+    {
+        core::TypedText publisher{};
+        publisher.setType(std::string{"publisher"});
+        publisher.setValue(myScoreData.publisher);
+        identification.addCreator(publisher);
+        hasIdentification = true;
+    }
+
     if (!myScoreData.copyright.empty())
     {
         core::TypedText copyright{};

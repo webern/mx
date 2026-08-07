@@ -85,7 +85,7 @@ class SpannerNumberEventCollector
     // Mirrors DirectionWriter::emitDirectionTypes: one pass over the ordered direction-type
     // content, registering each spanner event with the address of its DirectionChoice -- the
     // same identity the writer presents when it asks for the emitted number. Pedals are
-    // skipped: <pedal> has no number attribute.
+    // skipped: mx::api does not model <pedal>'s number attribute.
     void addDirection(const api::DirectionData &inDirection)
     {
         for (const auto &choice : inDirection.directionTypes)
