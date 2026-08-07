@@ -255,10 +255,12 @@ wasm-build: wasm-lib
 	emmake $(CMAKE) --build $(BUILD_ROOT)/wasm --target mxread mxwrite mxhide --parallel $(JOBS)
 
 # Runs mxread/mxwrite/mxhide under Node so this exercises mx::api, not just a
-# compile. mxwrite's output lands in Emscripten's in-memory MEMFS, not disk.
+# compile. mxwrite's output path is bare (no directory) and lands in
+# Emscripten's in-memory MEMFS, not disk -- MEMFS starts empty, so a path
+# with a build/wasm/ prefix would fail outright with no such directory.
 wasm-test: wasm-build
 	node $(BUILD_ROOT)/wasm/mxread.js
-	node $(BUILD_ROOT)/wasm/mxwrite.js $(BUILD_ROOT)/wasm/example.musicxml
+	node $(BUILD_ROOT)/wasm/mxwrite.js example.musicxml
 	node $(BUILD_ROOT)/wasm/mxhide.js
 	@echo 'wasm-test: mxread/mxwrite/mxhide ran successfully under Node (wasm).'
 
