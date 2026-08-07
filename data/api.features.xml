@@ -297,7 +297,8 @@
       <notes>EncodingData.encodingDescription; EncodingFunctions.cpp.</notes>
     </feature>
     <feature name="ending" support="full">
-      <notes>BarlineData ending (EndingType via endingMap).</notes>
+      <notes>BarlineData.ending -&gt; EndingData: type (EndingType via endingMap), the full number
+      list, and the display text.</notes>
     </feature>
     <feature name="ensemble" support="full">
       <notes>InstrumentData.soloOrEnsemble=ensemble.</notes>

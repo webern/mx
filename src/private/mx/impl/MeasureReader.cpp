@@ -914,8 +914,6 @@ void MeasureReader::parseBarline(const core::Barline &inMxBarline) const
     auto barline = api::BarlineData{};
     auto loc = api::HorizontalAlignment::unspecified;
     auto style = api::BarlineType::unspecified;
-    auto endingType = api::EndingType::none;
-    auto endingNumber = 0;
     auto repeat = false;
     auto repeatTimes = 0;
     auto repeatDirection = api::RepeatDirection::unspecified;
@@ -944,28 +942,15 @@ void MeasureReader::parseBarline(const core::Barline &inMxBarline) const
 
     if (inMxBarline.ending().has_value())
     {
-        const auto &ending = *inMxBarline.ending();
+        const auto &mxEnding = *inMxBarline.ending();
+        auto endingData = api::EndingData{};
+        endingData.type = myConverter.convert(mxEnding.type());
 
-        switch (ending.type().tag())
-        {
-        case core::StartStopDiscontinue::Tag::start:
-            endingType = api::EndingType::start;
-            break;
+        const auto numValues = mxEnding.number().values();
+        endingData.numbers.assign(numValues.begin(), numValues.end());
+        endingData.text = mxEnding.value();
 
-        case core::StartStopDiscontinue::Tag::stop:
-            endingType = api::EndingType::stop;
-            break;
-
-        case core::StartStopDiscontinue::Tag::discontinue:
-            endingType = api::EndingType::discontinue;
-            break;
-        };
-
-        const auto &numValues = ending.number().values();
-        if (!numValues.empty())
-        {
-            endingNumber = numValues.front();
-        }
+        barline.ending = std::move(endingData);
     }
 
     if (inMxBarline.repeat().has_value())
@@ -988,8 +973,6 @@ void MeasureReader::parseBarline(const core::Barline &inMxBarline) const
 
     barline.barlineType = style;
     barline.location = loc;
-    barline.endingType = endingType;
-    barline.endingNumber = endingNumber;
     barline.repeat = repeat;
     barline.repeatTimes = repeatTimes;
     barline.repeatDirection = repeatDirection;
