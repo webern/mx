@@ -14,9 +14,9 @@ inline mx::api::ScoreData apiK016aMiscScoreData()
     using namespace mx::api;
     ScoreData scoreData;
     scoreData.encoding.software.emplace_back("komp");
-    scoreData.encoding.miscelaneousFields.emplace_back("komp-version-major", "1");
-    scoreData.encoding.miscelaneousFields.emplace_back("komp-version-minor", "2");
-    scoreData.encoding.miscelaneousFields.emplace_back("komp-version-patch", "3");
+    scoreData.encoding.miscellaneousFields.emplace_back("komp-version-major", "1");
+    scoreData.encoding.miscellaneousFields.emplace_back("komp-version-minor", "2");
+    scoreData.encoding.miscellaneousFields.emplace_back("komp-version-patch", "3");
     scoreData.parts.emplace_back(PartData{});
     auto &part = scoreData.parts.back();
     part.name = "hello world";
