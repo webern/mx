@@ -12,6 +12,13 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
+# Emscripten disables exception catching by default; mx's internal MX_THROW
+# (Throw.h) needs it, so DocumentManager can actually catch and convert it.
+if(EMSCRIPTEN)
+    add_compile_options(-fexceptions)
+    add_link_options(-fexceptions)
+endif()
+
 option(MX_CORE_DEV "Build the core roundtrip (corert) test binary against the regenerated mx/core." OFF)
 
 option(MX_API "Build the mx::api/mx::impl product library and its tests." ON)

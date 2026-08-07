@@ -69,6 +69,7 @@ FIND_CPP := find src \
         core-build core-roundtrip-test core-unit core-coverage \
         api-lib api-build api-test api-examples api-roundtrip \
         api-roundtrip-discover api-roundtrip-dump api-roundtrip-classify api-coverage \
+        wasm-lib wasm-build wasm-test \
         gen-test audit-test gen-quality gen-lint \
         gen gen-cpp gen-go gen-c gen-schema \
         audit audit-force \
@@ -92,6 +93,11 @@ help:
 	@echo '  make api-roundtrip-dump      Dump normalized expected/actual XML for failures.'
 	@echo '  make api-roundtrip-classify  Classify dumped failures by root cause (Python).'
 	@echo '  make api-coverage        Instrumented api/impl/utility build + gcovr report.'
+	@echo ''
+	@echo '  WebAssembly (mx::api via Emscripten, issue #386):'
+	@echo '  make wasm-lib            Build the mx static library for wasm (MX_API=ON, emcmake).'
+	@echo '  make wasm-build          wasm-lib plus the mxread/mxwrite/mxhide examples.'
+	@echo '  make wasm-test           Run mxread/mxwrite/mxhide under Node against the wasm build.'
 	@echo ''
 	@echo '  Core substrate (mx::core):'
 	@echo '  make core-build          Build mx_core and the corert + unit test binaries.'
@@ -234,6 +240,25 @@ api-coverage:
 		--html-self-contained --html $(COV_DIR)/api/index.html \
 		$(BUILD_ROOT)/cov-api | tee $(COV_DIR)/api/summary.txt
 	@echo "=== api-coverage written to $(COV_DIR)/api/ ==="
+
+# wasm: mx::api built for Emscripten. ccache wraps emcc via the ambient
+# CMAKE_*_COMPILER_LAUNCHER env (Dockerfile), same as every other job.
+wasm-lib:
+	emcmake $(CMAKE) -S . -B $(BUILD_ROOT)/wasm \
+		-DCMAKE_BUILD_TYPE=$(BUILD_TYPE) \
+		-DMX_API=on
+	emmake $(CMAKE) --build $(BUILD_ROOT)/wasm --target mx --parallel $(JOBS)
+
+wasm-build: wasm-lib
+	emmake $(CMAKE) --build $(BUILD_ROOT)/wasm --target mxread mxwrite mxhide --parallel $(JOBS)
+
+# Runs mxread/mxwrite/mxhide under Node, exercising mx::api, not just a compile.
+# mxwrite's output path is bare -- Emscripten's MEMFS starts empty, no build/wasm/ dir.
+wasm-test: wasm-build
+	node $(BUILD_ROOT)/wasm/mxread.js
+	node $(BUILD_ROOT)/wasm/mxwrite.js example.musicxml
+	node $(BUILD_ROOT)/wasm/mxhide.js
+	@echo 'wasm-test: mxread/mxwrite/mxhide ran successfully under Node (wasm).'
 
 core-build:
 	$(CMAKE) -S . -B $(BUILD_ROOT)/core-dev -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) -DMX_CORE_DEV=on
@@ -399,6 +424,15 @@ api-coverage: $(DOCKER_STAMP) docker-volume
 	@rm -rf $(COV_DIR)/api
 	$(DOCKER_RUN) make api-coverage BUILD_TYPE=$(BUILD_TYPE) ARGS='$(ARGS)'
 	@echo "API coverage written to $(COV_DIR)/api/ (open $(COV_DIR)/api/index.html)"
+
+wasm-lib: $(DOCKER_STAMP) docker-volume
+	$(DOCKER_RUN) make wasm-lib BUILD_TYPE=$(BUILD_TYPE)
+
+wasm-build: $(DOCKER_STAMP) docker-volume
+	$(DOCKER_RUN) make wasm-build BUILD_TYPE=$(BUILD_TYPE)
+
+wasm-test: $(DOCKER_STAMP) docker-volume
+	$(DOCKER_RUN) make wasm-test BUILD_TYPE=$(BUILD_TYPE)
 
 core-build: $(DOCKER_STAMP) docker-volume
 	$(DOCKER_RUN) make core-build BUILD_TYPE=$(BUILD_TYPE)

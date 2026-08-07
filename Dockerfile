@@ -19,6 +19,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libxml2-dev \
         libxml2-utils \
         pkg-config \
+        git \
+        ca-certificates \
+        xz-utils \
     && rm -rf /var/lib/apt/lists/*
 
 # Python quality tooling for `make gen-quality` / `make gen-lint`. Isolated in a
@@ -34,6 +37,21 @@ RUN python3 -m venv /opt/quality-venv \
 
 # Unversioned name so the Makefile invokes the formatter without the suffix.
 RUN ln -sf /usr/bin/clang-format-18 /usr/local/bin/clang-format
+
+# emsdk: pinned Emscripten toolchain for building mx to WebAssembly (#386).
+ARG EMSDK_VERSION=6.0.6
+RUN git clone --depth 1 --branch ${EMSDK_VERSION} https://github.com/emscripten-core/emsdk.git /opt/emsdk \
+    && /opt/emsdk/emsdk install ${EMSDK_VERSION} \
+    && /opt/emsdk/emsdk activate ${EMSDK_VERSION} \
+    && ln -s "$(find /opt/emsdk/node -maxdepth 2 -type d -name bin)" /opt/emsdk/node/current-bin \
+    && rm -rf /opt/emsdk/downloads
+
+# EM_CACHE: like CCACHE_DIR, avoids writing under root-owned /opt/emsdk at runtime.
+# PATH is appended, not prepended -- emsdk's own dirs shadow real tools by name (node, cmake).
+ENV EMSDK=/opt/emsdk \
+    EM_CONFIG=/opt/emsdk/.emscripten \
+    EM_CACHE=/workspace/build/.emcache \
+    PATH="${PATH}:/opt/emsdk/node/current-bin:/opt/emsdk/upstream/emscripten"
 
 # MX_RUNNING_IN_DOCKER flips the Makefile to its in-container branch. Build with
 # the pinned GCC; ccache state lives under the mounted build volume.
