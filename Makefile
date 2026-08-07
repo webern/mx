@@ -241,13 +241,11 @@ api-coverage:
 		$(BUILD_ROOT)/cov-api | tee $(COV_DIR)/api/summary.txt
 	@echo "=== api-coverage written to $(COV_DIR)/api/ ==="
 
-# wasm: mx::api built for Emscripten. Compiler launcher blanked, same as the
-# coverage targets above -- ccache wrapping emcc's Python driver is untested.
+# wasm: mx::api built for Emscripten. ccache wraps emcc via the ambient
+# CMAKE_*_COMPILER_LAUNCHER env (Dockerfile), same as every other job.
 wasm-lib:
 	emcmake $(CMAKE) -S . -B $(BUILD_ROOT)/wasm \
 		-DCMAKE_BUILD_TYPE=$(BUILD_TYPE) \
-		-DCMAKE_C_COMPILER_LAUNCHER= \
-		-DCMAKE_CXX_COMPILER_LAUNCHER= \
 		-DMX_API=on
 	emmake $(CMAKE) --build $(BUILD_ROOT)/wasm --target mx --parallel $(JOBS)
 

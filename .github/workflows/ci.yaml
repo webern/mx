@@ -119,9 +119,17 @@ jobs:
             --opt type=none --opt o=bind \
             --opt device="$GITHUB_WORKSPACE/build/docker" mx-build
 
-      # Emscripten's compiled system-library cache (libc/libc++/compiler-rt),
-      # not source ccache -- see EM_CACHE in the Dockerfile. Populating it from
-      # scratch is the slow part of a wasm build.
+      # Two caches: ccache for mx's own object files (emcc via the ambient
+      # CMAKE_*_COMPILER_LAUNCHER), EM_CACHE for Emscripten's compiled
+      # system libraries (libc/libc++/compiler-rt). Without both, this job
+      # recompiles everything from scratch on every run.
+      - name: Cache ccache
+        uses: actions/cache@v4
+        with:
+          path: build/docker/.ccache
+          key: ccache-${{ runner.os }}-wasm-${{ github.sha }}
+          restore-keys: ccache-${{ runner.os }}-wasm-
+
       - name: Cache EM_CACHE
         uses: actions/cache@v4
         with:
