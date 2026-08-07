@@ -97,11 +97,7 @@ jobs:
         run: make test-all
 
   # mx::api cross-compiled to WebAssembly via the pinned mx-sdk emsdk install
-  # (issue #386): a consumer (denigma, github.com/rpatters1/denigma) compiles mx
-  # client-side for browser use, and this is the one place that path is proven
-  # rather than discovered as a regression downstream. Builds through the
-  # mx-sdk toolchain like test-linux/quality/gen; runs mxread/mxwrite/mxhide
-  # under Node so the check exercises mx::api, not just a compile.
+  # (#386) -- denigma (rpatters1/denigma) depends on this path staying green.
   emscripten:
     name: emscripten
     runs-on: ubuntu-latest
@@ -119,10 +115,8 @@ jobs:
             --opt type=none --opt o=bind \
             --opt device="$GITHUB_WORKSPACE/build/docker" mx-build
 
-      # Two caches: ccache for mx's own object files (emcc via the ambient
-      # CMAKE_*_COMPILER_LAUNCHER), EM_CACHE for Emscripten's compiled
-      # system libraries (libc/libc++/compiler-rt). Without both, this job
-      # recompiles everything from scratch on every run.
+      # ccache for mx's own object files; EM_CACHE (below) is Emscripten's
+      # separate cache for its compiled system libraries.
       - name: Cache ccache
         uses: actions/cache@v4
         with:
