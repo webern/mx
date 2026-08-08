@@ -9,17 +9,13 @@ argument-hint: "<prompt>"
 disable-model-invocation: false
 user-invocable: true
 ---
-
 Never use the `AskUserQuestion` tool; ask every question as plain text and wait for the answer.
 
-Interview me relentlessly about every aspect of this plan until
-we reach a shared understanding. Walk down each branch of the design
-tree resolving dependencies between decisions one by one.
+Interview me relentlessly about every aspect of this plan until we reach a shared understanding.
+Walk down each branch of the design tree resolving dependencies between decisions one by one.
 
-If a question can be answered by exploring the codebase, explore
-the codebase instead.
+If a question can be answered by exploring the codebase, explore the codebase instead.
 
 For each question, provide your recommended answer.
 
-Use the /mx-questions skill to avoid sending more than one question at
-once.
+Use the /mx-questions skill and never ask more than one question at once.

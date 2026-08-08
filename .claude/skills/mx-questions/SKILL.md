@@ -38,7 +38,8 @@ answers get lost.
 ## Usage
 
 - `/mx-questions`
-- `/mx-questions <optional-prompt>` — e.g., `/mx-questions about the design of the flubber async module`
+- `/mx-questions <optional-prompt>` — e.g.,
+  `/mx-questions about the design of the flubber async module`
 
 ## Flow
 
@@ -48,3 +49,21 @@ answers get lost.
 3. Repeat until the user says to stop.
 4. When they stop, produce a plan summarizing their answers. If it's unclear what they want done
    with the plan, ask — one question.
+
+## Make Questions Easy to Answer
+
+If a question could be answered with a yes or no, true or false, then make it answerable that way:
+
+Bad:
+
+> Frobulation solves problem X and introduces problem Y. Exinteration solves both problem X and Y. I
+> recommend Exinteration. Question: should we use Exinteration, or do you want to use Frobulation?
+
+Annoying. Now you've put me in a position where I can't just say "yes", I have to type the word
+Exinteration to answer properly. Instead ask it like this:
+
+> Frobulation solves problem X and introduces problem Y. Exinteration solves both problem X and Y. I
+> recommend Exinteration. Question: should we use Exinteration?
+
+Better! Now I can say "yes".
+
