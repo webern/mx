@@ -10,6 +10,7 @@
 #include "mx/core/generated/LyricTextGroup.h"
 #include "mx/core/generated/Notations.h"
 #include "mx/core/generated/NotationsChoice.h"
+#include "mx/core/generated/StartStopContinue.h"
 #include "mx/core/generated/Syllabic.h"
 #include "mx/core/generated/TextElementData.h"
 #include "mx/core/generated/Tied.h"
@@ -547,7 +548,25 @@ void NoteReader::setLyric()
 
             lyricData.syllabic = textGroup.syllabic().has_value() ? convertLyricSyllabic(*textGroup.syllabic())
                                                                   : api::LyricSyllabic::unspecified;
-            lyricData.hasExtend = textGroup.extend().has_value();
+            if (textGroup.extend().has_value())
+            {
+                lyricData.hasExtend = true;
+                if (textGroup.extend()->type().has_value())
+                {
+                    switch (textGroup.extend()->type()->tag())
+                    {
+                    case core::StartStopContinue::Tag::start:
+                        lyricData.extendType = api::LyricExtendType::start;
+                        break;
+                    case core::StartStopContinue::Tag::continue_:
+                        lyricData.extendType = api::LyricExtendType::continue_;
+                        break;
+                    case core::StartStopContinue::Tag::stop:
+                        lyricData.extendType = api::LyricExtendType::stop;
+                        break;
+                    }
+                }
+            }
             myLyrics.emplace_back(lyricData);
             myHasLyric = true;
             break;
@@ -555,6 +574,21 @@ void NoteReader::setLyric()
 
         case core::LyricChoice::Kind::extend:
             lyricData.hasExtend = true;
+            if (textChoice.asExtend().type().has_value())
+            {
+                switch (textChoice.asExtend().type()->tag())
+                {
+                case core::StartStopContinue::Tag::start:
+                    lyricData.extendType = api::LyricExtendType::start;
+                    break;
+                case core::StartStopContinue::Tag::continue_:
+                    lyricData.extendType = api::LyricExtendType::continue_;
+                    break;
+                case core::StartStopContinue::Tag::stop:
+                    lyricData.extendType = api::LyricExtendType::stop;
+                    break;
+                }
+            }
             lyricData.printData = getLyricPrintData(lyric, nullptr);
             myLyrics.emplace_back(lyricData);
             myHasLyric = true;
