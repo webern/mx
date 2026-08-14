@@ -23,12 +23,22 @@ enum class LyricSyllabic
     middle
 };
 
+// unspecified writes the legacy bare <extend/> form. The other values identify the
+// beginning, continuation, or end of a word extension across notes.
+enum class LyricExtendType
+{
+    unspecified,
+    start,
+    continue_,
+    stop
+};
+
 class LyricData
 {
   public:
     LyricData()
-        : text{}, verseNumber{}, verseName{}, syllabic{LyricSyllabic::unspecified}, hasExtend{false}, positionData{},
-          printData{}
+        : text{}, verseNumber{}, verseName{}, syllabic{LyricSyllabic::unspecified}, hasExtend{false},
+          extendType{LyricExtendType::unspecified}, positionData{}, printData{}
     {
     }
 
@@ -37,6 +47,7 @@ class LyricData
     std::string verseName;
     LyricSyllabic syllabic;
     bool hasExtend;
+    LyricExtendType extendType;
     PositionData positionData;
     PrintData printData;
 };
@@ -47,6 +58,7 @@ MXAPI_EQUALS_MEMBER(verseNumber)
 MXAPI_EQUALS_MEMBER(verseName)
 MXAPI_EQUALS_MEMBER(syllabic)
 MXAPI_EQUALS_MEMBER(hasExtend)
+MXAPI_EQUALS_MEMBER(extendType)
 MXAPI_EQUALS_MEMBER(positionData)
 MXAPI_EQUALS_MEMBER(printData)
 MXAPI_EQUALS_END;

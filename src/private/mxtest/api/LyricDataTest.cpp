@@ -43,6 +43,7 @@ mx::api::ScoreData makeScoreWithLyrics()
     first.verseName = "verse";
     first.syllabic = LyricSyllabic::begin;
     first.hasExtend = true;
+    first.extendType = LyricExtendType::start;
     first.positionData.placement = Placement::below;
     first.positionData.horizontalAlignment = HorizontalAlignment::center;
     first.positionData.isDefaultYSpecified = true;
@@ -58,6 +59,7 @@ mx::api::ScoreData makeScoreWithLyrics()
     LyricData second;
     second.verseNumber = "2";
     second.hasExtend = true;
+    second.extendType = LyricExtendType::stop;
     second.printData.printObject = Bool::no;
     note.lyrics.emplace_back(second);
 
@@ -92,11 +94,13 @@ TEST(lyricsWriteToMusicXml, LyricData)
     CHECK_EQUAL(std::string{"Hel"}, std::string{lyric.child("text").text().get()});
     CHECK_EQUAL(std::string{"Bravura Text"}, std::string{lyric.child("text").attribute("font-family").value()});
     CHECK(!lyric.child("extend").empty());
+    CHECK_EQUAL(std::string{"start"}, std::string{lyric.child("extend").attribute("type").value()});
 
     auto extendOnly = lyric.next_sibling("lyric");
     CHECK_EQUAL(std::string{"2"}, std::string{extendOnly.attribute("number").value()});
     CHECK_EQUAL(std::string{"no"}, std::string{extendOnly.attribute("print-object").value()});
     CHECK(!extendOnly.child("extend").empty());
+    CHECK_EQUAL(std::string{"stop"}, std::string{extendOnly.child("extend").attribute("type").value()});
     CHECK(extendOnly.child("text").empty());
 }
 
@@ -113,6 +117,7 @@ TEST(lyricsRoundTripThroughApi, LyricData)
     CHECK_EQUAL(std::string{"verse"}, note.lyrics.at(0).verseName);
     CHECK(note.lyrics.at(0).syllabic == LyricSyllabic::begin);
     CHECK(note.lyrics.at(0).hasExtend);
+    CHECK(note.lyrics.at(0).extendType == LyricExtendType::start);
     CHECK(note.lyrics.at(0).positionData.placement == Placement::below);
     CHECK(note.lyrics.at(0).positionData.horizontalAlignment == HorizontalAlignment::center);
     CHECK(note.lyrics.at(0).printData.printObject == Bool::yes);
@@ -125,6 +130,7 @@ TEST(lyricsRoundTripThroughApi, LyricData)
     CHECK_EQUAL(std::string{"2"}, note.lyrics.at(1).verseNumber);
     CHECK(note.lyrics.at(1).text.empty());
     CHECK(note.lyrics.at(1).hasExtend);
+    CHECK(note.lyrics.at(1).extendType == LyricExtendType::stop);
     CHECK(note.lyrics.at(1).printData.printObject == Bool::no);
 }
 

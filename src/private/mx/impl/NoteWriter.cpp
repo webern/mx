@@ -575,7 +575,22 @@ void NoteWriter::setLyrics() const
 
         if (lyricData.text.empty() && lyricData.hasExtend)
         {
-            lyric.setChoice(core::LyricChoice::extend(core::Extend{}));
+            core::Extend extend;
+            switch (lyricData.extendType)
+            {
+            case api::LyricExtendType::unspecified:
+                break;
+            case api::LyricExtendType::start:
+                extend.setType(core::StartStopContinue::start());
+                break;
+            case api::LyricExtendType::continue_:
+                extend.setType(core::StartStopContinue::continue_());
+                break;
+            case api::LyricExtendType::stop:
+                extend.setType(core::StartStopContinue::stop());
+                break;
+            }
+            lyric.setChoice(core::LyricChoice::extend(std::move(extend)));
         }
         else
         {
@@ -591,7 +606,22 @@ void NoteWriter::setLyrics() const
             textGroup.setText(std::move(text));
             if (lyricData.hasExtend)
             {
-                textGroup.setExtend(core::Extend{});
+                core::Extend extend;
+                switch (lyricData.extendType)
+                {
+                case api::LyricExtendType::unspecified:
+                    break;
+                case api::LyricExtendType::start:
+                    extend.setType(core::StartStopContinue::start());
+                    break;
+                case api::LyricExtendType::continue_:
+                    extend.setType(core::StartStopContinue::continue_());
+                    break;
+                case api::LyricExtendType::stop:
+                    extend.setType(core::StartStopContinue::stop());
+                    break;
+                }
+                textGroup.setExtend(std::move(extend));
             }
 
             lyric.setChoice(core::LyricChoice::lyricTextGroup(std::move(textGroup)));
