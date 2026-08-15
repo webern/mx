@@ -1699,6 +1699,10 @@ std::vector<core::MusicDataChoice> DirectionWriter::createHarmonyElements(int in
             core::Frame frame{};
             frame.setFrameStrings(chordIter->frameData.stringCount);
             frame.setFrameFrets(chordIter->frameData.fretCount);
+            if (chordIter->frameData.unplayed.has_value())
+            {
+                frame.setUnplayed(chordIter->frameData.unplayed);
+            }
 
             if (chordIter->frameData.isFirstFretSpecified)
             {
