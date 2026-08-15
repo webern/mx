@@ -20,11 +20,11 @@ namespace mx::core
 template <typename T> class OneOrMore
 {
   public:
-    OneOrMore() : m_items(1)
+    OneOrMore() : m_items(1), m_hasPlaceholder(true)
     {
     }
 
-    explicit OneOrMore(T first)
+    explicit OneOrMore(T first) : m_hasPlaceholder(false)
     {
         m_items.push_back(std::move(first));
     }
@@ -41,12 +41,21 @@ template <typename T> class OneOrMore
 
     void add(T item)
     {
-        m_items.push_back(std::move(item));
+        if (m_hasPlaceholder)
+        {
+            m_items.front() = std::move(item);
+            m_hasPlaceholder = false;
+        }
+        else
+        {
+            m_items.push_back(std::move(item));
+        }
     }
 
     /// Deterministic repair: an empty replacement becomes one default item.
     void setItems(std::vector<T> items)
     {
+        m_hasPlaceholder = items.empty();
         if (items.empty())
         {
             items.emplace_back();
@@ -66,6 +75,7 @@ template <typename T> class OneOrMore
 
   private:
     std::vector<T> m_items;
+    bool m_hasPlaceholder = false;
 };
 
 } // namespace mx::core
