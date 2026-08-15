@@ -11,6 +11,7 @@
 #include "cpul/cpulTestHarness.h"
 
 #include "mx/core/Error.h"
+#include "mx/core/OneOrMore.h"
 #include "mx/core/Xml.h"
 #include "mx/core/generated/Beam.h"
 #include "mx/core/generated/BeamValue.h"
@@ -86,6 +87,36 @@ TEST(DefaultConstructionIsValid, Shapes)
 {
     // The natural zero serializes schema-valid content recursively.
     CHECK_EQUAL(std::string{"<pitch><step>A</step><octave>0</octave></pitch>"}, toXml(Pitch{}));
+}
+
+TEST(OneOrMoreAddConsumesDefaultPlaceholder, Shapes)
+{
+    OneOrMore<int> items;
+    items.add(7);
+    CHECK_EQUAL(std::size_t{1}, items.items().size());
+    CHECK_EQUAL(7, items.front());
+
+    items.add(8);
+    CHECK_EQUAL(std::size_t{2}, items.items().size());
+    CHECK_EQUAL(8, items.items().back());
+}
+
+TEST(OneOrMoreAddPreservesExplicitFirstItem, Shapes)
+{
+    OneOrMore<int> items{0};
+    items.add(7);
+    CHECK_EQUAL(std::size_t{2}, items.items().size());
+    CHECK_EQUAL(0, items.items().front());
+    CHECK_EQUAL(7, items.items().back());
+}
+
+TEST(OneOrMoreEmptySetItemsCreatesPlaceholder, Shapes)
+{
+    OneOrMore<int> items{1};
+    items.setItems({});
+    items.add(7);
+    CHECK_EQUAL(std::size_t{1}, items.items().size());
+    CHECK_EQUAL(7, items.front());
 }
 
 TEST(VariantExclusivity, Shapes)
