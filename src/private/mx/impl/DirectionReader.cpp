@@ -1428,6 +1428,10 @@ void DirectionReader::parseHarmony(const core::Harmony &inHarmony, const core::H
         const auto &frame = *inHarmony.frame();
         chord.frameData.stringCount = frame.frameStrings();
         chord.frameData.fretCount = frame.frameFrets();
+        if (frame.unplayed().has_value())
+        {
+            chord.frameData.unplayed = *frame.unplayed();
+        }
 
         if (frame.firstFret().has_value())
         {
