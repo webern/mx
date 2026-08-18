@@ -6,6 +6,7 @@
 #include "mx/core/Decimal.h"
 #include "mx/core/generated/Semitones.h"
 #include "mx/core/generated/TransposeGroup.h"
+#include "mx/impl/IdFunctions.h"
 
 #include <algorithm>
 #include <cmath>
@@ -2323,7 +2324,9 @@ mx::api::TransposeData Converter::convertToTransposeData(const mx::core::Transpo
     const auto octaves = specifiedOctave.has_value() ? specifiedOctave.value() : 0;
     diatonic += octaves * 7;
     const auto chromatic = specifiedChromatic + (octaves * 12);
-    return mx::api::TransposeData{chromatic, diatonic};
+    mx::api::TransposeData out{chromatic, diatonic};
+    out.id = getId(inTranspose);
+    return out;
 }
 } // namespace impl
 } // namespace mx

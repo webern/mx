@@ -6,6 +6,9 @@
 #include "mx/api/ApiCommon.h"
 #include "mx/api/KeyComponent.h"
 
+#include <optional>
+#include <string>
+
 namespace mx
 {
 namespace api
@@ -121,9 +124,12 @@ struct KeyData
     // alterations. When custom is non-empty, then fifths and mode are ignored.
     std::vector<KeyComponent> nonTraditional;
 
+    // The <key> element's id attribute (see ApiCommon.h).
+    std::optional<std::string> id;
+
     KeyData()
         : fifths{0}, cancel{0}, cancelLocation{CancelLocation::unspecified}, mode{KeyMode::unspecified},
-          tickTimePosition{0}, staffIndex{INDEX_UNSPECIFIED}, nonTraditional{}
+          tickTimePosition{0}, staffIndex{INDEX_UNSPECIFIED}, nonTraditional{}, id{}
     {
     }
 };
@@ -136,6 +142,7 @@ MXAPI_EQUALS_MEMBER(mode)
 MXAPI_EQUALS_MEMBER(tickTimePosition)
 MXAPI_EQUALS_MEMBER(staffIndex)
 MXAPI_EQUALS_MEMBER(nonTraditional)
+MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 
 MXAPI_NOT_EQUALS_AND_VECTORS(KeyData);

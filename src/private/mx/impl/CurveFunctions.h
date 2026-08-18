@@ -8,6 +8,7 @@
 #include "mx/api/NoteData.h"
 #include "mx/core/generated/Slur.h"
 #include "mx/core/generated/Tied.h"
+#include "mx/impl/IdFunctions.h"
 #include "mx/impl/LineFunctions.h"
 #include "mx/impl/PositionFunctions.h"
 #include "mx/impl/PrintFunctions.h"
@@ -105,6 +106,8 @@ api::CurveStart parseCurveStart(const SLUR_OR_TIE_ELEMENT_TYPE &inSlurOrTie)
         c.curveOrientation = *inAttributes.orientation() == core::OverUnder::over() ? api::CurveOrientation::overhand
                                                                                     : api::CurveOrientation::underhand;
     }
+
+    c.id = getId(inAttributes);
     return c;
 }
 
@@ -139,6 +142,7 @@ api::CurveContinue parseCurveContinue(const SLUR_OR_TIE_ELEMENT_TYPE &inSlurOrTi
     }
 
     c.curvePoints = parseCurvePoints(inAttributes);
+    c.id = getId(inAttributes);
     return c;
 }
 
@@ -154,6 +158,7 @@ template <typename SLUR_OR_TIE_ELEMENT_TYPE> api::CurveStop parseCurveStop(const
     }
 
     c.curvePoints = parseCurvePoints(inAttributes);
+    c.id = getId(inAttributes);
     return c;
 }
 
@@ -167,6 +172,7 @@ void writeAttributesFromCurveStart(const api::CurveStart inCurve, ATTRIBUTES_TYP
 {
     using CurveTypeAttribute = std::decay_t<decltype(outAttributes.type())>;
     outAttributes.setType(CurveTypeAttribute::start());
+    impl::setId(inCurve.id, outAttributes);
     impl::setAttributesFromPositionData(inCurve.curvePoints.positionData, outAttributes);
     impl::setAttributesFromLineData(inCurve.lineData, outAttributes);
 
@@ -210,6 +216,7 @@ void writeAttributesFromCurveContinue(const api::CurveContinue inCurve, ATTRIBUT
 {
     using CurveTypeAttribute = std::decay_t<decltype(outAttributes.type())>;
     outAttributes.setType(CurveTypeAttribute::continue_());
+    impl::setId(inCurve.id, outAttributes);
     impl::setAttributesFromPositionData(inCurve.curvePoints.positionData, outAttributes);
 
     if (inResolvedNumber.has_value())
@@ -255,6 +262,7 @@ void writeAttributesFromCurveStop(const api::CurveStop inCurve, ATTRIBUTES_TYPE 
 {
     using CurveTypeAttribute = std::decay_t<decltype(outAttributes.type())>;
     outAttributes.setType(CurveTypeAttribute::stop());
+    impl::setId(inCurve.id, outAttributes);
     impl::setAttributesFromPositionData(inCurve.curvePoints.positionData, outAttributes);
 
     if (inResolvedNumber.has_value())
@@ -285,6 +293,7 @@ inline void writeAttributesFromTieLetRing(const api::TieLetRing &inTie, core::Ti
 {
     outTied.setType(core::TiedType::letRing());
     impl::setAttributesFromPositionData(inTie.positionData, outTied);
+    impl::setId(inTie.id, outTied);
 
     if (inTie.isColorSpecified)
     {
@@ -318,6 +327,8 @@ inline api::TieLetRing parseTieLetRing(const core::Tied &inTied)
         c.curveOrientation = *inTied.orientation() == core::OverUnder::over() ? api::CurveOrientation::overhand
                                                                               : api::CurveOrientation::underhand;
     }
+
+    c.id = getId(inTied);
     return c;
 }
 

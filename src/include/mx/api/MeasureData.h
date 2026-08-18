@@ -111,6 +111,9 @@ class MeasureData
     // before this field existed.
     std::vector<TransposeData> transpositions;
 
+    // The <measure> element's id attribute (see ApiCommon.h).
+    std::optional<std::string> id;
+
     MeasureData()
         : staves{}, timeSignature{}, number{}, measureNumbering{MeasureNumbering::unspecified},
           measureNumberingMultipleRestAlways{Bool::unspecified}, measureNumberingMultipleRestRange{Bool::unspecified},
@@ -141,6 +144,7 @@ MXAPI_EQUALS_MEMBER(keys)
 MXAPI_EQUALS_MEMBER(barlines)
 MXAPI_EQUALS_MEMBER(partSymbol)
 MXAPI_EQUALS_MEMBER(transpositions)
+MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(MeasureData);
 } // namespace api

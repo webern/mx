@@ -87,10 +87,13 @@ struct SoundData
 
     std::optional<SwingData> swing;
 
+    // The <sound> element's id attribute (see ApiCommon.h).
+    std::optional<std::string> id;
+
     SoundData()
         : tempo{DOUBLE_UNSPECIFIED}, dynamics{DOUBLE_UNSPECIFIED}, dacapo{Bool::unspecified},
           forwardRepeat{Bool::unspecified}, pizzicato{Bool::unspecified}, segno{}, dalsegno{}, coda{}, tocoda{}, fine{},
-          swing{}
+          swing{}, id{}
     {
     }
 
@@ -98,7 +101,7 @@ struct SoundData
     {
         return tempo >= 0.0 || dynamics >= 0.0 || dacapo != Bool::unspecified || forwardRepeat != Bool::unspecified ||
                pizzicato != Bool::unspecified || !segno.empty() || !dalsegno.empty() || !coda.empty() ||
-               !tocoda.empty() || !fine.empty() || swing.has_value();
+               !tocoda.empty() || !fine.empty() || swing.has_value() || id.has_value();
     }
 };
 
@@ -123,6 +126,7 @@ MXAPI_EQUALS_MEMBER(coda)
 MXAPI_EQUALS_MEMBER(tocoda)
 MXAPI_EQUALS_MEMBER(fine)
 MXAPI_EQUALS_MEMBER(swing)
+MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(SoundData);
 } // namespace api

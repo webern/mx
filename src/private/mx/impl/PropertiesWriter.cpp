@@ -40,6 +40,7 @@
 #include "mx/core/generated/Transpose.h"
 #include "mx/core/generated/YesNo.h"
 #include "mx/impl/Converter.h"
+#include "mx/impl/IdFunctions.h"
 
 namespace mx
 {
@@ -94,6 +95,7 @@ void PropertiesWriter::writeMultipleRest(int measureCount, api::Bool useSymbols)
 void PropertiesWriter::writeKey(int staffIndex, const api::KeyData &inKeyData)
 {
     core::Key key{};
+    impl::setId(inKeyData.id, key);
 
     if (staffIndex >= 0)
     {
@@ -234,6 +236,7 @@ void PropertiesWriter::writeTime(const api::TimeChoice &value, int staffIndex)
 {
     Converter converter;
     core::Time time{};
+    impl::setId(value.id, time);
 
     if (value.isSimple())
     {
@@ -325,6 +328,7 @@ void PropertiesWriter::writeStaffDetails(int staffIndex, int staffLines, double 
 void PropertiesWriter::writeClef(int staffIndex, const api::ClefData &inClefData)
 {
     core::Clef mxClef{};
+    impl::setId(inClefData.id, mxClef);
 
     // staffIndex < 0 means a single-staff part (the caller's clefStaffIndex() collapses it), so the
     // auto rule omits the implied 1; staffIndex >= 0 is a multi-staff part, so the auto rule emits
@@ -403,6 +407,7 @@ void PropertiesWriter::writePartSymbol(const api::PartSymbolData &inPartSymbolDa
 void PropertiesWriter::writeTranspose(int staffIndex, const api::TransposeData &inTransposeData)
 {
     auto xpose = Converter::convertToTranspose(inTransposeData);
+    impl::setId(inTransposeData.id, xpose);
 
     if (staffIndex >= 0)
     {

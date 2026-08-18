@@ -11,6 +11,7 @@
 #include "mx/impl/CurveFunctions.h"
 #include "mx/impl/DynamicsReader.h"
 #include "mx/impl/FermataFunctions.h"
+#include "mx/impl/IdFunctions.h"
 #include "mx/impl/MarkDataFunctions.h"
 #include "mx/impl/NonArpeggiateFunctions.h"
 #include "mx/impl/NoteReader.h"
@@ -159,6 +160,7 @@ api::NoteData NoteFunctions::parseNote() const
 
     parseMiscData();
     myOutNoteData.positionData = impl::getPositionData(myNote);
+    myOutNoteData.id = impl::getId(myNote);
 
     return myOutNoteData;
 }

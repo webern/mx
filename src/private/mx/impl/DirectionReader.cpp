@@ -84,6 +84,7 @@
 #include "mx/core/generated/WedgeType.h"
 #include "mx/core/generated/YesNo.h"
 #include "mx/impl/DynamicsReader.h"
+#include "mx/impl/IdFunctions.h"
 #include "mx/impl/MarkDataFunctions.h"
 #include "mx/impl/MetronomeReader.h"
 #include "mx/impl/PrintFunctions.h"
@@ -125,6 +126,7 @@ mx::api::DirectionData DirectionReader::initializeData()
     if (myDirection)
     {
         result.isStaffValueSpecified = myDirection->staff().has_value();
+        result.id = getId(*myDirection);
     }
     else if (myHarmony)
     {
@@ -367,6 +369,7 @@ void DirectionReader::parseRehearsal(const core::DirectionType &directionType)
         {
             outRehearsal.justify = myConverter.convert(*rehearsal.justify());
         }
+        outRehearsal.id = getId(rehearsal);
         myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice{std::move(outRehearsal)});
     }
 }
@@ -428,6 +431,7 @@ void DirectionReader::parseWordsRun(const core::DirectionType &directionType)
             {
                 outSymbol.justify = myConverter.convert(*symbolEl.justify());
             }
+            outSymbol.id = getId(symbolEl);
             run.emplace_back(std::move(outSymbol));
             continue;
         }
@@ -449,6 +453,7 @@ void DirectionReader::parseWordsRun(const core::DirectionType &directionType)
         {
             outWords.justify = myConverter.convert(*wordEl.justify());
         }
+        outWords.id = getId(wordEl);
         run.emplace_back(std::move(outWords));
     }
 
@@ -510,6 +515,7 @@ void DirectionReader::parseWedge(const core::DirectionType &directionType)
             stop.spread = spread;
         }
         stop.positionData = positionData;
+        stop.id = getId(wedge);
         myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice{std::move(stop)});
         return;
     }
@@ -530,6 +536,7 @@ void DirectionReader::parseWedge(const core::DirectionType &directionType)
         start.lineData = lineData;
         start.isColorSpecified = isColorSpecified;
         start.colorData = colorData;
+        start.id = getId(wedge);
         myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice{std::move(start)});
     }
 }
@@ -622,6 +629,7 @@ void DirectionReader::parseBracket(const core::DirectionType &directionType)
         start.positionData = this->parsePositionData(bracket);
         start.lineData = makeBracketLineData();
         start.printData = impl::getPrintData(bracket);
+        start.id = getId(bracket);
         myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice::bracketStart(std::move(start)));
         return;
     }
@@ -677,6 +685,7 @@ void DirectionReader::parsePedal(const core::DirectionType &directionType)
         pedalData.tickTimePosition = myOutDirectionData.tickTimePosition;
         pedalData.positionData = getPositionData(pedal);
         pedalData.positionData.placement = placement;
+        pedalData.id = getId(pedal);
         myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice{std::move(pedalData)});
         return;
     }

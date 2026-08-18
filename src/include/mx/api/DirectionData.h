@@ -11,6 +11,7 @@
 #include "mx/api/SoundData.h"
 
 #include <optional>
+#include <string>
 
 namespace mx
 {
@@ -80,10 +81,13 @@ struct DirectionData
     // serialize as their own <figured-bass> elements, not as direction-type content.
     std::vector<FiguredBassData> figuredBasses;
 
+    // The <direction> element's id attribute (see ApiCommon.h).
+    std::optional<std::string> id;
+
     DirectionData()
         : tickTimePosition{0}, placement{Placement::unspecified}, systemRelation{SystemRelation::unspecified}, offset{},
           voice{VALUE_UNSPECIFIED}, isStaffValueSpecified{true}, isSoundDataSpecified{false}, soundData{},
-          directionTypes{}, chords{}, figuredBasses{}
+          directionTypes{}, chords{}, figuredBasses{}, id{}
     {
     }
 };
@@ -106,6 +110,7 @@ MXAPI_EQUALS_MEMBER(soundData)
 MXAPI_EQUALS_MEMBER(directionTypes)
 MXAPI_EQUALS_MEMBER(chords)
 MXAPI_EQUALS_MEMBER(figuredBasses)
+MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(DirectionData);
 } // namespace api

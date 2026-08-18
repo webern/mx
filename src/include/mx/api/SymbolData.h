@@ -41,9 +41,12 @@ class SymbolData
     // symbol-formatting attributes mirror the text-formatting ones on `<words>`.
     HorizontalAlignment justify;
 
+    // The <symbol> element's id attribute (see ApiCommon.h).
+    std::optional<std::string> id;
+
     SymbolData()
         : smufl{}, positionData{}, fontData{}, color{}, enclosure{Enclosure::unspecified},
-          justify{HorizontalAlignment::unspecified}
+          justify{HorizontalAlignment::unspecified}, id{}
     {
     }
 };
@@ -55,6 +58,7 @@ MXAPI_EQUALS_MEMBER(fontData)
 MXAPI_EQUALS_MEMBER(color)
 MXAPI_EQUALS_MEMBER(enclosure)
 MXAPI_EQUALS_MEMBER(justify)
+MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(SymbolData);
 } // namespace api

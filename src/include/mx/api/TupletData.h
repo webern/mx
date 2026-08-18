@@ -9,6 +9,9 @@
 #include "mx/api/LineData.h"
 #include "mx/api/PositionData.h"
 
+#include <optional>
+#include <string>
+
 namespace mx
 {
 namespace api
@@ -46,12 +49,15 @@ class TupletStart
 
     Bool bracket;
 
+    // The <tuplet> element's id attribute (see ApiCommon.h).
+    std::optional<std::string> id;
+
     TupletStart()
         : numberLevel{NUMBER_LEVEL_UNSPECIFIED}, positionData{}, actualNumber{VALUE_UNSPECIFIED},
           actualDurationName{api::DurationName::unspecified}, actualDots{VALUE_UNSPECIFIED},
           normalNumber{VALUE_UNSPECIFIED}, normalDurationName{api::DurationName::unspecified},
           normalDots{VALUE_UNSPECIFIED}, showActualNumber{Bool::unspecified}, showNormalNumber{Bool::unspecified},
-          bracket{Bool::unspecified}
+          bracket{Bool::unspecified}, id{}
     {
     }
 };
@@ -65,7 +71,10 @@ class TupletStop
 
     PositionData positionData;
 
-    TupletStop() : numberLevel{NUMBER_LEVEL_UNSPECIFIED}, positionData{}
+    // The <tuplet> element's id attribute (see ApiCommon.h).
+    std::optional<std::string> id;
+
+    TupletStop() : numberLevel{NUMBER_LEVEL_UNSPECIFIED}, positionData{}, id{}
     {
     }
 };
@@ -82,12 +91,14 @@ MXAPI_EQUALS_MEMBER(normalDots)
 MXAPI_EQUALS_MEMBER(showActualNumber)
 MXAPI_EQUALS_MEMBER(showNormalNumber)
 MXAPI_EQUALS_MEMBER(bracket)
+MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(TupletStart);
 
 MXAPI_EQUALS_BEGIN(TupletStop)
 MXAPI_EQUALS_MEMBER(numberLevel)
 MXAPI_EQUALS_MEMBER(positionData)
+MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(TupletStop);
 } // namespace api

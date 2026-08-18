@@ -639,3 +639,8 @@ synthetic/harmonic.3.0.xml
 # attribute: this file's number="1, 2, 3" came back as number="1". BarlineData::ending
 # is now an optional EndingData holding the whole number list plus the display text.
 lysuite/ly45f_Repeats_InvalidEndings.xml
+
+# Unblocked by #399 (MusicXML id attributes). The id attribute of <bracket> and
+# <dashes> reaches the api on SpannerStart/SpannerStop, so it is no longer dropped.
+synthetic/bracket.3.1.xml
+synthetic/dashes.3.1.xml

@@ -111,7 +111,7 @@ const ComplexTimeSignature TimeChoice::complex() const
 
 bool TimeChoice::operator==(const TimeChoice &other) const
 {
-    return isImplicit == other.isImplicit && display == other.display && myValue == other.myValue;
+    return isImplicit == other.isImplicit && display == other.display && id == other.id && myValue == other.myValue;
 }
 
 } // namespace api

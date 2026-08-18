@@ -10,6 +10,9 @@
 #include "mx/api/PositionData.h"
 #include "mx/api/SpannerNumber.h"
 
+#include <optional>
+#include <string>
+
 namespace mx
 {
 namespace api
@@ -32,9 +35,12 @@ struct WedgeStart
     bool isColorSpecified;
     ColorData colorData;
 
+    // The <wedge> element's id attribute (see ApiCommon.h).
+    std::optional<std::string> id;
+
     WedgeStart()
         : number{}, wedgeType{WedgeType::unspecified}, isSpreadSpecified{false}, spread{0.0}, lineData{},
-          positionData{}, isColorSpecified{false}, colorData{}
+          positionData{}, isColorSpecified{false}, colorData{}, id{}
     {
     }
 };
@@ -46,7 +52,10 @@ struct WedgeStop
     bool isSpreadSpecified;
     double spread;
 
-    WedgeStop() : number{}, positionData{}, isSpreadSpecified{false}, spread{0.0}
+    // The <wedge> element's id attribute (see ApiCommon.h).
+    std::optional<std::string> id;
+
+    WedgeStop() : number{}, positionData{}, isSpreadSpecified{false}, spread{0.0}, id{}
     {
     }
 };
@@ -60,6 +69,7 @@ MXAPI_EQUALS_MEMBER(lineData)
 MXAPI_EQUALS_MEMBER(positionData)
 MXAPI_EQUALS_MEMBER(isColorSpecified)
 MXAPI_EQUALS_MEMBER(colorData)
+MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(WedgeStart);
 
@@ -68,6 +78,7 @@ MXAPI_EQUALS_MEMBER(number)
 MXAPI_EQUALS_MEMBER(positionData)
 MXAPI_EQUALS_MEMBER(isSpreadSpecified)
 MXAPI_EQUALS_MEMBER(spread)
+MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(WedgeStop);
 } // namespace api

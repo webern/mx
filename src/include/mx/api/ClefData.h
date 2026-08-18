@@ -6,6 +6,9 @@
 
 #include "mx/api/ApiCommon.h"
 
+#include <optional>
+#include <string>
+
 namespace mx
 {
 namespace api
@@ -67,6 +70,10 @@ class ClefData
     // Visibility of the clef via the MusicXML print-object attribute.
     // unspecified -> omit the attribute, yes/no -> write print-object verbatim.
     Bool printObject;
+
+    // The <clef> element's id attribute (see ApiCommon.h).
+    std::optional<std::string> id;
+
     std::string toString() const;
 
     // convenience - set symbol, line and octave for common clefs
@@ -99,6 +106,7 @@ MXAPI_EQUALS_MEMBER(tickTimePosition)
 MXAPI_EQUALS_MEMBER(location)
 MXAPI_EQUALS_MEMBER(additional)
 MXAPI_EQUALS_MEMBER(printObject)
+MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(ClefData);
 } // namespace api

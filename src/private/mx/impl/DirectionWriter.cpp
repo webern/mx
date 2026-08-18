@@ -109,6 +109,7 @@
 #include "mx/core/generated/YesNo.h"
 #include "mx/impl/DynamicsWriter.h"
 #include "mx/impl/FontFunctions.h"
+#include "mx/impl/IdFunctions.h"
 #include "mx/impl/LineFunctions.h"
 #include "mx/impl/MarkDataFunctions.h"
 #include "mx/impl/PrintFunctions.h"
@@ -165,6 +166,7 @@ std::vector<core::MusicDataChoice> DirectionWriter::getDirectionLikeThings()
     // nullopt for unspecified, and for the bottom-of-system values that only measure numbering has.
     // <harmony> carries the same attribute; createHarmonyElements writes it there too.
     direction.setSystem(myConverter.convertDirectionSystemRelation(myDirectionData.systemRelation));
+    setId(myDirectionData.id, direction);
 
     if (myDirectionData.isStaffValueSpecified || myCursor.staffIndex != 0)
     {
@@ -331,6 +333,7 @@ void DirectionWriter::emitPedal(const api::PedalLineData &item, core::Direction 
     pedal.setType(corePedalType(item.kind));
     pedal.setLine(core::YesNo::yes());
     setAttributesFromPositionData(item.positionData, pedal);
+    setId(item.id, pedal);
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::pedal(pedal));
     addDirectionType(std::move(dt), direction);
@@ -352,6 +355,7 @@ void DirectionWriter::emitWedgeStop(const api::WedgeStop &wedgeStop, const void 
         wedge.setSpread(core::Tenths{core::Decimal{static_cast<double>(wedgeStop.spread)}});
     }
     setAttributesFromPositionData(wedgeStop.positionData, wedge);
+    setId(wedgeStop.id, wedge);
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::wedge(wedge));
     addDirectionType(std::move(dt), direction);
@@ -384,6 +388,7 @@ void DirectionWriter::emitWedgeStart(const api::WedgeStart &wedgeStart, const vo
     {
         setAttributesFromColorData(wedgeStart.colorData, wedge);
     }
+    setId(wedgeStart.id, wedge);
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::wedge(wedge));
     addDirectionType(std::move(dt), direction);
@@ -409,6 +414,7 @@ void DirectionWriter::emitOttavaStart(const api::OttavaStart &ottavaStart, const
     impl::setAttributesFromPositionData(ottavaStart.spannerStart.positionData, os);
     impl::setAttributesFromPrintData(ottavaStart.spannerStart.printData, os);
     impl::setAttributesFromLineData(ottavaStart.spannerStart.lineData, os);
+    impl::setId(ottavaStart.spannerStart.id, os);
 
     const auto number = myNumberResolver.emittedNumber(ottavaStart.spannerStart.number, inIdentity);
     if (number.has_value())
@@ -749,6 +755,7 @@ void DirectionWriter::emitWordsRun(const std::vector<api::WordsChoice> &inRun, c
             {
                 outSymbol.setJustify(myConverter.convert(symbolData.justify));
             }
+            setId(symbolData.id, outSymbol);
             choiceItem = core::DirectionTypeChoiceChoice::symbol(std::move(outSymbol));
         }
         else
@@ -770,6 +777,7 @@ void DirectionWriter::emitWordsRun(const std::vector<api::WordsChoice> &inRun, c
             {
                 outWords.setJustify(myConverter.convert(wordsData.justify));
             }
+            setId(wordsData.id, outWords);
             choiceItem = core::DirectionTypeChoiceChoice::words(std::move(outWords));
         }
 
@@ -851,6 +859,7 @@ void DirectionWriter::emitRehearsal(const api::RehearsalData &item, core::Direct
     {
         rehearsal.setJustify(myConverter.convert(item.justify));
     }
+    setId(item.id, rehearsal);
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::rehearsal(core::OneOrMore<core::FormattedTextID>{std::move(rehearsal)}));
     addDirectionType(std::move(dt), direction);
@@ -1811,6 +1820,8 @@ std::vector<core::MusicDataChoice> DirectionWriter::createFiguredBassElements()
                 figuredBass.addFigure(figure);
             }
         }
+
+        setId(figuredBassData.id, figuredBass);
 
         if (figuredBassData.parentheses != api::Bool::unspecified)
         {

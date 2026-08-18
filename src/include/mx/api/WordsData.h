@@ -9,6 +9,9 @@
 #include "mx/api/FontData.h"
 #include "mx/api/PositionData.h"
 
+#include <optional>
+#include <string>
+
 namespace mx
 {
 namespace api
@@ -35,9 +38,12 @@ class WordsData
     // block against its anchor point; MusicXML defines both attributes on `<words>`.
     HorizontalAlignment justify;
 
+    // The <words> element's id attribute (see ApiCommon.h).
+    std::optional<std::string> id;
+
     WordsData()
         : text{}, positionData{}, fontData{}, isColorSpecified{false}, colorData{}, enclosure{Enclosure::unspecified},
-          justify{HorizontalAlignment::unspecified}
+          justify{HorizontalAlignment::unspecified}, id{}
     {
     }
 };
@@ -50,6 +56,7 @@ MXAPI_EQUALS_MEMBER(isColorSpecified)
 MXAPI_EQUALS_MEMBER(colorData)
 MXAPI_EQUALS_MEMBER(enclosure)
 MXAPI_EQUALS_MEMBER(justify)
+MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(WordsData);
 } // namespace api

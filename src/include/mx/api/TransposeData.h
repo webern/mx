@@ -6,6 +6,9 @@
 
 #include "mx/api/ApiCommon.h"
 
+#include <optional>
+#include <string>
+
 namespace mx
 {
 namespace api
@@ -70,6 +73,9 @@ class TransposeData
     /// Supports a transposition change somewhere other than at the start of a measure.
     int tickTimePosition = 0;
 
+    /// The <transpose> element's id attribute (see ApiCommon.h).
+    std::optional<std::string> id;
+
     /// If both chromatic and diatonic are zero, then TransposeData is unused (i.e. it need
     /// not be encoded in the MusicXML output).
     inline bool isUsed() const
@@ -83,6 +89,7 @@ MXAPI_EQUALS_MEMBER(chromatic)
 MXAPI_EQUALS_MEMBER(diatonic)
 MXAPI_EQUALS_MEMBER(staffIndex)
 MXAPI_EQUALS_MEMBER(tickTimePosition)
+MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(TransposeData);
 } // namespace api

@@ -62,6 +62,7 @@
 #include "mx/impl/Converter.h"
 #include "mx/impl/CurveFunctions.h"
 #include "mx/impl/DynamicsWriter.h"
+#include "mx/impl/IdFunctions.h"
 #include "mx/impl/MarkDataFunctions.h"
 #include "mx/impl/PositionFunctions.h"
 #include "mx/impl/ScoreWriter.h"
@@ -184,6 +185,7 @@ core::Notations NotationsWriter::getNotations() const
     {
         core::Tuplet tuplet;
         tuplet.setType(core::StartStop::stop());
+        setId(tupletStop.id, tuplet);
 
         if (tupletStop.numberLevel > 0)
         {
@@ -197,6 +199,7 @@ core::Notations NotationsWriter::getNotations() const
     {
         core::Tuplet tuplet;
         tuplet.setType(core::StartStop::start());
+        setId(tupletStart.id, tuplet);
 
         core::TupletPortion actual;
         core::TupletNumber tn1;
