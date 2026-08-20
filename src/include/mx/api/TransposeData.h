@@ -5,6 +5,7 @@
 #pragma once
 
 #include "mx/api/ApiCommon.h"
+#include "mx/api/Id.h"
 
 #include <optional>
 #include <string>
@@ -73,8 +74,8 @@ class TransposeData
     /// Supports a transposition change somewhere other than at the start of a measure.
     int tickTimePosition = 0;
 
-    /// The <transpose> element's id attribute (see ApiCommon.h).
-    std::optional<std::string> id;
+    /// The <transpose> element's id attribute (see Id.h).
+    std::optional<Id> id;
 
     /// If both chromatic and diatonic are zero, then TransposeData is unused (i.e. it need
     /// not be encoded in the MusicXML output).

@@ -6,6 +6,7 @@
 
 #include "mx/api/ApiCommon.h"
 #include "mx/api/DurationData.h"
+#include "mx/api/Id.h"
 #include "mx/api/LineData.h"
 #include "mx/api/PositionData.h"
 
@@ -49,8 +50,8 @@ class TupletStart
 
     Bool bracket;
 
-    // The <tuplet> element's id attribute (see ApiCommon.h).
-    std::optional<std::string> id;
+    // The <tuplet> element's id attribute (see Id.h).
+    std::optional<Id> id;
 
     TupletStart()
         : numberLevel{NUMBER_LEVEL_UNSPECIFIED}, positionData{}, actualNumber{VALUE_UNSPECIFIED},
@@ -71,8 +72,8 @@ class TupletStop
 
     PositionData positionData;
 
-    // The <tuplet> element's id attribute (see ApiCommon.h).
-    std::optional<std::string> id;
+    // The <tuplet> element's id attribute (see Id.h).
+    std::optional<Id> id;
 
     TupletStop() : numberLevel{NUMBER_LEVEL_UNSPECIFIED}, positionData{}, id{}
     {

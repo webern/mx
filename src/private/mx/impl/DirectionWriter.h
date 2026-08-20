@@ -58,7 +58,7 @@ class DirectionWriter
     core::EmptyPrintStyleAlignID createEmptyPrintStyleAlign(const api::PositionData &positionData,
                                                             const api::FontData &fontData,
                                                             const std::optional<api::ColorData> &color,
-                                                            const std::optional<std::string> &id);
+                                                            const std::optional<api::Id> &id);
     void emitDamp(const api::DampData &item, core::Direction &direction);
     void emitDampAll(const api::DampAllData &item, core::Direction &direction);
     void emitEyeglasses(const api::EyeglassesData &item, core::Direction &direction);

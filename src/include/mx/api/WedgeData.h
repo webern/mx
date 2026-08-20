@@ -6,6 +6,7 @@
 
 #include "mx/api/ApiCommon.h"
 #include "mx/api/ColorData.h"
+#include "mx/api/Id.h"
 #include "mx/api/LineData.h"
 #include "mx/api/PositionData.h"
 #include "mx/api/SpannerNumber.h"
@@ -35,8 +36,8 @@ struct WedgeStart
     bool isColorSpecified;
     ColorData colorData;
 
-    // The <wedge> element's id attribute (see ApiCommon.h).
-    std::optional<std::string> id;
+    // The <wedge> element's id attribute (see Id.h).
+    std::optional<Id> id;
 
     WedgeStart()
         : number{}, wedgeType{WedgeType::unspecified}, isSpreadSpecified{false}, spread{0.0}, lineData{},
@@ -52,8 +53,8 @@ struct WedgeStop
     bool isSpreadSpecified;
     double spread;
 
-    // The <wedge> element's id attribute (see ApiCommon.h).
-    std::optional<std::string> id;
+    // The <wedge> element's id attribute (see Id.h).
+    std::optional<Id> id;
 
     WedgeStop() : number{}, positionData{}, isSpreadSpecified{false}, spread{0.0}, id{}
     {

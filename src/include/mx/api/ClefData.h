@@ -5,6 +5,7 @@
 #pragma once
 
 #include "mx/api/ApiCommon.h"
+#include "mx/api/Id.h"
 
 #include <optional>
 #include <string>
@@ -71,8 +72,8 @@ class ClefData
     // unspecified -> omit the attribute, yes/no -> write print-object verbatim.
     Bool printObject;
 
-    // The <clef> element's id attribute (see ApiCommon.h).
-    std::optional<std::string> id;
+    // The <clef> element's id attribute (see Id.h).
+    std::optional<Id> id;
 
     std::string toString() const;
 

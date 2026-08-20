@@ -5,6 +5,7 @@
 #pragma once
 
 #include "mx/api/ApiCommon.h"
+#include "mx/api/Id.h"
 #include "mx/api/PositionData.h"
 
 #include <optional>
@@ -53,8 +54,8 @@ struct PedalLineData
     int tickTimePosition;
     PositionData positionData;
 
-    // The <pedal> element's id attribute (see ApiCommon.h).
-    std::optional<std::string> id;
+    // The <pedal> element's id attribute (see Id.h).
+    std::optional<Id> id;
 
     PedalLineData() : kind{PedalLineKind::unspecified}, tickTimePosition{0}, positionData{}, id{}
     {

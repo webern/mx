@@ -5,6 +5,7 @@
 #pragma once
 
 #include "mx/api/ApiCommon.h"
+#include "mx/api/Id.h"
 
 #include <optional>
 #include <string>
@@ -87,8 +88,8 @@ struct SoundData
 
     std::optional<SwingData> swing;
 
-    // The <sound> element's id attribute (see ApiCommon.h).
-    std::optional<std::string> id;
+    // The <sound> element's id attribute (see Id.h).
+    std::optional<Id> id;
 
     SoundData()
         : tempo{DOUBLE_UNSPECIFIED}, dynamics{DOUBLE_UNSPECIFIED}, dacapo{Bool::unspecified},

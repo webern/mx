@@ -7,6 +7,7 @@
 #include "mx/api/ApiCommon.h"
 #include "mx/api/ColorData.h"
 #include "mx/api/FontData.h"
+#include "mx/api/Id.h"
 #include "mx/api/PositionData.h"
 
 #include <optional>
@@ -41,8 +42,8 @@ class SymbolData
     // symbol-formatting attributes mirror the text-formatting ones on `<words>`.
     HorizontalAlignment justify;
 
-    // The <symbol> element's id attribute (see ApiCommon.h).
-    std::optional<std::string> id;
+    // The <symbol> element's id attribute (see Id.h).
+    std::optional<Id> id;
 
     SymbolData()
         : smufl{}, positionData{}, fontData{}, color{}, enclosure{Enclosure::unspecified},
