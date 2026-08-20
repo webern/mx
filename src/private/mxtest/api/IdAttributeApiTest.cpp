@@ -215,6 +215,14 @@ TEST(directionIds, IdAttribute)
     pedal.id = "p1";
     direction.directionTypes.emplace_back(DirectionChoice{pedal});
 
+    SegnoData segno;
+    segno.id = "sg1";
+    direction.directionTypes.emplace_back(DirectionChoice{segno});
+
+    CodaData coda;
+    coda.id = "co1";
+    direction.directionTypes.emplace_back(DirectionChoice{coda});
+
     direction.isSoundDataSpecified = true;
     direction.soundData.tempo = 120.0;
     direction.soundData.id = "so1";
@@ -237,6 +245,8 @@ TEST(directionIds, IdAttribute)
     std::optional<Id> foundDashes;
     std::optional<Id> foundOttava;
     std::optional<Id> foundPedal;
+    std::optional<Id> foundSegno;
+    std::optional<Id> foundCoda;
 
     for (const auto &choice : odirection.directionTypes)
     {
@@ -273,6 +283,12 @@ TEST(directionIds, IdAttribute)
         case DirectionChoice::Kind::pedal:
             foundPedal = choice.pedal().id;
             break;
+        case DirectionChoice::Kind::segno:
+            foundSegno = choice.segno().id;
+            break;
+        case DirectionChoice::Kind::coda:
+            foundCoda = choice.coda().id;
+            break;
         default:
             break;
         }
@@ -286,6 +302,8 @@ TEST(directionIds, IdAttribute)
     CHECK_EQUAL("da1", idAttributeText(foundDashes));
     CHECK_EQUAL("o1", idAttributeText(foundOttava));
     CHECK_EQUAL("p1", idAttributeText(foundPedal));
+    CHECK_EQUAL("sg1", idAttributeText(foundSegno));
+    CHECK_EQUAL("co1", idAttributeText(foundCoda));
 }
 
 T_END;

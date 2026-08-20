@@ -7,8 +7,10 @@
 #include "mx/api/ApiCommon.h"
 #include "mx/api/ColorData.h"
 #include "mx/api/FontData.h"
+#include "mx/api/Id.h"
 #include "mx/api/PositionData.h"
 
+#include <optional>
 #include <string>
 
 namespace mx
@@ -28,12 +30,12 @@ class CodaData
     ColorData colorData;
     bool isSmuflSpecified;
     std::string smufl;
-    bool isIdSpecified;
-    std::string id;
+
+    // The <coda> element's id attribute (see Id.h).
+    std::optional<Id> id;
 
     CodaData()
-        : positionData{}, fontData{}, isColorSpecified{false}, colorData{}, isSmuflSpecified{false}, smufl{},
-          isIdSpecified{false}, id{}
+        : positionData{}, fontData{}, isColorSpecified{false}, colorData{}, isSmuflSpecified{false}, smufl{}, id{}
     {
     }
 };
@@ -45,7 +47,6 @@ MXAPI_EQUALS_MEMBER(isColorSpecified)
 MXAPI_EQUALS_MEMBER(colorData)
 MXAPI_EQUALS_MEMBER(isSmuflSpecified)
 MXAPI_EQUALS_MEMBER(smufl)
-MXAPI_EQUALS_MEMBER(isIdSpecified)
 MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(CodaData);

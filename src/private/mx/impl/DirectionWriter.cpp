@@ -807,10 +807,7 @@ void DirectionWriter::emitSegno(const api::SegnoData &item, core::Direction &dir
     {
         segno.setSmufl(core::SmuflSegnoGlyphName::parse(item.smufl));
     }
-    if (item.isIdSpecified)
-    {
-        segno.setID(core::Token{item.id});
-    }
+    setId(item.id, segno);
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::segno(core::OneOrMore<core::Segno>{std::move(segno)}));
     addDirectionType(std::move(dt), direction);
@@ -829,10 +826,7 @@ void DirectionWriter::emitCoda(const api::CodaData &item, core::Direction &direc
     {
         coda.setSmufl(core::SmuflCodaGlyphName::parse(item.smufl));
     }
-    if (item.isIdSpecified)
-    {
-        coda.setID(core::Token{item.id});
-    }
+    setId(item.id, coda);
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::coda(core::OneOrMore<core::Coda>{std::move(coda)}));
     addDirectionType(std::move(dt), direction);

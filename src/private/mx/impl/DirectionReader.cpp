@@ -393,11 +393,7 @@ void DirectionReader::parseSegno(const core::DirectionType &directionType)
             outSegno.isSmuflSpecified = true;
             outSegno.smufl = segno.smufl()->toString();
         }
-        if (segno.id().has_value())
-        {
-            outSegno.isIdSpecified = true;
-            outSegno.id = segno.id()->value();
-        }
+        outSegno.id = getId(segno);
         myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice{std::move(outSegno)});
     }
 }
@@ -482,11 +478,7 @@ void DirectionReader::parseCoda(const core::DirectionType &directionType)
             outCoda.isSmuflSpecified = true;
             outCoda.smufl = coda.smufl()->toString();
         }
-        if (coda.id().has_value())
-        {
-            outCoda.isIdSpecified = true;
-            outCoda.id = coda.id()->value();
-        }
+        outCoda.id = getId(coda);
         myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice{std::move(outCoda)});
     }
 }
