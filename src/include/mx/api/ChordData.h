@@ -177,6 +177,8 @@ class FrameData
 
     int stringCount;
     int fretCount;
+    // What to display above a string without a frame note, such as "x" for a muted string.
+    std::optional<std::string> unplayed;
     int firstFret;
     bool isFirstFretSpecified;
     std::vector<FrameNoteData> notes;
@@ -185,6 +187,7 @@ class FrameData
 MXAPI_EQUALS_BEGIN(FrameData)
 MXAPI_EQUALS_MEMBER(stringCount)
 MXAPI_EQUALS_MEMBER(fretCount)
+MXAPI_EQUALS_MEMBER(unplayed)
 MXAPI_EQUALS_MEMBER(firstFret)
 MXAPI_EQUALS_MEMBER(isFirstFretSpecified)
 MXAPI_EQUALS_MEMBER(notes)

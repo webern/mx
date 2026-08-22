@@ -206,6 +206,25 @@ TEST(harmonyInversionRoundTrip, HarmonyExtrasApi)
 
 T_END;
 
+TEST(harmonyFrameUnplayedRoundTrip, HarmonyExtrasApi)
+{
+    auto score = makeScoreWithChord();
+    auto &chord = chordOf(score);
+    chord.root = Step::c;
+    chord.chordKind = ChordKind::major;
+    chord.hasFrameData = true;
+    chord.frameData.unplayed = "x";
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("unplayed=\"x\"") != std::string::npos);
+
+    const auto out = mxtest::roundTrip(score);
+    CHECK(out.parts.front().measures.front().staves.front().directions.front().chords.front().frameData.unplayed ==
+          std::optional<std::string>{"x"});
+}
+
+T_END;
+
 TEST(harmonyFunctionRoundTrip, HarmonyExtrasApi)
 {
     auto score = makeScoreWithChord();
