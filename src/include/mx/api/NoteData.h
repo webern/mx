@@ -6,6 +6,7 @@
 
 #include "mx/api/CurveData.h"
 #include "mx/api/DurationData.h"
+#include "mx/api/Id.h"
 #include "mx/api/LyricData.h"
 #include "mx/api/NoteAttachmentData.h"
 #include "mx/api/PitchData.h"
@@ -82,8 +83,8 @@ struct TieLetRing
     bool isColorSpecified;
     ColorData colorData;
 
-    // The <tied> element's id attribute (see ApiCommon.h).
-    std::optional<std::string> id;
+    // The <tied> element's id attribute (see Id.h).
+    std::optional<Id> id;
 
     TieLetRing()
         : positionData{}, curveOrientation{CurveOrientation::unspecified}, isColorSpecified{false}, colorData{}, id{}
@@ -208,8 +209,8 @@ class NoteData
     // will be parsed into these strings. do not use commas in your misc
     // data strings as these are the delimiter
 
-    // The <note> element's id attribute (see ApiCommon.h).
-    std::optional<std::string> id;
+    // The <note> element's id attribute (see Id.h).
+    std::optional<Id> id;
     std::vector<std::string> miscData;
 };
 

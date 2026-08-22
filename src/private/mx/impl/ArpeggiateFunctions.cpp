@@ -5,6 +5,7 @@
 #include "mx/impl/ArpeggiateFunctions.h"
 #include "mx/core/generated/Arpeggiate.h"
 #include "mx/impl/Converter.h"
+#include "mx/impl/IdFunctions.h"
 #include "mx/impl/MarkDataFunctions.h"
 
 namespace mx
@@ -47,10 +48,7 @@ api::MarkData ArpeggiateFunctions::parseArpeggiate() const
         Converter converter;
         arpeggiateData.unbroken = converter.convert(*myArpeggiate.unbroken());
     }
-    if (myArpeggiate.id().has_value())
-    {
-        arpeggiateData.id = myArpeggiate.id()->value();
-    }
+    arpeggiateData.id = getId(myArpeggiate);
     markData.choice = arpeggiateData;
 
     return markData;

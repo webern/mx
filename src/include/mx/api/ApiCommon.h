@@ -32,17 +32,6 @@ constexpr int NUMBER_LEVEL_UNSPECIFIED = -1; // MusicXML 'number' attributes, e.
 constexpr int VALUE_UNSPECIFIED = -1;        // other absent-able ints, e.g. DirectionData::voice
 constexpr Double DOUBLE_UNSPECIFIED = -1.0;  // absent-able doubles, e.g. StaffData::staffSize
 
-// MusicXML lets most elements carry an optional id attribute, a name that identifies that one
-// element within the document. Software uses it to point at a particular note, measure, or
-// marking -- to line playback up with the score, to hang an annotation on a note, or to link one
-// file to another. Every mx::api type that models such an element has an `id` member. Leave it
-// empty and no id attribute is written.
-//
-// An id must be unique within the document and must follow the XML name rules: a letter or an
-// underscore first, then letters, digits, dots, hyphens, or underscores. mx repairs an id that
-// breaks the name rules when it writes the file, but it does not check uniqueness, so an id you
-// invent must not collide with one already in the score.
-
 // Intentional ternary: absent-able bools use Bool::unspecified, not std::optional<bool>.
 // See "mx::api conventions" in AGENTS.md.
 enum class Bool

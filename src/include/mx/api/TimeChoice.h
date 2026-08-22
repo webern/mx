@@ -6,6 +6,7 @@
 
 #include "mx/api/ApiCommon.h"
 #include "mx/api/ComplexTimeSignature.h"
+#include "mx/api/Id.h"
 #include "mx/api/TimeSignatureData.h"
 
 #include <optional>
@@ -59,9 +60,9 @@ class TimeChoice
     // Print/hide the time signature (<time print-object=...>). Ignored when isImplicit.
     Bool display{Bool::unspecified};
 
-    // The <time> element's id attribute (see ApiCommon.h). Only the measure that states the time
+    // The <time> element's id attribute (see Id.h). Only the measure that states the time
     // signature carries it; a measure that inherits the signature (isImplicit) has no id.
-    std::optional<std::string> id;
+    std::optional<Id> id;
 
     // Defaults to a simple, implicit 4/4.
     TimeChoice();

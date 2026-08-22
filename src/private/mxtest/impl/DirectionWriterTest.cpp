@@ -140,7 +140,6 @@ TEST(segnoAndCodaRoundTrip, DirectionWriter)
     segno.colorData.alpha = 255;
     segno.isSmuflSpecified = true;
     segno.smufl = "segno";
-    segno.isIdSpecified = true;
     segno.id = "id3";
 
     api::CodaData coda;
@@ -157,7 +156,6 @@ TEST(segnoAndCodaRoundTrip, DirectionWriter)
     coda.colorData.blue = 56;
     coda.isSmuflSpecified = true;
     coda.smufl = "coda";
-    coda.isIdSpecified = true;
     coda.id = "id7";
 
     api::DirectionData directionData;

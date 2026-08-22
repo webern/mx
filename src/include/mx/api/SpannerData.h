@@ -5,6 +5,7 @@
 #pragma once
 
 #include "mx/api/ApiCommon.h"
+#include "mx/api/Id.h"
 #include "mx/api/LineData.h"
 #include "mx/api/PositionData.h"
 #include "mx/api/PrintData.h"
@@ -27,8 +28,8 @@ struct SpannerStart
     LineData lineData;
 
     // The id attribute of the element this spanner end is written as -- <bracket>,
-    // <dashes>, or <octave-shift> (see ApiCommon.h).
-    std::optional<std::string> id;
+    // <dashes>, or <octave-shift> (see Id.h).
+    std::optional<Id> id;
 
     SpannerStart() : number{}, tickTimePosition{0}, positionData{}, printData{}, lineData{}, id{}
     {
@@ -43,8 +44,8 @@ struct SpannerStop
     LineData lineData;
 
     // The id attribute of the element this spanner end is written as -- <bracket>,
-    // <dashes>, or <octave-shift> (see ApiCommon.h).
-    std::optional<std::string> id;
+    // <dashes>, or <octave-shift> (see Id.h).
+    std::optional<Id> id;
 
     SpannerStop() : number{}, tickTimePosition{0}, positionData{}, lineData{}, id{}
     {

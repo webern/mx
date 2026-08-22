@@ -7,6 +7,7 @@
 #include "mx/api/ApiCommon.h"
 #include "mx/api/ColorData.h"
 #include "mx/api/FontData.h"
+#include "mx/api/Id.h"
 #include "mx/api/PositionData.h"
 
 #include <optional>
@@ -38,8 +39,8 @@ class WordsData
     // block against its anchor point; MusicXML defines both attributes on `<words>`.
     HorizontalAlignment justify;
 
-    // The <words> element's id attribute (see ApiCommon.h).
-    std::optional<std::string> id;
+    // The <words> element's id attribute (see Id.h).
+    std::optional<Id> id;
 
     WordsData()
         : text{}, positionData{}, fontData{}, isColorSpecified{false}, colorData{}, enclosure{Enclosure::unspecified},

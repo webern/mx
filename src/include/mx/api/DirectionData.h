@@ -8,6 +8,7 @@
 #include "mx/api/ChordData.h"
 #include "mx/api/DirectionChoice.h"
 #include "mx/api/FiguredBassData.h"
+#include "mx/api/Id.h"
 #include "mx/api/SoundData.h"
 
 #include <optional>
@@ -81,8 +82,8 @@ struct DirectionData
     // serialize as their own <figured-bass> elements, not as direction-type content.
     std::vector<FiguredBassData> figuredBasses;
 
-    // The <direction> element's id attribute (see ApiCommon.h).
-    std::optional<std::string> id;
+    // The <direction> element's id attribute (see Id.h).
+    std::optional<Id> id;
 
     DirectionData()
         : tickTimePosition{0}, placement{Placement::unspecified}, systemRelation{SystemRelation::unspecified}, offset{},

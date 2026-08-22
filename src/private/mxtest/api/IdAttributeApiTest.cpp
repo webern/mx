@@ -11,6 +11,9 @@
 #include "mxtest/api/RoundTrip.h"
 #include "mxtest/api/TestHelpers.h"
 
+#include <map>
+#include <unordered_map>
+
 using namespace std;
 using namespace mx::api;
 using namespace mxtest;
@@ -60,6 +63,12 @@ static const NoteData &idAttributeNote(const ScoreData &score)
     return idAttributeMeasure(score).staves.back().voices.at(0).notes.back();
 }
 
+// The text of an id, or an empty string when there is none.
+static std::string idAttributeText(const std::optional<Id> &id)
+{
+    return id.has_value() ? id->value() : std::string{};
+}
+
 // The <note> id, the reason for issue 399, plus the <measure> and <lyric> ids around it.
 TEST(noteMeasureAndLyricIds, IdAttribute)
 {
@@ -78,12 +87,12 @@ TEST(noteMeasureAndLyricIds, IdAttribute)
     CHECK(xml.find("id=\"n1\"") != std::string::npos);
 
     const auto out = roundTrip(score);
-    CHECK(std::optional<std::string>{"m1"} == idAttributeMeasure(out).id);
+    CHECK_EQUAL("m1", idAttributeText(idAttributeMeasure(out).id));
 
     const auto &onote = idAttributeNote(out);
-    CHECK(std::optional<std::string>{"n1"} == onote.id);
+    CHECK_EQUAL("n1", idAttributeText(onote.id));
     REQUIRE(onote.lyrics.size() == 1);
-    CHECK(std::optional<std::string>{"ly1"} == onote.lyrics.front().id);
+    CHECK_EQUAL("ly1", idAttributeText(onote.lyrics.front().id));
 }
 
 T_END;
@@ -122,15 +131,15 @@ TEST(attributesAndBarlineIds, IdAttribute)
     const auto out = roundTrip(score);
     const auto &omeasure = idAttributeMeasure(out);
 
-    CHECK(std::optional<std::string>{"t1"} == omeasure.timeSignature.id);
+    CHECK_EQUAL("t1", idAttributeText(omeasure.timeSignature.id));
     REQUIRE(omeasure.keys.size() == 1);
-    CHECK(std::optional<std::string>{"k1"} == omeasure.keys.front().id);
+    CHECK_EQUAL("k1", idAttributeText(omeasure.keys.front().id));
     REQUIRE(omeasure.staves.back().clefs.size() == 1);
-    CHECK(std::optional<std::string>{"c1"} == omeasure.staves.back().clefs.front().id);
+    CHECK_EQUAL("c1", idAttributeText(omeasure.staves.back().clefs.front().id));
     REQUIRE(omeasure.transpositions.size() == 1);
-    CHECK(std::optional<std::string>{"x1"} == omeasure.transpositions.front().id);
+    CHECK_EQUAL("x1", idAttributeText(omeasure.transpositions.front().id));
     REQUIRE(omeasure.barlines.size() == 1);
-    CHECK(std::optional<std::string>{"b1"} == omeasure.barlines.front().id);
+    CHECK_EQUAL("b1", idAttributeText(omeasure.barlines.front().id));
 }
 
 T_END;
@@ -152,7 +161,7 @@ TEST(inheritedTimeSignatureHasNoId, IdAttribute)
 
     const auto out = roundTrip(score);
     REQUIRE(out.parts.back().measures.size() == 2);
-    CHECK(std::optional<std::string>{"t1"} == out.parts.back().measures.front().timeSignature.id);
+    CHECK_EQUAL("t1", idAttributeText(out.parts.back().measures.front().timeSignature.id));
     CHECK(!out.parts.back().measures.back().timeSignature.id.has_value());
 }
 
@@ -206,6 +215,14 @@ TEST(directionIds, IdAttribute)
     pedal.id = "p1";
     direction.directionTypes.emplace_back(DirectionChoice{pedal});
 
+    SegnoData segno;
+    segno.id = "sg1";
+    direction.directionTypes.emplace_back(DirectionChoice{segno});
+
+    CodaData coda;
+    coda.id = "co1";
+    direction.directionTypes.emplace_back(DirectionChoice{coda});
+
     direction.isSoundDataSpecified = true;
     direction.soundData.tempo = 120.0;
     direction.soundData.id = "so1";
@@ -217,17 +234,19 @@ TEST(directionIds, IdAttribute)
     REQUIRE(odirections.size() == 1);
     const auto &odirection = odirections.front();
 
-    CHECK(std::optional<std::string>{"d1"} == odirection.id);
-    CHECK(std::optional<std::string>{"so1"} == odirection.soundData.id);
+    CHECK_EQUAL("d1", idAttributeText(odirection.id));
+    CHECK_EQUAL("so1", idAttributeText(odirection.soundData.id));
 
-    std::optional<std::string> foundWords;
-    std::optional<std::string> foundSymbol;
-    std::optional<std::string> foundRehearsal;
-    std::optional<std::string> foundWedge;
-    std::optional<std::string> foundBracket;
-    std::optional<std::string> foundDashes;
-    std::optional<std::string> foundOttava;
-    std::optional<std::string> foundPedal;
+    std::optional<Id> foundWords;
+    std::optional<Id> foundSymbol;
+    std::optional<Id> foundRehearsal;
+    std::optional<Id> foundWedge;
+    std::optional<Id> foundBracket;
+    std::optional<Id> foundDashes;
+    std::optional<Id> foundOttava;
+    std::optional<Id> foundPedal;
+    std::optional<Id> foundSegno;
+    std::optional<Id> foundCoda;
 
     for (const auto &choice : odirection.directionTypes)
     {
@@ -264,19 +283,27 @@ TEST(directionIds, IdAttribute)
         case DirectionChoice::Kind::pedal:
             foundPedal = choice.pedal().id;
             break;
+        case DirectionChoice::Kind::segno:
+            foundSegno = choice.segno().id;
+            break;
+        case DirectionChoice::Kind::coda:
+            foundCoda = choice.coda().id;
+            break;
         default:
             break;
         }
     }
 
-    CHECK(std::optional<std::string>{"w1"} == foundWords);
-    CHECK(std::optional<std::string>{"sy1"} == foundSymbol);
-    CHECK(std::optional<std::string>{"r1"} == foundRehearsal);
-    CHECK(std::optional<std::string>{"we1"} == foundWedge);
-    CHECK(std::optional<std::string>{"br1"} == foundBracket);
-    CHECK(std::optional<std::string>{"da1"} == foundDashes);
-    CHECK(std::optional<std::string>{"o1"} == foundOttava);
-    CHECK(std::optional<std::string>{"p1"} == foundPedal);
+    CHECK_EQUAL("w1", idAttributeText(foundWords));
+    CHECK_EQUAL("sy1", idAttributeText(foundSymbol));
+    CHECK_EQUAL("r1", idAttributeText(foundRehearsal));
+    CHECK_EQUAL("we1", idAttributeText(foundWedge));
+    CHECK_EQUAL("br1", idAttributeText(foundBracket));
+    CHECK_EQUAL("da1", idAttributeText(foundDashes));
+    CHECK_EQUAL("o1", idAttributeText(foundOttava));
+    CHECK_EQUAL("p1", idAttributeText(foundPedal));
+    CHECK_EQUAL("sg1", idAttributeText(foundSegno));
+    CHECK_EQUAL("co1", idAttributeText(foundCoda));
 }
 
 T_END;
@@ -321,17 +348,17 @@ TEST(notationIds, IdAttribute)
     REQUIRE(onotes.size() == 2);
 
     REQUIRE(onotes.front().noteAttachmentData.curveStarts.size() == 1);
-    CHECK(std::optional<std::string>{"s1"} == onotes.front().noteAttachmentData.curveStarts.front().id);
+    CHECK_EQUAL("s1", idAttributeText(onotes.front().noteAttachmentData.curveStarts.front().id));
     REQUIRE(onotes.back().noteAttachmentData.curveStops.size() == 1);
-    CHECK(std::optional<std::string>{"s2"} == onotes.back().noteAttachmentData.curveStops.front().id);
+    CHECK_EQUAL("s2", idAttributeText(onotes.back().noteAttachmentData.curveStops.front().id));
 
     REQUIRE(onotes.front().noteAttachmentData.tupletStarts.size() == 1);
-    CHECK(std::optional<std::string>{"tu1"} == onotes.front().noteAttachmentData.tupletStarts.front().id);
+    CHECK_EQUAL("tu1", idAttributeText(onotes.front().noteAttachmentData.tupletStarts.front().id));
     REQUIRE(onotes.back().noteAttachmentData.tupletStops.size() == 1);
-    CHECK(std::optional<std::string>{"tu2"} == onotes.back().noteAttachmentData.tupletStops.front().id);
+    CHECK_EQUAL("tu2", idAttributeText(onotes.back().noteAttachmentData.tupletStops.front().id));
 
     REQUIRE(onotes.back().tieLetRing.has_value());
-    CHECK(std::optional<std::string>{"lr1"} == onotes.back().tieLetRing->id);
+    CHECK_EQUAL("lr1", idAttributeText(onotes.back().tieLetRing->id));
 }
 
 T_END;
@@ -359,7 +386,7 @@ TEST(figuredBassId, IdAttribute)
     const auto &odirections = idAttributeMeasure(out).staves.back().directions;
     REQUIRE(odirections.size() == 1);
     REQUIRE(odirections.front().figuredBasses.size() == 1);
-    CHECK(std::optional<std::string>{"fb1"} == odirections.front().figuredBasses.front().id);
+    CHECK_EQUAL("fb1", idAttributeText(odirections.front().figuredBasses.front().id));
 }
 
 T_END;
@@ -410,18 +437,120 @@ TEST(idsAreReadFromSourceXml, IdAttribute)
     REQUIRE(score.parts.size() == 1);
     const auto &measure = score.parts.front().measures.front();
 
-    CHECK(std::optional<std::string>{"m1"} == measure.id);
-    CHECK(std::optional<std::string>{"t1"} == measure.timeSignature.id);
+    CHECK_EQUAL("m1", idAttributeText(measure.id));
+    CHECK_EQUAL("t1", idAttributeText(measure.timeSignature.id));
     REQUIRE(measure.keys.size() == 1);
-    CHECK(std::optional<std::string>{"k1"} == measure.keys.front().id);
+    CHECK_EQUAL("k1", idAttributeText(measure.keys.front().id));
     REQUIRE(measure.staves.front().clefs.size() == 1);
-    CHECK(std::optional<std::string>{"c1"} == measure.staves.front().clefs.front().id);
+    CHECK_EQUAL("c1", idAttributeText(measure.staves.front().clefs.front().id));
     REQUIRE(measure.barlines.size() == 1);
-    CHECK(std::optional<std::string>{"b1"} == measure.barlines.front().id);
+    CHECK_EQUAL("b1", idAttributeText(measure.barlines.front().id));
 
     const auto &notes = measure.staves.front().voices.at(0).notes;
     REQUIRE(notes.size() == 1);
-    CHECK(std::optional<std::string>{"n1"} == notes.front().id);
+    CHECK_EQUAL("n1", idAttributeText(notes.front().id));
+}
+
+T_END;
+
+// An id that breaks the XML name rules is scrubbed as the Id is built, so the api and the file
+// always hold the same text.
+TEST(idsAreScrubbedWhenBuilt, IdAttribute)
+{
+    CHECK_EQUAL("n1", Id{"n1"}.value());
+    CHECK_EQUAL("measure-1.a_b", Id{"measure-1.a_b"}.value());
+
+    // Characters the rules do not allow are dropped.
+    CHECK_EQUAL("blindmice", Id{"3 blind mice"}.value());
+
+    // An id cannot start with a digit, a hyphen, or a dot.
+    CHECK_EQUAL("abc", Id{"1abc"}.value());
+    CHECK_EQUAL("abc", Id{"-abc"}.value());
+
+    // Nothing usable left, so the id becomes "X".
+    CHECK_EQUAL("X", Id{""}.value());
+    CHECK_EQUAL("X", Id{"!!!"}.value());
+}
+
+T_END;
+
+// Compare the id you built with the text you gave it to find out whether the text was legal.
+TEST(scrubbingIsVisibleToTheCaller, IdAttribute)
+{
+    const std::string wanted = "3 blind mice";
+    const auto id = Id{wanted};
+    CHECK(id.value() != wanted);
+
+    const std::string legal = "n1";
+    CHECK(Id{legal}.value() == legal);
+}
+
+T_END;
+
+// A scrubbed id reaches the file scrubbed, and reads back the same way.
+TEST(scrubbedIdRoundTrips, IdAttribute)
+{
+    auto score = idAttributeMakeScore();
+    idAttributeNote(score).id = "3 blind mice";
+
+    const auto xml = toXml(score);
+    CHECK(xml.find("id=\"blindmice\"") != std::string::npos);
+
+    const auto out = roundTrip(score);
+    CHECK_EQUAL("blindmice", idAttributeText(idAttributeNote(out).id));
+}
+
+T_END;
+
+// Id behaves like any other value: copy it, assign it, compare it, sort it, hash it.
+TEST(idBehavesLikeAValue, IdAttribute)
+{
+    const Id first{"n1"};
+    const Id copy = first;
+    CHECK(first == copy);
+    CHECK(!(first != copy));
+
+    Id assigned{"other"};
+    assigned = first;
+    CHECK(first == assigned);
+    CHECK_EQUAL("n1", assigned.value());
+
+    // Assigning does not tie the two together.
+    assigned = Id{"n2"};
+    CHECK_EQUAL("n1", first.value());
+    CHECK(first != assigned);
+
+    // Equality is by text, not by where the id came from.
+    CHECK(Id{"n1"} == Id{"n1"});
+    CHECK(Id{"n1"} != Id{"n2"});
+
+    // Ordering is by text.
+    CHECK(Id{"a"} < Id{"b"});
+    CHECK(Id{"b"} > Id{"a"});
+    CHECK(Id{"a"} <= Id{"a"});
+    CHECK(Id{"a"} >= Id{"a"});
+
+    // Equal ids hash the same.
+    const std::hash<Id> hasher;
+    CHECK(hasher(Id{"n1"}) == hasher(copy));
+
+    // So an Id works as a key in either kind of map.
+    std::map<Id, int> ordered;
+    ordered[Id{"n2"}] = 2;
+    ordered[Id{"n1"}] = 1;
+    REQUIRE(ordered.size() == 2);
+    CHECK_EQUAL("n1", ordered.begin()->first.value());
+    CHECK_EQUAL(1, ordered.at(Id{"n1"}));
+
+    std::unordered_map<Id, int> hashed;
+    hashed[Id{"n1"}] = 1;
+    CHECK_EQUAL(1, hashed.at(Id{"n1"}));
+
+    // A moved-from Id is still readable.
+    Id source{"n3"};
+    const Id moved = std::move(source);
+    CHECK_EQUAL("n3", moved.value());
+    CHECK(!source.value().empty());
 }
 
 T_END;

@@ -6,6 +6,7 @@
 
 #include "mx/api/ApiCommon.h"
 #include "mx/api/ColorData.h"
+#include "mx/api/Id.h"
 #include "mx/api/LineData.h"
 #include "mx/api/PositionData.h"
 #include "mx/api/SpannerNumber.h"
@@ -104,8 +105,8 @@ struct CurveStart
     ColorData colorData;
 
     // The id attribute of the element this curve end is written as -- <slur> for a slur,
-    // <tied> for a tie (see ApiCommon.h).
-    std::optional<std::string> id;
+    // <tied> for a tie (see Id.h).
+    std::optional<Id> id;
 
     CurveStart(CurveType inCurveType)
         : curveType{inCurveType}, number{}, curvePoints{}, curveOrientation{CurveOrientation::unspecified},
@@ -127,8 +128,8 @@ struct CurveContinue
     double bezierOffset2;
 
     // The id attribute of the element this curve end is written as -- <slur> for a slur,
-    // <tied> for a tie (see ApiCommon.h).
-    std::optional<std::string> id;
+    // <tied> for a tie (see Id.h).
+    std::optional<Id> id;
 
     CurveContinue(CurveType inCurveType)
         : curveType{inCurveType}, number{}, curvePoints{}, isBezierX2Specified{false}, bezierX2{0.0},
@@ -144,8 +145,8 @@ struct CurveStop
     CurvePoints curvePoints;
 
     // The id attribute of the element this curve end is written as -- <slur> for a slur,
-    // <tied> for a tie (see ApiCommon.h).
-    std::optional<std::string> id;
+    // <tied> for a tie (see Id.h).
+    std::optional<Id> id;
 
     CurveStop(CurveType inCurveType) : curveType{inCurveType}, number{}, curvePoints{}, id{}
     {

@@ -6,6 +6,7 @@
 
 #include "mx/api/ApiCommon.h"
 #include "mx/api/BarlineData.h"
+#include "mx/api/Id.h"
 #include "mx/api/KeyData.h"
 #include "mx/api/PartSymbolData.h"
 #include "mx/api/StaffData.h"
@@ -111,8 +112,8 @@ class MeasureData
     // before this field existed.
     std::vector<TransposeData> transpositions;
 
-    // The <measure> element's id attribute (see ApiCommon.h).
-    std::optional<std::string> id;
+    // The <measure> element's id attribute (see Id.h).
+    std::optional<Id> id;
 
     MeasureData()
         : staves{}, timeSignature{}, number{}, measureNumbering{MeasureNumbering::unspecified},

@@ -5,6 +5,7 @@
 #pragma once
 
 #include "mx/api/ApiCommon.h"
+#include "mx/api/Id.h"
 #include "mx/api/PositionData.h"
 #include "mx/api/PrintData.h"
 
@@ -54,8 +55,8 @@ class LyricData
     PositionData positionData;
     PrintData printData;
 
-    // The <lyric> element's id attribute (see ApiCommon.h).
-    std::optional<std::string> id;
+    // The <lyric> element's id attribute (see Id.h).
+    std::optional<Id> id;
 };
 
 MXAPI_EQUALS_BEGIN(LyricData)

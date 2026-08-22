@@ -5,6 +5,7 @@
 #pragma once
 
 #include "mx/api/ApiCommon.h"
+#include "mx/api/Id.h"
 
 #include <optional>
 #include <string>
@@ -49,8 +50,8 @@ class FiguredBassData
     // The optional <duration>, in ticks. A value less than 0 means 'unspecified' (no duration child).
     int durationTimeTicks;
 
-    // The <figured-bass> element's id attribute (see ApiCommon.h).
-    std::optional<std::string> id;
+    // The <figured-bass> element's id attribute (see Id.h).
+    std::optional<Id> id;
 
     FiguredBassData() : figures{}, parentheses{Bool::unspecified}, durationTimeTicks{VALUE_UNSPECIFIED}, id{}
     {

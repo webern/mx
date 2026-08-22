@@ -7,6 +7,7 @@
 #include "mx/api/ColorData.h"
 #include "mx/api/DurationData.h"
 #include "mx/api/FontData.h"
+#include "mx/api/Id.h"
 #include "mx/api/NoteRelationData.h"
 #include "mx/api/PositionData.h"
 #include "mx/api/PrintData.h"
@@ -126,7 +127,7 @@ class TempoData
     PositionData positionData;
     FontData fontData;
     std::optional<ColorData> color;
-    std::optional<std::string> id;
+    std::optional<Id> id;
     HorizontalAlignment justify;
     Bool printObject;
     TempoChoice choice;

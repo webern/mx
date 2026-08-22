@@ -4,6 +4,7 @@
 
 #include "mx/impl/NonArpeggiateFunctions.h"
 #include "mx/core/generated/NonArpeggiate.h"
+#include "mx/impl/IdFunctions.h"
 #include "mx/impl/MarkDataFunctions.h"
 
 namespace mx
@@ -30,10 +31,7 @@ api::MarkData NonArpeggiateFunctions::parseNonArpeggiate() const
     {
         nonArpeggiateData.number = myNonArpeggiate.number()->value();
     }
-    if (myNonArpeggiate.id().has_value())
-    {
-        nonArpeggiateData.id = myNonArpeggiate.id()->value();
-    }
+    nonArpeggiateData.id = getId(myNonArpeggiate);
     markData.choice = nonArpeggiateData;
 
     return markData;

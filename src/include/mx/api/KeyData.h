@@ -4,6 +4,7 @@
 
 #pragma once
 #include "mx/api/ApiCommon.h"
+#include "mx/api/Id.h"
 #include "mx/api/KeyComponent.h"
 
 #include <optional>
@@ -124,8 +125,8 @@ struct KeyData
     // alterations. When custom is non-empty, then fifths and mode are ignored.
     std::vector<KeyComponent> nonTraditional;
 
-    // The <key> element's id attribute (see ApiCommon.h).
-    std::optional<std::string> id;
+    // The <key> element's id attribute (see Id.h).
+    std::optional<Id> id;
 
     KeyData()
         : fifths{0}, cancel{0}, cancelLocation{CancelLocation::unspecified}, mode{KeyMode::unspecified},

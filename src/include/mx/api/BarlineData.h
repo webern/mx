@@ -5,6 +5,7 @@
 #pragma once
 
 #include "mx/api/ApiCommon.h"
+#include "mx/api/Id.h"
 #include "mx/api/PositionData.h"
 
 #include <optional>
@@ -116,8 +117,8 @@ class BarlineData
     RepeatWinged repeatWinged;
     HorizontalAlignment location;
 
-    // The <barline> element's id attribute (see ApiCommon.h).
-    std::optional<std::string> id;
+    // The <barline> element's id attribute (see Id.h).
+    std::optional<Id> id;
 
     BarlineData()
         : tickTimePosition{0}, barlineType{BarlineType::normal}, ending{}, repeat{false}, repeatTimes{0},

@@ -316,10 +316,7 @@ void NoteFunctions::parseNotations() const
                 {
                     payload.smufl = other.smufl()->toString();
                 }
-                if (other.id().has_value())
-                {
-                    payload.id = other.id()->value();
-                }
+                payload.id = getId(other);
                 mark.choice = std::move(payload);
                 myOutNoteData.noteAttachmentData.marks.emplace_back(std::move(mark));
                 break;

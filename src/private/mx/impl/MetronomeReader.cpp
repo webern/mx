@@ -23,6 +23,7 @@
 #include "mx/core/generated/TimeModificationGroup.h"
 #include "mx/impl/Converter.h"
 #include "mx/impl/FontFunctions.h"
+#include "mx/impl/IdFunctions.h"
 #include "mx/impl/PositionFunctions.h"
 #include "mx/impl/PrintFunctions.h"
 
@@ -138,10 +139,7 @@ api::TempoData MetronomeReader::getTempoData() const
     {
         myOutTempoData.color = getColor(myMetronome);
     }
-    if (myMetronome.id().has_value())
-    {
-        myOutTempoData.id = myMetronome.id()->value();
-    }
+    myOutTempoData.id = getId(myMetronome);
     if (myMetronome.justify().has_value())
     {
         myOutTempoData.justify = converter.convert(*myMetronome.justify());
