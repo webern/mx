@@ -50,18 +50,12 @@ class OttavaStop
     SpannerStop spannerStop;
 
     // Most users can ignore this; leave it unspecified. It only controls whether the stop end of an
-    // octave-shift line repeats the line's size (8, 15, or 22). The size is not the stop's own
-    // fact: it belongs to the OttavaStart that opened the line, so an authored ottava states its
-    // octave shift once, on the start, and the writer puts the matching size on the stop.
+    // octave-shift line repeats the line's size (8, 15, or 22). The size is not required on the
+    // stop and carries no new information. Omitting it is legal, but but some importers (MuseScore)
+    // expect it. Therefore `mx::api` defaults to automatically writing the redundant stop size.
     //
-    // unspecified (the default) and yes both write that size; no omits it. Omitting it is legal
-    // MusicXML, but some importers (MuseScore among them) expect it, so the default is the
-    // interoperable spelling. It exists for round-trip fidelity - reading a file sets yes or no
-    // according to whether the source spelled the attribute out.
-    //
-    // The start a stop closes is found by spannerStop.number: an identity, an explicit level, or an
-    // unspecified number pairs with the nearest still-open start of the same kind, within the part
-    // and across measures. A stop that matches no start writes MusicXML's default size of 8.
+    // For the sake of file round-trip fidelity, this will be set to 'no' if a the file being read
+    // does not include the size attribute in the stop element.
     Bool writeSize;
 
     OttavaStop() : spannerStop{}, writeSize{Bool::unspecified}
