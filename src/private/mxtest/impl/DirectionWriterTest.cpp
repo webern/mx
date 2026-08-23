@@ -236,4 +236,56 @@ TEST(rehearsalRoundTrip, DirectionWriter)
 
 T_END
 
+// <direction directive="yes"> aligns the direction with the measure's time signature. The
+// attribute is tri-state: unspecified does not write anything, and yes/no are written verbatim.
+TEST(directiveRoundTrip, DirectionWriter)
+{
+    api::RehearsalData rehearsal;
+    rehearsal.text = "A";
+
+    api::DirectionData directionData;
+    directionData.directionTypes.emplace_back(api::DirectionChoice{rehearsal});
+    directionData.directive = api::Bool::yes;
+
+    Cursor cursor{1, 100};
+    SpannerResolver spannerResolver;
+    DirectionWriter writer{directionData, cursor, spannerResolver};
+    const auto mdcSet = writer.getDirectionLikeThings();
+    REQUIRE(mdcSet.size() >= 1);
+    REQUIRE(mdcSet.front().isDirection());
+    const auto &direction = mdcSet.front().asDirection();
+    REQUIRE(direction.directive().has_value());
+    CHECK(core::YesNo::Tag::yes == direction.directive()->tag());
+
+    DirectionReader reader{direction, cursor};
+    CHECK(api::Bool::yes == reader.getDirectionData().directive);
+}
+
+T_END
+
+// An unspecified directive leaves the attribute off the written <direction> entirely, so a
+// document that never mentioned it does not gain one.
+TEST(directiveUnspecifiedWritesNoAttribute, DirectionWriter)
+{
+    api::RehearsalData rehearsal;
+    rehearsal.text = "A";
+
+    api::DirectionData directionData;
+    directionData.directionTypes.emplace_back(api::DirectionChoice{rehearsal});
+
+    Cursor cursor{1, 100};
+    SpannerResolver spannerResolver;
+    DirectionWriter writer{directionData, cursor, spannerResolver};
+    const auto mdcSet = writer.getDirectionLikeThings();
+    REQUIRE(mdcSet.size() >= 1);
+    REQUIRE(mdcSet.front().isDirection());
+    const auto &direction = mdcSet.front().asDirection();
+    CHECK(!direction.directive().has_value());
+
+    DirectionReader reader{direction, cursor};
+    CHECK(api::Bool::unspecified == reader.getDirectionData().directive);
+}
+
+T_END
+
 #endif

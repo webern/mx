@@ -167,6 +167,11 @@ std::vector<core::MusicDataChoice> DirectionWriter::getDirectionLikeThings()
     // nullopt for unspecified, and for the bottom-of-system values that only measure numbering has.
     // <harmony> carries the same attribute; createHarmonyElements writes it there too.
     direction.setSystem(myConverter.convertDirectionSystemRelation(myDirectionData.systemRelation));
+
+    if (myDirectionData.directive != api::Bool::unspecified)
+    {
+        direction.setDirective(myConverter.convert(myDirectionData.directive));
+    }
     setId(myDirectionData.id, direction);
 
     if (myDirectionData.isStaffValueSpecified || myCursor.staffIndex != 0)

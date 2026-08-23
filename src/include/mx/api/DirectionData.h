@@ -38,6 +38,15 @@ struct DirectionData
     // and ::alsoBottom exist only for measure numbering; either one here writes no attribute.
     SystemRelation systemRelation;
 
+    // Whether this direction lines up with the measure's time signature rather than with the
+    // note it is anchored to. A tempo or style marking at the head of a movement is usually set
+    // this way: yes puts its left edge at the left edge of the time signature, or at the first
+    // note in the measure when there is no time signature. A default-x, justify, or halign on
+    // the direction's content overrides it. Leave it unspecified for a direction that belongs
+    // over its note. Harmony chord symbols do not carry this; MusicXML puts it on <direction>
+    // alone.
+    Bool directive;
+
     // The source's <offset>, in divisions, or absent when it had none. An <offset> nudges only
     // where the direction is *drawn*, shifting it away from the note it is anchored to; it does not
     // move that anchor. tickTimePosition holds the anchor -- the musical location the direction
@@ -86,9 +95,9 @@ struct DirectionData
     std::optional<Id> id;
 
     DirectionData()
-        : tickTimePosition{0}, placement{Placement::unspecified}, systemRelation{SystemRelation::unspecified}, offset{},
-          voice{VALUE_UNSPECIFIED}, isStaffValueSpecified{true}, isSoundDataSpecified{false}, soundData{},
-          directionTypes{}, chords{}, figuredBasses{}, id{}
+        : tickTimePosition{0}, placement{Placement::unspecified}, systemRelation{SystemRelation::unspecified},
+          directive{Bool::unspecified}, offset{}, voice{VALUE_UNSPECIFIED}, isStaffValueSpecified{true},
+          isSoundDataSpecified{false}, soundData{}, directionTypes{}, chords{}, figuredBasses{}, id{}
     {
     }
 };
@@ -103,6 +112,7 @@ MXAPI_EQUALS_BEGIN(DirectionData)
 MXAPI_EQUALS_MEMBER(tickTimePosition)
 MXAPI_EQUALS_MEMBER(placement)
 MXAPI_EQUALS_MEMBER(systemRelation)
+MXAPI_EQUALS_MEMBER(directive)
 MXAPI_EQUALS_MEMBER(offset)
 MXAPI_EQUALS_MEMBER(voice)
 MXAPI_EQUALS_MEMBER(isStaffValueSpecified)
