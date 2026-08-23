@@ -39,10 +39,7 @@ class ScoreWriter
     std::optional<api::PageData> findPageLayoutData(api::MeasureIndex measureIndex) const;
     api::SystemData getSystemData(int measureIndex) const;
 
-    // Spanner 'number' assignments and octave-shift stop sizes for the
-    // ScoreData held by this writer, computed once at construction (after the
-    // score is sorted, so the resolved object addresses match what the
-    // measure/note writers visit).
+    // Get the writers shared spanner resolution state object.
     inline const SpannerResolver &getSpannerResolver() const
     {
         return mySpannerResolver;
