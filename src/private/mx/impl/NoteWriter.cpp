@@ -3,6 +3,7 @@
 // Distributed under the MIT License
 
 #include "mx/impl/NoteWriter.h"
+#include "mx/core/Decimal.h"
 #include "mx/core/NameToken.h"
 #include "mx/core/generated/Accidental.h"
 #include "mx/core/generated/BeamLevel.h"
@@ -17,6 +18,7 @@
 #include "mx/core/generated/GraceNoteGroup.h"
 #include "mx/core/generated/LyricChoice.h"
 #include "mx/core/generated/LyricTextGroup.h"
+#include "mx/core/generated/NonNegativeDecimal.h"
 #include "mx/core/generated/NormalNoteGroup.h"
 #include "mx/core/generated/Pitch.h"
 #include "mx/core/generated/Rest.h"
@@ -92,6 +94,16 @@ core::Note NoteWriter::getNote(bool isStartOfChord) const
     if (myNoteData.printData.printObject != api::Bool::unspecified)
     {
         myOutNote.setPrintObject(myConverter.convert(myNoteData.printData.printObject));
+    }
+
+    if (myNoteData.velocityStart.has_value())
+    {
+        myOutNote.setDynamics(core::NonNegativeDecimal{core::Decimal{*myNoteData.velocityStart}});
+    }
+
+    if (myNoteData.velocityStop.has_value())
+    {
+        myOutNote.setEndDynamics(core::NonNegativeDecimal{core::Decimal{*myNoteData.velocityStop}});
     }
 
     // The tie <notations> come first (as in the old writer, where they were

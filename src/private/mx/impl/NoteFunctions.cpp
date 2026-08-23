@@ -77,6 +77,17 @@ api::NoteData NoteFunctions::parseNote() const
     }
 
     myOutNoteData.pitchData.octave = reader.getOctave();
+
+    if (myNote.dynamics().has_value())
+    {
+        myOutNoteData.velocityStart = myNote.dynamics()->value().value();
+    }
+
+    if (myNote.endDynamics().has_value())
+    {
+        myOutNoteData.velocityStop = myNote.endDynamics()->value().value();
+    }
+
     myOutNoteData.userRequestedVoiceNumber = reader.getVoiceNumber();
 
     // Auto rule (see NoteData::writeStaffNumber): <staff> is included on a multi-staff part and

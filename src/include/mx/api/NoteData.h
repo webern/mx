@@ -160,6 +160,19 @@ class NoteData
     std::optional<std::string> noteheadSmufl;
 
     PitchData pitchData; // step, alter, octave, accidental, etc
+
+    // How hard this note is struck on playback, as a percentage of the default forte level: 100
+    // is that default and 50 is half as hard. This is MusicXML's dynamics attribute on <note>,
+    // and MIDI's Note On velocity. It describes one performance of this note. The dynamic
+    // marking printed above the staff is a separate thing -- a MarkData in noteAttachmentData --
+    // so leave this empty and playback follows the printed marking.
+    std::optional<double> velocityStart;
+
+    // How hard this note is released on playback, on the same percentage scale as velocityStart.
+    // This is MusicXML's end-dynamics attribute on <note>, and MIDI's Note Off velocity. Few
+    // instruments respond to it, so leave it empty unless the release really matters.
+    std::optional<double> velocityStop;
+
     int userRequestedVoiceNumber;
 
     // Most users can ignore this; leave it unspecified. It only controls whether the note's
@@ -230,6 +243,8 @@ MXAPI_EQUALS_MEMBER(notehead)
 MXAPI_EQUALS_MEMBER(noteheadFilled)
 MXAPI_EQUALS_MEMBER(noteheadSmufl)
 MXAPI_EQUALS_MEMBER(pitchData)
+MXAPI_EQUALS_MEMBER(velocityStart)
+MXAPI_EQUALS_MEMBER(velocityStop)
 MXAPI_EQUALS_MEMBER(userRequestedVoiceNumber)
 MXAPI_EQUALS_MEMBER(writeStaffNumber)
 MXAPI_EQUALS_MEMBER(crossStaffIndex)
