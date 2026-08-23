@@ -3,6 +3,7 @@
 // Distributed under the MIT License
 
 #pragma once
+#include "mx/api/ApiCommon.h"
 #include "mx/api/SpannerData.h"
 
 namespace mx
@@ -47,13 +48,21 @@ class OttavaStop
   public:
     SpannerStop spannerStop;
 
-    // MusicXML's octave-shift allows a size attribute ("8", "15", or "22") on the stop, not just the
-    // start. Most writers omit it there since it is implied by the corresponding start, but some
-    // importers (e.g. MuseScore) expect it to be present. Absent by default; set it to have the
-    // writer emit it explicitly.
-    std::optional<int> size;
+    // Octave-shift size fidelity knob. A stop's size (8, 15, or 22) is never its own musical fact:
+    // it belongs to the OttavaStart that opened the line, so the writer takes it from there. The
+    // stop is paired with its start by spannerStop.number -- an identity, an explicit level, or an
+    // unspecified number pairs with the nearest still-open start of the same kind, within the part
+    // and across measures.
+    //
+    // unspecified (the default) and yes both write the size the start implies; no omits the
+    // attribute. Omitting it is legal MusicXML, but some importers (e.g. MuseScore) expect it, so
+    // authoring leaves this alone and gets the interoperable spelling. The reader sets yes or no to
+    // record whether the source spelled the attribute out.
+    //
+    // A stop with no matching start writes MusicXML's default size of 8.
+    Bool writeSize;
 
-    OttavaStop() : spannerStop{}, size{std::nullopt}
+    OttavaStop() : spannerStop{}, writeSize{Bool::unspecified}
     {
     }
 };
@@ -67,7 +76,7 @@ MXAPI_NOT_EQUALS_AND_VECTORS(OttavaStart);
 
 MXAPI_EQUALS_BEGIN(OttavaStop)
 MXAPI_EQUALS_MEMBER(spannerStop)
-MXAPI_EQUALS_MEMBER(size)
+MXAPI_EQUALS_MEMBER(writeSize)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(OttavaStop);
 } // namespace api

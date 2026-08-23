@@ -108,7 +108,7 @@ void parseGlissandoOrSlide(const GLISSANDO_OR_SLIDE_TYPE &inElement, api::NoteAt
     }
 }
 
-// The number written is the one the SpannerNumberResolver pass resolved for the object -- mirrors
+// The number written is the one the SpannerResolver pass resolved for the object -- mirrors
 // writeAttributesFromCurveStart/Stop in CurveFunctions.h.
 template <typename GLISSANDO_OR_SLIDE_TYPE>
 void writeAttributesFromGlissandoStart(const api::GlissandoStart &inStart, GLISSANDO_OR_SLIDE_TYPE &outElement,

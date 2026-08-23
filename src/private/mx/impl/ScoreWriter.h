@@ -10,7 +10,7 @@
 #include "mx/core/generated/ScorePart.h"
 #include "mx/core/generated/ScorePartwise.h"
 #include "mx/impl/Cursor.h"
-#include "mx/impl/SpannerNumberResolver.h"
+#include "mx/impl/SpannerResolver.h"
 
 #include <mutex>
 #include <optional>
@@ -39,17 +39,18 @@ class ScoreWriter
     std::optional<api::PageData> findPageLayoutData(api::MeasureIndex measureIndex) const;
     api::SystemData getSystemData(int measureIndex) const;
 
-    // Spanner 'number' assignments for the ScoreData held by this writer,
-    // computed once at construction (after the score is sorted, so the
-    // resolved object addresses match what the measure/note writers visit).
-    inline const SpannerNumberResolver &getSpannerNumberResolver() const
+    // Spanner 'number' assignments and octave-shift stop sizes for the
+    // ScoreData held by this writer, computed once at construction (after the
+    // score is sorted, so the resolved object addresses match what the
+    // measure/note writers visit).
+    inline const SpannerResolver &getSpannerResolver() const
     {
-        return mySpannerNumberResolver;
+        return mySpannerResolver;
     }
 
   private:
     api::ScoreData myScoreData;
-    SpannerNumberResolver mySpannerNumberResolver;
+    SpannerResolver mySpannerResolver;
     mutable std::mutex myMutex;
     mutable core::ScorePartwise myOutScorePartwise;
 

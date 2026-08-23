@@ -211,7 +211,7 @@ TEST(stopPrecedesStartOnAChainedNote, Glissando)
 
 T_END
 
-// Requirement 2: identity spanners draw from the writer-side SpannerNumberResolver, and glissando
+// Requirement 2: identity spanners draw from the writer-side SpannerResolver, and glissando
 // and slide draw from separate pools even when open at the same time.
 TEST(identityNumbersAssignedPerElementPool, Glissando)
 {

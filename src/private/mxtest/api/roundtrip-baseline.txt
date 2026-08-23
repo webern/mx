@@ -663,3 +663,9 @@ synthetic/slide.3.0.xml
 synthetic/slide.3.1.xml
 synthetic/wavy-line.3.0.xml
 synthetic/wavy-line.4.0.xml
+
+# Discovered already passing while working on #372 (automatic octave-shift stop
+# size); neither file contains an <octave-shift>, so they were unblocked by
+# earlier work and simply had not been pinned yet.
+lysuite/ly71c_ChordsFrets.xml
+musuite/testHarmony3.xml

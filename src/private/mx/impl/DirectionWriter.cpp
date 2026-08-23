@@ -112,6 +112,7 @@
 #include "mx/impl/IdFunctions.h"
 #include "mx/impl/LineFunctions.h"
 #include "mx/impl/MarkDataFunctions.h"
+#include "mx/impl/OttavaFunctions.h"
 #include "mx/impl/PrintFunctions.h"
 #include "mx/impl/SoundFunctions.h"
 #include "mx/impl/SpannerFunctions.h"
@@ -145,8 +146,8 @@ static void applyBracketLineData(const api::LineData &lineData, core::Bracket &b
 }
 
 DirectionWriter::DirectionWriter(const api::DirectionData &inDirectionData, const Cursor &inCursor,
-                                 const SpannerNumberResolver &inNumberResolver)
-    : myDirectionData{inDirectionData}, myCursor{inCursor}, myNumberResolver{inNumberResolver}, myConverter{},
+                                 const SpannerResolver &inSpannerResolver)
+    : myDirectionData{inDirectionData}, myCursor{inCursor}, mySpannerResolver{inSpannerResolver}, myConverter{},
       myPlacements{}, myIsFirstDirectionTypeAdded{false}
 {
 }
@@ -344,7 +345,7 @@ void DirectionWriter::emitWedgeStop(const api::WedgeStop &wedgeStop, const void 
     core::Wedge wedge{};
     wedge.setType(core::WedgeType::stop());
 
-    const auto number = myNumberResolver.emittedNumber(wedgeStop.number, inIdentity);
+    const auto number = mySpannerResolver.emittedNumber(wedgeStop.number, inIdentity);
     if (number.has_value())
     {
         wedge.setNumber(core::NumberLevel{*number});
@@ -371,7 +372,7 @@ void DirectionWriter::emitWedgeStart(const api::WedgeStart &wedgeStart, const vo
         wedge.setType(myConverter.convert(wedgeStart.wedgeType));
     }
 
-    const auto number = myNumberResolver.emittedNumber(wedgeStart.number, inIdentity);
+    const auto number = mySpannerResolver.emittedNumber(wedgeStart.number, inIdentity);
     if (number.has_value())
     {
         wedge.setNumber(core::NumberLevel{*number});
@@ -399,9 +400,18 @@ void DirectionWriter::emitOttavaStop(const api::OttavaStop &ottavaStop, const vo
 {
     core::OctaveShift os{};
     setAttributesFromSpannerStop(ottavaStop.spannerStop, os,
-                                 myNumberResolver.emittedNumber(ottavaStop.spannerStop.number, inIdentity));
+                                 mySpannerResolver.emittedNumber(ottavaStop.spannerStop.number, inIdentity));
     os.setType(core::UpDownStopContinue::stop());
-    os.setSize(ottavaStop.size);
+
+    // The stop has no size of its own; it inherits the size of the start it closes, which the
+    // resolver pass paired for it (8 when nothing matched). Bool::no is the only value that
+    // suppresses the attribute -- an authored stop leaves writeSize unspecified and still gets the
+    // size, because importers such as MuseScore expect it there.
+    if (ottavaStop.writeSize != api::Bool::no)
+    {
+        os.setSize(mySpannerResolver.ottavaStopSize(inIdentity));
+    }
+
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::octaveShift(os));
     addDirectionType(std::move(dt), direction);
@@ -416,46 +426,28 @@ void DirectionWriter::emitOttavaStart(const api::OttavaStart &ottavaStart, const
     impl::setAttributesFromLineData(ottavaStart.spannerStart.lineData, os);
     impl::setId(ottavaStart.spannerStart.id, os);
 
-    const auto number = myNumberResolver.emittedNumber(ottavaStart.spannerStart.number, inIdentity);
+    const auto number = mySpannerResolver.emittedNumber(ottavaStart.spannerStart.number, inIdentity);
     if (number.has_value())
     {
         os.setNumber(core::NumberLevel{*number});
     }
 
-    int sizeValue = 8;
-
+    // An "up" ottava (o8va and friends) writes notes below their sounding pitch, which the spec
+    // spells type="down"; see the OttavaType comment in api/OttavaData.h.
     switch (ottavaStart.ottavaType)
     {
-    case api::OttavaType::o15ma: {
+    case api::OttavaType::o8va:
+    case api::OttavaType::o15ma:
+    case api::OttavaType::o22ma:
         os.setType(core::UpDownStopContinue::down());
-        sizeValue = 15;
         break;
-    }
-    case api::OttavaType::o15mb: {
+
+    case api::OttavaType::o8vb:
+    case api::OttavaType::o15mb:
+    case api::OttavaType::o22mb:
         os.setType(core::UpDownStopContinue::up());
-        sizeValue = 15;
         break;
-    }
-    case api::OttavaType::o22ma: {
-        os.setType(core::UpDownStopContinue::down());
-        sizeValue = 22;
-        break;
-    }
-    case api::OttavaType::o22mb: {
-        os.setType(core::UpDownStopContinue::up());
-        sizeValue = 22;
-        break;
-    }
-    case api::OttavaType::o8va: {
-        os.setType(core::UpDownStopContinue::down());
-        sizeValue = 8;
-        break;
-    }
-    case api::OttavaType::o8vb: {
-        os.setType(core::UpDownStopContinue::up());
-        sizeValue = 8;
-        break;
-    }
+
     default:
         break;
     }
@@ -463,6 +455,7 @@ void DirectionWriter::emitOttavaStart(const api::OttavaStart &ottavaStart, const
     // size follows from ottavaType; non-8va lines need an explicit size to encode their shift, while
     // the redundant default size="8" is emitted only when writeDefaultSize is set (the source spelled
     // it out).
+    const int sizeValue = ottavaTypeSize(ottavaStart.ottavaType);
     if (sizeValue != 8 || ottavaStart.writeDefaultSize)
     {
         os.setSize(sizeValue);
@@ -477,7 +470,7 @@ void DirectionWriter::emitBracketStart(const api::SpannerStart &item, const void
                                        core::Direction &direction)
 {
     core::Bracket bracket{};
-    setAttributesFromSpannerStart(item, bracket, myNumberResolver.emittedNumber(item.number, inIdentity));
+    setAttributesFromSpannerStart(item, bracket, mySpannerResolver.emittedNumber(item.number, inIdentity));
     bracket.setType(core::StartStopContinue::start());
     setAttributesFromPositionData(item.positionData, bracket);
     setAttributesFromPrintData(item.printData, bracket);
@@ -490,7 +483,7 @@ void DirectionWriter::emitBracketStart(const api::SpannerStart &item, const void
 void DirectionWriter::emitBracketStop(const api::SpannerStop &item, const void *inIdentity, core::Direction &direction)
 {
     core::Bracket bracket{};
-    setAttributesFromSpannerStop(item, bracket, myNumberResolver.emittedNumber(item.number, inIdentity));
+    setAttributesFromSpannerStop(item, bracket, mySpannerResolver.emittedNumber(item.number, inIdentity));
     bracket.setType(core::StartStopContinue::stop());
     applyBracketLineData(item.lineData, bracket, myConverter);
     core::DirectionType dt{};
@@ -501,7 +494,7 @@ void DirectionWriter::emitBracketStop(const api::SpannerStop &item, const void *
 void DirectionWriter::emitDashesStart(const api::SpannerStart &item, const void *inIdentity, core::Direction &direction)
 {
     core::Dashes dashes{};
-    setAttributesFromSpannerStart(item, dashes, myNumberResolver.emittedNumber(item.number, inIdentity));
+    setAttributesFromSpannerStart(item, dashes, mySpannerResolver.emittedNumber(item.number, inIdentity));
     dashes.setType(core::StartStopContinue::start());
     setAttributesFromPositionData(item.positionData, dashes);
     setAttributesFromPrintData(item.printData, dashes);
@@ -514,7 +507,7 @@ void DirectionWriter::emitDashesStart(const api::SpannerStart &item, const void 
 void DirectionWriter::emitDashesStop(const api::SpannerStop &item, const void *inIdentity, core::Direction &direction)
 {
     core::Dashes dashes{};
-    setAttributesFromSpannerStop(item, dashes, myNumberResolver.emittedNumber(item.number, inIdentity));
+    setAttributesFromSpannerStop(item, dashes, mySpannerResolver.emittedNumber(item.number, inIdentity));
     dashes.setType(core::StartStopContinue::stop());
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::dashes(dashes));

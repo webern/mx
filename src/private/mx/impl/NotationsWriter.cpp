@@ -108,7 +108,7 @@ core::Notations NotationsWriter::getNotations() const
     core::Ornaments ornaments;
     core::Technical technicals;
 
-    const auto &numberResolver = myScoreWriter.getSpannerNumberResolver();
+    const auto &spannerResolver = myScoreWriter.getSpannerResolver();
 
     for (const auto &curve : myNoteData.noteAttachmentData.curveStops)
     {
@@ -116,7 +116,7 @@ core::Notations NotationsWriter::getNotations() const
         {
             continue;
         }
-        const auto resolvedNumber = numberResolver.emittedNumber(curve.number, &curve);
+        const auto resolvedNumber = spannerResolver.emittedNumber(curve.number, &curve);
         if (curve.curveType == api::CurveType::tie)
         {
             core::Tied tied;
@@ -137,7 +137,7 @@ core::Notations NotationsWriter::getNotations() const
         {
             continue;
         }
-        const auto resolvedNumber = numberResolver.emittedNumber(curve.number, &curve);
+        const auto resolvedNumber = spannerResolver.emittedNumber(curve.number, &curve);
         if (curve.curveType == api::CurveType::tie)
         {
             core::Tied tied;
@@ -158,7 +158,7 @@ core::Notations NotationsWriter::getNotations() const
         {
             continue;
         }
-        const auto resolvedNumber = numberResolver.emittedNumber(curve.number, &curve);
+        const auto resolvedNumber = spannerResolver.emittedNumber(curve.number, &curve);
         if (curve.curveType == api::CurveType::tie)
         {
             core::Tied tied;
@@ -465,13 +465,13 @@ core::Notations NotationsWriter::getNotations() const
 
 void NotationsWriter::addGlissandoAndSlide(core::Notations &outNotations) const
 {
-    const auto &numberResolver = myScoreWriter.getSpannerNumberResolver();
+    const auto &spannerResolver = myScoreWriter.getSpannerResolver();
 
     // Glissando and slide are top-level <notations> children, like slur/tie. Stops are emitted
     // before starts so a chain of glissandi on one note keeps score order (see #139).
     for (const auto &glissandoStop : myNoteData.noteAttachmentData.glissandoStops)
     {
-        const auto resolvedNumber = numberResolver.emittedNumber(glissandoStop.number, &glissandoStop);
+        const auto resolvedNumber = spannerResolver.emittedNumber(glissandoStop.number, &glissandoStop);
         if (glissandoStop.glissandoType == api::GlissandoType::slide)
         {
             core::Slide slide;
@@ -488,7 +488,7 @@ void NotationsWriter::addGlissandoAndSlide(core::Notations &outNotations) const
 
     for (const auto &glissandoStart : myNoteData.noteAttachmentData.glissandoStarts)
     {
-        const auto resolvedNumber = numberResolver.emittedNumber(glissandoStart.number, &glissandoStart);
+        const auto resolvedNumber = spannerResolver.emittedNumber(glissandoStart.number, &glissandoStart);
         if (glissandoStart.glissandoType == api::GlissandoType::slide)
         {
             core::Slide slide;
@@ -506,11 +506,11 @@ void NotationsWriter::addGlissandoAndSlide(core::Notations &outNotations) const
 
 void NotationsWriter::addWavyLineStopsAndContinues(core::Ornaments &outOrnaments) const
 {
-    const auto &numberResolver = myScoreWriter.getSpannerNumberResolver();
+    const auto &spannerResolver = myScoreWriter.getSpannerResolver();
 
     for (const auto &wavyLineStop : myNoteData.noteAttachmentData.wavyLineStops)
     {
-        const auto resolvedNumber = numberResolver.emittedNumber(wavyLineStop.number, &wavyLineStop);
+        const auto resolvedNumber = spannerResolver.emittedNumber(wavyLineStop.number, &wavyLineStop);
         core::OrnamentsGroup group;
         group.setChoice(core::OrnamentsGroupChoice::wavyLine(writeWavyLineStop(wavyLineStop, resolvedNumber)));
         outOrnaments.addGroup(group);
@@ -518,7 +518,7 @@ void NotationsWriter::addWavyLineStopsAndContinues(core::Ornaments &outOrnaments
 
     for (const auto &wavyLineContinue : myNoteData.noteAttachmentData.wavyLineContinuations)
     {
-        const auto resolvedNumber = numberResolver.emittedNumber(wavyLineContinue.number, &wavyLineContinue);
+        const auto resolvedNumber = spannerResolver.emittedNumber(wavyLineContinue.number, &wavyLineContinue);
         core::OrnamentsGroup group;
         group.setChoice(core::OrnamentsGroupChoice::wavyLine(writeWavyLineContinue(wavyLineContinue, resolvedNumber)));
         outOrnaments.addGroup(group);
@@ -527,11 +527,11 @@ void NotationsWriter::addWavyLineStopsAndContinues(core::Ornaments &outOrnaments
 
 void NotationsWriter::addWavyLineStarts(core::Ornaments &outOrnaments) const
 {
-    const auto &numberResolver = myScoreWriter.getSpannerNumberResolver();
+    const auto &spannerResolver = myScoreWriter.getSpannerResolver();
 
     for (const auto &wavyLineStart : myNoteData.noteAttachmentData.wavyLineStarts)
     {
-        const auto resolvedNumber = numberResolver.emittedNumber(wavyLineStart.number, &wavyLineStart);
+        const auto resolvedNumber = spannerResolver.emittedNumber(wavyLineStart.number, &wavyLineStart);
         core::OrnamentsGroup group;
         group.setChoice(core::OrnamentsGroupChoice::wavyLine(writeWavyLineStart(wavyLineStart, resolvedNumber)));
         outOrnaments.addGroup(group);

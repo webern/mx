@@ -22,7 +22,7 @@ namespace impl
 // start/continue/stop vector on outAttachments matches its type attribute.
 void parseWavyLine(const core::WavyLine &inWavyLine, api::NoteAttachmentData &outAttachments);
 
-// The number written is the one the SpannerNumberResolver pass resolved for the object.
+// The number written is the one the SpannerResolver pass resolved for the object.
 core::WavyLine writeWavyLineStart(const api::WavyLineStart &inStart, const std::optional<int> &inResolvedNumber);
 core::WavyLine writeWavyLineContinue(const api::WavyLineContinue &inContinue,
                                      const std::optional<int> &inResolvedNumber);

@@ -32,7 +32,7 @@ namespace mx
 namespace impl
 {
 ScoreWriter::ScoreWriter(const api::ScoreData &inScoreData)
-    : myScoreData{inScoreData}, mySpannerNumberResolver{}, myMutex{}, myOutScorePartwise{}
+    : myScoreData{inScoreData}, mySpannerResolver{}, myMutex{}, myOutScorePartwise{}
 {
     myScoreData.sort();
 
@@ -40,7 +40,7 @@ ScoreWriter::ScoreWriter(const api::ScoreData &inScoreData)
     // ones the measure/note writers will visit.
     for (const auto &part : myScoreData.parts)
     {
-        mySpannerNumberResolver.resolvePart(part);
+        mySpannerResolver.resolvePart(part);
     }
 }
 

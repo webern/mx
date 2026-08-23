@@ -162,8 +162,8 @@ template <typename SLUR_OR_TIE_ELEMENT_TYPE> api::CurveStop parseCurveStop(const
     return c;
 }
 
-// The number each writer helper emits is the one the SpannerNumberResolver
-// pass resolved for the object (verbatim for an explicit level, assigned from
+// The number each writer helper emits is the one the SpannerResolver pass
+// resolved for the object (verbatim for an explicit level, assigned from
 // serialization order for an identity, absent for unspecified) -- the helpers
 // never look at the SpannerNumber directly.
 template <typename ATTRIBUTES_TYPE>

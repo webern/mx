@@ -14,7 +14,7 @@
 #include "mx/core/generated/OctaveShift.h"
 #include "mx/impl/DirectionReader.h"
 #include "mx/impl/DirectionWriter.h"
-#include "mx/impl/SpannerNumberResolver.h"
+#include "mx/impl/SpannerResolver.h"
 
 #include <memory>
 
@@ -27,9 +27,10 @@ TEST(ottavaStartStop, DirectionWriter)
     cursor.isFirstMeasureInPart = false;
     api::DirectionData directionData;
 
+    // No matching start is visible to the resolver, so this stop takes the documented dangling
+    // fallback and writes MusicXML's default size of 8.
     api::OttavaStop stop{};
     stop.spannerStop.number = api::SpannerNumber(2);
-    stop.size = 15;
     directionData.directionTypes.emplace_back(api::DirectionChoice{stop});
 
     api::OttavaStart start{};
@@ -53,8 +54,8 @@ TEST(ottavaStartStop, DirectionWriter)
     start.spannerStart.printData.color.blue = 56;
     directionData.directionTypes.emplace_back(api::DirectionChoice{start});
 
-    SpannerNumberResolver numberResolver;
-    DirectionWriter writer{directionData, cursor, numberResolver};
+    SpannerResolver spannerResolver;
+    DirectionWriter writer{directionData, cursor, spannerResolver};
     const auto mdcSet = writer.getDirectionLikeThings();
     CHECK(mdcSet.front().isDirection());
     const auto &direction = mdcSet.front().asDirection();
@@ -68,8 +69,10 @@ TEST(ottavaStartStop, DirectionWriter)
     REQUIRE(roundTripped.directionTypes.front().isOttavaStop());
     const auto roundTrippedStop = roundTripped.directionTypes.front().ottavaStop();
     CHECK(api::SpannerNumber(2) == roundTrippedStop.spannerStop.number);
-    CHECK(roundTrippedStop.size.has_value());
-    CHECK_EQUAL(15, *roundTrippedStop.size);
+    CHECK(api::Bool::yes == roundTrippedStop.writeSize);
+    const auto &stopCore = directionTypes.front().choice().asOctaveShift();
+    REQUIRE(stopCore.size().has_value());
+    CHECK_EQUAL(8, *stopCore.size());
     REQUIRE(roundTripped.directionTypes.back().isOttavaStart());
     CHECK(start == roundTripped.directionTypes.back().ottavaStart());
 }
@@ -89,8 +92,8 @@ TEST(ottava22maAnd22mb, DirectionWriter)
     directionData.directionTypes.emplace_back(api::DirectionChoice{down});
 
     Cursor cursor{1, 100};
-    SpannerNumberResolver numberResolver;
-    DirectionWriter writer{directionData, cursor, numberResolver};
+    SpannerResolver spannerResolver;
+    DirectionWriter writer{directionData, cursor, spannerResolver};
     const auto mdcSet = writer.getDirectionLikeThings();
 
     REQUIRE(mdcSet.size() == 1);
@@ -163,8 +166,8 @@ TEST(segnoAndCodaRoundTrip, DirectionWriter)
     directionData.directionTypes.emplace_back(api::DirectionChoice{coda});
 
     Cursor cursor{1, 100};
-    SpannerNumberResolver numberResolver;
-    DirectionWriter writer{directionData, cursor, numberResolver};
+    SpannerResolver spannerResolver;
+    DirectionWriter writer{directionData, cursor, spannerResolver};
     const auto mdcSet = writer.getDirectionLikeThings();
     REQUIRE(mdcSet.size() >= 1);
     CHECK(mdcSet.front().isDirection());
@@ -216,8 +219,8 @@ TEST(rehearsalRoundTrip, DirectionWriter)
     directionData.directionTypes.emplace_back(api::DirectionChoice{rehearsal});
 
     Cursor cursor{1, 100};
-    SpannerNumberResolver numberResolver;
-    DirectionWriter writer{directionData, cursor, numberResolver};
+    SpannerResolver spannerResolver;
+    DirectionWriter writer{directionData, cursor, spannerResolver};
     const auto mdcSet = writer.getDirectionLikeThings();
     REQUIRE(mdcSet.size() >= 1);
     CHECK(mdcSet.front().isDirection());
