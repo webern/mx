@@ -15,9 +15,8 @@ plain text in the chat, then stop and wait.
 ## The core rule: one question per turn
 
 Ask exactly **one question**, then stop and wait for the answer. Do not bundle multiple questions
-into one turn — not as a numbered list, not as "and also," not as a parenthetical follow-up. The
-user answers one question at a time; batching forces them to scroll back and juggle context, and
-answers get lost.
+into one turn. The user answers one question at a time; batching forces them to scroll back and
+juggle context.
 
 **Wrong:**
 
@@ -33,18 +32,12 @@ answers get lost.
 
 *(wait for answer, then next turn:)*
 
-> Got it. Does it need to work offline?
-
-## Usage
-
-- `/mx-questions`
-- `/mx-questions <optional-prompt>` — e.g., `/mx-questions about the design of the flubber async module`
+> Does it need to work offline?
 
 ## Flow
 
-1. Ask one question, grounded in existing context and the optional prompt. If there's no context,
+1. Ask one question, grounded in existing context or the optional prompt. If there's no context,
    open with "What would you like to work on?"
 2. Wait for the answer. Use it to shape the next question.
-3. Repeat until the user says to stop.
-4. When they stop, produce a plan summarizing their answers. If it's unclear what they want done
-   with the plan, ask — one question.
+3. Repeat until the user says to stop or you have no more questions.
+4. When they stop, produce a plan summarizing their answers.
