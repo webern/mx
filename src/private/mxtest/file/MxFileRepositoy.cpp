@@ -479,5 +479,9 @@ void MxFileRepository::initializeNameSubdirectoryMap()
     myNameSubdirectoryMap.emplace("coda.3.0.xml", "synthetic");
     myNameSubdirectoryMap.emplace("coda.3.1.xml", "synthetic");
     myNameSubdirectoryMap.emplace("kind.3.0.xml", "synthetic");
+    myNameSubdirectoryMap.emplace("glissando.3.0.xml", "synthetic");
+    myNameSubdirectoryMap.emplace("slide.3.0.xml", "synthetic");
+    myNameSubdirectoryMap.emplace("wavy-line.3.0.xml", "synthetic");
+    myNameSubdirectoryMap.emplace("wavy-line.4.0.xml", "synthetic");
 }
 } // namespace mxtest

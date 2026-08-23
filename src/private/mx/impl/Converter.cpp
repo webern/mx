@@ -230,7 +230,6 @@ const Converter::EnumMap<core::OrnamentsGroupChoice::Kind, api::MarkType> Conver
     {core::OrnamentsGroupChoice::Kind::invertedVerticalTurn, api::MarkType::invertedVerticalTurn},
     {core::OrnamentsGroupChoice::Kind::haydn, api::MarkType::haydn},
     {core::OrnamentsGroupChoice::Kind::shake, api::MarkType::shake},
-    {core::OrnamentsGroupChoice::Kind::wavyLine, api::MarkType::wavyLine},
     {core::OrnamentsGroupChoice::Kind::mordent, api::MarkType::mordent},
     {core::OrnamentsGroupChoice::Kind::invertedMordent, api::MarkType::invertedMordent},
     {core::OrnamentsGroupChoice::Kind::schleifer, api::MarkType::schleifer},

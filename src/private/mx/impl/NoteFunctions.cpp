@@ -11,6 +11,7 @@
 #include "mx/impl/CurveFunctions.h"
 #include "mx/impl/DynamicsReader.h"
 #include "mx/impl/FermataFunctions.h"
+#include "mx/impl/GlissandoFunctions.h"
 #include "mx/impl/IdFunctions.h"
 #include "mx/impl/MarkDataFunctions.h"
 #include "mx/impl/NonArpeggiateFunctions.h"
@@ -18,7 +19,6 @@
 #include "mx/impl/OrnamentsFunctions.h"
 #include "mx/impl/PositionFunctions.h"
 #include "mx/impl/PrintFunctions.h"
-#include "mx/impl/SlideFunctions.h"
 #include "mx/impl/TechnicalFunctions.h"
 #include "mx/impl/TimeReader.h"
 #include "mx/impl/TupletReader.h"
@@ -249,18 +249,16 @@ void NoteFunctions::parseNotations() const
                 break;
             }
             case core::NotationsChoice::Kind::slide: {
-                // TODO - import slide
-                // SlideFunctions funcs{ notationsChoice.asSlide(), myCursor };
-                // myOutNoteData.noteAttachmentData.marks.emplace_back( funcs.parseSlide() );
+                parseGlissandoOrSlide(notationsChoice.asSlide(), myOutNoteData.noteAttachmentData);
                 break;
             }
             case core::NotationsChoice::Kind::glissando: {
+                parseGlissandoOrSlide(notationsChoice.asGlissando(), myOutNoteData.noteAttachmentData);
                 break;
             }
             case core::NotationsChoice::Kind::ornaments: {
-                // TODO - some ornaments should be treated as spanners instead of marks
                 OrnamentsFunctions funcs{notationsChoice.asOrnaments(), myCursor};
-                funcs.parseOrnaments(myOutNoteData.noteAttachmentData.marks);
+                funcs.parseOrnaments(myOutNoteData.noteAttachmentData);
                 break;
             }
             case core::NotationsChoice::Kind::technical: {

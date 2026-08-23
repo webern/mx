@@ -24,19 +24,20 @@ namespace impl
 // concurrently-open identity spanner is never handed the same number.
 //
 // Numbers come from a pool of 1..16 per part and per spanner class (slur,
-// tied, wedge, octave-shift, bracket, and dashes each have their own pool; a
-// slur numbered 1 and a wedge numbered 1 do not conflict). The number-level
-// documentation scopes concurrency to the part, never the staff: two spanners
-// conflict exactly when they overlap in the order a streaming reader
-// encounters them, even when they sit on different staves of the part. So
-// resolvePart walks the part in the exact order MeasureWriter serializes it:
-// measures in order, staves in order, voices ascending, notes in vector order
-// (curve stops, then continues, then starts per note -- mirroring
-// NotationsWriter), and each staff's directions in vector order (mirroring
-// DirectionWriter's per-direction emission order). An identity spanner takes
-// the lowest number that is free across its whole serialized extent -- from
-// its first event to its last, whichever of start/stop comes first in the
-// stream -- and releases it afterward.
+// tied, wedge, octave-shift, bracket, dashes, glissando, slide, and wavy-line
+// each have their own pool; a slur numbered 1 and a wedge numbered 1 do not
+// conflict). The number-level documentation scopes concurrency to the part,
+// never the staff: two spanners conflict exactly when they overlap in the
+// order a streaming reader encounters them, even when they sit on different
+// staves of the part. So resolvePart walks the part in the exact order
+// MeasureWriter serializes it: measures in order, staves in order, voices
+// ascending, notes in vector order (curve stops/continues/starts, then
+// glissando/slide stops then starts, then wavy-line stops/continues/starts,
+// per note -- mirroring NotationsWriter), and each staff's directions in
+// vector order (mirroring DirectionWriter's per-direction emission order). An
+// identity spanner takes the lowest number that is free across its whole
+// serialized extent -- from its first event to its last, whichever of
+// start/stop comes first in the stream -- and releases it afterward.
 //
 // Identity ids are scoped per part and per spanner class: events in the same
 // part sharing a class and id are one logical spanner, even across staves.

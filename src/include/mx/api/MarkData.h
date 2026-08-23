@@ -60,7 +60,6 @@ enum class MarkType
     invertedVerticalTurn,
     haydn,
     shake,
-    wavyLine,
     mordent,
     invertedMordent,
     schleifer,
