@@ -6,9 +6,13 @@
 
 #include "mx/api/ApiCommon.h"
 #include "mx/api/ColorData.h"
+#include "mx/api/Id.h"
 #include "mx/api/LineData.h"
 #include "mx/api/PositionData.h"
 #include "mx/api/SpannerNumber.h"
+
+#include <optional>
+#include <string>
 
 // MusicXML Documentation for Bezier Attributes Group
 // The bezier attribute group is used to indicate the curvature of slurs
@@ -100,9 +104,13 @@ struct CurveStart
     bool isColorSpecified;
     ColorData colorData;
 
+    // The id attribute of the element this curve end is written as -- <slur> for a slur,
+    // <tied> for a tie (see Id.h).
+    std::optional<Id> id;
+
     CurveStart(CurveType inCurveType)
         : curveType{inCurveType}, number{}, curvePoints{}, curveOrientation{CurveOrientation::unspecified},
-          placement{Placement::unspecified}, lineData{}, isColorSpecified{false}, colorData{}
+          placement{Placement::unspecified}, lineData{}, isColorSpecified{false}, colorData{}, id{}
     {
     }
 };
@@ -119,9 +127,13 @@ struct CurveContinue
     bool isBezierOffset2Specified;
     double bezierOffset2;
 
+    // The id attribute of the element this curve end is written as -- <slur> for a slur,
+    // <tied> for a tie (see Id.h).
+    std::optional<Id> id;
+
     CurveContinue(CurveType inCurveType)
         : curveType{inCurveType}, number{}, curvePoints{}, isBezierX2Specified{false}, bezierX2{0.0},
-          isBezierY2Specified{false}, bezierY2{0.0}, isBezierOffset2Specified{false}, bezierOffset2{0.0}
+          isBezierY2Specified{false}, bezierY2{0.0}, isBezierOffset2Specified{false}, bezierOffset2{0.0}, id{}
     {
     }
 };
@@ -132,7 +144,11 @@ struct CurveStop
     SpannerNumber number;
     CurvePoints curvePoints;
 
-    CurveStop(CurveType inCurveType) : curveType{inCurveType}, number{}, curvePoints{}
+    // The id attribute of the element this curve end is written as -- <slur> for a slur,
+    // <tied> for a tie (see Id.h).
+    std::optional<Id> id;
+
+    CurveStop(CurveType inCurveType) : curveType{inCurveType}, number{}, curvePoints{}, id{}
     {
     }
 };
@@ -157,6 +173,7 @@ MXAPI_EQUALS_MEMBER(placement)
 MXAPI_EQUALS_MEMBER(lineData)
 MXAPI_EQUALS_MEMBER(isColorSpecified)
 MXAPI_EQUALS_MEMBER(colorData)
+MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(CurveStart);
 
@@ -170,6 +187,7 @@ MXAPI_EQUALS_MEMBER(isBezierY2Specified)
 MXAPI_EQUALS_MEMBER(bezierY2)
 MXAPI_EQUALS_MEMBER(isBezierOffset2Specified)
 MXAPI_EQUALS_MEMBER(bezierOffset2)
+MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(CurveContinue);
 
@@ -177,6 +195,7 @@ MXAPI_EQUALS_BEGIN(CurveStop)
 MXAPI_EQUALS_MEMBER(curveType)
 MXAPI_EQUALS_MEMBER(number)
 MXAPI_EQUALS_MEMBER(curvePoints)
+MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(CurveStop);
 } // namespace api

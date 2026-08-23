@@ -5,10 +5,10 @@
 #pragma once
 
 #include "mx/api/SpannerData.h"
+#include "mx/impl/IdFunctions.h"
 #include "mx/impl/LineFunctions.h"
 #include "mx/impl/PositionFunctions.h"
 #include "mx/impl/PrintFunctions.h"
-#include "mx/utility/Unused.h"
 
 #include <optional>
 
@@ -29,6 +29,7 @@ template <typename ATTRIBUTES_TYPE> api::SpannerStart getSpannerStart(const ATTR
     start.positionData = getPositionData(inAttributes);
     start.printData = getPrintData(inAttributes);
     start.lineData = getLineData(inAttributes);
+    start.id = getId(inAttributes);
     return start;
 }
 
@@ -41,6 +42,7 @@ template <typename ATTRIBUTES_TYPE> api::SpannerStop getSpannerStop(const ATTRIB
     }
     stop.positionData = getPositionData(inAttributes);
     stop.lineData = getLineData(inAttributes);
+    stop.id = getId(inAttributes);
     return stop;
 }
 
@@ -53,7 +55,8 @@ template <typename ATTRIBUTES_TYPE>
 void setAttributesFromSpannerStart(const api::SpannerStart &start, ATTRIBUTES_TYPE &outAttributes,
                                    const std::optional<int> &inResolvedNumber)
 {
-    MX_UNUSED(start);
+    setId(start.id, outAttributes);
+
     if (inResolvedNumber.has_value())
     {
         lookForAndSetHasNumber(true, &outAttributes);
@@ -81,6 +84,7 @@ void setAttributesFromSpannerStop(const api::SpannerStop &stop, ATTRIBUTES_TYPE 
 
     setAttributesFromPositionData(stop.positionData, outAttributes);
     setAttributesFromLineData(stop.lineData, outAttributes);
+    setId(stop.id, outAttributes);
 }
 } // namespace impl
 } // namespace mx

@@ -7,6 +7,7 @@
 #include "mx/api/ApiCommon.h"
 #include "mx/api/ColorData.h"
 #include "mx/api/FontData.h"
+#include "mx/api/Id.h"
 #include "mx/api/PositionData.h"
 
 #include <optional>
@@ -27,7 +28,7 @@ class EyeglassesData
     PositionData positionData;
     FontData fontData;
     std::optional<ColorData> color;
-    std::optional<std::string> id;
+    std::optional<Id> id;
 
     EyeglassesData() : positionData{}, fontData{}, color{}, id{}
     {

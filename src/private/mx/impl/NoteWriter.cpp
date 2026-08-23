@@ -27,6 +27,7 @@
 #include "mx/core/generated/TimeModification.h"
 #include "mx/core/generated/TimeModificationGroup.h"
 #include "mx/core/generated/Unpitched.h"
+#include "mx/impl/IdFunctions.h"
 #include "mx/impl/NotationsWriter.h"
 #include "mx/impl/PositionFunctions.h"
 #include "mx/impl/PrintFunctions.h"
@@ -85,6 +86,7 @@ core::Note NoteWriter::getNote(bool isStartOfChord) const
     setNotehead();
     setStemDirection();
     setMiscData();
+    impl::setId(myNoteData.id, myOutNote);
     NotationsWriter notationsWriter{myNoteData, myCursor, myScoreWriter};
     impl::setAttributesFromPositionData(myNoteData.positionData, myOutNote);
     if (myNoteData.printData.printObject != api::Bool::unspecified)
@@ -559,6 +561,7 @@ void NoteWriter::setLyrics() const
         }
 
         impl::setAttributesFromPositionData(lyricData.positionData, lyric);
+        impl::setId(lyricData.id, lyric);
         if (lyricData.positionData.horizontalAlignment != api::HorizontalAlignment::unspecified)
         {
             lyric.setJustify(myConverter.convert(lyricData.positionData.horizontalAlignment));

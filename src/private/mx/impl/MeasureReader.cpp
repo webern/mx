@@ -52,6 +52,7 @@
 #include "mx/core/generated/YesNo.h"
 #include "mx/impl/Converter.h"
 #include "mx/impl/DirectionReader.h"
+#include "mx/impl/IdFunctions.h"
 #include "mx/impl/NoteFunctions.h"
 #include "mx/impl/NoteReader.h"
 #include "mx/impl/SoundFunctions.h"
@@ -142,6 +143,7 @@ std::pair<api::MeasureData, std::optional<api::TransposeData>> MeasureReader::ge
     std::lock_guard<std::mutex> lock(myMutex);
     myOutMeasureData = api::MeasureData{};
     myOutMeasureData.number = myPartwiseMeasure.number();
+    myOutMeasureData.id = getId(myPartwiseMeasure);
 
     // if we are parsing the first measure of the part, then we need to return transpose information
     std::optional<api::TransposeData> transpose;
@@ -234,10 +236,13 @@ void MeasureReader::parseTimeSignature() const
         staffTimeSignatures = myPreviousMeasureCursor.staffTimeSignatures;
     }
 
+    // A carried-forward time signature is not the <time> element that stated it, so it keeps no id.
     timeSignature.isImplicit = true;
+    timeSignature.id.reset();
     for (auto &entry : staffTimeSignatures)
     {
         entry.second.isImplicit = true;
+        entry.second.id.reset();
     }
 
     TimeReader timeReader{myPartwiseMeasure.musicData()};
@@ -684,6 +689,7 @@ std::optional<api::TransposeData> MeasureReader::parseAttributes(const core::Att
                 keyData.nonTraditional.emplace_back(keyComponent);
             }
 
+            keyData.id = getId(key);
             myOutMeasureData.keys.emplace_back(std::move(keyData));
             continue;
         }
@@ -716,6 +722,7 @@ std::optional<api::TransposeData> MeasureReader::parseAttributes(const core::Att
             keyData.mode = myConverter.convert(*traditionalKey.mode());
         }
         keyData.tickTimePosition = myCurrentCursor.tickTimePosition;
+        keyData.id = getId(key);
 
         myOutMeasureData.keys.emplace_back(std::move(keyData));
     }
@@ -766,6 +773,7 @@ std::optional<api::TransposeData> MeasureReader::parseAttributes(const core::Att
             }
 
             transposeData.tickTimePosition = myCurrentCursor.tickTimePosition;
+            transposeData.id = getId(coreTranspose);
             myOutMeasureData.transpositions.emplace_back(std::move(transposeData));
         }
     }
@@ -828,6 +836,8 @@ void MeasureReader::parseFiguredBass(const core::FiguredBass &inMxFiguredBass, c
     {
         figuredBass.durationTimeTicks = myCurrentCursor.convertDurationToGlobalTickScale(*inMxFiguredBass.duration());
     }
+
+    figuredBass.id = getId(inMxFiguredBass);
 
     auto direction = api::DirectionData{};
     direction.tickTimePosition = myCurrentCursor.tickTimePosition;
@@ -978,6 +988,7 @@ void MeasureReader::parseBarline(const core::Barline &inMxBarline) const
     barline.repeatDirection = repeatDirection;
     barline.repeatAfterJump = repeatAfterJump;
     barline.repeatWinged = repeatWinged;
+    barline.id = getId(inMxBarline);
     myOutMeasureData.barlines.emplace_back(std::move(barline));
 }
 
@@ -1047,6 +1058,7 @@ void MeasureReader::importClef(const core::Clef &inClef) const
 {
     api::ClefData clefData;
     clefData.tickTimePosition = myCurrentCursor.tickTimePosition;
+    clefData.id = getId(inClef);
     auto converter = Converter{};
     clefData.symbol = converter.convert(inClef.clef().sign());
 

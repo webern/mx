@@ -109,6 +109,7 @@
 #include "mx/core/generated/YesNo.h"
 #include "mx/impl/DynamicsWriter.h"
 #include "mx/impl/FontFunctions.h"
+#include "mx/impl/IdFunctions.h"
 #include "mx/impl/LineFunctions.h"
 #include "mx/impl/MarkDataFunctions.h"
 #include "mx/impl/PrintFunctions.h"
@@ -165,6 +166,7 @@ std::vector<core::MusicDataChoice> DirectionWriter::getDirectionLikeThings()
     // nullopt for unspecified, and for the bottom-of-system values that only measure numbering has.
     // <harmony> carries the same attribute; createHarmonyElements writes it there too.
     direction.setSystem(myConverter.convertDirectionSystemRelation(myDirectionData.systemRelation));
+    setId(myDirectionData.id, direction);
 
     if (myDirectionData.isStaffValueSpecified || myCursor.staffIndex != 0)
     {
@@ -331,6 +333,7 @@ void DirectionWriter::emitPedal(const api::PedalLineData &item, core::Direction 
     pedal.setType(corePedalType(item.kind));
     pedal.setLine(core::YesNo::yes());
     setAttributesFromPositionData(item.positionData, pedal);
+    setId(item.id, pedal);
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::pedal(pedal));
     addDirectionType(std::move(dt), direction);
@@ -352,6 +355,7 @@ void DirectionWriter::emitWedgeStop(const api::WedgeStop &wedgeStop, const void 
         wedge.setSpread(core::Tenths{core::Decimal{static_cast<double>(wedgeStop.spread)}});
     }
     setAttributesFromPositionData(wedgeStop.positionData, wedge);
+    setId(wedgeStop.id, wedge);
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::wedge(wedge));
     addDirectionType(std::move(dt), direction);
@@ -384,6 +388,7 @@ void DirectionWriter::emitWedgeStart(const api::WedgeStart &wedgeStart, const vo
     {
         setAttributesFromColorData(wedgeStart.colorData, wedge);
     }
+    setId(wedgeStart.id, wedge);
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::wedge(wedge));
     addDirectionType(std::move(dt), direction);
@@ -409,6 +414,7 @@ void DirectionWriter::emitOttavaStart(const api::OttavaStart &ottavaStart, const
     impl::setAttributesFromPositionData(ottavaStart.spannerStart.positionData, os);
     impl::setAttributesFromPrintData(ottavaStart.spannerStart.printData, os);
     impl::setAttributesFromLineData(ottavaStart.spannerStart.lineData, os);
+    impl::setId(ottavaStart.spannerStart.id, os);
 
     const auto number = myNumberResolver.emittedNumber(ottavaStart.spannerStart.number, inIdentity);
     if (number.has_value())
@@ -692,10 +698,7 @@ void DirectionWriter::emitTempo(const api::TempoData &tempo, core::Direction &di
     {
         setAttributesFromColorData(*tempo.color, metronome);
     }
-    if (tempo.id.has_value())
-    {
-        metronome.setID(core::Token{*tempo.id});
-    }
+    setId(tempo.id, metronome);
     if (tempo.justify != api::HorizontalAlignment::unspecified)
     {
         metronome.setJustify(myConverter.convert(tempo.justify));
@@ -749,6 +752,7 @@ void DirectionWriter::emitWordsRun(const std::vector<api::WordsChoice> &inRun, c
             {
                 outSymbol.setJustify(myConverter.convert(symbolData.justify));
             }
+            setId(symbolData.id, outSymbol);
             choiceItem = core::DirectionTypeChoiceChoice::symbol(std::move(outSymbol));
         }
         else
@@ -770,6 +774,7 @@ void DirectionWriter::emitWordsRun(const std::vector<api::WordsChoice> &inRun, c
             {
                 outWords.setJustify(myConverter.convert(wordsData.justify));
             }
+            setId(wordsData.id, outWords);
             choiceItem = core::DirectionTypeChoiceChoice::words(std::move(outWords));
         }
 
@@ -802,10 +807,7 @@ void DirectionWriter::emitSegno(const api::SegnoData &item, core::Direction &dir
     {
         segno.setSmufl(core::SmuflSegnoGlyphName::parse(item.smufl));
     }
-    if (item.isIdSpecified)
-    {
-        segno.setID(core::Token{item.id});
-    }
+    setId(item.id, segno);
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::segno(core::OneOrMore<core::Segno>{std::move(segno)}));
     addDirectionType(std::move(dt), direction);
@@ -824,10 +826,7 @@ void DirectionWriter::emitCoda(const api::CodaData &item, core::Direction &direc
     {
         coda.setSmufl(core::SmuflCodaGlyphName::parse(item.smufl));
     }
-    if (item.isIdSpecified)
-    {
-        coda.setID(core::Token{item.id});
-    }
+    setId(item.id, coda);
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::coda(core::OneOrMore<core::Coda>{std::move(coda)}));
     addDirectionType(std::move(dt), direction);
@@ -851,6 +850,7 @@ void DirectionWriter::emitRehearsal(const api::RehearsalData &item, core::Direct
     {
         rehearsal.setJustify(myConverter.convert(item.justify));
     }
+    setId(item.id, rehearsal);
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::rehearsal(core::OneOrMore<core::FormattedTextID>{std::move(rehearsal)}));
     addDirectionType(std::move(dt), direction);
@@ -859,7 +859,7 @@ void DirectionWriter::emitRehearsal(const api::RehearsalData &item, core::Direct
 core::EmptyPrintStyleAlignID DirectionWriter::createEmptyPrintStyleAlign(const api::PositionData &positionData,
                                                                          const api::FontData &fontData,
                                                                          const std::optional<api::ColorData> &color,
-                                                                         const std::optional<std::string> &id)
+                                                                         const std::optional<api::Id> &id)
 {
     core::EmptyPrintStyleAlignID element{};
     setAttributesFromPositionData(positionData, element);
@@ -868,10 +868,7 @@ core::EmptyPrintStyleAlignID DirectionWriter::createEmptyPrintStyleAlign(const a
     {
         setAttributesFromColorData(*color, element);
     }
-    if (id.has_value())
-    {
-        element.setID(core::Token{*id});
-    }
+    setId(id, element);
     return element;
 }
 
@@ -909,10 +906,7 @@ void DirectionWriter::emitStringMute(const api::StringMuteData &item, core::Dire
     {
         setAttributesFromColorData(*item.color, stringMute);
     }
-    if (item.id.has_value())
-    {
-        stringMute.setID(core::Token{*item.id});
-    }
+    setId(item.id, stringMute);
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::stringMute(std::move(stringMute)));
     addDirectionType(std::move(dt), direction);
@@ -939,10 +933,7 @@ void DirectionWriter::emitStaffDivide(const api::StaffDivideData &item, core::Di
     {
         setAttributesFromColorData(*item.color, staffDivide);
     }
-    if (item.id.has_value())
-    {
-        staffDivide.setID(core::Token{*item.id});
-    }
+    setId(item.id, staffDivide);
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::staffDivide(std::move(staffDivide)));
     addDirectionType(std::move(dt), direction);
@@ -975,10 +966,7 @@ void DirectionWriter::emitPrincipalVoice(const api::PrincipalVoiceData &item, co
     {
         setAttributesFromColorData(*item.color, principalVoice);
     }
-    if (item.id.has_value())
-    {
-        principalVoice.setID(core::Token{*item.id});
-    }
+    setId(item.id, principalVoice);
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::principalVoice(std::move(principalVoice)));
     addDirectionType(std::move(dt), direction);
@@ -1002,10 +990,7 @@ void DirectionWriter::emitOtherDirection(const api::OtherDirectionData &item, co
     {
         setAttributesFromColorData(*item.color, otherDirection);
     }
-    if (item.id.has_value())
-    {
-        otherDirection.setID(core::Token{*item.id});
-    }
+    setId(item.id, otherDirection);
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::otherDirection(std::move(otherDirection)));
     addDirectionType(std::move(dt), direction);
@@ -1044,10 +1029,7 @@ void DirectionWriter::emitImage(const api::ImageData &item, core::Direction &dir
     default:
         break;
     }
-    if (item.id.has_value())
-    {
-        image.setID(core::Token{*item.id});
-    }
+    setId(item.id, image);
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::image(std::move(image)));
     addDirectionType(std::move(dt), direction);
@@ -1068,10 +1050,7 @@ void DirectionWriter::emitAccordionRegistration(const api::AccordionRegistration
     {
         setAttributesFromColorData(*item.color, accordion);
     }
-    if (item.id.has_value())
-    {
-        accordion.setID(core::Token{*item.id});
-    }
+    setId(item.id, accordion);
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::accordionRegistration(std::move(accordion)));
     addDirectionType(std::move(dt), direction);
@@ -1109,10 +1088,7 @@ void DirectionWriter::emitHarpPedals(const api::HarpPedalsData &item, core::Dire
     {
         setAttributesFromColorData(*item.color, harpPedals);
     }
-    if (item.id.has_value())
-    {
-        harpPedals.setID(core::Token{*item.id});
-    }
+    setId(item.id, harpPedals);
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::harpPedals(std::move(harpPedals)));
     addDirectionType(std::move(dt), direction);
@@ -1154,10 +1130,7 @@ void DirectionWriter::emitScordatura(const api::ScordaturaData &item, core::Dire
             scordatura.addAccord(std::move(accord));
         }
     }
-    if (item.id.has_value())
-    {
-        scordatura.setID(core::Token{*item.id});
-    }
+    setId(item.id, scordatura);
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::scordatura(std::move(scordatura)));
     addDirectionType(std::move(dt), direction);
@@ -1287,10 +1260,7 @@ void DirectionWriter::emitPercussion(const api::PercussionData &item, core::Dire
     {
         setAttributesFromColorData(*item.color, percussion);
     }
-    if (item.id.has_value())
-    {
-        percussion.setID(core::Token{*item.id});
-    }
+    setId(item.id, percussion);
     core::DirectionType dt{};
     dt.setChoice(core::DirectionTypeChoice::percussion(core::OneOrMore<core::Percussion>{std::move(percussion)}));
     addDirectionType(std::move(dt), direction);
@@ -1815,6 +1785,8 @@ std::vector<core::MusicDataChoice> DirectionWriter::createFiguredBassElements()
                 figuredBass.addFigure(figure);
             }
         }
+
+        setId(figuredBassData.id, figuredBass);
 
         if (figuredBassData.parentheses != api::Bool::unspecified)
         {

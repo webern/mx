@@ -11,6 +11,7 @@
 #include "mx/core/generated/TimeChoiceGroup.h"
 #include "mx/core/generated/TimeSignatureGroup.h"
 #include "mx/impl/Converter.h"
+#include "mx/impl/IdFunctions.h"
 
 #include <utility>
 #include <vector>
@@ -100,6 +101,7 @@ TimeReaderResult TimeReader::createTimeChoice(const core::Time &inTime)
     }
 
     timeChoice.isImplicit = false;
+    timeChoice.id = getId(inTime);
     if (inTime.printObject().has_value())
     {
         timeChoice.display = converter.convert(*inTime.printObject());

@@ -5,7 +5,11 @@
 #pragma once
 
 #include "mx/api/ApiCommon.h"
+#include "mx/api/Id.h"
 #include "mx/api/PositionData.h"
+
+#include <optional>
+#include <string>
 
 namespace mx
 {
@@ -50,11 +54,14 @@ struct PedalLineData
     int tickTimePosition;
     PositionData positionData;
 
-    PedalLineData() : kind{PedalLineKind::unspecified}, tickTimePosition{0}, positionData{}
+    // The <pedal> element's id attribute (see Id.h).
+    std::optional<Id> id;
+
+    PedalLineData() : kind{PedalLineKind::unspecified}, tickTimePosition{0}, positionData{}, id{}
     {
     }
 
-    PedalLineData(PedalLineKind inKind) : kind{inKind}, tickTimePosition{0}, positionData{}
+    PedalLineData(PedalLineKind inKind) : kind{inKind}, tickTimePosition{0}, positionData{}, id{}
     {
     }
 };
@@ -63,6 +70,7 @@ MXAPI_EQUALS_BEGIN(PedalLineData)
 MXAPI_EQUALS_MEMBER(kind)
 MXAPI_EQUALS_MEMBER(tickTimePosition)
 MXAPI_EQUALS_MEMBER(positionData)
+MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(PedalLineData);
 } // namespace api

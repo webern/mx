@@ -5,6 +5,7 @@
 #pragma once
 
 #include "mx/api/ApiCommon.h"
+#include "mx/api/Id.h"
 #include "mx/api/PositionData.h"
 
 #include <optional>
@@ -116,10 +117,13 @@ class BarlineData
     RepeatWinged repeatWinged;
     HorizontalAlignment location;
 
+    // The <barline> element's id attribute (see Id.h).
+    std::optional<Id> id;
+
     BarlineData()
         : tickTimePosition{0}, barlineType{BarlineType::normal}, ending{}, repeat{false}, repeatTimes{0},
           repeatDirection{RepeatDirection::unspecified}, repeatAfterJump{Bool::unspecified},
-          repeatWinged{RepeatWinged::unspecified}, location{HorizontalAlignment::unspecified}
+          repeatWinged{RepeatWinged::unspecified}, location{HorizontalAlignment::unspecified}, id{}
     {
     }
 };
@@ -134,6 +138,7 @@ MXAPI_EQUALS_MEMBER(repeatDirection)
 MXAPI_EQUALS_MEMBER(repeatAfterJump)
 MXAPI_EQUALS_MEMBER(repeatWinged)
 MXAPI_EQUALS_MEMBER(location)
+MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(BarlineData);
 } // namespace api

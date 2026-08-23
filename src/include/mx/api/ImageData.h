@@ -5,6 +5,7 @@
 #pragma once
 
 #include "mx/api/ApiCommon.h"
+#include "mx/api/Id.h"
 #include "mx/api/PositionData.h"
 
 #include <optional>
@@ -29,7 +30,7 @@ class ImageData
     std::optional<double> height;
     std::optional<double> width;
     PositionData positionData;
-    std::optional<std::string> id;
+    std::optional<Id> id;
 
     ImageData() : source{}, type{}, height{}, width{}, positionData{}, id{}
     {

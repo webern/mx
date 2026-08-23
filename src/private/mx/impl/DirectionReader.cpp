@@ -84,6 +84,7 @@
 #include "mx/core/generated/WedgeType.h"
 #include "mx/core/generated/YesNo.h"
 #include "mx/impl/DynamicsReader.h"
+#include "mx/impl/IdFunctions.h"
 #include "mx/impl/MarkDataFunctions.h"
 #include "mx/impl/MetronomeReader.h"
 #include "mx/impl/PrintFunctions.h"
@@ -125,6 +126,7 @@ mx::api::DirectionData DirectionReader::initializeData()
     if (myDirection)
     {
         result.isStaffValueSpecified = myDirection->staff().has_value();
+        result.id = getId(*myDirection);
     }
     else if (myHarmony)
     {
@@ -367,6 +369,7 @@ void DirectionReader::parseRehearsal(const core::DirectionType &directionType)
         {
             outRehearsal.justify = myConverter.convert(*rehearsal.justify());
         }
+        outRehearsal.id = getId(rehearsal);
         myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice{std::move(outRehearsal)});
     }
 }
@@ -390,11 +393,7 @@ void DirectionReader::parseSegno(const core::DirectionType &directionType)
             outSegno.isSmuflSpecified = true;
             outSegno.smufl = segno.smufl()->toString();
         }
-        if (segno.id().has_value())
-        {
-            outSegno.isIdSpecified = true;
-            outSegno.id = segno.id()->value();
-        }
+        outSegno.id = getId(segno);
         myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice{std::move(outSegno)});
     }
 }
@@ -428,6 +427,7 @@ void DirectionReader::parseWordsRun(const core::DirectionType &directionType)
             {
                 outSymbol.justify = myConverter.convert(*symbolEl.justify());
             }
+            outSymbol.id = getId(symbolEl);
             run.emplace_back(std::move(outSymbol));
             continue;
         }
@@ -449,6 +449,7 @@ void DirectionReader::parseWordsRun(const core::DirectionType &directionType)
         {
             outWords.justify = myConverter.convert(*wordEl.justify());
         }
+        outWords.id = getId(wordEl);
         run.emplace_back(std::move(outWords));
     }
 
@@ -477,11 +478,7 @@ void DirectionReader::parseCoda(const core::DirectionType &directionType)
             outCoda.isSmuflSpecified = true;
             outCoda.smufl = coda.smufl()->toString();
         }
-        if (coda.id().has_value())
-        {
-            outCoda.isIdSpecified = true;
-            outCoda.id = coda.id()->value();
-        }
+        outCoda.id = getId(coda);
         myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice{std::move(outCoda)});
     }
 }
@@ -510,6 +507,7 @@ void DirectionReader::parseWedge(const core::DirectionType &directionType)
             stop.spread = spread;
         }
         stop.positionData = positionData;
+        stop.id = getId(wedge);
         myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice{std::move(stop)});
         return;
     }
@@ -530,6 +528,7 @@ void DirectionReader::parseWedge(const core::DirectionType &directionType)
         start.lineData = lineData;
         start.isColorSpecified = isColorSpecified;
         start.colorData = colorData;
+        start.id = getId(wedge);
         myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice{std::move(start)});
     }
 }
@@ -622,6 +621,7 @@ void DirectionReader::parseBracket(const core::DirectionType &directionType)
         start.positionData = this->parsePositionData(bracket);
         start.lineData = makeBracketLineData();
         start.printData = impl::getPrintData(bracket);
+        start.id = getId(bracket);
         myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice::bracketStart(std::move(start)));
         return;
     }
@@ -677,6 +677,7 @@ void DirectionReader::parsePedal(const core::DirectionType &directionType)
         pedalData.tickTimePosition = myOutDirectionData.tickTimePosition;
         pedalData.positionData = getPositionData(pedal);
         pedalData.positionData.placement = placement;
+        pedalData.id = getId(pedal);
         myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice{std::move(pedalData)});
         return;
     }
@@ -793,10 +794,7 @@ void DirectionReader::parseHarpPedals(const core::DirectionType &directionType)
     {
         outHarpPedals.color = getColor(harpPedals);
     }
-    if (harpPedals.id().has_value())
-    {
-        outHarpPedals.id = harpPedals.id()->value();
-    }
+    outHarpPedals.id = getId(harpPedals);
     myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice{std::move(outHarpPedals)});
 }
 
@@ -810,10 +808,7 @@ void DirectionReader::parseDamp(const core::DirectionType &directionType)
     {
         outDamp.color = getColor(damp);
     }
-    if (damp.id().has_value())
-    {
-        outDamp.id = damp.id()->value();
-    }
+    outDamp.id = getId(damp);
     myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice{std::move(outDamp)});
 }
 
@@ -827,10 +822,7 @@ void DirectionReader::parseDampAll(const core::DirectionType &directionType)
     {
         outDampAll.color = getColor(dampAll);
     }
-    if (dampAll.id().has_value())
-    {
-        outDampAll.id = dampAll.id()->value();
-    }
+    outDampAll.id = getId(dampAll);
     myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice{std::move(outDampAll)});
 }
 
@@ -844,10 +836,7 @@ void DirectionReader::parseEyeglasses(const core::DirectionType &directionType)
     {
         outEyeglasses.color = getColor(eyeglasses);
     }
-    if (eyeglasses.id().has_value())
-    {
-        outEyeglasses.id = eyeglasses.id()->value();
-    }
+    outEyeglasses.id = getId(eyeglasses);
     myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice{std::move(outEyeglasses)});
 }
 
@@ -863,10 +852,7 @@ void DirectionReader::parseStringMute(const core::DirectionType &directionType)
     {
         outStringMute.color = getColor(stringMute);
     }
-    if (stringMute.id().has_value())
-    {
-        outStringMute.id = stringMute.id()->value();
-    }
+    outStringMute.id = getId(stringMute);
     myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice{std::move(outStringMute)});
 }
 
@@ -893,10 +879,7 @@ void DirectionReader::parseStaffDivide(const core::DirectionType &directionType)
     {
         outStaffDivide.color = getColor(staffDivide);
     }
-    if (staffDivide.id().has_value())
-    {
-        outStaffDivide.id = staffDivide.id()->value();
-    }
+    outStaffDivide.id = getId(staffDivide);
     myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice{std::move(outStaffDivide)});
 }
 
@@ -922,10 +905,7 @@ void DirectionReader::parseScordatura(const core::DirectionType &directionType)
         outAccord.tuningOctave = accord.tuning().tuningOctave().value();
         outScordatura.accords.emplace_back(outAccord);
     }
-    if (scordatura.id().has_value())
-    {
-        outScordatura.id = scordatura.id()->value();
-    }
+    outScordatura.id = getId(scordatura);
     myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice{std::move(outScordatura)});
 }
 
@@ -967,10 +947,7 @@ void DirectionReader::parseImage(const core::DirectionType &directionType)
     {
         outImage.positionData.verticalAlignment = api::VerticalAlignment::unspecified;
     }
-    if (image.id().has_value())
-    {
-        outImage.id = image.id()->value();
-    }
+    outImage.id = getId(image);
     myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice{std::move(outImage)});
 }
 
@@ -1003,10 +980,7 @@ void DirectionReader::parsePrincipalVoice(const core::DirectionType &directionTy
     {
         outPrincipalVoice.color = getColor(principalVoice);
     }
-    if (principalVoice.id().has_value())
-    {
-        outPrincipalVoice.id = principalVoice.id()->value();
-    }
+    outPrincipalVoice.id = getId(principalVoice);
     myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice{std::move(outPrincipalVoice)});
 }
 
@@ -1026,10 +1000,7 @@ void DirectionReader::parseAccordionRegistration(const core::DirectionType &dire
     {
         outAccordion.color = getColor(accordion);
     }
-    if (accordion.id().has_value())
-    {
-        outAccordion.id = accordion.id()->value();
-    }
+    outAccordion.id = getId(accordion);
     myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice{std::move(outAccordion)});
 }
 
@@ -1160,10 +1131,7 @@ void DirectionReader::parsePercussion(const core::DirectionType &directionType)
         {
             outPercussion.color = getColor(percussion);
         }
-        if (percussion.id().has_value())
-        {
-            outPercussion.id = percussion.id()->value();
-        }
+        outPercussion.id = getId(percussion);
         myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice{std::move(outPercussion)});
     }
 }
@@ -1184,10 +1152,7 @@ void DirectionReader::parseOtherDirection(const core::DirectionType &directionTy
     {
         outOtherDirection.color = getColor(otherDirection);
     }
-    if (otherDirection.id().has_value())
-    {
-        outOtherDirection.id = otherDirection.id()->value();
-    }
+    outOtherDirection.id = getId(otherDirection);
     myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice{std::move(outOtherDirection)});
 }
 

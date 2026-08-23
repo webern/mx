@@ -5,8 +5,12 @@
 #pragma once
 
 #include "mx/api/ApiCommon.h"
+#include "mx/api/Id.h"
 #include "mx/api/PositionData.h"
 #include "mx/api/PrintData.h"
+
+#include <optional>
+#include <string>
 
 namespace mx
 {
@@ -38,7 +42,7 @@ class LyricData
   public:
     LyricData()
         : text{}, verseNumber{}, verseName{}, syllabic{LyricSyllabic::unspecified}, hasExtend{false},
-          extendType{LyricExtendType::unspecified}, positionData{}, printData{}
+          extendType{LyricExtendType::unspecified}, positionData{}, printData{}, id{}
     {
     }
 
@@ -50,6 +54,9 @@ class LyricData
     LyricExtendType extendType;
     PositionData positionData;
     PrintData printData;
+
+    // The <lyric> element's id attribute (see Id.h).
+    std::optional<Id> id;
 };
 
 MXAPI_EQUALS_BEGIN(LyricData)
@@ -61,6 +68,7 @@ MXAPI_EQUALS_MEMBER(hasExtend)
 MXAPI_EQUALS_MEMBER(extendType)
 MXAPI_EQUALS_MEMBER(positionData)
 MXAPI_EQUALS_MEMBER(printData)
+MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(LyricData);
 } // namespace api

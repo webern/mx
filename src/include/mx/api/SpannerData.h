@@ -5,11 +5,13 @@
 #pragma once
 
 #include "mx/api/ApiCommon.h"
+#include "mx/api/Id.h"
 #include "mx/api/LineData.h"
 #include "mx/api/PositionData.h"
 #include "mx/api/PrintData.h"
 #include "mx/api/SpannerNumber.h"
 
+#include <optional>
 #include <string>
 
 namespace mx
@@ -25,7 +27,11 @@ struct SpannerStart
     PrintData printData;
     LineData lineData;
 
-    SpannerStart() : number{}, tickTimePosition{0}, positionData{}, printData{}, lineData{}
+    // The id attribute of the element this spanner end is written as -- <bracket>,
+    // <dashes>, or <octave-shift> (see Id.h).
+    std::optional<Id> id;
+
+    SpannerStart() : number{}, tickTimePosition{0}, positionData{}, printData{}, lineData{}, id{}
     {
     }
 };
@@ -37,7 +43,11 @@ struct SpannerStop
     PositionData positionData;
     LineData lineData;
 
-    SpannerStop() : number{}, tickTimePosition{0}, positionData{}, lineData{}
+    // The id attribute of the element this spanner end is written as -- <bracket>,
+    // <dashes>, or <octave-shift> (see Id.h).
+    std::optional<Id> id;
+
+    SpannerStop() : number{}, tickTimePosition{0}, positionData{}, lineData{}, id{}
     {
     }
 };
@@ -48,6 +58,7 @@ MXAPI_EQUALS_MEMBER(tickTimePosition)
 MXAPI_EQUALS_MEMBER(positionData)
 MXAPI_EQUALS_MEMBER(printData)
 MXAPI_EQUALS_MEMBER(lineData)
+MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(SpannerStart);
 
@@ -56,6 +67,7 @@ MXAPI_EQUALS_MEMBER(number)
 MXAPI_EQUALS_MEMBER(tickTimePosition)
 MXAPI_EQUALS_MEMBER(positionData)
 MXAPI_EQUALS_MEMBER(lineData)
+MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(SpannerStop);
 } // namespace api

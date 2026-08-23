@@ -5,6 +5,7 @@
 #pragma once
 
 #include "mx/api/ApiCommon.h"
+#include "mx/api/Id.h"
 #include "mx/api/PitchData.h"
 
 #include <optional>
@@ -49,7 +50,7 @@ class ScordaturaData
 {
   public:
     std::vector<AccordData> accords;
-    std::optional<std::string> id;
+    std::optional<Id> id;
 
     ScordaturaData() : accords{}, id{}
     {

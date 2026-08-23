@@ -6,6 +6,7 @@
 
 #include "mx/api/ApiCommon.h"
 #include "mx/api/DynamicsData.h"
+#include "mx/api/Id.h"
 
 #include <optional>
 #include <string>
@@ -59,7 +60,7 @@ struct ArpeggiateMarkData
     Bool unbroken = Bool::unspecified;
 
     // The element's `id` attribute (MusicXML 3.1).
-    std::optional<std::string> id;
+    std::optional<Id> id;
 };
 
 MXAPI_EQUALS_BEGIN(ArpeggiateMarkData)
@@ -89,7 +90,7 @@ struct NonArpeggiateMarkData
     std::optional<int> number;
 
     // The element's `id` attribute (MusicXML 3.1).
-    std::optional<std::string> id;
+    std::optional<Id> id;
 };
 
 MXAPI_EQUALS_BEGIN(NonArpeggiateMarkData)
@@ -126,7 +127,7 @@ struct OtherNotationMarkData
     OtherNotationType type = OtherNotationType::single;
     std::optional<int> number;
     std::optional<std::string> smufl;
-    std::optional<std::string> id;
+    std::optional<Id> id;
 };
 
 MXAPI_EQUALS_BEGIN(OtherNotationMarkData)

@@ -9,6 +9,7 @@
 #include "mx/core/generated/Tuplet.h"
 #include "mx/core/generated/TupletPortion.h"
 #include "mx/impl/Converter.h"
+#include "mx/impl/IdFunctions.h"
 #include "mx/impl/MarkDataFunctions.h"
 
 namespace mx
@@ -25,6 +26,7 @@ void TupletReader::parseTuplet(std::vector<api::TupletStart> &outTupletStarts,
 {
     api::TupletStart tupletStart;
     tupletStart.positionData = impl::getPositionData(myTuplet);
+    tupletStart.id = getId(myTuplet);
 
     if (myTuplet.number().has_value())
     {
@@ -36,6 +38,7 @@ void TupletReader::parseTuplet(std::vector<api::TupletStart> &outTupletStarts,
         api::TupletStop tupletStop;
         tupletStop.positionData = tupletStart.positionData;
         tupletStop.numberLevel = tupletStart.numberLevel;
+        tupletStop.id = getId(myTuplet);
         outTupletStops.emplace_back(std::move(tupletStop));
         return;
     }

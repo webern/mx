@@ -35,6 +35,7 @@
 #include "mx/core/generated/YesNo.h"
 #include "mx/impl/Converter.h"
 #include "mx/impl/DirectionWriter.h"
+#include "mx/impl/IdFunctions.h"
 #include "mx/impl/LayoutFunctions.h"
 #include "mx/impl/NoteWriter.h"
 #include "mx/impl/ScoreWriter.h"
@@ -99,6 +100,8 @@ void MeasureWriter::writeMeasureGlobals()
     {
         myOutMeasure.setWidth(core::Tenths{core::Decimal{static_cast<double>(myMeasureData.width)}});
     }
+
+    impl::setId(myMeasureData.id, myOutMeasure);
 
     Converter converter;
 
@@ -916,6 +919,7 @@ void MeasureWriter::writeBarlines(int tickTimePosition)
             barlineElement.setRepeat(repeatElement);
         }
 
+        impl::setId(myBarlinesIter->id, barlineElement);
         myOutMeasure.addMusicData(core::MusicDataChoice::barline(barlineElement));
         myHistory.log("writeBarline");
     }

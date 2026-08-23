@@ -7,7 +7,11 @@
 #include "mx/api/ApiCommon.h"
 #include "mx/api/ColorData.h"
 #include "mx/api/FontData.h"
+#include "mx/api/Id.h"
 #include "mx/api/PositionData.h"
+
+#include <optional>
+#include <string>
 
 namespace mx
 {
@@ -32,9 +36,12 @@ class RehearsalData
     // and says which edge of the text the position refers to; MusicXML defines both.
     HorizontalAlignment justify;
 
+    // The <rehearsal> element's id attribute (see Id.h).
+    std::optional<Id> id;
+
     RehearsalData()
         : text{}, positionData{}, isColorSpecified{false}, colorData{}, fontData{}, enclosure{Enclosure::unspecified},
-          justify{HorizontalAlignment::unspecified}
+          justify{HorizontalAlignment::unspecified}, id{}
     {
     }
 };
@@ -47,6 +54,7 @@ MXAPI_EQUALS_MEMBER(colorData)
 MXAPI_EQUALS_MEMBER(fontData)
 MXAPI_EQUALS_MEMBER(enclosure)
 MXAPI_EQUALS_MEMBER(justify)
+MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(RehearsalData);
 } // namespace api

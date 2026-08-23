@@ -6,6 +6,7 @@
 
 #include "mx/api/CurveData.h"
 #include "mx/api/DurationData.h"
+#include "mx/api/Id.h"
 #include "mx/api/LyricData.h"
 #include "mx/api/NoteAttachmentData.h"
 #include "mx/api/PitchData.h"
@@ -82,7 +83,11 @@ struct TieLetRing
     bool isColorSpecified;
     ColorData colorData;
 
-    TieLetRing() : positionData{}, curveOrientation{CurveOrientation::unspecified}, isColorSpecified{false}, colorData{}
+    // The <tied> element's id attribute (see Id.h).
+    std::optional<Id> id;
+
+    TieLetRing()
+        : positionData{}, curveOrientation{CurveOrientation::unspecified}, isColorSpecified{false}, colorData{}, id{}
     {
     }
 };
@@ -92,6 +97,7 @@ MXAPI_EQUALS_MEMBER(positionData)
 MXAPI_EQUALS_MEMBER(curveOrientation)
 MXAPI_EQUALS_MEMBER(isColorSpecified)
 MXAPI_EQUALS_MEMBER(colorData)
+MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(TieLetRing);
 
@@ -202,6 +208,9 @@ class NoteData
     // similarly when parsing if we see ##misc-data## in this element, it
     // will be parsed into these strings. do not use commas in your misc
     // data strings as these are the delimiter
+
+    // The <note> element's id attribute (see Id.h).
+    std::optional<Id> id;
     std::vector<std::string> miscData;
 };
 
@@ -234,6 +243,7 @@ MXAPI_EQUALS_MEMBER(printData)
 MXAPI_EQUALS_MEMBER(noteAttachmentData)
 MXAPI_EQUALS_MEMBER(lyrics)
 MXAPI_EQUALS_MEMBER(miscData)
+MXAPI_EQUALS_MEMBER(id)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(NoteData);
 } // namespace api

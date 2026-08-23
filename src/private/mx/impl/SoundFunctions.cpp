@@ -12,6 +12,7 @@
 #include "mx/core/generated/SwingChoiceGroup.h"
 #include "mx/core/generated/SwingTypeValue.h"
 #include "mx/core/generated/YesNo.h"
+#include "mx/impl/IdFunctions.h"
 
 namespace mx
 {
@@ -144,11 +145,15 @@ api::SoundData readSoundData(const core::Sound &inSound)
         out.swing = soundFunctionsToApiSwingData(*inSound.swing());
     }
 
+    out.id = getId(inSound);
+
     return out;
 }
 
 void writeSoundData(const api::SoundData &inSoundData, core::Sound &outSound)
 {
+    setId(inSoundData.id, outSound);
+
     if (inSoundData.tempo >= 0.0)
     {
         outSound.setTempo(core::NonNegativeDecimal{core::Decimal{inSoundData.tempo}});

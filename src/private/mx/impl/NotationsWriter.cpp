@@ -62,6 +62,7 @@
 #include "mx/impl/Converter.h"
 #include "mx/impl/CurveFunctions.h"
 #include "mx/impl/DynamicsWriter.h"
+#include "mx/impl/IdFunctions.h"
 #include "mx/impl/MarkDataFunctions.h"
 #include "mx/impl/PositionFunctions.h"
 #include "mx/impl/ScoreWriter.h"
@@ -184,6 +185,7 @@ core::Notations NotationsWriter::getNotations() const
     {
         core::Tuplet tuplet;
         tuplet.setType(core::StartStop::stop());
+        setId(tupletStop.id, tuplet);
 
         if (tupletStop.numberLevel > 0)
         {
@@ -197,6 +199,7 @@ core::Notations NotationsWriter::getNotations() const
     {
         core::Tuplet tuplet;
         tuplet.setType(core::StartStop::start());
+        setId(tupletStart.id, tuplet);
 
         core::TupletPortion actual;
         core::TupletNumber tn1;
@@ -372,10 +375,7 @@ core::Notations NotationsWriter::getNotations() const
             {
                 nonArpeggiate.setNumber(core::NumberLevel{*nonArpeggiateData.number});
             }
-            if (nonArpeggiateData.id.has_value())
-            {
-                nonArpeggiate.setID(core::Token{*nonArpeggiateData.id});
-            }
+            setId(nonArpeggiateData.id, nonArpeggiate);
 
             outNotations.addChoice(core::NotationsChoice::nonArpeggiate(nonArpeggiate));
         }
@@ -407,10 +407,7 @@ core::Notations NotationsWriter::getNotations() const
                 Converter converter;
                 arpeggiate.setUnbroken(converter.convert(arpeggiateData.unbroken));
             }
-            if (arpeggiateData.id.has_value())
-            {
-                arpeggiate.setID(core::Token{*arpeggiateData.id});
-            }
+            setId(arpeggiateData.id, arpeggiate);
 
             outNotations.addChoice(core::NotationsChoice::arpeggiate(arpeggiate));
         }
@@ -430,10 +427,7 @@ core::Notations NotationsWriter::getNotations() const
             {
                 other.setSmufl(core::SmuflGlyphName{*payload.smufl});
             }
-            if (payload.id.has_value())
-            {
-                other.setID(core::Token{*payload.id});
-            }
+            setId(payload.id, other);
 
             outNotations.addChoice(core::NotationsChoice::otherNotation(other));
         }
