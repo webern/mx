@@ -79,46 +79,74 @@ Implicit in the request is the idea that the same `u_span` mechanism would be ni
   attributes and use those same IDs for `u_span` specification. i.e., an application MUST NOT be
   required to place `mx::api`-specific IDs into the written MusicXML.
 
-- R8(webern): The `u_span` interface should be a common interface that works with all of the
-  following note-attached types:
-  - tie
-  - tied
-  - tuplet
-  - tremolo
-  - slur
-  - glissando
-  - slide
-  - hammer-on
-  - pull-off
-  - other-notation
+- R8(webern): The `u_span` interface should be a common interface that works with compatible spanner
+  types. The following tables list the spanner and spanner-like objects in MusicXML along with the
+  elements that contain them. A spanner is in scope when its `s_span:end` can be placed from an end
+  note ID alone -- either into that note, or into the measure at that note's tick position.
 
-- R9(webern): The `u_span` mechanism SHOULD support the following note-related types, if possible,
-  despite not (always) attaching directly to notes:
-  - wedge
-  - pedal
-  - dashes
-  - bracket
-  - octave-shift
-  - grouping
-  - beat-repeat
-  - measure-repeat
-  - slash
-  - ending
-  - barre
+  The schema of the following tables is as follows (null|empty means yes, no means no):
+  - spanner: the element which has start, stop (and maybe continue) attributes
+  - container: the element inside which the spanner element is housed
+  - descendant_of: the `music-data` child element that ultimately contains the spanner
+  - blocker: a GitHub issue that would unblock this spanner from being `u_span` eligible
+  - phase: `poc` (first trial implementation), `1` follow up from the poc. `2`: doable after phase
+    `1`. `TBD`: not sure if we want to support it.
 
-- R10(webern): If possible, `u_span` should support these weirder scenarios:
-  - wavy-line (within a note's `<notations>`, or within `<barline>`)
-  - extend (within a note's `<lyric>`, or within `<figured-bass>`, which is not note-attached)
-  - level (within a note's editorial content, or within many other non-note elements)
+**In scope.** `descendant_of` splits the write mechanism into exactly two cases:
 
-- R11(webern): The `u_spans` should not break the `mx::api` plain-old-data struct design. In other-
-  words, `mx::api` should not be responsible for validation during document authoring. Validation
-  may occur only when writing a document to `mx::core`.
+- `note`: the `s_span:end` goes into the end note itself, which already exists in the client's data.
+- `direction`: the `s_span:end` goes into a new `DirectionData` placed at the end note's
+  `tickTimePosition`. The end note supplies time only; a wedge is one graphical object on one staff,
+  so staff, voice, and placement are copied from the start, not from the end note.
 
-- TBD: these require further research:
-  - principal-voice
-  - metronome-tied
-  - metronome-tuplet
+Both cases are fully determined by an end note ID plus data copied from the start.
+
+| spanner           | container        | descendant_of | blocker | phase |
+|-------------------|------------------|---------------|---------|-------|
+| `bracket`         | `direction-type` | `direction`   |         |       |
+| `dashes`          | `direction-type` | `direction`   |         |       |
+| `octave-shift`    | `direction-type` | `direction`   |         |       |
+| `pedal`           | `direction-type` | `direction`   |         |       |
+| `principal-voice` | `direction-type` | `direction`   |         |       |
+| `wedge`           | `direction-type` | `direction`   |         |       |
+| `extend`          | `lyric`          | `note`        |         |       |
+| `glissando`       | `notations`      | `note`        |         |       |
+| `other-notation`  | `notations`      | `note`        |         |       |
+| `slide`           | `notations`      | `note`        |         |       |
+| `slur`            | `notations`      | `note`        |         |       |
+| `tied`            | `notations`      | `note`        |         |       |
+| `tuplet`          | `notations`      | `note`        |         |       |
+| `tie`             | `note`           | `note`        |         |       |
+| `tremolo`         | `ornaments`      | `note`        |         |       |
+| `wavy-line`       | `ornaments`      | `note`        |         |       |
+| `hammer-on`       | `technical`      | `note`        |         |       |
+| `pull-off`        | `technical`      | `note`        |         |       |
+
+**Out of scope.** These are neither note-attached nor tick-attached, so an end note ID cannot place
+their `s_span:end`.
+
+| spanner            | container        | descendant_of  | why                                          |
+|--------------------|------------------|----------------|----------------------------------------------|
+| `grouping`         | `measure`        | (self)         | measure-level; no tick position              |
+| `beat-repeat`      | `measure-style`  | `attributes`   | measure-scoped                               |
+| `measure-repeat`   | `measure-style`  | `attributes`   | measure-scoped                               |
+| `slash`            | `measure-style`  | `attributes`   | measure-scoped                               |
+| `ending`           | `barline`        | `barline`      | measure-scoped; end lands in a barline       |
+| `wavy-line`        | `barline`        | `barline`      | measure-scoped; the barline instance         |
+| `metronome-tied`   | `metronome-note` | `direction`    | both ends sit in one `metronome`             |
+| `metronome-tuplet` | `metronome-note` | `direction`    | both ends sit in one `metronome`             |
+| `extend`           | `figure`         | `figured-bass` | figured-bass instance of `extend`            |
+| `barre`            | `frame-note`     | `harmony`      | spans frets in a chord diagram; no time axis |
+| `level`            | `many`           | `various`      | too many containers to address; see below    |
+
+The measure-scoped rows (`ending`, `wavy-line` in `barline`, `beat-repeat`, `measure-repeat`,
+`slash`) are deferred rather than impossible. They need a different anchor concept -- a measure ID,
+which `mx::api` already exposes as `MeasureData::id` -- plus a rule for whether the end lands on the
+named measure or before it.
+
+The `<level>` element is hard to understand and can be contained in such a large variety of
+containing elements (attributes, backup, barline, direction, figure, figured-bass, forward, harmony,
+lyric, notations, note) that `u_span` support is not planned for `<level>` at this time.
 
 My answers to Claude's questions:
 
@@ -255,21 +283,12 @@ to the `Context` error reporting mechanism.
 
 ### Design Overview
 
-**IDs.** `u_spans` require the client to use MusicXML's ID feature. IDs are client-owned values in
-the schema-specified ID attributes; `mx::api` round-trips them like any other attribute, does not
-validate them, and never generates or requires mx-specific IDs. It reads them only for spanner
-endpoint detection (R6, R7).
-
-**Prerequisite.** Expose the schema ID attributes on u_span-eligible element types, starting with
-`NoteData` (`std::optional<std::string> id`), wired through reader and writer as ordinary
-round-tripped attributes. `NoteData` has no `id` field today.
-
 **Data model.** A `u_span` composes the existing `s_span:start` and `s_span:stop` structs (e.g.
 `CurveStart` + `CurveStop`) plus the endpoint ID — ideally one templated class. Wherever an
-`s_span:start` can be added, the vector's element type becomes a choice type (the existing
-`mx::api` choice pattern, Kind enum) holding either the `s_span:start` or the `u_span`. Client
-breakage is accepted. The POD design holds: no validation at authoring time (R11), and forward
-references are allowed — the end note need not exist yet (R2).
+`s_span:start` can be added, the vector's element type becomes a choice type (the existing `mx::api`
+choice pattern, Kind enum) holding either the `s_span:start` or the `u_span`. Client breakage is
+accepted. The POD design holds: no validation at authoring time (R11), and forward references are
+allowed — the end note need not exist yet (R2).
 
 **Write-side.** A non-user-facing `Context` object exists throughout the `mx::impl` write
 (precedent: `ScoreWriter`'s `SpannerNumberResolver`), carrying open-u_span state and error
@@ -280,9 +299,9 @@ implementation), then emits the `s_span:stop` there. Resolution is best effort: 
 pending at end of write are reported as errors through the `Context`. Error reporting should
 distinguish info/warning/error; that mechanism may be a separate prerequisite design.
 
-**Read-side.** MVP is write-only. The full feature adds an opt-in post-processing pass that
-converts `s_span` pairs to `u_spans` where the endpoint carries an ID, configured via a
-`DocumentManager` options structure (R5).
+**Read-side.** MVP is write-only. The full feature adds an opt-in post-processing pass that converts
+`s_span` pairs to `u_spans` where the endpoint carries an ID, configured via a `DocumentManager`
+options structure (R5).
 
 **Scope.** Eligibility is limited to element types carrying schema ID attributes. MVP covers
 note-attached types (R8); R9/R10 types follow.
@@ -300,8 +319,8 @@ change was 4 sites (`NotationsWriter.cpp`, `NoteWriter.cpp`, `SpannerNumberResol
 
 1. **Sound-level ties cannot be u_spans in the current model.** `<tie>` is modeled as
    `NoteData::isTieStart` / `isTieStop` bools (`src/include/mx/api/NoteData.h:120`), not as vector
-   entries, so there is no place to put a `USpan` for it. `CurveType::tie` covers `<tied>`
-   notation only. Decide: drop sound-level tie from R8's u_span list, or restructure tie modeling.
+   entries, so there is no place to put a `USpan` for it. `CurveType::tie` covers `<tied>` notation
+   only. Decide: drop sound-level tie from R8's u_span list, or restructure tie modeling.
 
 2. **The error channel cannot express "best effort."** `Result` (`src/include/mx/api/Result.h`)
    carries exactly one `ApiError` and is all-or-nothing: an error from `createFromScore` means no
@@ -310,33 +329,33 @@ change was 4 sites (`NotationsWriter.cpp`, `NoteWriter.cpp`, `SpannerNumberResol
    build the info/warning/error reporting design first as a hard prerequisite.
 
 3. **Ratify the lowering-pre-pass architecture.** The spike implemented u_span resolution as a
-   ScoreData -> ScoreData transform in the `ScoreWriter` constructor (it already owns a mutable
-   copy and sorts it), after `sort()` and before `SpannerNumberResolver::resolvePart`. Everything
+   ScoreData -> ScoreData transform in the `ScoreWriter` constructor (it already owns a mutable copy
+   and sorts it), after `sort()` and before `SpannerNumberResolver::resolvePart`. Everything
    downstream (number resolution, writers) then runs unchanged on pure s_spans. This replaces the
    "check while emitting" wording in the Design Direction and makes the read-side the symmetric
    raising transform. It worked cleanly in the spike.
 
 4. **Matching order is serialization order, not time order.** The walk is measures -> staves ->
-   voices -> notes (mirroring `SpannerNumberResolver::resolvePart`), so "first element carrying
-   the end-id" can differ from first-in-musical-time when the endpoint is in another voice or
-   staff. Also: duplicate IDs mean first-match-wins silently; a u_span whose end-id is on its own
-   start note or earlier never resolves and becomes an error. Ratify these semantics or restrict
-   matching (e.g. same voice only) per element type.
+   voices -> notes (mirroring `SpannerNumberResolver::resolvePart`), so "first element carrying the
+   end-id" can differ from first-in-musical-time when the endpoint is in another voice or staff.
+   Also: duplicate IDs mean first-match-wins silently; a u_span whose end-id is on its own start
+   note or earlier never resolves and becomes an error. Ratify these semantics or restrict matching
+   (e.g. same voice only) per element type.
 
 5. **Disposition of an unresolved u_span.** The spike dropped the whole spanner (start never
    written) and produced an error message. Alternative: write a dangling `s_span:start`. Decide.
 
-6. **Number pairing for materialized stops.** The lowering pass copies the start's
-   `SpannerNumber` to the stop; when the start's number is unspecified it generates a shared
-   identity (e.g. `mx::uspan::1`) so the resolver pairs the halves. Generated identities can
-   collide with client-chosen identity strings. Decide: reserve a namespace, or pair by a
-   non-string mechanism. Note also `TupletStart`/`TupletStop` use a raw `numberLevel` int, not
-   `SpannerNumber` -- number pairing is per-type work.
+6. **Number pairing for materialized stops.** The lowering pass copies the start's `SpannerNumber`
+   to the stop; when the start's number is unspecified it generates a shared identity (e.g.
+   `mx::uspan::1`) so the resolver pairs the halves. Generated identities can collide with
+   client-chosen identity strings. Decide: reserve a namespace, or pair by a non-string mechanism.
+   Note also `TupletStart`/`TupletStop` use a raw `numberLevel` int, not `SpannerNumber` -- number
+   pairing is per-type work.
 
-7. **Choice-type fallback requires default-constructible payloads.** The choice pattern's
-   wrong-kind accessor returns a default-constructed copy, but `CurveStart`/`CurveStop` have no
-   default constructor (they require a `CurveType`). The spike added defaults with
-   `CurveType::unspecified`, which the writer silently skips. Ratify or choose another fallback.
+7. **Choice-type fallback requires default-constructible payloads.** The choice pattern's wrong-kind
+   accessor returns a default-constructed copy, but `CurveStart`/`CurveStop` have no default
+   constructor (they require a `CurveType`). The spike added defaults with `CurveType::unspecified`,
+   which the writer silently skips. Ratify or choose another fallback.
 
 8. **U_span scores do not round-trip structurally in the MVP.** Writing a score authored with
    u_spans and reading it back yields s_span pairs, so `ScoreData` equality fails against the
