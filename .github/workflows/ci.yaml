@@ -239,7 +239,8 @@ jobs:
 
   # Proves mx compiles as a Swift package under AppleClang/SPM on every PR --
   # the path komp takes when it depends on a sibling mx via `.package(path:)`.
-  # Runs no test suites; the binary xcframework release arm is follow-up work.
+  # Runs no test suites; the binary xcframework ships from release-build.yml
+  # (docs/ai/design/release-process.md), not from CI.
   #
   # SwiftPM has no compiler-launcher hook, so incremental builds come from caching
   # its .build tree: llbuild tracks inputs by content signature, so a restored
