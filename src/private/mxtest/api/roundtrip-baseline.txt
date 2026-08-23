@@ -646,7 +646,7 @@ synthetic/bracket.3.1.xml
 synthetic/dashes.3.1.xml
 
 # Unblocked by #389 (glissando/slide/wavy-line spanners). Glissando and slide were
-# dropped entirely on read and cannot be authored; wavy-line read and wrote as an
+# dropped entirely on read and could not be authored; wavy-line read and wrote as an
 # unpaired mark that always wrote type="start", so every wavy line lost its pairing.
 # All three now round-trip as start/stop (glissando, slide) or start/continue/stop
 # (wavy-line) spanners.
