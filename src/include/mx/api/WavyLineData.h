@@ -45,8 +45,7 @@ enum class WavyLineTwoNoteTurn
 
 // A wavy line indicates a trill extension or a vibrato line. Unlike glissando and slide it can
 // have a continue point (for a line that crosses a system or page break), so it is a
-// start/continue/stop spanner rather than a start/stop one. It lives inside a note's <ornaments>,
-// not directly under <notations>.
+// start/continue/stop spanner rather than a start/stop one. It lives inside a note's <ornaments>.
 struct WavyLineStart
 {
     SpannerNumber number;
