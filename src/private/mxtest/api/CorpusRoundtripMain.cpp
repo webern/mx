@@ -268,9 +268,9 @@ void canonicalizeDirectionSpellings(pugi::xml_document &doc)
 
 // MusicXML lets octave-shift/@size be any positive integer, so a corpus file can carry a number
 // that does not name a line a performer could read: 27, 11, 1. mx::api narrows each of those to
-// the nearest ottava it can draw -- 22 stays 22, anything else above 8 becomes 15, and the rest
-// become 8 -- because the api models the six ottava lines music notation has rather than the whole
-// integer range. That narrowing is what the api is for, so the expected document is brought to the
+// the closest ottava it can draw -- 22 and up become 22, anything else above 8 becomes 15, and the
+// rest become 8 -- because the api models the six ottava lines music notation has rather than the
+// whole integer range. That narrowing is what the api is for, so the expected document is brought to the
 // same value instead of the api growing a field to carry the original number back out.
 //
 // Only the expected side is narrowed. mx writes 8, 15, or 22, so a write that produced some other
@@ -284,7 +284,7 @@ void narrowOctaveShiftSizes(pugi::xml_node el)
         const int stated = size ? size.as_int(0) : 0;
         if (stated > 0)
         {
-            size.set_value(stated == 22 ? 22 : (stated > 8 ? 15 : 8));
+            size.set_value(stated >= 22 ? 22 : (stated > 8 ? 15 : 8));
         }
     }
 
