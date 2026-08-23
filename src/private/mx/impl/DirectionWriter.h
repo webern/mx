@@ -11,7 +11,7 @@
 #include "mx/core/generated/PercussionChoice.h"
 #include "mx/impl/Converter.h"
 #include "mx/impl/Cursor.h"
-#include "mx/impl/SpannerNumberResolver.h"
+#include "mx/impl/SpannerResolver.h"
 
 #include <set>
 #include <vector>
@@ -23,11 +23,11 @@ namespace impl
 class DirectionWriter
 {
   public:
-    // inNumberResolver supplies the resolved 'number' for each wedge, octave
-    // shift, bracket, and dashes start/stop (see SpannerNumberResolver); it
-    // must outlive this writer.
+    // inSpannerResolver supplies the resolved 'number' for start/stop pairs such as wedge,
+    // octave-shift, bracket, and dashes and stop semantics such as the size attribute of an
+    // octave-shift (see SpannerResolver); it outlives this writer.
     DirectionWriter(const api::DirectionData &inDirectionData, const Cursor &inCursor,
-                    const SpannerNumberResolver &inNumberResolver);
+                    const SpannerResolver &inSpannerResolver);
     std::vector<core::MusicDataChoice> getDirectionLikeThings();
 
   private:
@@ -38,8 +38,8 @@ class DirectionWriter
                              std::vector<core::MusicDataChoice> &ioOutputSet);
 
     // The spanner emitters take inIdentity, the address of the DirectionChoice that holds the
-    // spanner: the same address the SpannerNumberResolver saw when it walked the score, so the
-    // resolved 'number' can be looked up for the emitted element.
+    // spanner: the same address the SpannerResolver saw when it walked the score, so the resolved
+    // 'number' -- and, for an ottava stop, the size -- can be looked up for the emitted element.
     void emitMark(api::MarkData mark, core::Direction &direction);
     void emitPedal(const api::PedalLineData &pedal, core::Direction &direction);
     void emitWedgeStop(const api::WedgeStop &wedgeStop, const void *inIdentity, core::Direction &direction);
@@ -77,7 +77,7 @@ class DirectionWriter
   private:
     const api::DirectionData &myDirectionData;
     const Cursor myCursor;
-    const SpannerNumberResolver &myNumberResolver;
+    const SpannerResolver &mySpannerResolver;
     const Converter myConverter;
     bool myIsFirstDirectionTypeAdded;
     std::set<api::Placement> myPlacements;

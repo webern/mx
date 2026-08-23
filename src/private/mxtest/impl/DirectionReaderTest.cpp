@@ -142,8 +142,27 @@ TEST(ottavaStop, DirectionReader)
     const auto ottavaStop = directionData.directionTypes.front().ottavaStop();
     CHECK_EQUAL(tickTimePosition, ottavaStop.spannerStop.tickTimePosition);
     CHECK(ottavaStop.spannerStop.number.isUnspecified());
-    CHECK(ottavaStop.size.has_value());
-    CHECK_EQUAL(15, *ottavaStop.size);
+    CHECK(api::Bool::yes == ottavaStop.writeSize);
+}
+
+T_END
+
+// A source stop without a size attribute records that absence, so the same spelling is written
+// back. The size itself is not read: it belongs to the start (see api/OttavaData.h).
+TEST(ottavaStopWithoutSize, DirectionReader)
+{
+    core::OctaveShift oct{};
+    oct.setType(core::UpDownStopContinue::stop());
+    core::DirectionType dirType{};
+    dirType.setChoice(core::DirectionTypeChoice::octaveShift(oct));
+    core::Direction dir{};
+    dir.setDirectionType(core::OneOrMore<core::DirectionType>{dirType});
+    Cursor cursor{1, 100};
+    DirectionReader reader{dir, cursor};
+    const auto directionData = reader.getDirectionData();
+    REQUIRE(directionData.directionTypes.size() == 1);
+    REQUIRE(directionData.directionTypes.front().isOttavaStop());
+    CHECK(api::Bool::no == directionData.directionTypes.front().ottavaStop().writeSize);
 }
 
 T_END
