@@ -78,7 +78,7 @@ void readNameDisplay(const core::PartName &nameElement, const std::optional<core
 
 PartReader::PartReader(const core::ScorePart &inScorePart, const core::PartwisePart &inPartwisePartRef,
                        int globalTicksPerMeasure, const core::ScorePartwise &inScore, int inDivisionsValue)
-    : myPartwisePart{inPartwisePartRef}, myScorePart{inScorePart}, myNumStaves{-1},
+    : myPartwisePart{inPartwisePartRef}, myScorePart{inScorePart}, myNumStaves{-1}, myIsStavesElementPresent{false},
       myGlobalTicksPerMeasure{globalTicksPerMeasure}, myScore{inScore}, myPartIndex{-1},
       myConstructedDivisionsValue{inDivisionsValue}
 {
@@ -91,7 +91,7 @@ PartReader::PartReader(const core::ScorePart &inScorePart, const core::PartwiseP
     const auto partIndex = findPartIndex(ppId);
     MX_ASSERT(partIndex >= 0);
     myPartIndex = partIndex;
-    myNumStaves = calculateNumStaves();
+    myNumStaves = calculateNumStaves(myIsStavesElementPresent);
 }
 
 api::PartData PartReader::getPartData()
@@ -99,6 +99,10 @@ api::PartData PartReader::getPartData()
     std::lock_guard<std::mutex> lock{myMutex};
     myOutPartData = api::PartData{};
     parseScorePart();
+
+    // A single-staff part does not need <staves>, so mx omits it there. Record an override only
+    // when the source spelled the redundant element out.
+    myOutPartData.writeStaffCount = myIsStavesElementPresent && myNumStaves == 1;
 
     myCurrentCursor = MeasureCursor{myNumStaves, myGlobalTicksPerMeasure};
     myCurrentCursor.partIndex = myPartIndex;
@@ -142,8 +146,9 @@ MeasureCursor PartReader::getCursor() const
     return myCurrentCursor;
 }
 
-int PartReader::calculateNumStaves() const
+int PartReader::calculateNumStaves(bool &outIsStavesElementPresent) const
 {
+    outIsStavesElementPresent = false;
     int numStaves = 1;
 
     for (const auto &measure : myPartwisePart.measure())
@@ -168,6 +173,7 @@ int PartReader::calculateNumStaves() const
                 const auto &attributes = mdc.asAttributes();
                 if (attributes.staves().has_value())
                 {
+                    outIsStavesElementPresent = true;
                     int temp = *attributes.staves();
                     if (temp > numStaves)
                     {

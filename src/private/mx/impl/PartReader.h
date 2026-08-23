@@ -38,6 +38,7 @@ class PartReader
     const core::PartwisePart &myPartwisePart;
     const core::ScorePart &myScorePart;
     int myNumStaves;
+    bool myIsStavesElementPresent;
     const int myGlobalTicksPerMeasure;
     const core::ScorePartwise &myScore;
     int myPartIndex;
@@ -49,7 +50,9 @@ class PartReader
     mutable std::mutex myMutex;
     mutable api::PartData myOutPartData;
 
-    int calculateNumStaves() const;
+    // Returns the part's staff count. outIsStavesElementPresent reports whether the source said
+    // so with a <staves> element, which the count alone cannot tell you when it is one.
+    int calculateNumStaves(bool &outIsStavesElementPresent) const;
     void parseScorePart() const;
     void parseScoreInstrument(const core::ScoreInstrument &scoreInstrument) const;
     void parseVirtualInstrument(const core::VirtualInstrument &virtualInstrument) const;

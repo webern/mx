@@ -702,3 +702,10 @@ synthetic/source.3.0.xml
 recsuite/Chant.xml
 synthetic/direction.3.1.xml
 synthetic/direction.4.0.xml
+
+# Unblocked by PartData::writeStaffCount: a single-staff part does not need
+# <staves>, so mx omitted it, and these three sources spell out the redundant
+# <staves>1</staves>.
+lysuite/ly02b_Rests_PitchedRests.xml
+lysuite/ly32b_Articulations_Texts.xml
+lysuite/ly33b_Spanners_Tie.xml
