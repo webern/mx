@@ -343,4 +343,67 @@ TEST(OttavaStopSizeContradictionIsNormalizedToTheStart, OttavaSize)
 
 T_END;
 
+// MusicXML's schema allows any positive integer in octave-shift/@size, so a file can ask for a
+// line music notation has no name for. The api narrows it to the nearest line it can draw, which
+// is what lets everything downstream assume an ottava is one of the six real ones.
+TEST(OttavaSizeAboveEightIsNarrowedToTheFifteenthLine, OttavaSize)
+{
+    const std::string sourceXml =
+        R"(<?xml version="1.0" encoding="UTF-8"?>)"
+        R"(<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 4.0 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">)"
+        R"(<score-partwise version="4.0"><part-list><score-part id="P1"><part-name>P</part-name></score-part></part-list>)"
+        R"(<part id="P1"><measure number="1"><attributes><divisions>1</divisions></attributes>)"
+        R"(<direction><direction-type><octave-shift type="down" size="27"/></direction-type></direction>)"
+        R"(<note><pitch><step>C</step><octave>4</octave></pitch><duration>1</duration><type>quarter</type></note>)"
+        R"(<direction><direction-type><octave-shift type="stop" size="27"/></direction-type></direction>)"
+        R"(</measure></part></score-partwise>)";
+
+    const auto score = mxtest::fromXml(sourceXml);
+    REQUIRE(score.parts.size() == 1);
+    const auto &directions = score.parts.front().measures.front().staves.front().directions;
+    REQUIRE(directions.size() == 2);
+    const auto &startTypes = directions.front().directionTypes;
+    REQUIRE(startTypes.size() == 1);
+    REQUIRE(startTypes.front().isOttavaStart());
+    CHECK(startTypes.front().ottavaStart().ottavaType == OttavaType::o15ma);
+
+    const auto xml = mxtest::toXml(score);
+    REQUIRE(!xml.empty());
+    const auto shifts = ottavaSizeWrittenShifts(xml);
+    REQUIRE(shifts.size() == 2);
+    CHECK_EQUAL(std::string{"15"}, shifts.front().size);
+    CHECK_EQUAL(std::string{"15"}, shifts.back().size);
+}
+
+T_END;
+
+// A size below 8 asks for less than an octave, which an ottava cannot draw either. It becomes a
+// plain octave line, and the size the source spelled out stays spelled out.
+TEST(OttavaSizeBelowEightIsNarrowedToAnOctave, OttavaSize)
+{
+    const std::string sourceXml =
+        R"(<?xml version="1.0" encoding="UTF-8"?>)"
+        R"(<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 4.0 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">)"
+        R"(<score-partwise version="4.0"><part-list><score-part id="P1"><part-name>P</part-name></score-part></part-list>)"
+        R"(<part id="P1"><measure number="1"><attributes><divisions>1</divisions></attributes>)"
+        R"(<direction><direction-type><octave-shift type="up" size="1"/></direction-type></direction>)"
+        R"(<note><pitch><step>C</step><octave>4</octave></pitch><duration>1</duration><type>quarter</type></note>)"
+        R"(</measure></part></score-partwise>)";
+
+    const auto score = mxtest::fromXml(sourceXml);
+    REQUIRE(score.parts.size() == 1);
+    const auto &startTypes = score.parts.front().measures.front().staves.front().directions.front().directionTypes;
+    REQUIRE(startTypes.size() == 1);
+    REQUIRE(startTypes.front().isOttavaStart());
+    CHECK(startTypes.front().ottavaStart().ottavaType == OttavaType::o8vb);
+
+    const auto xml = mxtest::toXml(score);
+    REQUIRE(!xml.empty());
+    const auto shifts = ottavaSizeWrittenShifts(xml);
+    REQUIRE(shifts.size() == 1);
+    CHECK_EQUAL(std::string{"8"}, shifts.front().size);
+}
+
+T_END;
+
 #endif

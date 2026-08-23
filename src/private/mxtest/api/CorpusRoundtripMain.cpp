@@ -266,6 +266,37 @@ void canonicalizeDirectionSpellings(pugi::xml_document &doc)
     mxtest::sortAttributes(doc);
 }
 
+// MusicXML lets octave-shift/@size be any positive integer, so a corpus file can carry a number
+// that does not name a line a performer could read: 27, 11, 1. mx::api narrows each of those to
+// the nearest ottava it can draw -- 22 stays 22, anything else above 8 becomes 15, and the rest
+// become 8 -- because the api models the six ottava lines music notation has rather than the whole
+// integer range. That narrowing is what the api is for, so the expected document is brought to the
+// same value instead of the api growing a field to carry the original number back out.
+//
+// Only the expected side is narrowed. mx writes 8, 15, or 22, so a write that produced some other
+// size still fails. The size of a stop is taken here from the stop's own attribute, while mx takes
+// it from the start the stop closes, so a source whose stop contradicts its start still fails too.
+void narrowOctaveShiftSizes(pugi::xml_node el)
+{
+    if (std::string_view{el.name()} == "octave-shift")
+    {
+        pugi::xml_attribute size = el.attribute("size");
+        const int stated = size ? size.as_int(0) : 0;
+        if (stated > 0)
+        {
+            size.set_value(stated == 22 ? 22 : (stated > 8 ? 15 : 8));
+        }
+    }
+
+    for (pugi::xml_node c = el.first_child(); c; c = c.next_sibling())
+    {
+        if (c.type() == pugi::node_element)
+        {
+            narrowOctaveShiftSizes(c);
+        }
+    }
+}
+
 bool hasSuffix(const std::string &name, std::string_view suffix)
 {
     return name.size() >= suffix.size() && name.compare(name.size() - suffix.size(), suffix.size(), suffix) == 0;
@@ -445,6 +476,10 @@ RoundtripResult runRoundtrip(const std::string &absolutePath)
     canonicalizeDirectionSpellings(expectedDoc);
     canonicalizeDirectionSpellings(actualDoc);
 
+    // mx::api narrows an octave-shift size to a size music notation has, so the expected document
+    // states the narrowed size rather than the one the source wrote.
+    narrowOctaveShiftSizes(expectedDoc.document_element());
+
     // Compare
     const auto fail = mxtest::corert::compareElements(expectedDoc.document_element(), actualDoc.document_element());
     if (fail.isFailure)
@@ -530,6 +565,7 @@ void dumpDocuments(const std::string &absolutePath, const std::string &relPath, 
     canonicalizeEncodingChildOrder(expectedDoc.document_element());
     collapseEqualPageMargins(expectedDoc.document_element());
     canonicalizeDirectionSpellings(expectedDoc);
+    narrowOctaveShiftSizes(expectedDoc.document_element());
     if (!expectedDoc.save_file(expectedPath.c_str()))
         std::cerr << "dump: failed to write " << expectedPath << "\n";
 
