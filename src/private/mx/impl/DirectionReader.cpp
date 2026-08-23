@@ -114,6 +114,7 @@ api::DirectionData DirectionReader::getDirectionData()
     parseOffset();
     parsePlacement();
     parseSystemRelation();
+    parseDirective();
     parseValues();
     return returnData();
 }
@@ -193,6 +194,16 @@ void DirectionReader::parseSystemRelation()
         {
             myOutDirectionData.systemRelation = myConverter.convertDirectionSystemRelation(*myHarmony->system());
         }
+    }
+}
+
+// <direction directive="yes"> aligns the direction with the measure's time signature. Only
+// <direction> has the attribute; <harmony> does not.
+void DirectionReader::parseDirective()
+{
+    if (myDirection && myDirection->directive().has_value())
+    {
+        myOutDirectionData.directive = myConverter.convert(*myDirection->directive());
     }
 }
 

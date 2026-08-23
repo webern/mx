@@ -41,6 +41,7 @@ class DirectionReader
     void parseOffset();
     void parsePlacement();
     void parseSystemRelation();
+    void parseDirective();
     void parseValues();
     mx::api::DirectionData returnData();
     void parseStaffIndex();
