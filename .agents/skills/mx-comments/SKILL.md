@@ -41,6 +41,7 @@ trying to read your work.
 ## Banned Words and Structures
 
 - "knob": you invented this and you overuse it. stop.
-- Don't say "writes no attribute". That's weird non-human style. Instead say "does not write an
-  attribute".
+- Don't say "writes no attribute". That's a weird non-human style. Instead say "does not write an
+  attribute". More generally do not say "{{verbs}} no {{noun}}". Instead say "does not {{verb}} a
+  {{noun}}"
 - "load bearing": it's weird, you invented it, and you overuse it.
