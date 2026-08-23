@@ -95,7 +95,7 @@ as in the first draft):
   only `release-manifest.json`; the binary manifest appears in the commits tab at `B`, which the
   run summary and PR body link directly for review of the URL/checksum lines.
 
-**The merge method is load-bearing.** Only a true merge commit preserves `B` in `main`'s
+**The merge method matters.** Only a true merge commit preserves `B` in `main`'s
 ancestry. A squash or rebase merge copies the net diff instead — harmless to `main`'s tree (the
 net diff is the record file), but `B` would then be reachable only via the tag, violating the
 tags-on-`main` requirement. `release-publish` hard-fails in that case (§5, check 3); recovery is
