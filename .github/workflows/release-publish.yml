@@ -1,0 +1,190 @@
+# Phase 2 of the release system (docs/ai/design/release-process.md §5): a v* tag
+# push re-verifies commit B's provenance record against primary sources and
+# publishes the already-built artifacts. Publishing never rebuilds anything: the
+# bytes attached to the Release are the bytes release-build validated, fetched
+# from that run by the run ID pinned inside B. Any check failing means no
+# release, loudly (design §11) -- recovery is always: delete the tag, fix the
+# cause, re-push.
+#
+# GitHub runs this file as it exists at the tagged commit, so only commits whose
+# trees already carry release-publish.yml are releasable (design §4).
+name: release-publish
+
+on:
+  push:
+    tags: ["v*"]
+
+concurrency:
+  group: release-publish-${{ github.ref_name }}
+
+permissions: {}
+
+jobs:
+  verify-and-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # create the GitHub Release
+      actions: read # read the pinned run's metadata + download its artifacts
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TAG: ${{ github.ref_name }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Verify the release commit (checks 1-4)
+        run: |
+          set -euo pipefail
+          fail() {
+            echo "::error::release-publish: $*. Nothing was published. Recover by deleting the tag (git push origin :refs/tags/$TAG), fixing the cause, and re-pushing (docs/ai/design/release-process.md, section 11)."
+            exit 1
+          }
+          B=$(git rev-parse "refs/tags/$TAG^{commit}")
+
+          # The provenance record must exist in B's tree; a tag at A or any
+          # other non-release commit dies here, and R or the merge commit die
+          # at check 2.
+          git show "$B:release-manifest.json" > manifest.json 2>/dev/null \
+            || fail "no release-manifest.json in the tagged commit's tree ($B) -- this tag does not point at a release commit B"
+          jq -e '(.version | type == "string") and (.base_sha | type == "string")
+                 and (.run_id | type == "number")
+                 and (.targets | type == "array" and length > 0)
+                 and (.allowed_paths | type == "array" and length > 0)' \
+            manifest.json > /dev/null \
+            || fail "release-manifest.json at $B is malformed"
+
+          VERSION=$(jq -r .version manifest.json)
+          A=$(jq -r .base_sha manifest.json)
+          RUN_ID=$(jq -r .run_id manifest.json)
+
+          # Check 1: the tag matches the version whose asset URL was baked into
+          # B -- otherwise the published URL could never resolve.
+          [ "$TAG" = "v$VERSION" ] \
+            || fail "check 1: tag $TAG does not equal v$VERSION from the manifest"
+
+          # Check 2: B sits directly on A -- exactly one parent, and it is A.
+          # Catches tagging R (parent is B) or the merge commit (two parents).
+          PARENTS=$(git rev-list --parents -n 1 "$B" | cut -d' ' -f2-)
+          [ "$PARENTS" = "$A" ] \
+            || fail "check 2: the tagged commit must have exactly one parent, the manifest's base $A; found '$PARENTS' (was R or the merge commit tagged by mistake?)"
+
+          # Check 3: releases come from mainline history, and the tag must be on
+          # main -- i.e. the release PR merged, with a true merge commit.
+          git merge-base --is-ancestor "$A" origin/main \
+            || fail "check 3: base $A is not an ancestor of main"
+          git merge-base --is-ancestor "$B" origin/main \
+            || fail "check 3: $B is not an ancestor of main. Merge the release PR with 'Create a merge commit' before tagging. If it was squash- or rebase-merged, recover with: git merge -s ours origin/release-prep/v$VERSION && git push origin main -- then re-push the tag"
+
+          # Check 4: the A..B diff touches only the manifest's declared paths,
+          # clamped by this static ceiling. The ceiling is hardcoded here on
+          # purpose: no target may ever declare src/ or .github/ (or anything
+          # else) into a release commit.
+          CEILING=("Package.swift" "release-manifest.json")
+          mapfile -t DECLARED < <(jq -r '.allowed_paths[]' manifest.json)
+          mapfile -t CHANGED < <(git diff --name-only "$A" "$B")
+          [ "${#CHANGED[@]}" -gt 0 ] \
+            || fail "check 4: B is tree-identical to A -- not a release commit"
+          for path in "${CHANGED[@]}"; do
+            ok=false
+            for allowed in "${DECLARED[@]}"; do
+              if [ "$path" = "$allowed" ]; then ok=true; fi
+            done
+            $ok || fail "check 4: $path changed between A and B but is not in the manifest's allowed_paths"
+            ok=false
+            for allowed in "${CEILING[@]}"; do
+              if [ "$path" = "$allowed" ]; then ok=true; fi
+            done
+            $ok || fail "check 4: $path changed between A and B but is outside release-publish's hardcoded path ceiling"
+          done
+
+          {
+            echo "B=$B"
+            echo "A=$A"
+            echo "VERSION=$VERSION"
+            echo "RUN_ID=$RUN_ID"
+          } >> "$GITHUB_ENV"
+
+      - name: Verify the pinned build run (check 5)
+        run: |
+          set -euo pipefail
+          fail() {
+            echo "::error::release-publish: $*. Nothing was published. Recover by deleting the tag (git push origin :refs/tags/$TAG), fixing the cause, and re-pushing (docs/ai/design/release-process.md, section 11)."
+            exit 1
+          }
+          # The API path scopes the lookup to this repository, so a run ID from
+          # some other repo simply does not resolve here.
+          RUN_JSON=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN_ID") \
+            || fail "check 5: run $RUN_ID does not exist in $GITHUB_REPOSITORY"
+          RUN_PATH=$(jq -r .path <<< "$RUN_JSON")
+          RUN_CONCLUSION=$(jq -r .conclusion <<< "$RUN_JSON")
+          [ "$RUN_PATH" = ".github/workflows/release-build.yml" ] \
+            || fail "check 5: run $RUN_ID is a run of '$RUN_PATH', not release-build.yml"
+          [ "$RUN_CONCLUSION" = "success" ] \
+            || fail "check 5: run $RUN_ID concluded '$RUN_CONCLUSION', not success"
+
+      - name: Verify the artifacts byte-for-byte (check 6)
+        run: |
+          set -euo pipefail
+          fail() {
+            echo "::error::release-publish: $*. Nothing was published. Recover by deleting the tag (git push origin :refs/tags/$TAG), fixing the cause, and re-pushing (docs/ai/design/release-process.md, section 11)."
+            exit 1
+          }
+          : > assets.txt
+          while IFS= read -r target_json; do
+            target=$(jq -r .target <<< "$target_json")
+            artifact=$(jq -r .artifact <<< "$target_json")
+            archive=$(jq -r .archive <<< "$target_json")
+            checksum=$(jq -r .checksum <<< "$target_json")
+
+            gh run download "$RUN_ID" --repo "$GITHUB_REPOSITORY" \
+              --name "$artifact" --dir "dist/$target" \
+              || fail "check 6: artifact $artifact of run $RUN_ID would not download -- expired (the 90-day retention window) or missing; re-dispatch release-build for a fresh build and tag its fresh B"
+            [ -f "dist/$target/$archive" ] \
+              || fail "check 6: artifact $artifact does not contain $archive"
+
+            # The recomputed bytes must equal the manifest's claim and the
+            # .sha256 file that ships next to the archive.
+            actual=$(sha256sum "dist/$target/$archive" | cut -d' ' -f1)
+            [ "$actual" = "$checksum" ] \
+              || fail "check 6: recomputed sha256 of $archive is $actual but the manifest says $checksum"
+            filed=$(cut -d' ' -f1 "dist/$target/$archive.sha256")
+            [ "$filed" = "$checksum" ] \
+              || fail "check 6: $archive.sha256 says $filed but the manifest says $checksum"
+
+            # Swift only: the checksum and asset URL baked into B's
+            # Package.swift are what every consumer will resolve against; they
+            # must match the artifact and this tag exactly.
+            if [ "$target" = "swift" ]; then
+              git show "$B:Package.swift" > package-swift-at-B
+              baked=$(sed -n 's/.*checksum: "\([0-9a-f]\{64\}\)".*/\1/p' package-swift-at-B | head -n 1)
+              [ "$baked" = "$checksum" ] \
+                || fail "check 6: the checksum in B's Package.swift ('$baked') does not match the artifact's sha256 ($checksum)"
+              url="https://github.com/$GITHUB_REPOSITORY/releases/download/$TAG/$archive"
+              grep -qF "\"$url\"" package-swift-at-B \
+                || fail "check 6: B's Package.swift does not carry the asset URL this release will serve ($url)"
+            fi
+
+            printf '%s\n' "dist/$target/$archive" "dist/$target/$archive.sha256" >> assets.txt
+          done < <(jq -c '.targets[]' manifest.json)
+
+      - name: Publish the GitHub Release
+        run: |
+          set -euo pipefail
+          fail() {
+            echo "::error::release-publish: $*. Nothing was published. Recover by deleting the tag (git push origin :refs/tags/$TAG), fixing the cause, and re-pushing (docs/ai/design/release-process.md, section 11)."
+            exit 1
+          }
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            fail "a release named $TAG already exists; delete it along with the tag before re-releasing"
+          fi
+          mapfile -t ASSETS < assets.txt
+          gh release create "$TAG" --repo "$GITHUB_REPOSITORY" \
+            --verify-tag --title "$TAG" --generate-notes "${ASSETS[@]}"
+          {
+            echo "## $TAG published"
+            echo
+            echo "All six checks passed against release-manifest.json at \`$B\` (base \`$A\`, release-build run $RUN_ID). Attached:"
+            echo
+            printf -- '- %s\n' "${ASSETS[@]}"
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,175 @@
+# The Swift release target (docs/ai/design/release-process.md §8-9): builds the
+# Mx XCFramework from commit A and emits the two artifacts the release system
+# consumes -- the publishable archive and the metadata the prep job commits as B.
+# Called only from release-build.yml (workflow_call); never triggered directly.
+name: _release-target-swift
+
+on:
+  workflow_call:
+    inputs:
+      sha:
+        description: Full 40-hex SHA of the commit to build (commit A).
+        required: true
+        type: string
+      version:
+        description: The MAJOR.MINOR.PATCH being released (no leading v).
+        required: true
+        type: string
+
+jobs:
+  xcframework:
+    runs-on: macos-latest
+    permissions:
+      contents: read
+    env:
+      ARCHIVE: Mx.xcframework.zip
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.sha }}
+
+      - name: Toolchain versions
+        run: |
+          sw_vers
+          xcodebuild -version
+          cmake --version | head -n 1
+          swift --version
+
+      # Three static-library slices via CMake's built-in Apple cross-compilation
+      # support (CMAKE_SYSTEM_NAME=iOS plus per-slice sysroot/archs); CMake drives
+      # clang directly -- no .xcodeproj, no third-party toolchain file. Each slice
+      # builds only the `mx` target and its dependencies (mx_core, pugixml), then
+      # libtool merges the three .a files so each XCFramework slice carries a
+      # single library. Deployment floors: macOS 11.0 (first arm64 macOS),
+      # iOS 13.0 -- raise deliberately, never by accident.
+      - name: Build slices (macOS universal, iOS device, iOS simulator)
+        run: |
+          set -euxo pipefail
+          build_slice() {
+            slice="$1"; shift
+            cmake -S . -B "build/release-$slice" -DCMAKE_BUILD_TYPE=Release "$@"
+            cmake --build "build/release-$slice" --target mx --parallel 4
+            libtool -static -o "build/release-$slice/libMxAll.a" \
+              "build/release-$slice/libmx.a" \
+              "build/release-$slice/libmx_core.a" \
+              "build/release-$slice/libpugixml.a"
+          }
+          build_slice macos \
+            -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0
+          build_slice ios \
+            -DCMAKE_SYSTEM_NAME=iOS \
+            -DCMAKE_OSX_SYSROOT=iphoneos \
+            -DCMAKE_OSX_ARCHITECTURES=arm64 \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=13.0 \
+            -DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY
+          build_slice iossim \
+            -DCMAKE_SYSTEM_NAME=iOS \
+            -DCMAKE_OSX_SYSROOT=iphonesimulator \
+            -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=13.0 \
+            -DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY
+
+      # xcodebuild -create-xcframework is the one Apple-tool call: nothing else
+      # writes the bundle format correctly. Headers are the public mx::api
+      # surface (src/include), shipped per slice; no module map -- consumers are
+      # C++/ObjC++ and include mx/api/... via the header search path.
+      - name: Assemble Mx.xcframework
+        run: |
+          set -euxo pipefail
+          mkdir -p stage/headers out/dist
+          cp -R src/include/. stage/headers/
+          xcodebuild -create-xcframework \
+            -library build/release-macos/libMxAll.a -headers stage/headers \
+            -library build/release-ios/libMxAll.a -headers stage/headers \
+            -library build/release-iossim/libMxAll.a -headers stage/headers \
+            -output out/Mx.xcframework
+          # ditto --keepParent puts the .xcframework bundle at the zip root, the
+          # layout SwiftPM's binaryTarget expects.
+          ditto -c -k --keepParent out/Mx.xcframework "out/dist/$ARCHIVE"
+
+      - name: Checksum, release Package.swift, contract fragment
+        env:
+          VERSION: ${{ inputs.version }}
+          SHA: ${{ inputs.sha }}
+        run: |
+          set -euxo pipefail
+          # For a zip, swift package compute-checksum IS the file's SHA-256;
+          # assert that equivalence here so release-publish can re-verify with
+          # plain sha256sum (design §5, check 6).
+          CHECKSUM=$(swift package compute-checksum "out/dist/$ARCHIVE")
+          SHA256=$(shasum -a 256 "out/dist/$ARCHIVE" | cut -d' ' -f1)
+          if [ "$CHECKSUM" != "$SHA256" ]; then
+            echo "::error::swift package compute-checksum ($CHECKSUM) != sha256 ($SHA256)"
+            exit 1
+          fi
+          printf '%s  %s\n' "$CHECKSUM" "$ARCHIVE" > "out/dist/$ARCHIVE.sha256"
+
+          # The release-mode Package.swift: the template at A, with the asset URL
+          # (a pure function of the tag name, which is why version is a build
+          # input) and the computed checksum interpolated.
+          URL="https://github.com/$GITHUB_REPOSITORY/releases/download/v$VERSION/$ARCHIVE"
+          TEMPLATE=.github/release/Package.swift.template
+          for placeholder in __MX_RELEASE_URL__ __MX_RELEASE_CHECKSUM__ __MX_RELEASE_VERSION__; do
+            if ! grep -q "$placeholder" "$TEMPLATE"; then
+              echo "::error::$TEMPLATE lost placeholder $placeholder"
+              exit 1
+            fi
+          done
+          mkdir -p out/metadata/tree
+          sed -e "s|__MX_RELEASE_URL__|$URL|g" \
+              -e "s|__MX_RELEASE_CHECKSUM__|$CHECKSUM|g" \
+              -e "s|__MX_RELEASE_VERSION__|$VERSION|g" \
+              "$TEMPLATE" > out/metadata/tree/Package.swift
+          if grep -q '__MX_RELEASE' out/metadata/tree/Package.swift; then
+            echo '::error::placeholders survived interpolation'
+            exit 1
+          fi
+
+          # Evaluate the generated manifest exactly as a consumer's SwiftPM will
+          # (dump-package loads the manifest; it fetches and builds nothing).
+          mkdir -p "$RUNNER_TEMP/manifest-check"
+          cp out/metadata/tree/Package.swift "$RUNNER_TEMP/manifest-check/"
+          (cd "$RUNNER_TEMP/manifest-check" && swift package dump-package > /dev/null)
+
+          # The target's contract fragment (design §9): identity, artifact,
+          # checksum, platforms, and the paths this target may occupy in B. A
+          # copy ships in both artifacts.
+          jq -n \
+            --arg version "$VERSION" \
+            --arg base_sha "$SHA" \
+            --arg artifact "mx-release-swift-$SHA" \
+            --arg archive "$ARCHIVE" \
+            --arg checksum "$CHECKSUM" \
+            '{target: "swift",
+              version: $version,
+              base_sha: $base_sha,
+              artifact: $artifact,
+              archive: $archive,
+              checksum: $checksum,
+              platforms: ["macos-arm64", "macos-x86_64", "ios-arm64",
+                          "ios-simulator-arm64", "ios-simulator-x86_64"],
+              allowed_paths: ["Package.swift"]}' \
+            > out/metadata/fragment.json
+          cp out/metadata/fragment.json out/dist/fragment.json
+
+      # The publishable artifact (design §6): archive + .sha256 + fragment.
+      # retention-days is the documented 90-day contract: the tag must be pushed
+      # while this artifact still exists.
+      - name: Upload release artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mx-release-swift-${{ inputs.sha }}
+          path: out/dist/
+          retention-days: 90
+          if-no-files-found: error
+
+      # The prep-job channel (design §9, outputs b and c): the exact tree files
+      # for commit B plus the contract fragment.
+      - name: Upload metadata artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mx-release-swift-metadata-${{ inputs.sha }}
+          path: out/metadata/
+          retention-days: 90
+          if-no-files-found: error
