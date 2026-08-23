@@ -1,0 +1,102 @@
+// MusicXML Class Library
+// Copyright (c) by Matthew James Briggs
+// Distributed under the MIT License
+
+#pragma once
+
+#include "mx/api/ScoreData.h"
+
+#include <optional>
+#include <unordered_map>
+
+namespace mx
+{
+namespace impl
+{
+// Resolves the writer-side facts that a spanner endpoint cannot know on its
+// own, in one pass over a part before the part is written: the MusicXML
+// 'number' attribute for every spanner start/continue/stop, and the size an
+// octave-shift stop inherits from the start it closes.
+//
+// == Numbers ==
+//
+// A SpannerNumber self-describes as unspecified, explicit, or identity (see
+// mx/api/ApiCommon.h). Explicit levels are emitted verbatim and unspecified
+// spanners emit no number, so only identity spanners need writer-side
+// assignment -- but explicit spanners still participate here, because an
+// explicit level must be treated as reserved while it is open so a
+// concurrently-open identity spanner is never handed the same number.
+//
+// Numbers come from a pool of 1..16 per part and per spanner class (slur,
+// tied, wedge, octave-shift, bracket, dashes, glissando, slide, and wavy-line
+// each have their own pool; a slur numbered 1 and a wedge numbered 1 do not
+// conflict). The number-level documentation scopes concurrency to the part,
+// never the staff: two spanners conflict exactly when they overlap in the
+// order a streaming reader encounters them, even when they sit on different
+// staves of the part. So resolvePart walks the part in the exact order
+// MeasureWriter serializes it: measures in order, staves in order, voices
+// ascending, notes in vector order (curve stops/continues/starts, then
+// glissando/slide stops then starts, then wavy-line stops/continues/starts,
+// per note -- mirroring NotationsWriter), and each staff's directions in
+// vector order (mirroring DirectionWriter's per-direction emission order). An
+// identity spanner takes the lowest number that is free across its whole
+// serialized extent -- from its first event to its last, whichever of
+// start/stop comes first in the stream -- and releases it afterward.
+//
+// Identity ids are scoped per part and per spanner class: events in the same
+// part sharing a class and id are one logical spanner, even across staves.
+// Pedal starts/stops carry SpannerNumber, but mx::api does not model the
+// <pedal> number attribute (added in MusicXML 3.1), so pedals are ignored
+// here and no number is ever emitted for one.
+//
+// If more than 16 spanners of one class are open at once in a part (which no
+// real score approaches), resolution fails loudly with an exception rather
+// than emitting an illegal number.
+//
+// == Octave-shift stop sizes ==
+//
+// An octave-shift's size is stated by api::OttavaStart::ottavaType alone;
+// api::OttavaStop has no size of its own. The same walk therefore pairs each
+// ottava stop with the start it closes and records that start's size, so
+// DirectionWriter can write the stop's size attribute without the author
+// restating it (see api/OttavaData.h).
+//
+// Pairing is by SpannerNumber within the part, in serialized order: identity
+// endpoints pair by id, explicit endpoints by level, and unspecified
+// endpoints with each other. Within one of those groups a stop closes the
+// most recently opened start that is still open, so overlapping ottavas that
+// carry distinct numbers or identities never cross, and pairing spans
+// measures. A stop with no open start is left unpaired and falls back to
+// MusicXML's default size of 8.
+class SpannerResolver
+{
+  public:
+    SpannerResolver() = default;
+
+    // Walks inPart in serialization order, assigning a number to every
+    // identity spanner event and a size to every ottava stop. May be called
+    // once per part of a score; results accumulate (object addresses are
+    // unique across parts).
+    void resolvePart(const api::PartData &inPart);
+
+    // The number the writer should emit for the given spanner object, or
+    // nullopt to omit the attribute. inObject must be the address of the same
+    // start/continue/stop object (within the ScoreData being written) that
+    // resolvePart visited. Throws if inNumber is an identity that resolvePart
+    // never saw -- that is a wiring bug, and omitting the number could emit a
+    // colliding spanner pair.
+    std::optional<int> emittedNumber(const api::SpannerNumber &inNumber, const void *inObject) const;
+
+    // The size (8, 15, or 22) the writer should emit for the given ottava
+    // stop, taken from the start it closes. inObject must be the address of
+    // the same object resolvePart visited. A stop this resolver never paired
+    // -- one with no matching start, or one written outside a resolved part --
+    // gets MusicXML's default size of 8.
+    int ottavaStopSize(const void *inObject) const;
+
+  private:
+    std::unordered_map<const void *, int> myResolved;
+    std::unordered_map<const void *, int> myOttavaStopSizes;
+};
+} // namespace impl
+} // namespace mx

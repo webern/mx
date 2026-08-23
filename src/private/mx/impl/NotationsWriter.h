@@ -37,6 +37,15 @@ class NotationsWriter
     void addArticulation(const api::MarkData &markData, core::Articulations &outArticulations) const;
     void addOrnament(const api::MarkData &markData, core::Ornaments &outOrnaments) const;
     void addTechnical(const api::MarkData &markData, core::Technical &outTechnical) const;
+
+    // Kept as their own (non-inlined) methods rather than loops inlined in getNotations(), the
+    // same reason addArticulation/addOrnament/addTechnical are separate: getNotations() is
+    // already a very large function, and folding more per-branch locals directly into its own
+    // stack frame doesn't scale -- it overflowed the default wasm stack (issue found while
+    // fixing #389's Emscripten smoke build).
+    void addGlissandoAndSlide(core::Notations &outNotations) const;
+    void addWavyLineStopsAndContinues(core::Ornaments &outOrnaments) const;
+    void addWavyLineStarts(core::Ornaments &outOrnaments) const;
 };
 } // namespace impl
 } // namespace mx

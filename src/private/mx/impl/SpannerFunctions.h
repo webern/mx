@@ -49,8 +49,8 @@ template <typename ATTRIBUTES_TYPE> api::SpannerStop getSpannerStop(const ATTRIB
 MX_OPTIONAL_SET_HAS_FUNC(number, setNumber, Number);
 MX_OPTIONAL_SET_INT_FUNC(number, setNumber, Number);
 
-// The number written is the one the SpannerNumberResolver pass resolved for
-// the object; these helpers never look at the SpannerNumber directly.
+// The number written is the one the SpannerResolver pass resolved for the
+// object; these helpers never look at the SpannerNumber directly.
 template <typename ATTRIBUTES_TYPE>
 void setAttributesFromSpannerStart(const api::SpannerStart &start, ATTRIBUTES_TYPE &outAttributes,
                                    const std::optional<int> &inResolvedNumber)

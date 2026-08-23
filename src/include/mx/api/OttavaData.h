@@ -3,6 +3,7 @@
 // Distributed under the MIT License
 
 #pragma once
+#include "mx/api/ApiCommon.h"
 #include "mx/api/SpannerData.h"
 
 namespace mx
@@ -30,11 +31,12 @@ class OttavaStart
     SpannerStart spannerStart;
     OttavaType ottavaType;
 
-    // Octave-shift size fidelity knob. The size value (8, 15, or 22) follows from ottavaType, so
-    // 15ma/15mb and 22ma/22mb lines always write their size while an 8va/8vb line omits the
-    // redundant, spec-default size="8". When true, the writer also emits that redundant size="8";
-    // the reader sets it when the source spelled the attribute out. Leave false (the default) when
-    // authoring. It has no effect on a 15ma/15mb or 22ma/22mb line, whose size is always written.
+    // Most users can ignore this; leave it false. It only controls whether an 8va/8vb line writes
+    // the redundant size="8" attribute. The size (8, 15, or 22) follows from ottavaType, and 8 is
+    // MusicXML's default, so a 15ma/15mb or 22ma/22mb line always writes its size while an 8va/8vb
+    // line omits it. When true, that redundant size="8" is written too; the flag has no effect on
+    // the larger lines, whose size is always written. It exists for round-trip fidelity - reading a
+    // file sets it when the source spelled the attribute out.
     bool writeDefaultSize;
 
     OttavaStart() : spannerStart{}, ottavaType{OttavaType::unspecified}, writeDefaultSize{false}
@@ -47,13 +49,16 @@ class OttavaStop
   public:
     SpannerStop spannerStop;
 
-    // MusicXML's octave-shift allows a size attribute ("8", "15", or "22") on the stop, not just the
-    // start. Most writers omit it there since it is implied by the corresponding start, but some
-    // importers (e.g. MuseScore) expect it to be present. Absent by default; set it to have the
-    // writer emit it explicitly.
-    std::optional<int> size;
+    // Most users can ignore this; leave it unspecified. It only controls whether the stop end of an
+    // octave-shift line repeats the line's size (8, 15, or 22). The size is not required on the
+    // stop and carries no new information. Omitting it is legal, but but some importers (MuseScore)
+    // expect it. Therefore `mx::api` defaults to automatically writing the redundant stop size.
+    //
+    // For the sake of file round-trip fidelity, this will be set to 'no' if a the file being read
+    // does not include the size attribute in the stop element.
+    Bool writeSize;
 
-    OttavaStop() : spannerStop{}, size{std::nullopt}
+    OttavaStop() : spannerStop{}, writeSize{Bool::unspecified}
     {
     }
 };
@@ -67,7 +72,7 @@ MXAPI_NOT_EQUALS_AND_VECTORS(OttavaStart);
 
 MXAPI_EQUALS_BEGIN(OttavaStop)
 MXAPI_EQUALS_MEMBER(spannerStop)
-MXAPI_EQUALS_MEMBER(size)
+MXAPI_EQUALS_MEMBER(writeSize)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(OttavaStop);
 } // namespace api

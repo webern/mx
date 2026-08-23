@@ -720,7 +720,10 @@ void DirectionReader::parseOctaveShift(const core::DirectionType &directionType)
         api::OttavaStop stop;
         stop.spannerStop = impl::getSpannerStop(octaveShift);
         stop.spannerStop.tickTimePosition = myCursor.tickTimePosition;
-        stop.size = octaveShift.size();
+
+        // The api holds size information at the start since specifying it on the stop is redundant.
+        // Here we ignore the value and just record its presence or absence for round-trip fidelity.
+        stop.writeSize = octaveShift.size().has_value() ? api::Bool::yes : api::Bool::no;
         myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice{std::move(stop)});
         return;
     }
@@ -740,6 +743,8 @@ void DirectionReader::parseOctaveShift(const core::DirectionType &directionType)
     // to the "down" variants (o8vb/o15mb/o22mb).
     bool isUp = octaveShift.type().tag() == core::UpDownStopContinue::Tag::up;
 
+    // MusicXML does not properly constrain the ottava size to valid music notation values. We do
+    // so here by interpolating the value into an enum that maps to valid music notation.
     if (!isUp && amount == 22)
     {
         ottavaType = api::OttavaType::o22ma;

@@ -2,7 +2,9 @@
 // Copyright (c) by Matthew James Briggs
 // Distributed under the MIT License
 
-#include "mx/impl/SpannerNumberResolver.h"
+#include "mx/impl/SpannerResolver.h"
+#include "mx/api/GlissandoData.h"
+#include "mx/impl/OttavaFunctions.h"
 #include "mx/utility/Throw.h"
 
 #include <algorithm>
@@ -21,6 +23,8 @@ namespace impl
 // distinguishes slur from tied; the SpannerStart/Stop structs serve several
 // elements (octave-shift, bracket, dashes) whose number attributes are
 // independent of each other in MusicXML, so each gets its own pool.
+// GlissandoType similarly distinguishes <glissando> from <slide>, two distinct
+// elements with independent number attributes.
 enum class SpannerNumberClass
 {
     slur,
@@ -28,7 +32,10 @@ enum class SpannerNumberClass
     wedge,
     octaveShift,
     bracket,
-    dashes
+    dashes,
+    glissando,
+    slide,
+    wavyLine
 };
 
 // One start/continue/stop occurrence at its position in the serialized stream. The number is
@@ -56,11 +63,39 @@ inline bool spannerNumberIntervalsOverlap(const SpannerNumberInterval &inLeft, c
     return inLeft.first <= inRight.last && inRight.first <= inLeft.last;
 }
 
+// One octave-shift start or stop, in serialized order. Starts carry the OttavaType that states
+// the line's size; stops carry the address the writer will present when it asks for that size.
+struct SpannerOttavaEvent
+{
+    const void *object;
+    api::SpannerNumber number;
+    api::OttavaType ottavaType;
+    bool isStart;
+};
+
+// The bucket an ottava endpoint pairs within: identity endpoints pair by id, explicit endpoints
+// by level, and unspecified endpoints with each other. The prefix keeps the three kinds from
+// colliding (an identity of "3" is not the explicit level 3).
+static std::string spannerOttavaPairingKey(const api::SpannerNumber &inNumber)
+{
+    switch (inNumber.kind())
+    {
+    case api::SpannerNumber::Kind::explicitLevel:
+        return "e" + std::to_string(inNumber.level());
+
+    case api::SpannerNumber::Kind::identity:
+        return "i" + inNumber.identity();
+
+    default:
+        return "u";
+    }
+}
+
 // Collects spanner events in the exact order MeasureWriter serializes them.
 // The position counter is global; only events within the same class are ever
 // compared, so cross-class interleaving is irrelevant, but within a class the
 // order matches what a streaming reader sees.
-class SpannerNumberEventCollector
+class SpannerEventCollector
 {
   public:
     void addNote(const api::NoteData &inNote)
@@ -79,6 +114,31 @@ class SpannerNumberEventCollector
         for (const auto &start : attachments.curveStarts)
         {
             addCurve(start.curveType, &start, start.number, true, false);
+        }
+
+        // NotationsWriter emits glissando/slide stops, then starts (see #139 stop-before-start).
+        for (const auto &stop : attachments.glissandoStops)
+        {
+            addGlissando(stop.glissandoType, &stop, stop.number, false, true);
+        }
+        for (const auto &start : attachments.glissandoStarts)
+        {
+            addGlissando(start.glissandoType, &start, start.number, true, false);
+        }
+
+        // NotationsWriter emits wavy-line stops, then continues, then (after any mark-derived
+        // ornaments, which carry no number) starts.
+        for (const auto &stop : attachments.wavyLineStops)
+        {
+            add(SpannerNumberClass::wavyLine, &stop, stop.number, false, true);
+        }
+        for (const auto &wavyLineContinue : attachments.wavyLineContinuations)
+        {
+            add(SpannerNumberClass::wavyLine, &wavyLineContinue, wavyLineContinue.number, false, false);
+        }
+        for (const auto &start : attachments.wavyLineStarts)
+        {
+            add(SpannerNumberClass::wavyLine, &start, start.number, true, false);
         }
     }
 
@@ -100,13 +160,21 @@ class SpannerNumberEventCollector
                 add(SpannerNumberClass::wedge, &choice, choice.wedgeStop().number, false, true);
                 break;
 
-            case api::DirectionChoice::Kind::ottavaStart:
-                add(SpannerNumberClass::octaveShift, &choice, choice.ottavaStart().spannerStart.number, true, false);
+            case api::DirectionChoice::Kind::ottavaStart: {
+                const auto ottavaStart = choice.ottavaStart();
+                add(SpannerNumberClass::octaveShift, &choice, ottavaStart.spannerStart.number, true, false);
+                myOttavaEvents.push_back(
+                    SpannerOttavaEvent{&choice, ottavaStart.spannerStart.number, ottavaStart.ottavaType, true});
                 break;
+            }
 
-            case api::DirectionChoice::Kind::ottavaStop:
-                add(SpannerNumberClass::octaveShift, &choice, choice.ottavaStop().spannerStop.number, false, true);
+            case api::DirectionChoice::Kind::ottavaStop: {
+                const auto ottavaStop = choice.ottavaStop();
+                add(SpannerNumberClass::octaveShift, &choice, ottavaStop.spannerStop.number, false, true);
+                myOttavaEvents.push_back(
+                    SpannerOttavaEvent{&choice, ottavaStop.spannerStop.number, api::OttavaType::unspecified, false});
                 break;
+            }
 
             case api::DirectionChoice::Kind::bracketStart:
                 add(SpannerNumberClass::bracket, &choice, choice.bracketStart().number, true, false);
@@ -135,6 +203,11 @@ class SpannerNumberEventCollector
         return myEvents;
     }
 
+    const std::vector<SpannerOttavaEvent> &ottavaEvents() const
+    {
+        return myOttavaEvents;
+    }
+
   private:
     void add(SpannerNumberClass inClass, const void *inObject, const api::SpannerNumber &inNumber, bool inOpens,
              bool inCloses)
@@ -156,8 +229,17 @@ class SpannerNumberEventCollector
         }
     }
 
+    void addGlissando(api::GlissandoType inGlissandoType, const void *inObject, const api::SpannerNumber &inNumber,
+                      bool inOpens, bool inCloses)
+    {
+        const auto spannerClass =
+            inGlissandoType == api::GlissandoType::slide ? SpannerNumberClass::slide : SpannerNumberClass::glissando;
+        add(spannerClass, inObject, inNumber, inOpens, inCloses);
+    }
+
     int myPosition = 0;
     std::map<SpannerNumberClass, std::vector<SpannerNumberEvent>> myEvents;
+    std::vector<SpannerOttavaEvent> myOttavaEvents;
 };
 
 // Assigns numbers within one spanner class. Explicit levels reserve their
@@ -286,9 +368,35 @@ static void spannerNumberAssignClass(const std::vector<SpannerNumberEvent> &inEv
     }
 }
 
-void SpannerNumberResolver::resolvePart(const api::PartData &inPart)
+// Pairs each ottava stop with the start it closes and records that start's size. Within one
+// pairing bucket a stop closes the most recently opened start still open, so a stop that opens
+// and closes inside another ottava of the same bucket does not steal the outer line's start. A
+// stop with nothing open is left out of ioResolved and falls back to size 8 at write time.
+static void spannerResolveOttavaSizes(const std::vector<SpannerOttavaEvent> &inEvents,
+                                      std::unordered_map<const void *, int> &ioResolved)
 {
-    SpannerNumberEventCollector collector;
+    std::map<std::string, std::vector<api::OttavaType>> openStarts;
+
+    for (const auto &event : inEvents)
+    {
+        auto &stack = openStarts[spannerOttavaPairingKey(event.number)];
+        if (event.isStart)
+        {
+            stack.push_back(event.ottavaType);
+            continue;
+        }
+        if (stack.empty())
+        {
+            continue;
+        }
+        ioResolved[event.object] = ottavaTypeSize(stack.back());
+        stack.pop_back();
+    }
+}
+
+void SpannerResolver::resolvePart(const api::PartData &inPart)
+{
+    SpannerEventCollector collector;
 
     for (const auto &measure : inPart.measures)
     {
@@ -312,9 +420,11 @@ void SpannerNumberResolver::resolvePart(const api::PartData &inPart)
     {
         spannerNumberAssignClass(classAndEvents.second, myResolved);
     }
+
+    spannerResolveOttavaSizes(collector.ottavaEvents(), myOttavaStopSizes);
 }
 
-std::optional<int> SpannerNumberResolver::emittedNumber(const api::SpannerNumber &inNumber, const void *inObject) const
+std::optional<int> SpannerResolver::emittedNumber(const api::SpannerNumber &inNumber, const void *inObject) const
 {
     switch (inNumber.kind())
     {
@@ -334,6 +444,16 @@ std::optional<int> SpannerNumberResolver::emittedNumber(const api::SpannerNumber
     default:
         return std::nullopt;
     }
+}
+
+int SpannerResolver::ottavaStopSize(const void *inObject) const
+{
+    const auto iter = myOttavaStopSizes.find(inObject);
+    if (iter == myOttavaStopSizes.cend())
+    {
+        return ottavaTypeSize(api::OttavaType::unspecified);
+    }
+    return iter->second;
 }
 } // namespace impl
 } // namespace mx

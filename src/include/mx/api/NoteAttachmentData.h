@@ -5,8 +5,10 @@
 #pragma once
 
 #include "mx/api/CurveData.h"
+#include "mx/api/GlissandoData.h"
 #include "mx/api/MarkData.h"
 #include "mx/api/TupletData.h"
+#include "mx/api/WavyLineData.h"
 
 namespace mx
 {
@@ -21,8 +23,11 @@ class NoteAttachmentData
     std::vector<CurveStop> curveStops;
     std::vector<TupletStart> tupletStarts;
     std::vector<TupletStop> tupletStops;
-    // std::vector<SpannerData> spannerStarts;
-    // std::vector<SpannerData> spannerStops;
+    std::vector<GlissandoStart> glissandoStarts;
+    std::vector<GlissandoStop> glissandoStops;
+    std::vector<WavyLineStart> wavyLineStarts;
+    std::vector<WavyLineContinue> wavyLineContinuations;
+    std::vector<WavyLineStop> wavyLineStops;
 };
 
 MXAPI_EQUALS_BEGIN(NoteAttachmentData)
@@ -32,8 +37,11 @@ MXAPI_EQUALS_MEMBER(curveContinuations)
 MXAPI_EQUALS_MEMBER(curveStops)
 MXAPI_EQUALS_MEMBER(tupletStarts)
 MXAPI_EQUALS_MEMBER(tupletStops)
-// MXAPI_EQUALS_MEMBER( spannerStarts )
-// MXAPI_EQUALS_MEMBER( spannerStops )
+MXAPI_EQUALS_MEMBER(glissandoStarts)
+MXAPI_EQUALS_MEMBER(glissandoStops)
+MXAPI_EQUALS_MEMBER(wavyLineStarts)
+MXAPI_EQUALS_MEMBER(wavyLineContinuations)
+MXAPI_EQUALS_MEMBER(wavyLineStops)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(NoteAttachmentData);
 } // namespace api

@@ -5,6 +5,7 @@
 #pragma once
 
 #include "mx/api/MarkData.h"
+#include "mx/api/NoteAttachmentData.h"
 #include "mx/impl/Converter.h"
 #include "mx/impl/Cursor.h"
 
@@ -25,14 +26,14 @@ class OrnamentsFunctions
     ~OrnamentsFunctions() = default;
     OrnamentsFunctions(const OrnamentsFunctions &) = default;
     OrnamentsFunctions(OrnamentsFunctions &&) = default;
-    void parseOrnaments(std::vector<api::MarkData> &outMarks) const;
+    void parseOrnaments(api::NoteAttachmentData &outAttachments) const;
 
   private:
     const core::Ornaments &myOrnaments;
     const impl::Cursor myCursor;
 
   private:
-    void parseOrnamentsSet(std::vector<api::MarkData> &outMarks) const;
+    void parseOrnamentsSet(api::NoteAttachmentData &outAttachments) const;
     void parseAccidentalMarkSet(std::vector<api::MarkData> &outMarks) const;
     void parseOrnament(const core::OrnamentsGroupChoice &choiceObj, api::MarkData &outMark) const;
 };
