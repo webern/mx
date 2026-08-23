@@ -12,6 +12,7 @@
 #include "mx/impl/Converter.h"
 #include "mx/impl/MeasureCursor.h"
 
+#include <string>
 #include <vector>
 
 namespace mx
@@ -25,7 +26,7 @@ class NoteWriter
   public:
     NoteWriter(const api::NoteData &inNoteData, const MeasureCursor &inCursor, const ScoreWriter &inScoreWriter,
                bool isPreviousNoteAChordMember, const std::vector<mx::api::NoteData> &inSiblingNotes, int inNoteIndex,
-               int inNumVoices);
+               int inNumVoices, const std::string &inVoiceLabel);
 
     core::Note getNote(bool isStartOfChord) const;
 
@@ -38,6 +39,7 @@ class NoteWriter
     const std::vector<mx::api::NoteData> &mySiblingNotes;
     const int myNoteIndex;
     const int myNumVoices;
+    const std::string &myVoiceLabel;
     mutable core::Note myOutNote;
     mutable core::FullNoteGroup myOutFullNoteGroup;
     mutable std::vector<core::Tie> myOutTies;
