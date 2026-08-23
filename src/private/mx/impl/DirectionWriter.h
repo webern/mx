@@ -23,10 +23,9 @@ namespace impl
 class DirectionWriter
 {
   public:
-    // inSpannerResolver supplies the resolved 'number' for each wedge, octave
-    // shift, bracket, and dashes start/stop, and the size each octave-shift
-    // stop inherits from its start (see SpannerResolver); it must outlive this
-    // writer.
+    // inSpannerResolver supplies the resolved 'number' for start/stop pairs such as wedge,
+    // octave-shift, bracket, and dashes and stop semantics such as the size attribute of an
+    // octave-shift (see SpannerResolver); it outlives this writer.
     DirectionWriter(const api::DirectionData &inDirectionData, const Cursor &inCursor,
                     const SpannerResolver &inSpannerResolver);
     std::vector<core::MusicDataChoice> getDirectionLikeThings();
