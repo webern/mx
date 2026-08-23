@@ -106,21 +106,21 @@ Both cases are fully determined by an end note ID plus data copied from the star
 | `bracket`         | `direction-type` | `direction`   |         |       |
 | `dashes`          | `direction-type` | `direction`   |         |       |
 | `octave-shift`    | `direction-type` | `direction`   |         |       |
-| `pedal`           | `direction-type` | `direction`   |         |       |
+| `pedal`           | `direction-type` | `direction`   | #411    |       |
 | `principal-voice` | `direction-type` | `direction`   |         |       |
 | `wedge`           | `direction-type` | `direction`   |         |       |
-| `extend`          | `lyric`          | `note`        |         |       |
-| `glissando`       | `notations`      | `note`        |         |       |
+| `extend`          | `lyric`          | `note`        | #TBD    |       |
+| `glissando`       | `notations`      | `note`        | #389    |       |
 | `other-notation`  | `notations`      | `note`        |         |       |
-| `slide`           | `notations`      | `note`        |         |       |
+| `slide`           | `notations`      | `note`        | #389    |       |
 | `slur`            | `notations`      | `note`        |         |       |
 | `tied`            | `notations`      | `note`        |         |       |
 | `tuplet`          | `notations`      | `note`        |         |       |
-| `tie`             | `note`           | `note`        |         |       |
+| `tie`             | `note`           | `note`        | #TBD    |       |
 | `tremolo`         | `ornaments`      | `note`        |         |       |
-| `wavy-line`       | `ornaments`      | `note`        |         |       |
-| `hammer-on`       | `technical`      | `note`        |         |       |
-| `pull-off`        | `technical`      | `note`        |         |       |
+| `wavy-line`       | `ornaments`      | `note`        | #389    |       |
+| `hammer-on`       | `technical`      | `note`        | #412    |       |
+| `pull-off`        | `technical`      | `note`        | #412    |       |
 
 **Out of scope.** These are neither note-attached nor tick-attached, so an end note ID cannot place
 their `s_span:end`.
@@ -287,8 +287,8 @@ to the `Context` error reporting mechanism.
 `CurveStart` + `CurveStop`) plus the endpoint ID — ideally one templated class. Wherever an
 `s_span:start` can be added, the vector's element type becomes a choice type (the existing `mx::api`
 choice pattern, Kind enum) holding either the `s_span:start` or the `u_span`. Client breakage is
-accepted. The POD design holds: no validation at authoring time (R11), and forward references are
-allowed — the end note need not exist yet (R2).
+accepted. The POD design holds: no validation at authoring time, and forward references are allowed
+— the end note need not exist yet (R2).
 
 **Write-side.** A non-user-facing `Context` object exists throughout the `mx::impl` write
 (precedent: `ScoreWriter`'s `SpannerNumberResolver`), carrying open-u_span state and error
@@ -303,24 +303,21 @@ distinguish info/warning/error; that mechanism may be a separate prerequisite de
 `s_span` pairs to `u_spans` where the endpoint carries an ID, configured via a `DocumentManager`
 options structure (R5).
 
-**Scope.** Eligibility is limited to element types carrying schema ID attributes. MVP covers
-note-attached types (R8); R9/R10 types follow.
-
 **SpannerNumber.** Expected unchanged: the composed start/stop structs already carry it, and the
 resolver walks serialization order, which includes materialized stops.
 
 ### Decisions Needed
 
-Harvested from a throwaway implementation spike (curves only: `NoteData::id`, a templated
-`USpan<StartT, StopT>` + `SpanChoice` in `curveStarts`, and a lowering pass in `ScoreWriter`). All
-spike code was discarded. The spike compiled cleanly; impl blast radius for the `curveStarts` type
-change was 4 sites (`NotationsWriter.cpp`, `NoteWriter.cpp`, `SpannerNumberResolver.cpp`,
-`CurveFunctions.h`) plus ~30 usages in 6 test files.
+Harvested from a throwaway implementation spike (curves only: a templated `USpan<StartT, StopT>` +
+`SpanChoice` in `curveStarts`, and a lowering pass in `ScoreWriter`). All spike code was discarded.
+The spike compiled cleanly; impl blast radius for the `curveStarts` type change was 4 sites
+(`NotationsWriter.cpp`, `NoteWriter.cpp`, `SpannerNumberResolver.cpp`, `CurveFunctions.h`) plus ~30
+usages in 6 test files.
 
 1. **Sound-level ties cannot be u_spans in the current model.** `<tie>` is modeled as
-   `NoteData::isTieStart` / `isTieStop` bools (`src/include/mx/api/NoteData.h:120`), not as vector
-   entries, so there is no place to put a `USpan` for it. `CurveType::tie` covers `<tied>` notation
-   only. Decide: drop sound-level tie from R8's u_span list, or restructure tie modeling.
+   `NoteData::isTieStart` / `isTieStop` bools, not as vector entries, so there is no place to put a
+   `USpan` for it. `CurveType::tie` covers `<tied>` notation only. Decide: drop sound-level tie from
+   R8's u_span list, or restructure tie modeling.
 
 2. **The error channel cannot express "best effort."** `Result` (`src/include/mx/api/Result.h`)
    carries exactly one `ApiError` and is all-or-nothing: an error from `createFromScore` means no
@@ -365,8 +362,6 @@ change was 4 sites (`NotationsWriter.cpp`, `NoteWriter.cpp`, `SpannerNumberResol
 Implementation note (no decision needed): `SpannerNumberResolver` keys spanner events by object
 address; for curve choices the wrapper address is the right key, matching the existing
 `DirectionChoice` precedent in `SpannerNumberResolver.cpp`.
-
-> claude --resume 459bba13-2e60-404a-b75f-3be7dec02b01
 
 ### Implementation Details
 
