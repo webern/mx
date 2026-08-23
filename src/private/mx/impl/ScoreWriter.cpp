@@ -144,6 +144,12 @@ core::ScorePartwise ScoreWriter::getScorePartwise() const
         hasIdentification = true;
     }
 
+    if (myScoreData.source.has_value())
+    {
+        identification.setSource(myScoreData.source);
+        hasIdentification = true;
+    }
+
     if (hasIdentification)
     {
         header.setIdentification(identification);

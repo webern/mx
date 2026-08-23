@@ -66,6 +66,11 @@ class ScoreData
     // The <rights> type attribute for `copyright` (above).
     std::optional<std::string> copyrightType;
 
+    // Where the music came from: the edition, manuscript, or other publication this score was
+    // made from. This is MusicXML's <source> element. It names the origin of the music, not of
+    // the file. Leave it empty when the score does not name one.
+    std::optional<std::string> source;
+
     EncodingData encoding;
     std::vector<PageTextData> pageTextItems;
 
@@ -118,6 +123,7 @@ MXAPI_EQUALS_MEMBER(arranger)
 MXAPI_EQUALS_MEMBER(publisher)
 MXAPI_EQUALS_MEMBER(copyright)
 MXAPI_EQUALS_MEMBER(copyrightType)
+MXAPI_EQUALS_MEMBER(source)
 MXAPI_EQUALS_MEMBER(encoding)
 MXAPI_EQUALS_MEMBER(pageTextItems)
 MXAPI_EQUALS_MEMBER(pageImageItems)
