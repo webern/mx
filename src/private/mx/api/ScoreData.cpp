@@ -14,7 +14,7 @@ namespace api
 ScoreData::ScoreData()
     : musicXmlVersion{api::MusicXmlVersion::unspecified}, declaredMusicXmlVersion{}, musicXmlType{"partwise"},
       workTitle{}, workNumber{}, movementTitle{}, movementNumber{}, composer{}, lyricist{}, copyright{},
-      copyrightType{"copyright"}, encoding{}, pageTextItems{}, defaults{}, parts{}, partGroups{},
+      copyrightType{"copyright"}, source{}, encoding{}, pageTextItems{}, defaults{}, parts{}, partGroups{},
       ticksPerQuarter{DEFAULT_TICKS_PER_QUARTER}
 {
 }

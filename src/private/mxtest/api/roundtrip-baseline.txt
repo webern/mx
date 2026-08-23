@@ -686,3 +686,12 @@ foundsuite/Invention_6.xml
 foundsuite/Invention_7.xml
 foundsuite/Invention_8.xml
 foundsuite/Invention_9.xml
+
+# Unblocked by ScoreData::source: <identification>/<source> names the edition or
+# manuscript a score was made from, and the api had nowhere to keep it, so the
+# element was dropped on write.
+musetrainer/Canon_in_D_easy.xml
+musetrainer/Carol_of_the_Bells_easy_piano.xml
+musetrainer/Lacrimosa_-_Requiem.xml
+musetrainer/Prelude_I_in_C_major_BWV_846_-_Well_Tempered_Clavier_First_Book.xml
+synthetic/source.3.0.xml

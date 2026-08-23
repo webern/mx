@@ -234,6 +234,8 @@ api::ScoreData ScoreReader::getScoreData() const
                 myOutScoreData.copyrightType = std::nullopt;
             }
         }
+        myOutScoreData.source = ident.source();
+
         api::EncodingData encodingData;
 
         if (ident.encoding().has_value())
