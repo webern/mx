@@ -5,17 +5,6 @@ description: >
 argument-hint: "<prompt>"
 disable-model-invocation: false
 user-invocable: true
-allowed-tools:  >
-  Bash(*),
-  Edit,
-  EnterWorktree,
-  ExitWorktree,
-  Read,
-  Skill,
-  Task,
-  WebFetch,
-  WebSearch,
-  Write
 ---
 # /mx-open-pr
 
