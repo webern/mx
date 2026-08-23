@@ -721,9 +721,8 @@ void DirectionReader::parseOctaveShift(const core::DirectionType &directionType)
         stop.spannerStop = impl::getSpannerStop(octaveShift);
         stop.spannerStop.tickTimePosition = myCursor.tickTimePosition;
 
-        // The stop's size is not kept: it restates the start's octave shift, and a stop whose size
-        // contradicts its start would let the api hold two answers to one question. Only whether
-        // the source spelled the attribute out is recorded, so the same spelling is written back.
+        // The api holds size information at the start since specifying it on the stop is redundant.
+        // Here we ignore the value and just record its presence or absence for round-trip fidelity.
         stop.writeSize = octaveShift.size().has_value() ? api::Bool::yes : api::Bool::no;
         myOutDirectionData.directionTypes.emplace_back(api::DirectionChoice{std::move(stop)});
         return;
