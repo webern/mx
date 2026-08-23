@@ -1,0 +1,238 @@
+# Phase 1 of the release system (docs/ai/design/release-process.md): build a
+# chosen commit A for every release target, then open the release PR whose first
+# commit, B, is the tag target. Nothing here publishes; phase 2 is
+# release-publish.yml, triggered by the tag push after the PR merges.
+name: release-build
+
+on:
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: Full 40-hex SHA of the main commit to release (commit A).
+        required: true
+        type: string
+      version:
+        description: Version to release, MAJOR.MINOR.PATCH (no leading v).
+        required: true
+        type: string
+
+# One release-build per version at a time: a re-dispatch of the same version
+# queues behind the in-flight run, then force-pushes a fresh release branch.
+concurrency:
+  group: release-build-${{ github.event.inputs.version }}
+
+permissions: {}
+
+jobs:
+  validate:
+    name: Validate inputs
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - name: Validate sha and version
+        env:
+          SHA: ${{ inputs.sha }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          [[ "$SHA" =~ ^[0-9a-f]{40}$ ]] \
+            || { echo "::error::sha must be the full 40-character lowercase hex SHA, got '$SHA'"; exit 1; }
+          [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] \
+            || { echo "::error::version must be MAJOR.MINOR.PATCH with no leading v, got '$VERSION'"; exit 1; }
+
+  # The target fan-out (design §9): one reusable workflow per release target.
+  # Adding a target = add a job like this one, and extend the hardcoded path
+  # ceiling in release-publish.yml with its declared metadata paths.
+  swift:
+    name: Swift target
+    needs: validate
+    permissions:
+      contents: read
+    uses: ./.github/workflows/_release-target-swift.yml
+    with:
+      sha: ${{ inputs.sha }}
+      version: ${{ inputs.version }}
+
+  # Collect every target's metadata, write release-manifest.json, commit B
+  # (release metadata on top of A) then R (restore the source Package.swift),
+  # force-push release-prep/v<version>, and open the release PR.
+  prep:
+    name: Release PR
+    needs: [validate, swift]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # push the release-prep/v* branch
+      pull-requests: write # open the release PR
+    env:
+      SHA: ${{ inputs.sha }}
+      VERSION: ${{ inputs.version }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.sha }}
+          fetch-depth: 0
+
+      - name: Download target metadata
+        uses: actions/download-artifact@v4
+        with:
+          pattern: mx-release-*-metadata-${{ inputs.sha }}
+          path: ${{ runner.temp }}/release-metadata
+
+      - name: Write release-manifest.json, commit B and R, push the branch
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+
+          if ! git merge-base --is-ancestor "$SHA" origin/main; then
+            echo "::warning::$SHA is not an ancestor of main yet; release-publish will refuse the tag until it is (design §5, check 3)."
+          fi
+
+          FRAGMENTS=("$RUNNER_TEMP"/release-metadata/*/fragment.json)
+          [ "${#FRAGMENTS[@]}" -gt 0 ] || { echo "::error::no target fragments were downloaded"; exit 1; }
+
+          # Defense against artifact mixups: every fragment must be for this
+          # exact sha and version.
+          for f in "${FRAGMENTS[@]}"; do
+            jq -e --arg sha "$SHA" --arg version "$VERSION" \
+              '.base_sha == $sha and .version == $version' "$f" > /dev/null \
+              || { echo "::error::fragment $f is not for v$VERSION at $SHA"; exit 1; }
+          done
+
+          # Lay each target's tree files into the checkout (for Swift: the
+          # binary-default release Package.swift).
+          for d in "$RUNNER_TEMP"/release-metadata/*/; do
+            if [ -d "$d/tree" ]; then cp -R "$d/tree/." .; fi
+          done
+
+          # release-manifest.json (design §5): version, base SHA A, this run's
+          # ID (the run pins itself into B -- dispatch inputs are not queryable
+          # later), every target's fragment, and the union of paths B may touch.
+          jq -s \
+            --arg version "$VERSION" \
+            --arg base_sha "$SHA" \
+            --argjson run_id "$GITHUB_RUN_ID" \
+            '{version: $version,
+              base_sha: $base_sha,
+              run_id: $run_id,
+              targets: .,
+              allowed_paths: ((map(.allowed_paths[]) + ["release-manifest.json"]) | unique)}' \
+            "${FRAGMENTS[@]}" > release-manifest.json
+
+          # Commit B: exactly the declared release-metadata files, nothing else.
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          mapfile -t ALLOWED < <(jq -r '.allowed_paths[]' release-manifest.json)
+          git add -- "${ALLOWED[@]}"
+          mapfile -t DIRTY < <(git status --porcelain | sed 's/^...//')
+          for path in "${DIRTY[@]}"; do
+            ok=false
+            for allowed in "${ALLOWED[@]}"; do
+              if [ "$path" = "$allowed" ]; then ok=true; fi
+            done
+            if ! $ok; then
+              echo "::error::unexpected change outside the declared release paths: $path"
+              exit 1
+            fi
+          done
+          if git diff --cached --quiet -- Package.swift; then
+            echo "::error::the release Package.swift is identical to A's -- interpolation failed"
+            exit 1
+          fi
+          git commit -m "release: v$VERSION binary release manifest"
+          B=$(git rev-parse HEAD)
+
+          # Commit R: restore A's Package.swift verbatim (purely mechanical) so
+          # the merge leaves every tip of main source-only, keeping
+          # release-manifest.json as the on-main release record.
+          git checkout "$SHA" -- Package.swift
+          git commit -m "release: v$VERSION restore the source manifest"
+
+          BRANCH="release-prep/v$VERSION"
+          git push --force origin "HEAD:refs/heads/$BRANCH"
+          {
+            echo "B=$B"
+            echo "BRANCH=$BRANCH"
+          } >> "$GITHUB_ENV"
+
+      - name: Open or refresh the release PR
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/body.md" <<'BODY'
+          Machine-generated release PR for **v__VERSION__**, base commit A = `__A__`,
+          opened by [release-build run __RUN_ID__](__RUN_URL__). Process:
+          `docs/ai/design/release-process.md`.
+
+          Two machine-written commits:
+
+          1. `__B__` -- **commit B, the tag target**: the binary-default release
+          `Package.swift` (asset URL + checksum of the built XCFramework) plus
+          `release-manifest.json`, the provenance record that release-publish
+          re-verifies at tag time. Review it here: __COMPARE__
+          2. commit R -- restores `Package.swift` to A's copy verbatim, so every tip
+          of `main` stays a source-only package. The PR's net diff is
+          `release-manifest.json` only.
+
+          To ship v__VERSION__:
+
+          1. Review B via the compare link above (the URL and checksum lines).
+          2. Merge this PR using **"Create a merge commit"** -- not squash, not
+          rebase. Only a true merge preserves B in main's ancestry; publish
+          refuses the tag otherwise. If it was squashed or rebased anyway, recover
+          with a history-only merge:
+          `git fetch origin && git checkout main && git pull && git merge -s ours origin/release-prep/v__VERSION__ && git push origin main`,
+          then push the tag.
+          3. After the merge, push the tag at B -- the tag push is the approval and
+          the only trigger for publishing:
+
+          ```
+          git fetch origin
+          git tag v__VERSION__ __B__
+          git push origin v__VERSION__
+          ```
+
+          Do not tag before merging: publish requires B to be an ancestor of main.
+          release-publish then re-verifies everything in `release-manifest.json`
+          (checks 1-6) and publishes the GitHub Release with the already-built,
+          already-checksummed artifacts. No rebuild.
+
+          Notes:
+
+          - CI does not run on this PR: it was pushed with the workflow token,
+          whose events GitHub never lets trigger other workflows. CI validated
+          A on its own PR, and release-build built and checksummed A.
+          - The tag must be pushed within 90 days of the build (artifact
+          retention); after that, re-dispatch release-build for a fresh B.
+          - This branch can be deleted once the tag is pushed; B stays reachable
+          from main and from the tag.
+          BODY
+          COMPARE="https://github.com/$GITHUB_REPOSITORY/compare/$SHA...$B"
+          RUN_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          sed -i \
+            -e "s|__VERSION__|$VERSION|g" \
+            -e "s|__A__|$SHA|g" \
+            -e "s|__B__|$B|g" \
+            -e "s|__RUN_ID__|$GITHUB_RUN_ID|g" \
+            -e "s|__RUN_URL__|$RUN_URL|g" \
+            -e "s|__COMPARE__|$COMPARE|g" \
+            "$RUNNER_TEMP/body.md"
+
+          TITLE="release: v$VERSION"
+          existing=$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$BRANCH" --base main \
+            --state open --json number --jq '.[0].number // empty')
+          if [ -n "$existing" ]; then
+            gh pr edit "$existing" --repo "$GITHUB_REPOSITORY" \
+              --title "$TITLE" --body-file "$RUNNER_TEMP/body.md"
+            PR_URL=$(gh pr view "$existing" --repo "$GITHUB_REPOSITORY" --json url --jq .url)
+          else
+            PR_URL=$(gh pr create --repo "$GITHUB_REPOSITORY" --base main --head "$BRANCH" \
+              --title "$TITLE" --body-file "$RUNNER_TEMP/body.md")
+          fi
+
+          {
+            echo "## release: v$VERSION"
+            echo
+            echo "Release PR: $PR_URL"
+            echo
+            cat "$RUNNER_TEMP/body.md"
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -1,11 +1,11 @@
 # Release process design
 
-Status: PROPOSED. This is the design record for `mx`'s GitHub Actions release system. It was
+Status: IMPLEMENTED. This is the design record for `mx`'s GitHub Actions release system. It was
 produced from a deep-research pass on how C++/Swift libraries do continuous delivery on GitHub,
 followed by an owner interview, then revised twice: once after a design review found mechanical
 flaws in the first draft, and once for the owner requirement that release tags live on `main`
-(§13 records each change and why). The decisions below are settled; the workflows themselves are
-follow-up work.
+(§13 records each change and why). The workflows in §4 exist and this document is kept in sync
+with them; §13's implementation entry records where the build drifted from the design text.
 
 ## 1. Goal
 
@@ -126,6 +126,20 @@ No workflow reacts to the release PR's merge; merging only places `B` into `main
 all validation happens at tag time. (The first draft had a `release-prep-merged.yml` for this;
 it is gone, along with its label machinery.)
 
+**Implementation notes.** Each target hands its results to the prep job through a companion
+artifact, `mx-release-<target>-metadata-<sha>`: a `tree/` directory holding the exact files to
+commit in `B` (for Swift, the interpolated release `Package.swift`) plus `fragment.json` (target
+name, artifact name, archive filename, checksum, platforms, allowed paths) — the concrete form
+of the §9 contract's outputs (b) and (c). The prep job merges every target's `tree/`, builds
+`release-manifest.json` from the fragments, and refuses to commit if anything outside the
+declared paths is dirty. The prep job pushes the branch and opens the PR with the workflow's own
+`GITHUB_TOKEN`, and GitHub suppresses workflow triggers for events created with that token — so
+**the release PR runs no CI**. That is acceptable by design: CI validated `A` on its own PR,
+`release-build` built and checksummed `A`, and the release PR's content is machine-written
+metadata. Two repository settings are prerequisites: **"Allow GitHub Actions to create and
+approve pull requests"** (Settings → Actions → General) must be on, and **"Create a merge
+commit"** must be an allowed merge method (§3).
+
 One bootstrap consequence of the `push: tags` trigger: GitHub runs the workflow YAML as it
 exists *at the tagged commit* — i.e. `B`, whose tree is `A` plus metadata. So only SHAs that
 already contain `release-publish.yml` are releasable. Acceptable; no escape hatch needed.
@@ -228,10 +242,16 @@ deleted: `B` stays reachable from both `main` and the tag.
 ## 8. Build mechanics (Swift target)
 
 `mx` builds with CMake/Make, not an Xcode project, and the design keeps it that way. Compilation
-uses CMake with an iOS toolchain file (e.g. `leetal/ios-cmake`) invoked once per slice; CMake
-drives `clang`/`clang++` **directly** (the same compiler the existing native `macos` CI job
-uses) — no `.xcodeproj` is generated and no `xcodebuild` runs for *compilation*. The toolchain
-file only points CMake at the correct Apple SDK sysroot and target triple per slice.
+uses CMake's built-in Apple cross-compilation support, invoked once per slice —
+`CMAKE_SYSTEM_NAME=iOS` plus the slice's `CMAKE_OSX_SYSROOT`/`CMAKE_OSX_ARCHITECTURES` (the
+design anticipated a third-party toolchain file, e.g. `leetal/ios-cmake`; none turned out to be
+needed). CMake drives `clang`/`clang++` **directly** (the same compiler the existing native
+`macos` CI job uses) — no `.xcodeproj` is generated and no `xcodebuild` runs for *compilation*.
+Each slice builds the `mx` CMake target and its dependencies (`mx_core`, `pugixml`) and merges
+the three static libraries into one with `libtool -static`, so each XCFramework slice carries a
+single library plus the public headers (`src/include`). No module map ships: the consumers are
+C++/ObjC++ and include `mx/api/...` via the header search path SwiftPM derives from the bundle;
+Swift-`import` support would be additive later. Deployment floors are macOS 11.0 and iOS 13.0.
 
 The single unavoidable Apple-tool call is the final `xcodebuild -create-xcframework`, used purely
 to assemble the three static-lib slices plus headers into a valid `.xcframework` bundle — there
@@ -252,9 +272,9 @@ commit per release:
 - **`main`'s manifest** stays a source-only package: sibling-checkout development
   (`.package(path:)`) and any non-Apple consumption keep working with zero setup, at every
   commit of `main` (`R` guarantees this — the binary manifest never survives to a `main` tip).
-  The env-gated `MX_BINARY_RELEASE` arm that `fatalError`s today is superseded by this design
-  and should be deleted when the workflows land — `main` never switches to binary mode, so the
-  arm is dead code under the final scheme.
+  The env-gated `MX_BINARY_RELEASE` arm that used to `fatalError` was superseded by this design
+  and was deleted when the workflows landed — `main` never switches to binary mode, so the arm
+  was dead code under the final scheme.
 - **The release manifest**, generated by `_release-target-swift.yml` from a template checked in
   at `A` (`.github/release/Package.swift.template`, with the URL and checksum interpolated) and
   existing only at `B`: `.binaryTarget(name: "Mx", url: <release-asset-url>, checksum:
@@ -264,7 +284,11 @@ commit per release:
   manifest as the automatic arm on non-Apple hosts (where an XCFramework `binaryTarget` cannot
   resolve; the manifest is Swift code evaluated on the consumer's machine, so `#if os(...)`
   handles this) and behind an explicit `MX_SOURCE_BUILD=1` opt-out for anyone who wants to
-  compile a tagged release from source on a Mac.
+  compile a tagged release from source on a Mac. The template's source arms carry a copy of the
+  source target, so the template must be kept in sync with `Package.swift` whenever the target
+  changes — both files carry a KEEP IN SYNC comment pointing at each other, the release PR
+  review is the human check, and the build evaluates the interpolated manifest with
+  `swift package dump-package` before committing it.
 
 ## 9. The release-target contract (Conan honesty)
 
@@ -327,6 +351,16 @@ isolated behind the tag-push trigger.
   tag; a curated `CHANGELOG.md`-driven flow is not adopted for v1.
 
 ## 13. Revision log
+
+**2026-08-23 (c) — implemented.** The workflows in §4, the template in §8, and the
+`Package.swift` cleanup shipped in one commit. Implementation drift from the design text, each
+recorded in place above: CMake's built-in `CMAKE_SYSTEM_NAME=iOS` support replaced the
+anticipated third-party toolchain file, and each slice's three static libraries are merged with
+`libtool -static` (§8); the §9 contract's outputs (b) and (c) are concretely a per-target
+`mx-release-<target>-metadata-<sha>` artifact consumed by the prep job (§4); the release PR runs
+no CI because it is pushed with the workflow token (§4); and two repository settings became
+explicit prerequisites — Actions may create PRs, and "Create a merge commit" is an allowed merge
+method (§4).
 
 **2026-08-23 (b) — owner requirement: tags live on `main`.** The first revision fixed the
 "binary-default vs source-default" conflict and the frozen-`main` problem by tagging a commit on
