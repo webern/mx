@@ -12,7 +12,7 @@ on:
         required: true
         type: string
       version:
-        description: Version to release, MAJOR.MINOR.PATCH (no leading v).
+        description: Version to release, e.g. 1.4.0 or 0.6.0-rc1 (no leading v).
         required: true
         type: string
 
@@ -37,8 +37,18 @@ jobs:
           set -euo pipefail
           [[ "$SHA" =~ ^[0-9a-f]{40}$ ]] \
             || { echo "::error::sha must be the full 40-character lowercase hex SHA, got '$SHA'"; exit 1; }
-          [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] \
-            || { echo "::error::version must be MAJOR.MINOR.PATCH with no leading v, got '$VERSION'"; exit 1; }
+          # SemVer 2.0 (semver.org): three numbers, then the optional
+          # pre-release suffix that release candidates use, as in 0.6.0-rc1. A
+          # pre-release identifier is a dot-separated run of letters, digits and
+          # hyphens, and a numeric one may not carry a leading zero. Build
+          # metadata ("+meta") is not accepted: SemVer ignores it when ordering
+          # versions, so two releases differing only there would look like one
+          # version to a consumer (design section 7).
+          NUM='(0|[1-9][0-9]*)'
+          IDENT="($NUM|[0-9]*[A-Za-z-][0-9A-Za-z-]*)"
+          SEMVER="^$NUM\.$NUM\.$NUM(-$IDENT(\.$IDENT)*)?$"
+          [[ "$VERSION" =~ $SEMVER ]] \
+            || { echo "::error::version must be MAJOR.MINOR.PATCH, optionally followed by a pre-release suffix such as -rc1, with no leading v, got '$VERSION'"; exit 1; }
 
   # The target fan-out (design §9): one reusable workflow per release target.
   # Adding a target = add a job like this one, and extend the hardcoded path
@@ -198,6 +208,7 @@ jobs:
 
           Notes:
 
+          __PRERELEASE_NOTE__
           - CI does not run on this PR: it was pushed with the workflow token,
           whose events GitHub never lets trigger other workflows. CI validated
           A on its own PR, and release-build built and checksummed A.
@@ -216,6 +227,14 @@ jobs:
             -e "s|__RUN_URL__|$RUN_URL|g" \
             -e "s|__COMPARE__|$COMPARE|g" \
             "$RUNNER_TEMP/body.md"
+
+          # A validated version only ever contains a hyphen as the SemVer
+          # pre-release separator, so this is the release-candidate test. Say so
+          # in the PR, since it changes what publishing does at the far end.
+          case "$VERSION" in
+            *-*) sed -i "s|__PRERELEASE_NOTE__|- v$VERSION is a release candidate. The published Release is marked as a pre-release, so it does not become the repository's \"latest\", and a SwiftPM consumer reaches it only by pinning it exactly.|" "$RUNNER_TEMP/body.md" ;;
+            *) sed -i "/__PRERELEASE_NOTE__/d" "$RUNNER_TEMP/body.md" ;;
+          esac
 
           TITLE="release: v$VERSION"
           existing=$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$BRANCH" --base main \

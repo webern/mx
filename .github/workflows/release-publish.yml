@@ -179,8 +179,20 @@ jobs:
             fail "a release named $TAG already exists; delete it along with the tag before re-releasing"
           fi
           mapfile -t ASSETS < assets.txt
+
+          # A version carrying a SemVer pre-release suffix (0.6.0-rc1) is
+          # published as a GitHub pre-release, so the repository's "latest"
+          # release keeps pointing at the newest finished version and a
+          # candidate is never the default download (design section 7). Check 1
+          # already proved the tag and the manifest version agree, so testing
+          # either one is the same test.
+          FLAGS=()
+          case "$VERSION" in
+            *-*) FLAGS+=(--prerelease) ;;
+          esac
+
           gh release create "$TAG" --repo "$GITHUB_REPOSITORY" \
-            --verify-tag --title "$TAG" --generate-notes "${ASSETS[@]}"
+            --verify-tag --title "$TAG" --generate-notes "${FLAGS[@]}" "${ASSETS[@]}"
           {
             echo "## $TAG published"
             echo
