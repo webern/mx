@@ -669,3 +669,20 @@ synthetic/wavy-line.4.0.xml
 # earlier work and simply had not been pinned yet.
 lysuite/ly71c_ChordsFrets.xml
 musuite/testHarmony3.xml
+
+# Unblocked by note playback velocity: the api had no home for the <note> dynamics
+# attribute, so a note that named its own playback velocity lost it on write. It is
+# now NoteData::velocityStart (with velocityStop for end-dynamics).
+foundsuite/Invention 2.xml
+foundsuite/Invention 3.xml
+foundsuite/Invention_10.xml
+foundsuite/Invention_11.xml
+foundsuite/Invention_12.xml
+foundsuite/Invention_13.xml
+foundsuite/Invention_14.xml
+foundsuite/Invention_15.xml
+foundsuite/Invention_4.xml
+foundsuite/Invention_6.xml
+foundsuite/Invention_7.xml
+foundsuite/Invention_8.xml
+foundsuite/Invention_9.xml
