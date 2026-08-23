@@ -1,29 +1,30 @@
 // swift-tools-version: 5.9
+
+// TEMPLATE for the machine-generated release manifest -- the Package.swift that
+// exists only at a tagged release commit ("B" in docs/ai/design/release-process.md).
+// The _release-target-swift workflow interpolates the three MX_RELEASE
+// placeholders (version, url, checksum) and the release-build prep job commits
+// the result as B; commit R then restores the source manifest, so every tip of
+// main keeps the source-only Package.swift.
+//
+// KEEP IN SYNC: mxSourceTarget below must stay byte-for-byte identical to the
+// target in the repository's Package.swift, so that a release built from source
+// (non-Apple hosts, or MX_SOURCE_BUILD=1) is the same build a sibling checkout
+// gets. When Package.swift's target changes, change this copy too.
+
 import PackageDescription
 
-// This is mx's SOURCE manifest: `Mx` compiles from this checkout, so sibling
-// development (a consumer using `.package(path:)`) needs no environment setup,
-// and non-Apple hosts can build. Every tip of main carries this manifest.
+// Release: 0.6.0
 //
-// Released versions resolve differently: a consumer depending on
-// `from: "X.Y.Z"` checks out the tagged release commit, which carries a
-// machine-generated binary-default manifest (an XCFramework binaryTarget)
-// interpolated from .github/release/Package.swift.template by the
-// release-build workflow. That manifest exists only at tagged release commits,
-// never at a tip of main. See docs/ai/design/release-process.md.
-//
-// KEEP IN SYNC: the target below must stay byte-for-byte identical to
-// mxSourceTarget in .github/release/Package.swift.template, so a release built
-// from source is the same build a sibling checkout gets.
+// SwiftPM evaluates this manifest on the consumer's machine, so the selection
+// below runs there:
+//   - Apple hosts get the published prebuilt XCFramework by default -- no
+//     environment setup. Setting MX_SOURCE_BUILD=1 opts a Mac into compiling
+//     the tagged release from source instead.
+//   - Non-Apple hosts always compile from source; an XCFramework binaryTarget
+//     cannot resolve there.
 
-// SPM globs every C++ translation unit under `src` (all of which live in
-// `src/private`), minus the Catch2 runner, the test suites, and the example
-// programs -- the only files carrying their own main(). The public surface
-// is the mx::api headers under `src/include`; `src/private` is added to the
-// internal header search path so the model can include `mx/core/...`; and
-// `src/private/pugixml` is added so sources can use the canonical
-// `#include "pugixml.hpp"` form that the CMake build also exposes.
-let mxTarget: Target = .target(
+let mxSourceTarget: Target = .target(
     name: "Mx",
     path: "src",
     exclude: [
@@ -37,6 +38,21 @@ let mxTarget: Target = .target(
         .headerSearchPath("private/pugixml"),
     ]
 )
+
+let mxTarget: Target
+#if os(macOS)
+if Context.environment["MX_SOURCE_BUILD"] != nil {
+    mxTarget = mxSourceTarget
+} else {
+    mxTarget = .binaryTarget(
+        name: "Mx",
+        url: "https://github.com/webern/mx/releases/download/v0.6.0/Mx.xcframework.zip",
+        checksum: "432e02aeb5013d91d6ec05099c2a7906a6c7db9dd46bbb71203f157b5e6f28a1"
+    )
+}
+#else
+mxTarget = mxSourceTarget
+#endif
 
 let package = Package(
     name: "mx",
