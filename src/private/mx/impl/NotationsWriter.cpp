@@ -183,41 +183,7 @@ core::Notations NotationsWriter::getNotations() const
         outNotations.addChoice(core::NotationsChoice::tied(tied));
     }
 
-    // Glissando and slide are top-level <notations> children, like slur/tie above. Stops are
-    // emitted before starts so a chain of glissandi on one note keeps score order (see #139).
-    for (const auto &glissandoStop : myNoteData.noteAttachmentData.glissandoStops)
-    {
-        const auto resolvedNumber = numberResolver.emittedNumber(glissandoStop.number, &glissandoStop);
-        if (glissandoStop.glissandoType == api::GlissandoType::slide)
-        {
-            core::Slide slide;
-            writeAttributesFromGlissandoStop(glissandoStop, slide, resolvedNumber);
-            outNotations.addChoice(core::NotationsChoice::slide(slide));
-        }
-        else
-        {
-            core::Glissando glissando;
-            writeAttributesFromGlissandoStop(glissandoStop, glissando, resolvedNumber);
-            outNotations.addChoice(core::NotationsChoice::glissando(glissando));
-        }
-    }
-
-    for (const auto &glissandoStart : myNoteData.noteAttachmentData.glissandoStarts)
-    {
-        const auto resolvedNumber = numberResolver.emittedNumber(glissandoStart.number, &glissandoStart);
-        if (glissandoStart.glissandoType == api::GlissandoType::slide)
-        {
-            core::Slide slide;
-            writeAttributesFromGlissandoStart(glissandoStart, slide, resolvedNumber);
-            outNotations.addChoice(core::NotationsChoice::slide(slide));
-        }
-        else
-        {
-            core::Glissando glissando;
-            writeAttributesFromGlissandoStart(glissandoStart, glissando, resolvedNumber);
-            outNotations.addChoice(core::NotationsChoice::glissando(glissando));
-        }
-    }
+    addGlissandoAndSlide(outNotations);
 
     for (const auto &tupletStop : myNoteData.noteAttachmentData.tupletStops)
     {
@@ -301,21 +267,7 @@ core::Notations NotationsWriter::getNotations() const
     // emitted before the mark-derived ornaments below (stop-before-start, as with glissando/slide
     // above); starts are emitted after, matching the common <trill-mark/><wavy-line type="start"/>
     // shape real files use.
-    for (const auto &wavyLineStop : myNoteData.noteAttachmentData.wavyLineStops)
-    {
-        const auto resolvedNumber = numberResolver.emittedNumber(wavyLineStop.number, &wavyLineStop);
-        core::OrnamentsGroup group;
-        group.setChoice(core::OrnamentsGroupChoice::wavyLine(writeWavyLineStop(wavyLineStop, resolvedNumber)));
-        ornaments.addGroup(group);
-    }
-
-    for (const auto &wavyLineContinue : myNoteData.noteAttachmentData.wavyLineContinuations)
-    {
-        const auto resolvedNumber = numberResolver.emittedNumber(wavyLineContinue.number, &wavyLineContinue);
-        core::OrnamentsGroup group;
-        group.setChoice(core::OrnamentsGroupChoice::wavyLine(writeWavyLineContinue(wavyLineContinue, resolvedNumber)));
-        ornaments.addGroup(group);
-    }
+    addWavyLineStopsAndContinues(ornaments);
 
     for (const auto &mark : myNoteData.noteAttachmentData.marks)
     {
@@ -491,13 +443,7 @@ core::Notations NotationsWriter::getNotations() const
         }
     }
 
-    for (const auto &wavyLineStart : myNoteData.noteAttachmentData.wavyLineStarts)
-    {
-        const auto resolvedNumber = numberResolver.emittedNumber(wavyLineStart.number, &wavyLineStart);
-        core::OrnamentsGroup group;
-        group.setChoice(core::OrnamentsGroupChoice::wavyLine(writeWavyLineStart(wavyLineStart, resolvedNumber)));
-        ornaments.addGroup(group);
-    }
+    addWavyLineStarts(ornaments);
 
     if (!articulations.choice().empty())
     {
@@ -515,6 +461,81 @@ core::Notations NotationsWriter::getNotations() const
     }
 
     return outNotations;
+}
+
+void NotationsWriter::addGlissandoAndSlide(core::Notations &outNotations) const
+{
+    const auto &numberResolver = myScoreWriter.getSpannerNumberResolver();
+
+    // Glissando and slide are top-level <notations> children, like slur/tie. Stops are emitted
+    // before starts so a chain of glissandi on one note keeps score order (see #139).
+    for (const auto &glissandoStop : myNoteData.noteAttachmentData.glissandoStops)
+    {
+        const auto resolvedNumber = numberResolver.emittedNumber(glissandoStop.number, &glissandoStop);
+        if (glissandoStop.glissandoType == api::GlissandoType::slide)
+        {
+            core::Slide slide;
+            writeAttributesFromGlissandoStop(glissandoStop, slide, resolvedNumber);
+            outNotations.addChoice(core::NotationsChoice::slide(slide));
+        }
+        else
+        {
+            core::Glissando glissando;
+            writeAttributesFromGlissandoStop(glissandoStop, glissando, resolvedNumber);
+            outNotations.addChoice(core::NotationsChoice::glissando(glissando));
+        }
+    }
+
+    for (const auto &glissandoStart : myNoteData.noteAttachmentData.glissandoStarts)
+    {
+        const auto resolvedNumber = numberResolver.emittedNumber(glissandoStart.number, &glissandoStart);
+        if (glissandoStart.glissandoType == api::GlissandoType::slide)
+        {
+            core::Slide slide;
+            writeAttributesFromGlissandoStart(glissandoStart, slide, resolvedNumber);
+            outNotations.addChoice(core::NotationsChoice::slide(slide));
+        }
+        else
+        {
+            core::Glissando glissando;
+            writeAttributesFromGlissandoStart(glissandoStart, glissando, resolvedNumber);
+            outNotations.addChoice(core::NotationsChoice::glissando(glissando));
+        }
+    }
+}
+
+void NotationsWriter::addWavyLineStopsAndContinues(core::Ornaments &outOrnaments) const
+{
+    const auto &numberResolver = myScoreWriter.getSpannerNumberResolver();
+
+    for (const auto &wavyLineStop : myNoteData.noteAttachmentData.wavyLineStops)
+    {
+        const auto resolvedNumber = numberResolver.emittedNumber(wavyLineStop.number, &wavyLineStop);
+        core::OrnamentsGroup group;
+        group.setChoice(core::OrnamentsGroupChoice::wavyLine(writeWavyLineStop(wavyLineStop, resolvedNumber)));
+        outOrnaments.addGroup(group);
+    }
+
+    for (const auto &wavyLineContinue : myNoteData.noteAttachmentData.wavyLineContinuations)
+    {
+        const auto resolvedNumber = numberResolver.emittedNumber(wavyLineContinue.number, &wavyLineContinue);
+        core::OrnamentsGroup group;
+        group.setChoice(core::OrnamentsGroupChoice::wavyLine(writeWavyLineContinue(wavyLineContinue, resolvedNumber)));
+        outOrnaments.addGroup(group);
+    }
+}
+
+void NotationsWriter::addWavyLineStarts(core::Ornaments &outOrnaments) const
+{
+    const auto &numberResolver = myScoreWriter.getSpannerNumberResolver();
+
+    for (const auto &wavyLineStart : myNoteData.noteAttachmentData.wavyLineStarts)
+    {
+        const auto resolvedNumber = numberResolver.emittedNumber(wavyLineStart.number, &wavyLineStart);
+        core::OrnamentsGroup group;
+        group.setChoice(core::OrnamentsGroupChoice::wavyLine(writeWavyLineStart(wavyLineStart, resolvedNumber)));
+        outOrnaments.addGroup(group);
+    }
 }
 
 core::NotationsChoice NotationsWriter::makeArticulationsNotationsChoice() const
