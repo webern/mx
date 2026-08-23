@@ -11,6 +11,7 @@
 #include "mx/core/generated/TremoloType.h"
 #include "mx/impl/AccidentalMarkFunctions.h"
 #include "mx/impl/MarkDataFunctions.h"
+#include "mx/impl/WavyLineFunctions.h"
 
 namespace mx
 {
@@ -44,17 +45,26 @@ OrnamentsFunctions::OrnamentsFunctions(const core::Ornaments &inOrnaments, impl:
 {
 }
 
-void OrnamentsFunctions::parseOrnaments(std::vector<api::MarkData> &outMarks) const
+void OrnamentsFunctions::parseOrnaments(api::NoteAttachmentData &outAttachments) const
 {
-    parseOrnamentsSet(outMarks);
-    parseAccidentalMarkSet(outMarks);
+    parseOrnamentsSet(outAttachments);
+    parseAccidentalMarkSet(outAttachments.marks);
 }
 
-void OrnamentsFunctions::parseOrnamentsSet(std::vector<api::MarkData> &outMarks) const
+void OrnamentsFunctions::parseOrnamentsSet(api::NoteAttachmentData &outAttachments) const
 {
     for (const auto &group : myOrnaments.group())
     {
         const auto &choiceObj = group.choice();
+
+        // A wavy line is a start/continue/stop spanner, not a mark -- it goes to its own vectors
+        // rather than through the markType-based path below.
+        if (choiceObj.kind() == core::OrnamentsGroupChoice::Kind::wavyLine)
+        {
+            parseWavyLine(choiceObj.asWavyLine(), outAttachments);
+            continue;
+        }
+
         Converter converter;
         const auto markType = converter.convertOrnament(choiceObj.kind());
         auto markData = api::MarkData{};
@@ -64,7 +74,7 @@ void OrnamentsFunctions::parseOrnamentsSet(std::vector<api::MarkData> &outMarks)
 
         if (markData.markType != api::MarkType::unknownOrnament)
         {
-            outMarks.emplace_back(std::move(markData));
+            outAttachments.marks.emplace_back(std::move(markData));
         }
     }
 }
@@ -123,11 +133,6 @@ void OrnamentsFunctions::parseOrnament(const core::OrnamentsGroupChoice &choiceO
     case core::OrnamentsGroupChoice::Kind::shake: {
         outMark.name = "shake";
         parseMarkDataAttributes(choiceObj.asShake(), outMark);
-        break;
-    }
-    case core::OrnamentsGroupChoice::Kind::wavyLine: {
-        outMark.name = "wavy-line";
-        parseMarkDataAttributes(choiceObj.asWavyLine(), outMark);
         break;
     }
     case core::OrnamentsGroupChoice::Kind::mordent: {

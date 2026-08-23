@@ -41,15 +41,15 @@ bool isMarkOrnament(MarkType markType)
     return (markType == MarkType::trillMark) || (markType == MarkType::turn) || (markType == MarkType::delayedTurn) ||
            (markType == MarkType::invertedTurn) || (markType == MarkType::delayedInvertedTurn) ||
            (markType == MarkType::verticalTurn) || (markType == MarkType::invertedVerticalTurn) ||
-           (markType == MarkType::haydn) || (markType == MarkType::shake) || (markType == MarkType::wavyLine) ||
-           (markType == MarkType::mordent) || (markType == MarkType::invertedMordent) ||
-           (markType == MarkType::schleifer) || (markType == MarkType::tremoloSingleOne) ||
-           (markType == MarkType::tremoloSingleTwo) || (markType == MarkType::tremoloSingleThree) ||
-           (markType == MarkType::tremoloSingleFour) || (markType == MarkType::tremoloSingleFive) ||
-           (markType == MarkType::tremoloSingleSix) || (markType == MarkType::tremoloSingleSeven) ||
-           (markType == MarkType::tremoloSingleEight) || (markType == MarkType::tremoloStart) ||
-           (markType == MarkType::tremoloStop) || (markType == MarkType::tremoloUnmeasured) ||
-           (markType == MarkType::otherOrnament) || (markType == MarkType::unknownOrnament);
+           (markType == MarkType::haydn) || (markType == MarkType::shake) || (markType == MarkType::mordent) ||
+           (markType == MarkType::invertedMordent) || (markType == MarkType::schleifer) ||
+           (markType == MarkType::tremoloSingleOne) || (markType == MarkType::tremoloSingleTwo) ||
+           (markType == MarkType::tremoloSingleThree) || (markType == MarkType::tremoloSingleFour) ||
+           (markType == MarkType::tremoloSingleFive) || (markType == MarkType::tremoloSingleSix) ||
+           (markType == MarkType::tremoloSingleSeven) || (markType == MarkType::tremoloSingleEight) ||
+           (markType == MarkType::tremoloStart) || (markType == MarkType::tremoloStop) ||
+           (markType == MarkType::tremoloUnmeasured) || (markType == MarkType::otherOrnament) ||
+           (markType == MarkType::unknownOrnament);
 }
 
 bool isMarkFermata(MarkType markType)

@@ -980,7 +980,7 @@ TEST(ornaments, NoteData)
     note.noteAttachmentData.marks.back().positionData.isDefaultXSpecified = true;
     note.noteAttachmentData.marks.back().positionData.defaultX = 123.0;
 
-    note.noteAttachmentData.marks.emplace_back(Placement::above, MarkType::wavyLine);
+    note.noteAttachmentData.marks.emplace_back(Placement::above, MarkType::shake);
     note.noteAttachmentData.marks.back().positionData.isDefaultYSpecified = true;
     note.noteAttachmentData.marks.back().positionData.defaultY = -456.0;
 
@@ -1019,7 +1019,7 @@ TEST(ornaments, NoteData)
 
     ++oIter;
     md = *oIter;
-    CHECK(md.markType == MarkType::wavyLine);
+    CHECK(md.markType == MarkType::shake);
     CHECK(!md.positionData.isDefaultXSpecified);
     CHECK(md.positionData.isDefaultYSpecified);
     CHECK_DOUBLES_EQUAL(-456.0, md.positionData.defaultY, 0.00001);

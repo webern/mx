@@ -3,6 +3,7 @@
 // Distributed under the MIT License
 
 #include "mx/impl/SpannerNumberResolver.h"
+#include "mx/api/GlissandoData.h"
 #include "mx/utility/Throw.h"
 
 #include <algorithm>
@@ -21,6 +22,8 @@ namespace impl
 // distinguishes slur from tied; the SpannerStart/Stop structs serve several
 // elements (octave-shift, bracket, dashes) whose number attributes are
 // independent of each other in MusicXML, so each gets its own pool.
+// GlissandoType similarly distinguishes <glissando> from <slide>, two distinct
+// elements with independent number attributes.
 enum class SpannerNumberClass
 {
     slur,
@@ -28,7 +31,10 @@ enum class SpannerNumberClass
     wedge,
     octaveShift,
     bracket,
-    dashes
+    dashes,
+    glissando,
+    slide,
+    wavyLine
 };
 
 // One start/continue/stop occurrence at its position in the serialized stream. The number is
@@ -79,6 +85,31 @@ class SpannerNumberEventCollector
         for (const auto &start : attachments.curveStarts)
         {
             addCurve(start.curveType, &start, start.number, true, false);
+        }
+
+        // NotationsWriter emits glissando/slide stops, then starts (see #139 stop-before-start).
+        for (const auto &stop : attachments.glissandoStops)
+        {
+            addGlissando(stop.glissandoType, &stop, stop.number, false, true);
+        }
+        for (const auto &start : attachments.glissandoStarts)
+        {
+            addGlissando(start.glissandoType, &start, start.number, true, false);
+        }
+
+        // NotationsWriter emits wavy-line stops, then continues, then (after any mark-derived
+        // ornaments, which carry no number) starts.
+        for (const auto &stop : attachments.wavyLineStops)
+        {
+            add(SpannerNumberClass::wavyLine, &stop, stop.number, false, true);
+        }
+        for (const auto &wavyLineContinue : attachments.wavyLineContinuations)
+        {
+            add(SpannerNumberClass::wavyLine, &wavyLineContinue, wavyLineContinue.number, false, false);
+        }
+        for (const auto &start : attachments.wavyLineStarts)
+        {
+            add(SpannerNumberClass::wavyLine, &start, start.number, true, false);
         }
     }
 
@@ -154,6 +185,14 @@ class SpannerNumberEventCollector
         {
             add(SpannerNumberClass::tie, inObject, inNumber, inOpens, inCloses);
         }
+    }
+
+    void addGlissando(api::GlissandoType inGlissandoType, const void *inObject, const api::SpannerNumber &inNumber,
+                      bool inOpens, bool inCloses)
+    {
+        const auto spannerClass =
+            inGlissandoType == api::GlissandoType::slide ? SpannerNumberClass::slide : SpannerNumberClass::glissando;
+        add(spannerClass, inObject, inNumber, inOpens, inCloses);
     }
 
     int myPosition = 0;
