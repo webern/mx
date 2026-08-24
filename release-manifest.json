@@ -1,0 +1,29 @@
+{
+  "version": "0.6.0",
+  "base_sha": "8195a40ee0aa982d3002e783ad34ab6221f90b89",
+  "run_id": 32661789098,
+  "targets": [
+    {
+      "target": "swift",
+      "version": "0.6.0",
+      "base_sha": "8195a40ee0aa982d3002e783ad34ab6221f90b89",
+      "artifact": "mx-release-swift-8195a40ee0aa982d3002e783ad34ab6221f90b89",
+      "archive": "Mx.xcframework.zip",
+      "checksum": "432e02aeb5013d91d6ec05099c2a7906a6c7db9dd46bbb71203f157b5e6f28a1",
+      "platforms": [
+        "macos-arm64",
+        "macos-x86_64",
+        "ios-arm64",
+        "ios-simulator-arm64",
+        "ios-simulator-x86_64"
+      ],
+      "allowed_paths": [
+        "Package.swift"
+      ]
+    }
+  ],
+  "allowed_paths": [
+    "Package.swift",
+    "release-manifest.json"
+  ]
+}
