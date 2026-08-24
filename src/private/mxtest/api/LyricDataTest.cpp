@@ -169,4 +169,149 @@ TEST(unspecifiedSyllabicIsOmitted, LyricData)
 
 T_END;
 
+TEST(elidedSyllablesRoundTripThroughApi, LyricData)
+{
+    ScoreData score;
+    score.ticksPerQuarter = 4;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto &staff = measure.staves.back();
+    auto &voice = staff.voices[0];
+    voice.notes.emplace_back();
+    auto &note = voice.notes.back();
+    note.durationData.durationTimeTicks = 4;
+    note.durationData.durationName = DurationName::quarter;
+    note.durationData.isDurationNameSpecified = true;
+
+    LyricData lyric;
+    lyric.text = "str";
+    lyric.syllabic = LyricSyllabic::single;
+
+    LyricTextSegment textJoined;
+    textJoined.text = "en";
+    textJoined.syllabic = LyricSyllabic::single;
+    textJoined.elisionText = "\xC2\xA0"; // U+00A0 NBSP
+    lyric.continuations.emplace_back(textJoined);
+
+    LyricTextSegment smuflJoined;
+    smuflJoined.text = "gth";
+    smuflJoined.syllabic = LyricSyllabic::single;
+    smuflJoined.elisionSmufl = std::string{"lyricsElisionWide"};
+    lyric.continuations.emplace_back(smuflJoined);
+
+    LyricTextSegment bareJoined;
+    bareJoined.text = "!";
+    bareJoined.syllabic = LyricSyllabic::single;
+    // Neither elisionText nor elisionSmufl: writes a bare <elision/>.
+    lyric.continuations.emplace_back(bareJoined);
+
+    LyricTextSegment bothJoined;
+    bothJoined.text = "?";
+    bothJoined.syllabic = LyricSyllabic::single;
+    // MusicXML only consults smufl when the text content is empty, but a source can legally set
+    // both; round-trip fidelity means neither is dropped.
+    bothJoined.elisionText = "\xC2\xA0";
+    bothJoined.elisionSmufl = std::string{"lyricsElisionNarrow"};
+    lyric.continuations.emplace_back(bothJoined);
+
+    LyricTextSegment otherLyricsGlyphJoined;
+    otherLyricsGlyphJoined.text = ".";
+    otherLyricsGlyphJoined.syllabic = LyricSyllabic::single;
+    // The schema only requires a "lyrics" prefix (pattern lyrics\c+), not one of the three
+    // elision-specific names, so an unrelated "lyrics*" glyph name must round-trip too.
+    otherLyricsGlyphJoined.elisionSmufl = std::string{"lyricsHyphenBaseline"};
+    lyric.continuations.emplace_back(otherLyricsGlyphJoined);
+
+    note.lyrics.emplace_back(lyric);
+
+    const auto xml = mxtest::toXml(score);
+    auto xmlNote = mxtest::api::lyric_data_test::firstNote(xml);
+    auto xmlLyric = xmlNote.child("lyric");
+
+    CHECK_EQUAL(std::string{"str"}, std::string{xmlLyric.child("text").text().get()});
+
+    auto elisions = xmlLyric.children("elision");
+    auto elisionIt = elisions.begin();
+    CHECK(elisionIt != elisions.end());
+    CHECK_EQUAL(std::string{"\xC2\xA0"}, std::string{elisionIt->text().get()});
+    CHECK(std::string{elisionIt->attribute("smufl").value()}.empty());
+    ++elisionIt;
+    CHECK(elisionIt != elisions.end());
+    CHECK(std::string{elisionIt->text().get()}.empty());
+    CHECK_EQUAL(std::string{"lyricsElisionWide"}, std::string{elisionIt->attribute("smufl").value()});
+    ++elisionIt;
+    CHECK(elisionIt != elisions.end());
+    CHECK(std::string{elisionIt->text().get()}.empty());
+    CHECK(std::string{elisionIt->attribute("smufl").value()}.empty());
+    ++elisionIt;
+    CHECK(elisionIt != elisions.end());
+    CHECK_EQUAL(std::string{"\xC2\xA0"}, std::string{elisionIt->text().get()});
+    CHECK_EQUAL(std::string{"lyricsElisionNarrow"}, std::string{elisionIt->attribute("smufl").value()});
+    ++elisionIt;
+    CHECK(elisionIt != elisions.end());
+    CHECK(std::string{elisionIt->text().get()}.empty());
+    CHECK_EQUAL(std::string{"lyricsHyphenBaseline"}, std::string{elisionIt->attribute("smufl").value()});
+
+    auto texts = xmlLyric.children("text");
+    auto textIt = texts.begin();
+    CHECK_EQUAL(std::string{"str"}, std::string{textIt->text().get()});
+    ++textIt;
+    CHECK(textIt != texts.end());
+    CHECK_EQUAL(std::string{"en"}, std::string{textIt->text().get()});
+    ++textIt;
+    CHECK(textIt != texts.end());
+    CHECK_EQUAL(std::string{"gth"}, std::string{textIt->text().get()});
+    ++textIt;
+    CHECK(textIt != texts.end());
+    CHECK_EQUAL(std::string{"!"}, std::string{textIt->text().get()});
+    ++textIt;
+    CHECK(textIt != texts.end());
+    CHECK_EQUAL(std::string{"?"}, std::string{textIt->text().get()});
+    ++textIt;
+    CHECK(textIt != texts.end());
+    CHECK_EQUAL(std::string{"."}, std::string{textIt->text().get()});
+
+    const auto out = mxtest::fromXml(xml);
+    const auto &outNote = out.parts.at(0).measures.at(0).staves.at(0).voices.at(0).notes.at(0);
+    const auto &outLyric = outNote.lyrics.at(0);
+
+    CHECK_EQUAL(std::string{"str"}, outLyric.text);
+    CHECK(outLyric.syllabic == LyricSyllabic::single);
+    CHECK_EQUAL(static_cast<size_t>(5), outLyric.continuations.size());
+
+    CHECK_EQUAL(std::string{"en"}, outLyric.continuations.at(0).text);
+    CHECK(outLyric.continuations.at(0).syllabic == LyricSyllabic::single);
+    CHECK(outLyric.continuations.at(0).elisionText.has_value());
+    CHECK_EQUAL(std::string{"\xC2\xA0"}, *outLyric.continuations.at(0).elisionText);
+    CHECK(!outLyric.continuations.at(0).elisionSmufl.has_value());
+
+    CHECK_EQUAL(std::string{"gth"}, outLyric.continuations.at(1).text);
+    CHECK(!outLyric.continuations.at(1).elisionText.has_value());
+    CHECK(outLyric.continuations.at(1).elisionSmufl.has_value());
+    CHECK_EQUAL(std::string{"lyricsElisionWide"}, *outLyric.continuations.at(1).elisionSmufl);
+
+    CHECK_EQUAL(std::string{"!"}, outLyric.continuations.at(2).text);
+    CHECK(!outLyric.continuations.at(2).elisionText.has_value());
+    CHECK(!outLyric.continuations.at(2).elisionSmufl.has_value());
+
+    // Both set at once must round-trip as both, not collapse to just the winning one.
+    CHECK_EQUAL(std::string{"?"}, outLyric.continuations.at(3).text);
+    CHECK(outLyric.continuations.at(3).elisionText.has_value());
+    CHECK_EQUAL(std::string{"\xC2\xA0"}, *outLyric.continuations.at(3).elisionText);
+    CHECK(outLyric.continuations.at(3).elisionSmufl.has_value());
+    CHECK_EQUAL(std::string{"lyricsElisionNarrow"}, *outLyric.continuations.at(3).elisionSmufl);
+
+    // A "lyrics*" glyph name unrelated to elision must not be dropped just because it isn't one
+    // of the three elision-specific names.
+    CHECK_EQUAL(std::string{"."}, outLyric.continuations.at(4).text);
+    CHECK(!outLyric.continuations.at(4).elisionText.has_value());
+    CHECK(outLyric.continuations.at(4).elisionSmufl.has_value());
+    CHECK_EQUAL(std::string{"lyricsHyphenBaseline"}, *outLyric.continuations.at(4).elisionSmufl);
+}
+
+T_END;
+
 #endif
