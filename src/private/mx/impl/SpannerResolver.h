@@ -41,7 +41,10 @@ namespace impl
 // vector order (mirroring DirectionWriter's per-direction emission order). An
 // identity spanner takes the lowest number that is free across its whole
 // serialized extent -- from its first event to its last, whichever of
-// start/stop comes first in the stream -- and releases it afterward.
+// start/stop comes first in the stream -- and releases it afterward. The one
+// place the writer departs from this order is a same-note span (see below),
+// emitted start-first; its two events stay next to each other, so a number
+// chosen from this walk still holds.
 //
 // Identity ids are scoped per part and per spanner class: events in the same
 // part sharing a class and id are one logical spanner, even across staves.
@@ -52,6 +55,21 @@ namespace impl
 // If more than 16 spanners of one class are open at once in a part (which no
 // real score approaches), resolution fails loudly with an exception rather
 // than emitting an illegal number.
+//
+// == Same-note spans ==
+//
+// A spanner can begin and end on one note. Finale produces this shape
+// routinely: it can only anchor a glissando or slide line to a notehead, so a
+// line drawn toward a rest starts and stops on the note it leaves from.
+// NotationsWriter must emit such a pair start-first, while a note that merely
+// chains two spanners (one ends where the next begins) keeps its
+// stop-before-start order (#139). The two shapes can carry identical numbers,
+// so a note cannot tell them apart on its own. The walk here can: a stop that
+// closes a spanner opened on an earlier note belongs to a chain, and a stop
+// that closes nothing pairs with a same-numbered start on its own note. Both
+// endpoints of each detected pair are recorded so the writer can ask about
+// either one (see sameNoteSpanPartner). Only the classes the writer reorders
+// are tracked: glissando, slide, and wavy-line (#429).
 //
 // == Octave-shift stop sizes ==
 //
@@ -94,9 +112,17 @@ class SpannerResolver
     // gets MusicXML's default size of 8.
     int ottavaStopSize(const void *inObject) const;
 
+    // The other end of a spanner that starts and stops on the same note, or
+    // nullptr when the spanner extends beyond its note. inObject must be the
+    // address of the same start/stop object that resolvePart visited. Tracked
+    // for glissando, slide, and wavy-line only -- the writer does not reorder
+    // the other spanner classes.
+    const void *sameNoteSpanPartner(const void *inObject) const;
+
   private:
     std::unordered_map<const void *, int> myResolved;
     std::unordered_map<const void *, int> myOttavaStopSizes;
+    std::unordered_map<const void *, const void *> mySameNoteSpanPartners;
 };
 } // namespace impl
 } // namespace mx
