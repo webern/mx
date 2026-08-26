@@ -10,6 +10,7 @@
 #include "mx/core/generated/LyricTextGroup.h"
 #include "mx/core/generated/Notations.h"
 #include "mx/core/generated/NotationsChoice.h"
+#include "mx/core/generated/SmuflLyricsGlyphName.h"
 #include "mx/core/generated/StartStopContinue.h"
 #include "mx/core/generated/Syllabic.h"
 #include "mx/core/generated/TextElementData.h"
@@ -110,35 +111,38 @@ api::PrintData getLyricPrintData(const core::Lyric &inLyric, const core::TextEle
     return outPrintData;
 }
 
-std::string getElisionDisplayText(const core::LyricSyllableGroup &inGroup)
+// Appends the runs after the first <text>: one api::LyricTextSegment per <elision>-joined
+// <syllabic>?/<text> pair, preserving each run's own syllabic value and elision content.
+std::vector<api::LyricTextSegment> getLyricContinuations(const core::LyricTextGroup &inGroup)
 {
-    if (inGroup.elisionSyllabicGroup().has_value())
-    {
-        const auto &elision = inGroup.elisionSyllabicGroup()->elision();
-        const auto &value = elision.value();
-        if (!value.empty())
-        {
-            return value;
-        }
-    }
-
-    // UTF-8 for U+203F (undertie), the conventional elision joiner, substituted when
-    // <elision> has no text of its own.
-    return "\xE2\x80\xBF";
-}
-
-// Flattens elided syllables into one string: mx::api models a lyric as a single text, so
-// <elision> structure is intentionally collapsed and cannot be round-tripped.
-std::string getLyricDisplayText(const core::LyricTextGroup &inGroup)
-{
-    std::string result;
-
-    result += inGroup.text().value();
+    std::vector<api::LyricTextSegment> result;
 
     for (const auto &group : inGroup.lyricSyllableGroup())
     {
-        result += getElisionDisplayText(group);
-        result += group.text().value();
+        api::LyricTextSegment segment;
+        segment.text = group.text().value();
+
+        if (group.elisionSyllabicGroup().has_value())
+        {
+            const auto &elisionSyllabicGroup = *group.elisionSyllabicGroup();
+            const auto &elision = elisionSyllabicGroup.elision();
+            if (!elision.value().empty())
+            {
+                segment.elisionText = elision.value();
+            }
+            // Preserved independently of elisionText for round-trip fidelity, even though
+            // MusicXML only consults smufl when the text content is empty.
+            if (elision.smufl().has_value())
+            {
+                segment.elisionSmufl = elision.smufl()->toString();
+            }
+            if (elisionSyllabicGroup.syllabic().has_value())
+            {
+                segment.syllabic = convertLyricSyllabic(*elisionSyllabicGroup.syllabic());
+            }
+        }
+
+        result.emplace_back(std::move(segment));
     }
 
     return result;
@@ -545,11 +549,12 @@ void NoteReader::setLyric()
         case core::LyricChoice::Kind::lyricTextGroup: {
             const auto &textGroup = textChoice.asLyricTextGroup();
 
-            lyricData.text = getLyricDisplayText(textGroup);
+            lyricData.text = textGroup.text().value();
             lyricData.printData = getLyricPrintData(lyric, &textGroup.text());
 
             lyricData.syllabic = textGroup.syllabic().has_value() ? convertLyricSyllabic(*textGroup.syllabic())
                                                                   : api::LyricSyllabic::unspecified;
+            lyricData.continuations = getLyricContinuations(textGroup);
             if (textGroup.extend().has_value())
             {
                 lyricData.hasExtend = true;

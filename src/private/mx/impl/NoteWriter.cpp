@@ -9,6 +9,8 @@
 #include "mx/core/generated/BeamLevel.h"
 #include "mx/core/generated/CueNoteGroup.h"
 #include "mx/core/generated/DisplayStepOctaveGroup.h"
+#include "mx/core/generated/Elision.h"
+#include "mx/core/generated/ElisionSyllabicGroup.h"
 #include "mx/core/generated/Extend.h"
 #include "mx/core/generated/FormattedText.h"
 #include "mx/core/generated/FullNoteGroupChoice.h"
@@ -17,12 +19,14 @@
 #include "mx/core/generated/GraceNoteChoice.h"
 #include "mx/core/generated/GraceNoteGroup.h"
 #include "mx/core/generated/LyricChoice.h"
+#include "mx/core/generated/LyricSyllableGroup.h"
 #include "mx/core/generated/LyricTextGroup.h"
 #include "mx/core/generated/NonNegativeDecimal.h"
 #include "mx/core/generated/NormalNoteGroup.h"
 #include "mx/core/generated/Pitch.h"
 #include "mx/core/generated/Rest.h"
 #include "mx/core/generated/SmuflGlyphName.h"
+#include "mx/core/generated/SmuflLyricsGlyphName.h"
 #include "mx/core/generated/Syllabic.h"
 #include "mx/core/generated/TextElementData.h"
 #include "mx/core/generated/Tied.h"
@@ -619,6 +623,34 @@ void NoteWriter::setLyrics() const
                 textGroup.setSyllabic(convertLyricSyllabicForNoteWriter(lyricData.syllabic));
             }
             textGroup.setText(std::move(text));
+            for (const auto &segment : lyricData.continuations)
+            {
+                core::Elision elision;
+                if (segment.elisionText.has_value())
+                {
+                    elision.setValue(*segment.elisionText);
+                }
+                if (segment.elisionSmufl.has_value())
+                {
+                    elision.setSmufl(core::SmuflLyricsGlyphName::parse(*segment.elisionSmufl));
+                }
+
+                core::ElisionSyllabicGroup elisionSyllabicGroup;
+                elisionSyllabicGroup.setElision(std::move(elision));
+                if (segment.syllabic != api::LyricSyllabic::unspecified)
+                {
+                    elisionSyllabicGroup.setSyllabic(convertLyricSyllabicForNoteWriter(segment.syllabic));
+                }
+
+                core::TextElementData segmentText;
+                segmentText.setValue(segment.text);
+                setAttributesFromFontData(lyricData.printData.fontData, segmentText);
+
+                core::LyricSyllableGroup syllableGroup;
+                syllableGroup.setElisionSyllabicGroup(std::move(elisionSyllabicGroup));
+                syllableGroup.setText(std::move(segmentText));
+                textGroup.addLyricSyllableGroup(std::move(syllableGroup));
+            }
             if (lyricData.hasExtend)
             {
                 core::Extend extend;

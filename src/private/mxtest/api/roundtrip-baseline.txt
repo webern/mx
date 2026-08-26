@@ -703,6 +703,13 @@ recsuite/Chant.xml
 synthetic/direction.3.1.xml
 synthetic/direction.4.0.xml
 
+# Unblocked by LyricData::continuations: a lyric split across more than one <text>
+# run joined by <elision> was flattened into a single string on read (substituting
+# an undertie glyph for empty elisions) and the writer never emitted <elision> at
+# all, so the extra runs were dropped on write.
+lysuite/ly61j_Lyrics_Elisions.xml
+synthetic/lyric.3.0.xml
+
 # Unblocked by PartData::writeStaffCount: a single-staff part does not need
 # <staves>, so mx omitted it, and these three sources spell out the redundant
 # <staves>1</staves>.

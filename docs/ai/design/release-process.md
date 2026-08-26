@@ -28,14 +28,14 @@ commit from primary sources and publishes). Most projects do single-phase (tag-t
 The entire release is four manual actions. Everything else is automation reacting to events.
 
 1. **(Optional) Open and merge a PR** for any real work the release needs. → commit `A` on `main`.
-2. **Run `release-build`** (a `workflow_dispatch`), passing SHA `A` and the version
-   `MAJOR.MINOR.PATCH`.
+2. **Run `release-build`** (a `workflow_dispatch`), passing SHA `A` and the version:
+   `MAJOR.MINOR.PATCH`, or `MAJOR.MINOR.PATCH-prerelease` for a release candidate (§7).
 3. **Review and merge the auto-opened release PR** (branch `release-prep/v<version>`), using
    **"Create a merge commit"** — not squash or rebase. §3 explains why the merge method matters;
    §5 enforces it.
-4. **Push a tag** (`vMAJOR.MINOR.PATCH`) pointing at commit `B` — the first of the PR's two
-   commits, whose SHA the run summary and the PR body both print alongside the exact
-   `git tag`/`git push` commands.
+4. **Push a tag** (`v` followed by that same version) pointing at commit `B` — the first of
+   the PR's two commits, whose SHA the run summary and the PR body both print alongside the
+   exact `git tag`/`git push` commands.
 
 No other human step exists. In particular there is no "click publish on a draft," no manual
 checksum edit, and no reviewer-approval gate beyond the tag push itself — pushing the tag *is*
@@ -117,7 +117,7 @@ All new, all separate from `ci.yaml`. Names are indicative.
 
 | File | Trigger | Responsibility |
 |---|---|---|
-| `release-build.yml` | `workflow_dispatch`, inputs `sha` (required; validated against `^[0-9a-f]{40}$`) and `version` (required; validated against `^\d+\.\d+\.\d+$`) | Checks out `sha` explicitly. Calls one reusable target workflow per release target. Uploads each target's artifacts (`retention-days: 90`). A final prep job collects every target's metadata files, writes `release-manifest.json` (§5), commits `B` then `R` on `release-prep/v<version>` (force-push; the branch is machine-owned), opens the release PR, and prints `B`'s SHA, the tag commands, and the `A...B` compare link in the run summary and the PR body. |
+| `release-build.yml` | `workflow_dispatch`, inputs `sha` (required; validated against `^[0-9a-f]{40}$`) and `version` (required; validated as SemVer 2.0 with an optional pre-release suffix and no build metadata, §7) | Checks out `sha` explicitly. Calls one reusable target workflow per release target. Uploads each target's artifacts (`retention-days: 90`). A final prep job collects every target's metadata files, writes `release-manifest.json` (§5), commits `B` then `R` on `release-prep/v<version>` (force-push; the branch is machine-owned), opens the release PR, and prints `B`'s SHA, the tag commands, and the `A...B` compare link in the run summary and the PR body. |
 | `_release-target-swift.yml` | `workflow_call` | Builds three slices via CMake + an iOS toolchain file: macOS universal (`arm64`+`x86_64`), iOS device (`arm64`), iOS simulator (`arm64`+`x86_64`). Stitches them with `xcodebuild -create-xcframework`, zips, computes the SHA256 via `swift package compute-checksum`. Outputs: artifact name, checksum, the complete release-mode `Package.swift` content (§8), and the list of paths it is allowed to occupy in `B`. |
 | `_release-target-conan.yml` | `workflow_call` | *Future.* Same input/output contract as the Swift target (SHA + version in; artifact + metadata files + allowed-path list out). Not built now; its existence in this table is the proof the abstraction is not Swift-only. |
 | `release-publish.yml` | `push: tags: ["v*"]` | Resolves the tag to `B`, reads `release-manifest.json` from `B`'s tree, and re-verifies every claim in it (§5). Hard-fails on any mismatch. Otherwise downloads the pinned run's artifacts and publishes a GitHub Release immediately (not draft), `generate_release_notes: true`, attaching each target's archive and its `.sha256`. |
@@ -226,9 +226,34 @@ truth" while also requiring the URL to be written at build time, with no version
 The tag remains the **approval**: nothing publishes until `v<version>` is pushed at `B`, and
 `release-publish` hard-fails unless the tag name matches the manifest's version exactly (§5,
 check 1), so the tag and the baked URL cannot desync. Format `vMAJOR.MINOR.PATCH` (e.g.
-`v1.4.0`). There is still no `VERSION` file and no version field in `Package.swift`;
-`release-publish` derives the version string it passes to release notes (and a future Conan
-target) from `github.ref_name`.
+`v1.4.0`), or `vMAJOR.MINOR.PATCH-prerelease` for a release candidate (e.g. `v0.6.0-rc1`).
+There is still no `VERSION` file and no version field in `Package.swift`; `release-publish`
+derives the version string it passes to release notes (and a future Conan target) from
+`github.ref_name`.
+
+**Release candidates.** A version may carry a SemVer 2.0 pre-release suffix: a hyphen, then
+dot-separated groups of letters, digits and hyphens. `0.6.0-rc1` is the shape this repository
+uses. SemVer sorts a pre-release *before* the version it leads to, so `0.6.0-rc1` comes before
+`0.6.0-rc2`, which comes before `0.6.0`. `release-build` rejects a numeric group with a leading
+zero for that same ordering reason, and rejects build metadata (`+meta`) because SemVer ignores
+it when comparing versions — two releases differing only there would look like one version to a
+consumer.
+
+A candidate goes through the same steps as any other release: the same four human steps, the
+same two-commit PR, the same merge commit, the same tag at `B`, and the same six checks at
+publish time. Only the last step differs. `release-publish` passes `--prerelease` to
+`gh release create` when the version carries a suffix, so the repository's "latest release"
+keeps pointing at the newest finished version and a candidate is never the default download.
+
+A consumer takes a candidate by pinning it:
+
+```swift
+.package(url: "https://github.com/webern/mx.git", exact: "0.6.0-rc1")
+```
+
+A range requirement such as `from: "0.6.0"` is not the way to reach one. Someone testing a
+candidate should be saying so in their manifest, and should have to edit that line to move on to
+the finished release.
 
 Release tags are protected by a repository ruleset on pattern `v*`: **Restrict updates** and
 **Restrict deletions**, with repo admins on the bypass list. This is complementary to — not a
@@ -351,6 +376,14 @@ isolated behind the tag-push trigger.
   tag; a curated `CHANGELOG.md`-driven flow is not adopted for v1.
 
 ## 13. Revision log
+
+**2026-08-23 (d) — release candidates.** A version may now carry a SemVer pre-release suffix,
+so `0.6.0-rc1` can be dispatched, tagged and published (§7). Two changes carry it:
+`release-build` validates the version against SemVer 2.0 minus build metadata instead of three
+plain numbers, and `release-publish` marks the GitHub Release as a pre-release when the version
+carries a suffix, which keeps "latest" on the newest finished version. Nothing else moved. The
+`v*` tag trigger, the six checks, the asset URL and the two-commit PR shape were all written in
+terms of the version string rather than its shape, so they took a candidate without edits.
 
 **2026-08-23 (c) — implemented.** The workflows in §4, the template in §8, and the
 `Package.swift` cleanup shipped in one commit. Implementation drift from the design text, each
