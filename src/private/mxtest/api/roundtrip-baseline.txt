@@ -366,6 +366,7 @@ synthetic/beats.3.0.xml
 synthetic/bracket.3.0.xml
 synthetic/dashes.3.0.xml
 synthetic/encoding-description.3.0.xml
+synthetic/first-fret.3.0.xml
 synthetic/first.4.0.xml
 synthetic/group.3.0.xml
 synthetic/instrument-abbreviation.3.0.xml

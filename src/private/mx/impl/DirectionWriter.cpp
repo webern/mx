@@ -1676,6 +1676,14 @@ std::vector<core::MusicDataChoice> DirectionWriter::createHarmonyElements(int in
             {
                 core::FirstFret firstFret{};
                 firstFret.setValue(chordIter->frameData.firstFret);
+                if (chordIter->frameData.firstFretText.has_value())
+                {
+                    firstFret.setText(chordIter->frameData.firstFretText);
+                }
+                if (chordIter->frameData.firstFretLocation != api::FirstFretLocation::unspecified)
+                {
+                    firstFret.setLocation(myConverter.convert(chordIter->frameData.firstFretLocation));
+                }
                 frame.setFirstFret(firstFret);
             }
 

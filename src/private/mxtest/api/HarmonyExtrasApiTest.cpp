@@ -223,6 +223,52 @@ TEST(harmonyFrameUnplayedRoundTrip, HarmonyExtrasApi)
           std::optional<std::string>{"x"});
 }
 
+TEST(harmonyFrameFirstFretRoundTrip, HarmonyExtrasApi)
+{
+    auto score = makeScoreWithChord();
+    auto &chord = chordOf(score);
+    chord.root = Step::c;
+    chord.chordKind = ChordKind::major;
+    chord.hasFrameData = true;
+    chord.frameData.isFirstFretSpecified = true;
+    chord.frameData.firstFret = 5;
+    chord.frameData.firstFretText = "5fr.";
+    chord.frameData.firstFretLocation = FirstFretLocation::right;
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("text=\"5fr.\"") != std::string::npos);
+    CHECK(xml.find("location=\"right\"") != std::string::npos);
+
+    const auto out = mxtest::roundTrip(score);
+    const auto &outFrame = firstChord(out).frameData;
+    CHECK(outFrame.isFirstFretSpecified);
+    CHECK_EQUAL(5, outFrame.firstFret);
+    CHECK(outFrame.firstFretText == std::optional<std::string>{"5fr."});
+    CHECK(FirstFretLocation::right == outFrame.firstFretLocation);
+}
+
+T_END;
+
+TEST(harmonyFrameFirstFretBareRoundTrip, HarmonyExtrasApi)
+{
+    auto score = makeScoreWithChord();
+    auto &chord = chordOf(score);
+    chord.root = Step::c;
+    chord.chordKind = ChordKind::major;
+    chord.hasFrameData = true;
+    chord.frameData.isFirstFretSpecified = true;
+    chord.frameData.firstFret = 3;
+
+    const auto xml = mxtest::toXml(score);
+    CHECK(xml.find("<first-fret>3</first-fret>") != std::string::npos);
+
+    const auto out = mxtest::roundTrip(score);
+    const auto &outFrame = firstChord(out).frameData;
+    CHECK_EQUAL(3, outFrame.firstFret);
+    CHECK(!outFrame.firstFretText.has_value());
+    CHECK(FirstFretLocation::unspecified == outFrame.firstFretLocation);
+}
+
 T_END;
 
 TEST(harmonyFunctionRoundTrip, HarmonyExtrasApi)

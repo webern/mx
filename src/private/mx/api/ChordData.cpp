@@ -24,7 +24,9 @@ FrameNoteData::FrameNoteData()
 {
 }
 
-FrameData::FrameData() : stringCount{6}, fretCount{4}, unplayed{}, firstFret{1}, isFirstFretSpecified{false}, notes{}
+FrameData::FrameData()
+    : stringCount{6}, fretCount{4}, unplayed{}, firstFret{1}, isFirstFretSpecified{false}, firstFretText{},
+      firstFretLocation{FirstFretLocation::unspecified}, notes{}
 {
 }
 

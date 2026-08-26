@@ -1376,6 +1376,11 @@ const Converter::EnumMap<core::CancelLocation, api::CancelLocation> Converter::c
     {core::CancelLocation::beforeBarline(), api::CancelLocation::beforeBarline},
 };
 
+const Converter::EnumMap<core::LeftRight, api::FirstFretLocation> Converter::firstFretLocationMap = {
+    {core::LeftRight::left(), api::FirstFretLocation::left},
+    {core::LeftRight::right(), api::FirstFretLocation::right},
+};
+
 // The standard <mode> vocabulary. api::KeyMode::unspecified and api::KeyMode::unsupported are absent
 // because they have no wire spelling.
 const Converter::EnumMap<core::Mode, api::KeyMode> Converter::keyModeMap = {
@@ -2001,6 +2006,16 @@ core::CancelLocation Converter::convert(api::CancelLocation value) const
 api::CancelLocation Converter::convert(core::CancelLocation value) const
 {
     return findApiItem(cancelLocationMap, api::CancelLocation::unspecified, value);
+}
+
+core::LeftRight Converter::convert(api::FirstFretLocation value) const
+{
+    return findCoreItem(firstFretLocationMap, core::LeftRight::right(), value);
+}
+
+api::FirstFretLocation Converter::convert(core::LeftRight value) const
+{
+    return findApiItem(firstFretLocationMap, api::FirstFretLocation::unspecified, value);
 }
 
 core::Mode Converter::convert(api::KeyMode value) const

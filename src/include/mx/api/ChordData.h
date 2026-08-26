@@ -149,6 +149,15 @@ enum class FrameBarre
     stop
 };
 
+// Which side of the frame the first-fret label is printed on. Guitar chord diagrams conventionally
+// carry it to the right of the grid.
+enum class FirstFretLocation
+{
+    unspecified,
+    left,
+    right
+};
+
 class FrameNoteData
 {
   public:
@@ -181,6 +190,10 @@ class FrameData
     std::optional<std::string> unplayed;
     int firstFret;
     bool isFirstFretSpecified;
+    // The label printed beside the frame naming the fret it starts on, such as "5fr." for a frame
+    // whose top space is the fifth fret. Leave absent to print the fret number by itself.
+    std::optional<std::string> firstFretText;
+    FirstFretLocation firstFretLocation;
     std::vector<FrameNoteData> notes;
 };
 
@@ -190,6 +203,8 @@ MXAPI_EQUALS_MEMBER(fretCount)
 MXAPI_EQUALS_MEMBER(unplayed)
 MXAPI_EQUALS_MEMBER(firstFret)
 MXAPI_EQUALS_MEMBER(isFirstFretSpecified)
+MXAPI_EQUALS_MEMBER(firstFretText)
+MXAPI_EQUALS_MEMBER(firstFretLocation)
 MXAPI_EQUALS_MEMBER(notes)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(FrameData);
