@@ -210,6 +210,13 @@ class PartData
     /// the part. Subsequent transposition changes are not currently supported by mx::api.
     std::optional<TransposeData> transposition;
 
+    // Most users can ignore this; leave it false. MusicXML states a part's staff count in
+    // <staves>, which it needs only when the part has more than one staff. A part with no
+    // <staves> has one. mx writes the element whenever the part has more than one staff, so
+    // this only controls the redundant <staves>1</staves> on a single-staff part. Reading a
+    // file sets it when the source spelled that out. Ignored when there is more than one staff.
+    bool writeSingleStaffCount = false;
+
     std::vector<MeasureData> measures;
 
     // MusicXML requires <part-name>, but real files often leave it empty and
@@ -312,6 +319,7 @@ MXAPI_EQUALS_MEMBER(displayAbbreviationPositionData)
 MXAPI_EQUALS_MEMBER(groups)
 MXAPI_EQUALS_MEMBER(instrumentData)
 MXAPI_EQUALS_MEMBER(transposition)
+MXAPI_EQUALS_MEMBER(writeSingleStaffCount)
 MXAPI_EQUALS_MEMBER(measures)
 MXAPI_EQUALS_END;
 MXAPI_NOT_EQUALS_AND_VECTORS(PartData);
