@@ -1418,6 +1418,11 @@ void DirectionReader::parseHarmony(const core::Harmony &inHarmony, const core::H
         {
             chord.frameData.isFirstFretSpecified = true;
             chord.frameData.firstFret = frame.firstFret()->value();
+            chord.frameData.firstFretText = frame.firstFret()->text();
+            if (frame.firstFret()->location().has_value())
+            {
+                chord.frameData.firstFretLocation = myConverter.convert(*frame.firstFret()->location());
+            }
         }
 
         for (const auto &frameNote : frame.frameNote())

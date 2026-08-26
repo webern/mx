@@ -34,6 +34,7 @@
 #include "mx/core/generated/GroupSymbolValue.h"
 #include "mx/core/generated/KindValue.h"
 #include "mx/core/generated/LeftCenterRight.h"
+#include "mx/core/generated/LeftRight.h"
 #include "mx/core/generated/LineEnd.h"
 #include "mx/core/generated/LineType.h"
 #include "mx/core/generated/MeasureNumberingValue.h"
@@ -201,6 +202,9 @@ class Converter
     core::CancelLocation convert(api::CancelLocation value) const;
     api::CancelLocation convert(core::CancelLocation value) const;
 
+    core::LeftRight convert(api::FirstFretLocation value) const;
+    api::FirstFretLocation convert(core::LeftRight value) const;
+
     // <mode> is an open vocabulary, so a core Mode holds an arbitrary string. api::KeyMode::unspecified
     // and api::KeyMode::unsupported have no wire spelling and convert to an empty core::Mode; callers
     // write no <mode> element for an empty Mode. A core Mode outside the standard vocabulary (including
@@ -294,6 +298,7 @@ class Converter
     const static EnumMap<core::SoundID, api::SoundID> instrumentMap;
     const static EnumMap<core::KindValue, api::ChordKind> kindMap;
     const static EnumMap<core::CancelLocation, api::CancelLocation> cancelLocationMap;
+    const static EnumMap<core::LeftRight, api::FirstFretLocation> firstFretLocationMap;
     const static EnumMap<core::Mode, api::KeyMode> keyModeMap;
     const static EnumMap<core::TimeSymbol, api::TimeSignatureSymbol> simpleTimeSymbolMap;
     const static EnumMap<core::TimeSymbol, api::ComplexTimeSymbol> complexTimeSymbolMap;
