@@ -102,7 +102,7 @@ api::PartData PartReader::getPartData()
 
     // A single-staff part does not need <staves>, so mx omits it there. Record an override only
     // when the source spelled the redundant element out.
-    myOutPartData.writeStaffCount = myIsStavesElementPresent && myNumStaves == 1;
+    myOutPartData.writeSingleStaffCount = myIsStavesElementPresent && myNumStaves == 1;
 
     myCurrentCursor = MeasureCursor{myNumStaves, myGlobalTicksPerMeasure};
     myCurrentCursor.partIndex = myPartIndex;

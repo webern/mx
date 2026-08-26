@@ -136,9 +136,9 @@ void MeasureWriter::writeMeasureGlobals()
             myPropertiesWriter->writeDivisions(myHistory.getCursor().getGlobalTicksPerQuarter());
         }
 
-        // <staves> is needed only when the part has more than one staff. PartData::writeStaffCount
+        // <staves> is needed only when the part has more than one staff. PartData::writeSingleStaffCount
         // adds the redundant <staves>1</staves> back for a source that spelled it out.
-        const bool isStaffCountRequested = myScoreWriter.getPart(myHistory.getCursor().partIndex).writeStaffCount;
+        const bool isStaffCountRequested = myScoreWriter.getPart(myHistory.getCursor().partIndex).writeSingleStaffCount;
         if (myMeasureData.staves.size() > 1 || isStaffCountRequested)
         {
             myPropertiesWriter->writeNumStaves(static_cast<int>(myMeasureData.staves.size()));

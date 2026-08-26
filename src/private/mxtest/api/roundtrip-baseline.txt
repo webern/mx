@@ -710,7 +710,7 @@ synthetic/direction.4.0.xml
 lysuite/ly61j_Lyrics_Elisions.xml
 synthetic/lyric.3.0.xml
 
-# Unblocked by PartData::writeStaffCount: a single-staff part does not need
+# Unblocked by PartData::writeSingleStaffCount: a single-staff part does not need
 # <staves>, so mx omitted it, and these three sources spell out the redundant
 # <staves>1</staves>.
 lysuite/ly02b_Rests_PitchedRests.xml

@@ -45,19 +45,19 @@ TEST(aSingleStaffPartOmitsTheStaffCount, StaffCount)
     CHECK(xml.find("<staves>") == std::string::npos);
 
     const auto out = roundTrip(score);
-    CHECK(!out.parts.at(0).writeStaffCount);
+    CHECK(!out.parts.at(0).writeSingleStaffCount);
 }
 
 TEST(aSingleStaffPartCanAskForTheStaffCount, StaffCount)
 {
     auto score = staffCountMakeScore(1);
-    score.parts.at(0).writeStaffCount = true;
+    score.parts.at(0).writeSingleStaffCount = true;
 
     const auto xml = toXml(score);
     CHECK(xml.find("<staves>1</staves>") != std::string::npos);
 
     const auto out = roundTrip(score);
-    CHECK(out.parts.at(0).writeStaffCount);
+    CHECK(out.parts.at(0).writeSingleStaffCount);
     REQUIRE(out.parts.at(0).measures.at(0).staves.size() == 1);
 }
 
@@ -70,7 +70,7 @@ TEST(aMultiStaffPartAlwaysWritesTheStaffCount, StaffCount)
     CHECK(xml.find("<staves>2</staves>") != std::string::npos);
 
     const auto out = roundTrip(score);
-    CHECK(!out.parts.at(0).writeStaffCount);
+    CHECK(!out.parts.at(0).writeSingleStaffCount);
     REQUIRE(out.parts.at(0).measures.at(0).staves.size() == 2);
 }
 
