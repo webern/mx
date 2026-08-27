@@ -717,3 +717,12 @@ synthetic/lyric.3.0.xml
 lysuite/ly02b_Rests_PitchedRests.xml
 lysuite/ly32b_Articulations_Texts.xml
 lysuite/ly33b_Spanners_Tie.xml
+
+# Unblocked by the #429 single-note spanner ordering fix: rpatters1's Finale
+# export of a glissando and a tab slide drawn from a note toward a rest, so
+# each line starts and stops on the one note it can anchor to, written
+# start-then-stop. The writer used to emit every stop before every start,
+# inverting the pair. (Its sibling tuplet_singletons-ref.xml is not pinned:
+# the ordering is fixed, but the writer restates <tuplet-actual>/
+# <tuplet-normal> on a start whose source omits them.)
+rpatters1/gliss_to_rest-ref.xml
