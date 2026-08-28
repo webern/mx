@@ -431,7 +431,8 @@ void MeasureReader::parseNote(const core::Note &inMxNote, const core::Note *next
     MX_ASSERT(bucketStaffIndex >= 0);
     MX_ASSERT(static_cast<size_t>(bucketStaffIndex) < myOutMeasureData.staves.size());
     myPreviousNoteBucketStaffIndex = bucketStaffIndex;
-    insertNoteData(std::move(noteData), myCurrentCursor.staffIndex, myCurrentCursor.voiceIndex);
+    insertNoteData(std::move(noteData), myCurrentCursor.staffIndex, myCurrentCursor.voiceIndex,
+                   noteReader.getVoiceLabel());
 }
 
 void MeasureReader::scanForCrossStaffBeamGroups() const
@@ -1158,7 +1159,7 @@ void MeasureReader::importClef(const core::Clef &inClef) const
     insertClef(std::move(clefData), celfStaffIndex);
 }
 
-void MeasureReader::insertNoteData(api::NoteData &&noteData, int staff, int voice) const
+void MeasureReader::insertNoteData(api::NoteData &&noteData, int staff, int voice, const std::string &voiceLabel) const
 {
     MX_ASSERT(staff >= 0);
     MX_ASSERT(static_cast<size_t>(staff) < myOutMeasureData.staves.size());
@@ -1169,6 +1170,14 @@ void MeasureReader::insertNoteData(api::NoteData &&noteData, int staff, int voic
         staffRef.voices[voice] = api::VoiceData{};
     }
     auto &voiceRef = staffRef.voices[voice];
+
+    // The first note that names the voice names it for all of them. Notes without a <voice> get
+    // the name of the voice they land in.
+    if (voiceRef.label.empty())
+    {
+        voiceRef.label = voiceLabel;
+    }
+
     voiceRef.notes.emplace_back(std::move(noteData));
 }
 
@@ -1191,6 +1200,25 @@ void MeasureReader::consolidateVoicesForAllStaves() const
         else
         {
             collapseVoicesAutomatically(staff);
+        }
+    }
+
+    dropRedundantVoiceLabels();
+}
+
+// A voice whose name is the number the writer would give it anyway does not need to carry one.
+// Clearing those keeps VoiceData::label empty in the common case, where it stands for a voice
+// name the index cannot express.
+void MeasureReader::dropRedundantVoiceLabels() const
+{
+    for (auto &staff : myOutMeasureData.staves)
+    {
+        for (auto &voicePair : staff.voices)
+        {
+            if (voicePair.second.label == std::to_string(voicePair.first + 1))
+            {
+                voicePair.second.label.clear();
+            }
         }
     }
 }

@@ -726,3 +726,10 @@ lysuite/ly33b_Spanners_Tie.xml
 # the ordering is fixed, but the writer restates <tuplet-actual>/
 # <tuplet-normal> on a start whose source omits them.)
 rpatters1/gliss_to_rest-ref.xml
+
+# Unblocked by VoiceData::label: mx renumbered every voice from the position of
+# its container, so a voice whose <voice> element said something else -- a word
+# rather than a number, or a number the api's own index does not reproduce --
+# was written under the wrong name.
+musuite/testChordNoVoice.xml
+musuite/testStringVoiceName.xml

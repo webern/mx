@@ -602,7 +602,8 @@ void MeasureWriter::writeVoices(const api::StaffData &inStaff)
                               myPreviousCursor.isChordActive,
                               voice.second.notes,
                               noteIndex,
-                              numVoices};
+                              numVoices,
+                              voice.second.label};
             myOutMeasure.addMusicData(core::MusicDataChoice::note(writer.getNote(isStartOfChord)));
             myHistory.log("addNote cursorTime " + std::to_string(myHistory.getCursor().tickTimePosition) +
                           ", noteTime " + std::to_string(apiNote.tickTimePosition));
