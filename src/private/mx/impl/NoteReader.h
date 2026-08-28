@@ -184,6 +184,13 @@ class NoteReader
         return myTimeModificationNormalTypeDots;
     }
 
+    // True when the <time-modification> carried a <normal-type> element. When false, the
+    // normal type getters return a default derived from the note's own type.
+    inline bool getIsTimeModificationNormalTypeSpecified() const
+    {
+        return myIsTimeModificationNormalTypeSpecified;
+    }
+
     inline bool getHasAccidental() const
     {
         return myHasAccidental;
@@ -281,6 +288,7 @@ class NoteReader
     int myTimeModificationNormalNotes;
     core::NoteTypeValue myTimeModificationNormalType;
     int myTimeModificationNormalTypeDots;
+    bool myIsTimeModificationNormalTypeSpecified;
     bool myHasAccidental;
     core::AccidentalValue myAccidental;
     bool myIsAccidentalParenthetical;

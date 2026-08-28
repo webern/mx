@@ -134,22 +134,14 @@ api::NoteData NoteFunctions::parseNote() const
 
     myOutNoteData.durationData.timeModificationActualNotes = reader.getTimeModificationActualNotes();
     myOutNoteData.durationData.timeModificationNormalNotes = reader.getTimeModificationNormalNotes();
-    myOutNoteData.durationData.timeModificationNormalType = converter.convert(reader.getTimeModificationNormalType());
-    myOutNoteData.durationData.timeModificationNormalTypeDots = reader.getTimeModificationNormalTypeDots();
 
-    const core::NoteTypeValue timeModType = reader.getTimeModificationNormalType();
-    const int timeModTypeDots = reader.getTimeModificationNormalTypeDots();
-    // TODO: should this be ||? Either conjunct alone proves <normal-type> was present (the
-    // reader defaults normalType to the note's own type with 0 dots when absent), so && drops
-    // an explicit undotted <normal-type>, and a dotted one equal to the note's own type, as
-    // "unspecified". Also, the two assignments above are dead stores -- both branches below
-    // overwrite them. Issue candidate.
-    bool isTimeModTypeSpecified = (timeModTypeDots > 0) && (timeModType != reader.getDurationType());
-
-    if (isTimeModTypeSpecified)
+    // An absent <normal-type> maps to unspecified rather than to the reader's derived default,
+    // so the writer can tell the difference and does not invent the element on output (#428).
+    if (reader.getIsTimeModificationNormalTypeSpecified())
     {
-        myOutNoteData.durationData.timeModificationNormalType = converter.convert(timeModType);
-        myOutNoteData.durationData.timeModificationNormalTypeDots = timeModTypeDots;
+        myOutNoteData.durationData.timeModificationNormalType =
+            converter.convert(reader.getTimeModificationNormalType());
+        myOutNoteData.durationData.timeModificationNormalTypeDots = reader.getTimeModificationNormalTypeDots();
     }
     else
     {
