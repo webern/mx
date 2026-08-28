@@ -48,6 +48,10 @@ struct SpannerNumberEvent
     api::SpannerNumber number;
     bool opens;  // a start
     bool closes; // a stop
+
+    // The note the event sits on, used to detect spanners that start and stop
+    // on one note. Direction events do not belong to a note and carry nullptr.
+    const void *noteTag;
 };
 
 // [first, last] positions (inclusive) during which a spanner is open in the
@@ -73,10 +77,11 @@ struct SpannerOttavaEvent
     bool isStart;
 };
 
-// The bucket an ottava endpoint pairs within: identity endpoints pair by id, explicit endpoints
-// by level, and unspecified endpoints with each other. The prefix keeps the three kinds from
-// colliding (an identity of "3" is not the explicit level 3).
-static std::string spannerOttavaPairingKey(const api::SpannerNumber &inNumber)
+// The bucket an endpoint pairs within, used for ottava sizes and for same-note span detection:
+// identity endpoints pair by id, explicit endpoints by level, and unspecified endpoints with
+// each other. The prefix keeps the three kinds from colliding (an identity of "3" is not the
+// explicit level 3).
+static std::string spannerPairingKey(const api::SpannerNumber &inNumber)
 {
     switch (inNumber.kind())
     {
@@ -100,6 +105,8 @@ class SpannerEventCollector
   public:
     void addNote(const api::NoteData &inNote)
     {
+        myCurrentNoteTag = &inNote;
+
         // NotationsWriter emits curve stops, then continues, then starts, and
         // skips curves whose type is neither tie nor slur.
         const auto &attachments = inNote.noteAttachmentData;
@@ -148,6 +155,8 @@ class SpannerEventCollector
     // skipped: mx::api does not model <pedal>'s number attribute.
     void addDirection(const api::DirectionData &inDirection)
     {
+        myCurrentNoteTag = nullptr;
+
         for (const auto &choice : inDirection.directionTypes)
         {
             switch (choice.kind())
@@ -212,7 +221,8 @@ class SpannerEventCollector
     void add(SpannerNumberClass inClass, const void *inObject, const api::SpannerNumber &inNumber, bool inOpens,
              bool inCloses)
     {
-        myEvents[inClass].push_back(SpannerNumberEvent{myPosition, inObject, inNumber, inOpens, inCloses});
+        myEvents[inClass].push_back(
+            SpannerNumberEvent{myPosition, inObject, inNumber, inOpens, inCloses, myCurrentNoteTag});
         ++myPosition;
     }
 
@@ -238,6 +248,7 @@ class SpannerEventCollector
     }
 
     int myPosition = 0;
+    const void *myCurrentNoteTag = nullptr;
     std::map<SpannerNumberClass, std::vector<SpannerNumberEvent>> myEvents;
     std::vector<SpannerOttavaEvent> myOttavaEvents;
 };
@@ -379,7 +390,7 @@ static void spannerResolveOttavaSizes(const std::vector<SpannerOttavaEvent> &inE
 
     for (const auto &event : inEvents)
     {
-        auto &stack = openStarts[spannerOttavaPairingKey(event.number)];
+        auto &stack = openStarts[spannerPairingKey(event.number)];
         if (event.isStart)
         {
             stack.push_back(event.ottavaType);
@@ -391,6 +402,54 @@ static void spannerResolveOttavaSizes(const std::vector<SpannerOttavaEvent> &inE
         }
         ioResolved[event.object] = ottavaTypeSize(stack.back());
         stack.pop_back();
+    }
+}
+
+// Finds spanners whose start and stop sit on the same note and records the two endpoints as
+// partners. The events arrive in the writer's plain stop-before-start order, which is what makes
+// the decision possible: a stop that closes a spanner opened on an earlier note belongs to that
+// spanner (a chain), and a stop that closes nothing pairs with a same-bucket start on its own
+// note. A leftover stop with no open start and no same-note start is an authoring error and is
+// left unpaired, the same as before this detection existed.
+static void spannerDetectSameNoteSpans(const std::vector<SpannerNumberEvent> &inEvents,
+                                       std::unordered_map<const void *, const void *> &ioPartners)
+{
+    std::map<std::string, int> openCounts;
+    std::map<std::string, std::vector<const SpannerNumberEvent *>> unopenedStops;
+
+    for (const auto &event : inEvents)
+    {
+        const auto key = spannerPairingKey(event.number);
+        if (event.closes)
+        {
+            auto &openCount = openCounts[key];
+            if (openCount > 0)
+            {
+                --openCount;
+            }
+            else
+            {
+                unopenedStops[key].push_back(&event);
+            }
+        }
+        else if (event.opens)
+        {
+            auto &stops = unopenedStops[key];
+            const auto sameNoteStop =
+                std::find_if(stops.cbegin(), stops.cend(), [&event](const SpannerNumberEvent *stop) {
+                    return stop->noteTag != nullptr && stop->noteTag == event.noteTag;
+                });
+            if (sameNoteStop != stops.cend())
+            {
+                ioPartners[event.object] = (*sameNoteStop)->object;
+                ioPartners[(*sameNoteStop)->object] = event.object;
+                stops.erase(sameNoteStop);
+            }
+            else
+            {
+                ++openCounts[key];
+            }
+        }
     }
 }
 
@@ -419,6 +478,13 @@ void SpannerResolver::resolvePart(const api::PartData &inPart)
     for (const auto &classAndEvents : collector.events())
     {
         spannerNumberAssignClass(classAndEvents.second, myResolved);
+
+        const auto spannerClass = classAndEvents.first;
+        if (spannerClass == SpannerNumberClass::glissando || spannerClass == SpannerNumberClass::slide ||
+            spannerClass == SpannerNumberClass::wavyLine)
+        {
+            spannerDetectSameNoteSpans(classAndEvents.second, mySameNoteSpanPartners);
+        }
     }
 
     spannerResolveOttavaSizes(collector.ottavaEvents(), myOttavaStopSizes);
@@ -452,6 +518,16 @@ int SpannerResolver::ottavaStopSize(const void *inObject) const
     if (iter == myOttavaStopSizes.cend())
     {
         return ottavaTypeSize(api::OttavaType::unspecified);
+    }
+    return iter->second;
+}
+
+const void *SpannerResolver::sameNoteSpanPartner(const void *inObject) const
+{
+    const auto iter = mySameNoteSpanPartners.find(inObject);
+    if (iter == mySameNoteSpanPartners.cend())
+    {
+        return nullptr;
     }
     return iter->second;
 }

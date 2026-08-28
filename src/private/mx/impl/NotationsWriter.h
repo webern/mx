@@ -44,6 +44,7 @@ class NotationsWriter
     // stack frame doesn't scale -- it overflowed the default wasm stack (issue found while
     // fixing #389's Emscripten smoke build).
     void addGlissandoAndSlide(core::Notations &outNotations) const;
+    void addGlissandoStop(const api::GlissandoStop &inGlissandoStop, core::Notations &outNotations) const;
     void addWavyLineStopsAndContinues(core::Ornaments &outOrnaments) const;
     void addWavyLineStarts(core::Ornaments &outOrnaments) const;
 };

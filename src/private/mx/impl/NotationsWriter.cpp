@@ -69,7 +69,9 @@
 #include "mx/impl/ScoreWriter.h"
 #include "mx/impl/WavyLineFunctions.h"
 
+#include <cstddef>
 #include <string>
+#include <vector>
 
 namespace mx
 {
@@ -93,6 +95,20 @@ void notationsWriterSetMordentSpecificAttributes(const api::MarkData &mark, core
     {
         mordent.setDeparture(converter.convert(mark.mordentDeparture));
     }
+}
+
+core::NotationsChoice notationsWriterMakeTupletStop(const api::TupletStop &inTupletStop)
+{
+    core::Tuplet tuplet;
+    tuplet.setType(core::StartStop::stop());
+    setId(inTupletStop.id, tuplet);
+
+    if (inTupletStop.numberLevel > 0)
+    {
+        tuplet.setNumber(core::NumberLevel{inTupletStop.numberLevel});
+    }
+
+    return core::NotationsChoice::tuplet(tuplet);
 }
 
 NotationsWriter::NotationsWriter(const api::NoteData &inNoteData, const MeasureCursor &inCursor,
@@ -185,19 +201,16 @@ core::Notations NotationsWriter::getNotations() const
 
     addGlissandoAndSlide(outNotations);
 
-    for (const auto &tupletStop : myNoteData.noteAttachmentData.tupletStops)
-    {
-        core::Tuplet tuplet;
-        tuplet.setType(core::StartStop::stop());
-        setId(tupletStop.id, tuplet);
-
-        if (tupletStop.numberLevel > 0)
-        {
-            tuplet.setNumber(core::NumberLevel{tupletStop.numberLevel});
-        }
-
-        outNotations.addChoice(core::NotationsChoice::tuplet(tuplet));
-    }
+    // A tuplet contained in a single note -- an inner tuplet covering exactly one note of its
+    // outer tuplet, or Finale's export of a one-note tuplet -- has its start and its stop on
+    // that one note, and the start must be written first (#429). So starts are written before
+    // stops, each start followed directly by the same-note stop that shares its numberLevel
+    // when there is one, and the remaining stops (closing tuplets begun on earlier notes)
+    // follow. Matching numberLevels on one note always mean a single-note tuplet: two
+    // different tuplets can never share a note, because a note carries only one
+    // time-modification.
+    const auto &tupletStops = myNoteData.noteAttachmentData.tupletStops;
+    std::vector<bool> tupletStopWritten(tupletStops.size(), false);
 
     for (const auto &tupletStart : myNoteData.noteAttachmentData.tupletStarts)
     {
@@ -261,12 +274,31 @@ core::Notations NotationsWriter::getNotations() const
         }
 
         outNotations.addChoice(core::NotationsChoice::tuplet(tuplet));
+
+        for (std::size_t stopIndex = 0; stopIndex < tupletStops.size(); ++stopIndex)
+        {
+            if (!tupletStopWritten[stopIndex] && tupletStops[stopIndex].numberLevel == tupletStart.numberLevel)
+            {
+                outNotations.addChoice(notationsWriterMakeTupletStop(tupletStops[stopIndex]));
+                tupletStopWritten[stopIndex] = true;
+                break;
+            }
+        }
+    }
+
+    for (std::size_t stopIndex = 0; stopIndex < tupletStops.size(); ++stopIndex)
+    {
+        if (!tupletStopWritten[stopIndex])
+        {
+            outNotations.addChoice(notationsWriterMakeTupletStop(tupletStops[stopIndex]));
+        }
     }
 
     // Wavy lines live inside <ornaments>, alongside trill-mark/shake/etc. Stops and continues are
     // emitted before the mark-derived ornaments below (stop-before-start, as with glissando/slide
     // above); starts are emitted after, matching the common <trill-mark/><wavy-line type="start"/>
-    // shape real files use.
+    // shape real files use. A wavy line that starts and stops on the same note is the exception:
+    // its stop is held back and written right after its start (#429).
     addWavyLineStopsAndContinues(ornaments);
 
     for (const auto &mark : myNoteData.noteAttachmentData.marks)
@@ -468,22 +500,19 @@ void NotationsWriter::addGlissandoAndSlide(core::Notations &outNotations) const
     const auto &spannerResolver = myScoreWriter.getSpannerResolver();
 
     // Glissando and slide are top-level <notations> children, like slur/tie. Stops are emitted
-    // before starts so a chain of glissandi on one note keeps score order (see #139).
+    // before starts so a chain of glissandi on one note keeps score order (see #139). The
+    // exception is a glissando or slide that starts and stops on this same note, as when a line
+    // is drawn from a note toward a rest: its stop is held back and written right after its
+    // start (#429). The SpannerResolver decides which stops those are -- a chained note and a
+    // single-note span can carry the same number, and only the stream of earlier events can
+    // tell them apart.
     for (const auto &glissandoStop : myNoteData.noteAttachmentData.glissandoStops)
     {
-        const auto resolvedNumber = spannerResolver.emittedNumber(glissandoStop.number, &glissandoStop);
-        if (glissandoStop.glissandoType == api::GlissandoType::slide)
+        if (spannerResolver.sameNoteSpanPartner(&glissandoStop) != nullptr)
         {
-            core::Slide slide;
-            writeAttributesFromGlissandoStop(glissandoStop, slide, resolvedNumber);
-            outNotations.addChoice(core::NotationsChoice::slide(slide));
+            continue;
         }
-        else
-        {
-            core::Glissando glissando;
-            writeAttributesFromGlissandoStop(glissandoStop, glissando, resolvedNumber);
-            outNotations.addChoice(core::NotationsChoice::glissando(glissando));
-        }
+        addGlissandoStop(glissandoStop, outNotations);
     }
 
     for (const auto &glissandoStart : myNoteData.noteAttachmentData.glissandoStarts)
@@ -501,6 +530,37 @@ void NotationsWriter::addGlissandoAndSlide(core::Notations &outNotations) const
             writeAttributesFromGlissandoStart(glissandoStart, glissando, resolvedNumber);
             outNotations.addChoice(core::NotationsChoice::glissando(glissando));
         }
+
+        const void *sameNoteStop = spannerResolver.sameNoteSpanPartner(&glissandoStart);
+        if (sameNoteStop != nullptr)
+        {
+            for (const auto &glissandoStop : myNoteData.noteAttachmentData.glissandoStops)
+            {
+                if (&glissandoStop == sameNoteStop)
+                {
+                    addGlissandoStop(glissandoStop, outNotations);
+                }
+            }
+        }
+    }
+}
+
+void NotationsWriter::addGlissandoStop(const api::GlissandoStop &inGlissandoStop, core::Notations &outNotations) const
+{
+    const auto &spannerResolver = myScoreWriter.getSpannerResolver();
+    const auto resolvedNumber = spannerResolver.emittedNumber(inGlissandoStop.number, &inGlissandoStop);
+
+    if (inGlissandoStop.glissandoType == api::GlissandoType::slide)
+    {
+        core::Slide slide;
+        writeAttributesFromGlissandoStop(inGlissandoStop, slide, resolvedNumber);
+        outNotations.addChoice(core::NotationsChoice::slide(slide));
+    }
+    else
+    {
+        core::Glissando glissando;
+        writeAttributesFromGlissandoStop(inGlissandoStop, glissando, resolvedNumber);
+        outNotations.addChoice(core::NotationsChoice::glissando(glissando));
     }
 }
 
@@ -508,8 +568,14 @@ void NotationsWriter::addWavyLineStopsAndContinues(core::Ornaments &outOrnaments
 {
     const auto &spannerResolver = myScoreWriter.getSpannerResolver();
 
+    // A stop whose wavy line starts on this same note is skipped here; addWavyLineStarts writes
+    // it right after its start (#429).
     for (const auto &wavyLineStop : myNoteData.noteAttachmentData.wavyLineStops)
     {
+        if (spannerResolver.sameNoteSpanPartner(&wavyLineStop) != nullptr)
+        {
+            continue;
+        }
         const auto resolvedNumber = spannerResolver.emittedNumber(wavyLineStop.number, &wavyLineStop);
         core::OrnamentsGroup group;
         group.setChoice(core::OrnamentsGroupChoice::wavyLine(writeWavyLineStop(wavyLineStop, resolvedNumber)));
@@ -535,6 +601,24 @@ void NotationsWriter::addWavyLineStarts(core::Ornaments &outOrnaments) const
         core::OrnamentsGroup group;
         group.setChoice(core::OrnamentsGroupChoice::wavyLine(writeWavyLineStart(wavyLineStart, resolvedNumber)));
         outOrnaments.addGroup(group);
+
+        // A wavy line that starts and stops on this same note gets its stop here, right after
+        // the start (#429).
+        const void *sameNoteStop = spannerResolver.sameNoteSpanPartner(&wavyLineStart);
+        if (sameNoteStop != nullptr)
+        {
+            for (const auto &wavyLineStop : myNoteData.noteAttachmentData.wavyLineStops)
+            {
+                if (&wavyLineStop == sameNoteStop)
+                {
+                    const auto stopNumber = spannerResolver.emittedNumber(wavyLineStop.number, &wavyLineStop);
+                    core::OrnamentsGroup stopGroup;
+                    stopGroup.setChoice(
+                        core::OrnamentsGroupChoice::wavyLine(writeWavyLineStop(wavyLineStop, stopNumber)));
+                    outOrnaments.addGroup(stopGroup);
+                }
+            }
+        }
     }
 }
 
