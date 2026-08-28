@@ -129,6 +129,13 @@ class NoteReader
         return myVoiceNumber;
     }
 
+    // The text of the note's <voice> element, empty when it had none. A voice name does not have
+    // to be a number, so getVoiceNumber above cannot stand in for it.
+    inline const std::string &getVoiceLabel() const
+    {
+        return myVoiceLabel;
+    }
+
     inline core::NoteheadValue getNoteheadValue() const
     {
         return myNoteheadValue;
@@ -277,6 +284,7 @@ class NoteReader
     int myStaffNumber;
     bool myIsStaffSpecified;
     int myVoiceNumber;
+    std::string myVoiceLabel;
     core::NoteheadValue myNoteheadValue;
     std::optional<core::YesNo> myNoteheadFilled;
     std::optional<std::string> myNoteheadSmufl;

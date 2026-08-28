@@ -113,9 +113,10 @@ class MeasureReader
     void importStaffDetails(const core::Attributes &inMxAttributes) const;
     void importClefs(std::span<const core::Clef> inClefs) const;
     void importClef(const core::Clef &inClef) const;
-    void insertNoteData(api::NoteData &&noteData, int staff, int voice) const;
+    void insertNoteData(api::NoteData &&noteData, int staff, int voice, const std::string &voiceLabel) const;
     void insertClef(api::ClefData &&clefData, int staff) const;
     void consolidateVoicesForAllStaves() const;
+    void dropRedundantVoiceLabels() const;
     void takeUserRequestedVoiceNumbers(api::StaffData &staff) const;
     void collapseVoicesAutomatically(api::StaffData &staff) const;
     bool isUserRequestedVoiceNumberConsistent(const api::VoiceData &voiceData) const;

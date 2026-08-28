@@ -66,10 +66,12 @@ core::Syllabic convertLyricSyllabicForNoteWriter(api::LyricSyllabic value)
 }
 
 NoteWriter::NoteWriter(const api::NoteData &inNoteData, const MeasureCursor &inCursor, const ScoreWriter &inScoreWriter,
-                       bool isPreviousNoteAChordMember, int inNumVoices)
+                       bool isPreviousNoteAChordMember, const std::vector<mx::api::NoteData> &inSiblingNotes,
+                       int inNumVoices, const std::string &inVoiceLabel)
     : myNoteData{inNoteData}, myCursor{inCursor}, myScoreWriter{inScoreWriter}, myConverter{},
-      myIsPreviousNoteAChordMember{isPreviousNoteAChordMember}, myNumVoices{inNumVoices}, myOutNote{},
-      myOutFullNoteGroup{}, myOutTies{}, myOutTieNotationsChoices{}
+      myIsPreviousNoteAChordMember{isPreviousNoteAChordMember}, mySiblingNotes{inSiblingNotes},
+      myNumVoices{inNumVoices}, myVoiceLabel{inVoiceLabel}, myOutNote{}, myOutFullNoteGroup{}, myOutTies{},
+      myOutTieNotationsChoices{}
 {
 }
 
@@ -403,13 +405,24 @@ void NoteWriter::setStaffAndVoice() const
         }
     }
 
+    // VoiceData::label decides what goes in the <voice> element, replacing the voice's number
+    // when the number cannot express its name. Which notes get the element is otherwise
+    // unchanged, so a source that left <voice> off a chord member still does. The exception is a
+    // voice where no note carried a number: there the label is the only thing asking for the
+    // element, so it is what puts one there.
+    const bool hasVoiceLabel = !myVoiceLabel.empty();
     const bool sourceHadVoice = myNoteData.userRequestedVoiceNumber != api::VALUE_UNSPECIFIED;
     const bool isNonDefaultVoice = myCursor.voiceIndex > 0;
     const bool isMultiVoiceStaff = myNumVoices > 1;
-    if (myCursor.voiceIndex >= 0 && (sourceHadVoice || isNonDefaultVoice || isMultiVoiceStaff))
+    const bool isVoiceNumbered = std::any_of(mySiblingNotes.cbegin(), mySiblingNotes.cend(), [](const auto &note) {
+        return note.userRequestedVoiceNumber != api::VALUE_UNSPECIFIED;
+    });
+    const bool labelAsksForVoice = hasVoiceLabel && !isVoiceNumbered;
+
+    if (myCursor.voiceIndex >= 0 && (sourceHadVoice || isNonDefaultVoice || isMultiVoiceStaff || labelAsksForVoice))
     {
         auto editorialVoice = myOutNote.editorialVoice();
-        editorialVoice.setVoice(std::to_string(myCursor.voiceIndex + 1));
+        editorialVoice.setVoice(hasVoiceLabel ? myVoiceLabel : std::to_string(myCursor.voiceIndex + 1));
         myOutNote.setEditorialVoice(std::move(editorialVoice));
     }
 }

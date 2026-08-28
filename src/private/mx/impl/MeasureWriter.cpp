@@ -595,7 +595,9 @@ void MeasureWriter::writeVoices(const api::StaffData &inStaff)
             myPropertiesWriter->flushBuffer();
             writeDirections(directionIter, directionEnd, noteIter, std::cbegin(voice.second.notes), noteEnd);
 
-            NoteWriter writer{apiNote, myHistory.getCursor(), myScoreWriter, myPreviousCursor.isChordActive, numVoices};
+            NoteWriter writer{
+                apiNote,   myHistory.getCursor(), myScoreWriter, myPreviousCursor.isChordActive, voice.second.notes,
+                numVoices, voice.second.label};
             myOutMeasure.addMusicData(core::MusicDataChoice::note(writer.getNote(isStartOfChord)));
             myHistory.log("addNote cursorTime " + std::to_string(myHistory.getCursor().tickTimePosition) +
                           ", noteTime " + std::to_string(apiNote.tickTimePosition));

@@ -154,9 +154,9 @@ NoteReader::NoteReader(const core::Note &mxNote)
       myIsNormal(false), myIsGrace(false), myIsCue(false), myIsRest(false), myIsChord(false), myIsMeasureRest(false),
       myIsUnpitched(false), myIsPitch(false), myIsDisplayStepOctaveSpecified(false), myDurationValue(0.0),
       myStep(core::Step::c()), myAlter(0), myCents(0.0), myOctave(4), myStaffNumber(0), myIsStaffSpecified(false),
-      myVoiceNumber(0), myNoteheadValue(core::NoteheadValue::normal()), myNoteheadFilled{}, myNoteheadSmufl{},
-      myDurationType(core::NoteTypeValue::maxima()), myIsDurationTypeSpecified(false), myNumDots(0), myBeams(),
-      myTimeModificationActualNotes(-1), myTimeModificationNormalNotes(-1),
+      myVoiceNumber(0), myVoiceLabel{}, myNoteheadValue(core::NoteheadValue::normal()), myNoteheadFilled{},
+      myNoteheadSmufl{}, myDurationType(core::NoteTypeValue::maxima()), myIsDurationTypeSpecified(false), myNumDots(0),
+      myBeams(), myTimeModificationActualNotes(-1), myTimeModificationNormalNotes(-1),
       myTimeModificationNormalType(core::NoteTypeValue::maxima()), myTimeModificationNormalTypeDots(0),
       myIsTimeModificationNormalTypeSpecified(false), myHasAccidental(false),
       myAccidental(core::AccidentalValue::natural()), myIsAccidentalParenthetical(false),
@@ -329,13 +329,15 @@ void NoteReader::setStaffNumber()
 void NoteReader::setVoiceNumber()
 {
     myVoiceNumber = api::VALUE_UNSPECIFIED;
+    myVoiceLabel.clear();
 
     if (!myNote.editorialVoice().voice().has_value())
     {
         return;
     }
 
-    utility::stringToInt(myNote.editorialVoice().voice()->c_str(), myVoiceNumber);
+    myVoiceLabel = *myNote.editorialVoice().voice();
+    utility::stringToInt(myVoiceLabel.c_str(), myVoiceNumber);
 }
 
 void NoteReader::setNoteheadItems()
