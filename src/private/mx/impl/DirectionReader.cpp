@@ -755,8 +755,10 @@ void DirectionReader::parseOctaveShift(const core::DirectionType &directionType)
     bool isUp = octaveShift.type().tag() == core::UpDownStopContinue::Tag::up;
 
     // MusicXML does not properly constrain the ottava size to valid music notation values. We do
-    // so here by interpolating the value into an enum that maps to valid music notation.
-    if (!isUp && amount == 22)
+    // so here by interpolating the value into an enum that maps to valid music notation. A size
+    // larger than 22 takes the widest line we have rather than falling back to the 15th, so the
+    // line we draw is the closest one to what the source asked for.
+    if (!isUp && amount >= 22)
     {
         ottavaType = api::OttavaType::o22ma;
     }
@@ -768,7 +770,7 @@ void DirectionReader::parseOctaveShift(const core::DirectionType &directionType)
     {
         ottavaType = api::OttavaType::o8va;
     }
-    else if (isUp && amount == 22)
+    else if (isUp && amount >= 22)
     {
         ottavaType = api::OttavaType::o22mb;
     }

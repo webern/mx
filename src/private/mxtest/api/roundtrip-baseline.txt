@@ -733,3 +733,12 @@ rpatters1/gliss_to_rest-ref.xml
 # was written under the wrong name.
 musuite/testChordNoVoice.xml
 musuite/testStringVoiceName.xml
+
+# Unblocked in the harness rather than in mx::api. Each of these sources states an
+# octave-shift size that no ottava line can mean -- 27, 11, 1 -- which MusicXML's
+# schema allows and music notation does not. mx::api narrows the size to a line it
+# can draw, which is the behavior we want, so the harness narrows the expected
+# document the same way instead of the api learning to echo the original number.
+lysuite/ly33e_Spanners_OctaveShifts_InvalidSize.xml
+synthetic/octave-shift.3.0.xml
+synthetic/octave-shift.3.1.xml
