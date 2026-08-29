@@ -526,14 +526,13 @@ void MeasureWriter::writeVoices(const api::StaffData &inStaff)
         myHistory.setVoiceIndex(voice.first);
         auto noteIter = voice.second.notes.cbegin();
         auto noteEnd = voice.second.notes.cend();
-        int noteIndex = 0;
 
         if (directionIter != directionEnd)
         {
             writeDirections(directionIter, directionEnd, noteIter, std::cbegin(voice.second.notes), noteEnd);
         }
 
-        for (; noteIter != noteEnd; ++noteIter, ++noteIndex)
+        for (; noteIter != noteEnd; ++noteIter)
         {
             bool isStartOfChord = false;
 
@@ -596,14 +595,9 @@ void MeasureWriter::writeVoices(const api::StaffData &inStaff)
             myPropertiesWriter->flushBuffer();
             writeDirections(directionIter, directionEnd, noteIter, std::cbegin(voice.second.notes), noteEnd);
 
-            NoteWriter writer{apiNote,
-                              myHistory.getCursor(),
-                              myScoreWriter,
-                              myPreviousCursor.isChordActive,
-                              voice.second.notes,
-                              noteIndex,
-                              numVoices,
-                              voice.second.label};
+            NoteWriter writer{
+                apiNote,   myHistory.getCursor(), myScoreWriter, myPreviousCursor.isChordActive, voice.second.notes,
+                numVoices, voice.second.label};
             myOutMeasure.addMusicData(core::MusicDataChoice::note(writer.getNote(isStartOfChord)));
             myHistory.log("addNote cursorTime " + std::to_string(myHistory.getCursor().tickTimePosition) +
                           ", noteTime " + std::to_string(apiNote.tickTimePosition));

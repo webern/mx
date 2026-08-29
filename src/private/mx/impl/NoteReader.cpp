@@ -158,7 +158,8 @@ NoteReader::NoteReader(const core::Note &mxNote)
       myNoteheadSmufl{}, myDurationType(core::NoteTypeValue::maxima()), myIsDurationTypeSpecified(false), myNumDots(0),
       myBeams(), myTimeModificationActualNotes(-1), myTimeModificationNormalNotes(-1),
       myTimeModificationNormalType(core::NoteTypeValue::maxima()), myTimeModificationNormalTypeDots(0),
-      myHasAccidental(false), myAccidental(core::AccidentalValue::natural()), myIsAccidentalParenthetical(false),
+      myIsTimeModificationNormalTypeSpecified(false), myHasAccidental(false),
+      myAccidental(core::AccidentalValue::natural()), myIsAccidentalParenthetical(false),
       myIsAccidentalCautionary{false}, myIsAccidentalEditorial{false}, myIsAccidentalBracketed{false},
       myIsStemSpecified{false}, myStem{}, myIsGraceSlashSpecified{false}, myGraceSlash{}, myIsTieStart{false},
       myIsTieStop{false}, myHasLyric{false}
@@ -425,6 +426,7 @@ void NoteReader::setTimeModification()
         const auto &grp = *mxTimeMod.group();
         myTimeModificationNormalType = grp.normalType();
         myTimeModificationNormalTypeDots = static_cast<int>(grp.normalDot().size());
+        myIsTimeModificationNormalTypeSpecified = true;
     }
     else
     {

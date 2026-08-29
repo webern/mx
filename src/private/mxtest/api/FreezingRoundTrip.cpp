@@ -531,12 +531,23 @@ TEST(checkMissingNormalTypeSimple, Freezing)
 {
     const auto testData = getTestData(tupletType);
     const auto musicData = testData.getMusicData(0, 0);
+
+    // The first note's <normal-type>eighth</normal-type> differs from its own <type> and
+    // must survive the round trip.
     const auto &mdc1 = musicData.second[1];
     REQUIRE(mdc1.isNote());
     const auto &note1 = mdc1.asNote();
     REQUIRE(note1.timeModification().has_value());
     REQUIRE(note1.timeModification()->group().has_value());
     CHECK(mx::core::NoteTypeValue::Tag::eighth == note1.timeModification()->group()->normalType().tag());
+
+    // The second note has no <normal-type> in the source, and the writer must not invent
+    // one (#428).
+    const auto &mdc2 = musicData.second[2];
+    REQUIRE(mdc2.isNote());
+    const auto &note2 = mdc2.asNote();
+    REQUIRE(note2.timeModification().has_value());
+    CHECK(!note2.timeModification()->group().has_value());
 }
 
 TEST(checkMissingNormalType, Freezing)
@@ -585,21 +596,33 @@ TEST(checkMissingNormalType, Freezing)
             {
                 const auto &savedNote = savedNotes[i]->asNote();
                 REQUIRE(savedNote.timeModification().has_value());
-                CHECK(savedNote.timeModification()->group().has_value());
 
+                // <normal-type> presence must match the original: present where the source
+                // wrote one, absent where it did not (#428).
                 const auto &origNote = originalNotes[i]->asNote();
-                if (origNote.timeModification()->group().has_value())
+                const bool origHasGroup = origNote.timeModification()->group().has_value();
+                const bool savedHasGroup = savedNote.timeModification()->group().has_value();
+
+                {
+                    std::stringstream message2;
+                    message2 << "( origHasGroup == savedHasGroup ), ";
+                    message2 << "( " << origHasGroup << " == " << savedHasGroup << " ), ";
+                    message2 << " partIndex = " << partIndex << ", measureIndex = " << measureIndex;
+                    CHECK_WITH_MESSAGE(origHasGroup == savedHasGroup, message2.str());
+                }
+
+                if (origHasGroup && savedHasGroup)
                 {
                     const auto originalType = origNote.timeModification()->group()->normalType();
                     const auto savedType = savedNote.timeModification()->group()->normalType();
 
                     if (originalType != savedType)
                     {
-                        std::stringstream message2;
-                        message2 << "( originalType == savedType ), ";
-                        message2 << "( " << originalType.toString() << " == " << savedType.toString() << " ), ";
-                        message2 << " partIndex = " << partIndex << ", measureIndex = " << measureIndex;
-                        CHECK_WITH_MESSAGE(originalType == savedType, message2.str());
+                        std::stringstream message3;
+                        message3 << "( originalType == savedType ), ";
+                        message3 << "( " << originalType.toString() << " == " << savedType.toString() << " ), ";
+                        message3 << " partIndex = " << partIndex << ", measureIndex = " << measureIndex;
+                        CHECK_WITH_MESSAGE(originalType == savedType, message3.str());
                     }
                 }
             }

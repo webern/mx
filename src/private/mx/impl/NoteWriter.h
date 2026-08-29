@@ -25,8 +25,8 @@ class NoteWriter
 {
   public:
     NoteWriter(const api::NoteData &inNoteData, const MeasureCursor &inCursor, const ScoreWriter &inScoreWriter,
-               bool isPreviousNoteAChordMember, const std::vector<mx::api::NoteData> &inSiblingNotes, int inNoteIndex,
-               int inNumVoices, const std::string &inVoiceLabel);
+               bool isPreviousNoteAChordMember, const std::vector<mx::api::NoteData> &inSiblingNotes, int inNumVoices,
+               const std::string &inVoiceLabel);
 
     core::Note getNote(bool isStartOfChord) const;
 
@@ -37,7 +37,6 @@ class NoteWriter
     const Converter myConverter;
     const bool myIsPreviousNoteAChordMember;
     const std::vector<mx::api::NoteData> &mySiblingNotes;
-    const int myNoteIndex;
     const int myNumVoices;
     const std::string &myVoiceLabel;
     mutable core::Note myOutNote;
@@ -57,7 +56,6 @@ class NoteWriter
     void setStemDirection() const;
     void setLyrics() const;
     void setMiscData() const;
-    bool findNormalNameAndDots(mx::api::DurationName &ioName, int &ioDots, double inTickLength) const;
 };
 } // namespace impl
 } // namespace mx
