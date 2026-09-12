@@ -65,6 +65,22 @@ core::Syllabic convertLyricSyllabicForNoteWriter(api::LyricSyllabic value)
     return core::Syllabic::single();
 }
 
+// The refusal sites below know where they are: the core error says why the
+// note was refused, and the cursor says where in the score the note sits.
+// Together they make an error a caller can act on -- the core error alone
+// does not say which note was the problem.
+WriteRefusal writeRefusalAt(const MeasureCursor &cursor, const core::Error &error)
+{
+    api::Location location;
+    location.xmlPath = error.path;
+    location.partIndex = cursor.partIndex;
+    location.measureIndex = cursor.measureIndex;
+    location.staffIndex = cursor.staffIndex;
+    location.voiceIndex = cursor.voiceIndex;
+    location.tickTimePosition = cursor.tickTimePosition;
+    return WriteRefusal{api::ApiError{api::ResultCode::tooManyElements, location, "NoteWriter: " + error.message}};
+}
+
 NoteWriter::NoteWriter(const api::NoteData &inNoteData, const MeasureCursor &inCursor, const ScoreWriter &inScoreWriter,
                        bool isPreviousNoteAChordMember, const std::vector<mx::api::NoteData> &inSiblingNotes,
                        int inNumVoices, const std::string &inVoiceLabel)
@@ -160,8 +176,7 @@ core::Note NoteWriter::getNote(bool isStartOfChord) const
         {
             // Refuse, don't drop: the core caps
             // beams at 8; silently discarding the ninth would lose data.
-            throw WriteRefusal{api::ApiError{api::ResultCode::tooManyElements, added.error().path,
-                                             "NoteWriter: " + added.error().message}};
+            throw writeRefusalAt(myCursor, added.error());
         }
         ++beamIndex;
     }
@@ -294,8 +309,7 @@ void NoteWriter::assembleNoteChoice() const
                 const auto added = inner.addTie(tie);
                 if (!added)
                 {
-                    throw WriteRefusal{api::ApiError{api::ResultCode::tooManyElements, added.error().path,
-                                                     "NoteWriter: " + added.error().message}};
+                    throw writeRefusalAt(myCursor, added.error());
                 }
             }
             choiceObj.setGraceNoteChoice(core::GraceNoteChoice::graceNormalNoteGroup(std::move(inner)));
@@ -319,8 +333,7 @@ void NoteWriter::assembleNoteChoice() const
             const auto added = choiceObj.addTie(tie);
             if (!added)
             {
-                throw WriteRefusal{api::ApiError{api::ResultCode::tooManyElements, added.error().path,
-                                                 "NoteWriter: " + added.error().message}};
+                throw writeRefusalAt(myCursor, added.error());
             }
         }
         myOutNote.setChoice(core::NoteChoice::normalNoteGroup(std::move(choiceObj)));
