@@ -8,7 +8,6 @@
 
 #include "cpul/cpulTestHarness.h"
 #include "mx/api/MusicXml.h"
-#include "mx/api/MusicXmlInternal.h"
 #include "mx/core/generated/Document.h"
 #include "mx/core/generated/FullNoteGroup.h"
 #include "mx/core/generated/MusicDataChoice.h"
@@ -81,8 +80,8 @@ TEST(chordTest, Chords)
     std::stringstream ss;
     doc.writeToStream(ss);
 
-    REQUIRE(coreDocumentOf(doc).isScorePartwise());
-    const auto &scorePartwise = coreDocumentOf(doc).asScorePartwise();
+    REQUIRE(doc.getCoreDocument().isScorePartwise());
+    const auto &scorePartwise = doc.getCoreDocument().asScorePartwise();
     const auto parts = scorePartwise.part();
     REQUIRE(!parts.empty());
     const auto &firstPart = parts[0];

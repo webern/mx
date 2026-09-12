@@ -6,7 +6,6 @@
 #ifdef MX_COMPILE_API_TESTS
 #include "cpul/cpulTestHarness.h"
 #include "mx/api/MusicXml.h"
-#include "mx/api/MusicXmlInternal.h"
 #include "mx/core/generated/Attributes.h"
 #include "mx/core/generated/AttributesChoice.h"
 #include "mx/core/generated/Document.h"
@@ -63,7 +62,7 @@ inline void checkCoreTransposeElement(const mx::api::ScoreData &inScore, int inE
     auto r = mx::api::fromScore(inScore);
     REQUIRE(r.ok());
     const auto doc = std::move(r).value();
-    const auto &core = coreDocumentOf(doc);
+    const auto &core = doc.getCoreDocument();
     REQUIRE(core.isScorePartwise());
     const auto &score = core.asScorePartwise();
     const auto parts = score.part();

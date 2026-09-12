@@ -7,7 +7,6 @@
 
 #include "cpul/cpulTestHarness.h"
 #include "mx/api/MusicXml.h"
-#include "mx/api/MusicXmlInternal.h"
 #include "mx/core/generated/DirectionTypeChoice.h"
 #include "mx/core/generated/Document.h"
 #include "mx/core/generated/DynamicsChoice.h"
@@ -75,12 +74,12 @@ struct TestData
 
     const mx::core::ScorePartwise &originalScore() const
     {
-        return coreDocumentOf(originalDoc).asScorePartwise();
+        return originalDoc.getCoreDocument().asScorePartwise();
     }
 
     const mx::core::ScorePartwise &savedScore() const
     {
-        return coreDocumentOf(savedDoc).asScorePartwise();
+        return savedDoc.getCoreDocument().asScorePartwise();
     }
 
     //////////////////////////// original score ///////////////////// saved score ///////////////////
@@ -178,8 +177,8 @@ TEST(roundTripViolaDynamicWrongTime, Freezing)
     const size_t partIndex = 0;
     const size_t measureIndex = 7;
 
-    const auto &originalScore = coreDocumentOf(originalDoc).asScorePartwise();
-    const auto &savedScore = coreDocumentOf(savedDoc).asScorePartwise();
+    const auto &originalScore = originalDoc.getCoreDocument().asScorePartwise();
+    const auto &savedScore = savedDoc.getCoreDocument().asScorePartwise();
 
     const auto originalMdcSpan = originalScore.part()[partIndex].measure()[measureIndex].musicData();
     auto originalMdcIter = originalMdcSpan.begin();
@@ -314,8 +313,8 @@ TEST(missingMusicXMLVersion, Freezing)
     REQUIRE(rSaved.ok());
     MusicXml savedDoc = std::move(rSaved).value();
 
-    const bool originalScoreHasVersion = coreDocumentOf(originalDoc).asScorePartwise().version().has_value();
-    const bool savedScoreHasVersion = coreDocumentOf(savedDoc).asScorePartwise().version().has_value();
+    const bool originalScoreHasVersion = originalDoc.getCoreDocument().asScorePartwise().version().has_value();
+    const bool savedScoreHasVersion = savedDoc.getCoreDocument().asScorePartwise().version().has_value();
     CHECK(originalScoreHasVersion);
     CHECK(savedScoreHasVersion);
 }
@@ -332,8 +331,8 @@ TEST(HasDefaultsHasAppearance, Freezing)
     REQUIRE(rSaved.ok());
     MusicXml savedDoc = std::move(rSaved).value();
 
-    const auto &origHeader = coreDocumentOf(originalDoc).asScorePartwise().scoreHeader();
-    const auto &savedHeader = coreDocumentOf(savedDoc).asScorePartwise().scoreHeader();
+    const auto &origHeader = originalDoc.getCoreDocument().asScorePartwise().scoreHeader();
+    const auto &savedHeader = savedDoc.getCoreDocument().asScorePartwise().scoreHeader();
 
     const bool originalHasDefaults = origHeader.defaults().has_value();
     const bool savedHasDefaults = savedHeader.defaults().has_value();
@@ -393,15 +392,15 @@ TEST(appearanceLineWidths, Freezing)
     REQUIRE(rSaved.ok());
     MusicXml savedDoc = std::move(rSaved).value();
 
-    REQUIRE(coreDocumentOf(originalDoc).asScorePartwise().scoreHeader().defaults().has_value());
-    REQUIRE(coreDocumentOf(savedDoc).asScorePartwise().scoreHeader().defaults().has_value());
-    REQUIRE(coreDocumentOf(originalDoc).asScorePartwise().scoreHeader().defaults()->appearance().has_value());
-    REQUIRE(coreDocumentOf(savedDoc).asScorePartwise().scoreHeader().defaults()->appearance().has_value());
+    REQUIRE(originalDoc.getCoreDocument().asScorePartwise().scoreHeader().defaults().has_value());
+    REQUIRE(savedDoc.getCoreDocument().asScorePartwise().scoreHeader().defaults().has_value());
+    REQUIRE(originalDoc.getCoreDocument().asScorePartwise().scoreHeader().defaults()->appearance().has_value());
+    REQUIRE(savedDoc.getCoreDocument().asScorePartwise().scoreHeader().defaults()->appearance().has_value());
 
     const auto &originalAppearance =
-        coreDocumentOf(originalDoc).asScorePartwise().scoreHeader().defaults()->appearance().value();
+        originalDoc.getCoreDocument().asScorePartwise().scoreHeader().defaults()->appearance().value();
     const auto &savedAppearance =
-        coreDocumentOf(savedDoc).asScorePartwise().scoreHeader().defaults()->appearance().value();
+        savedDoc.getCoreDocument().asScorePartwise().scoreHeader().defaults()->appearance().value();
 
     const auto lineWidthSetSize = savedAppearance.lineWidth().size();
     CHECK(lineWidthSetSize > 0);
@@ -431,15 +430,15 @@ TEST(appearanceNoteSize, Freezing)
     REQUIRE(rSaved.ok());
     MusicXml savedDoc = std::move(rSaved).value();
 
-    REQUIRE(coreDocumentOf(originalDoc).asScorePartwise().scoreHeader().defaults().has_value());
-    REQUIRE(coreDocumentOf(savedDoc).asScorePartwise().scoreHeader().defaults().has_value());
-    REQUIRE(coreDocumentOf(originalDoc).asScorePartwise().scoreHeader().defaults()->appearance().has_value());
-    REQUIRE(coreDocumentOf(savedDoc).asScorePartwise().scoreHeader().defaults()->appearance().has_value());
+    REQUIRE(originalDoc.getCoreDocument().asScorePartwise().scoreHeader().defaults().has_value());
+    REQUIRE(savedDoc.getCoreDocument().asScorePartwise().scoreHeader().defaults().has_value());
+    REQUIRE(originalDoc.getCoreDocument().asScorePartwise().scoreHeader().defaults()->appearance().has_value());
+    REQUIRE(savedDoc.getCoreDocument().asScorePartwise().scoreHeader().defaults()->appearance().has_value());
 
     const auto &originalAppearance =
-        coreDocumentOf(originalDoc).asScorePartwise().scoreHeader().defaults()->appearance().value();
+        originalDoc.getCoreDocument().asScorePartwise().scoreHeader().defaults()->appearance().value();
     const auto &savedAppearance =
-        coreDocumentOf(savedDoc).asScorePartwise().scoreHeader().defaults()->appearance().value();
+        savedDoc.getCoreDocument().asScorePartwise().scoreHeader().defaults()->appearance().value();
 
     const auto noteSizeSetSize = savedAppearance.noteSize().size();
     CHECK(noteSizeSetSize > 0);
@@ -469,15 +468,15 @@ TEST(appearancDistance, Freezing)
     REQUIRE(rSaved.ok());
     MusicXml savedDoc = std::move(rSaved).value();
 
-    REQUIRE(coreDocumentOf(originalDoc).asScorePartwise().scoreHeader().defaults().has_value());
-    REQUIRE(coreDocumentOf(savedDoc).asScorePartwise().scoreHeader().defaults().has_value());
-    REQUIRE(coreDocumentOf(originalDoc).asScorePartwise().scoreHeader().defaults()->appearance().has_value());
-    REQUIRE(coreDocumentOf(savedDoc).asScorePartwise().scoreHeader().defaults()->appearance().has_value());
+    REQUIRE(originalDoc.getCoreDocument().asScorePartwise().scoreHeader().defaults().has_value());
+    REQUIRE(savedDoc.getCoreDocument().asScorePartwise().scoreHeader().defaults().has_value());
+    REQUIRE(originalDoc.getCoreDocument().asScorePartwise().scoreHeader().defaults()->appearance().has_value());
+    REQUIRE(savedDoc.getCoreDocument().asScorePartwise().scoreHeader().defaults()->appearance().has_value());
 
     const auto &originalAppearance =
-        coreDocumentOf(originalDoc).asScorePartwise().scoreHeader().defaults()->appearance().value();
+        originalDoc.getCoreDocument().asScorePartwise().scoreHeader().defaults()->appearance().value();
     const auto &savedAppearance =
-        coreDocumentOf(savedDoc).asScorePartwise().scoreHeader().defaults()->appearance().value();
+        savedDoc.getCoreDocument().asScorePartwise().scoreHeader().defaults()->appearance().value();
 
     const auto distanceSetSize = savedAppearance.distance().size();
     CHECK(distanceSetSize > 0);

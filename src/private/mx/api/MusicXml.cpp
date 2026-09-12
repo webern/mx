@@ -3,7 +3,6 @@
 // Distributed under the MIT License
 
 #include "mx/api/MusicXml.h"
-#include "mx/api/MusicXmlInternal.h"
 #include "mx/core/Attribution.h"
 #include "mx/core/Error.h"
 #include "mx/core/generated/Document.h"
@@ -275,9 +274,14 @@ MusicXml MusicXml::clone() const
     return cloned;
 }
 
-const core::Document &coreDocumentOf(const MusicXml &document) noexcept
+core::Document &MusicXml::getCoreDocument()
 {
-    return document.myImpl->document;
+    return myImpl->document;
+}
+
+const core::Document &MusicXml::getCoreDocument() const
+{
+    return myImpl->document;
 }
 
 Result<MusicXml> fromScore(const ScoreData &score)

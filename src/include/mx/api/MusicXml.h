@@ -48,6 +48,13 @@ class MusicXml
     // Writes the document to a character stream.
     Result<void> writeToStream(std::ostream &stream) const;
 
+    // This is an escape hatch in case mx::api does not do what you need and
+    // you want to edit the core DOM directly. You will need to include the
+    // private mx::core headers in your header search paths to do so. Not
+    // recommended, try opening an issue first!
+    core::Document &getCoreDocument();
+    const core::Document &getCoreDocument() const;
+
   private:
     MusicXml();
     MusicXml(core::Document document, bool writeMxVersion);
@@ -56,7 +63,6 @@ class MusicXml
 
     friend Result<ScoreData> getScore(const MusicXml &document);
     friend Result<MusicXml> fromScore(const ScoreData &score);
-    friend const core::Document &coreDocumentOf(const MusicXml &document) noexcept;
 };
 
 // Reads the score out of the document. The document stays alive and can be

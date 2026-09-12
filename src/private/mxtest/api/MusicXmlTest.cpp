@@ -8,7 +8,6 @@
 #include "cpul/cpulTestHarness.h"
 #include "mx/api/DefaultsData.h"
 #include "mx/api/MusicXml.h"
-#include "mx/api/MusicXmlInternal.h"
 #include "mx/core/Attribution.h"
 #include "mx/core/generated/Document.h"
 #include "mx/core/generated/MarginType.h"
@@ -380,7 +379,7 @@ TEST(Layout_PageMarginsBoth, MusicXml)
     auto docResult = fromScore(score);
     REQUIRE(docResult.ok());
     const MusicXml doc = std::move(docResult).value();
-    const auto &mxDoc = coreDocumentOf(doc);
+    const auto &mxDoc = doc.getCoreDocument();
     REQUIRE(mxDoc.isScorePartwise());
     const auto &defaults = mxDoc.asScorePartwise().scoreHeader().defaults();
     REQUIRE(defaults.has_value());
@@ -417,7 +416,7 @@ TEST(Layout_PageMarginsEvenOdd, MusicXml)
     auto docResult = fromScore(score);
     REQUIRE(docResult.ok());
     const MusicXml doc = std::move(docResult).value();
-    const auto &mxDoc = coreDocumentOf(doc);
+    const auto &mxDoc = doc.getCoreDocument();
     REQUIRE(mxDoc.isScorePartwise());
     const auto &defaults = mxDoc.asScorePartwise().scoreHeader().defaults();
     REQUIRE(defaults.has_value());
