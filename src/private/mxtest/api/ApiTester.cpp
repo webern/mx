@@ -1,6 +1,9 @@
+// MusicXML Class Library
+// Copyright (c) by Matthew James Briggs
+// Distributed under the MIT License
 
 #include "mxtest/api/ApiTester.h"
-#include "mx/api/DocumentManager.h"
+#include "mx/api/MusicXml.h"
 #include "mxtest/file/StupidFileFunctions.h"
 #include "pugixml.hpp"
 
@@ -39,58 +42,49 @@ void ApiTester::runTestCode()
     const auto expectedScoreData = myScoreDataCreator->createScoreData();
 
     // load the data from disk
-    auto &docMgr = DocumentManager::getInstance();
-    const auto initialLoadDocIdResult = docMgr.createFromFile(testFilePath());
-    if (!initialLoadDocIdResult.ok())
+    auto initialLoadDocResult = MusicXml::fromFile(testFilePath());
+    if (!initialLoadDocResult.ok())
     {
         setIsSuccess(false);
-        setFailureMessage("createFromFile failed: " + initialLoadDocIdResult.error().message);
+        setFailureMessage("fromFile failed: " + initialLoadDocResult.error().message);
         return;
     }
-    const int initialLoadDocId = initialLoadDocIdResult.value();
-    const auto initialLoadScoreDataResult = docMgr.getData(initialLoadDocId);
+    MusicXml initialLoadDoc = std::move(initialLoadDocResult).value();
+    const auto initialLoadScoreDataResult = getScore(initialLoadDoc);
     if (!initialLoadScoreDataResult.ok())
     {
-        docMgr.destroyDocument(initialLoadDocId);
         setIsSuccess(false);
-        setFailureMessage("getData failed: " + initialLoadScoreDataResult.error().message);
+        setFailureMessage("getScore failed: " + initialLoadScoreDataResult.error().message);
         return;
     }
     const auto initialLoadScoreData = initialLoadScoreDataResult.value();
 
     // save what we loaded back to disk
-    const auto initialScoreDataDocIdResult = docMgr.createFromScore(initialLoadScoreData);
-    if (!initialScoreDataDocIdResult.ok())
+    auto initialScoreDataDocResult = fromScore(initialLoadScoreData);
+    if (!initialScoreDataDocResult.ok())
     {
-        docMgr.destroyDocument(initialLoadDocId);
         setIsSuccess(false);
-        setFailureMessage("createFromScore failed");
+        setFailureMessage("fromScore failed");
         return;
     }
-    const int initialScoreDataDocId = initialScoreDataDocIdResult.value();
+    const MusicXml initialScoreDataDoc = std::move(initialScoreDataDocResult).value();
 
     // save the 'intermediate' ScoreData
-    docMgr.writeToFile(initialScoreDataDocId, myIntermediateFilePath);
+    initialScoreDataDoc.writeToFile(myIntermediateFilePath);
 
-    // load what what we just saved back up into memory
-    const auto intermediateFileLoadDocIdResult = docMgr.createFromFile(myIntermediateFilePath);
-    if (!intermediateFileLoadDocIdResult.ok())
+    // load what we just saved back into memory
+    auto intermediateFileLoadDocResult = MusicXml::fromFile(myIntermediateFilePath);
+    if (!intermediateFileLoadDocResult.ok())
     {
-        docMgr.destroyDocument(initialLoadDocId);
-        docMgr.destroyDocument(initialScoreDataDocId);
         setIsSuccess(false);
-        setFailureMessage("createFromFile(intermediate) failed");
+        setFailureMessage("fromFile(intermediate) failed");
         return;
     }
-    const int intermediateFileLoadDocId = intermediateFileLoadDocIdResult.value();
-    const auto actualScoreDataResult = docMgr.getData(intermediateFileLoadDocId);
+    const auto actualScoreDataResult = getScore(std::move(intermediateFileLoadDocResult).value());
     if (!actualScoreDataResult.ok())
     {
-        docMgr.destroyDocument(initialLoadDocId);
-        docMgr.destroyDocument(initialScoreDataDocId);
-        docMgr.destroyDocument(intermediateFileLoadDocId);
         setIsSuccess(false);
-        setFailureMessage("getData(intermediate) failed");
+        setFailureMessage("getScore(intermediate) failed");
         return;
     }
     const auto actualScoreData = actualScoreDataResult.value();
@@ -100,9 +94,6 @@ void ApiTester::runTestCode()
     {
         // test was successful, return without registering a failure
         setIsSuccess(true);
-        docMgr.destroyDocument(initialLoadDocId);
-        docMgr.destroyDocument(initialScoreDataDocId);
-        docMgr.destroyDocument(intermediateFileLoadDocId);
         deleteFiles();
         return;
     }
@@ -119,26 +110,18 @@ void ApiTester::runTestCode()
     }
 
     // save the 'expected' ScoreData
-    const auto expectedScoreDataDocIdResult = docMgr.createFromScore(expectedScoreData);
-    if (expectedScoreDataDocIdResult.ok())
+    auto expectedScoreDataDocResult = fromScore(expectedScoreData);
+    if (expectedScoreDataDocResult.ok())
     {
-        const int expectedScoreDataDocId = expectedScoreDataDocIdResult.value();
-        docMgr.writeToFile(expectedScoreDataDocId, myExpectedFilePath);
-        docMgr.destroyDocument(expectedScoreDataDocId);
+        std::move(expectedScoreDataDocResult).value().writeToFile(myExpectedFilePath);
     }
 
     // save the 'actual' ScoreData
-    const auto finalDocIdResult = docMgr.createFromScore(actualScoreData);
-    if (finalDocIdResult.ok())
+    auto finalDocResult = fromScore(actualScoreData);
+    if (finalDocResult.ok())
     {
-        const int finalDocId = finalDocIdResult.value();
-        docMgr.writeToFile(finalDocId, myFinalFilePath);
-        docMgr.destroyDocument(finalDocId);
+        std::move(finalDocResult).value().writeToFile(myFinalFilePath);
     }
-
-    docMgr.destroyDocument(initialLoadDocId);
-    docMgr.destroyDocument(initialScoreDataDocId);
-    docMgr.destroyDocument(intermediateFileLoadDocId);
 }
 
 void ApiTester::deleteFiles() const

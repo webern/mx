@@ -13,7 +13,7 @@ namespace impl
 {
 
 // The timewise <-> partwise pivot: a regroup of parts-of-measures
-// <-> measures-of-parts plus header. Its only consumer is DocumentManager.
+// <-> measures-of-parts plus header. Its only consumer is the api boundary (MusicXml).
 // Under value semantics the old shallow copies become real copies --
 // strictly safer, behavior-identical for this use.
 

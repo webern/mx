@@ -2,7 +2,7 @@
 // Copyright (c) by Matthew James Briggs
 // Distributed under the MIT License
 
-#include "mx/api/DocumentManager.h"
+#include "mx/api/MusicXml.h"
 #include "mxtest/file/MxFileRepository.h"
 #include "mxtest/file/Path.h"
 
@@ -123,13 +123,10 @@ void MxFileRepository::initializeTestFiles()
 mx::api::ScoreData MxFileRepository::loadFile(const std::string &fileName)
 {
     const std::string fullPath = getFullPath(fileName);
-    auto &docMgr = mx::api::DocumentManager::getInstance();
-    const auto docIdResult = docMgr.createFromFile(fullPath);
-    if (!docIdResult.ok())
+    auto docResult = mx::api::MusicXml::fromFile(fullPath);
+    if (!docResult.ok())
         return {};
-    const int docId = docIdResult.value();
-    const auto scoreDataResult = docMgr.getData(docId);
-    docMgr.destroyDocument(docId);
+    const auto scoreDataResult = mx::api::getScore(std::move(docResult).value());
     if (!scoreDataResult.ok())
         return {};
     return scoreDataResult.value();

@@ -152,9 +152,9 @@ comment on a PR or the Coverage workflow's "Run workflow" button (`.github/workf
 
 | File | What it is |
 |------|------------|
-| `src/include/mx/api/DocumentManager.h` | The public API entry point: createFromFile, createFromScore, getData, writeToFile |
+| `src/include/mx/api/MusicXml.h` | The public API entry point: fromFile, fromStream, fromScore, getScore, intoScore, clone, writeTo* |
 | `src/include/mx/api/ScoreData.h` | The primary api data model (ScoreData, PartData, MeasureData, ...) |
-| `src/private/mx/api/DocumentManager.cpp` | API implementation: error channel, parse/serialize orchestration |
+| `src/private/mx/api/MusicXml.cpp` | API implementation: error channel, parse/serialize orchestration |
 | `src/private/mx/impl/ScoreReader.cpp` | Translates mx::core -> mx::api ScoreData |
 | `src/private/mx/impl/ScoreWriter.cpp` | Translates mx::api ScoreData -> mx::core |
 | `src/private/mx/impl/NoteReader.cpp` | Core -> api note translation (one of the largest impl files) |

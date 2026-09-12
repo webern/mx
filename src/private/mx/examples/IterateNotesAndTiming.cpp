@@ -25,7 +25,7 @@
 #include <sstream>
 #include <string>
 
-#include "mx/api/DocumentManager.h"
+#include "mx/api/MusicXml.h"
 #include "mx/api/ScoreData.h"
 
 #define MX_IS_A_SUCCESS 0
@@ -194,18 +194,15 @@ int main(int argc, const char *argv[])
 {
     using namespace mx::api;
 
-    auto &mgr = DocumentManager::getInstance();
     std::istringstream istr{xml};
 
-    const auto idResult = mgr.createFromStream(istr);
-    if (!idResult.ok())
+    auto docResult = MusicXml::fromStream(istr);
+    if (!docResult.ok())
     {
         return MX_IS_A_FAILURE;
     }
-    const auto documentID = idResult.value();
 
-    const auto scoreResult = mgr.getData(documentID);
-    mgr.destroyDocument(documentID);
+    const auto scoreResult = intoScore(std::move(docResult).value());
     if (!scoreResult.ok())
     {
         return MX_IS_A_FAILURE;

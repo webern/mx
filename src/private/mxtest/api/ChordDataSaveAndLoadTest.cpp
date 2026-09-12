@@ -6,7 +6,7 @@
 #ifdef MX_COMPILE_API_TESTS
 
 #include "cpul/cpulTestHarness.h"
-#include "mx/api/DocumentManager.h"
+#include "mx/api/MusicXml.h"
 #include "mx/core/generated/Bass.h"
 #include "mx/core/generated/BassStep.h"
 #include "mx/core/generated/Document.h"
@@ -38,15 +38,12 @@ using namespace mxtest;
 TEST(Save, ChordDataSaveTest)
 {
     const auto scoreData = apiChordSimpleScoreData();
-    auto &mgr = DocumentManager::getInstance();
-    const auto docIdResult = mgr.createFromScore(scoreData);
+    auto docIdResult = fromScore(scoreData);
     REQUIRE(docIdResult.ok());
-    const int docId = docIdResult.value();
-    const auto documentPtr = mgr.getDocument(docId);
-    mgr.destroyDocument(docId);
-    REQUIRE(documentPtr != nullptr);
-    REQUIRE(documentPtr->isScorePartwise());
-    const auto &scorePartwise = documentPtr->asScorePartwise();
+    const auto document = std::move(docIdResult).value();
+    const auto &coreDoc = document.getCoreDocument();
+    REQUIRE(coreDoc.isScorePartwise());
+    const auto &scorePartwise = coreDoc.asScorePartwise();
 
     const auto partwiseParts = scorePartwise.part();
     REQUIRE(!partwiseParts.empty());

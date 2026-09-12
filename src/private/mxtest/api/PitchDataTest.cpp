@@ -6,7 +6,7 @@
 #ifdef MX_COMPILE_API_TESTS
 
 #include "cpul/cpulTestHarness.h"
-#include "mx/api/DocumentManager.h"
+#include "mx/api/MusicXml.h"
 #include "pugixml.hpp"
 
 #include <sstream>
@@ -75,14 +75,11 @@ Output pitchDataTest(const Input &input)
     note.pitchData.cents = input.cents;
 
     // round trip it through xml
-    auto &mgr = DocumentManager::getInstance();
-    const auto docIdResult = mgr.createFromScore(score);
+    auto docIdResult = fromScore(score);
     if (!docIdResult.ok())
         return {};
-    const int docId = docIdResult.value();
     std::stringstream ss;
-    mgr.writeToStream(docId, ss);
-    mgr.destroyDocument(docId);
+    std::move(docIdResult).value().writeToStream(ss);
 
     // check the alter value that was written to xml
     pugi::xml_document xdoc;
@@ -95,12 +92,10 @@ Output pitchDataTest(const Input &input)
 
     // deserialize back to ScoreData
     std::istringstream iss{xml};
-    const auto docId2Result = mgr.createFromStream(iss);
+    auto docId2Result = MusicXml::fromStream(iss);
     if (!docId2Result.ok())
         return {};
-    const int docId2 = docId2Result.value();
-    const auto oscoreResult = mgr.getData(docId2);
-    mgr.destroyDocument(docId2);
+    const auto oscoreResult = getScore(std::move(docId2Result).value());
     if (!oscoreResult.ok())
         return {};
     const auto &oscore = oscoreResult.value();
@@ -115,13 +110,11 @@ Output pitchDataTest(const Input &input)
     output.accidental = onote.pitchData.accidental;
 
     // serialize a second time and check the alter string again
-    const auto docId3Result = mgr.createFromScore(score);
+    auto docId3Result = fromScore(score);
     if (!docId3Result.ok())
         return {};
-    const int docId3 = docId3Result.value();
     std::stringstream ss2;
-    mgr.writeToStream(docId3, ss2);
-    mgr.destroyDocument(docId3);
+    std::move(docId3Result).value().writeToStream(ss2);
 
     // check the alter value that was written to xml
     pugi::xml_document xdoc2;
@@ -366,13 +359,10 @@ TEST(AccidentalPresenceAttributesRoundTrip, PitchData)
     note.pitchData.isAccidentalEditorial = true;
     note.pitchData.isAccidentalBracketed = true;
 
-    auto &mgr = DocumentManager::getInstance();
-    const auto r1 = mgr.createFromScore(score);
+    auto r1 = fromScore(score);
     REQUIRE(r1.ok());
-    const int docId = r1.value();
     std::stringstream ss;
-    mgr.writeToStream(docId, ss);
-    mgr.destroyDocument(docId);
+    std::move(r1).value().writeToStream(ss);
     const std::string xml = ss.str();
     CHECK(xml.find(R"(parentheses="yes")") != std::string::npos);
     CHECK(xml.find(R"(cautionary="yes")") != std::string::npos);
@@ -380,12 +370,10 @@ TEST(AccidentalPresenceAttributesRoundTrip, PitchData)
     CHECK(xml.find(R"(bracket="yes")") != std::string::npos);
 
     std::istringstream iss{xml};
-    const auto r2 = mgr.createFromStream(iss);
+    auto r2 = MusicXml::fromStream(iss);
     REQUIRE(r2.ok());
-    const int docId2 = r2.value();
-    const auto rd = mgr.getData(docId2);
+    const auto rd = getScore(std::move(r2).value());
     REQUIRE(rd.ok());
-    mgr.destroyDocument(docId2);
     const auto &outNote = rd.value().parts.back().measures.back().staves.back().voices.at(0).notes.back();
     CHECK(outNote.pitchData.isAccidentalParenthetical);
     CHECK(outNote.pitchData.isAccidentalCautionary);

@@ -6,7 +6,7 @@
 #ifdef MX_COMPILE_API_TESTS
 
 #include "cpul/cpulTestHarness.h"
-#include "mx/api/DocumentManager.h"
+#include "mx/api/MusicXml.h"
 #include "mxtest/file/MxFileTest.h"
 #include "mxtest/file/MxFileTestGroup.h"
 
@@ -32,21 +32,18 @@ class ApiLoadSmokeTest : public mxtest::MxFileTest
             setIsSuccess(true);
             return;
         }
-        auto &docMgr = mx::api::DocumentManager::getInstance();
-        const auto docIdResult = docMgr.createFromFile(testFilePath());
-        if (!docIdResult.ok())
+        auto docResult = mx::api::MusicXml::fromFile(testFilePath());
+        if (!docResult.ok())
         {
             setIsSuccess(false);
-            setFailureMessage("docMgr.createFromFile failed: " + docIdResult.error().message);
+            setFailureMessage("MusicXml::fromFile failed: " + docResult.error().message);
             return;
         }
-        const int docId = docIdResult.value();
-        const auto scoreDataResult = docMgr.getData(docId);
-        docMgr.destroyDocument(docId);
+        const auto scoreDataResult = mx::api::getScore(std::move(docResult).value());
         if (!scoreDataResult.ok())
         {
             setIsSuccess(false);
-            setFailureMessage("docMgr.getData failed: " + scoreDataResult.error().message);
+            setFailureMessage("getScore failed: " + scoreDataResult.error().message);
             return;
         }
         bool isSuccess = scoreDataResult.value().parts.size() > 0;

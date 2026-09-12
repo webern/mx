@@ -10,7 +10,7 @@
 #ifdef MX_COMPILE_API_TESTS
 
 #include "cpul/cpulTestHarness.h"
-#include "mx/api/DocumentManager.h"
+#include "mx/api/MusicXml.h"
 #include "mxtest/api/RoundTrip.h"
 #include "mxtest/api/TestHelpers.h"
 #include "mxtest/file/MxFileRepository.h"

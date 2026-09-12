@@ -8,7 +8,7 @@
 #ifdef MX_COMPILE_API_TESTS
 
 #include "cpul/cpulTestHarness.h"
-#include "mx/api/DocumentManager.h"
+#include "mx/api/MusicXml.h"
 #include "mx/core/generated/Attributes.h"
 #include "mx/core/generated/Cancel.h"
 #include "mx/core/generated/Document.h"
@@ -42,11 +42,10 @@ ScoreData putKeyInScore(KeyData key)
 }
 
 /// Helper: get the first Key element from the first Attributes element of the first measure of the first part.
-const mx::core::Key &getFirstCoreKey(const mx::core::DocumentPtr &corePtr)
+const mx::core::Key &getFirstCoreKey(const mx::core::Document &coreDoc)
 {
-    REQUIRE(corePtr != nullptr);
-    REQUIRE(corePtr->isScorePartwise());
-    const auto &scorePartwise = corePtr->asScorePartwise();
+    REQUIRE(coreDoc.isScorePartwise());
+    const auto &scorePartwise = coreDoc.asScorePartwise();
     const auto parts = scorePartwise.part();
     REQUIRE(!parts.empty());
     const auto &part = parts[0];
@@ -125,13 +124,12 @@ TEST(EMajor, KeyData)
     key.staffIndex = 0;
 
     const auto original = putKeyInScore(key);
-    auto &docMgr = DocumentManager::getInstance();
-    const auto originalIdResult = docMgr.createFromScore(original);
+    auto originalIdResult = fromScore(original);
     REQUIRE(originalIdResult.ok());
-    const int originalId = originalIdResult.value();
-    const mx::core::DocumentPtr corePtr = docMgr.getDocument(originalId);
+    const auto originalDoc = std::move(originalIdResult).value();
+    const mx::core::Document &coreDoc = originalDoc.getCoreDocument();
 
-    const auto &coreKey = getFirstCoreKey(corePtr);
+    const auto &coreKey = getFirstCoreKey(coreDoc);
     const auto &coreKeyChoice = coreKey.choice();
     CHECK(coreKeyChoice.isTraditionalKey());
     const auto &coreTraditionalKey = coreKeyChoice.asTraditionalKey();
@@ -162,14 +160,11 @@ TEST(EMajor, KeyData)
 
     // serialize and deserialize
     std::stringstream xml;
-    docMgr.writeToStream(originalId, xml);
-    docMgr.destroyDocument(originalId);
+    originalDoc.writeToStream(xml);
     std::istringstream iss{xml.str()};
-    const auto deserializedIdResult = docMgr.createFromStream(iss);
+    auto deserializedIdResult = MusicXml::fromStream(iss);
     REQUIRE(deserializedIdResult.ok());
-    const int deserializedId = deserializedIdResult.value();
-    const auto deserializedScoreResult = docMgr.getData(deserializedId);
-    docMgr.destroyDocument(deserializedId);
+    const auto deserializedScoreResult = getScore(std::move(deserializedIdResult).value());
     REQUIRE(deserializedScoreResult.ok());
     const auto &deserializedScore = deserializedScoreResult.value();
     const auto &deserializedKeys = deserializedScore.parts.at(0).measures.at(0).keys;
@@ -193,13 +188,12 @@ TEST(AbMinor, KeyData)
     key.staffIndex = -10;
 
     const auto original = putKeyInScore(key);
-    auto &docMgr = DocumentManager::getInstance();
-    const auto originalIdResult = docMgr.createFromScore(original);
+    auto originalIdResult = fromScore(original);
     REQUIRE(originalIdResult.ok());
-    const int originalId = originalIdResult.value();
-    const mx::core::DocumentPtr corePtr = docMgr.getDocument(originalId);
+    const auto originalDoc = std::move(originalIdResult).value();
+    const mx::core::Document &coreDoc = originalDoc.getCoreDocument();
 
-    const auto &coreKey = getFirstCoreKey(corePtr);
+    const auto &coreKey = getFirstCoreKey(coreDoc);
     const auto &coreKeyChoice = coreKey.choice();
     CHECK(coreKeyChoice.isTraditionalKey());
     const auto &coreTraditionalKey = coreKeyChoice.asTraditionalKey();
@@ -222,14 +216,11 @@ TEST(AbMinor, KeyData)
 
     // serialize and deserialize
     std::stringstream xml;
-    docMgr.writeToStream(originalId, xml);
-    docMgr.destroyDocument(originalId);
+    originalDoc.writeToStream(xml);
     std::istringstream iss{xml.str()};
-    const auto deserializedIdResult = docMgr.createFromStream(iss);
+    auto deserializedIdResult = MusicXml::fromStream(iss);
     REQUIRE(deserializedIdResult.ok());
-    const int deserializedId = deserializedIdResult.value();
-    const auto deserializedScoreResult = docMgr.getData(deserializedId);
-    docMgr.destroyDocument(deserializedId);
+    const auto deserializedScoreResult = getScore(std::move(deserializedIdResult).value());
     REQUIRE(deserializedScoreResult.ok());
     const auto &deserializedScore = deserializedScoreResult.value();
     const auto &deserializedKeys = deserializedScore.parts.at(0).measures.at(0).keys;
@@ -257,13 +248,12 @@ TEST(NonTraditional1, KeyData)
     key.nonTraditional.push_back(dQuarterFlat);
 
     const auto original = putKeyInScore(key);
-    auto &docMgr = DocumentManager::getInstance();
-    const auto originalIdResult = docMgr.createFromScore(original);
+    auto originalIdResult = fromScore(original);
     REQUIRE(originalIdResult.ok());
-    const int originalId = originalIdResult.value();
-    const mx::core::DocumentPtr corePtr = docMgr.getDocument(originalId);
+    const auto originalDoc = std::move(originalIdResult).value();
+    const mx::core::Document &coreDoc = originalDoc.getCoreDocument();
 
-    const auto &coreKey = getFirstCoreKey(corePtr);
+    const auto &coreKey = getFirstCoreKey(coreDoc);
     const auto &coreKeyChoice = coreKey.choice();
     CHECK(coreKeyChoice.isNonTraditionalKey());
     const auto &coreKeyComponents = coreKeyChoice.asNonTraditionalKey();
@@ -294,14 +284,11 @@ TEST(NonTraditional1, KeyData)
 
     // serialize and deserialize
     std::stringstream xml;
-    docMgr.writeToStream(originalId, xml);
-    docMgr.destroyDocument(originalId);
+    originalDoc.writeToStream(xml);
     std::istringstream iss{xml.str()};
-    const auto deserializedIdResult = docMgr.createFromStream(iss);
+    auto deserializedIdResult = MusicXml::fromStream(iss);
     REQUIRE(deserializedIdResult.ok());
-    const int deserializedId = deserializedIdResult.value();
-    const auto deserializedScoreResult = docMgr.getData(deserializedId);
-    docMgr.destroyDocument(deserializedId);
+    const auto deserializedScoreResult = getScore(std::move(deserializedIdResult).value());
     REQUIRE(deserializedScoreResult.ok());
     const auto &deserializedScore = deserializedScoreResult.value();
     const auto &deserializedKeys = deserializedScore.parts.at(0).measures.at(0).keys;
@@ -489,13 +476,12 @@ TEST(CancelLocationBeforeBarline, KeyData)
     key.cancelLocation = CancelLocation::beforeBarline;
 
     const auto original = putKeyInScore(key);
-    auto &docMgr = DocumentManager::getInstance();
-    const auto originalIdResult = docMgr.createFromScore(original);
+    auto originalIdResult = fromScore(original);
     REQUIRE(originalIdResult.ok());
-    const int originalId = originalIdResult.value();
-    const mx::core::DocumentPtr corePtr = docMgr.getDocument(originalId);
+    const auto originalDoc = std::move(originalIdResult).value();
+    const mx::core::Document &coreDoc = originalDoc.getCoreDocument();
 
-    const auto &coreKey = getFirstCoreKey(corePtr);
+    const auto &coreKey = getFirstCoreKey(coreDoc);
     const auto &coreKeyChoice = coreKey.choice();
     CHECK(coreKeyChoice.isTraditionalKey());
     const auto &coreTraditionalKey = coreKeyChoice.asTraditionalKey();
@@ -511,15 +497,12 @@ TEST(CancelLocationBeforeBarline, KeyData)
 
     // serialize and deserialize
     std::stringstream xml;
-    docMgr.writeToStream(originalId, xml);
-    docMgr.destroyDocument(originalId);
+    originalDoc.writeToStream(xml);
     CHECK(xml.str().find("location=\"before-barline\"") != std::string::npos);
     std::istringstream iss{xml.str()};
-    const auto deserializedIdResult = docMgr.createFromStream(iss);
+    auto deserializedIdResult = MusicXml::fromStream(iss);
     REQUIRE(deserializedIdResult.ok());
-    const int deserializedId = deserializedIdResult.value();
-    const auto deserializedScoreResult = docMgr.getData(deserializedId);
-    docMgr.destroyDocument(deserializedId);
+    const auto deserializedScoreResult = getScore(std::move(deserializedIdResult).value());
     REQUIRE(deserializedScoreResult.ok());
     const auto &deserializedScore = deserializedScoreResult.value();
     const auto &deserializedKeys = deserializedScore.parts.at(0).measures.at(0).keys;
@@ -538,13 +521,12 @@ TEST(CancelLocationUnspecified, KeyData)
     key.cancel = -3;
 
     const auto original = putKeyInScore(key);
-    auto &docMgr = DocumentManager::getInstance();
-    const auto originalIdResult = docMgr.createFromScore(original);
+    auto originalIdResult = fromScore(original);
     REQUIRE(originalIdResult.ok());
-    const int originalId = originalIdResult.value();
-    const mx::core::DocumentPtr corePtr = docMgr.getDocument(originalId);
+    const auto originalDoc = std::move(originalIdResult).value();
+    const mx::core::Document &coreDoc = originalDoc.getCoreDocument();
 
-    const auto &coreKey = getFirstCoreKey(corePtr);
+    const auto &coreKey = getFirstCoreKey(coreDoc);
     const auto &coreKeyChoice = coreKey.choice();
     CHECK(coreKeyChoice.isTraditionalKey());
     const auto &coreTraditionalKey = coreKeyChoice.asTraditionalKey();
@@ -554,15 +536,12 @@ TEST(CancelLocationUnspecified, KeyData)
 
     // serialize and deserialize
     std::stringstream xml;
-    docMgr.writeToStream(originalId, xml);
-    docMgr.destroyDocument(originalId);
+    originalDoc.writeToStream(xml);
     CHECK(xml.str().find("location=") == std::string::npos);
     std::istringstream iss{xml.str()};
-    const auto deserializedIdResult = docMgr.createFromStream(iss);
+    auto deserializedIdResult = MusicXml::fromStream(iss);
     REQUIRE(deserializedIdResult.ok());
-    const int deserializedId = deserializedIdResult.value();
-    const auto deserializedScoreResult = docMgr.getData(deserializedId);
-    docMgr.destroyDocument(deserializedId);
+    const auto deserializedScoreResult = getScore(std::move(deserializedIdResult).value());
     REQUIRE(deserializedScoreResult.ok());
     const auto &deserializedScore = deserializedScoreResult.value();
     const auto &deserializedKeys = deserializedScore.parts.at(0).measures.at(0).keys;
@@ -744,20 +723,17 @@ TEST(ModeNoneIsNotNonTraditional, KeyData)
     key.mode = KeyMode::none;
 
     const auto original = putKeyInScore(key);
-    auto &docMgr = DocumentManager::getInstance();
-    const auto originalIdResult = docMgr.createFromScore(original);
+    auto originalIdResult = fromScore(original);
     REQUIRE(originalIdResult.ok());
-    const int originalId = originalIdResult.value();
-    const mx::core::DocumentPtr corePtr = docMgr.getDocument(originalId);
+    const auto originalDoc = std::move(originalIdResult).value();
+    const mx::core::Document &coreDoc = originalDoc.getCoreDocument();
 
-    const auto &coreKey = getFirstCoreKey(corePtr);
+    const auto &coreKey = getFirstCoreKey(coreDoc);
     CHECK(coreKey.choice().isTraditionalKey());
     const auto &coreTraditionalKey = coreKey.choice().asTraditionalKey();
     CHECK_EQUAL(0, coreTraditionalKey.fifths().value());
     REQUIRE(coreTraditionalKey.mode().has_value());
     CHECK_EQUAL(std::string{"none"}, coreTraditionalKey.mode()->value());
-
-    docMgr.destroyDocument(originalId);
 }
 
 TEST(KeyDataEquality_change_cancelLocation, KeyData)

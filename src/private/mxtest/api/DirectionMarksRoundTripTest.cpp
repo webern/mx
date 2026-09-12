@@ -6,7 +6,7 @@
 #ifdef MX_COMPILE_API_TESTS
 
 #include "cpul/cpulTestHarness.h"
-#include "mx/api/DocumentManager.h"
+#include "mx/api/MusicXml.h"
 
 #include <sstream>
 
@@ -27,23 +27,18 @@ static std::vector<DirectionData> roundTripDirectionData(const DirectionData &in
     auto &staff = measure.staves.back();
     staff.directions.push_back(inDirectionData);
 
-    auto &mgr = DocumentManager::getInstance();
-    const auto r1 = mgr.createFromScore(score);
+    auto r1 = fromScore(score);
     if (!r1.ok())
         return {};
-    auto docId = r1.value();
     std::stringstream ss;
-    mgr.writeToStream(docId, ss);
-    mgr.destroyDocument(docId);
+    std::move(r1).value().writeToStream(ss);
     const std::string xml = ss.str();
 
     std::istringstream iss{xml};
-    const auto r2 = mgr.createFromStream(iss);
+    auto r2 = MusicXml::fromStream(iss);
     if (!r2.ok())
         return {};
-    docId = r2.value();
-    const auto rd = mgr.getData(docId);
-    mgr.destroyDocument(docId);
+    const auto rd = getScore(std::move(r2).value());
     if (!rd.ok())
         return {};
     const auto &oscore = rd.value();
