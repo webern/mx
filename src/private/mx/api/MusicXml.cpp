@@ -70,12 +70,18 @@ ResultCode mirrorToApiResultCode(core::ErrorCode code)
 
 ApiError mirrorToApiError(const core::Error &error)
 {
-    return ApiError{mirrorToApiResultCode(error.code), error.path, error.message};
+    Location location;
+    location.xmlPath = error.path;
+    return ApiError{mirrorToApiResultCode(error.code), location, error.message};
 }
 
-ApiError musicXmlInternalError(const char *function, const std::string &message)
+// Builds the error for a caught exception. Call it inside a catch block only:
+// current_exception() keeps the exception alive in `cause`, so a caller can
+// look at it or throw it again. Most entry points repeat the same three
+// catches (out of memory, known exception, anything else).
+ApiError caughtError(const char *function, ResultCode code, const std::string &message)
 {
-    return ApiError{ResultCode::internalError, "", std::string{function} + ": " + message};
+    return ApiError{code, Location{}, std::string{function} + ": " + message, std::current_exception()};
 }
 
 std::string musicXmlFileExtension(const std::string &filePath)
@@ -150,16 +156,19 @@ Result<MusicXml> MusicXml::fromFile(const std::string &filePath)
             if (loaded.status == pugi::status_file_not_found || loaded.status == pugi::status_io_error ||
                 loaded.status == pugi::status_out_of_memory)
             {
-                return ApiError{ResultCode::ioError, filePath, loaded.description()};
+                return ApiError{ResultCode::ioError, Location{},
+                                "could not read '" + filePath + "' (" + loaded.description() + ")"};
             }
+            Location location;
+            location.byteOffset = loaded.offset;
             if (musicXmlFileExtension(filePath) == "mxl")
             {
                 std::stringstream ss;
                 ss << "it looks like you are trying to parse a compressed musicxml file, which is currently "
                    << "unsupported. https://github.com/webern/mx/issues/66 (" << loaded.description() << ")";
-                return ApiError{ResultCode::xmlSyntaxError, filePath, ss.str()};
+                return ApiError{ResultCode::xmlSyntaxError, location, ss.str()};
             }
-            return ApiError{ResultCode::xmlSyntaxError, filePath, loaded.description()};
+            return ApiError{ResultCode::xmlSyntaxError, location, loaded.description()};
         }
 
         auto parsed = core::parse(xdoc);
@@ -170,13 +179,17 @@ Result<MusicXml> MusicXml::fromFile(const std::string &filePath)
 
         return MusicXml{core::Document{std::move(parsed).value()}, true};
     }
+    catch (const std::bad_alloc &)
+    {
+        return caughtError("MusicXml::fromFile", ResultCode::outOfMemory, "out of memory");
+    }
     catch (const std::exception &e)
     {
-        return musicXmlInternalError("MusicXml::fromFile", e.what());
+        return caughtError("MusicXml::fromFile", ResultCode::internalError, e.what());
     }
     catch (...)
     {
-        return musicXmlInternalError("MusicXml::fromFile", "unknown exception");
+        return caughtError("MusicXml::fromFile", ResultCode::internalError, "unknown exception");
     }
 }
 
@@ -188,7 +201,9 @@ Result<MusicXml> MusicXml::fromStream(std::istream &stream)
         const pugi::xml_parse_result loaded = xdoc.load(stream, pugi::parse_default | pugi::parse_doctype);
         if (!loaded)
         {
-            return ApiError{ResultCode::xmlSyntaxError, "", loaded.description()};
+            Location location;
+            location.byteOffset = loaded.offset;
+            return ApiError{ResultCode::xmlSyntaxError, location, loaded.description()};
         }
 
         auto parsed = core::parse(xdoc);
@@ -199,13 +214,17 @@ Result<MusicXml> MusicXml::fromStream(std::istream &stream)
 
         return MusicXml{core::Document{std::move(parsed).value()}, true};
     }
+    catch (const std::bad_alloc &)
+    {
+        return caughtError("MusicXml::fromStream", ResultCode::outOfMemory, "out of memory");
+    }
     catch (const std::exception &e)
     {
-        return musicXmlInternalError("MusicXml::fromStream", e.what());
+        return caughtError("MusicXml::fromStream", ResultCode::internalError, e.what());
     }
     catch (...)
     {
-        return musicXmlInternalError("MusicXml::fromStream", "unknown exception");
+        return caughtError("MusicXml::fromStream", ResultCode::internalError, "unknown exception");
     }
 }
 
@@ -225,17 +244,21 @@ Result<void> MusicXml::writeToFile(const std::string &filePath) const
         }
         if (!xdoc.save_file(filePath.c_str(), "  "))
         {
-            return ApiError{ResultCode::ioError, filePath, "writeToFile: could not write the file"};
+            return ApiError{ResultCode::ioError, Location{}, "writeToFile: could not write '" + filePath + "'"};
         }
         return Result<void>{};
     }
+    catch (const std::bad_alloc &)
+    {
+        return caughtError("MusicXml::writeToFile", ResultCode::outOfMemory, "out of memory");
+    }
     catch (const std::exception &e)
     {
-        return musicXmlInternalError("MusicXml::writeToFile", e.what());
+        return caughtError("MusicXml::writeToFile", ResultCode::internalError, e.what());
     }
     catch (...)
     {
-        return musicXmlInternalError("MusicXml::writeToFile", "unknown exception");
+        return caughtError("MusicXml::writeToFile", ResultCode::internalError, "unknown exception");
     }
 }
 
@@ -256,13 +279,17 @@ Result<void> MusicXml::writeToStream(std::ostream &stream) const
         xdoc.save(stream, "  ");
         return Result<void>{};
     }
+    catch (const std::bad_alloc &)
+    {
+        return caughtError("MusicXml::writeToStream", ResultCode::outOfMemory, "out of memory");
+    }
     catch (const std::exception &e)
     {
-        return musicXmlInternalError("MusicXml::writeToStream", e.what());
+        return caughtError("MusicXml::writeToStream", ResultCode::internalError, e.what());
     }
     catch (...)
     {
-        return musicXmlInternalError("MusicXml::writeToStream", "unknown exception");
+        return caughtError("MusicXml::writeToStream", ResultCode::internalError, "unknown exception");
     }
 }
 
@@ -304,13 +331,17 @@ Result<MusicXml> fromScore(const ScoreData &score)
         // model will not represent.
         return refusal.error();
     }
+    catch (const std::bad_alloc &)
+    {
+        return caughtError("fromScore", ResultCode::outOfMemory, "out of memory");
+    }
     catch (const std::exception &e)
     {
-        return musicXmlInternalError("fromScore", e.what());
+        return caughtError("fromScore", ResultCode::internalError, e.what());
     }
     catch (...)
     {
-        return musicXmlInternalError("fromScore", "unknown exception");
+        return caughtError("fromScore", ResultCode::internalError, "unknown exception");
     }
 }
 
@@ -334,13 +365,17 @@ Result<ScoreData> getScore(const MusicXml &document)
         impl::ScoreReader reader{coreDocument.asScorePartwise()};
         return reader.getScoreData();
     }
+    catch (const std::bad_alloc &)
+    {
+        return caughtError("getScore", ResultCode::outOfMemory, "out of memory");
+    }
     catch (const std::exception &e)
     {
-        return musicXmlInternalError("getScore", e.what());
+        return caughtError("getScore", ResultCode::internalError, e.what());
     }
     catch (...)
     {
-        return musicXmlInternalError("getScore", "unknown exception");
+        return caughtError("getScore", ResultCode::internalError, "unknown exception");
     }
 }
 

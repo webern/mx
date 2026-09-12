@@ -14,6 +14,9 @@
 #include "mx/core/generated/PageLayout.h"
 #include "mxtest/file/Path.h"
 
+#include <new>
+#include <sstream>
+
 using namespace std;
 using namespace mx::api;
 
@@ -574,6 +577,165 @@ TEST(writeMxVersion_offSuppressesStamp, MusicXml)
     score.encoding.writeMxVersion = false;
     const std::string xml = writeScoreToString(score);
     CHECK(xml.find(std::string{mx::core::kMxSoftwareMarker}) == std::string::npos);
+}
+
+T_END
+
+// --- Error reporting -------------------------------------------------------
+// The api never lets an exception through; it returns errors. These pin what
+// an error carries: the reason, the place in the score, and, for caught
+// exceptions, the exception itself.
+
+// A ninth beam is more than the core model holds, so fromScore refuses it.
+// The refusal was discovered while walking the score, so it says which note
+// was the problem, not just that a limit exists somewhere.
+TEST(tooManyElementsCarriesThePlaceInTheScore, MusicXml)
+{
+    ScoreData score;
+    score.ticksPerQuarter = 4;
+    score.parts.emplace_back();
+    auto &part = score.parts.back();
+    part.measures.emplace_back();
+    auto &measure = part.measures.back();
+    measure.staves.emplace_back();
+    auto &note = measure.staves.back().voices[0].notes.emplace_back();
+    note.durationData.durationName = DurationName::quarter;
+    note.durationData.durationTimeTicks = 4;
+    for (int i = 0; i < 9; ++i)
+    {
+        note.beams.push_back(Beam::extend);
+    }
+
+    const auto result = fromScore(score);
+    REQUIRE(!result.ok());
+    const auto &error = result.error();
+    CHECK(ResultCode::tooManyElements == error.code);
+    CHECK_EQUAL(0, error.location.partIndex);
+    CHECK_EQUAL(0, error.location.measureIndex);
+    CHECK_EQUAL(0, error.location.staffIndex);
+    CHECK_EQUAL(0, error.location.voiceIndex);
+    CHECK_EQUAL(0, error.location.tickTimePosition);
+    CHECK(error.message.find("at most 8 beam occurrences") != std::string::npos);
+    CHECK(formatError(error).find("at part=0 measure=0 staff=0 voice=0 tick=0") != std::string::npos);
+
+    // a refusal is a choice mx made, not a caught exception
+    CHECK(!error.cause);
+}
+
+T_END
+
+// A stream that fails mid-read the way a broken file or connection might.
+// Pugixml asks a stream where it is and how long it is before reading, so
+// the stream must look seekable; every read then throws.
+class ThrowingStreambuf : public std::streambuf
+{
+  public:
+    explicit ThrowingStreambuf(std::exception_ptr inToThrow) : myToThrow{inToThrow}, myPosition{0}
+    {
+    }
+
+  protected:
+    pos_type seekoff(off_type offset, std::ios_base::seekdir direction, std::ios_base::openmode) override
+    {
+        if (direction == std::ios_base::beg)
+        {
+            myPosition = offset;
+        }
+        else if (direction == std::ios_base::end)
+        {
+            myPosition = size() + offset;
+        }
+        else
+        {
+            myPosition += offset;
+        }
+        return pos_type{myPosition};
+    }
+
+    pos_type seekpos(pos_type position, std::ios_base::openmode) override
+    {
+        myPosition = position;
+        return pos_type{myPosition};
+    }
+
+    std::streamsize xsgetn(char_type *, std::streamsize) override
+    {
+        std::rethrow_exception(myToThrow);
+    }
+
+    int_type underflow() override
+    {
+        std::rethrow_exception(myToThrow);
+    }
+
+  private:
+    std::streamsize size() const
+    {
+        return 16;
+    }
+
+    std::exception_ptr myToThrow;
+    std::streampos myPosition;
+};
+
+// A std::bad_alloc that reaches the boundary is reported as outOfMemory.
+// Real exhaustion is not practical to cause in a test; what matters is the
+// mapping, and a bad_alloc thrown mid-parse exercises it exactly.
+TEST(outOfMemoryIsReportedNotThrown, MusicXml)
+{
+    ThrowingStreambuf buf{std::make_exception_ptr(std::bad_alloc{})};
+    std::istream stream{&buf};
+    // std::istream catches exceptions thrown by its streambuf, sets badbit,
+    // and only rethrows if badbit is in the exception mask
+    stream.exceptions(std::ios_base::badbit);
+    const auto result = MusicXml::fromStream(stream);
+
+    REQUIRE(!result.ok());
+    CHECK_EQUAL(ResultCode::outOfMemory, result.error().code);
+
+    // the exception itself came through, not just a message about it
+    REQUIRE(result.error().cause);
+    bool caughtBadAlloc = false;
+    try
+    {
+        std::rethrow_exception(result.error().cause);
+    }
+    catch (const std::bad_alloc &)
+    {
+        caughtBadAlloc = true;
+    }
+    CHECK(caughtBadAlloc);
+}
+
+T_END
+
+// A stream that throws while being read is an unexpected exception: the
+// boundary keeps it out of the caller's face, reports it as internalError,
+// and keeps the exception in `cause` for whoever wants to look closer.
+TEST(internalErrorKeepsTheException, MusicXml)
+{
+    ThrowingStreambuf buf{std::make_exception_ptr(std::runtime_error{"the stream failed mid-read"})};
+    std::istream stream{&buf};
+    stream.exceptions(std::ios_base::badbit);
+    const auto result = MusicXml::fromStream(stream);
+
+    REQUIRE(!result.ok());
+    CHECK_EQUAL(ResultCode::internalError, result.error().code);
+
+    REQUIRE(result.error().cause);
+    bool caughtTheStreamsException = false;
+    std::string what;
+    try
+    {
+        std::rethrow_exception(result.error().cause);
+    }
+    catch (const std::exception &e)
+    {
+        caughtTheStreamsException = true;
+        what = e.what();
+    }
+    CHECK(caughtTheStreamsException);
+    CHECK(!what.empty());
 }
 
 T_END
