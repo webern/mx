@@ -6,7 +6,7 @@
 #ifdef MX_COMPILE_API_TESTS
 
 #include "cpul/cpulTestHarness.h"
-#include "mx/api/DocumentManager.h"
+#include "mx/api/MusicXml.h"
 #include "mx/api/ScoreData.h"
 #include "mxtest/api/ApiLy43eScoreData.h"
 #include "mxtest/api/ApiTester.h"

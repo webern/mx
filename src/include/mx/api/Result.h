@@ -18,7 +18,7 @@ namespace api
 // The mx::api error vocabulary. mx::api owns its own codes: the core-boundary
 // failures are mirrored (public headers never
 // include private mx::core headers), and the api adds the codes core has no
-// business knowing. No exceptions escape the DocumentManager boundary.
+// business knowing. No exceptions escape the MusicXml boundary.
 enum class ResultCode
 {
     ioError,        // file open/read/write failure          (api-level)
@@ -31,7 +31,6 @@ enum class ResultCode
     tooManyElements,
     invalidDocument,
     unsupportedVersion, // mirrored from the core parse boundary
-    badDocumentId,      // handle not in the registry           (api-level)
     internalError,      // caught exception; nothing escapes    (api-level)
 };
 

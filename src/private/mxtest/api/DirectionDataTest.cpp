@@ -6,7 +6,7 @@
 #ifdef MX_COMPILE_API_TESTS
 
 #include "cpul/cpulTestHarness.h"
-#include "mx/api/DocumentManager.h"
+#include "mx/api/MusicXml.h"
 #include "mx/api/OttavaData.h"
 #include "mx/api/RehearsalData.h"
 #include "mx/api/ScoreData.h"
@@ -246,12 +246,9 @@ T_END;
 TEST(RehearsalSyntheticFileRead, DirectionData)
 {
     const std::string path = mxtest::getResourcesDirectoryPath() + "synthetic/rehearsal.3.1.xml";
-    auto &docMgr = DocumentManager::getInstance();
-    const auto docIdResult = docMgr.createFromFile(path);
+    auto docIdResult = MusicXml::fromFile(path);
     REQUIRE(docIdResult.ok());
-    const int docId = docIdResult.value();
-    const auto scoreResult = docMgr.getData(docId);
-    docMgr.destroyDocument(docId);
+    const auto scoreResult = getScore(std::move(docIdResult).value());
     REQUIRE(scoreResult.ok());
     const auto &score = scoreResult.value();
     REQUIRE(score.parts.size() == 1);

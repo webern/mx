@@ -6,7 +6,7 @@
 #ifdef MX_COMPILE_API_TESTS
 
 #include "cpul/cpulTestHarness.h"
-#include "mx/api/DocumentManager.h"
+#include "mx/api/MusicXml.h"
 #include "mx/core/generated/Document.h"
 #include "mx/core/generated/FullNoteGroup.h"
 #include "mx/core/generated/MusicDataChoice.h"
@@ -106,12 +106,9 @@ T_END
 TEST(chordSaveNotes, ChordApi)
 {
     const auto originalData = mxtest::MxFileRepository::loadFile(fileName);
-    auto &docMgr = DocumentManager::getInstance();
-    const auto savedDocIdResult = docMgr.createFromScore(originalData);
+    auto savedDocIdResult = fromScore(originalData);
     REQUIRE(savedDocIdResult.ok());
-    const int savedDocId = savedDocIdResult.value();
-    const auto scoreDataResult = docMgr.getData(savedDocId);
-    docMgr.destroyDocument(savedDocId);
+    const auto scoreDataResult = getScore(std::move(savedDocIdResult).value());
     REQUIRE(scoreDataResult.ok());
     const auto &scoreData = scoreDataResult.value();
 
@@ -245,15 +242,12 @@ TEST(KompChordBug_PIVOTAL_147058063, ChordApi)
     note.isChord = true;
     originalStaffPtr->voices[0].notes.push_back(note);
 
-    auto &docMgr = DocumentManager::getInstance();
-    const auto docIdResult = docMgr.createFromScore(originalScore);
+    auto docIdResult = fromScore(originalScore);
     REQUIRE(docIdResult.ok());
-    const int docID = docIdResult.value();
-    const auto documentPtr = docMgr.getDocument(docID);
-    docMgr.destroyDocument(docID);
-    REQUIRE(documentPtr != nullptr);
-    REQUIRE(documentPtr->isScorePartwise());
-    const auto &scorePartwise = documentPtr->asScorePartwise();
+    const auto document = std::move(docIdResult).value();
+    const auto &coreDoc = document.getCoreDocument();
+    REQUIRE(coreDoc.isScorePartwise());
+    const auto &scorePartwise = coreDoc.asScorePartwise();
     const auto xml = mxtest::toXml(originalScore);
     const auto savedScore = mxtest::fromXml(xml);
     const auto &savedPart = savedScore.parts.at(0);

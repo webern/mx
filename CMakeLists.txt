@@ -13,10 +13,10 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
 # Emscripten disables exception catching by default; mx's internal MX_THROW
-# (Throw.h) needs it, so DocumentManager can actually catch and convert it.
+# (Throw.h) needs it, so the api boundary can actually catch and convert it.
 #
 # Emscripten's default wasm stack is 64 KiB. mx's write path is a deep,
-# unoptimized (Debug) C++ call chain -- DocumentManager -> ScoreWriter ->
+# unoptimized (Debug) C++ call chain -- fromScore -> ScoreWriter ->
 # PartWriter -> MeasureWriter -> NoteWriter -> NotationsWriter, several of
 # which carry their own sizable locals -- and it overflows that default with
 # only a little headroom to spare (issue #389 hit this by adding two more

@@ -6,7 +6,7 @@
 #ifdef MX_COMPILE_API_TESTS
 
 #include "cpul/cpulTestHarness.h"
-#include "mx/api/DocumentManager.h"
+#include "mx/api/MusicXml.h"
 #include "mxtest/api/RoundTrip.h"
 
 using namespace std;
@@ -23,10 +23,8 @@ TEST( x, Freezing )
 
     const std::string fileName{ "freezing.xml" };
     const std::string path{ MxFileRepository::getFullPath( fileName ) };
-    auto& docMgr = mx::api::DocumentManager::getInstance();
-    auto docId = docMgr.createFromFile( path );
-    auto scoreData = docMgr.getData( docId );
-    docMgr.destroyDocument( docId );
+    auto docResult = mx::api::MusicXml::fromFile( path );
+    auto scoreData = mx::api::getScore( std::move( docResult ).value() );
 
     const auto& part = scoreData.parts.at( partIndex );
     const auto& measure = part.measures.at( measureIndex );

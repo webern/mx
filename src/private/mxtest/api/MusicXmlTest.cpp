@@ -7,7 +7,7 @@
 
 #include "cpul/cpulTestHarness.h"
 #include "mx/api/DefaultsData.h"
-#include "mx/api/DocumentManager.h"
+#include "mx/api/MusicXml.h"
 #include "mx/core/Attribution.h"
 #include "mx/core/generated/Document.h"
 #include "mx/core/generated/MarginType.h"
@@ -17,26 +17,16 @@
 using namespace std;
 using namespace mx::api;
 
-inline int loadDoc()
+inline ScoreData loadDichterliebe()
 {
-    auto &docMngr = DocumentManager::getInstance();
-    const auto r = docMngr.createFromFile(std::string{mxtest::getResourcesDirectoryPath()} +
-                                          std::string{"/recsuite/Dichterliebe01.xml"});
-    return r.ok() ? r.value() : -1;
-}
-
-inline void destroyDoc(int documentId)
-{
-    auto &docMngr = DocumentManager::getInstance();
-    docMngr.destroyDocument(documentId);
-}
-
-inline ScoreData getScore()
-{
-    const int documentId = loadDoc();
-    const auto r = DocumentManager::getInstance().getData(documentId);
-    destroyDoc(documentId);
-    return r.ok() ? r.value() : ScoreData{};
+    auto docResult = MusicXml::fromFile(std::string{mxtest::getResourcesDirectoryPath()} +
+                                        std::string{"/recsuite/Dichterliebe01.xml"});
+    if (!docResult.ok())
+        return ScoreData{};
+    const auto scoreResult = getScore(std::move(docResult).value());
+    if (!scoreResult.ok())
+        return ScoreData{};
+    return scoreResult.value();
 }
 
 // Serializes a ScoreData to a stream and parses it back, returning the
@@ -44,44 +34,58 @@ inline ScoreData getScore()
 // current test via REQUIRE rather than throwing across the boundary.
 inline ScoreData roundTripScore(const ScoreData &input)
 {
-    auto &docMngr = DocumentManager::getInstance();
-    const auto createResult = docMngr.createFromScore(input);
+    auto createResult = fromScore(input);
     REQUIRE(createResult.ok());
-    const int writeId = createResult.value();
     std::ostringstream oss;
-    const auto writeResult = docMngr.writeToStream(writeId, oss);
+    const auto writeResult = std::move(createResult).value().writeToStream(oss);
     REQUIRE(writeResult.ok());
-    docMngr.destroyDocument(writeId);
     std::istringstream iss{oss.str()};
-    const auto reloadResult = docMngr.createFromStream(iss);
+    auto reloadResult = MusicXml::fromStream(iss);
     REQUIRE(reloadResult.ok());
-    const int readId = reloadResult.value();
-    const auto dataResult = docMngr.getData(readId);
+    const auto dataResult = getScore(std::move(reloadResult).value());
     REQUIRE(dataResult.ok());
-    auto output = dataResult.value();
-    docMngr.destroyDocument(readId);
-    return output;
+    return dataResult.value();
 }
 
-// --- Document handle lifecycle ----------------------------------------------
-// The DocumentManager registry contract: a live id yields a document, and
-// destroying it makes the id resolve to nullptr. Covered nowhere else.
+// --- RAII ownership ---------------------------------------------------------
+// A MusicXml owns its document. It cannot be copied, it moves, and a
+// moved-from document fails safely on every path rather than crashing.
 
-TEST(createFromFile, DocumentManager)
+TEST(moveTransfersOwnership, MusicXml)
 {
-    auto &docMngr = DocumentManager::getInstance();
-    const auto createResult = docMngr.createFromFile(std::string{mxtest::getResourcesDirectoryPath()} +
-                                                     std::string{"/recsuite/Dichterliebe01.xml"});
-    REQUIRE(createResult.ok());
-    const int documentId = createResult.value();
-    CHECK(documentId > 0);
+    auto docResult = MusicXml::fromFile(std::string{mxtest::getResourcesDirectoryPath()} +
+                                        std::string{"/recsuite/Dichterliebe01.xml"});
+    REQUIRE(docResult.ok());
+    MusicXml doc = std::move(docResult).value();
 
-    auto mxdocPtr = docMngr.getDocument(documentId);
-    CHECK(mxdocPtr != nullptr);
-    docMngr.destroyDocument(documentId);
+    // moving transfers the document to the destination
+    MusicXml other = std::move(doc);
+    const auto scoreResult = getScore(other);
+    REQUIRE(scoreResult.ok());
+    CHECK_EQUAL("Dichterliebe", scoreResult.value().workTitle);
 
-    auto shouldBeNull = docMngr.getDocument(documentId);
-    CHECK(shouldBeNull == nullptr);
+    // the moved-from document fails safely on the read and write paths
+    const auto movedScoreResult = getScore(doc);
+    CHECK(!movedScoreResult.ok());
+    CHECK(movedScoreResult.error().code == ResultCode::internalError);
+    std::stringstream ss;
+    const auto movedWriteResult = doc.writeToStream(ss);
+    CHECK(!movedWriteResult.ok());
+    CHECK(movedWriteResult.error().code == ResultCode::internalError);
+}
+
+T_END
+
+// intoScore takes the document by value: the underlying tree is freed when
+// the function returns, and the call site must spell std::move.
+TEST(intoScoreConsumesDocument, MusicXml)
+{
+    auto docResult = MusicXml::fromFile(std::string{mxtest::getResourcesDirectoryPath()} +
+                                        std::string{"/recsuite/Dichterliebe01.xml"});
+    REQUIRE(docResult.ok());
+    const auto scoreResult = intoScore(std::move(docResult).value());
+    REQUIRE(scoreResult.ok());
+    CHECK_EQUAL("Dichterliebe", scoreResult.value().workTitle);
 }
 
 T_END
@@ -90,80 +94,78 @@ T_END
 // Pins the reader against a frozen reference file. The corpus survival tests
 // only assert "loads without crashing"; these assert the actual values.
 
-TEST(musicXmlType, DocumentManager)
+TEST(musicXmlType, MusicXml)
 {
-    auto score = getScore();
+    auto score = loadDichterliebe();
     CHECK_EQUAL("partwise", score.musicXmlType);
 }
 
 T_END
 
-TEST(workTitle, DocumentManager)
+TEST(workTitle, MusicXml)
 {
-    auto score = getScore();
+    auto score = loadDichterliebe();
     CHECK_EQUAL("Dichterliebe", score.workTitle);
 }
 
 T_END
 
-TEST(workNumber, DocumentManager)
+TEST(workNumber, MusicXml)
 {
-    auto score = getScore();
+    auto score = loadDichterliebe();
     CHECK_EQUAL("Op. 48", score.workNumber);
 }
 
 T_END
 
-TEST(movementTitle, DocumentManager)
+TEST(movementTitle, MusicXml)
 {
-    auto score = getScore();
+    auto score = loadDichterliebe();
     CHECK_EQUAL("Im wunderschönen Monat Mai", score.movementTitle);
 }
 
 T_END
 
-TEST(movementNumber, DocumentManager)
+TEST(movementNumber, MusicXml)
 {
-    auto score = getScore();
+    auto score = loadDichterliebe();
     CHECK_EQUAL("1", score.movementNumber);
 }
 
 T_END
 
-TEST(composerName, DocumentManager)
+TEST(composerName, MusicXml)
 {
-    auto score = getScore();
+    auto score = loadDichterliebe();
     CHECK_EQUAL("Robert Schumann", score.composer);
 }
 
 T_END
 
-TEST(lyricistName, DocumentManager)
+TEST(lyricistName, MusicXml)
 {
-    auto score = getScore();
+    auto score = loadDichterliebe();
     CHECK_EQUAL("Heinrich Heine", score.lyricist);
 }
 
 T_END
 
-TEST(copyright, DocumentManager)
+TEST(copyright, MusicXml)
 {
-    auto score = getScore();
+    auto score = loadDichterliebe();
     CHECK_EQUAL("Copyright © 2002 Recordare LLC", score.copyright);
 }
 
 T_END
 
-TEST(RoundTrip_copyrightType_defaultIsCopyright, DocumentManager)
+TEST(RoundTrip_copyrightType_defaultIsCopyright, MusicXml)
 {
     auto input = ScoreData{};
     input.copyright = "Public Domain";
     std::stringstream ss;
-    auto &docMngr = DocumentManager::getInstance();
-    const auto createResult = docMngr.createFromScore(input);
+    auto createResult = fromScore(input);
     REQUIRE(createResult.ok());
-    docMngr.writeToStream(createResult.value(), ss);
-    docMngr.destroyDocument(createResult.value());
+    std::move(createResult).value().writeToStream(ss);
     CHECK(ss.str().find(R"(<rights type="copyright">Public Domain</rights>)") != std::string::npos);
 
     const auto output = roundTripScore(input);
@@ -176,33 +178,29 @@ T_END
 // The reader only recognizes a <rights> typed "copyright" (or untyped) as the
 // source of ScoreData::copyright; any other type value is out of scope for
 // this simplified field, so only the write side is asserted here.
-TEST(WriteHonorsExplicitCopyrightType, DocumentManager)
+TEST(WriteHonorsExplicitCopyrightType, MusicXml)
 {
     auto input = ScoreData{};
     input.copyright = "All rights reserved";
     input.copyrightType = std::string{"mechanical"};
     std::stringstream ss;
-    auto &docMngr = DocumentManager::getInstance();
-    const auto createResult = docMngr.createFromScore(input);
+    auto createResult = fromScore(input);
     REQUIRE(createResult.ok());
-    docMngr.writeToStream(createResult.value(), ss);
-    docMngr.destroyDocument(createResult.value());
+    std::move(createResult).value().writeToStream(ss);
     CHECK(ss.str().find(R"(<rights type="mechanical">All rights reserved</rights>)") != std::string::npos);
 }
 
 T_END
 
-TEST(RoundTrip_copyrightType_unsetOmitsAttribute, DocumentManager)
+TEST(RoundTrip_copyrightType_unsetOmitsAttribute, MusicXml)
 {
     auto input = ScoreData{};
     input.copyright = "Public Domain";
     input.copyrightType = std::nullopt;
     std::stringstream ss;
-    auto &docMngr = DocumentManager::getInstance();
-    const auto createResult = docMngr.createFromScore(input);
+    auto createResult = fromScore(input);
     REQUIRE(createResult.ok());
-    docMngr.writeToStream(createResult.value(), ss);
-    docMngr.destroyDocument(createResult.value());
+    std::move(createResult).value().writeToStream(ss);
     CHECK(ss.str().find(R"(<rights>Public Domain</rights>)") != std::string::npos);
 
     const auto output = roundTripScore(input);
@@ -211,27 +209,27 @@ TEST(RoundTrip_copyrightType_unsetOmitsAttribute, DocumentManager)
 
 T_END
 
-TEST(scalingMillimeters, DocumentManager)
+TEST(scalingMillimeters, MusicXml)
 {
-    auto score = getScore();
+    auto score = loadDichterliebe();
     CHECK_DOUBLES_EQUAL(6.35, score.defaults.scalingMillimeters, MX_API_EQUALITY_EPSILON)
 }
 
 T_END
 
-TEST(scalingTenths, DocumentManager)
+TEST(scalingTenths, MusicXml)
 {
-    auto score = getScore();
+    auto score = loadDichterliebe();
     CHECK_DOUBLES_EQUAL(40, score.defaults.scalingTenths, MX_API_EQUALITY_EPSILON)
 }
 
 T_END
 
 // --- Header / encoding round-trips ------------------------------------------
-// createFromScore -> writeToStream -> createFromStream -> getData fidelity for
-// the identification and encoding metadata fields.
+// fromScore -> writeToStream -> fromStream -> getScore fidelity for the
+// identification and encoding metadata fields.
 
-TEST(RoundTrip_WorkTitle, DocumentManager)
+TEST(RoundTrip_WorkTitle, MusicXml)
 {
     const auto value = std::string{"value"};
     auto input = ScoreData{};
@@ -243,7 +241,7 @@ TEST(RoundTrip_WorkTitle, DocumentManager)
 T_END
 
 #define ROUND_TRIP_TEST_SCALAR(scalarType, fieldPath, fieldName, value, nameSuffix)                                    \
-    TEST(RoundTrip_##fieldName##_##nameSuffix, DocumentManager)                                                        \
+    TEST(RoundTrip_##fieldName##_##nameSuffix, MusicXml)                                                               \
     {                                                                                                                  \
         const auto testValue = scalarType{value};                                                                      \
         auto input = ScoreData{};                                                                                      \
@@ -274,7 +272,7 @@ ROUND_TRIP_TEST_SCALAR(int, encoding.encodingDate.day, day, 12, 0);
 // into ScoreData::lyricist and rewritten as type="lyricist", so a file carrying both lost the
 // lyricist; the publisher was dropped on the way out entirely.
 
-TEST(RoundTrip_AllCreatorTypes, DocumentManager)
+TEST(RoundTrip_AllCreatorTypes, MusicXml)
 {
     auto input = ScoreData{};
     input.composer = "MetaComposer";
@@ -282,14 +280,11 @@ TEST(RoundTrip_AllCreatorTypes, DocumentManager)
     input.arranger = "MetaArranger";
     input.publisher = "MetaPublisher";
 
-    auto &docMngr = DocumentManager::getInstance();
-    const auto createResult = docMngr.createFromScore(input);
-    REQUIRE(createResult.ok());
-    const int writeId = createResult.value();
     std::ostringstream oss;
-    const auto writeResult = docMngr.writeToStream(writeId, oss);
+    auto createResult = fromScore(input);
+    REQUIRE(createResult.ok());
+    const auto writeResult = std::move(createResult).value().writeToStream(oss);
     REQUIRE(writeResult.ok());
-    docMngr.destroyDocument(writeId);
 
     const auto xml = oss.str();
     CHECK(xml.find("<creator type=\"composer\">MetaComposer</creator>") != std::string::npos);
@@ -310,17 +305,14 @@ T_END
 // composer and a lyricist, plus creator types mx::api does not model, which must not disturb
 // the ones it does.
 
-TEST(ReadAllCreatorTypes, DocumentManager)
+TEST(ReadAllCreatorTypes, MusicXml)
 {
-    auto &docMngr = DocumentManager::getInstance();
-    const auto createResult = docMngr.createFromFile(std::string{mxtest::getResourcesDirectoryPath()} +
-                                                     std::string{"/musuite/testMetaData.xml"});
-    REQUIRE(createResult.ok());
-    const int documentId = createResult.value();
-    const auto dataResult = docMngr.getData(documentId);
+    auto docResult =
+        MusicXml::fromFile(std::string{mxtest::getResourcesDirectoryPath()} + std::string{"/musuite/testMetaData.xml"});
+    REQUIRE(docResult.ok());
+    const auto dataResult = getScore(std::move(docResult).value());
     REQUIRE(dataResult.ok());
     const auto score = dataResult.value();
-    docMngr.destroyDocument(documentId);
 
     CHECK_EQUAL("MetaComposer", score.composer);
     CHECK_EQUAL("MetaLyricist", score.lyricist);
@@ -335,7 +327,7 @@ T_END
 // unequal margins emit separate odd and even entries. This rule is exercised
 // nowhere else.
 
-TEST(Layout_PageMarginsBoth, DocumentManager)
+TEST(Layout_PageMarginsBoth, MusicXml)
 {
     auto score = ScoreData{};
     const long double left = 0.1;
@@ -352,13 +344,12 @@ TEST(Layout_PageMarginsBoth, DocumentManager)
     score.defaults.pageLayout.margins.even.value().top = top;
     score.defaults.pageLayout.margins.odd.value().bottom = bottom;
     score.defaults.pageLayout.margins.even.value().bottom = bottom;
-    const auto rDocId = DocumentManager::getInstance().createFromScore(score);
-    REQUIRE(rDocId.ok());
-    const int docId = rDocId.value();
-    auto mxDoc = DocumentManager::getInstance().getDocument(docId);
-    REQUIRE(mxDoc != nullptr);
-    REQUIRE(mxDoc->isScorePartwise());
-    const auto &defaults = mxDoc->asScorePartwise().scoreHeader().defaults();
+    auto docResult = fromScore(score);
+    REQUIRE(docResult.ok());
+    const MusicXml doc = std::move(docResult).value();
+    const auto &mxDoc = doc.getCoreDocument();
+    REQUIRE(mxDoc.isScorePartwise());
+    const auto &defaults = mxDoc.asScorePartwise().scoreHeader().defaults();
     REQUIRE(defaults.has_value());
     const auto &pageLayout = defaults->layout().pageLayout();
     REQUIRE(pageLayout.has_value());
@@ -369,12 +360,11 @@ TEST(Layout_PageMarginsBoth, DocumentManager)
         REQUIRE(pageMarginsSpan[0].type().has_value());
         CHECK(mx::core::MarginType::Tag::both == pageMarginsSpan[0].type()->tag());
     }
-    DocumentManager::getInstance().destroyDocument(docId);
 }
 
 T_END
 
-TEST(Layout_PageMarginsEvenOdd, DocumentManager)
+TEST(Layout_PageMarginsEvenOdd, MusicXml)
 {
     auto score = ScoreData{};
     const long double left = 0.1;
@@ -391,13 +381,12 @@ TEST(Layout_PageMarginsEvenOdd, DocumentManager)
     score.defaults.pageLayout.margins.even.value().top = top;
     score.defaults.pageLayout.margins.odd.value().bottom = bottom;
     score.defaults.pageLayout.margins.even.value().bottom = bottom;
-    const auto rDocId = DocumentManager::getInstance().createFromScore(score);
-    REQUIRE(rDocId.ok());
-    const int docId = rDocId.value();
-    auto mxDoc = DocumentManager::getInstance().getDocument(docId);
-    REQUIRE(mxDoc != nullptr);
-    REQUIRE(mxDoc->isScorePartwise());
-    const auto &defaults = mxDoc->asScorePartwise().scoreHeader().defaults();
+    auto docResult = fromScore(score);
+    REQUIRE(docResult.ok());
+    const MusicXml doc = std::move(docResult).value();
+    const auto &mxDoc = doc.getCoreDocument();
+    REQUIRE(mxDoc.isScorePartwise());
+    const auto &defaults = mxDoc.asScorePartwise().scoreHeader().defaults();
     REQUIRE(defaults.has_value());
     const auto &pageLayout = defaults->layout().pageLayout();
     REQUIRE(pageLayout.has_value());
@@ -410,7 +399,6 @@ TEST(Layout_PageMarginsEvenOdd, DocumentManager)
         REQUIRE(pageMarginsSpan[1].type().has_value());
         CHECK(mx::core::MarginType::Tag::even == pageMarginsSpan[1].type()->tag());
     }
-    DocumentManager::getInstance().destroyDocument(docId);
 }
 
 T_END
@@ -419,7 +407,7 @@ T_END
 // The only coverage of the <supports> element: no other unit test touches it,
 // and none of the corpus files that use it are in the api-roundtrip baseline.
 
-TEST(RoundTrip_SupportedItems_elementName, DocumentManager)
+TEST(RoundTrip_SupportedItems_elementName, MusicXml)
 {
     const auto testValue0 = std::string{"value0"};
     const auto testValue1 = std::string{"value1"};
@@ -438,7 +426,7 @@ TEST(RoundTrip_SupportedItems_elementName, DocumentManager)
 
 T_END
 
-TEST(RoundTrip_SupportedItems_attributeName, DocumentManager)
+TEST(RoundTrip_SupportedItems_attributeName, MusicXml)
 {
     const auto testValue0 = std::string{"value0"};
     const auto testValue1 = std::string{"value1"};
@@ -459,7 +447,7 @@ TEST(RoundTrip_SupportedItems_attributeName, DocumentManager)
 
 T_END
 
-TEST(RoundTrip_SupportedItems_specificValue, DocumentManager)
+TEST(RoundTrip_SupportedItems_specificValue, MusicXml)
 {
     const auto testValue0 = std::string{"value0"};
     const auto testValue1 = std::string{"value1"};
@@ -482,7 +470,7 @@ TEST(RoundTrip_SupportedItems_specificValue, DocumentManager)
 
 T_END
 
-TEST(RoundTrip_SupportedItems_software, DocumentManager)
+TEST(RoundTrip_SupportedItems_software, MusicXml)
 {
     const auto testValue0 = std::string{"value0"};
     const auto testValue1 = std::string{"value1"};
@@ -497,7 +485,7 @@ TEST(RoundTrip_SupportedItems_software, DocumentManager)
 
 T_END
 
-TEST(RoundTrip_SupportedItems_isSupported, DocumentManager)
+TEST(RoundTrip_SupportedItems_isSupported, MusicXml)
 {
     const auto testValue0 = true;
     const auto testValue1 = false;
@@ -527,22 +515,19 @@ T_END
 // Serialize a ScoreData to a string via the api write path (no reload).
 inline std::string writeScoreToString(const ScoreData &input)
 {
-    auto &docMngr = DocumentManager::getInstance();
-    const auto createResult = docMngr.createFromScore(input);
+    auto createResult = fromScore(input);
     REQUIRE(createResult.ok());
-    const int writeId = createResult.value();
     std::ostringstream oss;
-    const auto writeResult = docMngr.writeToStream(writeId, oss);
+    const auto writeResult = std::move(createResult).value().writeToStream(oss);
     REQUIRE(writeResult.ok());
-    docMngr.destroyDocument(writeId);
     return oss.str();
 }
 
-TEST(writeMxVersion_defaultsTrueAndStamps, DocumentManager)
+TEST(writeMxVersion_defaultsTrueAndStamps, MusicXml)
 {
     // Parsed from a real file that never carried mx's stamp; the flag still
     // defaults true, so the written output gains the stamp.
-    ScoreData score = getScore();
+    ScoreData score = loadDichterliebe();
     CHECK(score.encoding.writeMxVersion);
     const std::string xml = writeScoreToString(score);
     CHECK(xml.find(std::string{mx::core::kMxSoftwareMarker}) != std::string::npos);
@@ -550,10 +535,10 @@ TEST(writeMxVersion_defaultsTrueAndStamps, DocumentManager)
 
 T_END
 
-TEST(writeMxVersion_offSuppressesStamp, DocumentManager)
+TEST(writeMxVersion_offSuppressesStamp, MusicXml)
 {
     // Turn the stamp off after parsing: the written output must not contain it.
-    ScoreData score = getScore();
+    ScoreData score = loadDichterliebe();
     score.encoding.writeMxVersion = false;
     const std::string xml = writeScoreToString(score);
     CHECK(xml.find(std::string{mx::core::kMxSoftwareMarker}) == std::string::npos);

@@ -7,7 +7,7 @@
 #ifdef MX_COMPILE_API_TESTS
 
 #include "cpul/cpulTestHarness.h"
-#include "mx/api/DocumentManager.h"
+#include "mx/api/MusicXml.h"
 #include "mxtest/api/RoundTrip.h"
 
 using namespace std;
@@ -20,13 +20,10 @@ inline ScoreData getBombe()
 {
     const std::string fileName{fname};
     const std::string path{MxFileRepository::getFullPath(fileName)};
-    auto &docMgr = mx::api::DocumentManager::getInstance();
-    const auto docIdResult = docMgr.createFromFile(path);
+    auto docIdResult = mx::api::MusicXml::fromFile(path);
     if (!docIdResult.ok())
         return {};
-    const int docId = docIdResult.value();
-    const auto scoreDataResult = docMgr.getData(docId);
-    docMgr.destroyDocument(docId);
+    const auto scoreDataResult = mx::api::getScore(std::move(docIdResult).value());
     if (!scoreDataResult.ok())
         return {};
     return scoreDataResult.value();

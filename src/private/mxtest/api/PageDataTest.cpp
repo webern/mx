@@ -6,7 +6,7 @@
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_API_TESTS
 
-#include "mx/api/DocumentManager.h"
+#include "mx/api/MusicXml.h"
 #include "mx/api/ScoreData.h"
 #include "mxtest/file/MxFileRepository.h"
 
@@ -91,7 +91,6 @@ inline mx::api::ScoreData makeSomeBoringMusic(int inNumMeasures)
 TEST(TestPageData, PageData)
 {
     auto score1 = pageDataTest::makeSomeBoringMusic(33);
-    auto &docMgr = DocumentManager::getInstance();
     SystemData sd{Bool::yes};
     MeasureIndex measureIndex = 1;
     score1.layout[measureIndex].system = sd;
@@ -127,17 +126,14 @@ TEST(TestPageData, PageData)
     pd = PageData{};
     pd.newPage = Bool::no;
     score1.layout[10].page = pd;
-    const auto rId1 = docMgr.createFromScore(score1);
+    auto rId1 = fromScore(score1);
     REQUIRE(rId1.ok());
-    const int id1 = rId1.value();
     std::stringstream xml1;
-    docMgr.writeToStream(id1, xml1);
-    docMgr.destroyDocument(id1);
+    std::move(rId1).value().writeToStream(xml1);
     std::istringstream xml1is{xml1.str()};
-    const auto rId2 = docMgr.createFromStream(xml1is);
+    auto rId2 = MusicXml::fromStream(xml1is);
     REQUIRE(rId2.ok());
-    const int id2 = rId2.value();
-    const auto rScore2 = docMgr.getData(id2);
+    const auto rScore2 = getScore(std::move(rId2).value());
     REQUIRE(rScore2.ok());
     const auto score2 = rScore2.value();
     // The write side always emits version="4.0"; normalize so version fields
@@ -145,26 +141,21 @@ TEST(TestPageData, PageData)
     score1.musicXmlVersion = score2.musicXmlVersion;
     score1.declaredMusicXmlVersion = score2.declaredMusicXmlVersion;
     CHECK(score1 == score2);
-    docMgr.destroyDocument(id2);
-    const auto rId3 = docMgr.createFromScore(score2);
+    auto rId3 = fromScore(score2);
     REQUIRE(rId3.ok());
-    const int id3 = rId3.value();
     std::stringstream xml3;
-    docMgr.writeToStream(id3, xml3);
+    std::move(rId3).value().writeToStream(xml3);
     CHECK(xml1.str() == xml3.str());
 }
 
 TEST(LoadFinaleExport, PageData)
 {
     const auto filepath = mxtest::MxFileRepository::getFullPath("systems-and-pages.xml");
-    auto &docMgr = DocumentManager::getInstance();
-    const auto rId = docMgr.createFromFile(filepath);
+    auto rId = MusicXml::fromFile(filepath);
     REQUIRE(rId.ok());
-    const int id = rId.value();
-    const auto rScore = docMgr.getData(id);
+    const auto rScore = getScore(std::move(rId).value());
     REQUIRE(rScore.ok());
     const auto score = rScore.value();
-    docMgr.destroyDocument(id);
 
     // The loaded file has page and system information as follows:
     // measure number 1  index 0  : page : system

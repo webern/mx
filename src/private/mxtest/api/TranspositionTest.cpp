@@ -5,7 +5,7 @@
 #include "mxtest/control/CompileControl.h"
 #ifdef MX_COMPILE_API_TESTS
 #include "cpul/cpulTestHarness.h"
-#include "mx/api/DocumentManager.h"
+#include "mx/api/MusicXml.h"
 #include "mx/core/generated/Attributes.h"
 #include "mx/core/generated/AttributesChoice.h"
 #include "mx/core/generated/Document.h"
@@ -26,21 +26,16 @@ namespace mxtest
 // save the file back to disk, load it back up into the API and assert equality.
 inline mx::api::ScoreData roundtrip(const mx::api::ScoreData &inOriginal)
 {
-    auto &docMgr = mx::api::DocumentManager::getInstance();
-    const auto r = docMgr.createFromScore(inOriginal);
+    auto r = mx::api::fromScore(inOriginal);
     REQUIRE(r.ok());
-    const int id = r.value();
     std::ostringstream oss;
-    docMgr.writeToStream(id, oss);
+    std::move(r).value().writeToStream(oss);
     std::istringstream iss{oss.str()};
-    const auto r2 = docMgr.createFromStream(iss);
+    auto r2 = mx::api::MusicXml::fromStream(iss);
     REQUIRE(r2.ok());
-    const int id2 = r2.value();
-    const auto rd = docMgr.getData(id2);
+    const auto rd = mx::api::getScore(std::move(r2).value());
     REQUIRE(rd.ok());
     auto result = rd.value();
-    docMgr.destroyDocument(id);
-    docMgr.destroyDocument(id2);
     // The write side always emits version="4.0"; normalize the version fields so they
     // do not prevent a meaningful music-content equality comparison.
     result.musicXmlVersion = inOriginal.musicXmlVersion;
@@ -64,15 +59,12 @@ inline mx::api::ScoreData makeScore(int measures)
 inline void checkCoreTransposeElement(const mx::api::ScoreData &inScore, int inExpectedChromatic,
                                       std::optional<int> inExpectedDiatonic, std::optional<int> inExpectedOctave)
 {
-    auto &docMgr = mx::api::DocumentManager::getInstance();
-    const auto r = docMgr.createFromScore(inScore);
+    auto r = mx::api::fromScore(inScore);
     REQUIRE(r.ok());
-    const int id = r.value();
-    const auto core = docMgr.getDocument(id);
-    docMgr.destroyDocument(id);
-    REQUIRE(core != nullptr);
-    REQUIRE(core->isScorePartwise());
-    const auto &score = core->asScorePartwise();
+    const auto doc = std::move(r).value();
+    const auto &core = doc.getCoreDocument();
+    REQUIRE(core.isScorePartwise());
+    const auto &score = core.asScorePartwise();
     const auto parts = score.part();
     REQUIRE(!parts.empty());
     const auto &part = parts[0];

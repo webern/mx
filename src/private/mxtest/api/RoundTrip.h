@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "mx/api/DocumentManager.h"
+#include "mx/api/MusicXml.h"
 #include "mxtest/control/CompileControl.h"
 #include "mxtest/file/MxFileRepository.h"
 #include "mxtest/file/Path.h"
@@ -17,46 +17,37 @@ constexpr const char *const roundTripFileName = "k007a_Notations_Dynamics.xml";
 inline void roundTrip()
 {
     const std::string path{MxFileRepository::getFullPath(roundTripFileName)};
-    auto &docMgr = mx::api::DocumentManager::getInstance();
-    auto docIdResult = docMgr.createFromFile(path);
-    if (!docIdResult.ok())
+    auto docResult = mx::api::MusicXml::fromFile(path);
+    if (!docResult.ok())
         return;
-    auto docId = docIdResult.value();
-    auto scoreDataResult = docMgr.getData(docId);
-    docMgr.destroyDocument(docId);
+    const auto scoreDataResult = mx::api::getScore(std::move(docResult).value());
     if (!scoreDataResult.ok())
         return;
     auto scoreData = scoreDataResult.value();
-    auto docId2Result = docMgr.createFromScore(scoreData);
-    if (!docId2Result.ok())
+    auto doc2Result = mx::api::fromScore(scoreData);
+    if (!doc2Result.ok())
         return;
-    auto docId2 = docId2Result.value();
     const std::string outputPath = getResourcesDirectoryPath() + "testOutput" + FILE_PATH_SEPARATOR + "output.xml";
-    docMgr.writeToFile(docId2, outputPath);
-    docMgr.destroyDocument(docId2);
+    std::move(doc2Result).value().writeToFile(outputPath);
 }
 
 inline mx::api::ScoreData roundTrip(const mx::api::ScoreData inScoreData)
 {
-    auto &docMgr = mx::api::DocumentManager::getInstance();
-    auto docIdResult = docMgr.createFromScore(inScoreData);
-    if (!docIdResult.ok())
+    auto docResult = mx::api::fromScore(inScoreData);
+    if (!docResult.ok())
         return {};
-    auto docId = docIdResult.value();
     std::stringstream ss;
-    docMgr.writeToStream(docId, ss);
-    docMgr.destroyDocument(docId);
-    auto xmlData = ss.str();
-    std::istringstream iss{xmlData};
-    auto docId2Result = docMgr.createFromStream(iss);
-    if (!docId2Result.ok())
+    const auto writeResult = std::move(docResult).value().writeToStream(ss);
+    if (!writeResult.ok())
         return {};
-    auto docId2 = docId2Result.value();
-    auto outScoreDataResult = docMgr.getData(docId2);
-    docMgr.destroyDocument(docId2);
+    const auto xmlData = ss.str();
+    std::istringstream iss{xmlData};
+    auto doc2Result = mx::api::MusicXml::fromStream(iss);
+    if (!doc2Result.ok())
+        return {};
+    const auto outScoreDataResult = mx::api::getScore(std::move(doc2Result).value());
     if (!outScoreDataResult.ok())
         return {};
-    // std::cout << xmlData << std::endl;
     return outScoreDataResult.value();
 }
 } // namespace mxtest

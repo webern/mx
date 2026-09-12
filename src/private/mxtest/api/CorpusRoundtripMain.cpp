@@ -20,7 +20,7 @@
 //       Print one line per file: PASS|FAIL|SKIP<TAB>relpath<TAB>detail.
 //       Exit 0 always. Use to grow the pinned list.
 
-#include "mx/api/DocumentManager.h"
+#include "mx/api/MusicXml.h"
 #include "mx/core/Attribution.h"
 #include "mxtest/corert/Compare.h"
 #include "mxtest/corert/Fixer.h"
@@ -386,21 +386,17 @@ RoundtripResult runRoundtrip(const std::string &absolutePath)
 {
     RoundtripResult r;
 
-    auto &mgr = mx::api::DocumentManager::getInstance();
-
     // Load via the api
-    const auto idResult = mgr.createFromFile(absolutePath);
-    if (!idResult.ok())
+    auto docResult = mx::api::MusicXml::fromFile(absolutePath);
+    if (!docResult.ok())
     {
         r.status = RoundtripResult::Status::loadFail;
-        r.detail = idResult.error().message;
+        r.detail = docResult.error().message;
         return r;
     }
-    const int docId = idResult.value();
 
     // Get score data
-    const auto scoreResult = mgr.getData(docId);
-    mgr.destroyDocument(docId);
+    const auto scoreResult = mx::api::getScore(std::move(docResult).value());
     if (!scoreResult.ok())
     {
         r.status = RoundtripResult::Status::getDataFail;
@@ -409,19 +405,17 @@ RoundtripResult runRoundtrip(const std::string &absolutePath)
     }
 
     // Re-create from ScoreData
-    const auto id2Result = mgr.createFromScore(scoreResult.value());
-    if (!id2Result.ok())
+    auto doc2Result = mx::api::fromScore(scoreResult.value());
+    if (!doc2Result.ok())
     {
         r.status = RoundtripResult::Status::createFail;
-        r.detail = id2Result.error().message;
+        r.detail = doc2Result.error().message;
         return r;
     }
-    const int docId2 = id2Result.value();
 
     // Write to string
     std::ostringstream ss;
-    const auto writeResult = mgr.writeToStream(docId2, ss);
-    mgr.destroyDocument(docId2);
+    const auto writeResult = std::move(doc2Result).value().writeToStream(ss);
     if (!writeResult.ok())
     {
         r.status = RoundtripResult::Status::fail;
@@ -581,34 +575,29 @@ void dumpDocuments(const std::string &absolutePath, const std::string &relPath, 
         return;
     }
 
-    // Actual side: re-run the api pipeline (load -> getData -> createFromScore
+    // Actual side: re-run the api pipeline (load -> getScore -> fromScore
     // -> writeToStream), then normalize. The provenance stamp is kept (the
     // expected side has it added to match). Mirrors runRoundtrip().
-    auto &mgr = mx::api::DocumentManager::getInstance();
-    const auto idResult = mgr.createFromFile(absolutePath);
+    auto idResult = mx::api::MusicXml::fromFile(absolutePath);
     if (!idResult.ok())
     {
-        std::cerr << "dump: no actual for " << relPath << " (createFromFile failed)\n";
+        std::cerr << "dump: no actual for " << relPath << " (fromFile failed)\n";
         return;
     }
-    const int docId = idResult.value();
-    const auto scoreResult = mgr.getData(docId);
-    mgr.destroyDocument(docId);
+    const auto scoreResult = mx::api::getScore(std::move(idResult).value());
     if (!scoreResult.ok())
     {
-        std::cerr << "dump: no actual for " << relPath << " (getData failed)\n";
+        std::cerr << "dump: no actual for " << relPath << " (getScore failed)\n";
         return;
     }
-    const auto id2Result = mgr.createFromScore(scoreResult.value());
+    auto id2Result = mx::api::fromScore(scoreResult.value());
     if (!id2Result.ok())
     {
-        std::cerr << "dump: no actual for " << relPath << " (createFromScore failed)\n";
+        std::cerr << "dump: no actual for " << relPath << " (fromScore failed)\n";
         return;
     }
-    const int docId2 = id2Result.value();
     std::ostringstream ss;
-    const auto writeResult = mgr.writeToStream(docId2, ss);
-    mgr.destroyDocument(docId2);
+    const auto writeResult = std::move(id2Result).value().writeToStream(ss);
     if (!writeResult.ok())
     {
         std::cerr << "dump: no actual for " << relPath << " (writeToStream failed)\n";

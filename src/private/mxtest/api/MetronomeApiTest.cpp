@@ -6,7 +6,7 @@
 #ifdef MX_COMPILE_API_TESTS
 
 #include "cpul/cpulTestHarness.h"
-#include "mx/api/DocumentManager.h"
+#include "mx/api/MusicXml.h"
 #include "mxtest/api/RoundTrip.h"
 
 #include <sstream>
@@ -100,16 +100,14 @@ TEST(nonNumericPerMinuteRoundTrips, MetronomeApi)
             <per-minute>fast</per-minute>
           )");
 
-    auto &mgr = DocumentManager::getInstance();
     std::istringstream iss{xml};
-    const auto idResult = mgr.createFromStream(iss);
-    CHECK(idResult.ok());
-    if (!idResult.ok())
+    auto docResult = MusicXml::fromStream(iss);
+    CHECK(docResult.ok());
+    if (!docResult.ok())
     {
         return;
     }
-    const auto dataResult = mgr.getData(idResult.value());
-    mgr.destroyDocument(idResult.value());
+    const auto dataResult = getScore(std::move(docResult).value());
     CHECK(dataResult.ok());
     if (!dataResult.ok())
     {
@@ -135,12 +133,8 @@ TEST(nonNumericPerMinuteRoundTrips, MetronomeApi)
     CHECK(std::string{"fast"} == bpm.beatsPerMinute);
 
     // The mark must also write back without error.
-    const auto id2Result = mgr.createFromScore(dataResult.value());
-    CHECK(id2Result.ok());
-    if (id2Result.ok())
-    {
-        mgr.destroyDocument(id2Result.value());
-    }
+    const auto doc2Result = fromScore(dataResult.value());
+    CHECK(doc2Result.ok());
 }
 
 T_END;
