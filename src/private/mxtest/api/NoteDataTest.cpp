@@ -8,6 +8,7 @@
 
 #include "cpul/cpulTestHarness.h"
 #include "mx/api/MusicXml.h"
+#include "mx/api/MusicXmlInternal.h"
 #include "mx/core/generated/Direction.h"
 #include "mx/core/generated/Document.h"
 #include "mx/core/generated/MusicDataChoice.h"
@@ -1111,7 +1112,7 @@ TEST(directionOrder, NoteData)
     std::stringstream ss;
     doc.writeToStream(ss);
 
-    const auto &docPtr = doc.getCoreDocument();
+    const auto &docPtr = coreDocumentOf(doc);
     REQUIRE(docPtr.isScorePartwise());
     const auto &partwise = docPtr.asScorePartwise();
     const auto partwiseParts = partwise.part();

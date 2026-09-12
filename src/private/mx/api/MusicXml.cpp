@@ -3,6 +3,7 @@
 // Distributed under the MIT License
 
 #include "mx/api/MusicXml.h"
+#include "mx/api/MusicXmlInternal.h"
 #include "mx/core/Attribution.h"
 #include "mx/core/Error.h"
 #include "mx/core/generated/Document.h"
@@ -19,10 +20,10 @@ namespace mx
 {
 namespace api
 {
-// The write side always emits version="4.0" unconditionally: echoing a
-// declared "3.0" (or ScoreData::musicXmlVersion) from a 4.0 model was a
-// fiction. Enforced here at the write boundary on a copy, so the owned
-// document (and the getCoreDocument escape hatch) keeps what was parsed.
+// mx's data model is MusicXML 4.0, so every write states version="4.0" on
+// the root element, whatever version a parsed document declared. The
+// override happens here on a copy at the write boundary, so the owned
+// document keeps what was parsed.
 core::Document withWriteVersion(const core::Document &document)
 {
     core::Document copy = document;
@@ -93,28 +94,44 @@ class MusicXml::Impl
   public:
     // writeMxVersion governs whether writeTo*() stamps mx's provenance
     // <software> (see EncodingData::writeMxVersion); it defaults true,
-    // including for parsed documents (whose source never had the stamp).
-    Impl(core::DocumentPtr inDocument, bool inWriteMxVersion)
+    // including for parsed documents (whose source did not have the stamp).
+    Impl() = default;
+
+    Impl(core::Document inDocument, bool inWriteMxVersion)
         : document{std::move(inDocument)}, writeMxVersion{inWriteMxVersion}
     {
     }
 
-    core::DocumentPtr document;
-    bool writeMxVersion;
+    // The natural zero: a default-constructed ScorePartwise, i.e. a valid,
+    // empty document.
+    core::Document document;
+    bool writeMxVersion = true;
 };
 
-MusicXml::MusicXml(core::DocumentPtr &&coreDocument, bool writeMxVersion)
-    : myImpl{new MusicXml::Impl{std::move(coreDocument), writeMxVersion}}
+MusicXml::MusicXml() : myImpl{new MusicXml::Impl{}}
 {
 }
 
-MusicXml::MusicXml(MusicXml &&other) noexcept : myImpl{std::move(other.myImpl)}
+MusicXml::MusicXml(core::Document document, bool writeMxVersion)
+    : myImpl{new MusicXml::Impl{std::move(document), writeMxVersion}}
 {
+}
+
+// The move operations never leave a null pimpl behind. A moved-from MusicXml
+// holds a valid, empty document, so it is safe to read and write. The
+// constructor allocates the empty replacement first, so it is not noexcept;
+// the assignment just swaps and is.
+MusicXml::MusicXml(MusicXml &&other) : myImpl{std::make_unique<MusicXml::Impl>()}
+{
+    std::swap(myImpl, other.myImpl);
 }
 
 MusicXml &MusicXml::operator=(MusicXml &&other) noexcept
 {
-    myImpl = std::move(other.myImpl);
+    if (this != &other)
+    {
+        std::swap(myImpl, other.myImpl);
+    }
     return *this;
 }
 
@@ -152,8 +169,7 @@ Result<MusicXml> MusicXml::fromFile(const std::string &filePath)
             return mirrorToApiError(parsed.error());
         }
 
-        core::DocumentPtr mxdoc = std::make_shared<core::Document>(std::move(parsed).value());
-        return MusicXml{std::move(mxdoc), true};
+        return MusicXml{core::Document{std::move(parsed).value()}, true};
     }
     catch (const std::exception &e)
     {
@@ -182,8 +198,7 @@ Result<MusicXml> MusicXml::fromStream(std::istream &stream)
             return mirrorToApiError(parsed.error());
         }
 
-        core::DocumentPtr mxdoc = std::make_shared<core::Document>(std::move(parsed).value());
-        return MusicXml{std::move(mxdoc), true};
+        return MusicXml{core::Document{std::move(parsed).value()}, true};
     }
     catch (const std::exception &e)
     {
@@ -199,13 +214,8 @@ Result<void> MusicXml::writeToFile(const std::string &filePath) const
 {
     try
     {
-        if (!myImpl)
-        {
-            return musicXmlInternalError("MusicXml::writeToFile", "the document has been moved from");
-        }
-
         pugi::xml_document xdoc;
-        const core::Document toWrite = withWriteVersion(*myImpl->document);
+        const core::Document toWrite = withWriteVersion(myImpl->document);
         if (myImpl->writeMxVersion)
         {
             core::serializeWithAttribution(toWrite, xdoc);
@@ -234,13 +244,8 @@ Result<void> MusicXml::writeToStream(std::ostream &stream) const
 {
     try
     {
-        if (!myImpl)
-        {
-            return musicXmlInternalError("MusicXml::writeToStream", "the document has been moved from");
-        }
-
         pugi::xml_document xdoc;
-        const core::Document toWrite = withWriteVersion(*myImpl->document);
+        const core::Document toWrite = withWriteVersion(myImpl->document);
         if (myImpl->writeMxVersion)
         {
             core::serializeWithAttribution(toWrite, xdoc);
@@ -262,16 +267,17 @@ Result<void> MusicXml::writeToStream(std::ostream &stream) const
     }
 }
 
-const core::Document &MusicXml::getCoreDocument() const
+MusicXml MusicXml::clone() const
 {
-    if (myImpl)
-    {
-        return *myImpl->document;
-    }
-    // a moved-from document holds nothing; reading it yields an empty core
-    // document rather than a crash
-    static const core::Document emptyDocument{};
-    return emptyDocument;
+    MusicXml cloned{};
+    cloned.myImpl->document = myImpl->document;
+    cloned.myImpl->writeMxVersion = myImpl->writeMxVersion;
+    return cloned;
+}
+
+const core::Document &coreDocumentOf(const MusicXml &document) noexcept
+{
+    return document.myImpl->document;
 }
 
 Result<MusicXml> fromScore(const ScoreData &score)
@@ -281,17 +287,12 @@ Result<MusicXml> fromScore(const ScoreData &score)
         impl::ScoreWriter writer{score};
         core::ScorePartwise scorePartwise = writer.getScorePartwise();
 
-        core::DocumentPtr mxdoc;
         if (score.musicXmlType == "timewise")
         {
-            mxdoc = std::make_shared<core::Document>(impl::partwiseTimewise(scorePartwise));
-        }
-        else
-        {
-            mxdoc = std::make_shared<core::Document>(std::move(scorePartwise));
+            return MusicXml{core::Document{impl::partwiseTimewise(scorePartwise)}, score.encoding.writeMxVersion};
         }
 
-        return MusicXml{std::move(mxdoc), score.encoding.writeMxVersion};
+        return MusicXml{core::Document{std::move(scorePartwise)}, score.encoding.writeMxVersion};
     }
     catch (const impl::WriteRefusal &refusal)
     {
@@ -313,12 +314,7 @@ Result<ScoreData> getScore(const MusicXml &document)
 {
     try
     {
-        if (!document.myImpl)
-        {
-            return musicXmlInternalError("getScore", "the document has been moved from");
-        }
-
-        const core::Document &coreDocument = *document.myImpl->document;
+        const core::Document &coreDocument = document.myImpl->document;
 
         // Convert a timewise document into a local partwise copy and read
         // that; the owned document is untouched.

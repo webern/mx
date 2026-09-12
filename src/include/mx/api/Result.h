@@ -31,7 +31,9 @@ enum class ResultCode
     tooManyElements,
     invalidDocument,
     unsupportedVersion, // mirrored from the core parse boundary
-    internalError,      // caught exception; nothing escapes    (api-level)
+    // TODO: this badly swallows exception information. we need more variants
+    // or something like a site and message.
+    internalError, // caught exception; nothing escapes    (api-level)
 };
 
 struct ApiError

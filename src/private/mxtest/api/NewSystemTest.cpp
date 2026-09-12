@@ -7,6 +7,7 @@
 
 #include "cpul/cpulTestHarness.h"
 #include "mx/api/MusicXml.h"
+#include "mx/api/MusicXmlInternal.h"
 #include "mx/core/generated/Document.h"
 #include "mx/core/generated/MusicDataChoice.h"
 #include "mx/core/generated/Print.h"
@@ -67,7 +68,7 @@ TEST(newSystem, doesItWork)
     auto rId = fromScore(s);
     REQUIRE(rId.ok());
     const auto doc = std::move(rId).value();
-    const auto &sp = doc.getCoreDocument().asScorePartwise();
+    const auto &sp = coreDocumentOf(doc).asScorePartwise();
     const auto &p = sp.part()[0];
 
     size_t index = 0;

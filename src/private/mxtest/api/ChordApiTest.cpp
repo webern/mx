@@ -7,6 +7,7 @@
 
 #include "cpul/cpulTestHarness.h"
 #include "mx/api/MusicXml.h"
+#include "mx/api/MusicXmlInternal.h"
 #include "mx/core/generated/Document.h"
 #include "mx/core/generated/FullNoteGroup.h"
 #include "mx/core/generated/MusicDataChoice.h"
@@ -245,7 +246,7 @@ TEST(KompChordBug_PIVOTAL_147058063, ChordApi)
     auto docIdResult = fromScore(originalScore);
     REQUIRE(docIdResult.ok());
     const auto document = std::move(docIdResult).value();
-    const auto &coreDoc = document.getCoreDocument();
+    const auto &coreDoc = coreDocumentOf(document);
     REQUIRE(coreDoc.isScorePartwise());
     const auto &scorePartwise = coreDoc.asScorePartwise();
     const auto xml = mxtest::toXml(originalScore);

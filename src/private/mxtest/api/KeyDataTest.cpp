@@ -9,6 +9,7 @@
 
 #include "cpul/cpulTestHarness.h"
 #include "mx/api/MusicXml.h"
+#include "mx/api/MusicXmlInternal.h"
 #include "mx/core/generated/Attributes.h"
 #include "mx/core/generated/Cancel.h"
 #include "mx/core/generated/Document.h"
@@ -127,7 +128,7 @@ TEST(EMajor, KeyData)
     auto originalIdResult = fromScore(original);
     REQUIRE(originalIdResult.ok());
     const auto originalDoc = std::move(originalIdResult).value();
-    const mx::core::Document &coreDoc = originalDoc.getCoreDocument();
+    const mx::core::Document &coreDoc = coreDocumentOf(originalDoc);
 
     const auto &coreKey = getFirstCoreKey(coreDoc);
     const auto &coreKeyChoice = coreKey.choice();
@@ -191,7 +192,7 @@ TEST(AbMinor, KeyData)
     auto originalIdResult = fromScore(original);
     REQUIRE(originalIdResult.ok());
     const auto originalDoc = std::move(originalIdResult).value();
-    const mx::core::Document &coreDoc = originalDoc.getCoreDocument();
+    const mx::core::Document &coreDoc = coreDocumentOf(originalDoc);
 
     const auto &coreKey = getFirstCoreKey(coreDoc);
     const auto &coreKeyChoice = coreKey.choice();
@@ -251,7 +252,7 @@ TEST(NonTraditional1, KeyData)
     auto originalIdResult = fromScore(original);
     REQUIRE(originalIdResult.ok());
     const auto originalDoc = std::move(originalIdResult).value();
-    const mx::core::Document &coreDoc = originalDoc.getCoreDocument();
+    const mx::core::Document &coreDoc = coreDocumentOf(originalDoc);
 
     const auto &coreKey = getFirstCoreKey(coreDoc);
     const auto &coreKeyChoice = coreKey.choice();
@@ -479,7 +480,7 @@ TEST(CancelLocationBeforeBarline, KeyData)
     auto originalIdResult = fromScore(original);
     REQUIRE(originalIdResult.ok());
     const auto originalDoc = std::move(originalIdResult).value();
-    const mx::core::Document &coreDoc = originalDoc.getCoreDocument();
+    const mx::core::Document &coreDoc = coreDocumentOf(originalDoc);
 
     const auto &coreKey = getFirstCoreKey(coreDoc);
     const auto &coreKeyChoice = coreKey.choice();
@@ -524,7 +525,7 @@ TEST(CancelLocationUnspecified, KeyData)
     auto originalIdResult = fromScore(original);
     REQUIRE(originalIdResult.ok());
     const auto originalDoc = std::move(originalIdResult).value();
-    const mx::core::Document &coreDoc = originalDoc.getCoreDocument();
+    const mx::core::Document &coreDoc = coreDocumentOf(originalDoc);
 
     const auto &coreKey = getFirstCoreKey(coreDoc);
     const auto &coreKeyChoice = coreKey.choice();
@@ -726,7 +727,7 @@ TEST(ModeNoneIsNotNonTraditional, KeyData)
     auto originalIdResult = fromScore(original);
     REQUIRE(originalIdResult.ok());
     const auto originalDoc = std::move(originalIdResult).value();
-    const mx::core::Document &coreDoc = originalDoc.getCoreDocument();
+    const mx::core::Document &coreDoc = coreDocumentOf(originalDoc);
 
     const auto &coreKey = getFirstCoreKey(coreDoc);
     CHECK(coreKey.choice().isTraditionalKey());

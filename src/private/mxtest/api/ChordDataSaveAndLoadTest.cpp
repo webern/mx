@@ -7,6 +7,7 @@
 
 #include "cpul/cpulTestHarness.h"
 #include "mx/api/MusicXml.h"
+#include "mx/api/MusicXmlInternal.h"
 #include "mx/core/generated/Bass.h"
 #include "mx/core/generated/BassStep.h"
 #include "mx/core/generated/Document.h"
@@ -41,7 +42,7 @@ TEST(Save, ChordDataSaveTest)
     auto docIdResult = fromScore(scoreData);
     REQUIRE(docIdResult.ok());
     const auto document = std::move(docIdResult).value();
-    const auto &coreDoc = document.getCoreDocument();
+    const auto &coreDoc = coreDocumentOf(document);
     REQUIRE(coreDoc.isScorePartwise());
     const auto &scorePartwise = coreDoc.asScorePartwise();
 

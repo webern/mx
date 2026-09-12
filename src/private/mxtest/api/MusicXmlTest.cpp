@@ -8,6 +8,7 @@
 #include "cpul/cpulTestHarness.h"
 #include "mx/api/DefaultsData.h"
 #include "mx/api/MusicXml.h"
+#include "mx/api/MusicXmlInternal.h"
 #include "mx/core/Attribution.h"
 #include "mx/core/generated/Document.h"
 #include "mx/core/generated/MarginType.h"
@@ -48,8 +49,8 @@ inline ScoreData roundTripScore(const ScoreData &input)
 }
 
 // --- RAII ownership ---------------------------------------------------------
-// A MusicXml owns its document. It cannot be copied, it moves, and a
-// moved-from document fails safely on every path rather than crashing.
+// A MusicXml owns its document. It cannot be copied (clone makes a deep
+// copy), it moves, and a moved-from document is a valid, empty document.
 
 TEST(moveTransfersOwnership, MusicXml)
 {
@@ -64,14 +65,46 @@ TEST(moveTransfersOwnership, MusicXml)
     REQUIRE(scoreResult.ok());
     CHECK_EQUAL("Dichterliebe", scoreResult.value().workTitle);
 
-    // the moved-from document fails safely on the read and write paths
+    // the moved-from document is a valid, empty document, safe to read and write
     const auto movedScoreResult = getScore(doc);
-    CHECK(!movedScoreResult.ok());
-    CHECK(movedScoreResult.error().code == ResultCode::internalError);
+    REQUIRE(movedScoreResult.ok());
+    CHECK(movedScoreResult.value().workTitle.empty());
     std::stringstream ss;
     const auto movedWriteResult = doc.writeToStream(ss);
-    CHECK(!movedWriteResult.ok());
-    CHECK(movedWriteResult.error().code == ResultCode::internalError);
+    REQUIRE(movedWriteResult.ok());
+    CHECK(!ss.str().empty());
+}
+
+T_END
+
+TEST(clone, MusicXml)
+{
+    auto input = ScoreData{};
+    input.workTitle = "CloneTest";
+    auto docResult = fromScore(input);
+    REQUIRE(docResult.ok());
+    const auto original = std::move(docResult).value();
+
+    const auto cloned = original.clone();
+
+    // the copy and the original are both usable and hold the same score
+    const auto a = getScore(original);
+    const auto b = getScore(cloned);
+    REQUIRE(a.ok());
+    REQUIRE(b.ok());
+    CHECK_EQUAL("CloneTest", a.value().workTitle);
+    CHECK_EQUAL("CloneTest", b.value().workTitle);
+
+    // the copy is deep: writing it does not disturb the original
+    auto edited = b.value();
+    edited.workTitle = "Edited";
+    auto rewritten = fromScore(edited);
+    REQUIRE(rewritten.ok());
+    std::stringstream ss;
+    std::move(rewritten).value().writeToStream(ss);
+    const auto reread = getScore(original);
+    REQUIRE(reread.ok());
+    CHECK_EQUAL("CloneTest", reread.value().workTitle);
 }
 
 T_END
@@ -347,7 +380,7 @@ TEST(Layout_PageMarginsBoth, MusicXml)
     auto docResult = fromScore(score);
     REQUIRE(docResult.ok());
     const MusicXml doc = std::move(docResult).value();
-    const auto &mxDoc = doc.getCoreDocument();
+    const auto &mxDoc = coreDocumentOf(doc);
     REQUIRE(mxDoc.isScorePartwise());
     const auto &defaults = mxDoc.asScorePartwise().scoreHeader().defaults();
     REQUIRE(defaults.has_value());
@@ -384,7 +417,7 @@ TEST(Layout_PageMarginsEvenOdd, MusicXml)
     auto docResult = fromScore(score);
     REQUIRE(docResult.ok());
     const MusicXml doc = std::move(docResult).value();
-    const auto &mxDoc = doc.getCoreDocument();
+    const auto &mxDoc = coreDocumentOf(doc);
     REQUIRE(mxDoc.isScorePartwise());
     const auto &defaults = mxDoc.asScorePartwise().scoreHeader().defaults();
     REQUIRE(defaults.has_value());
