@@ -52,6 +52,11 @@ class MusicXml
     // you want to edit the core DOM directly. You will need to include the
     // private mx::core headers in your header search paths to do so. Not
     // recommended, try opening an issue first!
+    //
+    // The reference is only good for as long as this MusicXml is alive and
+    // you have not moved it away: do not keep it past a std::move of this
+    // object into another MusicXml or into intoScore, which destroys the
+    // document when it returns.
     core::Document &getCoreDocument();
     const core::Document &getCoreDocument() const;
 
