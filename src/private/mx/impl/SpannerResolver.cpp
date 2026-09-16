@@ -397,10 +397,10 @@ static void spannerNumberAssignClass(const std::vector<SpannerNumberEvent> &inEv
         }
         if (chosen == 0)
         {
-            throw WriteRefusal{api::ApiError{
-                api::ResultCode::tooManyElements, group.location,
-                "more than 16 spanners of one type are open at the same point; MusicXML number attributes only "
-                "range from 1 to 16"}};
+            MX_THROW_AS(WriteRefusal,
+                        (api::ApiError{api::ResultCode::tooManyElements, group.location,
+                                       "more than 16 spanners of one type are open at the same point; MusicXML number "
+                                       "attributes only range from 1 to 16"}))
         }
         occupied[chosen].push_back(group.interval);
         for (const void *object : group.objects)

@@ -43,7 +43,7 @@ Responses to wrong api usage, in order of preference:
    returns a default-constructed copy; the writer drops the half of an encoding that is
    meaningless for the note it is on (a tie on a silent cue note is written as `<tied>`
    notation only, never as a sound-level `<tie>`). Report an important adjustment through an
-   optional `Diagnostics` collector; ignoring diagnostics must leave a safe, usable value.
+   optional `Diagnostics` collector.
 3. `Result<T>` (`Result.h`): the error channel of last resort. It exists for the `MusicXml`
    I/O boundary, where failure is real (unreadable file, unparseable XML). Do not spread it
    into the data model.

@@ -58,10 +58,10 @@ std::string formatDiagnostic(const Diagnostic &diagnostic)
         break;
     }
 
-    std::string text{"mx: "};
-    text += severityName;
-    appendFormattedLocationAndMessage(text, diagnostic.location, diagnostic.message);
-    return text;
+    std::string result{"mx: "};
+    result += severityName;
+    result += formatLocationAndMessage(diagnostic.location, diagnostic.message);
+    return result;
 }
 } // namespace api
 } // namespace mx

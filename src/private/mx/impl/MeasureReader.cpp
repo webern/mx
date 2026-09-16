@@ -69,7 +69,7 @@ namespace mx
 {
 namespace impl
 {
-api::FigureData measureReaderParseFigure(const core::Figure &figure)
+api::FigureData MeasureReader::parseFigure(const core::Figure &figure)
 {
     api::FigureData figureData;
 
@@ -91,8 +91,8 @@ api::FigureData measureReaderParseFigure(const core::Figure &figure)
     return figureData;
 }
 
-int measureReaderFiguredBassStaffIndex(const MeasureCursor &cursor, const api::MeasureData &measure,
-                                       const core::Note *nextNotePtr)
+int MeasureReader::figuredBassStaffIndex(const MeasureCursor &cursor, const api::MeasureData &measure,
+                                         const core::Note *nextNotePtr)
 {
     auto staffIndex = cursor.staffIndex;
 
@@ -828,7 +828,7 @@ void MeasureReader::parseFiguredBass(const core::FiguredBass &inMxFiguredBass, c
 
     for (const auto &figure : inMxFiguredBass.figure())
     {
-        figuredBass.figures.emplace_back(measureReaderParseFigure(figure));
+        figuredBass.figures.emplace_back(parseFigure(figure));
     }
 
     if (inMxFiguredBass.parentheses().has_value())
@@ -856,7 +856,7 @@ void MeasureReader::parseFiguredBass(const core::FiguredBass &inMxFiguredBass, c
 
     direction.figuredBasses.emplace_back(std::move(figuredBass));
 
-    const auto staffIndex = measureReaderFiguredBassStaffIndex(myCurrentCursor, myOutMeasureData, nextNotePtr);
+    const auto staffIndex = figuredBassStaffIndex(myCurrentCursor, myOutMeasureData, nextNotePtr);
     myOutMeasureData.staves.at(static_cast<size_t>(staffIndex)).directions.emplace_back(std::move(direction));
 }
 

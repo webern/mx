@@ -20,6 +20,8 @@ class PartwisePart;
 class ScorePart;
 class ScoreInstrument;
 class VirtualInstrument;
+class PartName;
+class NameDisplay;
 class ScorePartMIDIGroup;
 class MIDIInstrument;
 } // namespace core
@@ -37,6 +39,10 @@ class PartReader
     impl::MeasureCursor getCursor() const;
 
   private:
+    static bool nameHasDeprecatedFormatting(const core::PartName &name);
+    static void readNameDisplay(const core::PartName &nameElement, const std::optional<core::NameDisplay> &display,
+                                std::string &outText, api::PrintData &outPrintData, api::PositionData &outPositionData);
+
     const core::PartwisePart &myPartwisePart;
     const core::ScorePart &myScorePart;
     int myNumStaves;

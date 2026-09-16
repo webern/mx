@@ -12,6 +12,6 @@ namespace mx
 {
 namespace api
 {
-void appendFormattedLocationAndMessage(std::string &text, const Location &location, const std::string &message);
+std::string formatLocationAndMessage(const Location &location, const std::string &message);
 } // namespace api
 } // namespace mx

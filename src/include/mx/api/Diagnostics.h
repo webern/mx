@@ -26,19 +26,20 @@ enum class Severity
 // The recoverable decision reported by a diagnostic.
 enum class DiagnosticCode
 {
-    valueAdjusted,
-    unmatchedSpanner
+    valueAdjusted,   // a value was changed to one that MusicXML can represent
+    unmatchedSpanner // a spanner endpoint had no matching endpoint
 };
 
-// A non-fatal problem noticed while producing a value.
+// A non-fatal problem noticed while producing a score or MusicXML document.
 struct Diagnostic
 {
-    Severity severity = Severity::warning;
-    DiagnosticCode code = DiagnosticCode::valueAdjusted;
-    Location location;
-    std::string message;
+    Severity severity = Severity::warning;               // effect on the translated value
+    DiagnosticCode code = DiagnosticCode::valueAdjusted; // kind of recovery performed
+    Location location;                                   // source or output score position, when known
+    std::string message;                                 // human-readable description
 };
 
+// Receives a diagnostic while a score or MusicXML document is translated.
 using DiagnosticHandler = std::function<void(const Diagnostic &)>;
 
 // Collects diagnostics from one or more translations. A handler, when supplied,
@@ -49,8 +50,13 @@ class Diagnostics
     Diagnostics() = default;
     explicit Diagnostics(DiagnosticHandler handler);
 
+    // Adds a diagnostic to this collector and calls its handler.
     void add(Diagnostic diagnostic);
+
+    // All diagnostics collected so far, in the order they were reported.
     std::span<const Diagnostic> all() const noexcept;
+
+    // True when the collection contains this severity or a more severe one.
     bool hasSeverityOrWorse(Severity threshold) const noexcept;
 
   private:

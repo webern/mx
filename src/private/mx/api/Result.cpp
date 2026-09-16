@@ -53,10 +53,10 @@ std::string formatError(const ApiError &error)
         break;
     }
 
-    std::string text{"mx: "};
-    text += codeName;
-    appendFormattedLocationAndMessage(text, error.location, error.message);
-    return text;
+    std::string result{"mx: "};
+    result += codeName;
+    result += formatLocationAndMessage(error.location, error.message);
+    return result;
 }
 } // namespace api
 } // namespace mx

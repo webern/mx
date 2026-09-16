@@ -34,6 +34,10 @@
 #define MX_THROW(throw_error_message) throw std::runtime_error(MX_ERROR_MESSAGE(throw_error_message));
 #endif
 
+#ifndef MX_THROW_AS
+#define MX_THROW_AS(exception_type, ...) throw exception_type(__VA_ARGS__);
+#endif
+
 #ifndef MX_LOG
 #define MX_LOG(message) std::cout << MX_ERROR_MESSAGE(message) << std::endl;
 #endif

@@ -8,8 +8,9 @@ namespace mx
 {
 namespace api
 {
-void appendFormattedLocationAndMessage(std::string &text, const Location &location, const std::string &message)
+std::string formatLocationAndMessage(const Location &location, const std::string &message)
 {
+    std::string result;
     std::string where;
     const auto appendWhere = [&where](const char *name, long long value) {
         if (value < 0)
@@ -35,15 +36,16 @@ void appendFormattedLocationAndMessage(std::string &text, const Location &locati
 
     if (!where.empty())
     {
-        text += " at ";
-        text += where;
+        result += " at ";
+        result += where;
     }
 
     if (!message.empty())
     {
-        text += ": ";
-        text += message;
+        result += ": ";
+        result += message;
     }
+    return result;
 }
 } // namespace api
 } // namespace mx

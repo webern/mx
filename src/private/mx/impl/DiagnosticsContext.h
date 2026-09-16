@@ -7,6 +7,8 @@
 #include "mx/api/Diagnostics.h"
 #include "mx/impl/MeasureCursor.h"
 
+#include <functional>
+#include <memory>
 #include <string>
 #include <utility>
 
@@ -19,7 +21,8 @@ class DiagnosticsContext
   public:
     DiagnosticsContext() = default;
 
-    explicit DiagnosticsContext(api::Diagnostics &diagnostics) : myDiagnostics{&diagnostics}
+    explicit DiagnosticsContext(api::Diagnostics &diagnostics)
+        : myDiagnostics{std::make_shared<std::reference_wrapper<api::Diagnostics>>(diagnostics)}
     {
     }
 
@@ -27,7 +30,7 @@ class DiagnosticsContext
     {
         if (myDiagnostics)
         {
-            myDiagnostics->add(api::Diagnostic{severity, code, std::move(location), std::move(message)});
+            myDiagnostics->get().add(api::Diagnostic{severity, code, std::move(location), std::move(message)});
         }
     }
 
@@ -44,7 +47,7 @@ class DiagnosticsContext
     }
 
   private:
-    api::Diagnostics *myDiagnostics = nullptr;
+    std::shared_ptr<std::reference_wrapper<api::Diagnostics>> myDiagnostics;
 };
 } // namespace impl
 } // namespace mx

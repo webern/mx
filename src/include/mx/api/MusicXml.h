@@ -72,9 +72,25 @@ class MusicXml
 };
 
 // Reads the score out of the document. The document stays alive and can be
-// read again or written out. Pass Diagnostics to observe adjustments made
-// while translating the document.
+// read again or written out.
 Result<ScoreData> getScore(const MusicXml &document);
+
+// Reads the score and reports any adjustments made while translating it.
+//
+// To inspect diagnostics after the translation:
+//
+//     Diagnostics diagnostics;
+//     auto score = getScore(document, diagnostics);
+//     for (const auto &diagnostic : diagnostics.all()) {
+//         std::cerr << formatDiagnostic(diagnostic) << '\n';
+//     }
+//
+// To handle diagnostics as they are found:
+//
+//     Diagnostics diagnostics{[](const Diagnostic &diagnostic) {
+//         std::cerr << formatDiagnostic(diagnostic) << '\n';
+//     }};
+//     auto score = getScore(document, diagnostics);
 Result<ScoreData> getScore(const MusicXml &document, Diagnostics &diagnostics);
 
 // Reads the score out of the document and consumes it: the underlying tree
@@ -82,13 +98,16 @@ Result<ScoreData> getScore(const MusicXml &document, Diagnostics &diagnostics);
 // goes out of scope. Pass the document with std::move, or hand over the
 // Result's value directly.
 Result<ScoreData> intoScore(MusicXml document);
+
+// Consumes the document and reports any adjustments made while reading it.
 Result<ScoreData> intoScore(MusicXml document, Diagnostics &diagnostics);
 
 // Authors a new document from ScoreData. Fails with an error result when the
 // ScoreData describes something the core model will not represent (e.g. more
-// than 8 beams) rather than silently dropping data. Pass Diagnostics to
-// observe recoverable authoring decisions.
+// than 8 beams) rather than silently dropping data.
 Result<MusicXml> fromScore(const ScoreData &score);
+
+// Authors a document and reports recoverable authoring decisions.
 Result<MusicXml> fromScore(const ScoreData &score, Diagnostics &diagnostics);
 
 } // namespace api

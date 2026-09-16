@@ -25,6 +25,7 @@ class Direction;
 class Attributes;
 class Harmony;
 class FiguredBass;
+class Figure;
 class Print;
 class Sound;
 class Barline;
@@ -80,6 +81,10 @@ class MeasureReader
     mutable int myPreviousNoteBucketStaffIndex;
 
   private:
+    static api::FigureData parseFigure(const core::Figure &figure);
+    static int figuredBassStaffIndex(const MeasureCursor &cursor, const api::MeasureData &measure,
+                                     const core::Note *nextNotePtr);
+
     void addStavesToOutMeasure() const;
     void parseTimeSignature() const;
 
