@@ -6,6 +6,7 @@
 
 #include "mx/api/MeasureData.h"
 #include "mx/impl/Converter.h"
+#include "mx/impl/DiagnosticsContext.h"
 #include "mx/impl/MeasureCursor.h"
 
 #include <map>
@@ -40,7 +41,7 @@ class MeasureReader
 {
   public:
     MeasureReader(const core::PartwiseMeasure &inPartwiseMeasureRef, const MeasureCursor &cursor,
-                  const MeasureCursor &previousMeasureCursor);
+                  const MeasureCursor &previousMeasureCursor, DiagnosticsContext diagnostics = {});
 
     std::pair<api::MeasureData, std::optional<api::TransposeData>> getMeasureData() const;
     impl::MeasureCursor getCursor() const;
@@ -49,6 +50,7 @@ class MeasureReader
     mutable std::mutex myMutex;
     const core::PartwiseMeasure &myPartwiseMeasure;
     const Converter myConverter;
+    DiagnosticsContext myDiagnostics;
 
     mutable api::MeasureData myOutMeasureData;
     mutable MeasureCursor myCurrentCursor;

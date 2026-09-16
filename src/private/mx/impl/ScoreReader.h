@@ -6,6 +6,7 @@
 
 #include "mx/api/ScoreData.h"
 #include "mx/core/generated/ScorePartwise.h"
+#include "mx/impl/DiagnosticsContext.h"
 
 #include <list>
 #include <mutex>
@@ -20,7 +21,7 @@ namespace impl
 class ScoreReader
 {
   public:
-    ScoreReader(const core::ScorePartwise &inScorePartwise);
+    ScoreReader(const core::ScorePartwise &inScorePartwise, DiagnosticsContext diagnostics = {});
 
     api::ScoreData getScoreData() const;
 
@@ -28,6 +29,7 @@ class ScoreReader
     const core::ScorePartwise &myScorePartwise;
     std::span<const core::PartwisePart> myPartSet;
     const core::ScoreHeaderGroup &myHeaderGroup;
+    DiagnosticsContext myDiagnostics;
 
   private:
     mutable std::mutex myMutex;

@@ -313,9 +313,15 @@ const core::Document &MusicXml::getCoreDocument() const
 
 Result<MusicXml> fromScore(const ScoreData &score)
 {
+    Diagnostics diagnostics;
+    return fromScore(score, diagnostics);
+}
+
+Result<MusicXml> fromScore(const ScoreData &score, Diagnostics &diagnostics)
+{
     try
     {
-        impl::ScoreWriter writer{score};
+        impl::ScoreWriter writer{score, impl::DiagnosticsContext{diagnostics}};
         core::ScorePartwise scorePartwise = writer.getScorePartwise();
 
         if (score.musicXmlType == "timewise")
@@ -347,6 +353,12 @@ Result<MusicXml> fromScore(const ScoreData &score)
 
 Result<ScoreData> getScore(const MusicXml &document)
 {
+    Diagnostics diagnostics;
+    return getScore(document, diagnostics);
+}
+
+Result<ScoreData> getScore(const MusicXml &document, Diagnostics &diagnostics)
+{
     try
     {
         const core::Document &coreDocument = document.myImpl->document;
@@ -356,13 +368,13 @@ Result<ScoreData> getScore(const MusicXml &document)
         if (coreDocument.isScoreTimewise())
         {
             const core::ScorePartwise scorePartwise = impl::timewisePartwise(coreDocument.asScoreTimewise());
-            impl::ScoreReader reader{scorePartwise};
+            impl::ScoreReader reader{scorePartwise, impl::DiagnosticsContext{diagnostics}};
             auto score = reader.getScoreData();
             score.musicXmlType = "timewise";
             return score;
         }
 
-        impl::ScoreReader reader{coreDocument.asScorePartwise()};
+        impl::ScoreReader reader{coreDocument.asScorePartwise(), impl::DiagnosticsContext{diagnostics}};
         return reader.getScoreData();
     }
     catch (const std::bad_alloc &)
@@ -381,9 +393,15 @@ Result<ScoreData> getScore(const MusicXml &document)
 
 Result<ScoreData> intoScore(MusicXml document)
 {
+    Diagnostics diagnostics;
+    return intoScore(std::move(document), diagnostics);
+}
+
+Result<ScoreData> intoScore(MusicXml document, Diagnostics &diagnostics)
+{
     // the parameter owns the document; its destructor frees the underlying
     // tree when this function returns
-    return getScore(document);
+    return getScore(document, diagnostics);
 }
 } // namespace api
 } // namespace mx

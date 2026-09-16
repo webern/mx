@@ -4,6 +4,8 @@
 
 #include "mx/api/Result.h"
 
+#include "mx/api/LocationFormatting.h"
+
 namespace mx
 {
 namespace api
@@ -53,43 +55,7 @@ std::string formatError(const ApiError &error)
 
     std::string text{"mx: "};
     text += codeName;
-
-    // the place in the document or the score, if known
-    std::string where;
-    const auto appendWhere = [&where](const char *name, long long value) {
-        if (value < 0)
-        {
-            return;
-        }
-        if (!where.empty())
-        {
-            where += ' ';
-        }
-        where += name;
-        where += '=';
-        where += std::to_string(value);
-    };
-
-    where += error.location.xmlPath;
-    appendWhere("part", error.location.partIndex);
-    appendWhere("measure", error.location.measureIndex);
-    appendWhere("staff", error.location.staffIndex);
-    appendWhere("voice", error.location.voiceIndex);
-    appendWhere("tick", error.location.tickTimePosition);
-    appendWhere("offset", error.location.byteOffset);
-
-    if (!where.empty())
-    {
-        text += " at ";
-        text += where;
-    }
-
-    if (!error.message.empty())
-    {
-        text += ": ";
-        text += error.message;
-    }
-
+    appendFormattedLocationAndMessage(text, error.location, error.message);
     return text;
 }
 } // namespace api

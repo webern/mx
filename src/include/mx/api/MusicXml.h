@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "mx/api/Diagnostics.h"
 #include "mx/api/Result.h"
 #include "mx/api/ScoreData.h"
 
@@ -66,24 +67,29 @@ class MusicXml
     class Impl;
     std::unique_ptr<Impl> myImpl;
 
-    friend Result<ScoreData> getScore(const MusicXml &document);
-    friend Result<MusicXml> fromScore(const ScoreData &score);
+    friend Result<ScoreData> getScore(const MusicXml &document, Diagnostics &diagnostics);
+    friend Result<MusicXml> fromScore(const ScoreData &score, Diagnostics &diagnostics);
 };
 
 // Reads the score out of the document. The document stays alive and can be
-// read again or written out.
+// read again or written out. Pass Diagnostics to observe adjustments made
+// while translating the document.
 Result<ScoreData> getScore(const MusicXml &document);
+Result<ScoreData> getScore(const MusicXml &document, Diagnostics &diagnostics);
 
 // Reads the score out of the document and consumes it: the underlying tree
 // is freed when this function returns rather than when your MusicXml binding
 // goes out of scope. Pass the document with std::move, or hand over the
 // Result's value directly.
 Result<ScoreData> intoScore(MusicXml document);
+Result<ScoreData> intoScore(MusicXml document, Diagnostics &diagnostics);
 
 // Authors a new document from ScoreData. Fails with an error result when the
 // ScoreData describes something the core model will not represent (e.g. more
-// than 8 beams) rather than silently dropping data.
+// than 8 beams) rather than silently dropping data. Pass Diagnostics to
+// observe recoverable authoring decisions.
 Result<MusicXml> fromScore(const ScoreData &score);
+Result<MusicXml> fromScore(const ScoreData &score, Diagnostics &diagnostics);
 
 } // namespace api
 } // namespace mx

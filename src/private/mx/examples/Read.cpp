@@ -63,9 +63,13 @@ int main(int argc, const char *argv[])
         return MX_IS_A_FAILURE;
     }
 
+    // collect any non-fatal adjustments made while reading. A handler may
+    // also display each one as it is found.
+    Diagnostics diagnostics{[](const Diagnostic &diagnostic) { std::cerr << formatDiagnostic(diagnostic) << '\n'; }};
+
     // take the score out of the document. intoScore also consumes the
     // document, so its memory is freed as the function returns
-    const auto scoreResult = intoScore(std::move(docResult).value());
+    const auto scoreResult = intoScore(std::move(docResult).value(), diagnostics);
     if (!scoreResult.ok())
     {
         return MX_IS_A_FAILURE;

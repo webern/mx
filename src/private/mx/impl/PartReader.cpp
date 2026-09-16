@@ -40,11 +40,9 @@ namespace mx
 {
 namespace impl
 {
-namespace
-{
 // True when a <part-name>/<part-abbreviation> carries any of the formatting
 // attributes that MusicXML 2.0 deprecated in favor of the *-display elements.
-bool nameHasDeprecatedFormatting(const core::PartName &n)
+bool partReaderNameHasDeprecatedFormatting(const core::PartName &n)
 {
     return n.fontFamily().has_value() || n.fontStyle().has_value() || n.fontSize().has_value() ||
            n.fontWeight().has_value() || n.color().has_value() || n.defaultX().has_value() ||
@@ -57,15 +55,15 @@ bool nameHasDeprecatedFormatting(const core::PartName &n)
 // a present *-display element is canonical and wins; otherwise any deprecated
 // formatting on the name element itself is migrated into the display model so it
 // is re-emitted at the modern location.
-void readNameDisplay(const core::PartName &nameElement, const std::optional<core::NameDisplay> &display,
-                     std::string &outText, api::PrintData &outPrintData, api::PositionData &outPositionData)
+void partReaderReadNameDisplay(const core::PartName &nameElement, const std::optional<core::NameDisplay> &display,
+                               std::string &outText, api::PrintData &outPrintData, api::PositionData &outPositionData)
 {
     if (display.has_value())
     {
         outText = extractDisplayText(*display);
         extractDisplayFormatting(*display, outPrintData, outPositionData);
     }
-    else if (nameHasDeprecatedFormatting(nameElement))
+    else if (partReaderNameHasDeprecatedFormatting(nameElement))
     {
         outText = nameElement.value();
         outPrintData = getPrintData(nameElement);
@@ -74,13 +72,13 @@ void readNameDisplay(const core::PartName &nameElement, const std::optional<core
         outPositionData = getPositionData(nameElement);
     }
 }
-} // namespace
 
 PartReader::PartReader(const core::ScorePart &inScorePart, const core::PartwisePart &inPartwisePartRef,
-                       int globalTicksPerMeasure, const core::ScorePartwise &inScore, int inDivisionsValue)
+                       int globalTicksPerMeasure, const core::ScorePartwise &inScore, int inDivisionsValue,
+                       DiagnosticsContext diagnostics)
     : myPartwisePart{inPartwisePartRef}, myScorePart{inScorePart}, myNumStaves{-1}, myIsStavesElementPresent{false},
       myGlobalTicksPerMeasure{globalTicksPerMeasure}, myScore{inScore}, myPartIndex{-1},
-      myConstructedDivisionsValue{inDivisionsValue}
+      myConstructedDivisionsValue{inDivisionsValue}, myDiagnostics{diagnostics}
 {
     const auto ppId = myPartwisePart.id().value();
     const auto spId = myScorePart.id().value();
@@ -116,7 +114,7 @@ api::PartData PartReader::getPartData()
 
     for (const auto &mxMeasure : myPartwisePart.measure())
     {
-        MeasureReader reader{mxMeasure, myCurrentCursor, myPreviousCursor};
+        MeasureReader reader{mxMeasure, myCurrentCursor, myPreviousCursor, myDiagnostics};
         // the reader returns the measure data and any data that needs to be written at
         // the part-level (e.g. transposition). currently this is done as a pair.
         auto measureDataPair = reader.getMeasureData();
@@ -212,16 +210,17 @@ void PartReader::parseScorePart() const
     const auto &corePartName = myScorePart.partName();
     myOutPartData.name = corePartName.value();
     myOutPartData.namePrintObject = getPrintObject(corePartName);
-    readNameDisplay(corePartName, myScorePart.partNameDisplay(), myOutPartData.displayName,
-                    myOutPartData.displayNamePrintData, myOutPartData.displayNamePositionData);
+    partReaderReadNameDisplay(corePartName, myScorePart.partNameDisplay(), myOutPartData.displayName,
+                              myOutPartData.displayNamePrintData, myOutPartData.displayNamePositionData);
 
     if (myScorePart.partAbbreviation().has_value())
     {
         const auto &coreAbbreviation = *myScorePart.partAbbreviation();
         myOutPartData.abbreviation = coreAbbreviation.value();
         myOutPartData.abbreviationPrintObject = getPrintObject(coreAbbreviation);
-        readNameDisplay(coreAbbreviation, myScorePart.partAbbreviationDisplay(), myOutPartData.displayAbbreviation,
-                        myOutPartData.displayAbbreviationPrintData, myOutPartData.displayAbbreviationPositionData);
+        partReaderReadNameDisplay(coreAbbreviation, myScorePart.partAbbreviationDisplay(),
+                                  myOutPartData.displayAbbreviation, myOutPartData.displayAbbreviationPrintData,
+                                  myOutPartData.displayAbbreviationPositionData);
     }
     else if (myScorePart.partAbbreviationDisplay().has_value())
     {

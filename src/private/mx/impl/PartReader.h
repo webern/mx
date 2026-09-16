@@ -5,6 +5,7 @@
 #pragma once
 
 #include "mx/api/PartData.h"
+#include "mx/impl/DiagnosticsContext.h"
 #include "mx/impl/MeasureCursor.h"
 
 #include <memory>
@@ -29,7 +30,8 @@ class PartReader
 {
   public:
     PartReader(const core::ScorePart &inScorePart, const core::PartwisePart &inPartwisePartRef,
-               int globalTicksPerMeasure, const core::ScorePartwise &inScore, int inDivisionsValue);
+               int globalTicksPerMeasure, const core::ScorePartwise &inScore, int inDivisionsValue,
+               DiagnosticsContext diagnostics = {});
 
     api::PartData getPartData();
     impl::MeasureCursor getCursor() const;
@@ -43,6 +45,7 @@ class PartReader
     const core::ScorePartwise &myScore;
     int myPartIndex;
     const int myConstructedDivisionsValue;
+    DiagnosticsContext myDiagnostics;
     MeasureCursor myCurrentCursor;
     MeasureCursor myPreviousCursor;
 

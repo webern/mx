@@ -5,6 +5,7 @@
 #include "mx/impl/SpannerResolver.h"
 #include "mx/api/GlissandoData.h"
 #include "mx/impl/OttavaFunctions.h"
+#include "mx/impl/WriteRefusal.h"
 #include "mx/utility/Throw.h"
 
 #include <algorithm>
@@ -52,6 +53,7 @@ struct SpannerNumberEvent
     // The note the event sits on, used to detect spanners that start and stop
     // on one note. Direction events do not belong to a note and carry nullptr.
     const void *noteTag;
+    api::Location location;
 };
 
 // [first, last] positions (inclusive) during which a spanner is open in the
@@ -75,6 +77,7 @@ struct SpannerOttavaEvent
     api::SpannerNumber number;
     api::OttavaType ottavaType;
     bool isStart;
+    api::Location location;
 };
 
 // The bucket an endpoint pairs within, used for ottava sizes and for same-note span detection:
@@ -103,9 +106,30 @@ static std::string spannerPairingKey(const api::SpannerNumber &inNumber)
 class SpannerEventCollector
 {
   public:
+    explicit SpannerEventCollector(int partIndex) : myLocation{}
+    {
+        myLocation.partIndex = partIndex;
+    }
+
+    void setMeasure(int measureIndex)
+    {
+        myLocation.measureIndex = measureIndex;
+    }
+
+    void setStaff(int staffIndex)
+    {
+        myLocation.staffIndex = staffIndex;
+    }
+
+    void setVoice(int voiceIndex)
+    {
+        myLocation.voiceIndex = voiceIndex;
+    }
+
     void addNote(const api::NoteData &inNote)
     {
         myCurrentNoteTag = &inNote;
+        myLocation.tickTimePosition = inNote.tickTimePosition;
 
         // NotationsWriter emits curve stops, then continues, then starts, and
         // skips curves whose type is neither tie nor slur.
@@ -156,6 +180,8 @@ class SpannerEventCollector
     void addDirection(const api::DirectionData &inDirection)
     {
         myCurrentNoteTag = nullptr;
+        myLocation.voiceIndex = inDirection.voice;
+        myLocation.tickTimePosition = inDirection.tickTimePosition;
 
         for (const auto &choice : inDirection.directionTypes)
         {
@@ -172,16 +198,16 @@ class SpannerEventCollector
             case api::DirectionChoice::Kind::ottavaStart: {
                 const auto ottavaStart = choice.ottavaStart();
                 add(SpannerNumberClass::octaveShift, &choice, ottavaStart.spannerStart.number, true, false);
-                myOttavaEvents.push_back(
-                    SpannerOttavaEvent{&choice, ottavaStart.spannerStart.number, ottavaStart.ottavaType, true});
+                myOttavaEvents.push_back(SpannerOttavaEvent{&choice, ottavaStart.spannerStart.number,
+                                                            ottavaStart.ottavaType, true, myLocation});
                 break;
             }
 
             case api::DirectionChoice::Kind::ottavaStop: {
                 const auto ottavaStop = choice.ottavaStop();
                 add(SpannerNumberClass::octaveShift, &choice, ottavaStop.spannerStop.number, false, true);
-                myOttavaEvents.push_back(
-                    SpannerOttavaEvent{&choice, ottavaStop.spannerStop.number, api::OttavaType::unspecified, false});
+                myOttavaEvents.push_back(SpannerOttavaEvent{&choice, ottavaStop.spannerStop.number,
+                                                            api::OttavaType::unspecified, false, myLocation});
                 break;
             }
 
@@ -222,7 +248,7 @@ class SpannerEventCollector
              bool inCloses)
     {
         myEvents[inClass].push_back(
-            SpannerNumberEvent{myPosition, inObject, inNumber, inOpens, inCloses, myCurrentNoteTag});
+            SpannerNumberEvent{myPosition, inObject, inNumber, inOpens, inCloses, myCurrentNoteTag, myLocation});
         ++myPosition;
     }
 
@@ -249,6 +275,7 @@ class SpannerEventCollector
 
     int myPosition = 0;
     const void *myCurrentNoteTag = nullptr;
+    api::Location myLocation;
     std::map<SpannerNumberClass, std::vector<SpannerNumberEvent>> myEvents;
     std::vector<SpannerOttavaEvent> myOttavaEvents;
 };
@@ -322,6 +349,7 @@ static void spannerNumberAssignClass(const std::vector<SpannerNumberEvent> &inEv
     {
         SpannerNumberInterval interval;
         std::vector<const void *> objects;
+        api::Location location;
     };
 
     std::vector<SpannerNumberGroup> groups;
@@ -335,7 +363,8 @@ static void spannerNumberAssignClass(const std::vector<SpannerNumberEvent> &inEv
         const auto found = groupIndexByIdentity.emplace(event.number.identity(), groups.size());
         if (found.second)
         {
-            groups.push_back(SpannerNumberGroup{SpannerNumberInterval{event.position, event.position}, {}});
+            groups.push_back(
+                SpannerNumberGroup{SpannerNumberInterval{event.position, event.position}, {}, event.location});
         }
         auto &group = groups.at(found.first->second);
         group.interval.first = std::min(group.interval.first, event.position);
@@ -368,8 +397,10 @@ static void spannerNumberAssignClass(const std::vector<SpannerNumberEvent> &inEv
         }
         if (chosen == 0)
         {
-            MX_THROW("more than 16 spanners of one type are open at the same point in the serialized "
-                     "stream; MusicXML number attributes only range from 1 to 16");
+            throw WriteRefusal{api::ApiError{
+                api::ResultCode::tooManyElements, group.location,
+                "more than 16 spanners of one type are open at the same point; MusicXML number attributes only "
+                "range from 1 to 16"}};
         }
         occupied[chosen].push_back(group.interval);
         for (const void *object : group.objects)
@@ -384,7 +415,8 @@ static void spannerNumberAssignClass(const std::vector<SpannerNumberEvent> &inEv
 // and closes inside another ottava of the same bucket does not steal the outer line's start. A
 // stop with nothing open is left out of ioResolved and falls back to size 8 at write time.
 static void spannerResolveOttavaSizes(const std::vector<SpannerOttavaEvent> &inEvents,
-                                      std::unordered_map<const void *, int> &ioResolved)
+                                      std::unordered_map<const void *, int> &ioResolved,
+                                      const DiagnosticsContext &diagnostics)
 {
     std::map<std::string, std::vector<api::OttavaType>> openStarts;
 
@@ -398,6 +430,8 @@ static void spannerResolveOttavaSizes(const std::vector<SpannerOttavaEvent> &inE
         }
         if (stack.empty())
         {
+            diagnostics.report(api::Severity::warning, api::DiagnosticCode::unmatchedSpanner, event.location,
+                               "octave-shift stop has no matching start; using size 8");
             continue;
         }
         ioResolved[event.object] = ottavaTypeSize(stack.back());
@@ -453,16 +487,21 @@ static void spannerDetectSameNoteSpans(const std::vector<SpannerNumberEvent> &in
     }
 }
 
-void SpannerResolver::resolvePart(const api::PartData &inPart)
+void SpannerResolver::resolvePart(const api::PartData &inPart, int partIndex, DiagnosticsContext diagnostics)
 {
-    SpannerEventCollector collector;
+    SpannerEventCollector collector{partIndex};
 
+    int measureIndex = 0;
     for (const auto &measure : inPart.measures)
     {
+        collector.setMeasure(measureIndex);
+        int staffIndex = 0;
         for (const auto &staff : measure.staves)
         {
+            collector.setStaff(staffIndex);
             for (const auto &voicePair : staff.voices)
             {
+                collector.setVoice(voicePair.first);
                 for (const auto &note : voicePair.second.notes)
                 {
                     collector.addNote(note);
@@ -472,7 +511,9 @@ void SpannerResolver::resolvePart(const api::PartData &inPart)
             {
                 collector.addDirection(direction);
             }
+            ++staffIndex;
         }
+        ++measureIndex;
     }
 
     for (const auto &classAndEvents : collector.events())
@@ -487,7 +528,7 @@ void SpannerResolver::resolvePart(const api::PartData &inPart)
         }
     }
 
-    spannerResolveOttavaSizes(collector.ottavaEvents(), myOttavaStopSizes);
+    spannerResolveOttavaSizes(collector.ottavaEvents(), myOttavaStopSizes, diagnostics);
 }
 
 std::optional<int> SpannerResolver::emittedNumber(const api::SpannerNumber &inNumber, const void *inObject) const
