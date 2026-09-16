@@ -3,6 +3,7 @@
 #include "mx/core/generated/StaffDetailsGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -37,10 +38,15 @@ void StaffDetailsGroup::setLineDetail(std::vector<LineDetail> value)
 
 StaffDetailsGroup parseStaffDetailsGroup(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseStaffDetailsGroup(el, cursor, ParseContext{});
+}
+
+StaffDetailsGroup parseStaffDetailsGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+{
     StaffDetailsGroup out;
     if (cursorIs(cursor, "staff-lines"))
     {
-        out.setStaffLines(parseInt(childText(cursor)));
+        out.setStaffLines(parseIntegerValue(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -49,7 +55,7 @@ StaffDetailsGroup parseStaffDetailsGroup(pugi::xml_node el, pugi::xml_node &curs
     }
     while (cursorIs(cursor, "line-detail"))
     {
-        out.addLineDetail(parseLineDetail(cursor));
+        out.addLineDetail(parseLineDetail(cursor, context));
         cursor = nextElement(cursor);
     }
     return out;

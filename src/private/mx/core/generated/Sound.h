@@ -27,6 +27,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The sound element contains general playback parameters. They can stand alone within a
 /// part/measure, or be a component element within a direction. Tempo is expressed in quarter notes
 /// per minute. If 0, the sound-generating program should prompt the user at the time of compiling a
@@ -141,7 +143,11 @@ class Sound final
 
 Sound parseSound(pugi::xml_node el);
 
+Sound parseSound(pugi::xml_node el, const ParseContext &context);
+
 void parseSoundContent(Sound &out, pugi::xml_node el);
+
+void parseSoundContent(Sound &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeSound(const Sound &v, pugi::xml_node parent, const char *tag);
 

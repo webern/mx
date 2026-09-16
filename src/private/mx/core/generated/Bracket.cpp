@@ -3,6 +3,7 @@
 #include "mx/core/generated/Bracket.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -142,6 +143,11 @@ void Bracket::setID(std::optional<Token> value)
 
 Bracket parseBracket(pugi::xml_node el)
 {
+    return parseBracket(el, ParseContext{});
+}
+
+Bracket parseBracket(pugi::xml_node el, const ParseContext &context)
+{
     Bracket out;
     bool seen_type = false;
     bool seen_lineEnd = false;
@@ -155,52 +161,52 @@ Bracket parseBracket(pugi::xml_node el)
         if (aname == "type")
         {
             seen_type = true;
-            out.setType(StartStopContinue::parse(a.value()));
+            out.setType(parseValue<StartStopContinue>(a.value(), context, el, "type"));
         }
         else if (aname == "number")
         {
-            out.setNumber(NumberLevel::parse(a.value()));
+            out.setNumber(parseValue<NumberLevel>(a.value(), context, el, "number"));
         }
         else if (aname == "line-end")
         {
             seen_lineEnd = true;
-            out.setLineEnd(LineEnd::parse(a.value()));
+            out.setLineEnd(parseValue<LineEnd>(a.value(), context, el, "line-end"));
         }
         else if (aname == "end-length")
         {
-            out.setEndLength(Tenths::parse(a.value()));
+            out.setEndLength(parseValue<Tenths>(a.value(), context, el, "end-length"));
         }
         else if (aname == "line-type")
         {
-            out.setLineType(LineType::parse(a.value()));
+            out.setLineType(parseValue<LineType>(a.value(), context, el, "line-type"));
         }
         else if (aname == "dash-length")
         {
-            out.setDashLength(Tenths::parse(a.value()));
+            out.setDashLength(parseValue<Tenths>(a.value(), context, el, "dash-length"));
         }
         else if (aname == "space-length")
         {
-            out.setSpaceLength(Tenths::parse(a.value()));
+            out.setSpaceLength(parseValue<Tenths>(a.value(), context, el, "space-length"));
         }
         else if (aname == "default-x")
         {
-            out.setDefaultX(Tenths::parse(a.value()));
+            out.setDefaultX(parseValue<Tenths>(a.value(), context, el, "default-x"));
         }
         else if (aname == "default-y")
         {
-            out.setDefaultY(Tenths::parse(a.value()));
+            out.setDefaultY(parseValue<Tenths>(a.value(), context, el, "default-y"));
         }
         else if (aname == "relative-x")
         {
-            out.setRelativeX(Tenths::parse(a.value()));
+            out.setRelativeX(parseValue<Tenths>(a.value(), context, el, "relative-x"));
         }
         else if (aname == "relative-y")
         {
-            out.setRelativeY(Tenths::parse(a.value()));
+            out.setRelativeY(parseValue<Tenths>(a.value(), context, el, "relative-y"));
         }
         else if (aname == "color")
         {
-            out.setColor(Color::parse(a.value()));
+            out.setColor(parseValue<Color>(a.value(), context, el, "color"));
         }
         else if (aname == "id")
         {
@@ -219,13 +225,19 @@ Bracket parseBracket(pugi::xml_node el)
     {
         throwMissingAttribute(el, "line-end");
     }
-    parseBracketContent(out, el);
+    parseBracketContent(out, el, context);
     return out;
 }
 
 void parseBracketContent(Bracket &out, pugi::xml_node el)
 {
+    parseBracketContent(out, el, ParseContext{});
+}
+
+void parseBracketContent(Bracket &out, pugi::xml_node el, const ParseContext &context)
+{
     (void)out;
+    (void)context;
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

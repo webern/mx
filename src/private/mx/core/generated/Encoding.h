@@ -17,6 +17,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The encoding element contains information about who did the digital encoding, when, with what
 /// software, and in what aspects. Standard type values for the encoder element are music, words, and
 /// arrangement, but other types may be used. The type attribute is only needed when there are
@@ -37,7 +39,11 @@ class Encoding final
 
 Encoding parseEncoding(pugi::xml_node el);
 
+Encoding parseEncoding(pugi::xml_node el, const ParseContext &context);
+
 void parseEncodingContent(Encoding &out, pugi::xml_node el);
+
+void parseEncodingContent(Encoding &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeEncoding(const Encoding &v, pugi::xml_node parent, const char *tag);
 

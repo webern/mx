@@ -67,8 +67,14 @@ bool PedalType::tryParse(std::string_view text, PedalType &out) noexcept
 
 PedalType PedalType::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+PedalType PedalType::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     PedalType v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

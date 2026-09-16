@@ -18,6 +18,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The name-display type is used for exact formatting of multi-font text in part and group names to
 /// the left of the system. The print-object attribute can be used to determine what, if anything, is
 /// printed at the start of each system. Enclosure for the display-text element is none by default.
@@ -41,7 +43,11 @@ class NameDisplay final
 
 NameDisplay parseNameDisplay(pugi::xml_node el);
 
+NameDisplay parseNameDisplay(pugi::xml_node el, const ParseContext &context);
+
 void parseNameDisplayContent(NameDisplay &out, pugi::xml_node el);
+
+void parseNameDisplayContent(NameDisplay &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeNameDisplay(const NameDisplay &v, pugi::xml_node parent, const char *tag);
 

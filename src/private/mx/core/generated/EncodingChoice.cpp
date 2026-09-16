@@ -3,6 +3,7 @@
 #include "mx/core/generated/EncodingChoice.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -42,15 +43,20 @@ EncodingChoice EncodingChoice::supports(Supports value)
 
 EncodingChoice parseEncodingChoice(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseEncodingChoice(el, cursor, ParseContext{});
+}
+
+EncodingChoice parseEncodingChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+{
     if (cursor && (cursorIs(cursor, "encoding-date")))
     {
-        YyyyMmDd value = YyyyMmDd::parse(childText(cursor));
+        YyyyMmDd value = parseValue<YyyyMmDd>(childText(cursor), context, cursor, nullptr);
         cursor = nextElement(cursor);
         return EncodingChoice::encodingDate(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "encoder")))
     {
-        TypedText value = parseTypedText(cursor);
+        TypedText value = parseTypedText(cursor, context);
         cursor = nextElement(cursor);
         return EncodingChoice::encoder(std::move(value));
     }
@@ -68,7 +74,7 @@ EncodingChoice parseEncodingChoice(pugi::xml_node el, pugi::xml_node &cursor)
     }
     if (cursor && (cursorIs(cursor, "supports")))
     {
-        Supports value = parseSupports(cursor);
+        Supports value = parseSupports(cursor, context);
         cursor = nextElement(cursor);
         return EncodingChoice::supports(std::move(value));
     }

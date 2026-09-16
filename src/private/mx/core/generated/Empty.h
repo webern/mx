@@ -10,6 +10,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The empty type represents an empty element with no attributes.
 /// Presence-only marker: the element's only information is whether it
 /// appears. Optional occurrences project to bool fields; choice
@@ -22,7 +24,11 @@ class Empty
 
 Empty parseEmpty(pugi::xml_node el);
 
+Empty parseEmpty(pugi::xml_node el, const ParseContext &context);
+
 void parseEmptyContent(Empty &out, pugi::xml_node el);
+
+void parseEmptyContent(Empty &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeEmpty(const Empty &v, pugi::xml_node parent, const char *tag);
 

@@ -26,6 +26,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The principal-voice type represents principal and secondary voices in a score, either for
 /// analysis or for square bracket symbols that appear in a score. The element content is used for
 /// analysis and may be any text value. The symbol attribute indicates the type of symbol used. When
@@ -86,7 +88,11 @@ class PrincipalVoice final
 
 PrincipalVoice parsePrincipalVoice(pugi::xml_node el);
 
+PrincipalVoice parsePrincipalVoice(pugi::xml_node el, const ParseContext &context);
+
 void parsePrincipalVoiceContent(PrincipalVoice &out, pugi::xml_node el);
+
+void parsePrincipalVoiceContent(PrincipalVoice &out, pugi::xml_node el, const ParseContext &context);
 
 void serializePrincipalVoice(const PrincipalVoice &v, pugi::xml_node parent, const char *tag);
 

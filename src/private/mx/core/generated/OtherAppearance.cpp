@@ -3,6 +3,7 @@
 #include "mx/core/generated/OtherAppearance.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -32,6 +33,11 @@ void OtherAppearance::setValue(std::string value)
 
 OtherAppearance parseOtherAppearance(pugi::xml_node el)
 {
+    return parseOtherAppearance(el, ParseContext{});
+}
+
+OtherAppearance parseOtherAppearance(pugi::xml_node el, const ParseContext &context)
+{
     OtherAppearance out;
     bool seen_type = false;
     for (pugi::xml_attribute a : el.attributes())
@@ -55,11 +61,16 @@ OtherAppearance parseOtherAppearance(pugi::xml_node el)
     {
         throwMissingAttribute(el, "type");
     }
-    parseOtherAppearanceContent(out, el);
+    parseOtherAppearanceContent(out, el, context);
     return out;
 }
 
 void parseOtherAppearanceContent(OtherAppearance &out, pugi::xml_node el)
+{
+    parseOtherAppearanceContent(out, el, ParseContext{});
+}
+
+void parseOtherAppearanceContent(OtherAppearance &out, pugi::xml_node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))

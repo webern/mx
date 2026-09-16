@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "mx/core/Lexical.h"
+
 #include <cassert>
 #include <string>
 #include <string_view>
@@ -64,6 +66,10 @@ class PositiveIntegerOrEmpty final
     /// Lenient: unparseable text falls back to the first member's lenient
     /// parse (never produces an invalid value).
     static PositiveIntegerOrEmpty parse(std::string_view text);
+
+    /// Lenient, and says whether no member matched or a matched number was
+    /// clamped.
+    static PositiveIntegerOrEmpty parse(std::string_view text, ValueParseOutcome &outcome);
 
     bool operator==(const PositiveIntegerOrEmpty &other) const = default;
 

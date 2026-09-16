@@ -3,6 +3,7 @@
 #include "mx/core/generated/Backup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -32,6 +33,11 @@ void Backup::setEditorial(EditorialGroup value)
 
 Backup parseBackup(pugi::xml_node el)
 {
+    return parseBackup(el, ParseContext{});
+}
+
+Backup parseBackup(pugi::xml_node el, const ParseContext &context)
+{
     Backup out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -42,16 +48,21 @@ Backup parseBackup(pugi::xml_node el)
         }
         throwUnknownAttribute(el, a.name());
     }
-    parseBackupContent(out, el);
+    parseBackupContent(out, el, context);
     return out;
 }
 
 void parseBackupContent(Backup &out, pugi::xml_node el)
 {
+    parseBackupContent(out, el, ParseContext{});
+}
+
+void parseBackupContent(Backup &out, pugi::xml_node el, const ParseContext &context)
+{
     pugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "duration"))
     {
-        out.setDuration(PositiveDivisions::parse(childText(cursor)));
+        out.setDuration(parseValue<PositiveDivisions>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -60,7 +71,7 @@ void parseBackupContent(Backup &out, pugi::xml_node el)
     }
     if (cursor && (cursorIs(cursor, "footnote") || cursorIs(cursor, "level")))
     {
-        out.setEditorial(parseEditorialGroup(el, cursor));
+        out.setEditorial(parseEditorialGroup(el, cursor, context));
     }
     if (cursor)
     {

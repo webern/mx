@@ -19,6 +19,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// Technical indications give performance information for individual instruments.
 /// Content fields mirror the schema grammar in declaration order; the
 /// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
@@ -39,7 +41,11 @@ class Technical final
 
 Technical parseTechnical(pugi::xml_node el);
 
+Technical parseTechnical(pugi::xml_node el, const ParseContext &context);
+
 void parseTechnicalContent(Technical &out, pugi::xml_node el);
+
+void parseTechnicalContent(Technical &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeTechnical(const Technical &v, pugi::xml_node parent, const char *tag);
 

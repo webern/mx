@@ -15,6 +15,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The double type indicates that the music is doubled one octave from what is currently written. If
 /// the above attribute is set to yes, the doubling is one octave above what is written, as for mixed
 /// flute / piccolo parts in band literature. Otherwise the doubling is one octave below what is
@@ -32,7 +34,11 @@ class Double final
 
 Double parseDouble(pugi::xml_node el);
 
+Double parseDouble(pugi::xml_node el, const ParseContext &context);
+
 void parseDoubleContent(Double &out, pugi::xml_node el);
+
+void parseDoubleContent(Double &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeDouble(const Double &v, pugi::xml_node parent, const char *tag);
 

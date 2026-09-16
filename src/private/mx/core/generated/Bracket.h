@@ -22,6 +22,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// Brackets are combined with words in a variety of modern directions. The line-end attribute
 /// specifies if there is a jog up or down (or both), an arrow, or nothing at the start or end of the
 /// bracket. If the line-end is up or down, the length of the jog can be specified using the
@@ -75,7 +77,11 @@ class Bracket final
 
 Bracket parseBracket(pugi::xml_node el);
 
+Bracket parseBracket(pugi::xml_node el, const ParseContext &context);
+
 void parseBracketContent(Bracket &out, pugi::xml_node el);
+
+void parseBracketContent(Bracket &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeBracket(const Bracket &v, pugi::xml_node parent, const char *tag);
 

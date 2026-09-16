@@ -3,6 +3,7 @@
 #include "mx/core/generated/Interchangeable.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -57,6 +58,11 @@ void Interchangeable::setTimeSignature(OneOrMore<TimeSignatureGroup> value)
 
 Interchangeable parseInterchangeable(pugi::xml_node el)
 {
+    return parseInterchangeable(el, ParseContext{});
+}
+
+Interchangeable parseInterchangeable(pugi::xml_node el, const ParseContext &context)
+{
     Interchangeable out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -67,37 +73,42 @@ Interchangeable parseInterchangeable(pugi::xml_node el)
         }
         if (aname == "symbol")
         {
-            out.setSymbol(TimeSymbol::parse(a.value()));
+            out.setSymbol(parseValue<TimeSymbol>(a.value(), context, el, "symbol"));
         }
         else if (aname == "separator")
         {
-            out.setSeparator(TimeSeparator::parse(a.value()));
+            out.setSeparator(parseValue<TimeSeparator>(a.value(), context, el, "separator"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseInterchangeableContent(out, el);
+    parseInterchangeableContent(out, el, context);
     return out;
 }
 
 void parseInterchangeableContent(Interchangeable &out, pugi::xml_node el)
 {
+    parseInterchangeableContent(out, el, ParseContext{});
+}
+
+void parseInterchangeableContent(Interchangeable &out, pugi::xml_node el, const ParseContext &context)
+{
     pugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "time-relation"))
     {
-        out.setTimeRelation(TimeRelation::parse(childText(cursor)));
+        out.setTimeRelation(parseValue<TimeRelation>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     if (!(cursor && (cursorIs(cursor, "beats"))))
     {
         throwMissingElement(el, "beats");
     }
-    out.setTimeSignature(OneOrMore<TimeSignatureGroup>{parseTimeSignatureGroup(el, cursor)});
+    out.setTimeSignature(OneOrMore<TimeSignatureGroup>{parseTimeSignatureGroup(el, cursor, context)});
     while (cursor && (cursorIs(cursor, "beats")))
     {
-        out.addTimeSignature(parseTimeSignatureGroup(el, cursor));
+        out.addTimeSignature(parseTimeSignatureGroup(el, cursor, context));
     }
     if (cursor)
     {

@@ -24,6 +24,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The harmon-mute type represents the symbols used for harmon mutes in brass notation.
 /// Content fields mirror the schema grammar in declaration order; the
 /// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
@@ -70,7 +72,11 @@ class HarmonMute final
 
 HarmonMute parseHarmonMute(pugi::xml_node el);
 
+HarmonMute parseHarmonMute(pugi::xml_node el, const ParseContext &context);
+
 void parseHarmonMuteContent(HarmonMute &out, pugi::xml_node el);
+
+void parseHarmonMuteContent(HarmonMute &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeHarmonMute(const HarmonMute &v, pugi::xml_node parent, const char *tag);
 

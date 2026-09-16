@@ -23,6 +23,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// A schema choice (synthesized from an anonymous particle
 /// of the schema): exactly one alternative by construction.
 /// Alternatives are positional; dispatch is by Kind/index, never by type
@@ -270,6 +272,8 @@ class OrnamentsGroupChoice final
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
 OrnamentsGroupChoice parseOrnamentsGroupChoice(pugi::xml_node el, pugi::xml_node &cursor);
+
+OrnamentsGroupChoice parseOrnamentsGroupChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeOrnamentsGroupChoice(const OrnamentsGroupChoice &v, pugi::xml_node el);
 

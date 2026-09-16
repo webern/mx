@@ -103,8 +103,14 @@ bool NoteTypeValue::tryParse(std::string_view text, NoteTypeValue &out) noexcept
 
 NoteTypeValue NoteTypeValue::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+NoteTypeValue NoteTypeValue::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     NoteTypeValue v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

@@ -3,6 +3,7 @@
 #include "mx/core/generated/MetronomeChoice.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -27,13 +28,18 @@ MetronomeChoice MetronomeChoice::group2(MetronomeChoiceGroup2 value)
 
 MetronomeChoice parseMetronomeChoice(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseMetronomeChoice(el, cursor, ParseContext{});
+}
+
+MetronomeChoice parseMetronomeChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+{
     if (cursor && (cursorIs(cursor, "beat-unit")))
     {
-        return MetronomeChoice::group(parseMetronomeChoiceGroup(el, cursor));
+        return MetronomeChoice::group(parseMetronomeChoiceGroup(el, cursor, context));
     }
     if (cursor && (cursorIs(cursor, "metronome-arrows") || cursorIs(cursor, "metronome-note")))
     {
-        return MetronomeChoice::group2(parseMetronomeChoiceGroup2(el, cursor));
+        return MetronomeChoice::group2(parseMetronomeChoiceGroup2(el, cursor, context));
     }
     if (cursor)
     {

@@ -17,6 +17,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// Stems can be down, up, none, or double. For down and up stems, the position attributes can be
 /// used to specify stem length. The relative values specify the end of the stem relative to the
 /// program default. Default values specify an absolute end stem position. Negative values of
@@ -50,7 +52,11 @@ class Stem final
 
 Stem parseStem(pugi::xml_node el);
 
+Stem parseStem(pugi::xml_node el, const ParseContext &context);
+
 void parseStemContent(Stem &out, pugi::xml_node el);
+
+void parseStemContent(Stem &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeStem(const Stem &v, pugi::xml_node parent, const char *tag);
 

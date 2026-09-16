@@ -141,8 +141,14 @@ bool WoodValue::tryParse(std::string_view text, WoodValue &out) noexcept
 
 WoodValue WoodValue::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+WoodValue WoodValue::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     WoodValue v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

@@ -3,6 +3,7 @@
 #include "mx/core/generated/FullNoteGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -32,16 +33,21 @@ void FullNoteGroup::setChoice(FullNoteGroupChoice value)
 
 FullNoteGroup parseFullNoteGroup(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseFullNoteGroup(el, cursor, ParseContext{});
+}
+
+FullNoteGroup parseFullNoteGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+{
     FullNoteGroup out;
     if (cursorIs(cursor, "chord"))
     {
-        parseEmpty(cursor);
+        parseEmpty(cursor, context);
         out.setChord(true);
         cursor = nextElement(cursor);
     }
     if (cursor && (cursorIs(cursor, "pitch") || cursorIs(cursor, "unpitched") || cursorIs(cursor, "rest")))
     {
-        out.setChoice(parseFullNoteGroupChoice(el, cursor));
+        out.setChoice(parseFullNoteGroupChoice(el, cursor, context));
     }
     else
     {

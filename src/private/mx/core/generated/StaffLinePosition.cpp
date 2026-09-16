@@ -34,20 +34,33 @@ std::string StaffLinePosition::toString() const
 
 bool StaffLinePosition::tryParse(std::string_view text, StaffLinePosition &out)
 {
-    int v{};
-    if (!tryParseInt(text, v))
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    StaffLinePosition parsed = parse(text, outcome);
+    if (outcome == ValueParseOutcome::invalid)
     {
         return false;
     }
-    out = StaffLinePosition{v};
+    out = std::move(parsed);
     return true;
 }
 
 StaffLinePosition StaffLinePosition::parse(std::string_view text)
 {
-    StaffLinePosition v;
-    tryParse(text, v);
-    return v;
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+StaffLinePosition StaffLinePosition::parse(std::string_view text, ValueParseOutcome &outcome)
+{
+    int v{};
+    if (!tryParseInt(text, v))
+    {
+        outcome = ValueParseOutcome::invalid;
+        return StaffLinePosition{};
+    }
+    StaffLinePosition out{v};
+    outcome = out.value() == v ? ValueParseOutcome::valid : ValueParseOutcome::adjusted;
+    return out;
 }
 
 } // namespace mx::core

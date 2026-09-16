@@ -19,6 +19,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The image type is used to include graphical images in a score.
 class Image final
 {
@@ -63,7 +65,11 @@ class Image final
 
 Image parseImage(pugi::xml_node el);
 
+Image parseImage(pugi::xml_node el, const ParseContext &context);
+
 void parseImageContent(Image &out, pugi::xml_node el);
+
+void parseImageContent(Image &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeImage(const Image &v, pugi::xml_node parent, const char *tag);
 

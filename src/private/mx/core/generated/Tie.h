@@ -16,6 +16,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The tie element indicates that a tie begins or ends with this note. If the tie element applies
 /// only particular times through a repeat, the time-only attribute indicates which times to apply
 /// it. The tie element indicates sound; the tied element indicates notation.
@@ -35,7 +37,11 @@ class Tie final
 
 Tie parseTie(pugi::xml_node el);
 
+Tie parseTie(pugi::xml_node el, const ParseContext &context);
+
 void parseTieContent(Tie &out, pugi::xml_node el);
+
+void parseTieContent(Tie &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeTie(const Tie &v, pugi::xml_node parent, const char *tag);
 

@@ -20,6 +20,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 class Directive final
 {
   public:
@@ -63,7 +65,11 @@ class Directive final
 
 Directive parseDirective(pugi::xml_node el);
 
+Directive parseDirective(pugi::xml_node el, const ParseContext &context);
+
 void parseDirectiveContent(Directive &out, pugi::xml_node el);
+
+void parseDirectiveContent(Directive &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeDirective(const Directive &v, pugi::xml_node parent, const char *tag);
 

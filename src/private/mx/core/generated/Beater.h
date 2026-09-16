@@ -16,6 +16,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The beater type represents pictograms for beaters, mallets, and sticks that do not have different
 /// materials represented in the pictogram.
 class Beater final
@@ -34,7 +36,11 @@ class Beater final
 
 Beater parseBeater(pugi::xml_node el);
 
+Beater parseBeater(pugi::xml_node el, const ParseContext &context);
+
 void parseBeaterContent(Beater &out, pugi::xml_node el);
+
+void parseBeaterContent(Beater &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeBeater(const Beater &v, pugi::xml_node parent, const char *tag);
 

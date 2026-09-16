@@ -3,6 +3,7 @@
 #include "mx/core/generated/Defaults.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -102,6 +103,11 @@ void Defaults::setLyricLanguage(std::vector<LyricLanguage> value)
 
 Defaults parseDefaults(pugi::xml_node el)
 {
+    return parseDefaults(el, ParseContext{});
+}
+
+Defaults parseDefaults(pugi::xml_node el, const ParseContext &context)
+{
     Defaults out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -112,52 +118,57 @@ Defaults parseDefaults(pugi::xml_node el)
         }
         throwUnknownAttribute(el, a.name());
     }
-    parseDefaultsContent(out, el);
+    parseDefaultsContent(out, el, context);
     return out;
 }
 
 void parseDefaultsContent(Defaults &out, pugi::xml_node el)
 {
+    parseDefaultsContent(out, el, ParseContext{});
+}
+
+void parseDefaultsContent(Defaults &out, pugi::xml_node el, const ParseContext &context)
+{
     pugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "scaling"))
     {
-        out.setScaling(parseScaling(cursor));
+        out.setScaling(parseScaling(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "concert-score"))
     {
-        parseEmpty(cursor);
+        parseEmpty(cursor, context);
         out.setConcertScore(true);
         cursor = nextElement(cursor);
     }
     if (cursor &&
         (cursorIs(cursor, "page-layout") || cursorIs(cursor, "system-layout") || cursorIs(cursor, "staff-layout")))
     {
-        out.setLayout(parseLayoutGroup(el, cursor));
+        out.setLayout(parseLayoutGroup(el, cursor, context));
     }
     if (cursorIs(cursor, "appearance"))
     {
-        out.setAppearance(parseAppearance(cursor));
+        out.setAppearance(parseAppearance(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "music-font"))
     {
-        out.setMusicFont(parseEmptyFont(cursor));
+        out.setMusicFont(parseEmptyFont(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "word-font"))
     {
-        out.setWordFont(parseEmptyFont(cursor));
+        out.setWordFont(parseEmptyFont(cursor, context));
         cursor = nextElement(cursor);
     }
     while (cursorIs(cursor, "lyric-font"))
     {
-        out.addLyricFont(parseLyricFont(cursor));
+        out.addLyricFont(parseLyricFont(cursor, context));
         cursor = nextElement(cursor);
     }
     while (cursorIs(cursor, "lyric-language"))
     {
-        out.addLyricLanguage(parseLyricLanguage(cursor));
+        out.addLyricLanguage(parseLyricLanguage(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor)

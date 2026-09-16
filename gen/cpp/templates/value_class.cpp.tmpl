@@ -3,6 +3,7 @@
 #include "mx/core/generated/{{name.pascal}}.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -25,16 +26,26 @@ void {{type.ident}}::set{{name.pascal}}({{type_ref.ident}} value)
 {{/value}}
 {{ident}} parse{{ident}}(pugi::xml_node el)
 {
+    return parse{{ident}}(el, ParseContext{});
+}
+
+{{ident}} parse{{ident}}(pugi::xml_node el, const ParseContext &context)
+{
     {{ident}} out;
 {{>attributes_parse}}
-    parse{{ident}}Content(out, el);
+    parse{{ident}}Content(out, el, context);
     return out;
 }
 
 void parse{{ident}}Content({{ident}} &out, pugi::xml_node el)
 {
+    parse{{ident}}Content(out, el, ParseContext{});
+}
+
+void parse{{ident}}Content({{ident}} &out, pugi::xml_node el, const ParseContext &context)
+{
 {{#value}}
-    out.set{{name.pascal}}({{#type_ref.is_value}}{{type_ref.ident}}::parse(childText(el)){{/type_ref.is_value}}{{#type_ref.is_primitive_string}}std::string{childText(el)}{{/type_ref.is_primitive_string}}{{#type_ref.is_primitive_integer}}parseInt(childText(el)){{/type_ref.is_primitive_integer}}{{#type_ref.is_primitive_decimal}}Decimal::parse(childText(el)){{/type_ref.is_primitive_decimal}});
+    out.set{{name.pascal}}({{#type_ref.is_value}}parseValue<{{type_ref.ident}}>(childText(el), context, el, nullptr){{/type_ref.is_value}}{{#type_ref.is_primitive_string}}std::string{childText(el)}{{/type_ref.is_primitive_string}}{{#type_ref.is_primitive_integer}}parseIntegerValue(childText(el), context, el, nullptr){{/type_ref.is_primitive_integer}}{{#type_ref.is_primitive_decimal}}parseDecimalValue(childText(el), context, el, nullptr){{/type_ref.is_primitive_decimal}});
 {{/value}}
     if (firstElement(el))
     {

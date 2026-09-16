@@ -62,8 +62,14 @@ bool TimeRelation::tryParse(std::string_view text, TimeRelation &out) noexcept
 
 TimeRelation TimeRelation::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+TimeRelation TimeRelation::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     TimeRelation v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

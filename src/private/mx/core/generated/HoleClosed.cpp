@@ -3,6 +3,7 @@
 #include "mx/core/generated/HoleClosed.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -32,6 +33,11 @@ void HoleClosed::setValue(HoleClosedValue value)
 
 HoleClosed parseHoleClosed(pugi::xml_node el)
 {
+    return parseHoleClosed(el, ParseContext{});
+}
+
+HoleClosed parseHoleClosed(pugi::xml_node el, const ParseContext &context)
+{
     HoleClosed out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -42,20 +48,25 @@ HoleClosed parseHoleClosed(pugi::xml_node el)
         }
         if (aname == "location")
         {
-            out.setLocation(HoleClosedLocation::parse(a.value()));
+            out.setLocation(parseValue<HoleClosedLocation>(a.value(), context, el, "location"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseHoleClosedContent(out, el);
+    parseHoleClosedContent(out, el, context);
     return out;
 }
 
 void parseHoleClosedContent(HoleClosed &out, pugi::xml_node el)
 {
-    out.setValue(HoleClosedValue::parse(childText(el)));
+    parseHoleClosedContent(out, el, ParseContext{});
+}
+
+void parseHoleClosedContent(HoleClosed &out, pugi::xml_node el, const ParseContext &context)
+{
+    out.setValue(parseValue<HoleClosedValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

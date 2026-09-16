@@ -3,6 +3,7 @@
 #include "mx/core/generated/LyricChoice.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -37,25 +38,30 @@ LyricChoice LyricChoice::humming(Empty value)
 
 LyricChoice parseLyricChoice(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseLyricChoice(el, cursor, ParseContext{});
+}
+
+LyricChoice parseLyricChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+{
     if (cursor && (cursorIs(cursor, "syllabic") || cursorIs(cursor, "text")))
     {
-        return LyricChoice::lyricTextGroup(parseLyricTextGroup(el, cursor));
+        return LyricChoice::lyricTextGroup(parseLyricTextGroup(el, cursor, context));
     }
     if (cursor && (cursorIs(cursor, "extend")))
     {
-        Extend value = parseExtend(cursor);
+        Extend value = parseExtend(cursor, context);
         cursor = nextElement(cursor);
         return LyricChoice::extend(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "laughing")))
     {
-        Empty value = parseEmpty(cursor);
+        Empty value = parseEmpty(cursor, context);
         cursor = nextElement(cursor);
         return LyricChoice::laughing(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "humming")))
     {
-        Empty value = parseEmpty(cursor);
+        Empty value = parseEmpty(cursor, context);
         cursor = nextElement(cursor);
         return LyricChoice::humming(std::move(value));
     }

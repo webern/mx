@@ -32,6 +32,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The figured-bass element represents figured bass notation. Figured bass elements take their
 /// position from the first regular note (not a grace note or chord note) that follows in score
 /// order. The optional duration element is used to indicate changes of figures under a note. Figures
@@ -112,7 +114,11 @@ class FiguredBass final
 
 FiguredBass parseFiguredBass(pugi::xml_node el);
 
+FiguredBass parseFiguredBass(pugi::xml_node el, const ParseContext &context);
+
 void parseFiguredBassContent(FiguredBass &out, pugi::xml_node el);
+
+void parseFiguredBassContent(FiguredBass &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeFiguredBass(const FiguredBass &v, pugi::xml_node parent, const char *tag);
 

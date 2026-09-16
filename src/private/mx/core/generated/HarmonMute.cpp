@@ -3,6 +3,7 @@
 #include "mx/core/generated/HarmonMute.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -122,6 +123,11 @@ void HarmonMute::setHarmonClosed(HarmonClosed value)
 
 HarmonMute parseHarmonMute(pugi::xml_node el)
 {
+    return parseHarmonMute(el, ParseContext{});
+}
+
+HarmonMute parseHarmonMute(pugi::xml_node el, const ParseContext &context)
+{
     HarmonMute out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -132,59 +138,64 @@ HarmonMute parseHarmonMute(pugi::xml_node el)
         }
         if (aname == "default-x")
         {
-            out.setDefaultX(Tenths::parse(a.value()));
+            out.setDefaultX(parseValue<Tenths>(a.value(), context, el, "default-x"));
         }
         else if (aname == "default-y")
         {
-            out.setDefaultY(Tenths::parse(a.value()));
+            out.setDefaultY(parseValue<Tenths>(a.value(), context, el, "default-y"));
         }
         else if (aname == "relative-x")
         {
-            out.setRelativeX(Tenths::parse(a.value()));
+            out.setRelativeX(parseValue<Tenths>(a.value(), context, el, "relative-x"));
         }
         else if (aname == "relative-y")
         {
-            out.setRelativeY(Tenths::parse(a.value()));
+            out.setRelativeY(parseValue<Tenths>(a.value(), context, el, "relative-y"));
         }
         else if (aname == "font-family")
         {
-            out.setFontFamily(FontFamily::parse(a.value()));
+            out.setFontFamily(parseValue<FontFamily>(a.value(), context, el, "font-family"));
         }
         else if (aname == "font-style")
         {
-            out.setFontStyle(FontStyle::parse(a.value()));
+            out.setFontStyle(parseValue<FontStyle>(a.value(), context, el, "font-style"));
         }
         else if (aname == "font-size")
         {
-            out.setFontSize(FontSize::parse(a.value()));
+            out.setFontSize(parseValue<FontSize>(a.value(), context, el, "font-size"));
         }
         else if (aname == "font-weight")
         {
-            out.setFontWeight(FontWeight::parse(a.value()));
+            out.setFontWeight(parseValue<FontWeight>(a.value(), context, el, "font-weight"));
         }
         else if (aname == "color")
         {
-            out.setColor(Color::parse(a.value()));
+            out.setColor(parseValue<Color>(a.value(), context, el, "color"));
         }
         else if (aname == "placement")
         {
-            out.setPlacement(AboveBelow::parse(a.value()));
+            out.setPlacement(parseValue<AboveBelow>(a.value(), context, el, "placement"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseHarmonMuteContent(out, el);
+    parseHarmonMuteContent(out, el, context);
     return out;
 }
 
 void parseHarmonMuteContent(HarmonMute &out, pugi::xml_node el)
 {
+    parseHarmonMuteContent(out, el, ParseContext{});
+}
+
+void parseHarmonMuteContent(HarmonMute &out, pugi::xml_node el, const ParseContext &context)
+{
     pugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "harmon-closed"))
     {
-        out.setHarmonClosed(parseHarmonClosed(cursor));
+        out.setHarmonClosed(parseHarmonClosed(cursor, context));
         cursor = nextElement(cursor);
     }
     else

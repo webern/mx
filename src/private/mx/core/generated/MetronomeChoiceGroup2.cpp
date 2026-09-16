@@ -3,6 +3,7 @@
 #include "mx/core/generated/MetronomeChoiceGroup2.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -47,10 +48,15 @@ void MetronomeChoiceGroup2::setGroup(std::optional<MetronomeChoiceGroup2Group> v
 
 MetronomeChoiceGroup2 parseMetronomeChoiceGroup2(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseMetronomeChoiceGroup2(el, cursor, ParseContext{});
+}
+
+MetronomeChoiceGroup2 parseMetronomeChoiceGroup2(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+{
     MetronomeChoiceGroup2 out;
     if (cursorIs(cursor, "metronome-arrows"))
     {
-        parseEmpty(cursor);
+        parseEmpty(cursor, context);
         out.setMetronomeArrows(true);
         cursor = nextElement(cursor);
     }
@@ -58,16 +64,16 @@ MetronomeChoiceGroup2 parseMetronomeChoiceGroup2(pugi::xml_node el, pugi::xml_no
     {
         throwMissingOrMisplaced(el, cursor, "metronome-note");
     }
-    out.setMetronomeNote(OneOrMore<MetronomeNote>{parseMetronomeNote(cursor)});
+    out.setMetronomeNote(OneOrMore<MetronomeNote>{parseMetronomeNote(cursor, context)});
     cursor = nextElement(cursor);
     while (cursorIs(cursor, "metronome-note"))
     {
-        out.addMetronomeNote(parseMetronomeNote(cursor));
+        out.addMetronomeNote(parseMetronomeNote(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor && (cursorIs(cursor, "metronome-relation")))
     {
-        out.setGroup(parseMetronomeChoiceGroup2Group(el, cursor));
+        out.setGroup(parseMetronomeChoiceGroup2Group(el, cursor, context));
     }
     return out;
 }

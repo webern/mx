@@ -3,6 +3,7 @@
 #include "mx/core/generated/TimeSignatureGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -31,6 +32,11 @@ void TimeSignatureGroup::setBeatType(std::string value)
 }
 
 TimeSignatureGroup parseTimeSignatureGroup(pugi::xml_node el, pugi::xml_node &cursor)
+{
+    return parseTimeSignatureGroup(el, cursor, ParseContext{});
+}
+
+TimeSignatureGroup parseTimeSignatureGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     TimeSignatureGroup out;
     if (cursorIs(cursor, "beats"))

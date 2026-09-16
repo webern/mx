@@ -223,8 +223,14 @@ bool MetalValue::tryParse(std::string_view text, MetalValue &out) noexcept
 
 MetalValue MetalValue::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+MetalValue MetalValue::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     MetalValue v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

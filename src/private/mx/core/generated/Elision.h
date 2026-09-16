@@ -20,6 +20,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The elision type represents an elision between lyric syllables. The text content specifies the
 /// symbol used to display the elision. Common values are a no-break space (Unicode 00A0), an
 /// underscore (Unicode 005F), or an undertie (Unicode 203F). If the text content is empty, the smufl
@@ -58,7 +60,11 @@ class Elision final
 
 Elision parseElision(pugi::xml_node el);
 
+Elision parseElision(pugi::xml_node el, const ParseContext &context);
+
 void parseElisionContent(Elision &out, pugi::xml_node el);
+
+void parseElisionContent(Elision &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeElision(const Elision &v, pugi::xml_node parent, const char *tag);
 

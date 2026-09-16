@@ -16,6 +16,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The hole-closed type represents whether the hole is closed, open, or half-open. The optional
 /// location attribute indicates which portion of the hole is filled in when the element value is
 /// half.
@@ -35,7 +37,11 @@ class HoleClosed final
 
 HoleClosed parseHoleClosed(pugi::xml_node el);
 
+HoleClosed parseHoleClosed(pugi::xml_node el, const ParseContext &context);
+
 void parseHoleClosedContent(HoleClosed &out, pugi::xml_node el);
+
+void parseHoleClosedContent(HoleClosed &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeHoleClosed(const HoleClosed &v, pugi::xml_node parent, const char *tag);
 

@@ -3,6 +3,7 @@
 #include "mx/core/generated/OtherListening.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -52,6 +53,11 @@ void OtherListening::setValue(std::string value)
 
 OtherListening parseOtherListening(pugi::xml_node el)
 {
+    return parseOtherListening(el, ParseContext{});
+}
+
+OtherListening parseOtherListening(pugi::xml_node el, const ParseContext &context)
+{
     OtherListening out;
     bool seen_type = false;
     for (pugi::xml_attribute a : el.attributes())
@@ -72,7 +78,7 @@ OtherListening parseOtherListening(pugi::xml_node el)
         }
         else if (aname == "time-only")
         {
-            out.setTimeOnly(TimeOnly::parse(a.value()));
+            out.setTimeOnly(parseValue<TimeOnly>(a.value(), context, el, "time-only"));
         }
         else
         {
@@ -83,11 +89,16 @@ OtherListening parseOtherListening(pugi::xml_node el)
     {
         throwMissingAttribute(el, "type");
     }
-    parseOtherListeningContent(out, el);
+    parseOtherListeningContent(out, el, context);
     return out;
 }
 
 void parseOtherListeningContent(OtherListening &out, pugi::xml_node el)
+{
+    parseOtherListeningContent(out, el, ParseContext{});
+}
+
+void parseOtherListeningContent(OtherListening &out, pugi::xml_node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))

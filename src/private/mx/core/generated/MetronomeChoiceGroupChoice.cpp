@@ -3,6 +3,7 @@
 #include "mx/core/generated/MetronomeChoiceGroupChoice.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -27,15 +28,21 @@ MetronomeChoiceGroupChoice MetronomeChoiceGroupChoice::group(MetronomeChoiceGrou
 
 MetronomeChoiceGroupChoice parseMetronomeChoiceGroupChoice(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseMetronomeChoiceGroupChoice(el, cursor, ParseContext{});
+}
+
+MetronomeChoiceGroupChoice parseMetronomeChoiceGroupChoice(pugi::xml_node el, pugi::xml_node &cursor,
+                                                           const ParseContext &context)
+{
     if (cursor && (cursorIs(cursor, "per-minute")))
     {
-        PerMinute value = parsePerMinute(cursor);
+        PerMinute value = parsePerMinute(cursor, context);
         cursor = nextElement(cursor);
         return MetronomeChoiceGroupChoice::perMinute(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "beat-unit")))
     {
-        return MetronomeChoiceGroupChoice::group(parseMetronomeChoiceGroupChoiceGroup(el, cursor));
+        return MetronomeChoiceGroupChoice::group(parseMetronomeChoiceGroupChoiceGroup(el, cursor, context));
     }
     if (cursor)
     {

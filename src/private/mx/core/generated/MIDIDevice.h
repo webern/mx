@@ -17,6 +17,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The midi-device type corresponds to the DeviceName meta event in Standard MIDI Files. The
 /// optional port attribute is a number from 1 to 16 that can be used with the unofficial MIDI 1.0
 /// port (or cable) meta event. Unlike the DeviceName meta event, there can be multiple midi-device
@@ -42,7 +44,11 @@ class MIDIDevice final
 
 MIDIDevice parseMIDIDevice(pugi::xml_node el);
 
+MIDIDevice parseMIDIDevice(pugi::xml_node el, const ParseContext &context);
+
 void parseMIDIDeviceContent(MIDIDevice &out, pugi::xml_node el);
+
+void parseMIDIDeviceContent(MIDIDevice &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeMIDIDevice(const MIDIDevice &v, pugi::xml_node parent, const char *tag);
 

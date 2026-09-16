@@ -13,6 +13,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// If a program has other metadata not yet supported in the MusicXML format, each type of metadata
 /// can go in a miscellaneous-field element. The required name attribute indicates the type of
 /// metadata the element content represents.
@@ -32,7 +34,11 @@ class MiscellaneousField final
 
 MiscellaneousField parseMiscellaneousField(pugi::xml_node el);
 
+MiscellaneousField parseMiscellaneousField(pugi::xml_node el, const ParseContext &context);
+
 void parseMiscellaneousFieldContent(MiscellaneousField &out, pugi::xml_node el);
+
+void parseMiscellaneousFieldContent(MiscellaneousField &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeMiscellaneousField(const MiscellaneousField &v, pugi::xml_node parent, const char *tag);
 

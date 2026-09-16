@@ -16,6 +16,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The heel and toe elements are used with organ pedals. The substitution value is "no" if the
 /// attribute is not present.
 /// The schema's complexContent extension: non-polymorphic public
@@ -32,6 +34,8 @@ class HeelToe : public EmptyPlacement
 };
 
 HeelToe parseHeelToe(pugi::xml_node el);
+
+HeelToe parseHeelToe(pugi::xml_node el, const ParseContext &context);
 
 void serializeHeelToe(const HeelToe &v, pugi::xml_node parent, const char *tag);
 

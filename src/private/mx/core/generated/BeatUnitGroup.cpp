@@ -3,6 +3,7 @@
 #include "mx/core/generated/BeatUnitGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -37,10 +38,15 @@ void BeatUnitGroup::setBeatUnitDot(std::vector<Empty> value)
 
 BeatUnitGroup parseBeatUnitGroup(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseBeatUnitGroup(el, cursor, ParseContext{});
+}
+
+BeatUnitGroup parseBeatUnitGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+{
     BeatUnitGroup out;
     if (cursorIs(cursor, "beat-unit"))
     {
-        out.setBeatUnit(NoteTypeValue::parse(childText(cursor)));
+        out.setBeatUnit(parseValue<NoteTypeValue>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -49,7 +55,7 @@ BeatUnitGroup parseBeatUnitGroup(pugi::xml_node el, pugi::xml_node &cursor)
     }
     while (cursorIs(cursor, "beat-unit-dot"))
     {
-        out.addBeatUnitDot(parseEmpty(cursor));
+        out.addBeatUnitDot(parseEmpty(cursor, context));
         cursor = nextElement(cursor);
     }
     return out;

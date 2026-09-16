@@ -3,6 +3,7 @@
 #pragma once
 
 #include "mx/core/Decimal.h"
+#include "mx/core/Lexical.h"
 
 #include <string>
 #include <string_view>
@@ -36,6 +37,9 @@ class PositiveDivisions final
 
     /// Lenient: non-numeric text yields the clamped zero.
     static PositiveDivisions parse(std::string_view text);
+
+    /// Lenient, and says whether the text was non-numeric or clamped.
+    static PositiveDivisions parse(std::string_view text, ValueParseOutcome &outcome);
 
     bool operator==(const PositiveDivisions &other) const noexcept = default;
 

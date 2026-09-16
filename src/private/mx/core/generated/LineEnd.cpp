@@ -57,8 +57,14 @@ bool LineEnd::tryParse(std::string_view text, LineEnd &out) noexcept
 
 LineEnd LineEnd::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+LineEnd LineEnd::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     LineEnd v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

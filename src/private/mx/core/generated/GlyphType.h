@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "mx/core/Lexical.h"
+
 #include <string>
 #include <string_view>
 
@@ -44,6 +46,9 @@ class GlyphType final
     static bool tryParse(std::string_view text, GlyphType &out);
 
     static GlyphType parse(std::string_view text);
+
+    /// Says whether the text had to be repaired.
+    static GlyphType parse(std::string_view text, ValueParseOutcome &outcome);
 
     bool operator==(const GlyphType &other) const noexcept = default;
 

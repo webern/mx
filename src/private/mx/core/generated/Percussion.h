@@ -28,6 +28,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The percussion element is used to define percussion pictogram symbols. Definitions for these
 /// symbols can be found in Kurt Stone's "Music Notation in the Twentieth Century" on pages 206-212
 /// and 223. Some values are added to these based on how usage has evolved in the 30 years since
@@ -86,7 +88,11 @@ class Percussion final
 
 Percussion parsePercussion(pugi::xml_node el);
 
+Percussion parsePercussion(pugi::xml_node el, const ParseContext &context);
+
 void parsePercussionContent(Percussion &out, pugi::xml_node el);
+
+void parsePercussionContent(Percussion &out, pugi::xml_node el, const ParseContext &context);
 
 void serializePercussion(const Percussion &v, pugi::xml_node parent, const char *tag);
 

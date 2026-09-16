@@ -3,6 +3,7 @@
 #include "mx/core/generated/FormattedTextID.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -252,6 +253,11 @@ void FormattedTextID::setValue(std::string value)
 
 FormattedTextID parseFormattedTextID(pugi::xml_node el)
 {
+    return parseFormattedTextID(el, ParseContext{});
+}
+
+FormattedTextID parseFormattedTextID(pugi::xml_node el, const ParseContext &context)
+{
     FormattedTextID out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -270,83 +276,83 @@ FormattedTextID parseFormattedTextID(pugi::xml_node el)
         }
         else if (aname == "justify")
         {
-            out.setJustify(LeftCenterRight::parse(a.value()));
+            out.setJustify(parseValue<LeftCenterRight>(a.value(), context, el, "justify"));
         }
         else if (aname == "default-x")
         {
-            out.setDefaultX(Tenths::parse(a.value()));
+            out.setDefaultX(parseValue<Tenths>(a.value(), context, el, "default-x"));
         }
         else if (aname == "default-y")
         {
-            out.setDefaultY(Tenths::parse(a.value()));
+            out.setDefaultY(parseValue<Tenths>(a.value(), context, el, "default-y"));
         }
         else if (aname == "relative-x")
         {
-            out.setRelativeX(Tenths::parse(a.value()));
+            out.setRelativeX(parseValue<Tenths>(a.value(), context, el, "relative-x"));
         }
         else if (aname == "relative-y")
         {
-            out.setRelativeY(Tenths::parse(a.value()));
+            out.setRelativeY(parseValue<Tenths>(a.value(), context, el, "relative-y"));
         }
         else if (aname == "font-family")
         {
-            out.setFontFamily(FontFamily::parse(a.value()));
+            out.setFontFamily(parseValue<FontFamily>(a.value(), context, el, "font-family"));
         }
         else if (aname == "font-style")
         {
-            out.setFontStyle(FontStyle::parse(a.value()));
+            out.setFontStyle(parseValue<FontStyle>(a.value(), context, el, "font-style"));
         }
         else if (aname == "font-size")
         {
-            out.setFontSize(FontSize::parse(a.value()));
+            out.setFontSize(parseValue<FontSize>(a.value(), context, el, "font-size"));
         }
         else if (aname == "font-weight")
         {
-            out.setFontWeight(FontWeight::parse(a.value()));
+            out.setFontWeight(parseValue<FontWeight>(a.value(), context, el, "font-weight"));
         }
         else if (aname == "color")
         {
-            out.setColor(Color::parse(a.value()));
+            out.setColor(parseValue<Color>(a.value(), context, el, "color"));
         }
         else if (aname == "halign")
         {
-            out.setHalign(LeftCenterRight::parse(a.value()));
+            out.setHalign(parseValue<LeftCenterRight>(a.value(), context, el, "halign"));
         }
         else if (aname == "valign")
         {
-            out.setValign(Valign::parse(a.value()));
+            out.setValign(parseValue<Valign>(a.value(), context, el, "valign"));
         }
         else if (aname == "underline")
         {
-            out.setUnderline(NumberOfLines::parse(a.value()));
+            out.setUnderline(parseValue<NumberOfLines>(a.value(), context, el, "underline"));
         }
         else if (aname == "overline")
         {
-            out.setOverline(NumberOfLines::parse(a.value()));
+            out.setOverline(parseValue<NumberOfLines>(a.value(), context, el, "overline"));
         }
         else if (aname == "line-through")
         {
-            out.setLineThrough(NumberOfLines::parse(a.value()));
+            out.setLineThrough(parseValue<NumberOfLines>(a.value(), context, el, "line-through"));
         }
         else if (aname == "rotation")
         {
-            out.setRotation(RotationDegrees::parse(a.value()));
+            out.setRotation(parseValue<RotationDegrees>(a.value(), context, el, "rotation"));
         }
         else if (aname == "letter-spacing")
         {
-            out.setLetterSpacing(NumberOrNormal::parse(a.value()));
+            out.setLetterSpacing(parseValue<NumberOrNormal>(a.value(), context, el, "letter-spacing"));
         }
         else if (aname == "line-height")
         {
-            out.setLineHeight(NumberOrNormal::parse(a.value()));
+            out.setLineHeight(parseValue<NumberOrNormal>(a.value(), context, el, "line-height"));
         }
         else if (aname == "dir")
         {
-            out.setDir(TextDirection::parse(a.value()));
+            out.setDir(parseValue<TextDirection>(a.value(), context, el, "dir"));
         }
         else if (aname == "enclosure")
         {
-            out.setEnclosure(EnclosureShape::parse(a.value()));
+            out.setEnclosure(parseValue<EnclosureShape>(a.value(), context, el, "enclosure"));
         }
         else if (aname == "id")
         {
@@ -357,11 +363,16 @@ FormattedTextID parseFormattedTextID(pugi::xml_node el)
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseFormattedTextIDContent(out, el);
+    parseFormattedTextIDContent(out, el, context);
     return out;
 }
 
 void parseFormattedTextIDContent(FormattedTextID &out, pugi::xml_node el)
+{
+    parseFormattedTextIDContent(out, el, ParseContext{});
+}
+
+void parseFormattedTextIDContent(FormattedTextID &out, pugi::xml_node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))

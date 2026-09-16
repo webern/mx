@@ -3,6 +3,7 @@
 #include "mx/core/generated/PageLayoutGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -32,10 +33,15 @@ void PageLayoutGroup::setPageWidth(Tenths value)
 
 PageLayoutGroup parsePageLayoutGroup(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parsePageLayoutGroup(el, cursor, ParseContext{});
+}
+
+PageLayoutGroup parsePageLayoutGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+{
     PageLayoutGroup out;
     if (cursorIs(cursor, "page-height"))
     {
-        out.setPageHeight(Tenths::parse(childText(cursor)));
+        out.setPageHeight(parseValue<Tenths>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -44,7 +50,7 @@ PageLayoutGroup parsePageLayoutGroup(pugi::xml_node el, pugi::xml_node &cursor)
     }
     if (cursorIs(cursor, "page-width"))
     {
-        out.setPageWidth(Tenths::parse(childText(cursor)));
+        out.setPageWidth(parseValue<Tenths>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else

@@ -15,6 +15,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The virtual-instrument element defines a specific virtual instrument used for an instrument
 /// sound.
 /// Content fields mirror the schema grammar in declaration order; the
@@ -35,7 +37,11 @@ class VirtualInstrument final
 
 VirtualInstrument parseVirtualInstrument(pugi::xml_node el);
 
+VirtualInstrument parseVirtualInstrument(pugi::xml_node el, const ParseContext &context);
+
 void parseVirtualInstrumentContent(VirtualInstrument &out, pugi::xml_node el);
+
+void parseVirtualInstrumentContent(VirtualInstrument &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeVirtualInstrument(const VirtualInstrument &v, pugi::xml_node parent, const char *tag);
 

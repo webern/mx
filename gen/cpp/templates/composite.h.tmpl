@@ -32,6 +32,8 @@ class xml_node;
 namespace {{vars.namespace}}
 {
 
+class ParseContext;
+
 {{#doc_lines}}
 /// {{value}}
 {{/doc_lines}}
@@ -51,7 +53,11 @@ private:
 
 {{ident}} parse{{ident}}(pugi::xml_node el);
 
+{{ident}} parse{{ident}}(pugi::xml_node el, const ParseContext &context);
+
 void parse{{ident}}Content({{ident}} &out, pugi::xml_node el);
+
+void parse{{ident}}Content({{ident}} &out, pugi::xml_node el, const ParseContext &context);
 
 void serialize{{ident}}(const {{ident}} &v, pugi::xml_node parent, const char *tag);
 

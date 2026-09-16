@@ -3,6 +3,7 @@
 #include "mx/core/generated/TraditionalKeyGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -42,15 +43,20 @@ void TraditionalKeyGroup::setMode(std::optional<Mode> value)
 
 TraditionalKeyGroup parseTraditionalKeyGroup(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseTraditionalKeyGroup(el, cursor, ParseContext{});
+}
+
+TraditionalKeyGroup parseTraditionalKeyGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+{
     TraditionalKeyGroup out;
     if (cursorIs(cursor, "cancel"))
     {
-        out.setCancel(parseCancel(cursor));
+        out.setCancel(parseCancel(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "fifths"))
     {
-        out.setFifths(Fifths::parse(childText(cursor)));
+        out.setFifths(parseValue<Fifths>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -59,7 +65,7 @@ TraditionalKeyGroup parseTraditionalKeyGroup(pugi::xml_node el, pugi::xml_node &
     }
     if (cursorIs(cursor, "mode"))
     {
-        out.setMode(Mode::parse(childText(cursor)));
+        out.setMode(parseValue<Mode>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     return out;

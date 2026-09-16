@@ -29,9 +29,18 @@ class MusicXml
     // represented by an error result.
     static Result<MusicXml> fromFile(const std::string &filePath);
 
+    // Parses a MusicXML file and reports values that had to be repaired to
+    // be read, such as an unknown note type or an octave above 9. The same
+    // Diagnostics can be passed on to getScore to collect both in one place.
+    static Result<MusicXml> fromFile(const std::string &filePath, Diagnostics &diagnostics);
+
     // Parses a MusicXML document from a character stream. Logical errors and
     // caught exceptions are represented by an error result.
     static Result<MusicXml> fromStream(std::istream &stream);
+
+    // Parses a MusicXML document from a character stream and reports values
+    // that had to be repaired to be read.
+    static Result<MusicXml> fromStream(std::istream &stream, Diagnostics &diagnostics);
 
     MusicXml(const MusicXml &other) = delete;
     MusicXml &operator=(const MusicXml &other) = delete;

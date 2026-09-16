@@ -55,8 +55,14 @@ bool HarmonClosedLocation::tryParse(std::string_view text, HarmonClosedLocation 
 
 HarmonClosedLocation HarmonClosedLocation::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+HarmonClosedLocation HarmonClosedLocation::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     HarmonClosedLocation v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

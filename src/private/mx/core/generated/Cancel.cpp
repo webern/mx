@@ -3,6 +3,7 @@
 #include "mx/core/generated/Cancel.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -32,6 +33,11 @@ void Cancel::setValue(Fifths value)
 
 Cancel parseCancel(pugi::xml_node el)
 {
+    return parseCancel(el, ParseContext{});
+}
+
+Cancel parseCancel(pugi::xml_node el, const ParseContext &context)
+{
     Cancel out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -42,20 +48,25 @@ Cancel parseCancel(pugi::xml_node el)
         }
         if (aname == "location")
         {
-            out.setLocation(CancelLocation::parse(a.value()));
+            out.setLocation(parseValue<CancelLocation>(a.value(), context, el, "location"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseCancelContent(out, el);
+    parseCancelContent(out, el, context);
     return out;
 }
 
 void parseCancelContent(Cancel &out, pugi::xml_node el)
 {
-    out.setValue(Fifths::parse(childText(el)));
+    parseCancelContent(out, el, ParseContext{});
+}
+
+void parseCancelContent(Cancel &out, pugi::xml_node el, const ParseContext &context)
+{
+    out.setValue(parseValue<Fifths>(childText(el), context, el, nullptr));
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

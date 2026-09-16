@@ -21,6 +21,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The empty-placement type represents an empty element with print-style and placement attributes.
 class EmptyPlacement
 {
@@ -62,7 +64,11 @@ class EmptyPlacement
 
 EmptyPlacement parseEmptyPlacement(pugi::xml_node el);
 
+EmptyPlacement parseEmptyPlacement(pugi::xml_node el, const ParseContext &context);
+
 void parseEmptyPlacementContent(EmptyPlacement &out, pugi::xml_node el);
+
+void parseEmptyPlacementContent(EmptyPlacement &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeEmptyPlacement(const EmptyPlacement &v, pugi::xml_node parent, const char *tag);
 

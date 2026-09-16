@@ -20,6 +20,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The dashes type represents dashes, used for instance with cresc. and dim. marks.
 class Dashes final
 {
@@ -61,7 +63,11 @@ class Dashes final
 
 Dashes parseDashes(pugi::xml_node el);
 
+Dashes parseDashes(pugi::xml_node el, const ParseContext &context);
+
 void parseDashesContent(Dashes &out, pugi::xml_node el);
+
+void parseDashesContent(Dashes &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeDashes(const Dashes &v, pugi::xml_node parent, const char *tag);
 

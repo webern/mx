@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "mx/core/Lexical.h"
+
 #include <string_view>
 
 namespace mx::core
@@ -43,6 +45,9 @@ class TremoloType final
     /// Lenient: an unrecognized literal falls back to the first variant
     /// (the import leniency policy; never produces an invalid value).
     static TremoloType parse(std::string_view text) noexcept;
+
+    /// Lenient, and says whether the literal was recognized.
+    static TremoloType parse(std::string_view text, ValueParseOutcome &outcome) noexcept;
 
     bool operator==(const TremoloType &other) const noexcept = default;
 

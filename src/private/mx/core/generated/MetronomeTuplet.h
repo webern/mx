@@ -18,6 +18,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The metronome-tuplet type uses the same element structure as the time-modification element along
 /// with some attributes from the tuplet element.
 /// The schema's complexContent extension: non-polymorphic public
@@ -40,6 +42,8 @@ class MetronomeTuplet : public TimeModification
 };
 
 MetronomeTuplet parseMetronomeTuplet(pugi::xml_node el);
+
+MetronomeTuplet parseMetronomeTuplet(pugi::xml_node el, const ParseContext &context);
 
 void serializeMetronomeTuplet(const MetronomeTuplet &v, pugi::xml_node parent, const char *tag);
 

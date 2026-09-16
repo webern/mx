@@ -3,6 +3,7 @@
 #include "mx/core/generated/MIDIInstrument.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -102,6 +103,11 @@ void MIDIInstrument::setElevation(std::optional<RotationDegrees> value)
 
 MIDIInstrument parseMIDIInstrument(pugi::xml_node el)
 {
+    return parseMIDIInstrument(el, ParseContext{});
+}
+
+MIDIInstrument parseMIDIInstrument(pugi::xml_node el, const ParseContext &context)
+{
     MIDIInstrument out;
     bool seen_id = false;
     for (pugi::xml_attribute a : el.attributes())
@@ -125,16 +131,21 @@ MIDIInstrument parseMIDIInstrument(pugi::xml_node el)
     {
         throwMissingAttribute(el, "id");
     }
-    parseMIDIInstrumentContent(out, el);
+    parseMIDIInstrumentContent(out, el, context);
     return out;
 }
 
 void parseMIDIInstrumentContent(MIDIInstrument &out, pugi::xml_node el)
 {
+    parseMIDIInstrumentContent(out, el, ParseContext{});
+}
+
+void parseMIDIInstrumentContent(MIDIInstrument &out, pugi::xml_node el, const ParseContext &context)
+{
     pugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "midi-channel"))
     {
-        out.setMIDIChannel(MIDI16::parse(childText(cursor)));
+        out.setMIDIChannel(parseValue<MIDI16>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "midi-name"))
@@ -144,32 +155,32 @@ void parseMIDIInstrumentContent(MIDIInstrument &out, pugi::xml_node el)
     }
     if (cursorIs(cursor, "midi-bank"))
     {
-        out.setMIDIBank(MIDI16384::parse(childText(cursor)));
+        out.setMIDIBank(parseValue<MIDI16384>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "midi-program"))
     {
-        out.setMIDIProgram(MIDI128::parse(childText(cursor)));
+        out.setMIDIProgram(parseValue<MIDI128>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "midi-unpitched"))
     {
-        out.setMIDIUnpitched(MIDI128::parse(childText(cursor)));
+        out.setMIDIUnpitched(parseValue<MIDI128>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "volume"))
     {
-        out.setVolume(Percent::parse(childText(cursor)));
+        out.setVolume(parseValue<Percent>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "pan"))
     {
-        out.setPan(RotationDegrees::parse(childText(cursor)));
+        out.setPan(parseValue<RotationDegrees>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "elevation"))
     {
-        out.setElevation(RotationDegrees::parse(childText(cursor)));
+        out.setElevation(parseValue<RotationDegrees>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     if (cursor)

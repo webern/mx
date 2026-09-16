@@ -3,6 +3,7 @@
 #include "mx/core/generated/PerMinute.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -62,6 +63,11 @@ void PerMinute::setValue(std::string value)
 
 PerMinute parsePerMinute(pugi::xml_node el)
 {
+    return parsePerMinute(el, ParseContext{});
+}
+
+PerMinute parsePerMinute(pugi::xml_node el, const ParseContext &context)
+{
     PerMinute out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -72,30 +78,35 @@ PerMinute parsePerMinute(pugi::xml_node el)
         }
         if (aname == "font-family")
         {
-            out.setFontFamily(FontFamily::parse(a.value()));
+            out.setFontFamily(parseValue<FontFamily>(a.value(), context, el, "font-family"));
         }
         else if (aname == "font-style")
         {
-            out.setFontStyle(FontStyle::parse(a.value()));
+            out.setFontStyle(parseValue<FontStyle>(a.value(), context, el, "font-style"));
         }
         else if (aname == "font-size")
         {
-            out.setFontSize(FontSize::parse(a.value()));
+            out.setFontSize(parseValue<FontSize>(a.value(), context, el, "font-size"));
         }
         else if (aname == "font-weight")
         {
-            out.setFontWeight(FontWeight::parse(a.value()));
+            out.setFontWeight(parseValue<FontWeight>(a.value(), context, el, "font-weight"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parsePerMinuteContent(out, el);
+    parsePerMinuteContent(out, el, context);
     return out;
 }
 
 void parsePerMinuteContent(PerMinute &out, pugi::xml_node el)
+{
+    parsePerMinuteContent(out, el, ParseContext{});
+}
+
+void parsePerMinuteContent(PerMinute &out, pugi::xml_node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))

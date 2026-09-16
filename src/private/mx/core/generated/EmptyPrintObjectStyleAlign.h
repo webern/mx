@@ -23,6 +23,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The empty-print-style-align-object type represents an empty element with print-object and
 /// print-style-align attribute groups.
 class EmptyPrintObjectStyleAlign final
@@ -71,7 +73,12 @@ class EmptyPrintObjectStyleAlign final
 
 EmptyPrintObjectStyleAlign parseEmptyPrintObjectStyleAlign(pugi::xml_node el);
 
+EmptyPrintObjectStyleAlign parseEmptyPrintObjectStyleAlign(pugi::xml_node el, const ParseContext &context);
+
 void parseEmptyPrintObjectStyleAlignContent(EmptyPrintObjectStyleAlign &out, pugi::xml_node el);
+
+void parseEmptyPrintObjectStyleAlignContent(EmptyPrintObjectStyleAlign &out, pugi::xml_node el,
+                                            const ParseContext &context);
 
 void serializeEmptyPrintObjectStyleAlign(const EmptyPrintObjectStyleAlign &v, pugi::xml_node parent, const char *tag);
 

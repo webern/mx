@@ -3,6 +3,7 @@
 #include "mx/core/generated/Dynamics.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -197,6 +198,11 @@ void Dynamics::setChoice(std::vector<DynamicsChoice> value)
 
 Dynamics parseDynamics(pugi::xml_node el)
 {
+    return parseDynamics(el, ParseContext{});
+}
+
+Dynamics parseDynamics(pugi::xml_node el, const ParseContext &context)
+{
     Dynamics out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -207,67 +213,67 @@ Dynamics parseDynamics(pugi::xml_node el)
         }
         if (aname == "default-x")
         {
-            out.setDefaultX(Tenths::parse(a.value()));
+            out.setDefaultX(parseValue<Tenths>(a.value(), context, el, "default-x"));
         }
         else if (aname == "default-y")
         {
-            out.setDefaultY(Tenths::parse(a.value()));
+            out.setDefaultY(parseValue<Tenths>(a.value(), context, el, "default-y"));
         }
         else if (aname == "relative-x")
         {
-            out.setRelativeX(Tenths::parse(a.value()));
+            out.setRelativeX(parseValue<Tenths>(a.value(), context, el, "relative-x"));
         }
         else if (aname == "relative-y")
         {
-            out.setRelativeY(Tenths::parse(a.value()));
+            out.setRelativeY(parseValue<Tenths>(a.value(), context, el, "relative-y"));
         }
         else if (aname == "font-family")
         {
-            out.setFontFamily(FontFamily::parse(a.value()));
+            out.setFontFamily(parseValue<FontFamily>(a.value(), context, el, "font-family"));
         }
         else if (aname == "font-style")
         {
-            out.setFontStyle(FontStyle::parse(a.value()));
+            out.setFontStyle(parseValue<FontStyle>(a.value(), context, el, "font-style"));
         }
         else if (aname == "font-size")
         {
-            out.setFontSize(FontSize::parse(a.value()));
+            out.setFontSize(parseValue<FontSize>(a.value(), context, el, "font-size"));
         }
         else if (aname == "font-weight")
         {
-            out.setFontWeight(FontWeight::parse(a.value()));
+            out.setFontWeight(parseValue<FontWeight>(a.value(), context, el, "font-weight"));
         }
         else if (aname == "color")
         {
-            out.setColor(Color::parse(a.value()));
+            out.setColor(parseValue<Color>(a.value(), context, el, "color"));
         }
         else if (aname == "halign")
         {
-            out.setHalign(LeftCenterRight::parse(a.value()));
+            out.setHalign(parseValue<LeftCenterRight>(a.value(), context, el, "halign"));
         }
         else if (aname == "valign")
         {
-            out.setValign(Valign::parse(a.value()));
+            out.setValign(parseValue<Valign>(a.value(), context, el, "valign"));
         }
         else if (aname == "placement")
         {
-            out.setPlacement(AboveBelow::parse(a.value()));
+            out.setPlacement(parseValue<AboveBelow>(a.value(), context, el, "placement"));
         }
         else if (aname == "underline")
         {
-            out.setUnderline(NumberOfLines::parse(a.value()));
+            out.setUnderline(parseValue<NumberOfLines>(a.value(), context, el, "underline"));
         }
         else if (aname == "overline")
         {
-            out.setOverline(NumberOfLines::parse(a.value()));
+            out.setOverline(parseValue<NumberOfLines>(a.value(), context, el, "overline"));
         }
         else if (aname == "line-through")
         {
-            out.setLineThrough(NumberOfLines::parse(a.value()));
+            out.setLineThrough(parseValue<NumberOfLines>(a.value(), context, el, "line-through"));
         }
         else if (aname == "enclosure")
         {
-            out.setEnclosure(EnclosureShape::parse(a.value()));
+            out.setEnclosure(parseValue<EnclosureShape>(a.value(), context, el, "enclosure"));
         }
         else if (aname == "id")
         {
@@ -278,11 +284,16 @@ Dynamics parseDynamics(pugi::xml_node el)
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseDynamicsContent(out, el);
+    parseDynamicsContent(out, el, context);
     return out;
 }
 
 void parseDynamicsContent(Dynamics &out, pugi::xml_node el)
+{
+    parseDynamicsContent(out, el, ParseContext{});
+}
+
+void parseDynamicsContent(Dynamics &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     while (cursor &&
@@ -295,7 +306,7 @@ void parseDynamicsContent(Dynamics &out, pugi::xml_node el)
             cursorIs(cursor, "sffz") || cursorIs(cursor, "fz") || cursorIs(cursor, "n") || cursorIs(cursor, "pf") ||
             cursorIs(cursor, "sfzp") || cursorIs(cursor, "other-dynamics")))
     {
-        out.addChoice(parseDynamicsChoice(el, cursor));
+        out.addChoice(parseDynamicsChoice(el, cursor, context));
     }
     if (cursor)
     {

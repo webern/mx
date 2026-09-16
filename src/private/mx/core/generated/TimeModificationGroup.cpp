@@ -3,6 +3,7 @@
 #include "mx/core/generated/TimeModificationGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -37,10 +38,15 @@ void TimeModificationGroup::setNormalDot(std::vector<Empty> value)
 
 TimeModificationGroup parseTimeModificationGroup(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseTimeModificationGroup(el, cursor, ParseContext{});
+}
+
+TimeModificationGroup parseTimeModificationGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+{
     TimeModificationGroup out;
     if (cursorIs(cursor, "normal-type"))
     {
-        out.setNormalType(NoteTypeValue::parse(childText(cursor)));
+        out.setNormalType(parseValue<NoteTypeValue>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -49,7 +55,7 @@ TimeModificationGroup parseTimeModificationGroup(pugi::xml_node el, pugi::xml_no
     }
     while (cursorIs(cursor, "normal-dot"))
     {
-        out.addNormalDot(parseEmpty(cursor));
+        out.addNormalDot(parseEmpty(cursor, context));
         cursor = nextElement(cursor);
     }
     return out;

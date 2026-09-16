@@ -22,6 +22,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The handbell element represents notation for various techniques used in handbell and handchime
 /// music.
 class Handbell final
@@ -67,7 +69,11 @@ class Handbell final
 
 Handbell parseHandbell(pugi::xml_node el);
 
+Handbell parseHandbell(pugi::xml_node el, const ParseContext &context);
+
 void parseHandbellContent(Handbell &out, pugi::xml_node el);
+
+void parseHandbellContent(Handbell &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeHandbell(const Handbell &v, pugi::xml_node parent, const char *tag);
 

@@ -3,6 +3,7 @@
 #include "mx/core/generated/Sound.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -227,6 +228,11 @@ void Sound::setOffset(std::optional<Offset> value)
 
 Sound parseSound(pugi::xml_node el)
 {
+    return parseSound(el, ParseContext{});
+}
+
+Sound parseSound(pugi::xml_node el, const ParseContext &context)
+{
     Sound out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -237,15 +243,15 @@ Sound parseSound(pugi::xml_node el)
         }
         if (aname == "tempo")
         {
-            out.setTempo(NonNegativeDecimal::parse(a.value()));
+            out.setTempo(parseValue<NonNegativeDecimal>(a.value(), context, el, "tempo"));
         }
         else if (aname == "dynamics")
         {
-            out.setDynamics(NonNegativeDecimal::parse(a.value()));
+            out.setDynamics(parseValue<NonNegativeDecimal>(a.value(), context, el, "dynamics"));
         }
         else if (aname == "dacapo")
         {
-            out.setDacapo(YesNo::parse(a.value()));
+            out.setDacapo(parseValue<YesNo>(a.value(), context, el, "dacapo"));
         }
         else if (aname == "segno")
         {
@@ -265,11 +271,11 @@ Sound parseSound(pugi::xml_node el)
         }
         else if (aname == "divisions")
         {
-            out.setDivisions(Divisions::parse(a.value()));
+            out.setDivisions(parseValue<Divisions>(a.value(), context, el, "divisions"));
         }
         else if (aname == "forward-repeat")
         {
-            out.setForwardRepeat(YesNo::parse(a.value()));
+            out.setForwardRepeat(parseValue<YesNo>(a.value(), context, el, "forward-repeat"));
         }
         else if (aname == "fine")
         {
@@ -277,31 +283,31 @@ Sound parseSound(pugi::xml_node el)
         }
         else if (aname == "time-only")
         {
-            out.setTimeOnly(TimeOnly::parse(a.value()));
+            out.setTimeOnly(parseValue<TimeOnly>(a.value(), context, el, "time-only"));
         }
         else if (aname == "pizzicato")
         {
-            out.setPizzicato(YesNo::parse(a.value()));
+            out.setPizzicato(parseValue<YesNo>(a.value(), context, el, "pizzicato"));
         }
         else if (aname == "pan")
         {
-            out.setPan(RotationDegrees::parse(a.value()));
+            out.setPan(parseValue<RotationDegrees>(a.value(), context, el, "pan"));
         }
         else if (aname == "elevation")
         {
-            out.setElevation(RotationDegrees::parse(a.value()));
+            out.setElevation(parseValue<RotationDegrees>(a.value(), context, el, "elevation"));
         }
         else if (aname == "damper-pedal")
         {
-            out.setDamperPedal(YesNoNumber::parse(a.value()));
+            out.setDamperPedal(parseValue<YesNoNumber>(a.value(), context, el, "damper-pedal"));
         }
         else if (aname == "soft-pedal")
         {
-            out.setSoftPedal(YesNoNumber::parse(a.value()));
+            out.setSoftPedal(parseValue<YesNoNumber>(a.value(), context, el, "soft-pedal"));
         }
         else if (aname == "sostenuto-pedal")
         {
-            out.setSostenutoPedal(YesNoNumber::parse(a.value()));
+            out.setSostenutoPedal(parseValue<YesNoNumber>(a.value(), context, el, "sostenuto-pedal"));
         }
         else if (aname == "id")
         {
@@ -312,26 +318,31 @@ Sound parseSound(pugi::xml_node el)
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseSoundContent(out, el);
+    parseSoundContent(out, el, context);
     return out;
 }
 
 void parseSoundContent(Sound &out, pugi::xml_node el)
 {
+    parseSoundContent(out, el, ParseContext{});
+}
+
+void parseSoundContent(Sound &out, pugi::xml_node el, const ParseContext &context)
+{
     pugi::xml_node cursor = firstElement(el);
     while (cursor && (cursorIs(cursor, "instrument-change") || cursorIs(cursor, "midi-device") ||
                       cursorIs(cursor, "midi-instrument") || cursorIs(cursor, "play")))
     {
-        out.addGroup(parseSoundGroup(el, cursor));
+        out.addGroup(parseSoundGroup(el, cursor, context));
     }
     if (cursorIs(cursor, "swing"))
     {
-        out.setSwing(parseSwing(cursor));
+        out.setSwing(parseSwing(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "offset"))
     {
-        out.setOffset(parseOffset(cursor));
+        out.setOffset(parseOffset(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor)

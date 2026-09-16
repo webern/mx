@@ -3,6 +3,7 @@
 #include "mx/core/generated/VirtualInstrument.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -32,6 +33,11 @@ void VirtualInstrument::setVirtualName(std::optional<std::string> value)
 
 VirtualInstrument parseVirtualInstrument(pugi::xml_node el)
 {
+    return parseVirtualInstrument(el, ParseContext{});
+}
+
+VirtualInstrument parseVirtualInstrument(pugi::xml_node el, const ParseContext &context)
+{
     VirtualInstrument out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -42,11 +48,16 @@ VirtualInstrument parseVirtualInstrument(pugi::xml_node el)
         }
         throwUnknownAttribute(el, a.name());
     }
-    parseVirtualInstrumentContent(out, el);
+    parseVirtualInstrumentContent(out, el, context);
     return out;
 }
 
 void parseVirtualInstrumentContent(VirtualInstrument &out, pugi::xml_node el)
+{
+    parseVirtualInstrumentContent(out, el, ParseContext{});
+}
+
+void parseVirtualInstrumentContent(VirtualInstrument &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "virtual-library"))

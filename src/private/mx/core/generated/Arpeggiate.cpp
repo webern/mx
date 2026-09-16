@@ -3,6 +3,7 @@
 #include "mx/core/generated/Arpeggiate.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -112,6 +113,11 @@ void Arpeggiate::setID(std::optional<Token> value)
 
 Arpeggiate parseArpeggiate(pugi::xml_node el)
 {
+    return parseArpeggiate(el, ParseContext{});
+}
+
+Arpeggiate parseArpeggiate(pugi::xml_node el, const ParseContext &context)
+{
     Arpeggiate out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -122,39 +128,39 @@ Arpeggiate parseArpeggiate(pugi::xml_node el)
         }
         if (aname == "number")
         {
-            out.setNumber(NumberLevel::parse(a.value()));
+            out.setNumber(parseValue<NumberLevel>(a.value(), context, el, "number"));
         }
         else if (aname == "direction")
         {
-            out.setDirection(UpDown::parse(a.value()));
+            out.setDirection(parseValue<UpDown>(a.value(), context, el, "direction"));
         }
         else if (aname == "unbroken")
         {
-            out.setUnbroken(YesNo::parse(a.value()));
+            out.setUnbroken(parseValue<YesNo>(a.value(), context, el, "unbroken"));
         }
         else if (aname == "default-x")
         {
-            out.setDefaultX(Tenths::parse(a.value()));
+            out.setDefaultX(parseValue<Tenths>(a.value(), context, el, "default-x"));
         }
         else if (aname == "default-y")
         {
-            out.setDefaultY(Tenths::parse(a.value()));
+            out.setDefaultY(parseValue<Tenths>(a.value(), context, el, "default-y"));
         }
         else if (aname == "relative-x")
         {
-            out.setRelativeX(Tenths::parse(a.value()));
+            out.setRelativeX(parseValue<Tenths>(a.value(), context, el, "relative-x"));
         }
         else if (aname == "relative-y")
         {
-            out.setRelativeY(Tenths::parse(a.value()));
+            out.setRelativeY(parseValue<Tenths>(a.value(), context, el, "relative-y"));
         }
         else if (aname == "placement")
         {
-            out.setPlacement(AboveBelow::parse(a.value()));
+            out.setPlacement(parseValue<AboveBelow>(a.value(), context, el, "placement"));
         }
         else if (aname == "color")
         {
-            out.setColor(Color::parse(a.value()));
+            out.setColor(parseValue<Color>(a.value(), context, el, "color"));
         }
         else if (aname == "id")
         {
@@ -165,13 +171,19 @@ Arpeggiate parseArpeggiate(pugi::xml_node el)
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseArpeggiateContent(out, el);
+    parseArpeggiateContent(out, el, context);
     return out;
 }
 
 void parseArpeggiateContent(Arpeggiate &out, pugi::xml_node el)
 {
+    parseArpeggiateContent(out, el, ParseContext{});
+}
+
+void parseArpeggiateContent(Arpeggiate &out, pugi::xml_node el, const ParseContext &context)
+{
     (void)out;
+    (void)context;
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

@@ -3,6 +3,7 @@
 #include "mx/core/generated/Double.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -22,6 +23,11 @@ void Double::setAbove(std::optional<YesNo> value)
 
 Double parseDouble(pugi::xml_node el)
 {
+    return parseDouble(el, ParseContext{});
+}
+
+Double parseDouble(pugi::xml_node el, const ParseContext &context)
+{
     Double out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -32,20 +38,26 @@ Double parseDouble(pugi::xml_node el)
         }
         if (aname == "above")
         {
-            out.setAbove(YesNo::parse(a.value()));
+            out.setAbove(parseValue<YesNo>(a.value(), context, el, "above"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseDoubleContent(out, el);
+    parseDoubleContent(out, el, context);
     return out;
 }
 
 void parseDoubleContent(Double &out, pugi::xml_node el)
 {
+    parseDoubleContent(out, el, ParseContext{});
+}
+
+void parseDoubleContent(Double &out, pugi::xml_node el, const ParseContext &context)
+{
     (void)out;
+    (void)context;
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

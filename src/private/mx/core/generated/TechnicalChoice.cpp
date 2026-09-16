@@ -3,6 +3,7 @@
 #include "mx/core/generated/TechnicalChoice.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -172,189 +173,194 @@ TechnicalChoice TechnicalChoice::otherTechnical(OtherPlacementText value)
 
 TechnicalChoice parseTechnicalChoice(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseTechnicalChoice(el, cursor, ParseContext{});
+}
+
+TechnicalChoice parseTechnicalChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+{
     if (cursor && (cursorIs(cursor, "up-bow")))
     {
-        EmptyPlacement value = parseEmptyPlacement(cursor);
+        EmptyPlacement value = parseEmptyPlacement(cursor, context);
         cursor = nextElement(cursor);
         return TechnicalChoice::upBow(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "down-bow")))
     {
-        EmptyPlacement value = parseEmptyPlacement(cursor);
+        EmptyPlacement value = parseEmptyPlacement(cursor, context);
         cursor = nextElement(cursor);
         return TechnicalChoice::downBow(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "harmonic")))
     {
-        Harmonic value = parseHarmonic(cursor);
+        Harmonic value = parseHarmonic(cursor, context);
         cursor = nextElement(cursor);
         return TechnicalChoice::harmonic(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "open-string")))
     {
-        EmptyPlacement value = parseEmptyPlacement(cursor);
+        EmptyPlacement value = parseEmptyPlacement(cursor, context);
         cursor = nextElement(cursor);
         return TechnicalChoice::openString(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "thumb-position")))
     {
-        EmptyPlacement value = parseEmptyPlacement(cursor);
+        EmptyPlacement value = parseEmptyPlacement(cursor, context);
         cursor = nextElement(cursor);
         return TechnicalChoice::thumbPosition(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "fingering")))
     {
-        Fingering value = parseFingering(cursor);
+        Fingering value = parseFingering(cursor, context);
         cursor = nextElement(cursor);
         return TechnicalChoice::fingering(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "pluck")))
     {
-        PlacementText value = parsePlacementText(cursor);
+        PlacementText value = parsePlacementText(cursor, context);
         cursor = nextElement(cursor);
         return TechnicalChoice::pluck(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "double-tongue")))
     {
-        EmptyPlacement value = parseEmptyPlacement(cursor);
+        EmptyPlacement value = parseEmptyPlacement(cursor, context);
         cursor = nextElement(cursor);
         return TechnicalChoice::doubleTongue(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "triple-tongue")))
     {
-        EmptyPlacement value = parseEmptyPlacement(cursor);
+        EmptyPlacement value = parseEmptyPlacement(cursor, context);
         cursor = nextElement(cursor);
         return TechnicalChoice::tripleTongue(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "stopped")))
     {
-        EmptyPlacementSmufl value = parseEmptyPlacementSmufl(cursor);
+        EmptyPlacementSmufl value = parseEmptyPlacementSmufl(cursor, context);
         cursor = nextElement(cursor);
         return TechnicalChoice::stopped(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "snap-pizzicato")))
     {
-        EmptyPlacement value = parseEmptyPlacement(cursor);
+        EmptyPlacement value = parseEmptyPlacement(cursor, context);
         cursor = nextElement(cursor);
         return TechnicalChoice::snapPizzicato(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "fret")))
     {
-        Fret value = parseFret(cursor);
+        Fret value = parseFret(cursor, context);
         cursor = nextElement(cursor);
         return TechnicalChoice::fret(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "string")))
     {
-        String value = parseString(cursor);
+        String value = parseString(cursor, context);
         cursor = nextElement(cursor);
         return TechnicalChoice::string(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "hammer-on")))
     {
-        HammerOnPullOff value = parseHammerOnPullOff(cursor);
+        HammerOnPullOff value = parseHammerOnPullOff(cursor, context);
         cursor = nextElement(cursor);
         return TechnicalChoice::hammerOn(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "pull-off")))
     {
-        HammerOnPullOff value = parseHammerOnPullOff(cursor);
+        HammerOnPullOff value = parseHammerOnPullOff(cursor, context);
         cursor = nextElement(cursor);
         return TechnicalChoice::pullOff(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "bend")))
     {
-        Bend value = parseBend(cursor);
+        Bend value = parseBend(cursor, context);
         cursor = nextElement(cursor);
         return TechnicalChoice::bend(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "tap")))
     {
-        Tap value = parseTap(cursor);
+        Tap value = parseTap(cursor, context);
         cursor = nextElement(cursor);
         return TechnicalChoice::tap(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "heel")))
     {
-        HeelToe value = parseHeelToe(cursor);
+        HeelToe value = parseHeelToe(cursor, context);
         cursor = nextElement(cursor);
         return TechnicalChoice::heel(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "toe")))
     {
-        HeelToe value = parseHeelToe(cursor);
+        HeelToe value = parseHeelToe(cursor, context);
         cursor = nextElement(cursor);
         return TechnicalChoice::toe(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "fingernails")))
     {
-        EmptyPlacement value = parseEmptyPlacement(cursor);
+        EmptyPlacement value = parseEmptyPlacement(cursor, context);
         cursor = nextElement(cursor);
         return TechnicalChoice::fingernails(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "hole")))
     {
-        Hole value = parseHole(cursor);
+        Hole value = parseHole(cursor, context);
         cursor = nextElement(cursor);
         return TechnicalChoice::hole(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "arrow")))
     {
-        Arrow value = parseArrow(cursor);
+        Arrow value = parseArrow(cursor, context);
         cursor = nextElement(cursor);
         return TechnicalChoice::arrow(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "handbell")))
     {
-        Handbell value = parseHandbell(cursor);
+        Handbell value = parseHandbell(cursor, context);
         cursor = nextElement(cursor);
         return TechnicalChoice::handbell(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "brass-bend")))
     {
-        EmptyPlacement value = parseEmptyPlacement(cursor);
+        EmptyPlacement value = parseEmptyPlacement(cursor, context);
         cursor = nextElement(cursor);
         return TechnicalChoice::brassBend(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "flip")))
     {
-        EmptyPlacement value = parseEmptyPlacement(cursor);
+        EmptyPlacement value = parseEmptyPlacement(cursor, context);
         cursor = nextElement(cursor);
         return TechnicalChoice::flip(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "smear")))
     {
-        EmptyPlacement value = parseEmptyPlacement(cursor);
+        EmptyPlacement value = parseEmptyPlacement(cursor, context);
         cursor = nextElement(cursor);
         return TechnicalChoice::smear(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "open")))
     {
-        EmptyPlacementSmufl value = parseEmptyPlacementSmufl(cursor);
+        EmptyPlacementSmufl value = parseEmptyPlacementSmufl(cursor, context);
         cursor = nextElement(cursor);
         return TechnicalChoice::open(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "half-muted")))
     {
-        EmptyPlacementSmufl value = parseEmptyPlacementSmufl(cursor);
+        EmptyPlacementSmufl value = parseEmptyPlacementSmufl(cursor, context);
         cursor = nextElement(cursor);
         return TechnicalChoice::halfMuted(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "harmon-mute")))
     {
-        HarmonMute value = parseHarmonMute(cursor);
+        HarmonMute value = parseHarmonMute(cursor, context);
         cursor = nextElement(cursor);
         return TechnicalChoice::harmonMute(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "golpe")))
     {
-        EmptyPlacement value = parseEmptyPlacement(cursor);
+        EmptyPlacement value = parseEmptyPlacement(cursor, context);
         cursor = nextElement(cursor);
         return TechnicalChoice::golpe(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "other-technical")))
     {
-        OtherPlacementText value = parseOtherPlacementText(cursor);
+        OtherPlacementText value = parseOtherPlacementText(cursor, context);
         cursor = nextElement(cursor);
         return TechnicalChoice::otherTechnical(std::move(value));
     }

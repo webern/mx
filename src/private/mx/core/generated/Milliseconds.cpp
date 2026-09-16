@@ -38,20 +38,33 @@ std::string Milliseconds::toString() const
 
 bool Milliseconds::tryParse(std::string_view text, Milliseconds &out)
 {
-    int v{};
-    if (!tryParseInt(text, v))
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    Milliseconds parsed = parse(text, outcome);
+    if (outcome == ValueParseOutcome::invalid)
     {
         return false;
     }
-    out = Milliseconds{v};
+    out = std::move(parsed);
     return true;
 }
 
 Milliseconds Milliseconds::parse(std::string_view text)
 {
-    Milliseconds v;
-    tryParse(text, v);
-    return v;
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+Milliseconds Milliseconds::parse(std::string_view text, ValueParseOutcome &outcome)
+{
+    int v{};
+    if (!tryParseInt(text, v))
+    {
+        outcome = ValueParseOutcome::invalid;
+        return Milliseconds{};
+    }
+    Milliseconds out{v};
+    outcome = out.value() == v ? ValueParseOutcome::valid : ValueParseOutcome::adjusted;
+    return out;
 }
 
 } // namespace mx::core

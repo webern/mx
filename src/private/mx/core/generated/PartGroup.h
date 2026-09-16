@@ -23,6 +23,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The part-group element indicates groupings of parts in the score, usually indicated by braces and
 /// brackets. Braces that are used for multi-staff parts should be defined in the attributes element
 /// for that part. The part-group start element appears before the first score-part in the group. The
@@ -75,7 +77,11 @@ class PartGroup final
 
 PartGroup parsePartGroup(pugi::xml_node el);
 
+PartGroup parsePartGroup(pugi::xml_node el, const ParseContext &context);
+
 void parsePartGroupContent(PartGroup &out, pugi::xml_node el);
+
+void parsePartGroupContent(PartGroup &out, pugi::xml_node el, const ParseContext &context);
 
 void serializePartGroup(const PartGroup &v, pugi::xml_node parent, const char *tag);
 

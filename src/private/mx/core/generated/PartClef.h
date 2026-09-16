@@ -17,6 +17,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The child elements of the part-clef type have the same meaning as for the clef type. However that
 /// meaning applies to a transposed part created from the existing score file.
 /// Content fields mirror the schema grammar in declaration order; the
@@ -34,7 +36,11 @@ class PartClef final
 
 PartClef parsePartClef(pugi::xml_node el);
 
+PartClef parsePartClef(pugi::xml_node el, const ParseContext &context);
+
 void parsePartClefContent(PartClef &out, pugi::xml_node el);
+
+void parsePartClefContent(PartClef &out, pugi::xml_node el, const ParseContext &context);
 
 void serializePartClef(const PartClef &v, pugi::xml_node parent, const char *tag);
 

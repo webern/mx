@@ -19,6 +19,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The non-traditional-key group represents a single alteration within a non-traditional key
 /// signature. A sequence of these groups makes up a non-traditional key signature
 /// A shared content group: transparent on the wire, its
@@ -43,6 +45,9 @@ class NonTraditionalKeyGroup final
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
 NonTraditionalKeyGroup parseNonTraditionalKeyGroup(pugi::xml_node el, pugi::xml_node &cursor);
+
+NonTraditionalKeyGroup parseNonTraditionalKeyGroup(pugi::xml_node el, pugi::xml_node &cursor,
+                                                   const ParseContext &context);
 
 void serializeNonTraditionalKeyGroup(const NonTraditionalKeyGroup &v, pugi::xml_node el);
 

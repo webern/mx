@@ -17,6 +17,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The unpitched type represents musical elements that are notated on the staff but lack definite
 /// pitch, such as unpitched percussion and speaking voice. If the child elements are not present,
 /// the note is placed on the middle line of the staff. This is generally used with a one-line staff.
@@ -36,7 +38,11 @@ class Unpitched final
 
 Unpitched parseUnpitched(pugi::xml_node el);
 
+Unpitched parseUnpitched(pugi::xml_node el, const ParseContext &context);
+
 void parseUnpitchedContent(Unpitched &out, pugi::xml_node el);
+
+void parseUnpitchedContent(Unpitched &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeUnpitched(const Unpitched &v, pugi::xml_node parent, const char *tag);
 

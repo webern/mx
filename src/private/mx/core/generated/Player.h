@@ -18,6 +18,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The player type allows for multiple players per score-part for use in listening applications. One
 /// player may play multiple instruments, while a single instrument may include multiple players in
 /// divisi sections.
@@ -39,7 +41,11 @@ class Player final
 
 Player parsePlayer(pugi::xml_node el);
 
+Player parsePlayer(pugi::xml_node el, const ParseContext &context);
+
 void parsePlayerContent(Player &out, pugi::xml_node el);
+
+void parsePlayerContent(Player &out, pugi::xml_node el, const ParseContext &context);
 
 void serializePlayer(const Player &v, pugi::xml_node parent, const char *tag);
 

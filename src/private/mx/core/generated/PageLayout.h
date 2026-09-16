@@ -19,6 +19,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// Page layout can be defined both in score-wide defaults and in the print element. Page margins are
 /// specified either for both even and odd pages, or via separate odd and even page number values.
 /// The type is not needed when used as part of a print element. If omitted when used in the defaults
@@ -49,7 +51,11 @@ class PageLayout final
 
 PageLayout parsePageLayout(pugi::xml_node el);
 
+PageLayout parsePageLayout(pugi::xml_node el, const ParseContext &context);
+
 void parsePageLayoutContent(PageLayout &out, pugi::xml_node el);
+
+void parsePageLayoutContent(PageLayout &out, pugi::xml_node el, const ParseContext &context);
 
 void serializePageLayout(const PageLayout &v, pugi::xml_node parent, const char *tag);
 

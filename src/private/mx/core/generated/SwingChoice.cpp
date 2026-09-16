@@ -3,6 +3,7 @@
 #include "mx/core/generated/SwingChoice.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -27,15 +28,20 @@ SwingChoice SwingChoice::group(SwingChoiceGroup value)
 
 SwingChoice parseSwingChoice(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseSwingChoice(el, cursor, ParseContext{});
+}
+
+SwingChoice parseSwingChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+{
     if (cursor && (cursorIs(cursor, "straight")))
     {
-        Empty value = parseEmpty(cursor);
+        Empty value = parseEmpty(cursor, context);
         cursor = nextElement(cursor);
         return SwingChoice::straight(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "first")))
     {
-        return SwingChoice::group(parseSwingChoiceGroup(el, cursor));
+        return SwingChoice::group(parseSwingChoiceGroup(el, cursor, context));
     }
     if (cursor)
     {

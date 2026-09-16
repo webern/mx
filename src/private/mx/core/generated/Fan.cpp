@@ -49,8 +49,14 @@ bool Fan::tryParse(std::string_view text, Fan &out) noexcept
 
 Fan Fan::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+Fan Fan::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     Fan v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

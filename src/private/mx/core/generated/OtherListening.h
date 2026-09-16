@@ -17,6 +17,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The other-listening type represents other types of listening control and interaction. The
 /// required type attribute indicates the type of listening to which the element content applies. The
 /// optional player and time-only attributes restrict the element to apply to a single player or set
@@ -43,7 +45,11 @@ class OtherListening final
 
 OtherListening parseOtherListening(pugi::xml_node el);
 
+OtherListening parseOtherListening(pugi::xml_node el, const ParseContext &context);
+
 void parseOtherListeningContent(OtherListening &out, pugi::xml_node el);
+
+void parseOtherListeningContent(OtherListening &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeOtherListening(const OtherListening &v, pugi::xml_node parent, const char *tag);
 

@@ -27,6 +27,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// A direction is a musical indication that is not necessarily attached to a specific note. Two or
 /// more may be combined to indicate words followed by the start of a dashed line, the end of a wedge
 /// followed by dynamics, etc. For applications where a specific direction is indeed attached to a
@@ -78,7 +80,11 @@ class Direction final
 
 Direction parseDirection(pugi::xml_node el);
 
+Direction parseDirection(pugi::xml_node el, const ParseContext &context);
+
 void parseDirectionContent(Direction &out, pugi::xml_node el);
+
+void parseDirectionContent(Direction &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeDirection(const Direction &v, pugi::xml_node parent, const char *tag);
 

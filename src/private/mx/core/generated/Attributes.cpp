@@ -3,6 +3,7 @@
 #include "mx/core/generated/Attributes.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -162,6 +163,11 @@ void Attributes::setMeasureStyle(std::vector<MeasureStyle> value)
 
 Attributes parseAttributes(pugi::xml_node el)
 {
+    return parseAttributes(el, ParseContext{});
+}
+
+Attributes parseAttributes(pugi::xml_node el, const ParseContext &context)
+{
     Attributes out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -172,69 +178,74 @@ Attributes parseAttributes(pugi::xml_node el)
         }
         throwUnknownAttribute(el, a.name());
     }
-    parseAttributesContent(out, el);
+    parseAttributesContent(out, el, context);
     return out;
 }
 
 void parseAttributesContent(Attributes &out, pugi::xml_node el)
 {
+    parseAttributesContent(out, el, ParseContext{});
+}
+
+void parseAttributesContent(Attributes &out, pugi::xml_node el, const ParseContext &context)
+{
     pugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "footnote") || cursorIs(cursor, "level")))
     {
-        out.setEditorial(parseEditorialGroup(el, cursor));
+        out.setEditorial(parseEditorialGroup(el, cursor, context));
     }
     if (cursorIs(cursor, "divisions"))
     {
-        out.setDivisions(PositiveDivisions::parse(childText(cursor)));
+        out.setDivisions(parseValue<PositiveDivisions>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     while (cursorIs(cursor, "key"))
     {
-        out.addKey(parseKey(cursor));
+        out.addKey(parseKey(cursor, context));
         cursor = nextElement(cursor);
     }
     while (cursorIs(cursor, "time"))
     {
-        out.addTime(parseTime(cursor));
+        out.addTime(parseTime(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "staves"))
     {
-        out.setStaves(parseInt(childText(cursor)));
+        out.setStaves(parseIntegerValue(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "part-symbol"))
     {
-        out.setPartSymbol(parsePartSymbol(cursor));
+        out.setPartSymbol(parsePartSymbol(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "instruments"))
     {
-        out.setInstruments(parseInt(childText(cursor)));
+        out.setInstruments(parseIntegerValue(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     while (cursorIs(cursor, "clef"))
     {
-        out.addClef(parseClef(cursor));
+        out.addClef(parseClef(cursor, context));
         cursor = nextElement(cursor);
     }
     while (cursorIs(cursor, "staff-details"))
     {
-        out.addStaffDetails(parseStaffDetails(cursor));
+        out.addStaffDetails(parseStaffDetails(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor && (cursorIs(cursor, "transpose") || cursorIs(cursor, "for-part")))
     {
-        out.setChoice(parseAttributesChoice(el, cursor));
+        out.setChoice(parseAttributesChoice(el, cursor, context));
     }
     while (cursorIs(cursor, "directive"))
     {
-        out.addDirective(parseDirective(cursor));
+        out.addDirective(parseDirective(cursor, context));
         cursor = nextElement(cursor);
     }
     while (cursorIs(cursor, "measure-style"))
     {
-        out.addMeasureStyle(parseMeasureStyle(cursor));
+        out.addMeasureStyle(parseMeasureStyle(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor)

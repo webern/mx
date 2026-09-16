@@ -3,6 +3,7 @@
 #include "mx/core/generated/SystemLayout.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -52,6 +53,11 @@ void SystemLayout::setSystemDividers(std::optional<SystemDividers> value)
 
 SystemLayout parseSystemLayout(pugi::xml_node el)
 {
+    return parseSystemLayout(el, ParseContext{});
+}
+
+SystemLayout parseSystemLayout(pugi::xml_node el, const ParseContext &context)
+{
     SystemLayout out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -62,31 +68,36 @@ SystemLayout parseSystemLayout(pugi::xml_node el)
         }
         throwUnknownAttribute(el, a.name());
     }
-    parseSystemLayoutContent(out, el);
+    parseSystemLayoutContent(out, el, context);
     return out;
 }
 
 void parseSystemLayoutContent(SystemLayout &out, pugi::xml_node el)
 {
+    parseSystemLayoutContent(out, el, ParseContext{});
+}
+
+void parseSystemLayoutContent(SystemLayout &out, pugi::xml_node el, const ParseContext &context)
+{
     pugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "system-margins"))
     {
-        out.setSystemMargins(parseSystemMargins(cursor));
+        out.setSystemMargins(parseSystemMargins(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "system-distance"))
     {
-        out.setSystemDistance(Tenths::parse(childText(cursor)));
+        out.setSystemDistance(parseValue<Tenths>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "top-system-distance"))
     {
-        out.setTopSystemDistance(Tenths::parse(childText(cursor)));
+        out.setTopSystemDistance(parseValue<Tenths>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "system-dividers"))
     {
-        out.setSystemDividers(parseSystemDividers(cursor));
+        out.setSystemDividers(parseSystemDividers(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor)

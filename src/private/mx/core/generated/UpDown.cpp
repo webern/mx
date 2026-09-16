@@ -43,8 +43,14 @@ bool UpDown::tryParse(std::string_view text, UpDown &out) noexcept
 
 UpDown UpDown::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+UpDown UpDown::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     UpDown v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

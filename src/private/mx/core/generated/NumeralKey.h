@@ -19,6 +19,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The numeral-key type is used when the key for the numeral is different than the key specified by
 /// the key signature. The numeral-fifths element specifies the key in the same way as the fifths
 /// element. The numeral-mode element specifies the mode similar to the mode element, but with a
@@ -44,7 +46,11 @@ class NumeralKey final
 
 NumeralKey parseNumeralKey(pugi::xml_node el);
 
+NumeralKey parseNumeralKey(pugi::xml_node el, const ParseContext &context);
+
 void parseNumeralKeyContent(NumeralKey &out, pugi::xml_node el);
+
+void parseNumeralKeyContent(NumeralKey &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeNumeralKey(const NumeralKey &v, pugi::xml_node parent, const char *tag);
 

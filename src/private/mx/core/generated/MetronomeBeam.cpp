@@ -3,6 +3,7 @@
 #include "mx/core/generated/MetronomeBeam.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -32,6 +33,11 @@ void MetronomeBeam::setValue(BeamValue value)
 
 MetronomeBeam parseMetronomeBeam(pugi::xml_node el)
 {
+    return parseMetronomeBeam(el, ParseContext{});
+}
+
+MetronomeBeam parseMetronomeBeam(pugi::xml_node el, const ParseContext &context)
+{
     MetronomeBeam out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -42,20 +48,25 @@ MetronomeBeam parseMetronomeBeam(pugi::xml_node el)
         }
         if (aname == "number")
         {
-            out.setNumber(BeamLevel::parse(a.value()));
+            out.setNumber(parseValue<BeamLevel>(a.value(), context, el, "number"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseMetronomeBeamContent(out, el);
+    parseMetronomeBeamContent(out, el, context);
     return out;
 }
 
 void parseMetronomeBeamContent(MetronomeBeam &out, pugi::xml_node el)
 {
-    out.setValue(BeamValue::parse(childText(el)));
+    parseMetronomeBeamContent(out, el, ParseContext{});
+}
+
+void parseMetronomeBeamContent(MetronomeBeam &out, pugi::xml_node el, const ParseContext &context)
+{
+    out.setValue(parseValue<BeamValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

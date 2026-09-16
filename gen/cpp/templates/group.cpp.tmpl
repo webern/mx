@@ -3,6 +3,7 @@
 #include "mx/core/generated/{{name.pascal}}.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -12,6 +13,11 @@ namespace {{vars.namespace}}
 
 {{>fields_impl}}
 {{ident}} parse{{ident}}(pugi::xml_node el, pugi::xml_node &cursor)
+{
+    return parse{{ident}}(el, cursor, ParseContext{});
+}
+
+{{ident}} parse{{ident}}(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
     {{ident}} out;
 {{>fields_parse}}

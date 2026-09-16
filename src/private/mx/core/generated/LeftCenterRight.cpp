@@ -49,8 +49,14 @@ bool LeftCenterRight::tryParse(std::string_view text, LeftCenterRight &out) noex
 
 LeftCenterRight LeftCenterRight::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+LeftCenterRight LeftCenterRight::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     LeftCenterRight v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

@@ -49,8 +49,14 @@ bool StaffDivideSymbol::tryParse(std::string_view text, StaffDivideSymbol &out) 
 
 StaffDivideSymbol StaffDivideSymbol::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+StaffDivideSymbol StaffDivideSymbol::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     StaffDivideSymbol v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

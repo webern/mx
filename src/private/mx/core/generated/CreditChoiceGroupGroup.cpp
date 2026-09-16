@@ -3,6 +3,7 @@
 #include "mx/core/generated/CreditChoiceGroupGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -52,20 +53,26 @@ void CreditChoiceGroupGroup::setChoice(CreditChoiceGroupGroupChoice value)
 
 CreditChoiceGroupGroup parseCreditChoiceGroupGroup(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseCreditChoiceGroupGroup(el, cursor, ParseContext{});
+}
+
+CreditChoiceGroupGroup parseCreditChoiceGroupGroup(pugi::xml_node el, pugi::xml_node &cursor,
+                                                   const ParseContext &context)
+{
     CreditChoiceGroupGroup out;
     while (cursorIs(cursor, "link"))
     {
-        out.addLink(parseLink(cursor));
+        out.addLink(parseLink(cursor, context));
         cursor = nextElement(cursor);
     }
     while (cursorIs(cursor, "bookmark"))
     {
-        out.addBookmark(parseBookmark(cursor));
+        out.addBookmark(parseBookmark(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor && (cursorIs(cursor, "credit-words") || cursorIs(cursor, "credit-symbol")))
     {
-        out.setChoice(parseCreditChoiceGroupGroupChoice(el, cursor));
+        out.setChoice(parseCreditChoiceGroupGroupChoice(el, cursor, context));
     }
     else
     {

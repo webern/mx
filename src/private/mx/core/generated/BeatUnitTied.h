@@ -17,6 +17,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The beat-unit-tied type indicates a beat-unit within a metronome mark that is tied to the
 /// preceding beat-unit. This allows two or more tied notes to be associated with a per-minute value
 /// in a metronome mark, whereas the metronome-tied element is restricted to metric relationship
@@ -36,7 +38,11 @@ class BeatUnitTied final
 
 BeatUnitTied parseBeatUnitTied(pugi::xml_node el);
 
+BeatUnitTied parseBeatUnitTied(pugi::xml_node el, const ParseContext &context);
+
 void parseBeatUnitTiedContent(BeatUnitTied &out, pugi::xml_node el);
+
+void parseBeatUnitTiedContent(BeatUnitTied &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeBeatUnitTied(const BeatUnitTied &v, pugi::xml_node parent, const char *tag);
 

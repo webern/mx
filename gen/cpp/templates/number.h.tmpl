@@ -5,6 +5,7 @@
 {{#is_decimal}}
 #include "mx/core/Decimal.h"
 {{/is_decimal}}
+#include "mx/core/Lexical.h"
 
 #include <string>
 #include <string_view>
@@ -48,6 +49,9 @@ public:
 
     /// Lenient: non-numeric text yields the clamped zero.
     static {{ident}} parse(std::string_view text);
+
+    /// Lenient, and says whether the text was non-numeric or clamped.
+    static {{ident}} parse(std::string_view text, ValueParseOutcome &outcome);
 
     bool operator==(const {{ident}} &other) const noexcept = default;
 

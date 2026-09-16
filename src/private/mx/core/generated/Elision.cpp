@@ -3,6 +3,7 @@
 #include "mx/core/generated/Elision.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -82,6 +83,11 @@ void Elision::setValue(std::string value)
 
 Elision parseElision(pugi::xml_node el)
 {
+    return parseElision(el, ParseContext{});
+}
+
+Elision parseElision(pugi::xml_node el, const ParseContext &context)
+{
     Elision out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -92,38 +98,43 @@ Elision parseElision(pugi::xml_node el)
         }
         if (aname == "smufl")
         {
-            out.setSmufl(SmuflLyricsGlyphName::parse(a.value()));
+            out.setSmufl(parseValue<SmuflLyricsGlyphName>(a.value(), context, el, "smufl"));
         }
         else if (aname == "font-family")
         {
-            out.setFontFamily(FontFamily::parse(a.value()));
+            out.setFontFamily(parseValue<FontFamily>(a.value(), context, el, "font-family"));
         }
         else if (aname == "font-style")
         {
-            out.setFontStyle(FontStyle::parse(a.value()));
+            out.setFontStyle(parseValue<FontStyle>(a.value(), context, el, "font-style"));
         }
         else if (aname == "font-size")
         {
-            out.setFontSize(FontSize::parse(a.value()));
+            out.setFontSize(parseValue<FontSize>(a.value(), context, el, "font-size"));
         }
         else if (aname == "font-weight")
         {
-            out.setFontWeight(FontWeight::parse(a.value()));
+            out.setFontWeight(parseValue<FontWeight>(a.value(), context, el, "font-weight"));
         }
         else if (aname == "color")
         {
-            out.setColor(Color::parse(a.value()));
+            out.setColor(parseValue<Color>(a.value(), context, el, "color"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseElisionContent(out, el);
+    parseElisionContent(out, el, context);
     return out;
 }
 
 void parseElisionContent(Elision &out, pugi::xml_node el)
+{
+    parseElisionContent(out, el, ParseContext{});
+}
+
+void parseElisionContent(Elision &out, pugi::xml_node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))

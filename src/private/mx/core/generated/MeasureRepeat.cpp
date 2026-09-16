@@ -3,6 +3,7 @@
 #include "mx/core/generated/MeasureRepeat.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -42,6 +43,11 @@ void MeasureRepeat::setValue(PositiveIntegerOrEmpty value)
 
 MeasureRepeat parseMeasureRepeat(pugi::xml_node el)
 {
+    return parseMeasureRepeat(el, ParseContext{});
+}
+
+MeasureRepeat parseMeasureRepeat(pugi::xml_node el, const ParseContext &context)
+{
     MeasureRepeat out;
     bool seen_type = false;
     for (pugi::xml_attribute a : el.attributes())
@@ -54,11 +60,11 @@ MeasureRepeat parseMeasureRepeat(pugi::xml_node el)
         if (aname == "type")
         {
             seen_type = true;
-            out.setType(StartStop::parse(a.value()));
+            out.setType(parseValue<StartStop>(a.value(), context, el, "type"));
         }
         else if (aname == "slashes")
         {
-            out.setSlashes(parseInt(a.value()));
+            out.setSlashes(parseIntegerValue(a.value(), context, el, "slashes"));
         }
         else
         {
@@ -69,13 +75,18 @@ MeasureRepeat parseMeasureRepeat(pugi::xml_node el)
     {
         throwMissingAttribute(el, "type");
     }
-    parseMeasureRepeatContent(out, el);
+    parseMeasureRepeatContent(out, el, context);
     return out;
 }
 
 void parseMeasureRepeatContent(MeasureRepeat &out, pugi::xml_node el)
 {
-    out.setValue(PositiveIntegerOrEmpty::parse(childText(el)));
+    parseMeasureRepeatContent(out, el, ParseContext{});
+}
+
+void parseMeasureRepeatContent(MeasureRepeat &out, pugi::xml_node el, const ParseContext &context)
+{
+    out.setValue(parseValue<PositiveIntegerOrEmpty>(childText(el), context, el, nullptr));
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

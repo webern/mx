@@ -62,8 +62,14 @@ bool TimeSymbol::tryParse(std::string_view text, TimeSymbol &out) noexcept
 
 TimeSymbol TimeSymbol::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+TimeSymbol TimeSymbol::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     TimeSymbol v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

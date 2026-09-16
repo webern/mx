@@ -18,6 +18,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The staff-tuning type specifies the open, non-capo tuning of the lines on a tablature staff.
 /// Content fields mirror the schema grammar in declaration order; the
 /// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
@@ -37,7 +39,11 @@ class StaffTuning final
 
 StaffTuning parseStaffTuning(pugi::xml_node el);
 
+StaffTuning parseStaffTuning(pugi::xml_node el, const ParseContext &context);
+
 void parseStaffTuningContent(StaffTuning &out, pugi::xml_node el);
+
+void parseStaffTuningContent(StaffTuning &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeStaffTuning(const StaffTuning &v, pugi::xml_node parent, const char *tag);
 

@@ -32,4 +32,11 @@ Mode Mode::parse(std::string_view text)
     return Mode{std::string{text}};
 }
 
+Mode Mode::parse(std::string_view text, ValueParseOutcome &outcome)
+{
+    Mode out{std::string{text}};
+    outcome = out.value() == text ? ValueParseOutcome::valid : ValueParseOutcome::adjusted;
+    return out;
+}
+
 } // namespace mx::core

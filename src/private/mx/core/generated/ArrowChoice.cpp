@@ -3,6 +3,7 @@
 #include "mx/core/generated/ArrowChoice.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -27,13 +28,18 @@ ArrowChoice ArrowChoice::circularArrow(CircularArrow value)
 
 ArrowChoice parseArrowChoice(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseArrowChoice(el, cursor, ParseContext{});
+}
+
+ArrowChoice parseArrowChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+{
     if (cursor && (cursorIs(cursor, "arrow-direction")))
     {
-        return ArrowChoice::group(parseArrowChoiceGroup(el, cursor));
+        return ArrowChoice::group(parseArrowChoiceGroup(el, cursor, context));
     }
     if (cursor && (cursorIs(cursor, "circular-arrow")))
     {
-        CircularArrow value = CircularArrow::parse(childText(cursor));
+        CircularArrow value = parseValue<CircularArrow>(childText(cursor), context, cursor, nullptr);
         cursor = nextElement(cursor);
         return ArrowChoice::circularArrow(std::move(value));
     }

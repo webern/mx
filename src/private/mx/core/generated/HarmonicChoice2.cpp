@@ -3,6 +3,7 @@
 #include "mx/core/generated/HarmonicChoice2.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -32,21 +33,26 @@ HarmonicChoice2 HarmonicChoice2::soundingPitch(Empty value)
 
 HarmonicChoice2 parseHarmonicChoice2(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseHarmonicChoice2(el, cursor, ParseContext{});
+}
+
+HarmonicChoice2 parseHarmonicChoice2(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+{
     if (cursor && (cursorIs(cursor, "base-pitch")))
     {
-        Empty value = parseEmpty(cursor);
+        Empty value = parseEmpty(cursor, context);
         cursor = nextElement(cursor);
         return HarmonicChoice2::basePitch(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "touching-pitch")))
     {
-        Empty value = parseEmpty(cursor);
+        Empty value = parseEmpty(cursor, context);
         cursor = nextElement(cursor);
         return HarmonicChoice2::touchingPitch(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "sounding-pitch")))
     {
-        Empty value = parseEmpty(cursor);
+        Empty value = parseEmpty(cursor, context);
         cursor = nextElement(cursor);
         return HarmonicChoice2::soundingPitch(std::move(value));
     }

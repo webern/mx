@@ -3,6 +3,7 @@
 #include "mx/core/generated/NormalNoteGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -52,11 +53,16 @@ void NormalNoteGroup::clearTie() noexcept
 
 NormalNoteGroup parseNormalNoteGroup(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseNormalNoteGroup(el, cursor, ParseContext{});
+}
+
+NormalNoteGroup parseNormalNoteGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+{
     NormalNoteGroup out;
     if (cursor && (cursorIs(cursor, "chord") || cursorIs(cursor, "pitch") || cursorIs(cursor, "unpitched") ||
                    cursorIs(cursor, "rest")))
     {
-        out.setFullNote(parseFullNoteGroup(el, cursor));
+        out.setFullNote(parseFullNoteGroup(el, cursor, context));
     }
     else
     {
@@ -64,7 +70,7 @@ NormalNoteGroup parseNormalNoteGroup(pugi::xml_node el, pugi::xml_node &cursor)
     }
     if (cursorIs(cursor, "duration"))
     {
-        out.setDuration(PositiveDivisions::parse(childText(cursor)));
+        out.setDuration(parseValue<PositiveDivisions>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -73,7 +79,7 @@ NormalNoteGroup parseNormalNoteGroup(pugi::xml_node el, pugi::xml_node &cursor)
     }
     while (cursorIs(cursor, "tie"))
     {
-        if (!out.addTie(parseTie(cursor)))
+        if (!out.addTie(parseTie(cursor, context)))
         {
             throwTooManyElements(cursor);
         }

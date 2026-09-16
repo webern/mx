@@ -49,8 +49,14 @@ bool MeasureNumberingValue::tryParse(std::string_view text, MeasureNumberingValu
 
 MeasureNumberingValue MeasureNumberingValue::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+MeasureNumberingValue MeasureNumberingValue::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     MeasureNumberingValue v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

@@ -3,6 +3,7 @@
 #include "mx/core/generated/OtherText.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -32,6 +33,11 @@ void OtherText::setValue(std::string value)
 
 OtherText parseOtherText(pugi::xml_node el)
 {
+    return parseOtherText(el, ParseContext{});
+}
+
+OtherText parseOtherText(pugi::xml_node el, const ParseContext &context)
+{
     OtherText out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -42,18 +48,23 @@ OtherText parseOtherText(pugi::xml_node el)
         }
         if (aname == "smufl")
         {
-            out.setSmufl(SmuflGlyphName::parse(a.value()));
+            out.setSmufl(parseValue<SmuflGlyphName>(a.value(), context, el, "smufl"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseOtherTextContent(out, el);
+    parseOtherTextContent(out, el, context);
     return out;
 }
 
 void parseOtherTextContent(OtherText &out, pugi::xml_node el)
+{
+    parseOtherTextContent(out, el, ParseContext{});
+}
+
+void parseOtherTextContent(OtherText &out, pugi::xml_node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))

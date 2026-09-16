@@ -18,6 +18,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The notehead-text type represents text that is displayed inside a notehead, as is done in some
 /// educational music. It is not needed for the numbers used in tablature or jianpu notation. The
 /// presence of a TAB or jianpu clefs is sufficient to indicate that numbers are used. The
@@ -38,7 +40,11 @@ class NoteheadText final
 
 NoteheadText parseNoteheadText(pugi::xml_node el);
 
+NoteheadText parseNoteheadText(pugi::xml_node el, const ParseContext &context);
+
 void parseNoteheadTextContent(NoteheadText &out, pugi::xml_node el);
+
+void parseNoteheadTextContent(NoteheadText &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeNoteheadText(const NoteheadText &v, pugi::xml_node parent, const char *tag);
 

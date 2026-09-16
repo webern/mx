@@ -3,6 +3,7 @@
 #include "mx/core/generated/StaffTuning.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -32,6 +33,11 @@ void StaffTuning::setTuning(TuningGroup value)
 
 StaffTuning parseStaffTuning(pugi::xml_node el)
 {
+    return parseStaffTuning(el, ParseContext{});
+}
+
+StaffTuning parseStaffTuning(pugi::xml_node el, const ParseContext &context)
+{
     StaffTuning out;
     bool seen_line = false;
     for (pugi::xml_attribute a : el.attributes())
@@ -44,7 +50,7 @@ StaffTuning parseStaffTuning(pugi::xml_node el)
         if (aname == "line")
         {
             seen_line = true;
-            out.setLine(StaffLine::parse(a.value()));
+            out.setLine(parseValue<StaffLine>(a.value(), context, el, "line"));
         }
         else
         {
@@ -55,16 +61,21 @@ StaffTuning parseStaffTuning(pugi::xml_node el)
     {
         throwMissingAttribute(el, "line");
     }
-    parseStaffTuningContent(out, el);
+    parseStaffTuningContent(out, el, context);
     return out;
 }
 
 void parseStaffTuningContent(StaffTuning &out, pugi::xml_node el)
 {
+    parseStaffTuningContent(out, el, ParseContext{});
+}
+
+void parseStaffTuningContent(StaffTuning &out, pugi::xml_node el, const ParseContext &context)
+{
     pugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "tuning-step")))
     {
-        out.setTuning(parseTuningGroup(el, cursor));
+        out.setTuning(parseTuningGroup(el, cursor, context));
     }
     else
     {

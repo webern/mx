@@ -42,20 +42,33 @@ std::string MIDI128::toString() const
 
 bool MIDI128::tryParse(std::string_view text, MIDI128 &out)
 {
-    int v{};
-    if (!tryParseInt(text, v))
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    MIDI128 parsed = parse(text, outcome);
+    if (outcome == ValueParseOutcome::invalid)
     {
         return false;
     }
-    out = MIDI128{v};
+    out = std::move(parsed);
     return true;
 }
 
 MIDI128 MIDI128::parse(std::string_view text)
 {
-    MIDI128 v;
-    tryParse(text, v);
-    return v;
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+MIDI128 MIDI128::parse(std::string_view text, ValueParseOutcome &outcome)
+{
+    int v{};
+    if (!tryParseInt(text, v))
+    {
+        outcome = ValueParseOutcome::invalid;
+        return MIDI128{};
+    }
+    MIDI128 out{v};
+    outcome = out.value() == v ? ValueParseOutcome::valid : ValueParseOutcome::adjusted;
+    return out;
 }
 
 } // namespace mx::core

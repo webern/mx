@@ -16,6 +16,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The glass type represents pictograms for glass percussion instruments. The smufl attribute is
 /// used to distinguish different SMuFL glyphs for wind chimes in the Chimes pictograms range,
 /// including those made of materials other than glass.
@@ -35,7 +37,11 @@ class Glass final
 
 Glass parseGlass(pugi::xml_node el);
 
+Glass parseGlass(pugi::xml_node el, const ParseContext &context);
+
 void parseGlassContent(Glass &out, pugi::xml_node el);
+
+void parseGlassContent(Glass &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeGlass(const Glass &v, pugi::xml_node parent, const char *tag);
 

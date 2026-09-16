@@ -3,6 +3,7 @@
 #include "mx/core/generated/LyricTextGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -57,15 +58,20 @@ void LyricTextGroup::setExtend(std::optional<Extend> value)
 
 LyricTextGroup parseLyricTextGroup(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseLyricTextGroup(el, cursor, ParseContext{});
+}
+
+LyricTextGroup parseLyricTextGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+{
     LyricTextGroup out;
     if (cursorIs(cursor, "syllabic"))
     {
-        out.setSyllabic(Syllabic::parse(childText(cursor)));
+        out.setSyllabic(parseValue<Syllabic>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "text"))
     {
-        out.setText(parseTextElementData(cursor));
+        out.setText(parseTextElementData(cursor, context));
         cursor = nextElement(cursor);
     }
     else
@@ -74,11 +80,11 @@ LyricTextGroup parseLyricTextGroup(pugi::xml_node el, pugi::xml_node &cursor)
     }
     while (cursor && (cursorIs(cursor, "elision") || cursorIs(cursor, "text")))
     {
-        out.addLyricSyllableGroup(parseLyricSyllableGroup(el, cursor));
+        out.addLyricSyllableGroup(parseLyricSyllableGroup(el, cursor, context));
     }
     if (cursorIs(cursor, "extend"))
     {
-        out.setExtend(parseExtend(cursor));
+        out.setExtend(parseExtend(cursor, context));
         cursor = nextElement(cursor);
     }
     return out;

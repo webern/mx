@@ -49,8 +49,14 @@ bool ShowTuplet::tryParse(std::string_view text, ShowTuplet &out) noexcept
 
 ShowTuplet ShowTuplet::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+ShowTuplet ShowTuplet::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     ShowTuplet v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

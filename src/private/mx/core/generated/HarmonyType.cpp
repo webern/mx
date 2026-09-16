@@ -49,8 +49,14 @@ bool HarmonyType::tryParse(std::string_view text, HarmonyType &out) noexcept
 
 HarmonyType HarmonyType::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+HarmonyType HarmonyType::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     HarmonyType v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

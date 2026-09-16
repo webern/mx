@@ -19,6 +19,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The play type specifies playback techniques to be used in conjunction with the instrument-sound
 /// element. When used as part of a sound element, it applies to all notes going forward in score
 /// order. In multi-instrument parts, the affected instrument should be specified using the id
@@ -42,7 +44,11 @@ class Play final
 
 Play parsePlay(pugi::xml_node el);
 
+Play parsePlay(pugi::xml_node el, const ParseContext &context);
+
 void parsePlayContent(Play &out, pugi::xml_node el);
+
+void parsePlayContent(Play &out, pugi::xml_node el, const ParseContext &context);
 
 void serializePlay(const Play &v, pugi::xml_node parent, const char *tag);
 

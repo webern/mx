@@ -3,6 +3,7 @@
 #include "mx/core/generated/Grouping.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -67,6 +68,11 @@ void Grouping::setFeature(std::vector<Feature> value)
 
 Grouping parseGrouping(pugi::xml_node el)
 {
+    return parseGrouping(el, ParseContext{});
+}
+
+Grouping parseGrouping(pugi::xml_node el, const ParseContext &context)
+{
     Grouping out;
     bool seen_type = false;
     for (pugi::xml_attribute a : el.attributes())
@@ -79,7 +85,7 @@ Grouping parseGrouping(pugi::xml_node el)
         if (aname == "type")
         {
             seen_type = true;
-            out.setType(StartStopSingle::parse(a.value()));
+            out.setType(parseValue<StartStopSingle>(a.value(), context, el, "type"));
         }
         else if (aname == "number")
         {
@@ -102,16 +108,21 @@ Grouping parseGrouping(pugi::xml_node el)
     {
         throwMissingAttribute(el, "type");
     }
-    parseGroupingContent(out, el);
+    parseGroupingContent(out, el, context);
     return out;
 }
 
 void parseGroupingContent(Grouping &out, pugi::xml_node el)
 {
+    parseGroupingContent(out, el, ParseContext{});
+}
+
+void parseGroupingContent(Grouping &out, pugi::xml_node el, const ParseContext &context)
+{
     pugi::xml_node cursor = firstElement(el);
     while (cursorIs(cursor, "feature"))
     {
-        out.addFeature(parseFeature(cursor));
+        out.addFeature(parseFeature(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor)

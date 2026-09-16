@@ -3,6 +3,7 @@
 #include "mx/core/generated/PageMargins.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -32,6 +33,11 @@ void PageMargins::setAllMargins(AllMarginsGroup value)
 
 PageMargins parsePageMargins(pugi::xml_node el)
 {
+    return parsePageMargins(el, ParseContext{});
+}
+
+PageMargins parsePageMargins(pugi::xml_node el, const ParseContext &context)
+{
     PageMargins out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -42,23 +48,28 @@ PageMargins parsePageMargins(pugi::xml_node el)
         }
         if (aname == "type")
         {
-            out.setType(MarginType::parse(a.value()));
+            out.setType(parseValue<MarginType>(a.value(), context, el, "type"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parsePageMarginsContent(out, el);
+    parsePageMarginsContent(out, el, context);
     return out;
 }
 
 void parsePageMarginsContent(PageMargins &out, pugi::xml_node el)
 {
+    parsePageMarginsContent(out, el, ParseContext{});
+}
+
+void parsePageMarginsContent(PageMargins &out, pugi::xml_node el, const ParseContext &context)
+{
     pugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "left-margin")))
     {
-        out.setAllMargins(parseAllMarginsGroup(el, cursor));
+        out.setAllMargins(parseAllMarginsGroup(el, cursor, context));
     }
     else
     {

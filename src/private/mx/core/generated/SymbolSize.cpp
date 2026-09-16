@@ -55,8 +55,14 @@ bool SymbolSize::tryParse(std::string_view text, SymbolSize &out) noexcept
 
 SymbolSize SymbolSize::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+SymbolSize SymbolSize::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     SymbolSize v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

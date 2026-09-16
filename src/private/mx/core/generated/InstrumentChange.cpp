@@ -3,6 +3,7 @@
 #include "mx/core/generated/InstrumentChange.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -32,6 +33,11 @@ void InstrumentChange::setVirtualInstrumentData(VirtualInstrumentDataGroup value
 
 InstrumentChange parseInstrumentChange(pugi::xml_node el)
 {
+    return parseInstrumentChange(el, ParseContext{});
+}
+
+InstrumentChange parseInstrumentChange(pugi::xml_node el, const ParseContext &context)
+{
     InstrumentChange out;
     bool seen_id = false;
     for (pugi::xml_attribute a : el.attributes())
@@ -55,17 +61,22 @@ InstrumentChange parseInstrumentChange(pugi::xml_node el)
     {
         throwMissingAttribute(el, "id");
     }
-    parseInstrumentChangeContent(out, el);
+    parseInstrumentChangeContent(out, el, context);
     return out;
 }
 
 void parseInstrumentChangeContent(InstrumentChange &out, pugi::xml_node el)
 {
+    parseInstrumentChangeContent(out, el, ParseContext{});
+}
+
+void parseInstrumentChangeContent(InstrumentChange &out, pugi::xml_node el, const ParseContext &context)
+{
     pugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "instrument-sound") || cursorIs(cursor, "solo") || cursorIs(cursor, "ensemble") ||
                    cursorIs(cursor, "virtual-instrument")))
     {
-        out.setVirtualInstrumentData(parseVirtualInstrumentDataGroup(el, cursor));
+        out.setVirtualInstrumentData(parseVirtualInstrumentDataGroup(el, cursor, context));
     }
     if (cursor)
     {

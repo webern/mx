@@ -17,6 +17,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// Works are optionally identified by number and title. The work type also may indicate a link to
 /// the opus document that composes multiple scores into a collection.
 /// Content fields mirror the schema grammar in declaration order; the
@@ -40,7 +42,11 @@ class Work final
 
 Work parseWork(pugi::xml_node el);
 
+Work parseWork(pugi::xml_node el, const ParseContext &context);
+
 void parseWorkContent(Work &out, pugi::xml_node el);
+
+void parseWorkContent(Work &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeWork(const Work &v, pugi::xml_node parent, const char *tag);
 

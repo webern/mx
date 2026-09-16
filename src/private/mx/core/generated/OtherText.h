@@ -15,6 +15,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The other-text type represents a text element with a smufl attribute group. This type is used by
 /// MusicXML direction extension elements to allow specification of specific SMuFL glyphs without
 /// needed to add every glyph as a MusicXML element.
@@ -34,7 +36,11 @@ class OtherText final
 
 OtherText parseOtherText(pugi::xml_node el);
 
+OtherText parseOtherText(pugi::xml_node el, const ParseContext &context);
+
 void parseOtherTextContent(OtherText &out, pugi::xml_node el);
+
+void parseOtherTextContent(OtherText &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeOtherText(const OtherText &v, pugi::xml_node parent, const char *tag);
 

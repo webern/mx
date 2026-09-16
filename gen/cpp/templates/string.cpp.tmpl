@@ -46,4 +46,11 @@ bool {{ident}}::tryParse(std::string_view text, {{ident}} &out)
     return {{ident}}{std::string{text}};
 }
 
+{{ident}} {{ident}}::parse(std::string_view text, ValueParseOutcome &outcome)
+{
+    {{ident}} out{std::string{text}};
+    outcome = out.value() == text ? ValueParseOutcome::valid : ValueParseOutcome::adjusted;
+    return out;
+}
+
 } // namespace {{vars.namespace}}

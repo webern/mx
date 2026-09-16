@@ -3,6 +3,7 @@
 #include "mx/core/generated/VirtualInstrumentDataGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -42,19 +43,25 @@ void VirtualInstrumentDataGroup::setVirtualInstrument(std::optional<VirtualInstr
 
 VirtualInstrumentDataGroup parseVirtualInstrumentDataGroup(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseVirtualInstrumentDataGroup(el, cursor, ParseContext{});
+}
+
+VirtualInstrumentDataGroup parseVirtualInstrumentDataGroup(pugi::xml_node el, pugi::xml_node &cursor,
+                                                           const ParseContext &context)
+{
     VirtualInstrumentDataGroup out;
     if (cursorIs(cursor, "instrument-sound"))
     {
-        out.setInstrumentSound(InstrumentSound::parse(childText(cursor)));
+        out.setInstrumentSound(parseValue<InstrumentSound>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     if (cursor && (cursorIs(cursor, "solo") || cursorIs(cursor, "ensemble")))
     {
-        out.setChoice(parseVirtualInstrumentDataGroupChoice(el, cursor));
+        out.setChoice(parseVirtualInstrumentDataGroupChoice(el, cursor, context));
     }
     if (cursorIs(cursor, "virtual-instrument"))
     {
-        out.setVirtualInstrument(parseVirtualInstrument(cursor));
+        out.setVirtualInstrument(parseVirtualInstrument(cursor, context));
         cursor = nextElement(cursor);
     }
     return out;

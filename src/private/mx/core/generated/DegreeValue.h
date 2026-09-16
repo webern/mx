@@ -21,6 +21,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The content of the degree-value type is a number indicating the degree of the chord (1 for the
 /// root, 3 for third, etc). The text attribute specifies how the value of the degree should be
 /// displayed. The symbol attribute indicates that a symbol should be used in specifying the degree.
@@ -71,7 +73,11 @@ class DegreeValue final
 
 DegreeValue parseDegreeValue(pugi::xml_node el);
 
+DegreeValue parseDegreeValue(pugi::xml_node el, const ParseContext &context);
+
 void parseDegreeValueContent(DegreeValue &out, pugi::xml_node el);
+
+void parseDegreeValueContent(DegreeValue &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeDegreeValue(const DegreeValue &v, pugi::xml_node parent, const char *tag);
 

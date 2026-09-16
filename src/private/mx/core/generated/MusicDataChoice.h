@@ -29,6 +29,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The music-data group contains the basic musical data that is either associated with a part or a
 /// measure, depending on whether the partwise or timewise hierarchy is used.
 /// A repeated heterogeneous choice with large alternatives: each is boxed
@@ -276,6 +278,8 @@ class MusicDataChoice final
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
 MusicDataChoice parseMusicDataChoice(pugi::xml_node el, pugi::xml_node &cursor);
+
+MusicDataChoice parseMusicDataChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeMusicDataChoice(const MusicDataChoice &v, pugi::xml_node el);
 

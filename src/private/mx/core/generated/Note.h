@@ -44,6 +44,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// Notes are the most common type of MusicXML data. The MusicXML format distinguishes between
 /// elements used for sound information and elements used for notation information (e.g., tie is used
 /// for sound, tied for notation). Thus grace notes do not have a duration element. Cue notes have a
@@ -195,7 +197,11 @@ class Note final
 
 Note parseNote(pugi::xml_node el);
 
+Note parseNote(pugi::xml_node el, const ParseContext &context);
+
 void parseNoteContent(Note &out, pugi::xml_node el);
+
+void parseNoteContent(Note &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeNote(const Note &v, pugi::xml_node parent, const char *tag);
 

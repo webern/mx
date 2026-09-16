@@ -43,8 +43,14 @@ bool FontStyle::tryParse(std::string_view text, FontStyle &out) noexcept
 
 FontStyle FontStyle::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+FontStyle FontStyle::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     FontStyle v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

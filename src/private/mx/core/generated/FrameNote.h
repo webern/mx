@@ -20,6 +20,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The frame-note type represents each note included in the frame. An open string will have a fret
 /// value of 0, while a muted string will not be associated with a frame-note element.
 /// Content fields mirror the schema grammar in declaration order; the
@@ -46,7 +48,11 @@ class FrameNote final
 
 FrameNote parseFrameNote(pugi::xml_node el);
 
+FrameNote parseFrameNote(pugi::xml_node el, const ParseContext &context);
+
 void parseFrameNoteContent(FrameNote &out, pugi::xml_node el);
+
+void parseFrameNoteContent(FrameNote &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeFrameNote(const FrameNote &v, pugi::xml_node parent, const char *tag);
 

@@ -67,8 +67,14 @@ bool ArrowStyle::tryParse(std::string_view text, ArrowStyle &out) noexcept
 
 ArrowStyle ArrowStyle::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+ArrowStyle ArrowStyle::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     ArrowStyle v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

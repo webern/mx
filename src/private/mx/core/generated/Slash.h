@@ -19,6 +19,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The slash type is used to indicate that slash notation is to be used. If the slash is on every
 /// beat, use-stems is no (the default). To indicate rhythms but not pitches, use-stems is set to
 /// yes. The type attribute indicates whether this is the start or stop of a slash notation style.
@@ -48,7 +50,11 @@ class Slash final
 
 Slash parseSlash(pugi::xml_node el);
 
+Slash parseSlash(pugi::xml_node el, const ParseContext &context);
+
 void parseSlashContent(Slash &out, pugi::xml_node el);
+
+void parseSlashContent(Slash &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeSlash(const Slash &v, pugi::xml_node parent, const char *tag);
 

@@ -3,6 +3,7 @@
 #include "mx/core/generated/OtherPlay.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -32,6 +33,11 @@ void OtherPlay::setValue(std::string value)
 
 OtherPlay parseOtherPlay(pugi::xml_node el)
 {
+    return parseOtherPlay(el, ParseContext{});
+}
+
+OtherPlay parseOtherPlay(pugi::xml_node el, const ParseContext &context)
+{
     OtherPlay out;
     bool seen_type = false;
     for (pugi::xml_attribute a : el.attributes())
@@ -55,11 +61,16 @@ OtherPlay parseOtherPlay(pugi::xml_node el)
     {
         throwMissingAttribute(el, "type");
     }
-    parseOtherPlayContent(out, el);
+    parseOtherPlayContent(out, el, context);
     return out;
 }
 
 void parseOtherPlayContent(OtherPlay &out, pugi::xml_node el)
+{
+    parseOtherPlayContent(out, el, ParseContext{});
+}
+
+void parseOtherPlayContent(OtherPlay &out, pugi::xml_node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))

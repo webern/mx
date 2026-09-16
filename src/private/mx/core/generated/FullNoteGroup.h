@@ -18,6 +18,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The full-note group is a sequence of the common note elements between cue/grace notes and regular
 /// (full) notes: pitch, chord, and rest information, but not duration (cue and grace notes do not
 /// have duration encoded). Unpitched elements are used for unpitched percussion, speaking voice, and
@@ -41,6 +43,8 @@ class FullNoteGroup final
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
 FullNoteGroup parseFullNoteGroup(pugi::xml_node el, pugi::xml_node &cursor);
+
+FullNoteGroup parseFullNoteGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeFullNoteGroup(const FullNoteGroup &v, pugi::xml_node el);
 

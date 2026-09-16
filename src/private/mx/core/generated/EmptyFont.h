@@ -18,6 +18,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The empty-font type represents an empty element with font attributes.
 class EmptyFont final
 {
@@ -41,7 +43,11 @@ class EmptyFont final
 
 EmptyFont parseEmptyFont(pugi::xml_node el);
 
+EmptyFont parseEmptyFont(pugi::xml_node el, const ParseContext &context);
+
 void parseEmptyFontContent(EmptyFont &out, pugi::xml_node el);
+
+void parseEmptyFontContent(EmptyFont &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeEmptyFont(const EmptyFont &v, pugi::xml_node parent, const char *tag);
 

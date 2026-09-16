@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "mx/core/Lexical.h"
+
 #include <string>
 #include <string_view>
 
@@ -37,6 +39,9 @@ class LineWidthType final
     static bool tryParse(std::string_view text, LineWidthType &out);
 
     static LineWidthType parse(std::string_view text);
+
+    /// Says whether the text had to be repaired.
+    static LineWidthType parse(std::string_view text, ValueParseOutcome &outcome);
 
     bool operator==(const LineWidthType &other) const noexcept = default;
 

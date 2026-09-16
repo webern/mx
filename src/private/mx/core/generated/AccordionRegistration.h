@@ -28,6 +28,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The accordion-registration type is used for accordion registration symbols. These are circular
 /// symbols divided horizontally into high, middle, and low sections that correspond to 4', 8', and
 /// 16' pipes. Each accordion-high, accordion-middle, and accordion-low element represents the
@@ -90,7 +92,11 @@ class AccordionRegistration final
 
 AccordionRegistration parseAccordionRegistration(pugi::xml_node el);
 
+AccordionRegistration parseAccordionRegistration(pugi::xml_node el, const ParseContext &context);
+
 void parseAccordionRegistrationContent(AccordionRegistration &out, pugi::xml_node el);
+
+void parseAccordionRegistrationContent(AccordionRegistration &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeAccordionRegistration(const AccordionRegistration &v, pugi::xml_node parent, const char *tag);
 

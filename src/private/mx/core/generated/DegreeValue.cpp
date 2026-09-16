@@ -3,6 +3,7 @@
 #include "mx/core/generated/DegreeValue.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -132,6 +133,11 @@ void DegreeValue::setValue(int value)
 
 DegreeValue parseDegreeValue(pugi::xml_node el)
 {
+    return parseDegreeValue(el, ParseContext{});
+}
+
+DegreeValue parseDegreeValue(pugi::xml_node el, const ParseContext &context)
+{
     DegreeValue out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -142,7 +148,7 @@ DegreeValue parseDegreeValue(pugi::xml_node el)
         }
         if (aname == "symbol")
         {
-            out.setSymbol(DegreeSymbolValue::parse(a.value()));
+            out.setSymbol(parseValue<DegreeSymbolValue>(a.value(), context, el, "symbol"));
         }
         else if (aname == "text")
         {
@@ -150,52 +156,57 @@ DegreeValue parseDegreeValue(pugi::xml_node el)
         }
         else if (aname == "default-x")
         {
-            out.setDefaultX(Tenths::parse(a.value()));
+            out.setDefaultX(parseValue<Tenths>(a.value(), context, el, "default-x"));
         }
         else if (aname == "default-y")
         {
-            out.setDefaultY(Tenths::parse(a.value()));
+            out.setDefaultY(parseValue<Tenths>(a.value(), context, el, "default-y"));
         }
         else if (aname == "relative-x")
         {
-            out.setRelativeX(Tenths::parse(a.value()));
+            out.setRelativeX(parseValue<Tenths>(a.value(), context, el, "relative-x"));
         }
         else if (aname == "relative-y")
         {
-            out.setRelativeY(Tenths::parse(a.value()));
+            out.setRelativeY(parseValue<Tenths>(a.value(), context, el, "relative-y"));
         }
         else if (aname == "font-family")
         {
-            out.setFontFamily(FontFamily::parse(a.value()));
+            out.setFontFamily(parseValue<FontFamily>(a.value(), context, el, "font-family"));
         }
         else if (aname == "font-style")
         {
-            out.setFontStyle(FontStyle::parse(a.value()));
+            out.setFontStyle(parseValue<FontStyle>(a.value(), context, el, "font-style"));
         }
         else if (aname == "font-size")
         {
-            out.setFontSize(FontSize::parse(a.value()));
+            out.setFontSize(parseValue<FontSize>(a.value(), context, el, "font-size"));
         }
         else if (aname == "font-weight")
         {
-            out.setFontWeight(FontWeight::parse(a.value()));
+            out.setFontWeight(parseValue<FontWeight>(a.value(), context, el, "font-weight"));
         }
         else if (aname == "color")
         {
-            out.setColor(Color::parse(a.value()));
+            out.setColor(parseValue<Color>(a.value(), context, el, "color"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseDegreeValueContent(out, el);
+    parseDegreeValueContent(out, el, context);
     return out;
 }
 
 void parseDegreeValueContent(DegreeValue &out, pugi::xml_node el)
 {
-    out.setValue(parseInt(childText(el)));
+    parseDegreeValueContent(out, el, ParseContext{});
+}
+
+void parseDegreeValueContent(DegreeValue &out, pugi::xml_node el, const ParseContext &context)
+{
+    out.setValue(parseIntegerValue(childText(el), context, el, nullptr));
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

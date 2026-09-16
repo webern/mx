@@ -3,6 +3,7 @@
 #include "mx/core/generated/TimeModification.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -42,6 +43,11 @@ void TimeModification::setGroup(std::optional<TimeModificationGroup> value)
 
 TimeModification parseTimeModification(pugi::xml_node el)
 {
+    return parseTimeModification(el, ParseContext{});
+}
+
+TimeModification parseTimeModification(pugi::xml_node el, const ParseContext &context)
+{
     TimeModification out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -52,16 +58,21 @@ TimeModification parseTimeModification(pugi::xml_node el)
         }
         throwUnknownAttribute(el, a.name());
     }
-    parseTimeModificationContent(out, el);
+    parseTimeModificationContent(out, el, context);
     return out;
 }
 
 void parseTimeModificationContent(TimeModification &out, pugi::xml_node el)
 {
+    parseTimeModificationContent(out, el, ParseContext{});
+}
+
+void parseTimeModificationContent(TimeModification &out, pugi::xml_node el, const ParseContext &context)
+{
     pugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "actual-notes"))
     {
-        out.setActualNotes(parseInt(childText(cursor)));
+        out.setActualNotes(parseIntegerValue(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -70,7 +81,7 @@ void parseTimeModificationContent(TimeModification &out, pugi::xml_node el)
     }
     if (cursorIs(cursor, "normal-notes"))
     {
-        out.setNormalNotes(parseInt(childText(cursor)));
+        out.setNormalNotes(parseIntegerValue(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -79,7 +90,7 @@ void parseTimeModificationContent(TimeModification &out, pugi::xml_node el)
     }
     if (cursor && (cursorIs(cursor, "normal-type")))
     {
-        out.setGroup(parseTimeModificationGroup(el, cursor));
+        out.setGroup(parseTimeModificationGroup(el, cursor, context));
     }
     if (cursor)
     {

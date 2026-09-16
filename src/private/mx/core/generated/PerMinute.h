@@ -18,6 +18,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The per-minute type can be a number, or a text description including numbers. If a font is
 /// specified, it overrides the font specified for the overall metronome element. This allows
 /// separate specification of a music font for the beat-unit and a text font for the numeric value,
@@ -47,7 +49,11 @@ class PerMinute final
 
 PerMinute parsePerMinute(pugi::xml_node el);
 
+PerMinute parsePerMinute(pugi::xml_node el, const ParseContext &context);
+
 void parsePerMinuteContent(PerMinute &out, pugi::xml_node el);
+
+void parsePerMinuteContent(PerMinute &out, pugi::xml_node el, const ParseContext &context);
 
 void serializePerMinute(const PerMinute &v, pugi::xml_node parent, const char *tag);
 

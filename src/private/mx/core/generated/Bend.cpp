@@ -3,6 +3,7 @@
 #include "mx/core/generated/Bend.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -182,6 +183,11 @@ void Bend::setWithBar(std::optional<PlacementText> value)
 
 Bend parseBend(pugi::xml_node el)
 {
+    return parseBend(el, ParseContext{});
+}
+
+Bend parseBend(pugi::xml_node el, const ParseContext &context)
+{
     Bend out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -192,75 +198,80 @@ Bend parseBend(pugi::xml_node el)
         }
         if (aname == "shape")
         {
-            out.setShape(BendShape::parse(a.value()));
+            out.setShape(parseValue<BendShape>(a.value(), context, el, "shape"));
         }
         else if (aname == "default-x")
         {
-            out.setDefaultX(Tenths::parse(a.value()));
+            out.setDefaultX(parseValue<Tenths>(a.value(), context, el, "default-x"));
         }
         else if (aname == "default-y")
         {
-            out.setDefaultY(Tenths::parse(a.value()));
+            out.setDefaultY(parseValue<Tenths>(a.value(), context, el, "default-y"));
         }
         else if (aname == "relative-x")
         {
-            out.setRelativeX(Tenths::parse(a.value()));
+            out.setRelativeX(parseValue<Tenths>(a.value(), context, el, "relative-x"));
         }
         else if (aname == "relative-y")
         {
-            out.setRelativeY(Tenths::parse(a.value()));
+            out.setRelativeY(parseValue<Tenths>(a.value(), context, el, "relative-y"));
         }
         else if (aname == "font-family")
         {
-            out.setFontFamily(FontFamily::parse(a.value()));
+            out.setFontFamily(parseValue<FontFamily>(a.value(), context, el, "font-family"));
         }
         else if (aname == "font-style")
         {
-            out.setFontStyle(FontStyle::parse(a.value()));
+            out.setFontStyle(parseValue<FontStyle>(a.value(), context, el, "font-style"));
         }
         else if (aname == "font-size")
         {
-            out.setFontSize(FontSize::parse(a.value()));
+            out.setFontSize(parseValue<FontSize>(a.value(), context, el, "font-size"));
         }
         else if (aname == "font-weight")
         {
-            out.setFontWeight(FontWeight::parse(a.value()));
+            out.setFontWeight(parseValue<FontWeight>(a.value(), context, el, "font-weight"));
         }
         else if (aname == "color")
         {
-            out.setColor(Color::parse(a.value()));
+            out.setColor(parseValue<Color>(a.value(), context, el, "color"));
         }
         else if (aname == "accelerate")
         {
-            out.setAccelerate(YesNo::parse(a.value()));
+            out.setAccelerate(parseValue<YesNo>(a.value(), context, el, "accelerate"));
         }
         else if (aname == "beats")
         {
-            out.setBeats(TrillBeats::parse(a.value()));
+            out.setBeats(parseValue<TrillBeats>(a.value(), context, el, "beats"));
         }
         else if (aname == "first-beat")
         {
-            out.setFirstBeat(Percent::parse(a.value()));
+            out.setFirstBeat(parseValue<Percent>(a.value(), context, el, "first-beat"));
         }
         else if (aname == "last-beat")
         {
-            out.setLastBeat(Percent::parse(a.value()));
+            out.setLastBeat(parseValue<Percent>(a.value(), context, el, "last-beat"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseBendContent(out, el);
+    parseBendContent(out, el, context);
     return out;
 }
 
 void parseBendContent(Bend &out, pugi::xml_node el)
 {
+    parseBendContent(out, el, ParseContext{});
+}
+
+void parseBendContent(Bend &out, pugi::xml_node el, const ParseContext &context)
+{
     pugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "bend-alter"))
     {
-        out.setBendAlter(Semitones::parse(childText(cursor)));
+        out.setBendAlter(parseValue<Semitones>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -269,11 +280,11 @@ void parseBendContent(Bend &out, pugi::xml_node el)
     }
     if (cursor && (cursorIs(cursor, "pre-bend") || cursorIs(cursor, "release")))
     {
-        out.setChoice(parseBendChoice(el, cursor));
+        out.setChoice(parseBendChoice(el, cursor, context));
     }
     if (cursorIs(cursor, "with-bar"))
     {
-        out.setWithBar(parsePlacementText(cursor));
+        out.setWithBar(parsePlacementText(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor)

@@ -18,6 +18,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The editorial-voice-direction group supports the common combination of editorial and voice
 /// information for a direction element. It is separate from the editorial-voice element because
 /// extensions and restrictions might be different for directions than for the note and forward
@@ -44,6 +46,9 @@ class EditorialVoiceDirectionGroup final
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
 EditorialVoiceDirectionGroup parseEditorialVoiceDirectionGroup(pugi::xml_node el, pugi::xml_node &cursor);
+
+EditorialVoiceDirectionGroup parseEditorialVoiceDirectionGroup(pugi::xml_node el, pugi::xml_node &cursor,
+                                                               const ParseContext &context);
 
 void serializeEditorialVoiceDirectionGroup(const EditorialVoiceDirectionGroup &v, pugi::xml_node el);
 

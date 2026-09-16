@@ -3,6 +3,7 @@
 #include "mx/core/generated/Listening.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -37,6 +38,11 @@ void Listening::setOffset(std::optional<Offset> value)
 
 Listening parseListening(pugi::xml_node el)
 {
+    return parseListening(el, ParseContext{});
+}
+
+Listening parseListening(pugi::xml_node el, const ParseContext &context)
+{
     Listening out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -47,25 +53,30 @@ Listening parseListening(pugi::xml_node el)
         }
         throwUnknownAttribute(el, a.name());
     }
-    parseListeningContent(out, el);
+    parseListeningContent(out, el, context);
     return out;
 }
 
 void parseListeningContent(Listening &out, pugi::xml_node el)
+{
+    parseListeningContent(out, el, ParseContext{});
+}
+
+void parseListeningContent(Listening &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (!(cursor && (cursorIs(cursor, "sync") || cursorIs(cursor, "other-listening"))))
     {
         throwMissingElement(el, "sync");
     }
-    out.setChoice(OneOrMore<ListeningChoice>{parseListeningChoice(el, cursor)});
+    out.setChoice(OneOrMore<ListeningChoice>{parseListeningChoice(el, cursor, context)});
     while (cursor && (cursorIs(cursor, "sync") || cursorIs(cursor, "other-listening")))
     {
-        out.addChoice(parseListeningChoice(el, cursor));
+        out.addChoice(parseListeningChoice(el, cursor, context));
     }
     if (cursorIs(cursor, "offset"))
     {
-        out.setOffset(parseOffset(cursor));
+        out.setOffset(parseOffset(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor)

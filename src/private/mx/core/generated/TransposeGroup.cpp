@@ -3,6 +3,7 @@
 #include "mx/core/generated/TransposeGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -52,15 +53,20 @@ void TransposeGroup::setDouble(std::optional<Double> value)
 
 TransposeGroup parseTransposeGroup(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseTransposeGroup(el, cursor, ParseContext{});
+}
+
+TransposeGroup parseTransposeGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+{
     TransposeGroup out;
     if (cursorIs(cursor, "diatonic"))
     {
-        out.setDiatonic(parseInt(childText(cursor)));
+        out.setDiatonic(parseIntegerValue(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "chromatic"))
     {
-        out.setChromatic(Semitones::parse(childText(cursor)));
+        out.setChromatic(parseValue<Semitones>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -69,12 +75,12 @@ TransposeGroup parseTransposeGroup(pugi::xml_node el, pugi::xml_node &cursor)
     }
     if (cursorIs(cursor, "octave-change"))
     {
-        out.setOctaveChange(parseInt(childText(cursor)));
+        out.setOctaveChange(parseIntegerValue(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "double"))
     {
-        out.setDouble(parseDouble(cursor));
+        out.setDouble(parseDouble(cursor, context));
         cursor = nextElement(cursor);
     }
     return out;

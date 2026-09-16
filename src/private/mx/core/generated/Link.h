@@ -17,6 +17,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The link type serves as an outgoing simple XLink. If a relative link is used within a document
 /// that is part of a compressed MusicXML file, the link is relative to the root folder of the zip
 /// file.
@@ -69,7 +71,11 @@ class Link final
 
 Link parseLink(pugi::xml_node el);
 
+Link parseLink(pugi::xml_node el, const ParseContext &context);
+
 void parseLinkContent(Link &out, pugi::xml_node el);
+
+void parseLinkContent(Link &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeLink(const Link &v, pugi::xml_node parent, const char *tag);
 

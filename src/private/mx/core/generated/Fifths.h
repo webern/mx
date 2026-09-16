@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "mx/core/Lexical.h"
+
 #include <string>
 #include <string_view>
 
@@ -36,6 +38,9 @@ class Fifths final
 
     /// Lenient: non-numeric text yields the clamped zero.
     static Fifths parse(std::string_view text);
+
+    /// Lenient, and says whether the text was non-numeric or clamped.
+    static Fifths parse(std::string_view text, ValueParseOutcome &outcome);
 
     bool operator==(const Fifths &other) const noexcept = default;
 

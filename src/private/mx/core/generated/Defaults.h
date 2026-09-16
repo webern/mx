@@ -23,6 +23,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The defaults type specifies score-wide defaults for scaling; whether or not the file is a concert
 /// score; layout; and default values for the music font, word font, lyric font, and lyric language.
 /// Except for the concert-score element, if any defaults are missing, the choice of what to use is
@@ -65,7 +67,11 @@ class Defaults final
 
 Defaults parseDefaults(pugi::xml_node el);
 
+Defaults parseDefaults(pugi::xml_node el, const ParseContext &context);
+
 void parseDefaultsContent(Defaults &out, pugi::xml_node el);
+
+void parseDefaultsContent(Defaults &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeDefaults(const Defaults &v, pugi::xml_node parent, const char *tag);
 

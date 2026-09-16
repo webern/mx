@@ -3,6 +3,7 @@
 #include "mx/core/generated/PartTranspose.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -22,6 +23,11 @@ void PartTranspose::setTranspose(TransposeGroup value)
 
 PartTranspose parsePartTranspose(pugi::xml_node el)
 {
+    return parsePartTranspose(el, ParseContext{});
+}
+
+PartTranspose parsePartTranspose(pugi::xml_node el, const ParseContext &context)
+{
     PartTranspose out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -32,16 +38,21 @@ PartTranspose parsePartTranspose(pugi::xml_node el)
         }
         throwUnknownAttribute(el, a.name());
     }
-    parsePartTransposeContent(out, el);
+    parsePartTransposeContent(out, el, context);
     return out;
 }
 
 void parsePartTransposeContent(PartTranspose &out, pugi::xml_node el)
 {
+    parsePartTransposeContent(out, el, ParseContext{});
+}
+
+void parsePartTransposeContent(PartTranspose &out, pugi::xml_node el, const ParseContext &context)
+{
     pugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "diatonic") || cursorIs(cursor, "chromatic")))
     {
-        out.setTranspose(parseTransposeGroup(el, cursor));
+        out.setTranspose(parseTransposeGroup(el, cursor, context));
     }
     else
     {

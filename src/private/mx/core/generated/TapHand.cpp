@@ -43,8 +43,14 @@ bool TapHand::tryParse(std::string_view text, TapHand &out) noexcept
 
 TapHand TapHand::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+TapHand TapHand::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     TapHand v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

@@ -3,6 +3,7 @@
 #include "mx/core/generated/Bookmark.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -52,6 +53,11 @@ void Bookmark::setPosition(std::optional<int> value)
 
 Bookmark parseBookmark(pugi::xml_node el)
 {
+    return parseBookmark(el, ParseContext{});
+}
+
+Bookmark parseBookmark(pugi::xml_node el, const ParseContext &context)
+{
     Bookmark out;
     bool seen_id = false;
     for (pugi::xml_attribute a : el.attributes())
@@ -76,7 +82,7 @@ Bookmark parseBookmark(pugi::xml_node el)
         }
         else if (aname == "position")
         {
-            out.setPosition(parseInt(a.value()));
+            out.setPosition(parseIntegerValue(a.value(), context, el, "position"));
         }
         else
         {
@@ -87,13 +93,19 @@ Bookmark parseBookmark(pugi::xml_node el)
     {
         throwMissingAttribute(el, "id");
     }
-    parseBookmarkContent(out, el);
+    parseBookmarkContent(out, el, context);
     return out;
 }
 
 void parseBookmarkContent(Bookmark &out, pugi::xml_node el)
 {
+    parseBookmarkContent(out, el, ParseContext{});
+}
+
+void parseBookmarkContent(Bookmark &out, pugi::xml_node el, const ParseContext &context)
+{
     (void)out;
+    (void)context;
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

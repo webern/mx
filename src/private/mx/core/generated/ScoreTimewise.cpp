@@ -3,6 +3,7 @@
 #include "mx/core/generated/ScoreTimewise.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -47,6 +48,11 @@ void ScoreTimewise::setMeasure(OneOrMore<TimewiseMeasure> value)
 
 ScoreTimewise parseScoreTimewise(pugi::xml_node el)
 {
+    return parseScoreTimewise(el, ParseContext{});
+}
+
+ScoreTimewise parseScoreTimewise(pugi::xml_node el, const ParseContext &context)
+{
     ScoreTimewise out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -64,18 +70,23 @@ ScoreTimewise parseScoreTimewise(pugi::xml_node el)
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseScoreTimewiseContent(out, el);
+    parseScoreTimewiseContent(out, el, context);
     return out;
 }
 
 void parseScoreTimewiseContent(ScoreTimewise &out, pugi::xml_node el)
+{
+    parseScoreTimewiseContent(out, el, ParseContext{});
+}
+
+void parseScoreTimewiseContent(ScoreTimewise &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "work") || cursorIs(cursor, "movement-number") ||
                    cursorIs(cursor, "movement-title") || cursorIs(cursor, "identification") ||
                    cursorIs(cursor, "defaults") || cursorIs(cursor, "credit") || cursorIs(cursor, "part-list")))
     {
-        out.setScoreHeader(parseScoreHeaderGroup(el, cursor));
+        out.setScoreHeader(parseScoreHeaderGroup(el, cursor, context));
     }
     else
     {
@@ -85,11 +96,11 @@ void parseScoreTimewiseContent(ScoreTimewise &out, pugi::xml_node el)
     {
         throwMissingOrMisplaced(el, cursor, "measure");
     }
-    out.setMeasure(OneOrMore<TimewiseMeasure>{parseTimewiseMeasure(cursor)});
+    out.setMeasure(OneOrMore<TimewiseMeasure>{parseTimewiseMeasure(cursor, context)});
     cursor = nextElement(cursor);
     while (cursorIs(cursor, "measure"))
     {
-        out.addMeasure(parseTimewiseMeasure(cursor));
+        out.addMeasure(parseTimewiseMeasure(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor)

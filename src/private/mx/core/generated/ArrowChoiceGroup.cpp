@@ -3,6 +3,7 @@
 #include "mx/core/generated/ArrowChoiceGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -42,10 +43,15 @@ void ArrowChoiceGroup::setArrowhead(bool value) noexcept
 
 ArrowChoiceGroup parseArrowChoiceGroup(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseArrowChoiceGroup(el, cursor, ParseContext{});
+}
+
+ArrowChoiceGroup parseArrowChoiceGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+{
     ArrowChoiceGroup out;
     if (cursorIs(cursor, "arrow-direction"))
     {
-        out.setArrowDirection(ArrowDirection::parse(childText(cursor)));
+        out.setArrowDirection(parseValue<ArrowDirection>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -54,12 +60,12 @@ ArrowChoiceGroup parseArrowChoiceGroup(pugi::xml_node el, pugi::xml_node &cursor
     }
     if (cursorIs(cursor, "arrow-style"))
     {
-        out.setArrowStyle(ArrowStyle::parse(childText(cursor)));
+        out.setArrowStyle(parseValue<ArrowStyle>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "arrowhead"))
     {
-        parseEmpty(cursor);
+        parseEmpty(cursor, context);
         out.setArrowhead(true);
         cursor = nextElement(cursor);
     }

@@ -3,6 +3,7 @@
 #include "mx/core/generated/LeftRightMarginsGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -32,10 +33,15 @@ void LeftRightMarginsGroup::setRightMargin(Tenths value)
 
 LeftRightMarginsGroup parseLeftRightMarginsGroup(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseLeftRightMarginsGroup(el, cursor, ParseContext{});
+}
+
+LeftRightMarginsGroup parseLeftRightMarginsGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+{
     LeftRightMarginsGroup out;
     if (cursorIs(cursor, "left-margin"))
     {
-        out.setLeftMargin(Tenths::parse(childText(cursor)));
+        out.setLeftMargin(parseValue<Tenths>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -44,7 +50,7 @@ LeftRightMarginsGroup parseLeftRightMarginsGroup(pugi::xml_node el, pugi::xml_no
     }
     if (cursorIs(cursor, "right-margin"))
     {
-        out.setRightMargin(Tenths::parse(childText(cursor)));
+        out.setRightMargin(parseValue<Tenths>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else

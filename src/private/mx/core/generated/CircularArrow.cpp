@@ -43,8 +43,14 @@ bool CircularArrow::tryParse(std::string_view text, CircularArrow &out) noexcept
 
 CircularArrow CircularArrow::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+CircularArrow CircularArrow::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     CircularArrow v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

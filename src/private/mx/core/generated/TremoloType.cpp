@@ -55,8 +55,14 @@ bool TremoloType::tryParse(std::string_view text, TremoloType &out) noexcept
 
 TremoloType TremoloType::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+TremoloType TremoloType::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     TremoloType v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

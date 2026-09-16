@@ -3,6 +3,7 @@
 #include "mx/core/generated/GroupBarline.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -32,6 +33,11 @@ void GroupBarline::setValue(GroupBarlineValue value)
 
 GroupBarline parseGroupBarline(pugi::xml_node el)
 {
+    return parseGroupBarline(el, ParseContext{});
+}
+
+GroupBarline parseGroupBarline(pugi::xml_node el, const ParseContext &context)
+{
     GroupBarline out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -42,20 +48,25 @@ GroupBarline parseGroupBarline(pugi::xml_node el)
         }
         if (aname == "color")
         {
-            out.setColor(Color::parse(a.value()));
+            out.setColor(parseValue<Color>(a.value(), context, el, "color"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseGroupBarlineContent(out, el);
+    parseGroupBarlineContent(out, el, context);
     return out;
 }
 
 void parseGroupBarlineContent(GroupBarline &out, pugi::xml_node el)
 {
-    out.setValue(GroupBarlineValue::parse(childText(el)));
+    parseGroupBarlineContent(out, el, ParseContext{});
+}
+
+void parseGroupBarlineContent(GroupBarline &out, pugi::xml_node el, const ParseContext &context)
+{
+    out.setValue(parseValue<GroupBarlineValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

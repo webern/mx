@@ -3,6 +3,7 @@
 #include "mx/core/generated/HarmonClosed.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -32,6 +33,11 @@ void HarmonClosed::setValue(HarmonClosedValue value)
 
 HarmonClosed parseHarmonClosed(pugi::xml_node el)
 {
+    return parseHarmonClosed(el, ParseContext{});
+}
+
+HarmonClosed parseHarmonClosed(pugi::xml_node el, const ParseContext &context)
+{
     HarmonClosed out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -42,20 +48,25 @@ HarmonClosed parseHarmonClosed(pugi::xml_node el)
         }
         if (aname == "location")
         {
-            out.setLocation(HarmonClosedLocation::parse(a.value()));
+            out.setLocation(parseValue<HarmonClosedLocation>(a.value(), context, el, "location"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseHarmonClosedContent(out, el);
+    parseHarmonClosedContent(out, el, context);
     return out;
 }
 
 void parseHarmonClosedContent(HarmonClosed &out, pugi::xml_node el)
 {
-    out.setValue(HarmonClosedValue::parse(childText(el)));
+    parseHarmonClosedContent(out, el, ParseContext{});
+}
+
+void parseHarmonClosedContent(HarmonClosed &out, pugi::xml_node el, const ParseContext &context)
+{
+    out.setValue(parseValue<HarmonClosedValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

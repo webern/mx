@@ -3,6 +3,7 @@
 #include "mx/core/generated/NoteType.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -32,6 +33,11 @@ void NoteType::setValue(NoteTypeValue value)
 
 NoteType parseNoteType(pugi::xml_node el)
 {
+    return parseNoteType(el, ParseContext{});
+}
+
+NoteType parseNoteType(pugi::xml_node el, const ParseContext &context)
+{
     NoteType out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -42,20 +48,25 @@ NoteType parseNoteType(pugi::xml_node el)
         }
         if (aname == "size")
         {
-            out.setSize(SymbolSize::parse(a.value()));
+            out.setSize(parseValue<SymbolSize>(a.value(), context, el, "size"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseNoteTypeContent(out, el);
+    parseNoteTypeContent(out, el, context);
     return out;
 }
 
 void parseNoteTypeContent(NoteType &out, pugi::xml_node el)
 {
-    out.setValue(NoteTypeValue::parse(childText(el)));
+    parseNoteTypeContent(out, el, ParseContext{});
+}
+
+void parseNoteTypeContent(NoteType &out, pugi::xml_node el, const ParseContext &context)
+{
+    out.setValue(parseValue<NoteTypeValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

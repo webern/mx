@@ -3,6 +3,7 @@
 #include "mx/core/generated/TuningGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -42,10 +43,15 @@ void TuningGroup::setTuningOctave(Octave value)
 
 TuningGroup parseTuningGroup(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseTuningGroup(el, cursor, ParseContext{});
+}
+
+TuningGroup parseTuningGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+{
     TuningGroup out;
     if (cursorIs(cursor, "tuning-step"))
     {
-        out.setTuningStep(Step::parse(childText(cursor)));
+        out.setTuningStep(parseValue<Step>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -54,12 +60,12 @@ TuningGroup parseTuningGroup(pugi::xml_node el, pugi::xml_node &cursor)
     }
     if (cursorIs(cursor, "tuning-alter"))
     {
-        out.setTuningAlter(Semitones::parse(childText(cursor)));
+        out.setTuningAlter(parseValue<Semitones>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "tuning-octave"))
     {
-        out.setTuningOctave(Octave::parse(childText(cursor)));
+        out.setTuningOctave(parseValue<Octave>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else

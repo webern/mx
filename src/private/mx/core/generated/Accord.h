@@ -18,6 +18,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The accord type represents the tuning of a single string in the scordatura element. It uses the
 /// same group of elements as the staff-tuning element. Strings are numbered from high to low.
 /// Content fields mirror the schema grammar in declaration order; the
@@ -38,7 +40,11 @@ class Accord final
 
 Accord parseAccord(pugi::xml_node el);
 
+Accord parseAccord(pugi::xml_node el, const ParseContext &context);
+
 void parseAccordContent(Accord &out, pugi::xml_node el);
+
+void parseAccordContent(Accord &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeAccord(const Accord &v, pugi::xml_node parent, const char *tag);
 

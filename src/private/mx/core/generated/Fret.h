@@ -19,6 +19,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The fret element is used with tablature notation and chord diagrams. Fret numbers start with 0
 /// for an open string and 1 for the first fret.
 class Fret final
@@ -49,7 +51,11 @@ class Fret final
 
 Fret parseFret(pugi::xml_node el);
 
+Fret parseFret(pugi::xml_node el, const ParseContext &context);
+
 void parseFretContent(Fret &out, pugi::xml_node el);
+
+void parseFretContent(Fret &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeFret(const Fret &v, pugi::xml_node parent, const char *tag);
 

@@ -3,6 +3,7 @@
 #include "mx/core/generated/{{name.pascal}}.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -27,6 +28,11 @@ namespace {{vars.namespace}}
 
 {{/alternatives}}
 {{ident}} parse{{ident}}(pugi::xml_node el, pugi::xml_node &cursor)
+{
+    return parse{{ident}}(el, cursor, ParseContext{});
+}
+
+{{ident}} parse{{ident}}(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
 {
 {{#alternatives}}
     if ({{>field_first_match}})
@@ -60,21 +66,21 @@ namespace {{vars.namespace}}
 {{/is_element}}
 {{^is_element}}
 {{#is_required}}
-        return {{type.ident}}::{{ident}}(parse{{type_ref.ident}}(el, cursor));
+        return {{type.ident}}::{{ident}}(parse{{type_ref.ident}}(el, cursor, context));
 {{/is_required}}
 {{#is_vector}}
 {{#min1}}
-        OneOrMore<{{type_ref.ident}}> items{parse{{type_ref.ident}}(el, cursor)};
+        OneOrMore<{{type_ref.ident}}> items{parse{{type_ref.ident}}(el, cursor, context)};
         while ({{>field_first_match}})
         {
-            items.add(parse{{type_ref.ident}}(el, cursor));
+            items.add(parse{{type_ref.ident}}(el, cursor, context));
         }
 {{/min1}}
 {{^min1}}
         std::vector<{{type_ref.ident}}> items;
         while ({{>field_first_match}})
         {
-            items.push_back(parse{{type_ref.ident}}(el, cursor));
+            items.push_back(parse{{type_ref.ident}}(el, cursor, context));
         }
 {{/min1}}
         return {{type.ident}}::{{ident}}(std::move(items));

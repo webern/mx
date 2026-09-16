@@ -18,6 +18,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The pedal-tuning type specifies the tuning of a single harp pedal.
 /// Content fields mirror the schema grammar in declaration order; the
 /// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
@@ -37,7 +39,11 @@ class PedalTuning final
 
 PedalTuning parsePedalTuning(pugi::xml_node el);
 
+PedalTuning parsePedalTuning(pugi::xml_node el, const ParseContext &context);
+
 void parsePedalTuningContent(PedalTuning &out, pugi::xml_node el);
+
+void parsePedalTuningContent(PedalTuning &out, pugi::xml_node el, const ParseContext &context);
 
 void serializePedalTuning(const PedalTuning &v, pugi::xml_node parent, const char *tag);
 

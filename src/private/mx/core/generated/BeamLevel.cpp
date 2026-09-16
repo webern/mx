@@ -42,20 +42,33 @@ std::string BeamLevel::toString() const
 
 bool BeamLevel::tryParse(std::string_view text, BeamLevel &out)
 {
-    int v{};
-    if (!tryParseInt(text, v))
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    BeamLevel parsed = parse(text, outcome);
+    if (outcome == ValueParseOutcome::invalid)
     {
         return false;
     }
-    out = BeamLevel{v};
+    out = std::move(parsed);
     return true;
 }
 
 BeamLevel BeamLevel::parse(std::string_view text)
 {
-    BeamLevel v;
-    tryParse(text, v);
-    return v;
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+BeamLevel BeamLevel::parse(std::string_view text, ValueParseOutcome &outcome)
+{
+    int v{};
+    if (!tryParseInt(text, v))
+    {
+        outcome = ValueParseOutcome::invalid;
+        return BeamLevel{};
+    }
+    BeamLevel out{v};
+    outcome = out.value() == v ? ValueParseOutcome::valid : ValueParseOutcome::adjusted;
+    return out;
 }
 
 } // namespace mx::core

@@ -25,6 +25,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The string-mute type represents string mute on and mute off symbols.
 class StringMute final
 {
@@ -75,7 +77,11 @@ class StringMute final
 
 StringMute parseStringMute(pugi::xml_node el);
 
+StringMute parseStringMute(pugi::xml_node el, const ParseContext &context);
+
 void parseStringMuteContent(StringMute &out, pugi::xml_node el);
+
+void parseStringMuteContent(StringMute &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeStringMute(const StringMute &v, pugi::xml_node parent, const char *tag);
 

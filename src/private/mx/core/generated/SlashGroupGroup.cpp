@@ -3,6 +3,7 @@
 #include "mx/core/generated/SlashGroupGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -37,10 +38,15 @@ void SlashGroupGroup::setSlashDot(std::vector<Empty> value)
 
 SlashGroupGroup parseSlashGroupGroup(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseSlashGroupGroup(el, cursor, ParseContext{});
+}
+
+SlashGroupGroup parseSlashGroupGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+{
     SlashGroupGroup out;
     if (cursorIs(cursor, "slash-type"))
     {
-        out.setSlashType(NoteTypeValue::parse(childText(cursor)));
+        out.setSlashType(parseValue<NoteTypeValue>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else
@@ -49,7 +55,7 @@ SlashGroupGroup parseSlashGroupGroup(pugi::xml_node el, pugi::xml_node &cursor)
     }
     while (cursorIs(cursor, "slash-dot"))
     {
-        out.addSlashDot(parseEmpty(cursor));
+        out.addSlashDot(parseEmpty(cursor, context));
         cursor = nextElement(cursor);
     }
     return out;

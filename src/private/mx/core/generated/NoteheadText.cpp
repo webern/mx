@@ -3,6 +3,7 @@
 #include "mx/core/generated/NoteheadText.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -27,6 +28,11 @@ void NoteheadText::setChoice(OneOrMore<NoteheadTextChoice> value)
 
 NoteheadText parseNoteheadText(pugi::xml_node el)
 {
+    return parseNoteheadText(el, ParseContext{});
+}
+
+NoteheadText parseNoteheadText(pugi::xml_node el, const ParseContext &context)
+{
     NoteheadText out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -37,21 +43,26 @@ NoteheadText parseNoteheadText(pugi::xml_node el)
         }
         throwUnknownAttribute(el, a.name());
     }
-    parseNoteheadTextContent(out, el);
+    parseNoteheadTextContent(out, el, context);
     return out;
 }
 
 void parseNoteheadTextContent(NoteheadText &out, pugi::xml_node el)
+{
+    parseNoteheadTextContent(out, el, ParseContext{});
+}
+
+void parseNoteheadTextContent(NoteheadText &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (!(cursor && (cursorIs(cursor, "display-text") || cursorIs(cursor, "accidental-text"))))
     {
         throwMissingElement(el, "display-text");
     }
-    out.setChoice(OneOrMore<NoteheadTextChoice>{parseNoteheadTextChoice(el, cursor)});
+    out.setChoice(OneOrMore<NoteheadTextChoice>{parseNoteheadTextChoice(el, cursor, context)});
     while (cursor && (cursorIs(cursor, "display-text") || cursorIs(cursor, "accidental-text")))
     {
-        out.addChoice(parseNoteheadTextChoice(el, cursor));
+        out.addChoice(parseNoteheadTextChoice(el, cursor, context));
     }
     if (cursor)
     {

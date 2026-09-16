@@ -3,6 +3,7 @@
 #include "mx/core/generated/MeasureNumbering.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -172,6 +173,11 @@ void MeasureNumbering::setValue(MeasureNumberingValue value)
 
 MeasureNumbering parseMeasureNumbering(pugi::xml_node el)
 {
+    return parseMeasureNumbering(el, ParseContext{});
+}
+
+MeasureNumbering parseMeasureNumbering(pugi::xml_node el, const ParseContext &context)
+{
     MeasureNumbering out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -182,76 +188,81 @@ MeasureNumbering parseMeasureNumbering(pugi::xml_node el)
         }
         if (aname == "system")
         {
-            out.setSystem(SystemRelationNumber::parse(a.value()));
+            out.setSystem(parseValue<SystemRelationNumber>(a.value(), context, el, "system"));
         }
         else if (aname == "staff")
         {
-            out.setStaff(StaffNumber::parse(a.value()));
+            out.setStaff(parseValue<StaffNumber>(a.value(), context, el, "staff"));
         }
         else if (aname == "multiple-rest-always")
         {
-            out.setMultipleRestAlways(YesNo::parse(a.value()));
+            out.setMultipleRestAlways(parseValue<YesNo>(a.value(), context, el, "multiple-rest-always"));
         }
         else if (aname == "multiple-rest-range")
         {
-            out.setMultipleRestRange(YesNo::parse(a.value()));
+            out.setMultipleRestRange(parseValue<YesNo>(a.value(), context, el, "multiple-rest-range"));
         }
         else if (aname == "default-x")
         {
-            out.setDefaultX(Tenths::parse(a.value()));
+            out.setDefaultX(parseValue<Tenths>(a.value(), context, el, "default-x"));
         }
         else if (aname == "default-y")
         {
-            out.setDefaultY(Tenths::parse(a.value()));
+            out.setDefaultY(parseValue<Tenths>(a.value(), context, el, "default-y"));
         }
         else if (aname == "relative-x")
         {
-            out.setRelativeX(Tenths::parse(a.value()));
+            out.setRelativeX(parseValue<Tenths>(a.value(), context, el, "relative-x"));
         }
         else if (aname == "relative-y")
         {
-            out.setRelativeY(Tenths::parse(a.value()));
+            out.setRelativeY(parseValue<Tenths>(a.value(), context, el, "relative-y"));
         }
         else if (aname == "font-family")
         {
-            out.setFontFamily(FontFamily::parse(a.value()));
+            out.setFontFamily(parseValue<FontFamily>(a.value(), context, el, "font-family"));
         }
         else if (aname == "font-style")
         {
-            out.setFontStyle(FontStyle::parse(a.value()));
+            out.setFontStyle(parseValue<FontStyle>(a.value(), context, el, "font-style"));
         }
         else if (aname == "font-size")
         {
-            out.setFontSize(FontSize::parse(a.value()));
+            out.setFontSize(parseValue<FontSize>(a.value(), context, el, "font-size"));
         }
         else if (aname == "font-weight")
         {
-            out.setFontWeight(FontWeight::parse(a.value()));
+            out.setFontWeight(parseValue<FontWeight>(a.value(), context, el, "font-weight"));
         }
         else if (aname == "color")
         {
-            out.setColor(Color::parse(a.value()));
+            out.setColor(parseValue<Color>(a.value(), context, el, "color"));
         }
         else if (aname == "halign")
         {
-            out.setHalign(LeftCenterRight::parse(a.value()));
+            out.setHalign(parseValue<LeftCenterRight>(a.value(), context, el, "halign"));
         }
         else if (aname == "valign")
         {
-            out.setValign(Valign::parse(a.value()));
+            out.setValign(parseValue<Valign>(a.value(), context, el, "valign"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseMeasureNumberingContent(out, el);
+    parseMeasureNumberingContent(out, el, context);
     return out;
 }
 
 void parseMeasureNumberingContent(MeasureNumbering &out, pugi::xml_node el)
 {
-    out.setValue(MeasureNumberingValue::parse(childText(el)));
+    parseMeasureNumberingContent(out, el, ParseContext{});
+}
+
+void parseMeasureNumberingContent(MeasureNumbering &out, pugi::xml_node el, const ParseContext &context)
+{
+    out.setValue(parseValue<MeasureNumberingValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

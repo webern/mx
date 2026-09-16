@@ -3,6 +3,7 @@
 #include "mx/core/generated/Print.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -122,6 +123,11 @@ void Print::setPartAbbreviationDisplay(std::optional<NameDisplay> value)
 
 Print parsePrint(pugi::xml_node el)
 {
+    return parsePrint(el, ParseContext{});
+}
+
+Print parsePrint(pugi::xml_node el, const ParseContext &context)
+{
     Print out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -132,19 +138,19 @@ Print parsePrint(pugi::xml_node el)
         }
         if (aname == "staff-spacing")
         {
-            out.setStaffSpacing(Tenths::parse(a.value()));
+            out.setStaffSpacing(parseValue<Tenths>(a.value(), context, el, "staff-spacing"));
         }
         else if (aname == "new-system")
         {
-            out.setNewSystem(YesNo::parse(a.value()));
+            out.setNewSystem(parseValue<YesNo>(a.value(), context, el, "new-system"));
         }
         else if (aname == "new-page")
         {
-            out.setNewPage(YesNo::parse(a.value()));
+            out.setNewPage(parseValue<YesNo>(a.value(), context, el, "new-page"));
         }
         else if (aname == "blank-page")
         {
-            out.setBlankPage(parseInt(a.value()));
+            out.setBlankPage(parseIntegerValue(a.value(), context, el, "blank-page"));
         }
         else if (aname == "page-number")
         {
@@ -159,36 +165,41 @@ Print parsePrint(pugi::xml_node el)
             throwUnknownAttribute(el, a.name());
         }
     }
-    parsePrintContent(out, el);
+    parsePrintContent(out, el, context);
     return out;
 }
 
 void parsePrintContent(Print &out, pugi::xml_node el)
 {
+    parsePrintContent(out, el, ParseContext{});
+}
+
+void parsePrintContent(Print &out, pugi::xml_node el, const ParseContext &context)
+{
     pugi::xml_node cursor = firstElement(el);
     if (cursor &&
         (cursorIs(cursor, "page-layout") || cursorIs(cursor, "system-layout") || cursorIs(cursor, "staff-layout")))
     {
-        out.setLayout(parseLayoutGroup(el, cursor));
+        out.setLayout(parseLayoutGroup(el, cursor, context));
     }
     if (cursorIs(cursor, "measure-layout"))
     {
-        out.setMeasureLayout(parseMeasureLayout(cursor));
+        out.setMeasureLayout(parseMeasureLayout(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "measure-numbering"))
     {
-        out.setMeasureNumbering(parseMeasureNumbering(cursor));
+        out.setMeasureNumbering(parseMeasureNumbering(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "part-name-display"))
     {
-        out.setPartNameDisplay(parseNameDisplay(cursor));
+        out.setPartNameDisplay(parseNameDisplay(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "part-abbreviation-display"))
     {
-        out.setPartAbbreviationDisplay(parseNameDisplay(cursor));
+        out.setPartAbbreviationDisplay(parseNameDisplay(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor)

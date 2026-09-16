@@ -3,6 +3,7 @@
 #include "mx/core/generated/MeasureStyle.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -92,6 +93,11 @@ void MeasureStyle::setChoice(MeasureStyleChoice value)
 
 MeasureStyle parseMeasureStyle(pugi::xml_node el)
 {
+    return parseMeasureStyle(el, ParseContext{});
+}
+
+MeasureStyle parseMeasureStyle(pugi::xml_node el, const ParseContext &context)
+{
     MeasureStyle out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -102,27 +108,27 @@ MeasureStyle parseMeasureStyle(pugi::xml_node el)
         }
         if (aname == "number")
         {
-            out.setNumber(StaffNumber::parse(a.value()));
+            out.setNumber(parseValue<StaffNumber>(a.value(), context, el, "number"));
         }
         else if (aname == "font-family")
         {
-            out.setFontFamily(FontFamily::parse(a.value()));
+            out.setFontFamily(parseValue<FontFamily>(a.value(), context, el, "font-family"));
         }
         else if (aname == "font-style")
         {
-            out.setFontStyle(FontStyle::parse(a.value()));
+            out.setFontStyle(parseValue<FontStyle>(a.value(), context, el, "font-style"));
         }
         else if (aname == "font-size")
         {
-            out.setFontSize(FontSize::parse(a.value()));
+            out.setFontSize(parseValue<FontSize>(a.value(), context, el, "font-size"));
         }
         else if (aname == "font-weight")
         {
-            out.setFontWeight(FontWeight::parse(a.value()));
+            out.setFontWeight(parseValue<FontWeight>(a.value(), context, el, "font-weight"));
         }
         else if (aname == "color")
         {
-            out.setColor(Color::parse(a.value()));
+            out.setColor(parseValue<Color>(a.value(), context, el, "color"));
         }
         else if (aname == "id")
         {
@@ -133,17 +139,22 @@ MeasureStyle parseMeasureStyle(pugi::xml_node el)
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseMeasureStyleContent(out, el);
+    parseMeasureStyleContent(out, el, context);
     return out;
 }
 
 void parseMeasureStyleContent(MeasureStyle &out, pugi::xml_node el)
 {
+    parseMeasureStyleContent(out, el, ParseContext{});
+}
+
+void parseMeasureStyleContent(MeasureStyle &out, pugi::xml_node el, const ParseContext &context)
+{
     pugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "multiple-rest") || cursorIs(cursor, "measure-repeat") ||
                    cursorIs(cursor, "beat-repeat") || cursorIs(cursor, "slash")))
     {
-        out.setChoice(parseMeasureStyleChoice(el, cursor));
+        out.setChoice(parseMeasureStyleChoice(el, cursor, context));
     }
     else
     {

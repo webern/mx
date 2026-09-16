@@ -3,6 +3,7 @@
 #include "mx/core/generated/ScorePartMIDIGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -32,15 +33,20 @@ void ScorePartMIDIGroup::setMIDIInstrument(std::optional<MIDIInstrument> value)
 
 ScorePartMIDIGroup parseScorePartMIDIGroup(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseScorePartMIDIGroup(el, cursor, ParseContext{});
+}
+
+ScorePartMIDIGroup parseScorePartMIDIGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+{
     ScorePartMIDIGroup out;
     if (cursorIs(cursor, "midi-device"))
     {
-        out.setMIDIDevice(parseMIDIDevice(cursor));
+        out.setMIDIDevice(parseMIDIDevice(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "midi-instrument"))
     {
-        out.setMIDIInstrument(parseMIDIInstrument(cursor));
+        out.setMIDIInstrument(parseMIDIInstrument(cursor, context));
         cursor = nextElement(cursor);
     }
     return out;

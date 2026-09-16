@@ -3,6 +3,7 @@
 #include "mx/core/generated/EditorialGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -32,15 +33,20 @@ void EditorialGroup::setLevel(std::optional<Level> value)
 
 EditorialGroup parseEditorialGroup(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseEditorialGroup(el, cursor, ParseContext{});
+}
+
+EditorialGroup parseEditorialGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+{
     EditorialGroup out;
     if (cursorIs(cursor, "footnote"))
     {
-        out.setFootnote(parseFormattedText(cursor));
+        out.setFootnote(parseFormattedText(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "level"))
     {
-        out.setLevel(parseLevel(cursor));
+        out.setLevel(parseLevel(cursor, context));
         cursor = nextElement(cursor);
     }
     return out;

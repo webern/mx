@@ -32,4 +32,11 @@ LineWidthType LineWidthType::parse(std::string_view text)
     return LineWidthType{std::string{text}};
 }
 
+LineWidthType LineWidthType::parse(std::string_view text, ValueParseOutcome &outcome)
+{
+    LineWidthType out{std::string{text}};
+    outcome = out.value() == text ? ValueParseOutcome::valid : ValueParseOutcome::adjusted;
+    return out;
+}
+
 } // namespace mx::core

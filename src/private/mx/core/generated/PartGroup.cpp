@@ -3,6 +3,7 @@
 #include "mx/core/generated/PartGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -112,6 +113,11 @@ void PartGroup::setEditorial(EditorialGroup value)
 
 PartGroup parsePartGroup(pugi::xml_node el)
 {
+    return parsePartGroup(el, ParseContext{});
+}
+
+PartGroup parsePartGroup(pugi::xml_node el, const ParseContext &context)
+{
     PartGroup out;
     bool seen_type = false;
     for (pugi::xml_attribute a : el.attributes())
@@ -124,7 +130,7 @@ PartGroup parsePartGroup(pugi::xml_node el)
         if (aname == "type")
         {
             seen_type = true;
-            out.setType(StartStop::parse(a.value()));
+            out.setType(parseValue<StartStop>(a.value(), context, el, "type"));
         }
         else if (aname == "number")
         {
@@ -139,52 +145,57 @@ PartGroup parsePartGroup(pugi::xml_node el)
     {
         throwMissingAttribute(el, "type");
     }
-    parsePartGroupContent(out, el);
+    parsePartGroupContent(out, el, context);
     return out;
 }
 
 void parsePartGroupContent(PartGroup &out, pugi::xml_node el)
 {
+    parsePartGroupContent(out, el, ParseContext{});
+}
+
+void parsePartGroupContent(PartGroup &out, pugi::xml_node el, const ParseContext &context)
+{
     pugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "group-name"))
     {
-        out.setGroupName(parseGroupName(cursor));
+        out.setGroupName(parseGroupName(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "group-name-display"))
     {
-        out.setGroupNameDisplay(parseNameDisplay(cursor));
+        out.setGroupNameDisplay(parseNameDisplay(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "group-abbreviation"))
     {
-        out.setGroupAbbreviation(parseGroupName(cursor));
+        out.setGroupAbbreviation(parseGroupName(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "group-abbreviation-display"))
     {
-        out.setGroupAbbreviationDisplay(parseNameDisplay(cursor));
+        out.setGroupAbbreviationDisplay(parseNameDisplay(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "group-symbol"))
     {
-        out.setGroupSymbol(parseGroupSymbol(cursor));
+        out.setGroupSymbol(parseGroupSymbol(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "group-barline"))
     {
-        out.setGroupBarline(parseGroupBarline(cursor));
+        out.setGroupBarline(parseGroupBarline(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "group-time"))
     {
-        parseEmpty(cursor);
+        parseEmpty(cursor, context);
         out.setGroupTime(true);
         cursor = nextElement(cursor);
     }
     if (cursor && (cursorIs(cursor, "footnote") || cursorIs(cursor, "level")))
     {
-        out.setEditorial(parseEditorialGroup(el, cursor));
+        out.setEditorial(parseEditorialGroup(el, cursor, context));
     }
     if (cursor)
     {

@@ -19,6 +19,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The numeral type represents the Roman numeral or Nashville number part of a harmony. It requires
 /// that the key be specified in the encoding, either with a key or numeral-key element.
 /// Content fields mirror the schema grammar in declaration order; the
@@ -42,7 +44,11 @@ class Numeral final
 
 Numeral parseNumeral(pugi::xml_node el);
 
+Numeral parseNumeral(pugi::xml_node el, const ParseContext &context);
+
 void parseNumeralContent(Numeral &out, pugi::xml_node el);
+
+void parseNumeralContent(Numeral &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeNumeral(const Numeral &v, pugi::xml_node parent, const char *tag);
 

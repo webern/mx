@@ -3,6 +3,7 @@
 #include "mx/core/generated/Pedal.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -182,6 +183,11 @@ void Pedal::setID(std::optional<Token> value)
 
 Pedal parsePedal(pugi::xml_node el)
 {
+    return parsePedal(el, ParseContext{});
+}
+
+Pedal parsePedal(pugi::xml_node el, const ParseContext &context)
+{
     Pedal out;
     bool seen_type = false;
     for (pugi::xml_attribute a : el.attributes())
@@ -194,67 +200,67 @@ Pedal parsePedal(pugi::xml_node el)
         if (aname == "type")
         {
             seen_type = true;
-            out.setType(PedalType::parse(a.value()));
+            out.setType(parseValue<PedalType>(a.value(), context, el, "type"));
         }
         else if (aname == "number")
         {
-            out.setNumber(NumberLevel::parse(a.value()));
+            out.setNumber(parseValue<NumberLevel>(a.value(), context, el, "number"));
         }
         else if (aname == "line")
         {
-            out.setLine(YesNo::parse(a.value()));
+            out.setLine(parseValue<YesNo>(a.value(), context, el, "line"));
         }
         else if (aname == "sign")
         {
-            out.setSign(YesNo::parse(a.value()));
+            out.setSign(parseValue<YesNo>(a.value(), context, el, "sign"));
         }
         else if (aname == "abbreviated")
         {
-            out.setAbbreviated(YesNo::parse(a.value()));
+            out.setAbbreviated(parseValue<YesNo>(a.value(), context, el, "abbreviated"));
         }
         else if (aname == "default-x")
         {
-            out.setDefaultX(Tenths::parse(a.value()));
+            out.setDefaultX(parseValue<Tenths>(a.value(), context, el, "default-x"));
         }
         else if (aname == "default-y")
         {
-            out.setDefaultY(Tenths::parse(a.value()));
+            out.setDefaultY(parseValue<Tenths>(a.value(), context, el, "default-y"));
         }
         else if (aname == "relative-x")
         {
-            out.setRelativeX(Tenths::parse(a.value()));
+            out.setRelativeX(parseValue<Tenths>(a.value(), context, el, "relative-x"));
         }
         else if (aname == "relative-y")
         {
-            out.setRelativeY(Tenths::parse(a.value()));
+            out.setRelativeY(parseValue<Tenths>(a.value(), context, el, "relative-y"));
         }
         else if (aname == "font-family")
         {
-            out.setFontFamily(FontFamily::parse(a.value()));
+            out.setFontFamily(parseValue<FontFamily>(a.value(), context, el, "font-family"));
         }
         else if (aname == "font-style")
         {
-            out.setFontStyle(FontStyle::parse(a.value()));
+            out.setFontStyle(parseValue<FontStyle>(a.value(), context, el, "font-style"));
         }
         else if (aname == "font-size")
         {
-            out.setFontSize(FontSize::parse(a.value()));
+            out.setFontSize(parseValue<FontSize>(a.value(), context, el, "font-size"));
         }
         else if (aname == "font-weight")
         {
-            out.setFontWeight(FontWeight::parse(a.value()));
+            out.setFontWeight(parseValue<FontWeight>(a.value(), context, el, "font-weight"));
         }
         else if (aname == "color")
         {
-            out.setColor(Color::parse(a.value()));
+            out.setColor(parseValue<Color>(a.value(), context, el, "color"));
         }
         else if (aname == "halign")
         {
-            out.setHalign(LeftCenterRight::parse(a.value()));
+            out.setHalign(parseValue<LeftCenterRight>(a.value(), context, el, "halign"));
         }
         else if (aname == "valign")
         {
-            out.setValign(Valign::parse(a.value()));
+            out.setValign(parseValue<Valign>(a.value(), context, el, "valign"));
         }
         else if (aname == "id")
         {
@@ -269,13 +275,19 @@ Pedal parsePedal(pugi::xml_node el)
     {
         throwMissingAttribute(el, "type");
     }
-    parsePedalContent(out, el);
+    parsePedalContent(out, el, context);
     return out;
 }
 
 void parsePedalContent(Pedal &out, pugi::xml_node el)
 {
+    parsePedalContent(out, el, ParseContext{});
+}
+
+void parsePedalContent(Pedal &out, pugi::xml_node el, const ParseContext &context)
+{
     (void)out;
+    (void)context;
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

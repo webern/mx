@@ -3,6 +3,7 @@
 #include "mx/core/generated/Feature.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -32,6 +33,11 @@ void Feature::setValue(std::string value)
 
 Feature parseFeature(pugi::xml_node el)
 {
+    return parseFeature(el, ParseContext{});
+}
+
+Feature parseFeature(pugi::xml_node el, const ParseContext &context)
+{
     Feature out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -49,11 +55,16 @@ Feature parseFeature(pugi::xml_node el)
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseFeatureContent(out, el);
+    parseFeatureContent(out, el, context);
     return out;
 }
 
 void parseFeatureContent(Feature &out, pugi::xml_node el)
+{
+    parseFeatureContent(out, el, ParseContext{});
+}
+
+void parseFeatureContent(Feature &out, pugi::xml_node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))

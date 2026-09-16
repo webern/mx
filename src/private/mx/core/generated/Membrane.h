@@ -16,6 +16,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The membrane type represents pictograms for membrane percussion instruments. The smufl attribute
 /// is used to distinguish different SMuFL stylistic alternates.
 class Membrane final
@@ -34,7 +36,11 @@ class Membrane final
 
 Membrane parseMembrane(pugi::xml_node el);
 
+Membrane parseMembrane(pugi::xml_node el, const ParseContext &context);
+
 void parseMembraneContent(Membrane &out, pugi::xml_node el);
+
+void parseMembraneContent(Membrane &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeMembrane(const Membrane &v, pugi::xml_node parent, const char *tag);
 

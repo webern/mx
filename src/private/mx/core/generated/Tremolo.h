@@ -24,6 +24,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The tremolo ornament can be used to indicate single-note, double-note, or unmeasured tremolos.
 /// Single-note tremolos use the single type, double-note tremolos use the start and stop types, and
 /// unmeasured tremolos use the unmeasured type. The default is "single" for compatibility with
@@ -86,7 +88,11 @@ class Tremolo final
 
 Tremolo parseTremolo(pugi::xml_node el);
 
+Tremolo parseTremolo(pugi::xml_node el, const ParseContext &context);
+
 void parseTremoloContent(Tremolo &out, pugi::xml_node el);
+
+void parseTremoloContent(Tremolo &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeTremolo(const Tremolo &v, pugi::xml_node parent, const char *tag);
 

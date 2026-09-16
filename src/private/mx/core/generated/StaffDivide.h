@@ -25,6 +25,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The staff-divide element represents the staff division arrow symbols found at SMuFL code points
 /// U+E00B, U+E00C, and U+E00D.
 class StaffDivide final
@@ -76,7 +78,11 @@ class StaffDivide final
 
 StaffDivide parseStaffDivide(pugi::xml_node el);
 
+StaffDivide parseStaffDivide(pugi::xml_node el, const ParseContext &context);
+
 void parseStaffDivideContent(StaffDivide &out, pugi::xml_node el);
+
+void parseStaffDivideContent(StaffDivide &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeStaffDivide(const StaffDivide &v, pugi::xml_node parent, const char *tag);
 

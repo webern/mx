@@ -3,6 +3,7 @@
 #include "mx/core/generated/Degree.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -52,6 +53,11 @@ void Degree::setDegreeType(DegreeType value)
 
 Degree parseDegree(pugi::xml_node el)
 {
+    return parseDegree(el, ParseContext{});
+}
+
+Degree parseDegree(pugi::xml_node el, const ParseContext &context)
+{
     Degree out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -62,23 +68,28 @@ Degree parseDegree(pugi::xml_node el)
         }
         if (aname == "print-object")
         {
-            out.setPrintObject(YesNo::parse(a.value()));
+            out.setPrintObject(parseValue<YesNo>(a.value(), context, el, "print-object"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseDegreeContent(out, el);
+    parseDegreeContent(out, el, context);
     return out;
 }
 
 void parseDegreeContent(Degree &out, pugi::xml_node el)
 {
+    parseDegreeContent(out, el, ParseContext{});
+}
+
+void parseDegreeContent(Degree &out, pugi::xml_node el, const ParseContext &context)
+{
     pugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "degree-value"))
     {
-        out.setDegreeValue(parseDegreeValue(cursor));
+        out.setDegreeValue(parseDegreeValue(cursor, context));
         cursor = nextElement(cursor);
     }
     else
@@ -87,7 +98,7 @@ void parseDegreeContent(Degree &out, pugi::xml_node el)
     }
     if (cursorIs(cursor, "degree-alter"))
     {
-        out.setDegreeAlter(parseDegreeAlter(cursor));
+        out.setDegreeAlter(parseDegreeAlter(cursor, context));
         cursor = nextElement(cursor);
     }
     else
@@ -96,7 +107,7 @@ void parseDegreeContent(Degree &out, pugi::xml_node el)
     }
     if (cursorIs(cursor, "degree-type"))
     {
-        out.setDegreeType(parseDegreeType(cursor));
+        out.setDegreeType(parseDegreeType(cursor, context));
         cursor = nextElement(cursor);
     }
     else

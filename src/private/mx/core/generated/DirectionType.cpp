@@ -3,6 +3,7 @@
 #include "mx/core/generated/DirectionType.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -32,6 +33,11 @@ void DirectionType::setChoice(DirectionTypeChoice value)
 
 DirectionType parseDirectionType(pugi::xml_node el)
 {
+    return parseDirectionType(el, ParseContext{});
+}
+
+DirectionType parseDirectionType(pugi::xml_node el, const ParseContext &context)
+{
     DirectionType out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -49,11 +55,16 @@ DirectionType parseDirectionType(pugi::xml_node el)
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseDirectionTypeContent(out, el);
+    parseDirectionTypeContent(out, el, context);
     return out;
 }
 
 void parseDirectionTypeContent(DirectionType &out, pugi::xml_node el)
+{
+    parseDirectionTypeContent(out, el, ParseContext{});
+}
+
+void parseDirectionTypeContent(DirectionType &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "rehearsal") || cursorIs(cursor, "segno") || cursorIs(cursor, "coda") ||
@@ -66,7 +77,7 @@ void parseDirectionTypeContent(DirectionType &out, pugi::xml_node el)
                    cursorIs(cursor, "percussion") || cursorIs(cursor, "accordion-registration") ||
                    cursorIs(cursor, "staff-divide") || cursorIs(cursor, "other-direction")))
     {
-        out.setChoice(parseDirectionTypeChoice(el, cursor));
+        out.setChoice(parseDirectionTypeChoice(el, cursor, context));
     }
     else
     {

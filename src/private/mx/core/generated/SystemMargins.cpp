@@ -3,6 +3,7 @@
 #include "mx/core/generated/SystemMargins.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -22,6 +23,11 @@ void SystemMargins::setLeftRightMargins(LeftRightMarginsGroup value)
 
 SystemMargins parseSystemMargins(pugi::xml_node el)
 {
+    return parseSystemMargins(el, ParseContext{});
+}
+
+SystemMargins parseSystemMargins(pugi::xml_node el, const ParseContext &context)
+{
     SystemMargins out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -32,16 +38,21 @@ SystemMargins parseSystemMargins(pugi::xml_node el)
         }
         throwUnknownAttribute(el, a.name());
     }
-    parseSystemMarginsContent(out, el);
+    parseSystemMarginsContent(out, el, context);
     return out;
 }
 
 void parseSystemMarginsContent(SystemMargins &out, pugi::xml_node el)
 {
+    parseSystemMarginsContent(out, el, ParseContext{});
+}
+
+void parseSystemMarginsContent(SystemMargins &out, pugi::xml_node el, const ParseContext &context)
+{
     pugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "left-margin")))
     {
-        out.setLeftRightMargins(parseLeftRightMarginsGroup(el, cursor));
+        out.setLeftRightMargins(parseLeftRightMarginsGroup(el, cursor, context));
     }
     else
     {

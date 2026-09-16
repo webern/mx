@@ -29,6 +29,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The formatted-text-id type represents a text element with text-formatting and id attributes.
 class FormattedTextID final
 {
@@ -112,7 +114,11 @@ class FormattedTextID final
 
 FormattedTextID parseFormattedTextID(pugi::xml_node el);
 
+FormattedTextID parseFormattedTextID(pugi::xml_node el, const ParseContext &context);
+
 void parseFormattedTextIDContent(FormattedTextID &out, pugi::xml_node el);
+
+void parseFormattedTextIDContent(FormattedTextID &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeFormattedTextID(const FormattedTextID &v, pugi::xml_node parent, const char *tag);
 

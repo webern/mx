@@ -60,11 +60,19 @@ bool YesNoNumber::tryParse(std::string_view text, YesNoNumber &out)
 
 YesNoNumber YesNoNumber::parse(std::string_view text)
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+YesNoNumber YesNoNumber::parse(std::string_view text, ValueParseOutcome &outcome)
+{
     YesNoNumber out;
     if (tryParse(text, out))
     {
+        outcome = ValueParseOutcome::valid;
         return out;
     }
+    outcome = ValueParseOutcome::invalid;
     return YesNoNumber::yesNo(YesNo::parse(text));
 }
 

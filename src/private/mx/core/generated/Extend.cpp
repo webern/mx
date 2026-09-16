@@ -3,6 +3,7 @@
 #include "mx/core/generated/Extend.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -72,6 +73,11 @@ void Extend::setColor(std::optional<Color> value)
 
 Extend parseExtend(pugi::xml_node el)
 {
+    return parseExtend(el, ParseContext{});
+}
+
+Extend parseExtend(pugi::xml_node el, const ParseContext &context)
+{
     Extend out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -82,40 +88,46 @@ Extend parseExtend(pugi::xml_node el)
         }
         if (aname == "type")
         {
-            out.setType(StartStopContinue::parse(a.value()));
+            out.setType(parseValue<StartStopContinue>(a.value(), context, el, "type"));
         }
         else if (aname == "default-x")
         {
-            out.setDefaultX(Tenths::parse(a.value()));
+            out.setDefaultX(parseValue<Tenths>(a.value(), context, el, "default-x"));
         }
         else if (aname == "default-y")
         {
-            out.setDefaultY(Tenths::parse(a.value()));
+            out.setDefaultY(parseValue<Tenths>(a.value(), context, el, "default-y"));
         }
         else if (aname == "relative-x")
         {
-            out.setRelativeX(Tenths::parse(a.value()));
+            out.setRelativeX(parseValue<Tenths>(a.value(), context, el, "relative-x"));
         }
         else if (aname == "relative-y")
         {
-            out.setRelativeY(Tenths::parse(a.value()));
+            out.setRelativeY(parseValue<Tenths>(a.value(), context, el, "relative-y"));
         }
         else if (aname == "color")
         {
-            out.setColor(Color::parse(a.value()));
+            out.setColor(parseValue<Color>(a.value(), context, el, "color"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseExtendContent(out, el);
+    parseExtendContent(out, el, context);
     return out;
 }
 
 void parseExtendContent(Extend &out, pugi::xml_node el)
 {
+    parseExtendContent(out, el, ParseContext{});
+}
+
+void parseExtendContent(Extend &out, pugi::xml_node el, const ParseContext &context)
+{
     (void)out;
+    (void)context;
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

@@ -22,6 +22,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The notehead type indicates shapes other than the open and closed ovals associated with note
 /// durations. The smufl attribute can be used to specify a particular notehead, allowing application
 /// interoperability without requiring every SMuFL glyph to have a MusicXML element equivalent. This
@@ -69,7 +71,11 @@ class Notehead final
 
 Notehead parseNotehead(pugi::xml_node el);
 
+Notehead parseNotehead(pugi::xml_node el, const ParseContext &context);
+
 void parseNoteheadContent(Notehead &out, pugi::xml_node el);
+
+void parseNoteheadContent(Notehead &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeNotehead(const Notehead &v, pugi::xml_node parent, const char *tag);
 

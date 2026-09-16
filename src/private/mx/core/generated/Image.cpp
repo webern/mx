@@ -3,6 +3,7 @@
 #include "mx/core/generated/Image.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -122,6 +123,11 @@ void Image::setID(std::optional<Token> value)
 
 Image parseImage(pugi::xml_node el)
 {
+    return parseImage(el, ParseContext{});
+}
+
+Image parseImage(pugi::xml_node el, const ParseContext &context)
+{
     Image out;
     bool seen_source = false;
     bool seen_type = false;
@@ -144,35 +150,35 @@ Image parseImage(pugi::xml_node el)
         }
         else if (aname == "height")
         {
-            out.setHeight(Tenths::parse(a.value()));
+            out.setHeight(parseValue<Tenths>(a.value(), context, el, "height"));
         }
         else if (aname == "width")
         {
-            out.setWidth(Tenths::parse(a.value()));
+            out.setWidth(parseValue<Tenths>(a.value(), context, el, "width"));
         }
         else if (aname == "default-x")
         {
-            out.setDefaultX(Tenths::parse(a.value()));
+            out.setDefaultX(parseValue<Tenths>(a.value(), context, el, "default-x"));
         }
         else if (aname == "default-y")
         {
-            out.setDefaultY(Tenths::parse(a.value()));
+            out.setDefaultY(parseValue<Tenths>(a.value(), context, el, "default-y"));
         }
         else if (aname == "relative-x")
         {
-            out.setRelativeX(Tenths::parse(a.value()));
+            out.setRelativeX(parseValue<Tenths>(a.value(), context, el, "relative-x"));
         }
         else if (aname == "relative-y")
         {
-            out.setRelativeY(Tenths::parse(a.value()));
+            out.setRelativeY(parseValue<Tenths>(a.value(), context, el, "relative-y"));
         }
         else if (aname == "halign")
         {
-            out.setHalign(LeftCenterRight::parse(a.value()));
+            out.setHalign(parseValue<LeftCenterRight>(a.value(), context, el, "halign"));
         }
         else if (aname == "valign")
         {
-            out.setValign(ValignImage::parse(a.value()));
+            out.setValign(parseValue<ValignImage>(a.value(), context, el, "valign"));
         }
         else if (aname == "id")
         {
@@ -191,13 +197,19 @@ Image parseImage(pugi::xml_node el)
     {
         throwMissingAttribute(el, "type");
     }
-    parseImageContent(out, el);
+    parseImageContent(out, el, context);
     return out;
 }
 
 void parseImageContent(Image &out, pugi::xml_node el)
 {
+    parseImageContent(out, el, ParseContext{});
+}
+
+void parseImageContent(Image &out, pugi::xml_node el, const ParseContext &context)
+{
     (void)out;
+    (void)context;
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

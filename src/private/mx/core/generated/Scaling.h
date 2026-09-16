@@ -18,6 +18,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// Margins, page sizes, and distances are all measured in tenths to keep MusicXML data in a
 /// consistent coordinate system as much as possible. The translation to absolute units is done with
 /// the scaling type, which specifies how many millimeters are equal to how many tenths. For a staff
@@ -41,7 +43,11 @@ class Scaling final
 
 Scaling parseScaling(pugi::xml_node el);
 
+Scaling parseScaling(pugi::xml_node el, const ParseContext &context);
+
 void parseScalingContent(Scaling &out, pugi::xml_node el);
+
+void parseScalingContent(Scaling &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeScaling(const Scaling &v, pugi::xml_node parent, const char *tag);
 

@@ -24,6 +24,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// Slur types are empty. Most slurs are represented with two elements: one with a start type, and
 /// one with a stop type. Slurs can add more elements using a continue type. This is typically used
 /// to specify the formatting of cross-system slurs, or to specify the shape of very complex slurs.
@@ -94,7 +96,11 @@ class Slur final
 
 Slur parseSlur(pugi::xml_node el);
 
+Slur parseSlur(pugi::xml_node el, const ParseContext &context);
+
 void parseSlurContent(Slur &out, pugi::xml_node el);
+
+void parseSlurContent(Slur &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeSlur(const Slur &v, pugi::xml_node parent, const char *tag);
 

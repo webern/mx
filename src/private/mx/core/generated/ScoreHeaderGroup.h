@@ -21,6 +21,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The score-header group contains basic score metadata about the work and movement, score-wide
 /// defaults for layout and fonts, credits that appear on the first or following pages, and the part
 /// list.
@@ -59,6 +61,8 @@ class ScoreHeaderGroup final
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
 ScoreHeaderGroup parseScoreHeaderGroup(pugi::xml_node el, pugi::xml_node &cursor);
+
+ScoreHeaderGroup parseScoreHeaderGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeScoreHeaderGroup(const ScoreHeaderGroup &v, pugi::xml_node el);
 

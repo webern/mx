@@ -3,6 +3,7 @@
 #include "mx/core/generated/CueNoteGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -42,10 +43,15 @@ void CueNoteGroup::setDuration(PositiveDivisions value)
 
 CueNoteGroup parseCueNoteGroup(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseCueNoteGroup(el, cursor, ParseContext{});
+}
+
+CueNoteGroup parseCueNoteGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+{
     CueNoteGroup out;
     if (cursorIs(cursor, "cue"))
     {
-        out.setCue(parseEmpty(cursor));
+        out.setCue(parseEmpty(cursor, context));
         cursor = nextElement(cursor);
     }
     else
@@ -55,7 +61,7 @@ CueNoteGroup parseCueNoteGroup(pugi::xml_node el, pugi::xml_node &cursor)
     if (cursor && (cursorIs(cursor, "chord") || cursorIs(cursor, "pitch") || cursorIs(cursor, "unpitched") ||
                    cursorIs(cursor, "rest")))
     {
-        out.setFullNote(parseFullNoteGroup(el, cursor));
+        out.setFullNote(parseFullNoteGroup(el, cursor, context));
     }
     else
     {
@@ -63,7 +69,7 @@ CueNoteGroup parseCueNoteGroup(pugi::xml_node el, pugi::xml_node &cursor)
     }
     if (cursorIs(cursor, "duration"))
     {
-        out.setDuration(PositiveDivisions::parse(childText(cursor)));
+        out.setDuration(parseValue<PositiveDivisions>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     else

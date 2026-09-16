@@ -17,6 +17,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The repeat type represents repeat marks. The start of the repeat has a forward direction while
 /// the end of the repeat has a backward direction. The times and after-jump attributes are only used
 /// with backward repeats that are not part of an ending. The times attribute indicates the number of
@@ -44,7 +46,11 @@ class Repeat final
 
 Repeat parseRepeat(pugi::xml_node el);
 
+Repeat parseRepeat(pugi::xml_node el, const ParseContext &context);
+
 void parseRepeatContent(Repeat &out, pugi::xml_node el);
+
+void parseRepeatContent(Repeat &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeRepeat(const Repeat &v, pugi::xml_node parent, const char *tag);
 

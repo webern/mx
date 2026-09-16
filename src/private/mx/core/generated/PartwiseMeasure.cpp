@@ -3,6 +3,7 @@
 #include "mx/core/generated/PartwiseMeasure.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -87,6 +88,11 @@ void PartwiseMeasure::setMusicData(std::vector<MusicDataChoice> value)
 
 PartwiseMeasure parsePartwiseMeasure(pugi::xml_node el)
 {
+    return parsePartwiseMeasure(el, ParseContext{});
+}
+
+PartwiseMeasure parsePartwiseMeasure(pugi::xml_node el, const ParseContext &context)
+{
     PartwiseMeasure out;
     bool seen_number = false;
     for (pugi::xml_attribute a : el.attributes())
@@ -103,19 +109,19 @@ PartwiseMeasure parsePartwiseMeasure(pugi::xml_node el)
         }
         else if (aname == "text")
         {
-            out.setText(MeasureText::parse(a.value()));
+            out.setText(parseValue<MeasureText>(a.value(), context, el, "text"));
         }
         else if (aname == "implicit")
         {
-            out.setImplicit(YesNo::parse(a.value()));
+            out.setImplicit(parseValue<YesNo>(a.value(), context, el, "implicit"));
         }
         else if (aname == "non-controlling")
         {
-            out.setNonControlling(YesNo::parse(a.value()));
+            out.setNonControlling(parseValue<YesNo>(a.value(), context, el, "non-controlling"));
         }
         else if (aname == "width")
         {
-            out.setWidth(Tenths::parse(a.value()));
+            out.setWidth(parseValue<Tenths>(a.value(), context, el, "width"));
         }
         else if (aname == "id")
         {
@@ -130,11 +136,16 @@ PartwiseMeasure parsePartwiseMeasure(pugi::xml_node el)
     {
         throwMissingAttribute(el, "number");
     }
-    parsePartwiseMeasureContent(out, el);
+    parsePartwiseMeasureContent(out, el, context);
     return out;
 }
 
 void parsePartwiseMeasureContent(PartwiseMeasure &out, pugi::xml_node el)
+{
+    parsePartwiseMeasureContent(out, el, ParseContext{});
+}
+
+void parsePartwiseMeasureContent(PartwiseMeasure &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     while (cursor && (cursorIs(cursor, "note") || cursorIs(cursor, "backup") || cursorIs(cursor, "forward") ||
@@ -143,7 +154,7 @@ void parsePartwiseMeasureContent(PartwiseMeasure &out, pugi::xml_node el)
                       cursorIs(cursor, "listening") || cursorIs(cursor, "barline") || cursorIs(cursor, "grouping") ||
                       cursorIs(cursor, "link") || cursorIs(cursor, "bookmark")))
     {
-        out.addMusicData(parseMusicDataChoice(el, cursor));
+        out.addMusicData(parseMusicDataChoice(el, cursor, context));
     }
     if (cursor)
     {

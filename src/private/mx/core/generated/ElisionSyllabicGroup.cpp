@@ -3,6 +3,7 @@
 #include "mx/core/generated/ElisionSyllabicGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -32,10 +33,15 @@ void ElisionSyllabicGroup::setSyllabic(std::optional<Syllabic> value)
 
 ElisionSyllabicGroup parseElisionSyllabicGroup(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseElisionSyllabicGroup(el, cursor, ParseContext{});
+}
+
+ElisionSyllabicGroup parseElisionSyllabicGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+{
     ElisionSyllabicGroup out;
     if (cursorIs(cursor, "elision"))
     {
-        out.setElision(parseElision(cursor));
+        out.setElision(parseElision(cursor, context));
         cursor = nextElement(cursor);
     }
     else
@@ -44,7 +50,7 @@ ElisionSyllabicGroup parseElisionSyllabicGroup(pugi::xml_node el, pugi::xml_node
     }
     if (cursorIs(cursor, "syllabic"))
     {
-        out.setSyllabic(Syllabic::parse(childText(cursor)));
+        out.setSyllabic(parseValue<Syllabic>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     return out;

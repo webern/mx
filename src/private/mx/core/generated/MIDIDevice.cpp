@@ -3,6 +3,7 @@
 #include "mx/core/generated/MIDIDevice.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -42,6 +43,11 @@ void MIDIDevice::setValue(std::string value)
 
 MIDIDevice parseMIDIDevice(pugi::xml_node el)
 {
+    return parseMIDIDevice(el, ParseContext{});
+}
+
+MIDIDevice parseMIDIDevice(pugi::xml_node el, const ParseContext &context)
+{
     MIDIDevice out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -52,7 +58,7 @@ MIDIDevice parseMIDIDevice(pugi::xml_node el)
         }
         if (aname == "port")
         {
-            out.setPort(MIDI16::parse(a.value()));
+            out.setPort(parseValue<MIDI16>(a.value(), context, el, "port"));
         }
         else if (aname == "id")
         {
@@ -63,11 +69,16 @@ MIDIDevice parseMIDIDevice(pugi::xml_node el)
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseMIDIDeviceContent(out, el);
+    parseMIDIDeviceContent(out, el, context);
     return out;
 }
 
 void parseMIDIDeviceContent(MIDIDevice &out, pugi::xml_node el)
+{
+    parseMIDIDeviceContent(out, el, ParseContext{});
+}
+
+void parseMIDIDeviceContent(MIDIDevice &out, pugi::xml_node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))

@@ -24,6 +24,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The accidental type represents actual notated accidentals. Editorial and cautionary indications
 /// are indicated by attributes. Values for these attributes are "no" if not present. Specific
 /// graphic display such as parentheses, brackets, and size are controlled by the level-display
@@ -86,7 +88,11 @@ class Accidental final
 
 Accidental parseAccidental(pugi::xml_node el);
 
+Accidental parseAccidental(pugi::xml_node el, const ParseContext &context);
+
 void parseAccidentalContent(Accidental &out, pugi::xml_node el);
+
+void parseAccidentalContent(Accidental &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeAccidental(const Accidental &v, pugi::xml_node parent, const char *tag);
 

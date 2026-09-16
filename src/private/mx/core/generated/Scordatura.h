@@ -20,6 +20,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// Scordatura string tunings are represented by a series of accord elements, similar to the
 /// staff-tuning elements. Strings are numbered from high to low.
 /// Content fields mirror the schema grammar in declaration order; the
@@ -41,7 +43,11 @@ class Scordatura final
 
 Scordatura parseScordatura(pugi::xml_node el);
 
+Scordatura parseScordatura(pugi::xml_node el, const ParseContext &context);
+
 void parseScordaturaContent(Scordatura &out, pugi::xml_node el);
+
+void parseScordaturaContent(Scordatura &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeScordatura(const Scordatura &v, pugi::xml_node parent, const char *tag);
 

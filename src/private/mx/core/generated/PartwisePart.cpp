@@ -3,6 +3,7 @@
 #include "mx/core/generated/PartwisePart.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -37,6 +38,11 @@ void PartwisePart::setMeasure(OneOrMore<PartwiseMeasure> value)
 
 PartwisePart parsePartwisePart(pugi::xml_node el)
 {
+    return parsePartwisePart(el, ParseContext{});
+}
+
+PartwisePart parsePartwisePart(pugi::xml_node el, const ParseContext &context)
+{
     PartwisePart out;
     bool seen_id = false;
     for (pugi::xml_attribute a : el.attributes())
@@ -60,22 +66,27 @@ PartwisePart parsePartwisePart(pugi::xml_node el)
     {
         throwMissingAttribute(el, "id");
     }
-    parsePartwisePartContent(out, el);
+    parsePartwisePartContent(out, el, context);
     return out;
 }
 
 void parsePartwisePartContent(PartwisePart &out, pugi::xml_node el)
+{
+    parsePartwisePartContent(out, el, ParseContext{});
+}
+
+void parsePartwisePartContent(PartwisePart &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (!cursorIs(cursor, "measure"))
     {
         throwMissingOrMisplaced(el, cursor, "measure");
     }
-    out.setMeasure(OneOrMore<PartwiseMeasure>{parsePartwiseMeasure(cursor)});
+    out.setMeasure(OneOrMore<PartwiseMeasure>{parsePartwiseMeasure(cursor, context)});
     cursor = nextElement(cursor);
     while (cursorIs(cursor, "measure"))
     {
-        out.addMeasure(parsePartwiseMeasure(cursor));
+        out.addMeasure(parsePartwiseMeasure(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor)

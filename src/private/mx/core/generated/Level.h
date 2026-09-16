@@ -17,6 +17,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The level type is used to specify editorial information for different MusicXML elements. The
 /// content contains identifying and/or descriptive text about the editorial status of the parent
 /// element. If the reference attribute is yes, this indicates editorial information that is for
@@ -53,7 +55,11 @@ class Level final
 
 Level parseLevel(pugi::xml_node el);
 
+Level parseLevel(pugi::xml_node el, const ParseContext &context);
+
 void parseLevelContent(Level &out, pugi::xml_node el);
+
+void parseLevelContent(Level &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeLevel(const Level &v, pugi::xml_node parent, const char *tag);
 

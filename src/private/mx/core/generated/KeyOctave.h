@@ -16,6 +16,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The key-octave type specifies in which octave an element of a key signature appears. The content
 /// specifies the octave value using the same values as the display-octave element. The number
 /// attribute is a positive integer that refers to the key signature element in left-to-right order.
@@ -42,7 +44,11 @@ class KeyOctave final
 
 KeyOctave parseKeyOctave(pugi::xml_node el);
 
+KeyOctave parseKeyOctave(pugi::xml_node el, const ParseContext &context);
+
 void parseKeyOctaveContent(KeyOctave &out, pugi::xml_node el);
+
+void parseKeyOctaveContent(KeyOctave &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeKeyOctave(const KeyOctave &v, pugi::xml_node parent, const char *tag);
 

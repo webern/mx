@@ -3,6 +3,7 @@
 #include "mx/core/generated/NotationsChoice.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -87,87 +88,92 @@ NotationsChoice NotationsChoice::otherNotation(OtherNotation value)
 
 NotationsChoice parseNotationsChoice(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseNotationsChoice(el, cursor, ParseContext{});
+}
+
+NotationsChoice parseNotationsChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+{
     if (cursor && (cursorIs(cursor, "tied")))
     {
-        Tied value = parseTied(cursor);
+        Tied value = parseTied(cursor, context);
         cursor = nextElement(cursor);
         return NotationsChoice::tied(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "slur")))
     {
-        Slur value = parseSlur(cursor);
+        Slur value = parseSlur(cursor, context);
         cursor = nextElement(cursor);
         return NotationsChoice::slur(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "tuplet")))
     {
-        Tuplet value = parseTuplet(cursor);
+        Tuplet value = parseTuplet(cursor, context);
         cursor = nextElement(cursor);
         return NotationsChoice::tuplet(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "glissando")))
     {
-        Glissando value = parseGlissando(cursor);
+        Glissando value = parseGlissando(cursor, context);
         cursor = nextElement(cursor);
         return NotationsChoice::glissando(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "slide")))
     {
-        Slide value = parseSlide(cursor);
+        Slide value = parseSlide(cursor, context);
         cursor = nextElement(cursor);
         return NotationsChoice::slide(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "ornaments")))
     {
-        Ornaments value = parseOrnaments(cursor);
+        Ornaments value = parseOrnaments(cursor, context);
         cursor = nextElement(cursor);
         return NotationsChoice::ornaments(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "technical")))
     {
-        Technical value = parseTechnical(cursor);
+        Technical value = parseTechnical(cursor, context);
         cursor = nextElement(cursor);
         return NotationsChoice::technical(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "articulations")))
     {
-        Articulations value = parseArticulations(cursor);
+        Articulations value = parseArticulations(cursor, context);
         cursor = nextElement(cursor);
         return NotationsChoice::articulations(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "dynamics")))
     {
-        Dynamics value = parseDynamics(cursor);
+        Dynamics value = parseDynamics(cursor, context);
         cursor = nextElement(cursor);
         return NotationsChoice::dynamics(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "fermata")))
     {
-        Fermata value = parseFermata(cursor);
+        Fermata value = parseFermata(cursor, context);
         cursor = nextElement(cursor);
         return NotationsChoice::fermata(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "arpeggiate")))
     {
-        Arpeggiate value = parseArpeggiate(cursor);
+        Arpeggiate value = parseArpeggiate(cursor, context);
         cursor = nextElement(cursor);
         return NotationsChoice::arpeggiate(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "non-arpeggiate")))
     {
-        NonArpeggiate value = parseNonArpeggiate(cursor);
+        NonArpeggiate value = parseNonArpeggiate(cursor, context);
         cursor = nextElement(cursor);
         return NotationsChoice::nonArpeggiate(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "accidental-mark")))
     {
-        AccidentalMark value = parseAccidentalMark(cursor);
+        AccidentalMark value = parseAccidentalMark(cursor, context);
         cursor = nextElement(cursor);
         return NotationsChoice::accidentalMark(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "other-notation")))
     {
-        OtherNotation value = parseOtherNotation(cursor);
+        OtherNotation value = parseOtherNotation(cursor, context);
         cursor = nextElement(cursor);
         return NotationsChoice::otherNotation(std::move(value));
     }

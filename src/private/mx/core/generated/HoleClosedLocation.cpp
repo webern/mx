@@ -55,8 +55,14 @@ bool HoleClosedLocation::tryParse(std::string_view text, HoleClosedLocation &out
 
 HoleClosedLocation HoleClosedLocation::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+HoleClosedLocation HoleClosedLocation::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     HoleClosedLocation v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

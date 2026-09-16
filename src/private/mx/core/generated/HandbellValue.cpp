@@ -103,8 +103,14 @@ bool HandbellValue::tryParse(std::string_view text, HandbellValue &out) noexcept
 
 HandbellValue HandbellValue::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+HandbellValue HandbellValue::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     HandbellValue v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

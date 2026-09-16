@@ -21,6 +21,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The appearance type controls general graphical settings for the music's final form appearance on
 /// a printed page of display. This includes support for line widths, definitions for note sizes, and
 /// standard distances between notation elements, plus an extension element for other aspects of
@@ -57,7 +59,11 @@ class Appearance final
 
 Appearance parseAppearance(pugi::xml_node el);
 
+Appearance parseAppearance(pugi::xml_node el, const ParseContext &context);
+
 void parseAppearanceContent(Appearance &out, pugi::xml_node el);
+
+void parseAppearanceContent(Appearance &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeAppearance(const Appearance &v, pugi::xml_node parent, const char *tag);
 

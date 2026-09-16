@@ -25,6 +25,8 @@ class xml_node;
 namespace {{vars.namespace}}
 {
 
+class ParseContext;
+
 {{#doc_lines}}
 /// {{value}}
 {{/doc_lines}}
@@ -88,6 +90,8 @@ private:
 /// Consumes one alternative starting at `cursor` (which advances); `el` is
 /// the enclosing element, for error paths.
 {{ident}} parse{{ident}}(pugi::xml_node el, pugi::xml_node &cursor);
+
+{{ident}} parse{{ident}}(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serialize{{ident}}(const {{ident}} &v, pugi::xml_node el);
 

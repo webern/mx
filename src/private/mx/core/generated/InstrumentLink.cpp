@@ -3,6 +3,7 @@
 #include "mx/core/generated/InstrumentLink.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -21,6 +22,11 @@ void InstrumentLink::setID(Token value)
 }
 
 InstrumentLink parseInstrumentLink(pugi::xml_node el)
+{
+    return parseInstrumentLink(el, ParseContext{});
+}
+
+InstrumentLink parseInstrumentLink(pugi::xml_node el, const ParseContext &context)
 {
     InstrumentLink out;
     bool seen_id = false;
@@ -45,13 +51,19 @@ InstrumentLink parseInstrumentLink(pugi::xml_node el)
     {
         throwMissingAttribute(el, "id");
     }
-    parseInstrumentLinkContent(out, el);
+    parseInstrumentLinkContent(out, el, context);
     return out;
 }
 
 void parseInstrumentLinkContent(InstrumentLink &out, pugi::xml_node el)
 {
+    parseInstrumentLinkContent(out, el, ParseContext{});
+}
+
+void parseInstrumentLinkContent(InstrumentLink &out, pugi::xml_node el, const ParseContext &context)
+{
     (void)out;
+    (void)context;
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

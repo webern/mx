@@ -57,8 +57,14 @@ bool DegreeSymbolValue::tryParse(std::string_view text, DegreeSymbolValue &out) 
 
 DegreeSymbolValue DegreeSymbolValue::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+DegreeSymbolValue DegreeSymbolValue::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     DegreeSymbolValue v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

@@ -3,6 +3,7 @@
 #include "mx/core/generated/Bass.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -52,6 +53,11 @@ void Bass::setBassAlter(std::optional<HarmonyAlter> value)
 
 Bass parseBass(pugi::xml_node el)
 {
+    return parseBass(el, ParseContext{});
+}
+
+Bass parseBass(pugi::xml_node el, const ParseContext &context)
+{
     Bass out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -62,28 +68,33 @@ Bass parseBass(pugi::xml_node el)
         }
         if (aname == "arrangement")
         {
-            out.setArrangement(HarmonyArrangement::parse(a.value()));
+            out.setArrangement(parseValue<HarmonyArrangement>(a.value(), context, el, "arrangement"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseBassContent(out, el);
+    parseBassContent(out, el, context);
     return out;
 }
 
 void parseBassContent(Bass &out, pugi::xml_node el)
 {
+    parseBassContent(out, el, ParseContext{});
+}
+
+void parseBassContent(Bass &out, pugi::xml_node el, const ParseContext &context)
+{
     pugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "bass-separator"))
     {
-        out.setBassSeparator(parseStyleText(cursor));
+        out.setBassSeparator(parseStyleText(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "bass-step"))
     {
-        out.setBassStep(parseBassStep(cursor));
+        out.setBassStep(parseBassStep(cursor, context));
         cursor = nextElement(cursor);
     }
     else
@@ -92,7 +103,7 @@ void parseBassContent(Bass &out, pugi::xml_node el)
     }
     if (cursorIs(cursor, "bass-alter"))
     {
-        out.setBassAlter(parseHarmonyAlter(cursor));
+        out.setBassAlter(parseHarmonyAlter(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor)

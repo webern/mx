@@ -21,6 +21,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The non-arpeggiate type indicates that this note is at the top or bottom of a bracket indicating
 /// to not arpeggiate these notes. Since this does not involve playback, it is only used on the top
 /// or bottom notes, not on each note as for the arpeggiate type.
@@ -61,7 +63,11 @@ class NonArpeggiate final
 
 NonArpeggiate parseNonArpeggiate(pugi::xml_node el);
 
+NonArpeggiate parseNonArpeggiate(pugi::xml_node el, const ParseContext &context);
+
 void parseNonArpeggiateContent(NonArpeggiate &out, pugi::xml_node el);
+
+void parseNonArpeggiateContent(NonArpeggiate &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeNonArpeggiate(const NonArpeggiate &v, pugi::xml_node parent, const char *tag);
 

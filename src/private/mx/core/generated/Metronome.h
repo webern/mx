@@ -28,6 +28,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The metronome type represents metronome marks and other metric relationships. The beat-unit group
 /// and per-minute element specify regular metronome marks. The metronome-note and metronome-relation
 /// elements allow for the specification of metric modulations and other metric relationships, such
@@ -97,7 +99,11 @@ class Metronome final
 
 Metronome parseMetronome(pugi::xml_node el);
 
+Metronome parseMetronome(pugi::xml_node el, const ParseContext &context);
+
 void parseMetronomeContent(Metronome &out, pugi::xml_node el);
+
+void parseMetronomeContent(Metronome &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeMetronome(const Metronome &v, pugi::xml_node parent, const char *tag);
 

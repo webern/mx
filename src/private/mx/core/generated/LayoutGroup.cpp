@@ -3,6 +3,7 @@
 #include "mx/core/generated/LayoutGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -47,20 +48,25 @@ void LayoutGroup::setStaffLayout(std::vector<StaffLayout> value)
 
 LayoutGroup parseLayoutGroup(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseLayoutGroup(el, cursor, ParseContext{});
+}
+
+LayoutGroup parseLayoutGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+{
     LayoutGroup out;
     if (cursorIs(cursor, "page-layout"))
     {
-        out.setPageLayout(parsePageLayout(cursor));
+        out.setPageLayout(parsePageLayout(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "system-layout"))
     {
-        out.setSystemLayout(parseSystemLayout(cursor));
+        out.setSystemLayout(parseSystemLayout(cursor, context));
         cursor = nextElement(cursor);
     }
     while (cursorIs(cursor, "staff-layout"))
     {
-        out.addStaffLayout(parseStaffLayout(cursor));
+        out.addStaffLayout(parseStaffLayout(cursor, context));
         cursor = nextElement(cursor);
     }
     return out;

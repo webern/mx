@@ -3,6 +3,7 @@
 #include "mx/core/generated/StaffSize.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -32,6 +33,11 @@ void StaffSize::setValue(NonNegativeDecimal value)
 
 StaffSize parseStaffSize(pugi::xml_node el)
 {
+    return parseStaffSize(el, ParseContext{});
+}
+
+StaffSize parseStaffSize(pugi::xml_node el, const ParseContext &context)
+{
     StaffSize out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -42,20 +48,25 @@ StaffSize parseStaffSize(pugi::xml_node el)
         }
         if (aname == "scaling")
         {
-            out.setScaling(NonNegativeDecimal::parse(a.value()));
+            out.setScaling(parseValue<NonNegativeDecimal>(a.value(), context, el, "scaling"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseStaffSizeContent(out, el);
+    parseStaffSizeContent(out, el, context);
     return out;
 }
 
 void parseStaffSizeContent(StaffSize &out, pugi::xml_node el)
 {
-    out.setValue(NonNegativeDecimal::parse(childText(el)));
+    parseStaffSizeContent(out, el, ParseContext{});
+}
+
+void parseStaffSizeContent(StaffSize &out, pugi::xml_node el, const ParseContext &context)
+{
+    out.setValue(parseValue<NonNegativeDecimal>(childText(el), context, el, nullptr));
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

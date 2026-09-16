@@ -3,6 +3,7 @@
 #include "mx/core/generated/Listen.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -27,6 +28,11 @@ void Listen::setChoice(OneOrMore<ListenChoice> value)
 
 Listen parseListen(pugi::xml_node el)
 {
+    return parseListen(el, ParseContext{});
+}
+
+Listen parseListen(pugi::xml_node el, const ParseContext &context)
+{
     Listen out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -37,21 +43,26 @@ Listen parseListen(pugi::xml_node el)
         }
         throwUnknownAttribute(el, a.name());
     }
-    parseListenContent(out, el);
+    parseListenContent(out, el, context);
     return out;
 }
 
 void parseListenContent(Listen &out, pugi::xml_node el)
+{
+    parseListenContent(out, el, ParseContext{});
+}
+
+void parseListenContent(Listen &out, pugi::xml_node el, const ParseContext &context)
 {
     pugi::xml_node cursor = firstElement(el);
     if (!(cursor && (cursorIs(cursor, "assess") || cursorIs(cursor, "wait") || cursorIs(cursor, "other-listen"))))
     {
         throwMissingElement(el, "assess");
     }
-    out.setChoice(OneOrMore<ListenChoice>{parseListenChoice(el, cursor)});
+    out.setChoice(OneOrMore<ListenChoice>{parseListenChoice(el, cursor, context)});
     while (cursor && (cursorIs(cursor, "assess") || cursorIs(cursor, "wait") || cursorIs(cursor, "other-listen")))
     {
-        out.addChoice(parseListenChoice(el, cursor));
+        out.addChoice(parseListenChoice(el, cursor, context));
     }
     if (cursor)
     {

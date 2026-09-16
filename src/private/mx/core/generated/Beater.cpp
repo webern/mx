@@ -3,6 +3,7 @@
 #include "mx/core/generated/Beater.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -32,6 +33,11 @@ void Beater::setValue(BeaterValue value)
 
 Beater parseBeater(pugi::xml_node el)
 {
+    return parseBeater(el, ParseContext{});
+}
+
+Beater parseBeater(pugi::xml_node el, const ParseContext &context)
+{
     Beater out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -42,20 +48,25 @@ Beater parseBeater(pugi::xml_node el)
         }
         if (aname == "tip")
         {
-            out.setTip(TipDirection::parse(a.value()));
+            out.setTip(parseValue<TipDirection>(a.value(), context, el, "tip"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseBeaterContent(out, el);
+    parseBeaterContent(out, el, context);
     return out;
 }
 
 void parseBeaterContent(Beater &out, pugi::xml_node el)
 {
-    out.setValue(BeaterValue::parse(childText(el)));
+    parseBeaterContent(out, el, ParseContext{});
+}
+
+void parseBeaterContent(Beater &out, pugi::xml_node el, const ParseContext &context)
+{
+    out.setValue(parseValue<BeaterValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

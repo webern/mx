@@ -20,6 +20,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The degree type is used to add, alter, or subtract individual notes in the chord. The
 /// print-object attribute can be used to keep the degree from printing separately when it has
 /// already taken into account in the text attribute of the kind element. The degree-value and
@@ -50,7 +52,11 @@ class Degree final
 
 Degree parseDegree(pugi::xml_node el);
 
+Degree parseDegree(pugi::xml_node el, const ParseContext &context);
+
 void parseDegreeContent(Degree &out, pugi::xml_node el);
+
+void parseDegreeContent(Degree &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeDegree(const Degree &v, pugi::xml_node parent, const char *tag);
 

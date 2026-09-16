@@ -3,6 +3,7 @@
 #include "mx/core/generated/Link.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -142,6 +143,11 @@ void Link::setRelativeY(std::optional<Tenths> value)
 
 Link parseLink(pugi::xml_node el)
 {
+    return parseLink(el, ParseContext{});
+}
+
+Link parseLink(pugi::xml_node el, const ParseContext &context)
+{
     Link out;
     bool seen_xlinkHref = false;
     for (pugi::xml_attribute a : el.attributes())
@@ -186,23 +192,23 @@ Link parseLink(pugi::xml_node el)
         }
         else if (aname == "position")
         {
-            out.setPosition(parseInt(a.value()));
+            out.setPosition(parseIntegerValue(a.value(), context, el, "position"));
         }
         else if (aname == "default-x")
         {
-            out.setDefaultX(Tenths::parse(a.value()));
+            out.setDefaultX(parseValue<Tenths>(a.value(), context, el, "default-x"));
         }
         else if (aname == "default-y")
         {
-            out.setDefaultY(Tenths::parse(a.value()));
+            out.setDefaultY(parseValue<Tenths>(a.value(), context, el, "default-y"));
         }
         else if (aname == "relative-x")
         {
-            out.setRelativeX(Tenths::parse(a.value()));
+            out.setRelativeX(parseValue<Tenths>(a.value(), context, el, "relative-x"));
         }
         else if (aname == "relative-y")
         {
-            out.setRelativeY(Tenths::parse(a.value()));
+            out.setRelativeY(parseValue<Tenths>(a.value(), context, el, "relative-y"));
         }
         else
         {
@@ -213,13 +219,19 @@ Link parseLink(pugi::xml_node el)
     {
         throwMissingAttribute(el, "xlink:href");
     }
-    parseLinkContent(out, el);
+    parseLinkContent(out, el, context);
     return out;
 }
 
 void parseLinkContent(Link &out, pugi::xml_node el)
 {
+    parseLinkContent(out, el, ParseContext{});
+}
+
+void parseLinkContent(Link &out, pugi::xml_node el, const ParseContext &context)
+{
     (void)out;
+    (void)context;
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

@@ -11,7 +11,9 @@
 #include "mx/api/MusicXml.h"
 #include "mx/api/OttavaData.h"
 #include "mx/api/ScoreData.h"
+#include "mxtest/file/StupidFileFunctions.h"
 
+#include <fstream>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -63,6 +65,41 @@ inline std::string diagnosticsTimeSignatureXml()
     </measure>
   </part>
 </score-partwise>)";
+}
+
+inline std::string diagnosticsImportRepairXml()
+{
+    return R"(<?xml version="1.0" encoding="UTF-8"?>
+<score-partwise version="4.0">
+  <part-list><score-part id="P1"><part-name>Music</part-name></score-part></part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes>
+        <divisions>1</divisions>
+        <time number="3"><beats>3</beats><beat-type>4</beat-type></time>
+        <staves>1</staves>
+      </attributes>
+      <note><rest/><duration>1</duration><voice>1</voice><type>banana</type></note>
+    </measure>
+  </part>
+</score-partwise>)";
+}
+
+inline void diagnosticsCheckRethrowsHandlerFailure(const ApiError &error)
+{
+    CHECK(ResultCode::internalError == error.code);
+    REQUIRE(error.cause);
+    bool caughtExpected = false;
+    try
+    {
+        std::rethrow_exception(error.cause);
+    }
+    catch (const std::runtime_error &cause)
+    {
+        caughtExpected = true;
+        CHECK_EQUAL(std::string{"handler failed"}, std::string{cause.what()});
+    }
+    CHECK(caughtExpected);
 }
 
 TEST(diagnosticsCollectAndInvokeHandlerInOrder, Diagnostics)
@@ -187,19 +224,92 @@ TEST(throwingDiagnosticHandlerBecomesInternalError, Diagnostics)
 
     const auto result = fromScore(score, diagnostics);
     REQUIRE(!result.ok());
-    CHECK(ResultCode::internalError == result.error().code);
-    REQUIRE(result.error().cause);
-    bool caughtExpected = false;
-    try
+    diagnosticsCheckRethrowsHandlerFailure(result.error());
+}
+
+T_END
+
+TEST(fromStreamReportsImportRepairs, Diagnostics)
+{
+    std::istringstream stream{diagnosticsImportRepairXml()};
+    Diagnostics diagnostics;
+    const auto document = MusicXml::fromStream(stream, diagnostics);
+    REQUIRE(document.ok());
+    REQUIRE(diagnostics.all().size() == 1);
+
+    const auto &diagnostic = diagnostics.all().front();
+    CHECK(Severity::warning == diagnostic.severity);
+    CHECK(DiagnosticCode::invalidValue == diagnostic.code);
+    CHECK_EQUAL(std::string{"mx: warning at /score-partwise/part/measure/note/type: "
+                            "invalid value \"banana\"; using \"1024th\""},
+                formatDiagnostic(diagnostic));
+}
+
+T_END
+
+TEST(fromFileReportsImportRepairs, Diagnostics)
+{
+    const std::string path = mxtest::filePath(mxtest::TEST_OUTPUT_DIRECTORY_NAME, "DiagnosticsImportRepair.musicxml");
     {
-        std::rethrow_exception(result.error().cause);
+        std::ofstream file{path};
+        file << diagnosticsImportRepairXml();
     }
-    catch (const std::runtime_error &error)
-    {
-        caughtExpected = true;
-        CHECK_EQUAL(std::string{"handler failed"}, std::string{error.what()});
-    }
-    CHECK(caughtExpected);
+    Diagnostics diagnostics;
+    const auto document = MusicXml::fromFile(path, diagnostics);
+    mxtest::deleteFileNoThrow(path);
+    REQUIRE(document.ok());
+    REQUIRE(diagnostics.all().size() == 1);
+    CHECK(DiagnosticCode::invalidValue == diagnostics.all().front().code);
+    CHECK_EQUAL(std::string{"/score-partwise/part/measure/note/type"}, diagnostics.all().front().location.xmlPath);
+}
+
+T_END
+
+TEST(oneCollectionSpansImportAndTranslation, Diagnostics)
+{
+    std::istringstream stream{diagnosticsImportRepairXml()};
+    Diagnostics diagnostics;
+    const auto document = MusicXml::fromStream(stream, diagnostics);
+    REQUIRE(document.ok());
+    REQUIRE(diagnostics.all().size() == 1);
+
+    const auto score = getScore(document.value(), diagnostics);
+    REQUIRE(score.ok());
+    REQUIRE(diagnostics.all().size() == 2);
+    CHECK(DiagnosticCode::invalidValue == diagnostics.all()[0].code);
+    CHECK(DiagnosticCode::valueAdjusted == diagnostics.all()[1].code);
+    CHECK_EQUAL(0, diagnostics.all()[1].location.measureIndex);
+}
+
+T_END
+
+TEST(importWithoutDiagnosticsReadsTheSameDocument, Diagnostics)
+{
+    std::istringstream silentStream{diagnosticsImportRepairXml()};
+    const auto silent = MusicXml::fromStream(silentStream);
+    std::istringstream observedStream{diagnosticsImportRepairXml()};
+    Diagnostics diagnostics;
+    const auto observed = MusicXml::fromStream(observedStream, diagnostics);
+    REQUIRE(silent.ok());
+    REQUIRE(observed.ok());
+    CHECK(!diagnostics.all().empty());
+
+    std::ostringstream silentXml;
+    std::ostringstream observedXml;
+    REQUIRE(silent.value().writeToStream(silentXml).ok());
+    REQUIRE(observed.value().writeToStream(observedXml).ok());
+    CHECK_EQUAL(silentXml.str(), observedXml.str());
+}
+
+T_END
+
+TEST(throwingDiagnosticHandlerDuringImportBecomesInternalError, Diagnostics)
+{
+    std::istringstream stream{diagnosticsImportRepairXml()};
+    Diagnostics diagnostics{[](const Diagnostic &) { throw std::runtime_error{"handler failed"}; }};
+    const auto result = MusicXml::fromStream(stream, diagnostics);
+    REQUIRE(!result.ok());
+    diagnosticsCheckRethrowsHandlerFailure(result.error());
 }
 
 T_END

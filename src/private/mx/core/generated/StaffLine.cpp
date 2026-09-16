@@ -38,20 +38,33 @@ std::string StaffLine::toString() const
 
 bool StaffLine::tryParse(std::string_view text, StaffLine &out)
 {
-    int v{};
-    if (!tryParseInt(text, v))
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    StaffLine parsed = parse(text, outcome);
+    if (outcome == ValueParseOutcome::invalid)
     {
         return false;
     }
-    out = StaffLine{v};
+    out = std::move(parsed);
     return true;
 }
 
 StaffLine StaffLine::parse(std::string_view text)
 {
-    StaffLine v;
-    tryParse(text, v);
-    return v;
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+StaffLine StaffLine::parse(std::string_view text, ValueParseOutcome &outcome)
+{
+    int v{};
+    if (!tryParseInt(text, v))
+    {
+        outcome = ValueParseOutcome::invalid;
+        return StaffLine{};
+    }
+    StaffLine out{v};
+    outcome = out.value() == v ? ValueParseOutcome::valid : ValueParseOutcome::adjusted;
+    return out;
 }
 
 } // namespace mx::core

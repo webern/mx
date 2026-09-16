@@ -23,6 +23,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The hammer-on and pull-off elements are used in guitar and fretted instrument notation. Since a
 /// single slur can be marked over many notes, the hammer-on and pull-off elements are separate so
 /// the individual pair of notes can be specified. The element content can be used to specify how the
@@ -77,7 +79,11 @@ class HammerOnPullOff final
 
 HammerOnPullOff parseHammerOnPullOff(pugi::xml_node el);
 
+HammerOnPullOff parseHammerOnPullOff(pugi::xml_node el, const ParseContext &context);
+
 void parseHammerOnPullOffContent(HammerOnPullOff &out, pugi::xml_node el);
+
+void parseHammerOnPullOffContent(HammerOnPullOff &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeHammerOnPullOff(const HammerOnPullOff &v, pugi::xml_node parent, const char *tag);
 

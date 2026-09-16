@@ -42,20 +42,33 @@ std::string MIDI16384::toString() const
 
 bool MIDI16384::tryParse(std::string_view text, MIDI16384 &out)
 {
-    int v{};
-    if (!tryParseInt(text, v))
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    MIDI16384 parsed = parse(text, outcome);
+    if (outcome == ValueParseOutcome::invalid)
     {
         return false;
     }
-    out = MIDI16384{v};
+    out = std::move(parsed);
     return true;
 }
 
 MIDI16384 MIDI16384::parse(std::string_view text)
 {
-    MIDI16384 v;
-    tryParse(text, v);
-    return v;
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+MIDI16384 MIDI16384::parse(std::string_view text, ValueParseOutcome &outcome)
+{
+    int v{};
+    if (!tryParseInt(text, v))
+    {
+        outcome = ValueParseOutcome::invalid;
+        return MIDI16384{};
+    }
+    MIDI16384 out{v};
+    outcome = out.value() == v ? ValueParseOutcome::valid : ValueParseOutcome::adjusted;
+    return out;
 }
 
 } // namespace mx::core

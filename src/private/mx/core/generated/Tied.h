@@ -24,6 +24,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The tied element represents the notated tie. The tie element represents the tie sound. The number
 /// attribute is rarely needed to disambiguate ties, since note pitches will usually suffice. The
 /// attribute is implied rather than defaulting to 1 as with most elements. It is available for use
@@ -103,7 +105,11 @@ class Tied final
 
 Tied parseTied(pugi::xml_node el);
 
+Tied parseTied(pugi::xml_node el, const ParseContext &context);
+
 void parseTiedContent(Tied &out, pugi::xml_node el);
+
+void parseTiedContent(Tied &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeTied(const Tied &v, pugi::xml_node parent, const char *tag);
 

@@ -28,6 +28,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// Glissando and slide types both indicate rapidly moving from one pitch to the other so that
 /// individual notes are not discerned. A slide is continuous between the two pitches and defaults to
 /// a solid line. The optional text for a is printed alongside the line.
@@ -101,7 +103,11 @@ class Slide final
 
 Slide parseSlide(pugi::xml_node el);
 
+Slide parseSlide(pugi::xml_node el, const ParseContext &context);
+
 void parseSlideContent(Slide &out, pugi::xml_node el);
+
+void parseSlideContent(Slide &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeSlide(const Slide &v, pugi::xml_node parent, const char *tag);
 

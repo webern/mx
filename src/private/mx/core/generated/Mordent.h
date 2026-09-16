@@ -17,6 +17,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The mordent type is used for both represents the mordent sign with the vertical line and the
 /// inverted-mordent sign without the line. The long attribute is "no" by default. The approach and
 /// departure attributes are used for compound ornaments, indicating how the beginning and ending of
@@ -41,6 +43,8 @@ class Mordent : public EmptyTrillSound
 };
 
 Mordent parseMordent(pugi::xml_node el);
+
+Mordent parseMordent(pugi::xml_node el, const ParseContext &context);
 
 void serializeMordent(const Mordent &v, pugi::xml_node parent, const char *tag);
 

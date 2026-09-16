@@ -43,8 +43,14 @@ bool LineShape::tryParse(std::string_view text, LineShape &out) noexcept
 
 LineShape LineShape::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+LineShape LineShape::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     LineShape v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

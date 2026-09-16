@@ -21,6 +21,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The placement-text type represents a text element with print-style and placement attribute
 /// groups.
 class PlacementText final
@@ -66,7 +68,11 @@ class PlacementText final
 
 PlacementText parsePlacementText(pugi::xml_node el);
 
+PlacementText parsePlacementText(pugi::xml_node el, const ParseContext &context);
+
 void parsePlacementTextContent(PlacementText &out, pugi::xml_node el);
+
+void parsePlacementTextContent(PlacementText &out, pugi::xml_node el, const ParseContext &context);
 
 void serializePlacementText(const PlacementText &v, pugi::xml_node parent, const char *tag);
 

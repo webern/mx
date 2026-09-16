@@ -27,6 +27,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The other-notation type is used to define any notations not yet in the MusicXML format. It
 /// handles notations where more specific extension elements such as other-dynamics and
 /// other-technical are not appropriate. The smufl attribute can be used to specify a particular
@@ -91,7 +93,11 @@ class OtherNotation final
 
 OtherNotation parseOtherNotation(pugi::xml_node el);
 
+OtherNotation parseOtherNotation(pugi::xml_node el, const ParseContext &context);
+
 void parseOtherNotationContent(OtherNotation &out, pugi::xml_node el);
+
+void parseOtherNotationContent(OtherNotation &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeOtherNotation(const OtherNotation &v, pugi::xml_node parent, const char *tag);
 

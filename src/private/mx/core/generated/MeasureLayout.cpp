@@ -3,6 +3,7 @@
 #include "mx/core/generated/MeasureLayout.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -22,6 +23,11 @@ void MeasureLayout::setMeasureDistance(std::optional<Tenths> value)
 
 MeasureLayout parseMeasureLayout(pugi::xml_node el)
 {
+    return parseMeasureLayout(el, ParseContext{});
+}
+
+MeasureLayout parseMeasureLayout(pugi::xml_node el, const ParseContext &context)
+{
     MeasureLayout out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -32,16 +38,21 @@ MeasureLayout parseMeasureLayout(pugi::xml_node el)
         }
         throwUnknownAttribute(el, a.name());
     }
-    parseMeasureLayoutContent(out, el);
+    parseMeasureLayoutContent(out, el, context);
     return out;
 }
 
 void parseMeasureLayoutContent(MeasureLayout &out, pugi::xml_node el)
 {
+    parseMeasureLayoutContent(out, el, ParseContext{});
+}
+
+void parseMeasureLayoutContent(MeasureLayout &out, pugi::xml_node el, const ParseContext &context)
+{
     pugi::xml_node cursor = firstElement(el);
     if (cursorIs(cursor, "measure-distance"))
     {
-        out.setMeasureDistance(Tenths::parse(childText(cursor)));
+        out.setMeasureDistance(parseValue<Tenths>(childText(cursor), context, cursor, nullptr));
         cursor = nextElement(cursor);
     }
     if (cursor)

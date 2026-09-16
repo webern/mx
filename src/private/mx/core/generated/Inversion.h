@@ -20,6 +20,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The inversion type represents harmony inversions. The value is a number indicating which
 /// inversion is used: 0 for root position, 1 for first inversion, etc. The text attribute indicates
 /// how the inversion should be displayed in a score.
@@ -66,7 +68,11 @@ class Inversion final
 
 Inversion parseInversion(pugi::xml_node el);
 
+Inversion parseInversion(pugi::xml_node el, const ParseContext &context);
+
 void parseInversionContent(Inversion &out, pugi::xml_node el);
+
+void parseInversionContent(Inversion &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeInversion(const Inversion &v, pugi::xml_node parent, const char *tag);
 

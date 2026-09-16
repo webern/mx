@@ -3,6 +3,7 @@
 #include "mx/core/generated/AttributesChoice.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -27,12 +28,17 @@ AttributesChoice AttributesChoice::forPart(std::vector<ForPart> value)
 
 AttributesChoice parseAttributesChoice(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseAttributesChoice(el, cursor, ParseContext{});
+}
+
+AttributesChoice parseAttributesChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+{
     if (cursor && (cursorIs(cursor, "transpose")))
     {
         std::vector<Transpose> items;
         while (cursor && (cursorIs(cursor, "transpose")))
         {
-            items.push_back(parseTranspose(cursor));
+            items.push_back(parseTranspose(cursor, context));
             cursor = nextElement(cursor);
         }
         return AttributesChoice::transpose(std::move(items));
@@ -42,7 +48,7 @@ AttributesChoice parseAttributesChoice(pugi::xml_node el, pugi::xml_node &cursor
         std::vector<ForPart> items;
         while (cursor && (cursorIs(cursor, "for-part")))
         {
-            items.push_back(parseForPart(cursor));
+            items.push_back(parseForPart(cursor, context));
             cursor = nextElement(cursor);
         }
         return AttributesChoice::forPart(std::move(items));

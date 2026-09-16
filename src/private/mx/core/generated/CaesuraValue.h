@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "mx/core/Lexical.h"
+
 #include <string_view>
 
 namespace mx::core
@@ -47,6 +49,9 @@ class CaesuraValue final
     /// Lenient: an unrecognized literal falls back to the first variant
     /// (the import leniency policy; never produces an invalid value).
     static CaesuraValue parse(std::string_view text) noexcept;
+
+    /// Lenient, and says whether the literal was recognized.
+    static CaesuraValue parse(std::string_view text, ValueParseOutcome &outcome) noexcept;
 
     bool operator==(const CaesuraValue &other) const noexcept = default;
 

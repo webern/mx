@@ -3,6 +3,7 @@
 #include "mx/core/generated/PageLayout.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -42,6 +43,11 @@ void PageLayout::clearPageMargins() noexcept
 
 PageLayout parsePageLayout(pugi::xml_node el)
 {
+    return parsePageLayout(el, ParseContext{});
+}
+
+PageLayout parsePageLayout(pugi::xml_node el, const ParseContext &context)
+{
     PageLayout out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -52,20 +58,25 @@ PageLayout parsePageLayout(pugi::xml_node el)
         }
         throwUnknownAttribute(el, a.name());
     }
-    parsePageLayoutContent(out, el);
+    parsePageLayoutContent(out, el, context);
     return out;
 }
 
 void parsePageLayoutContent(PageLayout &out, pugi::xml_node el)
 {
+    parsePageLayoutContent(out, el, ParseContext{});
+}
+
+void parsePageLayoutContent(PageLayout &out, pugi::xml_node el, const ParseContext &context)
+{
     pugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "page-height")))
     {
-        out.setGroup(parsePageLayoutGroup(el, cursor));
+        out.setGroup(parsePageLayoutGroup(el, cursor, context));
     }
     while (cursorIs(cursor, "page-margins"))
     {
-        if (!out.addPageMargins(parsePageMargins(cursor)))
+        if (!out.addPageMargins(parsePageMargins(cursor, context)))
         {
             throwTooManyElements(cursor);
         }

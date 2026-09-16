@@ -3,6 +3,7 @@
 #include "mx/core/generated/BarStyleColor.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -32,6 +33,11 @@ void BarStyleColor::setValue(BarStyle value)
 
 BarStyleColor parseBarStyleColor(pugi::xml_node el)
 {
+    return parseBarStyleColor(el, ParseContext{});
+}
+
+BarStyleColor parseBarStyleColor(pugi::xml_node el, const ParseContext &context)
+{
     BarStyleColor out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -42,20 +48,25 @@ BarStyleColor parseBarStyleColor(pugi::xml_node el)
         }
         if (aname == "color")
         {
-            out.setColor(Color::parse(a.value()));
+            out.setColor(parseValue<Color>(a.value(), context, el, "color"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseBarStyleColorContent(out, el);
+    parseBarStyleColorContent(out, el, context);
     return out;
 }
 
 void parseBarStyleColorContent(BarStyleColor &out, pugi::xml_node el)
 {
-    out.setValue(BarStyle::parse(childText(el)));
+    parseBarStyleColorContent(out, el, ParseContext{});
+}
+
+void parseBarStyleColorContent(BarStyleColor &out, pugi::xml_node el, const ParseContext &context)
+{
+    out.setValue(parseValue<BarStyle>(childText(el), context, el, nullptr));
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

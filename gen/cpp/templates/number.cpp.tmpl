@@ -53,30 +53,39 @@ std::string {{ident}}::toString() const
 
 bool {{ident}}::tryParse(std::string_view text, {{ident}} &out)
 {
-{{#is_decimal}}
-    Decimal v;
-    if (!Decimal::tryParse(text, v))
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    {{ident}} parsed = parse(text, outcome);
+    if (outcome == ValueParseOutcome::invalid)
     {
         return false;
     }
-    out = {{ident}}{std::move(v)};
-{{/is_decimal}}
-{{#is_integer}}
-    int v{};
-    if (!tryParseInt(text, v))
-    {
-        return false;
-    }
-    out = {{ident}}{v};
-{{/is_integer}}
+    out = std::move(parsed);
     return true;
 }
 
 {{ident}} {{ident}}::parse(std::string_view text)
 {
-    {{ident}} v;
-    tryParse(text, v);
-    return v;
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+{{ident}} {{ident}}::parse(std::string_view text, ValueParseOutcome &outcome)
+{
+{{#is_decimal}}
+    Decimal v;
+    if (!Decimal::tryParse(text, v))
+{{/is_decimal}}
+{{#is_integer}}
+    int v{};
+    if (!tryParseInt(text, v))
+{{/is_integer}}
+    {
+        outcome = ValueParseOutcome::invalid;
+        return {{ident}}{};
+    }
+    {{ident}} out{v};
+    outcome = out.value() == v ? ValueParseOutcome::valid : ValueParseOutcome::adjusted;
+    return out;
 }
 
 } // namespace {{vars.namespace}}

@@ -16,6 +16,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// Multiple part-link elements can link a condensed part within a score file to multiple MusicXML
 /// parts files. For example, a "Clarinet 1 and 2" part in a score file could link to separate
 /// "Clarinet 1" and "Clarinet 2" part files. The instrument-link type distinguish which of the
@@ -34,7 +36,11 @@ class InstrumentLink final
 
 InstrumentLink parseInstrumentLink(pugi::xml_node el);
 
+InstrumentLink parseInstrumentLink(pugi::xml_node el, const ParseContext &context);
+
 void parseInstrumentLinkContent(InstrumentLink &out, pugi::xml_node el);
+
+void parseInstrumentLinkContent(InstrumentLink &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeInstrumentLink(const InstrumentLink &v, pugi::xml_node parent, const char *tag);
 

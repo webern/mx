@@ -60,11 +60,19 @@ bool FontSize::tryParse(std::string_view text, FontSize &out)
 
 FontSize FontSize::parse(std::string_view text)
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+FontSize FontSize::parse(std::string_view text, ValueParseOutcome &outcome)
+{
     FontSize out;
     if (tryParse(text, out))
     {
+        outcome = ValueParseOutcome::valid;
         return out;
     }
+    outcome = ValueParseOutcome::invalid;
     return FontSize::decimal(Decimal::parse(text));
 }
 

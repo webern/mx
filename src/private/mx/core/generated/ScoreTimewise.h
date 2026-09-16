@@ -19,6 +19,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// Content fields mirror the schema grammar in declaration order; the
 /// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
 class ScoreTimewise final
@@ -41,7 +43,11 @@ class ScoreTimewise final
 
 ScoreTimewise parseScoreTimewise(pugi::xml_node el);
 
+ScoreTimewise parseScoreTimewise(pugi::xml_node el, const ParseContext &context);
+
 void parseScoreTimewiseContent(ScoreTimewise &out, pugi::xml_node el);
+
+void parseScoreTimewiseContent(ScoreTimewise &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeScoreTimewise(const ScoreTimewise &v, pugi::xml_node parent, const char *tag);
 

@@ -18,6 +18,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The beat-unit group combines elements used repeatedly in the metronome element to specify a note
 /// within a metronome mark.
 /// A shared content group: transparent on the wire, its
@@ -40,6 +42,8 @@ class BeatUnitGroup final
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
 BeatUnitGroup parseBeatUnitGroup(pugi::xml_node el, pugi::xml_node &cursor);
+
+BeatUnitGroup parseBeatUnitGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeBeatUnitGroup(const BeatUnitGroup &v, pugi::xml_node el);
 

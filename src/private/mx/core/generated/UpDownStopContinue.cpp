@@ -55,8 +55,14 @@ bool UpDownStopContinue::tryParse(std::string_view text, UpDownStopContinue &out
 
 UpDownStopContinue UpDownStopContinue::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+UpDownStopContinue UpDownStopContinue::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     UpDownStopContinue v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

@@ -22,6 +22,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The wedge type represents crescendo and diminuendo wedge symbols. The type attribute is crescendo
 /// for the start of a wedge that is closed at the left side, and diminuendo for the start of a wedge
 /// that is closed on the right side. Spread values are measured in tenths; those at the start of a
@@ -78,7 +80,11 @@ class Wedge final
 
 Wedge parseWedge(pugi::xml_node el);
 
+Wedge parseWedge(pugi::xml_node el, const ParseContext &context);
+
 void parseWedgeContent(Wedge &out, pugi::xml_node el);
+
+void parseWedgeContent(Wedge &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeWedge(const Wedge &v, pugi::xml_node parent, const char *tag);
 

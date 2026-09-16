@@ -28,6 +28,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// Clefs are represented by a combination of sign, line, and clef-octave-change elements. The
 /// optional number attribute refers to staff numbers within the part. A value of 1 is assumed if not
 /// present. Sometimes clefs are added to the staff in non-standard line positions, either to
@@ -99,7 +101,11 @@ class Clef final
 
 Clef parseClef(pugi::xml_node el);
 
+Clef parseClef(pugi::xml_node el, const ParseContext &context);
+
 void parseClefContent(Clef &out, pugi::xml_node el);
+
+void parseClefContent(Clef &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeClef(const Clef &v, pugi::xml_node parent, const char *tag);
 

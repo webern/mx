@@ -29,6 +29,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The accidental-text type represents an element with an accidental value and text-formatting
 /// attributes.
 class AccidentalText final
@@ -113,7 +115,11 @@ class AccidentalText final
 
 AccidentalText parseAccidentalText(pugi::xml_node el);
 
+AccidentalText parseAccidentalText(pugi::xml_node el, const ParseContext &context);
+
 void parseAccidentalTextContent(AccidentalText &out, pugi::xml_node el);
+
+void parseAccidentalTextContent(AccidentalText &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeAccidentalText(const AccidentalText &v, pugi::xml_node parent, const char *tag);
 

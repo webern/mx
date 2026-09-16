@@ -3,6 +3,7 @@
 #include "mx/core/generated/Supports.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -52,6 +53,11 @@ void Supports::setValue(std::optional<std::string> value)
 
 Supports parseSupports(pugi::xml_node el)
 {
+    return parseSupports(el, ParseContext{});
+}
+
+Supports parseSupports(pugi::xml_node el, const ParseContext &context)
+{
     Supports out;
     bool seen_type = false;
     bool seen_element = false;
@@ -65,7 +71,7 @@ Supports parseSupports(pugi::xml_node el)
         if (aname == "type")
         {
             seen_type = true;
-            out.setType(YesNo::parse(a.value()));
+            out.setType(parseValue<YesNo>(a.value(), context, el, "type"));
         }
         else if (aname == "element")
         {
@@ -93,13 +99,19 @@ Supports parseSupports(pugi::xml_node el)
     {
         throwMissingAttribute(el, "element");
     }
-    parseSupportsContent(out, el);
+    parseSupportsContent(out, el, context);
     return out;
 }
 
 void parseSupportsContent(Supports &out, pugi::xml_node el)
 {
+    parseSupportsContent(out, el, ParseContext{});
+}
+
+void parseSupportsContent(Supports &out, pugi::xml_node el, const ParseContext &context)
+{
     (void)out;
+    (void)context;
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

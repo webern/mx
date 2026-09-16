@@ -21,6 +21,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The degree-type type indicates if this degree is an addition, alteration, or subtraction relative
 /// to the kind of the current chord. The value of the degree-type element affects the interpretation
 /// of the value of the degree-alter element. The text attribute specifies how the type of the degree
@@ -68,7 +70,11 @@ class DegreeType final
 
 DegreeType parseDegreeType(pugi::xml_node el);
 
+DegreeType parseDegreeType(pugi::xml_node el, const ParseContext &context);
+
 void parseDegreeTypeContent(DegreeType &out, pugi::xml_node el);
+
+void parseDegreeTypeContent(DegreeType &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeDegreeType(const DegreeType &v, pugi::xml_node parent, const char *tag);
 

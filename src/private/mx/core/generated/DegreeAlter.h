@@ -22,6 +22,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The degree-alter type represents the chromatic alteration for the current degree. If the
 /// degree-type value is alter or subtract, the degree-alter value is relative to the degree already
 /// in the chord based on its kind element. If the degree-type value is add, the degree-alter is
@@ -71,7 +73,11 @@ class DegreeAlter final
 
 DegreeAlter parseDegreeAlter(pugi::xml_node el);
 
+DegreeAlter parseDegreeAlter(pugi::xml_node el, const ParseContext &context);
+
 void parseDegreeAlterContent(DegreeAlter &out, pugi::xml_node el);
+
+void parseDegreeAlterContent(DegreeAlter &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeDegreeAlter(const DegreeAlter &v, pugi::xml_node parent, const char *tag);
 

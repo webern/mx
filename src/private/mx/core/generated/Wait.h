@@ -17,6 +17,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The wait type specifies a point where the accompaniment should wait for a performer event before
 /// continuing. This typically happens at the start of new sections or after a held note or
 /// indeterminate music. These waiting points cannot always be inferred reliably from the contents of
@@ -38,7 +40,11 @@ class Wait final
 
 Wait parseWait(pugi::xml_node el);
 
+Wait parseWait(pugi::xml_node el, const ParseContext &context);
+
 void parseWaitContent(Wait &out, pugi::xml_node el);
+
+void parseWaitContent(Wait &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeWait(const Wait &v, pugi::xml_node parent, const char *tag);
 

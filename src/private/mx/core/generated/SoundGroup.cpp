@@ -3,6 +3,7 @@
 #include "mx/core/generated/SoundGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -52,25 +53,30 @@ void SoundGroup::setPlay(std::optional<Play> value)
 
 SoundGroup parseSoundGroup(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseSoundGroup(el, cursor, ParseContext{});
+}
+
+SoundGroup parseSoundGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+{
     SoundGroup out;
     if (cursorIs(cursor, "instrument-change"))
     {
-        out.setInstrumentChange(parseInstrumentChange(cursor));
+        out.setInstrumentChange(parseInstrumentChange(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "midi-device"))
     {
-        out.setMIDIDevice(parseMIDIDevice(cursor));
+        out.setMIDIDevice(parseMIDIDevice(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "midi-instrument"))
     {
-        out.setMIDIInstrument(parseMIDIInstrument(cursor));
+        out.setMIDIInstrument(parseMIDIInstrument(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "play"))
     {
-        out.setPlay(parsePlay(cursor));
+        out.setPlay(parsePlay(cursor, context));
         cursor = nextElement(cursor);
     }
     return out;

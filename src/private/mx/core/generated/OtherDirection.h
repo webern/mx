@@ -26,6 +26,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The other-direction type is used to define any direction symbols not yet in the MusicXML format.
 /// The smufl attribute can be used to specify a particular direction symbol, allowing application
 /// interoperability without requiring every SMuFL glyph to have a MusicXML element equivalent. Using
@@ -86,7 +88,11 @@ class OtherDirection final
 
 OtherDirection parseOtherDirection(pugi::xml_node el);
 
+OtherDirection parseOtherDirection(pugi::xml_node el, const ParseContext &context);
+
 void parseOtherDirectionContent(OtherDirection &out, pugi::xml_node el);
+
+void parseOtherDirectionContent(OtherDirection &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeOtherDirection(const OtherDirection &v, pugi::xml_node parent, const char *tag);
 

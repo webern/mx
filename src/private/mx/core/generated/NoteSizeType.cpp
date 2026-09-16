@@ -55,8 +55,14 @@ bool NoteSizeType::tryParse(std::string_view text, NoteSizeType &out) noexcept
 
 NoteSizeType NoteSizeType::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+NoteSizeType NoteSizeType::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     NoteSizeType v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

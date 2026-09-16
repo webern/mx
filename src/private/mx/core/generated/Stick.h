@@ -20,6 +20,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The stick type represents pictograms where the material of the stick, mallet, or beater is
 /// included.The parentheses and dashed-circle attributes indicate the presence of these marks around
 /// the round beater part of a pictogram. Values for these attributes are "no" if not present.
@@ -50,7 +52,11 @@ class Stick final
 
 Stick parseStick(pugi::xml_node el);
 
+Stick parseStick(pugi::xml_node el, const ParseContext &context);
+
 void parseStickContent(Stick &out, pugi::xml_node el);
+
+void parseStickContent(Stick &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeStick(const Stick &v, pugi::xml_node parent, const char *tag);
 

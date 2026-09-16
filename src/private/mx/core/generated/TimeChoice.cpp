@@ -3,6 +3,7 @@
 #include "mx/core/generated/TimeChoice.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -27,9 +28,14 @@ TimeChoice TimeChoice::senzaMisura(std::string value)
 
 TimeChoice parseTimeChoice(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseTimeChoice(el, cursor, ParseContext{});
+}
+
+TimeChoice parseTimeChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+{
     if (cursor && (cursorIs(cursor, "beats")))
     {
-        return TimeChoice::group(parseTimeChoiceGroup(el, cursor));
+        return TimeChoice::group(parseTimeChoiceGroup(el, cursor, context));
     }
     if (cursor && (cursorIs(cursor, "senza-misura")))
     {

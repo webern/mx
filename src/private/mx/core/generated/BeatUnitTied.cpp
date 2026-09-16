@@ -3,6 +3,7 @@
 #include "mx/core/generated/BeatUnitTied.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -22,6 +23,11 @@ void BeatUnitTied::setBeatUnit(BeatUnitGroup value)
 
 BeatUnitTied parseBeatUnitTied(pugi::xml_node el)
 {
+    return parseBeatUnitTied(el, ParseContext{});
+}
+
+BeatUnitTied parseBeatUnitTied(pugi::xml_node el, const ParseContext &context)
+{
     BeatUnitTied out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -32,16 +38,21 @@ BeatUnitTied parseBeatUnitTied(pugi::xml_node el)
         }
         throwUnknownAttribute(el, a.name());
     }
-    parseBeatUnitTiedContent(out, el);
+    parseBeatUnitTiedContent(out, el, context);
     return out;
 }
 
 void parseBeatUnitTiedContent(BeatUnitTied &out, pugi::xml_node el)
 {
+    parseBeatUnitTiedContent(out, el, ParseContext{});
+}
+
+void parseBeatUnitTiedContent(BeatUnitTied &out, pugi::xml_node el, const ParseContext &context)
+{
     pugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "beat-unit")))
     {
-        out.setBeatUnit(parseBeatUnitGroup(el, cursor));
+        out.setBeatUnit(parseBeatUnitGroup(el, cursor, context));
     }
     else
     {

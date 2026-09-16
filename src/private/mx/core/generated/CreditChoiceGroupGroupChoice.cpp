@@ -3,6 +3,7 @@
 #include "mx/core/generated/CreditChoiceGroupGroupChoice.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -27,15 +28,21 @@ CreditChoiceGroupGroupChoice CreditChoiceGroupGroupChoice::creditSymbol(Formatte
 
 CreditChoiceGroupGroupChoice parseCreditChoiceGroupGroupChoice(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseCreditChoiceGroupGroupChoice(el, cursor, ParseContext{});
+}
+
+CreditChoiceGroupGroupChoice parseCreditChoiceGroupGroupChoice(pugi::xml_node el, pugi::xml_node &cursor,
+                                                               const ParseContext &context)
+{
     if (cursor && (cursorIs(cursor, "credit-words")))
     {
-        FormattedTextID value = parseFormattedTextID(cursor);
+        FormattedTextID value = parseFormattedTextID(cursor, context);
         cursor = nextElement(cursor);
         return CreditChoiceGroupGroupChoice::creditWords(std::move(value));
     }
     if (cursor && (cursorIs(cursor, "credit-symbol")))
     {
-        FormattedSymbolID value = parseFormattedSymbolID(cursor);
+        FormattedSymbolID value = parseFormattedSymbolID(cursor, context);
         cursor = nextElement(cursor);
         return CreditChoiceGroupGroupChoice::creditSymbol(std::move(value));
     }

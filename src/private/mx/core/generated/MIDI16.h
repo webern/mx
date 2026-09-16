@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "mx/core/Lexical.h"
+
 #include <string>
 #include <string_view>
 
@@ -34,6 +36,9 @@ class MIDI16 final
 
     /// Lenient: non-numeric text yields the clamped zero.
     static MIDI16 parse(std::string_view text);
+
+    /// Lenient, and says whether the text was non-numeric or clamped.
+    static MIDI16 parse(std::string_view text, ValueParseOutcome &outcome);
 
     bool operator==(const MIDI16 &other) const noexcept = default;
 

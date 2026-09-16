@@ -3,6 +3,7 @@
 #include "mx/core/generated/Level.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -72,6 +73,11 @@ void Level::setValue(std::string value)
 
 Level parseLevel(pugi::xml_node el)
 {
+    return parseLevel(el, ParseContext{});
+}
+
+Level parseLevel(pugi::xml_node el, const ParseContext &context)
+{
     Level out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -82,34 +88,39 @@ Level parseLevel(pugi::xml_node el)
         }
         if (aname == "reference")
         {
-            out.setReference(YesNo::parse(a.value()));
+            out.setReference(parseValue<YesNo>(a.value(), context, el, "reference"));
         }
         else if (aname == "type")
         {
-            out.setType(StartStopSingle::parse(a.value()));
+            out.setType(parseValue<StartStopSingle>(a.value(), context, el, "type"));
         }
         else if (aname == "parentheses")
         {
-            out.setParentheses(YesNo::parse(a.value()));
+            out.setParentheses(parseValue<YesNo>(a.value(), context, el, "parentheses"));
         }
         else if (aname == "bracket")
         {
-            out.setBracket(YesNo::parse(a.value()));
+            out.setBracket(parseValue<YesNo>(a.value(), context, el, "bracket"));
         }
         else if (aname == "size")
         {
-            out.setSize(SymbolSize::parse(a.value()));
+            out.setSize(parseValue<SymbolSize>(a.value(), context, el, "size"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseLevelContent(out, el);
+    parseLevelContent(out, el, context);
     return out;
 }
 
 void parseLevelContent(Level &out, pugi::xml_node el)
+{
+    parseLevelContent(out, el, ParseContext{});
+}
+
+void parseLevelContent(Level &out, pugi::xml_node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))

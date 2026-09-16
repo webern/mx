@@ -3,6 +3,7 @@
 #include "mx/core/generated/Opus.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -72,6 +73,11 @@ void Opus::setXlinkActuate(std::optional<std::string> value)
 
 Opus parseOpus(pugi::xml_node el)
 {
+    return parseOpus(el, ParseContext{});
+}
+
+Opus parseOpus(pugi::xml_node el, const ParseContext &context)
+{
     Opus out;
     bool seen_xlinkHref = false;
     for (pugi::xml_attribute a : el.attributes())
@@ -115,13 +121,19 @@ Opus parseOpus(pugi::xml_node el)
     {
         throwMissingAttribute(el, "xlink:href");
     }
-    parseOpusContent(out, el);
+    parseOpusContent(out, el, context);
     return out;
 }
 
 void parseOpusContent(Opus &out, pugi::xml_node el)
 {
+    parseOpusContent(out, el, ParseContext{});
+}
+
+void parseOpusContent(Opus &out, pugi::xml_node el, const ParseContext &context)
+{
     (void)out;
+    (void)context;
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

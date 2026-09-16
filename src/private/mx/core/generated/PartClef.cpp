@@ -3,6 +3,7 @@
 #include "mx/core/generated/PartClef.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -22,6 +23,11 @@ void PartClef::setClef(ClefGroup value)
 
 PartClef parsePartClef(pugi::xml_node el)
 {
+    return parsePartClef(el, ParseContext{});
+}
+
+PartClef parsePartClef(pugi::xml_node el, const ParseContext &context)
+{
     PartClef out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -32,16 +38,21 @@ PartClef parsePartClef(pugi::xml_node el)
         }
         throwUnknownAttribute(el, a.name());
     }
-    parsePartClefContent(out, el);
+    parsePartClefContent(out, el, context);
     return out;
 }
 
 void parsePartClefContent(PartClef &out, pugi::xml_node el)
 {
+    parsePartClefContent(out, el, ParseContext{});
+}
+
+void parsePartClefContent(PartClef &out, pugi::xml_node el, const ParseContext &context)
+{
     pugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "sign")))
     {
-        out.setClef(parseClefGroup(el, cursor));
+        out.setClef(parseClefGroup(el, cursor, context));
     }
     else
     {

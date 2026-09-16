@@ -25,6 +25,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The arrow element represents an arrow used for a musical technical indication. It can represent
 /// both Unicode and SMuFL arrows. The presence of an arrowhead element indicates that only the
 /// arrowhead is displayed, not the arrow stem. The smufl attribute distinguishes different SMuFL
@@ -78,7 +80,11 @@ class Arrow final
 
 Arrow parseArrow(pugi::xml_node el);
 
+Arrow parseArrow(pugi::xml_node el, const ParseContext &context);
+
 void parseArrowContent(Arrow &out, pugi::xml_node el);
+
+void parseArrowContent(Arrow &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeArrow(const Arrow &v, pugi::xml_node parent, const char *tag);
 

@@ -43,8 +43,14 @@ bool SwingTypeValue::tryParse(std::string_view text, SwingTypeValue &out) noexce
 
 SwingTypeValue SwingTypeValue::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+SwingTypeValue SwingTypeValue::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     SwingTypeValue v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

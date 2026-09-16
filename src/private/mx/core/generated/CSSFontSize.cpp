@@ -67,8 +67,14 @@ bool CSSFontSize::tryParse(std::string_view text, CSSFontSize &out) noexcept
 
 CSSFontSize CSSFontSize::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+CSSFontSize CSSFontSize::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     CSSFontSize v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "mx/core/Lexical.h"
 #include "mx/core/generated/SoundID.h"
 
 #include <cassert>
@@ -68,6 +69,10 @@ class InstrumentSound final
     /// Lenient: unparseable text falls back to the first member's lenient
     /// parse (never produces an invalid value).
     static InstrumentSound parse(std::string_view text);
+
+    /// Lenient, and says whether no member matched or a matched number was
+    /// clamped.
+    static InstrumentSound parse(std::string_view text, ValueParseOutcome &outcome);
 
     bool operator==(const InstrumentSound &other) const = default;
 

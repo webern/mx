@@ -27,6 +27,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// An accidental-mark can be used as a separate notation or as part of an ornament. When used in an
 /// ornament, position and placement are relative to the ornament, not relative to the note.
 class AccidentalMark final
@@ -87,7 +89,11 @@ class AccidentalMark final
 
 AccidentalMark parseAccidentalMark(pugi::xml_node el);
 
+AccidentalMark parseAccidentalMark(pugi::xml_node el, const ParseContext &context);
+
 void parseAccidentalMarkContent(AccidentalMark &out, pugi::xml_node el);
+
+void parseAccidentalMarkContent(AccidentalMark &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeAccidentalMark(const AccidentalMark &v, pugi::xml_node parent, const char *tag);
 

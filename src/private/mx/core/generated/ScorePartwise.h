@@ -19,6 +19,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// Content fields mirror the schema grammar in declaration order; the
 /// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
 class ScorePartwise final
@@ -41,7 +43,11 @@ class ScorePartwise final
 
 ScorePartwise parseScorePartwise(pugi::xml_node el);
 
+ScorePartwise parseScorePartwise(pugi::xml_node el, const ParseContext &context);
+
 void parseScorePartwiseContent(ScorePartwise &out, pugi::xml_node el);
+
+void parseScorePartwiseContent(ScorePartwise &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeScorePartwise(const ScorePartwise &v, pugi::xml_node parent, const char *tag);
 

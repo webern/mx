@@ -21,6 +21,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// A harmony element can contain many stacked chords (e.g. V of II). A sequence of harmony-chord
 /// groups is used for this type of secondary function, where V of II would be represented by a
 /// harmony-chord with a 5 numeral followed by a harmony-chord with a 2 numeral. A root is a pitch
@@ -58,6 +60,8 @@ class HarmonyChordGroup final
 /// Consumes matching siblings starting at `cursor` (which advances); `el`
 /// is the enclosing element, for error paths.
 HarmonyChordGroup parseHarmonyChordGroup(pugi::xml_node el, pugi::xml_node &cursor);
+
+HarmonyChordGroup parseHarmonyChordGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context);
 
 void serializeHarmonyChordGroup(const HarmonyChordGroup &v, pugi::xml_node el);
 

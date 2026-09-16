@@ -20,6 +20,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The grouping type is used for musical analysis. When the type attribute is "start" or "single",
 /// it usually contains one or more feature elements. The number attribute is used for distinguishing
 /// between overlapping and hierarchical groupings. The member-of attribute allows for easy
@@ -55,7 +57,11 @@ class Grouping final
 
 Grouping parseGrouping(pugi::xml_node el);
 
+Grouping parseGrouping(pugi::xml_node el, const ParseContext &context);
+
 void parseGroupingContent(Grouping &out, pugi::xml_node el);
+
+void parseGroupingContent(Grouping &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeGrouping(const Grouping &v, pugi::xml_node parent, const char *tag);
 

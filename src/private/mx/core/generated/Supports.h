@@ -17,6 +17,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The supports type indicates if a MusicXML encoding supports a particular MusicXML element. This
 /// is recommended for elements like beam, stem, and accidental, where the absence of an element is
 /// ambiguous if you do not know if the encoding supports that element. For Version 2.0, the supports
@@ -45,7 +47,11 @@ class Supports final
 
 Supports parseSupports(pugi::xml_node el);
 
+Supports parseSupports(pugi::xml_node el, const ParseContext &context);
+
 void parseSupportsContent(Supports &out, pugi::xml_node el);
+
+void parseSupportsContent(Supports &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeSupports(const Supports &v, pugi::xml_node parent, const char *tag);
 

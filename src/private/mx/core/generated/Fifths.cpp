@@ -34,20 +34,33 @@ std::string Fifths::toString() const
 
 bool Fifths::tryParse(std::string_view text, Fifths &out)
 {
-    int v{};
-    if (!tryParseInt(text, v))
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    Fifths parsed = parse(text, outcome);
+    if (outcome == ValueParseOutcome::invalid)
     {
         return false;
     }
-    out = Fifths{v};
+    out = std::move(parsed);
     return true;
 }
 
 Fifths Fifths::parse(std::string_view text)
 {
-    Fifths v;
-    tryParse(text, v);
-    return v;
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+Fifths Fifths::parse(std::string_view text, ValueParseOutcome &outcome)
+{
+    int v{};
+    if (!tryParseInt(text, v))
+    {
+        outcome = ValueParseOutcome::invalid;
+        return Fifths{};
+    }
+    Fifths out{v};
+    outcome = out.value() == v ? ValueParseOutcome::valid : ValueParseOutcome::adjusted;
+    return out;
 }
 
 } // namespace mx::core

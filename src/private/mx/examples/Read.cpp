@@ -56,16 +56,16 @@ int main(int argc, const char *argv[])
     // place the xml from above into a stream object
     std::istringstream istr{xml};
 
+    // collect any non-fatal adjustments made while reading. A handler may
+    // also display each one as it is found.
+    Diagnostics diagnostics{[](const Diagnostic &diagnostic) { std::cerr << formatDiagnostic(diagnostic) << '\n'; }};
+
     // parse the xml into a MusicXml document that we own
-    auto docResult = MusicXml::fromStream(istr);
+    auto docResult = MusicXml::fromStream(istr, diagnostics);
     if (!docResult.ok())
     {
         return MX_IS_A_FAILURE;
     }
-
-    // collect any non-fatal adjustments made while reading. A handler may
-    // also display each one as it is found.
-    Diagnostics diagnostics{[](const Diagnostic &diagnostic) { std::cerr << formatDiagnostic(diagnostic) << '\n'; }};
 
     // take the score out of the document. intoScore also consumes the
     // document, so its memory is freed as the function returns

@@ -42,20 +42,33 @@ std::string NumberOfLines::toString() const
 
 bool NumberOfLines::tryParse(std::string_view text, NumberOfLines &out)
 {
-    int v{};
-    if (!tryParseInt(text, v))
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    NumberOfLines parsed = parse(text, outcome);
+    if (outcome == ValueParseOutcome::invalid)
     {
         return false;
     }
-    out = NumberOfLines{v};
+    out = std::move(parsed);
     return true;
 }
 
 NumberOfLines NumberOfLines::parse(std::string_view text)
 {
-    NumberOfLines v;
-    tryParse(text, v);
-    return v;
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+NumberOfLines NumberOfLines::parse(std::string_view text, ValueParseOutcome &outcome)
+{
+    int v{};
+    if (!tryParseInt(text, v))
+    {
+        outcome = ValueParseOutcome::invalid;
+        return NumberOfLines{};
+    }
+    NumberOfLines out{v};
+    outcome = out.value() == v ? ValueParseOutcome::valid : ValueParseOutcome::adjusted;
+    return out;
 }
 
 } // namespace mx::core

@@ -26,6 +26,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The measure-numbering type describes how frequently measure numbers are displayed on this part.
 /// The text attribute from the measure element is used for display, or the number attribute if the
 /// text attribute is not present. Measures with an implicit attribute set to "yes" never display a
@@ -97,7 +99,11 @@ class MeasureNumbering final
 
 MeasureNumbering parseMeasureNumbering(pugi::xml_node el);
 
+MeasureNumbering parseMeasureNumbering(pugi::xml_node el, const ParseContext &context);
+
 void parseMeasureNumberingContent(MeasureNumbering &out, pugi::xml_node el);
+
+void parseMeasureNumberingContent(MeasureNumbering &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeMeasureNumbering(const MeasureNumbering &v, pugi::xml_node parent, const char *tag);
 

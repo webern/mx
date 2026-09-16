@@ -22,6 +22,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The string type is used with tablature notation, regular notation (where it is often circled),
 /// and chord diagrams. String numbers start with 1 for the highest pitched full-length string.
 class String final
@@ -67,7 +69,11 @@ class String final
 
 String parseString(pugi::xml_node el);
 
+String parseString(pugi::xml_node el, const ParseContext &context);
+
 void parseStringContent(String &out, pugi::xml_node el);
+
+void parseStringContent(String &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeString(const String &v, pugi::xml_node parent, const char *tag);
 

@@ -3,6 +3,7 @@
 #include "mx/core/generated/PartLink.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -102,6 +103,11 @@ void PartLink::setGroupLink(std::vector<std::string> value)
 
 PartLink parsePartLink(pugi::xml_node el)
 {
+    return parsePartLink(el, ParseContext{});
+}
+
+PartLink parsePartLink(pugi::xml_node el, const ParseContext &context)
+{
     PartLink out;
     bool seen_xlinkHref = false;
     for (pugi::xml_attribute a : el.attributes())
@@ -145,16 +151,21 @@ PartLink parsePartLink(pugi::xml_node el)
     {
         throwMissingAttribute(el, "xlink:href");
     }
-    parsePartLinkContent(out, el);
+    parsePartLinkContent(out, el, context);
     return out;
 }
 
 void parsePartLinkContent(PartLink &out, pugi::xml_node el)
 {
+    parsePartLinkContent(out, el, ParseContext{});
+}
+
+void parsePartLinkContent(PartLink &out, pugi::xml_node el, const ParseContext &context)
+{
     pugi::xml_node cursor = firstElement(el);
     while (cursorIs(cursor, "instrument-link"))
     {
-        out.addInstrumentLink(parseInstrumentLink(cursor));
+        out.addInstrumentLink(parseInstrumentLink(cursor, context));
         cursor = nextElement(cursor);
     }
     while (cursorIs(cursor, "group-link"))

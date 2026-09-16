@@ -3,6 +3,7 @@
 #include "mx/core/generated/HarmonyChordGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -67,10 +68,15 @@ void HarmonyChordGroup::setDegree(std::vector<Degree> value)
 
 HarmonyChordGroup parseHarmonyChordGroup(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseHarmonyChordGroup(el, cursor, ParseContext{});
+}
+
+HarmonyChordGroup parseHarmonyChordGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+{
     HarmonyChordGroup out;
     if (cursor && (cursorIs(cursor, "root") || cursorIs(cursor, "numeral") || cursorIs(cursor, "function")))
     {
-        out.setChoice(parseHarmonyChordGroupChoice(el, cursor));
+        out.setChoice(parseHarmonyChordGroupChoice(el, cursor, context));
     }
     else
     {
@@ -78,7 +84,7 @@ HarmonyChordGroup parseHarmonyChordGroup(pugi::xml_node el, pugi::xml_node &curs
     }
     if (cursorIs(cursor, "kind"))
     {
-        out.setKind(parseKind(cursor));
+        out.setKind(parseKind(cursor, context));
         cursor = nextElement(cursor);
     }
     else
@@ -87,17 +93,17 @@ HarmonyChordGroup parseHarmonyChordGroup(pugi::xml_node el, pugi::xml_node &curs
     }
     if (cursorIs(cursor, "inversion"))
     {
-        out.setInversion(parseInversion(cursor));
+        out.setInversion(parseInversion(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "bass"))
     {
-        out.setBass(parseBass(cursor));
+        out.setBass(parseBass(cursor, context));
         cursor = nextElement(cursor);
     }
     while (cursorIs(cursor, "degree"))
     {
-        out.addDegree(parseDegree(cursor));
+        out.addDegree(parseDegree(cursor, context));
         cursor = nextElement(cursor);
     }
     return out;

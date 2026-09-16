@@ -2,6 +2,7 @@
 
 #include "mx/core/generated/MusicDataChoice.h"
 
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -180,87 +181,92 @@ MusicDataChoice MusicDataChoice::bookmark(Bookmark value)
 
 MusicDataChoice parseMusicDataChoice(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseMusicDataChoice(el, cursor, ParseContext{});
+}
+
+MusicDataChoice parseMusicDataChoice(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+{
     if (cursorIs(cursor, "note"))
     {
-        Note value = parseNote(cursor);
+        Note value = parseNote(cursor, context);
         cursor = nextElement(cursor);
         return MusicDataChoice::note(std::move(value));
     }
     if (cursorIs(cursor, "backup"))
     {
-        Backup value = parseBackup(cursor);
+        Backup value = parseBackup(cursor, context);
         cursor = nextElement(cursor);
         return MusicDataChoice::backup(std::move(value));
     }
     if (cursorIs(cursor, "forward"))
     {
-        Forward value = parseForward(cursor);
+        Forward value = parseForward(cursor, context);
         cursor = nextElement(cursor);
         return MusicDataChoice::forward(std::move(value));
     }
     if (cursorIs(cursor, "direction"))
     {
-        Direction value = parseDirection(cursor);
+        Direction value = parseDirection(cursor, context);
         cursor = nextElement(cursor);
         return MusicDataChoice::direction(std::move(value));
     }
     if (cursorIs(cursor, "attributes"))
     {
-        Attributes value = parseAttributes(cursor);
+        Attributes value = parseAttributes(cursor, context);
         cursor = nextElement(cursor);
         return MusicDataChoice::attributes(std::move(value));
     }
     if (cursorIs(cursor, "harmony"))
     {
-        Harmony value = parseHarmony(cursor);
+        Harmony value = parseHarmony(cursor, context);
         cursor = nextElement(cursor);
         return MusicDataChoice::harmony(std::move(value));
     }
     if (cursorIs(cursor, "figured-bass"))
     {
-        FiguredBass value = parseFiguredBass(cursor);
+        FiguredBass value = parseFiguredBass(cursor, context);
         cursor = nextElement(cursor);
         return MusicDataChoice::figuredBass(std::move(value));
     }
     if (cursorIs(cursor, "print"))
     {
-        Print value = parsePrint(cursor);
+        Print value = parsePrint(cursor, context);
         cursor = nextElement(cursor);
         return MusicDataChoice::print(std::move(value));
     }
     if (cursorIs(cursor, "sound"))
     {
-        Sound value = parseSound(cursor);
+        Sound value = parseSound(cursor, context);
         cursor = nextElement(cursor);
         return MusicDataChoice::sound(std::move(value));
     }
     if (cursorIs(cursor, "listening"))
     {
-        Listening value = parseListening(cursor);
+        Listening value = parseListening(cursor, context);
         cursor = nextElement(cursor);
         return MusicDataChoice::listening(std::move(value));
     }
     if (cursorIs(cursor, "barline"))
     {
-        Barline value = parseBarline(cursor);
+        Barline value = parseBarline(cursor, context);
         cursor = nextElement(cursor);
         return MusicDataChoice::barline(std::move(value));
     }
     if (cursorIs(cursor, "grouping"))
     {
-        Grouping value = parseGrouping(cursor);
+        Grouping value = parseGrouping(cursor, context);
         cursor = nextElement(cursor);
         return MusicDataChoice::grouping(std::move(value));
     }
     if (cursorIs(cursor, "link"))
     {
-        Link value = parseLink(cursor);
+        Link value = parseLink(cursor, context);
         cursor = nextElement(cursor);
         return MusicDataChoice::link(std::move(value));
     }
     if (cursorIs(cursor, "bookmark"))
     {
-        Bookmark value = parseBookmark(cursor);
+        Bookmark value = parseBookmark(cursor, context);
         cursor = nextElement(cursor);
         return MusicDataChoice::bookmark(std::move(value));
     }

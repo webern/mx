@@ -23,6 +23,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// Content fields mirror the schema grammar in declaration order; the
 /// serializer walks them, so a wrong order is unrepresentable (plan §2.3).
 class TimewiseMeasure final
@@ -57,7 +59,11 @@ class TimewiseMeasure final
 
 TimewiseMeasure parseTimewiseMeasure(pugi::xml_node el);
 
+TimewiseMeasure parseTimewiseMeasure(pugi::xml_node el, const ParseContext &context);
+
 void parseTimewiseMeasureContent(TimewiseMeasure &out, pugi::xml_node el);
+
+void parseTimewiseMeasureContent(TimewiseMeasure &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeTimewiseMeasure(const TimewiseMeasure &v, pugi::xml_node parent, const char *tag);
 

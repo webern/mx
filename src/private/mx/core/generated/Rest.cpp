@@ -3,6 +3,7 @@
 #include "mx/core/generated/Rest.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -32,6 +33,11 @@ void Rest::setDisplayStepOctave(std::optional<DisplayStepOctaveGroup> value)
 
 Rest parseRest(pugi::xml_node el)
 {
+    return parseRest(el, ParseContext{});
+}
+
+Rest parseRest(pugi::xml_node el, const ParseContext &context)
+{
     Rest out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -42,23 +48,28 @@ Rest parseRest(pugi::xml_node el)
         }
         if (aname == "measure")
         {
-            out.setMeasure(YesNo::parse(a.value()));
+            out.setMeasure(parseValue<YesNo>(a.value(), context, el, "measure"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseRestContent(out, el);
+    parseRestContent(out, el, context);
     return out;
 }
 
 void parseRestContent(Rest &out, pugi::xml_node el)
 {
+    parseRestContent(out, el, ParseContext{});
+}
+
+void parseRestContent(Rest &out, pugi::xml_node el, const ParseContext &context)
+{
     pugi::xml_node cursor = firstElement(el);
     if (cursor && (cursorIs(cursor, "display-step")))
     {
-        out.setDisplayStepOctave(parseDisplayStepOctaveGroup(el, cursor));
+        out.setDisplayStepOctave(parseDisplayStepOctaveGroup(el, cursor, context));
     }
     if (cursor)
     {

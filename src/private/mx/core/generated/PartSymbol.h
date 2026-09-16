@@ -18,6 +18,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The part-symbol type indicates how a symbol for a multi-staff part is indicated in the score;
 /// brace is the default value. The top-staff and bottom-staff attributes are used when the brace
 /// does not extend across the entire part. For example, in a 3-staff organ part, the top-staff will
@@ -59,7 +61,11 @@ class PartSymbol final
 
 PartSymbol parsePartSymbol(pugi::xml_node el);
 
+PartSymbol parsePartSymbol(pugi::xml_node el, const ParseContext &context);
+
 void parsePartSymbolContent(PartSymbol &out, pugi::xml_node el);
+
+void parsePartSymbolContent(PartSymbol &out, pugi::xml_node el, const ParseContext &context);
 
 void serializePartSymbol(const PartSymbol &v, pugi::xml_node parent, const char *tag);
 

@@ -38,20 +38,33 @@ std::string PositiveDivisions::toString() const
 
 bool PositiveDivisions::tryParse(std::string_view text, PositiveDivisions &out)
 {
-    Decimal v;
-    if (!Decimal::tryParse(text, v))
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    PositiveDivisions parsed = parse(text, outcome);
+    if (outcome == ValueParseOutcome::invalid)
     {
         return false;
     }
-    out = PositiveDivisions{std::move(v)};
+    out = std::move(parsed);
     return true;
 }
 
 PositiveDivisions PositiveDivisions::parse(std::string_view text)
 {
-    PositiveDivisions v;
-    tryParse(text, v);
-    return v;
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+PositiveDivisions PositiveDivisions::parse(std::string_view text, ValueParseOutcome &outcome)
+{
+    Decimal v;
+    if (!Decimal::tryParse(text, v))
+    {
+        outcome = ValueParseOutcome::invalid;
+        return PositiveDivisions{};
+    }
+    PositiveDivisions out{v};
+    outcome = out.value() == v ? ValueParseOutcome::valid : ValueParseOutcome::adjusted;
+    return out;
 }
 
 } // namespace mx::core

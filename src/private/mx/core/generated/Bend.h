@@ -29,6 +29,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The bend type is used in guitar notation and tablature. A single note with a bend and release
 /// will contain two bend elements: the first to represent the bend and the second to represent the
 /// release. The shape attribute distinguishes between the angled bend symbols commonly used in
@@ -97,7 +99,11 @@ class Bend final
 
 Bend parseBend(pugi::xml_node el);
 
+Bend parseBend(pugi::xml_node el, const ParseContext &context);
+
 void parseBendContent(Bend &out, pugi::xml_node el);
+
+void parseBendContent(Bend &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeBend(const Bend &v, pugi::xml_node parent, const char *tag);
 

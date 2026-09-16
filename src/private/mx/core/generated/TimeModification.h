@@ -17,6 +17,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// Time modification indicates tuplets, double-note tremolos, and other durational changes. A
 /// time-modification element shows how the cumulative, sounding effect of tuplets and double-note
 /// tremolos compare to the written note type represented by the type and dot elements. Nested
@@ -43,7 +45,11 @@ class TimeModification
 
 TimeModification parseTimeModification(pugi::xml_node el);
 
+TimeModification parseTimeModification(pugi::xml_node el, const ParseContext &context);
+
 void parseTimeModificationContent(TimeModification &out, pugi::xml_node el);
+
+void parseTimeModificationContent(TimeModification &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeTimeModification(const TimeModification &v, pugi::xml_node parent, const char *tag);
 

@@ -3,6 +3,7 @@
 #include "mx/core/generated/PrincipalVoice.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -162,6 +163,11 @@ void PrincipalVoice::setValue(std::string value)
 
 PrincipalVoice parsePrincipalVoice(pugi::xml_node el)
 {
+    return parsePrincipalVoice(el, ParseContext{});
+}
+
+PrincipalVoice parsePrincipalVoice(pugi::xml_node el, const ParseContext &context)
+{
     PrincipalVoice out;
     bool seen_type = false;
     bool seen_symbol = false;
@@ -175,56 +181,56 @@ PrincipalVoice parsePrincipalVoice(pugi::xml_node el)
         if (aname == "type")
         {
             seen_type = true;
-            out.setType(StartStop::parse(a.value()));
+            out.setType(parseValue<StartStop>(a.value(), context, el, "type"));
         }
         else if (aname == "symbol")
         {
             seen_symbol = true;
-            out.setSymbol(PrincipalVoiceSymbol::parse(a.value()));
+            out.setSymbol(parseValue<PrincipalVoiceSymbol>(a.value(), context, el, "symbol"));
         }
         else if (aname == "default-x")
         {
-            out.setDefaultX(Tenths::parse(a.value()));
+            out.setDefaultX(parseValue<Tenths>(a.value(), context, el, "default-x"));
         }
         else if (aname == "default-y")
         {
-            out.setDefaultY(Tenths::parse(a.value()));
+            out.setDefaultY(parseValue<Tenths>(a.value(), context, el, "default-y"));
         }
         else if (aname == "relative-x")
         {
-            out.setRelativeX(Tenths::parse(a.value()));
+            out.setRelativeX(parseValue<Tenths>(a.value(), context, el, "relative-x"));
         }
         else if (aname == "relative-y")
         {
-            out.setRelativeY(Tenths::parse(a.value()));
+            out.setRelativeY(parseValue<Tenths>(a.value(), context, el, "relative-y"));
         }
         else if (aname == "font-family")
         {
-            out.setFontFamily(FontFamily::parse(a.value()));
+            out.setFontFamily(parseValue<FontFamily>(a.value(), context, el, "font-family"));
         }
         else if (aname == "font-style")
         {
-            out.setFontStyle(FontStyle::parse(a.value()));
+            out.setFontStyle(parseValue<FontStyle>(a.value(), context, el, "font-style"));
         }
         else if (aname == "font-size")
         {
-            out.setFontSize(FontSize::parse(a.value()));
+            out.setFontSize(parseValue<FontSize>(a.value(), context, el, "font-size"));
         }
         else if (aname == "font-weight")
         {
-            out.setFontWeight(FontWeight::parse(a.value()));
+            out.setFontWeight(parseValue<FontWeight>(a.value(), context, el, "font-weight"));
         }
         else if (aname == "color")
         {
-            out.setColor(Color::parse(a.value()));
+            out.setColor(parseValue<Color>(a.value(), context, el, "color"));
         }
         else if (aname == "halign")
         {
-            out.setHalign(LeftCenterRight::parse(a.value()));
+            out.setHalign(parseValue<LeftCenterRight>(a.value(), context, el, "halign"));
         }
         else if (aname == "valign")
         {
-            out.setValign(Valign::parse(a.value()));
+            out.setValign(parseValue<Valign>(a.value(), context, el, "valign"));
         }
         else if (aname == "id")
         {
@@ -243,11 +249,16 @@ PrincipalVoice parsePrincipalVoice(pugi::xml_node el)
     {
         throwMissingAttribute(el, "symbol");
     }
-    parsePrincipalVoiceContent(out, el);
+    parsePrincipalVoiceContent(out, el, context);
     return out;
 }
 
 void parsePrincipalVoiceContent(PrincipalVoice &out, pugi::xml_node el)
+{
+    parsePrincipalVoiceContent(out, el, ParseContext{});
+}
+
+void parsePrincipalVoiceContent(PrincipalVoice &out, pugi::xml_node el, const ParseContext &context)
 {
     out.setValue(std::string{childText(el)});
     if (firstElement(el))

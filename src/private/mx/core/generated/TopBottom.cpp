@@ -43,8 +43,14 @@ bool TopBottom::tryParse(std::string_view text, TopBottom &out) noexcept
 
 TopBottom TopBottom::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+TopBottom TopBottom::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     TopBottom v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

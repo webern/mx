@@ -13,6 +13,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The other-appearance type is used to define any graphical settings not yet in the current version
 /// of the MusicXML format. This allows extended representation, though without application
 /// interoperability.
@@ -32,7 +34,11 @@ class OtherAppearance final
 
 OtherAppearance parseOtherAppearance(pugi::xml_node el);
 
+OtherAppearance parseOtherAppearance(pugi::xml_node el, const ParseContext &context);
+
 void parseOtherAppearanceContent(OtherAppearance &out, pugi::xml_node el);
+
+void parseOtherAppearanceContent(OtherAppearance &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeOtherAppearance(const OtherAppearance &v, pugi::xml_node parent, const char *tag);
 

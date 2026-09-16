@@ -27,6 +27,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The pedal type represents piano pedal marks, including damper and sostenuto pedal marks. The line
 /// attribute is yes if pedal lines are used. The sign attribute is yes if Ped, Sost, and * signs are
 /// used. For compatibility with older versions, the sign attribute is yes by default if the line
@@ -96,7 +98,11 @@ class Pedal final
 
 Pedal parsePedal(pugi::xml_node el);
 
+Pedal parsePedal(pugi::xml_node el, const ParseContext &context);
+
 void parsePedalContent(Pedal &out, pugi::xml_node el);
+
+void parsePedalContent(Pedal &out, pugi::xml_node el, const ParseContext &context);
 
 void serializePedal(const Pedal &v, pugi::xml_node parent, const char *tag);
 

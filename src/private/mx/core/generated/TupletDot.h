@@ -19,6 +19,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The tuplet-dot type is used to specify dotted tuplet types.
 class TupletDot final
 {
@@ -45,7 +47,11 @@ class TupletDot final
 
 TupletDot parseTupletDot(pugi::xml_node el);
 
+TupletDot parseTupletDot(pugi::xml_node el, const ParseContext &context);
+
 void parseTupletDotContent(TupletDot &out, pugi::xml_node el);
+
+void parseTupletDotContent(TupletDot &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeTupletDot(const TupletDot &v, pugi::xml_node parent, const char *tag);
 

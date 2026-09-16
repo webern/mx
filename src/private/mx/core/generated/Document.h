@@ -19,6 +19,8 @@ class xml_document;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// A namespace declaration preserved verbatim from the parsed root element
 /// (xmlns, xmlns:xlink, ...): document plumbing, not schema data, but
 /// round-trip parity requires writing it back.
@@ -102,6 +104,8 @@ class Document final
 /// lenient on values; a root declaring a version newer than
 /// SupportedMusicXMLVersion is rejected with unsupportedVersion.
 Result<Document> parse(const pugi::xml_document &doc);
+
+Result<Document> parse(const pugi::xml_document &doc, const ParseContext &context);
 
 /// Total for every Document (§1.1 guarantees validity): writes the XML
 /// declaration, the matching DOCTYPE, the preserved root namespace

@@ -19,6 +19,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The sync type specifies the style that a score following application should use the synchronize
 /// an accompaniment with a performer. If this type is not included in a score, default
 /// synchronization depends on the application. The optional latency attribute specifies a time in
@@ -47,7 +49,11 @@ class Sync final
 
 Sync parseSync(pugi::xml_node el);
 
+Sync parseSync(pugi::xml_node el, const ParseContext &context);
+
 void parseSyncContent(Sync &out, pugi::xml_node el);
+
+void parseSyncContent(Sync &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeSync(const Sync &v, pugi::xml_node parent, const char *tag);
 

@@ -19,6 +19,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The tuplet-number type indicates the number of notes for this portion of the tuplet.
 class TupletNumber final
 {
@@ -48,7 +50,11 @@ class TupletNumber final
 
 TupletNumber parseTupletNumber(pugi::xml_node el);
 
+TupletNumber parseTupletNumber(pugi::xml_node el, const ParseContext &context);
+
 void parseTupletNumberContent(TupletNumber &out, pugi::xml_node el);
+
+void parseTupletNumberContent(TupletNumber &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeTupletNumber(const TupletNumber &v, pugi::xml_node parent, const char *tag);
 

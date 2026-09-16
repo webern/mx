@@ -34,6 +34,7 @@
 {{#import_default}}
         // Configured import repair (plan §2.4): inject the default.
         out.set{{name.pascal}}({{>attr_default_expr}});
+        reportAttributeDefaulted(context, el, {{name.wire_q}}, {{import_default_q}});
 {{/import_default}}
 {{^import_default}}
         throwMissingAttribute(el, {{name.wire_q}});

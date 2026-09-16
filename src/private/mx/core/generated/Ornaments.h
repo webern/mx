@@ -19,6 +19,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// Ornaments can be any of several types, followed optionally by accidentals. The accidental-mark
 /// element's content is represented the same as an accidental element, but with a different name to
 /// reflect the different musical meaning.
@@ -41,7 +43,11 @@ class Ornaments final
 
 Ornaments parseOrnaments(pugi::xml_node el);
 
+Ornaments parseOrnaments(pugi::xml_node el, const ParseContext &context);
+
 void parseOrnamentsContent(Ornaments &out, pugi::xml_node el);
+
+void parseOrnamentsContent(Ornaments &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeOrnaments(const Ornaments &v, pugi::xml_node parent, const char *tag);
 

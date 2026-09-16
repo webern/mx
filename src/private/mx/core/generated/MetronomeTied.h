@@ -15,6 +15,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The metronome-tied indicates the presence of a tie within a metric relationship mark. As with the
 /// tied element, both the start and stop of the tie should be specified, in this case within
 /// separate metronome-note elements.
@@ -31,7 +33,11 @@ class MetronomeTied final
 
 MetronomeTied parseMetronomeTied(pugi::xml_node el);
 
+MetronomeTied parseMetronomeTied(pugi::xml_node el, const ParseContext &context);
+
 void parseMetronomeTiedContent(MetronomeTied &out, pugi::xml_node el);
+
+void parseMetronomeTiedContent(MetronomeTied &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeMetronomeTied(const MetronomeTied &v, pugi::xml_node parent, const char *tag);
 

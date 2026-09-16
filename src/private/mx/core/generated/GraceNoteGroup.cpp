@@ -3,6 +3,7 @@
 #include "mx/core/generated/GraceNoteGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -32,10 +33,15 @@ void GraceNoteGroup::setGraceNoteChoice(GraceNoteChoice value)
 
 GraceNoteGroup parseGraceNoteGroup(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseGraceNoteGroup(el, cursor, ParseContext{});
+}
+
+GraceNoteGroup parseGraceNoteGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+{
     GraceNoteGroup out;
     if (cursorIs(cursor, "grace"))
     {
-        out.setGrace(parseGrace(cursor));
+        out.setGrace(parseGrace(cursor, context));
         cursor = nextElement(cursor);
     }
     else
@@ -45,7 +51,7 @@ GraceNoteGroup parseGraceNoteGroup(pugi::xml_node el, pugi::xml_node &cursor)
     if (cursor && (cursorIs(cursor, "chord") || cursorIs(cursor, "pitch") || cursorIs(cursor, "unpitched") ||
                    cursorIs(cursor, "rest") || cursorIs(cursor, "cue")))
     {
-        out.setGraceNoteChoice(parseGraceNoteChoice(el, cursor));
+        out.setGraceNoteChoice(parseGraceNoteChoice(el, cursor, context));
     }
     else
     {

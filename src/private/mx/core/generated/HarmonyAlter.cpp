@@ -3,6 +3,7 @@
 #include "mx/core/generated/HarmonyAlter.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -132,6 +133,11 @@ void HarmonyAlter::setValue(Semitones value)
 
 HarmonyAlter parseHarmonyAlter(pugi::xml_node el)
 {
+    return parseHarmonyAlter(el, ParseContext{});
+}
+
+HarmonyAlter parseHarmonyAlter(pugi::xml_node el, const ParseContext &context)
+{
     HarmonyAlter out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -142,60 +148,65 @@ HarmonyAlter parseHarmonyAlter(pugi::xml_node el)
         }
         if (aname == "location")
         {
-            out.setLocation(LeftRight::parse(a.value()));
+            out.setLocation(parseValue<LeftRight>(a.value(), context, el, "location"));
         }
         else if (aname == "print-object")
         {
-            out.setPrintObject(YesNo::parse(a.value()));
+            out.setPrintObject(parseValue<YesNo>(a.value(), context, el, "print-object"));
         }
         else if (aname == "default-x")
         {
-            out.setDefaultX(Tenths::parse(a.value()));
+            out.setDefaultX(parseValue<Tenths>(a.value(), context, el, "default-x"));
         }
         else if (aname == "default-y")
         {
-            out.setDefaultY(Tenths::parse(a.value()));
+            out.setDefaultY(parseValue<Tenths>(a.value(), context, el, "default-y"));
         }
         else if (aname == "relative-x")
         {
-            out.setRelativeX(Tenths::parse(a.value()));
+            out.setRelativeX(parseValue<Tenths>(a.value(), context, el, "relative-x"));
         }
         else if (aname == "relative-y")
         {
-            out.setRelativeY(Tenths::parse(a.value()));
+            out.setRelativeY(parseValue<Tenths>(a.value(), context, el, "relative-y"));
         }
         else if (aname == "font-family")
         {
-            out.setFontFamily(FontFamily::parse(a.value()));
+            out.setFontFamily(parseValue<FontFamily>(a.value(), context, el, "font-family"));
         }
         else if (aname == "font-style")
         {
-            out.setFontStyle(FontStyle::parse(a.value()));
+            out.setFontStyle(parseValue<FontStyle>(a.value(), context, el, "font-style"));
         }
         else if (aname == "font-size")
         {
-            out.setFontSize(FontSize::parse(a.value()));
+            out.setFontSize(parseValue<FontSize>(a.value(), context, el, "font-size"));
         }
         else if (aname == "font-weight")
         {
-            out.setFontWeight(FontWeight::parse(a.value()));
+            out.setFontWeight(parseValue<FontWeight>(a.value(), context, el, "font-weight"));
         }
         else if (aname == "color")
         {
-            out.setColor(Color::parse(a.value()));
+            out.setColor(parseValue<Color>(a.value(), context, el, "color"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseHarmonyAlterContent(out, el);
+    parseHarmonyAlterContent(out, el, context);
     return out;
 }
 
 void parseHarmonyAlterContent(HarmonyAlter &out, pugi::xml_node el)
 {
-    out.setValue(Semitones::parse(childText(el)));
+    parseHarmonyAlterContent(out, el, ParseContext{});
+}
+
+void parseHarmonyAlterContent(HarmonyAlter &out, pugi::xml_node el, const ParseContext &context)
+{
+    out.setValue(parseValue<Semitones>(childText(el), context, el, nullptr));
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

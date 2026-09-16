@@ -3,6 +3,7 @@
 #include "mx/core/generated/WavyLine.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -172,6 +173,11 @@ void WavyLine::setLastBeat(std::optional<Percent> value)
 
 WavyLine parseWavyLine(pugi::xml_node el)
 {
+    return parseWavyLine(el, ParseContext{});
+}
+
+WavyLine parseWavyLine(pugi::xml_node el, const ParseContext &context)
+{
     WavyLine out;
     bool seen_type = false;
     for (pugi::xml_attribute a : el.attributes())
@@ -184,67 +190,67 @@ WavyLine parseWavyLine(pugi::xml_node el)
         if (aname == "type")
         {
             seen_type = true;
-            out.setType(StartStopContinue::parse(a.value()));
+            out.setType(parseValue<StartStopContinue>(a.value(), context, el, "type"));
         }
         else if (aname == "number")
         {
-            out.setNumber(NumberLevel::parse(a.value()));
+            out.setNumber(parseValue<NumberLevel>(a.value(), context, el, "number"));
         }
         else if (aname == "smufl")
         {
-            out.setSmufl(SmuflWavyLineGlyphName::parse(a.value()));
+            out.setSmufl(parseValue<SmuflWavyLineGlyphName>(a.value(), context, el, "smufl"));
         }
         else if (aname == "default-x")
         {
-            out.setDefaultX(Tenths::parse(a.value()));
+            out.setDefaultX(parseValue<Tenths>(a.value(), context, el, "default-x"));
         }
         else if (aname == "default-y")
         {
-            out.setDefaultY(Tenths::parse(a.value()));
+            out.setDefaultY(parseValue<Tenths>(a.value(), context, el, "default-y"));
         }
         else if (aname == "relative-x")
         {
-            out.setRelativeX(Tenths::parse(a.value()));
+            out.setRelativeX(parseValue<Tenths>(a.value(), context, el, "relative-x"));
         }
         else if (aname == "relative-y")
         {
-            out.setRelativeY(Tenths::parse(a.value()));
+            out.setRelativeY(parseValue<Tenths>(a.value(), context, el, "relative-y"));
         }
         else if (aname == "placement")
         {
-            out.setPlacement(AboveBelow::parse(a.value()));
+            out.setPlacement(parseValue<AboveBelow>(a.value(), context, el, "placement"));
         }
         else if (aname == "color")
         {
-            out.setColor(Color::parse(a.value()));
+            out.setColor(parseValue<Color>(a.value(), context, el, "color"));
         }
         else if (aname == "start-note")
         {
-            out.setStartNote(StartNote::parse(a.value()));
+            out.setStartNote(parseValue<StartNote>(a.value(), context, el, "start-note"));
         }
         else if (aname == "trill-step")
         {
-            out.setTrillStep(TrillStep::parse(a.value()));
+            out.setTrillStep(parseValue<TrillStep>(a.value(), context, el, "trill-step"));
         }
         else if (aname == "two-note-turn")
         {
-            out.setTwoNoteTurn(TwoNoteTurn::parse(a.value()));
+            out.setTwoNoteTurn(parseValue<TwoNoteTurn>(a.value(), context, el, "two-note-turn"));
         }
         else if (aname == "accelerate")
         {
-            out.setAccelerate(YesNo::parse(a.value()));
+            out.setAccelerate(parseValue<YesNo>(a.value(), context, el, "accelerate"));
         }
         else if (aname == "beats")
         {
-            out.setBeats(TrillBeats::parse(a.value()));
+            out.setBeats(parseValue<TrillBeats>(a.value(), context, el, "beats"));
         }
         else if (aname == "second-beat")
         {
-            out.setSecondBeat(Percent::parse(a.value()));
+            out.setSecondBeat(parseValue<Percent>(a.value(), context, el, "second-beat"));
         }
         else if (aname == "last-beat")
         {
-            out.setLastBeat(Percent::parse(a.value()));
+            out.setLastBeat(parseValue<Percent>(a.value(), context, el, "last-beat"));
         }
         else
         {
@@ -255,13 +261,19 @@ WavyLine parseWavyLine(pugi::xml_node el)
     {
         throwMissingAttribute(el, "type");
     }
-    parseWavyLineContent(out, el);
+    parseWavyLineContent(out, el, context);
     return out;
 }
 
 void parseWavyLineContent(WavyLine &out, pugi::xml_node el)
 {
+    parseWavyLineContent(out, el, ParseContext{});
+}
+
+void parseWavyLineContent(WavyLine &out, pugi::xml_node el, const ParseContext &context)
+{
     (void)out;
+    (void)context;
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

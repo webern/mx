@@ -32,4 +32,11 @@ DistanceType DistanceType::parse(std::string_view text)
     return DistanceType{std::string{text}};
 }
 
+DistanceType DistanceType::parse(std::string_view text, ValueParseOutcome &outcome)
+{
+    DistanceType out{std::string{text}};
+    outcome = out.value() == text ? ValueParseOutcome::valid : ValueParseOutcome::adjusted;
+    return out;
+}
+
 } // namespace mx::core

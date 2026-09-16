@@ -18,6 +18,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The backup and forward elements are required to coordinate multiple voices in one part, including
 /// music on multiple staves. The backup type is generally used to move between voices and staves.
 /// Thus the backup element does not include voice or staff elements. Duration values should always
@@ -41,7 +43,11 @@ class Backup final
 
 Backup parseBackup(pugi::xml_node el);
 
+Backup parseBackup(pugi::xml_node el, const ParseContext &context);
+
 void parseBackupContent(Backup &out, pugi::xml_node el);
+
+void parseBackupContent(Backup &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeBackup(const Backup &v, pugi::xml_node parent, const char *tag);
 

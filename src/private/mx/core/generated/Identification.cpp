@@ -3,6 +3,7 @@
 #include "mx/core/generated/Identification.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -87,6 +88,11 @@ void Identification::setMiscellaneous(std::optional<Miscellaneous> value)
 
 Identification parseIdentification(pugi::xml_node el)
 {
+    return parseIdentification(el, ParseContext{});
+}
+
+Identification parseIdentification(pugi::xml_node el, const ParseContext &context)
+{
     Identification out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -97,26 +103,31 @@ Identification parseIdentification(pugi::xml_node el)
         }
         throwUnknownAttribute(el, a.name());
     }
-    parseIdentificationContent(out, el);
+    parseIdentificationContent(out, el, context);
     return out;
 }
 
 void parseIdentificationContent(Identification &out, pugi::xml_node el)
 {
+    parseIdentificationContent(out, el, ParseContext{});
+}
+
+void parseIdentificationContent(Identification &out, pugi::xml_node el, const ParseContext &context)
+{
     pugi::xml_node cursor = firstElement(el);
     while (cursorIs(cursor, "creator"))
     {
-        out.addCreator(parseTypedText(cursor));
+        out.addCreator(parseTypedText(cursor, context));
         cursor = nextElement(cursor);
     }
     while (cursorIs(cursor, "rights"))
     {
-        out.addRights(parseTypedText(cursor));
+        out.addRights(parseTypedText(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "encoding"))
     {
-        out.setEncoding(parseEncoding(cursor));
+        out.setEncoding(parseEncoding(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "source"))
@@ -126,12 +137,12 @@ void parseIdentificationContent(Identification &out, pugi::xml_node el)
     }
     while (cursorIs(cursor, "relation"))
     {
-        out.addRelation(parseTypedText(cursor));
+        out.addRelation(parseTypedText(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursorIs(cursor, "miscellaneous"))
     {
-        out.setMiscellaneous(parseMiscellaneous(cursor));
+        out.setMiscellaneous(parseMiscellaneous(cursor, context));
         cursor = nextElement(cursor);
     }
     if (cursor)

@@ -30,6 +30,8 @@ class xml_node;
 namespace mx::core
 {
 
+class ParseContext;
+
 /// The formatted-symbol-id type represents a SMuFL musical symbol element with formatting and id
 /// attributes.
 class FormattedSymbolID final
@@ -108,7 +110,11 @@ class FormattedSymbolID final
 
 FormattedSymbolID parseFormattedSymbolID(pugi::xml_node el);
 
+FormattedSymbolID parseFormattedSymbolID(pugi::xml_node el, const ParseContext &context);
+
 void parseFormattedSymbolIDContent(FormattedSymbolID &out, pugi::xml_node el);
+
+void parseFormattedSymbolIDContent(FormattedSymbolID &out, pugi::xml_node el, const ParseContext &context);
 
 void serializeFormattedSymbolID(const FormattedSymbolID &v, pugi::xml_node parent, const char *tag);
 

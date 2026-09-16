@@ -49,8 +49,14 @@ bool SystemRelation::tryParse(std::string_view text, SystemRelation &out) noexce
 
 SystemRelation SystemRelation::parse(std::string_view text) noexcept
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+SystemRelation SystemRelation::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
     SystemRelation v;
-    tryParse(text, v);
+    outcome = tryParse(text, v) ? ValueParseOutcome::valid : ValueParseOutcome::invalid;
     return v;
 }
 

@@ -61,11 +61,23 @@ bool PositiveIntegerOrEmpty::tryParse(std::string_view text, PositiveIntegerOrEm
 
 PositiveIntegerOrEmpty PositiveIntegerOrEmpty::parse(std::string_view text)
 {
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    return parse(text, outcome);
+}
+
+PositiveIntegerOrEmpty PositiveIntegerOrEmpty::parse(std::string_view text, ValueParseOutcome &outcome)
+{
     PositiveIntegerOrEmpty out;
     if (tryParse(text, out))
     {
+        outcome = ValueParseOutcome::valid;
+        if (int raw{}; out.isPositiveInteger() && tryParseInt(text, raw) && out.asPositiveInteger() != raw)
+        {
+            outcome = ValueParseOutcome::adjusted;
+        }
         return out;
     }
+    outcome = ValueParseOutcome::invalid;
     return PositiveIntegerOrEmpty::positiveInteger(parseInt(text));
 }
 

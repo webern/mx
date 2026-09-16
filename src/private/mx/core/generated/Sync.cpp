@@ -3,6 +3,7 @@
 #include "mx/core/generated/Sync.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -52,6 +53,11 @@ void Sync::setTimeOnly(std::optional<TimeOnly> value)
 
 Sync parseSync(pugi::xml_node el)
 {
+    return parseSync(el, ParseContext{});
+}
+
+Sync parseSync(pugi::xml_node el, const ParseContext &context)
+{
     Sync out;
     bool seen_type = false;
     for (pugi::xml_attribute a : el.attributes())
@@ -64,11 +70,11 @@ Sync parseSync(pugi::xml_node el)
         if (aname == "type")
         {
             seen_type = true;
-            out.setType(SyncType::parse(a.value()));
+            out.setType(parseValue<SyncType>(a.value(), context, el, "type"));
         }
         else if (aname == "latency")
         {
-            out.setLatency(Milliseconds::parse(a.value()));
+            out.setLatency(parseValue<Milliseconds>(a.value(), context, el, "latency"));
         }
         else if (aname == "player")
         {
@@ -76,7 +82,7 @@ Sync parseSync(pugi::xml_node el)
         }
         else if (aname == "time-only")
         {
-            out.setTimeOnly(TimeOnly::parse(a.value()));
+            out.setTimeOnly(parseValue<TimeOnly>(a.value(), context, el, "time-only"));
         }
         else
         {
@@ -87,13 +93,19 @@ Sync parseSync(pugi::xml_node el)
     {
         throwMissingAttribute(el, "type");
     }
-    parseSyncContent(out, el);
+    parseSyncContent(out, el, context);
     return out;
 }
 
 void parseSyncContent(Sync &out, pugi::xml_node el)
 {
+    parseSyncContent(out, el, ParseContext{});
+}
+
+void parseSyncContent(Sync &out, pugi::xml_node el, const ParseContext &context)
+{
     (void)out;
+    (void)context;
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));

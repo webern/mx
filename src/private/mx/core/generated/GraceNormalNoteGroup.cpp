@@ -3,6 +3,7 @@
 #include "mx/core/generated/GraceNormalNoteGroup.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -42,11 +43,16 @@ void GraceNormalNoteGroup::clearTie() noexcept
 
 GraceNormalNoteGroup parseGraceNormalNoteGroup(pugi::xml_node el, pugi::xml_node &cursor)
 {
+    return parseGraceNormalNoteGroup(el, cursor, ParseContext{});
+}
+
+GraceNormalNoteGroup parseGraceNormalNoteGroup(pugi::xml_node el, pugi::xml_node &cursor, const ParseContext &context)
+{
     GraceNormalNoteGroup out;
     if (cursor && (cursorIs(cursor, "chord") || cursorIs(cursor, "pitch") || cursorIs(cursor, "unpitched") ||
                    cursorIs(cursor, "rest")))
     {
-        out.setFullNote(parseFullNoteGroup(el, cursor));
+        out.setFullNote(parseFullNoteGroup(el, cursor, context));
     }
     else
     {
@@ -54,7 +60,7 @@ GraceNormalNoteGroup parseGraceNormalNoteGroup(pugi::xml_node el, pugi::xml_node
     }
     while (cursorIs(cursor, "tie"))
     {
-        if (!out.addTie(parseTie(cursor)))
+        if (!out.addTie(parseTie(cursor, context)))
         {
             throwTooManyElements(cursor);
         }

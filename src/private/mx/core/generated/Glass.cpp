@@ -3,6 +3,7 @@
 #include "mx/core/generated/Glass.h"
 
 #include "mx/core/Lexical.h"
+#include "mx/core/ParseContext.h"
 #include "mx/core/Xml.h"
 
 #include <utility>
@@ -32,6 +33,11 @@ void Glass::setValue(GlassValue value)
 
 Glass parseGlass(pugi::xml_node el)
 {
+    return parseGlass(el, ParseContext{});
+}
+
+Glass parseGlass(pugi::xml_node el, const ParseContext &context)
+{
     Glass out;
     for (pugi::xml_attribute a : el.attributes())
     {
@@ -42,20 +48,25 @@ Glass parseGlass(pugi::xml_node el)
         }
         if (aname == "smufl")
         {
-            out.setSmufl(SmuflPictogramGlyphName::parse(a.value()));
+            out.setSmufl(parseValue<SmuflPictogramGlyphName>(a.value(), context, el, "smufl"));
         }
         else
         {
             throwUnknownAttribute(el, a.name());
         }
     }
-    parseGlassContent(out, el);
+    parseGlassContent(out, el, context);
     return out;
 }
 
 void parseGlassContent(Glass &out, pugi::xml_node el)
 {
-    out.setValue(GlassValue::parse(childText(el)));
+    parseGlassContent(out, el, ParseContext{});
+}
+
+void parseGlassContent(Glass &out, pugi::xml_node el, const ParseContext &context)
+{
+    out.setValue(parseValue<GlassValue>(childText(el), context, el, nullptr));
     if (firstElement(el))
     {
         throwUnknownElement(firstElement(el));
