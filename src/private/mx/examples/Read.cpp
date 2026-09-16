@@ -3,7 +3,7 @@
 #include <sstream>
 #include <string>
 
-#include "mx/api/DocumentManager.h"
+#include "mx/api/MusicXml.h"
 #include "mx/api/ScoreData.h"
 
 #define MX_IS_A_SUCCESS 0
@@ -53,31 +53,24 @@ int main(int argc, const char *argv[])
 {
     using namespace mx::api;
 
-    // create a reference to the singleton which holds documents in memory for us
-    auto &mgr = DocumentManager::getInstance();
-
     // place the xml from above into a stream object
     std::istringstream istr{xml};
 
-    // ask the document manager to parse the xml into memory for us, returns a document ID.
-    const auto idResult = mgr.createFromStream(istr);
-    if (!idResult.ok())
+    // parse the xml into a MusicXml document that we own
+    auto docResult = MusicXml::fromStream(istr);
+    if (!docResult.ok())
     {
         return MX_IS_A_FAILURE;
     }
-    const auto documentID = idResult.value();
 
-    // get the structural representation of the score from the document manager
-    const auto scoreResult = mgr.getData(documentID);
+    // take the score out of the document. intoScore also consumes the
+    // document, so its memory is freed as the function returns
+    const auto scoreResult = intoScore(std::move(docResult).value());
     if (!scoreResult.ok())
     {
-        mgr.destroyDocument(documentID);
         return MX_IS_A_FAILURE;
     }
     const auto score = scoreResult.value();
-
-    // we need to explicitly destroy the document from memory
-    mgr.destroyDocument(documentID);
 
     // make sure we have exactly one part
     if (score.parts.size() != 1)

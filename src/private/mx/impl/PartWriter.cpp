@@ -3,7 +3,6 @@
 // Distributed under the MIT License
 
 #include "mx/impl/PartWriter.h"
-#include "mx/api/DocumentManager.h"
 #include "mx/core/Decimal.h"
 #include "mx/core/OneOrMore.h"
 #include "mx/core/Token.h"
@@ -36,6 +35,7 @@
 #include "mx/impl/NameDisplayFunctions.h"
 #include "mx/impl/ScoreWriter.h"
 
+#include <atomic>
 #include <sstream>
 
 namespace mx
@@ -56,6 +56,16 @@ void applyPrintObject(api::Bool printObject, core::PartName &out)
     }
 }
 } // namespace
+
+// Synthesized <score-instrument> ids, e.g. "ID1000000". Seeded high so they
+// are unlikely to collide with ids already present in parsed documents. The
+// sequence is shared process-wide so that instruments of different parts
+// cannot collide inside one document.
+int partWriterNextSynthesizedId()
+{
+    static std::atomic<int> nextId{1000000};
+    return nextId.fetch_add(1);
+}
 
 PartWriter::PartWriter(const api::PartData &inPartData, int inPartIndex, int inTicksPerQuarter,
                        const ScoreWriter &inScoreWriter)
@@ -253,7 +263,7 @@ core::ScorePart PartWriter::getScorePart() const
         {
             std::stringstream ss;
             ss << "ID";
-            ss << api::DocumentManager::getInstance().getUniqueId();
+            ss << partWriterNextSynthesizedId();
             scoreInstrument.setID(core::Token{ss.str()});
         }
         else

@@ -6,7 +6,7 @@
 #ifdef MX_COMPILE_API_TESTS
 
 #include "cpul/cpulTestHarness.h"
-#include "mx/api/DocumentManager.h"
+#include "mx/api/MusicXml.h"
 #include "mx/core/generated/DirectionTypeChoice.h"
 #include "mx/core/generated/Document.h"
 #include "mx/core/generated/DynamicsChoice.h"
@@ -42,36 +42,31 @@ inline bool writeRoundTrip(std::string inFilename)
     const auto outAfterFilepath = outDir + nameWithoutExtension + std::string{"_after.xml"};
     const auto scoreData = mxtest::MxFileRepository::loadFile(inFilename);
     const auto filePath = mxtest::MxFileRepository::getFullPath(inFilename);
-    auto &docMgr = DocumentManager::getInstance();
-    const auto rBefore = docMgr.createFromFile(filePath);
+    auto rBefore = MusicXml::fromFile(filePath);
     if (!rBefore.ok())
     {
         return false;
     }
-    const int docId = rBefore.value();
-    docMgr.writeToFile(docId, outBeforeFilepath);
-    docMgr.destroyDocument(docId);
-    const auto rAfter = docMgr.createFromScore(scoreData);
+    std::move(rBefore).value().writeToFile(outBeforeFilepath);
+    auto rAfter = fromScore(scoreData);
     if (!rAfter.ok())
     {
         return false;
     }
-    const int apiDocId = rAfter.value();
-    docMgr.writeToFile(apiDocId, outAfterFilepath);
-    docMgr.destroyDocument(apiDocId);
-    return docId != apiDocId;
+    std::move(rAfter).value().writeToFile(outAfterFilepath);
+    return true;
 }
 
-/// Holds references into Documents that must be kept alive.
+/// Holds the two round-tripped documents and their score data.
 struct TestData
 {
-    mx::core::DocumentPtr originalDoc;
-    mx::core::DocumentPtr savedDoc;
+    mx::api::MusicXml originalDoc;
+    mx::api::MusicXml savedDoc;
     mx::api::ScoreData originalScoreData;
     mx::api::ScoreData savedScoreData;
 
-    TestData(mx::core::DocumentPtr inOriginalDoc, mx::core::DocumentPtr inSavedDoc,
-             mx::api::ScoreData inOriginalScoreData, mx::api::ScoreData inSavedScoreData)
+    TestData(mx::api::MusicXml inOriginalDoc, mx::api::MusicXml inSavedDoc, mx::api::ScoreData inOriginalScoreData,
+             mx::api::ScoreData inSavedScoreData)
         : originalDoc{std::move(inOriginalDoc)}, savedDoc{std::move(inSavedDoc)},
           originalScoreData{std::move(inOriginalScoreData)}, savedScoreData{std::move(inSavedScoreData)}
     {
@@ -79,12 +74,12 @@ struct TestData
 
     const mx::core::ScorePartwise &originalScore() const
     {
-        return originalDoc->asScorePartwise();
+        return originalDoc.getCoreDocument().asScorePartwise();
     }
 
     const mx::core::ScorePartwise &savedScore() const
     {
-        return savedDoc->asScorePartwise();
+        return savedDoc.getCoreDocument().asScorePartwise();
     }
 
     //////////////////////////// original score ///////////////////// saved score ///////////////////
@@ -103,21 +98,20 @@ struct TestData
 
 inline TestData getTestData(std::string filename)
 {
-    auto &mgr = DocumentManager::getInstance();
     const auto filePath = mxtest::MxFileRepository::getFullPath(filename);
-    const auto rOrig = mgr.createFromFile(filePath);
-    const int originalId = rOrig.ok() ? rOrig.value() : -1;
-    const auto rOrigData = mgr.getData(originalId);
-    const auto originalScoreData = rOrigData.ok() ? rOrigData.value() : mx::api::ScoreData{};
-    const auto rSaved = mgr.createFromScore(originalScoreData);
-    const int savedId = rSaved.ok() ? rSaved.value() : -1;
-    const auto rSavedData = mgr.getData(savedId);
-    const auto savedScoreData = rSavedData.ok() ? rSavedData.value() : mx::api::ScoreData{};
-    auto originalDoc = mgr.getDocument(originalId);
-    auto savedDoc = mgr.getDocument(savedId);
-    mgr.destroyDocument(originalId);
-    mgr.destroyDocument(savedId);
-    return TestData{originalDoc, savedDoc, originalScoreData, savedScoreData};
+    auto rOrig = mx::api::MusicXml::fromFile(filePath);
+    REQUIRE(rOrig.ok());
+    mx::api::MusicXml originalDoc = std::move(rOrig).value();
+    const auto rOrigData = mx::api::getScore(originalDoc);
+    REQUIRE(rOrigData.ok());
+    const auto originalScoreData = rOrigData.value();
+    auto rSaved = mx::api::fromScore(originalScoreData);
+    REQUIRE(rSaved.ok());
+    mx::api::MusicXml savedDoc = std::move(rSaved).value();
+    const auto rSavedData = mx::api::getScore(savedDoc);
+    REQUIRE(rSavedData.ok());
+    const auto savedScoreData = rSavedData.value();
+    return TestData{std::move(originalDoc), std::move(savedDoc), originalScoreData, savedScoreData};
 }
 } // namespace
 
@@ -169,30 +163,22 @@ TEST(roundTripViolaDynamicWrongTime, Freezing)
 {
     // in the original file measure number="X7" implicit="yes" width="389"
     // or search for font-family="roundTripViolaDynamicWrongTime"
-    auto &mgr = DocumentManager::getInstance();
     const auto filePath = mxtest::MxFileRepository::getFullPath(freezingFile);
-    const auto rOrigId = mgr.createFromFile(filePath);
-    REQUIRE(rOrigId.ok());
-    const int originalId = rOrigId.value();
-    const auto rOrigData = mgr.getData(originalId);
+    auto rOrig = MusicXml::fromFile(filePath);
+    REQUIRE(rOrig.ok());
+    MusicXml originalDoc = std::move(rOrig).value();
+    const auto rOrigData = getScore(originalDoc);
     REQUIRE(rOrigData.ok());
     const auto originalScoreData = rOrigData.value();
-    auto originalDoc = mgr.getDocument(originalId);
-    const auto rSavedId = mgr.createFromScore(originalScoreData);
-    REQUIRE(rSavedId.ok());
-    const int savedId = rSavedId.value();
-    const auto rSavedData = mgr.getData(savedId);
-    REQUIRE(rSavedData.ok());
-    const auto savedScoreData = rSavedData.value();
-    auto savedDoc = mgr.getDocument(savedId);
-    mgr.destroyDocument(originalId);
-    mgr.destroyDocument(savedId);
+    auto rSaved = fromScore(originalScoreData);
+    REQUIRE(rSaved.ok());
+    MusicXml savedDoc = std::move(rSaved).value();
 
     const size_t partIndex = 0;
     const size_t measureIndex = 7;
 
-    const auto &originalScore = originalDoc->asScorePartwise();
-    const auto &savedScore = savedDoc->asScorePartwise();
+    const auto &originalScore = originalDoc.getCoreDocument().asScorePartwise();
+    const auto &savedScore = savedDoc.getCoreDocument().asScorePartwise();
 
     const auto originalMdcSpan = originalScore.part()[partIndex].measure()[measureIndex].musicData();
     auto originalMdcIter = originalMdcSpan.begin();
@@ -317,46 +303,36 @@ T_END
 
 TEST(missingMusicXMLVersion, Freezing)
 {
-    auto &mgr = DocumentManager::getInstance();
     const auto filePath = mxtest::MxFileRepository::getFullPath(freezingFile);
-    const auto rOrigId = mgr.createFromFile(filePath);
-    REQUIRE(rOrigId.ok());
-    const int originalId = rOrigId.value();
-    auto originalDoc = mgr.getDocument(originalId);
-    const auto rOrigData = mgr.getData(originalId);
+    auto rOrig = MusicXml::fromFile(filePath);
+    REQUIRE(rOrig.ok());
+    MusicXml originalDoc = std::move(rOrig).value();
+    const auto rOrigData = getScore(originalDoc);
     REQUIRE(rOrigData.ok());
-    const auto rSavedId = mgr.createFromScore(rOrigData.value());
-    REQUIRE(rSavedId.ok());
-    const int savedId = rSavedId.value();
-    auto savedDoc = mgr.getDocument(savedId);
-    mgr.destroyDocument(originalId);
-    mgr.destroyDocument(savedId);
+    auto rSaved = fromScore(rOrigData.value());
+    REQUIRE(rSaved.ok());
+    MusicXml savedDoc = std::move(rSaved).value();
 
-    const bool originalScoreHasVersion = originalDoc->asScorePartwise().version().has_value();
-    const bool savedScoreHasVersion = savedDoc->asScorePartwise().version().has_value();
+    const bool originalScoreHasVersion = originalDoc.getCoreDocument().asScorePartwise().version().has_value();
+    const bool savedScoreHasVersion = savedDoc.getCoreDocument().asScorePartwise().version().has_value();
     CHECK(originalScoreHasVersion);
     CHECK(savedScoreHasVersion);
 }
 
 TEST(HasDefaultsHasAppearance, Freezing)
 {
-    auto &mgr = DocumentManager::getInstance();
     const auto filePath = mxtest::MxFileRepository::getFullPath(freezingFile);
-    const auto rOrigId = mgr.createFromFile(filePath);
-    REQUIRE(rOrigId.ok());
-    const int originalId = rOrigId.value();
-    auto originalDoc = mgr.getDocument(originalId);
-    const auto rOrigData = mgr.getData(originalId);
+    auto rOrig = MusicXml::fromFile(filePath);
+    REQUIRE(rOrig.ok());
+    MusicXml originalDoc = std::move(rOrig).value();
+    const auto rOrigData = getScore(originalDoc);
     REQUIRE(rOrigData.ok());
-    const auto rSavedId = mgr.createFromScore(rOrigData.value());
-    REQUIRE(rSavedId.ok());
-    const int savedId = rSavedId.value();
-    auto savedDoc = mgr.getDocument(savedId);
-    mgr.destroyDocument(originalId);
-    mgr.destroyDocument(savedId);
+    auto rSaved = fromScore(rOrigData.value());
+    REQUIRE(rSaved.ok());
+    MusicXml savedDoc = std::move(rSaved).value();
 
-    const auto &origHeader = originalDoc->asScorePartwise().scoreHeader();
-    const auto &savedHeader = savedDoc->asScorePartwise().scoreHeader();
+    const auto &origHeader = originalDoc.getCoreDocument().asScorePartwise().scoreHeader();
+    const auto &savedHeader = savedDoc.getCoreDocument().asScorePartwise().scoreHeader();
 
     const bool originalHasDefaults = origHeader.defaults().has_value();
     const bool savedHasDefaults = savedHeader.defaults().has_value();
@@ -406,28 +382,25 @@ TEST(HasDefaultsHasAppearance, Freezing)
 
 TEST(appearanceLineWidths, Freezing)
 {
-    auto &mgr = DocumentManager::getInstance();
     const auto filePath = mxtest::MxFileRepository::getFullPath(freezingFile);
-    const auto rOrigId = mgr.createFromFile(filePath);
-    REQUIRE(rOrigId.ok());
-    const int originalId = rOrigId.value();
-    auto originalDoc = mgr.getDocument(originalId);
-    const auto rOrigData = mgr.getData(originalId);
+    auto rOrig = MusicXml::fromFile(filePath);
+    REQUIRE(rOrig.ok());
+    MusicXml originalDoc = std::move(rOrig).value();
+    const auto rOrigData = getScore(originalDoc);
     REQUIRE(rOrigData.ok());
-    const auto rSavedId = mgr.createFromScore(rOrigData.value());
-    REQUIRE(rSavedId.ok());
-    const int savedId = rSavedId.value();
-    auto savedDoc = mgr.getDocument(savedId);
-    mgr.destroyDocument(originalId);
-    mgr.destroyDocument(savedId);
+    auto rSaved = fromScore(rOrigData.value());
+    REQUIRE(rSaved.ok());
+    MusicXml savedDoc = std::move(rSaved).value();
 
-    REQUIRE(originalDoc->asScorePartwise().scoreHeader().defaults().has_value());
-    REQUIRE(savedDoc->asScorePartwise().scoreHeader().defaults().has_value());
-    REQUIRE(originalDoc->asScorePartwise().scoreHeader().defaults()->appearance().has_value());
-    REQUIRE(savedDoc->asScorePartwise().scoreHeader().defaults()->appearance().has_value());
+    REQUIRE(originalDoc.getCoreDocument().asScorePartwise().scoreHeader().defaults().has_value());
+    REQUIRE(savedDoc.getCoreDocument().asScorePartwise().scoreHeader().defaults().has_value());
+    REQUIRE(originalDoc.getCoreDocument().asScorePartwise().scoreHeader().defaults()->appearance().has_value());
+    REQUIRE(savedDoc.getCoreDocument().asScorePartwise().scoreHeader().defaults()->appearance().has_value());
 
-    const auto &originalAppearance = originalDoc->asScorePartwise().scoreHeader().defaults()->appearance().value();
-    const auto &savedAppearance = savedDoc->asScorePartwise().scoreHeader().defaults()->appearance().value();
+    const auto &originalAppearance =
+        originalDoc.getCoreDocument().asScorePartwise().scoreHeader().defaults()->appearance().value();
+    const auto &savedAppearance =
+        savedDoc.getCoreDocument().asScorePartwise().scoreHeader().defaults()->appearance().value();
 
     const auto lineWidthSetSize = savedAppearance.lineWidth().size();
     CHECK(lineWidthSetSize > 0);
@@ -447,28 +420,25 @@ TEST(appearanceLineWidths, Freezing)
 
 TEST(appearanceNoteSize, Freezing)
 {
-    auto &mgr = DocumentManager::getInstance();
     const auto filePath = mxtest::MxFileRepository::getFullPath(freezingFile);
-    const auto rOrigId = mgr.createFromFile(filePath);
-    REQUIRE(rOrigId.ok());
-    const int originalId = rOrigId.value();
-    auto originalDoc = mgr.getDocument(originalId);
-    const auto rOrigData = mgr.getData(originalId);
+    auto rOrig = MusicXml::fromFile(filePath);
+    REQUIRE(rOrig.ok());
+    MusicXml originalDoc = std::move(rOrig).value();
+    const auto rOrigData = getScore(originalDoc);
     REQUIRE(rOrigData.ok());
-    const auto rSavedId = mgr.createFromScore(rOrigData.value());
-    REQUIRE(rSavedId.ok());
-    const int savedId = rSavedId.value();
-    auto savedDoc = mgr.getDocument(savedId);
-    mgr.destroyDocument(originalId);
-    mgr.destroyDocument(savedId);
+    auto rSaved = fromScore(rOrigData.value());
+    REQUIRE(rSaved.ok());
+    MusicXml savedDoc = std::move(rSaved).value();
 
-    REQUIRE(originalDoc->asScorePartwise().scoreHeader().defaults().has_value());
-    REQUIRE(savedDoc->asScorePartwise().scoreHeader().defaults().has_value());
-    REQUIRE(originalDoc->asScorePartwise().scoreHeader().defaults()->appearance().has_value());
-    REQUIRE(savedDoc->asScorePartwise().scoreHeader().defaults()->appearance().has_value());
+    REQUIRE(originalDoc.getCoreDocument().asScorePartwise().scoreHeader().defaults().has_value());
+    REQUIRE(savedDoc.getCoreDocument().asScorePartwise().scoreHeader().defaults().has_value());
+    REQUIRE(originalDoc.getCoreDocument().asScorePartwise().scoreHeader().defaults()->appearance().has_value());
+    REQUIRE(savedDoc.getCoreDocument().asScorePartwise().scoreHeader().defaults()->appearance().has_value());
 
-    const auto &originalAppearance = originalDoc->asScorePartwise().scoreHeader().defaults()->appearance().value();
-    const auto &savedAppearance = savedDoc->asScorePartwise().scoreHeader().defaults()->appearance().value();
+    const auto &originalAppearance =
+        originalDoc.getCoreDocument().asScorePartwise().scoreHeader().defaults()->appearance().value();
+    const auto &savedAppearance =
+        savedDoc.getCoreDocument().asScorePartwise().scoreHeader().defaults()->appearance().value();
 
     const auto noteSizeSetSize = savedAppearance.noteSize().size();
     CHECK(noteSizeSetSize > 0);
@@ -488,28 +458,25 @@ TEST(appearanceNoteSize, Freezing)
 
 TEST(appearancDistance, Freezing)
 {
-    auto &mgr = DocumentManager::getInstance();
     const auto filePath = mxtest::MxFileRepository::getFullPath(freezingFile);
-    const auto rOrigId = mgr.createFromFile(filePath);
-    REQUIRE(rOrigId.ok());
-    const int originalId = rOrigId.value();
-    auto originalDoc = mgr.getDocument(originalId);
-    const auto rOrigData = mgr.getData(originalId);
+    auto rOrig = MusicXml::fromFile(filePath);
+    REQUIRE(rOrig.ok());
+    MusicXml originalDoc = std::move(rOrig).value();
+    const auto rOrigData = getScore(originalDoc);
     REQUIRE(rOrigData.ok());
-    const auto rSavedId = mgr.createFromScore(rOrigData.value());
-    REQUIRE(rSavedId.ok());
-    const int savedId = rSavedId.value();
-    auto savedDoc = mgr.getDocument(savedId);
-    mgr.destroyDocument(originalId);
-    mgr.destroyDocument(savedId);
+    auto rSaved = fromScore(rOrigData.value());
+    REQUIRE(rSaved.ok());
+    MusicXml savedDoc = std::move(rSaved).value();
 
-    REQUIRE(originalDoc->asScorePartwise().scoreHeader().defaults().has_value());
-    REQUIRE(savedDoc->asScorePartwise().scoreHeader().defaults().has_value());
-    REQUIRE(originalDoc->asScorePartwise().scoreHeader().defaults()->appearance().has_value());
-    REQUIRE(savedDoc->asScorePartwise().scoreHeader().defaults()->appearance().has_value());
+    REQUIRE(originalDoc.getCoreDocument().asScorePartwise().scoreHeader().defaults().has_value());
+    REQUIRE(savedDoc.getCoreDocument().asScorePartwise().scoreHeader().defaults().has_value());
+    REQUIRE(originalDoc.getCoreDocument().asScorePartwise().scoreHeader().defaults()->appearance().has_value());
+    REQUIRE(savedDoc.getCoreDocument().asScorePartwise().scoreHeader().defaults()->appearance().has_value());
 
-    const auto &originalAppearance = originalDoc->asScorePartwise().scoreHeader().defaults()->appearance().value();
-    const auto &savedAppearance = savedDoc->asScorePartwise().scoreHeader().defaults()->appearance().value();
+    const auto &originalAppearance =
+        originalDoc.getCoreDocument().asScorePartwise().scoreHeader().defaults()->appearance().value();
+    const auto &savedAppearance =
+        savedDoc.getCoreDocument().asScorePartwise().scoreHeader().defaults()->appearance().value();
 
     const auto distanceSetSize = savedAppearance.distance().size();
     CHECK(distanceSetSize > 0);

@@ -6,7 +6,7 @@
 #ifdef MX_COMPILE_API_TESTS
 
 #include "cpul/cpulTestHarness.h"
-#include "mx/api/DocumentManager.h"
+#include "mx/api/MusicXml.h"
 #include "mx/core/generated/Document.h"
 #include "mx/core/generated/MusicDataChoice.h"
 #include "mx/core/generated/Print.h"
@@ -64,15 +64,10 @@ TEST(newSystem, doesItWork)
     addSystemBreak(25);
     addSystemBreak(50);
     addSystemBreak(75);
-    auto &docMgr = DocumentManager::getInstance();
-    const auto rId = docMgr.createFromScore(s);
+    auto rId = fromScore(s);
     REQUIRE(rId.ok());
-    const int id = rId.value();
-    const auto doc = docMgr.getDocument(id);
-    docMgr.destroyDocument(id);
-    REQUIRE(doc != nullptr);
-    REQUIRE(doc->isScorePartwise());
-    const auto &sp = doc->asScorePartwise();
+    const auto doc = std::move(rId).value();
+    const auto &sp = doc.getCoreDocument().asScorePartwise();
     const auto &p = sp.part()[0];
 
     size_t index = 0;

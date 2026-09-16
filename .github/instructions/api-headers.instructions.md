@@ -17,7 +17,7 @@ simpler model (doctrine: `.claude/skills/mx-api-doctrine/SKILL.md`). Review for:
   duplicated, or id-linked; check the change against the principles doc.
 - A new positioned-in-a-measure type needs `int tickTimePosition`; durations are in ticks.
 - No UB or exceptions reachable through the public interface; a failed precondition must never
-  throw. Flag new `Result` usage outside `DocumentManager`, unchecked `std::get`, or accessors
+  throw. Flag new `Result` usage outside `MusicXml`, unchecked `std::get`, or accessors
   that return references guarded only by a precondition.
 - Kind-specific payloads use the choice-class pattern (`TimeChoice.h`, `MarkDataChoice.h`), not
   loose fields that apply only to some kinds.

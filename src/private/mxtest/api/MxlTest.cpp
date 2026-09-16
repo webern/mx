@@ -6,17 +6,15 @@
 #ifdef MX_COMPILE_API_TESTS
 
 #include "cpul/cpulTestHarness.h"
-#include "mx/api/DocumentManager.h"
+#include "mx/api/MusicXml.h"
 #include "mxtest/file/MxFileRepository.h"
 #include <sstream>
 
 TEST(Mxl, TemporaryNoCrashTest)
 {
     const auto filepath = mxtest::MxFileRepository::getFullPath("Dichterliebe01.mxl");
-    auto &docMgr = mx::api::DocumentManager::getInstance();
-
-    // The new API does not throw; it returns Result<int> with an error code
-    const auto result = docMgr.createFromFile(filepath);
+    // The api does not throw; it returns a Result with an error code
+    const auto result = mx::api::MusicXml::fromFile(filepath);
     CHECK(!result.ok());
     if (!result.ok())
     {

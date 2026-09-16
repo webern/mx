@@ -7,7 +7,7 @@
 #ifdef MX_COMPILE_API_TESTS
 
 #include "cpul/cpulTestHarness.h"
-#include "mx/api/DocumentManager.h"
+#include "mx/api/MusicXml.h"
 #include "mx/core/generated/Document.h"
 #include "mx/core/generated/FullNoteGroup.h"
 #include "mx/core/generated/MusicDataChoice.h"
@@ -74,18 +74,14 @@ TEST(chordTest, Chords)
     noteP->durationData.durationTimeTicks = 120;
     //    noteP->beams.emplace_back(Beam::end);
 
-    auto &mgr = DocumentManager::getInstance();
-    const auto docIdResult = mgr.createFromScore(score);
+    auto docIdResult = fromScore(score);
     REQUIRE(docIdResult.ok());
-    const int docId = docIdResult.value();
+    const auto doc = std::move(docIdResult).value();
     std::stringstream ss;
-    mgr.writeToStream(docId, ss);
-    auto doc = mgr.getDocument(docId);
-    mgr.destroyDocument(docId);
+    doc.writeToStream(ss);
 
-    REQUIRE(doc != nullptr);
-    REQUIRE(doc->isScorePartwise());
-    const auto &scorePartwise = doc->asScorePartwise();
+    REQUIRE(doc.getCoreDocument().isScorePartwise());
+    const auto &scorePartwise = doc.getCoreDocument().asScorePartwise();
     const auto parts = scorePartwise.part();
     REQUIRE(!parts.empty());
     const auto &firstPart = parts[0];

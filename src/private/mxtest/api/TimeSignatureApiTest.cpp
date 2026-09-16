@@ -6,7 +6,7 @@
 #ifdef MX_COMPILE_API_TESTS
 
 #include "cpul/cpulTestHarness.h"
-#include "mx/api/DocumentManager.h"
+#include "mx/api/MusicXml.h"
 #include "mxtest/file/MxFileRepository.h"
 
 #include <sstream>
@@ -38,25 +38,20 @@ static ScoreData timeSignatureApiTestScore(const TimeChoice &inTimeSignature, in
 // serializes the score and reads it back through the api
 static ScoreData timeSignatureApiTestRoundTrip(const ScoreData &inScore)
 {
-    auto &docMgr = DocumentManager::getInstance();
-    const auto originalIdResult = docMgr.createFromScore(inScore);
+    auto originalIdResult = fromScore(inScore);
     if (!originalIdResult.ok())
     {
         return ScoreData{};
     }
-    const int originalId = originalIdResult.value();
     std::stringstream xml;
-    docMgr.writeToStream(originalId, xml);
-    docMgr.destroyDocument(originalId);
+    std::move(originalIdResult).value().writeToStream(xml);
     std::istringstream iss{xml.str()};
-    const auto reloadedIdResult = docMgr.createFromStream(iss);
+    auto reloadedIdResult = MusicXml::fromStream(iss);
     if (!reloadedIdResult.ok())
     {
         return ScoreData{};
     }
-    const int reloadedId = reloadedIdResult.value();
-    const auto reloadedScoreResult = docMgr.getData(reloadedId);
-    docMgr.destroyDocument(reloadedId);
+    const auto reloadedScoreResult = getScore(std::move(reloadedIdResult).value());
     if (!reloadedScoreResult.ok())
     {
         return ScoreData{};

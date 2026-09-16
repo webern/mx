@@ -6,7 +6,7 @@
 #ifdef MX_COMPILE_API_TESTS
 
 #include "cpul/cpulTestHarness.h"
-#include "mx/api/DocumentManager.h"
+#include "mx/api/MusicXml.h"
 #include "mxtest/api/RoundTrip.h"
 #include "mxtest/api/TestHelpers.h"
 
@@ -34,19 +34,15 @@ TEST(forwardRepeat, MeasureData)
     barlineData.repeat = true;
 
     // round trip it through xml
-    auto &mgr = DocumentManager::getInstance();
-    const auto rDocId = mgr.createFromScore(score);
+    auto rDocId = fromScore(score);
     REQUIRE(rDocId.ok());
-    int docId = rDocId.value();
     std::stringstream ss;
-    mgr.writeToStream(docId, ss);
-    mgr.destroyDocument(docId);
+    std::move(rDocId).value().writeToStream(ss);
     const std::string xml = ss.str();
     std::istringstream iss{xml};
-    const auto rDocId2 = mgr.createFromStream(iss);
+    auto rDocId2 = MusicXml::fromStream(iss);
     REQUIRE(rDocId2.ok());
-    docId = rDocId2.value();
-    const auto rOscore = mgr.getData(docId);
+    const auto rOscore = getScore(std::move(rDocId2).value());
     REQUIRE(rOscore.ok());
     const auto oscore = rOscore.value();
 
@@ -86,19 +82,15 @@ TEST(backwardRepeat, MeasureData)
     barlineData.repeat = true;
 
     // round trip it through xml
-    auto &mgr = DocumentManager::getInstance();
-    const auto rDocId = mgr.createFromScore(score);
+    auto rDocId = fromScore(score);
     REQUIRE(rDocId.ok());
-    int docId = rDocId.value();
     std::stringstream ss;
-    mgr.writeToStream(docId, ss);
-    mgr.destroyDocument(docId);
+    std::move(rDocId).value().writeToStream(ss);
     const std::string xml = ss.str();
     std::istringstream iss{xml};
-    const auto rDocId2 = mgr.createFromStream(iss);
+    auto rDocId2 = MusicXml::fromStream(iss);
     REQUIRE(rDocId2.ok());
-    docId = rDocId2.value();
-    const auto rOscore = mgr.getData(docId);
+    const auto rOscore = getScore(std::move(rDocId2).value());
     REQUIRE(rOscore.ok());
     const auto oscore = rOscore.value();
 

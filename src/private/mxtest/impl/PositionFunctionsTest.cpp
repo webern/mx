@@ -6,7 +6,7 @@
 #ifdef MX_COMPILE_IMPL_TESTS
 
 #include "cpul/cpulTestHarness.h"
-#include "mx/api/DocumentManager.h"
+#include "mx/api/MusicXml.h"
 #include "mx/core/generated/Bracket.h"
 #include "mx/core/generated/Direction.h"
 #include "mx/core/generated/Stem.h"
@@ -180,16 +180,13 @@ TEST(stemDefaultYZeroApiRoundTrip, PositionFunctions)
 </score-partwise>
 )";
 
-    auto &mgr = api::DocumentManager::getInstance();
     std::istringstream iss{xml};
-    auto docIdResult = mgr.createFromStream(iss);
-    CHECK(docIdResult.ok());
-    auto docId = docIdResult.value();
+    auto docResult = api::MusicXml::fromStream(iss);
+    CHECK(docResult.ok());
 
-    auto scoreResult = mgr.getData(docId);
+    auto scoreResult = api::getScore(std::move(docResult).value());
     CHECK(scoreResult.ok());
     auto scoreData = scoreResult.value();
-    mgr.destroyDocument(docId);
 
     // Verify the reader populated stemPositionData
     const auto &note = scoreData.parts.at(0).measures.at(0).staves.at(0).voices.at(0).notes.at(0);
@@ -198,12 +195,10 @@ TEST(stemDefaultYZeroApiRoundTrip, PositionFunctions)
     CHECK_DOUBLES_EQUAL(0.0, note.stemPositionData.defaultY, 0.0001);
 
     // Round-trip back to XML
-    auto docId2Result = mgr.createFromScore(scoreData);
-    CHECK(docId2Result.ok());
-    auto docId2 = docId2Result.value();
+    auto doc2Result = api::fromScore(scoreData);
+    CHECK(doc2Result.ok());
     std::stringstream ss;
-    mgr.writeToStream(docId2, ss);
-    mgr.destroyDocument(docId2);
+    std::move(doc2Result).value().writeToStream(ss);
 
     const auto output = ss.str();
     CHECK(output.find("default-y") != std::string::npos);
