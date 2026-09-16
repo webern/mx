@@ -44,9 +44,9 @@ namespace mx
 {
 namespace impl
 {
-ScoreReader::ScoreReader(const core::ScorePartwise &inScorePartwise)
+ScoreReader::ScoreReader(const core::ScorePartwise &inScorePartwise, DiagnosticsContext diagnostics)
     : myScorePartwise{inScorePartwise}, myPartSet{inScorePartwise.part()}, myHeaderGroup{inScorePartwise.scoreHeader()},
-      myMutex{}, myOutScoreData{}, myPartGroupStack{}
+      myDiagnostics{diagnostics}, myMutex{}, myOutScoreData{}, myPartGroupStack{}
 {
 }
 
@@ -267,8 +267,10 @@ api::ScoreData ScoreReader::getScoreData() const
     int divisionsValue = -1;
     for (const auto &reconciledPart : partMap)
     {
-        PartReader reader{*reconciledPart.first, *reconciledPart.second, myOutScoreData.ticksPerQuarter,
-                          myScorePartwise, divisionsValue};
+        const auto &scorePart = *reconciledPart.first;
+        const auto &partwisePart = *reconciledPart.second;
+        const auto ticksPerQuarter = myOutScoreData.ticksPerQuarter;
+        PartReader reader{scorePart, partwisePart, ticksPerQuarter, myScorePartwise, divisionsValue, myDiagnostics};
         myOutScoreData.parts.emplace_back(reader.getPartData());
         const auto cursorReturn = reader.getCursor();
         divisionsValue = cursorReturn.ticksPerQuarter;

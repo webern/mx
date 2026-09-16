@@ -6,6 +6,7 @@
 
 #include "mx/api/MeasureData.h"
 #include "mx/impl/Converter.h"
+#include "mx/impl/DiagnosticsContext.h"
 #include "mx/impl/MeasureCursor.h"
 
 #include <map>
@@ -24,6 +25,7 @@ class Direction;
 class Attributes;
 class Harmony;
 class FiguredBass;
+class Figure;
 class Print;
 class Sound;
 class Barline;
@@ -40,7 +42,7 @@ class MeasureReader
 {
   public:
     MeasureReader(const core::PartwiseMeasure &inPartwiseMeasureRef, const MeasureCursor &cursor,
-                  const MeasureCursor &previousMeasureCursor);
+                  const MeasureCursor &previousMeasureCursor, DiagnosticsContext diagnostics = {});
 
     std::pair<api::MeasureData, std::optional<api::TransposeData>> getMeasureData() const;
     impl::MeasureCursor getCursor() const;
@@ -49,6 +51,7 @@ class MeasureReader
     mutable std::mutex myMutex;
     const core::PartwiseMeasure &myPartwiseMeasure;
     const Converter myConverter;
+    DiagnosticsContext myDiagnostics;
 
     mutable api::MeasureData myOutMeasureData;
     mutable MeasureCursor myCurrentCursor;
@@ -78,6 +81,10 @@ class MeasureReader
     mutable int myPreviousNoteBucketStaffIndex;
 
   private:
+    static api::FigureData parseFigure(const core::Figure &figure);
+    static int figuredBassStaffIndex(const MeasureCursor &cursor, const api::MeasureData &measure,
+                                     const core::Note *nextNotePtr);
+
     void addStavesToOutMeasure() const;
     void parseTimeSignature() const;
 

@@ -5,6 +5,7 @@
 #pragma once
 
 #include "mx/api/ScoreData.h"
+#include "mx/impl/DiagnosticsContext.h"
 
 #include <optional>
 #include <unordered_map>
@@ -53,8 +54,8 @@ namespace impl
 // here and no number is ever emitted for one.
 //
 // If more than 16 spanners of one class are open at once in a part (which no
-// real score approaches), resolution fails loudly with an exception rather
-// than emitting an illegal number.
+// real score approaches), resolution refuses the write rather than emitting
+// an illegal number.
 //
 // == Same-note spans ==
 //
@@ -92,10 +93,10 @@ class SpannerResolver
     SpannerResolver() = default;
 
     // Walks inPart in serialization order, assigning a number to every
-    // identity spanner event and a size to every ottava stop. May be called
-    // once per part of a score; results accumulate (object addresses are
-    // unique across parts).
-    void resolvePart(const api::PartData &inPart);
+    // identity spanner event and a size to every ottava stop. Reports an
+    // unmatched ottava stop through diagnostics. May be called once per part
+    // of a score; results accumulate (object addresses are unique across parts).
+    void resolvePart(const api::PartData &inPart, int partIndex, DiagnosticsContext diagnostics = {});
 
     // The number the writer should emit for the given spanner object, or
     // nullopt to omit the attribute. inObject must be the address of the same

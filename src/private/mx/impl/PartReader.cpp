@@ -40,16 +40,14 @@ namespace mx
 {
 namespace impl
 {
-namespace
-{
 // True when a <part-name>/<part-abbreviation> carries any of the formatting
 // attributes that MusicXML 2.0 deprecated in favor of the *-display elements.
-bool nameHasDeprecatedFormatting(const core::PartName &n)
+bool PartReader::nameHasDeprecatedFormatting(const core::PartName &name)
 {
-    return n.fontFamily().has_value() || n.fontStyle().has_value() || n.fontSize().has_value() ||
-           n.fontWeight().has_value() || n.color().has_value() || n.defaultX().has_value() ||
-           n.defaultY().has_value() || n.relativeX().has_value() || n.relativeY().has_value() ||
-           n.justify().has_value();
+    return name.fontFamily().has_value() || name.fontStyle().has_value() || name.fontSize().has_value() ||
+           name.fontWeight().has_value() || name.color().has_value() || name.defaultX().has_value() ||
+           name.defaultY().has_value() || name.relativeX().has_value() || name.relativeY().has_value() ||
+           name.justify().has_value();
 }
 
 // Reads a name/abbreviation's display text and formatting into the api's single
@@ -57,8 +55,8 @@ bool nameHasDeprecatedFormatting(const core::PartName &n)
 // a present *-display element is canonical and wins; otherwise any deprecated
 // formatting on the name element itself is migrated into the display model so it
 // is re-emitted at the modern location.
-void readNameDisplay(const core::PartName &nameElement, const std::optional<core::NameDisplay> &display,
-                     std::string &outText, api::PrintData &outPrintData, api::PositionData &outPositionData)
+void PartReader::readNameDisplay(const core::PartName &nameElement, const std::optional<core::NameDisplay> &display,
+                                 std::string &outText, api::PrintData &outPrintData, api::PositionData &outPositionData)
 {
     if (display.has_value())
     {
@@ -74,13 +72,13 @@ void readNameDisplay(const core::PartName &nameElement, const std::optional<core
         outPositionData = getPositionData(nameElement);
     }
 }
-} // namespace
 
 PartReader::PartReader(const core::ScorePart &inScorePart, const core::PartwisePart &inPartwisePartRef,
-                       int globalTicksPerMeasure, const core::ScorePartwise &inScore, int inDivisionsValue)
+                       int globalTicksPerMeasure, const core::ScorePartwise &inScore, int inDivisionsValue,
+                       DiagnosticsContext diagnostics)
     : myPartwisePart{inPartwisePartRef}, myScorePart{inScorePart}, myNumStaves{-1}, myIsStavesElementPresent{false},
       myGlobalTicksPerMeasure{globalTicksPerMeasure}, myScore{inScore}, myPartIndex{-1},
-      myConstructedDivisionsValue{inDivisionsValue}
+      myConstructedDivisionsValue{inDivisionsValue}, myDiagnostics{diagnostics}
 {
     const auto ppId = myPartwisePart.id().value();
     const auto spId = myScorePart.id().value();
@@ -116,7 +114,7 @@ api::PartData PartReader::getPartData()
 
     for (const auto &mxMeasure : myPartwisePart.measure())
     {
-        MeasureReader reader{mxMeasure, myCurrentCursor, myPreviousCursor};
+        MeasureReader reader{mxMeasure, myCurrentCursor, myPreviousCursor, myDiagnostics};
         // the reader returns the measure data and any data that needs to be written at
         // the part-level (e.g. transposition). currently this is done as a pair.
         auto measureDataPair = reader.getMeasureData();

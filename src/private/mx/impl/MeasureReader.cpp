@@ -69,9 +69,7 @@ namespace mx
 {
 namespace impl
 {
-namespace
-{
-api::FigureData parseFigure(const core::Figure &figure)
+api::FigureData MeasureReader::parseFigure(const core::Figure &figure)
 {
     api::FigureData figureData;
 
@@ -93,8 +91,8 @@ api::FigureData parseFigure(const core::Figure &figure)
     return figureData;
 }
 
-int getFiguredBassStaffIndex(const MeasureCursor &cursor, const api::MeasureData &measure,
-                             const core::Note *nextNotePtr)
+int MeasureReader::figuredBassStaffIndex(const MeasureCursor &cursor, const api::MeasureData &measure,
+                                         const core::Note *nextNotePtr)
 {
     auto staffIndex = cursor.staffIndex;
 
@@ -110,12 +108,11 @@ int getFiguredBassStaffIndex(const MeasureCursor &cursor, const api::MeasureData
 
     return staffIndex;
 }
-} // namespace
 
 MeasureReader::MeasureReader(const core::PartwiseMeasure &inPartwiseMeasureRef, const MeasureCursor &cursor,
-                             const MeasureCursor &previousMeasureCursor)
-    : myMutex{}, myPartwiseMeasure{inPartwiseMeasureRef}, myConverter{}, myOutMeasureData{}, myCurrentCursor{cursor},
-      myPreviousMeasureCursor{previousMeasureCursor}, myHistory{}, myCrossStaffHomes{},
+                             const MeasureCursor &previousMeasureCursor, DiagnosticsContext diagnostics)
+    : myMutex{}, myPartwiseMeasure{inPartwiseMeasureRef}, myConverter{}, myDiagnostics{diagnostics}, myOutMeasureData{},
+      myCurrentCursor{cursor}, myPreviousMeasureCursor{previousMeasureCursor}, myHistory{}, myCrossStaffHomes{},
       myPreviousNoteBucketStaffIndex{-1}
 {
     HistoryRecord initialCursorRecord;
@@ -253,6 +250,13 @@ void MeasureReader::parseTimeSignature() const
         // clamp an out-of-range staff number to "all staves", mirroring the keys pattern
         if (staffIndex != api::INDEX_UNSPECIFIED && staffIndex > myCurrentCursor.getNumStaves() - 1)
         {
+            api::Location location;
+            location.partIndex = myCurrentCursor.partIndex;
+            location.measureIndex = myCurrentCursor.measureIndex;
+            location.tickTimePosition = myCurrentCursor.tickTimePosition;
+            myDiagnostics.report(api::Severity::warning, api::DiagnosticCode::valueAdjusted, std::move(location),
+                                 "time signature staff number " + std::to_string(staffIndex + 1) +
+                                     " is out of range; applying it to all staves");
             staffIndex = api::INDEX_UNSPECIFIED;
         }
 
@@ -852,7 +856,7 @@ void MeasureReader::parseFiguredBass(const core::FiguredBass &inMxFiguredBass, c
 
     direction.figuredBasses.emplace_back(std::move(figuredBass));
 
-    const auto staffIndex = getFiguredBassStaffIndex(myCurrentCursor, myOutMeasureData, nextNotePtr);
+    const auto staffIndex = figuredBassStaffIndex(myCurrentCursor, myOutMeasureData, nextNotePtr);
     myOutMeasureData.staves.at(static_cast<size_t>(staffIndex)).directions.emplace_back(std::move(direction));
 }
 

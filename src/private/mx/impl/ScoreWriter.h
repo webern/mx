@@ -10,6 +10,7 @@
 #include "mx/core/generated/ScorePart.h"
 #include "mx/core/generated/ScorePartwise.h"
 #include "mx/impl/Cursor.h"
+#include "mx/impl/DiagnosticsContext.h"
 #include "mx/impl/SpannerResolver.h"
 
 #include <mutex>
@@ -23,7 +24,7 @@ namespace impl
 class ScoreWriter
 {
   public:
-    ScoreWriter(const api::ScoreData &inScoreData);
+    ScoreWriter(const api::ScoreData &inScoreData, DiagnosticsContext diagnostics = {});
 
     core::ScorePartwise getScorePartwise() const;
 
@@ -47,6 +48,7 @@ class ScoreWriter
 
   private:
     api::ScoreData myScoreData;
+    DiagnosticsContext myDiagnostics;
     SpannerResolver mySpannerResolver;
     mutable std::mutex myMutex;
     mutable core::ScorePartwise myOutScorePartwise;
