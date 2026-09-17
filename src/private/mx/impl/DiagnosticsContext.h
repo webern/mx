@@ -49,5 +49,15 @@ class DiagnosticsContext
   private:
     std::shared_ptr<std::reference_wrapper<api::Diagnostics>> myDiagnostics;
 };
+
+// The part, measure and tick of a cursor, for a report that is not about one staff or voice.
+inline api::Location measureLocation(const MeasureCursor &cursor)
+{
+    api::Location location;
+    location.partIndex = cursor.partIndex;
+    location.measureIndex = cursor.measureIndex;
+    location.tickTimePosition = cursor.tickTimePosition;
+    return location;
+}
 } // namespace impl
 } // namespace mx

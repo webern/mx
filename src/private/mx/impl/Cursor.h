@@ -52,6 +52,8 @@ class Cursor
 
     int convertDurationToGlobalTickScale(const core::PositiveDivisions &duration) const;
     int convertDurationToGlobalTickScale(double durationValue) const;
+    // The duration in global ticks before it is rounded to a whole tick.
+    double convertDurationToExactGlobalTicks(double durationValue) const;
     int convertDurationToGlobalTickScale(int duration) const;
 
   private:

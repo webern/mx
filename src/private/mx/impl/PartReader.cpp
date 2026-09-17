@@ -74,10 +74,9 @@ void PartReader::readNameDisplay(const core::PartName &nameElement, const std::o
 }
 
 PartReader::PartReader(const core::ScorePart &inScorePart, const core::PartwisePart &inPartwisePartRef,
-                       int globalTicksPerMeasure, const core::ScorePartwise &inScore, int inDivisionsValue,
-                       DiagnosticsContext diagnostics)
+                       int globalTicksPerMeasure, int partIndex, int inDivisionsValue, DiagnosticsContext diagnostics)
     : myPartwisePart{inPartwisePartRef}, myScorePart{inScorePart}, myNumStaves{-1}, myIsStavesElementPresent{false},
-      myGlobalTicksPerMeasure{globalTicksPerMeasure}, myScore{inScore}, myPartIndex{-1},
+      myGlobalTicksPerMeasure{globalTicksPerMeasure}, myPartIndex{partIndex},
       myConstructedDivisionsValue{inDivisionsValue}, myDiagnostics{diagnostics}
 {
     const auto ppId = myPartwisePart.id().value();
@@ -86,9 +85,6 @@ PartReader::PartReader(const core::ScorePart &inScorePart, const core::PartwiseP
     {
         MX_THROW("the partwise-part id must match the score-part id");
     }
-    const auto partIndex = findPartIndex(ppId);
-    MX_ASSERT(partIndex >= 0);
-    myPartIndex = partIndex;
     myNumStaves = calculateNumStaves(myIsStavesElementPresent);
 }
 
@@ -148,6 +144,7 @@ int PartReader::calculateNumStaves(bool &outIsStavesElementPresent) const
 {
     outIsStavesElementPresent = false;
     int numStaves = 1;
+    int declaredStaves = 1;
 
     for (const auto &measure : myPartwisePart.measure())
     {
@@ -173,9 +170,17 @@ int PartReader::calculateNumStaves(bool &outIsStavesElementPresent) const
                 {
                     outIsStavesElementPresent = true;
                     int temp = *attributes.staves();
+                    declaredStaves = std::max(declaredStaves, temp);
                     if (temp > numStaves)
                     {
                         numStaves = temp;
+                    }
+                }
+                for (const auto &clef : attributes.clef())
+                {
+                    if (clef.number().has_value() && clef.number()->value() > numStaves)
+                    {
+                        numStaves = clef.number()->value();
                     }
                 }
                 break;
@@ -198,6 +203,16 @@ int PartReader::calculateNumStaves(bool &outIsStavesElementPresent) const
                 break;
             }
         }
+    }
+
+    if (numStaves > declaredStaves)
+    {
+        api::Location location;
+        location.partIndex = myPartIndex;
+        myDiagnostics.report(api::Severity::warning, api::DiagnosticCode::valueAdjusted, std::move(location),
+                             "staff number " + std::to_string(numStaves) + " is above the staff count " +
+                                 std::to_string(declaredStaves) + "; reading the part with " +
+                                 std::to_string(numStaves) + " staves");
     }
 
     return numStaves;
@@ -276,6 +291,14 @@ void PartReader::parseScoreInstrument(const core::ScoreInstrument &scoreInstrume
         {
             Converter c;
             myOutPartData.instrumentData.soundID = c.convert(instrSound.asSoundID());
+        }
+        else
+        {
+            api::Location location;
+            location.partIndex = myPartIndex;
+            myDiagnostics.report(api::Severity::error, api::DiagnosticCode::droppedData, std::move(location),
+                                 "instrument-sound \"" + instrSound.asString() +
+                                     "\" is not a known sound; it is not read");
         }
     }
 
@@ -367,31 +390,5 @@ void PartReader::parseMidiInstrument(const core::MIDIInstrument &inst) const
     }
 }
 
-int PartReader::findPartIndex(const std::string &inPartId) const
-{
-    const auto &partList = myScore.scoreHeader().partList();
-    const auto &firstPart = partList.scorePart();
-    int index = 0;
-
-    if (firstPart.id().value() == inPartId)
-    {
-        return index;
-    }
-
-    ++index;
-
-    for (const auto &p : partList.choice())
-    {
-        if (p.isScorePart())
-        {
-            if (p.asScorePart().id().value() == inPartId)
-            {
-                return index;
-            }
-            ++index;
-        }
-    }
-    return api::INDEX_UNSPECIFIED;
-}
 } // namespace impl
 } // namespace mx

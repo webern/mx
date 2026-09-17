@@ -509,6 +509,11 @@ void addAppearance(const core::ScoreHeaderGroup &inScoreHeaderGroup, api::Defaul
         {
             data.value = parsedOtherAppearanceValue.value();
         }
+        else
+        {
+            diagnostics.report(api::Severity::warning, api::DiagnosticCode::invalidValue, api::Location{},
+                               "other-appearance \"" + oa.value() + "\" is not a number; using 0");
+        }
         outDefaults.appearance.emplace_back(std::move(data));
     }
 }

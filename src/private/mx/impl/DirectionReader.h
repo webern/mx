@@ -40,6 +40,8 @@ class DirectionReader
 
   private:
     mx::api::DirectionData initializeData();
+    void report(api::Severity severity, api::DiagnosticCode code, std::string message) const;
+    void reportRounded(const char *name, double value, int rounded) const;
     void parseOffset();
     void parsePlacement();
     void parseSystemRelation();

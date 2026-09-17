@@ -4,6 +4,7 @@
 
 #include "mx/impl/DirectionReader.h"
 #include "mx/api/WedgeData.h"
+#include "mx/core/Lexical.h"
 #include "mx/core/generated/Accord.h"
 #include "mx/core/generated/AccordionRegistration.h"
 #include "mx/core/generated/Barre.h"
@@ -111,6 +112,20 @@ DirectionReader::DirectionReader(const core::Harmony &inHarmony, MeasureCursor i
 {
 }
 
+void DirectionReader::report(api::Severity severity, api::DiagnosticCode code, std::string message) const
+{
+    myDiagnostics.report(severity, code, measureLocation(myCursor), std::move(message));
+}
+
+void DirectionReader::reportRounded(const char *name, double value, int rounded) const
+{
+    if (value != static_cast<double>(rounded))
+    {
+        report(api::Severity::warning, api::DiagnosticCode::valueAdjusted,
+               std::string{name} + " " + core::formatDouble(value) + " rounded to " + std::to_string(rounded));
+    }
+}
+
 api::DirectionData DirectionReader::getDirectionData()
 {
     myOutDirectionData = initializeData();
@@ -152,6 +167,7 @@ void DirectionReader::parseOffset()
         {
             const auto rawVal = myDirection->offset()->value().value().value();
             myOutDirectionData.offset = static_cast<int>(std::ceil(rawVal - 0.5));
+            reportRounded("offset", rawVal, *myOutDirectionData.offset);
         }
     }
     else if (myHarmony)
@@ -160,6 +176,7 @@ void DirectionReader::parseOffset()
         {
             const auto rawVal = myHarmony->offset()->value().value().value();
             myOutDirectionData.offset = static_cast<int>(std::ceil(rawVal - 0.5));
+            reportRounded("offset", rawVal, *myOutDirectionData.offset);
         }
     }
 }
@@ -234,9 +251,15 @@ void DirectionReader::parseValues()
         if (myDirection->editorialVoiceDirection().voice().has_value())
         {
             int parsedVoice = api::VALUE_UNSPECIFIED;
-            if (utility::stringToInt(myDirection->editorialVoiceDirection().voice()->c_str(), parsedVoice))
+            const std::string voiceText = *myDirection->editorialVoiceDirection().voice();
+            if (utility::stringToInt(voiceText, parsedVoice))
             {
                 myOutDirectionData.voice = parsedVoice;
+            }
+            else
+            {
+                report(api::Severity::warning, api::DiagnosticCode::invalidValue,
+                       "direction voice \"" + voiceText + "\" is not a number; it is not read");
             }
         }
     }
@@ -750,6 +773,13 @@ void DirectionReader::parseOctaveShift(const core::DirectionType &directionType)
         amount = *octaveShift.size();
     }
 
+    if (amount != 8 && amount != 15 && amount != 22)
+    {
+        const int used = amount >= 22 ? 22 : (amount > 8 ? 15 : 8);
+        report(api::Severity::warning, api::DiagnosticCode::valueAdjusted,
+               "octave-shift size " + std::to_string(amount) + " is not 8, 15 or 22; using " + std::to_string(used));
+    }
+
     // Per the MusicXML spec, octave-shift's type attribute describes the direction the
     // *written* notes are shifted from the true (sounding) pitch: an 8va, which sounds an
     // octave above what is written, is encoded as type="down" (notes are written below true
@@ -1191,7 +1221,9 @@ void DirectionReader::parseHarmony(const core::Harmony &inHarmony, const core::H
 
         if (root.rootAlter().has_value())
         {
-            chord.rootAlter = mx::utility::roundTo<double, int>(root.rootAlter()->value().value().value());
+            const double rawAlter = root.rootAlter()->value().value().value();
+            chord.rootAlter = mx::utility::roundTo<double, int>(rawAlter);
+            reportRounded("root-alter", rawAlter, chord.rootAlter);
         }
         break;
     }
@@ -1208,7 +1240,9 @@ void DirectionReader::parseHarmony(const core::Harmony &inHarmony, const core::H
         if (numeral.numeralAlter().has_value())
         {
             chord.hasNumeralAlter = true;
-            chord.numeralAlter = mx::utility::roundTo<double, int>(numeral.numeralAlter()->value().value().value());
+            const double rawAlter = numeral.numeralAlter()->value().value().value();
+            chord.numeralAlter = mx::utility::roundTo<double, int>(rawAlter);
+            reportRounded("numeral-alter", rawAlter, chord.numeralAlter);
         }
 
         if (numeral.numeralKey().has_value())
@@ -1294,7 +1328,9 @@ void DirectionReader::parseHarmony(const core::Harmony &inHarmony, const core::H
 
         if (bass.bassAlter().has_value())
         {
-            chord.bassAlter = mx::utility::roundTo<double, int>(bass.bassAlter()->value().value().value());
+            const double rawAlter = bass.bassAlter()->value().value().value();
+            chord.bassAlter = mx::utility::roundTo<double, int>(rawAlter);
+            reportRounded("bass-alter", rawAlter, chord.bassAlter);
         }
     }
 
@@ -1312,8 +1348,20 @@ void DirectionReader::parseHarmony(const core::Harmony &inHarmony, const core::H
         bool doAddExtension = true;
 
         const auto typeVal = degree.degreeType().value();
-        const auto alter = mx::utility::roundTo<double, int>(degree.degreeAlter().value().value().value());
+        const double rawAlter = degree.degreeAlter().value().value().value();
+        const auto alter = mx::utility::roundTo<double, int>(rawAlter);
         const auto value = degree.degreeValue().value();
+
+        if (alter < -2 || alter > 2)
+        {
+            report(api::Severity::warning, api::DiagnosticCode::valueAdjusted,
+                   "degree-alter " + core::formatDouble(rawAlter) + " is out of range; using " +
+                       std::to_string(alter < 0 ? -2 : 2));
+        }
+        else
+        {
+            reportRounded("degree-alter", rawAlter, alter);
+        }
 
         switch (typeVal.tag())
         {
@@ -1385,6 +1433,8 @@ void DirectionReader::parseHarmony(const core::Harmony &inHarmony, const core::H
             break;
         default:
             doAddExtension = false;
+            report(api::Severity::error, api::DiagnosticCode::droppedData,
+                   "degree-value " + std::to_string(value) + " is not supported; the degree is not read");
             break;
         }
 
@@ -1439,13 +1489,27 @@ void DirectionReader::parseHarmony(const core::Harmony &inHarmony, const core::H
             if (frameNote.fingering().has_value())
             {
                 const auto fingeringText = frameNote.fingering()->value();
+                std::size_t length = 0;
                 try
                 {
-                    frameNoteData.fingering = std::stoi(fingeringText);
+                    frameNoteData.fingering = std::stoi(fingeringText, &length);
                     frameNoteData.isFingeringSpecified = true;
                 }
                 catch (...)
                 {
+                }
+
+                // reported outside the try so a throwing diagnostic handler is not swallowed
+                if (!frameNoteData.isFingeringSpecified)
+                {
+                    report(api::Severity::error, api::DiagnosticCode::droppedData,
+                           "frame-note fingering \"" + fingeringText + "\" is not a number; it is not read");
+                }
+                else if (length != fingeringText.size())
+                {
+                    report(api::Severity::warning, api::DiagnosticCode::valueAdjusted,
+                           "frame-note fingering \"" + fingeringText + "\" is not a number; using " +
+                               std::to_string(frameNoteData.fingering));
                 }
             }
 
