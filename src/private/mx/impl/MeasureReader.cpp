@@ -189,7 +189,9 @@ std::pair<api::MeasureData, std::optional<api::TransposeData>> MeasureReader::ge
         // current tick position in myCurrentCursor
         auto peekAheadAtNextNoteIter = iter + 1;
 
-        while (mdc.isNote() && peekAheadAtNextNoteIter != endIter && !peekAheadAtNextNoteIter->isNote())
+        // stop at <backup>/<forward>: a note past a timeline jump can't chord with this one
+        while (mdc.isNote() && peekAheadAtNextNoteIter != endIter && !peekAheadAtNextNoteIter->isNote() &&
+               !peekAheadAtNextNoteIter->isBackup() && !peekAheadAtNextNoteIter->isForward())
         {
             ++peekAheadAtNextNoteIter;
         }
