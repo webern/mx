@@ -123,7 +123,7 @@ void TupletReader::guessNormalFromNote(api::TupletStart &outTupletStart)
         return;
     }
     const auto &timeMod = *myNote.timeModification();
-    outTupletStart.actualNumber = timeMod.actualNotes();
+    outTupletStart.normalNumber = timeMod.normalNotes();
 
     Converter converter;
     if (timeMod.group().has_value())
@@ -145,7 +145,7 @@ void TupletReader::guessActualFromNote(api::TupletStart &outTupletStart)
         return;
     }
     const auto &timeMod = *myNote.timeModification();
-    outTupletStart.normalNumber = timeMod.normalNotes();
+    outTupletStart.actualNumber = timeMod.actualNotes();
 
     Converter converter;
     if (timeMod.group().has_value())
