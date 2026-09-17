@@ -158,12 +158,16 @@ void MeasureWriter::writeMeasureGlobals()
             myPropertiesWriter->writeDivisions(myHistory.getCursor().getGlobalTicksPerQuarter());
         }
 
-        // <staves> is needed only when the part has more than one staff. PartData::writeSingleStaffCount
-        // adds the redundant <staves>1</staves> back for a source that spelled it out.
+        // <staves> is needed only when the part has more than one staff. Use the cursor's
+        // part-wide staff count here, not this measure's own staff count: PartReader gives every
+        // measure of the part the same (maximum) staff count on read, so the very first measure
+        // must declare that same maximum even when its own staff count is lower (issue #442).
+        // PartData::writeSingleStaffCount adds the redundant <staves>1</staves> back for a source
+        // that spelled it out.
         const bool isStaffCountRequested = myScoreWriter.getPart(myHistory.getCursor().partIndex).writeSingleStaffCount;
-        if (myMeasureData.staves.size() > 1 || isStaffCountRequested)
+        if (myHistory.getCursor().getNumStaves() > 1 || isStaffCountRequested)
         {
-            myPropertiesWriter->writeNumStaves(static_cast<int>(myMeasureData.staves.size()));
+            myPropertiesWriter->writeNumStaves(myHistory.getCursor().getNumStaves());
         }
     }
 
