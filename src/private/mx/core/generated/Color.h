@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "mx/core/Lexical.h"
+
 #include <cstdint>
 #include <optional>
 #include <string>
@@ -82,6 +84,9 @@ class Color final
 
     /// Lenient: malformed text yields opaque black.
     static Color parse(std::string_view text) noexcept;
+
+    /// Lenient, and says whether the text had to be repaired.
+    static Color parse(std::string_view text, ValueParseOutcome &outcome) noexcept;
 
     bool operator==(const Color &other) const noexcept = default;
 

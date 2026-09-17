@@ -101,4 +101,16 @@ EndingNumber EndingNumber::parse(std::string_view text)
     return out;
 }
 
+EndingNumber EndingNumber::parse(std::string_view text, ValueParseOutcome &outcome)
+{
+    EndingNumber out;
+    if (tryParse(text, out))
+    {
+        outcome = ValueParseOutcome::valid;
+        return out;
+    }
+    outcome = ValueParseOutcome::invalid;
+    return parse(text);
+}
+
 } // namespace mx::core

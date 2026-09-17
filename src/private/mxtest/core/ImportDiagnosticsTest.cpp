@@ -183,3 +183,54 @@ TEST(SilentParseProducesTheSameDocument, ImportDiagnostics)
     REQUIRE(silent.ok());
     CHECK(silent.value() == reported.document);
 }
+
+inline std::string importDiagnosticsBespokeScore(const std::string &date, const std::string &ending,
+                                                 const std::string &color, const std::string &timeOnly,
+                                                 const std::string &fontFamily, const std::string &accidental,
+                                                 const std::string &notehead, const std::string &wavyLine)
+{
+    return importDiagnosticsScore(
+        "<identification><encoding><encoding-date>" + date + "</encoding-date></encoding></identification>",
+        "<barline location=\"left\"><ending number=\"" + ending + "\" type=\"start\"/></barline><note color=\"" +
+            color + "\" time-only=\"" + timeOnly +
+            "\"><pitch><step>C</step><octave>4</octave></pitch><duration>1</duration><accidental font-family=\"" +
+            fontFamily + "\" smufl=\"" + accidental + "\">sharp</accidental><notehead smufl=\"" + notehead +
+            "\">normal</notehead><notations><ornaments><wavy-line type=\"start\" smufl=\"" + wavyLine +
+            "\"/></ornaments></notations></note>");
+}
+
+TEST(EachBespokeValueTypeReportsARepair, ImportDiagnostics)
+{
+    const auto parsed = importDiagnosticsParse(importDiagnosticsBespokeScore(
+        "2024-02-30", "1-2", "#ff0000", "1, x", "Arial,,Serif", "sharp", "note head", "guitarVibrato"));
+    REQUIRE(parsed.ok);
+    const std::vector<std::pair<std::string, std::string>> expected{
+        {"/score-partwise/identification/encoding/encoding-date", "invalid value \"2024-02-30\"; using \"1900-01-01\""},
+        {"/score-partwise/part/measure/barline/ending", "invalid value \"1-2\" in attribute \"number\"; using \"\""},
+        {"/score-partwise/part/measure/note", "invalid value \"#ff0000\" in attribute \"color\"; using \"#000000\""},
+        {"/score-partwise/part/measure/note", "invalid value \"1, x\" in attribute \"time-only\"; using \"1\""},
+        {"/score-partwise/part/measure/note/accidental",
+         "invalid value \"Arial,,Serif\" in attribute \"font-family\"; using \"Arial  Serif\""},
+        {"/score-partwise/part/measure/note/accidental",
+         "invalid value \"sharp\" in attribute \"smufl\"; using \"accsharp\""},
+        {"/score-partwise/part/measure/note/notehead",
+         "invalid value \"note head\" in attribute \"smufl\"; using \"notehead\""},
+        {"/score-partwise/part/measure/note/notations/ornaments/wavy-line",
+         "invalid value \"guitarVibrato\" in attribute \"smufl\"; using \"wiggleguitarVibrato\""},
+    };
+    REQUIRE(parsed.diagnostics.size() == expected.size());
+    for (std::size_t i = 0; i < expected.size(); ++i)
+    {
+        CHECK(DiagnosticCode::invalidValue == parsed.diagnostics[i].code);
+        CHECK_EQUAL(expected[i].first, parsed.diagnostics[i].path);
+        CHECK_EQUAL(expected[i].second, parsed.diagnostics[i].message);
+    }
+}
+
+TEST(ValidBespokeValuesReportNothing, ImportDiagnostics)
+{
+    const auto parsed = importDiagnosticsParse(importDiagnosticsBespokeScore(
+        "2024-02-29", "1, 2", "#80FF0000", "1,2", "Arial, Serif", "accidentalSharp", "noteheadBlack", "wiggleTrill"));
+    REQUIRE(parsed.ok);
+    CHECK(parsed.diagnostics.empty());
+}

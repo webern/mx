@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "mx/core/Lexical.h"
+
 #include <string>
 #include <string_view>
 
@@ -39,6 +41,9 @@ class SmuflGlyphName final
 
     /// Lenient: repairs into the nearest valid token.
     static SmuflGlyphName parse(std::string_view text);
+
+    /// Lenient, and says whether the text had to be repaired.
+    static SmuflGlyphName parse(std::string_view text, ValueParseOutcome &outcome);
 
     bool operator==(const SmuflGlyphName &other) const noexcept = default;
 

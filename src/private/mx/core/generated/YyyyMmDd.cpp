@@ -130,4 +130,16 @@ YyyyMmDd YyyyMmDd::parse(std::string_view text) noexcept
     return out;
 }
 
+YyyyMmDd YyyyMmDd::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
+    YyyyMmDd out;
+    if (tryParse(text, out))
+    {
+        outcome = ValueParseOutcome::valid;
+        return out;
+    }
+    outcome = ValueParseOutcome::invalid;
+    return parse(text);
+}
+
 } // namespace mx::core

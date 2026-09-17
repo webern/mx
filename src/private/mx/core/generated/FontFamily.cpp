@@ -120,4 +120,16 @@ FontFamily FontFamily::parse(std::string_view text)
     return out;
 }
 
+FontFamily FontFamily::parse(std::string_view text, ValueParseOutcome &outcome)
+{
+    FontFamily out;
+    if (tryParse(text, out))
+    {
+        outcome = ValueParseOutcome::valid;
+        return out;
+    }
+    outcome = ValueParseOutcome::invalid;
+    return parse(text);
+}
+
 } // namespace mx::core

@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "mx/core/Lexical.h"
+
 #include <string>
 #include <string_view>
 
@@ -58,6 +60,9 @@ public:
 
     /// Lenient: repairs into the nearest valid glyph name.
     static {{ident}} parse(std::string_view text);
+
+    /// Lenient, and says whether the text had to be repaired.
+    static {{ident}} parse(std::string_view text, ValueParseOutcome &outcome);
 
     bool operator==(const {{ident}} &other) const noexcept = default;
 

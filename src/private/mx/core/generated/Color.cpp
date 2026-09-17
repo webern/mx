@@ -96,4 +96,16 @@ Color Color::parse(std::string_view text) noexcept
     return out;
 }
 
+Color Color::parse(std::string_view text, ValueParseOutcome &outcome) noexcept
+{
+    Color out;
+    if (tryParse(text, out))
+    {
+        outcome = ValueParseOutcome::valid;
+        return out;
+    }
+    outcome = ValueParseOutcome::invalid;
+    return parse(text);
+}
+
 } // namespace mx::core

@@ -63,25 +63,17 @@ void reportIdRepair(const ParseContext &context, ValueParseOutcome outcome, pugi
 void reportAttributeDefaulted(const ParseContext &context, pugi::xml_node el, const char *attribute,
                               std::string_view value);
 
-/// The lenient parse of a value type, reporting any repair it made. A type
-/// without an outcome-reporting parse is parsed silently.
+/// The lenient parse of a value type, reporting any repair it made.
 template <typename T>
 T parseValue(std::string_view text, const ParseContext &context, pugi::xml_node el, const char *attribute)
 {
-    if constexpr (requires(std::string_view s, ValueParseOutcome &o) { T::parse(s, o); })
+    ValueParseOutcome outcome = ValueParseOutcome::valid;
+    T value = T::parse(text, outcome);
+    if (outcome != ValueParseOutcome::valid)
     {
-        ValueParseOutcome outcome = ValueParseOutcome::valid;
-        T value = T::parse(text, outcome);
-        if (outcome != ValueParseOutcome::valid)
-        {
-            reportValueRepair(context, outcome, el, attribute, text, std::string{value.toString()});
-        }
-        return value;
+        reportValueRepair(context, outcome, el, attribute, text, std::string{value.toString()});
     }
-    else
-    {
-        return T::parse(text);
-    }
+    return value;
 }
 
 /// The lenient parse of an xs:ID attribute, reporting any repair it made.

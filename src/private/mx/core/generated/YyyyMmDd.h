@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "mx/core/Lexical.h"
+
 #include <string>
 #include <string_view>
 
@@ -50,6 +52,9 @@ class YyyyMmDd final
     /// Lenient: malformed text yields the natural zero; out-of-range
     /// components clamp.
     static YyyyMmDd parse(std::string_view text) noexcept;
+
+    /// Lenient, and says whether the text had to be repaired.
+    static YyyyMmDd parse(std::string_view text, ValueParseOutcome &outcome) noexcept;
 
     bool operator==(const YyyyMmDd &other) const noexcept = default;
 

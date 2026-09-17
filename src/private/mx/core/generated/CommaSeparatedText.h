@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "mx/core/Lexical.h"
+
 #include <span>
 #include <string>
 #include <string_view>
@@ -41,6 +43,9 @@ class CommaSeparatedText final
 
     /// Lenient: repairs into the nearest valid list.
     static CommaSeparatedText parse(std::string_view text);
+
+    /// Lenient, and says whether the text had to be repaired.
+    static CommaSeparatedText parse(std::string_view text, ValueParseOutcome &outcome);
 
     bool operator==(const CommaSeparatedText &other) const noexcept
     {
